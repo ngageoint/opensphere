@@ -94,6 +94,7 @@ plugin.vectortools.EventType = {
 
 /**
  * Shows a menu item if the context contains all vector layers.
+ *
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -116,6 +117,7 @@ plugin.vectortools.visibleIfIsVector = function(context) {
 
 /**
  * Handle layer menu events.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
@@ -180,6 +182,7 @@ plugin.vectortools.handleMenuEvent_ = function(event) {
 
 /**
  * Map a tree node to layer id.
+ *
  * @param {os.structs.ITreeNode} node The tree node.
  * @return {string|undefined} The layer id.
  * @private
@@ -192,6 +195,7 @@ plugin.vectortools.nodeToId_ = function(node) {
 
 /**
  * Map a tree node to data source.
+ *
  * @param {os.structs.ITreeNode} node The tree node.
  * @return {os.source.ISource|undefined} The data source.
  * @private
@@ -208,6 +212,7 @@ plugin.vectortools.nodeToSource_ = function(node) {
 
 /**
  * Map a tree node to Copy Layer command.
+ *
  * @param {os.structs.ITreeNode} node The tree node.
  * @return {os.command.ICommand|undefined}
  * @private

@@ -11,6 +11,7 @@ goog.require('os.ui.slick.column');
 
 /**
  * The columnManager directive
+ *
  * @return {angular.Directive}
  */
 os.ui.column.columnManagerDirective = function() {
@@ -38,6 +39,7 @@ os.ui.Module.directive('columnManager', [os.ui.column.columnManagerDirective]);
 
 /**
  * Controller function for the columnManager directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -169,6 +171,7 @@ os.ui.column.ColumnManagerCtrl = function($scope, $element) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.column.ColumnManagerCtrl.prototype.destroy_ = function() {
@@ -180,6 +183,7 @@ os.ui.column.ColumnManagerCtrl.prototype.destroy_ = function() {
 
 /**
  * Close the window
+ *
  * @param {boolean} enableListen
  * @export
  */
@@ -194,6 +198,7 @@ os.ui.column.ColumnManagerCtrl.prototype.listenForKeys = function(enableListen) 
 
 /**
  * Toggles columns to shown.
+ *
  * @param {boolean=} opt_all Whether to select all
  * @export
  */
@@ -235,6 +240,7 @@ os.ui.column.ColumnManagerCtrl.prototype.show = function(opt_all) {
 
 /**
  * Toggles columns to hidden.
+ *
  * @param {boolean=} opt_all Whether to select all
  * @export
  */
@@ -264,6 +270,7 @@ os.ui.column.ColumnManagerCtrl.prototype.hide = function(opt_all) {
 
 /**
  * Save the state
+ *
  * @export
  */
 os.ui.column.ColumnManagerCtrl.prototype.accept = function() {
@@ -314,6 +321,7 @@ os.ui.column.ColumnManagerCtrl.prototype.accept = function() {
 
 /**
  * Close the window
+ *
  * @export
  */
 os.ui.column.ColumnManagerCtrl.prototype.close = function() {
@@ -323,6 +331,7 @@ os.ui.column.ColumnManagerCtrl.prototype.close = function() {
 
 /**
  * Checks the overall form validity (i.e. at least 1 column is visible)
+ *
  * @private
  */
 os.ui.column.ColumnManagerCtrl.prototype.validate_ = function() {
@@ -332,6 +341,7 @@ os.ui.column.ColumnManagerCtrl.prototype.validate_ = function() {
 
 /**
  * Generate row content in slick table
+ *
  * @param {os.data.ColumnDefinition} column
  * @param {(os.data.ColumnDefinition|string)} col
  * @return {string} The value
@@ -366,6 +376,7 @@ os.ui.column.ColumnManagerCtrl.prototype.find_ = function(term, columnName) {
 
 /**
  * Select the hidden terms
+ *
  * @param {number=} opt_startIndex
  * @export
  */
@@ -380,6 +391,7 @@ os.ui.column.ColumnManagerCtrl.prototype.find = function(opt_startIndex) {
 
 /**
  * Toggles columns to shown.
+ *
  * @export
  */
 os.ui.column.ColumnManagerCtrl.prototype.clear = function() {
@@ -391,6 +403,7 @@ os.ui.column.ColumnManagerCtrl.prototype.clear = function() {
 
 /**
  * Toggles columns to shown.
+ *
  * @export
  */
 os.ui.column.ColumnManagerCtrl.prototype.next = function() {
@@ -403,6 +416,7 @@ os.ui.column.ColumnManagerCtrl.prototype.next = function() {
 
 /**
  * Toggles columns to shown.
+ *
  * @export
  */
 os.ui.column.ColumnManagerCtrl.prototype.previous = function() {
@@ -433,6 +447,7 @@ os.ui.column.ColumnManagerCtrl.prototype.updateSearch_ = function() {
 
 /**
  * Handles key events
+ *
  * @param {goog.events.KeyEvent} event
  * @private
  */
@@ -451,6 +466,7 @@ os.ui.column.ColumnManagerCtrl.prototype.handleKeyEvent_ = function(event) {
 
 /**
  * Launches a column manager window with the given columns
+ *
  * @param {Array.<os.data.ColumnDefinition>} columns
  * @param {Function} callback
  */
@@ -483,6 +499,7 @@ os.ui.column.launchColumnManager = function(columns, callback) {
 
 /**
  * Launches a column manager window with the given columns
+ *
  * @param {Array.<os.data.ColumnDefinition>} columns
  * @param {string} header Dialog header
  * @param {Function} callback

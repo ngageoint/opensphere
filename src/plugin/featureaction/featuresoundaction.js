@@ -27,6 +27,7 @@ plugin.im.action.feature.DEFAULT_SOUND = 'Default';
 
 /**
  * Import action that sets the sound for a {@link ol.Feature}.
+ *
  * @extends {os.im.action.AbstractImportAction<ol.Feature>}
  * @constructor
  */

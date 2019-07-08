@@ -6,6 +6,7 @@ goog.require('os.command.State');
 
 /**
  * Command for clearing spatial queries on the map.
+ *
  * @implements {os.command.ICommand}
  * @constructor
  */

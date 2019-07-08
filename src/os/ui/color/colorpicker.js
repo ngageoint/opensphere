@@ -17,14 +17,16 @@ os.ui.color.COLOR_PICKER_SELECTOR = 'js-color-picker';
 /**
  * @type {string}
  */
-os.ui.color.COLOR_PICKER_TEMPLATE = '<button type="button" class="btn bg-transparent border ' +
-    os.ui.color.COLOR_PICKER_SELECTOR +
+os.ui.color.COLOR_PICKER_TEMPLATE = '<button type="button" class="btn btn-sm bg-transparent border rounded ' +
+    'flex-shrink-0 c-colorpicker ' + os.ui.color.COLOR_PICKER_SELECTOR +
     '" ng-click="colorPicker.togglePopup()" ng-disabled=disabled>' +
-    '<i class="fa fa-square" ng-style="{\'color\': color}"></i></button>';
+      '<i class="fa" ng-class="color && \'fa-square\' || \'fa-ban\'" ng-style="{\'color\': color}"></i>' +
+    '</button>';
 
 
 /**
  * A color picker directive
+ *
  * @return {angular.Directive}
  */
 os.ui.color.colorPickerDirective = function() {
@@ -54,6 +56,7 @@ os.ui.Module.directive('colorpicker', [os.ui.color.colorPickerDirective]);
 
 /**
  * Controller for the color picker directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -96,15 +99,10 @@ os.ui.color.ColorPickerCtrl = function($scope, $element, $compile) {
    */
   this['showPopup'] = false;
 
-  var color = /** @type {string} */ (this.scope['color']);
-
-  // default color is white if one was not set
-  if (!color) {
-    color = '#ffffff';
-  }
-
-  // if color was set to something other than a hex string (rgb() or rgba()), then fix it
-  if (color.indexOf('#') !== 0) {
+  // the control's color value should be undefined when the picker is set to the default color
+  var color = /** @type {string} */ (this.scope['color']) || undefined;
+  if (color && color.indexOf('#') !== 0) {
+    // if color was set to something other than a hex string (rgb() or rgba()), then fix it
     color = (color.indexOf('a(') > -1 ? goog.color.alpha.parse(color) : goog.color.parse(color)).hex.substring(0, 7);
   }
 
@@ -132,6 +130,7 @@ os.ui.color.ColorPickerCtrl = function($scope, $element, $compile) {
 
 /**
  * Clean up
+ *
  * @private
  */
 os.ui.color.ColorPickerCtrl.prototype.onDestroy_ = function() {
@@ -145,6 +144,7 @@ os.ui.color.ColorPickerCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Clean up the draw control menu.
+ *
  * @private
  */
 os.ui.color.ColorPickerCtrl.prototype.destroyControlMenu_ = function() {
@@ -164,6 +164,7 @@ os.ui.color.ColorPickerCtrl.prototype.destroyControlMenu_ = function() {
 
 /**
  * Handles color pick events.
+ *
  * @param {angular.Scope.Event} event
  * @param {string} color The new color
  * @private
@@ -187,6 +188,7 @@ os.ui.color.ColorPickerCtrl.prototype.onChange_ = function(event, color) {
 
 /**
  * Handles color pick events.
+ *
  * @param {angular.Scope.Event} event
  * @private
  */
@@ -216,6 +218,7 @@ os.ui.color.ColorPickerCtrl.prototype.onMouseDown_ = function(e) {
 
 /**
  * Toggle the color picker on/off.
+ *
  * @param {boolean=} opt_value
  * @export
  */
@@ -246,6 +249,7 @@ os.ui.color.ColorPickerCtrl.prototype.togglePopup = function(opt_value) {
 
 /**
  * Get the template for the color picker popup.
+ *
  * @return {string}
  * @protected
  */

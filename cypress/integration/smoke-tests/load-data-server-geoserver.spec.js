@@ -71,6 +71,12 @@ describe('Add GeoServer', function() {
     cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_1).rightClick();
     cy.get(os.layersDialog.Tabs.Areas.Tree.contextMenu.menuOptions.Query.LOAD).click();
     cy.get(os.layersDialog.Tabs.Layers.TAB).click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).should('contain', 'VIIRS Detection');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
         .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.FEATURE_COUNT_TEXT_WILDCARD, {timeout: 8000})
@@ -82,6 +88,7 @@ describe('Add GeoServer', function() {
         .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.FEATURE_COUNT_TEXT_WILDCARD, {timeout: 8000})
         .invoke('text')
         .should('match', /\([1-9]\d{0,3}\)/); // Any number 1-9999, surrounded by ()
+    cy.imageComparison('features loaded');
 
     // Open the timeline and animate the data (view window animates)
     cy.get(os.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
@@ -108,32 +115,5 @@ describe('Add GeoServer', function() {
               .invoke('text')
               .should('match', new RegExp('\\([0-9]\\d{0,3}\\/' + featureCount + '\\)'));
         });
-
-    // Clean up
-    cy.get(os.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
-    cy.get(os.Timeline.PANEL).should('not.exist');
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
-        .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.FEATURE_COUNT_TEXT_WILDCARD)
-        .invoke('text')
-        .should('match', /\([1-9]\d{0,3}\)/); // Any number 1-9999, surrounded by ()
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
-        .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.REMOVE_LAYER_BUTTON_WILDCARD)
-        .click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
-        .should('not.contain', 'VIIRS Detection Features');
-    cy.get(os.layersDialog.Tabs.Areas.TAB).click();
-    cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_1).click();
-    cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_1)
-        .find(os.layersDialog.Tabs.Areas.Tree.REMOVE_AREA_BUTTON_WILDCARD)
-        .click();
-    cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_1).should('not.contain', 'temp area 1');
-    cy.get(os.layersDialog.Tabs.Layers.TAB).click();
-    cy.get(os.statusBar.SERVERS_BUTTON).click();
-    cy.get(os.settingsDialog.Tabs.dataServers.SERVER_1)
-        .find(os.settingsDialog.Tabs.dataServers.DELETE_SERVER_BUTTON_WILDCARD).click();
-    cy.get(os.settingsDialog.Tabs.dataServers.SERVER_1)
-        .should('not.contain', 'GDP GeoServer');
-    cy.get(os.settingsDialog.CLOSE_BUTTON).click();
   });
 });

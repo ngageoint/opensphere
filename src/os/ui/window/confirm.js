@@ -9,6 +9,7 @@ goog.require('os.ui.window');
 
 /**
  * A confirmation window. Create a window using os.ui.window.create, supplying the necessary scope/window options.
+ *
  * @return {angular.Directive}
  */
 os.ui.window.confirmDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('confirm', [os.ui.window.confirmDirective]);
 
 /**
  * Launch a dialog prompting the user to enter some text.
+ *
  * @param {osx.window.ConfirmOptions=} opt_options The window options
  * @param {Object=} opt_scopeOptions
  */
@@ -54,10 +56,7 @@ os.ui.window.launchConfirm = function(opt_options, opt_scopeOptions) {
 
   var windowOverrides = /** @type {!osx.window.WindowOptions} */ (options.windowOptions || {});
 
-  var height = windowOverrides.height || 140;
-  var minHeight = windowOverrides.minHeight || height;
-  var maxHeight = windowOverrides.maxHeight || height;
-
+  var height = windowOverrides.height || 'auto';
   var width = windowOverrides.width || 325;
   var minWidth = windowOverrides.minWidth || width;
   var maxWidth = windowOverrides.maxWidth || width;
@@ -72,12 +71,16 @@ os.ui.window.launchConfirm = function(opt_options, opt_scopeOptions) {
     'min-width': minWidth,
     'max-width': maxWidth,
     'height': height,
-    'min-height': minHeight,
-    'max-height': maxHeight,
+    'min-height': windowOverrides.minHeight,
+    'max-height': windowOverrides.maxHeight,
     'modal': windowOverrides.modal != null ? windowOverrides.modal : true,
     'show-close': windowOverrides.showClose != null ? windowOverrides.showClose : false,
     'no-scroll': windowOverrides.noScroll != null ? windowOverrides.noScroll : true
   };
+
+  if (windowOverrides.id) {
+    windowOptions['id'] = windowOverrides.id;
+  }
 
   var text = options.prompt || 'Are you sure?';
   var template = '<confirm>' + text + '</confirm>';
@@ -132,6 +135,7 @@ os.ui.window.ConfirmCtrl = function($scope, $element, $timeout) {
 
 /**
  * Clean up
+ *
  * @private
  */
 os.ui.window.ConfirmCtrl.prototype.onDestroy_ = function() {
@@ -144,6 +148,7 @@ os.ui.window.ConfirmCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Fire the cancel callback and close the window.
+ *
  * @export
  */
 os.ui.window.ConfirmCtrl.prototype.cancel = function() {
@@ -157,6 +162,7 @@ os.ui.window.ConfirmCtrl.prototype.cancel = function() {
 
 /**
  * Fire the confirmation callback and close the window.
+ *
  * @export
  */
 os.ui.window.ConfirmCtrl.prototype.confirm = function() {
@@ -177,6 +183,7 @@ os.ui.window.ConfirmCtrl.prototype.confirm = function() {
 
 /**
  * Close the window.
+ *
  * @private
  */
 os.ui.window.ConfirmCtrl.prototype.close_ = function() {
@@ -186,6 +193,7 @@ os.ui.window.ConfirmCtrl.prototype.close_ = function() {
 
 /**
  * Handles key events
+ *
  * @param {goog.events.KeyEvent} event
  * @private
  */

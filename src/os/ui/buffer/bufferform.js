@@ -14,6 +14,7 @@ goog.require('os.ui.im.basicInfoDirective');
 
 /**
  * Buffer region form directive.
+ *
  * @return {angular.Directive}
  */
 os.ui.buffer.bufferFormDirective = function() {
@@ -42,6 +43,7 @@ os.ui.Module.directive('bufferform', [os.ui.buffer.bufferFormDirective]);
 
 /**
  * Controller for the buffer form.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.$timeout} $timeout The Angular $timeout service.
  * @extends {os.ui.ex.ExportOptionsCtrl}
@@ -149,6 +151,7 @@ os.ui.buffer.BufferFormCtrl.prototype.disposeInternal = function() {
 
 /**
  * Handle changes to the selected sources.
+ *
  * @param {angular.Scope.Event} event
  * @param {Array<!ol.Feature>} items
  * @param {Array<!os.source.Vector>} sources
@@ -170,7 +173,7 @@ os.ui.buffer.BufferFormCtrl.prototype.onOptionsChange_ = function(event, items, 
       }
     }
 
-    this['columns'] = sources && sources.length > 0 ? sources[0].getColumns().slice() : [];
+    this['columns'] = sources && sources.length > 0 ? sources[0].getColumns() : [];
     this['columns'].sort(os.ui.slick.column.nameCompare);
 
     this.updateLivePreview();
@@ -180,6 +183,7 @@ os.ui.buffer.BufferFormCtrl.prototype.onOptionsChange_ = function(event, items, 
 
 /**
  * Updates buffer previews on the map.
+ *
  * @param {boolean=} opt_force If a preview update should be forced.
  * @export
  */
@@ -211,6 +215,7 @@ os.ui.buffer.BufferFormCtrl.prototype.updatePreview = function(opt_force) {
 
 /**
  * Updates buffer previews on the map.
+ *
  * @protected
  */
 os.ui.buffer.BufferFormCtrl.prototype.updateLivePreview = function() {
@@ -232,6 +237,7 @@ os.ui.buffer.BufferFormCtrl.prototype.updateLivePreview = function() {
 
 /**
  * Get a warning message to display in the UI.
+ *
  * @return {string}
  * @protected
  */
@@ -296,6 +302,7 @@ os.ui.buffer.BufferFormCtrl.prototype.getWarningMessage = function() {
 
 /**
  * If the target geometry supports a bidirectional buffer.
+ *
  * @return {boolean}
  * @export
  */

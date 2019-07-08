@@ -116,7 +116,30 @@ os.ui.menu.MenuItem.prototype.find = function(eventTypeOrLabel) {
 
 
 /**
+ * Find a menu item, or create it as a child if not found.
+ *
+ * @param {!os.ui.menu.MenuItemOptions} options The options.
+ * @return {?os.ui.menu.MenuItem<T>} The menu item or null if it could not be found
+ */
+os.ui.menu.MenuItem.prototype.findOrCreate = function(options) {
+  var val = null;
+
+  var findKey = options.label || options.eventType;
+  if (findKey) {
+    val = this.find(findKey);
+
+    if (!val) {
+      val = this.addChild(options);
+    }
+  }
+
+  return val;
+};
+
+
+/**
  * Add a new child to the menu item.
+ *
  * @param {!(os.ui.menu.MenuItem<T>|os.ui.menu.MenuItemOptions)} options The options to define a new menu item
  * @return {!os.ui.menu.MenuItem<T>} The added menu item.
  */
@@ -149,6 +172,7 @@ os.ui.menu.MenuItem.prototype.addChild = function(options) {
 
 /**
  * Remove a child from the menu item.
+ *
  * @param {string} eventTypeOrLabel The event type or label to remove.
  * @return {boolean} If the child was removed.
  */

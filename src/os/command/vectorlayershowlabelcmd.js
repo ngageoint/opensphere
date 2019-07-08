@@ -11,6 +11,7 @@ goog.require('os.style.label');
 
 /**
  * Changes if labels are always shown for a layer, or on highlight only.
+ *
  * @param {string} layerId
  * @param {boolean} value
  * @param {boolean=} opt_oldValue

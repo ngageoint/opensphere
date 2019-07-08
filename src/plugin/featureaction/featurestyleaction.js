@@ -20,6 +20,7 @@ plugin.im.action.feature.StyleActionTagName = {
   CENTER_SHAPE: 'centerShape',
   COLOR: 'color',
   ICON_SRC: 'iconSrc',
+  LINE_DASH: 'lineDash',
   OPACITY: 'opacity',
   ROTATION_COLUMN: 'rotationColumn',
   SHOW_ROTATION: 'showRotation',
@@ -31,6 +32,7 @@ plugin.im.action.feature.StyleActionTagName = {
 
 /**
  * Import action that sets the style for a {@link ol.Feature}.
+ *
  * @extends {os.im.action.AbstractImportAction<ol.Feature>}
  * @implements {os.legend.ILegendRenderer}
  * @constructor
@@ -219,6 +221,11 @@ plugin.im.action.feature.StyleAction.prototype.toXml = function() {
     os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.SIZE, element, String(size));
   }
 
+  var lineDash = os.style.getConfigLineDash(this.styleConfig);
+  if (lineDash != null) {
+    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.LINE_DASH, element, JSON.stringify(lineDash));
+  }
+
   var shape = this.styleConfig[os.style.StyleField.SHAPE] || os.style.DEFAULT_SHAPE;
   os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.SHAPE, element, String(shape));
 
@@ -235,11 +242,15 @@ plugin.im.action.feature.StyleAction.prototype.toXml = function() {
     os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.ICON_SRC, element, icon.path);
   }
 
-  var showRotation = this.styleConfig[os.style.StyleField.SHOW_ROTATION] || false;
-  os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.SHOW_ROTATION, element, String(showRotation));
+  var showRotation = this.styleConfig[os.style.StyleField.SHOW_ROTATION];
+  if (showRotation != null) {
+    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.SHOW_ROTATION, element, String(showRotation));
+  }
 
-  var rotationColumn = this.styleConfig[os.style.StyleField.ROTATION_COLUMN] || false;
-  os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.ROTATION_COLUMN, element, String(rotationColumn));
+  var rotationColumn = this.styleConfig[os.style.StyleField.ROTATION_COLUMN];
+  if (rotationColumn != null) {
+    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.ROTATION_COLUMN, element, String(rotationColumn));
+  }
 
   return element;
 };
@@ -271,6 +282,14 @@ plugin.im.action.feature.StyleAction.prototype.fromXml = function(xml) {
       os.style.setConfigSize(styleConfig, size);
     }
 
+    var lineData = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.LINE_DASH);
+    if (lineData) {
+      var lineDash = JSON.parse(lineData);
+      if (lineDash && goog.isArray(lineDash)) {
+        os.style.setConfigLineDash(styleConfig, /** @type {Array<number>} */ (lineDash));
+      }
+    }
+
     var shape = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.SHAPE);
     if (shape) {
       styleConfig[os.style.StyleField.SHAPE] = shape;
@@ -288,10 +307,15 @@ plugin.im.action.feature.StyleAction.prototype.fromXml = function(xml) {
       }
     }
 
-    styleConfig[os.style.StyleField.SHOW_ROTATION] = Boolean(os.xml.getChildValue(xml,
-        plugin.im.action.feature.StyleActionTagName.SHOW_ROTATION));
-    styleConfig[os.style.StyleField.ROTATION_COLUMN] = os.xml.getChildValue(xml,
-        plugin.im.action.feature.StyleActionTagName.ROTATION_COLUMN);
+    var showRotation = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.SHOW_ROTATION);
+    if (showRotation != null) {
+      styleConfig[os.style.StyleField.SHOW_ROTATION] = Boolean(showRotation);
+    }
+
+    var rotationColumn = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.ROTATION_COLUMN);
+    if (rotationColumn != null) {
+      styleConfig[os.style.StyleField.ROTATION_COLUMN] = rotationColumn;
+    }
   }
 
   this.styleConfig = styleConfig;
@@ -332,6 +356,7 @@ plugin.im.action.feature.StyleAction.prototype.renderLegend = function(options, 
 
 /**
  * If a feature is styled by the action.
+ *
  * @param {!ol.Feature} feature The feature.
  * @return {boolean} If the feature is using this style action.
  *

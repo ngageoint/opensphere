@@ -91,6 +91,51 @@ os.ui.list.remove = function(id, markup) {
 
 
 /**
+ * Remove a list by ID.
+ *
+ * @param {string} id The list ID to remove
+ */
+os.ui.list.removeList = function(id) {
+  var map = os.ui.list.map_[id];
+  if (map) {
+    map.forEach(function(item) {
+      if (item) {
+        if (item.scope) {
+          item.scope.$destroy();
+          item.scope = undefined;
+        }
+
+        if (item.element) {
+          item.element.remove();
+          item.element = undefined;
+        }
+      }
+    });
+
+    delete os.ui.list.map_[id];
+  }
+};
+
+
+/**
+ * Copy a list under a new ID.
+ *
+ * @param {string} sourceId The original list ID.
+ * @param {string} targetId The new list ID.
+ */
+os.ui.list.copy = function(sourceId, targetId) {
+  if (sourceId !== targetId) {
+    var items = os.ui.list.get(sourceId);
+    if (items) {
+      items.forEach(function(item) {
+        os.ui.list.add(targetId, item.markup, item.priority);
+      });
+    }
+  }
+};
+
+
+/**
  * @param {os.ui.list.ListEntry} a list entry 1
  * @param {os.ui.list.ListEntry} b list entry 2
  * @return {number} per typical compare function
@@ -112,6 +157,7 @@ os.ui.list.get = function(id) {
 
 /**
  * Checks to see if the markup already exists in the list
+ *
  * @param {string} id The list ID to which to check
  * @param {string} markup The directive or markup to check
  * @return {boolean} if the markup was found or not
@@ -181,6 +227,7 @@ os.ui.listLink = function(scope, element, attr, ctrl) {
 
 /**
  * Controller for the list directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -237,6 +284,7 @@ os.ui.ListCtrl = function($scope, $element, $compile) {
 
 /**
  * Cleanup
+ *
  * @private
  */
 os.ui.ListCtrl.prototype.onDestroy_ = function() {
@@ -255,6 +303,7 @@ os.ui.ListCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Handles list change
+ *
  * @param {os.events.PropertyChangeEvent} evt The list change event
  * @protected
  */
@@ -274,6 +323,7 @@ os.ui.ListCtrl.prototype.onChange = function(evt) {
 
 /**
  * Updates the displayed UI
+ *
  * @private
  */
 os.ui.ListCtrl.prototype.update_ = function() {

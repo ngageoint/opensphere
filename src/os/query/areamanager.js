@@ -26,17 +26,12 @@ goog.require('os.ui.window');
 
 /**
  * Manages spatial areas
+ *
  * @extends {os.query.BaseAreaManager}
  * @constructor
  */
 os.query.AreaManager = function() {
   os.query.AreaManager.base(this, 'constructor');
-
-  /**
-   * @type {ol.Feature|undefined}
-   * @protected
-   */
-  this.highlightFeature = undefined;
 
   os.query.AreaManager.FULL_INCLUSION_STYLE.stroke.color =
       os.settings.get(os.query.AreaManager.KEYS.IN_COLOR,
@@ -136,22 +131,6 @@ os.query.AreaManager.FULL_INCLUSION_STYLE = {
 os.query.AreaManager.FULL_EXCLUSION_STYLE = {
   'stroke': {
     'color': 'rgba(255,0,0,1)',
-    'lineCap': 'square',
-    'width': 2
-  }
-};
-
-
-/**
- * @type {Object}
- * @const
- */
-os.query.AreaManager.HIGHLIGHT_STYLE = {
-  'fill': {
-    'color': 'rgba(0,255,255,0.15)'
-  },
-  'stroke': {
-    'color': 'rgba(0,255,255,1)',
     'lineCap': 'square',
     'width': 2
   }
@@ -287,41 +266,6 @@ os.query.AreaManager.prototype.redraw = function(area) {
 /**
  * @inheritDoc
  */
-os.query.AreaManager.prototype.unhighlight = function(idOrFeature) {
-  if (this.highlightFeature) {
-    os.MapContainer.getInstance().removeFeature(this.highlightFeature);
-    this.highlightFeature = undefined;
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.query.AreaManager.prototype.highlight = function(idOrFeature) {
-  if (this.highlightFeature) {
-    os.MapContainer.getInstance().removeFeature(this.highlightFeature);
-    this.highlightFeature = undefined;
-  }
-
-  var area = this.get(idOrFeature);
-  var map = os.MapContainer.getInstance();
-  if (area && map.containsFeature(area)) {
-    // this is an unfortunate workaround to the Cesium synchronizer not supporting removing/adding fill
-    var geometry = area.getGeometry();
-    if (geometry) {
-      var feature = new ol.Feature(geometry.clone());
-      // do not show a drawing layer node for this feature
-      feature.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
-      this.highlightFeature = map.addFeature(feature, os.query.AreaManager.HIGHLIGHT_STYLE);
-    }
-  }
-};
-
-
-/**
- * @inheritDoc
- */
 os.query.AreaManager.prototype.addInternal = function(feature, opt_bulk) {
   if (feature && !feature.get(os.interpolate.METHOD_FIELD)) {
     var geometry = /** @type {ol.geom.Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD)) ||
@@ -385,6 +329,7 @@ os.query.AreaManager.prototype.toRgbaString = function(color) {
 
 /**
  * Handle Include Color changes.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -399,6 +344,7 @@ os.query.AreaManager.prototype.updateInColor_ = function(event) {
 
 /**
  * Handle Include Width changes.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -412,6 +358,7 @@ os.query.AreaManager.prototype.updateInWidth_ = function(event) {
 
 /**
  * Handle Exclude Color changes.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -426,6 +373,7 @@ os.query.AreaManager.prototype.updateExColor_ = function(event) {
 
 /**
  * Handle Exclude Width changes.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -449,8 +397,8 @@ os.query.AreaManager.prototype.redrawQueryAreas_ = function() {
       var entries = os.query.BaseQueryManager.getInstance().getEntries(null, /** @type {string} */ (area.getId()));
       if (entries && entries.length > 0) {
         var expectedStyle = /** @type {boolean} */ (entries[0]['includeArea']) ?
-            goog.object.unsafeClone(os.query.AreaManager.FULL_INCLUSION_STYLE) :
-            goog.object.unsafeClone(os.query.AreaManager.FULL_EXCLUSION_STYLE);
+          goog.object.unsafeClone(os.query.AreaManager.FULL_INCLUSION_STYLE) :
+          goog.object.unsafeClone(os.query.AreaManager.FULL_EXCLUSION_STYLE);
         area.set(os.style.StyleType.SELECT, expectedStyle);
         os.style.setFeatureStyle(area);
         this.redraw(area);

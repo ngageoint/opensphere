@@ -21,7 +21,7 @@ goog.require('ol.render.canvas.ReplayGroup');
    * @template T
    */
   ol.render.canvas.ReplayGroup.prototype.forEachFeatureAtCoordinate = function(coordinate, resolution, rotation,
-      hitTolerance, skippedFeaturesHash, callback, declutterReplays) {
+    hitTolerance, skippedFeaturesHash, callback, declutterReplays) {
     var val = oldForEachFeatureAtCoordinate.call(this, coordinate, resolution, rotation, hitTolerance,
         skippedFeaturesHash, callback, declutterReplays);
 

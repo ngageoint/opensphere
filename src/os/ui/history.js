@@ -6,6 +6,7 @@ goog.require('os.ui.history.HistoryViewCtrl');
 
 /**
  * The history directive
+ *
  * @return {angular.Directive}
  */
 os.ui.historyDirective = function() {

@@ -13,8 +13,10 @@ goog.require('os.ui.file.csv.AbstractCSVExporter');
 goog.require('plugin.file.csv.ui.csvExportDirective');
 
 
+
 /**
  * The CSV exporter.
+ *
  * @extends {os.ui.file.csv.AbstractCSVExporter.<ol.Feature>}
  * @constructor
  */
@@ -28,6 +30,12 @@ plugin.file.csv.CSVExporter = function() {
    * @private
    */
   this.exportEllipses_ = false;
+
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.alwaysIncludeWkt_ = true;
 };
 goog.inherits(plugin.file.csv.CSVExporter, os.ui.file.csv.AbstractCSVExporter);
 
@@ -51,8 +59,10 @@ plugin.file.csv.CSVExporter.FIELDS = {
 };
 
 
+
 /**
  * Get if ellipses should be exported.
+ *
  * @return {boolean}
  */
 plugin.file.csv.CSVExporter.prototype.getExportEllipses = function() {
@@ -62,6 +72,7 @@ plugin.file.csv.CSVExporter.prototype.getExportEllipses = function() {
 
 /**
  * Set if ellipses should be exported.
+ *
  * @param {boolean} value
  */
 plugin.file.csv.CSVExporter.prototype.setExportEllipses = function(value) {
@@ -71,6 +82,7 @@ plugin.file.csv.CSVExporter.prototype.setExportEllipses = function(value) {
 
 /**
  * Get the geometry for a feature.
+ *
  * @param {ol.Feature} feature The feature
  * @return {ol.geom.GeometryCollection|ol.geom.SimpleGeometry|undefined}
  */
@@ -109,62 +121,12 @@ plugin.file.csv.CSVExporter.prototype.getUI = function() {
 plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
   var result = item == null ? null : {};
 
-  var geom = item ? /** @type {ol.geom.SimpleGeometry|undefined} */ (item.getGeometry()) : null;
-  if (geom != null) {
-    geom = /** @type {ol.geom.SimpleGeometry|undefined} */ (geom.clone().toLonLat());
-
-    try {
-      // only populate these fields for point geometries, which will return an array of numbers. unfortunately we can't
-      // detect a point geometry with instanceof because of external tools
-      var coords = geom.getCoordinates();
-      if (coords && typeof coords[0] === 'number') {
-        result[os.Fields.LAT] = String(coords[1]);
-        result[os.Fields.LON] = String(coords[0]);
-        result[os.Fields.LAT_DDM] = os.geo.toDegreesDecimalMinutes(coords[1], false, false);
-        result[os.Fields.LON_DDM] = os.geo.toDegreesDecimalMinutes(coords[0], true, false);
-        result[os.Fields.LAT_DMS] = os.geo.toSexagesimal(coords[1], false, false);
-        result[os.Fields.LON_DMS] = os.geo.toSexagesimal(coords[0], true, false);
-        result[os.Fields.MGRS] = osasm.toMGRS(coords);
-      }
-    } catch (e) {
-      // didn't have a getCoordinates function... carry on
-    }
-
-    // all geometry fields should at least be on the result to make PapaParse happier
-    if (!(os.Fields.LAT in result)) {
-      result[os.Fields.LAT] = '';
-      result[os.Fields.LON] = '';
-      result[os.Fields.LAT_DDM] = '';
-      result[os.Fields.LON_DDM] = '';
-      result[os.Fields.LAT_DMS] = '';
-      result[os.Fields.LON_DMS] = '';
-      result[os.Fields.MGRS] = '';
-    }
-
-    result[os.Fields.GEOMETRY] = os.ol.wkt.FORMAT.writeFeature(item, {
-      dataProjection: os.proj.EPSG4326,
-      featureProjection: os.map.PROJECTION});
-
-    var time = /** @type {os.time.ITime|undefined} */ (item.get(os.data.RecordField.TIME));
-    if (time) {
-      if (os.instanceOf(time, os.time.TimeRange.NAME)) {
-        // time ranges need to be put into two separate fields so that we can reimport our own exports
-        result[plugin.file.csv.CSVExporter.FIELDS.START_TIME] = time.getStartISOString();
-        result[plugin.file.csv.CSVExporter.FIELDS.END_TIME] = time.getEndISOString();
-      } else {
-        result[os.Fields.TIME] = time.toISOString();
-      }
-    }
-    if (this.exportEllipses_) {
-      result[os.Fields.SEMI_MAJOR] = item.get(os.Fields.SEMI_MAJOR);
-      result[os.Fields.SEMI_MINOR] = item.get(os.Fields.SEMI_MINOR);
-    }
-  }
-
   if (this.fields) {
     for (var i = 0, n = this.fields.length; i < n; i++) {
       var field = this.fields[i];
-      if (!(field in result)) {
+      if (field === os.data.RecordField.TIME) {
+        this.writeTime(item, result);
+      } else if (!(field in result)) {
         var value = item.get(this.fields[i]);
         if (value == null) {
           value = '';
@@ -177,5 +139,82 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
     }
   }
 
+  this.writeGeometry(item, result);
+
   return result;
+};
+
+
+/**
+ * Get whether to always include WKT geometry in the export
+ *
+ * @return {boolean} If true, WKT geometry will always be included in the export
+ */
+plugin.file.csv.CSVExporter.prototype.getAlwaysIncludeWkt = function() {
+  return this.alwaysIncludeWkt_;
+};
+
+
+/**
+ * Set wheather to always include WKT geometry in the export
+ *
+ * @param {boolean} newValue Set to true if WKT geometry should always be included in the export
+ */
+plugin.file.csv.CSVExporter.prototype.setAlwaysIncludeWkt = function(newValue) {
+  this.alwaysIncludeWkt_ = newValue;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.csv.CSVExporter.prototype.supportsTime = function() {
+  return true;
+};
+
+
+/**
+ * Conditionally writes the time field(s) to the result object
+ *
+ * @param {T} item The items
+ * @param {Object.<string, string>} result The Papa item
+ * @protected
+ * @template T
+ */
+plugin.file.csv.CSVExporter.prototype.writeTime = function(item, result) {
+  var time = item ? /** @type {os.time.ITime|undefined} */ (item.get(os.data.RecordField.TIME)) : null;
+  if (time != null) {
+    if (os.instanceOf(time, os.time.TimeRange.NAME)) {
+      // time ranges need to be put into two separate fields so that we can reimport our own exports
+      result[plugin.file.csv.CSVExporter.FIELDS.START_TIME] = time.getStartISOString();
+      result[plugin.file.csv.CSVExporter.FIELDS.END_TIME] = time.getEndISOString();
+    } else {
+      result[os.Fields.TIME] = time.toISOString();
+    }
+  }
+};
+
+
+/**
+ * Conditionally writes the geometry field to the result object
+ *
+ * @param {T} item The items
+ * @param {Object.<string, string>} result The Papa item
+ * @protected
+ * @template T
+ */
+plugin.file.csv.CSVExporter.prototype.writeGeometry = function(item, result) {
+  var geom = item ? /** @type {ol.geom.SimpleGeometry|undefined} */ (item.getGeometry()) : null;
+  if (this.alwaysIncludeWkt_ && geom != null) {
+    geom = /** @type {ol.geom.SimpleGeometry|undefined} */ (geom.clone().toLonLat());
+    result[os.Fields.GEOMETRY] = os.ol.wkt.FORMAT.writeFeature(item, {
+      dataProjection: os.proj.EPSG4326,
+      featureProjection: os.map.PROJECTION
+    });
+
+    if (this.exportEllipses_) {
+      result[os.Fields.SEMI_MAJOR] = item.get(os.Fields.SEMI_MAJOR);
+      result[os.Fields.SEMI_MINOR] = item.get(os.Fields.SEMI_MINOR);
+    }
+  }
 };

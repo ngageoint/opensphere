@@ -8,6 +8,7 @@ goog.require('os.ui.query.cmd.AbstractArea');
 
 /**
  * Command for modifying an area
+ *
  * @param {!ol.Feature} area
  * @param {!ol.geom.Geometry} geometry
  * @implements {os.command.ICommand}

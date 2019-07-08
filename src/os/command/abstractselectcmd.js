@@ -7,6 +7,8 @@ goog.require('os.command.State');
 
 /**
  * Abstract command for performing selections on a source
+ *
+ * @abstract
  * @implements {os.command.ICommand}
  * @extends {os.command.AbstractSource}
  * @param {!string} sourceId
@@ -53,8 +55,10 @@ os.command.AbstractSelect.prototype.execute = function() {
 
 /**
  * Does the selection
+ *
+ * @abstract
  */
-os.command.AbstractSelect.prototype.select = goog.abstractMethod;
+os.command.AbstractSelect.prototype.select = function() {};
 
 
 /**

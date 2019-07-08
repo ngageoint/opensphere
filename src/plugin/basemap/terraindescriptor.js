@@ -7,6 +7,7 @@ goog.require('plugin.basemap');
 
 /**
  * Placeholder descriptor to point users at the new terrain control location.
+ *
  * @extends {os.data.BaseDescriptor}
  * @constructor
  */
@@ -79,6 +80,7 @@ plugin.basemap.TerrainDescriptor.prototype.restore = function(from) {
 
 /**
  * Handle changes to the terrain enabled setting.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */

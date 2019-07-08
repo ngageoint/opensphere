@@ -5,6 +5,7 @@ goog.require('os.data.FileProvider');
 
 /**
  * GPX file provider
+ *
  * @extends {os.data.FileProvider}
  * @constructor
  */

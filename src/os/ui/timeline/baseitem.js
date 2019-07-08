@@ -6,6 +6,8 @@ goog.require('os.ui.timeline.ITimelineItem');
 
 /**
  * Base timeline item
+ *
+ * @abstract
  * @constructor
  * @extends {goog.events.EventTarget}
  * @implements {os.ui.timeline.ITimelineItem}
@@ -91,6 +93,7 @@ os.ui.timeline.BaseItem.prototype.setInteractive = function(value) {
 
 /**
  * Gets the tool tip
+ *
  * @return {?string} The tool tip
  */
 os.ui.timeline.BaseItem.prototype.getToolTip = function() {
@@ -100,6 +103,7 @@ os.ui.timeline.BaseItem.prototype.getToolTip = function() {
 
 /**
  * Set the tool tip
+ *
  * @param {?string} tip
  */
 os.ui.timeline.BaseItem.prototype.setToolTip = function(tip) {
@@ -140,21 +144,24 @@ os.ui.timeline.BaseItem.prototype.setActions = function(value) {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.ui.timeline.BaseItem.prototype.getExtent = goog.abstractMethod;
+os.ui.timeline.BaseItem.prototype.getExtent = function() {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.ui.timeline.BaseItem.prototype.getAvg = goog.abstractMethod;
+os.ui.timeline.BaseItem.prototype.getAvg = function() {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.ui.timeline.BaseItem.prototype.render = goog.abstractMethod;
+os.ui.timeline.BaseItem.prototype.render = function() {};
 
 
 /**

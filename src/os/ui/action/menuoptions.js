@@ -4,6 +4,7 @@ goog.provide('os.ui.action.MenuOptions');
 
 /**
  * Options for defining an item in a menu.
+ *
  * @constructor
  * @param {?string=} opt_menu The sub-menu into which this item will be placed
  *  A simple string, or a dot-delimited string to indicate multiple levels of sub-menu depth.

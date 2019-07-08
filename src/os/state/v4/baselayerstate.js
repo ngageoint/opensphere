@@ -158,6 +158,7 @@ os.state.v4.BaseLayerState.LOGGER_ = goog.log.getLogger('os.state.v4.BaseLayerSt
 
 /**
  * Checks if a layer was loaded from local data
+ *
  * @param {Object.<string, *>} layerOptions The layer options
  * @return {boolean} If the layer contains local data
  * @protected
@@ -170,6 +171,7 @@ os.state.v4.BaseLayerState.prototype.hasLocalData = function(layerOptions) {
 
 /**
  * Checks if a layer was loaded from the file system.
+ *
  * @param {Object.<string, *>} layerOptions The layer options.
  * @return {boolean} If the layer was loaded from the file system.
  * @protected
@@ -182,6 +184,7 @@ os.state.v4.BaseLayerState.prototype.hasFileSystemData = function(layerOptions) 
 
 /**
  * Checks if the provided layer is valid for addition to the state file
+ *
  * @param {os.layer.ILayer} layer The layer
  * @return {boolean} If the layer should be added
  * @protected
@@ -252,6 +255,7 @@ os.state.v4.BaseLayerState.prototype.load = function(obj, id) {
 
 /**
  * returns the layer type
+ *
  * @param {os.layer.ILayer} layer
  * @return {string}
  * @private
@@ -260,7 +264,7 @@ os.state.v4.BaseLayerState.prototype.getLayerType_ = function(layer) {
   if (layer.getLayerOptions()) {
     var type = layer.getLayerOptions()['type'];
     return goog.string.isEmptyOrWhitespace(goog.string.makeSafe(type)) ?
-        '' : /** @type {string} */ (layer.getLayerOptions()['type']);
+      '' : /** @type {string} */ (layer.getLayerOptions()['type']);
   }
   return '';
 };
@@ -268,6 +272,7 @@ os.state.v4.BaseLayerState.prototype.getLayerType_ = function(layer) {
 
 /**
  * returns the layers
+ *
  * @return {!Array<!ol.layer.Layer>}
  */
 os.state.v4.BaseLayerState.prototype.getLayers = function() {
@@ -329,6 +334,7 @@ os.state.v4.BaseLayerState.prototype.saveInternal = function(options, rootObj) {
 /**
  * Converts a {@link os.layer.ILayer} to an XML element
  * Default tag exclusions: locked, featureType, type
+ *
  * @param {os.layer.ILayer} layer The layer
  * @param {os.state.XMLStateOptions} options The save options
  * @param {string|Array.<string>=} opt_exclusions exclude these additional tags from the output.
@@ -610,6 +616,7 @@ os.state.v4.BaseLayerState.prototype.configKeyToXML = function(layerConfig, type
 
 /**
  * Converts an extent to a kml:LatLonBoxType
+ *
  * @param {Array<number>} extents
  * @return {!Element} the extents element
  * @private
@@ -628,6 +635,7 @@ os.state.v4.BaseLayerState.prototype.extentsToXML_ = function(extents) {
 
 /**
  * Transforms an kml:LatLonBoxType element to an extent.
+ *
  * @param {Element} element
  * @return {Array<number>}
  * @private
@@ -644,6 +652,7 @@ os.state.v4.BaseLayerState.prototype.extentsFromXML_ = function(element) {
 
 /**
  * Default handler for unknown layer configuration keys.
+ *
  * @param {string} key The key
  * @param {*} value The value
  * @param {!Element} layerEl The layer element
@@ -706,6 +715,7 @@ os.state.v4.BaseLayerState.prototype.defaultConfigToXML = function(key, value, l
 
 /**
  * Default handler for unknown XML nodes.
+ *
  * @param {string} key The key
  * @param {Element} el The element
  * @return {*} The config value
@@ -762,6 +772,7 @@ os.state.v4.BaseLayerState.prototype.defaultXmlToConfig = function(key, el) {
 
 /**
  * Analyzes all layer options objects in the state file
+ *
  * @param {Array.<Object.<string, *>>} options The array of layer options objects
  * @param {string} id The state file id
  * @protected
@@ -828,6 +839,7 @@ os.state.v4.BaseLayerState.prototype.analyzeOptions = function(options, id) {
 
 /**
  * Converts an XML node into layer options
+ *
  * @param {Element} node The XML element representing the layer
  * @return {Object.<string, *>} The layer options
  * @protected
@@ -897,11 +909,11 @@ os.state.v4.BaseLayerState.prototype.xmlToConfigKey = function(node, child, name
             break;
           case os.state.v4.LayerTag.PT_OPACITY:
             options['opacity'] = goog.string.isNumeric(styleVal) ? Number(styleVal) / 255 :
-                os.style.DEFAULT_ALPHA;
+              os.style.DEFAULT_ALPHA;
             break;
           case os.state.v4.LayerTag.PT_SIZE:
             options['size'] = goog.string.isNumeric(styleVal) ? Number(styleVal) / 2 :
-                os.style.DEFAULT_FEATURE_SIZE;
+              os.style.DEFAULT_FEATURE_SIZE;
             break;
           case os.state.v4.LayerTag.LABEL_COLUMN:
             var column = typeof styleVal === 'string' ? goog.string.trim(styleVal) : '';
@@ -939,8 +951,8 @@ os.state.v4.BaseLayerState.prototype.xmlToConfigKey = function(node, child, name
             // make sure the label size is between allowed values, and use the default value if none specified
             var styleSize = goog.string.isNumeric(styleVal) ? Number(styleVal) : 0;
             var size = styleSize > 0 ?
-                goog.math.clamp(styleSize, os.style.label.MIN_SIZE, os.style.label.MAX_SIZE) :
-                os.style.label.DEFAULT_SIZE;
+              goog.math.clamp(styleSize, os.style.label.MIN_SIZE, os.style.label.MAX_SIZE) :
+              os.style.label.DEFAULT_SIZE;
             options[os.style.StyleField.LABEL_SIZE] = size;
             break;
           default:
@@ -1067,6 +1079,7 @@ os.state.v4.BaseLayerState.prototype.xmlToConfigKey = function(node, child, name
 
 /**
  * Converts the colorModel node to a colorModel options object.
+ *
  * @param {Element} node
  * @return {Object}
  * @private
@@ -1135,6 +1148,7 @@ os.state.v4.BaseLayerState.prototype.colorModeOptionsFromXml_ = function(node) {
 
 /**
  * Returns the colorModel xml node for the color model.
+ *
  * @param {*} colorModel
  * @return {Element}
  * @private
@@ -1172,3 +1186,9 @@ os.state.v4.BaseLayerState.prototype.colorModeOptionsToXml_ = function(colorMode
   }
   return element;
 };
+
+
+/**
+ * @inheritDoc
+ */
+os.state.v4.BaseLayerState.prototype.remove = function(id) {};

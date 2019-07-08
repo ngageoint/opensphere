@@ -177,6 +177,7 @@ os.legend.layerPlugins = [];
 
 /**
  * Register a function that adds layer-relevant items to the legend.
+ *
  * @param {!osx.legend.PluginOptions} options The plugin options.
  */
 os.legend.registerLayerPlugin = function(options) {
@@ -204,6 +205,7 @@ os.legend.registerLayerPlugin = function(options) {
 
 /**
  * Sort legend plugins by descending priority.
+ *
  * @param {!osx.legend.PluginOptions} a First legend plugin.
  * @param {!osx.legend.PluginOptions} b Second legend plugin.
  * @return {number} The sort order.
@@ -216,6 +218,7 @@ os.legend.sortPluginByPriority = function(a, b) {
 
 /**
  * Get legend options from settings.
+ *
  * @return {!osx.legend.LegendOptions}
  */
 os.legend.getOptionsFromSettings = function() {
@@ -232,6 +235,7 @@ os.legend.getOptionsFromSettings = function() {
 
 /**
  * Filter layers that should be drawn in the legend.
+ *
  * @param {!ol.layer.Layer} layer The layer
  * @param {number} idx Index in the layers array
  * @param {!Array<!ol.layer.Layer>} layers The layers array
@@ -239,12 +243,13 @@ os.legend.getOptionsFromSettings = function() {
  */
 os.legend.layerFilter = function(layer, idx, layers) {
   return os.implements(layer, os.legend.ILegendRenderer.ID) &&
-      /** @type {!os.legend.ILegendRenderer} */ (layer).renderLegend !== goog.nullFunction;
+  /** @type {!os.legend.ILegendRenderer} */ (layer).renderLegend !== goog.nullFunction;
 };
 
 
 /**
  * Initialize legend draw options.
+ *
  * @param {!osx.legend.LegendOptions} options
  * @private
  */
@@ -260,6 +265,7 @@ os.legend.initializeOptions_ = function(options) {
 
 /**
  * Draw the legend to a canvas.
+ *
  * @param {HTMLCanvasElement} canvas The canvas
  * @param {number=} opt_maxHeight The maximum height for the canvas
  * @param {number=} opt_maxWidth The maximum height for the canvas
@@ -382,6 +388,7 @@ os.legend.drawToCanvas = function(canvas, opt_maxHeight, opt_maxWidth) {
 
 /**
  * Handle icon image loading.
+ *
  * @this ol.style.Icon
  * @private
  */
@@ -397,6 +404,7 @@ os.legend.onIconChange_ = function() {
 
 /**
  * Draw the header text.
+ *
  * @param {!osx.legend.LegendOptions} options
  * @private
  */
@@ -417,6 +425,7 @@ os.legend.addHeader_ = function(options) {
 
 /**
  * Draw the header text.
+ *
  * @param {!osx.legend.LegendOptions} options
  * @private
  */
@@ -432,6 +441,7 @@ os.legend.addLimitText_ = function(options) {
 
 /**
  * Draw the header text.
+ *
  * @param {!osx.legend.LegendOptions} options
  * @private
  */
@@ -444,6 +454,7 @@ os.legend.addNoItemsText_ = function(options) {
 
 /**
  * Check if we can add more items to the legend.
+ *
  * @param {!osx.legend.LegendOptions} options The legend options.
  * @return {boolean} If another row can be added to the legend.
  */
@@ -454,6 +465,7 @@ os.legend.canDraw = function(options) {
 
 /**
  * Add a tile layer to the legend canvas.
+ *
  * @param {!os.layer.Tile} layer The tile layer.
  * @param {!osx.legend.LegendOptions} options The legend options.
  */
@@ -479,6 +491,7 @@ os.legend.drawTileLayer = function(layer, options) {
 
 /**
  * Queue an item to be rendered in the legend.
+ *
  * @param {!osx.legend.LegendOptions} options
  * @param {ol.Feature=} opt_feature [description]
  * @param {ol.style.Style=} opt_style [description]
@@ -527,6 +540,7 @@ os.legend.queueItem = function(options, opt_feature, opt_style, opt_labelFeature
 
 /**
  * Add a vector layer to the legend canvas.
+ *
  * @param {!os.layer.Vector} layer The vector layer.
  * @param {!osx.legend.LegendOptions} options The legend options.
  */
@@ -548,6 +562,7 @@ os.legend.drawVectorLayer = function(layer, options) {
 
 /**
  * If a vector source should be included in the legend.
+ *
  * @param {!ol.source.Vector} source The vector source.
  * @return {boolean} If the source should be included.
  */
@@ -558,6 +573,7 @@ os.legend.shouldDrawSource = function(source) {
 
 /**
  * Compares two numeric bin labels to sort in numeric order.
+ *
  * @param {string} labelA The first numeric bin label to be compared.
  * @param {string} labelB The second numeric bin label to be compared.
  * @return {number}
@@ -582,6 +598,7 @@ os.legend.numericCompare = function(labelA, labelB) {
 
 /**
  * Queue an item styled by a vector config.
+ *
  * @param {!Object} config
  * @param {!osx.legend.LegendOptions} options
  * @param {string} label The item label
@@ -635,6 +652,7 @@ os.legend.queueVectorConfig = function(config, options, label, offsetX, opt_useD
 
 /**
  * Create a dash geometry to render in the legend.
+ *
  * @param {!ol.Coordinate} center The center of the dash.
  * @param {number} size The size of the dash.
  * @return {ol.geom.Polygon}
@@ -650,6 +668,7 @@ os.legend.createDashGeometry = function(center, size) {
 
 /**
  * Create a tile icon geometry to display in the legend.
+ *
  * @param {!osx.legend.LegendOptions} options
  * @return {!ol.geom.GeometryCollection}
  */
@@ -681,6 +700,7 @@ os.legend.createTileGeometry = function(options) {
 
 /**
  * Creates a style config tailored for rendering to the legend.
+ *
  * @param {!os.source.Vector} source
  * @param {!osx.legend.LegendOptions} options
  * @return {!Object}
@@ -717,6 +737,7 @@ os.legend.getSourceConfig = function(source, options) {
 
 /**
  * Add a label to the legend canvas.
+ *
  * @param {string} text The text to render
  * @param {!osx.legend.LegendOptions} options Draw options
  * @param {string=} opt_font The font to use

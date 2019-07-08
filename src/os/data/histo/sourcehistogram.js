@@ -11,6 +11,7 @@ goog.require('os.data.histo');
 goog.require('os.data.histo.ColorBin');
 goog.require('os.data.histo.ColorMethod');
 goog.require('os.data.histo.ColorModel');
+goog.require('os.data.xf.IGroupable');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.histo.BinMethod');
 goog.require('os.histo.bin');
@@ -27,6 +28,7 @@ goog.require('os.source.PropertyChange');
  * @param {os.source.Vector} source The source for the histogram
  * @param {os.data.histo.SourceHistogram=} opt_parent Parent histogram for cascading
  * @extends {goog.events.EventTarget}
+ * @implements {os.data.xf.IGroupable<ol.Feature>}
  * @constructor
  */
 os.data.histo.SourceHistogram = function(source, opt_parent) {
@@ -38,6 +40,13 @@ os.data.histo.SourceHistogram = function(source, opt_parent) {
    * @private
    */
   this.id_ = os.data.histo.SourceHistogram.ID + os.data.histo.SourceHistogram.nextId++;
+
+  /**
+   * The user-facing name for the histogram.
+   * @type {?string}
+   * @protected
+   */
+  this.name = null;
 
   /**
    * Key for xf dimension with multi key string
@@ -255,6 +264,7 @@ os.data.histo.SourceHistogram.prototype.decrementRefCount = function() {
 
 /**
  * Fires a change event when the histogram changes.
+ *
  * @protected
  */
 os.data.histo.SourceHistogram.prototype.onDataChange = function() {
@@ -274,6 +284,7 @@ os.data.histo.SourceHistogram.prototype.onDataChange = function() {
 
 /**
  * Get the histogram id.
+ *
  * @return {string}
  */
 os.data.histo.SourceHistogram.prototype.getId = function() {
@@ -283,6 +294,7 @@ os.data.histo.SourceHistogram.prototype.getId = function() {
 
 /**
  * Get the 2D histogram id.
+ *
  * @return {string}
  */
 os.data.histo.SourceHistogram.prototype.getMultiId = function() {
@@ -291,7 +303,24 @@ os.data.histo.SourceHistogram.prototype.getMultiId = function() {
 
 
 /**
+ * @inheritDoc
+ */
+os.data.histo.SourceHistogram.prototype.getName = function() {
+  return this.name;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.data.histo.SourceHistogram.prototype.setName = function(value) {
+  this.name = value;
+};
+
+
+/**
  * Get the cascaded values for this histogram.
+ *
  * @return {Array<*>}
  */
 os.data.histo.SourceHistogram.prototype.getCascadeValues = function() {
@@ -301,6 +330,7 @@ os.data.histo.SourceHistogram.prototype.getCascadeValues = function() {
 
 /**
  * Set the cascaded values for this histogram.
+ *
  * @param {Array<*>} value
  */
 os.data.histo.SourceHistogram.prototype.setCascadeValues = function(value) {
@@ -313,6 +343,7 @@ os.data.histo.SourceHistogram.prototype.setCascadeValues = function(value) {
 
 /**
  * Get the parent of this histogram.
+ *
  * @return {os.data.histo.SourceHistogram}
  */
 os.data.histo.SourceHistogram.prototype.getParent = function() {
@@ -322,6 +353,7 @@ os.data.histo.SourceHistogram.prototype.getParent = function() {
 
 /**
  * Set the parent of this histogram.
+ *
  * @param {os.data.histo.SourceHistogram} value
  */
 os.data.histo.SourceHistogram.prototype.setParent = function(value) {
@@ -352,8 +384,7 @@ os.data.histo.SourceHistogram.prototype.setParent = function(value) {
 
 
 /**
- * Get the bin method.
- * @return {os.histo.IBinMethod<ol.Feature>}
+ * @inheritDoc
  */
 os.data.histo.SourceHistogram.prototype.getBinMethod = function() {
   return this.binMethod;
@@ -362,6 +393,7 @@ os.data.histo.SourceHistogram.prototype.getBinMethod = function() {
 
 /**
  * Get the secondary bin method.
+ *
  * @return {os.histo.IBinMethod<ol.Feature>}
  */
 os.data.histo.SourceHistogram.prototype.getSecondaryBinMethod = function() {
@@ -370,9 +402,7 @@ os.data.histo.SourceHistogram.prototype.getSecondaryBinMethod = function() {
 
 
 /**
- * Sets the bin method.
- * @param {os.histo.IBinMethod<ol.Feature>} method
- *
+ * @inheritDoc
  * @export Prevent the compiler from moving the function off the prototype.
  */
 os.data.histo.SourceHistogram.prototype.setBinMethod = function(method) {
@@ -394,6 +424,7 @@ os.data.histo.SourceHistogram.prototype.setBinMethod = function(method) {
 
 /**
  * Sets the secondary bin method.
+ *
  * @param {os.histo.IBinMethod<ol.Feature>} method
  *
  * @export Prevent the compiler from moving the function off the prototype.
@@ -409,6 +440,7 @@ os.data.histo.SourceHistogram.prototype.setSecondaryBinMethod = function(method)
 
     /**
      * Do the binning for each dimension to create a xf key that represents the bins that would contain the item
+     *
      * @param {ol.Feature} item
      * @return {string}
      */
@@ -420,6 +452,7 @@ os.data.histo.SourceHistogram.prototype.setSecondaryBinMethod = function(method)
     /**
      * Warning: returning anything but the xf key may result in unexpected binning as the order in xf for the accessor
      * and this key grouping method must be the same
+     *
      * @param {string} key
      * @return {string}
      */
@@ -441,6 +474,7 @@ os.data.histo.SourceHistogram.prototype.setSecondaryBinMethod = function(method)
 
 /**
  * Re-index data in the time model.
+ *
  * @protected
  */
 os.data.histo.SourceHistogram.prototype.reindex = function() {
@@ -451,7 +485,7 @@ os.data.histo.SourceHistogram.prototype.reindex = function() {
       var valueFn = this.binMethod.getValue.bind(this.binMethod);
       // add dimension that will handle an array of keys
       var isArray = this.binMethod.getBinType() == 'Date' ?
-          os.histo.DateRangeBinType[this.binMethod.getDateBinType()] : false;
+        os.histo.DateRangeBinType[this.binMethod.getDateBinType()] : false;
       isArray = this.binRanges_ ? isArray : false;
       this.timeModel_.addDimension(this.id_, valueFn, isArray);
 
@@ -467,6 +501,7 @@ os.data.histo.SourceHistogram.prototype.reindex = function() {
 
 /**
  * Get the sorting function
+ *
  * @return {?os.histo.bin.SortFn}
  */
 os.data.histo.SourceHistogram.prototype.getSortFn = function() {
@@ -476,6 +511,7 @@ os.data.histo.SourceHistogram.prototype.getSortFn = function() {
 
 /**
  * Set the sorting function
+ *
  * @param {?os.histo.bin.SortFn} sortFn
  */
 os.data.histo.SourceHistogram.prototype.setSortFn = function(sortFn) {
@@ -486,6 +522,7 @@ os.data.histo.SourceHistogram.prototype.setSortFn = function(sortFn) {
 
 /**
  * Get the filters to apply to parent histogram dimensions.
+ *
  * @return {(Object<string, function(*):boolean>|undefined)}
  * @protected
  */
@@ -516,6 +553,7 @@ os.data.histo.SourceHistogram.prototype.getParentFilters = function() {
 
 /**
  * Get the results
+ *
  * @return {!Array<!os.data.histo.ColorBin>}
  *
  * @export Prevent the compiler from moving the function off the prototype.
@@ -536,6 +574,7 @@ os.data.histo.SourceHistogram.prototype.updateResults = function() {
       this.source.getFilteredFeatures();
     }
 
+    var tempFilters = {};
     var filters = this.getParentFilters();
     if (filters) {
       for (var id in filters) {
@@ -549,9 +588,9 @@ os.data.histo.SourceHistogram.prototype.updateResults = function() {
       }
     }
 
-    // clear the filters to get all of the data
+    // clear the filters to get all of the data, reapply them a little farther down
     if (this.forceAllData_ == true) {
-      this.timeModel_.clearAllFilters();
+      tempFilters = this.timeModel_.clearAllFilters();
     }
 
     if (this.secondaryBinMethod) {
@@ -564,9 +603,9 @@ os.data.histo.SourceHistogram.prototype.updateResults = function() {
           this.reduceRemove.bind(this), this.reduceInit.bind(this)));
     }
 
-    // reapply the time ranges
+    // reapply the filters
     if (this.source && this.forceAllData_ == true) {
-      this.source.getFilteredFeatures();
+      this.timeModel_.applyFilters(tempFilters);
     }
 
     if (filters) {
@@ -619,6 +658,7 @@ os.data.histo.SourceHistogram.prototype.map = function(item, i, arr) {
 
 /**
  * Set the data color method on the source.
+ *
  * @param {os.data.histo.ColorMethod} value
  * @param {Array<!os.data.histo.ColorBin>=} opt_bins The bins to color, for manual color
  * @param {string=} opt_color The manual color
@@ -654,6 +694,7 @@ os.data.histo.SourceHistogram.prototype.setColorMethod = function(value, opt_bin
 
 /**
  * Get the source for this histogram.
+ *
  * @return {os.source.Vector}
  */
 os.data.histo.SourceHistogram.prototype.getSource = function() {
@@ -663,6 +704,7 @@ os.data.histo.SourceHistogram.prototype.getSource = function() {
 
 /**
  * Handles change events on the source
+ *
  * @param {os.events.PropertyChangeEvent} e
  * @private
  */
@@ -688,6 +730,7 @@ os.data.histo.SourceHistogram.prototype.onSourceChange_ = function(e) {
 
 /**
  * Triggers an update of the data.
+ *
  * @param {number=} opt_delay Delay in milliseconds, to override the default value
  * @protected
  */
@@ -700,6 +743,7 @@ os.data.histo.SourceHistogram.prototype.update = function(opt_delay) {
 
 /**
  * Updates and colors the data in the histogram.
+ *
  * @param {goog.events.Event=} opt_e
  * @protected
  */
@@ -709,12 +753,7 @@ os.data.histo.SourceHistogram.prototype.onUpdate = function(opt_e) {
 
 
 /**
- * This runs when an item is added to a group
- * @param {!os.data.histo.ColorBin} bin
- * @param {!ol.Feature} item
- * @return {!os.data.histo.ColorBin}
- * @protected
- *
+ * @inheritDoc
  * @suppress {checkTypes} To allow [] access on features.
  */
 os.data.histo.SourceHistogram.prototype.reduceAdd = function(bin, item) {
@@ -726,12 +765,7 @@ os.data.histo.SourceHistogram.prototype.reduceAdd = function(bin, item) {
 
 
 /**
- * This runs when an item is removed from a group
- * @param {!os.data.histo.ColorBin} bin
- * @param {!ol.Feature} item
- * @return {!os.data.histo.ColorBin}
- * @protected
- *
+ * @inheritDoc
  * @suppress {checkTypes} To allow [] access on features.
  */
 os.data.histo.SourceHistogram.prototype.reduceRemove = function(bin, item) {
@@ -743,9 +777,7 @@ os.data.histo.SourceHistogram.prototype.reduceRemove = function(bin, item) {
 
 
 /**
- * Creates a new bin for a group
- * @return {!os.data.histo.ColorBin}
- * @protected
+ * @inheritDoc
  */
 os.data.histo.SourceHistogram.prototype.reduceInit = function() {
   var bin = new os.data.histo.ColorBin(this.source.getColor());

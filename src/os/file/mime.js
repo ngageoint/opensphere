@@ -52,10 +52,27 @@ os.file.mime.root_ = {
  * @return {boolean} True if successful, false otherwise
  */
 os.file.mime.register = function(mimeType, detectFunc, opt_priority, opt_parentType) {
+  var msg;
+  if (!mimeType) {
+    msg = 'Cannot register an undefined type!';
+    goog.log.error(os.file.mime.LOGGER_, msg);
+    console.error(msg);
+    return false;
+  }
+
+  if (!detectFunc) {
+    msg = 'Cannot register an undefined detect function!';
+    goog.log.error(os.file.mime.LOGGER_, msg);
+    console.error(msg);
+    return false;
+  }
+
   var parent = opt_parentType ? os.file.mime.find_(opt_parentType) : os.file.mime.root_;
 
   if (!parent) {
-    goog.log.error(os.file.mime.LOGGER_, 'The parent type "' + opt_parentType + '" could not be found.');
+    msg = 'The parent type "' + opt_parentType + '" could not be found.';
+    goog.log.error(os.file.mime.LOGGER_, msg);
+    console.error(msg);
     return false;
   }
 
@@ -87,6 +104,7 @@ os.file.mime.register = function(mimeType, detectFunc, opt_priority, opt_parentT
 
 /**
  * Sort ascending
+ *
  * @param {os.file.mime.Node} a
  * @param {os.file.mime.Node} b
  * @return {number} per typical compare functions
@@ -156,8 +174,8 @@ os.file.mime.detect = function(buffer, file, opt_node, opt_context) {
                 return val ? val : os.file.mime.detect(buffer, file, n, opt_context);
               });
             }, goog.Promise.resolve()).then(function(val) {
-              return val ? val : opt_node.type;
-            });
+          return val ? val : opt_node.type;
+        });
       }
 
       return opt_node.type;

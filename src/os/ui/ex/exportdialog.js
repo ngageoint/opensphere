@@ -19,6 +19,7 @@ goog.require('os.ui.window');
 
 /**
  * The export directive
+ *
  * @return {angular.Directive}
  */
 os.ui.ex.ExportDirective = function() {
@@ -37,6 +38,7 @@ os.ui.Module.directive('export', [os.ui.ex.ExportDirective]);
 
 /**
  * Controller function for the export directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -55,6 +57,12 @@ os.ui.ex.ExportCtrl = function($scope, $element, $compile) {
    * @type {boolean}
    */
   $scope['allowMultiple'] = false;
+
+  /**
+   * If time is allowed by the export method.
+   * @type {boolean}
+   */
+  $scope['allowTime'] = false;
 
   /**
    * If label export is supported by the export method.
@@ -86,8 +94,8 @@ goog.inherits(os.ui.ex.ExportCtrl, os.ui.file.ExportDialogCtrl);
  */
 os.ui.ex.ExportCtrl.prototype.getCustomOptions = function() {
   return '<h5 class="mt-3 text-center">Sources to Export</h5>' +
-      '<exportoptions init-sources="initSources" allow-multiple="allowMultiple" show-labels="showLabels">' +
-      '</exportoptions>';
+      '<exportoptions init-sources="initSources" allow-multiple="allowMultiple" show-labels="showLabels"' +
+      ' allow-time="allowTime"></exportoptions>';
 };
 
 
@@ -100,12 +108,14 @@ os.ui.ex.ExportCtrl.prototype.onExporterChange = function(opt_new, opt_old) {
   if (opt_new) {
     this.scope['allowMultiple'] = opt_new.supportsMultiple();
     this.scope['showLabels'] = opt_new.supportsLabelExport();
+    this.scope['allowTime'] = opt_new.supportsTime();
   }
 };
 
 
 /**
  * Handle changes to the export options.
+ *
  * @param {angular.Scope.Event} event The change event
  * @param {Array<!ol.Feature>} items The features to export
  * @param {Array<!os.source.Vector>} sources The sources to export
@@ -125,7 +135,7 @@ os.ui.ex.ExportCtrl.prototype.onExportOptionsChange_ = function(event, items, so
   // update the export columns
   if (sources) {
     for (var i = 0; i < sources.length; i++) {
-      var sourceFields = os.source.getExportFields(sources[i]);
+      var sourceFields = os.source.getExportFields(sources[i], false, this.scope['allowTime']);
       if (sourceFields) {
         for (var j = 0; j < sourceFields.length; j++) {
           if (!ol.array.includes(this.options.fields, sourceFields[j])) {
@@ -140,6 +150,7 @@ os.ui.ex.ExportCtrl.prototype.onExportOptionsChange_ = function(event, items, so
 
 /**
  * Starts the export process for the provided sources.
+ *
  * @param {Array<!os.source.Vector>=} opt_sources The sources.
  */
 os.ui.ex.startExport = function(opt_sources) {

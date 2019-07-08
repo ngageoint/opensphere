@@ -31,6 +31,7 @@ goog.inherits(os.config.ProjectionSettings, os.ui.config.SettingPlugin);
 
 /**
  * The projection settings UI directive
+ *
  * @return {angular.Directive}
  */
 os.config.projectionSettingsDirective = function() {
@@ -53,6 +54,7 @@ os.ui.Module.directive('projectionsettings', [os.config.projectionSettingsDirect
 
 /**
  * Controller for unit settings
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -122,6 +124,7 @@ os.config.ProjectionSettingsCtrl.prototype.onProjectionChange_ = function() {
 
 /**
  * Applies the projection change
+ *
  * @export
  */
 os.config.ProjectionSettingsCtrl.prototype.apply = function() {

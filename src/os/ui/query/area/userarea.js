@@ -59,6 +59,7 @@ os.ui.query.area.AreaTypeDetails = {
 
 /**
  * Directive to enter a user-defined area.
+ *
  * @return {angular.Directive}
  */
 os.ui.query.area.userAreaDirective = function() {
@@ -81,6 +82,7 @@ os.ui.Module.directive('userarea', [os.ui.query.area.userAreaDirective]);
 
 /**
  * Controller for the userarea directive.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @param {!angular.$timeout} $timeout The Angular $timeout service.
@@ -317,6 +319,7 @@ os.ui.query.area.UserAreaCtrl.prototype.disposeInternal = function() {
 
 /**
  * Fire the cancel callback and close the window.
+ *
  * @export
  */
 os.ui.query.area.UserAreaCtrl.prototype.cancel = function() {
@@ -330,6 +333,7 @@ os.ui.query.area.UserAreaCtrl.prototype.cancel = function() {
 
 /**
  * Fire the confirmation callback and close the window.
+ *
  * @export
  */
 os.ui.query.area.UserAreaCtrl.prototype.confirm = function() {
@@ -360,6 +364,7 @@ os.ui.query.area.UserAreaCtrl.prototype.confirm = function() {
 
 /**
  * Close the window.
+ *
  * @protected
  */
 os.ui.query.area.UserAreaCtrl.prototype.close = function() {
@@ -371,6 +376,7 @@ os.ui.query.area.UserAreaCtrl.prototype.close = function() {
 
 /**
  * Handles key events
+ *
  * @param {goog.events.KeyEvent} event
  * @protected
  */
@@ -383,6 +389,7 @@ os.ui.query.area.UserAreaCtrl.prototype.handleKeyEvent = function(event) {
 
 /**
  * Get the user-facing name for an area type.
+ *
  * @param {string} type The area type.
  * @return {string} The user-facing name for the area type.
  * @export
@@ -399,6 +406,7 @@ os.ui.query.area.UserAreaCtrl.prototype.getAreaTypeName = function(type) {
 
 /**
  * Get the user-facing name for an area type.
+ *
  * @param {string} type The area type.
  * @return {string} The user-facing name for the area type.
  * @export
@@ -415,6 +423,7 @@ os.ui.query.area.UserAreaCtrl.prototype.getAreaTypeIcon = function(type) {
 
 /**
  * Get the user-facing tooltip for an area type.
+ *
  * @param {string} type The area type.
  * @return {string} The user-facing tooltip for the area type.
  * @export
@@ -431,6 +440,7 @@ os.ui.query.area.UserAreaCtrl.prototype.getAreaTypeTooltip = function(type) {
 
 /**
  * Set the current area for the form.
+ *
  * @param {ol.Feature|undefined} area The area.
  * @protected
  */
@@ -453,6 +463,7 @@ os.ui.query.area.UserAreaCtrl.prototype.setArea = function(area) {
 
 /**
  * Update the name on the area.
+ *
  * @export
  */
 os.ui.query.area.UserAreaCtrl.prototype.onLonFirstChange = function() {
@@ -463,6 +474,7 @@ os.ui.query.area.UserAreaCtrl.prototype.onLonFirstChange = function() {
 
 /**
  * Update the area from the form.
+ *
  * @export
  */
 os.ui.query.area.UserAreaCtrl.prototype.updateArea = function() {
@@ -474,6 +486,7 @@ os.ui.query.area.UserAreaCtrl.prototype.updateArea = function() {
 
 /**
  * Update the area from the form.
+ *
  * @protected
  */
 os.ui.query.area.UserAreaCtrl.prototype.onUpdateDelay = function() {
@@ -520,6 +533,7 @@ os.ui.query.area.UserAreaCtrl.prototype.onUpdateDelay = function() {
 
 /**
  * Create an extend from bounding box coordinates.
+ *
  * @return {Array<number>|undefined}
  * @protected
  */
@@ -541,6 +555,7 @@ os.ui.query.area.UserAreaCtrl.prototype.getExtent = function() {
 
 /**
  * Update the geometry from bounding box fields.
+ *
  * @return {ol.geom.Geometry|undefined}
  * @protected
  */
@@ -562,6 +577,7 @@ os.ui.query.area.UserAreaCtrl.prototype.getBbox = function() {
 
 /**
  * Update the geometry from circle fields.
+ *
  * @return {ol.geom.Geometry|undefined}
  * @protected
  */
@@ -575,6 +591,7 @@ os.ui.query.area.UserAreaCtrl.prototype.getCircle = function() {
 
 /**
  * Update the geometry from polygon fields.
+ *
  * @return {ol.geom.Geometry|undefined}
  * @protected
  */
@@ -635,6 +652,7 @@ os.ui.query.area.UserAreaCtrl.prototype.getPolygon = function() {
 /**
  * Convert a coordinate to fixed decimal notation and strip trailing 0's. This prevents exponential notation, which
  * will break the position parser.
+ *
  * @param {number} coord The coordinate.
  * @return {string} The coordinate, for display in the UI.
  * @protected
@@ -646,6 +664,7 @@ os.ui.query.area.UserAreaCtrl.prototype.toFixed = function(coord) {
 
 /**
  * Open a UI to get a user-defined area.
+ *
  * @param {ol.Feature=} opt_area The area.
  * @param {Array<string>=} opt_areaTypes The allowed area types.
  * @param {boolean=} opt_modal If the window should be modal.

@@ -8,6 +8,7 @@ goog.require('os.im.mapping.MappingRegistry');
 
 /**
  * Used to rename a field.
+ *
  * @extends {os.im.mapping.AbstractMapping.<T>}
  * @constructor
  * @template T

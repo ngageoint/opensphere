@@ -8,6 +8,7 @@ goog.require('os.ui.historyDirective');
 
 /**
  * The alert button directive
+ *
  * @return {angular.Directive}
  */
 os.ui.history.historyButtonDirective = function() {
@@ -34,6 +35,7 @@ os.ui.Module.directive('historyButton', [os.ui.history.historyButtonDirective]);
 
 /**
  * Controller function for the nav-top directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element The element
  * @extends {os.ui.MenuButtonCtrl}

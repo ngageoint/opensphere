@@ -28,6 +28,7 @@ os.ui.layer.REFRESH_DURATIONS = [
 
 /**
  * Get the label column for the layer
+ *
  * @param {os.layer.ILayer} layer
  * @return {Array<os.style.label.LabelConfig>}
  */
@@ -39,6 +40,7 @@ os.ui.layer.getColumn = function(layer) {
 
 /**
  * Get if labels should be shown on the layer
+ *
  * @param {os.layer.ILayer} layer
  * @return {string}
  */
@@ -50,6 +52,7 @@ os.ui.layer.getShowLabel = function(layer) {
 
 /**
  * Get the label color for the layer.
+ *
  * @param {os.layer.ILayer} layer
  * @return {string}
  */
@@ -61,6 +64,7 @@ os.ui.layer.getLabelColor = function(layer) {
 
 /**
  * Get the label size for the layer.
+ *
  * @param {os.layer.ILayer} layer
  * @return {string}
  */
@@ -72,6 +76,7 @@ os.ui.layer.getLabelSize = function(layer) {
 
 /**
  * Get the available columns for the layer
+ *
  * @param {os.layer.ILayer} layer
  * @return {Array<os.data.ColumnDefinition>}
  */
@@ -86,13 +91,12 @@ os.ui.layer.getColumns = function(layer) {
 
 /**
  * Get the available columns for the source
+ *
  * @param {os.source.Vector} source
  * @return {Array<os.data.ColumnDefinition>}
  */
 os.ui.layer.getColumnsFromSource = function(source) {
-  var columns = source.getColumns().slice();
-  columns.sort(os.ui.slick.column.nameCompare);
-  return columns;
+  return source ? source.getColumns().sort(os.ui.slick.column.nameCompare) : [];
 };
 
 
@@ -149,6 +153,7 @@ os.ui.layer.setColorize = function(layer, value) {
 
 /**
  * Get the unique ID column for a layer
+ *
  * @param {os.layer.ILayer} layer
  * @return {os.data.ColumnDefinition}
  */

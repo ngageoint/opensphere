@@ -14,6 +14,7 @@ goog.require('os.layer.LayerGroup');
 
 /**
  * Base controller for a layer node UI.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {goog.Disposable}
@@ -91,6 +92,7 @@ os.ui.layer.AbstractLayerUICtrl.prototype.disposeInternal = function() {
 
 /**
  * Gets a value
+ *
  * @param {function(os.layer.ILayer):?} callback
  * @param {?=} opt_default
  * @return {?}
@@ -114,6 +116,7 @@ os.ui.layer.AbstractLayerUICtrl.prototype.getValue = function(callback, opt_defa
 
 /**
  * Creates a command to run on each layer node
+ *
  * @param {function(os.layer.ILayer):os.command.ICommand} commandFunction
  */
 os.ui.layer.AbstractLayerUICtrl.prototype.createCommand = function(commandFunction) {
@@ -148,6 +151,7 @@ os.ui.layer.AbstractLayerUICtrl.prototype.createCommand = function(commandFuncti
 
 /**
  * Get the layer nodes from the list of UI items.
+ *
  * @return {!Array<!os.data.LayerNode>}
  * @protected
  */
@@ -178,6 +182,7 @@ os.ui.layer.AbstractLayerUICtrl.prototype.getLayerNodes = function() {
 
 /**
  * Initializes UI values from the layer.
+ *
  * @protected
  */
 os.ui.layer.AbstractLayerUICtrl.prototype.initUI = function() {
@@ -188,6 +193,7 @@ os.ui.layer.AbstractLayerUICtrl.prototype.initUI = function() {
 
 /**
  * Request UI initialization after a brief delay.
+ *
  * @protected
  */
 os.ui.layer.AbstractLayerUICtrl.prototype.refreshUI = function() {
@@ -199,6 +205,7 @@ os.ui.layer.AbstractLayerUICtrl.prototype.refreshUI = function() {
 
 /**
  * Initializes UI values from the layer.
+ *
  * @private
  */
 os.ui.layer.AbstractLayerUICtrl.prototype.onInitDelay_ = function() {
@@ -210,6 +217,7 @@ os.ui.layer.AbstractLayerUICtrl.prototype.onInitDelay_ = function() {
 
 /**
  * Handles updates to the items array.
+ *
  * @param {Array<!os.data.LayerNode>} newVal The new items value.
  * @param {Array<!os.data.LayerNode>} oldVal The old items value.
  * @protected
@@ -239,6 +247,7 @@ os.ui.layer.AbstractLayerUICtrl.prototype.onItemsChange = function(newVal, oldVa
 
 /**
  * Handles layer property change events.
+ *
  * @param {os.events.PropertyChangeEvent|ol.Object.Event} event
  * @protected
  */
@@ -259,6 +268,7 @@ os.ui.layer.AbstractLayerUICtrl.prototype.onLayerPropertyChange = function(event
 
 /**
  * Clear any layer change listeners.
+ *
  * @private
  */
 os.ui.layer.AbstractLayerUICtrl.prototype.removeLayerListeners_ = function() {
@@ -269,6 +279,7 @@ os.ui.layer.AbstractLayerUICtrl.prototype.removeLayerListeners_ = function() {
 
 /**
  * Handle map property changes.
+ *
  * @param {os.events.PropertyChangeEvent} event The change event.
  * @private
  */
@@ -282,6 +293,7 @@ os.ui.layer.AbstractLayerUICtrl.prototype.onMapChange_ = function(event) {
 
 /**
  * Check if an item is a layer node.
+ *
  * @param {*} item The item
  * @return {boolean}
  */

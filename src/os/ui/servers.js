@@ -22,6 +22,7 @@ goog.require('os.ui.window');
 
 /**
  * The servers window directive
+ *
  * @return {angular.Directive}
  */
 os.ui.serversDirective = function() {
@@ -45,6 +46,7 @@ os.ui.Module.directive('servers', [os.ui.serversDirective]);
 
 /**
  * Controller for Servers window
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -76,6 +78,7 @@ os.ui.ServersCtrl.LOGGER_ = goog.log.getLogger('os.ui.ServersCtrl');
 
 /**
  * Cleanup
+ *
  * @private
  */
 os.ui.ServersCtrl.prototype.onDestroy_ = function() {
@@ -104,7 +107,7 @@ os.ui.ServersCtrl.prototype.updateData_ = function() {
   }
 
   var list = /** @type {Array.<os.data.IDataProvider>} */ (
-      os.dataManager.getProviderRoot().getChildren());
+    os.dataManager.getProviderRoot().getChildren());
 
   this.scope_['all'] = true;
   var data = [];
@@ -161,6 +164,7 @@ os.ui.ServersCtrl.prototype.onItemChanged_ = function(event) {
 
 /**
  * Applies the scope
+ *
  * @protected
  */
 os.ui.ServersCtrl.prototype.apply = function() {
@@ -170,6 +174,7 @@ os.ui.ServersCtrl.prototype.apply = function() {
 
 /**
  * Updates the servers from the UI enabled flag
+ *
  * @param {boolean=} opt_prompt
  * @export
  */
@@ -295,6 +300,7 @@ os.ui.ServersCtrl.prototype.checkForActiveDescriptors_ = function(provider, opt_
 
 /**
  * Toggles all servers
+ *
  * @export
  */
 os.ui.ServersCtrl.prototype.toggleAll = function() {
@@ -312,6 +318,7 @@ os.ui.ServersCtrl.prototype.toggleAll = function() {
 
 /**
  * Adds a new server
+ *
  * @export
  */
 os.ui.ServersCtrl.prototype.add = function() {
@@ -324,6 +331,7 @@ os.ui.ServersCtrl.prototype.add = function() {
 
 /**
  * Edits/Views a server
+ *
  * @param {!os.data.IDataProvider} provider
  * @export
  */
@@ -351,6 +359,7 @@ os.ui.ServersCtrl.prototype.edit = function(provider) {
 
 /**
  * Removes a server
+ *
  * @param {!os.data.IDataProvider} provider
  * @param {boolean=} opt_prompt
  * @export
@@ -367,7 +376,10 @@ os.ui.ServersCtrl.prototype.remove = function(provider, opt_prompt) {
       return;
     }
   }
-
+  var descList = os.dataManager.getDescriptors(provider.getId() + os.ui.data.BaseProvider.ID_DELIMITER);
+  for (var i = 0, ii = descList.length; i < ii; i++) {
+    os.dataManager.removeDescriptor(descList[i]);
+  }
   os.settings.delete(['userProviders', provider.getId()]);
 
   os.dataManager.removeProvider(provider.getId());
@@ -377,6 +389,7 @@ os.ui.ServersCtrl.prototype.remove = function(provider, opt_prompt) {
 
 /**
  * Refreshes a server
+ *
  * @param {!os.data.IDataProvider} provider
  * @export
  */

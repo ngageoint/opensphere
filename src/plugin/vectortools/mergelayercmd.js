@@ -17,6 +17,7 @@ goog.require('os.style.StyleManager');
 
 /**
  * Command for merging vector layers
+ *
  * @constructor
  * @implements {os.command.ICommand}
  * @param {!Array<string>} sourceIds The data source IDs to merge
@@ -93,6 +94,7 @@ plugin.vectortools.MergeLayer.prototype.getSources = function() {
 
 /**
  * Checks if the command is ready to execute.
+ *
  * @return {boolean}
  */
 plugin.vectortools.MergeLayer.prototype.canExecute = function() {

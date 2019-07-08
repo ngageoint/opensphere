@@ -6,6 +6,7 @@ goog.require('goog.asserts');
 
 /**
  * Base Cesium terrain provider.
+ *
  * @param {!osx.map.TerrainProviderOptions} options
  * @extends {Cesium.TerrainProvider}
  * @constructor
@@ -231,6 +232,7 @@ Object.defineProperties(plugin.cesium.AbstractTerrainProvider.prototype, {
 
 /**
  * Get the terrain name
+ *
  * @return {string}
  * @protected
  */
@@ -241,6 +243,7 @@ plugin.cesium.AbstractTerrainProvider.prototype.getName = function() {
 
 /**
  * Set the terrain name
+ *
  * @param {string} value
  * @protected
  */
@@ -251,6 +254,7 @@ plugin.cesium.AbstractTerrainProvider.prototype.setName = function(value) {
 
 /**
  * Get the terrain child mask
+ *
  * @param {number} x
  * @param {number} y
  * @param {number} level

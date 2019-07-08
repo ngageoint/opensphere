@@ -4,6 +4,7 @@ goog.provide('plugin.places.ui.placesNodeUIDirective');
 goog.require('goog.events.EventType');
 goog.require('os.ui.Module');
 goog.require('os.ui.node.DefaultLayerNodeUICtrl');
+goog.require('plugin.places');
 
 
 /**
@@ -16,7 +17,7 @@ plugin.places.ui.PlacesNodeUITemplate = '<span ng-if="nodeUi.show()" class="d-fl
       '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace()">' +
         '<i class="fa ' + plugin.places.Icon.PLACEMARK + ' fa-fw c-glyph" title="Create a new place"></i>' +
       '</span>' +
-      '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addAnnotation()">' +
+      '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace(true)">' +
         '<i class="fa ' + plugin.places.Icon.ANNOTATION + ' fa-fw c-glyph" title="Create a new annotation"></i>' +
       '</span>' +
 
@@ -27,6 +28,7 @@ plugin.places.ui.PlacesNodeUITemplate = '<span ng-if="nodeUi.show()" class="d-fl
 
 /**
  * The Places selected/highlighted node UI directive
+ *
  * @return {angular.Directive}
  */
 plugin.places.ui.placesNodeUIDirective = function() {
@@ -49,6 +51,7 @@ os.ui.Module.directive('placesnodeui', [plugin.places.ui.placesNodeUIDirective])
 
 /**
  * Controller for the Places selected/highlighted node UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.node.DefaultLayerNodeUICtrl}
@@ -63,24 +66,7 @@ goog.inherits(plugin.places.ui.PlacesNodeUICtrl, os.ui.node.DefaultLayerNodeUICt
 
 /**
  * Add a new folder.
- * @export
- */
-plugin.places.ui.PlacesNodeUICtrl.prototype.addAnnotation = function() {
-  var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
-  if (node) {
-    var rootNode = plugin.places.getPlacesRoot(node);
-    if (rootNode) {
-      plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.FolderOptions} */ ({
-        'annotation': true,
-        'parent': rootNode
-      }));
-    }
-  }
-};
-
-
-/**
- * Add a new folder.
+ *
  * @export
  */
 plugin.places.ui.PlacesNodeUICtrl.prototype.addFolder = function() {
@@ -98,15 +84,20 @@ plugin.places.ui.PlacesNodeUICtrl.prototype.addFolder = function() {
 
 /**
  * Add a new place.
+ *
+ * @param {boolean=} opt_annotation Whether the place is an annotation.
  * @export
  */
-plugin.places.ui.PlacesNodeUICtrl.prototype.addPlace = function() {
+plugin.places.ui.PlacesNodeUICtrl.prototype.addPlace = function(opt_annotation) {
   var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
   if (node) {
-    var rootNode = plugin.places.getPlacesRoot(node);
+    var rootNode = opt_annotation ?
+      plugin.places.PlacesManager.getInstance().getAnnotationsFolder() : plugin.places.getPlacesRoot(node);
+
     if (rootNode) {
       plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
-        'parent': rootNode
+        'parent': rootNode,
+        'annotation': opt_annotation
       }));
     }
   }
@@ -115,6 +106,7 @@ plugin.places.ui.PlacesNodeUICtrl.prototype.addPlace = function() {
 
 /**
  * If the node can be edited.
+ *
  * @return {boolean}
  * @export
  */

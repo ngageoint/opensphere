@@ -31,6 +31,7 @@ os.MainAppSelector = '.os-app';
 
 /**
  * Whether or not we're in OSX
+ *
  * @return {boolean}
  */
 os.isOSX = function() {
@@ -40,6 +41,7 @@ os.isOSX = function() {
 
 /**
  * Tests if obj is a numeric value.
+ *
  * @param {?} obj
  * @return {boolean}
  */
@@ -53,6 +55,7 @@ os.isNumeric = function(obj) {
 
 /**
  * Return the browser type/version, more browser checks (Android) if desired
+ *
  * @return {string}
  */
 os.browserVersion = function() {
@@ -79,6 +82,7 @@ os.browserVersion = function() {
 
 /**
  * Return the browser type/version, more browser checks (Android) if desired
+ *
  * @return {string}
  */
 os.operatingSystem = function() {
@@ -100,6 +104,7 @@ os.operatingSystem = function() {
 
 /**
  * Debounces the calls of a function by the amount specified in wait.
+ *
  * @param {function(...*)} func The function to call
  * @param {number} wait Wait time in ms
  * @param {boolean=} opt_immediate Whether to call it immediately before starting the cooldown
@@ -127,6 +132,7 @@ os.debounce = function(func, wait, opt_immediate) {
 
 /**
  * Strips off any minor revision portions of a string.  That is, anything after and including a second '.'
+ *
  * @param {?string} version The complete application version - e.g.: "1.0.1.2"
  * @return {!string} The major version portion of the supplied value - e.g.: "1.0".
  *  Will always return `<thing>.<thing>`, inserting '0' where necessary.
@@ -166,6 +172,7 @@ os.getMajorVersion = function(version) {
 /**
  * Get the parent Window, catching exceptions that may occur. This tests for access to the Window object to avoid
  * cross-origin security exceptions that may occur if the application was launched from a webpage on another domain.
+ *
  * @return {!Window}
  */
 os.getParentWindow = function() {
@@ -209,6 +216,7 @@ os.inIframe = function(opt_windowContext) {
 
 /**
  * Checks whether the current window context contains the main app selector.
+ *
  * @return {boolean} If this is the main window.
  */
 os.isMainWindow = function() {
@@ -218,6 +226,7 @@ os.isMainWindow = function() {
 
 /**
  * Opens an HTML popup with the given parameters passed in.
+ *
  * @param {string} title The title for the popup
  * @param {string} htmlBody The body HTML text for the popup
  * @param {string=} opt_bgColor Optional color for the background. Defaults to white

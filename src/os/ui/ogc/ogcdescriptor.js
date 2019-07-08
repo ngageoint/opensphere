@@ -574,7 +574,7 @@ os.ui.ogc.OGCDescriptor.prototype.setUsePost = function(value) {
  * @inheritDoc
  */
 os.ui.ogc.OGCDescriptor.prototype.getUrlKey = function() {
-  return this.wfsUrl_ + '!!' + this.wfsName_;
+  return this.getFilterKey();
 };
 
 
@@ -759,7 +759,7 @@ os.ui.ogc.OGCDescriptor.prototype.isFilterable = function() {
  * @inheritDoc
  */
 os.ui.ogc.OGCDescriptor.prototype.getFilterKey = function() {
-  return this.getUrlKey();
+  return this.wfsUrl_ + '!!' + this.wfsName_;
 };
 
 

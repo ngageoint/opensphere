@@ -63,6 +63,7 @@ os.net.addDefaultHandlers = function() {
 
 /**
  * Check if a crossOrigin value is valid.
+ *
  * @param {*} crossOrigin The value to check
  * @return {boolean} If the value is a valid crossOrigin
  */
@@ -208,6 +209,7 @@ os.net.loadTrustedUris = function() {
 
 /**
  * If content from a URI should be trusted for display in the DOM.
+ *
  * @param {goog.Uri|string|undefined} uri The uri.
  * @return {boolean} If content from the URI should be trusted.
  */
@@ -228,6 +230,7 @@ os.net.isTrustedUri = function(uri) {
 
 /**
  * Adds a trusted URI to the cache (does not save it to settings).
+ *
  * @param {string} uri The uri.
  */
 os.net.addTrustedUri = function(uri) {
@@ -237,6 +240,7 @@ os.net.addTrustedUri = function(uri) {
 
 /**
  * Add a URI to the trust cache and to the user's saved trusted URIs.
+ *
  * @param {goog.Uri|string} uri The uri.
  */
 os.net.registerTrustedUri = function(uri) {
@@ -256,6 +260,7 @@ os.net.registerTrustedUri = function(uri) {
 
 /**
  * If the browser supports sending a beacon in a beforeunload handler.
+ *
  * @return {boolean}
  */
 os.net.supportsBeacon = function() {
@@ -265,6 +270,7 @@ os.net.supportsBeacon = function() {
 
 /**
  * If the browser supports sending a beacon in a beforeunload handler.
+ *
  * @param {string} url The URL to send to
  * @param {ArrayBufferView|Blob|FormData|null|string|undefined} data The data to send
  * @param {string=} opt_contentType The content type

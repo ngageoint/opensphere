@@ -8,6 +8,7 @@ goog.require('os.command.State');
 
 /**
  * Inverts the selection on a source
+ *
  * @implements {os.command.ICommand}
  * @extends {os.command.AbstractSource}
  * @param {!string} sourceId
@@ -41,6 +42,7 @@ os.command.InvertSelect.prototype.execute = function() {
 
 /**
  * Inverts the selection on the source
+ *
  * @private
  */
 os.command.InvertSelect.prototype.invert_ = function() {

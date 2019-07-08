@@ -13,6 +13,7 @@ goog.require('os.parse.IParser');
 
 /**
  * Parses an arc JSON data source
+ *
  * @extends {goog.Disposable}
  * @implements {os.parse.IParser<ol.Feature>}
  * @constructor
@@ -138,6 +139,7 @@ plugin.arc.ArcJSONParser.prototype.parseNext = function() {
 
 /**
  * Parses a point geometry out from an Arc Geometry.
+ *
  * @param {Object} item
  * @return {ol.geom.Point}
  * @private
@@ -150,6 +152,7 @@ plugin.arc.ArcJSONParser.prototype.parsePointGeometry_ = function(item) {
 
 /**
  * Parses a LineString geometry out from an Arc Geometry.
+ *
  * @param {Object} item
  * @return {ol.geom.LineString}
  * @private
@@ -162,6 +165,7 @@ plugin.arc.ArcJSONParser.prototype.parseLineStringGeometry_ = function(item) {
 
 /**
  * Parses a Polygon geometry out from an Arc Geometry.
+ *
  * @param {Object} item
  * @return {ol.geom.Polygon}
  * @private
@@ -174,6 +178,7 @@ plugin.arc.ArcJSONParser.prototype.parsePolygonGeometry_ = function(item) {
 
 /**
  * Parses a MultiPoint geometry out from an Arc Geometry.
+ *
  * @param {Object} item
  * @return {ol.geom.MultiPoint}
  * @private
@@ -186,6 +191,7 @@ plugin.arc.ArcJSONParser.prototype.parseMultiPointGeometry_ = function(item) {
 
 /**
  * Parses a MultiPoint geometry out from an Arc Geometry.
+ *
  * @param {Object} item
  * @return {ol.geom.Polygon}
  * @private

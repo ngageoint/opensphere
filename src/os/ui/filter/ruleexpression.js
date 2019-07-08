@@ -11,6 +11,7 @@ goog.require('os.ui.filter.op.opUISwitchDirective');
 
 /**
  * The rule-expression directive
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.ruleExpressionDirective = function() {
@@ -33,6 +34,7 @@ os.ui.Module.directive('ruleExpression', [os.ui.filter.ruleExpressionDirective])
 
 /**
  * Rule expression object
+ *
  * @extends {os.ui.filter.Expression}
  * @constructor
  */
@@ -87,6 +89,7 @@ os.ui.filter.RuleExpression.prototype.setFilter = function(value) {
 
 /**
  * Controller for the expression directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.filter.ExpressionCtrl}

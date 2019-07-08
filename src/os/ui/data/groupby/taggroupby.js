@@ -8,6 +8,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Groups nodes by tag
+ *
  * @extends {os.data.groupby.BaseGroupBy}
  * @param {boolean=} opt_open Keeps groups open by default
  * @constructor
@@ -46,8 +47,16 @@ os.ui.data.groupby.TagGroupBy.prototype.getGroupIds = function(node) {
   }
 
   if (tags) {
+    var invalid = false;
     for (var i = 0, n = tags.length; i < n; i++) {
-      goog.array.insert(ids, 'a' + tags[i].toUpperCase());
+      if (tags[i]) {
+        goog.array.insert(ids, 'a' + tags[i].toUpperCase());
+      } else {
+        invalid = true;
+      }
+    }
+    if (invalid) {
+      goog.log.fine(this.log, 'Invalid tag set for ' + node.getLabel() + ': \n' + JSON.stringify(tags));
     }
   }
 

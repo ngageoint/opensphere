@@ -8,6 +8,7 @@ goog.require('os.ui.slick.TreeSearch');
 
 /**
  * AbstractGroupByTreeSearch allows you to filter a tree and group the results
+ *
  * @param {!Array.<!os.structs.ITreeNode>} search The original tree to search
  * @param {!string} setAs The field to set on...
  * @param {Object} onObj this object
@@ -23,6 +24,7 @@ goog.inherits(os.ui.slick.AbstractGroupByTreeSearch, os.ui.slick.TreeSearch);
 
 /**
  * Overridden to search with GroupBy
+ *
  * @override
  */
 os.ui.slick.AbstractGroupByTreeSearch.prototype.searchNodes = function(exp, results, nodes) {
@@ -83,6 +85,7 @@ os.ui.slick.AbstractGroupByTreeSearch.prototype.searchNodes = function(exp, resu
 
 /**
  * Override in inheriting class
+ *
  * @return {!Array}
  */
 os.ui.slick.AbstractGroupByTreeSearch.prototype.getSearchItems = function() {
@@ -92,6 +95,7 @@ os.ui.slick.AbstractGroupByTreeSearch.prototype.getSearchItems = function() {
 
 /**
  * Override in inheriting class
+ *
  * @param {Object} item - search item to setup as a node
  * @return {!os.structs.ITreeNode}
  */

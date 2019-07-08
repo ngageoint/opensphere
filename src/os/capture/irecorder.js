@@ -6,6 +6,7 @@ goog.require('goog.events.Listenable');
 
 /**
  * Interface for a class that produces a recording.
+ *
  * @extends {goog.disposable.IDisposable}
  * @extends {goog.events.Listenable}
  * @interface

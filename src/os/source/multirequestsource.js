@@ -15,6 +15,7 @@ goog.require('os.time.TimelineEventType');
 
 /**
  * Source that loads data with multiple {@link os.net.Request}'s.
+ *
  * @param {olx.source.VectorOptions=} opt_options OpenLayers vector source options.
  * @extends {os.source.Vector}
  * @implements {os.source.IImportSource}
@@ -234,6 +235,7 @@ os.source.MultiRequest.prototype.setRequests = function(requests) {
 
 /**
  * Request success handler.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -268,6 +270,7 @@ os.source.MultiRequest.prototype.onRequestComplete_ = function(event) {
 
 /**
  * Request error handler.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -285,6 +288,7 @@ os.source.MultiRequest.prototype.onRequestError_ = function(event) {
 
 /**
  * Import progress handler
+ *
  * @param {goog.events.Event=} opt_event
  * @protected
  */
@@ -297,6 +301,7 @@ os.source.MultiRequest.prototype.onImportProgress = function(opt_event) {
 
 /**
  * Import complete handler.
+ *
  * @param {goog.events.Event=} opt_event
  * @protected
  */
@@ -310,6 +315,7 @@ os.source.MultiRequest.prototype.onImportComplete = function(opt_event) {
 
 /**
  * Import error handler.
+ *
  * @param {goog.events.Event=} opt_event
  * @protected
  */
@@ -324,6 +330,7 @@ os.source.MultiRequest.prototype.onImporterError = function(opt_event) {
 /**
  * Gets a string representing the duration from the last time durationStart_ was set. Resets durationStart_ for
  * subsequent calls in the same request sequence.
+ *
  * @return {string}
  * @protected
  */
@@ -339,6 +346,7 @@ os.source.MultiRequest.prototype.durationString = function() {
 
 /**
  * Gets a string representing the URLs for all source requests.
+ *
  * @param {os.net.Request=} opt_request
  * @return {string}
  * @protected
@@ -368,6 +376,7 @@ os.source.MultiRequest.prototype.urlLogString = function(opt_request) {
 
 /**
  * If requests will load asynchronously with respect to one another, or one at a time.
+ *
  * @return {boolean}
  */
 os.source.MultiRequest.prototype.getLoadAsync = function() {
@@ -377,6 +386,7 @@ os.source.MultiRequest.prototype.getLoadAsync = function() {
 
 /**
  * Set if requests will load asynchronously with respect to one another, or one at a time.
+ *
  * @param {boolean} value
  */
 os.source.MultiRequest.prototype.setLoadAsync = function(value) {

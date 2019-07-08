@@ -127,6 +127,7 @@ plugin.file.kml.KMLSource.prototype.disposeInternal = function() {
 
 /**
  * Listen for screen overlays being toggled off via the X button on the GUI
+ *
  * @param {os.ui.events.UIEvent} event The event
  * @private
  */
@@ -139,6 +140,7 @@ plugin.file.kml.KMLSource.prototype.onToggleUI_ = function(event) {
 
 /**
  * Get a new importer. This is used by network link nodes so they have their own importer.
+ *
  * @return {plugin.file.kml.KMLImporter}
  */
 plugin.file.kml.KMLSource.prototype.createImporter = function() {
@@ -148,6 +150,7 @@ plugin.file.kml.KMLSource.prototype.createImporter = function() {
 
 /**
  * Get the KML tree node for a feature.
+ *
  * @param {ol.Feature} feature The feature.
  * @return {plugin.file.kml.ui.KMLNode} The KML node, or null if not found.
  */
@@ -167,6 +170,7 @@ plugin.file.kml.KMLSource.prototype.getFeatureNode = function(feature) {
 
 /**
  * Get the root KML tree node
+ *
  * @return {plugin.file.kml.ui.KMLNode}
  */
 plugin.file.kml.KMLSource.prototype.getRootNode = function() {
@@ -176,6 +180,7 @@ plugin.file.kml.KMLSource.prototype.getRootNode = function() {
 
 /**
  * Set the root KML tree node
+ *
  * @param {plugin.file.kml.ui.KMLNode} node
  */
 plugin.file.kml.KMLSource.prototype.setRootNode = function(node) {
@@ -214,6 +219,7 @@ plugin.file.kml.KMLSource.prototype.addFeatures = function(features) {
 
 /**
  * Keep track of kml image layers and add then to the map
+ *
  * @param {Array<os.layer.Image>} images
  * @suppress {checkTypes}
  */
@@ -227,6 +233,7 @@ plugin.file.kml.KMLSource.prototype.addImages = function(images) {
 
 /**
  * Keep track of kml screen overlays and add then to the map
+ *
  * @param {Array<string>} overlays
  * @suppress {checkTypes}
  */
@@ -239,6 +246,7 @@ plugin.file.kml.KMLSource.prototype.addOverlays = function(overlays) {
 
 /**
  * Removes image layers in the passed array.
+ *
  * @param {Array<os.layer.Image>} images
  * @param {boolean} removeNode Don't remove the node if it's only a refresh
  * @suppress {checkTypes}
@@ -261,6 +269,7 @@ plugin.file.kml.KMLSource.prototype.removeImages = function(images, removeNode) 
 
 /**
  * Removes all overlays in the passed array.
+ *
  * @param {Array<string>} overlays
  * @param {boolean} removeNode Don't remove the node if it's only a refresh
  * @suppress {checkTypes}
@@ -281,6 +290,7 @@ plugin.file.kml.KMLSource.prototype.removeOverlays = function(overlays, removeNo
 
 /**
  * Clears the whole images array. Faster than removeOverlays due to no calls to ol.array.remove.
+ *
  * @param {boolean} removeNode Whether to remove nodes (false for refresh)
  * @suppress {checkTypes}
  */
@@ -303,6 +313,7 @@ plugin.file.kml.KMLSource.prototype.clearImages = function(removeNode) {
 
 /**
  * Clears the whole overlays array. Faster than removeOverlays due to no calls to ol.array.remove.
+ *
  * @param {boolean} removeNode Whether to remove nodes (false for refresh)
  * @suppress {checkTypes}
  */
@@ -323,6 +334,7 @@ plugin.file.kml.KMLSource.prototype.clearOverlays = function(removeNode) {
 
 /**
  * Adds KML nodes to the source. Any features referenced by the nodes will also be added.
+ *
  * @param {!Array<plugin.file.kml.ui.KMLNode>} nodes The KML nodes to add
  * @param {boolean=} opt_recurse If children should be added recursively
  */
@@ -468,6 +480,7 @@ plugin.file.kml.KMLSource.prototype.removeFeature = function(feature) {
 
 /**
  * Remove the node based on the mapped ID
+ *
  * @param {string} id
  */
 plugin.file.kml.KMLSource.prototype.removeNode = function(id) {
@@ -499,6 +512,7 @@ plugin.file.kml.KMLSource.prototype.removeNode = function(id) {
 /**
  * Clears all descendant features of a tree node, disposing of the nodes unless indicated otherwise. Disable node
  * disposal when refreshing a node (like network links) to allow merging the tree.
+ *
  * @param {!plugin.file.kml.ui.KMLNode} node The root node.
  * @param {boolean=} opt_dispose If feature nodes should be disposed on removal; defaults to false.
  */
@@ -600,6 +614,7 @@ plugin.file.kml.KMLSource.prototype.updateVisibilityFromNodes = function() {
 
 /**
  * Sets the initial file on the source.
+ *
  * @param {?os.file.File} file
  */
 plugin.file.kml.KMLSource.prototype.setFile = function(file) {
@@ -651,6 +666,7 @@ plugin.file.kml.KMLSource.prototype.refresh = function() {
 
 /**
  * KML sources are not lockable.
+ *
  * @inheritDoc
  */
 plugin.file.kml.KMLSource.prototype.isLockable = function() {
@@ -703,6 +719,7 @@ plugin.file.kml.KMLSource.prototype.setRefreshInterval = function(value) {
 
 /**
  * Get the minimum automatic refresh period for the source.
+ *
  * @return {number}
  */
 plugin.file.kml.KMLSource.prototype.getMinRefreshPeriod = function() {
@@ -712,6 +729,7 @@ plugin.file.kml.KMLSource.prototype.getMinRefreshPeriod = function() {
 
 /**
  * Set the minimum automatic refresh period for the source.
+ *
  * @param {number} value
  */
 plugin.file.kml.KMLSource.prototype.setMinRefreshPeriod = function(value) {
@@ -756,6 +774,7 @@ plugin.file.kml.KMLSource.prototype.restore = function(config) {
 
 /**
  * Creates a basic feature overlay used to animate features on the map.
+ *
  * @protected
  * @override
  */
@@ -775,6 +794,7 @@ plugin.file.kml.KMLSource.prototype.createAnimationOverlay = function() {
 
 /**
  * Updates features displayed by the animation overlay if it exists.
+ *
  * @protected
  * @override
  */
@@ -807,6 +827,7 @@ plugin.file.kml.KMLSource.prototype.updateAnimationOverlay = function() {
 
 /**
  * Disposes of the animation overlay and cached features.
+ *
  * @protected
  * @override
  */

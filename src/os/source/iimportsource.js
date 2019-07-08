@@ -3,6 +3,7 @@ goog.provide('os.source.IImportSource');
 
 /**
  * Interface for sources that load data with a {@link os.im.Importer}.
+ *
  * @interface
  */
 os.source.IImportSource = function() {};

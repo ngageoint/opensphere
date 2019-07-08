@@ -43,11 +43,12 @@ ol.geom.Geometry.prototype.getAntiExtent = function(opt_extent) {
 
 
 /**
+ * @abstract
  * @param {ol.Extent} extent
  * @return {ol.Extent}
  * @protected
  */
-ol.geom.Geometry.prototype.computeAntiExtent = goog.abstractMethod;
+ol.geom.Geometry.prototype.computeAntiExtent = function(extent) {};
 
 
 /**
@@ -131,6 +132,7 @@ ol.geom.Geometry.prototype.osTransform = function(opt_projection) {
 
 /**
  * Transforms to EPSG:4326/LatLon
+ *
  * @return {ol.geom.Geometry}
  */
 ol.geom.Geometry.prototype.toLonLat = function() {
@@ -148,6 +150,7 @@ ol.geom.Geometry.prototype.toLonLat = function() {
 (function() {
   /**
    * Openlayers' implementation does not actually clone the underlying geometries
+   *
    * @return {!ol.geom.GeometryCollection} The clone
    * @override
    */
@@ -170,14 +173,15 @@ ol.geom.Geometry.prototype.toLonLat = function() {
 
   classes.forEach(function(cls) {
     if (cls && cls.prototype && cls.prototype.clone) {
-      cls.prototype.cloneSuper_ = cls.prototype.clone;
+      var origClone = cls.prototype.clone;
 
       /**
        * Overridden to clone values in addition to coordinates
+       *
        * @override
        */
       cls.prototype.clone = function() {
-        var geom = this.cloneSuper_();
+        var geom = origClone.call(this);
         os.object.merge(this.values_, geom.values_);
         return geom;
       };

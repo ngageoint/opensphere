@@ -5,25 +5,34 @@
       <div class="d-flex flex-row form-group">
         <label class="col-2 col-form-label text-right u-required">Name</label>
         <div class="col">
-          <input class="form-control" type="text" name="name" ng-model="ctrl.name" ng-change="ctrl.updatePreview()" ng-maxlength="100" required="true"/>
+          <input class="form-control" type="text" name="name" ng-model="ctrl.name" ng-change="ctrl.updatePreview()" required="true"/>
           <validation-message target="featureEditForm.name"></validation-message>
         </div>
       </div>
 
-      <div class="d-flex flex-row form-group">
+      <div class="d-flex flex-row form-group mt-2">
         <label class="col-2 col-form-label text-right">Description</label>
-        <div class="col mt-2">
+        <div class="col">
           <simplemde text="ctrl.description" edit="true" is-required="false" maxlength="4000"></simplemde>
         </div>
       </div>
 
+      <div ng-if="ctrl.customFoldersEnabled" class="d-flex flex-row form-group">
+        <label class="col-2 col-form-label text-right">Folder</label>
+        <div class="col">
+          <select class="custom-select" ng-model="ctrl.folder"
+            ng-options="folder.label for folder in ctrl.folderOptions"
+            ng-change="ctrl.updateFolder()">
+          </select>
+        </div>
+      </div>
 
       <div ng-if="ctrl.pointGeometry">
-        <div class="d-flex flex-row form-group">
+        <div class="d-flex flex-row form-group mt-2">
           <label class="col-2 col-form-label text-right u-required">Position</label>
           <position class="w-100" name="pointGeometry" geom="ctrl.pointGeometry" x-form="featureEditForm" show-label="false" map-support="true"></position>
         </div>
-        <div class="d-flex flex-row form-group">
+        <div class="d-flex flex-row form-group mt-2">
           <label class="col-2 col-form-label text-right">Altitude</label>
           <div class="col-4">
             <select class="custom-select" ng-model="ctrl.altitudeMode" ng-change="ctrl.updatePreview()"
@@ -52,7 +61,7 @@
         </div>
       </div>
 
-      <div class="d-flex flex-row form-group" ng-if="ctrl.timeEditEnabled">
+      <div class="d-flex flex-row form-group mt-2" ng-if="ctrl.timeEditEnabled">
         <label class="col-2 col-form-label text-right">Time</label>
         <div class="col">
           <anydate initialstart="ctrl.startTimeISO" initialend="ctrl.endTimeISO" initialtype="ctrl.dateType" x-disabled="disabled" help="ctrl.timeHelp"></anydate>
@@ -138,6 +147,7 @@
             icon-src="ctrl.iconSrc"
             show-icon="ctrl.showIcon()"
             size="ctrl.size"
+            line-dash="ctrl.lineDash"
             shape="ctrl.shape"
             shapes="ctrl.pointGeometry ? ctrl.shapes : undefined"
             center-shape="ctrl.centerShape"

@@ -8,6 +8,7 @@ goog.require('os.ui.Module');
 
 /**
  * Shows the feature count out of the total for feature layers
+ *
  * @return {angular.Directive}
  */
 os.ui.metrics.metricCompletionDirective = function() {
@@ -31,6 +32,7 @@ os.ui.Module.directive('metriccompletion', [os.ui.metrics.metricCompletionDirect
 
 /**
  * Controller for selected/highlighted node UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -58,6 +60,7 @@ os.ui.metrics.MetricCompletionCtrl = function($scope, $element) {
 
 /**
  * Clean up
+ *
  * @private
  */
 os.ui.metrics.MetricCompletionCtrl.prototype.onDestroy_ = function() {
@@ -93,6 +96,7 @@ os.ui.metrics.MetricCompletionCtrl.prototype.getCompleted = function() {
 
 /**
  * Gets the visited percentage for the node.
+ *
  * @return {number}
  * @private
  */

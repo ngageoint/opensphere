@@ -15,6 +15,7 @@ goog.require('os.time.TimelineEventType');
 
 /**
  * A source designed to import one-off data to a source.
+ *
  * @extends {os.source.Request}
  * @param {olx.source.VectorOptions=} opt_options OpenLayers vector source options.
  * @constructor
@@ -62,6 +63,7 @@ os.source.ImportQueue.prototype.clear = function() {
 
 /**
  * Queue data for import.
+ *
  * @param {!(Object|string)} data
  */
 os.source.ImportQueue.prototype.queueData = function(data) {
@@ -77,6 +79,7 @@ os.source.ImportQueue.prototype.queueData = function(data) {
 
 /**
  * Import the next item in the queue.
+ *
  * @protected
  */
 os.source.ImportQueue.prototype.importNext = function() {

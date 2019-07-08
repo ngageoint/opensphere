@@ -19,6 +19,7 @@ goog.require('os.time.TimelineEventType');
 
 /**
  * Source that loads data with a {@link os.net.Request}.
+ *
  * @param {olx.source.VectorOptions=} opt_options OpenLayers vector source options.
  * @extends {os.source.Vector}
  * @implements {os.source.IImportSource}
@@ -113,6 +114,7 @@ os.source.Request.prototype.disposeInternal = function() {
 
 /**
  * Listens for the max features reached event and stops any pending requests
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -180,6 +182,7 @@ os.source.Request.prototype.setLocked = function(value) {
 
 /**
  * Load and lock, useful when relating layers
+ *
  * @param {boolean} value
  */
 os.source.Request.prototype.setLockAfterQuery = function(value) {
@@ -269,6 +272,7 @@ os.source.Request.prototype.setRequest = function(request) {
 
 /**
  * Request success handler.
+ *
  * @param {goog.events.Event} event
  * @protected
  */
@@ -288,18 +292,21 @@ os.source.Request.prototype.onRequestComplete = function(event) {
 
 /**
  * Request error handler.
+ *
  * @param {goog.events.Event} event
  * @protected
  */
 os.source.Request.prototype.onRequestError = function(event) {
   // there was an error loading the request
-  var msg = 'There was an error loading the data source: ' + this.request.getErrors().join(' ');
+  var error = this.request.getErrors() ? this.request.getErrors().join(' ') : 'unknown error.';
+  var msg = 'There was an error loading the data source: ' + error;
   this.handleError(msg);
 };
 
 
 /**
  * Report an error and stop loading the source.
+ *
  * @param {string} msg The error message
  * @param {Error=} opt_error The error
  * @protected
@@ -313,6 +320,7 @@ os.source.Request.prototype.handleError = function(msg, opt_error) {
 
 /**
  * Import data from the request.
+ *
  * @param {Object|Array|string|Node|Document} data
  * @protected
  */
@@ -331,6 +339,7 @@ os.source.Request.prototype.doImport = function(data) {
 
 /**
  * Import progress handler
+ *
  * @param {goog.events.Event=} opt_event
  * @protected
  */
@@ -343,6 +352,7 @@ os.source.Request.prototype.onImportProgress = function(opt_event) {
 
 /**
  * Import complete handler.
+ *
  * @param {goog.events.Event=} opt_event
  * @protected
  */
@@ -359,6 +369,7 @@ os.source.Request.prototype.onImportComplete = function(opt_event) {
 
 /**
  * Import error handler.
+ *
  * @param {goog.events.Event=} opt_event
  * @protected
  */
@@ -373,6 +384,7 @@ os.source.Request.prototype.onImporterError = function(opt_event) {
 /**
  * Gets a string representing the duration from the last time durationStart was set. Resets durationStart for
  * subsequent calls in the same request sequence.
+ *
  * @return {string}
  * @protected
  */
@@ -388,6 +400,7 @@ os.source.Request.prototype.durationString = function() {
 
 /**
  * Gets a string representing the URL for the source request.
+ *
  * @return {string}
  * @protected
  */

@@ -46,6 +46,7 @@ os.state.v2.BaseFilter.OGC_NS = 'http://www.opengis.net/ogc';
 /**
  * If a layer is tied to a filter, but the filter isnt tied to the layer, duplicate the filter for that layer
  * This was to support state files when filters applied to any layer it could (THIN-7215)
+ *
  * @param {!Element} el
  */
 os.state.v2.BaseFilter.preload = function(el) {
@@ -84,6 +85,7 @@ os.state.v2.BaseFilter.preload = function(el) {
 
 /**
  * Get the layer id for the filter.
+ *
  * @param {!Element} el The element
  * @param {string} stateId The state id
  * @return {string} The layer id
@@ -97,6 +99,7 @@ os.state.v2.BaseFilter.prototype.getLayerId = function(el, stateId) {
 
 /**
  * Convert an XML filter to a FilterEntry
+ *
  * @param {!Element} el The element
  * @return {os.filter.FilterEntry} The filter entry
  * @protected
@@ -201,3 +204,9 @@ os.state.v2.BaseFilter.prototype.processFilters = function(rootObj, opt_sourceId
     }
   }
 };
+
+
+/**
+ * @inheritDoc
+ */
+os.state.v2.BaseFilter.prototype.remove = function(id) {};

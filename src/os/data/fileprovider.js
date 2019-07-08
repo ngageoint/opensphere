@@ -6,6 +6,8 @@ goog.require('os.ui.data.DescriptorProvider');
 
 /**
  * Generic file-based provider
+ *
+ * @abstract
  * @extends {os.ui.data.DescriptorProvider<!T>}
  * @template T
  * @constructor
@@ -35,4 +37,12 @@ os.data.FileProvider.prototype.configure = function(config) {
  */
 os.data.FileProvider.prototype.getToolTip = function() {
   return 'Contains all ' + this.getId().toUpperCase() + ' files that have been imported into the application.';
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.data.FileProvider.prototype.getErrorMessage = function() {
+  return null;
 };

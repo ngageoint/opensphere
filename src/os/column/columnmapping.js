@@ -38,6 +38,7 @@ os.column.ColumnMappingAttr = {
 
 /**
  * Base implementation of a column mapping.
+ *
  * @implements {os.column.IColumnMapping}
  * @extends {goog.events.EventTarget}
  * @constructor
@@ -71,7 +72,7 @@ os.column.ColumnMapping = function() {
 
   /**
    * Array of column models.
-   * @type {Array<os.column.ColumnModel>}
+   * @type {Array<osx.column.ColumnModel>}
    * @private
    */
   this.columns_ = [];
@@ -202,6 +203,7 @@ os.column.ColumnMapping.prototype.getColumn = function(layerKey) {
 
 /**
  * Loads raw XML mapping data
+ *
  * @param {string} xml
  */
 os.column.ColumnMapping.prototype.loadMapping = function(xml) {
@@ -245,6 +247,7 @@ os.column.ColumnMapping.prototype.loadMapping = function(xml) {
 
 /**
  * Writes raw XML mapping data
+ *
  * @return {string}
  */
 os.column.ColumnMapping.prototype.writeMapping = function() {

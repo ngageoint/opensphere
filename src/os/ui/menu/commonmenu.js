@@ -3,6 +3,7 @@ goog.provide('os.ui.menu.common');
 
 /**
  * Get vector source from an action event context.
+ *
  * @param {*} context
  * @return {!Array<!os.source.Vector>}
  */

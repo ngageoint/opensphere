@@ -3,6 +3,7 @@ goog.provide('os.ui.filter.string');
 
 /**
  * Escape a value for use in a filter string and wrap it in double quotes.
+ *
  * @param {*} s The value. If not a string, it will be casted to one.
  * @return {string} A double quoted, escaped copy of {@code s}.
  */
@@ -14,6 +15,7 @@ os.ui.filter.string.quoteString = function(s) {
 
 /**
  * Escape a value for use in a double quoted filter string.
+ *
  * @param {*} s The value. If not a string, it will be casted to one.
  * @return {string} An escaped copy of {@code s}.
  */
@@ -25,6 +27,7 @@ os.ui.filter.string.escapeString = function(s) {
 
 /**
  * Escape a value for use in a filter string RegExp.
+ *
  * @param {*} s The value. If not a string, it will be casted to one.
  * @param {string=} opt_wildcard The wildcard character. Defaults to '*'.
  * @param {string=} opt_singleChar The single wildcard character. Defaults to '.'.

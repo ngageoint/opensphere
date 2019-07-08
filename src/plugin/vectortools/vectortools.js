@@ -90,6 +90,7 @@ plugin.vectortools.getFeatureCloneFunction = function(sourceId) {
 
 /**
  * Creates a new layer and returns it.
+ *
  * @param {(string|Object)=} opt_restoreFromIdOrConfig An optional layerId or config to restore from
  * @return {os.layer.Vector}
  */
@@ -128,6 +129,7 @@ plugin.vectortools.addNewLayer = function(opt_restoreFromIdOrConfig) {
 
 /**
  * Gets a map of applicable column mappings to a set of sourceIds.
+ *
  * @param {!Array<string>} sourceIds The list of source ids
  * @return {!Object<string, !Object<string, string>>} map of sourceIds to columns that should change
  */
@@ -137,8 +139,9 @@ plugin.vectortools.getColumnMappings = function(sourceIds) {
 
   /**
    * Filter mappings to only those which apply to at least two of the sources
+   *
    * @param {number} count
-   * @param {os.column.ColumnModel} col
+   * @param {osx.column.ColumnModel} col
    * @return {number}
    */
   var countValidKeys = function(count, col) {
@@ -147,7 +150,8 @@ plugin.vectortools.getColumnMappings = function(sourceIds) {
 
   /**
    * Filter out column models that reference layers not in filterKeys
-   * @param {os.column.ColumnModel} col
+   *
+   * @param {osx.column.ColumnModel} col
    * @return {boolean}
    */
   var filterColumns = function(col) {
@@ -156,8 +160,9 @@ plugin.vectortools.getColumnMappings = function(sourceIds) {
 
   /**
    * Sort by the layer/source id order we were given
-   * @param {os.column.ColumnModel} a
-   * @param {os.column.ColumnModel} b
+   *
+   * @param {osx.column.ColumnModel} a
+   * @param {osx.column.ColumnModel} b
    * @return {number}
    */
   var sortColumns = function(a, b) {
@@ -168,8 +173,9 @@ plugin.vectortools.getColumnMappings = function(sourceIds) {
 
   /**
    * Replace filterKeys with sourceIds
-   * @param {os.column.ColumnModel} col
-   * @return {os.column.ColumnModel}
+   *
+   * @param {osx.column.ColumnModel} col
+   * @return {osx.column.ColumnModel}
    */
   var replaceKey = function(col) {
     var i = filterKeys.indexOf(col['layer']);
@@ -186,7 +192,7 @@ plugin.vectortools.getColumnMappings = function(sourceIds) {
 
   /**
    * @param {Object<string, Object<string, string>>} map
-   * @param {os.column.ColumnModel} col
+   * @param {osx.column.ColumnModel} col
    * @return {Object<string, Object<string, string>>}
    */
   var reduceMap = function(map, col) {
@@ -234,6 +240,7 @@ plugin.vectortools.mapIdToFilterKey_ = function(id) {
 
 /**
  * Runs a column mapping on a feature.
+ *
  * @param {Object<string, string>} mapping
  * @param {ol.Feature} feature
  */
@@ -255,6 +262,7 @@ plugin.vectortools.runColumnMapping = function(mapping, feature) {
 /**
  * Returns the combined columns between several sources. Accounts for column mappings and columns that just
  * happen to be identical.
+ *
  * @param {!Array<!os.source.Vector>} sources
  * @param {!Object<string, !Object<string, string>>} mappings
  * @return {!Array<!os.data.ColumnDefinition|string>}
@@ -275,7 +283,7 @@ plugin.vectortools.getCombinedColumns = function(sources, mappings) {
       return true;
     };
 
-    return columns.concat(source.getColumns().filter(filter));
+    return columns.concat(source.getColumnsArray().filter(filter));
   }, []).filter(function(column) {
     var field = typeof column === 'string' ? column : column['field'];
 
@@ -297,6 +305,7 @@ plugin.vectortools.getCombinedColumns = function(sources, mappings) {
 
 /**
  * Launches the Merge Layer window.
+ *
  * @param {Array<string>} sourceIds The source/layer IDs to merge
  */
 plugin.vectortools.launchMergeWindow = function(sourceIds) {
@@ -318,6 +327,7 @@ plugin.vectortools.launchMergeWindow = function(sourceIds) {
 
 /**
  * Launches the Join Layer window.
+ *
  * @param {Array<string>} sourceIds The source/layer IDs to join
  */
 plugin.vectortools.launchJoinWindow = function(sourceIds) {

@@ -9,6 +9,7 @@ goog.require('os.ui');
 /**
  * Class for managing route handlers. Handlers can be registered by any part of the application to handle particular
  * key value pairs in the query data of the application.
+ *
  * @constructor
  */
 os.ui.route.RouteManager = function() {
@@ -98,6 +99,7 @@ os.ui.route.RouteManager.prototype.onRouteUpdate = function() {
 /**
  * Register a URL handler. The manager will index it by its handles array and call all handlers
  * that handle a given key when that key is seen.
+ *
  * @param {os.url.AbstractUrlHandler} handler The handler to register.
  */
 os.ui.route.RouteManager.prototype.registerUrlHandler = function(handler) {
@@ -113,6 +115,7 @@ os.ui.route.RouteManager.prototype.registerUrlHandler = function(handler) {
 /**
  * Gets the search object. This prefers to use the Angular location service, but will fall back to
  * {@code goog.Uri.QueryData} if that fails.
+ *
  * @return {?Object} The search object
  *
  * @suppress {accessControls} For convenience. {@code goog.Uri.QueryData} doesn't expose its keymap for some reason.

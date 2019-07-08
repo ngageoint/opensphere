@@ -55,6 +55,7 @@ plugin.file.gml.GMLParser.prototype.cleanup = function() {
 
 /**
  * Parse a limited set of results from the source
+ *
  * @param {Object|null|string} source
  * @param {Array<os.im.mapping.IMapping>=} opt_mappings The set of mappings to apply to parsed features
  * @return {!Array<!ol.Feature>}
@@ -96,6 +97,7 @@ plugin.file.gml.GMLParser.prototype.parsePreview = function(source, opt_mappings
 
 /**
  * Get columns detected in the GML
+ *
  * @return {Array<!os.data.ColumnDefinition>}
  */
 plugin.file.gml.GMLParser.prototype.getColumns = function() {

@@ -6,6 +6,7 @@ goog.require('os.time');
 
 /**
  * Base implementation of a temporal formatter
+ *
  * @implements {os.query.ITemporalFormatter}
  * @constructor
  */
@@ -20,6 +21,7 @@ os.query.TemporalFormatter = function() {
 
 /**
  * Set the start column.
+ *
  * @param {?string} value
  */
 os.query.TemporalFormatter.prototype.setStartColumn = function(value) {
@@ -28,6 +30,7 @@ os.query.TemporalFormatter.prototype.setStartColumn = function(value) {
 
 /**
  * Set the end column.
+ *
  * @param {?string} value
  */
 os.query.TemporalFormatter.prototype.setEndColumn = function(value) {
@@ -36,6 +39,7 @@ os.query.TemporalFormatter.prototype.setEndColumn = function(value) {
 
 /**
  * Sets the date format from a string
+ *
  * @param {?string} value
  */
 os.query.TemporalFormatter.prototype.setDateFormat = function(value) {

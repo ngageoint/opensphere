@@ -20,6 +20,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Tree nodes for layers
+ *
  * @extends {os.ui.slick.SlickTreeNode}
  * @implements {os.data.ISearchable}
  * @implements {os.data.IExtent}
@@ -91,6 +92,7 @@ os.data.LayerNode.prototype.getLayer = function() {
 
 /**
  * Sets the layer
+ *
  * @param {os.layer.ILayer} value
  */
 os.data.LayerNode.prototype.setLayer = function(value) {
@@ -213,6 +215,7 @@ os.data.LayerNode.prototype.formatIcons = function() {
 
 /**
  * Whether or not the layer is loading
+ *
  * @return {boolean}
  * @export
  */
@@ -227,6 +230,7 @@ os.data.LayerNode.prototype.isLoading = function() {
 
 /**
  * Handles changes on the layer
+ *
  * @param {os.events.PropertyChangeEvent} e The event
  * @protected
  */

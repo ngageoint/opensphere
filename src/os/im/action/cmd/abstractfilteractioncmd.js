@@ -8,6 +8,8 @@ goog.require('os.ui.query.cmd.QueryEntries');
 
 /**
  * Abstract command for adding/removing filter actions.
+ *
+ * @abstract
  * @param {!os.im.action.FilterActionEntry} entry The filter action.
  * @param {number=} opt_index The index in the entry list.
  * @param {string=} opt_parentId The parent node ID.
@@ -57,19 +59,22 @@ os.im.action.cmd.AbstractFilterAction = function(entry, opt_index, opt_parentId)
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.im.action.cmd.AbstractFilterAction.prototype.execute = goog.abstractMethod;
+os.im.action.cmd.AbstractFilterAction.prototype.execute = function() {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.im.action.cmd.AbstractFilterAction.prototype.revert = goog.abstractMethod;
+os.im.action.cmd.AbstractFilterAction.prototype.revert = function() {};
 
 
 /**
  * Tests whether or not the command is ready and able to execute.
+ *
  * @return {boolean} True if ready, false otherwise.
  * @protected
  */
@@ -102,6 +107,7 @@ os.im.action.cmd.AbstractFilterAction.prototype.canExecute = function() {
 
 /**
  * Adds the filter action.
+ *
  * @protected
  */
 os.im.action.cmd.AbstractFilterAction.prototype.add = function() {
@@ -113,6 +119,7 @@ os.im.action.cmd.AbstractFilterAction.prototype.add = function() {
 
 /**
  * Removes the filter action.
+ *
  * @protected
  */
 os.im.action.cmd.AbstractFilterAction.prototype.remove = function() {

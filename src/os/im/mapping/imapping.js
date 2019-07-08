@@ -7,6 +7,7 @@ goog.require('os.IPersistable');
  * Represents a mapping. A mapping can map a field to a well-known field (such
  * as Latitude, Longitude, or Time) or it can do something more generic like
  * unit conversions or renaming.
+ *
  * @extends {os.IPersistable}
  * @interface
  * @template T,S

@@ -19,6 +19,7 @@ goog.inherits(os.ui.filter.op.LikeListNumeric, os.ui.filter.op.IsLikeNumeric);
 
 /**
  * Parses trimmed, non-empty values from a comma-separated list.
+ *
  * @param {string|null|undefined} literal The literal.
  * @return {!Array<string>} Parsed non-empty list values.
  * @protected

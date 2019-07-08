@@ -5,6 +5,7 @@ goog.require('os.data.FileProvider');
 
 /**
  * GML file provider
+ *
  * @extends {os.data.FileProvider}
  * @constructor
  */

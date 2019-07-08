@@ -8,6 +8,7 @@ goog.require('goog.string');
 goog.require('ol.array');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.filter.BaseFilterManager');
+goog.require('os.query');
 goog.require('os.query.BaseAreaManager');
 goog.require('os.ui.query');
 goog.require('os.ui.query.ComboNode');
@@ -17,6 +18,7 @@ goog.require('os.ui.query.ComboNode');
 /**
  * The base query manager class. This version of the query manager implements all of the logic for managing query
  * entries as well as connecting to the area and filter managers.
+ *
  * @param {os.query.BaseAreaManager=} opt_areaManager Optional area manager reference. Defaults to the singleton.
  * @param {os.filter.BaseFilterManager=} opt_filterManager Optional filter manager reference. Defaults to the singleton.
  * @extends {goog.events.EventTarget}
@@ -114,7 +116,7 @@ os.query.BaseQueryManager.prototype.load = goog.nullFunction;
  * @return {!Array<!Object<string, string|boolean>>}
  */
 os.query.BaseQueryManager.prototype.getEntries = function(opt_layerId, opt_areaId, opt_filterId, opt_expanded,
-    opt_includeNegations) {
+  opt_includeNegations) {
   var entries = opt_expanded ? this.expandedEntries : this.entries;
   opt_includeNegations = !!opt_includeNegations;
 
@@ -140,6 +142,7 @@ os.query.BaseQueryManager.prototype.getEntries = function(opt_layerId, opt_areaI
 
 /**
  * Ensure new ids are getting updated if they didnt exist before
+ *
  * @param {Array<!Object<string, string|boolean>>} oldEntries
  * @param {Array<!Object<string, string|boolean>>} newEntries
  * @private
@@ -159,6 +162,7 @@ os.query.BaseQueryManager.prototype.addIdsToUpdate_ = function(oldEntries, newEn
 
 /**
  * Updates local expanded collection before eventing and saving.
+ *
  * @private
  */
 os.query.BaseQueryManager.prototype.onUpdateTimer_ = function() {
@@ -172,6 +176,7 @@ os.query.BaseQueryManager.prototype.onUpdateTimer_ = function() {
 
 /**
  * Adds a query entry
+ *
  * @param {string} layerId The layer id
  * @param {string} areaId The area id
  * @param {string} filterId The filter id
@@ -181,7 +186,7 @@ os.query.BaseQueryManager.prototype.onUpdateTimer_ = function() {
  * @param {boolean=} opt_immediate
  */
 os.query.BaseQueryManager.prototype.addEntry = function(layerId, areaId, filterId, opt_includeArea, opt_filterGroup,
-    opt_temp, opt_immediate) {
+  opt_temp, opt_immediate) {
   var current = this.getEntries(layerId, areaId, filterId);
   var add = current.length === 0 || current[0]['includeArea'] !== opt_includeArea ||
       current[0]['filterGroup'] !== opt_filterGroup;
@@ -216,6 +221,7 @@ os.query.BaseQueryManager.prototype.addEntry = function(layerId, areaId, filterI
 /**
  * Whether or not an active, explicit entry exists. Active means that the layer is currently active. Explicit
  * means that the entry does not contain wildcards.
+ *
  * @return {boolean}
  */
 os.query.BaseQueryManager.prototype.hasActiveExplicitEntries = function() {
@@ -237,6 +243,7 @@ os.query.BaseQueryManager.prototype.hasActiveExplicitEntries = function() {
 
 /**
  * Adds a set of query entries
+ *
  * @param {!Array<!Object<string, string|boolean>>} entries
  * @param {boolean=} opt_immediate Whether to apply the update immediately
  * @param {string=} opt_layerHint The layer id to update
@@ -266,6 +273,7 @@ os.query.BaseQueryManager.prototype.addEntries = function(entries, opt_immediate
 
 /**
  * Gets the active entries
+ *
  * @param {boolean=} opt_expanded Whether to get from the original list or expanded list
  * @return {Array<Object<string, string|boolean>>} entries
  */
@@ -308,6 +316,7 @@ os.query.BaseQueryManager.prototype.getActiveEntries = function(opt_expanded) {
 
 /**
  * Removes all matching entries
+ *
  * @param {?string=} opt_layerId
  * @param {?string=} opt_areaId
  * @param {?string=} opt_filterId
@@ -352,6 +361,7 @@ os.query.BaseQueryManager.prototype.removeEntries = function(opt_layerId, opt_ar
 
 /**
  * Removes all entries
+ *
  * @param {!Array<Object<string, string|boolean>>} entries
  */
 os.query.BaseQueryManager.prototype.removeEntriesArr = function(entries) {
@@ -382,6 +392,7 @@ os.query.BaseQueryManager.prototype.removeEntriesArr = function(entries) {
 
 /**
  * Registers a query handler.
+ *
  * @param {!os.ui.query.QueryHandler} handler The handler to register
  * @param {boolean=} opt_immediate Whether to force an immediate update
  */
@@ -414,6 +425,7 @@ os.query.BaseQueryManager.prototype.unregisterHandler = function(idOrHandler) {
 
 /**
  * Gets a handler by its layerId
+ *
  * @param {string} layerId
  * @return {?os.ui.query.QueryHandler}
  */
@@ -429,8 +441,25 @@ os.query.BaseQueryManager.prototype.getHandlerById = function(layerId) {
 
 
 /**
- * @param {!(string|ol.Feature)} areaOrId
- * @return {number} 0 for none, 1 for exclusion, 2 for inclusion, 3 for both
+ * Get the states of areas in the query manager.
+ *
+ * @return {!Object<string, number>}
+ */
+os.query.BaseQueryManager.prototype.getAreaStates = function() {
+  return this.am ? this.am.getAll().reduce(function(result, area, index) {
+    var val = this.hasArea(area);
+    result[val] = result[val] || 0;
+    result[val]++;
+    return result;
+  }.bind(this), {}) : {};
+};
+
+
+/**
+ * If an area is being used in a query entry.
+ *
+ * @param {!(string|ol.Feature)} areaOrId The area feature or idea.
+ * @return {os.query.AreaState} The area usage by query entries.
  */
 os.query.BaseQueryManager.prototype.hasArea = function(areaOrId) {
   var type = typeof areaOrId;
@@ -457,7 +486,9 @@ os.query.BaseQueryManager.prototype.hasArea = function(areaOrId) {
     }
   }
 
-  return incl && excl ? 3 : incl ? 2 : excl ? 1 : 0;
+  return incl && excl ? os.query.AreaState.BOTH :
+    incl ? os.query.AreaState.INCLUSION :
+      excl ? os.query.AreaState.EXCLUSION : os.query.AreaState.NONE;
 };
 
 
@@ -489,6 +520,7 @@ os.query.BaseQueryManager.prototype.hasFilter = function(filterOrId) {
 /**
  * Asks if a filter is an And or an Or grouping for a particular layer. If the filter is in a complex state with
  * respect to areas, it will not account for the "both" case.
+ *
  * @param {!(string|os.filter.FilterEntry)} filterOrId
  * @param {string=} opt_layerId
  * @return {boolean} true for and, false for or
@@ -513,6 +545,7 @@ os.query.BaseQueryManager.prototype.isAnd = function(filterOrId, opt_layerId) {
 
 /**
  * Schedules a refresh for the given id
+ *
  * @param {!string} id
  */
 os.query.BaseQueryManager.prototype.scheduleRefresh = function(id) {
@@ -523,6 +556,7 @@ os.query.BaseQueryManager.prototype.scheduleRefresh = function(id) {
 
 /**
  * Handles refresh
+ *
  * @private
  */
 os.query.BaseQueryManager.prototype.onRefreshTimer_ = function() {
@@ -537,7 +571,7 @@ os.query.BaseQueryManager.prototype.onRefreshTimer_ = function() {
  * @return {boolean} Whether the area is registered as an inclusion or exclusion area
  */
 os.query.BaseQueryManager.prototype.isActive = function(areaOrId) {
-  return this.hasArea(areaOrId) > 0;
+  return this.hasArea(areaOrId) !== os.query.AreaState.NONE;
 };
 
 
@@ -546,7 +580,8 @@ os.query.BaseQueryManager.prototype.isActive = function(areaOrId) {
  * @return {boolean} Whether the area is registered as an inclusion area
  */
 os.query.BaseQueryManager.prototype.isInclusion = function(areaOrId) {
-  return this.hasArea(areaOrId) > 1;
+  var val = this.hasArea(areaOrId);
+  return val === os.query.AreaState.INCLUSION || val === os.query.AreaState.BOTH;
 };
 
 
@@ -555,12 +590,14 @@ os.query.BaseQueryManager.prototype.isInclusion = function(areaOrId) {
  * @return {boolean} Whether the area is registered as an exclusion area
  */
 os.query.BaseQueryManager.prototype.isExclusion = function(areaOrId) {
-  return this.hasArea(areaOrId) % 2 !== 0;
+  var val = this.hasArea(areaOrId);
+  return val === os.query.AreaState.EXCLUSION || val === os.query.AreaState.BOTH;
 };
 
 
 /**
  * Whether or not a particular layer has an inclusion area
+ *
  * @param {!string} layerId
  * @return {boolean}
  */
@@ -583,6 +620,7 @@ os.query.BaseQueryManager.prototype.hasInclusion = function(layerId) {
 
 /**
  * Gets the set of layers
+ *
  * @return {Object<string, string>}
  */
 os.query.BaseQueryManager.prototype.getLayerSet = function() {
@@ -657,6 +695,7 @@ os.query.BaseQueryManager.prototype.onFilterToggle = function(event) {
 
 /**
  * Gets the array of layer ids
+ *
  * @return {!Array<string>}
  */
 os.query.BaseQueryManager.prototype.getLayerIds = function() {
@@ -958,7 +997,7 @@ os.query.BaseQueryManager.sortEntries = function(a, b) {
  * @return {os.ui.query.ComboNode}
  */
 os.query.BaseQueryManager.prototype.getPivotData = function(opt_pivots, opt_pivot, opt_node, opt_flatten, opt_layer,
-    opt_nodeUI) {
+  opt_nodeUI) {
   opt_pivot = opt_pivot !== undefined ? opt_pivot : 0;
   opt_pivots = opt_pivots || ['layer', 'area', 'filter'];
 

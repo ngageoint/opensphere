@@ -21,6 +21,7 @@ goog.require('plugin.cesium.tiles.mime');
 
 /**
  * Provides a WebGL renderer for the map, powered by Cesium.
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */
@@ -37,6 +38,50 @@ goog.inherits(plugin.cesium.Plugin, os.plugin.AbstractPlugin);
  * @const
  */
 plugin.cesium.Plugin.ID = 'cesium';
+
+
+/**
+ * @typedef {{
+ *   id: number,
+ *   csPattern: (number|undefined)
+ * }}
+ */
+plugin.cesium.styleLineDashOption;
+
+
+/**
+ * Line dash configurations for Cesium
+ * Patterns based on 16 bit number to make it look consistent between map engines
+ * @type {!Array<!plugin.cesium.styleLineDashOption>}
+ * @const
+ */
+plugin.cesium.LINE_STYLE_OPTIONS = [
+  {
+    id: 0,
+    csPattern: undefined // []
+  }, {
+    id: 1,
+    csPattern: parseInt('1111111111110000', 2) // [12, 4]
+  }, {
+    id: 2,
+    csPattern: parseInt('1111111100000000', 2) // [8, 8]
+  }, {
+    id: 3,
+    csPattern: parseInt('1111100011111000', 2) // [4, 4, 4, 4]
+  }, {
+    id: 4,
+    csPattern: parseInt('1111100000000000', 2) // [4, 12]
+  }, {
+    id: 5,
+    csPattern: parseInt('1110000011100000', 2) // [2, 6, 2, 6]
+  }, {
+    id: 6,
+    csPattern: parseInt('1111110000111000', 2) // [5, 5, 1, 5]
+  }, {
+    id: 7,
+    csPattern: parseInt('1111111110011100', 2) // [7, 4, 1, 4]
+  }
+];
 
 
 /**

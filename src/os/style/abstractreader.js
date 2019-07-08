@@ -6,6 +6,8 @@ goog.require('os.style.IStyleReader');
 
 /**
  * Base implementation of a style configuration reader.
+ *
+ * @abstract
  * @implements {os.style.IStyleReader<T>}
  * @constructor
  * @template T
@@ -35,9 +37,10 @@ os.style.AbstractReader = function() {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.style.AbstractReader.prototype.getOrCreateStyle = goog.abstractMethod;
+os.style.AbstractReader.prototype.getOrCreateStyle = function(config) {};
 
 
 /**

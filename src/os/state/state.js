@@ -31,6 +31,7 @@ os.state.ID_SEPARATOR = '#';
 
 /**
  * Serializes an element.
+ *
  * @param {Element} el The element
  * @return {string} Serialized element
  */
@@ -65,6 +66,7 @@ os.state.stateToString = function(state) {
 
 /**
  * Compares states by priority.
+ *
  * @param {os.state.IState} a A state
  * @param {os.state.IState} b Another state
  * @return {number} The comparison
@@ -77,6 +79,7 @@ os.state.priorityCompare = function(a, b) {
 
 /**
  * Compares states by title.
+ *
  * @param {os.state.IState} a A state
  * @param {os.state.IState} b Another state
  * @return {number} The comparison

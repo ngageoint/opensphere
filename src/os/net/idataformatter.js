@@ -4,6 +4,7 @@ goog.provide('os.net.IDataFormatter');
 
 /**
  * Data formatters take the parameters (or any other part of) the URI and create the payload for the request.
+ *
  * @interface
  */
 os.net.IDataFormatter = function() {};

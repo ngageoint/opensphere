@@ -15,6 +15,7 @@ goog.require('os.ui.slick.column');
 
 /**
  * Create a column for a data source.
+ *
  * @param {string} field The data field for the column.
  * @param {string=} opt_header Optional header. If not specified, field will be used instead.
  * @param {boolean=} opt_temp Optional flag for temp columns. Defaults to false.
@@ -34,6 +35,7 @@ os.source.column.create = function(field, opt_header, opt_temp) {
 
 /**
  * Map a feature type column to a column definition.
+ *
  * @param {!(os.data.ColumnDefinition|string)} column The column name or definition.
  * @return {!os.data.ColumnDefinition} The column definition.
  */
@@ -44,6 +46,7 @@ os.source.column.mapStringOrDef = function(column) {
 
 /**
  * Add custom formatters to source columns.
+ *
  * @param {!os.data.ColumnDefinition} column The column definition.
  */
 os.source.column.addFormatter = function(column) {
@@ -64,6 +67,7 @@ os.source.column.addFormatter = function(column) {
 
 /**
  * Add application default columns to a vector source.
+ *
  * @param {!os.source.Vector} source The vector source.
  */
 os.source.column.addDefaults = function(source) {
@@ -82,7 +86,7 @@ os.source.column.addDefaults = function(source) {
   var hasSemiMinor = false;
 
   // test for each column type
-  source.getColumns().forEach(function(column) {
+  source.getColumnsArray().forEach(function(column) {
     var name = column['name'];
     if (name) {
       hasID |= goog.string.caseInsensitiveEquals(name, os.Fields.ID);

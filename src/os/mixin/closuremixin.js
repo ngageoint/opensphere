@@ -58,6 +58,7 @@ goog.object.forEach = function(obj, f, opt_obj) {
  * This prevents Array polyfills from being included in the count.
  *
  * Returns the number of key-value pairs in the object map.
+ *
  * @param {Object} obj The object for which to get the number of key-value
  *     pairs.
  * @return {number} The number of key-value pairs in the object map.
@@ -181,6 +182,7 @@ goog.object.unsafeClone = function(obj) {
  * time since we often read these from settings.
  *
  * Removing this will require an alternative to `goog.net.jsloader.safeLoad`.
+ *
  * @suppress {accessControls|const}
  */
 os.mixin.replaceTrustedResourceUrl = function() {

@@ -9,6 +9,7 @@ goog.require('os.tile.ColorableTile');
 /**
  * Extension of the base OL3 Arc tile source. This implements ILoadingSource so that we have a loading spinner
  * in the layers window.
+ *
  * @param {olx.source.TileArcGISRestOptions=} opt_options
  * @implements {os.ol.source.ILoadingSource}
  * @extends {ol.source.TileArcGISRest}
@@ -24,6 +25,7 @@ goog.inherits(plugin.arc.source.ArcTileSource, ol.source.TileArcGISRest);
 /**
  * This resets the params key that is used by the renderer to determine whether it needs to fetch a
  * new tile.
+ *
  * @private
  */
 plugin.arc.source.ArcTileSource.prototype.resetParamsKey_ = function() {

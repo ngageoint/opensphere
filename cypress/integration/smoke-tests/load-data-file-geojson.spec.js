@@ -21,8 +21,15 @@ describe('Geojson import', function() {
         .should('contain', 'smoke-tests/load-data-file-geojson/test-features.geojson Features (291)');
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.MOST_RECENT).click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
+    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
+        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+        .click();
     cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
     cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.GO_TO).click();
+    cy.imageComparison('features loaded');
 
     // Open the timeline and animate the data (view window animates)
     cy.get(os.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
@@ -44,15 +51,5 @@ describe('Geojson import', function() {
         .find(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.FEATURE_COUNT_TEXT_WILDCARD)
         .invoke('text')
         .should('match', new RegExp('\\([0-9]\\d{0,3}\\/' + '291\\)'));
-
-    // Clean up
-    cy.get(os.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
-    cy.get(os.Timeline.PANEL).should('not.exist');
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
-        .should('contain', 'smoke-tests/load-data-file-geojson/test-features.geojson Features (291)');
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.REMOVE_LAYER_BUTTON_WILDCARD).click();
-    cy.get(os.layersDialog.DIALOG).should('not.contain', 'smoke-tests/load-data-file-test-features.geojson Features');
-    cy.get(os.Application.PAGE).type('v');
   });
 });

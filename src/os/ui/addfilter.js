@@ -7,6 +7,7 @@ goog.require('os.ui.query.AddFilterCtrl');
 
 /**
  * The combinator window directive
+ *
  * @return {angular.Directive}
  */
 os.ui.addFilterDirective = function() {
@@ -25,6 +26,7 @@ os.ui.Module.directive('osaddfilter', [os.ui.addFilterDirective]);
 
 /**
  * Controller for combinator window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.query.AddFilterCtrl}

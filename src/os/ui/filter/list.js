@@ -8,6 +8,7 @@ goog.require('os.ui.clipboard');
 
 /**
  * The default list literal directive
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.listDirective = function() {
@@ -27,6 +28,7 @@ os.ui.Module.directive('fbList', [os.ui.filter.listDirective]);
 
 /**
  * The column type list validation
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.colTypeListValidation = function() {
@@ -41,6 +43,7 @@ os.ui.filter.colTypeListValidation = function() {
 
 /**
  * Controller function for the colTypeListValidation directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -74,6 +77,7 @@ os.ui.filter.ColTypeListCtrl = function($scope, $element) {
 
 /**
  * Handle paste event to massage text before placing in the input control.
+ *
  * @param {!jQuery.Event} e
  * @private
  */
@@ -93,6 +97,7 @@ os.ui.filter.ColTypeListCtrl.prototype.onPaste_ = function(e) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.filter.ColTypeListCtrl.prototype.destroy_ = function() {
@@ -104,6 +109,7 @@ os.ui.filter.ColTypeListCtrl.prototype.destroy_ = function() {
 
 /**
  * The link function for list type validation
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {*} $attrs

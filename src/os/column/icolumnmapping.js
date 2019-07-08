@@ -3,20 +3,9 @@ goog.provide('os.column.IColumnMapping');
 goog.require('goog.events.Listenable');
 goog.require('os.IPersistable');
 
-
-/**
- * @typedef {{
- *   column: string,
- *   layer: string,
- *   units: (string|undefined)
- * }}
- */
-os.column.ColumnModel;
-
-
-
 /**
  * Base interface representing a column mapping.
+ *
  * @extends {os.IPersistable}
  * @extends {goog.events.Listenable}
  * @interface
@@ -91,14 +80,14 @@ os.column.IColumnMapping.prototype.addColumn;
 
 /**
  * Removes a column model.
- * @param {os.column.ColumnModel} columnModel
+ * @param {osx.column.ColumnModel} columnModel
  */
 os.column.IColumnMapping.prototype.removeColumn;
 
 
 /**
  * Gets the columns from the mapping.
- * @return {Array<os.column.ColumnModel>}
+ * @return {Array<osx.column.ColumnModel>}
  */
 os.column.IColumnMapping.prototype.getColumns;
 
@@ -106,7 +95,7 @@ os.column.IColumnMapping.prototype.getColumns;
 /**
  * Gets a particular column model for a given layer key.
  * @param {string} layerKey
- * @return {?os.column.ColumnModel}
+ * @return {?osx.column.ColumnModel}
  */
 os.column.IColumnMapping.prototype.getColumn;
 

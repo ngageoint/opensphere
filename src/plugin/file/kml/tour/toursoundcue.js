@@ -8,6 +8,7 @@ goog.require('plugin.file.kml.tour.Wait');
 
 /**
  * Plays an audio file during the tour.
+ *
  * @param {string} href The URL to the audio file.
  * @param {number=} opt_delayedStart Delay before playing the file.
  * @extends {plugin.file.kml.tour.Wait}
@@ -61,6 +62,7 @@ plugin.file.kml.tour.SoundCue.prototype.onWaitComplete = function(opt_resolve, o
 
 /**
  * Play the audio file.
+ *
  * @private
  */
 plugin.file.kml.tour.SoundCue.prototype.playAudio_ = function() {
@@ -79,6 +81,7 @@ plugin.file.kml.tour.SoundCue.prototype.playAudio_ = function() {
 
 /**
  * Handle changes to the global mute setting.
+ *
  * @private
  */
 plugin.file.kml.tour.SoundCue.prototype.updateMute_ = function() {

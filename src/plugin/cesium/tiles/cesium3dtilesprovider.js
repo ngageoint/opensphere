@@ -7,6 +7,7 @@ goog.require('plugin.cesium.tiles');
 
 /**
  * Cesium 3D tiles provider.
+ *
  * @extends {os.data.FileProvider}
  * @constructor
  */

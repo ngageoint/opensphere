@@ -7,6 +7,7 @@ goog.require('os.ui.util.validationMessageDirective');
 
 /**
  * The addcolumnform directive
+ *
  * @return {angular.Directive}
  */
 os.ui.data.addColumnFormDirective = function() {
@@ -34,6 +35,7 @@ os.ui.Module.directive('addcolumnform', [os.ui.data.addColumnFormDirective]);
 
 /**
  * Controller function for the addcolumnform directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.$timeout} $timeout
  * @constructor
@@ -54,6 +56,7 @@ os.ui.data.AddColumnFormCtrl = function($scope, $timeout) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.data.AddColumnFormCtrl.prototype.destroy_ = function() {
@@ -63,6 +66,7 @@ os.ui.data.AddColumnFormCtrl.prototype.destroy_ = function() {
 
 /**
  * Add validators to the model controller.
+ *
  * @private
  */
 os.ui.data.AddColumnFormCtrl.prototype.addValidators_ = function() {
@@ -84,13 +88,14 @@ os.ui.data.AddColumnFormCtrl.prototype.addValidators_ = function() {
 
 /**
  * Checks whether the form is invalid due to duplicate column names.
+ *
  * @param {os.source.ISource} source The data source.
  * @param {string} modelVal
  * @param {string} viewVal
  * @return {boolean}
  */
 os.ui.data.AddColumnFormCtrl.isDuplicate = function(source, modelVal, viewVal) {
-  var columns = source.getColumns();
+  var columns = source.getColumnsArray();
   var value = modelVal || viewVal;
   if (value) {
     for (var i = 0, ii = columns.length; i < ii; i++) {

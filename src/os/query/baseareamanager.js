@@ -25,11 +25,18 @@ goog.require('os.ui.window');
 
 /**
  * Base class for managing areas on the map.
+ *
  * @extends {os.data.CollectionManager<!ol.Feature>}
  * @constructor
  */
 os.query.BaseAreaManager = function() {
   os.query.BaseAreaManager.base(this, 'constructor');
+
+  /**
+   * @type {ol.Feature|undefined}
+   * @protected
+   */
+  this.highlightFeature = undefined;
 
   /**
    * @type {goog.log.Logger}
@@ -111,6 +118,7 @@ os.query.BaseAreaManager.tempId_ = 1;
 
 /**
  * Handles map ready
+ *
  * @private
  */
 os.query.BaseAreaManager.prototype.onMapReady_ = function() {
@@ -134,6 +142,7 @@ os.query.BaseAreaManager.prototype.onMapReady_ = function() {
 
 /**
  * Handles map ready
+ *
  * @private
  */
 os.query.BaseAreaManager.prototype.onMapUnready_ = function() {
@@ -145,6 +154,7 @@ os.query.BaseAreaManager.prototype.onMapUnready_ = function() {
 
 /**
  * Gets the map reference relevant to this area manager.
+ *
  * @return {os.map.IMapContainer}
  */
 os.query.BaseAreaManager.prototype.getMap = function() {
@@ -154,6 +164,7 @@ os.query.BaseAreaManager.prototype.getMap = function() {
 
 /**
  * Sets the map reference relevant to this area manager.
+ *
  * @param {os.map.IMapContainer} map
  */
 os.query.BaseAreaManager.prototype.setMap = function(map) {
@@ -181,6 +192,7 @@ os.query.BaseAreaManager.prototype.getId = function(item) {
 
 /**
  * Add multiple areas to the model in bulk
+ *
  * @param {Array<!ol.Feature>} features
  * @param {boolean=} opt_show
  */
@@ -199,6 +211,7 @@ os.query.BaseAreaManager.prototype.bulkAdd = function(features, opt_show) {
     feature.set('shown', show);
     this.addInternal(feature, true);
   }, this);
+
   this.dispatchEvent(new os.events.PropertyChangeEvent('areas'));
 };
 
@@ -228,6 +241,7 @@ os.query.BaseAreaManager.prototype.add = function(feature) {
   // every incoming item.
   this.dispatchEvent(new os.events.PropertyChangeEvent('add/edit', feature));
   this.saveDelay_.start();
+
   return added;
 };
 
@@ -235,6 +249,7 @@ os.query.BaseAreaManager.prototype.add = function(feature) {
 /**
  * Check if the feature can be used as an area. Returns true if the area is a valid Polygon/MultiPolygon, or if it can
  * be translated into one.
+ *
  * @param {!ol.Feature} feature The feature
  * @return {boolean}
  * @protected
@@ -292,6 +307,7 @@ os.query.BaseAreaManager.prototype.normalizeGeometry = function(feature) {
 
 /**
  * filter the list of features to only include valid areas
+ *
  * @param {Array<ol.Feature>} features
  * @return {Array<ol.Feature>}
  */
@@ -333,7 +349,7 @@ os.query.BaseAreaManager.prototype.addInternal = function(feature, opt_bulk) {
   } else {
     os.alertManager.sendAlert('Area is invalid and cannot be used. Common problems include polygons that ' +
         'cross themselves and multipolygons with overlapping elements.',
-        os.alert.AlertEventSeverity.WARNING);
+    os.alert.AlertEventSeverity.WARNING);
   }
 
   return false;
@@ -342,6 +358,7 @@ os.query.BaseAreaManager.prototype.addInternal = function(feature, opt_bulk) {
 
 /**
  * Toggles the feature on the map
+ *
  * @param {string|ol.Feature} idOrFeature
  * @param {boolean=} opt_toggle Optional toggle value. If not set, the value will flip.
  */
@@ -372,6 +389,7 @@ os.query.BaseAreaManager.prototype.showHideFeature = function(idOrFeature, opt_t
 
 /**
  * Show or hide all area features
+ *
  * @param {boolean} show
  */
 os.query.BaseAreaManager.prototype.toggleAllFeatures = function(show) {
@@ -384,6 +402,7 @@ os.query.BaseAreaManager.prototype.toggleAllFeatures = function(show) {
 
 /**
  * Toggles the feature on the map
+ *
  * @param {string|ol.Feature} idOrFeature
  * @param {boolean=} opt_toggle Optional toggle value. If not set, the value will flip.
  */
@@ -416,6 +435,7 @@ os.query.BaseAreaManager.prototype.remove = function(feature) {
 
 /**
  * Clears all areas in the manager.
+ *
  * @return {Array<ol.Feature>} The areas that were removed.
  */
 os.query.BaseAreaManager.prototype.clear = function() {
@@ -440,6 +460,7 @@ os.query.BaseAreaManager.prototype.clear = function() {
 
 /**
  * Clears all the temporary areas in the manager.
+ *
  * @return {Array<ol.Feature>} The areas that were removed.
  */
 os.query.BaseAreaManager.prototype.clearTemp = function() {
@@ -466,6 +487,7 @@ os.query.BaseAreaManager.prototype.clearTemp = function() {
 
 /**
  * saves the areas
+ *
  * @return {!goog.async.Deferred}
  */
 os.query.BaseAreaManager.prototype.save = function() {
@@ -476,6 +498,7 @@ os.query.BaseAreaManager.prototype.save = function() {
 
 /**
  * loads the areas
+ *
  * @return {!goog.async.Deferred<Array<ol.Feature>>}
  */
 os.query.BaseAreaManager.prototype.load = function() {
@@ -488,6 +511,7 @@ os.query.BaseAreaManager.prototype.load = function() {
 
 /**
  * Gets areas from storage
+ *
  * @return {!goog.async.Deferred<Array<ol.Feature>>}
  */
 os.query.BaseAreaManager.prototype.getStoredAreas = function() {
@@ -498,6 +522,7 @@ os.query.BaseAreaManager.prototype.getStoredAreas = function() {
 
 /**
  * Handle areas loaded from storage.
+ *
  * @param {Object} obj
  * @return {Array<!ol.Feature>}
  * @private
@@ -530,6 +555,7 @@ os.query.BaseAreaManager.prototype.onAreasLoaded_ = function(obj) {
 
 /**
  * Sets the default style on a feature.
+ *
  * @param {ol.Feature} feature
  * @protected
  */
@@ -540,6 +566,7 @@ os.query.BaseAreaManager.prototype.setDefaultStyle = function(feature) {
 
 /**
  * Updates styles based on queries in query manager
+ *
  * @private
  */
 os.query.BaseAreaManager.prototype.updateStyles_ = function() {
@@ -618,6 +645,7 @@ os.query.BaseAreaManager.prototype.updateStyle = function(area, opt_suppress) {
 
 /**
  * Dispatch a change event
+ *
  * @param {!ol.Feature} area
  */
 os.query.BaseAreaManager.prototype.redraw = function(area) {
@@ -634,18 +662,9 @@ os.query.BaseAreaManager.prototype.redraw = function(area) {
  * @param {string|ol.Feature} idOrFeature
  */
 os.query.BaseAreaManager.prototype.unhighlight = function(idOrFeature) {
-  var area = this.get(idOrFeature);
-
-  if (area && this.getMap().containsFeature(area)) {
-    var entries = os.ui.queryManager.getEntries(undefined, /** @type {string} */ (area.getId()));
-
-    if (!entries.length > 0) {
-      area.setStyle(os.style.area.DEFAULT_STYLE);
-    } else if (entries[0]['includeArea']) {
-      area.setStyle(os.style.area.INCLUSION_STYLE);
-    } else {
-      area.setStyle(os.style.area.EXCLUSION_STYLE);
-    }
+  if (this.highlightFeature) {
+    this.getMap().removeFeature(this.highlightFeature);
+    this.highlightFeature = undefined;
   }
 };
 
@@ -654,14 +673,20 @@ os.query.BaseAreaManager.prototype.unhighlight = function(idOrFeature) {
  * @param {string|ol.Feature} idOrFeature
  */
 os.query.BaseAreaManager.prototype.highlight = function(idOrFeature) {
+  if (this.highlightFeature) {
+    this.getMap().removeFeature(this.highlightFeature);
+    this.highlightFeature = undefined;
+  }
+
   var area = this.get(idOrFeature);
 
   if (area && this.getMap().containsFeature(area)) {
-    var container = $('#map-container');
-
-    if (area) {
-      area.setStyle(os.style.area.HOVER_STYLE);
-      container.css('cursor', 'pointer');
+    var geometry = area.getGeometry();
+    if (geometry) {
+      var feature = new ol.Feature(geometry.clone());
+      // do not show a drawing layer node for this feature
+      feature.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
+      this.highlightFeature = this.getMap().addFeature(feature, os.style.area.HIGHLIGHT_STYLE);
     }
   }
 };
@@ -669,6 +694,7 @@ os.query.BaseAreaManager.prototype.highlight = function(idOrFeature) {
 
 /**
  * Notify listeners that a state for this feature has changed
+ *
  * @param {ol.Feature} feature The feature
  * @param {string} evt The name of the event
  */

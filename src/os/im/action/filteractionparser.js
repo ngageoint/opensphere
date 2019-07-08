@@ -13,6 +13,7 @@ goog.require('os.ui.filter');
 
 /**
  * Parses filter action entries from an XML document.
+ *
  * @implements {os.parse.IParser}
  * @constructor
  */
@@ -74,6 +75,7 @@ os.im.action.FilterActionParser.prototype.parseNext = function() {
 
 /**
  * Extracts filter actions from an array of XML nodes.
+ *
  * @param {!IArrayLike<Node>} nodes The XML nodes to extract an entry from.
  * @return {!Array<!os.im.action.FilterActionEntry>}
  */
@@ -177,6 +179,7 @@ os.im.action.FilterActionParser.parseNodes = function(nodes) {
 
 /**
  * Extracts filter action entries from an XML document.
+ *
  * @param {!Document} doc The XML document to extract entries from.
  * @return {!Array<!os.im.action.FilterActionEntry>}
  */

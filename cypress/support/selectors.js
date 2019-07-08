@@ -220,7 +220,10 @@ exports.addPlaceDialog = {
     annotationOptions: {
       SHOW_ANNOTATION_CHECKBOX: '[ng-attr-for=\'showAnnotation{{ctrl.uid}}\']',
       SHOW_NAME_CHECKBOX: '[ng-attr-for=\'showAnnotationName{{ctrl.uid}}\']',
-      SHOW_DESCRIPTION_CHECKBOX: '[ng-attr-for=\'showAnnotationDescription{{ctrl.uid}}\']'
+      SHOW_DESCRIPTION_CHECKBOX: '[ng-attr-for=\'showAnnotationDescription{{ctrl.uid}}\']',
+      SHOW_DEFAULTTAILTYPE_RADIOBUTTON: '[ng-attr-for=\'showAnnotationDefaultTail{{ctrl.uid}}\']',
+      SHOW_NOTAILTYPE_RADIOBUTTON: '[ng-attr-for=\'showAnnotationNoTail{{ctrl.uid}}\']',
+      SHOW_LINETAILTYPE_RADIOBUTTON: '[ng-attr-for=\'showAnnotationLineTail{{ctrl.uid}}\']'
     }
   },
   OK_BUTTON: '[ng-class=\'yesButtonClass\']',
@@ -489,6 +492,12 @@ exports.customDateTimeFormatsDialog = {
   CLOSE_BUTTON: '[ng-click=\'th.close()\']'
 };
 
+exports.descriptionInfoDialog = {
+  DIALOG: '[data-testid=\'descriptioninfo\']',
+  CONTENT: '[data-testid=\'descriptioninfocontent\']',
+  CLOSE_BUTTON: '[ng-click=\'windowCtrl.close(true)\']'
+};
+
 exports.editArcServerDialog = {
   DIALOG: '[label=\'Edit Arc Server\']',
   DIALOG_HEADER: '[title=\'Edit Arc Server\']',
@@ -688,7 +697,10 @@ exports.editPlaceDialog = {
     annotationOptions: {
       SHOW_ANNOTATION_CHECKBOX: '[ng-attr-for=\'showAnnotation{{ctrl.uid}}\']',
       SHOW_NAME_CHECKBOX: '[ng-attr-for=\'showAnnotationName{{ctrl.uid}}\']',
-      SHOW_DESCRIPTION_CHECKBOX: '[ng-attr-for=\'showAnnotationDescription{{ctrl.uid}}\']'
+      SHOW_DESCRIPTION_CHECKBOX: '[ng-attr-for=\'showAnnotationDescription{{ctrl.uid}}\']',
+      SHOW_DEFAULTTAILTYPE_RADIOBUTTON: '[ng-attr-for=\'showAnnotationDefaultTail{{ctrl.uid}}\']',
+      SHOW_NOTAILTYPE_RADIOBUTTON: '[ng-attr-for=\'showAnnotationNoTail{{ctrl.uid}}\']',
+      SHOW_LINETAILTYPE_RADIOBUTTON: '[ng-attr-for=\'showAnnotationLineTail{{ctrl.uid}}\']'
     }
   },
   OK_BUTTON: '[ng-class=\'yesButtonClass\']',
@@ -1414,6 +1426,7 @@ exports.layersDialog = {
                   REMOVE: '[title=\'Removes the layer\']',
                   RENAME: '[title=\'Rename the layer\']',
                   SHOW_DESCRIPTION: '[title=\'Gives details about the layer\']',
+                  SHOW_FEATURES: '[title=\'Displays features in the layer\']',
                   EXPORT: '[title=\'Exports data from this layer\']',
                   ADD_TO_TRACK: '[title=\'Adds selected features (or all features if none are selected) ' +
                   'to an existing track.\']',
@@ -2281,8 +2294,9 @@ exports.Map = {
   OVERVIEW_MAP_TOGGLE_BUTTON: '[title=\'Overview map\']',
   ZOOM_IN_BUTTON: '.ol-zoom-in',
   ZOOM_OUT_BUTTON: '.ol-zoom-out',
-  ROTATION_BUTTON: '.ol-compass',
-  MAP_MODE_BUTTON: '.ol-mapmode-toggle',
+  ROTATION_BUTTON: '.ol-rotate',
+  MAP_MODE_BUTTON: '.ol-mapmode',
+  ATTRIBUTION: '.ol-attribution',
   contextMenu: {
     PANEL: '#menu',
     menuOptions: {
@@ -2886,7 +2900,7 @@ exports.statusBar = {
   LEGEND_BUTTON: '[title=\'View Legend\']',
   SERVERS_BUTTON: '[title=Servers]',
   ALERTS_BUTTON: '[title=Alerts]',
-  ALERTS_UNREAD_BADGE: '.badge',
+  ALERTS_UNREAD_BADGE: '[title=Alerts] .badge',
   HISTORY_BUTTON: '[title=History]',
   Mute: {
     BUTTON: '.fa-volume-off, .fa-volume-up',

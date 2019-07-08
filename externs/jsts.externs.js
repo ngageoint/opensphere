@@ -560,3 +560,24 @@ jsts.operation.polygonize.Polygonizer.prototype.add = function(g) {};
  * @return {jsts.Collection<jsts.geom.Polygon>}
  */
 jsts.operation.polygonize.Polygonizer.prototype.getPolygons = function() {};
+
+
+/**
+ * Namespace.
+ * @type {Object}
+ */
+jsts.operation.distance = {};
+
+
+/**
+ * @constructor
+ */
+jsts.operation.distance.DistanceOp = function() {};
+
+
+/**
+ * @param {jsts.geom.Geometry} geom1
+ * @param {jsts.geom.Geometry} geom2
+ * @return {Array<jsts.geom.Coordinate>}
+ */
+jsts.operation.distance.DistanceOp.nearestPoints = function(geom1, geom2) {};

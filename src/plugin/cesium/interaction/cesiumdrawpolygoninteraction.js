@@ -22,11 +22,12 @@ os.interaction.DrawPolygon.prototype.cesiumLine = undefined;
 
 /**
  * Clean up the draw polygon interaction in Cesium.
+ *
  * @this {os.interaction.DrawPolygon}
  */
 plugin.cesium.interaction.drawpolygon.cleanupWebGL = function() {
   var webgl = /** @type {plugin.cesium.CesiumRenderer|undefined} */ (
-      os.MapContainer.getInstance().getWebGLRenderer());
+    os.MapContainer.getInstance().getWebGLRenderer());
   var scene = webgl ? webgl.getCesiumScene() : undefined;
   if (scene) {
     this.cesiumColor = undefined;
@@ -41,6 +42,7 @@ plugin.cesium.interaction.drawpolygon.cleanupWebGL = function() {
 
 /**
  * Draw the polygon in Cesium.
+ *
  * @this {os.interaction.DrawPolygon}
  * @suppress {accessControls}
  */
@@ -55,7 +57,7 @@ plugin.cesium.interaction.drawpolygon.updateWebGL = function() {
     }
 
     var webgl = /** @type {plugin.cesium.CesiumRenderer|undefined} */ (
-        os.MapContainer.getInstance().getWebGLRenderer());
+      os.MapContainer.getInstance().getWebGLRenderer());
     var scene = webgl ? webgl.getCesiumScene() : undefined;
 
     var coords = /** @type {ol.geom.LineString} */ (this.line2D.getGeometry()).getCoordinates();

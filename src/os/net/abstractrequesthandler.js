@@ -9,6 +9,8 @@ goog.require('os.net.IRequestHandler');
 
 /**
  * The base class for all handlers which make an actual URL request
+ *
+ * @abstract
  * @constructor
  * @extends {goog.events.EventTarget}
  * @implements {os.net.IRequestHandler}
@@ -93,37 +95,44 @@ os.net.AbstractRequestHandler.prototype.getStatusCode = function() {
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.net.AbstractRequestHandler.prototype.buildRequest = goog.abstractMethod;
+os.net.AbstractRequestHandler.prototype.buildRequest = function() {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.net.AbstractRequestHandler.prototype.getResponse = goog.abstractMethod;
+os.net.AbstractRequestHandler.prototype.getResponse = function() {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.net.AbstractRequestHandler.prototype.getResponseHeaders = goog.abstractMethod;
+os.net.AbstractRequestHandler.prototype.getResponseHeaders = function() {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.net.AbstractRequestHandler.prototype.abort = goog.abstractMethod;
+os.net.AbstractRequestHandler.prototype.abort = function() {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.net.AbstractRequestHandler.prototype.execute = goog.abstractMethod;
+os.net.AbstractRequestHandler.prototype.execute = function(method, uri, opt_headers, opt_formatter, opt_nocache,
+  opt_responseType) {};
 
 
 /**
  * Gets a displayable error message for requests that went wrong.
+ *
  * @param {goog.net.XhrIo} request The failed request
  * @return {string} The error message
  */

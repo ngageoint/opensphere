@@ -11,6 +11,8 @@ goog.require('os.capture.IVideoEncoder');
 
 /**
  * Abstract class for exporting a video.
+ *
+ * @abstract
  * @extends {goog.events.EventTarget}
  * @implements {os.capture.IVideoEncoder}
  * @constructor
@@ -122,13 +124,16 @@ os.capture.AbstractVideoEncoder.prototype.process = function() {
 
 /**
  * Process the video frames once the encoder has been loaded.
+ *
+ * @abstract
  * @protected
  */
-os.capture.AbstractVideoEncoder.prototype.processInternal = goog.abstractMethod;
+os.capture.AbstractVideoEncoder.prototype.processInternal = function() {};
 
 
 /**
  * If the encoder library has been loaded in the browser.
+ *
  * @return {boolean}
  * @protected
  */
@@ -140,6 +145,7 @@ os.capture.AbstractVideoEncoder.prototype.isEncoderLoaded = function() {
 
 /**
  * Set the error message and dispatch the error event.
+ *
  * @param {string} msg The error message
  * @param {Error=} opt_error The caught error
  * @protected
@@ -157,6 +163,7 @@ os.capture.AbstractVideoEncoder.prototype.handleError = function(msg, opt_error)
 
 /**
  * Handle failure to load the encoder library.
+ *
  * @param {goog.net.jsloader.Error} error The error
  * @protected
  */
@@ -176,6 +183,7 @@ os.capture.AbstractVideoEncoder.prototype.setFrames = function(frames) {
 
 /**
  * Set the progress for the export process and fire an event.
+ *
  * @param {number} value The new progress value.
  * @protected
  */
@@ -187,6 +195,7 @@ os.capture.AbstractVideoEncoder.prototype.setProgress = function(value) {
 
 /**
  * Set the status for the export process and fire an event.
+ *
  * @param {string} value The new status value.
  * @protected
  */

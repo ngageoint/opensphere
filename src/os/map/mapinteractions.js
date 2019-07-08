@@ -29,6 +29,7 @@ goog.require('os.ui.ol.interaction.MouseWheelZoom');
 
 /**
  * Get interactions that should be registered with the map.
+ *
  * @return {ol.Collection}
  */
 os.map.interaction.getInteractions = function() {

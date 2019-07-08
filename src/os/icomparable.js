@@ -4,6 +4,7 @@ goog.provide('os.IComparable');
 
 /**
  * Interface for objects that can be compared.
+ *
  * @interface
  * @template T
  */

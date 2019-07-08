@@ -7,6 +7,7 @@ goog.require('goog.math.Coordinate');
 
 /**
  * Class for representing circles
+ *
  * @constructor
  * @extends {goog.math.Coordinate}
  * @param {number=} opt_x Circle center x, defaults to 0
@@ -22,6 +23,7 @@ goog.inherits(os.math.Circle, goog.math.Coordinate);
 
 /**
  * Returns a new copy of the circle
+ *
  * @override
  * @return {!os.math.Circle} A clone of this circle
  */
@@ -33,6 +35,7 @@ os.math.Circle.prototype.clone = function() {
 if (goog.DEBUG) {
   /**
    * Returns a nice string representing the circle
+   *
    * @return {string} in the form C (50, 73) R 30
    * @override
    */
@@ -44,6 +47,7 @@ if (goog.DEBUG) {
 
 /**
  * Compares circles for equality
+ *
  * @param {os.math.Circle} a A circle
  * @param {os.math.Circle} b A circle
  * @return {boolean} True iff the coordinates are equal or if both are null.
@@ -64,6 +68,7 @@ os.math.Circle.equals = function(a, b) {
  * scaled by {@code sx} and {@code opt_sy} respectively. If {@code opt_sy}
  * is not given then {@code sx} is used for both x and y. The radius is scaled
  * by {@code sx}.
+ *
  * @param {number} sx The scale factor to use for the x dimension.
  * @param {number=} opt_sy The scale factor to use for the y dimension.
  * @return {!goog.math.Coordinate} This coordinate after scaling.
@@ -80,6 +85,7 @@ os.math.Circle.prototype.scale = function(sx, opt_sy) {
 
 /**
  * Gets the closest point on the circle to the given point
+ *
  * @param {number|goog.math.Coordinate} x
  * @param {number=} opt_y The y coordinate of the point - required if x is a number,
  *  ignored if x is a goog.math.Coordinate

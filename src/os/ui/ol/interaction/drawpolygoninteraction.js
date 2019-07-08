@@ -266,6 +266,7 @@ os.ui.ol.interaction.DrawPolygon.prototype.addCoord = function(coord, mapBrowser
 
 /**
  * This is for extending classes
+ *
  * @param {ol.MapBrowserEvent} mapBrowserEvent
  * @protected
  */
@@ -275,6 +276,7 @@ os.ui.ol.interaction.DrawPolygon.prototype.beforeUpdate = function(mapBrowserEve
 
 /**
  * Updates the 2D version
+ *
  * @protected
  */
 os.ui.ol.interaction.DrawPolygon.prototype.update2D = function() {

@@ -21,6 +21,7 @@ plugin.track.ui.TrackNodeUITemplate = '<span ng-if="nodeUi.show()" class="d-flex
 
 /**
  * The tracks selected/highlighted node UI directive
+ *
  * @return {angular.Directive}
  */
 plugin.track.ui.trackNodeUIDirective = function() {
@@ -43,6 +44,7 @@ os.ui.Module.directive('tracknodeui', [plugin.track.ui.trackNodeUIDirective]);
 
 /**
  * Controller for the tracks selected/highlighted node UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.node.DefaultLayerNodeUICtrl}
@@ -57,6 +59,7 @@ goog.inherits(plugin.track.ui.TrackNodeUICtrl, os.ui.node.DefaultLayerNodeUICtrl
 
 /**
  * Add a new folder.
+ *
  * @export
  */
 plugin.track.ui.TrackNodeUICtrl.prototype.addFolder = function() {
@@ -74,6 +77,7 @@ plugin.track.ui.TrackNodeUICtrl.prototype.addFolder = function() {
 
 /**
  * If the node can be edited.
+ *
  * @return {boolean}
  * @export
  */

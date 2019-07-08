@@ -15,6 +15,7 @@ goog.require('os.ui.search.place.coordResultCardDirective');
 
 /**
  * Search results containing a coordinate to display on the map.
+ *
  * @param {ol.Feature} result The search result, as an Openlayers feature.
  * @param {string=} opt_label The feature label field.
  * @param {number=} opt_score The search result score.
@@ -66,6 +67,7 @@ os.ui.search.place.FEATURE_CONFIG = {
 
 /**
  * Create a style config for a feature.
+ *
  * @param {ol.Feature} feature The feature.
  * @return {!Object} The style config.
  * @protected
@@ -114,15 +116,8 @@ os.ui.search.place.CoordinateResult.prototype.getSearchUI = function() {
 
 
 /**
- * @inheritDoc
- */
-os.ui.search.place.CoordinateResult.prototype.setSearchUI = function(value) {
-  // does nothing until the search UI is implemented as a directive
-};
-
-
-/**
  * Creates a feature representing a coordinate result.
+ *
  * @param {Object.<string, *>=} opt_options Feature options.
  * @return {!ol.Feature}
  */

@@ -13,6 +13,7 @@ goog.require('os.query.BaseQueryManager');
 
 /**
  * Implementation of the query manager that hooks up to the OS data manager.
+ *
  * @param {os.query.BaseAreaManager=} opt_areaManager Optional area manager reference. Defaults to the singleton.
  * @param {os.filter.BaseFilterManager=} opt_filterManager Optional filter manager reference. Defaults to the singleton.
  * @extends {os.query.BaseQueryManager}

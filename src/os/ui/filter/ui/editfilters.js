@@ -14,6 +14,7 @@ goog.require('os.ui.window');
 
 /**
  * The filter window directive
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.ui.editFiltersDirective = function() {
@@ -37,6 +38,7 @@ os.ui.Module.directive('editfilter', [os.ui.filter.ui.editFiltersDirective]);
 
 /**
  * Controller for the filters window.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @constructor
@@ -106,6 +108,7 @@ os.ui.filter.ui.EditFiltersCtrl = function($scope, $element) {
 
 /**
  * Cleanup
+ *
  * @protected
  */
 os.ui.filter.ui.EditFiltersCtrl.prototype.onDestroy = function() {
@@ -117,6 +120,7 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.onDestroy = function() {
 
 /**
  * Checks whether the filter is basic.
+ *
  * @private
  */
 os.ui.filter.ui.EditFiltersCtrl.prototype.checkFilter_ = function() {
@@ -142,6 +146,7 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.checkFilter_ = function() {
 
 /**
  * Creates the expressions from the filter
+ *
  * @param {goog.events.Event=} opt_event
  * @private
  */
@@ -158,6 +163,7 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.create_ = function(opt_event) {
 
 /**
  * Traverses the filter XML and adds nodes to the slicktree.
+ *
  * @param {Node} ele
  * @param {os.structs.ITreeNode} treeNode
  * @private
@@ -179,6 +185,7 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.readFilters_ = function(ele, treeNode)
 
 /**
  * Creates a tree node for the child and adds it as a child to the treeNode passed in.
+ *
  * @param {Node} child
  * @param {os.structs.ITreeNode} treeNode
  * @return {os.structs.ITreeNode}
@@ -211,6 +218,7 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.addTreeNode_ = function(child, treeNod
 
 /**
  * Handles node remove events
+ *
  * @param {angular.Scope.Event} event
  * @param {os.structs.ITreeNode} node The node to remove
  * @private
@@ -252,6 +260,7 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.onRemove_ = function(event, node) {
 
 /**
  * Removes a node.
+ *
  * @param {os.structs.ITreeNode} node The node to remove
  * @private
  */
@@ -263,6 +272,7 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.doRemove_ = function(node) {
 
 /**
  * Sets the tab value and broadcasts an event to the children.
+ *
  * @param {string} tab
  * @export
  */
@@ -275,6 +285,7 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.setTab = function(tab) {
 
 /**
  * Gets whether the form is invalid
+ *
  * @return {boolean}
  * @export
  */
@@ -316,6 +327,7 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.isNodeInvalid = function(node) {
 
 /**
  * Cancels the filter
+ *
  * @export
  */
 os.ui.filter.ui.EditFiltersCtrl.prototype.cancel = function() {
@@ -325,6 +337,7 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.cancel = function() {
 
 /**
  * User clicked OK
+ *
  * @export
  */
 os.ui.filter.ui.EditFiltersCtrl.prototype.finish = function() {
@@ -334,6 +347,13 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.finish = function() {
 
   var filter = this['root'].writeFilter(this['title'], this['description']);
   this.entry.setFilter(filter);
+
+  var dm = os.data.OSDataManager.getInstance();
+  if (dm) {
+    if (dm.getDescriptor(this.entry.getType()) == null) {
+      this.entry.setTemporary(true);
+    }
+  }
 
   // tell the thing that launched us that we're done
   if (this.scope['callback']) {
@@ -346,6 +366,7 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.finish = function() {
 
 /**
  * Closes the expression edit window.
+ *
  * @private
  */
 os.ui.filter.ui.EditFiltersCtrl.closeRemoveMultipleWindow_ = function() {

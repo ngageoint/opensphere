@@ -174,6 +174,7 @@ os.ui.file.kml.GoogleEarthIcons = {
   YLW_SQUARE: 'paddle/ylw-square.png',
   YLW_STARS: 'paddle/ylw-stars.png',
   AIRPORTS: 'shapes/airports.png',
+  AIRPORTS_WHITE: 'shapes/airports_white.png',
   ARROW_REVERSE: 'shapes/arrow-reverse.png',
   ARROW: 'shapes/arrow.png',
   ARTS: 'shapes/arts.png',
@@ -289,6 +290,7 @@ os.ui.file.kml.GMAPS_SEARCH = /https?:\/\/maps\.google\.com\/mapfiles\/kml\//i;
 
 /**
  * Get the default icon object.
+ *
  * @return {!osx.icon.Icon} The default icon.
  */
 os.ui.file.kml.getDefaultIcon = function() {
@@ -300,6 +302,7 @@ os.ui.file.kml.getDefaultIcon = function() {
 
 /**
  * Replace the Google icon URI with the application image path.
+ *
  * @param {string|null|undefined} src The image source URL.
  * @return {string} The icon src.
  */
@@ -706,6 +709,10 @@ os.ui.file.kml.GOOGLE_EARTH_ICON_SET = [
   {
     title: 'Shaded Dot',
     path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.SHADED_DOT
+  },
+  {
+    title: 'Airports White',
+    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.AIRPORTS_WHITE
   },
 
   // light blue icons

@@ -43,6 +43,7 @@ plugin.im.action.feature.layerDispose = function() {
 
 /**
  * If the action arguments support feature actions.
+ *
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -54,7 +55,7 @@ plugin.im.action.feature.visibleIfSupported = function(context) {
     var layers = os.ui.menu.layer.getLayersFromContext(context).filter(os.MapContainer.isVectorLayer);
     if (layers && layers.length == 1 && layers[0].getOSType() != os.layer.LayerType.REF) {
       var source = /** @type {ol.layer.Layer} */ (layers[0]).getSource();
-      this.visible = os.implements(source, os.source.IImportSource.ID);
+      this.visible = source != null;
     }
   }
 };
@@ -62,6 +63,7 @@ plugin.im.action.feature.visibleIfSupported = function(context) {
 
 /**
  * Handle import action event from the layer menu.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */

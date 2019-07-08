@@ -7,6 +7,8 @@ goog.require('os.config.Settings');
 /**
  * Abstract class for running logic to initialize settings.  Each application should have an
  * extension of this to implement its specific needs.
+ *
+ * @abstract
  * @constructor
  */
 os.config.AbstractSettingsInitializer = function() {
@@ -42,12 +44,15 @@ os.config.AbstractSettingsInitializer.prototype.init = function() {
 
 /**
  * Register settings storages
+ *
+ * @abstract
  */
-os.config.AbstractSettingsInitializer.prototype.registerStorages = goog.abstractMethod;
+os.config.AbstractSettingsInitializer.prototype.registerStorages = function() {};
 
 
 /**
  * Handle settings finished initialization
+ *
  * @protected
  */
 os.config.AbstractSettingsInitializer.prototype.onInitialized = function() {
@@ -58,6 +63,8 @@ os.config.AbstractSettingsInitializer.prototype.onInitialized = function() {
 
 /**
  * Handle settings finished loading
+ *
+ * @abstract
  * @protected
  */
-os.config.AbstractSettingsInitializer.prototype.onSettingsLoaded = goog.abstractMethod;
+os.config.AbstractSettingsInitializer.prototype.onSettingsLoaded = function() {};

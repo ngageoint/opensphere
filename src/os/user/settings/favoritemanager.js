@@ -34,6 +34,7 @@ os.user.settings.FavoriteType = {
 
 /**
  * Manage favorite actions and other favorite related stuff!
+ *
  * @extends {goog.events.EventTarget}
  * @constructor
  */
@@ -85,6 +86,7 @@ os.user.settings.FavoriteManager.KEY = 'favorite';
 
 /**
  * Get the icon for this favorite type.
+ *
  * @todo Icons should not be managed here, icons should be provided by the favorite at save time.
  * @param {string} type
  * @return {string}
@@ -96,6 +98,7 @@ os.user.settings.FavoriteManager.prototype.getIcon = function(type) {
 
 /**
  * Registers an icon for a type.
+ *
  * @param {string} type
  * @param {string} icon
  */
@@ -106,6 +109,7 @@ os.user.settings.FavoriteManager.prototype.registerIcon = function(type, icon) {
 
 /**
  * Return all the favorites
+ *
  * @return {Array}
  */
 os.user.settings.FavoriteManager.prototype.getFavorites = function() {
@@ -119,6 +123,7 @@ os.user.settings.FavoriteManager.prototype.getFavorites = function() {
 
 /**
  * Search folders for the favorite
+ *
  * @param {Array} favs
  * @param {string} key
  * @return {?os.user.settings.favorite}
@@ -143,6 +148,7 @@ os.user.settings.FavoriteManager.getFavoriteInternal_ = function(favs, key) {
 
 /**
  * Get the favorite
+ *
  * @param {string} key
  * @return {?os.user.settings.favorite}
  */
@@ -153,6 +159,7 @@ os.user.settings.FavoriteManager.prototype.getFavorite = function(key) {
 
 /**
  * Search folders for the favorite
+ *
  * @param {os.user.settings.favorite} folder
  * @param {string} key
  * @return {Array<string>} - the folder keys the favorite was found in
@@ -182,6 +189,7 @@ os.user.settings.FavoriteManager.getFavoriteFoldersInternal_ = function(folder, 
 
 /**
  * Get the favorite's folders
+ *
  * @param {string} key
  * @return {Array<os.user.settings.favorite>}
  */
@@ -206,6 +214,7 @@ os.user.settings.FavoriteManager.prototype.getFavoriteFolders = function(key) {
 
 /**
  * Dig through folders to find the favorite. When found remove it and return the complete list with the removal
+ *
  * @param {Array} favs
  * @param {string} key
  * @return {Array} - array with the favorite removed
@@ -230,6 +239,7 @@ os.user.settings.FavoriteManager.removeFavoriteInternal_ = function(favs, key) {
 
 /**
  * Get the types
+ *
  * @param {string} key
  */
 os.user.settings.FavoriteManager.prototype.removeFavorite = function(key) {
@@ -240,6 +250,7 @@ os.user.settings.FavoriteManager.prototype.removeFavorite = function(key) {
 
 /**
  * Dig through folders to find the favorite. When found remove it and return the complete list with the removal
+ *
  * @param {Array} favs
  * @param {string} key
  * @param {string} folder - the key for the folder to remove the favorite from
@@ -267,6 +278,7 @@ os.user.settings.FavoriteManager.removeFavoriteFromFolderInternal_ = function(fa
 
 /**
  * Get the types
+ *
  * @param {string} key
  * @param {string} folder the key for the folder
  */
@@ -285,6 +297,7 @@ os.user.settings.FavoriteManager.prototype.removeFavoriteFromFolder = function(k
 
 /**
  * Get favorites filtered by this type
+ *
  * @param {Array} favs
  * @param {Array<string>} types
  * @return {Array}
@@ -318,6 +331,7 @@ os.user.settings.FavoriteManager.getTypeInternal_ = function(favs, types) {
 
 /**
  * Get the types
+ *
  * @param {Array} favs
  * @param {Array<string>} types
  * @return {Array}
@@ -364,6 +378,7 @@ os.user.settings.FavoriteManager.getFoldersInternal_ = function(favs, opt_ignore
 
 /**
  * Get the Folders, Pass in a folder to ignore it and its children
+ *
  * @param {Array=} opt_ignore - ignore this folder key and all child folders
  * @return {Array}
  */
@@ -376,6 +391,7 @@ os.user.settings.FavoriteManager.prototype.getFolders = function(opt_ignore) {
 
 /**
  * Save the favorite to a folder
+ *
  * @param {Array} favs
  * @param {os.user.settings.favorite} favorite
  * @param {string} folder - the folder key
@@ -405,6 +421,7 @@ os.user.settings.FavoriteManager.saveFolderInternal_ = function(favs, favorite, 
 
 /**
  * Saves a favorite.
+ *
  * @param {string} type
  * @param {string} key
  * @param {string} value
@@ -461,6 +478,7 @@ os.user.settings.FavoriteManager.prototype.save = function(type, key, value, opt
 
 /**
  * Flatten down the list for easy presentation
+ *
  * @param {Array} list
  * @param {Array<string>=} opt_types only return this type of favorite
  * @param {number=} opt_max - only keep number of favorites
@@ -490,6 +508,7 @@ os.user.settings.FavoriteManager.prototype.filter = function(list, opt_types, op
 
 /**
  * Flatten down the list for easy presentation
+ *
  * @param {Array} fulllist
  * @param {Array} filterlist
  * @return {boolean}
@@ -505,6 +524,7 @@ os.user.settings.FavoriteManager.prototype.showMore = function(fulllist, filterl
 
 /**
  * Support different click actions for favorites
+ *
  * @param {string} type
  * @param {function(string)} action
  */
@@ -535,6 +555,7 @@ os.user.settings.FavoriteManager.prototype.openManager = function() {
 
 /**
  * Handle the click for the favorite
+ *
  * @param {Event} event
  * @param {string} type
  * @param {string} key
@@ -551,6 +572,7 @@ os.user.settings.FavoriteManager.prototype.handleEvent = function(event, type, k
 
 /**
  * Create a new folder
+ *
  * @param {string=} opt_folder - optional parent folder
  * @return {string}
  */
@@ -564,6 +586,7 @@ os.user.settings.FavoriteManager.prototype.createFolder = function(opt_folder) {
 
 /**
  * Set the key for this page
+ *
  * @param {string} key - set the key for this page
  */
 os.user.settings.FavoriteManager.prototype.setPageKey = function(key) {
@@ -573,6 +596,7 @@ os.user.settings.FavoriteManager.prototype.setPageKey = function(key) {
 
 /**
  * Return the key for this page
+ *
  * @return {string}
  */
 os.user.settings.FavoriteManager.prototype.getPageKey = function() {
@@ -582,6 +606,7 @@ os.user.settings.FavoriteManager.prototype.getPageKey = function() {
 
 /**
  * Rebuild the favorites list from the tree nodes
+ *
  * @param {Array<!os.structs.ITreeNode>} nodes
  * @return {Array<os.user.settings.favorite>}
  * @private
@@ -608,6 +633,7 @@ os.user.settings.FavoriteManager.convertInternal_ = function(nodes) {
 
 /**
  * Save the list order
+ *
  * @param {Array<!os.structs.ITreeNode>} nodes
  */
 os.user.settings.FavoriteManager.prototype.convert = function(nodes) {
@@ -618,6 +644,7 @@ os.user.settings.FavoriteManager.prototype.convert = function(nodes) {
 
 /**
  * Save favorites to settings
+ *
  * @param {Array<os.user.settings.favorite>} favs
  */
 os.user.settings.FavoriteManager.prototype.saveToSettings = function(favs) {

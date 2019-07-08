@@ -588,6 +588,7 @@ os.source.Vector.prototype.clearQueue = function() {
 /**
  * Reindex the R-tree. This should *only* be done in place of removing a large number of features from the tree since
  * there is no bulk removal endpoint.
+ *
  * @private
  * @suppress {accessControls}
  */
@@ -699,25 +700,36 @@ os.source.Vector.prototype.onRefreshTimer = function() {
  * @inheritDoc
  */
 os.source.Vector.prototype.getColumns = function() {
+  return this.columns.slice();
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.source.Vector.prototype.getColumnsArray = function() {
   return this.columns;
 };
 
 
 /**
  * Get columns that do not contain data on any features in the source.
+ *
  * @return {!Array<!os.data.ColumnDefinition>}
  *
  * @suppress {accessControls}
  */
 os.source.Vector.prototype.getEmptyColumns = function() {
-  var empty = this.columns ? this.columns.slice() : [];
+  if (!this.getFeatureCount()) {
+    return [];
+  }
+
+  // make sure columns are all non-null and have a field
+  var empty = this.getColumnsArray().filter(function(col) {
+    return !!col && !!col['field'];
+  });
 
   if (empty.length > 0) {
-    // make sure columns are all non-null and have a field
-    empty = empty.filter(function(col) {
-      return !!col && !!col['field'];
-    });
-
     var features = this.getFeatures();
     for (var i = 0; i < features.length && empty.length > 0; i++) {
       var j = empty.length;
@@ -740,24 +752,27 @@ os.source.Vector.prototype.getEmptyColumns = function() {
  * @export Prevent the compiler from moving the function off the prototype.
  */
 os.source.Vector.prototype.setColumns = function(columns) {
-  this.externalColumns = true;
+  if (columns) {
+    this.externalColumns = true;
 
-  // ensure all columns are column definition objects
-  this.columns = columns.map(os.source.column.mapStringOrDef);
+    // ensure all columns are column definition objects
+    this.columns = columns.map(os.source.column.mapStringOrDef);
 
-  // add defaults columns
-  os.source.column.addDefaults(this);
+    // add defaults columns
+    os.source.column.addDefaults(this);
 
-  // test for shape support
-  this.testShapeFields_(this.geometryShape_);
+    // test for shape support
+    this.testShapeFields_(this.geometryShape_);
 
-  // clean up the columns
-  this.processColumns();
+    // clean up the columns
+    this.processColumns();
+  }
 };
 
 
 /**
  * Adds a column to the source if a matching one doesn't exist already.
+ *
  * @param {string} field The data field for the column.
  * @param {string=} opt_header Optional header. If not specified, field will be used instead.
  * @param {boolean=} opt_temp Optional flag for temp columns. Defaults to false.
@@ -777,6 +792,7 @@ os.source.Vector.prototype.addColumn = function(field, opt_header, opt_temp, opt
 
 /**
  * Gets a flag to determine whether to attempt to convert feature data to a type.
+ *
  * @return {boolean}
  */
 os.source.Vector.prototype.getDetectColumnTypes = function() {
@@ -786,6 +802,7 @@ os.source.Vector.prototype.getDetectColumnTypes = function() {
 
 /**
  * Sets a flag to determine whether to attempt to convert feature data to a type.
+ *
  * @param {boolean} value
  */
 os.source.Vector.prototype.setDetectColumnTypes = function(value) {
@@ -795,6 +812,7 @@ os.source.Vector.prototype.setDetectColumnTypes = function(value) {
 
 /**
  * Perform cleanup actions on columns.
+ *
  * @param {boolean=} opt_silent If events should not be dispatched.
  * @protected
  */
@@ -802,7 +820,7 @@ os.source.Vector.prototype.processColumns = function(opt_silent) {
   if (this.columns) {
     // remove any duplicates
     var colByName = /** @type {function((os.data.ColumnDefinition|string)):string} */ (
-        os.object.getValueExtractor('name'));
+      os.object.getValueExtractor('name'));
     goog.array.removeDuplicates(this.columns, this.columns, colByName);
 
     var descriptor = os.dataManager.getDescriptor(this.getId());
@@ -874,6 +892,7 @@ os.source.Vector.prototype.processColumns = function(opt_silent) {
 
 /**
  * Make updates to columns based on feature properties
+ *
  * @param {!Array<!ol.Feature>} features
  * @protected
  * @suppress {accessControls}
@@ -908,6 +927,7 @@ os.source.Vector.prototype.updateColumns = function(features) {
 
 /**
  * Searches for a column on the source.
+ *
  * @param {string|os.data.ColumnDefinition} value
  * @return {boolean}
  */
@@ -935,6 +955,7 @@ os.source.Vector.prototype.hasColumn = function(value) {
 
 /**
  * Gets the column limit used to determine how many features to check for unique column keys
+ *
  * @return {number}
  */
 os.source.Vector.prototype.getColumnAutoDetectLimit = function() {
@@ -944,6 +965,7 @@ os.source.Vector.prototype.getColumnAutoDetectLimit = function() {
 
 /**
  * Sets the column limit used to determine how many features to check for unique column keys
+ *
  * @param {number} value
  */
 os.source.Vector.prototype.setColumnAutoDetectLimit = function(value) {
@@ -953,6 +975,7 @@ os.source.Vector.prototype.setColumnAutoDetectLimit = function(value) {
 
 /**
  * Gets the geometry shape used by features in the source.
+ *
  * @return {string}
  */
 os.source.Vector.prototype.getGeometryShape = function() {
@@ -962,6 +985,7 @@ os.source.Vector.prototype.getGeometryShape = function() {
 
 /**
  * Sets the geometry shape used by features in the source.
+ *
  * @param {string} value
  */
 os.source.Vector.prototype.setGeometryShape = function(value) {
@@ -1063,6 +1087,7 @@ os.source.Vector.prototype.updateIndex = function(feature) {
 
 /**
  * If the provided geometry shape is supported by this source.
+ *
  * @param {string} shapeName
  * @return {boolean}
  */
@@ -1080,6 +1105,7 @@ os.source.Vector.prototype.supportsShape = function(shapeName) {
 
 /**
  * Gets the center geometry shape used by features in the source.
+ *
  * @return {string}
  */
 os.source.Vector.prototype.getCenterGeometryShape = function() {
@@ -1089,6 +1115,7 @@ os.source.Vector.prototype.getCenterGeometryShape = function() {
 
 /**
  * Sets the geometry shape used by features in the source.
+ *
  * @param {string} value
  */
 os.source.Vector.prototype.setCenterGeometryShape = function(value) {
@@ -1098,6 +1125,7 @@ os.source.Vector.prototype.setCenterGeometryShape = function(value) {
 
 /**
  * If the provided geometry shape is an ellipse
+ *
  * @param {string} shapeName
  * @return {boolean}
  */
@@ -1110,6 +1138,7 @@ os.source.Vector.prototype.isNotEllipseOrLOBOrDefault = function(shapeName) {
 /**
  * Fire shape-specific alerts to the user if the source can't appropriately display the shape or if there are any
  * applicable notices.
+ *
  * @param {string} value
  * @private
  */
@@ -1267,6 +1296,7 @@ os.source.Vector.prototype.getMaxDate = function() {
 
 /**
  * Gets the layer title
+ *
  * @param {boolean=} opt_doNoUseTypeInName turns off the inclusion of the explicit type in the name
  * @return {!string} The title
  * @override
@@ -1297,6 +1327,7 @@ os.source.Vector.prototype.setTitle = function(value) {
 /**
  * If the source has been enabled for animation. When animation/time enabled, the source will start listening
  * to the timeline controller and enable the animation overlay for faster feature rendering.
+ *
  * @return {boolean}
  */
 os.source.Vector.prototype.getAnimationEnabled = function() {
@@ -1306,6 +1337,7 @@ os.source.Vector.prototype.getAnimationEnabled = function() {
 
 /**
  * Marks the source as being in the animating state.
+ *
  * @param {boolean} value
  */
 os.source.Vector.prototype.setAnimationEnabled = function(value) {
@@ -1320,6 +1352,7 @@ os.source.Vector.prototype.setAnimationEnabled = function(value) {
 /**
  * Sets if animation events are enabled on the source. If enabled, the source will dispatch change events with a map of
  * feature visibility changes on each animation frame.
+ *
  * @param {boolean} value
  */
 os.source.Vector.prototype.setWebGLEnabled = function(value) {
@@ -1354,6 +1387,7 @@ os.source.Vector.prototype.setWebGLEnabled = function(value) {
 
 /**
  * Return the key mapping if there is one
+ *
  * @param {string} key
  * @return {boolean}
  */
@@ -1364,6 +1398,7 @@ os.source.Vector.prototype.getSupportsAction = function(key) {
 
 /**
  * Set the key mapping, extendable for plugins
+ *
  * @param {string} key
  * @param {boolean} value
  */
@@ -1430,6 +1465,7 @@ os.source.Vector.prototype.setDisplayRange = function(range, opt_update) {
 
 /**
  * If added features should replace existing features with the same id.
+ *
  * @return {boolean}
  */
 os.source.Vector.prototype.getReplaceDuplicates = function() {
@@ -1439,6 +1475,7 @@ os.source.Vector.prototype.getReplaceDuplicates = function() {
 
 /**
  * Set if added features should replace existing features with the same id.
+ *
  * @param {boolean} value
  */
 os.source.Vector.prototype.setReplaceDuplicates = function(value) {
@@ -1448,6 +1485,7 @@ os.source.Vector.prototype.setReplaceDuplicates = function(value) {
 
 /**
  * Sets if the time filter will be used when calling os.source.Vector#getFilteredFeatures.
+ *
  * @param {boolean} value
  */
 os.source.Vector.prototype.setTimeFilterEnabled = function(value) {
@@ -1460,6 +1498,7 @@ os.source.Vector.prototype.setTimeFilterEnabled = function(value) {
 
 /**
  * Get whether time filtering is enabled.
+ *
  * @return {boolean}
  */
 os.source.Vector.prototype.getTimeFilterEnabled = function() {
@@ -1480,6 +1519,7 @@ os.source.Vector.prototype.isTimeEditEnabled = function() {
  * at the cost of interaction performance when features are off the screen. Interaction performance will be
  * uniform regardless of how many features are within the viewable extent because all features will be drawn
  * on each frame.
+ *
  * @private
  */
 os.source.Vector.prototype.updateAnimationState_ = function() {
@@ -1558,6 +1598,7 @@ os.source.Vector.prototype.getHistogram = function(options) {
 
 /**
  * Create a new histogram for this source.
+ *
  * @param {os.data.histo.SourceHistogram=} opt_parent The parent histogram.
  * @return {!os.data.histo.SourceHistogram}
  *
@@ -1588,6 +1629,7 @@ os.source.Vector.prototype.createColorModel = function(opt_histogram, opt_gradie
 
 /**
  * Get the histogram used to color features on the source.
+ *
  * @return {os.data.histo.ColorModel}
  *
  * @export Prevent the compiler from moving the function off the prototype.
@@ -1599,6 +1641,7 @@ os.source.Vector.prototype.getColorModel = function() {
 
 /**
  * Set the histogram used to color features on the source.
+ *
  * @param {os.data.histo.ColorModel} model
  */
 os.source.Vector.prototype.setColorModel = function(model) {
@@ -1621,6 +1664,7 @@ os.source.Vector.prototype.setColorModel = function(model) {
 
 /**
  * Handle color model change event.
+ *
  * @param {os.events.PropertyChangeEvent} event The event
  * @private
  */
@@ -1658,6 +1702,7 @@ os.source.Vector.prototype.reindexTimeModel = function() {
 
 /**
  * Gets the filtered set of features from the source.
+ *
  * @param {boolean=} opt_allTime If time bounds should be ignored. If this value differs from the current default,
  *                               intersection will be called twice on the data model! Please use sparingly.
  * @return {Array<ol.Feature>}
@@ -1784,6 +1829,7 @@ os.source.Vector.prototype.removeFeature = function(feature, opt_isBulk) {
 
 /**
  * Remove features from the source.
+ *
  * @param {!Array<!ol.Feature>} features The features to remove.
  */
 os.source.Vector.prototype.removeFeatures = function(features) {
@@ -1829,6 +1875,7 @@ os.source.Vector.prototype.removeFeatureInternal = function(feature) {
 
 /**
  * Gets the feature count
+ *
  * @return {number}
  */
 os.source.Vector.prototype.getFeatureCount = function() {
@@ -1838,6 +1885,7 @@ os.source.Vector.prototype.getFeatureCount = function() {
 
 /**
  * Checks the new features array to see if it will push us past the feature limit.
+ *
  * @param {!Array<!ol.Feature>} features The new features.
  */
 os.source.Vector.prototype.checkFeatureLimit = function(features) {
@@ -1862,6 +1910,7 @@ os.source.Vector.prototype.checkFeatureLimit = function(features) {
 
 /**
  * Process a set of features before they're added to the source.
+ *
  * @param {!Array<!ol.Feature>} features The features.
  * @protected
  */
@@ -1896,6 +1945,7 @@ os.source.Vector.prototype.processFeatures = function(features) {
 
 /**
  * Perform processing actions that aren't performance sensitive.
+ *
  * @param {!ol.Feature} feature
  * @protected
  *
@@ -1979,6 +2029,7 @@ os.source.Vector.prototype.processImmediate = function(feature) {
 
 /**
  * Detects the column types.
+ *
  * @param {!ol.Feature} feature
  * @private
  *
@@ -2024,6 +2075,7 @@ os.source.Vector.prototype.columnTypeDetection_ = function(feature) {
 
 /**
  * Process features in the process queue.
+ *
  * @private
  */
 os.source.Vector.prototype.onProcessTimer_ = function() {
@@ -2038,6 +2090,7 @@ os.source.Vector.prototype.onProcessTimer_ = function() {
 
 /**
  * Perform processing actions that need to be batched for performance reasons.
+ *
  * @param {!Array<!ol.Feature>} features
  * @protected
  */
@@ -2076,6 +2129,7 @@ os.source.Vector.prototype.processDeferred = function(features) {
 
 /**
  * Fires the deferred unprocess handler immediately to ensure the queue is cleared.
+ *
  * @protected
  */
 os.source.Vector.prototype.processNow = function() {
@@ -2088,6 +2142,7 @@ os.source.Vector.prototype.processNow = function() {
 /**
  * Handle a feature being removed from the source. Always process removed features on a timer
  * because Openlayers doesn't have bulk remove.
+ *
  * @param {!ol.Feature} feature
  * @protected
  *
@@ -2108,6 +2163,7 @@ os.source.Vector.prototype.unprocessFeature = function(feature) {
 
 /**
  * Perform processing actions that aren't performance sensitive.
+ *
  * @param {!ol.Feature} feature
  * @protected
  *
@@ -2141,6 +2197,7 @@ os.source.Vector.prototype.onUnprocessTimer_ = function() {
 
 /**
  * Perform unprocessing actions that need to be batched for performance reasons.
+ *
  * @param {!Array<!ol.Feature>} features
  * @protected
  *
@@ -2185,6 +2242,7 @@ os.source.Vector.prototype.unprocessDeferred = function(features) {
 
 /**
  * Fires the deferred unprocess handler immediately to ensure the queue is cleared.
+ *
  * @protected
  */
 os.source.Vector.prototype.unprocessNow = function() {
@@ -2221,6 +2279,7 @@ os.source.Vector.prototype.onTimelineShow_ = function(event) {
 /**
  * Fires a visibility change event when the timeline plays/stops so the UI updates appropriately. All data will be
  * displayed while animating to prevent excessive UI updates, and while stopped the data will be filtered.
+ *
  * @param {os.time.TimelineControllerEvent} event
  * @private
  */
@@ -2234,6 +2293,7 @@ os.source.Vector.prototype.onTimelinePlayChange_ = function(event) {
 
 /**
  * Get the animation overlay.
+ *
  * @return {?os.layer.AnimationOverlay}
  */
 os.source.Vector.prototype.getAnimationOverlay = function() {
@@ -2243,6 +2303,7 @@ os.source.Vector.prototype.getAnimationOverlay = function() {
 
 /**
  * Creates a basic feature overlay used to animate features on the map.
+ *
  * @protected
  */
 os.source.Vector.prototype.createAnimationOverlay = function() {
@@ -2278,6 +2339,7 @@ os.source.Vector.prototype.refreshAnimationFade = function() {
 
 /**
  * Fade was toggled on/off. If off, make sure everything is back to opacity of 1
+ *
  * @private
  */
 os.source.Vector.prototype.fadeToggle_ = function() {
@@ -2296,6 +2358,7 @@ os.source.Vector.prototype.fadeToggle_ = function() {
 
 /**
  * Updates features displayed by the animation overlay if it exists.
+ *
  * @protected
  */
 os.source.Vector.prototype.updateAnimationOverlay = function() {
@@ -2423,6 +2486,7 @@ os.source.Vector.prototype.updateAnimationOverlay = function() {
 /**
  * Update all of the features with the specified fade level/opacity. The opacity is set as a feature level parameter,
  * which is multiplied by the layer level opacity before rendering.
+ *
  * @param {Array<!ol.Feature>} features
  * @param {number} opacity
  * @private
@@ -2436,6 +2500,7 @@ os.source.Vector.prototype.updateFadeStyle_ = function(features, opacity) {
 
 /**
  * Sets the opacity on the animation overlay. Used to sync the overlay layer with the actual layer.
+ *
  * @param {number} value
  */
 os.source.Vector.prototype.setOverlayOpacity = function(value) {
@@ -2447,6 +2512,7 @@ os.source.Vector.prototype.setOverlayOpacity = function(value) {
 
 /**
  * Sets the z-index on the animation overlay. Used to sync the overlay layer with the actual layer.
+ *
  * @param {number} value
  */
 os.source.Vector.prototype.setOverlayZIndex = function(value) {
@@ -2458,6 +2524,7 @@ os.source.Vector.prototype.setOverlayZIndex = function(value) {
 
 /**
  * Dispatches an animation frame event with a map of visibility changes.
+ *
  * @param {Array<!ol.Feature>=} opt_hide Features to hide
  * @param {Array<!ol.Feature>=} opt_show Features to show
  * @protected
@@ -2490,6 +2557,7 @@ os.source.Vector.prototype.dispatchAnimationFrame = function(opt_hide, opt_show)
 
 /**
  * Disposes of the animation overlay and cached features.
+ *
  * @protected
  */
 os.source.Vector.prototype.disposeAnimationOverlay = function() {
@@ -2517,6 +2585,7 @@ os.source.Vector.prototype.disposeAnimationOverlay = function() {
 
 /**
  * Set up animation state for dynamic features.
+ *
  * @protected
  */
 os.source.Vector.prototype.initDynamicAnimation = function() {
@@ -2532,6 +2601,7 @@ os.source.Vector.prototype.initDynamicAnimation = function() {
 
 /**
  * Add a listener for a dynamic feature.
+ *
  * @param {!ol.Feature} feature The feature.
  * @protected
  *
@@ -2556,6 +2626,7 @@ os.source.Vector.prototype.addDynamicListener = function(feature) {
 
 /**
  * Remove a listener for a dynamic feature.
+ *
  * @param {!ol.Feature} feature The feature.
  * @protected
  *
@@ -2574,6 +2645,7 @@ os.source.Vector.prototype.removeDynamicListener = function(feature) {
 
 /**
  * Handle dynamic feature property change events.
+ *
  * @param {!(os.events.PropertyChangeEvent|ol.events.Event)} event The change event.
  * @protected
  */
@@ -2594,6 +2666,7 @@ os.source.Vector.prototype.onDynamicFeatureChange = function(event) {
 
 /**
  * Dispose animation state for dynamic features.
+ *
  * @protected
  */
 os.source.Vector.prototype.disposeDynamicAnimation = function() {
@@ -2668,6 +2741,7 @@ os.source.Vector.prototype.setHighlightedItems = function(items) {
 
 /**
  * Area selection listener
+ *
  * @param {os.ui.action.ActionEvent} event
  * @private
  *
@@ -2730,6 +2804,7 @@ os.source.Vector.prototype.getFeaturesInExtent = function(extent) {
 
 /**
  * Get all features inside the provided geometry.
+ *
  * @param {!ol.geom.Geometry} geometry The geometry
  * @param {Array<ol.Feature>=} opt_features The list of features to search
  * @return {Array<ol.Feature>}
@@ -2839,6 +2914,7 @@ os.source.Vector.prototype.getFeaturesInGeometry = function(geometry, opt_featur
 
 /**
  * Tests if a JSTS area (polygon) contains/crosses/overlaps an Openlayers geometry.
+ *
  * @param {!jsts.geom.Geometry} area The JSTS geometry
  * @param {!ol.geom.Geometry} geometry The Openlayers geometry
  * @param {boolean=} opt_rectangular If the provided area is a rectangle. This function assumes features have been
@@ -2966,13 +3042,14 @@ os.source.Vector.prototype.isSelected = function(feature) {
 
 /**
  * Convenience check for whether something in array is selected
+ *
  * @param {Array<!ol.Feature>} features
  * @return {boolean|undefined} All == true; partial === undefined; none === false
  * @suppress {checkTypes}
  */
 os.source.Vector.prototype.isSelectedArray = function(features) {
   var l = features.length;
-  if (!(Object.keys(this.selectedById_).length) || !l) {
+  if (!l || !(Object.keys(this.selectedById_).length)) {
     // nothing selected, don't bother
     return false;
   }
@@ -3157,6 +3234,7 @@ os.source.Vector.prototype.selectNone = function() {
 
 /**
  * Select a feature in the source.
+ *
  * @param {ol.Feature} feature
  * @return {boolean} If the feature was added to the selection.
  * @protected
@@ -3185,6 +3263,7 @@ os.source.Vector.prototype.select = function(feature) {
 
 /**
  * Deselect a feature in the source.
+ *
  * @param {ol.Feature} feature Feature to deselect
  * @return {boolean} If the feature was added to the selection.
  * @protected
@@ -3247,6 +3326,7 @@ os.source.Vector.prototype.showFeatures = function(features) {
 
 /**
  * Convenience show only the given features; hide others; maintain selection on visible features
+ *
  * @param {!ol.Feature|Array<!ol.Feature>} features
  */
 os.source.Vector.prototype.setVisibleFeatures = function(features) {
@@ -3377,6 +3457,7 @@ os.source.Vector.prototype.updateFeaturesVisibility = function(features, visible
 
 /**
  * Triggers an application label update if this source is configured to show labels.
+ *
  * @protected
  */
 os.source.Vector.prototype.updateLabels = function() {
@@ -3390,6 +3471,7 @@ os.source.Vector.prototype.updateLabels = function() {
 
 /**
  * Handler for a feature being hovered on the map.
+ *
  * @param {ol.Feature} feature The feature
  */
 os.source.Vector.prototype.handleFeatureHover = function(feature) {
@@ -3401,6 +3483,7 @@ os.source.Vector.prototype.handleFeatureHover = function(feature) {
 
 /**
  * Set the feature hover handler function.
+ *
  * @param {os.source.FeatureHoverFn=} opt_fn The handler function
  * @param {T=} opt_context The this context for the handler
  * @template T
@@ -3414,6 +3497,7 @@ os.source.Vector.prototype.setHoverHandler = function(opt_fn, opt_context) {
 
 /**
  * Default feature hover handler. Highlights the feature.
+ *
  * @param {ol.Feature} feature The hovered feature.
  * @private
  */
@@ -3424,6 +3508,7 @@ os.source.Vector.prototype.defaultFeatureHover_ = function(feature) {
 
 /**
  * Gets the unique ID used by features in the source.
+ *
  * @return {os.data.ColumnDefinition}
  */
 os.source.Vector.prototype.getUniqueId = function() {
@@ -3433,6 +3518,7 @@ os.source.Vector.prototype.getUniqueId = function() {
 
 /**
  * Sets the unique ID used by features in the source.
+ *
  * @param {os.data.ColumnDefinition} value
  */
 os.source.Vector.prototype.setUniqueId = function(value) {

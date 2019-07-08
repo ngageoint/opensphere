@@ -14,6 +14,7 @@ goog.require('os.ui.slick.slickTreeDirective');
 
 /**
  * The filter tree directive
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.ui.filterTreeDirective = function() {
@@ -42,6 +43,7 @@ os.ui.Module.directive('filtertree', [os.ui.filter.ui.filterTreeDirective]);
 
 /**
  * Controller for the filter tree
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -70,6 +72,7 @@ os.ui.filter.ui.FilterTreeCtrl = function($scope) {
 
 /**
  * Clean up references/listeners.
+ *
  * @private
  */
 os.ui.filter.ui.FilterTreeCtrl.prototype.onDestroy_ = function() {
@@ -89,6 +92,7 @@ os.ui.filter.ui.FilterTreeCtrl.TYPE_GROUP_BY_ = new os.ui.filter.ui.FilterGroupB
 
 /**
  * Refreshes the filter data
+ *
  * @param {goog.events.Event=} opt_e
  * @private
  */

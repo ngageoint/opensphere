@@ -7,6 +7,7 @@ goog.require('ol.webgl');
 
 /**
  * Checks if WebGL and required extensions are supported by the browser.
+ *
  * @return {boolean}
  */
 os.webgl.isSupported = function() {
@@ -30,6 +31,7 @@ os.webgl.isSupported = function() {
 
 /**
  * Checks if WebGL will be rendered with degraded performance
+ *
  * @return {boolean|null}
  */
 os.webgl.hasPerformanceCaveat = function() {
@@ -71,6 +73,7 @@ os.webgl.AltitudeMode = {
 
 /**
  * Gets a human readable name for altitude mode
+ *
  * @param {os.webgl.AltitudeMode} altitudeMode - The mode to map to a name
  * @return {string}
  */

@@ -9,6 +9,7 @@ goog.require('plugin.track');
 
 /**
  * Vector source to manage tracks created in the application.
+ *
  * @param {olx.source.VectorOptions=} opt_options OpenLayers vector source options.
  * @extends {plugin.file.kml.KMLSource}
  * @constructor
@@ -57,6 +58,7 @@ plugin.track.TrackSource.prototype.updateVisibilityFromNodes = function() {
 
 /**
  * Updates the z-index of all tracks in the layer.
+ *
  * @protected
  */
 plugin.track.TrackSource.prototype.updateTrackZIndex = function() {

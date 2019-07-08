@@ -2,6 +2,7 @@ goog.provide('os.histo.Histogram');
 
 goog.require('goog.asserts');
 goog.require('goog.events.EventTarget');
+goog.require('os.data.xf.IGroupable');
 goog.require('os.histo.Bin');
 goog.require('os.histo.IBinMethod');
 goog.require('os.histo.Result');
@@ -15,6 +16,7 @@ goog.require('os.histo.Result');
  *
  * @constructor
  * @extends {goog.events.EventTarget}
+ * @implements {os.data.xf.IGroupable<T>}
  * @template T
  */
 os.histo.Histogram = function() {
@@ -25,6 +27,13 @@ os.histo.Histogram = function() {
    * @protected
    */
   this.binMethod = null;
+
+  /**
+   * The user-facing name for the histogram.
+   * @type {?string}
+   * @protected
+   */
+  this.name = null;
 
   /**
    * @type {?crossfilter.Dimension}
@@ -89,6 +98,7 @@ os.histo.Histogram.prototype.disposeInternal = function() {
 
 /**
  * Initializes the unique dimension
+ *
  * @protected
  */
 os.histo.Histogram.prototype.initUnique = function() {
@@ -98,6 +108,7 @@ os.histo.Histogram.prototype.initUnique = function() {
 
 /**
  * Fires a change event when the histogram changes.
+ *
  * @protected
  */
 os.histo.Histogram.prototype.onDataChange = function() {
@@ -107,6 +118,7 @@ os.histo.Histogram.prototype.onDataChange = function() {
 
 /**
  * Add item(s) to the histogram
+ *
  * @param {!(T|Array.<!T>)} items
  *
  * @export Prevent the compiler from moving the function off the prototype.
@@ -123,6 +135,7 @@ os.histo.Histogram.prototype.addItems = function(items) {
 
 /**
  * Remove item(s) from the histogram
+ *
  * @param {!(T|Array.<!T>)} items
  *
  * @export Prevent the compiler from moving the function off the prototype.
@@ -159,6 +172,7 @@ os.histo.Histogram.prototype.clear = function() {
 
 /**
  * Get the results
+ *
  * @return {Array.<os.histo.Bin.<T>>}
  *
  * @export Prevent the compiler from moving the function off the prototype.
@@ -198,8 +212,23 @@ os.histo.Histogram.prototype.map_ = function(item, i, arr) {
 
 
 /**
- * Get the bin method.
- * @return {os.histo.IBinMethod.<T>}
+ * @inheritDoc
+ */
+os.histo.Histogram.prototype.getName = function() {
+  return this.name;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.histo.Histogram.prototype.setName = function(value) {
+  this.name = value;
+};
+
+
+/**
+ * @inheritDoc
  */
 os.histo.Histogram.prototype.getBinMethod = function() {
   return this.binMethod;
@@ -207,9 +236,7 @@ os.histo.Histogram.prototype.getBinMethod = function() {
 
 
 /**
- * Sets the bin method.
- * @param {os.histo.IBinMethod.<T>} method
- *
+ * @inheritDoc
  * @export Prevent the compiler from moving the function off the prototype.
  */
 os.histo.Histogram.prototype.setBinMethod = function(method) {
@@ -237,11 +264,7 @@ os.histo.Histogram.prototype.setBinMethod = function(method) {
 
 
 /**
- * This runs when an item is added to a group
- * @param {os.histo.Bin.<T>} bin
- * @param {T} item
- * @return {os.histo.Bin.<T>}
- * @protected
+ * @inheritDoc
  */
 os.histo.Histogram.prototype.reduceAdd = function(bin, item) {
   bin.addItem(item);
@@ -250,11 +273,7 @@ os.histo.Histogram.prototype.reduceAdd = function(bin, item) {
 
 
 /**
- * This runs when an item is removed from a group
- * @param {os.histo.Bin.<T>} bin
- * @param {T} item
- * @return {os.histo.Bin.<T>}
- * @protected
+ * @inheritDoc
  */
 os.histo.Histogram.prototype.reduceRemove = function(bin, item) {
   bin.removeItem(item);
@@ -263,9 +282,7 @@ os.histo.Histogram.prototype.reduceRemove = function(bin, item) {
 
 
 /**
- * Creates a new bin for a group
- * @return {os.histo.Bin.<T>}
- * @protected
+ * @inheritDoc
  */
 os.histo.Histogram.prototype.reduceInit = function() {
   return new os.histo.Bin();

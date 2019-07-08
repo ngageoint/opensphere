@@ -11,6 +11,8 @@ goog.require('os.query.BaseAreaManager');
 
 /**
  * Abstract command for adding/removing area
+ *
+ * @abstract
  * @param {!ol.Feature} area
  * @implements {os.command.ICommand}
  * @extends {goog.Disposable}
@@ -79,19 +81,22 @@ os.ui.query.cmd.AbstractArea.prototype.state = os.command.State.READY;
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.ui.query.cmd.AbstractArea.prototype.execute = goog.abstractMethod;
+os.ui.query.cmd.AbstractArea.prototype.execute = function() {};
 
 
 /**
+ * @abstract
  * @inheritDoc
  */
-os.ui.query.cmd.AbstractArea.prototype.revert = goog.abstractMethod;
+os.ui.query.cmd.AbstractArea.prototype.revert = function() {};
 
 
 /**
  * Checks if the command is ready to execute.
+ *
  * @return {boolean}
  */
 os.ui.query.cmd.AbstractArea.prototype.canExecute = function() {

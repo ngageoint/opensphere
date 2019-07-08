@@ -9,6 +9,8 @@ goog.require('os.ui.window');
 
 /**
  * Controller for the provider import UI
+ *
+ * @abstract
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -51,6 +53,7 @@ os.ui.ProviderImportCtrl.prototype.initialize = function() {
 
 /**
  * Save button handler
+ *
  * @export
  */
 os.ui.ProviderImportCtrl.prototype.accept = function() {
@@ -70,6 +73,7 @@ os.ui.ProviderImportCtrl.prototype.accept = function() {
 
 /**
  * Closes the window
+ *
  * @export
  */
 os.ui.ProviderImportCtrl.prototype.close = function() {
@@ -83,6 +87,7 @@ os.ui.ProviderImportCtrl.prototype.close = function() {
 
 /**
  * Apply the scope
+ *
  * @protected
  */
 os.ui.ProviderImportCtrl.prototype.apply = function() {
@@ -94,6 +99,7 @@ os.ui.ProviderImportCtrl.prototype.apply = function() {
 
 /**
  * Tests the data provider to ensure that it loads properly
+ *
  * @protected
  */
 os.ui.ProviderImportCtrl.prototype.test = function() {
@@ -111,6 +117,7 @@ os.ui.ProviderImportCtrl.prototype.test = function() {
 
 /**
  * Test finished handler
+ *
  * @param {os.events.PropertyChangeEvent} event
  */
 os.ui.ProviderImportCtrl.prototype.onTestFinished = function(event) {
@@ -133,6 +140,7 @@ os.ui.ProviderImportCtrl.prototype.onTestFinished = function(event) {
 
 /**
  * Save and close
+ *
  * @protected
  */
 os.ui.ProviderImportCtrl.prototype.saveAndClose = function() {
@@ -149,9 +157,11 @@ os.ui.ProviderImportCtrl.prototype.saveAndClose = function() {
 
 /**
  * Creates a data provider from the form
+ *
+ * @abstract
  * @return {os.data.IDataProvider} The data provider
  */
-os.ui.ProviderImportCtrl.prototype.getDataProvider = goog.abstractMethod;
+os.ui.ProviderImportCtrl.prototype.getDataProvider = function() {};
 
 
 /**
@@ -163,6 +173,7 @@ os.ui.ProviderImportCtrl.prototype.beforeTest = function() {
 
 /**
  * Preprocess the config prior to passing it to the provider.
+ *
  * @protected
  */
 os.ui.ProviderImportCtrl.prototype.cleanConfig = function() {};
@@ -176,14 +187,17 @@ os.ui.ProviderImportCtrl.prototype.afterTest = function() {
 
 
 /**
+ * @abstract
  * @return {boolean} True if the form differs from this.dp, false otherwise
  */
-os.ui.ProviderImportCtrl.prototype.formDiff = goog.abstractMethod;
+os.ui.ProviderImportCtrl.prototype.formDiff = function() {};
 
 
 /**
  * Gets the config to be persisted
+ *
+ * @abstract
  * @return {Object.<string, *>} the config
  * @protected
  */
-os.ui.ProviderImportCtrl.prototype.getConfig = goog.abstractMethod;
+os.ui.ProviderImportCtrl.prototype.getConfig = function() {};

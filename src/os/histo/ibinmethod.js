@@ -22,7 +22,7 @@ os.histo.IBinMethod.prototype.getValue;
 /**
  * @return {string}
  */
-os.histo.IBinMethod.prototype.getField = goog.abstractMethod;
+os.histo.IBinMethod.prototype.getField;
 
 
 /**
@@ -139,3 +139,15 @@ os.histo.IBinMethod.prototype.getArrayKeys;
  * @param {boolean|string} value
  */
 os.histo.IBinMethod.prototype.setArrayKeys;
+
+
+/**
+ * @return {boolean}
+ */
+os.histo.IBinMethod.prototype.getIsDate;
+
+
+/**
+ * @param {boolean} value
+ */
+os.histo.IBinMethod.prototype.setIsDate;

@@ -7,6 +7,7 @@ goog.require('plugin.google.places.Search');
 
 /**
  * Provides GeoNames search
+ *
  * @extends {os.plugin.AbstractPlugin}
  * @constructor
  */

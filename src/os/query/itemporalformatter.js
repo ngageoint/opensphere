@@ -5,6 +5,7 @@ goog.require('os.time.TimelineController');
 
 /**
  * Interface for formatting timeline controller start/end date.
+ *
  * @interface
  */
 os.query.ITemporalFormatter = function() {};

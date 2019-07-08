@@ -8,6 +8,7 @@ goog.require('os.ui.hist.IHistogramChart');
 
 /**
  * Draws the histogram as lines.
+ *
  * @param {!Element} parent The parent SVG container for the chart.
  * @implements {os.ui.hist.IHistogramChart}
  * @extends {goog.Disposable}
