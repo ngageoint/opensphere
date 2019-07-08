@@ -611,7 +611,7 @@ os.layer.Tile.prototype.getIcons = function() {
   }
 
   html += color ? os.ui.createIconSet(this.getId(), this.getSVGIconsInternal(), this.getStateBadge(), color)
-  : this.getIconsInternal();
+    : this.getIconsInternal();
   return html;
 };
 

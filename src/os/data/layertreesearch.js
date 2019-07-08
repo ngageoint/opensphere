@@ -139,7 +139,7 @@ os.data.LayerTreeSearch.prototype.makeGroups_ = function(results, parent) {
           var node = /** @type {os.data.LayerNode} */ (bucket[i]);
           var layer = node.getLayer();
           var t = os.implements(layer, os.IGroupable.ID) ?
-              /** @type {os.IGroupable} */ (layer).getGroupLabel() : layer.getTitle();
+            /** @type {os.IGroupable} */ (layer).getGroupLabel() : layer.getTitle();
 
           if (t.length < min) {
             title = t;
