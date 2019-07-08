@@ -535,7 +535,7 @@ os.time.xf.TimeModel.prototype.getResults = function(opt_value, opt_dim, opt_bot
   var val = os.time.xf.TimeModel.base(this, 'getResults', opt_value, opt_dim, opt_bottom);
   if (!(Array.isArray(val) && val.length) && !this.isDisposed()) {
     var dim = opt_dim && this.hasDimension(opt_dim) ?
-          this.timelessDimensions[opt_dim] : goog.object.getAnyValue(this.timelessDimensions);
+      this.timelessDimensions[opt_dim] : goog.object.getAnyValue(this.timelessDimensions);
     opt_value = opt_value || Infinity;
 
     if (dim) {
