@@ -291,6 +291,8 @@ os.state.v4.BaseLayerState.prototype.saveInternal = function(options, rootObj) {
   try {
     var layers = this.getLayers();
     var hasLocked = false;
+    var skippedLayers = [];
+
     for (var i = 0, n = layers.length; i < n; i++) {
       var layer = /** @type {os.layer.ILayer} */ (layers[i]);
       if (this.isValid(layer)) {
@@ -307,10 +309,20 @@ os.state.v4.BaseLayerState.prototype.saveInternal = function(options, rootObj) {
 
       var layerOptions = layer.getLayerOptions();
       if (layerOptions && layerOptions['skipState']) {
-        var msg = 'The \'' + layer.getTitle() + '\' layer is of a type which can not be saved in state files. ' +
-            'That layer will not be included. The state file may look different from what you currently see!';
-        os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.WARNING);
+        skippedLayers.push(layer.getTitle());
       }
+    }
+
+    if (skippedLayers.length > 0) {
+      var joined = '';
+
+      skippedLayers.forEach(function(l) {
+        joined += '<li>' + l + '</li>';
+      });
+
+      var msg = 'The following layer(s) are not supported by state files: <ul class="my-2"><b>' + joined +
+          '</b></ul> and have been excluded. The state file will look different from what you currently see!';
+      os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.WARNING);
     }
 
     if (hasLocked) {
