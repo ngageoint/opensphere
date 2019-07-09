@@ -168,7 +168,7 @@ os.search.SearchManager.prototype.getEnabledSearches = function(opt_term) {
  * @inheritDoc
  */
 os.search.SearchManager.prototype.search = function(term, opt_start, opt_pageSize,
-  opt_sortBy, opt_force, opt_noFacets, opt_sortOrder) {
+    opt_sortBy, opt_force, opt_noFacets, opt_sortOrder) {
   this.setTerm(term);
   this.providerResults = {};
   this.results = [];

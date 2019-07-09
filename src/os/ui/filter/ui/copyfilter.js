@@ -434,7 +434,7 @@ os.ui.filter.ui.CopyFilterCtrl.prototype.finish = function() {
  * @return {os.ui.filter.ui.CopyFilterPickerModel}
  */
 os.ui.filter.ui.CopyFilterCtrl.createPickerModel = function(targetLayerName, targetFilterKey,
-  sourceColumnName, targetColumns, selectedColumn, opt_mapping) {
+    sourceColumnName, targetColumns, selectedColumn, opt_mapping) {
   var model = /** @type {os.ui.filter.ui.CopyFilterPickerModel} */ ({
     'name': targetLayerName,
     'targetFilterKey': targetFilterKey,
