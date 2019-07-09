@@ -1,8 +1,9 @@
 goog.provide('os.layer.config.AbstractLayerConfig');
-goog.require('goog.Uri.QueryData');
+
 goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('os.layer.config.ILayerConfig');
+goog.require('os.net');
 goog.require('os.style');
 
 
@@ -113,11 +114,8 @@ os.layer.config.AbstractLayerConfig.prototype.initializeConfig = function(option
     this.url = options['url'];
   }
 
-  // avoiding instanceof here for external tools
-  if (typeof options['params'] === 'string') {
-    this.params = new goog.Uri.QueryData(options['params']);
-  } else if (options['params']) {
-    this.params = goog.Uri.QueryData.createFromMap(options['params']);
+  if (options['params'] != null) {
+    this.params = os.net.paramsToQueryData(options['params']);
   }
 
   this.alpha = goog.math.clamp(options['alpha'] || options['opacity'] || 1, 0, 1);

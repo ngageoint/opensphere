@@ -15,6 +15,7 @@ goog.require('os.command.LayerAdd');
 goog.require('os.data.DataManager');
 goog.require('os.file');
 goog.require('os.im.mapping.MappingManager');
+goog.require('os.net');
 goog.require('os.state.XMLState');
 goog.require('os.string');
 goog.require('os.style.label');
@@ -418,7 +419,7 @@ os.state.v4.BaseLayerState.prototype.configKeyToXML = function(layerConfig, type
   switch (key) {
     case 'params':
       var paramsEl = os.xml.appendElement(os.state.v4.LayerTag.PARAMS, layerEl);
-      var qd = typeof value === 'string' ? new goog.Uri.QueryData(value) : /** @type {goog.Uri.QueryData} */ (value);
+      var qd = os.net.paramsToQueryData(/** @type {string|goog.Uri.QueryData|Object} */ (value));
       var qdKeys = qd.getKeys();
       for (var i = 0, n = qdKeys.length; i < n; i++) {
         var qdKey = qdKeys[i];
