@@ -12,6 +12,7 @@ goog.require('ol.MapBrowserEventType');
 goog.require('ol.array');
 goog.require('ol.events');
 goog.require('ol.geom.Point');
+goog.require('os.MapContainer');
 goog.require('os.action.EventType');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.map');
@@ -335,9 +336,11 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   this['altitudeModes'] = ol.obj.getValues(os.webgl.AltitudeMode);
 
 
-  var webGLRenderer = os.map.mapContainer.getWebGLRenderer();
-  if (webGLRenderer) {
-    this['altitudeModes'] = webGLRenderer.getAltitudeModes();
+  if (os.map.mapContainer) {
+    var webGLRenderer = os.map.mapContainer.getWebGLRenderer();
+    if (webGLRenderer) {
+      this['altitudeModes'] = webGLRenderer.getAltitudeModes();
+    }
   }
 
   var defaultAltMode = os.webgl.AltitudeMode.CLAMP_TO_GROUND;
