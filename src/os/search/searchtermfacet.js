@@ -17,6 +17,12 @@ os.search.SearchTermFacet = function() {
    * @private
    */
   this.regex_ = null;
+
+  /**
+   * @type {?string}
+   * @private
+   */
+  this.term_ = null;
 };
 goog.inherits(os.search.SearchTermFacet, os.search.BaseFacet);
 
@@ -26,10 +32,12 @@ goog.inherits(os.search.SearchTermFacet, os.search.BaseFacet);
  */
 os.search.SearchTermFacet.prototype.setTerm = function(term) {
   this.regex_ = null;
+  this.term_ = null;
 
   if (term) {
     var pattern = os.ui.slick.TreeSearch.getPattern(term).replace(/\.\*/g, '');
     this.regex_ = new RegExp(pattern, 'gi');
+    this.term_ = term;
   }
 };
 
@@ -100,12 +108,12 @@ os.search.SearchTermFacet.prototype.getScore = function(regex, text, opt_base) {
   var results = regex.exec(text);
 
   // set up the term map
-  var terms = regex.source.split(/[(|)]/);
+  var terms = this.term_ ? this.term_.split(' ') : [];
   var termMap = {};
 
   for (var i = 0, n = terms.length; i < n; i++) {
     if (terms[i]) {
-      termMap[terms[i]] = 0;
+      termMap[terms[i].toLowerCase()] = 0;
     }
   }
 
