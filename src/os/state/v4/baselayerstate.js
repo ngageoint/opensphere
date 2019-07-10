@@ -15,6 +15,7 @@ goog.require('os.command.LayerAdd');
 goog.require('os.data.DataManager');
 goog.require('os.file');
 goog.require('os.im.mapping.MappingManager');
+goog.require('os.net');
 goog.require('os.state.XMLState');
 goog.require('os.string');
 goog.require('os.style.label');
@@ -290,6 +291,8 @@ os.state.v4.BaseLayerState.prototype.saveInternal = function(options, rootObj) {
   try {
     var layers = this.getLayers();
     var hasLocked = false;
+    var skippedLayers = [];
+
     for (var i = 0, n = layers.length; i < n; i++) {
       var layer = /** @type {os.layer.ILayer} */ (layers[i]);
       if (this.isValid(layer)) {
@@ -306,10 +309,20 @@ os.state.v4.BaseLayerState.prototype.saveInternal = function(options, rootObj) {
 
       var layerOptions = layer.getLayerOptions();
       if (layerOptions && layerOptions['skipState']) {
-        var msg = 'The \'' + layer.getTitle() + '\' layer is of a type which can not be saved in state files. ' +
-            'That layer will not be included. The state file may look different from what you currently see!';
-        os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.WARNING);
+        skippedLayers.push(layer.getTitle());
       }
+    }
+
+    if (skippedLayers.length > 0) {
+      var joined = '';
+
+      skippedLayers.forEach(function(l) {
+        joined += '<li>' + l + '</li>';
+      });
+
+      var msg = 'The following layer(s) are not supported by state files: <ul class="my-2"><b>' + joined +
+          '</b></ul> and have been excluded. The state file will look different from what you currently see!';
+      os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.WARNING);
     }
 
     if (hasLocked) {
@@ -418,7 +431,7 @@ os.state.v4.BaseLayerState.prototype.configKeyToXML = function(layerConfig, type
   switch (key) {
     case 'params':
       var paramsEl = os.xml.appendElement(os.state.v4.LayerTag.PARAMS, layerEl);
-      var qd = typeof value === 'string' ? new goog.Uri.QueryData(value) : /** @type {goog.Uri.QueryData} */ (value);
+      var qd = os.net.paramsToQueryData(/** @type {string|goog.Uri.QueryData|Object} */ (value));
       var qdKeys = qd.getKeys();
       for (var i = 0, n = qdKeys.length; i < n; i++) {
         var qdKey = qdKeys[i];
