@@ -123,7 +123,7 @@ Some of the intricacies from using the compiler are documented in the `Compiler 
 The debug build output
 ======================
 
-The ``index-template.html`` and its corresponding ``index.js`` file define how the main page is packaged up by opensphere-build-index_. That script produces ``index.html``, which is the is the debug instance. It contains all of the vendor scripts and css in addition to all of the source files listed from the `Closure Compiler`_ manifest (``.build/gcc-manfiest``).
+The ``index-template.html`` and its corresponding ``index.js`` file define how the main page is packaged up by opensphere-build-index_. That script produces ``index.html``, which is the debug instance. It contains all of the vendor scripts and css in addition to all of the source files listed from the `Closure Compiler`_ manifest (``.build/gcc-manifest``).
 
 .. _opensphere-build-index: https://github.com/ngageoint/opensphere-build-index
 
