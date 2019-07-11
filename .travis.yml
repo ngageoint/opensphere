@@ -27,8 +27,8 @@ install:
 script:
 - ./tasks/ci-script.sh
 after_success:
-- ./tasks/deploy.sh
 - if $RELEASE; then yarn run semantic-release; fi
+- ./tasks/deploy.sh
 after_failure:
 - "./cypress/support/s3-artifact-upload.sh"
 branches:
