@@ -1,6 +1,6 @@
 {
   "name": "opensphere",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "OpenSphere is a pluggable GIS web application that supports both 2D and 3D views.",
   "main": "index.js",
   "directories": {
@@ -125,7 +125,7 @@
     "build:xt": "mkdirp .build dist/opensphere; tasks/xt/build.js; cp src/os/xt/xt-example.html dist/opensphere",
     "package:update": "if git diff --name-only ORIG_HEAD HEAD | grep --quiet package.json; then echo 'UPDATE: package.json was updated, consider running yarn in your workspace root'; fi",
     "perms": "chmod -R u+rwX,go+rX,go-w .",
-    "semantic-release": "semantic-release",
+    "semantic-release": "semantic-release --dry-run",
     "start-server": "http-server ../../ -p 8282 -c-1 -o -U -s &",
     "stop-server": "pkill -f http-server"
   },
@@ -196,7 +196,6 @@
       {
         "path": "@semantic-release/git",
         "assets": [
-          "package.json",
           "CHANGELOG.md"
         ],
         "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
@@ -254,7 +253,7 @@
     "postcss-cli": "^5.0.0",
     "rimraf": "^2.5.4",
     "sass-lint": "^1.12.1",
-    "semantic-release": "^15.13.3",
+    "semantic-release": "^15.13.18",
     "surge": "^0.20.4",
     "validate-commit-msg": "^2.8.2",
     "xmllint": "^0.1.1"
