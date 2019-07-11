@@ -4,6 +4,7 @@ goog.provide('plugin.places.ui.placesNodeUIDirective');
 goog.require('goog.events.EventType');
 goog.require('os.ui.Module');
 goog.require('os.ui.node.DefaultLayerNodeUICtrl');
+goog.require('plugin.places');
 
 
 /**
