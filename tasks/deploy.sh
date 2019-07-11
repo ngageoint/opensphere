@@ -45,6 +45,15 @@ then
       # https://en.wikipedia.org/wiki/Domain_Name_System#Domain_name_syntax
       DEPLOY_SUBDOMAIN=`echo "$DEPLOY_SUBDOMAIN_UNFORMATTED" | sed -r 's/[\/|\.]+/\-/g'`
       DEPLOY_DOMAIN=https://${DEPLOY_SUBDOMAIN}-${REPO_NAME}-${REPO_OWNER}.surge.sh
+
+      if $RELEASE; then
+        # fix the version we are reporting in the application
+        packageVersion=$($(npm bin)/json version < package.json)
+        echo "Switching package version from 0.0.0-development to $packageVersion"
+        perl -pi -e "s#0\.0\.0-development#$packageVersion#g" $DEPLOY_PATH/index.html
+        DEPLOY_DOMAIN="https://opensphere-ngageoint.surge.sh"
+      fi
+
       surge --project ${DEPLOY_PATH} --domain $DEPLOY_DOMAIN;
     done
   fi
