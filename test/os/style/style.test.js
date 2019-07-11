@@ -167,3 +167,103 @@ describe('os.style.createFeatureStyle', function() {
     expect(style.length).toBe(2);
   });
 });
+
+describe('os.style.mergeConfig', function() {
+  it('should merge basic style configs', function() {
+    var from = {
+      'string': 'This is a test',
+      'number': 1,
+      'boolean': true
+    };
+
+    var to = {};
+
+    os.style.mergeConfig(from, to);
+    expect(to).toEqual(from);
+    expect(to).not.toBe(from);
+  });
+
+  it('should merge nested style configs', function() {
+    var from = {
+      'nested': {
+        'string': 'test',
+        'number': 1,
+        'boolean': true
+      },
+      'string': 'This is a test',
+      'number': 2,
+      'boolean': false
+    };
+
+    var to = {};
+    os.style.mergeConfig(from, to);
+    expect(to).toEqual(from);
+  });
+
+  it('should overwrite when merging', function() {
+    var from = {
+      'nested': {
+        'egg': 2
+      },
+      'string': 'test',
+      'number': 1,
+      'boolean': true
+    };
+
+    var toMergeAll = {
+      'nested': {
+        'egg': 1
+      },
+      'string': 'mergeAll',
+      'number': 0,
+      'boolean': false,
+      'other': 'no change'
+    };
+
+    os.style.mergeConfig(from, toMergeAll);
+    expect(toMergeAll).toEqual(ol.obj.assign({}, toMergeAll, from));
+
+    var toMergeSome = {
+      'string': 'mergeSome',
+      'number': -1
+    };
+
+    os.style.mergeConfig(from, toMergeSome);
+    expect(toMergeSome).toEqual(from);
+
+    var toMergeSomeNested = {
+      'nested': {},
+      'string': 'mergeSomeNested'
+    };
+
+    os.style.mergeConfig(from, toMergeSomeNested);
+    expect(toMergeSomeNested).toEqual(from);
+  });
+
+  it('should use null for deletions', function() {
+    var from = {'value': null};
+
+    var to = {'value': {'color': 'red'}};
+
+    os.style.mergeConfig(from, to);
+    expect(to).toEqual(from);
+
+    var newAddition = {'value': {'color': 'blue'}};
+
+    os.style.mergeConfig(newAddition, to);
+    expect(to).toEqual(newAddition);
+  });
+
+  it('should use undefined for inheritence', function() {
+    // we've already tested implicit undefined above, so test explicit undefined
+    var to = {'value': undefined};
+    var from = {'value': 1};
+    os.style.mergeConfig(from, to);
+    expect(to).toEqual(from);
+
+    var to = {'stroke': undefined};
+    var from = {'stroke': {'color': 'red'}};
+    os.style.mergeConfig(from, to);
+    expect(to).toEqual(from);
+  });
+});
