@@ -814,6 +814,36 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
   // Stack this new window on top of others
   $timeout(function() {
     this.bringToFront();
+    this.element.resize(function() {
+      var width = this.element.outerWidth();
+      var addClass = 'u-parent-resizer-xs';
+      this.element.removeClass('u-parent-resizer-sm');
+      if (width > 576) {
+        addClass = 'u-parent-resizer-sm';
+        this.element.removeClass('u-parent-resizer-xs');
+        this.element.removeClass('u-parent-resizer-md');
+      }
+      if (width > 768) {
+        addClass = 'u-parent-resizer-md';
+        this.element.removeClass('u-parent-resizer-sm');
+        this.element.removeClass('u-parent-resizer-lg');
+      }
+      if (width > 992) {
+        addClass = 'u-parent-resizer-lg';
+        this.element.removeClass('u-parent-resizer-md');
+        this.element.removeClass('u-parent-resizer-xl');
+      }
+      if (width > 1200) {
+        addClass = 'u-parent-resizer-xl';
+        this.element.removeClass('u-parent-resizer-lg');
+        this.element.removeClass('u-parent-resizer-xxl');
+      }
+      if (width > 1500) {
+        addClass = 'u-parent-resizer-xxl';
+        this.element.removeClass('u-parent-resizer-xl');
+      }
+      this.element.addClass(addClass);
+    }.bind(this));
   }.bind(this));
 };
 goog.inherits(os.ui.WindowCtrl, goog.Disposable);

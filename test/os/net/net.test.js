@@ -75,4 +75,43 @@ describe('os.net', function() {
     var userTrustedUris = os.settings.get('userTrustedUris', {});
     expect(userTrustedUris[url3]).toBe(true);
   });
+
+  it('creates query data from different param types', function() {
+    var stringParams = 'color=blue&size=50&style=undefined';
+    var qd = os.net.paramsToQueryData(stringParams);
+
+    expect(qd instanceof goog.Uri.QueryData).toBe(true);
+    expect(qd.getCount()).toBe(3);
+    expect(qd.get('color')).toBe('blue');
+    expect(qd.get('size')).toBe('50');
+    expect(qd.get('style')).toBe('undefined');
+
+    var objParams = {
+      color: 'red',
+      size: 30,
+      style: 'triangle'
+    };
+    qd = os.net.paramsToQueryData(objParams);
+
+    expect(qd instanceof goog.Uri.QueryData).toBe(true);
+    expect(qd.getCount()).toBe(3);
+    expect(qd.get('color')).toBe('red');
+    expect(qd.get('size')).toBe('30');
+    expect(qd.get('style')).toBe('triangle');
+
+    var qdParams = new goog.Uri.QueryData('color=black&size=10&style=ellipse');
+    qd = os.net.paramsToQueryData(qdParams);
+
+    expect(qd instanceof goog.Uri.QueryData).toBe(true);
+    expect(qd.getCount()).toBe(3);
+    expect(qd.get('color')).toBe('black');
+    expect(qd.get('size')).toBe('10');
+    expect(qd.get('style')).toBe('ellipse');
+
+    // handle the empty case
+    qd = os.net.paramsToQueryData(null);
+
+    expect(qd instanceof goog.Uri.QueryData).toBe(true);
+    expect(qd.getCount()).toBe(0);
+  });
 });
