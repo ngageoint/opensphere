@@ -137,19 +137,24 @@ os.data.AreaNode.prototype.formatIcons = function() {
 
   var icon;
   var tooltip;
+  var statecopy = '';
+  var badgecolor = '';
 
   switch (result) {
     case os.query.AreaState.EXCLUSION:
       icon = 'fa-ban text-danger';
       tooltip = 'This area is an exclusion';
+      badgecolor = 'text-danger';
       break;
     case os.query.AreaState.INCLUSION:
       icon = 'fa-circle u-text-yellow';
       tooltip = 'This area is querying features';
+      badgecolor = 'u-text-yellow';
       break;
     case os.query.AreaState.BOTH:
       icon = 'fa-times-circle text-warning';
       tooltip = 'This area is being used for queries and exclusions';
+      badgecolor = 'text-warning';
       break;
     case os.query.AreaState.NONE:
     default:
@@ -159,7 +164,11 @@ os.data.AreaNode.prototype.formatIcons = function() {
   }
 
   if (icon) {
-    return ' <i class="fa ' + icon + '" title="' + tooltip + '"></i> ';
+    if (os.state.isStateFile(this.getId())) {
+      statecopy = 'fa fa-bookmark ';
+    }
+    return ' <i class="fa ' + icon + '" title="' + tooltip + '"></i> <i class=" '
+      + statecopy + badgecolor + '" title="This is from a state file"></i>';
   }
 
   return os.data.AreaNode.base(this, 'formatIcons');

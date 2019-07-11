@@ -8,8 +8,6 @@ goog.require('os.ui.Module');
 
 
 /**
- * The count by directive
- *
  * @return {angular.Directive}
  */
 os.ui.text.simpleMDEDirective = function() {
@@ -124,8 +122,6 @@ os.ui.text.SimpleMDE.BASICTOOLBAR = [
 
 
 /**
- * Controller class for the source switcher
- *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout

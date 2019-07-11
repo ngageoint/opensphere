@@ -46,6 +46,14 @@ os.data.groupby.SourceGroupBy.prototype.getGroupIds = function(node) {
     }
   }
 
+  if (node && node instanceof os.ui.filter.ui.FilterNode) {
+    try {
+      sourceName = /** @type {string|undefined} */ (node.getEntry().getSource());
+    } catch (e) {
+      // can't find the source, so use the default group
+    }
+  }
+
   if (sourceName) {
     ids.push(sourceName);
   } else {

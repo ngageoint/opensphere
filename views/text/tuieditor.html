@@ -1,0 +1,27 @@
+<div class="c-tui-editor form-group mb-0 d-flex flex-fill flex-column">
+  <ng-form name="tuiEditorForm" ng-class="{'d-flex flex-fill flex-column': edit}">
+    <div ng-if="edit" class="d-flex flex-fill flex-column">
+      <h1 ng-if="ctrl.loading" class="d-flex justify-content-center align-items-center"><i class="fa fa-spin fa-spinner"></i></h1>
+      <div ng-show="!ctrl.loading" class="d-flex flex-fill flex-column">
+        <div class="js-tui-editor__editor d-flex flex-column flex-fill" ng-class="{'': !ctrl.textAreaBackup}">
+          <!-- Editor gets put here. Need to add node manually because it steals it -->
+        </div>
+        <textarea class="ng-hide" ng-class="{'flex-fill': ctrl.textAreaBackup}" ng-show="ctrl.textAreaBackup" type="text" name="empty" rows="8"
+            ng-model="ctrl.text"
+            ng-model-options="{allowInvalid: true}"
+            ng-change="ctrl.onTextEditChange()"
+            ng-maxlength="{{maxlength}}"
+            ng-required="isRequired">
+        </textarea>
+        <div class="small mt-1 d-flex justify-content-between">
+          <div class="text-danger" ng-if="text.length > maxlength">Content is too long!</div>
+          <div class="text-danger" ng-if="isRequired && text.length == 0">Required!</div>
+          <div class="text-muted ml-auto c-tui-editor__word-count">{{ctrl.getWordCount()}}</div>
+        </div>
+      </div>
+    </div>
+  </ng-form>
+  <div ng-if="!edit" class="js-tui-editor__viewer tui-editor-contents">
+    <div ng-bind-html="ctrl.displayHtml"></div>
+  </div>
+</div>
