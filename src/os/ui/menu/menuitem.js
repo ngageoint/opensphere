@@ -263,7 +263,7 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
   }
 
   if (classes.length > 0) {
-    html += ' class="' + classes.join(', ') + '"';
+    html += ' class="' + classes.join(' ') + '"';
   }
 
   if (isItem) {
