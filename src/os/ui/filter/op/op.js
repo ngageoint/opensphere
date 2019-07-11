@@ -18,7 +18,7 @@ goog.require('os.xsd.DataType');
  * @constructor
  */
 os.ui.filter.op.Op = function(localName, title, opt_shortTitle, opt_supportedTypes, opt_attributes, opt_hint, opt_ui,
-  opt_noLiteral) {
+    opt_noLiteral) {
   /**
    * @type {string}
    * @protected

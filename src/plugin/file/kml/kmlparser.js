@@ -60,9 +60,14 @@ plugin.file.kml.KMLParserStackObj;
  * @implements {os.parse.IParser.<plugin.file.kml.ui.KMLNode>}
  * @template T
  * @constructor
+ * @suppress {accessControls}
  */
 plugin.file.kml.KMLParser = function(options) {
   plugin.file.kml.KMLParser.base(this, 'constructor');
+
+  if (!ol.format.KML.DEFAULT_STYLE_ARRAY_) {
+    ol.format.KML.createStyleDefaults_();
+  }
 
   /**
    * The source document
@@ -122,21 +127,21 @@ plugin.file.kml.KMLParser = function(options) {
 
   /**
    * The KML style config map
-   * @type {!Object<string, !Array<Object>>}
+   * @type {!Object<string, Object<string, *>>}
    * @private
    */
   this.styleMap_ = {};
 
   /**
    * The KML balloon style config map.
-   * @type {!Object<string, !Object>}
+   * @type {!Object<string, !Object<string, *>>}
    * @private
    */
   this.balloonStyleMap = {};
 
   /**
    * The KML style config map for highlight styles from StyleMap tags
-   * @type {!Object<string, !Array<Object>>}
+   * @type {!Object<string, !Object<string, *>>}
    * @private
    */
   this.highlightStyleMap_ = {};
@@ -1397,24 +1402,15 @@ plugin.file.kml.KMLParser.prototype.parseSizeXY_ = function(obj) {
 
 
 /**
- * @param {?Object} config The style config
- * @param {Array<Object>} set The style set
+ * @param {?Object} merged The merged style config
+ * @param {Array<Object>} config The current config
  * @return {Object}
  * @private
  */
-plugin.file.kml.KMLParser.reduceStyles_ = function(config, set) {
-  if (set && set.length) {
-    config = config || {};
-    var s = set[0];
-    os.object.merge(s, config, true, false);
-
-    if (set.length > 1) {
-      goog.log.warning(plugin.file.kml.KMLParser.LOGGER_,
-          'An array of style configs with more than one entry was found!');
-    }
-  }
-
-  return config;
+plugin.file.kml.KMLParser.reduceStyles_ = function(merged, config) {
+  merged = merged || {};
+  os.style.mergeConfig(config, merged);
+  return merged;
 };
 
 
@@ -1424,14 +1420,14 @@ plugin.file.kml.KMLParser.reduceStyles_ = function(config, set) {
  * @private
  */
 plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
-  var styleSets = [];
+  var styles = [];
   var highlightStyle = null;
 
   // style from style url
   var styleUrl = /** @type {string} */ (feature.get('styleUrl'));
   if (styleUrl) {
     var styleId = this.getStyleId(decodeURIComponent(styleUrl));
-    styleSets.push(styleId in this.styleMap_ ? this.styleMap_[styleId] : null);
+    styles.push(styleId in this.styleMap_ ? this.styleMap_[styleId] : null);
     highlightStyle = styleId in this.highlightStyleMap_ ? this.highlightStyleMap_[styleId] : null;
   }
 
@@ -1439,26 +1435,27 @@ plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
 
 
   // local style
-  var styles = /** @type {Array<ol.style.Style>} */ (feature.get(plugin.file.kml.STYLE_KEY));
-  if (styles && styles.length) {
-    styleSets.push(styles.map(this.mapStyleToConfig_, this));
+  var style = /** @type {Object} */ (feature.get(plugin.file.kml.STYLE_KEY));
+  if (style) {
+    this.updateStyleConfig_(style);
+    styles.push(style);
   }
 
   // inherited styles
   var p = el.parentNode;
   while (p) {
     if (p.kmlStyle) {
-      styleSets.unshift(p.kmlStyle);
+      styles.unshift(p.kmlStyle);
     }
 
     p = p.parentNode;
   }
 
   // default style
-  styleSets.unshift(plugin.file.kml.DEFAULT_STYLE_ARRAY);
+  styles.unshift(plugin.file.kml.DEFAULT_STYLE);
 
   // reduce style sets to single set
-  var mergedStyle = styleSets.reduce(plugin.file.kml.KMLParser.reduceStyles_, null);
+  var mergedStyle = styles.reduce(plugin.file.kml.KMLParser.reduceStyles_, null);
   if (mergedStyle) {
     var existingStyle = /** @type {Array<!Object>|Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
     if (existingStyle) {
@@ -1475,8 +1472,8 @@ plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
       feature.set(os.style.StyleType.FEATURE, mergedStyle, true);
     }
 
-    if (highlightStyle && highlightStyle.length) {
-      feature.set(os.style.StyleType.CUSTOM_HIGHLIGHT, highlightStyle[0], true);
+    if (highlightStyle) {
+      feature.set(os.style.StyleType.CUSTOM_HIGHLIGHT, highlightStyle, true);
     }
 
     // set the feature shape if it wasn't defined in the file and an icon style is present
@@ -1528,7 +1525,8 @@ plugin.file.kml.KMLParser.prototype.extractStyles_ = function(el) {
 
     this.examineStyles_(style);
 
-    var styles = plugin.file.kml.readStyle(style, []);
+    var styleConfig = plugin.file.kml.readStyle(style, this.stack_);
+    this.updateStyleConfig_(styleConfig);
     var id = style.id || style.getAttribute('id');
     if (!id) {
       // styles without an ID are merely the base styles for the container
@@ -1536,7 +1534,7 @@ plugin.file.kml.KMLParser.prototype.extractStyles_ = function(el) {
       // Clever hack alert!
       // The "stack" in this class is not really a stack. Therefore, we are
       // going to store the KML styles on the element itself
-      el.kmlStyle = styles.map(this.mapStyleToConfig_, this);
+      el.kmlStyle = styleConfig;
       continue;
     }
 
@@ -1552,7 +1550,7 @@ plugin.file.kml.KMLParser.prototype.extractStyles_ = function(el) {
       id = newId;
     }
 
-    this.styleMap_[id] = styles.map(this.mapStyleToConfig_, this);
+    this.styleMap_[id] = styleConfig;
   }
 
   // handle StyleMap elements
@@ -1665,15 +1663,11 @@ plugin.file.kml.KMLParser.prototype.getKmlThingRegex = function() {
 
 
 /**
- * @param {ol.style.Style} style
- * @return {Object}
+ * @param {Object} config
  * @private
  */
-plugin.file.kml.KMLParser.prototype.mapStyleToConfig_ = function(style) {
-  var config = null;
-  if (style) {
-    config = os.style.StyleManager.getInstance().toConfig(style);
-
+plugin.file.kml.KMLParser.prototype.updateStyleConfig_ = function(config) {
+  if (config) {
     // attempt to convert local KMZ asset URIs to the proper data URIs
     if (config['image'] && config['image']['src']) {
       try {
@@ -1687,8 +1681,6 @@ plugin.file.kml.KMLParser.prototype.mapStyleToConfig_ = function(style) {
       }
     }
   }
-
-  return config;
 };
 
 

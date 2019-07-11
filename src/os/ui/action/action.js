@@ -31,7 +31,7 @@ goog.require('os.ui.action.MenuOptions');
  * @todo support capture/bubble phase and preventDefault()?
  */
 os.ui.action.Action = function(eventType, opt_title, opt_description, opt_icon, opt_hotkey,
-  opt_menuOptions, opt_metricKey) {
+    opt_menuOptions, opt_metricKey) {
   /**
    * @type {!string}
    * @private

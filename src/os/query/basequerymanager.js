@@ -116,7 +116,7 @@ os.query.BaseQueryManager.prototype.load = goog.nullFunction;
  * @return {!Array<!Object<string, string|boolean>>}
  */
 os.query.BaseQueryManager.prototype.getEntries = function(opt_layerId, opt_areaId, opt_filterId, opt_expanded,
-  opt_includeNegations) {
+    opt_includeNegations) {
   var entries = opt_expanded ? this.expandedEntries : this.entries;
   opt_includeNegations = !!opt_includeNegations;
 
@@ -186,7 +186,7 @@ os.query.BaseQueryManager.prototype.onUpdateTimer_ = function() {
  * @param {boolean=} opt_immediate
  */
 os.query.BaseQueryManager.prototype.addEntry = function(layerId, areaId, filterId, opt_includeArea, opt_filterGroup,
-  opt_temp, opt_immediate) {
+    opt_temp, opt_immediate) {
   var current = this.getEntries(layerId, areaId, filterId);
   var add = current.length === 0 || current[0]['includeArea'] !== opt_includeArea ||
       current[0]['filterGroup'] !== opt_filterGroup;
@@ -997,7 +997,7 @@ os.query.BaseQueryManager.sortEntries = function(a, b) {
  * @return {os.ui.query.ComboNode}
  */
 os.query.BaseQueryManager.prototype.getPivotData = function(opt_pivots, opt_pivot, opt_node, opt_flatten, opt_layer,
-  opt_nodeUI) {
+    opt_nodeUI) {
   opt_pivot = opt_pivot !== undefined ? opt_pivot : 0;
   opt_pivots = opt_pivots || ['layer', 'area', 'filter'];
 

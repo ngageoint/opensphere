@@ -124,3 +124,7 @@
 .select2-drop-mask {
   width: 100%;
 }
+
+.c-select2__no-padding .select2-results .select2-result-label {
+  padding: 0;
+}

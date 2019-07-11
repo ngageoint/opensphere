@@ -8,8 +8,7 @@ const resolver = require('opensphere-build-resolver/utils');
 module.exports = function(config) {
   var closureFiles = helper.readManifest(path.resolve('.build', 'gcc-test-manifest'))
       .filter(function(item) {
-        return item.indexOf('src/os/xt/build-xt.js') === -1 &&
-          item.indexOf(__dirname + '/test/') !== 0;
+        return item.indexOf(__dirname + '/test/') !== 0;
       });
 
   config.set({

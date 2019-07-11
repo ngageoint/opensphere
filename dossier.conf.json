@@ -1,9 +1,9 @@
 {
   "externs": [
     "google-closure-compiler/contrib/externs/jquery-1.9.js",
-    "google-closure-compiler/contrib/externs/angular-1.4-http-promise_templated.js",
-    "google-closure-compiler/contrib/externs/angular-1.4-resource.js",
-    "google-closure-compiler/contrib/externs/angular-1.4-q_templated.js",
+    "google-closure-compiler/contrib/externs/angular-1.5-http-promise_templated.js",
+    "google-closure-compiler/contrib/externs/angular-1.5-resource.js",
+    "google-closure-compiler/contrib/externs/angular-1.5-q_templated.js",
     "openlayers/src/ol/typedefs.js",
     "openlayers/externs/closure-compiler.js",
     "openlayers/externs/geojson.js",
