@@ -475,6 +475,8 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   $scope.$watch('ctrl.labelColor', this.updatePreview.bind(this));
   $scope.$watch('ctrl.labelSize', this.updatePreview.bind(this));
   $scope.$watch('ctrl.showLabels', this.updatePreview.bind(this));
+
+  $scope.$on(os.ui.WindowEventType.CANCEL, this.onCancel.bind(this));
   $scope.$on(os.ui.icon.IconPickerEventType.CHANGE, this.onIconChange.bind(this));
   $scope.$on('labelColor.reset', this.onLabelColorReset.bind(this));
   $scope.$on(os.ui.geo.PositionEventType.MAP_ENABLED, this.onMapEnabled_.bind(this));
@@ -655,6 +657,16 @@ os.ui.FeatureEditCtrl.prototype.accept = function() {
  * @export
  */
 os.ui.FeatureEditCtrl.prototype.cancel = function() {
+  this.onCancel();
+  this.close();
+};
+
+
+/**
+ * Handler for canceling the edit. This restores the state of the feature to what it was before any live
+ * edits were applied while the form was up. It's called on clicking both the cancel button and the window X.
+ */
+os.ui.FeatureEditCtrl.prototype.onCancel = function() {
   var feature = this.options['feature'];
   if (feature && this.originalProperties_) {
     feature.setProperties(this.originalProperties_);
@@ -665,9 +677,8 @@ os.ui.FeatureEditCtrl.prototype.cancel = function() {
       os.style.notifyStyleChange(layer, [feature]);
     }
   }
-  os.dispatcher.dispatchEvent(os.action.EventType.RESTORE_FEATURE);
 
-  this.close();
+  os.dispatcher.dispatchEvent(os.action.EventType.RESTORE_FEATURE);
 };
 
 
