@@ -2,11 +2,22 @@ goog.provide('os.net');
 goog.provide('os.net.CrossOrigin');
 
 goog.require('goog.Uri');
+goog.require('goog.Uri.QueryData');
 goog.require('goog.array');
 goog.require('os.net.ExtDomainHandler');
 goog.require('os.net.LocalFileHandler');
 goog.require('os.net.ProxyHandler');
 goog.require('os.net.SameDomainHandler');
+goog.require('os.registerClass');
+
+
+/**
+ * @type {string}
+ */
+goog.Uri.QueryData.NAME = 'goog.Uri.QueryData';
+
+// register {@link goog.Uri.QueryData} to allow type checking QueryData objects created in the external window
+os.registerClass(goog.Uri.QueryData.NAME, goog.Uri.QueryData);
 
 
 /**
@@ -287,4 +298,26 @@ os.net.sendBeacon = function(url, data, opt_contentType) {
       console.log('failed sending beacon', e);
     }
   }
+};
+
+
+/**
+ * Gets a query data object for a set of params.
+ *
+ * @param {string|goog.Uri.QueryData|Object|undefined} params The params.
+ * @return {!goog.Uri.QueryData} The query data.
+ */
+os.net.paramsToQueryData = function(params) {
+  var qd;
+
+  if (typeof params === 'string') {
+    qd = new goog.Uri.QueryData(params);
+  } else if (os.instanceOf(params, goog.Uri.QueryData.NAME)) {
+    qd = /** @type {goog.Uri.QueryData} */ (params);
+  } else {
+    // create a new one from the object or an empty one
+    qd = goog.isObject(params) ? goog.Uri.QueryData.createFromMap(params) : null;
+  }
+
+  return qd || new goog.Uri.QueryData();
 };
