@@ -261,7 +261,7 @@ plugin.places.menu.mapSetup = function() {
       sort: 50,
       children: [
         {
-          label: 'Save to Places...',
+          label: 'Create Place...',
           eventType: plugin.places.menu.EventType.SAVE_TO,
           tooltip: 'Creates a new saved place from this location',
           icons: ['<i class="fa fa-fw ' + plugin.places.Icon.PLACEMARK + '"></i>'],
@@ -269,9 +269,9 @@ plugin.places.menu.mapSetup = function() {
           handler: plugin.places.menu.saveCoordinateToPlaces,
           sort: 0
         }, {
-          label: 'Create Annotation...',
+          label: 'Create Place (Text Box)...',
           eventType: plugin.places.menu.EventType.SAVE_TO_ANNOTATION,
-          tooltip: 'Creates a new annotation at this location',
+          tooltip: 'Creates a new saved place with a text box at this location',
           icons: ['<i class="fa fa-fw ' + plugin.places.Icon.ANNOTATION + '"></i>'],
           beforeRender: os.ui.menu.map.showIfHasCoordinate,
           handler: plugin.places.menu.createAnnotationFromCoordinate,
@@ -309,7 +309,7 @@ plugin.places.menu.spatialSetup = function() {
 
     if (!group.find(plugin.places.menu.EventType.SAVE_TO)) {
       group.addChild({
-        label: 'Save to Places...',
+        label: 'Create Place...',
         eventType: plugin.places.menu.EventType.SAVE_TO,
         tooltip: 'Creates a new place from the feature',
         icons: ['<i class="fa fa-fw ' + plugin.places.Icon.PLACEMARK + '"></i>'],
@@ -329,7 +329,7 @@ plugin.places.menu.spatialSetup = function() {
       });
 
       group.addChild({
-        label: 'Create Annotation...',
+        label: 'Create Place (Text Box)...',
         eventType: plugin.places.menu.EventType.SAVE_TO_ANNOTATION,
         tooltip: 'Creates a new annotation from the feature',
         icons: ['<i class="fa fa-fw ' + plugin.places.Icon.ANNOTATION + '"></i>'],

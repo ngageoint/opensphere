@@ -35,6 +35,10 @@
     width: 50%;
     z-index: $zindex-tooltip;
   }
+
+  .c-dd-placeholder {
+    visibility: hidden;
+  }
 }
 
 .c-dd-source {
@@ -54,4 +58,15 @@
   padding: 1rem;
   width: 15rem;
   z-index: $zindex-dropdown - 1;
+}
+
+.c-dd-placeholder {
+  align-items: center;
+  border: .2rem dashed $border-color;
+  border-radius: $border-radius;
+  cursor: pointer;
+  display: flex;
+  height: 5rem;
+  justify-content: center;
+  width: 100%;
 }

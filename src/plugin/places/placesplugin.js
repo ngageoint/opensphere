@@ -1,13 +1,13 @@
 goog.provide('plugin.places.PlacesPlugin');
 
 goog.require('goog.log');
+goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.plugin.AbstractPlugin');
-goog.require('os.ui.clear.ClearEntry');
-goog.require('os.ui.clearManager');
 goog.require('os.ui.file.method.ImportMethod');
 goog.require('plugin.places');
 goog.require('plugin.places.KMLPlacesImportUI');
 goog.require('plugin.places.PlacesClear');
+goog.require('plugin.places.PlacesLayerConfig');
 goog.require('plugin.places.PlacesManager');
 goog.require('plugin.places.menu');
 
@@ -74,4 +74,8 @@ plugin.places.PlacesPlugin.prototype.init = function() {
   pim.registerImportUI(plugin.file.kml.mime.TYPE, new plugin.places.KMLPlacesImportUI());
   pim.registerImportUI(plugin.file.kml.mime.KMZ_TYPE, new plugin.places.KMLPlacesImportUI());
   pim.registerImportDetails('KML/KMZ', true);
+
+  // layer config
+  os.layer.config.LayerConfigManager.getInstance().registerLayerConfig(
+      plugin.places.PlacesLayerConfig.ID, plugin.places.PlacesLayerConfig);
 };
