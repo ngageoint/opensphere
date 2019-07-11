@@ -71,10 +71,12 @@ os.annotation.FeatureAnnotation.prototype.setVisibleInternal = function() {
   if (this.overlay && this.feature) {
     var options = this.getOptions();
 
-    // show the overlay when internal flag is set and configured to be displayed. this allows for separate states
-    // between config and the feature.
+    // Only show when both the feature and the annotation config flags are true.
+    // Note: the overlay position is the only good way to control the visibility externally. If you try to call
+    // the protected setVisible function on the overlay, much pain will be in your future.
     var showOverlay = this.visible && options.show;
-    os.annotation.setPosition(this.overlay, showOverlay ? this.feature : null);
+    var position = options.position;
+    this.overlay.setPosition(showOverlay ? position : null);
   }
 };
 
@@ -90,6 +92,13 @@ os.annotation.FeatureAnnotation.prototype.createUI = function() {
     return;
   }
 
+  if (!options.position) {
+    var geometry = this.feature.getGeometry();
+    var coordinate = geometry instanceof ol.geom.SimpleGeometry ? geometry.getFirstCoordinate() : [0, 0];
+    options.position = coordinate;
+  }
+
+  // don't initialize with a position value as this seems to cause the overlay to jiggle on show/hide
   this.overlay = new os.webgl.WebGLOverlay({
     id: ol.getUid(this.feature),
     offset: options.offset,
@@ -114,14 +123,6 @@ os.annotation.FeatureAnnotation.prototype.createUI = function() {
   var map = os.MapContainer.getInstance().getMap();
   if (map) {
     map.addOverlay(this.overlay);
-  }
-
-  if (this.visible && options.show) {
-    // setting an initial position causes the overlay to render
-    var geometry = this.feature.getGeometry();
-    var coordinate = geometry instanceof ol.geom.SimpleGeometry ? geometry.getFirstCoordinate() : [0, 0];
-
-    this.overlay.setPosition(coordinate);
   }
 
   this.setVisibleInternal();
