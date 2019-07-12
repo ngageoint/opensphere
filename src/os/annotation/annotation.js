@@ -4,8 +4,10 @@ goog.provide('os.annotation.TailType');
 goog.require('ol.geom.GeometryType');
 goog.require('ol.geom.Point');
 goog.require('os.annotation.TailStyle');
+goog.require('os.feature');
 goog.require('os.ui');
 goog.require('os.ui.color.colorPickerDirective');
+goog.require('os.ui.text.SimpleMDE');
 
 
 /**
@@ -26,6 +28,7 @@ os.annotation.TailType = {
 os.annotation.DEFAULT_OPTIONS = {
   editable: true,
   show: true,
+  showBackground: true,
   showName: true,
   showDescription: true,
   showTail: os.annotation.TailStyle.DEFAULT,
@@ -140,6 +143,73 @@ os.annotation.getDescriptionText = function(feature) {
   if (feature) {
     return /** @type {string|undefined} */ (feature.get(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION)) ||
     /** @type {string|undefined} */ (feature.get(os.ui.FeatureEditCtrl.Field.DESCRIPTION)) || '';
+  }
+
+  return '';
+};
+
+
+/**
+ * Get the description text for an annotation balloon in label mode.
+ * @param {ol.Feature} feature The feature.
+ * @return {string} The text.
+ */
+os.annotation.getLabelText = function(feature) {
+  if (feature) {
+    var columnNames = feature.get(os.style.StyleField.LABELS).split(',');
+    var showColumnNames = feature.get(os.style.StyleField.SHOW_LABEL_COLUMNS).split(',');
+    var columns = columnNames.map(function(columnName, i) {
+      return {columnName: columnName, showColumnName: showColumnNames[i] === '1'};
+    });
+
+    var lines = [];
+    for (var i = 0; i < columns.length; i++) {
+      var column = columns[i];
+      var line = '';
+      if (column.showColumnName) {
+        line = column.columnName + ': ';
+      }
+
+      var value = /** @type {string} */(feature.get(column.columnName));
+      if (column.columnName === os.ui.FeatureEditCtrl.Field.DESCRIPTION) {
+        value = os.ui.text.SimpleMDE.getUnformatedText(value);
+      }
+      line += value;
+
+      if (value) {
+        lines.push(line);
+      }
+    }
+
+    return lines.join('\n');
+  }
+
+  return '';
+};
+
+
+/**
+ * Get the font size for an annotation balloon in label mode.
+ * @param {ol.Feature} feature The Feature
+ * @return {number} The font size in px
+ */
+os.annotation.getLabelSize = function(feature) {
+  if (feature) {
+    return /** @type {number|undefined} */(feature.get(os.style.StyleField.LABEL_SIZE)) || 0;
+  }
+
+  return 0;
+};
+
+
+/**
+ * Get the name text for an annotation balloon.
+ * @param {ol.Feature} feature The feature.
+ * @return {string} The text.
+ */
+os.annotation.getLabelColor = function(feature) {
+  if (feature) {
+    return /** @type {string|undefined} */ (feature.get(os.style.StyleField.LABEL_COLOR)) || '';
   }
 
   return '';

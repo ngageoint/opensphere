@@ -20,26 +20,27 @@ os.annotation.UI_TEMPLATE =
   '<div class="c-annotation u-hover-container" ' +
     'ng-class="{\'c-annotation__editing\': ctrl.editingDescription || ctrl.editingName}">' +
     '<svg class="c-annotation__svg">' +
-      '<path ng-style="{ fill: ctrl.options.showDescription ? ctrl.options.bodyBG : ctrl.options.headerBG}" />' +
+      '<path ng-style="{ fill: ctrl.options.showDescription ? ctrl.options.bodyBG : ctrl.options.headerBG }"/>' +
     '</svg>' +
-    '<div class="u-card-popup position-absolute text-right animate-fade u-hover-show"' +
+    '<div class="u-card-popup position-absolute text-right animate-fade u-hover-show" ' +
         ' ng-show="ctrl.options.editable">' +
-      '<button class="btn btn-sm btn-outline-primary border-0 bg-transparent"' +
-          'title="Hide text box"' +
+      '<button class="btn btn-sm btn-outline-primary border-0 bg-transparent" ' +
+          'title="Hide text box" ' +
           'ng-click="ctrl.hideAnnotation()">' +
         '<i class="c-glyph fa fa-fw fa-comment"></i>' +
       '</button>' +
-      '<button class="btn btn-sm btn-outline-primary border-0 bg-transparent"' +
-          'title="Edit text box"' +
+      '<button class="btn btn-sm btn-outline-primary border-0 bg-transparent" ' +
+          'title="Edit text box" ' +
           'ng-click="ctrl.launchEditWindow()">' +
         '<i class="c-glyph fa fa-fw fa-pencil"></i>' +
       '</button>' +
     '</div>' +
-    '<div class="js-annotation c-window card h-100">' +
-      '<div class="card-header flex-shrink-0 text-truncate px-1 py-0 js-annotation__header" title="{{ctrl.name}}"' +
-          'ng-show="ctrl.options.showName" ' +
+    '<div class="js-annotation c-window card h-100" ' +
+      'ng-class="!ctrl.options.showBackground && \'bg-transparent u-border-show-on-hover u-text-stroke\'">' +
+      '<div class="card-header flex-shrink-0 text-truncate px-1 py-0 js-annotation__header" title="{{ctrl.name}}" ' +
+          'ng-show="ctrl.options.showName && ctrl.options.showBackground" ' +
           'ng-class="!ctrl.options.showDescription && \'h-100 border-0\'" ' +
-          'ng-style="{background: ctrl.options.headerBG }" ' +
+          'ng-style="{ background: ctrl.options.headerBG }" ' +
           'ng-dblclick="ctrl.editName()">' +
         '<div ng-show="!ctrl.editingName">{{ctrl.name}}</div>' +
         '<div class="form-row p-1" ng-if="ctrl.editingName">' +
@@ -59,11 +60,17 @@ os.annotation.UI_TEMPLATE =
         '</div>' +
       '</div>' +
       '<div class="card-body p-1 u-overflow-y-auto d-flex flex-fill flex-column" ' +
-          'ng-show="ctrl.options.showDescription" ' +
-          'ng-style="{background: ctrl.options.bodyBG }" ' +
+          'ng-show="ctrl.options.showDescription || !ctrl.options.showBackground" ' +
+          'ng-style="{ background: ctrl.options.showBackground ? ctrl.options.bodyBG : transparent }" ' +
           'ng-dblclick="ctrl.editDescription()">' +
-        '<tuieditor text="ctrl.description" edit="ctrl.editingDescription" is-required="false" maxlength="4000">' +
-        '</tuieditor>' +
+        '<div ng-if="ctrl.options.showBackground">' +
+          '<tuieditor text="ctrl.description" edit="ctrl.editingDescription" is-required="false" maxlength="4000">' +
+          '</tuieditor>' +
+        '</div>' +
+        '<div ng-if="!ctrl.options.showBackground" ' +
+          'style="font-size: {{ctrl.labelSize}}px; color: {{ctrl.labelColor}};">' +
+          '<strong><pre>{{ctrl.labelText}}</pre></strong>' +
+        '</div>' +
         '<div class="text-right mt-1" ng-if="ctrl.editingDescription">' +
           '<button class="btn btn-success mr-1" title="Save the text box" ng-click="ctrl.saveAnnotation()">' +
             '<i class="fa fa-check"/> OK' +
@@ -73,7 +80,8 @@ os.annotation.UI_TEMPLATE =
           '</button>' +
         '</div>' +
       '</div>' +
-    '</div>';
+    '</div>' +
+  '</div>';
 
 
 /**
@@ -268,7 +276,8 @@ os.annotation.AbstractAnnotationCtrl.prototype.initDragResize = function() {
       'handles': 'se',
       'start': this.onDragStart_.bind(this),
       'resize': this.updateTail.bind(this),
-      'stop': this.onDragStop_.bind(this)
+      'stop': this.onDragStop_.bind(this),
+      'autoHide': true
     });
   }
 };
@@ -309,7 +318,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.hideAnnotation = function() {};
  * @export
  */
 os.annotation.AbstractAnnotationCtrl.prototype.editDescription = function() {
-  if (this['options'].editable && !this['editingDescription']) {
+  if (this['options'].editable && !this['editingDescription'] && this['options']['showBackground']) {
     this['editingDescription'] = true;
     this.element.parent().draggable('option', 'handle', os.annotation.selectors.HEADER);
 
