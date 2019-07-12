@@ -37,7 +37,8 @@ plugin.places.TITLE = 'Saved Places';
 plugin.places.Icon = {
   ANNOTATION: 'fa-comment',
   FOLDER: 'fa-folder',
-  PLACEMARK: 'fa-map-marker'
+  PLACEMARK: 'fa-map-marker',
+  QUICK_ADD: 'fa-bolt'
 };
 
 
