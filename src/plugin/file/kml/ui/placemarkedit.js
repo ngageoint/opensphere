@@ -103,12 +103,6 @@ plugin.file.kml.ui.PlacemarkEditCtrl = function($scope, $element, $timeout) {
 
     os.ui.list.add(optionsListId,
         '<annotationoptions options="ctrl.annotationOptions"></annotationoptions>');
-    this['bgHelp'] = {};
-    this['bgHelp']['title'] = 'Show Background Option';
-    this['bgHelp']['pos'] = 'right';
-    this['bgHelp']['content'] = 'Show annotation background.\n' +
-       'When unchecked, the annotation acts like a label.\n' +
-       'It gets it\'s text from the label settings. It is also colored and sized like a label.';
 
     if (this.options['annotation']) {
       // if creating a new annotation, expand the Annotation Options section by default

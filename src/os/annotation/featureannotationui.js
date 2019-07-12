@@ -175,14 +175,10 @@ os.annotation.FeatureAnnotationCtrl.prototype.saveAnnotation = function() {
 os.annotation.FeatureAnnotationCtrl.prototype.onFeatureChange_ = function() {
   this['name'] = '';
   this['description'] = '';
-  this['labelText'] = '';
 
   if (this.feature && this.scope) {
     this['name'] = os.annotation.getNameText(this.feature);
     this['description'] = os.annotation.getDescriptionText(this.feature);
-    this['labelText'] = os.annotation.getLabelText(this.feature);
-    this['labelSize'] = os.annotation.getLabelSize(this.feature);
-    this['labelColor'] = os.annotation.getLabelColor(this.feature);
     this['options'] = /** @type {!osx.annotation.Options} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
 
     if (this['options'].show) {
