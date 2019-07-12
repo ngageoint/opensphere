@@ -180,6 +180,16 @@
 }
 
 
+// --------------------------------- List Utilities --------------------------------- //
+.u-column-count-4 {
+  column-count: 4;
+
+  &:not(.list-unstyled) {
+    column-gap: 2.25rem;
+  }
+}
+
+
 // --------------------------------- Table Utilities --------------------------------- //
 // Tables in bootstrap are styled by elements.... not classes. Allow class styling
 .u-table {
