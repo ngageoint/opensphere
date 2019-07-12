@@ -313,11 +313,6 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
     html += '</ul></li>';
   }
 
-  // automatically insert separators after groups
-  if (type === types.GROUP) {
-    html += '<li>-</li>';
-  }
-
   return html;
 };
 
