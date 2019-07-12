@@ -39,6 +39,7 @@ plugin.places.menu.EventType = {
   ADD_PLACEMARK: 'places:addPlacemark',
   EDIT_FOLDER: 'places:editFolder',
   EDIT_PLACEMARK: 'places:editPlacemark',
+  QUICK_ADD_PLACES: 'places:quickAdd',
   REMOVE_PLACE: 'places:removePlace',
   REMOVE_ALL: 'places:removeAll'
 };
@@ -57,40 +58,54 @@ plugin.places.menu.layerSetup = function() {
       sort: os.ui.menu.layer.GroupSort.GROUPS++,
       children: [
         {
-          label: 'Add Folder',
+          label: 'Create Folder...',
           eventType: plugin.places.menu.EventType.ADD_FOLDER,
           tooltip: 'Creates a new folder and adds it to the tree',
           icons: ['<i class="fa fa-fw fa-folder"></i>'],
           beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
           handler: plugin.places.menu.onLayerEvent_,
-          metricKey: os.metrics.Places.ADD_FOLDER
+          metricKey: os.metrics.Places.ADD_FOLDER,
+          sort: 100
         },
         {
-          label: 'Add Place',
+          label: 'Create Place...',
           eventType: plugin.places.menu.EventType.ADD_PLACEMARK,
           tooltip: 'Creates a new saved place',
           icons: ['<i class="fa fa-fw fa-map-marker"></i>'],
           beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
           handler: plugin.places.menu.onLayerEvent_,
-          metricKey: os.metrics.Places.ADD_PLACE
+          metricKey: os.metrics.Places.ADD_PLACE,
+          sort: 110
         },
         {
-          label: 'Edit Folder',
+          label: 'Quick Add Places...',
+          eventType: plugin.places.menu.EventType.QUICK_ADD_PLACES,
+          tooltip: 'Quickly add places to the selected folder',
+          icons: ['<i class="fa fa-fw ' + plugin.places.Icon.QUICK_ADD + '"></i>'],
+          beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
+          handler: plugin.places.menu.onLayerEvent_,
+          metricKey: os.metrics.Places.QUICK_ADD_PLACES,
+          sort: 120
+        },
+        {
+          label: 'Edit Folder...',
           eventType: plugin.places.menu.EventType.EDIT_FOLDER,
           tooltip: 'Edit the folder label',
           icons: ['<i class="fa fa-fw fa-pencil"></i>'],
           beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
           handler: plugin.places.menu.onLayerEvent_,
-          metricKey: os.metrics.Places.EDIT_FOLDER
+          metricKey: os.metrics.Places.EDIT_FOLDER,
+          sort: 130
         },
         {
-          label: 'Edit Place',
+          label: 'Edit Place...',
           eventType: plugin.places.menu.EventType.EDIT_PLACEMARK,
           tooltip: 'Edit the saved place',
           icons: ['<i class="fa fa-fw fa-pencil"></i>'],
           beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
           handler: plugin.places.menu.onLayerEvent_,
-          metricKey: os.metrics.Places.EDIT_PLACEMARK
+          metricKey: os.metrics.Places.EDIT_PLACEMARK,
+          sort: 140
         },
         {
           label: 'Export Places...',
@@ -99,7 +114,8 @@ plugin.places.menu.layerSetup = function() {
           icons: ['<i class="fa fa-fw fa-download"></i>'],
           beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
           handler: plugin.places.menu.onLayerEvent_,
-          metricKey: os.metrics.Places.EXPORT_CONTEXT
+          metricKey: os.metrics.Places.EXPORT_CONTEXT,
+          sort: 150
         },
         {
           label: 'Save to Places...',
@@ -109,7 +125,8 @@ plugin.places.menu.layerSetup = function() {
           icons: ['<i class="fa fa-fw ' + plugin.places.Icon.PLACEMARK + '"></i>'],
           beforeRender: plugin.places.menu.visibleIfCanSaveLayer,
           handler: plugin.places.menu.saveLayerToPlaces,
-          metricKey: os.metrics.Places.SAVE_TO
+          metricKey: os.metrics.Places.SAVE_TO,
+          sort: 160
         },
         {
           label: 'Remove',
@@ -118,7 +135,8 @@ plugin.places.menu.layerSetup = function() {
           icons: ['<i class="fa fa-fw fa-times"></i>'],
           beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
           handler: plugin.places.menu.onLayerEvent_,
-          metricKey: os.metrics.Places.REMOVE_PLACE
+          metricKey: os.metrics.Places.REMOVE_PLACE,
+          sort: 170
         },
         {
           label: 'Remove All',
@@ -127,7 +145,8 @@ plugin.places.menu.layerSetup = function() {
           icons: ['<i class="fa fa-fw fa-times"></i>'],
           beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
           handler: plugin.places.menu.onLayerEvent_,
-          metricKey: os.metrics.Places.REMOVE_ALL
+          metricKey: os.metrics.Places.REMOVE_ALL,
+          sort: 180
         }
       ]
     });
@@ -171,6 +190,7 @@ plugin.places.menu.visibleIfLayerNodeSupported_ = function(context) {
       switch (this.eventType) {
         case plugin.places.menu.EventType.ADD_FOLDER:
         case plugin.places.menu.EventType.ADD_PLACEMARK:
+        case plugin.places.menu.EventType.QUICK_ADD_PLACES:
           this.visible = node.isFolder() && node.canAddChildren;
           break;
         case plugin.places.menu.EventType.EDIT_FOLDER:
@@ -206,6 +226,7 @@ plugin.places.menu.visibleIfLayerNodeSupported_ = function(context) {
           break;
         case plugin.places.menu.EventType.ADD_FOLDER:
         case plugin.places.menu.EventType.ADD_PLACEMARK:
+        case plugin.places.menu.EventType.QUICK_ADD_PLACES:
           this.visible = isPlacesLayer && node.isEditable();
           break;
         case plugin.places.menu.EventType.REMOVE_ALL:
@@ -267,15 +288,27 @@ plugin.places.menu.mapSetup = function() {
           icons: ['<i class="fa fa-fw ' + plugin.places.Icon.PLACEMARK + '"></i>'],
           beforeRender: os.ui.menu.map.showIfHasCoordinate,
           handler: plugin.places.menu.saveCoordinateToPlaces,
+          metricKey: os.metrics.Places.ADD_PLACE,
           sort: 0
         }, {
-          label: 'Create Place (Text Box)...',
+          label: 'Create Text Box...',
           eventType: plugin.places.menu.EventType.SAVE_TO_ANNOTATION,
           tooltip: 'Creates a new saved place with a text box at this location',
           icons: ['<i class="fa fa-fw ' + plugin.places.Icon.ANNOTATION + '"></i>'],
           beforeRender: os.ui.menu.map.showIfHasCoordinate,
           handler: plugin.places.menu.createAnnotationFromCoordinate,
+          metricKey: os.metrics.Places.ADD_ANNOTATION,
           sort: 1
+        },
+        {
+          label: 'Quick Add Places...',
+          eventType: plugin.places.menu.EventType.QUICK_ADD_PLACES,
+          tooltip: 'Quickly add places to the selected folder',
+          icons: ['<i class="fa fa-fw ' + plugin.places.Icon.QUICK_ADD + '"></i>'],
+          beforeRender: os.ui.menu.map.showIfHasCoordinate,
+          handler: plugin.places.menu.quickAddFromCoordinate,
+          metricKey: os.metrics.Places.QUICK_ADD_PLACES,
+          sort: 120
         }
       ]
     });
@@ -329,9 +362,9 @@ plugin.places.menu.spatialSetup = function() {
       });
 
       group.addChild({
-        label: 'Create Place (Text Box)...',
+        label: 'Create Text Box...',
         eventType: plugin.places.menu.EventType.SAVE_TO_ANNOTATION,
-        tooltip: 'Creates a new annotation from the feature',
+        tooltip: 'Creates a new place with a text box',
         icons: ['<i class="fa fa-fw ' + plugin.places.Icon.ANNOTATION + '"></i>'],
         beforeRender: plugin.places.menu.visibleIfCanSaveSpatial,
         handler: plugin.places.menu.saveSpatialToAnnotation,
@@ -455,6 +488,9 @@ plugin.places.menu.onLayerEvent_ = function(event) {
               'parent': node
             }));
             break;
+          case plugin.places.menu.EventType.QUICK_ADD_PLACES:
+            plugin.places.ui.QuickAddPlacesCtrl.launch(node);
+            break;
           case plugin.places.menu.EventType.EDIT_FOLDER:
             plugin.file.kml.ui.createOrEditFolder(/** @type {!plugin.file.kml.ui.FolderOptions} */ ({
               'node': node
@@ -491,6 +527,9 @@ plugin.places.menu.onLayerEvent_ = function(event) {
             plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
               'parent': rootNode
             }));
+            break;
+          case plugin.places.menu.EventType.QUICK_ADD_PLACES:
+            plugin.places.ui.QuickAddPlacesCtrl.launch();
             break;
           case plugin.places.menu.EventType.EXPORT:
             plugin.file.kml.ui.launchTreeExport(/** @type {!plugin.file.kml.ui.KMLNode} */
@@ -534,6 +573,7 @@ plugin.places.menu.onLayerEvent_ = function(event) {
         }
       }
     }
+
     if (cmds.length) {
       var cmd = new os.command.ParallelCommand();
       cmd.setCommands(cmds);
@@ -609,7 +649,7 @@ plugin.places.menu.saveCoordinateToPlaces = function(event) {
 
 
 /**
- * Save a coordinate to places.
+ * Save a coordinate to places as an annotation.
  *
  * @param {os.ui.menu.MenuEvent<ol.Coordinate>} event The menu event.
  */
@@ -628,6 +668,22 @@ plugin.places.menu.createAnnotationFromCoordinate = function(event) {
       'geometry': new ol.geom.Point(context),
       'parent': rootNode
     }));
+  }
+};
+
+
+/**
+ * Launch the quick add dialog with an initial seed point.
+ *
+ * @param {os.ui.menu.MenuEvent<ol.Coordinate>} event The menu event.
+ */
+plugin.places.menu.quickAddFromCoordinate = function(event) {
+  var context = event.getContext();
+  if (context && event instanceof goog.events.Event && !os.inIframe()) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    plugin.places.ui.QuickAddPlacesCtrl.launch(undefined, new ol.geom.Point(context));
   }
 };
 
