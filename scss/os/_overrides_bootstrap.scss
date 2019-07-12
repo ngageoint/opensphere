@@ -27,6 +27,24 @@ $form-control-disabled-border: $gray-600 !default;
   }
 }
 
+// remove padding from the top of the menu, so headers fill to the top
+.dropdown-menu {
+  padding: 0 0 $dropdown-padding-y;
+}
+
+// make dropdown headers more prominent, similar to card headers
+.dropdown-header {
+  background-color: $card-cap-bg;
+  color: $body-color;
+  font-weight: $font-weight-bold;
+  padding: .25rem;
+
+  // separate the header from preceding menu items
+  &:not(:first-child) {
+    margin-top: .25rem;
+  }
+}
+
 // ui-menu-item has some spacer between font awesome icons and dropdown text. Has better readability
 .dropdown-item {
   cursor: pointer;
