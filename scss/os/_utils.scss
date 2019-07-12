@@ -393,6 +393,15 @@
   border-color: transparent;
 }
 
+// For a border that appears when the element is hovered
+.u-border-show-on-hover {
+  border-color: transparent;
+}
+
+.u-border-show-on-hover:hover {
+  border-color: $border-color;
+}
+
 // Used for buttons that are styled as form-controls borders
 .u-border-color-input {
   border-color: $input-border-color !important;
