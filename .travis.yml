@@ -36,6 +36,7 @@ branches:
   - "/^v\\d+\\.\\d+\\.\\d+$/"
 env:
   global:
+    RELEASE: false
     S3SCREENSHOT: true
     S3COMPARISON: true
     S3VIDEO: true
