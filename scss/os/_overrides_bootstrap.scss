@@ -37,7 +37,7 @@ $form-control-disabled-border: $gray-600 !default;
   background-color: $card-cap-bg;
   color: $body-color;
   font-weight: $font-weight-bold;
-  padding: .25rem;
+  padding: .25rem $dropdown-item-padding-x;
 
   // separate the header from preceding menu items
   &:not(:first-child) {
