@@ -14,6 +14,7 @@ token=$(travis token --org | awk '{print $NF}')
 body='{
   "request": {
     "branch": "master",
+    "message": "chore(release): run release build",
     "config": {
       "merge_mode": "deep_merge",
       "git": {
