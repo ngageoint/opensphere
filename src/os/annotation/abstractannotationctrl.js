@@ -36,11 +36,12 @@ os.annotation.UI_TEMPLATE =
       '</button>' +
     '</div>' +
     '<div class="js-annotation c-window card h-100" ' +
-      'ng-class="!ctrl.options.showBackground && \'bg-transparent u-border-show-on-hover u-text-stroke\'">' +
-      '<div class="card-header flex-shrink-0 text-truncate px-1 py-0 js-annotation__header" title="{{ctrl.name}}" ' +
-          'ng-show="ctrl.options.showName && ctrl.options.showBackground" ' +
-          'ng-class="!ctrl.options.showDescription && \'h-100 border-0\'" ' +
-          'ng-style="{ background: ctrl.options.headerBG }" ' +
+      'ng-class="{ \'bg-transparent u-border-show-on-hover u-text-stroke\': !ctrl.options.showBackground }">' +
+      '<div class="flex-shrink-0 text-truncate px-1 py-0 js-annotation__header" title="{{ctrl.name}}" ' +
+          'ng-show="ctrl.options.showName" ' +
+          'ng-class="{ \'h-100 border-0\': !ctrl.options.showDescription, ' +
+            '\'card-header\': ctrl.options.showBackground }" ' +
+          'ng-style="{ background: ctrl.options.showBackground ? ctrl.options.headerBG : transparent }" ' +
           'ng-dblclick="ctrl.editName()">' +
         '<div ng-show="!ctrl.editingName">{{ctrl.name}}</div>' +
         '<div class="form-row p-1" ng-if="ctrl.editingName">' +
@@ -60,17 +61,11 @@ os.annotation.UI_TEMPLATE =
         '</div>' +
       '</div>' +
       '<div class="card-body p-1 u-overflow-y-auto d-flex flex-fill flex-column" ' +
-          'ng-show="ctrl.options.showDescription || !ctrl.options.showBackground" ' +
+          'ng-show="ctrl.options.showDescription" ' +
           'ng-style="{ background: ctrl.options.showBackground ? ctrl.options.bodyBG : transparent }" ' +
           'ng-dblclick="ctrl.editDescription()">' +
-        '<div ng-if="ctrl.options.showBackground">' +
-          '<tuieditor text="ctrl.description" edit="ctrl.editingDescription" is-required="false" maxlength="4000">' +
-          '</tuieditor>' +
-        '</div>' +
-        '<div ng-if="!ctrl.options.showBackground" ' +
-          'style="font-size: {{ctrl.labelSize}}px; color: {{ctrl.labelColor}};">' +
-          '<strong><pre>{{ctrl.labelText}}</pre></strong>' +
-        '</div>' +
+        '<tuieditor text="ctrl.description" edit="ctrl.editingDescription" is-required="false" maxlength="4000">' +
+        '</tuieditor>' +
         '<div class="text-right mt-1" ng-if="ctrl.editingDescription">' +
           '<button class="btn btn-success mr-1" title="Save the text box" ng-click="ctrl.saveAnnotation()">' +
             '<i class="fa fa-check"/> OK' +
@@ -318,7 +313,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.hideAnnotation = function() {};
  * @export
  */
 os.annotation.AbstractAnnotationCtrl.prototype.editDescription = function() {
-  if (this['options'].editable && !this['editingDescription'] && this['options']['showBackground']) {
+  if (this['options'].editable && !this['editingDescription']) {
     this['editingDescription'] = true;
     this.element.parent().draggable('option', 'handle', os.annotation.selectors.HEADER);
 

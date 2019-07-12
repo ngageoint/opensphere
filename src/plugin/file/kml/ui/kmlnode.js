@@ -259,7 +259,6 @@ plugin.file.kml.ui.KMLNode.prototype.loadAnnotation = function() {
       this.feature_.get(os.annotation.OPTIONS_FIELD));
     if (annotationOptions && annotationOptions.show) {
       if (annotationOptions['showBackground'] === undefined) {
-        // TODO: Is there a better way to ensure that this is defined to the default?
         annotationOptions['showBackground'] = os.annotation.DEFAULT_OPTIONS['showBackground'];
       }
       this.annotation_ = new os.annotation.FeatureAnnotation(this.feature_);
