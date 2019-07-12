@@ -176,7 +176,7 @@
     "url": "https://github.com/ngageoint/opensphere.git"
   },
   "engines": {
-    "node": ">=8.0.0 <11.0.0"
+    "node": ">=8.0.0"
   },
   "config": {
     "commitizen": {
