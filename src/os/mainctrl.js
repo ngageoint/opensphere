@@ -159,7 +159,6 @@ goog.require('plugin.osm.nom.NominatimPlugin');
 goog.require('plugin.overview.OverviewPlugin');
 goog.require('plugin.params.ParamsPlugin');
 goog.require('plugin.pelias.geocoder.Plugin');
-goog.require('plugin.places.PlacesHide');
 goog.require('plugin.places.PlacesPlugin');
 goog.require('plugin.position.PositionPlugin');
 goog.require('plugin.suncalc.Plugin');
@@ -275,8 +274,6 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
       'Clear all spatial query areas'));
   os.ui.clearManager.addEntry(new os.ui.clear.ClearEntry('states', 'States', os.ui.state.cmd.StateClear,
       'Deactivate all states'));
-  os.ui.clearManager.addEntry(new os.ui.clear.ClearEntry('places', 'Places/Annotations', plugin.places.PlacesHide,
-      'Clear all Places and Annotations'));
 
   // set up search
   var searchManager = os.search.SearchManager.getInstance();
