@@ -7,7 +7,7 @@ goog.require('plugin.places');
 
 
 /**
- * Command for hiding all places and annotations
+ * Command for hiding all places
  * @implements {os.command.ICommand}
  * @constructor
  */
@@ -18,13 +18,6 @@ plugin.places.PlacesHide = function() {
    * @private
    */
   this.visibleNodes_ = [];
-
-  /**
-   * Children of the places root node at time of execution.
-   * @type {Array<!plugin.file.kml.ui.KMLNode>}
-   * @private
-   */
-  this.children_ = null;
 };
 
 
@@ -37,7 +30,7 @@ plugin.places.PlacesHide.prototype.isAsync = false;
 /**
  * @inheritDoc
  */
-plugin.places.PlacesHide.prototype.title = 'Hide Places and Annotations';
+plugin.places.PlacesHide.prototype.title = 'Hide Places';
 
 
 /**
@@ -63,14 +56,7 @@ plugin.places.PlacesHide.prototype.execute = function() {
     if (source) {
       var features = source.getFeatures();
       if (features) {
-        this.children_ = rootNode.getChildren();
-        if (this.children_) {
-          for (var i = 0, n = this.children_.length; i < n; i++) {
-            if (this.children_[i].getState() == os.structs.TriState.ON) {
-              this.visibleNodes_.push(this.children_[i]);
-            }
-          }
-        }
+        this.storeVisibleChildren(rootNode);
         source.hideFeatures(features);
       }
     } else {
@@ -90,6 +76,27 @@ plugin.places.PlacesHide.prototype.execute = function() {
 
 
 /**
+ * Traverse the kml tree for visible nodes
+ * @param {plugin.file.kml.ui.KMLNode} rootNode
+ */
+plugin.places.PlacesHide.prototype.storeVisibleChildren = function(rootNode) {
+  var children = rootNode.getChildren();
+  if (children) {
+    for (var i = 0; i < children.length; i++) {
+      if (children[i].getState() == os.structs.TriState.ON) {
+        this.visibleNodes_.push(children[i]);
+        children[i].setState(os.structs.TriState.OFF);
+      }
+
+      if (children[i].isFolder()) { // look at folder's children
+        this.storeVisibleChildren(/** @type {plugin.file.kml.ui.KMLNode} */ (children[i]));
+      }
+    }
+  }
+};
+
+
+/**
  * @inheritDoc
  */
 plugin.places.PlacesHide.prototype.revert = function() {
@@ -98,10 +105,13 @@ plugin.places.PlacesHide.prototype.revert = function() {
   if (rootNode) {
     var source = rootNode.getSource();
     if (source) {
-      if (!this.visibleNodes_.length == 0) {
+      if (this.visibleNodes_.length != 0) {
+        var features = [];
         for (var i = 0, n = this.visibleNodes_.length; i < n; i++) {
-          source.showFeatures(this.visibleNodes_[i].getFeatures());
+          features = features.concat(this.visibleNodes_[i].getFeatures());
+          this.visibleNodes_[i].setState(os.structs.TriState.ON);
         }
+        source.showFeatures(features);
       }
     } else {
       this.state = os.command.State.ERROR;
