@@ -83,6 +83,20 @@ Similarly, you can pass coordinates to the update method as well:
 
 .. tip:: With both features and coordinates, you have to make sure your geometry is transformed into the map projection.
 
+While your code could poll for updates, a streaming "server push" may be more appropriate in some scenarios.
+OpenSphere has two options for streams:
+
+  - :code:`os.net.LongPoll`
+  - :code:`goog.net.WebSocket`
+
+If Web Sockets are supported, prefer :code:`goog.net.WebSocket`.
+
+:code:`os.net.LongPoll` attempts to mimic the :code:`goog.net.WebSocket` interface as much as possible.
+There may be other calls needed to setup/teardown streams depending on the remote server's API.
+
+If neither the long poll or websocket options are supported (e.g. direct socket only), then it is not possible to connect from a web application such as OpenSphere.
+In this case, you will likely need a server proxy to adapt (e.g. "websockify") your streaming source.
+
 Full code
 ---------
 
