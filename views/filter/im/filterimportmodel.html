@@ -1,4 +1,4 @@
-<div ng-repeat="filter in models" title="{{filter.tooltip}}" class="ml-4 text-truncate">
+<div ng-repeat="filter in models" title="{{filter.tooltip}}" class="text-truncate u-table__row" ng-class="isChild ? 'ml-4' : ''">
   <div ng-if="found">
     <i class="fa" ng-class="icon"></i> {{filter.title}}
   </div>
@@ -12,5 +12,5 @@
       ({{filter.type}})
     </span>
   </div>
-  <filterimportmodel ng-if="filter.children" models="filter.children" icon="icon" found="found"></filterimportmodel>
+  <filterimportmodel ng-if="filter.children" models="filter.children" icon="icon" found="found" is-child="true"></filterimportmodel>
 </div>

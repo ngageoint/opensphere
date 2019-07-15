@@ -83,7 +83,6 @@ os.im.action.FilterActionParser.parseNodes = function(nodes) {
   var iam = os.im.action.ImportActionManager.getInstance();
   var entries = [];
   var parentMap = {};
-  var typeMap = {};
 
   goog.array.forEach(nodes, function(node) {
     var actions = [];
@@ -95,15 +94,7 @@ os.im.action.FilterActionParser.parseNodes = function(nodes) {
     var tags = /** @type {?string} */ (node.getAttribute('tags')) || '';
     var children = /** @type {?string} */ (node.getAttribute('children')) || '';
     var childrenArray = children ? children.split(', ') : [];
-
     var type = /** @type {string} */ (node.getAttribute('type')) || '';
-    var typeHint = /** @type {string|undefined} */ (node.getAttribute('typeHint'));
-
-    if (typeHint == os.im.action.filter.ExportTypeHint.EXACT) {
-      typeMap[type] = [type];
-    } else {
-      typeMap[type] = os.ui.filter.getFilterableTypes(type);
-    }
 
     var filterNode = node.querySelector('filter');
     if (filterNode) {
@@ -160,20 +151,7 @@ os.im.action.FilterActionParser.parseNodes = function(nodes) {
     }
   });
 
-  var finalEntries = [];
-  entries.forEach(function(entry) {
-    var types = typeMap[entry.getType()];
-
-    if (types) {
-      types.forEach(function(type) {
-        var clone = entry.clone();
-        clone.setType(type);
-        finalEntries.push(clone);
-      });
-    }
-  });
-
-  return finalEntries;
+  return entries;
 };
 
 

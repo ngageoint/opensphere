@@ -1,7 +1,7 @@
 goog.provide('os.ui.text.TuiEditor');
-goog.provide('os.ui.text.TuiEditor.READY');
 goog.provide('os.ui.text.TuiEditorCtrl');
 goog.provide('os.ui.text.tuiEditorDirective');
+
 goog.require('goog.dom.safe');
 goog.require('ol.xml');
 goog.require('os.defines');

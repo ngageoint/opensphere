@@ -124,17 +124,10 @@ os.state.deleteStates = function(list) {
 
 /**
  * Determine if a layer is a state file
- * @param {Object|null|string|undefined} source
+ * @param {string} id
  * @return {boolean}
  */
-os.state.isStateFile = function(source) {
-  var layerId = source;
-  var text = [];
-  var words = layerId.split(os.ui.data.BaseProvider.ID_DELIMITER);
-  text.push(words[0]);
-  if (text[0] === 'state') {
-    return true;
-  } else {
-    return false;
-  }
+os.state.isStateFile = function(id) {
+  var words = id && id.split(os.ui.data.BaseProvider.ID_DELIMITER);
+  return words ? words[0] === 'state' || words[0] === 'pubstate' : false;
 };
