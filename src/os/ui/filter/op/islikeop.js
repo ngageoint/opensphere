@@ -3,6 +3,8 @@ goog.provide('os.ui.filter.op.IsLike');
 goog.require('goog.string');
 goog.require('os.ui.filter.op.Op');
 goog.require('os.ui.filter.string');
+goog.require('os.xsd.DataType');
+
 
 
 /**
@@ -13,7 +15,7 @@ goog.require('os.ui.filter.string');
  */
 os.ui.filter.op.IsLike = function() {
   os.ui.filter.op.IsLike.base(this, 'constructor',
-      'PropertyIsLike', 'is like', 'like', ['string'],
+      'PropertyIsLike', 'is like', 'like', [os.xsd.DataType.STRING],
       'wildCard="*" singleChar="." escape="\\"', 'e.g. abc*');
 };
 goog.inherits(os.ui.filter.op.IsLike, os.ui.filter.op.Op);

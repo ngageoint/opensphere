@@ -2,7 +2,7 @@ goog.provide('os.ui.search.BasicResultCardCtrl');
 goog.provide('os.ui.search.basicResultCardDirective');
 
 goog.require('os.ui.Module');
-goog.require('os.ui.text.SimpleMDE');
+goog.require('os.ui.text.TuiEditor');
 
 
 /**
@@ -43,7 +43,7 @@ os.ui.search.BasicResultCardCtrl = function($scope, $element, $compile) {
   if ('result' in $scope) {
     var result = $scope['result'].getResult();
     this['url'] = result.getUrl();
-    this['title'] = os.ui.text.SimpleMDE.getUnformatedText(result.getTitle());
+    this['title'] = os.ui.text.TuiEditor.getUnformatedText(result.getTitle());
   }
 };
 

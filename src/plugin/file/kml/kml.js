@@ -239,7 +239,8 @@ plugin.file.kml.replaceParsers_(ol.format.KML.POLY_STYLE_PARSERS_, 'color',
 plugin.file.kml.readStyle = function(node, objectStack) {
   var styleObject = ol.xml.pushParseAndPop(
       {}, ol.format.KML.STYLE_PARSERS_, node, objectStack);
-  if (!styleObject) {
+  if (!styleObject || goog.object.isEmpty(styleObject)) {
+    // don't create a style config if nothing was parsed from the element
     return null;
   }
   var fillStyle = /** @type {ol.style.Fill} */

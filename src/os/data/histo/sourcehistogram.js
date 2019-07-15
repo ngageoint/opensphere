@@ -153,6 +153,13 @@ os.data.histo.SourceHistogram = function(source, opt_parent) {
   this.sortFn = null;
 
   /**
+   * Track when reindex is needed and only do it once; immediately before updating results
+   * @type {boolean}
+   * @private
+   */
+  this.reindexFlag_ = false;
+
+  /**
    * Update event delay
    * @type {goog.async.Delay}
    * @private
@@ -416,8 +423,8 @@ os.data.histo.SourceHistogram.prototype.setBinMethod = function(method) {
     this.binRanges_ = this.binMethod.getArrayKeys() || false;
   }
 
-  this.reindex();
-  this.update();
+  this.reindexFlag_ = true;
+  this.update(100);
   this.dispatchEvent(os.data.histo.HistoEventType.BIN_CHANGE);
 };
 
@@ -466,8 +473,8 @@ os.data.histo.SourceHistogram.prototype.setSecondaryBinMethod = function(method)
     this.combinedKeyMethod = null;
   }
 
-  this.reindex();
-  this.update();
+  this.reindexFlag_ = true;
+  this.update(100);
   this.dispatchEvent(os.data.histo.HistoEventType.BIN_CHANGE);
 };
 
@@ -478,6 +485,8 @@ os.data.histo.SourceHistogram.prototype.setSecondaryBinMethod = function(method)
  * @protected
  */
 os.data.histo.SourceHistogram.prototype.reindex = function() {
+  this.reindexFlag_ = false;
+
   if (this.timeModel_) {
     this.timeModel_.removeDimension(this.id_);
 
@@ -516,7 +525,7 @@ os.data.histo.SourceHistogram.prototype.getSortFn = function() {
  */
 os.data.histo.SourceHistogram.prototype.setSortFn = function(sortFn) {
   this.sortFn = sortFn;
-  this.update();
+  this.update(100);
 };
 
 
@@ -567,6 +576,10 @@ os.data.histo.SourceHistogram.prototype.getResults = function() {
  * Update results from crossfilter.
  */
 os.data.histo.SourceHistogram.prototype.updateResults = function() {
+  if (this.reindexFlag_) {
+    this.reindex();
+  }
+
   var results = [];
   if (this.timeModel_ && this.binMethod) {
     // make sure the source time model is filtered on the correct range
@@ -712,7 +725,7 @@ os.data.histo.SourceHistogram.prototype.onSourceChange_ = function(e) {
   var p = e.getProperty();
   if (p === os.source.PropertyChange.COLOR || p === os.source.PropertyChange.FEATURES ||
       p === os.source.PropertyChange.REPLACE_STYLE || p === os.source.PropertyChange.TIME_ENABLED) {
-    this.update();
+    this.update(100);
   } else if (p === os.source.PropertyChange.FEATURE_VISIBILITY) {
     // increase the delay to rate limit updates triggered by the timeline
     this.update(100);
@@ -722,8 +735,8 @@ os.data.histo.SourceHistogram.prototype.onSourceChange_ = function(e) {
     this.update();
   } else if (p === os.source.PropertyChange.DATA) {
     // existing data changed, so reindex crossfilter before updating
-    this.reindex();
-    this.update();
+    this.reindexFlag_ = true;
+    this.update(100);
   }
 };
 
@@ -819,8 +832,8 @@ os.data.histo.SourceHistogram.prototype.setBinRanges = function(value) {
     this.binMethod.setArrayKeys(value);
   }
 
-  this.reindex();
-  this.update();
+  this.reindexFlag_ = true;
+  this.update(100);
   this.dispatchEvent(goog.events.EventType.CHANGE);
 };
 
