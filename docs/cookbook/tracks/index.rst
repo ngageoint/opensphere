@@ -33,7 +33,7 @@ Your code needs to wait for the Places plugin to be available (fully loaded) bef
 .. literalinclude:: src/tracksplugin_features.js
   :caption: Tracks Cookbook example - Places plugin initialisation
   :linenos:
-  :lines: 41-42
+  :lines: 41-46
   :language: javascript
 
 You can then create a new track, which might be in response to an initial connection, or in response to a server update (e.g. over a WebSocket)
@@ -41,7 +41,7 @@ You can then create a new track, which might be in response to an initial connec
 .. literalinclude:: src/tracksplugin_features.js
   :caption: Tracks Cookbook example - Create Track
   :linenos:
-  :lines: 48-53,58
+  :lines: 52-57,62
   :language: javascript
 
 The track can then be updated with additional features in response to changes:
@@ -49,7 +49,7 @@ The track can then be updated with additional features in response to changes:
 .. literalinclude:: src/tracksplugin_features.js
   :caption: Tracks Cookbook example - Update Track
   :linenos:
-  :lines: 79-82
+  :lines: 83-86
   :language: javascript
 
 
@@ -63,12 +63,12 @@ The approach shown above will produce the track under the Saved Places layer (on
 You could create a separate track using :code:`createTrack()` in place of :code:`createAndAdd()`, and then add it to your own layer definition. See the KML
 parser implementation for an example of this.
 
-Instead of using features, you can just pass coordinate instead, as shown below:
+Instead of using features, you can just pass coordinates instead, as shown below:
 
 .. literalinclude:: src/tracksplugin_coordinates.js
   :caption: Tracks Cookbook Coordinates example - Create Track
   :linenos:
-  :lines: 48-52
+  :lines: 52-56
   :language: javascript
 
 .. tip:: In case you missed it, the CreateOptions object has a different key - :code:`coordinates` in place of :code:`features`. You pass exactly one of :code:`coordinates` or :code:`features`.
@@ -78,7 +78,7 @@ Similarly, you can pass coordinates to the update method as well:
 .. literalinclude:: src/tracksplugin_coordinates.js
   :caption: Tracks Cookbook Coordinates example - Update Track
   :linenos:
-  :lines: 77-80
+  :lines: 81-84
   :language: javascript
 
 .. tip:: With both features and coordinates, you have to make sure your geometry is transformed into the map projection.
@@ -100,7 +100,7 @@ In this case, you will likely need a server proxy to adapt (e.g. "websockify") y
 Full code
 ---------
 
-To avoid the need for a server that provides updates, the example code makes periodic update to the track position using :code:`setInterval()` and the :code:`modifyPosition_()` function. Those are artifacts of the example, and you wouldn't have that kind of function in your code.
+To avoid the need for a server that provides updates, the example code makes periodic updates to the track position using :code:`setInterval()` and the :code:`modifyPosition_()` function. Those are artifacts of the example, and you wouldn't have that kind of function in your code.
 
 .. literalinclude:: src/tracksplugin_features.js
   :caption: Tracks Cookbook Features variation example - Full code

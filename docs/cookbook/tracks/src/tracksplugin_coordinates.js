@@ -38,7 +38,11 @@ plugin.cookbook_tracks.ID = 'cookbook_tracks';
 plugin.cookbook_tracks.TracksPlugin.prototype.init = function() {
   transformToMap = ol.proj.getTransform(os.proj.EPSG4326, os.map.PROJECTION);
   var placesManager = plugin.places.PlacesManager.getInstance();
-  placesManager.listenOnce(os.config.EventType.LOADED, this.onPlacesLoaded, false, this);
+  if (placesManager.isLoaded()) {
+    this.onPlacesLoaded();
+  } else {
+    placesManager.listenOnce(os.config.EventType.LOADED, this.onPlacesLoaded, false, this);
+  }
 };
 
 /**
