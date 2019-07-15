@@ -299,11 +299,8 @@ plugin.cesium.sync.FeatureConverter.prototype.wrapFillAndOutlineGeometries = fun
  */
 plugin.cesium.sync.FeatureConverter.prototype.createLabel = function(feature, geometry, label, context) {
   if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(label.getText()))) {
-    var options = /** @type {!Cesium.optionsLabelCollection} */ ({
-      heightReference: this.getHeightReference(context.layer, feature, geometry)
-    });
-
-    this.updateLabel(options, geometry, label, context);
+    var options = /** @type {!Cesium.optionsLabelCollection} */ ({});
+    this.updateLabel(options, feature, geometry, label, context);
     context.addLabel(options, feature, geometry);
   }
 };
@@ -330,12 +327,13 @@ plugin.cesium.sync.getLabelPosition = function(geometry) {
 
 /**
  * @param {!(Cesium.Label|Cesium.optionsLabelCollection)} label The label or label options
+ * @param {!ol.Feature} feature
  * @param {!ol.geom.Geometry} geometry
  * @param {!ol.style.Style} style
  * @param {!plugin.cesium.VectorContext} context
  * @protected
  */
-plugin.cesium.sync.FeatureConverter.prototype.updateLabel = function(label, geometry, style, context) {
+plugin.cesium.sync.FeatureConverter.prototype.updateLabel = function(label, feature, geometry, style, context) {
   var geom = style.getGeometry();
   if (geom instanceof ol.geom.Geometry) {
     geometry = /** @type {!ol.geom.Geometry} */ (geom);
@@ -368,6 +366,8 @@ plugin.cesium.sync.FeatureConverter.prototype.updateLabel = function(label, geom
       label.geomRevision = geomRevision;
     }
   }
+
+  label.heightReference = this.getHeightReference(context.layer, feature, geometry);
 
   var labelStyle = undefined;
   var layerOpacity = context.layer.getOpacity();
@@ -1305,12 +1305,10 @@ plugin.cesium.sync.FeatureConverter.prototype.createOrUpdateBillboard = function
  */
 plugin.cesium.sync.FeatureConverter.prototype.createBillboard = function(feature, geometry, context, style,
     opt_flatCoords, opt_offset, opt_collection) {
-  var heightReference = this.getHeightReference(context.layer, feature, geometry);
   var show = context.featureToShownMap[feature['id']] == null || context.featureToShownMap[feature['id']];
   var isIcon = style instanceof ol.style.Icon;
 
   var options = /** @type {!Cesium.optionsBillboardCollectionAdd} */ ({
-    heightReference: heightReference,
     pixelOffsetScaleByDistance: isIcon ? this.distanceScalar_ : undefined,
     scaleByDistance: isIcon ? this.distanceScalar_ : undefined,
     show: show
@@ -1436,7 +1434,7 @@ plugin.cesium.sync.FeatureConverter.prototype.updateBillboard = function(feature
       }
     }
 
-    bb.heightReference = this.heightReference_;
+    bb.heightReference = this.getHeightReference(layer, feature, geometry);
     bb.horizontalOrigin = horizontalOrigin;
     bb.verticalOrigin = verticalOrigin;
     bb.pixelOffset = pixelOffset;
@@ -1936,7 +1934,7 @@ plugin.cesium.sync.FeatureConverter.prototype.convert = function(feature, resolu
             if (currentLabel == null) {
               this.createLabel(feature, geometry, style, context);
             } else {
-              this.updateLabel(currentLabel, geometry, style, context);
+              this.updateLabel(currentLabel, feature, geometry, style, context);
             }
           } else {
             // style is for a geometry
