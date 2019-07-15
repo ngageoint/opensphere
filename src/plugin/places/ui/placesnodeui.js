@@ -18,7 +18,8 @@ plugin.places.ui.PlacesNodeUITemplate = '<span ng-if="nodeUi.show()" class="d-fl
         '<i class="fa ' + plugin.places.Icon.PLACEMARK + ' fa-fw c-glyph" title="Create a new place"></i>' +
       '</span>' +
       '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace(true)">' +
-        '<i class="fa ' + plugin.places.Icon.ANNOTATION + ' fa-fw c-glyph" title="Create a new annotation"></i>' +
+        '<i class="fa ' + plugin.places.Icon.ANNOTATION + ' fa-fw c-glyph" title="Create a new place with a ' +
+            'text box"></i>' +
       '</span>' +
 
       '<span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">' +

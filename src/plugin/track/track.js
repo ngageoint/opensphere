@@ -57,7 +57,7 @@ plugin.track.ICON = 'fa-share-alt';
  * @type {string}
  * @const
  */
-plugin.track.LAYER_TITLE = 'Tracks';
+plugin.track.LAYER_TITLE = 'Places';
 
 
 /**
@@ -96,18 +96,6 @@ plugin.track.TrackLike;
  * @typedef {os.feature.DynamicFeature|ol.Feature}
  */
 plugin.track.TrackFeatureLike;
-
-
-/**
- * @typedef {{
- *   entry: !os.filter.FilterEntry,
- *   mappings: !Array<!Object>,
- *   startColumn: string,
- *   endColumn: string,
- *   uri: string
- * }}
- */
-plugin.track.QueryOptions;
 
 
 /**
@@ -256,24 +244,22 @@ plugin.track.isTrackFeature = function(feature) {
 
 
 /**
- * Get the track layer, creating it if one doesn't exist.
+ * Get the track layer.
  *
- * @param {boolean=} opt_create If the track layer should be created if it doesn't exist
  * @return {plugin.file.kml.KMLLayer}
  */
-plugin.track.getTrackLayer = function(opt_create) {
-  var osMap = os.MapContainer.getInstance();
-  var layer = /** @type {plugin.file.kml.KMLLayer} */ (osMap.getLayer(plugin.track.ID));
-  if (!layer && opt_create) {
-    var options = plugin.track.getDefaultLayerOptions();
-    layer = /** @type {plugin.file.kml.KMLLayer} */ (os.layer.createFromOptions(options));
+plugin.track.getTrackLayer = function() {
+  return plugin.places.PlacesManager.getInstance().getPlacesLayer();
+};
 
-    if (layer) {
-      osMap.addLayer(layer);
-    }
-  }
 
-  return layer;
+/**
+ * Get the track source.
+ *
+ * @return {plugin.file.kml.KMLSource}
+ */
+plugin.track.getTrackSource = function() {
+  return plugin.places.PlacesManager.getInstance().getPlacesSource();
 };
 
 
@@ -284,15 +270,7 @@ plugin.track.getTrackLayer = function(opt_create) {
  * @return {plugin.file.kml.ui.KMLNode}
  */
 plugin.track.getTrackNode = function(opt_create) {
-  var layer = plugin.track.getTrackLayer(opt_create);
-  if (layer) {
-    var source = /** @type {plugin.file.kml.KMLSource} */ (layer.getSource());
-    if (source) {
-      return source.getRootNode();
-    }
-  }
-
-  return null;
+  return plugin.places.PlacesManager.getInstance().getPlacesRoot();
 };
 
 
@@ -866,11 +844,6 @@ plugin.track.setGeometry = function(track, geometry) {
   geometry.toLonLat();
   geometry = os.geo.splitOnDateLine(geometry);
   geometry.osTransform();
-
-  // tracks must be a ol.geom.MultiLineString
-  // if (geometry instanceof ol.geom.LineString) {
-  //   geometry = new ol.geom.MultiLineString([geometry.getCoordinates()], geometry.getLayout());
-  // }
 
   // prevent further normalization of the geometry
   geometry.set(os.geom.GeometryField.NORMALIZED, true);

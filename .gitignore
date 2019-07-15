@@ -6,6 +6,7 @@ docs/_build/
 index.html
 old.html
 addlayer.html
+vendor/os-minified
 
 # old build
 .sass-cache/

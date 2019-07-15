@@ -5,6 +5,7 @@ goog.require('goog.log');
 goog.require('goog.string');
 goog.require('ol.events');
 goog.require('ol.layer.Layer');
+goog.require('os.IGroupable');
 goog.require('os.color');
 goog.require('os.events.LayerEvent');
 goog.require('os.events.PropertyChangeEvent');
@@ -23,6 +24,7 @@ goog.require('os.ui.renamelayer');
  * @extends {ol.layer.Layer}
  * @implements {os.layer.ILayer}
  * @implements {os.layer.IColorableLayer}
+ * @implements {os.IGroupable}
  * @constructor
  */
 plugin.cesium.Layer = function() {
@@ -141,6 +143,7 @@ plugin.cesium.Layer = function() {
 goog.inherits(plugin.cesium.Layer, ol.layer.Layer);
 os.implements(plugin.cesium.Layer, os.layer.ILayer.ID);
 os.implements(plugin.cesium.Layer, os.layer.IColorableLayer.ID);
+os.implements(plugin.cesium.Layer, os.IGroupable.ID);
 
 
 /**
@@ -231,6 +234,22 @@ plugin.cesium.Layer.prototype.getId = function() {
  */
 plugin.cesium.Layer.prototype.setId = function(value) {
   this.id_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Layer.prototype.getGroupId = function() {
+  return this.getId();
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Layer.prototype.getGroupLabel = function() {
+  return this.getTitle();
 };
 
 

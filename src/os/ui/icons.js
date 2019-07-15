@@ -35,7 +35,9 @@ os.ui.Icons = {
       'title="This layer supports animation over time"/>',
   DEPRECATED: '<i class="fa fa-exclamation-circle text-danger" title="This layer is soon to be deleted"></i>',
   LOCK: '<i class="fa fa-lock" title="This layer is locked."></i>',
-  COLOR_MODEL: '<i class="fa fa-tint" title="This layer has auto/manual coloring rules applied"></i>'
+  COLOR_MODEL: '<i class="fa fa-tint" title="This layer has auto/manual coloring rules applied"></i>',
+  FILTER: ' <i class="fa fa-fw fa-filter position-relative '
+    + '" title="This filter is active"></i>'
 };
 
 

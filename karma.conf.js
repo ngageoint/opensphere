@@ -8,8 +8,7 @@ const resolver = require('opensphere-build-resolver/utils');
 module.exports = function(config) {
   var closureFiles = helper.readManifest(path.resolve('.build', 'gcc-test-manifest'))
       .filter(function(item) {
-        return item.indexOf('src/os/xt/build-xt.js') === -1 &&
-          item.indexOf(__dirname + '/test/') !== 0;
+        return item.indexOf(__dirname + '/test/') !== 0;
       });
 
   config.set({
@@ -52,7 +51,8 @@ module.exports = function(config) {
       {pattern: resolver.resolveModulePath('zip-js/WebContent/inflate.js', __dirname), watched: false, included: false, served: true},
       {pattern: resolver.resolveModulePath('zip-js/WebContent/z-worker.js', __dirname), watched: false, included: false, served: true},
       {pattern: resolver.resolveModulePath('opensphere-state-schema/src/main/**/*.xsd', __dirname), watched: false, included: false, served: true},
-      {pattern: resolver.resolveModulePath('suncalc/suncalc.js', __dirname), watched: false, included: true, served: true}
+      {pattern: resolver.resolveModulePath('suncalc/suncalc.js', __dirname), watched: false, included: true, served: true},
+      {pattern: resolver.resolveModulePath('markdown-it/dist/markdown-it.min.js', __dirname), watched: false, included: true, served: true}
     ].concat(closureFiles).concat([
       // init
       'test/init.js',

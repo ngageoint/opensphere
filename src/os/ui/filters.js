@@ -4,6 +4,7 @@ goog.provide('os.ui.filtersDirective');
 goog.require('os.MapContainer');
 goog.require('os.command.SequenceCommand');
 goog.require('os.data.FilterTreeSearch');
+goog.require('os.data.groupby.SourceGroupBy');
 goog.require('os.defines');
 goog.require('os.layer');
 goog.require('os.metrics.Metrics');
@@ -104,7 +105,8 @@ goog.inherits(os.ui.FiltersCtrl, os.ui.slick.AbstractGroupByTreeSearchCtrl);
 os.ui.FiltersCtrl.VIEWS = {
   'None': -1, // you can't use null because Angular treats that as the empty/unselected option
   'Layer': new os.ui.FilterLayerGroupBy(),
-  'Layer Type': new os.ui.FilterLayerGroupBy(true)
+  'Layer Type': new os.ui.FilterLayerGroupBy(true),
+  'Source': new os.data.groupby.SourceGroupBy(true)
 };
 
 

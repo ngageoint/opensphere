@@ -131,7 +131,8 @@ os.ui.query.AddFilterCtrl.prototype.updateLayers = function() {
           layers.push({
             'id': key,
             'label': set[key],
-            'columns': cols
+            'columns': cols,
+            'source': filterable.getProvider()
           });
         }
       }
@@ -151,7 +152,7 @@ os.ui.query.AddFilterCtrl.prototype.updateLayers = function() {
   for (var i = 0, n = layers.length; i < n; i++) {
     var id = layers[i]['id'];
     menuRoot.addChild({
-      label: layers[i]['label'],
+      label: layers[i]['label'] + ' (' + layers[i]['source'] + ')',
       eventType: id,
       handler: this.addFilter.bind(this, id)
     });

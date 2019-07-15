@@ -9,6 +9,7 @@ os.layer.PropertyChange = {
   ANIMATION_ENABLED: 'animationEnabled',
   COLOR_MODEL: 'colorModel',
   ERROR: 'error',
+  GROUP_ID: 'groupId',
   ICONS: 'icons',
   LABEL_VISIBILITY: 'labelVisibility',
   LOADING: 'loading',

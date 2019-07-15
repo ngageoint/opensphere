@@ -7,7 +7,7 @@ goog.require('os.annotation.TailStyle');
 goog.require('os.annotation.TailType');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.ui.Module');
-goog.require('os.ui.text.simpleMDEDirective');
+goog.require('os.ui.text.tuiEditorDirective');
 
 
 /**
@@ -17,24 +17,26 @@ goog.require('os.ui.text.simpleMDEDirective');
  * @const
  */
 os.annotation.UI_TEMPLATE =
-  '<div class="c-annotation u-hover-container">' +
+  '<div class="c-annotation u-hover-container" ' +
+    'ng-class="{\'c-annotation__editing\': ctrl.editingDescription || ctrl.editingName}">' +
     '<svg class="c-annotation__svg">' +
       '<path ng-style="{ fill: ctrl.options.showDescription ? ctrl.options.bodyBG : ctrl.options.headerBG}" />' +
     '</svg>' +
-    '<div class="c-annotation__controls position-absolute text-right w-100" ng-show="ctrl.options.editable">' +
-      '<button class="btn btn-sm btn-outline-secondary border-0 bg-transparent animate-fade u-hover-show"' +
-          'title="Hide Annotation"' +
+    '<div class="u-card-popup position-absolute text-right animate-fade u-hover-show"' +
+        ' ng-show="ctrl.options.editable">' +
+      '<button class="btn btn-sm btn-outline-primary border-0 bg-transparent"' +
+          'title="Hide text box"' +
           'ng-click="ctrl.hideAnnotation()">' +
-        '<i class="fa fa-eye-slash"></i>' +
+        '<i class="c-glyph fa fa-fw fa-comment"></i>' +
       '</button>' +
-      '<button class="btn btn-sm btn-outline-secondary border-0 bg-transparent animate-fade u-hover-show"' +
-          'title="Edit annotation"' +
+      '<button class="btn btn-sm btn-outline-primary border-0 bg-transparent"' +
+          'title="Edit text box"' +
           'ng-click="ctrl.launchEditWindow()">' +
-        '<i class="fa fa-pencil"></i>' +
+        '<i class="c-glyph fa fa-fw fa-pencil"></i>' +
       '</button>' +
     '</div>' +
     '<div class="js-annotation c-window card h-100">' +
-      '<div class="card-header flex-shrink-0 text-truncate px-1 py-0" title="{{ctrl.name}}"' +
+      '<div class="card-header flex-shrink-0 text-truncate px-1 py-0 js-annotation__header" title="{{ctrl.name}}"' +
           'ng-show="ctrl.options.showName" ' +
           'ng-class="!ctrl.options.showDescription && \'h-100 border-0\'" ' +
           'ng-style="{background: ctrl.options.headerBG }" ' +
@@ -45,32 +47,42 @@ os.annotation.UI_TEMPLATE =
             '<input class="form-control" type="text" ng-model="ctrl.name"/>' +
           '</div>' +
           '<div class="col-auto">' +
-            '<button class="btn btn-success mr-1" title="Save the annotation" ' +
+            '<button class="btn btn-success mr-1" title="Save the name" ' +
                 'ng-click="ctrl.saveAnnotation()" ' +
                 'ng-disabled="!ctrl.name">' +
               '<i class="fa fa-check"/> OK' +
             '</button>' +
-            '<button class="btn btn-secondary" title="Cancel editing the annotation" ng-click="ctrl.cancelEdit()">' +
+            '<button class="btn btn-secondary" title="Cancel editing the text box" ng-click="ctrl.cancelEdit()">' +
               '<i class="fa fa-ban"/> Cancel' +
             '</button>' +
           '</div>' +
         '</div>' +
       '</div>' +
-      '<div class="card-body p-1 u-overflow-y-auto" ng-show="ctrl.options.showDescription" ' +
+      '<div class="card-body p-1 u-overflow-y-auto d-flex flex-fill flex-column" ' +
+          'ng-show="ctrl.options.showDescription" ' +
           'ng-style="{background: ctrl.options.bodyBG }" ' +
           'ng-dblclick="ctrl.editDescription()">' +
-        '<simplemde text="ctrl.description" edit="ctrl.editingDescription" is-required="false" maxlength="4000">' +
-        '</simplemde>' +
-        '<div class="float-right" ng-if="ctrl.editingDescription">' +
-          '<button class="btn btn-success mr-1" title="Save the annotation" ng-click="ctrl.saveAnnotation()">' +
+        '<tuieditor text="ctrl.description" edit="ctrl.editingDescription" is-required="false" maxlength="4000">' +
+        '</tuieditor>' +
+        '<div class="text-right mt-1" ng-if="ctrl.editingDescription">' +
+          '<button class="btn btn-success mr-1" title="Save the text box" ng-click="ctrl.saveAnnotation()">' +
             '<i class="fa fa-check"/> OK' +
           '</button>' +
-          '<button class="btn btn-secondary" title="Cancel editing the annotation" ng-click="ctrl.cancelEdit()">' +
+          '<button class="btn btn-secondary" title="Cancel editing the text box" ng-click="ctrl.cancelEdit()">' +
             '<i class="fa fa-ban"/> Cancel' +
           '</button>' +
         '</div>' +
       '</div>' +
     '</div>';
+
+
+/**
+ * @enum {string}
+ */
+os.annotation.selectors = {
+  HEADER: '.js-annotation__header',
+  ALL: '.js-annotation'
+};
 
 
 
@@ -186,6 +198,8 @@ goog.inherits(os.annotation.AbstractAnnotationCtrl, goog.Disposable);
  */
 os.annotation.AbstractAnnotationCtrl.prototype.disposeInternal = function() {
   os.annotation.AbstractAnnotationCtrl.base(this, 'disposeInternal');
+  this.element.parent().draggable('destroy');
+  this.element.resizable('destroy');
 
   this.scope = null;
   this.element = null;
@@ -231,17 +245,19 @@ os.annotation.AbstractAnnotationCtrl.prototype.initialize = function() {
  * @protected
  */
 os.annotation.AbstractAnnotationCtrl.prototype.initDragResize = function() {
-  if (this.element && this.element.parent().length) {
-    // OpenLayers absolutely positions the parent container, so attach the draggable handler to that and use the
-    // annotation container as the drag target.
-    this.element.parent().draggable({
-      'containment': this.getContainerSelector(),
-      'handle': '.js-annotation',
-      'start': this.onDragStart_.bind(this),
-      'drag': this.updateTail.bind(this),
-      'stop': this.onDragStop_.bind(this),
-      'scroll': false
-    });
+  if (this.element) {
+    if (this.element.parent().length) {
+      // OpenLayers absolutely positions the parent container, so attach the draggable handler to that and use the
+      // annotation container as the drag target.
+      this.element.parent().draggable({
+        'containment': this.getContainerSelector(),
+        'handle': os.annotation.selectors.ALL,
+        'start': this.onDragStart_.bind(this),
+        'drag': this.updateTail.bind(this),
+        'stop': this.onDragStop_.bind(this),
+        'scroll': false
+      });
+    }
 
     this.element.resizable({
       'containment': this.getContainerSelector(),
@@ -295,6 +311,7 @@ os.annotation.AbstractAnnotationCtrl.prototype.hideAnnotation = function() {};
 os.annotation.AbstractAnnotationCtrl.prototype.editDescription = function() {
   if (this['options'].editable && !this['editingDescription']) {
     this['editingDescription'] = true;
+    this.element.parent().draggable('option', 'handle', os.annotation.selectors.HEADER);
 
     this.recordCurrents_();
 
@@ -354,9 +371,14 @@ os.annotation.AbstractAnnotationCtrl.prototype.saveAnnotation = function() {
   this.element.width(this.currentWidth_);
   this['options'].size = [this.currentWidth_, this.currentHeight_];
 
+  if (this['editingDescription']) {
+    this.element.parent().draggable('option', 'handle', os.annotation.selectors.ALL);
+  }
+
   this['editingName'] = false;
   this['editingDescription'] = false;
 
+  this.element.parent().draggable('option', 'handle', os.annotation.selectors.ALL);
   this.updateTail();
 };
 
@@ -377,6 +399,10 @@ os.annotation.AbstractAnnotationCtrl.prototype.cancelEdit = function() {
     this['description'] = this.currentDescription_;
 
     this.updateTail();
+
+    if (this['editingDescription']) {
+      this.element.parent().draggable('option', 'handle', os.annotation.selectors.ALL);
+    }
   }
 
   this['editingName'] = false;

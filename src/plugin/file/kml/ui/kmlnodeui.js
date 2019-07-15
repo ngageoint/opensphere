@@ -22,15 +22,15 @@ plugin.file.kml.ui.kmlNodeUIDirective = function() {
         '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addPlace()">' +
             '<i class="fa fa-map-marker fa-fw c-glyph" title="Create a new place"></i></span>' +
         '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addPlace(true)">' +
-          '<i class="fa fa-comment fa-fw c-glyph" title="Create a new annotation"></i>' +
+          '<i class="fa fa-comment fa-fw c-glyph" title="Create a new place with a text box"></i>' +
         '</span>' +
         '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.edit()">' +
             '<i class="fa fa-pencil fa-fw c-glyph" ' +
                 'title="Edit the {{nodeUi.isFolder() ? \'folder\' : \'place\'}}"></i></span>' +
         '<span ng-if="!nodeUi.isFolder() && nodeUi.hasAnnotation()" ng-click="nodeUi.removeAnnotation()">' +
-            '<i class="fa fa-comment fa-fw c-glyph" title="Hide annotation"></i></span>' +
+            '<i class="fa fa-comment fa-fw c-glyph" title="Hide text box"></i></span>' +
         '<span ng-if="!nodeUi.isFolder() && !nodeUi.hasAnnotation()" ng-click="nodeUi.showAnnotation()">' +
-            '<i class="fa fa-comment-o fa-fw c-glyph" title="Show annotation"></i></span>' +
+            '<i class="fa fa-comment-o fa-fw c-glyph" title="Show text box"></i></span>' +
 
         '<span ng-if="nodeUi.canRemove()" ng-click="nodeUi.tryRemove()">' +
         '<i class="fa fa-times fa-fw c-glyph" ' +
