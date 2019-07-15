@@ -133,6 +133,7 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
           // Our users are more interested in color accuracy with the underlying imagery rather than attempting
           // to mimic atmospheric lighting effects
           scene.globe.showGroundAtmosphere = false;
+          scene.highDynamicRange = false;
 
           // set the FOV to 60 degrees to match Google Earth
           scene.camera.frustum.fov = Cesium.Math.PI_OVER_THREE;
