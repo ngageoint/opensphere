@@ -221,7 +221,7 @@
     "@semantic-release/github": "^5.2.10",
     "@semantic-release/npm": "^5.1.4",
     "@semantic-release/release-notes-generator": "^7.1.4",
-    "angular-mocks": "~1.5.x",
+    "angular-mocks": "~1.7.x",
     "autoprefixer": "^8.4.1",
     "clean-css-cli": "^4.1.11",
     "conventional-changelog-cli": "^1.2.0",
