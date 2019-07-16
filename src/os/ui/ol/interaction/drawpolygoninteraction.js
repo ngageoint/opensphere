@@ -72,6 +72,16 @@ os.ui.ol.interaction.DrawPolygon.TYPE = 'polygon';
 /**
  * @inheritDoc
  */
+os.ui.ol.interaction.DrawPolygon.prototype.disposeInternal = function() {
+  this.cleanup();
+
+  os.ui.ol.interaction.DrawPolygon.base(this, 'disposeInternal');
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.ui.ol.interaction.DrawPolygon.prototype.getGeometry = function() {
   var geom = new ol.geom.Polygon([this.coords]);
   var method = os.interpolate.getMethod();
