@@ -184,15 +184,13 @@ plugin.places.ui.QuickAddPlacesCtrl.WINDOW_ID = 'quickAddPlaces';
  */
 plugin.places.ui.QuickAddPlacesCtrl.prototype.disposeInternal = function() {
   plugin.places.ui.QuickAddPlacesCtrl.base(this, 'disposeInternal');
+  this.disablePoint();
 
   // remove interactions
   this.map.removeInteraction(this.dragBox_);
   this.map.removeInteraction(this.dragCircle_);
   this.map.removeInteraction(this.drawPolygon_);
   this.map.removeInteraction(this.drawLine_);
-
-  this.disablePoint();
-
   this.dragBox_.dispose();
   this.dragCircle_.dispose();
   this.drawPolygon_.dispose();
@@ -352,8 +350,13 @@ plugin.places.ui.QuickAddPlacesCtrl.prototype.addGeometry = function(geometry) {
 
     var place = plugin.places.addPlace(/** @type {plugin.places.PlaceOptions} */ ({
       geometry: geometry,
-      name: (this['name'] || 'New Place') + ' ' + ++this.numAdded,
+      name: this.getUniqueName(),
       parent: this.root,
+      styleConfig: {
+        'labelSize': 14,
+        'labelColor': 'rgba(255,255,255,1)',
+        'labels': [os.ui.FeatureEditCtrl.DEFAULT_LABEL]
+      },
       startTime: goog.now()
     }));
 
@@ -371,6 +374,26 @@ plugin.places.ui.QuickAddPlacesCtrl.prototype.addGeometry = function(geometry) {
  */
 plugin.places.ui.QuickAddPlacesCtrl.prototype.onNameChange = function() {
   this.numAdded = 0;
+};
+
+
+/**
+ * Gets a unique name for the target folder.
+ * @return {string} The unique name.
+ */
+plugin.places.ui.QuickAddPlacesCtrl.prototype.getUniqueName = function() {
+  var children = this.root && this.root.getChildren() || [];
+  var names = children.map(function(node) {
+    return node.getLabel();
+  });
+  var base = this['name'] || 'New Place';
+  var name = base + ' ' + ++this.numAdded;
+
+  while (names.indexOf(name) > -1) {
+    name = base + ' ' + ++this.numAdded;
+  }
+
+  return name;
 };
 
 
