@@ -43,10 +43,14 @@ os.Module = angular.module('os', [
  * Configuration function for <code>os.Module</code>. Used to configure the angular module.
  *
  * @param {!angular.$routeProvider} $routeProvider
+ * @param {!angular.$locationProvider} $locationProvider
  * @ngInject
  * @export
  */
-os.Module.configureModule = function($routeProvider) {
+os.Module.configureModule = function($routeProvider, $locationProvider) {
+  // Angular 1.6.0 defaulted to '#!' instead of '#'
+  $locationProvider.hashPrefix('');
+
   $routeProvider.otherwise({
     template: '<os-main></os-main>',
     reloadOnSearch: false
