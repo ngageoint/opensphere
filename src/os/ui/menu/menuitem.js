@@ -263,7 +263,7 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
   }
 
   if (classes.length > 0) {
-    html += ' class="' + classes.join(', ') + '"';
+    html += ' class="' + classes.join(' ') + '"';
   }
 
   if (isItem) {
@@ -311,11 +311,6 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
   // close sub menu
   if (type === types.SUBMENU) {
     html += '</ul></li>';
-  }
-
-  // automatically insert separators after groups
-  if (type === types.GROUP) {
-    html += '<li>-</li>';
   }
 
   return html;
