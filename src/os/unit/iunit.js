@@ -5,6 +5,7 @@ goog.require('os.unit.IMultiplier');
 
 /**
  * Defines a unit.  Includes details how to convert to this unit, and all of its multipliers.
+ *
  * @interface
  */
 os.unit.IUnit = function() {};

@@ -11,6 +11,7 @@ goog.require('os.alert.EventType');
 
 /**
  * An alert level
+ *
  * @param {string} name The name of the level.
  * @param {number} value The numeric value of the level.
  * @constructor

@@ -17,6 +17,7 @@ os.ui.uniqueServerUrl = function() {
 
 /**
  * Link function for unique title directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.Attributes} $attrs

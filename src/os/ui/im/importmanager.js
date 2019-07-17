@@ -20,6 +20,7 @@ os.ui.im.ImporterConfig;
 /**
  * Handles importing files and urls. Each layer type can register a corresponding import
  * UI. If the loaded file has a layer type, then the UI for that layer type is launched.
+ *
  * @constructor
  */
 os.ui.im.ImportManager = function() {
@@ -77,6 +78,7 @@ os.ui.im.ImportManager.DEFAULT_IMPORTER = 'default';
 
 /**
  * Get a registered import UI.
+ *
  * @param {?string} type
  * @return {os.ui.im.IImportUI}
  */
@@ -95,6 +97,7 @@ os.ui.im.ImportManager.prototype.getImportUI = function(type) {
 
 /**
  * Get all registered import details for the application.
+ *
  * @return {!Array<string>}
  */
 os.ui.im.ImportManager.prototype.getImportDetails = function() {
@@ -109,6 +112,7 @@ os.ui.im.ImportManager.prototype.getImportDetails = function() {
 
 /**
  * Get an importer registered with the application.
+ *
  * @param {string} type The importer type
  * @param {?=} opt_options Importer options
  * @return {os.im.IImporter}
@@ -129,6 +133,7 @@ os.ui.im.ImportManager.prototype.getImporter = function(type, opt_options) {
 
 /**
  * Get all the importers
+ *
  * @return {Array<os.ui.im.IImportUI>}
  */
 os.ui.im.ImportManager.prototype.getImporters = function() {
@@ -145,6 +150,7 @@ os.ui.im.ImportManager.prototype.getImporters = function() {
 
 /**
  * Get a parser registered with the application.
+ *
  * @param {string} type The parser type
  * @param {?=} opt_options Parser options
  * @return {os.parse.IParser}
@@ -164,6 +170,7 @@ os.ui.im.ImportManager.prototype.getParser = function(type, opt_options) {
 
 /**
  * Registers detail text for an import type that will be displayed to the user in a list of supported types.
+ *
  * @param {string} details The import type detail text.
  * @param {boolean=} opt_isData If this is for a data type. These will be combined when displayed to the user.
  */
@@ -180,6 +187,7 @@ os.ui.im.ImportManager.prototype.registerImportDetails = function(details, opt_i
 
 /**
  * Register an import UI launcher.
+ *
  * @param {string} type The import type
  * @param {os.ui.im.IImportUI} ui The import UI
  */
@@ -198,6 +206,7 @@ os.ui.im.ImportManager.prototype.registerImportUI = function(type, ui) {
 
 /**
  * Register an importer class.
+ *
  * @param {string} type The importer type
  * @param {function(new:os.im.IImporter, ...?)} clazz The importer class
  */
@@ -215,6 +224,7 @@ os.ui.im.ImportManager.prototype.registerImporter = function(type, clazz) {
 
 /**
  * Register an parser class.
+ *
  * @param {string} type The parser type
  * @param {function(new:os.parse.IParser, ...?)} clazz The parser class
  */
@@ -232,6 +242,7 @@ os.ui.im.ImportManager.prototype.registerParser = function(type, clazz) {
 
 /**
  * Unregister an import UI.
+ *
  * @param {string} type
  * @param {os.ui.im.IImportUI=} opt_ui
  */

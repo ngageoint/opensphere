@@ -9,6 +9,7 @@ goog.require('plugin.cesium.Layer');
 
 /**
  * An OpenLayers layer that manages a Cesium terrain provider.
+ *
  * @param {Cesium.TerrainProvider|undefined} provider The terrain provider.
  * @extends {plugin.cesium.Layer}
  * @constructor
@@ -85,6 +86,7 @@ plugin.cesium.TerrainLayer.prototype.getErrorMessage = function() {
 
 /**
  * Set the Cesium terrain provider managed by the layer.
+ *
  * @param {Cesium.TerrainProvider|undefined} provider The terrain provider.
  */
 plugin.cesium.TerrainLayer.prototype.setTerrainProvider = function(provider) {
@@ -128,6 +130,7 @@ plugin.cesium.TerrainLayer.prototype.synchronize = function() {
 
 /**
  * Wrap the terrain provider's `requestTileGeometry` to display loading status.
+ *
  * @param {number} x The tile x value.
  * @param {number} y The tile y value.
  * @param {number} level The tile level.
@@ -152,6 +155,7 @@ plugin.cesium.TerrainLayer.prototype.requestTileGeometry_ = function(x, y, level
 
 /**
  * Handle error raised from a Cesium terrain provider.
+ *
  * @param {Cesium.TileProviderError} error The tile provider error.
  * @private
  */
@@ -164,6 +168,7 @@ plugin.cesium.TerrainLayer.prototype.onTerrainError_ = function(error) {
 
 /**
  * Handle successful tile load.
+ *
  * @private
  */
 plugin.cesium.TerrainLayer.prototype.onTileSuccess_ = function() {
@@ -175,6 +180,7 @@ plugin.cesium.TerrainLayer.prototype.onTileSuccess_ = function() {
 
 /**
  * Handle failed tile load.
+ *
  * @private
  */
 plugin.cesium.TerrainLayer.prototype.onTileError_ = function() {

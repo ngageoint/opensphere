@@ -6,6 +6,7 @@ goog.require('goog.events.Listenable');
 
 /**
  * Interface representing a XF groupable object.
+ *
  * @extends {goog.events.Listenable}
  * @template T
  * @interface

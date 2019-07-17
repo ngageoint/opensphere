@@ -13,6 +13,7 @@ goog.require('os.metrics.keys');
 
 /**
  * Overridden to use smaller zoom increments
+ *
  * @constructor
  * @implements {os.I3DSupport}
  * @extends {ol.interaction.Interaction}

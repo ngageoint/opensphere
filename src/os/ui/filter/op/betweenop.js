@@ -2,6 +2,7 @@ goog.provide('os.ui.filter.op.Between');
 
 goog.require('os.ui.filter.betweenDirective');
 goog.require('os.ui.filter.op.Op');
+goog.require('os.xsd.DataType');
 
 
 
@@ -11,7 +12,8 @@ goog.require('os.ui.filter.op.Op');
  */
 os.ui.filter.op.Between = function() {
   os.ui.filter.op.Between.base(this, 'constructor',
-      'And', 'is between', 'between', ['integer', 'decimal'], 'hint="between"', undefined, 'fb-between');
+      'And', 'is between', 'between', [os.xsd.DataType.INTEGER, os.xsd.DataType.DECIMAL],
+      'hint="between"', undefined, 'fb-between');
   this.matchHint = 'between';
 };
 goog.inherits(os.ui.filter.op.Between, os.ui.filter.op.Op);
@@ -64,6 +66,7 @@ os.ui.filter.op.Between.prototype.getFilter = function(column, literal) {
 
 /**
  * Get the numeric range from the literal value.
+ *
  * @param {?string} literal The filter literal.
  * @return {Array<number>} The range, in the form [min, max].
  * @protected

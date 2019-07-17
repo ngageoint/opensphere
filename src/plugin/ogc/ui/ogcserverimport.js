@@ -10,6 +10,7 @@ goog.require('os.ui.window');
 
 /**
  * The ogcserver import directive
+ *
  * @return {angular.Directive}
  */
 plugin.ogc.ui.ogcserverDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('ogcserver', [plugin.ogc.ui.ogcserverDirective]);
 
 /**
  * Controller for the ogcserver import dialog
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.ProviderImportCtrl}

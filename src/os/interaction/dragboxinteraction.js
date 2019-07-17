@@ -13,6 +13,7 @@ goog.require('os.ui.ol.interaction.DragBox');
 
 /**
  * Draws a rectangluar query area on the map. This interaction is only supported for mouse devices.
+ *
  * @param {olx.interaction.PointerOptions=} opt_options
  * @extends {os.ui.ol.interaction.DragBox}
  * @implements {os.I3DSupport}

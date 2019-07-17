@@ -8,6 +8,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * The base implementation of a provider
+ *
  * @abstract
  * @extends {os.ui.slick.SlickTreeNode}
  * @implements {os.data.IDataProvider}
@@ -53,6 +54,7 @@ os.ui.data.BaseProvider = function() {
   this.providerType = os.ui.data.BaseProvider.TYPE;
 };
 goog.inherits(os.ui.data.BaseProvider, os.ui.slick.SlickTreeNode);
+os.implements(os.ui.data.BaseProvider, os.data.IDataProvider.ID);
 
 
 /**
@@ -184,6 +186,7 @@ os.ui.data.BaseProvider.prototype.getErrorMessage = function() {};
 
 /**
  * Get a unique identifier for a child of this provider.
+ *
  * @return {string}
  */
 os.ui.data.BaseProvider.prototype.getUniqueId = function() {

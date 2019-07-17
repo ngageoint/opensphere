@@ -34,6 +34,7 @@ plugin.file.kml.ui.KMLNodeAction = {
 
 /**
  * Base KML tree node
+ *
  * @extends {os.ui.slick.SlickTreeNode}
  * @implements {os.data.ISearchable}
  * @implements {os.data.IExtent}
@@ -200,6 +201,7 @@ plugin.file.kml.ui.KMLNode.prototype.canDropInternal = function(dropItem, moveMo
 
 /**
  * Get the feature for this node.
+ *
  * @return {ol.Feature} The feature
  */
 plugin.file.kml.ui.KMLNode.prototype.getFeature = function() {
@@ -209,6 +211,7 @@ plugin.file.kml.ui.KMLNode.prototype.getFeature = function() {
 
 /**
  * Set the feature for this node.
+ *
  * @param {ol.Feature} feature The feature
  */
 plugin.file.kml.ui.KMLNode.prototype.setFeature = function(feature) {
@@ -253,9 +256,12 @@ plugin.file.kml.ui.KMLNode.prototype.clearAnnotations = function() {
 plugin.file.kml.ui.KMLNode.prototype.loadAnnotation = function() {
   if (this.feature_ && !this.annotation_) {
     var annotationOptions = /** @type {osx.annotation.Options|undefined} */ (
-        this.feature_.get(os.annotation.OPTIONS_FIELD));
+      this.feature_.get(os.annotation.OPTIONS_FIELD));
     if (annotationOptions && annotationOptions.show) {
       this.annotation_ = new os.annotation.FeatureAnnotation(this.feature_);
+
+      // set initial visibility based on the tree/animation state
+      this.setAnnotationVisibility_(this.getState() === os.structs.TriState.ON && this.animationState_);
     }
   }
 };
@@ -263,6 +269,7 @@ plugin.file.kml.ui.KMLNode.prototype.loadAnnotation = function() {
 
 /**
  * Handle property change events fired on a feature.
+ *
  * @param {os.events.PropertyChangeEvent|ol.Object.Event} event The change event.
  * @protected
  */
@@ -273,7 +280,17 @@ plugin.file.kml.ui.KMLNode.prototype.onFeatureChange = function(event) {
       case 'loading':
         this.setLoading(!!event.getNewValue());
         break;
+      case os.annotation.EventType.UPDATE_PLACEMARK:
+        // this event needs to update the placemark (tree node) in addition to dispatching the event
+        plugin.file.kml.ui.updatePlacemark(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
+          'feature': this.feature_,
+          'node': this
+        }));
+
+        this.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
+        break;
       case os.annotation.EventType.CHANGE:
+        // this event just needs to resave the tree
         this.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
         break;
       case os.annotation.EventType.EDIT:
@@ -281,6 +298,11 @@ plugin.file.kml.ui.KMLNode.prototype.onFeatureChange = function(event) {
           'feature': this.feature_,
           'node': this
         }));
+        break;
+      case os.annotation.EventType.HIDE:
+        this.clearAnnotations();
+        this.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
+        this.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
         break;
       default:
         break;
@@ -291,6 +313,7 @@ plugin.file.kml.ui.KMLNode.prototype.onFeatureChange = function(event) {
 
 /**
  * If the node has one or more features beneath it.
+ *
  * @param {boolean=} opt_unchecked If unchecked nodes should be included, defaults to false.
  * @return {boolean} If the node has one or more features beneath it.
  */
@@ -308,6 +331,7 @@ plugin.file.kml.ui.KMLNode.prototype.hasFeatures = function(opt_unchecked) {
 
 /**
  * Get the feature(s) associated with this node.
+ *
  * @param {boolean=} opt_unchecked If unchecked nodes should be included, defaults to false.
  * @return {!Array<!ol.Feature>} The features
  */
@@ -337,6 +361,7 @@ plugin.file.kml.ui.KMLNode.prototype.getFeatures = function(opt_unchecked) {
 
 /**
  * Get the image layer for this node.
+ *
  * @return {os.layer.Image} The feature
  */
 plugin.file.kml.ui.KMLNode.prototype.getImage = function() {
@@ -346,6 +371,7 @@ plugin.file.kml.ui.KMLNode.prototype.getImage = function() {
 
 /**
  * Set the image layer for this node.
+ *
  * @param {os.layer.Image} image The feature
  */
 plugin.file.kml.ui.KMLNode.prototype.setImage = function(image) {
@@ -355,6 +381,7 @@ plugin.file.kml.ui.KMLNode.prototype.setImage = function(image) {
 
 /**
  * Get the overlay window ID for this node.
+ *
  * @return {?string} The overlay window ID.
  */
 plugin.file.kml.ui.KMLNode.prototype.getOverlayId = function() {
@@ -364,6 +391,7 @@ plugin.file.kml.ui.KMLNode.prototype.getOverlayId = function() {
 
 /**
  * Set the overlay window options for this node.
+ *
  * @param {osx.window.ScreenOverlayOptions} options The overlay options.
  */
 plugin.file.kml.ui.KMLNode.prototype.setOverlayOptions = function(options) {
@@ -373,6 +401,7 @@ plugin.file.kml.ui.KMLNode.prototype.setOverlayOptions = function(options) {
 
 /**
  * Set the timeline animation state of the node.
+ *
  * @param {boolean} value If the node should be shown.
  */
 plugin.file.kml.ui.KMLNode.prototype.setAnimationState = function(value) {
@@ -389,6 +418,7 @@ plugin.file.kml.ui.KMLNode.prototype.setAnimationState = function(value) {
 
 /**
  * Set the visibility of the annotation.
+ *
  * @param {boolean} shown If the annotation should be shown.
  * @private
  */
@@ -401,6 +431,7 @@ plugin.file.kml.ui.KMLNode.prototype.setAnnotationVisibility_ = function(shown) 
 
 /**
  * Set the visibility of the image.
+ *
  * @param {boolean} shown If the image should be shown.
  * @private
  */
@@ -413,6 +444,7 @@ plugin.file.kml.ui.KMLNode.prototype.setImageVisibility_ = function(shown) {
 
 /**
  * Set the visibility of the overlay.
+ *
  * @param {boolean} shown If the overlay should be shown.
  * @private
  */
@@ -433,6 +465,7 @@ plugin.file.kml.ui.KMLNode.prototype.setOverlayVisibility_ = function(shown) {
 
 /**
  * Get the images(s) associated with this node.
+ *
  * @param {boolean=} opt_unchecked If unchecked nodes should be included, defaults to false
  * @return {!Array<!os.layer.Image>} The image layers
  */
@@ -462,6 +495,7 @@ plugin.file.kml.ui.KMLNode.prototype.getImages = function(opt_unchecked) {
 
 /**
  * Get the overlay(s) associated with this node.
+ *
  * @param {boolean=} opt_unchecked If unchecked nodes should be included, defaults to false
  * @return {!Array<!string>} The overlay window IDs
  */
@@ -537,6 +571,7 @@ plugin.file.kml.ui.KMLNode.prototype.getId = function() {
 
 /**
  * Whether or not the KML node is loading.
+ *
  * @return {boolean}
  * @export
  */
@@ -547,6 +582,7 @@ plugin.file.kml.ui.KMLNode.prototype.isLoading = function() {
 
 /**
  * Set if the node is loading.
+ *
  * @param {boolean} value The new value
  * @protected
  */
@@ -568,6 +604,7 @@ plugin.file.kml.ui.KMLNode.prototype.getSearchText = function() {
 
 /**
  * Get the KML source associated with the node.
+ *
  * @return {plugin.file.kml.KMLSource}
  */
 plugin.file.kml.ui.KMLNode.prototype.getSource = function() {
@@ -634,7 +671,7 @@ plugin.file.kml.ui.KMLNode.prototype.hasChild = function(child) {
   var label = child.getLabel() || '';
   if (label in this.childLabelMap) {
     return /** @type {Array<plugin.file.kml.ui.KMLNode>} */ (
-        this.childLabelMap[label]).indexOf(/** @type {plugin.file.kml.ui.KMLNode} */ (child)) !== -1;
+      this.childLabelMap[label]).indexOf(/** @type {plugin.file.kml.ui.KMLNode} */ (child)) !== -1;
   }
 
   return false;
@@ -689,6 +726,7 @@ plugin.file.kml.ui.KMLNode.prototype.merge = function(child) {
 
 /**
  * If the node is a KML Folder.
+ *
  * @return {boolean}
  */
 plugin.file.kml.ui.KMLNode.prototype.isFolder = function() {
@@ -728,7 +766,7 @@ plugin.file.kml.ui.KMLNode.prototype.formatIcons = function() {
 
     // if an annotation is displayed, add an icon for it
     if (this.annotation_) {
-      icons.push('<i class="fa fa-comment fa-fw" title="Annotation"></i>');
+      icons.push('<i class="fa fa-comment fa-fw" title="Text box"></i>');
     }
 
     // add an info icon to launch feature info
@@ -806,6 +844,7 @@ plugin.file.kml.ui.KMLNode.prototype.onMouseLeave = function() {
 
 /**
  * Set the KML source for this node.
+ *
  * @param {plugin.file.kml.KMLSource} source The source
  */
 plugin.file.kml.ui.KMLNode.prototype.setSource = function(source) {
@@ -848,6 +887,7 @@ plugin.file.kml.ui.KMLNode.prototype.setState = function(value) {
 /**
  * Sets the state without trying to update features on the source. This is used to prevent duplicate source visibility
  * calls when the source caused the state change, or the state is being propagated through the tree.
+ *
  * @param {string} value The new state value
  */
 plugin.file.kml.ui.KMLNode.prototype.setStateOnly = function(value) {
@@ -869,6 +909,7 @@ plugin.file.kml.ui.KMLNode.prototype.updateChild = function(child, state) {
 
 /**
  * Collapses all nodes under the target that do not have children.
+ *
  * @param {!plugin.file.kml.ui.KMLNode} target The target node to collapse
  */
 plugin.file.kml.ui.KMLNode.collapseEmpty = function(target) {

@@ -120,6 +120,7 @@ os.style.StyleManager.prototype.toConfig = function(style) {
 
 /**
  * Get a style reader by id
+ *
  * @param {string} id The reader id
  * @return {os.style.IStyleReader|undefined} The reader, if registered
  */

@@ -131,6 +131,7 @@ os.net.ProxyHandler.prototype.modUri = function(uri) {
 
 /**
  * Get the proxy URI with the encoded url parameter set.
+ *
  * @param {goog.Uri|string} uri The URI parameter
  * @return {string} The proxy URI
  */

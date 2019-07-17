@@ -116,6 +116,7 @@ os.ui.util.AutoHeightCtrl = function($scope, $element, $injector) {
 
 /**
  * Clean up listeners/references.
+ *
  * @private
  */
 os.ui.util.AutoHeightCtrl.prototype.onDestroy_ = function() {
@@ -140,6 +141,7 @@ os.ui.util.AutoHeightCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Get the parent for the directive.
+ *
  * @return {?angular.JQLite}
  * @private
  */
@@ -167,6 +169,7 @@ os.ui.util.AutoHeightCtrl.prototype.getParent_ = function() {
 
 /**
  * Initialize the height multiplier from the scope.
+ *
  * @private
  */
 os.ui.util.AutoHeightCtrl.prototype.initHeight_ = function() {
@@ -188,6 +191,7 @@ os.ui.util.AutoHeightCtrl.prototype.initHeight_ = function() {
 
 /**
  * Handle resize events from the parent or children.
+ *
  * @private
  */
 os.ui.util.AutoHeightCtrl.prototype.onResize_ = function() {

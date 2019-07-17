@@ -73,6 +73,7 @@ os.ui.Module.directive('position', [os.ui.geo.positionDirective]);
 
 /**
  * Controller function for the locationedit directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -161,6 +162,7 @@ os.ui.geo.PositionCtrl.DEFAULT_COORD_PRECISION = 8;
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.geo.PositionCtrl.prototype.destroy_ = function() {
@@ -175,6 +177,7 @@ os.ui.geo.PositionCtrl.prototype.destroy_ = function() {
 
 /**
  * Handle position text change.
+ *
  * @private
  */
 os.ui.geo.PositionCtrl.prototype.onPosText_ = function() {
@@ -205,6 +208,7 @@ os.ui.geo.PositionCtrl.prototype.onPosText_ = function() {
 
 /**
  * Handle position change.
+ *
  * @private
  */
 os.ui.geo.PositionCtrl.prototype.onCoord_ = function() {
@@ -228,6 +232,7 @@ os.ui.geo.PositionCtrl.prototype.onCoord_ = function() {
 
 /**
  * Correctly format coordinates.
+ *
  * @private
  */
 os.ui.geo.PositionCtrl.prototype.formatLatLon_ = function() {
@@ -242,6 +247,7 @@ os.ui.geo.PositionCtrl.prototype.formatLatLon_ = function() {
 
 /**
  * Toggles listening for map click events via the UI, propagating an event upward.
+ *
  * @export
  */
 os.ui.geo.PositionCtrl.prototype.toggleMapEnabled = function() {
@@ -251,6 +257,7 @@ os.ui.geo.PositionCtrl.prototype.toggleMapEnabled = function() {
 
 /**
  * Update the location from a map click.
+ *
  * @param {angular.Scope.Event} event The Angular event
  * @param {Array.<number>} coordinates The coordinates as [lon, lat]
  * @param {boolean=} opt_disable If map clicks should be disabled
@@ -274,6 +281,7 @@ os.ui.geo.PositionCtrl.prototype.onMapClick_ = function(event, coordinates, opt_
 
 /**
  * Handle map enabled scope event.
+ *
  * @param {angular.Scope.Event} event The Angular event
  * @param {boolean=} opt_value If map clicks should be disabled
  * @param {string=} opt_name The position control name
@@ -292,6 +300,7 @@ os.ui.geo.PositionCtrl.prototype.onMapEnabled_ = function(event, opt_value, opt_
 
 /**
  * Handles if map clicks are propagated down to the location form.
+ *
  * @param {boolean} value If the map should be used for location clicks.
  * @private
  */

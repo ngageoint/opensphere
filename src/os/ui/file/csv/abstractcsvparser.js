@@ -11,6 +11,7 @@ goog.require('os.ui.file.csv');
 
 /**
  * A CSV parser driven by PapaParse.
+ *
  * @abstract
  * @param {os.parse.BaseParserConfig} config
  * @extends {os.parse.AsyncParser}
@@ -82,6 +83,7 @@ os.ui.file.csv.AbstractCsvParser.prototype.getColumns = function() {
 
 /**
  * Handle a partial chunk of processed results.
+ *
  * @param {Papa.Results} results
  * @param {Papa.ParserHandle} handle
  * @private
@@ -98,6 +100,7 @@ os.ui.file.csv.AbstractCsvParser.prototype.handleChunk_ = function(results, hand
 
 /**
  * Handle the final chunk of processed results.
+ *
  * @param {Papa.Results} results
  * @private
  */
@@ -114,6 +117,7 @@ os.ui.file.csv.AbstractCsvParser.prototype.handleComplete_ = function(results) {
 
 /**
  * Processes a single PapaParse result.
+ *
  * @abstract
  * @protected
  * @param {Object.<string, *>} result The result to process
@@ -126,6 +130,7 @@ os.ui.file.csv.AbstractCsvParser.prototype.processResult = function(result, opt_
 /**
  * Updates parser results if the header row wasn't used so the fields are 'Column 0..n' and each result is an object
  * of (column, value) pairs instead of arrays of values. This ensures results are translated to features correctly.
+ *
  * @protected
  * @param {Papa.Results} results
  */
@@ -152,6 +157,7 @@ os.ui.file.csv.AbstractCsvParser.prototype.preprocessResults = function(results)
 
 /**
  * Removes extra rows in the provided source using the headerRow and dataRow configuration.
+ *
  * @param {string} source
  * @return {string}
  * @protected
@@ -189,6 +195,7 @@ os.ui.file.csv.AbstractCsvParser.prototype.prepareSource = function(source) {
 
 /**
  * Synchronously parse a limited set of results from a source.
+ *
  * @abstract
  * @param {string} source The CSV source.
  * @param {Array.<os.im.mapping.IMapping>=} opt_mappings The set of mappings to apply to parsed features.
@@ -199,6 +206,7 @@ os.ui.file.csv.AbstractCsvParser.prototype.parsePreview = function(source, opt_m
 
 /**
  * Determines preview columns from the PapaParse results. Will not take mappings into consideration.
+ *
  * @param {Papa.Results} results
  * @protected
  */

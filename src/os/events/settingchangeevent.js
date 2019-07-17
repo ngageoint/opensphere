@@ -6,6 +6,7 @@ goog.require('goog.events.EventType');
 
 /**
  * A setting change event.
+ *
  * @param {string} type The setting that changed
  * @param {*=} opt_newVal The new value
  * @param {*=} opt_oldVal The old value

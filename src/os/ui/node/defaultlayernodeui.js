@@ -31,6 +31,7 @@ os.ui.node.DefaultLayerNodeUITemplate = '<span ng-if="nodeUi.show()" class="d-fl
 
 /**
  * The selected/highlighted node UI directive
+ *
  * @return {angular.Directive}
  */
 os.ui.node.defaultLayerNodeUIDirective = function() {
@@ -53,6 +54,7 @@ os.ui.Module.directive('defaultlayernodeui', [os.ui.node.defaultLayerNodeUIDirec
 
 /**
  * Controller for selected/highlighted node UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.slick.AbstractNodeUICtrl}
@@ -84,6 +86,7 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.destroy = function() {
 
 /**
  * Get the layer for this node.
+ *
  * @return {os.layer.ILayer}
  * @protected
  */
@@ -98,6 +101,7 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.getLayer = function() {
 
 /**
  * Get the source for this node.
+ *
  * @return {ol.source.Source}
  * @protected
  */
@@ -113,6 +117,7 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.getSource = function() {
 
 /**
  * If the layer is removable.
+ *
  * @return {boolean}
  * @export
  */
@@ -131,6 +136,7 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.isRemovable = function() {
 
 /**
  * Remove the layer
+ *
  * @export
  */
 os.ui.node.DefaultLayerNodeUICtrl.prototype.remove = function() {
@@ -154,6 +160,7 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.remove = function() {
 
 /**
  * Fires an event to remove a layer node.
+ *
  * @param {!os.structs.ITreeNode} node The node to remove
  * @private
  */
@@ -165,6 +172,7 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.removeNode_ = function(node) {
 
 /**
  * If the layer is favoritable.
+ *
  * @return {boolean}
  * @export
  */
@@ -181,6 +189,7 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.canFavorite = function() {
 
 /**
  * Launch the filter manager for the layer
+ *
  * @export
  */
 os.ui.node.DefaultLayerNodeUICtrl.prototype.filter = function() {
@@ -203,6 +212,7 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.filter = function() {
 
 /**
  * Update filters
+ *
  * @param {os.events.PropertyChangeEvent=} opt_event
  * @private
  */
@@ -229,6 +239,7 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.updateFilters_ = function(opt_event)
 
 /**
  * Update favorite information on the node scope
+ *
  * @protected
  */
 os.ui.node.DefaultLayerNodeUICtrl.prototype.updateFavorites_ = function() {
@@ -243,6 +254,7 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.updateFavorites_ = function() {
 
 /**
  * Get the layer id
+ *
  * @return {string}
  * @protected
  */

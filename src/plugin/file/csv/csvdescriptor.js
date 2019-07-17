@@ -8,6 +8,7 @@ goog.require('plugin.file.csv.CSVProvider');
 
 /**
  * CSV file descriptor.
+ *
  * @param {plugin.file.csv.CSVParserConfig=} opt_config
  * @extends {os.data.FileDescriptor}
  * @constructor
@@ -157,32 +158,13 @@ plugin.file.csv.CSVDescriptor.prototype.restore = function(conf) {
 
 /**
  * Creates a new descriptor from a parser configuration.
+ *
  * @param {!plugin.file.csv.CSVParserConfig} config
  * @return {!plugin.file.csv.CSVDescriptor}
  */
 plugin.file.csv.CSVDescriptor.createFromConfig = function(config) {
-  var file = config['file'];
   var provider = plugin.file.csv.CSVProvider.getInstance();
   var descriptor = new plugin.file.csv.CSVDescriptor(config);
-  descriptor.setId(provider.getUniqueId());
-  descriptor.setProvider(provider.getLabel());
-  descriptor.setUrl(file.getUrl());
-
-  plugin.file.csv.CSVDescriptor.updateFromConfig(descriptor, config);
-
+  os.data.FileDescriptor.createFromConfig(descriptor, provider, config);
   return descriptor;
-};
-
-
-/**
- * Updates an existing descriptor from a parser configuration.
- * @param {!plugin.file.csv.CSVDescriptor} descriptor
- * @param {!plugin.file.csv.CSVParserConfig} config
- */
-plugin.file.csv.CSVDescriptor.updateFromConfig = function(descriptor, config) {
-  descriptor.setColor(config['color']);
-  descriptor.setDescription(config['description']);
-  descriptor.setTitle(config['title']);
-  descriptor.setTags(config['tags'] ? config['tags'].split(/\s*,\s*/) : null);
-  descriptor.setParserConfig(config);
 };

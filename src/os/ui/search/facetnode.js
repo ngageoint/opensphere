@@ -130,6 +130,7 @@ os.ui.search.FacetNode.prototype.format = function(row, cell, value) {
 
 /**
  * Toggles the state
+ *
  * @param {MouseEvent} e the event
  * @export
  */

@@ -11,6 +11,7 @@ goog.require('goog.Uri');
  *
  * Everything after the # in the fragment is grabbed and initially checked, then any change is listened for. When
  * a change occurs, the parameters are checked for anything added or removed.
+ *
  * @abstract
  * @extends {goog.Disposable}
  * @constructor
@@ -44,6 +45,7 @@ os.url.AbstractUrlHandler.prototype.disposeInternal = function() {
 
 /**
  * Splits up the fragment and handles its components.
+ *
  * @param {string} key The key to handle
  * @param {string} value The value to handle
  */
@@ -88,6 +90,7 @@ os.url.AbstractUrlHandler.prototype.handle = function(key, value) {
 
 /**
  * Gets the array of keys that the handler handles.
+ *
  * @return {Array<string>}
  */
 os.url.AbstractUrlHandler.prototype.getKeys = function() {
@@ -97,6 +100,7 @@ os.url.AbstractUrlHandler.prototype.getKeys = function() {
 
 /**
  * Whether a key is handled.
+ *
  * @param {string} key
  * @return {boolean}
  */
@@ -107,6 +111,7 @@ os.url.AbstractUrlHandler.prototype.handles = function(key) {
 
 /**
  * Handles a key value pair. Should be implemented by extending classes.
+ *
  * @abstract
  * @param {string} key
  * @param {string} value
@@ -116,6 +121,7 @@ os.url.AbstractUrlHandler.prototype.handleInternal = function(key, value) {};
 
 /**
  * Handles a key value pair. To be implemented by extending classes, but doesn't have to be.
+ *
  * @param {string} key
  * @param {string} value
  */
@@ -124,6 +130,7 @@ os.url.AbstractUrlHandler.prototype.unhandleInternal = function(key, value) {};
 
 /**
  * Unhandles all values for the given key.
+ *
  * @param {string} key The key to unhandle all values for.
  */
 os.url.AbstractUrlHandler.prototype.unhandleAll = function(key) {

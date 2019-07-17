@@ -44,6 +44,7 @@ os.net.IRequestHandler.prototype.abort;
 
 /**
  * Executes the handler and retrieves the URI.
+ *
  * @param {string} method The request method
  * @param {goog.Uri} uri The URI
  * @param {?Object.<string, string>=} opt_headers The request headers

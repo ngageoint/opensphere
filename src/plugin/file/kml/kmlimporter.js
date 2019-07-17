@@ -6,6 +6,7 @@ goog.require('os.im.FeatureImporter');
 
 /**
  * Imports a set of KML items
+ *
  * @param {plugin.file.kml.KMLParser} parser The parser
  * @extends {os.im.FeatureImporter.<plugin.file.kml.ui.KMLNode>}
  * @constructor
@@ -55,6 +56,7 @@ plugin.file.kml.KMLImporter.prototype.disposeInternal = function() {
 
 /**
  * Get the root KML tree node.
+ *
  * @return {plugin.file.kml.ui.KMLNode}
  */
 plugin.file.kml.KMLImporter.prototype.getRootNode = function() {
@@ -64,6 +66,7 @@ plugin.file.kml.KMLImporter.prototype.getRootNode = function() {
 
 /**
  * Get columns detected in the KML.
+ *
  * @return {Array<!os.data.ColumnDefinition>}
  */
 plugin.file.kml.KMLImporter.prototype.getColumns = function() {
@@ -73,6 +76,7 @@ plugin.file.kml.KMLImporter.prototype.getColumns = function() {
 
 /**
  * Get columns detected in the KML.
+ *
  * @return {number}
  */
 plugin.file.kml.KMLImporter.prototype.getMinRefreshPeriod = function() {
@@ -104,7 +108,7 @@ plugin.file.kml.KMLImporter.prototype.onParsingComplete = function(opt_event) {
     var msg = this.invalidCount_ === 1 ? 'An area was' : (this.invalidCount_ + ' areas were');
     os.alertManager.sendAlert(msg + ' removed from the original due to invalid topology. One possible ' +
         ' reason is a repeating or invalid coordinate.',
-        os.alert.AlertEventSeverity.WARNING);
+    os.alert.AlertEventSeverity.WARNING);
   }
 
   plugin.file.kml.KMLImporter.base(this, 'onParsingComplete', opt_event);
@@ -138,5 +142,14 @@ plugin.file.kml.KMLImporter.prototype.performMappings = function(item) {
 
   if (feature && (this.mappings || this.autoMappings)) {
     plugin.file.kml.KMLImporter.base(this, 'performMappings', feature);
+
+    // line dash isn't part of kml spec, translate it here
+    var lineDash = /** @type {string} */ (feature.get(os.style.StyleField.LINE_DASH));
+    if (lineDash) {
+      var dash = /** @type {Array<number>} */ (JSON.parse(lineDash));
+      var config = os.style.getBaseFeatureConfig(feature);
+      os.style.setConfigLineDash(config, dash);
+      feature.set(os.style.StyleType.FEATURE, config);
+    }
   }
 };

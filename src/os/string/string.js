@@ -42,11 +42,12 @@ os.string.EMAIL = /^\s*[^@,; ]+@[^@,; ]+\.[^@,; ]+\s*(\s*,\s*[^@,; ]+@[^@,; ]+\.
  * @type {RegExp}
  * @const
  */
-os.string.EMAILS = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
+os.string.EMAILS = /([a-zA-Z0-9._#\$\&'\*\+/=\?\^`{}\|~-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
 
 
 /**
  * Tests if a string represents a boolean value
+ *
  * @param {string} str The string
  * @return {boolean} If the string represents a boolean value
  */
@@ -57,6 +58,7 @@ os.string.isBoolean = function(str) {
 
 /**
  * Tests if a string represents a float value
+ *
  * @param {string} str The string
  * @return {boolean} If the string represents a float value
  */
@@ -67,6 +69,7 @@ os.string.isFloat = function(str) {
 
 /**
  * Tests if a string represents a hex value
+ *
  * @param {string} str The string
  * @return {boolean} If the string represents a hex value
  */
@@ -77,6 +80,7 @@ os.string.isHex = function(str) {
 
 /**
  * Linkify a plain text string.
+ *
  * @param {string} text The plain text
  * @param {string=} opt_target Optional target param for links
  * @param {string=} opt_class Optional class to use for the links
@@ -151,6 +155,7 @@ os.string.linkify = function(text, opt_target, opt_class, opt_title, opt_htmlTex
 /**
  * Automatically determines a delimiter and splits a string.  Optionally takes an array of delimiters ordered by
  * precedence in case the default precedence saddens you.
+ *
  * @param {string} str
  * @param {boolean=} opt_removeSpaces If the string should have spaces removed before splitting.  This is helpful
  *   to split with or without spaces (so ',' and ', ' are treated the same).  If space is the delimeter, this option
@@ -197,6 +202,7 @@ os.string.createConstant = function(str) {
 
 /**
  * This keeps the last instance of the substring and removes all others
+ *
  * @param {?string} str The full string
  * @param {?string} substr The substring whose duplicates to remove
  * @return {string}
@@ -220,6 +226,7 @@ os.string.removeDuplicates = function(str, substr) {
 
 /**
  * Generate a random string that conforms to the rules of js variable name conventions
+ *
  * @return {string}
  */
 os.string.randomString = function() {

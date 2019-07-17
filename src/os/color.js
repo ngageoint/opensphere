@@ -355,6 +355,7 @@ os.color.getGradientColor = function(ratio, opt_gradient) {
 
 /**
  * Creates a uniform hue gradient across the HSL spectrum.
+ *
  * @param {number} size The number of colors to return in the gradient
  * @param {number=} opt_min The minimum HSL value to use (0-360)
  * @param {number=} opt_max The maximum HSL value to use (0-360)
@@ -432,6 +433,7 @@ os.color.interpolate = function(begin, end, step, max) {
 
 /**
  * Hex color wrapper for goog.color.darken.
+ *
  * @param {string} color
  * @param {number} factor
  * @return {string}
@@ -445,6 +447,7 @@ os.color.darken = function(color, factor) {
 
 /**
  * Hex color wrapper for goog.color.lighten.
+ *
  * @param {string} color
  * @param {number} factor
  * @return {string}
@@ -458,6 +461,7 @@ os.color.lighten = function(color, factor) {
 
 /**
  * Gets a color change matrix
+ *
  * @param {!goog.color.Rgb} from
  * @param {!goog.color.Rgb} to
  * @return {!Array.<number>} The matrix
@@ -476,7 +480,7 @@ os.color.changeColor = function(from, to) {
 
   var srcMax = Math.max(from[0], from[1], from[2]);
   var srcMaxPos = srcMax == from[0] ? 0 :
-      srcMax == from[1] ? 1 : 2;
+    srcMax == from[1] ? 1 : 2;
 
   var dstMax = Math.max(to[0], to[1], to[2]);
   var dstRatios = [
@@ -495,6 +499,7 @@ os.color.changeColor = function(from, to) {
 
 /**
  * Pads a hex color string to the correct number of digits in case it is lacking leading 0's.
+ *
  * @param {string} str The hex color string
  * @param {string=} opt_prefix The output prefix (defaults to none)
  * @param {string=} opt_default The default color ('ffffff' if not provided)
@@ -518,6 +523,7 @@ os.color.padHexColor = function(str, opt_prefix, opt_default) {
 
 /**
  * Check if a value contains a valid color string.
+ *
  * @param {*} value
  * @return {boolean}
  */
@@ -539,6 +545,7 @@ os.color.toHexString = function(color) {
 
 /**
  * Convert a color to the server format. This ensures a consistent format/case for caching purposes.
+ *
  * @param {Array<number>|string} value The color
  * @return {string} A color in the format "0xAABBCC"
  */
@@ -587,6 +594,7 @@ os.color.toRgbArray = function(color) {
 
 /**
  * Converts passed in hex string colors to HSL to sort them.
+ *
  * @param {string} c1
  * @param {string} c2
  * @return {number}
@@ -605,6 +613,7 @@ os.color.colorSort = function(c1, c2) {
 /**
  * Helper for determining if two color values are equal. Handy if you want to compare an RGB array with a string, or
  * have strings with differing capitalization, etc.
+ *
  * @param {string|goog.color.Rgb} color1
  * @param {string|goog.color.Rgb} color2
  * @return {boolean} [description]
@@ -629,6 +638,7 @@ os.color.equals = function(color1, color2) {
 
 /**
  * Normalize an opacity value between 0 and 1 with up to two decimal places.
+ *
  * @param {number} opacity The opacity.
  * @return {number} The normalized opacity.
  */
@@ -667,6 +677,7 @@ os.color.yiqToRgb = function(yiq, opt_result) {
 
 /**
  * Converts an integer color representation to a hex string
+ *
  * @param {number} num The integer color.
  * @return {string} The hex representation.
  */
@@ -733,6 +744,7 @@ os.color.calculateHueTransform = function(src, target, opt_normalize) {
 /**
  * Applies a colorize transform to an array of image data. This changes every non-zero channel in the array to the
  * passed in color.
+ *
  * @param {Array<number>} data The image data to colorize
  * @param {string|Array<number>} tgtColor The target color either as an rgba string or array
  */
@@ -754,6 +766,7 @@ os.color.colorize = function(data, tgtColor) {
 /**
  * Applies a color transform to an array of image data. This transform takes a target color and adjusts the color
  * for saturation color and brightness.
+ *
  * @param {Array<number>} data The image data to colorize
  * @param {number} brightness The target brightness. The range is -1 to 1.
  * @param {number} contrast The target contrast. The range is 0 to 2.
@@ -793,6 +806,7 @@ os.color.adjustColor = function(data, brightness, contrast, saturation) {
 /**
  * Applies a color transform to an array of image data. This transform takes a source and target color and blends
  * the alpha using a color transform matrix to produce a more natural version of the target color.
+ *
  * @param {Array<number>} data The image data to colorize
  * @param {string|Array<number>} srcColor The source color either as an rgba string or array
  * @param {string|Array<number>} tgtColor The target color either as an rgba string or array

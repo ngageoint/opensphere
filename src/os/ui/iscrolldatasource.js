@@ -4,6 +4,7 @@ goog.provide('os.ui.IScrollDataSource');
 
 /**
  * Interface for data sources which will feed angular-ui ng-scroll directive
+ *
  * @interface
  */
 os.ui.IScrollDataSource = function() {};

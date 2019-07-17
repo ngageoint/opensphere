@@ -4,6 +4,7 @@ goog.provide('os.ui.filtersDirective');
 goog.require('os.MapContainer');
 goog.require('os.command.SequenceCommand');
 goog.require('os.data.FilterTreeSearch');
+goog.require('os.data.groupby.SourceGroupBy');
 goog.require('os.defines');
 goog.require('os.layer');
 goog.require('os.metrics.Metrics');
@@ -27,6 +28,7 @@ goog.require('os.ui.slick.slickTreeDirective');
 
 /**
  * The filters window directive
+ *
  * @return {angular.Directive}
  */
 os.ui.filtersDirective = function() {
@@ -50,6 +52,7 @@ os.ui.Module.directive('filters', [os.ui.filtersDirective]);
 
 /**
  * Controller for Filters window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.slick.AbstractGroupByTreeSearchCtrl}
@@ -102,7 +105,8 @@ goog.inherits(os.ui.FiltersCtrl, os.ui.slick.AbstractGroupByTreeSearchCtrl);
 os.ui.FiltersCtrl.VIEWS = {
   'None': -1, // you can't use null because Angular treats that as the empty/unselected option
   'Layer': new os.ui.FilterLayerGroupBy(),
-  'Layer Type': new os.ui.FilterLayerGroupBy(true)
+  'Layer Type': new os.ui.FilterLayerGroupBy(true),
+  'Source': new os.data.groupby.SourceGroupBy(true)
 };
 
 
@@ -122,6 +126,7 @@ os.ui.FiltersCtrl.prototype.disposeInternal = function() {
 
 /**
  * Launches the advanced combination window
+ *
  * @export
  */
 os.ui.FiltersCtrl.prototype.launch = function() {
@@ -132,6 +137,7 @@ os.ui.FiltersCtrl.prototype.launch = function() {
 
 /**
  * Pop up filter export gui
+ *
  * @param {os.ui.filter.FilterEvent=} opt_event right click export event
  * @export
  */
@@ -142,6 +148,7 @@ os.ui.FiltersCtrl.prototype.export = function(opt_event) {
 
 /**
  * Disables export button
+ *
  * @return {boolean}
  * @export
  */
@@ -158,6 +165,7 @@ os.ui.FiltersCtrl.prototype.exportDisabled = function() {
 
 /**
  * Save the filters to a file
+ *
  * @param {string} name of the file
  * @param {os.ui.filter.ui.FilterExportChoice} mode how to export filters
  * @private
@@ -184,6 +192,7 @@ os.ui.FiltersCtrl.prototype.save_ = function(name, mode) {
 
 /**
  * Get filters out of the tree
+ *
  * @param {Array} arr The array of items
  * @param {Array} result The resulting flat array
  * @param {boolean} activeOnly get only the active filters
@@ -209,6 +218,7 @@ os.ui.FiltersCtrl.prototype.flatten_ = function(arr, result, activeOnly) {
 
 /**
  * Launches the filter import window.
+ *
  * @param {os.file.File=} opt_file Optional file to use in the import.
  * @export
  */
@@ -219,6 +229,7 @@ os.ui.FiltersCtrl.prototype.import = function(opt_file) {
 
 /**
  * Handles adds/edits to filters
+ *
  * @param {angular.Scope.Event} event
  * @param {os.filter.FilterEntry} entry
  * @private
@@ -244,6 +255,7 @@ os.ui.FiltersCtrl.prototype.onEditFilter_ = function(event, entry) {
 
 /**
  * Handles adds/edits to filters
+ *
  * @param {angular.Scope.Event} event
  * @param {os.filter.FilterEntry} entry
  * @private
@@ -257,6 +269,7 @@ os.ui.FiltersCtrl.prototype.onEditComplete_ = function(event, entry) {
 
 /**
  * Handles adds/edits to filters
+ *
  * @param {os.filter.FilterEntry} entry
  * @protected
  */
@@ -283,6 +296,7 @@ os.ui.FiltersCtrl.prototype.editEntry = function(entry) {
 
 /**
  * Handles adds/edits to filters
+ *
  * @param {angular.Scope.Event} event
  * @param {os.filter.FilterEntry} entry
  * @private
@@ -294,6 +308,7 @@ os.ui.FiltersCtrl.prototype.onCopyFilter_ = function(event, entry) {
 
 /**
  * Preform a search only if a node is added, updated, or removed
+ *
  * @param {os.events.PropertyChangeEvent} event The event
  * @private
  */
@@ -306,6 +321,7 @@ os.ui.FiltersCtrl.prototype.searchIfAddedOrRemoved_ = function(event) {
 
 /**
  * Handles Group By change
+ *
  * @export
  */
 os.ui.FiltersCtrl.prototype.onGroupChange = function() {
@@ -316,6 +332,7 @@ os.ui.FiltersCtrl.prototype.onGroupChange = function() {
 
 /**
  * Handles Group By change
+ *
  * @export
  */
 os.ui.FiltersCtrl.prototype.onSearchTermChange = function() {
@@ -326,6 +343,7 @@ os.ui.FiltersCtrl.prototype.onSearchTermChange = function() {
 
 /**
  * Handles file drops over the filters tab.
+ *
  * @param {Event} event The drop event.
  */
 os.ui.FiltersCtrl.prototype.onDrop_ = function(event) {
@@ -338,6 +356,7 @@ os.ui.FiltersCtrl.prototype.onDrop_ = function(event) {
 
 /**
  * Handle file drag-drop.
+ *
  * @param {!goog.events.Event|os.file.File} event
  * @private
  */

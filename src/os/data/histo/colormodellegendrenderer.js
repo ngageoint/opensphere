@@ -8,6 +8,7 @@ goog.require('os.ui.Module');
 
 /**
  * Add a vector layer's color model to the legend.
+ *
  * @param {!os.layer.Vector} layer The vector layer.
  * @param {!osx.legend.LegendOptions} options The legend options.
  */
@@ -63,7 +64,7 @@ os.data.histo.legend.addVectorColorModel = function(layer, options) {
         if (keys.length > 0) {
           // TODO: should we use goog.string.caseInsensitiveCompare for the default case?
           var sortFn = binMethod instanceof os.histo.NumericBinMethod ? os.legend.numericCompare :
-              goog.array.defaultCompare;
+            goog.array.defaultCompare;
           keys.sort(sortFn);
 
           for (var i = 0; i < keys.length; i++) {
@@ -96,6 +97,7 @@ os.data.histo.legend.addVectorColorModel = function(layer, options) {
 
 /**
  * The colormodellegendsettings directive.
+ *
  * @return {angular.Directive}
  */
 os.data.histo.legend.legendSettingsDirective = function() {

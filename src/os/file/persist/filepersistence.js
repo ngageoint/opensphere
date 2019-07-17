@@ -7,6 +7,7 @@ goog.require('os.ex.IPersistenceMethod');
 
 /**
  * Persistence method to save local files.
+ *
  * @implements {os.ex.IPersistenceMethod}
  * @constructor
  */
@@ -48,6 +49,7 @@ os.file.persist.FilePersistence.prototype.save = function(fileName, content, opt
 
 /**
  * Static function to save a file, so it can be used without the persistence
+ *
  * @param {string} fileName The file name
  * @param {Object|null|string} content The content to save
  * @param {string=} opt_mimeType The mime type of the content

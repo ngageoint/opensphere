@@ -4,6 +4,7 @@ goog.require('os.geo2');
 
 /**
  * Clamp an extent within a range.
+ *
  * @param {ol.Extent} extent The extent to clamp.
  * @param {ol.Extent} clampTo The clamping extent.
  * @param {ol.Extent=} opt_extent Optional extent to save the result into.
@@ -57,6 +58,7 @@ os.extent.crossesAntimeridian = function(extent, opt_proj) {
 /**
  * Normalizes an extent for a projection where the right antimeridian becomes
  * the meridian.
+ *
  * @param {ol.Extent} extent
  * @param {ol.ProjectionLike=} opt_proj
  * @param {ol.Extent=} opt_result
@@ -77,6 +79,7 @@ os.extent.normalizeAntiRight = function(extent, opt_proj, opt_result) {
 /**
  * Normalizes an extent for a projection where the left antimeridian becomes
  * the meridian.
+ *
  * @param {ol.Extent} extent
  * @param {ol.ProjectionLike=} opt_proj
  * @param {ol.Extent=} opt_result

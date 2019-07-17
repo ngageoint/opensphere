@@ -23,6 +23,7 @@ goog.require('os.ui.windowCommonElements');
  *
  * ```
  * minHeight: The smallest vh that the element will take. Defaults to 20.
+ * useMaxHeight: Set to true to use max-height property instead of height
  * padding: An optional amount of the vh to add to caculation to give some space around the element.
  *
  * @return {angular.Directive}
@@ -34,7 +35,8 @@ os.ui.util.autoVHeightDirective = function() {
       'siblings': '@',
       'padding': '@?',
       'minHeight': '@?',
-      'autovheightDisabled': '=?'
+      'autovheightDisabled': '=?',
+      'useMaxHeight': '=?'
     },
     controller: os.ui.util.AutoVHeightCtrl
   };
@@ -80,6 +82,13 @@ os.ui.util.AutoVHeightCtrl = function($scope, $element) {
   this.minHeight_ = this.scope_['minHeight'] != null ? this.scope_['minHeight'] : 20;
 
   /**
+   * @type {string}
+   * @private
+   */
+  this.heightProperty_ = (this.scope_['useMaxHeight'] != null && this.scope_['useMaxHeight'])
+    ? 'max-height' : 'height';
+
+  /**
    * @type {number}
    * @private
    */
@@ -112,6 +121,7 @@ os.ui.util.AutoVHeightCtrl = function($scope, $element) {
 
 /**
  * Clean up listeners/references.
+ *
  * @private
  */
 os.ui.util.AutoVHeightCtrl.prototype.onDestroy_ = function() {
@@ -150,6 +160,7 @@ os.ui.util.AutoVHeightCtrl.prototype.onDisable_ = function() {
 
 /**
  * Handle resize events from the parent or children.
+ *
  * @private
  */
 os.ui.util.AutoVHeightCtrl.prototype.onResize_ = function() {
@@ -172,13 +183,14 @@ os.ui.util.AutoVHeightCtrl.prototype.onResize_ = function() {
     if ((useableHeight / winHeight) * 100 > this.minHeight_) {
       vhHeight = ((useableHeight / winHeight) * 100 - this.padding_) + 'vh';
     }
-    this.element_.css('height', vhHeight);
+    this.element_.css(this.heightProperty_, vhHeight);
   }
 };
 
 
 /**
  * Add resize handlers to siblings
+ *
  * @private
  */
 os.ui.util.AutoVHeightCtrl.prototype.addResizeListeners_ = function() {
@@ -201,6 +213,7 @@ os.ui.util.AutoVHeightCtrl.prototype.addResizeListeners_ = function() {
 
 /**
  * Add resize handlers to siblings
+ *
  * @private
  */
 os.ui.util.AutoVHeightCtrl.prototype.removeResizeListeners_ = function() {

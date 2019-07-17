@@ -7,6 +7,7 @@ goog.require('os.ui.Module');
 
 /**
  * Shows the feature count out of the total for feature layers
+ *
  * @return {angular.Directive}
  */
 os.ui.node.featureCountDirective = function() {
@@ -29,6 +30,7 @@ os.ui.Module.directive('featurecount', [os.ui.node.featureCountDirective]);
 
 /**
  * Controller for selected/highlighted node UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -64,6 +66,7 @@ os.ui.node.FeatureCountCtrl = function($scope, $element) {
 
 /**
  * Clean up
+ *
  * @private
  */
 os.ui.node.FeatureCountCtrl.prototype.onDestroy_ = function() {
@@ -77,6 +80,7 @@ os.ui.node.FeatureCountCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Handles the loading property change
+ *
  * @param {os.events.PropertyChangeEvent} e The change event
  * @private
  */

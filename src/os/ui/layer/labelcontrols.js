@@ -8,6 +8,7 @@ goog.require('os.defines');
 goog.require('os.metrics.Metrics');
 goog.require('os.style.label');
 goog.require('os.ui.Module');
+goog.require('os.ui.geo.positionDirective');
 
 
 /**
@@ -21,6 +22,7 @@ os.ui.layer.LabelControlsEventType = {
 
 /**
  * The labelcontrols directive
+ *
  * @return {angular.Directive}
  */
 os.ui.layer.labelControlsDirective = function() {
@@ -52,6 +54,7 @@ os.ui.Module.directive('labelcontrols', [os.ui.layer.labelControlsDirective]);
 
 /**
  * Controller function for the labelcontrols directive
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @param {!angular.$timeout} $timeout Angular timeout.
@@ -124,6 +127,7 @@ os.ui.layer.LabelControlsCtrl.prototype.disposeInternal = function() {
 
 /**
  * Get options for the label sortable.
+ *
  * @return {!Object}
  * @protected
  */
@@ -143,6 +147,7 @@ os.ui.layer.LabelControlsCtrl.prototype.getSortOptions = function() {
 
 /**
  * Handles column changes
+ *
  * @export
  */
 os.ui.layer.LabelControlsCtrl.prototype.onColumnChange = function() {
@@ -157,6 +162,7 @@ os.ui.layer.LabelControlsCtrl.prototype.onColumnChange = function() {
 
 /**
  * Handles changes to the show labels checkbox.
+ *
  * @export
  */
 os.ui.layer.LabelControlsCtrl.prototype.onShowLabelsChange = function() {
@@ -168,6 +174,7 @@ os.ui.layer.LabelControlsCtrl.prototype.onShowLabelsChange = function() {
 
 /**
  * Add a new label
+ *
  * @export
  */
 os.ui.layer.LabelControlsCtrl.prototype.addLabel = function() {
@@ -179,6 +186,7 @@ os.ui.layer.LabelControlsCtrl.prototype.addLabel = function() {
 
 /**
  * Remove a label
+ *
  * @param {os.style.label.LabelConfig} label
  * @export
  */
@@ -191,6 +199,7 @@ os.ui.layer.LabelControlsCtrl.prototype.removeLabel = function(label) {
 
 /**
  * Sort the labels so "None" labels are at the end of the list.
+ *
  * @private
  */
 os.ui.layer.LabelControlsCtrl.prototype.sort_ = function() {
@@ -211,6 +220,7 @@ os.ui.layer.LabelControlsCtrl.prototype.sort_ = function() {
 
 /**
  * Validate the form.
+ *
  * @private
  */
 os.ui.layer.LabelControlsCtrl.prototype.validate_ = function() {
@@ -233,6 +243,7 @@ os.ui.layer.LabelControlsCtrl.prototype.validate_ = function() {
 
 /**
  * Handle label drag start.
+ *
  * @param {!jQuery.Event} event
  * @param {!{item: jQuery, placeholder: jQuery}} ui
  * @protected
@@ -261,6 +272,7 @@ os.ui.layer.LabelControlsCtrl.prototype.onDragStart = function(event, ui) {
 
 /**
  * Handle label drag end.
+ *
  * @param {!jQuery.Event} event
  * @param {!{item: Element}} ui
  * @protected

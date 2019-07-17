@@ -11,6 +11,7 @@ goog.require('plugin.file.gml.GMLProvider');
 
 /**
  * The GML import directive
+ *
  * @return {angular.Directive}
  */
 plugin.file.gml.gmlImportDirective = function() {
@@ -34,6 +35,7 @@ os.ui.Module.directive('gmlimport', [plugin.file.gml.gmlImportDirective]);
 
 /**
  * Controller for the GML import dialog
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.file.ui.AbstractFileImportCtrl<!plugin.file.gml.GMLParserConfig,!plugin.file.gml.GMLDescriptor>}
@@ -54,7 +56,7 @@ plugin.file.gml.GMLImportCtrl.prototype.createDescriptor = function() {
   if (this.config['descriptor']) {
     // existing descriptor, update it
     descriptor = /** @type {!plugin.file.gml.GMLDescriptor} */ (this.config['descriptor']);
-    plugin.file.gml.GMLDescriptor.updateFromConfig(descriptor, this.config);
+    descriptor.updateFromConfig(this.config);
   } else {
     // this is a new import
     descriptor = plugin.file.gml.GMLDescriptor.createFromConfig(this.config);

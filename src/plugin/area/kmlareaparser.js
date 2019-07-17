@@ -12,6 +12,7 @@ goog.require('os.ui.im.mergeAreaOptionDirective');
 
 /**
  * Simple KML parser that extracts areas from a KML. Has asynchronous support for KMZ files.
+ *
  * @implements {os.parse.IParser.<ol.Feature>}
  * @extends {os.parse.AsyncZipParser}
  * @template T
@@ -120,6 +121,7 @@ plugin.area.KMLAreaParser.prototype.setSource = function(source) {
  * HACK ALERT! zip.js has a zip.TextWriter() class that directly turns the zip entry into the string we want.
  * Unfortunately, it doesn't work in FF24 for some reason, but luckily, the BlobWriter does. Here, we read
  * the zip as a Blob, then feed it to a FileReader in the next callback in order to extract the text.
+ *
  * @inheritDoc
  */
 plugin.area.KMLAreaParser.prototype.handleZipEntries = function(entries) {
@@ -156,6 +158,7 @@ plugin.area.KMLAreaParser.prototype.handleZipEntries = function(entries) {
 
 /**
  * Parse the main kml file
+ *
  * @param {zip.Entry} mainEntry
  * @private
  */
@@ -166,6 +169,7 @@ plugin.area.KMLAreaParser.prototype.processMainEntry_ = function(mainEntry) {
 
 /**
  * Unzips the main entry.
+ *
  * @param {string} filename
  * @param {*} content
  * @private
@@ -263,6 +267,7 @@ plugin.area.KMLAreaParser.prototype.parseNext = function() {
 
 /**
  * Get the columns.
+ *
  * @return {?Array<os.data.ColumnDefinition>} The definitions
  */
 plugin.area.KMLAreaParser.prototype.getColumns = function() {

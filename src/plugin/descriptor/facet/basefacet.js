@@ -13,6 +13,7 @@ plugin.descriptor.facet.BaseFacet = function() {};
 
 /**
  * Loads available facets from the descriptor
+ *
  * @abstract
  * @param {!os.data.IDataDescriptor} descriptor
  * @param {!os.search.FacetSet} facets
@@ -23,6 +24,7 @@ plugin.descriptor.facet.BaseFacet.prototype.load = function(descriptor, facets) 
 
 /**
  * Tests applied facets against the descriptor
+ *
  * @abstract
  * @param {!os.data.IDataDescriptor} descriptor
  * @param {os.search.AppliedFacets} facets

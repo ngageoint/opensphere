@@ -11,6 +11,7 @@ goog.require('os.ui.sliderDirective');
  * @enum {string}
  */
 os.ui.layer.VectorStyleControlsEventType = {
+  LINE_DASH_CHANGE: 'vector:lineDashChange',
   SHAPE_CHANGE: 'vector:shapeChange',
   CENTER_SHAPE_CHANGE: 'vector:centerShapeChange',
   SHOW_ROTATION_CHANGE: 'vector:showRotationChange',
@@ -20,6 +21,7 @@ os.ui.layer.VectorStyleControlsEventType = {
 
 /**
  * Directive to style vector layers, features, etc.
+ *
  * @return {angular.Directive}
  */
 os.ui.layer.vectorStyleControlsDirective = function() {
@@ -40,6 +42,7 @@ os.ui.layer.vectorStyleControlsDirective = function() {
       'shapes': '=',
       'centerShape': '=?',
       'centerShapes': '=?',
+      'lineDash': '=?',
       'showColorReset': '=?'
     },
     templateUrl: os.ROOT + 'views/layer/vectorstylecontrols.html',
@@ -58,12 +61,14 @@ os.ui.Module.directive('vectorstylecontrols', [os.ui.layer.vectorStyleControlsDi
 
 /**
  * Controller function for the vectorstylecontrols directive.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
+ * @param {!angular.JQLite} $element
  * @extends {goog.Disposable}
  * @constructor
  * @ngInject
  */
-os.ui.layer.VectorStyleControlsCtrl = function($scope) {
+os.ui.layer.VectorStyleControlsCtrl = function($scope, $element) {
   os.ui.layer.VectorStyleControlsCtrl.base(this, 'constructor');
 
   /**
@@ -71,6 +76,13 @@ os.ui.layer.VectorStyleControlsCtrl = function($scope) {
    * @protected
    */
   this.scope = $scope;
+
+  /**
+   * The root DOM element.
+   * @type {?angular.JQLite}
+   * @protected
+   */
+  this.element = $element;
 
   if (this.scope['showIcon'] == null) {
     this.scope['showIcon'] = true;
@@ -80,9 +92,49 @@ os.ui.layer.VectorStyleControlsCtrl = function($scope) {
     this.scope['showCenterIcon'] = true;
   }
 
+  /**
+   * Options for line dash styles
+   * @type {!Array<!os.style.styleLineDashOption>}
+   */
+  this.scope['lineDashOptions'] = os.style.LINE_STYLE_OPTIONS;
+
+  /**
+   * The line dash style option for the stored pattern
+   * @type {os.style.styleLineDashOption}
+   */
+  var name = os.style.dashPatternToOptions(this.scope['lineDash']);
+
+  /**
+   * The selected line dash option
+   * @type {os.style.styleLineDashOption}
+   */
+  this.scope['lineDashOption'] = name ? name : this.scope['lineDashOptions'][1];
+
   $scope.$on('$destroy', goog.bind(this.dispose, this));
 };
 goog.inherits(os.ui.layer.VectorStyleControlsCtrl, goog.Disposable);
+
+
+/**
+ * Initialize the controller after it has been linked.
+ *
+ * @export
+ */
+os.ui.layer.VectorStyleControlsCtrl.prototype.$postLink = function() {
+  if (this.element) {
+    this.select2_ = this.element.find('.js-line-dash');
+    this.select2_.select2({
+      'minimumResultsForSearch': -1,
+      'placeholder': 'Line Dash Select',
+      'formatSelection': this.select2Formatter_,
+      'formatResult': this.select2Formatter_
+    }).on('select2-open', function(e) { // toggle the padding for the select2
+      $('body').addClass('c-select2__no-padding');
+    }).on('select2-close', function(e) {
+      $('body').removeClass('c-select2__no-padding');
+    });
+  }
+};
 
 
 /**
@@ -90,11 +142,13 @@ goog.inherits(os.ui.layer.VectorStyleControlsCtrl, goog.Disposable);
  */
 os.ui.layer.VectorStyleControlsCtrl.prototype.disposeInternal = function() {
   this.scope = null;
+  this.element = null;
 };
 
 
 /**
  * Fire a scope event when the shape is changed by the user.
+ *
  * @export
  */
 os.ui.layer.VectorStyleControlsCtrl.prototype.onShapeChange = function() {
@@ -106,6 +160,7 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.onShapeChange = function() {
 
 /**
  * Check for ellipse with center
+ *
  * @return {boolean}
  * @export
  */
@@ -119,6 +174,7 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.hasCenter = function() {
 
 /**
  * Fire a scope event when the ellipse center shape is changed by the user.
+ *
  * @param {string} shape
  * @export
  */
@@ -128,3 +184,36 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.onCenterShapeChange = function(sha
     this.scope['centerShape'] = shape;
   }
 };
+
+
+/**
+ * Fire a scope event when the line dash is changed by the user.
+ *
+ * @export
+ */
+os.ui.layer.VectorStyleControlsCtrl.prototype.onLineDashChange = function() {
+  if (this.scope && this.scope['lineDashOption']) {
+    this.scope['lineDash'] = /** @type {os.style.styleLineDashOption} */ (this.scope['lineDashOption']).pattern;
+    this.scope.$emit(os.ui.layer.VectorStyleControlsEventType.LINE_DASH_CHANGE, this.scope['lineDash']);
+  }
+};
+
+
+/**
+ * Search result formatter. The select is actually storing the ID of each
+ * descriptor. This function allows us to display the actual layer title.
+ * @param {Object} item
+ * @param {angular.JQLite} ele
+ * @return {string|angular.JQLite}
+ * @private
+ */
+os.ui.layer.VectorStyleControlsCtrl.prototype.select2Formatter_ = function(item, ele) {
+  if (item) {
+    var val = '<svg height="2" width="80"><g class="c-vectorstylecontrol__borderdash"><path ';
+    val = val + 'stroke-dasharray ="' + item['id'] + '" d= "M5 1 l215 0" /></g></svg>';
+    return val;
+  } else {
+    return '';
+  }
+};
+

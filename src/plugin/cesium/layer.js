@@ -5,6 +5,7 @@ goog.require('goog.log');
 goog.require('goog.string');
 goog.require('ol.events');
 goog.require('ol.layer.Layer');
+goog.require('os.IGroupable');
 goog.require('os.color');
 goog.require('os.events.LayerEvent');
 goog.require('os.events.PropertyChangeEvent');
@@ -23,6 +24,7 @@ goog.require('os.ui.renamelayer');
  * @extends {ol.layer.Layer}
  * @implements {os.layer.ILayer}
  * @implements {os.layer.IColorableLayer}
+ * @implements {os.IGroupable}
  * @constructor
  */
 plugin.cesium.Layer = function() {
@@ -141,6 +143,7 @@ plugin.cesium.Layer = function() {
 goog.inherits(plugin.cesium.Layer, ol.layer.Layer);
 os.implements(plugin.cesium.Layer, os.layer.ILayer.ID);
 os.implements(plugin.cesium.Layer, os.layer.IColorableLayer.ID);
+os.implements(plugin.cesium.Layer, os.IGroupable.ID);
 
 
 /**
@@ -169,6 +172,7 @@ plugin.cesium.Layer.prototype.disposeInternal = function() {
 
 /**
  * Handle map change events.
+ *
  * @param {os.events.PropertyChangeEvent} event The event.
  * @protected
  */
@@ -181,6 +185,7 @@ plugin.cesium.Layer.prototype.onMapChange = function(event) {
 
 /**
  * Test if Cesium is enabled and synchronize with Cesium.
+ *
  * @protected
  */
 plugin.cesium.Layer.prototype.synchronize = function() {
@@ -195,6 +200,7 @@ plugin.cesium.Layer.prototype.synchronize = function() {
 
 /**
  * Get the error message to display on the layer.
+ *
  * @return {string} The message.
  * @protected
  */
@@ -232,7 +238,24 @@ plugin.cesium.Layer.prototype.setId = function(value) {
 
 
 /**
+ * @inheritDoc
+ */
+plugin.cesium.Layer.prototype.getGroupId = function() {
+  return this.getId();
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Layer.prototype.getGroupLabel = function() {
+  return this.getTitle();
+};
+
+
+/**
  * Get the default color for the layer.
+ *
  * @return {?string}
  */
 plugin.cesium.Layer.prototype.getDefaultColor = function() {
@@ -275,6 +298,7 @@ plugin.cesium.Layer.prototype.setColor = function(value, opt_options) {
 
 /**
  * Update icons to use the current layer color.
+ *
  * @private
  */
 plugin.cesium.Layer.prototype.updateIcons_ = function() {
@@ -375,6 +399,7 @@ plugin.cesium.Layer.prototype.getLoadingDelay = function() {
 
 /**
  * Fires an event to indicate a loading change.
+ *
  * @private
  */
 plugin.cesium.Layer.prototype.fireLoadingEvent_ = function() {

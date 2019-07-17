@@ -8,6 +8,7 @@ goog.require('os.ui.im.action.filterActionNodeUIDirective');
 
 /**
  * Tree node for filter actions.
+ *
  * @param {!os.im.action.FilterActionEntry<T>} entry The entry.
  * @extends {os.ui.filter.ui.FilterNode}
  * @constructor
@@ -104,6 +105,7 @@ os.ui.im.action.FilterActionNode.prototype.clone = function() {
 
 /**
  * Translate filter action entries to nodes.
+ *
  * @param {Array<!os.im.action.FilterActionEntry>} entries The filter action entries.
  * @return {!Array<!os.ui.im.action.FilterActionNode>} The filter action nodes.
  */
@@ -122,6 +124,7 @@ os.ui.im.action.FilterActionNode.fromEntries = function(entries) {
 
 /**
  * Translate filter action nodes to entries.
+ *
  * @param {Array<!os.ui.im.action.FilterActionNode>} nodes The filter action nodes.
  * @return {!Array<!os.im.action.FilterActionEntry>} The filter action entries.
  */

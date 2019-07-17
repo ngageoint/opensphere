@@ -9,6 +9,7 @@ goog.require('os.ui.slick.AbstractNodeUICtrl');
 
 /**
  * The selected/highlighted node UI directive for areas
+ *
  * @return {angular.Directive}
  */
 os.ui.node.areaNodeUIDirective = function() {
@@ -39,6 +40,7 @@ os.ui.Module.directive('areanodeui', [os.ui.node.areaNodeUIDirective]);
 
 /**
  * Controller for selected/highlighted node UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.slick.AbstractNodeUICtrl}
@@ -63,6 +65,7 @@ os.ui.node.AreaNodeUICtrl.prototype.getTemp = function() {
 
 /**
  * Removes the area
+ *
  * @export
  */
 os.ui.node.AreaNodeUICtrl.prototype.remove = function() {
@@ -77,6 +80,7 @@ os.ui.node.AreaNodeUICtrl.prototype.remove = function() {
 
 /**
  * Edits the filter
+ *
  * @export
  */
 os.ui.node.AreaNodeUICtrl.prototype.edit = function() {

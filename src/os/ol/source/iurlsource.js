@@ -4,6 +4,7 @@ goog.provide('os.ol.source.IUrlSource');
 
 /**
  * Interface for openlayers sources supporting changing URLs and request parameters.
+ *
  * @interface
  */
 os.ol.source.IUrlSource = function() {};

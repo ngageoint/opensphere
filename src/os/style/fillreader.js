@@ -9,11 +9,13 @@ goog.require('os.style.AbstractReader');
 
 /**
  * Fill style reader
+ *
  * @extends {os.style.AbstractReader<!ol.style.Fill>}
  * @constructor
  */
 os.style.FillReader = function() {
   os.style.FillReader.base(this, 'constructor');
+  this.baseHash = 31 * this.baseHash + goog.string.hashCode('fill') >>> 0;
 };
 goog.inherits(os.style.FillReader, os.style.AbstractReader);
 
@@ -25,7 +27,7 @@ os.style.FillReader.prototype.getOrCreateStyle = function(config) {
   var color = /** @type {string|undefined} */ (config['color']) || os.style.DEFAULT_LAYER_COLOR;
   color = ol.color.asString(color);
 
-  var hash = this.baseHash + goog.string.hashCode(color);
+  var hash = 31 * this.baseHash + goog.string.hashCode(color) >>> 0;
   if (!this.cache[hash]) {
     this.cache[hash] = new ol.style.Fill({
       color: color

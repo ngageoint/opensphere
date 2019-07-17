@@ -10,6 +10,7 @@ goog.require('os.ui.filter');
 
 /**
  * Parses XML filter data to create filter entries.
+ *
  * @implements {os.parse.IParser}
  * @constructor
  */
@@ -89,6 +90,7 @@ os.ui.filter.parse.FilterParser.prototype.parseNext = function() {
 
 /**
  * Extracts filter data from a set of filters or a state file.
+ *
  * @param {Element} ele The element to extract filters from
  * @return {Array<os.filter.FilterEntry>}
  */
@@ -111,6 +113,7 @@ os.ui.filter.parse.FilterParser.prototype.extractFromFilters = function(ele) {
 
 /**
  * Takes an XML filter element and turns it into a set of os.filter.FilterEntry's for the appropriate layers.
+ *
  * @param {Element} el
  * @return {?Array<os.filter.FilterEntry>}
  */
@@ -161,6 +164,7 @@ os.ui.filter.parse.FilterParser.prototype.elToEntries = function(el) {
 
 /**
  * Extracts filter data from a PQS file.
+ *
  * @param {Element} ele The element to extract filters from
  * @return {Array<os.filter.FilterEntry>}
  */
@@ -187,6 +191,7 @@ os.ui.filter.parse.FilterParser.prototype.extractFromPQS = function(ele) {
 
 /**
  * Takes an XML filter element and turns it into a os.filter.FilterEntry.
+ *
  * @param {Element} el
  * @return {?os.filter.FilterEntry}
  */

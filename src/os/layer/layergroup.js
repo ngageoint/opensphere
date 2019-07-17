@@ -1,6 +1,8 @@
 goog.provide('os.layer.LayerGroup');
+
 goog.require('goog.events.EventTarget');
 goog.require('ol.array');
+goog.require('os.IGroupable');
 goog.require('os.implements');
 goog.require('os.layer.ILayer');
 goog.require('os.ui.node.defaultLayerNodeUIDirective');
@@ -9,8 +11,10 @@ goog.require('os.ui.node.defaultLayerNodeUIDirective');
 
 /**
  * Logical grouping of layers
+ *
  * @extends {goog.events.EventTarget}
  * @implements {os.layer.ILayer}
+ * @implements {os.IGroupable}
  * @constructor
  */
 os.layer.LayerGroup = function() {
@@ -78,6 +82,7 @@ os.layer.LayerGroup = function() {
 };
 goog.inherits(os.layer.LayerGroup, goog.events.EventTarget);
 os.implements(os.layer.LayerGroup, os.layer.ILayer.ID);
+os.implements(os.layer.LayerGroup, os.IGroupable.ID);
 
 
 /**
@@ -101,6 +106,22 @@ os.layer.LayerGroup.prototype.getId = function() {
  */
 os.layer.LayerGroup.prototype.setId = function(value) {
   this.id_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.LayerGroup.prototype.getGroupId = function() {
+  return this.getId();
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.LayerGroup.prototype.getGroupLabel = function() {
+  return this.getTitle();
 };
 
 
@@ -541,6 +562,7 @@ os.layer.LayerGroup.prototype.getGroupUI = function() {
 
 /**
  * Adds a layer to the group.
+ *
  * @param {!os.layer.ILayer} layer
  */
 os.layer.LayerGroup.prototype.addLayer = function(layer) {
@@ -550,6 +572,7 @@ os.layer.LayerGroup.prototype.addLayer = function(layer) {
 
 /**
  * Get the layers in the group.
+ *
  * @return {!Array.<!os.layer.ILayer>}
  */
 os.layer.LayerGroup.prototype.getLayers = function() {
@@ -559,6 +582,7 @@ os.layer.LayerGroup.prototype.getLayers = function() {
 
 /**
  * Removes a layer from the group.
+ *
  * @param {!os.layer.ILayer} layer
  */
 os.layer.LayerGroup.prototype.removeLayer = function(layer) {

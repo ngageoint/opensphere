@@ -9,6 +9,7 @@ goog.require('os.ui.popover.popoverDirective');
 
 /**
  * The newerolderthan directive
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.op.time.newerOlderThanDirective = function() {
@@ -31,6 +32,7 @@ os.ui.Module.directive('newerolderthan', [os.ui.filter.op.time.newerOlderThanDir
 
 /**
  * Controller for the newerolderthan directive.
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -69,6 +71,7 @@ os.ui.filter.op.time.NewerOlderThanCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Watcher for maximum duration value changes.
+ *
  * @param {number} newVal The new maximum value.
  * @param {number} oldVal The old maximum value.
  * @export

@@ -11,6 +11,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Provider representing an Arc Server.
+ *
  * @implements {os.data.IDataProvider}
  * @extends {os.ui.server.AbstractLoadingServer}
  * @constructor
@@ -38,6 +39,7 @@ plugin.arc.ArcServer = function() {
   this.log = plugin.arc.ArcServer.LOGGER_;
 };
 goog.inherits(plugin.arc.ArcServer, os.ui.server.AbstractLoadingServer);
+os.implements(plugin.arc.ArcServer, os.data.IDataProvider.ID);
 
 
 /**
@@ -59,6 +61,7 @@ plugin.arc.ArcServer.DEFAULT_COLOR = 'rgba(255,255,255,1)';
 
 /**
  * Get the Arc version
+ *
  * @return {?string}
  */
 plugin.arc.ArcServer.prototype.getVersion = function() {
@@ -68,6 +71,7 @@ plugin.arc.ArcServer.prototype.getVersion = function() {
 
 /**
  * Set the Arc version
+ *
  * @param {?string} value
  */
 plugin.arc.ArcServer.prototype.setVersion = function(value) {
@@ -117,6 +121,7 @@ plugin.arc.ArcServer.prototype.load = function(opt_ping) {
 
 /**
  * Handler for Arc server load success.
+ *
  * @param {goog.events.Event} event
  * @protected
  */
@@ -133,6 +138,7 @@ plugin.arc.ArcServer.prototype.onLoad = function(event) {
 
 /**
  * Handler for Arc server load errors.
+ *
  * @param {goog.events.Event} event
  * @protected
  */
@@ -151,6 +157,7 @@ plugin.arc.ArcServer.prototype.onError = function(event) {
 
 /**
  * Logs an error and sets the server to an error state.
+ *
  * @param {string} msg The error message.
  * @protected
  */
@@ -172,6 +179,7 @@ plugin.arc.ArcServer.prototype.logError = function(msg) {
 
 /**
  * Disposes of the loader.
+ *
  * @private
  */
 plugin.arc.ArcServer.prototype.disposeLoader_ = function() {

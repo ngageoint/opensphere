@@ -22,6 +22,7 @@ os.ui.ol.interaction.ContextMenuOptions;
 
 /**
  * Creates the menu when spatial areas are clicked
+ *
  * @constructor
  * @extends {ol.interaction.Interaction}
  * @param {os.ui.ol.interaction.ContextMenuOptions=} opt_options
@@ -98,6 +99,7 @@ os.ui.ol.interaction.ContextMenu.prototype.handleEvent = function(event) {
 
 /**
  * Internal handler for map browser events.
+ *
  * @param {!ol.MapBrowserEvent} event The map browser event
  * @protected
  */
@@ -111,6 +113,7 @@ os.ui.ol.interaction.ContextMenu.prototype.handleEventInternal = function(event)
 
 /**
  * Open the map context menu.
+ *
  * @param {Array<number>} coord The map coordinate to pass as an argument.
  * @param {Array<number>=} opt_pixel The menu position.
  * @protected
@@ -129,6 +132,7 @@ os.ui.ol.interaction.ContextMenu.prototype.openMapContextMenu = function(coord, 
 
 /**
  * Open a context menu for a hit detected feature.
+ *
  * @param {!ol.MapBrowserEvent} event The map browser event
  * @param {!ol.Feature} feature The feature
  * @param {ol.layer.Layer=} opt_layer The layer containing the feature

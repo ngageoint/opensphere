@@ -15,6 +15,7 @@ os.interaction.Measure.prototype.cesiumLabels = undefined;
 
 /**
  * Clean up the draw polygon interaction in Cesium.
+ *
  * @this {os.interaction.Measure}
  */
 plugin.cesium.interaction.measure.cleanupWebGL = function() {
@@ -33,6 +34,7 @@ plugin.cesium.interaction.measure.cleanupWebGL = function() {
 
 /**
  * Draw the measure line in Cesium.
+ *
  * @this {os.interaction.Measure}
  * @suppress {accessControls}
  */
@@ -41,7 +43,7 @@ plugin.cesium.interaction.measure.updateWebGL = function() {
 
   if (os.MapContainer.getInstance().is3DEnabled()) {
     var webgl = /** @type {plugin.cesium.CesiumRenderer|undefined} */ (
-          os.MapContainer.getInstance().getWebGLRenderer());
+      os.MapContainer.getInstance().getWebGLRenderer());
     var scene = webgl ? webgl.getCesiumScene() : undefined;
 
     var lonlats = this.coords.map(os.interaction.DrawPolygon.coordToLonLat);

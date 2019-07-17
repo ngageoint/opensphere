@@ -9,6 +9,7 @@ goog.require('os.ui.search.FeatureResultCardCtrl');
 
 /**
  * The beresultcard directive for displaying search results.
+ *
  * @return {angular.Directive}
  */
 os.ui.search.place.coordResultCardDirective = function() {
@@ -31,6 +32,7 @@ os.ui.Module.directive('coordresultcard', [os.ui.search.place.coordResultCardDir
 
 /**
  * Controller for the beresultcard directive.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor

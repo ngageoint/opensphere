@@ -8,6 +8,7 @@ goog.require('plugin.file.shp.SHPParser');
 
 /**
  * Configuration for a SHP parser.
+ *
  * @extends {os.parse.FileParserConfig}
  * @constructor
  */

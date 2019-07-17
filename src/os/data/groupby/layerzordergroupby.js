@@ -10,6 +10,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 
 /**
  * Groups layers by z-order
+ *
  * @extends {os.data.groupby.BaseGroupBy}
  * @constructor
  */

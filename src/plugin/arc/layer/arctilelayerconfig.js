@@ -8,6 +8,7 @@ goog.require('plugin.arc.source.ArcTileSource');
 
 /**
  * Layer config for Arc tile layers.
+ *
  * @extends {os.layer.config.AbstractTileLayerConfig}
  * @constructor
  */

@@ -20,6 +20,7 @@ goog.require('os.ui.window');
 
 /**
  * The combinator window directive
+ *
  * @return {angular.Directive}
  */
 os.ui.query.combinatorDirective = function() {
@@ -38,6 +39,7 @@ os.ui.Module.directive('combinator', [os.ui.query.combinatorDirective]);
 
 /**
  * The controller for the combinator window. This implements the combinator's interface with the map container.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.query.BaseCombinatorCtrl}
@@ -171,6 +173,7 @@ os.ui.query.CombinatorCtrl.launch = function() {
 
 /**
  * Launches a combinator explicitly for the passed in layer ID.
+ *
  * @param {string} layerId Layer ID for the combinator
  * @param {string=} opt_layerName Optional name to include
  */

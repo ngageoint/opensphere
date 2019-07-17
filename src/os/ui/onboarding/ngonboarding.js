@@ -10,6 +10,7 @@ goog.require('os.ui.Module');
 
 /**
  * The ng-onboarding directive, adapted from ngOnboarding by Adam Albrecht.
+ *
  * @see http://github.com/adamalbrecht/ngOnboarding/
  * @return {angular.Directive}
  */
@@ -40,6 +41,7 @@ os.ui.Module.directive('ngOnboarding', [os.ui.onboarding.ngOnboardingDirective])
 
 /**
  * Controller function for the onboarding directive.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.$sce} $sce
  * @constructor
@@ -98,6 +100,7 @@ os.ui.onboarding.NgOnboardingCtrl = function($scope, $sce) {
 
 /**
  * Clean up listeners/references.
+ *
  * @private
  */
 os.ui.onboarding.NgOnboardingCtrl.prototype.destroy_ = function() {
@@ -112,6 +115,7 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.destroy_ = function() {
 
 /**
  * Move to the next step.
+ *
  * @export
  */
 os.ui.onboarding.NgOnboardingCtrl.prototype.next = function() {
@@ -125,6 +129,7 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.next = function() {
 
 /**
  * Move to the previous step.
+ *
  * @export
  */
 os.ui.onboarding.NgOnboardingCtrl.prototype.previous = function() {
@@ -134,6 +139,7 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.previous = function() {
 
 /**
  * Close onboarding.
+ *
  * @export
  */
 os.ui.onboarding.NgOnboardingCtrl.prototype.close = function() {
@@ -147,6 +153,7 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.close = function() {
 
 /**
  * Close onboarding and prevent others from being displayed.
+ *
  * @export
  */
 os.ui.onboarding.NgOnboardingCtrl.prototype.stopShowing = function() {
@@ -182,6 +189,7 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.setupOverlay_ = function(showOverlay
 
 /**
  * Returns the height of a DOM element. Works with Element and SVGElement types.
+ *
  * @param {jQuery} element jQuery element.
  * @return {number}
  * @private
@@ -204,6 +212,7 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.getElementHeight_ = function(element
 
 /**
  * Handle window resize
+ *
  * @private
  */
 os.ui.onboarding.NgOnboardingCtrl.prototype.onResize_ = function() {
@@ -219,6 +228,7 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.onResize_ = function() {
 
 /**
  * Handle changes to the step index.
+ *
  * @param {?number} newVal The new index
  * @param {?number} oldVal The old index
  * @private
@@ -272,6 +282,7 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.onIndexChange_ = function(newVal, ol
 
 /**
  * Positions the onboarding step popover.
+ *
  * @private
  */
 os.ui.onboarding.NgOnboardingCtrl.prototype.setupPositioning_ = function() {
@@ -337,8 +348,8 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.setupPositioning_ = function() {
           top = attachTo.offset().top + attachTo.outerHeight() + yMargin;
           var popoverHeight = $('.js-onboarding__popover').outerHeight();
           if (
-              /* check if popover overflows bottom of window */
-              (top + popoverHeight > windowHeight) &&
+          /* check if popover overflows bottom of window */
+            (top + popoverHeight > windowHeight) &&
               /* check if popover on top would overflow top of window */
               (popoverHeight - attachTo.offset().top + yMargin <= 0)) {
             // switch to top

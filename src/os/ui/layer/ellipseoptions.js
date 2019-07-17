@@ -10,6 +10,7 @@ goog.require('os.ui.layer.AbstractLayerUICtrl');
 
 /**
  * The ellipseoptions directive.
+ *
  * @return {angular.Directive}
  */
 os.ui.layer.ellipseOptionsDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('ellipseoptions', [os.ui.layer.ellipseOptionsDirective]);
 
 /**
  * Controller function for the ellipseoptions directive.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {os.ui.layer.AbstractLayerUICtrl}
@@ -82,6 +84,7 @@ os.ui.layer.EllipseOptionsCtrl.prototype.initUI = function() {
 
 /**
  * If ellipsoids should be displayed for the layer(s).
+ *
  * @return {boolean}
  * @private
  */
@@ -100,6 +103,7 @@ os.ui.layer.EllipseOptionsCtrl.prototype.getShowEllipsoids_ = function() {
 
 /**
  * If ellipses should also show a ground reference line.
+ *
  * @return {boolean}
  * @private
  */
@@ -118,6 +122,7 @@ os.ui.layer.EllipseOptionsCtrl.prototype.getShowGroundReference_ = function() {
 
 /**
  * Handle changes to the Show Ellipsoids option.
+ *
  * @export
  */
 os.ui.layer.EllipseOptionsCtrl.prototype.onShowEllipsoidsChange = function() {
@@ -140,6 +145,7 @@ os.ui.layer.EllipseOptionsCtrl.prototype.onShowEllipsoidsChange = function() {
 
 /**
  * Handle changes to the Show Ground Reference option.
+ *
  * @export
  */
 os.ui.layer.EllipseOptionsCtrl.prototype.onShowGroundReferenceChange = function() {

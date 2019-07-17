@@ -180,6 +180,16 @@
 }
 
 
+// --------------------------------- List Utilities --------------------------------- //
+.u-column-count-4 {
+  column-count: 4;
+
+  &:not(.list-unstyled) {
+    column-gap: 2.25rem;
+  }
+}
+
+
 // --------------------------------- Table Utilities --------------------------------- //
 // Tables in bootstrap are styled by elements.... not classes. Allow class styling
 .u-table {
@@ -354,6 +364,93 @@
   }
 }
 
+
+// This block controls responsive behaviour with respect to a parent, and not the viewport
+// The parent needs to adjust the class u-parent-resizer (see window.js)
+$u-parent-resizer-count: 0;
+@each $breakpoint in map-keys($grid-breakpoints) {
+  $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+  .u-parent-resizer-#{$breakpoint} {
+
+    // these are all the fallback class overrides
+    // i.e. no sm, md, lg etc in the class name
+    @for $i from 1 through $grid-columns {
+      .col-#{$i} {
+        @include make-col($i, $grid-columns);
+      }
+    }
+
+    .flex-row {
+      flex-direction: row !important;
+    }
+
+    .flex-column {
+      flex-direction: column !important;
+    }
+
+    // these are all the responsive class overrides
+    // i.e. with sm, md, lg, etc in the class name
+    // how this works is there are no responsive classes "above" the parent-resizer
+    // so for u-parent-resizer-md there are col-xs-x, col-sm-x and col-md-x, but no col-lg-x
+    // therefore, if an element has col-lg, that class override won't exist, and will
+    // move down to the next override, or the fallback if there arent' any
+    $u-parent-resizer-subcount: 0;
+    @each $sub-breakpoint in map-keys($grid-breakpoints) {
+      @if ($u-parent-resizer-count >= $u-parent-resizer-subcount) {
+        .col-#{$sub-breakpoint} {
+          flex-basis: 0;
+          flex-grow: 1;
+          max-width: 100%;
+        }
+
+        .col-#{$sub-breakpoint}-auto {
+          flex: 0 0 auto;
+          max-width: none; // Reset earlier grid tiers
+          width: auto;
+        }
+
+        .flex-#{$sub-breakpoint}-row {
+          flex-direction: row !important;
+        }
+
+        .flex-#{$sub-breakpoint}-column {
+          flex-direction: column !important;
+        }
+
+        // these add responsive behaviour to forms, but have changed from vertical-at to
+        // horizontal-above, so 'default' behaviour is vertical (see propertieseditform.html)
+        .u-form-horizontal-above-#{$sub-breakpoint} {
+          .form-group {
+            .text-left .col-form-label,
+            .col-form-label.text-left {
+              text-align: right !important;
+            }
+
+            .col-form-label.border-left {
+              border-bottom: 1px solid $border-color;
+              border-left: 0 !important;
+            }
+
+            .btn-group.justify-content-start {
+              justify-content: flex-end !important;
+            }
+          }
+        }
+
+        @for $i from 1 through $grid-columns {
+          .col-#{$sub-breakpoint}-#{$i} {
+            @include make-col($i, $grid-columns);
+          }
+        }
+      }
+      $u-parent-resizer-subcount: $u-parent-resizer-subcount + 1;
+    }
+
+    $u-parent-resizer-count: $u-parent-resizer-count + 1;
+  }
+}
+
 .u-input-number__width-2 {
   width: 2.5rem;
 }
@@ -489,6 +586,14 @@ $somesizes: map-merge((
       color: $list-group-action-hover-color;
     }
   }
+}
+
+.u-card-popup {
+  @include border-radius($card-inner-border-radius $card-inner-border-radius 0 0);
+  background: rgba($card-cap-bg, .6);
+  margin-bottom: 0;
+  right: .2rem;
+  top: -1.3rem;
 }
 
 

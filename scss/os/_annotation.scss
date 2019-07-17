@@ -1,8 +1,5 @@
-.c-annotation {
-  .c-simplemde__preview > p {
-    // remove the bottom margin in the annotation to prevent unnecessary scrolling
-    margin: 0;
-  }
+.c-annotation__editing {
+  z-index: 1;
 }
 
 .c-annotation__svg {
@@ -11,10 +8,6 @@
   path {
     fill: $card-bg;
   }
-}
-
-.c-annotation__controls {
-  top: -1.3rem;
 }
 
 //

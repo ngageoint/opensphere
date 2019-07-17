@@ -100,6 +100,7 @@ os.ui.menu.draw.dispose = function() {
 
 /**
  * Handle draw menu events.
+ *
  * @param {!goog.events.Event} event The event.
  */
 os.ui.menu.draw.handleDrawEvent = function(event) {

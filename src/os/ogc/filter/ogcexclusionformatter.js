@@ -5,6 +5,7 @@ goog.require('os.ogc.filter.OGCSpatialFormatter');
 
 /**
  * Formats a exclusion query for use in an OGC Filter.
+ *
  * @param {string=} opt_column
  * @extends {os.ogc.filter.OGCSpatialFormatter}
  * @constructor

@@ -10,6 +10,7 @@ goog.require('os.ui.filter.ui.filterNodeUIDirective');
 
 /**
  * The selected/highlighted node UI directive for filter actions.
+ *
  * @return {angular.Directive}
  */
 os.ui.im.action.filterActionNodeUIDirective = function() {
@@ -36,6 +37,7 @@ os.ui.Module.directive('filteractionnodeui', [os.ui.im.action.filterActionNodeUI
 
 /**
  * Controller for selected/highlighted node UI.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {os.ui.filter.ui.FilterNodeUICtrl}
@@ -50,6 +52,7 @@ goog.inherits(os.ui.im.action.FilterActionNodeUICtrl, os.ui.filter.ui.FilterNode
 
 /**
  * Copy the filter action.
+ *
  * @override
  * @export
  */
@@ -67,6 +70,7 @@ os.ui.im.action.FilterActionNodeUICtrl.prototype.copy = function() {
 
 /**
  * Edit the filter action.
+ *
  * @override
  * @export
  */
@@ -81,6 +85,7 @@ os.ui.im.action.FilterActionNodeUICtrl.prototype.edit = function() {
 
 /**
  * Remove the filter action.
+ *
  * @override
  * @export
  */

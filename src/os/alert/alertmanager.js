@@ -12,6 +12,7 @@ goog.require('os.structs.EventType');
 
 /**
  * Responsible for receiving, logging and reporting alerts
+ *
  * @extends {goog.events.EventTarget}
  * @constructor
  */
@@ -60,6 +61,7 @@ os.alert.AlertManager.MAX_SAVED = 10000;
 
 /**
  * Takes a string and converts it into an alert event, then dispatches it
+ *
  * @param {string} alert The alert to send and add to the window
  * @param {os.alert.AlertEventSeverity=} opt_severity Severity of the event, defaults to error
  * @param {goog.log.Logger=} opt_logger If provided, writes the message to this logger
@@ -97,6 +99,7 @@ os.alert.AlertManager.prototype.sendAlert = function(alert, opt_severity, opt_lo
 
 /**
  * Check an alert string against onceMap_ before sending an alert
+ *
  * @param {string} alert The alert to send and add to the window
  * @param {os.alert.AlertEventSeverity=} opt_severity Severity of the event, defaults to error
  * @param {goog.log.Logger=} opt_logger If provided, writes the message to this logger
@@ -105,7 +108,7 @@ os.alert.AlertManager.prototype.sendAlert = function(alert, opt_severity, opt_lo
  *   by dispatching a {@code os.alert.AlertEventTypes.DISMISS_ALERT} event
  */
 os.alert.AlertManager.prototype.sendAlertOnce = function(alert, opt_severity, opt_logger, opt_limit,
-  opt_dismissDispatcher) {
+    opt_dismissDispatcher) {
   if (this.onceMap_[alert]) {
     return;
   } else {
@@ -127,6 +130,7 @@ os.alert.AlertManager.prototype.clearAlerts = function() {
 
 /**
  * Get the alert buffer
+ *
  * @return {!goog.structs.CircularBuffer.<!os.alert.AlertEvent>} Object containing the parsed record
  */
 os.alert.AlertManager.prototype.getAlerts = function() {
@@ -136,6 +140,7 @@ os.alert.AlertManager.prototype.getAlerts = function() {
 
 /**
  * Process alerts that AlertManager may have already generated before this class has initialized.
+ *
  * @param {!string} clientId An arbitrary string to identify the client that is processing alerts
  * @param {!function(os.alert.AlertEvent)} handler
  * @param {*=} opt_context

@@ -7,6 +7,7 @@ goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
 goog.require('os.ui.Module');
 goog.require('os.ui.menu.layer');
+goog.require('os.ui.uiSwitchDirective');
 goog.require('os.ui.window.confirmDirective');
 goog.require('os.ui.window.confirmTextDirective');
 goog.require('plugin.file.kml.ui');
@@ -16,6 +17,7 @@ goog.require('plugin.file.kml.ui.placemarkEditDirective');
 
 /**
  * The places directive
+ *
  * @return {angular.Directive}
  */
 plugin.places.ui.placesDirective = function() {
@@ -39,6 +41,7 @@ os.ui.Module.directive('places', [plugin.places.ui.placesDirective]);
 
 /**
  * Controller function for the places directive
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @extends {goog.Disposable}
  * @constructor
@@ -104,6 +107,7 @@ plugin.places.ui.PlacesCtrl.prototype.disposeInternal = function() {
 
 /**
  * Handle places manager loaded event.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -119,6 +123,7 @@ plugin.places.ui.PlacesCtrl.prototype.onPlacesReady_ = function(event) {
 
 /**
  * If the places root node is available.
+ *
  * @return {boolean}
  * @export
  */
@@ -129,6 +134,7 @@ plugin.places.ui.PlacesCtrl.prototype.hasRoot = function() {
 
 /**
  * Export places to a KMZ.
+ *
  * @export
  */
 plugin.places.ui.PlacesCtrl.prototype.export = function() {
@@ -143,6 +149,7 @@ plugin.places.ui.PlacesCtrl.prototype.export = function() {
 
 /**
  * Import places from a file/URL.
+ *
  * @export
  */
 plugin.places.ui.PlacesCtrl.prototype.import = function() {
@@ -153,6 +160,7 @@ plugin.places.ui.PlacesCtrl.prototype.import = function() {
 
 /**
  * Create a new folder and add it to the tree.
+ *
  * @export
  */
 plugin.places.ui.PlacesCtrl.prototype.addFolder = function() {
@@ -172,9 +180,11 @@ plugin.places.ui.PlacesCtrl.prototype.addFolder = function() {
 
 /**
  * Create a new place and add it to the tree.
+ *
+ * @param {boolean=} opt_annotation Whether the place is an annotation.
  * @export
  */
-plugin.places.ui.PlacesCtrl.prototype.addPlace = function() {
+plugin.places.ui.PlacesCtrl.prototype.addPlace = function(opt_annotation) {
   var parent = this['selected'] && this['selected'].length == 1 ? this['selected'][0] : this.placesRoot_;
   while (parent && !parent.isFolder()) {
     parent = parent.getParent();
@@ -182,6 +192,7 @@ plugin.places.ui.PlacesCtrl.prototype.addPlace = function() {
 
   if (parent) {
     plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
+      'annotation': opt_annotation,
       'parent': parent
     }));
   }
@@ -191,6 +202,7 @@ plugin.places.ui.PlacesCtrl.prototype.addPlace = function() {
 
 /**
  * Fully expands the tree from the provided node. Uses the first node if multiple are selected.
+ *
  * @export
  */
 plugin.places.ui.PlacesCtrl.prototype.expandAll = function() {
@@ -205,6 +217,7 @@ plugin.places.ui.PlacesCtrl.prototype.expandAll = function() {
 
 /**
  * Fully collapses the tree from the provided node. Uses the first node if multiple are selected.
+ *
  * @export
  */
 plugin.places.ui.PlacesCtrl.prototype.collapseAll = function() {
@@ -214,4 +227,20 @@ plugin.places.ui.PlacesCtrl.prototype.collapseAll = function() {
     this.scope_.$broadcast(os.ui.slick.SlickGridEvent.INVALIDATE_ROWS);
   }
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.Places.COLLAPSE_ALL, 1);
+};
+
+
+/**
+ * Gets the accordion UI associated with the selected item.
+ *
+ * @param {*} item
+ * @return {?string}
+ * @export
+ */
+plugin.places.ui.PlacesCtrl.prototype.getUi = function(item) {
+  if (item && os.implements(item, os.ui.ILayerUIProvider.ID)) {
+    return item.getLayerUI(item);
+  }
+
+  return null;
 };

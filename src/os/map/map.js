@@ -110,7 +110,7 @@ os.map.MAX_ZOOM = 25;
  * @type {number}
  * @const
  */
-os.map.MAX_AUTO_ZOOM = 15;
+os.map.MAX_AUTO_ZOOM = 18;
 
 
 /**
@@ -178,6 +178,7 @@ os.map.ZoomScale = {
 
 /**
  * Gets the zoom level from the given resolution.
+ *
  * @param {number} resolution The view resolution.
  * @param {ol.proj.Projection} projection The map projection.
  * @param {number=} opt_precision The decimal precision
@@ -201,6 +202,7 @@ os.map.resolutionToZoom = function(resolution, projection, opt_precision) {
 
 /**
  * Gets the resolution for the given zoom level
+ *
  * @param {number} zoom
  * @param {ol.proj.Projection} projection
  * @return {number} resolution (degrees per pixel)
@@ -231,6 +233,7 @@ os.map.MAX_RESOLUTION = os.map.zoomToResolution(os.map.MIN_ZOOM, os.map.PROJECTI
 
 /**
  * Get the degrees per pixel for a provided zoom level.
+ *
  * @param {number} zoom The zoom level
  * @return {number} The degrees per pixel
  * @private

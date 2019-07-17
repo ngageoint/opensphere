@@ -11,6 +11,7 @@ goog.require('os.net.IRequestHandler');
 
 /**
  * Handler for files in local storage.
+ *
  * @implements {os.net.IRequestHandler}
  * @extends {goog.events.EventTarget}
  * @constructor
@@ -201,5 +202,5 @@ os.net.LocalFileHandler.prototype.getTimeout = function() {
  * @inheritDoc
  */
 os.net.LocalFileHandler.prototype.setTimeout = function(timeout) {
- // timeout not supported
+  // timeout not supported
 };

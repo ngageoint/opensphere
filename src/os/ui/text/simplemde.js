@@ -8,7 +8,6 @@ goog.require('os.ui.Module');
 
 
 /**
- * The count by directive
  * @return {angular.Directive}
  */
 os.ui.text.simpleMDEDirective = function() {
@@ -37,6 +36,7 @@ os.ui.Module.directive('simplemde', [os.ui.text.simpleMDEDirective]);
 
 /**
  * Counts the words for the simpleMDE
+ *
  * @param {Element} el
  */
 os.ui.text.SimpleMDE.wordCount = function(el) {
@@ -122,7 +122,6 @@ os.ui.text.SimpleMDE.BASICTOOLBAR = [
 
 
 /**
- * Controller class for the source switcher
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -204,6 +203,7 @@ os.ui.text.SimpleMDECtrl.prototype.onDestroy = function() {
 
 /**
  * Make the preview return sanitized html
+ *
  * @param {string} plainText
  * @this SimpleMDE
  * @return {string}
@@ -266,6 +266,7 @@ os.ui.text.SimpleMDECtrl.prototype.init = function() {
 /**
  * This is a little hacky. Stolen from the codemirror on window resize logic
  * SimpleMDE has an open ticket to fix text/content not displaying, forcing the refresh is the workaround
+ *
  * @private
  */
 os.ui.text.SimpleMDECtrl.prototype.resize_ = function() {
@@ -293,6 +294,7 @@ os.ui.text.SimpleMDECtrl.prototype.onChange_ = function() {
  * Workaround for "Unintended fullscreen behavior when SimpleMDE is in a Bootstrap modal"
  * (https://github.com/sparksuite/simplemde-markdown-editor/issues/263) and fix for
  * fixed positioning styles in window component
+ *
  * @private
  */
 os.ui.text.SimpleMDECtrl.prototype.onToggleFullscreen_ = function() {
@@ -314,6 +316,7 @@ os.ui.text.SimpleMDECtrl.prototype.onToggleFullscreen_ = function() {
 
 /**
  * Remove all the markdown syntax
+ *
  * @param {string} rawText
  * @param {boolean=} opt_keepLineBreaks Keep linebreaks in the text.
  * @return {string} - cleaned text
@@ -334,6 +337,7 @@ os.ui.text.SimpleMDE.removeMarkdown = function(rawText, opt_keepLineBreaks) {
 
 /**
  * Convert markdown text to an HTML node.
+ *
  * @param {string} rawText
  * @return {Node}
  */
@@ -350,6 +354,7 @@ os.ui.text.SimpleMDE.getHtmlNode = function(rawText) {
 
 /**
  * Convert markdown text to html free string.
+ *
  * @param {string} rawText
  * @return {string}
  */

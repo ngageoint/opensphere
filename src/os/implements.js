@@ -33,6 +33,7 @@ os.IMPLEMENTS_KEY = 'os_impls';
 
 /**
  * Dual purpose function to set implements or ask if a thing implements an interface.
+ *
  * @param {*} value The value to test. If a function is provided, marks the function as implementing an interface.
  *      If an object is provided, returns if the object implements the interface. All other values return false.
  * @param {!string} interfaceId
@@ -55,6 +56,7 @@ os.implements = function(value, interfaceId) {
 
 /**
  * Add interface ID to the class to indicate it implements
+ *
  * @param {!Function} clazz The constructor
  * @param {!string} interfaceId The interface id
  * @private
@@ -75,6 +77,7 @@ os.addImplements_ = function(clazz, interfaceId) {
 
 /**
  * Determine if an instance of an object implements the provided interface
+ *
  * @param {!Object} inst The object instance
  * @param {!string} interfaceId The interface id
  * @return {boolean} If the instance implements the interface

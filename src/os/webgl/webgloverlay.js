@@ -6,6 +6,7 @@ goog.require('ol.proj');
 
 /**
  * An OpenLayers overlay that supports positioning itself with a WebGL renderer.
+ *
  * @param {olx.OverlayOptions} options Overlay options.
  * @constructor
  * @extends {ol.Overlay}
@@ -60,6 +61,7 @@ os.webgl.WebGLOverlay.prototype.getPosition = function() {
 
 /**
  * If the overlay is visible.
+ *
  * @return {boolean}
  */
 os.webgl.WebGLOverlay.prototype.isVisible = function() {
@@ -83,6 +85,7 @@ os.webgl.WebGLOverlay.prototype.setVisible = function(visible) {
 
 /**
  * Handle map property change events.
+ *
  * @param {os.events.PropertyChangeEvent} event The event.
  * @protected
  */
@@ -96,6 +99,7 @@ os.webgl.WebGLOverlay.prototype.onMapChange = function(event) {
 
 /**
  * Handle WebGL activiation on the map.
+ *
  * @protected
  */
 os.webgl.WebGLOverlay.prototype.onWebGLActive = function() {

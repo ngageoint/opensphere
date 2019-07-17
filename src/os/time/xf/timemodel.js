@@ -79,14 +79,14 @@ os.time.xf.TimeModel = function(getTimeFn, opt_getHoldTimeFn) {
    * @protected
    */
   this.holdStartDimension = this.getHoldTimeFn ?
-      this.holdsXf.dimension(this.startFilter_.bind(this, this.getHoldTimeFn)) : null;
+    this.holdsXf.dimension(this.startFilter_.bind(this, this.getHoldTimeFn)) : null;
 
   /**
    * @type {?crossfilter.Dimension}
    * @protected
    */
   this.holdEndDimension = this.getHoldTimeFn ?
-      this.holdsXf.dimension(this.endFilter_.bind(this, this.getHoldTimeFn)) : null;
+    this.holdsXf.dimension(this.endFilter_.bind(this, this.getHoldTimeFn)) : null;
 
   /**
    * @type {Object<string, crossfilter.Dimension>}
@@ -330,6 +330,7 @@ os.time.xf.TimeModel.prototype.hasDimension = function(id) {
 /**
  * Removes a dimension from the model. If all custom dimensions have been removed, the timeless crossfilter will
  * be given a default dimension that can be used to access all timeless data.
+ *
  * @param {string} id Unique id of the dimension
  * @param {boolean=} opt_skipDefault If true, skips adding the default dimension to the timeless crossfilter. This
  *    should only be used internally from addDimension or timeless records won't be returned.
@@ -370,6 +371,7 @@ os.time.xf.TimeModel.prototype.filterDimension = function(id, opt_value) {
 
 /**
  * Gets the time range of loaded data.
+ *
  * @return {!os.time.TimeRange}
  */
 os.time.xf.TimeModel.prototype.getRange = function() {
@@ -379,6 +381,7 @@ os.time.xf.TimeModel.prototype.getRange = function() {
 
 /**
  * Gets the last time range used to filter data.
+ *
  * @return {os.time.TimeRange}
  */
 os.time.xf.TimeModel.prototype.getLastRange = function() {
@@ -388,6 +391,7 @@ os.time.xf.TimeModel.prototype.getLastRange = function() {
 
 /**
  * Updates the time range of loaded data.
+ *
  * @protected
  */
 os.time.xf.TimeModel.prototype.updateRange = function() {
@@ -422,6 +426,7 @@ os.time.xf.TimeModel.prototype.getSize = function() {
 
 /**
  * Get items intersecting the provided time range.
+ *
  * @param {os.time.TimeRange} range
  * @param {boolean=} opt_includeTimeless If timeless records should be included in the intersection. Defaults to false.
  * @param {boolean=} opt_includeHolds If hold records should be included in the intersection. Defaults to false.
@@ -485,6 +490,7 @@ os.time.xf.TimeModel.prototype.isEmpty = function() {
 
 /**
  * Function to retrieve the start time for an object.
+ *
  * @param {os.time.xf.GetTimeFn} accessorFn
  * @param {Object} item
  * @return {number}
@@ -504,6 +510,7 @@ os.time.xf.TimeModel.prototype.startFilter_ = function(accessorFn, item) {
 
 /**
  * Function to retrieve the end time for an object.
+ *
  * @param {os.time.xf.GetTimeFn} accessorFn
  * @param {Object} item
  * @return {number}
@@ -518,4 +525,68 @@ os.time.xf.TimeModel.prototype.endFilter_ = function(accessorFn, item) {
     result = time.getEnd();
   }
   return result;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.time.xf.TimeModel.prototype.getResults = function(opt_value, opt_dim, opt_bottom) {
+  var val = os.time.xf.TimeModel.base(this, 'getResults', opt_value, opt_dim, opt_bottom);
+  if (!(Array.isArray(val) && val.length) && !this.isDisposed()) {
+    var dim = opt_dim && this.hasDimension(opt_dim) ?
+      this.timelessDimensions[opt_dim] : goog.object.getAnyValue(this.timelessDimensions);
+    opt_value = opt_value || Infinity;
+
+    if (dim) {
+      var results = /** @type {!Array<S>} */ (opt_bottom ? dim.bottom(opt_value) : dim.top(opt_value));
+
+      if (this.filterFunction) {
+        results = goog.array.filter(results, this.filterFunction, this);
+      }
+
+      return results;
+    }
+  }
+  return val;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.time.xf.TimeModel.prototype.getDimensionKeys = function(id) {
+  var val = os.time.xf.TimeModel.base(this, 'getDimensionKeys', id);
+  if (!(Array.isArray(val) && val.length) && !this.isDisposed() && this.hasDimension(id)) {
+    return this.timelessDimensions[id].group().all().map(function(v) {
+      return v.key;
+    });
+  }
+  return val;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.time.xf.TimeModel.prototype.getTopRecord = function(id) {
+  var val = os.time.xf.TimeModel.base(this, 'getTopRecord', id);
+  if (!val && !this.isDisposed() && this.hasDimension(id)) {
+    var topRecord = this.timelessDimensions[id].top(1);
+    return topRecord.length == 1 ? topRecord[0] : undefined;
+  }
+  return val;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.time.xf.TimeModel.prototype.getBottomRecord = function(id) {
+  var val = os.time.xf.TimeModel.base(this, 'getBottomRecord', id);
+  if (!val && !this.isDisposed() && this.hasDimension(id)) {
+    var bottomRecord = this.timelessDimensions[id].bottom(1);
+    return bottomRecord.length == 1 ? bottomRecord[0] : undefined;
+  }
+  return val;
 };

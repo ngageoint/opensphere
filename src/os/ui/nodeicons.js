@@ -6,6 +6,7 @@ goog.require('os.ui.Module');
 
 /**
  * The nodeicons directive
+ *
  * @return {angular.Directive}
  */
 os.ui.nodeIconsDirective = function() {
@@ -27,6 +28,7 @@ os.ui.Module.directive('nodeicons', [os.ui.nodeIconsDirective]);
 
 /**
  * Controller function for the nodeicons directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -74,6 +76,7 @@ os.ui.NodeIconsCtrl.DEFAULT_CONTENT_ = '&nbsp;';
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.NodeIconsCtrl.prototype.destroy_ = function() {
@@ -90,6 +93,7 @@ os.ui.NodeIconsCtrl.prototype.destroy_ = function() {
 
 /**
  * Handles the loading property change
+ *
  * @param {os.events.PropertyChangeEvent} e The change event
  * @private
  */
@@ -102,6 +106,7 @@ os.ui.NodeIconsCtrl.prototype.onPropertyChange_ = function(e) {
 
 /**
  * Updates the icons displayed by the directive.
+ *
  * @private
  */
 os.ui.NodeIconsCtrl.prototype.updateIcons_ = function() {

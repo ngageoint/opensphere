@@ -7,6 +7,7 @@ goog.require('os.ui.Module');
 
 /**
  * The mute button directive
+ *
  * @return {angular.Directive} The mute button directive
  */
 os.ui.muteButtonDirective = function() {
@@ -31,6 +32,7 @@ os.ui.Module.directive('muteButton', [os.ui.muteButtonDirective]);
 
 /**
  * The mute button controller
+ *
  * @param {!angular.Scope} $scope The scope
  * @constructor
  * @ngInject
@@ -47,6 +49,7 @@ os.ui.MuteButtonCtrl = function($scope) {
 
 /**
  * Toggles mute
+ *
  * @export
  */
 os.ui.MuteButtonCtrl.prototype.toggle = function() {

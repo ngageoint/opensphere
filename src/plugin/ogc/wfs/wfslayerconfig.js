@@ -1,7 +1,12 @@
 goog.provide('plugin.ogc.wfs.WFSLayerConfig');
+
 goog.require('goog.async.Deferred');
 goog.require('goog.string');
 goog.require('os.im.mapping.AltMapping');
+goog.require('os.im.mapping.OrientationMapping');
+goog.require('os.im.mapping.RadiusMapping');
+goog.require('os.im.mapping.SemiMajorMapping');
+goog.require('os.im.mapping.SemiMinorMapping');
 goog.require('os.im.mapping.TimeFormat');
 goog.require('os.im.mapping.TimeType');
 goog.require('os.im.mapping.time.DateTimeMapping');
@@ -232,6 +237,7 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.featureTypeAvailable = function(layer, o
 
 /**
  * Adds mappings
+ *
  * @param {os.layer.Vector} layer
  * @param {Object.<string, *>} options
  * @protected
@@ -240,11 +246,9 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.addMappings = function(layer, options) {
   var animate = options['animate'] != null ? options['animate'] : false;
   var source = /** @type {os.source.Request} */ (layer.getSource());
   var importer = /** @type {os.im.Importer} */ (source.getImporter());
-
   var execMappings = [];
-
-
   var timeFields = options['timeFields'];
+
   if (timeFields) {
     if (!Array.isArray(timeFields)) {
       timeFields = [timeFields];
@@ -256,12 +260,13 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.addMappings = function(layer, options) {
 
   var startField = this.featureType.getStartDateColumnName();
   var endField = this.featureType.getEndDateColumnName();
+  var columns = this.featureType.getColumns();
 
+  // do time autodetection
   if (animate && startField) {
     if (startField === 'validTime' && this.url.indexOf('/ogc/wfsServer') > -1) {
       // validTime means that the feature type is dynamic, which means we need to find the actual start/end fields
       // for the purposes of our mappings
-      var columns = this.featureType.getColumns();
       for (var i = 0, ii = columns.length; i < ii; i++) {
         var col = columns[i];
         if (col['name'] === 'DATE_TIME') {
@@ -306,13 +311,32 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.addMappings = function(layer, options) {
     }
   }
 
+  // do the other autodetections
+  var columnObj = {};
+  columns.forEach(function(column) {
+    columnObj[column['name']] = column['type'];
+  });
+
+  var autodetects = [
+    new os.im.mapping.AltMapping(),
+    new os.im.mapping.RadiusMapping(),
+    new os.im.mapping.OrientationMapping(),
+    new os.im.mapping.SemiMajorMapping(),
+    new os.im.mapping.SemiMinorMapping()
+  ];
+
+  for (var i = 0, ii = autodetects.length; i < ii; i++) {
+    var mapping = autodetects[i];
+    var detected = mapping.autoDetect([columnObj]);
+
+    if (detected) {
+      execMappings.push(detected);
+    }
+  }
+
   if (execMappings && execMappings.length > 0) {
     importer.setExecMappings(execMappings);
   }
-
-  // tell the importer we want to run a different set of autodetection mappers
-  importer.selectAutoMappings([os.im.mapping.AltMapping.ID, os.im.mapping.RadiusMapping.ID,
-    os.im.mapping.SemiMajorMapping.ID, os.im.mapping.SemiMinorMapping.ID]);
 };
 
 
@@ -426,6 +450,7 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.getLayer = function(source, options) {
 
 /**
  * CSV sources are not lockable.
+ *
  * @inheritDoc
  */
 plugin.ogc.wfs.WFSLayerConfig.prototype.getSource = function(options) {

@@ -6,6 +6,7 @@ goog.require('os.im.mapping.RadiusMapping');
 
 /**
  * Bearing mapping.
+ *
  * @extends {os.im.mapping.RadiusMapping}
  * @constructor
  */

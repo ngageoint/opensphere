@@ -210,6 +210,7 @@ os.xt.Peer.LOGGER_ = goog.log.getLogger('os.xt.Peer');
 
 /**
  * Enables cross origin messages. You can optionally specify a list of allowed origins for security
+ *
  * @return {boolean}
  */
 os.xt.Peer.prototype.isCrossOrigin = function() {
@@ -235,6 +236,7 @@ os.xt.Peer.prototype.getAllowedOrigins = function() {
 
 /**
  * Set the list of allowed origins for cross-origin messaging
+ *
  * @param {?Array<!string>} value
  */
 os.xt.Peer.prototype.setAllowedOrigins = function(value) {
@@ -244,6 +246,7 @@ os.xt.Peer.prototype.setAllowedOrigins = function(value) {
 
 /**
  * Handles HTML5 web messages for cross-origin messaging
+ *
  * @param {MessageEvent} evt
  * @private
  */
@@ -273,6 +276,7 @@ os.xt.Peer.prototype.disableCrossOriginMessages = function() {
 
 /**
  * Check whether the given peer is master.
+ *
  * @param {!string} peerId the peer ID of interest
  * @param {!string} group optional group, if peer is not a Peer instance
  * @param {!Storage} storage the storage to examine
@@ -324,6 +328,7 @@ os.xt.Peer.getLastPing_ = function(group, peerId, storage) {
 /**
  * Cleans up a given group/peer by removing all that peer's information and messages.  If the given peer is master,
  * this method resets the master state as well.
+ *
  * @param {!string} group The group
  * @param {!string} id The peer ID
  * @param {!Storage} storage
@@ -348,6 +353,7 @@ os.xt.Peer.cleanupPeer_ = function(group, id, storage) {
 
 /**
  * Gets the peer ID
+ *
  * @return {string}
  */
 os.xt.Peer.prototype.getId = function() {
@@ -357,6 +363,7 @@ os.xt.Peer.prototype.getId = function() {
 
 /**
  * Sets the peer ID
+ *
  * @param {string} value The new ID
  */
 os.xt.Peer.prototype.setId = function(value) {
@@ -367,6 +374,7 @@ os.xt.Peer.prototype.setId = function(value) {
 
 /**
  * Gets the group to which this peer belongs
+ *
  * @return {string}
  */
 os.xt.Peer.prototype.getGroup = function() {
@@ -376,6 +384,7 @@ os.xt.Peer.prototype.getGroup = function() {
 
 /**
  * Sets the group to which this peer belongs
+ *
  * @param {string} value The new group
  */
 os.xt.Peer.prototype.setGroup = function(value) {
@@ -386,6 +395,7 @@ os.xt.Peer.prototype.setGroup = function(value) {
 
 /**
  * Gets the title
+ *
  * @return {string}
  */
 os.xt.Peer.prototype.getTitle = function() {
@@ -395,6 +405,7 @@ os.xt.Peer.prototype.getTitle = function() {
 
 /**
  * Sets the title
+ *
  * @param {string} value The new title
  */
 os.xt.Peer.prototype.setTitle = function(value) {
@@ -405,6 +416,7 @@ os.xt.Peer.prototype.setTitle = function(value) {
 
 /**
  * Gets the details
+ *
  * @return {string}
  */
 os.xt.Peer.prototype.getDetails = function() {
@@ -414,6 +426,7 @@ os.xt.Peer.prototype.getDetails = function() {
 
 /**
  * Sets the details
+ *
  * @param {string} value The new details
  */
 os.xt.Peer.prototype.setDetails = function(value) {
@@ -424,6 +437,7 @@ os.xt.Peer.prototype.setDetails = function(value) {
 
 /**
  * Adds a message handler to the peer
+ *
  * @param {os.xt.IMessageHandler} handler The message handler
  */
 os.xt.Peer.prototype.addHandler = function(handler) {
@@ -436,6 +450,7 @@ os.xt.Peer.prototype.addHandler = function(handler) {
 
 /**
  * Gets all supported message types
+ *
  * @return {!Array<string>}
  */
 os.xt.Peer.prototype.getTypes = function() {
@@ -493,6 +508,7 @@ os.xt.Peer.prototype.init = function() {
 
 /**
  * Processes messages already available on startup
+ *
  * @protected
  */
 os.xt.Peer.prototype.processInitialMessages = function() {
@@ -516,6 +532,7 @@ os.xt.Peer.prototype.processInitialMessages = function() {
 
 /**
  * Create send data
+ *
  * @param {string} type
  * @param {*} data
  * @return {!string}
@@ -527,6 +544,7 @@ os.xt.Peer.prepareSendData = function(type, data) {
 
 /**
  * Sends a message
+ *
  * @param {string} type The message type
  * @param {*} data The data to send
  * @param {string=} opt_to A specific peer ID to which to send the message
@@ -563,6 +581,7 @@ os.xt.Peer.prototype.send = function(type, data, opt_to) {
 
 /**
  * Check whether an XT peer exists for the given application peer ID.
+ *
  * @param {string} appId The application ID to check
  * @param {string=} opt_messageType An optional message type to further restrict the search for a supporting peer
  * @return {boolean} True if the given app ID exists in the peer list, false otherwise
@@ -616,6 +635,7 @@ os.xt.Peer.prototype.getMasterId_ = function() {
 
 /**
  * Compare the last ping time of the given peer ID in this peer's group to the PING_INTERVAL.
+ *
  * @param {!string} peerId the ID of another peer
  * @return {!boolean} true if the given peer's last ping is within PING_INTERVAL, false otherwise.
  * @private
@@ -629,6 +649,7 @@ os.xt.Peer.prototype.isPeerAlive_ = function(peerId) {
 
 /**
  * Performs the "ping" or "keep-alive" as the ping timer ticks.
+ *
  * @param {goog.events.Event=} opt_e The optional event
  * @private
  */
@@ -657,6 +678,7 @@ os.xt.Peer.prototype.onPing_ = function(opt_e) {
 
 /**
  * Clean up peers in this peer's group that are no longer alive.
+ *
  * @private
  */
 os.xt.Peer.prototype.buryDeadPeers_ = function() {
@@ -673,6 +695,7 @@ os.xt.Peer.prototype.buryDeadPeers_ = function() {
 
 /**
  * Remove messages from this group's public channel that have expired.
+ *
  * @private
  */
 os.xt.Peer.prototype.ageOffPublicMessages_ = function() {
@@ -694,6 +717,7 @@ os.xt.Peer.prototype.ageOffPublicMessages_ = function() {
 
 /**
  * Called when the former master is lost.  Starts a delay to run the routine which will identify a new master.
+ *
  * @private
  */
 os.xt.Peer.prototype.establishMaster_ = function() {
@@ -708,6 +732,7 @@ os.xt.Peer.prototype.establishMaster_ = function() {
 /**
  * Handler for the delay to establish master.  Inspects all remaining peers and identify the next master,
  * deterministically.  If this peer is it, take on the role of master.
+ *
  * @private
  */
 os.xt.Peer.prototype.doEstablishMaster_ = function() {
@@ -739,6 +764,7 @@ os.xt.Peer.prototype.isMaster = function() {
 
 /**
  * Become the master peer if the position is still available.
+ *
  * @private
  */
 os.xt.Peer.prototype.becomeMaster_ = function() {
@@ -754,6 +780,7 @@ os.xt.Peer.prototype.becomeMaster_ = function() {
 /**
  * Get all the peers in the current group. If the optional type parameter is included, only peers which
  * support that message type are returned.
+ *
  * @param {string=} opt_type The optional message type
  * @param {boolean=} opt_includeDead Whether or not to include dead peers in the list.  Defaults to false.
  * @return {!Array<!string>} The list of peer IDs
@@ -795,6 +822,7 @@ os.xt.Peer.prototype.getPeers = function(opt_type, opt_includeDead) {
 /**
  * Wait for a peer matching the specified peer ID to become available, optionally waiting for that peer to support the
  * given message type.
+ *
  * @param {!string} peerId the ID of the peer of interest
  * @param {?string=} opt_messageType the message type the peer of interest needs to support
  * @param {!number=} opt_timeout the number of milliseconds to wait for the peer
@@ -815,6 +843,7 @@ os.xt.Peer.prototype.waitForPeer = function(peerId, opt_messageType, opt_timeout
 
 /**
  * Mapping function to map a list of IDs to info objects
+ *
  * @param {string} id The peer ID
  * @param {number} i The index
  * @param {Array} arr The array
@@ -828,6 +857,7 @@ os.xt.Peer.prototype.mapIdToInfo_ = function(id, i, arr) {
 
 /**
  * This is the exact same thing as getPeers(), but returns full peer info objects.
+ *
  * @param {string=} opt_type The optional message type.
  * @return {Array<os.xt.PeerInfo>} The peer info list
  */
@@ -846,6 +876,7 @@ os.xt.Peer.notThese_ = ['ping', 'title', 'details', 'types'];
 
 /**
  * Handles storage events
+ *
  * @param {Event} event The storage event
  * @private
  */
@@ -880,6 +911,7 @@ os.xt.Peer.prototype.onStorage_ = function(event) {
 
 /**
  * Removes all entries for this peer from local storage
+ *
  * @param {*=} opt_e An optional event
  * @private
  */
@@ -912,6 +944,7 @@ os.xt.Peer.prototype.destroy = function() {
 
 /**
  * Handles messages sent from other peers or off of the public channel
+ *
  * @param {string} value The JSON of the message
  * @param {string} sender The sender ID
  * @return {boolean}
@@ -948,6 +981,7 @@ os.xt.Peer.prototype.handleMessage = function(value, sender) {
 /**
  * Iterate over the wait list to determine what peers have become available.  For peers that have become available,
  * callback the deferred objects.  For wait records that have timed out, errback the deferred objects.
+ *
  * @private
  */
 os.xt.Peer.prototype.processWaitList_ = function() {
@@ -985,6 +1019,7 @@ os.xt.Peer.prototype.processWaitList_ = function() {
 
 /**
  * A small structure that represents info about other peers
+ *
  * @param {string} group The group to which the peer belongs
  * @param {string} id The ID
  * @param {string=} opt_title The title
@@ -1026,6 +1061,7 @@ os.xt.PeerInfo = function(group, id, opt_title, opt_details, opt_types) {
 
 /**
  * Loads the specified peer info from local storage
+ *
  * @param {!string} group the peer group
  * @param {!string} id the peer ID
  * @param {!Storage} storage

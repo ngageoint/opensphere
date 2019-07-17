@@ -8,6 +8,7 @@ goog.require('plugin.im.action.feature.StyleAction');
 
 /**
  * Add feature style actions to the legend.
+ *
  * @param {!os.layer.Vector} layer The vector layer.
  * @param {!osx.legend.LegendOptions} options The legend options.
  */
@@ -40,6 +41,7 @@ plugin.im.action.feature.addToLegend = function(layer, options) {
 
 /**
  * Test if an entry contains actions that contribute to the legend.
+ *
  * @param {!os.im.action.FilterActionEntry} entry The entry.
  * @return {boolean} If the entry has actions that contribute to the legend.
  */
@@ -50,6 +52,7 @@ plugin.im.action.feature.hasLegendAction = function(entry) {
 
 /**
  * Test if an import action contributes to the legend.
+ *
  * @param {!os.im.action.IImportAction} action The action.
  * @return {boolean} If the action contributes to the legend.
  */

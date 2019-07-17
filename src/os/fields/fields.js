@@ -116,6 +116,7 @@ os.fields.DESC_REGEXP = /^desc(ription)?$/i;
 
 /**
  * Hide specific columns
+ *
  * @param {os.data.ColumnDefinition} colDef
  */
 os.fields.hideSpecialColumns = function(colDef) {
@@ -131,6 +132,7 @@ os.fields.hideSpecialColumns = function(colDef) {
 
 /**
  * mark a column as derived
+ *
  * @param {os.data.ColumnDefinition} colDef
  */
 os.fields.markDerived = function(colDef) {

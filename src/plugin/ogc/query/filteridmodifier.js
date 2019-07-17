@@ -6,6 +6,7 @@ goog.require('os.ogc.filter.ModifierConstants');
 
 /**
  * Modifier for adding WFS relation filters to OGC queries.
+ *
  * @param {Object} columnValueMap
  * @extends {os.net.ParamModifier}
  * @constructor

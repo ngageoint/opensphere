@@ -18,13 +18,14 @@ goog.require('plugin.im.action.feature.ui.ActionConfigCtrl');
 
 /**
  * Directive to configure a feature style action.
+ *
  * @return {angular.Directive}
  */
 plugin.im.action.feature.ui.styleConfigDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    template: '<div><vectorstylecontrols color="color" opacity="opacity" size="size" ' +
+    template: '<div><vectorstylecontrols color="color" opacity="opacity" size="size" line-dash="lineDash"' +
         'icon="icon" center-icon="centerIcon" icon-set="ctrl.iconSet" icon-src="ctrl.iconSrc" ' +
         'shape="shape" shapes="shapes" center-shape="centerShape" center-shapes="centerShapes" ' +
         'show-color-reset="true"></vectorstylecontrols>' +
@@ -46,6 +47,7 @@ os.ui.Module.directive(plugin.im.action.feature.StyleAction.CONFIG_UI,
 
 /**
  * Controller for setting a feature style.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {plugin.im.action.feature.ui.ActionConfigCtrl<plugin.im.action.feature.StyleAction>}
@@ -89,6 +91,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl = function($scope, $element) {
   $scope.$on('color.reset', this.onColorReset.bind(this));
   $scope.$on('opacity.slidestop', this.onOpacityChange.bind(this));
   $scope.$on('size.slidestop', this.onSizeChange.bind(this));
+  $scope.$on(os.ui.layer.VectorStyleControlsEventType.LINE_DASH_CHANGE, this.onLineDashChange.bind(this));
   $scope.$on(os.ui.icon.IconPickerEventType.CHANGE, this.onIconChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.SHAPE_CHANGE, this.onShapeChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.CENTER_SHAPE_CHANGE, this.onCenterShapeChange.bind(this));
@@ -116,6 +119,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.initialize = function() {
     os.style.setConfigColor(this.styleConfig, os.style.getConfigColor(this.styleConfig));
 
     this.scope['size'] = os.style.getConfigSize(this.styleConfig);
+    this.scope['lineDash'] = os.style.getConfigLineDash(this.styleConfig);
 
     this.scope['shape'] = this.styleConfig[os.style.StyleField.SHAPE] || os.style.DEFAULT_SHAPE;
     this.updateIcon_();
@@ -162,6 +166,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.saveAction = function() {
 
 /**
  * Handle color change.
+ *
  * @param {?angular.Scope.Event} event The Angular event.
  * @param {string|undefined} value The new color value.
  * @protected
@@ -191,6 +196,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onColorChange = function(e
 
 /**
  * Handle color reset.
+ *
  * @param {?angular.Scope.Event} event The Angular event.
  * @protected
  */
@@ -206,6 +212,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onColorReset = function(ev
 
 /**
  * Handle icon change.
+ *
  * @param {?angular.Scope.Event} event The Angular event.
  * @param {osx.icon.Icon} value The new value.
  * @protected
@@ -223,6 +230,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onIconChange = function(ev
 
 /**
  * Handle changes to opacity.
+ *
  * @param {?angular.Scope.Event} event The Angular event.
  * @param {number} value
  * @protected
@@ -240,6 +248,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onOpacityChange = function
 
 /**
  * Handle changes to size.
+ *
  * @param {?angular.Scope.Event} event The Angular event.
  * @param {number} value
  * @protected
@@ -256,7 +265,26 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onSizeChange = function(ev
 
 
 /**
+ * Handle changes to line dash.
+ *
+ * @param {?angular.Scope.Event} event The Angular event.
+ * @param {Array<number>} value
+ * @protected
+ */
+plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onLineDashChange = function(event, value) {
+  if (event) {
+    event.stopPropagation();
+  }
+
+  if (this.styleConfig && value != null) {
+    os.style.setConfigLineDash(this.styleConfig, value);
+  }
+};
+
+
+/**
  * Handle changes to the shape.
+ *
  * @param {?angular.Scope.Event} event The Angular event.
  * @param {string} value The new value.
  * @protected
@@ -276,6 +304,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onShapeChange = function(e
 
 /**
  * Handle changes to the shape.
+ *
  * @param {?angular.Scope.Event} event The Angular event.
  * @param {string} value The new value.
  * @protected
@@ -295,6 +324,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onCenterShapeChange = func
 
 /**
  * Update the displayed icon.
+ *
  * @private
  */
 plugin.im.action.feature.ui.StyleConfigCtrl.prototype.updateIcon_ = function() {
@@ -310,6 +340,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.updateIcon_ = function() {
 
 /**
  * Update the displayed icon.
+ *
  * @private
  */
 plugin.im.action.feature.ui.StyleConfigCtrl.prototype.updateCenterIcon_ = function() {
@@ -325,6 +356,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.updateCenterIcon_ = functi
 
 /**
  * When to show the icon rotation option
+ *
  * @return {boolean}
  * @export
  */
@@ -342,6 +374,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.showRotationOption = funct
 
 /**
  * Handle changes to the Show Rotation option.
+ *
  * @param {angular.Scope.Event} event
  * @param {boolean} value
  * @private
@@ -359,6 +392,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onShowRotationChange_ = fu
 
 /**
  * Handles column changes to the rotation
+ *
  * @param {angular.Scope.Event=} opt_event
  * @param {string=} opt_value
  * @private

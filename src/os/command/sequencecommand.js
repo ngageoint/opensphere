@@ -10,6 +10,7 @@ goog.require('os.command.State');
 
 /**
  * Runs a set of commands in sequence
+ *
  * @implements {os.command.ICommand}
  * @extends {os.command.AbstractCommandSet}
  * @constructor
@@ -30,6 +31,7 @@ os.command.SequenceCommand.prototype.current_ = -1;
 
 /**
  * Sets the set of commands
+ *
  * @override
  * @param {Array.<os.command.ICommand>} set The set of commands
  */
@@ -92,6 +94,7 @@ os.command.SequenceCommand.prototype.revert = function() {
 
 /**
  * Execute the sub-commands.
+ *
  * @return {boolean} true if all sub-commands return true, or the first
  *   async sub-command returns true, false otherwise
  * @private
@@ -148,6 +151,7 @@ os.command.SequenceCommand.prototype.execute_ = function() {
 
 /**
  * Handle command executed.
+ *
  * @private
  */
 os.command.SequenceCommand.prototype.onCommandExecuted_ = function() {
@@ -169,6 +173,7 @@ os.command.SequenceCommand.prototype.onCommandExecuted_ = function() {
 
 /**
  * Begin the revert event loop.
+ *
  * @return {boolean} true if successful, false if not
  * @private
  */
@@ -217,6 +222,7 @@ os.command.SequenceCommand.prototype.revert_ = function() {
 
 /**
  * Handle command reverted.
+ *
  * @private
  */
 os.command.SequenceCommand.prototype.onCommandReverted_ = function() {
@@ -239,6 +245,7 @@ os.command.SequenceCommand.prototype.onCommandReverted_ = function() {
 /**
  * Set the details message appropriately for the current command state and the state of
  * the currently running command.
+ *
  * @private
  */
 os.command.SequenceCommand.prototype.updateCurrentCommandDetails_ = function() {

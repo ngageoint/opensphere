@@ -6,6 +6,7 @@ goog.require('ol.interaction.MouseWheelZoom');
 
 /**
  * Adjusts the OpenLayers mouse wheel zoom interaction for OpenSphere.
+ *
  * @param {olx.interaction.MouseWheelZoomOptions=} opt_options Options.
  * @extends {ol.interaction.MouseWheelZoom}
  * @constructor
@@ -21,7 +22,7 @@ os.ui.ol.interaction.MouseWheelZoom = function(opt_options) {
   // disable animation by default
   options.duration = options.duration != null ? options.duration : 0;
 
-  os.ui.ol.interaction.MouseWheelZoom.base(this, 'constructor', opt_options);
+  os.ui.ol.interaction.MouseWheelZoom.base(this, 'constructor', options);
 
   // the default value feels sluggish. this was observed on macOS and may need to be fine tuned for other environments
   this.trackpadDeltaPerZoom_ = 100;

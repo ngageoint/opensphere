@@ -9,6 +9,7 @@ goog.require('os.ui.Module');
 
 /**
  * The import wizard time instant ui directive
+ *
  * @return {angular.Directive}
  */
 os.ui.wiz.step.timeInstantUIDirective = function() {
@@ -37,6 +38,7 @@ os.ui.Module.directive('timeinstantui', [os.ui.wiz.step.timeInstantUIDirective])
 
 /**
  * Controller for the import wizard time instant ui
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -144,14 +146,14 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.destroy_ = function() {
 os.ui.wiz.step.TimeInstantUICtrl.prototype.initialize_ = function() {
   if (this.model_['dateType'] == 'combined') {
     this['dateFormat'] = ol.array.includes(this['dtFormats'], this.model_['dateFormat']) ?
-        this.model_['dateFormat'] : 'Custom';
+      this.model_['dateFormat'] : 'Custom';
   } else {
     this['dateFormat'] = ol.array.includes(this['dFormats'], this.model_['dateFormat']) ?
-        this.model_['dateFormat'] : 'Custom';
+      this.model_['dateFormat'] : 'Custom';
 
     if (this.model_['dateType'] == 'separate') {
       this['timeFormat'] = ol.array.includes(this['tFormats'], this.model_['timeFormat']) ?
-          this.model_['timeFormat'] : 'Custom';
+        this.model_['timeFormat'] : 'Custom';
     }
   }
 
@@ -161,6 +163,7 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.initialize_ = function() {
 
 /**
  * Updates the sample field with the first row of the selected column(s).
+ *
  * @private
  */
 os.ui.wiz.step.TimeInstantUICtrl.prototype.updateSample_ = function() {
@@ -185,7 +188,7 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.updateSample_ = function() {
     if (this['sample'] == null) {
       // couldn't find either column
       this['sample'] = this.model_['dateType'] == 'separate' ? os.ui.wiz.step.TimeInstantUICtrl.NO_DATETIME :
-          os.ui.wiz.step.TimeInstantUICtrl.NO_DATE;
+        os.ui.wiz.step.TimeInstantUICtrl.NO_DATE;
     } else {
       this.updateResult_();
     }
@@ -197,6 +200,7 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.updateSample_ = function() {
 
 /**
  * Search preview data for the first non-empty field value.
+ *
  * @param {string} field
  * @return {string}
  * @private
@@ -215,6 +219,7 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.getPreviewField_ = function(field) {
 
 /**
  * Updates the result field if all columns have been selected and formats chosen.
+ *
  * @private
  */
 os.ui.wiz.step.TimeInstantUICtrl.prototype.updateResult_ = function() {
@@ -240,6 +245,7 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.updateResult_ = function() {
 
 /**
  * Handles user UI changes.
+ *
  * @export
  */
 os.ui.wiz.step.TimeInstantUICtrl.prototype.change = function() {
@@ -249,6 +255,7 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.change = function() {
 
 /**
  * Attempts to auto detect the format for the date field, falling back to Custom if none was detected.
+ *
  * @private
  */
 os.ui.wiz.step.TimeInstantUICtrl.prototype.autoDetectDate_ = function() {
@@ -276,6 +283,7 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.autoDetectDate_ = function() {
 
 /**
  * Attempts to auto detect the format for the time field, falling back to Custom if none was detected.
+ *
  * @private
  */
 os.ui.wiz.step.TimeInstantUICtrl.prototype.autoDetectTime_ = function() {
@@ -302,6 +310,7 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.autoDetectTime_ = function() {
 
 /**
  * Handles user UI changes to the date type.
+ *
  * @export
  */
 os.ui.wiz.step.TimeInstantUICtrl.prototype.onDateType = function() {
@@ -315,6 +324,7 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.onDateType = function() {
 
 /**
  * Handles user UI changes to the date column.
+ *
  * @export
  */
 os.ui.wiz.step.TimeInstantUICtrl.prototype.onDateColumn = function() {
@@ -325,6 +335,7 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.onDateColumn = function() {
 
 /**
  * Handles user UI changes to the time column.
+ *
  * @export
  */
 os.ui.wiz.step.TimeInstantUICtrl.prototype.onTimeColumn = function() {
@@ -335,6 +346,7 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.onTimeColumn = function() {
 
 /**
  * Handles user UI changes to the date format picker.
+ *
  * @export
  */
 os.ui.wiz.step.TimeInstantUICtrl.prototype.onDateFormat = function() {
@@ -347,6 +359,7 @@ os.ui.wiz.step.TimeInstantUICtrl.prototype.onDateFormat = function() {
 
 /**
  * Handles user UI changes to the time format picker.
+ *
  * @export
  */
 os.ui.wiz.step.TimeInstantUICtrl.prototype.onTimeFormat = function() {

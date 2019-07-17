@@ -58,6 +58,69 @@ os.style.DEFAULT_STROKE_WIDTH = 3;
 
 
 /**
+ * The default style fields to check for line dashes.
+ * @type {!Array<string>}
+ * @const
+ */
+os.style.DEFAULT_LINE_DASH_STYLE_FIELDS = [
+  os.style.StyleField.STROKE
+];
+
+
+/**
+ * @typedef {{
+ *   id: number,
+ *   name: string,
+ *   pattern: !Array<number>
+ * }}
+ */
+os.style.styleLineDashOption;
+
+
+/**
+ * Line dash configurations
+ * Patterns based on 16 bit number to make it look consistent between map engines
+ * @type {!Array<!os.style.styleLineDashOption>}
+ * @const
+ */
+os.style.LINE_STYLE_OPTIONS = [
+  {
+    id: 0,
+    name: '\u2501\u2501\u2501\u2501\u2501\u2501\u2578',
+    pattern: []
+  }, {
+    id: 1,
+    name: '\u2501\u2009\u2501\u2009\u2501\u2009\u2501\u2009\u2501',
+    pattern: [12, 4]
+  }, {
+    id: 2,
+    name: '\u2501\u2002\u2501\u2002\u2501\u2002\u2501',
+    pattern: [8, 8]
+  }, {
+    id: 3,
+    name: '\u254D\u254D\u254D\u254D\u254D\u254D\u2578',
+    pattern: [4, 4, 4, 4]
+  }, {
+    id: 4,
+    name: '\u2501\u2003\u2501\u2003\u2501',
+    pattern: [4, 12]
+  }, {
+    id: 5,
+    name: '\u2578\u2578\u2578\u2578\u2578\u2578\u2578',
+    pattern: [2, 6, 2, 6]
+  }, {
+    id: 6,
+    name: '\u2501\u257A\u2008\u2501\u257A\u2008\u2501\u257A',
+    pattern: [5, 5, 1, 5]
+  }, {
+    id: 7,
+    name: '\u2501\u2505\u2501\u2505\u2501\u2505\u2578',
+    pattern: [7, 4, 1, 4]
+  }
+];
+
+
+/**
  * @type {number}
  * @const
  */
@@ -418,6 +481,7 @@ os.style.DEFAULT_COLOR_STYLE_FIELDS = [
 
 /**
  * Creates an override config for stroke/fill color.
+ *
  * @param {string} color The color
  * @return {Object<string, *>} The style config
  */
@@ -477,6 +541,7 @@ os.style.STYLE_COLOR_FIELDS_ = ['image', 'fill', 'stroke'];
 
 /**
  * Gets the first color value defined on the config
+ *
  * @param {Object} config The configuration to search for a color
  * @param {boolean=} opt_array If the color should be returned as an rgb array
  * @param {(os.style.StyleField|string)=} opt_colorFieldHint A hint to where to find the color to use.
@@ -488,10 +553,10 @@ os.style.getConfigColor = function(config, opt_array, opt_colorFieldHint) {
         config[opt_colorFieldHint] &&
         config[opt_colorFieldHint][os.style.StyleField.COLOR] != null) {
       return opt_array ? os.color.toRgbArray(config[opt_colorFieldHint][os.style.StyleField.COLOR]) :
-          config[opt_colorFieldHint][os.style.StyleField.COLOR];
+        config[opt_colorFieldHint][os.style.StyleField.COLOR];
     } else if (config[os.style.StyleField.COLOR] != null) {
       return opt_array ? os.color.toRgbArray(config[os.style.StyleField.COLOR]) :
-          config[os.style.StyleField.COLOR];
+        config[os.style.StyleField.COLOR];
     } else {
       for (var i = 0; i < os.style.STYLE_COLOR_FIELDS_.length; i++) {
         var key = os.style.STYLE_COLOR_FIELDS_[i];
@@ -513,6 +578,7 @@ os.style.getConfigColor = function(config, opt_array, opt_colorFieldHint) {
 /**
  * Sets all color values on the config. Colors are always set as an rgba string to minimize conversion both in
  * opensphere style functions and OL3 rendering functions.
+ *
  * @param {Object} config
  * @param {Array<number>|string} color
  * @param {Array<string>=} opt_includeStyleFields optional array of style fields to color,
@@ -522,15 +588,17 @@ os.style.setConfigColor = function(config, color, opt_includeStyleFields) {
   if (config) {
     var styleFields = opt_includeStyleFields || os.style.DEFAULT_COLOR_STYLE_FIELDS;
     for (var key in config) {
-      // color can exist in the image, fill, or stroke styles. in the case of icons, there may not be a color property
-      // but we still need to ensure the color is set correctly. set the color if a key that may contain a color is
-      // encountered.
-      if (styleFields.indexOf(key) !== -1) {
-        config[key][os.style.StyleField.COLOR] = color;
-      }
+      if (config[key]) {
+        // color can exist in the image, fill, or stroke styles. in the case of icons, there may not be a color property
+        // but we still need to ensure the color is set correctly. set the color if a key that may contain a color is
+        // encountered.
+        if (styleFields.indexOf(key) !== -1) {
+          config[key][os.style.StyleField.COLOR] = color;
+        }
 
-      if (!os.object.isPrimitive(config[key])) {
-        os.style.setConfigColor(config[key], color, opt_includeStyleFields);
+        if (!os.object.isPrimitive(config[key])) {
+          os.style.setConfigColor(config[key], color, opt_includeStyleFields);
+        }
       }
     }
   }
@@ -539,6 +607,7 @@ os.style.setConfigColor = function(config, color, opt_includeStyleFields) {
 
 /**
  * Gets the icon used in a config.
+ *
  * @param {Object|undefined} config The style config.
  * @return {?osx.icon.Icon} The icon or null if none was found.
  */
@@ -560,6 +629,7 @@ os.style.getConfigIcon = function(config) {
 /**
  * Sets all color values on the config. Colors are always set as an rgba string to minimize conversion both in
  * Open Sphere style functions and OL3 rendering functions.
+ *
  * @param {Object} config
  * @param {?osx.icon.Icon} icon
  */
@@ -576,6 +646,7 @@ os.style.setConfigIcon = function(config, icon) {
 /**
  * Sets the rotation of an icon
  * Open Sphere style functions and OL3 rendering functions.
+ *
  * @param {Object} config
  * @param {boolean} showRotation
  * @param {number} rotateAmount
@@ -593,6 +664,7 @@ os.style.setConfigIconRotation = function(config, showRotation, rotateAmount) {
 /**
  * Sets the rotation of an icon from a config object
  * Open Sphere style functions and OL3 rendering functions.
+ *
  * @param {Object} config
  * @param {Object} origin
  * @param {!ol.Feature} feature The feature
@@ -610,6 +682,7 @@ os.style.setConfigIconRotationFromObject = function(config, origin, feature) {
 
 /**
  * Gets the icon rotation column used in a config.
+ *
  * @param {Object|undefined} config The style config.
  * @return {number} The icon or null if none was found.
  */
@@ -628,6 +701,7 @@ os.style.getConfigIconRotation = function(config) {
 /**
  * Sets all color opacity values on the config. Colors are always set as an rgba string to minimize conversion both in
  * opensphere style functions and OL3 rendering functions.
+ *
  * @param {Object} config The style config.
  * @param {number} opacity The opacity value, from 0 to 1.
  * @param {boolean=} opt_multiply If the opacity should be multiplied with the original.
@@ -637,24 +711,26 @@ os.style.setConfigOpacityColor = function(config, opacity, opt_multiply) {
     var styleFields = os.style.DEFAULT_COLOR_STYLE_FIELDS;
     var colorArr;
     for (var key in config) {
-      // color can exist in the image, fill, or stroke styles. in the case of icons, there may not be a color property
-      // but we still need to ensure the color is set correctly. set the color if a key that may contain a color is
-      // encountered.
-      if (styleFields.indexOf(key) !== -1) {
-        colorArr = os.color.toRgbArray(config[key][os.style.StyleField.COLOR]);
-        if (colorArr) {
-          if (opt_multiply) {
-            colorArr[3] *= opacity;
-          } else {
-            colorArr[3] = opacity;
+      if (config[key]) {
+        // color can exist in the image, fill, or stroke styles. in the case of icons, there may not be a color property
+        // but we still need to ensure the color is set correctly. set the color if a key that may contain a color is
+        // encountered.
+        if (styleFields.indexOf(key) !== -1) {
+          colorArr = os.color.toRgbArray(config[key][os.style.StyleField.COLOR]);
+          if (colorArr) {
+            if (opt_multiply) {
+              colorArr[3] *= opacity;
+            } else {
+              colorArr[3] = opacity;
+            }
+
+            config[key][os.style.StyleField.COLOR] = os.style.toRgbaString(colorArr);
           }
-
-          config[key][os.style.StyleField.COLOR] = os.style.toRgbaString(colorArr);
         }
-      }
 
-      if (!os.object.isPrimitive(config[key])) {
-        os.style.setConfigOpacityColor(config[key], opacity, opt_multiply);
+        if (!os.object.isPrimitive(config[key])) {
+          os.style.setConfigOpacityColor(config[key], opacity, opt_multiply);
+        }
       }
     }
   }
@@ -664,6 +740,7 @@ os.style.setConfigOpacityColor = function(config, opacity, opt_multiply) {
 /**
  * Gets first color opacity values on the config. Colors are always set as an rgba string to minimize conversion both in
  * opensphere style functions and OL3 rendering functions.
+ *
  * @param {Object} config The style config.
  * @return {number} The opacity value, from 0 to 1.
  */
@@ -672,18 +749,20 @@ os.style.getConfigOpacityColor = function(config) {
     var styleFields = os.style.DEFAULT_COLOR_STYLE_FIELDS;
     var colorArr;
     for (var key in config) {
-      // color can exist in the image, fill, or stroke styles. in the case of icons, there may not be a color property
-      // but we still need to ensure the color is set correctly. set the color if a key that may contain a color is
-      // encountered.
-      if (styleFields.indexOf(key) !== -1) {
-        colorArr = os.color.toRgbArray(config[key][os.style.StyleField.COLOR]);
-        if (colorArr) {
-          return colorArr[3];
+      if (config[key]) {
+        // color can exist in the image, fill, or stroke styles. in the case of icons, there may not be a color property
+        // but we still need to ensure the color is set correctly. set the color if a key that may contain a color is
+        // encountered.
+        if (styleFields.indexOf(key) !== -1) {
+          colorArr = os.color.toRgbArray(config[key][os.style.StyleField.COLOR]);
+          if (colorArr) {
+            return colorArr[3];
+          }
         }
-      }
 
-      if (!os.object.isPrimitive(config[key])) {
-        return os.style.getConfigOpacityColor(config[key]);
+        if (!os.object.isPrimitive(config[key])) {
+          return os.style.getConfigOpacityColor(config[key]);
+        }
       }
     }
   }
@@ -693,6 +772,7 @@ os.style.getConfigOpacityColor = function(config) {
 
 /**
  * Gets the first size value defined on the config
+ *
  * @param {Object} config
  * @return {number|undefined} The size
  */
@@ -761,6 +841,7 @@ os.style.setConfigSize = function(config, size) {
 
 /**
  * Merge sizes from two style configs into the target config.
+ *
  * @param {Object} featureConfig The feature config
  * @param {Object} layerConfig The layer config
  * @param {number=} opt_default The default size
@@ -785,7 +866,79 @@ os.style.getMergedSize = function(featureConfig, layerConfig, opt_default) {
 
 
 /**
+ * Looks up a line style from a dash pattern
+ *
+ * @param {Array<number>|undefined} pattern
+ * @return {os.style.styleLineDashOption}
+ */
+os.style.dashPatternToOptions = function(pattern) {
+  if (Array.isArray(pattern)) {
+    for (var i = 0; i < os.style.LINE_STYLE_OPTIONS.length; i++) {
+      var styleLineDashOption = /** @type {os.style.styleLineDashOption} */ (os.style.LINE_STYLE_OPTIONS[i]);
+      if (goog.array.equals(styleLineDashOption.pattern, pattern)) {
+        return styleLineDashOption;
+      }
+    }
+  }
+  return /** @type {os.style.styleLineDashOption} */ (os.style.LINE_STYLE_OPTIONS[0]);
+};
+
+
+/**
+ * @param {Object} config
+ * @param {(os.style.StyleField|string)=} opt_lineDashFieldHint A hint to where to find the dash to use.
+ * @return {Array<number>|undefined} The line dash or null if none was found
+ */
+os.style.getConfigLineDash = function(config, opt_lineDashFieldHint) {
+  if (config) {
+    if (opt_lineDashFieldHint &&
+        config[opt_lineDashFieldHint] &&
+        config[opt_lineDashFieldHint][os.style.StyleField.LINE_DASH] != null) {
+      return config[opt_lineDashFieldHint][os.style.StyleField.LINE_DASH];
+    } else if (config[os.style.StyleField.LINE_DASH] != null) {
+      return config[os.style.StyleField.LINE_DASH];
+    } else {
+      var key = os.style.StyleField.STROKE;
+      if (!os.object.isPrimitive(config[key])) {
+        var result = os.style.getConfigLineDash(config[key]);
+        if (result) {
+          return result;
+        }
+      }
+    }
+  }
+
+  return undefined;
+};
+
+
+/**
+ * Sets all line dash values on the config.
+ *
+ * @param {Object} config
+ * @param {Array<number>} lineDash
+ * @param {Array<string>=} opt_includeLineDashFields optional array of style fields to line dash,
+ *                                                e.g. os.style.StyleField.IMAGE.
+ */
+os.style.setConfigLineDash = function(config, lineDash, opt_includeLineDashFields) {
+  if (config) {
+    var lineDashFields = opt_includeLineDashFields || os.style.DEFAULT_LINE_DASH_STYLE_FIELDS;
+    for (var key in config) {
+      if (lineDashFields.indexOf(key) !== -1) {
+        config[key][os.style.StyleField.LINE_DASH] = lineDash;
+      }
+
+      if (!os.object.isPrimitive(config[key])) {
+        os.style.setConfigLineDash(config[key], lineDash, opt_includeLineDashFields);
+      }
+    }
+  }
+};
+
+
+/**
  * Convert a vector size to an icon scale.
+ *
  * @param {number} size The vector size value
  * @return {number} The icon scale value
  */
@@ -796,6 +949,7 @@ os.style.sizeToScale = function(size) {
 
 /**
  * Convert an icon scale value to a vector size.
+ *
  * @param {number} scale The icon scale value
  * @return {number} The vector size value
  */
@@ -806,6 +960,7 @@ os.style.scaleToSize = function(scale) {
 
 /**
  * Get the base style configuration for a feature.
+ *
  * @param {!ol.Feature} feature The feature to update.
  * @param {Object=} opt_layerConfig The layer config.
  * @return {!Object} The base style configuration.
@@ -821,6 +976,7 @@ os.style.getBaseFeatureConfig = function(feature, opt_layerConfig) {
 
 /**
  * Update the style on a feature.
+ *
  * @param {!ol.Feature} feature The feature to update
  * @param {os.source.Vector=} opt_source The source containing the feature
  * @param {(Array<ol.style.Style>|ol.style.Style)=} opt_style The style to use
@@ -846,6 +1002,7 @@ os.style.setFeatureStyle = function(feature, opt_source, opt_style) {
 
 /**
  * Update the style on an array of features.
+ *
  * @param {Array<!ol.Feature>} features The features to update
  * @param {os.source.Vector=} opt_source The source containing the features
  * @suppress {accessControls} To allow direct access to feature metadata.
@@ -867,6 +1024,7 @@ os.style.setFeaturesStyle = function(features, opt_source) {
 
 /**
  * Gets the layer config for a feature.
+ *
  * @param {!ol.Feature} feature The feature
  * @param {os.source.Vector=} opt_source The source containing the feature
  * @return {Object|undefined}
@@ -929,6 +1087,7 @@ os.style.getLayerConfig = function(feature, opt_source) {
 
 /**
  * Check if a config contains an icon style
+ *
  * @param {Object} config The config object
  * @return {boolean}
  */
@@ -939,6 +1098,7 @@ os.style.isIconConfig = function(config) {
 
 /**
  * Combines all applicable style configs for a feature.
+ *
  * @param {!ol.Feature} feature The feature
  * @param {Object} baseConfig Base configuration for the feature
  * @param {Object=} opt_layerConfig Layer configuration for the feature
@@ -980,7 +1140,7 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
           opt_layerConfig[os.style.StyleField.IMAGE], os.style.DEFAULT_FEATURE_SIZE);
       imageConfig['radius'] = mergedSize;
       imageConfig['scale'] = Math.max(os.style.sizeToScale(mergedSize), 0.01);
-    } else if (opt_layerConfig[os.style.StyleField.IMAGE]) {
+    } else if (imageConfig !== null && opt_layerConfig[os.style.StyleField.IMAGE]) {
       // ensure the feature has an image config
       featureConfig[os.style.StyleField.IMAGE] = {};
       os.style.mergeConfig(opt_layerConfig[os.style.StyleField.IMAGE],
@@ -1002,7 +1162,7 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
       var mergedWidth = os.style.getMergedSize(styleOverride[os.style.StyleField.STROKE],
           opt_layerConfig[os.style.StyleField.STROKE], os.style.DEFAULT_STROKE_WIDTH);
       strokeConfig['width'] = Math.max(mergedWidth, 1);
-    } else if (opt_layerConfig[os.style.StyleField.STROKE]) {
+    } else if (strokeConfig !== null && opt_layerConfig[os.style.StyleField.STROKE]) {
       // ensure the feature has a stroke config
       featureConfig[os.style.StyleField.STROKE] = {};
       os.style.mergeConfig(opt_layerConfig[os.style.StyleField.STROKE],
@@ -1029,6 +1189,7 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
 
 /**
  * Verify appropriate geometries in a config object exist on a feature.
+ *
  * @param {!ol.Feature} feature The feature.
  * @param {!Object} config The config object.
  * @param {Object=} opt_layerConfig The layerConfig object.
@@ -1070,6 +1231,7 @@ os.style.verifyGeometries = function(feature, config, opt_layerConfig) {
 
 /**
  * Creates a style from the provided feature.
+ *
  * @param {ol.Feature} feature The feature
  * @param {Object} baseConfig Base configuration for the feature
  * @param {Object=} opt_layerConfig Layer configuration for the feature
@@ -1130,7 +1292,7 @@ os.style.createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
 
           var color = os.style.toRgbaString(os.style.getConfigColor(featureConfig) || os.style.DEFAULT_LAYER_COLOR);
           var size = iconConfig['scale'] != null ? os.style.scaleToSize(iconConfig['scale']) :
-              os.style.DEFAULT_FEATURE_SIZE;
+            os.style.DEFAULT_FEATURE_SIZE;
 
           var newImageConfig = {
             'radius': size,
@@ -1251,9 +1413,13 @@ os.style.createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
 os.style.mergeConfig = function(from, to) {
   for (var key in from) {
     var fval = from[key];
+    if (fval === os.object.IGNORE_VAL) {
+      continue;
+    }
+
     if (fval && typeof fval == 'object' && !(typeof fval.length == 'number')) {
       // clone objects into the target
-      if (!(key in to)) {
+      if (!(key in to) || to[key] == null) {
         to[key] = {};
       }
 
@@ -1267,6 +1433,7 @@ os.style.mergeConfig = function(from, to) {
 
 /**
  * Notify that the layer style changed and should be updated.
+ *
  * @param {ol.layer.Layer} layer The layer
  * @param {Array<ol.Feature>=} opt_features The features that changed
  * @param {string=} opt_type The style event type
@@ -1286,6 +1453,7 @@ os.style.notifyStyleChange = function(layer, opt_features, opt_type) {
 
 /**
  * Check whether this style config object has the labels config in it.
+ *
  * @param {Object} configEntry Style config object to query
  * @return {boolean} True if the config object contains the labels
  */

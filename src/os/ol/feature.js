@@ -28,6 +28,7 @@ os.ol.feature.GEOMETRIES = {
 
 /**
  * Clones a feature. This avoids copying style information since we handle styles very differently than base OL3.
+ *
  * @param {!ol.Feature} feature The feature to clone
  * @param {Array<string>=} opt_propertyKeys Keys of properties to copy from the original feature
  * @return {!ol.Feature} The cloned feature
@@ -61,6 +62,7 @@ os.ol.feature.clone = function(feature, opt_propertyKeys) {
 /**
  * Clones a geometry, verifying it's created in the current window context. This will ensure OL3's instanceof assertions
  * on the geometry do not fail.
+ *
  * @param {T} geometry The geometry to clone
  * @return {T}
  * @template T

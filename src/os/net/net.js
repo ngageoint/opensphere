@@ -2,11 +2,22 @@ goog.provide('os.net');
 goog.provide('os.net.CrossOrigin');
 
 goog.require('goog.Uri');
+goog.require('goog.Uri.QueryData');
 goog.require('goog.array');
 goog.require('os.net.ExtDomainHandler');
 goog.require('os.net.LocalFileHandler');
 goog.require('os.net.ProxyHandler');
 goog.require('os.net.SameDomainHandler');
+goog.require('os.registerClass');
+
+
+/**
+ * @type {string}
+ */
+goog.Uri.QueryData.NAME = 'goog.Uri.QueryData';
+
+// register {@link goog.Uri.QueryData} to allow type checking QueryData objects created in the external window
+os.registerClass(goog.Uri.QueryData.NAME, goog.Uri.QueryData);
 
 
 /**
@@ -63,6 +74,7 @@ os.net.addDefaultHandlers = function() {
 
 /**
  * Check if a crossOrigin value is valid.
+ *
  * @param {*} crossOrigin The value to check
  * @return {boolean} If the value is a valid crossOrigin
  */
@@ -208,6 +220,7 @@ os.net.loadTrustedUris = function() {
 
 /**
  * If content from a URI should be trusted for display in the DOM.
+ *
  * @param {goog.Uri|string|undefined} uri The uri.
  * @return {boolean} If content from the URI should be trusted.
  */
@@ -228,6 +241,7 @@ os.net.isTrustedUri = function(uri) {
 
 /**
  * Adds a trusted URI to the cache (does not save it to settings).
+ *
  * @param {string} uri The uri.
  */
 os.net.addTrustedUri = function(uri) {
@@ -237,6 +251,7 @@ os.net.addTrustedUri = function(uri) {
 
 /**
  * Add a URI to the trust cache and to the user's saved trusted URIs.
+ *
  * @param {goog.Uri|string} uri The uri.
  */
 os.net.registerTrustedUri = function(uri) {
@@ -256,6 +271,7 @@ os.net.registerTrustedUri = function(uri) {
 
 /**
  * If the browser supports sending a beacon in a beforeunload handler.
+ *
  * @return {boolean}
  */
 os.net.supportsBeacon = function() {
@@ -265,6 +281,7 @@ os.net.supportsBeacon = function() {
 
 /**
  * If the browser supports sending a beacon in a beforeunload handler.
+ *
  * @param {string} url The URL to send to
  * @param {ArrayBufferView|Blob|FormData|null|string|undefined} data The data to send
  * @param {string=} opt_contentType The content type
@@ -281,4 +298,26 @@ os.net.sendBeacon = function(url, data, opt_contentType) {
       console.log('failed sending beacon', e);
     }
   }
+};
+
+
+/**
+ * Gets a query data object for a set of params.
+ *
+ * @param {string|goog.Uri.QueryData|Object|undefined} params The params.
+ * @return {!goog.Uri.QueryData} The query data.
+ */
+os.net.paramsToQueryData = function(params) {
+  var qd;
+
+  if (typeof params === 'string') {
+    qd = new goog.Uri.QueryData(params);
+  } else if (os.instanceOf(params, goog.Uri.QueryData.NAME)) {
+    qd = /** @type {goog.Uri.QueryData} */ (params);
+  } else {
+    // create a new one from the object or an empty one
+    qd = goog.isObject(params) ? goog.Uri.QueryData.createFromMap(params) : null;
+  }
+
+  return qd || new goog.Uri.QueryData();
 };

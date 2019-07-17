@@ -8,6 +8,7 @@ goog.require('os.ui.window');
 
 /**
  * The KML import directive
+ *
  * @return {angular.Directive}
  */
 os.ui.file.anyTypeImportDirective = function() {
@@ -31,6 +32,7 @@ os.ui.Module.directive('anytypeimport', [os.ui.file.anyTypeImportDirective]);
 
 /**
  * Controller for the KML import dialog
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -67,6 +69,7 @@ os.ui.file.AnyTypeImportCtrl = function($scope, $element) {
 
 /**
  * Open the correct importer
+ *
  * @export
  */
 os.ui.file.AnyTypeImportCtrl.prototype.accept = function() {
@@ -83,6 +86,7 @@ os.ui.file.AnyTypeImportCtrl.prototype.accept = function() {
 
 /**
  * Open the correct importer
+ *
  * @export
  */
 os.ui.file.AnyTypeImportCtrl.prototype.close = function() {

@@ -8,6 +8,7 @@ goog.require('os.ui.file.exportDialogDirective');
 
 /**
  * The areaexport directive
+ *
  * @return {angular.Directive}
  */
 os.ui.ex.areaExportDirective = function() {
@@ -26,6 +27,7 @@ os.ui.Module.directive('areaexport', [os.ui.ex.areaExportDirective]);
 
 /**
  * Controller function for the areaexport directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -57,6 +59,7 @@ goog.inherits(os.ui.ex.AreaExportCtrl, os.ui.file.ExportDialogCtrl);
 
 /**
  * Starts the export process for the provided areas.
+ *
  * @param {Array<ol.Feature>} areas
  */
 os.ui.ex.AreaExportCtrl.start = function(areas) {

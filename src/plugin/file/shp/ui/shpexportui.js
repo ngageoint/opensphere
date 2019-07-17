@@ -6,6 +6,7 @@ goog.require('os.ui.Module');
 
 /**
  * The shpexport directive
+ *
  * @return {angular.Directive}
  */
 plugin.file.shp.ui.shpExportDirective = function() {
@@ -30,6 +31,7 @@ os.ui.Module.directive('shpexport', [plugin.file.shp.ui.shpExportDirective]);
 
 /**
  * Controller function for the shpexport directive
+ *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
@@ -61,6 +63,7 @@ plugin.file.shp.ui.SHPExportCtrl = function($scope) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 plugin.file.shp.ui.SHPExportCtrl.prototype.destroy_ = function() {
@@ -71,6 +74,7 @@ plugin.file.shp.ui.SHPExportCtrl.prototype.destroy_ = function() {
 
 /**
  * Updates the SHP exporter with the current UI configuration.
+ *
  * @private
  */
 plugin.file.shp.ui.SHPExportCtrl.prototype.updateExporter_ = function() {

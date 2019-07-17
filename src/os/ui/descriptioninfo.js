@@ -19,6 +19,7 @@ goog.require('os.ui.window');
 
 /**
  * The descriptioninfo directive
+ *
  * @return {angular.Directive}
  */
 os.ui.descriptionInfoDirective = function() {
@@ -44,6 +45,7 @@ os.ui.Module.directive('descriptioninfo', [os.ui.descriptionInfoDirective]);
 
 /**
  * Controller function for the descriptioninfo directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -82,6 +84,7 @@ os.ui.DescriptionInfoCtrl = function($scope, $element) {
 
 /**
  * Clean up.
+ *
  * @private
  */
 os.ui.DescriptionInfoCtrl.prototype.destroy_ = function() {
@@ -92,6 +95,7 @@ os.ui.DescriptionInfoCtrl.prototype.destroy_ = function() {
 
 /**
  * Launches a feature info window for the provided feature.
+ *
  * @param {!string} id The id to use for the window.
  * @param {!string} description The description string to display.
  * @param {string=} opt_titleDetail Title of the containing layer
@@ -126,7 +130,8 @@ os.ui.launchDescriptionInfo = function(id, description, opt_titleDetail) {
       'height': '600',
       'min-height': '600',
       'max-height': '600',
-      'show-close': 'true'
+      'show-close': 'true',
+      'data-testid': 'descriptioninfo'
     };
 
     var template = '<descriptioninfo description="description"></descriptioninfo>';
@@ -138,6 +143,7 @@ goog.exportSymbol('os.ui.launchDescriptionInfo', os.ui.launchDescriptionInfo);
 
 /**
  * Formats the source column
+ *
  * @param {number} row The row number
  * @param {number} cell The cell number in the row
  * @param {*} value The value

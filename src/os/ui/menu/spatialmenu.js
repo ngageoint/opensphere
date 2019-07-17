@@ -25,6 +25,7 @@ goog.require('os.ui.query.cmd.AreaRemove');
 
 /**
  * Spatial menu.
+ *
  * @param {!os.ui.menu.MenuItem<T>} root The menu item data
  * @extends {os.ui.menu.Menu<T>}
  * @constructor
@@ -239,13 +240,6 @@ os.ui.menu.spatial.setup = function() {
           sort: 40,
           beforeRender: os.ui.menu.spatial.visibleIfShown
         }, {
-          label: 'Export...',
-          eventType: os.action.EventType.EXPORT,
-          tooltip: 'Export the area',
-          icons: ['<i class="fa fa-fw fa-download"></i>'],
-          sort: 50,
-          beforeRender: os.ui.menu.spatial.visibleIfInAreaManager
-        }, {
           label: 'Merge...',
           eventType: os.action.EventType.MERGE_AREAS,
           tooltip: 'Merge selected areas into a new area',
@@ -258,6 +252,13 @@ os.ui.menu.spatial.setup = function() {
           tooltip: 'Remove the area',
           icons: ['<i class="fa fa-fw fa-times"></i>'],
           sort: 70,
+          beforeRender: os.ui.menu.spatial.visibleIfInAreaManager
+        }, {
+          label: 'Export...',
+          eventType: os.action.EventType.EXPORT,
+          tooltip: 'Export the area',
+          icons: ['<i class="fa fa-fw fa-download"></i>'],
+          sort: 80,
           beforeRender: os.ui.menu.spatial.visibleIfInAreaManager
         }]
       }]
@@ -293,6 +294,7 @@ os.ui.menu.spatial.dispose = function() {
 
 /**
  * Get geometries from the menu context object(s).
+ *
  * @param {Object|undefined} context The menu context.
  * @return {!Array<!ol.geom.Geometry>}
  */
@@ -322,6 +324,7 @@ os.ui.menu.spatial.getGeometriesFromContext = function(context) {
 
 /**
  * Get features from the menu context object(s).
+ *
  * @param {Object|undefined} context The menu context.
  * @return {!Array<ol.Feature>}
  */
@@ -343,6 +346,7 @@ os.ui.menu.spatial.getFeaturesFromContext = function(context) {
 
 /**
  * Test if all features are in the area manager.
+ *
  * @param {!Array<ol.Feature>} features The features
  * @return {boolean} If all features are in the area manager
  */
@@ -367,6 +371,7 @@ os.ui.menu.spatial.featuresInAreaManager = function(features) {
 
 /**
  * If the context has multiple items.
+ *
  * @param {Object|undefined} context The menu context.
  * @return {boolean}
  */
@@ -377,6 +382,7 @@ os.ui.menu.spatial.hasMultiple = function(context) {
 
 /**
  * If the context has a single item.
+ *
  * @param {Object|undefined} context The menu context.
  * @return {boolean}
  */
@@ -387,6 +393,7 @@ os.ui.menu.spatial.hasSingle = function(context) {
 
 /**
  * If all items in the context are in the area manager.
+ *
  * @param {Object|undefined} context The menu context.
  * @return {boolean}
  */
@@ -402,6 +409,7 @@ os.ui.menu.spatial.inAreaManager = function(context) {
 
 /**
  * Test if all objects in the context have polygonal geometries.
+ *
  * @param {Object|undefined} context The menu context.
  * @return {boolean} If all objects have a polygonal geometry.
  */
@@ -423,6 +431,7 @@ os.ui.menu.spatial.isPolygonal = function(context) {
 
 /**
  * Shows a menu item if the context has multiple items.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -433,6 +442,7 @@ os.ui.menu.spatial.visibleIfHasMultiple = function(context) {
 
 /**
  * Shows a menu item if the context has multiple items.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -443,6 +453,7 @@ os.ui.menu.spatial.visibleIfMultiplePolygonal = function(context) {
 
 /**
  * Shows a menu item if the context is polygonal.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -453,6 +464,7 @@ os.ui.menu.spatial.visibleIfPolygonal = function(context) {
 
 /**
  * Shows a menu item if the context is in a layer.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -502,6 +514,7 @@ os.ui.menu.spatial.removeItems = function(evt) {
 
 /**
  * Shows a menu item if the context can be modified.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -524,6 +537,7 @@ os.ui.menu.spatial.visibleIfCanModify = function(context) {
 
 /**
  * Shows a menu item if the context is in the area manager.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -534,6 +548,7 @@ os.ui.menu.spatial.visibleIfInAreaManager = function(context) {
 
 /**
  * Shows a menu item if the context is in the area manager.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -544,6 +559,7 @@ os.ui.menu.spatial.notVisibleIfInAreaManager = function(context) {
 
 /**
  * Shows a menu item if the context is polygonal and not in the area manager.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -554,6 +570,7 @@ os.ui.menu.spatial.visibleIfCanSave = function(context) {
 
 /**
  * Shows a menu item if the context is a shown area.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -579,6 +596,7 @@ os.ui.menu.spatial.visibleIfShown = function(context) {
 
 /**
  * Shows a menu item if the context is a hidden area.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -604,6 +622,7 @@ os.ui.menu.spatial.visibleIfNotShown = function(context) {
 
 /**
  * Handle spatial menu event.
+ *
  * @param {os.ui.menu.MenuEvent} event The menu event.
  * @param {Array<string>=} opt_layerIds - apply to only these ids
  */
@@ -748,6 +767,7 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
 
 /**
  * Launch a dialog prompting the user the file they're importing already exists and requesting action.
+ *
  * @param {?string=} opt_areaId - set the enabled state based on this area
  * @return {Array}
  */
@@ -791,6 +811,7 @@ os.ui.menu.spatial.getLayers = function(opt_areaId) {
 
 /**
  * Update temporary menu items.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -840,6 +861,7 @@ os.ui.menu.spatial.updateTemporaryItems = function(context) {
 
 /**
  * Add sub menu to query/exclude area by layer type.
+ *
  * @param {!os.ui.menu.MenuItem} group The menu group to add the submenu to.
  * @param {string} eventType The base event type.
  * @param {!Object<string, number>} types Map of layer type to count.
@@ -882,6 +904,7 @@ os.ui.menu.spatial.addLayerSubMenu = function(group, eventType, types) {
 
 /**
  * The layerChooser directive
+ *
  * @return {angular.Directive}
  */
 os.ui.menu.spatial.layerChooser = function() {
@@ -903,6 +926,7 @@ os.ui.Module.directive('layerchooser', [os.ui.menu.spatial.layerChooser]);
 
 /**
  * Controller function for the layerChooser directive
+ *
  * @param {!angular.Scope} $scope
  * @param {?angular.JQLite} $element
  * @constructor
@@ -925,6 +949,7 @@ os.ui.menu.spatial.LayerChooserCtrl = function($scope, $element) {
 
 /**
  * Fire the confirmation callback and close the window.
+ *
  * @return {boolean}
  * @export
  */
@@ -940,6 +965,7 @@ os.ui.menu.spatial.LayerChooserCtrl.prototype.valid = function() {
 
 /**
  * Fire the confirmation callback and close the window.
+ *
  * @export
  */
 os.ui.menu.spatial.LayerChooserCtrl.prototype.accept = function() {
@@ -960,6 +986,7 @@ os.ui.menu.spatial.LayerChooserCtrl.prototype.accept = function() {
 
 /**
  * Close the window.
+ *
  * @export
  */
 os.ui.menu.spatial.LayerChooserCtrl.prototype.close = function() {
@@ -969,6 +996,7 @@ os.ui.menu.spatial.LayerChooserCtrl.prototype.close = function() {
 
 /**
  * Launch the layer picker.
+ *
  * @param {os.ui.menu.MenuEvent} event The menu event.
  * @private
  */

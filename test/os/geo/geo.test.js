@@ -1039,6 +1039,10 @@ describe('os.geo', function() {
     expect(os.geo.toDegreesDecimalMinutes(54.1234, false, true)).toEqual('54° 07.40\' N');
   });
 
+  it('should convert lat to DDM with symbols (default arg)', function() {
+    expect(os.geo.toDegreesDecimalMinutes(54.1234, false)).toEqual('54° 07.40\' N');
+  });
+
   it('should convert negative lat to DDM', function() {
     expect(os.geo.toDegreesDecimalMinutes(-37.579, false, false)).toEqual('3734.74S');
   });
@@ -1097,5 +1101,129 @@ describe('os.geo', function() {
 
   it('should convert negative lon to DDM with symbols', function() {
     expect(os.geo.toDegreesDecimalMinutes(-168.987654, true, true)).toEqual('168° 59.26\' W');
+  });
+
+  it('should convert negative lon to DDM with symbols (default args)', function() {
+    expect(os.geo.toDegreesDecimalMinutes(-168.987654)).toEqual('168° 59.26\' W');
+  });
+
+  it('should convert lat to DMS correctly', function() {
+    expect(os.geo.toSexagesimal(10.51, false, false)).toEqual('103036.00N');
+  });
+
+  it('should convert lat to DMS correctly (default args)', function() {
+    expect(os.geo.toSexagesimal(10.51, false)).toEqual('10° 30\' 36.00" N');
+  });
+
+  it('should convert lat to padded DMS correctly', function() {
+    expect(os.geo.toSexagesimal(5.01, false, false)).toEqual('050036.00N');
+  });
+
+  it('should convert lat to DMS only displaying 2 decimal places (rounding)', function() {
+    expect(os.geo.toSexagesimal(23.456789, false, false)).toEqual('232724.44N');
+  });
+
+  it('should convert lat to DMS only displaying 2 decimal places (rounding)', function() {
+    expect(os.geo.toSexagesimal(54.1234, false, false)).toEqual('540724.24N');
+  });
+
+  it('should convert lat to DMS with symbols', function() {
+    expect(os.geo.toSexagesimal(54.1234, false, true)).toEqual('54° 07\' 24.24" N');
+  });
+
+  it('should convert negative lat to DMS', function() {
+    expect(os.geo.toSexagesimal(-37.579, false, false)).toEqual('373444.40S');
+  });
+
+  it('should convert negative lat to padded DMS correctly', function() {
+    expect(os.geo.toSexagesimal(-2.01, false, false)).toEqual('020036.00S');
+  });
+
+  it('should convert negative lat to DMS only displaying 2 decimal places (rounding)', function() {
+    expect(os.geo.toSexagesimal(-68.987654, false, false)).toEqual('685915.55S');
+  });
+
+  it('should convert negative lat to DMS only displaying 1 decimal place (rounding)', function() {
+    expect(os.geo.toSexagesimal(-68.987654, false, false, 1)).toEqual('685915.6S');
+  });
+
+  it('should convert negative lat to DMS displaying 3 decimal place (rounding)', function() {
+    expect(os.geo.toSexagesimal(-68.987654, false, false, 3)).toEqual('685915.554S');
+  });
+
+  it('should convert negative lat to DMS only displaying 0 decimal places (rounding)', function() {
+    expect(os.geo.toSexagesimal(-68.987654, false, false, 0)).toEqual('685916S');
+  });
+
+  it('should convert negative lat to DMS only displaying 2 decimal places (rounding)', function() {
+    expect(os.geo.toSexagesimal(-31.24689, false, false)).toEqual('311448.80S');
+  });
+
+  it('should convert negative lat to DMS with symbols', function() {
+    expect(os.geo.toSexagesimal(-68.987654, false, true)).toEqual('68° 59\' 15.55" S');
+  });
+
+  it('should convert negative lat to DMS with symbols, 1 decimal place', function() {
+    expect(os.geo.toSexagesimal(-68.987654, false, true, 1)).toEqual('68° 59\' 15.6" S');
+  });
+
+  it('should convert negative lat to DMS with symbols, 0 decimal place', function() {
+    expect(os.geo.toSexagesimal(-68.987654, false, true, 0)).toEqual('68° 59\' 16" S');
+  });
+
+  it('should convert lon to DMS correctly', function() {
+    expect(os.geo.toSexagesimal(145.32, true, false)).toEqual('1451912.00E');
+  });
+
+  it('should convert lon to DMS correctly (default args)', function() {
+    expect(os.geo.toSexagesimal(145.32)).toEqual('145° 19\' 12.00" E');
+  });
+
+  it('should convert lon to padded DMS correctly', function() {
+    expect(os.geo.toSexagesimal(9.01, true, false)).toEqual('0090036.00E');
+  });
+
+  it('should convert lon to DMS only displaying 2 decimal places (rounding)', function() {
+    expect(os.geo.toSexagesimal(123.456789, true, false)).toEqual('1232724.44E');
+  });
+
+  it('should convert lon to DMS only displaying 2 decimal places (rounding)', function() {
+    expect(os.geo.toSexagesimal(54.1234, true, false)).toEqual('0540724.24E');
+  });
+
+  it('should convert lon to DMS only displaying 1 decimal place (rounding)', function() {
+    expect(os.geo.toSexagesimal(54.1234, true, false, 1)).toEqual('0540724.2E');
+  });
+
+  it('should convert lon to DMS with symbols', function() {
+    expect(os.geo.toSexagesimal(154.1234, true, true)).toEqual('154° 07\' 24.24" E');
+  });
+
+  it('should convert lon to DMS with symbols, 1 decimal place', function() {
+    expect(os.geo.toSexagesimal(154.1234, true, true, 1)).toEqual('154° 07\' 24.2" E');
+  });
+
+  it('should convert lon to DMS with symbols, 0 decimal places', function() {
+    expect(os.geo.toSexagesimal(154.1234, true, true, 0)).toEqual('154° 07\' 24" E');
+  });
+
+  it('should convert negative lon to DMS', function() {
+    expect(os.geo.toSexagesimal(-37.579, true, false)).toEqual('0373444.40W');
+  });
+
+  it('should convert negative lon to padded DMS correctly', function() {
+    expect(os.geo.toSexagesimal(-2.03, true, false)).toEqual('0020148.00W');
+  });
+
+  it('should convert negative lon to DMS only displaying 2 decimal places (rounding)', function() {
+    expect(os.geo.toSexagesimal(-68.987654, true, false)).toEqual('0685915.55W');
+  });
+
+  it('should convert negative lon to DMS only displaying 2 decimal places (rounding)', function() {
+    expect(os.geo.toSexagesimal(-131.24689, true, false)).toEqual('1311448.80W');
+  });
+
+  it('should convert negative lon to DMS with symbols', function() {
+    expect(os.geo.toSexagesimal(-168.987654, true, true)).toEqual('168° 59\' 15.55" W');
   });
 });

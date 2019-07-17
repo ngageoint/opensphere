@@ -27,7 +27,10 @@ osx.annotation;
  *   showDescription: boolean,
  *   showTail: string,
  *   size: !Array<number>,
- *   offset: !Array<number>
+ *   offset: !Array<number>,
+ *   position: (Array<number>|undefined),
+ *   headerBG: (string|undefined),
+ *   bodyBG: (string|undefined)
  * }}
  */
 osx.annotation.Options;

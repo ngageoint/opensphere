@@ -10,6 +10,7 @@ goog.require('os.ui.search.FeatureResultCardCtrl');
 
 /**
  * The geonames result card directive for displaying search results.
+ *
  * @return {angular.Directive}
  */
 plugin.google.places.resultCardDirective = function() {
@@ -32,6 +33,7 @@ os.ui.Module.directive('googleplacesresultcard', [plugin.google.places.resultCar
 
 /**
  * Controller for the beresultcard directive.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor

@@ -15,6 +15,7 @@ goog.require('os.ui.window');
 
 /**
  * The combinator window directive
+ *
  * @return {angular.Directive}
  */
 os.ui.query.addFilterDirective = function() {
@@ -42,6 +43,7 @@ os.ui.Module.directive('addfilter', [os.ui.query.addFilterDirective]);
 
 /**
  * Controller for combinator window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @constructor
@@ -84,6 +86,7 @@ os.ui.query.AddFilterCtrl = function($scope, $element) {
 
 /**
  * Clean up
+ *
  * @protected
  */
 os.ui.query.AddFilterCtrl.prototype.onDestroy = function() {
@@ -99,6 +102,7 @@ os.ui.query.AddFilterCtrl.prototype.onDestroy = function() {
 
 /**
  * Updates the list of layers in the combo box
+ *
  * @protected
  */
 os.ui.query.AddFilterCtrl.prototype.updateLayers = function() {
@@ -127,7 +131,8 @@ os.ui.query.AddFilterCtrl.prototype.updateLayers = function() {
           layers.push({
             'id': key,
             'label': set[key],
-            'columns': cols
+            'columns': cols,
+            'source': filterable.getProvider()
           });
         }
       }
@@ -147,7 +152,7 @@ os.ui.query.AddFilterCtrl.prototype.updateLayers = function() {
   for (var i = 0, n = layers.length; i < n; i++) {
     var id = layers[i]['id'];
     menuRoot.addChild({
-      label: layers[i]['label'],
+      label: layers[i]['label'] + ' (' + layers[i]['source'] + ')',
       eventType: id,
       handler: this.addFilter.bind(this, id)
     });
@@ -159,6 +164,7 @@ os.ui.query.AddFilterCtrl.prototype.updateLayers = function() {
 
 /**
  * Open the menu to pick the layer for the filter
+ *
  * @export
  */
 os.ui.query.AddFilterCtrl.prototype.add = function() {
@@ -176,6 +182,7 @@ os.ui.query.AddFilterCtrl.prototype.add = function() {
 
 /**
  * Launch the editor for a filter
+ *
  * @param {string} layerId
  * @protected
  */
@@ -189,6 +196,7 @@ os.ui.query.AddFilterCtrl.prototype.addFilter = function(layerId) {
 
 /**
  * Handle filter ready
+ *
  * @param {os.filter.FilterEntry} entry
  * @private
  */
@@ -201,6 +209,7 @@ os.ui.query.AddFilterCtrl.prototype.onFilterReady_ = function(entry) {
 
 /**
  * If a new filter can be added.
+ *
  * @return {boolean}
  * @export
  */
@@ -211,6 +220,7 @@ os.ui.query.AddFilterCtrl.prototype.canAdd = function() {
 
 /**
  * Sort layers
+ *
  * @param {Object} a
  * @param {Object} b
  * @return {number} per compare functions

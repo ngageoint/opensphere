@@ -9,6 +9,7 @@ goog.require('os.ui.slick.column');
 
 /**
  * Tree node representing an expression in an advanced filter.
+ *
  * @param {boolean=} opt_viewonly
  * @extends {os.ui.slick.SlickTreeNode}
  * @constructor
@@ -57,6 +58,7 @@ os.ui.filter.ui.ExpressionNode.prototype.setExpression = function(value) {
 
 /**
  * Writes out the filter from the expression.
+ *
  * @return {string}
  */
 os.ui.filter.ui.ExpressionNode.prototype.writeFilter = function() {
@@ -142,6 +144,7 @@ os.ui.filter.ui.ExpressionNode.prototype.format = function(row, cell, value) {
 
 /**
  * Creates and sets up an expression node from a filter
+ *
  * @param {Node} filter The filter Element
  * @param {Array<!os.data.ColumnDefinition>} cols
  * @param {boolean=} opt_viewonly

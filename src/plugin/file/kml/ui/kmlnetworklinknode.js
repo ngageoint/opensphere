@@ -24,6 +24,7 @@ goog.require('plugin.file.kml.ui.NetworkLinkIcons');
 
 /**
  * Tree node for KML network links
+ *
  * @param {string} uri The network link URI
  * @extends {plugin.file.kml.ui.KMLNode}
  * @constructor
@@ -153,6 +154,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.disposeInternal = function() {
 
 /**
  * Clear the network link's features from the source.
+ *
  * @private
  */
 plugin.file.kml.ui.KMLNetworkLinkNode.prototype.clear_ = function() {
@@ -165,6 +167,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.clear_ = function() {
 /**
  * Gets a string representing the duration from the last time durationStart_ was set. Resets durationStart_ for
  * subsequent calls in the same request sequence.
+ *
  * @return {string}
  * @private
  */
@@ -180,6 +183,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.durationString_ = function() {
 
 /**
  * Displays an error message and disables the node.
+ *
  * @param {string} msg The error message
  * @private
  */
@@ -195,6 +199,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.handleError_ = function(msg) {
 
 /**
  * Gets a string representing the URL for the source request.
+ *
  * @return {string}
  * @private
  */
@@ -205,6 +210,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.urlLogString_ = function() {
 
 /**
  * Get the refresh interval for the network link.
+ *
  * @return {number}
  */
 plugin.file.kml.ui.KMLNetworkLinkNode.prototype.getRefreshInterval = function() {
@@ -216,6 +222,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.getRefreshInterval = function() 
  * Set the refresh interval for the network link. If {@link refreshMode} is set to
  * {@link os.ui.file.kml.RefreshMode.INTERVAL}, the network link will be refreshed after the provided amount of time.
  * The timer will not be started until data import has completed.
+ *
  * @param {number} value The refresh interval in milliseconds, or zero to prevent automatic refresh
  */
 plugin.file.kml.ui.KMLNetworkLinkNode.prototype.setRefreshInterval = function(value) {
@@ -227,6 +234,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.setRefreshInterval = function(va
 
 /**
  * Set the minimum refresh interval for the network link.
+ *
  * @param {number} value The minimum refresh interval in milliseconds, or zero to prevent automatic refresh
  */
 plugin.file.kml.ui.KMLNetworkLinkNode.prototype.setMinRefreshPeriod = function(value) {
@@ -238,6 +246,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.setMinRefreshPeriod = function(v
 
 /**
  * Get the refresh mode for the network link.
+ *
  * @return {os.ui.file.kml.RefreshMode}
  */
 plugin.file.kml.ui.KMLNetworkLinkNode.prototype.getRefreshMode = function() {
@@ -247,6 +256,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.getRefreshMode = function() {
 
 /**
  * Set the refresh mode for the network link.
+ *
  * @param {os.ui.file.kml.RefreshMode} value
  */
 plugin.file.kml.ui.KMLNetworkLinkNode.prototype.setRefreshMode = function(value) {
@@ -257,6 +267,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.setRefreshMode = function(value)
 
 /**
  * Updates the refresh timer based on the current refresh mode/interval.
+ *
  * @private
  */
 plugin.file.kml.ui.KMLNetworkLinkNode.prototype.updateRefreshTimer_ = function() {
@@ -275,6 +286,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.updateRefreshTimer_ = function()
 
 /**
  * Get the view refresh mode.
+ *
  * @return {os.ui.file.kml.ViewRefreshMode}
  */
 plugin.file.kml.ui.KMLNetworkLinkNode.prototype.getViewRefreshMode = function() {
@@ -284,6 +296,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.getViewRefreshMode = function() 
 
 /**
  * Set the view refresh mode.
+ *
  * @param {os.ui.file.kml.ViewRefreshMode} value
  */
 plugin.file.kml.ui.KMLNetworkLinkNode.prototype.setViewRefreshMode = function(value) {
@@ -294,6 +307,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.setViewRefreshMode = function(va
 /**
  * Set the view refresh interval for the network link. If {@link viewRefreshMode} is set to
  * {@link os.ui.file.kml.ViewRefreshMode.STOP}, the link refreshes this many milliseconds after the camera stops moving.
+ *
  * @param {number} value The refresh timer in seconds, or zero to prevent automatic refresh
  */
 plugin.file.kml.ui.KMLNetworkLinkNode.prototype.setViewRefreshTimer = function(value) {
@@ -305,6 +319,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.setViewRefreshTimer = function(v
 
 /**
  * Updates the view refresh timer.
+ *
  * @private
  */
 plugin.file.kml.ui.KMLNetworkLinkNode.prototype.updateViewRefreshTimer_ = function() {
@@ -322,6 +337,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.updateViewRefreshTimer_ = functi
 
 /**
  * Handles changes to the view.
+ *
  * @private
  */
 plugin.file.kml.ui.KMLNetworkLinkNode.prototype.onViewChange_ = function() {
@@ -350,6 +366,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.refresh = function() {
 
 /**
  * Handle the refresh timer firing.
+ *
  * @private
  */
 plugin.file.kml.ui.KMLNetworkLinkNode.prototype.onRefreshTimer_ = function() {
@@ -408,6 +425,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.setSource = function(source) {
 
 /**
  * Refresh the network link when the source is refreshed.
+ *
  * @private
  */
 plugin.file.kml.ui.KMLNetworkLinkNode.prototype.onSourceRefresh_ = function() {
@@ -463,6 +481,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.setState = function(value) {
 
 /**
  * Request success handler.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -487,6 +506,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.onRequestComplete_ = function(ev
 
 /**
  * Request error handler.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -498,6 +518,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.onRequestError_ = function(event
 
 /**
  * Import success handler.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -514,6 +535,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.onImportProgress_ = function(eve
 
 /**
  * Import success handler.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -565,6 +587,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.formatIcons = function() {
 
 /**
  * Set the network link icon displayed on the node.
+ *
  * @param {plugin.file.kml.ui.NetworkLinkIcons} value The icon to display
  * @private
  */

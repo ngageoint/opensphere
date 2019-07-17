@@ -7,6 +7,7 @@ goog.require('os.map');
 
 /**
  * Feature hit detection callback.
+ *
  * @param {(ol.Feature|ol.render.Feature)} feature The feature
  * @param {ol.layer.Layer} layer The layer containing the feature
  * @return {osx.interaction.FeatureResult|undefined} The hit detection result.
@@ -37,6 +38,7 @@ os.interaction.getFeatureResult = function(feature, layer) {
 
 /**
  * Get the delta value to use when zooming.
+ *
  * @param {boolean} boost If the delta should be boosted
  * @param {boolean} inverse If the delta should be inverted
  * @return {number}

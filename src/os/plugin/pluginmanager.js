@@ -11,6 +11,7 @@ goog.require('os.plugin.IPlugin');
 
 /**
  * The plugin manager helps initialize a group of plugins.
+ *
  * @extends {goog.events.EventTarget}
  * @constructor
  */
@@ -89,6 +90,7 @@ os.plugin.PluginManager.prototype.disposeInternal = function() {
 
 /**
  * Determine if plug-in is enabled based on configuration
+ *
  * @param {!string} pluginId
  * @return {boolean}
  */
@@ -146,6 +148,7 @@ os.plugin.PluginManager.prototype.initPlugin_ = function(p) {
 
 /**
  * Looks up a plugin by id.
+ *
  * @param {string} id The plugin id
  * @return {?os.plugin.IPlugin} The plugin, if found.
  */
@@ -186,6 +189,7 @@ os.plugin.PluginManager.prototype.init = function() {
 
 /**
  * Handle timeout reached in the initialization routine.
+ *
  * @private
  */
 os.plugin.PluginManager.prototype.onInitTimeout_ = function() {
@@ -265,6 +269,7 @@ os.plugin.PluginManager.prototype.markPlugin_ = function(plugin) {
 
 /**
  * Is the plugin manager done?
+ *
  * @return {boolean}
  */
 os.plugin.PluginManager.prototype.isReady = function() {

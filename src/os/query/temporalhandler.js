@@ -39,6 +39,7 @@ os.query.TemporalHandler = function(opt_localRefresh) {
 
 /**
  * Get the temporal formatter.
+ *
  * @return {?os.query.ITemporalFormatter}
  */
 os.query.TemporalHandler.prototype.getFormatter = function() {
@@ -48,6 +49,7 @@ os.query.TemporalHandler.prototype.getFormatter = function() {
 
 /**
  * Set the temporal formatter.
+ *
  * @param {?os.query.ITemporalFormatter} formatter
  */
 os.query.TemporalHandler.prototype.setFormatter = function(formatter) {
@@ -57,6 +59,7 @@ os.query.TemporalHandler.prototype.setFormatter = function(formatter) {
 
 /**
  * Get the parameter modifier.
+ *
  * @return {?os.net.ParamModifier}
  */
 os.query.TemporalHandler.prototype.getModifier = function() {
@@ -66,6 +69,7 @@ os.query.TemporalHandler.prototype.getModifier = function() {
 
 /**
  * Set the parameter modifier.
+ *
  * @param {?os.net.ParamModifier} modifier
  */
 os.query.TemporalHandler.prototype.setModifier = function(modifier) {
@@ -75,6 +79,7 @@ os.query.TemporalHandler.prototype.setModifier = function(modifier) {
 
 /**
  * Get the source.
+ *
  * @return {?os.source.Request}
  */
 os.query.TemporalHandler.prototype.getSource = function() {
@@ -84,6 +89,7 @@ os.query.TemporalHandler.prototype.getSource = function() {
 
 /**
  * Set the source.
+ *
  * @param {?os.source.Request} source
  */
 os.query.TemporalHandler.prototype.setSource = function(source) {
@@ -93,6 +99,7 @@ os.query.TemporalHandler.prototype.setSource = function(source) {
 
 /**
  * Handler for timeline reset.
+ *
  * @param {os.time.TimelineController} controller
  * @param {boolean=} opt_refresh
  */

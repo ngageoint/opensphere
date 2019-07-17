@@ -26,6 +26,7 @@ goog.require('os.ui.window');
 
 /**
  * Manages spatial areas
+ *
  * @extends {os.query.BaseAreaManager}
  * @constructor
  */
@@ -313,6 +314,7 @@ os.query.AreaManager.prototype.toRgbaString = function(color) {
 
 /**
  * Handle Include Color changes.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -327,6 +329,7 @@ os.query.AreaManager.prototype.updateInColor_ = function(event) {
 
 /**
  * Handle Include Width changes.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -340,6 +343,7 @@ os.query.AreaManager.prototype.updateInWidth_ = function(event) {
 
 /**
  * Handle Exclude Color changes.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -354,6 +358,7 @@ os.query.AreaManager.prototype.updateExColor_ = function(event) {
 
 /**
  * Handle Exclude Width changes.
+ *
  * @param {os.events.SettingChangeEvent} event
  * @private
  */
@@ -377,8 +382,8 @@ os.query.AreaManager.prototype.redrawQueryAreas_ = function() {
       var entries = os.query.BaseQueryManager.getInstance().getEntries(null, /** @type {string} */ (area.getId()));
       if (entries && entries.length > 0) {
         var expectedStyle = /** @type {boolean} */ (entries[0]['includeArea']) ?
-            goog.object.unsafeClone(os.query.AreaManager.FULL_INCLUSION_STYLE) :
-            goog.object.unsafeClone(os.query.AreaManager.FULL_EXCLUSION_STYLE);
+          goog.object.unsafeClone(os.query.AreaManager.FULL_INCLUSION_STYLE) :
+          goog.object.unsafeClone(os.query.AreaManager.FULL_EXCLUSION_STYLE);
         area.set(os.style.StyleType.SELECT, expectedStyle);
         os.style.setFeatureStyle(area);
         this.redraw(area);

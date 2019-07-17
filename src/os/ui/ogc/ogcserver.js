@@ -165,6 +165,7 @@ os.ui.ogc.OGCServer = function() {
   this.wpsUrl_ = '';
 };
 goog.inherits(os.ui.ogc.OGCServer, os.ui.server.AbstractLoadingServer);
+os.implements(os.ui.ogc.OGCServer, os.data.IDataProvider.ID);
 
 
 /**
@@ -498,6 +499,7 @@ os.ui.ogc.OGCServer.prototype.isLoaded = function() {
 
 /**
  * Called after finishing the load of the OGC layers. Used by extending classes.
+ *
  * @protected
  */
 os.ui.ogc.OGCServer.prototype.finalizeFinish = function() {};
@@ -505,6 +507,7 @@ os.ui.ogc.OGCServer.prototype.finalizeFinish = function() {};
 
 /**
  * Builds query data from the WFS params.
+ *
  * @return {goog.Uri.QueryData}
  * @private
  */
@@ -522,6 +525,7 @@ os.ui.ogc.OGCServer.prototype.getWfsQueryData_ = function() {
 
 /**
  * Builds query data from the WMS params.
+ *
  * @return {goog.Uri.QueryData}
  * @private
  */
@@ -546,6 +550,7 @@ os.ui.ogc.OGCServer.prototype.getWmsQueryData_ = function() {
 
 /**
  * Loads WMS GetCapabilities from the configured server.
+ *
  * @protected
  */
 os.ui.ogc.OGCServer.prototype.loadWmsCapabilities = function() {
@@ -573,6 +578,7 @@ os.ui.ogc.OGCServer.prototype.loadWmsCapabilities = function() {
 
 /**
  * Handle successful load of alternate URL.
+ *
  * @param {goog.events.Event} event The error event
  * @protected
  */
@@ -585,6 +591,7 @@ os.ui.ogc.OGCServer.prototype.onAlternateSuccess = function(event) {
 
 /**
  * Handle failure to load alternate URL.
+ *
  * @param {string} value The alternate URL
  * @param {goog.events.Event} event The error event
  * @protected
@@ -604,6 +611,7 @@ os.ui.ogc.OGCServer.prototype.onAlternateError = function(value, event) {
 
 /**
  * Test a WMS URL to check if its GetCapabilities is valid.
+ *
  * @param {string} url The WMS URL
  * @param {function(goog.events.Event)=} opt_success The success handler
  * @param {function(goog.events.Event)=} opt_error The error handler
@@ -631,6 +639,7 @@ os.ui.ogc.OGCServer.prototype.testWmsUrl = function(url, opt_success, opt_error)
 
 /**
  * Loads WFS GetCapabilities from the configured server.
+ *
  * @protected
  */
 os.ui.ogc.OGCServer.prototype.loadWfsCapabilities = function() {
@@ -926,9 +935,7 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
 
       if (!descriptor) {
         descriptor = this.createDescriptor();
-
-        // use the existing ID if it has one already
-        descriptor.setId(descriptor.getId() || idPrefix + name);
+        descriptor.setId(idPrefix + name);
         descriptor.setWfsEnabled(true);
         descriptor.setColor(os.ui.ogc.OGCServer.DEFAULT_COLOR);
         descriptor.setTitle(nodeTitle);
@@ -993,6 +1000,7 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
 
 /**
  * Adds the descriptor.
+ *
  * @param {!os.data.IDataDescriptor} descriptor
  */
 os.ui.ogc.OGCServer.prototype.addDescriptor = function(descriptor) {
@@ -1003,6 +1011,7 @@ os.ui.ogc.OGCServer.prototype.addDescriptor = function(descriptor) {
 
 /**
  * Gets a descriptor that matches the given title
+ *
  * @param {!string} title
  * @return {?os.ui.ogc.IOGCDescriptor} the descriptor or null
  * @protected
@@ -1028,6 +1037,7 @@ os.ui.ogc.OGCServer.prototype.getDescriptorByTitle = function(title) {
 
 /**
  * Creates a new layer descriptor
+ *
  * @return {!os.ui.ogc.IOGCDescriptor} the descriptor
  * @protected
  */
@@ -1151,10 +1161,6 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
           // }
         }
 
-        // use the existing ID if it exists
-        var id = layerDescriptor.getId() ||
-            this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + layerDescriptor.getWmsName();
-
         layerDescriptor.setWmsEnabled(true);
         layerDescriptor.setWmsParams(this.getWmsParams());
         layerDescriptor.setWmsVersion(version);
@@ -1162,7 +1168,7 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
         layerDescriptor.setWmsDateFormat(this.getWmsDateFormat());
         layerDescriptor.setWmsTimeFormat(this.getWmsTimeFormat());
         layerDescriptor.setProvider(this.getLabel());
-        layerDescriptor.setId(id);
+        layerDescriptor.setId(this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + layerDescriptor.getWmsName());
 
         this.addDescriptor(layerDescriptor);
 
@@ -1322,6 +1328,7 @@ os.ui.ogc.OGCServer.prototype.markAllDescriptors = function(opt_node) {
 
 /**
  * Finds and removes the descriptor.
+ *
  * @param {os.ui.ogc.IOGCDescriptor} descriptor
  */
 os.ui.ogc.OGCServer.prototype.removeDescriptor = function(descriptor) {

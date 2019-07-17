@@ -1,7 +1,6 @@
 goog.provide('os.ui.menu.timeline');
 
 goog.require('os.action.EventType');
-goog.require('os.command.FlyToExtent');
 goog.require('os.metrics.keys');
 goog.require('os.time.TimeRange');
 goog.require('os.time.TimelineActionEventType');
@@ -148,6 +147,7 @@ os.ui.menu.timeline.dispose = function() {
 
 /**
  * Time select listener
+ *
  * @param {os.ui.menu.MenuEvent<Array<number>>} event The menu event
  */
 os.ui.menu.timeline.onTimeSelect = function(event) {
@@ -197,6 +197,7 @@ os.ui.menu.timeline.onTimeSelect = function(event) {
 
 /**
  * Listener for actions that happen on all features at once
+ *
  * @param {os.ui.menu.MenuEvent<Array<number>>} event The menu event
  */
 os.ui.menu.timeline.onFeatureCollection = function(event) {
@@ -224,15 +225,7 @@ os.ui.menu.timeline.onFeatureCollection = function(event) {
         os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.FEATURE_INFO, 1);
         break;
       case os.time.TimelineActionEventType.GO_TO:
-        var geometries = features.map(function(f) {
-          return f.getGeometry();
-        }).filter(os.fn.filterFalsey);
-
-        if (geometries.length > 0) {
-          var zoomExtent = geometries.reduce(os.fn.reduceExtentFromGeometries, ol.extent.createEmpty());
-          var cmd = new os.command.FlyToExtent(zoomExtent);
-          os.command.CommandProcessor.getInstance().addCommand(cmd);
-        }
+        os.feature.flyTo(features);
         os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.GO_TO, 1);
         break;
       default:
@@ -244,6 +237,7 @@ os.ui.menu.timeline.onFeatureCollection = function(event) {
 
 /**
  * Time load listener
+ *
  * @param {os.ui.menu.MenuEvent<Array<number>>} event The menu event
  */
 os.ui.menu.timeline.onTimeLoad = function(event) {
@@ -257,6 +251,7 @@ os.ui.menu.timeline.onTimeLoad = function(event) {
 
 /**
  * Time add listener
+ *
  * @param {os.ui.menu.MenuEvent<Array<number>>} event The menu event
  */
 os.ui.menu.timeline.onTimeAdd = function(event) {
@@ -270,6 +265,7 @@ os.ui.menu.timeline.onTimeAdd = function(event) {
 
 /**
  * Time add listener
+ *
  * @param {os.ui.menu.MenuEvent<Array<number>>} event The menu event
  */
 os.ui.menu.timeline.onTimeSlice = function(event) {
@@ -283,6 +279,7 @@ os.ui.menu.timeline.onTimeSlice = function(event) {
 
 /**
  * Time zoom listener
+ *
  * @param {os.ui.menu.MenuEvent<Array<number>>} event The menu event
  */
 os.ui.menu.timeline.onTimeZoom = function(event) {
@@ -294,6 +291,7 @@ os.ui.menu.timeline.onTimeZoom = function(event) {
 
 /**
  * Adds a hold timeline range.
+ *
  * @param {os.ui.menu.MenuEvent<Array<number>>} event The menu event
  */
 os.ui.menu.timeline.onAddHold = function(event) {
@@ -307,6 +305,7 @@ os.ui.menu.timeline.onAddHold = function(event) {
 
 /**
  * Adds a animation timeline range.
+ *
  * @param {os.ui.menu.MenuEvent<Array<number>>} event The menu event
  */
 os.ui.menu.timeline.onAddAnimate = function(event) {
@@ -321,6 +320,7 @@ os.ui.menu.timeline.onAddAnimate = function(event) {
 
 /**
  * Removes a timeline animation range.
+ *
  * @param {os.ui.menu.MenuEvent<Array<number>>} event The menu event
  */
 os.ui.menu.timeline.onAddSkipAnimate = function(event) {
@@ -340,6 +340,7 @@ os.ui.menu.timeline.onAddSkipAnimate = function(event) {
 
 /**
  * Active window set listener.
+ *
  * @param {os.ui.menu.MenuEvent<Array<number>>} event The menu event
  */
 os.ui.menu.timeline.onActiveWindow = function(event) {

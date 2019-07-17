@@ -1,14 +1,16 @@
 goog.provide('os.ui.filter.op.Op');
 goog.require('os.ui.filter.textDirective');
+goog.require('os.xsd.DataType');
 
 
 
 /**
  * Model class representing operations. Operations can be a single expression or multiple (generally subclasses).
+ *
  * @param {string} localName Element name for the expression it creates
  * @param {string} title Human readable name for the op
  * @param {string=} opt_shortTitle Abbreviated human readable name for the op
- * @param {?Array<string>=} opt_supportedTypes Supported input types (number, string, integer)
+ * @param {?Array<os.xsd.DataType>=} opt_supportedTypes Supported input types (number, string, integer)
  * @param {string=} opt_attributes
  * @param {string=} opt_hint Hint text for the UI
  * @param {string=} opt_ui The UI rendered next to the op select
@@ -36,7 +38,7 @@ os.ui.filter.op.Op = function(localName, title, opt_shortTitle, opt_supportedTyp
   this.shortTitle_ = opt_shortTitle || title;
 
   /**
-   * @type {?Array<string>}
+   * @type {?Array<os.xsd.DataType>}
    * @protected
    */
   this.supportedTypes = opt_supportedTypes || null;
@@ -75,6 +77,7 @@ os.ui.filter.op.Op = function(localName, title, opt_shortTitle, opt_supportedTyp
 
 /**
  * Gets the op node name
+ *
  * @return {string}
  */
 os.ui.filter.op.Op.prototype.getLocalName = function() {
@@ -84,6 +87,7 @@ os.ui.filter.op.Op.prototype.getLocalName = function() {
 
 /**
  * Gets the title
+ *
  * @return {string} The title
  * @export
  */
@@ -94,6 +98,7 @@ os.ui.filter.op.Op.prototype.getTitle = function() {
 
 /**
  * Gets the title
+ *
  * @return {string} The title
  * @export
  */
@@ -104,6 +109,7 @@ os.ui.filter.op.Op.prototype.getShortTitle = function() {
 
 /**
  * Get the attributes on the root XML element.
+ *
  * @return {string}
  */
 os.ui.filter.op.Op.prototype.getAttributes = function() {
@@ -113,6 +119,7 @@ os.ui.filter.op.Op.prototype.getAttributes = function() {
 
 /**
  * Set the attributes on the root XML element.
+ *
  * @param {string} attributes The attributes.
  */
 os.ui.filter.op.Op.prototype.setAttributes = function(attributes) {
@@ -122,6 +129,7 @@ os.ui.filter.op.Op.prototype.setAttributes = function(attributes) {
 
 /**
  * Gets the UI
+ *
  * @return {!string}
  */
 os.ui.filter.op.Op.prototype.getUi = function() {
@@ -131,6 +139,7 @@ os.ui.filter.op.Op.prototype.getUi = function() {
 
 /**
  * Get if the literal should be excluded/ignored for the operation.
+ *
  * @return {boolean}
  */
 os.ui.filter.op.Op.prototype.getExcludeLiteral = function() {
@@ -140,6 +149,7 @@ os.ui.filter.op.Op.prototype.getExcludeLiteral = function() {
 
 /**
  * Set if the literal should be excluded/ignored for the operation.
+ *
  * @param {boolean} value The new value.
  */
 os.ui.filter.op.Op.prototype.setExcludeLiteral = function(value) {
@@ -149,6 +159,7 @@ os.ui.filter.op.Op.prototype.setExcludeLiteral = function(value) {
 
 /**
  * Gets the filter
+ *
  * @param {string} column
  * @param {string} literal
  * @return {?string} the filter
@@ -174,6 +185,7 @@ os.ui.filter.op.Op.prototype.getFilter = function(column, literal) {
 
 /**
  * Get a function expression to evaluate the operation against a variable.
+ *
  * @param {string} varName The name of the variable storing the value.
  * @param {?string} literal The value to test against.
  * @return {string} The filter function expression.
@@ -221,7 +233,7 @@ os.ui.filter.op.Op.prototype.matches = function(el) {
 
 
 /**
- * @param {string} type
+ * @param {os.xsd.DataType} type
  * @return {boolean} Whether or not the column type is supported
  */
 os.ui.filter.op.Op.prototype.isSupported = function(type) {
@@ -240,6 +252,7 @@ os.ui.filter.op.Op.prototype.isSupported = function(type) {
 
 /**
  * Set the supported column types.
+ *
  * @param {Array<string>} types The supported types.
  */
 os.ui.filter.op.Op.prototype.setSupported = function(types) {
@@ -249,6 +262,7 @@ os.ui.filter.op.Op.prototype.setSupported = function(types) {
 
 /**
  * Validates the value against the pattern associated to the key.
+ *
  * @param {string|null|undefined} value
  * @param {string} key
  * @return {boolean} Whether or not the column type is supported

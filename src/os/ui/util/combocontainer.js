@@ -12,6 +12,7 @@ goog.require('os.ui.Module');
  *  controller: $scope.additionalCss = '{"width":"708px"}';
  * Also accepts a focus-on attribute. If this is present, the directive will find the child element matching that
  * selector and focus on it when the combo is opened.
+ *
  * @return {angular.Directive}
  */
 os.ui.util.comboContainerDirective = function() {
@@ -27,6 +28,7 @@ os.ui.Module.directive('comboContainer', os.ui.util.comboContainerDirective);
 
 /**
  * Link function for combo-container directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {Object} $attrs

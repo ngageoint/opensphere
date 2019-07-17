@@ -31,13 +31,14 @@ goog.require('os.ui.geo.positionDirective');
 goog.require('os.ui.layer.labelControlsDirective');
 goog.require('os.ui.layer.vectorStyleControlsDirective');
 goog.require('os.ui.list');
-goog.require('os.ui.text.simpleMDEDirective');
+goog.require('os.ui.text.tuiEditorDirective');
 goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
 
 
 /**
  * Directive for editing a feature.
+ *
  * @return {angular.Directive}
  */
 os.ui.featureEditDirective = function() {
@@ -72,6 +73,7 @@ os.ui.FeatureEditOptions;
 
 /**
  * Controller function for the featureedit directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -163,7 +165,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * The feature icon.
    * @type {!osx.icon.Icon}
    */
-  this['icon'] = /** @type {!osx.icon.Icon} */ ({ // os.ui.file.kml.Icon to osx.icon.Icon
+  this['icon'] = /** @type {!osx.icon.Icon} */ ({// os.ui.file.kml.Icon to osx.icon.Icon
     path: os.ui.file.kml.getDefaultIcon().path
   });
 
@@ -171,7 +173,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * The feature center icon.
    * @type {!osx.icon.Icon}
    */
-  this['centerIcon'] = /** @type {!osx.icon.Icon} */ ({ // os.ui.file.kml.Icon to osx.icon.Icon
+  this['centerIcon'] = /** @type {!osx.icon.Icon} */ ({// os.ui.file.kml.Icon to osx.icon.Icon
     path: os.ui.file.kml.getDefaultIcon().path
   });
 
@@ -248,6 +250,11 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
     os.style.ShapeType.TRIANGLE,
     os.style.ShapeType.ICON
   ];
+
+  /**
+   * Selected line dash style
+   */
+  this['lineDash'] = undefined;
 
   /**
    * Selected shape.
@@ -378,7 +385,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * @type {boolean}
    */
   this['timeEditEnabled'] = this.options['timeEditEnabled'] !== undefined ?
-      this.options['timeEditEnabled'] : true;
+    this.options['timeEditEnabled'] : true;
 
   /**
    * Callback to fire when the dialog is closed.
@@ -404,9 +411,9 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   /**
    * The original geometry when editing a feature.
    * @type {ol.geom.Geometry}
-   * @private
+   * @protected
    */
-  this.originalGeometry_ = null;
+  this.originalGeometry = null;
 
   var feature = /** @type {ol.Feature|undefined} */ (this.options['feature']);
   if (feature) {
@@ -460,6 +467,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
 
   $scope.$watch('ctrl.description', this.updatePreview.bind(this));
   $scope.$watch('ctrl.color', this.onIconColorChange.bind(this));
+  $scope.$watch('ctrl.lineDash', this.onLineDashChange.bind(this));
   $scope.$watch('ctrl.opacity', this.updatePreview.bind(this));
   $scope.$watch('ctrl.size', this.updatePreview.bind(this));
   $scope.$watch('ctrl.shape', this.updatePreview.bind(this));
@@ -467,6 +475,8 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   $scope.$watch('ctrl.labelColor', this.updatePreview.bind(this));
   $scope.$watch('ctrl.labelSize', this.updatePreview.bind(this));
   $scope.$watch('ctrl.showLabels', this.updatePreview.bind(this));
+
+  $scope.$on(os.ui.WindowEventType.CANCEL, this.onCancel.bind(this));
   $scope.$on(os.ui.icon.IconPickerEventType.CHANGE, this.onIconChange.bind(this));
   $scope.$on('labelColor.reset', this.onLabelColorReset.bind(this));
   $scope.$on(os.ui.geo.PositionEventType.MAP_ENABLED, this.onMapEnabled_.bind(this));
@@ -493,6 +503,9 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   }.bind(this));
 
   $scope.$on('$destroy', this.dispose.bind(this));
+
+  // fire an event to inform other UIs that an edit has launched.
+  os.dispatcher.dispatchEvent(os.annotation.EventType.LAUNCH_EDIT);
 
   $timeout(function() {
     // expand the default section if set
@@ -609,6 +622,7 @@ os.ui.FeatureEditCtrl.prototype.disposeInternal = function() {
 
 /**
  * Accept changes, saving the feature.
+ *
  * @export
  */
 os.ui.FeatureEditCtrl.prototype.accept = function() {
@@ -639,9 +653,20 @@ os.ui.FeatureEditCtrl.prototype.accept = function() {
 
 /**
  * Cancel edit and close the window.
+ *
  * @export
  */
 os.ui.FeatureEditCtrl.prototype.cancel = function() {
+  this.onCancel();
+  this.close();
+};
+
+
+/**
+ * Handler for canceling the edit. This restores the state of the feature to what it was before any live
+ * edits were applied while the form was up. It's called on clicking both the cancel button and the window X.
+ */
+os.ui.FeatureEditCtrl.prototype.onCancel = function() {
   var feature = this.options['feature'];
   if (feature && this.originalProperties_) {
     feature.setProperties(this.originalProperties_);
@@ -652,14 +677,14 @@ os.ui.FeatureEditCtrl.prototype.cancel = function() {
       os.style.notifyStyleChange(layer, [feature]);
     }
   }
-  os.dispatcher.dispatchEvent(os.action.EventType.RESTORE_FEATURE);
 
-  this.close();
+  os.dispatcher.dispatchEvent(os.action.EventType.RESTORE_FEATURE);
 };
 
 
 /**
  * Close the window.
+ *
  * @protected
  */
 os.ui.FeatureEditCtrl.prototype.close = function() {
@@ -669,6 +694,7 @@ os.ui.FeatureEditCtrl.prototype.close = function() {
 
 /**
  * Handles key events.
+ *
  * @param {goog.events.KeyEvent} event
  * @protected
  */
@@ -688,6 +714,7 @@ os.ui.FeatureEditCtrl.prototype.handleKeyEvent = function(event) {
 
 /**
  * If an ellipse shape is selected.
+ *
  * @return {boolean}
  * @export
  */
@@ -697,7 +724,23 @@ os.ui.FeatureEditCtrl.prototype.isEllipse = function() {
 
 
 /**
+ * If a line or polygon is selected.
+ *
+ * @return {boolean}
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.isPolygonOrLine = function() {
+  var geometry = this.previewFeature.getGeometry();
+  var type = geometry.getType();
+
+  return type == ol.geom.GeometryType.POLYGON || type == ol.geom.GeometryType.MULTI_POLYGON ||
+    type == ol.geom.GeometryType.LINE_STRING || type == ol.geom.GeometryType.MULTI_LINE_STRING;
+};
+
+
+/**
  * If the icon picker should be displayed.
+ *
  * @return {boolean}
  * @export
  */
@@ -708,6 +751,7 @@ os.ui.FeatureEditCtrl.prototype.showIcon = function() {
 
 /**
  * If the icon picker should be displayed.
+ *
  * @return {boolean}
  * @export
  */
@@ -718,6 +762,7 @@ os.ui.FeatureEditCtrl.prototype.showCenterIcon = function() {
 
 /**
  * If the feature is dynamic, which means it is a time based track
+ *
  * @return {boolean}
  * @export
  */
@@ -729,6 +774,7 @@ os.ui.FeatureEditCtrl.prototype.isFeatureDynamic = function() {
 
 /**
  * Handles if map clicks are propagated down to the location form.
+ *
  * @param {angular.Scope.Event} event The Angular event
  * @param {boolean} isEnabled If the map should be used for location clicks.
  * @private
@@ -773,6 +819,7 @@ os.ui.FeatureEditCtrl.prototype.onMapEnabled_ = function(event, isEnabled) {
 
 /**
  * Handle map browser events.
+ *
  * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
  * @return {boolean} 'false' to stop event propagation
  * @private
@@ -792,6 +839,7 @@ os.ui.FeatureEditCtrl.prototype.onMapClick_ = function(mapBrowserEvent) {
 
 /**
  * Updates the temporary feature style.
+ *
  * @export
  */
 os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
@@ -814,6 +862,7 @@ os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
 
 /**
  * Create a default preview feature.
+ *
  * @protected
  */
 os.ui.FeatureEditCtrl.prototype.createPreviewFeature = function() {
@@ -852,7 +901,7 @@ os.ui.FeatureEditCtrl.prototype.createPreviewFeature = function() {
     }
   } else {
     // not a point, so disable geometry edit
-    this.originalGeometry_ = geometry;
+    this.originalGeometry = geometry;
   }
 
   // default feature to show the name field
@@ -862,6 +911,7 @@ os.ui.FeatureEditCtrl.prototype.createPreviewFeature = function() {
 
 /**
  * Restore the UI from a feature.
+ *
  * @param {!ol.Feature} feature The feature
  * @protected
  */
@@ -927,6 +977,11 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
       this['icon'] = icon;
       this['centerIcon'] = icon;
     }
+
+    var lineDash = os.style.getConfigLineDash(config);
+    if (lineDash) {
+      this['lineDash'] = lineDash;
+    }
   }
 
   var labelColor = /** @type {Array<number>|string|undefined} */ (feature.get(os.style.StyleField.LABEL_COLOR));
@@ -959,7 +1014,7 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
 
   var geometry = feature.getGeometry();
   if (geometry) {
-    this.originalGeometry_ = geometry;
+    this.originalGeometry = geometry;
 
     if (geometry instanceof ol.geom.Point) {
       var clone = /** @type {!ol.geom.Point} */ (geometry.clone());
@@ -1010,6 +1065,7 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
 
 /**
  * Get a numeric field from a feature, returning undefined if the value is not a number.
+ *
  * @param {ol.Feature} feature The feature to update
  * @param {string} field The field to retrieve
  * @param {number=} opt_default The default value
@@ -1025,6 +1081,7 @@ os.ui.FeatureEditCtrl.prototype.getNumericField_ = function(feature, field, opt_
 
 /**
  * Save the feature configuration to a feature.
+ *
  * @param {ol.Feature} feature The feature to update
  * @protected
  */
@@ -1033,8 +1090,7 @@ os.ui.FeatureEditCtrl.prototype.saveToFeature = function(feature) {
     this.saveGeometry_(feature);
 
     feature.set(os.ui.FeatureEditCtrl.Field.NAME, this['name']);
-    feature.set(os.ui.FeatureEditCtrl.Field.DESCRIPTION,
-        os.ui.text.SimpleMDE.removeMarkdown(this['description'], true));
+    feature.set(os.ui.FeatureEditCtrl.Field.DESCRIPTION, os.ui.text.TuiEditor.render(this['description']));
     feature.set(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION, this['description']);
 
     switch (this['dateType']) {
@@ -1115,9 +1171,10 @@ os.ui.FeatureEditCtrl.prototype.setFeatureConfig_ = function(config) {
   color[3] = opacity;
   color = os.style.toRgbaString(color);
 
-  // set color/size
+  // set color/size/line dash
   os.style.setConfigColor(config, color);
   os.style.setConfigSize(config, this['size']);
+  os.style.setConfigLineDash(config, this['lineDash']);
 
   // drop opacity to 0 if the shape style is set to 'None'
   if (this['shape'] === os.style.ShapeType.NONE) {
@@ -1145,6 +1202,7 @@ os.ui.FeatureEditCtrl.prototype.setFeatureConfig_ = function(config) {
 
 /**
  * Save the geometry to a feature.
+ *
  * @param {ol.Feature} feature The feature to update
  * @private
  */
@@ -1199,14 +1257,15 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
         feature.set(os.style.StyleField.ROTATION_COLUMN, '');
       }
     }
-  } else if (this.originalGeometry_) {
-    feature.setGeometry(this.originalGeometry_.clone());
+  } else if (this.originalGeometry) {
+    feature.setGeometry(this.originalGeometry.clone());
   }
 };
 
 
 /**
  * Handles column changes
+ *
  * @param {angular.Scope.Event} event
  * @protected
  */
@@ -1218,6 +1277,7 @@ os.ui.FeatureEditCtrl.prototype.onColumnChange = function(event) {
 
 /**
  * Handle changes to the icon color.
+ *
  * @param {string=} opt_new The new color value
  * @param {string=} opt_old The old color value
  * @export
@@ -1232,7 +1292,24 @@ os.ui.FeatureEditCtrl.prototype.onIconColorChange = function(opt_new, opt_old) {
 
 
 /**
+ * Handle changes to the line dash style.
+ *
+ * @param {string=} opt_new The new value
+ * @param {string=} opt_old The old value
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.onLineDashChange = function(opt_new, opt_old) {
+  if (opt_new != opt_old && this['lineDash'] == opt_old) {
+    this['lineDash'] = opt_new;
+  }
+
+  this.updatePreview();
+};
+
+
+/**
  * Handle icon change.
+ *
  * @param {angular.Scope.Event} event The Angular event.
  * @param {osx.icon.Icon} value The new value.
  * @export
@@ -1248,6 +1325,7 @@ os.ui.FeatureEditCtrl.prototype.onIconChange = function(event, value) {
 
 /**
  * Handles label color reset
+ *
  * @param {angular.Scope.Event} event
  * @protected
  */
@@ -1261,6 +1339,7 @@ os.ui.FeatureEditCtrl.prototype.onLabelColorReset = function(event) {
 
 /**
  * Get the minimum value for the semi-major ellipse axis by converting semi-minor to the semi-major units.
+ *
  * @return {number}
  * @export
  */
@@ -1278,6 +1357,7 @@ os.ui.FeatureEditCtrl.prototype.getSemiMajorMin = function() {
 /**
  * Handle changes to the semi-major or semi-minor axis. This corrects the initial arrow key/scroll value caused by
  * using "1e-16" as the min value to invalidate the form when 0 is used.
+ *
  * @export
  */
 os.ui.FeatureEditCtrl.prototype.onAxisChange = function() {
@@ -1295,6 +1375,7 @@ os.ui.FeatureEditCtrl.prototype.onAxisChange = function() {
 
 /**
  * Launch a window to create or edit a feature.
+ *
  * @param {!os.ui.FeatureEditOptions} options
  */
 os.ui.launchFeatureEdit = function(options) {
@@ -1332,6 +1413,7 @@ os.ui.launchFeatureEdit = function(options) {
 
 /**
  * Initialize labels on a place.
+ *
  * @param {ol.Feature} feature The feature
  */
 os.ui.FeatureEditCtrl.persistFeatureLabels = function(feature) {
@@ -1369,6 +1451,7 @@ os.ui.FeatureEditCtrl.persistFeatureLabels = function(feature) {
 
 /**
  * Initialize labels on a feature.
+ *
  * @param {ol.Feature} feature The feature
  */
 os.ui.FeatureEditCtrl.restoreFeatureLabels = function(feature) {
@@ -1379,7 +1462,7 @@ os.ui.FeatureEditCtrl.restoreFeatureLabels = function(feature) {
     }
 
     var configs = /** @type {(Array<Object<string, *>>|Object<string, *>)} */ (
-        feature.get(os.style.StyleType.FEATURE));
+      feature.get(os.style.StyleType.FEATURE));
 
     if (configs) {
       if (goog.isArray(configs)) {
@@ -1396,6 +1479,7 @@ os.ui.FeatureEditCtrl.restoreFeatureLabels = function(feature) {
 
 /**
  * Initialize labels on a feature config.
+ *
  * @param {ol.Feature} feature The feature
  * @param {Object<string, *>} config The config
  */
@@ -1483,6 +1567,7 @@ os.ui.FeatureEditCtrl.updateFeatureStyle = function(feature) {
           // grab the color/size from the icon configuration
           var color = os.style.toRgbaString(image['color'] || os.style.DEFAULT_LAYER_COLOR);
           var size = image['scale'] ? os.style.scaleToSize(image['scale']) : os.style.DEFAULT_FEATURE_SIZE;
+          var lineDash = config['stroke']['lineDash'];
           delete image['scale'];
 
           // set radius for points on the image config
@@ -1496,6 +1581,7 @@ os.ui.FeatureEditCtrl.updateFeatureStyle = function(feature) {
           config['stroke'] = config['stroke'] || {};
           config['stroke']['color'] = color;
           config['stroke']['width'] = config['stroke']['width'] || size;
+          config['stroke']['lineDash'] = lineDash;
 
           // drop opacity to 0 if the shape style is set to 'None'
           if (shape === os.style.ShapeType.NONE) {

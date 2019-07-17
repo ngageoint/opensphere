@@ -7,6 +7,7 @@ goog.require('os.ui.data.groupby.TagGroupBy');
 
 /**
  * Groups nodes by a given list of tags
+ *
  * @extends {os.ui.data.groupby.TagGroupBy}
  * @param {boolean=} opt_open Keeps groups open by default
  * @constructor
@@ -32,7 +33,7 @@ os.data.groupby.TagListGroupBy.prototype.init = function() {
 
   if (this.list_) {
     for (var i = 0, n = this.list_.length; i < n; i++) {
-      this.list_[i] = this.list_[i].toUpperCase();
+      this.list_[i] = this.list_[i] && this.list_[i].toUpperCase();
     }
   }
 };
@@ -59,12 +60,19 @@ os.data.groupby.TagListGroupBy.prototype.getGroupIds = function(node) {
   }
 
   if (tags && this.list_) {
+    var invalid = false;
     for (var i = 0, n = tags.length; i < n; i++) {
-      var t = tags[i].toUpperCase();
-
-      if (this.list_.indexOf(t) > -1) {
-        goog.array.insert(ids, 'a' + t);
+      if (tags[i]) {
+        var t = tags[i].toUpperCase();
+        if (this.list_.indexOf(t) > -1) {
+          goog.array.insert(ids, 'a' + t);
+        }
+      } else {
+        invalid = true;
       }
+    }
+    if (invalid) {
+      goog.log.fine(this.log, 'Invalid tag set for ' + node.getLabel() + ': \n' + JSON.stringify(tags));
     }
   }
 

@@ -36,6 +36,7 @@ goog.require('os.ui.window');
 /**
  * The base combinator directive. This directive is NOT registered with Angular, it is only used by the extending
  * combinator implementations.
+ *
  * @return {angular.Directive}
  */
 os.ui.query.baseCombinatorDirective = function() {
@@ -188,6 +189,7 @@ os.ui.query.BaseCombinatorCtrl.ORDERS_ = [
 
 /**
  * Applies the entries to the query manager
+ *
  * @export
  */
 os.ui.query.BaseCombinatorCtrl.prototype.apply = function() {
@@ -216,6 +218,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.apply = function() {
 
 /**
  * Closes the window
+ *
  * @export
  */
 os.ui.query.BaseCombinatorCtrl.prototype.close = function() {
@@ -226,6 +229,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.close = function() {
 
 /**
  * Clear
+ *
  * @export
  */
 os.ui.query.BaseCombinatorCtrl.prototype.clear = function() {
@@ -242,6 +246,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.clear = function() {
 
 /**
  * Get the currently configured layer id.
+ *
  * @param {string=} opt_default The default value.
  * @return {string|undefined}
  * @private
@@ -275,6 +280,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.getEntries_ = function() {
 
 /**
  * Clean up
+ *
  * @protected
  */
 os.ui.query.BaseCombinatorCtrl.prototype.onDestroy = function() {
@@ -297,6 +303,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.onDestroy = function() {
 
 /**
  * Performs a command. Useful for extending classes that may want to use the command stack.
+ *
  * @param {os.command.ICommand} cmd
  * @protected
  */
@@ -307,6 +314,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.doCommand = function(cmd) {
 
 /**
  * Schedules an update
+ *
  * @param {goog.events.Event} e
  */
 os.ui.query.BaseCombinatorCtrl.prototype.scheduleUpdate = function(e) {
@@ -330,6 +338,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.scheduleUpdate = function(e) {
 
 /**
  * Disposes the tree
+ *
  * @private
  */
 os.ui.query.BaseCombinatorCtrl.prototype.disposeTree_ = function() {
@@ -343,6 +352,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.disposeTree_ = function() {
 
 /**
  * Return the pivot data from the query manager
+ *
  * @param {Array<!string>=} opt_order
  * @param {boolean=} opt_advanced
  * @param {Object=} opt_layer
@@ -356,6 +366,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.getPivotData = function(opt_order, opt_
 
 /**
  * Updates the tree data.
+ *
  * @param {boolean=} opt_restoreState If state should be restored for tree nodes
  * @export
  */
@@ -411,6 +422,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.update = function(opt_restoreState) {
 
 /**
  * Handles user layer selection
+ *
  * @param {boolean=} opt_restoreState If state should be restored for tree nodes
  * @export
  */
@@ -422,6 +434,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.selectLayer = function(opt_restoreState
 
 /**
  * Handles user groupBy selection
+ *
  * @param {boolean=} opt_restoreState If state should be restored for tree nodes
  * @export
  */
@@ -433,6 +446,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.selectGroupBy = function(opt_restoreSta
 
 /**
  * Traverse through the tree and select the nodes that match an id
+ *
  * @param {string} id
  * @param {os.ui.slick.SlickTreeNode=} opt_node
  */
@@ -460,6 +474,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.selectById = function(id, opt_node) {
 
 /**
  * Handles toggle of advancde check box
+ *
  * @param {boolean=} opt_restoreState If state should be restored for tree nodes
  * @export
  */
@@ -471,6 +486,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.advancedToggle = function(opt_restoreSt
 
 /**
  * Sort layers
+ *
  * @param {Object} a
  * @param {Object} b
  * @return {number} per compare functions
@@ -482,6 +498,7 @@ os.ui.query.BaseCombinatorCtrl.sortLayers = function(a, b) {
 
 /**
  * Handle scope event to switch the selected layer.
+ *
  * @param {angular.Scope.Event} event
  * @param {string} id The layer id
  * @private
@@ -502,6 +519,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.onSetLayer_ = function(event, id) {
 
 /**
  * Updates the list of layers in the combo box
+ *
  * @protected
  */
 os.ui.query.BaseCombinatorCtrl.prototype.updateLayers = function() {
@@ -510,7 +528,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.updateLayers = function() {
   var layers = [];
   // if the chooser is hidden, always use the layerId on the scope
   var layer = this.scope['hideLayerChooser'] ?
-      this.scope['layerId'] : (this.scope['layer'] || this.scope['layerId']);
+    this.scope['layerId'] : (this.scope['layer'] || this.scope['layerId']);
 
   for (var key in set) {
     var filterable = /** @type {os.filter.IFilterable} */ (this.fm.getFilterable(key));
@@ -635,6 +653,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.getRoot = function() {
 
 /**
  * Traverses the ComboNode tree and builds out the set of entries from it. Places the reference on this.entries_
+ *
  * @protected
  */
 os.ui.query.BaseCombinatorCtrl.prototype.createEntriesFromTree = function() {
@@ -660,6 +679,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.getGoldCopy_ = function() {
  * Applies saved entries to the tree. When an external change to the query entries in queryManager is made, this
  * function will be called without attempting to restore the state. This situation arises when, say, a query
  * area is changed from inclusion to exclusion on the map.
+ *
  * @param {boolean=} opt_restoreState Controls whether to restore the tree state
  * @protected
  */
@@ -805,6 +825,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.onView_ = function(evt, isFilter, entry
 
 /**
  * Listener for copy events from combo nodes.
+ *
  * @param {angular.Scope.Event} event
  * @param {!Object<string, string|boolean>} entry
  * @private
@@ -1056,6 +1077,7 @@ os.ui.query.BaseCombinatorCtrl.applyEntries = function(node, entries, opt_entry,
 
 /**
  * Saves or applies tree collapse state
+ *
  * @param {os.ui.query.ComboNode} node
  * @param {Object<string, boolean>} collapsed
  * @param {boolean=} opt_apply
@@ -1105,6 +1127,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.doState = function(node, collapsed, opt
 
 /**
  * Handles adds/edits to filters
+ *
  * @param {os.filter.FilterEntry} entry
  * @protected
  */
@@ -1132,6 +1155,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.editEntry = function(entry) {
 
 /**
  * Handles 'filterComplete' Angular scope event.
+ *
  * @param {angular.Scope.Event} event
  * @param {os.filter.FilterEntry} entry
  * @private
@@ -1144,6 +1168,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.onFilterComplete_ = function(event, ent
 
 /**
  * Handles adds/edits to filters
+ *
  * @param {os.filter.FilterEntry} entry
  * @private
  */
@@ -1155,6 +1180,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.onEditComplete_ = function(entry) {
 
 /**
  * Get filters out of the tree
+ *
  * @param {Array} arr The array of items
  * @param {Array} result The resulting flat array
  * @param {boolean} activeOnly get only the active filters
@@ -1183,6 +1209,7 @@ os.ui.query.BaseCombinatorCtrl.flatten_ = function(arr, result, activeOnly) {
 
 /**
  * Save the filters to a file
+ *
  * @param {string} name of the file
  * @param {os.ui.filter.ui.FilterExportChoice} mode how to export filters
  * @private
@@ -1211,6 +1238,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.save_ = function(name, mode) {
 
 /**
  * Disables export button
+ *
  * @return {boolean}
  * @export
  */
@@ -1228,6 +1256,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.exportDisabled = function() {
 
 /**
  * Launches the filter export process.
+ *
  * @export
  */
 os.ui.query.BaseCombinatorCtrl.prototype.launchExport = function() {
@@ -1238,6 +1267,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.launchExport = function() {
 
 /**
  * Launches the filter import process.
+ *
  * @export
  */
 os.ui.query.BaseCombinatorCtrl.prototype.import = function() {
@@ -1249,6 +1279,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.import = function() {
 
 /**
  * Opens the area import menu.
+ *
  * @export
  */
 os.ui.query.BaseCombinatorCtrl.prototype.openImportMenu = function() {

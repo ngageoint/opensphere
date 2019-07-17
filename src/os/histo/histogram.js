@@ -98,6 +98,7 @@ os.histo.Histogram.prototype.disposeInternal = function() {
 
 /**
  * Initializes the unique dimension
+ *
  * @protected
  */
 os.histo.Histogram.prototype.initUnique = function() {
@@ -107,6 +108,7 @@ os.histo.Histogram.prototype.initUnique = function() {
 
 /**
  * Fires a change event when the histogram changes.
+ *
  * @protected
  */
 os.histo.Histogram.prototype.onDataChange = function() {
@@ -116,6 +118,7 @@ os.histo.Histogram.prototype.onDataChange = function() {
 
 /**
  * Add item(s) to the histogram
+ *
  * @param {!(T|Array.<!T>)} items
  *
  * @export Prevent the compiler from moving the function off the prototype.
@@ -132,6 +135,7 @@ os.histo.Histogram.prototype.addItems = function(items) {
 
 /**
  * Remove item(s) from the histogram
+ *
  * @param {!(T|Array.<!T>)} items
  *
  * @export Prevent the compiler from moving the function off the prototype.
@@ -168,6 +172,7 @@ os.histo.Histogram.prototype.clear = function() {
 
 /**
  * Get the results
+ *
  * @return {Array.<os.histo.Bin.<T>>}
  *
  * @export Prevent the compiler from moving the function off the prototype.

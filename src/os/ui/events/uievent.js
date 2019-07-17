@@ -26,6 +26,7 @@ os.ui.events.UIEventParams = {
 
 /**
  * UI event
+ *
  * @param {os.ui.events.UIEventType} type The event type
  * @param {string} id The UI identifier
  * @param {*=} opt_value The new UI value

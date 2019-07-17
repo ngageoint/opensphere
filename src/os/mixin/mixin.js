@@ -36,6 +36,7 @@ os.registerClass(ol.layer.Group.NAME, ol.layer.Group);
 
 /**
  * Clamps opacity precision to two decimal places.
+ *
  * @override
  * @suppress {accessControls|duplicate}
  */
@@ -53,6 +54,7 @@ ol.color.normalize = function(color, opt_color) {
  * Mixin to override the non-use of the frameState.skippedFeatureUids property. Openlayers' renderer does not skip
  * hidden features for the sake of hit detection, which is not only slower, but also causes them to be highlighted
  * on hover even if they are hidden. Fixes THIN-7359.
+ *
  * @inheritDoc
  *
  * @suppress {accessControls|duplicate}

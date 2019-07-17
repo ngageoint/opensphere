@@ -169,8 +169,8 @@ os.net.LongPoll.prototype.open = function(url, opt_protocol) {
 os.net.LongPoll.isExternal_ = function(uri, opt_localUri) {
   uri = typeof uri === 'string' ? new goog.Uri(uri) : uri;
   opt_localUri = opt_localUri ?
-      typeof opt_localUri === 'string' ? new goog.Uri(opt_localUri) : opt_localUri :
-      new goog.Uri(window.location);
+    typeof opt_localUri === 'string' ? new goog.Uri(opt_localUri) : opt_localUri :
+    new goog.Uri(window.location);
 
   return !uri.hasSameDomainAs(opt_localUri);
 };
@@ -198,6 +198,7 @@ os.net.LongPoll.prototype.close = function() {
 
 /**
  * Send is a no-op for long poll streaming since this is a one-way connection (download only)
+ *
  * @param {string} message
  */
 os.net.LongPoll.prototype.send = function(message) {
@@ -219,6 +220,7 @@ os.net.LongPoll.prototype.isOpen = function() {
 
 /**
  * Called when readystate changes on the request
+ *
  * @protected
  */
 os.net.LongPoll.prototype.onState = function() {
@@ -244,6 +246,7 @@ os.net.LongPoll.prototype.onState = function() {
 
 /**
  * Called when the stream has connected
+ *
  * @protected
  */
 os.net.LongPoll.prototype.onOpen = function() {
@@ -258,6 +261,7 @@ os.net.LongPoll.prototype.onOpen = function() {
 
 /**
  * Called when the stream has closed
+ *
  * @param {goog.events.Event} e
  * @param {boolean=} opt_normal
  * @protected
@@ -340,6 +344,7 @@ os.net.LongPoll.prototype.getStatus = function() {
 
 /**
  * Clears the reconnect timer.
+ *
  * @private
  */
 os.net.LongPoll.prototype.clearReconnectTimer_ = function() {

@@ -80,6 +80,7 @@ plugin.area.SHPAreaImportUI.prototype.launchUI = function(file, opt_config) {
 
 /**
  * The SHP import file selection area directive
+ *
  * @return {angular.Directive}
  */
 plugin.area.shpAreaDirective = function() {
@@ -102,6 +103,7 @@ os.ui.Module.directive('shparea', [plugin.area.shpAreaDirective]);
 
 /**
  * Controller for the SHP import file selection step
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout The Angular $timeout service.
@@ -124,6 +126,7 @@ goog.inherits(plugin.area.SHPAreaCtrl, plugin.area.AreaImportCtrl);
 
 /**
  * Update Title/Description
+ *
  * @param {angular.Scope.Event} event The Angular event
  * @param {boolean} valid
  * @private
@@ -136,6 +139,7 @@ plugin.area.SHPAreaCtrl.prototype.onFileChange_ = function(event, valid) {
 
 /**
  * Validate the done button
+ *
  * @return {boolean} if the form is valid
  * @export
  */
@@ -170,6 +174,7 @@ plugin.area.SHPAreaCtrl.prototype.finish = function() {
 
 /**
  * Success callback for importing data. Adds the areas to Area Manager
+ *
  * @param {goog.events.Event} event
  * @private
  */

@@ -12,7 +12,7 @@ describe('plugin.file.kml.ui.placemarkededit', function() {
   // eslint-disable-next-line require-jsdoc
   function timeout(fn, delay, invokeApply) {
     // $window.setTimeout(fn,delay);
-  };
+  }
 
   beforeEach(function() {
     inject(function($compile, $rootScope) {
@@ -238,15 +238,6 @@ describe('plugin.file.kml.ui.placemarkededit', function() {
 
     formCtrl.loadFromFeature(feature);
     expect(formCtrl['annotationOptions']).toBe(os.annotation.OPTIONS_FIELD);
-  });
-
-  it('should set annotationOptions to true', function() {
-
-    var formCtrl = new plugin.file.kml.ui.PlacemarkEditCtrl(scope, element, timeout);
-
-    formCtrl.cancel();
-
-    expect(formCtrl['annotationOptions'].editable).toBe(true);
   });
 
   it('should accept new feature', function() {

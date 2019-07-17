@@ -14,6 +14,7 @@ goog.array.insert(os.ui.query.featureKeys, os.data.RecordField.SOURCE_NAME);
 
 /**
  * Groups nodes by their source when available.
+ *
  * @param {boolean=} opt_open Keeps groups open by default
  * @extends {os.data.groupby.BaseGroupBy}
  * @constructor
@@ -40,6 +41,14 @@ os.data.groupby.SourceGroupBy.prototype.getGroupIds = function(node) {
   if (node && node instanceof os.ui.query.AreaNode) {
     try {
       sourceName = /** @type {string|undefined} */ (node.getArea().get(os.data.RecordField.SOURCE_NAME));
+    } catch (e) {
+      // can't find the source, so use the default group
+    }
+  }
+
+  if (node && node instanceof os.ui.filter.ui.FilterNode) {
+    try {
+      sourceName = /** @type {string|undefined} */ (node.getEntry().getSource());
     } catch (e) {
       // can't find the source, so use the default group
     }

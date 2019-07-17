@@ -59,6 +59,9 @@ plugin.file.kml.DEFAULT_STYLE = {
     'rotation': 0,
     'src': os.ui.file.kml.DEFAULT_ICON_PATH
   },
+  'fill': {
+    'color': os.style.DEFAULT_LAYER_COLOR
+  },
   'stroke': {
     'color': os.style.DEFAULT_LAYER_COLOR,
     'width': os.style.DEFAULT_STROKE_WIDTH
@@ -74,6 +77,7 @@ plugin.file.kml.DEFAULT_STYLE_ARRAY = [plugin.file.kml.DEFAULT_STYLE];
 
 /**
  * Replaces parsers in an Openlayers KML parser map.
+ *
  * @param {Object<string, Object<string, ol.XmlParser>>} obj The parser object with namespace keys
  * @param {string} field The field to replace
  * @param {ol.XmlParser} parser The new parser
@@ -90,6 +94,7 @@ plugin.file.kml.replaceParsers_ = function(obj, field, parser) {
 
 /**
  * Accessor for private Openlayers code.
+ *
  * @return {function(this: T, *, Array<*>, (string|undefined)): (Node|undefined)}
  * @template T
  */
@@ -100,6 +105,7 @@ plugin.file.kml.OL_GEOMETRY_NODE_FACTORY = function() {
 
 /**
  * Accessor for private Openlayers code.
+ *
  * @return {Object<string, Object<string, ol.XmlParser>>}
  * @template T
  */
@@ -110,6 +116,7 @@ plugin.file.kml.OL_ICON_STYLE_PARSERS = function() {
 
 /**
  * Accessor for private Openlayers code.
+ *
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
 plugin.file.kml.OL_LINK_PARSERS = function() {
@@ -119,6 +126,7 @@ plugin.file.kml.OL_LINK_PARSERS = function() {
 
 /**
  * Accessor for private Openlayers code.
+ *
  * @return {Array<string>}
  */
 plugin.file.kml.OL_NAMESPACE_URIS = function() {
@@ -128,6 +136,7 @@ plugin.file.kml.OL_NAMESPACE_URIS = function() {
 
 /**
  * Accessor for private Openlayers code.
+ *
  * @return {Array<string>}
  */
 plugin.file.kml.OL_GX_NAMESPACE_URIS = function() {
@@ -137,10 +146,21 @@ plugin.file.kml.OL_GX_NAMESPACE_URIS = function() {
 
 /**
  * Accessor for private Openlayers code.
+ *
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
 plugin.file.kml.OL_NETWORK_LINK_PARSERS = function() {
   return ol.format.KML.NETWORK_LINK_PARSERS_;
+};
+
+
+/**
+ * Accessor for private Openlayers code.
+ *
+ * @return {Object<string, Object<string, ol.XmlParser>>}
+ */
+plugin.file.kml.OL_PAIR_PARSERS = function() {
+  return ol.format.KML.PAIR_PARSERS_;
 };
 
 
@@ -155,6 +175,7 @@ plugin.file.kml.OL_PLACEMARK_PARSERS = function() {
 
 /**
  * Access for private Openlayers code.
+ *
  * @return {Object<string, Object<string, ol.XmlSerializer>>}
  */
 plugin.file.kml.OL_PLACEMARK_SERIALIZERS = function() {
@@ -164,6 +185,7 @@ plugin.file.kml.OL_PLACEMARK_SERIALIZERS = function() {
 
 /**
  * Access for private Openlayers code.
+ *
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
 plugin.file.kml.OL_STYLE_PARSERS = function() {
@@ -208,13 +230,79 @@ plugin.file.kml.replaceParsers_(ol.format.KML.POLY_STYLE_PARSERS_, 'color',
 
 /**
  * Accessor for private Openlayers code.
+ *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
- * @return {Array<ol.style.Style>} Style.
+ * @return {Object} style config
  */
 plugin.file.kml.readStyle = function(node, objectStack) {
-  return ol.format.KML.readStyle_(node, objectStack);
+  var styleObject = ol.xml.pushParseAndPop(
+      {}, ol.format.KML.STYLE_PARSERS_, node, objectStack);
+  if (!styleObject || goog.object.isEmpty(styleObject)) {
+    // don't create a style config if nothing was parsed from the element
+    return null;
+  }
+  var fillStyle = /** @type {ol.style.Fill} */
+      ('fillStyle' in styleObject ?
+        styleObject['fillStyle'] : ol.format.KML.DEFAULT_FILL_STYLE_);
+  var fill = /** @type {boolean|undefined} */ (styleObject['fill']);
+  var imageStyle = /** @type {ol.style.Image} */
+      ('imageStyle' in styleObject ?
+        styleObject['imageStyle'] : ol.format.KML.DEFAULT_IMAGE_STYLE_);
+  if (imageStyle == ol.format.KML.DEFAULT_NO_IMAGE_STYLE_) {
+    imageStyle = undefined;
+  }
+  var textStyle = /** @type {ol.style.Text} */
+      ('textStyle' in styleObject ?
+        styleObject['textStyle'] : ol.format.KML.DEFAULT_TEXT_STYLE_);
+  var strokeStyle = /** @type {ol.style.Stroke} */
+      ('strokeStyle' in styleObject ?
+        styleObject['strokeStyle'] : ol.format.KML.DEFAULT_STROKE_STYLE_);
+  var outline = /** @type {boolean|undefined} */
+      (styleObject['outline']);
+
+  var config = os.style.StyleManager.getInstance().toConfig(new ol.style.Style({
+    fill: fillStyle,
+    image: imageStyle,
+    stroke: strokeStyle,
+    text: textStyle,
+    zIndex: undefined // FIXME
+  }));
+
+  if (fill !== undefined && !fill) {
+    config['fill'] = null;
+  }
+
+  if (outline !== undefined && !outline) {
+    config['stroke'] = null;
+  }
+
+  return config;
 };
+
+
+/**
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @const
+ */
+plugin.file.kml.PAIR_PARSERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'Style': ol.xml.makeObjectPropertySetter(plugin.file.kml.readStyle)
+    });
+
+os.object.merge(plugin.file.kml.PAIR_PARSERS, plugin.file.kml.OL_PAIR_PARSERS(), true);
+
+
+/**
+ * @type {Object<string, Object<string, ol.XmlParser>>}
+ * @const
+ */
+plugin.file.kml.PLACEMARK_PARSERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'Style': ol.xml.makeObjectPropertySetter(plugin.file.kml.readStyle)
+    });
+
+os.object.merge(plugin.file.kml.PLACEMARK_PARSERS, plugin.file.kml.OL_PLACEMARK_PARSERS(), true);
 
 
 /**
@@ -233,6 +321,7 @@ plugin.file.kml.BALLOON_PROPERTY_PARSERS = ol.xml.makeStructureNS(
 
 /**
  * Parses a time node.
+ *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  * @return {os.time.ITime} The parsed time, or null if none could be parsed
@@ -322,6 +411,7 @@ os.object.merge(plugin.file.kml.TIME_PARSERS, plugin.file.kml.OL_PLACEMARK_PARSE
 
 /**
  * Read a MultiTrack node.
+ *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  * @return {ol.geom.MultiLineString|undefined} MultiLineString.
@@ -415,6 +505,7 @@ os.object.merge(plugin.file.kml.PLACEMARK_TRACK_PARSERS, plugin.file.kml.OL_PLAC
 
 /**
  * Read a LatLonBox node and add extent/rotation to the last object on the stack.
+ *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  * @private
@@ -439,6 +530,7 @@ plugin.file.kml.readLatLonBox_ = function(node, objectStack) {
 
 /**
  * Read a LatLonQuad node and add extent to the last object on the stack.
+ *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  * @private
@@ -536,6 +628,7 @@ plugin.file.kml.SCREEN_OVERLAY_PARSERS = ol.xml.makeStructureNS(
 
 /**
  * Override the Openlayers function to support exporting Track and MultiTrack nodes.
+ *
  * @param {*} value Value.
  * @param {Array<*>} objectStack Object stack.
  * @param {string=} opt_nodeName Node name.
@@ -623,6 +716,7 @@ plugin.file.kml.olWriteMultiGeometry_ = ol.format.KML.writeMultiGeometry_;
 
 /**
  * Adds support for writing geometries in a {@link ol.geom.GeometryCollection} to a kml:MultiGeometry node.
+ *
  * @param {Node} node Node.
  * @param {ol.geom.Geometry} geometry Geometry.
  * @param {Array<*>} objectStack Object stack.
@@ -646,6 +740,7 @@ plugin.file.kml.writeMultiGeometry_ = function(node, geometry, objectStack) {
 
 /**
  * Adds support for writing Track nodes.
+ *
  * @param {Node} node Node.
  * @param {ol.geom.Geometry} geometry Geometry.
  * @param {Array<*>} objectStack Object stack.
@@ -666,6 +761,7 @@ plugin.file.kml.writeMultiTrack_ = function(node, geometry, objectStack) {
 
 /**
  * Adds support for writing Track nodes.
+ *
  * @param {Node} node Node.
  * @param {ol.geom.Geometry} geometry Geometry.
  * @param {Array<*>} objectStack Object stack.

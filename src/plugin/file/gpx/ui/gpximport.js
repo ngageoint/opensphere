@@ -10,6 +10,7 @@ goog.require('plugin.file.gpx.GPXProvider');
 
 /**
  * The GPX import directive.
+ *
  * @return {angular.Directive}
  */
 plugin.file.gpx.ui.gpxImportDirective = function() {
@@ -33,6 +34,7 @@ os.ui.Module.directive('gpximport', [plugin.file.gpx.ui.gpxImportDirective]);
 
 /**
  * Controller for the GPX import dialog.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @extends {os.ui.file.ui.AbstractFileImportCtrl<!os.parse.FileParserConfig, !plugin.file.gpx.GPXDescriptor>}
@@ -54,7 +56,7 @@ plugin.file.gpx.ui.GPXImportCtrl.prototype.createDescriptor = function() {
     // existing descriptor. deactivate the descriptor, then update it
     descriptor = this.config['descriptor'];
     descriptor.setActive(false);
-    plugin.file.gpx.GPXDescriptor.updateFromConfig(descriptor, this.config);
+    descriptor.updateFromConfig(this.config);
   } else {
     // this is a new import
     descriptor = plugin.file.gpx.GPXDescriptor.createFromConfig(this.config);

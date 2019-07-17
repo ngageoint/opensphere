@@ -54,10 +54,8 @@ plugin.places.ICON = plugin.places.Icon.PLACEMARK;
  * included here, or features will revert to using an icon on import.
  *
  * @type {!Array<string>}
- * @private
- * @const
  */
-plugin.places.EXPORT_FIELDS_ = [
+plugin.places.ExportFields = [
   plugin.file.kml.KMLField.DESCRIPTION,
   plugin.file.kml.KMLField.MD_DESCRIPTION,
   os.annotation.OPTIONS_FIELD,
@@ -77,6 +75,14 @@ plugin.places.EXPORT_FIELDS_ = [
   os.Fields.ORIENTATION,
   os.Fields.BEARING
 ];
+
+
+/**
+ * Fields that should be displayed on the Places source.
+ *
+ * @type {!Array<string>}
+ */
+plugin.places.SourceFields = plugin.file.kml.SOURCE_FIELDS.slice();
 
 
 /**
@@ -106,12 +112,13 @@ plugin.places.PlaceOptions;
 
 /**
  * Create a KML tree exporter for the provided root node.
+ *
  * @param {plugin.file.kml.ui.KMLNode} root The root node to export
  * @return {plugin.file.kml.KMLTreeExporter}
  */
 plugin.places.createExporter = function(root) {
   var exporter = new plugin.file.kml.KMLTreeExporter();
-  exporter.setFields(plugin.places.EXPORT_FIELDS_);
+  exporter.setFields(plugin.places.ExportFields);
   exporter.setName(plugin.places.TITLE);
 
   // don't include the root node to avoid the superfluous folder
@@ -123,6 +130,7 @@ plugin.places.createExporter = function(root) {
 
 /**
  * If the Places layer is on the map.
+ *
  * @return {boolean}
  */
 plugin.places.isLayerPresent = function() {
@@ -132,6 +140,7 @@ plugin.places.isLayerPresent = function() {
 
 /**
  * Copy a feature, saving its current style as a local feature style.
+ *
  * @param {!ol.Feature} feature The feature to copy
  * @param {Object=} opt_layerConfig The feature's layer config
  * @return {!ol.Feature}
@@ -181,6 +190,7 @@ plugin.places.copyFeature = function(feature, opt_layerConfig) {
 
 /**
  * Save features from a source to places.
+ *
  * @param {!Object} config The save configuration
  */
 plugin.places.saveFromSource = function(config) {
@@ -287,6 +297,7 @@ plugin.places.saveFromSource = function(config) {
 
 /**
  * Gets the root node for places. Places are assumed to have only 1 document.
+ *
  * @param {plugin.file.kml.ui.KMLLayerNode=} opt_layerNode The layer node. Searches the map for the layer if not
  *                                                         provided.
  * @return {plugin.file.kml.ui.KMLNode}
@@ -317,6 +328,7 @@ plugin.places.getPlacesRoot = function(opt_layerNode) {
 
 /**
  * Add a new folder to places.
+ *
  * @param {!plugin.places.FolderOptions} options The folder options.
  * @return {plugin.file.kml.ui.KMLNode} The folder node, or null if one could not be created.
  */
@@ -332,6 +344,7 @@ plugin.places.addFolder = function(options) {
 
 /**
  * Add a new place.
+ *
  * @param {!plugin.places.PlaceOptions} options The save options.
  * @return {plugin.file.kml.ui.KMLNode} The place node, or null if one could not be created.
  */
@@ -351,7 +364,7 @@ plugin.places.addPlace = function(options) {
   feature.set(plugin.file.kml.KMLField.DESCRIPTION, options.description || undefined);
 
   var time = options.startTime != null ?
-      options.endTime != null ? new os.time.TimeRange(options.startTime, options.endTime) :
+    options.endTime != null ? new os.time.TimeRange(options.startTime, options.endTime) :
       new os.time.TimeInstant(options.startTime) : undefined;
   feature.set(os.data.RecordField.TIME, time);
 

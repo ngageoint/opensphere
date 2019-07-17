@@ -6,6 +6,7 @@ goog.require('os.command.State');
 
 /**
  * Commnad removes local states
+ *
  * @implements {os.command.ICommand}
  * @constructor
  */

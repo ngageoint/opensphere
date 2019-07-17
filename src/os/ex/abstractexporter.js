@@ -9,6 +9,7 @@ goog.require('os.thread.Thread');
 
 /**
  * Base class for exporting content
+ *
  * @abstract
  * @extends {goog.events.EventTarget}
  * @implements {os.ex.IExportMethod}

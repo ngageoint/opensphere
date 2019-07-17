@@ -27,6 +27,7 @@ goog.require('plugin.file.kml.ui.kmlExportDirective');
 
 /**
  * KML exporter
+ *
  * @extends {os.ui.file.kml.AbstractKMLExporter<ol.Feature>}
  * @constructor
  */
@@ -273,7 +274,16 @@ plugin.file.kml.KMLExporter.prototype.getRotationColumn = function(item) {
 
 
 /**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLExporter.prototype.getLineDash = function(item) {
+  return plugin.file.kml.export.getLineDash(item);
+};
+
+
+/**
  * Get the feature's source.
+ *
  * @param {ol.Feature} feature The feature
  * @return {os.source.Vector} The source
  * @private
@@ -335,6 +345,7 @@ plugin.file.kml.KMLExporter.prototype.getGroupLabels = function(item) {
 
 /**
  * Check the label field array for any non-null fields.
+ *
  * @param {Array<*>} labelFields Array of label fields
  * @return {boolean} True if there are any non-null label fields
  * @private

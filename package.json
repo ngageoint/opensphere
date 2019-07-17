@@ -1,6 +1,6 @@
 {
   "name": "opensphere",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "OpenSphere is a pluggable GIS web application that supports both 2D and 3D views.",
   "main": "index.js",
   "directories": {
@@ -28,14 +28,17 @@
       "overrides_slate_compact_cb_rg",
       "overrides_slate_compact_cb_b"
     ],
+    "defineRoots": {
+      "ROOT": "./"
+    },
     "gcc": {
       "language_in": "ECMASCRIPT_2015",
       "conformance_configs": "conformance_config.textproto",
       "externs": [
         "google-closure-compiler/contrib/externs/jquery-1.9.js",
-        "google-closure-compiler/contrib/externs/angular-1.4-http-promise_templated.js",
-        "google-closure-compiler/contrib/externs/angular-1.4-resource.js",
-        "google-closure-compiler/contrib/externs/angular-1.4-q_templated.js",
+        "google-closure-compiler/contrib/externs/angular-1.5-http-promise_templated.js",
+        "google-closure-compiler/contrib/externs/angular-1.5-resource.js",
+        "google-closure-compiler/contrib/externs/angular-1.5-q_templated.js",
         "google-closure-compiler/contrib/externs/svg.js",
         "openlayers/src/ol/typedefs.js",
         "openlayers/externs/closure-compiler.js",
@@ -75,7 +78,7 @@
     "genlibs": "npm run gen:modernizr && npm run gen:xmllexer",
     "gen:modernizr": "modernizr -c modernizr.config.json -u -d .build/modernizr.js",
     "gen:xmllexer": "globalify xml-lexer -o .build/xml-lexer.min.js",
-    "test:gcc": "os-compile $(cat .build/gcc-test-args)",
+    "test:gcc": "os-compile .build/gcc-test-args.json",
     "test:init": "npm run genlibs && npm run compile:resolve -- --exclude resources scss && npm run test:gcc",
     "test:debug": "karma start --browsers Chrome --reporters dots",
     "test:run": "karma start --single-run",
@@ -91,7 +94,7 @@
     "init:vfolder": "mkdirp $(cat .build/version)",
     "init": "npm run init:base && npm run init:debug && npm run init:version && npm run init:vfolder",
     "lint:css": "sass-lint -v -s scss -i 'scss/nolint/**/*.scss' 'scss/**/*.scss'",
-    "lint:js": "eslint --cache 'src/**/*.js' 'cypress/**/*.js'",
+    "lint:js": "eslint --cache 'src/**/*.js' 'cypress/**/*.js' 'tasks/**/*.js'",
     "lint": "npm run lint:js && npm run lint:css",
     "compile:dossier": "npm run init:apidoc && os-docs-gen-config dossier.conf.json .build/dossier.conf.json && os-docs -c .build/dossier.conf.json",
     "precompile:resolve": "cp addlayer.js .build",
@@ -101,9 +104,10 @@
     "postcompile:debugcss": "for i in $(ls .build/themes -1 | grep combined.css | grep -v combined.css.map); do postcss .build/themes/$i --no-map -u autoprefixer -r & pids=\"$pids $!\"; done; wait $pids",
     "minify:css": "for i in $(ls .build/themes -1 | grep combined.css | grep -v combined.css.map); do cleancss --output .build/themes/$(echo $i | sed 's/combined/min/') .build/themes/$i & pids=\"$pids $!\"; done; wait $pids",
     "compile:css": "npm run compile:debugcss; npm run minify:css;",
-    "compile:gcc": "os-compile $(cat .build/gcc-java-args)",
+    "compile:gcc": "os-compile .build/gcc-args.json",
+    "compile:vendor-min": "node vendor-min",
     "postcompile:gcc": "echo \"//# sourceMappingURL=$(pwd)/.build/opensphere.min.map\" >> .build/opensphere.min.js",
-    "compile": "npm run compile:resolve && npm run compile:gcc &&  npm run compile:css",
+    "compile": "npm run compile:vendor-min && npm run compile:resolve && npm run compile:gcc && npm run compile:css",
     "precopy:files": "mkdirp $(cat .build/version)/styles && mkdirp $(cat .build/version)/styles/themes && mkdirp dist/opensphere/test",
     "precopy:views": "mkdirp $(cat .build/version)/views",
     "precopy:config": "mkdirp dist/opensphere/config",
@@ -122,10 +126,10 @@
     "build:debug": "npm run init && npm run genlibs && npm run compile:resolve && npm run compile:debugcss && npm run build:debugindex",
     "build:index": "xargs -n 1 os-index < .build/resources-pages",
     "build:debugindex": "xargs -n 1 os-index --debug < .build/resources-pages",
-    "build:xt": "mkdirp .build dist/opensphere; os-compile $(cat src/os/xt/gcc-args); cp src/os/xt/xt-example.html dist/opensphere",
+    "build:xt": "mkdirp .build dist/opensphere; tasks/xt/build.js; cp src/os/xt/xt-example.html dist/opensphere",
     "package:update": "if git diff --name-only ORIG_HEAD HEAD | grep --quiet package.json; then echo 'UPDATE: package.json was updated, consider running yarn in your workspace root'; fi",
     "perms": "chmod -R u+rwX,go+rX,go-w .",
-    "semantic-release": "semantic-release",
+    "semantic-release": "semantic-release --dry-run",
     "start-server": "http-server ../../ -p 8282 -c-1 -o -U -s &",
     "stop-server": "pkill -f http-server"
   },
@@ -172,7 +176,7 @@
     "url": "https://github.com/ngageoint/opensphere.git"
   },
   "engines": {
-    "node": ">=8.0.0 <11.0.0"
+    "node": ">=8.0.0"
   },
   "config": {
     "commitizen": {
@@ -183,24 +187,36 @@
     }
   },
   "release": {
-    "verifyConditions": [
-      "@semantic-release/condition-travis",
-      "@semantic-release/changelog",
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      [
+        "@semantic-release/release-notes-generator",
+        {
+          "parserOpts": {
+            "issuePrefixes": [
+              "#",
+              "THIN-",
+              "thin-"
+            ]
+          }
+        }
+      ],
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogFile": "CHANGELOG.md"
+        }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "CHANGELOG.md"
+          ],
+          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ],
       "@semantic-release/npm",
-      "@semantic-release/git"
-    ],
-    "getLastRelease": "@semantic-release/git",
-    "publish": [
-      "@semantic-release/changelog",
-      "@semantic-release/npm",
-      {
-        "path": "@semantic-release/git",
-        "assets": [
-          "package.json",
-          "CHANGELOG.md"
-        ],
-        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-      },
       "@semantic-release/github"
     ]
   },
@@ -211,11 +227,12 @@
     "Firefox >= 31"
   ],
   "devDependencies": {
-    "@semantic-release/changelog": "^1.0.0",
+    "@semantic-release/changelog": "^3.0.2",
     "@semantic-release/condition-travis": "^7.1.3",
-    "@semantic-release/git": "^2.0.1",
-    "@semantic-release/github": "^3.0.0",
-    "@semantic-release/npm": "^2.5.0",
+    "@semantic-release/git": "^7.0.8",
+    "@semantic-release/github": "^5.2.10",
+    "@semantic-release/npm": "^5.1.4",
+    "@semantic-release/release-notes-generator": "^7.1.4",
     "angular-mocks": "~1.5.x",
     "autoprefixer": "^8.4.1",
     "clean-css-cli": "^4.1.11",
@@ -224,10 +241,11 @@
     "cypress": "^3.1.5",
     "cypress-image-snapshot": "^3.0.1",
     "cz-conventional-changelog": "^1.2.0",
-    "eslint": "^3.19.0",
-    "eslint-config-google": "^0.7.0",
-    "eslint-config-opensphere": "^1.1.1",
+    "eslint": "^6.0.0",
+    "eslint-config-google": "^0.13.0",
+    "eslint-config-opensphere": "^3.0.0",
     "eslint-plugin-google-camelcase": "^0.0.2",
+    "eslint-plugin-jsdoc": "^8.6.0",
     "eslint-plugin-opensphere": "^2.0.0",
     "globalify": "^1.1.0",
     "google-closure-compiler": "^20190415.0.0",
@@ -243,17 +261,16 @@
     "karma-junit-reporter": "^1.1.0",
     "lolex": "=2.3.2",
     "mkdirp": "^0.5.1",
-    "node-sass": "=4.7.2",
-    "opensphere-build-closure-helper": "^2.0.0",
+    "node-sass": "^4.12.0",
+    "opensphere-build-closure-helper": "^3.0.0",
     "opensphere-build-docs": "^1.0.0",
     "opensphere-build-index": "^1.0.0",
-    "opensphere-build-resolver": "^5.0.0",
+    "opensphere-build-resolver": "^5.2.0",
     "opensphere-state-schema": "^2.3.0",
     "postcss-cli": "^5.0.0",
-    "replace": "^0.3.0",
     "rimraf": "^2.5.4",
     "sass-lint": "^1.12.1",
-    "semantic-release": "^11.0.2",
+    "semantic-release": "^15.13.18",
     "surge": "^0.20.4",
     "validate-commit-msg": "^2.8.2",
     "xmllint": "^0.1.1"
@@ -275,7 +292,7 @@
     "font-awesome": "^4.6.3",
     "google-closure-library": "^20190415.0.0",
     "html2canvas": "^1.0.0-alpha.12",
-    "jquery": "3.3.1",
+    "jquery": "^3.4.1",
     "js-polyfills": "^0.1.42",
     "jschardet": "^1.6.0",
     "jsts": "^2.0.4",
@@ -291,9 +308,9 @@
     "proj4": "^2.3.17",
     "save-svg-as-png": "=1.3.2",
     "select2": "^3.5.1",
-    "simplemde": "^1.11.2",
     "suncalc": "^1.8.0",
     "text-encoding": "^0.6.4",
+    "tui-editor": "=1.4.1",
     "zip-js": "^0.0.2"
   },
   "husky": {

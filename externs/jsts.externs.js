@@ -590,3 +590,24 @@ jsts.LineStringExtracter = {};
  * @return {jsts.Collection<jsts.geom.LineString>}
  */
 jsts.LineStringExtracter.getLines = function(geom) {};
+
+
+/**
+ * Namespace.
+ * @type {Object}
+ */
+jsts.operation.distance = {};
+
+
+/**
+ * @constructor
+ */
+jsts.operation.distance.DistanceOp = function() {};
+
+
+/**
+ * @param {jsts.geom.Geometry} geom1
+ * @param {jsts.geom.Geometry} geom2
+ * @return {Array<jsts.geom.Coordinate>}
+ */
+jsts.operation.distance.DistanceOp.nearestPoints = function(geom1, geom2) {};

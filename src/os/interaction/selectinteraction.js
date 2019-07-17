@@ -16,6 +16,7 @@ goog.require('os.source.Vector');
 
 /**
  * Handles selection of vector features
+ *
  * @constructor
  * @extends {ol.interaction.Interaction}
  * @implements {os.I3DSupport}

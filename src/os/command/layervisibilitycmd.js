@@ -5,6 +5,7 @@ goog.require('os.command.AbstractSyncCommand');
 
 /**
  * Sets the visibility for a layer.
+ *
  * @extends {os.command.AbstractSyncCommand}
  * @constructor
  * @param {string} id Layer ID

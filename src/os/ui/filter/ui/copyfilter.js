@@ -14,6 +14,7 @@ goog.require('os.ui.window');
 
 /**
  * The copyfilter directive
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.ui.copyFilterDirective = function() {
@@ -40,6 +41,7 @@ os.ui.Module.directive('copyfilter', [os.ui.filter.ui.copyFilterDirective]);
 
 /**
  * Controller for the copyfilter directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout The Angular $timeout service.
@@ -119,6 +121,7 @@ os.ui.filter.ui.CopyFilterCtrl = function($scope, $element, $timeout) {
 
 /**
  * Cleanup
+ *
  * @private
  */
 os.ui.filter.ui.CopyFilterCtrl.prototype.onDestroy_ = function() {
@@ -129,6 +132,7 @@ os.ui.filter.ui.CopyFilterCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Initializes the layer list.
+ *
  * @private
  */
 os.ui.filter.ui.CopyFilterCtrl.prototype.init_ = function() {
@@ -171,6 +175,7 @@ os.ui.filter.ui.CopyFilterCtrl.prototype.init_ = function() {
 /**
  * Updates the two main lists that drive the UI: the list of mappings that already exist, and the list of mappings
  * that need to be created.
+ *
  * @private
  */
 os.ui.filter.ui.CopyFilterCtrl.prototype.update_ = function() {
@@ -263,6 +268,7 @@ os.ui.filter.ui.CopyFilterCtrl.prototype.update_ = function() {
  * Pieces together all of the mappings needed to perform the filter copy. This function creates and adds the
  * necessary new mappings to the manager as well as gathering the necessary existing mappings already in the
  * manager.
+ *
  * @return {Object<string, Array<os.column.IColumnMapping>>}
  * @private
  */
@@ -333,6 +339,7 @@ os.ui.filter.ui.CopyFilterCtrl.prototype.constructNewMappings_ = function() {
 
 /**
  * Get whether there are unmapped columns.
+ *
  * @return {boolean}
  * @export
  */
@@ -343,6 +350,7 @@ os.ui.filter.ui.CopyFilterCtrl.prototype.hasUnmappedColumns = function() {
 
 /**
  * Get whether there are unmapped columns.
+ *
  * @return {boolean}
  * @export
  */
@@ -353,6 +361,7 @@ os.ui.filter.ui.CopyFilterCtrl.prototype.hasMappedColumns = function() {
 
 /**
  * Cancels the filter
+ *
  * @export
  */
 os.ui.filter.ui.CopyFilterCtrl.prototype.cancel = function() {
@@ -362,6 +371,7 @@ os.ui.filter.ui.CopyFilterCtrl.prototype.cancel = function() {
 
 /**
  * User clicked OK
+ *
  * @export
  */
 os.ui.filter.ui.CopyFilterCtrl.prototype.finish = function() {
@@ -414,6 +424,7 @@ os.ui.filter.ui.CopyFilterCtrl.prototype.finish = function() {
 
 /**
  * Creates a picker model out of the passed parameters.
+ *
  * @param {string} targetLayerName The layer name for the target layer
  * @param {string} targetFilterKey The layer key for the target layer
  * @param {string} sourceColumnName The column name for the source layer

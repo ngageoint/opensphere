@@ -17,6 +17,7 @@ goog.require('plugin.file.kml.export');
 
 /**
  * KML tree exporter
+ *
  * @extends {os.ui.file.kml.AbstractKMLExporter<!plugin.file.kml.ui.KMLNode>}
  * @constructor
  */
@@ -332,4 +333,12 @@ plugin.file.kml.KMLTreeExporter.prototype.getBalloonOptions = function(item) {
  */
 plugin.file.kml.KMLTreeExporter.prototype.getRotationColumn = function(item) {
   return plugin.file.kml.export.getRotationColumn(item ? item.getFeature() : null);
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLTreeExporter.prototype.getLineDash = function(item) {
+  return plugin.file.kml.export.getLineDash(item ? item.getFeature() : null);
 };

@@ -5,6 +5,7 @@ goog.require('os.net.IDataFormatter');
 
 /**
  * Creates an application/json payload
+ *
  * @implements {os.net.IDataFormatter}
  * @param {Array<Object>} content The JSON objects to format.
  * @param {?function(string, *)=} opt_replacer The JSON object to format.

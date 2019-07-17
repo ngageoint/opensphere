@@ -10,11 +10,13 @@ goog.provide('os.ui.location.dmsLonFilter');
 goog.provide('os.ui.location.mgrsFilter');
 goog.require('os.geo');
 goog.require('os.ui.Module');
+goog.require('os.ui.location.Format');
 
 
 
 /**
  * Take decimal degress
+ *
  * @constructor
  * @return {angular.Filter}
  * @ngInject
@@ -42,12 +44,13 @@ os.ui.location.degFilter.Filter = function(latdeg, londeg) {
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.filter('deg', [os.ui.location.degFilter]);
+os.ui.Module.filter(os.ui.location.Format.DEG, [os.ui.location.degFilter]);
 
 
 
 /**
  * Take decimal degress format
+ *
  * @constructor
  * @return {angular.Filter}
  * @ngInject
@@ -77,6 +80,7 @@ os.ui.Module.filter('deglat', [os.ui.location.degLatFilter]);
 
 /**
  * Take decimal degress format
+ *
  * @constructor
  * @return {angular.Filter}
  * @ngInject
@@ -106,6 +110,7 @@ os.ui.Module.filter('deglon', [os.ui.location.degLonFilter]);
 
 /**
  * Take decimal degress format and return ddm Degrees Decimal Minutes
+ *
  * @constructor
  * @return {angular.Filter}
  * @ngInject
@@ -124,19 +129,20 @@ os.ui.location.ddmFilter = function() {
  */
 os.ui.location.ddmFilter.Filter = function(latdeg, londeg) {
   return os.geo.toDegreesDecimalMinutes(latdeg, false, false) + ' ' +
-   os.geo.toDegreesDecimalMinutes(londeg, true, false);
+      os.geo.toDegreesDecimalMinutes(londeg, true, false);
 };
 
 
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.filter('ddm', [os.ui.location.ddmFilter]);
+os.ui.Module.filter(os.ui.location.Format.DDM, [os.ui.location.ddmFilter]);
 
 
 
 /**
  * Take decimal degress format and return ddm Degrees Decimal Minutes
+ *
  * @constructor
  * @return {angular.Filter}
  * @ngInject
@@ -166,6 +172,7 @@ os.ui.Module.filter('ddmlat', [os.ui.location.ddmLatFilter]);
 
 /**
  * Take decimal degress format return ddm Degrees Decimal Minutes
+ *
  * @constructor
  * @return {angular.Filter}
  * @ngInject
@@ -195,6 +202,7 @@ os.ui.Module.filter('ddmlon', [os.ui.location.ddmLonFilter]);
 
 /**
  * Take decimal degress format and return dms Sexagesimal
+ *
  * @constructor
  * @return {angular.Filter}
  * @ngInject
@@ -219,12 +227,13 @@ os.ui.location.dmsFilter.Filter = function(latdeg, londeg) {
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.filter('dms', [os.ui.location.dmsFilter]);
+os.ui.Module.filter(os.ui.location.Format.DMS, [os.ui.location.dmsFilter]);
 
 
 
 /**
  * Take decimal degress format and return dms Sexagesimal
+ *
  * @constructor
  * @return {angular.Filter}
  * @ngInject
@@ -254,6 +263,7 @@ os.ui.Module.filter('dmslat', [os.ui.location.dmsLatFilter]);
 
 /**
  * Take decimal degress format and return Sexagesimal
+ *
  * @constructor
  * @return {angular.Filter}
  * @ngInject
@@ -283,6 +293,7 @@ os.ui.Module.filter('dmslon', [os.ui.location.dmsLonFilter]);
 
 /**
  * Take decimal degress format and return mgrs
+ *
  * @constructor
  * @return {angular.Filter}
  * @ngInject
@@ -310,4 +321,4 @@ os.ui.location.mgrsFilter.Filter = function(latdeg, londeg) {
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.filter('mgrs', [os.ui.location.mgrsFilter]);
+os.ui.Module.filter(os.ui.location.Format.MGRS, [os.ui.location.mgrsFilter]);

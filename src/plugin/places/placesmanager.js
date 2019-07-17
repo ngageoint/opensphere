@@ -8,17 +8,18 @@ goog.require('os.im.Importer');
 goog.require('os.object');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportProcess');
-goog.require('plugin.file.kml.KMLLayerConfig');
 goog.require('plugin.file.kml.KMLParser');
 goog.require('plugin.file.kml.ui');
 goog.require('plugin.file.kml.ui.KMLNode');
 goog.require('plugin.places');
+goog.require('plugin.places.PlacesLayerConfig');
 goog.require('plugin.places.ui.placesNodeUIDirective');
 
 
 
 /**
  * Allows the user to manage saved features as a KML tree.
+ *
  * @extends {goog.events.EventTarget}
  * @constructor
  */
@@ -146,6 +147,7 @@ plugin.places.PlacesManager.prototype.initialize = function() {
 
 /**
  * If the manager has finished loading.
+ *
  * @return {boolean}
  */
 plugin.places.PlacesManager.prototype.isLoaded = function() {
@@ -155,10 +157,30 @@ plugin.places.PlacesManager.prototype.isLoaded = function() {
 
 /**
  * Get the places KML root node.
+ *
  * @return {plugin.file.kml.ui.KMLNode}
  */
 plugin.places.PlacesManager.prototype.getPlacesRoot = function() {
   return this.placesRoot_;
+};
+
+
+/**
+ * Get the places KML layer.
+ *
+ * @return {plugin.file.kml.KMLLayer}
+ */
+plugin.places.PlacesManager.prototype.getPlacesLayer = function() {
+  return this.placesLayer_;
+};
+
+
+/**
+ * Get the places KML source.
+ * @return {plugin.file.kml.KMLSource}
+ */
+plugin.places.PlacesManager.prototype.getPlacesSource = function() {
+  return this.placesSource_;
 };
 
 
@@ -200,6 +222,7 @@ plugin.places.PlacesManager.prototype.removeLayer = function() {
 
 /**
  * Start the places import process.
+ *
  * @param {os.file.File=} opt_file Optional file to use in the import.
  */
 plugin.places.PlacesManager.prototype.startImport = function(opt_file) {
@@ -212,12 +235,13 @@ plugin.places.PlacesManager.prototype.startImport = function(opt_file) {
 
 /**
  * Handle the file.
+ *
  * @param {os.file.File} file The stored file
  * @private
  */
 plugin.places.PlacesManager.prototype.onFileReady_ = function(file) {
   if (file) {
-    var config = new plugin.file.kml.KMLLayerConfig();
+    var config = new plugin.places.PlacesLayerConfig();
 
     var options = this.getOptions();
     this.placesLayer_ = /** @type {!plugin.file.kml.KMLLayer} */ (config.createLayer(options));
@@ -266,7 +290,7 @@ plugin.places.PlacesManager.prototype.getOptions = function() {
     'animate': true,
     'color': os.style.DEFAULT_LAYER_COLOR,
     'collapsed': true,
-    'columns': plugin.file.kml.SOURCE_FIELDS,
+    'columns': plugin.places.SourceFields,
     'editable': true,
     'id': plugin.places.ID,
     'layerType': os.layer.LayerType.REF,
@@ -275,7 +299,7 @@ plugin.places.PlacesManager.prototype.getOptions = function() {
     'showLabels': false,
     'showRoot': false,
     'title': plugin.places.TITLE,
-    'type': 'kml',
+    'type': plugin.places.PlacesLayerConfig.ID,
     'url': plugin.places.PlacesManager.STORAGE_URL
   };
 
@@ -291,6 +315,7 @@ plugin.places.PlacesManager.prototype.getOptions = function() {
 
 /**
  * Log an error.
+ *
  * @param {string} msg The error message
  * @param {Error=} opt_error The caught error
  * @private
@@ -302,6 +327,7 @@ plugin.places.PlacesManager.prototype.handleError_ = function(msg, opt_error) {
 
 /**
  * Clears all local places data from the application.
+ *
  * @private
  */
 plugin.places.PlacesManager.prototype.clearPlaces_ = function() {
@@ -317,6 +343,7 @@ plugin.places.PlacesManager.prototype.clearPlaces_ = function() {
 
 /**
  * Clears the storage key when application settings are reset.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -333,6 +360,7 @@ plugin.places.PlacesManager.prototype.onSettingsReset_ = function(event) {
 
 /**
  * Save places to storage.
+ *
  * @param {!(ArrayBuffer|string)} content The file content
  * @return {!goog.async.Deferred} The deferred store request.
  * @private
@@ -347,6 +375,7 @@ plugin.places.PlacesManager.prototype.saveContent_ = function(content) {
 
 /**
  * Save data to storage.
+ *
  * @private
  */
 plugin.places.PlacesManager.prototype.saveInternal_ = function() {
@@ -367,7 +396,8 @@ plugin.places.PlacesManager.prototype.saveInternal_ = function() {
 
 
 /**
- * Success callback for importing data. Adds the areas to Area Manager
+ * Success callback for exporting data. Adds the areas to Area Manager
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -386,7 +416,8 @@ plugin.places.PlacesManager.prototype.onExportComplete_ = function(event) {
 
 
 /**
- * Success callback for importing data. Adds the areas to Area Manager
+ * Error callback for exporting data.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -400,6 +431,7 @@ plugin.places.PlacesManager.prototype.onExportError_ = function(event) {
 
 /**
  * Initialize a KML node, making it editable and removable unless it's the root node.
+ *
  * @param {plugin.file.kml.ui.KMLNode} node The node
  * @private
  */
@@ -425,6 +457,7 @@ plugin.places.PlacesManager.prototype.initializeNode_ = function(node) {
 
 /**
  * Handles source property change events.
+ *
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */
@@ -448,6 +481,7 @@ plugin.places.PlacesManager.prototype.onSourcePropertyChange_ = function(event) 
 
 /**
  * Handle the source finishing loading.
+ *
  * @private
  */
 plugin.places.PlacesManager.prototype.onSourceLoaded_ = function() {
@@ -458,7 +492,6 @@ plugin.places.PlacesManager.prototype.onSourceLoaded_ = function() {
     if (this.placesRoot_) {
       this.initializeNode_(this.placesRoot_);
       this.placesRoot_.collapsed = false;
-
       this.placesRoot_.listen(goog.events.EventType.PROPERTYCHANGE, this.onRootChange_, false, this);
 
       this.addLayer();
@@ -472,6 +505,7 @@ plugin.places.PlacesManager.prototype.onSourceLoaded_ = function() {
 
 /**
  * Handles changes on the root node
+ *
  * @param {os.events.PropertyChangeEvent} e The event
  * @private
  */
@@ -485,9 +519,19 @@ plugin.places.PlacesManager.prototype.onRootChange_ = function(e) {
 
 /**
  * Reindex the source time model
+ *
  * @private
  */
 plugin.places.PlacesManager.prototype.reindexTimeModel_ = function() {
   this.placesSource_.reindexTimeModel();
 };
 
+
+/**
+ * Get the root annotations folder. Currently, this is just the overall root.
+ *
+ * @return {plugin.file.kml.ui.KMLNode}
+ */
+plugin.places.PlacesManager.prototype.getAnnotationsFolder = function() {
+  return this.placesRoot_;
+};

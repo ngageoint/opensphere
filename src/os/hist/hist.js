@@ -7,6 +7,7 @@ goog.require('os.hist.HistogramData');
 
 /**
  * Gets the maximum combined bin count in an array of histograms.
+ *
  * @param {?Array.<!os.hist.IHistogramData>} histograms The array of histograms.
  * @param {boolean=} opt_combine If the counts should be combined for like bins.
  * @return {number}
@@ -48,6 +49,7 @@ os.hist.maxBinCount = function(histograms, opt_combine) {
 /**
  * Gets the bin counts and returns them in a sorted array of objects whose keys are the
  * bin name and values are the count.
+ *
  * @param {?Array.<os.hist.IHistogramData>} histograms The array of histograms.
  * @param {boolean=} opt_combine If the counts should be combined for like bins.
  * @param {boolean=} opt_skipCompare Whether to skip the compare function.

@@ -13,6 +13,7 @@ goog.require('os.ui.window');
 
 /**
  * The filter window directive
+ *
  * @return {angular.Directive}
  */
 os.ui.filter.ui.viewFiltersDirective = function() {
@@ -36,6 +37,7 @@ os.ui.Module.directive('viewfilter', [os.ui.filter.ui.viewFiltersDirective]);
 
 /**
  * Controller for the filters window.
+ *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
  * @constructor
@@ -83,6 +85,7 @@ os.ui.filter.ui.ViewFiltersCtrl = function($scope, $element) {
 
 /**
  * Cleanup
+ *
  * @private
  */
 os.ui.filter.ui.ViewFiltersCtrl.prototype.onDestroy_ = function() {
@@ -94,6 +97,7 @@ os.ui.filter.ui.ViewFiltersCtrl.prototype.onDestroy_ = function() {
 
 /**
  * Creates the expressions from the filter
+ *
  * @param {goog.events.Event=} opt_event
  * @private
  */
@@ -110,6 +114,7 @@ os.ui.filter.ui.ViewFiltersCtrl.prototype.create_ = function(opt_event) {
 
 /**
  * Traverses the filter XML and adds nodes to the slicktree.
+ *
  * @param {Node} ele
  * @param {os.structs.ITreeNode} treeNode
  * @private
@@ -131,6 +136,7 @@ os.ui.filter.ui.ViewFiltersCtrl.prototype.readFilters_ = function(ele, treeNode)
 
 /**
  * Creates a tree node for the child and adds it as a child to the treeNode passed in.
+ *
  * @param {Node} child
  * @param {os.structs.ITreeNode} treeNode
  * @return {os.structs.ITreeNode}
@@ -163,6 +169,7 @@ os.ui.filter.ui.ViewFiltersCtrl.prototype.addTreeNode_ = function(child, treeNod
 
 /**
  * Cancels the filter
+ *
  * @export
  */
 os.ui.filter.ui.ViewFiltersCtrl.prototype.cancel = function() {
@@ -172,6 +179,7 @@ os.ui.filter.ui.ViewFiltersCtrl.prototype.cancel = function() {
 
 /**
  * Closes the expression view window.
+ *
  * @private
  */
 os.ui.filter.ui.ViewFiltersCtrl.closeRemoveMultipleWindow_ = function() {

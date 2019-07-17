@@ -123,7 +123,7 @@ Some of the intricacies from using the compiler are documented in the `Compiler 
 The debug build output
 ======================
 
-The ``index-template.html`` and its corresponding ``index.js`` file define how the main page is packaged up by opensphere-build-index_. That script produces ``index.html``, which is the is the debug instance. It contains all of the vendor scripts and css in addition to all of the source files listed from the `Closure Compiler`_ manifest (``.build/gcc-manfiest``).
+The ``index-template.html`` and its corresponding ``index.js`` file define how the main page is packaged up by opensphere-build-index_. That script produces ``index.html``, which is the debug instance. It contains all of the vendor scripts and css in addition to all of the source files listed from the `Closure Compiler`_ manifest (``.build/gcc-manifest``).
 
 .. _opensphere-build-index: https://github.com/ngageoint/opensphere-build-index
 
@@ -146,12 +146,15 @@ All of our unit tests for opensphere are written in Jasmine_ and run with karma_
 .. _Jasmine: https://jasmine.github.io/
 .. _karma: https://karma-runner.github.io/1.0/index.html
 
-End to end tests are written in Mocha_ and run with Cypress_.  Tests can be started either from the command line via ``yarn test:cypress-all``, or interactively via ``yarn test:cypress``.  To run a single spec from the command line, use ``yarn test:cypress-spec folder/test.spec.js``. Test artifacts are available at ``/cypress/screenshots``, ``/cypress/comparisons`` and ``/cypress/videos``.  The test configuration can be adjusted in Cypress' 'configuration file'_.  Selectors for all elements present in the GUI can be found in selectors.js_.
+End to end tests are written in Mocha_ and run with Cypress_.  Tests can be started either from the command line via ``yarn test:cypress-all``, or interactively via ``yarn test:cypress``.  To run a single spec from the command line, use ``yarn test:cypress-spec folder/test.spec.js``. Test artifacts are available at ``/cypress/screenshots``, ``/cypress/comparisons`` and ``/cypress/videos``.  The test configuration can be adjusted in Cypress' 'configuration_file'_.  Selectors for all elements present in the GUI can be found in selectors.js_.
 
 .. _Mocha: https://github.com/mochajs/mocha
 .. _Cypress: https://github.com/cypress-io/cypress
-.. _configuration file: https://github.com/ngageoint/opensphere/blob/master/cypress.json
+.. _configuration_file: https://github.com/ngageoint/opensphere/blob/master/cypress.json
 .. _selectors.js: https://github.com/ngageoint/opensphere/blob/master/cypress/support/selectors.js
+.. _selectors.js: https://github.com/ngageoint/opensphere/blob/master/cypress/support/selectors.js
+
+See :doc:`/guides/cypress_artifacts` for information on accessing Cypress artifacts generated from a CI environment.
 
 Any contributions to OpenSphere should avoid breaking current tests and should include new tests that fully cover the changed areas.
 

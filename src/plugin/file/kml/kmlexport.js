@@ -7,6 +7,7 @@ goog.require('os.style.StyleField');
 
 /**
  * Get the KML balloon style options for an OpenLayers feature.
+ *
  * @param {ol.Feature} feature The feature.
  * @return {?osx.annotation.KMLBalloon} The balloon options.
  */
@@ -49,6 +50,7 @@ plugin.file.kml.export.getBalloonOptions = function(feature) {
 
 /**
  * Get the icon rotation column for an OpenLayers feature.
+ *
  * @param {ol.Feature} feature The feature.
  * @return {string|null|undefined} The column.
  */
@@ -58,6 +60,20 @@ plugin.file.kml.export.getRotationColumn = function(feature) {
     if (layerConfig && layerConfig[os.style.StyleField.SHOW_ROTATION]) {
       return layerConfig[os.style.StyleField.ROTATION_COLUMN];
     }
+  }
+  return undefined;
+};
+
+/**
+ * Get the line dash for an OpenLayers feature.
+ *
+ * @param {ol.Feature} feature The feature.
+ * @return {Array<number>|null|undefined} The line dash.
+ */
+plugin.file.kml.export.getLineDash = function(feature) {
+  if (feature) {
+    var layerConfig = os.style.getBaseFeatureConfig(feature);
+    return os.style.getConfigLineDash(goog.isArray(layerConfig) ? layerConfig[0] : layerConfig);
   }
   return undefined;
 };

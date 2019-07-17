@@ -26,7 +26,7 @@ os.file.mime.csv.APPLICATION_TYPE = 'application/csv';
  */
 os.file.mime.csv.detect = function(buffer, opt_file) {
   return /** @type {!goog.Promise<*|undefined>} */ (
-      goog.Promise.resolve(opt_file && (/\.csv$/.test(opt_file.getFileName()) ||
+    goog.Promise.resolve(opt_file && (/\.csv$/.test(opt_file.getFileName()) ||
       os.file.mime.csv.TYPE == opt_file.getContentType() ||
       os.file.mime.csv.APPLICATION_TYPE == opt_file.getContentType())));
 };

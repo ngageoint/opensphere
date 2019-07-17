@@ -7,6 +7,7 @@ goog.require('os.command.State');
 
 /**
  * Command to switch between 2D/3D map modes.
+ *
  * @param {boolean} toggle If WebGL should be enabled.
  * @param {boolean=} opt_silent If errors should be ignored.
  * @extends {os.command.AbstractAsyncCommand}
@@ -38,6 +39,7 @@ goog.inherits(os.command.ToggleWebGL, os.command.AbstractAsyncCommand);
 
 /**
  * If the application allows switching the map mode.
+ *
  * @param {boolean} webGLEnabled If WebGL is being used
  * @return {boolean}
  * @protected

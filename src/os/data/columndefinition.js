@@ -1,9 +1,12 @@
 goog.provide('os.data.ColumnDefinition');
 goog.require('os.IPersistable');
+goog.require('os.xsd.DataType');
+
 
 
 /**
  * All the properties that can define a column definition for SlickGrid
+ *
  * @param {string=} opt_name
  * @param {string=} opt_field
  * @implements {os.IPersistable}
@@ -32,7 +35,7 @@ os.data.ColumnDefinition = function(opt_name, opt_field) {
    * The value type.
    * @type {string}
    */
-  this['type'] = 'string';
+  this['type'] = os.xsd.DataType.STRING;
 
   /**
    * If the column is internal to the application
@@ -247,6 +250,7 @@ os.data.ColumnDefinition.prototype.restore = function(config) {
 
 /**
  * Creates a copy of the column definition.
+ *
  * @return {os.data.ColumnDefinition}
  */
 os.data.ColumnDefinition.prototype.clone = function() {

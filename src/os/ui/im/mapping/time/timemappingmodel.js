@@ -1,4 +1,5 @@
 goog.provide('os.ui.im.mapping.time.TimeMappingModel');
+goog.require('os.im.mapping.DateType');
 goog.require('os.im.mapping.TimeType');
 goog.require('os.im.mapping.time.DateMapping');
 goog.require('os.im.mapping.time.DateTimeMapping');
@@ -9,6 +10,7 @@ goog.require('os.time');
 
 /**
  * Model for describing a time mapping.
+ *
  * @param {os.im.mapping.TimeType=} opt_type The type of time mapping (instant, start, end).
  * @constructor
  */
@@ -16,7 +18,7 @@ os.ui.im.mapping.time.TimeMappingModel = function(opt_type) {
   /**
    * @type {string}
    */
-  this['dateType'] = 'combined';
+  this['dateType'] = os.im.mapping.DateType.COMBINED;
 
   /**
    * @type {string}
@@ -76,6 +78,7 @@ os.ui.im.mapping.time.TimeMappingModel.prototype.getType = function() {
 
 /**
  * Configure the model from a set of mappings.
+ *
  * @param {Array.<os.im.mapping.time.DateTimeMapping>} mappings
  */
 os.ui.im.mapping.time.TimeMappingModel.prototype.updateFromMappings = function(mappings) {
@@ -101,20 +104,21 @@ os.ui.im.mapping.time.TimeMappingModel.prototype.updateFromMappings = function(m
 
 /**
  * Generate mappings from the model configuration.
+ *
  * @return {Array.<os.im.mapping.time.DateTimeMapping>}
  */
 os.ui.im.mapping.time.TimeMappingModel.prototype.generateMappings = function() {
   var mappings = [];
 
   switch (this['dateType']) {
-    case 'combined':
+    case os.im.mapping.DateType.COMBINED:
       var dtm = new os.im.mapping.time.DateTimeMapping(this.type_);
       dtm.field = this['dateColumn'];
       dtm.setFormat(this['dateFormat']);
 
       mappings.push(dtm);
       break;
-    case 'separate':
+    case os.im.mapping.DateType.SEPARATE:
       var dm = new os.im.mapping.time.DateMapping(this.type_);
       dm.field = this['dateColumn'];
       dm.setFormat(this['dateFormat']);
@@ -125,7 +129,7 @@ os.ui.im.mapping.time.TimeMappingModel.prototype.generateMappings = function() {
       tm.setFormat(this['timeFormat']);
       mappings.push(tm);
       break;
-    case 'dateonly':
+    case os.im.mapping.DateType.DATE_ONLY:
       var dm = new os.im.mapping.time.DateMapping(this.type_);
       dm.field = this['dateColumn'];
       dm.setFormat(this['dateFormat']);
@@ -141,11 +145,12 @@ os.ui.im.mapping.time.TimeMappingModel.prototype.generateMappings = function() {
 
 /**
  * Check if mappings can be generated from this model.
+ *
  * @return {boolean}
  */
 os.ui.im.mapping.time.TimeMappingModel.prototype.validate = function() {
   var valid = this['dateColumn'] && this['dateFormat'];
-  if (this['dateType'] == 'separate') {
+  if (this['dateType'] == os.im.mapping.DateType.SEPARATE) {
     valid = valid && this['timeColumn'] && this['timeFormat'];
   }
 
@@ -159,12 +164,12 @@ os.ui.im.mapping.time.TimeMappingModel.prototype.validate = function() {
 os.ui.im.mapping.time.TimeMappingModel.prototype.updateTypeCombo_ = function() {
   if (this.timeMapping_) {
     // use separate fields if a time mapping exists even without a date mapping (may have been auto detected)
-    this['dateType'] = 'separate';
+    this['dateType'] = os.im.mapping.DateType.SEPARATE;
   } else if (this.dateMapping_ instanceof os.im.mapping.time.DateMapping) {
     // date but no time
-    this['dateType'] = 'dateonly';
+    this['dateType'] = os.im.mapping.DateType.DATE_ONLY;
   } else {
     // default to combined
-    this['dateType'] = 'combined';
+    this['dateType'] = os.im.mapping.DateType.COMBINED;
   }
 };

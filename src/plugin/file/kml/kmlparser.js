@@ -54,14 +54,20 @@ plugin.file.kml.KMLParserStackObj;
 
 /**
  * Parses a KML source
+ *
  * @param {Object.<string, *>} options Layer configuration options.
  * @extends {os.parse.AsyncZipParser}
  * @implements {os.parse.IParser.<plugin.file.kml.ui.KMLNode>}
  * @template T
  * @constructor
+ * @suppress {accessControls}
  */
 plugin.file.kml.KMLParser = function(options) {
   plugin.file.kml.KMLParser.base(this, 'constructor');
+
+  if (!ol.format.KML.DEFAULT_STYLE_ARRAY_) {
+    ol.format.KML.createStyleDefaults_();
+  }
 
   /**
    * The source document
@@ -121,21 +127,21 @@ plugin.file.kml.KMLParser = function(options) {
 
   /**
    * The KML style config map
-   * @type {!Object<string, !Array<Object>>}
+   * @type {!Object<string, Object<string, *>>}
    * @private
    */
   this.styleMap_ = {};
 
   /**
    * The KML balloon style config map.
-   * @type {!Object<string, !Object>}
+   * @type {!Object<string, !Object<string, *>>}
    * @private
    */
   this.balloonStyleMap = {};
 
   /**
    * The KML style config map for highlight styles from StyleMap tags
-   * @type {!Object<string, !Array<Object>>}
+   * @type {!Object<string, !Object<string, *>>}
    * @private
    */
   this.highlightStyleMap_ = {};
@@ -274,6 +280,7 @@ plugin.file.kml.KMLParser.prototype.clearAssets = function() {
 /**
  * Get the last parsed root KML tree node. This reference will be lost on cleanup, so it must be retrieved when parsing
  * completes.
+ *
  * @return {plugin.file.kml.ui.KMLNode}
  */
 plugin.file.kml.KMLParser.prototype.getRootNode = function() {
@@ -283,6 +290,7 @@ plugin.file.kml.KMLParser.prototype.getRootNode = function() {
 
 /**
  * Get the minimum refresh period (from the network link control)
+ *
  * @return {number}
  */
 plugin.file.kml.KMLParser.prototype.getMinRefreshPeriod = function() {
@@ -292,6 +300,7 @@ plugin.file.kml.KMLParser.prototype.getMinRefreshPeriod = function() {
 
 /**
  * Set the root KML tree node. Use this to merge the parse result into an existing tree.
+ *
  * @param {plugin.file.kml.ui.KMLNode} rootNode
  */
 plugin.file.kml.KMLParser.prototype.setRootNode = function(rootNode) {
@@ -302,6 +311,7 @@ plugin.file.kml.KMLParser.prototype.setRootNode = function(rootNode) {
 
 /**
  * Get columns detected in the KML.
+ *
  * @return {Array<!os.data.ColumnDefinition>}
  */
 plugin.file.kml.KMLParser.prototype.getColumns = function() {
@@ -502,6 +512,7 @@ plugin.file.kml.KMLParser.prototype.handleExternalStylesheet_ = function(content
 
 /**
  * Keep waiting for styles or begin if they are done
+ *
  * @private
  */
 plugin.file.kml.KMLParser.prototype.continueStyles_ = function() {
@@ -559,6 +570,7 @@ plugin.file.kml.KMLParser.prototype.handleZipReaderError = function() {
  * HACK ALERT! zip.js has a zip.TextWriter() class that directly turns the zip entry into the string we want.
  * Unfortunately, it doesn't work in FF24 for some reason, but luckily, the BlobWriter does. Here, we read
  * the zip as a Blob, then feed it to a FileReader in the next callback in order to extract the text.
+ *
  * @inheritDoc
  */
 plugin.file.kml.KMLParser.prototype.handleZipEntries = function(entries) {
@@ -610,6 +622,7 @@ plugin.file.kml.KMLParser.prototype.handleZipEntries = function(entries) {
 
 /**
  * Parse the main kml file
+ *
  * @param {zip.Entry} mainEntry
  * @param {boolean} success True if all entries/images were processed
  * @private
@@ -625,6 +638,7 @@ plugin.file.kml.KMLParser.prototype.processMainEntry_ = function(mainEntry, succ
 
 /**
  * True if we have processed all images
+ *
  * @return {boolean} True if not all images have been processes
  * @private
  */
@@ -778,6 +792,7 @@ plugin.file.kml.KMLParser.prototype.parseNext = function() {
 
 /**
  * Parses sample data from a KML.
+ *
  * @return {!Array<!ol.Feature>}
  */
 plugin.file.kml.KMLParser.prototype.parsePreview = function() {
@@ -798,6 +813,7 @@ plugin.file.kml.KMLParser.prototype.parsePreview = function() {
 
 /**
  * Marks the node's children for removal.
+ *
  * @param {!plugin.file.kml.ui.KMLNode} node The KML node
  * @private
  */
@@ -813,6 +829,7 @@ plugin.file.kml.KMLParser.prototype.markAllChildren_ = function(node) {
 
 /**
  * Removes all marked children from a node.
+ *
  * @param {!plugin.file.kml.ui.KMLNode} node The KML node
  * @private
  */
@@ -833,6 +850,7 @@ plugin.file.kml.KMLParser.prototype.removeMarkedChildren_ = function(node) {
 
 /**
  * Creates a tree node from an XML element
+ *
  * @param {Element} el The XML element
  * @param {plugin.file.kml.ui.KMLNode=} opt_parent The parent tree node
  * @return {plugin.file.kml.ui.KMLNode} The tree node
@@ -869,6 +887,7 @@ plugin.file.kml.KMLParser.prototype.createTreeNode_ = function(el, opt_parent) {
 
 /**
  * Examine styles that are unsupported in OpenLayers KML styles.
+ *
  * @param {Node} node Node.
  * @private
  */
@@ -888,6 +907,7 @@ plugin.file.kml.KMLParser.prototype.examineStyles_ = function(node) {
 
 /**
  * Read the KML balloon style.
+ *
  * @param {Element} el The XML element
  * @param {ol.Feature} feature The feature
  * @private
@@ -935,6 +955,7 @@ plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(el, feature) {
 
 /**
  * Creates a tree node from an XML element
+ *
  * @param {Element} el The XML element
  * @return {plugin.file.kml.ui.KMLNode} The tree node
  * @private
@@ -973,6 +994,7 @@ plugin.file.kml.KMLParser.prototype.examineElement_ = function(el) {
 
 /**
  * Executes a set of parsers to modify a tree node from an element.
+ *
  * @param {Element} el The XML element
  * @param {plugin.file.kml.ui.KMLNode} node The KML tree node
  * @param {Object.<string, plugin.file.kml.KMLElementParser>} parsers The parsers to use
@@ -991,6 +1013,7 @@ plugin.file.kml.KMLParser.prototype.updateNode_ = function(el, node, parsers) {
 
 /**
  * Get a default name for a KML tree node
+ *
  * @param {string} localName The element name
  * @return {string}
  * @private
@@ -1009,6 +1032,7 @@ plugin.file.kml.KMLParser.prototype.getDefaultName_ = function(localName) {
 
 /**
  * Parses a KML NetworkLink element into a tree node
+ *
  * @param {Element} el The XML element
  * @return {plugin.file.kml.ui.KMLNetworkLinkNode} The network link node, or null if unable to parse
  * @private
@@ -1078,6 +1102,7 @@ plugin.file.kml.KMLParser.prototype.readNetworkLink_ = function(el) {
 
 /**
  * Parses a KML Placemark element into a map feature
+ *
  * @param {Element} el The XML element
  * @return {os.feature.DynamicFeature|ol.Feature|undefined} The map feature
  * @private
@@ -1160,9 +1185,13 @@ plugin.file.kml.KMLParser.prototype.readPlacemark_ = function(el) {
   if (feature) {
     this.setFeatureId_(feature);
 
-    // parse annotation options from JSON
-    if (object[os.annotation.OPTIONS_FIELD] && typeof object[os.annotation.OPTIONS_FIELD] === 'string') {
-      object[os.annotation.OPTIONS_FIELD] = JSON.parse(object[os.annotation.OPTIONS_FIELD]);
+    // parse any fields that are known to contain JSON data into objects
+    for (var i = 0, ii = plugin.file.kml.JsonField.length; i < ii; i++) {
+      var field = plugin.file.kml.JsonField[i];
+
+      if (object[field] && typeof object[field] === 'string') {
+        object[field] = JSON.parse(object[field]);
+      }
     }
 
     feature.setProperties(object);
@@ -1186,6 +1215,7 @@ plugin.file.kml.KMLParser.prototype.readPlacemark_ = function(el) {
 
 /**
  * Parses a KML GroundOverlay element into a map layer.
+ *
  * @param {Element} el The XML element.
  * @return {plugin.file.kml.ui.KMLNode} A KML node for the overlay, or null if one couldn't be created.
  * @private
@@ -1232,6 +1262,7 @@ plugin.file.kml.KMLParser.prototype.readGroundOverlay_ = function(el) {
 
 /**
  * Parses a KML ScreenOverlay element into a legend style window.
+ *
  * @param {Element} el The XML element.
  * @return {plugin.file.kml.ui.KMLNode} A KML node for the overlay, or null if one couldn't be created.
  * @private
@@ -1282,6 +1313,7 @@ plugin.file.kml.KMLParser.prototype.readScreenOverlay_ = function(el) {
 
 /**
  * Parse XY attributes from a screenXY element and return an object with more useful location coordinates
+ *
  * @param {Object} obj The XY options.
  * @return {Array<string|number>} An array with x/y values representing location in pixels.
  * @private
@@ -1325,6 +1357,7 @@ plugin.file.kml.KMLParser.prototype.parseScreenXY_ = function(obj) {
 
 /**
  * Parse XY attributes from a size element and return an object with more sizing for our overlay
+ *
  * @param {Object} obj The XY options.
  * @return {Array<string|number>} An array with x/y values representing size in pixels.
  * @private
@@ -1369,24 +1402,15 @@ plugin.file.kml.KMLParser.prototype.parseSizeXY_ = function(obj) {
 
 
 /**
- * @param {?Object} config The style config
- * @param {Array<Object>} set The style set
+ * @param {?Object} merged The merged style config
+ * @param {Array<Object>} config The current config
  * @return {Object}
  * @private
  */
-plugin.file.kml.KMLParser.reduceStyles_ = function(config, set) {
-  if (set && set.length) {
-    config = config || {};
-    var s = set[0];
-    os.object.merge(s, config, true, false);
-
-    if (set.length > 1) {
-      goog.log.warning(plugin.file.kml.KMLParser.LOGGER_,
-          'An array of style configs with more than one entry was found!');
-    }
-  }
-
-  return config;
+plugin.file.kml.KMLParser.reduceStyles_ = function(merged, config) {
+  merged = merged || {};
+  os.style.mergeConfig(config, merged);
+  return merged;
 };
 
 
@@ -1396,14 +1420,14 @@ plugin.file.kml.KMLParser.reduceStyles_ = function(config, set) {
  * @private
  */
 plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
-  var styleSets = [];
+  var styles = [];
   var highlightStyle = null;
 
   // style from style url
   var styleUrl = /** @type {string} */ (feature.get('styleUrl'));
   if (styleUrl) {
     var styleId = this.getStyleId(decodeURIComponent(styleUrl));
-    styleSets.push(styleId in this.styleMap_ ? this.styleMap_[styleId] : null);
+    styles.push(styleId in this.styleMap_ ? this.styleMap_[styleId] : null);
     highlightStyle = styleId in this.highlightStyleMap_ ? this.highlightStyleMap_[styleId] : null;
   }
 
@@ -1411,26 +1435,27 @@ plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
 
 
   // local style
-  var styles = /** @type {Array<ol.style.Style>} */ (feature.get(plugin.file.kml.STYLE_KEY));
-  if (styles && styles.length) {
-    styleSets.push(styles.map(this.mapStyleToConfig_, this));
+  var style = /** @type {Object} */ (feature.get(plugin.file.kml.STYLE_KEY));
+  if (style) {
+    this.updateStyleConfig_(style);
+    styles.push(style);
   }
 
   // inherited styles
   var p = el.parentNode;
   while (p) {
     if (p.kmlStyle) {
-      styleSets.unshift(p.kmlStyle);
+      styles.unshift(p.kmlStyle);
     }
 
     p = p.parentNode;
   }
 
   // default style
-  styleSets.unshift(plugin.file.kml.DEFAULT_STYLE_ARRAY);
+  styles.unshift(plugin.file.kml.DEFAULT_STYLE);
 
   // reduce style sets to single set
-  var mergedStyle = styleSets.reduce(plugin.file.kml.KMLParser.reduceStyles_, null);
+  var mergedStyle = styles.reduce(plugin.file.kml.KMLParser.reduceStyles_, null);
   if (mergedStyle) {
     var existingStyle = /** @type {Array<!Object>|Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
     if (existingStyle) {
@@ -1447,8 +1472,8 @@ plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
       feature.set(os.style.StyleType.FEATURE, mergedStyle, true);
     }
 
-    if (highlightStyle && highlightStyle.length) {
-      feature.set(os.style.StyleType.CUSTOM_HIGHLIGHT, highlightStyle[0], true);
+    if (highlightStyle) {
+      feature.set(os.style.StyleType.CUSTOM_HIGHLIGHT, highlightStyle, true);
     }
 
     // set the feature shape if it wasn't defined in the file and an icon style is present
@@ -1488,6 +1513,7 @@ plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
 
 /**
  * Extracts all immediate styles from the provided element.
+ *
  * @param {Element} el The XML element
  * @private
  */
@@ -1499,7 +1525,8 @@ plugin.file.kml.KMLParser.prototype.extractStyles_ = function(el) {
 
     this.examineStyles_(style);
 
-    var styles = plugin.file.kml.readStyle(style, []);
+    var styleConfig = plugin.file.kml.readStyle(style, this.stack_);
+    this.updateStyleConfig_(styleConfig);
     var id = style.id || style.getAttribute('id');
     if (!id) {
       // styles without an ID are merely the base styles for the container
@@ -1507,7 +1534,7 @@ plugin.file.kml.KMLParser.prototype.extractStyles_ = function(el) {
       // Clever hack alert!
       // The "stack" in this class is not really a stack. Therefore, we are
       // going to store the KML styles on the element itself
-      el.kmlStyle = styles.map(this.mapStyleToConfig_, this);
+      el.kmlStyle = styleConfig;
       continue;
     }
 
@@ -1523,7 +1550,7 @@ plugin.file.kml.KMLParser.prototype.extractStyles_ = function(el) {
       id = newId;
     }
 
-    this.styleMap_[id] = styles.map(this.mapStyleToConfig_, this);
+    this.styleMap_[id] = styleConfig;
   }
 
   // handle StyleMap elements
@@ -1558,6 +1585,7 @@ plugin.file.kml.KMLParser.prototype.extractStyles_ = function(el) {
 
 /**
  * Gets all the schema tags and adds ol XML parsers for each one
+ *
  * @param {Element} el The XML element
  * @private
  */
@@ -1626,6 +1654,7 @@ plugin.file.kml.KMLParser.prototype.parseSchema_ = function(el) {
 
 /**
  * Creates the regex from the current set of KML things.
+ *
  * @return {RegExp} The KML regex.
  */
 plugin.file.kml.KMLParser.prototype.getKmlThingRegex = function() {
@@ -1634,15 +1663,11 @@ plugin.file.kml.KMLParser.prototype.getKmlThingRegex = function() {
 
 
 /**
- * @param {ol.style.Style} style
- * @return {Object}
+ * @param {Object} config
  * @private
  */
-plugin.file.kml.KMLParser.prototype.mapStyleToConfig_ = function(style) {
-  var config = null;
-  if (style) {
-    config = os.style.StyleManager.getInstance().toConfig(style);
-
+plugin.file.kml.KMLParser.prototype.updateStyleConfig_ = function(config) {
+  if (config) {
     // attempt to convert local KMZ asset URIs to the proper data URIs
     if (config['image'] && config['image']['src']) {
       try {
@@ -1656,13 +1681,12 @@ plugin.file.kml.KMLParser.prototype.mapStyleToConfig_ = function(style) {
       }
     }
   }
-
-  return config;
 };
 
 
 /**
  * Parse the StyleUrl into the correct id format.
+ *
  * @param {string} id The StyleUrl.
  * @return {string} The Parsed Style id.
  */
@@ -1678,6 +1702,7 @@ plugin.file.kml.KMLParser.prototype.getStyleId = function(id) {
 
 /**
  * Set the ID on a KML feature.
+ *
  * @param {!ol.Feature} feature The feature.
  * @private
  */
@@ -1697,6 +1722,7 @@ plugin.file.kml.KMLParser.prototype.setFeatureId_ = function(feature) {
 
 /**
  * Set the KML tree node name.
+ *
  * @param {plugin.file.kml.ui.KMLNode} node The KML tree node
  * @param {Element} el The name element
  * @private
@@ -1711,6 +1737,7 @@ plugin.file.kml.KMLParser.setNodeLabel_ = function(node, el) {
 
 /**
  * Set the KML tree node name.
+ *
  * @param {plugin.file.kml.ui.KMLNode} node The KML tree node
  * @param {Element} el The name element
  * @private
@@ -1725,6 +1752,7 @@ plugin.file.kml.KMLParser.setNodeCollapsed_ = function(node, el) {
 
 /**
  * Set the KML tree node visibility state.
+ *
  * @param {plugin.file.kml.ui.KMLNode} node The KML tree node
  * @param {Element} el The name element
  * @private

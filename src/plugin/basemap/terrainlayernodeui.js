@@ -18,6 +18,7 @@ plugin.basemap.TerrainNodeUITemplate =
 
 /**
  * The terrain layer node UI.
+ *
  * @return {angular.Directive}
  */
 plugin.basemap.terrainNodeUIDirective = function() {
@@ -40,6 +41,7 @@ os.ui.Module.directive('terrainnodeui', [plugin.basemap.terrainNodeUIDirective])
 
 /**
  * Controller for the terrain layer node UI.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.node.DefaultLayerNodeUICtrl}
@@ -54,6 +56,7 @@ goog.inherits(plugin.basemap.TerrainNodeUICtrl, os.ui.node.DefaultLayerNodeUICtr
 
 /**
  * Remove the terrain layer.
+ *
  * @override
  * @export
  */

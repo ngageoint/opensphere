@@ -10,6 +10,7 @@ goog.require('os.ui.clear.ClearEntry');
 
 /**
  * Manages clearing/resetting parts of the application.
+ *
  * @constructor
  */
 os.ui.clear.ClearManager = function() {
@@ -47,6 +48,7 @@ os.ui.clear.ClearManager.prototype.getEntries = function() {
 
 /**
  * Add a clear type. These are saved as checklist items so they're easily displayed using the checklist directive.
+ *
  * @param {!os.ui.clear.ClearEntry} entry The clear command class
  */
 os.ui.clear.ClearManager.prototype.addEntry = function(entry) {
@@ -63,6 +65,7 @@ os.ui.clear.ClearManager.prototype.addEntry = function(entry) {
 
 /**
  * Execute the enabled clear entries.
+ *
  * @param {boolean=} opt_all Optionally clear all regardless of their enabled state.
  * @param {Array<string>=} opt_skip clear entry ids to skip
  */
@@ -110,6 +113,7 @@ os.ui.clear.ClearManager.prototype.reset = function() {
 
 /**
  * Save clear entry enabled states to settings.
+ *
  * @private
  */
 os.ui.clear.ClearManager.prototype.saveConfig_ = function() {

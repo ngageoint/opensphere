@@ -5,6 +5,7 @@ goog.require('goog.events.Listenable');
 
 /**
  *  The base interface for executing a search.
+ *
  *  @extends {goog.events.Listenable}
  *  @interface
  */
@@ -101,7 +102,7 @@ os.search.ISearch.prototype.shouldNormalize;
 
 /**
  * Whether the search is sent to external search providers.
- * @return {boolean} [description]
+ * @return {boolean}
  */
 os.search.ISearch.prototype.isExternal;
 

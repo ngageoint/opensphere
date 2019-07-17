@@ -73,6 +73,7 @@ os.style.Icon.prototype.onImageChange = function(event) {
 
 /**
  * Get the base image for the icon. This is necessary to check if the image has been loaded.
+ *
  * @return {Image|HTMLCanvasElement} Image.
  * @suppress {accessControls}
  */

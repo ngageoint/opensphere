@@ -1,4 +1,5 @@
 goog.provide('plugin.file.kml.KMLNodeLayerUICtrl');
+goog.provide('plugin.file.kml.KMLNodeLayerUICtrl.UIEventType');
 goog.provide('plugin.file.kml.kmlNodeLayerUIDirective');
 goog.require('os.command.FeatureCenterShape');
 goog.require('os.command.FeatureColor');
@@ -6,6 +7,7 @@ goog.require('os.command.FeatureIcon');
 goog.require('os.command.FeatureLabel');
 goog.require('os.command.FeatureLabelColor');
 goog.require('os.command.FeatureLabelSize');
+goog.require('os.command.FeatureLineDash');
 goog.require('os.command.FeatureOpacity');
 goog.require('os.command.FeatureShape');
 goog.require('os.command.FeatureShowLabel');
@@ -51,6 +53,7 @@ plugin.file.kml.centerShapes = [
 
 /**
  * The directive for stream layer controls
+ *
  * @return {angular.Directive}
  */
 plugin.file.kml.kmlNodeLayerUIDirective = function() {
@@ -62,7 +65,7 @@ plugin.file.kml.kmlNodeLayerUIDirective = function() {
 
 
 /**
- * Add the directive to the mist module
+ * Add the directive to the module
  */
 os.ui.Module.directive('kmlnodelayerui', [plugin.file.kml.kmlNodeLayerUIDirective]);
 
@@ -70,6 +73,7 @@ os.ui.Module.directive('kmlnodelayerui', [plugin.file.kml.kmlNodeLayerUIDirectiv
 
 /**
  * Controller for the stream layer UI
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -181,6 +185,33 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getSize = function() {
   }
 
   return size || os.style.DEFAULT_FEATURE_SIZE;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLNodeLayerUICtrl.prototype.getLineDash = function() {
+  var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+  var lineDash;
+
+  if (items) {
+    for (var i = 0, n = items.length; i < n; i++) {
+      var feature = items[i].getFeature();
+      if (feature) {
+        var config = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
+
+        if (config) {
+          if (goog.isArray(config)) {
+            config = config[0];
+          }
+          lineDash = os.style.getConfigLineDash(config);
+        }
+      }
+    }
+  }
+
+  return lineDash;
 };
 
 
@@ -416,6 +447,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getLockable = function() {
 
 /**
  * Handle changes to opacity while it changes via slide controls
+ *
  * @param {?angular.Scope.Event} event
  * @param {?} value
  * @protected
@@ -476,6 +508,26 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onSizeChange = function(event, valu
        */
       function(layerId, featureId) {
         return new os.command.FeatureSize(layerId, featureId, value);
+      };
+
+  this.createFeatureCommand(fn);
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLNodeLayerUICtrl.prototype.onLineDashChange = function(event, value) {
+  event.stopPropagation();
+
+  var fn =
+      /**
+       * @param {string} layerId
+       * @param {string} featureId
+       * @return {os.command.ICommand}
+       */
+      function(layerId, featureId) {
+        return new os.command.FeatureLineDash(layerId, featureId, value);
       };
 
   this.createFeatureCommand(fn);
@@ -548,6 +600,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onCenterShapeChange = function(even
 
 /**
  * Handles changes to color
+ *
  * @param {angular.Scope.Event} event
  * @param {number} value
  * @protected
@@ -617,6 +670,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onLabelColorChange = function(event
 
 /**
  * Set it to the current track color
+ *
  * @inheritDoc
  */
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.onLabelColorReset = function(event) {
@@ -713,6 +767,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.updateRefresh = function() {
 
 /**
  * Gets a value from the feature
+ *
  * @param {string} field The field to retrieve
  * @param {?=} opt_default
  * @return {?}
@@ -735,6 +790,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getFeatureValue = function(field, o
 
 /**
  * Get the layer nodes from the list of UI items.
+ *
  * @return {!Array<!ol.Feature>}
  * @protected
  */
@@ -757,6 +813,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getFeatures = function() {
 
 /**
  * Creates a command to run on each feature
+ *
  * @param {function(string, string):os.command.ICommand} commandFunction
  */
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.createFeatureCommand = function(commandFunction) {
@@ -800,6 +857,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.createFeatureCommand = function(com
 
 /**
  * If the feature is dynamic, which means it is a time based track
+ *
  * @return {boolean}
  * @export
  */
@@ -812,6 +870,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.isFeatureDynamic = function() {
 
 /**
  * Leave the rotation choices to the Place Add/Edit dialog since it is more involved
+ *
  * @inheritDoc
  */
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.showRotationOption = function() {
@@ -821,6 +880,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.showRotationOption = function() {
 
 /**
  * Hide the ellipse options (ellipsoids/ground ref), also lob isn't supported at this time
+ *
  * @inheritDoc
  */
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.getShapeUIInternal = function() {
@@ -830,6 +890,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getShapeUIInternal = function() {
 
 /**
  * If the icon picker should be displayed.
+ *
  * @return {boolean}
  * @export
  */
@@ -840,6 +901,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.showIcon = function() {
 
 /**
  * If the icon picker should be displayed.
+ *
  * @return {boolean}
  * @export
  */

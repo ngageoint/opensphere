@@ -132,6 +132,7 @@ ol.geom.Geometry.prototype.osTransform = function(opt_projection) {
 
 /**
  * Transforms to EPSG:4326/LatLon
+ *
  * @return {ol.geom.Geometry}
  */
 ol.geom.Geometry.prototype.toLonLat = function() {
@@ -164,6 +165,7 @@ ol.geom.Geometry.prototype.toLonLat = function() {
 
   /**
    * Openlayers' implementation does not actually clone the underlying geometries
+   *
    * @return {!ol.geom.GeometryCollection} The clone
    * @override
    */
@@ -190,6 +192,7 @@ ol.geom.Geometry.prototype.toLonLat = function() {
 
       /**
        * Overridden to clone values in addition to coordinates
+       *
        * @override
        */
       cls.prototype.clone = function() {

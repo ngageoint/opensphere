@@ -18,6 +18,7 @@ goog.require('os.net.Request');
 
 /**
  * Handles requests to the same domain with a simple XHR.
+ *
  * @constructor
  * @extends {os.net.AbstractRequestHandler}
  */
@@ -174,6 +175,7 @@ os.net.SameDomainHandler.prototype.execute = function(
 /**
  * Modifies the URL once more before sending. This is mostly for extending
  * classes.
+ *
  * @param {goog.Uri|string} uri The URI
  * @return {goog.Uri|string} The modified URI
  * @protected
@@ -185,6 +187,7 @@ os.net.SameDomainHandler.prototype.modUri = function(uri) {
 
 /**
  * Handles a completed request
+ *
  * @param {goog.events.EventLike=} opt_event The event
  */
 os.net.SameDomainHandler.prototype.onXhrComplete = function(opt_event) {
@@ -195,6 +198,7 @@ os.net.SameDomainHandler.prototype.onXhrComplete = function(opt_event) {
 
 /**
  * Handles request errors
+ *
  * @param {goog.events.EventLike=} opt_event The event
  */
 os.net.SameDomainHandler.prototype.onXhrError = function(opt_event) {

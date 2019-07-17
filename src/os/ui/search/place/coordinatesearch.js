@@ -17,6 +17,7 @@ goog.require('os.ui.search.place.CoordinateResult');
 
 /**
  * Checks if a search term is a coordinate.
+ *
  * @extends {os.search.AbstractSearch}
  * @constructor
  */

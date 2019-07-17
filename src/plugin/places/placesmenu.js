@@ -150,6 +150,7 @@ plugin.places.menu.layerDispose = function() {
 
 /**
  * Show the places menu item if layers in the context support it.
+ *
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @private
  * @this {os.ui.menu.MenuItem}
@@ -260,17 +261,19 @@ plugin.places.menu.mapSetup = function() {
       sort: 50,
       children: [
         {
-          label: 'Save to Places...',
+          label: 'Create Place...',
           eventType: plugin.places.menu.EventType.SAVE_TO,
           tooltip: 'Creates a new saved place from this location',
           icons: ['<i class="fa fa-fw ' + plugin.places.Icon.PLACEMARK + '"></i>'],
+          beforeRender: os.ui.menu.map.showIfHasCoordinate,
           handler: plugin.places.menu.saveCoordinateToPlaces,
           sort: 0
         }, {
-          label: 'Create Annotation...',
+          label: 'Create Place (Text Box)...',
           eventType: plugin.places.menu.EventType.SAVE_TO_ANNOTATION,
-          tooltip: 'Creates a new annotation at this location',
+          tooltip: 'Creates a new saved place with a text box at this location',
           icons: ['<i class="fa fa-fw ' + plugin.places.Icon.ANNOTATION + '"></i>'],
+          beforeRender: os.ui.menu.map.showIfHasCoordinate,
           handler: plugin.places.menu.createAnnotationFromCoordinate,
           sort: 1
         }
@@ -306,21 +309,33 @@ plugin.places.menu.spatialSetup = function() {
 
     if (!group.find(plugin.places.menu.EventType.SAVE_TO)) {
       group.addChild({
+        label: 'Create Place...',
         eventType: plugin.places.menu.EventType.SAVE_TO,
-        label: 'Save to Places...',
-        tooltip: 'Creates a new saved place from the area',
+        tooltip: 'Creates a new place from the feature',
         icons: ['<i class="fa fa-fw ' + plugin.places.Icon.PLACEMARK + '"></i>'],
         beforeRender: plugin.places.menu.visibleIfCanSaveSpatial,
-        handler: plugin.places.menu.saveSpatialToPlaces
+        handler: plugin.places.menu.saveSpatialToPlaces,
+        sort: 100
       });
 
       group.addChild({
-        eventType: plugin.places.menu.EventType.EDIT_PLACEMARK,
         label: 'Edit Place',
+        eventType: plugin.places.menu.EventType.EDIT_PLACEMARK,
         tooltip: 'Edit the saved place',
         icons: ['<i class="fa fa-fw fa-pencil"></i>'],
         beforeRender: plugin.places.menu.visibleIfIsPlace,
-        handler: plugin.places.menu.onSpatialEdit_
+        handler: plugin.places.menu.onSpatialEdit_,
+        sort: 110
+      });
+
+      group.addChild({
+        label: 'Create Place (Text Box)...',
+        eventType: plugin.places.menu.EventType.SAVE_TO_ANNOTATION,
+        tooltip: 'Creates a new annotation from the feature',
+        icons: ['<i class="fa fa-fw ' + plugin.places.Icon.ANNOTATION + '"></i>'],
+        beforeRender: plugin.places.menu.visibleIfCanSaveSpatial,
+        handler: plugin.places.menu.saveSpatialToAnnotation,
+        sort: 120
       });
     }
   }
@@ -344,6 +359,7 @@ plugin.places.menu.spatialDispose = function() {
 
 /**
  * Test if spatial args contain a place.
+ *
  * @param {Object|undefined} context The menu context.
  * @return {boolean}
  */
@@ -363,6 +379,7 @@ plugin.places.menu.spatialIsPlace = function(context) {
 
 /**
  * Shows a menu item if the context can be saved to places.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -381,6 +398,7 @@ plugin.places.menu.visibleIfCanSaveSpatial = function(context) {
 
 /**
  * Shows a menu item if the context is a saved place.
+ *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -391,6 +409,7 @@ plugin.places.menu.visibleIfIsPlace = function(context) {
 
 /**
  * Handle Edit Place from spatial menu.
+ *
  * @param {os.ui.menu.MenuEvent} event The event.
  * @private
  */
@@ -414,6 +433,7 @@ plugin.places.menu.onSpatialEdit_ = function(event) {
 
 /**
  * Handle menu events from the layer menu.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
@@ -474,7 +494,7 @@ plugin.places.menu.onLayerEvent_ = function(event) {
             break;
           case plugin.places.menu.EventType.EXPORT:
             plugin.file.kml.ui.launchTreeExport(/** @type {!plugin.file.kml.ui.KMLNode} */
-              (rootNode), 'Export Places');
+                (rootNode), 'Export Places');
             break;
           case plugin.places.menu.EventType.REMOVE_ALL:
             var children = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (node.getChildren());
@@ -526,6 +546,7 @@ plugin.places.menu.onLayerEvent_ = function(event) {
 
 /**
  * Show a layer menu item if the context can be saved to Places.
+ *
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
@@ -566,6 +587,7 @@ plugin.places.menu.visibleIfCanSaveLayer = function(context) {
 
 /**
  * Save a coordinate to places.
+ *
  * @param {os.ui.menu.MenuEvent<ol.Coordinate>} event The menu event.
  */
 plugin.places.menu.saveCoordinateToPlaces = function(event) {
@@ -588,6 +610,7 @@ plugin.places.menu.saveCoordinateToPlaces = function(event) {
 
 /**
  * Save a coordinate to places.
+ *
  * @param {os.ui.menu.MenuEvent<ol.Coordinate>} event The menu event.
  */
 plugin.places.menu.createAnnotationFromCoordinate = function(event) {
@@ -599,7 +622,7 @@ plugin.places.menu.createAnnotationFromCoordinate = function(event) {
     event.preventDefault();
     event.stopPropagation();
 
-    var rootNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
+    var rootNode = plugin.places.PlacesManager.getInstance().getAnnotationsFolder();
     plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
       'annotation': true,
       'geometry': new ol.geom.Point(context),
@@ -610,10 +633,22 @@ plugin.places.menu.createAnnotationFromCoordinate = function(event) {
 
 
 /**
- * Save the spatial menu context to places.
+ * Save the spatial menu context to an annotation.
+ *
  * @param {os.ui.menu.MenuEvent} event The menu event.
  */
-plugin.places.menu.saveSpatialToPlaces = function(event) {
+plugin.places.menu.saveSpatialToAnnotation = function(event) {
+  plugin.places.menu.saveSpatialToPlaces(event, true);
+};
+
+
+/**
+ * Save the spatial menu context to places.
+ *
+ * @param {os.ui.menu.MenuEvent} event The menu event.
+ * @param {boolean=} opt_annotation Whether the spatial save is an annotation.
+ */
+plugin.places.menu.saveSpatialToPlaces = function(event, opt_annotation) {
   var context = event.getContext();
   if (context && event instanceof goog.events.Event && !os.inIframe()) {
     // Here's a fun exploitation of the whole window context and instanceof problem.
@@ -622,7 +657,8 @@ plugin.places.menu.saveSpatialToPlaces = function(event) {
     event.preventDefault();
     event.stopPropagation();
 
-    var rootNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
+    var rootNode = opt_annotation ? plugin.places.PlacesManager.getInstance().getAnnotationsFolder() :
+      plugin.places.PlacesManager.getInstance().getPlacesRoot();
     var geometry;
     var name;
     var time;
@@ -651,6 +687,7 @@ plugin.places.menu.saveSpatialToPlaces = function(event) {
     if (geometry) {
       // if found, save away
       plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
+        'annotation': opt_annotation,
         'geometry': geometry,
         'parent': rootNode,
         'name': name,
@@ -663,6 +700,7 @@ plugin.places.menu.saveSpatialToPlaces = function(event) {
 
 /**
  * Handle "Save to Places" events from the layer menu.
+ *
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  */
 plugin.places.menu.saveLayerToPlaces = function(event) {
@@ -706,6 +744,7 @@ plugin.places.menu.saveLayerToPlaces = function(event) {
 
 /**
  * Save a KML tree to places.
+ *
  * @param {!Array<plugin.file.kml.ui.KMLNode>|plugin.file.kml.ui.KMLNode} nodes The root KML node to save
  */
 plugin.places.menu.saveKMLToPlaces_ = function(nodes) {
@@ -737,6 +776,7 @@ plugin.places.menu.saveKMLToPlaces_ = function(nodes) {
 
 /**
  * Recursively copy a KML node, including attached features.
+ *
  * @param {!plugin.file.kml.ui.KMLNode} node The KML node to copy
  * @return {plugin.file.kml.ui.KMLNode}
  * @private

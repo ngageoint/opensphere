@@ -17,6 +17,7 @@ goog.require('plugin.places.PlacesManager');
 
 /**
  * Directive for editing a KML placemark.
+ *
  * @return {angular.Directive}
  */
 plugin.file.kml.ui.placemarkEditDirective = function() {
@@ -35,6 +36,7 @@ os.ui.Module.directive('placemarkedit', [plugin.file.kml.ui.placemarkEditDirecti
 
 /**
  * Controller function for the placemarkedit directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -71,10 +73,16 @@ plugin.file.kml.ui.PlacemarkEditCtrl = function($scope, $element, $timeout) {
   this['labelColumns'] = defaultColumns;
 
   /**
-   * @type {!plugin.file.kml.ui.PlacemarkOptions}
-   * @protected
+   * tempHeaderColor
+   * @type {string|undefined}
    */
-  this.options = /** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ($scope['options'] || {});
+  this['tempHeaderBG'] = this['annotationOptions'].headerBG || undefined;
+
+  /**
+   * tempBodyColor
+   * @type {string|undefined}
+   */
+  this['tempBodyBG'] = this['annotationOptions'].bodyBG || undefined;
 
   var time = this.options['time'];
 
@@ -89,6 +97,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl = function($scope, $element, $timeout) {
       this['dateType'] = os.ui.datetime.AnyDateType.INSTANT;
     }
   }
+
   if (!this.isFeatureDynamic()) {
     var optionsListId = 'optionsList' + this['uid'];
 
@@ -113,8 +122,14 @@ plugin.file.kml.ui.PlacemarkEditCtrl = function($scope, $element, $timeout) {
     if (!parentFolder && this.options['node']) {
       parentFolder = this.options['node'].getParent();
     }
+
     this['folder'] = parentFolder || rootFolder;
   }
+
+  $scope.$on('headerColor.reset', this.resetHeaderBackgroundColor_.bind(this));
+  $scope.$on('bodyColor.reset', this.resetBodyBackgroundColor_.bind(this));
+  $scope.$on('headerColor.change', this.saveHeaderBackgroundColor_.bind(this));
+  $scope.$on('bodyColor.change', this.saveBodyBackgroundColor_.bind(this));
 };
 goog.inherits(plugin.file.kml.ui.PlacemarkEditCtrl, os.ui.FeatureEditCtrl);
 
@@ -168,18 +183,6 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.accept = function() {
 
 /**
  * @inheritDoc
- * @export
- */
-plugin.file.kml.ui.PlacemarkEditCtrl.prototype.cancel = function() {
-  plugin.file.kml.ui.PlacemarkEditCtrl.base(this, 'cancel');
-
-  // enable editing the annotation when the edit is cancelled
-  this['annotationOptions'].editable = true;
-};
-
-
-/**
- * @inheritDoc
  */
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.createPreviewFeature = function() {
   plugin.file.kml.ui.PlacemarkEditCtrl.base(this, 'createPreviewFeature');
@@ -193,8 +196,10 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.createPreviewFeature = function()
   if (this.options['annotation']) {
     this.previewFeature.set(os.annotation.OPTIONS_FIELD, this['annotationOptions']);
 
-    // default to hiding the center shape
-    this['shape'] = os.style.ShapeType.NONE;
+    if (!this.originalGeometry) {
+      // default to hiding the geometry for points as it tends to visually obscure what you're annotating
+      this['shape'] = os.style.ShapeType.NONE;
+    }
 
     // don't display a label, but leave the config present to populate the UI
     this['labels'][0]['column'] = '';
@@ -210,10 +215,10 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.createPreviewFeature = function()
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.loadFromFeature = function(feature) {
   plugin.file.kml.ui.PlacemarkEditCtrl.base(this, 'loadFromFeature', feature);
 
-  this['annotationOptions'] = feature.get(os.annotation.OPTIONS_FIELD);
+  var currentOptions = feature.get(os.annotation.OPTIONS_FIELD);
+  this['annotationOptions'] = os.object.unsafeClone(currentOptions || os.annotation.DEFAULT_OPTIONS);
 
-  if (!this['annotationOptions']) {
-    this['annotationOptions'] = os.object.unsafeClone(os.annotation.DEFAULT_OPTIONS);
+  if (!currentOptions) {
     this['annotationOptions'].show = false;
   }
 
@@ -244,6 +249,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updatePreview = function() {
 
 /**
  * Updates the option for the placemark's parent folder
+ *
  * @export
  */
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updateFolder = function() {
@@ -255,6 +261,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updateFolder = function() {
 
 /**
  * Updates the temporary annotation.
+ *
  * @export
  */
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updateAnnotation = function() {
@@ -274,4 +281,47 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updateAnnotation = function() {
     // fire a change event on the feature to trigger an overlay update (if present)
     this.previewFeature.changed();
   }
+};
+
+
+/**
+ * Resets the header background to the current default theme color
+ *
+ * @private
+ */
+plugin.file.kml.ui.PlacemarkEditCtrl.prototype.resetHeaderBackgroundColor_ = function() {
+  this['annotationOptions'].headerBG = undefined;
+  this['tempHeaderBG'] = undefined;
+};
+
+
+/**
+ * Resets the body background to the current default theme color
+ *
+ * @private
+ */
+plugin.file.kml.ui.PlacemarkEditCtrl.prototype.resetBodyBackgroundColor_ = function() {
+  this['annotationOptions'].bodyBG = undefined;
+  this['tempBodyBG'] = undefined;
+};
+
+
+/**
+ * Save color to feature
+ *
+ * @param {angular.Scope.Event} event
+ * @param {string} color The new color
+ */
+plugin.file.kml.ui.PlacemarkEditCtrl.prototype.saveHeaderBackgroundColor_ = function(event, color) {
+  this['annotationOptions'].headerBG = color;
+};
+
+/**
+ * Save color to feature
+ *
+ * @param {angular.Scope.Event} event
+ * @param {string} color The new color
+ */
+plugin.file.kml.ui.PlacemarkEditCtrl.prototype.saveBodyBackgroundColor_ = function(event, color) {
+  this['annotationOptions'].bodyBG = color;
 };

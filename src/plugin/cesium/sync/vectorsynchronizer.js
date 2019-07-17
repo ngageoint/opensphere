@@ -19,6 +19,7 @@ goog.require('plugin.cesium.sync.FeatureConverter');
 
 /**
  * Synchronizes a single OpenLayers vector layer to Cesium.
+ *
  * @param {!ol.layer.Vector} layer The vector layer.
  * @param {!ol.PluggableMap} map The OpenLayers map.
  * @param {!Cesium.Scene} scene The Cesium scene.
@@ -109,6 +110,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.reset = function() {
 
 /**
  * Create Cesium primitives for the OpenLayers vector layer.
+ *
  * @private
  */
 plugin.cesium.sync.VectorSynchronizer.prototype.createLayerPrimitives_ = function() {
@@ -145,6 +147,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.createLayerPrimitives_ = functio
 
 /**
  * Dispose of all Cesium primitives.
+ *
  * @private
  */
 plugin.cesium.sync.VectorSynchronizer.prototype.disposeLayerPrimitives_ = function() {
@@ -190,6 +193,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.onLayerVisibility_ = function(op
 
 /**
  * Handle style changes to the layer, updating all features.
+ *
  * @param {goog.events.Event} event
  * @private
  */
@@ -202,6 +206,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.onLayerOpacity_ = function(event
 
 /**
  * Handle property change event from the source.
+ *
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */
@@ -226,6 +231,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.onLayerPropertyChange_ = functio
 
 /**
  * Handle feature add event from the source.
+ *
  * @param {ol.source.Vector.Event} event
  * @private
  */
@@ -238,6 +244,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.onAddFeature_ = function(event) 
 
 /**
  * Handle feature remove event from the source.
+ *
  * @param {ol.source.Vector.Event} event
  * @private
  */
@@ -250,6 +257,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.onRemoveFeature_ = function(even
 
 /**
  * Handle feature change event from the source.
+ *
  * @param {ol.source.Vector.Event} event
  * @private
  */
@@ -262,6 +270,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.onChangeFeature_ = function(even
 
 /**
  * Handle clear event from the source.
+ *
  * @param {ol.source.Vector.Event=} opt_event
  * @private
  */
@@ -274,6 +283,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.clearFeatures_ = function(opt_ev
 
 /**
  * Handle property change event from the source.
+ *
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */
@@ -404,6 +414,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.onSourcePropertyChange_ = functi
 
 /**
  * Refreshes the Cesium primitive style for a set of features.
+ *
  * @param {!ol.Feature} feature The features to refresh
  * @private
  *
@@ -431,6 +442,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.updateFeature_ = function(featur
 
 /**
  * Refreshes the Cesium primitive style for a set of features.
+ *
  * @param {Array<!ol.Feature>} features The features to refresh
  * @private
  */
@@ -445,6 +457,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.refreshFeatures_ = function(feat
 
 /**
  * Removes and adds features so their Cesium objects are recreated.
+ *
  * @param {Array<ol.Feature>} features The features to reset
  * @param {boolean=} opt_force If the reset should be forced
  * @private
@@ -515,6 +528,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.removeFeature = function(feature
 
 /**
  * Check if a feature is hidden on the source.
+ *
  * @param {!ol.Feature} feature The OpenLayers feature
  * @return {boolean} If the feature is hidden on the source.
  * @protected
@@ -530,6 +544,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.shouldShowFeature = function(fea
 
 /**
  * Performs initialization actions on a Cesium primitive.
+ *
  * @param {!Cesium.PrimitiveLike} primitive The Cesium primitive
  * @param {!ol.Feature} feature The OpenLayers feature
  * @protected
@@ -547,6 +562,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.initializePrimitive = function(p
 
 /**
  * Refreshes the Cesium primitive style for a set of features.
+ *
  * @param {Array<!ol.Feature>} features The features to refresh
  * @private
  * @suppress {checkTypes}
@@ -721,11 +737,13 @@ plugin.cesium.sync.VectorSynchronizer.prototype.updateBillboardOffsets = functio
 
 /**
  * Updates labels and billboards after the Cesium camera changes.
+ *
  * @inheritDoc
  */
 plugin.cesium.sync.VectorSynchronizer.prototype.updateFromCamera = function() {
   this.updateLabelOffsets();
   this.updateBillboardOffsets();
+  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
 };
 
 
@@ -746,6 +764,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.setEyeOffset_ = function(feature
 
 /**
  * Set the eyeOffset
+ *
  * @param {!Cesium.PrimitiveLike} prim The Cesium primitive
  * @private
  */

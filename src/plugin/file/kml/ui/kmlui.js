@@ -6,6 +6,7 @@ goog.require('os.command.SequenceCommand');
 goog.require('os.object');
 goog.require('os.style');
 goog.require('plugin.file.kml.KMLField');
+goog.require('plugin.file.kml.KMLNodeLayerUICtrl.UIEventType');
 goog.require('plugin.file.kml.cmd.KMLNodeAdd');
 goog.require('plugin.file.kml.cmd.KMLNodeRemove');
 goog.require('plugin.file.kml.kmlNodeLayerUIDirective');
@@ -37,6 +38,7 @@ plugin.file.kml.ui.PlacemarkOptions;
 
 /**
  * Launch a window to create or edit a KML Folder.
+ *
  * @param {!plugin.file.kml.ui.FolderOptions} options The folder options.
  */
 plugin.file.kml.ui.createOrEditFolder = function(options) {
@@ -60,6 +62,7 @@ plugin.file.kml.ui.createOrEditFolder = function(options) {
 
 /**
  * Handle folder choice selection.
+ *
  * @param {!plugin.file.kml.ui.FolderOptions} options The folder options.
  * @param {string} name The new name.
  * @private
@@ -72,6 +75,7 @@ plugin.file.kml.ui.onFolderName_ = function(options, name) {
 
 /**
  * Updates a folder from the provided options.
+ *
  * @param {!plugin.file.kml.ui.FolderOptions} options The folder options.
  * @return {!plugin.file.kml.ui.KMLNode}
  */
@@ -103,6 +107,7 @@ plugin.file.kml.ui.updateFolder = function(options) {
 
 /**
  * Launch a window to create or edit a place.
+ *
  * @param {!plugin.file.kml.ui.PlacemarkOptions} options The place options.
  */
 plugin.file.kml.ui.createOrEditPlace = function(options) {
@@ -139,6 +144,7 @@ plugin.file.kml.ui.createOrEditPlace = function(options) {
 
 /**
  * Updates a placemark from the provided options.
+ *
  * @param {!plugin.file.kml.ui.PlacemarkOptions} options The placemark options.
  * @return {!plugin.file.kml.ui.KMLNode}
  */
@@ -185,6 +191,7 @@ plugin.file.kml.ui.updatePlacemark = function(options) {
 
 /**
  * Verifies the KML node is still in the tree if it has a KML source defined.
+ *
  * @param {!plugin.file.kml.ui.KMLNode} node The node to verify
  * @return {!plugin.file.kml.ui.KMLNode} The same node if it's in the tree, otherwise the root of the tree.
  * @private
@@ -209,6 +216,7 @@ plugin.file.kml.ui.verifyNodeInTree_ = function(node) {
 
 /**
  * Get the KML root node from a KML layer node. Assumes the layer node may not be displaying the root.
+ *
  * @param {!plugin.file.kml.ui.KMLLayerNode} layerNode The layer node
  * @return {plugin.file.kml.ui.KMLNode}
  */

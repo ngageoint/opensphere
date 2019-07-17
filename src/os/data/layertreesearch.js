@@ -13,6 +13,7 @@ goog.require('os.ui.slick.TreeSearch');
 
 /**
  * Extends AbstractGroupByTreeSearch to search through layers on the map
+ *
  * @extends {os.ui.slick.AbstractGroupByTreeSearch}
  * @param {!string} setAs The field to set on...
  * @param {Object} onObj this object
@@ -27,6 +28,7 @@ goog.inherits(os.data.LayerTreeSearch, os.ui.slick.AbstractGroupByTreeSearch);
 
 /**
  * Overridden in inheriting class
+ *
  * @return {!Array}
  * @override
  */
@@ -42,6 +44,7 @@ os.data.LayerTreeSearch.prototype.getSearchItems = function() {
 
 /**
  * Overridden in inheriting class
+ *
  * @param {Object} item - search item to setup as a node
  * @return {!os.structs.ITreeNode}
  * @override
@@ -65,16 +68,15 @@ os.data.LayerTreeSearch.prototype.setupNode = function(item) {
 
 /**
  * Overridden for post result processing
+ *
  * @param {os.data.groupby.INodeGroupBy} groupBy
  * @param {!Array} results
  * @override
  */
 os.data.LayerTreeSearch.prototype.finalizeSearch = function(groupBy, results) {
-  if (!(groupBy instanceof os.data.groupby.LayerZOrderGroupBy)) {
-    var i = results.length;
-    while (i--) {
-      this.makeGroups_(results[i].getChildren(), /** @type {!os.ui.slick.SlickTreeNode} */ (results[i]));
-    }
+  var i = results.length;
+  while (i--) {
+    this.makeGroups_(results[i].getChildren(), /** @type {!os.ui.slick.SlickTreeNode} */ (results[i]));
   }
 };
 
@@ -93,6 +95,7 @@ os.data.LayerTreeSearch.prototype.setSort = function(list) {
 
 /**
  * Overridden to fill the list from the map
+ *
  * @override
  */
 os.data.LayerTreeSearch.prototype.fillListFromSearch = function(list) {
@@ -113,6 +116,7 @@ os.data.LayerTreeSearch.prototype.fillListFromSearch = function(list) {
 
 /**
  * Creates groupings from layer id which have the same prefix: <providerId>#<sourceId>#
+ *
  * @param {?Array<!os.structs.ITreeNode>} results
  * @param {!os.ui.slick.SlickTreeNode} parent
  * @private
@@ -120,7 +124,7 @@ os.data.LayerTreeSearch.prototype.fillListFromSearch = function(list) {
 os.data.LayerTreeSearch.prototype.makeGroups_ = function(results, parent) {
   if (results && results.length > 1) {
     var idBuckets = /** @type {!Object<string, !Array<!os.structs.ITreeNode>>} */
-        (goog.array.bucket(results, os.data.LayerTreeSearch.getNodeGroup_));
+        (goog.array.bucket(results, this.getNodeGroup_.bind(this)));
     results.length = 0;
 
     for (var id in idBuckets) {
@@ -128,12 +132,14 @@ os.data.LayerTreeSearch.prototype.makeGroups_ = function(results, parent) {
 
       if (bucket.length > 1) {
         var min = Number.MAX_VALUE;
-
         var title = 'Unknown';
 
         // pick the shortest title as the label for the group
         for (var i = 0, n = bucket.length; i < n; i++) {
-          var t = bucket[i].getLabel() || '';
+          var node = /** @type {os.data.LayerNode} */ (bucket[i]);
+          var layer = node.getLayer();
+          var t = os.implements(layer, os.IGroupable.ID) ?
+            /** @type {os.IGroupable} */ (layer).getGroupLabel() : layer.getTitle();
 
           if (t.length < min) {
             title = t;
@@ -167,8 +173,7 @@ os.data.LayerTreeSearch.prototype.makeGroups_ = function(results, parent) {
     }
 
     // Update the parent count
-    // Essentially this takes the "(1)" or "(1 of 2)" portion and applies the difference in count
-    // to both numbers.
+    // Essentially this takes the "(1)" or "(1 of 2)" portion and applies the difference in count to both numbers.
     var label = parent.getLabel();
     i = label.indexOf('(');
 
@@ -207,9 +212,26 @@ os.data.LayerTreeSearch.prototype.makeGroups_ = function(results, parent) {
  * @return {string}
  * @private
  */
-os.data.LayerTreeSearch.getNodeGroup_ = function(node, index, array) {
-  var id = node.getId().split(os.ui.data.BaseProvider.ID_DELIMITER);
-  id.pop();
+os.data.LayerTreeSearch.prototype.getNodeGroup_ = function(node, index, array) {
+  var groupId = node.getId();
+  var id;
 
-  return id.length > 1 ? id.join(os.ui.data.BaseProvider.ID_DELIMITER) : node.getId();
+  if (node instanceof os.data.LayerNode) {
+    var layer = node.getLayer();
+
+    if (os.implements(layer, os.IGroupable.ID)) {
+      groupId = /** @type {os.IGroupable} */ (layer).getGroupId();
+    }
+
+    if (this.getGroupBy() instanceof os.data.groupby.LayerZOrderGroupBy && groupId == node.getId()) {
+      // when in the z-order grouping, only group layers that have a specialized groupId
+      // this preserves the old behavior of never grouping anything but layers we want when using z-order
+      return groupId;
+    }
+
+    id = groupId.split(os.ui.data.BaseProvider.ID_DELIMITER);
+    id.pop();
+  }
+
+  return id && id.length > 1 ? id.join(os.ui.data.BaseProvider.ID_DELIMITER) : groupId;
 };

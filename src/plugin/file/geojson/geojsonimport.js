@@ -11,6 +11,7 @@ goog.require('plugin.file.geojson.GeoJSONProvider');
 
 /**
  * Controller for the GeoJSON import wizard window
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
@@ -53,12 +54,13 @@ plugin.file.geojson.GeoJSONImportCtrl.prototype.createFromConfig = function(conf
  * @override
  */
 plugin.file.geojson.GeoJSONImportCtrl.prototype.updateFromConfig = function(descriptor, config) {
-  plugin.file.geojson.GeoJSONDescriptor.updateFromConfig(descriptor, config);
+  descriptor.updateFromConfig(config);
 };
 
 
 /**
  * The GeoJSON import wizard directive.
+ *
  * @return {angular.Directive}
  */
 plugin.file.geojson.geojsonImportDirective = function() {

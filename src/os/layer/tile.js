@@ -5,6 +5,7 @@ goog.require('ol.array');
 goog.require('ol.events');
 goog.require('ol.layer.Property');
 goog.require('ol.layer.Tile');
+goog.require('os.IGroupable');
 goog.require('os.color');
 goog.require('os.events.LayerEvent');
 goog.require('os.events.PropertyChangeEvent');
@@ -34,6 +35,7 @@ goog.require('os.ui.renamelayer');
  * @extends {ol.layer.Tile}
  * @implements {os.layer.ILayer}
  * @implements {os.layer.IColorableLayer}
+ * @implements {os.IGroupable}
  * @implements {os.legend.ILegendRenderer}
  * @param {olx.layer.TileOptions} options Tile layer options
  * @constructor
@@ -152,6 +154,7 @@ os.layer.Tile = function(options) {
 goog.inherits(os.layer.Tile, ol.layer.Tile);
 os.implements(os.layer.Tile, os.layer.ILayer.ID);
 os.implements(os.layer.Tile, os.layer.IColorableLayer.ID);
+os.implements(os.layer.Tile, os.IGroupable.ID);
 os.implements(os.layer.Tile, os.legend.ILegendRenderer.ID);
 
 
@@ -213,6 +216,7 @@ os.layer.Tile.prototype.setMaxResolution = function(value) {
 
 /**
  * Update icons to use the current layer color.
+ *
  * @private
  */
 os.layer.Tile.prototype.updateIcons_ = function() {
@@ -225,6 +229,7 @@ os.layer.Tile.prototype.updateIcons_ = function() {
 
 /**
  * Handler for source change events.
+ *
  * @param {os.events.PropertyChangeEvent} event
  * @private
  */
@@ -259,7 +264,24 @@ os.layer.Tile.prototype.setId = function(value) {
 
 
 /**
+ * @inheritDoc
+ */
+os.layer.Tile.prototype.getGroupId = function() {
+  return this.getId();
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.Tile.prototype.getGroupLabel = function() {
+  return this.getTitle();
+};
+
+
+/**
  * Get the default color for the tile layer.
+ *
  * @return {?string}
  */
 os.layer.Tile.prototype.getDefaultColor = function() {
@@ -285,6 +307,7 @@ os.layer.Tile.prototype.getColor = function() {
 
 /**
  * Get the brightness for the tile layer.
+ *
  * @return {number}
  * @override
  */
@@ -298,6 +321,7 @@ os.layer.Tile.prototype.getBrightness = function() {
 
 /**
  * Get the brightness for the tile layer.
+ *
  * @override
  * @return {number}
  */
@@ -311,6 +335,7 @@ os.layer.Tile.prototype.getContrast = function() {
 
 /**
  * Get the saturation for the tile layer.
+ *
  * @override
  * @return {number}
  */
@@ -324,6 +349,7 @@ os.layer.Tile.prototype.getSaturation = function() {
 
 /**
  * Get the whether the tile layer is being colorized.
+ *
  * @return {boolean}
  */
 os.layer.Tile.prototype.getColorize = function() {
@@ -337,6 +363,7 @@ os.layer.Tile.prototype.getColorize = function() {
 
 /**
  * Get the whether the tile layer is being colorized.
+ *
  * @param {boolean} value
  */
 os.layer.Tile.prototype.setColorize = function(value) {
@@ -441,6 +468,7 @@ os.layer.Tile.prototype.setSaturation = function(value, opt_options) {
 /**
  * Updates the color filter, either adding or removing depending on whether the layer is colored to a non-default
  * color or colorized.
+ *
  * @protected
  */
 os.layer.Tile.prototype.updateColorFilter = function() {
@@ -460,6 +488,7 @@ os.layer.Tile.prototype.updateColorFilter = function() {
 /**
  * Filter function that applies the layer color tile image data. This filter is always in the filter array, but it
  * only runs if the current color is different from the default or if the colorize option is active.
+ *
  * @param {Array<number>} data
  * @protected
  */
@@ -504,6 +533,7 @@ os.layer.Tile.prototype.setStyles = function(value) {
 
 /**
  * Get the default server style.
+ *
  * @return {?osx.ogc.TileStyle}
  */
 os.layer.Tile.prototype.getDefaultStyle = function() {
@@ -580,8 +610,22 @@ os.layer.Tile.prototype.getIcons = function() {
     color = os.color.toRgbArray(layerColor);
   }
 
-  html += color ? os.ui.createIconSet(this.getId(), this.getSVGIconsInternal(), null, color) : this.getIconsInternal();
+  html += color ? os.ui.createIconSet(this.getId(), this.getSVGIconsInternal(), this.getStateBadge(), color)
+    : this.getIconsInternal();
   return html;
+};
+
+
+/**
+ * @return {Array<string>}
+ * @protected
+ */
+os.layer.Tile.prototype.getStateBadge = function() {
+  if (os.state.isStateFile(this.getId())) {
+    return [os.ui.Icons.STATE];
+  } else {
+    return null;
+  }
 };
 
 
@@ -772,6 +816,7 @@ os.layer.Tile.prototype.setLayerUI = function(value) {
 
 /**
  * Identify the layer on the map.
+ *
  * @protected
  */
 os.layer.Tile.prototype.identify = function() {

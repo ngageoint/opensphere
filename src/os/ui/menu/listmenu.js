@@ -1,7 +1,6 @@
 goog.provide('os.ui.menu.list');
 
 goog.require('os.command.FeaturesVisibility');
-goog.require('os.command.FlyToExtent');
 goog.require('os.command.InvertSelect');
 goog.require('os.command.SelectAll');
 goog.require('os.command.SelectNone');
@@ -96,6 +95,7 @@ os.ui.menu.list.dispose = function() {
 
 /**
  * Handle list menu event
+ *
  * @param {os.ui.menu.MenuEvent} event The menu event.
  */
 os.ui.menu.list.handleListEvent = function(event) {
@@ -152,14 +152,7 @@ os.ui.menu.list.handleListEvent = function(event) {
       case os.action.EventType.GOTO:
         var selected = source.getSelectedItems();
         if (selected.length > 0) {
-          var geometries = selected.map(function(f) {
-            return f.getGeometry();
-          }).filter(os.fn.filterFalsey);
-
-          if (geometries.length > 0) {
-            var extent = geometries.reduce(os.fn.reduceExtentFromGeometries, ol.extent.createEmpty());
-            cmd = new os.command.FlyToExtent(extent);
-          }
+          os.feature.flyTo(selected);
         }
         break;
       default:
@@ -175,6 +168,7 @@ os.ui.menu.list.handleListEvent = function(event) {
 
 /**
  * Handle the "Export" menu event.
+ *
  * @param {os.ui.menu.MenuEvent} event The menu event.
  */
 os.ui.menu.list.onExport = function(event) {
@@ -188,6 +182,7 @@ os.ui.menu.list.onExport = function(event) {
 
 /**
  * Handle the "Sort Selected" menu event.
+ *
  * @param {os.ui.menu.MenuEvent} event The menu event.
  */
 os.ui.menu.list.onSortSelected = function(event) {
@@ -216,6 +211,7 @@ os.ui.menu.list.canExport = function(context) {
 
 /**
  * If a menu context is a vector source with a selection.
+ *
  * @param {*} context The menu context.
  * @return {boolean} If the source has a selection.
  */
@@ -232,6 +228,7 @@ os.ui.menu.list.hasSelected = function(context) {
 
 /**
  * Shows a menu item if the menu context is a vector source with a selection.
+ *
  * @param {*} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */

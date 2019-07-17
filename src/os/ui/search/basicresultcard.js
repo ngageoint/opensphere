@@ -2,11 +2,12 @@ goog.provide('os.ui.search.BasicResultCardCtrl');
 goog.provide('os.ui.search.basicResultCardDirective');
 
 goog.require('os.ui.Module');
-goog.require('os.ui.text.SimpleMDE');
+goog.require('os.ui.text.TuiEditor');
 
 
 /**
  * The resultcard directive for displaying search results.
+ *
  * @return {angular.Directive}
  */
 os.ui.search.basicResultCardDirective = function() {
@@ -31,6 +32,7 @@ os.ui.Module.directive('basicresultcard', [os.ui.search.basicResultCardDirective
 
 /**
  * Controller for the resultcard directive.
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @param {!angular.$compile} $compile
@@ -41,13 +43,14 @@ os.ui.search.BasicResultCardCtrl = function($scope, $element, $compile) {
   if ('result' in $scope) {
     var result = $scope['result'].getResult();
     this['url'] = result.getUrl();
-    this['title'] = os.ui.text.SimpleMDE.getUnformatedText(result.getTitle());
+    this['title'] = os.ui.text.TuiEditor.getUnformatedText(result.getTitle());
   }
 };
 
 
 /**
  * Get the title with correct action icon
+ *
  * @return {string}
  * @export
  */
@@ -62,6 +65,7 @@ os.ui.search.BasicResultCardCtrl.prototype.getViewIcon = function() {
 
 /**
  * To linkify title or not
+ *
  * @return {string}
  * @export
  */
@@ -75,6 +79,7 @@ os.ui.search.BasicResultCardCtrl.prototype.getTitle = function() {
 
 /**
  * Is the link to an external site
+ *
  * @return {boolean}
  * @export
  */

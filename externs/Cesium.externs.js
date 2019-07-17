@@ -1097,9 +1097,9 @@ Cesium.Camera.prototype.flyTo = function(options) {};
 
 /**
  * @param {!Cesium.BoundingSphere} boundingSphere The bounding sphere
- * @param {!Cesium.optionsCameraFlyToBoundingSphere} options The flyTo options
+ * @param {Cesium.optionsCameraFlyToBoundingSphere=} opt_options The flyTo options
  */
-Cesium.Camera.prototype.flyToBoundingSphere = function(boundingSphere, options) {};
+Cesium.Camera.prototype.flyToBoundingSphere = function(boundingSphere, opt_options) {};
 
 
 /**
@@ -1330,9 +1330,11 @@ Cesium.Cartesian3.fromElements = function(x, y, z, result) {};
  * @param {number} lon Longitude in degrees
  * @param {number} lat latitude in degrees
  * @param {number=} opt_alt Altitude in meters
+ * @param {Cesium.Ellipsoid=} opt_ellipsoid Defaults to WGS84
+ * @param {Cesium.Cartesian3=} opt_result
  * @return {!Cesium.Cartesian3}
  */
-Cesium.Cartesian3.fromDegrees = function(lon, lat, opt_alt) {};
+Cesium.Cartesian3.fromDegrees = function(lon, lat, opt_alt, opt_ellipsoid, opt_result) {};
 
 
 /**
@@ -1609,7 +1611,8 @@ Cesium.Polygon.prototype.material;
  *   horizontal: (boolean|undefined),
  *   repeat: (number|undefined),
  *   evenColor: (Cesium.Color|undefined),
- *   oddColor: (Cesium.Color|undefined)
+ *   oddColor: (Cesium.Color|undefined),
+ *   dashPattern: (number|undefined)
  * }}
  */
 Cesium.optionsMaterialFromTypeAny;
@@ -1695,9 +1698,21 @@ Cesium.Material.prototype.uniforms;
 
 
 /**
+ * @type {!number} .
+ */
+Cesium.Material.prototype.uniforms.dashPattern;
+
+
+/**
  * @type {string} .
  */
 Cesium.Material.ColorType;
+
+
+/**
+ * @type {string} .
+ */
+Cesium.Material.PolylineDashType;
 
 
 /**
@@ -1760,6 +1775,12 @@ Cesium.Polyline.prototype.width;
  * @constructor
  */
 Cesium.Appearance = function() {};
+
+
+/**
+ * @type {Cesium.Material} .
+ */
+Cesium.Appearance.prototype.material;
 
 
 /**
@@ -1830,6 +1851,12 @@ Cesium.Primitive.prototype.ready;
  * @return {Cesium.GeometryInstanceAttribute|undefined}
  */
 Cesium.Primitive.prototype.getGeometryInstanceAttributes = function(opt_id) {};
+
+
+/**
+ * @type {Cesium.Appearance} .
+ */
+Cesium.Primitive.prototype.appearance;
 
 
 /**
@@ -2561,7 +2588,7 @@ Cesium.PolylineColorAppearance.prototype.vertexFormat;
 
 /**
  * @constructor
- * @param {{material: Cesium.Material}} object
+ * @param {Object} object
  * @extends {Cesium.Appearance}
  */
 Cesium.PolylineMaterialAppearance = function(object) {};
@@ -2572,6 +2599,14 @@ Cesium.PolylineMaterialAppearance = function(object) {};
  */
 Cesium.PolylineMaterialAppearance.prototype.vertexFormat;
 
+
+
+/**
+ * @constructor
+ * @param {Object} object
+ * @extends {Cesium.Appearance}
+ */
+Cesium.MaterialAppearance = function(object) {};
 
 
 /**
@@ -5226,6 +5261,24 @@ Cesium.EventHelper.prototype.removeAll = function() {};
  * @param {number=} opt_radius The radius
  */
 Cesium.BoundingSphere = function(opt_center, opt_radius) {};
+
+
+/**
+ * @param {Cesium.BoundingSphere} sphere
+ * @param {Cesium.Cartesian3} point
+ * @param {Cesium.BoundingSphere=} opt_result
+ * @return {Cesium.BoundingSphere}
+ */
+Cesium.BoundingSphere.expand = function(sphere, point, opt_result) {};
+
+
+/**
+ * @param {Cesium.BoundingSphere} left
+ * @param {Cesium.BoundingSphere} right
+ * @param {Cesium.BoundingSphere=} opt_result
+ * @return {Cesium.BoundingSphere}
+ */
+Cesium.BoundingSphere.union = function(left, right, opt_result) {};
 
 
 /**

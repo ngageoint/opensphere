@@ -16,6 +16,7 @@ goog.require('os.time.TimeRange');
 
 /**
  * Manager for handling tracks that are being followed during animation.
+ *
  * @extends {goog.events.EventTarget}
  * @constructor
  */
@@ -103,6 +104,7 @@ plugin.track.TrackManager.prototype.disposeInternal = function() {
 
 /**
  * Add the track(s) to the list of followed tracks
+ *
  * @param {Array<ol.Feature>} tracks
  */
 plugin.track.TrackManager.prototype.followTracks = function(tracks) {
@@ -117,6 +119,7 @@ plugin.track.TrackManager.prototype.followTracks = function(tracks) {
 
 /**
  * Remove the track(s) from the list of followed tracks
+ *
  * @param {Array<ol.Feature>} tracks
  */
 plugin.track.TrackManager.prototype.unfollowTracks = function(tracks) {
@@ -145,6 +148,7 @@ plugin.track.TrackManager.prototype.unfollowTracks = function(tracks) {
 
 /**
  * Return whether a set of tracks is being followed.
+ *
  * @param {Array<ol.Feature>} tracks
  * @return {boolean} false if any of the tracks passed in are not followed
  */
@@ -161,6 +165,7 @@ plugin.track.TrackManager.prototype.isFollowed = function(tracks) {
 
 /**
  * Called when track/feature change event is received
+ *
  * @param {ol.events.Event} event
  * @private
  */
@@ -174,6 +179,7 @@ plugin.track.TrackManager.prototype.onFeatureValueChange_ = function(event) {
 
 /**
  * Handle the track throttle event.
+ *
  * @private
  */
 plugin.track.TrackManager.prototype.onTrackThrottle_ = function() {
@@ -185,6 +191,7 @@ plugin.track.TrackManager.prototype.onTrackThrottle_ = function() {
 
 /**
  * Move the map to show active tracks.
+ *
  * @return {boolean} If the operation succeeded, for use with `goog.async.ConditionalDelay`.
  * @private
  */
@@ -222,12 +229,13 @@ plugin.track.TrackManager.prototype.showActiveTracks_ = function() {
 
 /**
  * Sets the list of active tracks to those that fall within the current timeline controller animation range.
+ *
  * @private
  */
 plugin.track.TrackManager.prototype.setActiveTracks_ = function() {
   // get the current animation range and determine which tracks are "active"
   var range = this.tlc_.getAnimationRange();
-  var trackSource = os.osDataManager.getSource('track');
+  var trackSource = plugin.track.getTrackSource();
 
   if (trackSource) {
     // find any tracks that overlap the timerange
@@ -247,6 +255,7 @@ plugin.track.TrackManager.prototype.setActiveTracks_ = function() {
 
 /**
  * Generate an extent for all multiple tracks combined.
+ *
  * @param {Array<ol.Feature>} tracks
  * @return {ol.Extent}
  */

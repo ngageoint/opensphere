@@ -5,6 +5,7 @@ goog.require('os.IPersistable');
 
 /**
  * Interface for a WebGL camera synchronized to the OpenLayers view.
+ *
  * @extends {os.IPersistable<osx.map.CameraState>}
  * @interface
  */

@@ -9,6 +9,7 @@ goog.require('os.ui.nodeToggleDirective');
 
 /**
  * A toggle directive for a node also shows a folder
+ *
  * @return {angular.Directive}
  */
 os.ui.nodeToggleFolderDirective = function() {
@@ -29,6 +30,7 @@ os.ui.Module.directive('nodetogglefolder', [os.ui.nodeToggleFolderDirective]);
 
 /**
  * Controller for the node toggle w/ folder directive
+ *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
  * @extends {os.ui.NodeToggleCtrl}

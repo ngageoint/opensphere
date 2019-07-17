@@ -58,6 +58,7 @@ plugin.basemap.BaseMapProvider = function() {
   os.dispatcher.listen('basemapAddFailover', this.activateFailSet, false, this);
 };
 goog.inherits(plugin.basemap.BaseMapProvider, os.ui.data.DescriptorProvider);
+os.implements(plugin.basemap.BaseMapProvider, os.data.IDataProvider.ID);
 
 
 /**
@@ -128,6 +129,7 @@ plugin.basemap.BaseMapProvider.prototype.load = function(ping) {
 
 /**
  * Activates the fail set for the given projection, if any
+ *
  * @protected
  */
 plugin.basemap.BaseMapProvider.prototype.activateFailSet = function() {
@@ -266,6 +268,7 @@ plugin.basemap.BaseMapProvider.prototype.onSwitchProjectionBins = function(evt) 
 
 /**
  * Get the id to use for the terrain descriptor.
+ *
  * @return {string}
  * @protected
  */
@@ -276,6 +279,7 @@ plugin.basemap.BaseMapProvider.prototype.getTerrainId = function() {
 
 /**
  * Handle terrain disabled event from the map container.
+ *
  * @param {goog.events.Event} event The event.
  * @protected
  *

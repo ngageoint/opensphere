@@ -10,6 +10,7 @@ goog.require('os.ui.draw.IDrawControl');
 
 /**
  * Box drawing control.
+ *
  * @abstract
  * @param {!SVGSVGElement} owner Owner DOM element.
  * @extends {goog.events.EventTarget}
@@ -42,6 +43,7 @@ goog.inherits(os.ui.draw.AbstractDrawControl, goog.events.EventTarget);
 
 /**
  * Handle keyboard events.
+ *
  * @param {goog.events.KeyEvent} event
  * @protected
  */

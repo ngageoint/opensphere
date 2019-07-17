@@ -20,14 +20,15 @@ addons:
       key_url: "https://dl.yarnpkg.com/debian/pubkey.gpg"
     packages:
     - yarn
+    - libgconf-2-4
 install:
 - yarn config list
 - yarn
 script:
-- ./ci-script.sh
+- ./tasks/ci-script.sh
 after_success:
-- chmod ugo+x ./deploy.sh
-- "./deploy.sh"
+- if $RELEASE; then yarn run semantic-release; fi
+- ./tasks/deploy.sh
 after_failure:
 - "./cypress/support/s3-artifact-upload.sh"
 branches:
@@ -35,6 +36,7 @@ branches:
   - "/^v\\d+\\.\\d+\\.\\d+$/"
 env:
   global:
-  - S3SCREENSHOT=true
-  - S3COMPARISON=true
-  - S3VIDEO=true
+    RELEASE: false
+    S3SCREENSHOT: true
+    S3COMPARISON: true
+    S3VIDEO: true

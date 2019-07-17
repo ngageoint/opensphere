@@ -15,6 +15,7 @@ os.feature.DynamicPropertyChange = {
 
 /**
  * A dynamic feature that changes with time.
+ *
  * @param {ol.geom.Geometry|Object<string, *>=} opt_geometryOrProperties
  *     You may pass a Geometry object directly, or an object literal
  *     containing properties.  If you pass an object literal, you may
@@ -27,7 +28,7 @@ os.feature.DynamicPropertyChange = {
  * @constructor
  */
 os.feature.DynamicFeature = function(opt_geometryOrProperties, opt_initFn, opt_disposeFn, opt_updateFn,
-  opt_dynamicEnabled) {
+    opt_dynamicEnabled) {
   os.feature.DynamicFeature.base(this, 'constructor', opt_geometryOrProperties);
 
   /**
@@ -58,6 +59,15 @@ goog.inherits(os.feature.DynamicFeature, ol.Feature);
 
 
 /**
+ * Class name.
+ * @type {string}
+ * @const
+ */
+os.feature.DynamicFeature.NAME = 'os.feature.DynamicFeature';
+os.registerClass(os.feature.DynamicFeature.NAME, os.feature.DynamicFeature);
+
+
+/**
  * Initialize the feature into the animating state.
  */
 os.feature.DynamicFeature.prototype.initDynamic = function() {
@@ -68,6 +78,7 @@ os.feature.DynamicFeature.prototype.initDynamic = function() {
 
 /**
  * Restore the feature to the non-animating state.
+ *
  * @param {boolean=} opt_disposing If the feature is being disposed.
  */
 os.feature.DynamicFeature.prototype.disposeDynamic = function(opt_disposing) {
@@ -78,6 +89,7 @@ os.feature.DynamicFeature.prototype.disposeDynamic = function(opt_disposing) {
 
 /**
  * Update the animating state for the given timestamp.
+ *
  * @param {number} startTime The start timestamp.
  * @param {number} endTime The ebd timestamp.
  */
@@ -92,7 +104,7 @@ os.feature.DynamicFeature.prototype.updateDynamic = function(startTime, endTime)
  */
 os.feature.DynamicFeature.prototype.clone = function() {
   var clone = new os.feature.DynamicFeature(undefined, this.initFn, this.disposeFn, this.updateFn,
-    this.isDynamicEnabled);
+      this.isDynamicEnabled);
   clone.setProperties(this.values_, true);
   clone.setGeometryName(this.getGeometryName());
   var geometry = this.getGeometry();
