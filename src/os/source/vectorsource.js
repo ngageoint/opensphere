@@ -1991,7 +1991,7 @@ os.source.Vector.prototype.processImmediate = function(feature) {
       feature.setGeometry(geom);
     } else if (geomType === ol.geom.GeometryType.POLYGON || geomType === ol.geom.GeometryType.MULTI_POLYGON) {
       geom = os.geo.jsts.splitPolarPolygon(
-        /** @type {ol.geom.Polygon|ol.geom.MultiPolygon} */ (geom));
+          /** @type {ol.geom.Polygon|ol.geom.MultiPolygon} */ (geom));
     }
   }
 

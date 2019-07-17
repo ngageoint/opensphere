@@ -265,7 +265,7 @@ os.query.BaseAreaManager.prototype.isValidFeature = function(feature) {
   var geomType = geometry.getType();
   if (geomType == ol.geom.GeometryType.POLYGON || geomType == ol.geom.GeometryType.MULTI_POLYGON) {
     geometry = os.geo.jsts.splitPolarPolygon(
-      /** @type {ol.geom.Polygon|ol.geom.MultiPolygon} */ (geometry));
+        /** @type {ol.geom.Polygon|ol.geom.MultiPolygon} */ (geometry));
     os.interpolate.interpolateGeom(geometry);
 
     var validated = os.geo.jsts.validate(geometry);
