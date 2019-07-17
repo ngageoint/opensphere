@@ -1854,8 +1854,8 @@ os.geo.padCoordinate = function(n, opt_isLon, opt_precision) {
  * Parses a coordinate value into sexagesimal format.
  *
  * @param {number} coordinate The coordinate
- * @param {boolean=} opt_isLon If the coordinate is a longitudinal value
- * @param {boolean=} opt_symbols If symbols should be displayed
+ * @param {boolean=} opt_isLon If the coordinate is a longitudinal value (default true)
+ * @param {boolean=} opt_symbols If symbols should be displayed (default true)
  * @param {number=} opt_decimalSeconds Number of decimals to display for seconds, default is 2
  * @return {string} The formatted coordinate
  */
@@ -1879,8 +1879,8 @@ os.geo.toSexagesimal = function(coordinate, opt_isLon, opt_symbols, opt_decimalS
  * Parses a coordinate value into Degrees Decimal Minutes (DDM) format.
  *
  * @param {number} coordinate The coordinate
- * @param {boolean=} opt_isLon If the coordinate is a longitudinal value
- * @param {boolean=} opt_symbols If symbols should be displayed
+ * @param {boolean=} opt_isLon If the coordinate is a longitudinal value (default true)
+ * @param {boolean=} opt_symbols If symbols should be displayed (default true)
  * @return {string} The formatted coordinate
  */
 os.geo.toDegreesDecimalMinutes = function(coordinate, opt_isLon, opt_symbols) {
