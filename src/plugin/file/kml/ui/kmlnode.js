@@ -302,6 +302,7 @@ plugin.file.kml.ui.KMLNode.prototype.onFeatureChange = function(event) {
       case os.annotation.EventType.HIDE:
         this.clearAnnotations();
         this.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
+        this.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
         break;
       default:
         break;

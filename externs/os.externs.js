@@ -28,6 +28,7 @@ osx.annotation;
  *   showTail: string,
  *   size: !Array<number>,
  *   offset: !Array<number>,
+ *   position: (Array<number>|undefined),
  *   headerBG: (string|undefined),
  *   bodyBG: (string|undefined)
  * }}

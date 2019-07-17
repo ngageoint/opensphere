@@ -425,6 +425,8 @@ os.annotation.FeatureAnnotationCtrl.prototype.updateTailFixed = function() {
     this.element.find('path').attr('d', linePath);
 
     os.annotation.setPosition(this.overlay, this.feature);
+
+    this['options'].position = this.overlay.getPosition();
   }
 
   return true;
