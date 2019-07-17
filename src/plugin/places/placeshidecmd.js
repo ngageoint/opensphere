@@ -49,6 +49,7 @@ plugin.places.PlacesHide.prototype.state = os.command.State.READY;
  * @inheritDoc
  */
 plugin.places.PlacesHide.prototype.execute = function() {
+  this.visibleNodes_ = [];
   this.state = os.command.State.EXECUTING;
   var rootNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
   if (rootNode) {
@@ -57,7 +58,6 @@ plugin.places.PlacesHide.prototype.execute = function() {
       var features = source.getFeatures();
       if (features) {
         this.storeVisibleChildren(rootNode);
-        source.hideFeatures(features);
       }
     } else {
       this.state = os.command.State.ERROR;
