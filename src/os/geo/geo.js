@@ -1867,11 +1867,23 @@ os.geo.toSexagesimal = function(coordinate, opt_isLon, opt_symbols, opt_decimalS
   var tMinutes = Math.abs((degrees - coordinate) * 60);
   var minutes = Math.floor(tMinutes);
   var seconds = (tMinutes - minutes) * 60;
-
+  var paddedSeconds = os.geo.padCoordinate(seconds, false, opt_decimalSeconds != null ? opt_decimalSeconds : 2);
+  // Sometimes padding will round up.
+  if (paddedSeconds.startsWith('60')) {
+    seconds = Math.abs(Math.abs(seconds) - 60.0);
+    paddedSeconds = os.geo.padCoordinate(seconds, false, opt_decimalSeconds != null ? opt_decimalSeconds : 2);
+    minutes += 1;
+  }
+  var paddedMinutes = os.geo.padCoordinate(minutes);
+  if (paddedMinutes.startsWith('60')) {
+    minutes = Math.floor(Math.abs(tMinutes - 60.0));
+    paddedMinutes = os.geo.padCoordinate(minutes);
+    degrees += (!isNegative ? 1.0 : -1.0);
+  }
   return goog.string.buildString(os.geo.padCoordinate(Math.abs(degrees), isLon), (symbols ? '° ' : ''),
-      os.geo.padCoordinate(minutes), (symbols ? '\' ' : ''),
-      os.geo.padCoordinate(seconds, false, opt_decimalSeconds != null ? opt_decimalSeconds : 2),
-      (symbols ? '"' : ''), (symbols ? ' ' : ''), (isLon ? (isNegative ? 'W' : 'E') : (isNegative ? 'S' : 'N')));
+      paddedMinutes, (symbols ? '\' ' : ''),
+      paddedSeconds, (symbols ? '" ' : ''),
+      (isLon ? (isNegative ? 'W' : 'E') : (isNegative ? 'S' : 'N')));
 };
 
 
@@ -1889,10 +1901,17 @@ os.geo.toDegreesDecimalMinutes = function(coordinate, opt_isLon, opt_symbols) {
   var isNegative = coordinate < 0;
   var degrees = coordinate > 0 ? Math.floor(coordinate) : Math.ceil(coordinate);
   var minutes = Math.abs((degrees - coordinate) * 60);
+  var paddedMinutes = os.geo.padCoordinate(minutes, false, 2);
+  // Sometimes padding will round up.
+  if (paddedMinutes.startsWith('60')) {
+    minutes = Math.abs(Math.abs((degrees - coordinate) * 60) - 60.0);
+    paddedMinutes = os.geo.padCoordinate(minutes, false, 2);
+    degrees += (!isNegative ? 1.0 : -1.0);
+  }
 
   return goog.string.buildString(os.geo.padCoordinate(Math.abs(degrees), isLon), (symbols ? '° ' : ''),
-      os.geo.padCoordinate(minutes, false, 2), (symbols ? '\'' : ''),
-      (symbols ? ' ' : ''), (isLon ? (isNegative ? 'W' : 'E') : (isNegative ? 'S' : 'N')));
+      paddedMinutes, (symbols ? '\' ' : ''),
+      (isLon ? (isNegative ? 'W' : 'E') : (isNegative ? 'S' : 'N')));
 };
 
 
