@@ -169,9 +169,6 @@ os.annotation.hasOverlay = function(feature) {
  *
  * @param {!ol.Overlay} overlay The overlay.
  * @param {ol.Feature} feature The feature. Use null to hide the overlay.
- *
- * @suppress {accessControls} To allow access to overlay.setVisible(), which is needed to fix an initial
- *                            positioning edge case.
  */
 os.annotation.setPosition = function(overlay, feature) {
   var position;
@@ -182,9 +179,6 @@ os.annotation.setPosition = function(overlay, feature) {
       // nothing fancy for points, just use the coordinate
       position = /** @type {ol.geom.Point} */ (geometry).getFirstCoordinate();
     } else {
-      // for non-point geometries, calculate the nearest point to the overlay
-      overlay.setVisible(true);
-
       var map = overlay.getMap();
       var element = overlay.getElement();
 
