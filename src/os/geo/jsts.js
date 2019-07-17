@@ -532,7 +532,7 @@ os.geo.jsts.toPolygon = function(geometry) {
  * @private
  */
 os.geo.jsts.polygonize_ = function(geometry) {
-  var lines = jsts.LineStringExtracter.getLines(geometry);
+  var lines = jsts.geom.util.LineStringExtracter.getLines(geometry);
   var polygonizer = new jsts.operation.polygonize.Polygonizer();
   polygonizer.add(/** @type {jsts.Collection<jsts.geom.Geometry>} */ (lines));
   var polys = polygonizer.getPolygons();

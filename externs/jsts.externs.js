@@ -582,14 +582,14 @@ jsts.operation.polygonize.Polygonizer.prototype.getPolygons = function() {};
 /**
  * @type {Object}
  */
-jsts.LineStringExtracter = {};
+jsts.geom.util.LineStringExtracter = {};
 
 
 /**
  * @param {jsts.geom.Geometry} geom
  * @return {jsts.Collection<jsts.geom.LineString>}
  */
-jsts.LineStringExtracter.getLines = function(geom) {};
+jsts.geom.util.LineStringExtracter.getLines = function(geom) {};
 
 
 /**
