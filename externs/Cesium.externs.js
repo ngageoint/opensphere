@@ -3983,6 +3983,13 @@ Cesium.Scene.prototype.context;
 Cesium.Scene.prototype.fog;
 
 
+
+/**
+ * @type {!boolean}
+ */
+Cesium.Scene.prototype.highDynamicRange;
+
+
 /**
  */
 Cesium.Scene.prototype.initializeFrame = function() {};
