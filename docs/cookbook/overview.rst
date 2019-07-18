@@ -16,3 +16,4 @@ For extended examples, see the Guides.
   audionotification/index
   pelias/index
   metrics/index
+  tracks/index
