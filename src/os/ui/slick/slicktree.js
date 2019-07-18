@@ -180,6 +180,7 @@ os.ui.slick.SlickTreeCtrl = function($scope, $element, $compile) {
   $scope['disposable'] = $scope['disposable'] != null;
 
   this.grid.onRowRender.subscribe(this.onRowRender.bind(this));
+  this.grid.onRowRenderComplete.subscribe(this.onRowRenderComplete.bind(this));
   this.grid.onRowRemove.subscribe(this.onRowRemove.bind(this));
   this.grid.onActiveCellChanged.subscribe(this.apply.bind(this));
 
@@ -631,6 +632,18 @@ os.ui.slick.SlickTreeCtrl.prototype.onRowRender = function(e, args) {
 
   // compile
   this.compile(args['node'])(s);
+};
+
+
+/**
+ * After all the rows are rendered, run an apply
+ *
+ * @param {*} e The event
+ * @param {{row: number, node: Element, item: Object}} args The event data
+ * @protected
+ */
+os.ui.slick.SlickTreeCtrl.prototype.onRowRenderComplete = function(e, args) {
+  os.ui.apply(this.scope);
 };
 
 
