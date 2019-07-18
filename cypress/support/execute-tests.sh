@@ -138,7 +138,7 @@ function startWebServer() {
       echo 'INFO: starting web server in continuous integration environment'
       $(npm bin)/http-server -p 8282 -c-1 -o -U -s &
     else
-      echo 'INFO: starting web server in local developement environment'
+      echo 'INFO: starting web server in local development environment'
       $(npm bin)/http-server ../../ -p 8282 -c-1 -o -U -s &
     fi
   else
