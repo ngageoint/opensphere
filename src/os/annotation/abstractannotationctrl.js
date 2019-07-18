@@ -27,7 +27,7 @@ os.annotation.UI_TEMPLATE =
       '<button class="btn btn-sm btn-outline-primary border-0 bg-transparent"' +
           'title="Hide text box"' +
           'ng-click="ctrl.hideAnnotation()">' +
-        '<i class="c-glyph fa fa-fw fa-comment"></i>' +
+        '<i class="c-glyph fa fa-fw fa-eye-slash"></i>' +
       '</button>' +
       '<button class="btn btn-sm btn-outline-primary border-0 bg-transparent"' +
           'title="Edit text box"' +
