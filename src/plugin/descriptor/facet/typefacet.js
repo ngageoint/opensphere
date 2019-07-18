@@ -1,23 +1,23 @@
 goog.provide('plugin.descriptor.facet.Type');
-goog.require('os.search.BaseFacet');
 
+goog.require('os.search.ValueFacet');
 
 
 /**
  * @constructor
- * @extends {os.search.BaseFacet<!os.data.IDataDescriptor>}
+ * @extends {os.search.ValueFacet<!os.data.IDataDescriptor>}
  */
 plugin.descriptor.facet.Type = function() {
-  plugin.descriptor.facet.Type.base(this, 'constructor');
+  plugin.descriptor.facet.Type.base(this, 'constructor', 'Type');
 };
-goog.inherits(plugin.descriptor.facet.Type, os.search.BaseFacet);
+goog.inherits(plugin.descriptor.facet.Type, os.search.ValueFacet);
 
 
 /**
  * @inheritDoc
  */
-plugin.descriptor.facet.Type.prototype.transformsValue = function(category) {
-  return category === 'Type';
+plugin.descriptor.facet.Type.prototype.getValue = function(item) {
+  return item ? item.getType() : null;
 };
 
 
@@ -30,30 +30,4 @@ plugin.descriptor.facet.Type.prototype.valueToLabel = function(value) {
   }
 
   return value;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.descriptor.facet.Type.prototype.load = function(item, facets) {
-  var type = item.getType();
-
-  if (type) {
-    os.search.BaseFacet.update('Type', type, facets);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.descriptor.facet.Type.prototype.test = function(item, facets, results) {
-  var values = facets['Type'];
-
-  if (values) {
-    var t = item.getType();
-    var x = t ? values.indexOf(t) : -1;
-    os.search.BaseFacet.updateResults('Type', results, x > -1 ? 1 : 0);
-  }
 };
