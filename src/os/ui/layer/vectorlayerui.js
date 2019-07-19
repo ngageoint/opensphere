@@ -4,20 +4,28 @@ goog.provide('os.ui.layer.vectorLayerUIDirective');
 goog.require('goog.color');
 goog.require('os.MapChange');
 goog.require('os.array');
+goog.require('os.command.FeatureOpacity');
+goog.require('os.command.FeatureStrokeOpacity');
+goog.require('os.command.LayerStyle');
 goog.require('os.command.VectorLayerAutoRefresh');
 goog.require('os.command.VectorLayerCenterShape');
 goog.require('os.command.VectorLayerColor');
+goog.require('os.command.VectorLayerFillColor');
+goog.require('os.command.VectorLayerFillOpacity');
 goog.require('os.command.VectorLayerIcon');
 goog.require('os.command.VectorLayerLabel');
 goog.require('os.command.VectorLayerLabelColor');
 goog.require('os.command.VectorLayerLabelSize');
 goog.require('os.command.VectorLayerLineDash');
+goog.require('os.command.VectorLayerOpacity');
 goog.require('os.command.VectorLayerReplaceStyle');
 goog.require('os.command.VectorLayerRotation');
 goog.require('os.command.VectorLayerShape');
 goog.require('os.command.VectorLayerShowLabel');
 goog.require('os.command.VectorLayerShowRotation');
 goog.require('os.command.VectorLayerSize');
+goog.require('os.command.VectorLayerStrokeColor');
+goog.require('os.command.VectorLayerStrokeOpacity');
 goog.require('os.command.VectorUniqueIdCmd');
 goog.require('os.data.OSDataManager');
 goog.require('os.defines');
@@ -144,6 +152,12 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.CENTER_SHAPE_CHANGE, this.onCenterShapeChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.LINE_DASH_CHANGE, this.onLineDashChange.bind(this));
 
+  // New default added to the base constructor
+  this.defaults['fillOpacity'] = os.style.DEFAULT_FILL_ALPHA;
+
+  $scope.$on('fillColor.change', this.onFillColorChange.bind(this));
+  $scope.$on('fillColor.reset', this.onFillColorReset.bind(this));
+
   // label change handlers
   $scope.$on('labelColor.change', this.onLabelColorChange.bind(this));
   $scope.$on('labelColor.reset', this.onLabelColorReset.bind(this));
@@ -165,6 +179,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
 
   if (this.scope) {
     this.scope['color'] = this.getColor();
+    this.scope['opacity'] = this.getOpacity();
     this.scope['size'] = this.getSize();
     this.scope['lineDash'] = this.getLineDash();
     this.scope['icon'] = this.getIcon();
@@ -174,6 +189,8 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
     this.scope['centerShape'] = this.getCenterShape();
     this.scope['centerShapes'] = this.getCenterShapes();
     this.scope['lockable'] = this.getLockable();
+    this.scope['fillColor'] = this.getFillColor();
+    this.scope['fillOpacity'] = this.getFillOpacity();
     this['altitudeMode'] = this.getAltitudeMode();
     this['columns'] = this.getColumns();
     this['showRotation'] = this.getShowRotation();
@@ -240,6 +257,21 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShapeUIInternal = function() {
 
 
 /**
+ * @inheritDoc
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.getProperties = function() {
+  return {
+    'opacity': os.layer.setOpacity,
+    'fillOpacity': goog.nullFunction,
+    'brightness': os.layer.setBrightness,
+    'contrast': os.layer.setContrast,
+    'hue': os.layer.setHue,
+    'saturation': os.layer.setSaturation
+  };
+};
+
+
+/**
  * Decide when to show the rotation option
  *
  * @return {boolean}
@@ -252,6 +284,19 @@ os.ui.layer.VectorLayerUICtrl.prototype.showRotationOption = function() {
     return shape == os.style.ShapeType.ICON || (os.style.CENTER_REGEXP.test(shape) && centr == os.style.ShapeType.ICON);
   }
 
+  return false;
+};
+
+
+/**
+ * Decide if we show the fill controls
+ * @return {boolean}
+ * @export
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.showFillStyleControls = function() {
+  if (this.scope && this.scope['fillOpacity'] !== undefined) {
+    return true;
+  }
   return false;
 };
 
@@ -290,22 +335,72 @@ os.ui.layer.VectorLayerUICtrl.prototype.reconcileLabelsState_ = function() {
 os.ui.layer.VectorLayerUICtrl.prototype.onColorChange = function(event, value) {
   event.stopPropagation();
 
-  var fn =
+  // Make sure the value includes the current opacity
+  var colorValue = os.color.toRgbArray(value);
+  colorValue[3] = this.scope['opacity'];
+
+  // Determine if we are changing both stroke and fill entirely, or keeping opacities separate, or only affecting stroke
+  var color = this.scope['color'];
+  var fillColor = this.scope['fillColor'];
+  var opacity = this.scope['opacity'];
+  var fillOpacity = this.scope['fillOpacity'];
+
+  this.scope['color'] = os.style.toRgbaString(colorValue);
+
+  if (color == fillColor && opacity == fillOpacity) {
+    var fn =
       /**
        * @param {os.layer.ILayer} layer
        * @return {os.command.ICommand}
        */
       function(layer) {
-        return new os.command.VectorLayerColor(layer.getId(), value);
+        return new os.command.VectorLayerColor(layer.getId(), colorValue);
       };
 
-  this.createCommand(fn);
+    this.createCommand(fn);
+  } else if (color == fillColor) {
+    // We run these separately so that they retain the different opacities
+    var fn2 =
+      /**
+       * @param {os.layer.ILayer} layer
+       * @return {os.command.ICommand}
+       */
+      function(layer) {
+        return new os.command.VectorLayerStrokeColor(layer.getId(), colorValue);
+      };
+
+    this.createCommand(fn2);
+
+    // Use the fill's opacity instead of the stroke's opacity
+    colorValue[3] = fillOpacity;
+
+    var fn3 =
+      /**
+       * @param {os.layer.ILayer} layer
+       * @return {os.command.ICommand}
+       */
+      function(layer) {
+        return new os.command.VectorLayerFillColor(layer.getId(), colorValue);
+      };
+
+    this.createCommand(fn3);
+  } else {
+    var fn4 =
+      /**
+       * @param {os.layer.ILayer} layer
+       * @return {os.command.ICommand}
+       */
+      function(layer) {
+        return new os.command.VectorLayerStrokeColor(layer.getId(), colorValue);
+      };
+
+    this.createCommand(fn4);
+  }
 };
 
 
 /**
  * Handles color reset
- *
  * @param {angular.Scope.Event} event
  * @protected
  */
@@ -317,6 +412,124 @@ os.ui.layer.VectorLayerUICtrl.prototype.onColorReset = function(event) {
 
   // reset to the layer color
   this.scope['color'] = this.getColor();
+};
+
+
+/**
+ * Handles changes to fill color
+ * @param {angular.Scope.Event} event
+ * @param {string} value
+ * @protected
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.onFillColorChange = function(event, value) {
+  event.stopPropagation();
+
+  // Make sure the value includes the current opacity
+  var colorValue = os.color.toRgbArray(value);
+  colorValue[3] = this.scope['fillOpacity'];
+
+  this.scope['fillColor'] = os.style.toRgbaString(colorValue);
+
+  var fn =
+    /**
+     * @param {os.layer.ILayer} layer
+     * @return {os.command.ICommand}
+     */
+    function(layer) {
+      return new os.command.VectorLayerFillColor(layer.getId(), colorValue);
+    };
+
+  this.createCommand(fn);
+};
+
+
+/**
+ * Handles fill color reset
+ * @param {angular.Scope.Event} event
+ * @protected
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.onFillColorReset = function(event) {
+  event.stopPropagation();
+
+  // clear the layer color config value
+  this.onFillColorChange(event, '');
+
+  // reset to the layer color
+  this.scope['fillColor'] = this.getColor();
+};
+
+
+/**
+ * @override
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.onValueChange = function(callback, event, value) {
+  // If we are not dealing with opacity of fill opacity, let the parent handle this event
+  if (event.name != 'opacity.slide' && event.name != 'fillOpacity.slide') {
+    os.ui.layer.VectorLayerUICtrl.base(this, 'onValueChange', callback, event, value);
+    return;
+  }
+
+  if (event.name == 'fillOpacity.slide') {
+    this.scope['fillOpacity'] = value;
+  } else {
+    if (this.scope['fillOpacity'] !== undefined && this.scope['opacity'] == this.scope['fillOpacity']) {
+      var color = os.color.toHexString(this.scope['color']);
+      var fillColor = os.color.toHexString(this.scope['fillColor']);
+      if (color == fillColor) {
+        this.scope['fillOpacity'] = value;
+      }
+    }
+
+    this.scope['opacity'] = value;
+  }
+};
+
+/**
+ * @inheritDoc
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.onSliderStop = function(callback, key, event, value) {
+  // If we are not dealing with opacity of fill opacity, let the parent handle this event
+  if (event.name != 'opacity.slidestop' && event.name != 'fillOpacity.slidestop') {
+    os.ui.layer.VectorLayerUICtrl.base(this, 'onSliderStop', callback, key, event, value);
+    return;
+  }
+
+  event.stopPropagation();
+
+  if (event.name == 'fillOpacity.slidestop') {
+    var fn =
+        /**
+         * @param {os.layer.ILayer} layer
+         * @return {os.command.ICommand}
+         */
+        function(layer) {
+          return new os.command.VectorLayerFillOpacity(layer.getId(), value);
+        };
+
+    this.createCommand(fn);
+  } else if (this.scope['fillOpacity'] !== undefined && this.scope['opacity'] == this.scope['fillOpacity']) {
+    var fn2 =
+      /**
+       * @param {os.layer.ILayer} layer
+       * @return {?os.command.ICommand}
+       */
+      function(layer) {
+        return new os.command.VectorLayerOpacity(layer.getId(), value);
+      };
+
+    this.createCommand(fn2);
+  } else {
+    var fn3 =
+      /**
+       * @param {os.layer.ILayer} layer
+       * @return {?os.command.ICommand}
+       */
+      function(layer) {
+        return new os.command.VectorLayerStrokeOpacity(layer.getId(), value);
+      };
+
+    this.createCommand(fn3);
+  }
 };
 
 
@@ -576,6 +789,97 @@ os.ui.layer.VectorLayerUICtrl.prototype.getColor = function() {
   }
 
   return null;
+};
+
+
+/**
+ * Gets the fill color from the item(s)
+ * @return {?string} a hex color string
+ * @protected
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.getFillColor = function() {
+  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+
+  if (items) {
+    for (var i = 0, n = items.length; i < n; i++) {
+      var layer = items[i].getLayer();
+
+      if (layer) {
+        var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
+
+        if (config) {
+          var color = os.style.getConfigColor(config, false, os.style.StyleField.FILL);
+          color = color || os.style.DEFAULT_LAYER_COLOR;
+
+          if (color) {
+            return os.color.toHexString(color);
+          }
+        }
+      }
+    }
+  }
+
+  return null;
+};
+
+
+/**
+ * @override
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.getOpacity = function() {
+  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  var opacity = os.style.DEFAULT_ALPHA;
+
+  if (items) {
+    for (var i = 0, n = items.length; i < n; i++) {
+      var layer = items[i].getLayer();
+
+      if (layer) {
+        var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
+
+        if (config) {
+          if (goog.isArray(config)) {
+            config = config[0];
+          }
+          var color = os.style.getConfigColor(config, true, os.style.StyleField.STROKE);
+          opacity = color[3];
+        }
+      }
+    }
+  }
+
+  return opacity;
+};
+
+
+/**
+ * Gets the fill opacity from the item(s)
+ * @return {?number} an opacity amount
+ * @protected
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.getFillOpacity = function() {
+  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  var opacity = os.style.DEFAULT_FILL_ALPHA;
+
+  if (items) {
+    for (var i = 0, n = items.length; i < n; i++) {
+      var layer = items[i].getLayer();
+
+      if (layer) {
+        var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
+
+        if (config) {
+          if (goog.isArray(config)) {
+            config = config[0];
+          }
+          var color = os.style.getConfigColor(config, true, os.style.StyleField.FILL);
+          opacity = color[3];
+        }
+      }
+    }
+  }
+
+  return opacity;
 };
 
 

@@ -1163,6 +1163,8 @@ os.layer.Vector.prototype.persist = function(opt_to) {
     opt_to[os.style.StyleField.LOB_BEARING_COLUMN] = config[os.style.StyleField.LOB_BEARING_COLUMN];
     opt_to[os.style.StyleField.LOB_BEARING_ERROR] = config[os.style.StyleField.LOB_BEARING_ERROR];
     opt_to[os.style.StyleField.LOB_BEARING_ERROR_COLUMN] = config[os.style.StyleField.LOB_BEARING_ERROR_COLUMN];
+    opt_to[os.style.StyleField.FILL_COLOR] = os.style.getConfigColor(config, false, os.style.StyleField.FILL);
+    opt_to[os.style.StyleField.FILL_OPACITY] = config[os.style.StyleField.FILL_OPACITY];
     opt_to[os.style.StyleField.ROTATION_COLUMN] = config[os.style.StyleField.ROTATION_COLUMN];
     opt_to[os.style.StyleField.SHOW_ROTATION] = config[os.style.StyleField.SHOW_ROTATION];
     opt_to[os.style.StyleField.SHOW_ARROW] = config[os.style.StyleField.SHOW_ARROW];
@@ -1240,6 +1242,11 @@ os.layer.Vector.prototype.restore = function(config) {
     os.style.setConfigColor(styleConf, os.style.toRgbaString(config[os.style.StyleField.COLOR]));
   }
 
+  if (config[os.style.StyleField.FILL_COLOR] != null) {
+    var fillString = os.style.toRgbaString(config[os.style.StyleField.FILL_COLOR]);
+    os.style.setConfigColor(styleConf, fillString, [os.style.StyleField.FILL]);
+  }
+
   if (config[os.style.StyleField.REPLACE_STYLE] != null) {
     styleConf[os.style.StyleField.REPLACE_STYLE] = config[os.style.StyleField.REPLACE_STYLE];
   }
@@ -1282,6 +1289,8 @@ os.layer.Vector.prototype.restore = function(config) {
 
   styleConf[os.style.StyleField.ARROW_SIZE] = config[os.style.StyleField.ARROW_SIZE] || os.style.DEFAULT_ARROW_SIZE;
   styleConf[os.style.StyleField.ARROW_UNITS] = config[os.style.StyleField.ARROW_UNITS] || os.style.DEFAULT_UNITS;
+  styleConf[os.style.StyleField.FILL_COLOR] = config[os.style.StyleField.FILL_COLOR] || os.style.DEFAULT_FILL_COLOR;
+  styleConf[os.style.StyleField.FILL_OPACITY] = config[os.style.StyleField.FILL_OPACITY] || os.style.DEFAULT_FILL_ALPHA;
   styleConf[os.style.StyleField.LOB_COLUMN_LENGTH] = config[os.style.StyleField.LOB_COLUMN_LENGTH] ||
       os.style.DEFAULT_LOB_LENGTH;
   styleConf[os.style.StyleField.LOB_LENGTH] = config[os.style.StyleField.LOB_LENGTH] || os.style.DEFAULT_LOB_LENGTH;

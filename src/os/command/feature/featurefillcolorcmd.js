@@ -1,4 +1,4 @@
-goog.provide('os.command.FeatureColor');
+goog.provide('os.command.FeatureFillColor');
 
 goog.require('os.command.AbstractFeatureStyle');
 goog.require('os.events.PropertyChangeEvent');
@@ -7,8 +7,7 @@ goog.require('os.metrics');
 
 
 /**
- * Changes the color of a feature
- *
+ * Changes the fill color of a feature
  * @extends {os.command.AbstractFeatureStyle}
  * @param {string} layerId
  * @param {string} featureId
@@ -16,13 +15,13 @@ goog.require('os.metrics');
  * @param {(Array<number>|string)=} opt_oldColor
  * @constructor
  */
-os.command.FeatureColor = function(layerId, featureId, color, opt_oldColor) {
-  os.command.FeatureColor.base(this, 'constructor', layerId, featureId, color, opt_oldColor);
-  this.title = 'Change Feature Color';
-  this.metricKey = os.metrics.Layer.FEATURE_COLOR;
+os.command.FeatureFillColor = function(layerId, featureId, color, opt_oldColor) {
+  os.command.FeatureFillColor.base(this, 'constructor', layerId, featureId, color, opt_oldColor);
+  this.title = 'Change Feature Fill Color';
+  this.metricKey = os.metrics.Layer.FEATURE_FILL_COLOR;
 
   if (!color) {
-    var feature = /** @type {ol.Feature} */ (this.getFeature());
+    var feature = this.getFeature();
     var config = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
 
     if (config) {
@@ -30,45 +29,49 @@ os.command.FeatureColor = function(layerId, featureId, color, opt_oldColor) {
         config = config[0];
       }
       var configColor = /** @type {Array<number>|string|undefined} */ (os.style.getConfigColor(config));
+
       if (configColor) {
         color = os.color.toHexString(color);
       }
     }
   }
 
-  // make sure the value is a string
+  // Make sure the value is a string
   this.value = os.style.toRgbaString(color);
 };
-goog.inherits(os.command.FeatureColor, os.command.AbstractFeatureStyle);
+goog.inherits(os.command.FeatureFillColor, os.command.AbstractFeatureStyle);
 
 
 /**
  * @type {string}
  * @const
  */
-os.command.FeatureColor.DEFAULT_COLOR = 'rgba(255,255,255,1)';
+os.command.FeatureFillColor.DEFAULT_COLOR = 'rgba(255,255,255,0)';
 
 
 /**
  * @inheritDoc
  */
-os.command.FeatureColor.prototype.getOldValue = function() {
+os.command.FeatureFillColor.prototype.getOldValue = function() {
   var feature = /** @type {ol.Feature} */ (this.getFeature());
   var config = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
   if (goog.isArray(config)) {
     config = config[0];
   }
 
-  return config ? os.style.getConfigColor(config) : os.command.FeatureColor.DEFAULT_COLOR;
+  if (config) {
+    return os.style.getConfigColor(config, false, os.style.StyleField.FILL);
+  } else {
+    return os.command.FeatureFillColor.DEFAULT_COLOR;
+  }
 };
 
 
 /**
  * Gets the old label color
- *
  * @return {Array<number>|string|undefined}
  */
-os.command.FeatureColor.prototype.getLabelValue = function() {
+os.command.FeatureFillColor.prototype.getLabelValue = function() {
   var feature = /** @type {ol.Feature} */ (this.getFeature());
   var labelColor = /** @type {Array<number>|string|undefined} */ (feature.get(os.style.StyleField.LABEL_COLOR));
   return labelColor ? labelColor : os.style.DEFAULT_LAYER_COLOR;
@@ -78,26 +81,22 @@ os.command.FeatureColor.prototype.getLabelValue = function() {
 /**
  * @inheritDoc
  */
-os.command.FeatureColor.prototype.applyValue = function(configs, value) {
+os.command.FeatureFillColor.prototype.applyValue = function(configs, value) {
   var color = os.style.toRgbaString(/** @type {string} */ (value));
   for (var i = 0; i < configs.length; i++) {
-    os.style.setConfigColor(configs[i], color);
+    os.style.setConfigColor(configs[i], color, [os.style.StyleField.FILL]);
   }
 
-  if (this.oldValue == this.getLabelValue()) {
-    this.applyLabelValue(configs, value);
-  }
-  os.command.FeatureColor.base(this, 'applyValue', configs, value);
+  os.command.FeatureFillColor.base(this, 'applyValue', configs, value);
 };
 
 
 /**
  * Set the label color
- *
  * @param {Object} configs The style config
  * @param {string} value The value to apply
  */
-os.command.FeatureColor.prototype.applyLabelValue = function(configs, value) {
+os.command.FeatureFillColor.prototype.applyLabelValue = function(configs, value) {
   var feature = /** @type {ol.Feature} */ (this.getFeature());
   feature.set(os.style.StyleField.LABEL_COLOR, value);
 
@@ -110,11 +109,11 @@ os.command.FeatureColor.prototype.applyLabelValue = function(configs, value) {
 /**
  * @inheritDoc
  */
-os.command.FeatureColor.prototype.finish = function(configs) {
+os.command.FeatureFillColor.prototype.finish = function(configs) {
   // dispatch the color change event on the source for the histogram
   var feature = this.getFeature();
 
   feature.dispatchEvent(new os.events.PropertyChangeEvent('colors'));
 
-  os.command.FeatureColor.base(this, 'finish', configs);
+  os.command.FeatureFillColor.base(this, 'finish', configs);
 };

@@ -42,6 +42,8 @@ os.state.v4.LayerTag = {
   CSV_USE_HEADER: 'useHeader',
   DATA_PROVIDER: 'dataProvider',
   IS_BASE_LAYER: 'isBaseLayer',
+  FILL_COLOR: 'fillColor',
+  FILL_OPACITY: 'fillOpacity',
   LABEL_COLUMN: 'labelColumn',
   LABEL_COLUMNS: 'labelColumns',
   LABEL: 'label',
@@ -470,6 +472,16 @@ os.state.v4.BaseLayerState.prototype.configKeyToXML = function(layerConfig, type
         this.defaultConfigToXML(key, value, layerEl);
       }
       break;
+    case os.style.StyleField.FILL_COLOR:
+      if (bfs) {
+        // hex string without the leading hash
+        var fillColor = os.color.toServerString(/** @type {string} */ (value));
+        os.xml.appendElement(os.state.v4.LayerTag.FILL_COLOR, bfs, fillColor);
+      } else {
+        // tile layer
+        this.defaultConfigToXML(key, value, layerEl);
+      }
+      break;
     case 'contrast':
       if (typeof value === 'number' && !isNaN(value)) {
         // Cesium contrast: 0 is gray, 1 is normal, > 1 increases contrast. we allow from 0 to 2.
@@ -491,6 +503,22 @@ os.state.v4.BaseLayerState.prototype.configKeyToXML = function(layerConfig, type
         // write tile layer opacity/alpha as alpha
         value = value != null ? Number(value) : os.style.DEFAULT_ALPHA;
         os.xml.appendElement(os.state.v4.LayerTag.ALPHA, layerEl, value);
+      }
+      break;
+    case os.style.StyleField.FILL_OPACITY:
+      if (bfs) {
+        value = value != null ? Number(value) : os.style.DEFAULT_FILL_ALPHA;
+        var opacity = Math.round(value * 255);
+        var fillOpacityElement = bfs.querySelector(os.state.v4.LayerTag.FILL_OPACITY);
+        if (fillOpacityElement) {
+          fillOpacityElement.textContent = opacity;
+        } else {
+          os.xml.appendElement(os.state.v4.LayerTag.FILL_OPACITY, bfs, opacity);
+        }
+      } else {
+        // write tile layer opacity/alpha as alpha
+        value = value != null ? Number(value) : os.style.DEFAULT_FILL_ALPHA;
+        os.xml.appendElement(os.state.v4.LayerTag.FILL_OPACITY, layerEl, value);
       }
       break;
     case 'size':
