@@ -156,3 +156,10 @@ ul {
     margin-bottom: 0;
   }
 }
+
+//sass-lint:disable no-duplicate-properties, no-vendor-prefixes
+input:-webkit-autofill,
+input:-webkit-autofill:active  {
+  -webkit-box-shadow: 0 0 0 30px #555 inset !important;
+  -webkit-text-fill-color: #fff !important;
+}
