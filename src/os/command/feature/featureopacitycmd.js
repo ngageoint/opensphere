@@ -1,6 +1,7 @@
 goog.provide('os.command.FeatureOpacity');
 
 goog.require('os.command.AbstractFeatureStyle');
+goog.require('os.events.PropertyChangeEvent');
 goog.require('os.metrics');
 goog.require('os.ui');
 
@@ -22,7 +23,7 @@ os.command.FeatureOpacity = function(layerId, featureId, opacity, opt_oldOpacity
   this.metricKey = os.metrics.Layer.FEATURE_OPACITY;
 
   if (!opacity) {
-    var feature = /** @type {ol.Feature} */ (this.getFeature());
+    var feature = this.getFeature();
     var config = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
 
     if (config) {
@@ -68,4 +69,17 @@ os.command.FeatureOpacity.prototype.applyValue = function(configs, value) {
   }
 
   os.command.FeatureOpacity.base(this, 'applyValue', configs, value);
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.command.FeatureOpacity.prototype.finish = function(configs) {
+  // dispatch the color change event on the source for the histogram
+  var feature = this.getFeature();
+
+  feature.dispatchEvent(new os.events.PropertyChangeEvent('colors'));
+
+  os.command.FeatureOpacity.base(this, 'finish', configs);
 };

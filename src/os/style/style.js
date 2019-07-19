@@ -26,6 +26,14 @@ os.style.DEFAULT_ALPHA = 1.0;
 
 
 /**
+ * Default alpha for polygon fills.
+ * @type {number}
+ * @const
+ */
+os.style.DEFAULT_FILL_ALPHA = 0.0;
+
+
+/**
  * Default color for tile/feature layers.
  * @type {string}
  * @const
@@ -39,6 +47,14 @@ os.style.DEFAULT_LAYER_COLOR = 'rgba(255,255,255,1)';
  * @const
  */
 os.style.DEFAULT_INVERSE_COLOR = 'rgba(255,0,0,1)';
+
+
+/**
+ * Default fill color for tile/feature layers.
+ * @type {string}
+ * @const
+ */
+os.style.DEFAULT_FILL_COLOR = 'rgba(255,255,255,0)';
 
 
 /**
@@ -359,10 +375,13 @@ os.style.DEFAULT_VECTOR_CONFIG = {
     'type': 'circle',
     'radius': os.style.DEFAULT_FEATURE_SIZE,
     'fill': {
-      'color': os.style.DEFAULT_LAYER_COLOR
+      'color': os.style.DEFAULT_FILL_COLOR
     }
   },
   // this will only be applied to line and polygon types
+  'fill': {
+    'color': os.style.DEFAULT_FILL_COLOR
+  },
   'stroke': {
     'width': os.style.DEFAULT_STROKE_WIDTH,
     'color': os.style.DEFAULT_LAYER_COLOR

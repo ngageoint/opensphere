@@ -21,6 +21,8 @@ plugin.im.action.feature.StyleActionTagName = {
   COLOR: 'color',
   ICON_SRC: 'iconSrc',
   ICON_OPTIONS: 'iconOptions',
+  FILL_COLOR: 'fillColor',
+  FILL_OPACITY: 'fillOpacity',
   LINE_DASH: 'lineDash',
   OPACITY: 'opacity',
   ROTATION_COLUMN: 'rotationColumn',
@@ -217,6 +219,15 @@ plugin.im.action.feature.StyleAction.prototype.toXml = function() {
         String(color.length > 3 ? color[3] : 1.0));
   }
 
+  var fillColor = /** @type {Array<number>} */
+      (os.style.getConfigColor(this.styleConfig, true, os.style.StyleField.FILL));
+  if (fillColor) {
+    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.FILL_COLOR, element,
+        os.color.toHexString(fillColor));
+    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.FILL_OPACITY, element,
+        String(fillColor.length > 3 ? fillColor[3] : 0));
+  }
+
   var size = os.style.getConfigSize(this.styleConfig);
   if (size != null) {
     os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.SIZE, element, String(size));
@@ -282,6 +293,20 @@ plugin.im.action.feature.StyleAction.prototype.fromXml = function(xml) {
       }
 
       os.style.setConfigColor(styleConfig, color);
+    }
+
+    var fillColor = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.FILL_COLOR);
+    if (os.color.isColorString(fillColor)) {
+      var fillColorArr = os.color.toRgbArray(fillColor);
+      if (fillColorArr) {
+        var fillOpacityVal = parseFloat(
+            os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.FILL_OPACITY));
+        var fillOpacity = !isNaN(fillOpacityVal) ? goog.math.clamp(fillOpacityVal, 0, 1) : 1.0;
+        fillColorArr[3] = fillOpacity;
+        fillColor = os.style.toRgbaString(fillColorArr);
+      }
+
+      os.style.setConfigColor(styleConfig, fillColor, [os.style.StyleField.FILL]);
     }
 
     var size = parseFloat(os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.SIZE));

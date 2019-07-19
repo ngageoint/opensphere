@@ -97,6 +97,19 @@ plugin.file.kml.KMLTreeExporter.prototype.getColor = function(item) {
 /**
  * @inheritDoc
  */
+plugin.file.kml.KMLTreeExporter.prototype.getFillColor = function(item) {
+  var featureColor = os.feature.getFillColor(item.getFeature());
+  if (!featureColor || (typeof featureColor != 'string' && !goog.isArray(featureColor))) {
+    featureColor = os.style.DEFAULT_LAYER_COLOR;
+  }
+
+  return os.style.toAbgrString(featureColor);
+};
+
+
+/**
+ * @inheritDoc
+ */
 plugin.file.kml.KMLTreeExporter.prototype.getElementType = function(item) {
   return item.isFolder() ? os.ui.file.kml.ElementType.FOLDER : os.ui.file.kml.ElementType.PLACEMARK;
 };

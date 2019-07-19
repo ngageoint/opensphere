@@ -784,6 +784,56 @@ os.feature.getColor = function(feature, opt_source, opt_default) {
 
 
 /**
+ * Get the fill color of a feature.
+ * @param {ol.Feature} feature The feature.
+ * @param {os.source.ISource=} opt_source The source containing the feature, or null to ignore source color.
+ * @param {*=} opt_default The default color.
+ * @return {*} The color.
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.feature.getFillColor = function(feature, opt_source, opt_default) {
+  if (feature) {
+    var color = /** @type {string|undefined} */ (feature.values_[os.data.RecordField.COLOR]);
+
+    if (!color) {
+      // check the layer config to see if it's replacing feature styles
+      var layerConfig = os.style.getLayerConfig(feature);
+      if (layerConfig && layerConfig[os.style.StyleField.REPLACE_STYLE]) {
+        color = /** @type {string|undefined} */ (os.style.getConfigColor(layerConfig, false, os.style.StyleField.FILL));
+      }
+    }
+
+    if (!color) {
+      var featureConfig = /** @type {Array<Object>|Object|undefined} */ (feature.values_[os.style.StyleType.FEATURE]);
+      if (featureConfig) {
+        if (Array.isArray(featureConfig)) {
+          for (var i = 0; !color && i < featureConfig.length; i++) {
+            color = os.style.getConfigColor(featureConfig[i], false, os.style.StyleField.FILL) || undefined;
+          }
+        } else {
+          color = os.style.getConfigColor(featureConfig, false, os.style.StyleField.FILL) || undefined;
+        }
+      }
+    }
+
+    if (color) {
+      return color;
+    } else if (opt_source) {
+      return opt_source.getColor();
+    } else if (opt_source !== null) {
+      var source = os.feature.getSource(feature);
+      if (source) {
+        return source.getColor();
+      }
+    }
+  }
+
+  return opt_default !== undefined ? opt_default : os.style.DEFAULT_LAYER_COLOR;
+};
+
+
+/**
  * Gets the shape name for a feature.
  *
  * @param {!ol.Feature} feature The feature

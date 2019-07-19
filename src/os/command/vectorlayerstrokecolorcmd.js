@@ -1,4 +1,4 @@
-goog.provide('os.command.VectorLayerColor');
+goog.provide('os.command.VectorLayerStrokeColor');
 
 goog.require('os.command.AbstractVectorStyle');
 goog.require('os.data.OSDataManager');
@@ -10,75 +10,71 @@ goog.require('os.ui');
 
 
 /**
- * Changes the color of a layer
- *
+ * Changes the stroke color of a layer
  * @extends {os.command.AbstractVectorStyle}
  * @param {string} layerId
  * @param {Array<number>|string} color
  * @param {(Array<number>|string)=} opt_oldColor
  * @constructor
  */
-os.command.VectorLayerColor = function(layerId, color, opt_oldColor) {
-  os.command.VectorLayerColor.base(this, 'constructor', layerId, color, opt_oldColor);
-  this.title = 'Change Color';
-  this.metricKey = os.metrics.Layer.VECTOR_COLOR;
+os.command.VectorLayerStrokeColor = function(layerId, color, opt_oldColor) {
+  os.command.VectorLayerStrokeColor.base(this, 'constructor', layerId, color, opt_oldColor);
+  this.title = 'Change Stroke Color';
+  this.metricKey = os.metrics.Layer.VECTOR_STROKE_COLOR;
 
   if (!color) {
     var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.layerId));
     if (layer) {
       var options = layer.getLayerOptions();
-      color = /** @type {string} */ (options && options['baseColor'] || os.command.VectorLayerColor.DEFAULT_COLOR);
+      color = /** @type {string} */ (options && options['baseColor'] ||
+          os.command.VectorLayerStrokeColor.DEFAULT_COLOR);
     }
   }
 
   // make sure the value is a string
   this.value = os.style.toRgbaString(color);
 };
-goog.inherits(os.command.VectorLayerColor, os.command.AbstractVectorStyle);
+goog.inherits(os.command.VectorLayerStrokeColor, os.command.AbstractVectorStyle);
 
 
 /**
  * @type {string}
  * @const
  */
-os.command.VectorLayerColor.DEFAULT_COLOR = 'rgba(255,255,255,1)';
+os.command.VectorLayerStrokeColor.DEFAULT_COLOR = 'rgba(255,255,255,1)';
 
 
 /**
  * @inheritDoc
  */
-os.command.VectorLayerColor.prototype.getOldValue = function() {
+os.command.VectorLayerStrokeColor.prototype.getOldValue = function() {
   var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-  return config ? os.style.getConfigColor(config) : os.command.VectorLayerColor.DEFAULT_COLOR;
+
+  if (config) {
+    os.style.getConfigColor(config, false, os.style.StyleField.STROKE);
+  } else {
+    return os.command.VectorLayerFillColor.DEFAULT_COLOR;
+  }
 };
 
 
 /**
  * @inheritDoc
  */
-os.command.VectorLayerColor.prototype.applyValue = function(config, value) {
+os.command.VectorLayerStrokeColor.prototype.applyValue = function(config, value) {
   var color = os.style.toRgbaString(/** @type {string} */ (value));
-  os.style.setConfigColor(config, color);
 
-  // Make sure the fill color and opacity are updated as well
-  if (config['fillColor']) {
-    config['fillColor'] = color;
-  }
-  if (config['fillOpacity'] !== undefined) {
-    var colorArray = os.color.toRgbArray(value);
-    config['fillOpacity'] = colorArray[3];
-  }
-
+  os.style.setConfigColor(config, color, [os.style.StyleField.STROKE, os.style.StyleField.IMAGE]);
   os.ui.adjustIconSet(this.layerId, color);
 
-  os.command.VectorLayerColor.base(this, 'applyValue', config, value);
+  os.command.VectorLayerStrokeColor.base(this, 'applyValue', config, value);
 };
 
 
 /**
  * @inheritDoc
  */
-os.command.VectorLayerColor.prototype.finish = function(config) {
+os.command.VectorLayerStrokeColor.prototype.finish = function(config) {
   // dispatch the color change event on the source for the histogram
   var source = os.osDataManager.getSource(this.layerId);
   source.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.COLOR, this.value));
@@ -88,5 +84,5 @@ os.command.VectorLayerColor.prototype.finish = function(config) {
     source.setColorModel(null);
   }
 
-  os.command.VectorLayerColor.base(this, 'finish', config);
+  os.command.VectorLayerStrokeColor.base(this, 'finish', config);
 };

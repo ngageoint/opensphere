@@ -725,10 +725,11 @@ os.ui.file.kml.AbstractKMLExporter.prototype.addGeometryNode = function(item, no
  * @param {T} item The item
  * @param {string} styleId The style id
  * @param {string} color The item color
+ * @param {string} fillColor The item fill color
  * @param {os.ui.file.kml.Icon=} opt_icon The item icon
  * @protected
  */
-os.ui.file.kml.AbstractKMLExporter.prototype.createStyle = function(item, styleId, color, opt_icon) {
+os.ui.file.kml.AbstractKMLExporter.prototype.createStyle = function(item, styleId, color, fillColor, opt_icon) {
   var styleEl = os.xml.createElementNS('Style', this.kmlNS, this.doc, undefined, {
     'id': styleId
   });
@@ -769,8 +770,8 @@ os.ui.file.kml.AbstractKMLExporter.prototype.createStyle = function(item, styleI
   os.xml.appendElementNS('width', this.kmlNS, lineStyleEl, 2);
 
   var polyStyleEl = os.xml.appendElementNS('PolyStyle', this.kmlNS, styleEl);
-  os.xml.appendElementNS('color', this.kmlNS, polyStyleEl, color);
-  os.xml.appendElementNS('fill', this.kmlNS, polyStyleEl, 0);
+  os.xml.appendElementNS('color', this.kmlNS, polyStyleEl, fillColor);
+  os.xml.appendElementNS('fill', this.kmlNS, polyStyleEl, 1);
 
   var firstFolder = this.kmlDoc.querySelector('Folder');
   if (firstFolder) {
@@ -805,6 +806,16 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getChildren = function(item) {
  * @protected
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.getColor = function(item) {};
+
+
+/**
+ * Get the fill color of an item. This should return an ABGR string that can be dropped directly into the KML.
+ * @abstract
+ * @param {T} item The item
+ * @return {string} The item's fill color as an ABGR string
+ * @protected
+ */
+os.ui.file.kml.AbstractKMLExporter.prototype.getFillColor = function(item) {};
 
 
 /**
@@ -996,6 +1007,11 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getStyleId = function(item) {
     styleParts.push(color);
   }
 
+  var fillColor = this.getFillColor(item);
+  if (this.useItemColor || type == os.ui.file.kml.StyleType.DEFAULT) {
+    styleParts.push(fillColor);
+  }
+
   var icon = type == os.ui.file.kml.StyleType.DEFAULT ? undefined : this.getIcon(item);
   if (type == os.ui.file.kml.StyleType.ICON && this.useItemIcon) {
     // override the default icon with the item's icon
@@ -1013,7 +1029,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getStyleId = function(item) {
   styleId = styleParts.join('-');
 
   if (!(styleId in this.styles_)) {
-    this.createStyle(item, styleId, color, icon);
+    this.createStyle(item, styleId, color, fillColor, icon);
   }
 
   return styleId;
