@@ -860,15 +860,14 @@ os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
   if (this.previewFeature) {
     this.saveToFeature(this.previewFeature);
 
-    if (this.previewFeature.getId() == os.ui.FeatureEditCtrl.TEMP_ID) {
-      var osMap = os.MapContainer.getInstance();
-      osMap.removeFeature(this.previewFeature, false);
+    var osMap = os.MapContainer.getInstance();
+    if (this.previewFeature.getId() == os.ui.FeatureEditCtrl.TEMP_ID && !osMap.containsFeature(this.previewFeature)) {
       osMap.addFeature(this.previewFeature);
-    } else {
-      var layer = os.feature.getLayer(this.previewFeature);
-      if (layer) {
-        os.style.notifyStyleChange(layer, [this.previewFeature]);
-      }
+    }
+
+    var layer = os.feature.getLayer(this.previewFeature);
+    if (layer) {
+      os.style.notifyStyleChange(layer, [this.previewFeature]);
     }
   }
 };
@@ -1114,19 +1113,19 @@ os.ui.FeatureEditCtrl.prototype.saveToFeature = function(feature) {
   if (feature) {
     this.saveGeometry_(feature);
 
-    feature.set(os.ui.FeatureEditCtrl.Field.NAME, this['name']);
-    feature.set(os.ui.FeatureEditCtrl.Field.DESCRIPTION, os.ui.text.TuiEditor.render(this['description']));
-    feature.set(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION, this['description']);
+    feature.set(os.ui.FeatureEditCtrl.Field.NAME, this['name'], true);
+    feature.set(os.ui.FeatureEditCtrl.Field.DESCRIPTION, os.ui.text.TuiEditor.render(this['description']), true);
+    feature.set(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION, this['description'], true);
 
     switch (this['dateType']) {
       case os.ui.datetime.AnyDateType.NOTIME:
-        feature.set(os.data.RecordField.TIME, undefined);
+        feature.set(os.data.RecordField.TIME, undefined, true);
         break;
       case os.ui.datetime.AnyDateType.INSTANT:
-        feature.set(os.data.RecordField.TIME, new os.time.TimeInstant(this['startTime']));
+        feature.set(os.data.RecordField.TIME, new os.time.TimeInstant(this['startTime']), true);
         break;
       case os.ui.datetime.AnyDateType.RANGE:
-        feature.set(os.data.RecordField.TIME, new os.time.TimeRange(this['startTime'], this['endTime']));
+        feature.set(os.data.RecordField.TIME, new os.time.TimeRange(this['startTime'], this['endTime']), true);
         break;
       default:
         break;
@@ -1144,20 +1143,21 @@ os.ui.FeatureEditCtrl.prototype.saveToFeature = function(feature) {
     }
 
     // set the feature style override to the configs
-    feature.set(os.style.StyleType.FEATURE, configs);
+    feature.set(os.style.StyleType.FEATURE, configs, true);
 
     // set the shape to use and apply shape config
-    feature.set(os.style.StyleField.SHAPE, this['shape']);
-    feature.set(os.style.StyleField.CENTER_SHAPE, this['centerShape']);
+    feature.set(os.style.StyleField.SHAPE, this['shape'], true);
+    feature.set(os.style.StyleField.CENTER_SHAPE, this['centerShape'], true);
 
     if (!this.isFeatureDynamic() && (this.showIcon() || this.showCenterIcon())) {
-      feature.set(os.Fields.BEARING, typeof this['iconRotation'] === 'number' ? this['iconRotation'] % 360 : undefined);
-      feature.set(os.style.StyleField.SHOW_ROTATION, true);
-      feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING);
+      feature.set(os.Fields.BEARING, typeof this['iconRotation'] === 'number' ? this['iconRotation'] % 360 : undefined,
+          true);
+      feature.set(os.style.StyleField.SHOW_ROTATION, true, true);
+      feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING, true);
     } else {
-      feature.set(os.Fields.BEARING, undefined);
-      feature.set(os.style.StyleField.SHOW_ROTATION, false);
-      feature.set(os.style.StyleField.ROTATION_COLUMN, undefined);
+      feature.set(os.Fields.BEARING, undefined, true);
+      feature.set(os.style.StyleField.SHOW_ROTATION, false, true);
+      feature.set(os.style.StyleField.ROTATION_COLUMN, undefined, true);
     }
     os.ui.FeatureEditCtrl.updateFeatureStyle(feature);
 
@@ -1240,16 +1240,24 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
     var altUnit = this['altUnits'] || os.math.Units.METERS;
     var alt = os.math.convertUnits(Number(this['altitude']) || 0, os.math.Units.METERS, altUnit);
 
-    feature.set(os.Fields.ALT, alt);
-    feature.set(os.Fields.ALT_UNITS, altUnit);
+    feature.set(os.Fields.ALT, alt, true);
+    feature.set(os.Fields.ALT_UNITS, altUnit, true);
 
     if (!isNaN(lon) && !isNaN(lat)) {
-      var point = new ol.geom.Point([lon, lat, alt]);
-      point.osTransform();
+      var coords = ol.proj.transform([lon, lat, alt], os.proj.EPSG4326, os.map.PROJECTION);
+      var point = feature.getGeometry();
+      if (!point || point === this.originalGeometry) {
+        point = new ol.geom.Point(coords);
+      }
+
+      if (point instanceof ol.geom.SimpleGeometry) {
+        point.setCoordinates(coords);
+      }
+
       feature.setGeometry(point);
 
       // update all coordinate fields from the geometry
-      os.feature.populateCoordFields(feature, true);
+      os.feature.populateCoordFields(feature, true, undefined, true);
 
       if (this.isEllipse() && this['semiMajor'] != null && this['semiMinor'] != null && this['orientation'] != null) {
         // set ellipse fields
@@ -1263,23 +1271,23 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
         os.feature.createEllipse(feature, true);
       } else {
         // clear ellipse fields on the feature
-        feature.set(os.Fields.SEMI_MAJOR, undefined);
-        feature.set(os.Fields.SEMI_MINOR, undefined);
-        feature.set(os.Fields.SEMI_MAJOR_UNITS, undefined);
-        feature.set(os.Fields.SEMI_MINOR_UNITS, undefined);
-        feature.set(os.Fields.ORIENTATION, undefined);
-        feature.set(os.data.RecordField.ELLIPSE, undefined);
-        feature.set(os.data.RecordField.LINE_OF_BEARING, undefined);
+        feature.set(os.Fields.SEMI_MAJOR, undefined, true);
+        feature.set(os.Fields.SEMI_MINOR, undefined, true);
+        feature.set(os.Fields.SEMI_MAJOR_UNITS, undefined, true);
+        feature.set(os.Fields.SEMI_MINOR_UNITS, undefined, true);
+        feature.set(os.Fields.ORIENTATION, undefined, true);
+        feature.set(os.data.RecordField.ELLIPSE, undefined, true);
+        feature.set(os.data.RecordField.LINE_OF_BEARING, undefined, true);
       }
 
       if (!this.isFeatureDynamic() && (this.showIcon() || this.showCenterIcon()) && this['iconRotation'] != null) {
-        feature.set(os.style.StyleField.SHOW_ROTATION, true);
-        feature.set(os.Fields.BEARING, this['iconRotation'] % 360);
-        feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING);
+        feature.set(os.style.StyleField.SHOW_ROTATION, true, true);
+        feature.set(os.Fields.BEARING, this['iconRotation'] % 360, true);
+        feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING, true);
       } else {
-        feature.set(os.Fields.BEARING, undefined);
-        feature.set(os.style.StyleField.SHOW_ROTATION, false);
-        feature.set(os.style.StyleField.ROTATION_COLUMN, '');
+        feature.set(os.Fields.BEARING, undefined, true);
+        feature.set(os.style.StyleField.SHOW_ROTATION, false, true);
+        feature.set(os.style.StyleField.ROTATION_COLUMN, '', true);
       }
     }
   } else if (this.originalGeometry) {
@@ -1289,6 +1297,7 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
   var geom = feature.getGeometry();
   if (geom) {
     geom.set(os.data.RecordField.ALTITUDE_MODE, this['altitudeMode']);
+    geom.changed();
   }
 };
 
@@ -1470,10 +1479,10 @@ os.ui.FeatureEditCtrl.persistFeatureLabels = function(feature) {
         }
       }
 
-      feature.set(os.style.StyleField.LABELS, labelNames);
-      feature.set(os.style.StyleField.SHOW_LABEL_COLUMNS, showColumns);
-      feature.set(os.style.StyleField.LABEL_COLOR, config[os.style.StyleField.LABEL_COLOR]);
-      feature.set(os.style.StyleField.LABEL_SIZE, config[os.style.StyleField.LABEL_SIZE]);
+      feature.set(os.style.StyleField.LABELS, labelNames, true);
+      feature.set(os.style.StyleField.SHOW_LABEL_COLUMNS, showColumns, true);
+      feature.set(os.style.StyleField.LABEL_COLOR, config[os.style.StyleField.LABEL_COLOR], true);
+      feature.set(os.style.StyleField.LABEL_SIZE, config[os.style.StyleField.LABEL_SIZE], true);
     }
   }
 };
