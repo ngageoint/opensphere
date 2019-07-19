@@ -1,17 +1,13 @@
 @mixin grab-cursor {
   // sass-lint:disable-block no-duplicate-properties, no-vendor-prefixes
-  cursor: pointer;
-  cursor: -moz-grab;
+  cursor: grab;
   cursor: -webkit-grab;
-  cursor: -ms-grab;
 }
 
 @mixin grabbing-cursor {
   // sass-lint:disable-block no-duplicate-properties, no-vendor-prefixes
   cursor: grabbing;
-  cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
-  cursor: -ms-grabbing;
 }
 
 // This extends bootstraps bg-<variants> to also have background colors
