@@ -156,10 +156,11 @@ ul {
     margin-bottom: 0;
   }
 }
-
-//sass-lint:disable no-duplicate-properties, no-vendor-prefixes
-input:-webkit-autofill,
-input:-webkit-autofill:active  {
-  -webkit-box-shadow: 0 0 0 30px #555 inset !important;
-  -webkit-text-fill-color: #fff !important;
+// Keeps theme uniform for input fields (Light and Dark themes)
+//sass-lint:disable-block no-duplicate-properties, no-vendor-prefixes
+@-webkit-keyframes autofill {
+  to {
+    background: $input-bg;
+    color: $input-color;
+  }
 }
