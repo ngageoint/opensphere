@@ -1,5 +1,5 @@
 @mixin grab-cursor {
-  // sass-lint:disable no-duplicate-properties, no-vendor-prefixes
+  // sass-lint:disable-block no-duplicate-properties, no-vendor-prefixes
   cursor: pointer;
   cursor: -moz-grab;
   cursor: -webkit-grab;
@@ -7,14 +7,14 @@
 }
 
 @mixin grabbing-cursor {
-  // sass-lint:disable no-duplicate-properties, no-vendor-prefixes
+  // sass-lint:disable-block no-duplicate-properties, no-vendor-prefixes
   cursor: grabbing;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
   cursor: -ms-grabbing;
 }
 
-// This extends bootstraps bg-<varents> to also have background colors
+// This extends bootstraps bg-<variants> to also have background colors
 @mixin bg-text-variant($background) {
   color: color-yiq($background);
 }
@@ -51,6 +51,7 @@
 }
 
 @mixin font-awesome {
+  // sass-lint:disable-block no-vendor-prefixes
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   display: inline-block;

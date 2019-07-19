@@ -312,8 +312,8 @@
     .u-form-vertical-at-#{$breakpoint} {
 
       // Wrap all form groups to new lines
-      // sass-lint:disable no-extends
       .form-group {
+        // sass-lint:disable-block no-extends
         flex-wrap: wrap;
 
         // Make all columns 100%
@@ -339,7 +339,7 @@
             }
           }
 
-          // Make all offets ignored
+          // Make all offsets ignored
           @for $i from 0 through ($grid-columns - 1) {
             @if not ($infix == '' and $i == 0) { // Avoid emitting useless .offset-0
               .offset#{$infix}-#{$i} {
