@@ -3,5 +3,6 @@
   "viewportWidth": 1279,
   "viewportHeight": 1000,
   "video": false,
-  "numTestsKeptInMemory": 20
+  "numTestsKeptInMemory": 20,
+  "defaultCommandTimeout": 8000
 }
