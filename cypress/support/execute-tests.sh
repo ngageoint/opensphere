@@ -136,10 +136,10 @@ function startWebServer() {
     SERVER_STARTED=true
     if [ "$ENVIRONMENT" == "ci" ]; then
       echo 'INFO: starting web server in continuous integration environment'
-      $(npm bin)/http-server -p 8282 -c-1 -o -U -s &
+      $(npm bin)/http-server -p 8282 -c-1 -s &
     else
       echo 'INFO: starting web server in local development environment'
-      $(npm bin)/http-server ../../ -p 8282 -c-1 -o -U -s &
+      $(npm bin)/http-server ../../ -p 8282 -c-1 -s &
     fi
   else
     echo 'INFO: web server already running'
