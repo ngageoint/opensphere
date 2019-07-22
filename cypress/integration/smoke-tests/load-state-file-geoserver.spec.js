@@ -1,5 +1,9 @@
 /// <reference types="Cypress" />
-var os = require('../../support/selectors.js');
+var core = require('../../support/selectors/core.js');
+var dialogs = require('../../support/selectors/dialogs.js');
+var imports = require('../../support/selectors/imports.js');
+var layers = require('../../support/selectors/layers.js');
+var shared = require('../../support/selectors/shared.js');
 
 describe('Import state file', function() {
   before('Login', function() {
@@ -14,46 +18,46 @@ describe('Import state file', function() {
 
   it('Load data from state file', function() {
     // Setup
-    cy.get(os.Toolbar.Date.INPUT).should('not.have.value', '2019-01-27');
-    cy.get(os.Map.MAP_MODE_BUTTON).should('contain', '2D');
-    cy.get(os.statusBar.COORDINATES_TEXT).should('contain', 'No coordinate');
-    cy.get(os.layersDialog.DIALOG).should('not.contain', 'VIIRS Detection Features');
-    cy.get(os.layersDialog.DIALOG).should('not.contain', 'VIIRS Detection Tiles');
-    cy.get(os.layersDialog.Tabs.Areas.TAB).click();
-    cy.get(os.layersDialog.DIALOG).should('not.contain', 'test exclude area');
-    cy.get(os.layersDialog.DIALOG).should('not.contain', 'test include area');
-    cy.get(os.layersDialog.Tabs.Filters.TAB).click();
-    cy.get(os.layersDialog.DIALOG).should('contain', 'No results');
-    cy.get(os.layersDialog.Tabs.Layers.TAB).click();
+    cy.get(core.Toolbar.Date.INPUT).should('not.have.value', '2019-01-27');
+    cy.get(core.Map.MAP_MODE_BUTTON).should('contain', '2D');
+    cy.get(core.statusBar.COORDINATES_TEXT).should('contain', 'No coordinate');
+    cy.get(layers.Dialog.DIALOG).should('not.contain', 'VIIRS Detection Features');
+    cy.get(layers.Dialog.DIALOG).should('not.contain', 'VIIRS Detection Tiles');
+    cy.get(layers.areasTab.TAB).click();
+    cy.get(layers.Dialog.DIALOG).should('not.contain', 'test exclude area');
+    cy.get(layers.Dialog.DIALOG).should('not.contain', 'test include area');
+    cy.get(layers.filtersTab.TAB).click();
+    cy.get(layers.Dialog.DIALOG).should('contain', 'No results');
+    cy.get(layers.layersTab.TAB).click();
 
     // Test
-    cy.get(os.Toolbar.addData.OPEN_FILE_BUTTON).click();
-    cy.get(os.importDataDialog.DIALOG).should('be.visible');
+    cy.get(core.Toolbar.addData.OPEN_FILE_BUTTON).click();
+    cy.get(imports.importDataDialog.DIALOG).should('be.visible');
     cy.upload('smoke-tests/load-state-file-geoserver/test-state-geoserver_state.xml');
-    cy.get(os.importDataDialog.NEXT_BUTTON).click();
-    cy.get(os.importStateDialog.DIALOG).should('be.visible');
-    cy.get(os.importStateDialog.CLEAR_CHECKBOX).check();
-    cy.get(os.importStateDialog.OK_BUTTON).click();
-    cy.get(os.Toolbar.Date.INPUT).should('have.value', '2019-01-27');
-    cy.get(os.Map.MAP_MODE_BUTTON).should('contain', '2D');
-    cy.get(os.Application.PAGE).trigger('mouseenter').trigger('mousemove');
-    cy.get(os.statusBar.COORDINATES_TEXT).should('contain', '+016');
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4, {timeout: 8000})
+    cy.get(imports.importDataDialog.NEXT_BUTTON).click();
+    cy.get(imports.importStateDialog.DIALOG).should('be.visible');
+    cy.get(imports.importStateDialog.CLEAR_CHECKBOX).check();
+    cy.get(imports.importStateDialog.OK_BUTTON).click();
+    cy.get(core.Toolbar.Date.INPUT).should('have.value', '2019-01-27');
+    cy.get(core.Map.MAP_MODE_BUTTON).should('contain', '2D');
+    cy.get(core.Application.PAGE).trigger('mouseenter').trigger('mousemove');
+    cy.get(core.statusBar.COORDINATES_TEXT).should('contain', '+016');
+    cy.get(shared.Tree.ROW_4)
         .should('contain', 'VIIRS Detection Features (19)');
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
-        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+    cy.get(layers.layersTab.Tree.STREET_MAP_TILES)
+        .find(shared.Tree.ROW_CHECKBOX)
         .click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
-        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+    cy.get(layers.layersTab.Tree.WORLD_IMAGERY_TILES)
+        .find(shared.Tree.ROW_CHECKBOX)
         .click();
     cy.imageComparison('features loaded');
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Server.contextMenu.menuOptions.FEATURE_ACTIONS).click();
-    cy.get(os.featureActionsDialog.DIALOG).should('be.visible');
-    cy.get(os.featureActionsDialog.DIALOG).should('contain', 'high confidence');
-    cy.get(os.featureActionsDialog.DIALOG_CLOSE).click();
-    cy.get(os.layersDialog.Tabs.Areas.TAB).click();
-    cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_1).should('contain', 'test exclude area');
-    cy.get(os.layersDialog.Tabs.Areas.Tree.AREA_2).should('contain', 'test include area');
+    cy.get(shared.Tree.ROW_4).rightClick();
+    cy.get(layers.layersTab.Tree.contextMenu.FEATURE_ACTIONS).click();
+    cy.get(dialogs.featureActionsDialog.DIALOG).should('be.visible');
+    cy.get(dialogs.featureActionsDialog.DIALOG).should('contain', 'high confidence');
+    cy.get(dialogs.featureActionsDialog.DIALOG_CLOSE).click();
+    cy.get(layers.areasTab.TAB).click();
+    cy.get(shared.Tree.ROW_1).should('contain', 'test exclude area');
+    cy.get(shared.Tree.ROW_2).should('contain', 'test include area');
   });
 });
