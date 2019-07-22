@@ -104,3 +104,9 @@ tui.Editor.mdEditor.cm = {};
  * kicks codemirror to update
  */
 tui.Editor.mdEditor.cm.refresh = function() {};
+
+
+/**
+ * @type {Object<string, Map>}
+ */
+tui.Editor.i18n = {'_langs': {}};
