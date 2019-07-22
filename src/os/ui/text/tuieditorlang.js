@@ -15,7 +15,8 @@ os.ui.text.TuiEditorLang.setup = function(opt_supportHotkeys) {
     options['Bold'] = options['Bold'] + ' (ctrl + b)';
     options['Blockquote'] = options['Blockquote'] + ' (alt + q)';
     options['Code'] = options['Code'] + ' (shift + ctrl + c)';
-    options['Insert CodeBlock'] = options['Insert CodeBlock'] + ' (shift + ctrl + p)';
+    // Opened issue #581
+    // options['Insert CodeBlock'] = options['Insert CodeBlock'] + ' (shift + ctrl + p)';
     options['Italic'] = options['Italic'] + ' (ctrl + i)';
     options['Line'] = options['Line'] + ' (ctrl + l)';
     options['Ordered list'] = options['Ordered list'] + ' (ctrl + o)';
