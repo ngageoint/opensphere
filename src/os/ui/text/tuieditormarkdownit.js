@@ -21,6 +21,7 @@ os.ui.text.TuiEditorMarkdownIt = markdownit({
  * DO NOT CHANGE YOURSELF
  *
  * COPY AND PASTE FROM node_modules/tui-editor/dist/tui-editor-Editor.js
+ * Future checkout https://github.com/nhn/tui.editor/blob/master/src/js/markdownItPlugins/markdownitTaskPlugin.js
  */
 (function() {
   /**
