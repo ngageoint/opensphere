@@ -1933,6 +1933,8 @@ if (typeof Slick === "undefined") {
         rowsCache[rows[i]].rowNode = parentNode.appendChild(x.firstChild);
       }
 
+      trigger(self.onRowRenderComplete);
+
       if (needToReselectCell) {
         activeCellNode = getCellNode(activeRow, activeCell);
       }
@@ -3355,6 +3357,7 @@ if (typeof Slick === "undefined") {
       "onSelectedRowsChanged": new Slick.Event(),
       "onCellCssStylesChanged": new Slick.Event(),
       "onRowRender": new Slick.Event(),
+      "onRowRenderComplete": new Slick.Event(),
       "onRowRemove": new Slick.Event(),
 
       // Methods
