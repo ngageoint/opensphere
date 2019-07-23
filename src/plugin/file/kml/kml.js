@@ -187,6 +187,16 @@ plugin.file.kml.OL_PLACEMARK_SERIALIZERS = function() {
 /**
  * Access for private Openlayers code.
  *
+ * @return {Object<string, Object<string, ol.XmlSerializer>>}
+ */
+plugin.file.kml.OL_MULTI_GEOMETRY_SERIALIZERS = function() {
+  return ol.format.KML.MULTI_GEOMETRY_SERIALIZERS_;
+};
+
+
+/**
+ * Access for private Openlayers code.
+ *
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
 plugin.file.kml.OL_STYLE_PARSERS = function() {
@@ -808,6 +818,40 @@ plugin.file.kml.PLACEMARK_SERIALIZERS = ol.xml.makeStructureNS(
         }
     ));
 os.object.merge(plugin.file.kml.PLACEMARK_SERIALIZERS, plugin.file.kml.OL_PLACEMARK_SERIALIZERS(), true);
+
+
+
+/**
+ * @param {Node} node Node.
+ * @param {ol.geom.Polygon} polygon Polygon.
+ * @param {Array<*>} objectStack Object stack
+ * @private
+ */
+plugin.file.kml.writePolygon_ = function(node, polygon, objectStack) {
+  ol.format.KML.writePolygon_(node, polygon, objectStack);
+
+  var context = /** @type {ol.XmlNodeStackItem} */ ({node: node});
+  var properties = polygon.getProperties();
+  var parentNode = objectStack[objectStack.length - 1].node;
+  var orderedKeys = ol.format.KML.PRIMITIVE_GEOMETRY_SEQUENCE_[parentNode.namespaceURI];
+  var values = ol.xml.makeSequence(properties, orderedKeys);
+  ol.xml.pushSerializeAndPop(context, ol.format.KML.PRIMITIVE_GEOMETRY_SERIALIZERS_,
+      ol.xml.OBJECT_PROPERTY_NODE_FACTORY, values, objectStack, orderedKeys);
+};
+
+
+/**
+ * @type {Object<string, Object<string, ol.XmlSerializer>>}
+ * @const
+ */
+plugin.file.kml.POLYGON_SERIALIZERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'Polygon': ol.xml.makeChildAppender(plugin.file.kml.writePolygon_)
+    });
+
+os.object.merge(plugin.file.kml.POLYGON_SERIALIZERS, plugin.file.kml.OL_PLACEMARK_SERIALIZERS(), true);
+os.object.merge(plugin.file.kml.POLYGON_SERIALIZERS,
+    plugin.file.kml.OL_MULTI_GEOMETRY_SERIALIZERS(), true);
 
 
 /**
