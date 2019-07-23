@@ -1,14 +1,27 @@
 // --------------------------------- Misc Utilities --------------------------------- //
-.u-pointer-events-all {
-  pointer-events: all;
+$pointer-events-options: all, auto, none;
+@each $option in $pointer-events-options {
+  .u-pointer-events-#{$option} {
+    pointer-events: $option;
+  }
 }
 
-.u-pointer-events-auto {
-  pointer-events: auto;
+$overflow-options: auto, hidden, scroll;
+@each $option in $overflow-options {
+  .u-overflow-x-#{$option} {
+    overflow-x: $option !important;
+  }
+
+  .u-overflow-y-#{$option} {
+    overflow-y: $option !important;
+  }
 }
 
-.u-pointer-events-none {
-  pointer-events: none;
+$user-select-options: all, auto, text, none;
+@each $option in $user-select-options {
+  .u-user-select-#{$option} {
+    user-select: $option;
+  }
 }
 
 .u-flex-basis-0 {
@@ -31,26 +44,6 @@
   font-size: 100%;
 
   white-space: pre-wrap;
-}
-
-.u-overflow-x-auto {
-  overflow-x: auto !important;
-}
-
-.u-overflow-x-hidden {
-  overflow-x: hidden !important;
-}
-
-.u-overflow-y-auto {
-  overflow-y: auto !important;
-}
-
-.u-overflow-y-hidden {
-  overflow-y: hidden !important;
-}
-
-.u-overflow-y-scroll {
-  overflow-y: scroll !important;
 }
 
 // Bootstrap by default puts a focus style around items. This turns that off
@@ -129,22 +122,6 @@
   position: absolute;
   right: -35%;
   text-align: center;
-}
-
-.u-user-select-all {
-  user-select: all;
-}
-
-.u-user-select-auto {
-  user-select: auto;
-}
-
-.u-user-select-text {
-  user-select: text;
-}
-
-.u-user-select-none {
-  user-select: none;
 }
 
 .u-link-style {
@@ -475,10 +452,6 @@ $u-parent-resizer-count: 0;
 
 .u-btn-body-offset {
   @include button-variant($u-theme-variables--bg-offset, $u-theme-variables--bg-offset);
-}
-
-.u-bg-body-text {
-  color: $body-color;
 }
 
 .u-bg-flyout {

@@ -42,6 +42,7 @@ os.interaction.DragBox = function(opt_options) {
 goog.inherits(os.interaction.DragBox, os.ui.ol.interaction.DragBox);
 os.implements(os.interaction.DragBox, os.I3DSupport.ID);
 
+
 /**
  * @inheritDoc
  */
@@ -59,7 +60,9 @@ os.interaction.DragBox.prototype.cleanup = function() {
 
   // restore camera controls in 3D mode
   var map = /** @type {os.Map} */ (this.getMap());
-  map.toggleMovement(true);
+  if (map) {
+    map.toggleMovement(true);
+  }
 
   this.cleanupWebGL();
 };
