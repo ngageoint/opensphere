@@ -37,7 +37,8 @@ plugin.places.TITLE = 'Saved Places';
 plugin.places.Icon = {
   ANNOTATION: 'fa-comment',
   FOLDER: 'fa-folder',
-  PLACEMARK: 'fa-map-marker'
+  PLACEMARK: 'fa-map-marker',
+  QUICK_ADD: 'fa-bolt'
 };
 
 
@@ -368,9 +369,16 @@ plugin.places.addPlace = function(options) {
       new os.time.TimeInstant(options.startTime) : undefined;
   feature.set(os.data.RecordField.TIME, time);
 
-  var styleConfig = options.styleConfig || os.object.unsafeClone(os.style.DEFAULT_VECTOR_CONFIG);
+  var styleConfig = os.object.unsafeClone(os.style.DEFAULT_VECTOR_CONFIG);
+
+  if (options.styleConfig) {
+    // merge a provided config onto the default
+    os.style.mergeConfig(options.styleConfig, styleConfig);
+  }
+
   feature.set(os.style.StyleType.FEATURE, [styleConfig]);
   feature.set(os.style.StyleField.SHAPE, options.shape || os.style.ShapeType.POINT);
+  feature.set(os.style.StyleField.SHOW_LABELS, !!styleConfig && !!styleConfig['labels']);
   os.style.setFeatureStyle(feature);
 
   return parent ? plugin.file.kml.ui.updatePlacemark({
