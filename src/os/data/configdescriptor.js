@@ -290,7 +290,7 @@ os.data.ConfigDescriptor.prototype.reimport = function() {
  * @inheritDoc
  */
 os.data.ConfigDescriptor.prototype.getNodeUI = function() {
-  return /** @type {string} */ (this.getFirst('nodeUi')) || '<defaultlayernodeui></defaultlayernodeui>';
+  return /** @type {string} */ (this.getFirst('nodeUi')) || os.data.ConfigDescriptor.base(this, 'getNodeUI');
 };
 
 
