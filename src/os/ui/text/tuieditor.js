@@ -2,8 +2,11 @@ goog.provide('os.ui.text.TuiEditor');
 goog.provide('os.ui.text.TuiEditorCtrl');
 goog.provide('os.ui.text.tuiEditorDirective');
 
+goog.require('goog.Promise');
 goog.require('goog.dom.safe');
 goog.require('ol.xml');
+goog.require('os.alert.AlertEventSeverity');
+goog.require('os.alert.AlertManager');
 goog.require('os.defines');
 goog.require('os.ui.Module');
 goog.require('os.ui.text.TuiEditorLang');
@@ -57,7 +60,9 @@ os.ui.text.tuiEditorDirective = function() {
       'text': '=',
       'edit': '<',
       'maxlength': '=',
-      'isRequired': '='
+      'isRequired': '=',
+      /* @type {function({'html': string}): goog.Promise} */
+      'postProcessFn': '&?'
     },
     templateUrl: os.ROOT + 'views/text/tuieditor.html',
     controller: os.ui.text.TuiEditorCtrl,
@@ -287,10 +292,36 @@ os.ui.text.TuiEditorCtrl.prototype.init = function() {
       this.onScriptLoadError(true);
     }
   } else {
-    this['displayHtml'] = os.ui.text.TuiEditor.render(this['text']);
+    this.getDisplayHtml_().then(function(displayHtml) {
+      this['displayHtml'] = displayHtml;
+      this.scope.$emit(os.ui.text.TuiEditor.READY);
+      os.ui.apply(this.scope);
+    }.bind(this));
   }
+};
 
-  this.scope.$emit(os.ui.text.TuiEditor.READY);
+
+/**
+ * @private
+ * @return {goog.Promise}
+ */
+os.ui.text.TuiEditorCtrl.prototype.getDisplayHtml_ = function() {
+  return new goog.Promise(function(resolve, reject) {
+    var text = os.ui.text.TuiEditor.render(this['text']);
+    if (this.scope['postProcessFn']) {
+      this.scope['postProcessFn']({'html': text}).then(function(html) {
+        resolve(html);
+      }, function(e) {
+        if (e && e.toString) {
+          os.alert.AlertManager.getInstance().sendAlert(e.toString(), os.alert.AlertEventSeverity.ERROR);
+        }
+        // fallback
+        resolve(text);
+      }, this);
+    } else {
+      resolve(text);
+    }
+  }, this);
 };
 
 
@@ -302,12 +333,16 @@ os.ui.text.TuiEditorCtrl.prototype.onScopeChange_ = function() {
 
   if (this.scope['edit'] && this['tuiEditor'] && this['text'] != this['tuiEditor'].getValue()) {
     this['tuiEditor'].setValue(this['text']);
+    os.ui.apply(this.scope);
   } else if (!this.scope['edit']) {
-    this['displayHtml'] = os.ui.text.TuiEditor.render(this['text']);
-    this.setTargetBlankPropertyInLinks();
+    this.getDisplayHtml_().then(function(displayHtml) {
+      this['displayHtml'] = displayHtml;
+      this.setTargetBlankPropertyInLinks();
+      os.ui.apply(this.scope);
+    }.bind(this));
+  } else {
+    os.ui.apply(this.scope);
   }
-
-  os.ui.apply(this.scope);
 };
 
 
@@ -354,7 +389,6 @@ os.ui.text.TuiEditorCtrl.prototype.insertLink = function(linkText, url) {
     'url': url
   });
 };
-
 
 
 /**
