@@ -156,11 +156,17 @@ ul {
     margin-bottom: 0;
   }
 }
-// Keeps theme uniform for input fields (Light and Dark themes)
-//sass-lint:disable-block no-duplicate-properties, no-vendor-prefixes
+
+// Replace the autofilled input colors in Webkit-based browsers
+// sass-lint:disable-block no-duplicate-properties, no-vendor-prefixes
 @-webkit-keyframes autofill {
   to {
     background: $input-bg;
     color: $input-color;
   }
+}
+
+input:-webkit-autofill {
+  -webkit-animation-fill-mode: both;
+  -webkit-animation-name: autofill;
 }
