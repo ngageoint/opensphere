@@ -1,26 +1,26 @@
 goog.provide('plugin.descriptor.facet.Source');
-goog.require('plugin.descriptor.facet.BaseFacet');
+goog.require('os.search.BaseFacet');
 
 
 
 /**
  * @constructor
- * @extends {plugin.descriptor.facet.BaseFacet}
+ * @extends {os.search.BaseFacet<!os.data.IDataDescriptor>}
  */
 plugin.descriptor.facet.Source = function() {
   plugin.descriptor.facet.Source.base(this, 'constructor');
 };
-goog.inherits(plugin.descriptor.facet.Source, plugin.descriptor.facet.BaseFacet);
+goog.inherits(plugin.descriptor.facet.Source, os.search.BaseFacet);
 
 
 /**
  * @inheritDoc
  */
-plugin.descriptor.facet.Source.prototype.load = function(descriptor, facets) {
-  var source = descriptor.getProvider();
+plugin.descriptor.facet.Source.prototype.load = function(item, facets) {
+  var source = item.getProvider();
 
   if (source) {
-    plugin.descriptor.facet.BaseFacet.update('Source', source, facets);
+    os.search.BaseFacet.update('Source', source, facets);
   }
 };
 
@@ -28,12 +28,12 @@ plugin.descriptor.facet.Source.prototype.load = function(descriptor, facets) {
 /**
  * @inheritDoc
  */
-plugin.descriptor.facet.Source.prototype.test = function(descriptor, facets, results) {
+plugin.descriptor.facet.Source.prototype.test = function(item, facets, results) {
   var values = facets['Source'];
 
   if (values) {
-    var p = descriptor.getProvider();
+    var p = item.getProvider();
     var x = p ? values.indexOf(p) : -1;
-    plugin.descriptor.facet.BaseFacet.updateResults('Source', results, x > -1 ? 1 : 0);
+    os.search.BaseFacet.updateResults('Source', results, x > -1 ? 1 : 0);
   }
 };

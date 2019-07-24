@@ -13,6 +13,8 @@ goog.require('os.ui.window.confirmTextDirective');
 goog.require('plugin.file.kml.ui');
 goog.require('plugin.file.kml.ui.KMLNode');
 goog.require('plugin.file.kml.ui.placemarkEditDirective');
+goog.require('plugin.places.ui.QuickAddPlacesCtrl');
+goog.require('plugin.places.ui.placesButtonDirective');
 
 
 /**
@@ -175,28 +177,6 @@ plugin.places.ui.PlacesCtrl.prototype.addFolder = function() {
     }));
   }
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.Places.ADD_FOLDER, 1);
-};
-
-
-/**
- * Create a new place and add it to the tree.
- *
- * @param {boolean=} opt_annotation Whether the place is an annotation.
- * @export
- */
-plugin.places.ui.PlacesCtrl.prototype.addPlace = function(opt_annotation) {
-  var parent = this['selected'] && this['selected'].length == 1 ? this['selected'][0] : this.placesRoot_;
-  while (parent && !parent.isFolder()) {
-    parent = parent.getParent();
-  }
-
-  if (parent) {
-    plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
-      'annotation': opt_annotation,
-      'parent': parent
-    }));
-  }
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.Places.ADD_PLACE, 1);
 };
 
 

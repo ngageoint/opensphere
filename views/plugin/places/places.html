@@ -1,21 +1,11 @@
 <div class="d-flex flex-column flex-fill">
   <div class="flex-shrink-0 mt-1">
-    <button class="btn btn-sm btn-success"
-        ng-click="places.addPlace()" ng-disabled="!places.hasRoot()"
-        title="Add a new place under the current selection, or at the top level of the tree">
-      <i class="fa fa-map-marker" /> Add Place
-    </button>
-    <button class="btn btn-sm btn-success"
-        ng-click="places.addPlace(true)" ng-disabled="!places.hasRoot()"
-        title="Add a new place under the current selection, or at the top level of the tree">
-      <i class="fa fa-comment" /> Add Place (Text Box)
-    </button>
+    <placesbutton selected="places.selected"></placesbutton>
     <button class="btn btn-sm btn-success"
         ng-click="places.addFolder()" ng-disabled="!places.hasRoot()"
         title="Add a new folder under the current selection, or at the top level of the tree">
       <i class="fa fa-folder" /> Add Folder
     </button>
-
     <button class="btn btn-secondary btn-sm" ng-click="places.expandAll()"
         ng-disabled="!places.hasRoot()"
         title="Fully expand the tree from the selected item, or the root if nothing is selected">

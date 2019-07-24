@@ -23,7 +23,8 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
-var os = require('./selectors.js');
+var core = require('../support/selectors/core.js');
+var layers = require('../support/selectors/layers.js');
 var config = require('./index.js');
 var addMatchImageSnapshotCommand = require('cypress-image-snapshot/command')
     .addMatchImageSnapshotCommand;
@@ -33,18 +34,19 @@ addMatchImageSnapshotCommand({
   failureThreshold: 0.0005,
   failureThresholdType: 'percent',
   customSnapshotsDir: 'cypress/comparisons',
-  blackout: [os.Toolbar.PANEL,
-    os.statusBar.PANEL,
+  blackout: [core.Toolbar.PANEL,
+    core.statusBar.PANEL,
     '.ol-overviewmap',
-    os.Map.ATTRIBUTION,
-    os.layersDialog.DIALOG,
+    core.Map.ATTRIBUTION,
+    layers.Dialog.DIALOG,
     '.ol-zoom',
-    os.Map.ROTATION_BUTTON,
-    os.Map.MAP_MODE_BUTTON]
+    core.Map.ROTATION_BUTTON,
+    core.Map.MAP_MODE_BUTTON]
 });
 
 Cypress.Commands.add('imageComparison', function(name) {
-  cy.wait(2500);
+  cy.wait(6000);
+  cy.get(layers.layersTab.Tree.LOADING_SPINNER, {timeout: 20000}).should('not.be.visible');
   cy.matchImageSnapshot(name);
 });
 
@@ -57,11 +59,12 @@ Cypress.Commands.add('login', function(clearLocalStorage) {
     indexedDB.deleteDatabase(config.IndexedDB.SETTINGS);
   }
   cy.visit(config.HIDE_TIPS);
-  cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES, {timeout: 15000}).should('be.visible');
+  cy.get(layers.layersTab.Tree.STREET_MAP_TILES, {timeout: 15000}).should('be.visible');
+  cy.get(layers.layersTab.Tree.LOADING_SPINNER, {timeout: 20000}).should('not.be.visible');
 });
 
 Cypress.Commands.add('upload', function(fileName) {
-  cy.get(os.Application.HIDDEN_FILE_INPUT).then(function(subject) {
+  cy.get(core.Application.HIDDEN_FILE_INPUT).then(function(subject) {
     cy.fixture(fileName, 'base64')
         .then(Cypress.Blob.base64StringToBlob)
         .then(function(blob) {

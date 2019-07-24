@@ -1107,6 +1107,38 @@ describe('os.geo', function() {
     expect(os.geo.toDegreesDecimalMinutes(-168.987654)).toEqual('168° 59.26\' W');
   });
 
+  it('should convert lat close to whole degrees to DDM', function() {
+    expect(os.geo.toDegreesDecimalMinutes(68.9999999, false, false)).toEqual('6900.00N');
+  });
+
+  it('should convert lat close to whole degrees to DDM with symbols', function() {
+    expect(os.geo.toDegreesDecimalMinutes(68.9999999, false, true)).toEqual('69° 00.00\' N');
+  });
+
+  it('should convert negative lat close to whole degrees to DDM', function() {
+    expect(os.geo.toDegreesDecimalMinutes(-68.9999999, false, false)).toEqual('6900.00S');
+  });
+
+  it('should convert negative lat close to whole degrees to DDM with symbols', function() {
+    expect(os.geo.toDegreesDecimalMinutes(-68.9999999, false, true)).toEqual('69° 00.00\' S');
+  });
+
+  it('should convert lon close to whole degrees to DDM', function() {
+    expect(os.geo.toDegreesDecimalMinutes(168.9999999, true, false)).toEqual('16900.00E');
+  });
+
+  it('should convert lon close to whole degrees to DDM with symbols', function() {
+    expect(os.geo.toDegreesDecimalMinutes(168.9999999, true, true)).toEqual('169° 00.00\' E');
+  });
+
+  it('should convert negative lon close to whole degrees to DDM', function() {
+    expect(os.geo.toDegreesDecimalMinutes(-168.9999999, true, false)).toEqual('16900.00W');
+  });
+
+  it('should convert negative lon close to whole degrees to DDM with symbols', function() {
+    expect(os.geo.toDegreesDecimalMinutes(-168.9999999, true, true)).toEqual('169° 00.00\' W');
+  });
+
   it('should convert lat to DMS correctly', function() {
     expect(os.geo.toSexagesimal(10.51, false, false)).toEqual('103036.00N');
   });
@@ -1225,5 +1257,53 @@ describe('os.geo', function() {
 
   it('should convert negative lon to DMS with symbols', function() {
     expect(os.geo.toSexagesimal(-168.987654, true, true)).toEqual('168° 59\' 15.55" W');
+  });
+
+  it('should convert lat close to whole degrees to DMS', function() {
+    expect(os.geo.toSexagesimal(68.9999999, false, false)).toEqual('690000.00N');
+  });
+
+  it('should convert lat close to whole minutes to DMS', function() {
+    expect(os.geo.toSexagesimal(45.016666666, false, false)).toEqual('450100.00N');
+  });
+
+  it('should convert lat close to whole degrees to DMS with symbols', function() {
+    expect(os.geo.toSexagesimal(68.9999999, false, true)).toEqual('69° 00\' 00.00" N');
+  });
+
+  it('should convert negative lat close to whole degrees to DMS', function() {
+    expect(os.geo.toSexagesimal(-68.99999999999, false, false)).toEqual('690000.00S');
+  });
+
+  it('should convert negative lat close to whole minutes to DMS', function() {
+    expect(os.geo.toSexagesimal(-45.016666666, false, false)).toEqual('450100.00S');
+  });
+
+  it('should convert negative lat close to whole degrees to DMS with symbols', function() {
+    expect(os.geo.toSexagesimal(-68.9999999, false, true)).toEqual('69° 00\' 00.00" S');
+  });
+
+  it('should convert lon close to whole degrees to DMS', function() {
+    expect(os.geo.toSexagesimal(168.9999999, true, false)).toEqual('1690000.00E');
+  });
+
+  it('should convert lon close to whole minutes to DMS', function() {
+    expect(os.geo.toSexagesimal(145.016666666, true, false)).toEqual('1450100.00E');
+  });
+
+  it('should convert lon close to whole degrees to DMS with symbols', function() {
+    expect(os.geo.toSexagesimal(168.9999999, true, true)).toEqual('169° 00\' 00.00" E');
+  });
+
+  it('should convert negative lon close to whole degrees to DMS', function() {
+    expect(os.geo.toSexagesimal(-168.9999999, true, false)).toEqual('1690000.00W');
+  });
+
+  it('should convert negative lon close to whole minutes to DMS', function() {
+    expect(os.geo.toSexagesimal(-145.01666666, true, false)).toEqual('1450100.00W');
+  });
+
+  it('should convert negative lon close to whole degrees to DMS with symbols', function() {
+    expect(os.geo.toSexagesimal(-168.9999999, true, true)).toEqual('169° 00\' 00.00" W');
   });
 });

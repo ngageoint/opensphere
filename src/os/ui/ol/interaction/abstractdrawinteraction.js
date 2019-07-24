@@ -308,6 +308,9 @@ os.ui.ol.interaction.AbstractDraw.prototype.cleanup = function() {
   if (map) {
     goog.log.fine(os.ui.ol.interaction.AbstractDraw.LOGGER_, this.getType() + ' interaction cleanup');
     map.getView().setHint(ol.ViewHint.INTERACTING, -1);
+  }
+
+  if (this.keyHandler_) {
     this.keyHandler_.unlisten(goog.events.KeyHandler.EventType.KEY, this.onKey, true, this);
     this.keyHandler_.dispose();
     this.keyHandler_ = null;
