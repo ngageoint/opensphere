@@ -72,28 +72,84 @@ plugin.config.Provider.prototype.load = function(ping) {
 
   if (this.layers_) {
     for (var id in this.layers_) {
-      try {
-        var conf = this.layers_[id];
-        var fullId = this.getId() + os.data.BaseDescriptor.ID_DELIMITER + id;
-        var descriptor = os.dataManager.getDescriptor(fullId);
-
-        if (!descriptor) {
-          descriptor = new os.data.ConfigDescriptor();
-        }
-
-        this.fixId(fullId, conf);
-        this.addIcons(conf);
-
-        descriptor.setBaseConfig(conf);
-        os.dataManager.addDescriptor(descriptor);
-        this.addDescriptor(descriptor, false, false);
-      } catch (e) {
-        goog.log.error(this.log, 'There was an error processing the configuration', e);
-      }
+      this.loadConfig(id, this.layers_[id]);
     }
   }
 
   this.dispatchEvent(new os.data.DataProviderEvent(os.data.DataProviderEventType.LOADED, this));
+};
+
+
+/**
+ * Load a layer config.
+ * @param {string} id The layer id.
+ * @param {Object|Array<Object>} config The layer config(s) to load.
+ * @return {os.data.IDataDescriptor} The descriptor, or null if one could not be found/created.
+ * @protected
+ */
+plugin.config.Provider.prototype.loadConfig = function(id, config) {
+  var descriptor = null;
+
+  try {
+    var fullId = this.getId() + os.data.BaseDescriptor.ID_DELIMITER + id;
+    descriptor = /** @type {os.data.ConfigDescriptor} */ (os.dataManager.getDescriptor(fullId));
+
+    if (!descriptor) {
+      descriptor = new os.data.ConfigDescriptor();
+    }
+
+    this.fixId(fullId, config);
+    this.addIcons(config);
+
+    descriptor.setBaseConfig(config);
+    os.dataManager.addDescriptor(descriptor);
+    this.addDescriptor(descriptor, false, false);
+  } catch (e) {
+    goog.log.error(this.log, 'There was an error processing the configuration', e);
+  }
+
+  return descriptor;
+};
+
+
+/**
+ * Get the settings key for the provider.
+ * @return {string} The key.
+ */
+plugin.config.Provider.prototype.getSettingsKey = function() {
+  return 'userProviders.' + this.getId();
+};
+
+
+/**
+ * Add a layer group to the provider and create a descriptor.
+ * @param {string} groupId The layer group id.
+ * @param {Object|Array<Object>} config The layer config(s) to add to the group.
+ * @return {os.data.IDataDescriptor} The descriptor. If `groupId` is already registered with the provider, the existing
+ *                                   descriptor will be returned.
+ */
+plugin.config.Provider.prototype.addLayerGroup = function(groupId, config) {
+  var fullId = this.getId() + os.data.BaseDescriptor.ID_DELIMITER + groupId;
+  var descriptor = os.dataManager.getDescriptor(fullId);
+  if (descriptor) {
+    return descriptor;
+  }
+
+  if (!this.layers_) {
+    this.layers_ = {};
+  }
+
+  if (!(groupId in this.layers_)) {
+    this.layers_[groupId] = config;
+
+    // save a copy of the config from settings, so changes made by loadConfig aren't persisted
+    var layersKey = this.getSettingsKey() + '.layers';
+    os.settings.set(layersKey + '.' + groupId, os.object.unsafeClone(config));
+
+    descriptor = this.loadConfig(groupId, config);
+  }
+
+  return descriptor;
 };
 
 
@@ -109,7 +165,11 @@ plugin.config.Provider.prototype.fixId = function(fullId, conf) {
     if (!('id' in conf)) {
       throw new Error('Config for "' + fullId + '" does not contain the "id" field!');
     }
-    conf['id'] = fullId + os.data.BaseDescriptor.ID_DELIMITER + conf['id'];
+    // ensure this isn't done more than once
+    var prefix = fullId + os.data.BaseDescriptor.ID_DELIMITER;
+    if (!conf['id'].startsWith(prefix)) {
+      conf['id'] = prefix + conf['id'];
+    }
   }
 };
 
@@ -145,4 +205,38 @@ plugin.config.Provider.prototype.addIcons = function(conf) {
  */
 plugin.config.Provider.prototype.getErrorMessage = function() {
   return null;
+};
+
+
+/**
+ * Create a new config provider, or return it if it already exists.
+ * @param {string} id The provider id.
+ * @param {Object} config The provider config.
+ * @return {plugin.config.Provider} The provider.
+ */
+plugin.config.Provider.create = function(id, config) {
+  var provider = null;
+
+  if (id && config) {
+    provider = /** @type {plugin.config.Provider} */ (os.dataManager.getProvider(id));
+
+    if (!provider) {
+      // ensure the type is set properly, and layers are defined
+      config['type'] = plugin.config.ID;
+
+      if (!config['layers']) {
+        config['layers'] = {};
+      }
+
+      provider = new plugin.config.Provider();
+      provider.setId(id);
+      provider.configure(config);
+      provider.load();
+
+      os.settings.set(provider.getSettingsKey(), config);
+      os.dataManager.addProvider(provider);
+    }
+  }
+
+  return provider;
 };
