@@ -57,7 +57,7 @@ plugin.descriptor.DescriptorSearch = function(name) {
   this.searchTermFacet_ = new plugin.descriptor.facet.SearchTerm();
 
   /**
-   * @type {!Array<!plugin.descriptor.facet.BaseFacet>}
+   * @type {!Array<!os.search.BaseFacet<!os.data.IDataDescriptor>>}
    * @private
    */
   this.facets_ = [];
