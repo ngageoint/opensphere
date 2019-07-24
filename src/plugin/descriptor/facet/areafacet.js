@@ -1,18 +1,18 @@
 goog.provide('plugin.descriptor.facet.Area');
 
 goog.require('os.data.IAreaTest');
-goog.require('plugin.descriptor.facet.BaseFacet');
+goog.require('os.search.BaseFacet');
 
 
 
 /**
  * @constructor
- * @extends {plugin.descriptor.facet.BaseFacet}
+ * @extends {os.search.BaseFacet<!os.data.IDataDescriptor>}
  */
 plugin.descriptor.facet.Area = function() {
   plugin.descriptor.facet.Area.base(this, 'constructor');
 };
-goog.inherits(plugin.descriptor.facet.Area, plugin.descriptor.facet.BaseFacet);
+goog.inherits(plugin.descriptor.facet.Area, os.search.BaseFacet);
 
 
 /**
@@ -47,12 +47,12 @@ plugin.descriptor.facet.Area.prototype.valueToLabel = function(value) {
 /**
  * @inheritDoc
  */
-plugin.descriptor.facet.Area.prototype.load = function(descriptor, facets) {
+plugin.descriptor.facet.Area.prototype.load = function(item, facets) {
   return this.updateCache_(
-      descriptor,
+      item,
       os.query.AreaManager.getInstance().getAll(),
       function(areaId) {
-        plugin.descriptor.facet.BaseFacet.update('Area', areaId, facets);
+        os.search.BaseFacet.update('Area', areaId, facets);
       });
 };
 
@@ -60,11 +60,11 @@ plugin.descriptor.facet.Area.prototype.load = function(descriptor, facets) {
 /**
  * @inheritDoc
  */
-plugin.descriptor.facet.Area.prototype.test = function(descriptor, facets, results) {
+plugin.descriptor.facet.Area.prototype.test = function(item, facets, results) {
   var areaIds = facets['Area'];
 
   if (areaIds) {
-    plugin.descriptor.facet.BaseFacet.updateResults('Area', results);
+    os.search.BaseFacet.updateResults('Area', results);
 
     var areas = os.query.AreaManager.getInstance().getAll();
     if (areas) {
@@ -74,10 +74,10 @@ plugin.descriptor.facet.Area.prototype.test = function(descriptor, facets, resul
     }
 
     return this.updateCache_(
-        descriptor,
+        item,
         areas,
         function(areaId) {
-          plugin.descriptor.facet.BaseFacet.updateResults('Area', results, 1);
+          os.search.BaseFacet.updateResults('Area', results, 1);
         });
   }
 };
