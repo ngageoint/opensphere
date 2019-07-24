@@ -1031,8 +1031,9 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
   if (geometry) {
     this.originalGeometry = geometry;
     altitudeMode = geometry.get(os.data.RecordField.ALTITUDE_MODE) || altitudeMode;
+    var type = geometry.getType();
 
-    if (geometry instanceof ol.geom.Point) {
+    if (type === ol.geom.GeometryType.POINT) {
       var clone = /** @type {!ol.geom.Point} */ (geometry.clone());
       clone.toLonLat();
 
@@ -1062,7 +1063,14 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
       this['semiMinorUnits'] = /** @type {string|undefined} */ (feature.get(os.Fields.SEMI_MINOR_UNITS)) ||
           this['semiMinorUnits'];
       this['orientation'] = this.getNumericField_(feature, os.Fields.ORIENTATION);
+    } else if (type === ol.geom.GeometryType.GEOMETRY_COLLECTION) {
+      var geom = os.ui.FeatureEditCtrl.getFirstNonCollectionGeometry_(geometry);
+      altitudeMode = geom.get(os.data.RecordField.ALTITUDE_MODE) || altitudeMode;
     }
+  }
+
+  if (Array.isArray(altitudeMode) && altitudeMode.length) {
+    altitudeMode = altitudeMode[0];
   }
 
   if (altitudeMode && this['altitudeModes'].indexOf(altitudeMode) > -1) {
@@ -1084,6 +1092,25 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
     // make sure there is at least one blank label so it shows up in the UI
     this['labels'].push(os.style.label.cloneConfig());
   }
+};
+
+
+/**
+ * @param {ol.geom.Geometry} geom
+ * @return {?ol.geom.Geometry}
+ */
+os.ui.FeatureEditCtrl.getFirstNonCollectionGeometry_ = function(geom) {
+  var type = geom.getType();
+  if (type === ol.geom.GeometryType.GEOMETRY_COLLECTION) {
+    var geometries = /** @type {ol.geom.GeometryCollection} */ (geom).getGeometriesArray();
+    if (geometries.length) {
+      geom = os.ui.FeatureEditCtrl.getFirstNonCollectionGeometry_(geometries[0]);
+    } else {
+      return null;
+    }
+  }
+
+  return geom;
 };
 
 
@@ -1296,8 +1323,27 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
 
   var geom = feature.getGeometry();
   if (geom) {
-    geom.set(os.data.RecordField.ALTITUDE_MODE, this['altitudeMode']);
+    os.ui.FeatureEditCtrl.setGeometryRecursive(geom, os.data.RecordField.ALTITUDE_MODE, this['altitudeMode'], true);
     geom.changed();
+  }
+};
+
+
+/**
+ * @param {ol.geom.Geometry} geom
+ * @param {string} field
+ * @param {*} value
+ * @param {boolean=} opt_silent
+ */
+os.ui.FeatureEditCtrl.setGeometryRecursive = function(geom, field, value, opt_silent) {
+  var type = geom.getType();
+  if (type === ol.geom.GeometryType.GEOMETRY_COLLECTION) {
+    var geometries = /** @type {ol.geom.GeometryCollection} */ (geom).getGeometriesArray();
+    for (var i = 0, n = geometries.length; i < n; i++) {
+      os.ui.FeatureEditCtrl.setGeometryRecursive(geometries[i], field, value, opt_silent);
+    }
+  } else {
+    geom.set(field, value, opt_silent);
   }
 };
 
