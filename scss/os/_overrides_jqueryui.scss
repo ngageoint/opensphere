@@ -97,9 +97,9 @@
 
 // NOTE: we want the ui-menu to be exactly like the dropdown menu. To do this override the jquery defaults, then
 // extend the bootstrap 4 equivalent classes. Ignore all the sass-lint rules because we want it to be exactly this way.
-// sass-lint:disable extends-before-declarations, extends-before-mixins, no-extends, placeholder-in-extend
 .ui-menu.ui-widget,
 .ui-menu {
+  // sass-lint:disable-block extends-before-declarations, extends-before-mixins, no-extends, placeholder-in-extend
   // This part ignores the default jquery styles
   background: $dropdown-bg;
   border: $dropdown-border-width solid $dropdown-border-color;

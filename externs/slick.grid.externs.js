@@ -1548,6 +1548,38 @@ onRowRender.prototype.notify = function(args, e, scope) {};
 
 
 
+
+
+
+/** @constructor */
+function onRowRenderComplete() {}
+
+
+/** @type {onRowRenderComplete} */
+Slick.Grid.prototype.onRowRenderComplete;
+
+
+/**
+ * @param {*} fn
+ */
+onRowRenderComplete.prototype.subscribe = function(fn) {};
+
+
+/**
+ * @param {*} fn
+ */
+onRowRenderComplete.prototype.unsubscribe = function(fn) {};
+
+
+/**
+ * @param {*} args
+ * @param {*} e
+ * @param {*} scope
+ * @return {*}
+ */
+onRowRenderComplete.prototype.notify = function(args, e, scope) {};
+
+
 /** @constructor */
 function onRowRemove() {}
 

@@ -1,4 +1,3 @@
-// sass-lint:disable no-extends, placeholder-in-extend
 ng-form,
 *[ng-form],
 form {
@@ -7,12 +6,14 @@ form {
   div:not([ng-form]).ng-invalid.ng-dirty,
   select.ng-invalid.ng-dirty,
   textarea.ng-invalid.ng-dirty {
+    // sass-lint:disable-block no-extends, placeholder-in-extend
     @extend .form-control.is-invalid;
   }
 
   .select2-container.ng-invalid.ng-dirty {
     .select2-choice,
     .select2-choices {
+      // sass-lint:disable-block no-extends, placeholder-in-extend
       @extend .form-control.is-invalid;
     }
   }
