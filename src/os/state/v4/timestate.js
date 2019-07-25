@@ -42,7 +42,8 @@ os.state.v4.TimeTag = {
   SLICE: 'slice',
   SLICE_INTERVAL: 'sliceInterval',
   INTERVAL_START: 'intervalStart',
-  INTERVAL_END: 'intervalEnd'
+  INTERVAL_END: 'intervalEnd',
+  LOCK: 'lock'
 };
 
 
@@ -198,6 +199,11 @@ os.state.v4.TimeState.prototype.loadInternal = function(obj, id) {
       tlc.setSkip(skip);
     }
 
+    var lock = this.readLock_(obj);
+    if (lock !== null) {
+      tlc.setLock(lock);
+    }
+
     // force the date control to update from the timeline controller
     var dcScope = angular.element('.js-date-control').scope();
     if (dcScope) {
@@ -281,6 +287,7 @@ os.state.v4.TimeState.prototype.saveInternal = function(options, rootObj) {
     }
 
     os.xml.appendElement(os.state.v4.TimeTag.DURATION, rootObj, tlc.getDuration());
+    os.xml.appendElement(os.state.v4.TimeTag.LOCK, rootObj, tlc.getLock());
 
     this.saveComplete(options, rootObj);
   } catch (e) {
@@ -513,8 +520,7 @@ os.state.v4.TimeState.prototype.readCurrent_ = function(element) {
 
 
 /**
- * Reards the skip element.
- *
+ * Reads the skip element.
  * @param {!Element} element
  * @return {?number}
  * @private
@@ -523,6 +529,20 @@ os.state.v4.TimeState.prototype.readSkip_ = function(element) {
   var skipEl = element.querySelector(os.state.v4.TimeTag.ADVANCE);
   if (skipEl) {
     return os.time.period.toMillis(skipEl.textContent);
+  }
+  return null;
+};
+
+/**
+ * Reads the lock element.
+ * @param {!Element} element
+ * @return {?boolean}
+ * @private
+ */
+os.state.v4.TimeState.prototype.readLock_ = function(element) {
+  var lockElement = element.querySelector(os.state.v4.TimeTag.LOCK);
+  if (lockElement) {
+    return lockElement.textContent == 'true';
   }
   return null;
 };

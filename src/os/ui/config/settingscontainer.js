@@ -62,6 +62,8 @@ goog.inherits(os.ui.config.SettingsContainerCtrl, os.ui.config.AbstractSettingsC
  * @inheritDoc
  */
 os.ui.config.SettingsContainerCtrl.prototype.destroy = function() {
+  os.ui.config.SettingsContainerCtrl.base(this, 'destroy');
+
   this.location_ = null;
 };
 

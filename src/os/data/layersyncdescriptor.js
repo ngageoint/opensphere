@@ -56,6 +56,8 @@ os.data.LayerSyncDescriptor = function() {
    */
   this.online = os.net.Online.getInstance();
 
+  this.setNodeUI('<defaultlayernodeui></defaultlayernodeui>');
+
   os.dispatcher.listen(os.events.LayerEventType.ADD, this.onLayerAdded, false, this);
   os.dispatcher.listen(os.events.LayerEventType.REMOVE, this.onLayerRemoved, false, this);
 };
@@ -472,12 +474,4 @@ os.data.LayerSyncDescriptor.prototype.persistLayerConfig = function() {
   }
 
   return config;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.LayerSyncDescriptor.prototype.getNodeUI = function() {
-  return '<defaultlayernodeui></defaultlayernodeui>';
 };

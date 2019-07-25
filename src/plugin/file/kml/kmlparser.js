@@ -60,14 +60,12 @@ plugin.file.kml.KMLParserStackObj;
  * @implements {os.parse.IParser.<plugin.file.kml.ui.KMLNode>}
  * @template T
  * @constructor
- * @suppress {accessControls}
  */
 plugin.file.kml.KMLParser = function(options) {
   plugin.file.kml.KMLParser.base(this, 'constructor');
 
-  if (!ol.format.KML.DEFAULT_STYLE_ARRAY_) {
-    ol.format.KML.createStyleDefaults_();
-  }
+  // load default KML styles
+  plugin.file.kml.createStyleDefaults();
 
   /**
    * The source document
