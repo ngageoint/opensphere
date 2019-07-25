@@ -1,25 +1,97 @@
-goog.require('goog.dom');
-goog.require('goog.dom.xml');
 goog.require('goog.math.RangeSet');
-goog.require('goog.string');
-goog.require('os.MapContainer');
 goog.require('os.state.v4.TimeState');
 
 describe('os.state.v4.TimeState', function() {
   var stateManager = null;
+  var tlc = null;
+  var resultSchemas = null;
+  var state = null;
+  var stateOptions = null;
+  var xmlRootDocument = null;
+
+  var testAndLoadXsdFiles = function() {
+    // Using jasmine's async test, as we need to load the xsd files
+    // that are used by xmllint.
+    runs(function() {
+      os.test.xsd.loadStateXsdFiles().then(function(result) {
+        resultSchemas = result;
+      }, function(err) {
+        throw err;
+      });
+    });
+
+    // waiting for the xsd files to load
+    waitsFor(function() {
+      return (resultSchemas !== null);
+    }, 'Wait for XSD(s) to load', 2 * jasmine.DEFAULT_TIMEOUT_INTERVAL);
+  };
+
+  var testStateSaveAndLoad = function() {
+    // The state.save method triggers more than required for this test
+    // calling the interal save directly.
+    stateSaveInternal();
+    expect(getXmlLintResult().errors).toBe(null);
+    testStateLoad();
+  };
+
+  var stateSaveInternal = function() {
+    stateOptions.doc = xmlRootDocument;
+    rootObj = state.createRoot(stateOptions);
+    xmlRootDocument.firstElementChild.appendChild(rootObj);
+
+    state.saveInternal(stateOptions, rootObj);
+  };
+
+  var getXmlLintResult = function() {
+    var seralizedDoc = os.xml.serialize(stateOptions.doc);
+    return xmllint.validateXML({
+      xml: seralizedDoc,
+      schema: resultSchemas
+    });
+  };
+
+  var testStateLoad = function() {
+    var timeNode = xmlRootDocument.firstElementChild.querySelector('time');
+    state.load(timeNode, 'do-not-care');
+  };
+
+  var testTimeStateWithLock = function(isLocked) {
+    tlc.setLock(isLocked);
+
+    spyOn(tlc, 'setLock').andCallThrough();
+
+    testAndLoadXsdFiles();
+
+    // Runs the tests.
+    runs(function() {
+      var lock = tlc.getLock();
+
+      testStateSaveAndLoad();
+
+      expect(tlc.setLock).toHaveBeenCalled();
+      expect(tlc.setLock.mostRecentCall.args[0]).toBe(lock);
+    });
+  };
 
   beforeEach(function() {
     stateManager = os.state.StateManager.getInstance();
     stateManager.setVersion(os.state.Versions.V4);
+    tlc = os.time.TimelineController.getInstance();
+    resultSchemas = null;
+    state = new os.state.v4.TimeState();
+    stateOptions = stateManager.createStateOptions(function() {}, 'test time state', 'desc');
+    xmlRootDocument = stateManager.createStateObject(function() {}, 'test time state', 'desc');
 
     // pretend the timeline UI is in the correct open/closed state
     spyOn(os.state.v4.TimeState, 'testUIState').andReturn(true);
+    // set up mock return true on the state isTimeLineVisible, so all elements
+    // will get seralized
+    spyOn(state, 'isTimeLineVisible').andCallFake(function() {
+      return true;
+    });
   });
 
   it('should produce a valid state file with time state', function() {
-    var resultSchemas = null;
-    var state = new os.state.v4.TimeState();
-    var tlc = os.time.TimelineController.getInstance();
     // Ensure the timeline controler is initalized
     var startDate = os.time.parseMoment('1970-01-01T00:16:39Z', [os.state.v4.TimeState.DATE_FORMAT], true);
     var endDate = os.time.parseMoment('1974-03-15T02:21:41Z', [os.state.v4.TimeState.DATE_FORMAT], true);
@@ -64,34 +136,10 @@ describe('os.state.v4.TimeState', function() {
     spyOn(tlc, 'setSkip').andCallThrough();
     spyOn(tlc, 'setFps').andCallThrough();
 
-    // set up mock return true on the state isTimeLineVisible, so all elements
-    // will get seralized
-    spyOn(state, 'isTimeLineVisible').andCallFake(function() {
-      return true;
-    });
-
-    // Using jasman's async test, as we need to load the xsd files
-    // that are used by xmllint.
-    runs(function() {
-      os.test.xsd.loadStateXsdFiles().then(function(result) {
-        resultSchemas = result;
-      }, function(err) {
-        throw err;
-      });
-    });
-
-    // waiting for the xsd files to load
-    waitsFor(function() {
-      return (resultSchemas !== null);
-    }, 'Wait for XSD(s) to load', 2 * jasmine.DEFAULT_TIMEOUT_INTERVAL);
+    testAndLoadXsdFiles();
 
     // Runs the tests.
     runs(function() {
-      var xmlRootDocument = stateManager.createStateObject(function() {}, 'test time state', 'desc');
-      var stateOptions = stateManager.createStateOptions(function() {}, 'test time state', 'desc');
-      stateOptions.doc = xmlRootDocument;
-      var rootObj = state.createRoot(stateOptions);
-      xmlRootDocument.firstElementChild.appendChild(rootObj);
       // get ref to current vals
       var duration = tlc.getDuration();
       var aRanges = tlc.animateRanges_.clone();
@@ -100,20 +148,9 @@ describe('os.state.v4.TimeState', function() {
       var current = tlc.getCurrent();
       var skip = tlc.getSkip();
       var fps = tlc.getFps();
-      // The state.save method triggers more than required for this test
-      // calling the interal save directly.
-      state.saveInternal(stateOptions, rootObj);
 
-      var seralizedDoc = os.xml.serialize(stateOptions.doc);
-      var xmlLintResult = xmllint.validateXML({
-        xml: seralizedDoc,
-        schema: resultSchemas
-      });
-      expect(xmlLintResult.errors).toBe(null);
+      testStateSaveAndLoad();
 
-      // now that we have the document, test load as well.
-      var timeNode = xmlRootDocument.firstElementChild.querySelector('time');
-      state.load(timeNode, 'do-not-care');
       // Validate the loaded state against the values orginally
       // in the time line controller.
       expect(tlc.setDuration).toHaveBeenCalled();
@@ -133,7 +170,7 @@ describe('os.state.v4.TimeState', function() {
 
       expect(tlc.setSliceRanges).toHaveBeenCalled();
       expect(goog.math.RangeSet.equals(sRanges,
-        tlc.setSliceRanges.mostRecentCall.args[0])).toBe(true);
+          tlc.setSliceRanges.mostRecentCall.args[0])).toBe(true);
 
       expect(tlc.setCurrent).toHaveBeenCalled();
       expect(tlc.setCurrent.mostRecentCall.args[0]).toBe(current);
@@ -144,5 +181,13 @@ describe('os.state.v4.TimeState', function() {
       expect(tlc.setFps).toHaveBeenCalled();
       expect(tlc.setFps.mostRecentCall.args[0]).toBe(fps);
     });
+  });
+
+  it('should produce a valid state file with time state and timeline not locked', function() {
+    testTimeStateWithLock(false);
+  });
+
+  it('should produce a valid state file with time state and timeline locked', function() {
+    testTimeStateWithLock(true);
   });
 });
