@@ -2,7 +2,7 @@
   <tr>
     <td>
       <div class="custom-control custom-checkbox d-inline-block" ng-init="checkId = $root.getUniqueString()">
-        <input type="checkbox" class="custom-control-input" id="{{'showRotation' + checkId}}" name="showRotation" ng-model="showRotation" ng-click="ctrl.toggleShowRotation()"/>
+        <input type="checkbox" class="custom-control-input" id="{{'showRotation' + checkId}}" name="showRotation" ng-model="showRotation" ng-change="ctrl.toggleShowRotation()"/>
         <label class="custom-control-label" for="{{'showRotation' + checkId}}"> Rotation</label>
       </div>
     </td>
