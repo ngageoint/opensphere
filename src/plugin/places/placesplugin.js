@@ -3,10 +3,13 @@ goog.provide('plugin.places.PlacesPlugin');
 goog.require('goog.log');
 goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.plugin.AbstractPlugin');
+goog.require('os.ui.clear.ClearEntry');
+goog.require('os.ui.clearManager');
 goog.require('os.ui.file.method.ImportMethod');
 goog.require('plugin.places');
 goog.require('plugin.places.KMLPlacesImportUI');
 goog.require('plugin.places.PlacesClear');
+goog.require('plugin.places.PlacesHide');
 goog.require('plugin.places.PlacesLayerConfig');
 goog.require('plugin.places.PlacesManager');
 goog.require('plugin.places.menu');
@@ -78,4 +81,8 @@ plugin.places.PlacesPlugin.prototype.init = function() {
   // layer config
   os.layer.config.LayerConfigManager.getInstance().registerLayerConfig(
       plugin.places.PlacesLayerConfig.ID, plugin.places.PlacesLayerConfig);
+
+  // clear option
+  os.ui.clearManager.addEntry(new os.ui.clear.ClearEntry('places', 'Places', plugin.places.PlacesHide,
+      'Clear all Places'));
 };

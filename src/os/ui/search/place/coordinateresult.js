@@ -27,25 +27,27 @@ os.ui.search.place.CoordinateResult = function(result, opt_label, opt_score) {
   os.ui.search.place.CoordinateResult.base(this, 'constructor', result, score);
 
   var featureConfig = this.createFeatureStyleConfig(result);
-  result.set(os.style.StyleType.FEATURE, featureConfig);
+  if (featureConfig) {
+    result.set(os.style.StyleType.FEATURE, featureConfig);
 
-  var hasName = !!result.get('name');
-  var labelField = opt_label || (hasName ? 'name' : undefined);
+    var hasName = !!result.get('name');
+    var labelField = opt_label || (hasName ? 'name' : undefined);
 
-  // configure labels for the feature
-  if (labelField) {
-    featureConfig[os.style.StyleField.LABELS] = [{
-      'column': labelField,
-      'showColumn': false
-    }];
+    // configure labels for the feature
+    if (labelField) {
+      featureConfig[os.style.StyleField.LABELS] = [{
+        'column': labelField,
+        'showColumn': false
+      }];
 
-    // ensure name field is populated for feature info
-    if (!hasName) {
-      result.set('name', result.get(labelField));
+      // ensure name field is populated for feature info
+      if (!hasName) {
+        result.set('name', result.get(labelField));
+      }
     }
-  }
 
-  os.style.setFeatureStyle(result);
+    os.style.setFeatureStyle(result);
+  }
 };
 goog.inherits(os.ui.search.place.CoordinateResult, os.search.AbstractSearchResult);
 
@@ -69,7 +71,7 @@ os.ui.search.place.FEATURE_CONFIG = {
  * Create a style config for a feature.
  *
  * @param {ol.Feature} feature The feature.
- * @return {!Object} The style config.
+ * @return {Object|undefined} The style config.
  * @protected
  */
 os.ui.search.place.CoordinateResult.prototype.createFeatureStyleConfig = function(feature) {

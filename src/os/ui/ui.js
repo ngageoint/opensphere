@@ -297,6 +297,15 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
 
 
 /**
+ * Custom events fired from a typeahead.
+ * @enum {string}
+ */
+os.ui.TypeaheadEventType = {
+  CLICK: 'typeahead:click'
+};
+
+
+/**
  * Extends Bootstrap typeahead for a better user experience. Also extends Bootstrap modal to prevent it from
  * competing for focus with select2.
  */
@@ -446,6 +455,10 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
         'click': function(e) {
           e.preventDefault();
           this.select();
+          // the typeahead will only update the input value, but will not submit the form. to differentiate between the
+          // user hitting enter (which will trigger a form submit) and a click, fire an event from the element to
+          // indicate a value was selected via click.
+          this['$element'].trigger(os.ui.TypeaheadEventType.CLICK);
         }
       });
 
