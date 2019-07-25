@@ -1,5 +1,8 @@
 /// <reference types="Cypress" />
-var os = require('../../support/selectors.js');
+var core = require('../../support/selectors/core.js');
+var imports = require('../../support/selectors/imports.js');
+var layers = require('../../support/selectors/layers.js');
+var shared = require('../../support/selectors/shared.js');
 
 describe('Generate heatmap from CSV', function() {
   before('Login', function() {
@@ -8,41 +11,41 @@ describe('Generate heatmap from CSV', function() {
 
   it('Load data, then generate heatmap', function() {
     // Setup
-    cy.get(os.layersDialog.DIALOG).should('not.contain', '(Image');
-    cy.get(os.layersDialog.DIALOG).should('not.contain', 'Heatmap');
+    cy.get(layers.Dialog.DIALOG).should('not.contain', '(Image');
+    cy.get(layers.Dialog.DIALOG).should('not.contain', 'Heatmap');
 
     // Upload a file
-    cy.get(os.Toolbar.addData.OPEN_FILE_BUTTON).click();
-    cy.get(os.importDataDialog.DIALOG).should('be.visible');
+    cy.get(core.Toolbar.addData.OPEN_FILE_BUTTON).click();
+    cy.get(imports.importDataDialog.DIALOG).should('be.visible');
     cy.upload('smoke-tests/generate-heatmap/chicago-traffic-counts.csv');
-    cy.get(os.importDataDialog.NEXT_BUTTON).click();
-    cy.get(os.importCSVDialog.DIALOG).should('be.visible');
-    cy.get(os.importCSVDialog.NEXT_BUTTON).click();
-    cy.get(os.importCSVDialog.NEXT_BUTTON).click();
-    cy.get(os.importCSVDialog.NEXT_BUTTON).click();
-    cy.get(os.importCSVDialog.Tabs.Options.LAYER_TITLE_INPUT).clear();
-    cy.get(os.importCSVDialog.Tabs.Options.LAYER_TITLE_INPUT).type('Chicago Traffic Counts');
-    cy.get(os.importCSVDialog.DONE_BUTTON).click();
+    cy.get(imports.importDataDialog.NEXT_BUTTON).click();
+    cy.get(imports.importCSVDialog.DIALOG).should('be.visible');
+    cy.get(imports.importCSVDialog.NEXT_BUTTON).click();
+    cy.get(imports.importCSVDialog.NEXT_BUTTON).click();
+    cy.get(imports.importCSVDialog.NEXT_BUTTON).click();
+    cy.get(shared.Options.LAYER_TITLE_INPUT).clear();
+    cy.get(shared.Options.LAYER_TITLE_INPUT).type('Chicago Traffic Counts');
+    cy.get(imports.importCSVDialog.DONE_BUTTON).click();
 
     // Load a layer
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
+    cy.get(shared.Tree.ROW_4)
         .should('contain', 'Chicago Traffic Counts Features (1279)');
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.STREET_MAP_TILES)
-        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+    cy.get(layers.layersTab.Tree.STREET_MAP_TILES)
+        .find(shared.Tree.ROW_CHECKBOX)
         .click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.mapLayer.WORLD_IMAGERY_TILES)
-        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+    cy.get(layers.layersTab.Tree.WORLD_IMAGERY_TILES)
+        .find(shared.Tree.ROW_CHECKBOX)
         .click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.GO_TO).click();
+    cy.get(shared.Tree.ROW_4).rightClick();
+    cy.get(layers.layersTab.Tree.contextMenu.GO_TO).click();
     cy.imageComparison('features loaded');
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4)
-        .find(os.layersDialog.Tabs.Layers.Tree.LAYER_TOGGLE_CHECKBOX_WILDCARD)
+    cy.get(shared.Tree.ROW_4)
+        .find(shared.Tree.ROW_CHECKBOX)
         .click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_4).rightClick();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.Type.featureLayer.Local.contextMenu.menuOptions.GENERATE_HEATMAP).click();
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_1).should('contain', 'Image (1)');
-    cy.get(os.layersDialog.Tabs.Layers.Tree.LAYER_2).should('contain', 'Heatmap - Chicago Traffic Counts');
+    cy.get(shared.Tree.ROW_4).rightClick();
+    cy.get(layers.layersTab.Tree.contextMenu.GENERATE_HEATMAP).click();
+    cy.get(shared.Tree.ROW_1).should('contain', 'Image (1)');
+    cy.get(shared.Tree.ROW_2).should('contain', 'Heatmap - Chicago Traffic Counts');
     cy.imageComparison('heatmap loaded');
   });
 });
