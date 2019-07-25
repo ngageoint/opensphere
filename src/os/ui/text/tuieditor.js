@@ -277,7 +277,7 @@ os.ui.text.TuiEditorCtrl.prototype.init = function() {
       this['tuiEditor'] = new tui.Editor(this.getOptions());
 
       if (os.settings.get(os.ui.text.TuiEditor.MODE_KEY) == os.ui.text.TuiEditor.Mode.MARKDOWN) {
-        this.fixCodemirrorInit_();
+        this.timeout_(this.fixCodemirrorInit_.bind(this));
       }
     } else {
       // If after we've loaded the editor script and it doesnt run correctly
