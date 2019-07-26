@@ -256,6 +256,7 @@ os.ui.layer.LayerPickerCtrl.prototype.select2Formatter_ = function(item, ele) {
       var color = des.getColor();
       color = color ? os.color.toHexString(color) : 'white';
       var description = des.getDescription() || 'No Description';
+      description = os.ui.escapeHtml(description);
       val = '<span title="' + description + '"><i class="fa fa-bars mr-1" style="color:' + color +
           ';"></i>' + val;
       if (des.getProvider()) {
