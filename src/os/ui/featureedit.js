@@ -1501,7 +1501,7 @@ os.ui.FeatureEditCtrl.prototype.onOpacityValueChange = function(event, value) {
   }
 
   this['opacity'] = value;
-}
+};
 
 
 /**
