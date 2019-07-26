@@ -308,12 +308,8 @@ plugin.file.kml.ui.KMLNode.prototype.onFeatureChange = function(event) {
         this.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
         break;
       case 'colors':
-        var source = /** @type {plugin.file.kml.KMLSource} */ (os.feature.getSource(this.feature_));
-        var rootNode = source.getRootNode();
-        var children = rootNode.getChildren();
-        for (var i = 0; i < children.length; i++) { // update icon color
-          children[i].dispatchEvent(new os.events.PropertyChangeEvent('icons'));
-        }
+        this.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
+        this.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
         break;
       default:
         break;
