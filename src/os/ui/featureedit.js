@@ -520,10 +520,10 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   $scope.$watch('ctrl.labelColor', this.updatePreview.bind(this));
   $scope.$watch('ctrl.labelSize', this.updatePreview.bind(this));
   $scope.$watch('ctrl.showLabels', this.updatePreview.bind(this));
+  $scope.$on('opacity.slide', this.onOpacityValueChange.bind(this));
   $scope.$on('fillColor.change', this.onFillColorChange.bind(this));
   $scope.$on('fillColor.reset', this.onFillColorReset.bind(this));
   $scope.$on('fillOpacity.slidestop', this.onFillOpacityChange.bind(this));
-  $scope.$on('fillOpacity.slide', this.onFillOpacityChange.bind(this));
 
   $scope.$on(os.ui.WindowEventType.CANCEL, this.onCancel.bind(this));
   $scope.$on(os.ui.icon.IconPickerEventType.CHANGE, this.onIconChange.bind(this));
@@ -1487,9 +1487,27 @@ os.ui.FeatureEditCtrl.prototype.onLabelColorReset = function(event) {
 
 
 /**
+ * Handles when the opacity slider has moved
+ * @param {angular.Scope.Event} event The Angular event.
+ * @param {number} value The new value.
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.onOpacityValueChange = function(event, value) {
+  event.stopPropagation();
+
+  // If we have a fill opacity and it is already the same as the stroke opacity, keep them the same
+  if (this['fillOpacity'] !== undefined && this['opacity'] == this['fillOpacity']) {
+    this['fillOpacity'] = value;
+  }
+
+  this['opacity'] = value;
+}
+
+
+/**
  * Handles when the fill opacity is changed
  * @param {angular.Scope.Event} event The Angular event.
- * @param {osx.icon.Icon} value The new value.
+ * @param {number} value The new value.
  * @export
  */
 os.ui.FeatureEditCtrl.prototype.onFillOpacityChange = function(event, value) {

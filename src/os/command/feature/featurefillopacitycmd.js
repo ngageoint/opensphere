@@ -30,7 +30,7 @@ goog.inherits(os.command.FeatureFillOpacity, os.command.AbstractFeatureStyle);
  * @type {number}
  * @const
  */
-os.command.FeatureFillOpacity.DEFAULT_OPACITY = 1;
+os.command.FeatureFillOpacity.DEFAULT_OPACITY = os.style.DEFAULT_FILL_ALPHA;
 
 
 /**
@@ -43,7 +43,12 @@ os.command.FeatureFillOpacity.prototype.getOldValue = function() {
     config = config[0];
   }
 
-  return config ? os.style.getConfigOpacityColor(config) : os.command.FeatureFillOpacity.DEFAULT_OPACITY;
+  if (config) {
+    var color = os.style.getConfigColor(config, true, os.style.StyleField.FILL);
+    return color[3];
+  } else {
+    return os.command.FeatureFillOpacity.DEFAULT_OPACITY;
+  }
 };
 
 
