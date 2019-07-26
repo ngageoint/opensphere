@@ -124,7 +124,7 @@ os.ui.text.TuiEditorCtrl = function($scope, $element, $timeout) {
    * @type {string}
    */
   this['text'] = $scope['text'] || '';
-  $scope['edit'] = goog.isDef($scope['edit']) ? $scope['edit'] : false;
+  $scope['edit'] = ($scope['edit'] === undefined) ? false : $scope['edit'];
 
   this.element_.on('keydown', this.onKeyboardEvent_);
   this.element_.on('keypress', this.onKeyboardEvent_);
