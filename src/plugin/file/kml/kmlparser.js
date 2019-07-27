@@ -947,6 +947,12 @@ plugin.file.kml.KMLParser.prototype.readBalloonStyle_ = function(el, feature) {
     text = os.ui.sanitize(text);
 
     feature.set(plugin.file.kml.KMLField.BALLOON_TEXT, text);
+    var balloonStyle = {
+      'bgColor': style.bgColor,
+      'textColor': style.textColor,
+      'displayMode': (style.displayMode !== undefined) ? style.displayMode : 'default'
+    };
+    feature.set(plugin.file.kml.KMLField.BALLOON_STYLE, balloonStyle);
   }
 };
 

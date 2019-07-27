@@ -13,7 +13,8 @@ plugin.file.kml.KMLField = {
   BALLOON_TEXT: '_balloonText',
   DESCRIPTION: 'description',
   MD_DESCRIPTION: '_mdDescription',
-  NAME: 'name'
+  NAME: 'name',
+  BALLOON_STYLE: '_balloonStyle'
 };
 
 

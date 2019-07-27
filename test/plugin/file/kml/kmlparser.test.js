@@ -351,4 +351,58 @@ describe('plugin.file.kml.KMLParser', function() {
       expect(geom.getGeometries().length).toBe(1);
     });
   });
+
+  it('parses a BalloonStyle element', function() {
+    openFileAndRun('balloon1_test.xml', function(features) {
+      expect(features.length).toBe(1);
+      expect(Object.keys(parser.balloonStyleMap).length).toBe(1);
+      var exampleBalloonStyle = parser.balloonStyleMap.exampleBalloonStyle;
+      expect(Object.keys(exampleBalloonStyle).length).toBe(3);
+      expect(goog.array.equals(exampleBalloonStyle['bgColor'], [0xbb, 0xfd, 0xfe, 1])).toBeTruthy();
+      expect(goog.array.equals(exampleBalloonStyle['textColor'], [0x08, 0x04, 0x02, 1])).toBeTruthy();
+      var expectedText = 'Simple text content for the balloon';
+      expect(exampleBalloonStyle['text']).toBe(expectedText);
+
+      var featureBalloonStyle = features[0].get(plugin.file.kml.KMLField.BALLOON_STYLE);
+      expect(goog.array.equals(featureBalloonStyle['bgColor'], [0xbb, 0xfd, 0xfe, 1])).toBeTruthy();
+      expect(goog.array.equals(featureBalloonStyle['textColor'], [0x08, 0x04, 0x02, 1])).toBeTruthy();
+      expect(featureBalloonStyle.displayMode).toBe('default');
+
+      expect(features[0].get(plugin.file.kml.KMLField.BALLOON_TEXT)).toBe(expectedText);
+    });
+  });
+
+  it('parses a BalloonStyle element with displayMode and complex text', function() {
+    openFileAndRun('balloon2_test.xml', function(features) {
+      expect(features.length).toBe(1);
+      expect(Object.keys(parser.balloonStyleMap).length).toBe(1);
+      var exampleBalloonStyle = parser.balloonStyleMap.exampleBalloonStyle;
+      expect(Object.keys(exampleBalloonStyle).length).toBe(3);
+      expect(goog.array.equals(exampleBalloonStyle['bgColor'], [0xbb, 0xff, 0xff, 1])).toBeTruthy();
+      expect(exampleBalloonStyle['displayMode']).toBe('hide');
+      var expectedText = '<b><font color="#CC0000" size="+3">$[name]</font></b>\n' +
+      '      <br/><br/>\n' +
+      '      <font face="Courier">$[description]</font>\n' +
+      '      <br/><br/>\n' +
+      '      Extra text that will appear in the description balloon\n' +
+      '      <br/><br/>\n' +
+      '      <!-- insert the to/from hyperlinks -->\n' +
+      '      $[geDirections]';
+      expect(exampleBalloonStyle['text']).toBe(expectedText);
+
+      var featureBalloonStyle = features[0].get(plugin.file.kml.KMLField.BALLOON_STYLE);
+      expect(goog.array.equals(featureBalloonStyle['bgColor'], [0xbb, 0xff, 0xff, 1])).toBeTruthy();
+      expect(featureBalloonStyle.displayMode).toBe('hide');
+
+      var expectedTextCleaned = 'BalloonStyle</font></b>&#10;' +
+      '      <br><br>&#10;' +
+      '      <font face="Courier">An example of BalloonStyle</font>&#10;' +
+      '      <br><br>&#10;' +
+      '      Extra text that will appear in the description balloon&#10;' +
+      '      <br><br>&#10;' +
+      '      &#10;' +
+      '      ';
+      expect(features[0].get(plugin.file.kml.KMLField.BALLOON_TEXT)).toContain(expectedTextCleaned);
+    });
+  });
 });
