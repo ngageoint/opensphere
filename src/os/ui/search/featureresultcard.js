@@ -4,6 +4,7 @@ goog.require('goog.Disposable');
 goog.require('goog.array');
 goog.require('goog.log');
 goog.require('ol.extent');
+goog.require('os.Fields');
 goog.require('os.layer.Vector');
 goog.require('os.source.Vector');
 
@@ -91,7 +92,7 @@ os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_ID = 'search';
 os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_LABELS = {
   'labelColor': 'rgba(255,255,255,1)',
   'labels': [{
-    'column': os.ui.FeatureEditCtrl.Field.NAME,
+    'column': os.Fields.LOWERCASE_NAME,
     'showColumn': false
   }]
 };
