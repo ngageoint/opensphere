@@ -18,6 +18,19 @@
           </label>
         </div>
       </div>
+      <div class="col">
+        <div class="custom-control custom-checkbox d-inline-block"
+            title="Show background colors behind the annotation text">
+          <input type="checkbox" class="custom-control-input" name="showBackground"
+              ng-attr-id="showBackground{{ctrl.uid}}"
+              ng-change="ctrl.updateAnnotation()"
+              ng-model="ctrl.annotationOptions.showBackground"
+              ng-disabled="!ctrl.annotationOptions.show" />
+          <label class="custom-control-label" ng-attr-for="showBackground{{ctrl.uid}}">
+            Show Background
+          </label>
+        </div>
+      </div>
     </div>
     <div class="form-row align-items-center">
       <div class="col">
@@ -39,9 +52,9 @@
                 color="ctrl.tempHeaderBG"
                 show-reset="true"
                 title="Sets the background color for header"
-                disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showName"></colorpicker>
+                disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showName || !ctrl.annotationOptions.showBackground"></colorpicker>
             <label class="col-form-label" ng-attr-for="headerColor{{ctrl.uid}}">
-              Header Background
+              Header Color
             </label>
           </div>
         </div>
@@ -67,8 +80,10 @@
                   color="ctrl.tempBodyBG"
                   show-reset="true"
                   title="Sets the background color for body"
-                  disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showDescription"></colorpicker>
-              <label class="col-form-label" ng-attr-for="bodyColor{{ctrl.uid}}">Description Background</label>
+                  disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showDescription || !ctrl.annotationOptions.showBackground"></colorpicker>
+              <label class="col-form-label" ng-attr-for="bodyColor{{ctrl.uid}}">
+                Description Color
+              </label>
             </div>
         </div>
       </div>
@@ -77,20 +92,20 @@
           <label class="col-form-label mr-2">Tail Style</label>
           <div class="custom-control custom-checkbox d-inline-block">
             <input ng-checked="true" type="radio" ng-attr-id="showAnnotationDefaultTail{{ctrl.uid}}" class="form-check-input" name="showAnnotationTail"
-              ng-change="ctrl.updateAnnotation()" value="default" ng-model="ctrl.annotationOptions.showTail" ng-disabled="!ctrl.annotationOptions.show"
+              ng-change="ctrl.updateAnnotation()" value="default" ng-model="ctrl.annotationOptions.showTail" ng-disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showBackground"
             />
-            <label class="form-check-label" ng-attr-for="showAnnotationDefaultTail{{ctrl.uid}}" ng-disabled="disabled">Default</label>
+            <label class="form-check-label" ng-attr-for="showAnnotationDefaultTail{{ctrl.uid}}">Default</label>
           </div>
           <div class="custom-control custom-checkbox d-inline-block">
             <input type="radio" ng-attr-id="showAnnotationLineTail{{ctrl.uid}}" class="form-check-input" name="showAnnotationTail" value="line"
-              ng-change="ctrl.updateAnnotation()" ng-model="ctrl.annotationOptions.showTail" ng-disabled="!ctrl.annotationOptions.show"
+              ng-change="ctrl.updateAnnotation()" ng-model="ctrl.annotationOptions.showTail" ng-disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showBackground"
             />
-            <label class="form-check-label" ng-attr-for="showAnnotationLineTail{{ctrl.uid}}" ng-disabled="disabled">Line</label>
+            <label class="form-check-label" ng-attr-for="showAnnotationLineTail{{ctrl.uid}}">Line</label>
           </div>
           <div class="custom-control custom-checkbox d-inline-block">
             <input type="radio" ng-attr-id="showAnnotationNoTail{{ctrl.uid}}" class="form-check-input" name="showAnnotationTail" ng-change="ctrl.updateAnnotation()"
-              value="none" ng-model="ctrl.annotationOptions.showTail" ng-disabled="!ctrl.annotationOptions.show" />
-            <label class="form-check-label" ng-attr-for="showAnnotationNoTail{{ctrl.uid}}" ng-disabled="disabled">None</label>
+              value="none" ng-model="ctrl.annotationOptions.showTail" ng-disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showBackground" />
+            <label class="form-check-label" ng-attr-for="showAnnotationNoTail{{ctrl.uid}}">None</label>
           </div>
         </div>
       </div>
