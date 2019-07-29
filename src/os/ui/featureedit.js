@@ -532,22 +532,22 @@ os.ui.FeatureEditCtrl.TEMP_ID = 'features#temporary';
 
 
 /**
- * Default label.
- * @type {!os.style.label.LabelConfig}
- */
-os.ui.FeatureEditCtrl.DEFAULT_LABEL = {
-  'column': 'name',
-  'showColumn': false
-};
-
-
-/**
  * @enum {string}
  */
 os.ui.FeatureEditCtrl.Field = {
   DESCRIPTION: 'description',
   MD_DESCRIPTION: '_mdDescription',
   NAME: 'name'
+};
+
+
+/**
+ * Default label.
+ * @type {!os.style.label.LabelConfig}
+ */
+os.ui.FeatureEditCtrl.DEFAULT_LABEL = {
+  'column': os.ui.FeatureEditCtrl.Field.NAME,
+  'showColumn': false
 };
 
 
