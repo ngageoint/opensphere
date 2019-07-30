@@ -590,3 +590,29 @@ $somesizes: map-merge((
   height: 1.5rem;
   width: 1.5rem;
 }
+
+
+// --------------------------------- Aspect Ratios ----------------------------------- //
+$aspect-ratios: ((16, 9), (4, 3));
+
+@each $w, $h in $aspect-ratios {
+  .u-aspect-ratio__#{$w}-#{$h} {
+    max-width: $w / $h * 89vh;
+    position: relative;
+    width: 100%;
+
+    &:after {
+      content: '';
+      display: block;
+      padding-bottom: ($h / $w) * 100%;
+    }
+
+    > * {
+      bottom: 0;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+  }
+}
