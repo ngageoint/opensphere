@@ -3,6 +3,7 @@ goog.provide('plugin.config.Provider');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('os.MapEvent');
+goog.require('os.data');
 goog.require('os.data.BaseDescriptor');
 goog.require('os.data.ConfigDescriptor');
 goog.require('os.data.DataManager');
@@ -35,10 +36,18 @@ plugin.config.Provider = function() {
   this.setId(plugin.config.ID);
 
   /**
-   * @type {Object|Array<Object>}
+   * Map of layer group ID to the layer configs.
+   * @type {!Object<string, (Array<Object>|Object)>}
    * @private
    */
-  this.layers_;
+  this.layers_ = {};
+
+  /**
+   * The base provider key for settings.
+   * @type {os.data.ProviderKey}
+   * @private
+   */
+  this.providerKey_ = os.data.ProviderKey.USER;
 };
 goog.inherits(plugin.config.Provider, os.ui.data.DescriptorProvider);
 os.implements(plugin.config.Provider, os.data.IDataProvider.ID);
@@ -59,7 +68,8 @@ plugin.config.Provider.LOGGER_ = goog.log.getLogger('plugin.config.Provider');
 plugin.config.Provider.prototype.configure = function(config) {
   plugin.config.Provider.base(this, 'configure', config);
   this.setToolTip(/** @type {?string} */ (config['tooltip'] || config['description']));
-  this.layers_ = /** @type {Object} */ (config['layers']);
+  this.layers_ = /** @type {Object} */ (config['layers']) || {};
+  this.providerKey_ = /** @type {os.data.ProviderKey} */ (config['providerKey']) || os.data.ProviderKey.USER;
 };
 
 
@@ -70,13 +80,30 @@ plugin.config.Provider.prototype.load = function(ping) {
   this.dispatchEvent(new os.data.DataProviderEvent(os.data.DataProviderEventType.LOADING, this));
   this.setChildren(null);
 
-  if (this.layers_) {
-    for (var id in this.layers_) {
-      this.loadConfig(id, this.layers_[id]);
-    }
+  for (var id in this.layers_) {
+    this.loadConfig(id, this.layers_[id]);
   }
 
   this.dispatchEvent(new os.data.DataProviderEvent(os.data.DataProviderEventType.LOADED, this));
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.config.Provider.prototype.removeDescriptor = function(descriptor, opt_clear) {
+  var result = plugin.config.Provider.base(this, 'removeDescriptor', descriptor, opt_clear);
+
+  var id = descriptor.getId();
+  var configId = id.replace(this.getId() + os.data.BaseDescriptor.ID_DELIMITER, '');
+  if (configId && configId in this.layers_) {
+    delete this.layers_[configId];
+
+    var settingsKey = this.getSettingsKey() + '.layers';
+    os.settings.set(settingsKey, this.layers_);
+  }
+
+  return result;
 };
 
 
@@ -91,15 +118,15 @@ plugin.config.Provider.prototype.loadConfig = function(id, config) {
   var descriptor = null;
 
   try {
-    var fullId = this.getId() + os.data.BaseDescriptor.ID_DELIMITER + id;
-    descriptor = /** @type {os.data.ConfigDescriptor} */ (os.dataManager.getDescriptor(fullId));
+    var descriptorId = this.getId() + os.data.BaseDescriptor.ID_DELIMITER + id;
+    descriptor = /** @type {os.data.ConfigDescriptor} */ (os.dataManager.getDescriptor(descriptorId));
 
     if (!descriptor) {
       descriptor = new os.data.ConfigDescriptor();
+      descriptor.setId(descriptorId);
     }
 
-    this.fixId(fullId, config);
-    this.addIcons(config);
+    this.fixId(descriptorId, config);
 
     descriptor.setBaseConfig(config);
     os.dataManager.addDescriptor(descriptor);
@@ -113,90 +140,60 @@ plugin.config.Provider.prototype.loadConfig = function(id, config) {
 
 
 /**
+ * Ensure layer config id's are prefixed with the descriptor id.
+ * @param {string} id The descriptor id.
+ * @param {Array<Object>|Object} config The layer config(s).
+ * @protected
+ */
+plugin.config.Provider.prototype.fixId = function(id, config) {
+  if (Array.isArray(config)) {
+    config.forEach(this.fixId.bind(this, id));
+  } else if (config) {
+    if (!('id' in config)) {
+      throw new Error('Config for "' + id + '" does not contain the "id" field!');
+    }
+    if (!config['id'].startsWith(id)) {
+      config['id'] = id + os.data.BaseDescriptor.ID_DELIMITER + config['id'];
+    }
+  }
+};
+
+
+/**
  * Get the settings key for the provider.
  * @return {string} The key.
+ * @protected
  */
 plugin.config.Provider.prototype.getSettingsKey = function() {
-  return 'userProviders.' + this.getId();
+  return this.providerKey_ + '.' + this.getId();
 };
 
 
 /**
  * Add a layer group to the provider and create a descriptor.
- * @param {string} groupId The layer group id.
- * @param {Object|Array<Object>} config The layer config(s) to add to the group.
- * @return {os.data.IDataDescriptor} The descriptor. If `groupId` is already registered with the provider, the existing
+ * @param {string} id The layer group id.
+ * @param {Array<Object>|Object} config The layer config(s) to add to the group.
+ * @return {os.data.IDataDescriptor} The descriptor. If `id` is already registered with the provider, the existing
  *                                   descriptor will be returned.
  */
-plugin.config.Provider.prototype.addLayerGroup = function(groupId, config) {
-  var fullId = this.getId() + os.data.BaseDescriptor.ID_DELIMITER + groupId;
-  var descriptor = os.dataManager.getDescriptor(fullId);
-  if (descriptor) {
-    return descriptor;
-  }
+plugin.config.Provider.prototype.addLayerGroup = function(id, config) {
+  var descriptor = null;
 
-  if (!this.layers_) {
-    this.layers_ = {};
-  }
+  if (config) {
+    if (!(id in this.layers_)) {
+      this.layers_[id] = config;
 
-  if (!(groupId in this.layers_)) {
-    this.layers_[groupId] = config;
+      var layersKey = this.getSettingsKey() + '.layers';
+      os.settings.set(layersKey, this.layers_);
 
-    // save a copy of the config from settings, so changes made by loadConfig aren't persisted
-    var layersKey = this.getSettingsKey() + '.layers';
-    os.settings.set(layersKey + '.' + groupId, os.object.unsafeClone(config));
-
-    descriptor = this.loadConfig(groupId, config);
+      descriptor = this.loadConfig(id, config);
+    } else {
+      var descriptorId = [this.getId(), id].join(os.data.BaseDescriptor.ID_DELIMITER);
+      descriptor = os.dataManager.getDescriptor(descriptorId);
+    }
   }
 
   return descriptor;
-};
-
-
-/**
- * @param {string} fullId
- * @param {Object|Array} conf
- * @protected
- */
-plugin.config.Provider.prototype.fixId = function(fullId, conf) {
-  if (Array.isArray(conf)) {
-    conf.forEach(this.fixId.bind(this, fullId));
-  } else {
-    if (!('id' in conf)) {
-      throw new Error('Config for "' + fullId + '" does not contain the "id" field!');
-    }
-    // ensure this isn't done more than once
-    var prefix = fullId + os.data.BaseDescriptor.ID_DELIMITER;
-    if (!conf['id'].startsWith(prefix)) {
-      conf['id'] = prefix + conf['id'];
-    }
-  }
-};
-
-
-/**
- * @param {Object|Array} conf
- */
-plugin.config.Provider.prototype.addIcons = function(conf) {
-  if (Array.isArray(conf)) {
-    conf.forEach(this.addIcons, this);
-  } else if (!conf['icons']) {
-    var icons = '';
-
-    var layerType = conf['layerType'];
-    if (layerType === os.layer.LayerType.TILES || layerType === os.layer.LayerType.GROUPS) {
-      icons += os.ui.Icons.TILES;
-    }
-    if (layerType === os.layer.LayerType.FEATURES || layerType === os.layer.LayerType.GROUPS) {
-      icons += os.ui.Icons.FEATURES;
-    }
-
-    if (conf['animate']) {
-      icons += os.ui.Icons.TIME;
-    }
-
-    conf['icons'] = icons;
-  }
 };
 
 
