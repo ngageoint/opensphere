@@ -4,6 +4,7 @@ goog.provide('os.ui.text.TuiEditorCtrl');
 goog.provide('os.ui.text.tuiEditorDirective');
 goog.require('goog.dom.safe');
 goog.require('ol.xml');
+goog.require('os.defines');
 goog.require('os.ui.Module');
 goog.require('os.ui.text.TuiEditorLang');
 goog.require('os.ui.text.TuiEditorMarkdownIt');
