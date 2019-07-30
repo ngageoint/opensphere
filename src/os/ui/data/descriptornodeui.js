@@ -93,7 +93,8 @@ os.ui.data.DescriptorNodeUICtrl.prototype.getRemoveWindowOptions = function() {
  * @protected
  */
 os.ui.data.DescriptorNodeUICtrl.prototype.getRemoveWindowText = function() {
-  return 'Are you sure you want to remove this layer from the application?';
+  return 'Are you sure you want to remove this layer from the application?' +
+      '<b>This action cannot be undone</b>, and will clear the application history.';
 };
 
 
@@ -120,7 +121,6 @@ os.ui.data.DescriptorNodeUICtrl.prototype.remove = function() {
 
 /**
  * Permanently remove the descriptor and associated data from the application.
- * @return {boolean} If the descriptor was removed.
  * @protected
  */
 os.ui.data.DescriptorNodeUICtrl.prototype.removeDescriptor = function() {
@@ -138,8 +138,7 @@ os.ui.data.DescriptorNodeUICtrl.prototype.removeDescriptor = function() {
 
     descriptor.dispose();
 
-    return true;
+    // restoring descriptors is currently not supported, so clear the application stack to avoid conflicts
+    os.command.CommandProcessor.getInstance().clearHistory();
   }
-
-  return false;
 };

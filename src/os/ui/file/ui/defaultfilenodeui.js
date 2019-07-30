@@ -46,18 +46,3 @@ os.ui.file.ui.DefaultFileNodeUICtrl.prototype.getRemoveWindowText = function() {
   return 'Are you sure you want to remove this file from the application? ' +
       '<b>This action cannot be undone</b>, and will clear the application history.';
 };
-
-
-/**
- * @inheritDoc
- */
-os.ui.file.ui.DefaultFileNodeUICtrl.prototype.removeDescriptor = function() {
-  var removed = os.ui.file.ui.DefaultFileNodeUICtrl.base(this, 'removeDescriptor');
-  if (removed) {
-    // since the file has been removed from indexedDB, we can no longer depend on anything in the command
-    // history since it may reference a file we can no longer access, so clear it
-    os.command.CommandProcessor.getInstance().clearHistory();
-  }
-
-  return removed;
-};
