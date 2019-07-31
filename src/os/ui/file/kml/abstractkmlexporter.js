@@ -69,6 +69,13 @@ os.ui.file.kml.AbstractKMLExporter = function() {
   this.gxNS = 'http://www.google.com/kml/ext/2.2';
 
   /**
+   * The KML os extension namespace to use for export.
+   * @type {string}
+   * @protected
+   */
+  this.osNS = plugin.file.kml.OS_NS;
+
+  /**
    * @type {!Object<string, function(!Element, T)>}
    * @protected
    */
@@ -237,9 +244,14 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getDefaultIcon = function() {
  *
  * @param {string} href The icon URI
  * @param {number=} opt_scale The icon scale
+ * @param {Object=} opt_options
  */
-os.ui.file.kml.AbstractKMLExporter.prototype.setDefaultIcon = function(href, opt_scale) {
+os.ui.file.kml.AbstractKMLExporter.prototype.setDefaultIcon = function(href, opt_scale, opt_options) {
   this.defaultIcon_.href = href;
+
+  if (typeof opt_options === 'object' && !isNaN(opt_options)) {
+    this.defaultIcon_.options = opt_options;
+  }
 
   if (typeof opt_scale === 'number' && !isNaN(opt_scale)) {
     this.defaultIcon_.scale = Math.max(0, opt_scale);
@@ -397,6 +409,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processItems = function() {
 
   var xmlnsUri = 'http://www.w3.org/2000/xmlns/';
   ol.xml.setAttributeNS(kml, xmlnsUri, 'xmlns:gx', this.gxNS);
+  ol.xml.setAttributeNS(kml, xmlnsUri, 'xmlns:os', this.osNS);
 
   // create the Document element
   this.kmlDoc = os.xml.appendElementNS('Document', this.kmlNS, kml);
@@ -732,6 +745,13 @@ os.ui.file.kml.AbstractKMLExporter.prototype.createStyle = function(item, styleI
 
     if (opt_icon.scale != null) {
       os.xml.appendElementNS('scale', this.kmlNS, iconStyleEl, opt_icon.scale);
+    }
+
+    if (opt_icon.options != null) {
+      var el = os.xml.appendElementNS('os:iconOptions', this.osNS, iconStyleEl, ' ');
+
+      var cdata = this.doc.createCDATASection(JSON.stringify(opt_icon.options));
+      el.appendChild(cdata);
     }
 
     // add the icon href
