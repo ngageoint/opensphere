@@ -33,6 +33,7 @@ os.style.IconReader.prototype.getOrCreateStyle = function(config) {
   if (config['fill'] && config['fill']['color']) {
     config['color'] = config['fill']['color'];
   }
+  var iconOptions = config['options'] || undefined;
   var hash = 31 * this.baseHash + goog.string.hashCode(JSON.stringify(config)) >>> 0;
   if (!this.cache[hash]) {
     var options = /** @type {olx.style.IconOptions} */ ({
@@ -43,6 +44,7 @@ os.style.IconReader.prototype.getOrCreateStyle = function(config) {
       color: config['color'],
       offset: config['offset'],
       offsetOrigin: config['offsetOrigin'],
+      options: iconOptions,
       rotation: config['rotation'],
       scale: config['scale'],
       size: config['size'],
@@ -141,6 +143,12 @@ os.style.IconReader.prototype.toConfig = function(style, obj) {
 
     if (src) {
       obj['src'] = src;
+    }
+
+    var options = iconStyle['options'] || undefined;
+
+    if (options) {
+      obj['options'] = options;
     }
   }
 };
