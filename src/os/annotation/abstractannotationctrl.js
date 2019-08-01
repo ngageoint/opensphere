@@ -22,26 +22,28 @@ os.annotation.UI_TEMPLATE =
     '<svg class="c-annotation__svg">' +
       '<path ng-style="{ \'fill\': ctrl.options.showDescription ? ctrl.options.bodyBG : ctrl.options.headerBG, ' +
           '\'stroke\': ctrl.options.showDescription ? ctrl.options.bodyBG : ctrl.options.headerBG, ' +
-          '\'stroke-width\': ctrl.options.showTail == \'line\' ? \'3px\' : \'0px\'}" />' +
+          '\'stroke-width\': ctrl.options.showTail == \'line\' ? \'3px\' : \'0px\' }" />' +
     '</svg>' +
-    '<div class="u-card-popup position-absolute text-right animate-fade u-hover-show"' +
+    '<div class="u-card-popup position-absolute text-right animate-fade u-hover-show" ' +
         ' ng-show="ctrl.options.editable">' +
-      '<button class="btn btn-sm btn-outline-primary border-0 bg-transparent"' +
-          'title="Hide text box"' +
+      '<button class="btn btn-sm btn-outline-primary border-0 bg-transparent" ' +
+          'title="Hide text box" ' +
           'ng-click="ctrl.hideAnnotation()">' +
         '<i class="c-glyph fa fa-fw fa-eye-slash"></i>' +
       '</button>' +
-      '<button class="btn btn-sm btn-outline-primary border-0 bg-transparent"' +
-          'title="Edit text box"' +
+      '<button class="btn btn-sm btn-outline-primary border-0 bg-transparent" ' +
+          'title="Edit text box" ' +
           'ng-click="ctrl.launchEditWindow()">' +
         '<i class="c-glyph fa fa-fw fa-pencil"></i>' +
       '</button>' +
     '</div>' +
-    '<div class="js-annotation c-window card h-100">' +
-      '<div class="card-header flex-shrink-0 text-truncate px-1 py-0 js-annotation__header" title="{{ctrl.name}}"' +
+    '<div class="js-annotation c-window card h-100" ' +
+      'ng-class="{ \'bg-transparent u-border-show-on-hover u-text-stroke\': !ctrl.options.showBackground }">' +
+      '<div class="flex-shrink-0 text-truncate px-1 py-0 js-annotation__header" title="{{ctrl.name}}" ' +
           'ng-show="ctrl.options.showName" ' +
-          'ng-class="!ctrl.options.showDescription && \'h-100 border-0\'" ' +
-          'ng-style="{background: ctrl.options.headerBG }" ' +
+          'ng-class="{ \'h-100 border-0\': !ctrl.options.showDescription, ' +
+            '\'card-header\': ctrl.options.showBackground }" ' +
+          'ng-style="{ background: ctrl.options.showBackground ? ctrl.options.headerBG : transparent }" ' +
           'ng-dblclick="ctrl.editName()">' +
         '<div ng-show="!ctrl.editingName">{{ctrl.name}}</div>' +
         '<div class="form-row p-1" ng-if="ctrl.editingName">' +
@@ -62,7 +64,7 @@ os.annotation.UI_TEMPLATE =
       '</div>' +
       '<div class="card-body p-1 u-overflow-y-auto d-flex flex-fill flex-column" ' +
           'ng-show="ctrl.options.showDescription" ' +
-          'ng-style="{background: ctrl.options.bodyBG }" ' +
+          'ng-style="{ background: ctrl.options.showBackground ? ctrl.options.bodyBG : transparent }" ' +
           'ng-dblclick="ctrl.editDescription()">' +
         '<tuieditor text="ctrl.description" edit="ctrl.editingDescription" is-required="false" maxlength="4000">' +
         '</tuieditor>' +
@@ -75,7 +77,8 @@ os.annotation.UI_TEMPLATE =
           '</button>' +
         '</div>' +
       '</div>' +
-    '</div>';
+    '</div>' +
+  '</div>';
 
 
 /**
@@ -270,7 +273,8 @@ os.annotation.AbstractAnnotationCtrl.prototype.initDragResize = function() {
       'handles': 'se',
       'start': this.onDragStart_.bind(this),
       'resize': this.updateTail.bind(this),
-      'stop': this.onDragStop_.bind(this)
+      'stop': this.onDragStop_.bind(this),
+      'autoHide': true
     });
   }
 };
