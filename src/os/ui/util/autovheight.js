@@ -169,12 +169,12 @@ os.ui.util.AutoVHeightCtrl.prototype.onResize_ = function() {
 
     var siblingHeight = 0;
     goog.object.getValues(os.ui.windowCommonElements).forEach(function(sibling) {
-      siblingHeight += ($(/** @type {string} */ (sibling)).outerHeight());
+      siblingHeight += ($(/** @type {string} */ (sibling)).outerHeight(true));
     });
 
     if (this.scope_['siblings']) {
       $.makeArray($(this.scope_['siblings'])).forEach(function(sibling) {
-        siblingHeight += ($(/** @type {string} */ (sibling)).outerHeight());
+        siblingHeight += ($(/** @type {string} */ (sibling)).outerHeight(true));
       });
     }
 

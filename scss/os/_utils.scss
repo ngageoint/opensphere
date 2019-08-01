@@ -597,7 +597,7 @@ $aspect-ratios: ((16, 9), (4, 3));
 
 @each $w, $h in $aspect-ratios {
   .u-aspect-ratio__#{$w}-#{$h} {
-    max-width: $w / $h * 89vh;
+    max-width: $w / $h * 84vh;
     position: relative;
     width: 100%;
 
