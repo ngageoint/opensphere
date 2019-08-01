@@ -2,11 +2,6 @@
 
 set -e
 
-# temp debug so that release dry-runs do not takae so long
-if $RELEASE; then
-  exit 0
-fi
-
 yarn run build
 yarn run test
 #
