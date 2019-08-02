@@ -346,10 +346,9 @@ os.annotation.FeatureAnnotationCtrl.prototype.updateTailAbsolute = function() {
     var cardCenter = [cardOffsetX + cardRect.width / 2, cardOffsetY + cardRect.height / 2];
     // Changes the annotation tail style
     var anchorWidth = Math.min(cardRect.height, cardRect.width) * .33;
-    if (this['options'].showTail === os.annotation.TailStyle.NOTAIL) {
+    if (this['options'].showTail === os.annotation.TailStyle.NOTAIL || !this['options'].showBackground) {
       anchorWidth = 0;
-    }
-    if (this['options'].showTail === os.annotation.TailStyle.LINETAIL) {
+    } else if (this['options'].showTail === os.annotation.TailStyle.LINETAIL) {
       anchorWidth = 4;
     }
     var linePath = os.annotation.AbstractAnnotationCtrl.createTailPath(cardCenter, pathTarget, anchorWidth);
@@ -414,10 +413,9 @@ os.annotation.FeatureAnnotationCtrl.prototype.updateTailFixed = function() {
     var cardCenter = [cardRect.x + cardRect.width / 2, cardRect.y + cardRect.height / 2];
     // Changes the annotation tail style
     var anchorWidth = Math.min(cardRect.height, cardRect.width) * .33;
-    if (this['options'].showTail === os.annotation.TailStyle.NOTAIL) {
+    if (this['options'].showTail === os.annotation.TailStyle.NOTAIL || !this['options'].showBackground) {
       anchorWidth = 0;
-    }
-    if (this['options'].showTail === os.annotation.TailStyle.LINETAIL) {
+    } else if (this['options'].showTail === os.annotation.TailStyle.LINETAIL) {
       anchorWidth = 4;
     }
     var linePath = os.annotation.AbstractAnnotationCtrl.createTailPath(cardCenter, targetPixel, anchorWidth);
