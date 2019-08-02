@@ -285,8 +285,9 @@ goog.define('os.file.ZIP_PATH', 'vendor/zip-js');
       // load the inflate/deflate scripts locally
       goog.net.jsloader.safeLoad(zipPath + 'inflate.js');
       goog.net.jsloader.safeLoad(zipPath + 'deflate.js');
-    } else {
-      // set the relative path to worker scripts so zip.js can find them
+    } else if (!zip.workerScriptsPath) {
+      // set the relative path to worker scripts so zip.js can find them. zip.js defaults this value to null, so do
+      // not replace the value if one was already set.
       zip.workerScriptsPath = zipPath;
     }
   }
