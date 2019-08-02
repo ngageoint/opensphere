@@ -94,7 +94,7 @@ os.annotation.FeatureAnnotation.prototype.createUI = function() {
 
   if (!options.position) {
     var geometry = this.feature.getGeometry();
-    var coordinate = geometry instanceof ol.geom.SimpleGeometry ? geometry.getFirstCoordinate() : [0, 0];
+    var coordinate = geometry instanceof ol.geom.SimpleGeometry ? geometry.getFirstCoordinate() : undefined;
     options.position = coordinate;
   }
 
