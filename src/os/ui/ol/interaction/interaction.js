@@ -10,7 +10,8 @@ goog.require('os.geo');
  */
 os.ui.ol.interaction.USES_KEYDOWN = goog.userAgent.IE ||
     goog.userAgent.EDGE ||
-    goog.userAgent.WEBKIT && goog.userAgent.isVersionOrHigher('525');
+    (goog.userAgent.WEBKIT && goog.userAgent.isVersionOrHigher('525')) ||
+    (goog.userAgent.GECKO && goog.userAgent.isVersionOrHigher('65'));
 
 
 /**
