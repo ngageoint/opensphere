@@ -35,6 +35,10 @@ $close-tab-font-size: .5rem !default;
     @include font-awesome();
     content: '\f054';
   }
+
+  &.c-close-tab-left__closed::before {
+    content: '\f053';
+  }
 }
 
 // position on the right side of an element
@@ -47,5 +51,9 @@ $close-tab-font-size: .5rem !default;
   &::before {
     @include font-awesome();
     content: '\f053';
+  }
+
+  &.c-close-tab-right__closed::before {
+    content: '\f054';
   }
 }
