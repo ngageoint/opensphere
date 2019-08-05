@@ -8,6 +8,7 @@ function main() {
   checkArguments
   configureSound
   overrideSettings
+  patchWindows
   startWebServer
   runTests
   stopWebServer
@@ -49,6 +50,8 @@ function setVariables() {
   export TEST_PATH=cypress/integration/
   
   export TEST_RESULT
+
+  export CYPRESS_BIN_CMD=node_modules/.bin/cypress.cmd
 }
 
 function checkArguments() {
@@ -127,6 +130,15 @@ function overrideSettings() {
 
   echo "INFO: creating OS settings file: $SETTINGS_OS_TARGET"
   cp $SETTINGS_OS_SOURCE $SETTINGS_OS_TARGET
+}
+
+function patchWindows() {
+  if [ "$OSTYPE" == "msys" ] && ! [ -f "$CYPRESS_BIN_CMD" ]; then
+    echo "INFO: Tests running under unpatched windows, patching yarn install"
+    ./cypress/support/windows/patch-windows.sh
+  else
+    echo "INFO: Tests running under patched windows, no action"
+  fi
 }
 
 function startWebServer() {
