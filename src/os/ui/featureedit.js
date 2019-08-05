@@ -1317,14 +1317,20 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
         feature.set(os.style.StyleField.ROTATION_COLUMN, '', true);
       }
     }
-  } else if (this.originalGeometry) {
+  } else if (this.originalGeometry && feature.getGeometry() === this.originalGeometry) {
     feature.setGeometry(this.originalGeometry.clone());
   }
 
   var geom = feature.getGeometry();
+
   if (geom) {
-    os.ui.FeatureEditCtrl.setGeometryRecursive(geom, os.data.RecordField.ALTITUDE_MODE, this['altitudeMode'], true);
-    geom.changed();
+    var altMode = geom.get(os.data.RecordField.ALTITUDE_MODE);
+    altMode = Array.isArray(altMode) && altMode.length ? altMode[0] : altMode;
+
+    if (altMode !== this['altitudeMode']) {
+      os.ui.FeatureEditCtrl.setGeometryRecursive(geom, os.data.RecordField.ALTITUDE_MODE, this['altitudeMode'], true);
+      geom.changed();
+    }
   }
 };
 
