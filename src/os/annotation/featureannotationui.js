@@ -181,10 +181,10 @@ os.annotation.FeatureAnnotationCtrl.prototype.onFeatureChange_ = function() {
     this['description'] = os.annotation.getDescriptionText(this.feature);
     this['options'] = /** @type {!osx.annotation.Options} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
 
-    var geometry = this['feature'].getGeometry();
+    var geometry = /** @type {ol.geom.SimpleGeometry} */ (this.feature.getGeometry());
     if (geometry) {
       var coords = geometry.getFirstCoordinate();
-      this['options']['position'] = coords || [0, 0];
+      this['options'].position = coords || [0, 0];
       this.feature.set(os.annotation.OPTIONS_FIELD, this['options']);
     }
 
