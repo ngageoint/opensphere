@@ -1779,6 +1779,15 @@ plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feat
     return;
   }
 
+  var heightReference = this.getHeightReference(context.layer, feature, geometry);
+  if ((heightReference !== Cesium.HeightReference.CLAMP_TO_GROUND &&
+    (primitive instanceof Cesium.GroundPolylinePrimitive || primitive instanceof Cesium.GroundPrimitive)) ||
+    (heightReference === Cesium.HeightReference.CLAMP_TO_GROUND &&
+    (primitive instanceof Cesium.Polyline || primitive instanceof Cesium.Primitive))) {
+    // we cannot update it; it must be recreated
+    primitive = null;
+  }
+
   if (primitive && geomType != ol.geom.GeometryType.GEOMETRY_COLLECTION) {
     // already exists - update it
     this.updatePrimitiveLike(feature, geometry, style, context, primitive);
