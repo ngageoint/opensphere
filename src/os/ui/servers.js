@@ -7,6 +7,7 @@ goog.require('goog.log.Logger');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
 goog.require('os.config.Settings');
+goog.require('os.data');
 goog.require('os.data.DataManager');
 goog.require('os.defines');
 goog.require('os.im.ImportProcess');
@@ -212,8 +213,8 @@ os.ui.ServersCtrl.prototype.update = function(opt_prompt) {
         }
       }
 
-      os.settings.set([
-        provider.getEditable() ? 'userProviders' : 'providers', provider.getId(), 'enabled'], enabled);
+      var providerKey = provider.getEditable() ? os.data.ProviderKey.USER : os.data.ProviderKey.ADMIN;
+      os.settings.set([providerKey, provider.getId(), 'enabled'], enabled);
 
       if (!enabled) {
         this.checkForActiveDescriptors_(provider, true);
@@ -380,7 +381,7 @@ os.ui.ServersCtrl.prototype.remove = function(provider, opt_prompt) {
   for (var i = 0, ii = descList.length; i < ii; i++) {
     os.dataManager.removeDescriptor(descList[i]);
   }
-  os.settings.delete(['userProviders', provider.getId()]);
+  os.settings.delete([os.data.ProviderKey.USER, provider.getId()]);
 
   os.dataManager.removeProvider(provider.getId());
   goog.log.info(os.ui.ServersCtrl.LOGGER_, 'Removed provider "' + provider.getLabel() + '"');

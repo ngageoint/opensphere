@@ -28,6 +28,7 @@ goog.require('ol.style.Stroke');
 goog.require('ol.style.Style');
 goog.require('ol.tilegrid.TileGrid');
 goog.require('os.control.ScaleLine');
+goog.require('os.data');
 goog.require('os.fn');
 goog.require('os.map');
 goog.require('os.map.IMapContainer');
@@ -394,7 +395,7 @@ os.ui.ol.OLMap.prototype.getInteractions_ = function() {
  * @private
  */
 os.ui.ol.OLMap.prototype.getLayers_ = function() {
-  var provider = /** @type {Object<string, *>} */ (os.settings.get(['providers', 'basemap']));
+  var provider = /** @type {Object<string, *>} */ (os.settings.get([os.data.ProviderKey.ADMIN, 'basemap']));
   var baseMapConfigs = /** @type {Object<string, Object<string, *>>} */ (provider['maps']);
   var layers = [];
   var hasDefault = false;

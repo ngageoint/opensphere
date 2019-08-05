@@ -3,6 +3,7 @@ goog.provide('os.ui.ProviderImportCtrl');
 goog.require('goog.events.EventType');
 goog.require('goog.string');
 goog.require('os.config.Settings');
+goog.require('os.data');
 goog.require('os.ui.window');
 
 
@@ -145,7 +146,7 @@ os.ui.ProviderImportCtrl.prototype.onTestFinished = function(event) {
  */
 os.ui.ProviderImportCtrl.prototype.saveAndClose = function() {
   var config = this.getConfig();
-  os.settings.set(['userProviders', this.dp.getId()], config);
+  os.settings.set([os.data.ProviderKey.USER, this.dp.getId()], config);
   // We want to add the test instance as replacement rather than re-configuring the old
   // povider. This avoids reloading the provider again after we just did that to test it.
   os.dataManager.removeProvider(this.dp.getId());
