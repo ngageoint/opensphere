@@ -112,12 +112,14 @@ os.ui.ServersCtrl.prototype.updateData_ = function() {
   this.scope_['all'] = true;
   var data = [];
 
+  var im = os.ui.im.ImportManager.getInstance();
   if (list) {
     var id = 0;
     for (var i = 0, n = list.length; i < n; i++) {
       var item = list[i];
 
       if (item.includeInServers()) {
+        var type = os.dataManager.getProviderTypeByClass(item.constructor);
         data.push({
           'id': id,
           'enabled': item.getEnabled(),
@@ -125,7 +127,8 @@ os.ui.ServersCtrl.prototype.updateData_ = function() {
           'loading': false,
           'error': item.getError(),
           'label': item.getLabel(),
-          'item': item
+          'item': item,
+          'hasView': !!im.getImportUI(type)
         });
 
         if (item instanceof os.ui.server.AbstractLoadingServer) {
