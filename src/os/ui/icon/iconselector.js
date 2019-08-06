@@ -65,17 +65,38 @@ os.ui.icon.IconSelectorCtrl = function($scope, $element) {
    */
   this.element_ = $element;
 
+  /**
+   * @type {boolean}
+   */
+  this.scope_['showResetButton'] = false;
+
   this.scope_['tabs'] = os.ui.icon.IconSelectorManager.getInstance().getAll();
   this.scope_['showtabs'] = this.scope_['tabs'].length === 1 ? false : true;
   this.scope_['activeTab'] = this.scope_['tabs'].length > 0 ? this.scope_['tabs'][0]['name'] : '';
+  this.scope_['tabMap'] = {};
 
   for (var i = 0; i < this.scope_['tabs'].length; i++) { // wrap each icon selector in tab structure
     var markup = '<div class="d-flex flex-fill" ng-if="activeTab == \'' +
         this.scope_['tabs'][i]['name'] + '\'">' + this.scope_['tabs'][i]['html'] + '</div>';
+
+    this.scope_['tabMap'][this.scope_['tabs'][i]['name']] = this.scope_['tabs'][i];
+
     if (!os.ui.list.exists(os.ui.icon.ICON_SELECTORS, markup)) {
       os.ui.list.add(os.ui.icon.ICON_SELECTORS, markup, 201);
     }
   }
+
+  this.scope_.$watch('activeTab', function() {
+    this['showResetButton'] = false;
+  }.bind(this));
+
+  this.scope_.$on('iconselector.showreseticon', function(event) {
+    this['showResetButton'] = true;
+  }.bind(this));
+
+  this.scope_.$on('iconselector.closewindow', function(event) {
+    this.okay();
+  }.bind(this));
 
   this.scope_.$emit(os.ui.WindowEventType.READY);
   $scope.$on('$destroy', this.destroy_.bind(this));
@@ -146,6 +167,15 @@ os.ui.icon.IconSelectorCtrl.prototype.okay = function() {
  */
 os.ui.icon.IconSelectorCtrl.prototype.setTab = function(name) {
   this.scope_['activeTab'] = name;
+};
+
+
+/**
+ * Emits signal that certain button is clicked
+ * @export
+ */
+os.ui.icon.IconSelectorCtrl.prototype.reset = function() {
+  this.scope_.$broadcast('iconselector.reseticon');
 };
 
 

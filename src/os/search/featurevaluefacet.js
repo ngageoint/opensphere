@@ -27,5 +27,6 @@ goog.inherits(os.search.FeatureValueFacet, os.search.ValueFacet);
  * @inheritDoc
  */
 os.search.FeatureValueFacet.prototype.getValue = function(item) {
-  return /** @type {?string} */ (item.get(this.field));
+  var value = item.get(this.field);
+  return value != null ? String(value) : null;
 };

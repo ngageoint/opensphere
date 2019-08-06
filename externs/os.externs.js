@@ -259,7 +259,8 @@ osx.icon;
 /**
  * @typedef {{
  *   title: (string|undefined),
- *   path: string
+ *   path: string,
+ *   options: (Object<string, *>|undefined)
  * }}
  */
 osx.icon.Icon;

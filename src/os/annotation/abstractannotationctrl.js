@@ -20,7 +20,9 @@ os.annotation.UI_TEMPLATE =
   '<div class="c-annotation u-hover-container" ' +
     'ng-class="{\'c-annotation__editing\': ctrl.editingDescription || ctrl.editingName}">' +
     '<svg class="c-annotation__svg">' +
-      '<path ng-style="{ fill: ctrl.options.showDescription ? ctrl.options.bodyBG : ctrl.options.headerBG }"/>' +
+      '<path ng-style="{ \'fill\': ctrl.options.showDescription ? ctrl.options.bodyBG : ctrl.options.headerBG, ' +
+          '\'stroke\': ctrl.options.showDescription ? ctrl.options.bodyBG : ctrl.options.headerBG, ' +
+          '\'stroke-width\': ctrl.options.showTail == \'line\' ? \'3px\' : \'0px\' }" />' +
     '</svg>' +
     '<div class="u-card-popup position-absolute text-right animate-fade u-hover-show" ' +
         ' ng-show="ctrl.options.editable">' +
@@ -504,10 +506,19 @@ os.annotation.AbstractAnnotationCtrl.prototype.updateTailFixed = function() {};
  * @param {!Array<number>} center The annotation center coordinate, in pixels.
  * @param {!Array<number>} target The annotation target coordinate, in pixels.
  * @param {number} radius The anchor line radius, in pixels.
+ * @param {string=} opt_tailStyle Optional tail style.
  * @return {string} The SVG tail path.
  * @protected
  */
-os.annotation.AbstractAnnotationCtrl.createTailPath = function(center, target, radius) {
+os.annotation.AbstractAnnotationCtrl.createTailPath = function(center, target, radius, opt_tailStyle) {
+  if (opt_tailStyle == os.annotation.TailStyle.NOTAIL) {
+    return '';
+  }
+
+  if (opt_tailStyle == os.annotation.TailStyle.LINETAIL) {
+    return 'M' + center[0] + ' ' + center[1] + ' L' + target[0] + ' ' + target[1];
+  }
+
   var anchor1 = os.annotation.AbstractAnnotationCtrl.rotateAnchor(center, target, radius);
   var anchor2 = os.annotation.AbstractAnnotationCtrl.rotateAnchor(center, target, -radius);
 
