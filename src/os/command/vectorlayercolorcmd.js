@@ -16,18 +16,38 @@ goog.require('os.ui');
  * @param {string} layerId
  * @param {Array<number>|string} color
  * @param {(Array<number>|string)=} opt_oldColor
+ * @param {string=} opt_changeMode
  * @constructor
  */
-os.command.VectorLayerColor = function(layerId, color, opt_oldColor) {
+os.command.VectorLayerColor = function(layerId, color, opt_oldColor, opt_changeMode) {
   os.command.VectorLayerColor.base(this, 'constructor', layerId, color, opt_oldColor);
-  this.title = 'Change Color';
-  this.metricKey = os.metrics.Layer.VECTOR_COLOR;
+
+  this.changeMode = opt_changeMode;
+
+  switch (this.changeMode) {
+    case os.command.VectorLayerColor.MODE.FILL:
+      this.title = 'Change Fill Color';
+      this.metricKey = os.metrics.Layer.VECTOR_FILL_COLOR;
+      this.defaultColor = os.command.VectorLayerColor.DEFAULT_FILL_COLOR;
+      break;
+    case os.command.VectorLayerColor.MODE.STROKE:
+      this.title = 'Change Stroke Color';
+      this.metricKey = os.metrics.Layer.VECTOR_STROKE_COLOR;
+      this.defaultColor = os.command.VectorLayerColor.DEFAULT_COLOR;
+      break;
+    default:
+    case os.command.VectorLayerColor.MODE.COMBINED:
+      this.title = 'Change Color';
+      this.metricKey = os.metrics.Layer.VECTOR_COLOR;
+      this.defaultColor = os.command.VectorLayerColor.DEFAULT_COLOR;
+      break;
+  }
 
   if (!color) {
     var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.layerId));
     if (layer) {
       var options = layer.getLayerOptions();
-      color = /** @type {string} */ (options && options['baseColor'] || os.command.VectorLayerColor.DEFAULT_COLOR);
+      color = /** @type {string} */ (options && options['baseColor'] || this.defaultColor);
     }
   }
 
@@ -45,11 +65,43 @@ os.command.VectorLayerColor.DEFAULT_COLOR = 'rgba(255,255,255,1)';
 
 
 /**
+ * @type {string}
+ * @const
+ */
+os.command.VectorLayerColor.DEFAULT_FILL_COLOR = 'rgba(255,255,255,0)';
+
+
+os.command.VectorLayerColor.MODE = {
+  COMBINED: 'combined',
+  FILL: 'fill',
+  STROKE: 'stroke'
+};
+
+/**
  * @inheritDoc
  */
 os.command.VectorLayerColor.prototype.getOldValue = function() {
   var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-  return config ? os.style.getConfigColor(config) : os.command.VectorLayerColor.DEFAULT_COLOR;
+  var ret;
+
+  if (config) {
+    switch (this.changeMode) {
+      case os.command.VectorLayerColor.MODE.FILL:
+        ret = os.style.getConfigColor(config, false, os.style.StyleField.FILL);
+        break;
+      case os.command.VectorLayerColor.MODE.STROKE:
+        ret = os.style.getConfigColor(config, false, os.style.StyleField.STROKE);
+        break;
+      default:
+      case os.command.VectorLayerColor.MODE.COMBINED:
+        ret = os.style.getConfigColor(config);
+        break;
+    }
+  } else {
+    ret = this.defaultColor;
+  }
+
+  return ret;
 };
 
 
@@ -58,18 +110,38 @@ os.command.VectorLayerColor.prototype.getOldValue = function() {
  */
 os.command.VectorLayerColor.prototype.applyValue = function(config, value) {
   var color = os.style.toRgbaString(/** @type {string} */ (value));
-  os.style.setConfigColor(config, color);
 
-  // Make sure the fill color and opacity are updated as well
-  if (config['fillColor']) {
-    config['fillColor'] = color;
-  }
-  if (config['fillOpacity'] !== undefined) {
-    var colorArray = os.color.toRgbArray(value);
-    config['fillOpacity'] = colorArray[3];
-  }
+  switch (this.changeMode) {
+    case os.command.VectorLayerColor.MODE.FILL:
+      os.style.setConfigColor(config, color, [os.style.StyleField.FILL]);
 
-  os.ui.adjustIconSet(this.layerId, color);
+      // Make sure the fill color and opacity are updated as well
+      if (config['fillColor']) {
+        config['fillColor'] = color;
+      }
+      break;
+    case os.command.VectorLayerColor.MODE.STROKE:
+      os.style.setConfigColor(config, color,
+          [os.style.StyleField.STROKE, os.style.StyleField.IMAGE]);
+      os.ui.adjustIconSet(this.layerId, color);
+      break;
+    default:
+    case os.command.VectorLayerColor.MODE.COMBINED:
+      os.style.setConfigColor(config, color);
+
+      // Make sure the fill color and opacity are updated as well
+      if (config['fillColor']) {
+        config['fillColor'] = color;
+      }
+      if (config['fillOpacity'] !== undefined) {
+        var colorArray = os.color.toRgbArray(value);
+        config['fillOpacity'] = colorArray[3];
+      }
+
+      os.ui.adjustIconSet(this.layerId, color);
+
+      break;
+  }
 
   os.command.VectorLayerColor.base(this, 'applyValue', config, value);
 };

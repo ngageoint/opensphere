@@ -3,10 +3,6 @@ goog.provide('plugin.im.action.feature.ui.styleConfigDirective');
 
 goog.require('goog.color');
 goog.require('os.color');
-goog.require('os.command.FeatureColor');
-goog.require('os.command.FeatureFillColor');
-goog.require('os.command.FeatureFillOpacity');
-goog.require('os.command.FeatureOpacity');
 goog.require('os.object');
 goog.require('os.style');
 goog.require('os.ui.Module');

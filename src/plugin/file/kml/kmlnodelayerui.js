@@ -3,8 +3,6 @@ goog.provide('plugin.file.kml.KMLNodeLayerUICtrl.UIEventType');
 goog.provide('plugin.file.kml.kmlNodeLayerUIDirective');
 goog.require('os.command.FeatureCenterShape');
 goog.require('os.command.FeatureColor');
-goog.require('os.command.FeatureFillColor');
-goog.require('os.command.FeatureFillOpacity');
 goog.require('os.command.FeatureIcon');
 goog.require('os.command.FeatureLabel');
 goog.require('os.command.FeatureLabelColor');
@@ -14,8 +12,6 @@ goog.require('os.command.FeatureOpacity');
 goog.require('os.command.FeatureShape');
 goog.require('os.command.FeatureShowLabel');
 goog.require('os.command.FeatureSize');
-goog.require('os.command.FeatureStrokeColor');
-goog.require('os.command.FeatureStrokeOpacity');
 goog.require('os.command.ParallelCommand');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.ui.Module');
@@ -617,7 +613,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onColorChange = function(event, val
        * @return {os.command.ICommand}
        */
       function(layerId, featureId) {
-        return new os.command.FeatureStrokeColor(layerId, featureId, colorValue);
+        return new os.command.FeatureColor(layerId, featureId, colorValue, null, os.command.FeatureColor.MODE.STROKE);
       };
 
     this.createFeatureCommand(fn2);
@@ -633,7 +629,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onColorChange = function(event, val
        * @return {os.command.ICommand}
        */
       function(layerId, featureId) {
-        return new os.command.FeatureFillColor(layerId, featureId, colorValue);
+        return new os.command.FeatureColor(layerId, featureId, colorValue, null, os.command.FeatureColor.MODE.FILL);
       };
 
     this.createFeatureCommand(fn3);
@@ -645,7 +641,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onColorChange = function(event, val
        * @return {os.command.ICommand}
        */
       function(layerId, featureId) {
-        return new os.command.FeatureStrokeColor(layerId, featureId, colorValue);
+        return new os.command.FeatureColor(layerId, featureId, colorValue, null, os.command.FeatureColor.MODE.STROKE);
       };
 
     this.createFeatureCommand(fn4);
@@ -672,7 +668,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onFillColorChange = function(event,
      * @return {os.command.ICommand}
      */
     function(layerId, featureId) {
-      return new os.command.FeatureFillColor(layerId, featureId, colorValue);
+      return new os.command.FeatureColor(layerId, featureId, colorValue, null, os.command.FeatureColor.MODE.FILL);
     };
 
   this.createFeatureCommand(fn);
@@ -814,7 +810,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onOpacityChange = function(event, v
          * @return {os.command.ICommand}
          */
         function(layerId, featureId) {
-          return new os.command.FeatureStrokeOpacity(layerId, featureId, value);
+          return new os.command.FeatureOpacity(layerId, featureId, value, null, os.command.FeatureOpacity.MODE.STROKE);
         };
 
       this.createFeatureCommand(fn2);
@@ -832,6 +828,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onOpacityChange = function(event, v
  */
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.onFillOpacityChange = function(event, value) {
   event.stopPropagation();
+  console.log('onFillOpacityChange', value);
 
   var fn =
       /**
@@ -840,7 +837,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onFillOpacityChange = function(even
        * @return {os.command.ICommand}
        */
       function(layerId, featureId) {
-        return new os.command.FeatureFillOpacity(layerId, featureId, value);
+        return new os.command.FeatureOpacity(layerId, featureId, value, null, os.command.FeatureOpacity.MODE.FILL);
       };
 
   this.createFeatureCommand(fn);
