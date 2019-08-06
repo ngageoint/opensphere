@@ -134,15 +134,19 @@ function overrideSettings() {
 
 function patchWindows() {
   if [ "$OSTYPE" == "msys" ] && ! [ -f "$CYPRESS_BIN_CMD" ]; then
-    echo "INFO: Tests running under unpatched windows, patching yarn install"
+    echo "INFO: tests running under unpatched windows, patching yarn install"
     ./cypress/support/windows/patch-windows.sh
   else
-    echo "INFO: Tests running under patched windows, no action"
+    echo "INFO: tests running under patched windows, no action"
   fi
 }
 
 function startWebServer() {
-  webServerProcess=$(ps -ef | grep http-server | grep -v grep)
+  if [ "$OSTYPE" == "msys" ]; then
+    webServerProcess="$(netstat -ano | findstr 0.0.0.0:8282 | awk '{print $5}')"
+  else
+    webServerProcess=$(ps -ef | grep http-server | grep -v grep)
+  fi
   
   if [ -z "$webServerProcess" ]; then
     SERVER_STARTED=true
@@ -203,16 +207,18 @@ function runTests() {
 }
 
 function stopWebServer() {
-  if pgrep "node" > /dev/null; then
-    if $SERVER_STARTED; then
-      echo 'INFO: terminating web server'
-      npm run stop-server
+  if $SERVER_STARTED; then
+    echo 'INFO: terminating web server'
+    if [ "$OSTYPE" == "msys" ]; then
+      webServerProcess="$(netstat -ano | findstr 0.0.0.0:8282 | awk '{print $5}')"
+      taskkill //PID $webServerProcess //F
     else
-      echo 'INFO: server was running before tests started, leaving it running'
+      npm run stop-server
     fi
   else
-    echo 'INFO: web server is not running, nothing to terminate'
+    echo 'INFO: server was running before tests started, leaving it running'
   fi
+
 }
 
 function restoreSettings() {
