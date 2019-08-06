@@ -381,7 +381,9 @@ os.layer.Vector.prototype.getIcons = function() {
 
   if (config) {
     var color = os.style.getConfigColor(config, true);
-    return os.ui.createIconSet(this.getId(), this.getSVGSet(), this.getFASet(), color);
+    if (color) {
+      return os.ui.createIconSet(this.getId(), this.getSVGSet(), this.getFASet(), color);
+    }
   }
 
   return this.getIconSet().join('');

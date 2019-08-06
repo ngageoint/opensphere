@@ -225,7 +225,9 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getFillOpacity = function() {
             config = config[0];
           }
           var color = os.style.getConfigColor(config, true, os.style.StyleField.FILL);
-          opacity = color[3];
+          if (color) {
+            opacity = color[3];
+          }
         }
       }
     }
@@ -415,7 +417,9 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getOpacity = function() {
           }
 
           var color = os.style.getConfigColor(config, true, os.style.StyleField.STROKE);
-          opacity = color[3];
+          if (color) {
+            opacity = color[3];
+          }
         }
       }
     }
