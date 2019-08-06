@@ -71,7 +71,7 @@ Please be aware of the coding styles and linux/windows end of line differences. 
 Otherwise, use the WSL terminal to run project related commands, and code editing in your Windows editor of choice.
 
 ## E2E Test Setup
-Cypress will not run correctly under Ubuntu with WSL 1 or WSL 2 (see https://github.com/cypress-io/cypress/issues/4145).  However, Cypress can still run via Git Bash alongside an Ubuntu/WSL 1 installation.  On the first execution under Windows via any yarn test:cypress script, a patch will be applied to the yarn installation that allows Cypress to run under Git Bash.
+Cypress will not run correctly under Ubuntu with WSL 1 or WSL 2 (see https://github.com/cypress-io/cypress/issues/4145).  However, Cypress can still run via Git Bash alongside an Ubuntu/WSL 1 installation.  On the first execution under Windows via yarn test:cypress, a patch will be applied to the yarn installation that allows Cypress to run under Git Bash.
 
 To support running Cypress under Git Bash, be sure the following are installed and configured under Windows (not just under Ubuntu): git for windows, node.js, npm, and yarn.  Be sure to run yarn install and yarn build under Ubuntu, not Git Bash.  Git Bash can then be used to start Cypress and run the tests.
 
