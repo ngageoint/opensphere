@@ -63,7 +63,7 @@ os.ui.icon.IconPaletteCtrl = function($scope) {
     if (con && con['path']) {
       for (var i = 0; i < ics.length; i++) {
         if (ics[i]['path'] == con['path']) {
-          this.pick(ics[i]['path']);
+          this.pick(ics[i]['path'], ics[i]['title'], ics[i]['options']);
           break;
         }
       }
@@ -100,9 +100,13 @@ os.ui.icon.IconPaletteCtrl.prototype.getIconSrc = function(src) {
  * Notify parent scope that a icon was chosen.
  *
  * @param {string} iconPath The selected iconPath
+ * @param {string} iconTitle The selected iconTitle
+ * @param {Object|undefined} options The selected options
  * @export
  */
-os.ui.icon.IconPaletteCtrl.prototype.pick = function(iconPath) {
+os.ui.icon.IconPaletteCtrl.prototype.pick = function(iconPath, iconTitle, options) {
   this.scope_['selected']['path'] = iconPath;
+  this.scope_['selected']['title'] = iconTitle;
+  this.scope_['selected']['options'] = options;
   os.ui.apply(this.scope_);
 };

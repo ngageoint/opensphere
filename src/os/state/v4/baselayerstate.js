@@ -112,6 +112,7 @@ os.state.v4.IconTag = {
   POINT_SIZE: 'iconDefaultPointSize',
   DEFAULT: 'iconDefaultTo',
   SCALE: 'iconScale',
+  OPTIONS: 'iconOptions',
   URL: 'defaultIconURL',
   X_OFFSET: 'iconXOffset',
   Y_OFFSET: 'iconYOffset',
@@ -552,6 +553,10 @@ os.state.v4.BaseLayerState.prototype.configKeyToXML = function(layerConfig, type
       if (layerConfig['size'] && typeof layerConfig['size'] === 'number') {
         // use the feature size to convert into a scale if it's available
         iconScale = Math.floor(/** @type {number} */ (layerConfig['size']) * 10);
+      }
+      var iconOptions = value['options'] || undefined;
+      if (iconOptions) {
+        os.xml.appendElement(os.state.v4.IconTag.OPTIONS, iconEl, JSON.stringify(iconOptions));
       }
       os.xml.appendElement(os.state.v4.IconTag.SCALE, iconEl, iconScale);
       os.xml.appendElement(os.state.v4.IconTag.URL, iconEl, value['path']);
@@ -1025,16 +1030,20 @@ os.state.v4.BaseLayerState.prototype.xmlToConfigKey = function(node, child, name
     case os.state.v4.LayerTag.ICON_STYLE:
       var urlEle = child.querySelector(os.state.v4.IconTag.URL);
       if (urlEle) {
+        var iconOptions = child.querySelector(os.state.v4.IconTag.OPTIONS) || undefined;
+        if (iconOptions) {
+          iconOptions = JSON.parse(iconOptions.innerHTML);
+        }
         // massage the URL a bit as Desktop writes it out as a local file protocol
         var urlText = urlEle.textContent;
         var i = urlText.indexOf('maps.google.com');
-
         // if it's a google maps icon, we reference it locally
         if (i > -1) {
           urlText = 'http://' + urlText.substring(i);
         }
         options[os.style.StyleField.ICON] = {
-          'path': urlText
+          'path': urlText,
+          'options': iconOptions
         };
       }
       break;

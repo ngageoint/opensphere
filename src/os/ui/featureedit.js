@@ -166,7 +166,9 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * @type {!osx.icon.Icon}
    */
   this['icon'] = /** @type {!osx.icon.Icon} */ ({// os.ui.file.kml.Icon to osx.icon.Icon
-    path: os.ui.file.kml.getDefaultIcon().path
+    title: os.ui.file.kml.getDefaultIcon().title,
+    path: os.ui.file.kml.getDefaultIcon().path,
+    options: os.ui.file.kml.getDefaultIcon().options
   });
 
   /**
@@ -532,22 +534,22 @@ os.ui.FeatureEditCtrl.TEMP_ID = 'features#temporary';
 
 
 /**
- * Default label.
- * @type {!os.style.label.LabelConfig}
- */
-os.ui.FeatureEditCtrl.DEFAULT_LABEL = {
-  'column': 'name',
-  'showColumn': false
-};
-
-
-/**
  * @enum {string}
  */
 os.ui.FeatureEditCtrl.Field = {
   DESCRIPTION: 'description',
   MD_DESCRIPTION: '_mdDescription',
   NAME: 'name'
+};
+
+
+/**
+ * Default label.
+ * @type {!os.style.label.LabelConfig}
+ */
+os.ui.FeatureEditCtrl.DEFAULT_LABEL = {
+  'column': os.ui.FeatureEditCtrl.Field.NAME,
+  'showColumn': false
 };
 
 

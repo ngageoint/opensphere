@@ -617,7 +617,8 @@ os.style.getConfigIcon = function(config) {
     var imageConfig = config[os.style.StyleField.IMAGE];
     if (imageConfig && imageConfig['src']) {
       icon = /** @type {!osx.icon.Icon} */ ({
-        path: imageConfig['src']
+        path: imageConfig['src'],
+        options: imageConfig['options']
       });
     }
   }
@@ -638,6 +639,7 @@ os.style.setConfigIcon = function(config, icon) {
     var imageConfig = config[os.style.StyleField.IMAGE];
     if (imageConfig) {
       imageConfig['src'] = icon['path'];
+      imageConfig['options'] = icon['options'];
     }
   }
 };
