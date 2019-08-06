@@ -650,6 +650,7 @@ os.config.Settings.prototype.reset = function(opt_namespace) {
             !this.storageRegistry_.hasRemoteStorage) {
           this.set('storage.writeType', os.config.storage.SettingsWritableStorageType.LOCAL, true);
         } else {
+          os.object.delete(this.mergedConfig_, ['storage', 'writeType']);
           this.set('storage.writeType', type, true);
         }
 
@@ -976,8 +977,8 @@ os.config.Settings.prototype.process = function(data, type, sender, time) {
     // save off the current value on the message and queue it for processing after the reload
     settingsMessage.oldValue = this.get(settingsMessage.keys);
     this.toNotifyInternal_.push(settingsMessage);
-    this.reloadDelay_.start();
   }
+  this.reloadDelay_.start();
 };
 
 

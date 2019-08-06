@@ -6,7 +6,7 @@ goog.require('os');
 goog.require('os.MainCtrl');
 goog.require('os.config');
 goog.require('os.config.Settings');
-goog.require('os.config.SettingsInitializer');
+goog.require('os.config.SettingsInitializerManager');
 goog.require('os.debug.FancierWindow');
 goog.require('os.defines');
 goog.require('os.mixin');
@@ -88,7 +88,7 @@ os.Module.config(os.Module.configureModule);
       os.net.addDefaultHandlers();
 
       // initialize settings for this app
-      var settingsInitializer = new os.config.SettingsInitializer();
+      var settingsInitializer = os.config.SettingsInitializerManager.getInstance().getSettingsInitializer();
       settingsInitializer.init();
     }
   };
