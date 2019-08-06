@@ -117,6 +117,10 @@ Run all tests via the command line ```yarn test:cypress-all```, individual specs
 
 [Optional] For VS Code, clone [opensphere-tests-vscode](https://github.com/justin-bits/opensphere-tests-vscode) for useful snippets and settings created specifically for testing OpenSphere.
 
+### Windows
+
+Tests run out of the box on Linux and OS X.  For Windows users, see [this page](windows.md) for instructions on running Cypress tests under WSL.
+
 ## License
 
 Copyright 2017 BIT Systems
