@@ -737,41 +737,57 @@ os.feature.getSource = function(feature, opt_layer) {
  *
  * @param {ol.Feature} feature The feature.
  * @param {os.source.ISource=} opt_source The source containing the feature, or null to ignore source color.
- * @param {*=} opt_default The default color.
- * @return {*} The color.
+ * @param {(Array<number>|string)=} opt_default The default color, `null` to indicate no color.
+ * @param {os.style.StyleField=} opt_colorField The style field to use in locating the color.
+ * @return {Array<number>|string} The color.
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.feature.getColor = function(feature, opt_source, opt_default) {
-  if (feature) {
-    var color = /** @type {string|undefined} */ (feature.values_[os.data.RecordField.COLOR]);
+os.feature.getColor = function(feature, opt_source, opt_default, opt_colorField) {
+  var defaultColor = opt_default !== undefined ? opt_default : os.style.DEFAULT_LAYER_COLOR;
 
-    if (!color) {
+  if (feature) {
+    var color;
+
+    if (!opt_colorField) {
+      // ignore the feature color override if a specific config color field was provided
+      color = /** @type {string|undefined} */ (feature.values_[os.data.RecordField.COLOR]);
+    }
+
+    if (color !== defaultColor) {
       // check the layer config to see if it's replacing feature styles
       var layerConfig = os.style.getLayerConfig(feature);
       if (layerConfig && layerConfig[os.style.StyleField.REPLACE_STYLE]) {
-        color = /** @type {string|undefined} */ (os.style.getConfigColor(layerConfig, false));
+        color = os.style.getConfigColor(layerConfig, false, opt_colorField);
       }
     }
 
-    if (!color) {
+    if (color !== defaultColor) {
       var featureConfig = /** @type {Array<Object>|Object|undefined} */ (feature.values_[os.style.StyleType.FEATURE]);
       if (featureConfig) {
         if (Array.isArray(featureConfig)) {
           for (var i = 0; !color && i < featureConfig.length; i++) {
-            color = os.style.getConfigColor(featureConfig[i]) || undefined;
+            color = os.style.getConfigColor(featureConfig[i], false, opt_colorField);
+
+            // stop on the first color found, allowing null if set as the default
+            if (color || (color === null && defaultColor === null)) {
+              break;
+            }
           }
         } else {
-          color = os.style.getConfigColor(featureConfig) || undefined;
+          color = os.style.getConfigColor(featureConfig, false, opt_colorField);
         }
       }
     }
 
-    if (color) {
-      return color;
+    if (color || (color === null && defaultColor === null)) {
+      // if the default color was provided as null, allow returning that as the color
+      return /** @type {Array<number>|string} */ (color);
     } else if (opt_source) {
+      // fall back on the source color
       return opt_source.getColor();
     } else if (opt_source !== null) {
+      // try to locate the source
       var source = os.feature.getSource(feature);
       if (source) {
         return source.getColor();
@@ -779,7 +795,7 @@ os.feature.getColor = function(feature, opt_source, opt_default) {
     }
   }
 
-  return opt_default !== undefined ? opt_default : os.style.DEFAULT_LAYER_COLOR;
+  return defaultColor;
 };
 
 
@@ -787,49 +803,25 @@ os.feature.getColor = function(feature, opt_source, opt_default) {
  * Get the fill color of a feature.
  * @param {ol.Feature} feature The feature.
  * @param {os.source.ISource=} opt_source The source containing the feature, or null to ignore source color.
- * @param {*=} opt_default The default color.
- * @return {*} The color.
- *
- * @suppress {accessControls} To allow direct access to feature metadata.
+ * @param {(Array<number>|string)=} opt_default The default color.
+ * @return {Array<number>|string} The color.
  */
 os.feature.getFillColor = function(feature, opt_source, opt_default) {
-  if (feature) {
-    var color = /** @type {string|undefined} */ (feature.values_[os.data.RecordField.COLOR]);
+  // default to null to indicate no fill
+  return os.feature.getColor(feature, opt_source, opt_default || null, os.style.StyleField.FILL);
+};
 
-    if (!color) {
-      // check the layer config to see if it's replacing feature styles
-      var layerConfig = os.style.getLayerConfig(feature);
-      if (layerConfig && layerConfig[os.style.StyleField.REPLACE_STYLE]) {
-        color = /** @type {string|undefined} */ (os.style.getConfigColor(layerConfig, false, os.style.StyleField.FILL));
-      }
-    }
 
-    if (!color) {
-      var featureConfig = /** @type {Array<Object>|Object|undefined} */ (feature.values_[os.style.StyleType.FEATURE]);
-      if (featureConfig) {
-        if (Array.isArray(featureConfig)) {
-          for (var i = 0; !color && i < featureConfig.length; i++) {
-            color = os.style.getConfigColor(featureConfig[i], false, os.style.StyleField.FILL) || undefined;
-          }
-        } else {
-          color = os.style.getConfigColor(featureConfig, false, os.style.StyleField.FILL) || undefined;
-        }
-      }
-    }
-
-    if (color) {
-      return color;
-    } else if (opt_source) {
-      return opt_source.getColor();
-    } else if (opt_source !== null) {
-      var source = os.feature.getSource(feature);
-      if (source) {
-        return source.getColor();
-      }
-    }
-  }
-
-  return opt_default !== undefined ? opt_default : os.style.DEFAULT_LAYER_COLOR;
+/**
+ * Get the stroke color of a feature.
+ * @param {ol.Feature} feature The feature.
+ * @param {os.source.ISource=} opt_source The source containing the feature, or null to ignore source color.
+ * @param {(Array<number>|string)=} opt_default The default color.
+ * @return {Array<number>|string} The color.
+ */
+os.feature.getStrokeColor = function(feature, opt_source, opt_default) {
+  // default to null to indicate no stroke
+  return os.feature.getColor(feature, opt_source, opt_default || null, os.style.StyleField.STROKE);
 };
 
 

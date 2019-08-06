@@ -725,11 +725,13 @@ os.ui.file.kml.AbstractKMLExporter.prototype.addGeometryNode = function(item, no
  * @param {T} item The item
  * @param {string} styleId The style id
  * @param {string} color The item color
- * @param {string} fillColor The item fill color
+ * @param {?string} fillColor The item fill color
+ * @param {?string} strokeColor The item fill color
  * @param {os.ui.file.kml.Icon=} opt_icon The item icon
  * @protected
  */
-os.ui.file.kml.AbstractKMLExporter.prototype.createStyle = function(item, styleId, color, fillColor, opt_icon) {
+os.ui.file.kml.AbstractKMLExporter.prototype.createStyle = function(item, styleId, color, fillColor, strokeColor,
+    opt_icon) {
   var styleEl = os.xml.createElementNS('Style', this.kmlNS, this.doc, undefined, {
     'id': styleId
   });
@@ -764,14 +766,14 @@ os.ui.file.kml.AbstractKMLExporter.prototype.createStyle = function(item, styleI
     os.xml.appendElementNS('color', this.kmlNS, iconStyleEl, color);
   }
 
-  // all styles should define a line/poly style
   var lineStyleEl = os.xml.appendElementNS('LineStyle', this.kmlNS, styleEl);
-  os.xml.appendElementNS('color', this.kmlNS, lineStyleEl, color);
+  os.xml.appendElementNS('color', this.kmlNS, lineStyleEl, strokeColor || color);
   os.xml.appendElementNS('width', this.kmlNS, lineStyleEl, 2);
 
   var polyStyleEl = os.xml.appendElementNS('PolyStyle', this.kmlNS, styleEl);
-  os.xml.appendElementNS('color', this.kmlNS, polyStyleEl, fillColor);
-  os.xml.appendElementNS('fill', this.kmlNS, polyStyleEl, 1);
+  os.xml.appendElementNS('color', this.kmlNS, polyStyleEl, fillColor || color);
+  os.xml.appendElementNS('fill', this.kmlNS, polyStyleEl, fillColor ? 1 : 0);
+  os.xml.appendElementNS('outline', this.kmlNS, polyStyleEl, strokeColor ? 1 : 0);
 
   var firstFolder = this.kmlDoc.querySelector('Folder');
   if (firstFolder) {
@@ -812,10 +814,20 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getColor = function(item) {};
  * Get the fill color of an item. This should return an ABGR string that can be dropped directly into the KML.
  * @abstract
  * @param {T} item The item
- * @return {string} The item's fill color as an ABGR string
+ * @return {?string} The item's fill color as an ABGR string
  * @protected
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.getFillColor = function(item) {};
+
+
+/**
+ * Get the stroke color of an item. This should return an ABGR string that can be dropped directly into the KML.
+ * @abstract
+ * @param {T} item The item
+ * @return {?string} The item's stroke color as an ABGR string
+ * @protected
+ */
+os.ui.file.kml.AbstractKMLExporter.prototype.getStrokeColor = function(item) {};
 
 
 /**
@@ -1012,6 +1024,11 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getStyleId = function(item) {
     styleParts.push(fillColor);
   }
 
+  var strokeColor = this.getStrokeColor(item);
+  if (this.useItemColor || type == os.ui.file.kml.StyleType.DEFAULT) {
+    styleParts.push(strokeColor);
+  }
+
   var icon = type == os.ui.file.kml.StyleType.DEFAULT ? undefined : this.getIcon(item);
   if (type == os.ui.file.kml.StyleType.ICON && this.useItemIcon) {
     // override the default icon with the item's icon
@@ -1029,7 +1046,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getStyleId = function(item) {
   styleId = styleParts.join('-');
 
   if (!(styleId in this.styles_)) {
-    this.createStyle(item, styleId, color, fillColor, icon);
+    this.createStyle(item, styleId, color, fillColor, strokeColor, icon);
   }
 
   return styleId;

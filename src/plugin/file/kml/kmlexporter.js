@@ -96,12 +96,16 @@ plugin.file.kml.KMLExporter.prototype.getColor = function(item) {
  */
 plugin.file.kml.KMLExporter.prototype.getFillColor = function(item) {
   var itemColor = os.feature.getFillColor(item, this.getSource_(item));
+  return itemColor ? os.style.toAbgrString(itemColor) : null;
+};
 
-  if (!itemColor || (typeof itemColor != 'string' && !goog.isArray(itemColor))) {
-    itemColor = os.style.DEFAULT_LAYER_COLOR;
-  }
 
-  return os.style.toAbgrString(itemColor);
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLExporter.prototype.getStrokeColor = function(item) {
+  var itemColor = os.feature.getStrokeColor(item, this.getSource_(item));
+  return itemColor ? os.style.toAbgrString(itemColor) : null;
 };
 
 

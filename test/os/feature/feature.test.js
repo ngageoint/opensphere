@@ -391,5 +391,124 @@ describe('os.feature', function() {
       feature.set('TITLE', 'test4');
       expect(os.feature.getTitle(feature)).toBe('test4');
     });
+
+    it('should get a color from a feature', function() {
+
+    });
+
+    it('should get a fill color from a feature', function() {
+      var feature = new ol.Feature();
+      var testColor = 'rgba(0,255,0,1)';
+      var featureConfig1 = {};
+      var featureConfig2 = {
+        fill: null
+      };
+
+      // defaults to null (no fill) when no feature provided
+      expect(os.feature.getFillColor(null)).toBeNull();
+      // unless a default color was provided
+      expect(os.feature.getFillColor(null, undefined, os.style.DEFAULT_LAYER_COLOR)).toBe(os.style.DEFAULT_LAYER_COLOR);
+
+      // defaults to null (no fill)
+      expect(os.feature.getFillColor(feature)).toBeNull();
+
+      // ignores feature base color override
+      feature.set(os.data.RecordField.COLOR, testColor);
+      expect(os.feature.getFillColor(feature)).toBeNull();
+
+      // empty config returns null
+      feature.set(os.style.StyleType.FEATURE, featureConfig1);
+      expect(os.feature.getFillColor(feature)).toBeNull();
+
+      // should not return the stroke/image color
+      featureConfig1.stroke = {
+        color: testColor,
+        width: 2
+      };
+      featureConfig1.image = {
+        color: testColor
+      };
+      expect(os.feature.getFillColor(feature)).toBeNull();
+
+      // should not return the base config color
+      featureConfig1.color = testColor;
+      expect(os.feature.getFillColor(feature)).toBeNull();
+
+      // unless the fill is explicitly null
+      featureConfig1.fill = null;
+      expect(os.feature.getFillColor(feature)).toBeNull();
+
+      // gets the fill color
+      featureConfig1.fill = {
+        color: testColor
+      };
+      expect(os.feature.getFillColor(feature)).toBe(testColor);
+
+      // gets null from the first config
+      feature.set(os.style.StyleType.FEATURE, [featureConfig2, featureConfig1]);
+      expect(os.feature.getFillColor(feature)).toBeNull();
+
+      // gets the fill color from the second config
+      featureConfig2.fill = undefined;
+      expect(os.feature.getFillColor(feature)).toBe(testColor);
+    });
+
+    it('should get a stroke color from a feature', function() {
+      var feature = new ol.Feature();
+      var testColor = 'rgba(0,255,0,1)';
+      var featureConfig1 = {};
+      var featureConfig2 = {
+        stroke: null
+      };
+
+      // defaults to null (no stroke) when no feature provided
+      expect(os.feature.getStrokeColor(null)).toBeNull();
+      // unless a default color was provided
+      expect(os.feature.getStrokeColor(null, undefined, os.style.DEFAULT_LAYER_COLOR))
+          .toBe(os.style.DEFAULT_LAYER_COLOR);
+
+      // defaults to null (no stroke)
+      expect(os.feature.getStrokeColor(feature)).toBeNull();
+
+      // ignores feature base color override
+      feature.set(os.data.RecordField.COLOR, testColor);
+      expect(os.feature.getStrokeColor(feature)).toBeNull();
+
+      // empty config returns null
+      feature.set(os.style.StyleType.FEATURE, featureConfig1);
+      expect(os.feature.getStrokeColor(feature)).toBeNull();
+
+      // should not return the fill/image color
+      featureConfig1.fill = {
+        color: testColor
+      };
+      featureConfig1.image = {
+        color: testColor
+      };
+      expect(os.feature.getStrokeColor(feature)).toBeNull();
+
+      // should not return the base config color
+      featureConfig1.color = testColor;
+      expect(os.feature.getStrokeColor(feature)).toBeNull();
+
+      // unless the stroke is explicitly null
+      featureConfig1.stroke = null;
+      expect(os.feature.getStrokeColor(feature)).toBeNull();
+
+      // gets the stroke color
+      featureConfig1.stroke = {
+        color: testColor,
+        width: 2
+      };
+      expect(os.feature.getStrokeColor(feature)).toBe(testColor);
+
+      // gets null from the first config
+      feature.set(os.style.StyleType.FEATURE, [featureConfig2, featureConfig1]);
+      expect(os.feature.getStrokeColor(feature)).toBeNull();
+
+      // gets the stroke color from the second config
+      featureConfig2.stroke = undefined;
+      expect(os.feature.getStrokeColor(feature)).toBe(testColor);
+    });
   });
 });

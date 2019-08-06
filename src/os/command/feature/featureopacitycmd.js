@@ -95,16 +95,22 @@ os.command.FeatureOpacity.prototype.getOldValue = function() {
     switch (this.changeMode) {
       case os.command.FeatureOpacity.MODE.FILL:
         var color = os.style.getConfigColor(config, true, os.style.StyleField.FILL);
-        ret = color[3];
+        if (color) {
+          ret = color[3];
+        }
         break;
       case os.command.FeatureOpacity.MODE.STROKE:
         var color = os.style.getConfigColor(config, true, os.style.StyleField.STROKE);
-        ret = color[3];
+        if (color) {
+          ret = color[3];
+        }
         break;
       default:
       case os.command.FeatureOpacity.MODE.COMBINED:
         var color = os.style.getConfigColor(config, true);
-        ret = color[3];
+        if (color) {
+          ret = color[3];
+        }
         break;
     }
   }

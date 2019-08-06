@@ -563,19 +563,32 @@ os.style.STYLE_COLOR_FIELDS_ = ['image', 'fill', 'stroke'];
  *
  * @param {Object} config The configuration to search for a color
  * @param {boolean=} opt_array If the color should be returned as an rgb array
- * @param {(os.style.StyleField|string)=} opt_colorFieldHint A hint to where to find the color to use.
- * @return {?(string|Array<number>)} The color or null if none was found
+ * @param {os.style.StyleField=} opt_colorField The style field to use in locating the color.
+ * @return {Array<number>|string|undefined} The color, or undefined if not found. Returns `null` if a style field was
+ *                                          provided and the field was `null`.
  */
-os.style.getConfigColor = function(config, opt_array, opt_colorFieldHint) {
+os.style.getConfigColor = function(config, opt_array, opt_colorField) {
   if (config) {
-    if (opt_colorFieldHint &&
-        config[opt_colorFieldHint] &&
-        config[opt_colorFieldHint][os.style.StyleField.COLOR] != null) {
-      return opt_array ? os.color.toRgbArray(config[opt_colorFieldHint][os.style.StyleField.COLOR]) :
-        config[opt_colorFieldHint][os.style.StyleField.COLOR];
+    //
+    // if a specific color field was provided, return:
+    //  - null (no color) if the field is null
+    //  - config.<field>.color if defined
+    //  - undefined (no color found)
+    //
+    // otherwise:
+    //  - return config.color if defined
+    //  - search all color fields for the color
+    //
+    if (opt_colorField) {
+      if (config[opt_colorField] === null) {
+        return null;
+      } else if (config[opt_colorField] && config[opt_colorField][os.style.StyleField.COLOR] != null) {
+        return opt_array ? os.color.toRgbArray(config[opt_colorField][os.style.StyleField.COLOR]) :
+          config[opt_colorField][os.style.StyleField.COLOR];
+      }
     } else if (config[os.style.StyleField.COLOR] != null) {
       return opt_array ? os.color.toRgbArray(config[os.style.StyleField.COLOR]) :
-        config[os.style.StyleField.COLOR];
+          config[os.style.StyleField.COLOR];
     } else {
       for (var i = 0; i < os.style.STYLE_COLOR_FIELDS_.length; i++) {
         var key = os.style.STYLE_COLOR_FIELDS_[i];
@@ -590,7 +603,7 @@ os.style.getConfigColor = function(config, opt_array, opt_colorFieldHint) {
     }
   }
 
-  return null;
+  return undefined;
 };
 
 
@@ -1405,7 +1418,7 @@ os.style.createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
               // use label override color
               color = ol.color.asArray(opt_layerConfig[os.style.StyleField.LABEL_COLOR]);
             } else {
-              color = ol.color.asArray(os.style.getConfigColor(featureConfig));
+              color = ol.color.asArray(os.style.getConfigColor(featureConfig) || os.style.DEFAULT_LAYER_COLOR);
             }
             color[3] *= opacity;
             labelStyle.text_.fill_.color_ = ol.color.toString(color);

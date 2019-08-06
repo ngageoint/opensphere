@@ -99,11 +99,16 @@ plugin.file.kml.KMLTreeExporter.prototype.getColor = function(item) {
  */
 plugin.file.kml.KMLTreeExporter.prototype.getFillColor = function(item) {
   var featureColor = os.feature.getFillColor(item.getFeature());
-  if (!featureColor || (typeof featureColor != 'string' && !goog.isArray(featureColor))) {
-    featureColor = os.style.DEFAULT_LAYER_COLOR;
-  }
+  return featureColor ? os.style.toAbgrString(featureColor) : null;
+};
 
-  return os.style.toAbgrString(featureColor);
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLTreeExporter.prototype.getStrokeColor = function(item) {
+  var featureColor = os.feature.getStrokeColor(item.getFeature());
+  return featureColor ? os.style.toAbgrString(featureColor) : null;
 };
 
 
