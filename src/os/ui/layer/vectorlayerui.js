@@ -4,14 +4,10 @@ goog.provide('os.ui.layer.vectorLayerUIDirective');
 goog.require('goog.color');
 goog.require('os.MapChange');
 goog.require('os.array');
-goog.require('os.command.FeatureOpacity');
-goog.require('os.command.FeatureStrokeOpacity');
 goog.require('os.command.LayerStyle');
 goog.require('os.command.VectorLayerAutoRefresh');
 goog.require('os.command.VectorLayerCenterShape');
 goog.require('os.command.VectorLayerColor');
-goog.require('os.command.VectorLayerFillColor');
-goog.require('os.command.VectorLayerFillOpacity');
 goog.require('os.command.VectorLayerIcon');
 goog.require('os.command.VectorLayerLabel');
 goog.require('os.command.VectorLayerLabelColor');
@@ -24,8 +20,6 @@ goog.require('os.command.VectorLayerShape');
 goog.require('os.command.VectorLayerShowLabel');
 goog.require('os.command.VectorLayerShowRotation');
 goog.require('os.command.VectorLayerSize');
-goog.require('os.command.VectorLayerStrokeColor');
-goog.require('os.command.VectorLayerStrokeOpacity');
 goog.require('os.command.VectorUniqueIdCmd');
 goog.require('os.data.OSDataManager');
 goog.require('os.defines');
@@ -354,7 +348,8 @@ os.ui.layer.VectorLayerUICtrl.prototype.onColorChange = function(event, value) {
        * @return {os.command.ICommand}
        */
       function(layer) {
-        return new os.command.VectorLayerColor(layer.getId(), colorValue);
+        return new os.command.VectorLayerColor(
+            layer.getId(), colorValue, null, os.command.VectorLayerColor.MODE.COMBINED);
       };
 
     this.createCommand(fn);
@@ -366,7 +361,8 @@ os.ui.layer.VectorLayerUICtrl.prototype.onColorChange = function(event, value) {
        * @return {os.command.ICommand}
        */
       function(layer) {
-        return new os.command.VectorLayerStrokeColor(layer.getId(), colorValue);
+        return new os.command.VectorLayerColor(
+            layer.getId(), colorValue, null, os.command.VectorLayerColor.MODE.STROKE);
       };
 
     this.createCommand(fn2);
@@ -380,7 +376,8 @@ os.ui.layer.VectorLayerUICtrl.prototype.onColorChange = function(event, value) {
        * @return {os.command.ICommand}
        */
       function(layer) {
-        return new os.command.VectorLayerFillColor(layer.getId(), colorValue);
+        return new os.command.VectorLayerColor(
+            layer.getId(), colorValue, null, os.command.VectorLayerColor.MODE.FILL);
       };
 
     this.createCommand(fn3);
@@ -391,7 +388,8 @@ os.ui.layer.VectorLayerUICtrl.prototype.onColorChange = function(event, value) {
        * @return {os.command.ICommand}
        */
       function(layer) {
-        return new os.command.VectorLayerStrokeColor(layer.getId(), colorValue);
+        return new os.command.VectorLayerColor(
+            layer.getId(), colorValue, null, os.command.VectorLayerColor.MODE.STROKE);
       };
 
     this.createCommand(fn4);
@@ -436,7 +434,8 @@ os.ui.layer.VectorLayerUICtrl.prototype.onFillColorChange = function(event, valu
      * @return {os.command.ICommand}
      */
     function(layer) {
-      return new os.command.VectorLayerFillColor(layer.getId(), colorValue);
+      return new os.command.VectorLayerColor(
+          layer.getId(), colorValue, null, os.command.VectorLayerColor.MODE.FILL);
     };
 
   this.createCommand(fn);
@@ -498,13 +497,14 @@ os.ui.layer.VectorLayerUICtrl.prototype.onSliderStop = function(callback, key, e
 
   if (event.name == 'fillOpacity.slidestop') {
     var fn =
-        /**
-         * @param {os.layer.ILayer} layer
-         * @return {os.command.ICommand}
-         */
-        function(layer) {
-          return new os.command.VectorLayerFillOpacity(layer.getId(), value);
-        };
+      /**
+       * @param {os.layer.ILayer} layer
+       * @return {os.command.ICommand}
+       */
+      function(layer) {
+        return new os.command.VectorLayerOpacity(
+            layer.getId(), value, null, os.command.VectorLayerOpacity.MODE.FILL);
+      };
 
     this.createCommand(fn);
   } else if (this.scope['fillOpacity'] !== undefined && this.scope['opacity'] == this.scope['fillOpacity']) {
@@ -525,7 +525,8 @@ os.ui.layer.VectorLayerUICtrl.prototype.onSliderStop = function(callback, key, e
        * @return {?os.command.ICommand}
        */
       function(layer) {
-        return new os.command.VectorLayerStrokeOpacity(layer.getId(), value);
+        return new os.command.VectorLayerOpacity(
+            layer.getId(), value, null, os.command.VectorLayerOpacity.MODE.STROKE);
       };
 
     this.createCommand(fn3);
