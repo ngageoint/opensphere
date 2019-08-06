@@ -135,7 +135,8 @@ function overrideSettings() {
 function patchWindows() {
   if [ "$OSTYPE" == "msys" ] && ! [ -f "$CYPRESS_BIN_CMD" ]; then
     echo "INFO: tests running under unpatched windows, patching yarn install"
-    ./cypress/support/windows/patch-windows.sh
+    ./cypress/support/windows/patch-windows.cmd >/dev/null
+    echo "INFO: finished patch!"
   else
     echo "INFO: tests running under patched windows, no action"
   fi
