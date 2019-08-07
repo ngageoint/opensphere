@@ -23,6 +23,7 @@ os.ui.layer.layerPickerDirective = function() {
       'maxNumLayers': '@?',
       'formatter': '=?',
       'matcher': '=?',
+      'groupFn': '=?',
       'placeholderText': '@?',
       'emitName': '@?'
     },
@@ -94,6 +95,13 @@ os.ui.layer.LayerPickerCtrl = function($scope, $element, $timeout) {
    * @private
    */
   this.layerIndex_ = {};
+
+  /**
+   * Optional override grouping function for the select.
+   * @type {function((os.data.IDataDescriptor|os.filter.IFilterable)):?string}
+   * @private
+   */
+  this.groupFn_ = $scope['groupFn'];
 
   /**
    * Array of available layers
@@ -254,7 +262,12 @@ os.ui.layer.LayerPickerCtrl.prototype.getLayersList = function() {
  * @export
  */
 os.ui.layer.LayerPickerCtrl.prototype.getGroup = function(layer) {
-  return layer instanceof os.data.BaseDescriptor ? 'Inactive' : 'Active';
+  if (this.groupFn_) {
+    // if we have a group fn passed in, use it
+    return this.groupFn_(layer);
+  }
+
+  return os.ui.layer.LayerPickerCtrl.layerGroupFn(layer);
 };
 
 
@@ -269,8 +282,14 @@ os.ui.layer.LayerPickerCtrl.prototype.getGroup = function(layer) {
  */
 os.ui.layer.LayerPickerCtrl.prototype.select2Formatter_ = function(item, ele) {
   if (item['children']) {
-    // It's an optgroup, so just return the label
-    return item['text'];
+    // it's an optgroup, so just return the label
+    var text = item['text'];
+    if (text === '') {
+      // an empty optgroup should be hidden, or they look ugly
+      ele.hide();
+    }
+
+    return text;
   }
 
   var val = '';
@@ -342,4 +361,15 @@ os.ui.layer.LayerPickerCtrl.prototype.matcher_ = function(term, text, option) {
   }
 
   return title ? goog.string.caseInsensitiveContains(title, term) : true;
+};
+
+
+/**
+ * Returns the group name for the layer.
+ *
+ * @param {os.data.IDataDescriptor|os.filter.IFilterable} layer The layer to group.
+ * @return {?string}
+ */
+os.ui.layer.LayerPickerCtrl.layerGroupFn = function(layer) {
+  return layer instanceof os.data.BaseDescriptor ? 'Inactive' : 'Active';
 };
