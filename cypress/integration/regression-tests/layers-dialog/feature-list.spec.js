@@ -917,7 +917,7 @@ describe('Feature list', function() {
       cy.get(shared.layerStyle.BUTTON).click();
       cy.get(shared.layerStyle.SIZE_SLIDER)
           .type('{rightarrow}{rightarrow}{rightarrow}{rightarrow}');
-      cy.imageComparison('Before go to'); // TODO: Baseline image needs update after #676 fixed
+      cy.imageComparison('Before go to');
       cy.get(shared.Tree.ROW_4).rightClick();
       cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
       cy.get(dialogs.featureListDialog.DIALOG)
