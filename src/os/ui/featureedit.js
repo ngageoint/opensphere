@@ -1259,6 +1259,7 @@ os.ui.FeatureEditCtrl.prototype.setFeatureConfig_ = function(config) {
  * @private
  */
 os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
+  var geom = feature.getGeometry();
   if (this['pointGeometry']) {
     // make sure the coordinate values are numeric
     var lon = Number(this['pointGeometry']['lon']);
@@ -1317,11 +1318,9 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
         feature.set(os.style.StyleField.ROTATION_COLUMN, '', true);
       }
     }
-  } else if (this.originalGeometry && feature.getGeometry() === this.originalGeometry) {
+  } else if (this.originalGeometry && (!geom || geom === this.originalGeometry)) {
     feature.setGeometry(this.originalGeometry.clone());
   }
-
-  var geom = feature.getGeometry();
 
   if (geom) {
     var altMode = geom.get(os.data.RecordField.ALTITUDE_MODE);
