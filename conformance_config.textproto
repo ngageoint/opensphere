@@ -158,23 +158,23 @@ requirement: {
 #  error_message: 'goog.isBoolean(value) is not permitted. Use typeof value === \'boolean\' instead.'
 #}
 
-#requirement: {
-#  type: BANNED_NAME
-#  value: 'goog.isDef'
-#  error_message: 'goog.isDef(value) is not permitted. Use value !== undefined instead.'
-#}
+requirement: {
+  type: BANNED_NAME
+  value: 'goog.isDef'
+  error_message: 'goog.isDef(value) is not permitted. Use value !== undefined instead.'
+}
 
-#requirement: {
-#  type: BANNED_NAME
-#  value: 'goog.isDefAndNotNull'
-#  error_message: 'goog.isDefAndNotNull(value) is not permitted. Use value != null instead.'
-#}
+requirement: {
+  type: BANNED_NAME
+  value: 'goog.isDefAndNotNull'
+  error_message: 'goog.isDefAndNotNull(value) is not permitted. Use value != null instead.'
+}
 
-#requirement: {
-#  type: BANNED_NAME
-#  value: 'goog.isNull'
-#  error_message: 'goog.isNull(value) is not permitted. Use value === null instead.'
-#}
+requirement: {
+  type: BANNED_NAME
+  value: 'goog.isNull'
+  error_message: 'goog.isNull(value) is not permitted. Use value === null instead.'
+}
 
 #requirement: {
 #  type: BANNED_NAME
