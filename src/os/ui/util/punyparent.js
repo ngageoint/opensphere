@@ -1,6 +1,9 @@
 goog.provide('os.ui.util.PunyParentCtrl');
 goog.provide('os.ui.util.punyParentDirective');
+
 goog.require('goog.Throttle');
+goog.require('goog.dom.ViewportSizeMonitor');
+goog.require('os.ui');
 goog.require('os.ui.Module');
 
 
@@ -51,19 +54,15 @@ os.ui.util.PunyParentCtrl = function($scope, $element) {
   this.throttle_ = new goog.Throttle(this.onThrottleResize_, 200, this);
 
   /**
-   * @type {Function}
-   * @private
-   */
-  this.resizeFn_ = this.onResize_.bind(this);
-
-  /**
    * Keep track of our maximum child size. This prevents saying we have enough space after a resize already occured
    * @type {number}
    * @private
    */
   this.fullSize = 0;
 
-  $element.resize(this.resizeFn_);
+  var vsm = goog.dom.ViewportSizeMonitor.getInstanceForWindow();
+  vsm.listen(goog.events.EventType.RESIZE, this.onResize_, false, this);
+
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
 
@@ -72,7 +71,9 @@ os.ui.util.PunyParentCtrl = function($scope, $element) {
  * @private
  */
 os.ui.util.PunyParentCtrl.prototype.destroy_ = function() {
-  this.element_.removeResize(this.resizeFn_);
+  var vsm = goog.dom.ViewportSizeMonitor.getInstanceForWindow();
+  vsm.unlisten(goog.events.EventType.RESIZE, this.onResize_, false, this);
+
   if (this.throttle_) {
     this.throttle_.dispose();
     this.throttle_ = null;
