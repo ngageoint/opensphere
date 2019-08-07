@@ -138,9 +138,12 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getProperties = function() {
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.initUI = function() {
   plugin.file.kml.KMLNodeLayerUICtrl.base(this, 'initUI');
 
-  if (this.scope) {
+  if (this.scope && this.isFeatureFillable()) {
     this.scope['fillColor'] = this.getFillColor();
     this.scope['fillOpacity'] = this.getFillOpacity();
+  } else {
+    delete this.scope['fillColor'];
+    delete this.scope['fillOpacity'];
   }
 };
 
@@ -584,20 +587,77 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onColorChange = function(event, val
   var colorValue = os.color.toRgbArray(value);
   colorValue[3] = this.scope['opacity'];
 
-  // Determine if we are changing both stroke and fill entirely, or keeping opacities separate, or only affecting stroke
-  var strokeColorArr = os.color.toRgbArray(this.scope['color']);
-  strokeColorArr[3] = this.scope['opacity'];
-  var strokeColorValue = os.style.toRgbaString(strokeColorArr);
-  var fillColorArr = os.color.toRgbArray(this.scope['fillColor']);
-  fillColorArr[3] = this.scope['fillOpacity'];
-  var fillColorValue = os.style.toRgbaString(fillColorArr);
-  var color = os.color.toHexString(this.scope['color']);
-  var fillColor = os.color.toHexString(this.scope['fillColor']);
+  // Do we have fill color/opacity to consider?
+  if (this.scope['fillColor'] !== undefined && this.scope['fillOpacity'] !== undefined) {
+    // Determine if we are changing both stroke and fill entirely, or keeping opacities separate, or only affecting stroke
+    var strokeColorArr = os.color.toRgbArray(this.scope['color']);
+    strokeColorArr[3] = this.scope['opacity'];
+    var strokeColorValue = os.style.toRgbaString(strokeColorArr);
+    var fillColorArr = os.color.toRgbArray(this.scope['fillColor']);
+    fillColorArr[3] = this.scope['fillOpacity'];
+    var fillColorValue = os.style.toRgbaString(fillColorArr);
+    var color = os.color.toHexString(this.scope['color']);
+    var fillColor = os.color.toHexString(this.scope['fillColor']);
 
-  this.scope['color'] = os.color.toHexString(colorValue);
+    this.scope['color'] = os.color.toHexString(colorValue);
 
-  if (strokeColorValue == fillColorValue) {
-    var fn =
+    if (strokeColorValue == fillColorValue) {
+      var fn =
+        /**
+         * @param {string} layerId
+         * @param {string} featureId
+         * @return {os.command.ICommand}
+         */
+        function(layerId, featureId) {
+          return new os.command.FeatureColor(layerId, featureId, colorValue);
+        };
+
+      this.createFeatureCommand(fn);
+    } else if (color == fillColor) {
+      // We run these separately so that they retain the different opacities
+      var fn2 =
+        /**
+         * @param {string} layerId
+         * @param {string} featureId
+         * @return {os.command.ICommand}
+         */
+        function(layerId, featureId) {
+          return new os.command.FeatureColor(layerId, featureId, colorValue, null, os.command.FeatureColor.MODE.STROKE);
+        };
+
+      this.createFeatureCommand(fn2);
+
+      // Use the fill's opacity instead of the stroke's opacity
+      colorValue[3] = this.scope['fillOpacity'];
+      this.scope['fillColor'] = os.style.toRgbaString(colorValue);
+
+      var fn3 =
+        /**
+         * @param {string} layerId
+         * @param {string} featureId
+         * @return {os.command.ICommand}
+         */
+        function(layerId, featureId) {
+          return new os.command.FeatureColor(layerId, featureId, colorValue, null, os.command.FeatureColor.MODE.FILL);
+        };
+
+      this.createFeatureCommand(fn3);
+    } else {
+      var fn4 =
+        /**
+         * @param {string} layerId
+         * @param {string} featureId
+         * @return {os.command.ICommand}
+         */
+        function(layerId, featureId) {
+          return new os.command.FeatureColor(layerId, featureId, colorValue, null, os.command.FeatureColor.MODE.STROKE);
+        };
+
+      this.createFeatureCommand(fn4);
+    }
+  } else {
+    // We are not taking fill into consideration
+    var fn5 =
       /**
        * @param {string} layerId
        * @param {string} featureId
@@ -607,48 +667,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onColorChange = function(event, val
         return new os.command.FeatureColor(layerId, featureId, colorValue);
       };
 
-    this.createFeatureCommand(fn);
-  } else if (color == fillColor) {
-    // We run these separately so that they retain the different opacities
-    var fn2 =
-      /**
-       * @param {string} layerId
-       * @param {string} featureId
-       * @return {os.command.ICommand}
-       */
-      function(layerId, featureId) {
-        return new os.command.FeatureColor(layerId, featureId, colorValue, null, os.command.FeatureColor.MODE.STROKE);
-      };
-
-    this.createFeatureCommand(fn2);
-
-    // Use the fill's opacity instead of the stroke's opacity
-    colorValue[3] = this.scope['fillOpacity'];
-    this.scope['fillColor'] = os.style.toRgbaString(colorValue);
-
-    var fn3 =
-      /**
-       * @param {string} layerId
-       * @param {string} featureId
-       * @return {os.command.ICommand}
-       */
-      function(layerId, featureId) {
-        return new os.command.FeatureColor(layerId, featureId, colorValue, null, os.command.FeatureColor.MODE.FILL);
-      };
-
-    this.createFeatureCommand(fn3);
-  } else {
-    var fn4 =
-      /**
-       * @param {string} layerId
-       * @param {string} featureId
-       * @return {os.command.ICommand}
-       */
-      function(layerId, featureId) {
-        return new os.command.FeatureColor(layerId, featureId, colorValue, null, os.command.FeatureColor.MODE.STROKE);
-      };
-
-    this.createFeatureCommand(fn4);
+    this.createFeatureCommand(fn5);
   }
 };
 
@@ -832,7 +851,6 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onOpacityChange = function(event, v
  */
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.onFillOpacityChange = function(event, value) {
   event.stopPropagation();
-  console.log('onFillOpacityChange', value);
 
   var fn =
       /**
@@ -1089,6 +1107,27 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.isFeatureDynamic = function() {
   var features = this.getFeatures();
   var feature = features.length > 0 ? features[0] : null;
   return feature instanceof os.feature.DynamicFeature;
+};
+
+
+/**
+ * If the feature is fillable, which means it should show fill controls
+ *
+ * @return {boolean}
+ * @export
+ */
+plugin.file.kml.KMLNodeLayerUICtrl.prototype.isFeatureFillable = function() {
+  var features = this.getFeatures();
+  var feature = features.length > 0 ? features[0] : null;
+  if (feature) {
+    var geometry = feature.getGeometry();
+
+    if (geometry instanceof ol.geom.Polygon || geometry instanceof ol.geom.MultiPolygon) {
+      return true;
+    }
+  }
+
+  return false;
 };
 
 

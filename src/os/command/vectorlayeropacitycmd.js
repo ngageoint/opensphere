@@ -35,8 +35,8 @@ os.command.VectorLayerOpacity = function(layerId, opacity, opt_oldOpacity, opt_c
       this.metricKey = os.metrics.Layer.VECTOR_STROKE_OPACITY;
       this.defaultOpacity = os.command.VectorLayerOpacity.DEFAULT_OPACITY;
       break;
-    default:
     case os.command.VectorLayerColor.MODE.COMBINED:
+    default:
       this.title = 'Change Opacity';
       this.metricKey = os.metrics.Layer.VECTOR_OPACITY;
       this.defaultOpacity = os.command.VectorLayerOpacity.DEFAULT_OPACITY;
@@ -91,12 +91,15 @@ os.command.VectorLayerOpacity.prototype.getOldValue = function() {
  * @inheritDoc
  */
 os.command.VectorLayerOpacity.prototype.applyValue = function(config, value) {
-  var color = os.style.getConfigColor(config, true);
-  color[3] = value;
-  var colorString = os.style.toRgbaString(color);
+  var color;
+  var colorString;
 
   switch (this.changeMode) {
     case os.command.VectorLayerOpacity.MODE.FILL:
+      color = os.style.getConfigColor(config, true, os.style.StyleField.FILL);
+      color[3] = value;
+      colorString = os.style.toRgbaString(color);
+
       os.style.setConfigColor(config, colorString, [os.style.StyleField.FILL]);
 
       // Make sure the fill color and opacity are updated as well
@@ -109,13 +112,21 @@ os.command.VectorLayerOpacity.prototype.applyValue = function(config, value) {
 
       break;
     case os.command.VectorLayerOpacity.MODE.STROKE:
+      color = os.style.getConfigColor(config, true, os.style.StyleField.STROKE);
+      color[3] = value;
+      colorString = os.style.toRgbaString(color);
+
       os.style.setConfigColor(config, colorString, [os.style.StyleField.IMAGE, os.style.StyleField.STROKE]);
 
       os.ui.adjustIconSet(this.layerId, color);
 
       break;
-    default:
     case os.command.VectorLayerOpacity.MODE.COMBINED:
+    default:
+      color = os.style.getConfigColor(config, true);
+      color[3] = value;
+      colorString = os.style.toRgbaString(color);
+
       os.style.setConfigColor(config, colorString);
 
       // Make sure the fill color and opacity are updated as well
