@@ -96,7 +96,12 @@ const sharedResources = [
   {
     source: 'vendor/jquery',
     target: 'vendor/jquery',
-    scripts: ['jquery.event.drag-2.3.0.js', 'jquery.resize.js']
+    scripts: ['jquery.event.drag-2.3.0.js']
+  },
+  {
+    source: resolver.resolveModulePath('css-element-queries/src', __dirname),
+    target: 'vendor/css-element-queries',
+    scripts: ['ResizeSensor.js']
   },
   {
     source: 'vendor/jquery-ui',
