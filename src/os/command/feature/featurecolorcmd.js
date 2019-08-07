@@ -33,8 +33,8 @@ os.command.FeatureColor = function(layerId, featureId, color, opt_oldColor, opt_
       this.metricKey = os.metrics.Layer.FEATURE_STROKE_COLOR;
       this.defaultColor = os.command.FeatureColor.DEFAULT_COLOR;
       break;
-    default:
     case os.command.FeatureColor.MODE.COMBINED:
+    default:
       this.title = 'Change Feature Color';
       this.metricKey = os.metrics.Layer.FEATURE_COLOR;
       this.defaultColor = os.command.FeatureColor.DEFAULT_COLOR;
@@ -103,8 +103,8 @@ os.command.FeatureColor.prototype.getOldValue = function() {
       case os.command.FeatureColor.MODE.STROKE:
         ret = os.style.getConfigColor(config, false, os.style.StyleField.STROKE);
         break;
-      default:
       case os.command.FeatureColor.MODE.COMBINED:
+      default:
         ret = os.style.getConfigColor(config);
         break;
     }
@@ -147,8 +147,8 @@ os.command.FeatureColor.prototype.applyValue = function(configs, value) {
         this.applyLabelValue(configs, value);
       }
       break;
-    default:
     case os.command.FeatureColor.MODE.COMBINED:
+    default:
       for (var i = 0; i < configs.length; i++) {
         os.style.setConfigColor(configs[i], color);
       }

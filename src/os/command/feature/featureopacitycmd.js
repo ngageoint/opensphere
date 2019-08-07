@@ -33,8 +33,8 @@ os.command.FeatureOpacity = function(layerId, featureId, opacity, opt_oldOpacity
       this.metricKey = os.metrics.Layer.FEATURE_STROKE_OPACITY;
       this.defaultOpacity = os.command.FeatureOpacity.DEFAULT_OPACITY;
       break;
-    default:
     case os.command.FeatureOpacity.MODE.COMBINED:
+    default:
       this.title = 'Change Feature Opacity';
       this.metricKey = os.metrics.Layer.FEATURE_OPACITY;
       this.defaultOpacity = os.command.FeatureOpacity.DEFAULT_OPACITY;
@@ -105,8 +105,8 @@ os.command.FeatureOpacity.prototype.getOldValue = function() {
           ret = color[3];
         }
         break;
-      default:
       case os.command.FeatureOpacity.MODE.COMBINED:
+      default:
         var color = os.style.getConfigColor(config, true);
         if (color) {
           ret = color[3];
@@ -144,8 +144,8 @@ os.command.FeatureOpacity.prototype.applyValue = function(configs, value) {
         os.style.setConfigColor(configs[i], colorValue, [os.style.StyleField.STROKE, os.style.StyleField.IMAGE]);
       }
       break;
-    default:
     case os.command.FeatureOpacity.MODE.COMBINED:
+    default:
       for (i = 0; i < configs.length; i++) {
         color = os.style.getConfigColor(configs[i], true);
         color[3] = value;

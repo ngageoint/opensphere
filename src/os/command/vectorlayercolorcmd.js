@@ -35,8 +35,8 @@ os.command.VectorLayerColor = function(layerId, color, opt_oldColor, opt_changeM
       this.metricKey = os.metrics.Layer.VECTOR_STROKE_COLOR;
       this.defaultColor = os.command.VectorLayerColor.DEFAULT_COLOR;
       break;
-    default:
     case os.command.VectorLayerColor.MODE.COMBINED:
+    default:
       this.title = 'Change Color';
       this.metricKey = os.metrics.Layer.VECTOR_COLOR;
       this.defaultColor = os.command.VectorLayerColor.DEFAULT_COLOR;
@@ -92,8 +92,8 @@ os.command.VectorLayerColor.prototype.getOldValue = function() {
       case os.command.VectorLayerColor.MODE.STROKE:
         ret = os.style.getConfigColor(config, false, os.style.StyleField.STROKE);
         break;
-      default:
       case os.command.VectorLayerColor.MODE.COMBINED:
+      default:
         ret = os.style.getConfigColor(config);
         break;
     }
@@ -125,8 +125,8 @@ os.command.VectorLayerColor.prototype.applyValue = function(config, value) {
           [os.style.StyleField.STROKE, os.style.StyleField.IMAGE]);
       os.ui.adjustIconSet(this.layerId, color);
       break;
-    default:
     case os.command.VectorLayerColor.MODE.COMBINED:
+    default:
       os.style.setConfigColor(config, color);
 
       // Make sure the fill color and opacity are updated as well

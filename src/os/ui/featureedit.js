@@ -478,6 +478,11 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
     this.previewFeature = feature;
     this.originalProperties_ = feature.getProperties();
 
+    if (!this.isPolygon()) {
+      delete this['fillColor'];
+      delete this['fillOpacity'];
+    }
+
     if (this.originalProperties_) {
       // we don't care about or want these sticking around, so remove them
       delete this.originalProperties_[os.style.StyleType.SELECT];
@@ -774,6 +779,25 @@ os.ui.FeatureEditCtrl.prototype.isEllipse = function() {
 
 
 /**
+ * If a polygon is selected.
+ *
+ * @return {boolean}
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.isPolygon = function() {
+  var geometry = this.previewFeature.getGeometry();
+
+  if (geometry) {
+    var type = geometry.getType();
+
+    return type == ol.geom.GeometryType.POLYGON || type == ol.geom.GeometryType.MULTI_POLYGON;
+  } else {
+    return false;
+  }
+};
+
+
+/**
  * If a line or polygon is selected.
  *
  * @return {boolean}
@@ -949,9 +973,17 @@ os.ui.FeatureEditCtrl.prototype.createPreviewFeature = function() {
         'alt': this['altitude']
       };
     }
+
+    delete this['fillColor'];
+    delete this['fillOpacity'];
   } else {
     // not a point, so disable geometry edit
     this.originalGeometry = geometry;
+
+    if (geometry instanceof ol.geom.LineString) {
+      delete this['fillColor'];
+      delete this['fillOpacity'];
+    }
   }
 
   // default feature to show the name field
@@ -1030,10 +1062,16 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
       this['centerIcon'] = icon;
     }
 
+    // Make sure we have a fill color and opacity for polygons, and don't have them otherwise
     if (config['fill'] && config['fill']['color']) {
-      this['fillColor'] = os.color.toHexString(config['fill']['color']);
-      var opacity = os.color.toRgbArray(config['fill']['color']);
-      this['fillOpacity'] = opacity[3];
+      if (this.isPolygon()) {
+        this['fillColor'] = os.color.toHexString(config['fill']['color']);
+        var opacity = os.color.toRgbArray(config['fill']['color']);
+        this['fillOpacity'] = opacity[3];
+      } else {
+        delete this['fillColor'];
+        delete this['fillOpacity'];
+      }
     }
 
     var lineDash = os.style.getConfigLineDash(config);
@@ -1790,10 +1828,6 @@ os.ui.FeatureEditCtrl.updateFeatureStyle = function(feature) {
           config['stroke']['color'] = color;
           config['stroke']['width'] = config['stroke']['width'] || size;
           config['stroke']['lineDash'] = lineDash;
-
-          // set fill for lines/polygons on the base config
-          config['fill'] = config['fill'] || {};
-          config['fill']['color'] = os.style.toRgbaString(config['fill']['color'] || color);
 
           // drop opacity to 0 if the shape style is set to 'None'
           if (shape === os.style.ShapeType.NONE) {
