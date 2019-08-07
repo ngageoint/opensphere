@@ -42,7 +42,7 @@ jQuery.prototype.modal;
 jQuery.prototype.popover;
 
 /**
- * @param {function()} listener
+ * @param {Function} listener
  * @return {!jQuery}
  */
 jQuery.prototype.removeResize;

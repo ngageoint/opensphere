@@ -1,6 +1,8 @@
 goog.provide('os.ui.util.PunyParentCtrl');
 goog.provide('os.ui.util.punyParentDirective');
+
 goog.require('goog.Throttle');
+goog.require('os.ui');
 goog.require('os.ui.Module');
 
 
@@ -72,7 +74,8 @@ os.ui.util.PunyParentCtrl = function($scope, $element) {
  * @private
  */
 os.ui.util.PunyParentCtrl.prototype.destroy_ = function() {
-  this.element_.removeResize(this.resizeFn_);
+  os.ui.removeResize(this.element_, this.resizeFn_);
+
   if (this.throttle_) {
     this.throttle_.dispose();
     this.throttle_ = null;

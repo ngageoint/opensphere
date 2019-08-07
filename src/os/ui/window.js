@@ -16,6 +16,7 @@ goog.require('goog.events.KeyHandler');
 goog.require('goog.log');
 goog.require('ol.array');
 goog.require('os.array');
+goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.onboarding.contextOnboardingDirective');
@@ -863,7 +864,7 @@ os.ui.WindowCtrl.prototype.disposeInternal = function() {
   }
 
   if (this.element && this.resizeFn_) {
-    this.element.removeResize(this.resizeFn_);
+    os.ui.removeResize(this.element, this.resizeFn_);
     this.resizeFn_ = null;
   }
 

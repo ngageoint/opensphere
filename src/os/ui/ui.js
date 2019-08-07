@@ -258,6 +258,25 @@ os.ui.sortDirectives_ = function(a, b) {
 
 
 /**
+ * Remove resize listener from an element.
+ * @param {?(angular.JQLite|jQuery)} el The element.
+ * @param {?Function} fn The callback to remove.
+ */
+os.ui.removeResize = function(el, fn) {
+  if (el && fn) {
+    try {
+      // remove function for the jquery.resize.js vendor library
+      el.removeResize(fn);
+    } catch (e) {
+      // either jquery.resize.js wasn't loaded, or a listener wasn't attached with that library. in either case, also
+      // attempt removing the jQuery-style resize listener.
+      el.off(goog.events.EventType.RESIZE, fn);
+    }
+  }
+};
+
+
+/**
  * Replace a directive already registered with Angular. The directive name and module should be identical to the
  * original.
  *

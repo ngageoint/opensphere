@@ -20,6 +20,7 @@ goog.require('os.time.TimeInstant');
 goog.require('os.time.TimelineController');
 goog.require('os.time.TimelineEventType');
 goog.require('os.time.timeline');
+goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.hist.IHistogramChart');
 goog.require('os.ui.timeline.Brush');
@@ -545,7 +546,7 @@ os.ui.timeline.TimelineCtrl.prototype.destroyBrushCollection_ = function(brushCo
  */
 os.ui.timeline.TimelineCtrl.prototype.destroy_ = function() {
   if (this.element_ && this.resizeFn_) {
-    this.element_.removeResize(this.resizeFn_);
+    os.ui.removeResize(this.element_, this.resizeFn_);
     this.resizeFn_ = null;
   }
 

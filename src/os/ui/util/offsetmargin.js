@@ -1,5 +1,6 @@
 goog.provide('os.ui.util.OffsetMarginCtrl');
 goog.provide('os.ui.util.offsetMarginDirective');
+
 goog.require('goog.Throttle');
 goog.require('os.config.ThemeSettingsChangeEvent');
 goog.require('os.ui');
@@ -100,12 +101,12 @@ os.ui.util.OffsetMarginCtrl.prototype.onDestroy_ = function() {
   }
 
   if (this.bufferTopElement_) {
-    this.bufferTopElement_.removeResize(this.resizeFn_);
+    os.ui.removeResize(this.bufferTopElement_, this.resizeFn_);
     this.bufferTopElement_ = null;
   }
 
   if (this.bufferBotElement_) {
-    this.bufferBotElement_.removeResize(this.resizeFn_);
+    os.ui.removeResize(this.bufferBotElement_, this.resizeFn_);
     this.bufferBotElement_ = null;
   }
 

@@ -121,13 +121,11 @@ os.ui.util.AutoHeightCtrl = function($scope, $element, $injector) {
  */
 os.ui.util.AutoHeightCtrl.prototype.onDestroy_ = function() {
   if (this.parent_) {
-    this.parent_.removeResize(this.resizeFn_);
+    os.ui.removeResize(this.parent_, this.resizeFn_);
 
     var siblings = /** @type {string} */ (this.scope_['siblings']);
     if (siblings) {
-      try {
-        this.parent_.find(siblings).removeResize(this.resizeFn_);
-      } catch (e) {}
+      os.ui.removeResize(this.parent_.find(siblings), this.resizeFn_);
     }
 
     this.parent_ = null;

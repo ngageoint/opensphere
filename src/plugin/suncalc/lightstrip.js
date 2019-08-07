@@ -3,6 +3,7 @@ goog.provide('plugin.suncalc.lightStripDirective');
 
 goog.require('goog.async.ConditionalDelay');
 goog.require('os.defines');
+goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('plugin.suncalc.LightStripSettings');
 goog.require('plugin.suncalc.LightStripSettingsCtrl');
@@ -104,7 +105,7 @@ plugin.suncalc.LightStripCtrl.prototype.destroy_ = function() {
   this.updateDelay_ = null;
 
   if (this.element_ && this.resizeFn_) {
-    this.element_.parent().removeResize(this.resizeFn_);
+    os.ui.removeResize(this.element_.parent(), this.resizeFn_);
     this.resizeFn_ = null;
   }
 
