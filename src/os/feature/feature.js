@@ -594,9 +594,11 @@ os.feature.populateCoordFields = function(feature, opt_replace, opt_geometry) {
  * @param {ol.Feature} item
  * @param {string} field
  * @return {*} The value
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
  */
 os.feature.getField = function(item, field) {
-  return item ? item.get(field) : undefined;
+  return item ? item.values_[field] : undefined;
 };
 
 
@@ -667,11 +669,13 @@ os.feature.isInternalField = function(field) {
  *
  * @param {ol.Feature} feature The feature
  * @return {string|undefined}
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
  */
 os.feature.getLayerId = function(feature) {
   var sourceId = undefined;
   if (feature) {
-    sourceId = /** @type {string|undefined} */ (feature.get(os.data.RecordField.SOURCE_ID));
+    sourceId = /** @type {string|undefined} */ (feature.values_[os.data.RecordField.SOURCE_ID]);
   }
   return sourceId;
 };
@@ -747,7 +751,9 @@ os.feature.getColor = function(feature, opt_source, opt_default) {
 
     if (!color) {
       // check the layer config to see if it's replacing feature styles
-      var layerConfig = os.style.getLayerConfig(feature);
+      // the config here will not be modified, so get it directly from the manager for speed
+      // (rather than getting a new one merged together for changing)
+      var layerConfig = os.style.StyleManager.getInstance().getLayerConfig(os.feature.getLayerId(feature) || '');
       if (layerConfig && layerConfig[os.style.StyleField.REPLACE_STYLE]) {
         color = /** @type {string|undefined} */ (os.style.getConfigColor(layerConfig, false));
       }
