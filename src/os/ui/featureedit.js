@@ -1319,7 +1319,8 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
       }
     }
   } else if (this.originalGeometry && (!geom || geom === this.originalGeometry)) {
-    feature.setGeometry(this.originalGeometry.clone());
+    geom = this.originalGeometry.clone();
+    feature.setGeometry(geom);
   }
 
   if (geom) {
