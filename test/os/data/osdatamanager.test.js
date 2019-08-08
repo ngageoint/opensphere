@@ -1,14 +1,15 @@
+goog.require('ol.source.TileWMS');
+goog.require('os.MapContainer');
 goog.require('os.config.Settings');
 goog.require('os.config.storage.SettingsObjectStorage');
-goog.require('os.data.ProviderEntry');
+goog.require('os.data');
 goog.require('os.data.BaseDescriptor');
-goog.require('os.MapContainer');
-goog.require('os.data.OSDataManager');
 goog.require('os.data.LayerSyncDescriptor');
 goog.require('os.data.MockProvider');
+goog.require('os.data.OSDataManager');
+goog.require('os.data.ProviderEntry');
 goog.require('os.layer.Tile');
 goog.require('os.mock');
-goog.require('ol.source.TileWMS');
 goog.require('test.os.config.SettingsUtil');
 
 
@@ -56,13 +57,13 @@ describe('os.data.OSDataManager', function() {
     test.os.config.SettingsUtil.initAndLoad(settings);
 
     runs(function() {
-      settings.set(['providers', 'thing1', 'type'], 'mock');
-      settings.set(['providers', 'thing1', 'test'], 'A');
-      settings.set(['userProviders', 'thing2', 'type'], 'mock');
-      settings.set(['userProviders', 'thing2', 'test'], 'B');
-      settings.set(['userProviders', 'thing2', 'enabled'], false);
-      settings.set(['userProviders', 'ufo', 'type'], 'unknown');
-      settings.set(['userProviders', 'ufo', 'probingYou'], true);
+      settings.set([os.data.ProviderKey.ADMIN, 'thing1', 'type'], 'mock');
+      settings.set([os.data.ProviderKey.ADMIN, 'thing1', 'test'], 'A');
+      settings.set([os.data.ProviderKey.USER, 'thing2', 'type'], 'mock');
+      settings.set([os.data.ProviderKey.USER, 'thing2', 'test'], 'B');
+      settings.set([os.data.ProviderKey.USER, 'thing2', 'enabled'], false);
+      settings.set([os.data.ProviderKey.USER, 'ufo', 'type'], 'unknown');
+      settings.set([os.data.ProviderKey.USER, 'ufo', 'probingYou'], true);
 
       dm.updateFromSettings(settings);
 
