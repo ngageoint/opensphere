@@ -30,9 +30,8 @@ There are ``readme.md`` files placed in various packages to help explain the dif
 Contributing Code
 -----------------
 
-Our `developer guide`_ has an overview of the build system, development, and testing the application in both compiled and debug modes.
+Our :ref:`getting_started` guide has an overview of the build system, development, and testing the application in both compiled and debug modes.
 
 We prefer that all contributions take place through `pull requests`_. Please ensure that your pull request passes our pull request checklist.
 
-.. _developer guide: getting_started
 .. _pull requests: https://help.github.com/articles/using-pull-requests

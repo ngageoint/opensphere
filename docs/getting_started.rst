@@ -1,3 +1,5 @@
+.. _getting_started:
+
 Getting Started
 ###############
 
@@ -97,6 +99,8 @@ Each target runs its individual pieces through npm scripts as well. Several of t
   $ npm run compile:gcc      # runs the google-closure-compiler to produce the compiled JS
   $ npm run compile:css      # runs node-sass to produce the minified/combined css
 
+If you are using yarn (recommended), replace ``npm run`` with ``yarn`` in those targets.
+
 The Resolver
 ============
 
@@ -157,6 +161,18 @@ End to end tests are written in Mocha_ and run with Cypress_.  Tests can be star
 See :doc:`/guides/cypress_artifacts` for information on accessing Cypress artifacts generated from a CI environment.
 
 Any contributions to OpenSphere should avoid breaking current tests and should include new tests that fully cover the changed areas.
+
+Git Commits
+***********
+
+When making local commits, there are checks (implemented as git pre-commit hooks) to verify that your commit message matches the `Conventional Commits`_ conventions. 
+Basically, you need use the form ``<type>(<scope>): <subject>``, for example something like: ``fix(docs): Updated Getting Started to describe git commits``.
+The valid types are: ``feat``, ``fix``, ``docs``, ``style``, ``refactor``, ``perf``, ``test``, ``build``, ``ci``, ``chore`` and ``revert``. Scope is optional, and 
+should cover the particular part of opensphere that you are working on.
+
+.. _Conventional Commits: https://www.conventionalcommits.org
+
+If your change is an API break, or would otherwise affect external projects, please add a ``BREAKING CHANGE:`` part to the commit message body (per conventions) that describes what external users need to do to adapt to the change.
 
 Developing plugins
 ******************

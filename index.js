@@ -278,11 +278,6 @@ const indexResources = sharedResources.concat([
     files: ['images']
   },
   {
-    source: 'styles',
-    target: 'styles',
-    files: ['icons']
-  },
-  {
     source: resolver.resolveModulePath('opensphere-asm/dist', __dirname),
     target: '',
     scripts: ['os-load.js'],
