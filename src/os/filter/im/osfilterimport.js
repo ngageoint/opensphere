@@ -45,6 +45,30 @@ goog.inherits(os.filter.im.OSFilterImportCtrl, os.ui.filter.im.FilterImportCtrl)
 
 
 /**
+ * Get the base filterable descriptors and add in the filterable layers.
+ * @inheritDoc
+ */
+os.filter.im.OSFilterImportCtrl.prototype.getFilterables = function() {
+  var filterables = os.filter.im.OSFilterImportCtrl.base(this, 'getFilterables');
+  var layers = os.map.mapContainer.getLayers();
+
+  if (layers) {
+    layers.forEach(function(layer) {
+      if (os.implements(layer, os.filter.IFilterable.ID)) {
+        layer = /** @type {os.filter.IFilterable} */ (layer);
+
+        if (layer.isFilterable()) {
+          filterables.unshift(layer);
+        }
+      }
+    });
+  }
+
+  return filterables;
+};
+
+
+/**
  * @inheritDoc
  */
 os.filter.im.OSFilterImportCtrl.prototype.getProviderFromFilterable = function(filterable) {

@@ -102,7 +102,7 @@ os.source.getFilterColumns = function(source, opt_local, opt_includeTime) {
     if (!columns) {
       var filterable = os.filter.BaseFilterManager.getInstance().getFilterable(source.getId());
       if (filterable) {
-        columns = filterable.getFilterColumns().map(os.source.mapFilterColumns);
+        columns = filterable.getFilterColumns().map(os.source.featureTypesToDefinitions);
       }
     }
   }
@@ -115,10 +115,19 @@ os.source.getFilterColumns = function(source, opt_local, opt_includeTime) {
  * @param {!os.ogc.FeatureTypeColumn} c The feature type column to convert
  * @return {!os.data.ColumnDefinition}
  */
-os.source.mapFilterColumns = function(c) {
+os.source.featureTypesToDefinitions = function(c) {
   var col = new os.data.ColumnDefinition(c.name);
   col['type'] = c.type;
   return col;
+};
+
+
+/**
+ * @param {!os.data.ColumnDefinition} c The feature type column to convert
+ * @return {!os.ogc.FeatureTypeColumn}
+ */
+os.source.definitionsToFeatureTypes = function(c) {
+  return {name: c['name'], type: c['type']};
 };
 
 

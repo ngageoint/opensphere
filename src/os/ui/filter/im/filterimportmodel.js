@@ -17,7 +17,8 @@ os.ui.filter.im.filterImportModelDirective = function() {
     scope: {
       'models': '=',
       'icon': '=',
-      'found': '='
+      'found': '=',
+      'isChild': '=?'
     },
     templateUrl: os.ROOT + 'views/filter/im/filterimportmodel.html'
   };

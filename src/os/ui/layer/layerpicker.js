@@ -2,11 +2,7 @@ goog.provide('os.ui.layer.LayerPickerCtrl');
 goog.provide('os.ui.layer.layerPickerDirective');
 
 goog.require('ol.array');
-
-
 goog.require('os.array');
-
-
 goog.require('os.ui.Module');
 
 
@@ -27,6 +23,7 @@ os.ui.layer.layerPickerDirective = function() {
       'maxNumLayers': '@?',
       'formatter': '=?',
       'matcher': '=?',
+      'groupFn': '=?',
       'placeholderText': '@?',
       'emitName': '@?'
     },
@@ -62,6 +59,12 @@ os.ui.layer.LayerPickerCtrl = function($scope, $element, $timeout) {
   this.scope_ = $scope;
 
   /**
+   * @type {?angular.$timeout}
+   * @private
+   */
+  this.timeout_ = $timeout;
+
+  /**
    * Maximum selection size allowed.
    * @type {number}
    * @private
@@ -71,7 +74,7 @@ os.ui.layer.LayerPickerCtrl = function($scope, $element, $timeout) {
   /**
    * Function that gets the desired descriptors in an array format for the select2.
    * If not in the scope it defaults to returning all descriptors.
-   * @type {function(): !Array.<!os.data.IDataDescriptor>}
+   * @type {function(): !Array.<(!os.data.IDataDescriptor|!os.filter.IFilterable)>}
    */
   this.getLayersFunction = this.scope_['layersFilter'] ? this.scope_['layersFilter'] : this.getLayersList;
 
@@ -88,20 +91,32 @@ os.ui.layer.LayerPickerCtrl = function($scope, $element, $timeout) {
   this.emitName_ = this.scope_['emitName'] != null ? this.scope_['emitName'] : 'layerpicker';
 
   /**
-   * Array of available layers
-   * @type {!Array.<!os.data.IDataDescriptor>}
+   * @type {!Object<string, (os.data.IDataDescriptor|os.filter.IFilterable)>}
+   * @private
    */
-  this['layersList'] = this.getLayersFunction();
+  this.layerIndex_ = {};
 
-  var formatter = /** @type {Function} */ ($scope['formatter']) || this.select2Formatter_;
-  var matcher = /** @type {Function} */ ($scope['matcher']) || this.matcher_;
+  /**
+   * Optional override grouping function for the select.
+   * @type {function((os.data.IDataDescriptor|os.filter.IFilterable)):?string}
+   * @private
+   */
+  this.groupFn_ = $scope['groupFn'];
+
+  /**
+   * Array of available layers
+   * @type {!Array<!os.data.IDataDescriptor>}
+   */
+  this['layersList'] = [];
+  this.updateLayers();
+
+  var formatter = /** @type {Function} */ ($scope['formatter'] || this.select2Formatter_).bind(this);
+  var matcher = /** @type {Function} */ ($scope['matcher'] || this.matcher_).bind(this);
 
   if ($scope['isRequired'] == null) {
     // default the picker to required
     $scope['isRequired'] = true;
   }
-
-  this.timeout_ = $timeout;
 
   $timeout(function() {
     this.select2_ = $element.find('.js-layer-picker');
@@ -112,13 +127,14 @@ os.ui.layer.LayerPickerCtrl = function($scope, $element, $timeout) {
       'formatSelection': formatter,
       'formatResult': formatter
     });
-    this.layerSelected_();
+
+    this.multiple() ? this.initLayers_() : this.initLayer_();
   }.bind(this));
-  this.scope_.$watch('layer', this.layerSelected_.bind(this));
-  this.scope_.$watch('layers', this.layerSelected_.bind(this));
-  this.scope_.$on('updateLayers', goog.bind(function() {
-    this['layersList'] = this.getLayersFunction();
-  }, this));
+
+  // this.scope_.$watch('layer', this.layerSelected_.bind(this));
+  // this.scope_.$watch('layers', this.layerSelected_.bind(this));
+
+  this.scope_.$on('updateLayers', this.updateLayers.bind(this));
   this.scope_.$on('$destroy', this.destroy_.bind(this));
 };
 
@@ -135,16 +151,15 @@ os.ui.layer.LayerPickerCtrl.prototype.destroy_ = function() {
 
 
 /**
- * Layer selection is triggered, use the correct one
- *
- * @private
+ * Updates the layers list.
  */
-os.ui.layer.LayerPickerCtrl.prototype.layerSelected_ = function() {
-  if (this.scope_['layer'] !== undefined) {
-    this.selectLayer_();
-  } else {
-    this.selectLayers_();
-  }
+os.ui.layer.LayerPickerCtrl.prototype.updateLayers = function() {
+  this['layersList'] = this.getLayersFunction();
+  this.layerIndex_ = {};
+
+  this['layersList'].forEach(function(l) {
+    this.layerIndex_[l.getId()] = l;
+  }, this);
 };
 
 
@@ -153,7 +168,7 @@ os.ui.layer.LayerPickerCtrl.prototype.layerSelected_ = function() {
  *
  * @private
  */
-os.ui.layer.LayerPickerCtrl.prototype.selectLayers_ = function() {
+os.ui.layer.LayerPickerCtrl.prototype.initLayers_ = function() {
   if (this.select2_) {
     var vals = [];
     if (this.scope_['layers']) {
@@ -161,11 +176,13 @@ os.ui.layer.LayerPickerCtrl.prototype.selectLayers_ = function() {
         var found = ol.array.find(this['layersList'], function(l) {
           return l.getId() == layer.getId();
         });
+
         if (found) {
           vals.push(found['$$hashKey']);
         }
       }, this);
     }
+
     this.select2_.select2('val', vals);
   }
 };
@@ -176,30 +193,21 @@ os.ui.layer.LayerPickerCtrl.prototype.selectLayers_ = function() {
  *
  * @private
  */
-os.ui.layer.LayerPickerCtrl.prototype.selectLayer_ = function() {
+os.ui.layer.LayerPickerCtrl.prototype.initLayer_ = function() {
   if (this.select2_) {
     var val = null;
     if (this.scope_['layer']) {
       var found = ol.array.find(this['layersList'], function(l) {
         return l.getId() == this.scope_['layer'].getId();
       }.bind(this));
+
       if (found) {
         val = found['$$hashKey'];
       }
     }
+
     this.select2_.select2('val', val);
   }
-};
-
-
-/**
- * Get all the layers
- * TODO update this to auto add new descriptors when they are added (is this even necessary?)
- *
- * @return {!Array.<!os.data.IDataDescriptor>}
- */
-os.ui.layer.LayerPickerCtrl.prototype.getLayersList = function() {
-  return os.dataManager.getDescriptors();
 };
 
 
@@ -237,6 +245,33 @@ os.ui.layer.LayerPickerCtrl.prototype.multiple = function() {
 
 
 /**
+ * Get all the layers
+ *
+ * @return {!Array.<!os.data.IDataDescriptor>}
+ */
+os.ui.layer.LayerPickerCtrl.prototype.getLayersList = function() {
+  return os.dataManager.getDescriptors();
+};
+
+
+/**
+ * Returns the group name for the layer.
+ *
+ * @param {os.data.IDataDescriptor|os.filter.IFilterable} layer The layer to group.
+ * @return {?string}
+ * @export
+ */
+os.ui.layer.LayerPickerCtrl.prototype.getGroup = function(layer) {
+  if (this.groupFn_) {
+    // if we have a group fn passed in, use it
+    return this.groupFn_(layer);
+  }
+
+  return os.ui.layer.LayerPickerCtrl.layerGroupFn(layer);
+};
+
+
+/**
  * Search result formatter. The select is actually storing the ID of each
  * descriptor. This function allows us to display the actual layer title.
  *
@@ -246,29 +281,54 @@ os.ui.layer.LayerPickerCtrl.prototype.multiple = function() {
  * @private
  */
 os.ui.layer.LayerPickerCtrl.prototype.select2Formatter_ = function(item, ele) {
-  if (item) {
-    var id = item['text'];
-    var des = os.dataManager.getDescriptor(id);
-    var val = '';
-    if (des) {
-      // include the explicit title here
-      val = des.getTitle() + ' ' + (des.getExplicitTitle() || '');
-      var color = des.getColor();
-      color = color ? os.color.toHexString(color) : 'white';
-      var description = des.getDescription() || 'No Description';
-      description = os.ui.escapeHtml(description);
-      val = '<span title="' + description + '"><i class="fa fa-bars mr-1" style="color:' + color +
-          ';"></i>' + val;
-      if (des.getProvider()) {
-        // put the provider on each for clarity
-        val += ' (' + des.getProvider() + ')';
-      }
-      val += '</span>';
+  if (item['children']) {
+    // it's an optgroup, so just return the label
+    var text = item['text'];
+    if (text === '') {
+      // an empty optgroup should be hidden, or they look ugly
+      ele.hide();
     }
-    return val;
-  } else {
-    return '';
+
+    return text;
   }
+
+  var val = '';
+
+  if (ele) {
+    var id = /** @type {string} */ (item['text']);
+    var layer = this.layerIndex_[id];
+    var title;
+    var color;
+    var description;
+    var provider;
+    var explicitType;
+
+    if (layer instanceof os.data.BaseDescriptor) {
+      var des = /** @type {os.data.BaseDescriptor} */ (layer);
+      title = layer.getTitle();
+      color = des.getColor() ? os.color.toHexString(des.getColor()) : 'white';
+      description = os.ui.escapeHtml(des.getDescription() || 'No Description');
+      provider = des.getProvider() ? ' (' + des.getProvider() + ')' : '';
+
+      explicitType = des.getExplicitTitle() ? ' ' + des.getExplicitTitle() : '';
+      if (explicitType == ' Tiles and Features') {
+        // the fact that a descriptor is for both tiles and features is irrelevant here, simplify if down
+        explicitType = ' Features';
+      }
+    } else if (layer instanceof os.layer.Vector) {
+      title = layer.getTitle();
+      color = /** @type {string} */ (layer.getLayerOptions()['color']);
+      color = color ? os.color.toHexString(color) : 'white';
+      description = 'No Description';
+      provider = layer.getProvider() ? ' (' + layer.getProvider() + ')' : '';
+      explicitType = layer.getExplicitType() ? ' ' + layer.getExplicitType() : '';
+    }
+
+    val = '<span title="' + description + '"><i class="fa fa-bars mr-1" style="color:' + color +
+          ';"></i>' + title + explicitType + provider + '</span>';
+  }
+
+  return val || '';
 };
 
 
@@ -283,12 +343,33 @@ os.ui.layer.LayerPickerCtrl.prototype.select2Formatter_ = function(item, ele) {
  * @private
  */
 os.ui.layer.LayerPickerCtrl.prototype.matcher_ = function(term, text, option) {
-  var des = os.dataManager.getDescriptor(text);
-  if (des) {
-    var layerTitle = des.getTitle() + ' ' + (des.getExplicitTitle() || '');
-    if (layerTitle) {
-      return goog.string.caseInsensitiveContains(layerTitle, term);
-    }
+  var id = option.text();
+
+  if (!id) {
+    // ng-options introduces an empty option element for some reason, get rid of it
+    return false;
   }
-  return false;
+
+  var layer = this.layerIndex_[id];
+  var title;
+
+  if (layer instanceof os.data.BaseDescriptor) {
+    title = layer.getTitle() + ' ' + (layer.getExplicitTitle() || '');
+  } else if (os.implements(layer, os.filter.IFilterable.ID)) {
+    var filterable = /** @type {os.filter.IFilterable} */ (layer);
+    title = filterable.getTitle();
+  }
+
+  return title ? goog.string.caseInsensitiveContains(title, term) : true;
+};
+
+
+/**
+ * Returns the group name for the layer.
+ *
+ * @param {os.data.IDataDescriptor|os.filter.IFilterable} layer The layer to group.
+ * @return {?string}
+ */
+os.ui.layer.LayerPickerCtrl.layerGroupFn = function(layer) {
+  return layer instanceof os.data.BaseDescriptor ? 'Inactive' : 'Active';
 };
