@@ -261,7 +261,7 @@ os.ui.filter.im.FilterImportCtrl.prototype.onImportComplete = function(event) {
         if (filterable) {
           // we matched it by filter key, so clone the filter and set the internal filterable ID as its type
           var clone = filter.clone();
-          var type = filterable.getId();
+          var type = filterable.getFilterableTypes()[0];
           clone.setId(goog.string.getRandomString());
           clone.setType(type);
 
@@ -439,6 +439,8 @@ os.ui.filter.im.FilterImportCtrl.prototype.testColumns = function() {
     }
   }
 
+  this.addUnmatched();
+
   os.ui.apply(this.scope);
 };
 
@@ -488,25 +490,36 @@ os.ui.filter.im.FilterImportCtrl.prototype.addUnmatched = function() {
       var filterModel = this['unmatched'][i];
 
       if (filterModel['matches']) {
-        filterModel = this.getFilterModel(filterModel['title'], filterModel['filter'], filterModel['tooltip'],
-            filterModel['type'], filterModel['match']);
-
         // since a single layer can have multiple filterable types, add it for all
         var types = f.getFilterableTypes();
 
         for (var j = 0, jj = types.length; j < jj; j++) {
           var type = types[j];
-          // make sure to set the type or none of this works
-          filterModel['filter'].setType(type);
-          matchedCount = os.ui.filter.im.FilterImportCtrl.getFilterCount(filterModel, matchedCount);
+          var filter = /** @type {os.filter.FilterEntry} */ (filterModel['filter']);
+          filter = filter.clone();
+          filter.setId(goog.string.getRandomString());
+          filter.setType(type);
+
+          filterModel = this.getFilterModel(filterModel['title'], filter, filterModel['tooltip'],
+              filterModel['type'], filterModel['match']);
 
           if (this['matched'][type]) {
-            this['matched'][type]['filterModels'].push(filterModel);
+            var models = this['matched'][type]['filterModels'];
+            var found = models.find(function(m) {
+              return m['filter'].getFilter() == filterModel['filter'].getFilter() &&
+                  m['filter'].getTitle() == filterModel['filter'].getTitle();
+            });
+
+            if (!found) {
+              models.push(filterModel);
+              matchedCount = os.ui.filter.im.FilterImportCtrl.getFilterCount(filterModel, matchedCount);
+            }
           } else {
             var icons = this.getIconsFromFilterable(f);
             var layerTitle = this.getTitleFromFilterable(f, type);
             var layerModel = this.getLayerModel(layerTitle, icons, filterModel['filter'].getMatch(), filterModel);
             this['matched'][type] = layerModel;
+            matchedCount = os.ui.filter.im.FilterImportCtrl.getFilterCount(filterModel, matchedCount);
           }
         }
       }
