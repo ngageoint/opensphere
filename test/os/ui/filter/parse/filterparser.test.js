@@ -1,6 +1,6 @@
-goog.require('os.ui.filter.parse.FilterParser');
 goog.require('goog.dom.xml');
 goog.require('goog.net.XhrIo');
+goog.require('os.ui.filter.parse.FilterParser');
 
 
 describe('os.ui.filter.parse.FilterParser', function() {
@@ -36,13 +36,13 @@ describe('os.ui.filter.parse.FilterParser', function() {
       expect(filters.length).toBe(3);
 
       expect(filters[0].getTitle()).toBe('TOI Filter');
-      expect(filters[0].type).toBe('LAYER_1');
+      expect(filters[0].type).toBe('https://fake.url.com/ogc!!LAYER_1');
 
       expect(filters[1].getTitle()).toBe('NUM Filter');
-      expect(filters[1].type).toBe('LAYER_2');
+      expect(filters[1].type).toBe('https://fake.url.com/ogc!!LAYER_2');
 
       expect(filters[2].getTitle()).toBe('ALT Filter');
-      expect(filters[2].type).toBe('LAYER_3');
+      expect(filters[2].type).toBe('https://fake.url.com/ogc!!LAYER_3');
     };
 
     requestFilters(filtersUrl, filterFn);
@@ -55,10 +55,10 @@ describe('os.ui.filter.parse.FilterParser', function() {
       expect(filters.length).toBe(2);
 
       expect(filters[0].getTitle()).toBe('State Filter 1');
-      expect(filters[0].type).toBe('LAYER_4');
+      expect(filters[0].type).toBe('default#LAYER_4#features');
 
       expect(filters[1].getTitle()).toBe('State Filter 2');
-      expect(filters[1].type).toBe('LAYER_5');
+      expect(filters[1].type).toBe('default#LAYER_5#features');
     };
 
     requestFilters(stateUrl, stateFn);
