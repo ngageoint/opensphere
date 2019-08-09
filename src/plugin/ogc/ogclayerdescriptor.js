@@ -6,6 +6,7 @@ goog.require('os.alert.AlertManager');
 goog.require('os.command.LayerAdd');
 goog.require('os.command.LayerRemove');
 goog.require('os.command.SequenceCommand');
+goog.require('os.data');
 goog.require('os.data.IAreaTest');
 goog.require('os.data.LayerSyncDescriptor');
 goog.require('os.events.LayerConfigEvent');
@@ -958,7 +959,8 @@ plugin.ogc.OGCLayerDescriptor.prototype.getWmsOptions = function() {
 
   if (options['provider']) {
     // check to see if the visibility is configured to false, if not visibility should be true
-    options['visible'] = os.settings.get(['providers', this.getProvider().toLowerCase(), 'visible'], true);
+    options['visible'] = os.settings.get(
+        [os.data.ProviderKey.ADMIN, this.getProvider().toLowerCase(), 'visible'], true);
   }
 
   return options;
@@ -1011,7 +1013,8 @@ plugin.ogc.OGCLayerDescriptor.prototype.getWfsOptions = function(opt_options) {
 
   if (options['provider']) {
     // check to see if the visibility is configured to false, if not visibility should be true
-    options['visible'] = os.settings.get(['providers', this.getProvider().toLowerCase(), 'visible'], true);
+    options['visible'] = os.settings.get(
+        [os.data.ProviderKey.ADMIN, this.getProvider().toLowerCase(), 'visible'], true);
   }
 
   return options;

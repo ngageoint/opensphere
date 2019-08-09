@@ -100,11 +100,11 @@ os.state.deleteStates = function(list) {
       // deactivate and remove the state without putting a command on the stack
       list[i].setActive(false);
       // If its a local state file, remove it.
-      if (list[i].descriptorType === 'state') {
+      if (list[i].getDescriptorType() === 'state') {
         // remove the descriptor from the data manager
         dataManager.removeDescriptor(list[i]);
         var provider = /** @type {os.ui.data.DescriptorProvider} */
-            (dataManager.getProvider(list[i].getDescriptorType()));
+            (dataManager.getProvider(list[i].getId()));
         if (provider && provider instanceof os.ui.data.DescriptorProvider) {
           // remove the descriptor from the provider
           provider.removeDescriptor(list[i], true);
