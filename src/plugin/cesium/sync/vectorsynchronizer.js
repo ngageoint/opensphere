@@ -678,7 +678,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.setFeatureHighlight_ = function(
       // distance or the feature will not appear on the screen.
       var cameraDistance = camera.getDistanceToPosition(prim.position);
       if (cameraDistance != null) {
-        prim.eyeOffset = new Cesium.Cartesian3(0.0, 0.0, -cameraDistance * 0.99);
+        prim.eyeOffset = new Cesium.Cartesian3(0.0, 0.0, -cameraDistance * 0.67);
       }
     } else {
       // reset the eye offset to the default
@@ -688,7 +688,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.setFeatureHighlight_ = function(
     if (value && this.scene && camera) {
       var cameraDistance = camera.getDistanceToPosition(prim.position);
       if (cameraDistance != null) {
-        this.converter.setLabelEyeOffset(prim, this.scene, new Cesium.Cartesian3(0.0, 0.0, -cameraDistance * 0.99));
+        this.converter.setLabelEyeOffset(prim, this.scene, new Cesium.Cartesian3(0.0, 0.0, -cameraDistance * 0.67));
       }
     } else {
       // reset the eye offset to the default
