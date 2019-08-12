@@ -23,7 +23,7 @@ Prerequisites
 =============
 
 Install git, java, node, and yarn. We recommend using Chocolatey_, a package manager for Windows.
-After installing Chocolatey_, run the following in an admin prompt:
+After installing Chocolatey_, run the following in a command prompt as an administrator:
 
 .. _Chocolatey: https://chocolatey.org/
 
@@ -31,8 +31,8 @@ After installing Chocolatey_, run the following in an admin prompt:
 
   choco install git jre8 nvm yarn
   refreshenv
-  nvm install 8
-  nvm use 8
+  nvm install 10.16.2
+  nvm use 10.16.2
 
 Now we will check our work:
 
