@@ -71,6 +71,14 @@ rather than whatever it typically uses on Windows.
 If you have other node projects on your machine and do not wish for this to pollute them, then consider adding
 that configuration to a ``.npmrc`` file local to the project.
 
+Also fix your line ending configuration for git (necessary if using Git Bash but not if you are using a full POSIX environment such as Cygwin_):
+
+.. code-block:: none
+
+  git config core.autocrlf input
+
+Now build:
+
 .. code-block:: none
 
   npm run build
