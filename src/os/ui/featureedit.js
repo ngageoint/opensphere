@@ -15,6 +15,7 @@ goog.require('ol.geom.Point');
 goog.require('os.MapContainer');
 goog.require('os.action.EventType');
 goog.require('os.data.ColumnDefinition');
+goog.require('os.geo');
 goog.require('os.map');
 goog.require('os.math.Units');
 goog.require('os.ol.feature');
@@ -788,9 +789,7 @@ os.ui.FeatureEditCtrl.prototype.isPolygon = function() {
   var geometry = this.previewFeature.getGeometry();
 
   if (geometry) {
-    var type = geometry.getType();
-
-    return type == ol.geom.GeometryType.POLYGON || type == ol.geom.GeometryType.MULTI_POLYGON;
+    return os.geo.isGeometryPolygonal(geometry);
   } else {
     return false;
   }
