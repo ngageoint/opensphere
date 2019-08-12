@@ -160,6 +160,7 @@ os.ui.LayersCtrl.prototype.disposeInternal = function() {
   var map = os.MapContainer.getInstance();
   map.unlisten(os.events.LayerEventType.ADD, this.search, false, this);
   map.unlisten(os.events.LayerEventType.REMOVE, this.search, false, this);
+  map.unlisten(os.events.LayerEventType.CHANGE, this.search, false, this);
 
   os.settings.unlisten(os.user.settings.FavoriteManager.KEY, this.search, false, this);
 
@@ -230,9 +231,6 @@ os.ui.LayersCtrl.prototype.openMenu = function(selector) {
   if (menu) {
     var target = this.element.find(selector);
     if (target && target.length > 0) {
-      this.scope['menu'] = selector;
-      os.dispatcher.listenOnce(os.ui.GlobalMenuEventType.MENU_CLOSE, this.onMenuClose, false, this);
-
       menu.open(undefined, {
         my: 'left top',
         at: 'left bottom',
@@ -240,17 +238,6 @@ os.ui.LayersCtrl.prototype.openMenu = function(selector) {
       });
     }
   }
-};
-
-
-/**
- * Handle menu close event.
- *
- * @param {goog.events.Event} evt The event.
- * @protected
- */
-os.ui.LayersCtrl.prototype.onMenuClose = function(evt) {
-  this.scope['menu'] = null;
 };
 
 
