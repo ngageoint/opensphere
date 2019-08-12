@@ -3,6 +3,7 @@ goog.provide('os.ui.menu.Menu');
 
 goog.require('goog.async.Delay');
 goog.require('goog.dom');
+goog.require('goog.dom.classlist');
 goog.require('goog.events.EventTarget');
 goog.require('os.ui');
 goog.require('os.ui.menu.MenuEvent');
@@ -115,20 +116,23 @@ os.ui.menu.Menu.prototype.isOpen = function() {
 os.ui.menu.Menu.prototype.onClick_ = function(e) {
   // if we didn't click on something in the menu
   if (!$(e.target).closest('#menu').length) {
-    // check to see if what was clicked was what originally opened the menu, if so, close it
+    // check to see if what was clicked was what originally opened the menu
     var opener = this.position_.of;
-    var openerEl = /** @type {Element} */ (this.position_.of);
-    var str = typeof opener === 'string' ? /** @type {string} */ (opener) : '';
-    try {
-      // check target against menu position element
-      var test = $(e.target).closest(opener[0]).length || $(e.target).closest(openerEl).length;
-    } catch (error) {
-      var test = $(e.target).closest(str).length ? true : false;
+    var openerEl = null;
+    var openerClicked = false;
+
+    if (opener && opener.length && opener[0] instanceof Element) {
+      // jQuery element
+      openerEl = opener[0];
+      openerClicked = !!openerEl && $(e.target).closest(openerEl).length;
+    } else if (typeof opener === 'string' && e.target) {
+      var jqEl = $(e.target).closest(opener);
+      openerEl = jqEl[0];
+      openerClicked = !!jqEl[0];
     }
-    // test to see if the map or timeline was clicked, those should always close a menu, as should clicking on a canvas
-    if (test && opener != '#map-container' && opener != '.c-svg-timeline' && typeof e.target.nodeName === 'string' &&
-      e.target.nodeName.toLowerCase() != 'canvas') {
-      // leave the open flag so the next call to open wont open anything
+
+    if (openerClicked && os.ui.menu.Menu.supportsToggle(openerEl)) {
+      // the opener was clicked again. leave the open flag if the opener supports toggling a menu.
       this.close(false, true);
     } else {
       // close the menu
@@ -313,4 +317,14 @@ os.ui.menu.Menu.prototype.dispatchEvent = function(evt) {
   var val = os.ui.menu.Menu.base(this, 'dispatchEvent', evt);
   var val2 = !evt.defaultPrevented ? os.dispatcher.dispatchEvent(evt) : false;
   return val || val2;
+};
+
+
+/**
+ * If an element supports toggling a menu.
+ * @param {Element} el The element.
+ * @return {boolean}
+ */
+os.ui.menu.Menu.supportsToggle = function(el) {
+  return !!el && (el.nodeName.toLowerCase() == 'button' || goog.dom.classlist.contains(el, 'btn-group'));
 };
