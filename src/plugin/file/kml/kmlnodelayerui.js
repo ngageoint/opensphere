@@ -14,6 +14,7 @@ goog.require('os.command.FeatureShowLabel');
 goog.require('os.command.FeatureSize');
 goog.require('os.command.ParallelCommand');
 goog.require('os.data.ColumnDefinition');
+goog.require('os.geo');
 goog.require('os.ui.Module');
 goog.require('os.ui.layer.VectorLayerUICtrl');
 goog.require('os.ui.layer.iconStyleControlsDirective');
@@ -1122,9 +1123,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.isFeatureFillable = function() {
   if (feature) {
     var geometry = feature.getGeometry();
 
-    if (geometry instanceof ol.geom.Polygon || geometry instanceof ol.geom.MultiPolygon) {
-      return true;
-    }
+    return os.geo.isGeometryPolygonal(geometry);
   }
 
   return false;
