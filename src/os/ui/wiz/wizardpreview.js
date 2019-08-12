@@ -3,6 +3,7 @@ goog.provide('os.ui.wiz.wizardPreviewDirective');
 
 goog.require('os.data.ColumnDefinition');
 goog.require('os.im.mapping');
+goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.slick.slickGridDirective');
 goog.require('os.ui.slick.slickHeaderButtonDirective');
@@ -91,7 +92,7 @@ os.ui.wiz.WizardPreviewCtrl = function($scope, $element, $timeout) {
   if ($scope['resizeWith']) {
     this.resizeFn_ = this.resizePreview_.bind(this);
     this.container_ = $element.parents($scope['resizeWith']);
-    this.container_.resize(this.resizeFn_);
+    os.ui.resize(this.container_, this.resizeFn_);
     this.resizePreview_(500);
   }
 
@@ -108,7 +109,7 @@ os.ui.wiz.WizardPreviewCtrl = function($scope, $element, $timeout) {
 os.ui.wiz.WizardPreviewCtrl.prototype.destroy_ = function() {
   if (this.container_) {
     if (this.resizeFn_) {
-      this.container_.removeResize(this.resizeFn_);
+      os.ui.removeResize(this.container_, this.resizeFn_);
       this.resizeFn_ = null;
     }
 
