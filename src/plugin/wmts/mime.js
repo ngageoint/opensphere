@@ -1,6 +1,7 @@
 goog.provide('plugin.wmts.mime');
 
 goog.require('os.file.mime.xml');
+goog.require('plugin.wmts');
 
 
 os.file.mime.register(

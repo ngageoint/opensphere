@@ -5,7 +5,7 @@ describe('os.data.ConfigDescriptor', function() {
   var tileConfig = {
     'id': 'config#descriptor#tiles',
     'type': 'WMS',
-    'layerType': 'Tile Layers',
+    'layerType': os.layer.LayerType.TILES,
     'crossOrigin': 'none',
     'description': 'This is a test of a tile layer',
     'descriptorType': 'testType',
@@ -26,7 +26,7 @@ describe('os.data.ConfigDescriptor', function() {
   var featureConfig = {
     'id': 'config#descriptor#features',
     'type': 'GeoJSON',
-    'layerType': 'Feature Layers',
+    'layerType': os.layer.LayerType.FEATURES,
     'crossOrigin': 'anonymous',
     'description': 'This is a test of a GeoJSON layer.',
     'provider': 'Some Service\'s GeoJSON stuff',
@@ -47,6 +47,14 @@ describe('os.data.ConfigDescriptor', function() {
       var d = new os.data.ConfigDescriptor();
       d.setBaseConfig(config);
       expect(d.getId()).toEqual(config.id);
+    });
+
+    it('should get own id if set', function() {
+      var id = 'test#descriptor#id';
+      var d = new os.data.ConfigDescriptor();
+      d.setBaseConfig(config);
+      d.setId(id);
+      expect(d.getId()).toEqual(id);
     });
 
     it('should get title from config', function() {
@@ -169,6 +177,25 @@ describe('os.data.ConfigDescriptor', function() {
     var d = new os.data.ConfigDescriptor();
     d.setBaseConfig([tileConfig, featureConfig]);
     expect(d.getIcons()).toBe(tileConfig.icons + featureConfig.icons);
+  });
+
+  it('should determine icons from multiple configs', function() {
+    var config1 = Object.assign({}, tileConfig);
+    delete config1['icons'];
+    var config2 = Object.assign({}, featureConfig);
+    delete config2['icons'];
+
+    var d = new os.data.ConfigDescriptor();
+    d.setBaseConfig([config1]);
+    expect(d.getIcons()).toBe(os.ui.Icons.TILES);
+
+    d.setBaseConfig([config1, config2]);
+    expect(d.getIcons()).toBe(os.ui.Icons.TILES + os.ui.Icons.FEATURES);
+
+    config1['animate'] = true;
+    config2['animate'] = true;
+    d.setBaseConfig([config1, config2]);
+    expect(d.getIcons()).toBe(os.ui.Icons.TILES + os.ui.Icons.FEATURES + os.ui.Icons.TIME);
   });
 
   it('should get search type from multiple configs', function() {

@@ -64,7 +64,7 @@
 // Tristate checkbox
 
 .c-tristate {
-  // sass-lint:disable no-duplicate-properties
+  // sass-lint:disable-block no-duplicate-properties
   background: #fcfff4;
   background: linear-gradient(#fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
   border-radius: 3px;
@@ -125,7 +125,7 @@
   border-right: 0;
   border-top: 0;
   // Chrome < 41 needs initial
-  // sass-lint:disable no-duplicate-properties
+  // sass-lint:disable-block no-duplicate-properties
   display: initial;
   display: unset;
   height: 5.5px;
@@ -137,7 +137,7 @@
   background: #555;
   border-radius: 2px;
   // Chrome < 41 needs initial
-  // sass-lint:disable no-duplicate-properties
+  // sass-lint:disable-block no-duplicate-properties
   display: initial;
   display: unset;
   height: 9px;

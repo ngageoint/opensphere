@@ -16,6 +16,7 @@ goog.require('goog.events.KeyHandler');
 goog.require('goog.log');
 goog.require('ol.array');
 goog.require('os.array');
+goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.onboarding.contextOnboardingDirective');
@@ -762,6 +763,13 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
   this.vsm_.listen(goog.events.EventType.RESIZE, this.onViewportResize_, false, this);
 
   /**
+   * Bound function to handle window resize events.
+   * @type {?function()}
+   * @private
+   */
+  this.resizeFn_ = null;
+
+  /**
    * The last window height, for use with expand/collapse behavior.
    * @type {number}
    * @private
@@ -814,6 +822,11 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
   // Stack this new window on top of others
   $timeout(function() {
     this.bringToFront();
+
+    if (this.element && !this.resizeFn_) {
+      this.resizeFn_ = this.onWindowResize_.bind(this);
+      os.ui.resize(this.element, this.resizeFn_);
+    }
   }.bind(this));
 };
 goog.inherits(os.ui.WindowCtrl, goog.Disposable);
@@ -848,6 +861,11 @@ os.ui.WindowCtrl.prototype.disposeInternal = function() {
   if (this.scope['overlay']) {
     goog.events.unlisten(this.element[0], goog.events.EventType.MOUSEOVER, this.showOverlayWindow_, true, this);
     goog.events.unlisten(this.element[0], goog.events.EventType.MOUSEOUT, this.hideOverlayWindow_, true, this);
+  }
+
+  if (this.element && this.resizeFn_) {
+    os.ui.removeResize(this.element, this.resizeFn_);
+    this.resizeFn_ = null;
   }
 
   if (this.scope['modal']) {
@@ -1172,6 +1190,44 @@ os.ui.WindowCtrl.prototype.updateZIndex_ = function() {
  */
 os.ui.WindowCtrl.prototype.onViewportResize_ = function(opt_e) {
   this.constrainWindow_();
+};
+
+
+/**
+ * Handle window resize events.
+ * @private
+ */
+os.ui.WindowCtrl.prototype.onWindowResize_ = function() {
+  if (this.element) {
+    var width = this.element.outerWidth();
+    var addClass = 'u-parent-resizer-xs';
+    this.element.removeClass('u-parent-resizer-sm');
+    if (width > 576) {
+      addClass = 'u-parent-resizer-sm';
+      this.element.removeClass('u-parent-resizer-xs');
+      this.element.removeClass('u-parent-resizer-md');
+    }
+    if (width > 768) {
+      addClass = 'u-parent-resizer-md';
+      this.element.removeClass('u-parent-resizer-sm');
+      this.element.removeClass('u-parent-resizer-lg');
+    }
+    if (width > 992) {
+      addClass = 'u-parent-resizer-lg';
+      this.element.removeClass('u-parent-resizer-md');
+      this.element.removeClass('u-parent-resizer-xl');
+    }
+    if (width > 1200) {
+      addClass = 'u-parent-resizer-xl';
+      this.element.removeClass('u-parent-resizer-lg');
+      this.element.removeClass('u-parent-resizer-xxl');
+    }
+    if (width > 1500) {
+      addClass = 'u-parent-resizer-xxl';
+      this.element.removeClass('u-parent-resizer-xl');
+    }
+    this.element.addClass(addClass);
+  }
 };
 
 

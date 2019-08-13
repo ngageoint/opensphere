@@ -1,11 +1,7 @@
 goog.provide('os.ui.search.place.CoordinateResult');
+
 goog.require('ol.Feature');
-goog.require('ol.geom.Point');
-goog.require('ol.style.Circle');
-goog.require('ol.style.Fill');
-goog.require('ol.style.Stroke');
-goog.require('ol.style.Style');
-goog.require('ol.style.Text');
+goog.require('os.feature');
 goog.require('os.search.AbstractSearchResult');
 goog.require('os.style');
 goog.require('os.style.label');
@@ -27,25 +23,27 @@ os.ui.search.place.CoordinateResult = function(result, opt_label, opt_score) {
   os.ui.search.place.CoordinateResult.base(this, 'constructor', result, score);
 
   var featureConfig = this.createFeatureStyleConfig(result);
-  result.set(os.style.StyleType.FEATURE, featureConfig);
+  if (featureConfig) {
+    result.set(os.style.StyleType.FEATURE, featureConfig);
 
-  var hasName = !!result.get('name');
-  var labelField = opt_label || (hasName ? 'name' : undefined);
+    var hasName = !!result.get('name');
+    var labelField = opt_label || (hasName ? 'name' : undefined);
 
-  // configure labels for the feature
-  if (labelField) {
-    featureConfig[os.style.StyleField.LABELS] = [{
-      'column': labelField,
-      'showColumn': false
-    }];
+    // configure labels for the feature
+    if (labelField) {
+      featureConfig[os.style.StyleField.LABELS] = [{
+        'column': labelField,
+        'showColumn': false
+      }];
 
-    // ensure name field is populated for feature info
-    if (!hasName) {
-      result.set('name', result.get(labelField));
+      // ensure name field is populated for feature info
+      if (!hasName) {
+        result.set('name', result.get(labelField));
+      }
     }
-  }
 
-  os.style.setFeatureStyle(result);
+    os.style.setFeatureStyle(result);
+  }
 };
 goog.inherits(os.ui.search.place.CoordinateResult, os.search.AbstractSearchResult);
 
@@ -69,7 +67,7 @@ os.ui.search.place.FEATURE_CONFIG = {
  * Create a style config for a feature.
  *
  * @param {ol.Feature} feature The feature.
- * @return {!Object} The style config.
+ * @return {Object|undefined} The style config.
  * @protected
  */
 os.ui.search.place.CoordinateResult.prototype.createFeatureStyleConfig = function(feature) {
@@ -87,20 +85,9 @@ os.ui.search.place.CoordinateResult.prototype.performAction = function() {
   if (extent) {
     // an extent set on the feature is most likely in lat/lon
     extent = ol.proj.transformExtent(extent, os.proj.EPSG4326, os.map.PROJECTION);
-  } else {
-    var geom = this.result.getGeometry();
-    if (geom instanceof ol.geom.Point) {
-      // for point geometries, simply center the map
-      os.MapContainer.getInstance().flyTo(/** @type {!osx.map.FlyToOptions} */ ({
-        center: geom.getFirstCoordinate()
-      }));
-    } else if (geom) {
-      extent = geom.getExtent();
-    }
-  }
-
-  if (extent) {
     os.MapContainer.getInstance().flyToExtent(extent, 2, 16);
+  } else {
+    os.feature.flyTo(this.result);
   }
 
   return false;

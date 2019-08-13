@@ -100,11 +100,11 @@ os.state.deleteStates = function(list) {
       // deactivate and remove the state without putting a command on the stack
       list[i].setActive(false);
       // If its a local state file, remove it.
-      if (list[i].descriptorType === 'state') {
+      if (list[i].getDescriptorType() === 'state') {
         // remove the descriptor from the data manager
         dataManager.removeDescriptor(list[i]);
         var provider = /** @type {os.ui.data.DescriptorProvider} */
-            (dataManager.getProvider(list[i].getDescriptorType()));
+            (dataManager.getProvider(list[i].getId()));
         if (provider && provider instanceof os.ui.data.DescriptorProvider) {
           // remove the descriptor from the provider
           provider.removeDescriptor(list[i], true);
@@ -124,17 +124,10 @@ os.state.deleteStates = function(list) {
 
 /**
  * Determine if a layer is a state file
- * @param {Object|null|string|undefined} source
+ * @param {string} id
  * @return {boolean}
  */
-os.state.isStateFile = function(source) {
-  var layerId = source;
-  var text = [];
-  var words = layerId.split(os.ui.data.BaseProvider.ID_DELIMITER);
-  text.push(words[0]);
-  if (text[0] === 'state') {
-    return true;
-  } else {
-    return false;
-  }
+os.state.isStateFile = function(id) {
+  var words = id && id.split(os.ui.data.BaseProvider.ID_DELIMITER);
+  return words ? words[0] === 'state' || words[0] === 'pubstate' : false;
 };

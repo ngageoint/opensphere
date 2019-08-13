@@ -258,6 +258,35 @@ os.ui.sortDirectives_ = function(a, b) {
 
 
 /**
+ * Listen to an element for size changes.
+ * @param {?(angular.JQLite|jQuery)} el The element.
+ * @param {?Function} fn The callback to remove.
+ */
+os.ui.resize = function(el, fn) {
+  if (el && fn) {
+    if (window.ResizeSensor) {
+      new ResizeSensor(el, fn);
+    } else {
+      goog.asserts.fail('The css-element-queries ResizeSensor library is not loaded. Element resize detection will ' +
+          'not work.');
+    }
+  }
+};
+
+
+/**
+ * Remove resize listener from an element.
+ * @param {?(angular.JQLite|jQuery)} el The element.
+ * @param {?Function} fn The callback to remove.
+ */
+os.ui.removeResize = function(el, fn) {
+  if (el && fn && window.ResizeSensor != null) {
+    ResizeSensor.detach(el, fn);
+  }
+};
+
+
+/**
  * Replace a directive already registered with Angular. The directive name and module should be identical to the
  * original.
  *
@@ -293,6 +322,15 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
 
   // register a decorator to return the highest priority directive
   module.decorator(name + 'Directive', os.ui.getPriorityDirective_);
+};
+
+
+/**
+ * Custom events fired from a typeahead.
+ * @enum {string}
+ */
+os.ui.TypeaheadEventType = {
+  CLICK: 'typeahead:click'
 };
 
 
@@ -446,6 +484,10 @@ os.ui.replaceDirective = function(name, module, directiveFn, opt_priority) {
         'click': function(e) {
           e.preventDefault();
           this.select();
+          // the typeahead will only update the input value, but will not submit the form. to differentiate between the
+          // user hitting enter (which will trigger a form submit) and a click, fire an event from the element to
+          // indicate a value was selected via click.
+          this['$element'].trigger(os.ui.TypeaheadEventType.CLICK);
         }
       });
 

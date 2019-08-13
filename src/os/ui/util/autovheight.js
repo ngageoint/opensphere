@@ -169,12 +169,12 @@ os.ui.util.AutoVHeightCtrl.prototype.onResize_ = function() {
 
     var siblingHeight = 0;
     goog.object.getValues(os.ui.windowCommonElements).forEach(function(sibling) {
-      siblingHeight += ($(/** @type {string} */ (sibling)).outerHeight());
+      siblingHeight += ($(/** @type {string} */ (sibling)).outerHeight(true));
     });
 
     if (this.scope_['siblings']) {
       $.makeArray($(this.scope_['siblings'])).forEach(function(sibling) {
-        siblingHeight += ($(/** @type {string} */ (sibling)).outerHeight());
+        siblingHeight += ($(/** @type {string} */ (sibling)).outerHeight(true));
       });
     }
 
@@ -200,12 +200,12 @@ os.ui.util.AutoVHeightCtrl.prototype.addResizeListeners_ = function() {
 
     // add resize to common elements
     goog.object.getValues(os.ui.windowCommonElements).forEach(function(sibling) {
-      $(/** @type {string} */ (sibling)).resize(this.resizeFn_);
+      os.ui.resize($(/** @type {string} */ (sibling)), this.resizeFn_);
     }.bind(this));
 
     var siblings = /** @type {string} */ (this.scope_['siblings']);
     if (siblings) {
-      $(siblings).resize(this.resizeFn_);
+      os.ui.resize($(siblings), this.resizeFn_);
     }
   }
 };
@@ -224,16 +224,14 @@ os.ui.util.AutoVHeightCtrl.prototype.removeResizeListeners_ = function() {
     // add resize to common elements
     goog.object.getValues(os.ui.windowCommonElements).forEach(function(sibling) {
       if (this.resizeFn_) {
-        try {
-          $(/** @type {string} */ (sibling)).off(goog.events.EventType.RESIZE, this.resizeFn_);
-        } catch (e) {}
+        os.ui.removeResize($(/** @type {string} */ (sibling)), this.resizeFn_);
       }
-    }.bind(this));
+    }, this);
 
     var siblings = /** @type {string} */ (this.scope_['siblings']);
     if (siblings && this.resizeFn_) {
       try {
-        $(siblings).off(goog.events.EventType.RESIZE, this.resizeFn_);
+        os.ui.removeResize($(siblings), this.resizeFn_);
       } catch (e) {}
     }
   }

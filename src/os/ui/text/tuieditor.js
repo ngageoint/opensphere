@@ -1,10 +1,12 @@
 goog.provide('os.ui.text.TuiEditor');
-goog.provide('os.ui.text.TuiEditor.READY');
 goog.provide('os.ui.text.TuiEditorCtrl');
 goog.provide('os.ui.text.tuiEditorDirective');
+
 goog.require('goog.dom.safe');
 goog.require('ol.xml');
+goog.require('os.defines');
 goog.require('os.ui.Module');
+goog.require('os.ui.text.TuiEditorLang');
 goog.require('os.ui.text.TuiEditorMarkdownIt');
 
 
@@ -124,7 +126,7 @@ os.ui.text.TuiEditorCtrl = function($scope, $element, $timeout) {
    * @type {string}
    */
   this['text'] = $scope['text'] || '';
-  $scope['edit'] = goog.isDef($scope['edit']) ? $scope['edit'] : false;
+  $scope['edit'] = ($scope['edit'] === undefined) ? false : $scope['edit'];
 
   this.element_.on('keydown', this.onKeyboardEvent_);
   this.element_.on('keypress', this.onKeyboardEvent_);
@@ -166,12 +168,22 @@ os.ui.text.TuiEditorCtrl.prototype.switchModes_ = function() {
             goog.html.TrustedResourceUrl.fromConstant(os.string.createConstant(os.ui.text.TuiEditor.SCRIPT_URL));
         goog.net.jsloader.safeLoad(trustedUrl, {
           'timeout': 30000
-        }).addCallbacks(this.init, this.onScriptLoadError, this);
+        }).addCallbacks(this.onScriptLoaded_, this.onScriptLoadError, this);
       } else {
         this.init();
       }
     }
   }.bind(this));
+};
+
+
+/**
+ * @private
+ */
+os.ui.text.TuiEditorCtrl.prototype.onScriptLoaded_ = function() {
+  // Changes words in the editor, adds hotkeys to tooltips
+  os.ui.text.TuiEditorLang.setup(this.getOptions()['useCommandShortcut']);
+  this.init();
 };
 
 
@@ -239,7 +251,7 @@ os.ui.text.TuiEditorCtrl.prototype.getOptions = function() {
     },
     'codeBlockLanguages': ['markdown'],
     'usedefaultHTMLSanitizer': true,
-    'useCommandShortcut': false,
+    'useCommandShortcut': true,
     'usageStatistics': false,
     'exts': this.getExtensions(),
     'hooks': this.getHooks()
@@ -265,24 +277,9 @@ os.ui.text.TuiEditorCtrl.prototype.init = function() {
       this['loading'] = false;
       this['tuiEditor'] = new tui.Editor(this.getOptions());
 
-      // HACK. There are no hooks to change the button text. So change it after the editor renders
-      // Opened issue #524 on github
-      this.timeout_(function() {
-        if (this.element_) {
-          var markdownButtonElement = this.element_.find('button.te-switch-button.markdown');
-          if (markdownButtonElement.length) {
-            markdownButtonElement.text('Text');
-          }
-          var wysiwygButtonElement = this.element_.find('button.te-switch-button.wysiwyg');
-          if (wysiwygButtonElement.length) {
-            wysiwygButtonElement.text('Visual');
-          }
-
-          if (os.settings.get(os.ui.text.TuiEditor.MODE_KEY) == os.ui.text.TuiEditor.Mode.MARKDOWN) {
-            this.fixCodemirrorInit_();
-          }
-        }
-      }.bind(this));
+      if (os.settings.get(os.ui.text.TuiEditor.MODE_KEY) == os.ui.text.TuiEditor.Mode.MARKDOWN) {
+        this.timeout_(this.fixCodemirrorInit_.bind(this));
+      }
     } else {
       // If after we've loaded the editor script and it doesnt run correctly
       // (happened in chrome 36. Just default to text area)

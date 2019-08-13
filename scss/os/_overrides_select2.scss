@@ -5,8 +5,8 @@
     box-shadow: none;
   }
 
-  // sass-lint:disable no-extends, placeholder-in-extend
   .select2-choice {
+    // sass-lint:disable-block no-extends, placeholder-in-extend
     @extend .form-control;
     background-image: none;
     height: $input-height;
@@ -23,8 +23,8 @@
   &.select2-container-multi {
     width: 100%;
 
-    // sass-lint:disable no-extends, placeholder-in-extend
     .select2-choices {
+      // sass-lint:disable-block no-extends, placeholder-in-extend
       @extend .form-control;
       background-image: none;
       min-width: 10rem;
@@ -44,7 +44,6 @@
         }
       }
 
-      // sass-lint:disable no-extends, placeholder-in-extend
       .select2-search-field {
         input.select2-input {
           background: transparent;
@@ -99,6 +98,7 @@
 
   // Single select2
   .select2-search input {
+    // sass-lint:disable-block no-extends, placeholder-in-extend
     @extend .form-control;
     background-image: none;
   }

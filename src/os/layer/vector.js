@@ -1283,21 +1283,21 @@ os.layer.Vector.prototype.restore = function(config) {
   styleConf[os.style.StyleField.ARROW_SIZE] = config[os.style.StyleField.ARROW_SIZE] || os.style.DEFAULT_ARROW_SIZE;
   styleConf[os.style.StyleField.ARROW_UNITS] = config[os.style.StyleField.ARROW_UNITS] || os.style.DEFAULT_UNITS;
   styleConf[os.style.StyleField.LOB_COLUMN_LENGTH] = config[os.style.StyleField.LOB_COLUMN_LENGTH] ||
-    os.style.DEFAULT_LOB_LENGTH;
+      os.style.DEFAULT_LOB_LENGTH;
   styleConf[os.style.StyleField.LOB_LENGTH] = config[os.style.StyleField.LOB_LENGTH] || os.style.DEFAULT_LOB_LENGTH;
   styleConf[os.style.StyleField.LOB_LENGTH_ERROR] = config[os.style.StyleField.LOB_LENGTH_ERROR] ||
-    os.style.DEFAULT_LOB_LENGTH_ERROR;
+      os.style.DEFAULT_LOB_LENGTH_ERROR;
   styleConf[os.style.StyleField.LOB_LENGTH_TYPE] = config[os.style.StyleField.LOB_LENGTH_TYPE] ||
-    os.style.DEFAULT_LOB_LENGTH_TYPE;
+      os.style.DEFAULT_LOB_LENGTH_TYPE;
   styleConf[os.style.StyleField.LOB_LENGTH_COLUMN] = config[os.style.StyleField.LOB_LENGTH_COLUMN] || '';
   styleConf[os.style.StyleField.LOB_LENGTH_ERROR_COLUMN] = config[os.style.StyleField.LOB_LENGTH_ERROR_COLUMN] || '';
   styleConf[os.style.StyleField.LOB_BEARING_COLUMN] = config[os.style.StyleField.LOB_BEARING_COLUMN] || '';
   styleConf[os.style.StyleField.LOB_LENGTH_ERROR_UNITS] = config[os.style.StyleField.LOB_LENGTH_ERROR_UNITS] ||
-    os.style.DEFAULT_UNITS;
+      os.style.DEFAULT_UNITS;
   styleConf[os.style.StyleField.LOB_LENGTH_UNITS] = config[os.style.StyleField.LOB_LENGTH_UNITS] ||
-    os.style.DEFAULT_UNITS;
+      os.style.DEFAULT_UNITS;
   styleConf[os.style.StyleField.LOB_BEARING_ERROR] = config[os.style.StyleField.LOB_BEARING_ERROR] ||
-    os.style.DEFAULT_LOB_BEARING_ERROR;
+      os.style.DEFAULT_LOB_BEARING_ERROR;
   styleConf[os.style.StyleField.LOB_BEARING_ERROR_COLUMN] = config[os.style.StyleField.LOB_BEARING_ERROR_COLUMN] || '';
   styleConf[os.style.StyleField.ROTATION_COLUMN] = config[os.style.StyleField.ROTATION_COLUMN] || '';
   styleConf[os.style.StyleField.LABELS] = config[os.style.StyleField.LABELS] || [os.style.label.cloneConfig()];

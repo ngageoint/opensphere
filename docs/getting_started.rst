@@ -1,3 +1,5 @@
+.. _getting_started:
+
 Getting Started
 ###############
 
@@ -19,7 +21,10 @@ Prerequisites
 - Chrome Browser (59+ required in default tests; plus you probably want this for development)
 - Firefox Browser (57+ required in default tests)
 
+Windows developers see `Windows Development`_
+
 .. _Yarn: https://yarnpkg.com
+.. _Windows Development: windows_development.html
 
 Ensure that the executables ``git``, ``node``, and ``java`` are in your ``PATH``.
 
@@ -69,7 +74,7 @@ While not required, we highly recommend setting up nginx or Apache httpd to serv
 The Build
 *********
 
-Note: The build does not work in Windows. Consider using an Ubuntu Docker container or VM to run the build.
+Note: The build does not work natively in Windows. See `Windows Development`_ for instructions.
 
 OpenSphere has all of its build targets as npm scripts. Therefore you can run any particular target by running:
 
@@ -96,6 +101,8 @@ Each target runs its individual pieces through npm scripts as well. Several of t
   $ npm run compile:resolve  # runs the resolver to check dependency/plugin/config resolution
   $ npm run compile:gcc      # runs the google-closure-compiler to produce the compiled JS
   $ npm run compile:css      # runs node-sass to produce the minified/combined css
+
+If you are using yarn (recommended), replace ``npm run`` with ``yarn`` in those targets.
 
 The Resolver
 ============
@@ -158,6 +165,18 @@ See :doc:`/guides/cypress_artifacts` for information on accessing Cypress artifa
 
 Any contributions to OpenSphere should avoid breaking current tests and should include new tests that fully cover the changed areas.
 
+Git Commits
+***********
+
+When making local commits, there are checks (implemented as git pre-commit hooks) to verify that your commit message matches the `Conventional Commits`_ conventions.
+Basically, you need use the form ``<type>(<scope>): <subject>``, for example something like: ``fix(docs): Updated Getting Started to describe git commits``.
+The valid types are: ``feat``, ``fix``, ``docs``, ``style``, ``refactor``, ``perf``, ``test``, ``build``, ``ci``, ``chore`` and ``revert``. Scope is optional, and
+should cover the particular part of opensphere that you are working on.
+
+.. _Conventional Commits: https://www.conventionalcommits.org
+
+If your change is an API break, or would otherwise affect external projects, please add a ``BREAKING CHANGE:`` part to the commit message body (per conventions) that describes what external users need to do to adapt to the change.
+
 Developing plugins
 ******************
 
@@ -193,6 +212,7 @@ The compiler will attempt to minify/rename everything not in a string. For the m
 Broken Example:
 
 .. code-block:: javascript
+   :linenos:
 
     /**
      * @param {!angular.Scope} $scope The scope
@@ -209,6 +229,7 @@ Broken Example:
     };
 
 .. code-block:: html
+   :linenos:
 
     <!-- Angular template -->
     <span ng-show="ctrl.isPositive(value)">{{value}} is positive</span>
@@ -218,6 +239,8 @@ This will work great in debug mode (no minification), but will fail in compiled 
 Fixed Example:
 
 .. code-block:: javascript
+   :linenos:
+   :emphasize-lines: 5, 10
 
     /**
      * @param {!angular.Scope} $scope The scope
@@ -228,14 +251,14 @@ Fixed Example:
 
     /**
      * @param {number} value
+     * @export
      */
     package.DirCtrl.prototype.isPositive = function(value) {
       return value > 0;
     };
-    // we highly recommend making this a snippet
-    goog.exportProperty(package.DirCtrl.prototype, 'isPositive', package.DirCtrl.prototype.isPositive);
 
 .. code-block:: html
+   :linenos:
 
     <!-- Angular template -->
     <span ng-show="ctrl.isPositive(value)">{{value}} is positive</span>

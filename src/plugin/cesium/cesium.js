@@ -443,6 +443,18 @@ plugin.cesium.scratchCoord_ = [];
 plugin.cesium.reduceBoundingSphere = function(sphere, geom) {
   if (geom) {
     var type = geom.getType();
+    var scratchSphere = plugin.cesium.scratchSphere_;
+
+    if (os.query.isWorldQuery(geom)) {
+      if (scratchSphere) {
+        scratchSphere.center = Cesium.Cartesian3.UNIT_X;
+        scratchSphere.radius = 6378137;
+      } else {
+        scratchSphere = new Cesium.BoundingSphere(Cesium.Cartesian3.UNIT_X, 6378137);
+      }
+
+      return scratchSphere;
+    }
 
     if (type === ol.geom.GeometryType.GEOMETRY_COLLECTION) {
       var geoms = /** @type {ol.geom.GeometryCollection} */ (geom).getGeometriesArray();
@@ -453,7 +465,6 @@ plugin.cesium.reduceBoundingSphere = function(sphere, geom) {
       var stride = geom.getStride();
       var scratchCartesian = plugin.cesium.scratchCartesian_ || new Cesium.Cartesian3();
       var scratchCoord = plugin.cesium.scratchCoord_;
-      var scratchSphere = plugin.cesium.scratchSphere_;
 
       for (var i = 0, n = flats.length; i < n; i += stride) {
         scratchCoord[0] = flats[i];

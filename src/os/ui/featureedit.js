@@ -133,6 +133,13 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   this['uid'] = goog.getUid(this);
 
   /**
+   * The temporary feature id for this window.
+   * @type {string}
+   * @protected
+   */
+  this.tempFeatureId = os.ui.FeatureEditCtrl.TEMP_ID + this['uid'];
+
+  /**
    * Help tooltips.
    * @type {!Object<string, string>}
    */
@@ -168,7 +175,9 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * @type {!osx.icon.Icon}
    */
   this['icon'] = /** @type {!osx.icon.Icon} */ ({// os.ui.file.kml.Icon to osx.icon.Icon
-    path: os.ui.file.kml.getDefaultIcon().path
+    title: os.ui.file.kml.getDefaultIcon().title,
+    path: os.ui.file.kml.getDefaultIcon().path,
+    options: os.ui.file.kml.getDefaultIcon().options
   });
 
   /**
@@ -499,6 +508,8 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   $scope.$watch('ctrl.labelColor', this.updatePreview.bind(this));
   $scope.$watch('ctrl.labelSize', this.updatePreview.bind(this));
   $scope.$watch('ctrl.showLabels', this.updatePreview.bind(this));
+
+  $scope.$on(os.ui.WindowEventType.CANCEL, this.onCancel.bind(this));
   $scope.$on(os.ui.icon.IconPickerEventType.CHANGE, this.onIconChange.bind(this));
   $scope.$on('labelColor.reset', this.onLabelColorReset.bind(this));
   $scope.$on(os.ui.geo.PositionEventType.MAP_ENABLED, this.onMapEnabled_.bind(this));
@@ -554,22 +565,22 @@ os.ui.FeatureEditCtrl.TEMP_ID = 'features#temporary';
 
 
 /**
- * Default label.
- * @type {!os.style.label.LabelConfig}
- */
-os.ui.FeatureEditCtrl.DEFAULT_LABEL = {
-  'column': 'name',
-  'showColumn': false
-};
-
-
-/**
  * @enum {string}
  */
 os.ui.FeatureEditCtrl.Field = {
   DESCRIPTION: 'description',
   MD_DESCRIPTION: '_mdDescription',
   NAME: 'name'
+};
+
+
+/**
+ * Default label.
+ * @type {!os.style.label.LabelConfig}
+ */
+os.ui.FeatureEditCtrl.DEFAULT_LABEL = {
+  'column': os.ui.FeatureEditCtrl.Field.NAME,
+  'showColumn': false
 };
 
 
@@ -631,7 +642,7 @@ os.ui.FeatureEditCtrl.prototype.disposeInternal = function() {
   }
 
   if (this.previewFeature) {
-    if (this.previewFeature.getId() == os.ui.FeatureEditCtrl.TEMP_ID) {
+    if (this.previewFeature.getId() == this.tempFeatureId) {
       os.MapContainer.getInstance().removeFeature(this.previewFeature, true);
     }
 
@@ -680,6 +691,16 @@ os.ui.FeatureEditCtrl.prototype.accept = function() {
  * @export
  */
 os.ui.FeatureEditCtrl.prototype.cancel = function() {
+  this.onCancel();
+  this.close();
+};
+
+
+/**
+ * Handler for canceling the edit. This restores the state of the feature to what it was before any live
+ * edits were applied while the form was up. It's called on clicking both the cancel button and the window X.
+ */
+os.ui.FeatureEditCtrl.prototype.onCancel = function() {
   var feature = this.options['feature'];
   if (feature && this.originalProperties_) {
     feature.setProperties(this.originalProperties_);
@@ -690,9 +711,8 @@ os.ui.FeatureEditCtrl.prototype.cancel = function() {
       os.style.notifyStyleChange(layer, [feature]);
     }
   }
-  os.dispatcher.dispatchEvent(os.action.EventType.RESTORE_FEATURE);
 
-  this.close();
+  os.dispatcher.dispatchEvent(os.action.EventType.RESTORE_FEATURE);
 };
 
 
@@ -860,6 +880,7 @@ os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
   if (this.previewFeature) {
     this.saveToFeature(this.previewFeature);
 
+
     var osMap = os.MapContainer.getInstance();
     if (this.previewFeature.getId() == os.ui.FeatureEditCtrl.TEMP_ID && !osMap.containsFeature(this.previewFeature)) {
       osMap.addFeature(this.previewFeature);
@@ -881,7 +902,7 @@ os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
 os.ui.FeatureEditCtrl.prototype.createPreviewFeature = function() {
   this.previewFeature = new ol.Feature();
   this.previewFeature.enableEvents();
-  this.previewFeature.setId(os.ui.FeatureEditCtrl.TEMP_ID);
+  this.previewFeature.setId(this.tempFeatureId);
   this.previewFeature.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
 
   var name = /** @type {string|undefined} */ (this.options['name']);

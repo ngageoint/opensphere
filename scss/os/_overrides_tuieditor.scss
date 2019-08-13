@@ -9,12 +9,12 @@
 
 
 .c-tui-editor {
-  //////////// Contstrain the editor //////////
+  //////////// Constrain the editor //////////
   .CodeMirror,
   .CodeMirror:not(.CodeMirror-fullscreen) .CodeMirror-scroll,
   .te-ww-container .te-editor .tui-editor-contents,
   .te-md-container .te-preview {
-    max-height: 75vh; // the toolbar doesnt scroll with the editor. So its annoying to have to scroll up just to use it
+    max-height: 75vh; // the toolbar doesn't scroll with the editor. So its annoying to have to scroll up just to use it
   }
 
   // BUG (#191) the editor has min height but its buggy
@@ -50,8 +50,8 @@
   }
 
   ////////// DISABLED FEATURES VIA CSS //////////
-  // We dont want to show the tab section OR the block overlay.
-  // Merge / Unmerge is not GFM. So dont allow that feature
+  // We don't want to show the tab section OR the block overlay.
+  // Merge / Unmerge is not GFM. So don't allow that feature
   .te-table-merge,
   .te-table-unmerge,
   .te-table-unmerge + hr,
@@ -94,13 +94,13 @@
       font-family: $font-family-monospace;
     }
 
-    // sass-lint:disable extends-before-declarations, extends-before-mixins, no-extends, placeholder-in-extend
     blockquote {
+      // sass-lint:disable-block no-extends, placeholder-in-extend
       @extend .blockquote;
     }
 
-    // sass-lint:disable extends-before-declarations, extends-before-mixins, no-extends, placeholder-in-extend
     attr {
+      // sass-lint:disable-block no-extends, placeholder-in-extend
       @extend .initialism;
     }
 
@@ -170,7 +170,7 @@
       .CodeMirror-cursor {
         border-left-color: $body-color;
 
-        // Sometimes the cursor doesnt show up (windows?) this fixes that issue
+        // Sometimes the cursor doesn't show up (windows?) this fixes that issue
         width: 1px !important;
       }
 
@@ -258,11 +258,11 @@
         color: color-yiq($u-theme-variables--bg-offset);
       }
 
-      // sass-lint:disable extends-before-declarations, extends-before-mixins, no-extends, placeholder-in-extend
       .te-link-text-input,
       .te-url-input,
       .te-image-url-input,
       .te-alt-text-input {
+        // sass-lint:disable-block no-extends, placeholder-in-extend
         @extend .form-control;
       }
     }
@@ -275,11 +275,13 @@
     }
 
     .te-ok-button {
+      // sass-lint:disable-block no-extends, placeholder-in-extend
       @extend .btn;
       @extend .btn-primary;
     }
 
     .te-close-button {
+      // sass-lint:disable-block no-extends, placeholder-in-extend
       @extend .btn;
       @extend .btn-secondary;
     }
@@ -349,6 +351,7 @@
     }
 
     .tui-scrollsync {
+      // sass-lint:disable-block no-extends, placeholder-in-extend
       @extend .btn;
       @extend .btn-secondary;
 

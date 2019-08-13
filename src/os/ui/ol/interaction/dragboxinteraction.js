@@ -53,6 +53,16 @@ os.ui.ol.interaction.DragBox.TYPE = 'box';
 /**
  * @inheritDoc
  */
+os.ui.ol.interaction.DragBox.prototype.disposeInternal = function() {
+  this.cleanup();
+
+  os.ui.ol.interaction.DragBox.base(this, 'disposeInternal');
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.ui.ol.interaction.DragBox.prototype.getGeometry = function() {
   var geom = this.box2D.getOriginalGeometry();
 

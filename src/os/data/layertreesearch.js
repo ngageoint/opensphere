@@ -61,7 +61,6 @@ os.data.LayerTreeSearch.prototype.setupNode = function(item) {
     node.setLayer(layer);
   }
 
-  node.setCheckboxVisible(true);
   return node;
 };
 

@@ -244,6 +244,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.removeAnnotation = function() {
       if (options) {
         options.show = false;
         node.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
+        node.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
       }
     }
   }
@@ -270,6 +271,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.showAnnotation = function() {
 
       node.loadAnnotation();
       node.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
+      node.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
     }
   }
 };

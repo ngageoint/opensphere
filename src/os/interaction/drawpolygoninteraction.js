@@ -65,7 +65,11 @@ os.interaction.DrawPolygon.prototype.cleanup = function() {
   os.interaction.DrawPolygon.base(this, 'cleanup');
 
   // restore camera controls in 3D mode
-  /** @type {os.Map} */ (this.getMap()).toggleMovement(true);
+  var map = /** @type {os.Map} */ (this.getMap());
+  if (map) {
+    map.toggleMovement(true);
+  }
+
   this.cleanupWebGL();
 };
 
