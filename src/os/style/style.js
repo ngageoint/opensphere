@@ -564,8 +564,8 @@ os.style.STYLE_COLOR_FIELDS_ = ['image', 'fill', 'stroke'];
  * @param {Object} config The configuration to search for a color
  * @param {boolean=} opt_array If the color should be returned as an rgb array
  * @param {os.style.StyleField=} opt_colorField The style field to use in locating the color.
- * @return {Array<number>|string|undefined} The color, or undefined if not found. Returns `null` if a style field was
- *                                          provided and the field was `null`.
+ * @return {Array<number>|string|undefined} The color, or null if not found. Returns `undefined` if a style field was
+ *                                          provided and the field was not present.
  */
 os.style.getConfigColor = function(config, opt_array, opt_colorField) {
   if (config) {
@@ -586,6 +586,7 @@ os.style.getConfigColor = function(config, opt_array, opt_colorField) {
         return opt_array ? os.color.toRgbArray(config[opt_colorField][os.style.StyleField.COLOR]) :
           config[opt_colorField][os.style.StyleField.COLOR];
       }
+      return undefined;
     } else if (config[os.style.StyleField.COLOR] != null) {
       return opt_array ? os.color.toRgbArray(config[os.style.StyleField.COLOR]) :
           config[os.style.StyleField.COLOR];
@@ -603,7 +604,7 @@ os.style.getConfigColor = function(config, opt_array, opt_colorField) {
     }
   }
 
-  return undefined;
+  return null;
 };
 
 
