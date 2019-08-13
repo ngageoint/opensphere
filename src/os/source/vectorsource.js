@@ -3521,9 +3521,11 @@ os.source.Vector.prototype.getUniqueId = function() {
  * @param {os.data.ColumnDefinition} value
  */
 os.source.Vector.prototype.setUniqueId = function(value) {
-  var old = this.uniqueId_;
-  this.uniqueId_ = value;
-  this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.UNIQUE_ID, value, old));
+  if (this.uniqueId_ !== value) {
+    var old = this.uniqueId_;
+    this.uniqueId_ = value;
+    this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.UNIQUE_ID, value, old));
+  }
 };
 
 

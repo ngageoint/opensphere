@@ -15,6 +15,7 @@ goog.require('os.feature.DynamicFeature');
 goog.require('os.feature.DynamicPropertyChange');
 goog.require('os.geom.GeometryField');
 goog.require('os.interpolate');
+goog.require('os.object');
 goog.require('os.ogc.filter.OGCFilterOverride');
 goog.require('os.style');
 goog.require('os.time.TimeRange');
@@ -84,7 +85,8 @@ os.track.TrackFeatureLike;
  * @typedef {{
  *   coordinates: (Array<!ol.Coordinate>|undefined),
  *   features: (Array<!ol.Feature>|undefined),
- *   track: !ol.Feature
+ *   track: !ol.Feature,
+ *   includeMetadata: (boolean|undefined)
  * }}
  */
 os.track.AddOptions;
@@ -99,10 +101,23 @@ os.track.AddOptions;
  *   color: (string|undefined),
  *   name: (string|undefined),
  *   sortField: (string|undefined),
- *   label: (string|undefined)
+ *   label: (string|undefined),
+ *   includeMetadata: (boolean|undefined),
+ *   useLayerStyle: (boolean|undefined)
  * }}
  */
 os.track.CreateOptions;
+
+
+/**
+ * @typedef {{
+ *   features: Array<ol.Feature>,
+ *   field: string,
+ *   getTrackFn: ((function((string|number)):ol.Feature)|undefined),
+ *   result: (Array<ol.Feature>|undefined)
+ * }}
+ */
+os.track.SplitOptions;
 
 
 
@@ -121,7 +136,8 @@ os.track.TrackField = {
   QUERY_OPTIONS: '_trackQueryOptions',
   ORIG_SOURCE_ID: '_trackOrigSourceId',
   SORT_FIELD: '_sortField',
-  INTERPOLATE_MARKER: '_interpolateMarker'
+  INTERPOLATE_MARKER: '_interpolateMarker',
+  METADATA_MAP: '_trackMetadataMap'
 };
 
 
@@ -219,9 +235,10 @@ os.track.sortCoordinatesByValue = function(a, b) {
  *
  * @param {!Array<!ol.Feature>} features The features.
  * @param {string} sortField The track sort field.
+ * @param {Object=} opt_metadataMap Optional map to store feature metadata by sort key.
  * @return {!Array<!ol.Coordinate>|undefined} The coordinates, or undefined if no coordinates were found.
  */
-os.track.getTrackCoordinates = function(features, sortField) {
+os.track.getTrackCoordinates = function(features, sortField, opt_metadataMap) {
   var getValueFn = sortField == os.data.RecordField.TIME ? os.track.getStartTime :
     os.track.getFeatureValue.bind(null, sortField);
 
@@ -268,6 +285,18 @@ os.track.getTrackCoordinates = function(features, sortField) {
 
       // add the sort value
       pointCoord.push(value);
+
+      // if a metadata map was provided, populate it with values for the feature
+      if (opt_metadataMap) {
+        opt_metadataMap[value] = {};
+
+        var props = feature.getProperties();
+        for (var key in props) {
+          if (!os.feature.isInternalField(key)) {
+            opt_metadataMap[value][key] = props[key];
+          }
+        }
+      }
     }
 
     return pointCoord;
@@ -292,12 +321,13 @@ os.track.createTrack = function(options) {
   var coordinates = options.coordinates;
   var features = options.features;
   var geometry = options.geometry;
+  var metadataMap = options.features && options.includeMetadata ? {} : undefined;
 
   if (!geometry) {
     if (coordinates) {
       coordinates.sort(os.track.sortCoordinatesByValue);
     } else if (features && features.length) {
-      coordinates = os.track.getTrackCoordinates(features, sortField);
+      coordinates = os.track.getTrackCoordinates(features, sortField, metadataMap);
 
       // if the color wasn't provided via options, determine the color from the features/source
       if (!trackColor && features.length) {
@@ -347,6 +377,10 @@ os.track.createTrack = function(options) {
   track.set(os.Fields.ID, trackId);
   track.set(os.data.RecordField.FEATURE_TYPE, os.track.ID);
 
+  if (metadataMap) {
+    track.set(os.track.TrackField.METADATA_MAP, metadataMap);
+  }
+
   // add a geometry to display the current track position
   os.track.updateCurrentPosition(track);
 
@@ -364,9 +398,14 @@ os.track.createTrack = function(options) {
   // set the style config for the track
   var trackStyle = /** @type {!Object<string, *>} */ (os.object.unsafeClone(os.track.TRACK_CONFIG));
   var currentStyle = /** @type {!Object<string, *>} */ (os.object.unsafeClone(os.track.CURRENT_CONFIG));
-  trackColor = trackColor || os.style.DEFAULT_LAYER_COLOR;
-  os.style.setConfigColor(trackStyle, trackColor, [os.style.StyleField.STROKE]);
-  os.style.setConfigColor(currentStyle, trackColor, [os.style.StyleField.IMAGE]);
+  if (options.useLayerStyle) {
+    delete trackStyle['stroke'];
+    delete currentStyle['image'];
+  } else {
+    trackColor = trackColor || os.style.DEFAULT_LAYER_COLOR;
+    os.style.setConfigColor(trackStyle, trackColor, [os.style.StyleField.STROKE]);
+    os.style.setConfigColor(currentStyle, trackColor, [os.style.StyleField.IMAGE]);
+  }
   track.set(os.style.StyleType.FEATURE, [trackStyle, currentStyle]);
 
   // configure default label for the track
@@ -395,6 +434,7 @@ os.track.createTrack = function(options) {
  */
 os.track.addToTrack = function(options) {
   var added = [];
+  var metadataMap = options.features && options.includeMetadata ? {} : undefined;
 
   var track = options.track;
   if (!track) {
@@ -416,7 +456,7 @@ os.track.addToTrack = function(options) {
   }
 
   if (!coordinates && features) {
-    coordinates = os.track.getTrackCoordinates(features, sortField);
+    coordinates = os.track.getTrackCoordinates(features, sortField, metadataMap);
 
     var skippedFeatures = features.length - coordinates.length;
     if (skippedFeatures) {
@@ -465,6 +505,15 @@ os.track.addToTrack = function(options) {
   // update the geometry on the track if coordinates were added
   if (skippedCoords < coordinates.length) {
     os.track.setGeometry(track, /** @type {!os.track.TrackLike} */ (geometry));
+
+    if (metadataMap) {
+      var existing = /** @type {Object|undefined} */ (track.get(os.track.TrackField.METADATA_MAP));
+      if (!existing) {
+        existing = {};
+        track.set(os.track.TrackField.METADATA_MAP, existing);
+      }
+      ol.obj.assign(existing, metadataMap);
+    }
   }
 
   if (skippedCoords) {
@@ -691,6 +740,9 @@ os.track.updateCurrentPosition = function(track) {
 
     // update coordinate fields to display in the list/feature info
     os.feature.populateCoordFields(track, true, currentPosition);
+
+    // update the extra metadata for the current position
+    os.track.updateMetadata(track, flatCoordinates, stride);
 
     // update the style in case coordinate fields are used as labels
     os.style.setFeatureStyle(track);
@@ -1141,6 +1193,34 @@ os.track.updateDynamic = function(track, startTime, endTime) {
 
 
 /**
+ * Update track metadata from original features.
+ * @param {!ol.Feature} track The track.
+ * @param {!Array<number>} coordinates The flat coordinate array.
+ * @param {number} stride The coordinate array stride.
+ *
+ * @suppress {accessControls} For direct access to track metadata.
+ */
+os.track.updateMetadata = function(track, coordinates, stride) {
+  var metadataMap = track.get(os.track.TrackField.METADATA_MAP);
+  if (metadataMap) {
+    // use metadata for the last sort value (end of the track)
+    var valueIndex = coordinates.length - 1;
+    var metadata = metadataMap[coordinates[valueIndex]];
+    if (!metadata && valueIndex > stride) {
+      // last value may have been interpolated, so try the one before it
+      metadata = metadataMap[coordinates[valueIndex - stride]];
+    }
+
+    if (metadata) {
+      for (var key in metadata) {
+        track.values_[key] = metadata[key];
+      }
+    }
+  }
+};
+
+
+/**
  * Get the closest index in the timestamp array for a time value.
  *
  * @param {!Array<number>} coordinates The timestamp array
@@ -1377,4 +1457,61 @@ os.track.updateTrackZIndex = function(tracks) {
     os.style.setFeatureStyle(track);
     track.changed();
   }
+};
+
+
+/**
+ * Split features into tracks.
+ * @param {os.track.SplitOptions} options The options.
+ * @return {!Array<!ol.Feature>} The resulting tracks. Also contains any features not used to create tracks.
+ *
+ * @suppress {accessControls}
+ */
+os.track.splitIntoTracks = function(options) {
+  var features = options.features;
+  var field = options.field;
+  var result = options.result || [];
+  var getTrackFn = options.getTrackFn || goog.nullFunction;
+
+  if (features && field) {
+    var buckets = goog.array.bucket(features, function(feature) {
+      // if the feature does not have a value for the field, add it to the ignore bucket so it can be included in the
+      // result. this avoids dropping features that aren't added to a track.
+      return feature ? (feature.values_[field] != null ? feature.values_[field] : os.object.IGNORE_VAL) : undefined;
+    });
+
+    for (var id in buckets) {
+      var bucketFeatures = buckets[id];
+      if (id === os.object.IGNORE_VAL) {
+        // features did not have a value for the provided field, so return them to the result array
+        for (var i = 0; i < bucketFeatures.length; i++) {
+          result.push(bucketFeatures[i]);
+        }
+      } else {
+        var trackId = id + '-track';
+        var track = getTrackFn(trackId);
+        if (track) {
+          os.track.addToTrack({
+            features: bucketFeatures,
+            track: track,
+            includeMetadata: true
+          });
+        } else {
+          track = os.track.createTrack({
+            id: trackId,
+            name: id,
+            features: bucketFeatures,
+            includeMetadata: true,
+            useLayerStyle: true
+          });
+
+          if (track) {
+            result.push(track);
+          }
+        }
+      }
+    }
+  }
+
+  return result;
 };

@@ -267,6 +267,7 @@ os.metrics.Layer = {
   VECTOR_LOB_BEARING_ERROR: 'layers.features.changeVectorLineOfBearingBearingError',
   VECTOR_LOB_BEARING_ERROR_COLUMN: 'layers.features.changeVectorLineOfBearingBearingErrorColumn',
   VECTOR_ROTATION_COLUMN: 'layers.features.changeVectorRotationColumn',
+  VECTOR_UNIQUE_ID: 'layers.features.changeVectorRotationColumn',
   FEATURE_COLOR: 'layers.features.changeFeatureColor',
   FEATURE_FILL_COLOR: 'layers.features.changeFeatureFillColor',
   FEATURE_ICON: 'layers.features.changeFeatureIcon',
