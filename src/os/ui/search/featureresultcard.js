@@ -4,6 +4,7 @@ goog.require('goog.Disposable');
 goog.require('goog.array');
 goog.require('goog.log');
 goog.require('ol.extent');
+goog.require('os.Fields');
 goog.require('os.layer.Vector');
 goog.require('os.source.Vector');
 
@@ -76,10 +77,25 @@ goog.inherits(os.ui.search.FeatureResultCardCtrl, goog.Disposable);
 
 
 /**
- * @const
+ * The ID for the search layer.
  * @type {string}
+ * @const
  */
 os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_ID = 'search';
+
+
+/**
+ * Default label style config for the search layer.
+ * @type {!Object}
+ * @const
+ */
+os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_LABELS = {
+  'labelColor': 'rgba(255,255,255,1)',
+  'labels': [{
+    'column': os.Fields.LOWERCASE_NAME,
+    'showColumn': false
+  }]
+};
 
 /**
  * Logger for os.ui.search.FeatureResultCardCtrl
@@ -143,6 +159,7 @@ os.ui.search.FeatureResultCardCtrl.prototype.addSearchLayer = function() {
   var layerConfig = os.style.StyleManager.getInstance().getOrCreateLayerConfig(
       os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_ID);
   layerConfig[os.style.StyleField.SHOW_LABELS] = true;
+  ol.obj.assign(layerConfig, os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_LABELS);
 
   var mm = os.MapContainer.getInstance();
   mm.addLayer(searchLayer);

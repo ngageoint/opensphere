@@ -1,0 +1,45 @@
+<div class="d-flex flex-column flex-fill">
+  <div class="modal-body d-flex">
+    <form class="flex-fill" name="quickAddForm" novalidate>
+      <div class="form-group row">
+        <label for="name" class="col-3 col-form-label text-right">Name</label>
+        <div class="col">
+          <input type="text" class="form-control" name="name" ng-model="quickAdd.name" ng-maxlength="500" ng-change="quickAdd.onNameChange()" />
+          <validation-message target="quickAddForm.name"></validation-message>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="name" class="col-3 col-form-label text-right">Shape</label>
+        <div class="col">
+          <div class="btn-group">
+            <button class="btn btn-secondary" ng-class="quickAdd.selectedType == 'point' && 'active'" ng-click="quickAdd.draw('point')" title="Place a point">
+              <i class="fa fa-fw fa-crosshairs"></i>
+            </button>
+            <button class="btn btn-secondary" ng-class="quickAdd.selectedType == 'box' && 'active'" ng-click="quickAdd.draw('box')" title="Draw a box">
+              <i class="fa fa-fw fa-square-o"></i>
+            </button>
+            <button class="btn btn-secondary" ng-class="quickAdd.selectedType == 'circle' && 'active'" ng-click="quickAdd.draw('circle')" title="Draw a circle">
+              <i class="fa fa-fw fa-circle-o"></i>
+            </button>
+            <button class="btn btn-secondary" ng-class="quickAdd.selectedType == 'polygon' && 'active'" ng-click="quickAdd.draw('polygon')" title="Draw a polygon">
+              <i class="fa fa-fw fa-star-o"></i>
+            </button>
+            <button class="btn btn-secondary" ng-class="quickAdd.selectedType == 'line' && 'active'" ng-click="quickAdd.draw('line')" title="Draw a line">
+              <i class="fa fa-fw fa-long-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-success" ng-click="quickAdd.confirm()" title="Finish adding places">
+      <i class="fa fa-check"></i> OK
+    </button>
+    <button class="btn btn-secondary" ng-click="quickAdd.cancel()" title="Cancel adding places">
+      <i class="fa fa-ban"></i> Cancel
+    </button>
+  </div>
+</div>

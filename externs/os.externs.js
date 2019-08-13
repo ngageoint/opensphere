@@ -23,11 +23,13 @@ osx.annotation;
  * @typedef {{
  *   editable: boolean,
  *   show: boolean,
+ *   showBackground: boolean,
  *   showName: boolean,
  *   showDescription: boolean,
  *   showTail: string,
  *   size: !Array<number>,
  *   offset: !Array<number>,
+ *   position: (Array<number>|undefined),
  *   headerBG: (string|undefined),
  *   bodyBG: (string|undefined)
  * }}
@@ -257,7 +259,8 @@ osx.icon;
 /**
  * @typedef {{
  *   title: (string|undefined),
- *   path: string
+ *   path: string,
+ *   options: (Object<string, *>|undefined)
  * }}
  */
 osx.icon.Icon;

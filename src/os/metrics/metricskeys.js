@@ -327,6 +327,7 @@ os.metrics.FeatureList = {
  * @enum {string}
  */
 os.metrics.Places = {
+  ADD_ANNOTATION: 'places.addAnnotation',
   ADD_FOLDER: 'places.addFolder',
   ADD_PLACE: 'places.addPlace',
   EXPORT: 'places.export',
@@ -338,6 +339,7 @@ os.metrics.Places = {
   EDIT_PLACEMARK: 'places.contextMenu.editPlacemark',
   SAVE_TO: 'places.contextMenu.saveTo',
   EXPORT_CONTEXT: 'places.contextMenu.export',
+  QUICK_ADD_PLACES: 'places.quickAdd',
   REMOVE_PLACE: 'places.removePlace',
   REMOVE_ALL: 'places.removeAll'
 };

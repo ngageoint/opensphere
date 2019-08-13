@@ -1,3 +1,5 @@
+:orphan:
+
 Cypress Artifacts
 #################
 On Cypress test failure, test artifacts like screenshots, image comparisons, and videos are automatically generated. These artifacts are easily accessible from the local file system for test runs via the GUI and CLI.  To obtain artifacts from test runs under CI, custom solutions may be required as the build artifacts are often destroyed after a build is completed.  Instructions for Travis CI is below; other CI environments can use a similar implementation.

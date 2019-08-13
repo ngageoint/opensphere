@@ -258,6 +258,9 @@ plugin.file.kml.ui.KMLNode.prototype.loadAnnotation = function() {
     var annotationOptions = /** @type {osx.annotation.Options|undefined} */ (
       this.feature_.get(os.annotation.OPTIONS_FIELD));
     if (annotationOptions && annotationOptions.show) {
+      if (annotationOptions['showBackground'] === undefined) {
+        annotationOptions['showBackground'] = os.annotation.DEFAULT_OPTIONS['showBackground'];
+      }
       this.annotation_ = new os.annotation.FeatureAnnotation(this.feature_);
 
       // set initial visibility based on the tree/animation state
@@ -302,6 +305,7 @@ plugin.file.kml.ui.KMLNode.prototype.onFeatureChange = function(event) {
       case os.annotation.EventType.HIDE:
         this.clearAnnotations();
         this.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
+        this.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
         break;
       default:
         break;

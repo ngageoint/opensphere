@@ -6,7 +6,7 @@ goog.require('os');
 goog.require('os.MainCtrl');
 goog.require('os.config');
 goog.require('os.config.Settings');
-goog.require('os.config.SettingsInitializer');
+goog.require('os.config.SettingsInitializerManager');
 goog.require('os.debug.FancierWindow');
 goog.require('os.defines');
 goog.require('os.mixin');
@@ -43,10 +43,14 @@ os.Module = angular.module('os', [
  * Configuration function for <code>os.Module</code>. Used to configure the angular module.
  *
  * @param {!angular.$routeProvider} $routeProvider
+ * @param {!angular.$locationProvider} $locationProvider
  * @ngInject
  * @export
  */
-os.Module.configureModule = function($routeProvider) {
+os.Module.configureModule = function($routeProvider, $locationProvider) {
+  // Angular 1.6.0 defaulted to '#!' instead of '#'
+  $locationProvider.hashPrefix('');
+
   $routeProvider.otherwise({
     template: '<os-main></os-main>',
     reloadOnSearch: false
@@ -84,7 +88,7 @@ os.Module.config(os.Module.configureModule);
       os.net.addDefaultHandlers();
 
       // initialize settings for this app
-      var settingsInitializer = new os.config.SettingsInitializer();
+      var settingsInitializer = os.config.SettingsInitializerManager.getInstance().getSettingsInitializer();
       settingsInitializer.init();
     }
   };

@@ -152,6 +152,12 @@ os.data.BaseDescriptor = function() {
    * @type {goog.log.Logger}
    */
   this.log = os.data.BaseDescriptor.LOGGER_;
+
+  /**
+   * NodeUI
+   * @type {string}
+   */
+  this.nodeUI = '';
 };
 goog.inherits(os.data.BaseDescriptor, goog.events.EventTarget);
 os.implements(os.data.BaseDescriptor, os.data.IDataDescriptor.ID);
@@ -614,7 +620,14 @@ os.data.BaseDescriptor.prototype.getSearchText = function() {
  * @inheritDoc
  */
 os.data.BaseDescriptor.prototype.getNodeUI = function() {
-  return '';
+  return this.nodeUI;
+};
+/**
+ * Sets the Node UI for this desceriptor
+ * @param {string} value - node UI HTML
+ */
+os.data.BaseDescriptor.prototype.setNodeUI = function(value) {
+  this.nodeUI = value;
 };
 
 

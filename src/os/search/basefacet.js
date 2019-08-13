@@ -1,44 +1,47 @@
-goog.provide('plugin.descriptor.facet.BaseFacet');
+goog.provide('os.search.BaseFacet');
 
 goog.require('os.search.FacetSet');
 
 
 
 /**
+ * Base implementation of a local search facet.
  * @abstract
  * @constructor
  */
-plugin.descriptor.facet.BaseFacet = function() {};
+os.search.BaseFacet = function() {};
 
 
 /**
- * Loads available facets from the descriptor
+ * Loads available facets from the search item.
  *
  * @abstract
- * @param {!os.data.IDataDescriptor} descriptor
+ * @param {T} item The search item.
  * @param {!os.search.FacetSet} facets
  * @return {goog.Promise|undefined} undefined for synchronous or promise that resolves when the facet counts load
+ * @template T
  */
-plugin.descriptor.facet.BaseFacet.prototype.load = function(descriptor, facets) {};
+os.search.BaseFacet.prototype.load = function(item, facets) {};
 
 
 /**
- * Tests applied facets against the descriptor
+ * Tests applied facets against the search item.
  *
  * @abstract
- * @param {!os.data.IDataDescriptor} descriptor
+ * @param {T} item The search item.
  * @param {os.search.AppliedFacets} facets
  * @param {Object<string, number>} results
  * @return {goog.Promise|undefined} undefined for synchronous or promise that resolves when the test finishes
+ * @template T
  */
-plugin.descriptor.facet.BaseFacet.prototype.test = function(descriptor, facets, results) {};
+os.search.BaseFacet.prototype.test = function(item, facets, results) {};
 
 
 /**
  * @param {string} category
  * @return {boolean} Whether or not this facet can transform a value for the given category
  */
-plugin.descriptor.facet.BaseFacet.prototype.transformsValue = function(category) {
+os.search.BaseFacet.prototype.transformsValue = function(category) {
   return false;
 };
 
@@ -47,7 +50,7 @@ plugin.descriptor.facet.BaseFacet.prototype.transformsValue = function(category)
  * @param {string} value
  * @return {string}
  */
-plugin.descriptor.facet.BaseFacet.prototype.valueToLabel = function(value) {
+os.search.BaseFacet.prototype.valueToLabel = function(value) {
   return value;
 };
 
@@ -57,7 +60,7 @@ plugin.descriptor.facet.BaseFacet.prototype.valueToLabel = function(value) {
  * @param {string} value
  * @param {!os.search.FacetSet} facets
  */
-plugin.descriptor.facet.BaseFacet.update = function(key, value, facets) {
+os.search.BaseFacet.update = function(key, value, facets) {
   if (value) {
     if (!(key in facets)) {
       facets[key] = {};
@@ -77,7 +80,7 @@ plugin.descriptor.facet.BaseFacet.update = function(key, value, facets) {
  * @param {Object<string, number>} results
  * @param {number=} opt_increment
  */
-plugin.descriptor.facet.BaseFacet.updateResults = function(key, results, opt_increment) {
+os.search.BaseFacet.updateResults = function(key, results, opt_increment) {
   opt_increment = opt_increment || 0;
 
   if (!(key in results)) {

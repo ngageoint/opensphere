@@ -89,6 +89,13 @@ os.ui.search.SearchBoxCtrl = function($scope, $element) {
   this.eventPrefix = $scope && $scope['eventPrefix'] || '';
 
   /**
+   * Prebound search call, for event listeners without a context parameter.
+   * @type {!Function}
+   * @protected
+   */
+  this.boundSearch = this.search.bind(this);
+
+  /**
    * @type {boolean}
    */
   this['allowMultiple'] = $scope['allowMultiple'] != 'false';
@@ -124,6 +131,9 @@ os.ui.search.SearchBoxCtrl = function($scope, $element) {
    * @private
    */
   this.autocompleteSrc_ = /** @type {!jQuery} */ ($element.find('.js-searchbox__typeahead')).typeahead();
+  // trigger a search when the user clicks an autocomplete item
+  this.autocompleteSrc_.on(os.ui.TypeaheadEventType.CLICK, this.boundSearch);
+
   goog.events.listen($element[0], 'click', this.onClick_, false, this);
   this.searchManager.listen(goog.events.EventType.CHANGE, this.onSearchManagerChange, false, this);
   this.searchManager.listen(os.search.SearchEventType.START, this.onSearchStart_, false, this);
@@ -186,6 +196,10 @@ os.ui.search.SearchBoxCtrl.MAX_RECENT_ = 5;
  */
 os.ui.search.SearchBoxCtrl.prototype.destroy = function() {
   goog.events.unlisten(this.element[0], 'click', this.onClick_, false, this);
+
+  if (this.autocompleteSrc_) {
+    this.autocompleteSrc_.off(os.ui.TypeaheadEventType.CLICK, this.boundSearch);
+  }
 
   if (this.listenKey) {
     goog.events.unlistenByKey(this.listenKey);

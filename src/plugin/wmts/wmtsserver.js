@@ -242,7 +242,7 @@ plugin.wmts.Server.prototype.load = function(opt_ping) {
 
 
 /**
- * Builds query data from the WMS params.
+ * Builds query data from the WMTS params.
  *
  * @return {goog.Uri.QueryData}
  * @private
@@ -264,7 +264,7 @@ plugin.wmts.Server.prototype.getQueryData_ = function() {
 
 
 /**
- * Loads WMS GetCapabilities from the configured server.
+ * Loads WMTS GetCapabilities from the configured server.
  *
  * @protected
  */
@@ -280,9 +280,9 @@ plugin.wmts.Server.prototype.loadCapabilities = function() {
 
 
 /**
- * Test a WMS URL to check if its GetCapabilities is valid.
+ * Test a WMTS URL to check if its GetCapabilities is valid.
  *
- * @param {string} url The WMS URL
+ * @param {string} url The WMTS URL
  * @param {function(goog.events.Event)=} opt_success The success handler
  * @param {function(goog.events.Event)=} opt_error The error handler
  * @protected

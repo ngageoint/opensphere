@@ -147,6 +147,7 @@ plugin.file.kml.KMLTreeExporter.prototype.getIcon = function(item) {
       var image = config['image'];
       if (image['src']) {
         icon.href = image['src'];
+        icon.options = image['options'];
       }
 
       var size = os.style.getConfigSize(image);

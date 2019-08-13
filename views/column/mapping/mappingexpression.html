@@ -1,7 +1,7 @@
 <span ng-form="exprForm" class="my-1 flex-fill">
   <div class="row form-inline">
     <label class="col-auto">Layer</label>
-    <layerpicker class="col-5" layer="exprCtrl.layer" layers-filter="node.getFn()" formatter="exprCtrl.formatter"></layerpicker>
+    <layerpicker class="col-5" layer="exprCtrl.layer" layers-filter="node.getFn()" group-fn="exprCtrl.groupFn"></layerpicker>
     <label class="col-auto">Column</label>
     <select class="col-4 js-mapping-expression__column-select" placeholder="Select column..." ng-model="exprCtrl.column"
         ng-options="value.name for value in exprCtrl.columns" required/>

@@ -1,5 +1,6 @@
 goog.provide('os.ui.util.OffsetMarginCtrl');
 goog.provide('os.ui.util.offsetMarginDirective');
+
 goog.require('goog.Throttle');
 goog.require('os.config.ThemeSettingsChangeEvent');
 goog.require('os.ui');
@@ -100,12 +101,12 @@ os.ui.util.OffsetMarginCtrl.prototype.onDestroy_ = function() {
   }
 
   if (this.bufferTopElement_) {
-    this.bufferTopElement_.removeResize(this.resizeFn_);
+    os.ui.removeResize(this.bufferTopElement_, this.resizeFn_);
     this.bufferTopElement_ = null;
   }
 
   if (this.bufferBotElement_) {
-    this.bufferBotElement_.removeResize(this.resizeFn_);
+    os.ui.removeResize(this.bufferBotElement_, this.resizeFn_);
     this.bufferBotElement_ = null;
   }
 
@@ -123,8 +124,8 @@ os.ui.util.OffsetMarginCtrl.prototype.setWatchEl_ = function() {
   this.bufferTopElement_ = $(this.scope_['offsetTopEl']);
   this.bufferBotElement_ = $(this.scope_['offsetBotEl']);
   if (this.bufferTopElement_[0] && this.bufferBotElement_[0]) {
-    this.bufferTopElement_.resize(this.resizeFn_);
-    this.bufferBotElement_.resize(this.resizeFn_);
+    os.ui.resize(this.bufferTopElement_, this.resizeFn_);
+    os.ui.resize(this.bufferBotElement_, this.resizeFn_);
     this.onThrottleResize_();
   } else {
     this.bufferTopElement_ = null;

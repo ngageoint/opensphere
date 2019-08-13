@@ -263,11 +263,24 @@ os.ui.file.kml.GoogleEarthIcons = {
 
 
 /**
- * The default icon (white circle).
+ * The default icon path (white circle).
  * @type {string}
  */
 os.ui.file.kml.DEFAULT_ICON_PATH =
     os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PLACEMARK_CIRCLE;
+
+/**
+ * The default icon title (white circle).
+ * @type {string}
+ */
+os.ui.file.kml.DEFAULT_ICON_TITLE = 'PLACEMARK_CIRCLE';
+
+
+/**
+ * The default icon options (white circle).
+ * @type {Object|undefined}
+ */
+os.ui.file.kml.DEFAULT_ICON_OPTIONS = undefined;
 
 
 /**
@@ -277,6 +290,7 @@ os.ui.file.kml.DEFAULT_ICON_PATH =
  */
 os.ui.file.kml.DEFAULT_ICON = {
   href: os.ui.file.kml.DEFAULT_ICON_PATH,
+  options: os.ui.file.kml.DEFAULT_ICON_OPTIONS,
   scale: 1
 };
 
@@ -295,7 +309,9 @@ os.ui.file.kml.GMAPS_SEARCH = /https?:\/\/maps\.google\.com\/mapfiles\/kml\//i;
  */
 os.ui.file.kml.getDefaultIcon = function() {
   return /** @type {!osx.icon.Icon} */ ({
-    path: os.ui.file.kml.DEFAULT_ICON_PATH
+    title: os.ui.file.kml.DEFAULT_ICON_TITLE,
+    path: os.ui.file.kml.DEFAULT_ICON_PATH,
+    options: os.ui.file.kml.DEFAULT_ICON_OPTIONS
   });
 };
 

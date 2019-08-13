@@ -1,14 +1,27 @@
 // --------------------------------- Misc Utilities --------------------------------- //
-.u-pointer-events-all {
-  pointer-events: all;
+$pointer-events-options: all, auto, none;
+@each $option in $pointer-events-options {
+  .u-pointer-events-#{$option} {
+    pointer-events: $option;
+  }
 }
 
-.u-pointer-events-auto {
-  pointer-events: auto;
+$overflow-options: auto, hidden, scroll;
+@each $option in $overflow-options {
+  .u-overflow-x-#{$option} {
+    overflow-x: $option !important;
+  }
+
+  .u-overflow-y-#{$option} {
+    overflow-y: $option !important;
+  }
 }
 
-.u-pointer-events-none {
-  pointer-events: none;
+$user-select-options: all, auto, text, none;
+@each $option in $user-select-options {
+  .u-user-select-#{$option} {
+    user-select: $option;
+  }
 }
 
 .u-flex-basis-0 {
@@ -31,26 +44,6 @@
   font-size: 100%;
 
   white-space: pre-wrap;
-}
-
-.u-overflow-x-auto {
-  overflow-x: auto !important;
-}
-
-.u-overflow-x-hidden {
-  overflow-x: hidden !important;
-}
-
-.u-overflow-y-auto {
-  overflow-y: auto !important;
-}
-
-.u-overflow-y-hidden {
-  overflow-y: hidden !important;
-}
-
-.u-overflow-y-scroll {
-  overflow-y: scroll !important;
 }
 
 // Bootstrap by default puts a focus style around items. This turns that off
@@ -131,22 +124,6 @@
   text-align: center;
 }
 
-.u-user-select-all {
-  user-select: all;
-}
-
-.u-user-select-auto {
-  user-select: auto;
-}
-
-.u-user-select-text {
-  user-select: text;
-}
-
-.u-user-select-none {
-  user-select: none;
-}
-
 .u-link-style {
   @include hover {
     color: $link-hover-color;
@@ -177,6 +154,16 @@
 // --------------------------------- Visibility Utilities --------------------------------- //
 .u-opacity__95 {
   opacity: .95;
+}
+
+
+// --------------------------------- List Utilities --------------------------------- //
+.u-column-count-4 {
+  column-count: 4;
+
+  &:not(.list-unstyled) {
+    column-gap: 2.25rem;
+  }
 }
 
 
@@ -302,8 +289,8 @@
     .u-form-vertical-at-#{$breakpoint} {
 
       // Wrap all form groups to new lines
-      // sass-lint:disable no-extends
       .form-group {
+        // sass-lint:disable-block no-extends
         flex-wrap: wrap;
 
         // Make all columns 100%
@@ -329,7 +316,7 @@
             }
           }
 
-          // Make all offets ignored
+          // Make all offsets ignored
           @for $i from 0 through ($grid-columns - 1) {
             @if not ($infix == '' and $i == 0) { // Avoid emitting useless .offset-0
               .offset#{$infix}-#{$i} {
@@ -351,6 +338,93 @@
         }
       }
     }
+  }
+}
+
+
+// This block controls responsive behaviour with respect to a parent, and not the viewport
+// The parent needs to adjust the class u-parent-resizer (see window.js)
+$u-parent-resizer-count: 0;
+@each $breakpoint in map-keys($grid-breakpoints) {
+  $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+  .u-parent-resizer-#{$breakpoint} {
+
+    // these are all the fallback class overrides
+    // i.e. no sm, md, lg etc in the class name
+    @for $i from 1 through $grid-columns {
+      .col-#{$i} {
+        @include make-col($i, $grid-columns);
+      }
+    }
+
+    .flex-row {
+      flex-direction: row !important;
+    }
+
+    .flex-column {
+      flex-direction: column !important;
+    }
+
+    // these are all the responsive class overrides
+    // i.e. with sm, md, lg, etc in the class name
+    // how this works is there are no responsive classes "above" the parent-resizer
+    // so for u-parent-resizer-md there are col-xs-x, col-sm-x and col-md-x, but no col-lg-x
+    // therefore, if an element has col-lg, that class override won't exist, and will
+    // move down to the next override, or the fallback if there arent' any
+    $u-parent-resizer-subcount: 0;
+    @each $sub-breakpoint in map-keys($grid-breakpoints) {
+      @if ($u-parent-resizer-count >= $u-parent-resizer-subcount) {
+        .col-#{$sub-breakpoint} {
+          flex-basis: 0;
+          flex-grow: 1;
+          max-width: 100%;
+        }
+
+        .col-#{$sub-breakpoint}-auto {
+          flex: 0 0 auto;
+          max-width: none; // Reset earlier grid tiers
+          width: auto;
+        }
+
+        .flex-#{$sub-breakpoint}-row {
+          flex-direction: row !important;
+        }
+
+        .flex-#{$sub-breakpoint}-column {
+          flex-direction: column !important;
+        }
+
+        // these add responsive behaviour to forms, but have changed from vertical-at to
+        // horizontal-above, so 'default' behaviour is vertical (see propertieseditform.html)
+        .u-form-horizontal-above-#{$sub-breakpoint} {
+          .form-group {
+            .text-left .col-form-label,
+            .col-form-label.text-left {
+              text-align: right !important;
+            }
+
+            .col-form-label.border-left {
+              border-bottom: 1px solid $border-color;
+              border-left: 0 !important;
+            }
+
+            .btn-group.justify-content-start {
+              justify-content: flex-end !important;
+            }
+          }
+        }
+
+        @for $i from 1 through $grid-columns {
+          .col-#{$sub-breakpoint}-#{$i} {
+            @include make-col($i, $grid-columns);
+          }
+        }
+      }
+      $u-parent-resizer-subcount: $u-parent-resizer-subcount + 1;
+    }
+
+    $u-parent-resizer-count: $u-parent-resizer-count + 1;
   }
 }
 
@@ -380,10 +454,6 @@
   @include button-variant($u-theme-variables--bg-offset, $u-theme-variables--bg-offset);
 }
 
-.u-bg-body-text {
-  color: $body-color;
-}
-
 .u-bg-flyout {
   background-color: rgba($modal-content-bg, .95);
 }
@@ -391,6 +461,15 @@
 // For when you want a border for spacing but transparent
 .u-border-color-transparent {
   border-color: transparent;
+}
+
+// For a border that appears when the element is hovered
+.u-border-show-on-hover {
+  border-color: transparent;
+}
+
+.u-border-show-on-hover:hover {
+  border-color: $border-color;
 }
 
 // Used for buttons that are styled as form-controls borders
@@ -510,4 +589,30 @@ $somesizes: map-merge((
 .u-icon-display-small {
   height: 1.5rem;
   width: 1.5rem;
+}
+
+
+// --------------------------------- Aspect Ratios ----------------------------------- //
+$aspect-ratios: ((16, 9), (4, 3));
+
+@each $w, $h in $aspect-ratios {
+  .u-aspect-ratio__#{$w}-#{$h} {
+    max-width: $w / $h * 84vh;
+    position: relative;
+    width: 100%;
+
+    &:after {
+      content: '';
+      display: block;
+      padding-bottom: ($h / $w) * 100%;
+    }
+
+    > * {
+      bottom: 0;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+  }
 }

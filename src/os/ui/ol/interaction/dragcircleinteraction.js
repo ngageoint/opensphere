@@ -53,6 +53,16 @@ os.ui.ol.interaction.DragCircle.TYPE = 'circle';
 /**
  * @inheritDoc
  */
+os.ui.ol.interaction.DragCircle.prototype.disposeInternal = function() {
+  this.cleanup();
+
+  os.ui.ol.interaction.DragCircle.base(this, 'disposeInternal');
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.ui.ol.interaction.DragCircle.prototype.getGeometry = function() {
   var geom = this.circle2D.getOriginalGeometry();
 

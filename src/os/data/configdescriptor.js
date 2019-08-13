@@ -3,10 +3,13 @@ goog.provide('os.data.ConfigDescriptor');
 goog.require('goog.object');
 goog.require('os.array');
 goog.require('os.command.LayerAdd');
+goog.require('os.data');
 goog.require('os.data.IReimport');
 goog.require('os.data.LayerSyncDescriptor');
 goog.require('os.im.ImportProcess');
 goog.require('os.implements');
+goog.require('os.layer.LayerType');
+goog.require('os.ui.Icons');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportEventType');
 
@@ -22,10 +25,18 @@ os.data.ConfigDescriptor = function() {
   this.descriptorType = os.data.ConfigDescriptor.ID;
 
   /**
-   * @type {?(Array<Object<string, *>>|Object<string, *>)}
+   * The original layer configuration(s) for the descriptor.
+   * @type {!(Array<Object>|Object)}
    * @protected
    */
-  this.baseConfig = null;
+  this.baseConfig = {};
+
+  /**
+   * Cached icons from the base config.
+   * @type {?string}
+   * @protected
+   */
+  this.icons = null;
 };
 goog.inherits(os.data.ConfigDescriptor, os.data.LayerSyncDescriptor);
 os.implements(os.data.ConfigDescriptor, 'os.data.IReimport');
@@ -41,28 +52,52 @@ os.data.ConfigDescriptor.ID = 'config';
 /**
  * @inheritDoc
  */
-os.data.ConfigDescriptor.prototype.getId = function() {
-  var ids = /** @type {string} */ (os.data.ConfigDescriptor.getAll_(this.baseConfig, 'id'));
-
-  if (Array.isArray(ids)) {
-    if (ids.length > 1) {
-      var done = false;
-      for (var x = 0, xx = ids[0].length; x < xx && !done; x++) {
-        var char = ids[0].charAt(x);
-        for (var i = 1, ii = ids.length; i < ii && !done; i++) {
-          if (ids[i].charAt(x) !== char) {
-            done = true;
-          }
-        }
-      }
-
-      ids = ids[0].substring(0, x - 1);
-    } else if (ids.length) {
-      ids = ids[0];
+os.data.ConfigDescriptor.prototype.getAliases = function() {
+  var aliases = [this.getId()];
+  var ids = /** @type {Array<string>|string} */ (os.data.ConfigDescriptor.getAll_(this.baseConfig, 'id'));
+  if (ids) {
+    if (Array.isArray(ids)) {
+      aliases = aliases.concat(ids);
+    } else {
+      aliases.push(ids);
     }
   }
 
-  return ids || os.data.ConfigDescriptor.base(this, 'getId');
+  return aliases;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.data.ConfigDescriptor.prototype.getId = function() {
+  // if an id is explicitly set on the descriptor, use that. otherwise determine one from the configs.
+  var id = os.data.ConfigDescriptor.base(this, 'getId');
+  if (!id) {
+    var ids = /** @type {string} */ (os.data.ConfigDescriptor.getAll_(this.baseConfig, 'id'));
+
+    if (Array.isArray(ids)) {
+      if (ids.length > 1) {
+        var done = false;
+        for (var x = 0, xx = ids[0].length; x < xx && !done; x++) {
+          var char = ids[0].charAt(x);
+          for (var i = 1, ii = ids.length; i < ii && !done; i++) {
+            if (ids[i].charAt(x) !== char) {
+              done = true;
+            }
+          }
+        }
+
+        ids = ids[0].substring(0, x - 1);
+      } else if (ids.length) {
+        ids = ids[0];
+      }
+    }
+
+    id = ids;
+  }
+
+  return id;
 };
 
 
@@ -147,13 +182,29 @@ os.data.ConfigDescriptor.prototype.getDescriptorType = function() {
  * @inheritDoc
  */
 os.data.ConfigDescriptor.prototype.getIcons = function() {
-  var icons = /** @type {Array<string>|string} */ (os.data.ConfigDescriptor.getAll_(this.baseConfig, 'icons'));
-  icons = Array.isArray(icons) ? icons.join('') : icons;
-  icons = icons || os.data.ConfigDescriptor.base(this, 'getIcons');
-  icons = os.string.removeDuplicates(icons, os.ui.Icons.TILES);
-  icons = os.string.removeDuplicates(icons, os.ui.Icons.FEATURES);
-  icons = os.string.removeDuplicates(icons, os.ui.Icons.TIME);
-  return icons;
+  if (this.icons == null) {
+    var icons = /** @type {Array<string>|string} */ (os.data.ConfigDescriptor.getAll_(this.baseConfig, 'icons', ''));
+    if (Array.isArray(icons)) {
+      icons = icons.join('');
+    }
+
+    if (!icons) {
+      // icons were not defined in configs, so determine them based on other config values
+      if (Array.isArray(this.baseConfig)) {
+        icons = this.baseConfig.reduce(os.data.ConfigDescriptor.reduceConfigIcons_, '');
+      } else {
+        icons = os.data.ConfigDescriptor.reduceConfigIcons_('', this.baseConfig);
+      }
+
+      icons = os.string.removeDuplicates(icons, os.ui.Icons.TILES);
+      icons = os.string.removeDuplicates(icons, os.ui.Icons.FEATURES);
+      icons = os.string.removeDuplicates(icons, os.ui.Icons.TIME);
+    }
+
+    this.icons = icons || os.data.ConfigDescriptor.base(this, 'getIcons') || '';
+  }
+
+  return this.icons;
 };
 
 
@@ -174,7 +225,6 @@ os.data.ConfigDescriptor.prototype.getSearchType = function() {
 /**
  * @param {string} key
  * @return {*}
- * @protected
  */
 os.data.ConfigDescriptor.prototype.getFirst = function(key) {
   var val = os.data.ConfigDescriptor.getAll_(this.baseConfig, key);
@@ -183,35 +233,43 @@ os.data.ConfigDescriptor.prototype.getFirst = function(key) {
 
 
 /**
- * @param {Array|Object} objOrArr
- * @param {string} key
+ * @param {Array|Object} objOrArr The config object/array.
+ * @param {string} key The config key.
+ * @param {*=} opt_default The default value.
  * @return {*}
  * @private
  */
-os.data.ConfigDescriptor.getAll_ = function(objOrArr, key) {
+os.data.ConfigDescriptor.getAll_ = function(objOrArr, key, opt_default) {
+  var defaultValue = opt_default != null ? opt_default : null;
   if (Array.isArray(objOrArr)) {
     return objOrArr.map(function(item) {
-      return os.data.ConfigDescriptor.getAll_(item, key);
+      return os.data.ConfigDescriptor.getAll_(item, key, defaultValue);
     });
-  } else {
-    return key in objOrArr ? objOrArr[key] : null;
+  } else if (objOrArr) {
+    return key in objOrArr ? objOrArr[key] : defaultValue;
   }
+  return defaultValue;
 };
 
 
 /**
- * @return {!Object<string, *>}
+ * Get the base layer config(s) for the descriptor.
+ * @return {!(Array<Object>|Object)} The layer config(s).
  */
 os.data.ConfigDescriptor.prototype.getBaseConfig = function() {
-  return this.baseConfig || {};
+  return this.baseConfig;
 };
 
 
 /**
- * @param {Object<string, *>} config
+ * Set the base layer config(s) for the descriptor.
+ * @param {Array<Object>|Object} config The layer config(s).
  */
 os.data.ConfigDescriptor.prototype.setBaseConfig = function(config) {
-  this.baseConfig = config;
+  this.baseConfig = config || {};
+
+  // update icons on next call to getIcons
+  this.icons = null;
 };
 
 
@@ -290,7 +348,7 @@ os.data.ConfigDescriptor.prototype.reimport = function() {
  * @inheritDoc
  */
 os.data.ConfigDescriptor.prototype.getNodeUI = function() {
-  return /** @type {string} */ (this.getFirst('nodeUi')) || '<defaultlayernodeui></defaultlayernodeui>';
+  return /** @type {string} */ (this.getFirst('nodeUi')) || os.data.ConfigDescriptor.base(this, 'getNodeUI');
 };
 
 
@@ -343,4 +401,29 @@ os.data.ConfigDescriptor.prototype.restore = function(conf) {
     // descriptor
     this.updateActiveFromTemp();
   }
+};
+
+
+/**
+ * Reduce function to determine icons from layer configs.
+ * @param {string} icons The accumulated icons.
+ * @param {Object} config The layer config.
+ * @return {string} The icons for the config.
+ */
+os.data.ConfigDescriptor.reduceConfigIcons_ = function(icons, config) {
+  if (config) {
+    var layerType = config['layerType'];
+    if (layerType === os.layer.LayerType.TILES || layerType === os.layer.LayerType.GROUPS) {
+      icons += os.ui.Icons.TILES;
+    }
+    if (layerType === os.layer.LayerType.FEATURES || layerType === os.layer.LayerType.GROUPS) {
+      icons += os.ui.Icons.FEATURES;
+    }
+
+    if (config['animate']) {
+      icons += os.ui.Icons.TIME;
+    }
+  }
+
+  return icons;
 };

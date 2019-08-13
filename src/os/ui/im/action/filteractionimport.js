@@ -6,6 +6,7 @@ goog.require('os.filter.im.OSFilterImportCtrl');
 goog.require('os.im.action.FilterActionEntry');
 goog.require('os.im.action.FilterActionParser');
 goog.require('os.im.action.cmd.FilterActionAdd');
+goog.require('os.layer.Drawing');
 goog.require('os.ui.Module');
 goog.require('os.ui.filter');
 goog.require('os.ui.filter.im.filterImportDirective');
@@ -51,6 +52,34 @@ goog.inherits(os.ui.im.action.FilterActionImportCtrl, os.filter.im.OSFilterImpor
 /**
  * @inheritDoc
  */
+os.ui.im.action.FilterActionImportCtrl.prototype.getFilterables = function() {
+  var descriptors = os.dataManager.getDescriptors();
+  var layers = os.map.mapContainer.getLayers();
+
+  // filter down to only the IFilterable descriptors
+  var filterables = descriptors.filter(function(d) {
+    d = /** @type {os.filter.IFilterable} */ (d);
+    return os.implements(d, os.filter.IFilterable.ID) && d.isFilterable();
+  });
+
+  if (layers) {
+    layers.forEach(function(layer) {
+      // we only want IFilterable layers, BUT... we want even ones that return false from isFilterable()
+      // also, exclude the drawing layer
+      if (os.implements(layer, os.filter.IFilterable.ID) && layer.getId() != os.layer.Drawing.ID) {
+        layer = /** @type {os.filter.IFilterable} */ (layer);
+        filterables.unshift(layer);
+      }
+    });
+  }
+
+  return /** @type {!Array<!os.filter.IFilterable>} */ (filterables);
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.ui.im.action.FilterActionImportCtrl.prototype.getParser = function() {
   return new os.im.action.FilterActionParser();
 };
@@ -76,17 +105,43 @@ os.ui.im.action.FilterActionImportCtrl.prototype.getFilterTooltip = function(ent
 
 /**
  * @inheritDoc
+ */
+os.ui.im.action.FilterActionImportCtrl.prototype.onLayerChange = function(layer) {
+  this.columns = [];
+
+  if (os.implements(layer, os.data.IDataDescriptor.ID)) {
+    os.ui.im.action.FilterActionImportCtrl.base(this, 'onLayerChange', layer);
+    return;
+  }
+
+  if (os.implements(layer, os.filter.IFilterable.ID)) {
+    var filterable = /** @type {os.filter.IFilterable} */ (layer);
+
+    if (layer instanceof os.layer.Vector) {
+      // its a layer but for filter actions, we want to get the columns a little differently
+      var source = /** @type {os.source.ISource} */ (layer.getSource());
+      var columns = os.source.getFilterColumns(source, true, true);
+      this.columns = columns.map(os.source.definitionsToFeatureTypes);
+    } else {
+      // it's another filterable descriptor, so just get its columns
+      this.columns = filterable.getFilterColumns();
+    }
+  }
+
+  this.testColumns();
+};
+
+
+/**
+ * @inheritDoc
  * @export
  */
 os.ui.im.action.FilterActionImportCtrl.prototype.finish = function() {
   var iam = os.im.action.ImportActionManager.getInstance();
   var entries = [];
 
-  // add any enqueued matching filters that the user may have forgotten
-  this.addNotFound();
-
-  for (var key in this['found']) {
-    var layerModel = this['found'][key];
+  for (var key in this['matched']) {
+    var layerModel = this['matched'][key];
     var filterModels = layerModel['filterModels'];
     for (var i = 0; i < filterModels.length; i++) {
       // add each filter and create a query entry for it
@@ -118,7 +173,7 @@ os.ui.im.action.FilterActionImportCtrl.prototype.finish = function() {
 
     os.commandStack.addCommand(cmd);
 
-    msg = 'Successfully imported <b>' + this['foundCount'] + '</b> ' + entryTitle + '.';
+    msg = 'Successfully imported <b>' + this['matchedCount'] + '</b> ' + entryTitle + '.';
     am.sendAlert(msg, os.alert.AlertEventSeverity.SUCCESS);
   } else {
     msg = 'No ' + iam.entryTitle + 's were imported!';

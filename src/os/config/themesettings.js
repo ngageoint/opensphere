@@ -218,6 +218,13 @@ os.config.ThemeSettings.loadingPromise = null;
 
 
 /**
+ * Allows overriding application theme for certain routes
+ * @type {Object}
+ */
+os.config.ThemeSettings.themeExceptions = {};
+
+
+/**
  * Set Theme
  *
  * @return {goog.Promise}
@@ -258,7 +265,9 @@ os.config.ThemeSettings.setTheme = function() {
       os.settings.set(os.config.ThemeSettings.Keys.ACCESSIBLE_THEME, accessibleTheme);
     }
 
-    var theme = null;
+    var theme = goog.object.findValue(os.config.ThemeSettings.themeExceptions, function(value, key) {
+      return window.location.hash.indexOf(key) != -1;
+    });
     if (accessibleTheme && accessibleThemes[displayTheme]) {
       // Get this flavor of the theme
       theme = accessibleThemes[displayTheme][accessibleTheme];
