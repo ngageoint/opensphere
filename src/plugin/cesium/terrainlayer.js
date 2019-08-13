@@ -1,7 +1,9 @@
 goog.provide('plugin.cesium.TerrainLayer');
 
 goog.require('goog.log');
+goog.require('os.data.LayerNode');
 goog.require('os.layer.LayerType');
+goog.require('os.structs.ITreeNodeSupplier');
 goog.require('os.ui.Icons');
 goog.require('plugin.basemap.terrainNodeUIDirective');
 goog.require('plugin.cesium.Layer');
@@ -12,6 +14,7 @@ goog.require('plugin.cesium.Layer');
  *
  * @param {Cesium.TerrainProvider|undefined} provider The terrain provider.
  * @extends {plugin.cesium.Layer}
+ * @implements {os.structs.ITreeNodeSupplier}
  * @constructor
  */
 plugin.cesium.TerrainLayer = function(provider) {
@@ -81,6 +84,17 @@ plugin.cesium.TerrainLayer.prototype.getErrorMessage = function() {
   }
 
   return error;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.TerrainLayer.prototype.getTreeNode = function() {
+  var node = new os.data.LayerNode();
+  node.setLayer(this);
+  node.setCheckboxVisible(false);
+  return node;
 };
 
 

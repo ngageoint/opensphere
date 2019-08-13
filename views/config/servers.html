@@ -24,8 +24,8 @@
               <i ng-if="item.loading" class="fa fa-fw fa-spin fa-spinner" title="Loading..."></i>
             </span>
             <span>
-              <i class="fa btn btn-secondary btn-sm" ng-class="item.edit ? 'fa-pencil' : 'fa-eye'" ng-click="servers.edit(item.item)"
-                  title="{{item.edit ? 'Edit' : 'View'}} server"></i>
+              <i class="fa btn btn-secondary btn-sm" ng-class="item.edit ? 'fa-pencil' : 'fa-eye'" ng-if="item.hasView" 
+                  ng-click="servers.edit(item.item)" title="{{item.edit ? 'Edit' : 'View'}} server"></i>
               <i class="fa fa-close text-danger btn btn-secondary btn-sm" ng-if="item.edit" ng-click="servers.remove(item.item)"
                   title="Delete server"></i>
               <i class="fa fa-refresh btn btn-secondary btn-sm" ng-click="servers.refresh(item.item)"
