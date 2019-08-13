@@ -616,3 +616,13 @@ $aspect-ratios: ((16, 9), (4, 3));
     }
   }
 }
+
+
+// --------------------------------- Highlight Style -----------------------------------//
+.u-highlight-text {
+  @include bg-text-variant($yellow);
+  background: $yellow;
+  font-style: italic !important;
+  font-weight: $font-weight-bold !important;
+  text-shadow: none !important;
+}
