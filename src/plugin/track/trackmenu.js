@@ -5,6 +5,7 @@ goog.require('os.instanceOf');
 goog.require('os.source');
 goog.require('os.ui.menu.layer');
 goog.require('os.ui.menu.spatial');
+goog.require('plugin.places.PlacesManager');
 goog.require('plugin.track');
 goog.require('plugin.track.Event');
 goog.require('plugin.track.EventType');
@@ -157,7 +158,7 @@ plugin.track.menu.visibleIfHasFeatures = function(context) {
  * @this {os.ui.menu.MenuItem}
  */
 plugin.track.menu.visibleIfTracksExist = function(context) {
-  var trackNode = plugin.track.getTrackNode();
+  var trackNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
   this.visible = trackNode != null && trackNode.hasFeatures() && plugin.track.menu.hasFeatures(context);
 };
 

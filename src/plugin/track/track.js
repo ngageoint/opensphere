@@ -5,6 +5,7 @@ goog.require('ol.Feature');
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.MultiLineString');
 goog.require('ol.geom.Point');
+goog.require('os.Fields');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.config');
 goog.require('os.data.RecordField');
@@ -23,7 +24,6 @@ goog.require('os.ui.window.confirmColumnDirective');
 goog.require('os.ui.window.confirmDirective');
 goog.require('os.ui.window.confirmTextDirective');
 goog.require('plugin.file.kml');
-goog.require('plugin.file.kml.KMLField');
 goog.require('plugin.file.kml.cmd.KMLNodeAdd');
 
 
@@ -50,22 +50,6 @@ plugin.track.ID = 'track';
  * @const
  */
 plugin.track.ICON = 'fa-share-alt';
-
-
-/**
- * Title for the track layer.
- * @type {string}
- * @const
- */
-plugin.track.LAYER_TITLE = 'Places';
-
-
-/**
- * Context menu submenu for grouped actions.
- * @type {string}
- * @const
- */
-plugin.track.MENU_GROUP = 'Tracks';
 
 
 /**
@@ -144,57 +128,6 @@ plugin.track.TrackField = {
 
 
 /**
- * Fields that should be displayed on the source.
- *
- * @type {!Array<string>}
- * @const
- */
-plugin.track.SOURCE_FIELDS = [
-  plugin.file.kml.KMLField.NAME,
-  plugin.file.kml.KMLField.DESCRIPTION,
-  plugin.track.TrackField.ELAPSED_AVERAGE_SPEED,
-  plugin.track.TrackField.ELAPSED_DISTANCE,
-  plugin.track.TrackField.ELAPSED_DURATION,
-  plugin.track.TrackField.TOTAL_DISTANCE,
-  plugin.track.TrackField.TOTAL_DURATION,
-  os.Fields.LAT,
-  os.Fields.LON,
-  os.Fields.LAT_DDM,
-  os.Fields.LON_DDM,
-  os.Fields.LAT_DMS,
-  os.Fields.LON_DMS,
-  os.Fields.MGRS,
-  os.Fields.ALT
-];
-
-
-/**
- * Default options for the track layer.
- *
- * @return {!Object<string,*>}
- */
-plugin.track.getDefaultLayerOptions = function() {
-  return {
-    'animate': true,
-    'color': os.style.DEFAULT_LAYER_COLOR,
-    'collapsed': false,
-    'columns': plugin.track.SOURCE_FIELDS,
-    'editable': true,
-    'explicitType': '',
-    'id': plugin.track.ID,
-    'layerType': os.layer.LayerType.FEATURES,
-    'loadOnce': true,
-    'provider': os.config.getAppName() || null,
-    'showLabels': false,
-    'showRoot': false,
-    'size': os.style.DEFAULT_FEATURE_SIZE,
-    'title': plugin.track.LAYER_TITLE,
-    'type': plugin.track.ID
-  };
-};
-
-
-/**
  * Style config for the track.
  * @type {!Object<string, *>}
  * @const
@@ -217,7 +150,7 @@ plugin.track.CURRENT_CONFIG = {
   'image': {
     'type': 'icon',
     'scale': 1,
-    'src': os.ui.file.kml.DEFAULT_ICON.href
+    'src': os.ui.file.kml.DEFAULT_ICON_PATH
   }
 };
 
@@ -240,37 +173,6 @@ plugin.track.isTrackFeature = function(feature) {
   }
 
   return false;
-};
-
-
-/**
- * Get the track layer.
- *
- * @return {plugin.file.kml.KMLLayer}
- */
-plugin.track.getTrackLayer = function() {
-  return plugin.places.PlacesManager.getInstance().getPlacesLayer();
-};
-
-
-/**
- * Get the track source.
- *
- * @return {plugin.file.kml.KMLSource}
- */
-plugin.track.getTrackSource = function() {
-  return plugin.places.PlacesManager.getInstance().getPlacesSource();
-};
-
-
-/**
- * Get the root track node.
- *
- * @param {boolean=} opt_create If the track layer/node should be created if it doesn't exist
- * @return {plugin.file.kml.ui.KMLNode}
- */
-plugin.track.getTrackNode = function(opt_create) {
-  return plugin.places.PlacesManager.getInstance().getPlacesRoot();
 };
 
 
@@ -299,47 +201,6 @@ plugin.track.getStartTime = function(feature) {
   }
 
   return undefined;
-};
-
-
-/**
- * Get a track feature by id.
- *
- * @param {string} id The track id.
- * @return {ol.Feature} The track, or null if not found.
- */
-plugin.track.getTrackById = function(id) {
-  var layer = plugin.track.getTrackLayer();
-  if (layer) {
-    var source = layer.getSource();
-    if (source) {
-      return source.getFeatureById(id);
-    }
-  }
-
-  return null;
-};
-
-
-/**
- * Remove a track feature by id.
- *
- * @param {string} id The track id.
- * @return {ol.Feature} The track, or null if not found.
- */
-plugin.track.removeTrackById = function(id) {
-  var layer = plugin.track.getTrackLayer();
-  if (layer) {
-    var source = layer.getSource();
-    if (source) {
-      var track = source.getFeatureById(id);
-      if (track) {
-        source.removeFeature(track);
-      }
-    }
-  }
-
-  return null;
 };
 
 
@@ -495,7 +356,7 @@ plugin.track.createTrack = function(options) {
   plugin.track.updateCurrentPosition(track);
 
   // set the track name, defaulting to the id if one isn't provided
-  track.set(plugin.file.kml.KMLField.NAME, options.name || trackId);
+  track.set(os.Fields.LOWERCASE_NAME, options.name || trackId);
 
   // save the field used to sort coordinates in the track
   track.set(plugin.track.TrackField.SORT_FIELD, sortField);
@@ -516,7 +377,7 @@ plugin.track.createTrack = function(options) {
   // configure default label for the track
   os.feature.showLabel(track);
   var labelStyle = {
-    'column': options.label || plugin.file.kml.KMLField.NAME,
+    'column': options.label || os.Fields.LOWERCASE_NAME,
     'showColumn': false
   };
   currentStyle[os.style.StyleField.LABELS] = [labelStyle];
@@ -889,7 +750,7 @@ plugin.track.createAndAdd = function(options) {
     'feature': track
   });
 
-  var rootNode = plugin.track.getTrackNode(true);
+  var rootNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
   if (rootNode) {
     var cmd = new plugin.file.kml.cmd.KMLNodeAdd(trackNode, rootNode);
     cmd.title = 'Create Track';
