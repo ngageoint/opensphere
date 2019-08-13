@@ -139,23 +139,12 @@ os.ui.filter.parse.FilterParser.prototype.elToEntries = function(el) {
 
     entry = new os.filter.FilterEntry();
     entry.setFilter(str);
-
-    var types = os.ui.filter.getFilterableTypes(type);
-    if (types.length > 0) {
-      entry.setDescription(/** @type {?string} */ (el.getAttribute('description')));
-      entry.setTitle(name);
-      entry.setType(types[0]);
-      entry.setEnabled(true);
-      entry.setMatch(match ? match.toUpperCase() == 'AND' : true);
-      entries.push(entry);
-
-      for (var i = 1, ii = types.length; i < ii; i++) {
-        var clone = entry.clone();
-        clone.setId(goog.string.getRandomString());
-        clone.setType(types[i]);
-        entries.push(clone);
-      }
-    }
+    entry.setDescription(/** @type {?string} */ (el.getAttribute('description')));
+    entry.setTitle(name);
+    entry.setType(type);
+    entry.setEnabled(true);
+    entry.setMatch(match ? match.toUpperCase() == 'AND' : true);
+    entries.push(entry);
   }
 
   return entries.length > 0 ? entries : null;

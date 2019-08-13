@@ -449,7 +449,7 @@ os.ogc.wfs.FeatureType.clearTimeColumns = function(typeName) {
  * @type {Array<string>}
  * @const
  */
-os.ogc.wfs.FeatureType.IGNORED_FIELDS = ['ID', 'DATE_TIME'];
+os.ogc.wfs.FeatureType.IGNORED_FIELDS = ['ID'];
 
 
 /**

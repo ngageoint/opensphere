@@ -370,7 +370,14 @@ os.filter.BaseFilterManager.prototype.addFilter = function(filter) {
       this.types[filter.type] = new os.filter.FilterType();
     }
 
-    this.types[filter.type].filters.push(filter);
+    var filters = this.types[filter.type].filters;
+    filters.push(filter);
+
+    // deduplicate by ID
+    goog.array.removeDuplicates(filters, undefined, function(f) {
+      return f.getId();
+    });
+
     this.dispatchEvent(new os.ui.filter.FilterEvent(os.ui.filter.FilterEventType.FILTERS_REFRESH));
     this.save();
   }

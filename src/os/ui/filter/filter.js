@@ -449,8 +449,7 @@ os.ui.filter.getString_ = function(something) {
  * @return {?os.filter.IFilterable}
  */
 os.ui.filter.getFilterableByType = function(type) {
-  var filterable = os.ui.filterManager.getFilterable(type);
-  return filterable;
+  return os.ui.filterManager.getFilterable(type);
 };
 
 

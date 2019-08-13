@@ -205,26 +205,12 @@ os.ui.column.mapping.MappingExpressionCtrl.prototype.setColumns_ = function(colu
 
 
 /**
- * Formatter for the layerpicker on each row.
+ * Trivial empty group ID function for the layer picker.
  *
- * @param {Object} item
- * @param {angular.JQLite} ele
- * @return {string|angular.JQLite}
+ * @param {os.data.IDataDescriptor|os.filter.IFilterable} layer The layer to group.
+ * @return {?string}
  * @export
  */
-os.ui.column.mapping.MappingExpressionCtrl.prototype.formatter = function(item, ele) {
-  var id = item['text'];
-  var des = os.dataManager.getDescriptor(id);
-  var val = '';
-  if (des) {
-    val = des.getTitle();
-    var color = des.getColor();
-    color = color ? os.color.toHexString(color) : 'white';
-    val = '<i class="fa fa-bars mr-1" style="color:' + color + '"></i>' + val;
-    if (des.getProvider()) {
-      // put the provider on each for clarity
-      val += ' (' + des.getProvider() + ')';
-    }
-  }
-  return val;
+os.ui.column.mapping.MappingExpressionCtrl.prototype.groupFn = function(layer) {
+  return '';
 };
