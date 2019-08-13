@@ -2,6 +2,7 @@ goog.provide('plugin.track.ConfirmTrackCtrl');
 goog.provide('plugin.track.confirmTrackDirective');
 
 goog.require('goog.Promise');
+goog.require('os.track');
 goog.require('os.ui.Module');
 goog.require('os.ui.window');
 goog.require('plugin.places.PlacesManager');
@@ -108,7 +109,7 @@ plugin.track.launchConfirmTrack = function(confirm, cancel) {
 
   var windowOptions = {
     'label': 'Choose a Track',
-    'icon': 'fa ' + plugin.track.ICON,
+    'icon': 'fa ' + os.track.ICON,
     'x': 'center',
     'y': 'center',
     'width': 300,

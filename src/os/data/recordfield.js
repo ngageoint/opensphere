@@ -13,6 +13,7 @@ os.data.RecordField = {
   ELLIPSE: 'ellipse',
   GEOM: 'geometry',
   DRAWING_LAYER_NODE: '_node',
+  FEATURE_TYPE: '_featureType',
   HTML_DESCRIPTION: '_htmlDescription',
   INTERACTIVE: '_interactive',
   LINE_OF_BEARING: 'lineOfBearing',

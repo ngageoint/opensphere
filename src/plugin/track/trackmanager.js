@@ -11,6 +11,7 @@ goog.require('ol.array');
 goog.require('ol.events');
 goog.require('ol.extent');
 goog.require('os.time.TimeRange');
+goog.require('os.track');
 
 
 
@@ -265,7 +266,7 @@ plugin.track.TrackManager.prototype.getActiveExtent = function(tracks) {
   var coordinates = [];
   if (tracks) {
     for (var i = 0; i < tracks.length; i++) {
-      var trackPos = tracks[i].get(plugin.track.TrackField.CURRENT_POSITION);
+      var trackPos = tracks[i].get(os.track.TrackField.CURRENT_POSITION);
       if (trackPos) {
         coordinates.push(trackPos.getCoordinates());
       }
