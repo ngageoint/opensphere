@@ -3,6 +3,7 @@ goog.provide('plugin.track.menu');
 goog.require('os.feature.DynamicFeature');
 goog.require('os.instanceOf');
 goog.require('os.source');
+goog.require('os.track');
 goog.require('os.ui.menu.layer');
 goog.require('os.ui.menu.spatial');
 goog.require('plugin.places.PlacesManager');
@@ -124,7 +125,7 @@ plugin.track.menu.hasFeatures = function(context) {
     var node = context[0];
     if (node instanceof os.data.LayerNode) {
       var layer = node.getLayer();
-      if (layer instanceof os.layer.Vector && layer.getId() !== plugin.track.ID) {
+      if (layer instanceof os.layer.Vector) {
         var source = layer.getSource();
         if (source instanceof os.source.Vector) {
           return source.getFeatureCount() > 0;
@@ -291,7 +292,7 @@ plugin.track.menu.isMarkerInterpolationOn = function(opt_context) {
   if (opt_context) {
     var tracks = plugin.track.menu.getTracks(/** @type {Object} */ (opt_context));
     if (tracks.length > 0) {
-      return plugin.track.getInterpolateMarker(/** @type {!ol.Feature} */ (tracks[0]));
+      return os.track.getInterpolateMarker(/** @type {!ol.Feature} */ (tracks[0]));
     }
   }
 
@@ -348,7 +349,7 @@ plugin.track.menu.isLineShown = function(opt_context) {
   if (opt_context) {
     var tracks = plugin.track.menu.getTracks(/** @type {Object} */ (opt_context));
     if (tracks.length > 0) {
-      return plugin.track.getShowLine(/** @type {!ol.Feature} */ (tracks[0]));
+      return os.track.getShowLine(/** @type {!ol.Feature} */ (tracks[0]));
     }
   }
 
@@ -379,7 +380,7 @@ plugin.track.menu.isLineHidden = function(opt_context) {
  * @this {os.ui.menu.MenuItem}
  */
 plugin.track.menu.visibleIfTrackFeature = function(context) {
-  this.visible = !!context && !!context.feature && plugin.track.isTrackFeature(context.feature);
+  this.visible = !!context && !!context.feature && os.track.isTrackFeature(context.feature);
 };
 
 
@@ -502,7 +503,7 @@ plugin.track.menu.setShowTrackLine = function(show, event) {
   if (context) {
     var tracks = plugin.track.menu.getTracks(/** @type {Object} */ (context));
     for (var i = 0; i < tracks.length; i++) {
-      plugin.track.setShowLine(/** @type {!ol.Feature} */ (tracks[i]), show);
+      os.track.setShowLine(/** @type {!ol.Feature} */ (tracks[i]), show);
     }
   }
 };
@@ -519,7 +520,7 @@ plugin.track.menu.setMarkerInterpolationEnabled = function(show, event) {
   if (context) {
     var tracks = plugin.track.menu.getTracks(/** @type {Object} */ (context));
     for (var i = 0; i < tracks.length; i++) {
-      plugin.track.setInterpolateMarker(/** @type {!ol.Feature} */ (tracks[i]), show);
+      os.track.setInterpolateMarker(/** @type {!ol.Feature} */ (tracks[i]), show);
     }
   }
 };
@@ -534,7 +535,7 @@ plugin.track.menu.setMarkerInterpolationEnabled = function(show, event) {
 plugin.track.menu.getTracks = function(context) {
   var tracks = [];
   if (context) {
-    if (context.feature && plugin.track.isTrackFeature(context.feature)) {
+    if (context.feature && os.track.isTrackFeature(context.feature)) {
       tracks.push(/** @type {!ol.Feature} */ (context.feature));
     } else if (goog.isArray(context)) {
       var trackNodes = plugin.track.menu.getTrackNodes(context);
@@ -547,7 +548,7 @@ plugin.track.menu.getTracks = function(context) {
       var source = /** @type {!os.source.Vector} */ (context);
       var temp = source.getSelectedItems();
       for (var i = 0; i < temp.length; i++) {
-        if (plugin.track.isTrackFeature(temp[i])) {
+        if (os.track.isTrackFeature(temp[i])) {
           tracks.push(temp[i]);
         }
       }
@@ -592,9 +593,9 @@ plugin.track.menu.handleAddCreateTrackEvent_ = function(event) {
 
     if (features && features.length) {
       if (event.type === plugin.track.EventType.CREATE_TRACK) {
-        plugin.track.promptForTitle(title).then(function(title) {
-          plugin.track.getSortField(features[0]).then(function(sortField) {
-            var options = /** @type {!plugin.track.CreateOptions} */ ({
+        os.track.promptForTitle(title).then(function(title) {
+          os.track.getSortField(features[0]).then(function(sortField) {
+            var options = /** @type {!os.track.CreateOptions} */ ({
               features: features,
               name: title,
               sortField: sortField
@@ -606,7 +607,7 @@ plugin.track.menu.handleAddCreateTrackEvent_ = function(event) {
       } else if (event.type === plugin.track.EventType.ADD_TO) {
         plugin.track.promptForTrack().then(function(track) {
           if (track) {
-            plugin.track.addToTrack({
+            os.track.addToTrack({
               track: track,
               features: features
             });
