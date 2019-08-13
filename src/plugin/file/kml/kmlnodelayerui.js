@@ -1,6 +1,7 @@
 goog.provide('plugin.file.kml.KMLNodeLayerUICtrl');
-goog.provide('plugin.file.kml.KMLNodeLayerUICtrl.UIEventType');
 goog.provide('plugin.file.kml.kmlNodeLayerUIDirective');
+
+goog.require('os.action.EventType');
 goog.require('os.command.FeatureCenterShape');
 goog.require('os.command.FeatureColor');
 goog.require('os.command.FeatureIcon');
@@ -102,25 +103,16 @@ plugin.file.kml.KMLNodeLayerUICtrl = function($scope, $element, $timeout) {
   $scope.$on('fillOpacity.slide', this.onFillOpacityValueChange.bind(this));
   $scope.$on('fillOpacity.slidestop', this.onFillOpacityChange.bind(this));
 
-  os.dispatcher.listen(plugin.file.kml.KMLNodeLayerUICtrl.UIEventType.REFRESH, this.initUI, false, this);
+  os.dispatcher.listen(os.action.EventType.REFRESH, this.initUI, false, this);
 };
 goog.inherits(plugin.file.kml.KMLNodeLayerUICtrl, os.ui.layer.VectorLayerUICtrl);
-
-
-/**
- * UI event types
- * @enum {string}
- */
-plugin.file.kml.KMLNodeLayerUICtrl.UIEventType = {
-  REFRESH: 'refresh'
-};
 
 
 /**
  * @inheritDoc
  */
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.disposeInternal = function() {
-  os.dispatcher.unlisten(os.ui.events.UIEventType.TOGGLE_UI, this.initUI, false, this);
+  os.dispatcher.unlisten(os.action.EventType.REFRESH, this.initUI, false, this);
   plugin.file.kml.KMLNodeLayerUICtrl.base(this, 'disposeInternal');
 };
 
@@ -139,12 +131,14 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getProperties = function() {
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.initUI = function() {
   plugin.file.kml.KMLNodeLayerUICtrl.base(this, 'initUI');
 
-  if (this.scope && this.isFeatureFillable()) {
-    this.scope['fillColor'] = this.getFillColor();
-    this.scope['fillOpacity'] = this.getFillOpacity();
-  } else {
-    delete this.scope['fillColor'];
-    delete this.scope['fillOpacity'];
+  if (this.scope) {
+    if (this.isFeatureFillable()) {
+      this.scope['fillColor'] = this.getFillColor();
+      this.scope['fillOpacity'] = this.getFillOpacity();
+    } else {
+      delete this.scope['fillColor'];
+      delete this.scope['fillOpacity'];
+    }
   }
 };
 
