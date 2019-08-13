@@ -120,8 +120,8 @@ describe('os.style', function() {
     };
 
     it('should get the color from a config using default fields', function() {
-      expect(os.style.getConfigColor(null)).toBeUndefined();
-      expect(os.style.getConfigColor({})).toBeUndefined();
+      expect(os.style.getConfigColor(null)).toBeNull();
+      expect(os.style.getConfigColor({})).toBeNull();
 
       expect(os.style.getConfigColor(colorConfig)).toBe(testColor);
       expect(os.style.getConfigColor(fillConfig)).toBe(testColor);
