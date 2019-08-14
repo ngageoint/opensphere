@@ -419,11 +419,11 @@ plugin.places.ui.QuickAddPlacesCtrl.prototype.confirm = function() {
 
 
 /**
- * Cancel adding the places.
+ * Clear all added places.
  *
  * @export
  */
-plugin.places.ui.QuickAddPlacesCtrl.prototype.cancel = function() {
+plugin.places.ui.QuickAddPlacesCtrl.prototype.clearAll = function() {
   if (this.added.length > 0) {
     var cp = os.command.CommandProcessor.getInstance();
     if (this.added[0].isFolder()) {
