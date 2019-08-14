@@ -154,9 +154,9 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.initialize = function() {
     var strokeColor = os.style.toRgbaString(color);
     os.style.setConfigColor(this.styleConfig, strokeColor);
 
-    // If we have a fill color, standardize that too
+    // If we have a fill color, set that to our style config
     var fillColor = os.style.toRgbaString(fill);
-    os.style.setConfigColor(this.styleConfig, fillColor, [os.style.StyleField.FILL]);
+    this.styleConfig.fill.color = fillColor;
 
     this.scope['size'] = os.style.getConfigSize(this.styleConfig);
     this.scope['lineDash'] = os.style.getConfigLineDash(this.styleConfig);
@@ -252,7 +252,9 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onColorChange = function(e
       os.style.setConfigColor(this.styleConfig, color);
       this.scope['color'] = os.color.toHexString(color);
 
-      os.style.setConfigColor(this.styleConfig, fillColor, [os.style.StyleField.FILL]);
+      // Only change the fill color without changing the image fill color too
+      this.styleConfig.fill.color = fillColor;
+
       this.scope['fillColor'] = os.color.toHexString(fillColor);
     } else {
       // change just the stroke color
@@ -286,7 +288,8 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onFillColorChange = functi
       color = os.style.toRgbaString(colorArr);
     }
 
-    os.style.setConfigColor(this.styleConfig, color, [os.style.StyleField.FILL]);
+    // Only change the fill color without changing the image fill color too
+    this.styleConfig.fill.color = color;
 
     this.scope['fillColor'] = os.color.toHexString(color);
   }
@@ -360,7 +363,9 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onOpacityChange = function
   if (event.name == 'fillOpacity.slidestop') {
     color = os.style.getConfigColor(this.styleConfig, true, os.style.StyleField.FILL);
     color[3] = value;
-    os.style.setConfigColor(this.styleConfig, color, [os.style.StyleField.FILL]);
+
+    // Only change the fill color without changing the image fill color too
+    this.styleConfig.fill.color = color;
 
     this.scope['fillOpacity'] = value;
   } else {

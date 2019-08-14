@@ -306,7 +306,8 @@ plugin.im.action.feature.StyleAction.prototype.fromXml = function(xml) {
         fillColor = os.style.toRgbaString(fillColorArr);
       }
 
-      os.style.setConfigColor(styleConfig, fillColor, [os.style.StyleField.FILL]);
+      // Only change the fill color without changing the image fill color too
+      styleConfig.fill.color = fillColor;
     }
 
     var size = parseFloat(os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.SIZE));
