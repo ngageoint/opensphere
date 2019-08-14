@@ -526,10 +526,11 @@ os.feature.setAltitude = function(feature, opt_field) {
  * @param {ol.Feature} feature The feature
  * @param {boolean=} opt_replace If existing values should be replaced
  * @param {ol.geom.Geometry=} opt_geometry Alternate geometry to populate the fields
+ * @param {boolean=} opt_silent
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.feature.populateCoordFields = function(feature, opt_replace, opt_geometry) {
+os.feature.populateCoordFields = function(feature, opt_replace, opt_geometry, opt_silent) {
   var changed = false;
   var geom = opt_geometry || feature.getGeometry();
   if (geom instanceof ol.geom.Point) {
@@ -582,7 +583,7 @@ os.feature.populateCoordFields = function(feature, opt_replace, opt_geometry) {
   }
 
   // fire a change event if anything was updated, so the UI can update
-  if (changed) {
+  if (!opt_silent && changed) {
     feature.changed();
   }
 };
