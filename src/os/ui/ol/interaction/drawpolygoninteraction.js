@@ -9,10 +9,12 @@ goog.require('ol.geom.LineString');
 goog.require('ol.geom.Polygon');
 goog.require('ol.layer.Vector');
 goog.require('ol.source.Vector');
+goog.require('os.data.RecordField');
 goog.require('os.geo.jsts');
 goog.require('os.geo2');
 goog.require('os.ui.ol.draw.DrawEvent');
 goog.require('os.ui.ol.interaction.AbstractDraw');
+goog.require('os.webgl');
 
 
 
@@ -110,6 +112,7 @@ os.ui.ol.interaction.DrawPolygon.prototype.getGeometry = function() {
 os.ui.ol.interaction.DrawPolygon.prototype.getProperties = function() {
   var props = {};
   props[os.interpolate.METHOD_FIELD] = os.interpolate.getMethod();
+  props[os.data.RecordField.ALTITUDE_MODE] = os.webgl.AltitudeMode.CLAMP_TO_GROUND;
   return props;
 };
 

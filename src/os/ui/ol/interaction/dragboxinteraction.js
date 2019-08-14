@@ -1,9 +1,11 @@
 goog.provide('os.ui.ol.interaction.DragBox');
 goog.require('ol.MapBrowserEvent');
+goog.require('os.data.RecordField');
 goog.require('os.geo2');
 goog.require('os.olm.render.Box');
 goog.require('os.proj');
 goog.require('os.ui.ol.interaction.AbstractDrag');
+goog.require('os.webgl');
 
 
 
@@ -78,6 +80,7 @@ os.ui.ol.interaction.DragBox.prototype.getGeometry = function() {
 os.ui.ol.interaction.DragBox.prototype.getProperties = function() {
   var props = {};
   props[os.interpolate.METHOD_FIELD] = os.interpolate.Method.RHUMB;
+  props[os.data.RecordField.ALTITUDE_MODE] = os.webgl.AltitudeMode.CLAMP_TO_GROUND;
   return props;
 };
 

@@ -2,10 +2,12 @@ goog.provide('os.ui.ol.interaction.DragCircle');
 
 goog.require('goog.string');
 goog.require('ol');
+goog.require('os.data.RecordField');
 goog.require('os.geo2');
 goog.require('os.math.Units');
 goog.require('os.olm.render.Circle');
 goog.require('os.ui.ol.interaction.AbstractDrag');
+goog.require('os.webgl');
 
 
 
@@ -78,6 +80,7 @@ os.ui.ol.interaction.DragCircle.prototype.getGeometry = function() {
 os.ui.ol.interaction.DragCircle.prototype.getProperties = function() {
   var props = {};
   props[os.interpolate.METHOD_FIELD] = os.interpolate.getMethod();
+  props[os.data.RecordField.ALTITUDE_MODE] = os.webgl.AltitudeMode.CLAMP_TO_GROUND;
   return props;
 };
 
