@@ -109,8 +109,8 @@ plugin.places.ui.QuickAddPlacesCtrl = function($scope, $element) {
    * @private
    */
   this.dragBox_ = new os.interaction.DragBox();
-  ol.events.listen(this.dragBox_, os.ui.ol.draw.DrawEventType.DRAWEND, this.onDrawEnd_, this);
-  ol.events.listen(this.dragBox_, os.ui.ol.draw.DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
+  ol.events.listen(this.dragBox_, os.ui.draw.DrawEventType.DRAWEND, this.onDrawEnd_, this);
+  ol.events.listen(this.dragBox_, os.ui.draw.DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
 
   /**
    * DragCircle interaction
@@ -118,8 +118,8 @@ plugin.places.ui.QuickAddPlacesCtrl = function($scope, $element) {
    * @private
    */
   this.dragCircle_ = new os.interaction.DragCircle();
-  ol.events.listen(this.dragCircle_, os.ui.ol.draw.DrawEventType.DRAWEND, this.onDrawEnd_, this);
-  ol.events.listen(this.dragCircle_, os.ui.ol.draw.DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
+  ol.events.listen(this.dragCircle_, os.ui.draw.DrawEventType.DRAWEND, this.onDrawEnd_, this);
+  ol.events.listen(this.dragCircle_, os.ui.draw.DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
 
   /**
    * DragBox interaction
@@ -127,8 +127,8 @@ plugin.places.ui.QuickAddPlacesCtrl = function($scope, $element) {
    * @private
    */
   this.drawPolygon_ = new os.interaction.DrawPolygon();
-  ol.events.listen(this.drawPolygon_, os.ui.ol.draw.DrawEventType.DRAWEND, this.onDrawEnd_, this);
-  ol.events.listen(this.drawPolygon_, os.ui.ol.draw.DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
+  ol.events.listen(this.drawPolygon_, os.ui.draw.DrawEventType.DRAWEND, this.onDrawEnd_, this);
+  ol.events.listen(this.drawPolygon_, os.ui.draw.DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
 
   /**
    * DragBox interaction
@@ -136,8 +136,8 @@ plugin.places.ui.QuickAddPlacesCtrl = function($scope, $element) {
    * @private
    */
   this.drawLine_ = new os.interaction.DrawLine();
-  ol.events.listen(this.drawLine_, os.ui.ol.draw.DrawEventType.DRAWEND, this.onDrawEnd_, this);
-  ol.events.listen(this.drawLine_, os.ui.ol.draw.DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
+  ol.events.listen(this.drawLine_, os.ui.draw.DrawEventType.DRAWEND, this.onDrawEnd_, this);
+  ol.events.listen(this.drawLine_, os.ui.draw.DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
 
   /**
    * Handler for escape key events.
@@ -271,7 +271,7 @@ plugin.places.ui.QuickAddPlacesCtrl.prototype.disablePoint = function() {
 /**
  * Handles draw end events.
  *
- * @param {os.ui.ol.draw.DrawEvent} event
+ * @param {os.ui.draw.DrawEvent} event
  * @private
  */
 plugin.places.ui.QuickAddPlacesCtrl.prototype.onDrawEnd_ = function(event) {
@@ -285,7 +285,7 @@ plugin.places.ui.QuickAddPlacesCtrl.prototype.onDrawEnd_ = function(event) {
 /**
  * Handles draw cancel events.
  *
- * @param {os.ui.ol.draw.DrawEvent=} opt_event
+ * @param {os.ui.draw.DrawEvent=} opt_event
  * @private
  */
 plugin.places.ui.QuickAddPlacesCtrl.prototype.onDrawCancel_ = function(opt_event) {
