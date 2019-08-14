@@ -182,33 +182,66 @@ os.data.ColumnDefinition.prototype.persist = function(opt_obj) {
     opt_obj = {};
   }
 
+  // always persist/restore these as they are the meat of the column definition
   opt_obj['id'] = this['id'];
   opt_obj['name'] = this['name'];
   opt_obj['field'] = this['field'];
-  opt_obj['type'] = this['type'];
-  opt_obj['resizable'] = this['resizable'];
-  opt_obj['sortable'] = this['sortable'];
-  opt_obj['minWidth'] = this['minWidth'];
-  opt_obj['maxWidth'] = this['maxWidth'];
-  opt_obj['width'] = this['width'];
-  opt_obj['rerenderOnResize'] = this['rerenderOnResize'];
-  opt_obj['headerCssClass'] = this['headerCssClass'];
-  opt_obj['cssClass'] = this['cssClass'];
-  opt_obj['defaultSortAsc'] = this['defaultSortAsc'];
-  opt_obj['focusable'] = this['focusable'];
-  opt_obj['selectable'] = this['selectable'];
-  opt_obj['behavior'] = this['behavior'];
-  opt_obj['visible'] = this['visible'];
-  opt_obj['visprotected'] = this['visprotected'];
-  opt_obj['toolTip'] = this['toolTip'];
-  opt_obj['derivedFrom'] = this['derivedFrom'];
-  opt_obj['userModified'] = this['userModified'];
 
-  /**
-   * @todo Need a way to persist/restore these.
-   */
-  opt_obj['formatter'] = null;
-  opt_obj['asyncPostRender'] = null;
+  // only persist these values when they differ from the default to conserve space
+  if (this['type'] !== os.xsd.DataType.STRING) {
+    opt_obj['type'] = this['type'];
+  }
+  if (this['resizable'] !== true) {
+    opt_obj['resizable'] = this['resizable'];
+  }
+  if (this['sortable'] !== true) {
+    opt_obj['sortable'] = this['sortable'];
+  }
+  if (this['minWidth'] !== 30) {
+    opt_obj['minWidth'] = this['minWidth'];
+  }
+  if (this['maxWidth'] !== Number.MAX_VALUE) {
+    opt_obj['maxWidth'] = this['maxWidth'];
+  }
+  if (this['width'] !== 0) {
+    opt_obj['width'] = this['width'];
+  }
+  if (this['rerenderOnResize'] !== false) {
+    opt_obj['rerenderOnResize'] = this['rerenderOnResize'];
+  }
+  if (this['headerCssClass'] !== '') {
+    opt_obj['headerCssClass'] = this['headerCssClass'];
+  }
+  if (this['cssClass'] !== '') {
+    opt_obj['cssClass'] = this['cssClass'];
+  }
+  if (this['defaultSortAsc'] !== true) {
+    opt_obj['defaultSortAsc'] = this['defaultSortAsc'];
+  }
+  if (this['focusable'] !== true) {
+    opt_obj['focusable'] = this['focusable'];
+  }
+  if (this['selectable'] !== true) {
+    opt_obj['selectable'] = this['selectable'];
+  }
+  if (this['behavior'] !== null) {
+    opt_obj['behavior'] = this['behavior'];
+  }
+  if (this['visible'] !== true) {
+    opt_obj['visible'] = this['visible'];
+  }
+  if (this['visprotected'] !== false) {
+    opt_obj['visprotected'] = this['visprotected'];
+  }
+  if (this['toolTip'] !== '') {
+    opt_obj['toolTip'] = this['toolTip'];
+  }
+  if (this['derivedFrom'] !== '') {
+    opt_obj['derivedFrom'] = this['derivedFrom'];
+  }
+  if (this['userModified'] !== false) {
+    opt_obj['userModified'] = this['userModified'];
+  }
 
   return opt_obj;
 };
@@ -221,30 +254,62 @@ os.data.ColumnDefinition.prototype.restore = function(config) {
   this['id'] = config['id'];
   this['name'] = config['name'];
   this['field'] = config['field'];
-  this['type'] = config['type'] || 'string';
-  this['resizable'] = config['resizable'];
-  this['sortable'] = config['sortable'];
-  this['minWidth'] = config['minWidth'];
-  this['maxWidth'] = config['maxWidth'];
-  this['width'] = config['width'];
-  this['rerenderOnResize'] = config['rerenderOnResize'];
-  this['headerCssClass'] = config['headerCssClass'];
-  this['cssClass'] = config['cssClass'];
-  this['defaultSortAsc'] = config['defaultSortAsc'];
-  this['focusable'] = config['focusable'];
-  this['selectable'] = config['selectable'];
-  this['behavior'] = config['behavior'];
-  this['visible'] = config['visible'];
-  this['visprotected'] = config['visprotected'];
-  this['toolTip'] = config['toolTip'];
-  this['derivedFrom'] = config['derivedFrom'];
-  this['userModified'] = config['userModified'];
 
-  /**
-   * @todo Need a way to persist/restore these.
-   */
-  this['formatter'] = null;
-  this['asyncPostRender'] = null;
+  // only set these values if these keys are on the config
+  if (config.hasOwnProperty('type')) {
+    this['type'] = config['type'];
+  }
+  if (config.hasOwnProperty('resizable')) {
+    this['resizable'] = config['resizable'];
+  }
+  if (config.hasOwnProperty('sortable')) {
+    this['sortable'] = config['sortable'];
+  }
+  if (config.hasOwnProperty('minWidth')) {
+    this['minWidth'] = config['minWidth'];
+  }
+  if (config.hasOwnProperty('maxWidth')) {
+    this['maxWidth'] = config['maxWidth'];
+  }
+  if (config.hasOwnProperty('width')) {
+    this['width'] = config['width'];
+  }
+  if (config.hasOwnProperty('rerenderOnResize')) {
+    this['rerenderOnResize'] = config['rerenderOnResize'];
+  }
+  if (config.hasOwnProperty('headerCssClass')) {
+    this['headerCssClass'] = config['headerCssClass'];
+  }
+  if (config.hasOwnProperty('cssClass')) {
+    this['cssClass'] = config['cssClass'];
+  }
+  if (config.hasOwnProperty('defaultSortAsc')) {
+    this['defaultSortAsc'] = config['defaultSortAsc'];
+  }
+  if (config.hasOwnProperty('focusable')) {
+    this['focusable'] = config['focusable'];
+  }
+  if (config.hasOwnProperty('selectable')) {
+    this['selectable'] = config['selectable'];
+  }
+  if (config.hasOwnProperty('behavior')) {
+    this['behavior'] = config['behavior'];
+  }
+  if (config.hasOwnProperty('visible')) {
+    this['visible'] = config['visible'];
+  }
+  if (config.hasOwnProperty('visprotected')) {
+    this['visprotected'] = config['visprotected'];
+  }
+  if (config.hasOwnProperty('toolTip')) {
+    this['toolTip'] = config['toolTip'];
+  }
+  if (config.hasOwnProperty('derivedFrom')) {
+    this['derivedFrom'] = config['derivedFrom'];
+  }
+  if (config.hasOwnProperty('userModified')) {
+    this['userModified'] = config['userModified'];
+  }
 };
 
 
