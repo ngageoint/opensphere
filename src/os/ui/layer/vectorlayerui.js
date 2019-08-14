@@ -5,6 +5,7 @@ goog.require('goog.color');
 goog.require('os.MapChange');
 goog.require('os.array');
 goog.require('os.command.LayerStyle');
+goog.require('os.command.SequenceCommand');
 goog.require('os.command.VectorLayerAutoRefresh');
 goog.require('os.command.VectorLayerCenterShape');
 goog.require('os.command.VectorLayerColor');
@@ -327,6 +328,9 @@ os.ui.layer.VectorLayerUICtrl.prototype.reconcileLabelsState_ = function() {
  * @protected
  */
 os.ui.layer.VectorLayerUICtrl.prototype.onColorChange = function(event, value) {
+  if (!os.color.isColorString(value) && !goog.isArray(value)) {
+    return;
+  }
   event.stopPropagation();
 
   // Make sure the value includes the current opacity
@@ -354,22 +358,36 @@ os.ui.layer.VectorLayerUICtrl.prototype.onColorChange = function(event, value) {
 
     this.createCommand(fn);
   } else if (color == fillColor) {
-    // We run these separately so that they retain the different opacities
+    var strokeArray = colorValue.slice(0, 3);
+    strokeArray.push(opacity);
+    var fillArray = colorValue.slice(0, 3);
+    fillArray.push(fillOpacity);
+
+    // We run these sequentially so that they retain the different opacities
     var fn2 =
       /**
        * @param {os.layer.ILayer} layer
        * @return {os.command.ICommand}
        */
       function(layer) {
-        return new os.command.VectorLayerColor(
-            layer.getId(), colorValue, null, os.command.VectorLayerColor.MODE.STROKE);
+        var cmds = [];
+
+        cmds.push(new os.command.VectorLayerColor(
+            layer.getId(), strokeArray, null, os.command.VectorLayerColor.MODE.STROKE)
+        );
+        cmds.push(new os.command.VectorLayerColor(
+            layer.getId(), fillArray, null, os.command.VectorLayerColor.MODE.FILL)
+        );
+
+        var sequence = new os.command.SequenceCommand();
+        sequence.setCommands(cmds);
+        sequence.title = 'Change Color';
+
+        return sequence;
       };
 
     this.createCommand(fn2);
-
-    // Use the fill's opacity instead of the stroke's opacity
-    colorValue[3] = fillOpacity;
-
+  } else {
     var fn3 =
       /**
        * @param {os.layer.ILayer} layer
@@ -377,22 +395,10 @@ os.ui.layer.VectorLayerUICtrl.prototype.onColorChange = function(event, value) {
        */
       function(layer) {
         return new os.command.VectorLayerColor(
-            layer.getId(), colorValue, null, os.command.VectorLayerColor.MODE.FILL);
-      };
-
-    this.createCommand(fn3);
-  } else {
-    var fn4 =
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.VectorLayerColor(
             layer.getId(), colorValue, null, os.command.VectorLayerColor.MODE.STROKE);
       };
 
-    this.createCommand(fn4);
+    this.createCommand(fn3);
   }
 };
 
@@ -406,7 +412,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onColorReset = function(event) {
   event.stopPropagation();
 
   // clear the layer color config value
-  this.onColorChange(event, '');
+  this.onColorChange(event, os.style.DEFAULT_LAYER_COLOR);
 
   // reset to the layer color
   this.scope['color'] = this.getColor();
@@ -420,6 +426,9 @@ os.ui.layer.VectorLayerUICtrl.prototype.onColorReset = function(event) {
  * @protected
  */
 os.ui.layer.VectorLayerUICtrl.prototype.onFillColorChange = function(event, value) {
+  if (!os.color.isColorString(value) && !goog.isArray(value)) {
+    return;
+  }
   event.stopPropagation();
 
   // Make sure the value includes the current opacity
@@ -451,7 +460,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onFillColorReset = function(event) {
   event.stopPropagation();
 
   // clear the layer color config value
-  this.onFillColorChange(event, '');
+  this.onFillColorChange(event, os.style.DEFAULT_FILL_COLOR);
 
   // reset to the layer color
   this.scope['fillColor'] = this.getColor();

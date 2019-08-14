@@ -20,8 +20,6 @@ goog.require('os.ui');
  * @constructor
  */
 os.command.VectorLayerColor = function(layerId, color, opt_oldColor, opt_changeMode) {
-  os.command.VectorLayerColor.base(this, 'constructor', layerId, color, opt_oldColor);
-
   this.changeMode = opt_changeMode;
 
   switch (this.changeMode) {
@@ -42,6 +40,8 @@ os.command.VectorLayerColor = function(layerId, color, opt_oldColor, opt_changeM
       this.defaultColor = os.command.VectorLayerColor.DEFAULT_COLOR;
       break;
   }
+
+  os.command.VectorLayerColor.base(this, 'constructor', layerId, color, opt_oldColor);
 
   if (!color) {
     var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.layerId));

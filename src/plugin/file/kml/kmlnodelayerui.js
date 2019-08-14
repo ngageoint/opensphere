@@ -14,6 +14,7 @@ goog.require('os.command.FeatureShape');
 goog.require('os.command.FeatureShowLabel');
 goog.require('os.command.FeatureSize');
 goog.require('os.command.ParallelCommand');
+goog.require('os.command.SequenceCommand');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.geo');
 goog.require('os.ui.Module');
@@ -576,6 +577,9 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onLockChange = function() {
  * @inheritDoc
  */
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.onColorChange = function(event, value) {
+  if (!os.color.isColorString(value) && !goog.isArray(value)) {
+    return;
+  }
   event.stopPropagation();
 
   // Make sure the value includes the current opacity
@@ -617,26 +621,19 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onColorChange = function(event, val
          * @return {os.command.ICommand}
          */
         function(layerId, featureId) {
-          return new os.command.FeatureColor(layerId, featureId, colorValue, null, os.command.FeatureColor.MODE.STROKE);
+          var cmds = [];
+
+          cmds.push(new os.command.FeatureColor(
+            layerId, featureId, strokeColorArr, null, os.command.FeatureColor.MODE.STROKE)
+          );
+          cmds.push(new os.command.FeatureColor(
+            layerId, featureId, fillColorArr, null, os.command.FeatureColor.MODE.FILL)
+          );
+
+          return cmds;
         };
 
-      this.createFeatureCommand(fn2);
-
-      // Use the fill's opacity instead of the stroke's opacity
-      colorValue[3] = this.scope['fillOpacity'];
-      this.scope['fillColor'] = os.style.toRgbaString(colorValue);
-
-      var fn3 =
-        /**
-         * @param {string} layerId
-         * @param {string} featureId
-         * @return {os.command.ICommand}
-         */
-        function(layerId, featureId) {
-          return new os.command.FeatureColor(layerId, featureId, colorValue, null, os.command.FeatureColor.MODE.FILL);
-        };
-
-      this.createFeatureCommand(fn3);
+      this.createFeatureSequenceCommand(fn2, 'Change Feature Color');
     } else {
       var fn4 =
         /**
@@ -671,6 +668,9 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onColorChange = function(event, val
  * @inheritDoc
  */
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.onFillColorChange = function(event, value) {
+  if (!os.color.isColorString(value) && !goog.isArray(value)) {
+    return;
+  }
   event.stopPropagation();
 
   // Make sure the value includes the current opacity
@@ -1091,6 +1091,46 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.createFeatureCommand = function(com
   }
 };
 
+
+/**
+ * Creates a sequence of commands to run on each feature
+ *
+ * @param {function(string, string):os.command.ICommand} commandFunction
+ * @param {string=} title
+ */
+plugin.file.kml.KMLNodeLayerUICtrl.prototype.createFeatureSequenceCommand = function(commandFunction, title) {
+  var cmds = [];
+
+  var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
+  if (items) {
+    for (var i = 0; i < items.length; i++) {
+      var feature = items[i].getFeature();
+      var source = items[i].getSource();
+      if (feature && source) {
+        var featureId = feature.getId();
+        var layerId = source.getId();
+        if (featureId && layerId) {
+          if (typeof featureId == 'number') {
+            featureId = featureId.toString();
+          }
+
+          var result = commandFunction(layerId, featureId);
+          if (result.length > 0) {
+            cmds = cmds.concat(result);
+          }
+        }
+      }
+    }
+  }
+
+  if (cmds.length > 0) {
+    var sequence = new os.command.SequenceCommand();
+    sequence.setCommands(cmds);
+    sequence.title = title ? title : '';
+
+    os.command.CommandProcessor.getInstance().addCommand(sequence);
+  }
+};
 
 /**
  * If the feature is dynamic, which means it is a time based track

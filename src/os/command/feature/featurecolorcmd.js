@@ -18,8 +18,6 @@ goog.require('os.metrics');
  * @constructor
  */
 os.command.FeatureColor = function(layerId, featureId, color, opt_oldColor, opt_changeMode) {
-  os.command.FeatureColor.base(this, 'constructor', layerId, featureId, color, opt_oldColor);
-
   this.changeMode = opt_changeMode;
 
   switch (this.changeMode) {
@@ -40,6 +38,8 @@ os.command.FeatureColor = function(layerId, featureId, color, opt_oldColor, opt_
       this.defaultColor = os.command.FeatureColor.DEFAULT_COLOR;
       break;
   }
+
+  os.command.FeatureColor.base(this, 'constructor', layerId, featureId, color, opt_oldColor);
 
   if (!color) {
     var feature = /** @type {ol.Feature} */ (this.getFeature());
