@@ -106,16 +106,16 @@ os.ui.menu.draw.dispose = function() {
 os.ui.menu.draw.handleDrawEvent = function(event) {
   switch (event.type) {
     case os.ui.menu.draw.EventType.BOX:
-      os.dispatcher.dispatchEvent(new goog.events.Event(os.ui.ol.draw.DrawEventType.DRAWBOX));
+      os.dispatcher.dispatchEvent(new goog.events.Event(os.ui.draw.DrawEventType.DRAWBOX));
       break;
     case os.ui.menu.draw.EventType.CIRCLE:
-      os.dispatcher.dispatchEvent(new goog.events.Event(os.ui.ol.draw.DrawEventType.DRAWCIRCLE));
+      os.dispatcher.dispatchEvent(new goog.events.Event(os.ui.draw.DrawEventType.DRAWCIRCLE));
       break;
     case os.ui.menu.draw.EventType.POLYGON:
-      os.dispatcher.dispatchEvent(new goog.events.Event(os.ui.ol.draw.DrawEventType.DRAWPOLYGON));
+      os.dispatcher.dispatchEvent(new goog.events.Event(os.ui.draw.DrawEventType.DRAWPOLYGON));
       break;
     case os.ui.menu.draw.EventType.LINE:
-      os.dispatcher.dispatchEvent(new goog.events.Event(os.ui.ol.draw.DrawEventType.DRAWLINE));
+      os.dispatcher.dispatchEvent(new goog.events.Event(os.ui.draw.DrawEventType.DRAWLINE));
       break;
     case os.ui.menu.draw.EventType.CHOOSE_AREA:
       os.query.launchChooseArea();
@@ -124,7 +124,7 @@ os.ui.menu.draw.handleDrawEvent = function(event) {
       os.query.launchCoordinates();
       break;
     case os.ui.menu.draw.EventType.COUNTRY_BORDER:
-      os.dispatcher.dispatchEvent(new goog.events.Event(os.ui.ol.draw.DrawEventType.DRAWCOUNTRY));
+      os.dispatcher.dispatchEvent(new goog.events.Event(os.ui.draw.DrawEventType.DRAWCOUNTRY));
       break;
     case os.ui.menu.draw.EventType.WHOLE_WORLD:
       os.query.queryWorld();

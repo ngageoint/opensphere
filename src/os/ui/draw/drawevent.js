@@ -1,12 +1,12 @@
-goog.provide('os.ui.ol.draw.DrawEvent');
-goog.provide('os.ui.ol.draw.DrawEventType');
+goog.provide('os.ui.draw.DrawEvent');
+goog.provide('os.ui.draw.DrawEventType');
 goog.require('goog.events.Event');
 
 
 /**
  * @enum {string}
  */
-os.ui.ol.draw.DrawEventType = {
+os.ui.draw.DrawEventType = {
   DRAWSTART: 'drawstart',
   DRAWCHANGE: 'drawchange',
   DRAWEND: 'drawend',
@@ -29,8 +29,8 @@ os.ui.ol.draw.DrawEventType = {
  * @extends {goog.events.Event}
  * @constructor
  */
-os.ui.ol.draw.DrawEvent = function(type, opt_coordinate, opt_geometry, opt_pixel, opt_properties) {
-  os.ui.ol.draw.DrawEvent.base(this, 'constructor', type);
+os.ui.draw.DrawEvent = function(type, opt_coordinate, opt_geometry, opt_pixel, opt_properties) {
+  os.ui.draw.DrawEvent.base(this, 'constructor', type);
 
   /**
    * The coordinate of the draw event.
@@ -61,7 +61,7 @@ os.ui.ol.draw.DrawEvent = function(type, opt_coordinate, opt_geometry, opt_pixel
    */
   this.properties = opt_properties || null;
 };
-goog.inherits(os.ui.ol.draw.DrawEvent, goog.events.Event);
+goog.inherits(os.ui.draw.DrawEvent, goog.events.Event);
 
 
 /**
@@ -70,4 +70,4 @@ goog.inherits(os.ui.ol.draw.DrawEvent, goog.events.Event);
  * @type {EventTarget|ol.events.EventTarget|undefined}
  * @suppress {duplicate}
  */
-os.ui.ol.draw.DrawEvent.prototype.target;
+os.ui.draw.DrawEvent.prototype.target;
