@@ -74,12 +74,6 @@ describe('Add ARCGIS server', function() {
     cy.route('POST', '**/OpenData/MapServer/5/query', 'fx:/smoke-tests/load-data-server-arcgis/query-2.stub.json')
         .as('getFeatureDetails');
     cy.get(layers.layersTab.TAB).click();
-    cy.get(layers.layersTab.Tree.STREET_MAP_TILES)
-        .find(shared.Tree.ROW_CHECKBOX)
-        .click();
-    cy.get(layers.layersTab.Tree.WORLD_IMAGERY_TILES)
-        .find(shared.Tree.ROW_CHECKBOX)
-        .click();
     cy.get(shared.Tree.ROW_4).should('contain', 'Fire Station');
     cy.get(shared.Tree.ROW_4)
         .find(layers.layersTab.Tree.FEATURE_COUNT_TEXT)

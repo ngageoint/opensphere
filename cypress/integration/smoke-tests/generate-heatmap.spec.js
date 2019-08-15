@@ -30,12 +30,6 @@ describe('Generate heatmap from CSV', function() {
     // Load a layer
     cy.get(shared.Tree.ROW_4)
         .should('contain', 'Chicago Traffic Counts Features (1279)');
-    cy.get(layers.layersTab.Tree.STREET_MAP_TILES)
-        .find(shared.Tree.ROW_CHECKBOX)
-        .click();
-    cy.get(layers.layersTab.Tree.WORLD_IMAGERY_TILES)
-        .find(shared.Tree.ROW_CHECKBOX)
-        .click();
     cy.get(shared.Tree.ROW_4).rightClick();
     cy.get(layers.layersTab.Tree.contextMenu.GO_TO).click();
     cy.imageComparison('features loaded');

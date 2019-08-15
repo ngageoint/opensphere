@@ -24,29 +24,23 @@ describe('KML import', function() {
         .should('contain', 'smoke-tests/load-data-file-kml/test-features.kmz Features (291)');
     cy.get(shared.Tree.ROW_4).rightClick();
     cy.get(layers.layersTab.Tree.contextMenu.MOST_RECENT).click();
-    cy.get(layers.layersTab.Tree.STREET_MAP_TILES)
-        .find(shared.Tree.ROW_CHECKBOX)
-        .click();
-    cy.get(layers.layersTab.Tree.WORLD_IMAGERY_TILES)
-        .find(shared.Tree.ROW_CHECKBOX)
-        .click();
     cy.get(shared.Tree.ROW_4).rightClick();
     cy.get(layers.layersTab.Tree.contextMenu.GO_TO).click();
     cy.imageComparison('features loaded');
 
     // Open the timeline and animate the data (view window animates)
-    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
+    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force:true}); // TODO: Remove force:true workaround after #732 fixed
     cy.get(core.Timeline.PANEL).should('be.visible');
     cy.get(core.Timeline.HISTOGRAM_POINTS).should('be.visible');
     cy.get(core.Timeline.VIEW_WINDOW).invoke('position').then(function(elementPosition) {
       cy.get(core.Timeline.PLAY_BUTTON).click();
       cy.get(core.Timeline.VIEW_WINDOW).invoke('position').should('not.equal', elementPosition);
     });
-    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
+    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force:true}); // TODO: Remove force:true workaround after #732 fixed
     cy.get(core.Timeline.PANEL).should('not.exist');
 
     // Open the timeline and animate the data (feature count changes)
-    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
+    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force:true}); // TODO: Remove force:true workaround after #732 fixed
     cy.get(core.Timeline.PANEL).should('be.visible');
     cy.get(core.Timeline.PLAY_BUTTON).click();
     cy.get(core.Timeline.PAUSE_BUTTON).click();
