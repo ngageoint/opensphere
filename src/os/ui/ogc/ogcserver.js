@@ -185,6 +185,13 @@ os.ui.ogc.OGCServer.DEFAULT_WMS_VERSION = '1.3.0';
 
 
 /**
+ * @const
+ * @type {string}
+ */
+os.ui.ogc.OGCServer.XLINK_NAMESPACE = 'http://www.w3.org/1999/xlink';
+
+
+/**
  * Default color for OGC descriptors.
  * @const
  * @type {string}
@@ -856,16 +863,24 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
     if (op) {
       var getFeatureEl = op.querySelector('Post');
       if (getFeatureEl != null) {
-        // Attr.value is the DOM4 property, while Attr.nodeValue inherited from Node should work on older browsers
-        var attr = getFeatureEl.attributes[0];
-        this.setWfsUrl(attr.value || attr.nodeValue);
+        if (getFeatureEl.hasAttributeNS(os.ui.ogc.OGCServer.XLINK_NAMESPACE, 'href')) {
+          this.setWfsUrl(getFeatureEl.getAttributeNS(os.ui.ogc.OGCServer.XLINK_NAMESPACE, 'href'));
+        } else {
+          var attr = getFeatureEl.attributes[0];
+          // Attr.value is the DOM4 property, while Attr.nodeValue inherited from Node should work on older browsers
+          this.setWfsUrl(attr.value || attr.nodeValue);
+        }
         this.setWfsPost(true);
       } else {
         getFeatureEl = op.querySelector('Get');
         if (getFeatureEl != null) {
-          // Attr.value is the DOM4 property, while Attr.nodeValue inherited from Node should work on older browsers
-          var attr = getFeatureEl.attributes[0];
-          this.setWfsUrl(attr.value || attr.nodeValue);
+          if (getFeatureEl.hasAttributeNS(os.ui.ogc.OGCServer.XLINK_NAMESPACE, 'href')) {
+            this.setWfsUrl(getFeatureEl.getAttributeNS(os.ui.ogc.OGCServer.XLINK_NAMESPACE, 'href'));
+          } else {
+            var attr = getFeatureEl.attributes[0];
+            // Attr.value is the DOM4 property, while Attr.nodeValue inherited from Node should work on older browsers
+            this.setWfsUrl(attr.value || attr.nodeValue);
+          }
         }
       }
 
