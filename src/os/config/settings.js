@@ -201,10 +201,17 @@ os.config.Settings.KEY_ = 'settings';
 
 
 /**
+ * Key to hold the storage writeType.
+ * @const {string}
+ */
+os.config.Settings.WRITE_STORAGE_KEY = 'storage.writeType';
+
+
+/**
  * Key to save the write storage type to local storage as a backup in case other storages don't load properly.
  * @const {string}
  */
-os.config.Settings.WRITE_STORAGE_BACKUP_KEY = 'opensphere.config.storage.writeType';
+os.config.Settings.WRITE_STORAGE_BACKUP_KEY = 'opensphere.config.' + os.config.Settings.WRITE_STORAGE_KEY;
 
 
 /**
@@ -437,7 +444,7 @@ os.config.Settings.prototype.setWriteStorageType = function(type, opt_alert) {
   var storageName = storage ? storage.name : 'not assigned';
   goog.log.info(os.config.Settings.LOGGER_, 'Storage write location is now: ' + storageName);
 
-  this.set('storage.writeType', type, !opt_alert);
+  this.set(os.config.Settings.WRITE_STORAGE_KEY, type, !opt_alert);
   window.localStorage.setItem(os.config.Settings.WRITE_STORAGE_BACKUP_KEY, type);
 };
 
@@ -634,7 +641,7 @@ os.config.Settings.prototype.reset = function(opt_namespace) {
 
   return new goog.Promise(function(resolve, reject) {
     // get the current storage type. this shouldn't be changed by the reset, so we'll restore it later.
-    var type = this.get('storage.writeType',
+    var type = this.get(os.config.Settings.WRITE_STORAGE_KEY,
         window.localStorage.getItem(os.config.Settings.WRITE_STORAGE_BACKUP_KEY) ||
         os.config.storage.SettingsWritableStorageType.LOCAL);
 
@@ -648,10 +655,10 @@ os.config.Settings.prototype.reset = function(opt_namespace) {
         this.actualConfig_[os.config.ConfigType.PREFERENCE] = {};
         if (type === os.config.storage.SettingsWritableStorageType.REMOTE &&
             !this.storageRegistry_.hasRemoteStorage) {
-          this.set('storage.writeType', os.config.storage.SettingsWritableStorageType.LOCAL, true);
+          this.set(os.config.Settings.WRITE_STORAGE_KEY, os.config.storage.SettingsWritableStorageType.LOCAL, true);
         } else {
           os.object.delete(this.mergedConfig_, ['storage', 'writeType']);
-          this.set('storage.writeType', type, true);
+          this.set(os.config.Settings.WRITE_STORAGE_KEY, type, true);
         }
 
         // set a metric for settings.reset
@@ -820,7 +827,7 @@ os.config.Settings.prototype.dispatchChange_ = function(keys, newVal, oldVal, op
     this.changed_ = true;
     var namespacedKeys = os.config.namespace.getPrefixedKeys(keys);
 
-    if (joined == 'storage.writeType') {
+    if (joined == os.config.Settings.WRITE_STORAGE_KEY) {
       this.peer_.send(namespacedKeys[0], {keys: keys, newValue: newVal});
     } else {
       goog.array.insert(this.toNotifyExternal_, {namespace: namespacedKeys[0], keys: keys});
@@ -910,7 +917,7 @@ os.config.Settings.prototype.alertFailure_ = function(opt_delay) {
     var dismissAlert = function() {
       dismissAlertEventTarget.dispatchEvent(new goog.events.Event(os.alert.AlertEventTypes.DISMISS_ALERT));
     };
-    this.listenOnce('storage.writeType', dismissAlert, false, this);
+    this.listenOnce(os.config.Settings.WRITE_STORAGE_KEY, dismissAlert, false, this);
     var alertMgr = os.alert.AlertManager.getInstance();
     alertMgr.sendAlert('<strong>Settings are unavailable!</strong> This session will continue to run without any ' +
         'previously saved options, and any changes you make will not be remembered for the next session.',
@@ -970,7 +977,7 @@ os.config.Settings.prototype.getTypes = function() {
  */
 os.config.Settings.prototype.process = function(data, type, sender, time) {
   var settingsMessage = /** @type {os.config.SettingsMessage} */ (data);
-  if (settingsMessage.keys && settingsMessage.keys.join('.') === 'storage.writeType') {
+  if (settingsMessage.keys && settingsMessage.keys.join('.') === os.config.Settings.WRITE_STORAGE_KEY) {
     this.setWriteStorageType(
         /** @type {os.config.storage.SettingsWritableStorageType} */ (settingsMessage.newValue));
   } else {
