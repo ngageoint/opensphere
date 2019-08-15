@@ -23,6 +23,7 @@ The code is open source, and `available on GitHub`_.
 
    contributing
    getting_started
+   windows_development
    guides/app_guide
    guides/plugin_guide
    guides/settings_guide

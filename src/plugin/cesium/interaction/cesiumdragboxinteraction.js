@@ -29,7 +29,7 @@ plugin.cesium.interaction.dragbox.cleanupWebGL = function() {
     os.MapContainer.getInstance().getWebGLRenderer());
   var scene = webgl ? webgl.getCesiumScene() : undefined;
   if (scene && this.cesiumBox) {
-    scene.primitives.remove(this.cesiumBox);
+    scene.groundPrimitives.remove(this.cesiumBox);
     this.cesiumBox = undefined;
   }
 };
@@ -62,30 +62,29 @@ plugin.cesium.interaction.dragbox.updateWebGL = function(start, end) {
 
     if (scene && start && end) {
       if (this.cesiumBox) {
-        scene.primitives.remove(this.cesiumBox);
+        scene.groundPrimitives.remove(this.cesiumBox);
       }
 
       var coords = /** @type {ol.geom.Polygon} */ (this.box2D.getGeometry()).getCoordinates()[0];
       var lonlats = coords.map(os.interaction.DrawPolygon.coordToLonLat);
 
-      var appearance = new Cesium.PolylineColorAppearance();
-      this.cesiumBox = new Cesium.Primitive({
+      this.cesiumBox = new Cesium.GroundPolylinePrimitive({
         asynchronous: false,
         geometryInstances: new Cesium.GeometryInstance({
           id: plugin.cesium.GeometryInstanceId.GEOM_OUTLINE,
-          geometry: new Cesium.PolylineGeometry({
+          geometry: new Cesium.GroundPolylineGeometry({
             positions: olcs.core.ol4326CoordinateArrayToCsCartesians(lonlats),
-            vertexFormat: appearance.vertexFormat,
+            arcType: Cesium.ArcType.RHUMB,
             width: 2
           }),
           attributes: {
             color: this.cesiumColor
           }
         }),
-        appearance: appearance
+        appearance: new Cesium.PolylineColorAppearance()
       });
 
-      scene.primitives.add(this.cesiumBox);
+      scene.groundPrimitives.add(this.cesiumBox);
       os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
     }
   }

@@ -111,6 +111,12 @@ plugin.cesium.VectorContext = function(scene, layer, projection) {
   this.collection.add(this.billboards);
   this.collection.add(this.labels);
   this.collection.add(this.polylines);
+
+  /**
+   * The primitive collection for primitives going to scene.groundPrimitives
+   * @type {!Cesium.PrimitiveCollection}
+   */
+  this.groundCollection = new Cesium.PrimitiveCollection();
 };
 
 
@@ -366,11 +372,35 @@ plugin.cesium.VectorContext.prototype.addPrimitive = function(primitive, feature
   }
 
   if (!feature.isDisposed()) {
-    this.collection.add(primitive);
+    if (plugin.cesium.VectorContext.isGroundPrimitive(primitive)) {
+      this.groundCollection.add(primitive);
+    } else {
+      this.collection.add(primitive);
+    }
+
     this.geometryToCesiumMap[geometryId] = primitive;
     this.addFeaturePrimitive(feature, primitive);
     this.addOLReferences(primitive, feature, geometry);
   }
+};
+
+
+/**
+ * @param {!Cesium.PrimitiveLike} primitive
+ * @return {boolean}
+ */
+plugin.cesium.VectorContext.isGroundPrimitive = function(primitive) {
+  if (primitive instanceof Cesium.GroundPrimitive || primitive instanceof Cesium.GroundPolylinePrimitive) {
+    return true;
+  } else if (primitive instanceof Cesium.PrimitiveCollection) {
+    for (var i = 0, n = primitive.length; i < n; i++) {
+      if (plugin.cesium.VectorContext.isGroundPrimitive(primitive.get(i))) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 };
 
 
@@ -422,6 +452,9 @@ plugin.cesium.VectorContext.prototype.removePrimitive = function(primitive) {
     this.geometryToLabelMap[geomId] = undefined;
   } else if (primitive instanceof Cesium.Polyline) {
     this.polylines.remove(primitive);
+    this.geometryToCesiumMap[geomId] = undefined;
+  } else if (plugin.cesium.VectorContext.isGroundPrimitive(primitive)) {
+    this.groundCollection.remove(primitive);
     this.geometryToCesiumMap[geomId] = undefined;
   } else {
     this.collection.remove(primitive);

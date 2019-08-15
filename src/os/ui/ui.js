@@ -258,6 +258,35 @@ os.ui.sortDirectives_ = function(a, b) {
 
 
 /**
+ * Listen to an element for size changes.
+ * @param {?(angular.JQLite|jQuery)} el The element.
+ * @param {?Function} fn The callback to remove.
+ */
+os.ui.resize = function(el, fn) {
+  if (el && fn) {
+    if (window.ResizeSensor) {
+      new ResizeSensor(el, fn);
+    } else {
+      goog.asserts.fail('The css-element-queries ResizeSensor library is not loaded. Element resize detection will ' +
+          'not work.');
+    }
+  }
+};
+
+
+/**
+ * Remove resize listener from an element.
+ * @param {?(angular.JQLite|jQuery)} el The element.
+ * @param {?Function} fn The callback to remove.
+ */
+os.ui.removeResize = function(el, fn) {
+  if (el && fn && window.ResizeSensor != null) {
+    ResizeSensor.detach(el, fn);
+  }
+};
+
+
+/**
  * Replace a directive already registered with Angular. The directive name and module should be identical to the
  * original.
  *

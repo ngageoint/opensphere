@@ -23,7 +23,7 @@ Questions? Ask them in the [forum](https://groups.google.com/forum/#!forum/opens
 * Node/NPM
 
 ## Getting Started
-OpenSphere is natively developed on Linux and should run great on OS X and typical Linux distributions. Windows support is limited, as the build system requires a Linux shell. Windows 10 introduced the Windows Subsystem for Linux (WSL) which works great, see [here](windows.md) for instructions on setting up a Windows 10/WSL environment to work on OpenSphere projects. Other Windows distributions, perhaps try Cygwin or Linux via a VM or Docker container.
+OpenSphere is natively developed on Linux and should run great on OS X and typical Linux distributions. See [Windows Development](http://opensphere.readthedocs.io/en/latest/windows_development.html) for instructions for building on Windows.
 
 ### Yarn
 
@@ -111,7 +111,7 @@ By default the ```baseURL``` is set to the local compiled build: http://localhos
 
 ### Running Tests
 Run all tests via the command line ```yarn test:cypress-all```, individual specs via the command line ```yarn test:cypress-spec folder/test.spec.js```, or run tests interactively with the [Test Runner](https://docs.cypress.io/guides/core-concepts/test-runner.html) via ```yarn test:cypress```.
-    
+
 
 ### Adding and modifying tests
 

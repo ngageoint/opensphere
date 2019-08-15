@@ -252,7 +252,7 @@ plugin.cesium.Camera.prototype.initExtentComputation_ = function() {
   var scratchViewport = new Cesium.BoundingRectangle();
 
   /**
-   * @return {Cesium.Rectangle}
+   * @return {Cesium.Rectangle|undefined}
    */
   plugin.cesium.Camera.prototype.computeCorrectExtent_ = function() {
     var rect = scratchRect;
@@ -278,6 +278,10 @@ plugin.cesium.Camera.prototype.initExtentComputation_ = function() {
         scratchPixel1);
     cameraGroundScreen.y = scratchViewport.height - cameraGroundScreen.y;
 
+
+    if (!cameraGroundScreen) {
+      return;
+    }
 
     //    r
     //    |   r2

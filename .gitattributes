@@ -1,0 +1,22 @@
+# Set the default behavior in the event that core.autocrlf is not set
+* text auto
+
+*.js text eol=lf
+*.scss text eol=lf
+*.html text eol=lf
+*.md text eol=lf
+*.rst text eol=lf
+
+*.dbf binary
+*.gif binary
+*.gpx binary
+*.ico binary
+*.jpg binary
+*.kmz binary
+*.pdf binary
+*.png binary
+*.shp binary
+*.wav binary
+*.woff binary
+*.woff2 binary
+*.zip binary
