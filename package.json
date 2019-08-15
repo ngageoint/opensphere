@@ -246,6 +246,7 @@
     "google-closure-compiler": "^20190415.0.0",
     "http-server": "^0.11.1",
     "husky": "^3.0.1",
+    "jest": "^24.8.0",
     "js-dossier": "^0.12.0",
     "json": "^9.0.4",
     "karma": "^1.3.0",
