@@ -103,35 +103,23 @@ describe('Toolbar right', function() {
       // Setup
       cy.get(core.Toolbar.addData.OPEN_FILE_BUTTON).click();
       cy.get(imports.importDataDialog.DIALOG).should('be.visible');
-      cy.upload('smoke-tests/toolbar-right/test-state_state.xml');
+      cy.upload('smoke-tests/toolbar-right/toolbar-right_state.xml');
       cy.get(imports.importDataDialog.NEXT_BUTTON).click();
       cy.get(imports.importStateDialog.DIALOG).should('be.visible');
       cy.get(imports.importStateDialog.CLEAR_CHECKBOX).check();
       cy.get(imports.importStateDialog.OK_BUTTON).click();
-      cy.get(shared.Tree.ROW_4).should('contain', 'Police Stations Features (3)');
-      cy.get(shared.Tree.ROW_5).should('contain', 'Fire Hydrants Features (747)');
       cy.get(layers.areasTab.TAB).click();
-      cy.get(shared.Tree.ROW_2).should('contain', 'Aurora Hydrant Include');
-      cy.get(shared.Tree.ROW_4).should('contain', 'Aurora Police Include');
-      cy.get(layers.filtersTab.TAB).click();
-      cy.get(shared.Tree.ROW_2).should('contain', 'East Hydrants');
+      cy.get(shared.Tree.ROW_1).should('contain', 'exclusion');
+      cy.get(shared.Tree.ROW_2).should('contain', 'inclusion');
+      cy.get(core.Application.PAGE).trigger('mouseenter').trigger('mousemove');
+      cy.get(core.statusBar.COORDINATES_TEXT).should('contain', '-33');
+      cy.get(core.Toolbar.Date.INPUT).should('have.value', '2019-01-06');
 
       // Test
       cy.get(core.Toolbar.States.Menu.BUTTON).click();
       cy.get(core.Toolbar.States.Menu.DISABLE_STATES).click();
-      cy.get(layers.Dialog.DIALOG).should('not.contain', 'Fire Hydrants Tiles');
-      cy.get(layers.Dialog.DIALOG).should('not.contain', 'Police Stations Tiles');
-      cy.get(layers.Dialog.DIALOG).should('not.contain', 'Fire Hydrants Features');
-      cy.get(layers.Dialog.DIALOG).should('not.contain', 'Police Stations Features');
-      cy.get(layers.areasTab.TAB).click();
-      cy.get(layers.Dialog.DIALOG).should('not.contain', 'Aurora Police Include');
-      cy.get(layers.Dialog.DIALOG).should('not.contain', 'Aurora Police Exclude');
-      cy.get(layers.Dialog.DIALOG).should('not.contain', 'Aurora Hydrant Include');
-      cy.get(layers.Dialog.DIALOG).should('not.contain', 'Aurora Hydrant Exclude');
-      cy.get(layers.Dialog.DIALOG).should('contain', 'No results');
-      cy.get(layers.filtersTab.TAB).click();
-      cy.get(layers.Dialog.DIALOG).should('not.contain', 'East Hydrants');
-      cy.get(layers.Dialog.DIALOG).should('contain', 'No results');
+      cy.get(shared.Tree.ROW_2).should('not.contain', 'exclusion');
+      cy.get(shared.Tree.ROW_4).should('not.contain', 'inclusion');
 
       // Clean up
       cy.get(layers.layersTab.TAB).click();

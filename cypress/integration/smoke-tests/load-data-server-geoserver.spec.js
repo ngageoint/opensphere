@@ -79,12 +79,6 @@ describe('Add GeoServer', function() {
     cy.get(shared.Tree.ROW_1).rightClick();
     cy.get(layers.areasTab.Tree.contextMenu.Query.LOAD).click();
     cy.get(layers.layersTab.TAB).click();
-    cy.get(layers.layersTab.Tree.STREET_MAP_TILES)
-        .find(shared.Tree.ROW_CHECKBOX)
-        .click();
-    cy.get(layers.layersTab.Tree.WORLD_IMAGERY_TILES)
-        .find(shared.Tree.ROW_CHECKBOX)
-        .click();
     cy.get(shared.Tree.ROW_4).should('contain', 'VIIRS Detection');
     cy.get(shared.Tree.ROW_4)
         .find(layers.layersTab.Tree.FEATURE_COUNT_TEXT)
@@ -99,14 +93,14 @@ describe('Add GeoServer', function() {
     cy.imageComparison('features loaded');
 
     // Open the timeline and animate the data (view window animates)
-    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
+    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force:true}); // TODO: Remove force:true workaround after #732 fixed
     cy.get(core.Timeline.PANEL).should('be.visible');
     cy.get(core.Timeline.HISTOGRAM_POINTS).should('be.visible');
     cy.get(core.Timeline.VIEW_WINDOW).invoke('position').then(function(elementPosition) {
       cy.get(core.Timeline.PLAY_BUTTON).click();
       cy.get(core.Timeline.VIEW_WINDOW).invoke('position').should('not.equal', elementPosition);
     });
-    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
+    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force:true}); // TODO: Remove force:true workaround after #732 fixed
     cy.get(core.Timeline.PANEL).should('not.exist');
 
     // Open the timeline and animate the data (feature count changes)
@@ -114,7 +108,7 @@ describe('Add GeoServer', function() {
         .find(layers.layersTab.Tree.FEATURE_COUNT_TEXT)
         .invoke('text')
         .then(function(featureCount) {
-          cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click();
+          cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force:true}); // TODO: Remove force:true workaround after #732 fixed
           cy.get(core.Timeline.PANEL).should('be.visible');
           cy.get(core.Timeline.PLAY_BUTTON).click();
           cy.get(core.Timeline.PAUSE_BUTTON).click();
