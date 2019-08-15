@@ -39,11 +39,11 @@ plugin.cesium.interaction.dragcircle.cleanupWebGL = function() {
   var scene = webgl ? webgl.getCesiumScene() : undefined;
   if (scene) {
     if (this.cesiumCircle) {
-      scene.primitives.remove(this.cesiumCircle);
+      scene.groundPrimitives.remove(this.cesiumCircle);
     }
 
     if (this.cesiumLabels) {
-      scene.primitives.remove(this.cesiumLabels);
+      scene.groundPrimitives.remove(this.cesiumLabels);
     }
 
     this.cesiumCircle = undefined;
@@ -76,35 +76,44 @@ plugin.cesium.interaction.dragcircle.updateWebGL = function(start, end) {
 
     if (scene && start && end && this.distance) {
       if (!this.cesiumLabels) {
-        this.cesiumLabels = new Cesium.LabelCollection();
-        scene.primitives.add(this.cesiumLabels);
-      }
-
-      if (!this.cesiumLabel) {
-        this.cesiumLabel = this.cesiumLabels.add();
-        this.cesiumLabel.show = false;
-        this.cesiumLabel.fillColor = Cesium.Color.WHITE;
-        this.cesiumLabel.outlineColor = Cesium.Color.BLACK;
-        this.cesiumLabel.outlineWidth = 2;
-        this.cesiumLabel.style = Cesium.LabelStyle.FILL_AND_OUTLINE;
-        this.cesiumLabel.horizontalOrigin = Cesium.HorizontalOrigin.LEFT;
-        this.cesiumLabel.verticalOrigin = Cesium.VerticalOrigin.BOTTOM;
-        this.cesiumLabel.font = os.style.label.getFont();
-      }
-
-      if (this.cesiumCircle) {
-        scene.primitives.remove(this.cesiumCircle);
+        this.cesiumLabels = new Cesium.LabelCollection({
+          scene: scene
+        });
+        scene.groundPrimitives.add(this.cesiumLabels);
       }
 
       var center = Cesium.Cartesian3.fromDegrees(start[0], start[1]);
-      var appearance = new Cesium.PolylineColorAppearance();
-      this.cesiumCircle = new Cesium.Primitive({
+      var um = os.unit.UnitManager.getInstance();
+      var labelText = um.formatToBestFit('distance', this.distance, 'm', um.getBaseSystem(), 3);
+
+      if (!this.cesiumLabel) {
+        this.cesiumLabel = this.cesiumLabels.add(/** @type {Cesium.optionsLabelCollection} */ ({
+          position: center,
+          heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+          show: false,
+          fillColor: Cesium.Color.WHITE,
+          outlineColor: Cesium.Color.BLACK,
+          outlineWidth: 2,
+          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+          horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+          verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+          font: os.style.label.getFont(),
+          text: labelText
+        }));
+      }
+
+      if (this.cesiumCircle) {
+        scene.groundPrimitives.remove(this.cesiumCircle);
+      }
+
+      this.cesiumCircle = new Cesium.GroundPolylinePrimitive({
         asynchronous: false,
-        appearance: appearance,
+        appearance: new Cesium.PolylineColorAppearance(),
         geometryInstances: new Cesium.GeometryInstance({
-          geometry: new Cesium.PolylineGeometry({
+          geometry: new Cesium.GroundPolylineGeometry({
             positions: plugin.cesium.generateCirclePositions(center, this.distance),
-            vertexFormat: appearance.vertexFormat,
+            arcType: os.interpolate.getMethod() === os.interpolate.Method.RHUMB ?
+              Cesium.ArcType.RHUMB : Cesium.ArcType.GEODESIC,
             width: 2
           }),
           attributes: {
@@ -113,12 +122,11 @@ plugin.cesium.interaction.dragcircle.updateWebGL = function(start, end) {
         })
       });
 
-      var um = os.unit.UnitManager.getInstance();
-      this.cesiumLabel.text = um.formatToBestFit('distance', this.distance, 'm', um.getBaseSystem(), 3);
       this.cesiumLabel.position = center;
+      this.cesiumLabel.text = labelText;
       this.cesiumLabel.show = true;
 
-      scene.primitives.add(this.cesiumCircle);
+      scene.groundPrimitives.add(this.cesiumCircle);
       os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
     }
   }

@@ -462,8 +462,7 @@ describe('Feature list', function() {
       // Test
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.GRID)
-          .rightClick()
-          .rightClick(); // TODO: This is a workaround for #677 and can be removed after it is fixed
+          .rightClick();
       cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('be.visible');
       cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Select All');
       cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Deselect All');
@@ -497,8 +496,7 @@ describe('Feature list', function() {
         cy.get(shared.Grid.ROW_6).should('not.have.class', shared.Grid.ROW_IS_SELECTED_CLASS);
         cy.get(shared.Grid.ROW_7).should('not.have.class', shared.Grid.ROW_IS_SELECTED_CLASS);
         cy.get(shared.Grid.GRID)
-            .rightClick()
-            .rightClick(); // TODO: This is a workaround for #677 and can be removed after it is fixed
+            .rightClick();
       });
       cy.get(dialogs.featureListDialog.contextMenu.SELECT_ALL).click();
       cy.get(dialogs.featureListDialog.DIALOG).within(function() {
@@ -919,7 +917,7 @@ describe('Feature list', function() {
       cy.get(shared.layerStyle.BUTTON).click();
       cy.get(shared.layerStyle.SIZE_SLIDER)
           .type('{rightarrow}{rightarrow}{rightarrow}{rightarrow}');
-      cy.imageComparison('Before go to'); // TODO: Baseline image needs update after #676 fixed
+      cy.imageComparison('Before go to');
       cy.get(shared.Tree.ROW_4).rightClick();
       cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
       cy.get(dialogs.featureListDialog.DIALOG)

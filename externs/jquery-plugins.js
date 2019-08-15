@@ -42,12 +42,6 @@ jQuery.prototype.modal;
 jQuery.prototype.popover;
 
 /**
- * @param {function()} listener
- * @return {!jQuery}
- */
-jQuery.prototype.removeResize;
-
-/**
  * @param {(string|Object)=} opt_options
  * @param {string=} opt_key
  * @param {*=} opt_value

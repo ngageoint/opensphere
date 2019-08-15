@@ -146,6 +146,51 @@ ol.geom.Geometry.prototype.toLonLat = function() {
   return this;
 };
 
+(function() {
+  var oldPoints = ol.geom.MultiPoint.prototype.getPoints;
+
+  /**
+   * @return {Array<ol.geom.Point>}
+   * @suppress {accessControls}
+   */
+  ol.geom.MultiPoint.prototype.getPoints = function() {
+    var points = oldPoints.call(this);
+    for (var i = 0, n = points.length; i < n; i++) {
+      ol.obj.assign(points[i].values_, this.values_);
+    }
+    return points;
+  };
+
+  var oldLines = ol.geom.MultiLineString.prototype.getLineStrings;
+
+  /**
+   * @return {Array<ol.geom.LineString>}
+   * @suppress {accessControls}
+   */
+  ol.geom.MultiLineString.prototype.getLineStrings = function() {
+    var lines = oldLines.call(this);
+    for (var i = 0, n = lines.length; i < n; i++) {
+      ol.obj.assign(lines[i].values_, this.values_);
+    }
+    return lines;
+  };
+
+
+  var oldPolys = ol.geom.MultiPolygon.prototype.getPolygons;
+
+  /**
+   * @return {Array<ol.geom.Polygon>}
+   * @suppress {accessControls}
+   */
+  ol.geom.MultiPolygon.prototype.getPolygons = function() {
+    var polys = oldPolys.call(this);
+    for (var i = 0, n = polys.length; i < n; i++) {
+      ol.obj.assign(polys[i].values_, this.values_);
+    }
+    return polys;
+  };
+})();
+
 
 (function() {
   /**

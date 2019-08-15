@@ -124,6 +124,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.createLayerPrimitives_ = functio
     // add the primitive collection to Cesium and initialize all features in the source
     this.initializePrimitives_(this.source.getFeatures());
     this.scene.primitives.add(this.csContext.collection);
+    this.scene.groundPrimitives.add(this.csContext.groundCollection);
 
     // add layer listeners
     ol.events.listen(this.layer, 'change:visible', this.onLayerVisibility_, this);
@@ -171,6 +172,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.disposeLayerPrimitives_ = functi
     // remove the primitive collection from Cesium. this will cascade the destroy to the layer primitives.
     this.csContext.dispose();
     this.scene.primitives.remove(this.csContext.collection);
+    this.scene.groundPrimitives.remove(this.csContext.groundCollection);
     this.csContext = null;
 
     os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
@@ -676,7 +678,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.setFeatureHighlight_ = function(
       // distance or the feature will not appear on the screen.
       var cameraDistance = camera.getDistanceToPosition(prim.position);
       if (cameraDistance != null) {
-        prim.eyeOffset = new Cesium.Cartesian3(0.0, 0.0, -cameraDistance * 0.99);
+        prim.eyeOffset = new Cesium.Cartesian3(0.0, 0.0, -cameraDistance * 0.67);
       }
     } else {
       // reset the eye offset to the default
@@ -686,7 +688,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.setFeatureHighlight_ = function(
     if (value && this.scene && camera) {
       var cameraDistance = camera.getDistanceToPosition(prim.position);
       if (cameraDistance != null) {
-        this.converter.setLabelEyeOffset(prim, this.scene, new Cesium.Cartesian3(0.0, 0.0, -cameraDistance * 0.99));
+        this.converter.setLabelEyeOffset(prim, this.scene, new Cesium.Cartesian3(0.0, 0.0, -cameraDistance * 0.67));
       }
     } else {
       // reset the eye offset to the default
