@@ -17,6 +17,7 @@ goog.require('ol.array');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.events');
 goog.require('os.string');
+goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.column.columnManagerDirective');
 goog.require('os.ui.globalMenuDirective');
@@ -297,11 +298,10 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
 
   if ($scope['resizeWith']) {
     this.container_ = $element.parents($scope['resizeWith']);
-    this.container_.resize(this.resizeFn);
+    os.ui.resize(this.container_, this.resizeFn);
   } else {
     // call the resize handler when the root element resizes
-    // note: this requires the jquery.resize.js vendor library to work properly
-    this.element.resize(this.resizeFn);
+    os.ui.resize(this.element, this.resizeFn);
   }
 
   /**
@@ -404,10 +404,10 @@ os.ui.slick.SlickGridCtrl.prototype.disposeInternal = function() {
   goog.dispose(this.resizeDelay);
 
   if (this.container_) {
-    this.container_.off('resize');
+    os.ui.removeResize(this.container_, this.resizeFn);
     this.container_ = null;
   } else {
-    this.element.off('resize');
+    os.ui.removeResize(this.element, this.resizeFn);
   }
 
   if (this.selectionModel_) {

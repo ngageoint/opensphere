@@ -7,7 +7,7 @@ cache:
 notifications:
   email: false
 node_js:
-- "8"
+- "stable"
 os:
 - linux
 addons:
@@ -25,6 +25,7 @@ install:
 - yarn config list
 - yarn
 script:
+- commitlint-travis
 - ./tasks/ci-script.sh
 after_success:
 - if $RELEASE; then yarn run semantic-release; fi
