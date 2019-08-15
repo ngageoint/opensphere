@@ -352,11 +352,6 @@ const indexResources = sharedResources.concat([
  */
 const oldResources = [
   {
-    source: __dirname,
-    target: '',
-    scripts: ['browserCheck.js']
-  },
-  {
     source: resolver.resolveModulePath('platform', __dirname),
     target: '',
     scripts: ['platform.js']
@@ -365,6 +360,11 @@ const oldResources = [
     source: buildPath,
     target: '',
     scripts: ['modernizr.js']
+  },
+  {
+    source: __dirname,
+    target: '',
+    scripts: ['browserCheck.js']
   },
   {
     source: resolver.resolveModulePath('font-awesome', __dirname),
@@ -376,15 +376,15 @@ const oldResources = [
 
 const addLayerResources = [
   {
+    source: resolver.resolveModulePath('jquery/dist', __dirname),
+    target: 'vendor/jquery',
+    scripts: ['jquery.min.js']
+  },
+  {
     source: resolver.resolveModulePath('bootstrap/dist', __dirname),
     target: 'vendor/bootstrap',
     scripts: ['js/bootstrap.min.js'],
     css: ['css/bootstrap.min.css']
-  },
-  {
-    source: resolver.resolveModulePath('jquery/dist', __dirname),
-    target: 'vendor/jquery',
-    scripts: ['jquery.min.js']
   },
   {
     source: buildPath,
