@@ -9,6 +9,7 @@ goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('ol.array');
 goog.require('ol.format.WMSCapabilities');
+goog.require('ol.format.XLink');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
 goog.require('os.color');
@@ -182,13 +183,6 @@ os.ui.ogc.OGCServer.LOGGER_ = goog.log.getLogger('os.ui.ogc.OGCServer');
  * @type {string}
  */
 os.ui.ogc.OGCServer.DEFAULT_WMS_VERSION = '1.3.0';
-
-
-/**
- * @const
- * @type {string}
- */
-os.ui.ogc.OGCServer.XLINK_NAMESPACE = 'http://www.w3.org/1999/xlink';
 
 
 /**
@@ -863,8 +857,8 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
     if (op) {
       var getFeatureEl = op.querySelector('Post');
       if (getFeatureEl != null) {
-        if (getFeatureEl.hasAttributeNS(os.ui.ogc.OGCServer.XLINK_NAMESPACE, 'href')) {
-          this.setWfsUrl(getFeatureEl.getAttributeNS(os.ui.ogc.OGCServer.XLINK_NAMESPACE, 'href'));
+        if (getFeatureEl.hasAttributeNS(ol.format.XLink.NAMESPACE_URI, 'href')) {
+          this.setWfsUrl(getFeatureEl.getAttributeNS(ol.format.XLink.NAMESPACE_URI, 'href'));
         } else {
           var attr = getFeatureEl.attributes[0];
           // Attr.value is the DOM4 property, while Attr.nodeValue inherited from Node should work on older browsers
@@ -874,8 +868,8 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
       } else {
         getFeatureEl = op.querySelector('Get');
         if (getFeatureEl != null) {
-          if (getFeatureEl.hasAttributeNS(os.ui.ogc.OGCServer.XLINK_NAMESPACE, 'href')) {
-            this.setWfsUrl(getFeatureEl.getAttributeNS(os.ui.ogc.OGCServer.XLINK_NAMESPACE, 'href'));
+          if (getFeatureEl.hasAttributeNS(ol.format.XLink.NAMESPACE_URI, 'href')) {
+            this.setWfsUrl(getFeatureEl.getAttributeNS(ol.format.XLink.NAMESPACE_URI, 'href'));
           } else {
             var attr = getFeatureEl.attributes[0];
             // Attr.value is the DOM4 property, while Attr.nodeValue inherited from Node should work on older browsers
