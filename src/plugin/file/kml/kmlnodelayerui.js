@@ -624,10 +624,10 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onColorChange = function(event, val
           var cmds = [];
 
           cmds.push(new os.command.FeatureColor(
-            layerId, featureId, strokeColorArr, null, os.command.FeatureColor.MODE.STROKE)
+              layerId, featureId, strokeColorArr, null, os.command.FeatureColor.MODE.STROKE)
           );
           cmds.push(new os.command.FeatureColor(
-            layerId, featureId, fillColorArr, null, os.command.FeatureColor.MODE.FILL)
+              layerId, featureId, fillColorArr, null, os.command.FeatureColor.MODE.FILL)
           );
 
           var sequence = new os.command.SequenceCommand();
