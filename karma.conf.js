@@ -44,7 +44,7 @@ module.exports = function(config) {
       {pattern: 'vendor/geomag/WMM.COF', watched: false, included: false, served: true},
       {pattern: 'vendor/geomag/cof2Obj.js', watched: false, included: true, served: true},
       {pattern: 'vendor/geomag/geomag.js', watched: false, included: true, served: true},
-      {pattern: 'vendor/jquery/jquery.resize.js', watched: false, included: true, served: true},
+      {pattern: resolver.resolveModulePath('css-element-queries/src/ResizeSensor.js'), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('jschardet/dist/jschardet.min.js'), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('oboe/dist/oboe-browser.min.js'), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('lolex/lolex.js', __dirname), watched: false, included: true, served: true},

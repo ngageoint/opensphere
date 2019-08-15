@@ -230,6 +230,7 @@ plugin.file.kml.KMLExporter.prototype.getTime = function(item) {
 };
 
 
+
 /**
  * @inheritDoc
  */
@@ -237,8 +238,11 @@ plugin.file.kml.KMLExporter.prototype.getGeometry = function(item) {
   var geometry;
   if (item) {
     geometry = /** @type {(ol.geom.Geometry|undefined)} */ (item.get(os.data.RecordField.GEOM));
+    var geomAltitudeMode;
+    var featAltitudeMode = item.get(os.data.RecordField.ALTITUDE_MODE);
     if (geometry) {
       geometry = geometry.clone().toLonLat();
+      geomAltitudeMode = geometry.get(os.data.RecordField.ALTITUDE_MODE);
     }
 
     if (this.exportEllipses) {
@@ -250,6 +254,10 @@ plugin.file.kml.KMLExporter.prototype.getGeometry = function(item) {
           geometry = ellipse;
         }
       }
+    }
+
+    if (geometry) {
+      geometry.set(os.data.RecordField.ALTITUDE_MODE, geomAltitudeMode || featAltitudeMode);
     }
   }
 
