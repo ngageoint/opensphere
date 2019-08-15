@@ -289,7 +289,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onFillColorChange = functi
     }
 
     // Only change the fill color without changing the image fill color too
-    this.styleConfig.fill.color = color;
+    this.styleConfig['fill']['color'] = color;
 
     this.scope['fillColor'] = os.color.toHexString(color);
   }
