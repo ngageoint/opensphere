@@ -518,6 +518,31 @@ os.query.BaseQueryManager.prototype.hasFilter = function(filterOrId) {
 
 
 /**
+ * @param {string=} opt_layerId
+ * @param {string=} opt_areaId
+ * @param {string=} opt_filterId
+ * @return {boolean} Whether or not the layer has enabled filters
+ */
+os.query.BaseQueryManager.prototype.hasEnabledEntries = function(opt_layerId, opt_areaId, opt_filterId) {
+  var entries = this.getEntries(opt_layerId, opt_areaId, opt_filterId, true, true);
+  for (var i = 0, n = entries.length; i < n; i++) {
+    var e = entries[i];
+    var fid = /** @type {string} */ (e['filterId']);
+    var aid = /** @type {string} */ (e['areaId']);
+    var area = this.am.get(aid);
+    var filter = this.fm.getFilter(fid);
+
+    if (fid && filter && filter.isEnabled() && fid !== '*' &&
+        (!aid || (aid === '*' || (area && area.get('shown'))))) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+
+/**
  * Asks if a filter is an And or an Or grouping for a particular layer. If the filter is in a complex state with
  * respect to areas, it will not account for the "both" case.
  *
