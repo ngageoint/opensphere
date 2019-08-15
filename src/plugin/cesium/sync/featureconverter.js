@@ -1740,6 +1740,23 @@ plugin.cesium.sync.FeatureConverter.prototype.matchDashPattern = function(primit
 
 
 /**
+ * @param {Cesium.HeightReference} heightReference
+ * @param {Cesium.PrimitiveLike} primitive
+ * @return {boolean}
+ */
+plugin.cesium.sync.FeatureConverter.prototype.isPrimitiveTypeChanging = function(heightReference, primitive) {
+  if (primitive instanceof Cesium.PrimitiveCollection && primitive.length) {
+    return this.isPrimitiveTypeChanging(heightReference, primitive.get(0));
+  }
+
+  return ((heightReference !== Cesium.HeightReference.CLAMP_TO_GROUND &&
+    (primitive instanceof Cesium.GroundPolylinePrimitive || primitive instanceof Cesium.GroundPrimitive)) ||
+    (heightReference === Cesium.HeightReference.CLAMP_TO_GROUND &&
+    (primitive instanceof Cesium.Polyline || primitive instanceof Cesium.Primitive)));
+};
+
+
+/**
  * Convert an OL3 geometry to Cesium.
  *
  * @param {!ol.Feature} feature The OL3 feature
@@ -1780,10 +1797,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feat
   }
 
   var heightReference = this.getHeightReference(context.layer, feature, geometry);
-  if ((heightReference !== Cesium.HeightReference.CLAMP_TO_GROUND &&
-    (primitive instanceof Cesium.GroundPolylinePrimitive || primitive instanceof Cesium.GroundPrimitive)) ||
-    (heightReference === Cesium.HeightReference.CLAMP_TO_GROUND &&
-    (primitive instanceof Cesium.Polyline || primitive instanceof Cesium.Primitive))) {
+  if (this.isPrimitiveTypeChanging(heightReference, primitive)) {
     // we cannot update it; it must be recreated
     primitive = null;
   }
