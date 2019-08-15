@@ -1741,7 +1741,7 @@ plugin.cesium.sync.FeatureConverter.prototype.matchDashPattern = function(primit
 
 /**
  * @param {Cesium.HeightReference} heightReference
- * @param {Cesium.PrimitiveLike} primitive
+ * @param {?Cesium.PrimitiveLike} primitive
  * @return {boolean}
  */
 plugin.cesium.sync.FeatureConverter.prototype.isPrimitiveTypeChanging = function(heightReference, primitive) {
