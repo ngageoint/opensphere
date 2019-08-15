@@ -613,7 +613,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onColorChange = function(event, val
 
       this.createFeatureCommand(fn);
     } else if (color == fillColor) {
-      // We run these separately so that they retain the different opacities
+      // We create two commands so that they retain the different opacities
       var fn2 =
         /**
          * @param {string} layerId
@@ -630,10 +630,14 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onColorChange = function(event, val
             layerId, featureId, fillColorArr, null, os.command.FeatureColor.MODE.FILL)
           );
 
-          return cmds;
+          var sequence = new os.command.SequenceCommand();
+          sequence.setCommands(cmds);
+          sequence.title = 'Change Color';
+
+          return sequence;
         };
 
-      this.createFeatureSequenceCommand(fn2, 'Change Feature Color');
+      this.createFeatureCommand(fn2);
     } else {
       var fn4 =
         /**
@@ -1062,12 +1066,9 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.createFeatureCommand = function(com
       var feature = items[i].getFeature();
       var source = items[i].getSource();
       if (feature && source) {
-        var featureId = feature.getId();
-        var layerId = source.getId();
-        if (featureId && layerId) {
-          if (typeof featureId == 'number') {
-            featureId = featureId.toString();
-          }
+        var featureId = String(feature.getId());
+        var layerId = String(source.getId());
+        if (featureId != null && layerId != null) {
           var cmd = commandFunction(layerId, featureId);
           if (cmd) { // if we have a feature and get a command, add it
             cmds.push(cmd);
@@ -1091,46 +1092,6 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.createFeatureCommand = function(com
   }
 };
 
-
-/**
- * Creates a sequence of commands to run on each feature
- *
- * @param {function(string, string):os.command.ICommand} commandFunction
- * @param {string=} title
- */
-plugin.file.kml.KMLNodeLayerUICtrl.prototype.createFeatureSequenceCommand = function(commandFunction, title) {
-  var cmds = [];
-
-  var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
-  if (items) {
-    for (var i = 0; i < items.length; i++) {
-      var feature = items[i].getFeature();
-      var source = items[i].getSource();
-      if (feature && source) {
-        var featureId = feature.getId();
-        var layerId = source.getId();
-        if (featureId && layerId) {
-          if (typeof featureId == 'number') {
-            featureId = featureId.toString();
-          }
-
-          var result = commandFunction(layerId, featureId);
-          if (result.length > 0) {
-            cmds = cmds.concat(result);
-          }
-        }
-      }
-    }
-  }
-
-  if (cmds.length > 0) {
-    var sequence = new os.command.SequenceCommand();
-    sequence.setCommands(cmds);
-    sequence.title = title ? title : '';
-
-    os.command.CommandProcessor.getInstance().addCommand(sequence);
-  }
-};
 
 /**
  * If the feature is dynamic, which means it is a time based track

@@ -460,10 +460,10 @@ os.ui.layer.VectorLayerUICtrl.prototype.onFillColorReset = function(event) {
   event.stopPropagation();
 
   // clear the layer color config value
-  this.onFillColorChange(event, os.style.DEFAULT_FILL_COLOR);
+  this.onFillColorChange(event, this.getColor());
 
   // reset to the layer color
-  this.scope['fillColor'] = this.getColor();
+  this.scope['fillColor'] = this.getFillColor();
 };
 
 
