@@ -408,7 +408,7 @@ os.layer.Vector.prototype.getFASet = function() {
     icons.push(os.ui.Icons.STATE);
   }
 
-  if (os.queryManager.hasEnabledEntries(this.getId())) {
+  if (os.query.QueryManager.getInstance().hasEnabledEntries(this.getId())) {
     icons.push(os.ui.Icons.FILTER);
   }
 
@@ -464,7 +464,7 @@ os.layer.Vector.prototype.getIconSet = function() {
       icons.push(os.ui.Icons.STATE);
     }
 
-    if (os.queryManager.hasEnabledEntries(this.getId())) {
+    if (os.query.QueryManager.getInstance().hasEnabledEntries(this.getId())) {
       icons.push(os.ui.Icons.FILTER);
     }
   }
