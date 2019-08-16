@@ -100,6 +100,18 @@ describe('Toolbar right', function() {
     });
 
     it('Disable state', function() {
+<<<<<<< HEAD
+=======
+      // TODO: Remove after #736 is fixed
+      cy.on('uncaught:exception', function(err) {
+        if (err.message.includes('$rootScope')) {
+          expect(err.message).to.include('$rootScope');
+          return false;
+        }
+        return true;
+      });
+
+>>>>>>> test(cypress): fixes linter errors
       // Setup
       cy.get(core.Toolbar.addData.OPEN_FILE_BUTTON).click();
       cy.get(imports.importDataDialog.DIALOG).should('be.visible');

@@ -31,18 +31,18 @@ describe('CSV import', function() {
     cy.imageComparison('features loaded');
 
     // Open the timeline and animate the data (view window animates)
-    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force:true}); // TODO: Remove force:true workaround after #732 fixed
+    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force: true}); // TODO: Remove force: true workaround after #732 fixed
     cy.get(core.Timeline.PANEL).should('be.visible');
     cy.get(core.Timeline.HISTOGRAM_POINTS).should('be.visible');
     cy.get(core.Timeline.VIEW_WINDOW).invoke('position').then(function(elementPosition) {
       cy.get(core.Timeline.PLAY_BUTTON).click();
       cy.get(core.Timeline.VIEW_WINDOW).invoke('position').should('not.equal', elementPosition);
     });
-    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force:true}); // TODO: Remove force:true workaround after #732 fixed
+    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force: true}); // TODO: Remove force: true workaround after #732 fixed
     cy.get(core.Timeline.PANEL).should('not.exist');
 
     // Open the timeline and animate the data (feature count changes)
-    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force:true}); // TODO: Remove force:true workaround after #732 fixed
+    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force: true}); // TODO: Remove force: true workaround after #732 fixed
     cy.get(core.Timeline.PANEL).should('be.visible');
     cy.get(core.Timeline.NEXT_BUTTON).click();
     cy.get(core.Timeline.NEXT_BUTTON).click();
