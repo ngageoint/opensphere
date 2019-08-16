@@ -2079,10 +2079,9 @@ os.source.Vector.prototype.columnTypeDetection_ = function(feature) {
  * @private
  */
 os.source.Vector.prototype.onProcessTimer_ = function() {
-  var features = this.processQueue_;
-  this.processQueue_ = [];
-
-  if (features && features.length > 0) {
+  if (this.processQueue_ && this.processQueue_.length) {
+    var features = this.processQueue_;
+    this.processQueue_ = [];
     this.processDeferred(features);
   }
 };
@@ -2133,7 +2132,7 @@ os.source.Vector.prototype.processDeferred = function(features) {
  * @protected
  */
 os.source.Vector.prototype.processNow = function() {
-  if (this.processTimer && this.processTimer.isActive()) {
+  if (this.processTimer) {
     this.processTimer.fire();
   }
 };
