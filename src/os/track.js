@@ -908,13 +908,9 @@ os.track.getGeometryTime = function(geometry) {
   var time = 0;
 
   if (geometry instanceof ol.geom.LineString) {
-    geometry.toLonLat();
     time = os.track.getLineTime(geometry.getCoordinates());
-    geometry.osTransform();
   } else if (geometry instanceof ol.geom.MultiLineString) {
-    geometry.toLonLat();
     time = os.track.getMultiLineTime(geometry.getCoordinates());
-    geometry.osTransform();
   }
 
   return time;
