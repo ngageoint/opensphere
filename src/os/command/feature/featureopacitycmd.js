@@ -29,8 +29,8 @@ os.command.FeatureOpacity = function(layerId, featureId, opacity, opt_oldOpacity
       this.defaultOpacity = os.command.FeatureOpacity.DEFAULT_FILL_OPACITY;
       break;
     case os.command.FeatureOpacity.MODE.STROKE:
-      this.title = 'Change Feature Stroke Opacity';
-      this.metricKey = os.metrics.Layer.FEATURE_STROKE_OPACITY;
+      this.title = 'Change Feature Opacity';
+      this.metricKey = os.metrics.Layer.FEATURE_OPACITY;
       this.defaultOpacity = os.command.FeatureOpacity.DEFAULT_OPACITY;
       break;
     case os.command.FeatureOpacity.MODE.COMBINED:
