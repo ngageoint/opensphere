@@ -135,12 +135,18 @@ os.command.FeatureColor.prototype.applyValue = function(configs, value) {
   switch (this.changeMode) {
     case os.command.FeatureColor.MODE.FILL:
       for (var i = 0; i < configs.length; i++) {
-        os.style.setConfigColor(configs[i], color, [os.style.StyleField.FILL]);
+        os.style.setFillColor(configs[i], color);
       }
       break;
     case os.command.FeatureColor.MODE.STROKE:
       for (var i = 0; i < configs.length; i++) {
-        os.style.setConfigColor(configs[i], color, [os.style.StyleField.STROKE, os.style.StyleField.IMAGE]);
+        var fillColor = os.style.getConfigColor(configs[i], true, os.style.StyleField.FILL);
+
+        os.style.setConfigColor(configs[i], color);
+
+        if (fillColor) {
+          os.style.setFillColor(configs[i], fillColor);
+        }
       }
 
       if (this.oldValue == this.getLabelValue()) {
