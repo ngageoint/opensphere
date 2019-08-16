@@ -883,7 +883,9 @@ os.ui.layer.VectorLayerUICtrl.prototype.getFillOpacity = function() {
             config = config[0];
           }
           var color = os.style.getConfigColor(config, true, os.style.StyleField.FILL);
-          opacity = color[3];
+          if (goog.isArray(color) && color.length >= 4) {
+            opacity = color[3];
+          }
         }
       }
     }

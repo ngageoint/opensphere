@@ -589,18 +589,10 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onColorChange = function(event, val
   // Do we have fill color/opacity to consider?
   if (this.scope['fillColor'] !== undefined && this.scope['fillOpacity'] !== undefined) {
     // Determine if we are changing both stroke and fill entirely, or keeping opacities separate, or only affecting stroke
-    var strokeColorArr = os.color.toRgbArray(this.scope['color']);
-    strokeColorArr[3] = this.scope['opacity'];
-    var strokeColorValue = os.style.toRgbaString(strokeColorArr);
-    var fillColorArr = os.color.toRgbArray(this.scope['fillColor']);
-    fillColorArr[3] = this.scope['fillOpacity'];
-    var fillColorValue = os.style.toRgbaString(fillColorArr);
-    var color = os.color.toHexString(this.scope['color']);
-    var fillColor = os.color.toHexString(this.scope['fillColor']);
+    if (this.scope['color'] == this.scope['fillColor'] && this.scope['opacity'] == this.scope['fillOpacity']) {
+      this.scope['color'] = os.color.toHexString(colorValue);
+      this.scope['fillColor'] = os.color.toHexString(colorValue);
 
-    this.scope['color'] = os.color.toHexString(colorValue);
-
-    if (strokeColorValue == fillColorValue) {
       var fn =
         /**
          * @param {string} layerId
@@ -612,8 +604,16 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onColorChange = function(event, val
         };
 
       this.createFeatureCommand(fn);
-    } else if (color == fillColor) {
+    } else if (this.scope['color'] == this.scope['fillColor']) {
+      this.scope['color'] = os.color.toHexString(colorValue);
+      this.scope['fillColor'] = os.color.toHexString(colorValue);
+
       // We create two commands so that they retain the different opacities
+      var strokeColor = os.color.toRgbArray(this.scope['color']);
+      strokeColor[3] = this.scope['opacity'];
+      var fillColor = os.color.toRgbArray(this.scope['fillColor']);
+      fillColor[3] = this.scope['fillOpacity'];
+
       var fn2 =
         /**
          * @param {string} layerId
@@ -624,10 +624,10 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onColorChange = function(event, val
           var cmds = [];
 
           cmds.push(new os.command.FeatureColor(
-              layerId, featureId, strokeColorArr, null, os.command.FeatureColor.MODE.STROKE)
+              layerId, featureId, strokeColor, null, os.command.FeatureColor.MODE.STROKE)
           );
           cmds.push(new os.command.FeatureColor(
-              layerId, featureId, fillColorArr, null, os.command.FeatureColor.MODE.FILL)
+              layerId, featureId, fillColor, null, os.command.FeatureColor.MODE.FILL)
           );
 
           var sequence = new os.command.SequenceCommand();
@@ -639,7 +639,8 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onColorChange = function(event, val
 
       this.createFeatureCommand(fn2);
     } else {
-      var fn4 =
+      this.scope['color'] = os.color.toHexString(colorValue);
+      var fn3 =
         /**
          * @param {string} layerId
          * @param {string} featureId
@@ -649,7 +650,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onColorChange = function(event, val
           return new os.command.FeatureColor(layerId, featureId, colorValue, null, os.command.FeatureColor.MODE.STROKE);
         };
 
-      this.createFeatureCommand(fn4);
+      this.createFeatureCommand(fn3);
     }
   } else {
     // We are not taking fill into consideration
@@ -1066,9 +1067,11 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.createFeatureCommand = function(com
       var feature = items[i].getFeature();
       var source = items[i].getSource();
       if (feature && source) {
-        var featureId = String(feature.getId());
-        var layerId = String(source.getId());
+        var featureId = feature.getId();
+        var layerId = source.getId();
         if (featureId != null && layerId != null) {
+          featureId = String(featureId);
+          layerId = String(layerId);
           var cmd = commandFunction(layerId, featureId);
           if (cmd) { // if we have a feature and get a command, add it
             cmds.push(cmd);
