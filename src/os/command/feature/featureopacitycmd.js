@@ -141,7 +141,13 @@ os.command.FeatureOpacity.prototype.applyValue = function(configs, value) {
         color = os.style.getConfigColor(configs[i], true, os.style.StyleField.STROKE);
         color[3] = value;
         colorValue = os.style.toRgbaString(color);
-        os.style.setConfigColor(configs[i], colorValue, [os.style.StyleField.STROKE, os.style.StyleField.IMAGE]);
+        var fillColor = os.style.getConfigColor(configs[i], true, os.style.StyleField.FILL);
+
+        os.style.setConfigColor(configs[i], colorValue);
+
+        if (fillColor) {
+          os.style.setFillColor(configs[i], fillColor);
+        }
       }
       break;
     case os.command.FeatureOpacity.MODE.COMBINED:

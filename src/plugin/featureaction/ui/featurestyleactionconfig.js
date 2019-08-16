@@ -289,7 +289,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onFillColorChange = functi
     }
 
     // Only change the fill color without changing the image fill color too
-    this.styleConfig['fill']['color'] = color;
+    os.style.setFillColor(this.styleConfig, color);
 
     this.scope['fillColor'] = os.color.toHexString(color);
   }
@@ -384,7 +384,12 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onOpacityChange = function
     } else {
       color = os.style.getConfigColor(this.styleConfig, true, os.style.StyleField.STROKE);
       color[3] = value;
-      os.style.setConfigColor(this.styleConfig, color, [os.style.StyleField.STROKE, os.style.StyleField.IMAGE]);
+
+      os.style.setConfigColor(this.styleConfig, color);
+
+      if (this.scope['fillColor']) {
+        os.style.setFillColor(this.styleConfig, this.styleConfig['fillColor']);
+      }
 
       this.scope['opacity'] = value;
     }

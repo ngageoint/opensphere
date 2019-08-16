@@ -100,7 +100,7 @@ os.command.VectorLayerOpacity.prototype.applyValue = function(config, value) {
       color[3] = value;
       colorString = os.style.toRgbaString(color);
 
-      os.style.setConfigColor(config, colorString, [os.style.StyleField.FILL]);
+      os.style.setFillColor(config, colorString);
 
       // Make sure the fill color and opacity are updated as well
       if (config['fillColor']) {
@@ -116,7 +116,11 @@ os.command.VectorLayerOpacity.prototype.applyValue = function(config, value) {
       color[3] = value;
       colorString = os.style.toRgbaString(color);
 
-      os.style.setConfigColor(config, colorString, [os.style.StyleField.IMAGE, os.style.StyleField.STROKE]);
+      os.style.setConfigColor(config, color);
+
+      if (config['fillColor']) {
+        os.style.setFillColor(config, config['fillColor']);
+      }
 
       os.ui.adjustIconSet(this.layerId, color);
 

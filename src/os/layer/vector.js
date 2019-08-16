@@ -1245,13 +1245,11 @@ os.layer.Vector.prototype.restore = function(config) {
 
     if (config[os.style.StyleField.FILL_COLOR] != null) {
       var fillString = os.style.toRgbaString(config[os.style.StyleField.FILL_COLOR]);
-      os.style.setConfigColor(styleConf, fillString, [os.style.StyleField.FILL]);
+      os.style.setFillColor(styleConf, fillString);
     } else {
       var fillArr = os.color.toRgbArray(config[os.style.StyleField.COLOR]);
       fillArr[3] = os.style.DEFAULT_FILL_ALPHA;
-      styleConf['fill'] = {
-        'color': os.style.toRgbaString(fillArr)
-      };
+      os.style.setFillColor(styleConf, os.style.toRgbaString(fillArr));
     }
   }
 

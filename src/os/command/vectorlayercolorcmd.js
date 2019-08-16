@@ -113,7 +113,7 @@ os.command.VectorLayerColor.prototype.applyValue = function(config, value) {
 
   switch (this.changeMode) {
     case os.command.VectorLayerColor.MODE.FILL:
-      os.style.setConfigColor(config, color, [os.style.StyleField.FILL]);
+      os.style.setFillColor(config, color);
 
       // Make sure the fill color and opacity are updated as well
       if (config['fillColor']) {
@@ -121,8 +121,12 @@ os.command.VectorLayerColor.prototype.applyValue = function(config, value) {
       }
       break;
     case os.command.VectorLayerColor.MODE.STROKE:
-      os.style.setConfigColor(config, color,
-          [os.style.StyleField.STROKE, os.style.StyleField.IMAGE]);
+      os.style.setConfigColor(config, color);
+
+      if (config['fillColor']) {
+        os.style.setFillColor(config, config['fillColor']);
+      }
+
       os.ui.adjustIconSet(this.layerId, color);
       break;
     case os.command.VectorLayerColor.MODE.COMBINED:

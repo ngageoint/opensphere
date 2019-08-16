@@ -639,6 +639,31 @@ os.style.setConfigColor = function(config, color, opt_includeStyleFields) {
 
 
 /**
+ * Sets the fill color, creating the fill object within the config if necessary.
+ * Colors are always set as an rgba string to minimize conversion both in opensphere style functions and OL3 rendering functions.
+ *
+ * @param {Object} config
+ * @param {Array<number>|string|null} color
+ */
+os.style.setFillColor = function(config, color) {
+  if (config) {
+    if (!color) {
+      // no fill
+      config['fill'] = null;
+    } else if (!config['fill']) {
+      // adding fill
+      config['fill'] = {
+        'color': color
+      };
+    } else {
+      // changing fill color
+      config['fill']['color'] = color;
+    }
+  }
+};
+
+
+/**
  * Gets the icon used in a config.
  *
  * @param {Object|undefined} config The style config.

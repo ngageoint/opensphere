@@ -1319,7 +1319,7 @@ os.ui.FeatureEditCtrl.prototype.setFeatureConfig_ = function(config) {
   fillColor = os.style.toRgbaString(fillColor);
 
   if (color != fillColor) {
-    os.style.setConfigColor(config, fillColor, [os.style.StyleField.FILL]);
+    os.style.setFillColor(config, fillColor);
   }
 
   // set icon config if selected
