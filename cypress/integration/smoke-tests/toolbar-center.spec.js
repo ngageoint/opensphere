@@ -104,7 +104,7 @@ describe('Toolbar center', function() {
     cy.get(core.Timeline.PANEL).should('not.exist');
 
     // Test
-    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force:true}); // TODO: Remove force:true workaround after #732 fixed
+    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force: true}); // TODO: Remove force: true workaround after #732 fixed
     cy.get(core.Timeline.PANEL).should('be.visible');
     cy.get(core.Timeline.START_DATE_TIME_TEXT).should('be.visible');
     cy.get(core.Timeline.PLAY_BUTTON).should('be.visible');
@@ -112,7 +112,7 @@ describe('Toolbar center', function() {
     cy.get(core.Timeline.END_DATE_TIME_TEXT).should('be.visible');
 
     // Clean up
-    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force:true}); // TODO: Remove force:true workaround after #732 fixed
+    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force: true}); // TODO: Remove force: true workaround after #732 fixed
     cy.get(core.Timeline.PANEL).should('not.exist');
   });
 });
