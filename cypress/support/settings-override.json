@@ -1,6 +1,0 @@
-{
-  "overrides": [
-    "config/settings_os.json",
-    "config/settings_cypress.json"
-  ]
-}
