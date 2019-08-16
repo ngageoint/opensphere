@@ -25,16 +25,26 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 var core = require('../support/selectors/core.js');
 var layers = require('../support/selectors/layers.js');
-var config = require('./index.js');
+var index = require('./index.js');
 var shared = require('../support/selectors/shared.js');
 var addMatchImageSnapshotCommand = require('cypress-image-snapshot/command')
     .addMatchImageSnapshotCommand;
+
+var projection;
+
+// Must add CYPRESS_ prefix to environment variables, but use it here without the prefix
+if (Cypress.env('PROJECTION')) {
+  projection = Cypress.env('PROJECTION');
+} else {
+  projection = 3857;
+}
+var snapshotFolder = 'cypress/comparisons/' + projection;
 
 addMatchImageSnapshotCommand({
   customDiffConfig: {threshold: 0.2},
   failureThreshold: 0.0005,
   failureThresholdType: 'percent',
-  customSnapshotsDir: 'cypress/comparisons',
+  customSnapshotsDir: snapshotFolder,
   blackout: [core.Toolbar.PANEL,
     core.statusBar.PANEL,
     '.ol-overviewmap',
@@ -68,10 +78,10 @@ Cypress.Commands.add('login', function(clearLocalStorage) {
   clearLocalStorage = clearLocalStorage || true;
 
   if (clearLocalStorage) {
-    indexedDB.deleteDatabase(config.IndexedDB.FILES);
-    indexedDB.deleteDatabase(config.IndexedDB.SETTINGS);
+    indexedDB.deleteDatabase(index.IndexedDB.FILES);
+    indexedDB.deleteDatabase(index.IndexedDB.SETTINGS);
   }
-  cy.visit('index.html' + config.HIDE_TIPS); // TODO: Windows 10 issue. Remove index.html after fixed: https://github.com/http-party/http-server/issues/525
+  cy.visit('index.html' + index.HIDE_TIPS); // TODO: Windows 10 issue. Remove index.html after fixed: https://github.com/http-party/http-server/issues/525
   cy.get(layers.layersTab.Tree.STREET_MAP_TILES, {timeout: 15000}).should('be.visible');
   cy.get(layers.layersTab.Tree.LOADING_SPINNER, {timeout: 20000}).should('not.be.visible');
 });
