@@ -143,7 +143,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.initialize = function() {
 
       this.scope['fillOpacity'] = fill[3];
     } else {
-      this.scope['fillColor'] = os.color.toHexString(os.style.DEFAULT_FILL_COLOR);
+      this.scope['fillColor'] = os.color.toHexString(color || os.style.DEFAULT_FILL_COLOR);
       this.scope['fillOpacity'] = os.style.DEFAULT_FILL_ALPHA;
 
       fill = os.color.toRgbArray(this.scope['fillColor']);
@@ -155,8 +155,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.initialize = function() {
     os.style.setConfigColor(this.styleConfig, strokeColor);
 
     // If we have a fill color, set that to our style config
-    var fillColor = os.style.toRgbaString(fill);
-    this.styleConfig.fill.color = fillColor;
+    os.style.setFillColor(this.styleConfig, os.style.toRgbaString(fill));
 
     this.scope['size'] = os.style.getConfigSize(this.styleConfig);
     this.scope['lineDash'] = os.style.getConfigLineDash(this.styleConfig);
@@ -253,7 +252,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onColorChange = function(e
       this.scope['color'] = os.color.toHexString(color);
 
       // Only change the fill color without changing the image fill color too
-      this.styleConfig.fill.color = fillColor;
+      os.style.setFillColor(this.styleConfig, fillColor);
 
       this.scope['fillColor'] = os.color.toHexString(fillColor);
     } else {
@@ -365,7 +364,7 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onOpacityChange = function
     color[3] = value;
 
     // Only change the fill color without changing the image fill color too
-    this.styleConfig.fill.color = color;
+    os.style.setFillColor(this.styleConfig, color);
 
     this.scope['fillOpacity'] = value;
   } else {
