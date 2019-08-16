@@ -634,3 +634,7 @@ $aspect-ratios: ((16, 9), (4, 3));
 .u-object-fit-contain {
   object-fit: contain;
 }
+
+.u-border-thick {
+  border-width: ($border-width * 2) !important;
+}
