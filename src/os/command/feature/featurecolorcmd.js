@@ -29,8 +29,8 @@ os.command.FeatureColor = function(layerId, featureId, color, opt_oldColor, opt_
       this.defaultColor = os.command.FeatureColor.DEFAULT_FILL_COLOR;
       break;
     case os.command.FeatureColor.MODE.STROKE:
-      this.title = 'Change Feature Stroke Color';
-      this.metricKey = os.metrics.Layer.FEATURE_STROKE_COLOR;
+      this.title = 'Change Feature Color';
+      this.metricKey = os.metrics.Layer.FEATURE_COLOR;
       this.defaultColor = os.command.FeatureColor.DEFAULT_COLOR;
       break;
     case os.command.FeatureColor.MODE.COMBINED:

@@ -31,8 +31,8 @@ os.command.VectorLayerColor = function(layerId, color, opt_oldColor, opt_changeM
       this.defaultColor = os.command.VectorLayerColor.DEFAULT_FILL_COLOR;
       break;
     case os.command.VectorLayerColor.MODE.STROKE:
-      this.title = 'Change Stroke Color';
-      this.metricKey = os.metrics.Layer.VECTOR_STROKE_COLOR;
+      this.title = 'Change Color';
+      this.metricKey = os.metrics.Layer.VECTOR_COLOR;
       this.defaultColor = os.command.VectorLayerColor.DEFAULT_COLOR;
       break;
     case os.command.VectorLayerColor.MODE.COMBINED:

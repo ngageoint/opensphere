@@ -31,8 +31,8 @@ os.command.VectorLayerOpacity = function(layerId, opacity, opt_oldOpacity, opt_c
       this.defaultOpacity = os.command.VectorLayerOpacity.DEFAULT_FILL_OPACITY;
       break;
     case os.command.VectorLayerColor.MODE.STROKE:
-      this.title = 'Change Stroke Opacity';
-      this.metricKey = os.metrics.Layer.VECTOR_STROKE_OPACITY;
+      this.title = 'Change Opacity';
+      this.metricKey = os.metrics.Layer.VECTOR_OPACITY;
       this.defaultOpacity = os.command.VectorLayerOpacity.DEFAULT_OPACITY;
       break;
     case os.command.VectorLayerColor.MODE.COMBINED:

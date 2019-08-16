@@ -34,11 +34,6 @@ os.metrics.LayersMetrics = function() {
     key: os.metrics.Layer.VECTOR_COLOR
   });
   this.addChild(styleLeaf, {
-    label: 'Change Feature Layer Stroke Color',
-    description: 'The stroke color used to render the data for this layer.',
-    key: os.metrics.Layer.VECTOR_STROKE_COLOR
-  });
-  this.addChild(styleLeaf, {
     label: 'Change Feature Layer Fill Color',
     description: 'The fill color used to render the data for this layer.',
     key: os.metrics.Layer.VECTOR_FILL_COLOR
@@ -72,11 +67,6 @@ os.metrics.LayersMetrics = function() {
     label: 'Change Feature Layer Fill Opacity',
     description: 'The fill opacity used to render the data for this layer.',
     key: os.metrics.Layer.VECTOR_FILL_OPACITY
-  });
-  this.addChild(styleLeaf, {
-    label: 'Change Feature Layer Stroke Opacity',
-    description: 'The stroke opacity used to render the data for this layer.',
-    key: os.metrics.Layer.VECTOR_STROKE_OPACITY
   });
   this.addChild(styleLeaf, {
     label: 'Change Feature Layer Line Dash',
@@ -194,11 +184,6 @@ os.metrics.LayersMetrics = function() {
     key: os.metrics.Layer.FEATURE_COLOR
   });
   this.addChild(styleLeaf, {
-    label: 'Change Feature Stroke Color',
-    description: 'The stroke color used to render the data for this feature.',
-    key: os.metrics.Layer.FEATURE_STROKE_COLOR
-  });
-  this.addChild(styleLeaf, {
     label: 'Change Feature Fill Color',
     description: 'The fill color used to render the data for this feature.',
     key: os.metrics.Layer.FEATURE_FILL_COLOR
@@ -212,11 +197,6 @@ os.metrics.LayersMetrics = function() {
     label: 'Change Feature Opacity',
     description: 'The opacity used to render the data for this feature.',
     key: os.metrics.Layer.FEATURE_OPACITY
-  });
-  this.addChild(styleLeaf, {
-    label: 'Change Feature Stroke Opacity',
-    description: 'The stroke opacity used to render the data for this feature.',
-    key: os.metrics.Layer.FEATURE_STROKE_OPACITY
   });
   this.addChild(styleLeaf, {
     label: 'Change Feature Fill Opacity',
