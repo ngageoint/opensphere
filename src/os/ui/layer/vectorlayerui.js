@@ -22,6 +22,7 @@ goog.require('os.command.VectorLayerShowLabel');
 goog.require('os.command.VectorLayerShowRotation');
 goog.require('os.command.VectorLayerSize');
 goog.require('os.command.VectorUniqueIdCmd');
+goog.require('os.command.style');
 goog.require('os.data.OSDataManager');
 goog.require('os.defines');
 goog.require('os.style');
@@ -353,7 +354,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onColorChange = function(event, value) {
        */
       function(layer) {
         return new os.command.VectorLayerColor(
-            layer.getId(), colorValue, null, os.command.VectorLayerColor.MODE.COMBINED);
+            layer.getId(), colorValue, null, os.command.style.ColorChangeType.COMBINED);
       };
 
     this.createCommand(fn);
@@ -373,10 +374,10 @@ os.ui.layer.VectorLayerUICtrl.prototype.onColorChange = function(event, value) {
         var cmds = [];
 
         cmds.push(new os.command.VectorLayerColor(
-            layer.getId(), strokeArray, null, os.command.VectorLayerColor.MODE.STROKE)
+            layer.getId(), strokeArray, null, os.command.style.ColorChangeType.STROKE)
         );
         cmds.push(new os.command.VectorLayerColor(
-            layer.getId(), fillArray, null, os.command.VectorLayerColor.MODE.FILL)
+            layer.getId(), fillArray, null, os.command.style.ColorChangeType.FILL)
         );
 
         var sequence = new os.command.SequenceCommand();
@@ -395,7 +396,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onColorChange = function(event, value) {
        */
       function(layer) {
         return new os.command.VectorLayerColor(
-            layer.getId(), colorValue, null, os.command.VectorLayerColor.MODE.STROKE);
+            layer.getId(), colorValue, null, os.command.style.ColorChangeType.STROKE);
       };
 
     this.createCommand(fn3);
@@ -444,7 +445,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onFillColorChange = function(event, valu
      */
     function(layer) {
       return new os.command.VectorLayerColor(
-          layer.getId(), colorValue, null, os.command.VectorLayerColor.MODE.FILL);
+          layer.getId(), colorValue, null, os.command.style.ColorChangeType.FILL);
     };
 
   this.createCommand(fn);
@@ -512,7 +513,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onSliderStop = function(callback, key, e
        */
       function(layer) {
         return new os.command.VectorLayerOpacity(
-            layer.getId(), value, null, os.command.VectorLayerOpacity.MODE.FILL);
+            layer.getId(), value, null, os.command.style.ColorChangeType.FILL);
       };
 
     this.createCommand(fn);
@@ -535,7 +536,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onSliderStop = function(callback, key, e
        */
       function(layer) {
         return new os.command.VectorLayerOpacity(
-            layer.getId(), value, null, os.command.VectorLayerOpacity.MODE.STROKE);
+            layer.getId(), value, null, os.command.style.ColorChangeType.STROKE);
       };
 
     this.createCommand(fn3);

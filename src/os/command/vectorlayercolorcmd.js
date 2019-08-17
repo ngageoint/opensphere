@@ -1,11 +1,10 @@
 goog.provide('os.command.VectorLayerColor');
 
 goog.require('os.command.AbstractVectorStyle');
-goog.require('os.data.OSDataManager');
+goog.require('os.command.style');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.metrics');
 goog.require('os.source.PropertyChange');
-goog.require('os.ui');
 
 
 
@@ -16,30 +15,35 @@ goog.require('os.ui');
  * @param {string} layerId
  * @param {Array<number>|string} color
  * @param {(Array<number>|string)=} opt_oldColor
- * @param {string=} opt_changeMode
+ * @param {os.command.style.ColorChangeType=} opt_changeMode
  * @constructor
  */
 os.command.VectorLayerColor = function(layerId, color, opt_oldColor, opt_changeMode) {
-  this.changeMode = opt_changeMode;
+  /**
+   * The color change mode. Determines how the config color is set.
+   * @type {os.command.style.ColorChangeType}
+   * @protected
+   */
+  this.changeMode = opt_changeMode || os.command.style.ColorChangeType.COMBINED;
 
   os.command.VectorLayerColor.base(this, 'constructor', layerId, color, opt_oldColor);
 
   switch (this.changeMode) {
-    case os.command.VectorLayerColor.MODE.FILL:
+    case os.command.style.ColorChangeType.FILL:
       this.title = 'Change Fill Color';
       this.metricKey = os.metrics.Layer.VECTOR_FILL_COLOR;
-      this.defaultColor = os.command.VectorLayerColor.DEFAULT_FILL_COLOR;
+      this.defaultColor = os.style.DEFAULT_FILL_COLOR;
       break;
-    case os.command.VectorLayerColor.MODE.STROKE:
+    case os.command.style.ColorChangeType.STROKE:
       this.title = 'Change Color';
       this.metricKey = os.metrics.Layer.VECTOR_COLOR;
-      this.defaultColor = os.command.VectorLayerColor.DEFAULT_COLOR;
+      this.defaultColor = os.style.DEFAULT_LAYER_COLOR;
       break;
-    case os.command.VectorLayerColor.MODE.COMBINED:
+    case os.command.style.ColorChangeType.COMBINED:
     default:
       this.title = 'Change Color';
       this.metricKey = os.metrics.Layer.VECTOR_COLOR;
-      this.defaultColor = os.command.VectorLayerColor.DEFAULT_COLOR;
+      this.defaultColor = os.style.DEFAULT_LAYER_COLOR;
       break;
   }
 
@@ -58,26 +62,6 @@ goog.inherits(os.command.VectorLayerColor, os.command.AbstractVectorStyle);
 
 
 /**
- * @type {string}
- * @const
- */
-os.command.VectorLayerColor.DEFAULT_COLOR = 'rgba(255,255,255,1)';
-
-
-/**
- * @type {string}
- * @const
- */
-os.command.VectorLayerColor.DEFAULT_FILL_COLOR = 'rgba(255,255,255,0)';
-
-
-os.command.VectorLayerColor.MODE = {
-  COMBINED: 'combined',
-  FILL: 'fill',
-  STROKE: 'stroke'
-};
-
-/**
  * @inheritDoc
  */
 os.command.VectorLayerColor.prototype.getOldValue = function() {
@@ -86,13 +70,13 @@ os.command.VectorLayerColor.prototype.getOldValue = function() {
 
   if (config) {
     switch (this.changeMode) {
-      case os.command.VectorLayerColor.MODE.FILL:
+      case os.command.style.ColorChangeType.FILL:
         ret = os.style.getConfigColor(config, false, os.style.StyleField.FILL);
         break;
-      case os.command.VectorLayerColor.MODE.STROKE:
+      case os.command.style.ColorChangeType.STROKE:
         ret = os.style.getConfigColor(config, false, os.style.StyleField.STROKE);
         break;
-      case os.command.VectorLayerColor.MODE.COMBINED:
+      case os.command.style.ColorChangeType.COMBINED:
       default:
         ret = os.style.getConfigColor(config);
         break;
@@ -112,7 +96,7 @@ os.command.VectorLayerColor.prototype.applyValue = function(config, value) {
   var color = os.style.toRgbaString(/** @type {string} */ (value));
 
   switch (this.changeMode) {
-    case os.command.VectorLayerColor.MODE.FILL:
+    case os.command.style.ColorChangeType.FILL:
       os.style.setFillColor(config, color);
 
       // Make sure the fill color and opacity are updated as well
@@ -120,7 +104,7 @@ os.command.VectorLayerColor.prototype.applyValue = function(config, value) {
         config['fillColor'] = color;
       }
       break;
-    case os.command.VectorLayerColor.MODE.STROKE:
+    case os.command.style.ColorChangeType.STROKE:
       os.style.setConfigColor(config, color);
 
       if (config['fillColor']) {
@@ -129,7 +113,7 @@ os.command.VectorLayerColor.prototype.applyValue = function(config, value) {
 
       os.ui.adjustIconSet(this.layerId, color);
       break;
-    case os.command.VectorLayerColor.MODE.COMBINED:
+    case os.command.style.ColorChangeType.COMBINED:
     default:
       os.style.setConfigColor(config, color);
 
