@@ -1,5 +1,6 @@
 goog.provide('os.command.FeatureOpacity');
 
+goog.require('goog.asserts');
 goog.require('os.command.AbstractFeatureStyle');
 goog.require('os.command.style');
 goog.require('os.events.PropertyChangeEvent');
@@ -20,6 +21,8 @@ goog.require('os.style');
  * @constructor
  */
 os.command.FeatureOpacity = function(layerId, featureId, opacity, opt_oldOpacity, opt_changeMode) {
+  goog.asserts.assert(opacity != null, 'opacity must be defined');
+
   /**
    * The opacity change mode. Determines how the config opacity is set.
    * @type {os.command.style.ColorChangeType}
@@ -27,40 +30,24 @@ os.command.FeatureOpacity = function(layerId, featureId, opacity, opt_oldOpacity
    */
   this.changeMode = opt_changeMode || os.command.style.ColorChangeType.COMBINED;
 
+  // intentionally called after changeMode is set so getOldValue has the correct value
   os.command.FeatureOpacity.base(this, 'constructor', layerId, featureId, opacity, opt_oldOpacity);
 
   switch (this.changeMode) {
     case os.command.style.ColorChangeType.FILL:
       this.title = 'Change Feature Fill Opacity';
       this.metricKey = os.metrics.Layer.FEATURE_FILL_OPACITY;
-      this.defaultOpacity = os.style.DEFAULT_FILL_ALPHA;
       break;
     case os.command.style.ColorChangeType.STROKE:
       this.title = 'Change Feature Opacity';
       this.metricKey = os.metrics.Layer.FEATURE_OPACITY;
-      this.defaultOpacity = os.style.DEFAULT_ALPHA;
       break;
     case os.command.style.ColorChangeType.COMBINED:
     default:
       this.title = 'Change Feature Opacity';
       this.metricKey = os.metrics.Layer.FEATURE_OPACITY;
-      this.defaultOpacity = os.style.DEFAULT_ALPHA;
       break;
   }
-
-  if (!opacity) {
-    var feature = this.getFeature();
-    var config = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
-
-    if (config) {
-      if (Array.isArray(config)) {
-        config = config[0];
-      }
-      opacity = /** @type {number} */ (os.style.getConfigOpacityColor(config));
-    }
-  }
-
-  this.value = opacity;
 };
 goog.inherits(os.command.FeatureOpacity, os.command.AbstractFeatureStyle);
 
@@ -69,35 +56,28 @@ goog.inherits(os.command.FeatureOpacity, os.command.AbstractFeatureStyle);
  * @inheritDoc
  */
 os.command.FeatureOpacity.prototype.getOldValue = function() {
+  var ret;
   var feature = /** @type {ol.Feature} */ (this.getFeature());
   var config = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
   if (Array.isArray(config)) {
     config = config[0];
   }
 
-  var ret = this.defaultOpacity;
-
   if (config) {
     var color;
     switch (this.changeMode) {
       case os.command.style.ColorChangeType.FILL:
         color = os.style.getConfigColor(config, true, os.style.StyleField.FILL);
-        if (color && color.length === 4) {
-          ret = color[3];
-        }
+        ret = color && color.length === 4 ? color[3] : os.style.DEFAULT_FILL_ALPHA;
         break;
       case os.command.style.ColorChangeType.STROKE:
         color = os.style.getConfigColor(config, true, os.style.StyleField.STROKE);
-        if (color && color.length === 4) {
-          ret = color[3];
-        }
+        ret = color && color.length === 4 ? color[3] : os.style.DEFAULT_ALPHA;
         break;
       case os.command.style.ColorChangeType.COMBINED:
       default:
         color = os.style.getConfigColor(config, true);
-        if (color && color.length === 4) {
-          ret = color[3];
-        }
+        ret = color && color.length === 4 ? color[3] : os.style.DEFAULT_ALPHA;
         break;
     }
   }
@@ -117,23 +97,30 @@ os.command.FeatureOpacity.prototype.applyValue = function(configs, value) {
   switch (this.changeMode) {
     case os.command.style.ColorChangeType.FILL:
       for (i = 0; i < configs.length; i++) {
-        color = os.style.getConfigColor(configs[i], true, os.style.StyleField.FILL);
-        color[3] = value;
-        colorValue = os.style.toRgbaString(color);
-        os.style.setConfigColor(configs[i], colorValue, [os.style.StyleField.FILL]);
+        color = os.style.getConfigColor(configs[i], true, os.style.StyleField.FILL) ||
+            os.style.getConfigColor(configs[i], true);
+
+        if (color) {
+          color[3] = value;
+          colorValue = os.style.toRgbaString(color);
+          os.style.setFillColor(configs[i], colorValue);
+        }
       }
       break;
     case os.command.style.ColorChangeType.STROKE:
       for (i = 0; i < configs.length; i++) {
-        color = os.style.getConfigColor(configs[i], true, os.style.StyleField.STROKE);
-        color[3] = value;
-        colorValue = os.style.toRgbaString(color);
-        var fillColor = os.style.getConfigColor(configs[i], true, os.style.StyleField.FILL);
+        color = os.style.getConfigColor(configs[i], true, os.style.StyleField.STROKE) ||
+            os.style.getConfigColor(configs[i], true);
 
-        os.style.setConfigColor(configs[i], colorValue);
+        if (color) {
+          color[3] = value;
+          colorValue = os.style.toRgbaString(color);
+          os.style.setConfigColor(configs[i], colorValue);
 
-        if (fillColor) {
-          os.style.setFillColor(configs[i], fillColor);
+          var fillColor = os.style.getConfigColor(configs[i], true, os.style.StyleField.FILL);
+          if (fillColor) {
+            os.style.setFillColor(configs[i], fillColor);
+          }
         }
       }
       break;
@@ -141,9 +128,12 @@ os.command.FeatureOpacity.prototype.applyValue = function(configs, value) {
     default:
       for (i = 0; i < configs.length; i++) {
         color = os.style.getConfigColor(configs[i], true);
-        color[3] = value;
-        colorValue = os.style.toRgbaString(color);
-        os.style.setConfigColor(configs[i], colorValue);
+
+        if (color) {
+          color[3] = value;
+          colorValue = os.style.toRgbaString(color);
+          os.style.setConfigColor(configs[i], colorValue);
+        }
       }
       break;
   }

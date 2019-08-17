@@ -1,5 +1,6 @@
 goog.provide('os.command.VectorLayerOpacity');
 
+goog.require('goog.asserts');
 goog.require('os.command.AbstractVectorStyle');
 goog.require('os.command.style');
 goog.require('os.events.PropertyChangeEvent');
@@ -19,6 +20,8 @@ goog.require('os.source.PropertyChange');
  * @constructor
  */
 os.command.VectorLayerOpacity = function(layerId, opacity, opt_oldOpacity, opt_changeMode) {
+  goog.asserts.assert(opacity != null, 'opacity must be defined');
+
   /**
    * The opacity change mode. Determines how the config opacity is set.
    * @type {os.command.style.ColorChangeType}
@@ -26,36 +29,23 @@ os.command.VectorLayerOpacity = function(layerId, opacity, opt_oldOpacity, opt_c
    */
   this.changeMode = opt_changeMode || os.command.style.ColorChangeType.COMBINED;
 
+  // intentionally called after changeMode is set so getOldValue has the correct value
   os.command.VectorLayerOpacity.base(this, 'constructor', layerId, opacity, opt_oldOpacity);
 
   switch (this.changeMode) {
     case os.command.style.ColorChangeType.FILL:
       this.title = 'Change Fill Opacity';
       this.metricKey = os.metrics.Layer.VECTOR_FILL_OPACITY;
-      this.defaultOpacity = os.style.DEFAULT_FILL_ALPHA;
       break;
     case os.command.style.ColorChangeType.STROKE:
       this.title = 'Change Opacity';
       this.metricKey = os.metrics.Layer.VECTOR_OPACITY;
-      this.defaultOpacity = os.style.DEFAULT_ALPHA;
       break;
     case os.command.style.ColorChangeType.COMBINED:
     default:
       this.title = 'Change Opacity';
       this.metricKey = os.metrics.Layer.VECTOR_OPACITY;
-      this.defaultOpacity = os.style.DEFAULT_ALPHA;
       break;
-  }
-
-  if (!opacity) {
-    opacity = this.defaultOpacity;
-    var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.layerId));
-    if (layer) {
-      var options = layer.getLayerOptions();
-      if (options && options['baseOpacity']) {
-        opacity = /** @type {number} */ (options['baseOpacity']);
-      }
-    }
   }
 };
 goog.inherits(os.command.VectorLayerOpacity, os.command.AbstractVectorStyle);
@@ -66,29 +56,23 @@ goog.inherits(os.command.VectorLayerOpacity, os.command.AbstractVectorStyle);
  */
 os.command.VectorLayerOpacity.prototype.getOldValue = function() {
   var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-  var ret = this.defaultOpacity;
+  var ret;
 
   if (config) {
     var color;
     switch (this.changeMode) {
       case os.command.style.ColorChangeType.FILL:
         color = os.style.getConfigColor(config, true, os.style.StyleField.FILL);
-        if (color && color.length === 4) {
-          ret = color[3];
-        }
+        ret = color && color.length === 4 ? color[3] : os.style.DEFAULT_FILL_ALPHA;
         break;
       case os.command.style.ColorChangeType.STROKE:
         color = os.style.getConfigColor(config, true, os.style.StyleField.STROKE);
-        if (color && color.length === 4) {
-          ret = color[3];
-        }
+        ret = color && color.length === 4 ? color[3] : os.style.DEFAULT_ALPHA;
         break;
       case os.command.style.ColorChangeType.COMBINED:
       default:
         color = os.style.getConfigColor(config, true);
-        if (color && color.length === 4) {
-          ret = color[3];
-        }
+        ret = color && color.length === 4 ? color[3] : os.style.DEFAULT_ALPHA;
         break;
     }
   }
@@ -106,53 +90,61 @@ os.command.VectorLayerOpacity.prototype.applyValue = function(config, value) {
 
   switch (this.changeMode) {
     case os.command.style.ColorChangeType.FILL:
-      color = os.style.getConfigColor(config, true, os.style.StyleField.FILL);
-      color[3] = value;
-      colorString = os.style.toRgbaString(color);
+      color = os.style.getConfigColor(config, true, os.style.StyleField.FILL) ||
+          os.style.getConfigColor(config, true);
 
-      os.style.setFillColor(config, colorString);
+      if (color) {
+        color[3] = value;
+        colorString = os.style.toRgbaString(color);
 
-      // Make sure the fill color and opacity are updated as well
-      if (config['fillColor']) {
-        config['fillColor'] = colorString;
+        os.style.setFillColor(config, colorString);
+
+        // Make sure the fill color and opacity are updated as well
+        if (config['fillColor']) {
+          config['fillColor'] = colorString;
+        }
+        if (config['fillOpacity'] !== undefined) {
+          config['fillOpacity'] = value;
+        }
       }
-      if (config['fillOpacity'] !== undefined) {
-        config['fillOpacity'] = value;
-      }
-
       break;
     case os.command.style.ColorChangeType.STROKE:
-      color = os.style.getConfigColor(config, true, os.style.StyleField.STROKE);
-      color[3] = value;
-      colorString = os.style.toRgbaString(color);
+      color = os.style.getConfigColor(config, true, os.style.StyleField.STROKE) ||
+          os.style.getConfigColor(config, true);
 
-      os.style.setConfigColor(config, color);
+      if (color) {
+        color[3] = value;
+        colorString = os.style.toRgbaString(color);
 
-      if (config['fillColor']) {
-        os.style.setFillColor(config, config['fillColor']);
+        os.style.setConfigColor(config, color);
+
+        if (config['fillColor']) {
+          os.style.setFillColor(config, config['fillColor']);
+        }
+
+        os.ui.adjustIconSet(this.layerId, color);
       }
-
-      os.ui.adjustIconSet(this.layerId, color);
-
       break;
     case os.command.style.ColorChangeType.COMBINED:
     default:
       color = os.style.getConfigColor(config, true);
-      color[3] = value;
-      colorString = os.style.toRgbaString(color);
 
-      os.style.setConfigColor(config, colorString);
+      if (color) {
+        color[3] = value;
+        colorString = os.style.toRgbaString(color);
 
-      // Make sure the fill color and opacity are updated as well
-      if (config['fillColor']) {
-        config['fillColor'] = colorString;
+        os.style.setConfigColor(config, colorString);
+
+        // Make sure the fill color and opacity are updated as well
+        if (config['fillColor']) {
+          config['fillColor'] = colorString;
+        }
+        if (config['fillOpacity'] !== undefined) {
+          config['fillOpacity'] = value;
+        }
+
+        os.ui.adjustIconSet(this.layerId, color);
       }
-      if (config['fillOpacity'] !== undefined) {
-        config['fillOpacity'] = value;
-      }
-
-      os.ui.adjustIconSet(this.layerId, color);
-
       break;
   }
 

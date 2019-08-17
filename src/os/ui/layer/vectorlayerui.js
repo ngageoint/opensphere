@@ -185,7 +185,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
     this.scope['centerShape'] = this.getCenterShape();
     this.scope['centerShapes'] = this.getCenterShapes();
     this.scope['lockable'] = this.getLockable();
-    this.scope['fillColor'] = this.getFillColor();
+    this.scope['fillColor'] = this.getFillColor() || this.scope['color'];
     this.scope['fillOpacity'] = this.getFillOpacity();
     this['altitudeMode'] = this.getAltitudeMode();
     this['columns'] = this.getColumns();
@@ -820,8 +820,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.getFillColor = function() {
 
         if (config) {
           var color = os.style.getConfigColor(config, false, os.style.StyleField.FILL);
-          color = color || os.style.DEFAULT_LAYER_COLOR;
-
           if (color) {
             return os.color.toHexString(color);
           }

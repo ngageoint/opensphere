@@ -26,6 +26,7 @@ os.command.VectorLayerColor = function(layerId, color, opt_oldColor, opt_changeM
    */
   this.changeMode = opt_changeMode || os.command.style.ColorChangeType.COMBINED;
 
+  // intentionally called after changeMode is set so getOldValue has the correct value
   os.command.VectorLayerColor.base(this, 'constructor', layerId, color, opt_oldColor);
 
   switch (this.changeMode) {
