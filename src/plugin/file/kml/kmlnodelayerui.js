@@ -527,13 +527,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getLockable = function() {
  */
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.onOpacityValueChange = function(event, value) {
   event.stopPropagation();
-
-  // If we have a fill opacity and it is already the same as the stroke opacity, keep them the same
-  if (this.scope['fillOpacity'] !== undefined && this.scope['opacity'] == this.scope['fillOpacity']) {
-    this.scope['fillOpacity'] = value;
-  }
-
-  this.scope['opacity'] = value; // do not set this on the config - the command takes care of that
+  this.scope['opacity'] = value;
 };
 
 
@@ -546,7 +540,6 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onOpacityValueChange = function(eve
  */
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.onFillOpacityValueChange = function(event, value) {
   event.stopPropagation();
-
   this.scope['fillOpacity'] = value;
 };
 
@@ -807,33 +800,18 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onCenterShapeChange = function(even
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.onOpacityChange = function(event, value) {
   event.stopPropagation();
 
-  if (value) {
-    if (this.scope['fillOpacity'] !== undefined && this.scope['opacity'] == this.scope['fillOpacity']) {
-      var fn =
-        /**
-         * @param {string} layerId
-         * @param {string} featureId
-         * @return {os.command.ICommand}
-         */
-        function(layerId, featureId) {
-          return new os.command.FeatureOpacity(layerId, featureId, value);
-        };
+  if (value != null) {
+    var fn =
+      /**
+       * @param {string} layerId
+       * @param {string} featureId
+       * @return {os.command.ICommand}
+       */
+      function(layerId, featureId) {
+        return new os.command.FeatureOpacity(layerId, featureId, value, null, os.command.style.ColorChangeType.STROKE);
+      };
 
-      this.createFeatureCommand(fn);
-    } else {
-      var fn2 =
-        /**
-         * @param {string} layerId
-         * @param {string} featureId
-         * @return {os.command.ICommand}
-         */
-        function(layerId, featureId) {
-          return new os.command.FeatureOpacity(layerId, featureId, value, null,
-              os.command.style.ColorChangeType.STROKE);
-        };
-
-      this.createFeatureCommand(fn2);
-    }
+    this.createFeatureCommand(fn);
   }
 };
 
@@ -848,17 +826,19 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onOpacityChange = function(event, v
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.onFillOpacityChange = function(event, value) {
   event.stopPropagation();
 
-  var fn =
-      /**
-       * @param {string} layerId
-       * @param {string} featureId
-       * @return {os.command.ICommand}
-       */
-      function(layerId, featureId) {
-        return new os.command.FeatureOpacity(layerId, featureId, value, null, os.command.style.ColorChangeType.FILL);
-      };
+  if (value != null) {
+    var fn =
+        /**
+         * @param {string} layerId
+         * @param {string} featureId
+         * @return {os.command.ICommand}
+         */
+        function(layerId, featureId) {
+          return new os.command.FeatureOpacity(layerId, featureId, value, null, os.command.style.ColorChangeType.FILL);
+        };
 
-  this.createFeatureCommand(fn);
+    this.createFeatureCommand(fn);
+  }
 };
 
 

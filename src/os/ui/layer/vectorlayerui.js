@@ -481,14 +481,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.onValueChange = function(callback, event
   if (event.name == 'fillOpacity.slide') {
     this.scope['fillOpacity'] = value;
   } else {
-    if (this.scope['fillOpacity'] !== undefined && this.scope['opacity'] == this.scope['fillOpacity']) {
-      var color = os.color.toHexString(this.scope['color']);
-      var fillColor = os.color.toHexString(this.scope['fillColor']);
-      if (color == fillColor) {
-        this.scope['fillOpacity'] = value;
-      }
-    }
-
     this.scope['opacity'] = value;
   }
 };
@@ -497,7 +489,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onValueChange = function(callback, event
  * @inheritDoc
  */
 os.ui.layer.VectorLayerUICtrl.prototype.onSliderStop = function(callback, key, event, value) {
-  // If we are not dealing with opacity of fill opacity, let the parent handle this event
+  // If we are not dealing with opacity or fill opacity, let the parent handle this event
   if (event.name != 'opacity.slidestop' && event.name != 'fillOpacity.slidestop') {
     os.ui.layer.VectorLayerUICtrl.base(this, 'onSliderStop', callback, key, event, value);
     return;
@@ -505,42 +497,19 @@ os.ui.layer.VectorLayerUICtrl.prototype.onSliderStop = function(callback, key, e
 
   event.stopPropagation();
 
-  if (event.name == 'fillOpacity.slidestop') {
-    var fn =
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.VectorLayerOpacity(
-            layer.getId(), value, null, os.command.style.ColorChangeType.FILL);
-      };
+  var changeType = event.name == 'fillOpacity.slidestop' ?
+      os.command.style.ColorChangeType.FILL : os.command.style.ColorChangeType.STROKE;
 
-    this.createCommand(fn);
-  } else if (this.scope['fillOpacity'] !== undefined && this.scope['opacity'] == this.scope['fillOpacity']) {
-    var fn2 =
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {?os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.VectorLayerOpacity(layer.getId(), value);
-      };
+  var fn =
+    /**
+     * @param {os.layer.ILayer} layer
+     * @return {os.command.ICommand}
+     */
+    function(layer) {
+      return new os.command.VectorLayerOpacity(layer.getId(), value, null, changeType);
+    };
 
-    this.createCommand(fn2);
-  } else {
-    var fn3 =
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {?os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.VectorLayerOpacity(
-            layer.getId(), value, null, os.command.style.ColorChangeType.STROKE);
-      };
-
-    this.createCommand(fn3);
-  }
+  this.createCommand(fn);
 };
 
 
