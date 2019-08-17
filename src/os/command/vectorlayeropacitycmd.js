@@ -1,11 +1,10 @@
 goog.provide('os.command.VectorLayerOpacity');
 
 goog.require('os.command.AbstractVectorStyle');
-goog.require('os.data.OSDataManager');
+goog.require('os.command.style');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.metrics');
 goog.require('os.source.PropertyChange');
-goog.require('os.ui');
 
 
 
@@ -16,30 +15,35 @@ goog.require('os.ui');
  * @param {string} layerId
  * @param {number} opacity
  * @param {number|null=} opt_oldOpacity
- * @param {string=} opt_changeMode
+ * @param {os.command.style.ColorChangeType=} opt_changeMode
  * @constructor
  */
 os.command.VectorLayerOpacity = function(layerId, opacity, opt_oldOpacity, opt_changeMode) {
+  /**
+   * The opacity change mode. Determines how the config opacity is set.
+   * @type {os.command.style.ColorChangeType}
+   * @protected
+   */
+  this.changeMode = opt_changeMode || os.command.style.ColorChangeType.COMBINED;
+
   os.command.VectorLayerOpacity.base(this, 'constructor', layerId, opacity, opt_oldOpacity);
 
-  this.changeMode = opt_changeMode;
-
   switch (this.changeMode) {
-    case os.command.VectorLayerColor.MODE.FILL:
+    case os.command.style.ColorChangeType.FILL:
       this.title = 'Change Fill Opacity';
       this.metricKey = os.metrics.Layer.VECTOR_FILL_OPACITY;
-      this.defaultOpacity = os.command.VectorLayerOpacity.DEFAULT_FILL_OPACITY;
+      this.defaultOpacity = os.style.DEFAULT_FILL_ALPHA;
       break;
-    case os.command.VectorLayerColor.MODE.STROKE:
+    case os.command.style.ColorChangeType.STROKE:
       this.title = 'Change Opacity';
       this.metricKey = os.metrics.Layer.VECTOR_OPACITY;
-      this.defaultOpacity = os.command.VectorLayerOpacity.DEFAULT_OPACITY;
+      this.defaultOpacity = os.style.DEFAULT_ALPHA;
       break;
-    case os.command.VectorLayerColor.MODE.COMBINED:
+    case os.command.style.ColorChangeType.COMBINED:
     default:
       this.title = 'Change Opacity';
       this.metricKey = os.metrics.Layer.VECTOR_OPACITY;
-      this.defaultOpacity = os.command.VectorLayerOpacity.DEFAULT_OPACITY;
+      this.defaultOpacity = os.style.DEFAULT_ALPHA;
       break;
   }
 
@@ -58,32 +62,38 @@ goog.inherits(os.command.VectorLayerOpacity, os.command.AbstractVectorStyle);
 
 
 /**
- * @type {number}
- * @const
- */
-os.command.VectorLayerOpacity.DEFAULT_OPACITY = 1;
-
-
-/**
- * @type {number}
- * @const
- */
-os.command.VectorLayerOpacity.DEFAULT_FILL_OPACITY = 0;
-
-
-os.command.VectorLayerOpacity.MODE = {
-  COMBINED: 'combined',
-  FILL: 'fill',
-  STROKE: 'stroke'
-};
-
-
-/**
  * @inheritDoc
  */
 os.command.VectorLayerOpacity.prototype.getOldValue = function() {
   var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-  return config ? os.style.getConfigOpacityColor(config) : this.defaultOpacity;
+  var ret = this.defaultOpacity;
+
+  if (config) {
+    var color;
+    switch (this.changeMode) {
+      case os.command.style.ColorChangeType.FILL:
+        color = os.style.getConfigColor(config, true, os.style.StyleField.FILL);
+        if (color && color.length === 4) {
+          ret = color[3];
+        }
+        break;
+      case os.command.style.ColorChangeType.STROKE:
+        color = os.style.getConfigColor(config, true, os.style.StyleField.STROKE);
+        if (color && color.length === 4) {
+          ret = color[3];
+        }
+        break;
+      case os.command.style.ColorChangeType.COMBINED:
+      default:
+        color = os.style.getConfigColor(config, true);
+        if (color && color.length === 4) {
+          ret = color[3];
+        }
+        break;
+    }
+  }
+
+  return ret;
 };
 
 
@@ -95,7 +105,7 @@ os.command.VectorLayerOpacity.prototype.applyValue = function(config, value) {
   var colorString;
 
   switch (this.changeMode) {
-    case os.command.VectorLayerOpacity.MODE.FILL:
+    case os.command.style.ColorChangeType.FILL:
       color = os.style.getConfigColor(config, true, os.style.StyleField.FILL);
       color[3] = value;
       colorString = os.style.toRgbaString(color);
@@ -111,7 +121,7 @@ os.command.VectorLayerOpacity.prototype.applyValue = function(config, value) {
       }
 
       break;
-    case os.command.VectorLayerOpacity.MODE.STROKE:
+    case os.command.style.ColorChangeType.STROKE:
       color = os.style.getConfigColor(config, true, os.style.StyleField.STROKE);
       color[3] = value;
       colorString = os.style.toRgbaString(color);
@@ -125,7 +135,7 @@ os.command.VectorLayerOpacity.prototype.applyValue = function(config, value) {
       os.ui.adjustIconSet(this.layerId, color);
 
       break;
-    case os.command.VectorLayerOpacity.MODE.COMBINED:
+    case os.command.style.ColorChangeType.COMBINED:
     default:
       color = os.style.getConfigColor(config, true);
       color[3] = value;

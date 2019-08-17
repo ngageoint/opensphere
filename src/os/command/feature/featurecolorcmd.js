@@ -1,8 +1,10 @@
 goog.provide('os.command.FeatureColor');
 
 goog.require('os.command.AbstractFeatureStyle');
+goog.require('os.command.style');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.metrics');
+goog.require('os.style');
 
 
 
@@ -14,26 +16,31 @@ goog.require('os.metrics');
  * @param {string} featureId
  * @param {Array<number>|string} color
  * @param {(Array<number>|string|null)=} opt_oldColor
- * @param {string=} opt_changeMode
+ * @param {os.command.style.ColorChangeType=} opt_changeMode
  * @constructor
  */
 os.command.FeatureColor = function(layerId, featureId, color, opt_oldColor, opt_changeMode) {
-  this.changeMode = opt_changeMode;
+  /**
+   * The color change mode. Determines how the config color is set.
+   * @type {os.command.style.ColorChangeType}
+   * @protected
+   */
+  this.changeMode = opt_changeMode || os.command.style.ColorChangeType.COMBINED;
 
   os.command.FeatureColor.base(this, 'constructor', layerId, featureId, color, opt_oldColor);
 
   switch (this.changeMode) {
-    case os.command.FeatureColor.MODE.FILL:
+    case os.command.style.ColorChangeType.FILL:
       this.title = 'Change Feature Fill Color';
       this.metricKey = os.metrics.Layer.FEATURE_FILL_COLOR;
       this.defaultColor = os.command.FeatureColor.DEFAULT_FILL_COLOR;
       break;
-    case os.command.FeatureColor.MODE.STROKE:
+    case os.command.style.ColorChangeType.STROKE:
       this.title = 'Change Feature Color';
       this.metricKey = os.metrics.Layer.FEATURE_COLOR;
       this.defaultColor = os.command.FeatureColor.DEFAULT_COLOR;
       break;
-    case os.command.FeatureColor.MODE.COMBINED:
+    case os.command.style.ColorChangeType.COMBINED:
     default:
       this.title = 'Change Feature Color';
       this.metricKey = os.metrics.Layer.FEATURE_COLOR;
@@ -76,13 +83,6 @@ os.command.FeatureColor.DEFAULT_COLOR = 'rgba(255,255,255,1)';
 os.command.FeatureColor.DEFAULT_FILL_COLOR = 'rgba(255,255,255,0)';
 
 
-os.command.FeatureColor.MODE = {
-  COMBINED: 'combined',
-  FILL: 'fill',
-  STROKE: 'stroke'
-};
-
-
 /**
  * @inheritDoc
  */
@@ -97,13 +97,13 @@ os.command.FeatureColor.prototype.getOldValue = function() {
 
   if (config) {
     switch (this.changeMode) {
-      case os.command.FeatureColor.MODE.FILL:
+      case os.command.style.ColorChangeType.FILL:
         ret = os.style.getConfigColor(config, false, os.style.StyleField.FILL);
         break;
-      case os.command.FeatureColor.MODE.STROKE:
+      case os.command.style.ColorChangeType.STROKE:
         ret = os.style.getConfigColor(config, false, os.style.StyleField.STROKE);
         break;
-      case os.command.FeatureColor.MODE.COMBINED:
+      case os.command.style.ColorChangeType.COMBINED:
       default:
         ret = os.style.getConfigColor(config);
         break;
@@ -133,12 +133,12 @@ os.command.FeatureColor.prototype.applyValue = function(configs, value) {
   var color = os.style.toRgbaString(/** @type {string} */ (value));
 
   switch (this.changeMode) {
-    case os.command.FeatureColor.MODE.FILL:
+    case os.command.style.ColorChangeType.FILL:
       for (var i = 0; i < configs.length; i++) {
         os.style.setFillColor(configs[i], color);
       }
       break;
-    case os.command.FeatureColor.MODE.STROKE:
+    case os.command.style.ColorChangeType.STROKE:
       for (var i = 0; i < configs.length; i++) {
         var fillColor = os.style.getConfigColor(configs[i], true, os.style.StyleField.FILL);
 
@@ -153,7 +153,7 @@ os.command.FeatureColor.prototype.applyValue = function(configs, value) {
         this.applyLabelValue(configs, value);
       }
       break;
-    case os.command.FeatureColor.MODE.COMBINED:
+    case os.command.style.ColorChangeType.COMBINED:
     default:
       for (var i = 0; i < configs.length; i++) {
         os.style.setConfigColor(configs[i], color);
