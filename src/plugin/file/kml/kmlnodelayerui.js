@@ -133,14 +133,9 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getProperties = function() {
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.initUI = function() {
   plugin.file.kml.KMLNodeLayerUICtrl.base(this, 'initUI');
 
-  if (this.scope) {
-    if (this.isFeatureFillable()) {
-      this.scope['fillColor'] = this.getFillColor();
-      this.scope['fillOpacity'] = this.getFillOpacity();
-    } else {
-      delete this.scope['fillColor'];
-      delete this.scope['fillOpacity'];
-    }
+  if (this.scope && !this.isFeatureFillable()) {
+    delete this.scope['fillColor'];
+    delete this.scope['fillOpacity'];
   }
 };
 
@@ -193,8 +188,6 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getFillColor = function() {
           }
 
           var color = os.style.getConfigColor(config, false, os.style.StyleField.FILL);
-          color = color || os.style.DEFAULT_LAYER_COLOR;
-
           if (color) {
             return os.color.toHexString(color);
           }
@@ -212,7 +205,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getFillColor = function() {
  */
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.getFillOpacity = function() {
   var items = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (this.scope['items']);
-  var opacity = os.style.DEFAULT_ALPHA;
+  var opacity = os.style.DEFAULT_FILL_ALPHA;
 
   if (items) {
     for (var i = 0, n = items.length; i < n; i++) {

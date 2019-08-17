@@ -27,6 +27,7 @@ os.command.FeatureColor = function(layerId, featureId, color, opt_oldColor, opt_
    */
   this.changeMode = opt_changeMode || os.command.style.ColorChangeType.COMBINED;
 
+  // intentionally called after changeMode is set so getOldValue has the correct value
   os.command.FeatureColor.base(this, 'constructor', layerId, featureId, color, opt_oldColor);
 
   switch (this.changeMode) {
