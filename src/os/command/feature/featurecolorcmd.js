@@ -151,7 +151,7 @@ os.command.FeatureColor.prototype.applyValue = function(configs, value) {
       }
 
       if (this.oldValue == this.getLabelValue()) {
-        this.applyLabelValue(configs, value);
+        this.applyLabelValue(configs, color);
       }
       break;
     case os.command.style.ColorChangeType.COMBINED:
@@ -161,7 +161,7 @@ os.command.FeatureColor.prototype.applyValue = function(configs, value) {
       }
 
       if (this.oldValue == this.getLabelValue()) {
-        this.applyLabelValue(configs, value);
+        this.applyLabelValue(configs, color);
       }
       break;
   }

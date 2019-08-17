@@ -1,8 +1,8 @@
 goog.provide('os.ui.color.ColorPickerCtrl');
 goog.provide('os.ui.color.colorPickerDirective');
-goog.require('goog.color');
-goog.require('goog.color.alpha');
+
 goog.require('goog.events.EventType');
+goog.require('os.color');
 goog.require('os.ui.Module');
 goog.require('os.ui.color.ColorPaletteCtrl');
 goog.require('os.ui.color.colorPaletteDirective');
@@ -100,10 +100,10 @@ os.ui.color.ColorPickerCtrl = function($scope, $element, $compile) {
   this['showPopup'] = false;
 
   // the control's color value should be undefined when the picker is set to the default color
-  var color = /** @type {string} */ (this.scope['color']) || undefined;
-  if (color && color.indexOf('#') !== 0) {
-    // if color was set to something other than a hex string (rgb() or rgba()), then fix it
-    color = (color.indexOf('a(') > -1 ? goog.color.alpha.parse(color) : goog.color.parse(color)).hex.substring(0, 7);
+  var color = /** @type {Array<number>|string} */ (this.scope['color']) || undefined;
+  if (color) {
+    // ensure the color is a hex string
+    color = os.color.toHexString(color);
   }
 
   this.scope['color'] = color;
