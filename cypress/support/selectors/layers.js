@@ -268,7 +268,7 @@ exports.filtersTab = {
 exports.placesTab = {
   TAB: '.nav-link:eq(3)',
   ADD_FOLDER_BUTTON: '[ng-click=\'places.addFolder()\']',
-  ADD_PLACE_BUTTON: '[ng-click=\'places.addPlace()\']',
+  ADD_PLACE_BUTTON: '[ng-click=\'ctrl.addPlace()\']',
   EXPAND_ALL_BUTTON: '[title=\'Fully expand the tree from the selected item, or the root if nothing is selected\']',
   COLLAPSE_ALL_BUTTON: '[title=\'Fully collapse the tree from the selected item, or the root if ' +
   'nothing is selected\']',
