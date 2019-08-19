@@ -48,6 +48,10 @@ os.command.FeatureOpacity = function(layerId, featureId, opacity, opt_oldOpacity
       this.metricKey = os.metrics.Layer.FEATURE_OPACITY;
       break;
   }
+
+  if (this.value == null) {
+    this.value = os.style.DEFAULT_FILL_ALPHA;
+  }
 };
 goog.inherits(os.command.FeatureOpacity, os.command.AbstractFeatureStyle);
 
@@ -91,7 +95,6 @@ os.command.FeatureOpacity.prototype.getOldValue = function() {
  */
 os.command.FeatureOpacity.prototype.applyValue = function(configs, value) {
   var color;
-  var colorValue;
   var i;
 
   switch (this.changeMode) {
@@ -102,8 +105,7 @@ os.command.FeatureOpacity.prototype.applyValue = function(configs, value) {
 
         if (color) {
           color[3] = value;
-          colorValue = os.style.toRgbaString(color);
-          os.style.setFillColor(configs[i], colorValue);
+          os.style.setFillColor(configs[i], os.style.toRgbaString(color));
         }
       }
       break;
@@ -113,11 +115,12 @@ os.command.FeatureOpacity.prototype.applyValue = function(configs, value) {
             os.style.getConfigColor(configs[i], true);
 
         if (color) {
-          var fillColor = os.style.getConfigColor(configs[i], true, os.style.StyleField.FILL);
+          var fillColor = os.style.getConfigColor(configs[i], false, os.style.StyleField.FILL);
 
           color[3] = value;
-          colorValue = os.style.toRgbaString(color);
-          os.style.setConfigColor(configs[i], colorValue);
+
+          var colorStr = os.style.toRgbaString(color);
+          os.style.setConfigColor(configs[i], colorStr);
 
           // preserve the original fill color when changing the stroke
           if (fillColor) {
@@ -125,6 +128,7 @@ os.command.FeatureOpacity.prototype.applyValue = function(configs, value) {
           }
         }
       }
+      this.updateLabelOpacity(configs, value);
       break;
     case os.command.style.ColorChangeType.COMBINED:
     default:
@@ -133,14 +137,40 @@ os.command.FeatureOpacity.prototype.applyValue = function(configs, value) {
 
         if (color) {
           color[3] = value;
-          colorValue = os.style.toRgbaString(color);
-          os.style.setConfigColor(configs[i], colorValue);
+
+          var colorStr = os.style.toRgbaString(color);
+          os.style.setConfigColor(configs[i], colorStr);
         }
       }
+      this.updateLabelOpacity(configs, value);
       break;
   }
 
   os.command.FeatureOpacity.base(this, 'applyValue', configs, value);
+};
+
+
+/**
+ * Set the label color
+ *
+ * @param {Object} configs The style config
+ * @param {number} value The opacity value.
+ */
+os.command.FeatureOpacity.prototype.updateLabelOpacity = function(configs, value) {
+  var feature = /** @type {ol.Feature} */ (this.getFeature());
+  if (feature) {
+    var labelColor = /** @type {Array<number>|string|undefined} */ (feature.get(os.style.StyleField.LABEL_COLOR)) ||
+        os.style.DEFAULT_LAYER_COLOR;
+    labelColor = os.color.toRgbArray(labelColor);
+    labelColor[3] = value;
+
+    var labelColorStr = os.style.toRgbaString(labelColor);
+    feature.set(os.style.StyleField.LABEL_COLOR, labelColorStr);
+
+    for (var i = 0; i < configs.length; i++) {
+      configs[i][os.style.StyleField.LABEL_COLOR] = labelColorStr;
+    }
+  }
 };
 
 

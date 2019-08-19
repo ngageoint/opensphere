@@ -34,18 +34,18 @@ os.command.FeatureColor = function(layerId, featureId, color, opt_oldColor, opt_
     case os.command.style.ColorChangeType.FILL:
       this.title = 'Change Feature Fill Color';
       this.metricKey = os.metrics.Layer.FEATURE_FILL_COLOR;
-      this.defaultColor = os.command.FeatureColor.DEFAULT_FILL_COLOR;
+      this.defaultColor = os.style.DEFAULT_FILL_COLOR;
       break;
     case os.command.style.ColorChangeType.STROKE:
       this.title = 'Change Feature Color';
       this.metricKey = os.metrics.Layer.FEATURE_COLOR;
-      this.defaultColor = os.command.FeatureColor.DEFAULT_COLOR;
+      this.defaultColor = os.style.DEFAULT_LAYER_COLOR;
       break;
     case os.command.style.ColorChangeType.COMBINED:
     default:
       this.title = 'Change Feature Color';
       this.metricKey = os.metrics.Layer.FEATURE_COLOR;
-      this.defaultColor = os.command.FeatureColor.DEFAULT_COLOR;
+      this.defaultColor = os.style.DEFAULT_LAYER_COLOR;
       break;
   }
 
@@ -54,7 +54,7 @@ os.command.FeatureColor = function(layerId, featureId, color, opt_oldColor, opt_
     var config = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
 
     if (config) {
-      if (goog.isArray(config)) {
+      if (Array.isArray(config)) {
         config = config[0];
       }
       var configColor = /** @type {Array<number>|string|undefined} */ (os.style.getConfigColor(config));
@@ -71,26 +71,12 @@ goog.inherits(os.command.FeatureColor, os.command.AbstractFeatureStyle);
 
 
 /**
- * @type {string}
- * @const
- */
-os.command.FeatureColor.DEFAULT_COLOR = 'rgba(255,255,255,1)';
-
-
-/**
- * @type {string}
- * @const
- */
-os.command.FeatureColor.DEFAULT_FILL_COLOR = 'rgba(255,255,255,0)';
-
-
-/**
  * @inheritDoc
  */
 os.command.FeatureColor.prototype.getOldValue = function() {
   var feature = /** @type {ol.Feature} */ (this.getFeature());
   var config = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
-  if (goog.isArray(config)) {
+  if (Array.isArray(config)) {
     config = config[0];
   }
 
@@ -135,7 +121,8 @@ os.command.FeatureColor.prototype.applyValue = function(configs, value) {
 
   // ignore opacity when comparing the label color to the current color
   var labelColor = os.color.toHexString(this.getLabelValue());
-  var currentColor = os.color.toHexString(this.state === os.command.State.EXECUTING ? this.oldValue : this.value);
+  var currentColor = this.state === os.command.State.EXECUTING ? this.oldValue : this.value;
+  var currentHexColor = currentColor ? os.color.toHexString(currentColor) : null;
 
   switch (this.changeMode) {
     case os.command.style.ColorChangeType.FILL:
@@ -145,17 +132,18 @@ os.command.FeatureColor.prototype.applyValue = function(configs, value) {
       break;
     case os.command.style.ColorChangeType.STROKE:
       for (var i = 0; i < configs.length; i++) {
-        var fillColor = os.style.getConfigColor(configs[i], true, os.style.StyleField.FILL);
+        var fillColor = os.style.getConfigColor(configs[i], false, os.style.StyleField.FILL);
 
         os.style.setConfigColor(configs[i], color);
 
+        // preserve the original fill color when changing the stroke
         if (fillColor) {
-          os.style.setFillColor(configs[i], fillColor);
+          os.style.setFillColor(configs[i], os.style.toRgbaString(fillColor));
         }
       }
 
       // if the label color matches the style color, change it as well
-      if (labelColor == currentColor) {
+      if (labelColor == currentHexColor) {
         this.applyLabelValue(configs, color);
       }
       break;
@@ -166,7 +154,7 @@ os.command.FeatureColor.prototype.applyValue = function(configs, value) {
       }
 
       // if the label color matches the style color, change it as well
-      if (labelColor == currentColor) {
+      if (labelColor == currentHexColor) {
         this.applyLabelValue(configs, color);
       }
       break;
