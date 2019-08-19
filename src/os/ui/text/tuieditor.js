@@ -94,9 +94,9 @@ os.ui.text.TuiEditorCtrl = function($scope, $element, $timeout) {
 
   /**
    * @type {?angular.JQLite}
-   * @private
+   * @protected
    */
-  this.element_ = $element;
+  this.element = $element;
 
   /**
    * @type {?angular.$timeout}
@@ -128,13 +128,29 @@ os.ui.text.TuiEditorCtrl = function($scope, $element, $timeout) {
   this['textAreaBackup'] = false;
 
   /**
+   * The intial mode of the editor
+   * @type {string}
+   */
+  this.initialEditType =
+    /** @type {string} */ (os.settings.get(os.ui.text.TuiEditor.MODE_KEY, os.ui.text.TuiEditor.Mode.WYSIWYG));
+
+  /**
    * @type {string}
    */
   this['text'] = $scope['text'] || '';
   $scope['edit'] = ($scope['edit'] === undefined) ? false : $scope['edit'];
 
-  this.element_.on('keydown', this.onKeyboardEvent_);
-  this.element_.on('keypress', this.onKeyboardEvent_);
+  /**
+   * The intial text of the editor
+   * @type {string}
+   * @private
+   */
+  this.initialText_ = this['text'];
+
+  this.element.on('keydown', this.onKeyboardEvent_);
+  this.element.on('keypress', this.onKeyboardEvent_);
+
+  os.dispatcher.listen('tuieditor.refresh', this.fixCodemirrorInit_, false, this);
 
   $scope.$watch('text', this.onScopeChange_.bind(this));
   $scope.$watch('edit', this.switchModes_.bind(this));
@@ -151,9 +167,12 @@ os.ui.text.TuiEditorCtrl.prototype.destroy = function() {
     this['tuiEditor'] = null;
   }
 
-  this.element_.off('keydown');
-  this.element_.off('keypress');
-  this.element_ = null;
+  if (this.element) {
+    this.element.off('keydown');
+    this.element.off('keypress');
+    this.element = null;
+  }
+
   this.timeout_ = null;
   this.scope = null;
 };
@@ -242,14 +261,14 @@ os.ui.text.TuiEditorCtrl.prototype.getWordCount = function() {
  */
 os.ui.text.TuiEditorCtrl.prototype.getOptions = function() {
   var options = {
-    'el': this.element_.find('.js-tui-editor__editor')[0],
+    'el': this.element.find('.js-tui-editor__editor')[0],
     'height': 'auto',
     'min-height': '10rem',
     'linkAttribute': {
       'target': 'blank'
     },
     'initialValue': this['text'],
-    'initialEditType': os.settings.get(os.ui.text.TuiEditor.MODE_KEY, os.ui.text.TuiEditor.Mode.WYSIWYG),
+    'initialEditType': this.initialEditType,
     'toolbarItems': this.getToolbar(),
     'events': {
       'change': this.onEditorChange_.bind(this)
@@ -350,7 +369,8 @@ os.ui.text.TuiEditorCtrl.prototype.onScopeChange_ = function() {
  * @private
  */
 os.ui.text.TuiEditorCtrl.prototype.onEditorChange_ = function() {
-  if (this.scope && this.scope['tuiEditorForm'] && this['tuiEditor'].getValue()) {
+  if (this.scope && this.scope['tuiEditorForm'] && this['tuiEditor'].getValue() &&
+  this['tuiEditor'].getValue() !== this.initialText_) {
     this.scope['tuiEditorForm'].$setDirty();
   }
 
@@ -431,8 +451,8 @@ os.ui.text.TuiEditorCtrl.prototype.getToolbar = function() {
  * Temporary until option is added to tui-editor viewer mode (commented on issue #527)
  */
 os.ui.text.TuiEditorCtrl.prototype.setTargetBlankPropertyInLinks = function() {
-  if (this.element_ && this.element_.find('.js-tui-editor__viewer')) {
-    var links = this.element_.find('.js-tui-editor__viewer a');
+  if (this.element && this.element.find('.js-tui-editor__viewer')) {
+    var links = this.element.find('.js-tui-editor__viewer a');
     if (links.length) {
       links.prop('target', '_blank');
     }
@@ -448,9 +468,9 @@ os.ui.text.TuiEditorCtrl.prototype.setTargetBlankPropertyInLinks = function() {
  * @private
  */
 os.ui.text.TuiEditorCtrl.prototype.fixCodemirrorInit_ = function() {
-  if (this.element_) {
+  if (this.element) {
     this.cmFixAttempt_ = this.cmFixAttempt_ ? this.cmFixAttempt_ + 1 : 1;
-    var codeMirror = this.element_.find('.te-md-container .CodeMirror');
+    var codeMirror = this.element.find('.te-md-container .CodeMirror');
     if (this['tuiEditor'] && codeMirror.length) {
       this.timeout_(function() {
         this['tuiEditor'].mdEditor.cm.refresh();
@@ -484,3 +504,9 @@ os.ui.text.TuiEditor.getUnformatedText = function(opt_markdown) {
     return '';
   }
 };
+
+
+/**
+ * Add custom event types to eventManager and listen to them
+ */
+os.ui.text.TuiEditorCtrl.prototype.addEventTypes = goog.nullFunction;
