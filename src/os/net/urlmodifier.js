@@ -7,11 +7,12 @@ goog.require('os.net.AbstractModifier');
 /**
  * URI parameter replacement modifier.
  *
+ * @param {string=} opt_id
  * @extends {os.net.AbstractModifier}
  * @constructor
  */
-os.net.URLModifier = function() {
-  os.net.URLModifier.base(this, 'constructor', 'urlReplace', -110);
+os.net.URLModifier = function(opt_id) {
+  os.net.URLModifier.base(this, 'constructor', opt_id || 'urlReplace', -110);
 };
 goog.inherits(os.net.URLModifier, os.net.AbstractModifier);
 
@@ -41,10 +42,19 @@ os.net.URLModifier.configure = function(options) {
 
 
 /**
+ * Return the list of url modifiers
+ * @return {!Array<{search: RegExp, replace: string}>}
+ */
+os.net.URLModifier.prototype.getList = function() {
+  return os.net.URLModifier.replace_;
+};
+
+
+/**
  * @inheritDoc
  */
 os.net.URLModifier.prototype.modify = function(uri) {
-  var list = os.net.URLModifier.replace_;
+  var list = this.getList();
   if (!list.length) {
     return;
   }
@@ -74,13 +84,22 @@ os.net.URLModifier.prototype.modify = function(uri) {
     }
   }
 
-  var u = new goog.Uri(url + (keys.length ? '?' + qd.toString() : '') + (fragment ? '#' + fragment : ''));
-  if (u.toString() !== uri.toString()) {
-    uri.setScheme(u.getScheme());
-    uri.setDomain(u.getDomain());
-    uri.setPort(u.getPort());
-    uri.setPath(u.getPath());
-    uri.setQuery(u.getQuery());
-    uri.setFragment(u.getFragment());
+  var modifiedUri = new goog.Uri(url + (keys.length ? '?' + qd.toString() : '') + (fragment ? '#' + fragment : ''));
+  if (modifiedUri.toString() !== uri.toString()) {
+    this.applyModifications(uri, modifiedUri);
   }
+};
+
+
+/**
+ * @param {goog.Uri} uri
+ * @param {goog.Uri} modifiedUri
+ */
+os.net.URLModifier.prototype.applyModifications = function(uri, modifiedUri) {
+  uri.setScheme(modifiedUri.getScheme());
+  uri.setDomain(modifiedUri.getDomain());
+  uri.setPort(modifiedUri.getPort());
+  uri.setPath(modifiedUri.getPath());
+  uri.setQuery(modifiedUri.getQuery());
+  uri.setFragment(modifiedUri.getFragment());
 };

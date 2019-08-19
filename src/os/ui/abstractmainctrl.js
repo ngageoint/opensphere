@@ -16,7 +16,6 @@ goog.require('os.metrics.Metrics');
 goog.require('os.net');
 goog.require('os.net.CertNazi');
 goog.require('os.net.ProxyHandler');
-goog.require('os.net.URLModifier');
 goog.require('os.plugin.PluginManager');
 goog.require('os.ui');
 goog.require('os.ui.alert.alertPopupDirective');
@@ -236,9 +235,6 @@ os.ui.AbstractMainCtrl.prototype.initialize = function() {
 
   // set up the proxy the new way
   os.net.ProxyHandler.configure(/** @type {?Object} */ (os.settings.get(['proxy'])));
-
-  // set up URL replacements
-  os.net.URLModifier.configure(/** @type {Object<string, string>} */ (os.settings.get('urlReplace')));
 
   // set if mixed content should be enabled
   os.net.ExtDomainHandler.MIXED_CONTENT_ENABLED = /** @type {boolean} */ (os.settings.get('mixedContent', false));
