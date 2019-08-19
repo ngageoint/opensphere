@@ -118,7 +118,7 @@ os.command.FeatureColor.prototype.getOldValue = function() {
 /**
  * Gets the old label color
  *
- * @return {Array<number>|string|undefined}
+ * @return {Array<number>|string}
  */
 os.command.FeatureColor.prototype.getLabelValue = function() {
   var feature = /** @type {ol.Feature} */ (this.getFeature());
@@ -132,6 +132,10 @@ os.command.FeatureColor.prototype.getLabelValue = function() {
  */
 os.command.FeatureColor.prototype.applyValue = function(configs, value) {
   var color = os.style.toRgbaString(/** @type {string} */ (value));
+
+  // ignore opacity when comparing the label color to the current color
+  var labelColor = os.color.toHexString(this.getLabelValue());
+  var currentColor = os.color.toHexString(this.state === os.command.State.EXECUTING ? this.oldValue : this.value);
 
   switch (this.changeMode) {
     case os.command.style.ColorChangeType.FILL:
@@ -151,8 +155,7 @@ os.command.FeatureColor.prototype.applyValue = function(configs, value) {
       }
 
       // if the label color matches the style color, change it as well
-      if ((this.state === os.command.State.EXECUTING && this.oldValue == this.getLabelValue()) ||
-          (this.state === os.command.State.REVERTING && this.value == this.getLabelValue())) {
+      if (labelColor == currentColor) {
         this.applyLabelValue(configs, color);
       }
       break;
@@ -163,8 +166,7 @@ os.command.FeatureColor.prototype.applyValue = function(configs, value) {
       }
 
       // if the label color matches the style color, change it as well
-      if ((this.state === os.command.State.EXECUTING && this.oldValue == this.getLabelValue()) ||
-          (this.state === os.command.State.REVERTING && this.value == this.getLabelValue())) {
+      if (labelColor == currentColor) {
         this.applyLabelValue(configs, color);
       }
       break;

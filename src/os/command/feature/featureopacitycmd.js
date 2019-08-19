@@ -113,11 +113,13 @@ os.command.FeatureOpacity.prototype.applyValue = function(configs, value) {
             os.style.getConfigColor(configs[i], true);
 
         if (color) {
+          var fillColor = os.style.getConfigColor(configs[i], true, os.style.StyleField.FILL);
+
           color[3] = value;
           colorValue = os.style.toRgbaString(color);
           os.style.setConfigColor(configs[i], colorValue);
 
-          var fillColor = os.style.getConfigColor(configs[i], true, os.style.StyleField.FILL);
+          // preserve the original fill color when changing the stroke
           if (fillColor) {
             os.style.setFillColor(configs[i], fillColor);
           }
