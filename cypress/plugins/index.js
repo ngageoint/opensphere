@@ -12,7 +12,7 @@
 // the project's config changing)
 
 var addMatchImageSnapshotPlugin = require('cypress-image-snapshot/plugin').addMatchImageSnapshotPlugin;
-os = require('os');
+var os = require('os');
 
 /** This is a description of the foo function.
  *
