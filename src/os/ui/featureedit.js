@@ -1532,11 +1532,6 @@ os.ui.FeatureEditCtrl.prototype.onLabelColorReset = function(event) {
 os.ui.FeatureEditCtrl.prototype.onOpacityValueChange = function(event, value) {
   event.stopPropagation();
 
-  // If we have a fill opacity and it is already the same as the stroke opacity, keep them the same
-  if (this['fillOpacity'] !== undefined && this['opacity'] == this['fillOpacity']) {
-    this['fillOpacity'] = value;
-  }
-
   this['opacity'] = value;
 };
 
