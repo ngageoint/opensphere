@@ -153,13 +153,14 @@ describe('os.net.Request', function() {
     m2.setId('mock2');
     m2.setPriority(2);
 
+    var startCount = r.modifiers_.length;
+
     r.addModifier(m);
     r.addModifier(m2);
 
     r.removeModifier(m2);
 
-    // there's a VariableReplacer modifier and a URL modifier added by default, so 3
-    expect(r.modifiers_.length).toBe(3);
+    expect(r.modifiers_.length).toBe(startCount + 1);
     expect(r.modifiers_).toContain(m);
   });
 
