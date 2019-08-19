@@ -643,13 +643,13 @@ os.style.setConfigColor = function(config, color, opt_includeStyleFields) {
  * Colors are always set as an rgba string to minimize conversion both in opensphere style functions and OL3 rendering functions.
  *
  * @param {Object} config
- * @param {Array<number>|string|null} color
+ * @param {Array<number>|string|null|undefined} color
  */
 os.style.setFillColor = function(config, color) {
   if (config) {
     if (!color) {
       // no fill
-      config['fill'] = null;
+      config['fill'] = color;
     } else if (!config['fill']) {
       // adding fill
       config['fill'] = {
