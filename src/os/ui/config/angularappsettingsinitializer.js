@@ -1,6 +1,8 @@
 goog.provide('os.ui.config.AngularAppSettingsInitializer');
 goog.require('os.config.AbstractSettingsInitializer');
 goog.require('os.config.ThemeSettings');
+goog.require('os.net.BaseServerModifier');
+goog.require('os.net.URLModifier');
 
 
 
@@ -45,6 +47,14 @@ os.ui.config.AngularAppSettingsInitializer.prototype.isBrowserSupported = functi
  * @inheritDoc
  */
 os.ui.config.AngularAppSettingsInitializer.prototype.onSettingsLoaded = function() {
+  // set up URL replacements
+  os.net.URLModifier.configure(/** @type {Object<string, string>} */ (os.settings.get('urlReplace')));
+
+  // This allows us to modify all non-application requests to a different base server
+  if (os.settings.get('baseUrl')) {
+    os.net.BaseServerModifier.configure(/** @type {string} */ (os.settings.get('baseUrl')));
+  }
+
   // Wait for the theme to be set before bootstrapping angular
   os.config.ThemeSettings.setTheme().then(function() {
     // Theme loaded - bootstrap Angular.
