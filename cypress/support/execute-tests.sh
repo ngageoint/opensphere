@@ -131,7 +131,7 @@ function overrideSettings() {
 
 function startWebServer() {
   if [ "$OSTYPE" == "msys" ]; then
-    webServerProcess="$(netstat -ano | findstr 0.0.0.0:8282 | awk '{print $5}')"
+    webServerProcess="$(netstat -ano | findstr 0.0.0.0:8282 | awk '{print $5}')" # TODO: Use a process name instead after this is fixed: https://github.com/http-party/http-server/issues/333
   else
     webServerProcess=$(ps -ef | grep http-server | grep -v grep)
   fi
@@ -198,7 +198,7 @@ function stopWebServer() {
   if $SERVER_STARTED; then
     echo 'INFO: terminating web server'
     if [ "$OSTYPE" == "msys" ]; then
-      webServerProcess="$(netstat -ano | findstr 0.0.0.0:8282 | awk '{print $5}')"
+      webServerProcess="$(netstat -ano | findstr 0.0.0.0:8282 | awk '{print $5}')" # TODO: Use a process name instead after this is fixed: https://github.com/http-party/http-server/issues/333
       taskkill //PID $webServerProcess //F
     else
       npm run stop-server
