@@ -150,7 +150,9 @@ os.command.FeatureColor.prototype.applyValue = function(configs, value) {
         }
       }
 
-      if (this.oldValue == this.getLabelValue()) {
+      // if the label color matches the style color, change it as well
+      if ((this.state === os.command.State.EXECUTING && this.oldValue == this.getLabelValue()) ||
+          (this.state === os.command.State.REVERTING && this.value == this.getLabelValue())) {
         this.applyLabelValue(configs, color);
       }
       break;
@@ -160,7 +162,9 @@ os.command.FeatureColor.prototype.applyValue = function(configs, value) {
         os.style.setConfigColor(configs[i], color);
       }
 
-      if (this.oldValue == this.getLabelValue()) {
+      // if the label color matches the style color, change it as well
+      if ((this.state === os.command.State.EXECUTING && this.oldValue == this.getLabelValue()) ||
+          (this.state === os.command.State.REVERTING && this.value == this.getLabelValue())) {
         this.applyLabelValue(configs, color);
       }
       break;
