@@ -381,7 +381,14 @@ plugin.places.addPlace = function(options) {
 
   feature.set(os.style.StyleType.FEATURE, [styleConfig]);
   feature.set(os.style.StyleField.SHAPE, options.shape || os.style.ShapeType.POINT);
-  feature.set(os.style.StyleField.SHOW_LABELS, !!styleConfig && !!styleConfig['labels']);
+
+  if (styleConfig && styleConfig[os.style.StyleField.LABELS]) {
+    os.feature.showLabel(feature);
+    os.ui.FeatureEditCtrl.persistFeatureLabels(feature);
+  } else {
+    os.feature.hideLabel(feature);
+  }
+
   os.style.setFeatureStyle(feature);
 
   return parent ? plugin.file.kml.ui.updatePlacemark({
