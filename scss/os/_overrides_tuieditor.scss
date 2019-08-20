@@ -375,6 +375,19 @@
       display: flex;
       justify-content: center;
 
+      &.c-tui-editor__custom-button {
+        padding: 0 .5rem;
+        width: auto;
+      }
+
+      &.c-tui-editor__disabled-button {
+        background: inherit !important;
+        border-color: transparent !important;
+        cursor: default !important;
+        opacity: .5;
+        text-shadow: inherit;
+      }
+
       &.active,
       &:active,
       &:hover {

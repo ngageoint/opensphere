@@ -305,10 +305,15 @@ os.data.xf.DataModel.prototype.getBottomRecord = function(id) {
  */
 os.data.xf.DataModel.prototype.isDimensionValueEmptyAll = function(id, emptyIdentifier) {
   if (!this.isDisposed() && this.hasDimension(id)) {
-    var groupResults = /** @type {Array.<crossfilter.GroupKV>} */ (this.dimensions[id].group().all());
+    var group = this.dimensions[id].group();
+    var groupResults = /** @type {Array.<crossfilter.GroupKV>} */ (group.all());
     var isEmpty = groupResults != null &&
                   groupResults.length == 1 &&
                   groupResults[0].key === emptyIdentifier;
+
+    // dispose the group
+    group.dispose();
+
     return isEmpty;
   }
   return null;
@@ -324,7 +329,8 @@ os.data.xf.DataModel.prototype.isDimensionValueEmptyAll = function(id, emptyIden
  */
 os.data.xf.DataModel.prototype.isDimensionValueEmptyAny = function(id, emptyIdentifier) {
   if (!this.isDisposed() && this.hasDimension(id)) {
-    var groupResults = /** @type {Array.<crossfilter.GroupKV>} */ (this.dimensions[id].group().all());
+    var group = this.dimensions[id].group();
+    var groupResults = /** @type {Array.<crossfilter.GroupKV>} */ (group.all());
     var hasEmpty = false;
 
     for (var i = 0; i < groupResults.length; i++) {
@@ -333,6 +339,9 @@ os.data.xf.DataModel.prototype.isDimensionValueEmptyAny = function(id, emptyIden
         break;
       }
     }
+
+    // dispose the group
+    group.dispose();
 
     return hasEmpty;
   }
@@ -348,9 +357,15 @@ os.data.xf.DataModel.prototype.isDimensionValueEmptyAny = function(id, emptyIden
  */
 os.data.xf.DataModel.prototype.getDimensionKeys = function(id) {
   if (!this.isDisposed() && this.hasDimension(id)) {
-    return this.dimensions[id].group().all().map(function(v) {
+    var group = this.dimensions[id].group();
+    var keys = group.all().map(function(v) {
       return v.key;
     });
+
+    // dispose the group
+    group.dispose();
+
+    return keys;
   }
   return null;
 };

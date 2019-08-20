@@ -131,10 +131,11 @@ os.data.FilterNode.prototype.setState = function(value) {
  */
 os.data.FilterNode.prototype.formatIcons = function() {
   var filter = this.getEntry();
-  var found = os.ui.queryManager.hasFilter(/** @type {string} */ (filter.getId()));
   var clazz = 'u-fa-badge-times';
   var status = 'inactive';
-  if (found && os.MapContainer.getInstance().getLayer(filter.getType()) != null) {
+  var layerId = filter.getType();
+  var layer = os.MapContainer.getInstance().getLayer(layerId);
+  if (layer && os.queryManager.hasEnabledEntries(layerId, undefined, filter.getId())) {
     clazz = 'u-fa-badge-check';
     status = 'active';
   }
