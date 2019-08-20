@@ -510,22 +510,6 @@ os.state.v4.BaseLayerState.prototype.configKeyToXML = function(layerConfig, type
         os.xml.appendElement(os.state.v4.LayerTag.ALPHA, layerEl, value);
       }
       break;
-    case os.style.StyleField.FILL_OPACITY:
-      if (bfs) {
-        value = value != null ? Number(value) : os.style.DEFAULT_FILL_ALPHA;
-        var opacity = Math.round(value * 255);
-        var fillOpacityElement = bfs.querySelector(os.state.v4.LayerTag.FILL_OPACITY);
-        if (fillOpacityElement) {
-          fillOpacityElement.textContent = opacity;
-        } else {
-          os.xml.appendElement(os.state.v4.LayerTag.FILL_OPACITY, bfs, opacity);
-        }
-      } else {
-        // write tile layer opacity/alpha as alpha
-        value = value != null ? Number(value) : os.style.DEFAULT_FILL_ALPHA;
-        os.xml.appendElement(os.state.v4.LayerTag.FILL_OPACITY, layerEl, value);
-      }
-      break;
     case 'size':
       if (bfs) {
         value = value != null ? Math.floor(value) : os.style.DEFAULT_FEATURE_SIZE;
