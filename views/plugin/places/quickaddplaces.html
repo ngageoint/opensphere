@@ -11,25 +11,7 @@
 
       <div class="form-group row">
         <label for="name" class="col-3 col-form-label text-right">Shape</label>
-        <div class="col">
-          <div class="btn-group">
-            <button class="btn btn-secondary" ng-class="quickAdd.selectedType == 'point' && 'active'" ng-click="quickAdd.draw('point')" title="Place a point">
-              <i class="fa fa-fw fa-crosshairs"></i>
-            </button>
-            <button class="btn btn-secondary" ng-class="quickAdd.selectedType == 'box' && 'active'" ng-click="quickAdd.draw('box')" title="Draw a box">
-              <i class="fa fa-fw fa-square-o"></i>
-            </button>
-            <button class="btn btn-secondary" ng-class="quickAdd.selectedType == 'circle' && 'active'" ng-click="quickAdd.draw('circle')" title="Draw a circle">
-              <i class="fa fa-fw fa-circle-o"></i>
-            </button>
-            <button class="btn btn-secondary" ng-class="quickAdd.selectedType == 'polygon' && 'active'" ng-click="quickAdd.draw('polygon')" title="Draw a polygon">
-              <i class="fa fa-fw fa-star-o"></i>
-            </button>
-            <button class="btn btn-secondary" ng-class="quickAdd.selectedType == 'line' && 'active'" ng-click="quickAdd.draw('line')" title="Draw a line">
-              <i class="fa fa-fw fa-long-arrow-right"></i>
-            </button>
-          </div>
-        </div>
+        <drawpicker callback="quickAdd.drawCallback" point="true" line="true" default="point"></drawpicker>
       </div>
     </form>
   </div>

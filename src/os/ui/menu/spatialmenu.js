@@ -9,6 +9,7 @@ goog.require('os.command.AreaToggle');
 goog.require('os.command.SequenceCommand');
 goog.require('os.data.AreaNode');
 goog.require('os.defines');
+goog.require('os.events.PayloadEvent');
 goog.require('os.fn');
 goog.require('os.query.BaseAreaManager');
 goog.require('os.query.ui.mergeAreasDirective');
@@ -260,6 +261,14 @@ os.ui.menu.spatial.setup = function() {
           icons: ['<i class="fa fa-fw fa-download"></i>'],
           sort: 80,
           beforeRender: os.ui.menu.spatial.visibleIfInAreaManager
+        }, {
+          eventType: os.action.EventType.SEARCH_AREA,
+          label: 'Search Area...',
+          tooltip: 'Searches for available data in the area',
+          icons: ['<i class="fa fa-fw fa-search"></i>'],
+          beforeRender: os.ui.menu.spatial.visibleIfPolygonal,
+          handler: os.ui.menu.spatial.searchArea,
+          sort: 1000
         }]
       }]
     }));
@@ -899,6 +908,82 @@ os.ui.menu.spatial.addLayerSubMenu = function(group, eventType, types) {
     handler: os.ui.menu.spatial.onLayerPicker_,
     sort: idx
   });
+};
+
+
+/**
+ * Initiates a geosearch in a selected area.
+ *
+ * @param {!os.ui.menu.MenuEvent} event The menu event.
+ * @private
+ */
+os.ui.menu.spatial.searchArea = function(event) {
+  var context = /** @type {Array<Object>} */ (event.getContext());
+
+  if (context) {
+    if (!goog.isArray(context)) {
+      context = [context];
+    }
+
+    // first check if there are features to add
+    var features = os.ui.menu.spatial.getFeaturesFromContext(context);
+    var geometry = os.ui.menu.spatial.getSearchGeometry(features);
+
+    if (geometry) {
+      // disable every other search
+      var searches = os.searchManager.getRegisteredSearches();
+      var geosearch = [];
+      var some = false;
+
+      searches.forEach(function(search) {
+        if (search && os.search.supportsGeoSearch(search)) {
+          geosearch.push(search);
+          some = search.isEnabled() || some;
+        } else {
+          // disable non-geosearch searches
+          search.setEnabled(false);
+        }
+      });
+
+      if (!some) {
+        // if no geosearches were enabled, enable them all (otherwise do nothing)
+        geosearch.forEach(function(search) {
+          search.setEnabled(true);
+        });
+      }
+
+      // fire an event to kick off the filtered layer lookup
+      var searchEvent = new os.events.PayloadEvent(os.search.SearchEventType.GEO_SEARCH_CHANGE, geometry);
+      os.dispatcher.dispatchEvent(searchEvent);
+    }
+  }
+};
+
+
+/**
+ * Gets a shape query from a set of features.
+ * @param {Array<ol.Feature>} features The features to get a shape query from.
+ * @return {ol.geom.Geometry|undefined} The shape query.
+ */
+os.ui.menu.spatial.getSearchGeometry = function(features) {
+  var geometry;
+
+  if (features && features.length > 0) {
+    var originalGeometry = /** @type {ol.geom.Geometry} */ (features[0].get(os.interpolate.ORIGINAL_GEOM_FIELD));
+    geometry = features[0].getGeometry();
+
+    if (geometry instanceof ol.geom.Polygon && originalGeometry instanceof ol.geom.Polygon) {
+      var coordinates = geometry.getCoordinates().slice();
+      os.geo2.normalizeRings(coordinates);
+
+      if (os.geo.isGeometryRectangular(originalGeometry)) {
+        // use the original geometry as it will be simpler and faster
+        geometry = originalGeometry;
+      }
+    }
+  }
+
+  return geometry;
 };
 
 
