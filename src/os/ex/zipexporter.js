@@ -28,9 +28,9 @@ os.ex.ZipExporter = function() {
   /**
    * The files to add to the zip
    * @type {!Array.<!os.file.File>}
-   * @private
+   * @protected
    */
-  this.files_ = [];
+  this.files = [];
 
   /**
    * The index of the next file to add to the zip
@@ -120,7 +120,7 @@ os.ex.ZipExporter.prototype.isAsync = function() {
  */
 os.ex.ZipExporter.prototype.reset = function() {
   os.ex.ZipExporter.base(this, 'reset');
-  this.files_.length = 0;
+  this.files.length = 0;
   this.fileIndex_ = 0;
 };
 
@@ -131,12 +131,12 @@ os.ex.ZipExporter.prototype.reset = function() {
 os.ex.ZipExporter.prototype.process = function() {
   this.processItems();
 
-  if (this.files_.length > 0) {
+  if (this.files.length > 0) {
     if (this.compress) {
       this.compressFiles_();
     } else {
       // just use the first file - there should not be multiple if compression is not used
-      this.output = this.files_[0].getContent();
+      this.output = this.files[0].getContent();
 
       // dispatch the complete event in case async is assumed
       this.dispatchEvent(new goog.events.Event(os.events.EventType.COMPLETE));
@@ -159,7 +159,17 @@ os.ex.ZipExporter.prototype.processItems = function() {};
  * @param {!os.file.File} file The file to add
  */
 os.ex.ZipExporter.prototype.addFile = function(file) {
-  this.files_.push(file);
+  this.files.push(file);
+};
+
+
+/**
+ * Returns the files array.
+ *
+ * @return {Array<!os.file.File>}
+ */
+os.ex.ZipExporter.prototype.getFiles = function() {
+  return this.files;
 };
 
 
@@ -181,8 +191,8 @@ os.ex.ZipExporter.prototype.compressFiles_ = function() {
  * @private
  */
 os.ex.ZipExporter.prototype.writeNextFile_ = function(writer) {
-  if (this.fileIndex_ < this.files_.length) {
-    var file = this.files_[this.fileIndex_++];
+  if (this.fileIndex_ < this.files.length) {
+    var file = this.files[this.fileIndex_++];
     var fileName = file.getFileName();
     var content = file.getContent();
 
