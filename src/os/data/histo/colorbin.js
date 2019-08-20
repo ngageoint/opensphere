@@ -126,7 +126,7 @@ os.data.histo.ColorBin.prototype.removeItem = function(item) {
 
 
 /**
- * Increment the count for a color.
+ * Decrement the count for a color.
  *
  * @param {string|undefined} color The color
  */
