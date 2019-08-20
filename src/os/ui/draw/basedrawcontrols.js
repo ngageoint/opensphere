@@ -30,7 +30,7 @@ os.ui.draw.baseDrawControlsDirective = function() {
       'olMap': '=',
       'embeddedControls': '=?'
     },
-    templateUrl: os.ROOT + 'views/ol/draw/basedrawcontrols.html',
+    templateUrl: os.ROOT + 'views/draw/basedrawcontrols.html',
     controller: os.ui.draw.BaseDrawControlsCtrl,
     controllerAs: 'drawControls'
   };
@@ -414,17 +414,19 @@ os.ui.draw.BaseDrawControlsCtrl.prototype.isActive = function() {
 
 
 /**
- * override via mixin if opensphere has access to country borders
+ * Get whether country borders are available.
  *
  * @return {boolean}
  * @export
  */
 os.ui.draw.BaseDrawControlsCtrl.prototype.isCountryEnabled = function() {
-  return false;
+  return os.query.isCountryEnabled();
 };
 
 
 /**
- * override via mixin if opensphere has access to country borders
+ * Launch the country border picker, if available.
  */
-os.ui.draw.BaseDrawControlsCtrl.prototype.launchCountryPicker = function() {};
+os.ui.draw.BaseDrawControlsCtrl.prototype.launchCountryPicker = function() {
+  os.query.launchCountryPicker();
+};
