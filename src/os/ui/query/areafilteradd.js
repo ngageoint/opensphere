@@ -56,14 +56,11 @@ os.ui.Module.directive('areafilteradd', [os.ui.query.areaFilterAddDirective]);
  */
 os.ui.query.AreaFilterAddCtrl = function($scope, $element, $timeout) {
   os.ui.query.AreaFilterAddCtrl.base(this, 'constructor');
-  $scope['areaTerm'] = '';
-  $scope['filterTerm'] = '';
   $scope['areas'] = [];
   $scope['filters'] = [];
 
   var view = /** @type {string} */ (os.settings.get(['areas', 'groupBy'], 'None'));
   $scope['areaViews'] = os.ui.query.AreaFilterAddCtrl.AREA_VIEWS;
-  $scope['areaView'] = os.ui.query.AreaFilterAddCtrl.AREA_VIEWS[view];
 
   /**
    * @type {?angular.Scope}
@@ -106,6 +103,24 @@ os.ui.query.AreaFilterAddCtrl = function($scope, $element, $timeout) {
    * @private
    */
   this.objectAreas_ = [];
+
+  /**
+   * The area search term
+   * @type {string}
+   */
+  this['areaTerm'] = '';
+
+  /**
+   * The view option for grouping areas
+   * @type {!Object<string, os.data.groupby.INodeGroupBy>}
+   */
+  this['areaView'] = os.ui.query.AreaFilterAddCtrl.AREA_VIEWS[view];
+
+  /**
+   * The filter search term
+   * @type {string}
+   */
+  this['filterTerm'] = '';
 
   /**
    * @type {string}
@@ -156,7 +171,7 @@ os.ui.query.AreaFilterAddCtrl.prototype.destroy_ = function() {
 
   var view = 'None';
   for (var key in os.ui.query.AreaFilterAddCtrl.AREA_VIEWS) {
-    if (this.scope_['areaView'] === os.ui.query.AreaFilterAddCtrl.AREA_VIEWS[key]) {
+    if (this['areaView'] === os.ui.query.AreaFilterAddCtrl.AREA_VIEWS[key]) {
       view = key;
       break;
     }
@@ -319,13 +334,13 @@ os.ui.query.AreaFilterAddCtrl.prototype.searchAreas = function() {
  */
 os.ui.query.AreaFilterAddCtrl.prototype.onAreaSearch_ = function() {
   if (this.areaTreeSearch_) {
-    var t = this.scope_['areaTerm'];
+    var t = this['areaTerm'];
 
     if (!t) {
       t = '*';
     }
 
-    var view = this.scope_['areaView'];
+    var view = this['areaView'];
     view = view === -1 ? null : view;
 
     // do the search
@@ -354,7 +369,7 @@ os.ui.query.AreaFilterAddCtrl.prototype.searchFilters = function() {
  */
 os.ui.query.AreaFilterAddCtrl.prototype.onFilterSearch_ = function() {
   if (this.filterTreeSearch_) {
-    var t = this.scope_['filterTerm'];
+    var t = this['filterTerm'];
     var view = os.ui.query.AreaFilterAddCtrl.TYPE_GROUP_BY_;
 
     // do the search
