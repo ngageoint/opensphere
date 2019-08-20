@@ -375,7 +375,7 @@ os.style.DEFAULT_VECTOR_CONFIG = {
     'type': 'circle',
     'radius': os.style.DEFAULT_FEATURE_SIZE,
     'fill': {
-      'color': os.style.DEFAULT_FILL_COLOR
+      'color': os.style.DEFAULT_LAYER_COLOR
     }
   },
   // this will only be applied to line and polygon types
