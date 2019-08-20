@@ -262,7 +262,7 @@ os.ui.layer.LabelControlsCtrl.prototype.onDragStart = function(event, ui) {
 
   if (ui['item']) {
     // show the grippy dragging cursor
-    ui['item'].find('.handle').addClass('moving');
+    ui['item'].find('.js-handle').addClass('moving');
 
     // save the start index
     this.startIndex_ = ui['item'].index();
@@ -280,7 +280,7 @@ os.ui.layer.LabelControlsCtrl.prototype.onDragStart = function(event, ui) {
 os.ui.layer.LabelControlsCtrl.prototype.onDragEnd = function(event, ui) {
   if (ui['item']) {
     // revert to grippy hover cursor
-    ui['item'].find('.handle').removeClass('moving');
+    ui['item'].find('.js-handle').removeClass('moving');
 
     // if the index changed, update the label order
     var stopIndex = ui['item'].index();

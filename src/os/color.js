@@ -556,6 +556,13 @@ os.color.toServerString = function(value) {
 
 
 /**
+ * Regex for capturing the components of an rgb/rgba color string.
+ * @type {RegExp}
+ */
+os.color.RGBA_MATCH_REGEX = /\s*rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*(\d?(\.\d+)?)\s*)?\)/i;
+
+
+/**
  * @param {Array<number>|string} color
  * @return {Array<number>}
  */
@@ -564,28 +571,26 @@ os.color.toRgbArray = function(color) {
     var colorStr = /** @type {string} */ (color);
 
     var i = colorStr.indexOf(',');
-    var n;
-
     if (i == -1) {
       // no commas indicate hex
       colorStr = colorStr.replace(/0x/ig, '');
       colorStr = '#' + colorStr.replace(/[^a-f0-9]/ig, '');
       color = goog.color.hexToRgb(colorStr);
-    } else {
-      // commas indicate an rgb() or rgba() string
-      colorStr = colorStr.replace(/[^.,0-9]/g, '');
-      var parts = colorStr.split(',');
-      color = [];
 
-      for (i = 0, n = parts.length; i < n; i++) {
-        color[i] = i == 3 ? parseFloat(parts[i]) : parseInt(parts[i], 10);
+      if (color && color.length == 3) {
+        // all the alpha
+        color.push(1);
+      }
+    } else {
+      var match = colorStr.match(os.color.RGBA_MATCH_REGEX);
+      if (match && match.length >= 5) {
+        var alpha = Number(match[4]);
+        color = [Number(match[1]), Number(match[2]), Number(match[3]), isNaN(alpha) ? 1 : alpha];
+      } else {
+        // not a valid rgb/rgba string, return null
+        color = null;
       }
     }
-  }
-
-  if (color && color.length == 3) {
-    // alpha
-    color.push(1);
   }
 
   return color;

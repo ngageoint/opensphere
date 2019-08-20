@@ -558,9 +558,15 @@ os.time.xf.TimeModel.prototype.getResults = function(opt_value, opt_dim, opt_bot
 os.time.xf.TimeModel.prototype.getDimensionKeys = function(id) {
   var val = os.time.xf.TimeModel.base(this, 'getDimensionKeys', id);
   if (!(Array.isArray(val) && val.length) && !this.isDisposed() && this.hasDimension(id)) {
-    return this.timelessDimensions[id].group().all().map(function(v) {
+    var group = this.timelessDimensions[id].group();
+    var keys = this.timelessDimensions[id].group().all().map(function(v) {
       return v.key;
     });
+
+    // dispose the group
+    group.dispose();
+
+    return keys;
   }
   return val;
 };
