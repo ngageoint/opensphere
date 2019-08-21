@@ -48,6 +48,24 @@ os.ui.feature.tab.PropertiesTabCtrl = function($scope, $element) {
   $scope['reverse'] = false;
   $scope['selected'] = null;
 
+  /**
+   * The feature.
+   * @type {ol.Feature}
+   */
+  this.feature = null;
+
+  /**
+   * The source.
+   * @type {os.source.Vector}
+   */
+  this.source = null;
+
+  /**
+   * Array of feature property model objects.
+   * @type {Array<Object<string, *>>}
+   */
+  this['properties'] = null;
+
   os.ui.feature.tab.PropertiesTabCtrl.base(this, 'constructor', $scope, $element);
 };
 goog.inherits(os.ui.feature.tab.PropertiesTabCtrl, os.ui.feature.tab.AbstractFeatureTabCtrl);
@@ -57,79 +75,89 @@ goog.inherits(os.ui.feature.tab.PropertiesTabCtrl, os.ui.feature.tab.AbstractFea
  * @inheritDoc
  */
 os.ui.feature.tab.PropertiesTabCtrl.prototype.updateTab = function(event, data) {
-  if (data) {
-    this.scope['properties'] = [];
-
-    var feature = /** @type {ol.Feature|undefined} */ (data);
-    if (feature) {
-      var properties = feature.getProperties();
-      // create content for the property grid
-      var time = /** @type {os.time.ITime|undefined} */ (feature.get(os.data.RecordField.TIME));
-      if (time) {
-        // add the record time to the property grid and make sure it isn't duplicated
-        this.scope['properties'].push({
-          'id': 'TIME',
-          'field': 'TIME',
-          'value': time
-        });
-
-        delete properties['TIME'];
-      }
-
-      for (var key in properties) {
-        if (key === os.Fields.GEOTAG) {
-          // associate the feature with the CX report it came from
-          this.scope['properties'].push({
-            'id': os.Fields.GEOTAG,
-            'field': os.Fields.GEOTAG,
-            'value': properties[os.data.RecordField.SOURCE_ID],
-            'CX': true
-          });
-        } else if (key === os.Fields.PROPERTIES) {
-          this.scope['properties'].push({
-            'id': key,
-            'field': key,
-            'value': properties[key],
-            'feature': feature
-          });
-        } else if (!os.feature.isInternalField(key) && os.object.isPrimitive(properties[key])) {
-          this.scope['properties'].push({
-            'id': key,
-            'field': key,
-            'value': properties[key]
-          });
-        }
-      }
-    }
+  if (this.source) {
+    ol.events.unlisten(this.source, goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
   }
 
-  this.order();
+  this.feature = data instanceof ol.Feature ? /** @type {ol.Feature} */ (data) : null;
+  this.source = os.feature.getSource(this.feature);
+
+  if (this.source) {
+    ol.events.listen(this.source, goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
+  }
+
+  this.updateProperties();
 };
 
 
 /**
- * Allow ordering
- *
- * @param {string=} opt_key
- * @export
+ * Updates the properties table from the current source columns.
  */
-os.ui.feature.tab.PropertiesTabCtrl.prototype.order = function(opt_key) {
-  if (opt_key) {
-    if (opt_key === this.scope['columnToOrder']) {
-      this.scope['reverse'] = !this.scope['reverse'];
+os.ui.feature.tab.PropertiesTabCtrl.prototype.updateProperties = function() {
+  this['properties'] = [];
+  if (this.feature) {
+    var source = os.feature.getSource(this.feature);
+
+    if (source) {
+      var columns = source.getColumns();
+
+      columns.forEach(function(col) {
+        var field = /** @type {string} */ (col['field']);
+        var value = this.feature.get(field);
+
+        if (col['visible']) {
+          this.addProperty(field, value);
+        }
+      }, this);
     } else {
-      this.scope['columnToOrder'] = opt_key;
+      // if we don't have a source, just show the properties
+      var featureProperties = this.feature.getProperties();
+
+      for (var key in featureProperties) {
+        this.addProperty(key, featureProperties[key]);
+      }
     }
   }
 
-  var field = this.scope['columnToOrder'];
-  var reverse = this.scope['reverse'];
+  os.ui.apply(this.scope);
+};
 
-  this.scope['properties'].sort(function(a, b) {
-    var v1 = a[field].toString();
-    var v2 = b[field].toString();
-    return goog.string.numerateCompare(v1, v2) * (reverse ? -1 : 1);
-  });
+
+/**
+ * Adds a property.
+ *
+ * @param {string} field The field to add.
+ * @param {*} value The value to add.
+ * @private
+ */
+os.ui.feature.tab.PropertiesTabCtrl.prototype.addProperty = function(field, value) {
+  if (field && value && !os.feature.isInternalField(field) && os.object.isPrimitive(value)) {
+    this['properties'].push({
+      'id': field,
+      'field': field,
+      'value': value
+    });
+  } else if (field === os.data.RecordField.TIME) {
+    this['properties'].push({
+      'id': field,
+      'field': os.Fields.TIME,
+      'value': value
+    });
+  }
+};
+
+
+/**
+ * Handle property changes on the source.
+ *
+ * @param {os.events.PropertyChangeEvent} e The change event.
+ * @private
+ */
+os.ui.feature.tab.PropertiesTabCtrl.prototype.onSourceChange_ = function(e) {
+  var p = e.getProperty();
+  if (p === os.source.PropertyChange.COLUMNS) {
+    this.updateProperties();
+  }
 };
 
 
