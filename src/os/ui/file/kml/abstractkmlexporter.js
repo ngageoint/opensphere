@@ -17,7 +17,7 @@ goog.require('os.time.TimeRange');
 goog.require('os.ui.file.kml');
 goog.require('os.ui.text.TuiEditor');
 goog.require('os.xml');
-
+goog.require('plugin.file.kml.KMLField');
 
 
 /**
