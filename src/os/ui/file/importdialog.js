@@ -32,7 +32,7 @@ os.ui.file.importDialogDirective = function() {
       'manager': '=?',
       'hideCancel': '=?',
       'confirmText': '=?',
-      'onClose': '=?'
+      'onCancel': '=?'
     },
     templateUrl: os.ROOT + 'views/file/importdialog.html',
     controller: os.ui.file.ImportDialogCtrl,
@@ -197,11 +197,21 @@ os.ui.file.ImportDialogCtrl.prototype.accept = function() {
  * @export
  */
 os.ui.file.ImportDialogCtrl.prototype.close = function() {
-  if (this.scope_ && this.scope_['onClose']) {
-    this.scope_['onClose']();
+  os.ui.window.close(this.element_);
+};
+
+
+/**
+ * Cancel the window
+ *
+ * @export
+ */
+os.ui.file.ImportDialogCtrl.prototype.cancel = function() {
+  if (this.scope_ && this.scope_['onCancel']) {
+    this.scope_['onCancel']();
   }
 
-  os.ui.window.close(this.element_);
+  this.close();
 };
 
 

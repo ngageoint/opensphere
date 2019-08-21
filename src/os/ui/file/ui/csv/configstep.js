@@ -8,6 +8,7 @@ goog.require('os.im.mapping.MappingManager');
 goog.require('os.parse.csv');
 goog.require('os.parse.csv.CsvParserConfig');
 goog.require('os.ui.Module');
+goog.require('os.ui.slick.SlickGridEvent');
 goog.require('os.ui.spinnerDirective');
 goog.require('os.ui.wiz.step.AbstractWizardStep');
 goog.require('os.ui.wiz.step.WizardStepEvent');
@@ -83,6 +84,12 @@ os.ui.Module.directive('csvconfigstep', [os.ui.file.ui.csv.configStepDirective])
  * @ngInject
  */
 os.ui.file.ui.csv.ConfigStepCtrl = function($scope, $timeout) {
+  /**
+   * @type {?angular.Scope}
+   * @private
+   */
+  this.scope_ = $scope;
+
   /**
    * @type {?angular.$timeout}
    * @private
@@ -167,6 +174,7 @@ os.ui.file.ui.csv.ConfigStepCtrl = function($scope, $timeout) {
  * @private
  */
 os.ui.file.ui.csv.ConfigStepCtrl.prototype.destroy_ = function() {
+  this.scope_ = null;
   this.config_ = null;
   this.timeout_ = null;
 };
@@ -190,4 +198,17 @@ os.ui.file.ui.csv.ConfigStepCtrl.prototype.scheduleUpdate_ = function() {
 os.ui.file.ui.csv.ConfigStepCtrl.prototype.updatePreview = function() {
   // don't apply mappings during CSV configuration
   this.config_.updatePreview();
+
+  this.timeout_(this.invalidateGrids.bind(this));
+};
+
+
+/**
+ * Refresh the child slickgrids
+ */
+os.ui.file.ui.csv.ConfigStepCtrl.prototype.invalidateGrids = function() {
+  if (this.scope_) {
+    this.scope_.$broadcast(os.ui.slick.SlickGridEvent.INVALIDATE_ROWS);
+    this.scope_.$broadcast(os.ui.slick.SlickGridEvent.INVALIDATE_COLUMNS);
+  }
 };
