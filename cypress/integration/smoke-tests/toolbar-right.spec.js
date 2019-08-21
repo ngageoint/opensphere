@@ -100,15 +100,6 @@ describe('Toolbar right', function() {
     });
 
     it('Disable state', function() {
-      // Catch console error we don't care about
-      cy.on('uncaught:exception', function(err) {
-        if (err.message.includes('$rootScope')) {
-          expect(err.message).to.include('$rootScope');
-          return false;
-        }
-        return true;
-      });
-
       // Setup
       cy.get(core.Toolbar.addData.OPEN_FILE_BUTTON).click();
       cy.get(imports.importDataDialog.DIALOG).should('be.visible');
