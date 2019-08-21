@@ -110,7 +110,7 @@ os.ui.capture.AbstractCapturePlugin.prototype.getDynamicRenderers = function() {
  * @private
  */
 os.ui.capture.AbstractCapturePlugin.prototype.updateRenderers_ = function() {
-  this.renderers = this.staticRenderers.concat(this.getDynamicRenderers());
+  this.renderers = this.staticRenderers.concat(this.getDynamicRenderers()).sort(os.ui.capture.rendererPrioritySort);
 };
 
 
@@ -271,7 +271,7 @@ os.ui.capture.AbstractCapturePlugin.prototype.renderFrame = function(opt_waitFor
  * Sort renderers by priority.
  *
  * @param {!os.ui.capture.ElementRenderer} a First renderer.
- * @param {!os.ui.capture.ElementRenderer} b S`econd renderer.
+ * @param {!os.ui.capture.ElementRenderer} b Second renderer.
  * @return {number} The sort order.
  */
 os.ui.capture.rendererPrioritySort = function(a, b) {
