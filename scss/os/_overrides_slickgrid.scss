@@ -88,7 +88,7 @@
   &.selected,
   &.hovered,
   &:hover {
-    a {
+    a:not(.select2-choice) {
       color: $list-group-active-color;
       text-decoration: underline;
     }

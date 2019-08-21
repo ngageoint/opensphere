@@ -19,7 +19,7 @@
       <i class="fa" ng-class="importdialog.loading && 'fa-spin fa-spinner' || 'fa-chevron-circle-right'"></i>
       <span>{{importdialog.loading ? 'Loading' : confirmText}}</span>
     </button>
-    <button ng-if="!importdialog.hideCancel" class="btn btn-secondary" ng-click="importdialog.close()" title="Cancel file import">
+    <button ng-if="!importdialog.hideCancel" class="btn btn-secondary" ng-click="importdialog.cancel()" title="Cancel file import">
       <i class="fa fa-ban"></i>
       Cancel
     </button>
