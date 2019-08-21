@@ -68,7 +68,7 @@ os.ui.search.FeatureResultCardCtrl = function($scope, $element) {
     this.layer = this.addSearchLayer();
   }
 
-  this.layer.getSource().addFeature(this.feature);
+  this.addFeatureToLayer();
 
   ol.events.listen(this.layer.getSource(), goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
   $scope.$on('$destroy', this.dispose.bind(this));
@@ -116,17 +116,75 @@ os.ui.search.FeatureResultCardCtrl.prototype.disposeInternal = function() {
 
   ol.events.unlisten(this.layer.getSource(), goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
 
-  var source = this.layer.getSource();
-  source.removeFeature(this.feature);
+  this.removeFeatureFromLayer();
+  this.feature = null;
 
+  var source = this.layer.getSource();
   if (!source.getFeatures().length) {
     this.layer.setRemovable(true);
     mm.removeLayer(this.layer);
   }
 
-  this.feature = null;
   this.element = null;
   this.scope = null;
+};
+
+
+/**
+ * Add the feature to the search results layer.
+ * @protected
+ */
+os.ui.search.FeatureResultCardCtrl.prototype.addFeatureToLayer = function() {
+  if (this.layer && this.feature) {
+    var source = this.layer.getSource();
+    var featureId = this.feature.getId();
+    if (featureId != null && !source.getFeatureById(featureId)) {
+      source.addFeature(this.feature);
+    }
+  }
+};
+
+
+/**
+ * Remove the feature to the search results layer.
+ * @protected
+ */
+os.ui.search.FeatureResultCardCtrl.prototype.removeFeatureFromLayer = function() {
+  this.removeFeatureHighlight();
+
+  if (this.layer && this.feature) {
+    var source = this.layer.getSource();
+    var featureId = this.feature.getId();
+    if (featureId != null && source.getFeatureById(featureId)) {
+      source.removeFeature(this.feature);
+    }
+  }
+};
+
+
+/**
+ * Add feature highlight styling.
+ * @protected
+ */
+os.ui.search.FeatureResultCardCtrl.prototype.addFeatureHighlight = function() {
+  if (this.feature && this.layer) {
+    this.feature.set(os.style.StyleType.HIGHLIGHT, os.style.DEFAULT_HIGHLIGHT_CONFIG);
+    os.style.setFeatureStyle(this.feature);
+    os.style.notifyStyleChange(this.layer, [this.feature]);
+  }
+};
+
+
+/**
+ * Remove feature highlight styling.
+ * @protected
+ */
+os.ui.search.FeatureResultCardCtrl.prototype.removeFeatureHighlight = function() {
+  if (this.feature && this.layer) {
+    this.feature.set(os.style.StyleType.HIGHLIGHT, undefined);
+    os.style.setFeatureStyle(this.feature);
+    os.style.notifyStyleChange(this.layer, [this.feature]);
+  }
 };
 
 
@@ -237,9 +295,11 @@ os.ui.search.FeatureResultCardCtrl.prototype.goTo = function() {
  * @export
  */
 os.ui.search.FeatureResultCardCtrl.prototype.over = function() {
-  this.feature.set(os.style.StyleType.HIGHLIGHT, os.style.DEFAULT_HIGHLIGHT_CONFIG);
-  os.style.setFeatureStyle(this.feature);
-  os.style.notifyStyleChange(this.layer, [this.feature]);
+  var source = this.layer.getSource();
+  var featureId = this.feature.getId();
+  if (featureId != null && source.getFeatureById(featureId)) {
+    this.addFeatureHighlight();
+  }
 };
 
 
@@ -249,8 +309,9 @@ os.ui.search.FeatureResultCardCtrl.prototype.over = function() {
  * @export
  */
 os.ui.search.FeatureResultCardCtrl.prototype.out = function() {
-  this.feature.set(os.style.StyleType.HIGHLIGHT, undefined);
-  os.style.setFeatureStyle(this.feature);
-  os.style.notifyStyleChange(this.layer, [this.feature]);
+  var source = this.layer.getSource();
+  var featureId = this.feature.getId();
+  if (featureId != null && source.getFeatureById(featureId)) {
+    this.removeFeatureHighlight();
+  }
 };
-
