@@ -742,6 +742,7 @@ plugin.file.kml.readURI = function(node) {
   var assetMap = null;
   var p = node;
   while (p && !assetMap) {
+    /** @suppress {checkTypes} To allow KML asset parsing. */
     assetMap = p.assetMap;
     p = p.parentNode;
   }
