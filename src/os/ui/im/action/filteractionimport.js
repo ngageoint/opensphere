@@ -10,6 +10,7 @@ goog.require('os.layer.Drawing');
 goog.require('os.ui.Module');
 goog.require('os.ui.filter');
 goog.require('os.ui.filter.im.filterImportDirective');
+goog.require('os.ui.im.action.FilterActionImporter');
 
 
 /**
@@ -51,6 +52,32 @@ goog.inherits(os.ui.im.action.FilterActionImportCtrl, os.filter.im.OSFilterImpor
 
 /**
  * @inheritDoc
+ * @export
+ */
+os.ui.im.action.FilterActionImportCtrl.prototype.getFilterIcon = function() {
+  return os.im.action.ICON;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.im.action.FilterActionImportCtrl.prototype.getImporter = function() {
+  var layerId = /** @type {string|undefined} */ (this.scope['layerId']);
+  return new os.ui.im.action.FilterActionImporter(this.getParser(), layerId);
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.im.action.FilterActionImportCtrl.prototype.getParser = function() {
+  return new os.im.action.FilterActionParser();
+};
+
+
+/**
+ * @inheritDoc
  */
 os.ui.im.action.FilterActionImportCtrl.prototype.getFilterables = function() {
   var descriptors = os.dataManager.getDescriptors();
@@ -74,32 +101,6 @@ os.ui.im.action.FilterActionImportCtrl.prototype.getFilterables = function() {
   }
 
   return /** @type {!Array<!os.filter.IFilterable>} */ (filterables);
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.im.action.FilterActionImportCtrl.prototype.getParser = function() {
-  return new os.im.action.FilterActionParser();
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.im.action.FilterActionImportCtrl.prototype.getFilterTooltip = function(entry) {
-  var tooltip = 'Filter: ' + os.ui.filter.toFilterString(entry.getFilterNode(), 1000);
-
-  if (entry instanceof os.im.action.FilterActionEntry && entry.actions.length > 0) {
-    var actionText = entry.actions.map(function(action) {
-      return action.getLabel();
-    }).join(', ') || 'None';
-
-    tooltip += '\nActions: ' + actionText;
-  }
-
-  return tooltip;
 };
 
 
@@ -181,39 +182,4 @@ os.ui.im.action.FilterActionImportCtrl.prototype.finish = function() {
   }
 
   os.ui.window.close(this.element);
-};
-
-
-/**
- * @inheritDoc
- * @export
- */
-os.ui.im.action.FilterActionImportCtrl.prototype.getFilterIcon = function() {
-  return os.im.action.ICON;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.im.action.FilterActionImportCtrl.prototype.getFilterModel = function(
-    title, filter, tooltip, opt_type, opt_match) {
-  var children = filter.getChildren();
-  var childModels;
-  if (children) {
-    childModels = [];
-    children.forEach(function(child) {
-      var model = this.getFilterModel(child.getTitle(), child, this.getFilterTooltip(child), opt_type);
-      childModels.push(model);
-    }, this);
-  }
-
-  return {
-    'title': title,
-    'filter': filter,
-    'tooltip': tooltip,
-    'type': opt_type,
-    'matches': opt_match,
-    'children': childModels
-  };
 };
