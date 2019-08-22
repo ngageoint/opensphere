@@ -9,6 +9,7 @@ goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('ol.array');
 goog.require('ol.format.WMSCapabilities');
+goog.require('ol.format.XLink');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
 goog.require('os.color');
@@ -856,16 +857,24 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
     if (op) {
       var getFeatureEl = op.querySelector('Post');
       if (getFeatureEl != null) {
-        // Attr.value is the DOM4 property, while Attr.nodeValue inherited from Node should work on older browsers
-        var attr = getFeatureEl.attributes[0];
-        this.setWfsUrl(attr.value || attr.nodeValue);
+        if (getFeatureEl.hasAttributeNS(ol.format.XLink.NAMESPACE_URI, 'href')) {
+          this.setWfsUrl(getFeatureEl.getAttributeNS(ol.format.XLink.NAMESPACE_URI, 'href'));
+        } else {
+          var attr = getFeatureEl.attributes[0];
+          // Attr.value is the DOM4 property, while Attr.nodeValue inherited from Node should work on older browsers
+          this.setWfsUrl(attr.value || attr.nodeValue);
+        }
         this.setWfsPost(true);
       } else {
         getFeatureEl = op.querySelector('Get');
         if (getFeatureEl != null) {
-          // Attr.value is the DOM4 property, while Attr.nodeValue inherited from Node should work on older browsers
-          var attr = getFeatureEl.attributes[0];
-          this.setWfsUrl(attr.value || attr.nodeValue);
+          if (getFeatureEl.hasAttributeNS(ol.format.XLink.NAMESPACE_URI, 'href')) {
+            this.setWfsUrl(getFeatureEl.getAttributeNS(ol.format.XLink.NAMESPACE_URI, 'href'));
+          } else {
+            var attr = getFeatureEl.attributes[0];
+            // Attr.value is the DOM4 property, while Attr.nodeValue inherited from Node should work on older browsers
+            this.setWfsUrl(attr.value || attr.nodeValue);
+          }
         }
       }
 

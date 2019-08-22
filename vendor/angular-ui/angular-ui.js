@@ -242,7 +242,7 @@ angular.module('ui.directives').directive('uiReset', ['ui.config', function (uiC
   //then we just use ui-event to catch events from an element
   function bindMapEvents(scope, eventsStr, googleObject, element) {
     angular.forEach(eventsStr.split(' '), function (eventName) {
-      //Prefix all googlemap events with 'map-', so eg 'click' 
+      //Prefix all googlemap events with 'map-', so eg 'click'
       //for the googlemap doesn't interfere with a normal 'click' event
       var $event = { type: 'map-' + eventName };
       google.maps.event.addListener(googleObject, eventName, function (evt) {
@@ -317,7 +317,7 @@ angular.module('ui.directives').directive('uiReset', ['ui.config', function (uiC
       };
     }]);
 
-  /* 
+  /*
    * Map overlay directives all work the same. Take map marker for example
    * <ui-map-marker="myMarker"> will $watch 'myMarker' and each time it changes,
    * it will hook up myMarker's events to the directive dom element.  Then
@@ -881,16 +881,16 @@ angular.module('ui.directives').directive('uiScrollfix', ['$window', function ($
 
 /*
 *  AngularJs Fullcalendar Wrapper for the JQuery FullCalendar
-*  inspired by http://arshaw.com/fullcalendar/ 
-*  
-*  Basic Angular Calendar Directive that takes in live events as the ng-model and watches that event array for changes, to update the view accordingly. 
-*  Can also take in an event url as a source object(s) and feed the events per view. 
+*  inspired by http://arshaw.com/fullcalendar/
+*
+*  Basic Angular Calendar Directive that takes in live events as the ng-model and watches that event array for changes, to update the view accordingly.
+*  Can also take in an event url as a source object(s) and feed the events per view.
 *
 */
 
 angular.module('ui.directives').directive('uiCalendar',['ui.config', '$parse', function (uiConfig,$parse) {
-    uiConfig.uiCalendar = uiConfig.uiCalendar || {};       
-    //returns the fullcalendar     
+    uiConfig.uiCalendar = uiConfig.uiCalendar || {};
+    //returns the fullcalendar
     return {
         require: 'ngModel',
         restrict: 'A',
@@ -899,7 +899,7 @@ angular.module('ui.directives').directive('uiCalendar',['ui.config', '$parse', f
         },
         link: function(scope, elm, $attrs) {
             var ngModel = $parse($attrs.ngModel);
-            //update method that is called on load and whenever the events array is changed. 
+            //update method that is called on load and whenever the events array is changed.
             function update() {
               //Default View Options
               var expression,
@@ -909,23 +909,23 @@ angular.module('ui.directives').directive('uiCalendar',['ui.config', '$parse', f
                   center: 'title',
                   right: 'month,agendaWeek,agendaDay'
                 },
-              // add event name to title attribute on mouseover. 
+              // add event name to title attribute on mouseover.
               eventMouseover: function(event, jsEvent, view) {
               if (view.name !== 'agendaDay') {
                 $(jsEvent.target).attr('title', event.title);
                }
               },
-          
-              // Calling the events from the scope through the ng-model binding attribute. 
+
+              // Calling the events from the scope through the ng-model binding attribute.
               events: scope.events
-              };          
-              //if attrs have been entered to the directive, then create a relative expression. 
+              };
+              //if attrs have been entered to the directive, then create a relative expression.
               if ($attrs.uiCalendar){
                  expression = scope.$eval($attrs.uiCalendar);
               }
               else{
                 expression = {};
-              } 
+              }
               //extend the options to suite the custom directive.
               angular.extend(options, uiConfig.uiCalendar, expression);
               //call fullCalendar from an empty html tag, to keep angular happy.
@@ -933,7 +933,7 @@ angular.module('ui.directives').directive('uiCalendar',['ui.config', '$parse', f
             }
             //on load update call.
             update();
-            //watching the length of the array to create a more efficient update process. 
+            //watching the length of the array to create a more efficient update process.
             scope.$watch( 'events.length', function( newVal, oldVal )
             {
               //update the calendar on every change to events.length
@@ -1089,7 +1089,7 @@ angular.module('ui.directives')
         // If we have a controller (i.e. ngModelController) then wire it up
         if (controller) {
           var updateModel = function () {
-            scope.$apply(function () {
+            scope.$evalAsync(function () {
               var date = element.datepicker("getDate");
               element.datepicker("setDate", element.val());
               controller.$setViewValue(date);
