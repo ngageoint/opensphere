@@ -29,10 +29,10 @@ os.ui.filter.im.FilterImporter = function(parser, opt_layerId) {
   this.matched = {};
 
   /**
-   * The matched filters.
-   * @type {Object}
+   * The unmatched filters.
+   * @type {Array}
    */
-  this.unmatched = {};
+  this.unmatched = [];
 };
 goog.inherits(os.ui.filter.im.FilterImporter, os.im.Importer);
 
@@ -43,7 +43,7 @@ goog.inherits(os.ui.filter.im.FilterImporter, os.im.Importer);
 os.ui.filter.im.FilterImporter.prototype.reset = function() {
   os.ui.filter.im.FilterImporter.base(this, 'reset');
   this.matched = {};
-  this.unmatched = {};
+  this.unmatched = [];
 };
 
 
