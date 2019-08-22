@@ -78,7 +78,7 @@ os.ui.RightClickCtrl.prototype.destroy_ = function() {
  */
 os.ui.RightClickCtrl.prototype.onContextMenu_ = function(evt) {
   if (this.scope_) {
-    this.scope_.$apply(function() {
+    this.scope_.$evalAsync(function() {
       evt.preventDefault();
       evt.stopPropagation();
       if (this.scope_ && this.handler_) {
