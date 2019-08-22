@@ -345,8 +345,8 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.addMappings = function(layer, options) {
  */
 plugin.ogc.wfs.WFSLayerConfig.PREFERRED_TYPES = [
   /^application\/json$/,
-  /gml\\?3/i,
-  /gml\\?2/i
+  /gml\/?3/i,
+  /gml\/?2/i
 ];
 
 
@@ -367,18 +367,15 @@ plugin.ogc.wfs.WFSLayerConfig.TYPES = {
  */
 plugin.ogc.wfs.WFSLayerConfig.prototype.getBestType = function(options) {
   var formats = /** @type {Array<string>} */ (options['formats']);
-  var format = this.params.get('outputformat');
+  var format = /** @type {string} */ (this.params.get('outputformat'));
   var preferred = plugin.ogc.wfs.WFSLayerConfig.PREFERRED_TYPES;
 
-  // see if the given format is one we support
-  if (format) {
+  // see if the given format is one mutually supported by the layer and this plugin
+  if (format && formats.includes(format)) {
     for (var i = 0, n = preferred.length; i < n; i++) {
       var regex = preferred[i];
-
-      if (format) {
-        if (regex.test(format)) {
-          return i;
-        }
+      if (regex.test(format)) {
+        return i;
       }
     }
   }

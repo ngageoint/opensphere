@@ -882,7 +882,7 @@ os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
 
 
     var osMap = os.MapContainer.getInstance();
-    if (this.previewFeature.getId() == os.ui.FeatureEditCtrl.TEMP_ID && !osMap.containsFeature(this.previewFeature)) {
+    if (this.previewFeature.getId() === this.tempFeatureId && !osMap.containsFeature(this.previewFeature)) {
       osMap.addFeature(this.previewFeature);
     }
 
