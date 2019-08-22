@@ -14,11 +14,17 @@
       </div>
     </div>
     <div ng-if="ctrl.hasUnmatchedFilters">
-      The file contains the following {{ctrl.getFilterTitle(ctrl.matchedCount)}}. Any {{ctrl.getFilterTitle(1)}} with an <i class="fa fa-times text-danger"></i> does not match the selected layer.
+      The file contains the following {{ctrl.getFilterTitle(ctrl.unmatched.length)}}.
+      <span ng-if="ctrl.layer">Any {{ctrl.getFilterTitle(1)}} with an <i class="fa fa-times text-danger"></i> does not match the selected layer.</span>
     </div>
 
-    <div class="u-table u-table__no-hover my-1 border" ng-if="ctrl.unmatched.length">
-      <filterimportmodel models="ctrl.unmatched" icon="ctrl.getFilterIcon()" found="false"></filterimportmodel>
+    <div class="u-table u-table__no-hover my-1 border" ng-if="ctrl.hasUnmatchedFilters && ctrl.unmatched.length">
+      <filterimportmodel
+          layer-selected="!!ctrl.layer"
+          models="ctrl.unmatched"
+          icon="ctrl.getFilterIcon()"
+          found="false">
+      </filterimportmodel>
     </div>
 
     <div ng-if="ctrl.matchedCount > 0" class="u-table u-table-striped u-table__no-hover border">
