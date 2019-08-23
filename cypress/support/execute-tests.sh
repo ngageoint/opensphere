@@ -121,7 +121,7 @@ function checkArguments() {
             export SETTINGS_WORLD_IMAGERY_URL=$WORLD_IMAGERY_URL
         else
           echo "WARNING: WORLD_IMAGERY_URL environment variable not set, using a default value instead."
-          export SETTINGS_WORLD_IMAGERY_URL="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          export SETTINGS_WORLD_IMAGERY_URL="https://wi.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
         fi
       fi
     fi
