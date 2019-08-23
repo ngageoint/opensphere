@@ -272,6 +272,18 @@ os.ui.layer.LayerPickerCtrl.prototype.getGroup = function(layer) {
 
 
 /**
+ * Returns the ID for the layer.
+ *
+ * @param {os.data.IDataDescriptor|os.filter.IFilterable} layer The layer.
+ * @return {?string}
+ * @export
+ */
+os.ui.layer.LayerPickerCtrl.prototype.getLayerId = function(layer) {
+  return layer ? layer.getId() : null;
+};
+
+
+/**
  * Search result formatter. The select is actually storing the ID of each
  * descriptor. This function allows us to display the actual layer title.
  *
