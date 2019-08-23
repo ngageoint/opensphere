@@ -3,6 +3,7 @@ goog.provide('os.ui.filter.ui.FilterNode');
 goog.require('goog.events.EventType');
 goog.require('os.data.ISearchable');
 goog.require('os.events.PropertyChangeEvent');
+goog.require('os.filter.default');
 goog.require('os.structs.TriState');
 goog.require('os.ui.filter.PropertyChange');
 goog.require('os.ui.slick.SlickTreeNode');
@@ -19,6 +20,13 @@ goog.require('os.ui.slick.SlickTreeNode');
  */
 os.ui.filter.ui.FilterNode = function(opt_entry) {
   os.ui.filter.ui.FilterNode.base(this, 'constructor');
+
+  /**
+   * The icon to display for default filters.
+   * @type {string}
+   * @protected
+   */
+  this.defaultIcon = os.filter.default.ICON;
 
   /**
    * @type {?os.filter.FilterEntry}
@@ -150,13 +158,13 @@ os.ui.filter.ui.FilterNode.prototype.getTags = function() {
  * @inheritDoc
  */
 os.ui.filter.ui.FilterNode.prototype.formatIcons = function() {
-  var s = null;
+  var icons = os.ui.filter.ui.FilterNode.base(this, 'formatIcons');
 
-  if (!s) {
-    return os.ui.filter.ui.FilterNode.superClass_.formatIcons.call(this);
+  if (this.entry && this.entry.isDefault()) {
+    icons += this.defaultIcon;
   }
 
-  return s;
+  return icons;
 };
 
 

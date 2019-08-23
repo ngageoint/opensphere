@@ -8,12 +8,20 @@ goog.require('os.ui');
  * Imports filters.
  * @param {os.parse.IParser<T>} parser The parser.
  * @param {string=} opt_layerId The layer id.
+ * @param {boolean=} opt_keepId If the original entry id should be preserved. Defaults to false.
  * @extends {os.im.Importer}
  * @constructor
  * @template T
  */
-os.ui.filter.im.FilterImporter = function(parser, opt_layerId) {
+os.ui.filter.im.FilterImporter = function(parser, opt_layerId, opt_keepId) {
   os.ui.filter.im.FilterImporter.base(this, 'constructor', parser);
+
+  /**
+   * If the original entry id should be preserved.
+   * @type {boolean}
+   * @protected
+   */
+  this.keepId = !!opt_keepId;
 
   /**
    * The layer id.
@@ -85,7 +93,9 @@ os.ui.filter.im.FilterImporter.prototype.processData = function() {
       if (impliedFilterable && columns && filter.matches(columns)) {
         // this filter matches the columns of the passed in context, so add it as such
         var clone = filter.clone();
-        clone.setId(goog.string.getRandomString());
+        if (!this.keepId) {
+          clone.setId(goog.string.getRandomString());
+        }
         clone.setType(this.layerId);
 
         filterModel = this.getFilterModel(filterTitle, clone, tooltip);

@@ -130,8 +130,9 @@ plugin.im.action.feature.Manager.prototype.addSource_ = function(source) {
     if (id && !this.sourceListeners_[id]) {
       this.sourceListeners_[id] = ol.events.listen(/** @type {ol.events.EventTarget} */ (source),
           goog.events.EventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
-
-      this.processItems(id);
+      this.loadDefaults(source.getId()).thenAlways(function() {
+        this.processItems(id);
+      }, this);
     }
   }
 };
