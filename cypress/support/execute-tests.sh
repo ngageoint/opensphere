@@ -104,23 +104,26 @@ function checkArguments() {
   esac
 
   if [ "$CYPRESS_PROJECTION" ]; then
-    if [ ! "$CYPRESS_PROJECTION" == 4326 ]; then
-      echo "ERROR: CYPRESS_PROJECTION environment variable set to unexpected value: $CYPRESS_PROJECTION. Expected 4326!"
+    if [ "$CYPRESS_PROJECTION" == 3857 ]; then
+      echo "INFO: CYPRESS_PROJECTION environment variable set, but the value matches the default of EPSG:3857. No override needed"
+    else if [ ! "$CYPRESS_PROJECTION" == 4326 ]; then
+      echo "ERROR: CYPRESS_PROJECTION environment variable set to unexpected value: $CYPRESS_PROJECTION. Expected 4326 or 3857!"
       exit 1
-    fi
+      else
+        if [ "$STREET_MAP_URL" ]; then
+          export SETTINGS_STREET_MAP_URL=$STREET_MAP_URL
+        else
+          echo "WARNING: STREET_MAP_URL environment variable not set, using default."
+          export SETTINGS_STREET_MAP_URL="https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+        fi
 
-    if [ "$STREET_MAP_URL" ]; then
-      export SETTINGS_STREET_MAP_URL=$STREET_MAP_URL
-    else
-      echo "WARNING: STREET_MAP_URL environment variable not set, using default."
-      export SETTINGS_STREET_MAP_URL="https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
-    fi
-
-    if [ "$WORLD_IMAGERY_URL" ]; then
-        export SETTINGS_WORLD_IMAGERY_URL=$WORLD_IMAGERY_URL
-    else
-      echo "WARNING: WORLD_IMAGERY_URL environment variable not set, using default."
-      export SETTINGS_WORLD_IMAGERY_URL="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+        if [ "$WORLD_IMAGERY_URL" ]; then
+            export SETTINGS_WORLD_IMAGERY_URL=$WORLD_IMAGERY_URL
+        else
+          echo "WARNING: WORLD_IMAGERY_URL environment variable not set, using default."
+          export SETTINGS_WORLD_IMAGERY_URL="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+        fi
+      fi
     fi
   fi
 }
@@ -237,7 +240,9 @@ function stopWebServer() {
     echo 'INFO: terminating web server'
     if [ "$OSTYPE" == "msys" ]; then
       webServerProcess="$(netstat -ano | findstr 0.0.0.0:8282 | awk '{print $5}')" # TODO: Use a process name instead after this is fixed: https://github.com/http-party/http-server/issues/333
-      taskkill //PID $webServerProcess //F
+      if [ $webServerProcess ]; then
+        taskkill //PID $webServerProcess //F
+      fi
     else
       npm run stop-server
     fi
