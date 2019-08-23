@@ -8,6 +8,7 @@ goog.require('os.im.action.FilterActionEntry');
 goog.require('os.im.action.ImportActionEventType');
 goog.require('os.im.action.TagName');
 goog.require('os.im.action.cmd.FilterActionAdd');
+goog.require('os.im.action.default');
 goog.require('os.plugin.PluginManager');
 goog.require('os.ui.filter');
 
@@ -67,6 +68,13 @@ os.im.action.ImportActionManager = function() {
    * @protected
    */
   this.storageKey = os.im.action.ImportActionManager.STORAGE_KEY;
+
+  /**
+   * Map to cache which default actions have been loaded.
+   * @type {!Object<string, boolean>}
+   * @protected
+   */
+  this.defaultsLoaded = {};
 
   // load import actions from storage once plugins have been loaded
   var pm = os.plugin.PluginManager.getInstance();
@@ -287,8 +295,9 @@ os.im.action.ImportActionManager.prototype.setActionEntries = function(type, ent
  * @param {os.im.action.FilterActionEntry<T>} entry The import action entry.
  * @param {number=} opt_index The index in the entry list.
  * @param {string=} opt_parentId The parent node ID.
+ * @param {boolean=} opt_skipApply If the apply call should be skipped. Intended for internal use by the manager.
  */
-os.im.action.ImportActionManager.prototype.addActionEntry = function(entry, opt_index, opt_parentId) {
+os.im.action.ImportActionManager.prototype.addActionEntry = function(entry, opt_index, opt_parentId, opt_skipApply) {
   if (entry && entry.type && entry.getFilter()) {
     var index = -1;
     if (!(entry.type in this.actionEntries)) {
@@ -321,7 +330,9 @@ os.im.action.ImportActionManager.prototype.addActionEntry = function(entry, opt_
       }
     }
 
-    this.apply();
+    if (!opt_skipApply) {
+      this.apply();
+    }
   }
 };
 
@@ -460,6 +471,49 @@ os.im.action.ImportActionManager.prototype.load = function() {
 
 
 /**
+ * Load default actions for a source.
+ *
+ * @param {string} id The default action id.
+ * @return {!goog.Promise}
+ * @protected
+ */
+os.im.action.ImportActionManager.prototype.loadDefaults = function(id) {
+  if (!this.defaultsLoaded[id]) {
+    this.defaultsLoaded[id] = true;
+
+    var defaultActions = /** @type {Object<string, Array<string>>|undefined} */ (
+      os.settings.get(os.im.action.default.SettingKey.FILES));
+
+    if (defaultActions && defaultActions[id]) {
+      return os.im.action.default.load(id, defaultActions[id]).then(function(entries) {
+        if (entries && entries.length) {
+          // add all of the default entries
+          entries.forEach(function(entry) {
+            // add the entry to the manager but skip apply to defer the refresh event
+            this.addActionEntry(entry, undefined, undefined, true);
+          }, this);
+
+          // notify entries have changed
+          this.dispatchEvent(os.im.action.ImportActionEventType.REFRESH);
+        }
+      }, function(opt_reason) {
+        var reason = 'Unspecified error.';
+        if (typeof opt_reason == 'string') {
+          reason = opt_reason;
+        } else if (opt_reason instanceof Error) {
+          reason = opt_reason.message;
+        }
+
+        goog.log.error(this.log, 'Failed loading default actions for "' + id + '": ' + reason);
+      }, this);
+    }
+  }
+
+  return goog.Promise.resolve();
+};
+
+
+/**
  * Initialize the manager when entries have been loaded.
  */
 os.im.action.ImportActionManager.prototype.initialize = goog.nullFunction;
@@ -478,6 +532,7 @@ os.im.action.ImportActionManager.prototype.apply = function() {
  * Save import actions to storage.
  */
 os.im.action.ImportActionManager.prototype.save = function() {
+  var defaultEnabled = {};
   var obj = {};
 
   for (var type in this.actionEntries) {
@@ -486,7 +541,11 @@ os.im.action.ImportActionManager.prototype.save = function() {
       var entryConfigs = [];
       for (var i = 0; i < entries.length; i++) {
         var e = entries[i];
-        if (!e.isTemporary()) {
+        if (e.isDefault()) {
+          // store the enabled state of default actions
+          os.im.action.default.getEnabledMap(e, defaultEnabled);
+        } else if (!e.isTemporary()) {
+          // persist the entire entry if it is not a default or temporary action
           entryConfigs.push(e.persist());
         }
       }
@@ -495,6 +554,7 @@ os.im.action.ImportActionManager.prototype.save = function() {
     }
   }
 
+  os.settings.set(os.im.action.default.SettingKey.ENABLED, defaultEnabled);
   os.settings.set(this.storageKey, obj);
 };
 
