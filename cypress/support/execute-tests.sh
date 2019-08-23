@@ -109,14 +109,18 @@ function checkArguments() {
       exit 1
     fi
 
-    if [ ! "$STREET_MAP_URL" ]; then
-      echo "ERROR: STREET_MAP_URL environment variable not set! This is expected when overriding the projection."
-      exit 1
+    if [ "$STREET_MAP_URL" ]; then
+      export SETTINGS_STREET_MAP_URL=$STREET_MAP_URL
+    else
+      echo "WARNING: STREET_MAP_URL environment variable not set, using default."
+      export SETTINGS_STREET_MAP_URL="https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
     fi
 
-    if [ ! "$WORLD_IMAGERY_URL" ]; then
-      echo "ERROR: WORLD_IMAGERY_URL environment variable not set! This is expected when overriding the projection."
-      exit 1
+    if [ "$WORLD_IMAGERY_URL" ]; then
+        export SETTINGS_WORLD_IMAGERY_URL=$WORLD_IMAGERY_URL
+    else
+      echo "WARNING: WORLD_IMAGERY_URL environment variable not set, using default."
+      export SETTINGS_WORLD_IMAGERY_URL="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
     fi
   fi
 }
@@ -158,8 +162,8 @@ function overrideSettings() {
   if [ "$CYPRESS_PROJECTION" == 4326 ]; then
     echo "INFO: creating projection settings file: $SETTINGS_CYPRESS_PROJECTION_TARGET"
     cp $SETTINGS_CYPRESS_PROJECTION_SOURCE $SETTINGS_CYPRESS_PROJECTION_TARGET
-    sed -i 's@STREET_MAP_URL@'$STREET_MAP_URL'@g' $SETTINGS_CYPRESS_PROJECTION_TARGET
-    sed -i 's@WORLD_IMAGERY_URL@'$WORLD_IMAGERY_URL'@g' $SETTINGS_CYPRESS_PROJECTION_TARGET
+    sed -i 's@STREET_MAP_URL@'$SETTINGS_STREET_MAP_URL'@g' $SETTINGS_CYPRESS_PROJECTION_TARGET
+    sed -i 's@WORLD_IMAGERY_URL@'$SETTINGS_WORLD_IMAGERY_URL'@g' $SETTINGS_CYPRESS_PROJECTION_TARGET
   fi
 }
 
