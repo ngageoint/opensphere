@@ -1,5 +1,7 @@
 goog.provide('os.command.AbstractFeatureStyle');
+
 goog.require('goog.events.Event');
+goog.require('os.action.EventType');
 goog.require('os.command.AbstractStyle');
 goog.require('os.command.ICommand');
 goog.require('os.command.State');
@@ -67,7 +69,7 @@ os.command.AbstractFeatureStyle.prototype.applyValue = function(configs, value) 
  * @inheritDoc
  */
 os.command.AbstractFeatureStyle.prototype.finish = function(configs) {
-  os.dispatcher.dispatchEvent(new goog.events.Event(plugin.file.kml.KMLNodeLayerUICtrl.UIEventType.REFRESH));
+  os.dispatcher.dispatchEvent(new goog.events.Event(os.action.EventType.REFRESH));
   var feature = /** @type {ol.Feature} */ (this.getFeature());
   var layer = os.MapContainer.getInstance().getLayer(this.layerId);
   goog.asserts.assert(layer, 'layer must be defined');

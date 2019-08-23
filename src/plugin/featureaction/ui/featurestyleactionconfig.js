@@ -28,7 +28,7 @@ plugin.im.action.feature.ui.styleConfigDirective = function() {
     template: '<div><vectorstylecontrols color="color" opacity="opacity" size="size" line-dash="lineDash"' +
         'icon="icon" center-icon="centerIcon" icon-set="ctrl.iconSet" icon-src="ctrl.iconSrc" ' +
         'shape="shape" shapes="shapes" center-shape="centerShape" center-shapes="centerShapes" ' +
-        'show-color-reset="true"></vectorstylecontrols>' +
+        'show-color-reset="true" fill-color="fillColor" fill-opacity="fillOpacity"></vectorstylecontrols>' +
         '<iconstylecontrols ng-show="ctrl.showRotationOption()" columns="columns" show-rotation="showRotation" ' +
         'rotation-column="rotationColumn"></iconstylecontrols></div>',
     controller: plugin.im.action.feature.ui.StyleConfigCtrl,
@@ -89,7 +89,10 @@ plugin.im.action.feature.ui.StyleConfigCtrl = function($scope, $element) {
 
   $scope.$on('color.change', this.onColorChange.bind(this));
   $scope.$on('color.reset', this.onColorReset.bind(this));
+  $scope.$on('fillColor.change', this.onFillColorChange.bind(this));
+  $scope.$on('fillColor.reset', this.onFillColorReset.bind(this));
   $scope.$on('opacity.slidestop', this.onOpacityChange.bind(this));
+  $scope.$on('fillOpacity.slidestop', this.onOpacityChange.bind(this));
   $scope.$on('size.slidestop', this.onSizeChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.LINE_DASH_CHANGE, this.onLineDashChange.bind(this));
   $scope.$on(os.ui.icon.IconPickerEventType.CHANGE, this.onIconChange.bind(this));
@@ -107,16 +110,52 @@ goog.inherits(plugin.im.action.feature.ui.StyleConfigCtrl, plugin.im.action.feat
  */
 plugin.im.action.feature.ui.StyleConfigCtrl.prototype.initialize = function() {
   if (this.styleConfig) {
-    var color = /** @type {Array<number>} */ (os.style.getConfigColor(this.styleConfig, true));
-    if (color) {
-      this.scope['color'] = this.initialColor = goog.color.rgbArrayToHex(color);
-      this.scope['opacity'] = color.length > 3 ? color[3] : 1.0;
-    } else {
-      this.scope['color'] = os.color.toHexString(os.style.DEFAULT_LAYER_COLOR);
-      this.scope['opacity'] = 1.0;
+    var color = /** @type {Array<number>} */
+        (os.style.getConfigColor(this.styleConfig, true, os.style.StyleField.STROKE));
+
+    if (!color) {
+      color = os.style.getConfigColor(this.styleConfig, true);
     }
 
-    os.style.setConfigColor(this.styleConfig, os.style.getConfigColor(this.styleConfig));
+    if (color) {
+      this.scope['color'] = this.initialColor = os.color.toHexString(color);
+      if (color.length < 4) {
+        color[3] = os.style.DEFAULT_ALPHA;
+      }
+
+      this.scope['opacity'] = color[3];
+    } else {
+      this.scope['color'] = os.color.toHexString(os.style.DEFAULT_LAYER_COLOR);
+      this.scope['opacity'] = os.style.DEFAULT_ALPHA;
+
+      color = os.color.toRgbArray(this.scope['color']);
+      color[3] = this.scope['opacity'];
+    }
+
+    var fill = /** @type {Array<number>} */ (os.style.getConfigColor(this.styleConfig, true, os.style.StyleField.FILL));
+
+    if (fill) {
+      this.scope['fillColor'] = os.color.toHexString(fill);
+
+      if (fill.length < 4) {
+        fill[3] = os.style.DEFAULT_FILL_ALPHA;
+      }
+
+      this.scope['fillOpacity'] = fill[3];
+    } else {
+      this.scope['fillColor'] = os.color.toHexString(color || os.style.DEFAULT_FILL_COLOR);
+      this.scope['fillOpacity'] = os.style.DEFAULT_FILL_ALPHA;
+
+      fill = os.color.toRgbArray(this.scope['fillColor']);
+      fill[3] = this.scope['fillOpacity'];
+    }
+
+    // Standardize the stroke color
+    var strokeColor = os.style.toRgbaString(color);
+    os.style.setConfigColor(this.styleConfig, strokeColor);
+
+    // If we have a fill color, set that to our style config
+    os.style.setFillColor(this.styleConfig, os.style.toRgbaString(fill));
 
     this.scope['size'] = os.style.getConfigSize(this.styleConfig);
     this.scope['lineDash'] = os.style.getConfigLineDash(this.styleConfig);
@@ -187,9 +226,71 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onColorChange = function(e
       color = os.style.toRgbaString(colorArr);
     }
 
-    os.style.setConfigColor(this.styleConfig, color);
+    // update the fill color with the correct opacity
+    var fillColor = value ? os.style.toRgbaString(value) : os.style.DEFAULT_FILL_COLOR;
+    var fillOpacity = /** @type {number|undefined} */ (this.scope['fillOpacity']);
+    var fillColorArr = os.color.toRgbArray(fillColor);
+    if (fillColorArr && fillOpacity != null) {
+      fillColorArr[3] = fillOpacity;
+      fillColor = os.style.toRgbaString(fillColorArr);
+    }
 
-    this.scope['color'] = os.color.toHexString(color);
+    // Determine if we are changing both stroke and fill entirely, or keeping opacities separate, or only affecting stroke
+    var strokeColorHex = os.color.toHexString(this.scope['color']);
+    var fillColorHex = os.color.toHexString(this.scope['fillColor']);
+    var strokeColorOpacity = this.scope['opacity'];
+    var fillColorOpacity = this.scope['fillOpacity'];
+
+    if (strokeColorHex == fillColorHex && strokeColorOpacity == fillColorOpacity) {
+      // change both to be the same
+      os.style.setConfigColor(this.styleConfig, color);
+      this.scope['color'] = os.color.toHexString(color);
+      this.scope['fillColor'] = os.color.toHexString(color);
+    } else if (strokeColorHex == fillColorHex) {
+      // change the color, but not the opacity, of each one separately
+      os.style.setConfigColor(this.styleConfig, color);
+      this.scope['color'] = os.color.toHexString(color);
+
+      // Only change the fill color without changing the image fill color too
+      os.style.setFillColor(this.styleConfig, fillColor);
+
+      this.scope['fillColor'] = os.color.toHexString(fillColor);
+    } else {
+      // change just the stroke color
+      os.style.setConfigColor(this.styleConfig, color);
+      this.scope['color'] = os.color.toHexString(color);
+    }
+  }
+};
+
+
+/**
+ * Handle fill color change.
+ *
+ * @param {?angular.Scope.Event} event The Angular event.
+ * @param {string|undefined} value The new color value.
+ * @protected
+ */
+plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onFillColorChange = function(event, value) {
+  if (event) {
+    event.stopPropagation();
+  }
+
+  if (this.styleConfig) {
+    var color = value ? os.style.toRgbaString(value) : os.style.DEFAULT_FILL_COLOR;
+
+    // update the color with the correct opacity
+    var colorArr = os.color.toRgbArray(color);
+    var opacity = /** @type {number|undefined} */ (this.scope['fillOpacity']);
+    if (colorArr && opacity != null) {
+      colorArr[3] = opacity;
+      color = os.style.toRgbaString(colorArr);
+    }
+
+    // Only change the fill color without changing the image fill color too
+    os.style.setFillColor(this.styleConfig, color);
+
+    this.scope['fillColor'] = os.color.toHexString(color);
   }
 };
 
@@ -207,6 +308,22 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onColorReset = function(ev
 
   // reset the color to the initial value
   this.onColorChange(event, this.initialColor);
+};
+
+
+/**
+ * Handle fill color reset.
+ *
+ * @param {?angular.Scope.Event} event The Angular event.
+ * @protected
+ */
+plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onFillColorReset = function(event) {
+  if (event) {
+    event.stopPropagation();
+  }
+
+  // reset the color to the initial value
+  this.onFillColorChange(event, os.style.DEFAULT_FILL_COLOR);
 };
 
 
@@ -240,8 +357,41 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onOpacityChange = function
     event.stopPropagation();
   }
 
-  if (this.styleConfig && value != null) {
-    os.style.setConfigOpacityColor(this.styleConfig, value);
+  var color;
+
+  if (event.name == 'fillOpacity.slidestop') {
+    color = os.style.getConfigColor(this.styleConfig, true, os.style.StyleField.FILL);
+    color[3] = value;
+
+    // Only change the fill color without changing the image fill color too
+    os.style.setFillColor(this.styleConfig, color);
+
+    this.scope['fillOpacity'] = value;
+  } else {
+    var strokeColorHex = os.color.toHexString(this.scope['color']);
+    var fillColorHex = os.color.toHexString(this.scope['fillColor']);
+    var strokeColorOpacity = this.scope['opacity'];
+    var fillColorOpacity = this.scope['fillOpacity'];
+
+    if (strokeColorHex == fillColorHex && strokeColorOpacity == fillColorOpacity) {
+      color = os.style.getConfigColor(this.styleConfig, true);
+      color[3] = value;
+      os.style.setConfigColor(this.styleConfig, color);
+
+      this.scope['opacity'] = value;
+      this.scope['fillOpacity'] = value;
+    } else {
+      color = os.style.getConfigColor(this.styleConfig, true, os.style.StyleField.STROKE);
+      color[3] = value;
+
+      os.style.setConfigColor(this.styleConfig, color);
+
+      if (this.scope['fillColor']) {
+        os.style.setFillColor(this.styleConfig, this.styleConfig['fillColor']);
+      }
+
+      this.scope['opacity'] = value;
+    }
   }
 };
 
