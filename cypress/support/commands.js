@@ -64,6 +64,7 @@ Cypress.Commands.add('imageComparison', function(name) {
   cy.get(layers.layersTab.Tree.WORLD_IMAGERY_TILES)
       .find(shared.Tree.ROW_CHECKBOX)
       .click();
+  cy.wait(200);
   cy.matchImageSnapshot(name);
   cy.get(layers.layersTab.Tree.STREET_MAP_TILES)
       .find(shared.Tree.ROW_CHECKBOX)
