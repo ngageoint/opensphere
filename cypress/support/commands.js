@@ -58,7 +58,7 @@ Cypress.Commands.add('login', function(clearLocalStorage) {
     indexedDB.deleteDatabase(config.IndexedDB.FILES);
     indexedDB.deleteDatabase(config.IndexedDB.SETTINGS);
   }
-  cy.visit(config.HIDE_TIPS);
+  cy.visit('index.html' + config.HIDE_TIPS); // TODO: Windows 10 issue. Remove index.html after fixed: https://github.com/http-party/http-server/issues/525
   cy.get(layers.layersTab.Tree.STREET_MAP_TILES, {timeout: 15000}).should('be.visible');
   cy.get(layers.layersTab.Tree.LOADING_SPINNER, {timeout: 20000}).should('not.be.visible');
 });

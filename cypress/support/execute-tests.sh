@@ -130,7 +130,11 @@ function overrideSettings() {
 }
 
 function startWebServer() {
-  webServerProcess=$(ps -ef | grep http-server | grep -v grep)
+  if [ "$OSTYPE" == "msys" ]; then
+    webServerProcess="$(netstat -ano | findstr 0.0.0.0:8282 | awk '{print $5}')" # TODO: Use a process name instead after this is fixed: https://github.com/http-party/http-server/issues/333
+  else
+    webServerProcess=$(ps -ef | grep http-server | grep -v grep)
+  fi
   
   if [ -z "$webServerProcess" ]; then
     SERVER_STARTED=true
@@ -191,15 +195,16 @@ function runTests() {
 }
 
 function stopWebServer() {
-  if pgrep "node" > /dev/null; then
-    if $SERVER_STARTED; then
-      echo 'INFO: terminating web server'
-      npm run stop-server
+  if $SERVER_STARTED; then
+    echo 'INFO: terminating web server'
+    if [ "$OSTYPE" == "msys" ]; then
+      webServerProcess="$(netstat -ano | findstr 0.0.0.0:8282 | awk '{print $5}')" # TODO: Use a process name instead after this is fixed: https://github.com/http-party/http-server/issues/333
+      taskkill //PID $webServerProcess //F
     else
-      echo 'INFO: server was running before tests started, leaving it running'
+      npm run stop-server
     fi
   else
-    echo 'INFO: web server is not running, nothing to terminate'
+    echo 'INFO: server was running before tests started, leaving it running'
   fi
 }
 
