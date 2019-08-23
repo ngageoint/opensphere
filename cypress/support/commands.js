@@ -26,6 +26,7 @@
 var core = require('../support/selectors/core.js');
 var layers = require('../support/selectors/layers.js');
 var config = require('./index.js');
+var shared = require('../support/selectors/shared.js');
 var addMatchImageSnapshotCommand = require('cypress-image-snapshot/command')
     .addMatchImageSnapshotCommand;
 
@@ -47,7 +48,19 @@ addMatchImageSnapshotCommand({
 Cypress.Commands.add('imageComparison', function(name) {
   cy.wait(6000);
   cy.get(layers.layersTab.Tree.LOADING_SPINNER, {timeout: 20000}).should('not.be.visible');
+  cy.get(layers.layersTab.Tree.STREET_MAP_TILES)
+      .find(shared.Tree.ROW_CHECKBOX)
+      .click();
+  cy.get(layers.layersTab.Tree.WORLD_IMAGERY_TILES)
+      .find(shared.Tree.ROW_CHECKBOX)
+      .click();
   cy.matchImageSnapshot(name);
+  cy.get(layers.layersTab.Tree.STREET_MAP_TILES)
+      .find(shared.Tree.ROW_CHECKBOX)
+      .click();
+  cy.get(layers.layersTab.Tree.WORLD_IMAGERY_TILES)
+      .find(shared.Tree.ROW_CHECKBOX)
+      .click();
 });
 
 Cypress.Commands.add('login', function(clearLocalStorage) {

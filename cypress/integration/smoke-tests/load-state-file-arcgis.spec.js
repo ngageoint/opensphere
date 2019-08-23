@@ -46,7 +46,7 @@ describe('Import state file', function() {
     cy.get(imports.importStateDialog.DIALOG).should('be.visible');
     cy.get(imports.importStateDialog.CLEAR_CHECKBOX).check();
     cy.get(imports.importStateDialog.OK_BUTTON).click();
-    cy.wait(1400);
+    cy.wait(1000); // TODO: Remove this flaky workaround after https://github.com/cypress-io/cypress/issues/4460 is fixed
     cy.route('POST', '**/OpenData/MapServer/3/query', 'fx:/smoke-tests/load-state-file-arcgis/query-3-2.stub.json')
         .as('getFeatureDetails-13_second');
     cy.route('POST', '**/OpenData/MapServer/234/query', 'fx:/smoke-tests/load-state-file-arcgis/query-234-2.stub.json')
@@ -57,12 +57,6 @@ describe('Import state file', function() {
     cy.get(core.statusBar.COORDINATES_TEXT).should('contain', '+39');
     cy.get(shared.Tree.ROW_4).should('contain', 'Police Stations Features (3)');
     cy.get(shared.Tree.ROW_5).should('contain', 'Fire Hydrants Features (747)');
-    cy.get(layers.layersTab.Tree.STREET_MAP_TILES)
-        .find(shared.Tree.ROW_CHECKBOX)
-        .click();
-    cy.get(layers.layersTab.Tree.WORLD_IMAGERY_TILES)
-        .find(shared.Tree.ROW_CHECKBOX)
-        .click();
     cy.imageComparison('features loaded');
     cy.get(shared.Tree.ROW_5).rightClick();
     cy.get(layers.layersTab.Tree.contextMenu.FEATURE_ACTIONS).click();
