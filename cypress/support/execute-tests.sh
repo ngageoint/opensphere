@@ -113,14 +113,14 @@ function checkArguments() {
         if [ "$STREET_MAP_URL" ]; then
           export SETTINGS_STREET_MAP_URL=$STREET_MAP_URL
         else
-          echo "WARNING: STREET_MAP_URL environment variable not set, using default."
-          export SETTINGS_STREET_MAP_URL="https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+          echo "WARNING: STREET_MAP_URL environment variable not set, using a default value instead."
+          export SETTINGS_STREET_MAP_URL="http://services.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer/tile/{z}/{y}/{x}"
         fi
 
         if [ "$WORLD_IMAGERY_URL" ]; then
             export SETTINGS_WORLD_IMAGERY_URL=$WORLD_IMAGERY_URL
         else
-          echo "WARNING: WORLD_IMAGERY_URL environment variable not set, using default."
+          echo "WARNING: WORLD_IMAGERY_URL environment variable not set, using a default value instead."
           export SETTINGS_WORLD_IMAGERY_URL="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
         fi
       fi
