@@ -85,6 +85,9 @@ describe('Add ARCGIS server', function() {
         .find(layers.layersTab.Tree.FEATURE_COUNT_TEXT)
         .invoke('text')
         .should('match', /\([1-9]\d{0,3}\)/); // Any number 1-9999, surrounded by ()
+    cy.get(shared.Tree.ROW_6)
+        .find(shared.Tree.ROW_CHECKBOX)
+        .click(); // TODO: Tiles cannot currently be stubbed. See https://github.com/cypress-io/cypress/issues/687
     cy.imageComparison('features loaded');
   });
 });
