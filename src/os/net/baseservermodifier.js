@@ -1,3 +1,4 @@
+goog.provide('os.net.BaseServerExpression');
 goog.provide('os.net.BaseServerModifier');
 goog.require('goog.Uri');
 goog.require('os.net.URLModifier');
@@ -22,6 +23,13 @@ os.net.BaseServerModifier.replace_ = [];
 
 
 /**
+ * The expression to remove https and trailing slashes
+ * @type {RegExp}
+ */
+os.net.BaseServerExpression = /(https:\/\/)?(.*[^\/])\/?/;
+
+
+/**
  * @param {string} server
  */
 os.net.BaseServerModifier.configure = function(server) {
@@ -30,7 +38,7 @@ os.net.BaseServerModifier.configure = function(server) {
   if (server) {
     os.net.BaseServerModifier.replace_.push({
       search: new RegExp(os.settings.get('baseServerRegex', '^\\/(.*)$')),
-      replace: server + '/$1'
+      replace: server.replace(/\/$/, '') + '/$1'
     });
   }
 };
