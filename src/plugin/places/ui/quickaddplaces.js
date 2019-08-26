@@ -6,6 +6,7 @@ goog.require('goog.events.KeyHandler');
 goog.require('ol.geom.Point');
 goog.require('os.command.CommandProcessor');
 goog.require('os.command.ParallelCommand');
+goog.require('os.data.RecordField');
 goog.require('os.defines');
 goog.require('os.interaction.DragBox');
 goog.require('os.interaction.DragCircle');
@@ -13,6 +14,7 @@ goog.require('os.interaction.DrawLine');
 goog.require('os.interaction.DrawPolygon');
 goog.require('os.ui.Module');
 goog.require('os.ui.menu.layer');
+goog.require('os.webgl.AltitudeMode');
 goog.require('plugin.file.kml.cmd.KMLNodeRemove');
 
 
@@ -338,6 +340,8 @@ plugin.places.ui.QuickAddPlacesCtrl.prototype.onMapClick = function(mapBrowserEv
  */
 plugin.places.ui.QuickAddPlacesCtrl.prototype.addGeometry = function(geometry) {
   if (geometry) {
+    geometry.set(os.data.RecordField.ALTITUDE_MODE, os.webgl.AltitudeMode.CLAMP_TO_GROUND);
+
     if (!this.root || !this.root.getParent()) {
       this.root = plugin.places.addFolder(/** @type {!plugin.places.FolderOptions} */ ({
         name: this['name'] || 'New Place'
