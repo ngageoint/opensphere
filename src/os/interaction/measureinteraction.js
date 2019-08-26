@@ -150,7 +150,7 @@ os.interaction.Measure.prototype.begin = function(mapBrowserEvent) {
 /**
  * @inheritDoc
  */
-os.interaction.Measure.prototype.beforeUpdate = function(mapBrowserEvent) {
+os.interaction.Measure.prototype.beforeUpdate = function(opt_mapBrowserEvent) {
   var result;
   var len = this.coords.length;
   if (len > 1) {
