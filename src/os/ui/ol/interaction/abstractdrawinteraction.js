@@ -13,8 +13,8 @@ goog.require('ol.style.Fill');
 goog.require('ol.style.Stroke');
 goog.require('ol.style.Style');
 goog.require('ol.style.Text');
-goog.require('os.ui.ol.draw.DrawEvent');
-goog.require('os.ui.ol.draw.DrawEventType');
+goog.require('os.ui.draw.DrawEvent');
+goog.require('os.ui.draw.DrawEventType');
 
 
 
@@ -244,7 +244,7 @@ os.ui.ol.interaction.AbstractDraw.prototype.begin = function(mapBrowserEvent) {
     this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument(), true);
     this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.onKey, true, this);
     map.getView().setHint(ol.ViewHint.INTERACTING, 1);
-    this.dispatchEvent(new os.ui.ol.draw.DrawEvent(os.ui.ol.draw.DrawEventType.DRAWSTART,
+    this.dispatchEvent(new os.ui.draw.DrawEvent(os.ui.draw.DrawEventType.DRAWSTART,
         mapBrowserEvent.coordinate));
   }
 };
@@ -274,7 +274,7 @@ os.ui.ol.interaction.AbstractDraw.prototype.end = function(mapBrowserEvent) {
     var geom = this.getGeometry();
     var props = this.getProperties();
     this.cleanup();
-    this.dispatchEvent(new os.ui.ol.draw.DrawEvent(os.ui.ol.draw.DrawEventType.DRAWEND,
+    this.dispatchEvent(new os.ui.draw.DrawEvent(os.ui.draw.DrawEventType.DRAWEND,
         mapBrowserEvent.coordinate, geom, mapBrowserEvent.pixel, props || undefined));
 
     // drawing completed, so prevent the event from propagating to further handlers
@@ -292,7 +292,7 @@ os.ui.ol.interaction.AbstractDraw.prototype.cancel = function() {
   if (this.drawing) {
     goog.log.fine(os.ui.ol.interaction.AbstractDraw.LOGGER_, this.getType() + ' interaction cancel');
     this.drawing = false;
-    this.dispatchEvent(new os.ui.ol.draw.DrawEvent(os.ui.ol.draw.DrawEventType.DRAWCANCEL));
+    this.dispatchEvent(new os.ui.draw.DrawEvent(os.ui.draw.DrawEventType.DRAWCANCEL));
     this.cleanup();
   }
 };

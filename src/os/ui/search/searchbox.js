@@ -984,3 +984,27 @@ os.ui.search.SearchBoxCtrl.prototype.isFavoriteActive = function(favorite) {
   var fav = favorite['uri'].split('#');
   return current.length == 2 && fav.length == 2 && current[1] == fav[1];
 };
+
+
+/**
+ * Checks to see if the search supports geosearch.
+ *
+ * @param {!os.search.ISearch} search The search.
+ * @return {boolean}
+ * @export
+ */
+os.ui.search.SearchBoxCtrl.prototype.supportsGeo = function(search) {
+  return os.search.supportsGeoSearch(search);
+};
+
+
+/**
+ * Checks to see if the search supports temporal search.
+ *
+ * @param {!os.search.ISearch} search The search.
+ * @return {boolean}
+ * @export
+ */
+os.ui.search.SearchBoxCtrl.prototype.supportsTemporal = function(search) {
+  return os.search.supportsTemporalSearch(search);
+};
