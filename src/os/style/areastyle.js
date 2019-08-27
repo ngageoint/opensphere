@@ -86,6 +86,27 @@ os.style.area.HOVER_STYLE = new ol.style.Style({
 
 
 /**
+ * Style for the search area.
+ *
+ * @type {ol.style.Style}
+ * @const
+ */
+os.style.area.SEARCH_AREA_STYLE = new ol.style.Style({
+  stroke: new ol.style.Stroke({
+    color: '#fff',
+    lineCap: 'square',
+    width: 3
+  }),
+  image: new ol.style.Circle({
+    radius: 3,
+    fill: new ol.style.Fill({
+      color: '#fff'
+    })
+  })
+});
+
+
+/**
  * @type {Object}
  * @const
  */
