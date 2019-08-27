@@ -366,12 +366,12 @@ plugin.ogc.wfs.WFSLayerConfig.TYPES = {
  * @protected
  */
 plugin.ogc.wfs.WFSLayerConfig.prototype.getBestType = function(options) {
-  var formats = /** @type {Array<string>} */ (options['formats']);
+  var formats = /** @type {Array<string>|undefined} */ (options['formats']);
   var format = /** @type {string} */ (this.params.get('outputformat'));
   var preferred = plugin.ogc.wfs.WFSLayerConfig.PREFERRED_TYPES;
 
   // see if the given format is one mutually supported by the layer and this plugin
-  if (format && formats.includes(format)) {
+  if (format && (!formats || formats.includes(format))) {
     for (var i = 0, n = preferred.length; i < n; i++) {
       var regex = preferred[i];
       if (regex.test(format)) {
@@ -397,6 +397,7 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.getBestType = function(options) {
     }
   }
 
+  this.params.remove('outputformat');
   return 1;
 };
 
