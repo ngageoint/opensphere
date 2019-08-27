@@ -265,10 +265,19 @@ os.config.ThemeSettings.setTheme = function() {
       os.settings.set(os.config.ThemeSettings.Keys.ACCESSIBLE_THEME, accessibleTheme);
     }
 
-    var theme = goog.object.findValue(os.config.ThemeSettings.themeExceptions, function(value, key) {
+    var theme = null;
+    var exceptionTheme = goog.object.findValue(os.config.ThemeSettings.themeExceptions, function(value, key) {
       return window.location.hash.indexOf(key) != -1;
     });
-    if (accessibleTheme && accessibleThemes[displayTheme]) {
+
+    if (exceptionTheme) {
+      if (accessibleTheme && accessibleThemes[exceptionTheme]) {
+        // Get this flavor of the theme
+        theme = accessibleThemes[exceptionTheme][accessibleTheme];
+      } else {
+        theme = accessibleThemes[exceptionTheme]['Normal'];
+      }
+    } else if (accessibleTheme && accessibleThemes[displayTheme]) {
       // Get this flavor of the theme
       theme = accessibleThemes[displayTheme][accessibleTheme];
     }
