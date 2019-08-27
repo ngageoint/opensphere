@@ -300,6 +300,7 @@ os.ui.text.TuiEditorCtrl.prototype.init = function() {
       this['textAreaBackup'] = false;
       this['loading'] = false;
       this['tuiEditor'] = new tui.Editor(this.getOptions());
+      this.scope.$emit(os.ui.text.TuiEditor.READY);
 
       if (os.settings.get(os.ui.text.TuiEditor.MODE_KEY) == os.ui.text.TuiEditor.Mode.MARKDOWN) {
         this.timeout_(this.fixCodemirrorInit_.bind(this));
