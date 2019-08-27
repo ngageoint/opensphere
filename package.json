@@ -133,7 +133,7 @@
     "semantic-release": "semantic-release --dry-run",
     "start-server": "http-server ../../ -p 8282 -c-1 -o -U -s &",
     "stop-server": "run-script-os",
-    "stop-server:macos:linux": "pkill -f http-server",
+    "stop-server:darwin:linux": "pkill -f http-server",
     "stop-server:windows": "taskkill -F -PID $(netstat -ano | findstr 0.0.0.0:8282 | awk '{print $5}')"
   },
   "keywords": [

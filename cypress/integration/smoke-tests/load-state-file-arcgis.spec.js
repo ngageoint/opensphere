@@ -57,6 +57,12 @@ describe('Import state file', function() {
     cy.get(core.statusBar.COORDINATES_TEXT).should('contain', '+39');
     cy.get(shared.Tree.ROW_4).should('contain', 'Police Stations Features (3)');
     cy.get(shared.Tree.ROW_5).should('contain', 'Fire Hydrants Features (747)');
+    cy.get(shared.Tree.ROW_7)
+        .find(shared.Tree.ROW_CHECKBOX)
+        .click(); // TODO: Tiles cannot currently be stubbed. See https://github.com/cypress-io/cypress/issues/687
+    cy.get(shared.Tree.ROW_8)
+        .find(shared.Tree.ROW_CHECKBOX)
+        .click(); // TODO: Tiles cannot currently be stubbed. See https://github.com/cypress-io/cypress/issues/687
     cy.imageComparison('features loaded');
     cy.get(shared.Tree.ROW_5).rightClick();
     cy.get(layers.layersTab.Tree.contextMenu.FEATURE_ACTIONS).click();
