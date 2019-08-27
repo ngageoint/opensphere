@@ -2,6 +2,8 @@ goog.provide('os.search');
 goog.provide('os.search.SortOrder');
 goog.provide('os.search.SortType');
 
+goog.require('os.search.ITemporalSearch');
+
 
 /**
  * The base key for search settings.
