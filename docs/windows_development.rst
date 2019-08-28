@@ -47,10 +47,32 @@ Now we will check our work:
 Git for Windows installs "Git Bash". Search for it in the Start Menu and fire it up.
 
 
-Setup
+npm
 =====
 
-Setup the project workspace and clone the project:
+Tell the NPM script runner to use BASH rather than whatever it typically uses on Windows.
+
+.. code-block:: none
+
+  npm config set script-shell "C:/Program Files/git/bin/bash.exe"
+
+If you have other node projects on your machine and do not wish for this to pollute them, then consider adding
+that configuration to a ``.npmrc`` file local to the project.
+
+git
+=====
+
+Fix your line ending configuration for git (necessary if using Git Bash but not if you are using a full POSIX environment such as Cygwin_):
+
+.. code-block:: none
+
+  git config core.autocrlf input
+
+
+OpenSphere
+==========
+
+Now set up the project workspace and clone the project:
 
 .. code-block:: none
 
@@ -60,22 +82,6 @@ Setup the project workspace and clone the project:
   git clone https://github.com/ngageoint/opensphere
   yarn install
   cd opensphere
-
-Now you are about ready to build opensphere. However, we need to tell the NPM script runner to use BASH
-rather than whatever it typically uses on Windows.
-
-.. code-block:: none
-
-  npm config set script-shell "C:/Program Files/git/bin/bash.exe"
-
-If you have other node projects on your machine and do not wish for this to pollute them, then consider adding
-that configuration to a ``.npmrc`` file local to the project.
-
-Also fix your line ending configuration for git (necessary if using Git Bash but not if you are using a full POSIX environment such as Cygwin_):
-
-.. code-block:: none
-
-  git config core.autocrlf input
 
 Now build:
 
