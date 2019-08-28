@@ -97,8 +97,7 @@ os.ui.header.ScrollHeaderCtrl = function($scope, $element, $timeout, $attrs) {
   this.supportsSticky_ = Modernizr.csspositionsticky || false;
   if (this.supportsSticky_) {
     this.timeout_(function() {
-      this.element_.css('position', 'sticky');
-      this.element_.css('top', 0);
+      this.element_.addClass('sticky-top position-sticky');
     }.bind(this));
   }
 
