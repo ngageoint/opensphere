@@ -150,8 +150,8 @@ os.ui.capture.AbstractCapturePlugin.prototype.capture_ = function() {
       if (canvas) {
         os.capture.saveCanvas(canvas);
       }
-    }, this.onCaptureError_, this);
-  }, this.onCaptureError_, this);
+    }, this.onCaptureError, this);
+  }, this.onCaptureError, this);
 };
 
 
@@ -159,9 +159,9 @@ os.ui.capture.AbstractCapturePlugin.prototype.capture_ = function() {
  * Handle rejected promise in processNextFrame_.
  *
  * @param {*} e
- * @private
+ * @protected
  */
-os.ui.capture.AbstractCapturePlugin.prototype.onCaptureError_ = function(e) {
+os.ui.capture.AbstractCapturePlugin.prototype.onCaptureError = function(e) {
   var errorMsg = 'Failed to take screenshot:';
   var error;
   if (e instanceof Error) {
