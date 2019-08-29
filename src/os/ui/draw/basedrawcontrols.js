@@ -208,19 +208,24 @@ os.ui.draw.BaseDrawControlsCtrl.prototype.setFeature = function(f) {
  * @protected
  */
 os.ui.draw.BaseDrawControlsCtrl.prototype.setSelectedControl = function(type) {
-  this.interaction = null;
+  if (this.interaction) {
+    this.interaction.setActive(false);
+    this.interaction = null;
+  }
 
   var map = this.getMap();
   if (map) {
     var interactions = map.getInteractions().getArray();
     for (var i = 0, n = interactions.length; i < n; i++) {
       var interaction = /** @type {os.ui.ol.interaction.AbstractDraw} */ (interactions[i]);
-      if (interaction instanceof os.ui.ol.interaction.AbstractDraw) {
+      if (interaction instanceof os.ui.ol.interaction.AbstractDraw &&
+         !(interaction instanceof os.interaction.DragZoom)) {
         var active = interaction.isType(type);
         interaction.setActive(active);
 
         if (active) {
           this.interaction = interaction;
+          break;
         }
       }
     }
