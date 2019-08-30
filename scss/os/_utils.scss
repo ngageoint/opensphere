@@ -67,6 +67,10 @@ $user-select-options: all, auto, text, none;
   cursor: help;
 }
 
+.u-cursor-wait {
+  cursor: wait !important;
+}
+
 .u-btn-separator {
   border-left: 1px solid $body-color;
   border-right: 1px solid $body-bg;
