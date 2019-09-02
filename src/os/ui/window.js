@@ -1227,6 +1227,8 @@ os.ui.WindowCtrl.prototype.onWindowResize_ = function() {
       this.element.removeClass('u-parent-resizer-xl');
     }
     this.element.addClass(addClass);
+
+    goog.dom.ViewportSizeMonitor.getInstanceForWindow().dispatchEvent(goog.events.EventType.RESIZE);
   }
 };
 
