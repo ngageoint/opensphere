@@ -7,6 +7,7 @@ goog.require('goog.log.Logger');
 goog.require('ol.Feature');
 goog.require('os.config.Settings');
 goog.require('os.data.RecordField');
+goog.require('os.interaction.DragZoom');
 goog.require('os.metrics.Metrics');
 goog.require('os.ui.GlobalMenuEventType');
 goog.require('os.ui.Module');
