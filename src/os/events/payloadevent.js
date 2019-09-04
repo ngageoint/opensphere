@@ -38,7 +38,7 @@ os.events.PayloadEvent.prototype.target;
 /**
  * Gets the payload.
  *
- * @return {?string}
+ * @return {?T}
  */
 os.events.PayloadEvent.prototype.getPayload = function() {
   return this.payload_;

@@ -59,4 +59,10 @@ describe('os.net.BaseServerModifier', function() {
     expect(uri.toString()).toBe(relativeString);
     os.net.BaseServerModifier.configure();
   });
+
+  it('should remove https and trailling /', function() {
+    expect('example.com'.replace(os.net.BaseServerExpression, '$2')).toBe('example.com');
+    expect('https://example.com'.replace(os.net.BaseServerExpression, '$2')).toBe('example.com');
+    expect('https://example.com/'.replace(os.net.BaseServerExpression, '$2')).toBe('example.com');
+  });
 });

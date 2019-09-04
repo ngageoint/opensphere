@@ -15,7 +15,7 @@ goog.require('os.geo');
 goog.require('os.implements');
 goog.require('os.interpolate');
 goog.require('os.map');
-goog.require('os.ui.ol.draw.DrawEvent');
+goog.require('os.ui.draw.DrawEvent');
 goog.require('os.ui.ol.interaction.DrawPolygon');
 
 

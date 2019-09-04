@@ -42,6 +42,7 @@ os.action.EventType = {
   ADD_TO_AREA: 'area:addTo',
   MODIFY_AREA: 'area:modify',
   MERGE_AREAS: 'area:merge',
+  SEARCH_AREA: 'area:search',
 
   // color
   COLOR_SELECTED: 'colorSelected',
