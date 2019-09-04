@@ -7,8 +7,7 @@ goog.require('os.MapEvent');
 goog.require('os.defines');
 goog.require('os.ui.Module');
 goog.require('os.ui.draw');
-goog.require('os.ui.ol.draw.DrawControlsCtrl');
-goog.require('os.ui.ol.draw.drawMenuDirective');
+goog.require('os.ui.draw.BaseDrawControlsCtrl');
 
 
 /**
@@ -20,7 +19,10 @@ os.ui.draw.drawControlsDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    scope: true,
+    scope: {
+      'menu': '=?',
+      'olMap': '=?'
+    },
     templateUrl: os.ROOT + 'views/draw/drawcontrols.html',
     controller: os.ui.draw.DrawControlsCtrl,
     controllerAs: 'drawControls'
@@ -41,7 +43,7 @@ os.ui.Module.directive('osDrawControls', [os.ui.draw.drawControlsDirective]);
  * @constructor
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
- * @extends {os.ui.ol.draw.DrawControlsCtrl}
+ * @extends {os.ui.draw.BaseDrawControlsCtrl}
  * @ngInject
  */
 os.ui.draw.DrawControlsCtrl = function($scope, $element) {
@@ -49,7 +51,7 @@ os.ui.draw.DrawControlsCtrl = function($scope, $element) {
   os.ui.draw.DrawControlsCtrl.base(this, 'constructor', $scope, $element);
   this.log = os.ui.draw.DrawControlsCtrl.LOGGER_;
 };
-goog.inherits(os.ui.draw.DrawControlsCtrl, os.ui.ol.draw.DrawControlsCtrl);
+goog.inherits(os.ui.draw.DrawControlsCtrl, os.ui.draw.BaseDrawControlsCtrl);
 
 
 /**
@@ -74,7 +76,8 @@ os.ui.draw.DrawControlsCtrl.prototype.disposeInternal = function() {
  * @inheritDoc
  */
 os.ui.draw.DrawControlsCtrl.prototype.getMap = function() {
-  return os.MapContainer.getInstance().getMap();
+  var map = os.ui.draw.DrawControlsCtrl.base(this, 'getMap');
+  return map || os.MapContainer.getInstance().getMap();
 };
 
 
@@ -82,7 +85,8 @@ os.ui.draw.DrawControlsCtrl.prototype.getMap = function() {
  * @inheritDoc
  */
 os.ui.draw.DrawControlsCtrl.prototype.getMenu = function() {
-  return os.ui.draw.MENU;
+  var menu = os.ui.draw.DrawControlsCtrl.base(this, 'getMenu');
+  return menu || os.ui.draw.MENU;
 };
 
 

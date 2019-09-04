@@ -1,0 +1,37 @@
+<div class="d-flex">
+  <div class="btn-group js-draw-controls{{drawPicker.uid}}" ng-if="menu">
+    <button class="btn btn-secondary"
+        ng-class="drawPicker.active && 'active'"
+        ng-click="drawPicker.draw(drawPicker.selectedType)"
+        ng-right-click="drawPicker.toggleMenu()"
+        title="Draws a {{drawPicker.selectedType}} on the map">
+      <i class="fa fa-fw"
+          ng-class="{'fa-square-o': drawPicker.selectedType == 'box', 'fa-circle-o': drawPicker.selectedType == 'circle', 'fa-long-arrow-right': drawPicker.selectedType == 'line', 'fa-star-o': drawPicker.selectedType == 'polygon'}"></i>
+    </button>
+    <button class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+        ng-click="drawPicker.toggleMenu()"
+        ng-right-click="drawPicker.toggleMenu()">
+    </button>
+  </div>
+  <div ng-if="!menu">
+    <div class="col">
+      <div class="btn-group">
+        <button ng-if="point" class="btn btn-secondary" ng-class="drawPicker.active && drawPicker.selectedType == 'point' && 'active'" ng-click="drawPicker.draw('point')" title="Place a point">
+          <i class="fa fa-fw fa-crosshairs"></i>
+        </button>
+        <button class="btn btn-secondary" ng-class="drawPicker.active && drawPicker.selectedType == 'box' && 'active'" ng-click="drawPicker.draw('box')" title="Draw a box">
+          <i class="fa fa-fw fa-square-o"></i>
+        </button>
+        <button class="btn btn-secondary" ng-class="drawPicker.active && drawPicker.selectedType == 'circle' && 'active'" ng-click="drawPicker.draw('circle')" title="Draw a circle">
+          <i class="fa fa-fw fa-circle-o"></i>
+        </button>
+        <button class="btn btn-secondary" ng-class="drawPicker.active && drawPicker.selectedType == 'polygon' && 'active'" ng-click="drawPicker.draw('polygon')" title="Draw a polygon">
+          <i class="fa fa-fw fa-star-o"></i>
+        </button>
+        <button ng-if="line" class="btn btn-secondary" ng-class="drawPicker.active && drawPicker.selectedType == 'line' && 'active'" ng-click="drawPicker.draw('line')" title="Draw a line">
+          <i class="fa fa-fw fa-long-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

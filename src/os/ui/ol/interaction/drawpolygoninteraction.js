@@ -12,7 +12,7 @@ goog.require('ol.source.Vector');
 goog.require('os.data.RecordField');
 goog.require('os.geo.jsts');
 goog.require('os.geo2');
-goog.require('os.ui.ol.draw.DrawEvent');
+goog.require('os.ui.draw.DrawEvent');
 goog.require('os.ui.ol.interaction.AbstractDraw');
 goog.require('os.webgl');
 
