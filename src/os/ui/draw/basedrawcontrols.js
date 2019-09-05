@@ -1,5 +1,5 @@
-goog.provide('os.ui.ol.draw.DrawControlsCtrl');
-goog.provide('os.ui.ol.draw.drawControlsDirective');
+goog.provide('os.ui.draw.BaseDrawControlsCtrl');
+goog.provide('os.ui.draw.baseDrawControlsDirective');
 
 goog.require('goog.Disposable');
 goog.require('goog.log');
@@ -10,9 +10,8 @@ goog.require('os.data.RecordField');
 goog.require('os.metrics.Metrics');
 goog.require('os.ui.GlobalMenuEventType');
 goog.require('os.ui.Module');
+goog.require('os.ui.draw.DrawEventType');
 goog.require('os.ui.menu.draw');
-goog.require('os.ui.ol.draw.DrawEventType');
-goog.require('os.ui.ol.draw.drawMenuDirective');
 goog.require('os.ui.ol.interaction.AbstractDraw');
 goog.require('os.ui.ol.interaction.DragBox');
 
@@ -22,18 +21,17 @@ goog.require('os.ui.ol.interaction.DragBox');
  *
  * @return {angular.Directive}
  */
-os.ui.ol.draw.drawControlsDirective = function() {
+os.ui.draw.baseDrawControlsDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
     scope: {
       'menu': '=',
       'olMap': '=',
-      'embeddedControls': '=',
-      'hideExtraControls': '='
+      'embeddedControls': '=?'
     },
-    templateUrl: os.ROOT + 'views/ol/draw/drawcontrols.html',
-    controller: os.ui.ol.draw.DrawControlsCtrl,
+    templateUrl: os.ROOT + 'views/draw/basedrawcontrols.html',
+    controller: os.ui.draw.BaseDrawControlsCtrl,
     controllerAs: 'drawControls'
   };
 };
@@ -42,7 +40,7 @@ os.ui.ol.draw.drawControlsDirective = function() {
 /**
  * Add the directive to the os.ui module.
  */
-os.ui.Module.directive('drawControls', [os.ui.ol.draw.drawControlsDirective]);
+os.ui.Module.directive('drawControls', [os.ui.draw.baseDrawControlsDirective]);
 
 
 
@@ -56,8 +54,8 @@ os.ui.Module.directive('drawControls', [os.ui.ol.draw.drawControlsDirective]);
  * @constructor
  * @ngInject
  */
-os.ui.ol.draw.DrawControlsCtrl = function($scope, $element) {
-  os.ui.ol.draw.DrawControlsCtrl.base(this, 'constructor');
+os.ui.draw.BaseDrawControlsCtrl = function($scope, $element) {
+  os.ui.draw.BaseDrawControlsCtrl.base(this, 'constructor');
 
   /**
    * @type {?angular.Scope}
@@ -95,7 +93,7 @@ os.ui.ol.draw.DrawControlsCtrl = function($scope, $element) {
    * @type {goog.log.Logger}
    * @protected
    */
-  this.log = os.ui.ol.draw.DrawControlsCtrl.LOGGER_;
+  this.log = os.ui.draw.BaseDrawControlsCtrl.LOGGER_;
 
   /**
    * @type {?os.ui.ol.OLMap}
@@ -120,22 +118,22 @@ os.ui.ol.draw.DrawControlsCtrl = function($scope, $element) {
   this['controlMenu'] = os.ui.menu.draw.MENU;
   this.initControlMenu();
 
-  os.dispatcher.listen(os.ui.ol.draw.DrawEventType.DRAWSTART, this.apply, false, this);
-  os.dispatcher.listen(os.ui.ol.draw.DrawEventType.DRAWEND, this.onDrawEnd, false, this);
-  os.dispatcher.listen(os.ui.ol.draw.DrawEventType.DRAWCANCEL, this.apply, false, this);
+  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWSTART, this.apply, false, this);
+  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWEND, this.onDrawEnd, false, this);
+  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWCANCEL, this.apply, false, this);
 
-  os.dispatcher.listen(os.ui.ol.draw.DrawEventType.DRAWBOX, this.onDrawType, false, this);
-  os.dispatcher.listen(os.ui.ol.draw.DrawEventType.DRAWCIRCLE, this.onDrawType, false, this);
-  os.dispatcher.listen(os.ui.ol.draw.DrawEventType.DRAWPOLYGON, this.onDrawType, false, this);
-  os.dispatcher.listen(os.ui.ol.draw.DrawEventType.DRAWLINE, this.onDrawType, false, this);
-  os.dispatcher.listen(os.ui.ol.draw.DrawEventType.DRAWCOUNTRY, this.onDrawType, false, this);
+  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWBOX, this.onDrawType, false, this);
+  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWCIRCLE, this.onDrawType, false, this);
+  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWPOLYGON, this.onDrawType, false, this);
+  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWLINE, this.onDrawType, false, this);
+  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWCOUNTRY, this.onDrawType, false, this);
 
   var selected = /** @type {string} */ (os.settings.get('drawType', os.ui.ol.interaction.DragBox.TYPE));
   this.setSelectedControl(selected);
 
   $scope.$on('$destroy', this.dispose.bind(this));
 };
-goog.inherits(os.ui.ol.draw.DrawControlsCtrl, goog.Disposable);
+goog.inherits(os.ui.draw.BaseDrawControlsCtrl, goog.Disposable);
 
 
 /**
@@ -144,24 +142,24 @@ goog.inherits(os.ui.ol.draw.DrawControlsCtrl, goog.Disposable);
  * @type {goog.debug.Logger}
  * @private
  */
-os.ui.ol.draw.DrawControlsCtrl.LOGGER_ = goog.log.getLogger('os.ui.ol.draw.DrawControlsCtrl');
+os.ui.draw.BaseDrawControlsCtrl.LOGGER_ = goog.log.getLogger('os.ui.draw.BaseDrawControlsCtrl');
 
 
 /**
  * @inheritDoc
  */
-os.ui.ol.draw.DrawControlsCtrl.prototype.disposeInternal = function() {
-  os.ui.ol.draw.DrawControlsCtrl.base(this, 'disposeInternal');
+os.ui.draw.BaseDrawControlsCtrl.prototype.disposeInternal = function() {
+  os.ui.draw.BaseDrawControlsCtrl.base(this, 'disposeInternal');
 
-  os.dispatcher.unlisten(os.ui.ol.draw.DrawEventType.DRAWSTART, this.apply, false, this);
-  os.dispatcher.unlisten(os.ui.ol.draw.DrawEventType.DRAWEND, this.onDrawEnd, false, this);
-  os.dispatcher.unlisten(os.ui.ol.draw.DrawEventType.DRAWCANCEL, this.apply, false, this);
+  os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWSTART, this.apply, false, this);
+  os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWEND, this.onDrawEnd, false, this);
+  os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWCANCEL, this.apply, false, this);
 
-  os.dispatcher.unlisten(os.ui.ol.draw.DrawEventType.DRAWBOX, this.onDrawType, false, this);
-  os.dispatcher.unlisten(os.ui.ol.draw.DrawEventType.DRAWCIRCLE, this.onDrawType, false, this);
-  os.dispatcher.unlisten(os.ui.ol.draw.DrawEventType.DRAWPOLYGON, this.onDrawType, false, this);
-  os.dispatcher.unlisten(os.ui.ol.draw.DrawEventType.DRAWLINE, this.onDrawType, false, this);
-  os.dispatcher.unlisten(os.ui.ol.draw.DrawEventType.DRAWCOUNTRY, this.onDrawType, false, this);
+  os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWBOX, this.onDrawType, false, this);
+  os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWCIRCLE, this.onDrawType, false, this);
+  os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWPOLYGON, this.onDrawType, false, this);
+  os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWLINE, this.onDrawType, false, this);
+  os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWCOUNTRY, this.onDrawType, false, this);
 
   this.scope_ = null;
   this.element_ = null;
@@ -171,7 +169,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.disposeInternal = function() {
 /**
  * @return {ol.PluggableMap}
  */
-os.ui.ol.draw.DrawControlsCtrl.prototype.getMap = function() {
+os.ui.draw.BaseDrawControlsCtrl.prototype.getMap = function() {
   return this.olMap_ ? this.olMap_.getMap() : null;
 };
 
@@ -181,7 +179,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.getMap = function() {
  *
  * @return {os.ui.menu.Menu|undefined}
  */
-os.ui.ol.draw.DrawControlsCtrl.prototype.getMenu = function() {
+os.ui.draw.BaseDrawControlsCtrl.prototype.getMenu = function() {
   return this.menu;
 };
 
@@ -192,7 +190,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.getMenu = function() {
  * @param {ol.Feature|undefined} f The feature.
  * @protected
  */
-os.ui.ol.draw.DrawControlsCtrl.prototype.setFeature = function(f) {
+os.ui.draw.BaseDrawControlsCtrl.prototype.setFeature = function(f) {
   if (this.feature && this.olMap_) {
     this.olMap_.removeFeature(this.feature, true);
   }
@@ -209,7 +207,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.setFeature = function(f) {
  * @param {string} type
  * @protected
  */
-os.ui.ol.draw.DrawControlsCtrl.prototype.setSelectedControl = function(type) {
+os.ui.draw.BaseDrawControlsCtrl.prototype.setSelectedControl = function(type) {
   this.interaction = null;
 
   var map = this.getMap();
@@ -240,7 +238,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.setSelectedControl = function(type) {
  *
  * @protected
  */
-os.ui.ol.draw.DrawControlsCtrl.prototype.listenForMapReady = function() {
+os.ui.draw.BaseDrawControlsCtrl.prototype.listenForMapReady = function() {
   // implement in extending classes
 };
 
@@ -251,7 +249,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.listenForMapReady = function() {
  * @param {goog.events.Event} event The ready event.
  * @protected
  */
-os.ui.ol.draw.DrawControlsCtrl.prototype.onMapReady = function(event) {
+os.ui.draw.BaseDrawControlsCtrl.prototype.onMapReady = function(event) {
   this.setSelectedControl(this['selectedType']);
 };
 
@@ -260,7 +258,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.onMapReady = function(event) {
  * @param {*=} opt_event
  * @protected
  */
-os.ui.ol.draw.DrawControlsCtrl.prototype.apply = function(opt_event) {
+os.ui.draw.BaseDrawControlsCtrl.prototype.apply = function(opt_event) {
   os.ui.apply(this.scope_);
 };
 
@@ -268,7 +266,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.apply = function(opt_event) {
 /**
  * @protected
  */
-os.ui.ol.draw.DrawControlsCtrl.prototype.initControlMenu = function() {
+os.ui.draw.BaseDrawControlsCtrl.prototype.initControlMenu = function() {
   var mi = this['controlMenu'].getRoot();
   if (this['supportsLines']) {
     mi.addChild({
@@ -300,10 +298,10 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.initControlMenu = function() {
 
 
 /**
- * @param {os.ui.ol.draw.DrawEvent} event
+ * @param {os.ui.draw.DrawEvent} event
  * @protected
  */
-os.ui.ol.draw.DrawControlsCtrl.prototype.onDrawEnd = function(event) {
+os.ui.draw.BaseDrawControlsCtrl.prototype.onDrawEnd = function(event) {
   if (event.target === this.interaction) {
     var style = this.interaction.getStyle();
     var menu = this.getMenu();
@@ -345,7 +343,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.onDrawEnd = function(event) {
  * @param {goog.events.Event=} opt_e
  * @protected
  */
-os.ui.ol.draw.DrawControlsCtrl.prototype.onMenuEnd = function(opt_e) {
+os.ui.draw.BaseDrawControlsCtrl.prototype.onMenuEnd = function(opt_e) {
   $(this.getMap().getViewport()).removeClass('u-pointer-events-none');
   this.setFeature(undefined);
   if (this.interaction) {
@@ -358,7 +356,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.onMenuEnd = function(opt_e) {
 /**
  * @param {goog.events.Event} e
  */
-os.ui.ol.draw.DrawControlsCtrl.prototype.onDrawType = function(e) {
+os.ui.draw.BaseDrawControlsCtrl.prototype.onDrawType = function(e) {
   if (e && e.type) {
     if (e.type == 'country' && this.isCountryEnabled()) {
       this.launchCountryPicker();
@@ -373,7 +371,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.onDrawType = function(e) {
  * @param {string} type
  * @export
  */
-os.ui.ol.draw.DrawControlsCtrl.prototype.activateControl = function(type) {
+os.ui.draw.BaseDrawControlsCtrl.prototype.activateControl = function(type) {
   goog.log.fine(this.log, 'Activating ' + type + ' control.');
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.DRAW, 1);
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.DRAW + '_' + type, 1);
@@ -394,7 +392,7 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.activateControl = function(type) {
  * @param {boolean=} opt_value
  * @export
  */
-os.ui.ol.draw.DrawControlsCtrl.prototype.toggleMenu = function(opt_value) {
+os.ui.draw.BaseDrawControlsCtrl.prototype.toggleMenu = function(opt_value) {
   var menu = this['controlMenu'];
 
   var target = this.element_.find('.draw-controls-group');
@@ -410,23 +408,25 @@ os.ui.ol.draw.DrawControlsCtrl.prototype.toggleMenu = function(opt_value) {
  * @return {boolean} whether the current interaction is enabled/active
  * @export
  */
-os.ui.ol.draw.DrawControlsCtrl.prototype.isActive = function() {
+os.ui.draw.BaseDrawControlsCtrl.prototype.isActive = function() {
   return this.interaction ? this.interaction.getEnabled() : false;
 };
 
 
 /**
- * override via mixin if opensphere has access to country borders
+ * Get whether country borders are available.
  *
  * @return {boolean}
  * @export
  */
-os.ui.ol.draw.DrawControlsCtrl.prototype.isCountryEnabled = function() {
-  return false;
+os.ui.draw.BaseDrawControlsCtrl.prototype.isCountryEnabled = function() {
+  return os.query.isCountryEnabled();
 };
 
 
 /**
- * override via mixin if opensphere has access to country borders
+ * Launch the country border picker, if available.
  */
-os.ui.ol.draw.DrawControlsCtrl.prototype.launchCountryPicker = function() {};
+os.ui.draw.BaseDrawControlsCtrl.prototype.launchCountryPicker = function() {
+  os.query.launchCountryPicker();
+};

@@ -6,13 +6,16 @@ goog.require('goog.events.KeyHandler');
 goog.require('ol.geom.Point');
 goog.require('os.command.CommandProcessor');
 goog.require('os.command.ParallelCommand');
+goog.require('os.data.RecordField');
 goog.require('os.defines');
 goog.require('os.interaction.DragBox');
 goog.require('os.interaction.DragCircle');
 goog.require('os.interaction.DrawLine');
 goog.require('os.interaction.DrawPolygon');
 goog.require('os.ui.Module');
+goog.require('os.ui.draw.drawPickerDirective');
 goog.require('os.ui.menu.layer');
+goog.require('os.webgl.AltitudeMode');
 goog.require('plugin.file.kml.cmd.KMLNodeRemove');
 
 
@@ -90,80 +93,16 @@ plugin.places.ui.QuickAddPlacesCtrl = function($scope, $element) {
   this.added = [];
 
   /**
-   * The map.
-   * @type {os.Map}
-   * @protected
-   */
-  this.map = /** @type {os.Map} */ (os.map.mapContainer.getMap());
-
-  /**
-   * Listener key for clicks on the map.
-   * @type {?ol.EventsKey}
-   * @protected
-   */
-  this.mapListenKey = null;
-
-  /**
-   * DragBox interaction
-   * @type {os.interaction.DragBox}
-   * @private
-   */
-  this.dragBox_ = new os.interaction.DragBox();
-  ol.events.listen(this.dragBox_, os.ui.ol.draw.DrawEventType.DRAWEND, this.onDrawEnd_, this);
-  ol.events.listen(this.dragBox_, os.ui.ol.draw.DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
-
-  /**
-   * DragCircle interaction
-   * @type {os.interaction.DragCircle}
-   * @private
-   */
-  this.dragCircle_ = new os.interaction.DragCircle();
-  ol.events.listen(this.dragCircle_, os.ui.ol.draw.DrawEventType.DRAWEND, this.onDrawEnd_, this);
-  ol.events.listen(this.dragCircle_, os.ui.ol.draw.DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
-
-  /**
-   * DragBox interaction
-   * @type {os.interaction.DrawPolygon}
-   * @private
-   */
-  this.drawPolygon_ = new os.interaction.DrawPolygon();
-  ol.events.listen(this.drawPolygon_, os.ui.ol.draw.DrawEventType.DRAWEND, this.onDrawEnd_, this);
-  ol.events.listen(this.drawPolygon_, os.ui.ol.draw.DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
-
-  /**
-   * DragBox interaction
-   * @type {os.interaction.DrawPolygon}
-   * @private
-   */
-  this.drawLine_ = new os.interaction.DrawLine();
-  ol.events.listen(this.drawLine_, os.ui.ol.draw.DrawEventType.DRAWEND, this.onDrawEnd_, this);
-  ol.events.listen(this.drawLine_, os.ui.ol.draw.DrawEventType.DRAWCANCEL, this.onDrawCancel_, this);
-
-  /**
-   * Handler for escape key events.
-   * @type {!goog.events.KeyHandler}
-   * @protected
-   */
-  this.keyHandler = new goog.events.KeyHandler(goog.dom.getDocument());
-  this.keyHandler.listen(goog.events.KeyHandler.EventType.KEY, this.onKey, false, this);
-
-  /**
-   * @type {?string}
-   */
-  this['selectedType'] = null;
-
-  /**
    * @type {string}
    */
   this['name'] = this.root && this.root.getLabel() || 'New Place';
 
-  this.map.addInteraction(this.dragBox_);
-  this.map.addInteraction(this.dragCircle_);
-  this.map.addInteraction(this.drawPolygon_);
-  this.map.addInteraction(this.drawLine_);
+  /**
+   * Bound callback function for draw controls.
+   * @type {function(ol.geom.SimpleGeometry)}
+   */
+  this['drawCallback'] = this.addGeometry.bind(this);
 
-  // initialize to drawing points
-  this.draw('point');
   this.addGeometry($scope['initial']);
 
   $scope.$emit(os.ui.WindowEventType.READY);
@@ -184,149 +123,9 @@ plugin.places.ui.QuickAddPlacesCtrl.WINDOW_ID = 'quickAddPlaces';
  */
 plugin.places.ui.QuickAddPlacesCtrl.prototype.disposeInternal = function() {
   plugin.places.ui.QuickAddPlacesCtrl.base(this, 'disposeInternal');
-  this.disablePoint();
-
-  // remove interactions
-  this.map.removeInteraction(this.dragBox_);
-  this.map.removeInteraction(this.dragCircle_);
-  this.map.removeInteraction(this.drawPolygon_);
-  this.map.removeInteraction(this.drawLine_);
-  this.dragBox_.dispose();
-  this.dragCircle_.dispose();
-  this.drawPolygon_.dispose();
-  this.drawLine_.dispose();
-  this.dragBox_ = null;
-  this.dragCircle_ = null;
-  this.drawPolygon_ = null;
-  this.drawLine_ = null;
-
-  goog.dispose(this.keyHandler);
 
   this.scope = null;
   this.element = null;
-  this.map = null;
-};
-
-
-/**
- * Initializes drawing places of a particular type.
- *
- * @param {string} type The drawing type to initialize.
- * @export
- */
-plugin.places.ui.QuickAddPlacesCtrl.prototype.draw = function(type) {
-  var lastType = this['selectedType'];
-  this.onDrawCancel_();
-
-  if (lastType && lastType === type) {
-    // user clicked the currently active button, so treat it as toggling the controls off
-    return;
-  }
-
-  this['selectedType'] = type;
-  var interaction;
-
-  if (type == 'point') {
-    // don't need an interaction for handling points
-    this.enablePoint();
-    return;
-  } else if (type == os.ui.ol.interaction.DragBox.TYPE) {
-    interaction = this.dragBox_;
-  } else if (type == os.ui.ol.interaction.DragCircle.TYPE) {
-    interaction = this.dragCircle_;
-  } else if (type == os.ui.ol.interaction.DrawPolygon.TYPE) {
-    interaction = this.drawPolygon_;
-  } else if (type == os.interaction.DrawLine.TYPE) {
-    interaction = this.drawLine_;
-  }
-
-  if (interaction) {
-    interaction.setActive(true);
-    interaction.setEnabled(true);
-  }
-};
-
-
-/**
- * Enables a listener for clicks on the map
- */
-plugin.places.ui.QuickAddPlacesCtrl.prototype.enablePoint = function() {
-  if (!this.mapListenKey) {
-    this.mapListenKey = ol.events.listen(this.map, ol.MapBrowserEventType.SINGLECLICK, this.onMapClick, this);
-  }
-};
-
-
-/**
- * Enables a listener for clicks on the map
- */
-plugin.places.ui.QuickAddPlacesCtrl.prototype.disablePoint = function() {
-  if (this.mapListenKey) {
-    ol.events.unlistenByKey(this.mapListenKey);
-    this.mapListenKey = null;
-  }
-};
-
-
-/**
- * Handles draw end events.
- *
- * @param {os.ui.ol.draw.DrawEvent} event
- * @private
- */
-plugin.places.ui.QuickAddPlacesCtrl.prototype.onDrawEnd_ = function(event) {
-  if (event && event.geometry instanceof ol.geom.SimpleGeometry) {
-    var geometry = /** @type {ol.geom.SimpleGeometry} */ (event.geometry);
-    this.addGeometry(geometry);
-  }
-};
-
-
-/**
- * Handles draw cancel events.
- *
- * @param {os.ui.ol.draw.DrawEvent=} opt_event
- * @private
- */
-plugin.places.ui.QuickAddPlacesCtrl.prototype.onDrawCancel_ = function(opt_event) {
-  if (opt_event) {
-    opt_event.preventDefault();
-    opt_event.stopPropagation();
-  }
-
-  // disable all interactions
-  this.disablePoint();
-  this.dragBox_.setActive(false);
-  this.dragBox_.setEnabled(false);
-  this.dragCircle_.setActive(false);
-  this.dragCircle_.setEnabled(false);
-  this.drawPolygon_.setActive(false);
-  this.drawPolygon_.setEnabled(false);
-  this.drawLine_.setActive(false);
-  this.drawLine_.setEnabled(false);
-
-  this['selectedType'] = null;
-
-  os.ui.apply(this.scope);
-};
-
-
-/**
- * Handle map browser events.
- *
- * @param {ol.MapBrowserEvent} mapBrowserEvent Map browser event.
- * @return {boolean} 'false' to stop event propagation
- * @protected
- */
-plugin.places.ui.QuickAddPlacesCtrl.prototype.onMapClick = function(mapBrowserEvent) {
-  if (mapBrowserEvent.type == ol.MapBrowserEventType.SINGLECLICK &&
-      mapBrowserEvent.coordinate && mapBrowserEvent.coordinate.length > 1) {
-    // This UI will do everything in lon/lat
-    var point = new ol.geom.Point(mapBrowserEvent.coordinate);
-    this.addGeometry(point);
-  }
-
-  return false;
 };
 
 
@@ -334,10 +133,12 @@ plugin.places.ui.QuickAddPlacesCtrl.prototype.onMapClick = function(mapBrowserEv
  * Add a geometry as a place. Also handles creating a root if one doesn't exist yet.
  *
  * @param {ol.geom.SimpleGeometry} geometry The geometry to add.
- * @protected
+ * @export
  */
 plugin.places.ui.QuickAddPlacesCtrl.prototype.addGeometry = function(geometry) {
   if (geometry) {
+    geometry.set(os.data.RecordField.ALTITUDE_MODE, os.webgl.AltitudeMode.CLAMP_TO_GROUND);
+
     if (!this.root || !this.root.getParent()) {
       this.root = plugin.places.addFolder(/** @type {!plugin.places.FolderOptions} */ ({
         name: this['name'] || 'New Place'
@@ -394,17 +195,6 @@ plugin.places.ui.QuickAddPlacesCtrl.prototype.getUniqueName = function() {
   }
 
   return name;
-};
-
-
-/**
- * Handler for escape key presses.
- * @param {goog.events.KeyEvent} event
- */
-plugin.places.ui.QuickAddPlacesCtrl.prototype.onKey = function(event) {
-  if (event.keyCode == goog.events.KeyCodes.ESC) {
-    this.onDrawCancel_();
-  }
 };
 
 

@@ -2,7 +2,6 @@ $font-family-sans-serif: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe 
 
 // Needed for color pallet to have white text on buttons
 $yiq-contrasted-threshold: 166 !default;
-$enable-gradients: true;
 
 $blue: #08c !default;
 $indigo:  #6c94bc !default;
@@ -56,4 +55,5 @@ $list-group-action-hover-color: $white;
 
 // Start Theme Variable Overides
 $u-theme-variables--bg-offset: $gray-100;
+$u-theme-variables--navtop-subnav-color: lighten($dark, 10%);
 // End Theme Variable Overides

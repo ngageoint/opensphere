@@ -43,6 +43,10 @@
             <i class="fa" ng-if="searchBox.allowMultiple || searchBox.isSearchEnabled(search)"
                 ng-class="searchBox.getSearchIcon(search)"></i>
             {{searchBox.getSearchName(search)}}
+            <div class="flex-shrink-0 float-right">
+              <i ng-if="searchBox.supportsTemporal(search)" class="fa fa-clock-o" title="Supports searching within the current application time"></i>
+              <i ng-if="searchBox.supportsGeo(search)" class="fa fa-map-marker" title="Supports searching with geospatial filters"></i>
+            </div>
           </span>
         </div>
         <div ng-if="searchBox.favorites.length > 0">

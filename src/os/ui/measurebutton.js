@@ -70,8 +70,8 @@ os.ui.MeasureButtonCtrl = function($scope, $element) {
    */
   this.prevActiveMap_ = {};
 
-  os.dispatcher.listen(os.ui.ol.draw.DrawEventType.DRAWEND, this.onDrawEnd_, false, this);
-  os.dispatcher.listen(os.ui.ol.draw.DrawEventType.DRAWCANCEL, this.onDrawEnd_, false, this);
+  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWEND, this.onDrawEnd_, false, this);
+  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWCANCEL, this.onDrawEnd_, false, this);
 
   /**
    * @type {!string}
@@ -148,7 +148,7 @@ os.ui.MeasureButtonCtrl.prototype.toggle = function(opt_value) {
 
 
 /**
- * @param {os.ui.ol.draw.DrawEvent} evt The draw event
+ * @param {os.ui.draw.DrawEvent} evt The draw event
  * @private
  */
 os.ui.MeasureButtonCtrl.prototype.onDrawEnd_ = function(evt) {
