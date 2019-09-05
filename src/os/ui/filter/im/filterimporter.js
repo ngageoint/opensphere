@@ -88,7 +88,7 @@ os.ui.filter.im.FilterImporter.prototype.processData = function() {
     if (this.layerId) {
       // if we have a layer ID, we were passed some context from a filter window, so use it
       var impliedFilterable = os.ui.filter.getFilterableByType(this.layerId);
-      var columns = impliedFilterable && impliedFilterable.getFilterColumns();
+      var columns = impliedFilterable ? impliedFilterable.getFilterColumns() : null;
 
       if (impliedFilterable && columns && filter.matches(columns)) {
         // this filter matches the columns of the passed in context, so add it as such
