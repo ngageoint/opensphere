@@ -1,5 +1,7 @@
 goog.provide('plugin.file.kml.menu');
 
+goog.require('ol.Feature');
+goog.require('ol.geom.Polygon');
 goog.require('os.buffer');
 goog.require('os.ui.feature.featureInfoDirective');
 goog.require('os.ui.menu.layer');
@@ -186,7 +188,10 @@ plugin.file.kml.menu.onLayerEvent_ = function(event) {
             }
             break;
           case plugin.file.kml.menu.EventType.GOTO:
-            os.feature.flyTo(node.getFeatures());
+            var features = node.getZoomFeatures();
+            if (features) {
+              os.feature.flyTo(features);
+            }
             break;
           case plugin.file.kml.menu.EventType.SELECT:
             source.addToSelected(node.getFeatures());

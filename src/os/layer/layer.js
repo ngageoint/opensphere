@@ -19,6 +19,7 @@ os.layer.SynchronizerType = {
   VECTOR: 'vector',
   TILE: 'tile',
   IMAGE: 'image',
+  IMAGE_STATIC: 'imageStatic',
   DRAW: 'draw'
 };
 
