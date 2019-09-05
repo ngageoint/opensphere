@@ -1,0 +1,33 @@
+{
+  "admin": {
+    "providers": {
+      "basemap": {
+        "defaults": {
+          "EPSG:4326": [
+            "streetmap",
+            "worldimagery"
+          ]
+        },
+        "maps": {
+          "streetmap": {
+            "projection": "EPSG:4326",
+            "urls": [
+              "STREET_MAP_URL"
+            ],
+            "zoomOffset": -1
+          },
+          "worldimagery": {
+            "projection": "EPSG:4326",
+            "urls": [
+              "WORLD_IMAGERY_URL"
+            ],
+            "zoomOffset": -1
+          }
+        }
+      }
+    }
+  },
+  "user": {
+    "baseProjection": "EPSG:4326"
+  }
+}

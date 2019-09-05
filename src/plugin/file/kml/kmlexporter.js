@@ -94,6 +94,24 @@ plugin.file.kml.KMLExporter.prototype.getColor = function(item) {
 /**
  * @inheritDoc
  */
+plugin.file.kml.KMLExporter.prototype.getFillColor = function(item) {
+  var itemColor = os.feature.getFillColor(item, this.getSource_(item));
+  return itemColor ? os.style.toAbgrString(itemColor) : null;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLExporter.prototype.getStrokeColor = function(item) {
+  var itemColor = os.feature.getStrokeColor(item, this.getSource_(item));
+  return itemColor ? os.style.toAbgrString(itemColor) : null;
+};
+
+
+/**
+ * @inheritDoc
+ */
 plugin.file.kml.KMLExporter.prototype.getField = function(item, field) {
   return os.feature.getField(item, field);
 };

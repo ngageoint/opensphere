@@ -42,6 +42,8 @@ os.state.v4.LayerTag = {
   CSV_USE_HEADER: 'useHeader',
   DATA_PROVIDER: 'dataProvider',
   IS_BASE_LAYER: 'isBaseLayer',
+  FILL_COLOR: 'fillColor',
+  FILL_OPACITY: 'fillOpacity',
   LABEL_COLUMN: 'labelColumn',
   LABEL_COLUMNS: 'labelColumns',
   LABEL: 'label',
@@ -465,6 +467,21 @@ os.state.v4.BaseLayerState.prototype.configKeyToXML = function(layerConfig, type
         // hex string without the leading hash
         var pointColor = os.color.toServerString(/** @type {string} */ (value));
         os.xml.appendElement(os.state.v4.LayerTag.PT_COLOR, bfs, pointColor);
+      } else {
+        // tile layer
+        this.defaultConfigToXML(key, value, layerEl);
+      }
+      break;
+    case os.style.StyleField.FILL_COLOR:
+      if (bfs) {
+        // hex string without the leading hash
+        var xmlColor = os.color.toServerString(/** @type {string} */ (value));
+        os.xml.appendElement(os.state.v4.LayerTag.FILL_COLOR, bfs, xmlColor);
+
+        // extract opacity from the color string
+        var colorArr = os.color.toRgbArray(/** @type {string} */ (value));
+        var fillOpacity = colorArr.length == 4 ? colorArr[3] : os.style.DEFAULT_FILL_ALPHA;
+        os.xml.appendElement(os.state.v4.LayerTag.FILL_OPACITY, bfs, fillOpacity);
       } else {
         // tile layer
         this.defaultConfigToXML(key, value, layerEl);
@@ -932,6 +949,20 @@ os.state.v4.BaseLayerState.prototype.xmlToConfigKey = function(node, child, name
           case os.state.v4.LayerTag.PT_SIZE:
             options['size'] = goog.string.isNumeric(styleVal) ? Number(styleVal) / 2 :
               os.style.DEFAULT_FEATURE_SIZE;
+            break;
+          case os.state.v4.LayerTag.FILL_COLOR:
+            try {
+              styleVal = os.color.padHexColor(styleVal, '#');
+              options[os.style.StyleField.FILL_COLOR] = os.style.toRgbaString(styleVal);
+            } catch (e) {
+            }
+            break;
+          case os.state.v4.LayerTag.FILL_OPACITY:
+            var fillOpacity = Number(styleVal);
+            if (isNaN(fillOpacity)) {
+              fillOpacity = os.style.DEFAULT_FILL_ALPHA;
+            }
+            options[os.style.StyleField.FILL_OPACITY] = goog.math.clamp(fillOpacity, 0, 1);
             break;
           case os.state.v4.LayerTag.LABEL_COLUMN:
             var column = typeof styleVal === 'string' ? goog.string.trim(styleVal) : '';
