@@ -2,6 +2,8 @@ goog.provide('os.search');
 goog.provide('os.search.SortOrder');
 goog.provide('os.search.SortType');
 
+goog.require('os.search.ITemporalSearch');
+
 
 /**
  * The base key for search settings.
@@ -137,4 +139,34 @@ os.search.dateScore = function(time, order) {
   } else {
     return 0;
   }
+};
+
+
+/**
+ * Get whether a search supports geosearch.
+ * @param {os.search.ISearch} search The search.
+ * @return {boolean} Whether it implements and supports geosearch.
+ */
+os.search.supportsGeoSearch = function(search) {
+  if (search && os.implements(search, os.search.IGeoSearch.ID)) {
+    var s = /** @type {os.search.IGeoSearch} */ (search);
+    return s.supportsGeoDistance() || s.supportsGeoExtent() || s.supportsGeoShape();
+  }
+
+  return false;
+};
+
+
+/**
+ * Get whether a search supports temporal search.
+ * @param {os.search.ISearch} search The search.
+ * @return {boolean} Whether it implements and supports temporal search.
+ */
+os.search.supportsTemporalSearch = function(search) {
+  if (search && os.implements(search, os.search.ITemporalSearch.ID)) {
+    var s = /** @type {os.search.ITemporalSearch} */ (search);
+    return s.supportsDateRange() || s.supportsStartDate() || s.supportsEndDate();
+  }
+
+  return false;
 };
