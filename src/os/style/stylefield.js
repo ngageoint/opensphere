@@ -11,6 +11,8 @@ os.style.StyleField = {
   CENTER_SHAPE: 'centerShape',
   COLOR: 'color',
   FILL: 'fill',
+  FILL_COLOR: 'fillColor',
+  FILL_OPACITY: 'fillOpacity',
   ICON: 'icon',
   IMAGE: 'image',
   LABELS: 'labels',

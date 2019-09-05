@@ -17,7 +17,7 @@
 
   // Replace the url to be local
   $web-font-path: str-replace($web-font-path,
-    'https://fonts.googleapis.com/css?family=', '../../vendor/fonts/typeface-');
+    'https://fonts.googleapis.com/css?family=', '../../../opensphere/vendor/fonts/typeface-');
 
   // Replace + with -
   $web-font-path: str-replace($web-font-path, '+', '-');
@@ -42,7 +42,7 @@
   $web-font-path: to-lower-case($web-font-path);
 
   // Example End
-  // $web-font-path: '../../vendor/fonts/typeface-source-sans-pro/index.css'
+  // $web-font-path: '../../../opensphere/vendor/fonts/typeface-source-sans-pro/index.css'
 
   // Final import paths
   @import url($web-font-path);

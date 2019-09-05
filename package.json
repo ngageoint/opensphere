@@ -132,7 +132,9 @@
     "perms": "chmod -R u+rwX,go+rX,go-w .",
     "semantic-release": "semantic-release --dry-run",
     "start-server": "http-server ../../ -p 8282 -c-1 -o -U -s &",
-    "stop-server": "pkill -f http-server"
+    "stop-server": "run-script-os",
+    "stop-server:darwin:linux": "pkill -f http-server",
+    "stop-server:windows": "taskkill -F -PID $(netstat -ano | findstr 0.0.0.0:8282 | awk '{print $5}')"
   },
   "keywords": [
     "geospatial",
@@ -264,6 +266,7 @@
     "opensphere-state-schema": "^2.4.0",
     "postcss-cli": "^5.0.0",
     "rimraf": "^2.5.4",
+    "run-script-os": "^1.0.7",
     "sass-lint": "^1.12.1",
     "semantic-release": "^15.13.18",
     "surge": "^0.20.4",
