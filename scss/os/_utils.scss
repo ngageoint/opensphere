@@ -71,6 +71,10 @@ $user-select-options: all, auto, text, none;
   cursor: wait !important;
 }
 
+.u-cursor-not-allowed {
+  cursor: not-allowed !important;
+};
+
 .u-btn-separator {
   border-left: 1px solid $body-color;
   border-right: 1px solid $body-bg;
