@@ -130,9 +130,15 @@ plugin.im.action.feature.Manager.prototype.addSource_ = function(source) {
     if (id && !this.sourceListeners_[id]) {
       this.sourceListeners_[id] = ol.events.listen(/** @type {ol.events.EventTarget} */ (source),
           goog.events.EventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
-      this.loadDefaults(source.getId()).thenAlways(function() {
+
+      var columns = source.getColumns();
+      if (columns && columns.length) {
+        this.loadDefaults(id).thenAlways(function() {
+          this.processItems(id);
+        }, this);
+      } else {
         this.processItems(id);
-      }, this);
+      }
     }
   }
 };
@@ -185,10 +191,25 @@ plugin.im.action.feature.Manager.prototype.onSourcePropertyChange_ = function(ev
   }
 
   var source = /** @type {os.source.ISource} */ (event.target);
-  if (source && p === os.source.PropertyChange.PREPROCESS_FEATURES) {
-    var features = /** @type {Array<!ol.Feature>|undefined} */ (event.getNewValue());
-    if (features && features.length > 0) {
-      this.processItems(source.getId(), features);
+  if (source) {
+    switch (p) {
+      case os.source.PropertyChange.COLUMNS:
+        var id = source.getId();
+        var columns = event.getNewValue();
+        if (id && !this.defaultsLoaded[id] && columns && columns.length) {
+          this.loadDefaults(id).thenAlways(function() {
+            this.processItems(id);
+          }, this);
+        }
+        break;
+      case os.source.PropertyChange.PREPROCESS_FEATURES:
+        var features = /** @type {Array<!ol.Feature>|undefined} */ (event.getNewValue());
+        if (features && features.length > 0) {
+          this.processItems(source.getId(), features);
+        }
+        break;
+      default:
+        break;
     }
   }
 };

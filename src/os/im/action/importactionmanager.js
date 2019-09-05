@@ -484,8 +484,11 @@ os.im.action.ImportActionManager.prototype.loadDefaults = function(id) {
     var defaultActions = /** @type {Object<string, Array<string>>|undefined} */ (
       os.settings.get(os.im.action.default.SettingKey.FILES));
 
-    if (defaultActions && defaultActions[id]) {
-      return os.im.action.default.load(id, defaultActions[id]).then(function(entries) {
+    var layer = os.map.mapContainer.getLayer(id);
+    var filterKey = layer ? layer.getFilterKey() : null;
+
+    if (filterKey && defaultActions && defaultActions[filterKey]) {
+      return os.im.action.default.load(id, defaultActions[filterKey]).then(function(entries) {
         if (entries && entries.length) {
           // add all of the default entries
           entries.forEach(function(entry) {
