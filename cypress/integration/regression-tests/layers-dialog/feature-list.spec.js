@@ -907,12 +907,6 @@ describe('Feature list', function() {
 
     it('Go to', function() {
       cy.get(dialogs.featureListDialog.CLOSE_BUTTON).click();
-      cy.get(layers.layersTab.Tree.STREET_MAP_TILES)
-          .find(shared.Tree.ROW_CHECKBOX)
-          .click();
-      cy.get(layers.layersTab.Tree.WORLD_IMAGERY_TILES)
-          .find(shared.Tree.ROW_CHECKBOX)
-          .click();
       cy.get(shared.Tree.ROW_4).click;
       cy.get(shared.layerStyle.BUTTON).click();
       cy.get(shared.layerStyle.SIZE_SLIDER)
@@ -932,12 +926,6 @@ describe('Feature list', function() {
       cy.imageComparison('After go to');
 
       // Clean up
-      cy.get(layers.layersTab.Tree.STREET_MAP_TILES)
-          .find(shared.Tree.ROW_CHECKBOX)
-          .click();
-      cy.get(layers.layersTab.Tree.WORLD_IMAGERY_TILES)
-          .find(shared.Tree.ROW_CHECKBOX)
-          .click();
       cy.get(shared.Tree.ROW_4).rightClick();
       cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
       cy.get('body').type('{ctrl}', {release: false});

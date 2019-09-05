@@ -15,6 +15,7 @@ goog.require('ol.geom.Point');
 goog.require('os.MapContainer');
 goog.require('os.action.EventType');
 goog.require('os.data.ColumnDefinition');
+goog.require('os.geo');
 goog.require('os.map');
 goog.require('os.math.Units');
 goog.require('os.ol.feature');
@@ -156,7 +157,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * The feature color.
    * @type {string}
    */
-  this['color'] = os.style.DEFAULT_LAYER_COLOR;
+  this['color'] = os.color.toHexString(os.style.DEFAULT_LAYER_COLOR);
 
   /**
    * The feature opacity.
@@ -169,6 +170,18 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * @type {number}
    */
   this['size'] = os.style.DEFAULT_FEATURE_SIZE;
+
+  /**
+   * The feature fill color
+   * @type {string}
+   */
+  this['fillColor'] = os.color.toHexString(os.style.DEFAULT_LAYER_COLOR);
+
+  /**
+   * The feature fill opacity
+   * @type {string}
+   */
+  this['fillOpacity'] = os.style.DEFAULT_FILL_ALPHA;
 
   /**
    * The feature icon.
@@ -364,7 +377,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * Configured label color.
    * @type {string}
    */
-  this['labelColor'] = os.style.DEFAULT_LAYER_COLOR;
+  this['labelColor'] = os.color.toHexString(os.style.DEFAULT_LAYER_COLOR);
 
   /**
    * Configured label size.
@@ -466,6 +479,11 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
     this.previewFeature = feature;
     this.originalProperties_ = feature.getProperties();
 
+    if (!this.isPolygon()) {
+      delete this['fillColor'];
+      delete this['fillOpacity'];
+    }
+
     if (this.originalProperties_) {
       // we don't care about or want these sticking around, so remove them
       delete this.originalProperties_[os.style.StyleType.SELECT];
@@ -508,6 +526,10 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   $scope.$watch('ctrl.labelColor', this.updatePreview.bind(this));
   $scope.$watch('ctrl.labelSize', this.updatePreview.bind(this));
   $scope.$watch('ctrl.showLabels', this.updatePreview.bind(this));
+  $scope.$on('opacity.slide', this.onOpacityValueChange.bind(this));
+  $scope.$on('fillColor.change', this.onFillColorChange.bind(this));
+  $scope.$on('fillColor.reset', this.onFillColorReset.bind(this));
+  $scope.$on('fillOpacity.slidestop', this.onFillOpacityChange.bind(this));
 
   $scope.$on(os.ui.WindowEventType.CANCEL, this.onCancel.bind(this));
   $scope.$on(os.ui.icon.IconPickerEventType.CHANGE, this.onIconChange.bind(this));
@@ -758,6 +780,23 @@ os.ui.FeatureEditCtrl.prototype.isEllipse = function() {
 
 
 /**
+ * If a polygon is selected.
+ *
+ * @return {boolean}
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.isPolygon = function() {
+  var geometry = this.previewFeature.getGeometry();
+
+  if (geometry) {
+    return os.geo.isGeometryPolygonal(geometry);
+  } else {
+    return false;
+  }
+};
+
+
+/**
  * If a line or polygon is selected.
  *
  * @return {boolean}
@@ -933,9 +972,17 @@ os.ui.FeatureEditCtrl.prototype.createPreviewFeature = function() {
         'alt': this['altitude']
       };
     }
+
+    delete this['fillColor'];
+    delete this['fillOpacity'];
   } else {
     // not a point, so disable geometry edit
     this.originalGeometry = geometry;
+
+    if (geometry instanceof ol.geom.LineString) {
+      delete this['fillColor'];
+      delete this['fillOpacity'];
+    }
   }
 
   // default feature to show the name field
@@ -1012,6 +1059,18 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
     if (icon) {
       this['icon'] = icon;
       this['centerIcon'] = icon;
+    }
+
+    // Make sure we have a fill color and opacity for polygons, and don't have them otherwise
+    if (config['fill'] && config['fill']['color']) {
+      if (this.isPolygon()) {
+        this['fillColor'] = os.color.toHexString(config['fill']['color']);
+        var opacity = os.color.toRgbArray(config['fill']['color']);
+        this['fillOpacity'] = opacity[3];
+      } else {
+        delete this['fillColor'];
+        delete this['fillOpacity'];
+      }
     }
 
     var lineDash = os.style.getConfigLineDash(config);
@@ -1254,6 +1313,15 @@ os.ui.FeatureEditCtrl.prototype.setFeatureConfig_ = function(config) {
     os.style.setConfigOpacityColor(config, 0);
   }
 
+  var fillColor = ol.color.asArray(this['fillColor']);
+  var fillOpacity = os.color.normalizeOpacity(this['fillOpacity']);
+  fillColor[3] = fillOpacity;
+  fillColor = os.style.toRgbaString(fillColor);
+
+  if (color != fillColor) {
+    os.style.setFillColor(config, fillColor);
+  }
+
   // set icon config if selected
   var useCenter = this.showCenterIcon();
   if ((this['shape'] === os.style.ShapeType.ICON || useCenter) && config['image'] != null) {
@@ -1395,8 +1463,14 @@ os.ui.FeatureEditCtrl.prototype.onColumnChange = function(event) {
  * @export
  */
 os.ui.FeatureEditCtrl.prototype.onIconColorChange = function(opt_new, opt_old) {
-  if (opt_new != opt_old && this['labelColor'] == opt_old) {
-    this['labelColor'] = opt_new;
+  if (opt_new != opt_old) {
+    if (this['labelColor'] == opt_old) {
+      this['labelColor'] = opt_new;
+    }
+
+    if (this['fillColor'] == opt_old) {
+      this['fillColor'] = opt_new;
+    }
   }
 
   this.updatePreview();
@@ -1445,6 +1519,60 @@ os.ui.FeatureEditCtrl.prototype.onLabelColorReset = function(event) {
   event.stopPropagation();
 
   this['labelColor'] = this['color'];
+  this.updatePreview();
+};
+
+
+/**
+ * Handles when the opacity slider has moved
+ * @param {angular.Scope.Event} event The Angular event.
+ * @param {number} value The new value.
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.onOpacityValueChange = function(event, value) {
+  event.stopPropagation();
+
+  this['opacity'] = value;
+};
+
+
+/**
+ * Handles when the fill opacity is changed
+ * @param {angular.Scope.Event} event The Angular event.
+ * @param {number} value The new value.
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.onFillOpacityChange = function(event, value) {
+  event.stopPropagation();
+
+  this['fillOpacity'] = value;
+  this.updatePreview();
+};
+
+
+/**
+ * Handles when the fill color is changed
+ * @param {angular.Scope.Event} event The Angular event.
+ * @param {string} value
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.onFillColorChange = function(event, value) {
+  event.stopPropagation();
+
+  this['fillColor'] = value;
+  this.updatePreview();
+};
+
+
+/**
+ * Handles fill color reset
+ * @param {angular.Scope.Event} event
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.onFillColorReset = function(event) {
+  event.stopPropagation();
+
+  this['fillColor'] = this['color'];
   this.updatePreview();
 };
 

@@ -27,6 +27,12 @@ os.layer.config.AbstractLayerConfig = function() {
   this.color = os.style.DEFAULT_LAYER_COLOR;
 
   /**
+   * @type {Array<number>|string}
+   * @protected
+   */
+  this.fillColor = 'rgba(255,255,255,0)';
+
+  /**
    * @type {Array<string>}
    * @protected
    */

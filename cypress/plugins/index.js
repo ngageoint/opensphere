@@ -12,6 +12,7 @@
 // the project's config changing)
 
 var addMatchImageSnapshotPlugin = require('cypress-image-snapshot/plugin').addMatchImageSnapshotPlugin;
+var os = require('os');
 
 /** This is a description of the foo function.
  *
@@ -22,7 +23,11 @@ module.exports = function(on, config) {
   addMatchImageSnapshotPlugin(on, config);
   on('before:browser:launch', function(browser, args) {
     if (browser.name === 'chrome') {
-      args.push('--window-size=1280,1200');
+      if (os.platform() === 'win32') {
+        args.push('--window-size=1295,1200');
+      } else {
+        args.push('--window-size=1280,1200');
+      }
       return args;
     }
 

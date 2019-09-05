@@ -15,6 +15,7 @@ os.ui.filter.im.filterImportModelDirective = function() {
     // this directive needs to be replace: false to display properly as it is recursive
     replace: false,
     scope: {
+      'layerSelected': '=',
       'models': '=',
       'icon': '=',
       'found': '=',
