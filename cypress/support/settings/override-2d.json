@@ -1,0 +1,6 @@
+{
+  "overrides": [
+    "config/settings-default.json",
+    "config/settings-2d.json"
+  ]
+}

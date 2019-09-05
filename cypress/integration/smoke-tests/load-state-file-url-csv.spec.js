@@ -35,12 +35,6 @@ describe('Import state file', function() {
     cy.get(core.statusBar.COORDINATES_TEXT).should('contain', '+129');
     cy.get(shared.Tree.ROW_4)
         .should('contain', 'Fireballs and Bolides Features (92)');
-    cy.get(layers.layersTab.Tree.STREET_MAP_TILES)
-        .find(shared.Tree.ROW_CHECKBOX)
-        .click();
-    cy.get(layers.layersTab.Tree.WORLD_IMAGERY_TILES)
-        .find(shared.Tree.ROW_CHECKBOX)
-        .click();
     cy.imageComparison('features loaded');
     cy.get(shared.Tree.ROW_4).rightClick();
     cy.get(layers.layersTab.Tree.contextMenu.FEATURE_ACTIONS).click();
