@@ -476,6 +476,10 @@ $u-parent-resizer-count: 0;
   border-color: $border-color;
 }
 
+.u-border-style__dashed {
+  border-style: dashed !important;
+}
+
 // Used for buttons that are styled as form-controls borders
 .u-border-color-input {
   border-color: $input-border-color !important;
