@@ -15,6 +15,7 @@ goog.require('os.command.VectorLayerLabel');
 goog.require('os.command.VectorLayerLabelColor');
 goog.require('os.command.VectorLayerLabelSize');
 goog.require('os.command.VectorLayerLineDash');
+goog.require('os.command.VectorLayerPreset');
 goog.require('os.command.VectorLayerReplaceStyle');
 goog.require('os.command.VectorLayerRotation');
 goog.require('os.command.VectorLayerShape');
@@ -25,6 +26,7 @@ goog.require('os.command.VectorUniqueIdCmd');
 goog.require('os.command.style');
 goog.require('os.data.OSDataManager');
 goog.require('os.defines');
+goog.require('os.layer.preset.LayerPresetManager');
 goog.require('os.style');
 goog.require('os.ui.Module');
 goog.require('os.ui.file.kml');
@@ -192,6 +194,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
     this['showRotation'] = this.getShowRotation();
     this['rotationColumn'] = this.getRotationColumn();
 
+    this.loadPresets();
     this.updateReplaceStyle_();
 
     if (this.scope['items'] && this.scope['items'].length == 1) {
@@ -294,6 +297,67 @@ os.ui.layer.VectorLayerUICtrl.prototype.showFillStyleControls = function() {
     return true;
   }
   return false;
+};
+
+
+/**
+ * Updates the Replace Feature Style state on the UI.
+ *
+ * @private
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.loadPresets = function() {
+  this['showPresets'] = false;
+
+  var nodes = this.getLayerNodes();
+  if (nodes && nodes.length == 1) {
+    var layer = nodes[0].getLayer();
+    var filterKey;
+    if (os.implements(layer, os.filter.IFilterable.ID)) {
+      filterKey = /** @type {os.filter.IFilterable} */ (layer).getFilterKey();
+    }
+
+    if (layer && filterKey) {
+      var promise = os.layer.preset.LayerPresetManager.getInstance().getPresets(filterKey);
+
+      if (promise) {
+        promise.then(function(presets) {
+          if (presets && presets.length) {
+            var options = layer.getLayerOptions();
+            var preset = presets.find(function(p) {
+              return p.id === (options['preset'] && options['preset'].id);
+            });
+
+            this['showPresets'] = true;
+            this['presets'] = presets;
+            this['preset'] = preset || null;
+          }
+        }, undefined, this);
+      }
+    }
+  }
+};
+
+
+/**
+ * Handle changes to the Replace Feature Style option.
+ *
+ * @export
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.onPresetChange = function() {
+  var items = /** @type {Array} */ (this.scope['items']);
+  if (items && items.length > 0) {
+    var value = this['preset'];
+    var fn =
+        /**
+         * @param {os.layer.ILayer} layer
+         * @return {os.command.ICommand}
+         */
+        function(layer) {
+          return new os.command.VectorLayerPreset(layer.getId(), value);
+        };
+
+    this.createCommand(fn);
+  }
 };
 
 

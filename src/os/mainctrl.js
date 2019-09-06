@@ -62,6 +62,7 @@ goog.require('os.im.mapping.time.DateTimeMapping');
 goog.require('os.im.mapping.time.TimeMapping');
 goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.layer.config.StaticLayerConfig');
+goog.require('os.layer.preset.LayerPresetManager');
 goog.require('os.load.LoadingManager');
 goog.require('os.map');
 goog.require('os.map.interaction');
@@ -236,6 +237,9 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
 
   // set up file storage
   os.file.FileStorage.getInstance();
+
+  // set up the layer
+  os.layer.preset.LayerPresetManager.getInstance();
 
   // load settings for anything that may need them.
   os.config.SettingsManager = os.ui.config.SettingsManager.getInstance();

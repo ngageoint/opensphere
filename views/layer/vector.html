@@ -6,6 +6,17 @@
       Style
     </div>
     <div id="layer-style" class="card-body collapse" data-parent="#layerControls">
+      <div class="form-group row" ng-if="vector.showPresets" title="Choose a layer style preset.">
+        <div class="col-3">
+          Preset
+        </div>
+        <div class="col">
+          <select class="custom-select" ng-model="vector.preset" ng-change="vector.onPresetChange()" ng-options="preset.label for preset in vector.presets">
+            <option value="">Default</option>
+          </select>
+        </div>
+      </div>
+
       <vectorstylecontrols
           color="color"
           fill-color="fillColor"

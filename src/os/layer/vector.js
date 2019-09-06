@@ -1124,6 +1124,8 @@ os.layer.Vector.prototype.persist = function(opt_to) {
   opt_to['minResolution'] = this.getMinResolution();
   opt_to['maxResolution'] = this.getMaxResolution();
 
+  opt_to['preset'] = this.layerOptions_ && this.layerOptions_['preset'];
+
   // style
   var config = os.style.StyleManager.getInstance().getLayerConfig(this.getId());
 

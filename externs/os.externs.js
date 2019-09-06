@@ -210,6 +210,18 @@ osx.layer.RefreshOption;
 
 
 /**
+ * @typedef {{
+ *   label: string,
+ *   id: string,
+ *   default: (boolean|undefined),
+ *   layerConfig: (Object<string, *>|undefined),
+ *   featureActions: (Array<string>|undefined)
+ * }}
+ */
+osx.layer.Preset;
+
+
+/**
  * Namespace.
  * @type {Object}
  */
