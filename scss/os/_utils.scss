@@ -643,6 +643,10 @@ $aspect-ratios: ((16, 9), (4, 3));
   object-fit: contain;
 }
 
+.u-object-position-top {
+  object-position: top;
+}
+
 .u-border-thick {
   border-width: ($border-width * 2) !important;
 }
