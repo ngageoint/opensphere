@@ -235,6 +235,7 @@ os.metrics.keys.OS = {
  * @enum {string}
  */
 os.metrics.Layer = {
+  PRESET: 'layers.features.preset',
   FORCE_LAYER_COLOR: 'layers.features.forceLayerColor',
   VECTOR_COLOR: 'layers.features.changeVectorColor',
   VECTOR_FILL_COLOR: 'layers.features.changeVectorFillColor',
