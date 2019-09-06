@@ -481,7 +481,7 @@ os.im.action.ImportActionManager.prototype.loadDefaults = function(id) {
   if (!this.defaultsLoaded[id]) {
     this.defaultsLoaded[id] = true;
 
-    var defaultActions = /** @type {Object<string, Array<string>>|undefined} */ (
+    var defaultActions = /** @type {Object<string, Array<osx.ResourceConfig>>|undefined} */ (
       os.settings.get(os.im.action.default.SettingKey.FILES));
 
     var filterKey;
