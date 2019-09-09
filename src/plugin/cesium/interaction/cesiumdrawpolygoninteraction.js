@@ -2,6 +2,7 @@ goog.provide('plugin.cesium.interaction.drawpolygon');
 
 goog.require('olcs.core');
 goog.require('os.interaction.DrawPolygon');
+goog.require('os.webgl.AltitudeMode');
 
 
 /**
@@ -43,10 +44,13 @@ plugin.cesium.interaction.drawpolygon.cleanupWebGL = function() {
 /**
  * Draw the polygon in Cesium.
  *
+ * @param {os.webgl.AltitudeMode=} opt_altMode Defaults to CLAMP_TO_GROUND
  * @this {os.interaction.DrawPolygon}
  * @suppress {accessControls}
  */
-plugin.cesium.interaction.drawpolygon.updateWebGL = function() {
+plugin.cesium.interaction.drawpolygon.updateWebGL = function(opt_altMode) {
+  opt_altMode = opt_altMode || os.webgl.AltitudeMode.CLAMP_TO_GROUND;
+
   if (os.MapContainer.getInstance().is3DEnabled()) {
     if (!this.cesiumColor) {
       this.cesiumColor = new Cesium.ColorGeometryInstanceAttribute(
@@ -76,11 +80,16 @@ plugin.cesium.interaction.drawpolygon.updateWebGL = function() {
       }
 
 
-      this.cesiumLine = new Cesium.GroundPolylinePrimitive({
+      var primClass = opt_altMode === os.webgl.AltitudeMode.CLAMP_TO_GROUND ? Cesium.GroundPolylinePrimitive :
+          Cesium.Primitive;
+      var geomClass = opt_altMode === os.webgl.AltitudeMode.CLAMP_TO_GROUND ? Cesium.GroundPolylineGeometry :
+          Cesium.PolylineGeometry;
+
+      this.cesiumLine = new primClass({
         asynchronous: false,
         appearance: new Cesium.PolylineColorAppearance(),
         geometryInstances: new Cesium.GeometryInstance({
-          geometry: new Cesium.GroundPolylineGeometry({
+          geometry: new geomClass({
             positions: olcs.core.ol4326CoordinateArrayToCsCartesians(lonlats),
             arcType: os.interpolate.getMethod() === os.interpolate.Method.RHUMB ?
               Cesium.ArcType.RHUMB : Cesium.ArcType.GEODESIC,

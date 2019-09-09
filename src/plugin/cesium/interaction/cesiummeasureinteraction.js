@@ -2,6 +2,7 @@ goog.provide('plugin.cesium.interaction.measure');
 
 goog.require('os.interaction.DrawPolygon');
 goog.require('os.interaction.Measure');
+goog.require('os.webgl.AltitudeMode');
 goog.require('plugin.cesium.interaction.drawpolygon');
 
 
@@ -39,7 +40,7 @@ plugin.cesium.interaction.measure.cleanupWebGL = function() {
  * @suppress {accessControls}
  */
 plugin.cesium.interaction.measure.updateWebGL = function() {
-  plugin.cesium.interaction.drawpolygon.updateWebGL.call(this);
+  plugin.cesium.interaction.drawpolygon.updateWebGL.call(this, os.webgl.AltitudeMode.ABSOLUTE);
 
   if (os.MapContainer.getInstance().is3DEnabled()) {
     var webgl = /** @type {plugin.cesium.CesiumRenderer|undefined} */ (
