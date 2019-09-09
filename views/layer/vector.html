@@ -11,7 +11,7 @@
           Preset
         </div>
         <div class="col">
-          <select class="custom-select" ng-model="vector.preset" ng-change="vector.onPresetChange()" ng-options="preset.label for preset in vector.presets">
+          <select class="custom-select" ng-model="vector.preset" ng-change="vector.onPresetChange()" ng-options="preset.label for preset in vector.presets track by preset.id">
             <option value="">Default</option>
           </select>
         </div>
