@@ -238,9 +238,6 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   // set up file storage
   os.file.FileStorage.getInstance();
 
-  // set up the layer
-  os.layer.preset.LayerPresetManager.getInstance();
-
   // load settings for anything that may need them.
   os.config.SettingsManager = os.ui.config.SettingsManager.getInstance();
   this.initializeSettings_();
@@ -253,6 +250,9 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   // configure default layer configs
   os.layer.config.LayerConfigManager.getInstance().registerLayerConfig(os.layer.config.StaticLayerConfig.ID,
       os.layer.config.StaticLayerConfig);
+
+  // set up the layer presets
+  os.layer.preset.LayerPresetManager.getInstance();
 
   // configure data manager
   os.dataManager = os.osDataManager = os.data.OSDataManager.getInstance();

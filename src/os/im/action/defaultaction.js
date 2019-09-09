@@ -47,31 +47,6 @@ os.im.action.default.SettingKey = {
 
 
 /**
- * Get the enabled state of the entry and its children.
- * @param {os.im.action.FilterActionEntry} entry The entry.
- * @param {Object<string, boolean>=} opt_result Object to store the result.
- * @return {!Object<string, boolean>} Map of entry id's to the enabled state.
- */
-os.im.action.default.getEnabledMap = function(entry, opt_result) {
-  var result = opt_result || {};
-  if (entry) {
-    if (entry.isEnabled()) {
-      result[entry.getId()] = true;
-    }
-
-    var children = entry.getChildren();
-    if (children) {
-      for (var i = 0; i < children.length; i++) {
-        os.im.action.default.getEnabledMap(children[i], result);
-      }
-    }
-  }
-
-  return result;
-};
-
-
-/**
  * Get the URL to load a default actions file.
  * @param {osx.ResourceConfig} resource The resource config.
  * @return {string} The URL.

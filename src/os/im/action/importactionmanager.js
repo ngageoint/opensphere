@@ -553,7 +553,7 @@ os.im.action.ImportActionManager.prototype.save = function() {
           }
 
           // store the enabled state of default actions
-          os.im.action.default.getEnabledMap(e, defaultEnabled[type]);
+          os.im.action.getEnabledMap(e, defaultEnabled[type]);
         } else if (!e.isTemporary()) {
           // persist the entire entry if it is not a default or temporary action
           entryConfigs.push(e.persist());
