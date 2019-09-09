@@ -74,38 +74,41 @@
   background: $body-bg;
   color: color-yiq($body-bg);
 
-  &.selected {
-    background: $list-group-active-bg;
-    color: $list-group-active-color;
-  }
+  &:not(.disabled) {
 
-  &.hovered,
-  &:hover {
-    background: $list-group-hover-bg;
-    color: $list-group-action-hover-color;
-  }
-
-  &.selected,
-  &.hovered,
-  &:hover {
-    a:not(.select2-choice) {
+    &.selected {
+      background: $list-group-active-bg;
       color: $list-group-active-color;
-      text-decoration: underline;
     }
 
-    .c-slick-grid__hover-color {
-      color: $list-group-active-color !important;
+    &.hovered,
+    &:hover {
+      background: $list-group-hover-bg;
+      color: $list-group-action-hover-color;
     }
 
-    @each $color, $value in $colors {
-      .u-text-#{$color}:not(.c-glyph__enabled) {
-        color: inherit !important;
+    &.selected,
+    &.hovered,
+    &:hover {
+      a:not(.select2-choice) {
+        color: $list-group-active-color;
+        text-decoration: underline;
       }
-    }
 
-    @each $color, $value in $theme-colors {
-      .text-#{$color} {
-        color: inherit !important;
+      .c-slick-grid__hover-color {
+        color: $list-group-active-color !important;
+      }
+
+      @each $color, $value in $colors {
+        .u-text-#{$color}:not(.c-glyph__enabled) {
+          color: inherit !important;
+        }
+      }
+
+      @each $color, $value in $theme-colors {
+        .text-#{$color} {
+          color: inherit !important;
+        }
       }
     }
   }
