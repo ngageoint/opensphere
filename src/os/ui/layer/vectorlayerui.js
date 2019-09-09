@@ -301,12 +301,12 @@ os.ui.layer.VectorLayerUICtrl.prototype.showFillStyleControls = function() {
 
 
 /**
- * Updates the Replace Feature Style state on the UI.
+ * Updates the layer preset state on the UI.
  *
  * @private
  */
 os.ui.layer.VectorLayerUICtrl.prototype.loadPresets = function() {
-  this['showPresets'] = false;
+  this['presets'] = null;
 
   var nodes = this.getLayerNodes();
   if (nodes && nodes.length == 1) {
@@ -322,14 +322,21 @@ os.ui.layer.VectorLayerUICtrl.prototype.loadPresets = function() {
       if (promise) {
         promise.then(function(presets) {
           if (presets && presets.length) {
-            var options = layer.getLayerOptions();
-            var preset = presets.find(function(p) {
-              return p.id === (options['preset'] && options['preset'].id);
+            var defaultPreset = presets.find(function(p) {
+              return p.id === os.layer.preset.DEFAULT_PRESET_ID;
             });
+            if (defaultPreset) {
+              os.layer.preset.updateDefault(layer, defaultPreset);
+            }
 
-            this['showPresets'] = true;
             this['presets'] = presets;
-            this['preset'] = preset || null;
+
+            // the preset objects may change, so resolve the current selection by id
+            var currentPreset = this['preset'] ? presets.find(function(p) {
+              return p && p.id === this['preset'].id;
+            }, this) : undefined;
+            // set the current selection, with priority as current > default > first
+            this['preset'] = currentPreset || defaultPreset || presets[0];
           }
         }, undefined, this);
       }
@@ -339,11 +346,11 @@ os.ui.layer.VectorLayerUICtrl.prototype.loadPresets = function() {
 
 
 /**
- * Handle changes to the Replace Feature Style option.
+ * Apply the layer preset.
  *
  * @export
  */
-os.ui.layer.VectorLayerUICtrl.prototype.onPresetChange = function() {
+os.ui.layer.VectorLayerUICtrl.prototype.applyPreset = function() {
   var items = /** @type {Array} */ (this.scope['items']);
   if (items && items.length > 0) {
     var value = this['preset'];

@@ -50,8 +50,11 @@ os.layer.preset.LayerPresetManager.prototype.init = function() {
   var presets = os.settings.get(os.layer.preset.SettingKey.PRESETS, {});
 
   for (var key in presets) {
+    var layerPresets = /** @type {Array<osx.layer.Preset>} */ (presets[key]);
+    os.layer.preset.addDefault(layerPresets);
+
     this.presets_[key] = new goog.Promise(function(resolve, reject) {
-      resolve(/** @type {Array<osx.layer.Preset>} */ (presets[key]));
+      resolve(layerPresets);
     });
   }
 };
