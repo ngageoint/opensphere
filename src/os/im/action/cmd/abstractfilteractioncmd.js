@@ -112,7 +112,9 @@ os.im.action.cmd.AbstractFilterAction.prototype.canExecute = function() {
  */
 os.im.action.cmd.AbstractFilterAction.prototype.add = function() {
   if (this.entry) {
-    os.im.action.ImportActionManager.getInstance().addActionEntry(this.entry, this.index, this.parentId);
+    var iam = os.im.action.ImportActionManager.getInstance();
+    iam.addActionEntry(this.entry, this.index, this.parentId);
+    iam.processItems(this.entry.getType());
   }
 };
 
