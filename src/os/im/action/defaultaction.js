@@ -122,12 +122,13 @@ os.im.action.default.initDefault_ = function(entry) {
     entry.setDefault(true);
 
     // init the enabled state from settings, defaulting to false
-    var defaultEnabled = /** @type {!Object<string, boolean>} */ (
-      os.settings.get(os.im.action.default.SettingKey.ENABLED, {}));
+    var defaultEnabled = {};
     var type = entry.getType();
-    if (defaultEnabled[type]) {
-      entry.setEnabled(!!defaultEnabled[type][entry.getId()]);
+    if (type) {
+      defaultEnabled = /** @type {!Object<string, boolean>} */ (
+        os.settings.get(os.im.action.default.SettingKey.ENABLED + '.' + type, {}));
     }
+    entry.setEnabled(!!defaultEnabled[entry.getId()]);
 
     // init children
     var children = entry.getChildren();
