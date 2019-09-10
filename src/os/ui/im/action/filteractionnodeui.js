@@ -17,9 +17,9 @@ os.ui.im.action.filterActionNodeUIDirective = function() {
   var directive = os.ui.filter.ui.filterNodeUIDirective();
   directive.controller = os.ui.im.action.FilterActionNodeUICtrl;
   directive.template = '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
-      '<span ng-click="nodeUi.copy()" ng-if="!nodeUi.isDefault()">' +
+      '<span ng-click="nodeUi.copy()">' +
       '<i class="fa fa-copy fa-fw c-glyph" title="Copy the action"></i></span>' +
-      '<span ng-click="nodeUi.edit()" ng-if="!nodeUi.isDefault()">' +
+      '<span ng-click="nodeUi.edit()">' +
       '<i class="fa fa-pencil fa-fw c-glyph" title="Edit the action"></i></span>' +
       '<span ng-click="nodeUi.remove()" ng-if="!nodeUi.isDefault()">' +
       '<i class="fa fa-times fa-fw c-glyph" title="Remove the action"></i></span>' +
@@ -60,7 +60,7 @@ os.ui.im.action.FilterActionNodeUICtrl.prototype.copy = function() {
   var node = /** @type {os.ui.im.action.FilterActionNode} */ (this.scope['item']);
   var entry = node.getEntry();
 
-  if (entry && !entry.isDefault()) {
+  if (entry) {
     var parentIndex = os.structs.getIndexInParent(node);
     this.scope.$emit(os.im.action.ImportActionEventType.COPY_ENTRY, entry, parentIndex);
     os.metrics.Metrics.getInstance().updateMetric(os.im.action.Metrics.COPY, 1);
@@ -76,7 +76,7 @@ os.ui.im.action.FilterActionNodeUICtrl.prototype.copy = function() {
  */
 os.ui.im.action.FilterActionNodeUICtrl.prototype.edit = function() {
   var entry = /** @type {os.ui.im.action.FilterActionNode} */ (this.scope['item']).getEntry();
-  if (entry && !entry.isDefault()) {
+  if (entry) {
     this.scope.$emit(os.im.action.ImportActionEventType.EDIT_ENTRY, entry);
     os.metrics.Metrics.getInstance().updateMetric(os.im.action.Metrics.EDIT, 1);
   }

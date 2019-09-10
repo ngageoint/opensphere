@@ -25,7 +25,7 @@ os.im.action.default.LOGGER_ = goog.log.getLogger('os.im.action.default');
  * @const
  */
 os.im.action.default.ICON = '<i class="fa ' + os.filter.default.FA_ICON + '" ' +
-    'title="This is an application default action and cannot be modified"></i>';
+    'title="This is an application default action. Changes to this action will be lost on refresh."></i>';
 
 
 /**
