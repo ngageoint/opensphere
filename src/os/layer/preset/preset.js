@@ -11,7 +11,7 @@ goog.require('os.style');
  * @type {string}
  * @const
  */
-os.layer.preset.BASE_KEY = 'layer.preset.';
+os.layer.preset.BASE_KEY = 'os.layerPreset.';
 
 
 /**
