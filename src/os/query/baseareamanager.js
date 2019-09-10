@@ -264,6 +264,10 @@ os.query.BaseAreaManager.prototype.isValidFeature = function(feature) {
   var isValid = false;
   var geomType = geometry.getType();
   if (geomType == ol.geom.GeometryType.POLYGON || geomType == ol.geom.GeometryType.MULTI_POLYGON) {
+    geometry = os.geo.jsts.splitPolarPolygon(
+        /** @type {ol.geom.Polygon|ol.geom.MultiPolygon} */ (geometry));
+    os.interpolate.interpolateGeom(geometry);
+
     var validated = os.geo.jsts.validate(geometry);
     var validatedOriginal = null;
 
@@ -289,19 +293,10 @@ os.query.BaseAreaManager.prototype.isValidFeature = function(feature) {
   }
 
   if (isValid) {
-    this.normalizeGeometry(feature);
+    os.geo2.normalizeGeometryCoordinates(feature.getGeometry());
   }
 
   return isValid;
-};
-
-
-/**
- * @param {ol.Feature} feature
- * @protected
- */
-os.query.BaseAreaManager.prototype.normalizeGeometry = function(feature) {
-  os.geo2.normalizeGeometryCoordinates(feature.getGeometry());
 };
 
 

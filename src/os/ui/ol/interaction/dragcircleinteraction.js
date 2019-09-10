@@ -67,7 +67,9 @@ os.ui.ol.interaction.DragCircle.prototype.getGeometry = function() {
   var geom = this.circle2D.getOriginalGeometry();
 
   if (geom) {
+    geom = os.geo.jsts.splitPolarPolygon(geom);
     os.geo2.normalizeGeometryCoordinates(geom);
+    os.interpolate.interpolateGeom(geom);
   }
 
   return geom;

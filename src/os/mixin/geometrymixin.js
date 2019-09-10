@@ -192,7 +192,22 @@ ol.geom.Geometry.prototype.toLonLat = function() {
 })();
 
 
+
 (function() {
+  var oldTransform = ol.geom.Geometry.prototype.transform;
+
+  /**
+   * @param {ol.ProjectionLike} pFrom
+   * @param {ol.ProjectionLike} pTo
+   * @return {ol.geom.Geometry}
+   */
+  ol.geom.Geometry.prototype.transform = function(pFrom, pTo) {
+    var to = ol.proj.get(pTo);
+    this.set(os.geom.GeometryField.PROJECTION, to.getCode());
+    return oldTransform.call(this, pFrom, to);
+  };
+
+
   /**
    * Openlayers' implementation does not actually clone the underlying geometries
    *

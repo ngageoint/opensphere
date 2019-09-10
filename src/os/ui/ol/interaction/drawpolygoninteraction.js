@@ -88,20 +88,9 @@ os.ui.ol.interaction.DrawPolygon.prototype.getGeometry = function() {
   var geom = new ol.geom.Polygon([this.coords]);
   var method = os.interpolate.getMethod();
   geom.set(os.interpolate.METHOD_FIELD, method);
-  geom.toLonLat();
-
-  // normalize coordinates prior to validation, or polygons crossing the date line may be broken
-  os.geo2.normalizeGeometryCoordinates(geom, undefined, os.proj.EPSG4326);
-
-  // then interpolate so the coordinates reflect what was drawn
-  os.interpolate.beginTempInterpolation(os.proj.EPSG4326, method);
+  geom = os.geo.jsts.splitPolarPolygon(geom);
+  os.geo2.normalizeGeometryCoordinates(geom);
   os.interpolate.interpolateGeom(geom);
-  os.interpolate.endTempInterpolation();
-
-  // finally validate the geometry to ensure it's accepted in server queries
-  geom = os.geo.jsts.validate(geom);
-
-  geom.osTransform();
   return geom;
 };
 

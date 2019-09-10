@@ -527,6 +527,198 @@ os.geo.jsts.toPolygon = function(geometry) {
 
 
 /**
+ * @param {jsts.geom.Geometry} geometry
+ * @return {Array<jsts.geom.Polygon>}
+ * @private
+ */
+os.geo.jsts.polygonize_ = function(geometry) {
+  var lines = jsts.geom.util.LineStringExtracter.getLines(geometry);
+  var polygonizer = new jsts.operation.polygonize.Polygonizer();
+  polygonizer.add(/** @type {jsts.Collection<jsts.geom.Geometry>} */ (lines));
+  var polys = polygonizer.getPolygons();
+  return jsts.geom.GeometryFactory.toPolygonArray(polys);
+};
+
+
+/**
+ * @param {ol.geom.Polygon|ol.geom.MultiPolygon} polygon
+ * @param {ol.geom.LineString} line
+ * @return {ol.geom.Polygon|ol.geom.MultiPolygon}
+ */
+os.geo.jsts.splitPolygonByLine = function(polygon, line) {
+  if (polygon && line) {
+    var olp = os.geo.jsts.OLParser.getInstance();
+    var jstsPolygon = olp.read(polygon);
+    var jstsLine = olp.read(line);
+
+    if (jstsPolygon && jstsLine) {
+      var nodedLinework = jstsPolygon.getBoundary().union(jstsLine);
+      var polys = os.geo.jsts.polygonize_(nodedLinework);
+
+      // only keep polygons which are inside the input
+      polys = polys.filter(function(poly) {
+        return jstsPolygon.contains(poly.getInteriorPoint());
+      });
+
+      polys = /** @type {Array<ol.geom.Polygon>} */ (polys.map(olp.write.bind(olp)));
+
+      var rings = [];
+      for (var i = 0, n = polys.length; i < n; i++) {
+        rings = rings.concat(polys[i].getCoordinates());
+      }
+
+      if (polys.length > 1) {
+        var multi = new ol.geom.MultiPolygon([]);
+        multi.setPolygons(polys);
+        return multi;
+      } else if (polys.length > 0) {
+        return polys[0];
+      }
+    }
+  }
+
+  return polygon;
+};
+
+
+/**
+ * @param {Array<ol.geom.Polygon|ol.geom.MultiPolygon>} polygons
+ * @private
+ */
+os.geo.jsts.flattenPolys_ = function(polygons) {
+  // do not cache length here as it is changing
+  for (var i = 0; i < polygons.length; i++) {
+    var item = polygons[i];
+    if (item.getType() === ol.geom.GeometryType.MULTI_POLYGON) {
+      var args = [i, 1].concat(/** @type {ol.geom.MultiPolygon} */ (item).getPolygons());
+      Array.prototype.splice.apply(polygons, args);
+    }
+  }
+};
+
+
+/**
+ * @param {ol.geom.Polygon} polygon
+ * @return {boolean}
+ */
+os.geo.jsts.needsSplit = function(polygon) {
+  var coords = polygon.getCoordinates()[0];
+  var proj = ol.proj.get(/** @type {string} */ (polygon.get(os.geom.GeometryField.PROJECTION)) ||
+    os.map.PROJECTION);
+
+  if (os.geo2.isPolarRing(coords, proj)) {
+    return true;
+  }
+
+  var extent = proj.getExtent();
+  var halfWidth = (extent[2] - extent[0]) / 2;
+
+  for (var i = 1, n = coords.length; i < n; i++) {
+    if (Math.abs(coords[i][0] - coords[i - 1][0]) > halfWidth) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+
+proj4.defs('EPSG:3031',
+    '+proj=stere +lat_0=-90 +lat_ts=-71 +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs');
+proj4.defs('EPSG:3413',
+    '+proj=stere +lat_0=90 +lat_ts=70 +lon_0=-45 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs');
+
+
+/**
+ * @param {ol.geom.Polygon|ol.geom.MultiPolygon} polygon
+ * @return {ol.geom.Polygon|ol.geom.MultiPolygon}
+ */
+os.geo.jsts.splitPolarPolygon = function(polygon) {
+  if (polygon.getType() === ol.geom.GeometryType.MULTI_POLYGON) {
+    var multi = /** @type {ol.geom.MultiPolygon} */ (polygon);
+    var polygons = multi.getPolygons();
+    polygons = polygons.map(os.geo.jsts.splitPolarPolygon);
+    os.geo.jsts.flattenPolys_(polygons);
+    multi.setPolygons(polygons);
+    return multi;
+  } else if (os.geo.jsts.needsSplit(/** @type {ol.geom.Polygon} */ (polygon))) {
+    var north = ol.extent.getCenter(polygon.getExtent())[1] >= 0;
+    polygon.toLonLat();
+    var pLonLat = ol.proj.get(os.proj.EPSG4326);
+    var pPolar = ol.proj.get(north ? 'EPSG:3413' : 'EPSG:3031');
+    var pFinal = os.map.PROJECTION;
+
+    polygon.transform(pLonLat, pPolar);
+    var meridian = new ol.geom.LineString([[0, 0], [0, north ? 90 : -90], [180, 0]]);
+    meridian.transform(pLonLat, pPolar);
+
+    var result = os.geo.jsts.splitPolygonByLine(polygon, meridian);
+    result.transform(pPolar, pLonLat);
+
+    os.geo2.normalizeGeometryCoordinates(result, 0, os.proj.EPSG4326);
+
+    if (result.getType() === ol.geom.GeometryType.MULTI_POLYGON) {
+      var polys = result.getCoordinates();
+
+      // The pole point needs go "straight up" a EPSG:4326 projection to the pole, which really
+      // means that we need two pole points, with one matching the longitude of the previous non-pole
+      // point and one matching the longitude of the next non-pole point.
+      for (var p = 0, pp = polys.length; p < pp; p++) {
+        var rings = polys[p];
+        for (var r = 0, rr = rings.length; r < rr; r++) {
+          var ring = rings[r];
+
+          // not caching ring length because we are changing it
+          var sumLon = 0;
+          var numLons = 0;
+          for (var i = 0; i < ring.length; i++) {
+            var lon = ring[i][0];
+
+            if (Math.abs(Math.abs(lon) - 180) > 1E-12) {
+              sumLon += lon;
+              numLons++;
+            }
+
+            if (Math.abs(Math.abs(ring[i][1]) - 90) < 1E-12) {
+              var idx = goog.math.modulo(i - 1, ring.length);
+              var before = ring[i].slice();
+              before[0] = ring[idx][0];
+
+              idx = goog.math.modulo(i + 1, ring.length);
+              var after = ring[i].slice();
+              after[0] = ring[idx][0];
+
+              ring.splice(i, 1, before, after);
+              i++;
+            }
+          }
+
+          // Normalization puts all antimeridian coordinates at -180. For eastern
+          // hemisphere polygons, we need those to be 180
+          if (sumLon / numLons >= 0) {
+            var n = ring.length;
+            for (i = 0; i < n; i++) {
+              if (Math.abs(Math.abs(ring[i][0]) - 180) < 1E-12) {
+                ring[i][0] = 180;
+              }
+            }
+          }
+        }
+      }
+
+      result.setCoordinates(polys);
+      result.transform(pLonLat, pFinal);
+      result.set(os.geom.GeometryField.NORMALIZED, true);
+      result.set(os.geom.GeometryField.POLE, north);
+    }
+    return result;
+  }
+
+  return polygon;
+};
+
+
+/**
  * Adds the target geometry to the source geometry.
  *
  * @param {ol.Feature} source The feature with the geometry to add to
@@ -1146,6 +1338,14 @@ os.geo.jsts.fromBufferProjection_ = function(geometry, projection, opt_normalize
 os.geo.jsts.validate = function(geometry, opt_quiet, opt_undefinedIfInvalid) {
   if (!geometry) {
     return undefined;
+  }
+
+  var pole = geometry.get(os.geom.GeometryField.POLE);
+  if (pole != null) {
+    // If a geometry was split over the pole by os.geo.jsts.splitPolarPolygon then each of the polygons in the
+    // MultiPolygon are valid. The MultiPolygon is technically not valid because they touch on a segment (the
+    // segment(s) making up the meridian/antimeridian).
+    return geometry;
   }
 
   var geomType = geometry.getType();

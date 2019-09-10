@@ -194,6 +194,12 @@ jsts.geom.Geometry.prototype.getCoordinates = function() {};
 
 
 /**
+ * @return {jsts.geom.Point}
+ */
+jsts.geom.Geometry.prototype.getInteriorPoint = function() {};
+
+
+/**
  * @return {number}
  */
 jsts.geom.Geometry.prototype.getLength = function() {};
@@ -340,6 +346,12 @@ jsts.geom.GeometryFactory.prototype.createMultiPolygon = function(polygons) {};
 jsts.geom.GeometryFactory.prototype.createGeometryCollection = function(geometries) {};
 
 
+/**
+ * @param {jsts.Collection<jsts.geom.Polygon>} geom
+ * @return {Array<jsts.geom.Polygon>}
+ */
+jsts.geom.GeometryFactory.toPolygonArray = function(geom) {};
+
 
 /**
  * @param {Array<T>} geometries
@@ -454,6 +466,11 @@ jsts.geom.Polygon.prototype.getInteriorRingN = function(n) {};
 jsts.geom.Polygon.prototype.getNumInteriorRing = function() {};
 
 
+/**
+ * @return {jsts.geom.LineString}
+ */
+jsts.geom.Polygon.prototype.getBoundary = function() {};
+
 
 /**
  * @param {Array<jsts.geom.Coordinate>} geometries
@@ -560,6 +577,19 @@ jsts.operation.polygonize.Polygonizer.prototype.add = function(g) {};
  * @return {jsts.Collection<jsts.geom.Polygon>}
  */
 jsts.operation.polygonize.Polygonizer.prototype.getPolygons = function() {};
+
+
+/**
+ * @type {Object}
+ */
+jsts.geom.util.LineStringExtracter = {};
+
+
+/**
+ * @param {jsts.geom.Geometry} geom
+ * @return {jsts.Collection<jsts.geom.LineString>}
+ */
+jsts.geom.util.LineStringExtracter.getLines = function(geom) {};
 
 
 /**

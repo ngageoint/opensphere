@@ -293,7 +293,7 @@
     "jquery": "^3.4.1",
     "js-polyfills": "^0.1.42",
     "jschardet": "^1.6.0",
-    "jsts": "^1.5.0",
+    "jsts": "^2.0.6",
     "modernizr": "~3.3.x",
     "moment": "~2.20.1",
     "navigator.sendbeacon": "~0.0.x",

@@ -7,5 +7,7 @@ goog.provide('os.geom.GeometryField');
  */
 os.geom.GeometryField = {
   DIRTY: '_dirty',
-  NORMALIZED: '_normalized'
+  NORMALIZED: '_normalized',
+  POLE: '_pole',
+  PROJECTION: '_projection'
 };

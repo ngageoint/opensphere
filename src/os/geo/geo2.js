@@ -176,3 +176,43 @@ os.geo2.normalizeGeometryCoordinates = function(geometry, opt_to, opt_proj) {
   return false;
 };
 
+
+/**
+ * Check if a polygon caps one of the poles
+ *
+ * @param {ol.geom.Polygon} polygon
+ * @return {boolean}
+ */
+os.geo2.isPolarPolygon = function(polygon) {
+  var proj = /** @type {ol.ProjectionLike} */ (polygon.get(os.geom.GeometryField.PROJECTION) || os.map.PROJECTION);
+  var rings = polygon.getCoordinates();
+  return rings.length ? os.geo2.isPolarRing(rings[0], proj) : false;
+};
+
+
+/**
+ * Check if a polygon caps one of the poles
+ *
+ * @param {Array<Array<number>>} ring The polygon's exterior ring
+ * @param {ol.ProjectionLike=} opt_proj
+ * @return {boolean} if the polygon caps a pole
+ */
+os.geo2.isPolarRing = function(ring, opt_proj) {
+  opt_proj = ol.proj.get(opt_proj) || os.map.PROJECTION;
+  var extent = opt_proj.getExtent();
+  var width = extent[2] - extent[0];
+  var total = 0;
+  if (ring) {
+    for (var i = 1, n = ring.length; i < n; i++) {
+      var dx = ring[i][0] - ring[i - 1][0];
+      if (dx > extent[2]) {
+        dx -= width;
+      } else if (dx < extent[0]) {
+        dx += width;
+      }
+      total += dx;
+    }
+  }
+
+  return Math.abs(total) > 1;
+};
