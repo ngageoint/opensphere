@@ -363,6 +363,10 @@ os.im.action.FilterActionEntry.prototype.compare = function(other) {
       var thisComp = os.xml.serialize(this.actions[length].toXml());
       var thatComp = os.xml.serialize(other.actions[length].toXml());
       val = thisComp < thatComp ? -1 : thisComp > thatComp ? 1 : 0;
+
+      if (val !== 0) {
+        break;
+      }
     }
   }
 
