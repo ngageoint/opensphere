@@ -182,7 +182,11 @@ plugin.im.action.feature.getColumns = function(opt_entryType) {
  * @param {os.im.action.FilterActionEntry=} opt_entry The import action entry.
  */
 plugin.im.action.feature.editEntry = function(entryType, opt_entry) {
-  var entry = opt_entry ? /** @type {!os.im.action.FilterActionEntry} */ (opt_entry.clone()) : undefined;
+  var entry;
+  if (opt_entry) {
+    entry = /** @type {!os.im.action.FilterActionEntry} */ (opt_entry.clone());
+    entry.setDefault(opt_entry.isDefault());
+  }
   plugin.im.action.feature.ui.launchEditFeatureAction(entryType, plugin.im.action.feature.getColumns(entryType),
       os.im.action.filter.onEditComplete.bind(null, opt_entry), entry);
 };
