@@ -1,9 +1,9 @@
 goog.provide('plugin.places.PlacesSource');
 
 goog.require('os.geom.GeometryField');
+goog.require('os.track');
 goog.require('plugin.file.kml.KMLSource');
 goog.require('plugin.file.kml.ui.KMLNode');
-goog.require('plugin.track');
 
 
 
@@ -54,5 +54,5 @@ plugin.places.PlacesSource.prototype.updateVisibilityFromNodes = function() {
  * @protected
  */
 plugin.places.PlacesSource.prototype.updateTrackZIndex = function() {
-  plugin.track.updateTrackZIndex(this.rootNode.getFeatures(false));
+  os.track.updateTrackZIndex(this.rootNode.getFeatures(false));
 };

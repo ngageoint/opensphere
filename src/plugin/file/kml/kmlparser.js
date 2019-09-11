@@ -26,6 +26,7 @@ goog.require('os.net.Request');
 goog.require('os.object');
 goog.require('os.parse.AsyncZipParser');
 goog.require('os.parse.IParser');
+goog.require('os.track');
 goog.require('os.ui.file.kml');
 goog.require('os.xml');
 goog.require('plugin.file.kml');
@@ -38,7 +39,6 @@ goog.require('plugin.file.kml.tour.parseTour');
 goog.require('plugin.file.kml.ui.KMLNetworkLinkNode');
 goog.require('plugin.file.kml.ui.KMLNode');
 goog.require('plugin.file.kml.ui.KMLTourNode');
-goog.require('plugin.track');
 
 
 /**
@@ -1172,7 +1172,7 @@ plugin.file.kml.KMLParser.prototype.readPlacemark_ = function(el) {
       geometry = new ol.geom.LineString(coordinates);
     }
 
-    feature = plugin.track.createTrack(/** @type {!plugin.track.CreateOptions} */ ({
+    feature = os.track.createTrack(/** @type {!os.track.CreateOptions} */ ({
       geometry: geometry,
       name: /** @type {string|undefined} */ (object['name'])
     }));
