@@ -29,8 +29,6 @@ os.layer.preset.LayerPresetManager = function() {
    * @private
    */
   this.requested_ = {};
-
-  this.init();
 };
 goog.addSingletonGetter(os.layer.preset.LayerPresetManager);
 
@@ -41,23 +39,6 @@ goog.addSingletonGetter(os.layer.preset.LayerPresetManager);
  * @const
  */
 os.layer.preset.LayerPresetManager.LOGGER_ = goog.log.getLogger('os.layer.preset.LayerPresetManager');
-
-
-/**
- * Initializes the layer presets from settings.
- */
-os.layer.preset.LayerPresetManager.prototype.init = function() {
-  var presets = os.settings.get(os.layer.preset.SettingKey.PRESETS, {});
-
-  for (var key in presets) {
-    var layerPresets = /** @type {Array<osx.layer.Preset>} */ (presets[key]);
-    os.layer.preset.addDefault(layerPresets);
-
-    this.presets_[key] = new goog.Promise(function(resolve, reject) {
-      resolve(layerPresets);
-    });
-  }
-};
 
 
 /**
@@ -123,5 +104,30 @@ os.layer.preset.LayerPresetManager.prototype.handleLoadError = function(reason) 
  * @return {goog.Promise<Array<osx.layer.Preset>>|undefined}
  */
 os.layer.preset.LayerPresetManager.prototype.getPresets = function(type) {
+  if (!this.presets_[type]) {
+    this.initPreset(type);
+  }
+
   return this.presets_[type];
+};
+
+
+/**
+ * Initializes the layer presets for a layer.
+ *
+ * @param {string} type The layer type.
+ * @protected
+ */
+os.layer.preset.LayerPresetManager.prototype.initPreset = function(type) {
+  var presets = /** @type {!Object<Array<osx.layer.Preset>>} */
+      (os.settings.get(os.layer.preset.SettingKey.PRESETS, {}));
+  var layerPresets = presets[type] || [];
+  if (layerPresets.length) {
+    // add a preset to restore the layer to its default settings
+    //
+    // note: this could be useful for any layer, but without other preset options it seems like unnecessary UI clutter
+    os.layer.preset.addDefault(layerPresets);
+  }
+
+  this.presets_[type] = goog.Promise.resolve(layerPresets);
 };

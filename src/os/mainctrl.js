@@ -62,7 +62,6 @@ goog.require('os.im.mapping.time.DateTimeMapping');
 goog.require('os.im.mapping.time.TimeMapping');
 goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.layer.config.StaticLayerConfig');
-goog.require('os.layer.preset.LayerPresetManager');
 goog.require('os.load.LoadingManager');
 goog.require('os.map');
 goog.require('os.map.interaction');
@@ -250,9 +249,6 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   // configure default layer configs
   os.layer.config.LayerConfigManager.getInstance().registerLayerConfig(os.layer.config.StaticLayerConfig.ID,
       os.layer.config.StaticLayerConfig);
-
-  // set up the layer presets
-  os.layer.preset.LayerPresetManager.getInstance();
 
   // configure data manager
   os.dataManager = os.osDataManager = os.data.OSDataManager.getInstance();
