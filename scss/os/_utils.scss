@@ -67,6 +67,14 @@ $user-select-options: all, auto, text, none;
   cursor: help;
 }
 
+.u-cursor-wait {
+  cursor: wait !important;
+}
+
+.u-cursor-not-allowed {
+  cursor: not-allowed !important;
+};
+
 .u-btn-separator {
   border-left: 1px solid $body-color;
   border-right: 1px solid $body-bg;
@@ -472,6 +480,10 @@ $u-parent-resizer-count: 0;
   border-color: $border-color;
 }
 
+.u-border-style__dashed {
+  border-style: dashed !important;
+}
+
 // Used for buttons that are styled as form-controls borders
 .u-border-color-input {
   border-color: $input-border-color !important;
@@ -629,4 +641,8 @@ $aspect-ratios: ((16, 9), (4, 3));
 
 .u-object-fit-contain {
   object-fit: contain;
+}
+
+.u-border-thick {
+  border-width: ($border-width * 2) !important;
 }

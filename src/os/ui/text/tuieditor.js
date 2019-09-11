@@ -401,10 +401,10 @@ os.ui.text.TuiEditorCtrl.prototype.insertImage = function(url, opt_altText) {
 
 
 /**
- * @param {string} linkText
  * @param {string} url
+ * @param {string} linkText
  */
-os.ui.text.TuiEditorCtrl.prototype.insertLink = function(linkText, url) {
+os.ui.text.TuiEditorCtrl.prototype.insertLink = function(url, linkText) {
   this['tuiEditor'].eventManager.emit('command', 'AddLink', {
     'linkText': linkText,
     'url': url
