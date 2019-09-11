@@ -4,9 +4,9 @@ goog.require('os.feature.DynamicFeature');
 goog.require('os.style');
 goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
-goog.require('plugin.track');
+goog.require('os.track');
 
-describe('plugin.track', function() {
+describe('os.track', function() {
   /**
    * Generate test track coordinates.
    * @param {number} count The number of coordinates.
@@ -72,24 +72,24 @@ describe('plugin.track', function() {
       field2: 'value2'
     });
 
-    expect(plugin.track.getFeatureValue('field1', feature)).toBe('value1');
-    expect(plugin.track.getFeatureValue('field2', feature)).toBe('value2');
-    expect(plugin.track.getFeatureValue('field3', feature)).toBeUndefined();
+    expect(os.track.getFeatureValue('field1', feature)).toBe('value1');
+    expect(os.track.getFeatureValue('field2', feature)).toBe('value2');
+    expect(os.track.getFeatureValue('field3', feature)).toBeUndefined();
 
-    expect(plugin.track.getFeatureValue('field1', undefined)).toBeUndefined();
-    expect(plugin.track.getFeatureValue('field1', null)).toBeUndefined();
+    expect(os.track.getFeatureValue('field1', undefined)).toBeUndefined();
+    expect(os.track.getFeatureValue('field1', null)).toBeUndefined();
   });
 
   it('gets the start time from a feature', function() {
     var feature = new ol.Feature();
-    expect(plugin.track.getStartTime(feature)).toBeUndefined();
+    expect(os.track.getStartTime(feature)).toBeUndefined();
 
     var now = Date.now();
     feature.set(os.data.RecordField.TIME, new os.time.TimeInstant(now));
-    expect(plugin.track.getStartTime(feature)).toBe(now);
+    expect(os.track.getStartTime(feature)).toBe(now);
 
     feature.set(os.data.RecordField.TIME, new os.time.TimeRange(now, now + 1000));
-    expect(plugin.track.getStartTime(feature)).toBe(now);
+    expect(os.track.getStartTime(feature)).toBe(now);
   });
 
   it('sorts coordinates by increasing M value', function() {
@@ -102,14 +102,14 @@ describe('plugin.track', function() {
       [0, 0, 0, 0]
     ];
 
-    coordinates.sort(plugin.track.sortCoordinatesByValue);
+    coordinates.sort(os.track.sortCoordinatesByValue);
     verifyCoordinateSort(coordinates);
   });
 
   it('gets sorted coordinates from a set of features', function() {
     var testGetTrackCoordinates = function(sortField, sortStart) {
       var features = generateFeatures(20, sortField, sortStart);
-      var coordinates = plugin.track.getTrackCoordinates(features, sortField);
+      var coordinates = os.track.getTrackCoordinates(features, sortField);
       expect(coordinates.length).toBe(features.length);
       verifyCoordinateSort(coordinates);
     };
@@ -122,15 +122,15 @@ describe('plugin.track', function() {
   });
 
   it('does not create a track without features or coordinates', function() {
-    var track = plugin.track.createTrack({});
+    var track = os.track.createTrack({});
     expect(track).toBeUndefined();
 
-    track = plugin.track.createTrack({
+    track = os.track.createTrack({
       features: []
     });
     expect(track).toBeUndefined();
 
-    track = plugin.track.createTrack({
+    track = os.track.createTrack({
       coordinates: []
     });
     expect(track).toBeUndefined();
@@ -144,7 +144,7 @@ describe('plugin.track', function() {
     var name = 'Test Track';
     var label = 'labelField';
 
-    var track = plugin.track.createTrack({
+    var track = os.track.createTrack({
       color: color,
       features: features,
       id: id,
@@ -163,8 +163,8 @@ describe('plugin.track', function() {
 
     expect(track.getId()).toBe(id);
     expect(track.get(os.Fields.ID)).toBe(id);
-    expect(track.get(plugin.file.kml.KMLField.NAME)).toBe(name);
-    expect(track.get(plugin.track.TrackField.SORT_FIELD)).toBe(sortField);
+    expect(track.get(os.Fields.LOWERCASE_NAME)).toBe(name);
+    expect(track.get(os.track.TrackField.SORT_FIELD)).toBe(sortField);
 
     var featureStyle = track.get(os.style.StyleType.FEATURE);
     expect(featureStyle).toBeDefined();
@@ -182,15 +182,15 @@ describe('plugin.track', function() {
 
   it('creates a track with default values', function() {
     var features = generateFeatures(20, os.data.RecordField.TIME, Date.now());
-    var track = plugin.track.createTrack({
+    var track = os.track.createTrack({
       features: features
     });
 
     var actualId = track.getId();
     expect(actualId).toBeDefined();
     expect(track.get(os.Fields.ID)).toBe(actualId);
-    expect(track.get(plugin.file.kml.KMLField.NAME)).toBe(actualId);
-    expect(track.get(plugin.track.TrackField.SORT_FIELD)).toBe(os.data.RecordField.TIME);
+    expect(track.get(os.Fields.LOWERCASE_NAME)).toBe(actualId);
+    expect(track.get(os.track.TrackField.SORT_FIELD)).toBe(os.data.RecordField.TIME);
 
     var featureStyle = track.get(os.style.StyleType.FEATURE);
     expect(featureStyle).toBeDefined();
@@ -203,12 +203,12 @@ describe('plugin.track', function() {
     expect(labelStyle).toBeDefined();
     expect(Array.isArray(labelStyle)).toBe(true);
     expect(labelStyle.length).toBe(1);
-    expect(labelStyle[0]['column']).toBe(plugin.file.kml.KMLField.NAME);
+    expect(labelStyle[0]['column']).toBe(os.Fields.LOWERCASE_NAME);
   });
 
   it('creates a track from a set of coordinates', function() {
     var coordinates = generateCoordinates(20, os.data.RecordField.TIME, Date.now());
-    var track = plugin.track.createTrack({
+    var track = os.track.createTrack({
       coordinates: coordinates
     });
 
@@ -225,13 +225,13 @@ describe('plugin.track', function() {
   it('creates a track without a time-based sort', function() {
     var sortField = 'testSortField';
     var features = generateFeatures(20, sortField, 0);
-    var track = plugin.track.createTrack({
+    var track = os.track.createTrack({
       features: features,
       sortField: sortField
     });
 
     expect(track instanceof os.feature.DynamicFeature).toBe(false);
-    expect(track.get(plugin.track.TrackField.SORT_FIELD)).toBe(sortField);
+    expect(track.get(os.track.TrackField.SORT_FIELD)).toBe(sortField);
 
     var geometry = track.getGeometry();
     expect(geometry).toBeDefined();
@@ -244,7 +244,7 @@ describe('plugin.track', function() {
   it('adds features to an existing track', function() {
     var startTime = Date.now();
     var features = generateFeatures(20, os.data.RecordField.TIME, startTime);
-    var track = plugin.track.createTrack({
+    var track = os.track.createTrack({
       features: features
     });
 
@@ -252,7 +252,7 @@ describe('plugin.track', function() {
     startTime += 18 * 1000;
 
     var moreFeatures = generateFeatures(20, os.data.RecordField.TIME, startTime);
-    var added = plugin.track.addToTrack({
+    var added = os.track.addToTrack({
       features: moreFeatures,
       track: track
     });
@@ -270,7 +270,7 @@ describe('plugin.track', function() {
   it('adds coordinates to an existing track', function() {
     var startTime = Date.now();
     var coordinates = generateCoordinates(20, os.data.RecordField.TIME, startTime);
-    var track = plugin.track.createTrack({
+    var track = os.track.createTrack({
       coordinates: coordinates
     });
 
@@ -278,7 +278,7 @@ describe('plugin.track', function() {
     startTime += 18 * 1000;
 
     var moreCoordinates = generateCoordinates(20, os.data.RecordField.TIME, startTime);
-    var added = plugin.track.addToTrack({
+    var added = os.track.addToTrack({
       coordinates: moreCoordinates,
       track: track
     });
