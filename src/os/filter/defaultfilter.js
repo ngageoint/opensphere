@@ -10,7 +10,7 @@ os.filter.default.FA_ICON = 'fa-shield';
 
 
 /**
- * Base settings key for default import actions.
+ * Base settings key for default filters.
  * @type {string}
  * @const
  */
