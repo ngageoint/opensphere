@@ -15,6 +15,7 @@ goog.require('os.layer.LayerType');
 goog.require('os.layer.PropertyChange');
 goog.require('os.registerClass');
 goog.require('os.source');
+goog.require('os.source.ImageStatic');
 goog.require('os.style');
 goog.require('os.ui.Icons');
 goog.require('os.ui.layer.defaultLayerUIDirective');
