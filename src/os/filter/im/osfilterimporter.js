@@ -9,12 +9,13 @@ goog.require('os.ui.filter.im.FilterImporter');
 /**
  * @param {os.parse.IParser<T>} parser The parser.
  * @param {string=} opt_layerId The layer id.
+ * @param {boolean=} opt_keepId If the original entry id should be preserved. Defaults to false.
  * @extends {os.ui.filter.im.FilterImporter}
  * @constructor
  * @template T
  */
-os.filter.im.OSFilterImporter = function(parser, opt_layerId) {
-  os.filter.im.OSFilterImporter.base(this, 'constructor', parser, opt_layerId);
+os.filter.im.OSFilterImporter = function(parser, opt_layerId, opt_keepId) {
+  os.filter.im.OSFilterImporter.base(this, 'constructor', parser, opt_layerId, opt_keepId);
 };
 goog.inherits(os.filter.im.OSFilterImporter, os.ui.filter.im.FilterImporter);
 

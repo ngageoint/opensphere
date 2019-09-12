@@ -21,7 +21,7 @@ os.ui.im.action.filterActionNodeUIDirective = function() {
       '<i class="fa fa-copy fa-fw c-glyph" title="Copy the action"></i></span>' +
       '<span ng-click="nodeUi.edit()">' +
       '<i class="fa fa-pencil fa-fw c-glyph" title="Edit the action"></i></span>' +
-      '<span ng-click="nodeUi.remove()">' +
+      '<span ng-click="nodeUi.remove()" ng-if="!nodeUi.isDefault()">' +
       '<i class="fa fa-times fa-fw c-glyph" title="Remove the action"></i></span>' +
       '</span>';
   return directive;
@@ -59,9 +59,9 @@ goog.inherits(os.ui.im.action.FilterActionNodeUICtrl, os.ui.filter.ui.FilterNode
 os.ui.im.action.FilterActionNodeUICtrl.prototype.copy = function() {
   var node = /** @type {os.ui.im.action.FilterActionNode} */ (this.scope['item']);
   var entry = node.getEntry();
-  var parentIndex = os.structs.getIndexInParent(node);
 
   if (entry) {
+    var parentIndex = os.structs.getIndexInParent(node);
     this.scope.$emit(os.im.action.ImportActionEventType.COPY_ENTRY, entry, parentIndex);
     os.metrics.Metrics.getInstance().updateMetric(os.im.action.Metrics.COPY, 1);
   }
@@ -91,7 +91,7 @@ os.ui.im.action.FilterActionNodeUICtrl.prototype.edit = function() {
  */
 os.ui.im.action.FilterActionNodeUICtrl.prototype.remove = function() {
   var entry = /** @type {os.ui.im.action.FilterActionNode} */ (this.scope['item']).getEntry();
-  if (entry) {
+  if (entry && !entry.isDefault()) {
     this.scope.$emit(os.im.action.ImportActionEventType.REMOVE_ENTRY, entry);
     os.metrics.Metrics.getInstance().updateMetric(os.im.action.Metrics.REMOVE, 1);
   }

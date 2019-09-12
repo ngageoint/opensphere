@@ -33,6 +33,13 @@ os.filter.FilterEntry = function() {
   this.title_ = 'New Filter';
 
   /**
+   * If this is a default filter.
+   * @type {boolean}
+   * @private
+   */
+  this.default_ = false;
+
+  /**
    * @type {boolean}
    * @private
    */
@@ -173,6 +180,26 @@ os.filter.FilterEntry.prototype.isEnabled = function() {
 os.filter.FilterEntry.prototype.setEnabled = function(value) {
   this['enabled'] = value;
   this.dispatchEvent(new os.events.PropertyChangeEvent(os.ui.filter.PropertyChange.ENABLED, value, !value));
+};
+
+
+/**
+ * Whether or not this is a default filter. Default filters are loaded from application settings.
+ *
+ * @return {boolean}
+ */
+os.filter.FilterEntry.prototype.isDefault = function() {
+  return this.default_;
+};
+
+
+/**
+ * Set if this is a default filter.
+ *
+ * @param {boolean} value
+ */
+os.filter.FilterEntry.prototype.setDefault = function(value) {
+  this.default_ = value;
 };
 
 

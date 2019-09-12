@@ -116,3 +116,15 @@ os.ui.filter.ui.FilterNodeUICtrl.prototype.copy = function() {
   this.scope.$emit('filterCopy', filter);
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.COPY, 1);
 };
+
+
+/**
+ * If this is a default filter.
+ *
+ * @return {boolean}
+ * @export
+ */
+os.ui.filter.ui.FilterNodeUICtrl.prototype.isDefault = function() {
+  var entry = /** @type {os.ui.filter.ui.FilterNode} */ (this.scope['item']).getEntry();
+  return !!entry && entry.isDefault();
+};
