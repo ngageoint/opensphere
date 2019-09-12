@@ -113,7 +113,7 @@ os.layer.Image = function(options) {
    * @type {?string}
    * @private
    */
-  this.syncType_ = os.layer.SynchronizerType.IMAGE;
+  this.syncType_ = null;
 
   /**
    * Image overlays are hidden by default.
@@ -330,12 +330,14 @@ os.layer.Image.prototype.getLayerVisible = function() {
 os.layer.Image.prototype.setLayerVisible = function(value) {
   value = !!value;
 
-  this.visible_ = value;
-  if (!this.mapVisibilityLocked_) {
-    this.setVisible(value);
-  }
+  if (this.visible_ != value) {
+    this.visible_ = value;
+    if (!this.mapVisibilityLocked_) {
+      this.setVisible(value);
+    }
 
-  this.dispatchEvent(new os.events.PropertyChangeEvent('visible', value, !value));
+    this.dispatchEvent(new os.events.PropertyChangeEvent('visible', value, !value));
+  }
 };
 
 
@@ -451,7 +453,13 @@ os.layer.Image.prototype.getGroupUI = function() {
  * @inheritDoc
  */
 os.layer.Image.prototype.getSynchronizerType = function() {
-  return this.syncType_;
+  if (this.syncType_) {
+    return this.syncType_;
+  }
+
+  return this.getSource() instanceof ol.source.ImageStatic ?
+    os.layer.SynchronizerType.IMAGE_STATIC :
+    os.layer.SynchronizerType.IMAGE;
 };
 
 
