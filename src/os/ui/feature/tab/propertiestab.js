@@ -162,6 +162,28 @@ os.ui.feature.tab.PropertiesTabCtrl.prototype.onSourceChange_ = function(e) {
 
 
 /**
+ * Change order
+ * @param {string} key
+ */
+os.ui.feature.tab.PropertiesTabCtrl.prototype.order = function(key) {
+  if (key === this.scope['columnToOrder']) {
+    this.scope['reverse'] = !this.scope['reverse'];
+  } else {
+    this.scope['columnToOrder'] = key;
+  }
+
+  var field = this.scope['columnToOrder'];
+  var reverse = this.scope['reverse'];
+
+  this['properties'].sort(function(a, b) {
+    var v1 = a[field].toString();
+    var v2 = b[field].toString();
+    return goog.string.numerateCompare(v1, v2) * (reverse ? -1 : 1);
+  });
+};
+
+
+/**
  * Select this property
  *
  * @param {Event} event
