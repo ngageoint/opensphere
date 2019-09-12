@@ -88,6 +88,11 @@ os.ui.filter.ui.EditFiltersCtrl = function($scope, $element) {
    */
   this['isComplex'] = false;
 
+  /**
+   * @type {string}
+   */
+  this['isDefault'] = this.entry.isDefault();
+
   this.create_();
   this.checkFilter_();
 
