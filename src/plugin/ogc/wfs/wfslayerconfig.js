@@ -366,7 +366,7 @@ plugin.ogc.wfs.WFSLayerConfig.TYPES = {
  * @protected
  */
 plugin.ogc.wfs.WFSLayerConfig.prototype.getBestType = function(options) {
-  var formats = /** @type {Array<string>} */ (options['formats']);
+  var formats = /** @type {Array<string>|undefined} */ (options['formats']);
   var format = /** @type {string} */ (this.params.get('outputformat'));
   var preferred = plugin.ogc.wfs.WFSLayerConfig.PREFERRED_TYPES;
 
@@ -397,6 +397,7 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.getBestType = function(options) {
     }
   }
 
+  this.params.remove('outputformat');
   return 1;
 };
 

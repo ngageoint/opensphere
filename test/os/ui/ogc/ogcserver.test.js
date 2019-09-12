@@ -76,4 +76,25 @@ describe('os.ui.ogc.OGCServer', function() {
     });
   });
 
+  it('should parse WFS 1.1.0 properly', function() {
+    var server = new os.ui.ogc.OGCServer();
+    loadAndRun(server, {
+      wfs: '/base/test/resources/ogc/wfs-110.xml'
+    }, function() {
+      expect(server.getWfsUrl()).toBe('https://example.com/geoserver/wfs');
+      expect(server.getWfsPost()).toBe(true);
+      expect(server.getWfsFormats()).toBeTruthy();
+      expect(server.getWfsFormats()).toContain('text/xml; subtype=gml/3.1.1');
+      expect(server.getWfsFormats()).toContain('GML2');
+      expect(server.getWfsFormats()).toContain('application/json');
+      expect(server.getWfsFormats()).toContain('gml3');
+      expect(server.getWfsFormats()).toContain('json');
+
+      for (var i = 1; i <= 2; i++) {
+        var d = os.dataManager.getDescriptor('testogc#OSDS:Layer_' + i);
+        expect(d).toBeTruthy();
+        expect(d.isWfsEnabled()).toBe(true);
+      }
+    });
+  });
 });
