@@ -4,14 +4,17 @@ goog.provide('plugin.file.kml.ui.KMLNodeAction');
 goog.require('goog.events.EventType');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('ol.Feature');
 goog.require('ol.events');
 goog.require('ol.extent');
 goog.require('ol.geom.GeometryType');
+goog.require('ol.geom.Polygon');
 goog.require('os.annotation');
 goog.require('os.annotation.FeatureAnnotation');
 goog.require('os.data.IExtent');
 goog.require('os.data.ISearchable');
 goog.require('os.events.PropertyChangeEvent');
+goog.require('os.fn');
 goog.require('os.structs.TriState');
 goog.require('os.ui.ILayerUIProvider');
 goog.require('os.ui.ScreenOverlayCtrl');
@@ -157,6 +160,8 @@ plugin.file.kml.ui.KMLNode = function() {
   this.layerUI = null;
 };
 goog.inherits(plugin.file.kml.ui.KMLNode, os.ui.slick.SlickTreeNode);
+os.implements(plugin.file.kml.ui.KMLNode, os.data.IExtent.ID);
+os.implements(plugin.file.kml.ui.KMLNode, os.data.ISearchable.ID);
 os.implements(plugin.file.kml.ui.KMLNode, os.ui.ILayerUIProvider.ID);
 
 
@@ -538,26 +543,57 @@ plugin.file.kml.ui.KMLNode.prototype.getOverlays = function(opt_unchecked) {
 plugin.file.kml.ui.KMLNode.prototype.getExtent = function() {
   var extent = null;
 
-  if (this.image_) {
+  var children = this.getChildren();
+  if (children && children.length) {
+    for (var i = 0, n = children.length; i < n; i++) {
+      if (os.implements(children[i], os.data.IExtent.ID)) {
+        var child = /** @type {os.data.IExtent} */ (children[i]);
+        var ex = child.getExtent();
+        if (extent && ex) {
+          ol.extent.extend(extent, ex);
+        } else if (!extent) {
+          extent = ex;
+        }
+      }
+    }
+  } else if (this.image_) {
     var source = this.image_.getSource();
 
     if (source instanceof ol.source.ImageStatic) {
       extent = /** @type {ol.source.ImageStatic} */ (source).image_.getExtent();
     }
   } else {
-    var features = this.getFeatures();
-    if (features && features.length) {
-      extent = ol.extent.createEmpty();
-      for (var i = 0, n = features.length; i < n; i++) {
-        var geometry = features[i].getGeometry();
-        if (geometry != null) {
-          ol.extent.extend(extent, geometry.getExtent());
-        }
-      }
-    }
+    var geoms = this.getFeatures().map(os.fn.mapFeatureToGeometry);
+    extent = geoms.reduce(os.fn.reduceExtentFromGeometries, ol.extent.createEmpty());
   }
 
   return extent;
+};
+
+
+/**
+ * @return {Array<!ol.Feature>|undefined}
+ */
+plugin.file.kml.ui.KMLNode.prototype.getZoomFeatures = function() {
+  var children = this.getChildren();
+  if (children && children.length) {
+    var features;
+    for (var i = 0, n = children.length; i < n; i++) {
+      var childFeatures = children[i].getZoomFeatures();
+      if (childFeatures) {
+        features = features ? features.concat(childFeatures) : childFeatures;
+      }
+    }
+
+    return features;
+  } else if (this.image_) {
+    var extent = this.getExtent();
+    if (extent && !ol.extent.isEmpty(extent)) {
+      return [new ol.Feature(ol.geom.Polygon.fromExtent(extent))];
+    }
+  }
+
+  return this.getFeatures();
 };
 
 
