@@ -139,19 +139,7 @@ os.ui.im.action.FilterActionImportCtrl.prototype.onLayerChange = function(layer)
  */
 os.ui.im.action.FilterActionImportCtrl.prototype.finish = function() {
   var iam = os.im.action.ImportActionManager.getInstance();
-  var entries = [];
-
-  for (var key in this['matched']) {
-    var layerModel = this['matched'][key];
-    var filterModels = layerModel['filterModels'];
-    for (var i = 0; i < filterModels.length; i++) {
-      // add each filter and create a query entry for it
-      var entry = /** @type {os.im.action.FilterActionEntry} */ (filterModels[i]['filter']);
-      if (entry) {
-        entries.push(entry);
-      }
-    }
-  }
+  var entries = os.ui.im.action.getEntriesFromMatched(this['matched']);
 
   var msg;
   var am = os.alert.AlertManager.getInstance();

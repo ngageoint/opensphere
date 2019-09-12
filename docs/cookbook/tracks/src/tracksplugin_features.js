@@ -5,6 +5,7 @@ goog.require('ol.geom.Point');
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.plugin.PluginManager');
 goog.require('os.time.TimeInstant');
+goog.require('os.track');
 goog.require('plugin.track');
 
 var transformToMap;
@@ -50,7 +51,7 @@ plugin.cookbook_tracks.TracksPlugin.prototype.init = function() {
  * @private
  */
 plugin.cookbook_tracks.TracksPlugin.prototype.onPlacesLoaded = function() {
-  var track = plugin.track.createAndAdd(/** @type {!plugin.track.CreateOptions} */({
+  var track = plugin.track.createAndAdd(/** @type {!os.track.CreateOptions} */({
     features: this.getFeatures_(),
     name: 'Cookbook track',
     color: '#00ff00'
@@ -80,7 +81,7 @@ plugin.cookbook_tracks.TracksPlugin.prototype.getFeatures_ = function() {
  */
 plugin.cookbook_tracks.TracksPlugin.prototype.updateTrack = function(track) {
   this.modifyPosition_();
-  plugin.track.addToTrack({
+  os.track.addToTrack({
     features: this.getFeatures_(),
     track: track
   });
