@@ -1,6 +1,7 @@
 goog.provide('os.ui.im.action.FilterActionNode');
 
 goog.require('os.im.action.ImportActionManager');
+goog.require('os.im.action.default');
 goog.require('os.ui.filter.ui.FilterNode');
 goog.require('os.ui.im.action.filterActionNodeUIDirective');
 
@@ -17,6 +18,7 @@ goog.require('os.ui.im.action.filterActionNodeUIDirective');
 os.ui.im.action.FilterActionNode = function(entry) {
   os.ui.im.action.FilterActionNode.base(this, 'constructor', entry);
   this.checkboxTooltip = 'If the action should automatically execute against loaded data';
+  this.defaultIcon = os.im.action.default.ICON;
   this.nodeUI = '<filteractionnodeui></filteractionnodeui>';
   this.bubbleState = false;
   this.bold = false;

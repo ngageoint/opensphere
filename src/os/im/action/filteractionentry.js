@@ -385,3 +385,67 @@ os.im.action.FilterActionEntry.prototype.compare = function(other) {
 os.im.action.testFilterActionEnabled = function(entry) {
   return entry.isEnabled();
 };
+
+
+/**
+ * Set enabled state of a filter action entries and its children from a map.
+ * @param {os.im.action.FilterActionEntry} entry The entry.
+ * @param {Object<string, boolean>} enabled Map of entry id to enabled state. Defaults to false for undefined id's.
+ */
+os.im.action.enableFromMap = function(entry, enabled) {
+  entry.setEnabled(!!enabled[entry.getId()]);
+
+  var children = entry.getChildren();
+  if (children) {
+    children.forEach(function(child) {
+      os.im.action.enableFromMap(child, enabled);
+    });
+  }
+};
+
+
+/**
+ * Get the enabled state of the entry and its children.
+ * @param {os.im.action.FilterActionEntry} entry The entry.
+ * @param {Object<string, boolean>=} opt_result Object to store the result.
+ * @return {!Object<string, boolean>} Map of entry id's to the enabled state.
+ */
+os.im.action.getEnabledMap = function(entry, opt_result) {
+  var result = opt_result || {};
+  if (entry) {
+    if (entry.isEnabled()) {
+      result[entry.getId()] = true;
+    }
+
+    var children = entry.getChildren();
+    if (children) {
+      for (var i = 0; i < children.length; i++) {
+        os.im.action.getEnabledMap(children[i], result);
+      }
+    }
+  }
+
+  return result;
+};
+
+
+/**
+ * Set enabled state of a filter action entries and its children from a map.
+ * @param {!Array<string>} ids Array of enabled entry id's.
+ * @param {os.im.action.FilterActionEntry} entry The entry.
+ * @return {!Array<string>} Array of enabled entry id's.
+ */
+os.im.action.reduceEnabled = function(ids, entry) {
+  if (entry) {
+    if (entry.isEnabled()) {
+      ids.push(entry.getId());
+    }
+
+    var children = entry.getChildren();
+    if (children) {
+      children.reduce(os.im.action.reduceEnabled, ids);
+    }
+  }
+
+  return ids;
+};

@@ -73,6 +73,10 @@
     </div>
   </div>
   <div class="modal-footer">
+    <div class="col" ng-if="ctrl.isDefault">
+      <i class="fa fa-warning text-warning"></i>
+      Changes to default feature actions will be lost on application refresh.
+    </div>
     <button class="btn btn-primary" ng-click="ctrl.finish()"
         ng-disabled="actionForm.$invalid || ctrl.isInvalid()">
       <i class="fa fa-check"></i>
