@@ -211,7 +211,7 @@ function setContactInfo() {
   }
   var browserInfo = document.getElementsByClassName('js-browser-info')[0];
   if (browserInfo && typeof (platform) != 'undefined') {
-    browserInfo.innerHTML = '<ul><li class="' + (checkVersion() ? 'js-found' : 'js-missing' ) + '">' +
+    browserInfo.innerHTML = '<ul><li class="' + (checkVersion() ? 'js-found' : 'js-missing') + '">' +
         platform.name + ' Version ' + platform.version + ' detected</li></ul>';
   }
 }
