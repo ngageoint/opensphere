@@ -131,7 +131,7 @@ os.ui.feature.tab.PropertiesTabCtrl.prototype.updateProperties = function() {
  * @private
  */
 os.ui.feature.tab.PropertiesTabCtrl.prototype.addProperty = function(field, value) {
-  if (field && value && !os.feature.isInternalField(field) && os.object.isPrimitive(value)) {
+  if (field && !os.feature.isInternalField(field) && os.object.isPrimitive(value)) {
     this['properties'].push({
       'id': field,
       'field': field,
