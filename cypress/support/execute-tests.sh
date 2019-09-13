@@ -5,6 +5,7 @@ function main() {
   trap ctrl_c INT
 
   setVariables
+  checkEnvironment
   checkArguments
   configureSound
   overrideSettings
@@ -26,6 +27,8 @@ function ctrl_c() {
 }
 
 function setVariables() {
+  export PLUGIN=../opensphere-plugin*
+  
   export SERVER_STARTED=false
   export SETTINGS_BACKED_UP=false
 
@@ -59,6 +62,15 @@ function setVariables() {
   export TEST_PATH=cypress/integration/
   
   export TEST_RESULT
+}
+
+function checkEnvironment() {
+  if ls $PLUGIN 1> /dev/null 2>&1; then
+    echo 'ERROR: A plug-in exists! You must disable the plugin AND rebuild before running tests.'
+    exit 1
+  else
+    echo 'INFO: plugin check complete; environment ready'
+  fi
 }
 
 function checkArguments() {
