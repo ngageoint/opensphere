@@ -1309,7 +1309,8 @@ os.layer.Vector.prototype.restore = function(config) {
   styleConf[os.style.StyleField.LABELS] = config[os.style.StyleField.LABELS] || [os.style.label.cloneConfig()];
   styleConf[os.style.StyleField.LABEL_COLOR] = config[os.style.StyleField.LABEL_COLOR];
   styleConf[os.style.StyleField.LABEL_SIZE] = config[os.style.StyleField.LABEL_SIZE] || os.style.label.DEFAULT_SIZE;
-  styleConf[os.style.StyleField.SHOW_LABELS] = config[os.style.StyleField.SHOW_LABELS] || false;
+  styleConf[os.style.StyleField.SHOW_LABELS] = config[os.style.StyleField.SHOW_LABELS] != null ?
+      config[os.style.StyleField.SHOW_LABELS] : true;
 
   var source = /** @type {os.IPersistable} */ (this.getSource());
   if (source && os.implements(source, os.source.ISource.ID)) {
