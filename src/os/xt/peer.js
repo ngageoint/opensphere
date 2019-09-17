@@ -587,7 +587,7 @@ os.xt.Peer.prototype.send = function(type, data, opt_to) {
  * @return {boolean} True if the given app ID exists in the peer list, false otherwise
  */
 os.xt.Peer.prototype.isAppOpen = function(appId, opt_messageType) {
-  return ol.array.includes(this.getPeers(opt_messageType), appId);
+  return ol.array.includes(this.getPeers(opt_messageType), appId) || this.id_ == appId;
 };
 
 
