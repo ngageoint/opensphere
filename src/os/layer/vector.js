@@ -296,6 +296,11 @@ os.layer.Vector.prototype.onSourceChange = function(event) {
           event.getOldValue());
       this.dispatchEvent(e);
       break;
+    case os.source.PropertyChange.LABEL:
+      // forward as a layer event
+      e = new os.events.PropertyChangeEvent(os.layer.PropertyChange.LABEL, event.getNewValue(), event.getOldValue());
+      this.dispatchEvent(e);
+      break;
     case os.source.PropertyChange.LOCK:
       e = new os.events.PropertyChangeEvent(os.layer.PropertyChange.LOCK, event.getNewValue(),
           event.getOldValue());
