@@ -226,6 +226,12 @@
     }
   }
 
+  .tui-editor-popup {
+    left: inherit;
+    margin-left: inherit;
+    position: fixed;
+    top: inherit;
+  }
 
   //////////// EDITOR POPUP WINDOWS //////////
   .tui-popup-wrapper,
