@@ -6,6 +6,7 @@ function main() {
 
   setVariables
   checkArguments
+  checkEnvironment
   configureSound
   overrideSettings
   startWebServer
@@ -18,16 +19,21 @@ function main() {
 }
 
 function ctrl_c() {
+  echo ''
   echo "WARNING: user terminated tests, performing cleanup..."
   stopWebServer
   restoreSettings
   echo 'INFO: cleanup complete, test execution script terminated early'
+  echo 'INFO: press CTRL+C again to fully exit and return to the terminal'
   exit 1
 }
 
 function setVariables() {
+  export PLUGIN=../opensphere-plugin*
+  
   export SERVER_STARTED=false
   export SETTINGS_BACKED_UP=false
+  export SETTINGS_OVERRIDE=FALSE
 
   export SOUND_CONFIGURATION_SOURCE=cypress/support/asound.conf
   export SOUND_CONFIGURATION_TARGET=/etc/asound.conf
@@ -128,6 +134,18 @@ function checkArguments() {
   fi
 }
 
+function checkEnvironment() {
+  if ls $PLUGIN 1> /dev/null 2>&1; then
+    echo 'WARNING: A plugin exists that may affect the test results!'
+    if ! [ "$ENVIRONMENT" == "ci" ]; then
+      read -t 15 -p "Press CTRL+C to Cancel, ENTER to Continue or wait 15 seconds"
+      echo ''
+    fi
+  else
+    echo 'INFO: plugin check complete; environment ready'
+  fi
+}
+
 function backupSettings(){
   if [ -f $SETTINGS_ORIGINAL ]; then
     echo 'INFO: build settings file exists and may need to be backed up'
@@ -152,6 +170,8 @@ function configureSound() {
 
 function overrideSettings() {
   backupSettings
+
+  SETTINGS_OVERRIDE=true
 
   echo "INFO: creating a new settings override file: $SETTINGS_OVERRIDE_TARGET"
   cp $SETTINGS_OVERRIDE_SOURCE $SETTINGS_OVERRIDE_TARGET
@@ -252,20 +272,21 @@ function stopWebServer() {
 }
 
 function restoreSettings() {
-  echo "INFO: removing settings override file: $SETTINGS_OVERRIDE_TARGET"
-  rm $SETTINGS_OVERRIDE_TARGET
-  
-  echo "INFO: removing default settings file: $SETTINGS_DEFAULT_TARGET"
-  rm $SETTINGS_DEFAULT_TARGET
+  if $SETTINGS_OVERRIDE; then
+    echo "INFO: removing settings override file: $SETTINGS_OVERRIDE_TARGET"
+    rm $SETTINGS_OVERRIDE_TARGET
+    
+    echo "INFO: removing default settings file: $SETTINGS_DEFAULT_TARGET"
+    rm $SETTINGS_DEFAULT_TARGET
 
-  echo "INFO: removing 2D mode settings file: $SETTINGS_CYPRESS_2D_TARGET"
-  rm $SETTINGS_CYPRESS_2D_TARGET
+    echo "INFO: removing 2D mode settings file: $SETTINGS_CYPRESS_2D_TARGET"
+    rm $SETTINGS_CYPRESS_2D_TARGET
 
-  if [ "$CYPRESS_PROJECTION" == 4326 ]; then
-    echo "INFO: removing projection settings file: $SETTINGS_CYPRESS_PROJECTION_TARGET"
-    rm $SETTINGS_CYPRESS_PROJECTION_TARGET
+    if [ "$CYPRESS_PROJECTION" == 4326 ]; then
+      echo "INFO: removing projection settings file: $SETTINGS_CYPRESS_PROJECTION_TARGET"
+      rm $SETTINGS_CYPRESS_PROJECTION_TARGET
+    fi
   fi
-
   restoreBackup
 }
 
