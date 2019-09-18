@@ -650,3 +650,35 @@ $aspect-ratios: ((16, 9), (4, 3));
 .u-border-thick {
   border-width: ($border-width * 2) !important;
 }
+
+
+// --------------------------------- Corner Ribbons -----------------------------------//
+.u-corner-ribbon {
+  background: $warning;
+  color: color-yiq($warning);
+  left: -50px;
+  letter-spacing: 1px;
+  line-height: 50px;
+  position: fixed;
+  text-align: center;
+  top: 25px;
+  transform: rotate(-45deg);
+  width: 200px;
+
+  &.bottom-left {
+    bottom: 25px;
+    left: -50px;
+    margin-bottom: 1rem;
+    top: auto;
+    transform: rotate(45deg);
+  }
+
+  &.bottom-right {
+    bottom: 25px;
+    left: auto;
+    margin-bottom: 1rem;
+    right: -50px;
+    top: auto;
+    transform: rotate(-45deg);
+  }
+}
