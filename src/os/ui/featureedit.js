@@ -1313,13 +1313,15 @@ os.ui.FeatureEditCtrl.prototype.setFeatureConfig_ = function(config) {
     os.style.setConfigOpacityColor(config, 0);
   }
 
-  var fillColor = ol.color.asArray(this['fillColor']);
-  var fillOpacity = os.color.normalizeOpacity(this['fillOpacity']);
-  fillColor[3] = fillOpacity;
-  fillColor = os.style.toRgbaString(fillColor);
+  if (this['fillColor'] && this['fillOpacity'] != null) {
+    var fillColor = ol.color.asArray(this['fillColor']);
+    var fillOpacity = os.color.normalizeOpacity(this['fillOpacity']);
+    fillColor[3] = fillOpacity;
+    fillColor = os.style.toRgbaString(fillColor);
 
-  if (color != fillColor) {
-    os.style.setFillColor(config, fillColor);
+    if (color != fillColor) {
+      os.style.setFillColor(config, fillColor);
+    }
   }
 
   // set icon config if selected
