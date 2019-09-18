@@ -1261,7 +1261,7 @@ os.geo.interpolateEllipse = function(center, a, b, t, opt_steps) {
 
       // get a lat/lon based on distance and bearing
       point = osasm.geodesicDirect(center, os.geo.R2D * (theta - tilt), r);
-      point.push(altitude);
+      point[2] = altitude;
 
       list.push(point);
 
