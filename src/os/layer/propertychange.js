@@ -11,6 +11,7 @@ os.layer.PropertyChange = {
   ERROR: 'error',
   GROUP_ID: 'groupId',
   ICONS: 'icons',
+  LABEL: 'label',
   LABEL_VISIBILITY: 'labelVisibility',
   LOADING: 'loading',
   LOCK: 'lock',
