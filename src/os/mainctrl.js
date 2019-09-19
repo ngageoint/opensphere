@@ -344,6 +344,9 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   // initialize the CMM
   os.column.ColumnMappingManager.getInstance();
 
+  // initialize the layer preset manager
+  os.layer.preset.LayerPresetManager.getInstance();
+
   $scope.$on(os.ui.WindowEventType.CLOSE, this.onWindowClose_.bind(this));
   $scope.$on(os.ui.WindowEventType.DRAGSTART, this.onWindowDrag_.bind(this));
   $scope.$on(os.ui.WindowEventType.DRAGSTOP, this.onWindowDrag_.bind(this));

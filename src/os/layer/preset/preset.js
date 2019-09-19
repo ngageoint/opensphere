@@ -19,6 +19,7 @@ os.layer.preset.BASE_KEY = 'os.layerPreset.';
  * @enum {string}
  */
 os.layer.preset.SettingKey = {
+  APPLIED_DEFAULTS: os.layer.preset.BASE_KEY + 'appliedDefaults',
   PRESETS: os.layer.preset.BASE_KEY + 'presets'
 };
 

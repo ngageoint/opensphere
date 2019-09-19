@@ -71,7 +71,7 @@ os.im.action.ImportActionManager = function() {
 
   /**
    * Map to cache which default actions have been loaded.
-   * @type {!Object<string, boolean>}
+   * @type {!Object<string, !goog.Promise>}
    * @protected
    */
   this.defaultsLoaded = {};
@@ -473,25 +473,22 @@ os.im.action.ImportActionManager.prototype.load = function() {
 /**
  * Load default actions for a source.
  *
- * @param {string} id The default action id.
+ * @param {string} id The internal layer ID.
  * @return {!goog.Promise}
- * @protected
  */
 os.im.action.ImportActionManager.prototype.loadDefaults = function(id) {
   if (!this.defaultsLoaded[id]) {
-    this.defaultsLoaded[id] = true;
-
     var defaultActions = /** @type {Object<string, Array<osx.ResourceConfig>>|undefined} */ (
       os.settings.get(os.im.action.default.SettingKey.FILES));
 
-    var filterKey;
+    var filterKey = id;
     var layer = os.map.mapContainer.getLayer(id);
     if (os.implements(layer, os.filter.IFilterable.ID)) {
       filterKey = /** @type {os.filter.IFilterable} */ (layer).getFilterKey();
     }
 
     if (filterKey && defaultActions && defaultActions[filterKey]) {
-      return os.im.action.default.load(id, defaultActions[filterKey]).then(function(entries) {
+      this.defaultsLoaded[id] = os.im.action.default.load(id, defaultActions[filterKey]).then(function(entries) {
         if (entries && entries.length) {
           // add all of the default entries
           entries.forEach(function(entry) {
@@ -512,10 +509,13 @@ os.im.action.ImportActionManager.prototype.loadDefaults = function(id) {
 
         goog.log.error(this.log, 'Failed loading default actions for "' + id + '": ' + reason);
       }, this);
+    } else {
+      // there are no default actions for that ID, so just return a plain resolved promise
+      this.defaultsLoaded[id] = goog.Promise.resolve();
     }
   }
 
-  return goog.Promise.resolve();
+  return this.defaultsLoaded[id];
 };
 
 
