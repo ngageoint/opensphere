@@ -1118,7 +1118,7 @@ plugin.ogc.OGCLayerDescriptor.prototype.launchFilterManager = function() {
  * @inheritDoc
  */
 plugin.ogc.OGCLayerDescriptor.prototype.getFilterKey = function() {
-  return this.wfsUrl_ + '!!' + this.wfsName_;
+  return this.wfsUrl_ + os.ui.filter.FILTER_KEY_DELIMITER + this.wfsName_;
 };
 
 

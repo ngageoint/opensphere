@@ -90,6 +90,14 @@ os.ui.filter.OPERATIONS = [
 
 
 /**
+ * The delimiter used to separate filter keys.
+ * @type {string}
+ * @const
+ */
+os.ui.filter.FILTER_KEY_DELIMITER = '!!';
+
+
+/**
  * Field for storing the current timestamp on the window object. This is an ugly way to do this, but the value is
  * read by functions instantiated in an unusual way, so it needs to be defined in an unminified way.
  * @type {number}
@@ -555,7 +563,7 @@ os.ui.filter.getFilterableTypes = function(type) {
           }, types);
     } else {
       // extract the type the hard way
-      var bangIdx = type.lastIndexOf('!!');
+      var bangIdx = type.lastIndexOf(os.ui.filter.FILTER_KEY_DELIMITER);
       var hashIdx = type.indexOf('#');
       if (bangIdx != -1) {
         type = type.substring(bangIdx + 2);

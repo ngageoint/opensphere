@@ -910,7 +910,7 @@ os.layer.Vector.prototype.getFilterKey = function() {
     var params = /** @type {string} */ (options['params']);
     var typeName = params ? /** @type {string} */ (params.get('typename')) : null;
     if (url && typeName) {
-      return url + '!!' + typeName;
+      return url + os.ui.filter.FILTER_KEY_DELIMITER + typeName;
     }
   }
 
