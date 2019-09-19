@@ -131,6 +131,12 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
    */
   this['showAltitudeModes'] = false;
 
+  /**
+   * Flag for whether the label state needs to be refreshed.
+   * @type {boolean}
+   */
+  this.refreshLabels = true;
+
   os.ui.layer.VectorLayerUICtrl.base(this, 'constructor', $scope, $element, $timeout);
   this.defaultColorControl = os.ui.ColorControlType.PICKER;
 
@@ -167,6 +173,23 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.ROTATION_COLUMN_CHANGE, this.onRotationColumnChange.bind(this));
 };
 goog.inherits(os.ui.layer.VectorLayerUICtrl, os.ui.layer.DefaultLayerUICtrl);
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.onLayerPropertyChange = function(event) {
+  if (!this.isDisposed()) {
+    if (event instanceof os.events.PropertyChangeEvent) {
+      var p = event.getProperty();
+      if (p === os.layer.PropertyChange.LABEL) {
+        this.refreshLabels = true;
+      }
+    }
+
+    os.ui.layer.VectorLayerUICtrl.base(this, 'onLayerPropertyChange', event);
+  }
+};
 
 
 /**
@@ -374,21 +397,25 @@ os.ui.layer.VectorLayerUICtrl.prototype.applyPreset = function() {
  * @private
  */
 os.ui.layer.VectorLayerUICtrl.prototype.reconcileLabelsState_ = function() {
-  // Duplicate the labels so the command stack undo/redo works
-  var labels = this.getColumn();
+  if (this.refreshLabels) {
+    // Duplicate the labels so the command stack undo/redo works
+    var labels = this.getColumn();
 
-  // the UI modifies the label config objects, so they must be cloned or undo/redo will not work.
-  var clone = [];
-  os.array.forEach(labels, function(label) {
-    clone.push(os.style.label.cloneConfig(label));
-  }, this);
+    // the UI modifies the label config objects, so they must be cloned or undo/redo will not work.
+    var clone = [];
+    os.array.forEach(labels, function(label) {
+      clone.push(os.style.label.cloneConfig(label));
+    }, this);
 
-  // If empty, add placeholder
-  if (clone.length === 0) {
-    clone.push(os.style.label.cloneConfig());
+    // If empty, add placeholder
+    if (clone.length === 0) {
+      clone.push(os.style.label.cloneConfig());
+    }
+
+    this.scope['labels'] = clone;
+
+    this.refreshLabels = false;
   }
-
-  this.scope['labels'] = clone;
 };
 
 
