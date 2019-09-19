@@ -647,6 +647,10 @@ $aspect-ratios: ((16, 9), (4, 3));
   object-position: top;
 }
 
+.u-object-position-top-left {
+  object-position: top left;
+}
+
 .u-border-thick {
   border-width: ($border-width * 2) !important;
 }
