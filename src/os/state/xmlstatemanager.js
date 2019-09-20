@@ -5,6 +5,7 @@ goog.require('goog.dom.xml');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('os.config');
+goog.require('os.events.PayloadEvent');
 goog.require('os.file.FileManager');
 goog.require('os.file.mime.xmlstate');
 goog.require('os.state');
@@ -137,6 +138,9 @@ os.state.XMLStateManager.prototype.loadState = function(obj, states, stateId, op
           }
         }
       }
+      os.dispatcher.dispatchEvent(new os.events.PayloadEvent(os.state.BaseStateManager.EventType.LOADED, {
+        'id': stateId
+      }));
     }
   }
 };

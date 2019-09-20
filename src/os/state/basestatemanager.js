@@ -99,7 +99,8 @@ os.state.Versions = {
  */
 os.state.BaseStateManager.EventType = {
   CLEAR: 'clear',
-  DELETE: 'delete'
+  DELETE: 'delete',
+  LOADED: 'loaded'
 };
 
 
