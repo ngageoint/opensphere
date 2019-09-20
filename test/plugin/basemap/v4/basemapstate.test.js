@@ -56,10 +56,10 @@ describe('plugin.basemap.v4.BaseMapState', function() {
   });
 
 
-  it('can seralize basemap', function() {
-    // Many of these options are initalized by a previous state file
-    // or by a description descovery process, as I did not want to
-    // make a network reqeust, the options were captured for a
+  it('can serialize basemaps', function() {
+    // Many of these options are initialized by a previous state file
+    // or by a description discovery process, as I did not want to
+    // make a network request, the options were captured for a
     // typical wms/wfs layer state save.
     var defaultOptions = {
       'animate': false,
@@ -79,7 +79,7 @@ describe('plugin.basemap.v4.BaseMapState', function() {
       'title': 'Street Map',
       'type': 'BaseMap',
       'urls': [
-        'https://maps.gvs.nga.ic.gov/arcgis/rest/services/Basemap/World_StreetMap_2D/MapServer/tile/{z}/{y}/{x}'
+        'https://services.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer/tile/{z}/{y}/{x}'
       ],
       'visible': true,
       'zoomOffset': -1
