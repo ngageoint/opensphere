@@ -111,8 +111,6 @@ os.array.forEachSafe = os.array.forEach;
  * @param {Array} dest Destination array
  * @param {number} destPos Destination start index
  * @param {number} length Number of elements to copy
- *
- * @see https://beta.appdev.proj.coe.ic.gov/heapexchange/stackoverflow.com/questions/15501573
  */
 os.array.arrayCopy = function(src, srcPos, dest, destPos, length) {
   for (var i = srcPos; i < srcPos + length; i += 1) {
