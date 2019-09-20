@@ -400,8 +400,8 @@ describe('OMAR.v4.ArcLayerState', function() {
     runs(function() {
       var descriptor = new plugin.arc.layer.ArcLayerDescriptor();
       descriptor.configureDescriptor(discriptorConfig,
-          '1678611117#https://services.gvs.nga.ic.gov/arcgis/rest/services/GEONAMES|0',
-          'https://services.gvs.nga.ic.gov/arcgis/rest/services/GEONAMES/MapServer');
+          '1678611117#https://services.arcgisonline.com/ArcGIS/rest/services/GEONAMES|0',
+          'https://services.arcgisonline.com/ArcGIS/rest/services/GEONAMES/MapServer');
       var descriptorOptions = descriptor.getLayerOptions();
       var options = {};
       for (var i = 0; i < descriptorOptions.length; i++) {
