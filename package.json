@@ -308,7 +308,7 @@
     "select2": "^3.5.1",
     "suncalc": "^1.8.0",
     "text-encoding": "^0.6.4",
-    "tui-editor": "=1.4.1",
+    "tui-editor": "=1.4.6",
     "zip-js": "^0.0.2"
   },
   "husky": {

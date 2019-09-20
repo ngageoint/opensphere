@@ -1,9 +1,20 @@
 //////////// SPECIAL WINDOW / MODAL STYLES //////////
 .c-window,
 .modal {
-  .CodeMirror:not(.CodeMirror-fullscreen) .CodeMirror-scroll,
-  .te-ww-container .te-editor .tui-editor-contents {
-    max-height: 25rem !important;
+  &[height='auto'] {
+    .CodeMirror,
+    .CodeMirror:not(.CodeMirror-fullscreen) .CodeMirror-scroll,
+    .te-ww-container .te-editor .tui-editor-contents {
+      max-height: 25rem !important;
+    }
+  }
+
+  &:not([height='auto']) {
+    .CodeMirror,
+    .CodeMirror:not(.CodeMirror-fullscreen) .CodeMirror-scroll,
+    .te-ww-container .te-editor .tui-editor-contents {
+      max-height: inherit !important;
+    }
   }
 }
 
@@ -237,7 +248,7 @@
   .tui-popup-wrapper,
   .tui-editor-popup {
     .tui-popup-body,
-    button:not(.tui-popup-close-button) {
+    button:not(.tui-popup-close-button):not(.te-ok-button):not(.te-close-button) {
       background-color: $u-theme-variables--bg-offset;
       border-color: $border-color;
       color: color-yiq($u-theme-variables--bg-offset);
@@ -255,7 +266,7 @@
       }
 
       ul li:hover,
-      button:hover,
+      button:not(.tui-popup-close-button):not(.te-ok-button):not(.te-close-button):hover,
       .te-tab button:hover,
       .te-tab .te-tab-active,
       .te-switch-button.active {
