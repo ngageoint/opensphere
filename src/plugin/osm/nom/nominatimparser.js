@@ -127,6 +127,7 @@ plugin.osm.nom.NominatimParser.prototype.parseNext = function() {
       }
 
       result = new ol.Feature(next);
+      result.setId(ol.getUid(result) + '');
     } catch (e) {
       goog.log.error(plugin.osm.nom.NominatimParser.LOGGER_, 'Failed reading feature:', e);
     }
