@@ -202,6 +202,26 @@ Cesium.BlendOption = {
 };
 
 
+/**
+ * @enum {number}
+ */
+Cesium.ArcType = {
+  NONE: 0,
+  GEODESIC: 1,
+  RHUMB: 2
+};
+
+
+/**
+ * @enum {number}
+ */
+Cesium.ClassificationType = {
+  TERRAIN: 0,
+  CESIUM_3D_TILE: 1,
+  BOTH: 2,
+  NUMBER_OF_CLASSIFICATION_TYPES: 3
+};
+
 
 /**
  * @constructor
@@ -1569,6 +1589,12 @@ Cesium.Globe.prototype.depthTestAgainstTerrain;
 
 
 /**
+ * @type {boolean}
+ */
+Cesium.Globe.prototype.showGroundAtmosphere;
+
+
+/**
  * @param {!Cesium.Cartographic} cartographic
  * @return {number|undefined}
  */
@@ -1609,6 +1635,7 @@ Cesium.Polygon.prototype.material;
  * @typedef {{
  *   color: (Cesium.Color|undefined),
  *   horizontal: (boolean|undefined),
+ *   image: (string|undefined),
  *   repeat: (number|undefined),
  *   evenColor: (Cesium.Color|undefined),
  *   oddColor: (Cesium.Color|undefined),
@@ -1772,9 +1799,20 @@ Cesium.Polyline.prototype.width;
 
 
 /**
+ * @param {Cesium.AppearanceOptions=} opt_options
  * @constructor
  */
-Cesium.Appearance = function() {};
+Cesium.Appearance = function(opt_options) {};
+
+
+/**
+ * @typedef {{
+ *  translucent: (boolean|undefined),
+ *  closed: (boolean|undefined),
+ *  material: (Cesium.Material|undefined)
+ * }}
+ */
+Cesium.AppearanceOptions;
 
 
 /**
@@ -1784,10 +1822,17 @@ Cesium.Appearance.prototype.material;
 
 
 /**
+ * @type {boolean}
+ */
+Cesium.Appearance.prototype.translucent;
+
+
+/**
  * @typedef {{
  *   asynchronous: (boolean|undefined),
  *   releaseGeometryInstances: (boolean|undefined),
  *   geometryInstances: !Cesium.GeometryInstance,
+ *   show: (boolean|undefined),
  *   appearance: !Cesium.Appearance
  * }}
  */
@@ -1860,6 +1905,18 @@ Cesium.Primitive.prototype.appearance;
 
 
 /**
+ * @type {Promise<!Cesium.Primitive>}
+ */
+Cesium.Primitive.prototype.readyPromise;
+
+
+/**
+ * @type {boolean}
+ */
+Cesium.Primitive.prototype.show;
+
+
+/**
  * @typedef {{
  *   geometryInstances: (!Cesium.GeometryInstance|undefined),
  *   geometryInstance: (!Cesium.GeometryInstance|undefined)
@@ -1876,6 +1933,47 @@ Cesium.optionsGroundPrimitive;
  */
 Cesium.GroundPrimitive = function(opt_opts) {};
 
+
+/**
+ * @constructor
+ * @param {Cesium.optionsGroundPolylinePrimitive} opt_opts
+ * @extends {Cesium.Primitive}
+ */
+Cesium.GroundPolylinePrimitive = function(opt_opts) {};
+
+
+/**
+ * @typedef {{
+ *  geometryInstances: (!Cesium.GeometryInstance|!Array<!Cesium.GeometryInstance>),
+ *  appearance: !Cesium.Appearance,
+ *  show: (boolean|undefined),
+ *  interleave: (boolean|undefined),
+ *  releaseGeometryInstances: (boolean|undefined),
+ *  allowPicking: (boolean|undefined),
+ *  asynchronous: (boolean|undefined),
+ *  classificationType: (Cesium.ClassificationType|undefined)
+ * }}
+ */
+Cesium.optionsGroundPolylinePrimitive;
+
+
+/**
+ * @constructor
+ * @param {Cesium.optionsGroundPolylineGeometry=} opt_opts
+ */
+Cesium.GroundPolylineGeometry = function(opt_opts) {};
+
+
+/**
+ * @typedef {{
+ *  positions: Array<Cesium.Cartesian3>,
+ *  width: (number|undefined),
+ *  granularity: (number|undefined),
+ *  loop: (boolean|undefined),
+ *  arcType: (Cesium.ArcType|undefined)
+ * }}
+ */
+Cesium.optionsGroundPolylineGeometry;
 
 
 /**
@@ -1968,82 +2066,27 @@ Cesium.LabelCollection = function(opt_options) {};
 
 
 /**
- * @constructor
- * @struct
+ * @typedef {{
+ *  show: (boolean|undefined),
+ *  position: (Cesium.Cartesian3|undefined),
+ *  text: (string|undefined),
+ *  font: (string|undefined),
+ *  fillColor: (Cesium.Color|undefined),
+ *  outlineColor: (Cesium.Color|undefined),
+ *  outlineWidth: (number|undefined),
+ *  showBackground: (boolean|undefined),
+ *  backgroundColor: (Cesium.Color|undefined),
+ *  backgroundPadding: (Cesium.Cartesian2|undefined),
+ *  style: (Cesium.LabelStyle|undefined),
+ *  pixelOffset: (Cesium.Cartesian2|undefined),
+ *  eyeOffset: (Cesium.Cartesian3|undefined),
+ *  horizontalOrigin: (Cesium.HorizontalOrigin|undefined),
+ *  verticalOrigin: (Cesium.VerticalOrigin|undefined),
+ *  scale: (number|undefined),
+ *  heightReference: (Cesium.HeightReference|undefined)
+ * }}
  */
-Cesium.optionsLabelCollection = function() {};
-
-
-/**
- * @type {string| undefined}
- */
-Cesium.optionsLabelCollection.prototype.text;
-
-
-/**
- * @type {string| undefined}
- */
-Cesium.optionsLabelCollection.prototype.font;
-
-
-/**
- * @type {Cesium.Cartesian2| undefined}
- */
-Cesium.optionsLabelCollection.prototype.pixelOffset;
-
-
-/**
- * @type {Cesium.Cartesian3|undefined}
- */
-Cesium.optionsLabelCollection.prototype.position;
-
-
-/**
- * @type {Cesium.Color|undefined}
- */
-Cesium.optionsLabelCollection.prototype.fillColor;
-
-
-/**
- * @type {Cesium.Color|undefined}
- */
-Cesium.optionsLabelCollection.prototype.outlineColor;
-
-
-/**
- * @type {number|undefined}
- */
-Cesium.optionsLabelCollection.prototype.outlineWidth;
-
-
-/**
- * @type {boolean|undefined}
- */
-Cesium.optionsLabelCollection.prototype.show;
-
-
-/**
- * @type {number|undefined}
- */
-Cesium.optionsLabelCollection.prototype.style;
-
-
-/**
- * @type {Cesium.HorizontalOrigin|undefined}
- */
-Cesium.optionsLabelCollection.prototype.horizontalOrigin;
-
-
-/**
- * @type {Cesium.VerticalOrigin|undefined}
- */
-Cesium.optionsLabelCollection.prototype.verticalOrigin;
-
-
-/**
- * @type {Cesium.HeightReference|undefined}
- */
-Cesium.optionsLabelCollection.prototype.heightReference;
+Cesium.optionsLabelCollection;
 
 
 /**
@@ -2603,10 +2646,25 @@ Cesium.PolylineMaterialAppearance.prototype.vertexFormat;
 
 /**
  * @constructor
- * @param {Object} object
+ * @param {Cesium.MaterialAppearanceOptions=} options
  * @extends {Cesium.Appearance}
  */
-Cesium.MaterialAppearance = function(object) {};
+Cesium.MaterialAppearance = function(options) {};
+
+
+/**
+ * @typedef {{
+ *  flat: (boolean|undefined),
+ *  faceForward: (boolean|undefined),
+ *  translucent: (boolean|undefined),
+ *  closed: (boolean|undefined),
+ *  material: (Cesium.Material|HTMLCanvasElement|HTMLVideoElement|Image|undefined),
+ *  vertexShaderSource: (string|undefined),
+ *  fragmentShaderSource: (string|undefined),
+ *  renderState: (Cesium.optionsRenderState|undefined)
+ * }}
+ */
+Cesium.MaterialAppearanceOptions;
 
 
 /**
@@ -2642,6 +2700,7 @@ Cesium.Transforms.headingPitchRollToFixedFrame = function(origin, hpr, opt_ellip
  *      Cesium.BillboardCollection|Cesium.Billboard|
  *      Cesium.LabelCollection|Cesium.Label|
  *      Cesium.PrimitiveCollection|Cesium.Primitive|
+ *      Cesium.GroundPrimitive|Cesium.GroundPolylinePrimitive|
  *      Cesium.Cesium3DTileset)
  * }
  */
@@ -3970,6 +4029,13 @@ Cesium.Scene.prototype.context;
 Cesium.Scene.prototype.fog;
 
 
+
+/**
+ * @type {!boolean}
+ */
+Cesium.Scene.prototype.highDynamicRange;
+
+
 /**
  */
 Cesium.Scene.prototype.initializeFrame = function() {};
@@ -4072,6 +4138,12 @@ Cesium.Scene.prototype.mode;
  * @type {!Cesium.PrimitiveCollection}
  */
 Cesium.Scene.prototype.primitives;
+
+
+/**
+ * @type {!Cesium.PrimitiveCollection}
+ */
+Cesium.Scene.prototype.groundPrimitives;
 
 
 /**

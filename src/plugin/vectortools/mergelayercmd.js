@@ -131,6 +131,14 @@ plugin.vectortools.MergeLayer.prototype.execute = function() {
       mergedLayer.setTitle(this.newLayerName_);
       mergedSource.setTitle(this.newLayerName_);
 
+      // for merged layers we want to allow layer level styling
+      var options = mergedLayer.getLayerOptions();
+      if (!options) {
+        options = {};
+      }
+      options[os.layer.LayerOption.SHOW_FORCE_COLOR] = true;
+      mergedLayer.setLayerOptions(options);
+
       var columnMappings = plugin.vectortools.getColumnMappings(this.sourceIds);
       mergedSource.setColumns(plugin.vectortools.getCombinedColumns(sources, columnMappings));
 

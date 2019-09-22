@@ -1,46 +1,70 @@
-<table>
-  <tr title="Sets the opacity (inverse transparency) of the layer(s)">
-    <td>Opacity</td>
-    <td><slider min="0" max="1" step="0.02" value="opacity" name="opacity"></slider></td>
-  </tr>
-  <tr title="Sets the size of each item in the layer(s)">
-    <td>Size</td>
-    <td><slider min="1" max="10" step="1" value="size" live="false" name="size"></slider></td>
-  </tr>
-  <tr title="Sets the color/shape used to render features">
-    <td>Style</td>
-    <td class="w-100">
-      <div class="form-row align-items-center flex-shrink-0 pt-1">
-        <div class="col-auto">
-          <colorpicker name="color" class="no-text" color="color" show-reset="{{showColorReset}}"></colorpicker>
-        </div>
-        <div class="col">
-          <select class="custom-select" ng-if="shapes && shapes.length > 0" ng-model="$parent.shape"
-              ng-change="ctrl.onShapeChange()"
-              ng-options="val for val in shapes">
-          </select>
-        </div>
-        <div class="col-auto" ng-show="(showIcon && icon && iconSet) || (ctrl.hasCenter() && showCenterIcon && centerIcon)">
-          <iconpicker ng-show="showIcon && icon && iconSet" ng-model="icon" icon-set="iconSet" icon-src="iconSrc"></iconpicker>
-          <iconpicker ng-show="ctrl.hasCenter() && showCenterIcon && centerIcon && iconSet" ng-model="centerIcon" icon-set="iconSet" icon-src="iconSrc"></iconpicker>
-        </div>
+<div class="d-flex flex-column flex-fill container-fluid p-0">
+  <div class="form-group row flex-shrink-0" title="Sets the opacity (inverse transparency) of the layer(s)">
+    <label class="col-3 col-form-label">Opacity</label>
+
+    <div class="col my-auto">
+      <slider min="0" max="1" step="0.02" value="opacity" name="opacity"></slider>
+    </div>
+  </div>
+
+  <div class="form-group row flex-shrink-0" title="Sets the size of each item in the layer(s)">
+      <label class="col-3 col-form-label">Size</label>
+
+      <div class="col my-auto">
+        <slider min="1" max="10" step="1" value="size" live="false" name="size"></slider>
       </div>
-    </td>
-  </tr>
-  <tr title="Sets the style of the line">
-    <td>Border</td>
-    <td>
-        <select class="w-auto js-line-dash" ng-model="lineDashOption" ng-change="ctrl.onLineDashChange()" ng-options="option as option.name for option in lineDashOptions track by option.pattern">
-        </select>
-    </td>
-  </tr>
-  <tr title="Sets the style of the ellipse center" ng-if="centerShapes && centerShapes.length > 0 && ctrl.hasCenter()">
-    <td>Center</td>
-    <td class="w-100">
-      <select class="custom-select" ng-model="$parent.centerShape"
+  </div>
+
+  <div class="form-group row flex-shrink-0" title="Sets the color/shape used to render features">
+    <label class="col-3 col-form-label">Style</label>
+
+    <div class="col-auto">
+        <colorpicker name="color" class="no-text" color="color" show-reset="{{showColorReset}}"></colorpicker>
+    </div>
+
+    <div class="col">
+      <select class="custom-select" ng-if="shapes && shapes.length > 0" ng-model="$parent.shape"
+          ng-change="ctrl.onShapeChange()"
+          ng-options="val for val in shapes">
+      </select>
+    </div>
+
+    <div class="col-auto" ng-show="(showIcon && icon && iconSet) || (ctrl.hasCenter() && showCenterIcon && centerIcon)">
+      <iconpicker ng-show="showIcon && icon && iconSet" ng-model="icon" icon-set="iconSet" icon-src="iconSrc"></iconpicker>
+
+      <iconpicker ng-show="ctrl.hasCenter() && showCenterIcon && centerIcon && iconSet" ng-model="centerIcon" icon-set="iconSet" icon-src="iconSrc"></iconpicker>
+    </div>
+  </div>
+
+  <div class="form-group row flex-shrink-0" title="Sets the style of the ellipse center" ng-if="centerShapes && centerShapes.length > 0 && ctrl.hasCenter()">
+      <label class="col-3 col-form-label">Center</label>
+      <div class="col">
+        <select class="custom-select" ng-model="$parent.centerShape"
           ng-change="ctrl.onCenterShapeChange($parent.centerShape)"
           ng-options="val for val in centerShapes">
+        </select>
+      </div>
+  </div>
+
+  <div class="form-group row flex-shrink-0" title="Sets the style of the line">
+    <label class="col-3 col-form-label">Border</label>
+
+    <div class="col my-auto">
+      <select class="w-auto js-line-dash" ng-model="lineDashOption" ng-change="ctrl.onLineDashChange()" 
+          ng-options="option as option.name for option in lineDashOptions track by option.pattern">
       </select>
-    </td>
-  </tr>
-</table>
+    </div>
+</div>
+
+  <div class="form-group row flex-shrink-0" title="Sets the opacity (inverse transparency) and color of the fill style." ng-if="ctrl.showFillStyleControls()">
+    <label class="col-3 col-form-label">Fill Style</label>
+
+    <div class="col-auto">
+        <colorpicker name="fillColor" class="no-text" color="fillColor" show-reset="true"></colorpicker>
+    </div>
+
+    <div class="col my-auto">
+        <slider min="0" max="1" step="0.02" value="fillOpacity" name="fillOpacity"></slider>
+    </div>
+  </div>
+</div>

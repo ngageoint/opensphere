@@ -13,6 +13,19 @@ var osx;
 
 
 /**
+ * A local/remote file resource. Local resources must provide a relative directory path to be loaded in the debug
+ * application. In the compiled app, `os.ROOT` will be used so resources must be copied appropriately. Remote files only
+ * need to specify the URL.
+ *
+ * @typedef {{
+ *   debugPath: (string|undefined),
+ *   url: string
+ * }}
+ */
+osx.ResourceConfig;
+
+
+/**
  * Namespace.
  * @type {Object}
  */
@@ -23,6 +36,7 @@ osx.annotation;
  * @typedef {{
  *   editable: boolean,
  *   show: boolean,
+ *   showBackground: boolean,
  *   showName: boolean,
  *   showDescription: boolean,
  *   showTail: string,
@@ -196,6 +210,18 @@ osx.layer.RefreshOption;
 
 
 /**
+ * @typedef {{
+ *   label: string,
+ *   id: string,
+ *   default: (boolean|undefined),
+ *   layerConfig: (Object<string, *>|undefined),
+ *   featureActions: (Array<string>|undefined)
+ * }}
+ */
+osx.layer.Preset;
+
+
+/**
  * Namespace.
  * @type {Object}
  */
@@ -258,7 +284,8 @@ osx.icon;
 /**
  * @typedef {{
  *   title: (string|undefined),
- *   path: string
+ *   path: string,
+ *   options: (Object<string, *>|undefined)
  * }}
  */
 osx.icon.Icon;

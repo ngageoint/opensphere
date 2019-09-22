@@ -12,8 +12,10 @@ goog.require('ol.MapBrowserEventType');
 goog.require('ol.array');
 goog.require('ol.events');
 goog.require('ol.geom.Point');
+goog.require('os.MapContainer');
 goog.require('os.action.EventType');
 goog.require('os.data.ColumnDefinition');
+goog.require('os.geo');
 goog.require('os.map');
 goog.require('os.math.Units');
 goog.require('os.ol.feature');
@@ -34,6 +36,7 @@ goog.require('os.ui.list');
 goog.require('os.ui.text.tuiEditorDirective');
 goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
+goog.require('os.webgl.AltitudeMode');
 
 
 /**
@@ -131,6 +134,13 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   this['uid'] = goog.getUid(this);
 
   /**
+   * The temporary feature id for this window.
+   * @type {string}
+   * @protected
+   */
+  this.tempFeatureId = os.ui.FeatureEditCtrl.TEMP_ID + this['uid'];
+
+  /**
    * Help tooltips.
    * @type {!Object<string, string>}
    */
@@ -147,7 +157,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * The feature color.
    * @type {string}
    */
-  this['color'] = os.style.DEFAULT_LAYER_COLOR;
+  this['color'] = os.color.toHexString(os.style.DEFAULT_LAYER_COLOR);
 
   /**
    * The feature opacity.
@@ -162,11 +172,25 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   this['size'] = os.style.DEFAULT_FEATURE_SIZE;
 
   /**
+   * The feature fill color
+   * @type {string}
+   */
+  this['fillColor'] = os.color.toHexString(os.style.DEFAULT_LAYER_COLOR);
+
+  /**
+   * The feature fill opacity
+   * @type {string}
+   */
+  this['fillOpacity'] = os.style.DEFAULT_FILL_ALPHA;
+
+  /**
    * The feature icon.
    * @type {!osx.icon.Icon}
    */
   this['icon'] = /** @type {!osx.icon.Icon} */ ({// os.ui.file.kml.Icon to osx.icon.Icon
-    path: os.ui.file.kml.getDefaultIcon().path
+    title: os.ui.file.kml.getDefaultIcon().title,
+    path: os.ui.file.kml.getDefaultIcon().path,
+    options: os.ui.file.kml.getDefaultIcon().options
   });
 
   /**
@@ -328,10 +352,32 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   this['altUnitOptions'] = goog.object.getValues(os.math.Units);
 
   /**
+   * The altitude modes supported
+   * @type {Array<os.webgl.AltitudeMode>}
+   */
+  this['altitudeModes'] = ol.obj.getValues(os.webgl.AltitudeMode);
+
+
+  if (os.map.mapContainer) {
+    var webGLRenderer = os.map.mapContainer.getWebGLRenderer();
+    if (webGLRenderer) {
+      this['altitudeModes'] = webGLRenderer.getAltitudeModes();
+    }
+  }
+
+  var defaultAltMode = os.webgl.AltitudeMode.CLAMP_TO_GROUND;
+
+  /**
+   * The selected altitude mode
+   * @type {?os.webgl.AltitudeMode}
+   */
+  this['altitudeMode'] = this['altitudeModes'].indexOf(defaultAltMode) > -1 ? defaultAltMode : null;
+
+  /**
    * Configured label color.
    * @type {string}
    */
-  this['labelColor'] = os.style.DEFAULT_LAYER_COLOR;
+  this['labelColor'] = os.color.toHexString(os.style.DEFAULT_LAYER_COLOR);
 
   /**
    * Configured label size.
@@ -433,6 +479,11 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
     this.previewFeature = feature;
     this.originalProperties_ = feature.getProperties();
 
+    if (!this.isPolygon()) {
+      delete this['fillColor'];
+      delete this['fillOpacity'];
+    }
+
     if (this.originalProperties_) {
       // we don't care about or want these sticking around, so remove them
       delete this.originalProperties_[os.style.StyleType.SELECT];
@@ -475,6 +526,10 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   $scope.$watch('ctrl.labelColor', this.updatePreview.bind(this));
   $scope.$watch('ctrl.labelSize', this.updatePreview.bind(this));
   $scope.$watch('ctrl.showLabels', this.updatePreview.bind(this));
+  $scope.$on('opacity.slide', this.onOpacityValueChange.bind(this));
+  $scope.$on('fillColor.change', this.onFillColorChange.bind(this));
+  $scope.$on('fillColor.reset', this.onFillColorReset.bind(this));
+  $scope.$on('fillOpacity.slidestop', this.onFillOpacityChange.bind(this));
 
   $scope.$on(os.ui.WindowEventType.CANCEL, this.onCancel.bind(this));
   $scope.$on(os.ui.icon.IconPickerEventType.CHANGE, this.onIconChange.bind(this));
@@ -532,22 +587,22 @@ os.ui.FeatureEditCtrl.TEMP_ID = 'features#temporary';
 
 
 /**
- * Default label.
- * @type {!os.style.label.LabelConfig}
- */
-os.ui.FeatureEditCtrl.DEFAULT_LABEL = {
-  'column': 'name',
-  'showColumn': false
-};
-
-
-/**
  * @enum {string}
  */
 os.ui.FeatureEditCtrl.Field = {
   DESCRIPTION: 'description',
   MD_DESCRIPTION: '_mdDescription',
   NAME: 'name'
+};
+
+
+/**
+ * Default label.
+ * @type {!os.style.label.LabelConfig}
+ */
+os.ui.FeatureEditCtrl.DEFAULT_LABEL = {
+  'column': os.ui.FeatureEditCtrl.Field.NAME,
+  'showColumn': false
 };
 
 
@@ -564,6 +619,7 @@ os.ui.FeatureEditCtrl.FIELDS = [
   os.Fields.LON,
   os.Fields.ALT,
   os.Fields.ALT_UNITS,
+  os.data.RecordField.ALTITUDE_MODE,
   os.Fields.LAT_DDM,
   os.Fields.LON_DDM,
   os.Fields.LAT_DMS,
@@ -608,7 +664,7 @@ os.ui.FeatureEditCtrl.prototype.disposeInternal = function() {
   }
 
   if (this.previewFeature) {
-    if (this.previewFeature.getId() == os.ui.FeatureEditCtrl.TEMP_ID) {
+    if (this.previewFeature.getId() == this.tempFeatureId) {
       os.MapContainer.getInstance().removeFeature(this.previewFeature, true);
     }
 
@@ -720,6 +776,23 @@ os.ui.FeatureEditCtrl.prototype.handleKeyEvent = function(event) {
  */
 os.ui.FeatureEditCtrl.prototype.isEllipse = function() {
   return os.style.ELLIPSE_REGEXP.test(this['shape']);
+};
+
+
+/**
+ * If a polygon is selected.
+ *
+ * @return {boolean}
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.isPolygon = function() {
+  var geometry = this.previewFeature.getGeometry();
+
+  if (geometry) {
+    return os.geo.isGeometryPolygonal(geometry);
+  } else {
+    return false;
+  }
 };
 
 
@@ -846,15 +919,15 @@ os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
   if (this.previewFeature) {
     this.saveToFeature(this.previewFeature);
 
-    if (this.previewFeature.getId() == os.ui.FeatureEditCtrl.TEMP_ID) {
-      var osMap = os.MapContainer.getInstance();
-      osMap.removeFeature(this.previewFeature, false);
+
+    var osMap = os.MapContainer.getInstance();
+    if (this.previewFeature.getId() === this.tempFeatureId && !osMap.containsFeature(this.previewFeature)) {
       osMap.addFeature(this.previewFeature);
-    } else {
-      var layer = os.feature.getLayer(this.previewFeature);
-      if (layer) {
-        os.style.notifyStyleChange(layer, [this.previewFeature]);
-      }
+    }
+
+    var layer = os.feature.getLayer(this.previewFeature);
+    if (layer) {
+      os.style.notifyStyleChange(layer, [this.previewFeature]);
     }
   }
 };
@@ -868,7 +941,7 @@ os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
 os.ui.FeatureEditCtrl.prototype.createPreviewFeature = function() {
   this.previewFeature = new ol.Feature();
   this.previewFeature.enableEvents();
-  this.previewFeature.setId(os.ui.FeatureEditCtrl.TEMP_ID);
+  this.previewFeature.setId(this.tempFeatureId);
   this.previewFeature.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
 
   var name = /** @type {string|undefined} */ (this.options['name']);
@@ -899,9 +972,17 @@ os.ui.FeatureEditCtrl.prototype.createPreviewFeature = function() {
         'alt': this['altitude']
       };
     }
+
+    delete this['fillColor'];
+    delete this['fillOpacity'];
   } else {
     // not a point, so disable geometry edit
     this.originalGeometry = geometry;
+
+    if (geometry instanceof ol.geom.LineString) {
+      delete this['fillColor'];
+      delete this['fillOpacity'];
+    }
   }
 
   // default feature to show the name field
@@ -945,6 +1026,8 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
     this['centerShape'] = featureCenterShape;
   }
 
+  var altitudeMode = feature.get(os.data.RecordField.ALTITUDE_MODE);
+
   var config = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
   var featureColor;
   if (config) {
@@ -976,6 +1059,18 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
     if (icon) {
       this['icon'] = icon;
       this['centerIcon'] = icon;
+    }
+
+    // Make sure we have a fill color and opacity for polygons, and don't have them otherwise
+    if (config['fill'] && config['fill']['color']) {
+      if (this.isPolygon()) {
+        this['fillColor'] = os.color.toHexString(config['fill']['color']);
+        var opacity = os.color.toRgbArray(config['fill']['color']);
+        this['fillOpacity'] = opacity[3];
+      } else {
+        delete this['fillColor'];
+        delete this['fillOpacity'];
+      }
     }
 
     var lineDash = os.style.getConfigLineDash(config);
@@ -1015,8 +1110,10 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
   var geometry = feature.getGeometry();
   if (geometry) {
     this.originalGeometry = geometry;
+    altitudeMode = geometry.get(os.data.RecordField.ALTITUDE_MODE) || altitudeMode;
+    var type = geometry.getType();
 
-    if (geometry instanceof ol.geom.Point) {
+    if (type === ol.geom.GeometryType.POINT) {
       var clone = /** @type {!ol.geom.Point} */ (geometry.clone());
       clone.toLonLat();
 
@@ -1033,6 +1130,10 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
 
         this['altitude'] = os.math.convertUnits(altitude, altUnit, os.math.Units.METERS);
         this['altUnits'] = altUnit;
+
+        if (altitude && !altitudeMode) {
+          altitudeMode = os.webgl.AltitudeMode.ABSOLUTE;
+        }
       }
 
       this['semiMajor'] = this.getNumericField_(feature, os.Fields.SEMI_MAJOR);
@@ -1042,7 +1143,18 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
       this['semiMinorUnits'] = /** @type {string|undefined} */ (feature.get(os.Fields.SEMI_MINOR_UNITS)) ||
           this['semiMinorUnits'];
       this['orientation'] = this.getNumericField_(feature, os.Fields.ORIENTATION);
+    } else if (type === ol.geom.GeometryType.GEOMETRY_COLLECTION) {
+      var geom = os.ui.FeatureEditCtrl.getFirstNonCollectionGeometry_(geometry);
+      altitudeMode = geom.get(os.data.RecordField.ALTITUDE_MODE) || altitudeMode;
     }
+  }
+
+  if (Array.isArray(altitudeMode) && altitudeMode.length) {
+    altitudeMode = altitudeMode[0];
+  }
+
+  if (altitudeMode && this['altitudeModes'].indexOf(altitudeMode) > -1) {
+    this['altitudeMode'] = altitudeMode;
   }
 
   if (!this.isFeatureDynamic()) {
@@ -1060,6 +1172,25 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
     // make sure there is at least one blank label so it shows up in the UI
     this['labels'].push(os.style.label.cloneConfig());
   }
+};
+
+
+/**
+ * @param {ol.geom.Geometry} geom
+ * @return {?ol.geom.Geometry}
+ */
+os.ui.FeatureEditCtrl.getFirstNonCollectionGeometry_ = function(geom) {
+  var type = geom.getType();
+  if (type === ol.geom.GeometryType.GEOMETRY_COLLECTION) {
+    var geometries = /** @type {ol.geom.GeometryCollection} */ (geom).getGeometriesArray();
+    if (geometries.length) {
+      geom = os.ui.FeatureEditCtrl.getFirstNonCollectionGeometry_(geometries[0]);
+    } else {
+      return null;
+    }
+  }
+
+  return geom;
 };
 
 
@@ -1089,19 +1220,19 @@ os.ui.FeatureEditCtrl.prototype.saveToFeature = function(feature) {
   if (feature) {
     this.saveGeometry_(feature);
 
-    feature.set(os.ui.FeatureEditCtrl.Field.NAME, this['name']);
-    feature.set(os.ui.FeatureEditCtrl.Field.DESCRIPTION, os.ui.text.TuiEditor.render(this['description']));
-    feature.set(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION, this['description']);
+    feature.set(os.ui.FeatureEditCtrl.Field.NAME, this['name'], true);
+    feature.set(os.ui.FeatureEditCtrl.Field.DESCRIPTION, os.ui.text.TuiEditor.render(this['description']), true);
+    feature.set(os.ui.FeatureEditCtrl.Field.MD_DESCRIPTION, this['description'], true);
 
     switch (this['dateType']) {
       case os.ui.datetime.AnyDateType.NOTIME:
-        feature.set(os.data.RecordField.TIME, undefined);
+        feature.set(os.data.RecordField.TIME, undefined, true);
         break;
       case os.ui.datetime.AnyDateType.INSTANT:
-        feature.set(os.data.RecordField.TIME, new os.time.TimeInstant(this['startTime']));
+        feature.set(os.data.RecordField.TIME, new os.time.TimeInstant(this['startTime']), true);
         break;
       case os.ui.datetime.AnyDateType.RANGE:
-        feature.set(os.data.RecordField.TIME, new os.time.TimeRange(this['startTime'], this['endTime']));
+        feature.set(os.data.RecordField.TIME, new os.time.TimeRange(this['startTime'], this['endTime']), true);
         break;
       default:
         break;
@@ -1119,20 +1250,21 @@ os.ui.FeatureEditCtrl.prototype.saveToFeature = function(feature) {
     }
 
     // set the feature style override to the configs
-    feature.set(os.style.StyleType.FEATURE, configs);
+    feature.set(os.style.StyleType.FEATURE, configs, true);
 
     // set the shape to use and apply shape config
-    feature.set(os.style.StyleField.SHAPE, this['shape']);
-    feature.set(os.style.StyleField.CENTER_SHAPE, this['centerShape']);
+    feature.set(os.style.StyleField.SHAPE, this['shape'], true);
+    feature.set(os.style.StyleField.CENTER_SHAPE, this['centerShape'], true);
 
     if (!this.isFeatureDynamic() && (this.showIcon() || this.showCenterIcon())) {
-      feature.set(os.Fields.BEARING, typeof this['iconRotation'] === 'number' ? this['iconRotation'] % 360 : undefined);
-      feature.set(os.style.StyleField.SHOW_ROTATION, true);
-      feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING);
+      feature.set(os.Fields.BEARING, typeof this['iconRotation'] === 'number' ? this['iconRotation'] % 360 : undefined,
+          true);
+      feature.set(os.style.StyleField.SHOW_ROTATION, true, true);
+      feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING, true);
     } else {
-      feature.set(os.Fields.BEARING, undefined);
-      feature.set(os.style.StyleField.SHOW_ROTATION, false);
-      feature.set(os.style.StyleField.ROTATION_COLUMN, undefined);
+      feature.set(os.Fields.BEARING, undefined, true);
+      feature.set(os.style.StyleField.SHOW_ROTATION, false, true);
+      feature.set(os.style.StyleField.ROTATION_COLUMN, undefined, true);
     }
     os.ui.FeatureEditCtrl.updateFeatureStyle(feature);
 
@@ -1181,6 +1313,15 @@ os.ui.FeatureEditCtrl.prototype.setFeatureConfig_ = function(config) {
     os.style.setConfigOpacityColor(config, 0);
   }
 
+  var fillColor = ol.color.asArray(this['fillColor']);
+  var fillOpacity = os.color.normalizeOpacity(this['fillOpacity']);
+  fillColor[3] = fillOpacity;
+  fillColor = os.style.toRgbaString(fillColor);
+
+  if (color != fillColor) {
+    os.style.setFillColor(config, fillColor);
+  }
+
   // set icon config if selected
   var useCenter = this.showCenterIcon();
   if ((this['shape'] === os.style.ShapeType.ICON || useCenter) && config['image'] != null) {
@@ -1207,6 +1348,7 @@ os.ui.FeatureEditCtrl.prototype.setFeatureConfig_ = function(config) {
  * @private
  */
 os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
+  var geom = feature.getGeometry();
   if (this['pointGeometry']) {
     // make sure the coordinate values are numeric
     var lon = Number(this['pointGeometry']['lon']);
@@ -1215,16 +1357,24 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
     var altUnit = this['altUnits'] || os.math.Units.METERS;
     var alt = os.math.convertUnits(Number(this['altitude']) || 0, os.math.Units.METERS, altUnit);
 
-    feature.set(os.Fields.ALT, alt);
-    feature.set(os.Fields.ALT_UNITS, altUnit);
+    feature.set(os.Fields.ALT, alt, true);
+    feature.set(os.Fields.ALT_UNITS, altUnit, true);
 
     if (!isNaN(lon) && !isNaN(lat)) {
-      var point = new ol.geom.Point([lon, lat, alt]);
-      point.osTransform();
+      var coords = ol.proj.transform([lon, lat, alt], os.proj.EPSG4326, os.map.PROJECTION);
+      var point = feature.getGeometry();
+      if (!point || point === this.originalGeometry) {
+        point = new ol.geom.Point(coords);
+      }
+
+      if (point instanceof ol.geom.SimpleGeometry) {
+        point.setCoordinates(coords);
+      }
+
       feature.setGeometry(point);
 
       // update all coordinate fields from the geometry
-      os.feature.populateCoordFields(feature, true);
+      os.feature.populateCoordFields(feature, true, undefined, true);
 
       if (this.isEllipse() && this['semiMajor'] != null && this['semiMinor'] != null && this['orientation'] != null) {
         // set ellipse fields
@@ -1238,27 +1388,57 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
         os.feature.createEllipse(feature, true);
       } else {
         // clear ellipse fields on the feature
-        feature.set(os.Fields.SEMI_MAJOR, undefined);
-        feature.set(os.Fields.SEMI_MINOR, undefined);
-        feature.set(os.Fields.SEMI_MAJOR_UNITS, undefined);
-        feature.set(os.Fields.SEMI_MINOR_UNITS, undefined);
-        feature.set(os.Fields.ORIENTATION, undefined);
-        feature.set(os.data.RecordField.ELLIPSE, undefined);
-        feature.set(os.data.RecordField.LINE_OF_BEARING, undefined);
+        feature.set(os.Fields.SEMI_MAJOR, undefined, true);
+        feature.set(os.Fields.SEMI_MINOR, undefined, true);
+        feature.set(os.Fields.SEMI_MAJOR_UNITS, undefined, true);
+        feature.set(os.Fields.SEMI_MINOR_UNITS, undefined, true);
+        feature.set(os.Fields.ORIENTATION, undefined, true);
+        feature.set(os.data.RecordField.ELLIPSE, undefined, true);
+        feature.set(os.data.RecordField.LINE_OF_BEARING, undefined, true);
       }
 
       if (!this.isFeatureDynamic() && (this.showIcon() || this.showCenterIcon()) && this['iconRotation'] != null) {
-        feature.set(os.style.StyleField.SHOW_ROTATION, true);
-        feature.set(os.Fields.BEARING, this['iconRotation'] % 360);
-        feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING);
+        feature.set(os.style.StyleField.SHOW_ROTATION, true, true);
+        feature.set(os.Fields.BEARING, this['iconRotation'] % 360, true);
+        feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING, true);
       } else {
-        feature.set(os.Fields.BEARING, undefined);
-        feature.set(os.style.StyleField.SHOW_ROTATION, false);
-        feature.set(os.style.StyleField.ROTATION_COLUMN, '');
+        feature.set(os.Fields.BEARING, undefined, true);
+        feature.set(os.style.StyleField.SHOW_ROTATION, false, true);
+        feature.set(os.style.StyleField.ROTATION_COLUMN, '', true);
       }
     }
-  } else if (this.originalGeometry) {
-    feature.setGeometry(this.originalGeometry.clone());
+  } else if (this.originalGeometry && (!geom || geom === this.originalGeometry)) {
+    geom = this.originalGeometry.clone();
+    feature.setGeometry(geom);
+  }
+
+  if (geom) {
+    var altMode = geom.get(os.data.RecordField.ALTITUDE_MODE);
+    altMode = Array.isArray(altMode) && altMode.length ? altMode[0] : altMode;
+
+    if (altMode !== this['altitudeMode']) {
+      os.ui.FeatureEditCtrl.setGeometryRecursive(geom, os.data.RecordField.ALTITUDE_MODE, this['altitudeMode'], true);
+      geom.changed();
+    }
+  }
+};
+
+
+/**
+ * @param {ol.geom.Geometry} geom
+ * @param {string} field
+ * @param {*} value
+ * @param {boolean=} opt_silent
+ */
+os.ui.FeatureEditCtrl.setGeometryRecursive = function(geom, field, value, opt_silent) {
+  var type = geom.getType();
+  if (type === ol.geom.GeometryType.GEOMETRY_COLLECTION) {
+    var geometries = /** @type {ol.geom.GeometryCollection} */ (geom).getGeometriesArray();
+    for (var i = 0, n = geometries.length; i < n; i++) {
+      os.ui.FeatureEditCtrl.setGeometryRecursive(geometries[i], field, value, opt_silent);
+    }
+  } else {
+    geom.set(field, value, opt_silent);
   }
 };
 
@@ -1283,8 +1463,14 @@ os.ui.FeatureEditCtrl.prototype.onColumnChange = function(event) {
  * @export
  */
 os.ui.FeatureEditCtrl.prototype.onIconColorChange = function(opt_new, opt_old) {
-  if (opt_new != opt_old && this['labelColor'] == opt_old) {
-    this['labelColor'] = opt_new;
+  if (opt_new != opt_old) {
+    if (this['labelColor'] == opt_old) {
+      this['labelColor'] = opt_new;
+    }
+
+    if (this['fillColor'] == opt_old) {
+      this['fillColor'] = opt_new;
+    }
   }
 
   this.updatePreview();
@@ -1333,6 +1519,60 @@ os.ui.FeatureEditCtrl.prototype.onLabelColorReset = function(event) {
   event.stopPropagation();
 
   this['labelColor'] = this['color'];
+  this.updatePreview();
+};
+
+
+/**
+ * Handles when the opacity slider has moved
+ * @param {angular.Scope.Event} event The Angular event.
+ * @param {number} value The new value.
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.onOpacityValueChange = function(event, value) {
+  event.stopPropagation();
+
+  this['opacity'] = value;
+};
+
+
+/**
+ * Handles when the fill opacity is changed
+ * @param {angular.Scope.Event} event The Angular event.
+ * @param {number} value The new value.
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.onFillOpacityChange = function(event, value) {
+  event.stopPropagation();
+
+  this['fillOpacity'] = value;
+  this.updatePreview();
+};
+
+
+/**
+ * Handles when the fill color is changed
+ * @param {angular.Scope.Event} event The Angular event.
+ * @param {string} value
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.onFillColorChange = function(event, value) {
+  event.stopPropagation();
+
+  this['fillColor'] = value;
+  this.updatePreview();
+};
+
+
+/**
+ * Handles fill color reset
+ * @param {angular.Scope.Event} event
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.onFillColorReset = function(event) {
+  event.stopPropagation();
+
+  this['fillColor'] = this['color'];
   this.updatePreview();
 };
 
@@ -1440,10 +1680,10 @@ os.ui.FeatureEditCtrl.persistFeatureLabels = function(feature) {
         }
       }
 
-      feature.set(os.style.StyleField.LABELS, labelNames);
-      feature.set(os.style.StyleField.SHOW_LABEL_COLUMNS, showColumns);
-      feature.set(os.style.StyleField.LABEL_COLOR, config[os.style.StyleField.LABEL_COLOR]);
-      feature.set(os.style.StyleField.LABEL_SIZE, config[os.style.StyleField.LABEL_SIZE]);
+      feature.set(os.style.StyleField.LABELS, labelNames, true);
+      feature.set(os.style.StyleField.SHOW_LABEL_COLUMNS, showColumns, true);
+      feature.set(os.style.StyleField.LABEL_COLOR, config[os.style.StyleField.LABEL_COLOR], true);
+      feature.set(os.style.StyleField.LABEL_SIZE, config[os.style.StyleField.LABEL_SIZE], true);
     }
   }
 };
@@ -1597,3 +1837,12 @@ os.ui.FeatureEditCtrl.updateFeatureStyle = function(feature) {
     }
   }
 };
+
+
+/**
+ * Gets a human readable name for altitude mode
+ * @param {os.webgl.AltitudeMode} altitudeMode - The mode to map to a name
+ * @return {string}
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.mapAltitudeModeToName = os.webgl.mapAltitudeModeToName;

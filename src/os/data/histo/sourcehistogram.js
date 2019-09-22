@@ -724,9 +724,10 @@ os.data.histo.SourceHistogram.prototype.getSource = function() {
 os.data.histo.SourceHistogram.prototype.onSourceChange_ = function(e) {
   var p = e.getProperty();
   if (p === os.source.PropertyChange.COLOR || p === os.source.PropertyChange.FEATURES ||
-      p === os.source.PropertyChange.REPLACE_STYLE || p === os.source.PropertyChange.TIME_ENABLED) {
+      p === os.source.PropertyChange.REPLACE_STYLE || p === os.source.PropertyChange.TIME_ENABLED ||
+      p === os.source.PropertyChange.COLOR_MODEL) {
     this.update(100);
-  } else if (p === os.source.PropertyChange.FEATURE_VISIBILITY) {
+  } else if (p === os.source.PropertyChange.FEATURE_VISIBILITY && !this.forceAllData_) {
     // increase the delay to rate limit updates triggered by the timeline
     this.update(100);
   } else if (p === os.source.PropertyChange.TIME_FILTER) {

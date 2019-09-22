@@ -511,7 +511,7 @@ os.ui.SourceGridCtrl.prototype.onSourceChange_ = function(e) {
       var item = items && items.length == 1 ? items[0] : null;
       if (item) {
         var row = this.mapItemsToRows(item, 0, null);
-        if (goog.isDef(row)) {
+        if (row !== undefined) {
           this.grid.scrollRowIntoView(row, 0);
 
           var rowNode = this.grid.getRowNode(row);

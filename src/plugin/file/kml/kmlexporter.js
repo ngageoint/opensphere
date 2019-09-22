@@ -94,6 +94,24 @@ plugin.file.kml.KMLExporter.prototype.getColor = function(item) {
 /**
  * @inheritDoc
  */
+plugin.file.kml.KMLExporter.prototype.getFillColor = function(item) {
+  var itemColor = os.feature.getFillColor(item, this.getSource_(item));
+  return itemColor ? os.style.toAbgrString(itemColor) : null;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLExporter.prototype.getStrokeColor = function(item) {
+  var itemColor = os.feature.getStrokeColor(item, this.getSource_(item));
+  return itemColor ? os.style.toAbgrString(itemColor) : null;
+};
+
+
+/**
+ * @inheritDoc
+ */
 plugin.file.kml.KMLExporter.prototype.getField = function(item, field) {
   return os.feature.getField(item, field);
 };
@@ -230,6 +248,7 @@ plugin.file.kml.KMLExporter.prototype.getTime = function(item) {
 };
 
 
+
 /**
  * @inheritDoc
  */
@@ -237,8 +256,11 @@ plugin.file.kml.KMLExporter.prototype.getGeometry = function(item) {
   var geometry;
   if (item) {
     geometry = /** @type {(ol.geom.Geometry|undefined)} */ (item.get(os.data.RecordField.GEOM));
+    var geomAltitudeMode;
+    var featAltitudeMode = item.get(os.data.RecordField.ALTITUDE_MODE);
     if (geometry) {
       geometry = geometry.clone().toLonLat();
+      geomAltitudeMode = geometry.get(os.data.RecordField.ALTITUDE_MODE);
     }
 
     if (this.exportEllipses) {
@@ -250,6 +272,10 @@ plugin.file.kml.KMLExporter.prototype.getGeometry = function(item) {
           geometry = ellipse;
         }
       }
+    }
+
+    if (geometry) {
+      geometry.set(os.data.RecordField.ALTITUDE_MODE, geomAltitudeMode || featAltitudeMode);
     }
   }
 

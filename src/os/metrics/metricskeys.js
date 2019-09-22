@@ -235,12 +235,16 @@ os.metrics.keys.OS = {
  * @enum {string}
  */
 os.metrics.Layer = {
+  PRESET: 'layers.features.preset',
   FORCE_LAYER_COLOR: 'layers.features.forceLayerColor',
   VECTOR_COLOR: 'layers.features.changeVectorColor',
+  VECTOR_FILL_COLOR: 'layers.features.changeVectorFillColor',
   VECTOR_ICON: 'layers.features.changeVectorIcon',
   VECTOR_SHAPE: 'layers.features.changeVectorShape',
   VECTOR_CENTER_SHAPE: 'layers.features.changeVectorCenterShape',
   VECTOR_SIZE: 'layers.features.changeVectorSize',
+  VECTOR_OPACITY: 'layers.features.changeVectorOpacity',
+  VECTOR_FILL_OPACITY: 'layers.features.changeVectorFillOpacity',
   VECTOR_LINE_DASH: 'layers.features.changeVectorLineDash',
   VECTOR_AUTO_REFRESH: 'layers.features.changeVectorAutoRefresh',
   VECTOR_ELLIPSOID: 'layers.features.changeVectorEllipsoid',
@@ -264,8 +268,10 @@ os.metrics.Layer = {
   VECTOR_LOB_BEARING_ERROR_COLUMN: 'layers.features.changeVectorLineOfBearingBearingErrorColumn',
   VECTOR_ROTATION_COLUMN: 'layers.features.changeVectorRotationColumn',
   FEATURE_COLOR: 'layers.features.changeFeatureColor',
+  FEATURE_FILL_COLOR: 'layers.features.changeFeatureFillColor',
   FEATURE_ICON: 'layers.features.changeFeatureIcon',
   FEATURE_OPACITY: 'layers.features.changeFeatureOpacity',
+  FEATURE_FILL_OPACITY: 'layers.features.changeFeatureFillOpacity',
   FEATURE_SIZE: 'layers.features.changeFeatureSize',
   FEATURE_LINE_DASH: 'layers.features.changeFeatureLineDash',
   FEATURE_LABEL_COLOR: 'layers.features.changeFeatureLabelColor',

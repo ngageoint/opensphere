@@ -26,6 +26,14 @@ os.style.DEFAULT_ALPHA = 1.0;
 
 
 /**
+ * Default alpha for polygon fills.
+ * @type {number}
+ * @const
+ */
+os.style.DEFAULT_FILL_ALPHA = 0.0;
+
+
+/**
  * Default color for tile/feature layers.
  * @type {string}
  * @const
@@ -39,6 +47,14 @@ os.style.DEFAULT_LAYER_COLOR = 'rgba(255,255,255,1)';
  * @const
  */
 os.style.DEFAULT_INVERSE_COLOR = 'rgba(255,0,0,1)';
+
+
+/**
+ * Default fill color for tile/feature layers.
+ * @type {string}
+ * @const
+ */
+os.style.DEFAULT_FILL_COLOR = 'rgba(255,255,255,0)';
 
 
 /**
@@ -363,6 +379,9 @@ os.style.DEFAULT_VECTOR_CONFIG = {
     }
   },
   // this will only be applied to line and polygon types
+  'fill': {
+    'color': os.style.DEFAULT_FILL_COLOR
+  },
   'stroke': {
     'width': os.style.DEFAULT_STROKE_WIDTH,
     'color': os.style.DEFAULT_LAYER_COLOR
@@ -544,19 +563,33 @@ os.style.STYLE_COLOR_FIELDS_ = ['image', 'fill', 'stroke'];
  *
  * @param {Object} config The configuration to search for a color
  * @param {boolean=} opt_array If the color should be returned as an rgb array
- * @param {(os.style.StyleField|string)=} opt_colorFieldHint A hint to where to find the color to use.
- * @return {?(string|Array<number>)} The color or null if none was found
+ * @param {os.style.StyleField=} opt_colorField The style field to use in locating the color.
+ * @return {Array<number>|string|undefined} The color, or null if not found. Returns `undefined` if a style field was
+ *                                          provided and the field was not present.
  */
-os.style.getConfigColor = function(config, opt_array, opt_colorFieldHint) {
+os.style.getConfigColor = function(config, opt_array, opt_colorField) {
   if (config) {
-    if (opt_colorFieldHint &&
-        config[opt_colorFieldHint] &&
-        config[opt_colorFieldHint][os.style.StyleField.COLOR] != null) {
-      return opt_array ? os.color.toRgbArray(config[opt_colorFieldHint][os.style.StyleField.COLOR]) :
-        config[opt_colorFieldHint][os.style.StyleField.COLOR];
+    //
+    // if a specific color field was provided, return:
+    //  - null (no color) if the field is null
+    //  - config.<field>.color if defined
+    //  - undefined (no color found)
+    //
+    // otherwise:
+    //  - return config.color if defined
+    //  - search all color fields for the color
+    //
+    if (opt_colorField) {
+      if (config[opt_colorField] === null) {
+        return null;
+      } else if (config[opt_colorField] && config[opt_colorField][os.style.StyleField.COLOR] != null) {
+        return opt_array ? os.color.toRgbArray(config[opt_colorField][os.style.StyleField.COLOR]) :
+          config[opt_colorField][os.style.StyleField.COLOR];
+      }
+      return undefined;
     } else if (config[os.style.StyleField.COLOR] != null) {
       return opt_array ? os.color.toRgbArray(config[os.style.StyleField.COLOR]) :
-        config[os.style.StyleField.COLOR];
+          config[os.style.StyleField.COLOR];
     } else {
       for (var i = 0; i < os.style.STYLE_COLOR_FIELDS_.length; i++) {
         var key = os.style.STYLE_COLOR_FIELDS_[i];
@@ -606,6 +639,31 @@ os.style.setConfigColor = function(config, color, opt_includeStyleFields) {
 
 
 /**
+ * Sets the fill color, creating the fill object within the config if necessary.
+ * Colors are always set as an rgba string to minimize conversion both in opensphere style functions and OL3 rendering functions.
+ *
+ * @param {Object} config
+ * @param {Array<number>|string|null|undefined} color
+ */
+os.style.setFillColor = function(config, color) {
+  if (config) {
+    if (!color) {
+      // no fill
+      config['fill'] = color;
+    } else if (!config['fill']) {
+      // adding fill
+      config['fill'] = {
+        'color': color
+      };
+    } else {
+      // changing fill color
+      config['fill']['color'] = color;
+    }
+  }
+};
+
+
+/**
  * Gets the icon used in a config.
  *
  * @param {Object|undefined} config The style config.
@@ -617,7 +675,8 @@ os.style.getConfigIcon = function(config) {
     var imageConfig = config[os.style.StyleField.IMAGE];
     if (imageConfig && imageConfig['src']) {
       icon = /** @type {!osx.icon.Icon} */ ({
-        path: imageConfig['src']
+        path: imageConfig['src'],
+        options: imageConfig['options']
       });
     }
   }
@@ -638,6 +697,7 @@ os.style.setConfigIcon = function(config, icon) {
     var imageConfig = config[os.style.StyleField.IMAGE];
     if (imageConfig) {
       imageConfig['src'] = icon['path'];
+      imageConfig['options'] = icon['options'];
     }
   }
 };
@@ -1384,7 +1444,7 @@ os.style.createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
               // use label override color
               color = ol.color.asArray(opt_layerConfig[os.style.StyleField.LABEL_COLOR]);
             } else {
-              color = ol.color.asArray(os.style.getConfigColor(featureConfig));
+              color = ol.color.asArray(os.style.getConfigColor(featureConfig) || os.style.DEFAULT_LAYER_COLOR);
             }
             color[3] *= opacity;
             labelStyle.text_.fill_.color_ = ol.color.toString(color);

@@ -15,7 +15,9 @@ goog.require('ol.style.IconOrigin');
 goog.require('ol.style.Style');
 goog.require('ol.xml');
 goog.require('os.data.RecordField');
+goog.require('os.geo');
 goog.require('os.mixin');
+goog.require('os.mixin.polygon');
 goog.require('os.object');
 goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
@@ -43,6 +45,14 @@ plugin.file.kml.KML_NS = 'http://www.opengis.net/kml/2.2';
  * @const
  */
 plugin.file.kml.GX_NS = 'http://www.google.com/kml/ext/2.2';
+
+
+/**
+ * Namespace URI used for gx nodes.
+ * @type {string}
+ * @const
+ */
+plugin.file.kml.OS_NS = 'http://opensphere.io/kml/ext/1.0';
 
 
 /**
@@ -218,6 +228,16 @@ plugin.file.kml.OL_PLACEMARK_SERIALIZERS = function() {
 /**
  * Access for private Openlayers code.
  *
+ * @return {Object<string, Object<string, ol.XmlSerializer>>}
+ */
+plugin.file.kml.OL_MULTI_GEOMETRY_SERIALIZERS = function() {
+  return ol.format.KML.MULTI_GEOMETRY_SERIALIZERS_;
+};
+
+
+/**
+ * Access for private Openlayers code.
+ *
  * @return {Object<string, Object<string, ol.XmlParser>>}
  */
 plugin.file.kml.OL_STYLE_PARSERS = function() {
@@ -303,6 +323,10 @@ plugin.file.kml.readStyle = function(node, objectStack) {
 
   if (fill !== undefined && !fill) {
     config['fill'] = null;
+  }
+
+  if (imageStyle['options'] !== undefined) {
+    config['image']['options'] = imageStyle['options'];
   }
 
   if (outline !== undefined && !outline) {
@@ -393,6 +417,11 @@ plugin.file.kml.LINK_PARSERS = ol.xml.makeStructureNS(
 os.object.merge(plugin.file.kml.LINK_PARSERS, plugin.file.kml.OL_LINK_PARSERS(), false);
 
 
+plugin.file.kml.OS_NAMESPACE_URIS_ = [
+  plugin.file.kml.OS_NS
+];
+
+
 /**
  * @type {Object<string, Object<string, ol.XmlParser>>}
  * @const
@@ -400,7 +429,11 @@ os.object.merge(plugin.file.kml.LINK_PARSERS, plugin.file.kml.OL_LINK_PARSERS(),
 plugin.file.kml.ICON_STYLE_PARSERS = ol.xml.makeStructureNS(
     plugin.file.kml.OL_NAMESPACE_URIS(), {
       'color': ol.xml.makeObjectPropertySetter(plugin.file.kml.readColor_)
-    });
+    }, ol.xml.makeStructureNS(
+        plugin.file.kml.OS_NAMESPACE_URIS_, {
+          'iconOptions': plugin.file.kml.readJson_
+        }
+    ));
 
 
 /**
@@ -570,17 +603,31 @@ plugin.file.kml.readLatLonBox_ = function(node, objectStack) {
 plugin.file.kml.readLatLonQuad_ = function(node, objectStack) {
   var flatCoords = ol.xml.pushParseAndPop([], plugin.file.kml.LAT_LON_QUAD_PARSERS, node, objectStack);
   if (flatCoords && flatCoords.length) {
+    // LatLonQuad is not (necessarily) a bounding box. We will only support rectangular LatLonQuads
+    // (aka they should've used LatLonBox).
+    //
+    // I believe you need non-affine transforms (which the canvas 2d context does not support) in
+    // order to draw the image properly. This is something that we could opt to do ourselves since
+    // the image would only need to be redrawn once.
     var coordinates = ol.geom.flat.inflate.coordinates(flatCoords, 0, flatCoords.length, 3);
     if (coordinates.length === 4) {
-      // TODO: how can we properly represent this with openlayers and cesium?
-      // the ImageStatic layer only supports a box but LatLonQuad can be skewed
-      var extent = ol.extent.createEmpty();
-      coordinates.forEach(function(coordinate) {
-        ol.extent.extendCoordinate(extent, coordinate);
-      });
+      var extent = coordinates.reduce(function(extent, coord) {
+        ol.extent.extendCoordinate(extent, coord);
+        return extent;
+      }, ol.extent.createEmpty());
 
       var targetObject = /** @type {Object} */ (objectStack[objectStack.length - 1]);
-      targetObject['extent'] = extent;
+
+      if (!os.geo.isClosed(coordinates)) {
+        coordinates.push(coordinates[0].slice());
+      }
+
+      if (os.geo.isRectangular(coordinates, extent)) {
+        targetObject['extent'] = extent;
+      } else {
+        targetObject['error'] = 'Non-rectangular gx:LatLonQuad values are not supported! ' +
+          'The GroundOverlay will not be shown.';
+      }
     }
   }
 };
@@ -710,6 +757,7 @@ plugin.file.kml.readURI = function(node) {
   var assetMap = null;
   var p = node;
   while (p && !assetMap) {
+    /** @suppress {checkTypes} To allow KML asset parsing. */
     assetMap = p.assetMap;
     p = p.parentNode;
   }
@@ -841,6 +889,40 @@ plugin.file.kml.PLACEMARK_SERIALIZERS = ol.xml.makeStructureNS(
 os.object.merge(plugin.file.kml.PLACEMARK_SERIALIZERS, plugin.file.kml.OL_PLACEMARK_SERIALIZERS(), true);
 
 
+
+/**
+ * @param {Node} node Node.
+ * @param {ol.geom.Polygon} polygon Polygon.
+ * @param {Array<*>} objectStack Object stack
+ * @private
+ */
+plugin.file.kml.writePolygon_ = function(node, polygon, objectStack) {
+  ol.format.KML.writePolygon_(node, polygon, objectStack);
+
+  var context = /** @type {ol.XmlNodeStackItem} */ ({node: node});
+  var properties = polygon.getProperties();
+  var parentNode = objectStack[objectStack.length - 1].node;
+  var orderedKeys = ol.format.KML.PRIMITIVE_GEOMETRY_SEQUENCE_[parentNode.namespaceURI];
+  var values = ol.xml.makeSequence(properties, orderedKeys);
+  ol.xml.pushSerializeAndPop(context, ol.format.KML.PRIMITIVE_GEOMETRY_SERIALIZERS_,
+      ol.xml.OBJECT_PROPERTY_NODE_FACTORY, values, objectStack, orderedKeys);
+};
+
+
+/**
+ * @type {Object<string, Object<string, ol.XmlSerializer>>}
+ * @const
+ */
+plugin.file.kml.POLYGON_SERIALIZERS = ol.xml.makeStructureNS(
+    plugin.file.kml.OL_NAMESPACE_URIS(), {
+      'Polygon': ol.xml.makeChildAppender(plugin.file.kml.writePolygon_)
+    });
+
+os.object.merge(plugin.file.kml.POLYGON_SERIALIZERS, plugin.file.kml.OL_PLACEMARK_SERIALIZERS(), true);
+os.object.merge(plugin.file.kml.POLYGON_SERIALIZERS,
+    plugin.file.kml.OL_MULTI_GEOMETRY_SERIALIZERS(), true);
+
+
 /**
  * {@link ol.geom.GeometryCollection} should be serialized as a kml:MultiGeometry.
  */
@@ -898,6 +980,24 @@ plugin.file.kml.replaceParsers_(ol.format.KML.ICON_STYLE_PARSERS_, 'scale',
     ol.xml.makeObjectPropertySetter(plugin.file.kml.readScale_));
 plugin.file.kml.replaceParsers_(ol.format.KML.LABEL_STYLE_PARSERS_, 'scale',
     ol.xml.makeObjectPropertySetter(plugin.file.kml.readScale_));
+
+
+/**
+ * Parse JSON data from the node.
+ *
+ * @param {Node} node Node.
+ * @return {Object|null}
+ * @private
+ */
+plugin.file.kml.readJson_ = function(node) {
+  var str = ol.format.XSD.readString(node);
+  if (str) {
+    return /** @type {Object} */ (JSON.parse(str));
+  }
+  return null;
+};
+plugin.file.kml.replaceParsers_(ol.format.KML.ICON_STYLE_PARSERS_, 'iconOptions',
+    ol.xml.makeObjectPropertySetter(plugin.file.kml.readJson_));
 
 
 /**
@@ -979,6 +1079,8 @@ plugin.file.kml.IconStyleParser_ = function(node, objectStack) {
 
   var scale = /** @type {number|undefined} */ (object['scale']);
 
+  var options = /** @type {Object|undefined} */ (object['iconOptions']);
+
   // determine the crossOrigin from the provided URL. if 'none', use undefined so the attribute isn't set on the image.
   var crossOrigin = src ? os.net.getCrossOrigin(src) : undefined;
   if (crossOrigin == os.net.CrossOrigin.NONE) {
@@ -1001,6 +1103,8 @@ plugin.file.kml.IconStyleParser_ = function(node, objectStack) {
     size: size,
     src: src
   });
+  imageStyle['options'] = options;
+
   styleObject['imageStyle'] = imageStyle;
 };
 plugin.file.kml.replaceParsers_(plugin.file.kml.OL_STYLE_PARSERS(), 'IconStyle', plugin.file.kml.IconStyleParser_);

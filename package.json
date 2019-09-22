@@ -32,7 +32,7 @@
       "ROOT": "./"
     },
     "gcc": {
-      "language_in": "ECMASCRIPT_2015",
+      "language_in": "ECMASCRIPT_2017",
       "conformance_configs": "conformance_config.textproto",
       "externs": [
         "google-closure-compiler/contrib/externs/jquery-1.9.js",
@@ -132,7 +132,9 @@
     "perms": "chmod -R u+rwX,go+rX,go-w .",
     "semantic-release": "semantic-release --dry-run",
     "start-server": "http-server ../../ -p 8282 -c-1 -o -U -s &",
-    "stop-server": "pkill -f http-server"
+    "stop-server": "run-script-os",
+    "stop-server:darwin:linux": "pkill -f http-server",
+    "stop-server:windows": "taskkill -F -PID $(netstat -ano | findstr 0.0.0.0:8282 | awk '{print $5}')"
   },
   "keywords": [
     "geospatial",
@@ -179,14 +181,6 @@
   "engines": {
     "node": ">=8.0.0"
   },
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog"
-    },
-    "validate-commit-msg": {
-      "helpMessage": "\nPlease fix your commit message (consider using 'npm i -g commitizen'). Well-formatted commit messages allow us to automate our changelog.\n\nExamples:\n\"fix(states): Fixed bug when parsing opacity from state files\"\n\"feat(timeline): Added support for an arbitrary number of ranges\"\n\nIf you have installed commitizen, try running 'git cz'."
-    }
-  },
   "release": {
     "plugins": [
       "@semantic-release/commit-analyzer",
@@ -228,6 +222,9 @@
     "Firefox >= 31"
   ],
   "devDependencies": {
+    "@commitlint/cli": "^8.0.0",
+    "@commitlint/config-conventional": "^8.1.0",
+    "@commitlint/travis-cli": "^8.1.0",
     "@semantic-release/changelog": "^3.0.2",
     "@semantic-release/condition-travis": "^7.1.3",
     "@semantic-release/git": "^7.0.8",
@@ -241,7 +238,6 @@
     "conventional-recommended-bump": "^0.3.0",
     "cypress": "^3.1.5",
     "cypress-image-snapshot": "^3.0.1",
-    "cz-conventional-changelog": "^1.2.0",
     "eslint": "^6.0.0",
     "eslint-config-google": "^0.13.0",
     "eslint-config-opensphere": "^3.0.0",
@@ -251,7 +247,7 @@
     "globalify": "^1.1.0",
     "google-closure-compiler": "^20190415.0.0",
     "http-server": "^0.11.1",
-    "husky": "^1.3.1",
+    "husky": "^3.0.1",
     "js-dossier": "^0.12.0",
     "json": "^9.0.4",
     "karma": "^1.3.0",
@@ -265,15 +261,15 @@
     "node-sass": "^4.12.0",
     "opensphere-build-closure-helper": "^3.0.0",
     "opensphere-build-docs": "^1.0.0",
-    "opensphere-build-index": "^2.1.0",
-    "opensphere-build-resolver": "^5.2.0",
+    "opensphere-build-index": "^2.2.0",
+    "opensphere-build-resolver": "^6.0.0",
     "opensphere-state-schema": "^2.4.0",
     "postcss-cli": "^5.0.0",
     "rimraf": "^2.5.4",
+    "run-script-os": "^1.0.7",
     "sass-lint": "^1.12.1",
     "semantic-release": "^15.13.18",
     "surge": "^0.20.4",
-    "validate-commit-msg": "^2.8.2",
     "xmllint": "^0.1.1"
   },
   "dependencies": {
@@ -284,9 +280,10 @@
     "blob-polyfill": "^2.0.20171115",
     "bootstrap": "4.3.1",
     "bootswatch": "4.3.1",
-    "cesium": "1.49.0",
+    "cesium": "1.60",
     "compass-mixins": "^0.12.10",
     "crossfilter2": "^1.4.5",
+    "css-element-queries": "^1.2.1",
     "d3": "^3.5.17",
     "d3-tip": "=0.6.8",
     "file-saver": "^1.3.8",
@@ -316,7 +313,7 @@
   },
   "husky": {
     "hooks": {
-      "commit-msg": "validate-commit-msg",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "post-merge": "npm run package:update",
       "post-rewrite": "npm run package:update"
     }

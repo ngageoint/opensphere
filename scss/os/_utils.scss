@@ -67,6 +67,14 @@ $user-select-options: all, auto, text, none;
   cursor: help;
 }
 
+.u-cursor-wait {
+  cursor: wait !important;
+}
+
+.u-cursor-not-allowed {
+  cursor: not-allowed !important;
+};
+
 .u-btn-separator {
   border-left: 1px solid $body-color;
   border-right: 1px solid $body-bg;
@@ -463,6 +471,19 @@ $u-parent-resizer-count: 0;
   border-color: transparent;
 }
 
+// For a border that appears when the element is hovered
+.u-border-show-on-hover {
+  border-color: transparent;
+}
+
+.u-border-show-on-hover:hover {
+  border-color: $border-color;
+}
+
+.u-border-style__dashed {
+  border-style: dashed !important;
+}
+
 // Used for buttons that are styled as form-controls borders
 .u-border-color-input {
   border-color: $input-border-color !important;
@@ -580,4 +601,52 @@ $somesizes: map-merge((
 .u-icon-display-small {
   height: 1.5rem;
   width: 1.5rem;
+}
+
+
+// --------------------------------- Aspect Ratios ----------------------------------- //
+$aspect-ratios: ((16, 9), (4, 3));
+
+@each $w, $h in $aspect-ratios {
+  .u-aspect-ratio__#{$w}-#{$h} {
+    max-width: $w / $h * 84vh;
+    position: relative;
+    width: 100%;
+
+    &:after {
+      content: '';
+      display: block;
+      padding-bottom: ($h / $w) * 100%;
+    }
+
+    > * {
+      bottom: 0;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+  }
+}
+
+
+// --------------------------------- Highlight Style -----------------------------------//
+.u-highlight-text {
+  @include bg-text-variant($yellow);
+  background: $yellow;
+  font-style: italic !important;
+  font-weight: $font-weight-bold !important;
+  text-shadow: none !important;
+}
+
+.u-object-fit-contain {
+  object-fit: contain;
+}
+
+.u-object-position-top {
+  object-position: top;
+}
+
+.u-border-thick {
+  border-width: ($border-width * 2) !important;
 }

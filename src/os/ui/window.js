@@ -16,6 +16,7 @@ goog.require('goog.events.KeyHandler');
 goog.require('goog.log');
 goog.require('ol.array');
 goog.require('os.array');
+goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.onboarding.contextOnboardingDirective');
@@ -824,7 +825,7 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
 
     if (this.element && !this.resizeFn_) {
       this.resizeFn_ = this.onWindowResize_.bind(this);
-      this.element.resize(this.resizeFn_);
+      os.ui.resize(this.element, this.resizeFn_);
     }
   }.bind(this));
 };
@@ -863,7 +864,7 @@ os.ui.WindowCtrl.prototype.disposeInternal = function() {
   }
 
   if (this.element && this.resizeFn_) {
-    this.element.removeResize(this.resizeFn_);
+    os.ui.removeResize(this.element, this.resizeFn_);
     this.resizeFn_ = null;
   }
 
@@ -1226,6 +1227,8 @@ os.ui.WindowCtrl.prototype.onWindowResize_ = function() {
       this.element.removeClass('u-parent-resizer-xl');
     }
     this.element.addClass(addClass);
+
+    goog.dom.ViewportSizeMonitor.getInstanceForWindow().dispatchEvent(goog.events.EventType.RESIZE);
   }
 };
 

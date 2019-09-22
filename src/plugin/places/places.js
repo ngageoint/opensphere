@@ -67,8 +67,10 @@ plugin.places.ExportFields = [
   os.style.StyleField.SHOW_LABEL_COLUMNS,
   os.style.StyleField.LABEL_COLOR,
   os.style.StyleField.LABEL_SIZE,
+  os.style.StyleField.FILL_COLOR,
   os.Fields.ALT,
   os.Fields.ALT_UNITS,
+  os.data.RecordField.ALTITUDE_MODE,
   os.Fields.SEMI_MAJOR,
   os.Fields.SEMI_MINOR,
   os.Fields.SEMI_MAJOR_UNITS,
@@ -378,7 +380,14 @@ plugin.places.addPlace = function(options) {
 
   feature.set(os.style.StyleType.FEATURE, [styleConfig]);
   feature.set(os.style.StyleField.SHAPE, options.shape || os.style.ShapeType.POINT);
-  feature.set(os.style.StyleField.SHOW_LABELS, !!styleConfig && !!styleConfig['labels']);
+
+  if (styleConfig && styleConfig[os.style.StyleField.LABELS]) {
+    os.feature.showLabel(feature);
+    os.ui.FeatureEditCtrl.persistFeatureLabels(feature);
+  } else {
+    os.feature.hideLabel(feature);
+  }
+
   os.style.setFeatureStyle(feature);
 
   return parent ? plugin.file.kml.ui.updatePlacemark({

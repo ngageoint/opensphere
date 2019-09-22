@@ -135,40 +135,6 @@ os.state.StateManager.prototype.deleteStates = function() {
 
 
 /**
- * @param {?Array<!os.data.IDataDescriptor>} list The list of state descriptors
- * @protected
- */
-os.state.StateManager.prototype.deleteStatesInternal = function(list) {
-  var dataManager = os.dataManager;
-  if (list) {
-    var i = list.length;
-    while (i--) {
-      // deactivate and remove the state without putting a command on the stack
-      list[i].setActive(false);
-      // If its a local state file, remove it.
-      if (list[i].descriptorType === 'state') {
-        // remove the descriptor from the data manager
-        dataManager.removeDescriptor(list[i]);
-        var provider = /** @type {os.ui.data.DescriptorProvider} */
-            (dataManager.getProvider(list[i].getDescriptorType()));
-        if (provider && provider instanceof os.ui.data.DescriptorProvider) {
-          // remove the descriptor from the provider
-          provider.removeDescriptor(list[i], true);
-        }
-
-        // since the file has been removed from indexedDB, we can no longer depend on anything in the command
-        // history since it may reference a file we can no longer access, so clear it
-        setTimeout(function() {
-          var cp = os.command.CommandProcessor.getInstance();
-          cp.clearHistory();
-        }, 1);
-      }
-    }
-  }
-};
-
-
-/**
  * @inheritDoc
  */
 os.state.StateManager.prototype.hasState = function(title) {

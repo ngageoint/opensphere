@@ -50,7 +50,6 @@ tui.Editor = function(options) {
 tui.Editor.prototype.getHtml = function() {};
 
 
-
 /**
  * @return {string}
  */
@@ -67,6 +66,12 @@ tui.Editor.prototype.setValue = function(markdown) {};
  * @return {boolean}
  */
 tui.Editor.prototype.isMarkdownMode = function() {};
+
+
+/**
+ * @param {string} text
+ */
+tui.Editor.prototype.insertText = function(text) {};
 
 
 /**
@@ -104,3 +109,9 @@ tui.Editor.mdEditor.cm = {};
  * kicks codemirror to update
  */
 tui.Editor.mdEditor.cm.refresh = function() {};
+
+
+/**
+ * @type {Object<string, Map>}
+ */
+tui.Editor.i18n = {'_langs': {}};

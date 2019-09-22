@@ -8,10 +8,12 @@ goog.require('goog.object');
  */
 os.data.RecordField = {
   ALPHA: 'alpha',
+  ALTITUDE_MODE: 'altitudeMode',
   COLOR: 'color',
   ELLIPSE: 'ellipse',
   GEOM: 'geometry',
   DRAWING_LAYER_NODE: '_node',
+  FEATURE_TYPE: '_featureType',
   HTML_DESCRIPTION: '_htmlDescription',
   INTERACTIVE: '_interactive',
   LINE_OF_BEARING: 'lineOfBearing',

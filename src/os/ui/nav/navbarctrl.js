@@ -2,6 +2,7 @@ goog.provide('os.ui.NavBarCtrl');
 
 goog.require('goog.Disposable');
 goog.require('goog.events.Event');
+goog.require('os.ui');
 goog.require('os.ui.list');
 goog.require('os.ui.nav.EventType');
 
@@ -39,7 +40,7 @@ os.ui.NavBarCtrl = function($scope, $element) {
    * @private
    */
   this.resizeFn_ = this.onResize_.bind(this);
-  $element.resize(this.resizeFn_);
+  os.ui.resize(this.element, this.resizeFn_);
 
   $scope.$on('$destroy', this.dispose.bind(this));
 };
@@ -51,6 +52,10 @@ goog.inherits(os.ui.NavBarCtrl, goog.Disposable);
  */
 os.ui.NavBarCtrl.prototype.disposeInternal = function() {
   os.ui.NavBarCtrl.base(this, 'disposeInternal');
+
+  if (this.element && this.resizeFn_) {
+    os.ui.removeResize(this.element, this.resizeFn_);
+  }
 
   this.scope = null;
   this.element = null;

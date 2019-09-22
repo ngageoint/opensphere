@@ -4,7 +4,9 @@ goog.provide('os.annotation.TailType');
 goog.require('ol.geom.GeometryType');
 goog.require('ol.geom.Point');
 goog.require('os.annotation.TailStyle');
+goog.require('os.feature');
 goog.require('os.ui');
+goog.require('os.ui.FeatureEditCtrl');
 goog.require('os.ui.color.colorPickerDirective');
 
 
@@ -26,6 +28,7 @@ os.annotation.TailType = {
 os.annotation.DEFAULT_OPTIONS = {
   editable: true,
   show: true,
+  showBackground: true,
   showName: true,
   showDescription: true,
   showTail: os.annotation.TailStyle.DEFAULT,

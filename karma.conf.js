@@ -2,15 +2,18 @@
 /* eslint-disable max-len */
 
 const path = require('path');
-const helper = require('opensphere-build-closure-helper');
 const resolver = require('opensphere-build-resolver/utils');
 
+/**
+ * Karma configuration for OpenSphere.
+ *
+ * Development Note:
+ * This configuration uses a script loader to avoid pending request limits in Chrome. To limit which tests run during
+ * development, use `ddescribe` and `iit` to instruct Jasmine to only run those specs.
+ *
+ * @param {Object} config The config.
+ */
 module.exports = function(config) {
-  var closureFiles = helper.readManifest(path.resolve('.build', 'gcc-test-manifest'))
-      .filter(function(item) {
-        return item.indexOf(__dirname + '/test/') !== 0;
-      });
-
   config.set({
     // base path, that will be used to resolve files and exclude
     basePath: '',
@@ -41,7 +44,7 @@ module.exports = function(config) {
       {pattern: 'vendor/geomag/WMM.COF', watched: false, included: false, served: true},
       {pattern: 'vendor/geomag/cof2Obj.js', watched: false, included: true, served: true},
       {pattern: 'vendor/geomag/geomag.js', watched: false, included: true, served: true},
-      {pattern: 'vendor/jquery/jquery.resize.js', watched: false, included: true, served: true},
+      {pattern: resolver.resolveModulePath('css-element-queries/src/ResizeSensor.js'), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('jschardet/dist/jschardet.min.js'), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('oboe/dist/oboe-browser.min.js'), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('lolex/lolex.js', __dirname), watched: false, included: true, served: true},
@@ -52,24 +55,34 @@ module.exports = function(config) {
       {pattern: resolver.resolveModulePath('zip-js/WebContent/z-worker.js', __dirname), watched: false, included: false, served: true},
       {pattern: resolver.resolveModulePath('opensphere-state-schema/src/main/**/*.xsd', __dirname), watched: false, included: false, served: true},
       {pattern: resolver.resolveModulePath('suncalc/suncalc.js', __dirname), watched: false, included: true, served: true},
-      {pattern: resolver.resolveModulePath('markdown-it/dist/markdown-it.min.js', __dirname), watched: false, included: true, served: true}
-    ].concat(closureFiles).concat([
-      // init
-      'test/init.js',
+      {pattern: resolver.resolveModulePath('markdown-it/dist/markdown-it.min.js', __dirname), watched: false, included: true, served: true},
 
-      // tests and mocks
-      'test/**/*.mock.js',
-      'test/**/*.test.js',
+      // initialization to run prior to tests
+      'test/init.js',
 
       // test resources
       {pattern: 'test/**/*.test.worker.js', included: false},
       {pattern: 'test/**/*.json', included: false},
       {pattern: 'test/**/*.xml', included: false},
       {pattern: 'test/resources/**/*', included: false},
-      {pattern: resolver.resolveModulePath('google-closure-library/closure/goog/bootstrap/webworkers.js', __dirname), included: false}
-    ]),
+
+      // source files for the script loader
+      {pattern: 'src/**/*.js', watched: false, included: false, served: true},
+      {pattern: 'test/**/*.js', watched: false, included: false, served: true},
+      {pattern: resolver.resolveModulePath('google-closure-library/**/*.js', __dirname), watched: false, included: false, served: true},
+      {pattern: resolver.resolveModulePath('openlayers/**/*.js', __dirname), watched: false, included: false, served: true},
+      {pattern: resolver.resolveModulePath('ol-cesium/**/*.js', __dirname), watched: false, included: false, served: true},
+
+      // serve the test manifest and include the script loader
+      {pattern: '.build/gcc-test-manifest', watched: false, included: false, served: true},
+      resolver.resolveModulePath('opensphere-build-index/karma-test-loader.js', __dirname)
+    ],
 
     proxies: {
+      // the test loader uses this path to resolve the manifest
+      '/karma-test-scripts': path.resolve(__dirname, '.build', 'gcc-test-manifest'),
+      // some tests load resources with an absolute path from these modules
+      '/opensphere': path.resolve(__dirname),
       '/google-closure-library': resolver.resolveModulePath('google-closure-library', __dirname),
       '/opensphere-state-schema': resolver.resolveModulePath('opensphere-state-schema', __dirname)
     },

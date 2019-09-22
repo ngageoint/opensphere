@@ -96,7 +96,12 @@ const sharedResources = [
   {
     source: 'vendor/jquery',
     target: 'vendor/jquery',
-    scripts: ['jquery.event.drag-2.3.0.js', 'jquery.resize.js']
+    scripts: ['jquery.event.drag-2.3.0.js']
+  },
+  {
+    source: resolver.resolveModulePath('css-element-queries/src', __dirname),
+    target: 'vendor/css-element-queries',
+    scripts: ['ResizeSensor.js']
   },
   {
     source: 'vendor/jquery-ui',
@@ -278,11 +283,6 @@ const indexResources = sharedResources.concat([
     files: ['images']
   },
   {
-    source: 'styles',
-    target: 'styles',
-    files: ['icons']
-  },
-  {
     source: resolver.resolveModulePath('opensphere-asm/dist', __dirname),
     target: '',
     scripts: ['os-load.js'],
@@ -352,11 +352,6 @@ const indexResources = sharedResources.concat([
  */
 const oldResources = [
   {
-    source: __dirname,
-    target: '',
-    scripts: ['browserCheck.js']
-  },
-  {
     source: resolver.resolveModulePath('platform', __dirname),
     target: '',
     scripts: ['platform.js']
@@ -365,6 +360,11 @@ const oldResources = [
     source: buildPath,
     target: '',
     scripts: ['modernizr.js']
+  },
+  {
+    source: __dirname,
+    target: '',
+    scripts: ['browserCheck.js']
   },
   {
     source: resolver.resolveModulePath('font-awesome', __dirname),
@@ -376,15 +376,15 @@ const oldResources = [
 
 const addLayerResources = [
   {
+    source: resolver.resolveModulePath('jquery/dist', __dirname),
+    target: 'vendor/jquery',
+    scripts: ['jquery.min.js']
+  },
+  {
     source: resolver.resolveModulePath('bootstrap/dist', __dirname),
     target: 'vendor/bootstrap',
     scripts: ['js/bootstrap.min.js'],
     css: ['css/bootstrap.min.css']
-  },
-  {
-    source: resolver.resolveModulePath('jquery/dist', __dirname),
-    target: 'vendor/jquery',
-    scripts: ['jquery.min.js']
   },
   {
     source: buildPath,

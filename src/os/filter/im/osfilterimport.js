@@ -1,10 +1,8 @@
 goog.provide('os.filter.im.OSFilterImportCtrl');
 goog.provide('os.filter.im.osFilterImportDirective');
 
-goog.require('os.color');
-goog.require('os.data.BaseDescriptor');
+goog.require('os.filter.im.OSFilterImporter');
 goog.require('os.implements');
-goog.require('os.layer.ILayer');
 goog.require('os.ui.Module');
 goog.require('os.ui.filter.im.FilterImportCtrl');
 
@@ -47,29 +45,31 @@ goog.inherits(os.filter.im.OSFilterImportCtrl, os.ui.filter.im.FilterImportCtrl)
 /**
  * @inheritDoc
  */
-os.filter.im.OSFilterImportCtrl.prototype.getProviderFromFilterable = function(filterable) {
-  var provider = os.filter.im.OSFilterImportCtrl.base(this, 'getProviderFromFilterable', filterable);
-
-  // if the filterable implements a provider name interface function, add that to the title
-  if (!provider && os.implements(filterable, os.layer.ILayer.ID)) {
-    provider = /** @type {!os.layer.ILayer} */ (filterable).getProvider();
-  }
-
-  return provider;
+os.filter.im.OSFilterImportCtrl.prototype.getImporter = function() {
+  var layerId = /** @type {string|undefined} */ (this.scope['layerId']);
+  return new os.filter.im.OSFilterImporter(this.getParser(), layerId);
 };
 
 
 /**
+ * Get the base filterable descriptors and add in the filterable layers.
  * @inheritDoc
  */
-os.filter.im.OSFilterImportCtrl.prototype.getIconsFromFilterable = function(filterable) {
-  if (os.implements(filterable, os.layer.ILayer.ID)) {
-    var options = /** @type {!os.layer.ILayer} */ (filterable).getLayerOptions();
-    var color = /** @type {string|undefined} */ (options['color']);
-    if (color) {
-      return '<i class="fa fa-bars" style="color:' + os.color.toHexString(color) + '"></i>';
-    }
+os.filter.im.OSFilterImportCtrl.prototype.getFilterables = function() {
+  var filterables = os.filter.im.OSFilterImportCtrl.base(this, 'getFilterables');
+  var layers = os.map.mapContainer.getLayers();
+
+  if (layers) {
+    layers.forEach(function(layer) {
+      if (os.implements(layer, os.filter.IFilterable.ID)) {
+        layer = /** @type {os.filter.IFilterable} */ (layer);
+
+        if (layer.isFilterable()) {
+          filterables.unshift(layer);
+        }
+      }
+    });
   }
 
-  return os.filter.im.OSFilterImportCtrl.base(this, 'getIconsFromFilterable', filterable);
+  return filterables;
 };

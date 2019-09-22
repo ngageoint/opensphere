@@ -65,7 +65,7 @@
     "unusedPrivateMembers",
     "useOfGoogBase"
   ],
-  "language_in": "ECMASCRIPT_2015",
+  "language_in": "ECMASCRIPT_2017",
   "summary_detail_level": 3,
   "warning_level": "VERBOSE"
 }

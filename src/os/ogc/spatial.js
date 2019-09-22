@@ -22,7 +22,7 @@ os.ogc.spatial.Format = {
 /**
  * Convert an element containing a KML geometry to an ol.Feature.
  *
- * @param {Element} element The element containing a KML geometry
+ * @param {Document|Element} element The element containing a KML geometry
  * @return {ol.geom.Geometry} The geometry
  *
  * @suppress {accessControls} Because OL3 decided not to let us use their code...

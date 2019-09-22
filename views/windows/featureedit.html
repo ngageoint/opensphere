@@ -34,16 +34,33 @@
         </div>
         <div class="d-flex flex-row form-group mt-2">
           <label class="col-2 col-form-label text-right">Altitude</label>
+          <div class="col-4">
+            <select class="custom-select" ng-model="ctrl.altitudeMode" ng-change="ctrl.updatePreview()"
+                ng-options="mode as ctrl.mapAltitudeModeToName(mode) for mode in ctrl.altitudeModes track by mode">
+            </select>
+          </div>
           <div class="col-3">
-            <input class="form-control" type="number" name="altitude" step="any"
+            <input class="form-control" ng-disabled="ctrl.altitudeMode == 'clampToGround'"
+                type="number" name="altitude" step="any"
                 ng-change="ctrl.updatePreview()" ng-model="ctrl.altitude" />
           </div>
           <select class="custom-select col-2" ng-model="ctrl.altUnits"
+              ng-disabled="ctrl.altitudeMode == 'clampToGround'"
               ng-options="unit for unit in ctrl.altUnitOptions"
               ng-change="ctrl.updatePreview()">
           </select>
         </div>
       </div>
+
+      <div ng-if="!ctrl.pointGeometry" class="d-flex flex-row form-group">
+        <label class="col-2 col-form-label text-right u-required">Altitude Mode</label>
+        <div class="col-4">
+          <select class="custom-select" ng-model="ctrl.altitudeMode" ng-change="ctrl.updatePreview()"
+              ng-options="mode as ctrl.mapAltitudeModeToName(mode) for mode in ctrl.altitudeModes track by mode">
+          </select>
+        </div>
+      </div>
+
       <div class="d-flex flex-row form-group mt-2" ng-if="ctrl.timeEditEnabled">
         <label class="col-2 col-form-label text-right">Time</label>
         <div class="col">
@@ -119,10 +136,12 @@
         Style Options
       </div>
       <div class="card-body collapse"
-          data-parent="#featureControls{{ctrl.uid}}" ng-attr-id="featureStyle{{ctrl.uid}}">
+          data-parent="#featureControls{{ctrl.uid}}" id="featureStyle{{ctrl.uid}}">
         <vectorstylecontrols
             color="ctrl.color"
             opacity="ctrl.opacity"
+            fill-color="ctrl.fillColor"
+            fill-opacity="ctrl.fillOpacity"
             icon="ctrl.icon"
             center-icon="ctrl.centerIcon"
             show-center-icon="ctrl.showCenterIcon()"
@@ -144,7 +163,7 @@
           Label Options
         </div>
         <div class="card-body collapse"
-            data-parent="#featureControls{{ctrl.uid}}" ng-attr-id="featureLabels{{ctrl.uid}}">
+            data-parent="#featureControls{{ctrl.uid}}" id="featureLabels{{ctrl.uid}}">
           <labelcontrols
               labels="ctrl.labels"
               columns="ctrl.labelColumns"

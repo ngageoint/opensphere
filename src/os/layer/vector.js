@@ -381,7 +381,9 @@ os.layer.Vector.prototype.getIcons = function() {
 
   if (config) {
     var color = os.style.getConfigColor(config, true);
-    return os.ui.createIconSet(this.getId(), this.getSVGSet(), this.getFASet(), color);
+    if (color) {
+      return os.ui.createIconSet(this.getId(), this.getSVGSet(), this.getFASet(), color);
+    }
   }
 
   return this.getIconSet().join('');
@@ -408,27 +410,11 @@ os.layer.Vector.prototype.getFASet = function() {
     icons.push(os.ui.Icons.STATE);
   }
 
-  if (this.showActiveFilter()) {
+  if (os.query.QueryManager.getInstance().hasEnabledEntries(this.getId())) {
     icons.push(os.ui.Icons.FILTER);
   }
 
   return icons;
-};
-
-
-/**
- * Check for active filters on layer
- * @return {boolean}
- * @protected
- */
-os.layer.Vector.prototype.showActiveFilter = function() {
-  var fm = os.filter.BaseFilterManager.getInstance();
-  var filtered = fm.hasEnabledFilters(this.getId());
-  var isActive = false;
-  if (filtered) {
-    isActive = true;
-  }
-  return isActive;
 };
 
 
@@ -480,7 +466,7 @@ os.layer.Vector.prototype.getIconSet = function() {
       icons.push(os.ui.Icons.STATE);
     }
 
-    if (this.showActiveFilter()) {
+    if (os.query.QueryManager.getInstance().hasEnabledEntries(this.getId())) {
       icons.push(os.ui.Icons.FILTER);
     }
   }
@@ -1145,6 +1131,7 @@ os.layer.Vector.prototype.persist = function(opt_to) {
     opt_to[os.style.StyleField.ARROW_SIZE] = config[os.style.StyleField.ARROW_SIZE];
     opt_to[os.style.StyleField.ARROW_UNITS] = config[os.style.StyleField.ARROW_UNITS];
     opt_to[os.style.StyleField.COLOR] = os.style.getConfigColor(config);
+    opt_to[os.style.StyleField.FILL_COLOR] = os.style.getConfigColor(config, false, os.style.StyleField.FILL);
     opt_to[os.style.StyleField.REPLACE_STYLE] = config[os.style.StyleField.REPLACE_STYLE];
     opt_to[os.style.StyleField.SIZE] = os.style.getConfigSize(config);
     opt_to[os.style.StyleField.ICON] = os.style.getConfigIcon(config);
@@ -1236,8 +1223,27 @@ os.layer.Vector.prototype.restore = function(config) {
   this.setMinResolution(config['minResolution'] || this.getMinResolution());
   this.setMaxResolution(config['maxResolution'] || this.getMaxResolution());
 
-  if (config[os.style.StyleField.COLOR] != null) {
-    os.style.setConfigColor(styleConf, os.style.toRgbaString(config[os.style.StyleField.COLOR]));
+  var color = config[os.style.StyleField.COLOR];
+  if (color) {
+    os.style.setConfigColor(styleConf, os.style.toRgbaString(color));
+  }
+
+  var fillColor = config[os.style.StyleField.FILL_COLOR];
+
+  // if fill color is not defined, use the base color with default fill opacity
+  if (!fillColor && color) {
+    fillColor = os.color.toRgbArray(color);
+    fillColor[3] = os.style.DEFAULT_FILL_ALPHA;
+  }
+
+  if (fillColor) {
+    // if a fill opacity is defined, override it in the color
+    if (config[os.style.StyleField.FILL_OPACITY] != null) {
+      fillColor = os.color.toRgbArray(fillColor);
+      fillColor[3] = config[os.style.StyleField.FILL_OPACITY];
+    }
+
+    os.style.setFillColor(styleConf, os.style.toRgbaString(fillColor));
   }
 
   if (config[os.style.StyleField.REPLACE_STYLE] != null) {

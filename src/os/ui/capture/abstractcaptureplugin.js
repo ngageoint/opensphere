@@ -110,7 +110,7 @@ os.ui.capture.AbstractCapturePlugin.prototype.getDynamicRenderers = function() {
  * @private
  */
 os.ui.capture.AbstractCapturePlugin.prototype.updateRenderers_ = function() {
-  this.renderers = this.staticRenderers.concat(this.getDynamicRenderers());
+  this.renderers = this.staticRenderers.concat(this.getDynamicRenderers()).sort(os.ui.capture.rendererPrioritySort);
 };
 
 
@@ -150,8 +150,8 @@ os.ui.capture.AbstractCapturePlugin.prototype.capture_ = function() {
       if (canvas) {
         os.capture.saveCanvas(canvas);
       }
-    }, this.onCaptureError_, this);
-  }, this.onCaptureError_, this);
+    }, this.onCaptureError, this);
+  }, this.onCaptureError, this);
 };
 
 
@@ -159,9 +159,9 @@ os.ui.capture.AbstractCapturePlugin.prototype.capture_ = function() {
  * Handle rejected promise in processNextFrame_.
  *
  * @param {*} e
- * @private
+ * @protected
  */
-os.ui.capture.AbstractCapturePlugin.prototype.onCaptureError_ = function(e) {
+os.ui.capture.AbstractCapturePlugin.prototype.onCaptureError = function(e) {
   var errorMsg = 'Failed to take screenshot:';
   var error;
   if (e instanceof Error) {
@@ -271,7 +271,7 @@ os.ui.capture.AbstractCapturePlugin.prototype.renderFrame = function(opt_waitFor
  * Sort renderers by priority.
  *
  * @param {!os.ui.capture.ElementRenderer} a First renderer.
- * @param {!os.ui.capture.ElementRenderer} b S`econd renderer.
+ * @param {!os.ui.capture.ElementRenderer} b Second renderer.
  * @return {number} The sort order.
  */
 os.ui.capture.rendererPrioritySort = function(a, b) {

@@ -181,6 +181,13 @@ os.annotation.FeatureAnnotationCtrl.prototype.onFeatureChange_ = function() {
     this['description'] = os.annotation.getDescriptionText(this.feature);
     this['options'] = /** @type {!osx.annotation.Options} */ (this.feature.get(os.annotation.OPTIONS_FIELD));
 
+    var geometry = /** @type {ol.geom.SimpleGeometry} */ (this.feature.getGeometry());
+    if (geometry) {
+      var coords = geometry.getFirstCoordinate();
+      this['options'].position = coords || [0, 0];
+      this.feature.set(os.annotation.OPTIONS_FIELD, this['options']);
+    }
+
     if (this['options'].show) {
       this.updateTail();
     }
@@ -346,13 +353,9 @@ os.annotation.FeatureAnnotationCtrl.prototype.updateTailAbsolute = function() {
     var cardCenter = [cardOffsetX + cardRect.width / 2, cardOffsetY + cardRect.height / 2];
     // Changes the annotation tail style
     var anchorWidth = Math.min(cardRect.height, cardRect.width) * .33;
-    if (this['options'].showTail === os.annotation.TailStyle.NOTAIL) {
-      anchorWidth = 0;
-    }
-    if (this['options'].showTail === os.annotation.TailStyle.LINETAIL) {
-      anchorWidth = 4;
-    }
-    var linePath = os.annotation.AbstractAnnotationCtrl.createTailPath(cardCenter, pathTarget, anchorWidth);
+    // Hide the tail when the background is not displayed
+    var tailStyle = !this['options'].showBackground ? os.annotation.TailStyle.NOTAIL : this['options'].showTail;
+    var linePath = os.annotation.AbstractAnnotationCtrl.createTailPath(cardCenter, pathTarget, anchorWidth, tailStyle);
 
     svg.attr('width', svgWidth);
     svg.attr('height', svgHeight);
@@ -414,13 +417,9 @@ os.annotation.FeatureAnnotationCtrl.prototype.updateTailFixed = function() {
     var cardCenter = [cardRect.x + cardRect.width / 2, cardRect.y + cardRect.height / 2];
     // Changes the annotation tail style
     var anchorWidth = Math.min(cardRect.height, cardRect.width) * .33;
-    if (this['options'].showTail === os.annotation.TailStyle.NOTAIL) {
-      anchorWidth = 0;
-    }
-    if (this['options'].showTail === os.annotation.TailStyle.LINETAIL) {
-      anchorWidth = 4;
-    }
-    var linePath = os.annotation.AbstractAnnotationCtrl.createTailPath(cardCenter, targetPixel, anchorWidth);
+    // Hide the tail when the background is not displayed
+    var tailStyle = !this['options'].showBackground ? os.annotation.TailStyle.NOTAIL : this['options'].showTail;
+    var linePath = os.annotation.AbstractAnnotationCtrl.createTailPath(cardCenter, targetPixel, anchorWidth, tailStyle);
 
     this.element.find('path').attr('d', linePath);
 

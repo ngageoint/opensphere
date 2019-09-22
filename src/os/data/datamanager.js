@@ -4,6 +4,7 @@ goog.require('goog.async.Delay');
 goog.require('goog.events.EventTarget');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('os.data');
 goog.require('os.data.DataProviderEvent');
 goog.require('os.data.DescriptorEvent');
 goog.require('os.data.DescriptorEventType');
@@ -303,9 +304,10 @@ os.data.DataManager.prototype.getProviderRoot = function() {
  * @inheritDoc
  */
 os.data.DataManager.prototype.updateFromSettings = function(settings) {
-  var sets = ['providers', 'userProviders'];
+  var sets = Object.values(os.data.ProviderKey);
   for (var s = 0, ss = sets.length; s < ss; s++) {
-    var set = /** @type {Object} */ (settings.get([sets[s]]));
+    var providerKey = sets[s];
+    var set = /** @type {Object} */ (settings.get([providerKey]));
 
     for (var id in set) {
       var item = /** @type {Object} */ (set[id]);
@@ -313,6 +315,7 @@ os.data.DataManager.prototype.updateFromSettings = function(settings) {
       // make sure the item is an object, in case Closure adds a UID key to the set
       if (typeof item == 'object') {
         item['id'] = id;
+        item['providerKey'] = providerKey;
         var on = true;
 
         if ('enabled' in item) {

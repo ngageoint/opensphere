@@ -4,6 +4,7 @@ goog.require('goog.object');
 goog.require('goog.string');
 goog.require('ol.geom.GeometryCollection');
 goog.require('ol.xml');
+goog.require('os.data.RecordField');
 goog.require('os.feature');
 goog.require('os.source');
 goog.require('os.style');
@@ -96,6 +97,24 @@ plugin.file.kml.KMLTreeExporter.prototype.getColor = function(item) {
 /**
  * @inheritDoc
  */
+plugin.file.kml.KMLTreeExporter.prototype.getFillColor = function(item) {
+  var featureColor = os.feature.getFillColor(item.getFeature());
+  return featureColor ? os.style.toAbgrString(featureColor) : null;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLTreeExporter.prototype.getStrokeColor = function(item) {
+  var featureColor = os.feature.getStrokeColor(item.getFeature());
+  return featureColor ? os.style.toAbgrString(featureColor) : null;
+};
+
+
+/**
+ * @inheritDoc
+ */
 plugin.file.kml.KMLTreeExporter.prototype.getElementType = function(item) {
   return item.isFolder() ? os.ui.file.kml.ElementType.FOLDER : os.ui.file.kml.ElementType.PLACEMARK;
 };
@@ -146,6 +165,7 @@ plugin.file.kml.KMLTreeExporter.prototype.getIcon = function(item) {
       var image = config['image'];
       if (image['src']) {
         icon.href = image['src'];
+        icon.options = image['options'];
       }
 
       var size = os.style.getConfigSize(image);
@@ -299,9 +319,13 @@ plugin.file.kml.KMLTreeExporter.prototype.getGeometry = function(item) {
 
   var feature = item ? item.getFeature() : null;
   if (feature) {
+    var geomAltitudeMode;
+    var featAltitudeMode = feature.get(os.data.RecordField.ALTITUDE_MODE);
+
     geometry = feature.getGeometry();
     if (geometry) {
       geometry = geometry.clone().toLonLat();
+      geomAltitudeMode = geometry.get(os.data.RecordField.ALTITUDE_MODE);
     }
 
     if (this.exportEllipses) {
@@ -313,6 +337,10 @@ plugin.file.kml.KMLTreeExporter.prototype.getGeometry = function(item) {
           geometry = ellipse;
         }
       }
+    }
+
+    if (geometry) {
+      geometry.set(os.data.RecordField.ALTITUDE_MODE, geomAltitudeMode || featAltitudeMode);
     }
   }
 

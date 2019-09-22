@@ -20,6 +20,9 @@ plugin.im.action.feature.StyleActionTagName = {
   CENTER_SHAPE: 'centerShape',
   COLOR: 'color',
   ICON_SRC: 'iconSrc',
+  ICON_OPTIONS: 'iconOptions',
+  FILL_COLOR: 'fillColor',
+  FILL_OPACITY: 'fillOpacity',
   LINE_DASH: 'lineDash',
   OPACITY: 'opacity',
   ROTATION_COLUMN: 'rotationColumn',
@@ -196,6 +199,17 @@ plugin.im.action.feature.StyleAction.prototype.persist = function(opt_to) {
 plugin.im.action.feature.StyleAction.prototype.restore = function(config) {
   var styleConfig = /** @type {Object|undefined} */ (config['styleConfig']);
   if (styleConfig) {
+    //  if the style config is lacking a fill, it's an old config prior to fill support. use the base color with the
+    //  default fill opacity.
+    if (styleConfig['fill'] === undefined) {
+      var color = os.style.getConfigColor(styleConfig);
+      if (color) {
+        color = os.color.toRgbArray(color);
+        color[3] = os.style.DEFAULT_FILL_ALPHA;
+        os.style.setFillColor(styleConfig, os.style.toRgbaString(color));
+      }
+    }
+
     // create a new object in the same window context as this object
     this.styleConfig = {};
     os.object.merge(styleConfig, this.styleConfig);
@@ -213,7 +227,16 @@ plugin.im.action.feature.StyleAction.prototype.toXml = function() {
   if (color) {
     os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.COLOR, element, os.color.toHexString(color));
     os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.OPACITY, element,
-        String(color.length > 3 ? color[3] : 1.0));
+        String(color.length > 3 ? color[3] : os.style.DEFAULT_ALPHA));
+  }
+
+  var fillColor = /** @type {Array<number>} */
+      (os.style.getConfigColor(this.styleConfig, true, os.style.StyleField.FILL));
+  if (fillColor) {
+    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.FILL_COLOR, element,
+        os.color.toHexString(fillColor));
+    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.FILL_OPACITY, element,
+        String(fillColor.length > 3 ? fillColor[3] : os.style.DEFAULT_FILL_ALPHA));
   }
 
   var size = os.style.getConfigSize(this.styleConfig);
@@ -252,6 +275,12 @@ plugin.im.action.feature.StyleAction.prototype.toXml = function() {
     os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.ROTATION_COLUMN, element, String(rotationColumn));
   }
 
+  if (shape == os.style.ShapeType.ICON || centerShape == os.style.ShapeType.ICON) {
+    var icon = os.style.getConfigIcon(this.styleConfig) || os.ui.file.kml.getDefaultIcon();
+    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.ICON_OPTIONS, element,
+        JSON.stringify(icon.options));
+  }
+
   return element;
 };
 
@@ -263,18 +292,41 @@ plugin.im.action.feature.StyleAction.prototype.fromXml = function(xml) {
   var styleConfig = /** @type {!Object} */ (os.object.unsafeClone(os.style.DEFAULT_VECTOR_CONFIG));
 
   if (xml) {
+    var colorArr;
     var color = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.COLOR);
     if (os.color.isColorString(color)) {
-      var colorArr = os.color.toRgbArray(color);
+      colorArr = os.color.toRgbArray(color);
       if (colorArr) {
         var opacityVal = parseFloat(
             os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.OPACITY));
-        var opacity = !isNaN(opacityVal) ? goog.math.clamp(opacityVal, 0, 1) : 1.0;
+        var opacity = !isNaN(opacityVal) ? goog.math.clamp(opacityVal, 0, 1) : os.style.DEFAULT_ALPHA;
         colorArr[3] = opacity;
         color = os.style.toRgbaString(colorArr);
       }
 
       os.style.setConfigColor(styleConfig, color);
+    }
+
+    var fillColor = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.FILL_COLOR);
+    if (os.color.isColorString(fillColor)) {
+      var fillColorArr = os.color.toRgbArray(fillColor);
+      if (fillColorArr) {
+        var fillOpacityVal = parseFloat(
+            os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.FILL_OPACITY));
+        var fillOpacity = !isNaN(fillOpacityVal) ? goog.math.clamp(fillOpacityVal, 0, 1) : os.style.DEFAULT_FILL_ALPHA;
+        fillColorArr[3] = fillOpacity;
+        fillColor = os.style.toRgbaString(fillColorArr);
+      }
+    } else if (colorArr) {
+      // No fill color in the XML, so use the base color with 0 opacity
+      var fillColorArr = colorArr.slice();
+      fillColorArr[3] = 0;
+      fillColor = os.style.toRgbaString(fillColorArr);
+    }
+
+    if (os.color.isColorString(fillColor)) {
+      // Only change the fill color without changing the image fill color too
+      os.style.setFillColor(styleConfig, fillColor);
     }
 
     var size = parseFloat(os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.SIZE));
@@ -301,8 +353,11 @@ plugin.im.action.feature.StyleAction.prototype.fromXml = function(xml) {
       if (shape == os.style.ShapeType.ICON ||
           (os.style.CENTER_LOOKUP[shape] && centerShape === os.style.ShapeType.ICON)) {
         var iconSrc = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.ICON_SRC);
+        var iconOptions = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.ICON_OPTIONS) || '{}';
+        iconOptions = typeof JSON.parse(iconOptions) === 'object' ? JSON.parse(iconOptions) : {};
         os.style.setConfigIcon(styleConfig, /** @type {!osx.icon.Icon} */ ({
-          path: iconSrc
+          path: iconSrc,
+          options: iconOptions
         }));
       }
     }

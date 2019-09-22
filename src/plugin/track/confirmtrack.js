@@ -2,8 +2,10 @@ goog.provide('plugin.track.ConfirmTrackCtrl');
 goog.provide('plugin.track.confirmTrackDirective');
 
 goog.require('goog.Promise');
+goog.require('os.track');
 goog.require('os.ui.Module');
 goog.require('os.ui.window');
+goog.require('plugin.places.PlacesManager');
 
 
 /**
@@ -29,14 +31,14 @@ os.ui.Module.directive('confirmtrack', [plugin.track.confirmTrackDirective]);
 
 
 /**
- * Controller for the color confirmation window.
+ * Controller for the track selection window.
  *
  * @param {!angular.Scope} $scope
  * @constructor
  * @ngInject
  */
 plugin.track.ConfirmTrackCtrl = function($scope) {
-  var trackNode = plugin.track.getTrackNode();
+  var trackNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
 
   /**
    * The available tracks.
@@ -107,7 +109,7 @@ plugin.track.launchConfirmTrack = function(confirm, cancel) {
 
   var windowOptions = {
     'label': 'Choose a Track',
-    'icon': 'fa ' + plugin.track.ICON,
+    'icon': 'fa ' + os.track.ICON,
     'x': 'center',
     'y': 'center',
     'width': 300,

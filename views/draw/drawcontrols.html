@@ -1,12 +1,12 @@
 <div class="draw-controls">
-  <div class="btn-group draw-controls-group o-draw-controls">
+  <div class="btn-group align-top draw-controls-group o-draw-controls">
     <button class="btn btn-primary"
             ng-class="{on: drawControls.isActive(), active: drawControls.isActive()}"
             ng-click="drawControls.activateControl(drawControls.selectedType)"
             ng-right-click="drawControls.toggleMenu()"
             title="Draws a {{drawControls.selectedType}} on the map for queries, zoom, and selection">
       <i class="fa fa-fw"
-         ng-class="{'fa-square-o': drawControls.selectedType == 'box', 'fa-circle-o': drawControls.selectedType == 'circle', 'fa-long-arrow-right': drawControls.selectedType == 'line', 'fa-star-o': drawControls.selectedType == 'polygon'}"></i>
+          ng-class="{'fa-square-o': drawControls.selectedType == 'box', 'fa-circle-o': drawControls.selectedType == 'circle', 'fa-long-arrow-right': drawControls.selectedType == 'line', 'fa-star-o': drawControls.selectedType == 'polygon'}"></i>
     </button>
     <button class="btn btn-primary dropdown-toggle dropdown-toggle-split"
             ng-click="drawControls.toggleMenu()"

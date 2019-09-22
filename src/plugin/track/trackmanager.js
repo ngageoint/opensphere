@@ -11,6 +11,7 @@ goog.require('ol.array');
 goog.require('ol.events');
 goog.require('ol.extent');
 goog.require('os.time.TimeRange');
+goog.require('os.track');
 
 
 
@@ -235,12 +236,12 @@ plugin.track.TrackManager.prototype.showActiveTracks_ = function() {
 plugin.track.TrackManager.prototype.setActiveTracks_ = function() {
   // get the current animation range and determine which tracks are "active"
   var range = this.tlc_.getAnimationRange();
-  var trackSource = plugin.track.getTrackSource();
+  var source = plugin.places.PlacesManager.getInstance().getPlacesSource();
 
-  if (trackSource) {
+  if (source) {
     // find any tracks that overlap the timerange
     var timeRange = new os.time.TimeRange(range.start, range.end);
-    this.activeTracks_ = /** @type {!Array<!ol.Feature>} */ (trackSource.getTimeModel().intersection(
+    this.activeTracks_ = /** @type {!Array<!ol.Feature>} */ (source.getTimeModel().intersection(
         timeRange, false, false));
 
     // check which of the active tracks are to be followed
@@ -265,7 +266,7 @@ plugin.track.TrackManager.prototype.getActiveExtent = function(tracks) {
   var coordinates = [];
   if (tracks) {
     for (var i = 0; i < tracks.length; i++) {
-      var trackPos = tracks[i].get(plugin.track.TrackField.CURRENT_POSITION);
+      var trackPos = tracks[i].get(os.track.TrackField.CURRENT_POSITION);
       if (trackPos) {
         coordinates.push(trackPos.getCoordinates());
       }

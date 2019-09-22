@@ -1,16 +1,18 @@
-<div ng-repeat="filter in models" title="{{filter.tooltip}}" class="ml-4 text-truncate">
+<div ng-repeat="filter in models" title="{{filter.tooltip}}" class="col text-truncate u-table__row" ng-class="isChild ? 'ml-4' : ''">
   <div ng-if="found">
     <i class="fa" ng-class="icon"></i> {{filter.title}}
   </div>
-  <div ng-if="!found">
-    <span class="text-truncate">
-      <i class="fa mx-1" ng-class="{'fa-times text-danger': !filter.matches, 'fa-check text-success': filter.matches}"
+  <div class="d-flex" ng-if="!found">
+    <span class="flex-fill text-truncate">
+      <i ng-show="layerSelected" class="fa"
+          ng-class="{'fa-times text-danger': !filter.matches, 'fa-check text-success': filter.matches}"
           title="{{{false: 'This filter does not match the selected layer', true: 'This filter matches the columns for the selected layer'}[filter.matches]}}"></i>
       {{filter.title}}
     </span>
-    <span class="float-right mr-1" title="This {{ctrl.getFilterTitle(1)}} most likely matches {{filter.type}}">
-      ({{filter.type}})
+    <span class="mr-1" title="This filter most likely matches {{filter.type}}">
+      <i class="fa fa-question-circle"></i>
+      {{filter.type}}
     </span>
   </div>
-  <filterimportmodel ng-if="filter.children" models="filter.children" icon="icon" found="found"></filterimportmodel>
+  <filterimportmodel ng-if="filter.children" models="filter.children" icon="icon" found="found" is-child="true"></filterimportmodel>
 </div>
