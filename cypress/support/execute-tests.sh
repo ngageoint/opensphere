@@ -258,14 +258,7 @@ function runTests() {
 function stopWebServer() {
   if $SERVER_STARTED; then
     echo 'INFO: terminating web server'
-    if [ "$OSTYPE" == "msys" ]; then
-      webServerProcess="$(netstat -ano | findstr 0.0.0.0:8282 | awk '{print $5}')" # TODO: Use a process name instead after this is fixed: https://github.com/http-party/http-server/issues/333
-      if [ $webServerProcess ]; then
-        taskkill //PID $webServerProcess //F
-      fi
-    else
-      npm run stop-server
-    fi
+    npm run stop-server
   else
     echo 'INFO: server was running before tests started, leaving it running'
   fi
