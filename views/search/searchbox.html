@@ -37,13 +37,13 @@
               {{searchBox.getSearchName(search)}}
             </a>
           </div>
-          <span class="dropdown-item text-truncate" ng-repeat="search in searchBox.searchOptionsNoGroup"
+          <span class="d-flex dropdown-item text-truncate align-items-center" ng-repeat="search in searchBox.searchOptionsNoGroup"
               ng-click="searchBox.toggleSearch(search)"
               ng-class="{'font-weight-bold': !searchBox.allowMultiple && searchBox.isSearchEnabled(search)}">
             <i class="fa" ng-if="searchBox.allowMultiple || searchBox.isSearchEnabled(search)"
                 ng-class="searchBox.getSearchIcon(search)"></i>
             {{searchBox.getSearchName(search)}}
-            <div class="flex-shrink-0 float-right">
+            <div class="flex-shrink-0 ml-auto">
               <i ng-if="searchBox.supportsTemporal(search)" class="fa fa-clock-o" title="Supports searching within the current application time"></i>
               <i ng-if="searchBox.supportsGeo(search)" class="fa fa-map-marker" title="Supports searching with geospatial filters"></i>
             </div>
