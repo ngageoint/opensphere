@@ -16,6 +16,23 @@ describe('os.ui.filter.op.IsFalse', function() {
     expect(op.getEvalExpression('v', 'noop')).toBe(expr);
   });
 
+  it('should generate the proper filter function xml', function() {
+    // literal doesn't affect the expression
+    var expr = '<And hint="os.ui.filter.op.IsFalse">' +
+        '<Not><PropertyIsNull><PropertyName>v</PropertyName></PropertyIsNull></Not>' +
+        '<Or>' +
+        '<PropertyIsEqualTo><PropertyName>v</PropertyName><Literal><![CDATA[0]]></Literal></PropertyIsEqualTo>' +
+        '<PropertyIsEqualTo matchCase="false">' +
+        '<PropertyName>v</PropertyName><Literal><![CDATA[false]]></Literal>' +
+        '</PropertyIsEqualTo>' +
+        '</Or>' +
+        '</And>';
+
+    expect(op.getFilter('v', null)).toBe(expr);
+    expect(op.getFilter('v', '')).toBe(expr);
+    expect(op.getFilter('v', 'noop')).toBe(expr);
+  });
+
   it('should evaluate variables as desired', function() {
     var expr = op.getEvalExpression('v', 'noop');
     var v = null;

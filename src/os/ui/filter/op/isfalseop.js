@@ -1,20 +1,27 @@
 goog.provide('os.ui.filter.op.IsFalse');
 
 goog.require('os.ui.filter.op.Op');
+goog.require('os.xsd.DataType');
 
 
 /**
  * A 'PropertyIsFalse' operation class.
+ * Based on the OGC Filter Spec
  *
  * @extends {os.ui.filter.op.Op}
  * @constructor
  */
 os.ui.filter.op.IsFalse = function() {
   os.ui.filter.op.IsFalse.base(this, 'constructor',
-      'And', 'is false', 'false', undefined, undefined, 'Supports false, 0, and "false"', 'span', true);
-  this.matchHint = 'false.operation';
+      'And', 'is false', 'false',
+      [os.xsd.DataType.BOOLEAN, os.xsd.DataType.INTEGER, os.xsd.DataType.STRING],
+      'hint="os.ui.filter.op.IsFalse"', 'Supports false, 0, and "false" (case insensitive)', 'span', true);
+  this.matchHint = 'os.ui.filter.op.IsFalse';
 };
+
+
 goog.inherits(os.ui.filter.op.IsFalse, os.ui.filter.op.Op);
+
 
 /**
  * Because OpenSphere allows isEmpty() comparator for Boolean type properties, fail null/empty tests
@@ -26,14 +33,16 @@ os.ui.filter.op.IsFalse.prototype.getEvalExpression = function(v, literal) {
       v + '===false||' + v + '==0||(""+' + v + ').toLowerCase()=="false"))';
 };
 
+
 /**
  *
  * @inheritDoc
  */
 os.ui.filter.op.IsFalse.prototype.getFilter = function(column, literal) {
   var f = [];
+  var attr = this.getAttributes();
 
-  f.push('<' + this.localName + '>');
+  f.push('<' + this.localName + (attr ? ' ' + attr : '') + '>');
 
   f.push(
       '<Not><PropertyIsNull>' +
@@ -49,7 +58,7 @@ os.ui.filter.op.IsFalse.prototype.getFilter = function(column, literal) {
       '</PropertyIsEqualTo>'
   );
   f.push(
-      '<PropertyIsEqualTo matchcase="false">' +
+      '<PropertyIsEqualTo matchCase="false">' +
         '<PropertyName>' + column + '</PropertyName>' +
         '<Literal><![CDATA[false]]></Literal>' +
       '</PropertyIsEqualTo>'
