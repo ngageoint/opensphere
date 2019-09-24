@@ -52,7 +52,8 @@ addMatchImageSnapshotCommand({
     layers.Dialog.DIALOG,
     '.ol-zoom',
     core.Map.ROTATION_BUTTON,
-    core.Map.MAP_MODE_BUTTON]
+    core.Map.MAP_MODE_BUTTON,
+    core.Application.ALERT]
 });
 
 Cypress.Commands.add('imageComparison', function(name) {
