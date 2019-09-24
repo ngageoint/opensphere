@@ -15,8 +15,8 @@ os.ui.filter.op.IsTrue = function() {
   os.ui.filter.op.IsTrue.base(this, 'constructor',
       'And', 'is true', 'true',
       [os.xsd.DataType.BOOLEAN, os.xsd.DataType.INTEGER, os.xsd.DataType.STRING],
-      'hint="os.ui.filter.op.IsTrue"', 'Supports true, 1, and "true" (case insensitive)', 'span', true);
-  this.matchHint = 'os.ui.filter.op.IsTrue';
+      'hint="is true"', 'Supports true, 1, and "true" (case insensitive)', 'span', true);
+  this.matchHint = 'is true';
 };
 
 

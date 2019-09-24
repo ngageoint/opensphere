@@ -18,7 +18,7 @@ describe('os.ui.filter.op.IsFalse', function() {
 
   it('should generate the proper filter function xml', function() {
     // literal doesn't affect the expression
-    var expr = '<And hint="os.ui.filter.op.IsFalse">' +
+    var expr = '<And hint="is false">' +
         '<Not><PropertyIsNull><PropertyName>v</PropertyName></PropertyIsNull></Not>' +
         '<Or>' +
         '<PropertyIsEqualTo><PropertyName>v</PropertyName><Literal><![CDATA[0]]></Literal></PropertyIsEqualTo>' +
