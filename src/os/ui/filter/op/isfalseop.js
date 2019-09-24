@@ -15,8 +15,8 @@ os.ui.filter.op.IsFalse = function() {
   os.ui.filter.op.IsFalse.base(this, 'constructor',
       'And', 'is false', 'false',
       [os.xsd.DataType.BOOLEAN, os.xsd.DataType.INTEGER, os.xsd.DataType.STRING],
-      'hint="os.ui.filter.op.IsFalse"', 'Supports false, 0, and "false" (case insensitive)', 'span', true);
-  this.matchHint = 'os.ui.filter.op.IsFalse';
+      'hint="is false"', 'Supports false, 0, and "false" (case insensitive)', 'span', true);
+  this.matchHint = 'is false';
 };
 
 
