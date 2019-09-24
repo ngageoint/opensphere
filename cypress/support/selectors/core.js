@@ -1,6 +1,7 @@
 exports.Application = {
   PAGE: 'body',
-  HIDDEN_FILE_INPUT: 'input[type=\'file\']'
+  HIDDEN_FILE_INPUT: 'input[type=\'file\']',
+  ALERT: '.alert'
 };
 
 exports.Map = {
