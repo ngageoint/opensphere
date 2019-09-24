@@ -63,6 +63,8 @@ exports.statusBar = {
   SERVERS_BUTTON: '[title=Servers]',
   ALERTS_BUTTON: '[title=Alerts]',
   ALERTS_UNREAD_BADGE: '[title=Alerts] .badge',
+  ALERTS_WARNING_BADGE: '[title=Alerts] .badge-warning',
+  ALERTS_ERROR_BADGE: '[title=Alerts] .badge-danger',
   HISTORY_BUTTON: '[title=History]',
   Mute: {
     BUTTON: '.fa-volume-off, .fa-volume-up',
