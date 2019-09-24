@@ -1,6 +1,7 @@
 goog.provide('os.ui.filter.op.IsTrue');
 
 goog.require('os.ui.filter.op.Op');
+goog.require('os.xsd.DataType');
 
 
 /**
@@ -12,10 +13,15 @@ goog.require('os.ui.filter.op.Op');
  */
 os.ui.filter.op.IsTrue = function() {
   os.ui.filter.op.IsTrue.base(this, 'constructor',
-      'And', 'is true', 'true', undefined, undefined, 'Supports true, >1, and "true"', 'span', true);
-  this.matchHint = 'true.operation';
+      'And', 'is true', 'true',
+      [os.xsd.DataType.BOOLEAN, os.xsd.DataType.INTEGER, os.xsd.DataType.STRING],
+      'hint="os.ui.filter.op.IsTrue"', 'Supports true, 1, and "true" (case insensitive)', 'span', true);
+  this.matchHint = 'os.ui.filter.op.IsTrue';
 };
+
+
 goog.inherits(os.ui.filter.op.IsTrue, os.ui.filter.op.Op);
+
 
 /**
  *
@@ -26,14 +32,16 @@ os.ui.filter.op.IsTrue.prototype.getEvalExpression = function(v, literal) {
         v + '===true||' + v + '==1||(""+' + v + ').toLowerCase()=="true"))';
 };
 
+
 /**
  *
  * @inheritDoc
  */
 os.ui.filter.op.IsTrue.prototype.getFilter = function(column, literal) {
   var f = [];
+  var attr = this.getAttributes();
 
-  f.push('<' + this.localName + '>');
+  f.push('<' + this.localName + (attr ? ' ' + attr : '') + '>');
 
   f.push(
       '<Not><PropertyIsNull>' +
@@ -49,7 +57,7 @@ os.ui.filter.op.IsTrue.prototype.getFilter = function(column, literal) {
       '</PropertyIsEqualTo>'
   );
   f.push(
-      '<PropertyIsEqualTo matchcase="false">' +
+      '<PropertyIsEqualTo matchCase="false">' +
         '<PropertyName>' + column + '</PropertyName>' +
         '<Literal><![CDATA[true]]></Literal>' +
       '</PropertyIsEqualTo>'
