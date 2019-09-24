@@ -73,6 +73,7 @@ describe('Application startup', function() {
   });
 
   it('Alerts', function() {
-    cy.get(core.statusBar.ALERTS_UNREAD_BADGE).should('not.exist');
+    cy.get(core.statusBar.ALERTS_WARNING_BADGE).should('not.exist');
+    cy.get(core.statusBar.ALERTS_ERROR_BADGE).should('not.exist');
   });
 });
