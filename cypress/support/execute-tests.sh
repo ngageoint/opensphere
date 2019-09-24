@@ -20,7 +20,7 @@ function main() {
 
 function ctrl_c() {
   echo ''
-  echo "WARNING: user terminated tests, performing cleanup..."
+  echo 'WARNING: user terminated tests, performing cleanup...'
   stopWebServer
   restoreSettings
   echo 'INFO: cleanup complete, test execution script terminated early'
@@ -32,29 +32,27 @@ function setVariables() {
   export PLUGIN=../opensphere-plugin*
   
   export SERVER_STARTED=false
-  export SETTINGS_BACKED_UP=false
-  export SETTINGS_OVERRIDE=FALSE
+  export SETTINGS_RENAMED=false
+  export SETTINGS_OVERRIDE=false
 
   export SOUND_CONFIGURATION_SOURCE=cypress/support/asound.conf
   export SOUND_CONFIGURATION_TARGET=/etc/asound.conf
 
   export SETTINGS_ORIGINAL=dist/opensphere/config/settings.json
-  export SETTINGS_BACKUP=dist/opensphere/config/settings.bak
+  export SETTINGS_MOVED=dist/opensphere/config/original-settings.json
     
   export SETTINGS_OVERRIDE_2D_SOURCE=cypress/support/settings/override-2d.json
   export SETTINGS_OVERRIDE_PROJECTION_SOURCE=cypress/support/settings/override-projection.json
   export SETTINGS_OVERRIDE_TARGET=dist/opensphere/config/settings.json
 
   if [ "$CYPRESS_PROJECTION" == 4326 ]; then
-    echo "INFO: overriding projection; using EPSG:4326"
+    echo 'INFO: overriding projection; using EPSG:4326'
     export SETTINGS_OVERRIDE_SOURCE=$SETTINGS_OVERRIDE_PROJECTION_SOURCE
   else
-    echo "INFO: using default projection EPSG:3857"
+    echo 'INFO: using default projection EPSG:3857'
     export SETTINGS_OVERRIDE_SOURCE=$SETTINGS_OVERRIDE_2D_SOURCE
   fi
   
-  export SETTINGS_DEFAULT_SOURCE=config/settings.json
-  export SETTINGS_DEFAULT_TARGET=dist/opensphere/config/settings-default.json
   export SETTINGS_CYPRESS_2D_SOURCE=cypress/support/settings/settings-2d.json
   export SETTINGS_CYPRESS_2D_TARGET=dist/opensphere/config/settings-2d.json
   export SETTINGS_CYPRESS_PROJECTION_SOURCE=cypress/support/settings/settings-projection.json
@@ -90,7 +88,7 @@ function checkArguments() {
 		;;
   "loop")
     if [ -z "$SPEC" ]; then
-      echo 'WARNING: Spec pattern not passed, selecting ALL tests'
+      echo 'WARNING: spec pattern not passed, selecting ALL tests'
       TEST_SPECS=$TEST_PATH$ALL_TESTS
     else
       TEST_SPECS=$TEST_PATH$SPEC
@@ -111,7 +109,7 @@ function checkArguments() {
 
   if [ "$CYPRESS_PROJECTION" ]; then
     if [ "$CYPRESS_PROJECTION" == 3857 ]; then
-      echo "INFO: CYPRESS_PROJECTION environment variable set, but the value matches the default of EPSG:3857. No override needed"
+      echo 'INFO: CYPRESS_PROJECTION environment variable set, but the value matches the default of EPSG:3857. No override needed'
     else if [ ! "$CYPRESS_PROJECTION" == 4326 ]; then
       echo "ERROR: CYPRESS_PROJECTION environment variable set to unexpected value: $CYPRESS_PROJECTION. Expected 4326 or 3857!"
       exit 1
@@ -136,9 +134,9 @@ function checkArguments() {
 
 function checkEnvironment() {
   if ls $PLUGIN 1> /dev/null 2>&1; then
-    echo 'WARNING: A plugin exists that may affect the test results!'
+    echo 'WARNING: a plugin exists that may affect the test results!'
     if ! [ "$ENVIRONMENT" == "ci" ]; then
-      read -t 15 -p "Press CTRL+C to Cancel, ENTER to Continue or wait 15 seconds"
+      read -t 30 -p "Press CTRL+C to Cancel, ENTER to Continue or wait 30 seconds"
       echo ''
     fi
   else
@@ -146,38 +144,28 @@ function checkEnvironment() {
   fi
 }
 
-function backupSettings(){
-  if [ -f $SETTINGS_ORIGINAL ]; then
-    echo 'INFO: build settings file exists and may need to be backed up'
-    if ! diff -q $SETTINGS_DEFAULT_SOURCE $SETTINGS_ORIGINAL; then
-      echo "INFO: settings file differs from source, backing up as $SETTINGS_BACKUP"
-      SETTINGS_BACKED_UP=true
-      mv $SETTINGS_ORIGINAL $SETTINGS_BACKUP
-    else
-      echo 'INFO: settings file matches source and does not need to be backed up'
-    fi
-  else
-    echo 'INFO: build settings file does not need to be backed up because it does not exist'
-  fi
-}
-
 function configureSound() {
   if [ "$ENVIRONMENT" == "ci" ]; then
-    echo "INFO: Configuring sound ouput (fixes ALSA errors)"
+    echo 'INFO: configuring sound ouput (fixes ALSA errors)'
     sudo cp $SOUND_CONFIGURATION_SOURCE $SOUND_CONFIGURATION_TARGET
   fi
 }
 
 function overrideSettings() {
-  backupSettings
+  echo 'INFO: temporarily adjusting settings to prepare for running the tests'
+  if [ -f $SETTINGS_ORIGINAL ]; then
+    echo 'INFO: renaming original settings file (most settings will be preserved)'
+    SETTINGS_RENAMED=true
+    mv $SETTINGS_ORIGINAL $SETTINGS_MOVED
+  else
+    echo 'WARNING: settings file does not exist!'
+  fi
 
+  echo 'INFO: creating override files...'
   SETTINGS_OVERRIDE=true
 
   echo "INFO: creating a new settings override file: $SETTINGS_OVERRIDE_TARGET"
   cp $SETTINGS_OVERRIDE_SOURCE $SETTINGS_OVERRIDE_TARGET
-
-  echo "INFO: creating default settings file: $SETTINGS_DEFAULT_TARGET"
-  cp $SETTINGS_DEFAULT_SOURCE $SETTINGS_DEFAULT_TARGET
 
   echo "INFO: creating 2D mode settings file: $SETTINGS_CYPRESS_2D_TARGET"
   cp $SETTINGS_CYPRESS_2D_SOURCE $SETTINGS_CYPRESS_2D_TARGET
@@ -188,13 +176,14 @@ function overrideSettings() {
     sed -i.bak 's@STREET_MAP_URL@'$SETTINGS_STREET_MAP_URL'@g' $SETTINGS_CYPRESS_PROJECTION_TARGET && rm $SETTINGS_CYPRESS_PROJECTION_TARGET.bak
     sed -i.bak 's@WORLD_IMAGERY_URL@'$SETTINGS_WORLD_IMAGERY_URL'@g' $SETTINGS_CYPRESS_PROJECTION_TARGET && rm $SETTINGS_CYPRESS_PROJECTION_TARGET.bak
   fi
+  echo 'INFO: all settings adjustments finished'
 }
 
 function startWebServer() {
   if [ "$OSTYPE" == "msys" ]; then
     webServerProcess="$(netstat -ano | findstr 0.0.0.0:8282 | awk '{print $5}')" # TODO: Use a process name instead after this is fixed: https://github.com/http-party/http-server/issues/333
   else
-    webServerProcess=$(ps -ef | grep http-server | grep -v grep)
+    webServerProcess="$(ps -ef | grep http-server | grep -v grep)"
   fi
   
   if [ -z "$webServerProcess" ]; then
@@ -233,7 +222,7 @@ function runTests() {
         TEST_RESULT=$result_counter
         if (( $TEST_RESULT > 0)); then
           if (( $TEST_RESULT == 5)); then
-            echo "WARNING: each test loop finished with code: 1. Tests appear to consisently FAIL."
+            echo 'WARNING: each test loop finished with code: 1. Tests appear to consisently FAIL.'
           else
             echo 'WARNING: *******************'
             echo "WARNING: FLAKY TESTS!! There were $TEST_RESULT failed loops out of 5 loops completed."
@@ -245,7 +234,7 @@ function runTests() {
       else
         $(npm bin)/cypress run --spec "$TEST_SPECS"
         TEST_RESULT=$?
-        echo "INFO: Cypress tests finished with code: $TEST_RESULT"
+        echo "INFO: cypress tests finished with code: $TEST_RESULT"
       fi
     fi
   else
@@ -260,36 +249,36 @@ function stopWebServer() {
     echo 'INFO: terminating web server'
     npm run stop-server
   else
-    echo 'INFO: server was running before tests started, leaving it running'
+    echo 'INFO: server was not started by this script, leaving it as is'
   fi
 }
 
 function restoreSettings() {
-  if $SETTINGS_OVERRIDE; then
-    echo "INFO: removing settings override file: $SETTINGS_OVERRIDE_TARGET"
-    rm $SETTINGS_OVERRIDE_TARGET
+  if $SETTINGS_OVERRIDE || $SETTINGS_RENAMED; then
+    echo 'INFO: restoring settings to their original state before tests were started'
     
-    echo "INFO: removing default settings file: $SETTINGS_DEFAULT_TARGET"
-    rm $SETTINGS_DEFAULT_TARGET
+    if $SETTINGS_OVERRIDE; then
+      echo "INFO: removing settings override file: $SETTINGS_OVERRIDE_TARGET"
+      rm $SETTINGS_OVERRIDE_TARGET
+      
+      echo "INFO: removing 2D mode settings file: $SETTINGS_CYPRESS_2D_TARGET"
+      rm $SETTINGS_CYPRESS_2D_TARGET
 
-    echo "INFO: removing 2D mode settings file: $SETTINGS_CYPRESS_2D_TARGET"
-    rm $SETTINGS_CYPRESS_2D_TARGET
-
-    if [ "$CYPRESS_PROJECTION" == 4326 ]; then
-      echo "INFO: removing projection settings file: $SETTINGS_CYPRESS_PROJECTION_TARGET"
-      rm $SETTINGS_CYPRESS_PROJECTION_TARGET
+      if [ "$CYPRESS_PROJECTION" == 4326 ]; then
+        echo "INFO: removing projection settings file: $SETTINGS_CYPRESS_PROJECTION_TARGET"
+        rm $SETTINGS_CYPRESS_PROJECTION_TARGET
+      fi
     fi
-  fi
-  restoreBackup
-}
 
-function restoreBackup() {
-  if $SETTINGS_BACKED_UP; then
-    echo "INFO: restoring backup $SETTINGS_BACKUP as $SETTINGS_ORIGINAL"
-    mv $SETTINGS_BACKUP $SETTINGS_ORIGINAL
+    if $SETTINGS_RENAMED; then
+      echo "INFO: renaming $SETTINGS_MOVED to $SETTINGS_ORIGINAL"
+      mv $SETTINGS_MOVED $SETTINGS_ORIGINAL
+    else
+      echo 'INFO: settings were never renamed, nothing to do'
+    fi
+    echo 'INFO: settings have been restored to their original state'
   else
-    echo "INFO: settings file backup does not exist, using default settings file: $SETTINGS_DEFAULT_TARGET"
-    cp $SETTINGS_DEFAULT_SOURCE $SETTINGS_OVERRIDE_TARGET
+    echo 'INFO: settings were never modified, nothing to do'
   fi
 }
 
