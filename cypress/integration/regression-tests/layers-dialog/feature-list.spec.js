@@ -1,5 +1,5 @@
 /// <reference types="Cypress" />
-var core = require('../../../support/selectors/core.js');
+var opensphere = require('../../../support/selectors/opensphere.js');
 var dialogs = require('../../../support/selectors/dialogs.js');
 var imports = require('../../../support/selectors/imports.js');
 var layers = require('../../../support/selectors/layers.js');
@@ -10,7 +10,7 @@ describe('Feature list', function() {
     cy.login();
 
     // Import test data
-    cy.get(core.Toolbar.addData.OPEN_FILE_BUTTON).click();
+    cy.get(opensphere.Toolbar.addData.OPEN_FILE_BUTTON).click();
     cy.upload('regression-tests/layers-dialog/feature-list/feat.kml');
     cy.get(imports.importDataDialog.NEXT_BUTTON).click();
     cy.get(imports.importKMLDialog.OK_BUTTON).click();
@@ -86,13 +86,13 @@ describe('Feature list', function() {
 
     // See https://github.com/cypress-io/cypress/issues/136 for why this is needed
     cy.get(dialogs.descriptionInfoDialog.CONTENT).then(function($iframe) {
-      var $body = $iframe.contents().find(core.Application.PAGE);
+      var $body = $iframe.contents().find(opensphere.Application.PAGE);
       expect($body.text()).to.equal('This is the description text.');
     });
 
     // Clean up
     cy.get(dialogs.descriptionInfoDialog.CLOSE_BUTTON).click();
-    cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+    cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
     cy.get(dialogs.featureListDialog.DIALOG)
         .find(shared.Grid.ROW_1)
         .find(shared.Grid.CELL_2)
@@ -121,7 +121,7 @@ describe('Feature list', function() {
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('contain', '7 records (1 selected)');
 
       // Clean up
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_2)
           .find(shared.Grid.CELL_2)
@@ -161,7 +161,7 @@ describe('Feature list', function() {
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('contain', '7 records (1 selected)');
 
       // Clean up
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_4)
           .find(shared.Grid.CELL_2)
@@ -178,7 +178,7 @@ describe('Feature list', function() {
           .find(shared.Grid.ROW_3)
           .should('have.class', shared.Grid.ROW_IS_SELECTED_CLASS);
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('contain', '7 records (1 selected)');
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_3)
           .find(shared.Grid.CELL_2)
@@ -195,7 +195,7 @@ describe('Feature list', function() {
           .find(shared.Grid.ROW_4)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_6)
           .find(shared.Grid.CELL_2)
@@ -212,12 +212,12 @@ describe('Feature list', function() {
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('contain', '7 records (2 selected)');
 
       // Clean up
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_4)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_6)
           .find(shared.Grid.CELL_2)
@@ -230,27 +230,27 @@ describe('Feature list', function() {
           .find(shared.Grid.ROW_4)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_6)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_5)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_7)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_4)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG).within(function() {
         cy.get(shared.Grid.ROW_6)
             .find(shared.Grid.CELL_2)
@@ -263,12 +263,12 @@ describe('Feature list', function() {
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('contain', '7 records (2 selected)');
 
       // Clean up
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_5)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_7)
           .find(shared.Grid.CELL_2)
@@ -281,17 +281,17 @@ describe('Feature list', function() {
           .find(shared.Grid.ROW_4)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_6)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_4)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_6)
           .find(shared.Grid.CELL_2)
@@ -309,7 +309,7 @@ describe('Feature list', function() {
           .find(shared.Grid.ROW_4)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{shift}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{shift}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_6)
           .find(shared.Grid.CELL_2)
@@ -326,12 +326,12 @@ describe('Feature list', function() {
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('contain', '7 records (3 selected)');
 
       // Clean up
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_4)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_6)
           .find(shared.Grid.CELL_2)
@@ -344,12 +344,12 @@ describe('Feature list', function() {
           .find(shared.Grid.ROW_4)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{shift}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{shift}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_6)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{shift}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{shift}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_2)
           .find(shared.Grid.CELL_2)
@@ -364,17 +364,17 @@ describe('Feature list', function() {
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('contain', '7 records (3 selected)');
 
       // Clean up
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_2)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_3)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_4)
           .find(shared.Grid.CELL_2)
@@ -387,12 +387,12 @@ describe('Feature list', function() {
           .find(shared.Grid.ROW_1)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{shift}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{shift}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_5)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{shift}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{shift}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_3)
           .find(shared.Grid.CELL_2)
@@ -407,17 +407,17 @@ describe('Feature list', function() {
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('contain', '7 records (3 selected)');
 
       // Clean up
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_1)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_2)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_3)
           .find(shared.Grid.CELL_2)
@@ -477,7 +477,7 @@ describe('Feature list', function() {
       cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Go To');
 
       // Clean up
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_2)
           .find(shared.Grid.CELL_2)
@@ -544,12 +544,12 @@ describe('Feature list', function() {
 
     it('Invert', function() {
       // Setup
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_5)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_7)
           .find(shared.Grid.CELL_2)
@@ -588,12 +588,12 @@ describe('Feature list', function() {
 
     it('Sort Selected', function() {
       // Setup
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_5)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_7)
           .find(shared.Grid.CELL_2)
@@ -740,12 +740,12 @@ describe('Feature list', function() {
           .find(shared.Grid.ROW_3)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_5)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_7)
           .find(shared.Grid.CELL_2)
@@ -784,12 +784,12 @@ describe('Feature list', function() {
           .find(shared.Grid.ROW_3)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_5)
           .find(shared.Grid.CELL_2)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_7)
           .find(shared.Grid.CELL_2)
@@ -856,7 +856,7 @@ describe('Feature list', function() {
           .find(shared.Grid.ROW_6)
           .find(shared.Grid.CELL_3)
           .click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_7)
           .find(shared.Grid.CELL_3)
@@ -928,7 +928,7 @@ describe('Feature list', function() {
       // Clean up
       cy.get(shared.Tree.ROW_4).rightClick();
       cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
-      cy.get(core.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_6)
           .find(shared.Grid.CELL_3)
