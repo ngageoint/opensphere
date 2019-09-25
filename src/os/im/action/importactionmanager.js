@@ -490,10 +490,10 @@ os.im.action.ImportActionManager.prototype.loadDefaults = function(id) {
     if (filterKey && defaultActions && defaultActions[filterKey]) {
       this.defaultsLoaded[id] = os.im.action.default.load(id, defaultActions[filterKey]).then(function(entries) {
         if (entries && entries.length) {
-          // add all of the default entries
-          entries.forEach(function(entry) {
+          // add all of the default entries from the right, we are inserting them from the top, so this maintains order
+          goog.array.forEachRight(entries, function(entry) {
             // add the entry to the manager but skip apply to defer the refresh event
-            this.addActionEntry(entry, undefined, undefined, true);
+            this.addActionEntry(entry, 0, undefined, true);
           }, this);
 
           // notify entries have changed
