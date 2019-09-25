@@ -1,5 +1,5 @@
 /// <reference types="Cypress" />
-var core = require('../../support/selectors/core.js');
+var opensphere = require('../../support/selectors/opensphere.js');
 var dialogs = require('../../support/selectors/dialogs.js');
 var imports = require('../../support/selectors/imports.js');
 var layers = require('../../support/selectors/layers.js');
@@ -16,7 +16,7 @@ describe('Toolbar left', function() {
       cy.get(dialogs.addDataDialog.DIALOG).should('not.exist');
 
       // Test
-      cy.get(core.Toolbar.addData.BUTTON).click();
+      cy.get(opensphere.Toolbar.addData.BUTTON).click();
       cy.get(dialogs.addDataDialog.DIALOG).should('be.visible');
       cy.get(dialogs.addDataDialog.DIALOG_HEADER).should('contain', 'Add Data');
 
@@ -30,7 +30,7 @@ describe('Toolbar left', function() {
       cy.get(imports.importDataDialog.DIALOG).should('not.exist');
 
       // Test
-      cy.get(core.Toolbar.addData.OPEN_FILE_BUTTON).click();
+      cy.get(opensphere.Toolbar.addData.OPEN_FILE_BUTTON).click();
       cy.get(imports.importDataDialog.DIALOG).should('be.visible');
       cy.get(imports.importDataDialog.DIALOG_HEADER).should('contain', 'Import Data');
 
@@ -43,20 +43,20 @@ describe('Toolbar left', function() {
   describe('Add data dropdown', function() {
     it('Menu options', function() {
       // Setup
-      cy.get(core.Toolbar.addData.Menu.PANEL).should('not.exist');
+      cy.get(opensphere.Toolbar.addData.Menu.PANEL).should('not.exist');
 
       // Test
-      cy.get(core.Toolbar.addData.Menu.BUTTON).click();
-      cy.get(core.Toolbar.addData.Menu.PANEL).should('be.visible');
-      cy.get(core.Toolbar.addData.Menu.ADD_DATA).should('be.visible');
-      cy.get(core.Toolbar.addData.Menu.OPEN_FILE_OR_URL).should('be.visible');
-      cy.get(core.Toolbar.addData.Menu.ADD_CESIUM_ION_ASSET).should('be.visible');
-      cy.get(core.Toolbar.addData.Menu.RECENT_WORLD_IMAGERY).should('be.visible');
-      cy.get(core.Toolbar.addData.Menu.RECENT_STREET_MAP).should('be.visible');
+      cy.get(opensphere.Toolbar.addData.Menu.BUTTON).click();
+      cy.get(opensphere.Toolbar.addData.Menu.PANEL).should('be.visible');
+      cy.get(opensphere.Toolbar.addData.Menu.ADD_DATA).should('be.visible');
+      cy.get(opensphere.Toolbar.addData.Menu.OPEN_FILE_OR_URL).should('be.visible');
+      cy.get(opensphere.Toolbar.addData.Menu.ADD_CESIUM_ION_ASSET).should('be.visible');
+      cy.get(opensphere.Toolbar.addData.Menu.RECENT_WORLD_IMAGERY).should('be.visible');
+      cy.get(opensphere.Toolbar.addData.Menu.RECENT_STREET_MAP).should('be.visible');
 
       // Clean up
-      cy.get(core.Toolbar.addData.Menu.BUTTON).click();
-      cy.get(core.Toolbar.addData.Menu.PANEL).should('not.exist');
+      cy.get(opensphere.Toolbar.addData.Menu.BUTTON).click();
+      cy.get(opensphere.Toolbar.addData.Menu.PANEL).should('not.exist');
     });
 
     it('Add data dialog (via dropdown)', function() {
@@ -64,8 +64,8 @@ describe('Toolbar left', function() {
       cy.get(dialogs.addDataDialog.DIALOG).should('not.exist');
 
       // Test
-      cy.get(core.Toolbar.addData.Menu.BUTTON).click();
-      cy.get(core.Toolbar.addData.Menu.ADD_DATA).click();
+      cy.get(opensphere.Toolbar.addData.Menu.BUTTON).click();
+      cy.get(opensphere.Toolbar.addData.Menu.ADD_DATA).click();
       cy.get(dialogs.addDataDialog.DIALOG).should('be.visible');
 
       // Clean up
@@ -78,8 +78,8 @@ describe('Toolbar left', function() {
       cy.get(imports.importDataDialog.DIALOG).should('not.exist');
 
       // Test
-      cy.get(core.Toolbar.addData.Menu.BUTTON).click();
-      cy.get(core.Toolbar.addData.Menu.OPEN_FILE_OR_URL).click();
+      cy.get(opensphere.Toolbar.addData.Menu.BUTTON).click();
+      cy.get(opensphere.Toolbar.addData.Menu.OPEN_FILE_OR_URL).click();
       cy.get(imports.importDataDialog.DIALOG).should('be.visible');
 
       // Clean up
@@ -92,8 +92,8 @@ describe('Toolbar left', function() {
       cy.get(imports.importCesiumIonAssetDialog.DIALOG).should('not.exist');
 
       // Test
-      cy.get(core.Toolbar.addData.Menu.BUTTON).click();
-      cy.get(core.Toolbar.addData.Menu.ADD_CESIUM_ION_ASSET).click();
+      cy.get(opensphere.Toolbar.addData.Menu.BUTTON).click();
+      cy.get(opensphere.Toolbar.addData.Menu.ADD_CESIUM_ION_ASSET).click();
       cy.get(imports.importCesiumIonAssetDialog.DIALOG).should('be.visible');
 
       // Clean up
@@ -115,19 +115,19 @@ describe('Toolbar left', function() {
           .should('have.class', shared.Tree.ROW_CHECKED_CLASS);
 
       // Test
-      cy.get(core.Toolbar.addData.Menu.BUTTON).click();
-      cy.get(core.Toolbar.addData.Menu.RECENT_STREET_MAP).click();
+      cy.get(opensphere.Toolbar.addData.Menu.BUTTON).click();
+      cy.get(opensphere.Toolbar.addData.Menu.RECENT_STREET_MAP).click();
       cy.get(layers.layersTab.Tree.STREET_MAP_TILES).should('not.exist');
-      cy.get(core.Toolbar.addData.Menu.BUTTON).click();
-      cy.get(core.Toolbar.addData.Menu.RECENT_WORLD_IMAGERY).click();
+      cy.get(opensphere.Toolbar.addData.Menu.BUTTON).click();
+      cy.get(opensphere.Toolbar.addData.Menu.RECENT_WORLD_IMAGERY).click();
       cy.get(layers.layersTab.Tree.WORLD_IMAGERY_TILES).should('not.exist');
 
       // Clean up
-      cy.get(core.Toolbar.addData.Menu.BUTTON).click();
-      cy.get(core.Toolbar.addData.Menu.RECENT_STREET_MAP).click();
+      cy.get(opensphere.Toolbar.addData.Menu.BUTTON).click();
+      cy.get(opensphere.Toolbar.addData.Menu.RECENT_STREET_MAP).click();
       cy.get(layers.layersTab.Tree.STREET_MAP_TILES).should('be.visible');
-      cy.get(core.Toolbar.addData.Menu.BUTTON).click();
-      cy.get(core.Toolbar.addData.Menu.RECENT_WORLD_IMAGERY).click();
+      cy.get(opensphere.Toolbar.addData.Menu.BUTTON).click();
+      cy.get(opensphere.Toolbar.addData.Menu.RECENT_WORLD_IMAGERY).click();
       cy.get(layers.layersTab.Tree.WORLD_IMAGERY_TILES).should('be.visible');
       cy.get(layers.layersTab.Tree.STREET_MAP_TILES)
           .find(shared.Tree.ROW_CHECKBOX)
@@ -145,7 +145,7 @@ describe('Toolbar left', function() {
     // Test
     cy.get(layers.Dialog.DIALOG_CLOSE).click();
     cy.get(layers.Dialog.DIALOG).should('not.exist');
-    cy.get(core.Toolbar.LAYERS_TOGGLE_BUTTON).click();
+    cy.get(opensphere.Toolbar.LAYERS_TOGGLE_BUTTON).click();
     cy.get(layers.Dialog.DIALOG).should('be.visible');
 
     // Clean up
@@ -154,13 +154,13 @@ describe('Toolbar left', function() {
 
   it('Drawing tool', function() {
     // Setup
-    cy.get(core.Application.PAGE).type('+++++++++++++++++++++++++'); // zoom in
-    cy.get(core.Toolbar.Drawing.BUTTON)
-        .should('not.have.class', core.Toolbar.Drawing.BUTTON_IS_ACTIVE_CLASS);
+    cy.get(opensphere.Application.PAGE).type('+++++++++++++++++++++++++'); // zoom in
+    cy.get(opensphere.Toolbar.Drawing.BUTTON)
+        .should('not.have.class', opensphere.Toolbar.Drawing.BUTTON_IS_ACTIVE_CLASS);
 
     // Test
-    cy.get(core.Toolbar.Drawing.BUTTON).click();
-    cy.get(core.Toolbar.Drawing.BUTTON).should('have.class', core.Toolbar.Drawing.BUTTON_IS_ACTIVE_CLASS);
+    cy.get(opensphere.Toolbar.Drawing.BUTTON).click();
+    cy.get(opensphere.Toolbar.Drawing.BUTTON).should('have.class', opensphere.Toolbar.Drawing.BUTTON_IS_ACTIVE_CLASS);
 
     // TODO: The rest of this test needs to be completed.
     // There were problems getting the map to respond to mouse inputs.
@@ -172,30 +172,30 @@ describe('Toolbar left', function() {
     // an area was created
 
     // Clean up
-    cy.get(core.Toolbar.Drawing.BUTTON).click();
-    cy.get(core.Toolbar.Drawing.BUTTON)
-        .should('not.have.class', core.Toolbar.Drawing.BUTTON_IS_ACTIVE_CLASS);
+    cy.get(opensphere.Toolbar.Drawing.BUTTON).click();
+    cy.get(opensphere.Toolbar.Drawing.BUTTON)
+        .should('not.have.class', opensphere.Toolbar.Drawing.BUTTON_IS_ACTIVE_CLASS);
   });
 
   describe('Drawing tool menu', function() {
     it('Menu options', function() {
       // Setup
-      cy.get(core.Toolbar.Drawing.Menu.PANEL).should('not.exist');
+      cy.get(opensphere.Toolbar.Drawing.Menu.PANEL).should('not.exist');
 
       // Test
-      cy.get(core.Toolbar.Drawing.Menu.BUTTON).click();
-      cy.get(core.Toolbar.Drawing.Menu.PANEL).should('be.visible');
-      cy.get(core.Toolbar.Drawing.Menu.BOX).should('be.visible');
-      cy.get(core.Toolbar.Drawing.Menu.CIRCLE).should('be.visible');
-      cy.get(core.Toolbar.Drawing.Menu.POLYGON).should('be.visible');
-      cy.get(core.Toolbar.Drawing.Menu.LINE).should('be.visible');
-      cy.get(core.Toolbar.Drawing.Menu.CHOOSE_AREA).should('be.visible');
-      cy.get(core.Toolbar.Drawing.Menu.ENTER_COORDINATES).should('be.visible');
-      cy.get(core.Toolbar.Drawing.Menu.WHOLE_WORLD).should('be.visible');
+      cy.get(opensphere.Toolbar.Drawing.Menu.BUTTON).click();
+      cy.get(opensphere.Toolbar.Drawing.Menu.PANEL).should('be.visible');
+      cy.get(opensphere.Toolbar.Drawing.Menu.BOX).should('be.visible');
+      cy.get(opensphere.Toolbar.Drawing.Menu.CIRCLE).should('be.visible');
+      cy.get(opensphere.Toolbar.Drawing.Menu.POLYGON).should('be.visible');
+      cy.get(opensphere.Toolbar.Drawing.Menu.LINE).should('be.visible');
+      cy.get(opensphere.Toolbar.Drawing.Menu.CHOOSE_AREA).should('be.visible');
+      cy.get(opensphere.Toolbar.Drawing.Menu.ENTER_COORDINATES).should('be.visible');
+      cy.get(opensphere.Toolbar.Drawing.Menu.WHOLE_WORLD).should('be.visible');
 
       // Clean up
-      cy.get(core.Toolbar.Drawing.Menu.BUTTON).click();
-      cy.get(core.Toolbar.Drawing.Menu.PANEL).should('not.exist');
+      cy.get(opensphere.Toolbar.Drawing.Menu.BUTTON).click();
+      cy.get(opensphere.Toolbar.Drawing.Menu.PANEL).should('not.exist');
     });
 
     it('Choose area', function() {
@@ -203,8 +203,8 @@ describe('Toolbar left', function() {
       cy.get(dialogs.chooseAreaDialog.DIALOG).should('not.exist');
 
       // Test
-      cy.get(core.Toolbar.Drawing.Menu.BUTTON).click();
-      cy.get(core.Toolbar.Drawing.Menu.CHOOSE_AREA).click();
+      cy.get(opensphere.Toolbar.Drawing.Menu.BUTTON).click();
+      cy.get(opensphere.Toolbar.Drawing.Menu.CHOOSE_AREA).click();
       cy.get(dialogs.chooseAreaDialog.DIALOG).should('be.visible');
 
       // Clean up
@@ -217,8 +217,8 @@ describe('Toolbar left', function() {
       cy.get(dialogs.enterAreaCoordinatesDialog.DIALOG).should('not.exist');
 
       // Test
-      cy.get(core.Toolbar.Drawing.Menu.BUTTON).click();
-      cy.get(core.Toolbar.Drawing.Menu.ENTER_COORDINATES).click();
+      cy.get(opensphere.Toolbar.Drawing.Menu.BUTTON).click();
+      cy.get(opensphere.Toolbar.Drawing.Menu.ENTER_COORDINATES).click();
       cy.get(dialogs.enterAreaCoordinatesDialog.DIALOG).should('be.visible');
 
       // Clean up
@@ -234,8 +234,8 @@ describe('Toolbar left', function() {
       cy.get(layers.areasTab.Tree.WHOLE_WORLD_AREA).should('not.exist');
 
       // Test
-      cy.get(core.Toolbar.Drawing.Menu.BUTTON).click();
-      cy.get(core.Toolbar.Drawing.Menu.WHOLE_WORLD).click();
+      cy.get(opensphere.Toolbar.Drawing.Menu.BUTTON).click();
+      cy.get(opensphere.Toolbar.Drawing.Menu.WHOLE_WORLD).click();
       cy.get(layers.areasTab.Tree.WHOLE_WORLD_AREA).should('be.visible');
 
       // Clean up
@@ -250,12 +250,12 @@ describe('Toolbar left', function() {
 
   it('Measure tool', function() {
     // Setup
-    cy.get(core.Toolbar.Measure.BUTTON)
-        .should('not.have.class', core.Toolbar.Measure.BUTTON_IS_ACTIVE_CLASS);
+    cy.get(opensphere.Toolbar.Measure.BUTTON)
+        .should('not.have.class', opensphere.Toolbar.Measure.BUTTON_IS_ACTIVE_CLASS);
 
     // Test
-    cy.get(core.Toolbar.Measure.BUTTON).click();
-    cy.get(core.Toolbar.Measure.BUTTON).should('have.class', core.Toolbar.Measure.BUTTON_IS_ACTIVE_CLASS);
+    cy.get(opensphere.Toolbar.Measure.BUTTON).click();
+    cy.get(opensphere.Toolbar.Measure.BUTTON).should('have.class', opensphere.Toolbar.Measure.BUTTON_IS_ACTIVE_CLASS);
 
     // TODO: The rest of this test needs to be completed.
     // There were problems getting the map to respond to mouse inputs.
@@ -267,24 +267,24 @@ describe('Toolbar left', function() {
     // measurement was taken
 
     // Clean up
-    cy.get(core.Toolbar.Measure.BUTTON).click();
-    cy.get(core.Toolbar.Measure.BUTTON)
-        .should('not.have.class', core.Toolbar.Measure.BUTTON_IS_ACTIVE_CLASS);
+    cy.get(opensphere.Toolbar.Measure.BUTTON).click();
+    cy.get(opensphere.Toolbar.Measure.BUTTON)
+        .should('not.have.class', opensphere.Toolbar.Measure.BUTTON_IS_ACTIVE_CLASS);
   });
 
   it('Interpolation', function() {
     // Setup
-    cy.get(core.Toolbar.Measure.Menu.PANEL).should('not.exist');
+    cy.get(opensphere.Toolbar.Measure.Menu.PANEL).should('not.exist');
 
     // Test
-    cy.get(core.Toolbar.Measure.Menu.BUTTON).click();
-    cy.get(core.Toolbar.Measure.Menu.PANEL).should('be.visible');
-    cy.get(core.Toolbar.Measure.Menu.MEASURE_GEODESIC).should('be.visible');
-    cy.get(core.Toolbar.Measure.Menu.MEASURE_RHUMB_LINE).should('be.visible');
+    cy.get(opensphere.Toolbar.Measure.Menu.BUTTON).click();
+    cy.get(opensphere.Toolbar.Measure.Menu.PANEL).should('be.visible');
+    cy.get(opensphere.Toolbar.Measure.Menu.MEASURE_GEODESIC).should('be.visible');
+    cy.get(opensphere.Toolbar.Measure.Menu.MEASURE_RHUMB_LINE).should('be.visible');
 
     // Clean up
-    cy.get(core.Toolbar.Measure.Menu.BUTTON).click();
-    cy.get(core.Toolbar.Measure.Menu.PANEL).should('not.exist');
+    cy.get(opensphere.Toolbar.Measure.Menu.BUTTON).click();
+    cy.get(opensphere.Toolbar.Measure.Menu.PANEL).should('not.exist');
   });
 
   it('Clear', function() {
@@ -292,7 +292,7 @@ describe('Toolbar left', function() {
     cy.get(dialogs.clearDialog.DIALOG).should('not.exist');
 
     // Test
-    cy.get(core.Toolbar.CLEAR_BUTTON).click();
+    cy.get(opensphere.Toolbar.CLEAR_BUTTON).click();
     cy.get(dialogs.clearDialog.DIALOG).should('be.visible');
     cy.get(dialogs.clearDialog.Items.ALL).should('be.visible');
     cy.get(dialogs.clearDialog.Items.STATES).should('be.visible');

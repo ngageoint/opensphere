@@ -1,5 +1,5 @@
 /// <reference types="Cypress" />
-var core = require('../../support/selectors/core.js');
+var opensphere = require('../../support/selectors/opensphere.js');
 var dialogs = require('../../support/selectors/dialogs.js');
 var imports = require('../../support/selectors/imports.js');
 var layers = require('../../support/selectors/layers.js');
@@ -25,7 +25,7 @@ describe('Add ARCGIS server', function() {
 
   it('Load data from ARCGIS server', function() {
     // Add a server
-    cy.get(core.statusBar.SERVERS_BUTTON).click();
+    cy.get(opensphere.statusBar.SERVERS_BUTTON).click();
     cy.get(settings.settingsDialog.Tabs.dataServers.ADD_SERVER_BUTTON).click();
     cy.get(imports.importURLDialog.ENTER_A_URL_INPUT)
         .type('https://ags.auroragov.org/aurora/rest/services/OpenData/MapServer');
@@ -41,7 +41,7 @@ describe('Add ARCGIS server', function() {
     cy.get(settings.settingsDialog.DIALOG_CLOSE).click();
 
     // Load a layer
-    cy.get(core.Toolbar.addData.BUTTON).click();
+    cy.get(opensphere.Toolbar.addData.BUTTON).click();
     cy.get(dialogs.addDataDialog.DIALOG).within(function() {
       cy.get(dialogs.addDataDialog.SEARCH_INPUT).type('fire station');
       cy.get(shared.Tree.ROW_1).should('contain', 'Fire Stations');
