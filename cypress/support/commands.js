@@ -23,7 +23,7 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
-var core = require('../support/selectors/core.js');
+var opensphere = require('../support/selectors/opensphere.js');
 var layers = require('../support/selectors/layers.js');
 var index = require('./index.js');
 var shared = require('../support/selectors/shared.js');
@@ -45,15 +45,15 @@ addMatchImageSnapshotCommand({
   failureThreshold: 0.0005,
   failureThresholdType: 'percent',
   customSnapshotsDir: snapshotFolder,
-  blackout: [core.Toolbar.PANEL,
-    core.statusBar.PANEL,
+  blackout: [opensphere.Toolbar.PANEL,
+    opensphere.statusBar.PANEL,
     '.ol-overviewmap',
-    core.Map.ATTRIBUTION,
+    opensphere.Map.ATTRIBUTION,
     layers.Dialog.DIALOG,
     '.ol-zoom',
-    core.Map.ROTATION_BUTTON,
-    core.Map.MAP_MODE_BUTTON,
-    core.Application.ALERT]
+    opensphere.Map.ROTATION_BUTTON,
+    opensphere.Map.MAP_MODE_BUTTON,
+    opensphere.Application.ALERT]
 });
 
 Cypress.Commands.add('imageComparison', function(name) {
@@ -89,7 +89,7 @@ Cypress.Commands.add('login', function(clearLocalStorage) {
 });
 
 Cypress.Commands.add('upload', function(fileName) {
-  cy.get(core.Application.HIDDEN_FILE_INPUT).then(function(subject) {
+  cy.get(opensphere.Application.HIDDEN_FILE_INPUT).then(function(subject) {
     cy.fixture(fileName, 'base64')
         .then(Cypress.Blob.base64StringToBlob)
         .then(function(blob) {

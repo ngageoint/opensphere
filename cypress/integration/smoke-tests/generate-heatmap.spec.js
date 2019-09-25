@@ -1,5 +1,5 @@
 /// <reference types="Cypress" />
-var core = require('../../support/selectors/core.js');
+var opensphere = require('../../support/selectors/opensphere.js');
 var imports = require('../../support/selectors/imports.js');
 var layers = require('../../support/selectors/layers.js');
 var shared = require('../../support/selectors/shared.js');
@@ -15,7 +15,7 @@ describe('Generate heatmap from CSV', function() {
     cy.get(layers.Dialog.DIALOG).should('not.contain', 'Heatmap');
 
     // Upload a file
-    cy.get(core.Toolbar.addData.OPEN_FILE_BUTTON).click();
+    cy.get(opensphere.Toolbar.addData.OPEN_FILE_BUTTON).click();
     cy.get(imports.importDataDialog.DIALOG).should('be.visible');
     cy.upload('smoke-tests/generate-heatmap/chicago-traffic-counts.csv');
     cy.get(imports.importDataDialog.NEXT_BUTTON).click();

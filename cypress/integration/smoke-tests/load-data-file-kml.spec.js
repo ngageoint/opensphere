@@ -1,5 +1,5 @@
 /// <reference types="Cypress" />
-var core = require('../../support/selectors/core.js');
+var opensphere = require('../../support/selectors/opensphere.js');
 var imports = require('../../support/selectors/imports.js');
 var layers = require('../../support/selectors/layers.js');
 var shared = require('../../support/selectors/shared.js');
@@ -11,7 +11,7 @@ describe('KML import', function() {
 
   it('Load data from KML', function() {
     // Upload a file
-    cy.get(core.Toolbar.addData.OPEN_FILE_BUTTON).click();
+    cy.get(opensphere.Toolbar.addData.OPEN_FILE_BUTTON).click();
     cy.get(imports.importDataDialog.DIALOG).should('be.visible');
     cy.upload('smoke-tests/load-data-file-kml/test-features.kmz');
     cy.get(imports.importDataDialog.NEXT_BUTTON).click();
@@ -29,21 +29,21 @@ describe('KML import', function() {
     cy.imageComparison('features loaded');
 
     // Open the timeline and animate the data (view window animates)
-    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force: true}); // TODO: Remove force: true workaround after #732 fixed
-    cy.get(core.Timeline.PANEL).should('be.visible');
-    cy.get(core.Timeline.HISTOGRAM_POINTS).should('be.visible');
-    cy.get(core.Timeline.VIEW_WINDOW).invoke('position').then(function(elementPosition) {
-      cy.get(core.Timeline.PLAY_BUTTON).click();
-      cy.get(core.Timeline.VIEW_WINDOW).invoke('position').should('not.equal', elementPosition);
+    cy.get(opensphere.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force: true}); // TODO: Remove force: true workaround after #732 fixed
+    cy.get(opensphere.Timeline.PANEL).should('be.visible');
+    cy.get(opensphere.Timeline.HISTOGRAM_POINTS).should('be.visible');
+    cy.get(opensphere.Timeline.VIEW_WINDOW).invoke('position').then(function(elementPosition) {
+      cy.get(opensphere.Timeline.PLAY_BUTTON).click();
+      cy.get(opensphere.Timeline.VIEW_WINDOW).invoke('position').should('not.equal', elementPosition);
     });
-    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force: true}); // TODO: Remove force: true workaround after #732 fixed
-    cy.get(core.Timeline.PANEL).should('not.exist');
+    cy.get(opensphere.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force: true}); // TODO: Remove force: true workaround after #732 fixed
+    cy.get(opensphere.Timeline.PANEL).should('not.exist');
 
     // Open the timeline and animate the data (feature count changes)
-    cy.get(core.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force: true}); // TODO: Remove force: true workaround after #732 fixed
-    cy.get(core.Timeline.PANEL).should('be.visible');
-    cy.get(core.Timeline.PLAY_BUTTON).click();
-    cy.get(core.Timeline.PAUSE_BUTTON).click();
+    cy.get(opensphere.Toolbar.TIMELINE_TOGGLE_BUTTON).click({force: true}); // TODO: Remove force: true workaround after #732 fixed
+    cy.get(opensphere.Timeline.PANEL).should('be.visible');
+    cy.get(opensphere.Timeline.PLAY_BUTTON).click();
+    cy.get(opensphere.Timeline.PAUSE_BUTTON).click();
     cy.get(shared.Tree.ROW_4)
         .find(layers.layersTab.Tree.FEATURE_COUNT_TEXT)
         .invoke('text')
