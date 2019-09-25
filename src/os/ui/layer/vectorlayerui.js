@@ -334,13 +334,10 @@ os.ui.layer.VectorLayerUICtrl.prototype.loadPresets = function() {
   var nodes = this.getLayerNodes();
   if (nodes && nodes.length == 1) {
     var layer = nodes[0].getLayer();
-    var filterKey;
-    if (os.implements(layer, os.filter.IFilterable.ID)) {
-      filterKey = /** @type {os.filter.IFilterable} */ (layer).getFilterKey();
-    }
 
-    if (layer && filterKey) {
-      var promise = os.layer.preset.LayerPresetManager.getInstance().getPresets(filterKey);
+    if (layer) {
+      var id = layer.getId();
+      var promise = os.layer.preset.LayerPresetManager.getInstance().getPresets(id);
 
       if (promise) {
         promise.then(function(presets) {
