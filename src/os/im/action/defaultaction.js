@@ -80,6 +80,7 @@ os.im.action.default.load = function(layerId, files) {
               if (response) {
                 var parser = new os.im.action.FilterActionParser();
                 var importer = new os.ui.im.action.FilterActionImporter(parser, layerId, true);
+                importer.setIgnoreColumns(true);
                 importer.listenOnce(os.events.EventType.COMPLETE, function() {
                   var matched = importer.matched;
                   importer.dispose();
