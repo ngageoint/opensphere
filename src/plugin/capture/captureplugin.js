@@ -170,7 +170,7 @@ plugin.capture.CapturePlugin.prototype.renderFrame = function(opt_waitForLoad) {
     var waitForLoad = opt_waitForLoad || false;
     if (waitForLoad) {
       goog.Timer.callOnce(function() {
-        plugin.capture.onReady_(resolve);
+        plugin.capture.onReady(resolve);
       }, plugin.capture.CapturePlugin.WAIT_TIME);
     } else {
       resolve();
@@ -183,9 +183,8 @@ plugin.capture.CapturePlugin.prototype.renderFrame = function(opt_waitForLoad) {
  * Check if the application is ready to capture the screen.
  *
  * @param {Function} callback The function to call when ready to capture
- * @private
  */
-plugin.capture.onReady_ = function(callback) {
+plugin.capture.onReady = function(callback) {
   // Check if we are ready to take picture
   var ready = goog.array.every(os.MapContainer.getInstance().getLayers(), function(layer) {
     layer = /** @type {os.layer.ILayer} */ (layer);
@@ -198,7 +197,7 @@ plugin.capture.onReady_ = function(callback) {
   } else {
     // not ready, wait 100ms and try again
     goog.Timer.callOnce(function() {
-      plugin.capture.onReady_(callback);
+      plugin.capture.onReady(callback);
     }, plugin.capture.CapturePlugin.WAIT_TIME);
   }
 };
