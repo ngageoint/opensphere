@@ -25,6 +25,8 @@ goog.require('os.ui.windowCommonElements');
  * minHeight: The smallest vh that the element will take. Defaults to 20.
  * useMaxHeight: Set to true to use max-height property instead of height
  * padding: An optional amount of the vh to add to caculation to give some space around the element.
+ * omitOptionalCommonElements: Opt-out of being offset by application specific, additional elements.
+ * @see {os.ui.windowCommonOptionalElements} for more detail.
  *
  * @return {angular.Directive}
  */
@@ -36,7 +38,8 @@ os.ui.util.autoVHeightDirective = function() {
       'padding': '@?',
       'minHeight': '@?',
       'autovheightDisabled': '=?',
-      'useMaxHeight': '=?'
+      'useMaxHeight': '=?',
+      'omitOptionalCommonElements': '<?'
     },
     controller: os.ui.util.AutoVHeightCtrl
   };
@@ -168,9 +171,15 @@ os.ui.util.AutoVHeightCtrl.prototype.onResize_ = function() {
     var winHeight = window.innerHeight;
 
     var siblingHeight = 0;
-    goog.object.getValues(os.ui.windowCommonElements).forEach(function(sibling) {
+    os.ui.windowCommonElements.forEach(function(sibling) {
       siblingHeight += ($(/** @type {string} */ (sibling)).outerHeight(true));
     });
+
+    if (!this.scope_['omitOptionalCommonElements']) {
+      goog.object.getValues(os.ui.windowCommonOptionalElements).forEach(function(sibling) {
+        siblingHeight += ($(/** @type {string} */ (sibling)).outerHeight(true));
+      });
+    }
 
     if (this.scope_['siblings']) {
       $.makeArray($(this.scope_['siblings'])).forEach(function(sibling) {
@@ -199,7 +208,9 @@ os.ui.util.AutoVHeightCtrl.prototype.addResizeListeners_ = function() {
     this.vsm_.listen(goog.events.EventType.RESIZE, this.onResize_, false, this);
 
     // add resize to common elements
-    goog.object.getValues(os.ui.windowCommonElements).forEach(function(sibling) {
+    var allCommonElements = goog.array.clone(os.ui.windowCommonElements);
+    goog.object.extend(allCommonElements, os.ui.windowCommonOptionalElements);
+    allCommonElements.forEach(function(sibling) {
       os.ui.resize($(/** @type {string} */ (sibling)), this.resizeFn_);
     }.bind(this));
 
@@ -221,8 +232,10 @@ os.ui.util.AutoVHeightCtrl.prototype.removeResizeListeners_ = function() {
     os.dispatcher.unlisten(os.config.ThemeSettingsChangeEvent, this.onResize_, false, this);
     this.vsm_.unlisten(goog.events.EventType.RESIZE, this.onResize_, false, this);
 
-    // add resize to common elements
-    goog.object.getValues(os.ui.windowCommonElements).forEach(function(sibling) {
+    // remove resize from common elements
+    var allCommonElements = goog.array.clone(os.ui.windowCommonElements);
+    goog.array.extend(allCommonElements, os.ui.windowCommonOptionalElements);
+    allCommonElements.forEach(function(sibling) {
       if (this.resizeFn_) {
         os.ui.removeResize($(/** @type {string} */ (sibling)), this.resizeFn_);
       }
