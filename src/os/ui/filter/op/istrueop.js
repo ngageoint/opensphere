@@ -28,8 +28,7 @@ goog.inherits(os.ui.filter.op.IsTrue, os.ui.filter.op.Op);
  * @inheritDoc
  */
 os.ui.filter.op.IsTrue.prototype.getEvalExpression = function(v, literal) {
-  return '(!(typeof ' + v + '==="undefined"||' + v + '==null||' + v + '.length==0)&&(' +
-        v + '===true||' + v + '==1||(""+' + v + ').toLowerCase()=="true"))';
+  return '(' + v + '===true||' + v + '===1||String(' + v + ').toLowerCase()==="true")';
 };
 
 
