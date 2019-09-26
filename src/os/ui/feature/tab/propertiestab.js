@@ -176,8 +176,17 @@ os.ui.feature.tab.PropertiesTabCtrl.prototype.order = function(key) {
   var reverse = this.scope['reverse'];
 
   this['properties'].sort(function(a, b) {
-    var v1 = a[field].toString();
-    var v2 = b[field].toString();
+    if (a[field] == b[field]) {
+      return 0;
+    } else if (a[field] == null) {
+      return 1;
+    } else if (b[field] == null) {
+      return -1;
+    }
+
+    // remove span tags if they are present before comparison
+    var v1 = a[field].toString().replace(/<\/*span>/g, '');
+    var v2 = b[field].toString().replace(/<\/*span>/g, '');
     return goog.string.numerateCompare(v1, v2) * (reverse ? -1 : 1);
   });
 };

@@ -2,6 +2,7 @@ goog.provide('plugin.ogc.wfs.WFSLayerConfig');
 
 goog.require('goog.async.Deferred');
 goog.require('goog.string');
+goog.require('os.command.VectorLayerPreset');
 goog.require('os.im.mapping.AltMapping');
 goog.require('os.im.mapping.OrientationMapping');
 goog.require('os.im.mapping.RadiusMapping');
@@ -12,6 +13,7 @@ goog.require('os.im.mapping.TimeType');
 goog.require('os.im.mapping.time.DateTimeMapping');
 goog.require('os.layer.Vector');
 goog.require('os.layer.config.AbstractDataSourceLayerConfig');
+goog.require('os.layer.preset.LayerPresetManager');
 goog.require('os.ogc');
 goog.require('os.ogc.filter.OGCFilterCleaner');
 goog.require('os.ogc.wfs.DescribeFeatureLoader');
@@ -33,6 +35,7 @@ goog.require('plugin.ogc.ui.ogcLayerNodeUIDirective');
  */
 plugin.ogc.wfs.WFSLayerConfig = function() {
   plugin.ogc.wfs.WFSLayerConfig.base(this, 'constructor');
+  this.log = plugin.ogc.wfs.WFSLayerConfig.LOGGER_;
 
   /**
    * @type {boolean}
@@ -58,6 +61,14 @@ plugin.ogc.wfs.WFSLayerConfig = function() {
   this.lockable = true;
 };
 goog.inherits(plugin.ogc.wfs.WFSLayerConfig, os.layer.config.AbstractDataSourceLayerConfig);
+
+
+/**
+ * @type {goog.log.Logger}
+ * @private
+ * @const
+ */
+plugin.ogc.wfs.WFSLayerConfig.LOGGER_ = goog.log.getLogger('plugin.ogc.wfs.WFSLayerConfig');
 
 
 /**
@@ -447,8 +458,6 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.getLayer = function(source, options) {
 
 
 /**
- * CSV sources are not lockable.
- *
  * @inheritDoc
  */
 plugin.ogc.wfs.WFSLayerConfig.prototype.getSource = function(options) {
