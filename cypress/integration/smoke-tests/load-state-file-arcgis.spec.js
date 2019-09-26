@@ -1,5 +1,5 @@
 /// <reference types="Cypress" />
-var core = require('../../support/selectors/core.js');
+var opensphere = require('../../support/selectors/opensphere.js');
 var dialogs = require('../../support/selectors/dialogs.js');
 var imports = require('../../support/selectors/imports.js');
 var layers = require('../../support/selectors/layers.js');
@@ -24,9 +24,9 @@ describe('Import state file', function() {
 
   it('Load data from state file', function() {
     // Setup
-    cy.get(core.Toolbar.Date.INPUT).should('not.have.value', '2019-01-07');
-    cy.get(core.Map.MAP_MODE_BUTTON).should('contain', '2D');
-    cy.get(core.statusBar.COORDINATES_TEXT).should('contain', 'No coordinate');
+    cy.get(opensphere.Toolbar.Date.INPUT).should('not.have.value', '2019-01-07');
+    cy.get(opensphere.Map.MAP_MODE_BUTTON).should('contain', '2D');
+    cy.get(opensphere.statusBar.COORDINATES_TEXT).should('contain', 'No coordinate');
     cy.get(layers.Dialog.DIALOG).should('not.contain', 'Police Stations Features');
     cy.get(layers.Dialog.DIALOG).should('not.contain', 'Fire Hydrants Features');
     cy.get(layers.Dialog.DIALOG).should('not.contain', 'Police Stations Tiles');
@@ -39,7 +39,7 @@ describe('Import state file', function() {
     cy.get(layers.layersTab.TAB).click();
 
     // Test
-    cy.get(core.Toolbar.addData.OPEN_FILE_BUTTON).click();
+    cy.get(opensphere.Toolbar.addData.OPEN_FILE_BUTTON).click();
     cy.get(imports.importDataDialog.DIALOG).should('be.visible');
     cy.upload('smoke-tests/load-state-file-arcgis/test-state-arcgis_state.xml');
     cy.get(imports.importDataDialog.NEXT_BUTTON).click();
@@ -51,10 +51,10 @@ describe('Import state file', function() {
         .as('getFeatureDetails-13_second');
     cy.route('POST', '**/OpenData/MapServer/234/query', 'fx:/smoke-tests/load-state-file-arcgis/query-234-2.stub.json')
         .as('getFeatureDetails-234_second');
-    cy.get(core.Toolbar.Date.INPUT).should('have.value', '2019-01-07');
-    cy.get(core.Map.MAP_MODE_BUTTON).should('contain', '2D');
-    cy.get(core.Application.PAGE).trigger('mouseenter').trigger('mousemove');
-    cy.get(core.statusBar.COORDINATES_TEXT).should('contain', '+39');
+    cy.get(opensphere.Toolbar.Date.INPUT).should('have.value', '2019-01-07');
+    cy.get(opensphere.Map.MAP_MODE_BUTTON).should('contain', '2D');
+    cy.get(opensphere.Application.PAGE).trigger('mouseenter').trigger('mousemove');
+    cy.get(opensphere.statusBar.COORDINATES_TEXT).should('contain', '+39');
     cy.get(shared.Tree.ROW_4).should('contain', 'Police Stations Features (3)');
     cy.get(shared.Tree.ROW_5).should('contain', 'Fire Hydrants Features (747)');
     cy.get(shared.Tree.ROW_7)

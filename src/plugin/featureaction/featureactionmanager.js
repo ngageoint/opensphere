@@ -131,17 +131,9 @@ plugin.im.action.feature.Manager.prototype.addSource_ = function(source) {
       this.sourceListeners_[id] = ol.events.listen(/** @type {ol.events.EventTarget} */ (source),
           goog.events.EventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
 
-      // matching default actions depends on having columns for the source. columns may not be loaded yet when the
-      // source is added. if that's the case, process the items and wait for columns to be set before loading default
-      // actions.
-      var columns = source.getColumns();
-      if (columns && columns.length) {
-        this.loadDefaults(id).thenAlways(function() {
-          this.processItems(id);
-        }, this);
-      } else {
+      this.loadDefaults(id).thenAlways(function() {
         this.processItems(id);
-      }
+      }, this);
     }
   }
 };
@@ -196,16 +188,6 @@ plugin.im.action.feature.Manager.prototype.onSourcePropertyChange_ = function(ev
   var source = /** @type {os.source.ISource} */ (event.target);
   if (source) {
     switch (p) {
-      case os.source.PropertyChange.COLUMNS:
-        var id = source.getId();
-        var columns = event.getNewValue();
-        if (id && !this.defaultsLoaded[id] && columns && columns.length) {
-          // columns have been added to the source, load the default actions
-          this.loadDefaults(id).thenAlways(function() {
-            this.processItems(id);
-          }, this);
-        }
-        break;
       case os.source.PropertyChange.PREPROCESS_FEATURES:
         var features = /** @type {Array<!ol.Feature>|undefined} */ (event.getNewValue());
         if (features && features.length > 0) {
