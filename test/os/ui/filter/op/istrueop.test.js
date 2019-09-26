@@ -9,7 +9,7 @@ describe('os.ui.filter.op.IsTrue', function() {
 
   it('should generate the proper filter function expression', function() {
     // literal doesn't affect the expression
-    var expr = '(!(typeof v==="undefined"||v==null||v.length==0)&&(v===true||v==1||(""+v).toLowerCase()=="true"))';
+    var expr = '(v===true||v===1||String(v).toLowerCase()==="true")';
 
     expect(op.getEvalExpression('v', null)).toBe(expr);
     expect(op.getEvalExpression('v', '')).toBe(expr);
