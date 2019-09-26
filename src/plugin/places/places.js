@@ -85,7 +85,24 @@ plugin.places.ExportFields = [
  *
  * @type {!Array<string>}
  */
-plugin.places.SourceFields = plugin.file.kml.SOURCE_FIELDS.slice();
+plugin.places.SourceFields = [
+  plugin.file.kml.KMLField.NAME,
+  plugin.file.kml.KMLField.DESCRIPTION,
+  os.Fields.BEARING,
+  os.Fields.LAT,
+  os.Fields.LON,
+  os.Fields.LAT_DDM,
+  os.Fields.LON_DDM,
+  os.Fields.LAT_DMS,
+  os.Fields.LON_DMS,
+  os.Fields.MGRS,
+  os.Fields.SEMI_MAJOR,
+  os.Fields.SEMI_MINOR,
+  os.Fields.SEMI_MAJOR_UNITS,
+  os.Fields.SEMI_MINOR_UNITS,
+  os.Fields.TIME,
+  os.Fields.ORIENTATION
+];
 
 
 /**
