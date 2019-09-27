@@ -71,11 +71,14 @@ os.ui.im.AbstractMapperCtrl = function($scope, $element, $timeout) {
   col1['name'] = 'When the file contains...';
   col1['width'] = 405;
   col1['sortable'] = true;
+  col1['cssClass'] = 'd-flex flex-fill align-items-center';
   var col2 = new os.data.ColumnDefinition('mappedValue');
   col2['name'] = 'It becomes...';
   col2['width'] = 405;
   col2['formatter'] = this.mappedValueFormatter.bind(this);
   col2['sortable'] = false;
+  col2['cssClass'] = 'd-flex flex-fill align-items-center';
+
   /**
    * Grid columns.
    * @type {Array.<os.data.ColumnDefinition>}
