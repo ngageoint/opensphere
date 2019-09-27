@@ -561,9 +561,13 @@ os.xt.Peer.prototype.send = function(type, data, opt_to) {
 
   try {
     // do this in a try/catch in case localStorage is full so that we can let the user know
-    this.storage_.setItem(
-        ['xt', this.group_, opt_to, this.id_, Date.now()].join('.'),
-        os.xt.Peer.prepareSendData(type, data));
+    var event = /** @type {Event} */ ({'key': ['xt', this.group_, opt_to, this.id_, Date.now()].join('.'),
+      'newValue': os.xt.Peer.prepareSendData(type, data)});
+    this.storage_.setItem(event['key'], event['newValue']);
+    if (this.id_ == opt_to) {
+      // handle the event locally, we are intentionally sending to ourself but the event is ignored in onStorage_
+      this.handleMessage(event['newValue'], this.id_);
+    }
   } catch (e) {
     var logMsg = 'A cross-app communication event was unable to be sent. This usually happens because the data was ' +
         'too large or because the storage is corrupted.';

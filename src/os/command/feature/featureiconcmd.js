@@ -1,6 +1,7 @@
 goog.provide('os.command.FeatureIcon');
 
 goog.require('os.command.AbstractFeatureStyle');
+goog.require('os.events.PropertyChangeEvent');
 goog.require('os.metrics');
 goog.require('os.ui.file.kml');
 
@@ -48,4 +49,17 @@ os.command.FeatureIcon.prototype.applyValue = function(configs, value) {
   }
 
   os.command.FeatureIcon.base(this, 'applyValue', configs, value);
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.command.FeatureIcon.prototype.finish = function(configs) {
+  // dispatch the color change event on the source for the histogram
+  var feature = this.getFeature();
+
+  feature.dispatchEvent(new os.events.PropertyChangeEvent('colors'));
+
+  os.command.FeatureIcon.base(this, 'finish', configs);
 };
