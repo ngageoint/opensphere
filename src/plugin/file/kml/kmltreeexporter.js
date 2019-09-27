@@ -158,7 +158,7 @@ plugin.file.kml.KMLTreeExporter.prototype.getIcon = function(item) {
 
     // may be an array of configs - use the first one (feature style)
     if (goog.isArray(config)) {
-      config = config[0];
+      config = feature instanceof os.feature.DynamicFeature ? config[1] : config[0];
     }
 
     if (config && config['image']) {
@@ -249,14 +249,7 @@ plugin.file.kml.KMLTreeExporter.prototype.getProperties = function(item) {
  * @inheritDoc
  */
 plugin.file.kml.KMLTreeExporter.prototype.getStyleType = function(item) {
-  var type = os.ui.file.kml.StyleType.DEFAULT;
-
-  var geometry = this.getGeometry(item);
-  if (geometry && geometry.getType() == ol.geom.GeometryType.POINT) {
-    type = os.ui.file.kml.StyleType.ICON;
-  }
-
-  return type;
+  return os.ui.file.kml.StyleType.ICON;
 };
 
 
