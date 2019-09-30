@@ -11,8 +11,8 @@ goog.require('goog.math.RangeSet');
 goog.require('os.map');
 goog.require('os.state.XMLState');
 goog.require('os.time');
+goog.require('os.time.TimeRange');
 goog.require('os.time.TimelineController');
-goog.require('os.time.period');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.events.UIEventType');
 goog.require('os.xml');
@@ -43,9 +43,13 @@ os.state.v4.TimeTag = {
   SLICE_INTERVAL: 'sliceInterval',
   INTERVAL_START: 'intervalStart',
   INTERVAL_END: 'intervalEnd',
-  LOCK: 'lock'
+  LOCK: 'lock',
+  LOCK_RANGE: 'lockRange',
+  FADE: 'fade',
+  AUTO_CONFIGURE: 'autoConfigure',
+  COLLAPSED: 'timelineCollapsed',
+  VISIBLE_RANGE: 'visibleRange'
 };
-
 
 
 /**
@@ -199,9 +203,24 @@ os.state.v4.TimeState.prototype.loadInternal = function(obj, id) {
       tlc.setSkip(skip);
     }
 
+    var autoConfigure = this.readBoolean_(os.state.v4.TimeTag.AUTO_CONFIGURE, obj);
+    if (autoConfigure !== null) {
+      tlc.setAutoConfigure(autoConfigure);
+    }
+
     var lock = this.readLock_(obj);
     if (lock !== null) {
       tlc.setLock(lock);
+    }
+
+    var lockRange = this.readRange_(os.state.v4.TimeTag.LOCK_RANGE, obj);
+    if (lockRange !== null) {
+      tlc.setLockRange(lockRange.end - lockRange.start);
+    }
+
+    var fade = this.readFade_(obj);
+    if (fade !== null) {
+      tlc.setFade(fade);
     }
 
     // force the date control to update from the timeline controller
@@ -214,8 +233,20 @@ os.state.v4.TimeState.prototype.loadInternal = function(obj, id) {
       // force the timeline panel to update from the timeline controller
       var tlContainer = goog.dom.getElementByClass('js-timeline');
       if (tlContainer) {
-        // otherwise force it to update the viewable range if it was already open
-        angular.element(tlContainer).scope()['timelineCtrl'].updateTimeline(true);
+        var tlCtrl = angular.element(tlContainer).scope()['timelineCtrl'];
+        if (tlCtrl && animationEl) {
+          var collapsed = this.readBoolean_(os.state.v4.TimeTag.COLLAPSED, animationEl);
+          if (collapsed != null) {
+            tlCtrl.setCollapsed(collapsed);
+          }
+
+          var timeRange = this.readVisibleRange_(animationEl);
+          if (timeRange != null) {
+            angular.element(tlContainer).children().scope()['timeline'].setVisibleRange(timeRange);
+          }
+        } else {
+          tlCtrl.updateTimeline(true);
+        }
       }
 
       var stateEl = animationEl.querySelector(os.state.v4.TimeTag.PLAY_STATE);
@@ -248,8 +279,15 @@ os.state.v4.TimeState.prototype.saveInternal = function(options, rootObj) {
   try {
     var tlc = os.time.TimelineController.getInstance();
 
-    var currentRange = new goog.math.Range(tlc.getCurrent() - tlc.getOffset(), tlc.getCurrent());
-    var advance = os.time.period.toTimePeriod(tlc.getSkip());
+    var currentStart = tlc.getCurrent() - tlc.getOffset();
+    var currentRange = new goog.math.Range(currentStart, tlc.getCurrent());
+    var advance = moment.duration(tlc.getSkip()).toISOString();
+    if (tlc.getLock()) {
+      // if the lock is used, save the lock range off
+      var lockRange = new goog.math.Range(currentStart, currentStart + tlc.getLockRange());
+      os.xml.appendElement(os.state.v4.TimeTag.LOCK_RANGE, rootObj,
+          this.rangeToDateFormatString_(lockRange));
+    }
 
     // Root level interval is the full animation range.
     os.xml.appendElement(os.state.v4.TimeTag.INTERVAL, rootObj,
@@ -280,7 +318,20 @@ os.state.v4.TimeState.prototype.saveInternal = function(options, rootObj) {
       var animation = os.xml.appendElement(os.state.v4.TimeTag.ANIMATION, rootObj);
       os.xml.appendElement(os.state.v4.TimeTag.MS_PER_FRAME, animation, millisPerFrame);
       os.xml.appendElement(os.state.v4.TimeTag.PLAY_STATE, animation, playState);
+
+      var tlContainer = goog.dom.getElementByClass('js-timeline');
+      if (tlContainer) {
+        os.xml.appendElement(os.state.v4.TimeTag.COLLAPSED, animation, os.ui.timeline.AbstractTimelineCtrl.collapsed);
+        var visibleRange = angular.element(tlContainer).children().scope()['timeline'].getVisibleRange();
+        os.xml.appendElement(os.state.v4.TimeTag.VISIBLE_RANGE, animation,
+            this.rangeToDateFormatString_(new goog.math.Range(visibleRange.getStart(), visibleRange.getEnd())));
+      }
     }
+
+    var fade = moment.duration(tlc.getFade() ? tlc.getOffset() : 0).toISOString();
+    var fadeEl = os.xml.appendElement(os.state.v4.TimeTag.FADE, rootObj);
+    os.xml.appendElement('in', fadeEl, fade);
+    os.xml.appendElement('out', fadeEl, fade);
 
     if (tlc.hasSliceRanges()) {
       rootObj.appendChild(this.sliceRangesToXml_(tlc.getSliceRanges()));
@@ -288,6 +339,7 @@ os.state.v4.TimeState.prototype.saveInternal = function(options, rootObj) {
 
     os.xml.appendElement(os.state.v4.TimeTag.DURATION, rootObj, tlc.getDuration());
     os.xml.appendElement(os.state.v4.TimeTag.LOCK, rootObj, tlc.getLock());
+    os.xml.appendElement(os.state.v4.TimeTag.AUTO_CONFIGURE, rootObj, tlc.getAutoConfigure());
 
     this.saveComplete(options, rootObj);
   } catch (e) {
@@ -510,10 +562,41 @@ os.state.v4.TimeState.prototype.readFps_ = function(element) {
  * @private
  */
 os.state.v4.TimeState.prototype.readCurrent_ = function(element) {
-  var currentEl = element.querySelector(os.state.v4.TimeTag.CURRENT);
-  var current = currentEl ? currentEl.textContent : undefined;
-  if (current) {
-    return this.intervalStringToRange_(current);
+  return this.readRange_(os.state.v4.TimeTag.CURRENT, element);
+};
+
+
+/**
+ * Reads a range element.
+ *
+ * @param {!string} tag
+ * @param {!Element} element
+ * @return {goog.math.Range}
+ * @private
+ */
+os.state.v4.TimeState.prototype.readRange_ = function(tag, element) {
+  var rangeEl = element.querySelector(tag);
+  var range = rangeEl ? rangeEl.textContent : undefined;
+  if (range) {
+    return this.intervalStringToRange_(range);
+  }
+  return null;
+};
+
+
+/**
+ * Reads the visible range element.
+ *
+ * @param {!Element} element
+ * @return {os.time.TimeRange}
+ * @private
+ */
+os.state.v4.TimeState.prototype.readVisibleRange_ = function(element) {
+  var currentEl = element.querySelector(os.state.v4.TimeTag.VISIBLE_RANGE);
+  var visibleRange = currentEl ? currentEl.textContent : undefined;
+  if (visibleRange) {
+    var range = this.intervalStringToRange_(visibleRange);
+    return new os.time.TimeRange(range.start, range.end);
   }
   return null;
 };
@@ -528,10 +611,11 @@ os.state.v4.TimeState.prototype.readCurrent_ = function(element) {
 os.state.v4.TimeState.prototype.readSkip_ = function(element) {
   var skipEl = element.querySelector(os.state.v4.TimeTag.ADVANCE);
   if (skipEl) {
-    return os.time.period.toMillis(skipEl.textContent);
+    return moment.duration(skipEl.textContent).asMilliseconds();
   }
   return null;
 };
+
 
 /**
  * Reads the lock element.
@@ -540,9 +624,52 @@ os.state.v4.TimeState.prototype.readSkip_ = function(element) {
  * @private
  */
 os.state.v4.TimeState.prototype.readLock_ = function(element) {
-  var lockElement = element.querySelector(os.state.v4.TimeTag.LOCK);
-  if (lockElement) {
-    return lockElement.textContent == 'true';
+  return this.readBoolean_(os.state.v4.TimeTag.LOCK, element);
+};
+
+
+/**
+ * Reads the fade element.
+ * @param {!Element} element
+ * @return {?boolean}
+ * @private
+ */
+os.state.v4.TimeState.prototype.readFade_ = function(element) {
+  var fadeEl = element.querySelector(os.state.v4.TimeTag.FADE);
+  if (fadeEl) {
+    var fadeIn = 0;
+    var fadeOut = 0;
+
+    var fadeInEl = fadeEl.querySelector('in');
+    if (fadeInEl) {
+      fadeIn = moment.duration(fadeInEl.textContent).asMilliseconds();
+    }
+
+    var fadeOutEl = fadeEl.querySelector('out');
+    if (fadeOutEl) {
+      fadeOut = moment.duration(fadeOutEl.textContent).asMilliseconds();
+    }
+
+    if (fadeIn != 0 || fadeOut != 0) {
+      return true;
+    }
+    return false;
+  }
+  return null;
+};
+
+
+/**
+ * Reads a boolean element.
+ * @param {!string} tag
+ * @param {!Element} element
+ * @return {?boolean}
+ * @private
+ */
+os.state.v4.TimeState.prototype.readBoolean_ = function(tag, element) {
+  var booleanElement = element.querySelector(tag);
+  if (booleanElement) {
+    return booleanElement.textContent == 'true';
   }
   return null;
 };
