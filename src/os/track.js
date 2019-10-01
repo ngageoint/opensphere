@@ -101,7 +101,7 @@ os.track.AddOptions;
  *   color: (string|undefined),
  *   name: (string|undefined),
  *   sortField: (string|undefined),
- *   label: (string|undefined),
+ *   label: (string|null|undefined),
  *   includeMetadata: (boolean|undefined),
  *   useLayerStyle: (boolean|undefined)
  * }}
@@ -408,13 +408,15 @@ os.track.createTrack = function(options) {
   }
   track.set(os.style.StyleType.FEATURE, [trackStyle, currentStyle]);
 
-  // configure default label for the track
-  os.feature.showLabel(track);
-  var labelStyle = {
-    'column': options.label || os.Fields.LOWERCASE_NAME,
-    'showColumn': false
-  };
-  currentStyle[os.style.StyleField.LABELS] = [labelStyle];
+  if (options.label !== null) {
+    // configure default label for the track
+    os.feature.showLabel(track);
+    var labelStyle = {
+      'column': options.label || os.Fields.LOWERCASE_NAME,
+      'showColumn': false
+    };
+    currentStyle[os.style.StyleField.LABELS] = [labelStyle];
+  }
 
   // display the current position as an icon
   track.set(os.style.StyleField.SHAPE, os.style.ShapeType.ICON);
@@ -1502,6 +1504,7 @@ os.track.splitIntoTracks = function(options) {
             name: id,
             features: bucketFeatures,
             includeMetadata: true,
+            label: null,
             useLayerStyle: true
           });
 
