@@ -1,0 +1,17 @@
+<div class="d-flex flex-column flex-fill">
+  <p ng-if="filesStep.loading">Unzipping file(s)...</p>
+  <p ng-if="!filesStep.loading">Please select file(s) to import</p>
+
+  <form name="filesForm" novalidate>
+    <!-- TODO repeat for all files in the ZIP -->
+    <div class="form-group form-row" ng-repeat="file in filesStep.config_.files">
+      <label class="form-label">
+        <input type="checkbox" ng-model="file.selected"></input>
+        <i class="fa fa-exclamation-triangle text-warning" ng-if="!file.valid"></i>
+        {{file.filename}}
+      </label>
+      <small class="form-text invalid-feedback" ng-if="!file.valid">ERROR {{file.error}}</small>
+    </div>
+  </form>
+</div>
+  
