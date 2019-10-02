@@ -264,6 +264,13 @@ os.source.Vector = function(opt_options) {
   this.unprocessTimer = new goog.async.Delay(this.onUnprocessTimer_, 250, this);
 
   /**
+   * Delay to reduce frequency of reindexing the time model.
+   * @type {goog.async.Delay}
+   * @protected
+   */
+  this.reindexTimer = new goog.async.Delay(this.reindexTimeModel_, 100, this);
+
+  /**
    * @type {os.time.TimelineController}
    * @protected
    */
@@ -467,6 +474,9 @@ os.source.Vector.prototype.disposeInternal = function() {
   goog.dispose(this.unprocessTimer);
   this.unprocessTimer = null;
   this.unprocessQueue_.length = 0;
+
+  goog.dispose(this.reindexTimer);
+  this.reindexTimer = null;
 
   if (this.timeModel) {
     this.timeModel.dispose();
@@ -1689,7 +1699,21 @@ os.source.Vector.prototype.getTimeModel = function() {
  * Reindex the time model with current features/times.
  */
 os.source.Vector.prototype.reindexTimeModel = function() {
+  if (this.reindexTimer && !this.reindexTimer.isActive()) {
+    this.reindexTimer.start();
+  }
+};
+
+
+/**
+ * Reindex the time model with current features/times.
+ * @private
+ */
+os.source.Vector.prototype.reindexTimeModel_ = function() {
   if (this.timeModel) {
+    // process any pending features before reindexing the model to avoid double adds
+    this.processNow();
+
     this.rangeCollections_ = {};
     this.timeModel.clear();
     this.timeModel.add(this.getFeatures());
