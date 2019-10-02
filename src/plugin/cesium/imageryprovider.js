@@ -20,7 +20,7 @@ goog.require('plugin.cesium.TileGridTilingScheme');
 plugin.cesium.ImageryProvider = function(source, layer, opt_fallbackProj) {
   /** @suppress {invalidCasts} */
   plugin.cesium.ImageryProvider.base(this, 'constructor',
-    /** @type {!ol.source.TileImage} */ (source), opt_fallbackProj);
+      /** @type {!ol.source.TileImage} */ (source), opt_fallbackProj);
 
   /**
    * @type {boolean}
