@@ -69,5 +69,4 @@ plugin.file.zip.ui.ZIPImportUI.prototype.launchUI = function(file, opt_config) {
     var template = '<zipimport resize-with="' + os.ui.windowSelector.WINDOW + '"></zipimport>';
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }); // unzip and set the UI
-
 };

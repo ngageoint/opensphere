@@ -42,6 +42,10 @@ ehthumbs.db
 Thumbs.db
 
 
+# yarn generated files #
+########################
+yarn.lock
+
 # node generated files #
 ########################
 package-lock.json

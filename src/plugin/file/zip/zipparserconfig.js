@@ -36,11 +36,11 @@ plugin.file.zip.ZIPParserConfig.prototype.update = function(callback) {
   this['parsing'] = true;
 
   var parser = new plugin.file.zip.ZIPParser(this);
-  
+
   goog.events.listenOnce(parser, os.events.EventType.COMPLETE, goog.bind(function() {
     var files = parser.getFiles();
     if (files) {
-        for (var i = 0; i < files.length; i++) this['files'].push(files[i]);
+      for (var i = 0; i < files.length; i++) this['files'].push(files[i]);
     }
     this['parsing'] = false;
 
@@ -50,5 +50,4 @@ plugin.file.zip.ZIPParserConfig.prototype.update = function(callback) {
   }, this), false, this);
 
   parser.setSource(this['file'].getContent());
-
 };
