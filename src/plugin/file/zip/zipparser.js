@@ -49,13 +49,6 @@ plugin.file.zip.ZIPParser = function(config) {
    * @private
    */
   this.source_ = [];
-
-  /**
-   * @type {function}
-   * @public
-   */
-  this.unzipCallback = null;
-
 };
 goog.inherits(plugin.file.zip.ZIPParser, os.parse.AsyncZipParser);
 
@@ -222,25 +215,23 @@ plugin.file.zip.ZIPParser.prototype.createZipReader = function(source) {
  * @inheritDoc
  */
 plugin.file.zip.ZIPParser.prototype.handleZipEntries = function(entries) {
-  if (goog.isNull(entries) || entries.length == 0) {
+  if (typeof entries == 'undefined' || entries === null || entries.length == 0) {
     this.logWarning_('No file(s) found in ZIP!');
   } else {
     for (var i = 0, n = entries.length; i < n; i++) {
       var entry = entries[i];
 
-      entry.isLast = (i == (n-1));
+      entry.isLast = (i == (n - 1));
 
       // if the entry is a supported type, build an "entry" object and queue up the content import
       entry.getData(new zip.ArrayBufferWriter(), this.processZIPEntry_.bind(this, entry));
-
     }
-
   }
 };
 
 
 /**
- * @param {*} entry
+ * @param {Object} entry
  * @param {*} content
  * @private
  */
@@ -250,14 +241,14 @@ plugin.file.zip.ZIPParser.prototype.processZIPEntry_ = function(entry, content) 
     reader.onload = this.handleZIPText_.bind(this, entry);
     reader.readAsText(new Blob([content]));
   } else {
-    goog.log.error(this.log_, 'There was a problem unzipping the file!');
-    this.onError(); 
+    this.logError_('There was a problem unzipping the file!');
+    this.onError();
   }
 };
 
 
 /**
- * @param {*} entry
+ * @param {Object} entry
  * @param {Event} event
  * @private
  */
@@ -266,10 +257,9 @@ plugin.file.zip.ZIPParser.prototype.handleZIPText_ = function(entry, event) {
 
   if (content && typeof content === 'string') {
     var dst = this.toUIObject_(entry, content);
-    if (!goog.isNull(dst)) this.files_.push(dst);
-
+    if (dst != null) this.files_.push(dst);
   } else {
-    goog.log.error(this.log_, 'There was a problem reading the ZIP content!');
+    this.logError_('There was a problem reading the ZIP content!');
     this.onError();
   }
 
@@ -282,19 +272,21 @@ plugin.file.zip.ZIPParser.prototype.handleZIPText_ = function(entry, event) {
 
 /**
  * @param {Object} src
+ * @param {*} content
+ * @return {Object|null}
  * @private
  */
 plugin.file.zip.ZIPParser.prototype.toUIObject_ = function(src, content) {
   // TODO check import support for the file
-  if (!src.filename) return;
-  
+  if (!src.filename) return null;
+
   var file = new os.file.File();
-        
-  file.setContent(content);
-  file.setContentType('application/csv');
+
+  file.setContent(String(content));
+  file.setContentType('text/csv');
   file.setFileName(src.filename);
-  file.setUrl('local://'+src.filename);
-  file.setType('application/csv');
+  file.setUrl('local://' + src.filename);
+  file.setType('text/csv');
 
   // turn this into a better object for the UI
   return {

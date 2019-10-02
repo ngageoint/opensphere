@@ -4,20 +4,19 @@ goog.provide('plugin.file.zip.ui.ZIPFilesStepCtrl');
 goog.require('goog.log');
 goog.require('os.defines');
 goog.require('os.file.File');
-goog.require('os.parse.FileParserConfig');
 goog.require('os.ui.Module');
 goog.require('os.ui.file.method.UrlMethod');
 goog.require('os.ui.wiz.step.AbstractWizardStep');
 goog.require('os.ui.wiz.step.WizardStepEvent');
 goog.require('os.ui.wiz.wizardPreviewDirective');
-
 goog.require('plugin.file.zip');
+goog.require('plugin.file.zip.ZIPParserConfig');
 
 
 /**
  * ZIP import file selection step
  *
- * @extends {os.ui.wiz.step.AbstractWizardStep.<os.parse.FileParserConfig>}
+ * @extends {os.ui.wiz.step.AbstractWizardStep.<plugin.file.zip.ZIPParserConfig>}
  * @constructor
  */
 plugin.file.zip.ui.ZIPFilesStep = function() {
@@ -89,10 +88,10 @@ plugin.file.zip.ui.ZIPFilesStepCtrl = function($scope) {
   this.scope_ = $scope;
 
   /**
-   * @type {os.parse.FileParserConfig}
+   * @type {plugin.file.zip.ZIPParserConfig}
    * @private
    */
-  this.config_ = /** @type {os.parse.FileParserConfig} */ ($scope['config']);
+  this.config_ = /** @type {plugin.file.zip.ZIPParserConfig} */ ($scope['config']);
 
   /**
    * @type {boolean}
@@ -111,8 +110,6 @@ plugin.file.zip.ui.ZIPFilesStepCtrl = function($scope) {
   var msg = 'SUCCESS!  Initialized zip -- Files Step';
 
   goog.log.info(plugin.file.zip.ui.ZIPFilesStepCtrl.LOGGER_, msg);
-
-  console.log(msg, this, this.config_);
 };
 
 
@@ -141,7 +138,7 @@ plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.destroy_ = function() {
  */
 plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.validate_ = function() {
   this['valid'] = true;
-  this['loading'] = this.config_.parsing;
+  this['loading'] = this.config_['parsing'];
 
   this.scope_.$emit(os.ui.wiz.step.WizardStepEvent.VALIDATE, this['valid']);
 
