@@ -4,8 +4,10 @@ goog.provide('plugin.file.zip.ui.zipImportDirective');
 goog.require('os.defines');
 goog.require('os.file.File');
 goog.require('os.ui.Module');
+goog.require('os.ui.im.DuplicateImportProcess');
 goog.require('os.ui.im.FileImportWizard');
-goog.require('os.ui.im.ImportProcess');
+goog.require('os.ui.im.ImportEvent');
+goog.require('os.ui.im.ImportEventType');
 goog.require('os.ui.im.ImportManager');
 goog.require('os.ui.wiz.wizardDirective');
 goog.require('plugin.file.zip.ZIPDescriptor');
@@ -139,19 +141,21 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.importer = function() {
   if (typeof this.importers_ == 'undefined' || this.importers_ == null || this.importers_.length == 0) return;
 
   var im = this.importers_.splice(0,1)[0]; //remove the current importer from the queue
-  var process = new os.ui.im.ImportProcess();
+  var process = new os.ui.im.DuplicateImportProcess();
+  var event = new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE, im.file);
 
-  process.setEvent({file: im.file, config: this.config});
+  process.setEvent(event);
 
   //initialize and chain next import on callback
   process.begin().addCallbacks(
     this.importer,
-    this.importer, // function() { console.log('ERROR!', arguments)},
+    function() {
+      // TODO let user know that the file failed and why... then continue
+      console.log('ERROR!', arguments); 
+      this.importer(); 
+    },
     this
   );
-
-  //execute
-  //process.importFile();
 };
 
 
@@ -161,7 +165,6 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.importer = function() {
  * @override
  */
 plugin.file.zip.ui.ZIPImportCtrl.prototype.storeAndFinish = function(descriptor) {
-  console.log('double-woot!', this);
   var entries = this.config['files'];
 
   if (!entries) {
