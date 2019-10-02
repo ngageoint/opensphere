@@ -9,6 +9,7 @@ goog.require('ol.source.VectorTile');
 goog.require('os.layer.VectorTile');
 goog.require('os.layer.config.AbstractLayerConfig');
 goog.require('os.net');
+goog.require('os.net.Request');
 
 
 /**
@@ -96,7 +97,7 @@ plugin.vectortile.VectorTileLayerConfig.prototype.initializeConfig = function(op
     }
   }
 
-  // the correct none equivalent for crossOrigin in OL3 is null
+  // the correct none equivalent for crossOrigin in OL is null
   if (this.crossOrigin === os.net.CrossOrigin.NONE) {
     this.crossOrigin = null;
     options['crossOrigin'] = null;
@@ -164,9 +165,43 @@ plugin.vectortile.VectorTileLayerConfig.prototype.createLayer = function(options
   goog.log.fine(plugin.vectortile.VectorTileLayerConfig.LOGGER_,
       'layer ' + this.id + ' crossOrigin=' + this.crossOrigin);
 
-
   var layer = this.getLayer(source, options);
   options['skipStyle'] = true;
   layer.restore(options);
+
+  if (options['styleUrl'] && options['sources']) {
+    new os.net.Request(/** @type {string} */ (options['styleUrl'])).getPromise()
+        .then(function(resp) {
+          return JSON.parse(resp);
+        }).then(function(glStyle) {
+          var glStyleFunction = parseMapboxStyle(glStyle, /** @type {string|Array<string>} */ (options['sources']));
+
+          /**
+           * @param {ol.Feature|ol.render.Feature} feature
+           * @param {number} resolution
+           * @return {ol.style.Style|Array<ol.style.Style>}
+           */
+          var styleFunction = function(feature, resolution) {
+            var styleConfig = glStyleFunction(feature.getProperties(), feature.getGeometry().getType(),
+                resolution);
+
+            if (Array.isArray(styleConfig)) {
+              if (styleConfig.length === 1) {
+                styleConfig = styleConfig[0];
+              } else {
+                styleConfig = ol.obj.assign.apply(null, styleConfig);
+              }
+            }
+
+            return os.style.StyleManager.getInstance().getOrCreateStyle(styleConfig);
+          };
+
+          layer.setStyle(styleFunction);
+        }).thenCatch(function(e) {
+          goog.log.error(plugin.vectortile.VectorTileLayerConfig.LOGGER_,
+              'layer ' + layer.getId() + ' could not load style from ' + options['styleUrl']);
+        });
+  }
+
   return layer;
 };
