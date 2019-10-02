@@ -387,4 +387,33 @@ describe('os.track', function() {
       expect(tracks[i]).toBe(featuresC[i - 2]);
     }
   });
+
+  it('truncates a track to a fixed size', function() {
+    var features = generateFeatures(20, os.data.RecordField.TIME, Date.now());
+    var track = os.track.createTrack({
+      features: features
+    });
+
+    var geometry = track.getGeometry();
+    expect(geometry.flatCoordinates.length).toBe(20 * geometry.stride);
+
+    var lastTimeValue = geometry.flatCoordinates[geometry.flatCoordinates.length - 1];
+
+    // does nothing if the size is greater than the number of coordinates
+    os.track.truncate(track, 50);
+    geometry = track.getGeometry();
+    expect(geometry.flatCoordinates.length).toBe(20 * geometry.stride);
+    expect(geometry.flatCoordinates[geometry.flatCoordinates.length - 1]).toBe(lastTimeValue);
+
+    // truncates to the number of coordinates specified
+    os.track.truncate(track, 10);
+    geometry = track.getGeometry();
+    expect(geometry.flatCoordinates.length).toBe(10 * geometry.stride);
+    expect(geometry.flatCoordinates[geometry.flatCoordinates.length - 1]).toBe(lastTimeValue);
+
+    // truncates to zero if a negative value is provided
+    os.track.truncate(track, 0);
+    geometry = track.getGeometry();
+    expect(geometry.flatCoordinates.length).toBe(0);
+  });
 });
