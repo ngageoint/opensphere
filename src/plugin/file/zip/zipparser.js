@@ -15,6 +15,7 @@ goog.require('ol.geom.Point');
 goog.require('ol.geom.Polygon');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.file');
+goog.require('os.file.mime');
 goog.require('os.file.mime.text');
 goog.require('os.file.mime.zip');
 goog.require('os.geo');
@@ -237,6 +238,7 @@ plugin.file.zip.ZIPParser.prototype.handleZipEntries = function(entries) {
  */
 plugin.file.zip.ZIPParser.prototype.processZIPEntry_ = function(entry, content) {
   if (content && content instanceof ArrayBuffer) {
+    entry.content = content;
     var reader = new FileReader();
     reader.onload = this.handleZIPText_.bind(this, entry);
     reader.readAsText(new Blob([content]));
@@ -256,45 +258,79 @@ plugin.file.zip.ZIPParser.prototype.handleZIPText_ = function(entry, event) {
   var content = event.target.result;
 
   if (content && typeof content === 'string') {
-    var dst = this.toUIObject_(entry, content);
-    if (dst != null) this.files_.push(dst);
+    // TODO move this step up to the processZIPEntry -- so the mime.detect doesn't have to use a copy of "content"
+    this.toFile_(
+      entry, 
+      content, 
+      this.onComplete_
+    );
   } else {
     this.logError_('There was a problem reading the ZIP content!');
     this.onError();
-  }
-
-  if (entry.isLast) {
-    this.dispatchEvent(new goog.events.Event(os.events.EventType.COMPLETE));
-    this.processingZip_ = false;
   }
 };
 
 
 /**
- * @param {Object} src
+ * @param {Object} entry
  * @param {*} content
- * @return {Object|null}
+ * @param {function} callback
  * @private
  */
-plugin.file.zip.ZIPParser.prototype.toUIObject_ = function(src, content) {
+plugin.file.zip.ZIPParser.prototype.toFile_ = function(entry, content, callback) {
   // TODO check import support for the file
-  if (!src.filename) return null;
+  if (!entry.filename) return null;
 
   var file = new os.file.File();
-
   file.setContent(String(content));
-  file.setContentType('text/csv');
-  file.setFileName(src.filename);
-  file.setUrl('local://' + src.filename);
-  file.setType('text/csv');
+  file.setFileName(entry.filename);
+  file.setUrl('local://' + entry.filename);
+  
+  var onComplete = function(type) {
+    if (type) {
+      var chain = os.file.mime.getTypeChain(type);
+      if (chain && chain.indexOf(os.file.mime.text.TYPE) > -1) {
+        file.convertContentToString();
+      }
 
-  // turn this into a better object for the UI
-  return {
-    filename: src.filename,
-    valid: true,
-    selected: true,
-    msg: '',
-    src: src,
-    file: file
+      file.setContentType(type);
+      file.setType(type);
+    }
+    return type;
   };
+
+  os.file.mime
+    .detect(entry.content, file)
+    .then(onComplete)
+    .then(function(type) {
+      delete entry['content']; //stop wasting space
+      if (type) {
+        // turn this into a better object for the UI
+        this.files_.push({
+          filename: entry.filename,
+          valid: true,
+          selected: true,
+          msg: '',
+          src: entry,
+          file: file
+        });
+      }
+      return entry;
+    }, null, this)
+    .then(callback, null, this);
+};
+
+
+/**
+ * Lets UI know that files are unzipped
+ * 
+ * @param {Object} entry
+ * @private
+ */
+plugin.file.zip.ZIPParser.prototype.onComplete_ = function(entry) {
+  // TODO use semaphore/count method -- the last entry isn't necessarily the last to unzip 
+  if (entry.isLast) {
+    this.processingZip_ = false;
+    this.dispatchEvent(new goog.events.Event(os.events.EventType.COMPLETE));
+  }    
 };
