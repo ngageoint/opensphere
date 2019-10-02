@@ -112,7 +112,8 @@ os.track.CreateOptions;
 /**
  * @typedef {{
  *   features: Array<ol.Feature>,
- *   field: string,
+ *   field: (string|undefined),
+ *   bucketFn: ((function(ol.Feature):?)|undefined),
  *   getTrackFn: ((function((string|number)):ol.Feature)|undefined),
  *   result: (Array<ol.Feature>|undefined)
  * }}
@@ -572,6 +573,38 @@ os.track.clamp = function(track, start, end) {
 
   // update the geometry on the track
   if (flatCoordinates.length !== prevLength) {
+    os.track.setGeometry(track, geometry);
+  }
+};
+
+
+/**
+ * Truncate a track to a maximum number of points. Keeps the most recent points.
+ *
+ * @param {!ol.Feature} track The track.
+ * @param {number} size The size.
+ *
+ * @suppress {accessControls} To allow direct access to line coordinates.
+ */
+os.track.truncate = function(track, size) {
+  // ensure size is >= 0
+  size = Math.max(0, size);
+
+  // add point(s) to the original geometry, in case the track was interpolated
+  var geometry = /** @type {!(os.track.TrackLike)} */ (track.get(os.interpolate.ORIGINAL_GEOM_FIELD) ||
+      track.getGeometry());
+
+  // merge the split line so features can be added in the correct location
+  geometry.toLonLat();
+  geometry = os.geo.mergeLineGeometry(geometry);
+  geometry.osTransform();
+
+  var flatCoordinates = geometry.flatCoordinates;
+  var stride = geometry.stride;
+  var numCoords = size * stride;
+
+  if (flatCoordinates.length > numCoords) {
+    flatCoordinates.splice(0, flatCoordinates.length - numCoords);
     os.track.setGeometry(track, geometry);
   }
 };
@@ -1463,24 +1496,38 @@ os.track.updateTrackZIndex = function(tracks) {
 
 
 /**
+ * Bucket features by a field.
+ * @param {string} field The field.
+ * @param {ol.Feature} feature The feature.
+ * @return {?} The field value.
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.track.bucketByField = function(field, feature) {
+  if (feature) {
+    // if the feature does not have a value for the field, add it to the ignore bucket so it can be included in the
+    // result. this avoids dropping features that aren't added to a track.
+    return feature.values_[field] != null ? feature.values_[field] : os.object.IGNORE_VAL;
+  }
+
+  // no feature, don't add to a bucket
+  return undefined;
+};
+
+
+/**
  * Split features into tracks.
  * @param {os.track.SplitOptions} options The options.
  * @return {!Array<!ol.Feature>} The resulting tracks. Also contains any features not used to create tracks.
- *
- * @suppress {accessControls}
  */
 os.track.splitIntoTracks = function(options) {
   var features = options.features;
-  var field = options.field;
   var result = options.result || [];
+  var bucketFn = options.bucketFn || (options.field ? os.track.bucketByField.bind(undefined, options.field) : null);
   var getTrackFn = options.getTrackFn || goog.nullFunction;
 
-  if (features && field) {
-    var buckets = goog.array.bucket(features, function(feature) {
-      // if the feature does not have a value for the field, add it to the ignore bucket so it can be included in the
-      // result. this avoids dropping features that aren't added to a track.
-      return feature ? (feature.values_[field] != null ? feature.values_[field] : os.object.IGNORE_VAL) : undefined;
-    });
+  if (features && bucketFn) {
+    var buckets = goog.array.bucket(features, bucketFn);
 
     for (var id in buckets) {
       var bucketFeatures = buckets[id];
