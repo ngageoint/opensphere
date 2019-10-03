@@ -50,6 +50,18 @@ plugin.file.zip.ZIPParser = function(config) {
    * @private
    */
   this.source_ = [];
+
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.semaphore_ = false;
+
+  /**
+   * @type {number}
+   * @private
+   */
+  this.zipEntries_ = 0;
 };
 goog.inherits(plugin.file.zip.ZIPParser, os.parse.AsyncZipParser);
 
@@ -169,8 +181,11 @@ plugin.file.zip.ZIPParser.prototype.initialize_ = function() {
  * @inheritDoc
  */
 plugin.file.zip.ZIPParser.prototype.onError = function() {
-  this.initialized_ = true;
-  this.processingZip_ = false;
+  if (this.zipEntries_ > 0) this.zipEntries_--;
+
+  this.processingZip_= (this.semaphore_ || this.zipEntries_ > 0);
+  this.initialized_ = !this.processingZip;
+
   plugin.file.zip.ZIPParser.base(this, 'onError');
 };
 
@@ -219,14 +234,18 @@ plugin.file.zip.ZIPParser.prototype.handleZipEntries = function(entries) {
   if (typeof entries == 'undefined' || entries === null || entries.length == 0) {
     this.logWarning_('No file(s) found in ZIP!');
   } else {
+    this.semaphore_ = true;
+
     for (var i = 0, n = entries.length; i < n; i++) {
+      this.zipEntries_++;
+
       var entry = entries[i];
 
-      entry.isLast = (i == (n - 1));
-
-      // if the entry is a supported type, build an "entry" object and queue up the content import
+      //build an "entry" object, detect filetype mime, etc
       entry.getData(new zip.ArrayBufferWriter(), this.processZIPEntry_.bind(this, entry));
     }
+
+    this.semaphore_ = false;
   }
 };
 
@@ -238,10 +257,15 @@ plugin.file.zip.ZIPParser.prototype.handleZipEntries = function(entries) {
  */
 plugin.file.zip.ZIPParser.prototype.processZIPEntry_ = function(entry, content) {
   if (content && content instanceof ArrayBuffer) {
-    entry.content = content;
-    var reader = new FileReader();
-    reader.onload = this.handleZIPText_.bind(this, entry);
-    reader.readAsText(new Blob([content]));
+    var self = this;
+    var callback = function(uio){
+      var reader = new FileReader();
+      reader.onload = self.handleZIPText_.bind(self, uio);
+      reader.readAsText(new Blob([content]));
+    };
+
+    this.toUIO_(entry, content, callback);
+
   } else {
     this.logError_('There was a problem unzipping the file!');
     this.onError();
@@ -250,43 +274,40 @@ plugin.file.zip.ZIPParser.prototype.processZIPEntry_ = function(entry, content) 
 
 
 /**
- * @param {Object} entry
+ * @param {Object} uio
  * @param {Event} event
  * @private
  */
-plugin.file.zip.ZIPParser.prototype.handleZIPText_ = function(entry, event) {
+plugin.file.zip.ZIPParser.prototype.handleZIPText_ = function(uio, event) {
   var content = event.target.result;
 
   if (content && typeof content === 'string') {
-    // TODO move this step up to the processZIPEntry -- so the mime.detect doesn't have to use a copy of "content"
-    this.toFile_(
-      entry, 
-      content, 
-      this.onComplete_
-    );
+    if (uio) uio.file.setContent(content);
+
+    this.onComplete_(uio, content);
   } else {
     this.logError_('There was a problem reading the ZIP content!');
     this.onError();
   }
 };
 
-
 /**
+ * Create a UI Object to which Angular can bind form elements
+ * 
  * @param {Object} entry
  * @param {*} content
  * @param {function} callback
  * @private
  */
-plugin.file.zip.ZIPParser.prototype.toFile_ = function(entry, content, callback) {
+plugin.file.zip.ZIPParser.prototype.toUIO_ = function(entry, content, callback) {
   // TODO check import support for the file
   if (!entry.filename) return null;
 
   var file = new os.file.File();
-  file.setContent(String(content));
   file.setFileName(entry.filename);
   file.setUrl('local://' + entry.filename);
   
-  var onComplete = function(type) {
+  var onDetect = function(type) {
     if (type) {
       var chain = os.file.mime.getTypeChain(type);
       if (chain && chain.indexOf(os.file.mime.text.TYPE) > -1) {
@@ -295,41 +316,50 @@ plugin.file.zip.ZIPParser.prototype.toFile_ = function(entry, content, callback)
 
       file.setContentType(type);
       file.setType(type);
+      return file;
     }
-    return type;
+    return null;
+  };
+
+  var onFile = function(file) {
+    if (file) {
+      // turn this into a better object for the UI
+      return {
+        filename: entry.filename,
+        valid: true,
+        selected: true,
+        msg: '',
+        //src: entry,
+        file: file
+      };
+    }
+    return null;
   };
 
   os.file.mime
-    .detect(entry.content, file)
-    .then(onComplete)
-    .then(function(type) {
-      delete entry['content']; //stop wasting space
-      if (type) {
-        // turn this into a better object for the UI
-        this.files_.push({
-          filename: entry.filename,
-          valid: true,
-          selected: true,
-          msg: '',
-          src: entry,
-          file: file
-        });
-      }
-      return entry;
-    }, null, this)
-    .then(callback, null, this);
+    .detect(content, file)
+    .then(onDetect)
+    .then(onFile)
+    .then(callback);
 };
 
 
 /**
- * Lets UI know that files are unzipped
+ * Add to UI list, and let UI know that files are unzipped
  * 
- * @param {Object} entry
+ * @param {Object} uio
  * @private
  */
-plugin.file.zip.ZIPParser.prototype.onComplete_ = function(entry) {
+plugin.file.zip.ZIPParser.prototype.onComplete_ = function(uio) {
+  if (this.zipEntries_ > 0) this.zipEntries_--;
+
+  if (!uio) return;
+
+  this.files_.push(uio);
+
   // TODO use semaphore/count method -- the last entry isn't necessarily the last to unzip 
-  if (entry.isLast) {
+  if (!this.semaphore_ && this.zipEntries_ == 0) {
+    
     this.processingZip_ = false;
     this.dispatchEvent(new goog.events.Event(os.events.EventType.COMPLETE));
   }    
