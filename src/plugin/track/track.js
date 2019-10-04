@@ -486,6 +486,8 @@ plugin.track.createAndAdd = function(options) {
     cmd.title = 'Create Track';
     os.command.CommandProcessor.getInstance().addCommand(cmd);
 
+    plugin.track.updateTrackSource(track);
+
     return track;
   } else {
     goog.log.error(plugin.track.LOGGER_, 'Unable to create track: track layer missing');
@@ -557,4 +559,22 @@ plugin.track.addFeaturesToTrack = function(track, features) {
   }
 
   return addedFeatures;
+};
+
+
+/**
+ * Update the track source
+ * @param {os.track.TrackFeatureLike|undefined} track
+ */
+plugin.track.updateTrackSource = function(track) {
+  if (track) {
+    var source = os.feature.getSource(track);
+    if (source) {
+      source.addColumn(os.track.TrackField.ELAPSED_AVERAGE_SPEED);
+      source.addColumn(os.track.TrackField.ELAPSED_DISTANCE);
+      source.addColumn(os.track.TrackField.ELAPSED_DURATION);
+      source.addColumn(os.track.TrackField.TOTAL_DISTANCE);
+      source.addColumn(os.track.TrackField.TOTAL_DURATION);
+    }
+  }
 };

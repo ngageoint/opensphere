@@ -759,7 +759,7 @@ os.ui.ogc.OGCDescriptor.prototype.isFilterable = function() {
  * @inheritDoc
  */
 os.ui.ogc.OGCDescriptor.prototype.getFilterKey = function() {
-  return this.wfsUrl_ + '!!' + this.wfsName_;
+  return this.wfsUrl_ + os.ui.filter.FILTER_KEY_DELIMITER + this.wfsName_;
 };
 
 

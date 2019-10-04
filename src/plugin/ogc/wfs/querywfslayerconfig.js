@@ -36,8 +36,7 @@ plugin.ogc.wfs.QueryWFSLayerConfig.prototype.addMappings = function(layer, optio
   var useExclusions = options['exclusions'] != null ? options['exclusions'] : false;
   var useFilter = options['filter'] != null ? options['filter'] : false;
   var useSpatial = options['spatial'] != null ? options['spatial'] : false;
-  var useTemporal = options['temporal'] != null ? options['temporal'] :
-    !!this.featureType.getStartDateColumnName();
+  var useTemporal = options['temporal'] != null ? options['temporal'] : !!this.featureType.getStartDateColumnName();
   var featureIDs = options['featureIDs'] != null ? options['featureIDs'] : null;
   var relatedLayer = options['relatedLayer'] != null ? options['relatedLayer'] : null;
 
