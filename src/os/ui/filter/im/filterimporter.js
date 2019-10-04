@@ -9,11 +9,12 @@ goog.require('os.ui');
  * @param {os.parse.IParser<T>} parser The parser.
  * @param {string=} opt_layerId The layer id.
  * @param {boolean=} opt_keepId If the original entry id should be preserved. Defaults to false.
+ * @param {boolean=} opt_ignoreColumns If the parser should ignore checking if the columns match the filters.
  * @extends {os.im.Importer}
  * @constructor
  * @template T
  */
-os.ui.filter.im.FilterImporter = function(parser, opt_layerId, opt_keepId) {
+os.ui.filter.im.FilterImporter = function(parser, opt_layerId, opt_keepId, opt_ignoreColumns) {
   os.ui.filter.im.FilterImporter.base(this, 'constructor', parser);
 
   /**
@@ -31,6 +32,14 @@ os.ui.filter.im.FilterImporter = function(parser, opt_layerId, opt_keepId) {
   this.layerId = opt_layerId;
 
   /**
+   * If the parser should ignore checking if the columns match the filters. To be used only when we can safely
+   * assume the columns will match.
+   * @type {boolean}
+   * @protected
+   */
+  this.ignoreColumns = false;
+
+  /**
    * The matched filters.
    * @type {Object}
    */
@@ -43,6 +52,24 @@ os.ui.filter.im.FilterImporter = function(parser, opt_layerId, opt_keepId) {
   this.unmatched = [];
 };
 goog.inherits(os.ui.filter.im.FilterImporter, os.im.Importer);
+
+
+/**
+ * Get whether to ignore columns.
+ * @return {boolean}
+ */
+os.ui.filter.im.FilterImporter.prototype.getIgnoreColumns = function() {
+  return this.ignoreColumns;
+};
+
+
+/**
+ * Set whether to ignore columns.
+ * @param {boolean} value
+ */
+os.ui.filter.im.FilterImporter.prototype.setIgnoreColumns = function(value) {
+  this.ignoreColumns = value;
+};
 
 
 /**
@@ -90,7 +117,7 @@ os.ui.filter.im.FilterImporter.prototype.processData = function() {
       var impliedFilterable = os.ui.filter.getFilterableByType(this.layerId);
       var columns = impliedFilterable ? impliedFilterable.getFilterColumns() : null;
 
-      if (impliedFilterable && columns && filter.matches(columns)) {
+      if (impliedFilterable && columns && (this.ignoreColumns || filter.matches(columns))) {
         // this filter matches the columns of the passed in context, so add it as such
         var clone = filter.clone();
         if (!this.keepId) {

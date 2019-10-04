@@ -57,9 +57,9 @@ os.ui.column.mapping.ColumnMappingNode.prototype.setColumnMapping = function(val
       var label = columnText + ' (' + layer + ')';
       var node = new os.ui.slick.SlickTreeNode();
 
-      if (layer.indexOf('!!') !== -1) {
+      if (layer.indexOf(os.ui.filter.FILTER_KEY_DELIMITER) !== -1) {
         // construct a friendlier looking name
-        var serverLayer = layer.split('!!');
+        var serverLayer = layer.split(os.ui.filter.FILTER_KEY_DELIMITER);
         label = '<b>' + columnText + '</b>  (' + serverLayer[0] + ' - ' + serverLayer[1] + ')';
       }
 

@@ -110,6 +110,7 @@ os.command.VectorLayerPreset.prototype.applyFeatureActions = function(layer) {
   });
 
   iam.processItems(type, undefined, true);
+  iam.apply();
 };
 
 
