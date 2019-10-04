@@ -16,9 +16,9 @@ plugin.file.zip.ZIPParserConfig = function() {
   plugin.file.zip.ZIPParserConfig.base(this, 'constructor');
 
   /**
-   * @type {boolean}
+   * @type {number}
    */
-  this['parsing'] = null;
+  this['status'] = -1;
 
   /**
    * @type {Array.<any>}
@@ -32,8 +32,9 @@ goog.inherits(plugin.file.zip.ZIPParserConfig, os.parse.FileParserConfig);
  * @param {Function} callback
  */
 plugin.file.zip.ZIPParserConfig.prototype.update = function(callback) {
-  this['files'].length = 0;
-  this['parsing'] = true;
+  // re-initialize
+  if (this['files'].length > 0) this['files'] = [];
+  this['status'] = -1;
 
   var parser = new plugin.file.zip.ZIPParser(this);
 
@@ -42,12 +43,16 @@ plugin.file.zip.ZIPParserConfig.prototype.update = function(callback) {
     if (files) {
       for (var i = 0; i < files.length; i++) this['files'].push(files[i]);
     }
-    this['parsing'] = false;
 
     if (callback) callback();
+
+    this['status'] = 0;
 
     parser.dispose();
   }, this), false, this);
 
+  // tell the parser to start unzipping this file
   parser.setSource(this['file'].getContent());
+
+  this['status'] = 1;
 };

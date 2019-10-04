@@ -22,7 +22,7 @@ goog.require('plugin.file.zip.ZIPParserConfig');
 plugin.file.zip.ui.ZIPFilesStep = function() {
   plugin.file.zip.ui.ZIPFilesStep.base(this, 'constructor');
   this.template = '<zipfilesstep></zipfilesstep>';
-  this.title = 'Files';
+  this.title = 'Choose file(s)';
 };
 
 
@@ -55,7 +55,7 @@ plugin.file.zip.ui.ZIPFilesStep.prototype.finalize = function(config) {
  *
  * @return {angular.Directive}
  */
-plugin.file.zip.ui.configStepDirective = function() {
+plugin.file.zip.ui.filesStepDirective = function() {
   return {
     restrict: 'E',
     replace: true,
@@ -69,7 +69,7 @@ plugin.file.zip.ui.configStepDirective = function() {
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('zipfilesstep', [plugin.file.zip.ui.configStepDirective]);
+os.ui.Module.directive('zipfilesstep', [plugin.file.zip.ui.filesStepDirective]);
 
 
 
