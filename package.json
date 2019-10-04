@@ -32,7 +32,7 @@
       "ROOT": "./"
     },
     "gcc": {
-      "language_in": "ECMASCRIPT_2017",
+      "language_in": "ECMASCRIPT_2018",
       "conformance_configs": "conformance_config.textproto",
       "externs": [
         "google-closure-compiler/contrib/externs/jquery-1.9.js",
@@ -239,11 +239,7 @@
     "cypress": "^3.1.5",
     "cypress-image-snapshot": "^3.0.1",
     "eslint": "^6.0.0",
-    "eslint-config-google": "^0.13.0",
     "eslint-config-opensphere": "^3.0.0",
-    "eslint-plugin-google-camelcase": "^0.0.2",
-    "eslint-plugin-jsdoc": "^8.6.0",
-    "eslint-plugin-opensphere": "^2.0.0",
     "globalify": "^1.1.0",
     "google-closure-compiler": "^20190415.0.0",
     "http-server": "^0.11.1",
