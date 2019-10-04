@@ -1,0 +1,6 @@
+<div class="d-flex flex-column flex-fill">
+    <div>
+        <p ng-repeat="m in processStep.msg" ng-if="m" ng-bind-html="m"></p>
+    </div>
+    <p ng-if="processStep.loading"><i class="fa fa-spinner fa-spin" /></p>
+</div>

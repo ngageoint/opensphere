@@ -1,6 +1,8 @@
 goog.provide('plugin.file.zip.ui.ZIPImportCtrl');
 goog.provide('plugin.file.zip.ui.zipImportDirective');
 
+goog.require('os.alert.AlertEventSeverity');
+goog.require('os.alert.AlertManager');
 goog.require('os.defines');
 goog.require('os.file.File');
 goog.require('os.ui.Module');
@@ -48,18 +50,6 @@ plugin.file.zip.ui.ZIPImportCtrl = function($scope, $element, $timeout, $attrs) 
   this.im_ = os.ui.im.ImportManager.getInstance();
 
   /**
-   * @type {boolean}
-   * @private
-   */
-  this.semaphore_ = false;
-
-  /**
-   * @type {number}
-   * @private
-   */
-  this.threads_ = 0;
-
-  /**
    * @type {!Array<Object>}
    * @private
    */
@@ -93,7 +83,35 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.createFromConfig = function(config) {
  * @inheritDoc
  */
 plugin.file.zip.ui.ZIPImportCtrl.prototype.finish = function() {
-  console.log('Woot!', this);
+  var entries = this.config['files'];
+
+  if (!entries) {
+    var msg = 'No files selected to import from ZIP';
+    os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.WARNING);
+    return;
+  }
+
+  this.importers_ = [];
+  var unsupported = {};
+
+  for (var i = 0; i < entries.length; i++) {
+    var entry = entries[i];
+    if (entry.selected === true) {
+      var file = entry.file;
+      var type = file.getType();
+      var ui = this.im_.getImportUI(type);
+      if (ui) this.importers_.push({ui: ui, file: file});
+      else unsupported[type] = true; // store the filetype to report to user later
+    }
+  }
+
+  var keys = Object.keys(unsupported);
+
+  if (keys && keys.length > 0) {
+    var err = 'Unsupported filetype(s).<br />' + keys.join(', ');
+    os.alert.AlertManager.getInstance().sendAlert(err, os.alert.AlertEventSeverity.ERROR);
+  }
+
   plugin.file.zip.ui.ZIPImportCtrl.base(this, 'finish');
 };
 
@@ -104,96 +122,33 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.finish = function() {
  * @override
  */
 plugin.file.zip.ui.ZIPImportCtrl.prototype.finishImport = function(descriptor) {
-  console.log('final-woot!', this);
-  var entries = this.config['files'];
-
-  if (this.threads_ > 0) this.threads_--;
-
-  if (!entries) {
-    // TODO warn
-    return;
-  } else if (this.semaphore_ || this.threads_ > 0) {
-    return; // another parallel callback will handle this
-  }
-
-  this.importers_ = [];
-
-  for (var i = 0; i < entries.length; i++) {
-    var entry = entries[i];
-    if (entry.selected === true) {
-      var file = entry.file;
-      var type = file.getType();
-      var ui = this.im_.getImportUI(type);
-      if (ui) this.importers_.push({ui: ui, file: file});
-    }
-  }
-
-  if (this.importers_.length > 0) this.importer(); 
+  if (this.importers_ && this.importers_.length > 0) this.chain();
 
   plugin.file.zip.ui.ZIPImportCtrl.base(this, 'finishImport', descriptor);
 };
 
 
 /**
- * 
+ * Kick off the import of an unzipped file
  */
-plugin.file.zip.ui.ZIPImportCtrl.prototype.importer = function() {
+plugin.file.zip.ui.ZIPImportCtrl.prototype.chain = function() {
   if (typeof this.importers_ == 'undefined' || this.importers_ == null || this.importers_.length == 0) return;
 
-  var im = this.importers_.splice(0,1)[0]; //remove the current importer from the queue
+  var im = this.importers_.splice(0, 1)[0]; // remove the current importer from the queue
   var process = new os.ui.im.DuplicateImportProcess();
   var event = new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE, im.file);
 
   process.setEvent(event);
 
-  //initialize and chain next import on callback
+  // initialize and chain next import on callback
   process.begin().addCallbacks(
-    this.importer,
-    function() {
-      // TODO let user know that the file failed and why... then continue
-      console.log('ERROR!', arguments); 
-      this.importer(); 
-    },
-    this
+      this.chain,
+      function() {
+        // messaging should be handled by the Import Process... just kick off the next item in the chain
+        this.chain();
+      },
+      this
   );
-};
-
-
-/**
- * @param {!plugin.file.zip.ZIPDescriptor} descriptor
- * @protected
- * @override
- */
-plugin.file.zip.ui.ZIPImportCtrl.prototype.storeAndFinish = function(descriptor) {
-  var entries = this.config['files'];
-
-  if (!entries) {
-    // TODO warn
-    return;
-  }
-
-  this.semaphore_ = true; // block multiple calls to finishImport() from conflicting
-
-  var waiting = false;
-
-  /*
-  //store the unzipped files
-  for (var i = 0; i < entries.length; i++) {
-    var entry = entries[i];
-    if (entry.selected === true) {
-      this.threads_++;
-      waiting = true;
-
-      var file = entry.file;
-      this.fs
-          .storeFile(file, true)
-          .addCallbacks(goog.partial(this.finishImport, descriptor), this.onPersistError, this);
-    }
-  }
-  */
-  this.semaphore_ = false; // unblock
-
-  if (!waiting) plugin.file.zip.ui.ZIPImportCtrl.base(this, 'storeAndFinish', descriptor);
 };
 
 
@@ -205,12 +160,4 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.storeAndFinish = function(descriptor)
  */
 plugin.file.zip.ui.ZIPImportCtrl.prototype.updateFromConfig = function(descriptor, config) {
   descriptor.updateFromConfig(config);
-};
-
-/**
- * @inheritDoc
- */
-plugin.file.zip.ui.ZIPImportCtrl.prototype.onPersistError = function(error) {
-  if (this.threads_ > 0) this.threads_--;
-  plugin.file.zip.ui.ZIPImportCtrl.base(this, 'onPersistError', error);
 };
