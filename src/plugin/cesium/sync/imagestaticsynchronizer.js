@@ -50,7 +50,7 @@ goog.inherits(plugin.cesium.sync.ImageStaticSynchronizer, plugin.cesium.sync.Ces
 plugin.cesium.sync.ImageStaticSynchronizer.prototype.disposeInternal = function() {
   this.resetInternal();
   this.source = null;
-  plugin.cesium.sync.ImageSynchronizer.base(this, 'disposeInternal');
+  plugin.cesium.sync.ImageStaticSynchronizer.base(this, 'disposeInternal');
 };
 
 
