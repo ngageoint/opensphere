@@ -546,9 +546,13 @@ os.source.Vector.prototype.clear = function(opt_fast) {
       this.timeModel.clear();
     }
 
-    // clear out all of hte collections/Rtree
+    // clear out all of the collections/Rtree
     if (this.featuresRtree_) {
-      this.featuresRtree_.forEach(this.removeFeatureInternal, this);
+      var rTreeFeatures = this.featuresRtree_.getAll();
+      for (var i = 0; i < rTreeFeatures.length; i++) {
+        this.removeFeatureInternal(rTreeFeatures[i], true);
+      }
+
       for (var id in this.nullGeometryFeatures_) {
         this.removeFeatureInternal(this.nullGeometryFeatures_[id]);
       }
@@ -1838,15 +1842,7 @@ os.source.Vector.prototype.addFeatures = function(features) {
  * @suppress {accessControls}
  */
 os.source.Vector.prototype.removeFeature = function(feature, opt_isBulk) {
-  var featureKey = ol.getUid(feature).toString();
-  if (featureKey in this.nullGeometryFeatures_) {
-    // keeping delete here because it's very rarely used, and ol.source.Vector uses "key in obj" on this map
-    delete this.nullGeometryFeatures_[featureKey];
-  } else if (!opt_isBulk && this.featuresRtree_) {
-    this.featuresRtree_.remove(feature);
-  }
-
-  this.removeFeatureInternal(feature);
+  this.removeFeatureInternal(feature, opt_isBulk);
   this.changed();
 };
 
@@ -1875,16 +1871,27 @@ os.source.Vector.prototype.removeFeatures = function(features) {
 
 
 /**
- * @inheritDoc
+ * @param {ol.Feature} feature The feature.
+ * @param {boolean=} opt_isBulk If this was called by bulk removal
+ * @override
+ *
  * @suppress {accessControls}
  */
-os.source.Vector.prototype.removeFeatureInternal = function(feature) {
+os.source.Vector.prototype.removeFeatureInternal = function(feature, opt_isBulk) {
   if (feature) {
     this.processNow();
+
+    var featureKey = ol.getUid(feature).toString();
+    if (featureKey in this.nullGeometryFeatures_) {
+      // keeping delete here because it's very rarely used, and ol.source.Vector uses "key in obj" on this map
+      delete this.nullGeometryFeatures_[featureKey];
+    } else if (!opt_isBulk && this.featuresRtree_) {
+      this.featuresRtree_.remove(feature);
+    }
+
     this.featureCount_ = Math.max(this.featureCount_ - 1, 0);
     this.unprocessFeature(feature);
 
-    var featureKey = ol.getUid(feature).toString();
     this.featureChangeKeys_[featureKey].forEach(ol.events.unlistenByKey);
     /** @type {Object} */ (this.featureChangeKeys_)[featureKey] = undefined;
 
@@ -2676,11 +2683,13 @@ os.source.Vector.prototype.onDynamicFeatureChange = function(event) {
   if (event instanceof os.events.PropertyChangeEvent) {
     var p = event.getProperty();
     if (p === os.feature.DynamicPropertyChange.GEOMETRY) {
-      // if the original geometry changes, dispose the dynamic geometries so they are recreated
+      // if the original geometry changes, update the dynamic geometry
       var feature = /** @type {os.feature.DynamicFeature} */ (event.target);
-      if (feature) {
+      if (feature && feature.isDynamicEnabled) {
+        // dispose of the animation geometries
         feature.disposeDynamic(true);
-        this.updateAnimationOverlay();
+        // and recreate them
+        feature.updateDynamic(this.displayRange_.getStart(), this.displayRange_.getEnd());
       }
     }
   }
