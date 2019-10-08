@@ -89,9 +89,9 @@ describe('os.source.Vector', function() {
 
   var addDynamicSpies = function() {
     dynamicFeatures.forEach(function(df) {
-      spyOn(df, 'initDynamic');
-      spyOn(df, 'disposeDynamic');
-      spyOn(df, 'updateDynamic');
+      spyOn(df, 'initDynamic').andCallThrough();
+      spyOn(df, 'disposeDynamic').andCallThrough();
+      spyOn(df, 'updateDynamic').andCallThrough();
     });
   };
 
@@ -287,7 +287,7 @@ describe('os.source.Vector', function() {
       source.selectAll();
     });
 
-    setTimeout(function() { /* wait to make sure event isn't fired */ }, 100);
+    setTimeout(function() {/* wait to make sure event isn't fired */}, 100);
 
     runs(function() {
       expect(addedCount).toBe(1);
@@ -342,7 +342,7 @@ describe('os.source.Vector', function() {
       source.selectNone();
     });
 
-    setTimeout(function() { /* wait to make sure event isn't fired */ }, 100);
+    setTimeout(function() {/* wait to make sure event isn't fired */}, 100);
 
     runs(function() {
       expect(removedCount).toBe(1);
@@ -754,11 +754,11 @@ describe('os.source.Vector', function() {
       // and the dynamic content updated for the new geometry
       expect(df.updateDynamic).toHaveBeenCalledWith(displayStart, displayEnd);
 
-      // remaining dynamic features should be updated with the animation overlay update
+      // dynamic features that did not change should not be updated
       for (var i = 1; i < dynamicFeatures.length; i++) {
         expect(dynamicFeatures[i].initDynamic).not.toHaveBeenCalled();
         expect(dynamicFeatures[i].disposeDynamic).not.toHaveBeenCalled();
-        expect(dynamicFeatures[i].updateDynamic).toHaveBeenCalledWith(displayStart, displayEnd);
+        expect(dynamicFeatures[i].updateDynamic).not.toHaveBeenCalled();
       }
     });
 
