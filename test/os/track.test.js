@@ -388,14 +388,18 @@ describe('os.track', function() {
     }
   });
 
-  it('truncates a track to a fixed size', function() {
+  iit('truncates a track to a fixed size', function() {
     var features = generateFeatures(20, os.data.RecordField.TIME, Date.now());
     var track = os.track.createTrack({
-      features: features
+      features: features,
+      includeMetadata: true
     });
 
     var geometry = track.getGeometry();
     expect(geometry.flatCoordinates.length).toBe(20 * geometry.stride);
+
+    var metadataMap = track.get(os.track.TrackField.METADATA_MAP);
+    expect(goog.object.getCount(metadataMap)).toBe(20);
 
     var lastTimeValue = geometry.flatCoordinates[geometry.flatCoordinates.length - 1];
 
@@ -405,15 +409,24 @@ describe('os.track', function() {
     expect(geometry.flatCoordinates.length).toBe(20 * geometry.stride);
     expect(geometry.flatCoordinates[geometry.flatCoordinates.length - 1]).toBe(lastTimeValue);
 
+    metadataMap = track.get(os.track.TrackField.METADATA_MAP);
+    expect(goog.object.getCount(metadataMap)).toBe(20);
+
     // truncates to the number of coordinates specified
     os.track.truncate(track, 10);
     geometry = track.getGeometry();
     expect(geometry.flatCoordinates.length).toBe(10 * geometry.stride);
     expect(geometry.flatCoordinates[geometry.flatCoordinates.length - 1]).toBe(lastTimeValue);
 
+    metadataMap = track.get(os.track.TrackField.METADATA_MAP);
+    expect(goog.object.getCount(metadataMap)).toBe(10);
+
     // truncates to zero if a negative value is provided
     os.track.truncate(track, 0);
     geometry = track.getGeometry();
     expect(geometry.flatCoordinates.length).toBe(0);
+
+    metadataMap = track.get(os.track.TrackField.METADATA_MAP);
+    expect(goog.object.getCount(metadataMap)).toBe(0);
   });
 });

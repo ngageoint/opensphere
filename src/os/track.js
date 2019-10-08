@@ -591,7 +591,7 @@ os.track.truncate = function(track, size) {
   size = Math.max(0, size);
 
   // add point(s) to the original geometry, in case the track was interpolated
-  var geometry = /** @type {!(os.track.TrackLike)} */ (track.get(os.interpolate.ORIGINAL_GEOM_FIELD) ||
+  var geometry = /** @type {!(os.track.TrackLike)} */ (track.values_[os.interpolate.ORIGINAL_GEOM_FIELD] ||
       track.getGeometry());
 
   // merge the split line so features can be added in the correct location
@@ -604,8 +604,21 @@ os.track.truncate = function(track, size) {
   var numCoords = size * stride;
 
   if (flatCoordinates.length > numCoords) {
-    flatCoordinates.splice(0, flatCoordinates.length - numCoords);
+    var removed = flatCoordinates.splice(0, flatCoordinates.length - numCoords);
     os.track.setGeometry(track, geometry);
+
+    // remove old metadata fields from the track
+    var metadataMap = /** @type {Object|undefined} */ (track.values_[os.track.TrackField.METADATA_MAP]);
+    if (metadataMap) {
+      for (var i = 0; i < removed.length; i += stride) {
+        var next = removed[i + stride - 1];
+        if (next != null) {
+          metadataMap[next] = undefined;
+        }
+      }
+
+      track.values_[os.track.TrackField.METADATA_MAP] = os.object.prune(metadataMap);
+    }
   }
 };
 
