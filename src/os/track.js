@@ -535,11 +535,11 @@ os.track.addToTrack = function(options) {
  * @param {string|number} start The start value.
  * @param {string|number} end The end value.
  *
- * @suppress {accessControls} To allow direct access to line coordinates.
+ * @suppress {accessControls} To allow direct access to feature metadata and line coordinates.
  */
 os.track.clamp = function(track, start, end) {
   // add point(s) to the original geometry, in case the track was interpolated
-  var geometry = /** @type {!(os.track.TrackLike)} */ (track.get(os.interpolate.ORIGINAL_GEOM_FIELD) ||
+  var geometry = /** @type {!(os.track.TrackLike)} */ (track.values_[os.interpolate.ORIGINAL_GEOM_FIELD] ||
       track.getGeometry());
 
   // merge the split line so features can be added in the correct location
@@ -565,10 +565,17 @@ os.track.clamp = function(track, start, end) {
 
   var prevLength = flatCoordinates.length;
   if (startIndex < endIndex) {
-    flatCoordinates.length = endIndex;
-    flatCoordinates.splice(0, startIndex);
+    // splice the clamped range from the array
+    var newCoords = flatCoordinates.splice(startIndex, endIndex - startIndex);
+
+    // remove metadata for remaining coordinates
+    os.track.pruneMetadata_(track, flatCoordinates, stride);
+
+    // set flat coordinates to the clamped list
+    geometry.flatCoordinates = newCoords;
   } else {
     flatCoordinates.length = 0;
+    track.values_[os.track.TrackField.METADATA_MAP] = {};
   }
 
   // update the geometry on the track
@@ -584,7 +591,7 @@ os.track.clamp = function(track, start, end) {
  * @param {!ol.Feature} track The track.
  * @param {number} size The size.
  *
- * @suppress {accessControls} To allow direct access to line coordinates.
+ * @suppress {accessControls} To allow direct access to feature metadata and line coordinates.
  */
 os.track.truncate = function(track, size) {
   // ensure size is >= 0
@@ -608,17 +615,34 @@ os.track.truncate = function(track, size) {
     os.track.setGeometry(track, geometry);
 
     // remove old metadata fields from the track
-    var metadataMap = /** @type {Object|undefined} */ (track.values_[os.track.TrackField.METADATA_MAP]);
-    if (metadataMap) {
-      for (var i = 0; i < removed.length; i += stride) {
-        var next = removed[i + stride - 1];
-        if (next != null) {
-          metadataMap[next] = undefined;
-        }
-      }
+    os.track.pruneMetadata_(track, removed, stride);
+  }
+};
 
-      track.values_[os.track.TrackField.METADATA_MAP] = os.object.prune(metadataMap);
+
+/**
+ * Prune the metadata map for a track, removing metadata by indexed sort values.
+ * @param {!ol.Feature} track The track.
+ * @param {!Array} values The values to remove.
+ * @param {number=} opt_stride If provided, the `values` array stride. Use if providing a list of flat coordinates that
+ *                             contain sort values as the last coordinate value.
+ * @private
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.track.pruneMetadata_ = function(track, values, opt_stride) {
+  var stride = Math.max(0, opt_stride || 1);
+
+  var metadataMap = /** @type {Object|undefined} */ (track.values_[os.track.TrackField.METADATA_MAP]);
+  if (metadataMap) {
+    for (var i = 0; i < values.length; i += stride) {
+      var next = values[i + stride - 1];
+      if (next != null) {
+        metadataMap[next] = undefined;
+      }
     }
+
+    track.values_[os.track.TrackField.METADATA_MAP] = os.object.prune(metadataMap);
   }
 };
 

@@ -8,6 +8,7 @@ goog.require('os.track');
 
 describe('os.track', function() {
   var metadataField = 'testField';
+  var sortIncrement = 1000;
 
   /**
    * Generate test track coordinates.
@@ -23,7 +24,7 @@ describe('os.track', function() {
     while (i--) {
       var coordinate = [i * 0.1, i * 0.1, 0];
       if (sortField === os.data.RecordField.TIME) {
-        coordinate.push(sortStart + i * 1000);
+        coordinate.push(sortStart + i * sortIncrement);
       } else {
         coordinate.push(sortStart + i);
       }
@@ -65,6 +66,18 @@ describe('os.track', function() {
       var a = coordinates[i - 1];
       var b = coordinates[i];
       expect(a[a.length - 1] < b[b.length - 1]).toBe(true);
+    }
+  };
+
+  /**
+   * Verifies all coordinate sort values are in a metadata map.
+   * @param {!Array<number>} coordinates The flat array of coordinates.
+   * @param {number} stride The coordinate stride.
+   * @param {!Object} metadataMap The metadata map to verify against coordinates.
+   */
+  var verifyMetadata = function(coordinates, stride, metadataMap) {
+    for (var i = 0; i < coordinates.length; i += stride) {
+      expect(metadataMap[coordinates[i + stride - 1]]).toBeDefined();
     }
   };
 
@@ -388,7 +401,7 @@ describe('os.track', function() {
     }
   });
 
-  iit('truncates a track to a fixed size', function() {
+  it('truncates a track to a fixed size', function() {
     var features = generateFeatures(20, os.data.RecordField.TIME, Date.now());
     var track = os.track.createTrack({
       features: features,
@@ -412,6 +425,8 @@ describe('os.track', function() {
     metadataMap = track.get(os.track.TrackField.METADATA_MAP);
     expect(goog.object.getCount(metadataMap)).toBe(20);
 
+    verifyMetadata(geometry.flatCoordinates, geometry.stride, metadataMap);
+
     // truncates to the number of coordinates specified
     os.track.truncate(track, 10);
     geometry = track.getGeometry();
@@ -421,8 +436,61 @@ describe('os.track', function() {
     metadataMap = track.get(os.track.TrackField.METADATA_MAP);
     expect(goog.object.getCount(metadataMap)).toBe(10);
 
+    verifyMetadata(geometry.flatCoordinates, geometry.stride, metadataMap);
+
     // truncates to zero if a negative value is provided
     os.track.truncate(track, 0);
+    geometry = track.getGeometry();
+    expect(geometry.flatCoordinates.length).toBe(0);
+
+    metadataMap = track.get(os.track.TrackField.METADATA_MAP);
+    expect(goog.object.getCount(metadataMap)).toBe(0);
+  });
+
+  it('clamps a track within a sort range', function() {
+    var start = Date.now();
+    var features = generateFeatures(20, os.data.RecordField.TIME, start);
+    var track = os.track.createTrack({
+      features: features,
+      includeMetadata: true
+    });
+
+    var geometry = track.getGeometry();
+    expect(geometry.flatCoordinates.length).toBe(20 * geometry.stride);
+
+    var metadataMap = track.get(os.track.TrackField.METADATA_MAP);
+    expect(goog.object.getCount(metadataMap)).toBe(20);
+
+    var originalCoordinates = geometry.flatCoordinates.slice();
+
+    // does nothing if the clamp range includes the entire track
+    os.track.clamp(track, start, start * sortIncrement * 20);
+    geometry = track.getGeometry();
+    expect(geometry.flatCoordinates.length).toBe(20 * geometry.stride);
+    expect(geometry.flatCoordinates[geometry.flatCoordinates.length - 1])
+        .toBe(originalCoordinates[originalCoordinates.length - 1]);
+
+    metadataMap = track.get(os.track.TrackField.METADATA_MAP);
+    expect(goog.object.getCount(metadataMap)).toBe(20);
+
+    verifyMetadata(geometry.flatCoordinates, geometry.stride, metadataMap);
+
+    // clamps the track within the provided sort range
+    os.track.clamp(track, start + sortIncrement * 5, start + sortIncrement * 14);
+    geometry = track.getGeometry();
+    expect(geometry.flatCoordinates.length).toBe(10 * geometry.stride);
+    expect(geometry.flatCoordinates[geometry.stride - 1])
+        .toBe(originalCoordinates[6 * geometry.stride - 1]);
+    expect(geometry.flatCoordinates[geometry.flatCoordinates.length - 1])
+        .toBe(originalCoordinates[15 * geometry.stride - 1]);
+
+    metadataMap = track.get(os.track.TrackField.METADATA_MAP);
+    expect(goog.object.getCount(metadataMap)).toBe(10);
+
+    verifyMetadata(geometry.flatCoordinates, geometry.stride, metadataMap);
+
+    // result is empty if the clamp range does not contain any points
+    os.track.clamp(track, start + sortIncrement * 5 + 1, start + sortIncrement * 5 + 2);
     geometry = track.getGeometry();
     expect(geometry.flatCoordinates.length).toBe(0);
 
