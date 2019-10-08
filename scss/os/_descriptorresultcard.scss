@@ -1,0 +1,8 @@
+.c-descriptor-card {
+  cursor: pointer;
+
+  &:hover {
+    background-color: $u-theme-variables--bg-offset;
+    border-color: $card-border-color;
+  }
+}
