@@ -671,18 +671,22 @@ os.track.disposeAnimationGeometries = function(track) {
  * @param {!ol.Feature} track The track
  * @param {boolean} show
  * @param {boolean=} opt_update
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
  */
 os.track.setShowLine = function(track, show, opt_update) {
-  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
+  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.values_[os.style.StyleType.FEATURE]);
   if (trackStyles.length > 1) {
     var lineConfig = trackStyles[0];
     var dynamic = track instanceof os.feature.DynamicFeature && track.isDynamicEnabled;
-    lineConfig['geometry'] = show ? (dynamic ? os.track.TrackField.CURRENT_LINE : undefined) :
-      os.track.HIDE_GEOMETRY;
+    var lineGeometry = show ? (dynamic ? os.track.TrackField.CURRENT_LINE : undefined) : os.track.HIDE_GEOMETRY;
+    if (lineConfig['geometry'] !== lineGeometry) {
+      lineConfig['geometry'] = lineGeometry;
 
-    // set the style config for the track
-    os.style.setFeatureStyle(track);
-    track.changed();
+      // set the style config for the track
+      os.style.setFeatureStyle(track);
+      track.changed();
+    }
   }
 };
 
@@ -692,9 +696,11 @@ os.track.setShowLine = function(track, show, opt_update) {
  *
  * @param {!ol.Feature} track The track
  * @return {boolean}
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
  */
 os.track.getShowLine = function(track) {
-  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
+  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.values_[os.style.StyleType.FEATURE]);
   return trackStyles.length > 0 && trackStyles[0]['geometry'] != os.track.HIDE_GEOMETRY;
 };
 
@@ -705,19 +711,24 @@ os.track.getShowLine = function(track) {
  * @param {!ol.Feature} track The track
  * @param {boolean} show
  * @param {boolean=} opt_update
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
  */
 os.track.setShowMarker = function(track, show, opt_update) {
-  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
+  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.values_[os.style.StyleType.FEATURE]);
   if (trackStyles.length > 1) { // recreate marker style
     var currentGeometry = show ? os.track.TrackField.CURRENT_POSITION : os.track.HIDE_GEOMETRY;
     var currentConfig = trackStyles[1];
-    currentConfig['geometry'] = currentGeometry;
-    track.set(os.style.StyleField.LABEL_GEOMETRY, currentGeometry);
+    if (currentConfig['geometry'] !== currentGeometry ||
+        track.values_[os.style.StyleField.LABEL_GEOMETRY] !== currentGeometry) {
+      currentConfig['geometry'] = currentGeometry;
+      track.values_[os.style.StyleField.LABEL_GEOMETRY] = currentGeometry;
 
-    // set the style config for the track
-    if (opt_update) {
-      os.style.setFeatureStyle(track);
-      track.changed();
+      // set the style config for the track
+      if (opt_update) {
+        os.style.setFeatureStyle(track);
+        track.changed();
+      }
     }
   }
 };
