@@ -126,34 +126,6 @@ plugin.descriptor.ResultCardCtrl.prototype.getField = function(field) {
       case 'title': return d.getTitle();
       case 'type': return d.getSearchType();
       case 'description': return d.getDescription();
-      case 'snippet':
-        var desc = d.getDescription();
-
-        if (desc) {
-          // split into "paragraphs"
-          var paragraphs = desc.split(/\n\n/);
-          var sx = 0;
-
-          // we'll use the first paragraph that contains a period, falling
-          // back to just the first paragraph
-          for (var i = 0, n = paragraphs.length; i < n; i++) {
-            if (paragraphs[i].indexOf('.') > -1) {
-              sx = i;
-              break;
-            }
-          }
-
-          var snippet = paragraphs[sx];
-          if (snippet.length > plugin.descriptor.ResultCardCtrl.SNIPPET_LENGTH) {
-            snippet = snippet.substring(0, plugin.descriptor.ResultCardCtrl.SNIPPET_LENGTH) + ' ...';
-            this.scope_['short'] = true;
-          }
-
-          return snippet;
-        }
-
-        return '';
-
       default: break;
     }
   }
@@ -164,10 +136,14 @@ plugin.descriptor.ResultCardCtrl.prototype.getField = function(field) {
 
 /**
  * Toggles the descriptor
+ * @param {Event} event The click event.
  *
  * @export
  */
-plugin.descriptor.ResultCardCtrl.prototype.toggle = function() {
+plugin.descriptor.ResultCardCtrl.prototype.toggle = function(event) {
+  event.preventDefault();
+  event.stopPropagation();
+
   var d = this.getDescriptor();
 
   if (d) {
@@ -177,16 +153,4 @@ plugin.descriptor.ResultCardCtrl.prototype.toggle = function() {
       os.dispatcher.dispatchEvent(new os.data.DescriptorEvent(os.data.DescriptorEventType.USER_TOGGLED, d));
     }
   }
-};
-
-
-/**
- * Toggles the description text length
- *
- * @param {boolean} full
- * @export
- */
-plugin.descriptor.ResultCardCtrl.prototype.showFullDescription = function(full) {
-  this.scope_['showFullDescription'] = full;
-  os.ui.apply(this.scope_);
 };
