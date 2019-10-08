@@ -238,6 +238,8 @@ os.track.sortCoordinatesByValue = function(a, b) {
  * @param {string} sortField The track sort field.
  * @param {Object=} opt_metadataMap Optional map to store feature metadata by sort key.
  * @return {!Array<!ol.Coordinate>|undefined} The coordinates, or undefined if no coordinates were found.
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
  */
 os.track.getTrackCoordinates = function(features, sortField, opt_metadataMap) {
   var getValueFn = sortField == os.data.RecordField.TIME ? os.track.getStartTime :
@@ -291,10 +293,9 @@ os.track.getTrackCoordinates = function(features, sortField, opt_metadataMap) {
       if (opt_metadataMap) {
         opt_metadataMap[value] = {};
 
-        var props = feature.getProperties();
-        for (var key in props) {
+        for (var key in feature.values_) {
           if (!os.feature.isInternalField(key)) {
-            opt_metadataMap[value][key] = props[key];
+            opt_metadataMap[value][key] = feature.values_[key];
           }
         }
       }
@@ -547,11 +548,10 @@ os.track.clamp = function(track, start, end) {
   geometry = os.geo.mergeLineGeometry(geometry);
   geometry.osTransform();
 
-  var flatCoordinates = geometry.flatCoordinates;
   var stride = geometry.stride;
 
-  var startIndex = os.array.binaryStrideSearch(flatCoordinates, start, stride, stride - 1);
-  var endIndex = os.array.binaryStrideSearch(flatCoordinates, end, stride, stride - 1);
+  var startIndex = os.array.binaryStrideSearch(geometry.flatCoordinates, start, stride, stride - 1);
+  var endIndex = os.array.binaryStrideSearch(geometry.flatCoordinates, end, stride, stride - 1);
 
   if (startIndex < 0) {
     startIndex = ~startIndex;
@@ -563,24 +563,26 @@ os.track.clamp = function(track, start, end) {
     endIndex += stride;
   }
 
-  var prevLength = flatCoordinates.length;
-  if (startIndex < endIndex) {
-    // splice the clamped range from the array
-    var newCoords = flatCoordinates.splice(startIndex, endIndex - startIndex);
+  if (endIndex - startIndex != geometry.flatCoordinates.length) {
+    var prevLength = geometry.flatCoordinates.length;
+    if (startIndex < endIndex) {
+      // splice the clamped range from the array
+      var newCoords = geometry.flatCoordinates.splice(startIndex, endIndex - startIndex);
 
-    // remove metadata for remaining coordinates
-    os.track.pruneMetadata_(track, flatCoordinates, stride);
+      // remove metadata for remaining coordinates
+      os.track.pruneMetadata_(track, geometry.flatCoordinates, stride);
 
-    // set flat coordinates to the clamped list
-    geometry.flatCoordinates = newCoords;
-  } else {
-    flatCoordinates.length = 0;
-    track.values_[os.track.TrackField.METADATA_MAP] = {};
-  }
+      // set flat coordinates to the clamped list
+      geometry.flatCoordinates = newCoords;
+    } else {
+      geometry.flatCoordinates.length = 0;
+      track.values_[os.track.TrackField.METADATA_MAP] = {};
+    }
 
-  // update the geometry on the track
-  if (flatCoordinates.length !== prevLength) {
-    os.track.setGeometry(track, geometry);
+    // update the geometry on the track
+    if (geometry.flatCoordinates.length !== prevLength) {
+      os.track.setGeometry(track, geometry);
+    }
   }
 };
 
