@@ -117,7 +117,7 @@ plugin.file.zip.ui.ZIPFilesStepCtrl = function($scope) {
       sortable: false
     }
   ];
-  
+
   /**
    * @type {Object}
    */
@@ -161,6 +161,12 @@ plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.destroy_ = function() {
 /**
  * Checks if files have been chosen/validated.
  *
+ * @param {!number} row
+ * @param {!number} cell
+ * @param {!*} value
+ * @param {!Object} columnDef
+ * @param {!Object} dataContext
+ * @return {!string}
  * @private
  */
 plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.formatter_ = function(row, cell, value, columnDef, dataContext) {
@@ -168,14 +174,14 @@ plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.formatter_ = function(row, cell, v
 
   // match the angular in zipfilestep.html
   html.push('<div onclick="var _s = angular.element(this).scope(); _s.$parent.filesStep.toggle(_s, '
-    + dataContext.id 
+    + dataContext.id
     + ');">');
-  
+
   if (dataContext.selected) html.push('<i class="fa fa-check"></i> ');
   else html.push('<span>&nbsp;&nbsp;</span> ');
 
   html.push(dataContext.filename);
-  html.push('</div>')
+  html.push('</div>');
 
   return html.join('');
 };
@@ -199,22 +205,26 @@ plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.validate_ = function() {
 /**
  * Toggles true/false for file.selected and notifies SlickGrid
  *
- * @private
+ * @param {!Object} scope
+ * @param {!number} id
  */
 plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.toggle = function(scope, id) {
   if (scope && id) {
     var idx = -1;
-    var file = this.config_.files.find(e => { idx++; return e.id == id;});
+    var file = this.config_['files'].find(function(e) {
+      idx++;
+      return e.id == id;
+    });
 
     if (file) {
       file.selected = !file.selected;
-      scope.gridCtrl.grid.updateRow(idx); // just invalidate them all if sorting is added: scope.gridCtrl.invalidateRows();
+      scope['gridCtrl']['grid'].updateRow(idx); // just invalidate them all if sorting is added: scope.gridCtrl.invalidateRows();
     }
   } else {
-    scope = this.scope_.$$childHead;
+    scope = this.scope_['$$childHead'];
 
-    var selected = !this.config_.files[0].selected;
-    this.config_.files.forEach((file) => {
+    var selected = !this.config_['files'][0].selected;
+    this.config_['files'].forEach(function(file) {
       file.selected = selected;
     });
 
@@ -225,14 +235,14 @@ plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.toggle = function(scope, id) {
 
 /**
  * Returns a count of the number of "selected" files for the UI
- * @returns {number}
+ * @return {number}
  */
 plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.count = function() {
-  return (this.config_.files)
-    ? this.config_.files.reduce((a, v) => { 
-        if (typeof a == 'object') a = (a.selected ? 1 : 0);
-        if (v.selected) a++;
-        return a; 
-      }) 
+  return (this.config_['files'])
+    ? this.config_['files'].reduce(function(a, v) {
+      if (typeof a == 'object') a = (a.selected ? 1 : 0);
+      if (v.selected) a++;
+      return a;
+    })
     : 0;
 };
