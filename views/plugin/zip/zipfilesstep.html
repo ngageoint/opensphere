@@ -1,17 +1,23 @@
 <div class="d-flex flex-column flex-fill">
-  <p ng-if="filesStep.loading">Unzipping file(s)...</p>
-  <p ng-if="!filesStep.loading">Please select file(s) to import</p>
-
+  <div>
+    <p class="float-left" ng-if="filesStep.loading">Unzipping file(s)...</p>
+    <p class="float-left" ng-if="!filesStep.loading">Please select file(s) to import</p>
+    <p class="float-right">
+      {{filesStep.count()}} selected
+      <button class="btn btn-link" ng-click="filesStep.toggle();">Toggle All</button>
+    </p>
+    <div style="clear: both;"></div>
+  </div>
   <form name="filesForm" novalidate>
-    <!-- TODO repeat for all files in the ZIP -->
-    <div class="form-group form-row" ng-repeat="file in filesStep.config_.files">
-      <label class="form-label">
-        <input type="checkbox" ng-model="file.selected"></input>
-        <i class="fa fa-exclamation-triangle text-warning" ng-if="!file.valid"></i>
-        {{file.filename}}
-      </label>
-      <small class="form-text invalid-feedback" ng-if="!file.valid">ERROR {{file.error}}</small>
+    <div class="form-group form-row">
+      <!-- slickgrid "viewport" height is based on the height of this directive when autoHeight:false -->
+      <slickgrid class="border no-header text-monospace"
+          style="height: 182px;"
+          x-data="filesStep.config_.files"
+          columns="filesStep.columnDefinitions"
+          options="filesStep.gridOptions"
+          resize-with=".js-window">
+      </slickgrid>
     </div>
   </form>
 </div>
-  

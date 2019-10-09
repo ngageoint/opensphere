@@ -63,12 +63,12 @@ plugin.file.zip.ui.ZIPImportUI.prototype.launchUI = function(file, opt_config) {
     'width': '650',
     'min-width': '500',
     'max-width': '1200',
-    'height': '350',
+    'height': '360',
     'min-height': '300',
     'max-height': '1000',
     'modal': 'true',
     'show-close': 'true',
-    'no-scroll': 'false'
+    'no-scroll': 'true'
   };
   var template = '<zipimport resize-with="' + os.ui.windowSelector.WINDOW + '"></zipimport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);

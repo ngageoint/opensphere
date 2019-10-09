@@ -343,6 +343,7 @@ plugin.file.zip.ZIPParser.prototype.toUIO_ = function(entry, content, callback) 
     if (file) {
       // turn this into a better object for the UI
       return {
+        id: ol.getUid(file),
         filename: entry.filename,
         valid: true,
         selected: true,
