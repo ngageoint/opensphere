@@ -603,10 +603,12 @@ os.track.truncate = function(track, size) {
   var geometry = /** @type {!(os.track.TrackLike)} */ (track.values_[os.interpolate.ORIGINAL_GEOM_FIELD] ||
       track.getGeometry());
 
-  // merge the split line so features can be added in the correct location
-  geometry.toLonLat();
-  geometry = os.geo.mergeLineGeometry(geometry);
-  geometry.osTransform();
+  if (geometry.getType() === ol.geom.GeometryType.MULTI_LINE_STRING) {
+    // merge the split line so coordinates can be truncated to the correct size
+    geometry.toLonLat();
+    geometry = os.geo.mergeLineGeometry(geometry);
+    geometry.osTransform();
+  }
 
   var flatCoordinates = geometry.flatCoordinates;
   var stride = geometry.stride;
