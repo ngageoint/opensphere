@@ -127,6 +127,14 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.finishImport = function(descriptor) {
   plugin.file.zip.ui.ZIPImportCtrl.base(this, 'finishImport', descriptor);
 };
 
+/**
+ * @inheritDoc
+ */
+plugin.file.zip.ui.ZIPImportCtrl.prototype.storeAndFinish = function(descriptor) {
+  // do not store the ZIP file; just the file(s) that are subsequently imported
+  this.finishImport(descriptor);
+};
+
 
 /**
  * Kick off the import of an unzipped file

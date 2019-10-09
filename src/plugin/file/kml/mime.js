@@ -45,7 +45,7 @@ plugin.file.kml.mime.KMZ_TYPE = 'application/vnd.google-earth.kmz';
 /**
  * Determine if this file is a KMZ file.  Currently, the logic is:
  * Must contain *.kml file(s) and have a *.kmz filename
- * 
+ *
  * @param {ArrayBuffer} buffer
  * @param {os.file.File=} opt_file
  * @param {*=} opt_context

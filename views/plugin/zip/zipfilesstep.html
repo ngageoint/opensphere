@@ -1,17 +1,12 @@
 <div class="d-flex flex-column flex-fill">
   <div>
-    <p class="float-left" ng-if="filesStep.loading">Unzipping file(s)...</p>
-    <p class="float-left" ng-if="!filesStep.loading">Please select file(s) to import</p>
-    <p class="float-right">
-      {{filesStep.count()}} selected
-      <button class="btn btn-link" ng-click="filesStep.toggle();">Toggle All</button>
-    </p>
-    <div style="clear: both;"></div>
+    <p ng-if="filesStep.loading">Unzipping file(s)...</p>
+    <p ng-if="!filesStep.loading">Please select file(s) to import</p>
   </div>
   <form name="filesForm" novalidate>
     <div class="form-group form-row">
       <!-- slickgrid "viewport" height is based on the height of this directive when autoHeight:false -->
-      <slickgrid class="border no-header text-monospace"
+      <slickgrid class="border no-header text-monospace no-padding"
           style="height: 182px;"
           x-data="filesStep.config_.files"
           columns="filesStep.columnDefinitions"
@@ -19,5 +14,9 @@
           resize-with=".js-window">
       </slickgrid>
     </div>
+    <p>
+      {{filesStep.count()}} file(s) selected
+      <button class="btn btn-link" ng-click="filesStep.toggle();">Toggle All</button>
+    </p>
   </form>
 </div>
