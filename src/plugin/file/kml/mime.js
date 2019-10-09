@@ -27,6 +27,8 @@ plugin.file.kml.detect = function(buffer, opt_file, opt_context) {
 
   return goog.Promise.resolve(retVal);
 };
+
+
 os.file.mime.register(
     plugin.file.kml.mime.TYPE,
     plugin.file.kml.detect,
@@ -39,7 +41,38 @@ os.file.mime.register(
  */
 plugin.file.kml.mime.KMZ_TYPE = 'application/vnd.google-earth.kmz';
 
+
+/**
+ * Determine if this file is a KMZ file.  Currently, the logic is:
+ * Must contain *.kml file(s) and have a *.kmz filename
+ * 
+ * @param {ArrayBuffer} buffer
+ * @param {os.file.File=} opt_file
+ * @param {*=} opt_context
+ * @return {!goog.Promise<*|undefined>}
+ */
+plugin.file.kml.detectKmz = function(buffer, opt_file, opt_context) {
+  var retVal;
+  var kmzRegex = /\.kmz$/i;
+  var kmlRegex = /\.kml$/i;
+
+  if (opt_file && kmzRegex.test(opt_file.getFileName())) {
+    if (opt_context && Array.isArray(opt_context)) {
+      var entries = /** @type {!Array<!zip.Entry>} */ (opt_context);
+      for (var i = 0, n = entries.length; i < n; i++) {
+        if (kmlRegex.test(entries[i].filename)) {
+          retVal = true;
+          break;
+        }
+      }
+    }
+  }
+
+  return /** @type {!goog.Promise<*|undefined>} */ (goog.Promise.resolve(retVal));
+};
+
+
 os.file.mime.register(
     plugin.file.kml.mime.KMZ_TYPE,
-    os.file.mime.zip.createDetect(/\.kml$/i),
+    plugin.file.kml.detectKmz,
     0, os.file.mime.zip.TYPE);
