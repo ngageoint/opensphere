@@ -176,3 +176,38 @@ os.geo2.normalizeGeometryCoordinates = function(geometry, opt_to, opt_proj) {
   return false;
 };
 
+/**
+ * @enum {boolean}
+ */
+os.geo2.WindingOrder = {
+  CLOCKWISE: true,
+  COUNTER_CLOCKWISE: false
+};
+
+/**
+ * @param {Array<Array<number>>} ring
+ * @return {number}
+ */
+os.geo2.computeArea = function(ring) {
+  var length = ring.length;
+  var area = 0.0;
+  for (var i0 = length - 1, i1 = 0; i1 < length; i0 = i1++) {
+    var v0 = ring[i0];
+    var v1 = ring[i1];
+
+    area += (v0[0] * v1[1]) - (v1[0] * v0[1]);
+  }
+  return area * 0.5;
+};
+
+/**
+ * @param {Array<Array<number>>} ring The linear or polygon ring to check
+ * @return {os.geo2.WindingOrder}
+ */
+os.geo2.computeWindingOrder = function(ring) {
+  var area = os.geo2.computeArea(ring);
+  if (area > 0.0) {
+    return os.geo2.WindingOrder.COUNTER_CLOCKWISE;
+  }
+  return os.geo2.WindingOrder.CLOCKWISE;
+};
