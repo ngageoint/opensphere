@@ -139,10 +139,27 @@ os.query.WORLD_EXTENT = [-179.9999999999999, -89.99999999999999, 180, 90];
 
 
 /**
+ * The world coordinates in EPSG:4326. This is the max precision that a polygon can handle.
+ * Note: this includes coordinates at 0 latitude to ensure directionality of the vertical line components in 3D.
+ * @type {Array<Array<Array<number>>>}
+ * @const
+ */
+os.query.WORLD_COORDS = [[
+  [-179.9999999999999, -89.99999999999999],
+  [-179.9999999999999, 0],
+  [-179.9999999999999, 90],
+  [180, 90],
+  [180, 0],
+  [180, -89.99999999999999],
+  [-179.9999999999999, -89.99999999999999]
+]];
+
+
+/**
  * Polygon representing the whole world.
  * @type {ol.geom.Polygon}
  */
-os.query.WORLD_GEOM = ol.geom.Polygon.fromExtent(os.query.WORLD_EXTENT);
+os.query.WORLD_GEOM = new ol.geom.Polygon(os.query.WORLD_COORDS);
 
 
 /**
