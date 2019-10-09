@@ -49,7 +49,7 @@ describe('plugin.arc.ArcJSONParser', function() {
     expect(olGeom.getCoordinates()[3][0]).toBe(9);
   });
 
-  iit('should parse Arc polygon geometries', function() {
+  it('should parse Arc polygon geometries', function() {
     var parser = new plugin.arc.ArcJSONParser();
 
     // Testing one Polygon

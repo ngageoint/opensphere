@@ -176,12 +176,8 @@ plugin.arc.ArcJSONParser.prototype.parseLineStringGeometry_ = function(item) {
 plugin.arc.ArcJSONParser.prototype.parsePolygonGeometry_ = function(item) {
   var rings = item['rings'];
   var polygons = [];
-  // for (var i in rings) {
-  //   polygons[i] = new ol.geom.Polygon([rings[i]]);
-  // }
   for (var i = 0; i < rings.length; i++) {
     if (os.geo2.computeWindingOrder(rings[i]) == os.geo2.WindingOrder.CLOCKWISE) {
-      // polygons[i] = new ol.geom.Polygon([rings[i]]);
       polygons.push(new ol.geom.Polygon([rings[i]]));
     }
   }
