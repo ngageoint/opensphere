@@ -32,7 +32,7 @@ function setVariables() {
   export PLUGIN=../opensphere-plugin*
   
   export SERVER_STARTED=false
-  export SETTINGS_RENAMED=false
+  export SETTINGS_BACKUP=false
   export SETTINGS_OVERRIDE=false
 
   export SOUND_CONFIGURATION_SOURCE=cypress/support/asound.conf
@@ -40,24 +40,13 @@ function setVariables() {
 
   export SETTINGS_ORIGINAL=dist/opensphere/config/settings.json
   export SETTINGS_MOVED=dist/opensphere/config/original-settings.json
-    
-  export SETTINGS_OVERRIDE_2D_SOURCE=cypress/support/settings/override-2d.json
-  export SETTINGS_OVERRIDE_PROJECTION_SOURCE=cypress/support/settings/override-projection.json
-  export SETTINGS_OVERRIDE_TARGET=dist/opensphere/config/settings.json
+   
+  export SETTINGS_SOURCE=cypress/support/settings/.
+  export SETTINGS_TARGET=dist/opensphere/config/
 
-  if [ "$CYPRESS_PROJECTION" == 4326 ]; then
-    echo 'INFO: overriding projection; using EPSG:4326'
-    export SETTINGS_OVERRIDE_SOURCE=$SETTINGS_OVERRIDE_PROJECTION_SOURCE
-  else
-    echo 'INFO: using default projection EPSG:3857'
-    export SETTINGS_OVERRIDE_SOURCE=$SETTINGS_OVERRIDE_2D_SOURCE
-  fi
-  
-  export SETTINGS_CYPRESS_2D_SOURCE=cypress/support/settings/settings-2d.json
-  export SETTINGS_CYPRESS_2D_TARGET=dist/opensphere/config/settings-2d.json
-  export SETTINGS_CYPRESS_PROJECTION_SOURCE=cypress/support/settings/settings-projection.json
-  export SETTINGS_CYPRESS_PROJECTION_TARGET=dist/opensphere/config/settings-projection.json
-    
+  export OPENSPHERE_CONFIG_TESTER=dist/opensphere/config/opensphere-config-tester.json
+  export RUNTIME_SETTINGS=dist/opensphere/config/runtime-settings.json
+
   export ALL_TESTS=**
   export SMOKE_TESTS=smoke-tests/**
   export TEST_PATH=cypress/integration/
@@ -108,27 +97,25 @@ function checkArguments() {
   esac
 
   if [ "$CYPRESS_PROJECTION" ]; then
-    if [ "$CYPRESS_PROJECTION" == 3857 ]; then
-      echo 'INFO: CYPRESS_PROJECTION environment variable set, but the value matches the default of EPSG:3857. No override needed'
-    else if [ ! "$CYPRESS_PROJECTION" == 4326 ]; then
-      echo "ERROR: CYPRESS_PROJECTION environment variable set to unexpected value: $CYPRESS_PROJECTION. Expected 4326 or 3857!"
+    if [ "$CYPRESS_PROJECTION" != 3857 ] && [ "$CYPRESS_PROJECTION" != 4326 ]; then
+      echo "ERROR: CYPRESS_PROJECTION environment variable set to unexpected value: $CYPRESS_PROJECTION. Expected 3857 or 4326!"
       exit 1
-      else
-        if [ "$STREET_MAP_URL" ]; then
-          export SETTINGS_STREET_MAP_URL=$STREET_MAP_URL
-        else
-          echo "WARNING: STREET_MAP_URL environment variable not set, using a default value instead."
-          export SETTINGS_STREET_MAP_URL="http://services.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer/tile/{z}/{y}/{x}"
-        fi
-
-        if [ "$WORLD_IMAGERY_URL" ]; then
-            export SETTINGS_WORLD_IMAGERY_URL=$WORLD_IMAGERY_URL
-        else
-          echo "WARNING: WORLD_IMAGERY_URL environment variable not set, using a default value instead."
-          export SETTINGS_WORLD_IMAGERY_URL="https://wi.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-        fi
-      fi
+    else
+      echo "INFO: cypress will run tests with projection $CYPRESS_PROJECTION"
     fi
+  else
+    echo 'INFO: CYPRESS_PROJECTION environment variable not set, using default of 3857'
+    export CYPRESS_PROJECTION=3857
+  fi
+
+  if [ -z "$STREET_MAP_URL" ]; then
+    echo 'INFO: STREET_MAP_URL environment variable set, using default'
+    export STREET_MAP_URL="http://services.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer/tile/{z}/{y}/{x}"
+  fi
+
+  if [ -z "$WORLD_IMAGERY_URL" ]; then
+    echo 'INFO: WORLD_IMAGERY_URL environment variable not set, using default'
+    export WORLD_IMAGERY_URL="https://wi.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
   fi
 }
 
@@ -154,28 +141,24 @@ function configureSound() {
 function overrideSettings() {
   echo 'INFO: temporarily adjusting settings to prepare for running the tests'
   if [ -f $SETTINGS_ORIGINAL ]; then
-    echo 'INFO: renaming original settings file (most settings will be preserved)'
-    SETTINGS_RENAMED=true
+    echo 'INFO: backing up original settings file'
+    SETTINGS_BACKUP=true
     mv $SETTINGS_ORIGINAL $SETTINGS_MOVED
   else
     echo 'WARNING: settings file does not exist!'
   fi
 
-  echo 'INFO: creating override files...'
+  echo 'INFO: copying settings files for use during testing'
   SETTINGS_OVERRIDE=true
+  cp -r $SETTINGS_SOURCE $SETTINGS_TARGET
 
-  echo "INFO: creating a new settings override file: $SETTINGS_OVERRIDE_TARGET"
-  cp $SETTINGS_OVERRIDE_SOURCE $SETTINGS_OVERRIDE_TARGET
+  echo 'INFO: writing projection to settings file'
+  sed -i.bak 's@CYPRESS_PROJECTION@'$CYPRESS_PROJECTION'@g' $OPENSPHERE_CONFIG_TESTER && rm $OPENSPHERE_CONFIG_TESTER.bak
 
-  echo "INFO: creating 2D mode settings file: $SETTINGS_CYPRESS_2D_TARGET"
-  cp $SETTINGS_CYPRESS_2D_SOURCE $SETTINGS_CYPRESS_2D_TARGET
+  echo 'INFO: writing map urls to settings file'
+  sed -i.bak 's@STREET_MAP_URL@'$STREET_MAP_URL'@g' $OPENSPHERE_CONFIG_TESTER && rm $OPENSPHERE_CONFIG_TESTER.bak
+  sed -i.bak 's@WORLD_IMAGERY_URL@'$WORLD_IMAGERY_URL'@g' $OPENSPHERE_CONFIG_TESTER && rm $OPENSPHERE_CONFIG_TESTER.bak
 
-  if [ "$CYPRESS_PROJECTION" == 4326 ]; then
-    echo "INFO: creating projection settings file: $SETTINGS_CYPRESS_PROJECTION_TARGET"
-    cp $SETTINGS_CYPRESS_PROJECTION_SOURCE $SETTINGS_CYPRESS_PROJECTION_TARGET
-    sed -i.bak 's@STREET_MAP_URL@'$SETTINGS_STREET_MAP_URL'@g' $SETTINGS_CYPRESS_PROJECTION_TARGET && rm $SETTINGS_CYPRESS_PROJECTION_TARGET.bak
-    sed -i.bak 's@WORLD_IMAGERY_URL@'$SETTINGS_WORLD_IMAGERY_URL'@g' $SETTINGS_CYPRESS_PROJECTION_TARGET && rm $SETTINGS_CYPRESS_PROJECTION_TARGET.bak
-  fi
   echo 'INFO: all settings adjustments finished'
 }
 
@@ -185,7 +168,7 @@ function startWebServer() {
   else
     webServerProcess="$(ps -ef | grep http-server | grep -v grep)"
   fi
-  
+
   if [ -z "$webServerProcess" ]; then
     SERVER_STARTED=true
     if [ "$ENVIRONMENT" == "ci" ]; then
@@ -254,27 +237,21 @@ function stopWebServer() {
 }
 
 function restoreSettings() {
-  if $SETTINGS_OVERRIDE || $SETTINGS_RENAMED; then
+  if $SETTINGS_OVERRIDE || $SETTINGS_BACKUP; then
     echo 'INFO: restoring settings to their original state before tests were started'
     
     if $SETTINGS_OVERRIDE; then
-      echo "INFO: removing settings override file: $SETTINGS_OVERRIDE_TARGET"
-      rm $SETTINGS_OVERRIDE_TARGET
-      
-      echo "INFO: removing 2D mode settings file: $SETTINGS_CYPRESS_2D_TARGET"
-      rm $SETTINGS_CYPRESS_2D_TARGET
-
-      if [ "$CYPRESS_PROJECTION" == 4326 ]; then
-        echo "INFO: removing projection settings file: $SETTINGS_CYPRESS_PROJECTION_TARGET"
-        rm $SETTINGS_CYPRESS_PROJECTION_TARGET
-      fi
+      echo 'INFO: removing temporary settings files'
+      rm $OPENSPHERE_CONFIG_TESTER
+      rm $RUNTIME_SETTINGS
+      rm $SETTINGS_ORIGINAL
     fi
 
-    if $SETTINGS_RENAMED; then
-      echo "INFO: renaming $SETTINGS_MOVED to $SETTINGS_ORIGINAL"
+    if $SETTINGS_BACKUP; then
+      echo 'INFO: restoring settings backup'
       mv $SETTINGS_MOVED $SETTINGS_ORIGINAL
     else
-      echo 'INFO: settings were never renamed, nothing to do'
+      echo 'INFO: settings were never backed up, nothing to do'
     fi
     echo 'INFO: settings have been restored to their original state'
   else
