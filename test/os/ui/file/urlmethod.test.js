@@ -7,7 +7,7 @@ goog.require('os.ui.file.method.UrlMethod');
 
 describe('os.ui.file.method.UrlMethod', function() {
   os.net.RequestHandlerFactory.addHandler(os.net.SameDomainHandler);
-  var testUrl = '/base/test/resources/foo';
+  var testUrl = '/base/test/resources/foo.txt';
 
   it('gets the url', function() {
     var method = new os.ui.file.method.UrlMethod();
@@ -44,7 +44,7 @@ describe('os.ui.file.method.UrlMethod', function() {
       var file = method.getFile();
       file.convertContentToString();
 
-      expect(file.getFileName()).toBe('foo');
+      expect(file.getFileName()).toBe('foo.txt');
       expect(file.getContent()).toBe('bar');
       expect(file.getUrl()).toBe(testUrl);
       expect(file.getContentType()).toBe('text/plain');
