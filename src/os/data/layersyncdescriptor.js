@@ -380,7 +380,11 @@ os.data.LayerSyncDescriptor.prototype.onLayerChange = function(e) {
     if (p == 'loading') {
       this.onLoadingChange(e);
     } else if (os.data.LayerSyncDescriptor.STYLE_CHANGE_EVENTS.indexOf(p) > -1) {
-      this.onStyleChange();
+      // only handle these events if they aren't for a specific set of features, to avoid unnecessary processing
+      var features = e.getNewValue();
+      if (!features || !features.length) {
+        this.onStyleChange();
+      }
     } else {
       this.saveDescriptor();
     }

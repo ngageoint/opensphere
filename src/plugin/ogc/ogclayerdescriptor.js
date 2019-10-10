@@ -976,19 +976,6 @@ plugin.ogc.OGCLayerDescriptor.prototype.getWfsOptions = function(opt_options) {
   var options = opt_options || {};
   options['id'] = this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + 'features';
 
-  var params = os.ogc.getDefaultWfsParams();
-  params.set('typename', this.getWfsName());
-
-  // merge custom WFS params
-  var customWfsParams = this.getWfsParams();
-  if (customWfsParams) {
-    params.extend(customWfsParams);
-  }
-
-  if (this.getWfsNamespace()) {
-    params.set('namespace', this.getWfsNamespace());
-  }
-
   // color will change with user choices, baseColor maintains the original layer color for reset
   options['baseColor'] = this.getColor();
   options['color'] = this.getColor();
@@ -1000,7 +987,7 @@ plugin.ogc.OGCLayerDescriptor.prototype.getWfsOptions = function(opt_options) {
   options['filter'] = true;
   options['layerType'] = this.getType();
   options['load'] = true;
-  options['params'] = params;
+  options['params'] = os.ogc.getWfsParams(this);
   options['provider'] = this.getProvider();
   options['spatial'] = true;
   options['tags'] = this.getTags();

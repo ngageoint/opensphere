@@ -37,17 +37,19 @@ os.style.label.DEFAULT_LABEL = {
 /**
  * Checks whether a set of labels has any non-default labels.
  *
- * @param {Array<os.style.label.LabelConfig>} labels
- * @return {boolean}
+ * @param {Array<os.style.label.LabelConfig>} labels The label configs.
+ * @return {boolean} If one or more label configs have a non-default column.
  */
 os.style.label.hasNonDefaultLabels = function(labels) {
-  for (var i = 0, ii = labels.length; i < ii; i++) {
-    if (labels[i]['column'] !== os.style.label.DEFAULT_LABEL['column']) {
-      return false;
+  if (labels && labels.length) {
+    for (var i = 0; i < labels.length; i++) {
+      if (labels[i]['column'] !== os.style.label.DEFAULT_LABEL['column']) {
+        return true;
+      }
     }
   }
 
-  return true;
+  return false;
 };
 
 
@@ -65,12 +67,37 @@ os.style.label.getLabels = function(featureLabels, layerLabels) {
   }
 
   // no feature labels - check if layer labels are defined and not the defaults
-  if (layerLabels && !os.style.label.hasNonDefaultLabels(layerLabels)) {
+  if (layerLabels && os.style.label.hasNonDefaultLabels(layerLabels)) {
     return layerLabels;
   }
 
   // return the default label config
   return [os.style.label.cloneConfig()];
+};
+
+
+/**
+ * Gets the first non-default set of labels between the feature and layer configs.
+ *
+ * @param {Array<Object>|Object|undefined} config
+ * @return {Array<os.style.label.LabelConfig>}
+ */
+os.style.label.getConfigLabels = function(config) {
+  if (config) {
+    if (config[os.style.StyleField.LABELS]) {
+      return config[os.style.StyleField.LABELS];
+    } else if (Array.isArray(config)) {
+      // return the first non-empty label config
+      for (var i = 0; i < config.length; i++) {
+        var labels = /** @type {Array<os.style.label.LabelConfig>} */ (config[i][os.style.StyleField.LABELS]);
+        if (os.style.label.hasNonDefaultLabels(labels)) {
+          return labels;
+        }
+      }
+    }
+  }
+
+  return null;
 };
 
 
@@ -234,7 +261,7 @@ os.style.label.updateShown_ = function() {
 
       // labels set on the feature config take precedence over source labels
       var featureConfig = feature.values_[os.style.StyleType.FEATURE];
-      var featureLabels = featureConfig ? featureConfig[os.style.StyleField.LABELS] : null;
+      var featureLabels = os.style.label.getConfigLabels(featureConfig);
       var featureSourceId = feature.values_[os.data.RecordField.SOURCE_ID];
       var layerLabels = fields[featureSourceId];
       var labels = os.style.label.getLabels(featureLabels, layerLabels);
