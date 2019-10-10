@@ -10,9 +10,11 @@ goog.require('os.ui.filter.op.EqualTo');
 goog.require('os.ui.filter.op.GreaterThan');
 goog.require('os.ui.filter.op.GreaterThanOrEqualTo');
 goog.require('os.ui.filter.op.InList');
+goog.require('os.ui.filter.op.IsFalse');
 goog.require('os.ui.filter.op.IsLike');
 goog.require('os.ui.filter.op.IsLikeNumeric');
 goog.require('os.ui.filter.op.IsNull');
+goog.require('os.ui.filter.op.IsTrue');
 goog.require('os.ui.filter.op.LessThan');
 goog.require('os.ui.filter.op.LessThanOrEqualTo');
 goog.require('os.ui.filter.op.LikeList');
@@ -83,6 +85,8 @@ os.ui.filter.OPERATIONS = [
   new os.ui.filter.op.Not(new os.ui.filter.op.LikeList()),
   new os.ui.filter.op.IsLikeNumeric(),
   new os.ui.filter.op.LikeListNumeric(),
+  new os.ui.filter.op.IsTrue(),
+  new os.ui.filter.op.IsFalse(),
   new os.ui.filter.op.time.NewerThan(),
   new os.ui.filter.op.time.Between(),
   new os.ui.filter.op.time.OlderThan()
