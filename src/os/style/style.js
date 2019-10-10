@@ -1207,15 +1207,6 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
           featureConfig[os.style.StyleField.IMAGE]);
     }
 
-    // rotate icon as specified
-    if (featureConfig[os.style.StyleField.SHOW_ROTATION] !== undefined &&
-        featureConfig[os.style.StyleField.ROTATION_COLUMN] !== undefined) {
-      os.style.setConfigIconRotationFromObject(featureConfig, featureConfig, feature);
-    } else if (feature.values_[os.style.StyleField.SHOW_ROTATION] !== undefined &&
-        feature.values_[os.style.StyleField.ROTATION_COLUMN] !== undefined) {
-      os.style.setConfigIconRotationFromObject(featureConfig, feature.values_, feature);
-    }
-
     var strokeConfig = featureConfig[os.style.StyleField.STROKE];
     if (strokeConfig) {
       // merge the layer size into the feature size
@@ -1228,7 +1219,16 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
       os.style.mergeConfig(opt_layerConfig[os.style.StyleField.STROKE],
           featureConfig[os.style.StyleField.STROKE]);
     }
-  } else if (opt_layerConfig && opt_layerConfig[os.style.StyleField.SHOW_ROTATION] !== undefined && // rotate icon
+  }
+
+  // rotate icon as specified
+  if (featureConfig[os.style.StyleField.SHOW_ROTATION] !== undefined &&
+      featureConfig[os.style.StyleField.ROTATION_COLUMN] !== undefined) {
+    os.style.setConfigIconRotationFromObject(featureConfig, featureConfig, feature);
+  } else if (feature.values_[os.style.StyleField.SHOW_ROTATION] !== undefined &&
+      feature.values_[os.style.StyleField.ROTATION_COLUMN] !== undefined) {
+    os.style.setConfigIconRotationFromObject(featureConfig, feature.values_, feature);
+  } else if (opt_layerConfig && opt_layerConfig[os.style.StyleField.SHOW_ROTATION] !== undefined &&
       opt_layerConfig[os.style.StyleField.ROTATION_COLUMN] !== undefined) {
     os.style.setConfigIconRotationFromObject(featureConfig, opt_layerConfig, feature);
   }
