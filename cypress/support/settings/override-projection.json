@@ -1,7 +1,0 @@
-{
-  "overrides": [
-    "config/original-settings.json",
-    "config/settings-2d.json",
-    "config/settings-projection.json"
-  ]
-}
