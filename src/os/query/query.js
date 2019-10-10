@@ -180,6 +180,19 @@ os.query.WORLD_AREA = new ol.Feature({
 
 
 /**
+ * Feature representing the area we want to zoom to when zooming to the whole world.
+ * @type {ol.Feature}
+ */
+os.query.WORLD_ZOOM_FEATURE = new ol.Feature(new ol.geom.Polygon([[
+  [179, 90],
+  [181, 90],
+  [181, -90],
+  [179, -90],
+  [179, 90]
+]]));
+
+
+/**
  * Get whether country borders are enabled.
  * @return {boolean} Whether or not picking by country is enabled
  */
