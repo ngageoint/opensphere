@@ -1,0 +1,7 @@
+{
+  "overrides": [
+    "../../config/settings.json",
+    "config/opensphere-config-tester.json",
+    "config/runtime-settings.json"
+  ]
+}
