@@ -297,7 +297,7 @@ plugin.file.zip.ZIPParser.prototype.handleZIPText_ = function(uio, event) {
   var content = (event && event.target) ? event.target.result : null;
 
   if (content && typeof content === 'string') {
-    if (uio) uio.file.setContent(content);
+    if (uio) uio['file'].setContent(content);
     this.onComplete_(uio);
   } else {
     this.logError_('There was a problem reading the ZIP content!');
@@ -343,12 +343,12 @@ plugin.file.zip.ZIPParser.prototype.toUIO_ = function(entry, content, callback) 
     if (file) {
       // turn this into a better object for the UI
       return {
-        id: ol.getUid(file),
-        filename: entry.filename,
-        valid: true,
-        selected: true,
-        msg: '',
-        file: file
+        'id': ol.getUid(file),
+        'filename': entry.filename,
+        'valid': true,
+        'selected': true,
+        'msg': '',
+        'file': file
       };
     }
     return null;
