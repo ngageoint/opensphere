@@ -37,7 +37,9 @@ os.search.SearchSetting = {
  */
 os.search.SortType = {
   DATE: 'Date',
-  RELEVANCE: 'Relevance'
+  RECENTLY_USED: 'Recently Used',
+  RELEVANCE: 'Relevance',
+  TITLE: 'Title'
 };
 
 
