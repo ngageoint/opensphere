@@ -8,10 +8,11 @@
       <!-- slickgrid "viewport" height is based on the height of this directive when autoHeight:false -->
       <slickgrid class="border no-header text-monospace no-padding"
           style="height: 182px;"
-          x-data="filesStep.config_.files"
+          x-data="filesStep.files"
           columns="filesStep.columnDefinitions"
           options="filesStep.gridOptions"
-          resize-with=".js-window">
+          resize-with=".js-window"
+          use-angular="true">
       </slickgrid>
     </div>
     <p>

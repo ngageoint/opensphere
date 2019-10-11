@@ -2,6 +2,7 @@ goog.provide('plugin.file.zip.ui.ZIPFilesStep');
 goog.provide('plugin.file.zip.ui.ZIPFilesStepCtrl');
 
 goog.require('goog.log');
+goog.require('os.data.ColumnDefinition');
 goog.require('os.defines');
 goog.require('os.file.File');
 goog.require('os.ui.Module');
@@ -51,6 +52,35 @@ plugin.file.zip.ui.ZIPFilesStep.prototype.finalize = function(config) {
 
 
 /**
+ * Simple formatter to create checkmark on "selected" when rendering slickgrid
+ *
+ * @param {!number} row
+ * @param {!number} cell
+ * @param {!*} value
+ * @param {!Object} columnDef
+ * @param {!Object} dataContext
+ * @return {!string}
+ * @private
+ */
+plugin.file.zip.ui.formatter = function(row, cell, value, columnDef, dataContext) {
+  var html = [];
+
+  // match the angular in zipfilestep.html
+  html.push('<div onclick="var _s = angular.element(this).scope(); _s.$parent.filesStep.toggle(_s, '
+    + dataContext['id']
+    + ');">');
+
+  if (dataContext['selected']) html.push('<i class="fa fa-check"></i> ');
+  else html.push('<span>&nbsp;&nbsp;</span> ');
+
+  html.push(dataContext['filename']);
+  html.push('</div>');
+
+  return html.join('');
+};
+
+
+/**
  * The ZIP import file selection step directive
  *
  * @return {angular.Directive}
@@ -94,6 +124,11 @@ plugin.file.zip.ui.ZIPFilesStepCtrl = function($scope) {
   this.config_ = /** @type {plugin.file.zip.ZIPParserConfig} */ ($scope['config']);
 
   /**
+   * @type {Array.<Object>}
+   */
+  this['files'] = this.config_['files'];
+
+  /**
    * @type {boolean}
    */
   this['loading'] = false;
@@ -104,30 +139,32 @@ plugin.file.zip.ui.ZIPFilesStepCtrl = function($scope) {
   this['valid'] = false;
 
   /**
-   * @type {Array.<Object>}
+   * @type {Array.<os.data.ColumnDefinition>}
    */
   this['columnDefinitions'] = [
-    {
-      id: 'filename',
-      editable: false,
-      field: 'filename',
-      formatter: this.formatter_,
-      name: 'Filename',
-      selectable: false,
-      sortable: false
-    }
+    new os.data.ColumnDefinition()
   ];
+
+  this['columnDefinitions'][0].restore({
+    'id': 'filename',
+    'editable': false,
+    'field': 'filename',
+    'formatter': plugin.file.zip.ui.formatter,
+    'name': 'Filename',
+    'selectable': false,
+    'sortable': false
+  });
 
   /**
    * @type {Object}
    */
   this['gridOptions'] = {
-    editable: true,
-    enableAutoResize: true,
-    enableRowSelection: false,
-    forceFitColumns: true,
-    fullWidthRows: true,
-    multiSelect: false
+    'editable': true,
+    'enableAutoResize': true,
+    'enableRowSelection': false,
+    'forceFitColumns': true,
+    'fullWidthRows': true,
+    'multiSelect': false
   };
 
   $scope.$on('$destroy', this.destroy_.bind(this));
@@ -161,35 +198,6 @@ plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.destroy_ = function() {
 /**
  * Checks if files have been chosen/validated.
  *
- * @param {!number} row
- * @param {!number} cell
- * @param {!*} value
- * @param {!Object} columnDef
- * @param {!Object} dataContext
- * @return {!string}
- * @private
- */
-plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.formatter_ = function(row, cell, value, columnDef, dataContext) {
-  var html = [];
-
-  // match the angular in zipfilestep.html
-  html.push('<div onclick="var _s = angular.element(this).scope(); _s.$parent.filesStep.toggle(_s, '
-    + dataContext.id
-    + ');">');
-
-  if (dataContext.selected) html.push('<i class="fa fa-check"></i> ');
-  else html.push('<span>&nbsp;&nbsp;</span> ');
-
-  html.push(dataContext.filename);
-  html.push('</div>');
-
-  return html.join('');
-};
-
-
-/**
- * Checks if files have been chosen/validated.
- *
  * @private
  */
 plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.validate_ = function() {
@@ -211,35 +219,36 @@ plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.validate_ = function() {
 plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.toggle = function(scope, id) {
   if (scope && id) {
     var idx = -1;
-    var file = this.config_['files'].find(function(e) {
+    var file = this['files'].find(function(e) {
       idx++;
       return e.id == id;
     });
 
     if (file) {
       file.selected = !file.selected;
-      scope['gridCtrl']['grid'].updateRow(idx); // just invalidate them all if sorting is added: scope.gridCtrl.invalidateRows();
+      scope['gridCtrl'].grid.updateRow(idx); // just invalidate them all if sorting is added: scope.gridCtrl.invalidateRows();
     }
   } else {
     scope = this.scope_['$$childHead'];
 
-    var selected = !this.config_['files'][0].selected;
-    this.config_['files'].forEach(function(file) {
+    var selected = !this['files'][0].selected;
+    this['files'].forEach(function(file) {
       file.selected = selected;
     });
 
-    if (scope) scope.gridCtrl.invalidateRows();
+    if (scope) scope['gridCtrl'].invalidateRows();
   }
   os.ui.apply(this.scope_);
 };
+
 
 /**
  * Returns a count of the number of "selected" files for the UI
  * @return {number}
  */
 plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.count = function() {
-  return (this.config_['files'])
-    ? this.config_['files'].reduce(function(a, v) {
+  return (this['files'])
+    ? this['files'].reduce(function(a, v) {
       if (typeof a == 'object') a = (a.selected ? 1 : 0);
       if (v.selected) a++;
       return a;

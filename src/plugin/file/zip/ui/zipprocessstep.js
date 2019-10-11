@@ -183,7 +183,7 @@ plugin.file.zip.ui.ZIPProcessStepCtrl.prototype.validate_ = function() {
     msg.push('Found ' + nFiles + ' file(s)');
     msg.push('Click "Next" to proceed');
   }
-  this.msg = msg;
+  this['msg'] = msg;
   this.scope_.$emit(os.ui.wiz.step.WizardStepEvent.VALIDATE, this['valid']);
 
   if (status == 1) {
