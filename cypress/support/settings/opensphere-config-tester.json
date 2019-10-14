@@ -3,21 +3,21 @@
     "providers": {
       "basemap": {
         "defaults": {
-          "EPSG:4326": [
+          "EPSG:CYPRESS_PROJECTION": [
             "streetmap",
             "worldimagery"
           ]
         },
         "maps": {
           "streetmap": {
-            "projection": "EPSG:4326",
+            "projection": "EPSG:CYPRESS_PROJECTION",
             "urls": [
               "STREET_MAP_URL"
             ],
             "zoomOffset": -1
           },
           "worldimagery": {
-            "projection": "EPSG:4326",
+            "projection": "EPSG:CYPRESS_PROJECTION",
             "urls": [
               "WORLD_IMAGERY_URL"
             ],
@@ -28,6 +28,6 @@
     }
   },
   "user": {
-    "baseProjection": "EPSG:4326"
+    "baseProjection": "EPSG:CYPRESS_PROJECTION"
   }
 }

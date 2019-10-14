@@ -12,7 +12,6 @@ goog.require('ol.source.Vector');
 goog.require('ol.source.VectorEventType');
 goog.require('os');
 goog.require('os.Fields');
-goog.require('os.MapContainer');
 goog.require('os.command.FlyToExtent');
 goog.require('os.data.RecordField');
 goog.require('os.fn');
@@ -357,7 +356,6 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
 
   var geom = feature ? feature.getGeometry() : null;
   if (opt_lobOpts && geom instanceof ol.geom.Point) {
-    // var use3D = os.MapContainer.getInstance().is3DEnabled();
     // the feature must have a center point and a bearing to generate a lob. no values should ever be assumed.
     var center = ol.proj.toLonLat(geom.getFirstCoordinate(), os.map.PROJECTION);
     var bearing = os.feature.getColumnValue(feature, opt_lobOpts.bearingColumn);
@@ -692,11 +690,11 @@ os.feature.getLayerId = function(feature) {
  */
 os.feature.getLayer = function(feature) {
   var layer = null;
-  if (feature) {
+  if (feature && os.map.mapContainer) {
     var sourceId = os.feature.getLayerId(feature);
     if (sourceId) {
       // look up the layer via the id
-      layer = os.MapContainer.getInstance().getLayer(sourceId);
+      layer = os.map.mapContainer.getLayer(sourceId);
     }
   }
 
@@ -934,8 +932,8 @@ os.feature.update = function(feature, opt_source) {
     opt_source = os.feature.getSource(feature);
   }
 
-  if (!opt_source && os.MapContainer.getInstance().containsFeature(feature)) {
-    opt_source = os.MapContainer.getInstance().getLayer(os.MapContainer.DRAW_ID).getSource();
+  if (!opt_source && os.map.mapContainer && os.map.mapContainer.containsFeature(feature)) {
+    opt_source = os.map.mapContainer.getLayer(os.MapContainer.DRAW_ID).getSource();
   }
 
   var id = feature.getId();

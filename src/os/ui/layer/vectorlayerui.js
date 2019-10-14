@@ -137,6 +137,12 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
    */
   this.refreshLabels = true;
 
+  /**
+   * The unique identifier for the layer.
+   * @type {os.data.ColumnDefinition}
+   */
+  this['uniqueId'] = null;
+
   os.ui.layer.VectorLayerUICtrl.base(this, 'constructor', $scope, $element, $timeout);
   this.defaultColorControl = os.ui.ColorControlType.PICKER;
 
@@ -223,7 +229,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
     if (this.scope['items'] && this.scope['items'].length == 1) {
       // NOTE: This initUI method can get called a-lot, depending on some events that get routed to this method.
       this.scope['columns'] = this.getColumns();
-      this['uniqueId'] = this.getUniqueId();
+      this['uniqueId'] = this.getValue(os.ui.layer.getUniqueId);
 
       this.reconcileLabelsState_();
 
@@ -245,6 +251,8 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
       this.scope['showLabels'] = false;
       this.scope['labelColor'] = '';
       this.scope['labelSize'] = 0;
+
+      this['uniqueId'] = null;
     }
 
     var webGLRenderer = os.map.mapContainer.getWebGLRenderer();
@@ -1146,16 +1154,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.getColumn = function() {
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getShowLabel = function() {
   return this.getValue(os.ui.layer.getShowLabel);
-};
-
-
-/**
- * Gets the unique id
- *
- * @return {boolean} The show label
- */
-os.ui.layer.VectorLayerUICtrl.prototype.getUniqueId = function() {
-  return this.getValue(os.ui.layer.getUniqueId);
 };
 
 

@@ -675,12 +675,26 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePolyline = function(feature,
   var width = this.extractLineWidthFromOlStyle(style);
   var color = this.extractColorFromOlStyle(style, true);
   color.alpha *= context.layer.getOpacity();
-  var lineDash = this.getDashPattern(style);
+  var dashPattern = this.getDashPattern(style);
 
-  polyline.material = Cesium.Material.fromType(Cesium.Material.PolylineDashType, {
+  var materialOptions = {
     color: color,
-    dashPattern: lineDash
-  });
+    dashPattern: dashPattern
+  };
+
+  var materialType = dashPattern != null ? Cesium.Material.PolylineDashType : Cesium.Material.ColorType;
+  var material = polyline.material;
+  if (!material || material.type != materialType) {
+    polyline.material = Cesium.Material.fromType(materialType, materialOptions);
+  } else {
+    if (!material.uniforms.color.equals(color)) {
+      material.uniforms.color = color;
+    }
+    if (materialType === Cesium.Material.PolylineDashType && material.uniforms.dashPattern != dashPattern) {
+      material.uniforms.dashPattern = dashPattern;
+    }
+  }
+
   polyline.width = width;
 
   if (polyline instanceof Cesium.Polyline) {
@@ -1791,11 +1805,6 @@ plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feat
     geomType = 'ellipse';
   }
 
-  if (geometry.getType() === ol.geom.GeometryType.POLYGON && os.query.isWorldQuery(geometry)) {
-    // do not show these
-    return;
-  }
-
   var heightReference = this.getHeightReference(context.layer, feature, geometry);
   if (this.isPrimitiveTypeChanging(heightReference, primitive)) {
     // we cannot update it; it must be recreated
@@ -1853,7 +1862,6 @@ plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feat
       case ol.geom.GeometryType.POLYGON:
         geometry = /** @type {!ol.geom.Polygon} */ (geometry);
         primitive = this.olPolygonGeometryToCesiumPolyline(feature, geometry, context, style);
-        // primitive = this.olPolygonGeometryToCesium(feature, geometry, context, style);
         break;
       case ol.geom.GeometryType.MULTI_POINT:
       case ol.geom.GeometryType.MULTI_LINE_STRING:
