@@ -63,6 +63,10 @@ $user-select-options: all, auto, text, none;
   cursor: default;
 }
 
+.u-cursor-pointer {
+  cursor: pointer;
+}
+
 .u-cursor-help {
   cursor: help;
 }
