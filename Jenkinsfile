@@ -70,7 +70,9 @@ node(getLabel()) {
 
         stage('package') {
           dir('dist') {
-            sh "zip -q -r opensphere-${env.BRANCH_NAME}-${env.BUILD_NUMBER}.zip opensphere"
+            def specialCharRegex = /[\W_&&[^\s]]/
+            def branchZipName = env.BRANCH_NAME.replaceAll(specialCharRegex, '')
+            sh "zip -q -r opensphere-${branchZipName}-${env.BUILD_NUMBER}.zip opensphere"
 
             try {
               // newer
