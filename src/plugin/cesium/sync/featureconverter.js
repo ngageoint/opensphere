@@ -1805,11 +1805,6 @@ plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feat
     geomType = 'ellipse';
   }
 
-  if (geometry.getType() === ol.geom.GeometryType.POLYGON && os.query.isWorldQuery(geometry)) {
-    // do not show these
-    return;
-  }
-
   var heightReference = this.getHeightReference(context.layer, feature, geometry);
   if (this.isPrimitiveTypeChanging(heightReference, primitive)) {
     // we cannot update it; it must be recreated
@@ -1867,7 +1862,6 @@ plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feat
       case ol.geom.GeometryType.POLYGON:
         geometry = /** @type {!ol.geom.Polygon} */ (geometry);
         primitive = this.olPolygonGeometryToCesiumPolyline(feature, geometry, context, style);
-        // primitive = this.olPolygonGeometryToCesium(feature, geometry, context, style);
         break;
       case ol.geom.GeometryType.MULTI_POINT:
       case ol.geom.GeometryType.MULTI_LINE_STRING:

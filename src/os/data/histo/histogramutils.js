@@ -3,7 +3,6 @@ goog.provide('os.data.histo');
 goog.require('goog.dom');
 goog.require('ol.array');
 goog.require('os.alert.Alert');
-goog.require('os.data.OSDataManager');
 goog.require('os.filter.FilterEntry');
 goog.require('os.filter.IFilterable');
 goog.require('os.implements');
