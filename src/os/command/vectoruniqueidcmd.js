@@ -1,11 +1,8 @@
 goog.provide('os.command.VectorUniqueIdCmd');
 
+goog.require('goog.asserts');
 goog.require('os.command.AbstractVectorStyle');
-goog.require('os.data.OSDataManager');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.metrics');
-goog.require('os.source.PropertyChange');
-
+goog.require('os.metrics.keys');
 
 
 /**
@@ -20,7 +17,7 @@ goog.require('os.source.PropertyChange');
 os.command.VectorUniqueIdCmd = function(layerId, value, opt_oldValue) {
   os.command.VectorUniqueIdCmd.base(this, 'constructor', layerId, value, opt_oldValue);
   this.title = 'Change Unique ID';
-  this.metricKey = os.metrics.Layer.LABEL_COLUMN_SELECT;
+  this.metricKey = os.metrics.Layer.VECTOR_UNIQUE_ID;
 
   /**
    * @type {os.data.ColumnDefinition}

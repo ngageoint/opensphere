@@ -114,6 +114,32 @@ os.ogc.getDefaultWfsParams = function() {
 
 
 /**
+ * Get the WFS params for an OGC descriptor.
+ * @param {os.ui.ogc.IOGCDescriptor} descriptor The descriptor.
+ * @return {!goog.Uri.QueryData} The params.
+ */
+os.ogc.getWfsParams = function(descriptor) {
+  var params = os.ogc.getDefaultWfsParams();
+  if (descriptor) {
+    params.set('typename', descriptor.getWfsName());
+
+    // merge custom WFS params
+    var customWfsParams = descriptor.getWfsParams();
+    if (customWfsParams) {
+      params.extend(customWfsParams);
+    }
+
+    var namespace = descriptor.getWfsNamespace();
+    if (namespace) {
+      params.set('namespace', namespace);
+    }
+  }
+
+  return params;
+};
+
+
+/**
  * Get the maxiumum number of features supported by the application.
  *
  * @param {string=} opt_key Optional settings key
