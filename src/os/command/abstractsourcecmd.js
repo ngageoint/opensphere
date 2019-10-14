@@ -1,7 +1,6 @@
 goog.provide('os.command.AbstractSource');
 goog.require('os.command.ICommand');
 goog.require('os.command.State');
-goog.require('os.data.OSDataManager');
 goog.require('os.source.ISource');
 
 
@@ -32,7 +31,7 @@ os.command.AbstractSource = function(sourceId) {
  * @return {?os.source.ISource} The source
  */
 os.command.AbstractSource.prototype.getSource = function() {
-  return os.osDataManager.getSource(this.sourceId);
+  return os.data.OSDataManager.getInstance().getSource(this.sourceId);
 };
 
 
