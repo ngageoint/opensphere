@@ -1,0 +1,32 @@
+<div class="flex-fill w-100 d-flex flex-column">
+  <div class="modal-body container flex-fill">
+    <div>
+        <p>Unzipping file(s)... <span ng-show="!ctrl.loading">{{ctrl.valid ? 'SUCCESS' : 'ERROR'}}</span></p>
+        <p ng-show="ctrl.loading"><i class="fa fa-spinner fa-spin" /></p>
+    </div>
+    <div ng-if="!ctrl.loading">
+      <div>
+        <p class="float-left">Please select file(s) to import</p>
+        <p class="float-right">
+          {{ctrl.count()}} file(s) selected
+        </p>
+        <div style="clear: both;"></div>
+      </div>
+      <form name="filesForm" novalidate>
+        <div class="form-group form-row">
+          <checklist name="filelist" allow-multiple="true" items="ctrl.files"></checklist>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer d-flex">
+    <button class="btn btn-primary" ng-click="ctrl.finish()" ng-disabled="filesForm.$invalid" title="Import the selected file(s)">
+      <i class="fa fa-check"></i>
+      OK
+    </button>
+    <button class="btn btn-secondary" ng-click="ctrl.close()" title="Cancel import">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
+  </div>
+</div>

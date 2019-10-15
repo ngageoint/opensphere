@@ -4,7 +4,6 @@ goog.require('os.ui.im.FileImportUI');
 goog.require('os.ui.window');
 goog.require('plugin.file.zip.ZIPParserConfig');
 goog.require('plugin.file.zip.mime');
-goog.require('plugin.file.zip.ui.ZIPFilesStep');
 goog.require('plugin.file.zip.ui.zipImportDirective');
 
 
@@ -14,6 +13,9 @@ goog.require('plugin.file.zip.ui.zipImportDirective');
  */
 plugin.file.zip.ui.ZIPImportUI = function() {
   plugin.file.zip.ui.ZIPImportUI.base(this, 'constructor');
+
+  // file contents are only used in memory, not loaded from storage
+  this.requiresStorage = false;
 };
 goog.inherits(plugin.file.zip.ui.ZIPImportUI, os.ui.im.FileImportUI);
 
@@ -32,10 +34,6 @@ plugin.file.zip.ui.ZIPImportUI.prototype.getTitle = function() {
 plugin.file.zip.ui.ZIPImportUI.prototype.launchUI = function(file, opt_config) {
   plugin.file.zip.ui.ZIPImportUI.base(this, 'launchUI', file, opt_config);
 
-  var steps = [
-    new plugin.file.zip.ui.ZIPFilesStep()
-  ];
-
   var config = new plugin.file.zip.ZIPParserConfig();
 
   // if a configuration was provided, merge it in
@@ -46,12 +44,11 @@ plugin.file.zip.ui.ZIPImportUI.prototype.launchUI = function(file, opt_config) {
   config.file = file; // set the file
 
   config.update(function() {
-    // called when unzip finishes... don't need it right now
+    // called when unzip finishes... don't need it at this point in the UI
   });
 
   var scopeOptions = {
-    'config': config,
-    'steps': steps
+    'config': config
   };
   var windowOptions = {
     'label': 'ZIP Import',

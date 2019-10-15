@@ -7,8 +7,8 @@ goog.require('os.data.FileDescriptor');
 goog.require('os.defines');
 goog.require('os.file.File');
 goog.require('os.ui.Module');
+goog.require('os.ui.file.FileImportCtrl');
 goog.require('os.ui.im.DuplicateImportProcess');
-goog.require('os.ui.im.FileImportWizard');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportEventType');
 goog.require('os.ui.im.ImportManager');
@@ -21,9 +21,13 @@ goog.require('os.ui.wiz.wizardDirective');
  * @return {angular.Directive}
  */
 plugin.file.zip.ui.zipImportDirective = function() {
-  var dir = os.ui.wiz.wizardDirective();
-  dir.controller = plugin.file.zip.ui.ZIPImportCtrl;
-  return dir;
+  return {
+    restrict: 'E',
+    replace: true,
+    templateUrl: os.ROOT + 'views/plugin/zip/zipimport.html',
+    controller: plugin.file.zip.ui.ZIPImportCtrl,
+    controllerAs: 'ctrl'
+  };
 };
 os.ui.Module.directive('zipimport', [plugin.file.zip.ui.zipImportDirective]);
 
@@ -35,12 +39,18 @@ os.ui.Module.directive('zipimport', [plugin.file.zip.ui.zipImportDirective]);
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
  * @param {!Object.<string, string>} $attrs
- * @extends {os.ui.im.FileImportWizard<!plugin.file.zip.ZIPParserConfig,!os.data.FileDescriptor>}
+ * @extends {os.ui.file.FileImportCtrl}
  * @constructor
  * @ngInject
  */
 plugin.file.zip.ui.ZIPImportCtrl = function($scope, $element, $timeout, $attrs) {
-  plugin.file.zip.ui.ZIPImportCtrl.base(this, 'constructor', $scope, $element, $timeout, $attrs);
+  plugin.file.zip.ui.ZIPImportCtrl.base(this, 'constructor', $scope, $element, $timeout);
+
+  /**
+   * @type {angular.$timeout|null}
+   * @private
+   */
+  this.timeout__ = $timeout;
 
   /**
    * @type {os.ui.im.ImportManager}
@@ -49,19 +59,47 @@ plugin.file.zip.ui.ZIPImportCtrl = function($scope, $element, $timeout, $attrs) 
   this.im_ = os.ui.im.ImportManager.getInstance();
 
   /**
-   * @type {!Array<Object>}
+   * @type {!Array<Object>|null}
    * @private
    */
   this.importers_;
+
+  /**
+   * @type {plugin.file.zip.ZIPParserConfig}
+   * @private
+   */
+  this.config_ = /** @type {plugin.file.zip.ZIPParserConfig} */ ($scope['config']);
+
+  /**
+   * @type {Array.<Object>|null}
+   */
+  this['files'] = this.config_['files'];
+
+  /**
+   * @type {boolean}
+   */
+  this['loading'] = false;
+
+  /**
+   * @type {boolean}
+   */
+  this['valid'] = false;
+
+  /**
+   * @type {number}
+   */
+  this['wait'] = 0;
+
+  this.validate_();
 };
-goog.inherits(plugin.file.zip.ui.ZIPImportCtrl, os.ui.im.FileImportWizard);
+goog.inherits(plugin.file.zip.ui.ZIPImportCtrl, os.ui.file.FileImportCtrl);
 
 
 /**
- * @inheritDoc
+ * @export
  */
 plugin.file.zip.ui.ZIPImportCtrl.prototype.finish = function() {
-  var entries = this.config['files'];
+  var entries = this['files'];
 
   if (!entries) {
     var msg = 'No files selected to import from ZIP';
@@ -90,26 +128,9 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.finish = function() {
     os.alert.AlertManager.getInstance().sendAlert(err, os.alert.AlertEventSeverity.ERROR);
   }
 
-  plugin.file.zip.ui.ZIPImportCtrl.base(this, 'finish');
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.zip.ui.ZIPImportCtrl.prototype.finishImport = function(descriptor) {
+  // either close after the chain completes, or close since there is no chain
   if (this.importers_ && this.importers_.length > 0) this.chain();
-
-  // do not store the Descriptor as done in base.finishImport() -- this is handled by the individual file(s) imported
-  this.cleanConfig();
-};
-
-/**
- * @inheritDoc
- */
-plugin.file.zip.ui.ZIPImportCtrl.prototype.storeAndFinish = function(descriptor) {
-  // do not store the ZIP file; just the file(s) that are subsequently imported
-  this.finishImport(descriptor);
+  else this.close(); // for now, close this and rely on the chain; possible future improvement: use slickgrid and show import status
 };
 
 
@@ -117,29 +138,87 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.storeAndFinish = function(descriptor)
  * Kick off the import of an unzipped file
  */
 plugin.file.zip.ui.ZIPImportCtrl.prototype.chain = function() {
-  if (typeof this.importers_ == 'undefined' || this.importers_ == null || this.importers_.length == 0) return;
+  if (typeof this.importers_ == 'undefined' || this.importers_ == null || this.importers_.length == 0) {
+    this.close();
+    return;
+  }
+
+  var onSuccess = function() {
+    // importer kicked off... TODO wait for it to finish or be cancelled
+    this.chain();
+  };
+
+  var onFailure = function() {
+    this.chain(); // continue
+  };
 
   var im = this.importers_.splice(0, 1)[0]; // remove the current importer from the queue
   var process = new os.ui.im.DuplicateImportProcess();
-  var event = new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE, im.file);
+  process.setEvent(new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE, im.file));
 
-  process.setEvent(event);
-
-  // initialize and chain next import on callback
-  process.begin().addCallbacks(
-      this.chain,
-      function() {
-        // messaging should be handled by the Import Process... just kick off the next item in the chain
-        this.chain();
-      },
-      this
-  );
+  var deferred = process.begin();
+  deferred.then(onSuccess, onFailure, this); // called back when import process starts or fails...
 };
 
 
 /**
  * @inheritDoc
  */
-plugin.file.zip.ui.ZIPImportCtrl.prototype.updateFromConfig = function(descriptor, config) {
-  descriptor.updateFromConfig(config);
+plugin.file.zip.ui.ZIPImportCtrl.prototype.onDestroy_ = function() {
+  plugin.file.zip.ui.ZIPImportCtrl.base(this, 'onDestroy_');
+
+  this.timeout__ = null;
+  this.config_ = null;
+  this.importers_ = null;
+  this.files = null;
+  this.loading = null;
+  this.valid = null;
+  this.wait = null;
+};
+
+
+/**
+ * Checks if files have been chosen/validated.
+ *
+ * @private
+ */
+plugin.file.zip.ui.ZIPImportCtrl.prototype.validate_ = function() {
+  var wait = 750;
+  var maxWait = 80 * wait;
+
+  if (!this.config_) return;
+
+  var status = this.config_['status'];
+
+  this['loading'] = status != 0;
+  this['valid'] = !this['loading'];
+
+  // this.scope_.$emit(os.ui.wiz.step.WizardStepEvent.VALIDATE, this['valid']);
+
+  if (status == 1) {
+    if (this['wait'] < maxWait) this.timeout__(this.validate_.bind(this), wait);
+    else {
+      this['loading'] = false;
+      var err = 'Unzipping took too long in browser.  Try unzipping locally first.';
+      os.alert.AlertManager.getInstance().sendAlert(err, os.alert.AlertEventSeverity.ERROR);
+    }
+    this['wait'] += wait;
+  }
+
+  // os.ui.apply(this.scope_);
+};
+
+
+/**
+ * Returns a count of the number of "selected" files for the UI
+ * @return {number}
+ */
+plugin.file.zip.ui.ZIPImportCtrl.prototype.count = function() {
+  return (this['files'] && this['files'].length > 0)
+    ? this['files'].reduce(function(a, v) {
+      if (typeof a == 'object') a = (a.enabled ? 1 : 0);
+      if (v.enabled) a++;
+      return a;
+    })
+    : 0;
 };
