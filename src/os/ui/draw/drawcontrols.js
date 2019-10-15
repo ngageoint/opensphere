@@ -5,6 +5,8 @@ goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('os.MapEvent');
 goog.require('os.defines');
+goog.require('os.map');
+goog.require('os.proj');
 goog.require('os.ui.Module');
 goog.require('os.ui.draw');
 goog.require('os.ui.draw.BaseDrawControlsCtrl');
@@ -36,7 +38,6 @@ os.ui.draw.drawControlsDirective = function() {
 os.ui.Module.directive('osDrawControls', [os.ui.draw.drawControlsDirective]);
 
 
-
 /**
  * Controller for the draw-controls directive.
  *
@@ -47,7 +48,17 @@ os.ui.Module.directive('osDrawControls', [os.ui.draw.drawControlsDirective]);
  * @ngInject
  */
 os.ui.draw.DrawControlsCtrl = function($scope, $element) {
+  /**
+   * The search area of the drawing feature.
+   * @type {Array.<ol.Feature>}
+   * @protected
+   */
+  this.grid = [];
+
   this['supportsLines'] = true;
+
+  this['supportsGrid'] = false;
+
   os.ui.draw.DrawControlsCtrl.base(this, 'constructor', $scope, $element);
   this.log = os.ui.draw.DrawControlsCtrl.LOGGER_;
 };
@@ -94,12 +105,25 @@ os.ui.draw.DrawControlsCtrl.prototype.getMenu = function() {
  * @inheritDoc
  */
 os.ui.draw.DrawControlsCtrl.prototype.setFeature = function(f) {
+  if (this.grid) {
+    os.MapContainer.getInstance().removeFeatures(this.grid, true); // remove prior search grid
+  }
   if (this.feature) {
     os.MapContainer.getInstance().removeFeature(this.feature.getId(), true);
   }
 
-  this.feature = f;
+  var feature = (f) ? f : null;
 
+  if (this['supportsGrid']) {
+    var detail = os.ui.draw.utils.getGridSetting(os.ui.draw.GRID_DETAIL, 0.25); // number of degrees; for lon/lat size of grid boxes
+
+    this.grid = os.ui.draw.utils.getGridFromFeature(feature, detail);
+    if (this.grid) {
+      os.MapContainer.getInstance().addFeatures(this.grid); // draw new search grid
+    }
+  }
+
+  this.feature = feature;
   if (this.feature) {
     os.MapContainer.getInstance().addFeature(this.feature);
   }

@@ -3,10 +3,13 @@ goog.provide('plugin.arc.ArcJSONParser');
 goog.require('goog.Disposable');
 goog.require('ol.Feature');
 goog.require('ol.geom.LineString');
+goog.require('ol.geom.LinearRing');
 goog.require('ol.geom.MultiPoint');
+goog.require('ol.geom.MultiPolygon');
 goog.require('ol.geom.Point');
 goog.require('ol.geom.Polygon');
 goog.require('os.feature');
+goog.require('os.geo2');
 goog.require('os.parse.IParser');
 
 
@@ -167,12 +170,36 @@ plugin.arc.ArcJSONParser.prototype.parseLineStringGeometry_ = function(item) {
  * Parses a Polygon geometry out from an Arc Geometry.
  *
  * @param {Object} item
- * @return {ol.geom.Polygon}
+ * @return {ol.geom.Polygon|ol.geom.MultiPolygon}
  * @private
  */
 plugin.arc.ArcJSONParser.prototype.parsePolygonGeometry_ = function(item) {
-  var coords = item['rings'];
-  return new ol.geom.Polygon(coords);
+  var rings = item['rings'];
+  var polygons = [];
+  for (var i = 0; i < rings.length; i++) {
+    if (os.geo2.computeWindingOrder(rings[i]) == os.geo2.WindingOrder.CLOCKWISE) {
+      polygons.push(new ol.geom.Polygon([rings[i]]));
+    }
+  }
+  for (var i = 0; i < rings.length; i++) {
+    if (os.geo2.computeWindingOrder(rings[i]) == os.geo2.WindingOrder.COUNTER_CLOCKWISE) {
+      var x = rings[i][0][0];
+      var y = rings[i][0][1];
+      for (var j = 0; j < polygons.length; j++) {
+        if (polygons[j].containsXY(x, y)) {
+          polygons[j].appendLinearRing(new ol.geom.LinearRing(rings[i]));
+          break;
+        }
+      }
+    }
+  }
+
+  if (polygons.length > 1) {
+    var multi = new ol.geom.MultiPolygon(null);
+    multi.setPolygons(polygons);
+    return multi;
+  }
+  return polygons[0];
 };
 
 
