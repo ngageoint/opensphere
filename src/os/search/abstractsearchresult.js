@@ -15,21 +15,23 @@ goog.require('os.search.ISearchResult');
  * @template T
  */
 os.search.AbstractSearchResult = function(result, opt_score, opt_id) {
-  os.search.AbstractSearchResult.nextId_++;
-
+  // allow truthy values or explicit 0, not an empty string
   /**
+   * The result id.
    * @type {number|string}
    * @private
    */
-  this.id_ = opt_id || os.search.AbstractSearchResult.nextId_;
+  this.id_ = opt_id || opt_id === 0 ? opt_id : os.search.AbstractSearchResult.nextId_++;
 
   /**
+   * The result.
    * @type {T}
    * @protected
    */
   this.result = result;
 
   /**
+   * The result score.
    * @type {number}
    * @protected
    */
@@ -38,6 +40,7 @@ os.search.AbstractSearchResult = function(result, opt_score, opt_id) {
 
 
 /**
+ * Incrementing counter for results that do not specify an id.
  * @type {number}
  * @private
  */
