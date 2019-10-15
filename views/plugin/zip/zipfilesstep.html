@@ -1,23 +1,20 @@
 <div class="d-flex flex-column flex-fill">
   <div>
-    <p ng-if="filesStep.loading">Unzipping file(s)...</p>
-    <p ng-if="!filesStep.loading">Please select file(s) to import</p>
+      <p>Unzipping file(s)... <span ng-show="!filesStep.loading">{{filesStep.valid ? 'SUCCESS' : 'ERROR'}}</span></p>
+      <p ng-show="filesStep.loading"><i class="fa fa-spinner fa-spin" /></p>
   </div>
-  <form name="filesForm" novalidate>
-    <div class="form-group form-row">
-      <!-- slickgrid "viewport" height is based on the height of this directive when autoHeight:false -->
-      <slickgrid class="border no-header text-monospace no-padding"
-          style="height: 182px;"
-          x-data="filesStep.files"
-          columns="filesStep.columnDefinitions"
-          options="filesStep.gridOptions"
-          resize-with=".js-window"
-          use-angular="true">
-      </slickgrid>
+  <div ng-if="!filesStep.loading">
+    <div>
+      <p class="float-left">Please select file(s) to import</p>
+      <p class="float-right">
+        {{filesStep.count()}} file(s) selected
+      </p>
+      <div style="clear: both;"></div>
     </div>
-    <p>
-      {{filesStep.count()}} file(s) selected
-      <button class="btn btn-link" ng-click="filesStep.toggle();">Toggle All</button>
-    </p>
-  </form>
+    <form name="filesForm" novalidate>
+      <div class="form-group form-row">
+        <checklist name="filelist" allow-multiple="true" items="filesStep.files"></checklist>
+      </div>
+    </form>
+  </div>
 </div>

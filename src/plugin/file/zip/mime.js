@@ -2,7 +2,6 @@ goog.provide('plugin.file.zip.mime');
 
 goog.require('os.file.mime');
 goog.require('os.file.mime.zip');
-goog.require('plugin.file.zip');
 
 /**
  * @const

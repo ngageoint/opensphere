@@ -3,6 +3,7 @@ goog.provide('plugin.file.zip.ui.zipImportDirective');
 
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
+goog.require('os.data.FileDescriptor');
 goog.require('os.defines');
 goog.require('os.file.File');
 goog.require('os.ui.Module');
@@ -12,8 +13,6 @@ goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportEventType');
 goog.require('os.ui.im.ImportManager');
 goog.require('os.ui.wiz.wizardDirective');
-goog.require('plugin.file.zip.ZIPDescriptor');
-goog.require('plugin.file.zip.ZIPProvider');
 
 
 /**
@@ -36,7 +35,7 @@ os.ui.Module.directive('zipimport', [plugin.file.zip.ui.zipImportDirective]);
  * @param {!angular.JQLite} $element
  * @param {!angular.$timeout} $timeout
  * @param {!Object.<string, string>} $attrs
- * @extends {os.ui.im.FileImportWizard<!plugin.file.zip.ZIPParserConfig,!plugin.file.zip.ZIPDescriptor>}
+ * @extends {os.ui.im.FileImportWizard<!plugin.file.zip.ZIPParserConfig,!os.data.FileDescriptor>}
  * @constructor
  * @ngInject
  */
@@ -59,27 +58,6 @@ goog.inherits(plugin.file.zip.ui.ZIPImportCtrl, os.ui.im.FileImportWizard);
 
 
 /**
- * @param {!plugin.file.zip.ZIPDescriptor} descriptor
- * @protected
- * @override
- */
-plugin.file.zip.ui.ZIPImportCtrl.prototype.addDescriptorToProvider = function(descriptor) {
-  plugin.file.zip.ZIPProvider.getInstance().addDescriptor(descriptor);
-};
-
-
-/**
- * @param {!plugin.file.zip.ZIPParserConfig} config
- * @return {!plugin.file.zip.ZIPDescriptor}
- * @protected
- * @override
- */
-plugin.file.zip.ui.ZIPImportCtrl.prototype.createFromConfig = function(config) {
-  return plugin.file.zip.ZIPDescriptor.createFromConfig(this.config);
-};
-
-
-/**
  * @inheritDoc
  */
 plugin.file.zip.ui.ZIPImportCtrl.prototype.finish = function() {
@@ -96,7 +74,7 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.finish = function() {
 
   for (var i = 0; i < entries.length; i++) {
     var entry = entries[i];
-    if (entry.selected === true) {
+    if (entry.enabled === true) {
       var file = entry.file;
       var type = file.getType();
       var ui = this.im_.getImportUI(type);
@@ -117,14 +95,13 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.finish = function() {
 
 
 /**
- * @param {!plugin.file.zip.ZIPDescriptor} descriptor
- * @protected
- * @override
+ * @inheritDoc
  */
 plugin.file.zip.ui.ZIPImportCtrl.prototype.finishImport = function(descriptor) {
   if (this.importers_ && this.importers_.length > 0) this.chain();
 
-  plugin.file.zip.ui.ZIPImportCtrl.base(this, 'finishImport', descriptor);
+  // do not store the Descriptor as done in base.finishImport() -- this is handled by the individual file(s) imported
+  this.cleanConfig();
 };
 
 /**
@@ -161,10 +138,7 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.chain = function() {
 
 
 /**
- * @param {!plugin.file.zip.ZIPDescriptor} descriptor
- * @param {!plugin.file.zip.ZIPParserConfig} config
- * @protected
- * @override
+ * @inheritDoc
  */
 plugin.file.zip.ui.ZIPImportCtrl.prototype.updateFromConfig = function(descriptor, config) {
   descriptor.updateFromConfig(config);

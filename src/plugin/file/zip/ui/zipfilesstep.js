@@ -10,7 +10,6 @@ goog.require('os.ui.file.method.UrlMethod');
 goog.require('os.ui.wiz.step.AbstractWizardStep');
 goog.require('os.ui.wiz.step.WizardStepEvent');
 goog.require('os.ui.wiz.wizardPreviewDirective');
-goog.require('plugin.file.zip');
 goog.require('plugin.file.zip.ZIPParserConfig');
 
 
@@ -38,6 +37,7 @@ plugin.file.zip.ui.ZIPFilesStep.prototype.finalize = function(config) {
     config.updatePreview();
 
     var features = config['preview'];
+
     if ((!config['mappings'] || config['mappings'].length <= 0) && features && features.length > 0) {
       // no mappings have been set yet, so try to auto detect them
       var mm = os.im.mapping.MappingManager.getInstance();
@@ -48,35 +48,6 @@ plugin.file.zip.ui.ZIPFilesStep.prototype.finalize = function(config) {
     }
   } catch (e) {
   }
-};
-
-
-/**
- * Simple formatter to create checkmark on "selected" when rendering slickgrid
- *
- * @param {!number} row
- * @param {!number} cell
- * @param {!*} value
- * @param {!Object} columnDef
- * @param {!Object} dataContext
- * @return {!string}
- * @private
- */
-plugin.file.zip.ui.formatter = function(row, cell, value, columnDef, dataContext) {
-  var html = [];
-
-  // match the angular in zipfilestep.html
-  html.push('<div onclick="var _s = angular.element(this).scope(); _s.$parent.filesStep.toggle(_s, '
-    + dataContext['id']
-    + ');">');
-
-  if (dataContext['selected']) html.push('<i class="fa fa-check"></i> ');
-  else html.push('<span>&nbsp;&nbsp;</span> ');
-
-  html.push(dataContext['filename']);
-  html.push('</div>');
-
-  return html.join('');
 };
 
 
@@ -107,15 +78,22 @@ os.ui.Module.directive('zipfilesstep', [plugin.file.zip.ui.filesStepDirective]);
  * Controller for the ZIP import file selection step
  *
  * @param {!angular.Scope} $scope
+ * @param {!angular.$timeout} $timeout
  * @constructor
  * @ngInject
  */
-plugin.file.zip.ui.ZIPFilesStepCtrl = function($scope) {
+plugin.file.zip.ui.ZIPFilesStepCtrl = function($scope, $timeout) {
   /**
    * @type {?angular.Scope}
    * @private
    */
   this.scope_ = $scope;
+
+  /**
+   * @type {?angular.$timeout}
+   * @private
+   */
+  this.timeout_ = $timeout;
 
   /**
    * @type {plugin.file.zip.ZIPParserConfig}
@@ -139,33 +117,9 @@ plugin.file.zip.ui.ZIPFilesStepCtrl = function($scope) {
   this['valid'] = false;
 
   /**
-   * @type {Array.<os.data.ColumnDefinition>}
+   * @type {number}
    */
-  this['columnDefinitions'] = [
-    new os.data.ColumnDefinition()
-  ];
-
-  this['columnDefinitions'][0].restore({
-    'id': 'filename',
-    'editable': false,
-    'field': 'filename',
-    'formatter': plugin.file.zip.ui.formatter,
-    'name': 'Filename',
-    'selectable': false,
-    'sortable': false
-  });
-
-  /**
-   * @type {Object}
-   */
-  this['gridOptions'] = {
-    'editable': true,
-    'enableAutoResize': true,
-    'enableRowSelection': false,
-    'forceFitColumns': true,
-    'fullWidthRows': true,
-    'multiSelect': false
-  };
+  this['wait'] = 0;
 
   $scope.$on('$destroy', this.destroy_.bind(this));
 
@@ -201,43 +155,28 @@ plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.destroy_ = function() {
  * @private
  */
 plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.validate_ = function() {
-  this['valid'] = true;
-  this['loading'] = this.config_['parsing'];
+  var wait = 750;
+  var maxWait = 80 * wait;
+
+  if (!this.config_) return;
+
+  var status = this.config_['status'];
+
+  this['loading'] = status != 0;
+  this['valid'] = !this['loading'];
 
   this.scope_.$emit(os.ui.wiz.step.WizardStepEvent.VALIDATE, this['valid']);
 
-  os.ui.apply(this.scope_);
-};
-
-
-/**
- * Toggles true/false for file.selected and notifies SlickGrid
- *
- * @param {!Object} scope
- * @param {!number} id
- */
-plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.toggle = function(scope, id) {
-  if (scope && id) {
-    var idx = -1;
-    var file = this['files'].find(function(e) {
-      idx++;
-      return e.id == id;
-    });
-
-    if (file) {
-      file.selected = !file.selected;
-      scope['gridCtrl'].grid.updateRow(idx); // just invalidate them all if sorting is added: scope.gridCtrl.invalidateRows();
+  if (status == 1) {
+    if (this['wait'] < maxWait) this.timeout_(this.validate_.bind(this), wait);
+    else {
+      this['loading'] = false;
+      var err = 'Unzipping took too long in browser.  Try unzipping locally first.';
+      os.alert.AlertManager.getInstance().sendAlert(err, os.alert.AlertEventSeverity.ERROR);
     }
-  } else {
-    scope = this.scope_['$$childHead'];
-
-    var selected = !this['files'][0].selected;
-    this['files'].forEach(function(file) {
-      file.selected = selected;
-    });
-
-    if (scope) scope['gridCtrl'].invalidateRows();
+    this['wait'] += wait;
   }
+
   os.ui.apply(this.scope_);
 };
 
@@ -247,10 +186,10 @@ plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.toggle = function(scope, id) {
  * @return {number}
  */
 plugin.file.zip.ui.ZIPFilesStepCtrl.prototype.count = function() {
-  return (this['files'])
+  return (this['files'] && this['files'].length > 0)
     ? this['files'].reduce(function(a, v) {
-      if (typeof a == 'object') a = (a.selected ? 1 : 0);
-      if (v.selected) a++;
+      if (typeof a == 'object') a = (a.enabled ? 1 : 0);
+      if (v.enabled) a++;
       return a;
     })
     : 0;

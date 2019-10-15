@@ -20,7 +20,6 @@ goog.require('os.file.mime.text');
 goog.require('os.file.mime.zip');
 goog.require('os.geo');
 goog.require('os.parse.AsyncZipParser');
-goog.require('plugin.file.zip');
 
 
 /**
@@ -344,9 +343,9 @@ plugin.file.zip.ZIPParser.prototype.toUIO_ = function(entry, content, callback) 
       // turn this into a better object for the UI
       return {
         'id': ol.getUid(file),
-        'filename': entry.filename,
+        'label': entry.filename,
         'valid': true,
-        'selected': true,
+        'enabled': true,
         'msg': '',
         'file': file
       };
