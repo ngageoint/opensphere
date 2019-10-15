@@ -117,7 +117,7 @@ os.ui.file.FileImportCtrl.LOGGER_ = goog.log.getLogger('os.ui.file.FileImportCtr
 /**
  * Clean up references/listeners.
  *
- * @private
+ * @protected
  */
 os.ui.file.FileImportCtrl.prototype.onDestroy_ = function() {
   goog.events.unlisten(this.fileInputEl_, goog.events.EventType.CHANGE, this.onFileChange_, false, this);
