@@ -5,7 +5,6 @@ goog.require('os.ui.window');
 goog.require('plugin.file.zip.ZIPParserConfig');
 goog.require('plugin.file.zip.mime');
 goog.require('plugin.file.zip.ui.ZIPFilesStep');
-goog.require('plugin.file.zip.ui.ZIPProcessStep');
 goog.require('plugin.file.zip.ui.zipImportDirective');
 
 
@@ -34,7 +33,6 @@ plugin.file.zip.ui.ZIPImportUI.prototype.launchUI = function(file, opt_config) {
   plugin.file.zip.ui.ZIPImportUI.base(this, 'launchUI', file, opt_config);
 
   var steps = [
-    new plugin.file.zip.ui.ZIPProcessStep(),
     new plugin.file.zip.ui.ZIPFilesStep()
   ];
 
