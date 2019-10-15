@@ -203,7 +203,8 @@ os.layer.config.AbstractDataSourceLayerConfig.prototype.getParser = function(opt
  */
 os.layer.config.AbstractDataSourceLayerConfig.prototype.getLayer = function(source, options) {
   return new os.layer.Vector({
-    source: source
+    source: source,
+    renderMode: /** @type {string} */ (options['renderMode']) || ol.layer.VectorRenderType.VECTOR
   });
 };
 
