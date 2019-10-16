@@ -13,7 +13,7 @@
       <div class="d-flex flex-row form-group mt-2">
         <label class="col-2 col-form-label text-right">Description</label>
         <div class="col">
-          <tuieditor text="ctrl.description" edit="true" is-required="false" maxlength="4000"></tuieditor>
+          <tuieditor class="c-tui-editor__small" text="ctrl.description" edit="true" is-required="false" hide-wc="true"></tuieditor>
         </div>
       </div>
 
@@ -173,6 +173,15 @@
           </labelcontrols>
         </div>
       </div>
+
+      <div class="btn btn-secondary btn-block" title="Options for creating rings around the feature"
+          data-toggle="collapse" data-target="#rings{{ctrl.uid}}">
+        {{ctrl.ringTitle}} Options
+      </div>
+      <div class="card-body collapse" data-parent="#featureControls{{ctrl.uid}}" id="rings{{ctrl.uid}}">
+        <ringoptions options="ctrl.ringOptions"></ringoptions>
+      </div>
+
       <div list list-id="optionsList{{ctrl.uid}}"></div>
     </div>
   </div>

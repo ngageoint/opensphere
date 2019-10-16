@@ -4,6 +4,7 @@ goog.require('goog.reflect');
 goog.require('goog.string');
 goog.require('ol.Feature');
 goog.require('ol.geom.Geometry');
+goog.require('ol.geom.GeometryCollection');
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.MultiLineString');
 goog.require('ol.geom.Point');
@@ -18,6 +19,7 @@ goog.require('os.fn');
 goog.require('os.geo');
 goog.require('os.geom.Ellipse');
 goog.require('os.im.mapping.MappingManager');
+goog.require('os.interpolate');
 goog.require('os.map');
 goog.require('os.math.Units');
 goog.require('os.style.StyleField');
@@ -496,6 +498,124 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
 
   return lob;
 };
+
+
+/**
+ * Generates a set of ring geometries from an options object.
+ * @param {?ol.Feature} feature The feature to generate rings for.
+ * @param {boolean=} opt_replace Whether to replace an existing ring.
+ * @return {ol.geom.Geometry|undefined} The rings.
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.feature.createRings = function(feature, opt_replace) {
+  var ringGeom;
+
+  if (!opt_replace) {
+    ringGeom = /** @type {ol.geom.GeometryCollection} */ (feature.values_[os.data.RecordField.RING]);
+    if (ringGeom instanceof ol.geom.GeometryCollection) {
+      return ringGeom;
+    }
+  }
+
+  if (feature) {
+    var options = feature.get(os.data.RecordField.RING_OPTIONS);
+    var geometry = feature.getGeometry();
+    var center = geometry ? ol.proj.toLonLat(ol.extent.getCenter(geometry.getExtent()), os.map.PROJECTION) : null;
+
+    if (options && options['enabled'] && options['rings'] && center) {
+      var date = new Date(os.time.TimelineController.getInstance().getCurrent());
+      var geomag = os.bearing.geomag(center, date);
+      var declination = geomag['dec'];
+      var interpFn = os.interpolate.getMethod() == os.interpolate.Method.GEODESIC ?
+          osasm.geodesicDirect : osasm.rhumbDirect;
+
+      var rings = options['rings'];
+      var crosshair = options['crosshair'];
+      var arcs = options['arcs'];
+      var startAngle = (options['startAngle'] || 0) + declination;
+      var widthAngle = options['widthAngle'] || 0;
+      var lastRing = rings[rings.length - 1];
+      var geoms = [];
+
+      rings.forEach(function(ring) {
+        var units = ring['units'];
+        var radius = ring['radius'];
+
+        if (units && radius) {
+          radius = os.math.convertUnits(radius, os.math.Units.METERS, units);
+          var geom;
+          var coordinates;
+
+          if (arcs) {
+            coordinates = os.geo.interpolateArc(center, radius, widthAngle, startAngle + widthAngle / 2);
+            geom = new ol.geom.LineString(coordinates);
+          } else {
+            coordinates = os.geo.interpolateEllipse(center, radius, radius, 0);
+            geom = new ol.geom.Polygon([coordinates]);
+          }
+
+          geoms.push(geom);
+        }
+      });
+
+      if (arcs) {
+        // add the "endcap" geometries
+        var startBearing = startAngle;
+        var endBearing = startAngle + widthAngle;
+
+        if (lastRing) {
+          var distance = lastRing['radius'];
+          var units = lastRing['units'];
+
+          distance = os.math.convertUnits(distance, os.math.Units.METERS, units);
+
+          var endCoord1 = interpFn(center, startBearing, distance);
+          var endCoord2 = interpFn(center, endBearing, distance);
+
+          var startCap = new ol.geom.LineString([center, endCoord1]);
+          geoms.push(startCap);
+
+          var endCap = new ol.geom.LineString([center, endCoord2]);
+          geoms.push(endCap);
+        }
+      }
+
+      if (crosshair) {
+        var bearing = declination < 0 ? declination + 360 : declination;
+
+        if (lastRing) {
+          var distance = lastRing['radius'];
+          var units = lastRing['units'];
+
+          distance = os.math.convertUnits(distance, os.math.Units.METERS, units);
+          distance += distance / rings.length;
+
+          var coord1 = interpFn(center, bearing, distance);
+          var coord2 = interpFn(center, bearing - 180, distance);
+
+          var verticalLine = new ol.geom.LineString([coord1, center, coord2]);
+
+          coord1 = interpFn(center, bearing - 90, distance);
+          coord2 = interpFn(center, bearing + 90, distance);
+
+          var horizontalLine = new ol.geom.LineString([coord1, center, coord2]);
+
+          geoms.push(verticalLine);
+          geoms.push(horizontalLine);
+        }
+      }
+
+      ringGeom = new ol.geom.GeometryCollection(geoms);
+      ringGeom.osTransform();
+      os.interpolate.interpolateGeom(ringGeom);
+    }
+
+    feature.set(os.data.RecordField.RING, ringGeom);
+  }
+
+  return ringGeom;
+};
+
 
 
 /**

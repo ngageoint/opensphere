@@ -113,10 +113,12 @@ plugin.file.kml.ui.updateFolder = function(options) {
 plugin.file.kml.ui.createOrEditPlace = function(options) {
   var windowId = 'placemarkEdit';
   windowId += options['feature'] ? ol.getUid(options['feature']) : goog.string.getRandomString();
+
   var scopeOptions = {
     'options': options
   };
-  var label = (options['feature'] ? 'Edit' : 'Add') + ' Place';
+  var label = options['label'] || (options['feature'] ? 'Edit' : 'Add') + ' Place';
+
   if (os.ui.window.exists(windowId)) {
     os.ui.window.bringToFront(windowId);
   } else {

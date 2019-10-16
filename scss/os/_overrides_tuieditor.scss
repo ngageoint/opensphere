@@ -18,7 +18,6 @@
   }
 }
 
-
 .c-tui-editor {
   //////////// Constrain the editor //////////
   .CodeMirror,
@@ -34,7 +33,18 @@
     min-height: 12rem;
   }
 
+  &.c-tui-editor__small {
+    .CodeMirror,
+    .CodeMirror:not(.CodeMirror-fullscreen) .CodeMirror-scroll {
+      max-height: 12rem !important;
+      min-height: 6rem !important;
+    }
 
+    .tui-editor-contents {
+      max-height: 12rem !important;
+      min-height: 6rem !important;
+    }
+  }
 
   //////////// Flex layout //////////
   // the editor section grows on the page if the parent is flex
@@ -45,7 +55,6 @@
     flex: 1;
     flex-direction: column;
   }
-
 
   // Scroll the editor over the parent
   .te-ww-container .te-editor .tui-editor-contents {
@@ -71,8 +80,6 @@
     display: none !important;
   }
 
-
-
   //////////// ERROR STYLING //////////
   .ng-invalid.ng-dirty {
     .te-editor-section {
@@ -83,7 +90,6 @@
       color: $danger !important;
     }
   }
-
 
   //////////// WYSIWYG / DISPLAY STYLES //////////
   // Instead of adding the contents and overriding them, just use the ones we want
@@ -151,8 +157,6 @@
       }
     }
   }
-
-
 
   //////////// EDITOR STYLES //////////
   // Only show the cursor if we are in edit mode
@@ -382,7 +386,6 @@
     .tui-toolbar-divider {
       background-color: $border-color;
     }
-
 
     //////////// FONT AWESOME ICONS (default is an image) //////////
     .tui-toolbar-icons {

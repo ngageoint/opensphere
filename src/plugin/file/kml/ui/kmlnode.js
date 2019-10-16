@@ -297,6 +297,7 @@ plugin.file.kml.ui.KMLNode.prototype.onFeatureChange = function(event) {
 
         this.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
         break;
+      case goog.events.EventType.CHANGE:
       case os.annotation.EventType.CHANGE:
         // this event just needs to resave the tree
         this.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
