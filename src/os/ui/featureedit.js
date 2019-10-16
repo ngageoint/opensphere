@@ -11,6 +11,7 @@ goog.require('ol.Feature');
 goog.require('ol.MapBrowserEventType');
 goog.require('ol.array');
 goog.require('ol.events');
+goog.require('ol.geom.GeometryCollection');
 goog.require('ol.geom.Point');
 goog.require('os.MapContainer');
 goog.require('os.action.EventType');
@@ -31,6 +32,7 @@ goog.require('os.ui.datetime.AnyDateType');
 goog.require('os.ui.file.kml');
 goog.require('os.ui.geo.PositionEventType');
 goog.require('os.ui.geo.positionDirective');
+goog.require('os.ui.geo.ringOptionsDirective');
 goog.require('os.ui.layer.labelControlsDirective');
 goog.require('os.ui.layer.vectorStyleControlsDirective');
 goog.require('os.ui.list');
@@ -67,6 +69,7 @@ os.ui.Module.directive('featureedit', [os.ui.featureEditDirective]);
  * @typedef {{
  *   feature: (ol.Feature|undefined),
  *   geometry: (ol.geom.SimpleGeometry|undefined),
+ *   label: (string|undefined),
  *   name: (string|undefined),
  *   callback: Function
  * }}
@@ -318,6 +321,17 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   this['orientation'] = undefined;
 
   /**
+   * The ring options.
+   * @type {?Object<string, *>}
+   */
+  this['ringOptions'] = null;
+
+  /**
+   * @type {string}
+   */
+  this['ringTitle'] = os.ui.geo.RingTitle;
+
+  /**
    * Icon Rotation, in degrees.
    * @type {number|undefined}
    */
@@ -475,6 +489,10 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
       this['timeEditEnabled'] = source.isTimeEditEnabled();
     }
 
+    if (!feature.getId()) {
+      feature.setId(this.tempFeatureId);
+    }
+
     // when editing, we update the existing feature so we don't have to worry about hiding it or overlapping a
     // temporary feature.
     this.previewFeature = feature;
@@ -537,6 +555,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   $scope.$on('labelColor.reset', this.onLabelColorReset.bind(this));
   $scope.$on(os.ui.geo.PositionEventType.MAP_ENABLED, this.onMapEnabled_.bind(this));
   $scope.$on(os.ui.layer.LabelControlsEventType.COLUMN_CHANGE, this.onColumnChange.bind(this));
+  $scope.$on('ring.update', this.onRingsChange.bind(this));
 
   $scope.$on(os.ui.datetime.AnyDateCtrl.CHANGE, function(event, instant, start, end) {
     event.stopPropagation();
@@ -563,18 +582,20 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   // fire an event to inform other UIs that an edit has launched.
   os.dispatcher.dispatchEvent(os.annotation.EventType.LAUNCH_EDIT);
 
-  $timeout(function() {
-    // expand the default section if set
-    if (this.defaultExpandedOptionsId) {
-      var el = document.getElementById(this.defaultExpandedOptionsId);
-      if (el) {
-        goog.dom.classlist.add(el, 'show');
+  $scope.$on(os.ui.text.TuiEditor.READY, function() {
+    $timeout(function() {
+      // expand the default section if set
+      if (this.defaultExpandedOptionsId) {
+        var el = document.getElementById(this.defaultExpandedOptionsId);
+        if (el) {
+          goog.dom.classlist.add(el, 'show');
+        }
       }
-    }
 
-    // notify the window that it can update the size
-    $scope.$emit(os.ui.WindowEventType.READY);
-  }.bind(this), 150);
+      // notify the window that it can update the size
+      $scope.$emit(os.ui.WindowEventType.READY);
+    }.bind(this));
+  }.bind(this));
 };
 goog.inherits(os.ui.FeatureEditCtrl, goog.Disposable);
 
@@ -666,7 +687,7 @@ os.ui.FeatureEditCtrl.prototype.disposeInternal = function() {
 
   if (this.previewFeature) {
     if (this.previewFeature.getId() == this.tempFeatureId) {
-      os.MapContainer.getInstance().removeFeature(this.previewFeature, true);
+      os.MapContainer.getInstance().removeFeature(this.previewFeature);
     }
 
     this.previewFeature = null;
@@ -918,7 +939,7 @@ os.ui.FeatureEditCtrl.prototype.onMapClick_ = function(mapBrowserEvent) {
  */
 os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
   if (this.previewFeature) {
-    if (this.isPolygon()) {
+    if (this.isPolygon() || this['ringOptions']) {
       this['fillOpacity'] = this['fillOpacity'] || os.style.DEFAULT_FILL_ALPHA;
       this['fillColor'] = this['fillColor'] || os.color.toHexString(os.style.DEFAULT_LAYER_COLOR);
     } else {
@@ -1155,6 +1176,12 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
       var geom = os.ui.FeatureEditCtrl.getFirstNonCollectionGeometry_(geometry);
       altitudeMode = geom.get(os.data.RecordField.ALTITUDE_MODE) || altitudeMode;
     }
+  } else {
+    this['pointGeometry'] = {
+      'lon': NaN,
+      'lat': NaN,
+      'alt': NaN
+    };
   }
 
   if (Array.isArray(altitudeMode) && altitudeMode.length) {
@@ -1164,6 +1191,8 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
   if (altitudeMode && this['altitudeModes'].indexOf(altitudeMode) > -1) {
     this['altitudeMode'] = altitudeMode;
   }
+
+  this['ringOptions'] = /** @type {Object<string, *>} */ (feature.get(os.data.RecordField.RING_OPTIONS));
 
   if (!this.isFeatureDynamic()) {
     var rotation = feature.get(os.Fields.BEARING);
@@ -1409,6 +1438,10 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
         feature.set(os.data.RecordField.LINE_OF_BEARING, undefined, true);
       }
 
+      // set the ring options
+      feature.set(os.data.RecordField.RING_OPTIONS, this['ringOptions']);
+      os.feature.createRings(feature, true);
+
       if (!this.isFeatureDynamic() && (this.showIcon() || this.showCenterIcon()) && this['iconRotation'] != null) {
         feature.set(os.style.StyleField.SHOW_ROTATION, true, true);
         feature.set(os.Fields.BEARING, this['iconRotation'] % 360, true);
@@ -1474,6 +1507,21 @@ os.ui.FeatureEditCtrl.setGeometryRecursive = function(geom, field, value, opt_si
  */
 os.ui.FeatureEditCtrl.prototype.onColumnChange = function(event) {
   event.stopPropagation();
+  this.updatePreview();
+};
+
+
+/**
+ * Handles column changes
+ *
+ * @param {angular.Scope.Event} event
+ * @param {Object<string, *>} options The new ring options.
+ * @protected
+ */
+os.ui.FeatureEditCtrl.prototype.onRingsChange = function(event, options) {
+  event.stopPropagation();
+  this['ringOptions'] = options;
+
   this.updatePreview();
 };
 

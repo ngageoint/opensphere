@@ -177,6 +177,10 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.accept = function() {
 
   plugin.file.kml.ui.updatePlacemark(this.options);
 
+  if (this.callback) {
+    this.callback(this.options);
+  }
+
   this.close();
 };
 
