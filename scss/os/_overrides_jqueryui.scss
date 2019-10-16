@@ -198,7 +198,3 @@ table.ui-datepicker-calendar a.ui-state-default.ui-state-highlight {
 .ui-draggable-dragging .ui-draggable-handle {
   @include grabbing-cursor();
 }
-
-.ui-datepicker{
-  z-index: $u-zindex-base !important;
-}
