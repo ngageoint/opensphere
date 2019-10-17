@@ -87,6 +87,8 @@ Now build:
 
 .. code-block:: none
 
+  yarn build
+  # or
   npm run build
 
-At the time of this writing, ``yarn`` has a bug with the ``script-shell`` config. A fix has already been committed and should make their next non-patch release. After that you can use ``yarn run build`` or just ``yarn build`` if  you prefer.
+Note: Yarn has a bug involving the use of the script-shell config with some older combinations of yarn/node. Please ensure that you are using the latest Yarn and also Node 12+.
