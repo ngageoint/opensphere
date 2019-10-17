@@ -1,5 +1,6 @@
 goog.provide('os.ui');
 goog.provide('os.ui.Module');
+goog.provide('os.ui.ResizeEventType');
 
 goog.require('goog.events.EventTarget');
 goog.require('goog.html.SafeHtml');
@@ -283,6 +284,15 @@ os.ui.removeResize = function(el, fn) {
   if (el && fn && window.ResizeSensor != null) {
     ResizeSensor.detach(el, fn);
   }
+};
+
+
+/**
+ * Enumeration of resize event types.
+ * @enum {string}
+ */
+os.ui.ResizeEventType = {
+  UPDATE_RESIZE: 'updateResize'
 };
 
 

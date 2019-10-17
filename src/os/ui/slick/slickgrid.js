@@ -19,6 +19,7 @@ goog.require('os.events');
 goog.require('os.string');
 goog.require('os.ui');
 goog.require('os.ui.Module');
+goog.require('os.ui.ResizeEventType');
 goog.require('os.ui.column.columnManagerDirective');
 goog.require('os.ui.globalMenuDirective');
 goog.require('os.ui.menu.IMenuSupplier');
@@ -253,6 +254,7 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
   $scope.$on(os.ui.slick.SlickGridEvent.SCROLL_TO_CELL, this.onScrollToCell.bind(this));
   $scope.$on(os.ui.slick.SlickGridEvent.SORT_SELECTED, this.onSortBySelectionChange.bind(this));
   $scope.$on('resize', this.resizeFn);
+  $scope.$on(os.ui.ResizeEventType.UPDATE_RESIZE, this.onUpdateResize.bind(this));
 
   $scope['cellTooltips'] = $scope['cellTooltips'] == undefined ? true : $scope['cellTooltips'];
 
@@ -644,6 +646,17 @@ os.ui.slick.SlickGridCtrl.prototype.doResize = function() {
     this.grid.scrollRowIntoView(selected[0], false);
   }
 };
+
+
+/**
+ * Handler for updating the resize listener. This is needed due to cases where the resize listener breaks.
+ * @private
+ */
+os.ui.slick.SlickGridCtrl.prototype.onUpdateResize = function() {
+  os.ui.removeResize(this.element, this.resizeFn);
+  os.ui.resize(this.element, this.resizeFn);
+};
+
 
 
 /**
