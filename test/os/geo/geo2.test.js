@@ -114,4 +114,26 @@ describe('os.geo2', function() {
       }
     });
   });
+
+
+  it('should properly compute the area of a ring', function() {
+    var ring = [[0,0], [2,0], [2,2], [0,2], [0,0]];
+    var csRing = ring.map(function(coord) {
+      return {x: coord[0], y: coord[1]};
+    });
+    expect(os.geo2.computeArea(ring)).toBe(Cesium.PolygonPipeline.computeArea2D(csRing));
+
+    ring = ring.reverse();
+    csRing = csRing.reverse();
+    expect(os.geo2.computeArea(ring)).toBe(Cesium.PolygonPipeline.computeArea2D(csRing));
+  });
+
+  it('should properly compute winding order', function() {
+    var ring = [[0, 0], [2,0], [2,2], [0,2], [0,0]];
+    expect(os.geo2.computeWindingOrder(ring)).toBe(os.geo2.WindingOrder.COUNTER_CLOCKWISE);
+
+    ring = ring.reverse();
+    expect(os.geo2.computeWindingOrder(ring)).toBe(os.geo2.WindingOrder.CLOCKWISE);
+  });
+
 });
