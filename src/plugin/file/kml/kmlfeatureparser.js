@@ -73,7 +73,9 @@ plugin.file.kml.KMLFeatureParser.prototype.parseNext = function() {
     var doc = this.document_;
     this.document_ = null;
 
-    features = this.format_.readFeatures(doc);
+    features = this.format_.readFeatures(doc, {
+      featureProjection: os.map.PROJECTION
+    });
   }
 
   return features;
