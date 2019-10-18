@@ -51,7 +51,27 @@ describe('plugin.arc.ArcJSONParser', function() {
 
   it('should parse Arc polygon geometries', function() {
     var parser = new plugin.arc.ArcJSONParser();
+
+    // Testing one Polygon
     var arcPolygon = {
+      'rings': [
+        [
+          [0, 18],
+          [-32, 5],
+          [-56, 56],
+          [0, 18]
+        ]
+      ]
+    }
+    var olGeom = parser.parsePolygonGeometry_(arcPolygon);
+    expect(olGeom instanceof ol.geom.Polygon).toBe(true);
+    expect(olGeom.getCoordinates()[0][0][0]).toBe(0);
+    expect(olGeom.getCoordinates()[0][0][1]).toBe(18);
+    expect(olGeom.getCoordinates()[0][3][0]).toBe(0);
+    expect(olGeom.getCoordinates()[0][3][1]).toBe(18);
+
+    // Testing a MultiPolygon
+    arcPolygon = {
       'rings': [
         [
           [0, 18],
@@ -68,17 +88,17 @@ describe('plugin.arc.ArcJSONParser', function() {
       ]
     };
 
-    var olGeom = parser.parsePolygonGeometry_(arcPolygon);
-    expect(olGeom instanceof ol.geom.Polygon).toBe(true);
-    expect(olGeom.getCoordinates()[0][0][0]).toBe(0);
-    expect(olGeom.getCoordinates()[0][0][1]).toBe(18);
-    expect(olGeom.getCoordinates()[0][3][0]).toBe(0);
-    expect(olGeom.getCoordinates()[0][3][1]).toBe(18);
+    olGeom = parser.parsePolygonGeometry_(arcPolygon);
+    expect(olGeom instanceof ol.geom.MultiPolygon).toBe(true);
+    expect(olGeom.getCoordinates()[0][0][0][0]).toBe(0);
+    expect(olGeom.getCoordinates()[0][0][0][1]).toBe(18);
+    expect(olGeom.getCoordinates()[0][0][3][0]).toBe(0);
+    expect(olGeom.getCoordinates()[0][0][3][1]).toBe(18);
 
-    expect(olGeom.getCoordinates()[1][0][0]).toBe(-185);
-    expect(olGeom.getCoordinates()[1][0][1]).toBe(290);
-    expect(olGeom.getCoordinates()[1][2][1]).toBe(-20);
-    expect(olGeom.getCoordinates()[1][1][1]).toBe(50);
+    expect(olGeom.getCoordinates()[1][0][0][0]).toBe(-185);
+    expect(olGeom.getCoordinates()[1][0][0][1]).toBe(290);
+    expect(olGeom.getCoordinates()[1][0][2][1]).toBe(-20);
+    expect(olGeom.getCoordinates()[1][0][1][1]).toBe(50);
   });
 
   it('should parse Arc multipoint geometries', function() {

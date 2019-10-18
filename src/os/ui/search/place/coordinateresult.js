@@ -1,10 +1,15 @@
 goog.provide('os.ui.search.place.CoordinateResult');
 
 goog.require('ol.Feature');
+goog.require('os.data.RecordField');
 goog.require('os.feature');
+goog.require('os.implements');
 goog.require('os.search.AbstractSearchResult');
+goog.require('os.search.ISortableResult');
+goog.require('os.search.SortType');
 goog.require('os.style');
 goog.require('os.style.label');
+goog.require('os.time.ITime');
 goog.require('os.ui.search.place.coordResultCardDirective');
 
 
@@ -16,6 +21,7 @@ goog.require('os.ui.search.place.coordResultCardDirective');
  * @param {string=} opt_label The feature label field.
  * @param {number=} opt_score The search result score.
  * @extends {os.search.AbstractSearchResult<!ol.Feature>}
+ * @implements {os.search.ISortableResult}
  * @constructor
  */
 os.ui.search.place.CoordinateResult = function(result, opt_label, opt_score) {
@@ -46,6 +52,7 @@ os.ui.search.place.CoordinateResult = function(result, opt_label, opt_score) {
   }
 };
 goog.inherits(os.ui.search.place.CoordinateResult, os.search.AbstractSearchResult);
+os.implements(os.ui.search.place.CoordinateResult, os.search.ISortableResult.ID);
 
 
 /**
@@ -99,6 +106,32 @@ os.ui.search.place.CoordinateResult.prototype.performAction = function() {
  */
 os.ui.search.place.CoordinateResult.prototype.getSearchUI = function() {
   return '<coordresultcard></coordresultcard>';
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.search.place.CoordinateResult.prototype.getSortValue = function(sortType) {
+  var value;
+
+  if (this.result) {
+    switch (sortType) {
+      case os.search.SortType.DATE:
+        var time = this.result.get(os.data.RecordField.TIME);
+        if (os.implements(time, os.time.ITime.ID)) {
+          value = /** @type {os.time.ITime} */ (time.getStart());
+        }
+        break;
+      case os.search.SortType.TITLE:
+        value = os.feature.getTitle(this.result) || null;
+        break;
+      default:
+        break;
+    }
+  }
+
+  return value != null ? String(value) : null;
 };
 
 
