@@ -132,6 +132,15 @@ plugin.file.shp.SHPExporter.LOGGER_ = goog.log.getLogger('plugin.file.shp.SHPExp
 
 
 /**
+ * PRJ content for WGS84.
+ * @type {string}
+ * @const
+ */
+plugin.file.shp.SHPExporter.PRJ_WGS84 = 'GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",' +
+    'SPHEROID["WGS_1984",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]]';
+
+
+/**
  * @inheritDoc
  */
 plugin.file.shp.SHPExporter.prototype.getExtension = function() {
@@ -250,9 +259,9 @@ plugin.file.shp.SHPExporter.prototype.parseColumn_ = function(item, col) {
     }
 
     // determine the precision for numeric columns
-    if (this.columnTypes_[name] == 'N' && value.match(/^\d*\.\d+$/)) {
+    if (this.columnTypes_[name] == 'N' && value.match(/^[+-]?\d*\.\d+$/)) {
       var currentPrecision = this.columnPrecisions_[name] || 0;
-      this.columnPrecisions_[name] = Math.min(Math.max(currentPrecision, value.replace(/^\d*\./, '').length), 255);
+      this.columnPrecisions_[name] = Math.min(Math.max(currentPrecision, value.replace(/^[+-]?\d*\./, '').length), 255);
     } else {
       this.columnPrecisions_[name] = 0;
     }
@@ -565,6 +574,9 @@ plugin.file.shp.SHPExporter.prototype.appendDBFHeader = function() {
 
   // write record size
   this.dvDbf_.setUint16(10, recordSize + 1, true);
+
+  // language driver ID (ANSI)
+  this.dvDbf_.setUint16(29, 0x57, true);
 
   // write header (column info)
   os.array.forEach(this.columns_, function(col, index) {
@@ -1090,6 +1102,11 @@ plugin.file.shp.SHPExporter.prototype.appendFooter = function() {
   shxFile.setContent(this.header_.shx.data.slice(0, this.header_.shx.position));
   shxFile.setFileName(this.name + '.shx');
   this.addFile(shxFile);
+
+  var prjFile = new os.file.File();
+  prjFile.setContent(plugin.file.shp.SHPExporter.PRJ_WGS84);
+  prjFile.setFileName(this.name + '.prj');
+  this.addFile(prjFile);
 };
 
 
