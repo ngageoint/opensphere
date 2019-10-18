@@ -259,9 +259,9 @@ plugin.file.shp.SHPExporter.prototype.parseColumn_ = function(item, col) {
     }
 
     // determine the precision for numeric columns
-    if (this.columnTypes_[name] == 'N' && value.match(/^\d*\.\d+$/)) {
+    if (this.columnTypes_[name] == 'N' && value.match(/^[+-]?\d*\.\d+$/)) {
       var currentPrecision = this.columnPrecisions_[name] || 0;
-      this.columnPrecisions_[name] = Math.min(Math.max(currentPrecision, value.replace(/^\d*\./, '').length), 255);
+      this.columnPrecisions_[name] = Math.min(Math.max(currentPrecision, value.replace(/^[+-]?\d*\./, '').length), 255);
     } else {
       this.columnPrecisions_[name] = 0;
     }
