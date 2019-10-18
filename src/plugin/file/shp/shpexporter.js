@@ -132,6 +132,15 @@ plugin.file.shp.SHPExporter.LOGGER_ = goog.log.getLogger('plugin.file.shp.SHPExp
 
 
 /**
+ * PRJ content for WGS84.
+ * @type {string}
+ * @const
+ */
+plugin.file.shp.SHPExporter.PRJ_WGS84 = 'GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",' +
+    'SPHEROID["WGS_1984",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]]';
+
+
+/**
  * @inheritDoc
  */
 plugin.file.shp.SHPExporter.prototype.getExtension = function() {
@@ -1090,6 +1099,11 @@ plugin.file.shp.SHPExporter.prototype.appendFooter = function() {
   shxFile.setContent(this.header_.shx.data.slice(0, this.header_.shx.position));
   shxFile.setFileName(this.name + '.shx');
   this.addFile(shxFile);
+
+  var prjFile = new os.file.File();
+  prjFile.setContent(plugin.file.shp.SHPExporter.PRJ_WGS84);
+  prjFile.setFileName(this.name + '.prj');
+  this.addFile(prjFile);
 };
 
 
