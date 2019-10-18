@@ -575,6 +575,9 @@ plugin.file.shp.SHPExporter.prototype.appendDBFHeader = function() {
   // write record size
   this.dvDbf_.setUint16(10, recordSize + 1, true);
 
+  // language driver ID (ANSI)
+  this.dvDbf_.setUint16(29, 0x57, true);
+
   // write header (column info)
   os.array.forEach(this.columns_, function(col, index) {
     var startPos = 32 + index * 32;
