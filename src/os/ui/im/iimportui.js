@@ -20,6 +20,20 @@ os.ui.im.IImportUI.prototype.requiresStorage;
 
 
 /**
+ * If the import UI needs to store local files.
+ * @type {goog.events.EventTarget}
+ */
+os.ui.im.IImportUI.prototype.eventTarget;
+
+
+/**
+ * Getter for the EventTarget
+ * @return {goog.events.EventTarget}
+ */
+os.ui.im.IImportUI.prototype.getEventTarget;
+
+
+/**
  * Title of the import ui used in the anytype import chooser
  * @return {string}
  */
@@ -40,3 +54,9 @@ os.ui.im.IImportUI.prototype.launchUI;
  * @param {T} to The import configuration to merge to
  */
 os.ui.im.IImportUI.prototype.mergeConfig;
+
+
+/**
+ * Basic on-close for the UI which notifies listeners
+ */
+os.ui.im.IImportUI.prototype.onClose;

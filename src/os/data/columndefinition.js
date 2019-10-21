@@ -292,9 +292,6 @@ os.data.ColumnDefinition.prototype.restore = function(config) {
   if (config.hasOwnProperty('selectable')) {
     this['selectable'] = config['selectable'];
   }
-  if (config.hasOwnProperty('formatter')) {
-    this['formatter'] = config['formatter'];
-  }
   if (config.hasOwnProperty('behavior')) {
     this['behavior'] = config['behavior'];
   }

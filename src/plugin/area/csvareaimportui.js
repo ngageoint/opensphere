@@ -46,6 +46,7 @@ plugin.area.CSVAreaImportUI.prototype.launchUI = function(file, opt_config) {
   var config = new plugin.file.csv.CSVParserConfig();
   config['file'] = file;
   config['title'] = file.getFileName();
+  config['onClose'] = this.onClose.bind(this);
   config.updateLinePreview();
 
   var scopeOptions = {

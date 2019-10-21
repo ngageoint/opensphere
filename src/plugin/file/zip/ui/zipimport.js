@@ -143,9 +143,16 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.chain = function() {
     return;
   }
 
-  var onSuccess = function() {
-    // importer kicked off... TODO wait for it to finish or be cancelled
-    this.chain();
+  var onSuccess = function(config) {
+    // importer kicked off... listen for it to finish or be cancelled
+    var eventTarget = config['ui'].getEventTarget();
+    if (eventTarget) {
+      eventTarget.listenOnce(
+          os.events.EventType.COMPLETE,
+          this.chain.bind(this, null));
+    } else {
+      this.chain();
+    }
   };
 
   var onFailure = function() {

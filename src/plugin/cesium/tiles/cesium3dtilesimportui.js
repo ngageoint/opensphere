@@ -40,6 +40,7 @@ plugin.cesium.tiles.TilesetImportUI.prototype.launchUI = function(file, opt_conf
 
   config['file'] = file;
   config['title'] = 'New 3D Tile Layer';
+  config['onClose'] = this.onClose.bind(this);
 
   var scopeOptions = {
     'config': config

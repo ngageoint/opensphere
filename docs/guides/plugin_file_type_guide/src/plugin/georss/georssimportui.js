@@ -44,6 +44,7 @@ plugin.georss.GeoRSSImportUI.prototype.launchUI = function(file, opt_config) {
 
   config['file'] = file;
   config['title'] = file.getFileName();
+  config['onClose'] = this.onClose.bind(this);
 
   var scopeOptions = {
     'config': config
