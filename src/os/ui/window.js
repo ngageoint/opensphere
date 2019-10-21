@@ -1036,6 +1036,10 @@ os.ui.WindowCtrl.prototype.close = function(opt_cancel) {
   this.closing_ = true;
 
   var eventScope = this.element.scope() || this.scope;
+  if (eventScope['config']) {
+    var cfg = eventScope['config'];
+    if (typeof cfg['onClose'] == 'function') cfg['onClose']();
+  }
   if (opt_cancel) {
     // notify children the window is closing due to the X being clicked
     eventScope.$broadcast(os.ui.WindowEventType.CANCEL, this.element);

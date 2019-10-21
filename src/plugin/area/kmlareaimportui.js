@@ -71,6 +71,7 @@ plugin.area.KMLAreaImportUI.prototype.onPreviewReady_ = function(config, event) 
 
   config['columns'] = columns;
   config['preview'] = preview;
+  config['onClose'] = this.onClose.bind(this);
 
   var scopeOptions = {
     'config': config

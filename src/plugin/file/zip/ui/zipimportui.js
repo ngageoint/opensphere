@@ -41,10 +41,11 @@ plugin.file.zip.ui.ZIPImportUI.prototype.launchUI = function(file, opt_config) {
     this.mergeConfig(opt_config, config);
   }
 
-  config.file = file; // set the file
+  config['file'] = file; // set the file
+  config['onClose'] = this.onClose.bind(this);
 
   config.update(function() {
-    // called when unzip finishes... don't need it at this point in the UI
+    // called when unzip parser finishes... don't need it at this point in the UI
   });
 
   var scopeOptions = {
