@@ -1,4 +1,5 @@
 goog.provide('os.ui.draw');
+goog.provide('os.ui.draw.utils');
 
 goog.require('ol.Feature');
 goog.require('ol.geom.Polygon');
@@ -6,44 +7,27 @@ goog.require('ol.style.Fill');
 goog.require('ol.style.Stroke');
 goog.require('ol.style.Style');
 goog.require('os.geo.jsts.OLParser');
-goog.require('os.style.area');
-
 
 /**
  * The menu to display when drawing interaction completes.
  * @type {os.ui.menu.Menu|undefined}
  */
 os.ui.draw.MENU = undefined;
-
-
-/**
- * Key to get default square size of grid, in Lat/Lon degrees
- * @type {string}
- */
-os.ui.draw.GRID_DETAIL = 'grid.detail';
-
-
-/**
- * Key to get default maximum number of squares within extent for the grid
- * @type {string}
- */
-os.ui.draw.GRID_DETAIL_MAX = 'grid.detailMax';
+os.ui.draw.GRID_DETAIL = 'search.grid.detail';
+os.ui.draw.GRID_DETAIL_MAX = 'search.grid.detailMax';
 
 
 /**
  * Build a list of features to represent the search grid that intersects with the drawn geometry
  *
  * @param {ol.Feature} feature The source feature to trace.
- * @param {osx.ui.draw.GridOptions} options Config object for grid generation
+ * @param {number} detail The number of degrees to which to "snap" the grid
  * @return {Array.<ol.Feature>}
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.ui.draw.getGridFromFeature = function(feature, options) {
-  if (!feature || !options) return null;
-
-  var detail = options.detail;
-  var max = options.max;
+os.ui.draw.utils.getGridFromFeature = function(feature, detail) {
+  if (!feature) return null;
 
   var features = [];
   var geo = feature.getGeometry();
@@ -52,9 +36,12 @@ os.ui.draw.getGridFromFeature = function(feature, options) {
   var extent = geo.getExtent(); // build a simplified box around the search geometry
   geo.osTransform(); // undo transformation so copyFeature() succeeds
 
+  // the number of boxes (X * Y) at which to skip this grid feature; from settings.json
+  var mult = os.ui.draw.utils.getGridSetting(os.ui.draw.GRID_DETAIL_MAX, 100.0);
+
   // don't continue building the grid if it would create too many boxes
   if ((Math.ceil(Math.abs(extent[2] - extent[0]) / detail) *
-      Math.ceil(Math.abs(extent[3] - extent[1]) / detail)) > max) return null;
+      Math.ceil(Math.abs(extent[3] - extent[1]) / detail)) > mult) return null;
 
   // snap box coordinates to the nearest "detail" degrees
   var snap = function(l, d, ceil) {
@@ -67,6 +54,7 @@ os.ui.draw.getGridFromFeature = function(feature, options) {
   extent[2] = snap(extent[2], detail, true); // lon max
   extent[3] = snap(extent[3], detail, true); // lat max
 
+  var style = os.style.area.SEARCH_GRID_STYLE;
   var cfg = {
     lon: {
       n: (extent[0] < extent[2]) ? extent[0] : extent[2],
@@ -81,7 +69,6 @@ os.ui.draw.getGridFromFeature = function(feature, options) {
   var prop = {};
   goog.object.extend(prop, feature.values_);
   delete prop['geometry'];
-  delete prop['title'];
   delete prop['_node'];
 
   // TODO research a better, faster way to create/approximate the grid
@@ -95,12 +82,23 @@ os.ui.draw.getGridFromFeature = function(feature, options) {
 
       // only add this to the grid if the original polygon intersects it
       if (feature.getGeometry().intersectsExtent(gridExtent)) {
-        features.push(os.ui.draw.gridFeatureFromExtent_(gridExtent, prop, options));
+        // new() is faster than doing os.feature.copyFeature(feature)
+        var g = ol.geom.Polygon.fromExtent(gridExtent);
+        var prop_ = {'geometry': g};
+        goog.object.extend(prop_, prop);
+
+        var f = new ol.Feature(prop_);
+        f.setId(goog.string.getRandomString());
+        f.setStyle(style);
+        f.set(os.data.RecordField.DRAWING_LAYER_NODE, true);
+        f.set(os.data.RecordField.INTERACTIVE, false);
+
+        features.push(f);
       }
     }
   }
 
-  // TODO build a trace of the grid and save that to the Drawing Layers
+  // TODO build a union-ed multipolygon of this 'grid'
 
   return features;
 };
@@ -113,7 +111,7 @@ os.ui.draw.getGridFromFeature = function(feature, options) {
  * @param {number} defaultValue
  * @return {number}
  */
-os.ui.draw.getGridSetting = function(key, defaultValue) {
+os.ui.draw.utils.getGridSetting = function(key, defaultValue) {
   var value = defaultValue;
   try {
     value = parseFloat(os.settings.get(key, defaultValue));
@@ -121,46 +119,4 @@ os.ui.draw.getGridSetting = function(key, defaultValue) {
     // do nothing
   }
   return value;
-};
-
-
-/**
- * Build a grid feature from the extent and GridOptions
- *
- * @param {Array.<number>} extent The outer bounds of this grid
- * @param {Object} prop The drawing and altitude modes; copied from the context feature
- * @param {osx.ui.draw.GridOptions} options The color, line thickness, etc settings for this grid
- * @return {ol.Feature}
- * @private
- */
-os.ui.draw.gridFeatureFromExtent_ = function(extent, prop, options) {
-  // new() is faster than doing os.feature.copyFeature(feature) from the original feature
-  var g = ol.geom.Polygon.fromExtent(extent);
-  var prop_ = {'geometry': g};
-  goog.object.extend(prop_, prop);
-
-  var f = new ol.Feature(prop_);
-  f.setId(goog.string.getRandomString());
-  f.setStyle(options.style);
-  f.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
-  f.set(os.data.RecordField.INTERACTIVE, false);
-
-  return f;
-};
-
-
-/**
- * Helper function to get valid default settings for grid capabilities
- *
- * @param {number=} detail The number of degrees squared used to draw the grid
- * @param {number=} max The maximum number of grid squares to draw
- * @param {ol.style.Style=} style The style applied to the squares of the grid
- * @return {osx.ui.draw.GridOptions}
- */
-os.ui.draw.gridOptionsInstance = function(detail, max, style) {
-  return /** @type {!osx.ui.draw.GridOptions} */ ({
-    detail: (detail) ? detail : os.ui.draw.getGridSetting(os.ui.draw.GRID_DETAIL, 1.0), // enforces non-zero
-    max: (max) ? max : os.ui.draw.getGridSetting(os.ui.draw.GRID_DETAIL_MAX, 100.0), // enforces non-zero
-    style: (style) ? style : os.style.area.GRID_STYLE
-  });
 };
