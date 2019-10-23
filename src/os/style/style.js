@@ -1234,7 +1234,8 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
   }
 
   if (colorOverride) {
-    os.style.setConfigColor(featureConfig, colorOverride);
+    // only apply the color override to the image and stroke
+    os.style.setConfigColor(featureConfig, colorOverride, [os.style.StyleField.IMAGE, os.style.StyleField.STROKE]);
   }
 
   // if the feature has a custom opacity set, override the config opacity
