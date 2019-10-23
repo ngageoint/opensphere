@@ -150,8 +150,11 @@
       }
     },
     "search": {
-      "areaId": "sa_1AD05F97",
-      "enableAll": true
+      "enableAll": true,
+      "grid" : {
+        "detail": 0.25,
+        "detailMax": 350
+      }
     },
     "facetedSearch": {
       "categories": {
