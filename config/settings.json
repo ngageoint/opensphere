@@ -146,7 +146,11 @@
       }
     },
     "search": {
-      "enableAll": true
+      "enableAll": true,
+      "grid" : {
+        "detail": 0.25,
+        "detailMax": 350
+      }
     },
     "facetedSearch": {
       "categories": {
