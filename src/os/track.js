@@ -101,15 +101,7 @@ os.track.AddOptions;
  *   color: (string|undefined),
  *   name: (string|undefined),
  *   sortField: (string|undefined),
-<<<<<<< HEAD
-<<<<<<< HEAD
  *   label: (string|null|undefined),
-=======
- *   label: (string|undefined),
->>>>>>> b2822792... feat(track): add function to split features into tracks
-=======
- *   label: (string|null|undefined),
->>>>>>> fc74c7b2... refactor(track): disable labels when splitting features into tracks
  *   includeMetadata: (boolean|undefined),
  *   useLayerStyle: (boolean|undefined)
  * }}
@@ -120,17 +112,8 @@ os.track.CreateOptions;
 /**
  * @typedef {{
  *   features: Array<ol.Feature>,
-<<<<<<< HEAD
-<<<<<<< HEAD
  *   field: (string|undefined),
  *   bucketFn: ((function(ol.Feature):?)|undefined),
-=======
- *   field: string,
->>>>>>> b2822792... feat(track): add function to split features into tracks
-=======
- *   field: (string|undefined),
- *   bucketFn: ((function(ol.Feature):?)|undefined),
->>>>>>> 266f3457... feat(track): add/expand track API's
  *   getTrackFn: ((function((string|number)):ol.Feature)|undefined),
  *   result: (Array<ol.Feature>|undefined)
  * }}
@@ -310,22 +293,9 @@ os.track.getTrackCoordinates = function(features, sortField, opt_metadataMap) {
       if (opt_metadataMap) {
         opt_metadataMap[value] = {};
 
-<<<<<<< HEAD
-<<<<<<< HEAD
         for (var key in feature.values_) {
           if (!os.feature.isInternalField(key)) {
             opt_metadataMap[value][key] = feature.values_[key];
-=======
-        var props = feature.getProperties();
-        for (var key in props) {
-          if (!os.feature.isInternalField(key)) {
-            opt_metadataMap[value][key] = props[key];
->>>>>>> b2822792... feat(track): add function to split features into tracks
-=======
-        for (var key in feature.values_) {
-          if (!os.feature.isInternalField(key)) {
-            opt_metadataMap[value][key] = feature.values_[key];
->>>>>>> c17a160b... perf(track): optimizations for clamp and getTrackCoordinates
           }
         }
       }
@@ -593,16 +563,11 @@ os.track.clamp = function(track, start, end) {
     endIndex += stride;
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c17a160b... perf(track): optimizations for clamp and getTrackCoordinates
   if (endIndex - startIndex != geometry.flatCoordinates.length) {
     var prevLength = geometry.flatCoordinates.length;
     if (startIndex < endIndex) {
       // splice the clamped range from the array
       var newCoords = geometry.flatCoordinates.splice(startIndex, endIndex - startIndex);
-<<<<<<< HEAD
 
       // remove metadata for remaining coordinates
       os.track.pruneMetadata_(track, geometry.flatCoordinates, stride);
@@ -618,101 +583,6 @@ os.track.clamp = function(track, start, end) {
     if (geometry.flatCoordinates.length !== prevLength) {
       os.track.setGeometry(track, geometry);
     }
-=======
-  var prevLength = flatCoordinates.length;
-  if (startIndex < endIndex) {
-    // splice the clamped range from the array
-    var newCoords = flatCoordinates.splice(startIndex, endIndex - startIndex);
-=======
->>>>>>> c17a160b... perf(track): optimizations for clamp and getTrackCoordinates
-
-      // remove metadata for remaining coordinates
-      os.track.pruneMetadata_(track, geometry.flatCoordinates, stride);
-
-<<<<<<< HEAD
-    // set flat coordinates to the clamped list
-    geometry.flatCoordinates = newCoords;
-  } else {
-    flatCoordinates.length = 0;
-    track.values_[os.track.TrackField.METADATA_MAP] = {};
->>>>>>> eeabfa7f... fix(track): clean up metadata when clamping tracks
-  }
-};
-
-
-/**
- * Truncate a track to a maximum number of points. Keeps the most recent points.
- *
- * @param {!ol.Feature} track The track.
- * @param {number} size The size.
- *
- * @suppress {accessControls} To allow direct access to feature metadata and line coordinates.
- */
-os.track.truncate = function(track, size) {
-  // ensure size is >= 0
-  size = Math.max(0, size);
-
-  // add point(s) to the original geometry, in case the track was interpolated
-  var geometry = /** @type {!(os.track.TrackLike)} */ (track.values_[os.interpolate.ORIGINAL_GEOM_FIELD] ||
-      track.getGeometry());
-
-  if (geometry.getType() === ol.geom.GeometryType.MULTI_LINE_STRING) {
-    // merge the split line so coordinates can be truncated to the correct size
-    geometry.toLonLat();
-    geometry = os.geo.mergeLineGeometry(geometry);
-    geometry.osTransform();
-  }
-
-  var flatCoordinates = geometry.flatCoordinates;
-  var stride = geometry.stride;
-  var numCoords = size * stride;
-
-  if (flatCoordinates.length > numCoords) {
-    var removed = flatCoordinates.splice(0, flatCoordinates.length - numCoords);
-    os.track.setGeometry(track, geometry);
-
-    // remove old metadata fields from the track
-    os.track.pruneMetadata_(track, removed, stride);
-  }
-};
-
-
-/**
- * Prune the metadata map for a track, removing metadata by indexed sort values.
- * @param {!ol.Feature} track The track.
- * @param {!Array} values The values to remove.
- * @param {number=} opt_stride If provided, the `values` array stride. Use if providing a list of flat coordinates that
- *                             contain sort values as the last coordinate value.
- * @private
- *
- * @suppress {accessControls} To allow direct access to feature metadata.
- */
-os.track.pruneMetadata_ = function(track, values, opt_stride) {
-  var stride = Math.max(0, opt_stride || 1);
-
-  var metadataMap = /** @type {Object|undefined} */ (track.values_[os.track.TrackField.METADATA_MAP]);
-  if (metadataMap) {
-    for (var i = 0; i < values.length; i += stride) {
-      var next = values[i + stride - 1];
-      if (next != null) {
-        metadataMap[next] = undefined;
-      }
-    }
-
-    track.values_[os.track.TrackField.METADATA_MAP] = os.object.prune(metadataMap);
-=======
-      // set flat coordinates to the clamped list
-      geometry.flatCoordinates = newCoords;
-    } else {
-      geometry.flatCoordinates.length = 0;
-      track.values_[os.track.TrackField.METADATA_MAP] = {};
-    }
-
-    // update the geometry on the track
-    if (geometry.flatCoordinates.length !== prevLength) {
-      os.track.setGeometry(track, geometry);
-    }
->>>>>>> c17a160b... perf(track): optimizations for clamp and getTrackCoordinates
   }
 };
 
@@ -1678,10 +1548,6 @@ os.track.updateTrackZIndex = function(tracks) {
 
 
 /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 266f3457... feat(track): add/expand track API's
  * Bucket features by a field.
  * @param {string} field The field.
  * @param {ol.Feature} feature The feature.
@@ -1702,7 +1568,6 @@ os.track.bucketByField = function(field, feature) {
 
 
 /**
-<<<<<<< HEAD
  * Split features into tracks.
  * @param {os.track.SplitOptions} options The options.
  * @return {!Array<!ol.Feature>} The resulting tracks. Also contains any features not used to create tracks.
@@ -1715,31 +1580,6 @@ os.track.splitIntoTracks = function(options) {
 
   if (features && bucketFn) {
     var buckets = goog.array.bucket(features, bucketFn);
-=======
-=======
->>>>>>> 266f3457... feat(track): add/expand track API's
- * Split features into tracks.
- * @param {os.track.SplitOptions} options The options.
- * @return {!Array<!ol.Feature>} The resulting tracks. Also contains any features not used to create tracks.
- */
-os.track.splitIntoTracks = function(options) {
-  var features = options.features;
-  var result = options.result || [];
-  var bucketFn = options.bucketFn || (options.field ? os.track.bucketByField.bind(undefined, options.field) : null);
-  var getTrackFn = options.getTrackFn || goog.nullFunction;
-
-<<<<<<< HEAD
-  if (features && field) {
-    var buckets = goog.array.bucket(features, function(feature) {
-      // if the feature does not have a value for the field, add it to the ignore bucket so it can be included in the
-      // result. this avoids dropping features that aren't added to a track.
-      return feature ? (feature.values_[field] != null ? feature.values_[field] : os.object.IGNORE_VAL) : undefined;
-    });
->>>>>>> b2822792... feat(track): add function to split features into tracks
-=======
-  if (features && bucketFn) {
-    var buckets = goog.array.bucket(features, bucketFn);
->>>>>>> 266f3457... feat(track): add/expand track API's
 
     for (var id in buckets) {
       var bucketFeatures = buckets[id];
@@ -1763,14 +1603,7 @@ os.track.splitIntoTracks = function(options) {
             name: id,
             features: bucketFeatures,
             includeMetadata: true,
-<<<<<<< HEAD
-<<<<<<< HEAD
             label: null,
-=======
->>>>>>> b2822792... feat(track): add function to split features into tracks
-=======
-            label: null,
->>>>>>> fc74c7b2... refactor(track): disable labels when splitting features into tracks
             useLayerStyle: true
           });
 
