@@ -148,7 +148,7 @@
     "search": {
       "enableAll": true,
       "grid" : {
-        "detail": 0.25,
+        "detail": 1.0,
         "detailMax": 350
       }
     },
