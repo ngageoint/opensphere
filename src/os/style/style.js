@@ -630,7 +630,9 @@ os.style.setConfigColor = function(config, color, opt_includeStyleFields) {
         }
 
         if (!os.object.isPrimitive(config[key])) {
-          os.style.setConfigColor(config[key], color, opt_includeStyleFields);
+          // images should set all of the style fields on their nested object
+          os.style.setConfigColor(config[key], color,
+              key == 'image' ? os.style.DEFAULT_COLOR_STYLE_FIELDS : opt_includeStyleFields);
         }
       }
     }
