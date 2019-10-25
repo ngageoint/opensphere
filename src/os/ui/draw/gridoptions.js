@@ -2,6 +2,39 @@ goog.provide('os.ui.draw.GridOptions');
 
 goog.require('ol.style.Style');
 goog.require('os.style.area');
+goog.require('os.ui.draw');
+
+
+/**
+ * Key to get default square size of grid, in Lat/Lon degrees
+ * @type {string}
+ */
+os.ui.draw.GRID_DETAIL = 'grid.detail';
+
+
+/**
+ * Key to get default maximum number of squares within extent for the grid
+ * @type {string}
+ */
+os.ui.draw.GRID_DETAIL_MAX = 'grid.detailMax';
+
+
+/**
+ * Helper function; gets a numeric representation of the JSON setting
+ *
+ * @param {string} key
+ * @param {number} defaultValue
+ * @return {number}
+ */
+os.ui.draw.getGridSetting = function(key, defaultValue) {
+  var value = defaultValue;
+  try {
+    value = parseFloat(os.settings.get(key, defaultValue));
+  } catch (e) {
+    // do nothing
+  }
+  return value;
+};
 
 
 /**
@@ -76,22 +109,4 @@ os.ui.draw.GridOptions.prototype.getStyle = function() {
  */
 os.ui.draw.GridOptions.prototype.setStyle = function(style) {
   this.style = style;
-};
-
-
-/**
- * Helper function; gets a numeric representation of the JSON setting
- *
- * @param {string} key
- * @param {number} defaultValue
- * @return {number}
- */
-os.ui.draw.getGridSetting = function(key, defaultValue) {
-  var value = defaultValue;
-  try {
-    value = parseFloat(os.settings.get(key, defaultValue));
-  } catch (e) {
-    // do nothing
-  }
-  return value;
 };

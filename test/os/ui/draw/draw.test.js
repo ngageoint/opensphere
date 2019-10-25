@@ -5,7 +5,7 @@ goog.require('os.map');
 goog.require('os.ui.draw');
 goog.require('os.ui.draw.GridOptions');
 
-ddescribe('os.ui.draw', function() {
+describe('os.ui.draw', function() {
   window.localStorage.clear();
   os.net.RequestHandlerFactory.addHandler(os.net.SameDomainHandler);
 
