@@ -75,6 +75,13 @@ os.search.AbstractSearch = function(id, name, opt_type, opt_priority, opt_defaul
   this.isExternal_ = false;
 
   /**
+   * The grid options for this search provider
+   * @type {os.ui.draw.GridOptions}
+   * @protected
+   */
+  this.gridOptions_ = null;
+
+  /**
    * The logger used by the search provider.
    * @type {goog.log.Logger}
    * @protected
@@ -212,6 +219,30 @@ os.search.AbstractSearch.prototype.isExternal = function() {
  */
 os.search.AbstractSearch.prototype.setExternal = function(external) {
   this.isExternal_ = external;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.search.AbstractSearch.prototype.hasGridOptions = function() {
+  return (this.gridOptions_ != null);
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.search.AbstractSearch.prototype.getGridOptions = function() {
+  return this.gridOptions_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.search.AbstractSearch.prototype.setGridOptions = function(gridOptions) {
+  this.gridOptions_ = gridOptions;
 };
 
 

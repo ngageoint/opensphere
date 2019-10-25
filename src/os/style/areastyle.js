@@ -107,12 +107,12 @@ os.style.area.SEARCH_AREA_STYLE = new ol.style.Style({
 
 
 /**
- * Style for the search grid.
+ * Style for the default grid.
  *
  * @type {ol.style.Style}
  * @const
  */
-os.style.area.SEARCH_GRID_STYLE = new ol.style.Style({
+os.style.area.GRID_STYLE = new ol.style.Style({
   stroke: new ol.style.Stroke({
     color: 'rgba(245,245,245,1.0)',
     lineCap: 'square',

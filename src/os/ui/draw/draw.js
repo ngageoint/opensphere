@@ -1,5 +1,4 @@
 goog.provide('os.ui.draw');
-goog.provide('os.ui.draw.utils');
 
 goog.require('ol.Feature');
 goog.require('ol.geom.Polygon');
@@ -13,21 +12,38 @@ goog.require('os.geo.jsts.OLParser');
  * @type {os.ui.menu.Menu|undefined}
  */
 os.ui.draw.MENU = undefined;
-os.ui.draw.GRID_DETAIL = 'search.grid.detail';
-os.ui.draw.GRID_DETAIL_MAX = 'search.grid.detailMax';
+
+
+/**
+ * Key to get default square size of grid, in Lat/Lon degrees
+ * @type {string}
+ */
+os.ui.draw.GRID_DETAIL = 'grid.detail';
+
+
+/**
+ * Key to get default maximum number of squares within extent for the grid
+ * @type {string}
+ */
+os.ui.draw.GRID_DETAIL_MAX = 'grid.detailMax';
 
 
 /**
  * Build a list of features to represent the search grid that intersects with the drawn geometry
  *
  * @param {ol.Feature} feature The source feature to trace.
- * @param {number} detail The number of degrees to which to "snap" the grid
+ * @param {os.ui.draw.GridOptions} options Config object for grid generation
  * @return {Array.<ol.Feature>}
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.ui.draw.utils.getGridFromFeature = function(feature, detail) {
+os.ui.draw.getGridFromFeature = function(feature, options) {
   if (!feature) return null;
+  if (!options) options = new os.ui.draw.GridOptions(0.1, 100.0);
+
+  var detail = options.getDetail();
+  var max = options.getMax();
+  var style = options.getStyle();
 
   var features = [];
   var geo = feature.getGeometry();
@@ -36,12 +52,9 @@ os.ui.draw.utils.getGridFromFeature = function(feature, detail) {
   var extent = geo.getExtent(); // build a simplified box around the search geometry
   geo.osTransform(); // undo transformation so copyFeature() succeeds
 
-  // the number of boxes (X * Y) at which to skip this grid feature; from settings.json
-  var mult = os.ui.draw.utils.getGridSetting(os.ui.draw.GRID_DETAIL_MAX, 100.0);
-
   // don't continue building the grid if it would create too many boxes
   if ((Math.ceil(Math.abs(extent[2] - extent[0]) / detail) *
-      Math.ceil(Math.abs(extent[3] - extent[1]) / detail)) > mult) return null;
+      Math.ceil(Math.abs(extent[3] - extent[1]) / detail)) > max) return null;
 
   // snap box coordinates to the nearest "detail" degrees
   var snap = function(l, d, ceil) {
@@ -54,7 +67,6 @@ os.ui.draw.utils.getGridFromFeature = function(feature, detail) {
   extent[2] = snap(extent[2], detail, true); // lon max
   extent[3] = snap(extent[3], detail, true); // lat max
 
-  var style = os.style.area.SEARCH_GRID_STYLE;
   var cfg = {
     lon: {
       n: (extent[0] < extent[2]) ? extent[0] : extent[2],
@@ -101,22 +113,4 @@ os.ui.draw.utils.getGridFromFeature = function(feature, detail) {
   // TODO build a union-ed multipolygon of this 'grid'
 
   return features;
-};
-
-
-/**
- * Helper function; gets a numeric representation of the JSON setting
- *
- * @param {string} key
- * @param {number} defaultValue
- * @return {number}
- */
-os.ui.draw.utils.getGridSetting = function(key, defaultValue) {
-  var value = defaultValue;
-  try {
-    value = parseFloat(os.settings.get(key, defaultValue));
-  } catch (e) {
-    // do nothing
-  }
-  return value;
 };
