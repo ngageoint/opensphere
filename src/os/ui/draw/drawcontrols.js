@@ -56,7 +56,7 @@ os.ui.draw.DrawControlsCtrl = function($scope, $element) {
 
   this['supportsLines'] = true;
 
-  this['supportsGrid'] = false;
+  this['supportsGrid'] = true;
 
   os.ui.draw.DrawControlsCtrl.base(this, 'constructor', $scope, $element);
   this.log = os.ui.draw.DrawControlsCtrl.LOGGER_;
@@ -114,9 +114,9 @@ os.ui.draw.DrawControlsCtrl.prototype.setFeature = function(f) {
   var feature = (f) ? f : null;
 
   if (this['supportsGrid']) {
-    var detail = os.ui.draw.utils.getGridSetting(os.ui.draw.GRID_DETAIL, 0.25); // number of degrees; for lon/lat size of grid boxes
+    var options = new os.ui.draw.GridOptions(0.1, 100.0);
 
-    this.grid = os.ui.draw.utils.getGridFromFeature(feature, detail);
+    this.grid = os.ui.draw.getGridFromFeature(feature, options);
     if (this.grid) {
       os.MapContainer.getInstance().addFeatures(this.grid); // draw new search grid
     }
