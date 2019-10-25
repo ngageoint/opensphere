@@ -168,12 +168,8 @@ os.query.AreaManager.prototype.save = function() {
     featureProjection: os.map.PROJECTION
   });
 
-  var objAll = format.writeFeaturesObject(areasAll, {
-    featureProjection: os.map.PROJECTION
-  });
-
   os.settings.set(os.AREA_STORAGE_KEY, obj);
-  os.settings.set(os.ALL_AREA_STORAGE_KEY, objAll);
+  os.settings.delete(os.ALL_AREA_STORAGE_KEY);
   return goog.async.Deferred.succeed();
 };
 
