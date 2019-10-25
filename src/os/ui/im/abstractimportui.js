@@ -1,5 +1,4 @@
 goog.provide('os.ui.im.AbstractImportUI');
-
 goog.require('os.ui.im.IImportUI');
 
 
@@ -16,6 +15,7 @@ os.ui.im.AbstractImportUI = function() {
    */
   this.requiresStorage = false;
 };
+
 
 /**
  * @inheritDoc
