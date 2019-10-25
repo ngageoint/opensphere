@@ -24,21 +24,6 @@
     }
   }
 
-  &.no-padding {
-    .slick-row {
-      border-bottom: 0 !important;
-    }
-
-    .slick-cell {
-      border: 0;
-      padding: 0 !important;
-
-      & > div {
-        margin: 1px 0 2px 5px;
-      }
-    }
-  }
-
   .slick-header,
   .slick-header-column {
     background: $body-bg;
