@@ -7,7 +7,6 @@ goog.require('os.search.Favorite');
 goog.require('os.search.ISearch');
 
 
-
 /**
  * Abstract implementation of a search provider.
  *
