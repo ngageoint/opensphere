@@ -171,12 +171,12 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.chain = function() {
   };
 
   this.cur_.importer = this.importers_.splice(0, 1)[0]; // remove the current importer from the queue
-  
+
   var process = new os.im.ImportProcess(); // new os.ui.im.DuplicateImportProcess();
   process.setSkipDuplicates(true);
   process.setEvent(new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE, this.cur_.importer['file']));
 
-  // TODO because the duplicate dialog is created by setEvent(), the deferred is not called when 
+  // TODO because the duplicate dialog is created by setEvent(), the deferred is not called when
   // the Duplicate dialog is cancelled... so just use ImportProcess for now
   var deferred = process.begin();
   deferred.then(onSuccess, onFailure, this); // called back when import process starts or fails...
@@ -184,7 +184,10 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.chain = function() {
 
 
 /**
- * 
+ * Checks to see if the window created is an ImporterUI with the expected file
+ *
+ * @param {angular.Scope.Event} event
+ * @return {boolean}
  */
 plugin.file.zip.ui.ZIPImportCtrl.prototype.windowMatches = function(event) {
   var filename = (this.cur_.importer
@@ -193,7 +196,7 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.windowMatches = function(event) {
       ? this.cur_.importer.file.getFileName()
       : '';
   var config = (event && event.targetScope) ? event.targetScope.config : null;
-  
+
   return (config
     && config.file
     && typeof config.file.getFileName == 'function'
@@ -202,16 +205,17 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.windowMatches = function(event) {
 
 
 /**
- * 
+ * Handles the generic listener for any window events
+ *
+ * @param {angular.Scope.Event} event
  */
 plugin.file.zip.ui.ZIPImportCtrl.prototype.onWindowOpen_ = function(event) {
-
   // if the window scope has the expected file, then listen to that scope for window CLOSE
   if (this.windowMatches(event)) {
     if (this.cur_.timeout) this.timeout__.cancel(this.cur_.timeout); // kill the timeout
     if (typeof this.cur_.listener == 'function') this.cur_.listener(); // kill the listener that was created by the previous chain()
 
-    this.cur_.listener = event.targetScope.$on(os.ui.WindowEventType.CLOSE, function(event){
+    this.cur_.listener = event.targetScope.$on(os.ui.WindowEventType.CLOSE, function(event) {
       // because this is listening to the event.targetScope, this is definitely the window with the expected file, so chain
       this.chain();
     }.bind(this));
@@ -220,7 +224,7 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.onWindowOpen_ = function(event) {
 
 
 /**
- * 
+ * Handles calling he next chain() when an Importer is a background run (doesn't create a window)
  */
 plugin.file.zip.ui.ZIPImportCtrl.prototype.onWindowTimeout_ = function() {
   if (typeof this.cur_.listener == 'function') this.cur_.listener(); // kill the listener that was created by the previous chain()
@@ -282,11 +286,10 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.validate_ = function() {
  * @return {number}
  */
 plugin.file.zip.ui.ZIPImportCtrl.prototype.count = function() {
-  return (this['files'] && this['files'].length > 0)
+  return (this['files'])
     ? this['files'].reduce(
-      function(count, file) {
-        return file.enabled ? count + 1 : count, 0; // the , 0 at the end of this line initializes the accumulator
-      }
+        (count, file) => file.enabled ? count + 1 : count,
+        0 // this optional reduce() param initializes the accumulator
     )
     : 0;
 };
