@@ -630,7 +630,9 @@ os.style.setConfigColor = function(config, color, opt_includeStyleFields) {
         }
 
         if (!os.object.isPrimitive(config[key])) {
-          os.style.setConfigColor(config[key], color, opt_includeStyleFields);
+          // images should set all of the style fields on their nested object
+          os.style.setConfigColor(config[key], color,
+              key == 'image' ? os.style.DEFAULT_COLOR_STYLE_FIELDS : opt_includeStyleFields);
         }
       }
     }
@@ -1234,7 +1236,8 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
   }
 
   if (colorOverride) {
-    os.style.setConfigColor(featureConfig, colorOverride);
+    // only apply the color override to the image and stroke
+    os.style.setConfigColor(featureConfig, colorOverride, [os.style.StyleField.IMAGE, os.style.StyleField.STROKE]);
   }
 
   // if the feature has a custom opacity set, override the config opacity
