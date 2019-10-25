@@ -24,8 +24,7 @@ os.ui.draw.MENU = undefined;
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 os.ui.draw.getGridFromFeature = function(feature, options) {
-  if (!feature) return null;
-  if (!options) options = new os.ui.draw.GridOptions(0.1, 100.0);
+  if (!feature || !options) return null;
 
   var detail = options.getDetail();
   var max = options.getMax();
