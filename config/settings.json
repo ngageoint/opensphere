@@ -37,7 +37,7 @@
       "enabled": true
     },
     "grid" : {
-      "detail": 10.25,
+      "detail": 0.25,
       "detailMax": 350
     },
     "helpVideoUrl": "",
