@@ -112,3 +112,24 @@ os.search.ISearch.prototype.isExternal;
  * @param {boolean} external
  */
 os.search.ISearch.prototype.setExternal;
+
+
+/**
+ * Whether the search has gridded data
+ * @return {boolean}
+ */
+os.search.ISearch.prototype.hasGridOptions;
+
+
+/**
+ * Set if the search has gridded data
+ * @return {os.ui.draw.GridOptions}
+ */
+os.search.ISearch.prototype.getGridOptions;
+
+
+/**
+ * Set if the search has gridded data
+ * @param {os.ui.draw.GridOptions} options
+ */
+os.search.ISearch.prototype.setGridOptions;
