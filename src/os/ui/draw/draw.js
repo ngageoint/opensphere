@@ -15,20 +15,6 @@ os.ui.draw.MENU = undefined;
 
 
 /**
- * Key to get default square size of grid, in Lat/Lon degrees
- * @type {string}
- */
-os.ui.draw.GRID_DETAIL = 'grid.detail';
-
-
-/**
- * Key to get default maximum number of squares within extent for the grid
- * @type {string}
- */
-os.ui.draw.GRID_DETAIL_MAX = 'grid.detailMax';
-
-
-/**
  * Build a list of features to represent the search grid that intersects with the drawn geometry
  *
  * @param {ol.Feature} feature The source feature to trace.
