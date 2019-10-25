@@ -58,8 +58,6 @@ plugin.area.SHPAreaImportUI.prototype.launchUI = function(file, opt_config) {
     config['title'] = name;
   }
 
-  config['onClose'] = this.onClose.bind(this);
-
   var scopeOptions = {
     'config': config
   };

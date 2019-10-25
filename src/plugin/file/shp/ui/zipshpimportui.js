@@ -151,7 +151,6 @@ plugin.file.shp.ui.ZipSHPImportUI.prototype.launchUIInternal_ = function() {
     config['file2'] = this.dbfFile_;
     config['zipFile'] = this.zipFile_;
     config['title'] = this.zipFile_.getFileName();
-    config['onClose'] = this.onClose.bind(this);
 
     // generate preview data from the config and try to auto detect mappings
     config.updatePreview();

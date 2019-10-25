@@ -50,7 +50,6 @@ plugin.places.KMLPlacesImportUI.prototype.launchUI = function(file, opt_config) 
   var config = new os.parse.FileParserConfig();
   config['file'] = file;
   config['title'] = file.getFileName() || '';
-  config['onClose'] = this.onClose.bind(this);
 
   var callback = goog.partial(this.onPreviewReady_, config);
   var parser = new plugin.file.kml.KMLParser({});

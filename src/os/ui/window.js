@@ -607,6 +607,7 @@ os.ui.WindowEventType = {
   DRAGSTART: 'windowDragStart',
   DRAGSTOP: 'windowDragStop',
   HEADERBTN: 'windowHeaderBtn',
+  OPEN: 'windowOpen',
   RECONSTRAIN: 'windowReConstrain',
   READY: 'window.ready'
 };
@@ -829,6 +830,10 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
 
   // Stack this new window on top of others
   $timeout(function() {
+    // notify anyone listening that this window opened
+    var eventScope = this.element.scope() || this.scope;
+    eventScope.$emit(os.ui.WindowEventType.OPEN, this.element);
+
     this.bringToFront();
 
     if (this.element && !this.resizeFn_) {
@@ -1036,10 +1041,7 @@ os.ui.WindowCtrl.prototype.close = function(opt_cancel) {
   this.closing_ = true;
 
   var eventScope = this.element.scope() || this.scope;
-  if (eventScope['config']) {
-    var cfg = eventScope['config'];
-    if (typeof cfg['onClose'] == 'function') cfg['onClose']();
-  }
+
   if (opt_cancel) {
     // notify children the window is closing due to the X being clicked
     eventScope.$broadcast(os.ui.WindowEventType.CANCEL, this.element);

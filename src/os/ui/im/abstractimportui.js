@@ -1,7 +1,5 @@
 goog.provide('os.ui.im.AbstractImportUI');
 
-goog.require('goog.events.EventTarget');
-goog.require('os.events.EventType');
 goog.require('os.ui.im.IImportUI');
 
 
@@ -17,22 +15,7 @@ os.ui.im.AbstractImportUI = function() {
    * @type {boolean}
    */
   this.requiresStorage = false;
-
-  /**
-   * The object which notifies listeners when importer is completed or cancelled
-   * @type {goog.events.EventTarget}
-   */
-  this.eventTarget = new goog.events.EventTarget();
 };
-
-
-/**
- * @inheritDoc
- */
-os.ui.im.AbstractImportUI.prototype.getEventTarget = function() {
-  return this.eventTarget;
-};
-
 
 /**
  * @inheritDoc
@@ -60,12 +43,4 @@ os.ui.im.AbstractImportUI.prototype.mergeConfig = function(from, to) {
   to['mappings'] = from['mappings'];
   to['tags'] = from['tags'];
   to['title'] = from['title'];
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.im.AbstractImportUI.prototype.onClose = function() {
-  this.eventTarget.dispatchEvent(os.events.EventType.COMPLETE);
 };
