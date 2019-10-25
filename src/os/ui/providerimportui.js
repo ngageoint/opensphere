@@ -53,8 +53,6 @@ os.ui.ProviderImportUI.prototype.launchUI = function(file, opt_config) {
       config['enabled'] = true;
     }
 
-    config['onClose'] = this.onClose.bind(this);
-
     var scopeOptions = {
       'config': config
     };

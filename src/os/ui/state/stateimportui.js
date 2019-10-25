@@ -133,8 +133,6 @@ os.ui.state.StateImportUI.prototype.showUI = function(file, config) {
     config['title'] = file.getFileName();
   }
 
-  config['onClose'] = this.onClose.bind(this);
-
   var scopeOptions = {
     'config': config
   };

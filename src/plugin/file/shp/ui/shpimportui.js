@@ -56,7 +56,6 @@ plugin.file.shp.ui.SHPImportUI.prototype.launchUI = function(file, opt_config) {
     config['file2'] = file;
     config['title'] = name.split(plugin.file.shp.mime.DBF_EXT_REGEXP)[0] + '.shp';
   }
-  config['onClose'] = this.onClose.bind(this);
 
   var scopeOptions = {
     'config': config,
