@@ -201,6 +201,19 @@ os.ui.layer.VectorLayerUICtrl.prototype.onLayerPropertyChange = function(event) 
 /**
  * @inheritDoc
  */
+os.ui.layer.VectorLayerUICtrl.prototype.onItemsChange = function(newVal, oldVal) {
+  if (!this.isDisposed()) {
+    // whenever the selected layers change, the labels UI needs to be refreshed
+    this.refreshLabels = true;
+  }
+
+  os.ui.layer.VectorLayerUICtrl.base(this, 'onItemsChange', newVal, oldVal);
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
   os.ui.layer.VectorLayerUICtrl.base(this, 'initUI');
 
