@@ -106,7 +106,8 @@ plugin.file.shp.SHPParser.prototype.getColumns = function() {
  * @inheritDoc
  */
 plugin.file.shp.SHPParser.prototype.hasNext = function() {
-  return this.initialized_ && this.header_.data != null && this.header_.position < this.header_.data.byteLength;
+  return this.initialized_ && !!this.header_ && !!this.header_.data &&
+      this.header_.position < this.header_.data.byteLength;
 };
 
 
@@ -505,7 +506,7 @@ plugin.file.shp.SHPParser.prototype.logError_ = function(msg) {
 plugin.file.shp.SHPParser.prototype.updateColumns_ = function() {
   this.columns_.length = 0;
 
-  if (this.header_.dbf) {
+  if (this.header_ && this.header_.dbf) {
     var fields = this.header_.dbf.fields;
     for (var i = 0, n = fields.length; i < n; i++) {
       var col = new os.data.ColumnDefinition(fields[i].name);
@@ -571,7 +572,7 @@ plugin.file.shp.SHPParser.prototype.processZIPEntry_ = function(entry, content) 
     }
   }
 
-  if (!this.initialized_ && this.header_.data && this.header_.dbf.data) {
+  if (!this.initialized_ && this.header_ && this.header_.data && this.header_.dbf.data) {
     this.onReady();
   }
 };
@@ -607,8 +608,10 @@ plugin.file.shp.SHPParser.prototype.setupSHPFile_ = function(source) {
     return;
   }
 
-  this.header_.data = source;
-  this.header_.position = 100;
+  if (this.header_) {
+    this.header_.data = source;
+    this.header_.position = 100;
+  }
 };
 
 
@@ -644,7 +647,11 @@ plugin.file.shp.SHPParser.prototype.setupDBFFile_ = function(source) {
    * Byte 12   Field Type                                    Byte      n/a
    * Byte 16   Field Length                                  Byte      n/a
    */
-  var dbf = this.header_.dbf;
+  var dbf = this.header_ ? this.header_.dbf : null;
+  if (!dbf) {
+    return;
+  }
+
   var dv = new DataView(source);
   dbf.numRecords = dv.getUint32(4, true);
   dbf.recordStart = dv.getUint16(8, true) + 1;
