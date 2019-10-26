@@ -789,7 +789,7 @@ os.ui.FeatureEditCtrl.prototype.isPolygon = function() {
   var geometry = this.previewFeature.getGeometry();
 
   if (geometry) {
-    return os.geo.isGeometryPolygonal(geometry);
+    return os.geo.isGeometryPolygonal(geometry) || this.isEllipse();
   } else {
     return false;
   }
@@ -917,8 +917,15 @@ os.ui.FeatureEditCtrl.prototype.onMapClick_ = function(mapBrowserEvent) {
  */
 os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
   if (this.previewFeature) {
-    this.saveToFeature(this.previewFeature);
+    if (this.isPolygon()) {
+      this['fillOpacity'] = this['fillOpacity'] || os.style.DEFAULT_FILL_ALPHA;
+      this['fillColor'] = this['fillColor'] || os.color.toHexString(os.style.DEFAULT_LAYER_COLOR);
+    } else {
+      this['fillOpacity'] = undefined;
+      this['fillColor'] = undefined;
+    }
 
+    this.saveToFeature(this.previewFeature);
 
     var osMap = os.MapContainer.getInstance();
     if (this.previewFeature.getId() === this.tempFeatureId && !osMap.containsFeature(this.previewFeature)) {
