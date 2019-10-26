@@ -1031,7 +1031,7 @@ os.feature.updateFeaturesFadeStyle = function(features, opacity, opt_source) {
             (feature.values_[os.style.StyleType.FEATURE]) ||
             layerConfig ||
             os.style.DEFAULT_VECTOR_CONFIG;
-        os.style.setConfigOpacityColor(baseConfig, opacity);
+        os.style.setConfigOpacityColor(baseConfig, opacity, true);
 
         var style = os.style.createFeatureStyle(feature, baseConfig, layerConfig);
         feature.setStyle(style);
