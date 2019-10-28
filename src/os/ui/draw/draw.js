@@ -1,4 +1,5 @@
 goog.provide('os.ui.draw');
+goog.provide('os.ui.draw.GridOptions');
 
 goog.require('ol.Feature');
 goog.require('ol.geom.Polygon');
@@ -6,12 +7,28 @@ goog.require('ol.style.Fill');
 goog.require('ol.style.Stroke');
 goog.require('ol.style.Style');
 goog.require('os.geo.jsts.OLParser');
+goog.require('os.style.area');
+
 
 /**
  * The menu to display when drawing interaction completes.
  * @type {os.ui.menu.Menu|undefined}
  */
 os.ui.draw.MENU = undefined;
+
+
+/**
+ * Key to get default square size of grid, in Lat/Lon degrees
+ * @type {string}
+ */
+os.ui.draw.GRID_DETAIL = 'grid.detail';
+
+
+/**
+ * Key to get default maximum number of squares within extent for the grid
+ * @type {string}
+ */
+os.ui.draw.GRID_DETAIL_MAX = 'grid.detailMax';
 
 
 /**
@@ -28,7 +45,6 @@ os.ui.draw.getGridFromFeature = function(feature, options) {
 
   var detail = options.getDetail();
   var max = options.getMax();
-  var style = options.getStyle();
 
   var features = [];
   var geo = feature.getGeometry();
@@ -66,6 +82,7 @@ os.ui.draw.getGridFromFeature = function(feature, options) {
   var prop = {};
   goog.object.extend(prop, feature.values_);
   delete prop['geometry'];
+  delete prop['title'];
   delete prop['_node'];
 
   // TODO research a better, faster way to create/approximate the grid
@@ -79,23 +96,130 @@ os.ui.draw.getGridFromFeature = function(feature, options) {
 
       // only add this to the grid if the original polygon intersects it
       if (feature.getGeometry().intersectsExtent(gridExtent)) {
-        // new() is faster than doing os.feature.copyFeature(feature)
-        var g = ol.geom.Polygon.fromExtent(gridExtent);
-        var prop_ = {'geometry': g};
-        goog.object.extend(prop_, prop);
-
-        var f = new ol.Feature(prop_);
-        f.setId(goog.string.getRandomString());
-        f.setStyle(style);
-        f.set(os.data.RecordField.DRAWING_LAYER_NODE, true);
-        f.set(os.data.RecordField.INTERACTIVE, false);
-
-        features.push(f);
+        features.push(os.ui.draw.gridFeatureFromExtent_(gridExtent, prop, options));
       }
     }
   }
 
-  // TODO build a union-ed multipolygon of this 'grid'
+  // TODO build a trace of the grid and save that to the Drawing Layers
 
   return features;
+};
+
+
+/**
+ * Helper function; gets a numeric representation of the JSON setting
+ *
+ * @param {string} key
+ * @param {number} defaultValue
+ * @return {number}
+ */
+os.ui.draw.getGridSetting = function(key, defaultValue) {
+  var value = defaultValue;
+  try {
+    value = parseFloat(os.settings.get(key, defaultValue));
+  } catch (e) {
+    // do nothing
+  }
+  return value;
+};
+
+
+/**
+ * Build a grid feature from the extent and GridOptions
+ *
+ * @param {Array.<number>} extent The outer bounds of this grid
+ * @param {Object} prop The drawing and altitude modes; copied from the context feature
+ * @param {os.ui.draw.GridOptions} options The color, line thickness, etc settings for this grid
+ * @return {ol.Feature}
+ * @private
+ */
+os.ui.draw.gridFeatureFromExtent_ = function(extent, prop, options) {
+  // new() is faster than doing os.feature.copyFeature(feature) from the original feature
+  var g = ol.geom.Polygon.fromExtent(extent);
+  var prop_ = {'geometry': g};
+  goog.object.extend(prop_, prop);
+
+  var f = new ol.Feature(prop_);
+  f.setId(goog.string.getRandomString());
+  f.setStyle(options.getStyle());
+  f.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
+  f.set(os.data.RecordField.INTERACTIVE, false);
+
+  return f;
+};
+
+
+/**
+ * Config class to store settings for grid capabilities
+ *
+ * @param {number} detail The number of degrees squared used to draw the grid
+ * @param {number} max The maximum number of grid squares to draw
+ * @constructor
+ */
+os.ui.draw.GridOptions = function(detail, max) {
+  /**
+   * @type {number}
+   * @protected
+   */
+  this.detail = (detail) ? detail : os.ui.draw.getGridSetting(os.ui.draw.GRID_DETAIL, 1.0);
+
+  /**
+   * @type {number}
+   * @protected
+   */
+  this.max = (max) ? max : os.ui.draw.getGridSetting(os.ui.draw.GRID_DETAIL_MAX, 100.0);
+
+  /**
+   * @type {ol.style.Style} style
+   */
+  this.style = os.style.area.GRID_STYLE;
+};
+
+
+/**
+ * @return {number}
+ */
+os.ui.draw.GridOptions.prototype.getDetail = function() {
+  return this.detail;
+};
+
+
+/**
+ * @param {number} detail
+ */
+os.ui.draw.GridOptions.prototype.setDetail = function(detail) {
+  this.detail = detail;
+};
+
+
+/**
+ * @return {number}
+ */
+os.ui.draw.GridOptions.prototype.getMax = function() {
+  return this.max;
+};
+
+
+/**
+ * @param {number} max
+ */
+os.ui.draw.GridOptions.prototype.setMax = function(max) {
+  this.max = max;
+};
+
+
+/**
+ * @return {ol.style.Style}
+ */
+os.ui.draw.GridOptions.prototype.getStyle = function() {
+  return this.style;
+};
+
+
+/**
+ * @param {ol.style.Style} style
+ */
+os.ui.draw.GridOptions.prototype.setStyle = function(style) {
+  this.style = style;
 };
