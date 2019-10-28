@@ -125,6 +125,7 @@ describe('Toolbar right', function() {
       cy.get(layers.layersTab.TAB).click();
       cy.get(opensphere.Application.PAGE).type('v');
       cy.get(opensphere.Toolbar.Date.INPUT).clear();
+      cy.wait(200); // Date input appears disabled briefly
       cy.get(opensphere.Toolbar.Date.INPUT).type(Cypress.moment().format('YYYY[-]MM[-]DD'));
       cy.get(opensphere.Toolbar.Date.INPUT).type('{esc}');
     });
