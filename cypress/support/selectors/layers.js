@@ -45,6 +45,7 @@ exports.layersTab = {
       EDIT_PLACE_BUTTON: '[title=\'Edit the place\']',
       EDIT_TRACK_BUTTON: '[title=\'Edit the place\']',
       MANAGE_FILTERS_BUTTON: '[title=\'Manage filters\']',
+      REMOVE_FEATURE_BUTTON: '[title=\'Remove the feature\']',
       REMOVE_LAYER_BUTTON: '[title=\'Remove the layer\']',
       SAVE_BUTTON: '[title=\'Save\']'
     },
