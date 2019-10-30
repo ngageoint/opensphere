@@ -17,7 +17,7 @@ describe('Feature list', function() {
     cy.get(shared.Tree.ROW_4).should('contain', 'feat.kml Features (7)');
 
     // Open features list dialog
-    cy.get(shared.Tree.ROW_4).rightClick();
+    cy.get(shared.Tree.ROW_4).rightclick();
     cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
   });
 
@@ -102,7 +102,7 @@ describe('Feature list', function() {
   describe('Selections (mouse/keyboard)', function() {
     before('Login', function() {
       // Setup
-      cy.get(shared.Tree.ROW_4).rightClick();
+      cy.get(shared.Tree.ROW_4).rightclick();
       cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
     });
 
@@ -428,7 +428,7 @@ describe('Feature list', function() {
   describe('Context menu', function() {
     before('Login', function() {
       // Setup
-      cy.get(shared.Tree.ROW_4).rightClick();
+      cy.get(shared.Tree.ROW_4).rightclick();
       cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
     });
 
@@ -436,7 +436,7 @@ describe('Feature list', function() {
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('not.contain', 'selected');
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.GRID)
-          .rightClick();
+          .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('be.visible');
       cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Select All');
       cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Deselect All');
@@ -462,7 +462,7 @@ describe('Feature list', function() {
       // Test
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.GRID)
-          .rightClick();
+          .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('be.visible');
       cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Select All');
       cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Deselect All');
@@ -496,7 +496,7 @@ describe('Feature list', function() {
         cy.get(shared.Grid.ROW_6).should('not.have.class', shared.Grid.ROW_IS_SELECTED_CLASS);
         cy.get(shared.Grid.ROW_7).should('not.have.class', shared.Grid.ROW_IS_SELECTED_CLASS);
         cy.get(shared.Grid.GRID)
-            .rightClick();
+            .rightclick();
       });
       cy.get(dialogs.featureListDialog.contextMenu.SELECT_ALL).click();
       cy.get(dialogs.featureListDialog.DIALOG).within(function() {
@@ -513,7 +513,7 @@ describe('Feature list', function() {
       // Clean up
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.GRID)
-          .rightClick();
+          .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.DESELECT_ALL).click();
     });
 
@@ -521,14 +521,14 @@ describe('Feature list', function() {
       // Setup
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.GRID)
-          .rightClick();
+          .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.SELECT_ALL).click();
 
       // Test
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('contain', '7 records (7 selected)');
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.GRID)
-          .rightClick();
+          .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.DESELECT_ALL).click();
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('not.contain', 'selected');
       cy.get(dialogs.featureListDialog.DIALOG).within(function() {
@@ -565,7 +565,7 @@ describe('Feature list', function() {
         cy.get(shared.Grid.ROW_5).should('have.class', shared.Grid.ROW_IS_SELECTED_CLASS);
         cy.get(shared.Grid.ROW_6).should('not.have.class', shared.Grid.ROW_IS_SELECTED_CLASS);
         cy.get(shared.Grid.ROW_7).should('have.class', shared.Grid.ROW_IS_SELECTED_CLASS);
-        cy.get(shared.Grid.GRID).rightClick();
+        cy.get(shared.Grid.GRID).rightclick();
       });
       cy.get(dialogs.featureListDialog.contextMenu.INVERT).click();
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('contain', '7 records (5 selected)');
@@ -582,7 +582,7 @@ describe('Feature list', function() {
       // Clean up
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.GRID)
-          .rightClick();
+          .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.DESELECT_ALL).click();
     });
 
@@ -630,7 +630,7 @@ describe('Feature list', function() {
         cy.get(shared.Grid.ROW_7)
             .find(shared.Grid.CELL_3)
             .should('contain', '18TWL8519809280');
-        cy.get(shared.Grid.GRID).rightClick();
+        cy.get(shared.Grid.GRID).rightclick();
       });
       cy.get(dialogs.featureListDialog.contextMenu.SORT_SELECTED).click();
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('contain', '7 records (2 selected)');
@@ -667,7 +667,7 @@ describe('Feature list', function() {
 
       // Clean up
       cy.get(dialogs.featureListDialog.CLOSE_BUTTON).click();
-      cy.get(shared.Tree.ROW_4).rightClick();
+      cy.get(shared.Tree.ROW_4).rightclick();
       cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
     });
 
@@ -685,7 +685,7 @@ describe('Feature list', function() {
           .should('contain', '18TWL8519809280');
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.GRID)
-          .rightClick();
+          .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.HIDE_SELECTED).click();
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('contain', '6 records (1 hidden)');
       cy.get(dialogs.featureListDialog.DIALOG).should('not.contain', '18TWL8519809280');
@@ -693,11 +693,11 @@ describe('Feature list', function() {
       cy.get(shared.Tree.ROW_4).should('contain', 'feat.kml Features (6/7)');
 
       // Clean up
-      cy.get(shared.Tree.ROW_4).rightClick();
+      cy.get(shared.Tree.ROW_4).rightclick();
       cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.GRID)
-          .rightClick();
+          .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.DISPLAY_ALL).click();
     });
 
@@ -715,7 +715,7 @@ describe('Feature list', function() {
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('contain', '7 records (1 selected)');
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.GRID)
-          .rightClick();
+          .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.HIDE_UNSELECTED).click();
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('contain', '1 record (1 selected, 6 hidden)');
       cy.get(dialogs.featureListDialog.DIALOG).should('not.contain', '18TWL8884215339');
@@ -726,11 +726,11 @@ describe('Feature list', function() {
       cy.get(shared.Tree.ROW_4).should('contain', 'feat.kml Features (1/7)');
 
       // Clean up
-      cy.get(shared.Tree.ROW_4).rightClick();
+      cy.get(shared.Tree.ROW_4).rightclick();
       cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.GRID)
-          .rightClick();
+          .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.DISPLAY_ALL).click();
     });
 
@@ -752,13 +752,13 @@ describe('Feature list', function() {
           .click();
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.GRID)
-          .rightClick();
+          .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.HIDE_SELECTED).click();
 
       // Test
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.GRID)
-          .rightClick();
+          .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.DISPLAY_ALL).click();
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('contain', '7 records');
       cy.get(dialogs.featureListDialog.DIALOG)
@@ -774,7 +774,7 @@ describe('Feature list', function() {
       cy.get(shared.Tree.ROW_4).should('contain', 'feat.kml Features (7)');
 
       // Clean up
-      cy.get(shared.Tree.ROW_4).rightClick();
+      cy.get(shared.Tree.ROW_4).rightclick();
       cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
     });
 
@@ -796,13 +796,13 @@ describe('Feature list', function() {
           .click();
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.GRID)
-          .rightClick();
+          .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.REMOVE_SELECTED).click();
 
       // Test
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.GRID)
-          .rightClick();
+          .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.DISPLAY_ALL).click();
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('contain', '4 records');
       cy.get(dialogs.featureListDialog.DIALOG)
@@ -813,10 +813,10 @@ describe('Feature list', function() {
       cy.get(shared.Tree.ROW_4).should('contain', 'feat.kml Features (4)');
 
       // Clean up
-      cy.get(shared.Tree.ROW_4).rightClick();
+      cy.get(shared.Tree.ROW_4).rightclick();
       cy.get(layers.layersTab.Tree.contextMenu.REFRESH).click();
       cy.wait(200); // Row not immediately ready after refresh
-      cy.get(shared.Tree.ROW_4).rightClick();
+      cy.get(shared.Tree.ROW_4).rightclick();
       cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
     });
 
@@ -834,7 +834,7 @@ describe('Feature list', function() {
           .should('contain', '18TWL8519809280');
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.GRID)
-          .rightClick();
+          .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.REMOVE_SELECTED).click();
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('contain', '6 records');
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('not.contain', 'hidden');
@@ -843,10 +843,10 @@ describe('Feature list', function() {
       cy.get(shared.Tree.ROW_4).should('contain', 'feat.kml Features (6)');
 
       // Clean up
-      cy.get(shared.Tree.ROW_4).rightClick();
+      cy.get(shared.Tree.ROW_4).rightclick();
       cy.get(layers.layersTab.Tree.contextMenu.REFRESH).click();
       cy.wait(200); // Row not immediately ready after refresh
-      cy.get(shared.Tree.ROW_4).rightClick();
+      cy.get(shared.Tree.ROW_4).rightclick();
       cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
     });
 
@@ -872,7 +872,7 @@ describe('Feature list', function() {
           .should('contain', '18TWL8519809280');
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.GRID)
-          .rightClick();
+          .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.REMOVE_UNSELECTED).click();
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('contain', '2 records');
       cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('not.contain', 'hidden');
@@ -886,10 +886,10 @@ describe('Feature list', function() {
       cy.get(shared.Tree.ROW_4).should('contain', 'feat.kml Features (2)');
 
       // Clean up
-      cy.get(shared.Tree.ROW_4).rightClick();
+      cy.get(shared.Tree.ROW_4).rightclick();
       cy.get(layers.layersTab.Tree.contextMenu.REFRESH).click();
       cy.wait(200); // Row not immediately ready after refresh
-      cy.get(shared.Tree.ROW_4).rightClick();
+      cy.get(shared.Tree.ROW_4).rightclick();
       cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
     });
 
@@ -897,7 +897,7 @@ describe('Feature list', function() {
       // Test
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.GRID)
-          .rightClick();
+          .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.EXPORT).click();
       cy.get(dialogs.exportDataDialog.DIALOG).should('be.visible');
 
@@ -912,7 +912,7 @@ describe('Feature list', function() {
       cy.get(shared.layerStyle.SIZE_SLIDER)
           .type('{rightarrow}{rightarrow}{rightarrow}{rightarrow}');
       cy.imageComparison('Before go to');
-      cy.get(shared.Tree.ROW_4).rightClick();
+      cy.get(shared.Tree.ROW_4).rightclick();
       cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_6)
@@ -920,13 +920,13 @@ describe('Feature list', function() {
           .click();
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.GRID)
-          .rightClick();
+          .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.GO_TO).click();
       cy.get(dialogs.featureListDialog.CLOSE_BUTTON).click();
       cy.imageComparison('After go to');
 
       // Clean up
-      cy.get(shared.Tree.ROW_4).rightClick();
+      cy.get(shared.Tree.ROW_4).rightclick();
       cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
       cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
