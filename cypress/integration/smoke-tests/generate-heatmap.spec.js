@@ -30,13 +30,13 @@ describe('Generate heatmap from CSV', function() {
     // Load a layer
     cy.get(shared.Tree.ROW_4)
         .should('contain', 'Chicago Traffic Counts Features (1279)');
-    cy.get(shared.Tree.ROW_4).rightClick();
+    cy.get(shared.Tree.ROW_4).rightclick();
     cy.get(layers.layersTab.Tree.contextMenu.GO_TO).click();
     cy.imageComparison('features loaded');
     cy.get(shared.Tree.ROW_4)
         .find(shared.Tree.ROW_CHECKBOX)
         .click();
-    cy.get(shared.Tree.ROW_4).rightClick();
+    cy.get(shared.Tree.ROW_4).rightclick();
     cy.get(layers.layersTab.Tree.contextMenu.GENERATE_HEATMAP).click();
     cy.get(shared.Tree.ROW_1).should('contain', 'Image (1)');
     cy.get(shared.Tree.ROW_2).should('contain', 'Heatmap - Chicago Traffic Counts');
