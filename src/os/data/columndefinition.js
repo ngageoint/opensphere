@@ -259,10 +259,10 @@ os.data.ColumnDefinition.prototype.restore = function(config) {
   if (config.hasOwnProperty('type')) {
     this['type'] = config['type'];
   }
-  if (config.hasOwnProperty('resizable')) {
+  if (config.hasOwnProperty('resizable') && config['resizable'] != null) {
     this['resizable'] = config['resizable'];
   }
-  if (config.hasOwnProperty('sortable')) {
+  if (config.hasOwnProperty('sortable') && config['sortable'] != null) {
     this['sortable'] = config['sortable'];
   }
   if (config.hasOwnProperty('minWidth')) {
@@ -295,7 +295,7 @@ os.data.ColumnDefinition.prototype.restore = function(config) {
   if (config.hasOwnProperty('behavior')) {
     this['behavior'] = config['behavior'];
   }
-  if (config.hasOwnProperty('visible')) {
+  if (config.hasOwnProperty('visible') && config['visible'] != null) {
     this['visible'] = config['visible'];
   }
   if (config.hasOwnProperty('visprotected')) {
