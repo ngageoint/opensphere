@@ -3,7 +3,6 @@ goog.require('ol.geom.Polygon');
 goog.require('ol.proj');
 goog.require('os.map');
 goog.require('os.ui.draw');
-goog.require('os.ui.draw.GridOptions');
 
 describe('os.ui.draw', function() {
   window.localStorage.clear();
@@ -23,7 +22,7 @@ describe('os.ui.draw', function() {
 
   it('should create a "detail x detail" grid around a feature, snapped to the world Lat/Lon coodinates', function() {
     runs(function() {
-      var options = new os.ui.draw.GridOptions(0.1, 100);
+      var options = os.ui.draw.gridOptionsInstance(0.1, 100);
 
       var g = ol.geom.Polygon
         .fromExtent(
