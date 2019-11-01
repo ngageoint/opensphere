@@ -1,5 +1,4 @@
 goog.provide('os.ui.draw');
-goog.provide('os.ui.draw.GridOptions');
 
 goog.require('ol.Feature');
 goog.require('ol.geom.Polygon');
@@ -35,7 +34,7 @@ os.ui.draw.GRID_DETAIL_MAX = 'grid.detailMax';
  * Build a list of features to represent the search grid that intersects with the drawn geometry
  *
  * @param {ol.Feature} feature The source feature to trace.
- * @param {os.ui.draw.GridOptions} options Config object for grid generation
+ * @param {osx.ui.draw.GridOptions} options Config object for grid generation
  * @return {Array.<ol.Feature>}
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
@@ -43,8 +42,8 @@ os.ui.draw.GRID_DETAIL_MAX = 'grid.detailMax';
 os.ui.draw.getGridFromFeature = function(feature, options) {
   if (!feature || !options) return null;
 
-  var detail = options.getDetail();
-  var max = options.getMax();
+  var detail = options.detail;
+  var max = options.max;
 
   var features = [];
   var geo = feature.getGeometry();
@@ -130,7 +129,7 @@ os.ui.draw.getGridSetting = function(key, defaultValue) {
  *
  * @param {Array.<number>} extent The outer bounds of this grid
  * @param {Object} prop The drawing and altitude modes; copied from the context feature
- * @param {os.ui.draw.GridOptions} options The color, line thickness, etc settings for this grid
+ * @param {osx.ui.draw.GridOptions} options The color, line thickness, etc settings for this grid
  * @return {ol.Feature}
  * @private
  */
@@ -142,7 +141,7 @@ os.ui.draw.gridFeatureFromExtent_ = function(extent, prop, options) {
 
   var f = new ol.Feature(prop_);
   f.setId(goog.string.getRandomString());
-  f.setStyle(options.getStyle());
+  f.setStyle(options.style);
   f.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
   f.set(os.data.RecordField.INTERACTIVE, false);
 
@@ -151,75 +150,17 @@ os.ui.draw.gridFeatureFromExtent_ = function(extent, prop, options) {
 
 
 /**
- * Config class to store settings for grid capabilities
+ * Helper function to get valid default settings for grid capabilities
  *
- * @param {number} detail The number of degrees squared used to draw the grid
- * @param {number} max The maximum number of grid squares to draw
- * @constructor
+ * @param {number=} detail The number of degrees squared used to draw the grid
+ * @param {number=} max The maximum number of grid squares to draw
+ * @param {ol.style.Style=} style The style applied to the squares of the grid
+ * @return {osx.ui.draw.GridOptions}
  */
-os.ui.draw.GridOptions = function(detail, max) {
-  /**
-   * @type {number}
-   * @protected
-   */
-  this.detail = (detail) ? detail : os.ui.draw.getGridSetting(os.ui.draw.GRID_DETAIL, 1.0);
-
-  /**
-   * @type {number}
-   * @protected
-   */
-  this.max = (max) ? max : os.ui.draw.getGridSetting(os.ui.draw.GRID_DETAIL_MAX, 100.0);
-
-  /**
-   * @type {ol.style.Style} style
-   */
-  this.style = os.style.area.GRID_STYLE;
-};
-
-
-/**
- * @return {number}
- */
-os.ui.draw.GridOptions.prototype.getDetail = function() {
-  return this.detail;
-};
-
-
-/**
- * @param {number} detail
- */
-os.ui.draw.GridOptions.prototype.setDetail = function(detail) {
-  this.detail = detail;
-};
-
-
-/**
- * @return {number}
- */
-os.ui.draw.GridOptions.prototype.getMax = function() {
-  return this.max;
-};
-
-
-/**
- * @param {number} max
- */
-os.ui.draw.GridOptions.prototype.setMax = function(max) {
-  this.max = max;
-};
-
-
-/**
- * @return {ol.style.Style}
- */
-os.ui.draw.GridOptions.prototype.getStyle = function() {
-  return this.style;
-};
-
-
-/**
- * @param {ol.style.Style} style
- */
-os.ui.draw.GridOptions.prototype.setStyle = function(style) {
-  this.style = style;
+os.ui.draw.gridOptionsInstance = function(detail, max, style) {
+  return /** @type {!osx.ui.draw.GridOptions} */ ({
+    detail: (detail) ? detail : os.ui.draw.getGridSetting(os.ui.draw.GRID_DETAIL, 1.0), // enforces non-zero
+    max: (max) ? max : os.ui.draw.getGridSetting(os.ui.draw.GRID_DETAIL_MAX, 100.0), // enforces non-zero
+    style: (style) ? style : os.style.area.GRID_STYLE
+  });
 };
