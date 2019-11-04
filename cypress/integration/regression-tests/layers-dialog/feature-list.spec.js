@@ -217,7 +217,7 @@ describe('Feature list', function() {
     cy.get(dialogs.featureListDialog.DIALOG)
         .find(dialogs.featureListDialog.CLOSE_BUTTON)
         .click();
-    cy.get(shared.Tree.ROW_4).rightClick();
+    cy.get(shared.Tree.ROW_4).rightclick();
     cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
     cy.get(dialogs.featureListDialog.DIALOG).should('be.visible');
   });
