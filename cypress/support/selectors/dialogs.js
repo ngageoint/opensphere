@@ -530,6 +530,8 @@ exports.featureListDialog = {
   DIALOG_CLOSE: '[id*=\'featureList\'] .close',
   DIALOG_FOOTER: '[id*=\'featureList\'] .modal-footer',
   CLOSE_BUTTON: '[ng-click=\'ctrl.close()\']',
+  SHOW_SELECTED_CHECKBOX: '[title=\'If checked, only selected data will be displayed in the list.\']',
+  ROW_HEIGHT_SLIDER: '[id*=featureList] .ui-slider-handle',
   contextMenu: {
     PANEL: '#menu',
     SELECT_ALL: '[title=\'Selects all items\']',
