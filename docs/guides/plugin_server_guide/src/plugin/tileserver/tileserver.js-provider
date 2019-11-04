@@ -3,6 +3,7 @@ goog.provide('plugin.tileserver.Tileserver');
 goog.require('os.data.IDataProvider');
 goog.require('os.net.Request');
 goog.require('os.ui.server.AbstractLoadingServer');
+goog.require('plugin.tileserver.constants');
 
 
 /**
