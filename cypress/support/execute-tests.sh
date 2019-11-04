@@ -109,13 +109,21 @@ function checkArguments() {
   fi
 
   if [ -z "$STREET_MAP_URL" ]; then
-    echo 'INFO: STREET_MAP_URL environment variable set, using default'
-    export STREET_MAP_URL="http://services.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer/tile/{z}/{y}/{x}"
+    echo "INFO: STREET_MAP_URL environment variable not set, using default for $CYPRESS_PROJECTION"
+    if [ "$CYPRESS_PROJECTION" = 3857 ]; then
+      export STREET_MAP_URL="http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+    else
+      export STREET_MAP_URL="http://services.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer/tile/{z}/{y}/{x}"
+    fi
   fi
 
   if [ -z "$WORLD_IMAGERY_URL" ]; then
-    echo 'INFO: WORLD_IMAGERY_URL environment variable not set, using default'
-    export WORLD_IMAGERY_URL="https://wi.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+    echo "INFO: WORLD_IMAGERY_URL environment variable not set, using default for $CYPRESS_PROJECTION"
+    if [ "$CYPRESS_PROJECTION" = 3857 ]; then
+      export WORLD_IMAGERY_URL="http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+    else
+      export WORLD_IMAGERY_URL="https://wi.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+    fi
   fi
 }
 
@@ -158,6 +166,13 @@ function overrideSettings() {
   echo 'INFO: writing map urls to settings file'
   sed -i.bak 's@STREET_MAP_URL@'$STREET_MAP_URL'@g' $OPENSPHERE_CONFIG_TESTER && rm $OPENSPHERE_CONFIG_TESTER.bak
   sed -i.bak 's@WORLD_IMAGERY_URL@'$WORLD_IMAGERY_URL'@g' $OPENSPHERE_CONFIG_TESTER && rm $OPENSPHERE_CONFIG_TESTER.bak
+
+  echo 'INFO: zoom offset to settings file'
+  if [ "$CYPRESS_PROJECTION" = 3857 ]; then
+    sed -i.bak 's@"ZOOM_OFFSET"@'0'@g' $OPENSPHERE_CONFIG_TESTER && rm $OPENSPHERE_CONFIG_TESTER.bak
+  else
+    sed -i.bak 's@"ZOOM_OFFSET"@'-1'@g' $OPENSPHERE_CONFIG_TESTER && rm $OPENSPHERE_CONFIG_TESTER.bak
+  fi
 
   echo 'INFO: all settings adjustments finished'
 }
