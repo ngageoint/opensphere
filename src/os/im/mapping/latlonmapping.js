@@ -15,7 +15,7 @@ goog.require('os.im.mapping.location.BaseLatLonMapping');
  * @constructor
  */
 os.im.mapping.LatLonMapping = function(opt_order) {
-  os.im.mapping.LatLonMapping.base(this, 'constructor');
+  os.im.mapping.LatLonMapping.base(this, 'constructor', opt_order);
 };
 goog.inherits(os.im.mapping.LatLonMapping, os.im.mapping.location.BaseLatLonMapping);
 
