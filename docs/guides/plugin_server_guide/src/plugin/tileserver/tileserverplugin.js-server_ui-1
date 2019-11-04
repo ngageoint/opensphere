@@ -5,6 +5,7 @@ goog.require('os.data.ProviderEntry');
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.plugin.PluginManager');
 goog.require('plugin.tileserver.Tileserver');
+goog.require('plugin.tileserver.constants');
 goog.require('plugin.tileserver.mime');
 
 
@@ -19,13 +20,6 @@ plugin.tileserver.TileserverPlugin = function() {
   this.errorMessage = null;
 };
 goog.inherits(plugin.tileserver.TileserverPlugin, os.plugin.AbstractPlugin);
-
-
-/**
- * @type {string}
- * @const
- */
-plugin.tileserver.ID = 'tileserver';
 
 
 /**
