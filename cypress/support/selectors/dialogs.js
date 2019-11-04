@@ -525,7 +525,7 @@ exports.layerDescriptionDialog = {
 };
 
 exports.featureListDialog = {
-  DIALOG: '[id*=featureList]',
+  DIALOG: '[id*=featureList].modal',
   DIALOG_HEADER: '[id*=\'featureList\'] .js-window__header',
   DIALOG_CLOSE: '[id*=\'featureList\'] .close',
   DIALOG_FOOTER: '[id*=\'featureList\'] .modal-footer',
