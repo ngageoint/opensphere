@@ -17,20 +17,6 @@ os.ui.draw.MENU = undefined;
 
 
 /**
- * Key to get default square size of grid, in Lat/Lon degrees
- * @type {string}
- */
-os.ui.draw.GRID_DETAIL = 'grid.detail';
-
-
-/**
- * Key to get default maximum number of squares within extent for the grid
- * @type {string}
- */
-os.ui.draw.GRID_DETAIL_MAX = 'grid.detailMax';
-
-
-/**
  * Build a list of features to represent the search grid that intersects with the drawn geometry
  *
  * @param {ol.Feature} feature The source feature to trace.
@@ -40,7 +26,15 @@ os.ui.draw.GRID_DETAIL_MAX = 'grid.detailMax';
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 os.ui.draw.getGridFromFeature = function(feature, options) {
-  if (!feature || !options) return null;
+  var valid = function(options) {
+    var b = (typeof options != 'undefined' && options != null);
+    if (b) b = (typeof options.detail == 'number' && options.detail > 0.0); // enforce numeric, positive, non-null, non-zero;
+    if (b) b = (typeof options.max == 'number' && options.max > 0.0); // enforce numeric, positive, non-null, non-zero;
+    if (b) b = (typeof options.style == 'object');
+    return b; // any failure skips next tests
+  };
+
+  if (!feature || !options || !valid(options)) return null;
 
   var detail = options.detail;
   var max = options.max;
@@ -52,10 +46,6 @@ os.ui.draw.getGridFromFeature = function(feature, options) {
   var extent = geo.getExtent(); // build a simplified box around the search geometry
   geo.osTransform(); // undo transformation so copyFeature() succeeds
 
-  // don't continue building the grid if it would create too many boxes
-  if ((Math.ceil(Math.abs(extent[2] - extent[0]) / detail) *
-      Math.ceil(Math.abs(extent[3] - extent[1]) / detail)) > max) return null;
-
   // snap box coordinates to the nearest "detail" degrees
   var snap = function(l, d, ceil) {
     if ((l % d) != 0.0) return Math.floor(l / d) * d + (ceil ? d : 0.0);
@@ -66,6 +56,10 @@ os.ui.draw.getGridFromFeature = function(feature, options) {
   extent[1] = snap(extent[1], detail, false); // lat min
   extent[2] = snap(extent[2], detail, true); // lon max
   extent[3] = snap(extent[3], detail, true); // lat max
+
+  // don't continue building the grid if it would create too many boxes
+  if ((Math.ceil(Math.abs(extent[2] - extent[0]) / detail) *
+      Math.ceil(Math.abs(extent[3] - extent[1]) / detail)) > max) return null;
 
   var cfg = {
     lon: {
@@ -146,21 +140,4 @@ os.ui.draw.gridFeatureFromExtent_ = function(extent, prop, options) {
   f.set(os.data.RecordField.INTERACTIVE, false);
 
   return f;
-};
-
-
-/**
- * Helper function to get valid default settings for grid capabilities
- *
- * @param {number=} detail The number of degrees squared used to draw the grid
- * @param {number=} max The maximum number of grid squares to draw
- * @param {ol.style.Style=} style The style applied to the squares of the grid
- * @return {osx.ui.draw.GridOptions}
- */
-os.ui.draw.gridOptionsInstance = function(detail, max, style) {
-  return /** @type {!osx.ui.draw.GridOptions} */ ({
-    detail: (detail) ? detail : os.ui.draw.getGridSetting(os.ui.draw.GRID_DETAIL, 1.0), // enforces non-zero
-    max: (max) ? max : os.ui.draw.getGridSetting(os.ui.draw.GRID_DETAIL_MAX, 100.0), // enforces non-zero
-    style: (style) ? style : os.style.area.GRID_STYLE
-  });
 };
