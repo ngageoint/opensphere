@@ -21,6 +21,67 @@ describe('Feature list', function() {
     cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
   });
 
+  it('Toolbar', function() {
+    cy.get(dialogs.featureListDialog.SHOW_SELECTED_CHECKBOX).should('be.visible');
+    cy.get(dialogs.featureListDialog.ROW_HEIGHT_SLIDER).should('be.visible');
+  });
+
+  it('Row height slider', function() {
+    // Setup
+    cy.get(dialogs.featureListDialog.DIALOG)
+        .find(shared.Grid.HEADER_ROW)
+        .should('have.css', 'height', '26px');
+    cy.get(dialogs.featureListDialog.DIALOG)
+        .find(shared.Grid.ROW_1)
+        .should('have.css', 'height', '25px');
+    cy.get(dialogs.featureListDialog.DIALOG)
+        .find(shared.Grid.ROW_3)
+        .should('have.css', 'height', '25px');
+    cy.get(dialogs.featureListDialog.DIALOG)
+        .find(shared.Grid.ROW_5)
+        .should('have.css', 'height', '25px');
+
+    // Test
+    cy.get(dialogs.featureListDialog.ROW_HEIGHT_SLIDER).type('{rightarrow}{rightarrow}');
+    cy.get(dialogs.featureListDialog.DIALOG)
+        .find(shared.Grid.HEADER_ROW)
+        .should('have.css', 'height', '26px');
+    cy.get(dialogs.featureListDialog.DIALOG)
+        .find(shared.Grid.ROW_1)
+        .should('have.css', 'height', '67px');
+    cy.get(dialogs.featureListDialog.DIALOG)
+        .find(shared.Grid.ROW_3)
+        .should('have.css', 'height', '67px');
+    cy.get(dialogs.featureListDialog.DIALOG)
+        .find(shared.Grid.ROW_5)
+        .should('have.css', 'height', '67px');
+    cy.get(dialogs.featureListDialog.ROW_HEIGHT_SLIDER).type('{leftarrow}');
+    cy.get(dialogs.featureListDialog.DIALOG)
+        .find(shared.Grid.HEADER_ROW)
+        .should('have.css', 'height', '26px');
+    cy.get(dialogs.featureListDialog.DIALOG)
+        .find(shared.Grid.ROW_1)
+        .should('have.css', 'height', '46px');
+    cy.get(dialogs.featureListDialog.DIALOG)
+        .find(shared.Grid.ROW_3)
+        .should('have.css', 'height', '46px');
+    cy.get(dialogs.featureListDialog.DIALOG)
+        .find(shared.Grid.ROW_5)
+        .should('have.css', 'height', '46px');
+
+    // Clean up
+    cy.get(dialogs.featureListDialog.ROW_HEIGHT_SLIDER).type('{leftarrow}');
+    cy.get(dialogs.featureListDialog.DIALOG)
+        .find(shared.Grid.ROW_1)
+        .should('have.css', 'height', '25px');
+    cy.get(dialogs.featureListDialog.DIALOG)
+        .find(shared.Grid.ROW_3)
+        .should('have.css', 'height', '25px');
+    cy.get(dialogs.featureListDialog.DIALOG)
+        .find(shared.Grid.ROW_5)
+        .should('have.css', 'height', '25px');
+  });
+
   it('Status bar', function() {
     cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('contain', '7 records');
     cy.get(dialogs.featureListDialog.DIALOG_FOOTER).should('not.contain', 'selected');
@@ -71,6 +132,94 @@ describe('Feature list', function() {
         cy.get(shared.Grid.CELL_6).should('contain', '40.71919');
       });
     });
+  });
+
+  it('Sort by column headers', function() {
+    // Setup
+    cy.get(dialogs.featureListDialog.DIALOG).within(function() {
+      cy.get(shared.Grid.ROW_1).within(function() {
+        cy.get(shared.Grid.CELL_3).contains('18TWL8884215339');
+        cy.get(shared.Grid.CELL_10).contains('96th St');
+        cy.get(shared.Grid.CELL_12).contains('Q');
+        cy.get(shared.Grid.CELL_13).contains('Q-all times');
+      });
+
+      cy.get(shared.Grid.ROW_2).within(function() {
+        cy.get(shared.Grid.CELL_3).contains('18TWL9489920441');
+        cy.get(shared.Grid.CELL_10).contains('Morrison Av - Soundview');
+        cy.get(shared.Grid.CELL_12).contains('6');
+        cy.get(shared.Grid.CELL_13).contains('6-all times');
+      });
+
+      cy.get(shared.Grid.ROW_3).within(function() {
+        cy.get(shared.Grid.CELL_3).contains('18TWL9341202125');
+        cy.get(shared.Grid.CELL_10).contains('Pennsylvania Ave');
+        cy.get(shared.Grid.CELL_12).contains('3-4');
+        cy.get(shared.Grid.CELL_13).contains('4-nights, 3-all other times');
+      });
+    });
+
+    // Test - Ascend
+    cy.get(dialogs.featureListDialog.DIALOG)
+        .find(shared.Grid.HEADER_CELL_3)
+        .click();
+    cy.get(dialogs.featureListDialog.DIALOG).within(function() {
+      cy.get(shared.Grid.ROW_2).within(function() { // Actually clicking on row-1; selectors offset after sort
+        cy.get(shared.Grid.CELL_3).contains('18TWL8444208022');
+        cy.get(shared.Grid.CELL_10).contains('Canal St');
+        cy.get(shared.Grid.CELL_12).contains('4-6-6 Express');
+        cy.get(shared.Grid.CELL_13).contains('4 nights, 6-all times, 6 Express-weekdays AM southbound, PM northbound');
+      });
+
+      cy.get(shared.Grid.ROW_3).within(function() { // Actually clicking on row-1; selectors offset after sort
+        cy.get(shared.Grid.CELL_3).contains('18TWL8449008066');
+        cy.get(shared.Grid.CELL_10).contains('50th St');
+        cy.get(shared.Grid.CELL_12).contains('1-2');
+        cy.get(shared.Grid.CELL_13).contains('1-all times, 2-nights');
+      });
+
+      cy.get(shared.Grid.ROW_4).within(function() { // Actually clicking on row-1; selectors offset after sort
+        cy.get(shared.Grid.CELL_3).contains('18TWL8519809280');
+        cy.get(shared.Grid.CELL_10).contains('Astor Pl');
+        cy.get(shared.Grid.CELL_12).contains('4-6-6 Express');
+        cy.get(shared.Grid.CELL_13).contains('4 nights, 6-all times, 6 Express-weekdays AM southbound, PM northbound');
+      });
+    });
+
+    // Test - Descend
+    cy.get(dialogs.featureListDialog.DIALOG)
+        .find(shared.Grid.HEADER_CELL_3)
+        .click();
+    cy.get(dialogs.featureListDialog.DIALOG).within(function() {
+      cy.get(shared.Grid.ROW_2).within(function() { // Actually clicking on row-1; selectors offset after sort
+        cy.get(shared.Grid.CELL_3).contains('18TWL9489920441');
+        cy.get(shared.Grid.CELL_10).contains('Morrison Av - Soundview');
+        cy.get(shared.Grid.CELL_12).contains('6');
+        cy.get(shared.Grid.CELL_13).contains('6-all times');
+      });
+
+      cy.get(shared.Grid.ROW_3).within(function() { // Actually clicking on row-1; selectors offset after sort
+        cy.get(shared.Grid.CELL_3).contains('18TWL9341202125');
+        cy.get(shared.Grid.CELL_10).contains('Pennsylvania Ave');
+        cy.get(shared.Grid.CELL_12).contains('3-4');
+        cy.get(shared.Grid.CELL_13).contains('4-nights, 3-all other times');
+      });
+
+      cy.get(shared.Grid.ROW_4).within(function() { // Actually clicking on row-1; selectors offset after sort
+        cy.get(shared.Grid.CELL_3).contains('18TWL8884215339');
+        cy.get(shared.Grid.CELL_10).contains('96th St');
+        cy.get(shared.Grid.CELL_12).contains('Q');
+        cy.get(shared.Grid.CELL_13).contains('Q-all times');
+      });
+    });
+
+    // Clean up
+    cy.get(dialogs.featureListDialog.DIALOG)
+        .find(dialogs.featureListDialog.CLOSE_BUTTON)
+        .click();
+    cy.get(shared.Tree.ROW_4).rightClick();
+    cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
+    cy.get(dialogs.featureListDialog.DIALOG).should('be.visible');
   });
 
   it('Description dialog', function() {
@@ -422,6 +571,42 @@ describe('Feature list', function() {
           .find(shared.Grid.ROW_3)
           .find(shared.Grid.CELL_2)
           .click();
+    });
+
+    it('Show selected only', function() {
+      // Setup
+      cy.get(dialogs.featureListDialog.DIALOG)
+          .find(shared.Grid.ROW_3)
+          .find(shared.Grid.CELL_2)
+          .click();
+      cy.get(opensphere.Application.PAGE).type('{ctrl}', {release: false});
+      cy.get(dialogs.featureListDialog.DIALOG)
+          .find(shared.Grid.ROW_5)
+          .find(shared.Grid.CELL_2)
+          .click();
+      cy.get(dialogs.featureListDialog.DIALOG)
+          .find(shared.Grid.ROW_6)
+          .find(shared.Grid.CELL_2)
+          .click();
+
+      // Test
+      cy.get(dialogs.featureListDialog.SHOW_SELECTED_CHECKBOX).click();
+      cy.get(dialogs.featureListDialog.DIALOG)
+          .find(shared.Grid.ROW_4).should('not.exist');
+      cy.get(dialogs.featureListDialog.DIALOG).should('contain', '18TWL9341202125');
+      cy.get(dialogs.featureListDialog.DIALOG).should('contain', '18TWL8449008066');
+      cy.get(dialogs.featureListDialog.DIALOG).should('contain', '18TWL8444208022');
+      cy.get(dialogs.featureListDialog.DIALOG).should('not.contain', '18TWL8884215339');
+      cy.get(dialogs.featureListDialog.DIALOG).should('not.contain', '18TWL9489920441');
+      cy.get(dialogs.featureListDialog.DIALOG).should('not.contain', '18TWL8661903835');
+      cy.get(dialogs.featureListDialog.DIALOG).should('not.contain', '18TWL8519809280');
+
+      // Clean up
+      cy.get(dialogs.featureListDialog.SHOW_SELECTED_CHECKBOX).click();
+      cy.get(dialogs.featureListDialog.DIALOG)
+          .find(shared.Grid.GRID)
+          .rightclick();
+      cy.get(dialogs.featureListDialog.contextMenu.DESELECT_ALL).click();
     });
   });
 
