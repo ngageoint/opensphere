@@ -42,23 +42,20 @@ os.debug.FancierWindow.STYLE_RULES_ = goog.string.Const.from(
  * @inheritDoc
  */
 os.debug.FancierWindow.prototype.writeInitialDocument = function() {
+  goog.events.unlisten(this.win, goog.events.EventType.BEFOREUNLOAD, this.closeLogger, false, this);
   os.debug.FancierWindow.superClass_.writeInitialDocument.call(this);
   // close button should set the debug window to disabled
-  if (window) {
-    goog.events.listenOnce(window, goog.events.EventType.BEFOREUNLOAD, this.onBeforeUnload_, false, this);
+  if (this.win) {
+    goog.events.listenOnce(this.win, goog.events.EventType.BEFOREUNLOAD, this.closeLogger, false, this);
   }
 };
 
 
 /**
- * @private
+ * @suppress {accessControls}
  */
-os.debug.FancierWindow.prototype.onBeforeUnload_ = function() {
-  // this.exit_ is private (grr), so copy it here
-  this.setEnabled(false);
-  if (this.win) {
-    this.win.close();
-  }
+os.debug.FancierWindow.prototype.closeLogger = function() {
+  this.exit_(null);
 };
 
 
