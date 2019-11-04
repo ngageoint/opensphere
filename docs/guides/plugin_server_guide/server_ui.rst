@@ -21,7 +21,7 @@ Now have the plugin require it.
   :caption: ``src/plugin/tileserver/tileserverplugin.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 8
+  :emphasize-lines: 9
 
 
 Now we need to make an Angular directive so the user has a form to give the server a title and potentially modify the URL.
@@ -39,7 +39,7 @@ Now let's hook that up in our plugin.
   :caption: ``src/plugin/tileserver/tileserverplugin.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 7, 10, 47-51
+  :emphasize-lines: 7, 11, 41-45
 
 Save and run the build. Open the debug instance and go to Settings > Data Servers. You can now hit the little view icon on the Tileserver provider in that list. In addition, you can hit "Add Server" and add the URL to the ``index.json``. It will pop up a UI for you to edit the title and the URL, as shown below:
 
