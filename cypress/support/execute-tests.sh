@@ -161,17 +161,17 @@ function overrideSettings() {
   cp -r $SETTINGS_SOURCE $SETTINGS_TARGET
 
   echo 'INFO: writing projection to settings file'
-  sed -i 's@CYPRESS_PROJECTION@'$CYPRESS_PROJECTION'@g' $OPENSPHERE_CONFIG_TESTER
+  sed -i.bak 's@CYPRESS_PROJECTION@'$CYPRESS_PROJECTION'@g' $OPENSPHERE_CONFIG_TESTER && rm $OPENSPHERE_CONFIG_TESTER.bak
 
   echo 'INFO: writing map urls to settings file'
-  sed -i 's@STREET_MAP_URL@'$STREET_MAP_URL'@g' $OPENSPHERE_CONFIG_TESTER
-  sed -i 's@WORLD_IMAGERY_URL@'$WORLD_IMAGERY_URL'@g' $OPENSPHERE_CONFIG_TESTER
+  sed -i.bak 's@STREET_MAP_URL@'$STREET_MAP_URL'@g' $OPENSPHERE_CONFIG_TESTER && rm $OPENSPHERE_CONFIG_TESTER.bak
+  sed -i.bak 's@WORLD_IMAGERY_URL@'$WORLD_IMAGERY_URL'@g' $OPENSPHERE_CONFIG_TESTER && rm $OPENSPHERE_CONFIG_TESTER.bak
 
   echo 'INFO: zoom offset to settings file'
   if [ "$CYPRESS_PROJECTION" = 3857 ]; then
-    sed -i 's@"ZOOM_OFFSET"@'0'@g' $OPENSPHERE_CONFIG_TESTER
+    sed -i.bak 's@"ZOOM_OFFSET"@'0'@g' $OPENSPHERE_CONFIG_TESTER && rm $OPENSPHERE_CONFIG_TESTER.bak
   else
-    sed -i 's@"ZOOM_OFFSET"@'-1'@g' $OPENSPHERE_CONFIG_TESTER
+    sed -i.bak 's@"ZOOM_OFFSET"@'-1'@g' $OPENSPHERE_CONFIG_TESTER && rm $OPENSPHERE_CONFIG_TESTER.bak
   fi
 
   echo 'INFO: all settings adjustments finished'
