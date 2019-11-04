@@ -175,6 +175,7 @@ describe('Toolbar left', function() {
     cy.get(opensphere.Toolbar.Drawing.BUTTON).click();
     cy.get(opensphere.Toolbar.Drawing.BUTTON)
         .should('not.have.class', opensphere.Toolbar.Drawing.BUTTON_IS_ACTIVE_CLASS);
+    cy.get(opensphere.Application.PAGE).type('v');
   });
 
   describe('Drawing tool menu', function() {
@@ -252,24 +253,26 @@ describe('Toolbar left', function() {
     // Setup
     cy.get(opensphere.Toolbar.Measure.BUTTON)
         .should('not.have.class', opensphere.Toolbar.Measure.BUTTON_IS_ACTIVE_CLASS);
+    cy.get(shared.Tree.ROW).should('not.contain', 'Geodesic Measure 1');
 
     // Test
     cy.get(opensphere.Toolbar.Measure.BUTTON).click();
     cy.get(opensphere.Toolbar.Measure.BUTTON).should('have.class', opensphere.Toolbar.Measure.BUTTON_IS_ACTIVE_CLASS);
-
-    // TODO: The rest of this test needs to be completed.
-    // There were problems getting the map to respond to mouse inputs.
-    // https://github.com/cypress-io/cypress/issues/2768
-
-    // click a point
-    // move the mouse
-    // click another point
-    // measurement was taken
+    cy.get(opensphere.Map.CANVAS_2D).click(500, 500);
+    cy.wait(200); // Ensure this isn't interpreted as a double click
+    cy.get(opensphere.Map.CANVAS_2D).click(700, 700);
+    cy.imageComparison('measure line');
+    cy.get(shared.Tree.ROW_2)
+        .find(shared.Tree.ROW_NODE_TOGGLE)
+        .click();
+    cy.get(shared.Tree.ROW_3).should('contain', 'Geodesic Measure 1');
 
     // Clean up
-    cy.get(opensphere.Toolbar.Measure.BUTTON).click();
-    cy.get(opensphere.Toolbar.Measure.BUTTON)
-        .should('not.have.class', opensphere.Toolbar.Measure.BUTTON_IS_ACTIVE_CLASS);
+    cy.get(shared.Tree.ROW_3).click();
+    cy.get(shared.Tree.ROW_3)
+        .find(layers.layersTab.Tree.Buttons.REMOVE_FEATURE_BUTTON)
+        .click();
+    cy.get(shared.Tree.ROW).should('not.contain', 'Geodesic Measure 1');
   });
 
   it('Interpolation', function() {
