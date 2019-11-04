@@ -2,11 +2,6 @@ goog.provide('os.ui.draw');
 
 goog.require('ol.Feature');
 goog.require('ol.geom.Polygon');
-goog.require('ol.style.Fill');
-goog.require('ol.style.Stroke');
-goog.require('ol.style.Style');
-goog.require('os.geo.jsts.OLParser');
-goog.require('os.style.area');
 
 
 /**
@@ -97,24 +92,6 @@ os.ui.draw.getGridFromFeature = function(feature, options) {
   // TODO build a trace of the grid and save that to the Drawing Layers
 
   return features;
-};
-
-
-/**
- * Helper function; gets a numeric representation of the JSON setting
- *
- * @param {string} key
- * @param {number} defaultValue
- * @return {number}
- */
-os.ui.draw.getGridSetting = function(key, defaultValue) {
-  var value = defaultValue;
-  try {
-    value = parseFloat(os.settings.get(key, defaultValue));
-  } catch (e) {
-    // do nothing
-  }
-  return value;
 };
 
 

@@ -5,14 +5,6 @@ goog.require('os.map');
 goog.require('os.ui.draw');
 
 describe('os.ui.draw', function() {
-  it('should read grid settings as numbers', function() {
-    runs(function() {
-      var gridDetail = os.ui.draw.getGridSetting('DC', 0.5);
-      expect(typeof gridDetail).toEqual('number');
-      expect(gridDetail).toBe(0.5);
-    });
-  });
-
   // reusable geometry / feature for testing
   var g = ol.geom.Polygon
     .fromExtent(
