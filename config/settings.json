@@ -128,13 +128,14 @@
             "attributions": [
               "Esri",
               "DigitalGlobe",
-              "GeoEye",
               "Earthstar Geographics",
               "CNES/Airbus DS",
-              "USDA",
+              "GeoEye",
+              "USDA FSA",
               "USGS",
-              "AeroGRID",
+              "Aerogrid",
               "IGN",
+              "IGP",
               "the GIS User Community"
             ]
           },
@@ -153,13 +154,15 @@
             "attributions": [
               "Esri",
               "DigitalGlobe",
-              "GeoEye",
               "Earthstar Geographics",
               "CNES/Airbus DS",
-              "USDA",
+              "GeoEye",
+              "USDA FSA",
               "USGS",
+              "Getmapping",
               "AeroGRID",
               "IGN",
+              "IGP",
               "the GIS User Community"
             ]
           }
