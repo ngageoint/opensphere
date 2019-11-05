@@ -598,7 +598,7 @@ $somesizes: map-merge((
 }
 
 .u-progress__lg {
-  font-size: 1rem;
+  font-size: round($progress-font-size * 2);
   height: $progress-height * 2;
 }
 
