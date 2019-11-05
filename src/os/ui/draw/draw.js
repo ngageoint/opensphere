@@ -2,7 +2,9 @@ goog.provide('os.ui.draw');
 
 goog.require('ol.Feature');
 goog.require('ol.geom.Polygon');
-
+goog.require('os.interpolate');
+goog.require('os.interpolate.Method');
+goog.require('os.webgl.AltitudeMode');
 
 /**
  * The menu to display when drawing interaction completes.
@@ -17,19 +19,9 @@ os.ui.draw.MENU = undefined;
  * @param {ol.Feature} feature The source feature to trace.
  * @param {osx.ui.draw.GridOptions} options Config object for grid generation
  * @return {Array.<ol.Feature>}
- *
- * @suppress {accessControls} To allow direct access to feature metadata.
  */
 os.ui.draw.getGridFromFeature = function(feature, options) {
-  var valid = function(options) {
-    var b = (typeof options != 'undefined' && options != null);
-    if (b) b = (typeof options.detail == 'number' && options.detail > 0.0); // enforce numeric, positive, non-null, non-zero;
-    if (b) b = (typeof options.max == 'number' && options.max > 0.0); // enforce numeric, positive, non-null, non-zero;
-    if (b) b = (typeof options.style == 'object');
-    return b; // any failure skips next tests
-  };
-
-  if (!feature || !options || !valid(options)) return null;
+  if (!feature || !options || !os.ui.draw.gridOptionsValid_(options)) return null;
 
   var detail = options.detail;
   var max = options.max;
@@ -67,11 +59,11 @@ os.ui.draw.getGridFromFeature = function(feature, options) {
     }
   }; // sort the data so the loops later are faster
 
-  var prop = {};
-  goog.object.extend(prop, feature.values_);
-  delete prop['geometry'];
-  delete prop['title'];
-  delete prop['_node'];
+  var prop = {}; // starting Feature properties; copied into each grid Feature
+  prop[os.interpolate.METHOD_FIELD] = os.interpolate.Method.RHUMB; // these are lat/lon boxes; always draw them RHUMB
+  prop[os.data.RecordField.ALTITUDE_MODE] = os.webgl.AltitudeMode.CLAMP_TO_GROUND; // follow terrain (if applicable)
+  prop[os.data.RecordField.DRAWING_LAYER_NODE] = false; // part of the drawing layer, but not visible in Layers mgr
+  prop[os.data.RecordField.INTERACTIVE] = false; // no hover, selection, etc
 
   // TODO research a better, faster way to create/approximate the grid
   // build detail x detail degree boxes that fit the "snapped" extent
@@ -89,9 +81,26 @@ os.ui.draw.getGridFromFeature = function(feature, options) {
     }
   }
 
-  // TODO build a trace of the grid and save that to the Drawing Layers
+  // build a trace of the grid as a single geometry
+  // var geometry = os.geo.jsts.merge(geometries);
+  // var trace = new ol.Feature(geometry);
+
+  // TODO use a repeating square image background fill (with the proper scaling factor) to visually simulate a grid
+  // var scalar = detail; // if the image is sized as 1 deg x 1 deg, then multiply by "detail" to get the new size
 
   return features;
+};
+
+
+/**
+ * Helper function to make sure the grid options won't cause infinite loops, etc in
+ * the getGridFromFeature() call
+ * @param {osx.ui.draw.GridOptions} options The color, line thickness, etc settings for this grid
+ * @return {boolean}
+ * @private
+ */
+os.ui.draw.gridOptionsValid_ = function(options) {
+  return (options.detail > 0.0 && options.max > 0.0);
 };
 
 
@@ -99,7 +108,7 @@ os.ui.draw.getGridFromFeature = function(feature, options) {
  * Build a grid feature from the extent and GridOptions
  *
  * @param {Array.<number>} extent The outer bounds of this grid
- * @param {Object} prop The drawing and altitude modes; copied from the context feature
+ * @param {Object} prop The interpolation method, altitude mode, etc; copied to all grid Features
  * @param {osx.ui.draw.GridOptions} options The color, line thickness, etc settings for this grid
  * @return {ol.Feature}
  * @private
@@ -107,14 +116,12 @@ os.ui.draw.getGridFromFeature = function(feature, options) {
 os.ui.draw.gridFeatureFromExtent_ = function(extent, prop, options) {
   // new() is faster than doing os.feature.copyFeature(feature) from the original feature
   var g = ol.geom.Polygon.fromExtent(extent);
-  var prop_ = {'geometry': g};
-  goog.object.extend(prop_, prop);
+  var p = ol.obj.assign({}, prop); // make a copy
 
-  var f = new ol.Feature(prop_);
+  var f = new ol.Feature(p);
   f.setId(goog.string.getRandomString());
+  f.setGeometry(g);
   f.setStyle(options.style);
-  f.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
-  f.set(os.data.RecordField.INTERACTIVE, false);
 
   return f;
 };
