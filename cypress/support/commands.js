@@ -103,6 +103,3 @@ Cypress.Commands.add('upload', function(fileName) {
   });
 });
 
-Cypress.Commands.add('rightClick', {prevSubject: 'element'}, function(subject) {
-  cy.wrap(subject).trigger('contextmenu');
-});
