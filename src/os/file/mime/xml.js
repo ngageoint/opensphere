@@ -28,6 +28,7 @@ os.file.mime.xml.TYPE = 'text/xml';
  */
 os.file.mime.xml.Types = {
   OPEN_TAG: 'open-tag',
+  CLOSE_TAG: 'close-tag',
   ATTRIBUTE_NAME: 'attribute-name',
   ATTRIBUTE_VALUE: 'attribute-value'
 };
@@ -76,6 +77,7 @@ os.file.mime.xml.isXML = function(buffer, opt_file, opt_context) {
             });
           }
 
+          expectedTypes.push(os.file.mime.xml.Types.CLOSE_TAG);
           expectedTypes.push(os.file.mime.xml.Types.ATTRIBUTE_NAME);
         } else if (data.type === os.file.mime.xml.Types.ATTRIBUTE_NAME) {
           expectedTypes.pop();
@@ -94,6 +96,9 @@ os.file.mime.xml.isXML = function(buffer, opt_file, opt_context) {
 
           namespaceIncoming = false;
           expectedTypes.push(os.file.mime.xml.Types.ATTRIBUTE_NAME);
+        } else if (data.type === os.file.mime.xml.Types.CLOSE_TAG) {
+          expectedTypes.pop();
+          expectedTypes.push(os.file.mime.xml.Types.OPEN_TAG);
         }
       } else {
         // malformed nonsense

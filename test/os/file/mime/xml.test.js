@@ -8,7 +8,7 @@ describe('os.file.mime.xml', function() {
       '/base/test/plugin/file/geojson/10k.json',
       '/base/test/resources/bin/rand.bin',
       '/base/test/resources/xml/ERROR_text-before-root.xml'],
-        os.file.mime.mock.testNo(os.file.mime.xml.TYPE));
+    os.file.mime.mock.testNo(os.file.mime.xml.TYPE));
   });
 
   it('should detect files that are xml files', function() {
@@ -50,6 +50,19 @@ describe('os.file.mime.xml', function() {
             }
           });
         });
+  });
+
+  it('should detect empty root tags as xml', function() {
+    var test = '<something/>';
+    var buffer = new TextEncoder().encode(test).buffer;
+
+    // pretend this came from a file
+    var file = new os.file.File();
+    file.setFileName('something.xml');
+    file.setUrl(file.getFileName());
+
+    var testFunc = os.file.mime.mock.testYes(os.file.mime.xml.TYPE);
+    testFunc(buffer, file);
   });
 
   it('should register itself with mime detection', function() {
