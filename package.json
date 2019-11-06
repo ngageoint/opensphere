@@ -236,7 +236,7 @@
     "clean-css-cli": "^4.1.11",
     "conventional-changelog-cli": "^1.2.0",
     "conventional-recommended-bump": "^0.3.0",
-    "cypress": "^3.1.5",
+    "cypress": "=3.5.0",
     "cypress-image-snapshot": "^3.0.1",
     "eslint": "^6.0.0",
     "eslint-config-opensphere": "^3.0.0",
