@@ -23,21 +23,12 @@ exports.Map = {
     SHOW_LEGEND: '[title=\'Display the map legend\']',
     CLEAR_SELECTION: '[title=\'Clears the selected features across all layers\']',
     BACKGROUND_COLOR: '[title=\'Change the map background color\']',
-    Sky: {
-      OPTION: '[title=\'Show the sky/stars around the 3D globe\']',
-      IS_ACTIVE_CLASS: '[title=\'Show the sky/stars around the 3D globe\'] .fa-check-square-o',
-      IS_INACTIVE_CLASS: '[title=\'Show the sky/stars around the 3D globe\'] .fa-square-o'
-    },
-    Sunlight: {
-      OPTION: '[title=\'Light the 3D globe with the Sun\']',
-      IS_ACTIVE_CLASS: '[title=\'Light the 3D globe with the Sun\'] .fa-check-square-o',
-      IS_INACTIVE_CLASS: '[title=\'Light the 3D globe with the Sun\'] .fa-square-o'
-    },
     COPY_COORDINATES: '[title=\'Copy coordinates to clipboard\']',
     CREATE_BUFFER_REGION: '[title=\'Create a buffer region around the clicked coordinate\']',
     SUN_MOON_INFO: '[title=\'See sun/moon event times for this location\']',
-    SAVE_TO_PLACES: '[title=\'Creates a new saved place from this location\']',
-    CREATE_ANNOTATION: '[title=\'Creates a new annotation at this location\']'
+    CREATE_PLACE: '[title=\'Creates a new saved place from this location\']',
+    CREATE_TEXT_BOX: '[title=\'Creates a new saved place with a text box at this location\']',
+    QUICK_ADD_PLACES: '[title=\'Quickly add places to the selected folder\']'
   }
 };
 

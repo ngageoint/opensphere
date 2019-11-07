@@ -13,6 +13,8 @@ goog.require('os.ui.server.AbstractLoadingServer');
 goog.require('plugin.basemap.BaseMapPlugin');
 goog.require('plugin.xyz.XYZPlugin');
 
+goog.require('plugin.tileserver.constants');
+
 
 /**
  * The Tileserver provider
