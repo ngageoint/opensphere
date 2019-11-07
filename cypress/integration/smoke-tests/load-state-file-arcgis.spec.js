@@ -64,7 +64,7 @@ describe('Import state file', function() {
         .find(shared.Tree.ROW_CHECKBOX)
         .click(); // TODO: Tiles cannot currently be stubbed. See https://github.com/cypress-io/cypress/issues/687
     cy.imageComparison('features loaded');
-    cy.get(shared.Tree.ROW_5).rightClick();
+    cy.get(shared.Tree.ROW_5).rightclick();
     cy.get(layers.layersTab.Tree.contextMenu.FEATURE_ACTIONS).click();
     cy.get(dialogs.featureActionsDialog.DIALOG).should('be.visible');
     cy.get(dialogs.featureActionsDialog.DIALOG).should('contain', 'Private Hydrant');

@@ -11,17 +11,13 @@
         "maps": {
           "streetmap": {
             "projection": "EPSG:CYPRESS_PROJECTION",
-            "urls": [
-              "STREET_MAP_URL"
-            ],
-            "zoomOffset": -1
+            "url": "STREET_MAP_URL",
+            "zoomOffset": "ZOOM_OFFSET"
           },
           "worldimagery": {
             "projection": "EPSG:CYPRESS_PROJECTION",
-            "urls": [
-              "WORLD_IMAGERY_URL"
-            ],
-            "zoomOffset": -1
+            "url": "WORLD_IMAGERY_URL",
+            "zoomOffset": "ZOOM_OFFSET"
           }
         }
       }
