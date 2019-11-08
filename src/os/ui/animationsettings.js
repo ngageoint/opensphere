@@ -124,13 +124,6 @@ os.ui.AnimationSettingsCtrl.prototype.onDestroy = function() {
 
 
 /**
- * @type {boolean}
- * @protected
- */
-os.ui.AnimationSettingsCtrl.autoConfigure = true;
-
-
-/**
  * @type {Array<{label: string, value: number}>}
  * @const
  */
@@ -165,7 +158,7 @@ os.ui.AnimationSettingsCtrl.prototype.populate = function() {
 
   this.loadStart = new Date(tlc.getStart() + os.time.timeOffset);
   this.loadEnd = new Date(tlc.getEnd() + os.time.timeOffset);
-  this.scope['autoConfig'] = os.ui.AnimationSettingsCtrl.autoConfigure;
+  this.scope['autoConfig'] = tlc.getAutoConfigure();
 
   // if no animation ranges are defined, the loop is equal to the loaded range
   this.scope['autoLoop'] = !tlc.hasAnimationRanges();
@@ -178,7 +171,8 @@ os.ui.AnimationSettingsCtrl.prototype.populate = function() {
     this.scope['loopEnd'] = this.loopEnd = new Date(tlc.getLoopEnd() + os.time.timeOffset);
   }
 
-  this.detectUnits(this.scope, tlc.getOffset(), tlc.getSkip());
+  // if the lock is used, use the original range for the window, not the current offset
+  this.detectUnits(this.scope, tlc.getLock() ? tlc.getLockRange() : tlc.getOffset(), tlc.getSkip());
   this.autoConfigure();
 
   this.scope['duration'] = tlc.getDuration();
@@ -338,7 +332,7 @@ os.ui.AnimationSettingsCtrl.prototype.accept = function() {
   }
 
   if (this.scope['lock'] != tlc.getLock()) { // turn lock on/off
-    tlc.setLock(this.scope['lock']);
+    tlc.updateLock(this.scope['lock']);
     os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.LOCK, 1);
   }
 
@@ -359,9 +353,12 @@ os.ui.AnimationSettingsCtrl.prototype.accept = function() {
   }
 
   // do window/skip
-  os.ui.AnimationSettingsCtrl.autoConfigure = this.scope['autoConfig'];
+  tlc.setAutoConfigure(this.scope['autoConfig']);
 
   tlc.setOffset(this.scope['window'] * this.scope['windowUnit']['value']);
+  if (tlc.getLock()) {
+    tlc.setLockRange(tlc.getOffset());
+  }
   tlc.setSkip(this.scope['skip'] * this.scope['skipUnit']['value']);
   tlc.setDuration(this.scope['duration']);
 
