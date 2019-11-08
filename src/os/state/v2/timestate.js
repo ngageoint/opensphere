@@ -12,7 +12,6 @@ goog.require('os.map');
 goog.require('os.state.XMLState');
 goog.require('os.time');
 goog.require('os.time.TimelineController');
-goog.require('os.time.period');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.events.UIEventType');
 goog.require('os.ui.timeline.AbstractTimelineCtrl');
@@ -236,7 +235,7 @@ os.state.v2.TimeState.prototype.saveInternal = function(options, rootObj) {
     var tlc = os.time.TimelineController.getInstance();
 
     var currentRange = new goog.math.Range(tlc.getCurrent() - tlc.getOffset(), tlc.getCurrent());
-    var advance = os.time.period.toTimePeriod(tlc.getSkip());
+    var advance = moment.duration(tlc.getSkip()).toISOString();
 
     // Root level interval is the full animation range.
     os.xml.appendElement(os.state.v2.TimeTag.INTERVAL, rootObj,
@@ -476,7 +475,7 @@ os.state.v2.TimeState.prototype.readCurrent_ = function(element) {
 os.state.v2.TimeState.prototype.readSkip_ = function(element) {
   var skipEl = element.querySelector(os.state.v2.TimeTag.ADVANCE);
   if (skipEl) {
-    return os.time.period.toMillis(skipEl.textContent);
+    return moment.duration(skipEl.textContent).asMilliseconds();
   }
   return null;
 };

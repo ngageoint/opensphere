@@ -17,6 +17,7 @@ goog.require('os.hist.HistogramData');
 goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
 goog.require('os.time.TimeInstant');
+goog.require('os.time.TimeRange');
 goog.require('os.time.TimelineController');
 goog.require('os.time.TimelineEventType');
 goog.require('os.time.timeline');
@@ -1425,6 +1426,24 @@ os.ui.timeline.TimelineCtrl.prototype.setStart = function(value) {
 os.ui.timeline.TimelineCtrl.prototype.setEnd = function(value) {
   this.end_ = os.time.TimeInstant.parseTime(value);
   this.rescale_();
+};
+
+
+/**
+ * Sets the visible timeline range by setting startEnd
+ * @param {os.time.TimeRange} timeRange
+ */
+os.ui.timeline.TimelineCtrl.prototype.setVisibleRange = function(timeRange) {
+  this.scope_['startEnd'] = timeRange;
+};
+
+
+/**
+ * Gets the visible timeline range
+ * @return {os.time.TimeRange}
+ */
+os.ui.timeline.TimelineCtrl.prototype.getVisibleRange = function() {
+  return new os.time.TimeRange(this.start_, this.end_);
 };
 
 
