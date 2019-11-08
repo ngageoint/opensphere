@@ -1,6 +1,13 @@
 Plugin
 ------
 
+Add a constant for the plugin id.
+
+.. literalinclude:: src/plugin/tileserver/tileserverconstants.js
+   :caption: ``src/plugin/tileserver/tileserverconstants.js``
+   :linenos:
+   :language: javascript
+
 Add a basic plugin class.
 
 .. literalinclude:: src/plugin/tileserver/tileserverplugin.js-plugin

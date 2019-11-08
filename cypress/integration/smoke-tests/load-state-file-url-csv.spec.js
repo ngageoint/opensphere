@@ -36,7 +36,7 @@ describe('Import state file', function() {
     cy.get(shared.Tree.ROW_4)
         .should('contain', 'Fireballs and Bolides Features (92)');
     cy.imageComparison('features loaded');
-    cy.get(shared.Tree.ROW_4).rightClick();
+    cy.get(shared.Tree.ROW_4).rightclick();
     cy.get(layers.layersTab.Tree.contextMenu.FEATURE_ACTIONS).click();
     cy.get(dialogs.featureActionsDialog.DIALOG).should('be.visible');
     cy.get(dialogs.featureActionsDialog.DIALOG).should('contain', 'high impact energy');
