@@ -1766,6 +1766,22 @@ os.source.Vector.prototype.getFilteredFeatures = function(opt_allTime) {
 
 
 /**
+ * Convenience get features by id
+ * @param {string|number|Array<string>|Array<number>} ids
+ * @return {!Array<ol.Feature>}
+ */
+os.source.Vector.prototype.getFeaturesById = function(ids) {
+  if (ids == null) {
+    return [];
+  } else if (!Array.isArray(ids)) {
+    ids = [ids];
+  }
+
+  return ids.map(this.getFeatureById, this).filter(os.fn.filterFalsey);
+};
+
+
+/**
  * @inheritDoc
  * @suppress {accessControls} To allow direct access to feature id.
  */
@@ -2772,6 +2788,16 @@ os.source.Vector.prototype.setHighlightedItems = function(items) {
 
 
 /**
+ * Convenience method highlight by id/array of ids
+ * @param {number|Array<number>} ids
+ */
+os.source.Vector.prototype.highlightById = function(ids) {
+  var features = this.getFeaturesById(ids);
+  this.setHighlightedItems(features);
+};
+
+
+/**
  * Area selection listener
  *
  * @param {os.ui.action.ActionEvent} event
@@ -3218,6 +3244,21 @@ os.source.Vector.prototype.invertSelection = function() {
 
 
 /**
+ * Convenience method select by id/array of ids
+ * @param {number|Array<number>} ids
+ * @param {boolean=} opt_deselect
+ */
+os.source.Vector.prototype.selectById = function(ids, opt_deselect) {
+  var features = this.getFeaturesById(ids);
+  if (opt_deselect) {
+    this.removeFromSelected(features);
+  } else {
+    this.addToSelected(features);
+  }
+};
+
+
+/**
  * @inheritDoc
  */
 os.source.Vector.prototype.selectAll = function() {
@@ -3353,6 +3394,21 @@ os.source.Vector.prototype.showFeatures = function(features) {
   }
 
   this.updateFeaturesVisibility(features, true);
+};
+
+
+/**
+ * Convenience method hide by id/array of ids
+ * @param {number|Array<number>} ids
+ * @param {boolean=} opt_show
+ */
+os.source.Vector.prototype.hideById = function(ids, opt_show) {
+  var features = this.getFeaturesById(ids);
+  if (opt_show) {
+    this.showFeatures(features);
+  } else {
+    this.hideFeatures(features);
+  }
 };
 
 

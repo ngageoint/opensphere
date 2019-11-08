@@ -448,11 +448,13 @@ osx.cesium.WMSTerrainLayerOptions;
  */
 osx.cesium.WMSTerrainProviderOptions;
 
+
 /**
  * Namespace
  * @type {Object}
  */
 osx.column;
+
 
 /**
  * @typedef {{
@@ -462,3 +464,27 @@ osx.column;
  * }}
  */
 osx.column.ColumnModel;
+
+
+/**
+ * Namespace.
+ * @type {Object}
+ */
+osx.ui;
+
+
+/**
+ * Namespace.
+ * @type {Object}
+ */
+osx.ui.draw;
+
+
+/**
+ * @typedef {{
+ *   detail: number,
+ *   max: number,
+ *   style: ol.style.Style
+ * }}
+ */
+osx.ui.draw.GridOptions;
