@@ -13,7 +13,6 @@ goog.require('os.time.TimelineEventType');
 goog.require('os.time.timeline');
 
 
-
 /**
  * Controls time state within os.js.
  *
@@ -76,6 +75,12 @@ os.time.TimelineController = function() {
    * @private
    */
   this.skip_ = 1000;
+
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.autoConfigure_ = true;
 
   /**
    * @type {boolean}
@@ -192,6 +197,7 @@ os.time.TimelineController.prototype.initialize_ = function() {
   this.setOffset(this.getSmallestAnimateRangeLength());
   this.setFade(false);
   this.setLock(false);
+  this.setAutoConfigure(true);
   this.setCurrent(end.getTime());
   this.setSuppressShowEvents(false);
   this.updateOffetsAndCurrent_();
@@ -311,11 +317,7 @@ os.time.TimelineController.prototype.getLock = function() {
  */
 os.time.TimelineController.prototype.toggleLock = function() {
   this.lock_ = !this.lock_;
-  if (this.lock_) {
-    this.lockRange_ = this.getCurrentRange().end - this.getCurrentRange().start;
-    this.setSkip(this.lockRange_);
-    this.first();
-  }
+  this.updateBasedOnLock_();
   return this.lock_;
 };
 
@@ -325,12 +327,50 @@ os.time.TimelineController.prototype.toggleLock = function() {
  */
 os.time.TimelineController.prototype.setLock = function(value) {
   this.lock_ = value;
+  this.dispatchEvent(os.time.TimelineEventType.LOCK_TOGGLE);
+};
+
+
+/**
+ * Updates the lock
+ *
+ * @param {boolean} value
+ */
+os.time.TimelineController.prototype.updateLock = function(value) {
+  this.lock_ = value;
+  this.updateBasedOnLock_();
+  this.dispatchEvent(os.time.TimelineEventType.LOCK_TOGGLE);
+};
+
+
+/**
+ * Update other timeline values where appropriate if lock is on
+ */
+os.time.TimelineController.prototype.updateBasedOnLock_ = function() {
   if (this.lock_) {
     this.lockRange_ = this.getCurrentRange().end - this.getCurrentRange().start;
-    this.setSkip(this.lockRange_);
+    if (this.autoConfigure_) {
+      this.setSkip(this.lockRange_);
+    }
     this.first();
   }
-  this.dispatchEvent(os.time.TimelineEventType.LOCK_TOGGLE);
+};
+
+
+/**
+ * Getter for lock range.
+ * @return {number}
+ */
+os.time.TimelineController.prototype.getLockRange = function() {
+  return this.lockRange_;
+};
+
+/**
+ * Sets the lock range.
+ * @param {number} range
+ */
+os.time.TimelineController.prototype.setLockRange = function(range) {
+  this.lockRange_ = range;
 };
 
 
@@ -529,6 +569,22 @@ os.time.TimelineController.prototype.getCurrentFrame = function() {
  */
 os.time.TimelineController.prototype.setSkip = function(value) {
   this.skip_ = Math.max(value, -1);
+};
+
+/**
+ * Getter for auto configure setting.
+ * @return {boolean}
+ */
+os.time.TimelineController.prototype.getAutoConfigure = function() {
+  return this.autoConfigure_;
+};
+
+/**
+ * Setter for auto configure setting.
+ * @param {boolean} value
+ */
+os.time.TimelineController.prototype.setAutoConfigure = function(value) {
+  this.autoConfigure_ = value;
 };
 
 
@@ -956,6 +1012,7 @@ os.time.TimelineController.prototype.persist = function(opt_to) {
   obj['fade'] = this.getFade();
   obj['lock'] = this.getLock();
   obj['skip'] = this.getSkip();
+  obj['autoConfig'] = this.getAutoConfigure();
   obj['playing'] = this.isPlaying();
   obj['sliceRanges'] = this.sliceRanges_.clone();
   obj['loadRanges'] = this.loadRanges_.clone();
@@ -976,6 +1033,7 @@ os.time.TimelineController.prototype.restore = function(config) {
   this.setFade(config['fade']);
   this.setLock(config['lock']);
   this.setSkip(config['skip']);
+  this.setAutoConfigure(config['autoConfig']);
   this.setCurrent(config['current']);
   this.setSliceRanges(config['sliceRanges']);
   this.setLoadRanges(config['loadRanges']);
