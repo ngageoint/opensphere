@@ -5,6 +5,7 @@ goog.require('goog.userAgent');
 goog.require('ol.Feature');
 goog.require('ol.Map');
 goog.require('os.map');
+goog.require('os.mixin.canvasreplay');
 goog.require('os.mixin.canvasreplaygroup');
 
 
