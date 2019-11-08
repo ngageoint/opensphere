@@ -883,9 +883,6 @@ os.ui.timeline.Brush.prototype.deleteBrush = function(opt_silent) {
     if (!opt_silent) {
       this.dispatchEvent(new goog.events.Event('deleted', this));
     }
-    if (this.tlc.getLock()) {
-      this.tlc.first();
-    }
     this.dispose();
   }
 };
