@@ -33,13 +33,13 @@ Run ``yarn test`` to see if it tests properly. Now we need to register our provi
   :caption: ``src/plugin/tileserer/tileserverplugin.js``
   :linenos:
   :language: javascript
-  :emphasize-lines: 3, 6, 33-39
+  :emphasize-lines: 3, 6, 27-33
 
 Lastly, we need to update our config so that the application instantiates a copy of our provider.
 
 .. code-block:: json
   :caption: ``config/settings.json``
-  
+
   {
     "admin": {
       "providers": {

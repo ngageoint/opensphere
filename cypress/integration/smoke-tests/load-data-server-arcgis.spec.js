@@ -66,9 +66,9 @@ describe('Add ARCGIS server', function() {
     cy.get(imports.geoJSONAreaImportDialog.Tabs.areaOptions.TITLE_COLUMN_INPUT).should('be.visible');
     cy.get(imports.geoJSONAreaImportDialog.DONE_BUTTON).click();
     cy.get(shared.Tree.ROW_1).should('contain', 'temp area 5');
-    cy.get(shared.Tree.ROW_1).rightClick();
+    cy.get(shared.Tree.ROW_1).rightclick();
     cy.get(layers.areasTab.Tree.contextMenu.ZOOM).click();
-    cy.get(shared.Tree.ROW_1).rightClick();
+    cy.get(shared.Tree.ROW_1).rightclick();
     cy.get(layers.areasTab.Tree.contextMenu.Query.LOAD).click(); // THIS LINE CAUSES TWO REQUESTS TO BE SENT
     cy.wait(400);
     cy.route('POST', '**/OpenData/MapServer/5/query', 'fx:/smoke-tests/load-data-server-arcgis/query-2.stub.json')

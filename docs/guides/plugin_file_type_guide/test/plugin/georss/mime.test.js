@@ -7,7 +7,7 @@ describe('plugin.georss.mime', function() {
     var feed = '<?xml version="1.0" encoding="utf-8"?>' +
       '<feed xmlns="http://www.w3.org/2005/Atom"/>';
 
-    var buffer = new TextEncoder().encode(feed);
+    var buffer = new TextEncoder().encode(feed).buffer;
 
     // pretend this came from a file
     var file = new os.file.File();
@@ -20,7 +20,7 @@ describe('plugin.georss.mime', function() {
 
   it('should not detect other XML as GeoRSS', function() {
     var xml = '<?xml version="1.0" encoding="utf-8"?><something xmlns="http://something.com/schema"/>';
-    var buffer = new TextEncoder().encode(xml);
+    var buffer = new TextEncoder().encode(xml).buffer;
 
     // pretend this came from a file
     var file = new os.file.File();

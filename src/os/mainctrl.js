@@ -432,7 +432,7 @@ os.MainCtrl.prototype.initialize = function() {
  */
 os.MainCtrl.prototype.onClose = function() {
   // close the log window
-  os.logWindow.setEnabled(false);
+  os.logWindow.closeLogger();
 };
 
 

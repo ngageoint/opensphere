@@ -35,8 +35,8 @@ describe('Import state file', function() {
     cy.get(opensphere.statusBar.COORDINATES_TEXT).should('contain', '+40');
     cy.get(shared.Tree.ROW_4)
         .should('contain', 'City of New York Subway Stations Features (473)');
-    cy.imageComparison('features loaded'); // TODO: Baseline image needs update after #676 fixed
-    cy.get(shared.Tree.ROW_4).rightClick();
+    cy.imageComparison('features loaded');
+    cy.get(shared.Tree.ROW_4).rightclick();
     cy.get(layers.layersTab.Tree.contextMenu.FEATURE_ACTIONS).click();
     cy.get(dialogs.featureActionsDialog.DIALOG).should('be.visible');
     cy.get(dialogs.featureActionsDialog.DIALOG).should('contain', 'line 2-5');

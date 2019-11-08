@@ -65,7 +65,7 @@ describe('Add GeoServer', function() {
         .should('contain', 'VIIRS Detection Features (0)');
 
     // Import and activate a query area
-    cy.get(shared.Tree.ROW_4).rightClick();
+    cy.get(shared.Tree.ROW_4).rightclick();
     cy.get(layers.layersTab.Tree.contextMenu.MOST_RECENT).click();
     cy.get(layers.areasTab.TAB).click();
     cy.get(layers.areasTab.Import.BUTTON).click();
@@ -74,9 +74,9 @@ describe('Add GeoServer', function() {
     cy.get(imports.geoJSONAreaImportDialog.Tabs.areaOptions.TITLE_COLUMN_INPUT).should('be.visible');
     cy.get(imports.geoJSONAreaImportDialog.DONE_BUTTON).click();
     cy.get(shared.Tree.ROW_1).should('contain', 'temp area 1');
-    cy.get(shared.Tree.ROW_1).rightClick();
+    cy.get(shared.Tree.ROW_1).rightclick();
     cy.get(layers.areasTab.Tree.contextMenu.ZOOM).click();
-    cy.get(shared.Tree.ROW_1).rightClick();
+    cy.get(shared.Tree.ROW_1).rightclick();
     cy.get(layers.areasTab.Tree.contextMenu.Query.LOAD).click();
     cy.get(layers.layersTab.TAB).click();
     cy.get(shared.Tree.ROW_4).should('contain', 'VIIRS Detection');
