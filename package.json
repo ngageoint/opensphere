@@ -100,7 +100,7 @@
     "compile:dossier": "npm run init:apidoc && os-docs-gen-config dossier.conf.json .build/dossier.conf.json && os-docs -c .build/dossier.conf.json",
     "precompile:resolve": "cp addlayer.js .build",
     "compile:resolve": "os-resolve --outputDir .build --defineRoots $(cat .build/version)",
-    "postcompile:resolve": "scripts/addlayer-replace.js",
+    "postcompile:resolve": "node scripts/addlayer-replace.js",
     "compile:debugcss": "for i in $(ls .build/themes -1 | grep node-sass-args); do node-sass --source-map true -o .build/themes --output-style expanded $(cat .build/themes/$i) & pids=\"$pids $!\"; done; wait $pids; npm run postcompile:debugcss",
     "postcompile:debugcss": "for i in $(ls .build/themes -1 | grep combined.css | grep -v combined.css.map); do postcss .build/themes/$i --no-map -u autoprefixer -r & pids=\"$pids $!\"; done; wait $pids",
     "minify:css": "for i in $(ls .build/themes -1 | grep combined.css | grep -v combined.css.map); do cleancss --output .build/themes/$(echo $i | sed 's/combined/min/') .build/themes/$i & pids=\"$pids $!\"; done; wait $pids",
