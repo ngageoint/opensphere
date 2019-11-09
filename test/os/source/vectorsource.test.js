@@ -137,6 +137,7 @@ describe('os.source.Vector', function() {
 
     source.addFeature(feature);
     expect(feature.getId()).toBeDefined();
+    expect(feature === source.getFeaturesById(feature.getId())[0]).toBe(true);
 
     source.removeFeature(feature);
     source.unprocessNow();
@@ -182,6 +183,10 @@ describe('os.source.Vector', function() {
 
     var singleFeature = features[0];
     var multiFeature = features.slice(0, 10);
+    var featById = features.slice(0, 12).map(function(feat) {
+      return feat.getId();
+    });
+
     source.addToSelected(singleFeature);
 
     waitsFor(function() {
@@ -211,6 +216,24 @@ describe('os.source.Vector', function() {
       expect(addedItems).not.toBeNull();
       expect(addedItems.length).toBe(9);
       expect(addedItems).not.toContain(singleFeature);
+
+      addedItems = null;
+      source.selectById(featById);
+    });
+
+    waitsFor(function() {
+      return count == 3 && addedItems != null;
+    }, 'features to be selected');
+
+    runs(function() {
+      expect(source.selected_.length).toBe(12);
+      expect(goog.object.getKeys(source.selectedById_).length).toBe(12);
+      expect(addedItems).not.toBeNull();
+      expect(addedItems.length).toBe(2);
+      expect(addedItems).not.toContain(singleFeature);
+      expect(addedItems).not.toContain(multiFeature[0]);
+
+      addedItems = null;
       ol.events.unlisten(source, goog.events.EventType.PROPERTYCHANGE, onPropertyChange, this);
     });
   });
@@ -228,6 +251,10 @@ describe('os.source.Vector', function() {
 
     var singleFeature = features[0];
     var multiFeature = features.slice(0, 10);
+    var featById = features.slice(0, 12).map(function(feat) {
+      return feat.getId();
+    });
+
     source.removeFromSelected(singleFeature);
 
     waitsFor(function() {
@@ -235,9 +262,9 @@ describe('os.source.Vector', function() {
     }, 'feature to be deselected');
 
     runs(function() {
-      expect(source.selected_.length).toBe(9);
+      expect(source.selected_.length).toBe(11);
       expect(source.selected_).not.toContain(singleFeature);
-      expect(goog.object.getKeys(source.selectedById_).length).toBe(9);
+      expect(goog.object.getKeys(source.selectedById_).length).toBe(11);
       expect(source.selectedById_[singleFeature.getId()]).toBeUndefined();
       expect(removedItems).not.toBeNull();
       expect(removedItems.length).toBe(1);
@@ -252,11 +279,28 @@ describe('os.source.Vector', function() {
     }, 'features to be deselected');
 
     runs(function() {
-      expect(source.selected_.length).toBe(0);
-      expect(goog.object.getKeys(source.selectedById_).length).toBe(0);
+      expect(source.selected_.length).toBe(2);
+      expect(goog.object.getKeys(source.selectedById_).length).toBe(2);
       expect(removedItems).not.toBeNull();
       expect(removedItems.length).toBe(9);
       expect(removedItems).not.toContain(singleFeature);
+
+      removedItems = null;
+      source.selectById(featById, true);
+    });
+
+    waitsFor(function() {
+      return count == 3 && removedItems != null;
+    }, 'features to be deselected');
+
+    runs(function() {
+      expect(source.selected_.length).toBe(0);
+      expect(goog.object.getKeys(source.selectedById_).length).toBe(0);
+      expect(removedItems).not.toBeNull();
+      expect(removedItems.length).toBe(2);
+      expect(removedItems).not.toContain(singleFeature);
+      expect(removedItems).not.toContain(multiFeature[0]);
+
       ol.events.unlisten(source, goog.events.EventType.PROPERTYCHANGE, onPropertyChange, this);
     });
   });
@@ -375,17 +419,25 @@ describe('os.source.Vector', function() {
     expect(source.getFilteredFeatures().length).toBe(features.length - 1);
     source.hideFeatures(features.slice(0, 10));
     expect(source.getFilteredFeatures().length).toBe(features.length - 10);
+    source.hideById(features.slice(0, 12).map(function(feat) {
+      return feat.getId();
+    }));
+    expect(source.getFilteredFeatures().length).toBe(features.length - 12);
   });
 
   it('should be able to get the hidden items', function() {
     var hidden = source.getHiddenItems();
-    expect(hidden.length).toBe(10);
+    expect(hidden.length).toBe(12);
   });
 
   it('should show features in the source', function() {
     source.showFeatures(features[0]);
-    expect(source.getFilteredFeatures().length).toBe(features.length - 9);
+    expect(source.getFilteredFeatures().length).toBe(features.length - 11);
     source.showFeatures(features.slice(0, 10));
+    expect(source.getFilteredFeatures().length).toBe(features.length - 2);
+    source.hideById(features.slice(0, 12).map(function(feat) {
+      return feat.getId();
+    }), true);
     expect(source.getFilteredFeatures().length).toBe(features.length);
 
     source.hideFeatures(features);
