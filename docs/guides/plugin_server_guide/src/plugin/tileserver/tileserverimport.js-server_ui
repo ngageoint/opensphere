@@ -6,6 +6,7 @@ goog.require('os.ui.Module');
 goog.require('os.ui.SingleUrlProviderImportCtrl');
 goog.require('os.ui.window');
 goog.require('plugin.tileserver.Tileserver');
+goog.require('plugin.tileserver.constants');
 
 
 /**

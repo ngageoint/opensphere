@@ -152,6 +152,9 @@ $user-select-options: all, auto, text, none;
   text-shadow: -1px -1px 0 color-yiq($body-color), 1px -1px 0 color-yiq($body-color), -1px 1px 0 color-yiq($body-color), 1px 1px 0 color-yiq($body-color);
 }
 
+.u-text-decoration__line-through {
+  text-decoration: line-through;
+}
 
 // --------------------------------- Font Utilities --------------------------------- //
 .u-font-family-sans-serif {
@@ -213,6 +216,10 @@ $user-select-options: all, auto, text, none;
       background-color: $table-accent-bg;
     }
   }
+}
+
+.u-table-layout__fixed {
+  table-layout: fixed;
 }
 
 .u-nav-tabs__vertical.nav-tabs {
@@ -588,6 +595,11 @@ $somesizes: map-merge((
   margin-bottom: 0;
   right: .2rem;
   top: -1.3rem;
+}
+
+.u-progress__lg {
+  font-size: round($progress-font-size * 2);
+  height: $progress-height * 2;
 }
 
 

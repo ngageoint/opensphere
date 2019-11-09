@@ -24,9 +24,9 @@ describe('CSV import', function() {
     // Load a layer
     cy.get(shared.Tree.ROW_4)
         .should('contain', 'smoke-tests/load-data-file-csv/test-features.csv Features (447)');
-    cy.get(shared.Tree.ROW_4).rightClick();
+    cy.get(shared.Tree.ROW_4).rightclick();
     cy.get(layers.layersTab.Tree.contextMenu.MOST_RECENT).click();
-    cy.get(shared.Tree.ROW_4).rightClick();
+    cy.get(shared.Tree.ROW_4).rightclick();
     cy.get(layers.layersTab.Tree.contextMenu.GO_TO).click();
     cy.imageComparison('features loaded');
 

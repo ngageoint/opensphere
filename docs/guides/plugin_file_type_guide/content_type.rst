@@ -10,6 +10,15 @@ The first thing we need to do for a file type is to detect the file type given a
 
 As always, let's test it.
 
+External Plugins
+  If you are working with an external plugin, you will need to add the following two lines to the files list in ``karma.conf.js``:
+
+  .. code-block:: javascript
+
+      {pattern: resolver.resolveModulePath('jschardet/dist/jschardet.min.js'), watched: false, included: true, served: true},
+      {pattern: '../opensphere/.build/xml-lexer.min.js', watched: false, included: true, served: true},
+
+
 .. literalinclude:: test/plugin/georss/mime.test.js
   :caption: ``test/plugin/georss/mime.test.js``
   :linenos:
