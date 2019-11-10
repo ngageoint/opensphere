@@ -1,9 +1,10 @@
 goog.require('os.net.BaseServerModifier');
+goog.require('os.net.URLModifier');
 
 
 describe('os.net.BaseServerModifier', function() {
   it('should not modify if not configured', function() {
-    var mod = new os.net.BaseServerModifier();
+    var mod = new os.net.URLModifier();
 
     // set no replacements
     os.net.BaseServerModifier.configure();
@@ -16,7 +17,7 @@ describe('os.net.BaseServerModifier', function() {
   });
 
   it('should not modify if is an absolute path', function() {
-    var mod = new os.net.BaseServerModifier();
+    var mod = new os.net.URLModifier();
     var server = 'http://example.com';
 
     // set a replacement
@@ -27,11 +28,11 @@ describe('os.net.BaseServerModifier', function() {
 
     mod.modify(uri);
     expect(uri.toString()).toBe(expectedString);
-    os.net.BaseServerModifier.configure();
+    os.net.URLModifier.configure();
   });
 
   it('should modify relative services requests', function() {
-    var mod = new os.net.BaseServerModifier();
+    var mod = new os.net.URLModifier();
     var server = 'http://example.com';
 
     // set a replacement
@@ -46,7 +47,7 @@ describe('os.net.BaseServerModifier', function() {
   });
 
   it('should not modify relative application requests', function() {
-    var mod = new os.net.BaseServerModifier();
+    var mod = new os.net.URLModifier();
     var server = 'http://example.com';
 
     // set a replacement
