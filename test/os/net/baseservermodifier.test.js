@@ -31,6 +31,21 @@ describe('os.net.BaseServerModifier', function() {
     os.net.URLModifier.configure();
   });
 
+  it('should not modify scheme-relative URLs', function() {
+    var mod = new os.net.URLModifier();
+    var server = 'http://example.com';
+
+    // set a replacement
+    os.net.BaseServerModifier.configure(server);
+
+    var expectedString = '//example2.com/path/to/thing?someQuery=text%20with%20%25%20spaces#someFragment';
+    var uri = new goog.Uri(expectedString);
+
+    mod.modify(uri);
+    expect(uri.toString()).toBe(expectedString);
+    os.net.URLModifier.configure();
+  });
+
   it('should modify relative services requests', function() {
     var mod = new os.net.URLModifier();
     var server = 'http://example.com';
@@ -59,11 +74,5 @@ describe('os.net.BaseServerModifier', function() {
     mod.modify(uri);
     expect(uri.toString()).toBe(relativeString);
     os.net.BaseServerModifier.configure();
-  });
-
-  it('should remove https and trailling /', function() {
-    expect('example.com'.replace(os.net.BaseServerExpression, '$2')).toBe('example.com');
-    expect('https://example.com'.replace(os.net.BaseServerExpression, '$2')).toBe('example.com');
-    expect('https://example.com/'.replace(os.net.BaseServerExpression, '$2')).toBe('example.com');
   });
 });
