@@ -11,7 +11,6 @@ goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('goog.net.EventType');
 goog.require('os');
-goog.require('os.net.BaseServerModifier');
 goog.require('os.net.IDataFormatter');
 goog.require('os.net.IModifier');
 goog.require('os.net.IRequestHandler');
@@ -168,7 +167,6 @@ os.net.Request = function(opt_uri, opt_method, opt_timeout) {
 
   this.addModifier(new os.net.VariableReplacer());
   this.addModifier(new os.net.URLModifier());
-  this.addModifier(new os.net.BaseServerModifier());
 };
 goog.inherits(os.net.Request, goog.events.EventTarget);
 
