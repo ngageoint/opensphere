@@ -73,6 +73,42 @@ describe('os.state.v4.TimeState', function() {
     });
   };
 
+  var testTimeStateWithFade = function(fadeOn) {
+    tlc.setFade(fadeOn);
+
+    spyOn(tlc, 'setFade').andCallThrough();
+
+    testAndLoadXsdFiles();
+
+    // Runs the tests.
+    runs(function() {
+      var fade = tlc.getFade();
+
+      testStateSaveAndLoad();
+
+      expect(tlc.setFade).toHaveBeenCalled();
+      expect(tlc.setFade.mostRecentCall.args[0]).toBe(fade);
+    });
+  };
+
+  var testTimeStateWithAutoConfigure = function(autoConfigureOn) {
+    tlc.setAutoConfigure(autoConfigureOn);
+
+    spyOn(tlc, 'setAutoConfigure').andCallThrough();
+
+    testAndLoadXsdFiles();
+
+    // Runs the tests.
+    runs(function() {
+      var autoConfigure = tlc.getAutoConfigure();
+
+      testStateSaveAndLoad();
+
+      expect(tlc.setAutoConfigure).toHaveBeenCalled();
+      expect(tlc.setAutoConfigure.mostRecentCall.args[0]).toBe(autoConfigure);
+    });
+  };
+
   beforeEach(function() {
     stateManager = os.state.StateManager.getInstance();
     stateManager.setVersion(os.state.Versions.V4);
@@ -189,5 +225,21 @@ describe('os.state.v4.TimeState', function() {
 
   it('should produce a valid state file with time state and timeline locked', function() {
     testTimeStateWithLock(true);
+  });
+
+  it('should produce a valid state file with time state and fade turned off', function() {
+    testTimeStateWithFade(false);
+  });
+
+  it('should produce a valid state file with time state and fade turned on', function() {
+    testTimeStateWithFade(true);
+  });
+
+  it('should produce a valid state file with time state and auto configure turned off', function() {
+    testTimeStateWithAutoConfigure(false);
+  });
+
+  it('should produce a valid state file with time state and auto configure turned on', function() {
+    testTimeStateWithAutoConfigure(true);
   });
 });
