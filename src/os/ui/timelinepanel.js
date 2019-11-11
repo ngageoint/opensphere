@@ -54,6 +54,13 @@ os.ui.resizeMap = 'resizeMap';
 os.ui.TimelinePanelCtrl = function($scope, $element, $timeout) {
   os.ui.TimelinePanelCtrl.base(this, 'constructor', $scope, $element, $timeout);
 
+  try {
+    var $animate = /** @type {angular.$animate} */ (os.ui.injector.get('$animate'));
+    $animate.enabled($element, false);
+  } catch (e) {
+    // animate service not available, we don't really care
+  }
+
   /**
    * @type {boolean}
    */
@@ -274,4 +281,3 @@ os.ui.TimelinePanelCtrl.prototype.setLock = function() {
   this['locked'] = this.tlc.getLock();
   os.ui.apply(this.scope);
 };
-

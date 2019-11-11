@@ -244,7 +244,7 @@ os.ui.timeline.AbstractTimelineCtrl = function($scope, $element, $timeout) {
    */
   this.zoomMenu = undefined;
 
-  // force the animation/hold ragne state to be updated
+  // force the animation/hold range state to be updated
   this.onAnimationRangeChanged_(null);
   this.onHoldRangeChanged_(null);
 
@@ -351,14 +351,16 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onWindow = function(event, range) 
       this.tlc.setOffset(diff);
       if (!this.tlc.getLock()) {
         this.tlc.setSkip(diff / 2);
+      } else {
+        this.tlc.setSkip(diff);
+        this.tlc.setLockRange(diff);
       }
     }
-    if (this.tlc.getLock()) {
-      if (this.tlc.getAnimationRange().start != range[0]) {
-        this.tlc.setLock(false);
-        os.alertManager.sendAlert('Moving the currently displayed window turns off the timeline lock. ' +
-          'Relock at the new location if desired.', os.alert.AlertEventSeverity.INFO);
-      }
+    if (this.tlc.getLock() && this.tlc.getAnimationRange().start != range[0]) {
+      this.tlc.updateLock(false);
+      os.alertManager.sendAlert('Moving the currently displayed window turns off the timeline lock. ' +
+        'Relock at the new location if desired.', os.alert.AlertEventSeverity.INFO);
+      this.tlc.setSkip(diff / 2);
     }
 
     this.tlc.setCurrent(range[1]);
@@ -521,6 +523,17 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.setTimelineFps = function(value) {
   this.tlc.unlisten(os.time.TimelineEventType.FPS_CHANGE, this.onTimelineEvent, false, this);
   this.tlc.setFps(value);
   this.tlc.listen(os.time.TimelineEventType.FPS_CHANGE, this.onTimelineEvent, false, this);
+};
+
+
+/**
+ * Set if the timeline should be collapsed.
+ * @param {boolean} value
+ */
+os.ui.timeline.AbstractTimelineCtrl.prototype.setCollapsed = function(value) {
+  os.ui.timeline.AbstractTimelineCtrl.collapsed = value;
+  this.scope['collapsed'] = os.ui.timeline.AbstractTimelineCtrl.collapsed;
+  this.adjust();
 };
 
 
@@ -1740,9 +1753,7 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.close = function() {
  * @export
  */
 os.ui.timeline.AbstractTimelineCtrl.prototype.toggleCollapse = function() {
-  os.ui.timeline.AbstractTimelineCtrl.collapsed = !os.ui.timeline.AbstractTimelineCtrl.collapsed;
-  this.scope['collapsed'] = os.ui.timeline.AbstractTimelineCtrl.collapsed;
-  this.adjust();
+  this.setCollapsed(!os.ui.timeline.AbstractTimelineCtrl.collapsed);
 };
 
 
