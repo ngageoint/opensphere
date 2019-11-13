@@ -1272,20 +1272,24 @@ os.ui.slick.SlickGridCtrl.prototype.apply = function() {
 /**
  * A given cell's editor has been created
  *
+ * @param {*=} event The Event
+ * @param {Object=} data Properties of what cell is being affected
  * @protected
  */
-os.ui.slick.SlickGridCtrl.prototype.beforeCellEdited = function() {
-  this.scope.$emit(os.ui.slick.SlickGridEvent.BEFORE_CELL_EDITED, arguments);
+os.ui.slick.SlickGridCtrl.prototype.beforeCellEdited = function(event, data) {
+  this.scope.$emit(os.ui.slick.SlickGridEvent.BEFORE_CELL_EDITED, event, data);
 };
 
 
 /**
  * A given cell's value has been changed
  *
+ * @param {*=} event The Event
+ * @param {Object=} data Properties of what cell is being affected
  * @protected
  */
-os.ui.slick.SlickGridCtrl.prototype.cellChanged = function() {
-  this.scope.$emit(os.ui.slick.SlickGridEvent.CELL_CHANGED, arguments);
+os.ui.slick.SlickGridCtrl.prototype.cellChanged = function(event, data) {
+  this.scope.$emit(os.ui.slick.SlickGridEvent.CELL_CHANGED, event, data);
 };
 
 
@@ -1293,19 +1297,22 @@ os.ui.slick.SlickGridCtrl.prototype.cellChanged = function() {
  * The cell is no longer being edited.
  * This is triggered when an edit has been made or discarded.
  *
+ * @param {*=} event The Event
+ * @param {Object=} scope Editor and Grid instances
  * @protected
  */
-os.ui.slick.SlickGridCtrl.prototype.cellEditorDestroyed = function() {
-  this.scope.$emit(os.ui.slick.SlickGridEvent.CELL_EDITOR_DESTROYED, arguments);
+os.ui.slick.SlickGridCtrl.prototype.cellEditorDestroyed = function(event, scope) {
+  this.scope.$emit(os.ui.slick.SlickGridEvent.CELL_EDITOR_DESTROYED, event, scope);
 };
 
 
 /**
  * Triggers another render and refresh of the display
  *
+ * @param {angular.Scope.Event} event
  * @protected
  */
-os.ui.slick.SlickGridCtrl.prototype.refreshDataView = function() {
+os.ui.slick.SlickGridCtrl.prototype.refreshDataView = function(event) {
   this.dataView.refresh();
 };
 
