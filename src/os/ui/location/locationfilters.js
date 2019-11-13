@@ -311,10 +311,7 @@ os.ui.location.mgrsFilter = function() {
  * @return {string}
  */
 os.ui.location.mgrsFilter.Filter = function(latdeg, londeg) {
-  if (londeg && latdeg) {
-    return osasm.toMGRS([londeg, latdeg]);
-  }
-  return '';
+  return osasm.toMGRS([londeg, latdeg]);
 };
 
 
