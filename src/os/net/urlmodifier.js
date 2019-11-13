@@ -100,6 +100,6 @@ os.net.URLModifier.prototype.applyModifications = function(uri, modifiedUri) {
   uri.setDomain(modifiedUri.getDomain());
   uri.setPort(modifiedUri.getPort());
   uri.setPath(modifiedUri.getPath());
-  uri.setQuery(modifiedUri.getQuery());
+  uri.setQuery(modifiedUri.getQuery(), true);
   uri.setFragment(modifiedUri.getFragment());
 };
