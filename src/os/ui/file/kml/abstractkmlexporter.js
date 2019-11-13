@@ -772,8 +772,8 @@ os.ui.file.kml.AbstractKMLExporter.prototype.createStyle = function(item, styleI
 
   var polyStyleEl = os.xml.appendElementNS('PolyStyle', this.kmlNS, styleEl);
   os.xml.appendElementNS('color', this.kmlNS, polyStyleEl, fillColor || color);
-  os.xml.appendElementNS('fill', this.kmlNS, polyStyleEl, fillColor ? 1 : 0);
-  os.xml.appendElementNS('outline', this.kmlNS, polyStyleEl, strokeColor ? 1 : 0);
+  os.xml.appendElementNS('fill', this.kmlNS, polyStyleEl, this.getFill(item) && fillColor ? 1 : 0);
+  os.xml.appendElementNS('outline', this.kmlNS, polyStyleEl, this.getStroke(item) && strokeColor ? 1 : 0);
 
   var firstFolder = this.kmlDoc.querySelector('Folder');
   if (firstFolder) {
@@ -808,6 +808,28 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getChildren = function(item) {
  * @protected
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.getColor = function(item) {};
+
+
+/**
+ * Gets whether or not to fill the item
+ * @param {T} item The item
+ * @return {boolean}
+ * @protected
+ */
+os.ui.file.kml.AbstractKMLExporter.prototype.getFill = function(item) {
+  return false;
+};
+
+
+/**
+ * Gets whether or not to stroke the item
+ * @param {T} item The item
+ * @return {boolean}
+ * @protected
+ */
+os.ui.file.kml.AbstractKMLExporter.prototype.getStroke = function(item) {
+  return true;
+};
 
 
 /**
