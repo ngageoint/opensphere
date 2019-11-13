@@ -1523,3 +1523,39 @@ os.style.notifyStyleChange = function(layer, opt_features, opt_type) {
 os.style.isLabelConfig = function(configEntry) {
   return !!configEntry[os.style.StyleField.LABELS];
 };
+
+
+/**
+ * @param {ol.style.Style} style
+ * @return {boolean}
+ */
+os.style.hasNonZeroFillOpacity = function(style) {
+  if (style) {
+    const fill = style.getFill();
+    if (fill) {
+      const color = ol.color.asArray(/** @type {Array<number>|string|null} */ (fill.getColor()));
+      return color[3] !== 0;
+    }
+  }
+
+  return false;
+};
+
+
+/**
+ * @param {ol.style.Style} style
+ * @return {boolean}
+ */
+os.style.hasNonZeroStrokeOpacity = function(style) {
+  if (style) {
+    const stroke = style.getStroke();
+    if (stroke) {
+      const color = ol.color.asArray(/** @type {Array<number>|string|null} */ (stroke.getColor()));
+      return color[3] !== 0;
+    }
+  }
+
+  return false;
+};
+
+
