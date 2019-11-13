@@ -3,6 +3,7 @@ goog.require('goog.debug.FancyWindow');
 goog.require('goog.html.SafeStyleSheet');
 goog.require('goog.string.Const');
 goog.require('os.alert.AlertManager');
+goog.require('os.file.persist.FilePersistence');
 goog.require('os.ui');
 
 
