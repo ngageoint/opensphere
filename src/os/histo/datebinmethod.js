@@ -469,6 +469,8 @@ os.histo.DateBinMethod.prototype.persist = function(opt_to) {
   opt_to = os.histo.DateBinMethod.base(this, 'persist', opt_to) || {};
 
   opt_to['binType'] = this.getDateBinType();
+  opt_to['binTypes'] = this.getDateBinTypes();
+
   return opt_to;
 };
 
@@ -482,6 +484,11 @@ os.histo.DateBinMethod.prototype.restore = function(config) {
   var binType = /** @type {os.histo.DateBinType|undefined} */ (config['binType']);
   if (binType && goog.object.containsValue(os.histo.DateBinType, binType)) {
     this.setDateBinType(binType);
+  }
+
+  var binTypes = /** @type {Array<string>|undefined} */ (config['binTypes']);
+  if (binTypes) {
+    this.setDateBinTypes(binTypes);
   }
 };
 
