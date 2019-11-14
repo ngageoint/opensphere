@@ -34,12 +34,16 @@ goog.require('os.ui.windowSelector');
  * @enum {string}
  */
 os.ui.slick.SlickGridEvent = {
+  BEFORE_CELL_EDITED: 'slickgrid.beforeCellEdited',
+  CELL_CHANGED: 'slickgrid.cellChanged',
+  CELL_EDITOR_DESTROYED: 'slickgrid.cellEditorDestroyed',
   COMMIT_EDIT: 'slickgrid.commitEdit',
   COPY_ROWS: 'slickgrid.copyRows',
   HIGHLIGHT_CHANGE: 'slickgrid.highlightChange',
   INVALIDATE_ROWS: 'slickgrid.invalidateRows',
   INVALIDATE_COLUMNS: 'slickgrid.invalidateColumns',
   ORDER_CHANGE: 'slickgrid.orderChange',
+  REFRESH_DATA: 'slickgrid.refreshData',
   SELECTION_CHANGE: 'slickgrid.selectionChange',
   SCROLL_TO: 'slickgrid.scrollToItem',
   SCROLL_TO_CELL: 'slickgrid.scrollToCell',
@@ -208,12 +212,6 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
   }
 
   var options = this.getOptions();
-  if (options['editable']) {
-    // editable grids have additional CSS styles. add the class to enable them.
-    this.element.addClass('editable');
-    this.scope.$on(os.ui.slick.SlickGridEvent.COMMIT_EDIT, this.onCommitEdit.bind(this));
-  }
-
   /**
    * @type {Slick.Grid}
    */
@@ -245,6 +243,18 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
     // this was intentionally moved after the click handler so our handler gets called first
     this.grid.setSelectionModel(this.selectionModel_);
     this.dataView.syncGridSelection(this.grid, false);
+  }
+
+  if (options['editable']) {
+    // editable grids have additional CSS styles. add the class to enable them.
+    this.element.addClass('editable');
+
+    this.grid.onCellChange.subscribe(this.cellChanged.bind(this));
+    this.grid.onBeforeEditCell.subscribe(this.beforeCellEdited.bind(this));
+    this.grid.onBeforeCellEditorDestroy.subscribe(this.cellEditorDestroyed.bind(this));
+
+    this.scope.$on(os.ui.slick.SlickGridEvent.REFRESH_DATA, this.refreshDataView.bind(this));
+    this.scope.$on(os.ui.slick.SlickGridEvent.COMMIT_EDIT, this.onCommitEdit.bind(this));
   }
 
   $scope.$on(os.ui.slick.SlickGridEvent.INVALIDATE_ROWS, this.invalidateRows.bind(this));
@@ -1256,6 +1266,54 @@ os.ui.slick.SlickGridCtrl.prototype.onGridSelectedChange = function(e, args) {
  */
 os.ui.slick.SlickGridCtrl.prototype.apply = function() {
   os.ui.apply(this.scope);
+};
+
+
+/**
+ * A given cell's editor has been created
+ *
+ * @param {*=} event The Event
+ * @param {Object=} data Properties of what cell is being affected
+ * @protected
+ */
+os.ui.slick.SlickGridCtrl.prototype.beforeCellEdited = function(event, data) {
+  this.scope.$emit(os.ui.slick.SlickGridEvent.BEFORE_CELL_EDITED, event, data);
+};
+
+
+/**
+ * A given cell's value has been changed
+ *
+ * @param {*=} event The Event
+ * @param {Object=} data Properties of what cell is being affected
+ * @protected
+ */
+os.ui.slick.SlickGridCtrl.prototype.cellChanged = function(event, data) {
+  this.scope.$emit(os.ui.slick.SlickGridEvent.CELL_CHANGED, event, data);
+};
+
+
+/**
+ * The cell is no longer being edited.
+ * This is triggered when an edit has been made or discarded.
+ *
+ * @param {*=} event The Event
+ * @param {Object=} scope Editor and Grid instances
+ * @protected
+ */
+os.ui.slick.SlickGridCtrl.prototype.cellEditorDestroyed = function(event, scope) {
+  this.scope.$emit(os.ui.slick.SlickGridEvent.CELL_EDITOR_DESTROYED, event, scope);
+};
+
+
+/**
+ * Triggers another render and refresh of the display
+ *
+ * @param {angular.Scope.Event} event
+ * @protected
+ */
+os.ui.slick.SlickGridCtrl.prototype.refreshDataView = function(event) {
+  this.dataView.refresh();
 };
 
 
