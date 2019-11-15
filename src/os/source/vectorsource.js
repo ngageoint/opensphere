@@ -1062,30 +1062,31 @@ os.source.Vector.scratchExtent_ = ol.extent.createEmpty();
 
 
 /**
+ * @param {ol.geom.Geometry} g
+ */
+os.source.Vector.updateScratchExtent_ = function(g) {
+  if (g) {
+    var e = os.extent.getFunctionalExtent(g);
+    if (e) {
+      ol.extent.extend(os.source.Vector.scratchExtent_, e);
+    }
+  }
+};
+
+
+/**
  * @param {ol.Feature} feature
  * @suppress {accessControls}
  */
 os.source.Vector.prototype.updateIndex = function(feature) {
   if (feature) {
-    var style = feature.getStyle();
-    var styles = Array.isArray(style) ? style : [style];
-
     var extent = os.source.Vector.scratchExtent_;
     extent[0] = Infinity;
     extent[1] = Infinity;
     extent[2] = -Infinity;
     extent[3] = -Infinity;
 
-    for (var s = 0, ss = styles.length; s < ss; s++) {
-      var geomFunc = styles[s].getGeometryFunction();
-      var g = geomFunc(feature);
-      if (g) {
-        var e = os.extent.getFunctionalExtent(g);
-        if (e) {
-          ol.extent.extend(extent, e);
-        }
-      }
-    }
+    os.feature.forEachGeometry(feature, os.source.Vector.updateScratchExtent_);
 
     if (!ol.extent.isEmpty(extent)) {
       var id = ol.getUid(feature);
