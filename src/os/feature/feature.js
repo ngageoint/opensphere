@@ -87,8 +87,7 @@ os.feature.flyTo = function(features) {
   if (os.feature.flyToOverride) {
     os.feature.flyToOverride(/** @type {Array<ol.Feature>} */ (features));
   } else {
-    var extent = features.map(os.fn.mapFeatureToGeometry).
-        reduce(os.fn.reduceExtentFromGeometries, ol.extent.createEmpty());
+    var extent = os.feature.getGeometries(features).reduce(os.fn.reduceExtentFromGeometries, ol.extent.createEmpty());
     var cmd = new os.command.FlyToExtent(extent);
     os.commandStack.addCommand(cmd);
   }
@@ -1333,4 +1332,26 @@ os.feature.forEachGeometry = function(feature, callback) {
       callback(mainGeom);
     }
   }
+};
+
+
+/**
+ * Gets all associated geometries for a feature or list of features.
+ * @param {(ol.Feature|Array<ol.Feature>)} features
+ * @return {!Array<ol.geom.Geometry>} The array of all the geometries.
+ */
+os.feature.getGeometries = function(features) {
+  const arr = [];
+  const callback = (geom) => {
+    arr.push(geom);
+    return true;
+  };
+
+  if (Array.isArray(features)) {
+    features.forEach((f) => os.feature.forEachGeometry(f, callback));
+  } else {
+    os.feature.forEachGeometry(features, callback);
+  }
+
+  return arr;
 };
