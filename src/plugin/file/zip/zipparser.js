@@ -33,7 +33,7 @@ plugin.file.zip.ZIPParser = function(config) {
   plugin.file.zip.ZIPParser.base(this, 'constructor');
 
   /**
-   * @type {Array.<Object>}
+   * @type {Array.<osx.import.FileWrapper>}
    * @private
    */
   this.files_ = [];
@@ -103,7 +103,7 @@ plugin.file.zip.ZIPParser.prototype.disposeInternal = function() {
 
 
 /**
- * @return {Array.<Object>}
+ * @return {Array.<osx.import.FileWrapper>}
  */
 plugin.file.zip.ZIPParser.prototype.getFiles = function() {
   return this.files_;
@@ -260,7 +260,7 @@ plugin.file.zip.ZIPParser.prototype.handleZipEntries = function(entries) {
 
 
 /**
- * @param {Object} entry
+ * @param {zip.Entry} entry
  * @param {*} content
  * @private
  */
@@ -288,7 +288,7 @@ plugin.file.zip.ZIPParser.prototype.processZIPEntry_ = function(entry, content) 
 
 
 /**
- * @param {Object} uio
+ * @param {osx.import.FileWrapper} uio
  * @param {Event} event
  * @private
  */
@@ -314,7 +314,6 @@ plugin.file.zip.ZIPParser.prototype.handleZIPText_ = function(uio, event) {
  * @private
  */
 plugin.file.zip.ZIPParser.prototype.toUIO_ = function(entry, content, callback) {
-  // TODO check import support for the file
   if (!entry || !entry.filename || !content || entry.directory) {
     if (callback) callback(null);
     return;
@@ -341,14 +340,14 @@ plugin.file.zip.ZIPParser.prototype.toUIO_ = function(entry, content, callback) 
   var onFile = function(file) {
     if (file) {
       // turn this into a better object for the UI
-      return {
+      return /** @type {osx.import.FileWrapper} */ ({
         'id': ol.getUid(file),
         'label': entry.filename,
         'valid': true,
         'enabled': true,
         'msg': '',
         'file': file
-      };
+      });
     }
     return null;
   };
@@ -364,7 +363,7 @@ plugin.file.zip.ZIPParser.prototype.toUIO_ = function(entry, content, callback) 
 /**
  * Add to UI list, and let UI know that files are unzipped
  *
- * @param {Object} uio
+ * @param {osx.import.FileWrapper|null} uio
  * @private
  */
 plugin.file.zip.ZIPParser.prototype.onComplete_ = function(uio) {

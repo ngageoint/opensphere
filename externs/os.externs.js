@@ -494,30 +494,18 @@ osx.ui.draw.GridOptions;
  * Namespace.
  * @type {Object}
  */
-osx.feature;
+osx.import;
 
 
 /**
  * @typedef {{
- *   radius: number,
- *   units: string
- * }}
- */
-osx.feature.RingDefinition;
-
-
-/**
- * @typedef {{
- *   enabled: boolean,
- *   type: string,
- *   interval: number,
- *   units: string,
- *   crosshair: boolean,
- *   arcs: boolean,
- *   labels: boolean,
- *   startAngle: number,
- *   widthAngle: number,
- *   rings: Array<osx.feature.RingDefinition>
- * }}
- */
-osx.feature.RingOptions;
+  *   id: (string|undefined),
+  *   label: (string|undefined),
+  *   valid: (boolean|undefined),
+  *   enabled: (boolean|undefined),
+  *   msg: (string|undefined),
+  *   file: os.file.File,
+  *   ui: (os.ui.im.IImportUI|undefined)
+  * }}
+  */
+osx.import.FileWrapper;
