@@ -3,7 +3,6 @@ goog.provide('plugin.file.zip.ui.ZIPImportUI');
 goog.require('os.ui.im.FileImportUI');
 goog.require('os.ui.window');
 goog.require('plugin.file.zip.ZIPParserConfig');
-goog.require('plugin.file.zip.mime');
 goog.require('plugin.file.zip.ui.zipImportDirective');
 
 
@@ -43,9 +42,7 @@ plugin.file.zip.ui.ZIPImportUI.prototype.launchUI = function(file, opt_config) {
 
   config['file'] = file; // set the file
 
-  config.update(function() {
-    // called when unzip parser finishes... don't need it at this point in the UI
-  });
+  config.update(null);
 
   var scopeOptions = {
     'config': config

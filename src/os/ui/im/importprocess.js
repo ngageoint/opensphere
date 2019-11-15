@@ -273,7 +273,7 @@ os.ui.im.ImportProcess.prototype.importFile = function(opt_config) {
       }
 
       if (this.deferred_) {
-        this.deferred_.callback({'file': this.file, 'ui': ui});
+        this.deferred_.callback(this.file);
       }
 
       try {

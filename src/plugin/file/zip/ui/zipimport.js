@@ -65,14 +65,28 @@ plugin.file.zip.ui.ZIPImportCtrl = function($scope, $element, $timeout, $attrs) 
   this.importers_;
 
   /**
+   * Group of objects related to each step in the chain of importers
+   *
    * @type {Object}
    * @private
    */
-  this.cur_ = {
-    importer: null,
-    listener: null,
-    timeout: null
-  };
+  this.curImporter_ = null;
+
+  /**
+   * Group of objects related to each step in the chain of importers
+   *
+   * @type {function()|null}
+   * @private
+   */
+  this.curListener_ = null;
+
+  /**
+   * Group of objects related to each step in the chain of importers
+   *
+   * @type {angular.$q.Promise|null}
+   * @private
+   */
+  this.curTimeout_ = null;
 
   /**
    * @type {plugin.file.zip.ZIPParserConfig}
@@ -81,7 +95,13 @@ plugin.file.zip.ui.ZIPImportCtrl = function($scope, $element, $timeout, $attrs) 
   this.config_ = /** @type {plugin.file.zip.ZIPParserConfig} */ ($scope['config']);
 
   /**
-   * @type {Array.<Object>|null}
+   * @type {number}
+   * @private
+   */
+  this.wait_ = 0;
+
+  /**
+   * @type {Array.<osx.import.FileWrapper>|null}
    */
   this['files'] = this.config_['files'];
 
@@ -94,11 +114,6 @@ plugin.file.zip.ui.ZIPImportCtrl = function($scope, $element, $timeout, $attrs) 
    * @type {boolean}
    */
   this['valid'] = false;
-
-  /**
-   * @type {number}
-   */
-  this['wait'] = 0;
 
   this.validate_();
 };
@@ -126,8 +141,13 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.finish = function() {
       var file = entry.file;
       var type = file.getType();
       var ui = this.im_.getImportUI(type);
-      if (ui) this.importers_.push({'file': file, 'ui': ui});
-      else unsupported[type] = true; // store the filetype to report to user later
+      if (ui) {
+        var importer = /** @type osx.import.FileWrapper */ ({
+          'file': file,
+          'ui': ui
+        });
+        this.importers_.push(importer);
+      } else unsupported[type] = true; // store the filetype to report to user later
     }
   }
 
@@ -149,7 +169,7 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.finish = function() {
  */
 plugin.file.zip.ui.ZIPImportCtrl.prototype.chain = function() {
   if (typeof this.importers_ == 'undefined' || this.importers_ == null || this.importers_.length == 0) {
-    if (typeof this.cur_.listener == 'function') this.cur_.listener(); // kill the listener that was created by the previous chain()
+    if (this.curListener_) this.curListener_(); // kill the listener that was created by the previous chain()
     this.close();
     return;
   }
@@ -160,24 +180,26 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.chain = function() {
     // file successfully read and importer kicked off... so one of two things happened:
     // 1. asycnhronous window process kicked off...
     // 2. assume the importer just did some processing then finished; so chain()
-    this.cur_.listener = this.scope_.$root.$on(os.ui.WindowEventType.OPEN, this.onWindowOpen_.bind(this));
+    this.curListener_ = this.scope_.$root.$on(os.ui.WindowEventType.OPEN, this.onWindowOpen_.bind(this));
 
     var wait = 1350;
-    this.cur_.timeout = this.timeout__(this.onWindowTimeout_.bind(this), wait);
+    this.curTimeout_ = this.timeout__(this.onWindowTimeout_.bind(this), wait);
   };
 
   var onFailure = function() {
     this.chain(); // continue
   };
 
-  this.cur_.importer = this.importers_.splice(0, 1)[0]; // remove the current importer from the queue
+  this.curImporter_ = this.importers_.splice(0, 1)[0]; // remove the current importer from the queue
 
-  var process = new os.im.ImportProcess(); // new os.ui.im.DuplicateImportProcess();
+  // TODO - Breaking Change -- Fix every place that uses DuplicateImportProcess to utilize events OR alter DuplicateImportProcess
+  // to handle the deferred object in all cases (without breaking any of the current uses).  Currently, the duplicate
+  // dialog is created by setEvent(), so the deferred is not called when that dialog is cancelled.  So for now, we
+  // have to use ImportProcess instead of DuplicateImportProcess here.
+  var process = new os.im.ImportProcess();
   process.setSkipDuplicates(true);
-  process.setEvent(new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE, this.cur_.importer['file']));
+  process.setEvent(new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE, this.curImporter_['file']));
 
-  // TODO because the duplicate dialog is created by setEvent(), the deferred is not called when
-  // the Duplicate dialog is cancelled... so just use ImportProcess for now
   var deferred = process.begin();
   deferred.then(onSuccess, onFailure, this); // called back when import process starts or fails...
 };
@@ -190,16 +212,11 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.chain = function() {
  * @return {boolean}
  */
 plugin.file.zip.ui.ZIPImportCtrl.prototype.windowMatches = function(event) {
-  var filename = (this.cur_.importer
-    && this.cur_.importer.file
-    && typeof this.cur_.importer.file.getFileName == 'function')
-      ? this.cur_.importer.file.getFileName()
-      : '';
+  var filename = (this.curImporter_.file) ? this.curImporter_.file.getFileName() : '';
   var config = (event && event.targetScope) ? event.targetScope.config : null;
 
   return (config
     && config.file
-    && typeof config.file.getFileName == 'function'
     && config.file.getFileName() == filename);
 };
 
@@ -212,13 +229,12 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.windowMatches = function(event) {
 plugin.file.zip.ui.ZIPImportCtrl.prototype.onWindowOpen_ = function(event) {
   // if the window scope has the expected file, then listen to that scope for window CLOSE
   if (this.windowMatches(event)) {
-    if (this.cur_.timeout) this.timeout__.cancel(this.cur_.timeout); // kill the timeout
-    if (typeof this.cur_.listener == 'function') this.cur_.listener(); // kill the listener that was created by the previous chain()
+    if (this.curTimeout_) this.timeout__.cancel(this.curTimeout_); // kill the timeout
+    if (this.curListener_) this.curListener_(); // kill the listener that was created by the previous chain()
 
-    this.cur_.listener = event.targetScope.$on(os.ui.WindowEventType.CLOSE, function(event) {
-      // because this is listening to the event.targetScope, this is definitely the window with the expected file, so chain
-      this.chain();
-    }.bind(this));
+    // because this is listening to the event.targetScope, this is definitely the window with
+    // the expected file, so simply chain
+    this.curListener_ = event.targetScope.$on(os.ui.WindowEventType.CLOSE, this.chain.bind(this));
   }
 };
 
@@ -227,7 +243,7 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.onWindowOpen_ = function(event) {
  * Handles calling he next chain() when an Importer is a background run (doesn't create a window)
  */
 plugin.file.zip.ui.ZIPImportCtrl.prototype.onWindowTimeout_ = function() {
-  if (typeof this.cur_.listener == 'function') this.cur_.listener(); // kill the listener that was created by the previous chain()
+  if (this.curListener_) this.curListener_(); // kill the listener that was created by the previous chain()
 
   // assume that the importer ran a background process that succeeded or failed without user input
   this.chain();
@@ -242,10 +258,13 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.onDestroy_ = function() {
   this.timeout__ = null;
   this.config_ = null;
   this.importers_ = null;
+  this.curImporter_ = null;
+  this.curListener_ = null;
+  this.curTimeout_ = null;
   this.files = null;
   this.loading = null;
   this.valid = null;
-  this.wait = null;
+  this.wait_ = 0;
 };
 
 
@@ -265,19 +284,15 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.validate_ = function() {
   this['loading'] = status != 0;
   this['valid'] = !this['loading'];
 
-  // this.scope_.$emit(os.ui.wiz.step.WizardStepEvent.VALIDATE, this['valid']);
-
   if (status == 1) {
-    if (this['wait'] < maxWait) this.timeout__(this.validate_.bind(this), wait);
+    if (this.wait_ < maxWait) this.timeout__(this.validate_.bind(this), wait);
     else {
       this['loading'] = false;
       var err = 'Unzipping took too long in browser.  Try unzipping locally first.';
       os.alert.AlertManager.getInstance().sendAlert(err, os.alert.AlertEventSeverity.ERROR);
     }
-    this['wait'] += wait;
+    this.wait_ += wait;
   }
-
-  // os.ui.apply(this.scope_);
 };
 
 

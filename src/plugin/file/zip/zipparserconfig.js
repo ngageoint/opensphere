@@ -21,7 +21,7 @@ plugin.file.zip.ZIPParserConfig = function() {
   this['status'] = -1;
 
   /**
-   * @type {Array.<any>}
+   * @type {Array.<osx.import.FileWrapper>}
    */
   this['files'] = [];
 };
