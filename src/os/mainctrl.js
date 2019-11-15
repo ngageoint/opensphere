@@ -162,6 +162,7 @@ goog.require('plugin.pelias.geocoder.Plugin');
 goog.require('plugin.places.PlacesPlugin');
 goog.require('plugin.position.PositionPlugin');
 goog.require('plugin.suncalc.Plugin');
+goog.require('plugin.text.transformer.TextTransformerPlugin');
 goog.require('plugin.track.TrackPlugin');
 goog.require('plugin.vectortools.VectorToolsPlugin');
 goog.require('plugin.weather.WeatherPlugin');
@@ -540,6 +541,7 @@ os.MainCtrl.prototype.addPlugins = function() {
   os.ui.pluginManager.addPlugin(plugin.suncalc.Plugin.getInstance());
   os.ui.pluginManager.addPlugin(plugin.track.TrackPlugin.getInstance());
   os.ui.pluginManager.addPlugin(plugin.openpage.Plugin.getInstance());
+  os.ui.pluginManager.addPlugin(plugin.text.transformer.TextTransformerPlugin.getInstance());
 };
 
 

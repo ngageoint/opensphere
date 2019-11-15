@@ -77,7 +77,8 @@
           ng-model="searchBox.searchTerm"
           ng-change="searchBox.refreshAutocomplete()"
           placeholder="{{searchBox.getPlaceholderText()}}"
-          data-provide="typeahead" />
+          data-provide="typeahead"
+          transform-input />
       <div class="input-group-append">
         <button ng-if="showClear" class="btn border border-left-0 form-control w-auto"
             type="button"

@@ -14,6 +14,7 @@ goog.require('os.search.SearchManager');
 goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.dragDropDirective');
+goog.require('os.ui.text.transformers.transformInputDirective');
 
 
 /**
