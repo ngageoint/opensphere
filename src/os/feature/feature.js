@@ -301,6 +301,10 @@ os.feature.createEllipse = function(feature, opt_replace) {
         ellipse = new os.geom.Ellipse(center, radius);
       }
     }
+
+    if (ellipse) {
+      ellipse.values_[os.data.RecordField.ALTITUDE_MODE] = geom.values_[os.data.RecordField.ALTITUDE_MODE];
+    }
   }
 
   // if an ellipse couldn't be created, use the original geometry so it's still rendered on the map
@@ -1170,4 +1174,43 @@ os.feature.validateGeometries = function(feature, opt_quiet) {
     feature.setGeometry(geom);
   }
   return count;
+};
+
+
+/**
+ * @param {ol.Feature} feature
+ * @param {function(!ol.geom.Geometry):(boolean|undefined)} callback Return
+ *   false to shortcut the loop
+ */
+os.feature.forEachGeometry = function(feature, callback) {
+  if (feature) {
+    var mainGeom = feature.getGeometry();
+    var mainGeomSeen = false;
+
+    var style = feature.getStyle();
+    var styles = Array.isArray(style) ? style : [style];
+
+    for (var s = 0, ss = styles.length; s < ss; s++) {
+      if (styles[s]) {
+        var geomFunc = styles[s].getGeometryFunction();
+        if (geomFunc) {
+          var geom = geomFunc(feature);
+          if (geom) {
+            if (geom === mainGeom) {
+              mainGeomSeen = true;
+            }
+
+            var retVal = callback(geom);
+            if (retVal != null && !retVal) {
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    if (mainGeom && !mainGeomSeen) {
+      callback(mainGeom);
+    }
+  }
 };
