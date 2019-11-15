@@ -44,7 +44,8 @@ plugin.file.kml.mime.KMZ_TYPE = 'application/vnd.google-earth.kmz';
 
 /**
  * Determine if this file is a KMZ file.  Currently, the logic is:
- * Must contain *.kml file(s) and have a *.kmz filename
+ * 1. Must contain *.kml file(s) AND
+ * 2. Must have a *.kmz filename OR have the kmz application-type
  *
  * @param {ArrayBuffer} buffer
  * @param {os.file.File=} opt_file
@@ -56,7 +57,10 @@ plugin.file.kml.detectKmz = function(buffer, opt_file, opt_context) {
   var kmzRegex = /\.kmz$/i;
   var kmlRegex = /\.kml$/i;
 
-  if (opt_file && kmzRegex.test(opt_file.getFileName())) {
+  if (opt_file && (
+    kmzRegex.test(opt_file.getFileName()) ||
+    plugin.file.kml.mime.TYPE == opt_file.getContentType()
+  )) {
     if (opt_context && Array.isArray(opt_context)) {
       var entries = /** @type {!Array<!zip.Entry>} */ (opt_context);
       for (var i = 0, n = entries.length; i < n; i++) {
