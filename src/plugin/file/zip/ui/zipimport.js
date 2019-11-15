@@ -59,7 +59,7 @@ plugin.file.zip.ui.ZIPImportCtrl = function($scope, $element, $timeout, $attrs) 
   this.im_ = os.ui.im.ImportManager.getInstance();
 
   /**
-   * @type {!Array<Object>|null}
+   * @type {!Array<osx.import.FileWrapper>|null}
    * @private
    */
   this.importers_;
@@ -67,7 +67,7 @@ plugin.file.zip.ui.ZIPImportCtrl = function($scope, $element, $timeout, $attrs) 
   /**
    * Group of objects related to each step in the chain of importers
    *
-   * @type {Object}
+   * @type {osx.import.FileWrapper|null}
    * @private
    */
   this.curImporter_ = null;
@@ -174,7 +174,7 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.chain = function() {
     return;
   }
 
-  var onSuccess = function(im) {
+  var onSuccess = function() {
     // TODO if there are other paths through importers in the future, then update this code
     //
     // file successfully read and importer kicked off... so one of two things happened:
