@@ -55,5 +55,6 @@ $list-group-action-hover-color: $white;
 
 // Start Theme Variable Overides
 $u-theme-variables--bg-offset: $gray-100;
-$u-theme-variables--navtop-subnav-color: lighten($dark, 10%);
+$u-theme-variables--navtop-subnav-color: $gray-200;
+$app-color-default: yiq($u-theme-variables--navtop-subnav-color);
 // End Theme Variable Overides
