@@ -537,6 +537,14 @@ plugin.cesium.sync.VectorSynchronizer.prototype.removeFeature = function(feature
  */
 plugin.cesium.sync.VectorSynchronizer.prototype.shouldShowFeature = function(feature) {
   if (this.source instanceof os.source.Vector) {
+    //
+    // show the feature if:
+    //  - it is not hidden
+    //  - the source is not time enabled, or it is not in the animating state
+    //
+    // when vector sources are animating, they will fire animation events to update feature visibility. all features
+    // should initialize to hidden and their visibility will update as these events are fired.
+    //
     return !this.source.isHidden(feature) && (!this.source.getTimeEnabled() || !this.source.getAnimationEnabled());
   }
 
