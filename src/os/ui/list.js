@@ -50,7 +50,7 @@ os.ui.list.dispatcher_ = new goog.events.EventTarget();
  * @param {number=} opt_priority The sort priority (lowest to highest)
  */
 os.ui.list.add = function(id, markup, opt_priority) {
-  var map = os.ui.list.map_;
+  const map = os.ui.list.map_;
 
   if (!(id in map)) {
     map[id] = [];
@@ -71,9 +71,9 @@ os.ui.list.add = function(id, markup, opt_priority) {
  * @param {string} markup The directive or markup to delete
  */
 os.ui.list.remove = function(id, markup) {
-  var map = os.ui.list.map_[id];
+  const map = os.ui.list.map_[id];
   if (map) {
-    var item = ol.array.find(map, function(item) {
+    const item = ol.array.find(map, function(item) {
       return item.markup == markup;
     });
     if (item) {
@@ -96,7 +96,7 @@ os.ui.list.remove = function(id, markup) {
  * @param {string} id The list ID to remove
  */
 os.ui.list.removeList = function(id) {
-  var map = os.ui.list.map_[id];
+  const map = os.ui.list.map_[id];
   if (map) {
     map.forEach(function(item) {
       if (item) {
@@ -125,7 +125,7 @@ os.ui.list.removeList = function(id) {
  */
 os.ui.list.copy = function(sourceId, targetId) {
   if (sourceId !== targetId) {
-    var items = os.ui.list.get(sourceId);
+    const items = os.ui.list.get(sourceId);
     if (items) {
       items.forEach(function(item) {
         os.ui.list.add(targetId, item.markup, item.priority);
@@ -163,8 +163,8 @@ os.ui.list.get = function(id) {
  * @return {boolean} if the markup was found or not
  */
 os.ui.list.exists = function(id, markup) {
-  var found = null;
-  var map = os.ui.list.map_[id];
+  let found = null;
+  const map = os.ui.list.map_[id];
   if (map) {
     found = ol.array.find(map, function(item) {
       return item.markup == markup;
@@ -209,10 +209,10 @@ os.ui.Module.directive('list', [os.ui.listDirective]);
  */
 os.ui.listLink = function(scope, element, attr, ctrl) {
   // add the list stuff to the scope
-  var id = attr['listId'];
+  const id = attr['listId'];
   ctrl.id = id;
 
-  var list = os.ui.list.get(id) || scope.$eval(attr['listItems']);
+  const list = os.ui.list.get(id) || scope.$eval(attr['listItems']);
 
   if (list) {
     ctrl.items = /** @type {!Array<!os.ui.list.ListEntry>} */ (list);
@@ -220,6 +220,22 @@ os.ui.listLink = function(scope, element, attr, ctrl) {
 
   ctrl.prefix = attr['listPrefix'];
   ctrl.suffix = attr['listSuffix'];
+
+  for (const key in attr) {
+    if (!key.match(/^listAttr.+$/)) {
+      continue;
+    }
+    let camel = key.replace(/^listAttr/, '');
+    camel = camel.charAt(0).toLowerCase() + camel.substr(1);
+    ctrl.attrs[camel] = scope.$eval(attr[key]);
+    scope.$watch(function() {
+      const kebab = key.replace(/([A-Z])/g, '-$1').toLowerCase();
+      return scope.$eval(element.attr(kebab));
+    }, function(newValue, oldValue) {
+      ctrl.attrs[camel] = newValue;
+      ctrl.update_();
+    }, true);
+  }
   ctrl.update_();
 };
 
@@ -277,6 +293,12 @@ os.ui.ListCtrl = function($scope, $element, $compile) {
    */
   this.suffix = '';
 
+  /**
+   * @type {!Object<string, *>}
+   * @protected
+   */
+  this.attrs = {};
+
   os.ui.list.dispatcher_.listen(goog.events.EventType.PROPERTYCHANGE, this.onChange, false, this);
   $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
@@ -308,8 +330,8 @@ os.ui.ListCtrl.prototype.onDestroy_ = function() {
  * @protected
  */
 os.ui.ListCtrl.prototype.onChange = function(evt) {
-  var oldItem = evt.getOldValue();
-  var newItem = evt.getNewValue();
+  const oldItem = evt.getOldValue();
+  const newItem = evt.getNewValue();
   if (evt.getProperty() === this.id) {
     if (oldItem && !newItem) {
       goog.dom.removeNode(oldItem.element[0]);
@@ -328,25 +350,32 @@ os.ui.ListCtrl.prototype.onChange = function(evt) {
  */
 os.ui.ListCtrl.prototype.update_ = function() {
   // Always attempt to get the updated list of items, or use the scope list of items if it doesnt exist
-  var items = os.ui.list.get(this.id || '') || this.items;
+  const items = os.ui.list.get(this.id || '') || this.items;
 
-  var prefix = this.prefix || '';
-  var suffix = this.suffix || '';
+  const prefix = this.prefix || '';
+  const suffix = this.suffix || '';
 
   if (items) {
-    for (var i = 0, n = items.length; i < n; i++) {
-      var item = items[i];
+    const n = items.length;
+    for (let i = 0; i < n; i++) {
+      const item = items[i];
+
+      if (item.scope && Object.keys(this.attrs).length) {
+        Object.assign(item.scope, this.attrs);
+        os.ui.apply(item.scope);
+      }
 
       if (!item.element) {
-        var dir = item.markup;
+        let dir = item.markup;
         if (dir.indexOf('<') === -1) {
           dir = '<' + dir + '></' + dir + '>';
         }
 
-        var html = prefix + dir + suffix;
+        const html = prefix + dir + suffix;
 
         if (this.scope) {
-          var elScope = this.scope.$new();
+          const elScope = this.scope.$new();
+          Object.assign(elScope, this.attrs);
           item.element = this.compile_(html)(elScope);
           item.scope = elScope;
         }

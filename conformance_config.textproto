@@ -128,13 +128,6 @@ requirement: {
 
 requirement: {
   type: BANNED_NAME
-  value: 'Object.assign'
-  error_message: 'Object.assign is not permitted. Use '
-                 'ol.obj.assign instead.'
-}
-
-requirement: {
-  type: BANNED_NAME
   value: 'goog.abstractMethod'
   error_message: 'goog.abstractMethod is not permitted. Use @abstract on the class and method instead.'
 }
