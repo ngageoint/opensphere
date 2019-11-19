@@ -82,6 +82,10 @@ $web-font-path: 'https://fonts.googleapis.com/css?family=Open+Sans:400,700' !def
     background-image: none;
     border: 0;
   }
+
+  .nav-link.disabled {
+    background: none;
+  }
 }
 
 // Nav tabs within a modal (or window)

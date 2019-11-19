@@ -121,8 +121,9 @@ os.ui.util.OffsetMarginCtrl.prototype.onDestroy_ = function() {
  * @private
  */
 os.ui.util.OffsetMarginCtrl.prototype.setWatchEl_ = function() {
-  this.bufferTopElement_ = $(this.scope_['offsetTopEl']);
-  this.bufferBotElement_ = $(this.scope_['offsetBotEl']);
+  this.bufferTopElement_ = /** @type {?angular.JQLite} */ ($(this.scope_['offsetTopEl']));
+  this.bufferBotElement_ = /** @type {?angular.JQLite} */ ($(this.scope_['offsetBotEl']));
+
   if (this.bufferTopElement_[0] && this.bufferBotElement_[0]) {
     os.ui.resize(this.bufferTopElement_, this.resizeFn_);
     os.ui.resize(this.bufferBotElement_, this.resizeFn_);

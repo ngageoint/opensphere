@@ -3,6 +3,7 @@ goog.provide('os.ui.WindowEventType');
 goog.provide('os.ui.window');
 goog.provide('os.ui.window.HeaderBtnConfig');
 goog.provide('os.ui.windowCommonElements');
+goog.provide('os.ui.windowCommonOptionalElements');
 goog.provide('os.ui.windowDirective');
 goog.provide('os.ui.windowSelector');
 goog.provide('os.ui.windowZIndexMax');
@@ -39,13 +40,20 @@ os.ui.windowSelector = {
 
 
 /**
- * Common selectors for window compontents
- * @enum {string}
+ * Common selectors for window elements which are always considered for positioning application UI's.
+ * Individual applications may append items to this array as needed.
+ * @type {!Array.<!string>}
  */
-os.ui.windowCommonElements = {
-  NAVTOP: '.js-navtop',
-  NAVBOTTOM: '.js-navbottom'
-};
+os.ui.windowCommonElements = ['.js-navtop', '.js-navbottom'];
+
+/**
+ * Common selectors for elements which are optionally considered for positioning application UI's.
+ * Individual applicatoins may append items to this array as needed, and any positioning logic should determine
+ * whether or not to use these optional elements on a case-by-case basis.
+ * For example, some fixed, overlaying panels may not want to consider these elements, but other inline panels do.
+ * @type {!Array.<!string>}
+ */
+os.ui.windowCommonOptionalElements = [];
 
 
 /**
@@ -1281,7 +1289,7 @@ os.ui.WindowCtrl.prototype.constrainWindow_ = function() {
   // If window is height auto, force max-height on the modal-content
   if (this.scope['height'] == 'auto') {
     var otherHeight = 0;
-    goog.object.getValues(os.ui.windowCommonElements).forEach(function(otherEl) {
+    os.ui.windowCommonElements.forEach(function(otherEl) {
       otherHeight += ($(/** @type {string} */ (otherEl)).outerHeight());
     });
 
