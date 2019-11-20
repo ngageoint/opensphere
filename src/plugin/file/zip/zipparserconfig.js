@@ -21,6 +21,7 @@ plugin.file.zip.ZIPParserConfig = function() {
   this['status'] = -1;
 
   /**
+   * The destination where ZIPParser drops the unzipped files
    * @type {Array.<osx.import.FileWrapper>}
    */
   this['files'] = [];
@@ -29,30 +30,11 @@ goog.inherits(plugin.file.zip.ZIPParserConfig, os.parse.FileParserConfig);
 
 
 /**
- * @param {Function} callback
+ * Helper function to clean up memory if the parser is taking too long, user cancels/abandons the thread, etc
+ * @public
  */
-plugin.file.zip.ZIPParserConfig.prototype.update = function(callback) {
-  // re-initialize
+plugin.file.zip.ZIPParserConfig.prototype.cleanup = function() {
+  this['file'] = null;
   if (this['files'].length > 0) this['files'] = [];
-  this['status'] = -1;
-
-  var parser = new plugin.file.zip.ZIPParser(this);
-
-  goog.events.listenOnce(parser, os.events.EventType.COMPLETE, goog.bind(function() {
-    var files = parser.getFiles();
-    if (files) {
-      for (var i = 0; i < files.length; i++) this['files'].push(files[i]);
-    }
-
-    if (callback) callback();
-
-    this['status'] = 0;
-
-    parser.dispose();
-  }, this), false, this);
-
-  // tell the parser to start unzipping this file
-  parser.setSource(this['file'].getContent());
-
-  this['status'] = 1;
+  this['status'] = -1; // uninitialized state
 };
