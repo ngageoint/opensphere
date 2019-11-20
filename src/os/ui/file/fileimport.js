@@ -101,7 +101,7 @@ os.ui.file.FileImportCtrl = function($scope, $element, $timeout) {
   goog.events.listen(this.fileInputEl_, goog.events.EventType.CHANGE, this.onFileChange_, false, this);
 
   $scope.$emit(os.ui.WindowEventType.READY);
-  $scope.$on('$destroy', this.onDestroy_.bind(this));
+  $scope.$on('$destroy', this.onDestroy.bind(this));
 };
 
 
@@ -119,7 +119,7 @@ os.ui.file.FileImportCtrl.LOGGER_ = goog.log.getLogger('os.ui.file.FileImportCtr
  *
  * @protected
  */
-os.ui.file.FileImportCtrl.prototype.onDestroy_ = function() {
+os.ui.file.FileImportCtrl.prototype.onDestroy = function() {
   goog.events.unlisten(this.fileInputEl_, goog.events.EventType.CHANGE, this.onFileChange_, false, this);
   goog.dom.removeNode(this.fileInputEl_);
   this.fileInputEl_ = null;

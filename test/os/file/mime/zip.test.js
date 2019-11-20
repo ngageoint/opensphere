@@ -18,6 +18,7 @@ describe('os.file.mime.zip', function() {
   it('should detect files that are zip files even if it only has a partial', function() {
     os.file.mime.mock.testFiles([
       '/base/test/resources/zip/test.zip',
+      '/base/test/resources/zip/test.docx',
       '/base/test/resources/zip/test.kmz'],
     function(buffer, filename) {
       var result = Number.POSITIVE_INFINITY;

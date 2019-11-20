@@ -4,7 +4,7 @@
         <p>Unzipping file(s)... <span ng-show="!ctrl.loading">{{ctrl.valid ? 'SUCCESS' : 'ERROR'}}</span></p>
         <p ng-show="ctrl.loading"><i class="fa fa-spinner fa-spin" /></p>
     </div>
-    <div ng-if="!ctrl.loading">
+    <div ng-if="!ctrl.loading && ctrl.valid">
       <div>
         <p class="float-left">Please select file(s) to import</p>
         <p class="float-right">
@@ -18,9 +18,12 @@
         </div>
       </form>
     </div>
+    <div ng-if="!ctrl.loading && !ctrl.valid">
+      <p>Could not read ZIP file.  Try unzipping it locally first.</p>
+    </div>
   </div>
   <div class="modal-footer d-flex">
-    <button class="btn btn-primary" ng-click="ctrl.finish()" ng-disabled="filesForm.$invalid" title="Import the selected file(s)">
+    <button class="btn btn-primary" ng-click="ctrl.finish()" ng-disabled="!ctrl.valid" title="Import the selected file(s)">
       <i class="fa fa-check"></i>
       OK
     </button>

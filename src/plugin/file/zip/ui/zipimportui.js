@@ -42,8 +42,6 @@ plugin.file.zip.ui.ZIPImportUI.prototype.launchUI = function(file, opt_config) {
 
   config['file'] = file; // set the file
 
-  config.update(null);
-
   var scopeOptions = {
     'config': config
   };

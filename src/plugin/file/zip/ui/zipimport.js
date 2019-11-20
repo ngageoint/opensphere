@@ -13,6 +13,16 @@ goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportEventType');
 goog.require('os.ui.im.ImportManager');
 goog.require('os.ui.wiz.wizardDirective');
+goog.require('plugin.file.zip.ZIPParser');
+
+
+/**
+ * @typedef {{
+ *   file: os.file.File,
+ *   ui: os.ui.im.IImportUI
+ * }}
+ */
+plugin.file.zip.ImporterPair;
 
 
 /**
@@ -59,7 +69,7 @@ plugin.file.zip.ui.ZIPImportCtrl = function($scope, $element, $timeout, $attrs) 
   this.im_ = os.ui.im.ImportManager.getInstance();
 
   /**
-   * @type {!Array<osx.import.FileWrapper>|null}
+   * @type {!Array<plugin.file.zip.ImporterPair>|null}
    * @private
    */
   this.importers_;
@@ -67,7 +77,7 @@ plugin.file.zip.ui.ZIPImportCtrl = function($scope, $element, $timeout, $attrs) 
   /**
    * Group of objects related to each step in the chain of importers
    *
-   * @type {osx.import.FileWrapper|null}
+   * @type {plugin.file.zip.ImporterPair|null}
    * @private
    */
   this.curImporter_ = null;
@@ -115,7 +125,7 @@ plugin.file.zip.ui.ZIPImportCtrl = function($scope, $element, $timeout, $attrs) 
    */
   this['valid'] = false;
 
-  this.validate_();
+  this.init_();
 };
 goog.inherits(plugin.file.zip.ui.ZIPImportCtrl, os.ui.file.FileImportCtrl);
 
@@ -142,10 +152,7 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.finish = function() {
       var type = file.getType();
       var ui = this.im_.getImportUI(type);
       if (ui) {
-        var importer = /** @type osx.import.FileWrapper */ ({
-          'file': file,
-          'ui': ui
-        });
+        var importer = /** @type plugin.file.zip.ImporterPair */ ({file, ui});
         this.importers_.push(importer);
       } else unsupported[type] = true; // store the filetype to report to user later
     }
@@ -252,8 +259,8 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.onWindowTimeout_ = function() {
 /**
  * @inheritDoc
  */
-plugin.file.zip.ui.ZIPImportCtrl.prototype.onDestroy_ = function() {
-  plugin.file.zip.ui.ZIPImportCtrl.base(this, 'onDestroy_');
+plugin.file.zip.ui.ZIPImportCtrl.prototype.onDestroy = function() {
+  plugin.file.zip.ui.ZIPImportCtrl.base(this, 'onDestroy');
 
   this.timeout__ = null;
   this.config_ = null;
@@ -269,29 +276,59 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.onDestroy_ = function() {
 
 
 /**
+ * Starts the unzip process...
+ *
+ * @private
+ */
+plugin.file.zip.ui.ZIPImportCtrl.prototype.init_ = function() {
+  // wait for the unzip to finish, or timeout
+  this.validate_();
+
+  this.parser_ = new plugin.file.zip.ZIPParser(this.config_);
+  this.parser_.unzip();
+};
+
+
+/**
+ * @param {string=} msg
+ * @private
+ */
+plugin.file.zip.ui.ZIPImportCtrl.prototype.onError_ = function(msg) {
+  this['loading'] = false;
+  this['valid'] = false;
+
+  this.config_.cleanup(); // clean up the config
+  this.parser_.dispose(); // clean up the unzipper
+
+  if (msg) os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
+};
+
+
+/**
  * Checks if files have been chosen/validated.
  *
  * @private
  */
 plugin.file.zip.ui.ZIPImportCtrl.prototype.validate_ = function() {
   var wait = 750;
-  var maxWait = 80 * wait;
+  var maxWait = 30 * wait; // 22.5 seconds
 
   if (!this.config_) return;
 
   var status = this.config_['status'];
+  var loading = (status == -1 || status == 1); // initializing or parsing
 
-  this['loading'] = status != 0;
-  this['valid'] = !this['loading'];
+  this['loading'] = loading;
+  this['valid'] = !loading;
 
-  if (status == 1) {
+  if (loading) {
     if (this.wait_ < maxWait) this.timeout__(this.validate_.bind(this), wait);
     else {
-      this['loading'] = false;
-      var err = 'Unzipping took too long in browser.  Try unzipping locally first.';
-      os.alert.AlertManager.getInstance().sendAlert(err, os.alert.AlertEventSeverity.ERROR);
+      this.onError_('Unzipping file took too long in browser.  Try unzipping locally first.');
     }
     this.wait_ += wait;
+  } else if (status == -2) {
+    this.onError_('Failed to unzip file in browser.  Try unzipping it locally first.');
   }
 };
 

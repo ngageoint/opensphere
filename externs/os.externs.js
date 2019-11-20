@@ -499,13 +499,12 @@ osx.import;
 
 /**
  * @typedef {{
-  *   id: (string|undefined),
-  *   label: (string|undefined),
-  *   valid: (boolean|undefined),
-  *   enabled: (boolean|undefined),
+  *   id: string,
+  *   label: string,
+  *   valid: boolean,
+  *   enabled: boolean,
   *   msg: (string|undefined),
-  *   file: os.file.File,
-  *   ui: (os.ui.im.IImportUI|undefined)
+  *   file: os.file.File
   * }}
   */
 osx.import.FileWrapper;

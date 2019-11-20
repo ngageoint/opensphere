@@ -33,6 +33,12 @@ plugin.file.zip.ZIPParser = function(config) {
   plugin.file.zip.ZIPParser.base(this, 'constructor');
 
   /**
+   * @type {plugin.file.zip.ZIPParserConfig}
+   * @private
+   */
+  this.config_ = config;
+
+  /**
    * @type {Array.<osx.import.FileWrapper>}
    * @private
    */
@@ -137,6 +143,38 @@ plugin.file.zip.ZIPParser.prototype.parseNext = function() {
 
 
 /**
+ * Unzip the file in the ZIPParserConfig
+ * @public
+ */
+plugin.file.zip.ZIPParser.prototype.unzip = function() {
+  var content = (this.config_['file']) ? this.config_['file'].getContent() : null;
+
+  if (content) {
+    // listen for complete or error...
+    goog.events.listenOnce(
+        this,
+        [os.events.EventType.COMPLETE, os.events.EventType.ERROR],
+        goog.bind(
+            function(evt) {
+              // push the unzipped files to the UI
+              var files = this.getFiles();
+              if (files) {
+                for (var i = 0; i < files.length; i++) this.config_['files'].push(files[i]);
+              }
+              this.config_['status'] = (evt.type == os.events.EventType.COMPLETE) ? 0 : -2; // done
+              this.dispose(); // clean up the memory
+            },
+            this),
+        false, this);
+
+    this.config_['status'] = 1; // flag UI that parser is working...
+
+    this.setSource(content); // begin the unzip
+  }
+};
+
+
+/**
  * @inheritDoc
  */
 plugin.file.zip.ZIPParser.prototype.setSource = function(source) {
@@ -190,10 +228,13 @@ plugin.file.zip.ZIPParser.prototype.initialize_ = function() {
  * @inheritDoc
  */
 plugin.file.zip.ZIPParser.prototype.onError = function() {
-  if (this.zipEntries_ > 0) this.zipEntries_--;
+  // clear memory and tell anyone listening that there's a problem
+  this.zipEntries_ = 0;
+  this.files_ = [];
+  this.processingZip_ = false;
+  this.initialized_ = true;
 
-  this.processingZip_ = (this.semaphore_ || this.zipEntries_ > 0);
-  this.initialized_ = !this.processingZip_;
+  this.dispatchEvent(new goog.events.Event(os.events.EventType.ERROR));
 
   plugin.file.zip.ZIPParser.base(this, 'onError');
 };
@@ -231,7 +272,7 @@ plugin.file.zip.ZIPParser.prototype.logError_ = function(msg) {
  * @inheritDoc
  */
 plugin.file.zip.ZIPParser.prototype.createZipReader = function(source) {
-  this.processingZip_ = true;
+  this.processingZip_ = true; // flag processing
   plugin.file.zip.ZIPParser.base(this, 'createZipReader', source);
 };
 
@@ -282,7 +323,7 @@ plugin.file.zip.ZIPParser.prototype.processZIPEntry_ = function(entry, content) 
     this.toUIO_(entry, content, callback);
   } else {
     this.logError_('There was a problem unzipping the file!');
-    this.onError();
+    this.onFailure_();
   }
 };
 
@@ -300,7 +341,7 @@ plugin.file.zip.ZIPParser.prototype.handleZIPText_ = function(uio, event) {
     this.onComplete_(uio);
   } else {
     this.logError_('There was a problem reading the ZIP content!');
-    this.onError();
+    this.onFailure_();
   }
 };
 
@@ -375,5 +416,22 @@ plugin.file.zip.ZIPParser.prototype.onComplete_ = function(uio) {
   if (!this.semaphore_ && this.zipEntries_ == 0) {
     this.processingZip_ = false;
     this.dispatchEvent(new goog.events.Event(os.events.EventType.COMPLETE));
+  }
+};
+
+
+/**
+ * This entry failed for some reason; decrement counters and continue unzipping
+ *
+ * @private
+ */
+plugin.file.zip.ZIPParser.prototype.onFailure_ = function() {
+  if (this.zipEntries_ > 0) this.zipEntries_--;
+
+  this.processingZip_ = (this.semaphore_ || this.zipEntries_ > 0);
+  this.initialized_ = !this.processingZip_;
+
+  if (this.initialized_ && this.files_.length == 0) {
+    this.onError();
   }
 };
