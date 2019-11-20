@@ -356,5 +356,27 @@ describe('os.style', function() {
       os.style.mergeConfig(from, to);
       expect(to).toEqual(from);
     });
+
+    it('should detect non-zero opacity fills', function() {
+      var fill = new ol.style.Fill();
+      fill.setColor('rgba(1,1,1,1)');
+      var style = new ol.style.Style();
+      style.setFill(fill);
+
+      expect(os.style.hasNonZeroFillOpacity(style)).toBe(true);
+      fill.setColor('rgba(1,1,1,0)');
+      expect(os.style.hasNonZeroFillOpacity(style)).toBe(false);
+    });
+
+    it('should detect non-zero opacity strokes', function() {
+      var stroke = new ol.style.Stroke();
+      stroke.setColor('rgba(1,1,1,1)');
+      var style = new ol.style.Style();
+      style.setStroke(stroke);
+
+      expect(os.style.hasNonZeroStrokeOpacity(style)).toBe(true);
+      stroke.setColor('rgba(1,1,1,0)');
+      expect(os.style.hasNonZeroStrokeOpacity(style)).toBe(false);
+    });
   });
 });
