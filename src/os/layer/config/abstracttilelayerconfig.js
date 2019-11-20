@@ -111,6 +111,10 @@ os.layer.config.AbstractTileLayerConfig.prototype.initializeConfig = function(op
   var width = this.getTileWidth(options);
   var height = this.getTileHeight(options);
 
+  if (width === 512 && options['zoomOffset'] == null) {
+    options['zoomOffset'] = -1;
+  }
+
   var projection = os.proj.getBestSupportedProjection(options);
   if (!projection) {
     throw new Error('No projections supported by the layer are defined!');

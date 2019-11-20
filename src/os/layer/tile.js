@@ -1110,12 +1110,12 @@ os.layer.Tile.prototype.restore = function(config) {
 
   if (config['minZoom'] != null) {
     var z = Math.min(tgMax, Math.max(tgMin, Math.round(config['minZoom']) + offset));
-    this.setMaxResolution(this.getSource().getTileGrid().getResolution(z));
+    this.setMaxResolution(grid.getResolution(z));
   }
 
   if (config['maxZoom'] != null) {
     z = Math.min(tgMax, Math.max(tgMin, Math.round(config['maxZoom']) + offset));
-    this.setMinResolution(this.getSource().getTileGrid().getResolution(z));
+    this.setMinResolution(grid.getResolution(z));
   }
 
   var style = config['style'] || '';
