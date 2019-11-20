@@ -84,7 +84,7 @@ os.ui.feature.MultiFeatureInfoCtrl = function($scope, $element) {
    * @type {Object}
    */
   this['options'] = {
-    'dataItemColumnValueExtractor': this.getValueFromFeature_.bind(this),
+    'dataItemColumnValueExtractor': this.getValueFromFeature.bind(this),
     'multiColumnSort': true,
     'multiSelect': false,
     'defaultFormatter': os.ui.slick.formatter.urlNewTabFormatter,
@@ -190,11 +190,11 @@ os.ui.feature.MultiFeatureInfoCtrl.prototype.onSearchDelay_ = function() {
  * @param {ol.Feature} feature
  * @param {(os.data.ColumnDefinition|string)} col
  * @return {*} The value
- * @private
+ * @protected
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.ui.feature.MultiFeatureInfoCtrl.prototype.getValueFromFeature_ = function(feature, col) {
+os.ui.feature.MultiFeatureInfoCtrl.prototype.getValueFromFeature = function(feature, col) {
   if (col['id'] == os.ui.slick.column.COLOR_ID) {
     var color = /** @type {Array<number>|string|undefined} */ (os.feature.getColor(feature, this.source));
     if (color) {
