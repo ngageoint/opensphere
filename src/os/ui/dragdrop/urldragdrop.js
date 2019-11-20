@@ -32,7 +32,8 @@ os.ui.urlDragDropDirective = function() {
       'ddCapture': '@',
       'ddElement': '@',
       'ddText': '@?',
-      'enabled': '=?'
+      'enabled': '=?',
+      'allowInternal': '<?'
     }
   };
 };
@@ -85,6 +86,10 @@ os.ui.UrlDragDrop = function($scope, $element) {
     goog.events.listen(this.element_[0], 'dragover', this.handleDrag_, false, this);
     goog.events.listen(this.element_[0], 'dragleave', this.handleDrag_, false, this);
 
+    if (!this.scope_['allowInternal']) {
+      goog.events.listen($('html')[0], 'dragstart', this.handleDragStart_, false, this);
+    }
+
     if (this.scope_['ddText']) {
       this.element_.attr('data-text', this.scope_['ddText']);
     } else {
@@ -103,6 +108,12 @@ os.ui.UrlDragDrop.CLEAR = 'urldragdrop.clear';
 
 
 /**
+ * @type {string}
+ */
+os.ui.UrlDragDrop.LOCAL = 'urldragdrop-local-element';
+
+
+/**
  * @param {goog.events.Event} event
  */
 os.ui.UrlDragDrop.prototype.onClear_ = function(event) {
@@ -110,6 +121,20 @@ os.ui.UrlDragDrop.prototype.onClear_ = function(event) {
     if (this.element_[0] != event.target) {
       goog.dom.classlist.remove(/** @type {Element} */ (this.element_[0]), os.ui.DragDropStyle.DRAG_DROP_CLASS);
     }
+  }
+};
+
+
+/**
+ * If this triggers than you know its from your webpage instead of another page / file
+ * So you can add a identifier to the dataTransfer to know its from this page
+ *
+ * @param {goog.events.BrowserEvent} event The drop event
+ * @private
+ */
+os.ui.UrlDragDrop.prototype.handleDragStart_ = function(event) {
+  if (this.scope_['enabled']) {
+    event.getBrowserEvent().dataTransfer.setData(os.ui.UrlDragDrop.LOCAL, '');
   }
 };
 
@@ -126,7 +151,8 @@ os.ui.UrlDragDrop.prototype.handleDrag_ = function(event) {
     browserEvent.preventDefault();
     browserEvent.stopPropagation();
 
-    if (!document.querySelector(os.ui.windowSelector.MODAL_BG) && browserEvent && browserEvent.currentTarget) {
+    if (this.isValidTarget_(event) && !document.querySelector(os.ui.windowSelector.MODAL_BG) &&
+        browserEvent && browserEvent.currentTarget) {
       if (browserEvent.type == 'dragover') {
         goog.dom.classlist.add(/** @type {Element} */ (browserEvent.currentTarget),
             os.ui.DragDropStyle.DRAG_DROP_CLASS);
@@ -137,6 +163,27 @@ os.ui.UrlDragDrop.prototype.handleDrag_ = function(event) {
         goog.dom.classlist.remove(/** @type {Element} */ (browserEvent.currentTarget),
             os.ui.DragDropStyle.DRAG_DROP_CLASS);
       }
+    }
+  }
+};
+
+
+/**
+ * If this is from the page its hosted on, ignore it
+ * @param {goog.events.BrowserEvent} event The drop event
+ * @return {boolean}
+ * @private
+ */
+os.ui.UrlDragDrop.prototype.isValidTarget_ = function(event) {
+  if (this.scope_['allowInternal']) {
+    return true;
+  } else {
+    var dt = event.getBrowserEvent().dataTransfer;
+    // If its a file, its valid
+    if (dt.files.length) {
+      return true;
+    } else {
+      return !dt.types.includes(os.ui.UrlDragDrop.LOCAL);
     }
   }
 };
@@ -156,7 +203,7 @@ os.ui.UrlDragDrop.prototype.handleDrop_ = function(event) {
 
     goog.dom.classlist.remove(/** @type {Element} */ (browserEvent.currentTarget), os.ui.DragDropStyle.DRAG_DROP_CLASS);
 
-    if (!document.querySelector(os.ui.windowSelector.MODAL_BG)) {
+    if (this.isValidTarget_(event) && !document.querySelector(os.ui.windowSelector.MODAL_BG)) {
       if (this.scope_['ddDrop'] != null) {
         this.scope_['ddDrop'](browserEvent);
       } else if (browserEvent.dataTransfer.files && browserEvent.dataTransfer.files.length > 0) {
@@ -192,6 +239,9 @@ os.ui.UrlDragDrop.prototype.destroy = function() {
   goog.events.unlisten(this.element_[0], 'drop', this.handleDrop_, this.scope_['ddCapture'] === 'true', this);
   goog.events.unlisten(this.element_[0], 'dragover', this.handleDrag_, false, this);
   goog.events.unlisten(this.element_[0], 'dragleave', this.handleDrag_, false, this);
+  if (!this.scope_['allowInternal']) {
+    goog.events.unlisten($('html')[0], 'dragstart', this.handleDragStart_, false, this);
+  }
   os.dispatcher.unlisten(os.ui.UrlDragDrop.CLEAR, this.onClear_, false, this);
   this.scope_ = null;
   this.element_ = null;
