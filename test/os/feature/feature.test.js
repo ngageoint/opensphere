@@ -477,13 +477,15 @@ describe('os.feature', function() {
       // defaults to null (no fill)
       expect(os.feature.getFillColor(feature)).toBeNull();
 
-      // ignores feature base color override
-      feature.set(os.data.RecordField.COLOR, testColor);
-      expect(os.feature.getFillColor(feature)).toBeNull();
 
       // empty config returns null
       feature.set(os.style.StyleType.FEATURE, featureConfig1);
       expect(os.feature.getFillColor(feature)).toBeNull();
+
+      // use auto color when set
+      feature.set(os.data.RecordField.COLOR, testColor);
+      expect(os.feature.getFillColor(feature)).toBe(testColor);
+      feature.unset(os.data.RecordField.COLOR);
 
       // should not return the stroke/image color
       featureConfig1.stroke = {
@@ -535,9 +537,10 @@ describe('os.feature', function() {
       // defaults to null (no stroke)
       expect(os.feature.getStrokeColor(feature)).toBeNull();
 
-      // ignores feature base color override
+      // use auto color when set
       feature.set(os.data.RecordField.COLOR, testColor);
-      expect(os.feature.getStrokeColor(feature)).toBeNull();
+      expect(os.feature.getStrokeColor(feature)).toBe(testColor);
+      feature.unset(os.data.RecordField.COLOR);
 
       // empty config returns null
       feature.set(os.style.StyleType.FEATURE, featureConfig1);
