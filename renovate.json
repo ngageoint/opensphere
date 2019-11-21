@@ -1,1 +1,4 @@
-{ "includeForks": true }
+{ 
+  "includeForks": true,
+  prConcurrentLimit : 0
+}
