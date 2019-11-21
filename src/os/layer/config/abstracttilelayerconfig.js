@@ -1,5 +1,6 @@
 goog.provide('os.layer.config.AbstractTileLayerConfig');
 
+goog.require('goog.Uri');
 goog.require('goog.log');
 goog.require('os.TileClass');
 goog.require('os.layer.Tile');
@@ -8,6 +9,7 @@ goog.require('os.map');
 goog.require('os.mixin.TileImage');
 goog.require('os.mixin.UrlTileSource');
 goog.require('os.net');
+goog.require('os.net.URLModifier');
 goog.require('os.ol.source.tileimage');
 goog.require('os.proj');
 goog.require('os.tile.ColorableTile');
@@ -106,6 +108,8 @@ os.layer.config.AbstractTileLayerConfig.prototype.initializeConfig = function(op
   }
 
   this.expandUrls();
+  this.urls = this.urls.map(os.layer.config.AbstractTileLayerConfig.addBaseServer);
+
   options['urls'] = this.urls;
 
   var width = this.getTileWidth(options);
@@ -333,4 +337,14 @@ os.layer.config.AbstractTileLayerConfig.expandUrlMatch = function(url, match) {
   return urls;
 };
 
+
+/**
+ * @param {string} url
+ * @return {string}
+ */
+os.layer.config.AbstractTileLayerConfig.addBaseServer = function(url) {
+  var baseUrl = /** @type {string|undefined} */ (os.settings.get('baseUrl'));
+  return (baseUrl && url && url.startsWith('/') && !url.startsWith('//')) ?
+      baseUrl + url : url;
+};
 
