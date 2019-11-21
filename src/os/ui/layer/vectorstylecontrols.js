@@ -175,19 +175,6 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.hasCenter = function() {
 
 
 /**
- * Decide if we show the fill controls
- * @return {boolean}
- * @export
- */
-os.ui.layer.VectorStyleControlsCtrl.prototype.showFillStyleControls = function() {
-  if (this.scope && this.scope['fillOpacity'] !== undefined) {
-    return true;
-  }
-  return false;
-};
-
-
-/**
  * Fire a scope event when the ellipse center shape is changed by the user.
  *
  * @param {string} shape
