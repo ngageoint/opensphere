@@ -15,6 +15,7 @@ goog.require('ol.geom.Point');
 goog.require('os.MapContainer');
 goog.require('os.action.EventType');
 goog.require('os.data.ColumnDefinition');
+goog.require('os.feature');
 goog.require('os.geo');
 goog.require('os.map');
 goog.require('os.math.Units');
@@ -1290,11 +1291,13 @@ os.ui.FeatureEditCtrl.prototype.saveToFeature = function(feature) {
       os.feature.hideLabel(feature);
     }
 
+
     os.ui.FeatureEditCtrl.persistFeatureLabels(feature);
     os.ui.FeatureEditCtrl.restoreFeatureLabels(feature);
 
     os.style.setFeatureStyle(feature);
 
+    this.updateAltMode(feature);
     os.dispatcher.dispatchEvent(os.action.EventType.SAVE_FEATURE);
   }
 };
@@ -1371,16 +1374,16 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
 
     if (!isNaN(lon) && !isNaN(lat)) {
       var coords = ol.proj.transform([lon, lat, alt], os.proj.EPSG4326, os.map.PROJECTION);
-      var point = feature.getGeometry();
-      if (!point || point === this.originalGeometry) {
-        point = new ol.geom.Point(coords);
+      geom = feature.getGeometry();
+      if (!geom || geom === this.originalGeometry) {
+        geom = new ol.geom.Point(coords);
       }
 
-      if (point instanceof ol.geom.SimpleGeometry) {
-        point.setCoordinates(coords);
+      if (geom instanceof ol.geom.SimpleGeometry) {
+        geom.setCoordinates(coords);
       }
 
-      feature.setGeometry(point);
+      feature.setGeometry(geom);
 
       // update all coordinate fields from the geometry
       os.feature.populateCoordFields(feature, true, undefined, true);
@@ -1421,15 +1424,26 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
     feature.setGeometry(geom);
   }
 
-  if (geom) {
-    var altMode = geom.get(os.data.RecordField.ALTITUDE_MODE);
+  this.updateAltMode(feature);
+};
+
+
+/**
+ * @param {ol.Feature} feature
+ * @protected
+ */
+os.ui.FeatureEditCtrl.prototype.updateAltMode = function(feature) {
+  var newAltMode = this['altitudeMode'];
+
+  os.feature.forEachGeometry(feature, (g) => {
+    let altMode = g.get(os.data.RecordField.ALTITUDE_MODE);
     altMode = Array.isArray(altMode) && altMode.length ? altMode[0] : altMode;
 
-    if (altMode !== this['altitudeMode']) {
-      os.ui.FeatureEditCtrl.setGeometryRecursive(geom, os.data.RecordField.ALTITUDE_MODE, this['altitudeMode'], true);
-      geom.changed();
+    if (altMode !== newAltMode) {
+      os.ui.FeatureEditCtrl.setGeometryRecursive(g, os.data.RecordField.ALTITUDE_MODE, newAltMode, true);
+      g.changed();
     }
-  }
+  });
 };
 
 
