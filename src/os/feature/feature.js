@@ -751,14 +751,9 @@ os.feature.getColor = function(feature, opt_source, opt_default, opt_colorField)
   var defaultColor = opt_default !== undefined ? opt_default : os.style.DEFAULT_LAYER_COLOR;
 
   if (feature) {
-    var color;
+    var color = /** @type {string|undefined} */ (feature.values_[os.data.RecordField.COLOR]);
 
-    if (!opt_colorField) {
-      // ignore the feature color override if a specific config color field was provided
-      color = /** @type {string|undefined} */ (feature.values_[os.data.RecordField.COLOR]);
-    }
-
-    if (color !== defaultColor) {
+    if (color === undefined) {
       // check the layer config to see if it's replacing feature styles
       // the config here will not be modified, so get it directly from the manager for speed
       // (rather than getting a new one merged together for changing)
@@ -768,7 +763,7 @@ os.feature.getColor = function(feature, opt_source, opt_default, opt_colorField)
       }
     }
 
-    if (color !== defaultColor) {
+    if (color === undefined) {
       var featureConfig = /** @type {Array<Object>|Object|undefined} */ (feature.values_[os.style.StyleType.FEATURE]);
       if (featureConfig) {
         if (Array.isArray(featureConfig)) {
