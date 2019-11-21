@@ -185,7 +185,7 @@ os.extent.getFunctionalExtent = function(geom) {
     var antiExtent = geom.getAntiExtent();
     var antiExtentWidth = ol.extent.getWidth(antiExtent);
 
-    result = antiExtentWidth < extentWidth ? antiExtent : extent;
+    result = antiExtentWidth + os.geo.EPSILON < extentWidth ? antiExtent : extent;
   }
 
   return result;
