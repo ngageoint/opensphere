@@ -1512,7 +1512,7 @@ os.ui.FeatureEditCtrl.prototype.onColumnChange = function(event) {
 
 
 /**
- * Handles column changes
+ * Handles ring options changes.
  *
  * @param {angular.Scope.Event} event
  * @param {Object<string, *>} options The new ring options.
