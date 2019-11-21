@@ -1250,8 +1250,10 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
   if (ringOptions) {
     var geometries = featureConfig['geometries'];
     if (geometries) {
-      // add a geometry
-      geometries.push(os.data.RecordField.RING);
+      if (geometries.indexOf(os.data.RecordField.RING) == -1) {
+        // add the ring
+        geometries.push(os.data.RecordField.RING);
+      }
     } else {
       // create the geometries field
       featureConfig['geometries'] = [os.data.RecordField.GEOM, os.data.RecordField.RING];
@@ -1432,10 +1434,6 @@ os.style.createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
     os.style.verifyGeometries(feature, featureConfig);
 
     if (featureConfig['geometries']) {
-      if (featureConfig['geometry']) {
-        styles.push(os.style.StyleManager.getInstance().getOrCreateStyle(featureConfig));
-      }
-
       // if multiple geometries are defined, create a style for each
       for (var i = 0, n = featureConfig['geometries'].length; i < n; i++) {
         var geometryName = featureConfig['geometries'][i];
