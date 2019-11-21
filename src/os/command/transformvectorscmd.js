@@ -126,39 +126,15 @@ os.command.TransformVectors.prototype.transform = function(sourceProjection, tar
 
         if (features.length) {
           source.clear(true);
-          var geoms = [];
 
           for (var j = 0, m = features.length; j < m; j++) {
-            var geometry = features[j].getGeometry();
-            if (geometry) {
-              geoms.push(geometry);
+            os.feature.forEachGeometry(features[j], tx);
 
-              // if the original geometry is the same, don't re-add it or it will be transformed twice. this will
-              // happen for any geometry that is not interpolated.
-              var origGeometry = /** @type {ol.geom.Geometry} */ (features[j].get(os.interpolate.ORIGINAL_GEOM_FIELD));
-              if (origGeometry !== geometry) {
-                geoms.push(origGeometry);
-              }
-            }
-
-            geoms.push(/** @type {(os.geom.Ellipse|undefined)} */ (features[j].get(os.data.RecordField.ELLIPSE)));
-            geoms.push(/** @type {(ol.geom.LineString|undefined)} */
-                (features[j].get(os.data.RecordField.LINE_OF_BEARING)));
-
-            // find geometries in the styles and convert those too
-            var styles = features[j].getStyle();
-            if (styles) {
-              if (!goog.isArray(styles)) {
-                styles = [styles];
-              }
-
-              for (var s = 0, ss = styles.length; s < ss; s++) {
-                geoms.push(styles[s].getGeometry());
-              }
-            }
+            // check cached geoms just in case
+            tx(/** @type {(os.geom.Ellipse|undefined)} */ (features[j].get(os.data.RecordField.ELLIPSE)));
+            tx(/** @type {(ol.geom.LineString|undefined)} */ (features[j].get(os.data.RecordField.LINE_OF_BEARING)));
           }
 
-          geoms.forEach(tx);
           source.addFeatures(features);
         }
       }
