@@ -646,12 +646,10 @@ plugin.cesium.CesiumRenderer.prototype.getAltitudeModes = function() {
  * @inheritDoc
  */
 plugin.cesium.CesiumRenderer.prototype.flyToFeatures = function(features) {
-  var sphere = features.map(os.fn.mapFeatureToGeometry).reduce(plugin.cesium.reduceBoundingSphere, null);
+  var sphere = os.feature.getGeometries(features).reduce(plugin.cesium.reduceBoundingSphere, null);
 
   if (sphere) {
     var cmd = new plugin.cesium.command.FlyToSphere(sphere);
     os.commandStack.addCommand(cmd);
   }
 };
-
-
