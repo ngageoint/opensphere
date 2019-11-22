@@ -18,9 +18,9 @@
     <popover class="ml-3" ng-if="help" data-title="help.title" content="help.content" pos="help.pos"></popover>
   </div>
 
-  <div ng-form="anyDateForm">
+  <div ng-if="anydate.dateType != 'notime'" ng-form="anyDateForm">
     <div class="d-flex flex-row form-group">
-      <div data-ng-if="anydate.dateType != 'notime'" data-ng-class="{'text-danger': anyDateForm.startDate.$dirty && (!anydate.timesValid || (!anydate.startDate && !anydate.startUnknown))}">
+      <div data-ng-class="{'text-danger': anyDateForm.startDate.$dirty && (!anydate.timesValid || (!anydate.startDate && !anydate.startUnknown))}">
         <date-time data-value="anydate.startDate" x-disabled="anydate.startUnknown || disabled"
           is-required="anydate.dateType != 'notime' && !anydate.startUnknown">
         </date-time>
@@ -29,8 +29,8 @@
     </div>
   </div>
 
-  <div class="d-flex flex-row form-group">
-    <div data-ng-if="anydate.dateType == 'range'" data-ng-class="{'text-danger': anyDateForm.endDate.$dirty && (!anydate.timesValid || (!anydate.endDate && !anydate.endUnknown))}">
+  <div ng-if="anydate.dateType == 'range'" class="d-flex flex-row form-group">
+    <div data-ng-class="{'text-danger': anyDateForm.endDate.$dirty && (!anydate.timesValid || (!anydate.endDate && !anydate.endUnknown))}">
       <date-time class="date-time" data-value="anydate.endDate" x-disabled="anydate.endUnknown || disabled"
         is-required="anydate.dateType == 'range' && !anydate.endUnknown">
       </date-time>
