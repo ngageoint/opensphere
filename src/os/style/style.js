@@ -1164,7 +1164,7 @@ os.style.isIconConfig = function(config) {
  * @param {!ol.Feature} feature The feature
  * @param {Object} baseConfig Base configuration for the feature
  * @param {Object=} opt_layerConfig Layer configuration for the feature
- * @return {Object}
+ * @return {!Object}
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
@@ -1246,6 +1246,20 @@ os.style.createFeatureConfig = function(feature, baseConfig, opt_layerConfig) {
     os.style.setConfigOpacityColor(featureConfig, Number(opacity), true);
   }
 
+  var ringOptions = feature.get(os.data.RecordField.RING_OPTIONS);
+  if (ringOptions) {
+    var geometries = featureConfig['geometries'];
+    if (geometries) {
+      if (geometries.indexOf(os.data.RecordField.RING) == -1) {
+        // add the ring
+        geometries.push(os.data.RecordField.RING);
+      }
+    } else {
+      // create the geometries field
+      featureConfig['geometries'] = [os.data.RecordField.GEOM, os.data.RecordField.RING];
+    }
+  }
+
   return featureConfig;
 };
 
@@ -1288,6 +1302,10 @@ os.style.verifyGeometries = function(feature, config, opt_layerConfig) {
       config['geometries'] && config['geometries'].indexOf(os.data.RecordField.ELLIPSE) != -1) {
     // verify an ellipse has been created
     os.feature.createEllipse(feature);
+  }
+
+  if (config['geometries'] && config['geometries'].indexOf(os.data.RecordField.RING) != -1) {
+    os.feature.createRings(feature);
   }
 };
 
@@ -1412,6 +1430,8 @@ os.style.createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
     if (highlightConfig) {
       os.style.mergeConfig(highlightConfig, featureConfig);
     }
+
+    os.style.verifyGeometries(feature, featureConfig);
 
     if (featureConfig['geometries']) {
       // if multiple geometries are defined, create a style for each

@@ -6,7 +6,7 @@ goog.require('plugin.places.PlacesManager');
 
 
 
-describe('plugin.file.kml.ui.placemarkededit', function() {
+describe('plugin.file.kml.ui.placemarkedit', function() {
   var scope, element, rootFolder, folder1;
 
   // eslint-disable-next-line require-jsdoc
@@ -20,9 +20,9 @@ describe('plugin.file.kml.ui.placemarkededit', function() {
 
       parent = $('<div></div>');
       element = angular.element(
-        '<form name="testForm">' +
-        '<input ng-model="model.somenum" name="somenum" integer />' |
-        '</form>'
+          '<form name="testForm">' +
+          '<input ng-model="model.somenum" name="somenum" integer />' |
+          '</form>'
       ).appendTo(parent);
 
       $compile(element)(scope);
@@ -43,10 +43,6 @@ describe('plugin.file.kml.ui.placemarkededit', function() {
     spyOn(plugin.places.PlacesManager.prototype, 'reindexTimeModel_').andCallFake(function() {
       return;
     });
-  });
-
-  afterEach(function() {
-
   });
 
   it('should init correctly', function() {
@@ -77,8 +73,9 @@ describe('plugin.file.kml.ui.placemarkededit', function() {
     expect(formCtrl['defaultExpandedOptionsId']).toBe('featureAnnotation' + formCtrl['uid']);
   });
 
-  it('should init with as dynamic feature', function() {
+  it('should init with a dynamic feature', function() {
     var feature = new os.feature.DynamicFeature();
+    feature.setId('dynamicFeatureId');
     var options = {
       'feature': feature
     };

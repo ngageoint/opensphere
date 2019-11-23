@@ -62,7 +62,8 @@ os.ui.text.tuiEditorDirective = function() {
       'maxlength': '=',
       'isRequired': '=',
       /* @type {function({'html': string}): goog.Promise} */
-      'postProcessFn': '&?'
+      'postProcessFn': '&?',
+      'hideWc': '=?'
     },
     templateUrl: os.ROOT + 'views/text/tuieditor.html',
     controller: os.ui.text.TuiEditorCtrl,

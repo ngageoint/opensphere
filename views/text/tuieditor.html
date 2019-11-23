@@ -16,7 +16,7 @@
         <div class="small mt-1 d-flex justify-content-between flex-shrink-0">
           <div class="text-danger" ng-if="text.length > maxlength">Content is too long!</div>
           <div class="text-danger" ng-if="isRequired && text.length == 0">Required!</div>
-          <div class="text-muted ml-auto c-tui-editor__word-count">{{ctrl.getWordCount()}}</div>
+          <div class="text-muted ml-auto c-tui-editor__word-count" ng-if="!hideWc">{{ctrl.getWordCount()}}</div>
         </div>
       </div>
     </div>
