@@ -68,5 +68,6 @@ plugin.file.kml.SOURCE_FIELDS = [
  * @type {!Array<string>}
  */
 plugin.file.kml.JsonField = [
-  os.annotation.OPTIONS_FIELD
+  os.annotation.OPTIONS_FIELD,
+  os.data.RecordField.RING_OPTIONS
 ];

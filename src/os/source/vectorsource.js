@@ -1737,7 +1737,7 @@ os.source.Vector.prototype.reindexTimeModel_ = function() {
  * @return {Array<ol.Feature>}
  */
 os.source.Vector.prototype.getFilteredFeatures = function(opt_allTime) {
-  if (this.getVisible()) {
+  if (this.getVisible() && this.tlc) {
     // ignore time filter if we're animating. this prevents UI's like the list tool from rapidly updating, beyond
     // what is useful to the user.
     var defaultAllTime = !this.timeFilterEnabled_ || this.tlc.isPlaying();

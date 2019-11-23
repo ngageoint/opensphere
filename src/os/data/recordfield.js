@@ -19,6 +19,8 @@ os.data.RecordField = {
   LINE_OF_BEARING: 'lineOfBearing',
   LINE_OF_BEARING_ERROR_HIGH: 'lineOfBearingErrorHigh',
   LINE_OF_BEARING_ERROR_LOW: 'lineOfBearingErrorLow',
+  RING: '_ring',
+  RING_OPTIONS: '_ringOptions',
   SOURCE_ID: 'sourceId',
   SOURCE_NAME: '_sourceName',
   TIME: 'recordTime',

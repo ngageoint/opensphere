@@ -73,19 +73,15 @@ os.bearing.onGeomag = function(event) {
 
 
 /**
- * @param {!ol.Coordinate} coord The coordinate
+ * Creates a geomagnetic data object for a coordinate in lon/lat and a date.
+ * @param {!ol.Coordinate} coord The coordinate in lon/lat.
  * @param {!Date} date The date
  * @return {!Object} The magnetic model details for the given time and location
  */
 os.bearing.geomag = function(coord, date) {
-  if (os.bearing.geomag_) {
-    // ensure coordinate is in lat/lon
-    var c = ol.proj.toLonLat(coord, os.map.PROJECTION);
-
-    if (c) {
-      // convert altitude from meters to feet
-      return os.bearing.geomag_(c[1], c[0], (c[2] || 0) * 3.28084, date);
-    }
+  if (os.bearing.geomag_ && coord) {
+    // convert altitude from meters to feet
+    return os.bearing.geomag_(coord[1], coord[0], (coord[2] || 0) * 3.28084, date);
   }
 
   return {};
@@ -103,7 +99,7 @@ os.bearing.geomag = function(coord, date) {
  * @return {number}
  */
 os.bearing.getBearing = function(coord1, coord2, date, opt_method) {
-  opt_method = opt_method || os.interpolate.Method.GEODESIC;
+  opt_method = opt_method || os.interpolate.getMethod();
 
   var bearing = opt_method === os.interpolate.Method.GEODESIC ? osasm.geodesicInverse(coord1, coord2).initialBearing :
     osasm.rhumbInverse(coord1, coord2).bearing;
@@ -121,7 +117,7 @@ os.bearing.getBearing = function(coord1, coord2, date, opt_method) {
  */
 os.bearing.modifyBearing = function(bearing, coord, date) {
   var bearingType = os.settings.get(os.bearing.BearingSettingsKeys.BEARING_TYPE, os.bearing.BearingType.TRUE_NORTH);
-  if (bearingType == os.bearing.BearingType.MAGNETIC && os.bearing.geomag_) {
+  if (coord && bearingType == os.bearing.BearingType.MAGNETIC && os.bearing.geomag_) {
     var geomag = os.bearing.geomag(coord, date);
     bearing = bearing - geomag['dec'];
   }
