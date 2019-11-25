@@ -133,6 +133,7 @@ os.command.TransformVectors.prototype.transform = function(sourceProjection, tar
             // check cached geoms just in case
             tx(/** @type {(os.geom.Ellipse|undefined)} */ (features[j].get(os.data.RecordField.ELLIPSE)));
             tx(/** @type {(ol.geom.LineString|undefined)} */ (features[j].get(os.data.RecordField.LINE_OF_BEARING)));
+            tx(/** @type {(ol.geom.GeometryCollection|undefined)} */ (features[j].get(os.data.RecordField.RING)));
           }
 
           source.addFeatures(features);

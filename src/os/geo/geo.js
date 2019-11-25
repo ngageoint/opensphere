@@ -1176,9 +1176,10 @@ os.geo.parse_ = function(deg, min, sec, dir) {
  * @param {number} angleRange range of angle to draw arc in degrees (clockwise from north)
  * @param {number=} opt_startAngle center of arc, defaulting to 0
  * @param {number=} opt_points Number of points, defaulting to 20.
+ * @param {string=} opt_method Optional interpolation method for the arcs.
  * @return {Array<Array<number>>} Array of locations as [[x1, y1], [x2, y2] ... [xn, yn]]
  */
-os.geo.interpolateArc = function(center, radius, angleRange, opt_startAngle, opt_points) {
+os.geo.interpolateArc = function(center, radius, angleRange, opt_startAngle, opt_points, opt_method) {
   var altitude = center.length > 2 ? center[2] : 0;
   angleRange = angleRange > 360 ? angleRange % 360 : angleRange;
   var points = opt_points || 20;
@@ -1186,7 +1187,12 @@ os.geo.interpolateArc = function(center, radius, angleRange, opt_startAngle, opt
   var angleDelta = angleRange / points;
   var locations = [];
   for (var i = 0; i <= points; ++i) {
-    var point = osasm.geodesicDirect(center, startAngle - angleRange / 2 + i * angleDelta, radius);
+    if (!opt_method) {
+      opt_method = os.interpolate.getMethod();
+    }
+
+    var interpFn = opt_method === os.interpolate.Method.GEODESIC ? osasm.geodesicDirect : osasm.rhumbDirect;
+    var point = interpFn(center, startAngle - angleRange / 2 + i * angleDelta, radius);
     point.push(altitude);
     locations.push(point);
   }
