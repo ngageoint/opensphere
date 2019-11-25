@@ -272,7 +272,10 @@ plugin.cesium.sync.FeatureConverter.prototype.wrapFillAndOutlineGeometries = fun
     var fillColor = this.extractColorFromOlStyle(style, false);
     fillColor.alpha *= layerOpacity;
 
-    primitives.add(this.createColoredPrimitive(fill, fillColor, undefined, undefined, primitiveType));
+    // hide the primitive when alpha is 0 so it isn't picked
+    var fillPrimitive = this.createColoredPrimitive(fill, fillColor, undefined, undefined, primitiveType);
+    fillPrimitive.show = fillColor.alpha > 0;
+    primitives.add(fillPrimitive);
   }
 
   if (outline) {
@@ -1181,6 +1184,8 @@ plugin.cesium.sync.FeatureConverter.prototype.olPolygonGeometryToCesiumPolyline 
 
       var p = this.createColoredPrimitive(fillGeometry, fillColor, undefined, undefined,
           heightReference === Cesium.HeightReference.CLAMP_TO_GROUND ? Cesium.GroundPrimitive : Cesium.Primitive);
+      // hide the primitive when alpha is 0 so it isn't picked
+      p.show = fillColor.alpha > 0;
       primitives.add(p);
     }
 
@@ -1543,6 +1548,9 @@ plugin.cesium.sync.FeatureConverter.prototype.updatePrimitive = function(feature
           }
 
           if (color) {
+            // hide the primitive when alpha is 0 so it isn't picked
+            primitive.show = color.alpha > 0;
+
             if (material && material.uniforms) {
               material.uniforms.color = color;
             } else {
