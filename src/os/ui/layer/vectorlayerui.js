@@ -332,19 +332,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.showRotationOption = function() {
 
 
 /**
- * Decide if we show the fill controls
- * @return {boolean}
- * @export
- */
-os.ui.layer.VectorLayerUICtrl.prototype.showFillStyleControls = function() {
-  if (this.scope && this.scope['fillOpacity'] !== undefined) {
-    return true;
-  }
-  return false;
-};
-
-
-/**
  * Updates the layer preset state on the UI.
  *
  * @private
