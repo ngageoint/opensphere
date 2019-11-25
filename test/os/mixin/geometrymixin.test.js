@@ -1,4 +1,9 @@
+goog.require('ol.geom.GeometryCollection');
+goog.require('ol.geom.LineString');
+goog.require('ol.geom.Point');
+goog.require('ol.geom.Polygon');
 goog.require('os.mixin.geometry');
+goog.require('os.proj');
 
 
 describe('os.mixin.geometry', function() {
@@ -43,5 +48,27 @@ describe('os.mixin.geometry', function() {
       expect(geom).not.toBe(line);
       expect(geom).not.toBe(poly);
     });
+  });
+
+  it('should not doubly transform geometries', function() {
+    const point = new ol.geom.Point([-45, 45]);
+    const line = new ol.geom.LineString([[-45, 45], [0, 0]]);
+    const poly = new ol.geom.Polygon([[[-45, 45], [45, 45], [0, 0], [-45, 45]]]);
+
+    const testGeometries = [point, line, poly];
+    const expectedGeometries = testGeometries.map((g) => g.clone());
+
+    for (let i = 0, n = testGeometries.length; i < n; i++) {
+      testGeometries[i].transform(os.proj.EPSG4326, os.proj.EPSG3857);
+      expect(testGeometries[i].getFlatCoordinates()).not.toEqual(
+          expectedGeometries[i].getFlatCoordinates());
+
+      // tests protection against the incorrect step of doubly-transforming the projection
+      testGeometries[i].transform(os.proj.EPSG4326, os.proj.EPSG3857);
+
+      // transform back to the original
+      testGeometries[i].transform(os.proj.EPSG3857, os.proj.EPSG4326);
+      expect(testGeometries[i].getFlatCoordinates()).toEqual(expectedGeometries[i].getFlatCoordinates());
+    }
   });
 });
