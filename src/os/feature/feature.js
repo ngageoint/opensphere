@@ -517,28 +517,28 @@ os.feature.createRings = function(feature, opt_replace) {
   }
 
   if (feature) {
-    var options = feature.get(os.data.RecordField.RING_OPTIONS);
+    var options = /** @type {osx.feature.RingOptions} */ (feature.get(os.data.RecordField.RING_OPTIONS));
     var geometry = feature.getGeometry();
     var center = geometry ? ol.proj.toLonLat(ol.extent.getCenter(geometry.getExtent()), os.map.PROJECTION) : null;
 
-    if (options && options['enabled'] && options['rings'] && center) {
+    if (options && options.enabled && options.rings && center) {
       var date = new Date(os.time.TimelineController.getInstance().getCurrent());
       var geomag = os.bearing.geomag(center, date);
-      var declination = geomag['dec'];
+      var declination = /** @type {number} */ (geomag['dec']);
       var interpFn = os.interpolate.getMethod() == os.interpolate.Method.GEODESIC ?
           osasm.geodesicDirect : osasm.rhumbDirect;
 
-      var rings = options['rings'];
-      var crosshair = options['crosshair'];
-      var arcs = options['arcs'];
-      var startAngle = (options['startAngle'] || 0) + declination;
-      var widthAngle = options['widthAngle'] || 0;
+      var rings = options.rings;
+      var crosshair = options.crosshair;
+      var arcs = options.arcs;
+      var startAngle = (options.startAngle || 0) + declination;
+      var widthAngle = options.widthAngle || 0;
       var lastRing = rings[rings.length - 1];
       var geoms = [];
 
       rings.forEach(function(ring) {
-        var units = ring['units'];
-        var radius = ring['radius'];
+        var units = ring.units;
+        var radius = ring.radius;
 
         if (units && radius) {
           radius = os.math.convertUnits(radius, os.math.Units.METERS, units);
@@ -563,8 +563,8 @@ os.feature.createRings = function(feature, opt_replace) {
         var endBearing = startAngle + widthAngle;
 
         if (lastRing) {
-          var distance = lastRing['radius'];
-          var units = lastRing['units'];
+          var distance = lastRing.radius;
+          var units = lastRing.units;
 
           distance = os.math.convertUnits(distance, os.math.Units.METERS, units);
 
@@ -583,8 +583,8 @@ os.feature.createRings = function(feature, opt_replace) {
         var bearing = declination < 0 ? declination + 360 : declination;
 
         if (lastRing) {
-          var distance = lastRing['radius'];
-          var units = lastRing['units'];
+          var distance = lastRing.radius;
+          var units = lastRing.units;
 
           distance = os.math.convertUnits(distance, os.math.Units.METERS, units);
           distance += distance / rings.length;
