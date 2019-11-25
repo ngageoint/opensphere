@@ -322,7 +322,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
 
   /**
    * The ring options.
-   * @type {?Object<string, *>}
+   * @type {?osx.feature.RingOptions}
    */
   this['ringOptions'] = null;
 
@@ -1175,7 +1175,7 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
     this['altitudeMode'] = altitudeMode;
   }
 
-  this['ringOptions'] = /** @type {Object<string, *>} */ (feature.get(os.data.RecordField.RING_OPTIONS));
+  this['ringOptions'] = /** @type {osx.feature.RingOptions} */ (feature.get(os.data.RecordField.RING_OPTIONS));
 
   if (!this.isFeatureDynamic()) {
     var rotation = feature.get(os.Fields.BEARING);
