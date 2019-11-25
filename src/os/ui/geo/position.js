@@ -115,7 +115,15 @@ os.ui.geo.PositionCtrl = function($scope, $element) {
    */
   this.precision = Math.pow(10, os.ui.geo.PositionCtrl.DEFAULT_COORD_PRECISION);
 
+  /**
+   * @type {boolean}
+   */
   this['showLabel'] = this.scope_['showLabel'] != null ? this.scope_['showLabel'] : true;
+
+  /**
+   * @type {string}
+   */
+  this['popoverTitle'] = 'Entering Position';
 
   /**
    * @type {string}

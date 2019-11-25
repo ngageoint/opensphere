@@ -4,6 +4,7 @@ goog.require('goog.reflect');
 goog.require('goog.string');
 goog.require('ol.Feature');
 goog.require('ol.geom.Geometry');
+goog.require('ol.geom.GeometryCollection');
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.MultiLineString');
 goog.require('ol.geom.Point');
@@ -18,6 +19,7 @@ goog.require('os.fn');
 goog.require('os.geo');
 goog.require('os.geom.Ellipse');
 goog.require('os.im.mapping.MappingManager');
+goog.require('os.interpolate');
 goog.require('os.map');
 goog.require('os.math.Units');
 goog.require('os.style.StyleField');
@@ -85,8 +87,7 @@ os.feature.flyTo = function(features) {
   if (os.feature.flyToOverride) {
     os.feature.flyToOverride(/** @type {Array<ol.Feature>} */ (features));
   } else {
-    var extent = features.map(os.fn.mapFeatureToGeometry).
-        reduce(os.fn.reduceExtentFromGeometries, ol.extent.createEmpty());
+    var extent = os.feature.getGeometries(features).reduce(os.fn.reduceExtentFromGeometries, ol.extent.createEmpty());
     var cmd = new os.command.FlyToExtent(extent);
     os.commandStack.addCommand(cmd);
   }
@@ -499,6 +500,124 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
 
 
 /**
+ * Generates a set of ring geometries from an options object.
+ * @param {?ol.Feature} feature The feature to generate rings for.
+ * @param {boolean=} opt_replace Whether to replace an existing ring.
+ * @return {ol.geom.Geometry|undefined} The rings.
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.feature.createRings = function(feature, opt_replace) {
+  var ringGeom;
+
+  if (!opt_replace) {
+    ringGeom = /** @type {ol.geom.GeometryCollection} */ (feature.values_[os.data.RecordField.RING]);
+    if (ringGeom instanceof ol.geom.GeometryCollection) {
+      return ringGeom;
+    }
+  }
+
+  if (feature) {
+    var options = feature.get(os.data.RecordField.RING_OPTIONS);
+    var geometry = feature.getGeometry();
+    var center = geometry ? ol.proj.toLonLat(ol.extent.getCenter(geometry.getExtent()), os.map.PROJECTION) : null;
+
+    if (options && options['enabled'] && options['rings'] && center) {
+      var date = new Date(os.time.TimelineController.getInstance().getCurrent());
+      var geomag = os.bearing.geomag(center, date);
+      var declination = geomag['dec'];
+      var interpFn = os.interpolate.getMethod() == os.interpolate.Method.GEODESIC ?
+          osasm.geodesicDirect : osasm.rhumbDirect;
+
+      var rings = options['rings'];
+      var crosshair = options['crosshair'];
+      var arcs = options['arcs'];
+      var startAngle = (options['startAngle'] || 0) + declination;
+      var widthAngle = options['widthAngle'] || 0;
+      var lastRing = rings[rings.length - 1];
+      var geoms = [];
+
+      rings.forEach(function(ring) {
+        var units = ring['units'];
+        var radius = ring['radius'];
+
+        if (units && radius) {
+          radius = os.math.convertUnits(radius, os.math.Units.METERS, units);
+          var geom;
+          var coordinates;
+
+          if (arcs) {
+            coordinates = os.geo.interpolateArc(center, radius, widthAngle, startAngle + widthAngle / 2);
+            geom = new ol.geom.LineString(coordinates);
+          } else {
+            coordinates = os.geo.interpolateEllipse(center, radius, radius, 0);
+            geom = new ol.geom.Polygon([coordinates]);
+          }
+
+          geoms.push(geom);
+        }
+      });
+
+      if (arcs) {
+        // add the "endcap" geometries
+        var startBearing = startAngle;
+        var endBearing = startAngle + widthAngle;
+
+        if (lastRing) {
+          var distance = lastRing['radius'];
+          var units = lastRing['units'];
+
+          distance = os.math.convertUnits(distance, os.math.Units.METERS, units);
+
+          var endCoord1 = interpFn(center, startBearing, distance);
+          var endCoord2 = interpFn(center, endBearing, distance);
+
+          var startCap = new ol.geom.LineString([center, endCoord1]);
+          geoms.push(startCap);
+
+          var endCap = new ol.geom.LineString([center, endCoord2]);
+          geoms.push(endCap);
+        }
+      }
+
+      if (crosshair) {
+        var bearing = declination < 0 ? declination + 360 : declination;
+
+        if (lastRing) {
+          var distance = lastRing['radius'];
+          var units = lastRing['units'];
+
+          distance = os.math.convertUnits(distance, os.math.Units.METERS, units);
+          distance += distance / rings.length;
+
+          var coord1 = interpFn(center, bearing, distance);
+          var coord2 = interpFn(center, bearing - 180, distance);
+
+          var verticalLine = new ol.geom.LineString([coord1, center, coord2]);
+
+          coord1 = interpFn(center, bearing - 90, distance);
+          coord2 = interpFn(center, bearing + 90, distance);
+
+          var horizontalLine = new ol.geom.LineString([coord1, center, coord2]);
+
+          geoms.push(verticalLine);
+          geoms.push(horizontalLine);
+        }
+      }
+
+      ringGeom = new ol.geom.GeometryCollection(geoms);
+      ringGeom.osTransform();
+      os.interpolate.interpolateGeom(ringGeom);
+    }
+
+    feature.set(os.data.RecordField.RING, ringGeom);
+  }
+
+  return ringGeom;
+};
+
+
+
+/**
  * Set the altitude component on a feature if it has a point geometry.
  *
  * @param {ol.Feature} feature The feature
@@ -753,14 +872,9 @@ os.feature.getColor = function(feature, opt_source, opt_default, opt_colorField)
   var defaultColor = opt_default !== undefined ? opt_default : os.style.DEFAULT_LAYER_COLOR;
 
   if (feature) {
-    var color;
+    var color = /** @type {string|undefined} */ (feature.values_[os.data.RecordField.COLOR]);
 
-    if (!opt_colorField) {
-      // ignore the feature color override if a specific config color field was provided
-      color = /** @type {string|undefined} */ (feature.values_[os.data.RecordField.COLOR]);
-    }
-
-    if (color !== defaultColor) {
+    if (color === undefined) {
       // check the layer config to see if it's replacing feature styles
       // the config here will not be modified, so get it directly from the manager for speed
       // (rather than getting a new one merged together for changing)
@@ -770,7 +884,7 @@ os.feature.getColor = function(feature, opt_source, opt_default, opt_colorField)
       }
     }
 
-    if (color !== defaultColor) {
+    if (color === undefined) {
       var featureConfig = /** @type {Array<Object>|Object|undefined} */ (feature.values_[os.style.StyleType.FEATURE]);
       if (featureConfig) {
         if (Array.isArray(featureConfig)) {
@@ -1213,4 +1327,26 @@ os.feature.forEachGeometry = function(feature, callback) {
       callback(mainGeom);
     }
   }
+};
+
+
+/**
+ * Gets all associated geometries for a feature or list of features.
+ * @param {(ol.Feature|Array<ol.Feature>)} features
+ * @return {!Array<ol.geom.Geometry>} The array of all the geometries.
+ */
+os.feature.getGeometries = function(features) {
+  const arr = [];
+  const callback = (geom) => {
+    arr.push(geom);
+    return true;
+  };
+
+  if (Array.isArray(features)) {
+    features.forEach((f) => os.feature.forEachGeometry(f, callback));
+  } else {
+    os.feature.forEachGeometry(features, callback);
+  }
+
+  return arr;
 };

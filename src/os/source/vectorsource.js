@@ -1737,7 +1737,7 @@ os.source.Vector.prototype.reindexTimeModel_ = function() {
  * @return {Array<ol.Feature>}
  */
 os.source.Vector.prototype.getFilteredFeatures = function(opt_allTime) {
-  if (this.getVisible()) {
+  if (this.getVisible() && this.tlc) {
     // ignore time filter if we're animating. this prevents UI's like the list tool from rapidly updating, beyond
     // what is useful to the user.
     var defaultAllTime = !this.timeFilterEnabled_ || this.tlc.isPlaying();
@@ -2162,9 +2162,10 @@ os.source.Vector.prototype.processDeferred = function(features) {
   // fire the feature event to update views and WebGL sync
   this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.FEATURES, features));
 
-  // repeat the last show event to update the animation overlay, if active
-  if (this.animationOverlay && this.tlc.getLastEvent()) {
-    this.onTimelineShow_(this.tlc.getLastEvent());
+  // repeat the last timeline event to update which features are displayed
+  var lastTimeEvent = this.tlc.getLastEvent();
+  if (lastTimeEvent) {
+    this.onTimelineShow_(lastTimeEvent);
   }
 
   var om = os.ui.onboarding.OnboardingManager.getInstance();
@@ -2278,9 +2279,10 @@ os.source.Vector.prototype.unprocessDeferred = function(features) {
   // refresh displayed labels
   this.updateLabels();
 
-  // repeat the last show event to update the animation overlay, if active
-  if (this.animationOverlay && this.tlc.getLastEvent()) {
-    this.onTimelineShow_(this.tlc.getLastEvent());
+  // repeat the last timeline event to update which features are displayed
+  var lastTimeEvent = this.tlc.getLastEvent();
+  if (lastTimeEvent) {
+    this.onTimelineShow_(lastTimeEvent);
   }
 
   this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.FEATURES, undefined, features));
@@ -2300,7 +2302,8 @@ os.source.Vector.prototype.unprocessNow = function() {
 
 
 /**
- * @param {os.time.TimelineControllerEvent} event
+ * Handle timeline controller show event.
+ * @param {os.time.TimelineControllerEvent} event The event.
  * @private
  */
 os.source.Vector.prototype.onTimelineShow_ = function(event) {

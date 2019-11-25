@@ -76,7 +76,8 @@ plugin.places.ExportFields = [
   os.Fields.SEMI_MAJOR_UNITS,
   os.Fields.SEMI_MINOR_UNITS,
   os.Fields.ORIENTATION,
-  os.Fields.BEARING
+  os.Fields.BEARING,
+  os.data.RecordField.RING_OPTIONS
 ];
 
 

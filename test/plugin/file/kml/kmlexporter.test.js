@@ -1,4 +1,8 @@
 goog.require('ol.Feature');
+goog.require('ol.geom.Point');
+goog.require('ol.style.Fill');
+goog.require('ol.style.Stroke');
+goog.require('ol.style.Style');
 goog.require('os.MapContainer');
 goog.require('os.mock');
 goog.require('os.style.StyleManager');
@@ -214,4 +218,43 @@ describe('plugin.file.kml.KMLExporter', function() {
     f.set(os.data.RecordField.TIME, range);
     expect(exporter.getTime(f)).toBe(range);
   });
+
+  it('generates proper fill booleans in styles', function() {
+    var exporter = new plugin.file.kml.KMLExporter();
+    var f = new ol.Feature(new ol.geom.Point(0, 0));
+
+    expect(exporter.getFill(f)).toBe(false);
+
+    var style = new ol.style.Style();
+    f.setStyle(style);
+    expect(exporter.getFill(f)).toBe(false);
+
+    var fill = new ol.style.Fill();
+    fill.setColor('rgba(255,255,255,0)');
+    style.setFill(fill);
+    expect(exporter.getFill(f)).toBe(false);
+
+    fill.setColor('rgba(255,255,255,1)');
+    expect(exporter.getFill(f)).toBe(true);
+  });
+
+  it('generates proper stroke booleans in styles', function() {
+    var exporter = new plugin.file.kml.KMLExporter();
+    var f = new ol.Feature(new ol.geom.Point(0, 0));
+
+    expect(exporter.getStroke(f)).toBe(false);
+
+    var style = new ol.style.Style();
+    f.setStyle(style);
+    expect(exporter.getStroke(f)).toBe(false);
+
+    var stroke = new ol.style.Stroke();
+    stroke.setColor('rgba(255,255,255,0)');
+    style.setStroke(stroke);
+    expect(exporter.getStroke(f)).toBe(false);
+
+    stroke.setColor('rgba(255,255,255,1)');
+    expect(exporter.getStroke(f)).toBe(true);
+  });
+
 });

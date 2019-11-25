@@ -273,6 +273,108 @@ describe('os.feature', function() {
     expect(testCoords(ellipse.getFlatCoordinates())).toBe(true);
   });
 
+  it('should create rings when a feature has options on it', function() {
+    var center = new ol.geom.Point([0, 0]);
+    var feature = new ol.Feature(center);
+    feature.set(os.data.RecordField.RING_OPTIONS, {
+      'enabled': true,
+      'type': 'auto',
+      'interval': 40,
+      'units': os.math.Units.NAUTICAL_MILES,
+      'crosshair': false,
+      'arcs': false,
+      'startAngle': 0,
+      'widthAngle': 0,
+      'rings': [
+        {'radius': 40, 'units': os.math.Units.NAUTICAL_MILES},
+        {'radius': 80, 'units': os.math.Units.NAUTICAL_MILES},
+        {'radius': 120, 'units': os.math.Units.NAUTICAL_MILES},
+        {'radius': 160, 'units': os.math.Units.NAUTICAL_MILES},
+        {'radius': 200, 'units': os.math.Units.NAUTICAL_MILES}
+      ]
+    });
+
+    var rings = os.feature.createRings(feature);
+    expect(rings).toBeDefined();
+    expect(rings instanceof ol.geom.GeometryCollection).toBe(true);
+
+    var geometries = rings.getGeometries();
+    expect(geometries.length).toBe(5);
+    geometries.forEach(function(ring) {
+      expect(testCoords(ring.getFlatCoordinates())).toBe(true);
+    });
+
+    // should only create once, then return the same geometry
+    expect(os.feature.createRings(feature)).toBe(rings);
+
+    // should replace an existing geometry
+    expect(os.feature.createRings(feature, true)).not.toBe(rings);
+  });
+
+  it('should create rings with crosshairs', function() {
+    var center = new ol.geom.Point([0, 0]);
+    var feature = new ol.Feature(center);
+    feature.set(os.data.RecordField.RING_OPTIONS, {
+      'enabled': true,
+      'type': 'auto',
+      'interval': 20,
+      'units': os.math.Units.MILES,
+      'crosshair': true,
+      'arcs': false,
+      'startAngle': 0,
+      'widthAngle': 0,
+      'rings': [
+        {'radius': 20, 'units': os.math.Units.MILES},
+        {'radius': 40, 'units': os.math.Units.MILES},
+        {'radius': 60, 'units': os.math.Units.MILES},
+        {'radius': 80, 'units': os.math.Units.MILES},
+        {'radius': 100, 'units': os.math.Units.MILES}
+      ]
+    });
+
+    var rings = os.feature.createRings(feature);
+    expect(rings).toBeDefined();
+    expect(rings instanceof ol.geom.GeometryCollection).toBe(true);
+
+    var geometries = rings.getGeometries();
+    expect(geometries.length).toBe(7);
+    geometries.forEach(function(ring) {
+      expect(testCoords(ring.getFlatCoordinates())).toBe(true);
+    });
+  });
+
+  it('should create rings with arcs', function() {
+    var center = new ol.geom.Point([0, 0]);
+    var feature = new ol.Feature(center);
+    feature.set(os.data.RecordField.RING_OPTIONS, {
+      'enabled': true,
+      'type': 'manuel',
+      'interval': 20,
+      'units': os.math.Units.MILES,
+      'crosshair': true,
+      'arcs': true,
+      'startAngle': 20,
+      'widthAngle': 70,
+      'rings': [
+        {'radius': 20, 'units': os.math.Units.MILES},
+        {'radius': 40, 'units': os.math.Units.MILES},
+        {'radius': 60, 'units': os.math.Units.MILES},
+        {'radius': 80, 'units': os.math.Units.MILES},
+        {'radius': 100, 'units': os.math.Units.MILES}
+      ]
+    });
+
+    var rings = os.feature.createRings(feature);
+    expect(rings).toBeDefined();
+    expect(rings instanceof ol.geom.GeometryCollection).toBe(true);
+
+    var geometries = rings.getGeometries();
+    expect(geometries.length).toBe(9);
+    geometries.forEach(function(ring) {
+      expect(testCoords(ring.getFlatCoordinates())).toBe(true);
+    });
+  });
+
   it('should create an expression to get a value from a feature', function() {
     os.feature.filterFnGetter();
 
@@ -477,13 +579,15 @@ describe('os.feature', function() {
       // defaults to null (no fill)
       expect(os.feature.getFillColor(feature)).toBeNull();
 
-      // ignores feature base color override
-      feature.set(os.data.RecordField.COLOR, testColor);
-      expect(os.feature.getFillColor(feature)).toBeNull();
 
       // empty config returns null
       feature.set(os.style.StyleType.FEATURE, featureConfig1);
       expect(os.feature.getFillColor(feature)).toBeNull();
+
+      // use auto color when set
+      feature.set(os.data.RecordField.COLOR, testColor);
+      expect(os.feature.getFillColor(feature)).toBe(testColor);
+      feature.unset(os.data.RecordField.COLOR);
 
       // should not return the stroke/image color
       featureConfig1.stroke = {
@@ -535,9 +639,10 @@ describe('os.feature', function() {
       // defaults to null (no stroke)
       expect(os.feature.getStrokeColor(feature)).toBeNull();
 
-      // ignores feature base color override
+      // use auto color when set
       feature.set(os.data.RecordField.COLOR, testColor);
-      expect(os.feature.getStrokeColor(feature)).toBeNull();
+      expect(os.feature.getStrokeColor(feature)).toBe(testColor);
+      feature.unset(os.data.RecordField.COLOR);
 
       // empty config returns null
       feature.set(os.style.StyleType.FEATURE, featureConfig1);

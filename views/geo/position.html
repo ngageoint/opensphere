@@ -15,7 +15,7 @@
             ng-disabled="disabled" ng-class="{'active': posCtrl.mapEnabled}">
         <i class="fa fa-globe" ng-class="{'text-primary': posCtrl.mapEnabled}"></i>
       </button>
-      <popover class="mx-2" title="'Entering Position'" content="popoverContent" pos="'right'"></popover>
+      <popover class="mx-2" title="posCtrl.popoverTitle" content="popoverContent" pos="'right'"></popover>
     </div>
     <div>
       <validation-message target="form.pos"></validation-message>
@@ -24,9 +24,6 @@
       </span>
     </div>
     <div>
-      <small class="text-muted" ng-if="!posCtrl.mapEnabled && !hideHint">
-        Enter a location as DD, DMS, DDM or MGRS.
-      </small>
       <span ng-if="posCtrl.mapEnabled && !hideHint">
         Choose a location by clicking on the map.
       </span>
