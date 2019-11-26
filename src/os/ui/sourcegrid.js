@@ -186,10 +186,21 @@ os.ui.SourceGridCtrl.prototype.disposeInternal = function() {
 
 
 /**
- * @inheritDoc
+ * Compare function over multiple columns
+ *
+ * @param {!Array<string>} cols The sort columns
+ * @param {*} a
+ * @param {*} b
+ * @param {boolean=} opt_direct access the items directly
+ * @return {number} -1, 0, or 1 per typical compare function
+ * @protected
+ * @override
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.ui.SourceGridCtrl.prototype.multiColumnSort = function(cols, a, b) {
+os.ui.SourceGridCtrl.prototype.multiColumnSort = function(cols, a, b, opt_direct) {
+  if (opt_direct) {
+    return os.ui.SourceGridCtrl.base(this, 'multiColumnSort', cols, a, b);
+  }
   return os.ui.SourceGridCtrl.base(this, 'multiColumnSort', cols, a.values_, b.values_);
 };
 
