@@ -140,8 +140,8 @@
         <vectorstylecontrols
             color="ctrl.color"
             opacity="ctrl.opacity"
-            fill-color="ctrl.fillColor"
-            fill-opacity="ctrl.fillOpacity"
+            fill-color="ctrl.isPolygon() ? ctrl.fillColor : undefined"
+            fill-opacity="ctrl.isPolygon() ? ctrl.fillOpacity : undefined"
             icon="ctrl.icon"
             center-icon="ctrl.centerIcon"
             show-center-icon="ctrl.showCenterIcon()"
