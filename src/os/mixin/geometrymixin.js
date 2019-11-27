@@ -15,6 +15,7 @@ goog.require('ol.geom.Point');
 goog.require('ol.geom.Polygon');
 goog.require('ol.geom.SimpleGeometry');
 goog.require('ol.proj');
+goog.require('ol.proj.projections');
 goog.require('os.map');
 goog.require('os.proj');
 
@@ -202,16 +203,12 @@ ol.geom.Geometry.prototype.toLonLat = function() {
    * @return {ol.geom.Geometry} Always returns this (not a clone).
    */
   ol.geom.Geometry.prototype.transform = function(sourceProjection, destinationProjection) {
-    destinationProjection = ol.proj.get(destinationProjection);
-    const currentProjection = ol.proj.get(
-        /** @type {string|undefined} */ (this.get(os.geom.GeometryField.PROJECTION)) || sourceProjection);
-
-    if (!ol.proj.equivalent(currentProjection, destinationProjection)) {
-      this.set(os.geom.GeometryField.PROJECTION, destinationProjection.getCode());
-      return oldTransform.call(this, sourceProjection, destinationProjection);
-    }
-
-    return this;
+    const currentProjection = /** @type {string|undefined} */ (
+      this.get(os.geom.GeometryField.PROJECTION)) || sourceProjection;
+    const destinationCode = typeof destinationProjection === 'string' ?
+      destinationProjection : destinationProjection.getCode();
+    this.set(os.geom.GeometryField.PROJECTION, destinationCode);
+    return oldTransform.call(this, currentProjection, destinationProjection);
   };
 
 
