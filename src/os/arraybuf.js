@@ -1,28 +1,21 @@
-goog.provide('os.arraybuf');
+goog.module('os.arraybuf');
+goog.module.declareLegacyNamespace();
 
-
-/**
- * Maximum ArrayBuffer size for string conversion. Larger buffers will be converted a chunk at a time.
- * @type {number}
- * @const
- * @private
- */
-os.arraybuf.MAX_STRING_CHUNK_ = 65536;
+goog.require('goog.array');
 
 
 /**
  * The Byte Order Marker (BOM) sequence.
  * @type {!Array<number>}
- * @const
  */
-os.arraybuf.BYTE_ORDER_MARKER = [0xef, 0xbb, 0xbf];
+const BYTE_ORDER_MARKER = [0xef, 0xbb, 0xbf];
 
 
 /**
  * Enumeration of magic numbers for array buffer type checking.
  * @enum {number}
  */
-os.arraybuf.MagicNumber = {
+const MagicNumber = {
   ZIP: 0x504b0304,
   PDF: 0x25504446
 };
@@ -41,9 +34,9 @@ os.arraybuf.MagicNumber = {
  * @return {boolean}
  * @deprecated Please use Boolean(os.file.mime.text.getText()) instead
  */
-os.arraybuf.isText = function(ab) {
+const isText = function(ab) {
   // If UTF-8 Byte Order Mark exists
-  if (goog.array.equals(new Uint8Array(ab.slice(0, 3)), os.arraybuf.BYTE_ORDER_MARKER)) {
+  if (goog.array.equals(new Uint8Array(ab.slice(0, 3)), BYTE_ORDER_MARKER)) {
     // just assume it is text
     return true;
   }
@@ -57,7 +50,7 @@ os.arraybuf.isText = function(ab) {
     return true;
   }
 
-  if (has32 && dv.getUint32(0) == os.arraybuf.MagicNumber.ZIP) {
+  if (has32 && dv.getUint32(0) == MagicNumber.ZIP) {
     // zip files are considered binary regardless of contents
     return false;
   }
@@ -68,7 +61,7 @@ os.arraybuf.isText = function(ab) {
     if (has32 && i < pdfMax) {
       // PDF magic number can occur anywhere in the first 1024 bytes according to the spec, so check each one
       var int32 = dv.getUint32(i);
-      if (int32 === os.arraybuf.MagicNumber.PDF) {
+      if (int32 === MagicNumber.PDF) {
         // PDF files are also considered binary regardless of contents
         return false;
       }
@@ -81,7 +74,7 @@ os.arraybuf.isText = function(ab) {
       return false;
     }
 
-    if (!os.arraybuf.isTextCharacter(b)) {
+    if (!isTextCharacter(b)) {
       nonTextBytes++;
     }
   }
@@ -102,7 +95,7 @@ os.arraybuf.isText = function(ab) {
  * @return {boolean}
  * @deprecated Please see the os.file.mime.text package instead
  */
-os.arraybuf.isTextCharacter = function(b) {
+const isTextCharacter = function(b) {
   return b == 10 || b == 13 || b == 9 || b == 8 || (b >= 32 && b <= 127);
 };
 
@@ -114,10 +107,10 @@ os.arraybuf.isTextCharacter = function(b) {
  * @return {string} The string
  * @deprecated Please use os.file.mime.text.getText() instead
  */
-os.arraybuf.toString = function(ab) {
+const toString = function(ab) {
   var s = '';
   // strip the BOM if the content has one
-  if (goog.array.equals(new Uint8Array(ab.slice(0, 3)), os.arraybuf.BYTE_ORDER_MARKER)) {
+  if (goog.array.equals(new Uint8Array(ab.slice(0, 3)), BYTE_ORDER_MARKER)) {
     ab = ab.slice(3);
   }
 
@@ -140,3 +133,5 @@ os.arraybuf.toString = function(ab) {
   // trim nulls from the beginning/end
   return s.replace(/(^\x00+)|(\x00+$)/g, '');
 };
+
+exports = {BYTE_ORDER_MARKER, MagicNumber, isText, isTextCharacter, toString};
