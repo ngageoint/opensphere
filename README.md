@@ -21,6 +21,7 @@ Questions? Ask them in the [forum](https://groups.google.com/forum/#!forum/opens
 
 * Java 1.7.0+
 * Node/NPM
+* Python
 
 ## Getting Started
 OpenSphere is natively developed on Linux and should run great on OS X and typical Linux distributions. See [Windows Development](http://opensphere.readthedocs.io/en/latest/windows_development.html) for instructions for building on Windows.
