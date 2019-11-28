@@ -1,5 +1,5 @@
-goog.provide('os.defines');
-goog.provide('os.worker');
+goog.module('os.defines');
+goog.module.declareLegacyNamespace();
 
 
 /**
@@ -36,17 +36,3 @@ goog.define('os.SETTINGS_DB_NAME', os.NAMESPACE + '.settings');
  * @define {string} The database name used to transfer between apps
  */
 goog.define('os.SHARED_FILE_DB_NAME', 'com.bitsys.db');
-
-
-/**
- * @define {string} The path to os workers.
- *
- * Override this in compiled mode using --define os.worker.DIR='something/else', or to override in uncompiled mode
- * use:
- * <pre>
- *   var CLOSURE_UNCOMPILED_DEFINES = {'os.worker.DIR': 'something/else'};
- * </pre>
- *
- * Note the above must be executed prior to loading base.js.
- */
-goog.define('os.worker.DIR', 'src/worker/');

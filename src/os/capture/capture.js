@@ -13,6 +13,7 @@ goog.require('os.defines');
 goog.require('os.file.persist.FilePersistence');
 goog.require('os.job.Job');
 goog.require('os.string');
+goog.require('os.worker');
 
 
 /**
