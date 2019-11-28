@@ -14,6 +14,7 @@ Prerequisites
 - Node 6+ and npm
 - Yarn_
 - Python
+- Sphinx (optional, used to generate these docs)
 - POSIX-compatible shell environment
 
   - Along with ``cat``, ``cp``, ``echo``, ``grep``, ``perl``, ``xargs``
@@ -136,7 +137,7 @@ The ``index-template.html`` and its corresponding ``index.js`` file define how t
 
 If you set up nginx or httpd as recommended above, accessing it might be accomplished by pointing your browser at http://localhost:8080/workspace/opensphere
 
-.. note:: The debug instance references each individual Javascript file in place, resulting in the debug page loading thousands of individual files. Modern browsers tend to handle this well, but debugging on older browsers can be a painful experience.
+.. note:: The debug instance references each individual Javascript file in place, resulting in the debug page loading thousands of individual files. Modern browsers tend to handle this well, but debugging on older browsers can be an unpleasant experience.
 
 Once you have run the build once, you can make changes to files in the workspace and pick them up on the page by merely refreshing it. The build only has to be run if dependencies (``goog.require/provide``) change or if files are added or removed.
 
