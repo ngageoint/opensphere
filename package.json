@@ -251,6 +251,7 @@
     "karma-chrome-launcher": "^3.1.0",
     "karma-coverage": "^2.0.1",
     "karma-firefox-launcher": "^1.2.0",
+    "karma-googmodule-preprocessor": "^1.0.1",
     "karma-jasmine": "^0.1.0",
     "karma-junit-reporter": "^1.2.0",
     "lolex": "=2.3.2",
