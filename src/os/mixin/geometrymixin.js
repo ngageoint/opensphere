@@ -15,6 +15,7 @@ goog.require('ol.geom.Point');
 goog.require('ol.geom.Polygon');
 goog.require('ol.geom.SimpleGeometry');
 goog.require('ol.proj');
+goog.require('ol.proj.projections');
 goog.require('os.map');
 goog.require('os.proj');
 
@@ -192,7 +193,25 @@ ol.geom.Geometry.prototype.toLonLat = function() {
 })();
 
 
+
 (function() {
+  var oldTransform = ol.geom.Geometry.prototype.transform;
+
+  /**
+   * @param {ol.ProjectionLike} sourceProjection
+   * @param {ol.ProjectionLike} destinationProjection
+   * @return {ol.geom.Geometry} Always returns this (not a clone).
+   */
+  ol.geom.Geometry.prototype.transform = function(sourceProjection, destinationProjection) {
+    const currentProjection = /** @type {string|undefined} */ (
+      this.get(os.geom.GeometryField.PROJECTION)) || sourceProjection;
+    const destinationCode = typeof destinationProjection === 'string' ?
+      destinationProjection : destinationProjection.getCode();
+    this.set(os.geom.GeometryField.PROJECTION, destinationCode);
+    return oldTransform.call(this, currentProjection, destinationProjection);
+  };
+
+
   /**
    * Openlayers' implementation does not actually clone the underlying geometries
    *
