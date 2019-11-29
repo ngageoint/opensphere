@@ -1,10 +1,12 @@
-goog.provide('os.alert.EventType');
-
+goog.module('os.alert.EventType');
+goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}
  */
-os.alert.EventType = {
+const EventType = {
   ALERT: 'alert',
   CLEAR_ALERTS: 'clearAlerts'
 };
+
+exports = EventType;
