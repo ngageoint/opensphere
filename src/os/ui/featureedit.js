@@ -1891,6 +1891,10 @@ os.ui.FeatureEditCtrl.updateFeatureStyle = function(feature) {
           var bearing = /** @type {number} */ (feature.get(os.Fields.BEARING));
           if (!isNaN(bearing)) {
             config['image']['rotation'] = goog.math.toRadians(bearing);
+
+            // when setting the icon rotation, ensure the appropriate rotation columns are set on the feature.
+            feature.set(os.style.StyleField.SHOW_ROTATION, true, true);
+            feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING, true);
           }
         }
       }
