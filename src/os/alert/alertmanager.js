@@ -15,7 +15,6 @@ const AlertEventType = goog.require('os.alert.EventType');
 /**
  * Maximum number of alerts to be saved.
  * @type {number}
- * @private
  */
 const maxSaved_ = 10000;
 
@@ -64,6 +63,14 @@ class AlertManager extends goog.events.EventTarget {
    */
   static get MAX_SAVED() {
     return maxSaved_;
+  }
+
+  /**
+   * Global alert manager instance.
+   * @return {AlertManager}
+   */
+  static getInstance() {
+    return instance_;
   }
 
   /**
@@ -156,6 +163,11 @@ class AlertManager extends goog.events.EventTarget {
     }
   }
 }
-goog.addSingletonGetter(AlertManager);
+
+/**
+ * Global alert manager instance.
+ * @type {AlertManager}
+ */
+const instance_ = new AlertManager();
 
 exports = AlertManager;

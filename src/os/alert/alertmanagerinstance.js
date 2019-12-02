@@ -1,12 +1,10 @@
+/**
+ * This is added for backward compatibility with files that goog.require('os.alertManager'). This can be removed if
+ * those are replaced with `goog.require('os.alert.AlertManager')` and use `getInstance()`.
+ */
 goog.module('os.alertManager');
 goog.module.declareLegacyNamespace();
 
 const AlertManager = goog.require('os.alert.AlertManager');
 
-/**
- * Global alert manager reference.
- * @type {AlertManager}
- */
-const instance = AlertManager.getInstance();
-
-exports = instance;
+exports = AlertManager.getInstance();
