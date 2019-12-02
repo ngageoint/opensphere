@@ -41,9 +41,9 @@ const isText = function(ab) {
     return true;
   }
 
-  var dv = new DataView(ab);
-  var n = Math.min(64000, dv.byteLength);
-  var has32 = n >= 4;
+  const dv = new DataView(ab);
+  const n = Math.min(64000, dv.byteLength);
+  const has32 = n >= 4;
 
   if (n == 0) {
     // empty files are considered text
@@ -55,19 +55,19 @@ const isText = function(ab) {
     return false;
   }
 
-  var nonTextBytes = 0;
-  var pdfMax = Math.min(1021, n - 3);
-  for (var i = 0; i < n; i++) {
+  let nonTextBytes = 0;
+  const pdfMax = Math.min(1021, n - 3);
+  for (let i = 0; i < n; i++) {
     if (has32 && i < pdfMax) {
       // PDF magic number can occur anywhere in the first 1024 bytes according to the spec, so check each one
-      var int32 = dv.getUint32(i);
+      const int32 = dv.getUint32(i);
       if (int32 === MagicNumber.PDF) {
         // PDF files are also considered binary regardless of contents
         return false;
       }
     }
 
-    var b = dv.getUint8(i);
+    const b = dv.getUint8(i);
 
     if (b == 0) {
       // files with null bytes are likely binary
@@ -108,19 +108,19 @@ const isTextCharacter = function(b) {
  * @deprecated Please use os.file.mime.text.getText() instead
  */
 const toString = function(ab) {
-  var s = '';
+  let s = '';
   // strip the BOM if the content has one
   if (goog.array.equals(new Uint8Array(ab.slice(0, 3)), BYTE_ORDER_MARKER)) {
     ab = ab.slice(3);
   }
 
   // TextDecoder.decode only works with a DataView in earlier versions of Firefox
-  var dv = new DataView(ab);
+  const dv = new DataView(ab);
 
-  var toTry = ['utf-8', 'latin2', 'latin3', 'latin4', 'cyrillic', 'utf-16'];
-  for (var i = 0, ii = toTry.length; i < ii; i++) {
+  const toTry = ['utf-8', 'latin2', 'latin3', 'latin4', 'cyrillic', 'utf-16'];
+  for (let i = 0, ii = toTry.length; i < ii; i++) {
     // this is poly-filled by the text-encoding package
-    var decoder = new TextDecoder(toTry[i], {fatal: true});
+    const decoder = new TextDecoder(toTry[i], {fatal: true});
 
     try {
       s = decoder.decode(dv);

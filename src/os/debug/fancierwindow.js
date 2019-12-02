@@ -52,7 +52,7 @@ class FancierWindow extends goog.debug.FancyWindow {
     super.writeInitialDocument();
 
     /** @suppress {accessControls} To access the private dom helper for the logging window to get the save button */
-    var saveButton = this.dh_.getElement('savebutton');
+    const saveButton = this.dh_.getElement('savebutton');
     saveButton.addEventListener(goog.events.EventType.CLICK, this.exportLogs_.bind(this));
 
     // close button should set the debug window to disabled
@@ -72,8 +72,8 @@ class FancierWindow extends goog.debug.FancyWindow {
    * @inheritDoc
    */
   getStyleRules() {
-    var baseRules = super.getStyleRules();
-    var extraRules = goog.html.SafeStyleSheet.fromConstant(styleRules);
+    const baseRules = super.getStyleRules();
+    const extraRules = goog.html.SafeStyleSheet.fromConstant(styleRules);
     return goog.html.SafeStyleSheet.concat(baseRules, extraRules);
   }
 
@@ -82,17 +82,17 @@ class FancierWindow extends goog.debug.FancyWindow {
    * @suppress {accessControls} To overwrite private method getHtml_ to add save button
    */
   getHtml_() {
-    var baseHtml = super.getHtml_();
+    const baseHtml = super.getHtml_();
 
-    var SafeHtml = goog.html.SafeHtml;
+    const SafeHtml = goog.html.SafeHtml;
 
-    var body = SafeHtml.create(
+    const body = SafeHtml.create(
         'body', {},
         SafeHtml.create(
             'div', {'id': 'head'},
             SafeHtml.create('span', {'id': 'savebutton'}, 'save')));
 
-    var additionalHtml = SafeHtml.create('html', {}, body);
+    const additionalHtml = SafeHtml.create('html', {}, body);
     return goog.html.SafeHtml.concat(baseHtml, additionalHtml);
   }
 
@@ -101,22 +101,22 @@ class FancierWindow extends goog.debug.FancyWindow {
    * @private
    */
   exportLogs_() {
-    var SafeHtml = goog.html.SafeHtml;
-    var head = SafeHtml.create(
+    const SafeHtml = goog.html.SafeHtml;
+    const head = SafeHtml.create(
         'head', {},
         SafeHtml.concat(
             SafeHtml.create('title', {}, 'Logging: ' + this.identifier),
             SafeHtml.createStyle(this.getStyleRules())));
 
-    var htmlMessages = [];
+    const htmlMessages = [];
 
     /** @suppress {accessControls} To access the private log messages (savedMessges_) */
-    var messages = this.savedMessages_.getValues();
-    for (var i = 0; i < messages.length; i++) {
+    const messages = this.savedMessages_.getValues();
+    for (let i = 0; i < messages.length; i++) {
       htmlMessages.push(SafeHtml.create('div', {'class': 'logmsg'}, messages[i]));
     }
 
-    var body = SafeHtml.create(
+    const body = SafeHtml.create(
         'body', {},
         SafeHtml.concat(
             SafeHtml.create(
@@ -124,9 +124,10 @@ class FancierWindow extends goog.debug.FancyWindow {
                 {'id': 'log', 'style': goog.string.Const.from('overflow:auto;height:100%;')},
                 SafeHtml.concat(htmlMessages))));
 
-    var logOutput = SafeHtml.create('html', {}, SafeHtml.concat(head, body));
+    const logOutput = SafeHtml.create('html', {}, SafeHtml.concat(head, body));
 
-    var outFileName = this.identifier + 'LoggingOutput_' + moment(goog.now()).utc().format('YYYYMMDD_Hmmss') + 'Z.html';
+    const outFileName = this.identifier + 'LoggingOutput_' + moment(goog.now()).utc().format('YYYYMMDD_Hmmss') +
+        'Z.html';
     if (os.file.persist.saveFile(outFileName, goog.html.SafeHtml.unwrap(logOutput), 'text/html')) {
       os.alert.AlertManager.getInstance().sendAlert('Created ' + outFileName, os.alert.AlertEventSeverity.SUCCESS);
     } else {

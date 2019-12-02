@@ -77,10 +77,10 @@ class AlertManager extends goog.events.EventTarget {
    *   by dispatching a {@code os.alert.AlertEventTypes.DISMISS_ALERT} event
    */
   sendAlert(alert, opt_severity, opt_logger, opt_limit, opt_dismissDispatcher) {
-    var severity = opt_severity || AlertEventSeverity.ERROR;
+    const severity = opt_severity || AlertEventSeverity.ERROR;
 
     // fire off the alert
-    var alertEvent = new os.alert.AlertEvent(alert, severity, opt_limit, opt_dismissDispatcher);
+    const alertEvent = new os.alert.AlertEvent(alert, severity, opt_limit, opt_dismissDispatcher);
     this.savedAlerts_.add(alertEvent);
     this.dispatchEvent(alertEvent);
 
@@ -148,8 +148,8 @@ class AlertManager extends goog.events.EventTarget {
    */
   processMissedAlerts(clientId, handler, opt_context) {
     if (!this.missedAlertsProcessed_) {
-      var beforeCount = this.processedByClientCount_[clientId] || 0;
-      var alerts = goog.array.slice(this.savedAlerts_.getValues(), 0, this.savedAlerts_.getCount() - beforeCount);
+      const beforeCount = this.processedByClientCount_[clientId] || 0;
+      const alerts = goog.array.slice(this.savedAlerts_.getValues(), 0, this.savedAlerts_.getCount() - beforeCount);
       os.array.forEach(alerts, handler, opt_context);
       this.processedByClientCount_[clientId] = this.savedAlerts_.getCount();
       this.missedAlertsProcessed_ = true;
