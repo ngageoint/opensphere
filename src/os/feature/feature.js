@@ -522,33 +522,36 @@ os.feature.createRings = function(feature, opt_replace) {
     var center = geometry ? ol.proj.toLonLat(ol.extent.getCenter(geometry.getExtent()), os.map.PROJECTION) : null;
 
     if (options && options.enabled && options.rings && center) {
+      // calculate the geomag object and get the current interpolation function to use
       var date = new Date(os.time.TimelineController.getInstance().getCurrent());
       var geomag = os.bearing.geomag(center, date);
       var declination = /** @type {number} */ (geomag['dec']);
-      var interpFn = os.interpolate.getMethod() == os.interpolate.Method.GEODESIC ?
+      var directInterpFn = os.interpolate.getMethod() == os.interpolate.Method.GEODESIC ?
           osasm.geodesicDirect : osasm.rhumbDirect;
 
       var rings = options.rings;
-      var crosshair = options.crosshair;
-      var arcs = options.arcs;
       var startAngle = (options.startAngle || 0) + declination;
       var widthAngle = options.widthAngle || 0;
       var lastRing = rings[rings.length - 1];
       var geoms = [];
+      var labels;
 
+      // iterate over the rings and create either arcs or circles from them
       rings.forEach(function(ring) {
         var units = ring.units;
         var radius = ring.radius;
 
         if (units && radius) {
+          // units need to be in meters to use with the interpolation functions
           radius = os.math.convertUnits(radius, os.math.Units.METERS, units);
           var geom;
           var coordinates;
 
-          if (arcs) {
+          if (options.arcs) {
             coordinates = os.geo.interpolateArc(center, radius, widthAngle, startAngle + widthAngle / 2);
             geom = new ol.geom.LineString(coordinates);
           } else {
+            // interpolateCircle wasn't working correctly... so use ellipse with semimajor = semiminor instead
             coordinates = os.geo.interpolateEllipse(center, radius, radius, 0);
             geom = new ol.geom.Polygon([coordinates]);
           }
@@ -557,8 +560,8 @@ os.feature.createRings = function(feature, opt_replace) {
         }
       });
 
-      if (arcs) {
-        // add the "endcap" geometries
+      if (options.arcs) {
+        // add the "endcap" geometries using the last ring
         var startBearing = startAngle;
         var endBearing = startAngle + widthAngle;
 
@@ -568,8 +571,8 @@ os.feature.createRings = function(feature, opt_replace) {
 
           distance = os.math.convertUnits(distance, os.math.Units.METERS, units);
 
-          var endCoord1 = interpFn(center, startBearing, distance);
-          var endCoord2 = interpFn(center, endBearing, distance);
+          var endCoord1 = directInterpFn(center, startBearing, distance);
+          var endCoord2 = directInterpFn(center, endBearing, distance);
 
           var startCap = new ol.geom.LineString([center, endCoord1]);
           geoms.push(startCap);
@@ -579,23 +582,25 @@ os.feature.createRings = function(feature, opt_replace) {
         }
       }
 
-      if (crosshair) {
+      if (options.crosshair) {
+        // create the crosshair starting from magnetic north
         var bearing = declination < 0 ? declination + 360 : declination;
 
         if (lastRing) {
-          var distance = lastRing.radius;
+          var distance = lastRing.radius || 40;
           var units = lastRing.units;
 
           distance = os.math.convertUnits(distance, os.math.Units.METERS, units);
           distance += distance / rings.length;
 
-          var coord1 = interpFn(center, bearing, distance);
-          var coord2 = interpFn(center, bearing - 180, distance);
+          // the create the lines at 90 degree angles from magnetic north (not just at 0, 90, 180, 270)
+          var coord1 = directInterpFn(center, bearing, distance);
+          var coord2 = directInterpFn(center, bearing - 180, distance);
 
           var verticalLine = new ol.geom.LineString([coord1, center, coord2]);
 
-          coord1 = interpFn(center, bearing - 90, distance);
-          coord2 = interpFn(center, bearing + 90, distance);
+          coord1 = directInterpFn(center, bearing - 90, distance);
+          coord2 = directInterpFn(center, bearing + 90, distance);
 
           var horizontalLine = new ol.geom.LineString([coord1, center, coord2]);
 
@@ -604,12 +609,43 @@ os.feature.createRings = function(feature, opt_replace) {
         }
       }
 
+      if (options.labels) {
+        labels = [];
+
+        rings.forEach(function(ring, i) {
+          var distance = ring.radius;
+
+          if (distance) {
+            // edge case: don't draw labels for null/0 radius rings
+            var units = ring.units;
+            distance = os.math.convertUnits(distance, os.math.Units.METERS, units);
+
+            var coord = osasm.rhumbDirect(center, options.arcs ? declination + options.startAngle : 90, distance);
+            var geom = new ol.geom.Point(coord);
+            var key = os.data.RecordField.RING_LABEL + i;
+            feature.set(key, geom);
+
+            var labelConfig = {
+              'geometry': key,
+              'text': ring.radius + units,
+              'textAlign': 'left',
+              'offsetX': 4,
+              'zIndex': 100
+            };
+
+            labels.push(labelConfig);
+          }
+        });
+      }
+
+      // create the geometry collection, transform it and interpolate it now
       ringGeom = new ol.geom.GeometryCollection(geoms);
       ringGeom.osTransform();
       os.interpolate.interpolateGeom(ringGeom);
     }
 
     feature.set(os.data.RecordField.RING, ringGeom);
+    feature.set(os.style.StyleField.ADDITIONAL_LABELS, labels);
   }
 
   return ringGeom;

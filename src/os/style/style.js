@@ -1478,6 +1478,11 @@ os.style.createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
       }
     }
 
+    var additionalStyles = os.style.label.createAdditionalLabels(feature, featureConfig, opt_layerConfig);
+    if (additionalStyles) {
+      styles = styles.concat(additionalStyles);
+    }
+
     return styles;
   }
 };

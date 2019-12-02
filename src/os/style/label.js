@@ -475,6 +475,74 @@ os.style.label.createOrUpdate = function(feature, config, opt_layerConfig) {
 
 
 /**
+ * Creates label styles for additional label config included on a feature.
+ *
+ * @param {ol.Feature} feature The feature
+ * @param {Object} config Base configuration for the feature
+ * @param {Object=} opt_layerConfig Layer configuration for the feature
+ * @return {Array<ol.style.Style>|undefined} The label style, or undefined if the feature isn't labelled
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ */
+os.style.label.createAdditionalLabels = function(feature, config, opt_layerConfig) {
+  var additionalLabels = feature.get(os.style.StyleField.ADDITIONAL_LABELS);
+  var labelStyles;
+
+  if (additionalLabels) {
+    labelStyles = [];
+
+    var reader = os.style.StyleManager.getInstance().getReader('text');
+    goog.asserts.assert(reader);
+
+    additionalLabels.forEach(function(additionalConfig) {
+      // look for the text style configuration on the feature config, then the layer config.
+      // if these change in the future we'll have to rework this a bit.
+      var labelConfig = {};
+      var baseLabelConfig = /** @type {Object|undefined} */ (os.object.getFirstValue('text', config,
+          opt_layerConfig)) || {};
+      os.style.mergeConfig(baseLabelConfig, labelConfig);
+      os.style.mergeConfig(additionalConfig, labelConfig);
+
+      // create the style using the text reader
+      var textStyle = reader.getOrCreateStyle(labelConfig);
+      var labelStyle = new ol.style.Style({
+        geometry: additionalConfig['geometry'] || os.style.label.defaultGeometryFunction,
+        text: textStyle
+      });
+
+      var baseZIndex = labelConfig['zIndex'] || 0;
+      labelStyle.setZIndex(baseZIndex + os.style.label.Z_INDEX);
+
+      // update the font and colors
+      var fontSize = labelConfig[os.style.StyleField.LABEL_SIZE];
+      if (typeof fontSize == 'string') {
+        fontSize = parseInt(fontSize, 10) || undefined;
+      }
+
+      if (!fontSize) {
+        fontSize = os.style.label.DEFAULT_SIZE;
+      }
+
+      var labelFont = os.style.label.getFont(fontSize);
+      textStyle.setFont(labelFont);
+
+      var labelColor = os.style.label.getColor(feature, config, opt_layerConfig);
+      textStyle.getFill().setColor(labelColor);
+
+      var fillColor = ol.color.asArray(labelColor);
+      var strokeColor = ol.color.asArray(/** @type {Array<number>|string} */ (textStyle.getStroke().getColor()));
+      strokeColor[3] = fillColor[3];
+      textStyle.getStroke().setColor(os.style.toRgbaString(strokeColor));
+
+      labelStyles.push(labelStyle);
+    });
+  }
+
+  return labelStyles;
+};
+
+
+/**
  * Prepare label text for display to the user. Strips HTML and newlines and truncates the label.
  *
  * @param {string} text The label text

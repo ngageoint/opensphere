@@ -24,8 +24,8 @@
       </div>
 
       <div class="form-group row flex-shrink-0" title="Choose the interval and units for your rings">
-        <label class="col-4 col-form-label">Interval</label>
-        <div class="col-4">
+        <label class="col-4 col-form-label">Units</label>
+        <div class="col-4" ng-if="ctrl.options.type == 'auto'">
           <div class="row">
             <input class="form-control" type="number" name="interval" step="any" ng-change="ctrl.updateInterval(true)" ng-model="ctrl.options.interval" ng-disabled="!ctrl.options.enabled"/>
           </div>
@@ -44,24 +44,31 @@
           </div>
         </div>
 
-        <div class="col-4" style="max-height:10rem;overflow:auto;">
+        <div class="col-4 overflow-auto js-ring-scroll-section" style="max-height:10rem;">
           <div class="mb-1 row" ng-repeat="ring in ctrl.options.rings | limitTo: 50">
-            <input class="form-control col" type="number" name="count" step="1" ng-change="ctrl.update()" ng-model="ring.radius" ng-disabled="!ctrl.options.enabled && ctrl.options.type == 'auto'"/>
-            <button class="btn btn-outline-danger border-0" ng-click="ctrl.remove($index, true)" ng-if="ctrl.options.type == 'manual'" ng-disabled="!ctrl.options.enabled && ctrl.options.rings.length <= 1">
+            <input class="form-control col" type="number" name="count" step="1" ng-change="ctrl.update()" ng-model="ring.radius" ng-disabled="!ctrl.options.enabled || ctrl.options.type == 'auto'"/>
+            <button class="btn btn-outline-danger border-0" ng-click="ctrl.remove($index, true)" ng-if="ctrl.options.type == 'manual'" ng-disabled="!ctrl.options.enabled || ctrl.options.rings.length <= 1">
               <i class="fa fa-times"></i>
             </button>
           </div>
+        </div>
 
-          <div class="row">
-            <button class="btn btn-success" ng-click="ctrl.add(true)" ng-disabled="ctrl.options.rings.length > 100" ng-if="ctrl.options.type == 'manual'">
-              <i class="fa fa-plus"></i> Add
-            </button>
-          </div>
+        <div class="col-4">
+          <button class="btn btn-success" ng-click="ctrl.add(true)" ng-disabled="ctrl.options.rings.length > 100" ng-if="ctrl.options.type == 'manual'">
+            <i class="fa fa-plus"></i> Add
+          </button>
         </div>
       </div>
     </div>
 
     <div class="col-6">
+      <div class="form-group flex-shrink-0">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="labels{{ctrl.uid}}" ng-model="ctrl.options.labels" ng-change="ctrl.update()"  ng-disabled="!ctrl.options.enabled"/>
+          <label class="form-check-label" for="labels{{ctrl.uid}}">Show Labels</label>
+        </div>
+      </div>
+
       <div class="form-group flex-shrink-0">
         <div class="form-check">
           <input class="form-check-input" type="checkbox" id="crosshair{{ctrl.uid}}" ng-model="ctrl.options.crosshair" ng-change="ctrl.update()"  ng-disabled="!ctrl.options.enabled"/>
