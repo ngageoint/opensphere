@@ -41,15 +41,28 @@ os.ui.Module.directive('ringoptions', [os.ui.geo.RingOptionsCtrl]);
  * Controller function for the ringoptions directive
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout
  * @constructor
  * @ngInject
  */
-os.ui.geo.ringOptionsDirective = function($scope, $element) {
+os.ui.geo.ringOptionsDirective = function($scope, $element, $timeout) {
   /**
    * @type {?angular.Scope}
    * @private
    */
   this.scope_ = $scope;
+
+  /**
+   * @type {?angular.JQLite}
+   * @private
+   */
+  this.element_ = $element;
+
+  /**
+   * @type {?angular.$timeout}
+   * @private
+   */
+  this.timeout_ = $timeout;
 
   /**
    * The ring options object.
@@ -88,6 +101,7 @@ os.ui.geo.ringOptionsDirective = function($scope, $element) {
 os.ui.geo.ringOptionsDirective.prototype.$onDestroy = function() {
   this.scope_ = null;
   this.element_ = null;
+  this.timeout_ = null;
 };
 
 
@@ -190,8 +204,14 @@ os.ui.geo.ringOptionsDirective.prototype.updateUnits = function(opt_update) {
  */
 os.ui.geo.ringOptionsDirective.prototype.add = function(opt_update) {
   var last = goog.array.peek(this['options'].rings);
-  var radius = (last.radius || 0) + this['options'].interval;
+  var radius = (last && last.radius || 0) + this['options'].interval;
   this['options'].rings.push({'radius': radius, 'units': this['options'].units});
+
+  this.timeout_(function() {
+    // wait until after the new UI element is added before scrolling down to the bottom
+    var scrollEle = this.element_.find('.js-ring-scroll-section');
+    scrollEle.scrollTop(scrollEle[0].scrollHeight);
+  }.bind(this));
 
   if (opt_update) {
     this.update();

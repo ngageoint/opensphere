@@ -6,6 +6,7 @@ goog.provide('os.style.StyleField');
  * @const
  */
 os.style.StyleField = {
+  ADDITIONAL_LABELS: '_additionalLabels',
   ARROW_SIZE: 'arrowSize',
   ARROW_UNITS: 'arrowUnits',
   CENTER_SHAPE: 'centerShape',
