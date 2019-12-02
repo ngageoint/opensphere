@@ -52,16 +52,21 @@ plugin.file.kml.export.getBalloonOptions = function(feature) {
  * Get the icon rotation column for an OpenLayers feature.
  *
  * @param {ol.Feature} feature The feature.
- * @return {string|null|undefined} The column.
+ * @return {string|undefined} The column.
  */
 plugin.file.kml.export.getRotationColumn = function(feature) {
+  var rotColumn;
   if (feature) {
+    rotColumn = /** @type {string|undefined} */ (feature.get(os.style.StyleField.ROTATION_COLUMN));
+
     var layerConfig = os.style.getLayerConfig(feature);
-    if (layerConfig && layerConfig[os.style.StyleField.SHOW_ROTATION]) {
-      return layerConfig[os.style.StyleField.ROTATION_COLUMN];
+    if (!rotColumn || layerConfig && layerConfig[os.style.StyleField.REPLACE_STYLE]) {
+      rotColumn = layerConfig[os.style.StyleField.ROTATION_COLUMN];
     }
   }
-  return undefined;
+
+  // don't return an empty string
+  return rotColumn;
 };
 
 /**
