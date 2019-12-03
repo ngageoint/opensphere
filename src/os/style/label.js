@@ -514,7 +514,8 @@ os.style.label.createAdditionalLabels = function(feature, config, opt_layerConfi
       labelStyle.setZIndex(baseZIndex + os.style.label.Z_INDEX);
 
       // update the font and colors
-      var fontSize = labelConfig[os.style.StyleField.LABEL_SIZE];
+      var fontSize = /** @type {string|number|undefined} */ (os.object.getFirstValue(
+          os.style.StyleField.LABEL_SIZE, labelConfig, config, opt_layerConfig));
       if (typeof fontSize == 'string') {
         fontSize = parseInt(fontSize, 10) || undefined;
       }

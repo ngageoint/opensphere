@@ -120,7 +120,7 @@ os.ui.geo.ringOptionsDirective.prototype.getDefaultOptions = function() {
     arcs: false,
     labels: true,
     startAngle: 0,
-    widthAngle: 0,
+    widthAngle: 45,
     rings: [
       {radius: 40, units: os.math.Units.NAUTICAL_MILES},
       {radius: 80, units: os.math.Units.NAUTICAL_MILES},

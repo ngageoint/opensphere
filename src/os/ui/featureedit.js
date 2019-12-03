@@ -1679,20 +1679,20 @@ os.ui.launchFeatureEdit = function(options) {
       'options': options
     };
 
+    var container = angular.element(os.ui.windowSelector.CONTAINER);
+    var x = container.width() - 625;
     var label = options['label'] ? options['label'] : (options['feature'] ? 'Edit' : 'Add') + ' Feature';
     var icon = options['icon'] ? options['icon'] : 'fa fa-map-marker';
     var windowOptions = {
       'id': windowId,
       'label': label,
       'icon': icon,
-      'x': 'center',
+      'x': x,
       'y': 'center',
-      'width': 700,
+      'width': 600,
       'min-width': 400,
-      'max-width': 2000,
+      'max-width': 1000,
       'height': 'auto',
-      'min-height': 300,
-      'max-height': 2000,
       'modal': false,
       'show-close': true
     };

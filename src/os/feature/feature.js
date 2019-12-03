@@ -537,7 +537,7 @@ os.feature.createRings = function(feature, opt_replace) {
       var labels;
 
       // iterate over the rings and create either arcs or circles from them
-      rings.forEach(function(ring) {
+      rings.forEach(function(ring, i, arr) {
         var units = ring.units;
         var radius = ring.radius;
 
@@ -548,8 +548,23 @@ os.feature.createRings = function(feature, opt_replace) {
           var coordinates;
 
           if (options.arcs) {
-            coordinates = os.geo.interpolateArc(center, radius, widthAngle, startAngle + widthAngle / 2);
+            coordinates = os.geo.interpolateArc(center, radius, widthAngle, startAngle);
             geom = new ol.geom.LineString(coordinates);
+
+            if (i == arr.length - 1) {
+              // last ring, so create the endcap geometries and stitch it into a polygon so it can be filled
+              var endCoord1 = directInterpFn(center, startAngle - widthAngle / 2, radius);
+              var endCoord2 = directInterpFn(center, startAngle + widthAngle / 2, radius);
+
+              var startCap = new ol.geom.LineString([center, endCoord1]);
+              var endCap = new ol.geom.LineString([center, endCoord2]);
+              var polyCoords = [];
+              polyCoords = polyCoords.concat(startCap.getCoordinates());
+              polyCoords = polyCoords.concat(geom.getCoordinates());
+              polyCoords = polyCoords.concat(endCap.getCoordinates().reverse());
+
+              geom = new ol.geom.Polygon([polyCoords]);
+            }
           } else {
             // interpolateCircle wasn't working correctly... so use ellipse with semimajor = semiminor instead
             coordinates = os.geo.interpolateEllipse(center, radius, radius, 0);
@@ -560,28 +575,6 @@ os.feature.createRings = function(feature, opt_replace) {
         }
       });
 
-      if (options.arcs) {
-        // add the "endcap" geometries using the last ring
-        var startBearing = startAngle;
-        var endBearing = startAngle + widthAngle;
-
-        if (lastRing) {
-          var distance = lastRing.radius;
-          var units = lastRing.units;
-
-          distance = os.math.convertUnits(distance, os.math.Units.METERS, units);
-
-          var endCoord1 = directInterpFn(center, startBearing, distance);
-          var endCoord2 = directInterpFn(center, endBearing, distance);
-
-          var startCap = new ol.geom.LineString([center, endCoord1]);
-          geoms.push(startCap);
-
-          var endCap = new ol.geom.LineString([center, endCoord2]);
-          geoms.push(endCap);
-        }
-      }
-
       if (options.crosshair) {
         // create the crosshair starting from magnetic north
         var bearing = declination < 0 ? declination + 360 : declination;
@@ -590,8 +583,8 @@ os.feature.createRings = function(feature, opt_replace) {
           var distance = lastRing.radius || 40;
           var units = lastRing.units;
 
-          distance = os.math.convertUnits(distance, os.math.Units.METERS, units);
-          distance += distance / rings.length;
+          // convert to meters and add 10% so the crosshairs reach past the outermost ring
+          distance = os.math.convertUnits(distance, os.math.Units.METERS, units) * 1.1;
 
           // the create the lines at 90 degree angles from magnetic north (not just at 0, 90, 180, 270)
           var coord1 = directInterpFn(center, bearing, distance);
