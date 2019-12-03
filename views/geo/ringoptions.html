@@ -84,12 +84,12 @@
       </div>
 
       <div class="form-group row" ng-if="ctrl.options.arcs">
-        <label class="col-4 col-form-label">Start Angle</label>
-        <input class="form-control col-4" type="number" name="startAngle" min="0" max="360" ng-change="ctrl.update()" ng-model="ctrl.options.startAngle"  ng-disabled="!ctrl.options.enabled"/>
+        <label class="col-6 col-form-label">Center Azimuth</label>
+        <input class="form-control col-4" type="number" name="startAngle" ng-change="ctrl.update()" ng-model="ctrl.options.startAngle"  ng-disabled="!ctrl.options.enabled"/>
       </div>
 
       <div class="form-group row" ng-if="ctrl.options.arcs">
-        <label class="col-4 col-form-label">Width</label>
+        <label class="col-6 col-form-label">Width</label>
         <input class="form-control col-4" type="number" name="widthAngle" min="0" max="360" ng-change="ctrl.update()" ng-model="ctrl.options.widthAngle"  ng-disabled="!ctrl.options.enabled"/>
       </div>
     </div>
