@@ -146,7 +146,7 @@ os.ui.file.method.FileMethod.prototype.loadFile = function(opt_options) {
 
       if (tries < 10) {
         var fileEl =
-            goog.dom.getElement(os.ui.windowSelector.CONTAINER.substring(1)).querySelector('input[type="file"]');
+            goog.dom.getElement(os.ui.windowSelector.CONTAINER.substring(1)).querySelector('input[id="fileImportId"]');
         if (fileEl) {
           fileEl.click();
         } else {
