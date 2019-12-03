@@ -404,43 +404,45 @@ os.ui.ol.OLMap.prototype.getLayers_ = function() {
   for (var key in baseMapConfigs) {
     var layerConfig = baseMapConfigs[key];
     var source;
+    var proj = ol.proj.get(/** @type {string|undefined} */ (layerConfig['projection']) || os.ui.ol.OLMap.PROJECTION);
+    if (ol.proj.equivalent(proj, os.ui.ol.OLMap.PROJECTION)) {
+      if (layerConfig['baseType'] === 'XYZ') {
+        source = new os.ol.source.XYZ(/** @type {olx.source.XYZOptions} */ ({
+          projection: proj,
+          url: layerConfig['url'],
+          tileSize: layerConfig['tileSize'] || 512,
+          minZoom: layerConfig['minZoom'],
+          maxZoom: layerConfig['maxZoom'],
+          'zoomOffset': layerConfig['zoomOffset']
+        }));
+      } else {
+        var params = {
+          'EXCEPTIONS': 'INIMAGE',
+          'LAYERS': layerConfig['name']
+        };
 
-    if (layerConfig['baseType'] === 'XYZ') {
-      source = new os.ol.source.XYZ(/** @type {olx.source.XYZOptions} */ ({
-        projection: 'EPSG:4326',
-        url: layerConfig['url'],
-        tileSize: 512,
-        minZoom: layerConfig['minZoom'],
-        maxZoom: layerConfig['maxZoom'],
-        'zoomOffset': layerConfig['zoomOffset']
-      }));
-    } else {
-      var params = {
-        'EXCEPTIONS': 'INIMAGE',
-        'LAYERS': layerConfig['name']
-      };
+        source = new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
+          url: layerConfig['url'],
+          params: params,
+          serverType: 'geoserver',
+          tileGrid: os.ui.ol.OLMap.TILEGRID
+        }));
+      }
 
-      source = new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
-        url: layerConfig['url'],
-        params: params,
-        serverType: 'geoserver',
-        tileGrid: os.ui.ol.OLMap.TILEGRID
-      }));
+      var layer = new ol.layer.Tile({
+        source: source
+      });
+
+      if (layerConfig['isDefault']) {
+        // note that we have a default because if we don't, we need to set the first one visible
+        hasDefault = true;
+      }
+
+      layer.setVisible(layerConfig['isDefault'] !== undefined);
+      layer.set('title', layerConfig['title'] || layerConfig['display']);
+      layer.set('type', 'base');
+      layers.push(layer);
     }
-
-    var layer = new ol.layer.Tile({
-      source: source
-    });
-
-    if (layerConfig['isDefault']) {
-      // note that we have a default because if we don't, we need to set the first one visible
-      hasDefault = true;
-    }
-
-    layer.setVisible(layerConfig['isDefault'] !== undefined);
-    layer.set('title', layerConfig['display']);
-    layer.set('type', 'base');
-    layers.push(layer);
   }
 
   if (!hasDefault && layers.length > 0) {
