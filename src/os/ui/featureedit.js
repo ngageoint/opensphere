@@ -1069,7 +1069,7 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
     }
 
     // initialize fill color and opacity
-    if (config['fill']['color']) {
+    if (config['fill'] && config['fill']['color']) {
       // use the color from config
       this['fillColor'] = os.color.toHexString(config['fill']['color']);
       this['fillOpacity'] = os.color.toRgbArray(config['fill']['color'])[3];
