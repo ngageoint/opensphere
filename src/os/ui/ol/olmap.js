@@ -404,7 +404,7 @@ os.ui.ol.OLMap.prototype.getLayers_ = function() {
   for (var key in baseMapConfigs) {
     var layerConfig = baseMapConfigs[key];
     var source;
-    var proj = ol.proj.get(layerConfig['projection'] || os.ui.ol.OLMap.PROJECTION);
+    var proj = ol.proj.get(/** @type {string|undefined} */ (layerConfig['projection']) || os.ui.ol.OLMap.PROJECTION);
     if (ol.proj.equivalent(proj, os.ui.ol.OLMap.PROJECTION)) {
       if (layerConfig['baseType'] === 'XYZ') {
         source = new os.ol.source.XYZ(/** @type {olx.source.XYZOptions} */ ({
