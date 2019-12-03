@@ -40,12 +40,12 @@
   }
 
   .slick-header-column {
-    background: $body-bg;
+    background: $table-head-color;
     border-bottom: 1px solid $table-border-color;
     border-right-color: $table-border-color;
     border-top: 1px solid $table-border-color;
     box-sizing: content-box;
-    color: color-yiq($body-bg);
+    color: color-yiq($table-head-color);
     cursor: pointer;
 
     .ui-state-hover {
