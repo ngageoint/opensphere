@@ -459,7 +459,22 @@ describe('os.geo', function() {
     // different geometry types
     expect(os.geo.isGeometryPolygonal(new ol.geom.Point())).toBe(false);
     expect(os.geo.isGeometryPolygonal(new ol.geom.LineString())).toBe(false);
-    expect(os.geo.isGeometryPolygonal(new ol.geom.GeometryCollection())).toBe(false);
+
+    // handles collections when specified
+    var collection = new ol.geom.GeometryCollection();
+    expect(os.geo.isGeometryPolygonal(collection)).toBe(false);
+
+    var mixedArray = [
+      new ol.geom.Point(),
+      new ol.geom.LineString(),
+      new ol.geom.Polygon()
+    ];
+    collection.setGeometriesArray(mixedArray);
+    expect(os.geo.isGeometryPolygonal(collection, true)).toBe(true);
+
+    // nested collections are also handled
+    collection.setGeometriesArray([new ol.geom.GeometryCollection(mixedArray)]);
+    expect(os.geo.isGeometryPolygonal(collection, true)).toBe(true);
   });
 
   it('ol.geom.LineString should not cross the date line', function() {
