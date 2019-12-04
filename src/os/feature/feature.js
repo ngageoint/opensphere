@@ -1350,3 +1350,27 @@ os.feature.getGeometries = function(features) {
 
   return arr;
 };
+
+
+/**
+ * If a feature is currently rendering a polygonal geometry.
+ * @param {ol.Feature} feature The feature.
+ * @return {boolean} If one or more styles on the feature are rendering a polygon.
+ */
+os.feature.hasPolygon = function(feature) {
+  var hasPolygon = false;
+
+  if (feature) {
+    os.feature.forEachGeometry(feature, function(geometry) {
+      if (os.geo.isGeometryPolygonal(geometry, true)) {
+        // found one, stop processing geometries
+        hasPolygon = true;
+        return false;
+      }
+      // continue processing geometries
+      return true;
+    });
+  }
+
+  return hasPolygon;
+};

@@ -803,15 +803,7 @@ os.ui.FeatureEditCtrl.prototype.isEllipse = function() {
  * @export
  */
 os.ui.FeatureEditCtrl.prototype.isPolygon = function() {
-  if (this.isEllipse()) {
-    return true;
-  }
-
-  if (this.previewFeature) {
-    return os.geo.isGeometryPolygonal(this.previewFeature.getGeometry());
-  }
-
-  return false;
+  return os.feature.hasPolygon(this.previewFeature);
 };
 
 

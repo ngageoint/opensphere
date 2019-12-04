@@ -1,6 +1,6 @@
 goog.require('os.bearing');
+goog.require('os.bearing.geomag.wait');
 goog.require('os.interpolate');
-goog.require('os.net.Request');
 goog.require('os.osasm.wait');
 
 
@@ -12,21 +12,6 @@ describe('os.bearing', function() {
   var precision = 8;
   var geodesic = os.interpolate.Method.GEODESIC;
   var rhumb = os.interpolate.Method.RHUMB;
-
-  beforeEach(function() {
-    if (!os.bearing.geomag_) {
-      runs(function() {
-        var request = new os.net.Request('/base/vendor/geomag/WMM.COF');
-        request.listenOnce(goog.net.EventType.SUCCESS, os.bearing.onGeomag);
-        request.listenOnce(goog.net.EventType.ERROR, os.bearing.onGeomag);
-        request.load();
-      });
-
-      waitsFor(function() {
-        return !!os.bearing.geomag_;
-      });
-    }
-  });
 
   it('should get bearings correctly', function() {
     expect(os.bearing.getBearing([5, 10], [15, 20], date)).toBeCloseTo(42.99295488831754, precision);

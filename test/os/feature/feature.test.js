@@ -1,8 +1,12 @@
 goog.require('ol.Feature');
+goog.require('ol.geom.Point');
+goog.require('ol.geom.Polygon');
+goog.require('os.bearing.geomag.wait');
 goog.require('os.feature');
 goog.require('os.mock');
 goog.require('os.osasm.wait');
 goog.require('os.source.Vector');
+goog.require('os.style');
 
 
 describe('os.feature', function() {
@@ -679,6 +683,56 @@ describe('os.feature', function() {
       // gets the stroke color from the second config
       featureConfig2.stroke = undefined;
       expect(os.feature.getStrokeColor(feature)).toBe(testColor);
+    });
+
+    it('detects if a feature has a polygon', function() {
+      var feature;
+
+      // handles null/undefined feature
+      expect(os.feature.hasPolygon(feature)).toBe(false);
+
+      // no geometry
+      feature = new ol.Feature();
+      expect(os.feature.hasPolygon(feature)).toBe(false);
+
+      // no style, main geom is not a polygon
+      feature.setGeometry(new ol.geom.Point());
+      expect(os.feature.hasPolygon(feature)).toBe(false);
+
+      // no style, main geom is a polygon
+      feature.setGeometry(new ol.geom.Polygon());
+      expect(os.feature.hasPolygon(feature)).toBe(true);
+
+      // default style
+      os.style.setFeatureStyle(feature);
+      expect(os.feature.hasPolygon(feature)).toBe(true);
+
+      // default style with a point
+      feature.setGeometry(new ol.geom.Point());
+      expect(os.feature.hasPolygon(feature)).toBe(false);
+
+      var styles = [
+        os.style.DEFAULT_VECTOR_CONFIG,
+        {
+          geometry: '_polygonField',
+          fill: {
+            color: os.style.DEFAULT_FILL_COLOR
+          },
+          stroke: {
+            color: os.style.DEFAULT_LAYER_COLOR,
+            width: 3
+          }
+        }
+      ];
+
+      // secondary polygon config defined, geometry is not defined yet
+      feature.set(os.style.StyleType.FEATURE, styles);
+      os.style.setFeatureStyle(feature);
+      expect(os.feature.hasPolygon(feature)).toBe(false);
+
+      // polygon added in secondary field
+      feature.set('_polygonField', new ol.geom.Polygon());
+      expect(os.feature.hasPolygon(feature)).toBe(true);
     });
   });
 });
