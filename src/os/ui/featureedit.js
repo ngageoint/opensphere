@@ -1678,9 +1678,7 @@ os.ui.launchFeatureEdit = function(options) {
     var scopeOptions = {
       'options': options
     };
-
-    var container = angular.element(os.ui.windowSelector.CONTAINER);
-    var x = container.width() - 625;
+    var x = os.ui.FeatureEditCtrl.calculateXPosition(/** @type {ol.geom.SimpleGeometry} */ (options.geometry));
     var label = options['label'] ? options['label'] : (options['feature'] ? 'Edit' : 'Add') + ' Feature';
     var icon = options['icon'] ? options['icon'] : 'fa fa-map-marker';
     var windowOptions = {
@@ -1700,6 +1698,27 @@ os.ui.launchFeatureEdit = function(options) {
     var template = '<featureedit></featureedit>';
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
+};
+
+
+/**
+ * Calculates the X pixel position to create the feature edit window at for a given geometry. Tries to keep it out
+ * of the way of the view.
+ * @param {ol.geom.SimpleGeometry} geom The geometry
+ * @return {number} The X coordinate
+ */
+os.ui.FeatureEditCtrl.calculateXPosition = function(geom) {
+  var container = angular.element(os.ui.windowSelector.CONTAINER);
+  if (geom) {
+    var extent = geom.getExtent();
+    var center = ol.extent.getCenter(extent);
+    var pixel = os.MapContainer.getInstance().getMap().getPixelFromCoordinate(center);
+    var width = container.width();
+    return pixel[0] > width / 2 ? 100 : container.width() - 700;
+  }
+
+  // no geom, open it on the right side
+  return container.width() - 700;
 };
 
 

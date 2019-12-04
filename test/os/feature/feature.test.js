@@ -376,7 +376,7 @@ describe('os.feature', function() {
     expect(rings instanceof ol.geom.GeometryCollection).toBe(true);
 
     var geometries = rings.getGeometries();
-    expect(geometries.length).toBe(9);
+    expect(geometries.length).toBe(7);
     geometries.forEach(function(ring) {
       expect(testCoords(ring.getFlatCoordinates())).toBe(true);
     });

@@ -122,8 +122,8 @@ plugin.file.kml.ui.createOrEditPlace = function(options) {
   if (os.ui.window.exists(windowId)) {
     os.ui.window.bringToFront(windowId);
   } else {
-    var container = angular.element(os.ui.windowSelector.CONTAINER);
-    var x = container.width() - 625;
+    var x = os.ui.FeatureEditCtrl.calculateXPosition(/** @type {ol.geom.SimpleGeometry} */ (options.geometry));
+
     var windowOptions = {
       'id': windowId,
       'label': label,
