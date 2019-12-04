@@ -1,8 +1,10 @@
+goog.require('ol.geom.Point');
+goog.require('ol.geom.Polygon');
 goog.require('ol.proj');
 goog.require('os.extent');
 goog.require('os.proj');
 
-describe('os.extent', function() {
+ddescribe('os.extent', function() {
   var expandExtent = function(extent) {
     return [extent[0], 0, extent[1], 0];
   };
@@ -227,5 +229,48 @@ describe('os.extent', function() {
         });
       }
     });
+  });
+
+  it('should get the functional extent of a geometry', function() {
+    expect(os.extent.getFunctionalExtent(null)).toBe(null);
+
+    const point = new ol.geom.Point([0, 0]);
+    expect(os.extent.getFunctionalExtent(point, os.proj.EPSG4326)).toBe(point.getExtent());
+
+    const poly = ol.geom.Polygon.fromExtent([-5, -5, 5, 5]);
+    expect(os.extent.getFunctionalExtent(poly, os.proj.EPSG4326)).toBe(poly.getExtent());
+
+    const polyCrossingAntimeridian = ol.geom.Polygon.fromExtent([-179, -5, 179, 5]);
+    expect(os.extent.getFunctionalExtent(polyCrossingAntimeridian, os.proj.EPSG4326)).toBe(
+        polyCrossingAntimeridian.getAntiExtent());
+  });
+
+  it('should get the functional extent of an extent', function() {
+    let extent = [0, 0, 0, 0];
+    expect(os.extent.getFunctionalExtent(extent)).toBe(extent);
+    extent = [30, 15, 50, 45];
+    expect(os.extent.getFunctionalExtent(extent)).toBe(extent);
+    extent = [-179, -5, 179, 5];
+    expect(os.extent.getFunctionalExtent(extent)).toEqual([179, -5, 181, 5]);
+  });
+
+  it('should get the thinnest extent', function() {
+    const thin = [0, 0, 0, 0];
+    const fat = [-5, 0, 5, 0];
+    expect(os.extent.getThinnestExtent(thin, fat)).toBe(thin);
+    expect(os.extent.getThinnestExtent(fat, thin)).toBe(thin);
+
+    const thin2 = thin.slice();
+    expect(os.extent.getThinnestExtent(thin, thin2)).toBe(thin);
+    expect(os.extent.getThinnestExtent(thin2, thin)).toBe(thin2);
+
+    const fat2 = fat.slice();
+    expect(os.extent.getThinnestExtent(fat, fat2)).toBe(fat);
+    expect(os.extent.getThinnestExtent(fat2, fat)).toBe(fat2);
+  });
+
+  it('should get the inverse extent', function() {
+    expect(os.extent.getInverse([-5, -2, 5, 2], os.proj.EPSG4326)).toEqual([5, -2, 355, 2]);
+    expect(os.extent.getInverse([-179, -2, 179, 2], os.proj.EPSG4326)).toEqual([179, -2, 181, 2]);
   });
 });
