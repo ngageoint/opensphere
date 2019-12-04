@@ -424,39 +424,14 @@ os.style.label.createOrUpdate = function(feature, config, opt_layerConfig) {
           });
         }
 
-        // update the z-index of the label
-        var baseZIndex = config['zIndex'] || 0;
-        labelStyle.setZIndex(baseZIndex + os.style.label.Z_INDEX);
+        os.style.label.updateLabelStyle(labelStyle, feature, config, opt_layerConfig);
 
-        // update the style with dynamic values
-        var labelColor = os.style.label.getColor(feature, config, opt_layerConfig);
-
-        // force font size to an integer, and drop NaN values
-        var fontSize = /** @type {string|number|undefined} */ (os.object.getFirstValue(
-            os.style.StyleField.LABEL_SIZE, config, opt_layerConfig));
-        if (typeof fontSize == 'string') {
-          fontSize = parseInt(fontSize, 10) || undefined;
-        }
-
-        // if there isn't a font size (or it's zero), use the default size to ensure labels are drawn
-        if (!fontSize) {
-          fontSize = os.style.label.DEFAULT_SIZE;
-        }
-
-        var labelFont = os.style.label.getFont(fontSize);
         var text = labelStyle.getText();
-        text.setFont(labelFont);
         text.setText(os.style.label.prepareText(labelText, true));
-        text.getFill().setColor(labelColor);
-
-        // match the fill/stroke opacity
-        var fillColor = ol.color.asArray(labelColor);
-        var strokeColor = ol.color.asArray(/** @type {Array<number>|string} */ (text.getStroke().getColor()));
-        strokeColor[3] = fillColor[3];
-        text.getStroke().setColor(os.style.toRgbaString(strokeColor));
 
         // labels need to be offset a little more when next to an icon. this helps, but isn't nearly complete.
         // TODO: determine the size of the rendered feature and use that for the x offset
+        var fontSize = os.style.label.DEFAULT_SIZE;
         var offsetx = os.style.isIconConfig(config) ? fontSize : (fontSize / 2);
         text.setOffsetX(offsetx);
 
@@ -500,6 +475,7 @@ os.style.label.createAdditionalLabels = function(feature, config, opt_layerConfi
       var labelConfig = {};
       var baseLabelConfig = /** @type {Object|undefined} */ (os.object.getFirstValue('text', config,
           opt_layerConfig)) || {};
+      os.style.mergeConfig(config, labelConfig);
       os.style.mergeConfig(baseLabelConfig, labelConfig);
       os.style.mergeConfig(additionalConfig, labelConfig);
 
@@ -510,36 +486,50 @@ os.style.label.createAdditionalLabels = function(feature, config, opt_layerConfi
         text: textStyle
       });
 
-      var baseZIndex = labelConfig['zIndex'] || 0;
-      labelStyle.setZIndex(baseZIndex + os.style.label.Z_INDEX);
-
-      // update the font and colors
-      var fontSize = /** @type {string|number|undefined} */ (os.object.getFirstValue(
-          os.style.StyleField.LABEL_SIZE, labelConfig, config, opt_layerConfig));
-      if (typeof fontSize == 'string') {
-        fontSize = parseInt(fontSize, 10) || undefined;
-      }
-
-      if (!fontSize) {
-        fontSize = os.style.label.DEFAULT_SIZE;
-      }
-
-      var labelFont = os.style.label.getFont(fontSize);
-      textStyle.setFont(labelFont);
-
-      var labelColor = os.style.label.getColor(feature, config, opt_layerConfig);
-      textStyle.getFill().setColor(labelColor);
-
-      var fillColor = ol.color.asArray(labelColor);
-      var strokeColor = ol.color.asArray(/** @type {Array<number>|string} */ (textStyle.getStroke().getColor()));
-      strokeColor[3] = fillColor[3];
-      textStyle.getStroke().setColor(os.style.toRgbaString(strokeColor));
+      os.style.label.updateLabelStyle(labelStyle, feature, config, opt_layerConfig);
 
       labelStyles.push(labelStyle);
     });
   }
 
   return labelStyles;
+};
+
+
+/**
+ * Prepare label text for display to the user. Strips HTML and newlines and truncates the label.
+ *
+ * @param {ol.style.Style} labelStyle The style.
+ * @param {ol.Feature} feature The feature.
+ * @param {Object} config Base configuration for the feature.
+ * @param {Object=} opt_layerConfig Layer configuration for the feature.
+ */
+os.style.label.updateLabelStyle = function(labelStyle, feature, config, opt_layerConfig) {
+  var textStyle = labelStyle.getText();
+  var baseZIndex = config['zIndex'] || 0;
+  labelStyle.setZIndex(baseZIndex + os.style.label.Z_INDEX);
+
+  // update the font and colors
+  var fontSize = /** @type {string|number|undefined} */ (os.object.getFirstValue(
+      os.style.StyleField.LABEL_SIZE, config, opt_layerConfig));
+  if (typeof fontSize == 'string') {
+    fontSize = parseInt(fontSize, 10) || undefined;
+  }
+
+  if (!fontSize) {
+    fontSize = os.style.label.DEFAULT_SIZE;
+  }
+
+  var labelFont = os.style.label.getFont(fontSize);
+  textStyle.setFont(labelFont);
+
+  var labelColor = os.style.label.getColor(feature, config, opt_layerConfig);
+  textStyle.getFill().setColor(labelColor);
+
+  var fillColor = ol.color.asArray(labelColor);
+  var strokeColor = ol.color.asArray(/** @type {Array<number>|string} */ (textStyle.getStroke().getColor()));
+  strokeColor[3] = fillColor[3];
+  textStyle.getStroke().setColor(os.style.toRgbaString(strokeColor));
 };
 
 
