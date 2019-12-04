@@ -168,25 +168,96 @@ os.extent.normalize = function(extent, opt_min, opt_max, opt_proj, opt_result) {
  * This is unhelpful for zooming and other extent aggregations. This function
  * produces an extent from longitudes normalized to [0, 360] instead.
  *
- * @param {?ol.geom.Geometry} geom The geom
+ * @param {?(ol.geom.Geometry|ol.Extent)} geomOrExtent The geometry or extent
  * @return {?ol.Extent} the extent
  */
-os.extent.getFunctionalExtent = function(geom) {
+os.extent.getFunctionalExtent = function(geomOrExtent) {
+  if (Array.isArray(geomOrExtent)) {
+    return os.extent.getFunctionalExtentFromExtent(geomOrExtent);
+  }
+  return os.extent.getFunctionalExtentFromGeom(geomOrExtent);
+};
+
+
+/**
+ * Gets the "functional" extent of the extent. Extents that cross the
+ * antimeridian have points that give a default extent like [-179.999, 179.999].
+ * This is unhelpful for zooming and other extent aggregations. This function
+ * produces an extent from longitudes normalized to [0, 360] instead.
+ *
+ * @param {?ol.geom.Geometry} geom The geometry or extent
+ * @return {?ol.Extent} the extent
+ */
+os.extent.getFunctionalExtentFromGeom = function(geom, opt_proj) {
   if (!geom) {
     return null;
   }
 
-  var proj = os.map.PROJECTION;
-  var extent = geom.getExtent();
-  var result = extent;
+  const proj = ol.proj.get(opt_proj || os.map.PROJECTION);
+  const extent = geom.getExtent();
+  let result = extent;
 
   if (proj.canWrapX()) {
-    var extentWidth = ol.extent.getWidth(extent);
-    var antiExtent = geom.getAntiExtent();
-    var antiExtentWidth = ol.extent.getWidth(antiExtent);
-
-    result = antiExtentWidth + os.geo.EPSILON < extentWidth ? antiExtent : extent;
+    const antiExtent = geom.getAntiExtent();
+    result = os.extent.getThinnestExtent(extent, antiExtent);
   }
 
   return result;
 };
+
+
+/**
+ * @param {?ol.Extent} extent
+ * @param {ol.proj.ProjectionLike=} opt_proj
+ * @return {?ol.Extent}
+ */
+os.extent.getFunctionalExtentFromExtent = function(extent, opt_proj) {
+  if (!extent) {
+    return null;
+  }
+
+  const proj = ol.proj.get(opt_proj || os.map.PROJECTION);
+  let result = extent;
+
+  if (proj.canWrapX()) {
+    const antiExtent = os.extent.getInverse(extent, proj);
+    result = os.extent.getThinnestExtent(extent, antiExtent);
+  }
+
+  return result;
+};
+
+/**
+ * @param {ol.Extent} extent
+ * @param {ol.proj.ProjectionLike=} opt_proj
+ * @return {ol.Extent}
+ */
+os.extent.getInverse = function(extent, opt_proj) {
+  const result = extent.slice();
+  const proj = ol.proj.get(opt_proj || os.map.PROJECTION);
+  const projExtent = proj.getExtent();
+  result[0] += ol.extent.getWidth(projExtent);
+
+  const tmp = result[0];
+  result[0] = result[2];
+  result[2] = tmp;
+
+  return result;
+};
+
+
+/**
+ * @param {?ol.Extent} extent1
+ * @param {?ol.Extent} extent2
+ * @return {?ol.Extent}
+ */
+os.extent.getThinnestExtent = function(extent1, extent2) {
+  if (!extent1 || !extent2) {
+    return extent1 || extent2;
+  }
+
+  const width1 = ol.extent.getWidth(extent1);
+  const width2 = ol.extent.getWidth(extent2);
+  return width2 + os.geo.EPSILON < width1 ? extent2 : extent1;
+};
+
