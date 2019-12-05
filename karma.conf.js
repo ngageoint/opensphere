@@ -98,7 +98,7 @@ module.exports = function(config) {
     reporters: ['dots', 'junit', 'coverage'],
 
     preprocessors: {
-      'src/**/*.js': ['coverage']
+      'src/**/*.js': ['googmodule', 'coverage']
     },
 
     junitReporter: {

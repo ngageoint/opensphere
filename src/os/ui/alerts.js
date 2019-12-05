@@ -1,5 +1,7 @@
 goog.provide('os.ui.alert.AlertsCtrl');
 goog.provide('os.ui.alertsDirective');
+
+goog.require('os.alertManager');
 goog.require('os.defines');
 goog.require('os.ui.Module');
 
@@ -53,11 +55,6 @@ os.ui.alert.AlertsCtrl = function($scope, $timeout, $element) {
    * @type {boolean}
    */
   this['showAlertPopups'] = /** @type {string} */ (os.settings.get(['showAlertPopups'], true));
-
-  if (!os.alertManager) {
-    // has not been initialized yet
-    os.alertManager = os.alert.AlertManager.getInstance();
-  }
 
   os.alertManager.getAlerts().getValues().forEach(this.registerAlert_, this);
   os.alertManager.listen(os.alert.EventType.ALERT, this.registerAlert_, false, this);
