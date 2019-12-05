@@ -222,6 +222,14 @@ $user-select-options: all, auto, text, none;
   table-layout: fixed;
 }
 
+.u-table__sortable-header {
+  cursor: pointer;
+
+  &:hover {
+    border-bottom: 1px solid $primary;
+  }
+}
+
 .u-nav-tabs__vertical.nav-tabs {
   border-bottom: 0;
   border-right: 1px solid $nav-tabs-border-color;
