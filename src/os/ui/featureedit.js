@@ -1878,7 +1878,7 @@ os.ui.FeatureEditCtrl.updateFeatureStyle = function(feature) {
           // grab the color/size from the icon configuration
           var color = os.style.toRgbaString(image['color'] || os.style.DEFAULT_LAYER_COLOR);
           var size = image['scale'] ? os.style.scaleToSize(image['scale']) : os.style.DEFAULT_FEATURE_SIZE;
-          var lineDash = config['stroke']['lineDash'];
+          var lineDash = config['stroke'] && config['stroke']['lineDash'];
           delete image['scale'];
 
           // set radius for points on the image config
