@@ -1,6 +1,8 @@
 goog.provide('os.ui.ex.AreaExportCtrl');
 goog.provide('os.ui.ex.areaExportDirective');
+
 goog.require('os.array');
+goog.require('os.style');
 goog.require('os.ui.Module');
 goog.require('os.ui.file.ExportDialogCtrl');
 goog.require('os.ui.file.exportDialogDirective');
@@ -69,6 +71,14 @@ os.ui.ex.AreaExportCtrl.start = function(areas) {
 
   // De-dupe areas
   goog.array.removeDuplicates(areas);
+
+  // Replace the feature style with the default.
+  areas = areas.map(function(area) {
+    area = area.clone();
+    area.set(os.style.StyleType.FEATURE, os.style.DEFAULT_VECTOR_CONFIG);
+    os.style.setFeatureStyle(area);
+    return area;
+  });
 
   var title = areas.length == 1 ? areas[0].get('title') : null;
   var scopeOptions = {
