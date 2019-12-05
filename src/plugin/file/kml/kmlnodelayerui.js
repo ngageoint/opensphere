@@ -845,22 +845,19 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onFillOpacityChange = function(even
 /**
  * @inheritDoc
  */
-plugin.file.kml.KMLNodeLayerUICtrl.prototype.onLabelSizeChange = function(event, value) {
-  event.stopPropagation();
+plugin.file.kml.KMLNodeLayerUICtrl.prototype.updateLabelSize = function() {
+  var value = /** @type {number} */ (this.scope['labelSize']);
+  var fn =
+      /**
+       * @param {string} layerId
+       * @param {string} featureId
+       * @return {os.command.ICommand}
+       */
+      function(layerId, featureId) {
+        return new os.command.FeatureLabelSize(layerId, featureId, value);
+      };
 
-  if (value) {
-    var fn =
-        /**
-         * @param {string} layerId
-         * @param {string} featureId
-         * @return {os.command.ICommand}
-         */
-        function(layerId, featureId) {
-          return new os.command.FeatureLabelSize(layerId, featureId, value);
-        };
-
-    this.createFeatureCommand(fn);
-  }
+  this.createFeatureCommand(fn);
 };
 
 
