@@ -13,7 +13,8 @@ Prerequisites
 - Java 1.7.0+
 - Node 6+ and npm
 - Yarn_
-- Python (optional)
+- Python
+- Sphinx (optional, used to generate these docs)
 - POSIX-compatible shell environment
 
   - Along with ``cat``, ``cp``, ``echo``, ``grep``, ``perl``, ``xargs``
@@ -74,7 +75,7 @@ While not required, we highly recommend setting up nginx or Apache httpd to serv
 The Build
 *********
 
-Note: The build does not work natively in Windows. See `Windows Development`_ for instructions.
+.. note:: The build does not work natively in Windows. See `Windows Development`_ for instructions.
 
 OpenSphere has all of its build targets as npm scripts. Therefore you can run any particular target by running:
 
@@ -87,11 +88,11 @@ The most common targets are:
 .. code-block:: none
 
   $ npm run build       # runs the full build for both debug and compiled mode
-  $ npm run build:debug # runs the debug build only (requires Python)
+  $ npm run build:debug # runs the debug build only
   $ npm run test        # runs the unit tests
   $ npm run test:debug  # runs the unit tests with a configuration more suited to debugging
   $ npm run apidoc      # generates api documentation
-  $ npm run guide       # generates this documentation (requires Python and Sphinx)
+  $ npm run guide       # generates this documentation
 
 Each target runs its individual pieces through npm scripts as well. Several of those pieces are highly useful when run by themselves just to see if you fixed an error in that part of the build before restarting the entire thing.
 
@@ -130,13 +131,13 @@ Some of the intricacies from using the compiler are documented in the `Compiler 
 The debug build output
 ======================
 
-The ``index-template.html`` and its corresponding ``index.js`` file define how the main page is packaged up by opensphere-build-index_. That script produces ``index.html``, which is the debug instance. It contains all of the vendor scripts and css in addition to all of the source files listed from the `Closure Compiler`_ manifest (``.build/gcc-manifest``).
+The ``index-template.html`` and its corresponding ``index.js`` file define how the main page is packaged up by opensphere-build-index_. That script produces ``index.html``, which is the debug instance. It contains all of the vendor scripts and css in addition to source files that load the application using Closure's debug loader.
 
 .. _opensphere-build-index: https://github.com/ngageoint/opensphere-build-index
 
 If you set up nginx or httpd as recommended above, accessing it might be accomplished by pointing your browser at http://localhost:8080/workspace/opensphere
 
-Note: because the debug instance references each individual Javascript file in place, it can result in the debug page referencing thousands of individual files. The only browser that handles this gracefully (as of this writing) is Chrome. Firefox technically works but is much more painful.
+.. note:: The debug instance references each individual Javascript file in place, resulting in the debug page loading thousands of individual files. Modern browsers tend to handle this well, but debugging on older browsers can be an unpleasant experience.
 
 Once you have run the build once, you can make changes to files in the workspace and pick them up on the page by merely refreshing it. The build only has to be run if dependencies (``goog.require/provide``) change or if files are added or removed.
 

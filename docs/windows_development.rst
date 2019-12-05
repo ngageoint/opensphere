@@ -91,4 +91,4 @@ Now build:
   # or
   npm run build
 
-Note: Yarn has a bug involving the use of the script-shell config with some older combinations of yarn/node. Please ensure that you are using the latest Yarn and also Node 12+.
+.. note:: Yarn has a bug involving the use of the script-shell config with some older combinations of yarn/node. Please ensure that you are using the latest Yarn and also Node 12+.
