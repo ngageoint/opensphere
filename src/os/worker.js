@@ -12,4 +12,5 @@ goog.module.declareLegacyNamespace();
  *
  * Note the above must be executed prior to loading base.js.
  */
-goog.define('os.worker.DIR', 'src/worker/');
+const DIR = goog.define('os.worker.DIR', 'src/worker/');
+exports = {DIR};
