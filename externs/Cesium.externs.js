@@ -1831,7 +1831,7 @@ Cesium.Appearance.prototype.translucent;
  * @typedef {{
  *   asynchronous: (boolean|undefined),
  *   releaseGeometryInstances: (boolean|undefined),
- *   geometryInstances: !Cesium.GeometryInstance,
+ *   geometryInstances: !(Cesium.GeometryInstance|Array<!Cesium.GeometryInstance>),
  *   show: (boolean|undefined),
  *   appearance: !Cesium.Appearance
  * }}
@@ -1959,6 +1959,7 @@ Cesium.optionsGroundPolylinePrimitive;
 
 /**
  * @constructor
+ * @extends {Cesium.Geometry}
  * @param {Cesium.optionsGroundPolylineGeometry=} opt_opts
  */
 Cesium.GroundPolylineGeometry = function(opt_opts) {};
@@ -2366,30 +2367,22 @@ Cesium.ColorGeometryInstanceAttribute.toValue = function(color, opt_result) {};
 
 
 /**
- * @constructor
- * @struct
+ * @typedef {{
+ *  id: (!string|undefined),
+ *  geometry: !Cesium.Geometry,
+ *  attributes: (!Cesium.optionsGeometryInstanceAttribute|undefined),
+ *  modelMatrix: (!Cesium.Matrix4|undefined)
+ * }}
  */
-Cesium.optionsGeometryInstance = function() {};
+Cesium.optionsGeometryInstance;
 
 
 /**
- * @type {string}
+ * @typedef {{
+ *   color: Cesium.ColorGeometryInstanceAttribute
+ * }}
  */
-Cesium.optionsGeometryInstance.prototype.id;
-
-
-/**
- * @type {!Cesium.Geometry}
- */
-Cesium.optionsGeometryInstance.prototype.geometry;
-
-
-/**
- * @type {!Cesium.Matrix4}
- */
-Cesium.optionsGeometryInstance.prototype.modelMatrix;
-
-
+Cesium.optionsGeometryInstanceAttribute;
 
 /**
  * @constructor
@@ -2399,23 +2392,16 @@ Cesium.GeometryInstanceAttribute;
 
 
 /**
- * @type {Cesium.GeometryInstanceAttribute| undefined}
- */
-Cesium.optionsGeometryInstance.prototype.attributes;
-
-
-/**
  * @type {Cesium.ColorGeometryInstanceAttribute}
  */
 Cesium.GeometryInstanceAttribute.prototype.color;
 
 
-
 /**
  * @constructor
- * @param {Object} object
+ * @param {Cesium.optionsGeometryInstance} options
  */
-Cesium.GeometryInstance = function(object) {};
+Cesium.GeometryInstance = function(options) {};
 
 
 
@@ -2688,7 +2674,7 @@ Cesium.Transforms.eastNorthUpToFixedFrame = function(origin, opt_ellipsoid, opt_
  * @param {Cesium.Ellipsoid=} opt_ellipsoid .
  * @param {Function=} opt_transform .
  * @param {Cesium.Matrix4=} opt_result .
- * @return {Cesium.Matrix4}
+ * @return {!Cesium.Matrix4}
  */
 Cesium.Transforms.headingPitchRollToFixedFrame = function(origin, hpr, opt_ellipsoid, opt_transform, opt_result) {};
 

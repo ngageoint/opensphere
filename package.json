@@ -83,8 +83,10 @@
     "pregen:xmllexer": "echo \"window.xmlLexer = require('xml-lexer');\" > .build/xml-lexer.require.js",
     "gen:xmllexer": "browserify .build/xml-lexer.require.js -o .build/xml-lexer.min.js",
     "postgen:xmllexer": "rm .build/xml-lexer.require.js",
+    "gentestlibs": "npm run gen:webgl-mock",
+    "gen:webgl-mock": "browserify vendor/webgl-mock/webgl-mock.require.js -o .build/webgl-mock.min.js",
     "test:gcc": "os-compile .build/gcc-test-args.json",
-    "test:init": "npm run genlibs && npm run compile:resolve -- --exclude resources scss && npm run test:gcc",
+    "test:init": "npm run genlibs && npm run gentestlibs && npm run compile:resolve -- --exclude resources scss && npm run test:gcc",
     "test:debug": "karma start --browsers Chrome --reporters dots",
     "test:run": "karma start --single-run",
     "test": "npm run test:init && npm run test:run",
@@ -281,6 +283,7 @@
     "sass-lint": "^1.12.1",
     "semantic-release": "^15.13.18",
     "surge": "^0.20.4",
+    "webgl-mock": "^0.1.7",
     "xmllint": "^0.1.1"
   },
   "dependencies": {

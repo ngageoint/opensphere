@@ -25,6 +25,7 @@ module.exports = function(config) {
     files: [
       {pattern: '.build/modernizr.js', watched: false, included: true, served: true},
       {pattern: '.build/xml-lexer.min.js', watched: false, included: true, served: true},
+      {pattern: '.build/webgl-mock.min.js', watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('opensphere-asm/dist/os-wasm.*', __dirname), watched: false, included: false, served: true},
       {pattern: resolver.resolveModulePath('opensphere-asm/dist/os-asm.*', __dirname), watched: false, included: false, served: true},
       {pattern: resolver.resolveModulePath('opensphere-asm/dist/os-load.js', __dirname), watched: false, included: true, served: true},
@@ -65,6 +66,7 @@ module.exports = function(config) {
       {pattern: 'test/**/*.json', included: false},
       {pattern: 'test/**/*.xml', included: false},
       {pattern: 'test/resources/**/*', included: false},
+      {pattern: 'images/**/*', included: false},
 
       // source files for the script loader
       {pattern: 'src/**/*.js', watched: false, included: false, served: true},
@@ -103,7 +105,7 @@ module.exports = function(config) {
     //  - coverage provides test coverage reports
     //
     preprocessors: {
-      'src/**/*.js': ['googmodule', 'coverage'],
+      'src/**/*.js': ['coverage', 'googmodule'],
       'test/**/*.mock.js': ['googmodule']
     },
 

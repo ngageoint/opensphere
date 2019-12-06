@@ -1,0 +1,118 @@
+goog.provide('plugin.cesium.sync.AbstractLineWidthConverter');
+
+goog.require('os.style');
+goog.require('plugin.cesium.sync.AbstractConverter');
+
+
+/**
+ * @abstract
+ * @extends {plugin.cesium.sync.AbstractConverter}
+ * @constructor
+ */
+plugin.cesium.sync.AbstractLineWidthConverter = function() {
+  plugin.cesium.sync.AbstractLineWidthConverter.base(this, 'constructor');
+
+  /**
+   * @type {?boolean}
+   * @protected
+   */
+  this.wasPrimitiveShown = null;
+};
+goog.inherits(plugin.cesium.sync.AbstractLineWidthConverter, plugin.cesium.sync.AbstractConverter);
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.sync.AbstractLineWidthConverter.prototype.createPrimitive = function(feature, geometry, style, context) {
+  const primitive = this.createPrimitiveInternal(feature, geometry, style, context);
+  if (primitive) {
+    this.setPrimitiveShown(primitive);
+    this.addPrimitive(feature, geometry, context, primitive);
+  }
+};
+
+
+/**
+ * @abstract
+ * @param {!ol.Feature} feature
+ * @param {!(ol.geom.LineString|ol.geom.MultiLineString)} geometry
+ * @param {!ol.style.Style} style
+ * @param {!plugin.cesium.VectorContext} context
+ * @return {?Cesium.PrimitiveLike}
+ * @protected
+ */
+plugin.cesium.sync.AbstractLineWidthConverter.prototype.createPrimitiveInternal;
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.sync.AbstractLineWidthConverter.prototype.shouldUpdatePrimitive = function(
+    feature, geometry, style, context, primitive) {
+  // if the outline width or line dash changed, we need to recreate the primitive since Cesium can't change the width
+  // or line dash on a geometry instance
+  if (primitive && primitive['olLineWidth'] != null) {
+    const dirty = geometry.get(os.geom.GeometryField.DIRTY);
+    const width = plugin.cesium.sync.extractLineWidthFromOlStyle(style);
+    const lineDash = this.getDashPattern(style);
+    if (dirty || primitive['olLineWidth'] != width || this.matchDashPattern(primitive, lineDash)) {
+      this.wasPrimitiveShown = plugin.cesium.VectorContext.isPrimitiveShown(primitive);
+      context.removePrimitive(primitive);
+      geometry.set(os.geom.GeometryField.DIRTY, false);
+      return false;
+    }
+  }
+
+  return plugin.cesium.sync.AbstractLineWidthConverter.base(this, 'shouldUpdatePrimitive',
+      feature, geometry, style, context, primitive);
+};
+
+
+/**
+ * @param {!ol.Feature} feature
+ * @param {!ol.geom.Geometry} geometry
+ * @param {!plugin.cesium.VectorContext} context
+ * @param {!Cesium.PrimitiveLike} primitive
+ * @protected
+ */
+plugin.cesium.sync.AbstractLineWidthConverter.prototype.addPrimitive = function(feature, geometry, context, primitive) {
+  context.addPrimitive(primitive, feature, geometry);
+};
+
+
+/**
+ * Checks a primitive or primitive collection for a matching dash pattern
+ *
+ * @param {!Cesium.PrimitiveLike} primitive The primitive
+ * @param {number|undefined} lineDash The line dash pattern
+ * @return {boolean}
+ * @protected
+ */
+plugin.cesium.sync.AbstractLineWidthConverter.prototype.matchDashPattern = function(primitive, lineDash) {
+  if (primitive instanceof Cesium.PrimitiveCollection) {
+    for (let i = 0; i < primitive.length; i++) {
+      if (!this.matchDashPattern(primitive.get(i), lineDash)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  if (primitive && primitive.appearance && primitive.appearance.material && primitive.appearance.material.uniforms) {
+    return primitive.appearance.material.uniforms.dashPattern != lineDash;
+  }
+
+  return true; // don't change the dashPattern for extruded polygons
+};
+
+
+/**
+ * @param {!Cesium.PrimitiveLike} primitive
+ * @protected
+ */
+plugin.cesium.sync.AbstractLineWidthConverter.prototype.setPrimitiveShown = function(primitive) {
+  if (this.wasPrimitiveShown != null) {
+    plugin.cesium.VectorContext(primitive, this.wasPrimitiveShown);
+  }
+};
