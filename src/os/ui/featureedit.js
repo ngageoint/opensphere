@@ -322,7 +322,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
 
   /**
    * The ring options.
-   * @type {?Object<string, *>}
+   * @type {?osx.feature.RingOptions}
    */
   this['ringOptions'] = null;
 
@@ -1069,7 +1069,7 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
     }
 
     // initialize fill color and opacity
-    if (config['fill']['color']) {
+    if (config['fill'] && config['fill']['color']) {
       // use the color from config
       this['fillColor'] = os.color.toHexString(config['fill']['color']);
       this['fillOpacity'] = os.color.toRgbArray(config['fill']['color'])[3];
@@ -1175,7 +1175,7 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
     this['altitudeMode'] = altitudeMode;
   }
 
-  this['ringOptions'] = /** @type {Object<string, *>} */ (feature.get(os.data.RecordField.RING_OPTIONS));
+  this['ringOptions'] = /** @type {osx.feature.RingOptions} */ (feature.get(os.data.RecordField.RING_OPTIONS));
 
   if (!this.isFeatureDynamic()) {
     var rotation = feature.get(os.Fields.BEARING);
@@ -1678,21 +1678,19 @@ os.ui.launchFeatureEdit = function(options) {
     var scopeOptions = {
       'options': options
     };
-
+    var x = os.ui.FeatureEditCtrl.calculateXPosition(/** @type {ol.geom.SimpleGeometry} */ (options.geometry));
     var label = options['label'] ? options['label'] : (options['feature'] ? 'Edit' : 'Add') + ' Feature';
     var icon = options['icon'] ? options['icon'] : 'fa fa-map-marker';
     var windowOptions = {
       'id': windowId,
       'label': label,
       'icon': icon,
-      'x': 'center',
+      'x': x,
       'y': 'center',
-      'width': 700,
+      'width': 600,
       'min-width': 400,
-      'max-width': 2000,
+      'max-width': 1000,
       'height': 'auto',
-      'min-height': 300,
-      'max-height': 2000,
       'modal': false,
       'show-close': true
     };
@@ -1700,6 +1698,27 @@ os.ui.launchFeatureEdit = function(options) {
     var template = '<featureedit></featureedit>';
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
+};
+
+
+/**
+ * Calculates the X pixel position to create the feature edit window at for a given geometry. Tries to keep it out
+ * of the way of the view.
+ * @param {ol.geom.SimpleGeometry} geom The geometry
+ * @return {number} The X coordinate
+ */
+os.ui.FeatureEditCtrl.calculateXPosition = function(geom) {
+  var container = angular.element(os.ui.windowSelector.CONTAINER);
+  if (geom) {
+    var extent = geom.getExtent();
+    var center = ol.extent.getCenter(extent);
+    var pixel = os.MapContainer.getInstance().getMap().getPixelFromCoordinate(center);
+    var width = container.width();
+    return pixel[0] > width / 2 ? 100 : container.width() - 700;
+  }
+
+  // no geom, open it on the right side
+  return container.width() - 700;
 };
 
 
@@ -1859,7 +1878,7 @@ os.ui.FeatureEditCtrl.updateFeatureStyle = function(feature) {
           // grab the color/size from the icon configuration
           var color = os.style.toRgbaString(image['color'] || os.style.DEFAULT_LAYER_COLOR);
           var size = image['scale'] ? os.style.scaleToSize(image['scale']) : os.style.DEFAULT_FEATURE_SIZE;
-          var lineDash = config['stroke']['lineDash'];
+          var lineDash = config['stroke'] && config['stroke']['lineDash'];
           delete image['scale'];
 
           // set radius for points on the image config
