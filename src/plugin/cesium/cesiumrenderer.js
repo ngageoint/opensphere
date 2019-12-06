@@ -100,7 +100,7 @@ plugin.cesium.CesiumRenderer.prototype.isInitialized = function() {
 
 /**
  * @inheritDoc
- * @suppress {accessControls|checkTypes}
+ * @suppress {accessControls}
  */
 plugin.cesium.CesiumRenderer.prototype.initialize = function() {
   if (!this.olCesium_ && this.map) {
@@ -223,7 +223,6 @@ plugin.cesium.CesiumRenderer.prototype.setEnabled = function(value) {
 
 /**
  * @inheritDoc
- * @suppress {checkTypes}
  */
 plugin.cesium.CesiumRenderer.prototype.getCamera = function() {
   return this.olCesium_ ? /** @type {plugin.cesium.Camera} */ (this.olCesium_.getCamera()) : undefined;
