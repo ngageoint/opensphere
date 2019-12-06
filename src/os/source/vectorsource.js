@@ -2317,9 +2317,8 @@ os.source.Vector.prototype.onTimelineShow_ = function(event) {
     this.updateAnimationOverlay();
     this.updateLabels();
 
-    // only dispatch a feature visibility event if the timeline is not playing and time filtering is enabled. this event
-    // is used by histograms to update and in either case they will be displaying data for all time
-    if (!this.tlc.isPlaying() && this.timeFilterEnabled_) {
+    // only dispatch a feature visibility event if the timeline is not playing
+    if (!this.tlc.isPlaying()) {
       this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.FEATURE_VISIBILITY));
     }
   }
