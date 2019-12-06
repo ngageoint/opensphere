@@ -281,20 +281,21 @@ describe('os.feature', function() {
     var center = new ol.geom.Point([0, 0]);
     var feature = new ol.Feature(center);
     feature.set(os.data.RecordField.RING_OPTIONS, {
-      'enabled': true,
-      'type': 'auto',
-      'interval': 40,
-      'units': os.math.Units.NAUTICAL_MILES,
-      'crosshair': false,
-      'arcs': false,
-      'startAngle': 0,
-      'widthAngle': 0,
-      'rings': [
-        {'radius': 40, 'units': os.math.Units.NAUTICAL_MILES},
-        {'radius': 80, 'units': os.math.Units.NAUTICAL_MILES},
-        {'radius': 120, 'units': os.math.Units.NAUTICAL_MILES},
-        {'radius': 160, 'units': os.math.Units.NAUTICAL_MILES},
-        {'radius': 200, 'units': os.math.Units.NAUTICAL_MILES}
+      enabled: true,
+      type: 'auto',
+      interval: 40,
+      units: os.math.Units.NAUTICAL_MILES,
+      crosshair: false,
+      arcs: false,
+      labels: true,
+      startAngle: 0,
+      widthAngle: 0,
+      rings: [
+        {radius: 40, units: os.math.Units.NAUTICAL_MILES},
+        {radius: 80, units: os.math.Units.NAUTICAL_MILES},
+        {radius: 120, units: os.math.Units.NAUTICAL_MILES},
+        {radius: 160, units: os.math.Units.NAUTICAL_MILES},
+        {radius: 200, units: os.math.Units.NAUTICAL_MILES}
       ]
     });
 
@@ -319,20 +320,21 @@ describe('os.feature', function() {
     var center = new ol.geom.Point([0, 0]);
     var feature = new ol.Feature(center);
     feature.set(os.data.RecordField.RING_OPTIONS, {
-      'enabled': true,
-      'type': 'auto',
-      'interval': 20,
-      'units': os.math.Units.MILES,
-      'crosshair': true,
-      'arcs': false,
-      'startAngle': 0,
-      'widthAngle': 0,
-      'rings': [
-        {'radius': 20, 'units': os.math.Units.MILES},
-        {'radius': 40, 'units': os.math.Units.MILES},
-        {'radius': 60, 'units': os.math.Units.MILES},
-        {'radius': 80, 'units': os.math.Units.MILES},
-        {'radius': 100, 'units': os.math.Units.MILES}
+      enabled: true,
+      type: 'auto',
+      interval: 20,
+      units: os.math.Units.MILES,
+      crosshair: true,
+      arcs: false,
+      labels: true,
+      startAngle: 0,
+      widthAngle: 0,
+      rings: [
+        {radius: 20, units: os.math.Units.MILES},
+        {radius: 40, units: os.math.Units.MILES},
+        {radius: 60, units: os.math.Units.MILES},
+        {radius: 80, units: os.math.Units.MILES},
+        {radius: 100, units: os.math.Units.MILES}
       ]
     });
 
@@ -351,20 +353,21 @@ describe('os.feature', function() {
     var center = new ol.geom.Point([0, 0]);
     var feature = new ol.Feature(center);
     feature.set(os.data.RecordField.RING_OPTIONS, {
-      'enabled': true,
-      'type': 'manuel',
-      'interval': 20,
-      'units': os.math.Units.MILES,
-      'crosshair': true,
-      'arcs': true,
-      'startAngle': 20,
-      'widthAngle': 70,
-      'rings': [
-        {'radius': 20, 'units': os.math.Units.MILES},
-        {'radius': 40, 'units': os.math.Units.MILES},
-        {'radius': 60, 'units': os.math.Units.MILES},
-        {'radius': 80, 'units': os.math.Units.MILES},
-        {'radius': 100, 'units': os.math.Units.MILES}
+      enabled: true,
+      type: 'manual',
+      interval: 20,
+      units: os.math.Units.MILES,
+      crosshair: true,
+      arcs: true,
+      labels: true,
+      startAngle: 20,
+      widthAngle: 70,
+      rings: [
+        {radius: 20, units: os.math.Units.MILES},
+        {radius: 40, units: os.math.Units.MILES},
+        {radius: 60, units: os.math.Units.MILES},
+        {radius: 80, units: os.math.Units.MILES},
+        {radius: 100, units: os.math.Units.MILES}
       ]
     });
 
@@ -373,7 +376,7 @@ describe('os.feature', function() {
     expect(rings instanceof ol.geom.GeometryCollection).toBe(true);
 
     var geometries = rings.getGeometries();
-    expect(geometries.length).toBe(9);
+    expect(geometries.length).toBe(7);
     geometries.forEach(function(ring) {
       expect(testCoords(ring.getFlatCoordinates())).toBe(true);
     });

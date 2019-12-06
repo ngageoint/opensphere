@@ -122,18 +122,18 @@ plugin.file.kml.ui.createOrEditPlace = function(options) {
   if (os.ui.window.exists(windowId)) {
     os.ui.window.bringToFront(windowId);
   } else {
+    var x = os.ui.FeatureEditCtrl.calculateXPosition(/** @type {ol.geom.SimpleGeometry} */ (options.geometry));
+
     var windowOptions = {
       'id': windowId,
       'label': label,
       'icon': 'fa fa-map-marker',
-      'x': 'center',
+      'x': x,
       'y': 'center',
-      'width': 700,
+      'width': 600,
       'min-width': 400,
-      'max-width': 2000,
+      'max-width': 1000,
       'height': 'auto',
-      'min-height': 300,
-      'max-height': 2000,
       'modal': false,
       'show-close': true
     };
