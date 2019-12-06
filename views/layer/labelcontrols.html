@@ -4,8 +4,8 @@
       <td>Style</td>
       <td class="w-100">
         <colorpicker name="labelColor" color="labelColor" show-reset="true" title="Sets the label color"></colorpicker>
-        <spinner class="d-inline-block" min="labelCtrl.minSize" max="labelCtrl.maxSize" live="false" step="1"
-            value="labelSize" name="labelSize" title="Sets the label font size"></spinner>
+        <input class="d-inline-block form-control w-25" type="number" min="{{labelCtrl.minSize}}" max="{{labelCtrl.maxSize}}" step="1"
+            ng-model="labelSize" name="labelSize" title="Sets the label font size"></input>
         <span class="ml-1">px</span>
       </td>
     </tr>
