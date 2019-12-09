@@ -112,17 +112,19 @@ plugin.file.kml.ui.updateFolder = function(options) {
  */
 plugin.file.kml.ui.createOrEditPlace = function(options) {
   var windowId = 'placemarkEdit';
-  windowId += options['feature'] ? ol.getUid(options['feature']) : goog.string.getRandomString();
+  windowId += options.feature ? ol.getUid(options.feature) : goog.string.getRandomString();
 
   var scopeOptions = {
     'options': options
   };
-  var label = options['label'] || (options['feature'] ? 'Edit' : 'Add') + ' Place';
 
   if (os.ui.window.exists(windowId)) {
     os.ui.window.bringToFront(windowId);
   } else {
-    var x = os.ui.FeatureEditCtrl.calculateXPosition(/** @type {ol.geom.SimpleGeometry} */ (options.geometry));
+    var label = options.label || (options.feature ? 'Edit' : 'Add') + ' Place';
+    var geom = /** @type {ol.geom.SimpleGeometry} */ (options.geometry) ||
+        options.feature ? options.feature.getGeometry() : null;
+    var x = os.ui.FeatureEditCtrl.calculateXPosition(geom);
 
     var windowOptions = {
       'id': windowId,

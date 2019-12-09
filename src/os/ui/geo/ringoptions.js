@@ -1,6 +1,7 @@
 goog.provide('os.ui.geo.RingOptionsCtrl');
 goog.provide('os.ui.geo.ringOptionsDirective');
 
+goog.require('os.bearing.BearingType');
 goog.require('os.math.Units');
 goog.require('os.ui.Module');
 
@@ -114,6 +115,7 @@ os.ui.geo.ringOptionsDirective.prototype.getDefaultOptions = function() {
   return {
     enabled: false,
     type: 'auto',
+    bearingType: os.bearing.BearingType.MAGNETIC,
     interval: 40,
     units: os.math.Units.NAUTICAL_MILES,
     crosshair: true,
