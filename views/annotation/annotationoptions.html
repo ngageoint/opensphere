@@ -47,18 +47,19 @@
       </div>
       <div class="col">
         <div title="Change the background color of the header">
-            <colorpicker name="headerColor"
-                id="headerColor{{ctrl.uid}}"
-                color="ctrl.tempHeaderBG"
-                show-reset="true"
-                title="Sets the background color for header"
-                disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showName || !ctrl.annotationOptions.showBackground"></colorpicker>
-            <label class="col-form-label" for="headerColor{{ctrl.uid}}">
-              Header Color
-            </label>
-          </div>
+          <colorpicker name="headerColor"
+              id="headerColor{{ctrl.uid}}"
+              color="ctrl.tempHeaderBG"
+              show-reset="true"
+              title="Sets the background color for header"
+              disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showName || !ctrl.annotationOptions.showBackground"></colorpicker>
+          <label class="col-form-label" for="headerColor{{ctrl.uid}}">
+            Header Color
+          </label>
         </div>
       </div>
+    </div>
+    <div>
       <div class="form-row align-items-center">
         <div class="col">
           <div class="custom-control custom-checkbox d-inline-block"
