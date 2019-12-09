@@ -186,6 +186,7 @@ os.extent.getFunctionalExtent = function(geomOrExtent) {
  * produces an extent from longitudes normalized to [0, 360] instead.
  *
  * @param {?ol.geom.Geometry} geom The geometry or extent
+ * @param {ol.ProjectionLike=} opt_proj
  * @return {?ol.Extent} the extent
  */
 os.extent.getFunctionalExtentFromGeom = function(geom, opt_proj) {
@@ -208,7 +209,7 @@ os.extent.getFunctionalExtentFromGeom = function(geom, opt_proj) {
 
 /**
  * @param {?ol.Extent} extent
- * @param {ol.proj.ProjectionLike=} opt_proj
+ * @param {ol.ProjectionLike=} opt_proj
  * @return {?ol.Extent}
  */
 os.extent.getFunctionalExtentFromExtent = function(extent, opt_proj) {
@@ -229,7 +230,7 @@ os.extent.getFunctionalExtentFromExtent = function(extent, opt_proj) {
 
 /**
  * @param {ol.Extent} extent
- * @param {ol.proj.ProjectionLike=} opt_proj
+ * @param {ol.ProjectionLike=} opt_proj
  * @return {ol.Extent}
  */
 os.extent.getInverse = function(extent, opt_proj) {
