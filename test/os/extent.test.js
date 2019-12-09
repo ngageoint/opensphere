@@ -4,7 +4,7 @@ goog.require('ol.proj');
 goog.require('os.extent');
 goog.require('os.proj');
 
-ddescribe('os.extent', function() {
+describe('os.extent', function() {
   var expandExtent = function(extent) {
     return [extent[0], 0, extent[1], 0];
   };
