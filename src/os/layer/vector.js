@@ -18,6 +18,7 @@ goog.require('os.layer.LayerType');
 goog.require('os.layer.PropertyChange');
 goog.require('os.legend');
 goog.require('os.legend.ILegendRenderer');
+goog.require('os.net');
 goog.require('os.registerClass');
 goog.require('os.source');
 goog.require('os.source.Request');
@@ -907,10 +908,13 @@ os.layer.Vector.prototype.getFilterKey = function() {
 
     // try to derive it from the layer options
     var url = /** @type {string} */ (options['url']);
-    var params = /** @type {string} */ (options['params']);
-    var typeName = params ? /** @type {string} */ (params.get('typename')) : null;
-    if (url && typeName) {
-      return url + os.ui.filter.FILTER_KEY_DELIMITER + typeName;
+    var params = /** @type {string|Object<string, *>|goog.Uri.QueryData} */ (options['params']);
+    if (params) {
+      params = os.net.paramsToQueryData(params);
+      var typeName = params.get('typename');
+      if (url && typeName) {
+        return url + os.ui.filter.FILTER_KEY_DELIMITER + typeName;
+      }
     }
   }
 
