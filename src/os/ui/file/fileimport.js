@@ -94,7 +94,8 @@ os.ui.file.FileImportCtrl = function($scope, $element, $timeout) {
   this.fileInputEl_ = goog.dom.createDom(goog.dom.TagName.INPUT, {
     'type': 'file',
     'name': 'file',
-    'class': 'd-none'
+    'class': 'd-none',
+    'id': 'fileImportId'
   });
   goog.dom.appendChild(goog.dom.getElement(os.ui.windowSelector.CONTAINER.substring(1)), this.fileInputEl_);
   goog.events.listen(this.fileInputEl_, goog.events.EventType.CHANGE, this.onFileChange_, false, this);
