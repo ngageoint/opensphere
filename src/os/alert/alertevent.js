@@ -5,12 +5,11 @@ goog.require('goog.date.DateTime');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventTarget');
 
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity'); // eslint-disable-line no-unused-vars
+const AlertEventSeverity = goog.requireType('os.alert.AlertEventSeverity');
 const EventType = goog.require('os.alert.EventType');
 
 /**
  * @type {number}
- * @const
  */
 const DEFAULT_LIMIT = 5;
 
@@ -21,7 +20,6 @@ const DEFAULT_LIMIT = 5;
 let id_ = 0;
 
 /**
- * @extends {goog.events.Event}
  * @unrestricted
  */
 class AlertEvent extends goog.events.Event {
