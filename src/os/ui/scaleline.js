@@ -7,7 +7,6 @@ goog.require('os.ui.menu.MenuButtonCtrl');
 
 /**
  * Controller for the scale line directive.
- * @extends {os.ui.menu.MenuButtonCtrl}
  */
 class ScaleLineCtrl extends os.ui.menu.MenuButtonCtrl {
   /**
