@@ -645,7 +645,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
     // Some fields do not get automatically exported (e.g., fields that are not visible)
     // if the rotation column is one of those fields create its data element here
     var rotationColumn = this.getRotationColumn(item);
-    if (rotationColumn != null && !ol.array.includes(fields, rotationColumn)) {
+    if (!!rotationColumn && !ol.array.includes(fields, rotationColumn)) {
       var rotDataEl = os.xml.appendElementNS('Data', this.kmlNS, ed, undefined, {
         'name': rotationColumn
       });
