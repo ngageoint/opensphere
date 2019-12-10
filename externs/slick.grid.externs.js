@@ -14,6 +14,45 @@
  */
 var Slick = {};
 
+/**
+ * @constructor
+ */
+Slick.EventData;
+
+Slick.EventData.prototype.stopPropagation = function() {};
+
+/**
+ * @returns {boolean}
+ */
+Slick.EventData.prototype.isPropagationStopped = function() {};
+
+Slick.EventData.prototype.stopImmediatePropagation = function() {};
+
+/**
+ * @return {boolean}
+ */
+Slick.EventData.prototype.isImmediatePropagationStopped = function() {};
+
+/**
+ * @template EvtType, ArgType
+ * @constructor
+ */
+Slick.Event;
+
+/**
+ * @param {function(EvtType, ArgType)} handler
+ */
+Slick.Event.prototype.subscribe = function(handler) {};
+
+/**
+ * @param {function(EvtType, ArgType)} handler
+ */
+Slick.Event.prototype.unsubscribe = function(handler) {};
+
+
+/** @type {Slick.Event<Slick.EventData, {node: Node, column: os.data.ColumnDefinition}>} */
+Slick.Grid.prototype.onHeaderCellRendered;
+
 
 /**
  * Namespace.
