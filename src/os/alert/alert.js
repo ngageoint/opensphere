@@ -1,41 +1,48 @@
-goog.provide('os.alert.Alert');
-goog.require('os.alert.AlertEventSeverity');
+goog.module('os.alert.Alert');
+goog.module.declareLegacyNamespace();
 
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity'); // eslint-disable-line no-unused-vars
 
 
 /**
- * Object to carry around alert details
- *
- * @param {string} message The alert to send and add to the window
- * @param {os.alert.AlertEventSeverity=} opt_severity Severity of the event, defaults to error
- * @constructor
+ * Object to carry around alert details.
  */
-os.alert.Alert = function(message, opt_severity) {
+class Alert {
   /**
-   * @type {string}
-   * @private
+   * @param {string} message The alert to send and add to the window
+   * @param {AlertEventSeverity=} opt_severity Severity of the event, defaults to error
    */
-  this.message_ = message;
+  constructor(message, opt_severity) {
+    /**
+     * The alert message.
+     * @type {string}
+     * @private
+     */
+    this.message_ = message;
+
+    /**
+     * The alert severity.
+     * @type {AlertEventSeverity|undefined}
+     * @private
+     */
+    this.severity_ = opt_severity;
+  }
 
   /**
-   * @type {os.alert.AlertEventSeverity|undefined}
-   * @private
+   * Get the alert message.
+   * @return {string}
    */
-  this.severity_ = opt_severity;
-};
+  getMessage() {
+    return this.message_;
+  }
 
+  /**
+   * Get the alert severity.
+   * @return {AlertEventSeverity|undefined}
+   */
+  getSeverity() {
+    return this.severity_;
+  }
+}
 
-/**
- * @return {string}
- */
-os.alert.Alert.prototype.getMessage = function() {
-  return this.message_;
-};
-
-
-/**
- * @return {os.alert.AlertEventSeverity|undefined}
- */
-os.alert.Alert.prototype.getSeverity = function() {
-  return this.severity_;
-};
+exports = Alert;

@@ -1,5 +1,6 @@
 goog.provide('os.ui.alert.AlertPopupCtrl');
 goog.provide('os.ui.alert.alertPopupDirective');
+
 goog.require('goog.async.Delay');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventTarget');
@@ -82,11 +83,6 @@ os.ui.alert.AlertPopupCtrl = function($scope) {
    * @type {Array.<Object>}
    */
   this['alertPopups'] = [];
-
-  if (!os.alertManager) {
-    // has not been initialized yet
-    os.alertManager = os.alert.AlertManager.getInstance();
-  }
 
   this.alertClientId_ = 'alertpopups';
   os.alertManager.processMissedAlerts(this.alertClientId_, this.handleAlertEvent_, this);
