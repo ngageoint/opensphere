@@ -11,8 +11,6 @@ goog.require('os.ui');
 
 /**
  * @type {!goog.string.Const}
- * @private
- * @const
  */
 const styleRules = goog.string.Const.from(
     '#log{background-color:#000;}' +
@@ -32,7 +30,6 @@ const styleRules = goog.string.Const.from(
 
 /**
  * Makes FancyWindow fancier by making the window close button do the same thing as clicking the exit button
- * @extends {goog.debug.FancyWindow}
  */
 class FancierWindow extends goog.debug.FancyWindow {
   /**

@@ -10,7 +10,6 @@ const EventType = goog.require('os.alert.EventType');
 
 /**
  * @type {number}
- * @const
  */
 const DEFAULT_LIMIT = 5;
 
@@ -21,7 +20,6 @@ const DEFAULT_LIMIT = 5;
 let id_ = 0;
 
 /**
- * @extends {goog.events.Event}
  * @unrestricted
  */
 class AlertEvent extends goog.events.Event {
