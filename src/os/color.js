@@ -311,7 +311,7 @@ const YIQ_TO_RGB = new goog.math.Matrix([
  * @return {goog.color.Rgb}
  */
 const getGradientColor = function(ratio, opt_gradient) {
-  var gradient = opt_gradient || DEFAULT_GRADIENT;
+  const gradient = opt_gradient || DEFAULT_GRADIENT;
 
   // if the ratio is outside the bounds of the gradient, return the boundary color.
   if (ratio <= gradient[0].ratio) {
@@ -321,28 +321,28 @@ const getGradientColor = function(ratio, opt_gradient) {
   }
 
   // figure out where the ratio falls on the gradient
-  for (var i = 0, len = gradient.length - 1; i < len; i++) {
+  for (let i = 0, len = gradient.length - 1; i < len; i++) {
     if (ratio >= gradient[i].ratio && ratio < gradient[i + 1].ratio) {
       // linear gradient between 2 colors
-      var color1 = gradient[i].color;
-      var color2 = gradient[i + 1].color;
+      const color1 = gradient[i].color;
+      const color2 = gradient[i + 1].color;
 
       // get the value for each color channel
-      var r1 = color1[0];
-      var g1 = color1[1];
-      var b1 = color1[2];
+      const r1 = color1[0];
+      const g1 = color1[1];
+      const b1 = color1[2];
 
-      var r2 = color2[0];
-      var g2 = color2[1];
-      var b2 = color2[2];
+      const r2 = color2[0];
+      const g2 = color2[1];
+      const b2 = color2[2];
 
-      var step = ratio - gradient[i].ratio;
-      var max = gradient[i + 1].ratio - gradient[i].ratio;
+      const step = ratio - gradient[i].ratio;
+      const max = gradient[i + 1].ratio - gradient[i].ratio;
 
       // interpolate the value for each color channel
-      var r = interpolate(r1, r2, step, max);
-      var g = interpolate(g1, g2, step, max);
-      var b = interpolate(b1, b2, step, max);
+      const r = interpolate(r1, r2, step, max);
+      const g = interpolate(g1, g2, step, max);
+      const b = interpolate(b1, b2, step, max);
 
       return [r, g, b];
     }
@@ -362,15 +362,15 @@ const getGradientColor = function(ratio, opt_gradient) {
  * @return {!Array<string>} An array of colors as hex strings.
  */
 const getHslGradient = function(size, opt_min, opt_max, opt_distinct) {
-  var gradient = [];
-  var min = opt_min !== undefined ? goog.math.clamp(opt_min, 0, 360) : 0;
-  var max = opt_max !== undefined ? goog.math.clamp(opt_max, min, 360) : 360;
+  const gradient = [];
+  const min = opt_min !== undefined ? goog.math.clamp(opt_min, 0, 360) : 0;
+  const max = opt_max !== undefined ? goog.math.clamp(opt_max, min, 360) : 360;
 
-  var range = max - min;
-  var lastHue = 0;
-  for (var i = 0, n = size; i < n; i++) {
-    var hue = Math.round(i / n * range) + min;
-    var lightness = 0.5;
+  const range = max - min;
+  let lastHue = 0;
+  for (let i = 0, n = size; i < n; i++) {
+    let hue = Math.round(i / n * range) + min;
+    let lightness = 0.5;
 
     if (opt_distinct) {
       // make adjustments based on the current hue in an effort to distinguish the gradient colors
@@ -405,7 +405,7 @@ const getRandomColor = function() {
  * @return {string}
  */
 const getRandomColorString = function(opt_rgba) {
-  var color = getRandomColor();
+  const color = getRandomColor();
   if (opt_rgba) {
     return 'rgba(' + color[0] + ',' + color[1] + ',' + color[2] + ',1)';
   }
@@ -438,8 +438,8 @@ const interpolate = function(begin, end, step, max) {
  * @return {string}
  */
 const darken = function(color, factor) {
-  var rgb = goog.color.hexToRgb(color);
-  var darker = goog.color.darken(rgb, factor);
+  const rgb = goog.color.hexToRgb(color);
+  const darker = goog.color.darken(rgb, factor);
   return goog.color.rgbArrayToHex(darker);
 };
 
@@ -452,8 +452,8 @@ const darken = function(color, factor) {
  * @return {string}
  */
 const lighten = function(color, factor) {
-  var rgb = goog.color.hexToRgb(color);
-  var lighter = goog.color.lighten(rgb, factor);
+  const rgb = goog.color.hexToRgb(color);
+  const lighter = goog.color.lighten(rgb, factor);
   return goog.color.rgbArrayToHex(lighter);
 };
 
@@ -466,7 +466,7 @@ const lighten = function(color, factor) {
  * @return {!Array<number>} The matrix
  */
 const changeColor = function(from, to) {
-  var matrix = [
+  const matrix = [
     0, 0, 0, 0, 0,
     0, 0, 0, 0, 0,
     0, 0, 0, 0, 0,
@@ -477,18 +477,18 @@ const changeColor = function(from, to) {
     return matrix;
   }
 
-  var srcMax = Math.max(from[0], from[1], from[2]);
-  var srcMaxPos = srcMax == from[0] ? 0 :
+  const srcMax = Math.max(from[0], from[1], from[2]);
+  const srcMaxPos = srcMax == from[0] ? 0 :
     srcMax == from[1] ? 1 : 2;
 
-  var dstMax = Math.max(to[0], to[1], to[2]);
-  var dstRatios = [
+  const dstMax = Math.max(to[0], to[1], to[2]);
+  const dstRatios = [
     to[0] / dstMax,
     to[1] / dstMax,
     to[2] / dstMax
   ];
 
-  for (var i = 0; i < 3; i++) {
+  for (let i = 0; i < 3; i++) {
     matrix[i * 5 + srcMaxPos] = dstRatios[i] * dstMax / srcMax;
   }
 
@@ -505,7 +505,7 @@ const changeColor = function(from, to) {
  * @return {string} The padded hex color string
  */
 const padHexColor = function(str, opt_prefix, opt_default) {
-  var prefix = opt_prefix || '';
+  const prefix = opt_prefix || '';
   str = str.trim().replace(/^(0x|#)/, '');
 
   if (!str || isNaN(Number('0x' + str))) {
@@ -549,7 +549,7 @@ const toHexString = function(color) {
  * @return {string} A color in the format "0xAABBCC"
  */
 const toServerString = function(value) {
-  var hexColor = toHexString(value);
+  const hexColor = toHexString(value);
   return hexColor.toUpperCase().replace(/^#/, '0x');
 };
 
@@ -560,9 +560,9 @@ const toServerString = function(value) {
  */
 const toRgbArray = function(color) {
   if (typeof color == 'string') {
-    var colorStr = /** @type {string} */ (color);
+    let colorStr = /** @type {string} */ (color);
 
-    var i = colorStr.indexOf(',');
+    const i = colorStr.indexOf(',');
     if (i == -1) {
       // no commas indicate hex
       colorStr = colorStr.replace(/0x/ig, '');
@@ -574,9 +574,9 @@ const toRgbArray = function(color) {
         color.push(1);
       }
     } else {
-      var match = colorStr.match(RGBA_MATCH_REGEX);
+      const match = colorStr.match(RGBA_MATCH_REGEX);
       if (match && match.length >= 5) {
-        var alpha = Number(match[4]);
+        const alpha = Number(match[4]);
         color = [Number(match[1]), Number(match[2]), Number(match[3]), isNaN(alpha) ? 1 : alpha];
       } else {
         // not a valid rgb/rgba string, return null
@@ -597,11 +597,11 @@ const toRgbArray = function(color) {
  * @return {number}
  */
 const colorSort = function(c1, c2) {
-  var hsl1 = goog.color.hexToHsl(c1);
-  var hsl2 = goog.color.hexToHsl(c2);
+  const hsl1 = goog.color.hexToHsl(c1);
+  const hsl2 = goog.color.hexToHsl(c2);
 
-  var val1 = Math.round(hsl1[0] * 100) + Math.round(hsl1[1] * 100) / 100 + Math.round(hsl1[2] * 100) / 10000;
-  var val2 = Math.round(hsl2[0] * 100) + Math.round(hsl2[1] * 100) / 100 + Math.round(hsl2[2] * 100) / 10000;
+  const val1 = Math.round(hsl1[0] * 100) + Math.round(hsl1[1] * 100) / 100 + Math.round(hsl1[2] * 100) / 10000;
+  const val2 = Math.round(hsl2[0] * 100) + Math.round(hsl2[1] * 100) / 100 + Math.round(hsl2[2] * 100) / 10000;
 
   return goog.array.defaultCompare(val2, val1);
 };
@@ -653,7 +653,7 @@ const normalizeOpacity = function(opacity) {
  * @return {!Array<number>}
  */
 const rgbToYiq = function(rgb, opt_result) {
-  var mat = new goog.math.Matrix([rgb]);
+  const mat = new goog.math.Matrix([rgb]);
   return RGB_TO_YIQ.multiply(mat).toArray()[0];
 };
 
@@ -667,7 +667,7 @@ const rgbToYiq = function(rgb, opt_result) {
  * @return {!Array<number>}
  */
 const yiqToRgb = function(yiq, opt_result) {
-  var mat = new goog.math.Matrix([yiq]);
+  const mat = new goog.math.Matrix([yiq]);
   return YIQ_TO_RGB.multiply(mat).toArray()[0];
 };
 
@@ -693,11 +693,11 @@ const intToHex = function(num) {
  * @return {Array<number>} The adjusted color in RGB
  */
 const transformHue = function(rgb, hue) {
-  var yiq = rgbToYiq(rgb);
+  const yiq = rgbToYiq(rgb);
   hue = Math.atan2(yiq[2], yiq[1]) + goog.math.toRadians(hue);
-  var chroma = Math.sqrt(yiq[2] * yiq[2] + yiq[1] * yiq[1]);
+  const chroma = Math.sqrt(yiq[2] * yiq[2] + yiq[1] * yiq[1]);
 
-  var newYiq = [yiq[0], chroma * Math.cos(hue), chroma * Math.sin(hue)];
+  const newYiq = [yiq[0], chroma * Math.cos(hue), chroma * Math.sin(hue)];
   return yiqToRgb(newYiq);
 };
 
@@ -717,10 +717,10 @@ const calculateHueTransform = function(src, target, opt_normalize) {
     // saturation with varying lightness, not a color. treating grayscale as blue (#0000ff) will mostly resolve this.
     // the exception is that white > blue hue transformation can't be done. that problem cannot be resolved with a
     // simple hue shift.
-    var srcHsl = goog.color.rgbArrayToHsl(src);
-    var srcHue = srcHsl[0] == 0 && srcHsl[1] == 0 ? 240 : srcHsl[0];
+    const srcHsl = goog.color.rgbArrayToHsl(src);
+    const srcHue = srcHsl[0] == 0 && srcHsl[1] == 0 ? 240 : srcHsl[0];
 
-    var targetHsl = goog.color.rgbArrayToHsl(target);
+    const targetHsl = goog.color.rgbArrayToHsl(target);
 
     // convert the source/target color to have max saturation and mid lightness. this normalizes the hue translation
     // across all colors.
@@ -728,11 +728,11 @@ const calculateHueTransform = function(src, target, opt_normalize) {
     target = goog.color.hslArrayToRgb([targetHsl[0], 1, 0.5]);
   }
 
-  var yiq1 = rgbToYiq(src);
-  var yiq2 = rgbToYiq(target);
+  const yiq1 = rgbToYiq(src);
+  const yiq2 = rgbToYiq(target);
 
-  var hue1 = Math.atan2(yiq1[2], yiq1[1]);
-  var hue2 = Math.atan2(yiq2[2], yiq2[1]);
+  const hue1 = Math.atan2(yiq1[2], yiq1[1]);
+  const hue2 = Math.atan2(yiq2[2], yiq2[1]);
 
   return hue2 - hue1;
 };
@@ -746,14 +746,14 @@ const calculateHueTransform = function(src, target, opt_normalize) {
  * @param {string|Array<number>} tgtColor The target color either as an rgba string or array
  */
 const colorize = function(data, tgtColor) {
-  var rgbaColor;
+  let rgbaColor;
   if (Array.isArray(tgtColor)) {
     rgbaColor = tgtColor;
   } else {
     rgbaColor = toRgbArray(tgtColor);
   }
 
-  for (var i = 0, n = data.length; i < n; i += 4) {
+  for (let i = 0, n = data.length; i < n; i += 4) {
     data[i] = rgbaColor[0];
     data[i + 1] = rgbaColor[1];
     data[i + 2] = rgbaColor[2];
@@ -770,14 +770,14 @@ const colorize = function(data, tgtColor) {
  * @param {number} saturation The target saturation. The range is 0 to 1.
  */
 const adjustColor = function(data, brightness, contrast, saturation) {
-  var intercept = (1 - contrast) / 2;
-  var sr = (1 - saturation) * 0.3086;
-  var sg = (1 - saturation) * 0.6094;
-  var sb = (1 - saturation) * 0.0820;
+  const intercept = (1 - contrast) / 2;
+  const sr = (1 - saturation) * 0.3086;
+  const sg = (1 - saturation) * 0.6094;
+  const sb = (1 - saturation) * 0.0820;
   brightness = brightness * 225;
 
   // color transform matrix for contrast and saturation, taken from online research https://docs.rainmeter.net/tips/colormatrix-guide/
-  var m = [
+  const m = [
     contrast * (sr + saturation), contrast * sr, contrast * sr, 0, 0,
     contrast * sg, contrast * (sg + saturation), sg * contrast, 0, 0,
     contrast * sb, contrast * sb, contrast * (sb + saturation), 0, 0,
@@ -786,11 +786,11 @@ const adjustColor = function(data, brightness, contrast, saturation) {
   ];
 
 
-  for (var i = 0, n = data.length; i < n; i += 4) {
-    var r = data[i];
-    var g = data[i + 1];
-    var b = data[i + 2];
-    var a = data[i + 3];
+  for (let i = 0, n = data.length; i < n; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    const a = data[i + 3];
     data[i] = Math.round((r * m[0] + g * m[5] + b * m[10] + a * m[15] + m[20]));
     data[i + 1] = Math.round((r * m[1] + g * m[6] + b * m[11] + a * m[16] + m[21]));
     data[i + 2] = Math.round((r * m[2] + g * m[7] + b * m[12] + a * m[17] + m[22]));
@@ -809,8 +809,8 @@ const adjustColor = function(data, brightness, contrast, saturation) {
  * @param {string|Array<number>} tgtColor The target color either as an rgba string or array
  */
 const transformColor = function(data, srcColor, tgtColor) {
-  var srcRgb;
-  var tgtRgb;
+  let srcRgb;
+  let tgtRgb;
 
   if (Array.isArray(srcColor)) {
     srcRgb = srcColor;
@@ -825,30 +825,30 @@ const transformColor = function(data, srcColor, tgtColor) {
   }
 
   // find the maximum color channel in the source and target and construct a ratio
-  var srcMax = Math.max(srcRgb[0], srcRgb[1], srcRgb[2]);
-  var srcIdx = srcMax == srcRgb[0] ? 0 : (srcMax == srcRgb[1] ? 1 : 2);
+  const srcMax = Math.max(srcRgb[0], srcRgb[1], srcRgb[2]);
+  const srcIdx = srcMax == srcRgb[0] ? 0 : (srcMax == srcRgb[1] ? 1 : 2);
 
-  var tgtMax = Math.max(tgtRgb[0], tgtRgb[1], tgtRgb[2]);
-  var tgtRatios = [tgtRgb[0] / tgtMax, tgtRgb[1] / tgtMax, tgtRgb[2] / tgtMax];
-  var ratio = tgtMax / srcMax;
+  const tgtMax = Math.max(tgtRgb[0], tgtRgb[1], tgtRgb[2]);
+  const tgtRatios = [tgtRgb[0] / tgtMax, tgtRgb[1] / tgtMax, tgtRgb[2] / tgtMax];
+  const ratio = tgtMax / srcMax;
 
-  var tgtRatio0 = tgtRatios[0] * ratio;
-  var tgtRatio1 = tgtRatios[1] * ratio;
-  var tgtRatio2 = tgtRatios[2] * ratio;
+  const tgtRatio0 = tgtRatios[0] * ratio;
+  const tgtRatio1 = tgtRatios[1] * ratio;
+  const tgtRatio2 = tgtRatios[2] * ratio;
 
   // color transform matrix, taken from an old Flash/Flex utility and a little online research
-  var m = [
+  const m = [
     srcIdx == 0 ? tgtRatio0 : 0, srcIdx == 1 ? tgtRatio0 : 0, srcIdx == 2 ? tgtRatio0 : 0, 0, 0,
     srcIdx == 0 ? tgtRatio1 : 0, srcIdx == 1 ? tgtRatio1 : 0, srcIdx == 2 ? tgtRatio1 : 0, 0, 0,
     srcIdx == 0 ? tgtRatio2 : 0, srcIdx == 1 ? tgtRatio2 : 0, srcIdx == 2 ? tgtRatio2 : 0, 0, 0,
     0, 0, 0, 1, 0
   ];
 
-  for (var i = 0, n = data.length; i < n; i += 4) {
-    var r = data[i];
-    var g = data[i + 1];
-    var b = data[i + 2];
-    var a = data[i + 3];
+  for (let i = 0, n = data.length; i < n; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    const a = data[i + 3];
 
     // apply the color matrix with the following assumptions to improve performance:
     // 1) we don't need to change anything if r == g == b == a == 0 because m4, m9 and m14 are always 0
