@@ -277,7 +277,7 @@ os.style.SHAPES = {
   },
   'Ellipse': {
     'config': {
-      'geometry': os.data.RecordField.ELLIPSE
+      'geometries': [os.data.RecordField.ELLIPSE]
     }
   },
   'Ellipse with Center': {
@@ -287,7 +287,7 @@ os.style.SHAPES = {
   },
   'Selected Ellipse': {
     'selectedConfig': {
-      'geometry': os.data.RecordField.ELLIPSE
+      'geometries': [os.data.RecordField.ELLIPSE]
     }
   },
   'Selected Ellipse with Center': {
@@ -1476,6 +1476,11 @@ os.style.createFeatureStyle = function(feature, baseConfig, opt_layerConfig) {
 
         styles.push(labelStyle);
       }
+    }
+
+    var additionalStyles = os.style.label.createAdditionalLabels(feature, featureConfig, opt_layerConfig);
+    if (additionalStyles) {
+      styles = styles.concat(additionalStyles);
     }
 
     return styles;

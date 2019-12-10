@@ -622,8 +622,10 @@ os.data.BaseDescriptor.prototype.getSearchText = function() {
 os.data.BaseDescriptor.prototype.getNodeUI = function() {
   return this.nodeUI;
 };
+
+
 /**
- * Sets the Node UI for this desceriptor
+ * Sets the Node UI for this descriptor
  * @param {string} value - node UI HTML
  */
 os.data.BaseDescriptor.prototype.setNodeUI = function(value) {

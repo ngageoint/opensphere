@@ -1,6 +1,7 @@
 goog.provide('os.ui.layer.VectorLayerUICtrl');
 goog.provide('os.ui.layer.vectorLayerUIDirective');
 
+goog.require('goog.async.Delay');
 goog.require('goog.color');
 goog.require('os.MapChange');
 goog.require('os.array');
@@ -132,16 +133,22 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
   this['showAltitudeModes'] = false;
 
   /**
-   * Flag for whether the label state needs to be refreshed.
-   * @type {boolean}
-   */
-  this.refreshLabels = true;
-
-  /**
    * The unique identifier for the layer.
    * @type {os.data.ColumnDefinition}
    */
   this['uniqueId'] = null;
+
+  /**
+   * Delay for grouping label size changes.
+   * @type {goog.async.Delay}
+   */
+  this.labelSizeChangeDelay = new goog.async.Delay(this.updateLabelSize, 500, this);
+
+  /**
+   * Flag for whether the label state needs to be refreshed.
+   * @type {boolean}
+   */
+  this.refreshLabels = true;
 
   os.ui.layer.VectorLayerUICtrl.base(this, 'constructor', $scope, $element, $timeout);
   this.defaultColorControl = os.ui.ColorControlType.PICKER;
@@ -171,7 +178,7 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
   // label change handlers
   $scope.$on('labelColor.change', this.onLabelColorChange.bind(this));
   $scope.$on('labelColor.reset', this.onLabelColorReset.bind(this));
-  $scope.$on('labelSize.spinstop', this.onLabelSizeChange.bind(this));
+  $scope.$watch('labelSize', this.onLabelSizeChange.bind(this));
 
   $scope.$on(os.ui.layer.LabelControlsEventType.COLUMN_CHANGE, this.onLabelColumnChange.bind(this));
   $scope.$on(os.ui.layer.LabelControlsEventType.SHOW_LABELS_CHANGE, this.onShowLabelsChange.bind(this));
@@ -734,15 +741,24 @@ os.ui.layer.VectorLayerUICtrl.prototype.onLabelColorReset = function(event) {
 
 
 /**
- * Handles changes to label size
+ * Handles changes to label size.
  *
- * @param {angular.Scope.Event} event
- * @param {number} value
+ * @param {number} newVal The new label size.
+ * @param {number} oldVal The old label size.
  * @protected
  */
-os.ui.layer.VectorLayerUICtrl.prototype.onLabelSizeChange = function(event, value) {
-  event.stopPropagation();
+os.ui.layer.VectorLayerUICtrl.prototype.onLabelSizeChange = function(newVal, oldVal) {
+  if (newVal !== oldVal) {
+    this.labelSizeChangeDelay.start();
+  }
+};
 
+
+/**
+ * Updates the label size.
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.updateLabelSize = function() {
+  var value = /** @type {number} */ (this.scope['labelSize']);
   var fn =
       /**
        * @param {os.layer.ILayer} layer

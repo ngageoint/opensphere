@@ -64,10 +64,6 @@
           "EPSG:4326": ["worldimagery-4326", "streetmap-4326"],
           "EPSG:3857": ["worldimagery", "streetmap"]
         },
-        "failSet": {
-          "EPSG:4326": [],
-          "EPSG:3857": []
-        },
         "maps": {
           "streetmap": {
             "title": "Street Map",
