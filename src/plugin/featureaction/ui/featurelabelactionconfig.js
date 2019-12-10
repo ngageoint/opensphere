@@ -106,8 +106,8 @@ plugin.im.action.feature.ui.LabelConfigCtrl = function($scope, $element) {
 
   $scope.$on('labelColor.change', this.onColorChange.bind(this));
   $scope.$on('labelColor.reset', this.onColorReset.bind(this));
-  $scope.$on('labelSize.spinstop', this.onSizeChange.bind(this));
   $scope.$on(os.ui.layer.LabelControlsEventType.COLUMN_CHANGE, this.validate.bind(this));
+  $scope.$watch('size', this.onSizeChange.bind(this));
   $scope.$watch('config.customName', this.onCustomNameChange.bind(this));
 
   this.initialize();
@@ -284,14 +284,12 @@ plugin.im.action.feature.ui.LabelConfigCtrl.prototype.onColorReset = function(ev
 /**
  * Handle changes to size.
  *
- * @param {angular.Scope.Event} event
- * @param {number} value
+ * @param {number} newVal
+ * @param {number} oldVal
  * @protected
  */
-plugin.im.action.feature.ui.LabelConfigCtrl.prototype.onSizeChange = function(event, value) {
-  event.stopPropagation();
-
-  if (this.labelConfig && value != null) {
-    this.labelConfig['size'] = value;
+plugin.im.action.feature.ui.LabelConfigCtrl.prototype.onSizeChange = function(newVal, oldVal) {
+  if (this.labelConfig && newVal != null) {
+    this.labelConfig['size'] = newVal;
   }
 };
