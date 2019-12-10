@@ -5,7 +5,7 @@ goog.require('goog.date.DateTime');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventTarget');
 
-const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity'); // eslint-disable-line no-unused-vars
+const AlertEventSeverity = goog.requireType('os.alert.AlertEventSeverity');
 const EventType = goog.require('os.alert.EventType');
 
 /**
