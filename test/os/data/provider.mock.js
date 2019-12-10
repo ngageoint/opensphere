@@ -1,17 +1,32 @@
-goog.provide('os.data.MockProvider');
+goog.module('os.data.MockProvider');
+goog.module.declareLegacyNamespace();
+
 goog.require('os.ui.data.BaseProvider');
 
+/**
+ * Mock provider for tests.
+ */
+class MockProvider extends os.ui.data.BaseProvider {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
 
-os.data.MockProvider = function() {
-  goog.base(this);
-};
-goog.inherits(os.data.MockProvider, os.ui.data.BaseProvider);
+  /**
+   * @param {Object} config Test config.
+   */
+  configure(config) {
+    this.test = config['test'];
+  }
 
+  /**
+   * @param {boolean} ping Unused here.
+   */
+  load(ping) {
+    this.loaded = true;
+  }
+}
 
-os.data.MockProvider.prototype.configure = function(config) {
-  this.test = config['test'];
-};
-
-os.data.MockProvider.prototype.load = function(ping) {
-  this.loaded = true;
-};
+exports = MockProvider;
