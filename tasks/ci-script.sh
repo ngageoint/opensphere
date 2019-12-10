@@ -10,4 +10,8 @@ yarn run test
 #
 # ./cypress/support/execute-tests.sh ci cli all
 
-yarn run apidoc
+#
+# js-dossier does not properly support goog.module and ES6 modules. This has
+# been disabled until a functional documentation framework is ready.
+#
+# yarn run apidoc
