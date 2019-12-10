@@ -20,7 +20,6 @@ const maxSaved_ = 10000;
 
 /**
  * Responsible for receiving, logging and reporting alerts
- * @extends {goog.events.EventTarget}
  */
 class AlertManager extends goog.events.EventTarget {
   /**
