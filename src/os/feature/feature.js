@@ -545,6 +545,7 @@ os.feature.createRings = function(feature, opt_replace) {
       var largestRing = rings.reduce((acc, current) => acc.radius > current.radius ? acc : current);
       var geoms = [];
       var labels = [];
+      var previousCoordinates;
 
       // iterate over the rings and create either arcs or circles from them
       rings.forEach(function(ring, i, arr) {
@@ -578,7 +579,13 @@ os.feature.createRings = function(feature, opt_replace) {
           } else {
             // interpolateCircle wasn't working correctly... so use ellipse with semimajor = semiminor instead
             coordinates = os.geo.interpolateEllipse(center, radius, radius, 0);
-            geom = new ol.geom.Polygon([coordinates]);
+
+            // Create the first ring normally, but subsequent rings should be created with the previous ring as
+            // a hole. This prevents their fills from stacking in the central zones.
+            geom = previousCoordinates ?
+                new ol.geom.Polygon([coordinates, previousCoordinates]) : new ol.geom.Polygon([coordinates]);
+
+            previousCoordinates = coordinates.slice();
           }
 
           geoms.push(geom);
