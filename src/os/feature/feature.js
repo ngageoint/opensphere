@@ -13,6 +13,7 @@ goog.require('ol.source.Vector');
 goog.require('ol.source.VectorEventType');
 goog.require('os');
 goog.require('os.Fields');
+goog.require('os.bearing.BearingType');
 goog.require('os.command.FlyToExtent');
 goog.require('os.data.RecordField');
 goog.require('os.fn');
@@ -517,6 +518,8 @@ os.feature.createRings = function(feature, opt_replace) {
   }
 
   if (feature) {
+    os.feature.cleanRingGeoms(feature);
+
     var options = /** @type {osx.feature.RingOptions} */ (feature.get(os.data.RecordField.RING_OPTIONS));
     var geometry = feature.getGeometry();
     var center = geometry ? ol.proj.toLonLat(ol.extent.getCenter(geometry.getExtent()), os.map.PROJECTION) : null;
@@ -524,17 +527,24 @@ os.feature.createRings = function(feature, opt_replace) {
     if (options && options.enabled && options.rings && center) {
       // calculate the geomag object and get the current interpolation function to use
       var date = new Date(os.time.TimelineController.getInstance().getCurrent());
-      var geomag = os.bearing.geomag(center, date);
-      var declination = /** @type {number} */ (geomag['dec']);
       var directInterpFn = os.interpolate.getMethod() == os.interpolate.Method.GEODESIC ?
           osasm.geodesicDirect : osasm.rhumbDirect;
+
+      // calculate the magnetic declination
+      var declination = 0;
+      if (options.bearingType == os.bearing.BearingType.MAGNETIC) {
+        // set the declination value if we're set to magnetic north
+        var geomag = os.bearing.geomag(center, date);
+        declination = /** @type {number} */ (geomag['dec']);
+      }
+
 
       var rings = options.rings;
       var startAngle = (options.startAngle || 0) + declination;
       var widthAngle = options.widthAngle || 0;
       var lastRing = rings[rings.length - 1];
       var geoms = [];
-      var labels;
+      var labels = [];
 
       // iterate over the rings and create either arcs or circles from them
       rings.forEach(function(ring, i, arr) {
@@ -576,8 +586,8 @@ os.feature.createRings = function(feature, opt_replace) {
       });
 
       if (options.crosshair) {
-        // create the crosshair starting from magnetic north
-        var bearing = declination < 0 ? declination + 360 : declination;
+        // create the crosshair starting from north
+        var northBearing = declination < 0 ? declination + 360 : declination;
 
         if (lastRing) {
           var distance = lastRing.radius || 40;
@@ -586,25 +596,37 @@ os.feature.createRings = function(feature, opt_replace) {
           // convert to meters and add 10% so the crosshairs reach past the outermost ring
           distance = os.math.convertUnits(distance, os.math.Units.METERS, units) * 1.1;
 
-          // the create the lines at 90 degree angles from magnetic north (not just at 0, 90, 180, 270)
-          var coord1 = directInterpFn(center, bearing, distance);
-          var coord2 = directInterpFn(center, bearing - 180, distance);
+          // the create the lines at 90 degree angles from north (whether magnetic or true)
+          var coord1 = directInterpFn(center, northBearing, distance);
+          var coord2 = directInterpFn(center, northBearing - 180, distance);
 
           var verticalLine = new ol.geom.LineString([coord1, center, coord2]);
 
-          coord1 = directInterpFn(center, bearing - 90, distance);
-          coord2 = directInterpFn(center, bearing + 90, distance);
+          var coord3 = directInterpFn(center, northBearing - 90, distance);
+          var coord4 = directInterpFn(center, northBearing + 90, distance);
 
-          var horizontalLine = new ol.geom.LineString([coord1, center, coord2]);
+          var horizontalLine = new ol.geom.LineString([coord3, center, coord4]);
 
           geoms.push(verticalLine);
           geoms.push(horizontalLine);
+
+          if (options.labels) {
+            var northGeom = new ol.geom.Point(coord1);
+            var northKey = os.data.RecordField.RING_LABEL + 'north';
+            feature.set(northKey, northGeom);
+
+            var labelConfig = {
+              'geometry': northKey,
+              'text': 'N',
+              'zIndex': 100
+            };
+
+            labels.push(labelConfig);
+          }
         }
       }
 
       if (options.labels) {
-        labels = [];
-
         rings.forEach(function(ring, i) {
           var distance = ring.radius;
 
@@ -642,6 +664,31 @@ os.feature.createRings = function(feature, opt_replace) {
   }
 
   return ringGeom;
+};
+
+
+/**
+ * Cleans the ring geometries off of a feature. This is necessary because the geometries for positioning additional
+ * labels are held by the feature to allow the renderer to know where to draw them.
+ *
+ * @param {ol.Feature} feature The feature
+ */
+os.feature.cleanRingGeoms = function(feature) {
+  if (feature) {
+    for (var i = 0; i < 100; i++) {
+      var key = os.data.RecordField.RING_LABEL + i;
+      var geom = feature.get(key);
+
+      if (geom) {
+        feature.unset(key);
+      } else {
+        // all cleaned up, so break
+        break;
+      }
+    }
+
+    feature.unset(os.data.RecordField.RING_LABEL + 'north');
+  }
 };
 
 

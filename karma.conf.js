@@ -97,8 +97,14 @@ module.exports = function(config) {
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
     reporters: ['dots', 'junit', 'coverage'],
 
+    //
+    // Preprocessors:
+    //  - googmodule wraps goog.module files so they are loaded correctly by the browser
+    //  - coverage provides test coverage reports
+    //
     preprocessors: {
-      'src/**/*.js': ['coverage']
+      'src/**/*.js': ['googmodule', 'coverage'],
+      'test/**/*.mock.js': ['googmodule']
     },
 
     junitReporter: {
@@ -128,6 +134,7 @@ module.exports = function(config) {
           overrides: {}
         }
       }, */
+      includeAllSources: true,
       reporters: [{
         type: 'html',
         dir: '.build/test/coverage/html',
