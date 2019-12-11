@@ -8,6 +8,7 @@ goog.require('os.events.LayerConfigEvent');
 goog.require('os.ex.ZipExporter');
 goog.require('os.file.File');
 goog.require('os.job.Job');
+goog.require('os.worker');
 
 
 /**

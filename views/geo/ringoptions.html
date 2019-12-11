@@ -62,10 +62,18 @@
     </div>
 
     <div class="col-6">
-      <div class="form-group flex-shrink-0">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="labels{{ctrl.uid}}" ng-model="ctrl.options.labels" ng-change="ctrl.update()"  ng-disabled="!ctrl.options.enabled"/>
-          <label class="form-check-label" for="labels{{ctrl.uid}}">Show Labels</label>
+      <div class="form-group row flex-shrink-0" title="Use Magnetic or True North for your crosshair and bearings">
+        <label class="col-4 col-form-label">Bearing</label>
+        <div class="col">
+          <div class="custom-control custom-checkbox d-inline mr-2">
+            <input class="form-check-input" ng-checked="true" type="radio" id="magnetic{{ctrl.uid}}" name="magnetic" value="magnetic" ng-change="ctrl.update()" ng-model="ctrl.options.bearingType" ng-disabled="!ctrl.options.enabled"/>
+            <label class="form-check-label" for="magnetic{{ctrl.uid}}">Magnetic</label>
+          </div>
+
+          <div class="custom-control custom-checkbox d-inline">
+            <input class="form-check-input" type="radio" id="trueNorth{{ctrl.uid}}" name="manual" value="trueNorth" ng-change="ctrl.update()" ng-model="ctrl.options.bearingType" ng-disabled="!ctrl.options.enabled"/>
+            <label class="form-check-label" for="trueNorth{{ctrl.uid}}">True</label>
+          </div>
         </div>
       </div>
 
@@ -73,6 +81,13 @@
         <div class="form-check">
           <input class="form-check-input" type="checkbox" id="crosshair{{ctrl.uid}}" ng-model="ctrl.options.crosshair" ng-change="ctrl.update()"  ng-disabled="!ctrl.options.enabled"/>
           <label class="form-check-label" for="crosshair{{ctrl.uid}}">Show Crosshair</label>
+        </div>
+      </div>
+
+      <div class="form-group flex-shrink-0">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="labels{{ctrl.uid}}" ng-model="ctrl.options.labels" ng-change="ctrl.update()"  ng-disabled="!ctrl.options.enabled"/>
+          <label class="form-check-label" for="labels{{ctrl.uid}}">Show Labels</label>
         </div>
       </div>
 
