@@ -1,4 +1,6 @@
 goog.provide('os.bearing');
+goog.provide('os.bearing.BearingType');
+
 goog.require('os.config.Settings');
 goog.require('os.net.Request');
 
@@ -113,10 +115,12 @@ os.bearing.getBearing = function(coord1, coord2, date, opt_method) {
  * @param {!number} bearing The bearing to format
  * @param {!ol.Coordinate} coord The coordinate at which the bearing is being calculated
  * @param {!Date} date Optional date, only useful for magnetic bearing calculation
- * @return {number} The formatted bearing
+ * @param {string=} opt_bearingType Optional bearing type override.
+ * @return {number} The normalized bearing
  */
-os.bearing.modifyBearing = function(bearing, coord, date) {
-  var bearingType = os.settings.get(os.bearing.BearingSettingsKeys.BEARING_TYPE, os.bearing.BearingType.TRUE_NORTH);
+os.bearing.modifyBearing = function(bearing, coord, date, opt_bearingType) {
+  var bearingType = opt_bearingType ||
+      os.settings.get(os.bearing.BearingSettingsKeys.BEARING_TYPE, os.bearing.BearingType.TRUE_NORTH);
   if (coord && bearingType == os.bearing.BearingType.MAGNETIC && os.bearing.geomag_) {
     var geomag = os.bearing.geomag(coord, date);
     bearing = bearing - geomag['dec'];
@@ -131,11 +135,13 @@ os.bearing.modifyBearing = function(bearing, coord, date) {
  *
  * @param {!number} bearing The bearing to format
  * @param {number=} opt_precision The precision to round to, defaults to 5
+ * @param {string=} opt_bearingType Optional bearing type override.
  * @return {string} String formatted version of the bearing.
  */
-os.bearing.getFormattedBearing = function(bearing, opt_precision) {
+os.bearing.getFormattedBearing = function(bearing, opt_precision, opt_bearingType) {
   opt_precision = opt_precision !== undefined ? opt_precision : 5;
-  var bearingType = os.settings.get(os.bearing.BearingSettingsKeys.BEARING_TYPE, os.bearing.BearingType.TRUE_NORTH);
+  var bearingType = opt_bearingType ||
+      os.settings.get(os.bearing.BearingSettingsKeys.BEARING_TYPE, os.bearing.BearingType.TRUE_NORTH);
   var typeString = bearingType == os.bearing.BearingType.TRUE_NORTH ? 'T' : 'M';
   return os.math.toFixed(bearing, opt_precision) + '° ' + typeString;
 };
