@@ -508,3 +508,36 @@ osx.import;
   * }}
   */
 osx.import.FileWrapper;
+
+
+/**
+ * Namespace.
+ * @type {Object}
+ */
+osx.feature;
+
+
+/**
+ * @typedef {{
+ *   radius: number,
+ *   units: string
+ * }}
+ */
+osx.feature.RingDefinition;
+
+
+/**
+ * @typedef {{
+ *   enabled: boolean,
+ *   type: string,
+ *   interval: number,
+ *   units: string,
+ *   crosshair: boolean,
+ *   arcs: boolean,
+ *   labels: boolean,
+ *   startAngle: number,
+ *   widthAngle: number,
+ *   rings: Array<osx.feature.RingDefinition>
+ * }}
+ */
+osx.feature.RingOptions;
