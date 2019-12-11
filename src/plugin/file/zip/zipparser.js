@@ -382,12 +382,12 @@ plugin.file.zip.ZIPParser.prototype.toUIO_ = function(entry, content, callback) 
     if (file) {
       // turn this into a better object for the UI
       return /** @type {osx.import.FileWrapper} */ ({
-        'id': ol.getUid(file),
-        'label': entry.filename,
-        'valid': true,
-        'enabled': true,
-        'msg': '',
-        'file': file
+        id: ol.getUid(file),
+        label: entry.filename,
+        valid: true,
+        enabled: true,
+        msg: '',
+        file: file
       });
     }
     return null;

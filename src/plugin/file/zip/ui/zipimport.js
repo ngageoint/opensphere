@@ -182,8 +182,6 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.chain = function() {
   }
 
   var onSuccess = function() {
-    // TODO if there are other paths through importers in the future, then update this code
-    //
     // file successfully read and importer kicked off... so one of two things happened:
     // 1. asycnhronous window process kicked off...
     // 2. assume the importer just did some processing then finished; so chain()
@@ -199,10 +197,8 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.chain = function() {
 
   this.curImporter_ = this.importers_.splice(0, 1)[0]; // remove the current importer from the queue
 
-  // TODO - Breaking Change -- Fix every place that uses DuplicateImportProcess to utilize events OR alter DuplicateImportProcess
-  // to handle the deferred object in all cases (without breaking any of the current uses).  Currently, the duplicate
-  // dialog is created by setEvent(), so the deferred is not called when that dialog is cancelled.  So for now, we
-  // have to use ImportProcess instead of DuplicateImportProcess here.
+  // Currently, the duplicate dialog is created by setEvent(), so the deferred is not called when
+  // that dialog is canceled.  So for now, use ImportProcess instead of DuplicateImportProcess here
   var process = new os.im.ImportProcess();
   process.setSkipDuplicates(true);
   process.setEvent(new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE, this.curImporter_['file']));
