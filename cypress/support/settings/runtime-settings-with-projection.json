@@ -1,0 +1,46 @@
+{
+  "admin": {
+    "os": {
+      "map": {
+        "mapMode": "2d"
+      }
+    },
+    "providers": {
+      "basemap": {
+        "defaults": {
+          "EPSG:3857": ["streetmap", "worldimagery"],
+          "EPSG:4326": ["streetmap-4326", "worldimagery-4326"]
+        },
+        "maps": {
+          "streetmap": {
+            "crossOrigin": "anonymous",
+            "proxy": false,
+            "title": "Street Map",
+            "type": "BaseMap",
+            "baseType": "XYZ",
+            "url": "STREET_MAP_URL",
+            "minZoom": 2,
+            "maxZoom": 16,
+            "projection": "EPSG:3857",
+            "tileSize": 256
+          },
+          "worldimagery": {
+            "crossOrigin": "anonymous",
+            "proxy": false,
+            "title": "World Imagery",
+            "type": "BaseMap",
+            "baseType": "XYZ",
+            "url": "WORLD_IMAGERY_URL",
+            "minZoom": 12,
+            "maxZoom": 21,
+            "projection": "EPSG:3857",
+            "tileSize": 256
+          }
+        }
+      }
+    }
+  },
+  "user": {
+    "baseProjection": "BASE_PROJECTION_OVERRIDE"
+  }
+}
