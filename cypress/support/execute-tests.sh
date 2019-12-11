@@ -139,13 +139,13 @@ function checkEnvironment() {
   if [ -d $OPENSPHERE_CONFIG_TESTER_FOLDER ]; then
     OPENSPHERE_CONFIG_TESTER_FOLDER_SOURCE=$OPENSPHERE_CONFIG_TESTER_FOLDER
     OPENSPHERE_CONFIG_TESTER_EXISTS=true
-    echo 'INFO: opensphere tester configuration check complete; tester machine'
+    echo 'INFO: opensphere-config-tester check complete; found tester machine'
   elif [ -d $OPENSPHERE_NO_MERGE_CONFIG_TESTER_FOLDER ]; then
     OPENSPHERE_CONFIG_TESTER_FOLDER_SOURCE=$OPENSPHERE_NO_MERGE_CONFIG_TESTER_FOLDER
     OPENSPHERE_CONFIG_TESTER_EXISTS=true
-    echo 'INFO: opensphere tester configuration check complete; developer machine'
+    echo 'INFO: opensphere-config-tester check complete; found developer machine'
   else
-    echo 'INFO: opensphere tester configuration not present, continuing without it'
+    echo 'INFO: opensphere-config-tester not present, continuing without it'
     OPENSPHERE_CONFIG_TESTER_EXISTS=false
   fi
 
