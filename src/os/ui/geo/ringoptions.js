@@ -139,6 +139,7 @@ os.ui.geo.ringOptionsDirective.prototype.getDefaultOptions = function() {
  * @export
  */
 os.ui.geo.ringOptionsDirective.prototype.update = function() {
+  this['count'] = this['options'].rings.length;
   this.scope_.$emit('ring.update', this['options']);
 };
 

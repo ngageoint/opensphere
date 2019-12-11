@@ -542,7 +542,7 @@ os.feature.createRings = function(feature, opt_replace) {
       var rings = options.rings;
       var startAngle = (options.startAngle || 0) + declination;
       var widthAngle = options.widthAngle || 0;
-      var lastRing = rings[rings.length - 1];
+      var largestRing = rings.reduce((acc, current) => acc.radius > current.radius ? acc : current);
       var geoms = [];
       var labels = [];
 
@@ -589,9 +589,9 @@ os.feature.createRings = function(feature, opt_replace) {
         // create the crosshair starting from north
         var northBearing = declination < 0 ? declination + 360 : declination;
 
-        if (lastRing) {
-          var distance = lastRing.radius || 40;
-          var units = lastRing.units;
+        if (largestRing) {
+          var distance = largestRing.radius || 40;
+          var units = largestRing.units;
 
           // convert to meters and add 10% so the crosshairs reach past the outermost ring
           distance = os.math.convertUnits(distance, os.math.Units.METERS, units) * 1.1;
