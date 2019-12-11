@@ -96,7 +96,7 @@
     "init:version": "echo dist/opensphere/v$(date +%s) > .build/version; cat .build/version",
     "init:vfolder": "mkdirp $(cat .build/version)",
     "init": "npm run init:base && npm run init:debug && npm run init:version && npm run init:vfolder",
-    "lint:html": "htmlhint --config htmlhint.conf 'views/**/*.html'",
+    "lint:html": "htmlhint 'views/**/*.html'",
     "lint:css": "sass-lint -v -s scss -i 'scss/nolint/**/*.scss' 'scss/**/*.scss'",
     "lint:js": "eslint --cache 'src/**/*.js' 'cypress/**/*.js' 'tasks/**/*.js'",
     "lint": "npm run lint:html && npm run lint:js && npm run lint:css",

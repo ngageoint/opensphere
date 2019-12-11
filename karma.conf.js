@@ -134,6 +134,7 @@ module.exports = function(config) {
           overrides: {}
         }
       }, */
+      includeAllSources: true,
       reporters: [{
         type: 'html',
         dir: '.build/test/coverage/html',
