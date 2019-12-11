@@ -562,8 +562,8 @@ os.feature.createRings = function(feature, opt_replace) {
             coordinates = os.geo.interpolateArc(center, radius, widthAngle, startAngle);
             geom = new ol.geom.LineString(coordinates);
 
-            if (i == arr.length - 1) {
-              // last ring, so create the endcap geometries and stitch it into a polygon so it can be filled
+            if (ring === largestRing) {
+              // largest ring, so create the endcap geometries and stitch it into a polygon so it can be filled
               var endCoord1 = directInterpFn(center, startAngle - widthAngle / 2, radius);
               var endCoord2 = directInterpFn(center, startAngle + widthAngle / 2, radius);
 
