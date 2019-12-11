@@ -14,7 +14,7 @@ function main() {
   stopWebServer
   restoreSettings
 
-  echo 'INFO: test execution script completed!'
+  echo "INFO: test execution script completed; code $TEST_RESULT"
   exit $TEST_RESULT
 }
 
@@ -274,6 +274,7 @@ function runTests() {
   else
     echo 'INFO: starting Cypress in local development environment via interactive mode'
     $(npm bin)/cypress open
+    TEST_RESULT=0
     echo 'INFO: user has closed Cypress interactive mode'
   fi
 }
