@@ -150,6 +150,7 @@ goog.require('plugin.file.gml.GMLPlugin');
 goog.require('plugin.file.gpx.GPXPlugin');
 goog.require('plugin.file.kml.KMLPlugin');
 goog.require('plugin.file.shp.SHPPlugin');
+goog.require('plugin.file.zip.ZIPPlugin');
 goog.require('plugin.google.places.Plugin');
 goog.require('plugin.heatmap.HeatmapPlugin');
 goog.require('plugin.im.action.feature.Plugin');
@@ -528,6 +529,7 @@ os.MainCtrl.prototype.addPlugins = function() {
   os.ui.pluginManager.addPlugin(new plugin.file.gpx.GPXPlugin());
   os.ui.pluginManager.addPlugin(new plugin.file.kml.KMLPlugin());
   os.ui.pluginManager.addPlugin(new plugin.file.shp.SHPPlugin());
+  os.ui.pluginManager.addPlugin(new plugin.file.zip.ZIPPlugin());
   os.ui.pluginManager.addPlugin(new plugin.weather.WeatherPlugin());
   os.ui.pluginManager.addPlugin(new plugin.overview.OverviewPlugin());
   os.ui.pluginManager.addPlugin(new plugin.arc.ArcPlugin());
