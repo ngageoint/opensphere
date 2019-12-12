@@ -38,7 +38,7 @@ ES6 Constructor
 
 - Defined using the ``class`` keyword.
 - Constructor is defined with the special ``constructor`` function. The ``@constructor`` annotation is not required.
-- If it extends another class, the ``extends`` keyword is used. This establishes prototypal inheritance, and cues the compiler so ``@extends`` is not required.
+- If it extends another class, the ``extends`` keyword is used. This establishes prototypal inheritance, and cues the compiler so ``@extends`` is not required. ``@extends`` is still used when providing generic types for a template (ie, ``@extends {MyParentClass<MyType>}``).
 - Parent constructor is invoked with ``super(<args>)``.
 - Class properties are added with ``this.<property>``.
 
