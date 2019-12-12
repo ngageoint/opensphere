@@ -223,6 +223,10 @@
     "Chrome >= 35",
     "Firefox >= 31"
   ],
+  "resolutions": {
+    "raphael": "2.3.0",
+    "squire-rte": "1.9.0"
+  },
   "devDependencies": {
     "@commitlint/cli": "^8.0.0",
     "@commitlint/config-conventional": "^8.1.0",
