@@ -1,0 +1,6 @@
+{
+  "overrides": [
+    "../../config/settings.json",
+    "config/runtime-settings.json"
+  ]
+}

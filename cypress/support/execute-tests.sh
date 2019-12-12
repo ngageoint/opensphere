@@ -30,10 +30,16 @@ function ctrl_c() {
 
 function setVariables() {
   export PLUGIN=../opensphere-plugin*
-  
+  export OPENSPHERE_CONFIG_TESTER_FOLDER=../opensphere-config-tester
+  export OPENSPHERE_NO_MERGE_CONFIG_TESTER_FOLDER=../opensphere-no-merge-config-tester
+  export OPENSPHERE_CONFIG_TESTER_FOLDER_SOURCE
+  export OPENSPHERE_CONFIG_TESTER_EXISTS
+
   export SERVER_STARTED=false
   export SETTINGS_BACKUP=false
   export SETTINGS_OVERRIDE=false
+
+  export MAP_CONFIG=map.config
 
   export SOUND_CONFIGURATION_SOURCE=cypress/support/asound.conf
   export SOUND_CONFIGURATION_TARGET=/etc/asound.conf
@@ -44,8 +50,18 @@ function setVariables() {
   export SETTINGS_SOURCE=cypress/support/settings/.
   export SETTINGS_TARGET=dist/opensphere/config/
 
-  export OPENSPHERE_CONFIG_TESTER=dist/opensphere/config/opensphere-config-tester.json
+  export SETTINGS_OVERWRITE_WITHOUT=dist/opensphere/config/settings-without-config-tester.json
+  export SETTINGS_OVERWRITE_WITH=dist/opensphere/config/settings-with-config-tester.json
+
+  export OPENSPHERE_CONFIG_TESTER_SOURCE=/settings.json
+  export OPENSPHERE_CONFIG_TESTER_TARGET=dist/opensphere/config/opensphere-config-tester.json
+  
   export RUNTIME_SETTINGS=dist/opensphere/config/runtime-settings.json
+  export RUNTIME_SETTINGS_WITH_PROJECTION=dist/opensphere/config/runtime-settings-with-projection.json
+  export RUNTIME_SETTINGS_WITHOUT_PROJECTION=dist/opensphere/config/runtime-settings-without-projection.json
+
+  export STREET_MAP_URL
+  export WORLD_IMAGERY_URL
 
   export ALL_TESTS=**
   export SMOKE_TESTS=smoke-tests/**
@@ -55,6 +71,8 @@ function setVariables() {
 }
 
 function checkArguments() {
+  echo 'INFO: checking script arguments'
+
   if ! [[ "$ENVIRONMENT" =~ ^(dev|ci)$ ]]; then
     echo "ERROR: only dev and ci accepted as a valid environment argument; '$ENVIRONMENT' is not valid"
     exit 1
@@ -66,6 +84,8 @@ function checkArguments() {
   fi
 
   case "$TESTS" in
+	"user")
+		;;
 	"all")
     TEST_SPECS=$TEST_PATH$ALL_TESTS
 		;;
@@ -76,58 +96,36 @@ function checkArguments() {
     TEST_SPECS=$TEST_PATH$SPEC
 		;;
   "loop")
-    if [ -z "$SPEC" ]; then
-      echo 'WARNING: spec pattern not passed, selecting ALL tests'
-      TEST_SPECS=$TEST_PATH$ALL_TESTS
-    else
-      TEST_SPECS=$TEST_PATH$SPEC
-    fi
+    TEST_SPECS=$TEST_PATH$SPEC
     ;;
 	*)
-		if [ -z "$TESTS" ]; then
-      if ! [ "$MODE" == "gui" ]; then
-        echo 'ERROR: tests argument must be supplied unless mode is gui'
-        exit 1
-      fi
-    else
-      echo "ERROR: only all, smoke, spec, or loop accepted as a valid tests argument; '$TESTS' is not valid"
-      exit 1
-    fi
-		;;
+    echo "ERROR: only user, all, smoke, spec, or loop accepted as a valid tests argument; '$TESTS' is not valid"
+    exit 1
+ 		;;
   esac
 
-  if [ "$CYPRESS_PROJECTION" ]; then
-    if [ "$CYPRESS_PROJECTION" != 3857 ] && [ "$CYPRESS_PROJECTION" != 4326 ]; then
-      echo "ERROR: CYPRESS_PROJECTION environment variable set to unexpected value: $CYPRESS_PROJECTION. Expected 3857 or 4326!"
-      exit 1
-    else
-      echo "INFO: cypress will run tests with projection $CYPRESS_PROJECTION"
-    fi
+  if ! [ "$SPEC" ]; then
+    echo 'ERROR: spec pattern not passed!'
+    exit 1
+  fi
+
+  if ! [ "$PROJECTION" ]; then
+    echo 'INFO: projection not passed; using default'
+    PROJECTION=default
+  elif [[ "$PROJECTION" =~ ^(3857|4326)$ ]]; then
+    PROJECTION="EPSG:$PROJECTION"
+    echo "INFO: projection override; using $PROJECTION"
   else
-    echo 'INFO: CYPRESS_PROJECTION environment variable not set, using default of 3857'
-    export CYPRESS_PROJECTION=3857
+    echo "ERROR: only 3857 and 4326 accepted as a valid projections; '$PROJECTION' is not valid"
+    exit 1
   fi
 
-  if [ -z "$STREET_MAP_URL" ]; then
-    echo "INFO: STREET_MAP_URL environment variable not set, using default for $CYPRESS_PROJECTION"
-    if [ "$CYPRESS_PROJECTION" = 3857 ]; then
-      export STREET_MAP_URL="http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
-    else
-      export STREET_MAP_URL="http://services.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer/tile/{z}/{y}/{x}"
-    fi
-  fi
-
-  if [ -z "$WORLD_IMAGERY_URL" ]; then
-    echo "INFO: WORLD_IMAGERY_URL environment variable not set, using default for $CYPRESS_PROJECTION"
-    if [ "$CYPRESS_PROJECTION" = 3857 ]; then
-      export WORLD_IMAGERY_URL="http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-    else
-      export WORLD_IMAGERY_URL="https://wi.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-    fi
-  fi
+  echo 'INFO: script argument check complete'
 }
 
 function checkEnvironment() {
+  echo 'INFO: checking environment'
+
   if ls $PLUGIN 1> /dev/null 2>&1; then
     echo 'WARNING: a plugin exists that may affect the test results!'
     if ! [ "$ENVIRONMENT" == "ci" ]; then
@@ -137,6 +135,32 @@ function checkEnvironment() {
   else
     echo 'INFO: plugin check complete; environment ready'
   fi
+
+  if [ -d $OPENSPHERE_CONFIG_TESTER_FOLDER ]; then
+    OPENSPHERE_CONFIG_TESTER_FOLDER_SOURCE=$OPENSPHERE_CONFIG_TESTER_FOLDER
+    OPENSPHERE_CONFIG_TESTER_EXISTS=true
+    echo 'INFO: opensphere tester configuration check complete; tester machine'
+  elif [ -d $OPENSPHERE_NO_MERGE_CONFIG_TESTER_FOLDER ]; then
+    OPENSPHERE_CONFIG_TESTER_FOLDER_SOURCE=$OPENSPHERE_NO_MERGE_CONFIG_TESTER_FOLDER
+    OPENSPHERE_CONFIG_TESTER_EXISTS=true
+    echo 'INFO: opensphere tester configuration check complete; developer machine'
+  else
+    echo 'INFO: opensphere tester configuration not present, continuing without it'
+    OPENSPHERE_CONFIG_TESTER_EXISTS=false
+  fi
+
+  if $OPENSPHERE_CONFIG_TESTER_EXISTS; then
+    echo 'INFO: loading variables from configuration files'
+    . $OPENSPHERE_CONFIG_TESTER_FOLDER_SOURCE/$MAP_CONFIG
+    STREET_MAP_URL=$STREET_MAP_URL_3857
+    WORLD_IMAGERY_URL=$WORLD_IMAGERY_URL_3857
+  else
+    echo 'INFO: no configuration files present, using default configuration'
+    STREET_MAP_URL=//services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}
+    WORLD_IMAGERY_URL=//services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}
+  fi
+
+  echo 'INFO: environment check complete'
 }
 
 function configureSound() {
@@ -160,19 +184,31 @@ function overrideSettings() {
   SETTINGS_OVERRIDE=true
   cp -r $SETTINGS_SOURCE $SETTINGS_TARGET
 
-  echo 'INFO: writing projection to settings file'
-  sed -i.bak 's@CYPRESS_PROJECTION@'$CYPRESS_PROJECTION'@g' $OPENSPHERE_CONFIG_TESTER && rm $OPENSPHERE_CONFIG_TESTER.bak
+  if $OPENSPHERE_CONFIG_TESTER_EXISTS; then
+    echo 'INFO: copying settings files from tester repo'
+    cp $OPENSPHERE_CONFIG_TESTER_FOLDER_SOURCE$OPENSPHERE_CONFIG_TESTER_SOURCE $OPENSPHERE_CONFIG_TESTER_TARGET
+    rm $SETTINGS_OVERWRITE_WITHOUT
+    mv $SETTINGS_OVERWRITE_WITH $SETTINGS_ORIGINAL
+  else
+    echo 'INFO: no settings files to copy from tester repo (it is not present)'
+    rm $SETTINGS_OVERWRITE_WITH
+    mv $SETTINGS_OVERWRITE_WITHOUT $SETTINGS_ORIGINAL
+  fi
+
+  if [ "$PROJECTION" == "default" ]; then
+    echo 'INFO: using default projection'
+    rm $RUNTIME_SETTINGS_WITH_PROJECTION
+    mv $RUNTIME_SETTINGS_WITHOUT_PROJECTION $RUNTIME_SETTINGS
+  else
+    echo 'INFO: writing projection to settings file'
+    rm $RUNTIME_SETTINGS_WITHOUT_PROJECTION
+    mv $RUNTIME_SETTINGS_WITH_PROJECTION $RUNTIME_SETTINGS
+    sed -i.bak 's@BASE_PROJECTION_OVERRIDE@'$PROJECTION'@g' $RUNTIME_SETTINGS && rm $RUNTIME_SETTINGS.bak
+  fi
 
   echo 'INFO: writing map urls to settings file'
-  sed -i.bak 's@STREET_MAP_URL@'$STREET_MAP_URL'@g' $OPENSPHERE_CONFIG_TESTER && rm $OPENSPHERE_CONFIG_TESTER.bak
-  sed -i.bak 's@WORLD_IMAGERY_URL@'$WORLD_IMAGERY_URL'@g' $OPENSPHERE_CONFIG_TESTER && rm $OPENSPHERE_CONFIG_TESTER.bak
-
-  echo 'INFO: zoom offset to settings file'
-  if [ "$CYPRESS_PROJECTION" = 3857 ]; then
-    sed -i.bak 's@"ZOOM_OFFSET"@'0'@g' $OPENSPHERE_CONFIG_TESTER && rm $OPENSPHERE_CONFIG_TESTER.bak
-  else
-    sed -i.bak 's@"ZOOM_OFFSET"@'-1'@g' $OPENSPHERE_CONFIG_TESTER && rm $OPENSPHERE_CONFIG_TESTER.bak
-  fi
+  sed -i.bak 's@STREET_MAP_URL@'$STREET_MAP_URL'@g' $RUNTIME_SETTINGS && rm $RUNTIME_SETTINGS.bak
+  sed -i.bak 's@WORLD_IMAGERY_URL@'$WORLD_IMAGERY_URL'@g' $RUNTIME_SETTINGS && rm $RUNTIME_SETTINGS.bak
 
   echo 'INFO: all settings adjustments finished'
 }
@@ -257,7 +293,11 @@ function restoreSettings() {
     
     if $SETTINGS_OVERRIDE; then
       echo 'INFO: removing temporary settings files'
-      rm $OPENSPHERE_CONFIG_TESTER
+      
+      if $OPENSPHERE_CONFIG_TESTER_EXISTS; then
+        rm $OPENSPHERE_CONFIG_TESTER_TARGET
+      fi
+      
       rm $RUNTIME_SETTINGS
       rm $SETTINGS_ORIGINAL
     fi
@@ -274,16 +314,19 @@ function restoreSettings() {
   fi
 }
 
-#dev or ci
+#dev or ci (required)
 ENVIRONMENT=$1
 
-#cli or gui
+#cli or gui (required)
 MODE=$2
 
-#all, smoke, spec, loop
+#user, all, smoke, spec, loop (required)
 TESTS=$3
 
-#spec
+#smoke-tests/smoke-test.spec.sh or na (required)
 SPEC=$4
+
+#3857 or 4326 (optional)
+PROJECTION=$5
 
 main
