@@ -530,6 +530,7 @@ osx.feature.RingDefinition;
  * @typedef {{
  *   enabled: boolean,
  *   type: string,
+ *   bearingType: string,
  *   interval: number,
  *   units: string,
  *   crosshair: boolean,
