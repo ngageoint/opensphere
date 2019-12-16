@@ -273,7 +273,7 @@ function runTests() {
     fi
   else
     echo 'INFO: starting Cypress in local development environment via interactive mode'
-    $(npm bin)/cypress open
+    $(npm bin)/cypress open 1> /dev/null 2>&1
     TEST_RESULT=0
     echo 'INFO: user has closed Cypress interactive mode'
   fi
