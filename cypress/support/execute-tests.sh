@@ -68,6 +68,8 @@ function setVariables() {
   export TEST_PATH=cypress/integration/
   
   export TEST_RESULT
+
+  export CYPRESS_PROJECTION
 }
 
 function checkArguments() {
@@ -154,12 +156,20 @@ function checkEnvironment() {
     . $OPENSPHERE_CONFIG_TESTER_FOLDER_SOURCE/$MAP_CONFIG
     STREET_MAP_URL=$STREET_MAP_URL_3857
     WORLD_IMAGERY_URL=$WORLD_IMAGERY_URL_3857
+
+    if grep -E '"baseProjection":\s*"EPSG:4326"' $OPENSPHERE_CONFIG_TESTER_FOLDER_SOURCE$OPENSPHERE_CONFIG_TESTER_SOURCE 1> /dev/null 2>&1; then
+        CYPRESS_PROJECTION=4326
+      elif grep -E '"baseProjection":\s*"EPSG:3857"' $OPENSPHERE_CONFIG_TESTER_FOLDER_SOURCE$OPENSPHERE_CONFIG_TESTER_SOURCE 1> /dev/null 2>&1; then
+        CYPRESS_PROJECTION=3857
+      fi
   else
     echo 'INFO: no configuration files present, using default configuration'
     STREET_MAP_URL=//services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}
     WORLD_IMAGERY_URL=//services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}
+    CYPRESS_PROJECTION=3857
   fi
 
+  echo "INFO: using a projection of EPSG:$CYPRESS_PROJECTION"
   echo 'INFO: environment check complete'
 }
 

@@ -33,11 +33,7 @@ var addMatchImageSnapshotCommand = require('cypress-image-snapshot/command')
 var projection;
 
 // Must add CYPRESS_ prefix to environment variables, but use it here without the prefix
-if (Cypress.env('PROJECTION')) {
-  projection = Cypress.env('PROJECTION');
-} else {
-  projection = 3857;
-}
+projection = Cypress.env('PROJECTION');
 var snapshotFolder = 'cypress/comparisons/' + projection;
 
 addMatchImageSnapshotCommand({
