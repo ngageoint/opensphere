@@ -4,5 +4,5 @@
   "viewportHeight": 1000,
   "video": false,
   "numTestsKeptInMemory": 20,
-  "defaultCommandTimeout": 8000
+  "defaultCommandTimeout": 16000
 }
