@@ -18,28 +18,26 @@
     <popover class="ml-3" ng-if="help" data-title="help.title" content="help.content" pos="help.pos"></popover>
   </div>
 
-  <div ng-if="anydate.dateType != 'notime'" ng-form="anyDateForm">
-    <div class="d-flex flex-row form-group">
-      <div data-ng-class="{'text-danger': anyDateForm.startDate.$dirty && (!anydate.timesValid || (!anydate.startDate && !anydate.startUnknown))}">
+  <div ng-form="anyDateForm">
+    <div ng-if="anydate.dateType != 'notime'">
+      <div class="d-flex flex-row form-group">
         <date-time data-value="anydate.startDate" x-disabled="anydate.startUnknown || disabled"
           is-required="anydate.dateType != 'notime' && !anydate.startUnknown">
         </date-time>
         <input type="hidden" name="startDate" data-ng-required="anydate.dateType != 'notime' && !anydate.startUnknown" data-ng-model="anydate.startDate"/>
       </div>
     </div>
-  </div>
 
-  <div ng-if="anydate.dateType == 'range'" class="d-flex flex-row form-group">
-    <div data-ng-class="{'text-danger': anyDateForm.endDate.$dirty && (!anydate.timesValid || (!anydate.endDate && !anydate.endUnknown))}">
+    <div ng-if="anydate.dateType == 'range'" class="d-flex flex-row form-group">
       <date-time class="date-time" data-value="anydate.endDate" x-disabled="anydate.endUnknown || disabled"
         is-required="anydate.dateType == 'range' && !anydate.endUnknown">
       </date-time>
       <input type="hidden" name="endDate" data-ng-required="anydate.dateType == 'range' && !anydate.endUnknown" data-ng-model="anydate.endDate"/>
     </div>
-  </div>
 
-  <div data-ng-show="anydate.dateType == 'range' && !anydate.timesValid">
-    <input type="hidden" data-ng-required="anydate.dateType == 'range'" data-ng-model="anydate.timesValid"/>
-    <span class="invalid-feedback d-block">End date must be after start date!</span>
+    <div data-ng-show="anydate.dateType == 'range' && !anydate.timesValid">
+      <input type="hidden" data-ng-required="anydate.dateType == 'range'" data-ng-model="anydate.timesValid"/>
+      <span class="invalid-feedback d-block">End date must be after start date!</span>
+    </div>
   </div>
 </div>
