@@ -757,6 +757,9 @@ describe('Feature list', function() {
 
     it('Sort Selected', function() {
       // Setup
+      cy.get(dialogs.featureListDialog.CLOSE_BUTTON).click();
+      cy.get(shared.Tree.ROW_4).rightclick();
+      cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
       cy.get(dialogs.featureListDialog.DIALOG).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_5)
