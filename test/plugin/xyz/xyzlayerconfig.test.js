@@ -47,7 +47,7 @@ describe('plugin.xyz.XYZLayerConfig', function() {
 
     var resultURL = tileFn(tileCoord, pixelRatio, proj);
 
-    expect(resultURL).toBe('http://a.tiles.example.com/osm/3/2/0.png');
+    expect(resultURL).toBe('http://a.tiles.example.com/osm/2/2/0.png');
   });
 
   it('should handle single URLs as array properly', function() {
@@ -67,7 +67,7 @@ describe('plugin.xyz.XYZLayerConfig', function() {
 
     var resultURL = tileFn(tileCoord, pixelRatio, proj);
 
-    expect(resultURL).toBe('http://b.tiles.example.com/osm/3/2/0.png');
+    expect(resultURL).toBe('http://b.tiles.example.com/osm/2/2/0.png');
   });
 
   it('should handle multiple URLs as array properly', function() {
@@ -87,7 +87,7 @@ describe('plugin.xyz.XYZLayerConfig', function() {
 
     var resultURL = tileFn(tileCoord, pixelRatio, proj);
 
-    expect(resultURL).toMatch('http://[a-c].tiles.example.com/osm/3/2/0.png');
+    expect(resultURL).toMatch('http://[a-c].tiles.example.com/osm/2/2/0.png');
   });
 
   it('should handle wildcard URLs properly', function() {
@@ -106,10 +106,10 @@ describe('plugin.xyz.XYZLayerConfig', function() {
     var proj = ol.proj.get('EPSG:3857');
 
     var resultURL = tileFn(tileCoord, pixelRatio, proj);
-    expect(resultURL).toMatch('http://[a-c].tiles.example.com/osm/3/2/0.png');
+    expect(resultURL).toMatch('http://[a-c].tiles.example.com/osm/2/2/0.png');
 
     resultURL = tileFn(tileCoord, pixelRatio, proj);
-    expect(resultURL).toMatch('http://[a-c].tiles.example.com/osm/3/2/0.png');
+    expect(resultURL).toMatch('http://[a-c].tiles.example.com/osm/2/2/0.png');
   });
 
   it('should handle wildcard URLs with numeric values properly', function() {
@@ -128,9 +128,9 @@ describe('plugin.xyz.XYZLayerConfig', function() {
     var proj = ol.proj.get('EPSG:3857');
 
     var resultURL = tileFn(tileCoord, pixelRatio, proj);
-    expect(resultURL).toMatch('http://[0-4].tiles.example.com/osm/3/2/0.png');
+    expect(resultURL).toMatch('http://[0-4].tiles.example.com/osm/2/2/0.png');
 
     resultURL = tileFn(tileCoord, pixelRatio, proj);
-    expect(resultURL).toMatch('http://[0-4].tiles.example.com/osm/3/2/0.png');
+    expect(resultURL).toMatch('http://[0-4].tiles.example.com/osm/2/2/0.png');
   });
 });

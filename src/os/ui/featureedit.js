@@ -1336,7 +1336,7 @@ os.ui.FeatureEditCtrl.prototype.setFeatureConfig_ = function(config) {
   }
 
   // set fill color for polygons
-  if (this.isPolygon()) {
+  if (this['fillColor'] != null && this['fillOpacity'] != null) {
     var fillColor = ol.color.asArray(this['fillColor']);
     var fillOpacity = os.color.normalizeOpacity(this['fillOpacity']);
     fillColor[3] = fillOpacity;

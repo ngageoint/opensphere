@@ -123,7 +123,7 @@ plugin.file.kml.ui.createOrEditPlace = function(options) {
   } else {
     var label = options.label || (options.feature ? 'Edit' : 'Add') + ' Place';
     var geom = /** @type {ol.geom.SimpleGeometry} */ (options.geometry) ||
-        options.feature ? options.feature.getGeometry() : null;
+        (options.feature ? options.feature.getGeometry() : null);
     var x = os.ui.FeatureEditCtrl.calculateXPosition(geom);
 
     var windowOptions = {

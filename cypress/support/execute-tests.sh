@@ -14,7 +14,7 @@ function main() {
   stopWebServer
   restoreSettings
 
-  echo 'INFO: test execution script completed!'
+  echo "INFO: test execution script completed; code $TEST_RESULT"
   exit $TEST_RESULT
 }
 
@@ -139,13 +139,13 @@ function checkEnvironment() {
   if [ -d $OPENSPHERE_CONFIG_TESTER_FOLDER ]; then
     OPENSPHERE_CONFIG_TESTER_FOLDER_SOURCE=$OPENSPHERE_CONFIG_TESTER_FOLDER
     OPENSPHERE_CONFIG_TESTER_EXISTS=true
-    echo 'INFO: opensphere tester configuration check complete; tester machine'
+    echo 'INFO: opensphere-config-tester check complete; found tester machine'
   elif [ -d $OPENSPHERE_NO_MERGE_CONFIG_TESTER_FOLDER ]; then
     OPENSPHERE_CONFIG_TESTER_FOLDER_SOURCE=$OPENSPHERE_NO_MERGE_CONFIG_TESTER_FOLDER
     OPENSPHERE_CONFIG_TESTER_EXISTS=true
-    echo 'INFO: opensphere tester configuration check complete; developer machine'
+    echo 'INFO: opensphere-config-tester check complete; found developer machine'
   else
-    echo 'INFO: opensphere tester configuration not present, continuing without it'
+    echo 'INFO: opensphere-config-tester not present, continuing without it'
     OPENSPHERE_CONFIG_TESTER_EXISTS=false
   fi
 
@@ -274,6 +274,7 @@ function runTests() {
   else
     echo 'INFO: starting Cypress in local development environment via interactive mode'
     $(npm bin)/cypress open
+    TEST_RESULT=0
     echo 'INFO: user has closed Cypress interactive mode'
   fi
 }

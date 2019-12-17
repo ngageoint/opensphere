@@ -542,9 +542,10 @@ os.feature.createRings = function(feature, opt_replace) {
       var rings = options.rings;
       var startAngle = (options.startAngle || 0) + declination;
       var widthAngle = options.widthAngle || 0;
-      var lastRing = rings[rings.length - 1];
+      var largestRing = rings.reduce((acc, current) => acc.radius > current.radius ? acc : current);
       var geoms = [];
       var labels = [];
+      var previousCoordinates;
 
       // iterate over the rings and create either arcs or circles from them
       rings.forEach(function(ring, i, arr) {
@@ -561,8 +562,8 @@ os.feature.createRings = function(feature, opt_replace) {
             coordinates = os.geo.interpolateArc(center, radius, widthAngle, startAngle);
             geom = new ol.geom.LineString(coordinates);
 
-            if (i == arr.length - 1) {
-              // last ring, so create the endcap geometries and stitch it into a polygon so it can be filled
+            if (ring === largestRing) {
+              // largest ring, so create the endcap geometries and stitch it into a polygon so it can be filled
               var endCoord1 = directInterpFn(center, startAngle - widthAngle / 2, radius);
               var endCoord2 = directInterpFn(center, startAngle + widthAngle / 2, radius);
 
@@ -578,7 +579,13 @@ os.feature.createRings = function(feature, opt_replace) {
           } else {
             // interpolateCircle wasn't working correctly... so use ellipse with semimajor = semiminor instead
             coordinates = os.geo.interpolateEllipse(center, radius, radius, 0);
-            geom = new ol.geom.Polygon([coordinates]);
+
+            // Create the first ring normally, but subsequent rings should be created with the previous ring as
+            // a hole. This prevents their fills from stacking in the central zones.
+            geom = previousCoordinates ?
+                new ol.geom.Polygon([coordinates, previousCoordinates]) : new ol.geom.Polygon([coordinates]);
+
+            previousCoordinates = coordinates.slice();
           }
 
           geoms.push(geom);
@@ -589,9 +596,9 @@ os.feature.createRings = function(feature, opt_replace) {
         // create the crosshair starting from north
         var northBearing = declination < 0 ? declination + 360 : declination;
 
-        if (lastRing) {
-          var distance = lastRing.radius || 40;
-          var units = lastRing.units;
+        if (largestRing) {
+          var distance = largestRing.radius || 40;
+          var units = largestRing.units;
 
           // convert to meters and add 10% so the crosshairs reach past the outermost ring
           distance = os.math.convertUnits(distance, os.math.Units.METERS, units) * 1.1;
