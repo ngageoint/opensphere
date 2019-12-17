@@ -296,7 +296,11 @@ function runTests() {
 function stopWebServer() {
   if $SERVER_STARTED; then
     echo 'INFO: terminating web server'
-    npm run stop-server
+    if [ "$OSTYPE" == "msys" ]; then
+      taskkill -F -PID $(netstat -ano | findstr 0.0.0.0:8282 | awk '{print $5}') 1> /dev/null 2>&1
+    else
+      pkill -f http-server
+    fi
   else
     echo 'INFO: server was not started by this script, leaving it as is'
   fi
