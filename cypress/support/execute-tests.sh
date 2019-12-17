@@ -68,6 +68,8 @@ function setVariables() {
   export TEST_PATH=cypress/integration/
   
   export TEST_RESULT
+
+  export CYPRESS_PROJECTION
 }
 
 function checkArguments() {
@@ -114,7 +116,7 @@ function checkArguments() {
     PROJECTION=default
   elif [[ "$PROJECTION" =~ ^(3857|4326)$ ]]; then
     PROJECTION="EPSG:$PROJECTION"
-    echo "INFO: projection override; using $PROJECTION"
+    echo "INFO: projection override set to $PROJECTION"
   else
     echo "ERROR: only 3857 and 4326 accepted as a valid projections; '$PROJECTION' is not valid"
     exit 1
@@ -154,12 +156,24 @@ function checkEnvironment() {
     . $OPENSPHERE_CONFIG_TESTER_FOLDER_SOURCE/$MAP_CONFIG
     STREET_MAP_URL=$STREET_MAP_URL_3857
     WORLD_IMAGERY_URL=$WORLD_IMAGERY_URL_3857
+    
+    if [ "$PROJECTION" == "default" ]; then
+      if grep -E '"baseProjection":\s*"EPSG:4326"' $OPENSPHERE_CONFIG_TESTER_FOLDER_SOURCE$OPENSPHERE_CONFIG_TESTER_SOURCE 1> /dev/null 2>&1; then
+        CYPRESS_PROJECTION=4326
+      elif grep -E '"baseProjection":\s*"EPSG:3857"' $OPENSPHERE_CONFIG_TESTER_FOLDER_SOURCE$OPENSPHERE_CONFIG_TESTER_SOURCE 1> /dev/null 2>&1; then
+        CYPRESS_PROJECTION=3857
+      fi
+    else
+      CYPRESS_PROJECTION=${PROJECTION:5:4}
+    fi
   else
     echo 'INFO: no configuration files present, using default configuration'
     STREET_MAP_URL=//services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}
     WORLD_IMAGERY_URL=//services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}
+    CYPRESS_PROJECTION=3857
   fi
 
+  echo "INFO: using a projection of EPSG:$CYPRESS_PROJECTION"
   echo 'INFO: environment check complete'
 }
 
@@ -273,7 +287,7 @@ function runTests() {
     fi
   else
     echo 'INFO: starting Cypress in local development environment via interactive mode'
-    $(npm bin)/cypress open
+    $(npm bin)/cypress open 1> /dev/null 2>&1
     TEST_RESULT=0
     echo 'INFO: user has closed Cypress interactive mode'
   fi

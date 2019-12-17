@@ -222,6 +222,10 @@ $user-select-options: all, auto, text, none;
   table-layout: fixed;
 }
 
+.u-table-vertical-align__middle td {
+  vertical-align: middle;
+}
+
 .u-table__sortable-header {
   cursor: pointer;
 
