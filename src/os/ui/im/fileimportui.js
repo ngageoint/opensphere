@@ -46,4 +46,3 @@ os.ui.im.FileImportUI.prototype.launchUI = function(file, opt_config) {
     }
   }
 };
-
