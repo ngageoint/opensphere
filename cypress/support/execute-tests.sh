@@ -116,7 +116,7 @@ function checkArguments() {
     PROJECTION=default
   elif [[ "$PROJECTION" =~ ^(3857|4326)$ ]]; then
     PROJECTION="EPSG:$PROJECTION"
-    echo "INFO: projection override; using $PROJECTION"
+    echo "INFO: projection override set to $PROJECTION"
   else
     echo "ERROR: only 3857 and 4326 accepted as a valid projections; '$PROJECTION' is not valid"
     exit 1
@@ -156,12 +156,16 @@ function checkEnvironment() {
     . $OPENSPHERE_CONFIG_TESTER_FOLDER_SOURCE/$MAP_CONFIG
     STREET_MAP_URL=$STREET_MAP_URL_3857
     WORLD_IMAGERY_URL=$WORLD_IMAGERY_URL_3857
-
-    if grep -E '"baseProjection":\s*"EPSG:4326"' $OPENSPHERE_CONFIG_TESTER_FOLDER_SOURCE$OPENSPHERE_CONFIG_TESTER_SOURCE 1> /dev/null 2>&1; then
+    
+    if [ "$PROJECTION" == "default" ]; then
+      if grep -E '"baseProjection":\s*"EPSG:4326"' $OPENSPHERE_CONFIG_TESTER_FOLDER_SOURCE$OPENSPHERE_CONFIG_TESTER_SOURCE 1> /dev/null 2>&1; then
         CYPRESS_PROJECTION=4326
       elif grep -E '"baseProjection":\s*"EPSG:3857"' $OPENSPHERE_CONFIG_TESTER_FOLDER_SOURCE$OPENSPHERE_CONFIG_TESTER_SOURCE 1> /dev/null 2>&1; then
         CYPRESS_PROJECTION=3857
       fi
+    else
+      CYPRESS_PROJECTION=${PROJECTION:5:4}
+    fi
   else
     echo 'INFO: no configuration files present, using default configuration'
     STREET_MAP_URL=//services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}
