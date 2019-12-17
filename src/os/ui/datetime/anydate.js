@@ -150,7 +150,7 @@ os.ui.datetime.AnyDateCtrl = function($scope, $element, $compile, $timeout) {
   $scope.$watch('anydate.startDate', function(newVal, oldVal) {
     if (newVal != oldVal) {
       // If the form doesnt have the input, dont set data on it. It gets initialized correctly when displayed
-      if ($scope['anyDateForm']['startDate']) {
+      if ($scope['anyDateForm'] && $scope['anyDateForm']['startDate']) {
         var modelCtrl = /** @type {angular.NgModelController} */ ($scope['anyDateForm']['startDate']);
         modelCtrl.$setViewValue(newVal);
         modelCtrl.$setDirty();
@@ -164,7 +164,7 @@ os.ui.datetime.AnyDateCtrl = function($scope, $element, $compile, $timeout) {
   $scope.$watch('anydate.endDate', function(newVal, oldVal) {
     if (newVal != oldVal) {
       // If the form doesnt have the input, dont set data on it. It gets initialized correctly when displayed
-      if ($scope['anyDateForm']['endDate']) {
+      if ($scope['anyDateForm'] && $scope['anyDateForm']['endDate']) {
         var modelCtrl = /** @type {angular.NgModelController} */ ($scope['anyDateForm']['endDate']);
         modelCtrl.$setViewValue(newVal);
         modelCtrl.$setDirty();
