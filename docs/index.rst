@@ -25,6 +25,7 @@ The code is open source, and `available on GitHub`_.
    getting_started
    windows_development
    guides/app_guide
+   guides/es6_transition_guide
    guides/plugin_guide
    guides/settings_guide
    guides/deployment_guide
