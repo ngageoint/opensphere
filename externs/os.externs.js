@@ -494,6 +494,26 @@ osx.ui.draw.GridOptions;
  * Namespace.
  * @type {Object}
  */
+osx.import;
+
+
+/**
+ * @typedef {{
+  *   id: string,
+  *   label: string,
+  *   valid: boolean,
+  *   enabled: boolean,
+  *   msg: (string|undefined),
+  *   file: os.file.File
+  * }}
+  */
+osx.import.FileWrapper;
+
+
+/**
+ * Namespace.
+ * @type {Object}
+ */
 osx.feature;
 
 
