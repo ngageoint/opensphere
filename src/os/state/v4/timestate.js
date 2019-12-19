@@ -27,6 +27,7 @@ os.state.v4.TimeTag = {
   ANIMATION: 'animation',
   CURRENT: 'current',
   DURATION: 'duration',
+  LOAD_INTERVALS: 'loadIntervals',
   INTERVAL: 'interval',
   LOOP: 'loop', // NOT USING ?
   LOOP_BEHAVIOR: 'loopBehavior', // NOT USING ?
@@ -143,39 +144,44 @@ os.state.v4.TimeState.prototype.loadInternal = function(obj, id) {
   try {
     var animationEl = obj.querySelector(os.state.v4.TimeTag.ANIMATION);
     var tActive = animationEl != null && animationEl.childElementCount > 0;
-
     var tlc = os.time.TimelineController.getInstance();
-    var fullTimeLineRange = this.readRangeFromIntervals_(obj);
+
+    var loadRanges = this.readIntervalsAsRangeSet_(obj, os.state.v4.TimeTag.LOAD_INTERVALS);
+    var fullLoadRange = this.readRangeFromIntervals_(obj);
     var current = this.readCurrent_(obj);
 
     // Desktop may only provide a current tag if the Time state is exported, but not the Animation state. in that
     // case, treat current as the loaded range.
-    if (!fullTimeLineRange && current) {
-      fullTimeLineRange = new goog.math.Range(current.start, current.end);
+    if (!fullLoadRange && current) {
+      fullLoadRange = new goog.math.Range(current.start, current.end);
     }
 
-    if (fullTimeLineRange) {
+    if (fullLoadRange) {
       // set the duration first since doing so will clear animate/hold ranges
-      var duration = this.readDuration_(obj, fullTimeLineRange) || undefined;
+      var duration = this.readDuration_(obj, fullLoadRange) || undefined;
       if (duration) {
         tlc.setDuration(duration);
       }
 
       var animateRanges = this.readIntervalsAsRangeSet_(obj, os.state.v4.TimeTag.PLAY_INTERVALS);
-      var fullRangeSet = new goog.math.RangeSet();
-      fullRangeSet.add(fullTimeLineRange);
+      var fullLoadRangeSet = loadRanges.isEmpty() ? new goog.math.RangeSet() : loadRanges;
+
+      if (fullLoadRangeSet.isEmpty()) {
+        // backwards compatibility: if the LOAD_INTERVALS tag wasn't present, simply use the fullLoadRange
+        fullLoadRangeSet.add(fullLoadRange);
+      }
 
       // if the animate range is equal to the loaded range, clear out the animate ranges
-      tlc.setRange(fullTimeLineRange);
+      tlc.setLoadRanges(fullLoadRangeSet);
 
       // make sure we have good defaults when the timeline is open. this changes the timeline controller duration to the
       // value used for tile ranges with the timeline open, so we don't want it called if the timeline is closed.
       if (tActive) {
         os.time.timeline.autoConfigureFromTimeRange(tlc, duration);
-        os.time.timeline.setDefaultOffsetForRange(tlc, fullTimeLineRange.end - fullTimeLineRange.start);
+        os.time.timeline.setDefaultOffsetForRange(tlc, fullLoadRange.end - fullLoadRange.start);
       }
 
-      if (goog.math.RangeSet.equals(fullRangeSet, animateRanges)) {
+      if (goog.math.RangeSet.equals(fullLoadRangeSet, animateRanges)) {
         tlc.clearAnimateRanges();
       } else {
         tlc.setAnimateRanges(animateRanges);
@@ -279,8 +285,9 @@ os.state.v4.TimeState.prototype.saveInternal = function(options, rootObj) {
   try {
     var tlc = os.time.TimelineController.getInstance();
 
+    var loadRange = tlc.getLoadRange();
     var currentStart = tlc.getCurrent() - tlc.getOffset();
-    var currentRange = new goog.math.Range(currentStart, tlc.getCurrent());
+    var currentRange = tlc.getCurrentRange();
     var advance = moment.duration(tlc.getSkip()).toISOString();
     if (tlc.getLock()) {
       // if the lock is used, save the lock range off
@@ -289,12 +296,17 @@ os.state.v4.TimeState.prototype.saveInternal = function(options, rootObj) {
           this.rangeToDateFormatString_(lockRange));
     }
 
-    // Root level interval is the full animation range.
-    os.xml.appendElement(os.state.v4.TimeTag.INTERVAL, rootObj,
-        this.rangeToDateFormatString_(tlc.getRange()));
-    os.xml.appendElement(os.state.v4.TimeTag.CURRENT, rootObj,
-        this.rangeToDateFormatString_(currentRange));
+    // Set the load range, current range, and advance.
+    os.xml.appendElement(os.state.v4.TimeTag.INTERVAL, rootObj, this.rangeToDateFormatString_(loadRange));
+    os.xml.appendElement(os.state.v4.TimeTag.CURRENT, rootObj, this.rangeToDateFormatString_(currentRange));
     os.xml.appendElement(os.state.v4.TimeTag.ADVANCE, rootObj, advance);
+
+    var loadRanges = tlc.getLoadRanges();
+    if (loadRanges && loadRanges.length > 1) {
+      // more than one load range, so add all of them, but leave the old INTERVAL tag for backwards compatibility
+      var loadSeq = /** @type {!Element} */ (os.xml.appendElement(os.state.v4.TimeTag.LOAD_INTERVALS, rootObj));
+      this.addRanges_(loadRanges, loadSeq);
+    }
 
     if (tlc.hasAnimationRanges()) {
       // NOTE: Using the sequence element for animation ranges. As of 08/24/2016
