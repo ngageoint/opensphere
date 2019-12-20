@@ -199,6 +199,9 @@ plugin.im.action.feature.StyleAction.prototype.persist = function(opt_to) {
 plugin.im.action.feature.StyleAction.prototype.restore = function(config) {
   var styleConfig = /** @type {Object|undefined} */ (config['styleConfig']);
   if (styleConfig) {
+    // clone the config before doing this to avoid changing the config by reference
+    styleConfig = os.object.unsafeClone(styleConfig);
+
     //  if the style config is lacking a fill, it's an old config prior to fill support. use the base color with the
     //  default fill opacity.
     if (styleConfig['fill'] === undefined) {
