@@ -2,6 +2,7 @@ goog.provide('os.ui.geo.RingOptionsCtrl');
 goog.provide('os.ui.geo.ringOptionsDirective');
 
 goog.require('os.bearing.BearingType');
+goog.require('os.math');
 goog.require('os.math.Units');
 goog.require('os.ui.Module');
 
@@ -17,7 +18,7 @@ os.ui.geo.RingTitle = 'Ring';
  * The ringoptions directive
  * @return {angular.Directive}
  */
-os.ui.geo.RingOptionsCtrl = function() {
+os.ui.geo.ringOptionsDirective = function() {
   return {
     restrict: 'E',
     replace: true,
@@ -25,7 +26,7 @@ os.ui.geo.RingOptionsCtrl = function() {
       'options': '='
     },
     templateUrl: os.ROOT + 'views/geo/ringoptions.html',
-    controller: os.ui.geo.ringOptionsDirective,
+    controller: os.ui.geo.RingOptionsCtrl,
     controllerAs: 'ctrl'
   };
 };
@@ -34,7 +35,7 @@ os.ui.geo.RingOptionsCtrl = function() {
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('ringoptions', [os.ui.geo.RingOptionsCtrl]);
+os.ui.Module.directive('ringoptions', [os.ui.geo.ringOptionsDirective]);
 
 
 
@@ -46,7 +47,7 @@ os.ui.Module.directive('ringoptions', [os.ui.geo.RingOptionsCtrl]);
  * @constructor
  * @ngInject
  */
-os.ui.geo.ringOptionsDirective = function($scope, $element, $timeout) {
+os.ui.geo.RingOptionsCtrl = function($scope, $element, $timeout) {
   /**
    * @type {?angular.Scope}
    * @private
@@ -99,7 +100,7 @@ os.ui.geo.ringOptionsDirective = function($scope, $element, $timeout) {
 /**
  * Clean up.
  */
-os.ui.geo.ringOptionsDirective.prototype.$onDestroy = function() {
+os.ui.geo.RingOptionsCtrl.prototype.$onDestroy = function() {
   this.scope_ = null;
   this.element_ = null;
   this.timeout_ = null;
@@ -111,7 +112,7 @@ os.ui.geo.ringOptionsDirective.prototype.$onDestroy = function() {
  * @return {!osx.feature.RingOptions} The default options.
  * @protected
  */
-os.ui.geo.ringOptionsDirective.prototype.getDefaultOptions = function() {
+os.ui.geo.RingOptionsCtrl.prototype.getDefaultOptions = function() {
   return {
     enabled: false,
     type: 'auto',
@@ -138,9 +139,20 @@ os.ui.geo.ringOptionsDirective.prototype.getDefaultOptions = function() {
  * Fires an update event with the new ring options.
  * @export
  */
-os.ui.geo.ringOptionsDirective.prototype.update = function() {
-  this['count'] = this['options'].rings.length;
-  this.scope_.$emit('ring.update', this['options']);
+os.ui.geo.RingOptionsCtrl.prototype.update = function() {
+  const rings = this['options'].rings;
+  if (rings.length == 0) {
+    this['count'] = null;
+  } else {
+    this['count'] = rings.length;
+  }
+
+  // don't do an update to the ring options if there are invalid values in the form
+  this.timeout_(() => {
+    if (!this.scope_['ringOptionsForm'].$invalid) {
+      this.scope_.$emit('ring.update', this['options']);
+    }
+  });
 };
 
 
@@ -149,13 +161,15 @@ os.ui.geo.ringOptionsDirective.prototype.update = function() {
  * @param {boolean=} opt_update Whether to force an update.
  * @export
  */
-os.ui.geo.ringOptionsDirective.prototype.updateCount = function(opt_update) {
-  var rings = this['options'].rings;
-  while (rings.length < this['count']) {
+os.ui.geo.RingOptionsCtrl.prototype.updateCount = function(opt_update) {
+  const rings = this['options'].rings;
+  // if count is null, default to 0 for while loops
+  const count = this['count'] || 0;
+  while (rings.length < count) {
     this.add();
   }
 
-  while (rings.length > this['count'] && rings.length > 0) {
+  while (rings.length > count && rings.length > 0) {
     this.remove(rings.length - 1);
   }
 
@@ -170,10 +184,11 @@ os.ui.geo.ringOptionsDirective.prototype.updateCount = function(opt_update) {
  * @param {boolean=} opt_update Whether to force an update.
  * @export
  */
-os.ui.geo.ringOptionsDirective.prototype.updateInterval = function(opt_update) {
+os.ui.geo.RingOptionsCtrl.prototype.updateInterval = function(opt_update) {
   var rings = this['options'].rings;
   rings.forEach(function(ring, i) {
     ring['radius'] = (i + 1) * this['options'].interval;
+    ring['radius'] = os.math.roundWithPrecision(ring['radius'], os.math.precision(this['options'].interval));
   }, this);
 
   if (opt_update) {
@@ -187,7 +202,7 @@ os.ui.geo.ringOptionsDirective.prototype.updateInterval = function(opt_update) {
  * @param {boolean=} opt_update Whether to force an update.
  * @export
  */
-os.ui.geo.ringOptionsDirective.prototype.updateUnits = function(opt_update) {
+os.ui.geo.RingOptionsCtrl.prototype.updateUnits = function(opt_update) {
   var units = this['options'].units;
   var rings = this['options'].rings;
   rings.forEach(function(ring, i) {
@@ -205,9 +220,10 @@ os.ui.geo.ringOptionsDirective.prototype.updateUnits = function(opt_update) {
  * @param {boolean=} opt_update Whether to force an update.
  * @export
  */
-os.ui.geo.ringOptionsDirective.prototype.add = function(opt_update) {
+os.ui.geo.RingOptionsCtrl.prototype.add = function(opt_update) {
   var last = goog.array.peek(this['options'].rings);
   var radius = (last && last.radius || 0) + this['options'].interval;
+  radius = os.math.roundWithPrecision(radius, os.math.precision(this['options'].interval));
   this['options'].rings.push({'radius': radius, 'units': this['options'].units});
 
   this.timeout_(function() {
@@ -228,7 +244,7 @@ os.ui.geo.ringOptionsDirective.prototype.add = function(opt_update) {
  * @param {boolean=} opt_update Whether to force an update.
  * @export
  */
-os.ui.geo.ringOptionsDirective.prototype.remove = function(i, opt_update) {
+os.ui.geo.RingOptionsCtrl.prototype.remove = function(i, opt_update) {
   if (this['options'].rings.length > 0) {
     this['options'].rings.splice(i, 1);
   }
