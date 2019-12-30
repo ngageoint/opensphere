@@ -97,27 +97,27 @@ os.ui.util.PunyParentCtrl.prototype.onResize_ = function() {
 os.ui.util.PunyParentCtrl.prototype.onThrottleResize_ = function() {
   if (this.element_) {
     var children = this.element_.children().toArray();
-    var childrenWidth = 0;
-    children.forEach(function(child) {
+    var childrenWidth = children.reduce((accumulator, child) => {
       var c = $(child);
       // ignore the resize trigger since thats the parent size
       if (!c.hasClass('resize-triggers')) {
-        childrenWidth += c.outerWidth(true);
+        accumulator += c.outerWidth(true);
       }
-    });
+      return accumulator;
+    }, 0);
 
     if (childrenWidth > this.fullSize) {
       this.fullSize = childrenWidth;
     }
 
     // Set the puny state on the child scope
-    children.forEach(function(child) {
+    children.forEach((child) => {
       var c = $(child);
       var cscope = c.scope();
       if (!c.hasClass('resize-triggers') && cscope) {
         cscope['puny'] = this.element_.outerWidth(true) < this.fullSize;
       }
-    }.bind(this));
+    });
     os.ui.apply(this.scope_);
   }
 };
