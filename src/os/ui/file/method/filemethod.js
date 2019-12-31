@@ -57,7 +57,7 @@ os.ui.file.method.FileMethod.prototype.getPriority = function() {
  * @inheritDoc
  */
 os.ui.file.method.FileMethod.prototype.isSupported = function() {
-  return Modernizr.indexeddb;
+  return Modernizr.indexeddb == true;
 };
 
 
