@@ -90,8 +90,11 @@ os.ui.help.supportMsg.prototype.getModernizrValues = function() {
   var result = '';
   for (var key in Modernizr) {
     if (key.indexOf('_') === 0 ||
-        typeof Modernizr[key] === 'function' ||
-        typeof Modernizr[key] === 'object') {
+        typeof Modernizr[key] === 'function') {
+      continue;
+    } else if (Modernizr[key] instanceof Boolean) {
+      result += key + ':' + Modernizr[key].valueOf() + '\n';
+    } else if (typeof Modernizr[key] === 'object') {
       continue;
     }
     result += key + ':' + Modernizr[key] + '\n';
