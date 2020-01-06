@@ -466,6 +466,12 @@ plugin.im.action.feature.ui.StyleConfigCtrl.prototype.onCenterShapeChange = func
 
   if (this.styleConfig) {
     this.styleConfig[os.style.StyleField.CENTER_SHAPE] = value;
+
+    // set the center shape image config from the shape picker
+    var shape = os.style.SHAPES[value];
+    if (shape) {
+      os.style.mergeConfig(shape['config'], this.styleConfig);
+    }
   }
 
   this.updateCenterIcon_();

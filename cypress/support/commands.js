@@ -33,11 +33,7 @@ var addMatchImageSnapshotCommand = require('cypress-image-snapshot/command')
 var projection;
 
 // Must add CYPRESS_ prefix to environment variables, but use it here without the prefix
-if (Cypress.env('PROJECTION')) {
-  projection = Cypress.env('PROJECTION');
-} else {
-  projection = 3857;
-}
+projection = Cypress.env('PROJECTION');
 var snapshotFolder = 'cypress/comparisons/' + projection;
 
 addMatchImageSnapshotCommand({
@@ -84,7 +80,7 @@ Cypress.Commands.add('login', function(clearLocalStorage) {
     indexedDB.deleteDatabase(index.IndexedDB.SETTINGS);
   }
   cy.visit('index.html' + index.HIDE_TIPS); // TODO: Windows 10 issue. Remove index.html after fixed: https://github.com/http-party/http-server/issues/525
-  cy.get(layers.layersTab.Tree.STREET_MAP_TILES, {timeout: 15000}).should('be.visible');
+  cy.get(layers.layersTab.Tree.STREET_MAP_TILES).should('be.visible');
   cy.get(layers.layersTab.Tree.LOADING_SPINNER, {timeout: 20000}).should('not.be.visible');
 });
 

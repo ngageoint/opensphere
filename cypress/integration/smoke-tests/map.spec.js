@@ -76,7 +76,13 @@ describe('Map controls', function() {
     cy.get(opensphere.Map.OVERVIEW_MAP).click('top');
     cy.get(opensphere.Map.OVERVIEW_MAP).click('top');
     cy.get(opensphere.Application.PAGE).trigger('mouseenter').trigger('mousemove');
-    cy.get(opensphere.statusBar.COORDINATES_TEXT).should('contain', '+65');
+
+    if (Cypress.env('PROJECTION') == '3857') {
+      cy.get(opensphere.statusBar.COORDINATES_TEXT).should('contain', '+65');
+    } else {
+      cy.get(opensphere.statusBar.COORDINATES_TEXT).should('contain', '+86');
+    }
+
     cy.get(opensphere.statusBar.COORDINATES_TEXT).should('contain', '-000.');
 
     // Cleanup
@@ -98,7 +104,13 @@ describe('Map controls', function() {
     cy.get(opensphere.Map.OVERVIEW_MAP).click('bottom');
     cy.get(opensphere.Map.OVERVIEW_MAP).click('bottom');
     cy.get(opensphere.Application.PAGE).trigger('mouseenter').trigger('mousemove');
-    cy.get(opensphere.statusBar.COORDINATES_TEXT).should('contain', '-63');
+
+    if (Cypress.env('PROJECTION') == '3857') {
+      cy.get(opensphere.statusBar.COORDINATES_TEXT).should('contain', '-63');
+    } else {
+      cy.get(opensphere.statusBar.COORDINATES_TEXT).should('contain', '-82');
+    }
+
     cy.get(opensphere.statusBar.COORDINATES_TEXT).should('contain', '-000.');
 
     // Clean up

@@ -542,7 +542,7 @@ os.feature.createRings = function(feature, opt_replace) {
       var rings = options.rings;
       var startAngle = (options.startAngle || 0) + declination;
       var widthAngle = options.widthAngle || 0;
-      var largestRing = rings.reduce((acc, current) => acc.radius > current.radius ? acc : current);
+      var largestRing = rings.reduce((acc, current) => acc.radius > current.radius ? acc : current, 0);
       var geoms = [];
       var labels = [];
       var previousCoordinates;
