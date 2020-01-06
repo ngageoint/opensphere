@@ -11,7 +11,7 @@ Prerequisites
 
 - git
 - Java 1.7.0+
-- Node 6+ and npm
+- Node 8.16+ and npm
 - Yarn_
 - Python
 - Sphinx (optional, used to generate these docs)
