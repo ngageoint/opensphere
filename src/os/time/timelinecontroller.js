@@ -213,7 +213,7 @@ os.time.TimelineController.prototype.isPlaying = function() {
 
 
 /**
- * Getter for current time.
+ * Gets the current time range. This corresponds to the blue window on the timeline.
  *
  * @return {number}
  */
@@ -223,7 +223,7 @@ os.time.TimelineController.prototype.getCurrent = function() {
 
 
 /**
- * Setter for current time.
+ * Setter for current time range. This corresponds to the blue window on the timeline.
  *
  * @param {number} value
  */
@@ -511,7 +511,7 @@ os.time.TimelineController.prototype.buildRange = function(start, end) {
 
 
 /**
- * Sets the full timeline range
+ * Sets the load range. This corresponds to the yellow window on the timeline.
  *
  * @param {!goog.math.Range} range
  */
@@ -589,7 +589,7 @@ os.time.TimelineController.prototype.setAutoConfigure = function(value) {
 
 
 /**
- * Get the start value of the timeline range.
+ * Get the start value of the timeline load range.
  *
  * @return {number} The start value
  */
@@ -599,7 +599,7 @@ os.time.TimelineController.prototype.getStart = function() {
 
 
 /**
- * The full timeline range
+ * Gets the load range. This corresponds to the yellow box on the timeline.
  *
  * @return {goog.math.Range}
  */
@@ -609,7 +609,7 @@ os.time.TimelineController.prototype.getRange = function() {
 
 
 /**
- * Gets the animation range
+ * Gets the load range. This corresponds to the yellow box on the timeline.
  *
  * @return {goog.math.Range}
  */

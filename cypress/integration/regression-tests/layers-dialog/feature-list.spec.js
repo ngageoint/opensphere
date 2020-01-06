@@ -92,30 +92,30 @@ describe('Feature list', function() {
       cy.get(shared.Grid.GRID).should('be.visible');
       cy.get(shared.Grid.HEADER_ROW).should('be.visible');
       cy.get(shared.Grid.HEADER_CELL_1).should('have.text', '');
-      cy.get(shared.Grid.HEADER_CELL_2).contains('TIME');
-      cy.get(shared.Grid.HEADER_CELL_3).contains('MGRS');
-      cy.get(shared.Grid.HEADER_CELL_4).contains('LAT_DMS');
-      cy.get(shared.Grid.HEADER_CELL_5).contains('LON_DMS');
-      cy.get(shared.Grid.HEADER_CELL_6).contains('LAT');
-      cy.get(shared.Grid.HEADER_CELL_7).contains('LON');
-      cy.get(shared.Grid.HEADER_CELL_8).contains('LAT_DDM');
-      cy.get(shared.Grid.HEADER_CELL_9).contains('LON_DDM');
-      cy.get(shared.Grid.HEADER_CELL_10).contains('name');
-      cy.get(shared.Grid.HEADER_CELL_11).contains('description');
-      cy.get(shared.Grid.HEADER_CELL_12).contains('line');
-      cy.get(shared.Grid.HEADER_ROW).contains('notes'); // Columns reversed GUI vs CLI, less specific selector
-      cy.get(shared.Grid.HEADER_ROW).contains('objectid'); // Columns reversed GUI vs CLI, less specific selector
-      cy.get(shared.Grid.HEADER_CELL_15).contains('ID');
+      cy.get(shared.Grid.HEADER_CELL_2).should('contain', 'TIME');
+      cy.get(shared.Grid.HEADER_CELL_3).should('contain', 'MGRS');
+      cy.get(shared.Grid.HEADER_CELL_4).should('contain', 'LAT_DMS');
+      cy.get(shared.Grid.HEADER_CELL_5).should('contain', 'LON_DMS');
+      cy.get(shared.Grid.HEADER_CELL_6).should('contain', 'LAT');
+      cy.get(shared.Grid.HEADER_CELL_7).should('contain', 'LON');
+      cy.get(shared.Grid.HEADER_CELL_8).should('contain', 'LAT_DDM');
+      cy.get(shared.Grid.HEADER_CELL_9).should('contain', 'LON_DDM');
+      cy.get(shared.Grid.HEADER_CELL_10).should('contain', 'name');
+      cy.get(shared.Grid.HEADER_CELL_11).should('contain', 'description');
+      cy.get(shared.Grid.HEADER_CELL_12).should('contain', 'line');
+      cy.get(shared.Grid.HEADER_ROW).should('contain', 'notes'); // Columns reversed GUI vs CLI, less specific selector
+      cy.get(shared.Grid.HEADER_ROW).should('contain', 'objectid'); // Columns reversed GUI vs CLI, less specific selector
+      cy.get(shared.Grid.HEADER_CELL_15).should('contain', 'ID');
     });
   });
 
   it('Spot check data', function() {
     cy.get(dialogs.featureListDialog.DIALOG).within(function() {
       cy.get(shared.Grid.ROW_1).within(function() {
-        cy.get(shared.Grid.CELL_3).contains('18TWL8884215339');
-        cy.get(shared.Grid.CELL_5).contains('073° 56\' 49.44" W');
-        cy.get(shared.Grid.CELL_7).contains('-73.9470660219183');
-        cy.get(shared.Grid.CELL_9).contains('073° 56.82\' W');
+        cy.get(shared.Grid.CELL_3).should('contain', '18TWL8884215339');
+        cy.get(shared.Grid.CELL_5).should('contain', '073° 56\' 49.44" W');
+        cy.get(shared.Grid.CELL_7).should('contain', '-73.9470660219183');
+        cy.get(shared.Grid.CELL_9).should('contain', '073° 56.82\' W');
       });
 
       cy.get(shared.Grid.ROW_3).within(function() {
@@ -138,24 +138,24 @@ describe('Feature list', function() {
     // Setup
     cy.get(dialogs.featureListDialog.DIALOG).within(function() {
       cy.get(shared.Grid.ROW_1).within(function() {
-        cy.get(shared.Grid.CELL_3).contains('18TWL8884215339');
-        cy.get(shared.Grid.CELL_10).contains('96th St');
-        cy.get(shared.Grid.CELL_12).contains('Q');
-        cy.get(shared.Grid.CELL_13).contains('Q-all times');
+        cy.get(shared.Grid.CELL_3).should('contain', '18TWL8884215339');
+        cy.get(shared.Grid.CELL_10).should('contain', '96th St');
+        cy.get(shared.Grid.CELL_12).should('contain', 'Q');
+        cy.get(shared.Grid.CELL_13).should('contain', 'Q-all times');
       });
 
       cy.get(shared.Grid.ROW_2).within(function() {
-        cy.get(shared.Grid.CELL_3).contains('18TWL9489920441');
-        cy.get(shared.Grid.CELL_10).contains('Morrison Av - Soundview');
-        cy.get(shared.Grid.CELL_12).contains('6');
-        cy.get(shared.Grid.CELL_13).contains('6-all times');
+        cy.get(shared.Grid.CELL_3).should('contain', '18TWL9489920441');
+        cy.get(shared.Grid.CELL_10).should('contain', 'Morrison Av - Soundview');
+        cy.get(shared.Grid.CELL_12).should('contain', '6');
+        cy.get(shared.Grid.CELL_13).should('contain', '6-all times');
       });
 
       cy.get(shared.Grid.ROW_3).within(function() {
-        cy.get(shared.Grid.CELL_3).contains('18TWL9341202125');
-        cy.get(shared.Grid.CELL_10).contains('Pennsylvania Ave');
-        cy.get(shared.Grid.CELL_12).contains('3-4');
-        cy.get(shared.Grid.CELL_13).contains('4-nights, 3-all other times');
+        cy.get(shared.Grid.CELL_3).should('contain', '18TWL9341202125');
+        cy.get(shared.Grid.CELL_10).should('contain', 'Pennsylvania Ave');
+        cy.get(shared.Grid.CELL_12).should('contain', '3-4');
+        cy.get(shared.Grid.CELL_13).should('contain', '4-nights, 3-all other times');
       });
     });
 
@@ -165,24 +165,26 @@ describe('Feature list', function() {
         .click();
     cy.get(dialogs.featureListDialog.DIALOG).within(function() {
       cy.get(shared.Grid.ROW_2).within(function() { // Actually clicking on row-1; selectors offset after sort
-        cy.get(shared.Grid.CELL_3).contains('18TWL8444208022');
-        cy.get(shared.Grid.CELL_10).contains('Canal St');
-        cy.get(shared.Grid.CELL_12).contains('4-6-6 Express');
-        cy.get(shared.Grid.CELL_13).contains('4 nights, 6-all times, 6 Express-weekdays AM southbound, PM northbound');
+        cy.get(shared.Grid.CELL_3).should('contain', '18TWL8444208022');
+        cy.get(shared.Grid.CELL_10).should('contain', 'Canal St');
+        cy.get(shared.Grid.CELL_12).should('contain', '4-6-6 Express');
+        cy.get(shared.Grid.CELL_13).should('contain',
+            '4 nights, 6-all times, 6 Express-weekdays AM southbound, PM northbound');
       });
 
-      cy.get(shared.Grid.ROW_3).within(function() { // Actually clicking on row-1; selectors offset after sort
-        cy.get(shared.Grid.CELL_3).contains('18TWL8449008066');
-        cy.get(shared.Grid.CELL_10).contains('50th St');
-        cy.get(shared.Grid.CELL_12).contains('1-2');
-        cy.get(shared.Grid.CELL_13).contains('1-all times, 2-nights');
+      cy.get(shared.Grid.ROW_3).within(function() { // Actually clicking on row-2; selectors offset after sort
+        cy.get(shared.Grid.CELL_3).should('contain', '18TWL8449008066');
+        cy.get(shared.Grid.CELL_10).should('contain', '50th St');
+        cy.get(shared.Grid.CELL_12).should('contain', '1-2');
+        cy.get(shared.Grid.CELL_13).should('contain', '1-all times, 2-nights');
       });
 
-      cy.get(shared.Grid.ROW_4).within(function() { // Actually clicking on row-1; selectors offset after sort
-        cy.get(shared.Grid.CELL_3).contains('18TWL8519809280');
-        cy.get(shared.Grid.CELL_10).contains('Astor Pl');
-        cy.get(shared.Grid.CELL_12).contains('4-6-6 Express');
-        cy.get(shared.Grid.CELL_13).contains('4 nights, 6-all times, 6 Express-weekdays AM southbound, PM northbound');
+      cy.get(shared.Grid.ROW_4).within(function() { // Actually clicking on row-3; selectors offset after sort
+        cy.get(shared.Grid.CELL_3).should('contain', '18TWL8519809280');
+        cy.get(shared.Grid.CELL_10).should('contain', 'Astor Pl');
+        cy.get(shared.Grid.CELL_12).should('contain', '4-6-6 Express');
+        cy.get(shared.Grid.CELL_13).should('contain',
+            '4 nights, 6-all times, 6 Express-weekdays AM southbound, PM northbound');
       });
     });
 
@@ -192,24 +194,24 @@ describe('Feature list', function() {
         .click();
     cy.get(dialogs.featureListDialog.DIALOG).within(function() {
       cy.get(shared.Grid.ROW_2).within(function() { // Actually clicking on row-1; selectors offset after sort
-        cy.get(shared.Grid.CELL_3).contains('18TWL9489920441');
-        cy.get(shared.Grid.CELL_10).contains('Morrison Av - Soundview');
-        cy.get(shared.Grid.CELL_12).contains('6');
-        cy.get(shared.Grid.CELL_13).contains('6-all times');
+        cy.get(shared.Grid.CELL_3).should('contain', '18TWL9489920441');
+        cy.get(shared.Grid.CELL_10).should('contain', 'Morrison Av - Soundview');
+        cy.get(shared.Grid.CELL_12).should('contain', '6');
+        cy.get(shared.Grid.CELL_13).should('contain', '6-all times');
       });
 
-      cy.get(shared.Grid.ROW_3).within(function() { // Actually clicking on row-1; selectors offset after sort
-        cy.get(shared.Grid.CELL_3).contains('18TWL9341202125');
-        cy.get(shared.Grid.CELL_10).contains('Pennsylvania Ave');
-        cy.get(shared.Grid.CELL_12).contains('3-4');
-        cy.get(shared.Grid.CELL_13).contains('4-nights, 3-all other times');
+      cy.get(shared.Grid.ROW_3).within(function() { // Actually clicking on row-2; selectors offset after sort
+        cy.get(shared.Grid.CELL_3).should('contain', '18TWL9341202125');
+        cy.get(shared.Grid.CELL_10).should('contain', 'Pennsylvania Ave');
+        cy.get(shared.Grid.CELL_12).should('contain', '3-4');
+        cy.get(shared.Grid.CELL_13).should('contain', '4-nights, 3-all other times');
       });
 
-      cy.get(shared.Grid.ROW_4).within(function() { // Actually clicking on row-1; selectors offset after sort
-        cy.get(shared.Grid.CELL_3).contains('18TWL8884215339');
-        cy.get(shared.Grid.CELL_10).contains('96th St');
-        cy.get(shared.Grid.CELL_12).contains('Q');
-        cy.get(shared.Grid.CELL_13).contains('Q-all times');
+      cy.get(shared.Grid.ROW_4).within(function() { // Actually clicking on row-3; selectors offset after sort
+        cy.get(shared.Grid.CELL_3).should('contain', '18TWL8884215339');
+        cy.get(shared.Grid.CELL_10).should('contain', '96th St');
+        cy.get(shared.Grid.CELL_12).should('contain', 'Q');
+        cy.get(shared.Grid.CELL_13).should('contain', 'Q-all times');
       });
     });
 
@@ -229,7 +231,7 @@ describe('Feature list', function() {
     // Test
     cy.get(dialogs.featureListDialog.DIALOG)
         .find(shared.Grid.CELL_11)
-        .contains('Show')
+        .should('contain', 'Show')
         .click();
     cy.get(dialogs.descriptionInfoDialog.DIALOG).should('be.visible');
 
@@ -608,16 +610,16 @@ describe('Feature list', function() {
           .find(shared.Grid.GRID)
           .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('be.visible');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Select All');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Deselect All');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Invert');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Select All');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Deselect All');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Invert');
       cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('not.contain', 'Sort Selected');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Hide Selected');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Hide Unselected');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Display All');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Remove Selected');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Remove Unselected');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Export');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Hide Selected');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Hide Unselected');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Display All');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Remove Selected');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Remove Unselected');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Export');
       cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('not.contain', 'Go To');
     });
 
@@ -634,17 +636,17 @@ describe('Feature list', function() {
           .find(shared.Grid.GRID)
           .rightclick();
       cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('be.visible');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Select All');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Deselect All');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Invert');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Sort Selected');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Hide Selected');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Hide Unselected');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Display All');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Remove Selected');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Remove Unselected');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Export');
-      cy.get(dialogs.featureListDialog.contextMenu.PANEL).contains('Go To');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Select All');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Deselect All');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Invert');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Sort Selected');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Hide Selected');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Hide Unselected');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Display All');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Remove Selected');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Remove Unselected');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Export');
+      cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Go To');
 
       // Clean up
       cy.get(dialogs.featureListDialog.DIALOG).type('{ctrl}', {release: false});
@@ -757,6 +759,9 @@ describe('Feature list', function() {
 
     it('Sort Selected', function() {
       // Setup
+      cy.get(dialogs.featureListDialog.CLOSE_BUTTON).click();
+      cy.get(shared.Tree.ROW_4).rightclick();
+      cy.get(layers.layersTab.Tree.contextMenu.SHOW_FEATURES).click();
       cy.get(dialogs.featureListDialog.DIALOG).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_5)
