@@ -1,5 +1,5 @@
 /**
- * @fileoverview Externs for Modernizr 3.3.1.
+ * @fileoverview Externs for Modernizr ^3.8.0
  * @externs
  */
 
@@ -8,6 +8,14 @@
  * @type {!Object}
  */
 var Modernizr = {};
+
+
+/**
+ * An async feature check
+ * @param {string} checkName of async Modernizr check (e.g. indexeddb)
+ * @param {function(Boolean)} callbackFn to execute on return of the async check
+ */
+Modernizr.on = function (checkName, callbackFn) {};
 
 
 /**
@@ -53,7 +61,7 @@ Modernizr.flexbox;
 
 
 /**
- * @type {boolean}
+ * @type {Boolean}
  */
 Modernizr.indexeddb;
 
