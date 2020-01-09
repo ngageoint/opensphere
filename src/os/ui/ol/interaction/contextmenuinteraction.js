@@ -38,7 +38,7 @@ os.ui.ol.interaction.ContextMenu = function(opt_options) {
    * @type {function(ol.MapBrowserEvent):boolean}
    * @protected
    */
-  this.condition = options.condition || os.ol.events.condition.rightClick;
+  this.condition = options.condition || os.ol.events.condition.middleOrRightClick;
 
   /**
    * Menu for hit detected features.
