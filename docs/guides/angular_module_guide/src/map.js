@@ -1,12 +1,20 @@
 goog.module('os.ui.Map');
 goog.module.declareLegacyNamespace();
 
-const Controller = class {
-  // Create the controller
-};
+/**
+ * Controller for the map directive.
+ */
+class Controller {
+  // Controller class body
+}
 
-const directive = () => {
-  // Create the directive
-};
+/**
+ * The map directive.
+ * @return {angular.Directive}
+ */
+const directive = () => ({
+  // Directive definition
+});
 
+// Export on the module as Controller and directive.
 exports = {Controller, directive};

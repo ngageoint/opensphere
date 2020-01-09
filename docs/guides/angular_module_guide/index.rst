@@ -7,11 +7,15 @@ Our options were to split the original names into separate files, or change our 
 
 The following example shows how the ``map`` directive was transitioned to a module.
 
+.. note:: For a full example, see the `map directive source`_ here.
+
+.. _map directive source: https://github.com/ngageoint/opensphere/blob/master/src/os/ui/map.js
+
 Creating the UI Module
 ----------------------
 
-- The module can use the original controller name, minus ``Ctrl``. The name can be adjusted if needed, for example if this convention results in a name conflict with another class.
-- Export the controller as ``Controller``, and the directive as ``directive``.
+- The ``goog.module`` value can use the original controller name, minus ``Ctrl``. The name can be adjusted if needed, for example if this convention results in a name conflict with another class.
+- Define and export the controller class as ``Controller``, and the directive function as ``directive``. This will ensure consistency across all UI's.
 
 .. literalinclude:: src/map.js
   :language: javascript
@@ -20,7 +24,7 @@ Creating the UI Module
 Using the Module
 ----------------
 
-To reference the UI module in other files:
+To reference the UI in ``goog.module`` files:
 
 .. code-block:: javascript
 
@@ -28,10 +32,20 @@ To reference the UI module in other files:
     // reference the controller class as MapUI.Controller
     // reference the directive function as MapUI.directive
 
+.. note:: This intentionally uses the variable name convention ``<class>UI`` both for clarity that it's a UI where referenced in the file, and the avoid shadowing the native ``Map`` object.
+
+To reference the UI in legacy ``goog.provide`` files:
+
+.. code-block:: javascript
+
+    goog.require('os.ui.Map');
+    // reference the controller class as os.ui.Map.Controller
+    // reference the directive function as os.ui.Map.directive
+
 Backward Compatibility Shim
 ---------------------------
 
-To avoid a breaking change with the new module, we'll create a shim to provide the old namespaces. The shim needs to accomplish a couple things:
+When converting existing UI's to modules, we would like to avoid breaking changes where possible. To avoid a breaking change with a converted module, we'll create a shim to provide the old namespaces. The shim needs to accomplish a couple things:
 
 - Make the old namespaces available to ``goog.require`` statements.
 - Deprecate the old namespaces so developers are aware of the change.
@@ -40,6 +54,8 @@ To avoid a breaking change with the new module, we'll create a shim to provide t
   :language: javascript
   :caption: ``src/os/ui/map_shim.js``
 
-The shim will be maintained until all code referencing the old namespaces has been transitioned to directly reference the new module. After a suitable (TBD) amount of time has passed for developers to respond to the deprecation warning, the shim will be deleted.
+The shim will be maintained until all code referencing the old namespaces has been transitioned to directly reference the new module. After a suitable (TBD) amount of time has passed for developers to update their code, the shim will be deleted.
+
+.. note:: New UI's do not need a shim because all references to them can be guaranteed to use the new format.
 
 .. warning:: The deprecation warning will not appear as a result of ``goog.require``. The Closure compiler will only issue a warning if the old directive/controller references are invoked in code.
