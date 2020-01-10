@@ -226,7 +226,8 @@
   ],
   "resolutions": {
     "raphael": "2.3.0",
-    "squire-rte": "1.9.0"
+    "squire-rte": "1.9.0",
+    "handlebars": "4.5.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.0.0",
