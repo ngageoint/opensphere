@@ -12,6 +12,18 @@ function ready() {
 
 
 /**
+ * Set up Modernizr and wait for it to finish before running the checks
+ */
+function initCheck() {
+  if (Modernizr && Modernizr.indexeddb === undefined) {
+    Modernizr.on('indexeddb', initCheck);
+  } else {
+    runBrowserCheck();
+  }
+}
+
+
+/**
  * Appends test results to DOM
  * @param {element} el
  * @param {string} msg
@@ -74,7 +86,7 @@ function populateCheckInfo(doSpin) {
     append(ul, 'Flexbox - used for layout and making things pretty',
         typeof (Modernizr) != 'undefined' && Modernizr.flexbox);
     append(ul, 'IndexedDB - allows data to be stored in local browser database',
-        typeof (Modernizr) != 'undefined' && Modernizr.indexeddb);
+        typeof (Modernizr) != 'undefined' && Modernizr.indexeddb == true);
     append(ul, 'Local storage - stores settings & caches images',
         typeof (Modernizr) != 'undefined' && Modernizr.localstorage);
     append(ul, 'SVG render - draws 2D vectors like the legend and timeline',
@@ -102,7 +114,7 @@ function populateCheckInfo(doSpin) {
  */
 function checkCompat() {
   return typeof (Modernizr) != 'undefined' && Modernizr.canvas && Modernizr.localstorage && Modernizr.svg &&
-      Modernizr.webworkers && Modernizr.flexbox && Modernizr.indexeddb && Modernizr.cors;
+      Modernizr.webworkers && Modernizr.flexbox && Modernizr.indexeddb == true && Modernizr.cors;
 }
 
 
@@ -124,8 +136,11 @@ function getModernizrValues() {
   var result = '';
   for (var key in Modernizr) {
     if (key.indexOf('_') === 0 ||
-        typeof Modernizr[key] === 'function' ||
-        typeof Modernizr[key] === 'object') {
+        typeof Modernizr[key] === 'function') {
+      continue;
+    } else if (Modernizr[key] instanceof Boolean) {
+      result += key + ':' + Modernizr[key].valueOf() + '\n';
+    } else if (typeof Modernizr[key] === 'object') {
       continue;
     }
     result += key + ':' + Modernizr[key] + '\n';
@@ -182,7 +197,7 @@ function setContactInfo() {
   if (!checkCompat() && checkVersion()) {
     var warn = '<em>Your browser has been configured to disable features required by this application.</em> ' +
       '<p>Please enable those features or contact your IT department for support.</p>';
-    if (platform.name == 'Firefox' && (!Modernizr.localstorage || !Modernizr.indexeddb)) {
+    if (platform.name == 'Firefox' && (!Modernizr.localstorage || !Modernizr.indexeddb == true)) {
       var parsed = getConfig();
       if (parsed && parsed['admin'] && parsed['admin']['firefoxCompatibleVersionLocalStorageOrIndexedDBErrorLink']) {
         warn += '<p>For local storage or indexedDB related issues, see <a href="' +
@@ -284,4 +299,4 @@ function toggleFullList(opt_hide) {
   }
 }
 
-runBrowserCheck();
+initCheck();

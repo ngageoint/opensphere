@@ -150,7 +150,7 @@ os.storage.IDBStorage.prototype.disposeInternal = function() {
  */
 os.storage.IDBStorage.prototype.init = function() {
   var deferred;
-  if (Modernizr.indexeddb) {
+  if (Modernizr.indexeddb == true) {
     deferred = this.initDeferred = goog.db.openDatabase(this.dbName_, this.dbVersion_,
         this.onUpgradeNeeded_.bind(this),
         this.onBlocked_.bind(this))
@@ -227,7 +227,7 @@ os.storage.IDBStorage.prototype.get = function(key) {
     return this.initDeferred.addCallback(goog.partial(this.getInternal_, key), this);
   }
 
-  if (Modernizr.indexeddb) {
+  if (Modernizr.indexeddb == true) {
     return this.getInternal_(key);
   }
 
@@ -263,7 +263,7 @@ os.storage.IDBStorage.prototype.getAll = function() {
     return this.initDeferred.addCallback(this.getAllInternal_, this);
   }
 
-  if (Modernizr.indexeddb) {
+  if (Modernizr.indexeddb == true) {
     return this.getAllInternal_();
   }
 
@@ -298,7 +298,7 @@ os.storage.IDBStorage.prototype.set = function(key, item, opt_replace) {
     return this.initDeferred.addCallback(goog.partial(this.setInternal_, key, item, opt_replace), this);
   }
 
-  if (Modernizr.indexeddb) {
+  if (Modernizr.indexeddb == true) {
     return this.setInternal_(key, item, opt_replace);
   }
 
@@ -358,7 +358,7 @@ os.storage.IDBStorage.prototype.remove = function(key) {
     return this.initDeferred.addCallback(goog.partial(this.removeInternal_, key), this);
   }
 
-  if (Modernizr.indexeddb) {
+  if (Modernizr.indexeddb == true) {
     return this.removeInternal_(key);
   }
 
@@ -476,7 +476,7 @@ os.storage.IDBStorage.prototype.clear = function() {
     return this.initDeferred.addCallback(this.clearInternal_, this);
   }
 
-  if (Modernizr.indexeddb) {
+  if (Modernizr.indexeddb == true) {
     return this.clearInternal_();
   }
 
@@ -502,7 +502,7 @@ os.storage.IDBStorage.prototype.clearInternal_ = function() {
  * Delete the database.
  */
 os.storage.IDBStorage.prototype.deleteDatabase = function() {
-  if (Modernizr.indexeddb) {
+  if (Modernizr.indexeddb == true) {
     if (this.db_ && this.db_.isOpen()) {
       this.db_.close();
     }
