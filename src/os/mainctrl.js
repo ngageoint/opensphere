@@ -546,7 +546,7 @@ os.MainCtrl.prototype.addPlugins = function() {
   os.ui.pluginManager.addPlugin(plugin.suncalc.Plugin.getInstance());
   os.ui.pluginManager.addPlugin(plugin.track.TrackPlugin.getInstance());
   os.ui.pluginManager.addPlugin(plugin.openpage.Plugin.getInstance());
-  os.ui.pluginManager.addPlugin(plugin.storage.PersistPlugin.getInstance());
+  os.ui.pluginManager.addPlugin(new plugin.storage.PersistPlugin());
 };
 
 
