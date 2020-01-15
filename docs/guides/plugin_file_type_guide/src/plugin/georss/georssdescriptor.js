@@ -47,6 +47,8 @@ plugin.georss.GeoRSSDescriptor.prototype.getLayerOptions = function() {
  * @return {!plugin.georss.GeoRSSDescriptor}
  */
 plugin.georss.GeoRSSDescriptor.createFromConfig = function(config) {
-  return os.data.FileDescriptor.createFromConfig(new plugin.georss.GeoRSSDescriptor(config),
-    plugin.georss.GeoRSSProvider.getInstance(), config, true);
+  var provider = plugin.georss.GeoRSSProvider.getInstance();
+  var descriptor = new plugin.georss.GeoRSSDescriptor();
+  os.data.FileDescriptor.createFromConfig(descriptor, provider, config);
+  return descriptor;
 };
