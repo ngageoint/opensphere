@@ -11,7 +11,7 @@ Prerequisites
 
 - git
 - Java 1.7.0+
-- Node 6+ and npm
+- Node 8.16+ and npm
 - Yarn_
 - Python
 - Sphinx (optional, used to generate these docs)
@@ -71,6 +71,15 @@ Serving the application
 -----------------------
 
 While not required, we highly recommend setting up nginx or Apache httpd to serve up your workspace from your local machine. This will allow you to easily proxy remote servers and mock up services to develop against in addition to serving the application exactly as it will be served from production rather than accessing it via a file path in the browser or serving it with a node-based server.
+
+You can also use the ``start-server`` target, for example:
+
+``` yarn start-server ```
+
+or
+
+``` npm run start-server ```
+
 
 The Build
 *********

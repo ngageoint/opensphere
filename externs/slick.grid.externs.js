@@ -1238,6 +1238,12 @@ Slick.Grid.prototype.addCellCssStyles = function(key, hash) {};
 
 /**
  * @param {*} key
+ */
+Slick.Grid.prototype.getCellCssStyles = function(key) {};
+
+
+/**
+ * @param {*} key
  * @param {*} hash
  */
 Slick.Grid.prototype.setCellCssStyles = function(key, hash) {};

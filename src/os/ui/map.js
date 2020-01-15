@@ -64,16 +64,14 @@ class Controller {
  * The map directive.
  * @return {angular.Directive}
  */
-const directive = function() {
-  return {
-    restrict: 'E',
-    scope: true,
-    replace: true,
-    template: '<div id="map-container" class="mw-0 flex-fill"></div>',
-    controller: Controller,
-    controllerAs: 'mapCtrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  scope: true,
+  replace: true,
+  template: '<div id="map-container" class="mw-0 flex-fill"></div>',
+  controller: Controller,
+  controllerAs: 'mapCtrl'
+});
 
 
 /**
