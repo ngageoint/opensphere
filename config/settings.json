@@ -94,7 +94,7 @@
             "provider": "ArcGIS Online",
             "url": "//services.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer/tile/{z}/{y}/{x}",
             "minZoom": 2,
-            "maxZoom": 16,
+            "maxZoom": 13,
             "zoomOffset": -1,
             "projection": "EPSG:4326",
             "tileSize": 256,
