@@ -2,7 +2,7 @@
 
 const path = require('path');
 
-const provideToFileMap = new Map();
+const provideToFile = new Map();
 const provideToProvidesWhichRequireIt = new Map();
 
 if (process.argv.length < 4) {
@@ -16,7 +16,7 @@ if (process.argv.length < 4) {
 global.goog = {
   addDependency: (file, providesList, requiresList) => {
     providesList.forEach((provide) => {
-      provideToFileMap.set(provide, file);
+      provideToFile.set(provide, file);
       requiresList.forEach((require) => {
         let itemsRequiringProvide = provideToProvidesWhichRequireIt.get(require);
         if (!itemsRequiringProvide) {
@@ -36,13 +36,14 @@ global.goog = {
 // load the app-loader.js file
 require(path.resolve(process.cwd(), process.argv[4] || './.build/app-loader.js'));
 
-const getFile = (dep) => provideToFileMap.get(dep);
+const getFile = (dep) => provideToFile.get(dep);
+const getItemsRequiringDep = (dep) => provideToProvidesWhichRequireIt.get(dep);
 
 const findPath = (startDep, endDep, path) => {
-  const startFile = provideToFileMap.get(startDep);
+  const startFile = getFile(startDep);
   path = path || [endDep];
 
-  const itemsWhichRequireEnd = provideToProvidesWhichRequireIt.get(endDep);
+  const itemsWhichRequireEnd = getItemsRequiringDep(endDep);
   if (itemsWhichRequireEnd) {
     itemsWhichRequireEnd.forEach((dep) => {
       if (dep.startsWith('goog.')) {
@@ -67,8 +68,7 @@ const addPath = (path) => {
   if (path.length > 1) {
     let str = '';
     for (let i = 0, n = path.length; i < n; i++) {
-      str += ((i === 0) ? 'Found ' : '     ') +
-        provideToFileMap.get(path[i]) + '\n';
+      str += ((i === 0) ? 'Found ' : '     ') + getFile(path[i]) + '\n';
     }
     paths.add(str);
   }
