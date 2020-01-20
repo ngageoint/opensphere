@@ -240,7 +240,7 @@ plugin.places.PlacesManager.prototype.startImport = function(opt_file) {
  * @private
  */
 plugin.places.PlacesManager.prototype.onFileReady_ = function(file) {
-  if (file) {
+  if (file && file.getContent()) {
     var config = new plugin.places.PlacesLayerConfig();
 
     var options = this.getOptions();
@@ -407,7 +407,7 @@ plugin.places.PlacesManager.prototype.onExportComplete_ = function(event) {
   var output = /** @type {ArrayBuffer|string} */ (exporter.getOutput() || '');
   exporter.dispose();
 
-  if (output != null) {
+  if (output) {
     this.saveContent_(output);
   } else {
     this.handleError_('Failed exporting places to browser storage. Content was empty.');
@@ -486,15 +486,30 @@ plugin.places.PlacesManager.prototype.onSourcePropertyChange_ = function(event) 
  */
 plugin.places.PlacesManager.prototype.onSourceLoaded_ = function() {
   if (this.placesSource_) {
-    // the root node is the kml node, so "Saved Places" is the first child.  Make that the root for places.
-    this.placesRoot_ = /** @type {plugin.file.kml.ui.KMLNode} */ (this.placesSource_.getRootNode().getChildren()[0]);
+    var rootNode = this.placesSource_.getRootNode();
+    var children = rootNode && rootNode.getChildren();
 
-    if (this.placesRoot_) {
-      this.initializeNode_(this.placesRoot_);
-      this.placesRoot_.collapsed = false;
-      this.placesRoot_.listen(goog.events.EventType.PROPERTYCHANGE, this.onRootChange_, false, this);
+    if (children) {
+      // the root node is the kml node, so "Saved Places" is the first child. Make that the root for places.
+      this.placesRoot_ = /** @type {plugin.file.kml.ui.KMLNode} */ (children[0]);
 
-      this.addLayer();
+      if (this.placesRoot_) {
+        this.initializeNode_(this.placesRoot_);
+        this.placesRoot_.collapsed = false;
+        this.placesRoot_.listen(goog.events.EventType.PROPERTYCHANGE, this.onRootChange_, false, this);
+
+        this.addLayer();
+      }
+    }
+
+    if (!this.placesRoot_) {
+      this.handleError_('Failed parsing Places root node.');
+
+      if (!this.savedEmpty_) {
+        this.savedEmpty_ = true;
+        this.saveContent_(plugin.places.PlacesManager.EMPTY_CONTENT)
+            .addCallbacks(this.initialize, this.handleError_, this);
+      }
     }
 
     this.loaded_ = true;
