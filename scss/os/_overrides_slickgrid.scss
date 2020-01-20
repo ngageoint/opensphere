@@ -31,7 +31,8 @@
   }
 
   .slick-header {
-    border: $table-border-color;
+    // border: $body-bg;
+    border: $body-bg;
 
     .slick-header-buttons {
       cursor: pointer;
@@ -40,32 +41,34 @@
   }
 
   .slick-header-column {
-    background: $table-head-color;
-    border-bottom: 1px solid $table-border-color;
-    border-right-color: $table-border-color;
-    border-top: 1px solid $table-border-color;
+    // background: $table-head-color;
+    $header-bg-color: yiq-contrast-color($body-bg, $gray-200, $gray-800);
+    background: $header-bg-color;
+    border-bottom: 1px solid $body-bg;
+    border-right-color: $body-bg;
+    border-top: 1px solid $body-bg;
     box-sizing: content-box;
-    color: color-yiq($table-head-color);
+    color: color-yiq($header-bg-color);
     cursor: pointer;
 
     .ui-state-hover {
       background: $table-hover-bg;
-      border-color: $table-border-color;
+      border-color: $body-bg;
       color: $body-color;
     }
 
     &:first-child {
-      border-left: 1px solid $table-border-color;
+      border-left: 1px solid $body-bg;
       padding-left: 3px;
     }
 
     &:last-child {
-      border-right-color: $table-border-color;
+      border-right-color: $body-bg;
     }
   }
 
   .slick-resizable-handle {
-    color: $table-border-color;
+    color: $body-bg;
   }
 }
 
@@ -142,8 +145,8 @@
 }
 
 .slick-cell {
-  border-bottom-color: $table-border-color;
-  border-right-color: $table-border-color;
+  border-bottom-color: yiq-contrast-color($body-bg, $gray-200, $gray-800);
+  border-right-color: $body-bg;
   box-sizing: border-box;
   padding: 0 .0625rem;
 
@@ -158,7 +161,7 @@
   }
 
   &:first-child {
-    border-left: 1px solid $table-border-color;
+    border-left: 1px solid $body-bg;
     padding-right: 1px;
   }
 
