@@ -45,6 +45,13 @@ os.histo.UniqueBinMethod = function() {
    * @protected
    */
   this.isDate = false;
+
+  /**
+   * The graph(s) using this BinMethod instance should show the bins with count = 0
+   * @type {boolean}
+   * @protected
+   */
+  this.showEmptyBins = false;
 };
 
 
@@ -327,6 +334,24 @@ os.histo.UniqueBinMethod.prototype.getIsDate = function() {
  */
 os.histo.UniqueBinMethod.prototype.setIsDate = function(value) {
   this.isDate = value;
+};
+
+
+/**
+ * Gets the showEmptyBins property
+ * @return {boolean} true if the empty bins should be displayed by the graphing system
+ */
+os.histo.UniqueBinMethod.prototype.getShowEmptyBins = function() {
+  return this.showEmptyBins;
+};
+
+
+/**
+ * Sets the showEmptyBins property
+ * @param {boolean} value toggle to show/hide the empty bins
+ */
+os.histo.UniqueBinMethod.prototype.setShowEmptyBins = function(value) {
+  this.showEmptyBins = value;
 };
 
 

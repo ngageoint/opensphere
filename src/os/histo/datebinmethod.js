@@ -68,6 +68,7 @@ os.histo.Labels = {
 os.histo.DateBinMethod = function() {
   os.histo.DateBinMethod.base(this, 'constructor');
   this.type = os.histo.DateBinMethod.TYPE;
+  this.showEmptyBins = false;
 
   /**
    * @type {os.histo.DateBinType}
@@ -470,6 +471,7 @@ os.histo.DateBinMethod.prototype.persist = function(opt_to) {
 
   opt_to['binType'] = this.getDateBinType();
   opt_to['binTypes'] = this.getDateBinTypes();
+  opt_to['showEmptyBins'] = this.getShowEmptyBins();
 
   return opt_to;
 };
@@ -486,6 +488,9 @@ os.histo.DateBinMethod.prototype.restore = function(config) {
     this.setDateBinType(binType);
   }
 
+  var show = config['showEmptyBins'];
+  this.setShowEmptyBins(show == true); // loose truthy
+ 
   var binTypes = /** @type {Array<string>|undefined} */ (config['binTypes']);
   if (binTypes) {
     this.setDateBinTypes(binTypes);
