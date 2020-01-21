@@ -497,4 +497,38 @@ describe('os.track', function() {
     metadataMap = track.get(os.track.TrackField.METADATA_MAP);
     expect(goog.object.getCount(metadataMap)).toBe(0);
   });
+
+  it('allows updates to a track properties', function() {
+    var features = generateFeatures(20, os.data.RecordField.TIME, Date.now());
+    var id = 'testId';
+    var modifiedId = "id2";
+    var name = 'Test Track';
+    var modifiedName = "New Track Name";
+
+    var track = os.track.createTrack({
+      features: features,
+      id: id,
+      name: name
+    });
+
+    expect(track instanceof os.feature.DynamicFeature).toBe(true);
+
+    var geometry = track.getGeometry();
+    expect(geometry).toBeDefined();
+
+    var coordinates = geometry.getCoordinates();
+    expect(coordinates.length).toBe(features.length);
+    verifyCoordinateSort(coordinates);
+
+    expect(track.getId()).toBe(id);
+    expect(track.get(os.Fields.ID)).toBe(id);
+    expect(track.get(os.Fields.LOWERCASE_NAME)).toBe(name);
+    expect(track.get(os.track.TrackField.METADATA_MAP)).toBeUndefined();
+
+    track.set(os.Fields.LOWERCASE_NAME, modifiedName);
+    track.setId(modifiedId);
+    expect(track.getId()).toBe(modifiedId);
+    expect(track.get(os.Fields.LOWERCASE_NAME)).toBe(modifiedName);
+  });
+
 });
