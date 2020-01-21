@@ -328,6 +328,7 @@ os.histo.NumericBinMethod.prototype.persist = function(opt_to) {
   opt_to['offset'] = this.offset;
   opt_to['min'] = this.min;
   opt_to['max'] = this.max;
+  opt_to['showEmptyBins'] = this.showEmptyBins;
 
   return opt_to;
 };
@@ -357,6 +358,11 @@ os.histo.NumericBinMethod.prototype.restore = function(config) {
   var max = /** @type {string|number|undefined} */ (config['max']);
   if (max != null && !isNaN(max)) {
     this.setMax(Number(max));
+  }
+
+  var show = /** @type {string|boolean|undefined} */ (config['showEmptyBins']);
+  if (show != null) {
+    this.setShowEmptyBins(show == true); // loose comparison rather than ===
   }
 };
 
