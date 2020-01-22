@@ -25,7 +25,6 @@ rules:
   no-duplicate-properties: 2
   no-empty-rulesets: 2
   no-extends: 2
-  no-invalid-hex: 2
   no-mergeable-selectors: 2
   no-misspelled-properties:
     - 2
@@ -107,6 +106,5 @@ rules:
   space-between-parens: 2
   space-around-operator: 2
 
-  # Final Items
-  trailing-semicolon: 2
+  # Final Item
   final-newline: 2
