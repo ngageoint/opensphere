@@ -80,7 +80,6 @@ rules:
   clean-import-paths: 2
   hex-length: 2
   hex-notation: 2
-  indentation: 2
   leading-zero: 2
   nesting-depth:
     - 2

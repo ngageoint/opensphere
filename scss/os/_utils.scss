@@ -547,14 +547,17 @@ $u-parent-resizer-count: 0;
 @include color-generator($theme-colors);
 
 
-// ----------- Generic max sizes. Use with caution only when absoluted needed ----------- //
+// ----------- Generic max sizes. Use with caution only when absolutely needed ----------- //
 $somesizes: () !default;
-$somesizes: map-merge((
+$somesizes: map-merge(
+  (
     0: 0%,
     25: 25%,
     50: 50%,
     75: 75%
-), $somesizes);
+  ),
+  $somesizes
+);
 
 // (u-mh-25: max-height: 25%)
 @each $prop, $abbrev in (width: w, height: h) {
