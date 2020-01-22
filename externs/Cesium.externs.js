@@ -3889,11 +3889,12 @@ Cesium.PerspectiveFrustum.prototype.computeCullingVolume = function(position, di
  * @param {!number} drawingBufferWidth
  * @param {!number} drawingBufferHeight
  * @param {!number} dist
+ * @param {!number} pixelRatio
  * @param {!Cesium.Cartesian2} result
  * @return {!Cesium.Cartesian2}
  */
 Cesium.PerspectiveFrustum.prototype.getPixelDimensions = function(drawingBufferWidth, drawingBufferHeight, dist,
-    result) {};
+  pixelRatio, result) {};
 
 
 
