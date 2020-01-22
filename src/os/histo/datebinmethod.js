@@ -169,7 +169,7 @@ os.histo.DateBinMethod.prototype.getTypeMax = function(opt_timestamp) {
       start.setUTCMonth(new Date(opt_timestamp).getUTCMonth(), 1);
       end.setUTCMonth(start.getUTCMonth() + 1, 1);
 
-      return Math.floor((end.getTime() - start.getTime()) / (60 * 60 * 1000));
+      return Math.floor((end.getTime() - start.getTime()) / (60 * 60 * 1000)) - 1; // goes from 0 to ((days * 24) - 1) hours
     case os.histo.DateBinType.HOUR_OF_YEAR:
       var start = new Date();
       var end = new Date();
@@ -180,6 +180,8 @@ os.histo.DateBinMethod.prototype.getTypeMax = function(opt_timestamp) {
       end.setUTCFullYear(start.getUTCFullYear() + 1, 0, 1);
 
       return Math.floor((end.getTime() - start.getTime()) / (60 * 60 * 1000));
+    case os.histo.DateBinType.MONTH_OF_YEAR:
+      return 11;
     default:
       return 0;
   }
