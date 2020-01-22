@@ -19,11 +19,9 @@ rules:
 
   # Disallows
   no-css-comments: 2
-  no-debug: 2
   no-disallowed-properties: 2
   no-duplicate-properties: 2
   no-empty-rulesets: 2
-  no-extends: 2
   no-mergeable-selectors: 2
   no-misspelled-properties:
     - 2
@@ -33,7 +31,6 @@ rules:
   no-url-domains: 2
   no-url-protocols: 2
   no-vendor-prefixes: 2
-  no-warn: 2
   property-units:
     - 2
     - global:

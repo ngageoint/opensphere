@@ -1,5 +1,6 @@
 {
     "rules": {
+        "at-rule-blacklist": ["debug", "extends", "warn"],
         "at-rule-no-unknown": null,
         "block-no-empty": true,
         "color-no-invalid-hex": true,
