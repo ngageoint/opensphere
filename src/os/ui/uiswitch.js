@@ -38,6 +38,7 @@ os.ui.uiSwitchDirective = function() {
     scope: {
       'items': '=',
       'directiveFunction': '=',
+      'options': '=?',
       'generic': '@',
       'alwaysSwitch': '@'
     },

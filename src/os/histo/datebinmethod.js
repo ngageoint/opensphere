@@ -490,7 +490,7 @@ os.histo.DateBinMethod.prototype.restore = function(config) {
 
   var show = config['showEmptyBins'];
   this.setShowEmptyBins(show == true); // loose truthy
- 
+
   var binTypes = /** @type {Array<string>|undefined} */ (config['binTypes']);
   if (binTypes) {
     this.setDateBinTypes(binTypes);
