@@ -3,6 +3,7 @@
         "at-rule-no-unknown": null,
         "block-no-empty": true,
         "color-no-invalid-hex": true,
+        "color-named": "never",
         "comment-no-empty": true,
         "declaration-block-no-duplicate-properties": [
             true,

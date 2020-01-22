@@ -18,7 +18,6 @@ rules:
   single-line-per-selector: 2
 
   # Disallows
-  no-color-keywords: 2
   no-css-comments: 2
   no-debug: 2
   no-disallowed-properties: 2
