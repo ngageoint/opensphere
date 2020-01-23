@@ -4,6 +4,7 @@ goog.require('goog.async.Delay');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
+goog.require('os.alert.AlertManager');
 goog.require('os.im.Importer');
 goog.require('os.object');
 goog.require('os.ui.im.ImportEvent');
@@ -64,6 +65,13 @@ plugin.places.PlacesManager = function() {
    * @private
    */
   this.savedEmpty_ = false;
+
+  /**
+   * If the manager failed to export Places.
+   * @type {boolean}
+   * @private
+   */
+  this.exportFailed_ = false;
 
   /**
    * Delay to dedupe saving data.
@@ -411,6 +419,15 @@ plugin.places.PlacesManager.prototype.onExportComplete_ = function(event) {
     this.saveContent_(output);
   } else {
     this.handleError_('Failed exporting places to browser storage. Content was empty.');
+
+    if (!this.exportFailed_) {
+      this.exportFailed_ = true;
+      var target = new goog.events.EventTarget();
+      var msg = 'There was a problem saving your Places to browser storage. ' +
+          'Places will no longer save during the current session.' +
+          '<br><br><b>You should export your Places to a file to ensure that they are not lost on refresh.</b>';
+      os.alert.AlertManager.getInstance().sendAlert(msg, undefined, undefined, undefined, target);
+    }
   }
 };
 
