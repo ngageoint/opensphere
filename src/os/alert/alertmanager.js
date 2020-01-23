@@ -58,7 +58,7 @@ class AlertManager extends goog.events.EventTarget {
 
   /**
    * Maximum number of alerts to be saved.
-   * @return {number}
+   * @type {number}
    */
   static get MAX_SAVED() {
     return maxSaved_;
