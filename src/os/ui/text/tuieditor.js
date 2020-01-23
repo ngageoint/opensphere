@@ -466,6 +466,13 @@ os.ui.text.TuiEditorCtrl.prototype.setTargetBlankPropertyInLinks = function() {
  * Codemirror has the same issues that it did in simpleMDE with initalization.
  * Codemirror issue #798. when its put in a textarea with display none it needs a refresh
  * After Codemirror is added, call refresh on it
+ *
+ * Another issue: this broke at some point. The line that reads codeMirror['0'].innerText != 'xxxxxxxxxx'
+ * had codeMirror.length instead. Turns out codeMirror.length is always defined no matter what.
+ * But it will say 'xxxxxxxxxx' for innerText unless it is actually loaded.
+ * Note that for some reason this issue is speed sensitive.
+ * This is some borked thing deep in CodeMirror that is screwing things up.
+ *
  * Commented on tuieditor issue #191
  * @private
  */
@@ -473,12 +480,14 @@ os.ui.text.TuiEditorCtrl.prototype.fixCodemirrorInit_ = function() {
   if (this.element) {
     this.cmFixAttempt_ = this.cmFixAttempt_ ? this.cmFixAttempt_ + 1 : 1;
     var codeMirror = this.element.find('.te-md-container .CodeMirror');
-    if (this['tuiEditor'] && codeMirror.length) {
-      this.timeout_(function() {
-        this['tuiEditor'].mdEditor.cm.refresh();
-      }.bind(this));
-    } else if (this.cmFixAttempt_ < 50) {
-      goog.Timer.callOnce(this.fixCodemirrorInit_, 250, this);
+    if (codeMirror.length) {
+      if (this['tuiEditor'] && codeMirror['0'].innerText != 'xxxxxxxxxx') {
+        this.timeout_(function() {
+          this['tuiEditor'].mdEditor.cm.refresh();
+        }.bind(this));
+      } else if (this.cmFixAttempt_ < 50) {
+        goog.Timer.callOnce(this.fixCodemirrorInit_, 250, this);
+      }
     }
   }
 };
