@@ -507,3 +507,61 @@ os.histo.DateBinMethod.prototype.exportAsFilter = function(bins) {
   // don't create filters by date because they will conflict with the application date control
   return null;
 };
+
+
+/**
+ * @inheritDoc
+ */
+os.histo.DateBinMethod.prototype.getConfigForBin = function(bins) {
+  var result = os.histo.DateBinMethod.base(this, 'getConfigForBin', bins);
+  if (result == null) return result;
+
+  var max1 = this.getTypeMax(result['range'][0]);
+  var max2 = this.getTypeMax(result['range'][1]);
+
+  if (max1 != 0 || max2 != 0) {
+    // when the range is a logical time period, e.g. Day of Week, Hour of Day, etc
+    result['range'] = [0, (max2 > max1 ? max2 : max1)];
+    result['step'] = 1;
+    result['binCountAll'] = ((result['range'][1] - result['range'][0]) / result['step']) + 1;
+  } else {
+    // when the range is a specific time period, e.g. Jan 3rd thru Jan 17th
+    var type = this.getDateBinType();
+    var min = new Date(result['range'][0]);
+    var max = new Date(result['range'][1]);
+    var floor = 'sec';
+    var step = 1000; // 1K milliseconds = 1 second
+    switch (type) {
+      case os.histo.DateBinType.MINUTE:
+        floor = 'min';
+        step = step * 60;
+        break;
+      case os.histo.DateBinType.HOUR:
+        floor = 'hour';
+        step = step * 60 * 60;
+        break;
+      case os.histo.DateBinType.DAY:
+        floor = 'day';
+        step = step * 60 * 60 * 24;
+        break;
+      case os.histo.DateBinType.WEEK:
+        floor = 'week';
+        step = step * 60 * 60 * 24 * 7;
+        break;
+      case os.histo.DateBinType.MONTH:
+        floor = 'month';
+        step = step * 60 * 60 * 24 * 31; // approximate... TODO
+        break;
+      case os.histo.DateBinType.YEAR:
+        floor = 'year';
+        step = step * 60 * 60 * 24 * 365; // approximate... only called if the bin doesn't exist
+        break;
+      default:
+        break;
+    }
+    result['range'] = [os.time.floor(min, floor).getTime(), os.time.floor(max, floor).getTime()];
+    result['step'] = step;
+    result['binCountAll'] = ((result['range'][1] - result['range'][0]) / result['step']) + 1;
+  }
+  return result;
+};

@@ -374,6 +374,25 @@ os.histo.UniqueBinMethod.prototype.getFilterForBin = function(bin) {
 
 
 /**
+ * Get the range, step size, etc for the bins made by this method.
+ *
+ * @param {!Array<os.histo.Bin>} bins The bins made using this bin method
+ * @return {any|null} The config
+ * @public
+ */
+os.histo.UniqueBinMethod.prototype.getConfigForBin = function(bins) {
+  if (!bins || bins.length == 0) return null;
+  var range = [bins[0]['key'], bins[bins.length - 1]['key']];
+  var step = 1; // don't allow divide by 0 errors
+  return {
+    'range': range,
+    'step': step,
+    'binCount': bins.length,
+    'binCountAll': ((range[1] - range[0]) / step) + 1 // +1 since it needs a bin for the top and bottom entry
+  };
+};
+
+/**
  * Test if a value is contained within a set of values. Avoided ol.array.includes to prevent an extra function call.
  *
  * @param {!Array<string>} values
