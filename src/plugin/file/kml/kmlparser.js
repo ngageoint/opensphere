@@ -577,6 +577,7 @@ plugin.file.kml.KMLParser.prototype.handleZipEntries = function(entries) {
   var firstEntry = null;
   var mainKml = /(doc|index)\.kml$/i;
   var anyKml = /\.kml$/i;
+  var collada = /\.dae$/i;
   var img = /\.(png|jpg|jpeg|gif|bmp|do)$/i;
 
   for (var i = 0, n = entries.length; i < n; i++) {
@@ -599,6 +600,10 @@ plugin.file.kml.KMLParser.prototype.handleZipEntries = function(entries) {
 
       entry.getData(new zip.Data64URIWriter('image/' + result[1]),
           this.processZipImage_.bind(this, entry.filename));
+    } else if (collada.test(entry.filename)) {
+      this.kmzImagesRemaining_++;
+      entry.getData(new zip.TextWriter(),
+          this.processZipCollada_.bind(this, entry.filename));
     }
   }
 
@@ -661,6 +666,20 @@ plugin.file.kml.KMLParser.prototype.processZipImage_ = function(filename, uri) {
   }
 };
 
+/**
+ * @param {*} filename
+ * @param {*} content
+ * @private
+ */
+plugin.file.kml.KMLParser.prototype.processZipCollada_ = function(filename, content) {
+  if (typeof filename === 'string' && typeof uri === 'string') {
+    this.assetMap_[filename] = content;
+    this.kmzImagesRemaining_--;
+  } else {
+    goog.log.error(this.log_, 'There was a problem unzipping the KMZ!');
+    this.onError();
+  }
+};
 
 /**
  * @param {string} filename
