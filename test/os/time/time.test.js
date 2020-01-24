@@ -237,4 +237,44 @@ describe('os.time', function() {
     expect(os.time.humanize(moment.duration(50, 'hours'))).toBe('2 days, 2 hours');
     expect(os.time.humanize(moment.duration(2883, 'minutes'))).toBe('2 days, 3 minutes');
   });
+
+  it('should get the step between two dates properly', function() {
+    const hour_ = (1000 * 60 * 60);
+    const day_ = (1000 * 60 * 60 * 24);
+    const week_ = (1000 * 60 * 60 * 24 * 7);
+
+    var d1 = new Date(2000, 1, 1, 23, 30, 0, 99); // leap year
+    var d2 = new Date(2001, 1, 1, 23, 30, 0, 99);
+    var d3 = new Date(2004, 1, 1, 23, 30, 0, 99); // leap year
+    var d4 = new Date(2005, 1, 1, 23, 30, 0, 99);
+    var d5 = new Date(2100, 1, 1, 23, 30, 0, 99); // special-case non-leap year
+    var d6 = new Date(2016, 11, 31, 0, 0, 0, 0); // leap second
+
+    // inconsistent number of milliseconds per month / year
+    expect(os.time.step(d1, os.time.Duration.YEAR, 1)).toBe(366 * day_);
+    expect(os.time.step(d2, os.time.Duration.YEAR, 1)).toBe(365 * day_);
+    expect(os.time.step(d1, os.time.Duration.YEAR, 1)).toBe(d2.getTime() - d1.getTime());
+    expect(os.time.step(d1, os.time.Duration.YEAR, 4)).toBe(d3.getTime() - d1.getTime());
+    expect(os.time.step(d1, os.time.Duration.YEAR, 5)).toBe(d4.getTime() - d1.getTime());
+    expect(os.time.step(d2, os.time.Duration.YEAR, 3)).toBe(d3.getTime() - d2.getTime());
+    expect(os.time.step(d3, os.time.Duration.YEAR, 1)).toBe(d4.getTime() - d3.getTime());
+    expect(os.time.step(d3, os.time.Duration.MONTH, 1)).toBe(29 * day_);
+    expect(os.time.step(d3, os.time.Duration.MONTH, 2)).toBe(60 * day_); // 29 + 31
+    expect(os.time.step(d3, os.time.Duration.MONTH, 3)).toBe(90 * day_); // 29 + 31 + 30
+    expect(os.time.step(d4, os.time.Duration.MONTH, 1)).toBe(28 * day_);
+    expect(os.time.step(d5, os.time.Duration.MONTH, 1)).toBe(28 * day_);
+
+    // inconsistent number of milliseconds per day... not supported by JavaScript Date
+    expect(os.time.step(d6, os.time.Duration.DAY, 1)).toBe(day_); // + 1000);
+
+    // consistent number of milliseconds per hour, day, week
+    expect(os.time.step(d1, os.time.Duration.HOURS, 1)).toBe(hour_);
+    expect(os.time.step(d1, os.time.Duration.DAY, 1)).toBe(day_);
+    expect(os.time.step(d1, os.time.Duration.WEEK, 1)).toBe(week_);
+
+    var scale = 3;
+    expect(os.time.step(d1, os.time.Duration.HOURS, scale)).toBe(scale * hour_);
+    expect(os.time.step(d1, os.time.Duration.DAY, scale)).toBe(scale * day_);
+    expect(os.time.step(d1, os.time.Duration.WEEK, scale)).toBe(scale * week_);
+  });
 });

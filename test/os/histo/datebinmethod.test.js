@@ -354,4 +354,78 @@ describe('os.histo.DateBinMethod', function() {
     result = method.getBinKey('123abc');
     expect(result).toEqual('123abc');
   });
+
+
+  it('should provide bins statistics', function() {
+    var method = new os.histo.DateBinMethod();
+    method.setField('field');
+    method.setDateBinType(os.histo.DateBinType.MONTH);
+
+    var minDate = new Date(2020, 0, 3); // Jan 3, 2020 >> Jan 2020
+    var maxDate = new Date(2030, 0, 15); // Jan 15, 2030 >> Jan 2030
+    var min = os.time.floor(minDate, 'month').getTime();
+    var max = os.time.floor(maxDate, 'month').getTime();
+    var bins = [];
+    var bin;
+
+    bin = new os.data.histo.ColorBin('#000');
+    bin['key'] = min;
+    bin['label'] = method.getLabelForKey(min);
+    bin['id'] = bin['label'];
+    bin['series'] = '';
+    bin['count'] = 0;
+    bin['sel'] = false;
+    bin['highlight'] = false;
+    bins.push(bin);
+
+    bin = new os.data.histo.ColorBin('#000');
+    bin['key'] = max;
+    bin['label'] = method.getLabelForKey(max);
+    bin['id'] = bin['label'];
+    bin['series'] = '';
+    bin['count'] = 0;
+    bin['sel'] = false;
+    bin['highlight'] = false;
+    bins.push(bin);
+
+    var stats = method.getStatsForBin(bins);
+    expect(stats.range[0]).toBe(min);
+    expect(stats.range[1]).toBe(max);
+    expect(stats.binCount).toBe(2);
+    // Note: see sourcemodel.js > generateEmptyBins_() for example of how to use MAGIC_MONTH_MILLIS and os.time.step()
+    expect(stats.binCountAll).toBe(121);
+
+    minDate = new Date(2019, 1, 12); // Feb 12 >> Feb
+    maxDate = new Date(2019, 2, 1); // Mar 1 >> Mar
+    min = os.time.floor(minDate, 'month').getTime();
+    max = os.time.floor(maxDate, 'month').getTime();
+    bins = [];
+
+    bin = new os.data.histo.ColorBin('#000');
+    bin['key'] = min;
+    bin['label'] = method.getLabelForKey(min);
+    bin['id'] = bin['label'];
+    bin['series'] = '';
+    bin['count'] = 0;
+    bin['sel'] = false;
+    bin['highlight'] = false;
+    bins.push(bin);
+
+    bin = new os.data.histo.ColorBin('#000');
+    bin['key'] = max;
+    bin['label'] = method.getLabelForKey(max);
+    bin['id'] = bin['label'];
+    bin['series'] = '';
+    bin['count'] = 0;
+    bin['sel'] = false;
+    bin['highlight'] = false;
+    bins.push(bin);
+
+    var stats = method.getStatsForBin(bins);
+    expect(stats.range[0]).toBe(min);
+    expect(stats.range[1]).toBe(max);
+    expect(stats.binCount).toBe(2);
+    // Note: see sourcemodel.js > generateEmptyBins_() for example of how to use MAGIC_MONTH_MILLIS and os.time.step()
+    expect(stats.binCountAll).toBe(2);
+  });
 });

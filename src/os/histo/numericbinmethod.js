@@ -328,7 +328,6 @@ os.histo.NumericBinMethod.prototype.persist = function(opt_to) {
   opt_to['offset'] = this.offset;
   opt_to['min'] = this.min;
   opt_to['max'] = this.max;
-  opt_to['showEmptyBins'] = this.showEmptyBins;
 
   return opt_to;
 };
@@ -358,11 +357,6 @@ os.histo.NumericBinMethod.prototype.restore = function(config) {
   var max = /** @type {string|number|undefined} */ (config['max']);
   if (max != null && !isNaN(max)) {
     this.setMax(Number(max));
-  }
-
-  var show = /** @type {string|boolean|undefined} */ (config['showEmptyBins']);
-  if (show != null) {
-    this.setShowEmptyBins(show == true); // loose comparison rather than ===
   }
 };
 
@@ -459,11 +453,11 @@ os.histo.NumericBinMethod.prototype.getFilterForRange_ = function(range) {
 /**
  * @inheritDoc
  */
-os.histo.NumericBinMethod.prototype.getConfigForBin = function(bins) {
-  var result = os.histo.NumericBinMethod.base(this, 'getConfigForBin', bins);
+os.histo.NumericBinMethod.prototype.getStatsForBin = function(bins) {
+  var result = os.histo.NumericBinMethod.base(this, 'getStatsForBin', bins);
   if (result != null) {
-    result['step'] = this.getWidth() || 1; // don't allow divide by 0 errors
-    result['binCountAll'] = ((result['range'][1] - result['range'][0]) / result['step']) + 1;
+    result.step = this.getWidth() || 1; // don't allow divide by 0 errors
+    result.binCountAll = ((result.range[1] - result.range[0]) / result.step) + 1;
   }
   return result;
 };
