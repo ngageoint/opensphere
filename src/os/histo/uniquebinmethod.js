@@ -198,6 +198,7 @@ os.histo.UniqueBinMethod.prototype.persist = function(opt_to) {
   opt_to['field'] = this.getField();
   opt_to['isDate'] = this.getIsDate();
   opt_to['arrayKeys'] = this.getArrayKeys();
+  opt_to['showEmptyBins'] = this.getShowEmptyBins();
 
   return opt_to;
 };
@@ -217,6 +218,11 @@ os.histo.UniqueBinMethod.prototype.restore = function(config) {
   var arrayKeys = /** @type {boolean|string|undefined} */ (config['arrayKeys']);
   if (typeof arrayKeys === 'boolean' || typeof arrayKeys === 'string') {
     this.setArrayKeys(arrayKeys);
+  }
+
+  var show = /** @type {string|boolean|undefined} */ (config['showEmptyBins']);
+  if (show != null) {
+    this.setShowEmptyBins(show == true); // loose comparison rather than ===
   }
 };
 
@@ -377,19 +383,19 @@ os.histo.UniqueBinMethod.prototype.getFilterForBin = function(bin) {
  * Get the range, step size, etc for the bins made by this method.
  *
  * @param {!Array<os.histo.Bin>} bins The bins made using this bin method
- * @return {any|null} The config
+ * @return {osx.histo.BinMethodStats|null} The config
  * @public
  */
-os.histo.UniqueBinMethod.prototype.getConfigForBin = function(bins) {
+os.histo.UniqueBinMethod.prototype.getStatsForBin = function(bins) {
   if (!bins || bins.length == 0) return null;
   var range = [bins[0]['key'], bins[bins.length - 1]['key']];
   var step = 1; // don't allow divide by 0 errors
-  return {
-    'range': range,
-    'step': step,
-    'binCount': bins.length,
-    'binCountAll': ((range[1] - range[0]) / step) + 1 // +1 since it needs a bin for the top and bottom entry
-  };
+  return /** @type {osx.histo.BinMethodStats} */ ({
+    range: range,
+    step: step,
+    binCount: bins.length,
+    binCountAll: ((range[1] - range[0]) / step) + 1 // +1 since it needs a bin for the top and bottom entry
+  });
 };
 
 /**
