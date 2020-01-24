@@ -472,10 +472,15 @@ $u-parent-resizer-count: 0;
   background-color: $body-bg;
 }
 
+.u-text-bg-contrast {
+  color: yiq-contrast-color($body-bg, $dark, $light);
+}
+
 .u-bg-body-offset,
 .u-bg-body-offset__on-hover:hover {
   background-color: $u-theme-variables--bg-offset;
 }
+
 
 .u-btn-body-offset {
   @include button-variant($u-theme-variables--bg-offset, $u-theme-variables--bg-offset);
