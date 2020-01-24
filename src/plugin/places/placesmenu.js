@@ -335,42 +335,54 @@ plugin.places.menu.mapDispose = function() {
  */
 plugin.places.menu.spatialSetup = function() {
   var menu = os.ui.menu.SPATIAL;
-  if (menu) {
+
+  if (menu && !menu.getRoot().find(plugin.places.menu.GROUP_LABEL)) {
     var root = menu.getRoot();
-    var group = root.find(os.ui.menu.spatial.Group.TOOLS);
-    goog.asserts.assert(group, 'Group "' + os.ui.menu.spatial.Group.TOOLS + '" should exist! Check spelling?');
-
-    if (!group.find(plugin.places.menu.EventType.SAVE_TO)) {
-      group.addChild({
-        label: 'Create Place...',
-        eventType: plugin.places.menu.EventType.SAVE_TO,
-        tooltip: 'Creates a new place from the feature',
-        icons: ['<i class="fa fa-fw ' + plugin.places.Icon.PLACEMARK + '"></i>'],
-        beforeRender: plugin.places.menu.visibleIfCanSaveSpatial,
-        handler: plugin.places.menu.saveSpatialToPlaces,
-        sort: 100
-      });
-
-      group.addChild({
-        label: 'Edit Place',
-        eventType: plugin.places.menu.EventType.EDIT_PLACEMARK,
-        tooltip: 'Edit the saved place',
-        icons: ['<i class="fa fa-fw fa-pencil"></i>'],
-        beforeRender: plugin.places.menu.visibleIfIsPlace,
-        handler: plugin.places.menu.onSpatialEdit_,
-        sort: 110
-      });
-
-      group.addChild({
-        label: 'Create Text Box...',
-        eventType: plugin.places.menu.EventType.SAVE_TO_ANNOTATION,
-        tooltip: 'Creates a new place with a text box',
-        icons: ['<i class="fa fa-fw ' + plugin.places.Icon.ANNOTATION + '"></i>'],
-        beforeRender: plugin.places.menu.visibleIfCanSaveSpatial,
-        handler: plugin.places.menu.saveSpatialToAnnotation,
-        sort: 120
-      });
-    }
+    root.addChild({
+      label: plugin.places.menu.GROUP_LABEL,
+      type: os.ui.menu.MenuItemType.GROUP,
+      sort: 50,
+      children: [
+        {
+          label: 'Create Place...',
+          eventType: plugin.places.menu.EventType.SAVE_TO,
+          tooltip: 'Creates a new place from the feature',
+          icons: ['<i class="fa fa-fw ' + plugin.places.Icon.PLACEMARK + '"></i>'],
+          beforeRender: plugin.places.menu.visibleIfCanSaveSpatial,
+          handler: plugin.places.menu.saveSpatialToPlaces,
+          metricKey: os.metrics.Places.ADD_PLACE,
+          sort: 100
+        }, {
+          label: 'Edit Place',
+          eventType: plugin.places.menu.EventType.EDIT_PLACEMARK,
+          tooltip: 'Edit the saved place',
+          icons: ['<i class="fa fa-fw fa-pencil"></i>'],
+          beforeRender: plugin.places.menu.visibleIfIsPlace,
+          handler: plugin.places.menu.onSpatialEdit_,
+          sort: 110
+        },
+        {
+          label: 'Create Text Box...',
+          eventType: plugin.places.menu.EventType.SAVE_TO_ANNOTATION,
+          tooltip: 'Creates a new place with a text box',
+          icons: ['<i class="fa fa-fw ' + plugin.places.Icon.ANNOTATION + '"></i>'],
+          beforeRender: plugin.places.menu.visibleIfCanSaveSpatial,
+          handler: plugin.places.menu.saveSpatialToAnnotation,
+          metricKey: os.metrics.Places.ADD_ANNOTATION,
+          sort: 120
+        },
+        {
+          label: 'Quick Add Places...',
+          eventType: plugin.places.menu.EventType.QUICK_ADD_PLACES,
+          tooltip: 'Quickly add places to the selected folder',
+          icons: ['<i class="fa fa-fw ' + plugin.places.Icon.QUICK_ADD + '"></i>'],
+          beforeRender: plugin.places.menu.visibleIfCanSaveSpatial,
+          handler: plugin.places.menu.quickAddFromSpatial,
+          metricKey: os.metrics.Places.QUICK_ADD_PLACES,
+          sort: 120
+        }
+      ]
+    });
   }
 };
 
@@ -684,6 +696,20 @@ plugin.places.menu.quickAddFromCoordinate = function(event) {
     event.stopPropagation();
 
     plugin.places.ui.QuickAddPlacesCtrl.launch(undefined, new ol.geom.Point(context));
+  }
+};
+
+
+/**
+ * Launch the quick add dialog with an initial seed point.
+ *
+ * @param {os.ui.menu.MenuEvent<Object>} event The menu event.
+ */
+plugin.places.menu.quickAddFromSpatial = function(event) {
+  var context = event.getContext();
+  if (context) {
+    var geom = /** @type {ol.geom.SimpleGeometry} */ (context['geometry']);
+    plugin.places.ui.QuickAddPlacesCtrl.launch(undefined, geom);
   }
 };
 
