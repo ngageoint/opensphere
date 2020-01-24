@@ -31,6 +31,7 @@ goog.require('os.ui.file.kml');
 goog.require('os.xml');
 goog.require('plugin.file.kml');
 goog.require('plugin.file.kml.KMLField');
+goog.require('plugin.file.kml.KMLModelParser');
 goog.require('plugin.file.kml.tour.FlyTo');
 goog.require('plugin.file.kml.tour.Tour');
 goog.require('plugin.file.kml.tour.TourControl');
@@ -1129,6 +1130,8 @@ plugin.file.kml.KMLParser.prototype.readPlacemark_ = function(el) {
   if (!object) {
     return null;
   }
+
+  plugin.file.kml.parseModel(el, object);
 
   // set geometry fields on the object
   var geometry = /** @type {ol.geom.Geometry|undefined} */ (object['geometry']);
