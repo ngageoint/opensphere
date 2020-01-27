@@ -672,7 +672,7 @@ plugin.file.kml.KMLParser.prototype.processZipImage_ = function(filename, uri) {
  * @private
  */
 plugin.file.kml.KMLParser.prototype.processZipCollada_ = function(filename, content) {
-  if (typeof filename === 'string' && typeof uri === 'string') {
+  if (typeof filename === 'string' && typeof content === 'string') {
     this.assetMap_[filename] = content;
     this.kmzImagesRemaining_--;
   } else {
