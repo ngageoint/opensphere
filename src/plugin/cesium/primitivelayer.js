@@ -105,7 +105,7 @@ plugin.cesium.PrimitiveLayer.prototype.removePrimitive = function() {
 plugin.cesium.PrimitiveLayer.prototype.getExtent = function() {
   var primitive = this.getPrimitive();
 
-  if (primitive.ready && primitive.boundingSphere) {
+  if (primitive && primitive.ready && primitive.boundingSphere) {
     var sphere = primitive.boundingSphere;
     var angle = Math.atan2(sphere.radius, Cesium.Cartesian3.magnitude(sphere.center));
     var cartographicCenter = Cesium.Cartographic.fromCartesian(sphere.center);
