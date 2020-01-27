@@ -19,7 +19,7 @@ plugin.file.kml.parseModel = function(el, object) {
         } else if (modelElement.children[j].localName == 'Scale') {
           plugin.file.kml.parseScale(modelElement.children[j], modelObject);
         } else if (modelElement.children[j].localName == 'altitudeMode') {
-          modelObject['altitudeMode'] = modelElement.children[j].textContent;
+          this.parseAltMode(modelElement.children[j], modelObject);
         } else if (modelElement.children[j].localName == 'Link') {
           this.parseLink(el, modelElement.children[j], modelObject);
         }
@@ -28,6 +28,23 @@ plugin.file.kml.parseModel = function(el, object) {
       break;
     }
   }
+};
+
+/**
+ * Parses the alitude mode element of the model.
+ *
+ * @param {Element} el A model xml element.
+ * @param {Object} object The object to add the link information to.
+ */
+plugin.file.kml.parseAltMode = function(el, object) {
+  var altModeText = el.textContent;
+
+  var altMode = os.webgl.AltitudeMode.CLAMP_TO_GROUND;
+  if (altModeText == 'relativeToGround') {
+    altMode = os.webgl.AltitudeMode.RELATIVE_TO_GROUND;
+  }
+
+  object['altitudeMode'] = altMode;
 };
 
 /**
