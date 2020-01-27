@@ -1,0 +1,79 @@
+goog.provide('plugin.file.kml.KMLModelParser');
+/**
+ * Parses a KML model element that may be contained in a placemark element.
+ *
+ * @param {Element} el A placemark xml element.
+ * @param {Object} object The object to add the model information to.
+ */
+plugin.file.kml.parseModel = function(el, object) {
+  for (var i = el.children.length - 1; i >= 0; i--) {
+    if (el.children[i].localName == 'Model') {
+      var modelElement = el.children[i];
+      var modelObject = {};
+      for (var j = 0; j < modelElement.children.length; j++) {
+        if (modelElement.children[j].localName == 'Location') {
+          plugin.file.kml.parseLocation(modelElement.children[j], modelObject);
+        } else if (modelElement.children[j].localName == 'Orientation') {
+          plugin.file.kml.parseOrientation(modelElement.children[j], modelObject);
+        } else if (modelElement.children[j].localName == 'Scale') {
+          plugin.file.kml.parseScale(modelElement.children[j], modelObject);
+        } else if (modelElement.children[j].localName == 'altitudeMode') {
+          modelObject['altitudeMode'] = modelElement.children[j].textContent;
+        }
+      }
+      object['Model'] = modelObject;
+      break;
+    }
+  }
+};
+/**
+ * Parses the location element of the model.
+ *
+ * @param {Element} el A model xml element.
+ * @param {Object} object The object to add the location information to.
+ */
+plugin.file.kml.parseLocation = function(el, object) {
+  for (var i = 0; i < el.children.length; i++) {
+    if (el.children[i].localName == 'longitude') {
+      object['longitude'] = parseFloat(el.children[i].textContent);
+    } else if (el.children[i].localName == 'latitude') {
+      object['latitude'] = parseFloat(el.children[i].textContent);
+    } else if (el.children[i].localName == 'altitude') {
+      object['altitude'] = parseFloat(el.children[i].textContent);
+    }
+  }
+};
+/**
+ * Parses the orientation element of the model.
+ *
+ * @param {Element} el A model xml element.
+ * @param {Object} object The object to add the orientation information to.
+ */
+plugin.file.kml.parseOrientation = function(el, object) {
+  for (var i = 0; i < el.children.length; i++) {
+    if (el.children[i].localName == 'heading') {
+      object['heading'] = parseFloat(el.children[i].textContent);
+    } else if (el.children[i].localName == 'tilt') {
+      object['tilt'] = parseFloat(el.children[i].textContent);
+    } else if (el.children[i].localName == 'roll') {
+      object['roll'] = parseFloat(el.children[i].textContent);
+    }
+  }
+};
+/**
+ * Parses the scale element of the model.
+ *
+ * @param {Element} el A model xml element.
+ * @param {Object} object The object to add the scale information to.
+ */
+plugin.file.kml.parseScale = function(el, object) {
+  for (var i = 0; i < el.children.length; i++) {
+    if (el.children[i].localName == 'x') {
+      object['scaleX'] = parseFloat(el.children[i].textContent);
+    } else if (el.children[i].localName == 'y') {
+      object['scaleY'] = parseFloat(el.children[i].textContent);
+    } else if (el.children[i].localName == 'z') {
+      object['scaleZ'] = parseFloat(el.children[i].textContent);
+    }
+  }
+};
