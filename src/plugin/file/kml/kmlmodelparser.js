@@ -24,6 +24,17 @@ plugin.file.kml.parseModel = function(el, object) {
           this.parseLink(el, modelElement.children[j], modelObject);
         }
       }
+
+      const keys = Object.keys(el.assetMap);
+      var imagesObject = {};
+      for (var k = 0; k < keys.length; k++) {
+        var key = keys[k];
+        if (!key.endsWith('.dae')) {
+          imagesObject[key] = el.assetMap[key];
+        }
+      }
+
+      modelObject['Images'] = imagesObject;
       object['Model'] = modelObject;
       break;
     }
