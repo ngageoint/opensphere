@@ -97,3 +97,26 @@ plugin.cesium.PrimitiveLayer.prototype.removePrimitive = function() {
 
   os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
 };
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.PrimitiveLayer.prototype.getExtent = function() {
+  var primitive = this.getPrimitive();
+
+  if (primitive && primitive.ready && primitive.boundingSphere) {
+    var sphere = primitive.boundingSphere;
+    var angle = Math.atan2(sphere.radius, Cesium.Cartesian3.magnitude(sphere.center));
+    var cartographicCenter = Cesium.Cartographic.fromCartesian(sphere.center);
+    var extent = [
+      os.geo.R2D * (cartographicCenter.longitude - angle),
+      os.geo.R2D * (cartographicCenter.latitude - angle),
+      os.geo.R2D * (cartographicCenter.longitude + angle),
+      os.geo.R2D * (cartographicCenter.latitude + angle)];
+
+    return ol.proj.transformExtent(extent, os.proj.EPSG4326, os.map.PROJECTION);
+  }
+
+  return undefined;
+};
