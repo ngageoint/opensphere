@@ -476,11 +476,20 @@ $u-parent-resizer-count: 0;
   color: yiq-contrast-color($body-bg, $dark, $light);
 }
 
-.u-bg-body-offset,
-.u-bg-body-offset__on-hover:hover {
+.u-bg-body-offset {
   background-color: $u-theme-variables--bg-offset;
 }
 
+.u-bg-body-offset__on-hover:hover {
+  background-color: $u-theme-variables--bg-offset;
+  border-color: lighten($primary, 10%) !important;
+}
+
+.u-bg-body-inset,
+.u-bg-body-inset__on-hover:hover {
+  background: yiq-contrast-color($body-bg, $light, darken($body-bg, 3%));
+  box-shadow: yiq-contrast-color($body-bg, rgba($black, .1), rgba($black, .4)) 0 .1rem .3rem inset;
+}
 
 .u-btn-body-offset {
   @include button-variant($u-theme-variables--bg-offset, $u-theme-variables--bg-offset);
