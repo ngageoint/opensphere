@@ -1,4 +1,5 @@
 goog.provide('plugin.file.kml.KMLModelParser');
+
 /**
  * Parses a KML model element that may be contained in a placemark element.
  *
@@ -19,6 +20,8 @@ plugin.file.kml.parseModel = function(el, object) {
           plugin.file.kml.parseScale(modelElement.children[j], modelObject);
         } else if (modelElement.children[j].localName == 'altitudeMode') {
           modelObject['altitudeMode'] = modelElement.children[j].textContent;
+        } else if (modelElement.children[j].localName == 'Link') {
+          this.parseLink(el, modelElement.children[j], modelObject);
         }
       }
       object['Model'] = modelObject;
@@ -26,6 +29,20 @@ plugin.file.kml.parseModel = function(el, object) {
     }
   }
 };
+
+/**
+ * Parses the link element of the model.
+ *
+ * @param {Element} placemark The placemark element
+ * @param {Element} el A model xml element.
+ * @param {Object} object The object to add the link information to.
+ */
+plugin.file.kml.parseLink = function(placemark, el, object) {
+  var colladaFileName = el.children[0].textContent;
+  var colladaData = placemark.assetMap[colladaFileName];
+  object['collada'] = colladaData;
+};
+
 /**
  * Parses the location element of the model.
  *
@@ -43,6 +60,7 @@ plugin.file.kml.parseLocation = function(el, object) {
     }
   }
 };
+
 /**
  * Parses the orientation element of the model.
  *
@@ -60,6 +78,7 @@ plugin.file.kml.parseOrientation = function(el, object) {
     }
   }
 };
+
 /**
  * Parses the scale element of the model.
  *
