@@ -44,6 +44,12 @@ const createLabel = (feature, geometry, style, context) => {
  * @type {UpdateFunction}
  */
 const updateLabel = (feature, geometry, style, context, label) => {
+  const isLabelInstance = label instanceof Cesium.Label;
+
+  if (isLabelInstance && label.isDestroyed()) {
+    return false;
+  }
+
   const geom = style.getGeometry();
   if (geom instanceof ol.geom.Geometry) {
     geometry = /** @type {!ol.geom.Geometry} */ (geom);
@@ -71,7 +77,7 @@ const updateLabel = (feature, geometry, style, context, label) => {
     label.eyeOffset = context.labelEyeOffset;
   }
 
-  if (label instanceof Cesium.Label) {
+  if (isLabelInstance) {
     // mark as updated so it isn't deleted
     label.dirty = false;
   }

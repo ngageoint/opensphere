@@ -8,6 +8,7 @@ const EllipseConverter = goog.require('plugin.cesium.sync.EllipseConverter');
 const GeometryCollectionConverter = goog.require('plugin.cesium.sync.GeometryCollectionConverter');
 const LabelConverter = goog.require('plugin.cesium.sync.LabelConverter');
 const LineStringConverter = goog.require('plugin.cesium.sync.LineStringConverter');
+const MultiDynamicLineStringConverter = goog.require('plugin.cesium.sync.MultiDynamicLineStringConverter');
 const MultiLineStringConverter = goog.require('plugin.cesium.sync.MultiLineStringConverter');
 const MultiPointConverter = goog.require('plugin.cesium.sync.MultiPointConverter');
 const MultiPolygonConverter = goog.require('plugin.cesium.sync.MultiPolygonConverter');
@@ -56,6 +57,16 @@ GeometryCollectionConverter.setConvertFunction(convertGeometry);
 
 
 /**
+ * @type {Object<string, Converter>}
+ */
+const dynamicConverters = {
+  ...converters,
+  [GeometryType.LINE_STRING]: DynamicLineStringConverter,
+  [GeometryType.MULTI_LINE_STRING]: MultiDynamicLineStringConverter
+};
+
+
+/**
  * @param {!Feature} feature
  * @param {!Geometry} geometry
  * @param {!Style} style
@@ -69,8 +80,8 @@ const getConverter = (feature, geometry, style, context) => {
     return LabelConverter;
   }
 
-  if (geometryType === GeometryType.LINE_STRING && feature instanceof DynamicFeature) {
-    return DynamicLineStringConverter;
+  if (feature instanceof DynamicFeature) {
+    return dynamicConverters[geometryType];
   }
 
   if (geometry instanceof Ellipse) {

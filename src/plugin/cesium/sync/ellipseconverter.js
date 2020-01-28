@@ -48,9 +48,7 @@ const update = (feature, geometry, style, context, primitive) => {
  * @param {VectorContext} context
  * @return {Converter}
  */
-const getConverter = (context) => {
-  return isEllipsoid(context) ? EllipsoidConverter : PolygonConverter;
-};
+const getConverter = (context) => isEllipsoid(context) ? EllipsoidConverter : PolygonConverter;
 
 
 /**

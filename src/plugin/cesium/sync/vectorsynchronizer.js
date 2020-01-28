@@ -291,6 +291,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
    * @private
    */
   clearFeatures_(opt_event) {
+    goog.asserts.assert(this.csContext != null);
     objectUtils.forEach(this.csContext.featureToCesiumMap,
         /**
          * @param {Array<!Cesium.PrimitiveLike>|undefined} val
@@ -492,6 +493,8 @@ class VectorSynchronizer extends CesiumSynchronizer {
    * @private
    */
   resetFeatures_(features, opt_force) {
+    goog.asserts.assert(this.csContext !== null);
+
     if (this.active || opt_force) {
       for (let i = 0, n = features.length; i < n; i++) {
         const feature = features[i];
@@ -648,7 +651,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
    */
   updateLabelOffsets() {
     const camera = os.MapContainer.getInstance().getWebGLCamera();
-    if (camera) {
+    if (this.csContext && camera) {
       // Find the z-index step from the camera altitude
       const cameraDistance = camera.getDistanceToCenter();
       const zIndexStep = Math.round(cameraDistance / (this.zIndexMax_ * 10));
@@ -750,7 +753,9 @@ class VectorSynchronizer extends CesiumSynchronizer {
       const cameraDistance = camera.getDistanceToCenter();
       const zIndexStep = Math.round(cameraDistance / (this.zIndexMax_ * 100));
       const newOffset = -(this.zIndex_ * zIndexStep);
-      this.csContext.setEyeOffset(new Cesium.Cartesian3(0.0, 0.0, newOffset));
+      if (this.csContext) {
+        this.csContext.setEyeOffset(new Cesium.Cartesian3(0.0, 0.0, newOffset));
+      }
     }
   }
 
