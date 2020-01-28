@@ -139,6 +139,12 @@ requirement: {
   error_message: 'goog.abstractMethod is not permitted. Use @abstract on the class and method instead.'
 }
 
+requirement: {
+  type: BANNED_NAME
+  value: 'goog.now'
+  error_message: 'goog.now is not permitted. Use Date.now instead.'
+}
+
 #requirement: {
 #  type: BANNED_NAME
 #  value: 'goog.bind'

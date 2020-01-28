@@ -1159,7 +1159,7 @@ os.source.Vector.prototype.isNotEllipseOrLOBOrDefault = function(shapeName) {
  */
 os.source.Vector.prototype.testShapeFields_ = function(value) {
   var am = os.alert.AlertManager.getInstance();
-  var now = goog.now();
+  var now = Date.now();
 
   if (this.columns.length > 0) {
     if (os.style.ELLIPSE_REGEXP.test(value)) {
