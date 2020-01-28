@@ -47,6 +47,8 @@ const renderScene = (scene) => {
   }
 };
 
+window.CESIUM_BASE_URL = window.location.toString();
+
 exports = {
   getFakeScene,
   getRealScene,
