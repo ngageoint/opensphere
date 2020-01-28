@@ -479,7 +479,12 @@ describe('plugin.cesium.VectorContext', () => {
 
         context.removePrimitive(item);
 
-        expect(context.geometryToCesiumMap[ol.getUid(geometry)]).toBe(undefined);
+        if (item instanceof Cesium.Label) {
+          expect(context.geometryToLabelMap[ol.getUid(geometry)]).toBe(undefined);
+        } else {
+          expect(context.geometryToCesiumMap[ol.getUid(geometry)]).toBe(undefined);
+        }
+
         expect(context.featureToCesiumMap[feature.getUid()].length).toBe(0);
       });
 

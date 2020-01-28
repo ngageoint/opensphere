@@ -421,19 +421,22 @@ class VectorContext {
     this.removeFeaturePrimitive(primitive.olFeature, primitive);
     this.removeOLReferences(primitive);
 
-    if (primitive instanceof Cesium.Billboard) {
-      this.billboards.remove(primitive);
-    } else if (primitive instanceof Cesium.Label) {
+    if (primitive instanceof Cesium.Label) {
       this.labels.remove(primitive);
-    } else if (primitive instanceof Cesium.Polyline) {
-      this.polylines.remove(primitive);
-    } else if (isGroundPrimitive(primitive)) {
-      this.groundPrimitives.remove(primitive);
+      this.geometryToLabelMap[geomId] = undefined;
     } else {
-      this.primitives.remove(primitive);
-    }
+      if (primitive instanceof Cesium.Billboard) {
+        this.billboards.remove(primitive);
+      } else if (primitive instanceof Cesium.Polyline) {
+        this.polylines.remove(primitive);
+      } else if (isGroundPrimitive(primitive)) {
+        this.groundPrimitives.remove(primitive);
+      } else {
+        this.primitives.remove(primitive);
+      }
 
-    this.geometryToCesiumMap[geomId] = undefined;
+      this.geometryToCesiumMap[geomId] = undefined;
+    }
   }
 
 
