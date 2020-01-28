@@ -32,7 +32,7 @@
       "overrides_slate_compact_cb_b"
     ],
     "defineRoots": {
-      "ROOT": "./"
+      "os.APP_ROOT": "./"
     },
     "gcc": {
       "language_in": "ECMASCRIPT_2018",
