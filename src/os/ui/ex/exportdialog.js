@@ -93,7 +93,7 @@ goog.inherits(os.ui.ex.ExportCtrl, os.ui.file.ExportDialogCtrl);
  * @inheritDoc
  */
 os.ui.ex.ExportCtrl.prototype.getCustomOptions = function() {
-  return '<h5 class="mt-3 text-center">Sources to Export</h5>' +
+  return '<h5 class="text-center">Sources to Export</h5>' +
       '<exportoptions init-sources="initSources" allow-multiple="allowMultiple" show-labels="showLabels"' +
       ' allow-time="allowTime"></exportoptions>';
 };
