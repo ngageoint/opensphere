@@ -29,7 +29,7 @@ goog.inherits(os.query.QueryManager, os.query.BaseQueryManager);
 goog.addSingletonGetter(os.query.QueryManager);
 
 // replace the os.ui QueryManager's getInstance with this one so we never instantiate a second instance
-goog.object.extend(os.query.BaseQueryManager, {
+Object.assign(os.query.BaseQueryManager, {
   getInstance: function() {
     return os.query.QueryManager.getInstance();
   }

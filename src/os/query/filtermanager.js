@@ -26,7 +26,7 @@ goog.addSingletonGetter(os.query.FilterManager);
 
 
 // replace the os.ui FilterManager's getInstance with this one so we never instantiate a second instance
-goog.object.extend(os.filter.BaseFilterManager, {
+Object.assign(os.filter.BaseFilterManager, {
   getInstance: function() {
     return os.query.FilterManager.getInstance();
   }

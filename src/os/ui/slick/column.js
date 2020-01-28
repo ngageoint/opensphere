@@ -25,7 +25,7 @@ os.ui.slick.column.FIX_HEADER = 'ui-widget ui-state-default';
 
 /**
  * Initial column width/order settings.
- * @type {Object<string, Object>}
+ * @type {!Object<string, !Object>}
  */
 os.ui.slick.column.fix = {
   'TIME': {

@@ -139,7 +139,7 @@ plugin.params.setParamsForLayer = function(layer, params, opt_remove) {
 
     var oldParams = source.getParams();
     if (oldParams) {
-      goog.object.extend(oldParams, params);
+      Object.assign(oldParams, params);
 
       if (opt_remove) {
         opt_remove.forEach(function(key) {

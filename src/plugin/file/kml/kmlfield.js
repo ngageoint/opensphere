@@ -18,7 +18,7 @@ plugin.file.kml.KMLField = {
 
 
 // extend column auto size rules to include KML columns
-goog.object.extend(os.ui.slick.column.fix, {
+Object.assign(os.ui.slick.column.fix, {
   'name': {
     order: -60,
     width: 200
