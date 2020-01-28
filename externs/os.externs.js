@@ -542,22 +542,3 @@ osx.feature.RingDefinition;
  * }}
  */
 osx.feature.RingOptions;
-
-
-/**
- * Namespace.
- * @type {Object}
- */
-osx.histo;
-
-
-/**
- * @typedef {{
-  *   range: Array<number>,
-  *   step: number,
-  *   binCount: number,
-  *   binCountAll: number
-  * }}
-  */
-osx.histo.BinMethodStats;
-

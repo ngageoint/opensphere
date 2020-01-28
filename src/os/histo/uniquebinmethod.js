@@ -1,3 +1,4 @@
+goog.provide('os.histo.BinMethodStats');
 goog.provide('os.histo.UniqueBinMethod');
 
 goog.require('os.IPersistable');
@@ -6,6 +7,18 @@ goog.require('os.histo.IBinMethod');
 goog.require('os.histo.bin');
 goog.require('os.object');
 
+
+
+/**
+ * A function used to sort features.
+ * @typedef {{
+  *   range: Array<number>,
+  *   step: number,
+  *   binCount: number,
+  *   binCountAll: number
+  * }}
+ */
+os.histo.BinMethodStats;
 
 
 /**
@@ -52,6 +65,13 @@ os.histo.UniqueBinMethod = function() {
    * @protected
    */
   this.showEmptyBins = false;
+
+  /**
+   * Cap the amount of resources used by the crossfilter
+   * @type {number}
+   * @protected
+   */
+  this.maxBins = 1000000;
 };
 
 
@@ -224,6 +244,11 @@ os.histo.UniqueBinMethod.prototype.restore = function(config) {
   if (show != null) {
     this.setShowEmptyBins(show == true); // loose comparison rather than ===
   }
+
+  var maxBins = /** @type {number|undefined} */ (config['maxBins']);
+  if (maxBins) {
+    this.setMaxBins(maxBins); // only set if non-zero and non-null
+  }
 };
 
 
@@ -362,6 +387,24 @@ os.histo.UniqueBinMethod.prototype.setShowEmptyBins = function(value) {
 
 
 /**
+ * Gets the maxBins property
+ * @return {number}
+ */
+os.histo.UniqueBinMethod.prototype.getMaxBins = function() {
+  return this.maxBins;
+};
+
+
+/**
+ * Sets the maxBins property
+ * @param {number} value
+ */
+os.histo.UniqueBinMethod.prototype.setMaxBins = function(value) {
+  this.maxBins = value;
+};
+
+
+/**
  * Get the filter for an individual bin.
  *
  * @param {!os.histo.Bin} bin The bin
@@ -383,14 +426,13 @@ os.histo.UniqueBinMethod.prototype.getFilterForBin = function(bin) {
  * Get the range, step size, etc for the bins made by this method.
  *
  * @param {!Array<os.histo.Bin>} bins The bins made using this bin method
- * @return {osx.histo.BinMethodStats|null} The config
- * @public
+ * @return {os.histo.BinMethodStats|null} The config
  */
 os.histo.UniqueBinMethod.prototype.getStatsForBin = function(bins) {
   if (!bins || bins.length == 0) return null;
   var range = [bins[0]['key'], bins[bins.length - 1]['key']];
   var step = 1; // don't allow divide by 0 errors
-  return /** @type {osx.histo.BinMethodStats} */ ({
+  return /** @type {os.histo.BinMethodStats} */ ({
     range: range,
     step: step,
     binCount: bins.length,
