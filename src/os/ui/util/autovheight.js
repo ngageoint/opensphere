@@ -209,7 +209,7 @@ os.ui.util.AutoVHeightCtrl.prototype.addResizeListeners_ = function() {
 
     // add resize to common elements
     var allCommonElements = goog.array.clone(os.ui.windowCommonElements);
-    goog.object.extend(allCommonElements, os.ui.windowCommonOptionalElements);
+    Object.assign(allCommonElements, os.ui.windowCommonOptionalElements);
     allCommonElements.forEach(function(sibling) {
       os.ui.resize($(/** @type {string} */ (sibling)), this.resizeFn_);
     }.bind(this));
