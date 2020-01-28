@@ -77,7 +77,7 @@ describe('os.xml', function() {
   });
 
   it('should parse a date from a node', function() {
-    var now = new Date(goog.now());
+    var now = new Date(Date.now());
 
     // actual date string
     var el = os.xml.createElementNS(testTagNs, testNs, doc, now.toISOString());

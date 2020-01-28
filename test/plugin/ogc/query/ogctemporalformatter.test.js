@@ -34,7 +34,7 @@ describe('plugin.ogc.query.OGCTemporalFormatter', function() {
     formatter.setEndColumn(testEnd);
 
     var controller = new os.time.TimelineController();
-    var startTime = goog.now();
+    var startTime = Date.now();
     var endTime = startTime + 5000;
     controller.setRange(controller.buildRange(startTime, endTime));
 
@@ -58,7 +58,7 @@ describe('plugin.ogc.query.OGCTemporalFormatter', function() {
     formatter.setEndColumn(testEnd);
 
     var controller = new os.time.TimelineController();
-    var startTime = goog.now();
+    var startTime = Date.now();
     var endTime = startTime + 5000;
     controller.setRange(controller.buildRange(startTime, endTime));
     controller.addLoadRange(controller.buildRange(startTime - 86400000, startTime - 86400000 + 50000));

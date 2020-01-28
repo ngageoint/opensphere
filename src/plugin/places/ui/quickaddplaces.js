@@ -158,7 +158,7 @@ plugin.places.ui.QuickAddPlacesCtrl.prototype.addGeometry = function(geometry) {
         'labelColor': 'rgba(255,255,255,1)',
         'labels': [os.ui.FeatureEditCtrl.DEFAULT_LABEL]
       },
-      startTime: goog.now()
+      startTime: Date.now()
     }));
 
     if (place) {
