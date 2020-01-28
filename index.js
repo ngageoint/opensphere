@@ -223,9 +223,9 @@ const sharedResources = [
     scripts: ['FileSaver.js']
   },
   {
-    source: resolver.resolveModulePath('js-polyfills', __dirname),
+    source: resolver.resolveModulePath('core-js-bundle', __dirname),
     target: 'vendor/polyfill',
-    scripts: ['polyfill.min.js']
+    scripts: ['minified.js']
   },
   {
     source: resolver.resolveModulePath('zip-js/WebContent', __dirname),
