@@ -242,24 +242,29 @@ plugin.wmts.Server.prototype.load = function(opt_ping) {
 
 
 /**
- * Builds query data from the WMTS params.
+ * Updates query data from the WMTS params.
  *
- * @return {goog.Uri.QueryData}
+ * @param {goog.Uri.QueryData} queryData The query data.
  * @private
  */
-plugin.wmts.Server.prototype.getQueryData_ = function() {
-  var queryData = this.params_ ? this.params_.clone() : new goog.Uri.QueryData();
+plugin.wmts.Server.prototype.updateQueryData_ = function(queryData) {
   queryData.setIgnoreCase(true);
 
-  queryData.set('request', 'GetCapabilities');
-
-  var version = plugin.wmts.Server.DEFAULT_VERSION;
-  if (queryData.containsKey('version')) {
-    version = queryData.get('version');
+  if (this.params_) {
+    queryData.extend(this.params_);
   }
 
-  queryData.set('version', version);
-  return queryData;
+  if (!queryData.containsKey('request')) {
+    queryData.set('request', 'GetCapabilities');
+  }
+
+  if (!queryData.containsKey('service')) {
+    queryData.set('service', 'WMTS');
+  }
+
+  if (!queryData.containsKey('version')) {
+    queryData.set('version', plugin.wmts.Server.DEFAULT_VERSION);
+  }
 };
 
 
@@ -289,8 +294,7 @@ plugin.wmts.Server.prototype.loadCapabilities = function() {
  */
 plugin.wmts.Server.prototype.testUrl = function(url, opt_success, opt_error) {
   var uri = new goog.Uri(url);
-  var queryData = this.getQueryData_();
-  uri.setQueryData(queryData);
+  this.updateQueryData_(uri.getQueryData());
 
   var onSuccess = opt_success || this.handleCapabilities;
   var onError = opt_error || this.onOGCError;

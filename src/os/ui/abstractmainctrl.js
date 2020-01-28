@@ -13,6 +13,7 @@ goog.require('os.config');
 goog.require('os.config.Settings');
 goog.require('os.metrics');
 goog.require('os.metrics.Metrics');
+goog.require('os.mixin.fixInjectorInvoke');
 goog.require('os.net');
 goog.require('os.net.CertNazi');
 goog.require('os.net.ProxyHandler');
@@ -59,6 +60,7 @@ os.ui.AbstractMainCtrl = function($scope, $injector, rootPath, defaultAppName) {
    * @type {angular.$injector}
    */
   os.ui.injector = $injector;
+  os.mixin.fixInjectorInvoke($injector);
 
   /**
    * @type {?os.net.CertNazi}
