@@ -93,20 +93,26 @@ The key difference for ES6 classes is that they are `@struct`_ by default, which
 Singletons
 ----------
 
-Class instance singletons have historically been created using ``goog.addSingletonGetter`` which creates an instance and adds a ``getInstance`` function to the class. With ES6 classes and the local scope provided by modules, this is easy to do natively by adding a ``static getInstance()`` call to the class.
+Class instance singletons have historically been created using ``goog.addSingletonGetter`` which adds a ``getInstance`` function to the class. With ES6 classes and the local scope provided by modules, this is easy to do natively by adding a ``static getInstance()`` call to the class.
 
 .. code-block:: javascript
+
+    // store the instance in a module-scoped variable that can be externally referenced
+    // with MyClass.getInstance()
+    let instance;
 
     class MyClass {
       constructor() {}
 
       static getInstance() {
+        // do not create the instance until the first time this function is called
+        if (!instance) {
+          instance = new MyClass();
+        }
+
         return instance;
       }
     }
-
-    // instance can be externally referenced with MyClass.getInstance()
-    const instance = new MyClass();
 
 Constants
 ---------
