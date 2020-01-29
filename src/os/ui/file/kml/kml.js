@@ -299,7 +299,7 @@ os.ui.file.kml.DEFAULT_ICON = {
  * @type {RegExp}
  * @const
  */
-os.ui.file.kml.GMAPS_SEARCH = /https?:\/\/maps\.google\.com\/mapfiles\/kml\//i;
+os.ui.file.kml.GMAPS_SEARCH = /^https?:\/\/maps\.google\.com\/mapfiles\/kml\//i;
 
 
 /**
@@ -317,13 +317,28 @@ os.ui.file.kml.getDefaultIcon = function() {
 
 
 /**
+ * @type {boolean}
+ */
+os.ui.file.kml.isGoogleMapsAccessible = true;
+
+
+/**
  * Replace the Google icon URI with the application image path.
  *
  * @param {string|null|undefined} src The image source URL.
- * @return {string} The icon src.
+ * @return {!string} The icon src.
  */
 os.ui.file.kml.replaceGoogleUri = function(src) {
-  return src ? src.replace(os.ui.file.kml.GMAPS_SEARCH, os.ui.file.kml.ICON_PATH) : '';
+  if (os.ui.file.kml.GMAPS_SEARCH.test(src)) {
+    const icon = os.ui.file.kml.GOOGLE_EARTH_ICON_SET.find((icon) => icon.path === src);
+    if (icon) {
+      return icon.path.replace(os.ui.file.kml.GMAPS_SEARCH, os.ui.file.kml.ICON_PATH);
+    } else if (!os.ui.file.kml.isGoogleMapsAccessible) {
+      return os.ui.file.kml.DEFAULT_ICON_PATH;
+    }
+  }
+
+  return src || '';
 };
 
 
