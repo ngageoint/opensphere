@@ -200,6 +200,13 @@ plugin.file.kml.KMLParser = function(options) {
   this.kmlThingRegex_ = this.getKmlThingRegex();
 
   /**
+   * Indicates if the kmz has a collada model to parse.
+   * @type {boolean}
+   * @private
+   */
+  this.hasModel_ = false;
+
+  /**
    * @type {Object<string, {parent: ?string, parsers: Object<string, Object<string, ol.XmlParser>>}>}
    * @private
    */
@@ -601,6 +608,7 @@ plugin.file.kml.KMLParser.prototype.handleZipEntries = function(entries) {
       entry.getData(new zip.Data64URIWriter('image/' + result[1]),
           this.processZipImage_.bind(this, entry.filename));
     } else if (collada.test(entry.filename)) {
+      this.hasModel_ = true;
       this.kmzImagesRemaining_++;
       entry.getData(new zip.TextWriter(),
           this.processZipCollada_.bind(this, entry.filename));
@@ -1150,7 +1158,9 @@ plugin.file.kml.KMLParser.prototype.readPlacemark_ = function(el) {
     return null;
   }
 
-  new plugin.file.kml.KMLModelParser().parseModel(el, object);
+  if (this.hasModel_) {
+    new plugin.file.kml.KMLModelParser().parseModel(el, object);
+  }
 
   // set geometry fields on the object
   var geometry = /** @type {ol.geom.Geometry|undefined} */ (object['geometry']);
