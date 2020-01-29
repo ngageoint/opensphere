@@ -1150,7 +1150,7 @@ plugin.file.kml.KMLParser.prototype.readPlacemark_ = function(el) {
     return null;
   }
 
-  plugin.file.kml.parseModel(el, object);
+  new plugin.file.kml.KMLModelParser().parseModel(el, object);
 
   // set geometry fields on the object
   var geometry = /** @type {ol.geom.Geometry|undefined} */ (object['geometry']);

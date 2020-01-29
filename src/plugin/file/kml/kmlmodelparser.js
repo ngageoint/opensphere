@@ -1,23 +1,29 @@
 goog.provide('plugin.file.kml.KMLModelParser');
 
 /**
+ * Constructor.
+ * @constructor
+ */
+plugin.file.kml.KMLModelParser = function() {};
+
+/**
  * Parses a KML model element that may be contained in a placemark element.
  *
  * @param {Element} el A placemark xml element.
  * @param {Object} object The object to add the model information to.
  */
-plugin.file.kml.parseModel = function(el, object) {
+plugin.file.kml.KMLModelParser.prototype.parseModel = function(el, object) {
   for (var i = el.children.length - 1; i >= 0; i--) {
     if (el.children[i].localName == 'Model') {
       var modelElement = el.children[i];
       var modelObject = {};
       for (var j = 0; j < modelElement.children.length; j++) {
         if (modelElement.children[j].localName == 'Location') {
-          plugin.file.kml.parseLocation(modelElement.children[j], modelObject);
+          this.parseLocation(modelElement.children[j], modelObject);
         } else if (modelElement.children[j].localName == 'Orientation') {
-          plugin.file.kml.parseOrientation(modelElement.children[j], modelObject);
+          this.parseOrientation(modelElement.children[j], modelObject);
         } else if (modelElement.children[j].localName == 'Scale') {
-          plugin.file.kml.parseScale(modelElement.children[j], modelObject);
+          this.parseScale(modelElement.children[j], modelObject);
         } else if (modelElement.children[j].localName == 'altitudeMode') {
           this.parseAltMode(modelElement.children[j], modelObject);
         } else if (modelElement.children[j].localName == 'Link') {
@@ -46,8 +52,9 @@ plugin.file.kml.parseModel = function(el, object) {
  *
  * @param {Element} el A model xml element.
  * @param {Object} object The object to add the link information to.
+ * @private
  */
-plugin.file.kml.parseAltMode = function(el, object) {
+plugin.file.kml.KMLModelParser.prototype.parseAltMode = function(el, object) {
   var altModeText = el.textContent;
 
   var altMode = os.webgl.AltitudeMode.CLAMP_TO_GROUND;
@@ -64,8 +71,9 @@ plugin.file.kml.parseAltMode = function(el, object) {
  * @param {Element} placemark The placemark element
  * @param {Element} el A model xml element.
  * @param {Object} object The object to add the link information to.
+ * @private
  */
-plugin.file.kml.parseLink = function(placemark, el, object) {
+plugin.file.kml.KMLModelParser.prototype.parseLink = function(placemark, el, object) {
   var colladaFileName = el.children[0].textContent;
   var colladaData = placemark.assetMap[colladaFileName];
   object['collada'] = colladaData;
@@ -76,8 +84,9 @@ plugin.file.kml.parseLink = function(placemark, el, object) {
  *
  * @param {Element} el A model xml element.
  * @param {Object} object The object to add the location information to.
+ * @private
  */
-plugin.file.kml.parseLocation = function(el, object) {
+plugin.file.kml.KMLModelParser.prototype.parseLocation = function(el, object) {
   for (var i = 0; i < el.children.length; i++) {
     if (el.children[i].localName == 'longitude') {
       object['longitude'] = parseFloat(el.children[i].textContent);
@@ -94,8 +103,9 @@ plugin.file.kml.parseLocation = function(el, object) {
  *
  * @param {Element} el A model xml element.
  * @param {Object} object The object to add the orientation information to.
+ * @private
  */
-plugin.file.kml.parseOrientation = function(el, object) {
+plugin.file.kml.KMLModelParser.prototype.parseOrientation = function(el, object) {
   for (var i = 0; i < el.children.length; i++) {
     if (el.children[i].localName == 'heading') {
       object['heading'] = parseFloat(el.children[i].textContent);
@@ -112,8 +122,9 @@ plugin.file.kml.parseOrientation = function(el, object) {
  *
  * @param {Element} el A model xml element.
  * @param {Object} object The object to add the scale information to.
+ * @private
  */
-plugin.file.kml.parseScale = function(el, object) {
+plugin.file.kml.KMLModelParser.prototype.parseScale = function(el, object) {
   for (var i = 0; i < el.children.length; i++) {
     if (el.children[i].localName == 'x') {
       object['scaleX'] = parseFloat(el.children[i].textContent);
