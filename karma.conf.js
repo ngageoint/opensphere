@@ -42,7 +42,7 @@ module.exports = function(config) {
       {pattern: resolver.resolveModulePath('papaparse/papaparse.min.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('cesium/Build/CesiumUnminified/Cesium.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('xmllint/xmllint.js', __dirname), watched: false, included: true, served: true},
-      {pattern: 'vendor/geomag/WMM.COF', watched: false, included: false, served: true},
+      {pattern: 'vendor/geomag/WMM.txt', watched: false, included: false, served: true},
       {pattern: 'vendor/geomag/cof2Obj.js', watched: false, included: true, served: true},
       {pattern: 'vendor/geomag/geomag.js', watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('css-element-queries/src/ResizeSensor.js'), watched: false, included: true, served: true},
