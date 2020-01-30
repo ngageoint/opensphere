@@ -80,11 +80,11 @@ describe('os.style.IconReader', function() {
   });
 
   it('should replace Google maps/earth icons with local copies', function() {
-    config.src = 'http://maps.google.com/mapfiles/kml/pal4/icon28.png';
+    config.src = 'http://maps.google.com/mapfiles/kml/pushpin/wht-pushpin.png';
 
     var icon = reader.getOrCreateStyle(config);
 
     // this should point back a directory to where we keep all of the KML icons
-    expect(icon.getSrc()).toBe(os.ROOT + 'images/icons/kml/pal4/icon28.png');
+    expect(icon.getSrc()).toBe(os.ROOT + 'images/icons/kml/pushpin/wht-pushpin.png');
   });
 });
