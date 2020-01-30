@@ -159,7 +159,7 @@ describe('plugin.cesium.primitive', () => {
         expect(primitive.updateRetries).toBe(1);
       });
 
-      waitsFor(() => primitive.updateRetries == 5, 1000, '5 retries');
+      waitsFor(() => primitive.updateRetries >= 5, '5 retries');
 
       let waitFinished = false;
       runs(() => {
