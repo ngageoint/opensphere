@@ -533,7 +533,7 @@ os.layer.LayerGroup.prototype.getNodeUI = function() {
 /**
  * @inheritDoc
  */
-os.layer.LayerGroup.prototype.setNodeUI = goog.nullFunction();
+os.layer.LayerGroup.prototype.setNodeUI = function(value) {};
 
 
 /**

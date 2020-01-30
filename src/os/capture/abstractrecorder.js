@@ -18,11 +18,41 @@ goog.require('os.capture.IRecorder');
  */
 os.capture.AbstractRecorder = function() {
   os.capture.AbstractRecorder.base(this, 'constructor');
+
+  /**
+   * If the recording was aborted.
+   * @type {boolean}
+   */
   this.aborted = false;
+
+  /**
+   * Final recording data.
+   * @type {*}
+   */
   this.data = null;
+
+  /**
+   * Detailed error message if the recording fails.
+   * @type {string}
+   */
   this.errorMsg = '';
+
+  /**
+   * Progress percentage for the current task.
+   * @type {number}
+   */
   this.progress = 0;
+
+  /**
+   * Recorder status message.
+   * @type {string}
+   */
   this.status = '';
+
+  /**
+   * User-facing title of the recorder.
+   * @type {string}
+   */
   this.title = 'Give me a title please';
 
   /**

@@ -29,9 +29,29 @@ goog.require('os.metrics.keys');
  */
 os.data.AbstractDescriptor = function(descriptor) {
   os.data.AbstractDescriptor.base(this, 'constructor');
+
+  /**
+   * Whether or not the command is asynchronous.
+   * @type {boolean}
+   */
   this.isAsync = true;
+
+  /**
+   * The title of the command.
+   * @type {?string}
+   */
   this.title = 'Activate/Deactivate Descriptor';
+
+  /**
+   * The details of the command.
+   * @type {?string}
+   */
   this.details = null;
+
+  /**
+   * Return the current state of the command.
+   * @type {!os.command.State}
+   */
   this.state = os.command.State.READY;
 
   /**
