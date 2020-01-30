@@ -60,7 +60,7 @@ plugin.file.kml.export.getRotationColumn = function(feature) {
     rotColumn = /** @type {string|undefined} */ (feature.get(os.style.StyleField.ROTATION_COLUMN));
 
     var layerConfig = os.style.getLayerConfig(feature);
-    if (!rotColumn || layerConfig && layerConfig[os.style.StyleField.REPLACE_STYLE]) {
+    if ((!rotColumn && layerConfig) || (layerConfig && layerConfig[os.style.StyleField.REPLACE_STYLE])) {
       rotColumn = layerConfig[os.style.StyleField.ROTATION_COLUMN];
     }
   }
