@@ -24,7 +24,7 @@ goog.require('os.tile.ColorableTile');
  * @implements {os.source.IFilterableTileSource}
  * @extends {ol.source.UrlTile}
  * @constructor
- * @suppress {duplicate}
+ * @suppress {checkTypes|duplicate}
  */
 ol.source.TileImage;
 os.implements(ol.source.TileImage, os.source.IFilterableTileSource.ID);
