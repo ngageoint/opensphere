@@ -369,6 +369,16 @@ os.net.Request.prototype.removeModifier = function(modifier) {
 
 
 /**
+ * Returns a copy of the modifiers
+ *
+ * @return {?Array.<os.net.IModifier>}
+ */
+os.net.Request.prototype.getModifiers = function() {
+  return this.modifiers_ ? this.modifiers_.slice() : null;
+};
+
+
+/**
  * Static compare function for sorting the modifiers list.
  *
  * @param {os.net.IModifier} a
