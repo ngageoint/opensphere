@@ -1,5 +1,7 @@
 goog.provide('plugin.file.kml.KMLModelParser');
 
+goog.require('ol.geom.Point');
+
 /**
  * Constructor.
  * @constructor
@@ -19,7 +21,7 @@ plugin.file.kml.KMLModelParser.prototype.parseModel = function(el, object) {
       var modelObject = {};
       for (var j = 0; j < modelElement.children.length; j++) {
         if (modelElement.children[j].localName == 'Location') {
-          this.parseLocation(modelElement.children[j], modelObject);
+          this.parseLocation(modelElement.children[j], object);
         } else if (modelElement.children[j].localName == 'Orientation') {
           this.parseOrientation(modelElement.children[j], modelObject);
         } else if (modelElement.children[j].localName == 'Scale') {
@@ -83,19 +85,25 @@ plugin.file.kml.KMLModelParser.prototype.parseLink = function(placemark, el, obj
  * Parses the location element of the model.
  *
  * @param {Element} el A model xml element.
- * @param {Object} object The object to add the location information to.
+ * @param {Object} object The object to add the point geometry to.
  * @private
  */
 plugin.file.kml.KMLModelParser.prototype.parseLocation = function(el, object) {
+  let lat;
+  let lon;
+  let alt;
+
   for (var i = 0; i < el.children.length; i++) {
     if (el.children[i].localName == 'longitude') {
-      object['longitude'] = parseFloat(el.children[i].textContent);
+      lon = parseFloat(el.children[i].textContent);
     } else if (el.children[i].localName == 'latitude') {
-      object['latitude'] = parseFloat(el.children[i].textContent);
+      lat = parseFloat(el.children[i].textContent);
     } else if (el.children[i].localName == 'altitude') {
-      object['altitude'] = parseFloat(el.children[i].textContent);
+      alt = parseFloat(el.children[i].textContent);
     }
   }
+
+  object['geometry'] = new ol.geom.Point([lon, lat, alt]);
 };
 
 /**
