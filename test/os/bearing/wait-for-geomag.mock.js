@@ -7,7 +7,7 @@ goog.require('os.net.Request');
 beforeEach(function() {
   if (!os.bearing.geomag_) {
     runs(function() {
-      var request = new os.net.Request('/base/vendor/geomag/WMM.COF');
+      var request = new os.net.Request('/base/vendor/geomag/WMM.txt');
       request.listenOnce(goog.net.EventType.SUCCESS, os.bearing.onGeomag);
       request.listenOnce(goog.net.EventType.ERROR, os.bearing.onGeomag);
       request.load();
