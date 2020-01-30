@@ -237,7 +237,7 @@ const sharedResources = [
     source: 'vendor/geomag',
     target: 'vendor/geomag',
     scripts: ['cof2Obj.js', 'geomag.js'],
-    files: ['WMM.COF']
+    files: ['WMM.txt']
   },
   {
     source: resolver.resolveModulePath('jsts/dist', __dirname),
