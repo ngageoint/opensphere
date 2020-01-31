@@ -68,7 +68,6 @@ os.histo.Labels = {
 os.histo.DateBinMethod = function() {
   os.histo.DateBinMethod.base(this, 'constructor');
   this.type = os.histo.DateBinMethod.TYPE;
-  this.showEmptyBins = false;
 
   /**
    * @type {os.histo.DateBinType}
@@ -199,7 +198,7 @@ os.histo.DateBinMethod.prototype.getTypeMax = function(opt_timestamp) {
       start.setUTCFullYear(new Date(opt_timestamp).getUTCFullYear(), 0, 1);
       end.setUTCFullYear(start.getUTCFullYear() + 1, 0, 1);
 
-      return Math.floor((end.getTime() - start.getTime()) / (60 * 60 * 1000));
+      return Math.floor((end.getTime() - start.getTime()) / (60 * 60 * 1000)) - 1; // goes from 0 to ((days * 24) - 1) hours
     case os.histo.DateBinType.MONTH_OF_YEAR:
       return 11;
     default:
@@ -493,7 +492,6 @@ os.histo.DateBinMethod.prototype.persist = function(opt_to) {
 
   opt_to['binType'] = this.getDateBinType();
   opt_to['binTypes'] = this.getDateBinTypes();
-  opt_to['showEmptyBins'] = this.getShowEmptyBins();
 
   return opt_to;
 };

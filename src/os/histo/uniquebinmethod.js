@@ -71,7 +71,7 @@ os.histo.UniqueBinMethod = function() {
    * @type {number}
    * @protected
    */
-  this.maxBins = 1000000;
+  this.maxBins = Infinity;
 };
 
 
@@ -219,6 +219,7 @@ os.histo.UniqueBinMethod.prototype.persist = function(opt_to) {
   opt_to['isDate'] = this.getIsDate();
   opt_to['arrayKeys'] = this.getArrayKeys();
   opt_to['showEmptyBins'] = this.getShowEmptyBins();
+  opt_to['maxBins'] = this.getMaxBins();
 
   return opt_to;
 };
@@ -245,9 +246,9 @@ os.histo.UniqueBinMethod.prototype.restore = function(config) {
     this.setShowEmptyBins(show == true); // loose comparison rather than ===
   }
 
-  var maxBins = /** @type {number|undefined} */ (config['maxBins']);
-  if (maxBins) {
-    this.setMaxBins(maxBins); // only set if non-zero and non-null
+  var maxBins = /** @type {string|number|undefined} */ (config['maxBins']);
+  if (maxBins != null && !isNaN(maxBins)) {
+    this.setMaxBins(Number(maxBins));
   }
 };
 
