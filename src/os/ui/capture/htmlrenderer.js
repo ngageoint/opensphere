@@ -42,7 +42,7 @@ os.ui.capture.HtmlRenderer.prototype.getCanvas = function() {
         scale: pixelRatio
       };
 
-      goog.object.extend(options, this.extraOptions);
+      Object.assign(options, this.extraOptions);
       html2canvas(htmlElement, /** @type {html2canvas.Options} */ (options)).then(resolve, reject);
     } else {
       resolve(null);

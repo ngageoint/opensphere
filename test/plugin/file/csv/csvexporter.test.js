@@ -99,7 +99,7 @@ describe('plugin.file.csv.CSVExporter', function() {
 
     var result = ex.processItem(pointFeature);
 
-    expect(result[os.Fields.TIME]).toBe('1970-01-01 00:16:39Z');
+    expect(result[os.Fields.TIME]).toBe('1970-01-01T00:16:39Z');
   });
 
   it('should export time ranges correctly', function() {
@@ -112,8 +112,8 @@ describe('plugin.file.csv.CSVExporter', function() {
 
     var result = ex.processItem(pointFeature);
 
-    expect(result[plugin.file.csv.CSVExporter.FIELDS.START_TIME]).toBe('1970-01-01 00:16:39Z');
-    expect(result[plugin.file.csv.CSVExporter.FIELDS.END_TIME]).toBe('1970-01-01 02:46:39Z');
+    expect(result[plugin.file.csv.CSVExporter.FIELDS.START_TIME]).toBe('1970-01-01T00:16:39Z');
+    expect(result[plugin.file.csv.CSVExporter.FIELDS.END_TIME]).toBe('1970-01-01T02:46:39Z');
   });
 
   it('should export GEOMETRY when alwaysIncludeWkt is true', function() {

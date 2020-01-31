@@ -123,7 +123,7 @@ class FancierWindow extends goog.debug.FancyWindow {
 
     const logOutput = SafeHtml.create('html', {}, SafeHtml.concat(head, body));
 
-    const outFileName = this.identifier + 'LoggingOutput_' + moment(goog.now()).utc().format('YYYYMMDD_Hmmss') +
+    const outFileName = this.identifier + 'LoggingOutput_' + moment(Date.now()).utc().format('YYYYMMDD_Hmmss') +
         'Z.html';
     if (os.file.persist.saveFile(outFileName, goog.html.SafeHtml.unwrap(logOutput), 'text/html')) {
       os.alert.AlertManager.getInstance().sendAlert('Created ' + outFileName, os.alert.AlertEventSeverity.SUCCESS);

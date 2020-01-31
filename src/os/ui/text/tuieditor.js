@@ -30,7 +30,7 @@ os.ui.text.TuiEditor.READY = 'tui.editor.ready';
  * @type {string}
  * @const
  */
-os.ui.text.TuiEditor.SCRIPT_URL = ROOT + 'vendor/os-minified/os-tui-editor.min.js';
+os.ui.text.TuiEditor.SCRIPT_URL = os.APP_ROOT + 'vendor/os-minified/os-tui-editor.min.js';
 
 
 /**

@@ -237,7 +237,7 @@ os.ui.window.launchInternal = function(html, parent, $scope, $compile, opt_scope
   // make a new scope
   var s = $scope.$new();
   if (opt_scopeOptions != null) {
-    goog.object.extend(s, opt_scopeOptions);
+    Object.assign(s, opt_scopeOptions);
   }
 
   // compile and add
@@ -740,7 +740,7 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
       'start': this.onDragStart_.bind(this),
       'stop': this.onDragStop_.bind(this)
     };
-    goog.object.extend(resizeConfig, $scope['resizeOptions'] || {});
+    Object.assign(resizeConfig, $scope['resizeOptions'] || {});
     $element.resizable(resizeConfig);
   }
 

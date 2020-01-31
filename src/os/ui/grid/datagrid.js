@@ -140,7 +140,7 @@ os.ui.grid.DataGridCtrl.prototype.createGrid = function(el) {
   };
 
   if (this.scope_['options']) {
-    goog.object.extend(options, this.scope_['options']);
+    Object.assign(options, this.scope_['options']);
   }
 
   if (options['dataItemColumnValueExtractor']) {

@@ -48,7 +48,7 @@ os.ui.Module.directive('savedwindow', [os.ui.savedWindowDirective]);
  */
 os.ui.SavedWindowCtrl = function($scope, $element, $timeout) {
   // copy config to scope
-  goog.object.extend($scope, os.ui.SavedWindowCtrl.getConf_($scope['key']));
+  Object.assign($scope, os.ui.SavedWindowCtrl.getConf_($scope['key']));
   os.ui.SavedWindowCtrl.base(this, 'constructor', $scope, $element, $timeout);
 };
 goog.inherits(os.ui.SavedWindowCtrl, os.ui.WindowCtrl);

@@ -408,7 +408,7 @@ os.ui.query.launchModifyArea = function(config) {
     // update the existing window
     var scope = $('.js-window#' + windowId + ' .modal-body').scope();
     if (scope) {
-      goog.object.extend(scope, config);
+      Object.assign(scope, config);
       os.ui.apply(scope);
     }
 
