@@ -156,6 +156,6 @@ plugin.basemap.BaseMapDescriptor.prototype.restore = function(from) {
   this.setCanDelete(from['canDelete']);
 
   if (!this.canDelete_ && isNaN(this.getDeleteTime())) {
-    this.setDeleteTime(goog.now() + 24 * 60 * 60 * 1000);
+    this.setDeleteTime(Date.now() + 24 * 60 * 60 * 1000);
   }
 };

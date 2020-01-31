@@ -102,7 +102,7 @@ goog.addSingletonGetter(os.filter.BaseFilterManager);
 /**
  * @define {string} The storage key for filters
  */
-goog.define('os.FILTER_STORAGE_KEY', 'filters');
+os.FILTER_STORAGE_KEY = goog.define('os.FILTER_STORAGE_KEY', 'filters');
 
 
 /**

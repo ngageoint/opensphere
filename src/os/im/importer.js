@@ -423,19 +423,19 @@ os.im.Importer.prototype.getParser = function() {
  * @inheritDoc
  */
 os.im.Importer.prototype.executeNext = function() {
-  var s = goog.now();
+  var s = Date.now();
   goog.log.fine(os.im.Importer.LOGGER_, 'processing new chunk');
 
   var i = 0;
-  var t = goog.now();
+  var t = Date.now();
 
   while (this.parserHasNext() && (t - s) < 250) {
     this.parseOne();
-    t = goog.now();
+    t = Date.now();
     i++;
   }
 
-  var elapsed = goog.now() - s;
+  var elapsed = Date.now() - s;
   goog.log.fine(os.im.Importer.LOGGER_, 'finished processing chunk of ' + i + ' items in ' + elapsed + ' ms.');
   this.dispatchEvent(new goog.events.Event(os.thread.EventType.PROGRESS));
 

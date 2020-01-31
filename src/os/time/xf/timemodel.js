@@ -140,7 +140,7 @@ os.time.xf.TimeModel.EMPTY_RANGE_ = new os.time.TimeRange(NaN, NaN);
  */
 os.time.xf.TimeModel.prototype.add = function(items) {
   if (!this.isDisposed()) {
-    var then = goog.now();
+    var then = Date.now();
 
     if (!goog.isArray(items)) {
       items = [items];
@@ -168,7 +168,7 @@ os.time.xf.TimeModel.prototype.add = function(items) {
     this.updateRange();
 
     goog.log.fine(os.time.xf.TimeModel.LOGGER_,
-        'Added ' + items.length + ' items to the model in ' + (goog.now() - then) + 'ms.');
+        'Added ' + items.length + ' items to the model in ' + (Date.now() - then) + 'ms.');
   }
 };
 

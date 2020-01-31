@@ -83,7 +83,7 @@ describe('os.histo.DateBinMethod', function() {
       os.histo.DateBinMethod.MAGIC, os.histo.DateBinMethod.MAGIC,
       os.histo.DateBinMethod.MAGIC, os.histo.DateBinMethod.MAGIC];
 
-    var expectedLabels = ['2014-01-30 12:34:56Z', '2014-01-30 12:34:30Z',
+    var expectedLabels = ['2014-01-30T12:34:56Z', '2014-01-30T12:34:30Z',
       'Invalid Date', 'Invalid Date', 'Invalid Date', 'Invalid Date'];
 
     for (var i = 0, n = values.length; i < n; i++) {

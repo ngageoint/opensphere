@@ -70,7 +70,7 @@ os.source.ImportQueue.prototype.queueData = function(data) {
   this.importQueue_.push(data);
 
   if (!this.isLoading()) {
-    this.durationStart = goog.now();
+    this.durationStart = Date.now();
     this.setLoading(true);
     this.importNext();
   }
