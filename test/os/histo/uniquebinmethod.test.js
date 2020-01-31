@@ -104,10 +104,12 @@ describe('os.histo.UniqueBinMethod', function() {
     };
     method.setValueFunction(fn);
     method.setShowEmptyBins(true);
+    method.setMaxBins(1);
 
     var clone = method.clone();
     expect(clone.getField()).toBe('field');
     expect(clone.getShowEmptyBins()).toBe(true);
+    expect(clone.getMaxBins()).toBe(1);
     expect(clone.valueFunction).toBe(fn);
   });
 
@@ -119,27 +121,33 @@ describe('os.histo.UniqueBinMethod', function() {
     method.restore({});
     expect(method.getField()).toBe('field');
     expect(method.getShowEmptyBins()).toBe(false);
+    expect(method.getMaxBins()).toBe(Infinity);
 
     method.restore({
       field: null
     });
     expect(method.getField()).toBe('field');
     expect(method.getShowEmptyBins()).toBe(false);
+    expect(method.getMaxBins()).toBe(Infinity);
 
     // sets the field if the value is a string
     method.restore({
       field: '',
-      showEmptyBins: true
+      showEmptyBins: true,
+      maxBins: '1'
     });
     expect(method.getField()).toBe('');
     expect(method.getShowEmptyBins()).toBe(true);
+    expect(method.getMaxBins()).toBe(1);
 
     method.restore({
       field: 'otherField',
-      showEmptyBins: false
+      showEmptyBins: false,
+      maxBins: 'not a number' // does not override the '1' provided before
     });
     expect(method.getField()).toBe('otherField');
     expect(method.getShowEmptyBins()).toBe(false);
+    expect(method.getMaxBins()).toBe(1);
   });
 
   it('should provide bins statistics', function() {
