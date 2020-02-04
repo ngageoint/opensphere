@@ -198,12 +198,12 @@ describe('os.time', function() {
     os.time.applyOffset('UTC+04:15');
     expect(os.time.timeOffset).toBe(4 * 60 * 60 * 1000 + 15 * 60 * 1000);
     expect(os.time.timeOffsetLabel).toBe('+0415');
-    expect(os.time.toOffsetString(0)).toBe('1970-01-01 04:15:00 +0415');
+    expect(os.time.toOffsetString(0)).toBe('1970-01-01T04:15:00 +0415');
 
     os.time.applyOffset('-0600');
     expect(os.time.timeOffset).toBe(-6 * 60 * 60 * 1000);
     expect(os.time.timeOffsetLabel).toBe('-0600');
-    expect(os.time.toOffsetString(0)).toBe('1969-12-31 18:00:00 -0600');
+    expect(os.time.toOffsetString(0)).toBe('1969-12-31T18:00:00 -0600');
 
     // set these back to the default so other tests don't break
     os.time.applyOffset('+0000');

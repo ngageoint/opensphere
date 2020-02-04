@@ -49,7 +49,7 @@ describe('os.im.mapping.time.DateTimeMapping', function() {
   });
 
   it('should get a os.time.ITime instance based on the time type', function() {
-    var t = goog.now();
+    var t = Date.now();
     var time = dtm.getNewTime(t);
     expect(time).not.toBeNull();
     expect(time instanceof os.time.TimeInstant).toBe(true);

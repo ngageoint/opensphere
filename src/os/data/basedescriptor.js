@@ -466,7 +466,7 @@ os.data.BaseDescriptor.prototype.getLastActive = function() {
  * There are times when we need to update the last active without actually activating the descriptor.
  */
 os.data.BaseDescriptor.prototype.touchLastActive = function() {
-  this.lastActive_ = goog.now();
+  this.lastActive_ = Date.now();
 };
 
 
@@ -526,7 +526,7 @@ os.data.BaseDescriptor.prototype.setActiveInternal = function() {
 os.data.BaseDescriptor.prototype.onDescriptorReady = function() {
   // if the descriptor was activated, update the last active time
   if (this.isActive()) {
-    this.lastActive_ = goog.now();
+    this.lastActive_ = Date.now();
   }
 
   this.recordActivationMetric();

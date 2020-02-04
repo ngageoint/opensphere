@@ -35,7 +35,7 @@ plugin.descriptor.facet.SearchTerm.prototype.setTerm = function(term) {
   this.dateThreshold_ = -1;
 
   if (term) {
-    var now = goog.now();
+    var now = Date.now();
     this.dateThreshold_ = now - plugin.descriptor.facet.SearchTerm.DURATION_;
   }
 };
