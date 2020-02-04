@@ -103,9 +103,13 @@ describe('os.histo.UniqueBinMethod', function() {
       return 'hi';
     };
     method.setValueFunction(fn);
+    method.setShowEmptyBins(true);
+    method.setMaxBins(1);
 
     var clone = method.clone();
     expect(clone.getField()).toBe('field');
+    expect(clone.getShowEmptyBins()).toBe(true);
+    expect(clone.getMaxBins()).toBe(1);
     expect(clone.valueFunction).toBe(fn);
   });
 
@@ -116,21 +120,69 @@ describe('os.histo.UniqueBinMethod', function() {
     // if the field isn't set, don't change it
     method.restore({});
     expect(method.getField()).toBe('field');
+    expect(method.getShowEmptyBins()).toBe(false);
+    expect(method.getMaxBins()).toBe(Infinity);
 
     method.restore({
       field: null
     });
     expect(method.getField()).toBe('field');
+    expect(method.getShowEmptyBins()).toBe(false);
+    expect(method.getMaxBins()).toBe(Infinity);
 
     // sets the field if the value is a string
     method.restore({
-      field: ''
+      field: '',
+      showEmptyBins: true,
+      maxBins: '1'
     });
     expect(method.getField()).toBe('');
+    expect(method.getShowEmptyBins()).toBe(true);
+    expect(method.getMaxBins()).toBe(1);
 
     method.restore({
-      field: 'otherField'
+      field: 'otherField',
+      showEmptyBins: false,
+      maxBins: 'not a number' // does not override the '1' provided before
     });
     expect(method.getField()).toBe('otherField');
+    expect(method.getShowEmptyBins()).toBe(false);
+    expect(method.getMaxBins()).toBe(1);
+  });
+
+  it('should provide bins statistics', function() {
+    var method = new os.histo.UniqueBinMethod();
+    method.setField('field');
+
+    var min = 0;
+    var max = 4;
+    var bins = [];
+    var bin;
+
+    bin = new os.data.histo.ColorBin('#000');
+    bin['key'] = min;
+    bin['label'] = method.getLabelForKey(min);
+    bin['id'] = bin['label'];
+    bin['series'] = '';
+    bin['count'] = 0;
+    bin['sel'] = false;
+    bin['highlight'] = false;
+    bins.push(bin);
+
+    bin = new os.data.histo.ColorBin('#000');
+    bin['key'] = max;
+    bin['label'] = method.getLabelForKey(max);
+    bin['id'] = bin['label'];
+    bin['series'] = '';
+    bin['count'] = 0;
+    bin['sel'] = false;
+    bin['highlight'] = false;
+    bins.push(bin);
+
+    var stats = method.getStatsForBin(bins);
+    expect(stats.range[0]).toBe(min);
+    expect(stats.range[1]).toBe(max);
+    expect(stats.binCount).toBe(2);
+    expect(stats.binCountAll).toBe(5);
   });
 });
