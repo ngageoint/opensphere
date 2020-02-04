@@ -59,7 +59,7 @@ goog.inherits(os.query.AreaManager, os.query.BaseAreaManager);
 goog.addSingletonGetter(os.query.AreaManager);
 
 // replace the os.ui AreaManager's getInstance with this one so we never instantiate a second instance
-goog.object.extend(os.query.BaseAreaManager, {
+Object.assign(os.query.BaseAreaManager, {
   getInstance: function() {
     return os.query.AreaManager.getInstance();
   }

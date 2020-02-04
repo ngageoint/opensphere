@@ -96,7 +96,7 @@ describe('os.data.BaseDescriptor', function() {
     d.setDescription('not descriptive yet');
     var expectedHtmlDescription =
      'Layer Name: D1<br>Provider: Test<br>Type: Vectorz<br>' +
-     'Time: 2018-03-16 23:29:25Z to 2018-03-17 02:17:34Z<br><br>' +
+     'Time: 2018-03-16T23:29:25Z to 2018-03-17T02:17:34Z<br><br>' +
      'not descriptive yet<br><br>' +
      'Tags: one, two, three, five<br><br>';
     expect(d.getHtmlDescription()).toBe(expectedHtmlDescription);

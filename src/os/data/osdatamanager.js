@@ -59,7 +59,7 @@ goog.inherits(os.data.OSDataManager, os.data.DataManager);
 goog.addSingletonGetter(os.data.OSDataManager);
 
 // replace the os.ui DataManager's getInstance with this one so we never instantiate a second instance
-goog.object.extend(os.data.DataManager, {
+Object.assign(os.data.DataManager, {
   getInstance: function() {
     return os.data.OSDataManager.getInstance();
   }

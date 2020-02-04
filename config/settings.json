@@ -201,7 +201,7 @@
     },
     "plugins": {},
     "bearing": {
-      "cofUrl": "vendor/geomag/WMM.COF",
+      "cofUrl": "vendor/geomag/WMM.txt",
       "cofVersion": "2015-2020",
       "magneticNorthHelpUrl": "https://www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml"
     },

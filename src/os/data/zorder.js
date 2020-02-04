@@ -126,7 +126,7 @@ os.data.ZOrder.prototype.mergeFromMap_ = function() {
       for (var k = 0, l = list.length; k < l; k++) {
         if (list[k].id == layer.getId()) {
           found = true;
-          list[k].time = goog.now();
+          list[k].time = Date.now();
           break;
         }
       }
@@ -134,7 +134,7 @@ os.data.ZOrder.prototype.mergeFromMap_ = function() {
       if (!found) {
         list.push({
           id: layer.getId(),
-          time: goog.now()
+          time: Date.now()
         });
       }
     }
@@ -274,7 +274,7 @@ os.data.ZOrder.prototype.moveHighestAndUpdate = function(id) {
       for (var k = 0, l = list.length; k < l; k++) {
         if (list[k].id == layer.getId()) {
           found = true;
-          list[k].time = goog.now();
+          list[k].time = Date.now();
           break;
         }
       }
@@ -282,7 +282,7 @@ os.data.ZOrder.prototype.moveHighestAndUpdate = function(id) {
       if (!found) {
         list.push({
           id: layer.getId(),
-          time: goog.now()
+          time: Date.now()
         });
       }
 
@@ -396,7 +396,7 @@ os.data.ZOrder.prototype.save = function() {
  */
 os.data.ZOrder.prototype.expire_ = function() {
   if (this.groups_) {
-    var now = goog.now();
+    var now = Date.now();
 
     for (var groupId in this.groups_) {
       var list = this.groups_[groupId];
