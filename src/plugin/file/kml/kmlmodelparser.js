@@ -15,11 +15,11 @@ plugin.file.kml.KMLModelParser = function() {};
  * @param {Object} object The object to add the model information to.
  */
 plugin.file.kml.KMLModelParser.prototype.parseModel = function(el, object) {
-  for (var i = el.children.length - 1; i >= 0; i--) {
+  for (let i = el.children.length - 1; i >= 0; i--) {
     if (el.children[i].localName == 'Model') {
-      var modelElement = el.children[i];
-      var modelObject = {};
-      for (var j = 0; j < modelElement.children.length; j++) {
+      const modelElement = el.children[i];
+      const modelObject = {};
+      for (let j = 0; j < modelElement.children.length; j++) {
         if (modelElement.children[j].localName == 'Location') {
           this.parseLocation(modelElement.children[j], object);
         } else if (modelElement.children[j].localName == 'Orientation') {
@@ -34,9 +34,9 @@ plugin.file.kml.KMLModelParser.prototype.parseModel = function(el, object) {
       }
 
       const keys = Object.keys(el.assetMap);
-      var imagesObject = {};
-      for (var k = 0; k < keys.length; k++) {
-        var key = keys[k];
+      const imagesObject = {};
+      for (let k = 0; k < keys.length; k++) {
+        const key = keys[k];
         if (!key.endsWith('.dae')) {
           imagesObject[key] = el.assetMap[key];
         }
@@ -57,9 +57,9 @@ plugin.file.kml.KMLModelParser.prototype.parseModel = function(el, object) {
  * @private
  */
 plugin.file.kml.KMLModelParser.prototype.parseAltMode = function(el, object) {
-  var altModeText = el.textContent;
+  const altModeText = el.textContent;
 
-  var altMode = os.webgl.AltitudeMode.CLAMP_TO_GROUND;
+  let altMode = os.webgl.AltitudeMode.CLAMP_TO_GROUND;
   if (altModeText == 'relativeToGround') {
     altMode = os.webgl.AltitudeMode.RELATIVE_TO_GROUND;
   }
@@ -76,8 +76,8 @@ plugin.file.kml.KMLModelParser.prototype.parseAltMode = function(el, object) {
  * @private
  */
 plugin.file.kml.KMLModelParser.prototype.parseLink = function(placemark, el, object) {
-  var colladaFileName = el.children[0].textContent;
-  var colladaData = placemark.assetMap[colladaFileName];
+  const colladaFileName = el.children[0].textContent;
+  const colladaData = placemark.assetMap[colladaFileName];
   object['collada'] = colladaData;
 };
 
@@ -93,7 +93,7 @@ plugin.file.kml.KMLModelParser.prototype.parseLocation = function(el, object) {
   let lon;
   let alt;
 
-  for (var i = 0; i < el.children.length; i++) {
+  for (let i = 0; i < el.children.length; i++) {
     if (el.children[i].localName == 'longitude') {
       lon = parseFloat(el.children[i].textContent);
     } else if (el.children[i].localName == 'latitude') {
@@ -114,7 +114,7 @@ plugin.file.kml.KMLModelParser.prototype.parseLocation = function(el, object) {
  * @private
  */
 plugin.file.kml.KMLModelParser.prototype.parseOrientation = function(el, object) {
-  for (var i = 0; i < el.children.length; i++) {
+  for (let i = 0; i < el.children.length; i++) {
     if (el.children[i].localName == 'heading') {
       object['heading'] = parseFloat(el.children[i].textContent);
     } else if (el.children[i].localName == 'tilt') {
@@ -133,7 +133,7 @@ plugin.file.kml.KMLModelParser.prototype.parseOrientation = function(el, object)
  * @private
  */
 plugin.file.kml.KMLModelParser.prototype.parseScale = function(el, object) {
-  for (var i = 0; i < el.children.length; i++) {
+  for (let i = 0; i < el.children.length; i++) {
     if (el.children[i].localName == 'x') {
       object['scaleX'] = parseFloat(el.children[i].textContent);
     } else if (el.children[i].localName == 'y') {
