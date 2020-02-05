@@ -42,14 +42,14 @@ os.command.ICommand.prototype.isAsync;
 
 
 /**
- * The title of the command
+ * The title of the command.
  * @type {?string}
  */
 os.command.ICommand.prototype.title;
 
 
 /**
- * The details of the command
+ * The details of the command.
  * @type {?string}
  */
 os.command.ICommand.prototype.details;
