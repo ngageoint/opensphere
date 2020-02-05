@@ -49,10 +49,14 @@ The string can also be referenced using the old pattern, without a return value 
     goog.require('my.ns');
     console.log(my.ns.myString);
 
+.. warning:: ``goog.require`` only has a return value when called within a module. It returns the exports of the required module, or if requiring a legacy file it will return the value assigned to the required namespace.
+
 Requiring a Module in Legacy Code
 ---------------------------------
 
-``goog.require`` only has a return value when called from a module, on another module. It does not have a return value if called from a legacy file, or if the target is a legacy file. In either of these cases the require should be referenced using the full namespace. This backward compatibility is made possible by calling a special Closure function within a module, ``goog.declareLegacyNamespace``.
+In a legacy file, ``goog.require`` always returns ``null`` and should never be assigned to a variable. Doing so would pollute the global context by adding the variable name to ``window``.
+
+Required namespaces should be referenced by the full namespace, which has to exist on ``window``. To make a module's exports available on ``window``, the module must call a special function, ``goog.module.declareLegacyNamespace``.
 
 Legacy Namespace Compatibility
 ******************************
