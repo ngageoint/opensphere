@@ -195,10 +195,12 @@ const getTextAlignMap = () => {
 const updateHorizontalOrigin = (label, textStyle) => {
   const textAlign = textStyle.getTextAlign();
   const textAlignMap = getTextAlignMap();
-  if (textAlign in textAlignMap) {
-    label.horizontalOrigin = textAlignMap[textAlign];
-  } else {
-    goog.asserts.fail('unhandled text align ' + textAlign);
+  if (textAlign) {
+    if (textAlign in textAlignMap) {
+      label.horizontalOrigin = textAlignMap[textAlign];
+    } else {
+      goog.asserts.fail('unhandled text align ' + textAlign);
+    }
   }
 };
 
@@ -233,10 +235,13 @@ const getTextBaselineMap = () => {
 const updateVerticalOrigin = (label, textStyle) => {
   const textBaseline = textStyle.getTextBaseline();
   const textBaselineMap = getTextBaselineMap();
-  if (textBaseline in textBaselineMap) {
-    label.verticalOrigin = textBaselineMap[textBaseline];
-  } else {
-    goog.asserts.fail('unhandled baseline ' + textBaseline);
+
+  if (textBaseline) {
+    if (textBaseline in textBaselineMap) {
+      label.verticalOrigin = textBaselineMap[textBaseline];
+    } else {
+      goog.asserts.fail('unhandled baseline ' + textBaseline);
+    }
   }
 };
 

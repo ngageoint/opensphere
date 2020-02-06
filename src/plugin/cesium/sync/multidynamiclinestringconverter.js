@@ -74,10 +74,7 @@ const update = (feature, geometry, style, context, primitive) => {
     return false;
   }
 
-  for (let i = 0, n = primitive.length; i < n; i++) {
-    createOrUpdateDynamicMultiLineString(feature, geometry, style, context, primitive.get(i));
-  }
-
+  createOrUpdateDynamicMultiLineString(feature, geometry, style, context, primitive);
   primitive.dirty = false;
   return true;
 };

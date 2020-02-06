@@ -311,6 +311,11 @@ Cesium.Color.byteToFloat = function(component) {};
 Cesium.prototype.writeTextToCanvas = function(text, opt_description) {};
 
 
+/**
+ * @typedef {HTMLCanvasElement|HTMLVideoElement|Image|string}
+ */
+Cesium.ImageLike;
+
 
 /**
  * @constructor
@@ -393,7 +398,7 @@ Cesium.Billboard.prototype.geomRevision;
 
 /**
  * @param {string|number} id The image id
- * @param {HTMLCanvasElement|HTMLVideoElement|Image|string} image The new image
+ * @param {Cesium.ImageLike|Promise<Cesium.ImageLike>} image The new image
  */
 Cesium.Billboard.prototype.setImage = function(id, image) {};
 
@@ -455,7 +460,7 @@ Cesium.BillboardCollection = function(opt_options) {};
 
 /**
  * @typedef {{
- *   image: (string|HTMLCanvasElement|HTMLImageElement|Image),
+ *   image: (Cesium.ImageLike|Promise<Cesium.ImageLike>),
  *   imageId: (string|number),
  *   color: (Cesium.Color|undefined),
  *   verticalOrigin: (Cesium.VerticalOrigin|undefined),
