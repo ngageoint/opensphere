@@ -40,12 +40,26 @@ plugin.weather.WeatherPlugin.prototype.init = function() {
     if (group) {
       group.addChild({
         label: 'Weather Forecast',
+        link: url,
         eventType: plugin.weather.WeatherPlugin.ID,
         tooltip: 'Open the weather forecast for this location',
-        icons: ['<i class="fa fa-fw fa-umbrella"></i>']
-      });
+        icons: ['<i class="fa fa-fw fa-umbrella"></i>'],
+        beforeRender:
+          /**
+           * @param {ol.Coordinate} coord
+           * @this {os.ui.menu.MenuItem<ol.Coordinate>}
+           */
+          function(coord) {
+            var url = plugin.weather.getUrl_();
 
-      menu.listen(plugin.weather.WeatherPlugin.ID, plugin.weather.onLookup_);
+            if (url) {
+              url = url.replace('{lon}', coord[0].toString());
+              url = url.replace('{lat}', coord[1].toString());
+            }
+
+            this.link = url;
+          }
+      });
     }
   }
 };
@@ -63,33 +77,4 @@ plugin.weather.getUrl_ = function() {
   }
 
   return null;
-};
-
-
-/**
- * Forecast menu option listener
- *
- * @param {os.ui.menu.MenuEvent<ol.Coordinate>} evt The menu event
- * @private
- */
-plugin.weather.onLookup_ = function(evt) {
-  plugin.weather.launchForecast(evt.getContext());
-};
-
-
-/**
- * Opens a weather forecast for the given location
- *
- * @param {ol.Coordinate} coord
- */
-plugin.weather.launchForecast = function(coord) {
-  var url = plugin.weather.getUrl_();
-  coord = ol.proj.toLonLat(coord, os.map.PROJECTION);
-
-  if (url) {
-    url = url.replace('{lon}', coord[0].toString());
-    url = url.replace('{lat}', coord[1].toString());
-
-    window.open(url, '_blank');
-  }
 };

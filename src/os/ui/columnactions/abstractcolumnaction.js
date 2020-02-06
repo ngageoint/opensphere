@@ -1,5 +1,4 @@
 goog.provide('os.ui.columnactions.AbstractColumnAction');
-goog.require('goog.structs.Map');
 
 
 
