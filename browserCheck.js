@@ -114,7 +114,7 @@ function populateCheckInfo(doSpin) {
  */
 function checkCompat() {
   return typeof (Modernizr) != 'undefined' && Modernizr.canvas && Modernizr.localstorage && Modernizr.svg &&
-      Modernizr.webworkers && Modernizr.flexbox && Modernizr.indexeddb == true && Modernizr.cors;
+      Modernizr.webworkers && Modernizr.flexbox && Modernizr.cors;
 }
 
 
