@@ -213,7 +213,9 @@ os.ui.menu.Menu.prototype.open = function(context, position, opt_target, opt_dis
  * Reopen the menu to update it. If the menu isn't already open, nothing will happen.
  */
 os.ui.menu.Menu.prototype.reopen = function() {
-  if (this.target_) {
+  if (this.target_ && this.isOpen_) {
+    // prevent open from closing the menu and returning early
+    this.isOpen_ = false;
     this.open(this.context_, this.position_, this.target_, false);
   }
 };
