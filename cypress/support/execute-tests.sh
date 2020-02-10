@@ -75,8 +75,8 @@ function setVariables() {
 function checkArguments() {
   echo 'INFO: checking script arguments'
 
-  if ! [[ "$ENVIRONMENT" =~ ^(dev|ci)$ ]]; then
-    echo "ERROR: only dev and ci accepted as a valid environment argument; '$ENVIRONMENT' is not valid"
+  if ! [[ "$LOCAL_ENVIRONMENT" =~ ^(dev|ci)$ ]]; then
+    echo "ERROR: only dev and ci accepted as a valid environment argument; '$LOCAL_ENVIRONMENT' is not valid"
     exit 1
   fi
 
@@ -130,7 +130,7 @@ function checkEnvironment() {
 
   if ls $PLUGIN 1> /dev/null 2>&1; then
     echo 'WARNING: a plugin exists that may affect the test results!'
-    if ! [ "$ENVIRONMENT" == "ci" ]; then
+    if ! [ "$LOCAL_ENVIRONMENT" == "ci" ]; then
       read -t 30 -p "Press CTRL+C to Cancel, ENTER to Continue or wait 30 seconds"
       echo ''
     fi
@@ -178,7 +178,7 @@ function checkEnvironment() {
 }
 
 function configureSound() {
-  if [ "$ENVIRONMENT" == "ci" ]; then
+  if [ "$LOCAL_ENVIRONMENT" == "ci" ]; then
     echo 'INFO: configuring sound ouput (fixes ALSA errors)'
     sudo cp $SOUND_CONFIGURATION_SOURCE $SOUND_CONFIGURATION_TARGET
   fi
@@ -236,7 +236,7 @@ function startWebServer() {
 
   if [ -z "$webServerProcess" ]; then
     SERVER_STARTED=true
-    if [ "$ENVIRONMENT" == "ci" ]; then
+    if [ "$LOCAL_ENVIRONMENT" == "ci" ]; then
       echo 'INFO: starting web server in continuous integration environment'
       $(npm bin)/http-server -p 8282 -c-1 -s &
     else
@@ -250,7 +250,7 @@ function startWebServer() {
 
 function runTests() {
   if [ "$MODE" == "cli" ]; then
-    if [ "$ENVIRONMENT" == "ci" ]; then
+    if [ "$LOCAL_ENVIRONMENT" == "ci" ]; then
       echo 'INFO: starting Cypress in continuous integration environment'
       $(npm bin)/cypress run --config baseUrl=http://localhost:8282/dist/opensphere --spec "$TEST_SPECS"
       TEST_RESULT=$?
@@ -334,7 +334,7 @@ function restoreSettings() {
 }
 
 #dev or ci (required)
-ENVIRONMENT=$1
+LOCAL_ENVIRONMENT=$1
 
 #cli or gui (required)
 MODE=$2
