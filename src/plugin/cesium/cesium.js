@@ -110,7 +110,7 @@ plugin.cesium.ionUrl = '';
 /**
  * @define {string} Base path to the Cesium library, from the OpenSphere root.
  */
-goog.define('plugin.cesium.LIBRARY_BASE_PATH', 'vendor/cesium');
+plugin.cesium.LIBRARY_BASE_PATH = goog.define('plugin.cesium.LIBRARY_BASE_PATH', 'vendor/cesium');
 
 
 /**

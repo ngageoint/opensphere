@@ -867,3 +867,18 @@ os.time.replaceNow_ = function(match, p1, offset, str) {
   return os.time.momentFormat(date, parts[1] || os.time.DEFAULT_TIME_FORMAT, true);
 };
 os.net.VariableReplacer.add('now', os.time.replaceNow_);
+
+
+/**
+ * Gets the difference in millis between the original date and the offset one.
+ *
+ * @param {Date} date The date to offset
+ * @param {string} duration The duration of the offset
+ * @param {number} offset Multiplier for the duration
+ * @param {boolean=} opt_local Whether the incoming and outgoing dates are local or UTC
+ * @return {number} The new date
+ */
+os.time.step = function(date, duration, offset, opt_local) {
+  var next = os.time.offset(date, duration, offset, opt_local);
+  return (next.getTime() - date.getTime());
+};

@@ -171,7 +171,7 @@ os.object.reduce = function(obj, opt_prefix, opt_delim) {
         // otherwise continue reducing the object
         for (var key in obj) {
           var reduced = os.object.reduce(obj[key], prefix ? prefix + delim + key : key, delim);
-          goog.object.extend(result, reduced);
+          Object.assign(result, reduced);
         }
       }
     }

@@ -8,13 +8,13 @@ goog.require('os.defines');
  * @define {string} Namespace used by settings to indicate which application is making updates.
  * Will be assigned by each app.
  */
-goog.define('os.config.appNs', os.NAMESPACE);
+os.config.appNs = goog.define('os.config.appNs', os.NAMESPACE);
 
 
 /**
  * @define {string} Namespace for common settings - those to be rememberred across all applications
  */
-goog.define('os.config.coreNs', 'core');
+os.config.coreNs = goog.define('os.config.coreNs', 'core');
 
 
 /**
