@@ -61,19 +61,19 @@ os.file.FileStorage.LOGGER_ = goog.log.getLogger('os.file.FileStorage');
 /**
  * @define {string} The database name. Override this in the application to use a separate database for storage.
  */
-goog.define('os.FILE_DB_NAME', os.NAMESPACE + '.files');
+os.FILE_DB_NAME = goog.define('os.FILE_DB_NAME', os.NAMESPACE + '.files');
 
 
 /**
  * @define {number} The database version.
  */
-goog.define('os.FILE_DB_VERSION', 2);
+os.FILE_DB_VERSION = goog.define('os.FILE_DB_VERSION', 2);
 
 
 /**
  * @define {string} The file store name
  */
-goog.define('os.FILE_STORE_NAME', 'files');
+os.FILE_STORE_NAME = goog.define('os.FILE_STORE_NAME', 'files');
 
 
 /**

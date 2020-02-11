@@ -1,4 +1,4 @@
-goog.module('os.ui.Map');
+goog.module('os.ui.MapUI');
 goog.module.declareLegacyNamespace();
 
 /**

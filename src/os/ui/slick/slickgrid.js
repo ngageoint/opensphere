@@ -462,7 +462,7 @@ os.ui.slick.SlickGridCtrl.prototype.getOptions = function() {
 
   if (this.scope['options']) {
     var o = goog.object.clone(defaults);
-    goog.object.extend(o, this.scope['options']);
+    Object.assign(o, this.scope['options']);
     return o;
   }
 
@@ -1521,7 +1521,7 @@ os.ui.slick.SlickGridCtrl.prototype.onRowRender = function(e, args) {
   var s = this.scope.$new();
 
   if (goog.isObject(this.scope['rowScope'])) {
-    goog.object.extend(s, this.scope['rowScope']);
+    Object.assign(s, this.scope['rowScope']);
   }
 
   // put the data item on the scope

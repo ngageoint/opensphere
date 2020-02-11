@@ -8,6 +8,7 @@
   <div ng-if="target.$error.unique || target.$error.exists">Already exists!</div>
   <div ng-if="target.$error.alphanumeric">{{context ? context + ' c' : 'C'}}an't contain any special characters or spaces!</div>
   <div ng-if="target.$error.duplicate">{{context ? context + ' m' : 'M'}}ust be unique!</div>
+  <div ng-if="target.$error.url">{{context ? context + ' ' : 'Input'}} must be a url!</div>
   <div ng-if="target.tags.$error.maxlength">Tags are too long!</div>
   <div ng-if="target.$invalid && !target.$error">Invalid!</div>
 </div>

@@ -311,7 +311,7 @@ os.layer.AnimatedTile.updateParams = function(timeValue) {
   };
 
   if (newParams['TIME'] != oldParams['TIME']) {
-    goog.object.extend(oldParams, newParams);
+    Object.assign(oldParams, newParams);
     source.updateParams(oldParams);
   }
 };

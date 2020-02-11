@@ -451,6 +451,19 @@ os.histo.NumericBinMethod.prototype.getFilterForRange_ = function(range) {
 
 
 /**
+ * @inheritDoc
+ */
+os.histo.NumericBinMethod.prototype.getStatsForBin = function(bins) {
+  var result = os.histo.NumericBinMethod.base(this, 'getStatsForBin', bins);
+  if (result != null) {
+    result.step = this.getWidth() || 1; // don't allow divide by 0 errors
+    result.binCountAll = ((result.range[1] - result.range[0]) / result.step) + 1;
+  }
+  return result;
+};
+
+
+/**
  * Test if a value is between or equal to the bin method's range for a set of minimum values.
  *
  * @param {!Array<number>} values The values to check

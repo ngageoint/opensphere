@@ -164,7 +164,7 @@ os.net.SameDomainHandler.prototype.execute = function(
 
   if (opt_nocache) {
     // add a cache defeater
-    uri.setParameterValue('_cd', goog.now());
+    uri.setParameterValue('_cd', Date.now());
   }
 
   this.req.setResponseType(opt_responseType || goog.net.XhrIo.ResponseType.DEFAULT);
