@@ -77,7 +77,7 @@ os.config.isTerrainConfigured = function() {
  * @return {boolean}
  */
 os.config.isFogConfigured = function() {
-  var fogSupport = /** @type {boolean|undefined} */ os.settings.get(os.config.DisplaySetting.FOG_UNSUPPORTED);
+  var fogSupport = /** @type {boolean|undefined} */ (os.settings.get(os.config.DisplaySetting.FOG_UNSUPPORTED));
   return !(fogSupport);
 };
 
