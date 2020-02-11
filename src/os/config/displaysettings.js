@@ -50,7 +50,7 @@ os.config.DisplaySetting = {
   CAMERA_STATE: os.config.DisplaySettings.BASE_KEY + 'cameraState',
   CAMERA_MODE: os.config.DisplaySettings.BASE_KEY + 'cameraMode',
   MAP_MODE: os.config.DisplaySettings.BASE_KEY + 'mapMode',
-  FOG_UNSUPPORTED: os.config.DisplaySettings.BASE_KEY + 'fogUnsupported',
+  FOG_SUPPORTED: os.config.DisplaySettings.BASE_KEY + 'fogSupported',
   FOG_ENABLED: os.config.DisplaySettings.BASE_KEY + 'fogEnabled',
   FOG_DENSITY: os.config.DisplaySettings.BASE_KEY + 'fogDensity',
   ENABLE_SKY: os.config.DisplaySettings.BASE_KEY + 'enableSky',
@@ -77,8 +77,8 @@ os.config.isTerrainConfigured = function() {
  * @return {boolean}
  */
 os.config.isFogConfigured = function() {
-  var fogSupport = /** @type {boolean|undefined} */ (os.settings.get(os.config.DisplaySetting.FOG_UNSUPPORTED));
-  return !(fogSupport);
+  var fogSupport = /** @type {boolean|undefined} */ (os.settings.get(os.config.DisplaySetting.FOG_SUPPORTED, true));
+  return !!(fogSupport);
 };
 
 /**
