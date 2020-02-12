@@ -8,7 +8,6 @@ goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuButtonCtrl');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
-goog.require('os.ui.ol.interaction.AbstractDraw');
 
 /**
  * The add data button bar directive
@@ -64,12 +63,6 @@ os.ui.MeasureButtonCtrl = function($scope, $element) {
 
   this.scope['measuring'] = false;
 
-  /**
-   * @type {Object<string, boolean>}
-   * @private
-   */
-  this.prevActiveMap_ = {};
-
   os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWEND, this.onDrawEnd_, false, this);
   os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWCANCEL, this.onDrawEnd_, false, this);
 
@@ -113,28 +106,6 @@ os.ui.MeasureButtonCtrl.prototype.toggle = function(opt_value) {
 
   if (measure) {
     opt_value = opt_value !== undefined ? opt_value : !measure.getActive();
-
-    if (opt_value) {
-      this.prevActiveMap_ = {};
-    }
-
-    var interactions = os.MapContainer.getInstance().getMap().getInteractions().getArray();
-
-    for (var i = 0, n = interactions.length; i < n; i++) {
-      if (interactions[i] instanceof os.ui.ol.interaction.AbstractDraw) {
-        var interaction = /** @type {os.ui.ol.interaction.AbstractDraw} */ (interactions[i]);
-        var type = interaction.getType();
-
-        if (opt_value) {
-          this.prevActiveMap_[type] = interaction.getActive();
-          interaction.setActive(false);
-        } else if (type in this.prevActiveMap_) {
-          interaction.setActive(this.prevActiveMap_[type]);
-        } else {
-          interaction.setActive(false);
-        }
-      }
-    }
 
     measure.setEnabled(opt_value);
     measure.setActive(opt_value);
