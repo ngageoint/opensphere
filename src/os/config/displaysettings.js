@@ -50,6 +50,7 @@ os.config.DisplaySetting = {
   CAMERA_STATE: os.config.DisplaySettings.BASE_KEY + 'cameraState',
   CAMERA_MODE: os.config.DisplaySettings.BASE_KEY + 'cameraMode',
   MAP_MODE: os.config.DisplaySettings.BASE_KEY + 'mapMode',
+  FOG_SUPPORTED: os.config.DisplaySettings.BASE_KEY + 'fogSupported',
   FOG_ENABLED: os.config.DisplaySettings.BASE_KEY + 'fogEnabled',
   FOG_DENSITY: os.config.DisplaySettings.BASE_KEY + 'fogDensity',
   ENABLE_SKY: os.config.DisplaySettings.BASE_KEY + 'enableSky',
@@ -70,6 +71,15 @@ os.config.isTerrainConfigured = function() {
   return !!(options && options.type);
 };
 
+/**
+ * If fog has been configured in the application.
+ *
+ * @return {boolean}
+ */
+os.config.isFogConfigured = function() {
+  var fogSupport = /** @type {boolean|undefined} */ (os.settings.get(os.config.DisplaySetting.FOG_SUPPORTED, true));
+  return !!(fogSupport);
+};
 
 /**
  * The display settings UI directive
@@ -471,6 +481,16 @@ os.config.DisplaySettingsCtrl.prototype.onTerrainChange_ = function(event) {
  */
 os.config.DisplaySettingsCtrl.prototype.supportsTerrain = function() {
   return os.config.isTerrainConfigured();
+};
+
+/**
+ * If fog is available in the application.
+ *
+ * @return {boolean}
+ * @export
+ */
+os.config.DisplaySettingsCtrl.prototype.supportsFog = function() {
+  return os.config.isFogConfigured();
 };
 
 
