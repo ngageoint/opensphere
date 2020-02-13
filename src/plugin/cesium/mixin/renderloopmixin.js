@@ -48,7 +48,7 @@ goog.require('os.time.TimelineEventType');
    */
   olcs.AutoRenderLoop.prototype.onPostUpdate_ = function() {
     // render for at least a whole second after a GL_REPAINT event is fired
-    if (goog.now() - lastRepaintEventTime < 1000) {
+    if (Date.now() - lastRepaintEventTime < 1000) {
       this.scene_.requestRender();
     }
   };
@@ -71,6 +71,6 @@ goog.require('os.time.TimelineEventType');
     }
 
     origNotify.call(this);
-    lastRepaintEventTime = goog.now();
+    lastRepaintEventTime = Date.now();
   };
 })();

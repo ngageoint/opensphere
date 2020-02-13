@@ -23,9 +23,29 @@ goog.require('os.metrics.Metrics');
  */
 os.command.AbstractLayer = function(opt_options) {
   os.command.AbstractLayer.base(this, 'constructor');
+
+  /**
+   * The details of the command.
+   * @type {?string}
+   */
   this.details = null;
+
+  /**
+   * Whether or not the command is asynchronous.
+   * @type {boolean}
+   */
   this.isAsync = false;
+
+  /**
+   * Return the current state of the command.
+   * @type {!os.command.State}
+   */
   this.state = os.command.State.READY;
+
+  /**
+   * The title of the command.
+   * @type {?string}
+   */
   this.title = 'Add/Remove Layer';
 
   /**

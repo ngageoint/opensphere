@@ -111,6 +111,26 @@ os.histo.DateBinMethod.MAGIC = moment.utc('0867-05-03T09:00:00Z').valueOf();
 
 
 /**
+ * "Unique" value used to detect when generating empty bins across month(s)
+ * WARNING: Over thousands of years, the stats.binCountAll estimate will get more and more off
+ *
+ * @type {number}
+ * @const
+ */
+os.histo.DateBinMethod.MAGIC_MONTH_MILLIS = 1000 * 60 * 60 * 2 * 365; // 2 = (24 / 12) i.e. days divided by 12 mo/yr
+
+
+/**
+ * "Unique" value used to detect when generating empty bins across year(s)
+ * WARNING: Over thousands of years, the stats.binCountAll estimate will get more and more off
+ *
+ * @type {number}
+ * @const
+ */
+os.histo.DateBinMethod.MAGIC_YEAR_MILLIS = (1000 * 60 * 60 * 24 * 365);
+
+
+/**
  * @return {os.histo.DateBinType}
  */
 os.histo.DateBinMethod.prototype.getDateBinType = function() {
@@ -168,7 +188,7 @@ os.histo.DateBinMethod.prototype.getTypeMax = function(opt_timestamp) {
       start.setUTCMonth(new Date(opt_timestamp).getUTCMonth(), 1);
       end.setUTCMonth(start.getUTCMonth() + 1, 1);
 
-      return Math.floor((end.getTime() - start.getTime()) / (60 * 60 * 1000));
+      return Math.floor((end.getTime() - start.getTime()) / (60 * 60 * 1000)) - 1; // goes from 0 to ((days * 24) - 1) hours
     case os.histo.DateBinType.HOUR_OF_YEAR:
       var start = new Date();
       var end = new Date();
@@ -178,7 +198,9 @@ os.histo.DateBinMethod.prototype.getTypeMax = function(opt_timestamp) {
       start.setUTCFullYear(new Date(opt_timestamp).getUTCFullYear(), 0, 1);
       end.setUTCFullYear(start.getUTCFullYear() + 1, 0, 1);
 
-      return Math.floor((end.getTime() - start.getTime()) / (60 * 60 * 1000));
+      return Math.floor((end.getTime() - start.getTime()) / (60 * 60 * 1000)) - 1; // goes from 0 to ((days * 24) - 1) hours
+    case os.histo.DateBinType.MONTH_OF_YEAR:
+      return 11;
     default:
       return 0;
   }
@@ -499,4 +521,63 @@ os.histo.DateBinMethod.prototype.restore = function(config) {
 os.histo.DateBinMethod.prototype.exportAsFilter = function(bins) {
   // don't create filters by date because they will conflict with the application date control
   return null;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.histo.DateBinMethod.prototype.getStatsForBin = function(bins) {
+  var result = os.histo.DateBinMethod.base(this, 'getStatsForBin', bins);
+  if (result == null) return result;
+
+  var max1 = this.getTypeMax(result.range[0]);
+  var max2 = this.getTypeMax(result.range[1]);
+
+  if (max1 != 0 || max2 != 0) {
+    // when the range is a logical time period, e.g. Day of Week, Hour of Day, etc
+    result.range = [0, (max2 > max1 ? max2 : max1)];
+    result.step = 1;
+    result.binCountAll = ((result.range[1] - result.range[0]) / result.step) + 1;
+  } else {
+    // when the range is a specific time period, e.g. Jan 3rd thru Jan 17th
+    var type = this.getDateBinType();
+    var min = new Date(result.range[0]);
+    var max = new Date(result.range[1]);
+    var floor = 'sec';
+    var step = 1000; // 1K milliseconds = 1 second
+    switch (type) {
+      case os.histo.DateBinType.MINUTE:
+        floor = 'min';
+        step = step * 60;
+        break;
+      case os.histo.DateBinType.HOUR:
+        floor = 'hour';
+        step = step * 60 * 60;
+        break;
+      case os.histo.DateBinType.DAY:
+        floor = 'day';
+        step = step * 60 * 60 * 24;
+        break;
+      case os.histo.DateBinType.WEEK:
+        floor = 'week';
+        step = step * 60 * 60 * 24 * 7;
+        break;
+      case os.histo.DateBinType.MONTH:
+        floor = 'month';
+        step = os.histo.DateBinMethod.MAGIC_MONTH_MILLIS; // approximate... you must detect this and then calculate the next step
+        break;
+      case os.histo.DateBinType.YEAR:
+        floor = 'year';
+        step = os.histo.DateBinMethod.MAGIC_YEAR_MILLIS; // approximate... you must detect this and then calculate the next step
+        break;
+      default:
+        break;
+    }
+    result.range = [os.time.floor(min, floor).getTime(), os.time.floor(max, floor).getTime()];
+    result.step = step;
+    // For MONTH and YEAR, err on the side of too many bins, e.g. for years with 366 days, still give a bin when dividing by 365 days
+    result.binCountAll = Math.round(((result.range[1] - result.range[0]) / result.step) + 1.0);
+  }
+  return result;
 };

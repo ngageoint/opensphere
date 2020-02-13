@@ -85,7 +85,7 @@ os.data.xf.DataModel.LOGGER_ = goog.log.getLogger('os.data.xf.DataModel');
  */
 os.data.xf.DataModel.prototype.add = function(items) {
   if (!this.isDisposed()) {
-    var then = goog.now();
+    var then = Date.now();
 
     if (!goog.isArray(items)) {
       items = [items];
@@ -94,7 +94,7 @@ os.data.xf.DataModel.prototype.add = function(items) {
     this.xf.add(items);
 
     goog.log.fine(os.data.xf.DataModel.LOGGER_,
-        'Added ' + items.length + ' items to the model in ' + (goog.now() - then) + 'ms.');
+        'Added ' + items.length + ' items to the model in ' + (Date.now() - then) + 'ms.');
   }
 };
 

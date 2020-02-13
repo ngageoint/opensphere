@@ -75,13 +75,13 @@ goog.inherits(os.ui.ol.interaction.ContextMenu, ol.interaction.Interaction);
 os.ui.ol.interaction.ContextMenu.prototype.handleEvent = function(event) {
   // save the right-down info...
   if (event.type === ol.MapBrowserEventType.POINTERDOWN) {
-    this.downTime = goog.now();
+    this.downTime = Date.now();
     this.downPixel = event.pixel || [0, 0];
     return true;
   }
 
   // ... so we can skip this if it was more of a drag
-  var time = goog.now();
+  var time = Date.now();
   var pixel = event.pixel || [0, 0];
   var line = new goog.math.Line(pixel[0], pixel[1], this.downPixel[0], this.downPixel[1]);
 

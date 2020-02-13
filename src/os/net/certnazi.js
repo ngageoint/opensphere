@@ -94,7 +94,7 @@ os.net.CertNazi.prototype.setUrls = function(urls) {
  */
 os.net.CertNazi.prototype.setPostUrl = function(url) {
   goog.asserts.assert(url.indexOf('https') === 0, 'The POST URL must be secure');
-  url += (url.indexOf('?') > -1 ? '&' : '?') + 'nocache=' + goog.now();
+  url += (url.indexOf('?') > -1 ? '&' : '?') + 'nocache=' + Date.now();
   this.postUrl_ = url;
 };
 
@@ -109,7 +109,7 @@ os.net.CertNazi.prototype.checkUrls_ = function(urls) {
   for (var i = 0, n = urls.length; i < n; i++) {
     goog.asserts.assert(urls[i].indexOf('https') === 0, 'The URL must be secure');
     // add a cache defeater
-    urls[i] += (urls[i].indexOf('?') > -1 ? '&' : '?') + '_cd=' + goog.now();
+    urls[i] += (urls[i].indexOf('?') > -1 ? '&' : '?') + '_cd=' + Date.now();
   }
 };
 

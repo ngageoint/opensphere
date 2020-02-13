@@ -886,7 +886,7 @@ os.config.Settings.prototype.markKeysForDelete_ = function(keys, newVal, oldVal)
  * @private
  */
 os.config.Settings.prototype.isExternal_ = function(value) {
-  return typeof value === 'object' && !(value instanceof Object || value instanceof Array);
+  return !(value instanceof Object || value instanceof Array) && typeof value === 'object';
 };
 
 

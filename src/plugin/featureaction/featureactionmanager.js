@@ -48,7 +48,7 @@ goog.addSingletonGetter(plugin.im.action.feature.Manager);
 
 
 // replace the base ImportActionManager singleton with this one
-goog.object.extend(os.im.action.ImportActionManager, {
+Object.assign(os.im.action.ImportActionManager, {
   getInstance: function() {
     return plugin.im.action.feature.Manager.getInstance();
   }

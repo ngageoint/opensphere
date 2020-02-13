@@ -167,7 +167,7 @@ os.audio.AudioManager.prototype.play = function(label, opt_timeBetweenPlays) {
     }
 
     var lastPlayed = this.lastPlayed_[url] || 0;
-    var now = goog.now();
+    var now = Date.now();
 
     if (!this.mute_ && (opt_timeBetweenPlays === undefined || now - lastPlayed > opt_timeBetweenPlays)) {
       goog.log.fine(os.audio.AudioManager.LOGGER_, 'Playing "' + label + '" from ' + url);

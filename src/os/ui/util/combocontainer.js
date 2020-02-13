@@ -78,7 +78,7 @@ os.ui.util.comboContainerLink = function($scope, $element, $attrs) {
       };
 
       if ($attrs['comboCss']) {
-        goog.object.extend(css, angular.fromJson($attrs['comboCss']));
+        Object.assign(css, angular.fromJson($attrs['comboCss']));
       }
 
       if ($attrs['resizable']) {

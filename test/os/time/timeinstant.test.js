@@ -53,7 +53,7 @@ describe('os.time.TimeInstant', function() {
 
   it('should print the correct time', function() {
     var t = new os.time.TimeInstant(h);
-    expect(t.toISOString()).toBe('1970-01-01 12:00:00Z');
+    expect(t.toISOString()).toBe('1970-01-01T12:00:00Z');
   });
 
   it('should check equality against other time instants', function() {

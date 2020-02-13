@@ -5,34 +5,34 @@ goog.module.declareLegacyNamespace();
 /**
  * @define {string} The root namespace for DB and storage keys
  */
-goog.define('os.NAMESPACE', 'opensphere');
+os.NAMESPACE = goog.define('os.NAMESPACE', 'opensphere');
 
 
 /**
  * @define {string} The path to this project
  */
-goog.define('os.ROOT', '../opensphere/');
+os.ROOT = goog.define('os.ROOT', '../opensphere/');
 
 
 /**
  * @define {string} The path to this project
  */
-goog.define('ROOT', './');
+os.APP_ROOT = goog.define('os.APP_ROOT', './');
 
 
 /**
  * @define {string} The settings file
  */
-goog.define('os.SETTINGS', '.build/settings-debug.json');
+os.SETTINGS = goog.define('os.SETTINGS', '.build/settings-debug.json');
 
 
 /**
  * @define {string} The DB name for settings storage
  */
-goog.define('os.SETTINGS_DB_NAME', os.NAMESPACE + '.settings');
+os.SETTINGS_DB_NAME = goog.define('os.SETTINGS_DB_NAME', os.NAMESPACE + '.settings');
 
 
 /**
  * @define {string} The database name used to transfer between apps
  */
-goog.define('os.SHARED_FILE_DB_NAME', 'com.bitsys.db');
+os.SHARED_FILE_DB_NAME = goog.define('os.SHARED_FILE_DB_NAME', 'com.bitsys.db');

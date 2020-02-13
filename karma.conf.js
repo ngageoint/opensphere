@@ -3,6 +3,7 @@
 
 const path = require('path');
 const resolver = require('opensphere-build-resolver/utils');
+const closureLibJsPattern = resolver.resolveModulePath('google-closure-library/**/*.js', __dirname);
 
 /**
  * Karma configuration for OpenSphere.
@@ -71,7 +72,7 @@ module.exports = function(config) {
       // source files for the script loader
       {pattern: 'src/**/*.js', watched: false, included: false, served: true},
       {pattern: 'test/**/*.js', watched: false, included: false, served: true},
-      {pattern: resolver.resolveModulePath('google-closure-library/**/*.js', __dirname), watched: false, included: false, served: true},
+      {pattern: closureLibJsPattern, watched: false, included: false, served: true},
       {pattern: resolver.resolveModulePath('openlayers/**/*.js', __dirname), watched: false, included: false, served: true},
       {pattern: resolver.resolveModulePath('ol-cesium/**/*.js', __dirname), watched: false, included: false, served: true},
 
@@ -106,7 +107,9 @@ module.exports = function(config) {
     //
     preprocessors: {
       'src/**/*.js': ['googmodule', 'coverage'],
-      'test/**/*.mock.js': ['googmodule']
+      'test/**/*.mock.js': ['googmodule'],
+      // support goog.module in Closure library
+      [`${closureLibJsPattern}`]: ['googmodule']
     },
 
     junitReporter: {

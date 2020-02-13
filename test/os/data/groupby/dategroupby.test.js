@@ -13,7 +13,7 @@ describe('os.data.groupby.DateGroupBy', function() {
 
     // if you set it *right at* 5 minutes then you run the risk of occasionally
     // failing the test if the init runs in the next ms
-    d.setMaxDate(goog.now() - 5 * 59 * 1000);
+    d.setMaxDate(Date.now() - 5 * 59 * 1000);
     by.init();
     var ids = by.getGroupIds(node);
 
@@ -40,7 +40,7 @@ describe('os.data.groupby.DateGroupBy', function() {
     var node = new os.ui.data.DescriptorNode();
     node.setDescriptor(d);
 
-    d.setMaxDate(goog.now() + 5 * 60 * 1000);
+    d.setMaxDate(Date.now() + 5 * 60 * 1000);
     by.init();
     var ids = by.getGroupIds(node);
 
@@ -54,7 +54,7 @@ describe('os.data.groupby.DateGroupBy', function() {
     var node = new os.ui.data.DescriptorNode();
     node.setDescriptor(d);
 
-    d.setMaxDate(goog.now() - 61 * 24 * 60 * 60 * 1000);
+    d.setMaxDate(Date.now() - 61 * 24 * 60 * 60 * 1000);
     by.init();
     var ids = by.getGroupIds(node);
 
