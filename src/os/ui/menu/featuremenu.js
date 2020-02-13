@@ -12,6 +12,7 @@ os.ui.menu.feature.GroupLabel = {
   SELECT: 'Select',
   SHOW_HIDE: 'Show/Hide',
   REMOVE: 'Remove',
+  COLOR: 'Color',
   TOOLS: 'Tools'
 };
 
