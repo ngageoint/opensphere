@@ -172,7 +172,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.clear_ = function() {
  * @private
  */
 plugin.file.kml.ui.KMLNetworkLinkNode.prototype.durationString_ = function() {
-  var now = goog.now();
+  var now = Date.now();
   var duration = new Date(now - this.durationStart_);
   var durationString = ' in ' + os.time.formatDate(duration, 'mm:ss.SSS');
   this.durationStart_ = now;
@@ -399,7 +399,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.onRefreshTimer_ = function() {
       uri.setParameterValue('BBOX', '{extent:west},{extent:south},{extent:east},{extent:north}');
     }
 
-    this.durationStart_ = goog.now();
+    this.durationStart_ = Date.now();
     this.request_.load();
   } else {
     this.handleError_('source is null');

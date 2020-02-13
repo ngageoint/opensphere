@@ -89,7 +89,7 @@ os.data.groupby.DateGroupBy.PERIODS_ = [{
  */
 os.data.groupby.DateGroupBy.prototype.init = function() {
   os.data.groupby.DateGroupBy.superClass_.init.call(this);
-  this.now_ = goog.now();
+  this.now_ = Date.now();
 };
 
 

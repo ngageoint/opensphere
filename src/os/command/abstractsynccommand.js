@@ -16,9 +16,29 @@ goog.require('os.command.State');
  */
 os.command.AbstractSyncCommand = function() {
   os.command.AbstractSyncCommand.base(this, 'constructor');
+
+  /**
+   * The details of the command.
+   * @type {?string}
+   */
   this.details = null;
+
+  /**
+   * Whether or not the command is asynchronous.
+   * @type {boolean}
+   */
   this.isAsync = false;
+
+  /**
+   * Return the current state of the command.
+   * @type {!os.command.State}
+   */
   this.state = os.command.State.READY;
+
+  /**
+   * The title of the command.
+   * @type {?string}
+   */
   this.title = '';
 };
 goog.inherits(os.command.AbstractSyncCommand, goog.Disposable);

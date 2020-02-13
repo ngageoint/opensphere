@@ -128,15 +128,14 @@ requirement: {
 
 requirement: {
   type: BANNED_NAME
-  value: 'Object.assign'
-  error_message: 'Object.assign is not permitted. Use '
-                 'ol.obj.assign instead.'
+  value: 'goog.abstractMethod'
+  error_message: 'goog.abstractMethod is not permitted. Use @abstract on the class and method instead.'
 }
 
 requirement: {
   type: BANNED_NAME
-  value: 'goog.abstractMethod'
-  error_message: 'goog.abstractMethod is not permitted. Use @abstract on the class and method instead.'
+  value: 'goog.now'
+  error_message: 'goog.now is not permitted. Use Date.now instead.'
 }
 
 #requirement: {
@@ -152,11 +151,11 @@ requirement: {
 #                 'assign the property directly for aliases.'
 #}
 
-#requirement: {
-#  type: BANNED_NAME
-#  value: 'goog.isBoolean'
-#  error_message: 'goog.isBoolean(value) is not permitted. Use typeof value === \'boolean\' instead.'
-#}
+requirement: {
+  type: BANNED_NAME
+  value: 'goog.isBoolean'
+  error_message: 'goog.isBoolean(value) is not permitted. Use typeof value === \'boolean\' instead.'
+}
 
 requirement: {
   type: BANNED_NAME
@@ -176,17 +175,17 @@ requirement: {
   error_message: 'goog.isNull(value) is not permitted. Use value === null instead.'
 }
 
-#requirement: {
-#  type: BANNED_NAME
-#  value: 'goog.isNumber'
-#  error_message: 'goog.isNumber(value) is not permitted. Use typeof value === \'number\' instead.'
-#}
+requirement: {
+  type: BANNED_NAME
+  value: 'goog.isNumber'
+  error_message: 'goog.isNumber(value) is not permitted. Use typeof value === \'number\' instead.'
+}
 
-#requirement: {
-#  type: BANNED_NAME
-#  value: 'goog.isString'
-#  error_message: 'goog.isString(value) is not permitted. Use typeof value === \'string\' instead.'
-#}
+requirement: {
+  type: BANNED_NAME
+  value: 'goog.isString'
+  error_message: 'goog.isString(value) is not permitted. Use typeof value === \'string\' instead.'
+}
 
 #requirement: {
 #  type: BANNED_NAME
@@ -223,3 +222,9 @@ requirement: {
 #  value: 'goog.array.remove'
 #  error_message: 'goog.array.remove is not permitted. Use ol.array.remove instead.'
 #}
+
+requirement: {
+  type: BANNED_NAME
+  value: 'goog.object.extend'
+  error_message: 'goog.object.extend is not permitted. Use Object.assign instead.'
+}

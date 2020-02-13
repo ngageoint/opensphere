@@ -8,19 +8,19 @@ goog.require('os.events.EventType');
 /**
  * @define {string} Shared IDB store name.
  */
-goog.define('os.SHARED_STORE_NAME', 'shared');
+os.SHARED_STORE_NAME = goog.define('os.SHARED_STORE_NAME', 'shared');
 
 
 /**
  * @define {string} Shared IDB name.
  */
-goog.define('os.SHARED_DB_NAME', os.NAMESPACE + '.shared');
+os.SHARED_DB_NAME = goog.define('os.SHARED_DB_NAME', os.NAMESPACE + '.shared');
 
 
 /**
  * @define {number} Shared IDB version.
  */
-goog.define('os.SHARED_DB_VERSION', 2);
+os.SHARED_DB_VERSION = goog.define('os.SHARED_DB_VERSION', 2);
 
 
 /**

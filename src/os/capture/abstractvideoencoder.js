@@ -20,13 +20,46 @@ goog.require('os.capture.IVideoEncoder');
 os.capture.AbstractVideoEncoder = function() {
   os.capture.AbstractVideoEncoder.base(this, 'constructor');
 
-  // os.capture.IVideoEncoder interface properties
+  /**
+   * User-facing description of the video encoder.
+   * @type {string}
+   */
   this.description = '';
+
+  /**
+   * The file extension for encoded videos.
+   * @type {string}
+   */
   this.extension = 'unknown';
+
+  /**
+   * Detailed error message if encoding fails.
+   * @type {string}
+   */
   this.errorMsg = '';
+
+  /**
+   * Final video output.
+   * @type {*}
+   */
   this.output = null;
+
+  /**
+   * Progress percentage for the current task.
+   * @type {number}
+   */
   this.progress = 0;
+
+  /**
+   * Encoder status message.
+   * @type {string}
+   */
   this.status = '';
+
+  /**
+   * User-facing title of the video encoder.
+   * @type {string}
+   */
   this.title = 'Give me a title!';
 
   /**

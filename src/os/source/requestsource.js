@@ -149,7 +149,7 @@ os.source.Request.prototype.loadRequest = function() {
     }
 
     this.abortRequest();
-    this.durationStart = goog.now();
+    this.durationStart = Date.now();
     this.setLoading(true);
 
     try {
@@ -389,7 +389,7 @@ os.source.Request.prototype.onImporterError = function(opt_event) {
  * @protected
  */
 os.source.Request.prototype.durationString = function() {
-  var now = goog.now();
+  var now = Date.now();
   var duration = new Date(now - this.durationStart);
   var durationString = ' in ' + os.time.formatDate(duration, 'mm:ss.SSS');
   this.durationStart = now;

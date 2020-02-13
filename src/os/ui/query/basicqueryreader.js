@@ -1,6 +1,7 @@
 goog.provide('os.ui.query.BasicQueryReader');
 
 goog.require('goog.asserts');
+goog.require('goog.asserts.dom');
 goog.require('os.filter.FilterEntry');
 goog.require('os.ui.filter');
 goog.require('os.ui.query.AbstractQueryReader');
@@ -77,7 +78,7 @@ os.ui.query.BasicQueryReader.prototype.parseEntries_ = function(ele) {
   // test to see if its an area
   if (ele.localName == 'BBOX' || ele.localName == 'Intersects') {
     var areaEle = ele.querySelector('MultiPolygon') || ele.querySelector('Envelope') || ele.querySelector('Polygon');
-    goog.asserts.assertElement(areaEle, 'Area is not an Element!');
+    goog.asserts.dom.assertIsElement(areaEle);
     var area = os.ui.query.AbstractQueryReader.parseArea(areaEle);
     if (area) {
       var title = os.xml.unescape(ele.getAttribute('areanamehint') || ele.getAttribute('namehint') || 'New Area');
@@ -101,7 +102,7 @@ os.ui.query.BasicQueryReader.prototype.parseEntries_ = function(ele) {
   }
   if (ele.localName == 'Disjoint') {
     var excAreaEle = ele.querySelector('MultiPolygon') || ele.querySelector('Envelope') || ele.querySelector('Polygon');
-    goog.asserts.assertElement(excAreaEle, 'Exclusion area is not an Element!');
+    goog.asserts.dom.assertIsElement(excAreaEle);
     var excArea = os.ui.query.AbstractQueryReader.parseArea(excAreaEle);
     if (excArea) {
       var title = os.xml.unescape(ele.getAttribute('areanamehint') || ele.getAttribute('namehint') || 'New Area');

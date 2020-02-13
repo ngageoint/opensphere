@@ -456,7 +456,7 @@ ol.source.UrlTile.prototype.setTileLoadFunction = function(tileLoadFunction) {
         if (scope.isRefreshEnabled() && scope.refreshInterval) {
           var uri = new goog.Uri(source);
           var qd = uri.getQueryData();
-          qd.set('_cd', goog.now());
+          qd.set('_cd', Date.now());
           source = uri.toString();
         }
 

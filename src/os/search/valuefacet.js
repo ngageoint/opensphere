@@ -8,7 +8,7 @@ goog.require('os.search.BaseFacet');
  * @param {string} id The facet identifier.
  * @abstract
  * @constructor
- * @extends {os.search.BaseFacet<T>}
+ * @extends {os.search.BaseFacet}
  */
 os.search.ValueFacet = function(id) {
   os.search.ValueFacet.base(this, 'constructor');

@@ -115,7 +115,7 @@ describe('plugin.file.kml.KMLParser', function() {
 
     var time = feature.get('recordTime');
     expect(time instanceof os.time.TimeInstant).toBe(true);
-    expect(time.toISOString()).toBe('2010-02-01 18:03:30Z');
+    expect(time.toISOString()).toBe('2010-02-01T18:03:30Z');
 
     // test folder open/closed
     var openFolder = rootChildren[1];

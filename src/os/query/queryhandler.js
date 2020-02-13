@@ -231,7 +231,7 @@ os.query.QueryHandler.prototype.scheduleRefresh = function(opt_now) {
 
 
 /**
- * @protected
+ * Resets modifiers
  */
 os.query.QueryHandler.prototype.resetModifiers = function() {
   if (this.source) {
