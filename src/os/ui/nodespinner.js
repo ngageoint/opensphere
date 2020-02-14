@@ -89,7 +89,7 @@ os.ui.NodeSpinnerCtrl.prototype.onDestroy_ = function() {
  * @private
  */
 os.ui.NodeSpinnerCtrl.prototype.onPropertyChange_ = function(e) {
-  if (e.getProperty() == 'loading') {
+  if (e.getOldValue() != e.getNewValue() && e.getProperty() == 'loading') {
     os.ui.apply(this.scope_);
   }
 };
