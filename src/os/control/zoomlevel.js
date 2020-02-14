@@ -1,6 +1,7 @@
 goog.provide('os.control.ZoomLevel');
 goog.provide('os.control.ZoomLevelOptions');
 
+goog.require('goog.async.Throttle');
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
 goog.require('goog.dom.classes');
@@ -91,6 +92,12 @@ os.control.ZoomLevel = function(opt_options) {
     target: options.target
   });
 
+  /**
+   * Debounce the heavy updates
+   * @type {goog.async.Throttle}
+   */
+  this.updateThrottle = new goog.async.Throttle(this.updateElementInternal_, 200, this);
+
   // initialize from unit manager
   var um = os.unit.UnitManager.getInstance();
   var units = /** @type {ol.control.ScaleLineUnits<string>} */ (um.getSelectedSystem());
@@ -107,6 +114,7 @@ goog.inherits(os.control.ZoomLevel, ol.control.Control);
  */
 os.control.ZoomLevel.prototype.disposeInternal = function() {
   os.control.ZoomLevel.base(this, 'disposeInternal');
+  this.updateThrottle = null;
   os.unit.UnitManager.getInstance().unlisten(goog.events.EventType.PROPERTYCHANGE, this.onUnitsChange, false, this);
 };
 
@@ -200,11 +208,25 @@ os.control.ZoomLevel.prototype.hideZoom = function() {
 /**
  * Update the control text.
  *
+ * @private
+ */
+os.control.ZoomLevel.prototype.updateElementInternal_ = function() {
+  this.updateAltitudeText();
+  this.updateZoomText();
+};
+
+
+/**
+ * Update the control text.
+ *
  * @protected
  */
 os.control.ZoomLevel.prototype.updateElement = function() {
-  this.updateAltitudeText();
-  this.updateZoomText();
+  if (this.updateThrottle) {
+    this.updateThrottle.fire();
+  } else {
+    this.updateElementInternal_();
+  }
 };
 
 

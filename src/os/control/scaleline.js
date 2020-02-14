@@ -1,5 +1,6 @@
 goog.provide('os.control.ScaleLine');
 
+goog.require('goog.async.Throttle');
 goog.require('goog.dom');
 goog.require('goog.dom.safe');
 goog.require('goog.html.SafeHtml');
@@ -20,6 +21,11 @@ goog.require('os.math');
  */
 os.control.ScaleLine = function(opt_options) {
   os.control.ScaleLine.base(this, 'constructor', opt_options);
+  /**
+   * Debounce the heavy updates
+   * @type {goog.async.Throttle}
+   */
+  this.updateThrottle = new goog.async.Throttle(this.updateElementInternal_, 200, this);
 
   // initialize from unit manager
   var um = os.unit.UnitManager.getInstance();
@@ -37,6 +43,7 @@ goog.inherits(os.control.ScaleLine, ol.control.ScaleLine);
 os.control.ScaleLine.prototype.disposeInternal = function() {
   os.unit.UnitManager.getInstance().unlisten(goog.events.EventType.PROPERTYCHANGE, this.onUnitsChange, false, this);
   os.control.ScaleLine.base(this, 'disposeInternal');
+  this.updateThrottle = null;
 };
 
 
@@ -67,12 +74,25 @@ os.control.ScaleLine.prototype.hide = function() {
 
 
 /**
- * This is a copy of the original OpenLayers code, with additional bits for showing a single unit
+ * Fire a debouncer for this
  *
  * @inheritDoc
  * @suppress {accessControls}
  */
 os.control.ScaleLine.prototype.updateElement_ = function() {
+  if (this.updateThrottle) {
+    this.updateThrottle.fire();
+  } else {
+    this.updateElementInternal_();
+  }
+};
+
+
+/**
+ * This is a copy of the original Openlayers code for updateElement_, with additional bits for showing a single unit
+ * @suppress {accessControls}
+ */
+os.control.ScaleLine.prototype.updateElementInternal_ = function() {
   var viewState = this.viewState_;
 
   if (!viewState) {
