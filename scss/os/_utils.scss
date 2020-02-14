@@ -715,3 +715,33 @@ $aspect-ratios: ((16, 9), (4, 3));
     transform: rotate(-45deg);
   }
 }
+
+
+// --------------------------------- Nav -----------------------------------//
+.u-nav.nav {
+  .u-nav__spacer {
+    .nav-item {
+      &.active:not(:first-child):not(.u-nav__no-margin) {
+        margin-top: 1rem !important;
+      }
+
+      &.active:not(.u-nav__no-margin) {
+        margin-bottom: 1rem !important;
+      }
+    }
+  }
+
+  .nav-item {
+    &.active > .nav-link {
+      color: $body-color;
+    }
+
+    .nav-link {
+      color: $text-muted;
+
+      &:hover {
+        color: $body-color;
+      }
+    }
+  }
+}
