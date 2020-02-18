@@ -26,6 +26,13 @@ os.data.histo.HistoEventType = {
 
 
 /**
+ * The label used for manual overrides to feature colors
+ * @type {string}
+ */
+os.data.histo.OVERRIDE_LABEL = 'Manual';
+
+
+/**
  * Create a filter from an array of histogram controllers.
  *
  * @param {!Array<!os.ui.IHistogramUI>} controllers The histogram controllers
