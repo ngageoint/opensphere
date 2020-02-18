@@ -988,6 +988,35 @@ os.source.Vector.prototype.setColumnAutoDetectLimit = function(value) {
 
 
 /**
+ * Sets the colors of the provided features; uses the ColorModel's colorFeatures() if it exists, otherwise
+ * does a fast-color on the Features directly.
+ *
+ * @param {Array<!ol.Feature>|null} items
+ * @param {string|null} color rgba-color or clear with a null
+ *
+ * @suppress {accessControls}
+ */
+os.source.Vector.prototype.setColor = function(items, color) {
+  if (!items || !color) return;
+
+  var cm = this.colorModel;
+  if (cm) {
+    cm.colorFeatures(items, color);
+  } else {
+    // colorModel.colorFeatures() is much more robust and relies on 2x os.feature.getColor() calls (which
+    // gives a lot of if...then fail-overs).  This is just a straight up manual override.
+    for (const item of items) {
+      var oldColor = item.values_[os.data.RecordField.COLOR];
+      item.values_[os.data.RecordField.COLOR] = color;
+      item.dispatchFeatureEvent(os.data.FeatureEventType.COLOR, color, oldColor);
+    }
+  }
+  this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.STYLE));
+  this.changed();
+};
+
+
+/**
  * Gets the geometry shape used by features in the source.
  *
  * @return {string}
