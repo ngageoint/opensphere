@@ -17,3 +17,4 @@ For extended examples, see the Guides.
   pelias/index
   metrics/index
   tracks/index
+  pluginindex/index
