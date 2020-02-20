@@ -12,11 +12,11 @@ goog.require('os.object');
 /**
  * A function used to sort features.
  * @typedef {{
-  *   range: Array<number>,
-  *   step: number,
-  *   binCount: number,
-  *   binCountAll: number
-  * }}
+ *   range: Array<number>,
+ *   step: number,
+ *   binCount: number,
+ *   binCountAll: number
+ * }}
  */
 os.histo.BinMethodStats;
 

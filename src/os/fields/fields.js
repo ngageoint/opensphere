@@ -65,7 +65,7 @@ os.fields.DEFAULT_RADIUS_UNIT = 'nmi';
 /**
  * Indicator for a derived column
  * @type {string}
-*/
+ */
 os.fields.DERIVED_COL_INDICATOR = '*';
 
 

@@ -71,11 +71,11 @@ goog.addSingletonGetter(plugin.track.TrackManager);
 
 
 /**
-* Logger
-* @type {goog.log.Logger}
-* @private
-* @const
-*/
+ * Logger
+ * @type {goog.log.Logger}
+ * @private
+ * @const
+ */
 plugin.track.TrackManager.LOGGER_ = goog.log.getLogger('plugin.track.TrackManager');
 
 
