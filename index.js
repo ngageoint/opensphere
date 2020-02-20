@@ -273,6 +273,11 @@ const sharedResources = [
     source: 'vendor/fonts/typeface-open-sans',
     target: 'vendor/fonts/typeface-open-sans',
     files: ['files', 'index.css']
+  },
+  {
+    source: resolver.resolveModulePath('pluralize', __dirname),
+    target: 'vendor/pluralize',
+    scripts: ['pluralize.js']
   }
 ];
 
