@@ -117,9 +117,13 @@ os.ui.file.ExportManager.prototype.registerPersistenceMethod = function(method) 
  */
 os.ui.file.ExportManager.prototype.getPersistenceMethods = function(opt_getAll) {
   var methods = [];
+  var disabledMethods = /** @type {Object<string, boolean>} */ (os.settings.get('ex.disabledPersisters', {}));
+
   for (var i = 0, n = this.persisters_.length; i < n; i++) {
-    if (this.persisters_[i].isSupported() || opt_getAll) {
-      methods.push(new this.persisters_[i].constructor());
+    var p = this.persisters_[i];
+    // return the method only if it is supported and not explicitly disabled in the map (or all are request)
+    if (p.isSupported() && disabledMethods[p.getLabel()] !== true || opt_getAll) {
+      methods.push(new p.constructor());
     }
   }
 
