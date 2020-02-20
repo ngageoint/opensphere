@@ -1318,6 +1318,32 @@ os.ui.slick.SlickGridCtrl.prototype.refreshDataView = function(event) {
 
 
 /**
+ * Puts column objects on the sortColumn objects
+ *
+ * slickgrid doesn't have a quick getColumnById method, so we'll go ahead and
+ * put the actual column on the sort column so that it is quickly accessible in
+ * the sort methods.
+ *
+ * This changes slickgrid's internal sortColumns array
+ * @return {!Array<Slick.Grid.SortColumn>} The modified sort columns
+ * @private
+ */
+os.ui.slick.SlickGridCtrl.prototype.putRealColumnsOnSortColumns_ = function() {
+  const cols = this.grid.getSortColumns();
+  const realCols = this.grid.getColumns();
+
+  for (const col of cols) {
+    const index = this.grid.getColumnIndex(col['columnId']);
+    if (typeof index === 'number' && realCols[index]) {
+      col['column'] = realCols[index];
+    }
+  }
+
+  return cols;
+};
+
+
+/**
  * Handles changes to the sort
  *
  * @param {*=} opt_e The Event
@@ -1327,22 +1353,9 @@ os.ui.slick.SlickGridCtrl.prototype.refreshDataView = function(event) {
 os.ui.slick.SlickGridCtrl.prototype.onSortChange = function(opt_e, opt_args) {
   this.dataView.beginUpdate();
 
-  // slickgrid doesn't have a quick getColumnById method, so we'll go ahead and put
-  // the actual column on the sort column so that it is quickly accessible in the
-  // sort method
-  var cols = this.grid.getSortColumns();
-  var realCols = this.grid.getColumns();
+  const cols = this.putRealColumnsOnSortColumns_();
 
-  for (var i = 0, n = cols.length; i < n; i++) {
-    for (var j = 0, m = realCols.length; j < m; j++) {
-      if (realCols[j]['id'] == cols[i]['columnId']) {
-        cols[i]['column'] = realCols[j];
-        break;
-      }
-    }
-  }
-
-  var compare = this.scope['compare'] || this.multiColumnSort.bind(this, this.grid.getSortColumns());
+  var compare = this.scope['compare'] || this.multiColumnSort.bind(this, cols);
   this.dataView.sort(compare);
   this.dataView.endUpdate();
 
@@ -1356,7 +1369,7 @@ os.ui.slick.SlickGridCtrl.prototype.onSortChange = function(opt_e, opt_args) {
 /**
  * Compare function over multiple columns
  *
- * @param {!Array<string>} cols The sort columns
+ * @param {!Array<Slick.Grid.SortColumn>} cols The sort columns
  * @param {*} a
  * @param {*} b
  * @return {number} -1, 0, or 1 per typical compare function
@@ -1459,20 +1472,7 @@ os.ui.slick.SlickGridCtrl.prototype.multiColumnSort = function(cols, a, b) {
 os.ui.slick.SlickGridCtrl.prototype.onSortBySelectionChange = function(opt_e, opt_args) {
   this.dataView.beginUpdate();
 
-  // slickgrid doesn't have a quick getColumnById method, so we'll go ahead and put
-  // the actual column on the sort column so that it is quickly accessible in the
-  // sort method
-  var cols = this.grid.getSortColumns();
-  var realCols = this.grid.getColumns();
-
-  for (var i = 0, n = cols.length; i < n; i++) {
-    for (var j = 0, m = realCols.length; j < m; j++) {
-      if (realCols[j]['id'] == cols[i]['columnId']) {
-        cols[i]['column'] = realCols[j];
-        break;
-      }
-    }
-  }
+  const cols = this.putRealColumnsOnSortColumns_();
 
   // get the selected data from the grid and not the source!
   var data = /** @type {Slick.Data.DataView} */ (this.grid.getData());
@@ -1480,8 +1480,7 @@ os.ui.slick.SlickGridCtrl.prototype.onSortBySelectionChange = function(opt_e, op
   var selectedFeatureIndexes = data.mapRowsToIds(selectedRows);
   var selectionMap = goog.object.createSet(selectedFeatureIndexes);
 
-  var compare = this.selectColumnSort.bind(this, selectionMap,
-      this.grid.getSortColumns());
+  var compare = this.selectColumnSort.bind(this, selectionMap, cols);
   this.dataView.sort(compare);
   this.dataView.endUpdate();
 };
@@ -1491,7 +1490,7 @@ os.ui.slick.SlickGridCtrl.prototype.onSortBySelectionChange = function(opt_e, op
  * Compare function over multiple columns bringing selected items to the top
  *
  * @param {!Object<string,boolean>} sel The selected features
- * @param {!Array<string>} cols The sort columns
+ * @param {!Array<Slick.Grid.SortColumn>} cols The sort columns
  * @param {Object} a
  * @param {Object} b
  * @return {number} -1, 0, or 1 per typical compare function
