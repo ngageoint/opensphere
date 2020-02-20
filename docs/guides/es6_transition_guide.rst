@@ -15,6 +15,7 @@ As a step toward modernizing our codebase, OpenSphere plans to migrate all code 
   goog_module_guide/index
   es6_class_guide/index
   angular_module_guide/index
+  unit_test_module_guide/index
 
 External Documentation
 **********************
