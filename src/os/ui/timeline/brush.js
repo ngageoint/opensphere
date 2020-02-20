@@ -115,35 +115,35 @@ os.ui.timeline.Brush = function() {
   this.doClamp_ = true;
 
   /**
-  * @type {boolean}
-  * @protected
-  */
+   * @type {boolean}
+   * @protected
+   */
   this.mouseOverDeleteButton = false;
 
   /**
-  * Brush can be deleted
-  * @type {boolean}
-  */
+   * Brush can be deleted
+   * @type {boolean}
+   */
   this.canDelete = false;
 
   /**
-  * @return {boolean}
-  */
+   * @return {boolean}
+   */
   this.drawFlagCheck = goog.functions.TRUE;
 
   /**
-  * @type {boolean}
-  */
+   * @type {boolean}
+   */
   this.init = false;
 
   /**
-  * @type {?d3.Selection}
-  */
+   * @type {?d3.Selection}
+   */
   this.node = null;
 
   /**
-  * @type {boolean}
-  */
+   * @type {boolean}
+   */
   this.deleted = false;
 
   /**

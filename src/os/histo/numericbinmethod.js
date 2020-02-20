@@ -55,9 +55,9 @@ goog.inherits(os.histo.NumericBinMethod, os.histo.UniqueBinMethod);
 
 
 /**
-* @type {string}
-* @const
-*/
+ * @type {string}
+ * @const
+ */
 os.histo.NumericBinMethod.TYPE = 'Numeric';
 
 

@@ -7,12 +7,12 @@ goog.require('os.ui.datetime.dateTimeDirective');
 
 
 /**
-   * @typedef {{
-   *   name: string,
-   *   content: string,
-   *   pos: string
-   * }}
-   */
+ * @typedef {{
+ *   name: string,
+ *   content: string,
+ *   pos: string
+ * }}
+ */
 os.ui.datetime.AnyDateHelp;
 
 
