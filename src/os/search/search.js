@@ -35,6 +35,14 @@ os.search.SearchSetting = {
 /**
  * @enum {string}
  */
+os.search.SubSearchSetting = {
+  ENABLED: 'ss'
+};
+
+
+/**
+ * @enum {string}
+ */
 os.search.SortType = {
   DATE: 'Date',
   RECENTLY_USED: 'Recently Used',
