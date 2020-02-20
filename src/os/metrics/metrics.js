@@ -63,10 +63,10 @@ os.metrics.Metrics = function() {
   this.enabled_ = /** @type {boolean} */ (os.settings.get('metrics.enabled', false));
 
   /**
-  * Metric service provider
-  * @type {os.metrics.IMetricServiceProvider}
-  * @private
-  */
+   * Metric service provider
+   * @type {os.metrics.IMetricServiceProvider}
+   * @private
+   */
   this.metricServiceProvider_ = null;
 
   /**

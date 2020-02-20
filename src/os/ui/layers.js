@@ -135,8 +135,8 @@ goog.inherits(os.ui.LayersCtrl, os.ui.slick.AbstractGroupByTreeSearchCtrl);
 
 /**
  * The functions to be called to determine if the layer should not be toggled
-* @type {Array<function(!ol.layer.Layer):boolean>}
-*/
+ * @type {Array<function(!ol.layer.Layer):boolean>}
+ */
 os.ui.LayersCtrl.SKIP_TOGGLE_FUNCS = [];
 
 
