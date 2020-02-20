@@ -216,22 +216,26 @@ os.state.BaseStateManager.prototype.deleteStates = function() {
  */
 os.state.BaseStateManager.prototype.getAvailable = function(opt_allVersions) {
   var list = [];
+  var disabledStates = /** @type {Object<string, boolean>} */ (os.settings.get('ex.disabledStates', {}));
+  var s;
+  var pushFn = function(statez) {
+    for (var tag in statez) {
+      s = new statez[tag]();
+      if (disabledStates[os.state.stateToString(s)] !== true) {
+        list.push(s);
+      }
+    }
+  };
 
   if (!opt_allVersions) {
     if (this.version_ in this.versions) {
       var states = this.versions[this.version_];
-
-      for (var tag in states) {
-        list.push(new states[tag]());
-      }
+      pushFn(states);
     }
   } else {
     for (var version in this.versions) {
       var states = this.versions[version];
-
-      for (var tag in states) {
-        list.push(new states[tag]());
-      }
+      pushFn(states);
     }
   }
 

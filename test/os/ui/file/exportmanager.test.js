@@ -1,3 +1,4 @@
+goog.require('os.config.Settings');
 goog.require('os.ui.file.ExportManager');
 goog.require('os.ui.file.MockExportMethod');
 goog.require('os.ui.file.MockPersistMethod');
@@ -71,6 +72,17 @@ describe('os.ui.file.ExportManager', function() {
 
   it('should not return unsupported persistence methods unless forced', function() {
     pMethod.supported = false;
+
+    var p = em.getPersistenceMethods();
+    expect(p.length).toBe(0);
+
+    var p = em.getPersistenceMethods(true);
+    expect(p.length).toBe(1);
+  });
+
+  it('should not return persistence methods disabled in settings unless forced', function() {
+    pMethod.supported = true;
+    os.settings.set('ex.disabledPersisters', {'Mock Persistence': true});
 
     var p = em.getPersistenceMethods();
     expect(p.length).toBe(0);
