@@ -732,12 +732,20 @@ $aspect-ratios: ((16, 9), (4, 3));
   }
 
   .nav-item {
+    border: 1px solid transparent;
+
+    &.active {
+      background: $u-theme-variables--bg-offset;
+      border-color: $border-color;
+    }
+
     &.active > .nav-link {
-      color: $body-color;
+      background: $table-head-bg;
+      color: color-yiq($table-head-bg);
     }
 
     .nav-link {
-      color: $text-muted;
+      color: $link-color;
 
       &:hover {
         color: $body-color;
