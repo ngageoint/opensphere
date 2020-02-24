@@ -211,16 +211,20 @@ ol.format.GPX.TRKPT_PARSERS_ = ol.xml.makeStructureNS(
  * @private
  */
 ol.format.GPX.appendCoordinate_ = function(flatCoordinates, layoutOptions, node, values) {
-  flatCoordinates.push(parseFloat(node.getAttribute('lon')), parseFloat(node.getAttribute('lat')));
+  // always include altitude, defaulting to 0
+  var altitude = 0;
+  layoutOptions.hasZ = true;
 
-  if ('ele' in values) {
-    flatCoordinates.push(/** @type {number} */ (values['ele']));
+  // use altitude from the file if available, and delete the key so it isn't added to the feature by OL
+  if (values['ele'] != null) {
+    altitude = /** @type {number} */ (values['ele']);
     delete values['ele'];
-    layoutOptions.hasZ = true;
-  } else {
-    flatCoordinates.push(0);
   }
 
+  // create the base coordinate as [lon, lat, alt]
+  flatCoordinates.push(parseFloat(node.getAttribute('lon')), parseFloat(node.getAttribute('lat')), altitude);
+
+  // if time is available, add it to the coordinate and delete the key(s) so they aren't added to the feature by OL
   if ('time' in values || 'extensionsNode_' in values) {
     flatCoordinates.push({
       'extensions': values['extensionsNode_'],
@@ -229,8 +233,6 @@ ol.format.GPX.appendCoordinate_ = function(flatCoordinates, layoutOptions, node,
     delete values['extensionsNode_'];
     delete values['time'];
     layoutOptions.hasM = true;
-  } else {
-    flatCoordinates.push(0);
   }
 
   return flatCoordinates;

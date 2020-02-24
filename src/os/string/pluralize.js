@@ -1,0 +1,87 @@
+goog.module('os.string.Pluralize');
+goog.module.declareLegacyNamespace();
+
+const OsModule = goog.require('os.ui.Module');
+
+
+let initialized = false;
+/**
+ * Initialize pluralization rules
+ */
+const initialize = function() {
+  if (!initialized) {
+    /** @type {!Array<!Object>} */ (os.settings.get('pluralize.pluralRules', [])).forEach((rule) => {
+      pluralize.addPluralRule(rule['re'], rule['plural']);
+    });
+
+    /** @type {!Array<!Object>} */ (os.settings.get('pluralize.irregularRules', [])).forEach((rule) => {
+      pluralize.addIrregularRule(rule['irregular'], rule['plural']);
+    });
+    initialized = true;
+  }
+};
+
+
+
+/**
+ * Controller for pluralize
+ * @unrestricted
+ */
+class Controller {
+  /**
+   * Controller for the pluralize directive.
+   * @param {!angular.Scope} $scope
+   * @ngInject
+   */
+  constructor($scope) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+
+    initialize();
+
+    this.pluralize_();
+  }
+
+  /**
+   * @private
+   */
+  pluralize_() {
+    this['value'] = pluralize(this.scope_['word'], this.scope_['count'], this.scope_['inclusive']);
+    os.ui.apply(this.scope_);
+  }
+
+  /**
+   * Clean up.
+   */
+  $onDestroy() {
+    this.scope_ = null;
+  }
+}
+
+/**
+ * The marking directive. This control is used in forms to choose a classification value.
+ * @return {angular.Directive}
+ */
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: {
+    'word': '@',
+    'count': '@?',
+    'inclusive': '@?'
+  },
+  template: '<div class="d-inline">{{ctrl.value}}</div>',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
+
+
+/**
+ * Add the directive to the module.
+ */
+OsModule.directive('pluralize', [directive]);
+
+exports = {Controller, directive};
