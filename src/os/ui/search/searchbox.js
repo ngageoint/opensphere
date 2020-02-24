@@ -8,9 +8,12 @@ goog.require('os.array');
 goog.require('os.config.Settings');
 goog.require('os.plugin.PluginManager');
 goog.require('os.search');
+goog.require('os.search.ISubSearch');
 goog.require('os.search.SearchEvent');
 goog.require('os.search.SearchEventType');
 goog.require('os.search.SearchManager');
+goog.require('os.search.SubSearchUtils');
+goog.require('os.structs.TriState');
 goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.dragDropDirective');
@@ -167,7 +170,7 @@ os.ui.search.SearchBoxCtrl = function($scope, $element) {
   this.setUpGroups();
 
   // make sure the plugin manager is loaded before migrating recent searches, or they will not be migrated correctly.
-  var pm = os.plugin.PluginManager.getInstance();
+  const pm = os.plugin.PluginManager.getInstance();
   if (pm.ready) {
     this.validateRecents_();
   } else {
@@ -225,29 +228,29 @@ os.ui.search.SearchBoxCtrl.prototype.destroy = function() {
  * @private
  */
 os.ui.search.SearchBoxCtrl.prototype.validateRecents_ = function() {
-  var recents = /** @type {!Array<!osx.search.RecentSearch>} */ (this['recentSearches']);
+  const recents = /** @type {!Array<!osx.search.RecentSearch>} */ (this['recentSearches']);
   if (recents) {
-    var updated = false;
+    let updated = false;
 
     try {
-      var searches = this.searchManager.getRegisteredSearches();
-      var allIds = searches.map(os.search.getSearchId).sort();
-      var i = recents.length;
+      const searches = this.searchManager.getRegisteredSearches();
+      const allIds = searches.map(os.search.getSearchId).sort();
+      let i = recents.length;
       while (i--) {
-        var recent = recents[i];
+        const recent = recents[i];
         if ('type' in recent) {
           //
           // This recent search is in the old format, so migrate it to the new one if possible.
           //
 
-          var oldName = /** @type {string} */ (recent['type'] || '');
+          const oldName = /** @type {string} */ (recent['type'] || '');
           updated = true;
 
           if (recent['type'] == os.search.SEARCH_ALL) {
             // assume the available providers haven't changed and enable all
             recent.ids = allIds;
           } else {
-            var search = ol.array.find(searches, os.search.isNameEqual.bind(undefined, oldName));
+            const search = ol.array.find(searches, os.search.isNameEqual.bind(undefined, oldName));
             if (search) {
               // update to the new model
               recent.ids = [search.getId()];
@@ -264,7 +267,7 @@ os.ui.search.SearchBoxCtrl.prototype.validateRecents_ = function() {
           // This recent search is in the current format, so make sure the search id's are all registered.
           //
 
-          var idCount = recent.ids.length;
+          let idCount = recent.ids.length;
           while (idCount--) {
             // if a recent search id isn't registered, remove that id
             if (!this.searchManager.getSearch(recent.ids[idCount])) {
@@ -329,7 +332,7 @@ os.ui.search.SearchBoxCtrl.prototype.clear = function() {
 os.ui.search.SearchBoxCtrl.prototype.search = function() {
   if (this['searchTerm'] || this.searchOnClear_) {
     if (this.scope['dataSource']) {
-      var dataSource = /** @type {os.ui.search.SearchScrollDataSource} */ (this.scope['dataSource']);
+      const dataSource = /** @type {os.ui.search.SearchScrollDataSource} */ (this.scope['dataSource']);
       dataSource.setTerm(this.getSearchTerm_());
     } else {
       this.searchManager.search(this.getSearchTerm_());
@@ -367,7 +370,7 @@ os.ui.search.SearchBoxCtrl.prototype.onSearchManagerChange = function(opt_event)
 
   if (!this['allowMultiple']) {
     // if multiple providers aren't allowed, make sure only one is enabled
-    var foundEnabled = false;
+    let foundEnabled = false;
     this['searchOptions'].forEach(function(search) {
       if (search.isEnabled()) {
         if (foundEnabled) {
@@ -394,7 +397,7 @@ os.ui.search.SearchBoxCtrl.prototype.onSearchManagerChange = function(opt_event)
  * @private
  */
 os.ui.search.SearchBoxCtrl.prototype.onSearchStart_ = function(event) {
-  var term = event.getTerm();
+  const term = event.getTerm();
   if (term !== this['searchTerm']) {
     this['searchTerm'] = term;
   }
@@ -425,7 +428,27 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearch = function(search) {
   // always toggle if multiple types are available, otherwise only allow enabling a search. this prevents disabling all
   // search types in single mode.
   if (this['allowMultiple'] || !search.isEnabled()) {
-    search.setEnabled(!search.isEnabled());
+    if (os.implements(search, os.search.ISubSearch.ID) &&
+    /** @type {os.search.ISubSearch} */ (search).getRegisteredSubSearches().length) {
+      const subSearch = /** @type {os.search.ISubSearch} */ (search);
+      /**
+       * @type {os.structs.TriState}
+       */
+      const state = subSearch.isSubSearchEnabled();
+      if (state === os.structs.TriState.ON) {
+        search.setEnabled(false);
+        subSearch.setEnabledSubSearches([]);
+      } else {
+        const defaultDisabledSubSearches = subSearch.getDefaultDisabledSubSearches();
+        const defaultEnabledSubSearches = subSearch.getRegisteredSubSearches().filter((ss) => {
+          return !os.search.SubSearchUtils.isDefaultDisabled(defaultDisabledSubSearches, ss);
+        });
+        search.setEnabled(true);
+        subSearch.setEnabledSubSearches(defaultEnabledSubSearches);
+      }
+    } else {
+      search.setEnabled(!search.isEnabled());
+    }
   }
 
   if (!this['allowMultiple'] && search.isEnabled()) {
@@ -472,7 +495,24 @@ os.ui.search.SearchBoxCtrl.prototype.getSearchName = function(search) {
  */
 os.ui.search.SearchBoxCtrl.prototype.getSearchIcon = function(search) {
   if (this['allowMultiple']) {
-    return search.isEnabled() ? 'fa-check-square-o' : 'fa-square-o';
+    if (os.implements(search, os.search.ISubSearch.ID) &&
+    /** @type {os.search.ISubSearch} */ (search).getRegisteredSubSearches().length &&
+        search.isEnabled()) {
+      const ss = /** @type {os.search.ISubSearch} */ (search);
+      /**
+       * @type {os.structs.TriState}
+       */
+      const state = ss.isSubSearchEnabled();
+      if (state === os.structs.TriState.ON) {
+        return 'fa-check-square-o';
+      } else if (state === os.structs.TriState.BOTH) {
+        return 'fa-minus-square-o';
+      } else {
+        return 'fa-square-o';
+      }
+    } else {
+      return search.isEnabled() ? 'fa-check-square-o' : 'fa-square-o';
+    }
   } else if (search.isEnabled()) {
     return 'fa-angle-double-right';
   }
@@ -489,18 +529,18 @@ os.ui.search.SearchBoxCtrl.prototype.setUpGroups = function() {
   this['searchOptionsGroups'] = {};
   this['searchOptionsNoGroup'] = [];
 
-  var proGroups = /** @type {!Object<!Array<string>>} */ (os.settings.get('providerGroups', {}));
-  var copiedOptions = goog.array.clone(this['searchOptions']);
+  const proGroups = /** @type {!Object<!Array<string>>} */ (os.settings.get('providerGroups', {}));
+  const copiedOptions = goog.array.clone(this['searchOptions']);
 
   // Iterate over the Provider group names
   goog.object.forEach(proGroups, function(searchNameArray, groupName) {
     this['providerGroups'].push(groupName);
 
-    var currentGroup = [];
+    const currentGroup = [];
 
     // Iterate over the searches under the provider group, and add the search to the group
     os.array.forEach(searchNameArray, function(searchName) {
-      var ind = ol.array.findIndex(copiedOptions, function(searchOption) {
+      const ind = ol.array.findIndex(copiedOptions, function(searchOption) {
         return searchName == searchOption.getName();
       });
       if (ind > -1) {
@@ -511,9 +551,9 @@ os.ui.search.SearchBoxCtrl.prototype.setUpGroups = function() {
     this['searchOptionsGroups'][groupName] = currentGroup;
   }, this);
 
-  var order = /** @type {Array} */ (os.settings.get('providerGroupOrder', []));
+  const order = /** @type {Array} */ (os.settings.get('providerGroupOrder', []));
   order.forEach(function(value, index) {
-    var currentIndex = this['providerGroups'].indexOf(value);
+    const currentIndex = this['providerGroups'].indexOf(value);
     if (currentIndex > 0) {
       goog.array.moveItem(this['providerGroups'], currentIndex, index);
     }
@@ -547,9 +587,9 @@ os.ui.search.SearchBoxCtrl.prototype.getGroupIcon = function(group) {
  * @return {boolean}
  */
 os.ui.search.SearchBoxCtrl.prototype.allSearchesEnabled = function(group) {
-  var searches = this['searchOptionsGroups'][group];
-  var allEnabled = true;
-  for (var i = 0; i < searches.length; i++) {
+  const searches = this['searchOptionsGroups'][group];
+  let allEnabled = true;
+  for (let i = 0; i < searches.length; i++) {
     if (!searches[i].isEnabled()) {
       allEnabled = false;
       break;
@@ -566,9 +606,9 @@ os.ui.search.SearchBoxCtrl.prototype.allSearchesEnabled = function(group) {
  * @return {boolean}
  */
 os.ui.search.SearchBoxCtrl.prototype.allSearchesDisabled = function(group) {
-  var searches = this['searchOptionsGroups'][group];
-  var allDisabled = true;
-  for (var i = 0; i < searches.length; i++) {
+  const searches = this['searchOptionsGroups'][group];
+  let allDisabled = true;
+  for (let i = 0; i < searches.length; i++) {
     if (searches[i].isEnabled()) {
       allDisabled = false;
       break;
@@ -585,9 +625,9 @@ os.ui.search.SearchBoxCtrl.prototype.allSearchesDisabled = function(group) {
  * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.toggleGroup = function(group) {
-  var on = this.allSearchesEnabled(group);
-  var searches = this['searchOptionsGroups'][group];
-  for (var i = 0; i < searches.length; i++) {
+  const on = this.allSearchesEnabled(group);
+  const searches = this['searchOptionsGroups'][group];
+  for (let i = 0; i < searches.length; i++) {
     searches[i].setEnabled(!on);
   }
 };
@@ -601,7 +641,7 @@ os.ui.search.SearchBoxCtrl.prototype.toggleGroup = function(group) {
  * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.getSearchOptionsGroup = function(groupName) {
-  var group = this['searchOptionsGroups'][groupName];
+  const group = this['searchOptionsGroups'][groupName];
   goog.array.sort(group, function(a, b) {
     return goog.array.defaultCompare(a.getName(), b.getName());
   });
@@ -619,14 +659,14 @@ os.ui.search.SearchBoxCtrl.prototype.singleGroupSelected = function() {
     return null;
   }
 
-  var numGroups = 0;
-  var selectedGroup = '';
+  let numGroups = 0;
+  let selectedGroup = '';
 
-  var enabled = this['searchOptions'].filter(function(search) {
+  const enabled = this['searchOptions'].filter(function(search) {
     return search.isEnabled();
   });
 
-  for (var i = 0; i < this['providerGroups'].length; i++) {
+  for (let i = 0; i < this['providerGroups'].length; i++) {
     if (this.allSearchesEnabled(this['providerGroups'][i])) {
       numGroups += 1;
       selectedGroup = this['providerGroups'][i];
@@ -673,7 +713,7 @@ os.ui.search.SearchBoxCtrl.prototype.hasDisabledSearch = function() {
  */
 os.ui.search.SearchBoxCtrl.prototype.getPlaceholderText = function(opt_ids) {
   if (this['searchOptions'].length > 0) {
-    var enabled = this['searchOptions'].filter(function(search) {
+    const enabled = this['searchOptions'].filter(function(search) {
       return search.isEnabled();
     });
 
@@ -684,7 +724,7 @@ os.ui.search.SearchBoxCtrl.prototype.getPlaceholderText = function(opt_ids) {
     } else if (enabled.length == 0) {
       return 'No search types enabled.';
     } else {
-      var selectedGroup = this.singleGroupSelected();
+      const selectedGroup = this.singleGroupSelected();
       if (selectedGroup) {
         return 'Search ' + selectedGroup + '...';
       }
@@ -704,17 +744,17 @@ os.ui.search.SearchBoxCtrl.prototype.getPlaceholderText = function(opt_ids) {
  * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.getRecentDetails = function(recent) {
-  var text = '';
+  let text = '';
 
-  var ids = recent.ids;
+  const ids = recent.ids;
   if (ids.length > 0) {
-    var allIds = this.searchManager.getRegisteredSearches().map(os.search.getSearchId).sort();
+    const allIds = this.searchManager.getRegisteredSearches().map(os.search.getSearchId).sort();
     if (goog.array.equals(ids, allIds)) {
       // ids are an exact match (assumes both lists are sorted)
       text = '(All Search Types)';
     } else if (ids.length == 1) {
       // show the name if only one type
-      var search = this.searchManager.getSearch(ids[0]);
+      const search = this.searchManager.getSearch(ids[0]);
       if (search && search.getName()) {
         text = '(' + search.getName() + ')';
       } else {
@@ -739,27 +779,27 @@ os.ui.search.SearchBoxCtrl.prototype.getRecentDetails = function(recent) {
  * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.getRecentTitle = function(recent) {
-  var text = 'Load recent search';
+  let text = 'Load recent search';
 
-  var ids = recent.ids;
+  const ids = recent.ids;
   if (ids.length > 0) {
-    var allIds = this.searchManager.getRegisteredSearches().map(os.search.getSearchId).sort();
+    const allIds = this.searchManager.getRegisteredSearches().map(os.search.getSearchId).sort();
     if (goog.array.equals(ids, allIds)) {
       // ids are an exact match (assumes both lists are sorted)
       text = 'Search all types for "' + recent.term + '".';
     } else if (ids.length == 1) {
       // show the name if only one type
-      var search = this.searchManager.getSearch(ids[0]);
+      const search = this.searchManager.getSearch(ids[0]);
       if (search && search.getName()) {
         text = 'Search ' + search.getName() + ' for "' + recent.term + '".';
       }
     } else {
       // otherwise show the number of types
-      var separator = '\n - ';
+      const separator = '\n - ';
       text = 'Search the following types for "' + recent.term + '":' + separator;
 
-      var names = ids.map(function(id) {
-        var search = this.searchManager.getSearch(id);
+      const names = ids.map(function(id) {
+        const search = this.searchManager.getSearch(id);
         if (search) {
           return search.getName();
         }
@@ -785,8 +825,8 @@ os.ui.search.SearchBoxCtrl.prototype.setFromRecent = function(recent) {
   this['searchTerm'] = recent.term;
 
   // update which search providers are enabled
-  for (var i = 0; i < this['searchOptions'].length; i++) {
-    var search = /** @type {!os.search.ISearch} */ (this['searchOptions'][i]);
+  for (let i = 0; i < this['searchOptions'].length; i++) {
+    const search = /** @type {!os.search.ISearch} */ (this['searchOptions'][i]);
     if (recent.ids.indexOf(search.getId()) > -1) {
       search.setEnabled(true);
     } else {
@@ -797,7 +837,7 @@ os.ui.search.SearchBoxCtrl.prototype.setFromRecent = function(recent) {
   this.search();
 
   // move the item to the top of the recent list
-  var recentIndex = goog.array.indexOf(this['recentSearches'], recent);
+  const recentIndex = goog.array.indexOf(this['recentSearches'], recent);
   if (recentIndex > 0) {
     goog.array.moveItem(this['recentSearches'], recentIndex, 0);
   }
@@ -828,18 +868,29 @@ os.ui.search.SearchBoxCtrl.prototype.refreshAutocomplete = function() {
  * @export
  */
 os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions = function(event) {
-  var originalEvent = event.originalEvent;
+  const originalEvent = event.originalEvent;
 
   this['showSearchOptions'] = !this['showSearchOptions'];
 
   if (this['showSearchOptions']) {
     // save the ids of currently enabled searches
-    var enabledIds = this.searchManager.getEnabledSearches().map(os.search.getSearchId).sort();
+    const enabledIds = {};
+    enabledIds[os.structs.TriState.ON] = [];
+    enabledIds[os.structs.TriState.BOTH] = [];
+    this.searchManager.getEnabledSearches().forEach((search) => {
+      if (os.implements(search, os.search.ISubSearch.ID) &&
+      /** @type {os.search.ISubSearch} */ (search).getRegisteredSubSearches().length) {
+        const ss = /** @type {os.search.ISubSearch} */ (search);
+        enabledIds[ss.isSubSearchEnabled()].push(os.search.getSearchId(search));
+      } else {
+        enabledIds[os.structs.TriState.ON].push(os.search.getSearchId(search));
+      }
+    });
     this.listenKey = goog.events.listen(document, 'click', function(e) {
       if (this.element) {
-        var event = /** @type {goog.events.BrowserEvent} */ (e);
-        var optionsEl = this.element.find('.js-searchbox__search-options')[0] || null;
-        var recentsEl = this.element.find('.js-searchbox__recent-searches')[0] || null;
+        const event = /** @type {goog.events.BrowserEvent} */ (e);
+        const optionsEl = this.element.find('.js-searchbox__search-options')[0] || null;
+        const recentsEl = this.element.find('.js-searchbox__recent-searches')[0] || null;
 
         //
         // Handle the event if this isn't the click event that opened the options and it meets one of these criteria:
@@ -847,8 +898,8 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions = function(event) {
         //  - The click was on a recent search
         //  - Only one search type is allowed
         //
-        var optionsClicked = goog.dom.contains(optionsEl, event.target);
-        var recentClicked = goog.dom.contains(recentsEl, event.target);
+        const optionsClicked = goog.dom.contains(optionsEl, event.target);
+        const recentClicked = goog.dom.contains(recentsEl, event.target);
         if (event.getBrowserEvent() != originalEvent && (!optionsClicked || recentClicked || !this['allowMultiple'])) {
           // clean up the listener and kill the event
           goog.events.unlistenByKey(this.listenKey);
@@ -860,8 +911,20 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions = function(event) {
           // because they already update the search.
           if (!recentClicked) {
             event.stopPropagation();
-            var newEnabledIds = this.searchManager.getEnabledSearches().map(os.search.getSearchId).sort();
-            if (!goog.array.equals(newEnabledIds, enabledIds)) {
+            const newEnabledIds = {};
+            newEnabledIds[os.structs.TriState.ON] = [];
+            newEnabledIds[os.structs.TriState.BOTH] = [];
+            this.searchManager.getEnabledSearches().forEach((search) => {
+              if (os.implements(search, os.search.ISubSearch.ID) &&
+              /** @type {os.search.ISubSearch} */ (search).getRegisteredSubSearches().length) {
+                const ss = /** @type {os.search.ISubSearch} */ (search);
+                newEnabledIds[ss.isSubSearchEnabled()].push(os.search.getSearchId(search));
+              } else {
+                newEnabledIds[os.structs.TriState.ON].push(os.search.getSearchId(search));
+              }
+            });
+            if (!goog.array.equals(newEnabledIds[os.structs.TriState.ON], enabledIds[os.structs.TriState.ON]) ||
+                !goog.array.equals(newEnabledIds[os.structs.TriState.BOTH], enabledIds[os.structs.TriState.BOTH])) {
               this.search();
             }
           }
@@ -881,10 +944,10 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions = function(event) {
  * @private
  */
 os.ui.search.SearchBoxCtrl.prototype.populateAutocomplete_ = function(event) {
-  var results = event.getResults();
+  const results = event.getResults();
   if (results && results.length > 0) {
-    var typeahead = this.autocompleteSrc_.data('typeahead');
-    var current = typeahead['source'].concat(results);
+    const typeahead = this.autocompleteSrc_.data('typeahead');
+    const current = typeahead['source'].concat(results);
     goog.array.removeDuplicates(current); // don't allow dupes in auto-complete results
     typeahead['source'] = current;
     typeahead['lookup']();
@@ -899,9 +962,9 @@ os.ui.search.SearchBoxCtrl.prototype.populateAutocomplete_ = function(event) {
  */
 os.ui.search.SearchBoxCtrl.prototype.updateRecents = function() {
   if (this['searchTerm']) {
-    var enabledIds = this.searchManager.getEnabledSearches().map(os.search.getSearchId).sort();
+    const enabledIds = this.searchManager.getEnabledSearches().map(os.search.getSearchId).sort();
 
-    var recentIndex = ol.array.findIndex(this['recentSearches'], function(recent) {
+    const recentIndex = ol.array.findIndex(this['recentSearches'], function(recent) {
       return recent.term == this['searchTerm'];
     }.bind(this));
 
@@ -909,7 +972,7 @@ os.ui.search.SearchBoxCtrl.prototype.updateRecents = function() {
       // already in the array, so move it to the top
       goog.array.moveItem(this['recentSearches'], recentIndex, 0);
     } else {
-      var recent = /** @type {!osx.search.RecentSearch} */ ({
+      const recent = /** @type {!osx.search.RecentSearch} */ ({
         ids: enabledIds,
         term: this['searchTerm']
       });
@@ -932,11 +995,11 @@ os.ui.search.SearchBoxCtrl.prototype.updateRecents = function() {
  * @private
  */
 os.ui.search.SearchBoxCtrl.prototype.saveRecent_ = function() {
-  var recentCopy = [];
+  const recentCopy = [];
   this['recentSearches'].forEach(function(recent) {
     // manually clone to avoid properties like $$hashKey that may be added by Angular
     if (recent.ids) {
-      var recentSearch = /** @type {!osx.search.RecentSearch} */ ({
+      const recentSearch = /** @type {!osx.search.RecentSearch} */ ({
         ids: recent.ids.slice(),
         term: recent.term
       });
@@ -980,8 +1043,8 @@ os.ui.search.SearchBoxCtrl.prototype.onFavoritesUpdate = function() {
  */
 os.ui.search.SearchBoxCtrl.prototype.isFavoriteActive = function(favorite) {
   // Is the url the same after the hash?
-  var current = location.href.split('#');
-  var fav = favorite['uri'].split('#');
+  const current = location.href.split('#');
+  const fav = favorite['uri'].split('#');
   return current.length == 2 && fav.length == 2 && current[1] == fav[1];
 };
 

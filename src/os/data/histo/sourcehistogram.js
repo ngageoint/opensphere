@@ -682,19 +682,17 @@ os.data.histo.SourceHistogram.prototype.setColorMethod = function(value, opt_bin
   if (this.source) {
     var colorModel = this.source.getColorModel();
     if (value > 0) {
-      var oldBinColors = {};
-      if (colorModel) {
-        oldBinColors = colorModel.getBinColors();
-      }
+      var set = !colorModel || (colorModel.getHistogram() != this);
 
-      if (!colorModel || colorModel.getHistogram() != this) {
+      if (set) {
         colorModel = this.source.createColorModel(this);
-        this.source.setColorModel(colorModel);
-        // we switched data sources, keep the old bin colors before assigning something new
-        colorModel.setManualBinColors(oldBinColors);
       }
 
       colorModel.setColorMethod(value, opt_bins, opt_color);
+
+      if (set) {
+        this.source.setColorModel(colorModel);
+      }
     } else {
       if (colorModel != null) {
         colorModel.setColorMethod(value, opt_bins, opt_color);

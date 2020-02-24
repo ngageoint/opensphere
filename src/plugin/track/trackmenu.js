@@ -175,7 +175,7 @@ plugin.track.menu.visibleIfTrackNode = function(context) {
 
   if (context) {
     var trackNodes = plugin.track.menu.getTrackNodes(context);
-    this.visible = trackNodes.length === context.length;
+    this.visible = trackNodes && trackNodes.length === context.length;
   }
 };
 

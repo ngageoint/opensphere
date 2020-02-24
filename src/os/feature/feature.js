@@ -1457,3 +1457,23 @@ os.feature.hasPolygon = function(feature) {
 
   return hasPolygon;
 };
+
+
+/**
+ * Finds the first color in the items so the User has some consistency
+ *
+ * @param {Array<!ol.Feature>|null} items
+ * @return {string} the color
+ */
+os.feature.getFirstColor = function(items) {
+  var str = os.style.DEFAULT_LAYER_COLOR;
+  if (!items) return str;
+  var color;
+
+  for (const item of items) {
+    color = /** @type {string} */ (item.get(os.data.RecordField.COLOR));
+    if (color) break;
+  }
+
+  return color ? color : str;
+};

@@ -180,6 +180,37 @@ os.data.histo.ColorModel.prototype.getResults = function() {
  * Get the bin/color pairs currently applied by this color model.
  *
  * @return {Object<string, string>}
+ * @suppress {accessControls} To allow direct access to bin data.
+ */
+os.data.histo.ColorModel.prototype.getAllBinColors = function() {
+  // start with bins and overrides from this histogram on top of that
+  const colors = Object.assign({}, this.binColors_, this.manualBinColors_);
+  const lookup = {};
+
+  for (const value of Object.values(colors)) {
+    lookup[os.color.toHexString(value)] = true;
+  }
+
+  // get any missing the colors out of the folds from external histograms
+  return this.getResults().reduce(function(all, bin) {
+    if (bin.colorCounts_) {
+      for (var k in bin.colorCounts_) {
+        if (!lookup[k]) {
+          var label = [os.data.histo.OVERRIDE_LABEL, k].join(' ');
+          all[label] = os.style.toRgbaString(k);
+          lookup[k] = true;
+        }
+      }
+    }
+    return all;
+  }, colors);
+};
+
+
+/**
+ * Get the bin/color pairs currently applied by this color model.
+ *
+ * @return {Object<string, string>}
  */
 os.data.histo.ColorModel.prototype.getBinColors = function() {
   return this.binColors_;
@@ -207,7 +238,8 @@ os.data.histo.ColorModel.prototype.setManualBinColors = function(colors) {
   goog.removeUid(colors);
 
   this.manualBinColors_ = colors;
-  this.applyColorMethod();
+
+  // this.applyColorMethod(); // already called by setColorMethod(), so don't double-up the re-draws for all the charts
 };
 
 
@@ -274,6 +306,7 @@ os.data.histo.ColorModel.prototype.setColorMethod = function(value, opt_bins, op
     }
   }
 
+  // keep the underlying method when simply adjusting a few colors manually
   this.colorMethod_ = value === os.data.histo.ColorMethod.MANUAL ? this.colorMethod_ : value;
   this.applyColorMethod();
 };
@@ -471,13 +504,35 @@ os.data.histo.ColorModel.prototype.colorFeatures_ = function(features, opt_color
 
 
 /**
+ * Sets the color on a set of features.
+ *
+ * @param {Array<ol.Feature>} features The features to update
+ * @param {string=} opt_color The new feature color
+ *
+ */
+os.data.histo.ColorModel.prototype.colorFeatures = function(features, opt_color) {
+  if (opt_color) {
+    // add a manual entry for this color
+    var label = [os.data.histo.OVERRIDE_LABEL, os.color.toHexString(opt_color)].join(' ');
+    this.manualBinColors_[label] = opt_color;
+  }
+  this.colorFeatures_(features, opt_color);
+};
+
+
+/**
  * @inheritDoc
  */
 os.data.histo.ColorModel.prototype.persist = function(opt_to) {
   var obj = opt_to || {};
 
   obj['colorMethod'] = this.colorMethod_;
-  obj['manualColors'] = goog.object.clone(this.manualBinColors_);
+  obj['manualColors'] = {};
+
+  // only grab manual bin colors, because features will be different next load/search
+  for (const [label, color] of Object.entries(/** @type {!Object<?, string>} */ (this.manualBinColors_))) {
+    if (label.indexOf(os.data.histo.OVERRIDE_LABEL) == -1) obj['manualColors'][label] = color;
+  }
 
   if (this.histogram_) {
     var binMethod = this.histogram_.getBinMethod();
@@ -503,10 +558,14 @@ os.data.histo.ColorModel.prototype.restore = function(config) {
     }
   }
 
-  this.setColorMethod(config['colorMethod']);
+  var colorMethod = config['colorMethod'];
 
-  // set the manual colors last, because changing the color method might clear them
   if (config['manualColors']) {
     this.setManualBinColors(/** @type {!Object<string, string>} */ (goog.object.clone(config['manualColors'])));
+
+    // since manual overrides maintain the original color method, (manualColors && NONE) actually means Manual
+    if (colorMethod == os.data.histo.ColorMethod.NONE) colorMethod = os.data.histo.ColorMethod.MANUAL;
   }
+
+  this.setColorMethod(colorMethod);
 };

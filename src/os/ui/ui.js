@@ -203,7 +203,7 @@ os.ui.apply = function(scope, opt_delay) {
   } else {
     try {
       if (scope && (!scope.$root || !scope.$root.$$phase)) {
-        scope.$apply();
+        scope.$applyAsync();
       }
     } catch (e) {
     }

@@ -46,6 +46,7 @@ os.action.EventType = {
 
   // color
   COLOR_SELECTED: 'colorSelected',
+  COLOR_SELECTED_BINS: 'colorSelectedBins',
   AUTO_COLOR: 'autoColor',
   AUTO_COLOR_BY_COUNT: 'autoColorByCount',
   RESET_COLOR: 'resetColor',
