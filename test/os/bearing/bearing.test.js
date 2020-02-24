@@ -31,11 +31,11 @@ describe('os.bearing', function() {
   it('should get magnetic bearings correctly', function() {
     os.settings.set(os.bearing.BearingSettingsKeys.BEARING_TYPE, os.bearing.BearingType.MAGNETIC);
 
-    expect(os.bearing.getBearing([5, 10], [15, 20], date)).toBeCloseTo(44.173649564391106, precision);
-    expect(os.bearing.getBearing([5, 10], [15, 20], date, rhumb)).toBeCloseTo(45.325086481629974, precision);
+    expect(os.bearing.getBearing([5, 10], [15, 20], date)).toBeCloseTo(44.180072479561, precision);
+    expect(os.bearing.getBearing([5, 10], [15, 20], date, rhumb)).toBeCloseTo(45.331509396800, precision);
 
-    expect(os.bearing.getBearing([-50, 80], [75, -60], date)).toBeCloseTo(111.95771451664854, precision);
-    expect(os.bearing.getBearing([-50, 80], [75, -60], date, rhumb)).toBeCloseTo(189.66831353743729, precision);
+    expect(os.bearing.getBearing([-50, 80], [75, -60], date)).toBeCloseTo(111.912444073130, precision);
+    expect(os.bearing.getBearing([-50, 80], [75, -60], date, rhumb)).toBeCloseTo(189.623043093919, precision);
   });
 
   it('should format bearings correctly', function() {
