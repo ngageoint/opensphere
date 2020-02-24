@@ -330,7 +330,7 @@ os.ui.file.kml.isGoogleMapsAccessible = true;
  */
 os.ui.file.kml.replaceGoogleUri = function(src) {
   if (os.ui.file.kml.GMAPS_SEARCH.test(src)) {
-    const secureSource = src.replace(/^http:/, 'https:');
+    const secureSource = 'https:' + src.replace(/^[a-z]*:\/\//, '//');
     const icon = os.ui.file.kml.GOOGLE_EARTH_ICON_SET.find((icon) => secureSource === icon.path);
     if (icon) {
       return icon.path.replace(os.ui.file.kml.GMAPS_SEARCH, os.ui.file.kml.ICON_PATH);
