@@ -76,7 +76,7 @@ os.ui.file.kml.Icon;
  * @type {string}
  * @const
  */
-os.ui.file.kml.GOOGLE_EARTH_URL = '//maps.google.com/mapfiles/kml/';
+os.ui.file.kml.GOOGLE_EARTH_URL = 'https://maps.google.com/mapfiles/kml/';
 
 
 /**
@@ -330,7 +330,8 @@ os.ui.file.kml.isGoogleMapsAccessible = true;
  */
 os.ui.file.kml.replaceGoogleUri = function(src) {
   if (os.ui.file.kml.GMAPS_SEARCH.test(src)) {
-    const icon = os.ui.file.kml.GOOGLE_EARTH_ICON_SET.find((icon) => src.endsWith(icon.path));
+    const secureSource = src.replace(/^http:/, 'https:');
+    const icon = os.ui.file.kml.GOOGLE_EARTH_ICON_SET.find((icon) => secureSource === icon.path);
     if (icon) {
       return icon.path.replace(os.ui.file.kml.GMAPS_SEARCH, os.ui.file.kml.ICON_PATH);
     } else if (!os.ui.file.kml.isGoogleMapsAccessible) {
