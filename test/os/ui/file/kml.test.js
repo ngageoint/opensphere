@@ -14,9 +14,11 @@ describe('os.ui.file.kml', function() {
     expect(os.ui.file.kml.replaceGoogleUri('http://not.google.com/icon.png'))
         .toBe('http://not.google.com/icon.png');
 
-    var original = os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PLACEMARK_CIRCLE;
-    var expected = os.ui.file.kml.ICON_PATH + os.ui.file.kml.GoogleEarthIcons.PLACEMARK_CIRCLE;
+    const original = os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PLACEMARK_CIRCLE;
+    const expected = os.ui.file.kml.ICON_PATH + os.ui.file.kml.GoogleEarthIcons.PLACEMARK_CIRCLE;
     expect(os.ui.file.kml.replaceGoogleUri(original)).toBe(expected);
+    const schemeRelative = original.replace(/https?:/, '');
+    expect(os.ui.file.kml.replaceGoogleUri(schemeRelative)).toBe(expected);
   });
 
   it('should not convert Google icon URLs which we do not have replacements for', () => {
