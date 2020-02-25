@@ -54,7 +54,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
     this.csContext = null;
 
     /**
-     * @type {?OLVectorSource}
+     * @type {OLVectorSource}
      * @protected
      */
     this.source = this.layer.getSource();

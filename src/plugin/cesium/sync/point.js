@@ -168,7 +168,7 @@ const updateBillboard = (feature, geometry, style, context, bb, opt_flatCoords, 
 
 
 /**
- * @type {?Cesium.NearFarScalar}
+ * @type {Cesium.NearFarScalar}
  */
 let distanceScalar = null;
 

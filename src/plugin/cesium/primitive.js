@@ -13,7 +13,7 @@ const {RetrieveFunction, UpdateFunction} = goog.requireType('plugin.cesium.sync.
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
 
 /**
- * @type {RetrieveFunction}
+ * @type {plugin.cesium.sync.ConverterTypes.RetrieveFunction}
  */
 const getPrimitive = (feature, geometry, style, context) => {
   return context.getPrimitiveForGeometry(geometry);
@@ -198,15 +198,7 @@ const BASE_PRIMITIVE_OPTIONS = {
  */
 const isGroundPrimitive = function(primitive) {
   if (primitive) {
-    if (primitive instanceof Cesium.GroundPrimitive || primitive instanceof Cesium.GroundPolylinePrimitive) {
-      return true;
-    } else if (primitive.length) {
-      for (let i = 0, n = primitive.length; i < n; i++) {
-        if (isGroundPrimitive(primitive.get(i))) {
-          return true;
-        }
-      }
-    }
+    return primitive instanceof Cesium.GroundPrimitive || primitive instanceof Cesium.GroundPolylinePrimitive;
   }
 
   return false;
@@ -214,14 +206,12 @@ const isGroundPrimitive = function(primitive) {
 
 
 /**
- * @param {Cesium.PrimitiveLike} primitive The primitive
+ * @param {?(Array<Cesium.PrimitiveLike>|Cesium.PrimitiveLike)} primitive The primitive
  * @return {!boolean}
  */
 const isPrimitiveShown = function(primitive) {
-  // This function would not be necessary if some of the *Collection implementations
-  // didn't somehow miss implementing the "show" member of the primitive "interface".
-  if (primitive.show === undefined) {
-    return primitive.length > 0 ? isPrimitiveShown(primitive.get(0)) : true;
+  if (Array.isArray(primitive)) {
+    return primitive.length > 0 ? isPrimitiveShown(primitive[0]) : true;
   }
 
   return !!primitive.show;
@@ -229,14 +219,16 @@ const isPrimitiveShown = function(primitive) {
 
 
 /**
- * @param {?Cesium.PrimitiveLike} primitive The primitive
+ * @param {?(Array<Cesium.PrimitiveLike>|Cesium.PrimitiveLike|Cesium.CollectionLike)} primitive The primitive
  * @param {boolean} show Whether or not to show the primitive
  */
 const setPrimitiveShown = function(primitive, show) {
   if (primitive) {
-    // This function would not be necessary if some of the *Collection implementations
-    // didn't somehow miss implementing the "show" member of the primitive "interface".
-    if (primitive.show === undefined) {
+    if (Array.isArray(primitive)) {
+      for (let i = 0, n = primitive.length; i < n; i++) {
+        setPrimitiveShown(primitive[i], show);
+      }
+    } else if (primitive.length != null) {
       for (let i = 0, n = primitive.length; i < n; i++) {
         setPrimitiveShown(primitive.get(i), show);
       }
@@ -245,6 +237,7 @@ const setPrimitiveShown = function(primitive, show) {
     }
   }
 };
+
 
 exports = {
   BASE_PRIMITIVE_OPTIONS,

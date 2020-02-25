@@ -45,7 +45,7 @@ const scratchStyleArray = [];
  * @param {!Feature} feature
  * @param {number} resolution
  * @param {!OLVectorLayer} layer
- * @return {?Array<Style>} null if no style is available
+ * @return {Array<Style>} null if no style is available
  */
 const getFeatureStyles = (feature, resolution, layer) => {
   var style;
