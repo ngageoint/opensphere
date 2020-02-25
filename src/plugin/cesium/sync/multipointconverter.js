@@ -16,16 +16,8 @@ const {CreateFunction, UpdateFunction, Converter} = goog.requireType('plugin.ces
 const create = (feature, geometry, style, context) => {
   const imageStyle = style.getImage();
   if (imageStyle) {
-    const primitives = new Cesium.BillboardCollection({
-      scene: context.scene
-    });
-
-    updateMultiPoint(feature, geometry, imageStyle, context, primitives);
-
-    if (primitives.length) {
-      context.addPrimitive(primitives, feature, geometry);
-      return true;
-    }
+    updateMultiPoint(feature, geometry, imageStyle, context);
+    return true;
   }
 
   return false;
@@ -34,7 +26,6 @@ const create = (feature, geometry, style, context) => {
 
 /**
  * @type {UpdateFunction}
- * @suppress {accessControls}
  */
 const update = (feature, geometry, style, context, primitive) => {
   const imageStyle = style.getImage();
@@ -53,23 +44,23 @@ const update = (feature, geometry, style, context, primitive) => {
  * @param {!MultiPoint} geometry
  * @param {!ImageStyle} imageStyle
  * @param {!VectorContext} context
- * @param {!Cesium.BillboardCollection} primitive
+ * @param {!Array<!(Cesium.Billboard|Cesium.optionsBillboardCollectionAdd)>=} opt_primitive
  * @suppress {accessControls}
  */
-const updateMultiPoint = (feature, geometry, imageStyle, context, primitive) => {
+const updateMultiPoint = (feature, geometry, imageStyle, context, opt_primitive) => {
   const pointFlats = geometry.getFlatCoordinates();
   const stride = geometry.stride;
 
   let count = 0;
 
   for (let i = 0, ii = pointFlats.length; i < ii; i += stride) {
-    const bb = count < primitive.length ? primitive.get(count) : undefined;
+    const bb = opt_primitive && count < opt_primitive.length ? opt_primitive[count] : undefined;
 
     if (bb) {
       updateBillboard(feature, geometry, imageStyle, context, bb, pointFlats, i, count);
     } else {
       const options = createBillboard(feature, geometry, imageStyle, context, pointFlats, i, count);
-      primitive.add(options);
+      context.addBillboard(options, feature, geometry);
     }
 
     count++;

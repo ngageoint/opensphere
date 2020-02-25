@@ -1,44 +1,30 @@
-goog.module('plugin.cesium.sync.ConverterTypes');
-
-
-const Feature = goog.requireType('ol.Feature');
-const Geometry = goog.requireType('ol.geom.Geometry');
-const Style = goog.requireType('ol.style.Style');
-const VectorContext = goog.requireType('plugin.cesium.VectorContext');
-
+goog.provide('plugin.cesium.sync.ConverterTypes');
 
 
 /**
- * @typedef {!function(!Feature, !Geometry, !Style, !VectorContext):boolean}
+ * @typedef {!function(!ol.Feature, !ol.geom.Geometry, !ol.style.Style, !plugin.cesium.VectorContext):boolean}
  */
-let CreateFunction;
+plugin.cesium.sync.ConverterTypes.CreateFunction;
 
 
 /**
- * @typedef {!function(!Feature, !Geometry, !Style, !VectorContext):(Cesium.PrimitiveLike|null|undefined)}
+ * @typedef {!function(!ol.Feature, !ol.geom.Geometry, !ol.style.Style, !plugin.cesium.VectorContext):(Cesium.PrimitiveLike|null|undefined)}
  */
-let RetrieveFunction;
+plugin.cesium.sync.ConverterTypes.RetrieveFunction;
 
 
 /**
- * @typedef {!function(!Feature, !Geometry, !Style, !VectorContext, !Cesium.PrimitiveLike):boolean}
+ * @typedef {!function(!ol.Feature, !ol.geom.Geometry, !ol.style.Style, !plugin.cesium.VectorContext, !Cesium.PrimitiveLike):boolean}
  */
-let UpdateFunction;
+plugin.cesium.sync.ConverterTypes.UpdateFunction;
 
 
 /**
  * @typedef {{
- *  create: CreateFunction,
- *  retrieve: RetrieveFunction,
- *  update: UpdateFunction,
- *  delete: UpdateFunction
+ *  create: plugin.cesium.sync.ConverterTypes.CreateFunction,
+ *  retrieve: plugin.cesium.sync.ConverterTypes.RetrieveFunction,
+ *  update: plugin.cesium.sync.ConverterTypes.UpdateFunction,
+ *  delete: plugin.cesium.sync.ConverterTypes.UpdateFunction
  * }}
  */
-let Converter;
-
-exports = {
-  CreateFunction,
-  RetrieveFunction,
-  UpdateFunction,
-  Converter
-};
+plugin.cesium.sync.ConverterTypes.Converter;

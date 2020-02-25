@@ -2686,17 +2686,33 @@ Cesium.Transforms.headingPitchRollToFixedFrame = function(origin, hpr, opt_ellip
 
 /**
  * @typedef {
+ *    !(Cesium.BillboardCollection|
+ *      Cesium.PolylineCollection|
+ *      Cesium.PrimitiveCollection|
+ *      Cesium.LabelCollection)
+ * }
+ */
+Cesium.CollectionLike;
+
+/**
+ * @typedef {
  *    !(Cesium.Polygon|
- *      Cesium.PolylineCollection|Cesium.Polyline|
- *      Cesium.BillboardCollection|Cesium.Billboard|
- *      Cesium.LabelCollection|Cesium.Label|
- *      Cesium.PrimitiveCollection|Cesium.Primitive|
- *      Cesium.GroundPrimitive|Cesium.GroundPolylinePrimitive|
+ *      Cesium.Polyline|
+ *      Cesium.Billboard|
+ *      Cesium.Label|
+ *      Cesium.Primitive|
+ *      Cesium.GroundPrimitive|
+ *      Cesium.GroundPolylinePrimitive|
  *      Cesium.Cesium3DTileset)
  * }
  */
 Cesium.PrimitiveLike;
 
+
+/**
+ * @typedef {!(Cesium.CollectionLike|Cesium.PrimitiveLike)}
+ */
+Cesium.PrimitiveOrCollection;
 
 
 /**
@@ -2707,13 +2723,13 @@ Cesium.PrimitiveCollection = function() {};
 
 
 /**
- * @param {!Cesium.PrimitiveLike} primitive
+ * @param {!Cesium.PrimitiveOrCollection} primitive
  */
 Cesium.PrimitiveCollection.prototype.add = function(primitive) {};
 
 
 /**
- * @param {!Cesium.PrimitiveLike} primitive
+ * @param {!Cesium.PrimitiveOrCollection} primitive
  * @return {boolean}
  */
 Cesium.PrimitiveCollection.prototype.contains = function(primitive) {};
@@ -2721,19 +2737,19 @@ Cesium.PrimitiveCollection.prototype.contains = function(primitive) {};
 
 /**
  * @param {number} index
- * @return {Cesium.PrimitiveLike}
+ * @return {Cesium.PrimitiveOrCollection}
  */
 Cesium.PrimitiveCollection.prototype.get = function(index) {};
 
 
 /**
- * @param {!Cesium.PrimitiveLike} primitive
+ * @param {!Cesium.PrimitiveOrCollection} primitive
  */
 Cesium.PrimitiveCollection.prototype.raiseToTop = function(primitive) {};
 
 
 /**
- * @param {!Cesium.PrimitiveLike} primitive
+ * @param {!Cesium.PrimitiveOrCollection} primitive
  */
 Cesium.PrimitiveCollection.prototype.remove = function(primitive) {};
 

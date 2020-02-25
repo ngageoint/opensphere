@@ -66,7 +66,7 @@ const getAltitudeModeFromArray = (altitudeMode, opt_index) => {
 
 
 /**
- * @param {?AltitudeMode|undefined} altitudeMode
+ * @param {AltitudeMode|undefined} altitudeMode
  * @return {!Cesium.HeightReference} defaults to Cesium.HeightReference.NONE
  */
 const getHeightReferenceFromAltitudeMode = (altitudeMode) => {
@@ -86,14 +86,10 @@ const getHeightReferenceFromAltitudeMode = (altitudeMode) => {
 
 /**
  * @param {Cesium.HeightReference} newHeightReference
- * @param {?Cesium.PrimitiveLike} primitive
+ * @param {Cesium.PrimitiveLike|null} primitive
  * @return {boolean}
  */
 const isPrimitiveClassTypeChanging = (newHeightReference, primitive) => {
-  if (primitive instanceof Cesium.PrimitiveCollection && primitive.length) {
-    return isPrimitiveClassTypeChanging(newHeightReference, primitive.get(0));
-  }
-
   return ((newHeightReference !== Cesium.HeightReference.CLAMP_TO_GROUND &&
     (primitive instanceof Cesium.GroundPolylinePrimitive || primitive instanceof Cesium.GroundPrimitive)) ||
     (newHeightReference === Cesium.HeightReference.CLAMP_TO_GROUND &&

@@ -8,6 +8,9 @@ const log = goog.require('goog.log');
 const objectUtils = goog.require('os.object');
 const {isGroundPrimitive, isPrimitiveShown, setPrimitiveShown} = goog.require('plugin.cesium.primitive');
 
+const Feature = goog.requireType('ol.Feature');
+const Geometry = goog.requireType('ol.geom.Geometry');
+const OLVectorLayer = goog.requireType('ol.layer.Vector');
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 
 
@@ -79,7 +82,7 @@ class VectorContext {
 
     /**
      * Map of OL geometries to Cesium primitives/billboards.
-     * @type {Object<number, (Cesium.PrimitiveLike|undefined)>}
+     * @type {Object<number, (!Array<Cesium.PrimitiveLike>|Cesium.PrimitiveLike|undefined)>}
      * @protected
      */
     this.geometryToCesiumMap = {};
@@ -165,13 +168,12 @@ class VectorContext {
 
 
   /**
-   * @param {?(Cesium.BillboardCollection|Cesium.LabelCollection|Cesium.PolylineCollection|Cesium.PrimitiveCollection)} collection
+   * @param {?Cesium.CollectionLike} collection
    * @private
    */
   disposeCollection_(collection) {
     if (collection) {
       collection.destroyPrimitives = true;
-      this.removeOLReferences(collection);
       this.scene.primitives.remove(collection);
       this.scene.groundPrimitives.remove(collection);
     }
@@ -203,8 +205,8 @@ class VectorContext {
    * Sets references to OpenLayers objects on a Cesium primitive.
    *
    * @param {Cesium.PrimitiveLike} primitive
-   * @param {!ol.Feature} feature The OL3 feature
-   * @param {!ol.geom.Geometry} geometry The OL3 geometry
+   * @param {!Feature} feature The OL3 feature
+   * @param {!Geometry} geometry The OL3 geometry
    */
   addOLReferences(primitive, feature, geometry) {
     if (primitive) {
@@ -212,15 +214,6 @@ class VectorContext {
       primitive.olFeature = feature;
       primitive.olGeometry = geometry;
       primitive.geomRevision = geometry.getRevision();
-
-      // primitives in a collection need a feature reference or hover will not work
-      if (primitive instanceof Cesium.PrimitiveCollection || primitive instanceof Cesium.BillboardCollection ||
-          primitive instanceof Cesium.PolylineCollection) {
-        for (let i = 0, n = primitive.length; i < n; i++) {
-          const p = primitive.get(i);
-          this.addOLReferences(p, feature, geometry);
-        }
-      }
     }
   }
 
@@ -236,15 +229,6 @@ class VectorContext {
       primitive.olLayer = undefined;
       primitive.olFeature = undefined;
       primitive.olGeometry = undefined;
-
-      // clean up feature references on collections
-      if (primitive instanceof Cesium.PrimitiveCollection || primitive instanceof Cesium.BillboardCollection ||
-          primitive instanceof Cesium.PolylineCollection || primitive instanceof Cesium.LabelCollection) {
-        for (let i = 0, n = primitive.length; i < n; i++) {
-          const p = primitive.get(i);
-          this.removeOLReferences(p);
-        }
-      }
     }
   }
 
@@ -252,7 +236,7 @@ class VectorContext {
   /**
    * Marks all primitives for a feature as dirty.
    *
-   * @param {!ol.Feature} feature The OL3 feature
+   * @param {!Feature} feature The OL3 feature
    */
   markDirty(feature) {
     const primitives = this.featureToCesiumMap[feature.getUid()];
@@ -267,7 +251,7 @@ class VectorContext {
   /**
    * Removes all dirty primitives for a feature as dirty.
    *
-   * @param {!ol.Feature} feature The OL3 feature
+   * @param {!Feature} feature The OL3 feature
    */
   removeDirty(feature) {
     const primitives = this.featureToCesiumMap[feature.getUid()];
@@ -285,7 +269,7 @@ class VectorContext {
   /**
    * Cleans up Cesium objects created for a feature.
    *
-   * @param {!ol.Feature} feature the OL3 feature
+   * @param {!Feature} feature the OL3 feature
    */
   cleanup(feature) {
     const featureId = feature.getUid();
@@ -315,42 +299,63 @@ class VectorContext {
    * Adds a billboard to the collection.
    *
    * @param {!Cesium.optionsBillboardCollectionAdd} options The billboard configuration
-   * @param {!ol.Feature} feature The OL3 feature tied to the billboard
-   * @param {!ol.geom.Geometry} geometry The billboard's geometry
+   * @param {!Feature} feature The OL3 feature tied to the billboard
+   * @param {!Geometry} geometry The billboard's geometry
    */
   addBillboard(options, feature, geometry) {
-    const geometryId = getUid(geometry);
-    const existing = this.geometryToCesiumMap[geometryId];
-    if (existing) {
-      this.removePrimitive(existing);
-    }
-
     if (!feature.isDisposed()) {
       const billboard = this.billboards.add(options);
-      this.geometryToCesiumMap[geometryId] = billboard;
+      this.updateGeometryMap_(geometry, billboard);
       this.addFeaturePrimitive(feature, billboard);
       this.addOLReferences(billboard, feature, geometry);
     }
   }
 
+  /**
+   * @param {Geometry} geometry
+   * @param {!Array<Cesium.PrimitiveLike>|Cesium.PrimitiveLike} item
+   * @private
+   */
+  updateGeometryMap_(geometry, item) {
+    const geometryId = getUid(geometry);
+    let existing = this.geometryToCesiumMap[geometryId];
+
+    // this is messier than [existing, item].filter(filterFalsey).flat(2); but
+    // should be way faster (plus this way doesn't require the map value to be
+    // an array)
+    if (Array.isArray(item)) {
+      if (existing) {
+        if (!Array.isArray(existing)) {
+          existing = [existing];
+        }
+
+        Array.prototype.push.apply(existing, item);
+        this.geometryToCesiumMap[geometryId] = existing;
+      } else {
+        this.geometryToCesiumMap[geometryId] = item;
+      }
+    } else if (existing) {
+      if (Array.isArray(existing)) {
+        existing[existing.length] = item;
+      } else {
+        this.geometryToCesiumMap[geometryId] = [existing, item];
+      }
+    } else {
+      this.geometryToCesiumMap[geometryId] = item;
+    }
+  }
 
   /**
    * Adds a polyline to the collection.
    *
    * @param {!Cesium.PolylineOptions} options The polyline options.
-   * @param {!ol.Feature} feature The OL3 feature tied to the primitive
-   * @param {!ol.geom.Geometry} geometry The primitive's geometry
+   * @param {!Feature} feature The OL3 feature tied to the primitive
+   * @param {!Geometry} geometry The primitive's geometry
    */
   addPolyline(options, feature, geometry) {
-    const geometryId = getUid(geometry);
-    const existing = this.geometryToCesiumMap[geometryId];
-    if (existing) {
-      this.removePrimitive(existing);
-    }
-
     if (!feature.isDisposed()) {
       const polyline = this.polylines.add(options);
-      this.geometryToCesiumMap[geometryId] = polyline;
+      this.updateGeometryMap_(geometry, polyline);
       this.addFeaturePrimitive(feature, polyline);
       this.addOLReferences(polyline, feature, geometry);
     }
@@ -360,17 +365,11 @@ class VectorContext {
   /**
    * Adds a primitive to the collection.
    *
-   * @param {!Cesium.PrimitiveLike} primitive The Cesium primitive
-   * @param {!ol.Feature} feature The OL3 feature tied to the primitive
-   * @param {!ol.geom.Geometry} geometry The primitive's geometry
+   * @param {Cesium.PrimitiveLike} primitive The Cesium primitive
+   * @param {!Feature} feature The OL3 feature tied to the primitive
+   * @param {!Geometry} geometry The primitive's geometry
    */
   addPrimitive(primitive, feature, geometry) {
-    const geometryId = getUid(geometry);
-    const existing = this.geometryToCesiumMap[geometryId];
-    if (existing) {
-      this.removePrimitive(existing);
-    }
-
     if (!feature.isDisposed()) {
       if (isGroundPrimitive(primitive)) {
         this.groundPrimitives.add(primitive);
@@ -378,7 +377,7 @@ class VectorContext {
         this.primitives.add(primitive);
       }
 
-      this.geometryToCesiumMap[geometryId] = primitive;
+      this.updateGeometryMap_(geometry, primitive);
       this.addFeaturePrimitive(feature, primitive);
       this.addOLReferences(primitive, feature, geometry);
     }
@@ -389,22 +388,14 @@ class VectorContext {
    * Adds a label to the collection.
    *
    * @param {!Cesium.optionsLabelCollection} options The label configuration
-   * @param {!ol.Feature} feature The feature tied to the label
-   * @param {!ol.geom.Geometry} geometry The billboard's geometry
+   * @param {!Feature} feature The feature tied to the label
+   * @param {!Geometry} geometry The billboard's geometry
    */
   addLabel(options, feature, geometry) {
-    const geometryId = getUid(geometry);
-
-    // remove the existing labels because they will be recreated
-    const existing = this.geometryToLabelMap[geometryId];
-    if (existing) {
-      this.removePrimitive(existing);
-    }
-
     if (!feature.isDisposed()) {
       // add the label to the collection
       const label = this.labels.add(options);
-      this.geometryToLabelMap[geometryId] = label;
+      this.geometryToLabelMap[getUid(geometry)] = label;
       this.addFeaturePrimitive(feature, label);
       this.addOLReferences(label, feature, geometry);
     }
@@ -443,7 +434,7 @@ class VectorContext {
   /**
    * Adds a primitive to the map for a feature.
    *
-   * @param {!ol.Feature} feature The OL3 feature
+   * @param {!Feature} feature The OL3 feature
    * @param {!Cesium.PrimitiveLike} primitive The Cesium primitive
    * @protected
    */
@@ -463,7 +454,7 @@ class VectorContext {
   /**
    * Removes a primitive from the map for a feature.
    *
-   * @param {ol.Feature} feature The OL3 feature
+   * @param {Feature} feature The OL3 feature
    * @param {!Cesium.PrimitiveLike} primitive
    * @protected
    */
@@ -480,22 +471,22 @@ class VectorContext {
   /**
    * Get the Cesium label for the provided geometry, if it exists.
    *
-   * @param {!ol.geom.Geometry} geometry The geometry.
+   * @param {!Geometry} geometry The geometry.
    * @return {?Cesium.Label}
    */
   getLabelForGeometry(geometry) {
-    return this.geometryToLabelMap[ol.getUid(geometry)] || null;
+    return this.geometryToLabelMap[getUid(geometry)] || null;
   }
 
 
   /**
    * Get the Cesium primitive/billboard for the provided geometry, if it exists.
    *
-   * @param {!ol.geom.Geometry} geometry The geometry.
-   * @return {?Cesium.PrimitiveLike}
+   * @param {!Geometry} geometry The geometry.
+   * @return {!Array<Cesium.PrimitiveLike>|Cesium.PrimitiveLike|undefined}
    */
   getPrimitiveForGeometry(geometry) {
-    return this.geometryToCesiumMap[ol.getUid(geometry)] || null;
+    return this.geometryToCesiumMap[getUid(geometry)];
   }
 
 
@@ -560,7 +551,7 @@ class VectorContext {
 
 
   /**
-   * @param {!ol.Feature} feature
+   * @param {!Feature} feature
    * @return {boolean}
    */
   isFeatureShown(feature) {
