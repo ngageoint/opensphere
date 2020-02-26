@@ -1,6 +1,8 @@
 goog.provide('os.ui.column.mapping.ColumnMappingNodeUICtrl');
 goog.provide('os.ui.column.mapping.columnMappingNodeUIDirective');
+
 goog.require('os.ui.Module');
+goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -58,7 +60,7 @@ os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype.tryRemove = function() {
   var text = 'Are you sure you want to remove the <b>' + cm.getName() + '</b> column association from the ' +
       'application? <b>This action cannot be undone.</b>';
 
-  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+  os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
     confirm: this.remove_.bind(this),
     prompt: text,
     yesText: 'Remove',

@@ -4,7 +4,7 @@ goog.provide('os.ui.window.confirmTextDirective');
 goog.require('os.ui.Module');
 goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
-goog.require('os.ui.window.confirmDirective');
+goog.require('os.ui.window.ConfirmUI');
 
 
 /**
