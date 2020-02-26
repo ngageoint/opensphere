@@ -5,6 +5,7 @@ goog.require('os.config');
 goog.require('os.ui.Module');
 goog.require('os.ui.util.LinkyFilter');
 goog.require('os.ui.window');
+goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -75,7 +76,7 @@ os.ui.help.launchWebGLSupportDialog = function(opt_title) {
     scopeOptions['showGCHelp'] = true;
   }
 
-  os.ui.window.launchConfirm(/** @type {!osx.window.ConfirmOptions} */ ({
+  os.ui.window.ConfirmUI.launchConfirm(/** @type {!osx.window.ConfirmOptions} */ ({
     prompt: '<webglsupport></webglsupport>',
     windowOptions: windowOptions
   }), scopeOptions);

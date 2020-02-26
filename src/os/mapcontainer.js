@@ -79,6 +79,7 @@ goog.require('os.ui.help.Controls');
 goog.require('os.ui.help.webGLPerfCaveatDirective');
 goog.require('os.ui.help.webGLSupportDirective');
 goog.require('os.ui.window');
+goog.require('os.ui.window.ConfirmUI');
 goog.require('os.webgl');
 goog.require('plugin.position.copyPositionDirective');
 
@@ -2030,7 +2031,7 @@ os.MapContainer.launch2DPerformanceDialog = function() {
         '<p>If you would like to switch to 2D mode safely, please consider narrowing your time range, applying ' +
         'filters, shrinking your query areas, or removing some feature layers.</p>';
 
-    os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
       confirm: resolve,
       cancel: reject,
       prompt: text,

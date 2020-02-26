@@ -28,6 +28,7 @@ goog.require('os.ui.notification.NotificationManager');
 goog.require('os.ui.onboarding.OnboardingManager');
 goog.require('os.ui.onboarding.contextOnboardingDirective');
 goog.require('os.ui.onboarding.onboardingDirective');
+goog.require('os.ui.window.ConfirmUI');
 goog.require('plugin.electron.ElectronPlugin');
 
 
@@ -177,7 +178,7 @@ os.ui.AbstractMainCtrl.prototype.onCertNaziFailure = function(event) {
         'for instructions on how to fix this.';
   }
 
-  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+  os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
     confirm: goog.nullFunction,
     prompt: text,
     noText: '',
