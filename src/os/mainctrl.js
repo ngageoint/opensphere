@@ -509,6 +509,8 @@ os.MainCtrl.prototype.initXt = function() {
  * @inheritDoc
  */
 os.MainCtrl.prototype.addPlugins = function() {
+  os.MainCtrl.base(this, 'addPlugins');
+
   // Only "os" application plugins are added here
   os.ui.pluginManager.addPlugin(new plugin.cesium.Plugin());
   os.ui.pluginManager.addPlugin(plugin.im.action.feature.Plugin.getInstance());

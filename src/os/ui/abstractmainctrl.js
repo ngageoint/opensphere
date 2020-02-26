@@ -28,6 +28,7 @@ goog.require('os.ui.notification.NotificationManager');
 goog.require('os.ui.onboarding.OnboardingManager');
 goog.require('os.ui.onboarding.contextOnboardingDirective');
 goog.require('os.ui.onboarding.onboardingDirective');
+goog.require('plugin.electron.ElectronPlugin');
 
 
 /**
@@ -352,7 +353,10 @@ os.ui.AbstractMainCtrl.prototype.initXt = goog.nullFunction;
  * Add the plugins for this app
  * @protected
  */
-os.ui.AbstractMainCtrl.prototype.addPlugins = goog.nullFunction;
+os.ui.AbstractMainCtrl.prototype.addPlugins = function() {
+  const pm = os.plugin.PluginManager.getInstance();
+  pm.addPlugin(new plugin.electron.ElectronPlugin());
+};
 
 
 /**
