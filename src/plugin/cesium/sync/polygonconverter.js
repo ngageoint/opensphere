@@ -1,44 +1,38 @@
 goog.module('plugin.cesium.sync.PolygonConverter');
 
-const {createPolygon} = goog.require('plugin.cesium.sync.polygon');
-const {deletePrimitive, getPrimitive} = goog.require('plugin.cesium.primitive');
+const {createAndAddPolygon} = goog.require('plugin.cesium.sync.polygon');
 const LineStringConverter = goog.require('plugin.cesium.sync.LineStringConverter');
-const {CreateFunction, UpdateFunction, Converter} = goog.requireType('plugin.cesium.sync.ConverterTypes');
 
 
 /**
- * @type {CreateFunction}
+ * Converter for Polygons
  */
-const create = (feature, geometry, style, context) => {
-  const primitive = createPolygon(feature, geometry, style, context);
-  context.addPrimitive(primitive, feature, geometry);
-  return true;
-};
-
-
-/**
- * @type {UpdateFunction}
- */
-const update = (feature, geometry, style, context, primitive) => {
-  if (primitive.length) {
-    primitive.dirty = false;
-    for (let i = 0, n = primitive.length; i < n; i++) {
-      if (!update(feature, geometry, style, context, primitive.get(i))) {
-        return false;
-      }
-    }
+class PolygonConverter extends LineStringConverter {
+  /**
+   * @inheritDoc
+   */
+  create(feature, geometry, style, context) {
+    createAndAddPolygon(feature, geometry, style, context);
+    return true;
   }
 
-  return LineStringConverter.update(feature, geometry, style, context, primitive);
-};
+
+  /**
+   * @inheritDoc
+   */
+  update(feature, geometry, style, context, primitive) {
+    if (Array.isArray(primitive)) {
+      for (let i = 0, n = primitive.length; i < n; i++) {
+        if (!super.update(feature, geometry, style, context, primitive[i])) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    return super.update(feature, geometry, style, context, primitive);
+  }
+}
 
 
-/**
- * @type {Converter}
- */
-exports = {
-  create,
-  retrieve: getPrimitive,
-  update,
-  delete: deletePrimitive
-};
+exports = PolygonConverter;

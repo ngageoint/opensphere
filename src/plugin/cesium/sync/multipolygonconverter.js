@@ -1,30 +1,39 @@
 goog.module('plugin.cesium.sync.MultiPolygonConverter');
 
-const {deletePrimitive, getPrimitive} = goog.require('plugin.cesium.primitive');
-const {createPolygon} = goog.require('plugin.cesium.sync.polygon');
+const {createAndAddPolygon} = goog.require('plugin.cesium.sync.polygon');
 const PolygonConverter = goog.require('plugin.cesium.sync.PolygonConverter');
 
 const Feature = goog.requireType('ol.Feature');
 const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
 const Style = goog.requireType('ol.style.Style');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
-const {CreateFunction, UpdateFunction, Converter} = goog.requireType('plugin.cesium.sync.ConverterTypes');
 
 
 /**
- * @type {CreateFunction}
+ * Converter for MultiPolygons
  */
-const create = (feature, geometry, style, context) => {
-  const primitives = new Cesium.PrimitiveCollection();
-  createMultiPolygon(feature, geometry, style, context, primitives);
-
-  if (primitives.length) {
-    context.addPrimitive(primitives, feature, geometry);
+class MultiPolygonConverter extends PolygonConverter {
+  /**
+   * @inheritDoc
+   */
+  create(feature, geometry, style, context) {
+    createMultiPolygon(feature, geometry, style, context);
     return true;
   }
 
-  return false;
-};
+  /**
+   * @inheritDoc
+   */
+  update(feature, geometry, style, context, primitive) {
+    for (let i = 0, n = primitive.length; i < n; i++) {
+      if (!super.update(feature, geometry, style, context, primitive[i])) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+}
 
 
 /**
@@ -32,9 +41,8 @@ const create = (feature, geometry, style, context) => {
  * @param {!MultiPolygon} multipoly
  * @param {!Style} style
  * @param {!VectorContext} context
- * @param {!Cesium.PrimitiveCollection} primitives
  */
-const createMultiPolygon = (feature, multipoly, style, context, primitives) => {
+const createMultiPolygon = (feature, multipoly, style, context) => {
   const polyFlats = multipoly.getFlatCoordinates();
   const polyEnds = multipoly.getEndss();
 
@@ -45,39 +53,12 @@ const createMultiPolygon = (feature, multipoly, style, context, primitives) => {
     const ringEnds = polyEnds[i];
     const extrude = extrudes && extrudes.length === polyEnds.length ? extrudes[i] : false;
 
-    const poly = createPolygon(feature, multipoly, style, context, polyFlats, offset,
+    createAndAddPolygon(feature, multipoly, style, context, polyFlats, offset,
         ringEnds, extrude, i);
-
-    if (poly) {
-      primitives.add(poly);
-    }
 
     offset = ringEnds[ringEnds.length - 1];
   }
 };
 
 
-/**
- * @type {UpdateFunction}
- */
-const update = (feature, geometry, style, context, primitive) => {
-  for (let i = 0, n = primitive.length; i < n; i++) {
-    if (!PolygonConverter.update(feature, geometry, style, context, primitive.get(i))) {
-      return false;
-    }
-  }
-
-  primitive.dirty = false;
-  return true;
-};
-
-
-/**
- * @type {Converter}
- */
-exports = {
-  create,
-  retrieve: getPrimitive,
-  update,
-  delete: deletePrimitive
-};
+exports = MultiPolygonConverter;

@@ -12,10 +12,11 @@ goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.PointConverter');
 
 
-describe('plugin.cesium.point', () => {
+describe('plugin.cesium.sync.PointConverter', () => {
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
   const VectorContext = goog.module.get('plugin.cesium.VectorContext');
   const PointConverter = goog.module.get('plugin.cesium.sync.PointConverter');
+  const pointConverter = new PointConverter();
 
   let feature;
   let geometry;
@@ -49,13 +50,13 @@ describe('plugin.cesium.point', () => {
   };
 
   it('should not create anything if no image style exists', () => {
-    PointConverter.create(feature, geometry, style, context);
+    pointConverter.create(feature, geometry, style, context);
     expect(context.billboards.length).toBe(0);
   });
 
   it('should create a billboard a local canvas style', () => {
     setCircleStyle(green);
-    const result = PointConverter.create(feature, geometry, style, context);
+    const result = pointConverter.create(feature, geometry, style, context);
     expect(result).toBe(true);
     expect(context.billboards.length).toBe(1);
 
@@ -93,7 +94,7 @@ describe('plugin.cesium.point', () => {
       rotation: 90
     }));
 
-    const result = PointConverter.create(feature, geometry, style, context);
+    const result = pointConverter.create(feature, geometry, style, context);
     expect(result).toBe(true);
     expect(context.billboards.length).toBe(1);
 
@@ -134,7 +135,7 @@ describe('plugin.cesium.point', () => {
 
     geometry.setCoordinates(ol.proj.transform([-105, 40], os.proj.EPSG4326, os.proj.EPSG3857));
 
-    const result = PointConverter.create(feature, geometry, style, context);
+    const result = pointConverter.create(feature, geometry, style, context);
     expect(result).toBe(true);
     expect(context.billboards.length).toBe(1);
 
@@ -147,19 +148,19 @@ describe('plugin.cesium.point', () => {
   });
 
   it('should not update anything if no image style exists', () => {
-    const result = PointConverter.update(feature, geometry, style, context, {});
+    const result = pointConverter.update(feature, geometry, style, context, {});
     expect(result).toBe(false);
   });
 
   it('should update a billboard which already exists', () => {
     setCircleStyle(green);
-    PointConverter.create(feature, geometry, style, context);
+    pointConverter.create(feature, geometry, style, context);
 
     const billboard = context.billboards.get(0);
     billboard.dirty = true;
     setCircleStyle(blue);
 
-    const result = PointConverter.update(feature, geometry, style, context, billboard);
+    const result = pointConverter.update(feature, geometry, style, context, billboard);
     expect(result).toBe(true);
     expect(context.billboards.length).toBe(1);
     const updatedBillboard = context.billboards.get(0);

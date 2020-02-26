@@ -22,6 +22,7 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
   const {testLine} = goog.module.get('test.plugin.cesium.sync.linestring');
   const VectorContext = goog.module.get('plugin.cesium.VectorContext');
   const LineStringConverter = goog.module.get('plugin.cesium.sync.LineStringConverter');
+  const lineStringConverter = new LineStringConverter();
 
   let feature;
   let geometry;
@@ -50,7 +51,7 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
 
   describe('create', () => {
     it('should create a line', () => {
-      const result = LineStringConverter.create(feature, geometry, style, context);
+      const result = lineStringConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
       expect(context.primitives.length).toBe(1);
       testLine(context.primitives.get(0));
@@ -63,7 +64,7 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
       }));
 
       spyOn(Cesium, 'PolylineGeometry').andCallThrough();
-      const result = LineStringConverter.create(feature, geometry, style, context);
+      const result = lineStringConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
       testLine(context.primitives.get(0), {color: green, width: 4});
       expect(Cesium.PolylineGeometry.calls[0].args[0].width).toBe(style.getStroke().getWidth());
@@ -77,7 +78,7 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
       stroke.setLineDash([12, 4]);
       style.setStroke(stroke);
 
-      const result = LineStringConverter.create(feature, geometry, style, context);
+      const result = lineStringConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
       testLine(context.primitives.get(0), {
         color: green,
@@ -94,7 +95,7 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
         width: 1
       }));
 
-      const result = LineStringConverter.create(feature, geometry, style, context);
+      const result = lineStringConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
 
       expect(context.groundPrimitives.length).toBe(1);
@@ -115,7 +116,7 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
         width: 1
       }));
 
-      const result = LineStringConverter.create(feature, geometry, style, context);
+      const result = lineStringConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
 
       testLine(context.primitives.get(0), {
@@ -135,7 +136,7 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
         width: 1
       }));
 
-      const result = LineStringConverter.create(feature, geometry, style, context);
+      const result = lineStringConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
 
       expect(context.primitives.length).toBe(1);
@@ -155,7 +156,7 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
   describe('update', () => {
     it('should not update dirty geometries', () => {
       geometry.set(os.geom.GeometryField.DIRTY, true);
-      expect(LineStringConverter.update(feature, geometry, style, context, null)).toBe(false);
+      expect(lineStringConverter.update(feature, geometry, style, context, null)).toBe(false);
     });
 
     it('should not update changing line widths', () => {
@@ -164,7 +165,7 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
         width: 3
       }));
 
-      LineStringConverter.create(feature, geometry, style, context);
+      lineStringConverter.create(feature, geometry, style, context);
 
       const linestring = context.primitives.get(0);
 
@@ -173,7 +174,7 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
         width: 4
       }));
 
-      const result = LineStringConverter.update(feature, geometry, style, context, linestring);
+      const result = lineStringConverter.update(feature, geometry, style, context, linestring);
       expect(result).toBe(false);
     });
 
@@ -185,12 +186,12 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
       stroke.setLineDash([12, 4]);
       style.setStroke(stroke);
 
-      LineStringConverter.create(feature, geometry, style, context);
+      lineStringConverter.create(feature, geometry, style, context);
 
       const linestring = context.primitives.get(0);
       stroke.setLineDash([8, 8]);
 
-      const result = LineStringConverter.update(feature, geometry, style, context, linestring);
+      const result = lineStringConverter.update(feature, geometry, style, context, linestring);
       expect(result).toBe(false);
     });
 
@@ -200,7 +201,7 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
         width: 4
       }));
 
-      let result = LineStringConverter.create(feature, geometry, style, context);
+      let result = lineStringConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
 
       const linestring = context.primitives.get(0);
@@ -218,7 +219,7 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
       style.getStroke().setColor(blue);
 
       linestring.dirty = true;
-      result = LineStringConverter.update(feature, geometry, style, context, linestring);
+      result = lineStringConverter.update(feature, geometry, style, context, linestring);
       expect(result).toBe(true);
 
       testLine(linestring, {

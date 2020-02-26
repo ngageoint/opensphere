@@ -121,26 +121,8 @@ describe('plugin.cesium.sync.HeightReference', () => {
       expect(isPrimitiveClassTypeChanging(Cesium.HeightReference.NONE, primitive)).toBe(true);
     });
 
-    it('should report changes in primitive collections moving from clampToGround to something else', () => {
-      const child = primitiveUtils.createGroundPrimitive([-2, -2, 2, 2]);
-      const primitive = new Cesium.PrimitiveCollection();
-      primitive.add(child);
-      expect(isPrimitiveClassTypeChanging(Cesium.HeightReference.CLAMP_TO_GROUND, primitive)).toBe(false);
-      expect(isPrimitiveClassTypeChanging(Cesium.HeightReference.RELATIVE_TO_GROUND, primitive)).toBe(true);
-      expect(isPrimitiveClassTypeChanging(Cesium.HeightReference.NONE, primitive)).toBe(true);
-    });
-
     it('should report changing when primitives move from something else to clampToGround', () => {
       const primitive = primitiveUtils.createPrimitive([-2, -2, 2, 2]);
-      expect(isPrimitiveClassTypeChanging(Cesium.HeightReference.CLAMP_TO_GROUND, primitive)).toBe(true);
-      expect(isPrimitiveClassTypeChanging(Cesium.HeightReference.RELATIVE_TO_GROUND, primitive)).toBe(false);
-      expect(isPrimitiveClassTypeChanging(Cesium.HeightReference.NONE, primitive)).toBe(false);
-    });
-
-    it('should report changes in primitive collections moving from something else to clampToGround', () => {
-      const child = primitiveUtils.createPrimitive([-2, -2, 2, 2]);
-      const primitive = new Cesium.PrimitiveCollection();
-      primitive.add(child);
       expect(isPrimitiveClassTypeChanging(Cesium.HeightReference.CLAMP_TO_GROUND, primitive)).toBe(true);
       expect(isPrimitiveClassTypeChanging(Cesium.HeightReference.RELATIVE_TO_GROUND, primitive)).toBe(false);
       expect(isPrimitiveClassTypeChanging(Cesium.HeightReference.NONE, primitive)).toBe(false);

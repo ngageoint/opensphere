@@ -4,11 +4,11 @@ const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
 const Style = goog.requireType('ol.style.Style');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
-const {Converter} = goog.requireType('plugin.cesium.sync.ConverterTypes');
+const IConverter = goog.requireType('plugin.cesium.sync.IConverter');
 
 
 /**
- * @param {!Converter} converter
+ * @param {!IConverter} converter
  * @param {!Feature} feature
  * @param {!Geometry} geometry
  * @param {!Style} style

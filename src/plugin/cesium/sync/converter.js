@@ -16,10 +16,10 @@ const PointConverter = goog.require('plugin.cesium.sync.PointConverter');
 const PolygonConverter = goog.require('plugin.cesium.sync.PolygonConverter');
 const {runConverter} = goog.require('plugin.cesium.sync.runConverter');
 
+const IConverter = goog.requireType('plugin.cesium.sync.IConverter');
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
 const Style = goog.requireType('ol.style.Style');
-const {Converter} = goog.requireType('plugin.cesium.sync.ConverterTypes');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
 
 /**
@@ -40,16 +40,18 @@ const convertGeometry = (feature, geometry, style, context) => {
 
 
 /**
- * @type {Object<string, Converter>}
+ * @type {Object<string, !IConverter>}
  */
 const converters = {
-  [GeometryType.GEOMETRY_COLLECTION]: GeometryCollectionConverter,
-  [GeometryType.LINE_STRING]: LineStringConverter,
-  [GeometryType.MULTI_LINE_STRING]: MultiLineStringConverter,
-  [GeometryType.MULTI_POINT]: MultiPointConverter,
-  [GeometryType.MULTI_POLYGON]: MultiPolygonConverter,
-  [GeometryType.POINT]: PointConverter,
-  [GeometryType.POLYGON]: PolygonConverter
+  [GeometryType.GEOMETRY_COLLECTION]: new GeometryCollectionConverter,
+  [GeometryType.LINE_STRING]: new LineStringConverter,
+  [GeometryType.MULTI_LINE_STRING]: new MultiLineStringConverter,
+  [GeometryType.MULTI_POINT]: new MultiPointConverter,
+  [GeometryType.MULTI_POLYGON]: new MultiPolygonConverter,
+  [GeometryType.POINT]: new PointConverter,
+  [GeometryType.POLYGON]: new PolygonConverter,
+  label: new LabelConverter,
+  ellipse: new EllipseConverter
 };
 
 
@@ -57,12 +59,12 @@ GeometryCollectionConverter.setConvertFunction(convertGeometry);
 
 
 /**
- * @type {Object<string, Converter>}
+ * @type {Object<string, !IConverter>}
  */
 const dynamicConverters = {
   ...converters,
-  [GeometryType.LINE_STRING]: DynamicLineStringConverter,
-  [GeometryType.MULTI_LINE_STRING]: MultiDynamicLineStringConverter
+  [GeometryType.LINE_STRING]: new DynamicLineStringConverter,
+  [GeometryType.MULTI_LINE_STRING]: new MultiDynamicLineStringConverter
 };
 
 
@@ -71,13 +73,13 @@ const dynamicConverters = {
  * @param {!Geometry} geometry
  * @param {!Style} style
  * @param {!VectorContext} context
- * @return {Converter|undefined}
+ * @return {IConverter|undefined}
  */
 const getConverter = (feature, geometry, style, context) => {
   const geometryType = geometry.getType();
 
   if (style && style.getText()) {
-    return LabelConverter;
+    return converters.label;
   }
 
   if (feature instanceof DynamicFeature) {
@@ -85,7 +87,7 @@ const getConverter = (feature, geometry, style, context) => {
   }
 
   if (geometry instanceof Ellipse) {
-    return EllipseConverter;
+    return converters.ellipse;
   }
 
   return converters[geometryType];

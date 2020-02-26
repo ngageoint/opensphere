@@ -1,29 +1,40 @@
 goog.module('plugin.cesium.sync.MultiDynamicLineStringConverter');
 
-const {deletePrimitive, getPrimitive, shouldUpdatePrimitive} = goog.require('plugin.cesium.primitive');
+const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
+const {shouldUpdatePrimitive} = goog.require('plugin.cesium.primitive');
 const {createPolyline, updatePolyline} = goog.require('plugin.cesium.sync.DynamicLineString');
 
 const Feature = goog.requireType('ol.Feature');
 const MultiLineString = goog.requireType('ol.geom.MultiLineString');
 const Style = goog.requireType('ol.style.Style');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
-const {CreateFunction, UpdateFunction, Converter} = goog.requireType('plugin.cesium.sync.ConverterTypes');
 
 
 /**
- * @type {CreateFunction}
+ * Converter for DynamicFeature instances with MultiLineStrings
  */
-const create = (feature, geometry, style, context) => {
-  const primitives = new Cesium.PolylineCollection();
-  createOrUpdateDynamicMultiLineString(feature, geometry, style, context, primitives);
-
-  if (primitives.length) {
-    context.addPrimitive(primitives, feature, geometry);
+class MultiDynamicLineStringConverter extends BaseConverter {
+  /**
+   * @inheritDoc
+   */
+  create(feature, geometry, style, context) {
+    createOrUpdateDynamicMultiLineString(feature, geometry, style, context);
     return true;
   }
 
-  return false;
-};
+  /**
+   * @inheritDoc
+   */
+  update(feature, geometry, style, context, primitive) {
+    if (!shouldUpdatePrimitive(feature, geometry, style, context, primitive)) {
+      return false;
+    }
+
+    createOrUpdateDynamicMultiLineString(feature, geometry, style, context, primitive);
+    primitive.dirty = false;
+    return true;
+  }
+}
 
 
 /**
@@ -31,9 +42,9 @@ const create = (feature, geometry, style, context) => {
  * @param {!MultiLineString} multiLine
  * @param {!Style} style
  * @param {!VectorContext} context
- * @param {!Cesium.PolylineCollection} primitives
+ * @param {!Array<!Cesium.Polyline>=} opt_primitives
  */
-const createOrUpdateDynamicMultiLineString = (feature, multiLine, style, context, primitives) => {
+const createOrUpdateDynamicMultiLineString = (feature, multiLine, style, context, opt_primitives) => {
   const lineFlats = multiLine.getFlatCoordinates();
   const lineEnds = multiLine.getEnds();
 
@@ -43,15 +54,15 @@ const createOrUpdateDynamicMultiLineString = (feature, multiLine, style, context
     const lineEnd = lineEnds[i];
 
     let line;
-    if (i < primitives.length) {
-      line = primitives.get(i);
+    if (opt_primitives && i < opt_primitives.length) {
+      line = opt_primitives[i];
     }
 
     if (!line) {
       line = createPolyline(feature, multiLine, style, context, lineFlats, offset, lineEnd);
 
       if (line) {
-        primitives.add(line);
+        context.addPolyline(line, feature, multiLine);
       }
     } else {
       updatePolyline(feature, multiLine, style, context, line, lineFlats, offset, lineEnd);
@@ -59,33 +70,7 @@ const createOrUpdateDynamicMultiLineString = (feature, multiLine, style, context
 
     offset = lineEnd;
   }
-
-  while (lineEnds.length < primitives.length) {
-    primitives.remove(primitives.get(primitives.length - 1));
-  }
 };
 
 
-/**
- * @type {UpdateFunction}
- */
-const update = (feature, geometry, style, context, primitive) => {
-  if (!shouldUpdatePrimitive(feature, geometry, style, context, primitive)) {
-    return false;
-  }
-
-  createOrUpdateDynamicMultiLineString(feature, geometry, style, context, primitive);
-  primitive.dirty = false;
-  return true;
-};
-
-
-/**
- * @type {Converter}
- */
-exports = {
-  create,
-  retrieve: getPrimitive,
-  update,
-  delete: deletePrimitive
-};
+exports = MultiDynamicLineStringConverter;

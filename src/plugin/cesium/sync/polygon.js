@@ -26,21 +26,20 @@ const VectorContext = goog.requireType('plugin.cesium.VectorContext');
  * @param {Array<number>=} opt_ringEnds
  * @param {boolean=} opt_extrude
  * @param {number=} opt_index
- * @return {Cesium.PrimitiveCollection|Cesium.Primitive}
  */
-const createPolygon = (feature, geometry, style, context, opt_polyFlats, opt_offset, opt_ringEnds,
+const createAndAddPolygon = (feature, geometry, style, context, opt_polyFlats, opt_offset, opt_ringEnds,
     opt_extrude, opt_index) => {
-  // extruded polygons cannot be rendered as a polyline. since polygons will not respect line width on Windows, make
-  // sure the geometry is both extruded and has an altitude before using the polygon primitive.
-  const extrude = opt_extrude != undefined ? opt_extrude : !!geometry.get('extrude');
-  if (extrude && os.geo.hasAltitudeGeometry(geometry)) {
-    return createPolygonPrimitive(feature, geometry, style, context, opt_polyFlats, opt_offset, opt_ringEnds,
-        opt_extrude, opt_index);
-  }
-
-  return createPolygonAsPolyline(feature, geometry, style, context, opt_polyFlats, opt_offset, opt_ringEnds,
+  const poly = createPolygon(feature, geometry, style, context, opt_polyFlats, opt_offset, opt_ringEnds,
       opt_extrude, opt_index);
+  if (poly) {
+    for (let i = 0, n = poly.length; i < n; i++) {
+      context.addPrimitive(poly[i], feature, geometry);
+    }
+  }
 };
+
+
+const groupPrimitive = [];
 
 
 /**
@@ -53,9 +52,39 @@ const createPolygon = (feature, geometry, style, context, opt_polyFlats, opt_off
  * @param {Array<number>=} opt_ringEnds
  * @param {boolean=} opt_extrude
  * @param {number=} opt_index
- * @return {?(Cesium.PrimitiveCollection|Cesium.Primitive)}
+ * @return {?Array<!Cesium.PrimitiveLike>} Note: this array is always the same scratch instance
  */
-const createPolygonAsPolyline = (feature, geometry, style, context, opt_polyFlats, opt_offset, opt_ringEnds,
+const createPolygon = (feature, geometry, style, context, opt_polyFlats, opt_offset, opt_ringEnds,
+    opt_extrude, opt_index) => {
+  groupPrimitive.length = 0;
+
+  // extruded polygons cannot be rendered as a polyline. since polygons will not respect line width on Windows, make
+  // sure the geometry is both extruded and has an altitude before using the polygon primitive.
+  const extrude = opt_extrude != undefined ? opt_extrude : !!geometry.get('extrude');
+  if (extrude && os.geo.hasAltitudeGeometry(geometry)) {
+    return createPolygonPrimitive(feature, geometry, style, context, groupPrimitive, opt_polyFlats, opt_offset,
+        opt_ringEnds, opt_extrude, opt_index);
+  }
+
+  return createPolygonAsPolyline(feature, geometry, style, context, groupPrimitive, opt_polyFlats, opt_offset,
+      opt_ringEnds, opt_extrude, opt_index);
+};
+
+
+/**
+ * @param {!Feature} feature Ol3 feature..
+ * @param {!(Polygon|MultiPolygon)} geometry Ol3 polygon geometry.
+ * @param {!Style} style
+ * @param {!VectorContext} context
+ * @param {!Array<!Cesium.PrimitiveLike>} result
+ * @param {Array<number>=} opt_polyFlats
+ * @param {number=} opt_offset
+ * @param {Array<number>=} opt_ringEnds
+ * @param {boolean=} opt_extrude
+ * @param {number=} opt_index
+ * @return {Array<!Cesium.PrimitiveLike>|null}
+ */
+const createPolygonAsPolyline = (feature, geometry, style, context, result, opt_polyFlats, opt_offset, opt_ringEnds,
     opt_extrude, opt_index) => {
   const hierarchy = createPolygonHierarchy(geometry, opt_polyFlats, opt_offset, opt_ringEnds, opt_extrude);
   if (!hierarchy) {
@@ -83,12 +112,9 @@ const createPolygonAsPolyline = (feature, geometry, style, context, opt_polyFlat
     })
   });
 
-  const primitives = new Cesium.PrimitiveCollection();
 
   // Cesium doesn't make line width accessible once the primitive is loaded to the GPU, so we need to save it. also
   // save if the outline needs to be displayed, so we know to recreate the primitive if that changes.
-  primitives['olLineWidth'] = width;
-
   const heightReference = getHeightReference(context.layer, feature, geometry, opt_index);
   const primitiveType = heightReference === Cesium.HeightReference.CLAMP_TO_GROUND ? Cesium.GroundPolylinePrimitive :
     Cesium.Primitive;
@@ -112,7 +138,7 @@ const createPolygonAsPolyline = (feature, geometry, style, context, opt_polyFlat
     });
 
     outlinePrimitive['olLineWidth'] = width;
-    primitives.add(outlinePrimitive);
+    result.push(outlinePrimitive);
   }
 
   if (style.getFill()) {
@@ -126,18 +152,10 @@ const createPolygonAsPolyline = (feature, geometry, style, context, opt_polyFlat
         heightReference === Cesium.HeightReference.CLAMP_TO_GROUND ? Cesium.GroundPrimitive : Cesium.Primitive);
     // hide the primitive when alpha is 0 so it isn't picked
     p.show = fillColor.alpha > 0;
-    primitives.add(p);
+    result.push(p);
   }
 
-  if (primitives.length == 1) {
-    // if there is only 1 primative, set the outline properties on it and return it instead of the collection
-    const result = /** @type {!Cesium.Primitive} */(primitives.get(0));
-    result['olLineWidth'] = width;
-
-    return result;
-  } else {
-    return primitives;
-  }
+  return result;
 };
 
 
@@ -149,14 +167,15 @@ const createPolygonAsPolyline = (feature, geometry, style, context, opt_polyFlat
  * @param {!(Polygon|MultiPolygon)} geometry Ol3 polygon geometry.
  * @param {!Style} style
  * @param {!VectorContext} context
+ * @param {!Array<!Cesium.PrimitiveLike>} result
  * @param {Array<number>=} opt_polyFlats
  * @param {number=} opt_offset
  * @param {Array<number>=} opt_ringEnds
  * @param {boolean=} opt_extrude
  * @param {number=} opt_index
- * @return {?(Cesium.PrimitiveCollection|Cesium.Primitive)}
+ * @return {Array<!Cesium.PrimitiveLike>|null}
  */
-const createPolygonPrimitive = (feature, geometry, style, context, opt_polyFlats, opt_offset, opt_ringEnds,
+const createPolygonPrimitive = (feature, geometry, style, context, result, opt_polyFlats, opt_offset, opt_ringEnds,
     opt_extrude, opt_index) => {
   let fillGeometry = null;
   let outlineGeometry = null;
@@ -180,7 +199,8 @@ const createPolygonPrimitive = (feature, geometry, style, context, opt_polyFlats
     extrudedHeight: extrude ? 0 : undefined
   });
 
-  return wrapFillAndOutlineGeometries(feature, geometry, style, context, fillGeometry, outlineGeometry, opt_index);
+  return wrapFillAndOutlineGeometries(feature, geometry, style, context, result, fillGeometry, outlineGeometry,
+      opt_index);
 };
 
 
@@ -192,13 +212,14 @@ const createPolygonPrimitive = (feature, geometry, style, context, opt_polyFlats
  * @param {!Geometry} geometry
  * @param {!Style} style The style
  * @param {!VectorContext} context The vector context
+ * @param {!Array<!Cesium.PrimitiveLike>} result
  * @param {Cesium.Geometry} fill The fill geometry
  * @param {Cesium.Geometry} outline The outline geometry
  * @param {number=} opt_index
- * @return {!Cesium.PrimitiveCollection}
+ * @return {!Array<Cesium.PrimitiveLike>}
  * @protected
  */
-const wrapFillAndOutlineGeometries = (feature, geometry, style, context, fill, outline, opt_index) => {
+const wrapFillAndOutlineGeometries = (feature, geometry, style, context, result, fill, outline, opt_index) => {
   const width = getLineWidthFromStyle(style);
 
   // Cesium doesn't make line width accessible once the primitive is loaded to the GPU, so we need to save it.
@@ -215,16 +236,16 @@ const wrapFillAndOutlineGeometries = (feature, geometry, style, context, fill, o
     // hide the primitive when alpha is 0 so it isn't picked
     const fillPrimitive = createColoredPrimitive(fill, fillColor, undefined, undefined, primitiveType);
     fillPrimitive.show = fillColor.alpha > 0;
-    primitives.add(fillPrimitive);
+    result.push(fillPrimitive);
   }
 
   if (outline) {
     // combine the layer/style opacity if there is a stroke style, otherwise set it to 0 to hide the outline
     const outlineColor = getColor(style, context, GeometryInstanceId.GEOM_OUTLINE);
-    primitives.add(createColoredPrimitive(outline, outlineColor, width, undefined, primitiveType));
+    result.push(createColoredPrimitive(outline, outlineColor, width, undefined, primitiveType));
   }
 
-  return primitives;
+  return result;
 };
 
 
@@ -317,5 +338,6 @@ const createPolygonHierarchy = (geometry, opt_flats, opt_offset, opt_ringEnds, o
 };
 
 exports = {
+  createAndAddPolygon,
   createPolygon
 };

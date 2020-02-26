@@ -8,12 +8,17 @@ const styleUtils = goog.require('plugin.cesium.sync.style');
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
+const IConverter = goog.requireType('plugin.cesium.sync.IConverter');
 const Style = goog.requireType('ol.style.Style');
-const {RetrieveFunction, UpdateFunction} = goog.requireType('plugin.cesium.sync.ConverterTypes');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
 
 /**
- * @type {plugin.cesium.sync.ConverterTypes.RetrieveFunction}
+ * @param {!Feature} feature
+ * @param {!Geometry} geometry
+ * @param {!Style} style
+ * @param {!VectorContext} context
+ * @return {!Array<!Cesium.PrimitiveLike>|!Cesium.PrimitiveLike|null|undefined}
+ * @this {IConverter}
  */
 const getPrimitive = (feature, geometry, style, context) => {
   return context.getPrimitiveForGeometry(geometry);
@@ -21,7 +26,12 @@ const getPrimitive = (feature, geometry, style, context) => {
 
 
 /**
- * @type {UpdateFunction}
+ * @param {!Feature} feature
+ * @param {!Geometry} geometry
+ * @param {!Style} style
+ * @param {!VectorContext} context
+ * @param {!Cesium.PrimitiveLike} primitive
+ * @return {boolean}
  */
 const shouldUpdatePrimitive = (feature, geometry, style, context, primitive) => {
   const heightReference = getHeightReference(context.layer, feature, geometry);
@@ -30,7 +40,13 @@ const shouldUpdatePrimitive = (feature, geometry, style, context, primitive) => 
 
 
 /**
- * @type {UpdateFunction}
+ * @param {!Feature} feature
+ * @param {!Geometry} geometry
+ * @param {!Style} style
+ * @param {!VectorContext} context
+ * @param {!Cesium.PrimitiveLike} primitive
+ * @return {boolean}
+ * @this {IConverter}
  */
 const updatePrimitive = (feature, geometry, style, context, primitive) => {
   if (!shouldUpdatePrimitive(feature, geometry, style, context, primitive)) {
@@ -106,9 +122,22 @@ const updatePrimitiveGeomInstances = (style, context, primitive) => {
 
 
 /**
- * @type {UpdateFunction}
+ * @param {!Feature} feature
+ * @param {!Geometry} geometry
+ * @param {!Style} style
+ * @param {!VectorContext} context
+ * @param {!Array<!Cesium.PrimitiveLike>|!Cesium.PrimitiveLike} primitive
+ * @return {boolean}
+ * @this {IConverter}
  */
 const deletePrimitive = (feature, geometry, style, context, primitive) => {
+  if (Array.isArray(primitive)) {
+    for (let i = 0, n = primitive.length; i < n; i++) {
+      deletePrimitive(feature, geometry, style, context, primitive[i]);
+    }
+    return true;
+  }
+
   context.removePrimitive(primitive);
   return true;
 };
@@ -206,12 +235,14 @@ const isGroundPrimitive = function(primitive) {
 
 
 /**
- * @param {?(Array<Cesium.PrimitiveLike>|Cesium.PrimitiveLike)} primitive The primitive
+ * @param {?(Array<Cesium.PrimitiveLike>|Cesium.PrimitiveLike|Cesium.CollectionLike)} primitive The primitive
  * @return {!boolean}
  */
 const isPrimitiveShown = function(primitive) {
   if (Array.isArray(primitive)) {
     return primitive.length > 0 ? isPrimitiveShown(primitive[0]) : true;
+  } else if (primitive.length != null) {
+    return primitive.length > 0 ? isPrimitiveShown(primitive.get(0)) : true;
   }
 
   return !!primitive.show;

@@ -1,42 +1,46 @@
 goog.module('plugin.cesium.sync.MultiPointConverter');
 
-const {deletePrimitive, getPrimitive} = goog.require('plugin.cesium.primitive');
+const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
 const {createBillboard, updateBillboard} = goog.require('plugin.cesium.sync.point');
 
 const Feature = goog.requireType('ol.Feature');
 const MultiPoint = goog.requireType('ol.geom.MultiPoint');
 const ImageStyle = goog.requireType('ol.style.Image');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
-const {CreateFunction, UpdateFunction, Converter} = goog.requireType('plugin.cesium.sync.ConverterTypes');
 
 
 /**
- * @type {CreateFunction}
+ * Converter for MultiPoints
  */
-const create = (feature, geometry, style, context) => {
-  const imageStyle = style.getImage();
-  if (imageStyle) {
-    updateMultiPoint(feature, geometry, imageStyle, context);
-    return true;
+class MultiPointConverter extends BaseConverter {
+  /**
+   * @inheritDoc
+   */
+  create(feature, geometry, style, context) {
+    const imageStyle = style.getImage();
+    if (imageStyle) {
+      updateMultiPoint(feature, geometry, imageStyle, context);
+      return true;
+    }
+
+    return false;
   }
 
-  return false;
-};
 
+  /**
+   * @inheritDoc
+   */
+  update(feature, geometry, style, context, primitive) {
+    const imageStyle = style.getImage();
+    if (imageStyle) {
+      updateMultiPoint(feature, geometry, imageStyle, context, primitive);
+      primitive.dirty = false;
+      return true;
+    }
 
-/**
- * @type {UpdateFunction}
- */
-const update = (feature, geometry, style, context, primitive) => {
-  const imageStyle = style.getImage();
-  if (imageStyle) {
-    updateMultiPoint(feature, geometry, imageStyle, context, primitive);
-    primitive.dirty = false;
-    return true;
+    return false;
   }
-
-  return false;
-};
+}
 
 
 /**
@@ -68,12 +72,4 @@ const updateMultiPoint = (feature, geometry, imageStyle, context, opt_primitive)
 };
 
 
-/**
- * @type {Converter}
- */
-exports = {
-  create,
-  retrieve: getPrimitive,
-  update,
-  delete: deletePrimitive
-};
+exports = MultiPointConverter;

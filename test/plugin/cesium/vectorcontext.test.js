@@ -109,25 +109,12 @@ describe('plugin.cesium.VectorContext', () => {
     });
 
     it('should add references to the OpenLayers items on the primitive', () => {
-      let billboard = primitiveUtils.createBillboard([0, 0, 0]);
-      let polyline = primitiveUtils.createPolyline([[0, 0], [5, 5], [0, 5]]);
+      const billboard = primitiveUtils.createBillboard([0, 0, 0]);
+      const polyline = primitiveUtils.createPolyline([[0, 0], [5, 5], [0, 5]]);
       const rectangle = primitiveUtils.createPrimitive([-5, -5, 5, 5]);
 
-      const billboardCollection = new Cesium.BillboardCollection();
-      billboard = billboardCollection.add(billboard);
-
-      const polylineCollection = new Cesium.PolylineCollection();
-      polyline = polylineCollection.add(polyline);
-
-      const primitiveCollection = new Cesium.PrimitiveCollection();
-      primitiveCollection.add(rectangle);
-
-      context.addOLReferences(billboardCollection, feature, geometry);
-      context.addOLReferences(polylineCollection, feature, geometry);
-      context.addOLReferences(primitiveCollection, feature, geometry);
-
-      [billboardCollection, polylineCollection, primitiveCollection,
-        billboard, polyline, rectangle].forEach((primitive, i) => {
+      [billboard, polyline, rectangle].forEach((primitive) => {
+        context.addOLReferences(primitive, feature, geometry);
         expect(primitive.olLayer).toBe(context.layer);
         expect(primitive.olFeature).toBe(feature);
         expect(primitive.olGeometry).toBe(geometry);
@@ -271,19 +258,6 @@ describe('plugin.cesium.VectorContext', () => {
       expect(context.addOLReferences).toHaveBeenCalledWith(billboard, feature, geometry);
     });
 
-    it('should remove an existing billboard', () => {
-      const billboardOptions = primitiveUtils.createBillboard([0, 0, 0]);
-      context.addBillboard(billboardOptions, feature, geometry);
-      const billboard1 = context.billboards.get(0);
-      context.addBillboard(billboardOptions, feature, geometry);
-
-      expect(context.billboards.length).toBe(1);
-      const billboard2 = context.billboards.get(0);
-      expect(billboard1).not.toBe(billboard2);
-
-      expect(context.geometryToCesiumMap[ol.getUid(geometry)]).toBe(billboard2);
-    });
-
     it('should not add a disposed feature', () => {
       const billboardOptions = primitiveUtils.createBillboard([0, 0, 0]);
       goog.dispose(feature);
@@ -317,19 +291,6 @@ describe('plugin.cesium.VectorContext', () => {
       expect(context.geometryToCesiumMap[ol.getUid(geometry)]).toBe(polyline);
       expect(context.addFeaturePrimitive).toHaveBeenCalledWith(feature, polyline);
       expect(context.addOLReferences).toHaveBeenCalledWith(polyline, feature, geometry);
-    });
-
-    it('should remove an existing polyline', () => {
-      const polylineOptions = primitiveUtils.createPolyline(geometry.getCoordinates());
-      context.addPolyline(polylineOptions, feature, geometry);
-      const polyline1 = context.polylines.get(0);
-      context.addPolyline(polylineOptions, feature, geometry);
-
-      expect(context.polylines.length).toBe(1);
-      const polyline2 = context.polylines.get(0);
-      expect(polyline1).not.toBe(polyline2);
-
-      expect(context.geometryToCesiumMap[ol.getUid(geometry)]).toBe(polyline2);
     });
 
     it('should not add a disposed feature', () => {
@@ -366,18 +327,6 @@ describe('plugin.cesium.VectorContext', () => {
       expect(context.geometryToCesiumMap[ol.getUid(geometry)]).toBe(primitive);
       expect(context.addFeaturePrimitive).toHaveBeenCalledWith(feature, primitive);
       expect(context.addOLReferences).toHaveBeenCalledWith(primitive, feature, geometry);
-    });
-
-    it('should remove an existing primitive', () => {
-      const primitive1 = primitiveUtils.createPrimitive(geometry.getExtent());
-      context.addPrimitive(primitive1, feature, geometry);
-      const primitive2 = primitiveUtils.createPrimitive(geometry.getExtent());
-      context.addPrimitive(primitive2, feature, geometry);
-
-      expect(context.primitives.length).toBe(1);
-      expect(primitive1).not.toBe(primitive2);
-
-      expect(context.geometryToCesiumMap[ol.getUid(geometry)]).toBe(primitive2);
     });
 
     it('should not add a disposed feature', () => {
@@ -426,19 +375,6 @@ describe('plugin.cesium.VectorContext', () => {
       expect(context.geometryToLabelMap[ol.getUid(geometry)]).toBe(label);
       expect(context.addFeaturePrimitive).toHaveBeenCalledWith(feature, label);
       expect(context.addOLReferences).toHaveBeenCalledWith(label, feature, geometry);
-    });
-
-    it('should remove an existing label', () => {
-      const labelOptions = primitiveUtils.createLabelOptions();
-      context.addLabel(labelOptions, feature, geometry);
-      const label1 = context.labels.get(0);
-      context.addLabel(labelOptions, feature, geometry);
-
-      expect(context.labels.length).toBe(1);
-      const label2 = context.labels.get(0);
-      expect(label1).not.toBe(label2);
-
-      expect(context.geometryToLabelMap[ol.getUid(geometry)]).toBe(label2);
     });
 
     it('should not add a disposed feature', () => {
@@ -517,8 +453,8 @@ describe('plugin.cesium.VectorContext', () => {
   describe('getPrimitiveForGeometry', () => {
     const geometry = new ol.geom.Point([0, 0]);
 
-    it('should return null by default', () => {
-      expect(context.getPrimitiveForGeometry(geometry)).toBe(null);
+    it('should return undefined by default', () => {
+      expect(context.getPrimitiveForGeometry(geometry)).toBe(undefined);
     });
 
     it('should return the primitive for the geometry if one exists', () => {

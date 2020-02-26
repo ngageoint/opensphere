@@ -24,6 +24,7 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
   const {testPolygon} = goog.module.get('test.plugin.cesium.sync.polygon');
   const VectorContext = goog.module.get('plugin.cesium.VectorContext');
   const PolygonConverter = goog.module.get('plugin.cesium.sync.PolygonConverter');
+  const polygonConverter = new PolygonConverter();
 
   let feature;
   let geometry;
@@ -51,7 +52,7 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
 
   describe('create', () => {
     it('should create a polygon', () => {
-      const result = PolygonConverter.create(feature, geometry, style, context);
+      const result = polygonConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
       expect(context.primitives.length).toBe(1);
       const polygonOutline = context.primitives.get(0);
@@ -66,7 +67,7 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
 
       spyOn(Cesium, 'PolylineGeometry').andCallThrough();
 
-      const result = PolygonConverter.create(feature, geometry, style, context);
+      const result = polygonConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
       expect(Cesium.PolylineGeometry.calls[0].args[0].width).toBe(style.getStroke().getWidth());
 
@@ -85,7 +86,7 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
       stroke.setLineDash([12, 4]);
       style.setStroke(stroke);
 
-      const result = PolygonConverter.create(feature, geometry, style, context);
+      const result = polygonConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
 
       testLine(context.primitives.get(0), {
@@ -101,7 +102,7 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
       coords.push(otherRing.getCoordinates()[0]);
       geometry.setCoordinates(coords);
 
-      const result = PolygonConverter.create(feature, geometry, style, context);
+      const result = polygonConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
 
       expect(context.primitives.length).toBe(1);
@@ -125,7 +126,7 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
         color: blue
       }));
 
-      const result = PolygonConverter.create(feature, geometry, style, context);
+      const result = polygonConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
 
       expect(context.primitives.length).toBe(1);
