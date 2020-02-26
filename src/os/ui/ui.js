@@ -190,9 +190,9 @@ os.ui.measureText = function(text, opt_classes, opt_font) {
 
 
 /**
- * Applies the scope
+ * Applies the scope with angular.Scope#apply.
  *
- * @param {?angular.Scope} scope
+ * @param {?angular.Scope} scope The Angular scope.
  * @param {number=} opt_delay Timeout interval to wait before applying the scope, in milliseconds
  */
 os.ui.apply = function(scope, opt_delay) {
@@ -203,10 +203,22 @@ os.ui.apply = function(scope, opt_delay) {
   } else {
     try {
       if (scope && (!scope.$root || !scope.$root.$$phase)) {
-        scope.$applyAsync();
+        scope.$apply();
       }
     } catch (e) {
     }
+  }
+};
+
+
+/**
+ * Asynchronously applies the scope with angular.Scope#applyAsync.
+ *
+ * @param {?angular.Scope} scope The Angular scope.
+ */
+os.ui.applyAsync = function(scope) {
+  if (scope) {
+    scope.$applyAsync();
   }
 };
 
