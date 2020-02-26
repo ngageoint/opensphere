@@ -82,7 +82,7 @@ describe('os.ui.file.ExportManager', function() {
 
   it('should not return persistence methods disabled in settings unless forced', function() {
     pMethod.supported = true;
-    os.settings.set('ex.disabledPersisters', {'Mock Persistence': true});
+    os.settings.set('ex.enabledPersisters', {'Mock Persistence': false});
 
     var p = em.getPersistenceMethods();
     expect(p.length).toBe(0);
