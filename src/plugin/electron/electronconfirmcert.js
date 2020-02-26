@@ -2,6 +2,7 @@ goog.module('plugin.electron.ElectronConfirmCertUI');
 
 const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
+const windowSelector = goog.require('os.ui.windowSelector');
 const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
 
 
@@ -78,7 +79,8 @@ const launchConfirmCert = function(url, certs) {
       windowOptions: /** @type {!osx.window.WindowOptions} */ ({
         label: 'Select a Certificate',
         height: 'auto',
-        modal: true
+        modal: true,
+        parent: windowSelector.APP
       })
     }), {
       'certs': certs,
