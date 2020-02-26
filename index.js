@@ -64,7 +64,7 @@ const overrideVersion = fs.existsSync(overrideVersionFile) ? fs.readFileSync(ove
  */
 const sharedResources = [
   {
-    source: 'src/electron',
+    source: 'scripts/electron',
     target: 'electron',
     scripts: ['electronvendorpre.js']
   },
@@ -265,7 +265,7 @@ const sharedResources = [
     scripts: ['sendbeacon.js']
   },
   {
-    source: 'src/electron',
+    source: 'scripts/electron',
     target: 'electron',
     scripts: ['electronvendorpost.js']
   },
