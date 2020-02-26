@@ -1,9 +1,8 @@
 goog.module('plugin.electron.ElectronConfirmCertUI');
 
-goog.require('os.ui.window.confirmDirective');
-
 const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
+const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -70,7 +69,7 @@ class Controller {
  */
 const launchConfirmCert = function(url, certs) {
   return new Promise((resolve, reject) => {
-    os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
       confirm: resolve,
       confirmValue: certs[0],
       // User cancel should resolve the promise with no cert selection.
