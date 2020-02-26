@@ -1,18 +1,63 @@
 goog.module('plugin.cesium.sync.GeometryCollectionConverter');
 
-const {deletePrimitive, getPrimitive} = goog.require('plugin.cesium.primitive');
+const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
+const GeometryCollection = goog.requireType('ol.geom.GeometryCollection');
 const Style = goog.requireType('ol.style.Style');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
-const {CreateFunction, UpdateFunction, Converter} = goog.requireType('plugin.cesium.sync.ConverterTypes');
 
 
 /**
- * @type {CreateFunction}
+ * @typedef {undefined|function(!Feature, !Geometry, !Style, !VectorContext):undefined}
  */
-const create = (feature, geometry, style, context) => {
+/* exported ConvertFunctionType */
+let ConvertFunctionType;
+
+
+/**
+ * @type {ConvertFunctionType}
+ */
+let convertFunction = undefined;
+
+
+/**
+ * Converter for GeometryCollections
+ */
+class GeometryCollectionConverter extends BaseConverter {
+  /**
+   * @inheritDoc
+   */
+  create(feature, geometry, style, context) {
+    return convert(feature, geometry, style, context);
+  }
+
+
+  /**
+   * @inheritDoc
+   */
+  update(feature, geometry, style, context, primitive) {
+    return convert(feature, geometry, style, context);
+  }
+
+  /**
+   * @param {ConvertFunctionType} value
+   */
+  static setConvertFunction(value) {
+    convertFunction = value;
+  }
+}
+
+
+/**
+ * @param {!Feature} feature
+ * @param {!GeometryCollection} geometry
+ * @param {!Style} style
+ * @param {!VectorContext} context
+ * @return {boolean}
+ */
+const convert = (feature, geometry, style, context) => {
   const geoms = geometry.getGeometriesArray();
   if (convertFunction) {
     for (let i = 0, n = geoms.length; i < n; i++) {
@@ -29,34 +74,4 @@ const create = (feature, geometry, style, context) => {
 };
 
 
-/**
- * @type {UpdateFunction}
- */
-const update = (feature, geometry, style, context, primitive) => false;
-
-
-/**
- * @type {undefined|function(!Feature, !Geometry, !Style, !VectorContext):undefined}
- */
-let convertFunction = undefined;
-
-
-/**
- * @param {undefined|function(!Feature, !Geometry, !Style, !VectorContext):undefined} value
- */
-const setConvertFunction = (value) => {
-  convertFunction = value;
-};
-
-
-/**
- * @type {Converter}
- */
-exports = {
-  create,
-  retrieve: getPrimitive,
-  update,
-  delete: deletePrimitive,
-  setConvertFunction
-};
-
+exports = GeometryCollectionConverter;

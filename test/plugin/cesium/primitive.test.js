@@ -205,7 +205,7 @@ describe('plugin.cesium.primitive', () => {
       context.addOLReferences(billboard, feature, geometry);
 
       expect(syncUtils.deletePrimitive(feature, geometry, undefined, context, billboard)).toBe(true);
-      expect(syncUtils.getPrimitive(feature, geometry, undefined, context)).toBe(null);
+      expect(syncUtils.getPrimitive(feature, geometry, undefined, context)).toBe(undefined);
     });
   });
 
@@ -309,13 +309,14 @@ describe('plugin.cesium.primitive', () => {
       const groundPolyline = primitiveUtils.createGroundPolylinePrimitive([[0, 0], [10, 10]]);
       expect(isGroundPrimitive(groundPolyline)).toBe(true);
 
+      // Should return false for collections regardless of content
       const primitiveCollection = new Cesium.PrimitiveCollection();
       expect(isGroundPrimitive(primitiveCollection)).toBe(false);
       primitiveCollection.add(groundPrimitive);
-      expect(isGroundPrimitive(primitiveCollection)).toBe(true);
+      expect(isGroundPrimitive(primitiveCollection)).toBe(false);
       primitiveCollection.removeAll();
       primitiveCollection.add(groundPolyline);
-      expect(isGroundPrimitive(primitiveCollection)).toBe(true);
+      expect(isGroundPrimitive(primitiveCollection)).toBe(false);
     });
   });
 
@@ -326,10 +327,7 @@ describe('plugin.cesium.primitive', () => {
       const pointPrimitive = primitiveUtils.createPointPrimitive([0, 0]);
       const polyline = primitiveUtils.createPolyline([[0, 0], [10, 10]]);
 
-      // We are considering anything which directly implements a "show" field as "generic"
-      const primitiveCollection = new Cesium.PrimitiveCollection();
-
-      const genericPrimitives = [billboard, primitive, pointPrimitive, polyline, primitiveCollection];
+      const genericPrimitives = [billboard, primitive, pointPrimitive, polyline];
 
       genericPrimitives.forEach((item) => {
         item.show = true;
@@ -337,6 +335,11 @@ describe('plugin.cesium.primitive', () => {
         item.show = false;
         expect(isPrimitiveShown(item)).toBe(item.show);
       });
+
+      expect(isPrimitiveShown([])).toBe(true);
+      expect(isPrimitiveShown(genericPrimitives)).toBe(false);
+      billboard.show = true;
+      expect(isPrimitiveShown(genericPrimitives)).toBe(true);
     });
 
     it('should default primitive collections to shown', () => {
@@ -377,6 +380,7 @@ describe('plugin.cesium.primitive', () => {
 
       // We are considering anything which directly implements a "show" field as "generic"
       const primitiveCollection = new Cesium.PrimitiveCollection();
+      primitiveCollection.add(primitive);
 
       const genericPrimitives = [billboard, primitive, pointPrimitive, polyline, primitiveCollection];
 
@@ -386,6 +390,11 @@ describe('plugin.cesium.primitive', () => {
         setPrimitiveShown(item, true);
         expect(isPrimitiveShown(item)).toBe(true);
       });
+
+      setPrimitiveShown(genericPrimitives, false);
+      expect(isPrimitiveShown(genericPrimitives)).toBe(false);
+      setPrimitiveShown(genericPrimitives, true);
+      expect(isPrimitiveShown(genericPrimitives)).toBe(true);
     });
 
     it('should set the shown value of all items in collections', () => {

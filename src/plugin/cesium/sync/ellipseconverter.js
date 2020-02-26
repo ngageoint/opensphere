@@ -1,5 +1,6 @@
 goog.module('plugin.cesium.sync.EllipseConverter');
 
+const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
 const DynamicLineStringConverter = goog.require('plugin.cesium.sync.DynamicLineStringConverter');
 const ILayer = goog.require('os.layer.ILayer');
 const LineString = goog.require('ol.geom.LineString');
@@ -14,41 +15,49 @@ const Feature = goog.requireType('ol.Feature');
 const Ellipse = goog.requireType('os.geom.Ellipse');
 const Style = goog.requireType('ol.style.Style');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
-const {CreateFunction, UpdateFunction, Converter} = goog.requireType('plugin.cesium.sync.ConverterTypes');
+const IConverter = goog.requireType('plugin.cesium.sync.IConverter');
 
 /**
- * @type {CreateFunction}
+ * Converter for Ellipses
  */
-const create = (feature, geometry, style, context) => {
-  const returnVal = getConverter(context).create(feature, geometry, style, context);
+class EllipseConverter extends BaseConverter {
+  /**
+   * @inheritDoc
+   */
+  create(feature, geometry, style, context) {
+    const returnVal = getConverter(context).create(feature, geometry, style, context);
 
-  if (returnVal) {
-    createOrUpdateGroundReference(feature, geometry, style, context);
+    if (returnVal) {
+      createOrUpdateGroundReference(feature, geometry, style, context);
+    }
+
+    return returnVal;
   }
 
-  return returnVal;
-};
 
+  /**
+   * @inheritDoc
+   */
+  update(feature, geometry, style, context, primitive) {
+    const returnVal = getConverter(context).update(feature, geometry, style, context, primitive);
 
-/**
- * @type {UpdateFunction}
- */
-const update = (feature, geometry, style, context, primitive) => {
-  const returnVal = getConverter(context).update(feature, geometry, style, context, primitive);
+    if (returnVal) {
+      createOrUpdateGroundReference(feature, geometry, style, context);
+    }
 
-  if (returnVal) {
-    createOrUpdateGroundReference(feature, geometry, style, context);
+    return returnVal;
   }
+}
 
-  return returnVal;
-};
 
+const ellipsoidConverter = new EllipsoidConverter();
+const polygonConverter = new PolygonConverter();
 
 /**
  * @param {VectorContext} context
- * @return {Converter}
+ * @return {IConverter}
  */
-const getConverter = (context) => isEllipsoid(context) ? EllipsoidConverter : PolygonConverter;
+const getConverter = (context) => isEllipsoid(context) ? ellipsoidConverter : polygonConverter;
 
 
 /**
@@ -61,6 +70,8 @@ const isEllipsoid = (context) => {
   return config && config[StyleField.SHOW_ELLIPSOIDS];
 };
 
+
+const dynamicConverter = new DynamicLineStringConverter();
 
 /**
  * Get a ground reference line from a coordinate to the surface of the globe.
@@ -106,17 +117,9 @@ const createOrUpdateGroundReference = (feature, geometry, style, context) => {
   }
 
   if (groundRef) {
-    runConverter(DynamicLineStringConverter, feature, groundRef, style, context);
+    runConverter(dynamicConverter, feature, groundRef, style, context);
   }
 };
 
 
-/**
- * @type {Converter}
- */
-exports = {
-  create,
-  retrieve: PolygonConverter.retrieve,
-  update,
-  delete: PolygonConverter.delete
-};
+exports = EllipseConverter;

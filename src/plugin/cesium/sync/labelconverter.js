@@ -3,87 +3,91 @@ goog.module('plugin.cesium.sync.LabelConverter');
 goog.require('goog.asserts');
 goog.require('goog.string');
 
+const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
 const {GeometryInstanceId} = goog.require('plugin.cesium');
 const {getColor, getLineWidthFromStyle} = goog.require('plugin.cesium.sync.style');
 const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
 const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
-const {deletePrimitive, isPrimitiveShown} = goog.require('plugin.cesium.primitive');
+const {isPrimitiveShown} = goog.require('plugin.cesium.primitive');
 const olcsCore = goog.require('olcs.core');
 
-const {CreateFunction, RetrieveFunction, UpdateFunction, Converter} =
-  goog.requireType('plugin.cesium.sync.ConverterTypes');
 const Geometry = goog.requireType('ol.geom.Geometry');
 const Text = goog.requireType('ol.style.Text');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**
- * @type {RetrieveFunction}
+ * Converter for Label styles
  */
-const getLabel = (feature, geometry, style, context) => {
-  return context.getLabelForGeometry(geometry);
-};
-
-
-/**
- * @type {CreateFunction}
- */
-const createLabel = (feature, geometry, style, context) => {
-  if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(style.getText()))) {
-    const options = /** @type {!Cesium.optionsLabelCollection} */ ({});
-    updateLabel(feature, geometry, style, context, /** @type {!Cesium.Label} */ (options));
-    context.addLabel(options, feature, geometry);
-    return true;
+class LabelConverter extends BaseConverter {
+  /**
+   * @inheritDoc
+   */
+  retrieve(feature, geometry, style, context) {
+    return context.getLabelForGeometry(geometry);
   }
 
-  return false;
-};
 
+  /**
+   * @inheritDoc
+   */
+  create(feature, geometry, style, context) {
+    if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(style.getText()))) {
+      const options = /** @type {!Cesium.optionsLabelCollection} */ ({});
+      this.update(feature, geometry, style, context, /** @type {!Cesium.Label} */ (options));
+      context.addLabel(options, feature, geometry);
+      return true;
+    }
 
-/**
- * @type {UpdateFunction}
- */
-const updateLabel = (feature, geometry, style, context, label) => {
-  const isLabelInstance = label instanceof Cesium.Label;
-
-  if (isLabelInstance && label.isDestroyed()) {
     return false;
   }
 
-  const geom = style.getGeometry();
-  if (geom instanceof ol.geom.Geometry) {
-    geometry = /** @type {!ol.geom.Geometry} */ (geom);
+
+  /**
+   * @inheritDoc
+   */
+  update(feature, geometry, style, context, label) {
+    const isLabelInstance = label instanceof Cesium.Label;
+
+    if (isLabelInstance && label.isDestroyed()) {
+      return false;
+    }
+
+    const geom = style.getGeometry();
+    if (geom instanceof ol.geom.Geometry) {
+      geometry = /** @type {!ol.geom.Geometry} */ (geom);
+    }
+
+    const textStyle = style.getText();
+
+    updatePosition(label, geometry);
+    label.heightReference = getHeightReference(context.layer, feature, geometry);
+    updateFillAndOutline(label, textStyle, context);
+    updateHorizontalOrigin(label, textStyle);
+    updateVerticalOrigin(label, textStyle);
+    updateText(label, textStyle);
+
+    label.font = textStyle.getFont() || os.style.label.getFont();
+    label.pixelOffset = new Cesium.Cartesian2(textStyle.getOffsetX(), textStyle.getOffsetY());
+
+    // check if there is an associated primitive, and if it is shown
+    const prim = context.getPrimitiveForGeometry(geometry);
+    if (prim) {
+      label.show = isPrimitiveShown(prim);
+    }
+
+    if (context.scene) {
+      label.eyeOffset = context.labelEyeOffset;
+    }
+
+    if (isLabelInstance) {
+      // mark as updated so it isn't deleted
+      label.dirty = false;
+    }
+
+    return true;
   }
-
-  const textStyle = style.getText();
-
-  updatePosition(label, geometry);
-  label.heightReference = getHeightReference(context.layer, feature, geometry);
-  updateFillAndOutline(label, textStyle, context);
-  updateHorizontalOrigin(label, textStyle);
-  updateVerticalOrigin(label, textStyle);
-  updateText(label, textStyle);
-
-  label.font = textStyle.getFont() || os.style.label.getFont();
-  label.pixelOffset = new Cesium.Cartesian2(textStyle.getOffsetX(), textStyle.getOffsetY());
-
-  // check if there is an associated primitive, and if it is shown
-  const prim = context.getPrimitiveForGeometry(geometry);
-  if (prim) {
-    label.show = isPrimitiveShown(prim);
-  }
-
-  if (context.scene) {
-    label.eyeOffset = context.labelEyeOffset;
-  }
-
-  if (isLabelInstance) {
-    // mark as updated so it isn't deleted
-    label.dirty = false;
-  }
-
-  return true;
-};
+}
 
 
 /**
@@ -265,12 +269,4 @@ const updateText = (label, textStyle) => {
 };
 
 
-/**
- * @type {Converter}
- */
-exports = {
-  create: createLabel,
-  retrieve: getLabel,
-  update: updateLabel,
-  delete: deletePrimitive
-};
+exports = LabelConverter;

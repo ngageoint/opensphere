@@ -136,25 +136,34 @@ const isGeometryDirty = (geometry) => {
 
 
 /**
- * @param {!Cesium.PrimitiveLike} primitive
+ * @param {!Array<!Cesium.PrimitiveLike>|!Cesium.PrimitiveLike} primitive
  * @param {!(Style|Text)} style
  * @return {boolean}
  */
 const isLineWidthChanging = (primitive, style) => {
-  if (primitive && primitive['olLineWidth'] != null) {
-    const width = getLineWidthFromStyle(style);
-    return primitive['olLineWidth'] != width;
+  if (primitive) {
+    if (Array.isArray(primitive)) {
+      return primitive.length ? isLineWidthChanging(primitive[0], style) : false;
+    } else if (primitive['olLineWidth'] != null) {
+      const width = getLineWidthFromStyle(style);
+      return primitive['olLineWidth'] != width;
+    }
   }
+
   return false;
 };
 
 
 /**
- * @param {!Cesium.PrimitiveLike} primitive
+ * @param {!Array<!Cesium.PrimitiveLike>|!Cesium.PrimitiveLike} primitive
  * @param {!(Style|Text)} style
  * @return {boolean}
  */
 const isDashChanging = (primitive, style) => {
+  if (Array.isArray(primitive)) {
+    return primitive.length ? isDashChanging(primitive[0], style) : false;
+  }
+
   return isDashPatternChanging(primitive, getDashPattern(style));
 };
 
