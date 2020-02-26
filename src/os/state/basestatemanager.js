@@ -216,12 +216,12 @@ os.state.BaseStateManager.prototype.deleteStates = function() {
  */
 os.state.BaseStateManager.prototype.getAvailable = function(opt_allVersions) {
   var list = [];
-  var disabledStates = /** @type {Object<string, boolean>} */ (os.settings.get('ex.disabledStates', {}));
+  var enabledStates = /** @type {Object<string, boolean>} */ (os.settings.get('ex.enabledStates', {}));
   var s;
   var pushFn = function(statez) {
     for (var tag in statez) {
       s = new statez[tag]();
-      if (disabledStates[os.state.stateToString(s)] !== true) {
+      if (enabledStates[os.state.stateToString(s)] !== false) {
         list.push(s);
       }
     }
