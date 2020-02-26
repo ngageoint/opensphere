@@ -82,9 +82,13 @@ const launchConfirm = function(opt_options, opt_scopeOptions) {
     windowOptions['id'] = windowOverrides.id;
   }
 
+  if (windowOverrides.parent) {
+    windowOptions['window-container'] = windowOverrides.parent;
+  }
+
   var text = options.prompt || 'Are you sure?';
   var template = '<confirm>' + text + '</confirm>';
-  createWindow(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  createWindow(windowOptions, template, windowOverrides.parent, undefined, undefined, scopeOptions);
 };
 
 
