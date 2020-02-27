@@ -105,14 +105,10 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
       const result = polygonConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
 
-      expect(context.primitives.length).toBe(1);
-      const polygon = context.primitives.get(0);
+      expect(context.primitives.length).toBe(2);
 
-      expect(polygon.constructor).toBe(Cesium.PrimitiveCollection);
-      expect(polygon.length).toBe(2);
-
-      for (let i = 0, n = polygon.length; i < n; i++) {
-        testLine(polygon.get(i));
+      for (let i = 0, n = context.primitives.length; i < n; i++) {
+        testLine(context.primitives.get(i));
       }
     });
 
@@ -129,18 +125,14 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
       const result = polygonConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
 
-      expect(context.primitives.length).toBe(1);
-      const polygon = context.primitives.get(0);
+      expect(context.primitives.length).toBe(2);
 
-      expect(polygon.constructor).toBe(Cesium.PrimitiveCollection);
-      expect(polygon.length).toBe(2);
-
-      testLine(polygon.get(0), {
+      testLine(context.primitives.get(0), {
         color: green,
         width: 4
       });
 
-      const polygonFill = polygon.get(1);
+      const polygonFill = context.primitives.get(1);
       polygonFill._asynchronous = false;
       polygonFill._releaseGeometryInstances = false;
       renderScene(scene);
