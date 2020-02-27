@@ -528,7 +528,7 @@ os.query.BaseAreaManager.prototype.getStoredAreas = function() {
  * @private
  */
 os.query.BaseAreaManager.prototype.onAreasLoaded_ = function(obj) {
-  if (obj) {
+  if (obj && obj['features']) {
     var format = new ol.format.GeoJSON();
     this.loadProj_ = os.map.PROJECTION;
 
