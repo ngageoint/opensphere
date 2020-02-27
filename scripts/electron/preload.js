@@ -28,9 +28,11 @@ const selectClientCertificate = (event, url, list) => {
     certHandler(url, list).then((cert) => {
       // Sent the selected certificate to the main process.
       ipcRenderer.send('client-certificate-selected', url, cert);
-    }, (err) => {
-      // Request failed, don't use a certificate.
-      ipcRenderer.send('client-certificate-selected', url, null);
+    }, (reason) => {
+      // The Electron handler will delete the promise if undefined is returned, as the user did not make a choice. A
+      // null value indicates the user cancelled the request and a cert should not be used.
+      const value = reason === 'unload' ? undefined : null;
+      ipcRenderer.send('client-certificate-selected', url, value);
     });
   } else {
     // No handler regisered, use Electron's default behavior.
