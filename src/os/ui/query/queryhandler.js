@@ -8,6 +8,16 @@ goog.require('os.filter.IFilterFormatter');
 goog.require('os.filter.ISpatialFormatter');
 
 
+/**
+ * @typedef {{
+ *   entries: !Array<!Object<string, string|boolean>>,
+ *   includes: !Array<!Object<string, string|boolean>>,
+ *   excludes: !Array<!Object<string, string|boolean>>
+ * }}
+ */
+os.ui.query.ActiveEntries;
+
+
 
 /**
  * Class for representing a query consisting of areas and filters. Contains no actual handling logic, just
@@ -307,12 +317,13 @@ os.ui.query.QueryHandler.prototype.getEntries = function(id) {
 
 /**
  * Gets entries for the filter
- * @param {!Array<!Object<string, string|boolean>>} entries
- * @param {!Array<!Object<string, string|boolean>>} includes
- * @param {!Array<!Object<string, string|boolean>>} excludes
+ * @return {os.ui.query.ActiveEntries}
  */
-os.ui.query.QueryHandler.prototype.getActiveEntries = function(entries, includes, excludes) {
+os.ui.query.QueryHandler.prototype.getActiveEntries = function() {
   var qmEntries = this.getEntries(this.getLayerId());
+  var entries = [];
+  var includes = [];
+  var excludes = [];
 
   // clone the entries
   for (var i = 0, n = qmEntries.length; i < n; i++) {
@@ -322,26 +333,26 @@ os.ui.query.QueryHandler.prototype.getActiveEntries = function(entries, includes
   }
 
   // ignore disabled areas
-  entries = entries.filter(this.shownAreas.bind(this));
+  entries = entries.filter(this.shownAreas, this);
 
   if (excludes) { // exclusion areas must be handled differently
-    var excl = entries.filter(this.excludes.bind(this)).map(this.toExclude.bind(this));
+    var excl = entries.filter(this.excludes, this).map(this.toExclude, this);
     for (var i = 0; i < excl.length; i++) {
       excludes.push(excl[i]);
     }
   }
 
   if (includes) { // inclusion areas
-    var incl = entries.filter(this.includes.bind(this));
+    var incl = entries.filter(this.includes, this);
     for (var i = 0; i < incl.length; i++) {
       includes.push(incl[i]);
     }
 
     if (includes.length) {
-      entries = includes.filter(this.filters.bind(this));
+      entries = includes.filter(this.filters, this);
     } else {
       // Theres no inclusions, check to see if we still have filters to apply
-      entries = entries.filter(this.filters.bind(this));
+      entries = entries.filter(this.filters, this);
 
       // Since this is only for exclusions or no areas. We only need 1 of each filter
       goog.array.removeDuplicates(entries, null, function(entry) {
@@ -349,6 +360,8 @@ os.ui.query.QueryHandler.prototype.getActiveEntries = function(entries, includes
       });
     }
   }
+
+  return /** @type {os.ui.query.ActiveEntries} */ ({entries: entries, includes: includes, excludes: excludes});
 };
 
 
@@ -358,11 +371,10 @@ os.ui.query.QueryHandler.prototype.getActiveEntries = function(entries, includes
  * @return {string}
  */
 os.ui.query.QueryHandler.prototype.createFilter = function() {
-  var entries = [];
-  var includes = [];
-  var excludes = [];
-
-  this.getActiveEntries(entries, includes, excludes);
+  var activeEntries = this.getActiveEntries();
+  var entries = activeEntries.entries;
+  var includes = activeEntries.includes;
+  var excludes = activeEntries.excludes;
 
   // we don't care about layer in the order array
   var order = ['area', 'filter'];
@@ -508,11 +520,11 @@ os.ui.query.QueryHandler.prototype.wrapAll = function(filter) {
 
 
 /**
- * @param {os.ui.query.QueryHandler?} opt_qh another query handler to clone to
+ * @param {os.ui.query.QueryHandler=} opt_result another query handler to clone to
  * @return {os.ui.query.QueryHandler}
  */
-os.ui.query.QueryHandler.prototype.clone = function(opt_qh) {
-  var clone = opt_qh ? opt_qh : new os.ui.query.QueryHandler();
+os.ui.query.QueryHandler.prototype.clone = function(opt_result) {
+  var clone = opt_result ? opt_result : new os.ui.query.QueryHandler();
   clone.setLayerId(this.getLayerId());
   clone.setLayerName(this.getLayerName());
   clone.setModifier(this.getModifier());
