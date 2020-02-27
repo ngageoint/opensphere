@@ -51,12 +51,11 @@ plugin.arc.query.ArcQueryHandler.LOGGER_ = goog.log.getLogger('plugin.arc.query.
 
 
 /**
- * Get the active query entries for this layer.
- * @param {!Array<!Object<string, string|boolean>>} entries
- * @override
+ * @inheritDoc
  */
-plugin.arc.query.ArcQueryHandler.prototype.getActiveEntries = function(entries) {
+plugin.arc.query.ArcQueryHandler.prototype.getActiveEntries = function() {
   var qmEntries = this.getEntries(this.getLayerId());
+  var entries = [];
 
   // clone the entries
   for (var i = 0, n = qmEntries.length; i < n; i++) {
@@ -66,7 +65,8 @@ plugin.arc.query.ArcQueryHandler.prototype.getActiveEntries = function(entries) 
   }
 
   // ignore disabled areas
-  entries = entries.filter(this.shownAreas.bind(this));
+  entries = entries.filter(this.shownAreas, this);
+  return /** @type {os.ui.query.ActiveEntries} */ ({entries: entries, includes: [], excludes: []});
 };
 
 
@@ -76,10 +76,10 @@ plugin.arc.query.ArcQueryHandler.prototype.getActiveEntries = function(entries) 
 plugin.arc.query.ArcQueryHandler.prototype.createFilter = function() {
   var result = '';
 
-  var entries = [];
-  this.getActiveEntries(entries);
-  entries = entries.filter(this.includes.bind(this));
-  entries = entries.filter(this.filters.bind(this));
+  var activeEntries = this.getActiveEntries();
+  var entries = activeEntries.entries;
+  entries = entries.filter(this.includes, this);
+  entries = entries.filter(this.filters, this);
 
   if (!entries.length) {
     return result;
@@ -121,8 +121,8 @@ plugin.arc.query.ArcQueryHandler.prototype.createGeometry = function() {
   var hasInclude = false;
   var seenAreas = {};
 
-  var entries = [];
-  this.getActiveEntries(entries);
+  var activeEntries = this.getActiveEntries();
+  var entries = activeEntries.entries;
   var bucket = goog.array.bucket(entries, function(entry) {
     // track which areaIds we've already seen since the expanded entries are inherently duplicative
     var areaId = entry['areaId'];
@@ -136,7 +136,7 @@ plugin.arc.query.ArcQueryHandler.prototype.createGeometry = function() {
       seenAreas[areaId] = true;
       return 'exclusion';
     }
-  }.bind(this));
+  }, this);
 
   if (!hasInclude) {
     return '';
