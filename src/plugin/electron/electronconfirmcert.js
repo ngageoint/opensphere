@@ -112,12 +112,25 @@ const sortCerts = (a, b) => {
  */
 const launchConfirmCert = (url, certs) => {
   return new Promise((resolve, reject) => {
+    // Listen for unload event to reject the promise.
+    const unloadListener = (event) => {
+      reject('unload');
+    };
+    window.addEventListener('beforeunload', unloadListener);
+
+    // Clean up the unload listener and resolve the promise.
+    const confirm = (cert) => {
+      window.removeEventListener('beforeunload', unloadListener);
+      resolve(cert);
+    };
+
+    // Reject the promise if the user cancels the request.
     const cancel = () => {
       reject(new Error('User cancelled certificate request.'));
     };
 
     launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
-      confirm: resolve,
+      confirm: confirm,
       confirmValue: certs[0],
       cancel: cancel,
       prompt: '<electronconfirmcert></electronconfirmcert>',
