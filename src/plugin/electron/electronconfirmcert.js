@@ -37,17 +37,45 @@ class Controller {
    */
   constructor($scope) {
     /**
+     * The Angular scope.
+     * @type {?angular.Scope}
+     * @protected
+     */
+    this.scope = $scope;
+
+    /**
+     * The selected certificate.
      * @type {Electron.Certificate}
      */
-    this['cert'] = $scope['certs'] && $scope['certs'][0] || null;
+    this['cert'] = null;
 
-    $scope.$watch('ctrl.cert', function(newVal, oldVal) {
+    $scope.$watch('ctrl.cert', (newVal, oldVal) => {
       if (newVal != oldVal) {
         $scope.$parent['confirmValue'] = newVal;
       }
     });
+  }
 
-    $scope.$emit(WindowEventType.READY);
+  /**
+   * Angular $onDestroy lifecycle function.
+   */
+  $onDestroy() {
+    this.scope = null;
+  }
+
+  /**
+   * Angular $onInit lifecycle function.
+   */
+  $onInit() {
+    if (this.scope) {
+      const certs = /** @type {Array<!Electron.Certificate>} */ (this.scope['certs']);
+      if (certs) {
+        certs.sort(sortCerts);
+        this['cert'] = certs[0];
+      }
+
+      this.scope.$emit(WindowEventType.READY);
+    }
   }
 
   /**
@@ -63,18 +91,35 @@ class Controller {
 
 
 /**
+ * Sort client certificates by subject/issuer name.
+ * @param {Electron.Certificate} a First certificate.
+ * @param {Electron.Certificate} b Second certificate.
+ * @return {number} The sort value.
+ */
+const sortCerts = (a, b) => {
+  // Sort by subject name, then issuer name.
+  return a.subjectName === b.subjectName ?
+      (a.issuerName > b.issuerName ? 1 : a.issuerName === b.issuerName ? 0 : -1) :
+      (a.subjectName > b.subjectName ? 1 : -1);
+};
+
+
+/**
  * Launch a dialog prompting the user to select a certificate.
  * @param {string} url The URL requesting a certificate.
  * @param {!Array<!Electron.Certificate>} certs The available client certificates.
- * @return {!Promise} A promise that resolves to the selected certificate.
+ * @return {!Promise<!Electron.Certificate>} A promise that resolves to the selected certificate.
  */
-const launchConfirmCert = function(url, certs) {
+const launchConfirmCert = (url, certs) => {
   return new Promise((resolve, reject) => {
+    const cancel = () => {
+      reject(new Error('User cancelled certificate request.'));
+    };
+
     launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
       confirm: resolve,
       confirmValue: certs[0],
-      // User cancel should resolve the promise with no cert selection.
-      cancel: resolve,
+      cancel: cancel,
       prompt: '<electronconfirmcert></electronconfirmcert>',
       windowOptions: /** @type {!osx.window.WindowOptions} */ ({
         label: 'Select a Certificate',

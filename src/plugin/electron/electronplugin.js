@@ -10,7 +10,7 @@ const ElectronConfirmCertUI = goog.require('plugin.electron.ElectronConfirmCertU
  * Handle client certificate request from Electron.
  * @param {string} url The URL requesting a certificate.
  * @param {!Array<!Electron.Certificate>} certs The available client certificates.
- * @return {!Promise} A promise that resolves to the selected certificate.
+ * @return {!Promise<!Electron.Certificate>} A promise that resolves to the selected certificate.
  */
 const onCertificateRequest = (url, certs) => {
   return ElectronConfirmCertUI.launchConfirmCert(url, certs);

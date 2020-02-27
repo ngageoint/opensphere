@@ -41,7 +41,7 @@ Electron.CertificatePrincipal;
 
 
 /**
- * @typedef {function(string, !Array<!Electron.Certificate>):!Promise}
+ * @typedef {function(string, !Array<!Electron.Certificate>):!Promise<!Electron.Certificate>}
  */
 Electron.CertificateRequestFn;
 
