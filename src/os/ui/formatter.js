@@ -26,7 +26,7 @@ os.ui.formatter.urlNewTabFormatter = function(value) {
             var cleanValue = os.ui.sanitize(value);
             newValue = os.string.linkify(cleanValue, '_blank', 'slick-cell-link', cleanValue);
           }
-        } else if (splitVal.length > 500) { // performance suffers horribly here for long text (browser-crashingly bad)
+        } else if (splitVal.length < 500) { // performance suffers horribly here for long text (browser-crashingly bad)
           // If theres more than 1 value, put a number on it
           os.array.forEach(splitVal, function(elem, index, arr) {
             if (os.url.URL_REGEXP_LINKY.test(elem)) {
