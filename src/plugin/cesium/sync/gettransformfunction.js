@@ -21,13 +21,13 @@ let olTransform = null;
  *
  * @type {ol.TransformFunction}
  */
-const transformFunction = (coord, opt_output, opt_length) => {
-  const result = olTransform(coord, opt_output, opt_length);
+const transformFunction = (coord, opt_output, opt_dimensions) => {
+  const dimension = opt_dimensions == undefined ? coord.length : opt_dimensions;
+  const result = olTransform(coord, opt_output, dimension);
 
   if (opt_output) {
-    const n = opt_length == undefined ? coord.length : opt_length;
-    opt_output.length = n;
-    for (let i = 2; i < n; i++) {
+    opt_output.length = dimension;
+    for (let i = 2; i < dimension; i++) {
       result[i] = coord[i];
     }
   }
