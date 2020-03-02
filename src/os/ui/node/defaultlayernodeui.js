@@ -132,7 +132,8 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.getSource = function() {
  * @export
  */
 os.ui.node.DefaultLayerNodeUICtrl.prototype.canHide = function() {
-  return this.getLayer() instanceof os.layer.Vector;
+  var layer = this.getLayer();
+  return layer instanceof os.layer.Vector && layer.isEnabled();
 };
 
 
