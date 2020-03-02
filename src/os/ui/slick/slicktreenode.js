@@ -285,7 +285,7 @@ os.ui.slick.SlickTreeNode.prototype.format = function(row, cell, value) {
   html += '<nodespinner></nodespinner>';
   html += '<nodeicons class="flex-shrink-0"></nodeicons>';
 
-  html += '<span class="text-truncate flex-fill">' + this.formatValue(value) + '</span>';
+  html += this.formatLabel(value);
   html += this.formatNodeUI();
   return html;
 };
@@ -300,6 +300,19 @@ os.ui.slick.SlickTreeNode.prototype.format = function(row, cell, value) {
  */
 os.ui.slick.SlickTreeNode.prototype.formatCheckbox = function() {
   return '<tristatecheckbox></tristatecheckbox>';
+};
+
+
+/**
+ * Gets the HTML that supplies the label. The data item/node is
+ * supplied on the scope as <code>item</code>.
+ *
+ * @param {string} value The value of the cell.
+ * @return {!string} The label HTML
+ * @protected
+ */
+os.ui.slick.SlickTreeNode.prototype.formatLabel = function(value) {
+  return '<span class="text-truncate flex-fill">' + this.formatValue(value) + '</span>';
 };
 
 

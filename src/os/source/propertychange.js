@@ -14,6 +14,7 @@ os.source.PropertyChange = {
   COLUMNS: 'columns',
   COLUMN_ADDED: 'columnAdded',
   DATA: 'data',
+  ENABLED: 'enabled',
   FEATURES: 'features',
   PREPROCESS_FEATURES: 'preprocessFeatures',
   FEATURE_VISIBILITY: 'featureVisibility',

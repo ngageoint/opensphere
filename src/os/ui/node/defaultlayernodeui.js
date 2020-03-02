@@ -2,6 +2,8 @@ goog.provide('os.ui.node.DefaultLayerNodeUICtrl');
 goog.provide('os.ui.node.defaultLayerNodeUIDirective');
 
 goog.require('goog.events.EventType');
+goog.require('ol.ObjectEventType');
+goog.require('ol.events');
 goog.require('os.events.LayerEvent');
 goog.require('os.events.LayerEventType');
 goog.require('os.filter.BaseFilterManager');
@@ -15,19 +17,28 @@ goog.require('os.ui.slick.AbstractNodeUICtrl');
 /**
  * @type {string}
  */
-os.ui.node.DefaultLayerNodeUITemplate = '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
-    '<span ng-if="nodeUi.canFavorite()">' +
-    '<favorite ng-show="nodeUi.show()" type="descriptor" key="{{nodeUi.descId}}" ' +
-      'value="{{nodeUi.layerLabel}}"></favorite></span>' +
+os.ui.node.DefaultLayerNodeUITemplate = `
+  <span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">
+    <span ng-if="nodeUi.canFavorite()">
+      <favorite ng-show="nodeUi.show()" type="descriptor" key="{{nodeUi.descId}}" value="{{nodeUi.layerLabel}}">
+      </favorite>
+    </span>
 
-    '<span ng-if="nodeUi.filtersEnabled" ng-click="nodeUi.filter()">' +
-      '<i class="fa fa-filter fa-fw c-glyph" title="Manage filters"' +
-      'ng-class="{\'text-success\': nodeUi.filtered, \'c-glyph__off\': !nodeUi.filtered}"></i></span>' +
+    <span ng-if="nodeUi.filtersEnabled" ng-click="nodeUi.filter()">
+      <i class="fa fa-filter fa-fw c-glyph" title="Manage filters"
+          ng-class="{'text-success': nodeUi.filtered, 'c-glyph__off': !nodeUi.filtered}"></i>
+    </span>
 
-    '<span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">' +
-      '<i class="fa fa-times fa-fw c-glyph" title="Remove the layer"></i></span>' +
+    <span ng-if="nodeUi.canHide()" ng-click="nodeUi.toggleVisibility()">
+      <i class="fa fa-fw c-glyph" ng-class="nodeUi.isVisible() ? 'fa-eye' : 'fa-eye-slash'"
+          title="{{(nodeUi.isVisible() ? 'Hide' : 'Show') + ' the layer'}}"></i>
+    </span>
 
-    '</span>';
+    <span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">
+      <i class="fa fa-times fa-fw c-glyph" title="Remove the layer"></i>
+    </span>
+  </span>
+`;
 
 /**
  * The selected/highlighted node UI directive
@@ -112,6 +123,39 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.getSource = function() {
   }
 
   return null;
+};
+
+
+/**
+ * If the layer can be hidden.
+ * @return {boolean}
+ * @export
+ */
+os.ui.node.DefaultLayerNodeUICtrl.prototype.canHide = function() {
+  return this.getLayer() instanceof os.layer.Vector;
+};
+
+
+/**
+ * If the layer is visible.
+ * @return {boolean}
+ * @export
+ */
+os.ui.node.DefaultLayerNodeUICtrl.prototype.isVisible = function() {
+  var layer = this.getLayer();
+  return layer != null && layer.getLayerVisible();
+};
+
+
+/**
+ * Toggle layer visibility.
+ * @export
+ */
+os.ui.node.DefaultLayerNodeUICtrl.prototype.toggleVisibility = function() {
+  var layer = this.getLayer();
+  if (layer) {
+    layer.setLayerVisible(!layer.getLayerVisible());
+  }
 };
 
 

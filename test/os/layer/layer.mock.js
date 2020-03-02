@@ -15,6 +15,7 @@ goog.require('os.layer.ILayer');
  */
 os.layer.MockLayer = function() {
   this.id = this.title = goog.string.getRandomString();
+  this.enabled = true;
   this.loading = false;
   this.explicitType = 'mock';
 };
@@ -50,6 +51,22 @@ os.layer.MockLayer.prototype.getGroupId = function() {
  */
 os.layer.MockLayer.prototype.getGroupLabel = function() {
   return this.getTitle();
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.MockLayer.prototype.isEnabled = function() {
+  return this.enabled;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.MockLayer.prototype.setEnabled = function(value) {
+  this.enabled = value;
 };
 
 

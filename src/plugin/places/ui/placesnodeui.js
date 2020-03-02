@@ -10,21 +10,27 @@ goog.require('plugin.places');
 /**
  * @type {string}
  */
-plugin.places.ui.PlacesNodeUITemplate = '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
-      '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addFolder()">' +
-        '<i class="fa ' + plugin.places.Icon.FOLDER + ' fa-fw c-glyph" title="Create a new folder"></i>' +
-      '</span>' +
-      '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace()">' +
-        '<i class="fa ' + plugin.places.Icon.PLACEMARK + ' fa-fw c-glyph" title="Create a new place"></i>' +
-      '</span>' +
-      '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace(true)">' +
-        '<i class="fa ' + plugin.places.Icon.ANNOTATION + ' fa-fw c-glyph" title="Create a new place with a ' +
-            'text box"></i>' +
-      '</span>' +
+plugin.places.ui.PlacesNodeUITemplate = `
+  <span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">
+    <span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addFolder()">
+      <i class="fa ${plugin.places.Icon.FOLDER} fa-fw c-glyph" title="Create a new folder"></i>
+    </span>
+    <span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace()">
+      <i class="fa ${plugin.places.Icon.PLACEMARK} fa-fw c-glyph" title="Create a new place"></i>
+    </span>
+    <span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace(true)">
+      <i class="fa ${plugin.places.Icon.ANNOTATION} fa-fw c-glyph" title="Create a new place with a text box"></i>
+    </span>
 
-      '<span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">' +
-      '<i class="fa fa-times fa-fw c-glyph" title="Remove the place></i></span>' +
-    '</span>';
+    <span ng-if="nodeUi.canHide()" ng-click="nodeUi.toggleVisibility()">
+      <i class="fa fa-fw c-glyph" ng-class="nodeUi.isVisible() ? 'fa-eye' : 'fa-eye-slash'"
+          title="{{(nodeUi.isVisible() ? 'Hide' : 'Show') + ' the layer'}}"></i>
+    </span>
+    <span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">
+      <i class="fa fa-times fa-fw c-glyph" title="Remove the place></i>
+    </span>
+  </span>
+`;
 
 
 /**
