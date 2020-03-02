@@ -505,6 +505,19 @@ describe('os.source.Vector', function() {
     expect(f.getGeometry()).toBe(null);
   });
 
+  it('should clear the source when disabled', function() {
+    source.setEnabled(false);
+    expect(source.getFeatures().length).toBe(0);
+    expect(source.getFilteredFeatures().length).toBe(0);
+  });
+
+  it('should refresh the source when enabled', function() {
+    spyOn(source, 'refresh');
+
+    source.setEnabled(true);
+    expect(source.refresh).toHaveBeenCalled();
+  });
+
   describe('columns', function() {
     var columns;
 

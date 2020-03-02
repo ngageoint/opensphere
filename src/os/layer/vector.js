@@ -21,6 +21,7 @@ goog.require('os.legend.ILegendRenderer');
 goog.require('os.net');
 goog.require('os.registerClass');
 goog.require('os.source');
+goog.require('os.source.ISource');
 goog.require('os.source.Request');
 goog.require('os.source.Vector');
 goog.require('os.style');
@@ -71,6 +72,13 @@ os.layer.Vector = function(options) {
    * @private
    */
   this.title_ = 'New Layer';
+
+  /**
+   * If the layer is enabled.
+   * @type {boolean}
+   * @private
+   */
+  this.enabled_ = true;
 
   /**
    * @type {boolean}
@@ -494,6 +502,31 @@ os.layer.Vector.prototype.getLayerOptions = function() {
  */
 os.layer.Vector.prototype.setLayerOptions = function(value) {
   this.layerOptions_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.Vector.prototype.isEnabled = function() {
+  return this.enabled_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.Vector.prototype.setEnabled = function(value) {
+  if (this.enabled_ !== value) {
+    this.enabled_ = value;
+
+    var source = this.getSource();
+    if (os.implements(source, os.source.ISource.ID)) {
+      /** @type {os.source.ISource} */ (source).setEnabled(value);
+    }
+
+    this.dispatchEvent(new os.events.PropertyChangeEvent(os.layer.PropertyChange.ENABLED, value, !value));
+  }
 };
 
 
@@ -1128,6 +1161,7 @@ os.layer.Vector.prototype.renderLegend = function(options) {
 os.layer.Vector.prototype.persist = function(opt_to) {
   opt_to = opt_to || {};
 
+  opt_to['enabled'] = this.isEnabled();
   opt_to['visible'] = this.getLayerVisible();
   opt_to['opacity'] = this.getOpacity();
   opt_to['minResolution'] = this.getMinResolution();
@@ -1184,6 +1218,10 @@ os.layer.Vector.prototype.persist = function(opt_to) {
 os.layer.Vector.prototype.restore = function(config) {
   if (config['id'] != null) {
     this.setId(config['id']);
+  }
+
+  if (config['enabled'] != null) {
+    this.setEnabled(config['enabled']);
   }
 
   var styleConf = os.style.StyleManager.getInstance().getOrCreateLayerConfig(this.getId());

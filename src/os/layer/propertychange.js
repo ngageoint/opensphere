@@ -8,6 +8,7 @@ os.layer.PropertyChange = {
   ALTITUDE: 'altitude',
   ANIMATION_ENABLED: 'animationEnabled',
   COLOR_MODEL: 'colorModel',
+  ENABLED: 'enabled',
   ERROR: 'error',
   GROUP_ID: 'groupId',
   ICONS: 'icons',

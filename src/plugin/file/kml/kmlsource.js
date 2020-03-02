@@ -419,7 +419,7 @@ plugin.file.kml.KMLSource.prototype.onImportProgress = function(opt_event) {
  * @inheritDoc
  */
 plugin.file.kml.KMLSource.prototype.onImportComplete = function(opt_event) {
-  this.setRootNode(this.importer.getRootNode());
+  this.setRootNode(this.importer.getRootNode(true));
   this.setMinRefreshPeriod(this.importer.getMinRefreshPeriod());
 
   if (!this.externalColumns) {
@@ -639,6 +639,22 @@ plugin.file.kml.KMLSource.prototype.updateFeaturesVisibility = function(features
       }
     }
   }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLSource.prototype.clear = function() {
+  plugin.file.kml.KMLSource.base(this, 'clear');
+
+  // Drop everything, clear the root node, then dispose of it. The KML will be parsed again on refresh.
+  this.clearImages(true);
+  this.clearOverlays(true);
+  this.nodeMap_ = {};
+
+  this.setRootNode(null);
+  goog.dispose(this.rootNode);
 };
 
 
