@@ -245,10 +245,12 @@ os.ui.menu.list.onResetColor = function(event) {
   var context = event.getContext();
   if (os.instanceOf(context, os.source.Vector.NAME)) {
     var source = /** @type {!os.source.Vector} */ (context);
-    if (source && source.getColorModel()) {
+    if (source) {
       var cm = source.getColorModel();
       if (cm) {
         cm.setColorMethod(os.data.histo.ColorMethod.RESET);
+      } else {
+        source.setColorModel(null);
       }
     }
   }
