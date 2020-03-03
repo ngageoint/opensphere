@@ -3,7 +3,7 @@ goog.provide('os.ui.window.confirmColumnDirective');
 
 goog.require('os.ui.Module');
 goog.require('os.ui.window');
-goog.require('os.ui.window.confirmDirective');
+goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -67,7 +67,7 @@ os.ui.window.launchConfirmColumn = function(options) {
   windowOptions.label = windowOptions.label || 'Choose Column';
   windowOptions.height = 'auto';
 
-  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+  os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
     confirm: options.confirm,
     confirmValue: options.defaultValue,
     cancel: options.cancel,

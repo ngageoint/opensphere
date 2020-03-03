@@ -1,5 +1,6 @@
 goog.provide('os.ui.filter.ui.EditFiltersCtrl');
 goog.provide('os.ui.filter.ui.editFiltersDirective');
+
 goog.require('os.filter.IFilterEntry');
 goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
@@ -10,6 +11,7 @@ goog.require('os.ui.filter.basicFilterBuilderDirective');
 goog.require('os.ui.filter.ui.GroupNode');
 goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
+goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -237,7 +239,7 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.onRemove_ = function(event, node) {
       return;
     }
 
-    os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
       confirm: this.doRemove_.bind(this, node),
       prompt: 'Are you sure you want to remove multiple items from the filter?',
       yesText: 'Yes',

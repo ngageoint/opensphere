@@ -19,6 +19,7 @@ goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportEventType');
 goog.require('os.ui.server.AbstractLoadingServer');
 goog.require('os.ui.window');
+goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -249,7 +250,7 @@ os.ui.ServersCtrl.prototype.getPrompt_ = function(provider, callback, remove) {
       msg = msg.replace('disable', 'remove');
     }
 
-    os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
       confirm: callback,
       cancel: this.updateData_.bind(this),
       prompt: msg,
