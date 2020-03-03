@@ -154,7 +154,18 @@ os.source.isFilterable = function(source) {
 
 
 /**
- * @param {os.source.ISource} source
+ * If a source is enabled.
+ * @param {os.source.ISource} source The source.
+ * @return {boolean}
+ */
+os.source.isEnabled = function(source) {
+  return !!source && source.isEnabled();
+};
+
+
+/**
+ * If a source is visible.
+ * @param {os.source.ISource} source The source.
  * @return {boolean}
  */
 os.source.isVisible = function(source) {
