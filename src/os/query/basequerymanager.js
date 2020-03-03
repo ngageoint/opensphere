@@ -61,7 +61,7 @@ os.query.BaseQueryManager = function(opt_areaManager, opt_filterManager) {
    * @type {goog.async.Delay}
    * @protected
    */
-  this.updateTimer = new goog.async.Delay(this.onUpdateTimer_, 20, this);
+  this.updateTimer = new goog.async.Delay(this.onUpdateTimer, 20, this);
 
   /**
    * @type {os.query.BaseAreaManager}
@@ -162,10 +162,8 @@ os.query.BaseQueryManager.prototype.addIdsToUpdate_ = function(oldEntries, newEn
 
 /**
  * Updates local expanded collection before eventing and saving.
- *
- * @private
  */
-os.query.BaseQueryManager.prototype.onUpdateTimer_ = function() {
+os.query.BaseQueryManager.prototype.onUpdateTimer = function() {
   var expandedEntries = this.getExpanded();
   this.addIdsToUpdate_(this.expandedEntries, expandedEntries);
   this.expandedEntries = expandedEntries;
@@ -211,7 +209,7 @@ os.query.BaseQueryManager.prototype.addEntry = function(layerId, areaId, filterI
   }
 
   if (opt_immediate) {
-    this.onUpdateTimer_();
+    this.onUpdateTimer();
   } else {
     this.updateTimer.start();
   }
@@ -264,7 +262,7 @@ os.query.BaseQueryManager.prototype.addEntries = function(entries, opt_immediate
   }
 
   if (opt_immediate) {
-    this.onUpdateTimer_();
+    this.onUpdateTimer();
   } else {
     this.updateTimer.start();
   }
@@ -399,7 +397,7 @@ os.query.BaseQueryManager.prototype.removeEntriesArr = function(entries) {
 os.query.BaseQueryManager.prototype.registerHandler = function(handler, opt_immediate) {
   goog.asserts.assert(handler);
   this.handlers.push(handler);
-  opt_immediate ? this.onUpdateTimer_() : this.updateTimer.start();
+  opt_immediate ? this.onUpdateTimer() : this.updateTimer.start();
 };
 
 
@@ -437,6 +435,26 @@ os.query.BaseQueryManager.prototype.getHandlerById = function(layerId) {
   }
 
   return null;
+};
+
+
+/**
+ * Gets all of the handlers
+ *
+ * @return {Array<os.ui.query.QueryHandler>}
+ */
+os.query.BaseQueryManager.prototype.getHandlers = function() {
+  return this.handlers.slice();
+};
+
+
+/**
+ * Sets the handlers
+ *
+ * @param {Array<os.ui.query.QueryHandler>} handlers
+ */
+os.query.BaseQueryManager.prototype.setHandlers = function(handlers) {
+  this.handlers = handlers;
 };
 
 
