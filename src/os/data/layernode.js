@@ -1,4 +1,5 @@
 goog.provide('os.data.LayerNode');
+
 goog.require('goog.events.EventType');
 goog.require('ol.events');
 goog.require('os.data.DataManager');
@@ -12,11 +13,13 @@ goog.require('os.layer.Tile');
 goog.require('os.layer.Vector');
 goog.require('os.structs.TriState');
 goog.require('os.ui.ILayerUIProvider');
+goog.require('os.ui.layer.LayerVisibilityUI');
 goog.require('os.ui.node.defaultLayerNodeUIDirective');
 goog.require('os.ui.node.featureCountDirective');
 goog.require('os.ui.node.layerTypeDirective');
 goog.require('os.ui.node.tileLoadingDirective');
 goog.require('os.ui.slick.SlickTreeNode');
+goog.require('os.ui.triStateCheckboxDirective');
 
 
 
@@ -98,6 +101,30 @@ os.data.LayerNode.prototype.getLayer = function() {
 
 
 /**
+ * @inheritDoc
+ */
+os.data.LayerNode.prototype.formatCheckbox = function() {
+  const checkboxParts = [];
+
+  const layer = this.getLayer();
+  if (layer) {
+    // add a normal checkbox (layer enable/disable) if the layer is not removable
+    if (layer.isRemovable()) {
+      checkboxParts.push('<tristatecheckbox></tristatecheckbox>');
+    }
+
+    // add a separate visibility toggle for feature layers
+    if (layer instanceof os.layer.Vector) {
+      const padClass = checkboxParts.length ? 'pl-1' : '';
+      checkboxParts.push(`<layervisibility class="c-glyph ${padClass}"></layervisibility>`);
+    }
+  }
+
+  return checkboxParts.join('');
+};
+
+
+/**
  * Sets the layer
  *
  * @param {os.layer.ILayer} value
@@ -117,9 +144,6 @@ os.data.LayerNode.prototype.setLayer = function(value) {
           this.onPropertyChange, this);
       this.setId(value.getId());
       this.setLabel(value.getTitle());
-
-      // If a layer can't be removed, don't allow it to be disabled either.
-      this.setCheckboxVisible(value.isRemovable());
 
       var result = undefined;
       if (value instanceof os.layer.LayerGroup) {
