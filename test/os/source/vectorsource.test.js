@@ -902,7 +902,7 @@ describe('os.source.Vector', function() {
 
     it('should set the colors of features and know when it has done so', function() {
       initDynamicFeatures();
-      var color = 'rgba(255, 255, 255, 1.0';
+      var color = 'rgba(255,255,255,1.0)';
 
       source.addFeatures(dynamicFeatures);
       expect(source.hasColors()).toBe(false);
