@@ -1,5 +1,6 @@
 goog.provide('os.ui.exportManager');
 goog.provide('os.ui.file.ExportManager');
+
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.Listenable');
 goog.require('goog.log');
@@ -8,7 +9,6 @@ goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
 goog.require('os.ex.ExportOptions');
 goog.require('os.ui.window');
-goog.require('os.ui.window.confirmDirective');
 
 
 

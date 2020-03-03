@@ -316,6 +316,7 @@ osx.window;
  *   modal: (boolean|undefined),
  *   showClose: (boolean|undefined),
  *   noScroll: (boolean|undefined),
+ *   string: (string|undefined),
  *
  *   height: (string|number|undefined),
  *   minHeight: (number|undefined),
@@ -499,14 +500,14 @@ osx.import;
 
 /**
  * @typedef {{
-  *   id: string,
-  *   label: string,
-  *   valid: boolean,
-  *   enabled: boolean,
-  *   msg: (string|undefined),
-  *   file: os.file.File
-  * }}
-  */
+ *   id: string,
+ *   label: string,
+ *   valid: boolean,
+ *   enabled: boolean,
+ *   msg: (string|undefined),
+ *   file: os.file.File
+ * }}
+ */
 osx.import.FileWrapper;
 
 

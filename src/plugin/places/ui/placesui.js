@@ -8,8 +8,6 @@ goog.require('os.metrics.keys');
 goog.require('os.ui.Module');
 goog.require('os.ui.menu.layer');
 goog.require('os.ui.uiSwitchDirective');
-goog.require('os.ui.window.confirmDirective');
-goog.require('os.ui.window.confirmTextDirective');
 goog.require('plugin.file.kml.ui');
 goog.require('plugin.file.kml.ui.KMLNode');
 goog.require('plugin.file.kml.ui.placemarkEditDirective');

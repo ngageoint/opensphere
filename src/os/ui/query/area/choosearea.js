@@ -3,7 +3,7 @@ goog.provide('os.ui.query.area.chooseAreaDirective');
 
 goog.require('goog.Disposable');
 goog.require('os.ui.Module');
-goog.require('os.ui.window.confirmDirective');
+goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -115,7 +115,7 @@ os.ui.query.area.ChooseAreaCtrl.prototype.updateAreas_ = function() {
  * @param {ol.Feature=} opt_default The default area to select
  */
 os.ui.query.area.launchChooseArea = function(confirm, opt_default) {
-  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+  os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
     confirm: confirm,
     confirmValue: opt_default,
     prompt: '<span>Please choose an area from the list:</span><choosearea></choosearea>',

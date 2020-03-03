@@ -1,34 +1,34 @@
-goog.provide('os.ui.window.ConfirmComponentCtrl');
-goog.provide('os.ui.window.ConfirmCtrl');
-goog.provide('os.ui.window.confirmDirective');
+goog.module('os.ui.window.ConfirmUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.KeyHandler');
-goog.require('os.ui.Module');
-goog.require('os.ui.window');
+const {getDocument} = goog.require('goog.dom');
+const KeyCodes = goog.require('goog.events.KeyCodes');
+const KeyHandler = goog.require('goog.events.KeyHandler');
+const Module = goog.require('os.ui.Module');
+const {create: createWindow, close: closeWindow} = goog.require('os.ui.window');
+const WindowEventType = goog.require('os.ui.WindowEventType');
 
 
 /**
- * A confirmation window. Create a window using os.ui.window.create, supplying the necessary scope/window options.
+ * A confirmation window. Create a window using window.create, supplying the necessary scope/window options.
  *
  * @return {angular.Directive}
  */
-os.ui.window.confirmDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    transclude: true,
-    scope: true,
-    templateUrl: os.ROOT + 'views/window/confirm.html',
-    controller: os.ui.window.ConfirmCtrl,
-    controllerAs: 'confirm'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  transclude: true,
+  scope: true,
+  templateUrl: os.ROOT + 'views/window/confirm.html',
+  controller: Controller,
+  controllerAs: 'confirm'
+});
 
 
 /**
  * Add the directive to the os module
  */
-os.ui.Module.directive('confirm', [os.ui.window.confirmDirective]);
+Module.directive('confirm', [directive]);
 
 
 /**
@@ -37,7 +37,7 @@ os.ui.Module.directive('confirm', [os.ui.window.confirmDirective]);
  * @param {osx.window.ConfirmOptions=} opt_options The window options
  * @param {Object=} opt_scopeOptions
  */
-os.ui.window.launchConfirm = function(opt_options, opt_scopeOptions) {
+const launchConfirm = function(opt_options, opt_scopeOptions) {
   var options = /** @type {!osx.window.ConfirmOptions} */ (opt_options || {});
   var scopeOptions = (opt_scopeOptions || {});
 
@@ -82,9 +82,13 @@ os.ui.window.launchConfirm = function(opt_options, opt_scopeOptions) {
     windowOptions['id'] = windowOverrides.id;
   }
 
+  if (windowOverrides.parent) {
+    windowOptions['window-container'] = windowOverrides.parent;
+  }
+
   var text = options.prompt || 'Are you sure?';
   var template = '<confirm>' + text + '</confirm>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  createWindow(windowOptions, template, windowOverrides.parent, undefined, undefined, scopeOptions);
 };
 
 
@@ -94,116 +98,121 @@ os.ui.window.launchConfirm = function(opt_options, opt_scopeOptions) {
  *
  * The scope.valid field can be set from window options.  If it is not set, it defaults
  * to true. It controls the button that runs the "confirmCallback"
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$timeout} $timeout
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.window.ConfirmCtrl = function($scope, $element, $timeout) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$timeout} $timeout
+   * @ngInject
    */
-  this.scope_ = $scope;
+  constructor($scope, $element, $timeout) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
 
-  /**
-   * @type {?angular.JQLite}
-   * @private
-   */
-  this.element_ = $element;
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
 
-  if (this.scope_['valid'] == null) {
-    this.scope_['valid'] = true;
-  }
-
-  /**
-   * @type {!goog.events.KeyHandler}
-   * @private
-   */
-  this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
-  this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
-
-  $timeout(function() {
-    $scope.$emit(os.ui.WindowEventType.READY);
-  });
-
-  $scope.$on('$destroy', this.onDestroy_.bind(this));
-};
-
-
-/**
- * Clean up
- *
- * @private
- */
-os.ui.window.ConfirmCtrl.prototype.onDestroy_ = function() {
-  goog.dispose(this.keyHandler_);
-
-  this.element_ = null;
-  this.scope_ = null;
-};
-
-
-/**
- * Fire the cancel callback and close the window.
- *
- * @export
- */
-os.ui.window.ConfirmCtrl.prototype.cancel = function() {
-  if (this.scope_['cancelCallback']) {
-    this.scope_['cancelCallback']();
-  }
-
-  this.close_();
-};
-
-
-/**
- * Fire the confirmation callback and close the window.
- *
- * @export
- */
-os.ui.window.ConfirmCtrl.prototype.confirm = function() {
-  if (this.scope_['confirmCallback']) {
-    var value = this.scope_['confirmValue'];
-    if (value == null) {
-      // try looking for it on the transcluded content's scope
-      var transScope;
-      if (this.element_.find('.js-confirm-text').children().first().scope()) {
-        transScope = this.element_.find('.js-confirm-text').children().first().scope();
-      } else {
-        transScope = this.element_.find('.js-confirm-text').scope();
-      }
-      value = transScope['confirmValue'];
+    if (this.scope_['valid'] == null) {
+      this.scope_['valid'] = true;
     }
 
-    this.scope_['confirmCallback'](value);
+    /**
+     * @type {!KeyHandler}
+     * @private
+     */
+    this.keyHandler_ = new KeyHandler(getDocument());
+    this.keyHandler_.listen(KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+
+    $timeout(function() {
+      $scope.$emit(WindowEventType.READY);
+    });
+
+    $scope.$on('$destroy', this.onDestroy_.bind(this));
   }
 
-  this.close_();
-};
+  /**
+   * Clean up
+   *
+   * @private
+   */
+  onDestroy_() {
+    goog.dispose(this.keyHandler_);
 
-
-/**
- * Close the window.
- *
- * @private
- */
-os.ui.window.ConfirmCtrl.prototype.close_ = function() {
-  os.ui.window.close(this.element_);
-};
-
-
-/**
- * Handles key events
- *
- * @param {goog.events.KeyEvent} event
- * @private
- */
-os.ui.window.ConfirmCtrl.prototype.handleKeyEvent_ = function(event) {
-  if (event.keyCode == goog.events.KeyCodes.ESC) {
-    this.cancel();
+    this.element_ = null;
+    this.scope_ = null;
   }
+
+  /**
+   * Fire the cancel callback and close the window.
+   *
+   * @export
+   */
+  cancel() {
+    if (this.scope_['cancelCallback']) {
+      this.scope_['cancelCallback']();
+    }
+
+    this.close_();
+  }
+
+  /**
+   * Fire the confirmation callback and close the window.
+   *
+   * @export
+   */
+  confirm() {
+    if (this.scope_['confirmCallback']) {
+      var value = this.scope_['confirmValue'];
+      if (value == null) {
+        // try looking for it on the transcluded content's scope
+        var transScope;
+        if (this.element_.find('.js-confirm-text').children().first().scope()) {
+          transScope = this.element_.find('.js-confirm-text').children().first().scope();
+        } else {
+          transScope = this.element_.find('.js-confirm-text').scope();
+        }
+        value = transScope['confirmValue'];
+      }
+
+      this.scope_['confirmCallback'](value);
+    }
+
+    this.close_();
+  }
+
+  /**
+   * Close the window.
+   *
+   * @private
+   */
+  close_() {
+    closeWindow(this.element_);
+  }
+
+  /**
+   * Handles key events
+   *
+   * @param {goog.events.KeyEvent} event
+   * @private
+   */
+  handleKeyEvent_(event) {
+    if (event.keyCode == KeyCodes.ESC) {
+      this.cancel();
+    }
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  launchConfirm
 };

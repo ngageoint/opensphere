@@ -1,5 +1,6 @@
 goog.provide('os.ui.filter.AdvancedFilterBuilderCtrl');
 goog.provide('os.ui.filter.advancedFilterBuilderDirective');
+
 goog.require('goog.array');
 goog.require('goog.async.Delay');
 goog.require('goog.dom');
@@ -11,7 +12,7 @@ goog.require('os.ui.Module');
 goog.require('os.ui.filter.Expression');
 goog.require('os.ui.filter.ui.ExpressionNode');
 goog.require('os.ui.filter.ui.GroupNode');
-goog.require('os.ui.window.confirmDirective');
+goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -300,7 +301,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.edit = function(opt_expr, opt_n
     scopeOptions['columns'].sort(os.ui.filter.AdvancedFilterBuilderCtrl.sortColumns);
   }
 
-  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+  os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
     confirm: edit && opt_node ? this.doEditExpr_.bind(this, opt_expr, opt_node) : this.doAddExpr_.bind(this, opt_expr),
     cancel: this.onEditComplete_.bind(this),
     prompt: '<expression expr="expr" columns="columns"></expression>',
