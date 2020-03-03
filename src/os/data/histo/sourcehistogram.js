@@ -341,10 +341,16 @@ os.data.histo.SourceHistogram.prototype.getCascadeValues = function() {
  * @param {Array<*>} value
  */
 os.data.histo.SourceHistogram.prototype.setCascadeValues = function(value) {
-  this.cascadeValues_ = value;
+  // Don't trigger everything re-rendering (usually again) if swapping from null to null;
+  // NOTE: Visible code that calls this are passing in a new Array with the old items, so the
+  // event will still be thrown and all listeners triggered.  It would be more accurate to
+  // run an item-by-item comparison, but that's too slow
+  if (this.cascadeValues_ != value) {
+    this.cascadeValues_ = value;
 
-  // notify cascaded histograms they need to update
-  this.dispatchEvent(os.data.histo.HistoEventType.CASCADE_CHANGE);
+    // notify cascaded histograms they need to update
+    this.dispatchEvent(os.data.histo.HistoEventType.CASCADE_CHANGE);
+  }
 };
 
 
