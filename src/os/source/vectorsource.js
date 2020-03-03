@@ -1254,15 +1254,23 @@ os.source.Vector.prototype.isEnabled = function() {
 os.source.Vector.prototype.setEnabled = function(value) {
   if (this.enabled_ !== value) {
     this.enabled_ = value;
-
-    if (value) {
-      this.refresh();
-    } else {
-      this.setLocked(false);
-      this.clear();
-    }
-
+    this.setEnabledInternal(value);
     this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.ENABLED, value, !value));
+  }
+};
+
+
+/**
+ * Perform internal source actions when the enabled state changes.
+ * @param {boolean} value The new value.
+ * @protected
+ */
+os.source.Vector.prototype.setEnabledInternal = function(value) {
+  if (value) {
+    this.refresh();
+  } else {
+    this.setLocked(false);
+    this.clear();
   }
 };
 

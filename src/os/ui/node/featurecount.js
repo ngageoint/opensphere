@@ -115,10 +115,6 @@ os.ui.node.FeatureCountCtrl.prototype.getTotal = function() {
         return '(Disabled)';
       }
 
-      if (!this.layer_.getLayerVisible()) {
-        return '(Hidden)';
-      }
-
       if (this.source_.isLoading()) {
         return '(Loading...)';
       }

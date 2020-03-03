@@ -519,13 +519,21 @@ os.layer.Vector.prototype.isEnabled = function() {
 os.layer.Vector.prototype.setEnabled = function(value) {
   if (this.enabled_ !== value) {
     this.enabled_ = value;
-
-    var source = this.getSource();
-    if (os.implements(source, os.source.ISource.ID)) {
-      /** @type {os.source.ISource} */ (source).setEnabled(value);
-    }
-
+    this.setEnabledInternal(value);
     this.dispatchEvent(new os.events.PropertyChangeEvent(os.layer.PropertyChange.ENABLED, value, !value));
+  }
+};
+
+
+/**
+ * Perform internal layer actions when the enabled state changes.
+ * @param {boolean} value The new value.
+ * @protected
+ */
+os.layer.Vector.prototype.setEnabledInternal = function(value) {
+  var source = this.getSource();
+  if (os.implements(source, os.source.ISource.ID)) {
+    /** @type {os.source.ISource} */ (source).setEnabled(value);
   }
 };
 
