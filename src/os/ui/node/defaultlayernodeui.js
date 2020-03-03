@@ -29,11 +29,6 @@ os.ui.node.DefaultLayerNodeUITemplate = `
           ng-class="{'text-success': nodeUi.filtered, 'c-glyph__off': !nodeUi.filtered}"></i>
     </span>
 
-    <span ng-if="nodeUi.canHide()" ng-click="nodeUi.toggleVisibility()">
-      <i class="fa fa-fw c-glyph" ng-class="nodeUi.isVisible() ? 'fa-eye' : 'fa-eye-slash'"
-          title="{{(nodeUi.isVisible() ? 'Hide' : 'Show') + ' the layer'}}"></i>
-    </span>
-
     <span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">
       <i class="fa fa-times fa-fw c-glyph" title="Remove the layer"></i>
     </span>
@@ -123,40 +118,6 @@ os.ui.node.DefaultLayerNodeUICtrl.prototype.getSource = function() {
   }
 
   return null;
-};
-
-
-/**
- * If the layer can be hidden.
- * @return {boolean}
- * @export
- */
-os.ui.node.DefaultLayerNodeUICtrl.prototype.canHide = function() {
-  var layer = this.getLayer();
-  return layer instanceof os.layer.Vector && layer.isEnabled();
-};
-
-
-/**
- * If the layer is visible.
- * @return {boolean}
- * @export
- */
-os.ui.node.DefaultLayerNodeUICtrl.prototype.isVisible = function() {
-  var layer = this.getLayer();
-  return layer != null && layer.getLayerVisible();
-};
-
-
-/**
- * Toggle layer visibility.
- * @export
- */
-os.ui.node.DefaultLayerNodeUICtrl.prototype.toggleVisibility = function() {
-  var layer = this.getLayer();
-  if (layer) {
-    layer.setLayerVisible(!layer.getLayerVisible());
-  }
 };
 
 
