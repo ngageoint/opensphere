@@ -407,7 +407,7 @@ os.layer.Vector.prototype.getFASet = function() {
 
   var source = this.getSource();
   if (source instanceof os.source.Vector) {
-    if (source.getColorModel()) {
+    if (source.hasColors()) {
       icons.push(os.ui.Icons.COLOR_MODEL);
     }
   }
@@ -464,7 +464,7 @@ os.layer.Vector.prototype.getIconSet = function() {
       icons.push(os.ui.Icons.LOCK);
     }
 
-    if (source.getColorModel()) {
+    if (source.hasColors()) {
       icons.push(os.ui.Icons.COLOR_MODEL);
     }
 
@@ -1049,7 +1049,7 @@ os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
       case os.action.EventType.UNLOCK:
         return isVector && source.isLockable() && source.isLocked();
       case os.action.EventType.RESET_COLOR:
-        return isVector && source.getColorModel() != null;
+        return isVector && source.hasColors();
       default:
         // ask the source if it supports the action
         return isVector && source.getSupportsAction(type);
