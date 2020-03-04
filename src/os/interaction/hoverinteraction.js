@@ -370,7 +370,7 @@ os.interaction.Hover.prototype.onSourceChange_ = function(e) {
 
     if (p === os.source.PropertyChange.HIGHLIGHTED_ITEMS) {
       var source = /** @type {os.source.ISource} */ (e.target);
-      this.highlight_(source.getHighlightedItems());
+      this.highlight_(source && source.getVisible() ? source.getHighlightedItems() : null);
     }
   }
 };
