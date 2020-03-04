@@ -6,7 +6,7 @@ const log = goog.require('goog.log');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const Metrics = goog.require('os.metrics.Metrics');
-const {launchConfirm} = goog.require('os.ui.window');
+const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
 const LOGGER_ = log.getLogger('PersistPlugin');
 
 const PERSISTENCE_SUCCEEDED = 'storage.persistence.succeeded';
@@ -37,13 +37,54 @@ class PersistPlugin extends AbstractPlugin {
     if (navigator.storage && navigator.storage.persist) {
       navigator.storage.persisted().then((result) => {
         if (!result) {
-          navigator.storage.persist().then((userDecision) => {
-            if (!userDecision) {
-              msgs.length = 0;
-              msgs.push('By declining persistent storage, your application settings may be automatically ' +
-                'reset when under storage pressure (the conditions for that event are browser dependent).');
-              this.log(msgs);
-              metrics.updateMetric(PERSISTENCE_DECLINED, 1);
+          const requestTime = Date.now();
+          navigator.storage.persist().then((persistResult) => {
+            if (!persistResult) {
+              const now = Date.now();
+
+              // this attempts to detect whether the user used a browser-provided prompt or if the request
+              // was automatically handled in some fashion by the browser
+              const userDecision = now - requestTime > 50;
+
+              if (userDecision) {
+                msgs.push(`By declining persistent storage, your application settings may be automatically
+                  reset when under storage pressure (the conditions for that event vary by browser).`);
+                this.log(msgs);
+                metrics.updateMetric(PERSISTENCE_DECLINED, 1);
+              } else if (browser.isChrome()) {
+                msgs.push(`Chrome automatically manages the persistent storage permission based on the following
+                  criteria (<a href="https://developers.google.com/web/updates/2016/06/persistent-storage"
+                  rel="noopener" target="_blank">source</a>):
+                  <ul><li>The site is bookmarked (and the user has 5 or less bookmarks)</li>
+                  <li>The site has high site engagement [not quantified]</li>
+                  <li>The site has been added to home screen</li>
+                  <li>The site has push notifications enabled</li></ul> Try bookmarking the application or
+                  allowing push notifications.`);
+
+                if (window.Notification) {
+                  if (Notification.permission === 'granted') {
+                    log.warning(LOGGER_, 'Notifications are allowed but persistence is not!');
+                    metrics.updateMetric(PERSISTENCE_DECLINED, 1);
+                  } else if (Notification.permission !== 'denied') {
+                    Notification.requestPermission((permission) => {
+                      if (permission === 'granted') {
+                        metrics.updateMetric(PERSISTENCE_SUCCEEDED, 1);
+                        metrics.updateMetric(PERSISTENCE_ACCEPTED, 1);
+                      } else {
+                        this.log(msgs);
+                        metrics.updateMetric(PERSISTENCE_DECLINED, 1);
+                      }
+                    });
+                  } else {
+                    log.warning(LOGGER_, 'Notifications were previously denied');
+                    metrics.updateMetric(PERSISTENCE_DECLINED, 1);
+                  }
+                }
+              } else {
+                msgs.push('Browser automatically declined persistence');
+                this.log(msgs);
+                metrics.updateMetric(PERSISTENCE_DECLINED, 1);
+              }
             } else {
               log.info(LOGGER_, 'User allowed (or browser automatically allowed) persistent storage');
               metrics.updateMetric(PERSISTENCE_ACCEPTED, 1);
@@ -57,17 +98,8 @@ class PersistPlugin extends AbstractPlugin {
       });
     } else {
       if (window.isSecureContext === false) {
-        msgs.push('The application is not being served in a secure context. Persistent storage permission ' +
-            'will be automatically declined.');
-      } else if (browser.isChrome()) {
-        msgs.push('Chrome automatically manages the persistent storage permission based on the following ' +
-          'criteria (<a href="https://developers.google.com/web/updates/2016/06/persistent-storage" ' +
-          'target="_blank">source</a>):' +
-          '<ul><li>The site is bookmarked (and the user has 5 or less bookmarks)</li>' +
-          '<li>The site has high site engagement [not quantified]</li>' +
-          '<li>The site has been added to home screen</li>' +
-          '<li>The site has push notifications enabled</li></ul> Try bookmarking the application or ' +
-            'allowing push notifications.');
+        msgs.push(`The application is not being served in a secure context. Persistent storage permission
+            will be automatically declined.`);
       }
 
       msgs.push('Your application settings may be automatically reset when under storage pressure.');
