@@ -992,27 +992,18 @@ os.source.Vector.prototype.setColumnAutoDetectLimit = function(value) {
  * does a fast-color on the Features directly.
  *
  * @param {Array<!ol.Feature>|null} items
- * @param {string|null} color rgba-color or clear with a null
+ * @param {string=} opt_color rgba-color or clear with a null or undefined (which colormodel treats differently)
  *
  * @suppress {accessControls}
  */
-os.source.Vector.prototype.setColor = function(items, color) {
-  if (!items || !color) return;
-
-  var cm = this.colorModel;
-  if (cm) {
-    cm.colorFeatures(items, color);
-  } else {
-    // colorModel.colorFeatures() is much more robust and relies on 2x os.feature.getColor() calls (which
-    // gives a lot of if...then fail-overs).  This is just a straight up manual override.
-    for (const item of items) {
-      var oldColor = item.values_[os.data.RecordField.COLOR];
-      item.values_[os.data.RecordField.COLOR] = color;
-      item.dispatchFeatureEvent(os.data.FeatureEventType.COLOR, color, oldColor);
-    }
+os.source.Vector.prototype.setColor = function(items, opt_color) {
+  if (!items) return;
+  if (!this.colorModel) this.setColorModel(this.createColorModel());
+  if (this.colorModel) {
+    this.colorModel.colorFeatures(items, opt_color);
+    this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.STYLE));
+    this.changed();
   }
-  this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.STYLE));
-  this.changed();
 };
 
 
@@ -1672,6 +1663,16 @@ os.source.Vector.prototype.createColorModel = function(opt_histogram, opt_gradie
 
 
 /**
+ * Check for a color model or manually colored items in the Source
+ *
+ * @return {boolean}
+ */
+os.source.Vector.prototype.hasColors = function() {
+  return (this.colorModel != null);
+};
+
+
+/**
  * Get the histogram used to color features on the source.
  *
  * @return {os.data.histo.ColorModel}
@@ -1689,6 +1690,7 @@ os.source.Vector.prototype.getColorModel = function() {
  * @param {os.data.histo.ColorModel} model
  */
 os.source.Vector.prototype.setColorModel = function(model) {
+  // update the color model
   if (model !== this.colorModel) {
     if (this.colorModel) {
       this.colorModel.dispose();
