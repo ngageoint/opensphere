@@ -36,9 +36,12 @@ os.config.AbstractSettingsInitializer = function() {
  * Kick off initialization of settings and bootstrap the application.
  */
 os.config.AbstractSettingsInitializer.prototype.init = function() {
-  this.registerStorages();
-  os.settings.listenOnce(os.config.EventType.INITIALIZED, this.onInitialized, false, this);
-  os.settings.init();
+  // IndexedDb is an async call
+  Modernizr.on('indexeddb', (result) => {
+    this.registerStorages();
+    os.settings.listenOnce(os.config.EventType.INITIALIZED, this.onInitialized, false, this);
+    os.settings.init();
+  });
 };
 
 
