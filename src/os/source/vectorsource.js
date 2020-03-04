@@ -2612,26 +2612,8 @@ os.source.Vector.prototype.setOverlayZIndex = function(value) {
  * @suppress {accessControls} To allow direct access to feature id.
  */
 os.source.Vector.prototype.dispatchAnimationFrame = function(opt_hide, opt_show) {
-  var changeMap = {};
-  if (opt_hide) {
-    for (var i = 0, n = opt_hide.length; i < n; i++) {
-      changeMap[opt_hide[i].id_] = false;
-    }
-  }
-
-  if (opt_show) {
-    for (var i = 0, n = opt_show.length; i < n; i++) {
-      var id = opt_show[i].id_;
-      if (id in changeMap && !this.tlc.getFade()) {
-        // only remove items if we are not fading anything out
-        delete changeMap[id];
-      } else {
-        changeMap[id] = true;
-      }
-    }
-  }
-
-  this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.ANIMATION_FRAME, changeMap));
+  this.dispatchEvent(new os.events.PropertyChangeEvent(
+      os.source.PropertyChange.ANIMATION_FRAME, opt_show, opt_hide));
 };
 
 
