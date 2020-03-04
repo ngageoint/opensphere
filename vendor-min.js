@@ -57,7 +57,11 @@ const tuiEditorResources = [
  * @param {string=} opt_optimizationLevel The optimization level.
  */
 const vendorMinify = function(resources, output, opt_optimizationLevel = 'SIMPLE_OPTIMIZATIONS') {
-  const fileList = resources.map((lib) => lib.scripts.map((script) => path.join(lib.source, script))).flat();
+  // Assemble script paths to include in the compilation.
+  const fileList = [];
+  resources.forEach((lib) => {
+    fileList.push(...lib.scripts.map((script) => path.join(lib.source, script)));
+  });
 
   compile({
     'js': fileList,
