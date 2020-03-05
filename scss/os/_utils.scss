@@ -156,6 +156,10 @@ $user-select-options: all, auto, text, none;
   text-decoration: line-through;
 }
 
+.u-text-prewrap {
+  white-space: pre-wrap;
+}
+
 // --------------------------------- Font Utilities --------------------------------- //
 .u-font-family-sans-serif {
   font-family: sans-serif;
