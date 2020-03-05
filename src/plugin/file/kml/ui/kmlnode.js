@@ -814,7 +814,7 @@ plugin.file.kml.ui.KMLNode.prototype.formatIcons = function() {
     }
 
     // add an info icon to launch feature info
-    icons.push('<i class="fa fa-info-circle fa-fw compact gold-icon pointer" title="Feature Info" ' +
+    icons.push('<i class="fa fa-info-circle fa-fw c-glyph" title="Feature Info" ' +
         'ng-click="itemAction(\'' + plugin.file.kml.ui.KMLNodeAction.FEATURE_INFO + '\')"></i>');
 
     return icons.join('');
