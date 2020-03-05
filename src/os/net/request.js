@@ -1,4 +1,5 @@
 goog.provide('os.net.Request');
+goog.provide('os.net.Request.STATUS_CODE_MSG');
 
 goog.require('goog.Promise');
 goog.require('goog.Uri');
@@ -218,6 +219,20 @@ os.net.Request.METHOD_DELETE = 'DELETE';
  * @type {string}
  */
 os.net.Request.METHOD_HEAD = 'HEAD';
+
+
+/**
+ * Status Code Messages
+ * @enum {string}
+ */
+os.net.Request.STATUS_CODE_MSG = {
+  502: 'Bad Gateway',
+  503: 'Service Unavailable',
+  400: 'Bad Request',
+  401: 'Unauthorized',
+  403: 'Forbidden',
+  404: 'Not Found'
+};
 
 
 /**
