@@ -21,7 +21,6 @@ goog.require('os.time.TimeRange');
 goog.require('os.ui.file.kml');
 goog.require('os.ui.window');
 goog.require('os.ui.window.confirmColumnDirective');
-goog.require('os.ui.window.confirmDirective');
 goog.require('os.ui.window.confirmTextDirective');
 
 

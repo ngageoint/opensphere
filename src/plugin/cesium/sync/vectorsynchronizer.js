@@ -345,23 +345,23 @@ class VectorSynchronizer extends CesiumSynchronizer {
           }
         }
         break;
-      case SourcePropertyChange.ANIMATION_FRAME:
+      case os.source.PropertyChange.ANIMATION_FRAME:
         // each frame fires a map of features that changed visibility
-        const showChangeMap = /** @type {Object<number, boolean>} */ (event.getNewValue());
-        if (showChangeMap) {
-          goog.object.forEach(showChangeMap,
-              /**
-               * @param {boolean} shown
-               * @param {number} id
-               * @this {VectorSynchronizer}
-               */
-              function(shown, id) {
-                const feature = source.getFeatureById(id);
-                if (feature) {
-                  this.updatePrimitiveVisibility_(feature, shown);
-                }
-              }, this);
+        const toHide = /** @type {?Array<!ol.Feature>} */ (event.getOldValue());
+        const toShow = /** @type {?Array<!ol.Feature>} */ (event.getNewValue());
+
+        if (toHide) {
+          for (let i = 0, n = toHide.length; i < n; i++) {
+            this.updatePrimitiveVisibility_(toHide[i], false);
+          }
         }
+
+        if (toShow) {
+          for (let i = 0, n = toShow.length; i < n; i++) {
+            this.updatePrimitiveVisibility_(toShow[i], true);
+          }
+        }
+
         break;
       case SourcePropertyChange.ALTITUDE:
         if (this.source instanceof os.source.Vector) {

@@ -4,6 +4,7 @@ goog.provide('plugin.file.kml.ui.kmlNodeUIDirective');
 goog.require('os.events');
 goog.require('os.ui.Module');
 goog.require('os.ui.slick.AbstractNodeUICtrl');
+goog.require('os.ui.window.ConfirmUI');
 goog.require('plugin.file.kml.cmd.KMLNodeRemove');
 
 
@@ -158,7 +159,7 @@ plugin.file.kml.ui.KMLNodeUICtrl.prototype.tryRemove = function() {
       var prompt = 'Are you sure you want to remove <strong>' + label + '</strong> from the tree? This will also ' +
           'remove all descendants.';
 
-      os.ui.window.launchConfirm(/** @type {!osx.window.ConfirmOptions} */ ({
+      os.ui.window.ConfirmUI.launchConfirm(/** @type {!osx.window.ConfirmOptions} */ ({
         confirm: this.removeNodeInternal.bind(this, node),
         prompt: prompt,
 

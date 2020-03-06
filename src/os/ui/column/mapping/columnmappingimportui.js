@@ -1,10 +1,12 @@
 goog.provide('os.ui.column.mapping.ColumnMappingImportUI');
+
 goog.require('goog.dom.xml');
 goog.require('goog.log');
 goog.require('os.column.ColumnMapping');
 goog.require('os.column.ColumnMappingManager');
 goog.require('os.ui.im.FileImportUI');
 goog.require('os.ui.window');
+goog.require('os.ui.window.ConfirmUI');
 
 
 
@@ -45,7 +47,7 @@ os.ui.column.mapping.ColumnMappingImportUI.prototype.launchUI = function(file, o
     var text = 'You are importing a new set of Column Associations. This action will <b>wipe out all existing ' +
         'Column Associations and replace them with the imported set</b><br><br>Are you sure you want to proceed?';
 
-    os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
       confirm: this.confirm_.bind(this, file),
       prompt: text,
       yesText: 'Clear and Import',

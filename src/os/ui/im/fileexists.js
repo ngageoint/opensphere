@@ -3,7 +3,7 @@ goog.provide('os.ui.im.FileExistsCtrl');
 goog.provide('os.ui.im.fileExistsDirective');
 
 goog.require('os.ui.Module');
-goog.require('os.ui.window.confirmDirective');
+goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -85,5 +85,5 @@ os.ui.im.launchFileExists = function(file, confirm) {
     'fileName': file.getFileName()
   };
 
-  os.ui.window.launchConfirm(confirmOptions, scopeOptions);
+  os.ui.window.ConfirmUI.launchConfirm(confirmOptions, scopeOptions);
 };

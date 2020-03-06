@@ -57,6 +57,28 @@ os.ui.menu.list.setup = function() {
         sort: 4
       }]
     }, {
+      label: os.ui.menu.feature.GroupLabel.COLOR,
+      type: os.ui.menu.MenuItemType.GROUP,
+      sort: 3,
+      children: [{
+        label: 'Color Selected',
+        eventType: os.action.EventType.COLOR_SELECTED,
+        tooltip: 'Choose a color for selected items',
+        icons: ['<i class="fa fa-fw fa-tint"></i>'],
+        handler: os.ui.menu.list.onColorSelected,
+        metricKey: os.metrics.FeatureList.COLOR_SELECTED,
+        beforeRender: os.ui.menu.list.visibleIfHasSelected,
+        sort: 0
+      }, {
+        label: 'Reset Color',
+        eventType: os.action.EventType.RESET_COLOR,
+        tooltip: 'Reset all records to the default layer color',
+        icons: ['<i class="fa fa-fw fa-tint"></i>'],
+        handler: os.ui.menu.list.onResetColor,
+        metricKey: os.metrics.FeatureList.RESET_COLOR,
+        sort: 10
+      }]
+    }, {
       label: os.ui.menu.feature.GroupLabel.TOOLS,
       type: os.ui.menu.MenuItemType.GROUP,
       sort: 10,
@@ -192,6 +214,47 @@ os.ui.menu.list.onSortSelected = function(event) {
   }
 };
 
+
+/**
+ * Handle the "Color Selected" menu event.
+ *
+ * @param {os.ui.menu.MenuEvent} event The menu event.
+ */
+os.ui.menu.list.onColorSelected = function(event) {
+  var context = event.getContext();
+  if (os.instanceOf(context, os.source.Vector.NAME)) {
+    var source = /** @type {!os.source.Vector} */ (context);
+    if (source && source.getSelectedItems()) {
+      var items = source.getSelectedItems();
+
+      // call the confirm window from this context so it doesn't appear in the wrong tab
+      os.ui.window.launchConfirmColor(function(color) {
+        source.setColor(items, os.style.toRgbaString(color));
+      }, os.feature.getFirstColor(items));
+    }
+  }
+};
+
+
+/**
+ * Handle the "Color Selected" menu event.
+ *
+ * @param {os.ui.menu.MenuEvent} event The menu event.
+ */
+os.ui.menu.list.onResetColor = function(event) {
+  var context = event.getContext();
+  if (os.instanceOf(context, os.source.Vector.NAME)) {
+    var source = /** @type {!os.source.Vector} */ (context);
+    if (source) {
+      var cm = source.getColorModel();
+      if (cm) {
+        cm.setColorMethod(os.data.histo.ColorMethod.RESET);
+      } else {
+        source.setColorModel(null);
+      }
+    }
+  }
+};
 
 /**
  * @param {os.source.Vector} context
