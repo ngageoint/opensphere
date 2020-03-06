@@ -325,7 +325,9 @@ os.metrics.FeatureList = {
   SORT_SELECTED: 'featureList.sortSelected',
   SELECT_ALL: 'featureList.selectAll',
   DESELECT_ALL: 'featureList.deselectAll',
-  INVERT_SELECTION: 'featureList.invertSelection'
+  INVERT_SELECTION: 'featureList.invertSelection',
+  COLOR_SELECTED: 'featureList.colorSelected',
+  RESET_COLOR: 'featureList.resetColor'
 };
 
 

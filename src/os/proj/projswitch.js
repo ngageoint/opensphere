@@ -19,6 +19,7 @@ goog.require('os.command.TransformVectors');
 goog.require('os.data.ActivateDescriptor');
 goog.require('os.data.LayerSyncDescriptor');
 goog.require('os.map');
+goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -334,7 +335,7 @@ os.proj.switch.SwitchProjection.prototype.prompt_ = function() {
     text += '<p>The 3D view does not support the new projection. The view will be switched to 2D.</p>';
   }
 
-  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+  os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
     confirm: this.performSwitch.bind(this, layers),
     cancel: this.cancelSwitch.bind(this),
     prompt: text,

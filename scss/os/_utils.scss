@@ -476,11 +476,20 @@ $u-parent-resizer-count: 0;
   color: yiq-contrast-color($body-bg, $dark, $light);
 }
 
-.u-bg-body-offset,
-.u-bg-body-offset__on-hover:hover {
+.u-bg-body-offset {
   background-color: $u-theme-variables--bg-offset;
 }
 
+.u-bg-body-offset__on-hover:hover {
+  background-color: $u-theme-variables--bg-offset;
+  border-color: lighten($primary, 10%) !important;
+}
+
+.u-bg-body-inset,
+.u-bg-body-inset__on-hover:hover {
+  background: yiq-contrast-color($body-bg, $light, darken($body-bg, 3%));
+  box-shadow: yiq-contrast-color($body-bg, rgba($black, .1), rgba($black, .4)) 0 .1rem .3rem inset;
+}
 
 .u-btn-body-offset {
   @include button-variant($u-theme-variables--bg-offset, $u-theme-variables--bg-offset);
@@ -713,5 +722,43 @@ $aspect-ratios: ((16, 9), (4, 3));
     right: -50px;
     top: auto;
     transform: rotate(-45deg);
+  }
+}
+
+
+// --------------------------------- Nav -----------------------------------//
+.u-nav.nav {
+  .u-nav__spacer {
+    .nav-item {
+      &.active:not(:first-child):not(.u-nav__no-margin) {
+        margin-top: 1rem !important;
+      }
+
+      &.active:not(.u-nav__no-margin) {
+        margin-bottom: 1rem !important;
+      }
+    }
+  }
+
+  .nav-item {
+    border: 1px solid transparent;
+
+    &.active {
+      background: $u-theme-variables--bg-offset;
+      border-color: $border-color;
+    }
+
+    &.active > .nav-link {
+      background: $table-head-bg;
+      color: color-yiq($table-head-bg);
+    }
+
+    .nav-link {
+      color: $link-color;
+
+      &:hover {
+        color: $body-color;
+      }
+    }
   }
 }

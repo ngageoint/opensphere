@@ -341,10 +341,16 @@ os.data.histo.SourceHistogram.prototype.getCascadeValues = function() {
  * @param {Array<*>} value
  */
 os.data.histo.SourceHistogram.prototype.setCascadeValues = function(value) {
-  this.cascadeValues_ = value;
+  // Don't trigger everything re-rendering (usually again) if swapping from null to null;
+  // NOTE: Visible code that calls this are passing in a new Array with the old items, so the
+  // event will still be thrown and all listeners triggered.  It would be more accurate to
+  // run an item-by-item comparison, but that's too slow
+  if (this.cascadeValues_ != value) {
+    this.cascadeValues_ = value;
 
-  // notify cascaded histograms they need to update
-  this.dispatchEvent(os.data.histo.HistoEventType.CASCADE_CHANGE);
+    // notify cascaded histograms they need to update
+    this.dispatchEvent(os.data.histo.HistoEventType.CASCADE_CHANGE);
+  }
 };
 
 
@@ -682,19 +688,17 @@ os.data.histo.SourceHistogram.prototype.setColorMethod = function(value, opt_bin
   if (this.source) {
     var colorModel = this.source.getColorModel();
     if (value > 0) {
-      var oldBinColors = {};
-      if (colorModel) {
-        oldBinColors = colorModel.getBinColors();
-      }
+      var set = !colorModel || (colorModel.getHistogram() != this);
 
-      if (!colorModel || colorModel.getHistogram() != this) {
+      if (set) {
         colorModel = this.source.createColorModel(this);
-        this.source.setColorModel(colorModel);
-        // we switched data sources, keep the old bin colors before assigning something new
-        colorModel.setManualBinColors(oldBinColors);
       }
 
       colorModel.setColorMethod(value, opt_bins, opt_color);
+
+      if (set) {
+        this.source.setColorModel(colorModel);
+      }
     } else {
       if (colorModel != null) {
         colorModel.setColorMethod(value, opt_bins, opt_color);

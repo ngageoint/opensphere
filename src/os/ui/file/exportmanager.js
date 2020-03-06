@@ -1,5 +1,6 @@
 goog.provide('os.ui.exportManager');
 goog.provide('os.ui.file.ExportManager');
+
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.Listenable');
 goog.require('goog.log');
@@ -8,7 +9,6 @@ goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
 goog.require('os.ex.ExportOptions');
 goog.require('os.ui.window');
-goog.require('os.ui.window.confirmDirective');
 
 
 
@@ -117,9 +117,13 @@ os.ui.file.ExportManager.prototype.registerPersistenceMethod = function(method) 
  */
 os.ui.file.ExportManager.prototype.getPersistenceMethods = function(opt_getAll) {
   var methods = [];
+  var enabledMethods = /** @type {Object<string, boolean>} */ (os.settings.get('ex.enabledPersisters', {}));
+
   for (var i = 0, n = this.persisters_.length; i < n; i++) {
-    if (this.persisters_[i].isSupported() || opt_getAll) {
-      methods.push(new this.persisters_[i].constructor());
+    var p = this.persisters_[i];
+    // return the method only if it is supported and not explicitly disabled in the map (or all are request)
+    if (p.isSupported() && enabledMethods[p.getLabel()] !== false || opt_getAll) {
+      methods.push(new p.constructor());
     }
   }
 
