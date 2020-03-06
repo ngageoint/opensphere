@@ -105,12 +105,12 @@ const createPolygonAsPolyline = (feature, geometry, style, context, result, opt_
 
   const outlineColor = getColor(style, context, GeometryInstanceId.GEOM_OUTLINE);
 
-  const appearance = new Cesium.PolylineMaterialAppearance({
+  const appearance = lineDash ? new Cesium.PolylineMaterialAppearance({
     material: Cesium.Material.fromType(Cesium.Material.PolylineDashType, {
       color: outlineColor,
       dashPattern: lineDash
     })
-  });
+  }) : new Cesium.PolylineColorAppearance();
 
 
   // Cesium doesn't make line width accessible once the primitive is loaded to the GPU, so we need to save it. also

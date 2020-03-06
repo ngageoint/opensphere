@@ -4,7 +4,6 @@ const olcsCore = goog.require('olcs.core');
 
 const {createGeometryInstance} = goog.require('plugin.cesium.primitive');
 const {GeometryInstanceId} = goog.require('plugin.cesium');
-const GeometryField = goog.require('os.geom.GeometryField');
 const {getColor, getLineWidthFromStyle} = goog.require('plugin.cesium.sync.style');
 const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
 const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
@@ -61,26 +60,38 @@ const createLinePrimitive = (positions, context, style, opt_type, opt_method) =>
   const type = opt_type || 'PolylineGeometry';
   opt_method = opt_method || os.interpolate.getMethod();
 
+  let geometryId = GeometryInstanceId.GEOM_OUTLINE;
+  let color = getColor(style, context, geometryId);
   const width = getLineWidthFromStyle(style);
-  const color = getColor(style, context, GeometryInstanceId.GEOM_OUTLINE);
   const lineDash = getDashPattern(style);
 
-  const appearance = new Cesium.PolylineMaterialAppearance({
-    material: Cesium.Material.fromType(Cesium.Material.PolylineDashType, {
-      color: color,
-      dashPattern: lineDash
-    })
-  });
+  let appearance;
+  if (type.endsWith('PolylineGeometry')) {
+    if (lineDash) {
+      appearance = new Cesium.PolylineMaterialAppearance({
+        material: Cesium.Material.fromType(Cesium.Material.PolylineDashType, {
+          color,
+          dashPattern: lineDash
+        })
+      });
+    } else {
+      appearance = new Cesium.PolylineColorAppearance();
+    }
+  } else {
+    geometryId = GeometryInstanceId.GEOM;
+    color = getColor(style, context, geometryId);
+    appearance = new Cesium.PerInstanceColorAppearance();
+  }
 
   // Handle both color and width
-  const outlineGeometry = new Cesium[type]({
+  const geometry = new Cesium[type]({
     positions: positions,
     vertexFormat: appearance.vertexFormat,
     arcType: opt_method === os.interpolate.Method.RHUMB ? Cesium.ArcType.RHUMB : Cesium.ArcType.GEODESIC,
     width: width
   });
 
-  const instance = createGeometryInstance(GeometryInstanceId.GEOM_OUTLINE, outlineGeometry, color);
+  const instance = createGeometryInstance(geometryId, geometry, color);
 
   const primitiveType = opt_type && opt_type.startsWith('Ground') ? Cesium.GroundPolylinePrimitive : Cesium.Primitive;
   const primitive = new primitiveType({
@@ -123,15 +134,6 @@ const getDashPattern = (style) => {
   const dashPattern = stroke != null ? stroke.getLineDash() : undefined;
   const id = dashPatternToOptions(dashPattern).id;
   return LINE_STYLE_OPTIONS[id];
-};
-
-
-/**
- * @param {Geometry} geometry
- * @return {boolean}
- */
-const isGeometryDirty = (geometry) => {
-  return !!geometry.get(GeometryField.DIRTY);
 };
 
 
@@ -246,7 +248,6 @@ exports = {
   createLineStringPrimitive,
   getDashPattern,
   getLineStringPositions,
-  isGeometryDirty,
   isDashChanging,
   isLineWidthChanging
 };

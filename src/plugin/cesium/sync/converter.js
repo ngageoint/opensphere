@@ -62,7 +62,6 @@ GeometryCollectionConverter.setConvertFunction(convertGeometry);
  * @type {Object<string, !IConverter>}
  */
 const dynamicConverters = {
-  ...converters,
   [GeometryType.LINE_STRING]: new DynamicLineStringConverter,
   [GeometryType.MULTI_LINE_STRING]: new MultiDynamicLineStringConverter
 };
@@ -82,7 +81,7 @@ const getConverter = (feature, geometry, style, context) => {
     return converters.label;
   }
 
-  if (feature instanceof DynamicFeature) {
+  if (feature instanceof DynamicFeature && geometryType in dynamicConverters) {
     return dynamicConverters[geometryType];
   }
 

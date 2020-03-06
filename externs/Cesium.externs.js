@@ -2465,10 +2465,10 @@ Cesium.optionsPerInstanceColorAppearance;
 
 /**
  * @constructor
- * @param {Object} object
+ * @param {Object=} opt_options
  * @extends {Cesium.Appearance}
  */
-Cesium.PerInstanceColorAppearance = function(object) {};
+Cesium.PerInstanceColorAppearance = function(opt_options) {};
 
 
 

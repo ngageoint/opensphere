@@ -4,7 +4,6 @@ goog.require('ol.proj');
 goog.require('ol.style.Fill');
 goog.require('ol.style.Style');
 goog.require('olcs.core');
-goog.require('os.geom.GeometryField');
 goog.require('os.interpolate');
 goog.require('os.layer.Vector');
 goog.require('os.map');
@@ -19,8 +18,8 @@ goog.require('test.plugin.cesium.sync.polygon');
 
 
 describe('plugin.cesium.sync.PolygonConverter', () => {
-  const {getRealScene, renderScene} = goog.module.get('test.plugin.cesium.scene');
-  const {testLine} = goog.module.get('test.plugin.cesium.sync.linestring');
+  const {getRealScene} = goog.module.get('test.plugin.cesium.scene');
+  const {getLineRetriever, testLine} = goog.module.get('test.plugin.cesium.sync.linestring');
   const {testPolygon} = goog.module.get('test.plugin.cesium.sync.polygon');
   const VectorContext = goog.module.get('plugin.cesium.VectorContext');
   const PolygonConverter = goog.module.get('plugin.cesium.sync.PolygonConverter');
@@ -32,6 +31,7 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
   let layer;
   let scene;
   let context;
+  let getLine;
 
   beforeEach(() => {
     enableWebGLMock();
@@ -41,6 +41,7 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
     layer = new os.layer.Vector();
     scene = getRealScene();
     context = new VectorContext(scene, layer, ol.proj.get(os.proj.EPSG4326));
+    getLine = getLineRetriever(context, scene);
   });
 
   afterEach(() => {
@@ -55,8 +56,7 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
       const result = polygonConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
       expect(context.primitives.length).toBe(1);
-      const polygonOutline = context.primitives.get(0);
-      testLine(polygonOutline);
+      testLine(getLine());
     });
 
     it('should create an outline with a given stroke style', () => {
@@ -65,14 +65,10 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
         width: 4
       }));
 
-      spyOn(Cesium, 'PolylineGeometry').andCallThrough();
-
       const result = polygonConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
-      expect(Cesium.PolylineGeometry.calls[0].args[0].width).toBe(style.getStroke().getWidth());
 
-      const polygonOutline = context.primitives.get(0);
-      testLine(polygonOutline, {
+      testLine(getLine(), {
         color: green,
         width: 4
       });
@@ -89,7 +85,7 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
       const result = polygonConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
 
-      testLine(context.primitives.get(0), {
+      testLine(getLine(), {
         color: green,
         width: 1,
         dashPattern: parseInt('1111111111110000', 2)
@@ -108,7 +104,7 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
       expect(context.primitives.length).toBe(2);
 
       for (let i = 0, n = context.primitives.length; i < n; i++) {
-        testLine(context.primitives.get(i));
+        testLine(getLine(context.primitives, i));
       }
     });
 
@@ -126,18 +122,17 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
       expect(result).toBe(true);
 
       expect(context.primitives.length).toBe(2);
+      const polygonFill = context.primitives.get(1);
+      polygonFill._asynchronous = false;
+      polygonFill._releaseGeometryInstances = false;
 
-      testLine(context.primitives.get(0), {
+      // getLine calls renderScene()
+      testLine(getLine(), {
         color: green,
         width: 4
       });
 
-      const polygonFill = context.primitives.get(1);
-      polygonFill._asynchronous = false;
-      polygonFill._releaseGeometryInstances = false;
-      renderScene(scene);
       expect(polygonFill.ready).toBe(true);
-
       testPolygon(polygonFill, {
         color: blue
       });
