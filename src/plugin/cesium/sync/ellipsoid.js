@@ -17,7 +17,6 @@ const VectorContext = goog.requireType('plugin.cesium.VectorContext');
  * @param {!Ellipse} geometry Ellipse geometry.
  * @param {!Style} style
  * @param {!VectorContext} context
- * @return {Cesium.PrimitiveCollection|Cesium.Primitive}
  */
 const createEllipsoid = (feature, geometry, style, context) => {
   const olCenter = geometry.getCenter();
@@ -42,9 +41,7 @@ const createEllipsoid = (feature, geometry, style, context) => {
     slicePartitions: 4
   });
 
-  const primitives = wrapFillAndOutline(fillGeometry, outlineGeometry, style, context, modelMatrix);
-
-  return primitives;
+  addFillAndOutline(feature, geometry, style, context, fillGeometry, outlineGeometry, modelMatrix);
 };
 
 
@@ -52,16 +49,15 @@ const createEllipsoid = (feature, geometry, style, context) => {
  * Create a primitive collection out of two Cesium ellipsoid geometries.
  * Only the OpenLayers style colors will be used.
  *
- * @param {!Cesium.Geometry} fill The fill geometry
- * @param {!Cesium.Geometry} outline The outline geometry
+ * @param {!Feature} feature
+ * @param {!Ellipse} geometry
  * @param {!Style} style The style
  * @param {!VectorContext} context The vector context
+ * @param {!Cesium.Geometry} fill The fill geometry
+ * @param {!Cesium.Geometry} outline The outline geometry
  * @param {!Cesium.Matrix4} modelMatrix
- * @return {!Cesium.PrimitiveCollection}
  */
-const wrapFillAndOutline = function(fill, outline, style, context, modelMatrix) {
-  const primitives = new Cesium.PrimitiveCollection();
-
+const addFillAndOutline = function(feature, geometry, style, context, fill, outline, modelMatrix) {
   const fillColor = new Cesium.Color(1, 1, 1, context.layer.getOpacity() * 0.3);
   const outlineColor = getColor(style, context, GeometryInstanceId.GEOM_OUTLINE);
   outlineColor.alpha *= 0.75;
@@ -69,12 +65,13 @@ const wrapFillAndOutline = function(fill, outline, style, context, modelMatrix) 
   // wireframe width is fixed to give 3D context without being invasive
   const wireWidth = 1;
 
-  primitives.add(createColoredPrimitive(fill, fillColor, undefined, createEllipsoidInstance,
-      undefined, modelMatrix));
-  primitives.add(createColoredPrimitive(outline, outlineColor, wireWidth, createEllipsoidInstance,
-      undefined, modelMatrix));
+  context.addPrimitive(
+      createColoredPrimitive(fill, fillColor, undefined, createEllipsoidInstance, undefined, modelMatrix),
+      feature, geometry);
 
-  return primitives;
+  context.addPrimitive(
+      createColoredPrimitive(outline, outlineColor, wireWidth, createEllipsoidInstance, undefined, modelMatrix),
+      feature, geometry);
 };
 
 

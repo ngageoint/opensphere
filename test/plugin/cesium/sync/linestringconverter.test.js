@@ -18,8 +18,8 @@ goog.require('test.plugin.cesium.sync.linestring');
 
 
 describe('plugin.cesium.sync.LineStringConverter', () => {
-  const {getRealScene, renderScene} = goog.module.get('test.plugin.cesium.scene');
-  const {testLine} = goog.module.get('test.plugin.cesium.sync.linestring');
+  const {getRealScene} = goog.module.get('test.plugin.cesium.scene');
+  const {getLineRetriever, testLine} = goog.module.get('test.plugin.cesium.sync.linestring');
   const VectorContext = goog.module.get('plugin.cesium.VectorContext');
   const LineStringConverter = goog.module.get('plugin.cesium.sync.LineStringConverter');
   const lineStringConverter = new LineStringConverter();
@@ -29,6 +29,7 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
   let style;
   let scene;
   let context;
+  let getLine;
 
   beforeEach(() => {
     enableWebGLMock();
@@ -38,6 +39,7 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
     layer = new os.layer.Vector();
     scene = getRealScene();
     context = new VectorContext(scene, layer, ol.proj.get(os.proj.EPSG4326));
+    getLine = getLineRetriever(context, scene);
   });
 
   const originalProjection = os.map.PROJECTION;
@@ -49,12 +51,13 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
   const blue = 'rgba(0,0,255,1)';
   const green = 'rgba(0,255,0,1)';
 
+
   describe('create', () => {
     it('should create a line', () => {
       const result = lineStringConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
       expect(context.primitives.length).toBe(1);
-      testLine(context.primitives.get(0));
+      testLine(getLine());
     });
 
     it('should create a line with a given stroke style', () => {
@@ -63,11 +66,9 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
         width: 4
       }));
 
-      spyOn(Cesium, 'PolylineGeometry').andCallThrough();
       const result = lineStringConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
-      testLine(context.primitives.get(0), {color: green, width: 4});
-      expect(Cesium.PolylineGeometry.calls[0].args[0].width).toBe(style.getStroke().getWidth());
+      testLine(getLine(), {color: green, width: 4});
     });
 
     it('should create a dashed line if the stroke contains a dash', () => {
@@ -80,7 +81,7 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
 
       const result = lineStringConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
-      testLine(context.primitives.get(0), {
+      testLine(getLine(), {
         color: green,
         dashPattern: parseInt('1111111111110000', 2),
         width: 1
@@ -88,22 +89,27 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
     });
 
     it('should use the correct classes when the altitude mode is clampToGround', () => {
-      geometry.set(os.data.RecordField.ALTITUDE_MODE, os.webgl.AltitudeMode.CLAMP_TO_GROUND);
+      let initialized = false;
+      Cesium.GroundPolylinePrimitive.initializeTerrainHeights().then(() => initialized = true);
+      waitsFor(() => initialized, 'terrain heights to initialize');
 
-      style.setStroke(new ol.style.Stroke({
-        color: green,
-        width: 1
-      }));
+      runs(() => {
+        geometry.set(os.data.RecordField.ALTITUDE_MODE, os.webgl.AltitudeMode.CLAMP_TO_GROUND);
 
-      const result = lineStringConverter.create(feature, geometry, style, context);
-      expect(result).toBe(true);
+        style.setStroke(new ol.style.Stroke({
+          color: green,
+          width: 1
+        }));
 
-      expect(context.groundPrimitives.length).toBe(1);
-      testLine(context.groundPrimitives.get(0), {
-        color: green,
-        width: 1,
-        primitiveClass: Cesium.GroundPolylinePrimitive,
-        geometryClass: Cesium.GroundPolylineGeometry
+        const result = lineStringConverter.create(feature, geometry, style, context);
+        expect(result).toBe(true);
+        expect(context.groundPrimitives.length).toBe(1);
+        testLine(getLine(context.groundPrimitives), {
+          color: green,
+          width: 1,
+          primitiveClass: Cesium.GroundPolylinePrimitive,
+          geometryClass: Cesium.GroundPolylineGeometry
+        });
       });
     });
 
@@ -112,14 +118,17 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
       geometry.set('extrude', true);
 
       style.setStroke(new ol.style.Stroke({
-        color: green,
+        color: blue,
         width: 1
+      }));
+
+      style.setFill(new ol.style.Fill({
+        color: green
       }));
 
       const result = lineStringConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
-
-      testLine(context.primitives.get(0), {
+      testLine(getLine(context.primitives), {
         color: green,
         width: 1,
         geometryClass: Cesium.WallGeometry
@@ -132,8 +141,12 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
       geometry.set(os.data.RecordField.ALTITUDE_MODE, os.webgl.AltitudeMode.CLAMP_TO_GROUND);
 
       style.setStroke(new ol.style.Stroke({
-        color: green,
+        color: blue,
         width: 1
+      }));
+
+      style.setFill(new ol.style.Fill({
+        color: green
       }));
 
       const result = lineStringConverter.create(feature, geometry, style, context);
@@ -141,24 +154,15 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
 
       expect(context.primitives.length).toBe(1);
 
-      testLine(context.primitives.get(0), {
+      testLine(getLine(), {
         color: green,
         width: 1,
         geometryClass: Cesium.WallGeometry
       });
-
-      expect(() => {
-        renderScene(scene);
-      }).not.toThrow();
     });
   });
 
   describe('update', () => {
-    it('should not update dirty geometries', () => {
-      geometry.set(os.geom.GeometryField.DIRTY, true);
-      expect(lineStringConverter.update(feature, geometry, style, context, null)).toBe(false);
-    });
-
     it('should not update changing line widths', () => {
       style.setStroke(new ol.style.Stroke({
         color: blue,
@@ -204,16 +208,12 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
       let result = lineStringConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
 
-      const linestring = context.primitives.get(0);
-      linestring._asynchronous = false;
-      renderScene(scene);
-
+      const linestring = getLine();
       expect(linestring.ready).toBe(true);
 
       testLine(linestring, {
         color: green,
-        width: 4,
-        cleanedGeometryInstances: true
+        width: 4
       });
 
       style.getStroke().setColor(blue);
@@ -224,8 +224,7 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
 
       testLine(linestring, {
         color: blue,
-        width: 4,
-        cleanedGeometryInstances: true
+        width: 4
       });
 
       expect(linestring.dirty).toBe(false);

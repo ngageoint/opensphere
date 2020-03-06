@@ -1,6 +1,6 @@
 goog.module('plugin.cesium.sync.convert');
 
-const {convertGeometry} = goog.require('plugin.cesium.sync.converter');
+const converter = goog.require('plugin.cesium.sync.converter');
 
 const Feature = goog.requireType('ol.Feature');
 const OLVectorLayer = goog.requireType('ol.layer.Vector');
@@ -23,7 +23,7 @@ const convert = (feature, resolution, context) => {
       if (style) {
         const geometry = style.getGeometryFunction()(feature);
         if (geometry) {
-          convertGeometry(feature, geometry, style, context);
+          converter.convertGeometry(feature, geometry, style, context);
         }
       }
     }

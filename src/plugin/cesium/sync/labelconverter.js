@@ -4,6 +4,7 @@ goog.require('goog.asserts');
 goog.require('goog.string');
 
 const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
+const GeometryType = goog.require('ol.geom.GeometryType');
 const {GeometryInstanceId} = goog.require('plugin.cesium');
 const {getColor, getLineWidthFromStyle} = goog.require('plugin.cesium.sync.style');
 const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
@@ -12,6 +13,8 @@ const {isPrimitiveShown} = goog.require('plugin.cesium.primitive');
 const olcsCore = goog.require('olcs.core');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
+const MultiPoint = goog.requireType('ol.geom.MultiPoint');
+const Point = goog.requireType('ol.geom.Point');
 const Text = goog.requireType('ol.style.Text');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
 
@@ -124,6 +127,11 @@ const updatePosition = (label, geometry) => {
 
 
 /**
+ * @type {!Array<number>}
+ */
+const scratchCoord = [];
+
+/**
  * Get the label position for a geometry.
  *
  * @param {!ol.geom.Geometry} geometry The geometry.
@@ -132,10 +140,17 @@ const updatePosition = (label, geometry) => {
 const getLabelPosition = (geometry) => {
   const geometryType = geometry.getType();
   switch (geometryType) {
-    case ol.geom.GeometryType.POINT:
-      return /** @type {!ol.geom.Point} */ (geometry).getFlatCoordinates().slice();
-    case ol.geom.GeometryType.MULTI_POINT:
-      return /** @type {!ol.geom.MultiPoint} */ (geometry).getFlatCoordinates().slice(0, 2);
+    case GeometryType.POINT:
+    case GeometryType.MULTI_POINT:
+      const geom = /** @type {Point|MultiPoint} */ (geometry);
+      const flats = geom.getFlatCoordinates();
+      const stride = geom.getStride();
+
+      for (let i = 0, n = stride; i < n; i++) {
+        scratchCoord[i] = flats[i];
+      }
+
+      return scratchCoord;
     default:
       return ol.extent.getCenter(geometry.getExtent());
   }

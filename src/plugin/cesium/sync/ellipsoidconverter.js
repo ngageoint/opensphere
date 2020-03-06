@@ -12,8 +12,7 @@ class EllipsoidConverter extends PolygonConverter {
    * @inheritDoc
    */
   create(feature, geometry, style, context) {
-    const primitive = createEllipsoid(feature, geometry, style, context);
-    context.addPrimitive(primitive, feature, geometry);
+    createEllipsoid(feature, geometry, style, context);
     return true;
   }
 }

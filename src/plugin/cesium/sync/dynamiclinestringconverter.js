@@ -1,7 +1,6 @@
 goog.module('plugin.cesium.sync.DynamicLineStringConverter');
 
 const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
-const {shouldUpdatePrimitive} = goog.require('plugin.cesium.primitive');
 const {createPolyline, updatePolyline} = goog.require('plugin.cesium.sync.DynamicLineString');
 
 /**
@@ -21,10 +20,6 @@ class DynamicLineStringConverter extends BaseConverter {
    * @inheritDoc
    */
   update(feature, geometry, style, context, primitive) {
-    if (!shouldUpdatePrimitive(feature, geometry, style, context, primitive)) {
-      return false;
-    }
-
     updatePolyline(feature, geometry, style, context, primitive);
     return true;
   }

@@ -34,6 +34,8 @@ const getRealScene = () => {
     creditViewport
   });
 
+  scene.terrainProvider = new Cesium.EllipsoidTerrainProvider();
+
   fixContextLimits();
   return scene;
 };
@@ -47,7 +49,12 @@ const renderScene = (scene) => {
   }
 };
 
-window.CESIUM_BASE_URL = window.location.toString();
+for (const key in __karma__.files) {
+  if (key.endsWith('/Cesium.js')) {
+    window.CESIUM_BASE_URL = key.replace('/Cesium.js', '/');
+    break;
+  }
+}
 
 exports = {
   getFakeScene,

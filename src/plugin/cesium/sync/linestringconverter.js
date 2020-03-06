@@ -2,8 +2,7 @@ goog.module('plugin.cesium.sync.LineStringConverter');
 
 const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
 const {updatePrimitive} = goog.require('plugin.cesium.primitive');
-const {createLineStringPrimitive, isGeometryDirty, isLineWidthChanging, isDashChanging} =
-  goog.require('plugin.cesium.sync.linestring');
+const {createLineStringPrimitive, isLineWidthChanging, isDashChanging} = goog.require('plugin.cesium.sync.linestring');
 
 /**
  * Converter for LineStrings
@@ -22,9 +21,7 @@ class LineStringConverter extends BaseConverter {
    * @inheritDoc
    */
   update(feature, geometry, style, context, primitive) {
-    if (isGeometryDirty(geometry) ||
-        isLineWidthChanging(primitive, style) ||
-        isDashChanging(primitive, style)) {
+    if (isLineWidthChanging(primitive, style) || isDashChanging(primitive, style)) {
       return false;
     }
 

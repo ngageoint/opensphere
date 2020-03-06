@@ -24,6 +24,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      {pattern: '.build/gcc-defines-test-debug.js', watched: false, included: true, served: true},
       {pattern: '.build/modernizr.js', watched: false, included: true, served: true},
       {pattern: '.build/xml-lexer.min.js', watched: false, included: true, served: true},
       {pattern: '.build/webgl-mock.min.js', watched: false, included: true, served: true},
@@ -42,6 +43,7 @@ module.exports = function(config) {
       {pattern: resolver.resolveModulePath('crossfilter2/crossfilter.min.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('papaparse/papaparse.min.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('cesium/Build/CesiumUnminified/Cesium.js', __dirname), watched: false, included: true, served: true},
+      {pattern: resolver.resolveModulePath('cesium/Build/CesiumUnminified/**/*', __dirname), watched: false, included: false, served: true},
       {pattern: resolver.resolveModulePath('xmllint/xmllint.js', __dirname), watched: false, included: true, served: true},
       {pattern: 'vendor/geomag/WMM.txt', watched: false, included: false, served: true},
       {pattern: 'vendor/geomag/cof2Obj.js', watched: false, included: true, served: true},

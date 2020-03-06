@@ -59,7 +59,7 @@ class GeometryCollectionConverter extends BaseConverter {
  */
 const convert = (feature, geometry, style, context) => {
   const geoms = geometry.getGeometriesArray();
-  if (convertFunction) {
+  if (convertFunction && geoms) {
     for (let i = 0, n = geoms.length; i < n; i++) {
       const geom = geoms[i];
       if (geom) {
