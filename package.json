@@ -298,7 +298,7 @@
     "blob-polyfill": "^2.0.20171115",
     "bootstrap": "4.3.1",
     "bootswatch": "4.3.1",
-    "cesium": "1.65",
+    "cesium": "1.67",
     "compass-mixins": "^0.12.10",
     "core-js-bundle": "3.6.4",
     "crossfilter2": "1.4.8",

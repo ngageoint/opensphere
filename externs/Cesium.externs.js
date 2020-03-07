@@ -3241,7 +3241,7 @@ Cesium.Resource.prototype._makeRequest = function(options) {};
 Cesium.Resource._Implementations = {};
 
 /**
- * @type {function(string, boolean, Cesium.Promise)}
+ * @type {function(Cesium.ResourceFetchOptions, boolean, Cesium.Promise, boolean, boolean)}
  */
 Cesium.Resource._Implementations.createImage;
 
