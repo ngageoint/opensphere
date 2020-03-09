@@ -127,7 +127,9 @@ os.config.DisplaySettingsCtrl = function($scope) {
         'fog or reducing density may degrade application performance.',
     'sky': 'Show the sky/stars around the 3D globe.',
     'sunlight': 'Light the 3D scene with the Sun.',
-    'terrain': 'Show terrain on the 3D globe.'
+    'terrain': 'Show terrain on the 3D globe.',
+    'help2D': 'Maximum feature count for 2D mode. Valid range: 100-50,000.',
+    'help3D': 'Maximum feature count for 3D mode. Valid range: 100-2,000,000'
   };
 
   /**
@@ -207,6 +209,18 @@ os.config.DisplaySettingsCtrl = function($scope) {
    */
   this['terrainEnabled'] = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.ENABLE_TERRAIN, false));
 
+  /**
+   * The max feature count for 2D.
+   * @type {number}
+   */
+  this['maxFeatures2D'] = /** @type {number} */ (os.settings.get('maxFeatures.2d', false));
+
+  /**
+   * The max feature count for 3D. This is initialized to a value and then updated when checking for 3D support.
+   * @type {number}
+   */
+  this['maxFeatures3D'] = 150000;
+
   $scope.$watch('display.fogEnabled', this.updateFog.bind(this));
   $scope.$watch('display.fogDensity', this.updateFog.bind(this));
 
@@ -281,19 +295,16 @@ os.config.DisplaySettingsCtrl.prototype.getDefaultCameraState_ = function() {
  * @private
  */
 os.config.DisplaySettingsCtrl.prototype.update3DSupport_ = function() {
-  this['show3DSettings'] = os.MapContainer.getInstance().is3DSupported();
+  const map = os.MapContainer.getInstance();
+  this['show3DSettings'] = map.is3DSupported();
 
-  // set browser-specific scope options
+  // update the 3D max feature count
   if (this['show3DSettings']) {
-    this.scope_['showIEHelp'] = false;
-    this.scope_['showFFHelp'] = false;
-    this.scope_['showGCHelp'] = false;
-  } else if (goog.userAgent.IE && goog.userAgent.VERSION == 11) {
-    this.scope_['showIEHelp'] = true;
-  } else if (goog.userAgent.GECKO && goog.userAgent.isVersionOrHigher(10)) {
-    this.scope_['showFFHelp'] = true;
-  } else if (goog.userAgent.WEBKIT && goog.userAgent.isVersionOrHigher(28)) {
-    this.scope_['showGCHelp'] = true;
+    const renderer = map.getWebGLRenderer();
+
+    if (renderer) {
+      this['maxFeatures3D'] = renderer.getMaxFeatureCount();
+    }
   }
 };
 
@@ -521,4 +532,22 @@ os.config.DisplaySettingsCtrl.prototype.updateSunlight = function() {
  */
 os.config.DisplaySettingsCtrl.prototype.updateTerrain = function() {
   this.updateSetting_(os.config.DisplaySetting.ENABLE_TERRAIN, this['terrainEnabled']);
+};
+
+
+/**
+ * Update the max feature count.
+ * @param {boolean} update3D Whether to update 3D or 2D.
+ *
+ * @export
+ */
+os.config.DisplaySettingsCtrl.prototype.updateMaxFeatures = function(update3D) {
+  if (update3D) {
+    const renderer = os.MapContainer.getInstance().getWebGLRenderer();
+    if (renderer && this['maxFeatures3D'] != null) {
+      renderer.setMaxFeatureCount(this['maxFeatures3D']);
+    }
+  } else if (this['maxFeatures2D'] != null) {
+    os.settings.set('maxFeatures.2d', this['maxFeatures2D']);
+  }
 };
