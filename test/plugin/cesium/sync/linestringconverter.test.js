@@ -199,6 +199,38 @@ describe('plugin.cesium.sync.LineStringConverter', () => {
       expect(result).toBe(false);
     });
 
+    it('should not update if adding a dash pattern', () => {
+      const stroke = new ol.style.Stroke({
+        color: green,
+        width: 1
+      });
+      style.setStroke(stroke);
+
+      lineStringConverter.create(feature, geometry, style, context);
+
+      const linestring = context.primitives.get(0);
+      stroke.setLineDash([8, 8]);
+
+      const result = lineStringConverter.update(feature, geometry, style, context, linestring);
+      expect(result).toBe(false);
+    });
+
+    it('should not update if removing a dash pattern', () => {
+      const stroke = new ol.style.Stroke({
+        color: green,
+        width: 1
+      });
+      stroke.setLineDash([8, 8]);
+      style.setStroke(stroke);
+
+      lineStringConverter.create(feature, geometry, style, context);
+
+      const linestring = context.primitives.get(0);
+      stroke.setLineDash(null);
+      const result = lineStringConverter.update(feature, geometry, style, context, linestring);
+      expect(result).toBe(false);
+    });
+
     it('should update lines with new colors', () => {
       style.setStroke(new ol.style.Stroke({
         color: green,

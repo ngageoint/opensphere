@@ -187,7 +187,7 @@ const isDashPatternChanging = (primitive, dashPattern) => {
     return primitive.appearance.material.uniforms.dashPattern != dashPattern;
   }
 
-  return false;
+  return dashPattern != null;
 };
 
 
