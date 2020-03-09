@@ -34,6 +34,11 @@
     "defineRoots": {
       "os.APP_ROOT": "./"
     },
+    "electron": {
+      "preload": [
+        "./scripts/electron/preload.js"
+      ]
+    },
     "gcc": {
       "language_in": "ECMASCRIPT_2018",
       "conformance_configs": "conformance_config.textproto",
