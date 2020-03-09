@@ -67,6 +67,7 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
 
       const result = polygonConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
+      expect(context.primitives.length).toBe(1);
 
       testLine(getLine(), {
         color: green,
@@ -136,6 +137,54 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
       testPolygon(polygonFill, {
         color: blue
       });
+    });
+  });
+
+  describe('update', () => {
+    it('should not update if a fill is being added', () => {
+      style.setStroke(new ol.style.Stroke({
+        color: green,
+        width: 4
+      }));
+
+      const createResult = polygonConverter.create(feature, geometry, style, context);
+      expect(createResult).toBe(true);
+
+      const polygon = polygonConverter.retrieve(feature, geometry, style, context);
+      expect(polygon).toBeTruthy();
+      expect(context.primitives.length).toBe(1);
+
+      style.setFill(new ol.style.Fill({
+        color: blue
+      }));
+
+      expect(polygonConverter.update(feature, geometry, style, context, polygon)).toBe(false);
+    });
+
+    it('should not update the dirty flag for the fill if the fill is being removed', () => {
+      style.setStroke(new ol.style.Stroke({
+        color: green,
+        width: 4
+      }));
+
+      style.setFill(new ol.style.Fill({
+        color: blue
+      }));
+
+      const createResult = polygonConverter.create(feature, geometry, style, context);
+      expect(createResult).toBe(true);
+
+      const polygon = polygonConverter.retrieve(feature, geometry, style, context);
+      expect(polygon).toBeTruthy();
+      expect(context.primitives.length).toBe(2);
+
+      style.setFill(null);
+      polygon[0].dirty = true;
+      polygon[1].dirty = true;
+
+      expect(polygonConverter.update(feature, geometry, style, context, polygon)).toBe(true);
+      expect(polygon[0].dirty).toBe(false);
+      expect(polygon[1].dirty).toBe(true);
     });
   });
 });
