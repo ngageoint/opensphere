@@ -25,6 +25,7 @@ goog.require('plugin.cesium.sync.RootSynchronizer');
 plugin.cesium.CesiumRenderer = function() {
   plugin.cesium.CesiumRenderer.base(this, 'constructor');
   this.log = plugin.cesium.CesiumRenderer.LOGGER_;
+  this.maxFeaturesKey = 'maxFeatures.cesium';
 
   /**
    * The Openlayers/Cesium synchronizer.
