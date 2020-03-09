@@ -135,6 +135,7 @@ goog.require('os.ui.state.menu');
 goog.require('os.ui.timelinePanelDirective');
 goog.require('os.ui.urlDragDropDirective');
 goog.require('os.ui.user.settings.LocationSettings');
+goog.require('os.ui.window.ConfirmUI');
 goog.require('os.url');
 goog.require('plugin.arc.ArcPlugin');
 goog.require('plugin.area.AreaPlugin');
@@ -509,6 +510,8 @@ os.MainCtrl.prototype.initXt = function() {
  * @inheritDoc
  */
 os.MainCtrl.prototype.addPlugins = function() {
+  os.MainCtrl.base(this, 'addPlugins');
+
   // Only "os" application plugins are added here
   os.ui.pluginManager.addPlugin(new plugin.cesium.Plugin());
   os.ui.pluginManager.addPlugin(plugin.im.action.feature.Plugin.getInstance());
@@ -1041,7 +1044,7 @@ os.MainCtrl.prototype.suggestOtherBrowser = function() {
     'ng-model="mainCtrl.showRedirectChecked" class="form-check-input">Stop showing this message</label></div>';
     var text = os.MainCtrl.UNSUPPORTED_BROWSER_TEXT + link + ignore;
 
-    os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
       confirm: this.confirm_.bind(this),
       cancel: os.MainCtrl.unsupportedBrowserCancelCallback,
       prompt: text,

@@ -15,7 +15,7 @@ goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
 goog.require('os.ui.menu.common');
 goog.require('os.ui.window');
-goog.require('os.ui.window.confirmDirective');
+goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -323,7 +323,7 @@ os.ui.menu.layer.onDescription_ = function(event) {
     windowOptions: windowOptions
   });
 
-  os.ui.window.launchConfirm(confirmOptions);
+  os.ui.window.ConfirmUI.launchConfirm(confirmOptions);
 };
 
 
