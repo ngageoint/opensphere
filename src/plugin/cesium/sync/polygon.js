@@ -112,7 +112,6 @@ const createPolygonAsPolyline = (feature, geometry, style, context, result, opt_
     })
   }) : new Cesium.PolylineColorAppearance();
 
-
   // Cesium doesn't make line width accessible once the primitive is loaded to the GPU, so we need to save it. also
   // save if the outline needs to be displayed, so we know to recreate the primitive if that changes.
   const heightReference = getHeightReference(context.layer, feature, geometry, opt_index);
@@ -142,17 +141,18 @@ const createPolygonAsPolyline = (feature, geometry, style, context, result, opt_
   }
 
   if (style.getFill()) {
-    const fillGeometry = new Cesium.PolygonGeometry({
-      polygonHierarchy: hierarchy,
-      perPositionHeight: true
-    });
-
     const fillColor = getColor(style, context, GeometryInstanceId.GEOM);
-    const p = createColoredPrimitive(fillGeometry, fillColor, undefined, undefined,
-        heightReference === Cesium.HeightReference.CLAMP_TO_GROUND ? Cesium.GroundPrimitive : Cesium.Primitive);
-    // hide the primitive when alpha is 0 so it isn't picked
-    p.show = fillColor.alpha > 0;
-    result.push(p);
+
+    if (fillColor.alpha > 0) {
+      const fillGeometry = new Cesium.PolygonGeometry({
+        polygonHierarchy: hierarchy,
+        perPositionHeight: true
+      });
+
+      const p = createColoredPrimitive(fillGeometry, fillColor, undefined, undefined,
+          heightReference === Cesium.HeightReference.CLAMP_TO_GROUND ? Cesium.GroundPrimitive : Cesium.Primitive);
+      result.push(p);
+    }
   }
 
   return result;
@@ -336,6 +336,8 @@ const createPolygonHierarchy = (geometry, opt_flats, opt_offset, opt_ringEnds, o
   // don't create a polygon if we don't have an outer ring
   return positions ? new Cesium.PolygonHierarchy(positions, holes) : null;
 };
+
+
 
 exports = {
   createAndAddPolygon,
