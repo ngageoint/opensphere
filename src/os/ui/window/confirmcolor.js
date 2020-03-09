@@ -4,7 +4,7 @@ goog.provide('os.ui.window.confirmColorDirective');
 goog.require('os.ui.Module');
 goog.require('os.ui.color.colorPickerDirective');
 goog.require('os.ui.window');
-goog.require('os.ui.window.confirmDirective');
+goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -63,7 +63,7 @@ os.ui.window.launchConfirmColor = function(confirm, opt_default) {
     'no-scroll': 'true'
   };
 
-  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+  os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
     confirm: confirm,
     confirmValue: opt_default || '#ffffff',
     prompt: '<confirmcolor></confirmcolor>',

@@ -1,12 +1,51 @@
-goog.provide('plugin.file.kml.KMLModelParser');
+goog.module('plugin.file.kml.model');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.geom.Point');
+const Point = goog.require('ol.geom.Point');
+const AltitudeMode = goog.require('os.webgl.AltitudeMode');
+
 
 /**
- * Constructor.
- * @constructor
+ * @typedef {{
+ *   collada: string,
+ *   images: !Object<string, string>,
+ *
+ *   heading: number,
+ *   tilt: number,
+ *   roll: number,
+ *
+ *   scaleX: number,
+ *   scaleY: number,
+ *   scaleZ: number
+ * }}
  */
-plugin.file.kml.KMLModelParser = function() {};
+let KMLModel;
+
+
+/**
+ * Field used to store Collada models on features.
+ * @type {string}
+ */
+const MODEL_FIELD = 'Model';
+
+
+/**
+ * Get a default KML model object.
+ * @return {KMLModel}
+ */
+const getDefaultModel = () => ({
+  collada: '',
+  images: {},
+
+  heading: 0,
+  tilt: 0,
+  roll: 0,
+
+  scaleX: 1,
+  scaleY: 1,
+  scaleZ: 1
+});
+
 
 /**
  * Parses a KML model element that may be contained in a placemark element.
@@ -14,81 +53,79 @@ plugin.file.kml.KMLModelParser = function() {};
  * @param {Element} el A placemark xml element.
  * @param {Object} object The object to add the model information to.
  */
-plugin.file.kml.KMLModelParser.prototype.parseModel = function(el, object) {
+const parseModel = function(el, object) {
   for (let i = el.children.length - 1; i >= 0; i--) {
     if (el.children[i].localName == 'Model') {
       const modelElement = el.children[i];
-      const modelObject = {};
+      const modelObject = getDefaultModel();
       for (let j = 0; j < modelElement.children.length; j++) {
         if (modelElement.children[j].localName == 'Location') {
-          this.parseLocation(modelElement.children[j], object);
+          parseLocation(modelElement.children[j], object);
         } else if (modelElement.children[j].localName == 'Orientation') {
-          this.parseOrientation(modelElement.children[j], modelObject);
+          parseOrientation(modelElement.children[j], modelObject);
         } else if (modelElement.children[j].localName == 'Scale') {
-          this.parseScale(modelElement.children[j], modelObject);
+          parseScale(modelElement.children[j], modelObject);
         } else if (modelElement.children[j].localName == 'altitudeMode') {
-          this.parseAltMode(modelElement.children[j], modelObject);
+          parseAltMode(modelElement.children[j], modelObject);
         } else if (modelElement.children[j].localName == 'Link') {
-          this.parseLink(el, modelElement.children[j], modelObject);
+          parseLink(el, modelElement.children[j], modelObject);
         }
       }
 
       const keys = Object.keys(el.assetMap);
-      const imagesObject = {};
       for (let k = 0; k < keys.length; k++) {
         const key = keys[k];
         if (!key.endsWith('.dae')) {
-          imagesObject[key] = el.assetMap[key];
+          modelObject.images[key] = el.assetMap[key];
         }
       }
 
-      modelObject['Images'] = imagesObject;
-      object['Model'] = modelObject;
+      object[MODEL_FIELD] = modelObject;
       break;
     }
   }
 };
 
+
 /**
  * Parses the alitude mode element of the model.
  *
  * @param {Element} el A model xml element.
- * @param {Object} object The object to add the link information to.
- * @private
+ * @param {KMLModel} object The object to add the link information to.
  */
-plugin.file.kml.KMLModelParser.prototype.parseAltMode = function(el, object) {
+const parseAltMode = function(el, object) {
   const altModeText = el.textContent;
 
-  let altMode = os.webgl.AltitudeMode.CLAMP_TO_GROUND;
+  let altMode = AltitudeMode.CLAMP_TO_GROUND;
   if (altModeText == 'relativeToGround') {
-    altMode = os.webgl.AltitudeMode.RELATIVE_TO_GROUND;
+    altMode = AltitudeMode.RELATIVE_TO_GROUND;
   }
 
   object['altitudeMode'] = altMode;
 };
+
 
 /**
  * Parses the link element of the model.
  *
  * @param {Element} placemark The placemark element
  * @param {Element} el A model xml element.
- * @param {Object} object The object to add the link information to.
- * @private
+ * @param {KMLModel} object The object to add the link information to.
  */
-plugin.file.kml.KMLModelParser.prototype.parseLink = function(placemark, el, object) {
+const parseLink = function(placemark, el, object) {
   const colladaFileName = el.children[0].textContent;
   const colladaData = placemark.assetMap[colladaFileName];
-  object['collada'] = colladaData;
+  object.collada = colladaData;
 };
+
 
 /**
  * Parses the location element of the model.
  *
  * @param {Element} el A model xml element.
  * @param {Object} object The object to add the point geometry to.
- * @private
  */
-plugin.file.kml.KMLModelParser.prototype.parseLocation = function(el, object) {
+const parseLocation = function(el, object) {
   let lat;
   let lon;
   let alt;
@@ -103,17 +140,17 @@ plugin.file.kml.KMLModelParser.prototype.parseLocation = function(el, object) {
     }
   }
 
-  object['geometry'] = new ol.geom.Point([lon, lat, alt]);
+  object['geometry'] = new Point([lon, lat, alt]);
 };
+
 
 /**
  * Parses the orientation element of the model.
  *
  * @param {Element} el A model xml element.
- * @param {Object} object The object to add the orientation information to.
- * @private
+ * @param {KMLModel} object The object to add the orientation information to.
  */
-plugin.file.kml.KMLModelParser.prototype.parseOrientation = function(el, object) {
+const parseOrientation = function(el, object) {
   for (let i = 0; i < el.children.length; i++) {
     if (el.children[i].localName == 'heading') {
       object['heading'] = parseFloat(el.children[i].textContent);
@@ -125,14 +162,14 @@ plugin.file.kml.KMLModelParser.prototype.parseOrientation = function(el, object)
   }
 };
 
+
 /**
  * Parses the scale element of the model.
  *
  * @param {Element} el A model xml element.
- * @param {Object} object The object to add the scale information to.
- * @private
+ * @param {KMLModel} object The object to add the scale information to.
  */
-plugin.file.kml.KMLModelParser.prototype.parseScale = function(el, object) {
+const parseScale = function(el, object) {
   for (let i = 0; i < el.children.length; i++) {
     if (el.children[i].localName == 'x') {
       object['scaleX'] = parseFloat(el.children[i].textContent);
@@ -143,3 +180,6 @@ plugin.file.kml.KMLModelParser.prototype.parseScale = function(el, object) {
     }
   }
 };
+
+
+exports = {parseModel, KMLModel, MODEL_FIELD};

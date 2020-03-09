@@ -2,7 +2,6 @@ goog.provide('plugin.im.action.feature.ui.ActionConfigCtrl');
 
 goog.require('goog.Disposable');
 goog.require('os.ui.window');
-goog.require('os.ui.window.confirmDirective');
 
 
 
