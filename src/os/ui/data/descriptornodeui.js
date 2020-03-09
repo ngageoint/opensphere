@@ -4,7 +4,7 @@ goog.provide('os.ui.data.descriptorNodeUIDirective');
 goog.require('os.ui.Module');
 goog.require('os.ui.data.DescriptorProvider');
 goog.require('os.ui.slick.AbstractNodeUICtrl');
-goog.require('os.ui.window.confirmDirective');
+goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -49,7 +49,7 @@ goog.inherits(os.ui.data.DescriptorNodeUICtrl, os.ui.slick.AbstractNodeUICtrl);
  * @export
  */
 os.ui.data.DescriptorNodeUICtrl.prototype.tryRemove = function() {
-  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+  os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
     confirm: this.remove.bind(this),
     cancel: goog.nullFunction,
     prompt: this.getRemoveWindowText(),
@@ -93,7 +93,7 @@ os.ui.data.DescriptorNodeUICtrl.prototype.getRemoveWindowOptions = function() {
  * @protected
  */
 os.ui.data.DescriptorNodeUICtrl.prototype.getRemoveWindowText = function() {
-  return 'Are you sure you want to remove this layer from the application?' +
+  return 'Are you sure you want to remove this layer from the application? ' +
       '<b>This action cannot be undone</b>, and will clear the application history.';
 };
 

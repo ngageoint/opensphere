@@ -3,7 +3,7 @@ goog.provide('os.ui.im.URLExistsCtrl');
 goog.provide('os.ui.im.urlExistsDirective');
 
 goog.require('os.ui.Module');
-goog.require('os.ui.window.confirmDirective');
+goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -86,5 +86,5 @@ os.ui.im.launchURLExists = function(url, current, confirm) {
     'url': url
   };
 
-  os.ui.window.launchConfirm(confirmOptions, scopeOptions);
+  os.ui.window.ConfirmUI.launchConfirm(confirmOptions, scopeOptions);
 };

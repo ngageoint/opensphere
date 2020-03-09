@@ -5,7 +5,7 @@ goog.require('os.storage');
 goog.require('os.ui.EventType');
 goog.require('os.ui.action.Action');
 goog.require('os.ui.window');
-goog.require('os.ui.window.confirmDirective');
+goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -35,7 +35,7 @@ os.ui.util.resetSettings = function(opt_parent) {
   text += '<br>Last reset: ' + os.config.Settings.getInstance().getLastReset();
   text += '<br><br><b>Are you sure you want to clear your settings and reload?</b>';
 
-  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+  os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
     confirm: os.storage.clearStorage,
     prompt: text,
     yesText: 'Clear and Reload',

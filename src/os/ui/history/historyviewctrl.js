@@ -6,6 +6,7 @@ goog.require('os.command.ICommand');
 goog.require('os.ui');
 goog.require('os.ui.WindowEventType');
 goog.require('os.ui.window');
+goog.require('os.ui.window.ConfirmUI');
 
 
 
@@ -101,7 +102,7 @@ os.ui.history.HistoryViewCtrl.prototype.destroy_ = function() {
  * @export
  */
 os.ui.history.HistoryViewCtrl.prototype.clearHistory = function() {
-  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+  os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
     confirm: this.clearHistoryInternal_.bind(this),
     prompt: 'Are you sure you want to clear the application history? This action cannot be undone.',
     yesText: 'Clear',

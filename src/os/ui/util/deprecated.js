@@ -1,7 +1,9 @@
 goog.provide('os.ui.util.deprecated');
+
 goog.require('goog.async.Delay');
 goog.require('os.config.Settings');
 goog.require('os.ui.window');
+goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -61,7 +63,7 @@ os.ui.util.deprecated.launchDeprecatedLayersWindow_ = function() {
     var text = '<b>Heads up!</b><p>The following legacy layers were just loaded into the application: </p>' +
         layersMarkup;
 
-    os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
       prompt: text,
       yesText: 'Got It',
       noIcon: '',
