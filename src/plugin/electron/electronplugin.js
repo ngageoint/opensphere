@@ -35,6 +35,12 @@ class ElectronPlugin extends AbstractPlugin {
   init() {
     if (electron.isElectron()) {
       ElectronOS.registerCertificateHandler(onCertificateRequest);
+
+      /**
+       * Electron uses the file protocol, so those URL's need to be considered safe.
+       * @suppress {const}
+       */
+      goog.html.SAFE_URL_PATTERN_ = /^(?:(?:https?|mailto|ftp|file):|[^:/?#]*(?:[/?#]|$))/i;
     }
   }
 }
