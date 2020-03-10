@@ -5,6 +5,8 @@ const {createAndAddPolygon} = goog.require('plugin.cesium.sync.polygon');
 const LineStringConverter = goog.require('plugin.cesium.sync.LineStringConverter');
 const {getColor} = goog.require('plugin.cesium.sync.style');
 
+const Feature = goog.requireType('ol.Feature');
+const Geometry = goog.requireType('ol.geom.Geometry');
 const Style = goog.requireType('ol.style.Style');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
 
@@ -13,18 +15,6 @@ const VectorContext = goog.requireType('plugin.cesium.VectorContext');
  * Converter for Polygons
  */
 class PolygonConverter extends LineStringConverter {
-  /**
-   *
-   */
-  constructor() {
-    super();
-
-    /**
-     * @private
-     */
-    this.isRoot_ = true;
-  }
-
   /**
    * @inheritDoc
    */
@@ -38,20 +28,31 @@ class PolygonConverter extends LineStringConverter {
    * @inheritDoc
    */
   update(feature, geometry, style, context, primitive) {
-    if (this.isRoot_ && isFillBeingAdded(style, context, primitive)) {
+    if (isFillBeingAdded(style, context, primitive)) {
       return false;
     }
 
-    if (Array.isArray(primitive)) {
-      this.isRoot_ = false;
+    return this.updateInternal(feature, geometry, style, context, primitive);
+  }
 
+
+  /**
+   * @param {!Feature} feature
+   * @param {!Geometry} geometry
+   * @param {!Style} style
+   * @param {!VectorContext} context
+   * @param {!Cesium.Primitive} primitive
+   * @return {boolean}
+   * @protected
+   */
+  updateInternal(feature, geometry, style, context, primitive) {
+    if (Array.isArray(primitive)) {
       for (let i = 0, n = primitive.length; i < n; i++) {
-        if (!this.update(feature, geometry, style, context, primitive[i])) {
+        if (!this.updateInternal(feature, geometry, style, context, primitive[i])) {
           return false;
         }
       }
 
-      this.isRoot_ = true;
       return true;
     }
 
