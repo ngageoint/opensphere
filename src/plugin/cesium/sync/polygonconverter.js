@@ -74,21 +74,16 @@ class PolygonConverter extends LineStringConverter {
  */
 const isFillBeingAdded = (style, context, primitive) => {
   const styleHasFill = style.getFill() ? getColor(style, context, GeometryInstanceId.GEOM).alpha > 0 : false;
-  let primitiveHasFill = false;
-
-  if (Array.isArray(primitive)) {
-    for (let i = 0, n = primitive.length; i < n; i++) {
-      if (primitive[i]['olLineWidth'] == null) {
-        primitiveHasFill = true;
-        break;
-      }
-    }
-  } else {
-    primitiveHasFill = primitive['olLineWidth'] == null;
-  }
-
+  const primitiveHasFill = Array.isArray(primitive) ? primitive.some(isPolygonFill) : isPolygonFill(primitive);
   return styleHasFill && !primitiveHasFill;
 };
+
+
+/**
+ * @param {!Cesium.Primitive} primitive
+ * @return {boolean}
+ */
+const isPolygonFill = (primitive) => primitive['olLineWidth'] == null;
 
 
 /**
@@ -98,7 +93,7 @@ const isFillBeingAdded = (style, context, primitive) => {
  * @return {boolean}
  */
 const isFillBeingRemoved = (style, context, primitive) => {
-  if (primitive['olLineWidth'] == null) {
+  if (isPolygonFill(primitive)) {
     return style.getFill() ? getColor(style, context, GeometryInstanceId.GEOM).alpha === 0 : true;
   }
   return false;
