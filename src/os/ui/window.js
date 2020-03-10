@@ -730,6 +730,12 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
     $element.draggable(dragConfig);
   }
 
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.resizable_ = false;
+
   if (($scope['minWidth'] && $scope['maxWidth'] && $scope['minWidth'] != $scope['maxWidth']) ||
       ($scope['minHeight'] && $scope['maxHeight'] && $scope['minHeight'] != $scope['maxHeight'])) {
     // make the element resizable. the height/width values must be numbers, or jquery calculations won't work
@@ -746,6 +752,9 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
     };
     Object.assign(resizeConfig, $scope['resizeOptions'] || {});
     $element.resizable(resizeConfig);
+    this.resizable_ = true;
+  } else {
+    $element.resizable({ disabled: true });
   }
 
   $element.css('width', $scope['width'] + 'px');
@@ -1084,7 +1093,7 @@ os.ui.WindowCtrl.prototype.toggle = function() {
       this.element.height(this.lastHeight_);
       this.lastHeight_ = NaN;
       content.toggle();
-      this.element.resizable('option', 'disabled');
+      this.element.resizable('option', 'disabled', !this.resizable_);
       this.constrainWindow_();
       this.scope['collapsed'] = false;
       this.element.find('.js-window__header').removeClass('collapsed');
