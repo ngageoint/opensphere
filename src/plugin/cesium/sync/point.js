@@ -4,8 +4,9 @@ goog.module('plugin.cesium.sync.point');
 const olcsCore = goog.require('olcs.core');
 const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
 const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
+const {drawShape} = goog.require('plugin.cesium.sync.shape');
 const OLIconStyle = goog.require('ol.style.Icon');
-const {listenOnce, unlistenByKey, EventType} = goog.require('ol.events');
+const OLRegularShape = goog.require('ol.style.RegularShape');
 
 const Feature = goog.requireType('ol.Feature');
 const MultiPoint = goog.requireType('ol.geom.MultiPoint');
@@ -134,9 +135,11 @@ const updateGeometry = (geometry, bb, opt_flatCoords, opt_offset) => {
  */
 const updateImage = (feature, geometry, style, context, bb, opt_index) => {
   if (style instanceof OLIconStyle) {
-    updateImageIcon(feature, geometry, style, context, bb, opt_index);
+    updateImageIcon(geometry, style, context, bb, opt_index);
+  } else if (style instanceof OLRegularShape) {
+    updateImageShape(style, bb);
   } else {
-    updateImageShape(feature, geometry, style, context, bb);
+    updateImageDefault(style, bb);
   }
 };
 
@@ -146,18 +149,17 @@ const updateImage = (feature, geometry, style, context, bb, opt_index) => {
  *  variation (color, scale, rotation, etc) of the same icon will be added to Cesium's texture atlas. this uses
  *  more memory than necessary, and is far more likely to hit the size limit for the atlas.
  *
- * @param {!Feature} feature
  * @param {!(Point|MultiPoint)} geometry
  * @param {!OLIconStyle} style
  * @param {!VectorContext} context
  * @param {!(Cesium.Billboard|Cesium.optionsBillboardCollectionAdd)} bb
  * @param {number=} opt_index
  */
-const updateImageIcon = (feature, geometry, style, context, bb, opt_index) => {
+const updateImageIcon = (geometry, style, context, bb, opt_index) => {
   const imageId = style.getSrc();
 
   if (imageId && imageId != bb.imageId && imageId != bb._imageId) {
-    const image = iconStyleToImagePromise(feature, geometry, style, context, bb, opt_index);
+    const image = iconStyleToImagePromise(geometry, style, context, bb, opt_index);
     updateBillboardImage(bb, imageId, image);
   }
 
@@ -171,25 +173,49 @@ const updateImageIcon = (feature, geometry, style, context, bb, opt_index) => {
 
 
 /**
- * @param {!Feature} feature
- * @param {!(Point|MultiPoint)} geometry
- * @param {!OLImageStyle} style
- * @param {!VectorContext} context
+ * @param {!OLRegularShape} style
  * @param {!(Cesium.Billboard|Cesium.optionsBillboardCollectionAdd)} bb
  */
-const updateImageShape = (feature, geometry, style, context, bb) => {
-  const image = style.getImage(1);
+const updateImageShape = (style, bb) => {
+  const stroke = style.getStroke();
+  const fill = style.getFill();
 
-  // Cesium uses the imageId to identify a texture in the WebGL texture atlas. this *must* be unique to the texture
-  // being displayed, but we want as much reuse as possible. we'll try:
-  //  - The style id that we use to cache OL3 styles
-  //  - Fall back on the UID of the image/canvas
+  let hash = stroke ? stroke['id'] : 1;
+  hash = 31 * hash + (fill ? 1 : 0) >>> 0;
+  hash = 31 * hash + style.getPoints() >>> 0;
+  hash = 31 * hash + style.getRadius() >>> 0;
+  hash = 31 * hash + goog.string.hashCode(style.getAngle().toString()) >>> 0;
+
+  const imageId = hash.toString();
+  if (imageId && imageId != bb.imageId && imageId != bb._imageId) {
+    updateBillboardImage(bb, imageId, (id) => drawShape(style));
+  }
+
+  const color = fill ? fill.getColor() :
+    stroke ? stroke.getColor() : null;
+
+  if (color) {
+    bb.color = olcsCore.convertColorToCesium(color);
+  }
+};
+
+
+/**
+ * The default is to use the style's image directly. This is more expensive in the texture atlas but at least
+ * something will display if no better method could be used.
+ *
+ * @param {!OLImageStyle} style
+ * @param {!(Cesium.Billboard|Cesium.optionsBillboardCollectionAdd)} bb
+ */
+const updateImageDefault = (style, bb) => {
+  const image = style.getImage(1);
   const imageId = style['id'] || ol.getUid(image);
 
   if (image && imageId != bb.imageId && imageId != bb._imageId) {
     updateBillboardImage(bb, imageId, image);
   }
 
+  // the color is already rendered in the original image
   bb.color = bb.color || new Cesium.Color(1.0, 1.0, 1.0, 1.0);
 };
 
@@ -211,7 +237,7 @@ const updateColorAlpha = (style, context, bb) => {
 /**
  * @param {!(Cesium.Billboard|Cesium.optionsBillboardCollectionAdd)} bb
  * @param {!string} imageId
- * @param {Cesium.ImageLike|Promise<Cesium.ImageLike>} image
+ * @param {Cesium.ImageLike|Promise<Cesium.ImageLike>|function(string=):Cesium.ImageLike} image
  */
 const updateBillboardImage = (bb, imageId, image) => {
   if (bb instanceof Cesium.Billboard) {
@@ -273,47 +299,29 @@ const updateSizeDynamicIconProperties = (style, bb) => {
 
 /**
  *
- * @param {!Feature} feature
  * @param {!(Point|MultiPoint)} geometry
- * @param {OLIconStyle} style
+ * @param {!OLIconStyle} style
  * @param {!VectorContext} context
  * @param {!(Cesium.Billboard|Cesium.optionsBillboardCollectionAdd)} bb
  * @param {number=} opt_index
  * @return {!Promise<HTMLCanvasElement>}
  */
-const iconStyleToImagePromise = (feature, geometry, style, context, bb, opt_index) => {
+const iconStyleToImagePromise = (geometry, style, context, bb, opt_index) => {
   bb.dirty = false;
 
   const originalShow = bb.show;
   bb.show = false;
 
-  const image = new Image();
-  const listenerKeys = [];
-
-  return new Promise((resolve, reject) => {
-    listenerKeys.push(listenOnce(image, EventType.LOAD, () => {
-      listenerKeys.forEach(unlistenByKey);
-      const billboard = getBillboardFromContext(geometry, context, opt_index);
-      if (billboard) {
-        updateSizeDynamicIconProperties(style, billboard);
-      }
-
-      bb.show = originalShow;
-      resolve(image);
-    }));
-
-    listenerKeys.push(listenOnce(image, EventType.ERROR, () => {
-      listenerKeys.forEach(unlistenByKey);
-      reject(new Error('error loading icon'));
-    }));
-
-    try {
-      const src = style.getSrc() || '';
-      image.crossOrigin = os.net.getCrossOrigin(src);
-      image.src = src;
-    } catch (e) {
-      reject(e);
+  const src = style.getSrc() || '';
+  const resource = Cesium.Resource.createIfNeeded(src);
+  return resource.fetchImage().then((image) => {
+    const billboard = getBillboardFromContext(geometry, context, opt_index);
+    if (billboard) {
+      updateSizeDynamicIconProperties(style, billboard);
     }
+
+    bb.show = originalShow;
+    return image;
   });
 };
 

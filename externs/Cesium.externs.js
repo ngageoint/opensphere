@@ -403,7 +403,7 @@ Cesium.Billboard.prototype.geomRevision;
 
 /**
  * @param {string|number} id The image id
- * @param {Cesium.ImageLike|Promise<Cesium.ImageLike>} image The new image
+ * @param {Cesium.ImageLike|Promise<Cesium.ImageLike>|function(string=):Cesium.ImageLike} image The new image
  */
 Cesium.Billboard.prototype.setImage = function(id, image) {};
 
@@ -465,7 +465,7 @@ Cesium.BillboardCollection = function(opt_options) {};
 
 /**
  * @typedef {{
- *   image: (Cesium.ImageLike|Promise<Cesium.ImageLike>),
+ *   image: (Cesium.ImageLike|Promise<Cesium.ImageLike>|function(string=):Cesium.ImageLike),
  *   imageId: (string|number),
  *   color: (Cesium.Color|undefined),
  *   verticalOrigin: (Cesium.VerticalOrigin|undefined),
@@ -3238,10 +3238,32 @@ Cesium.ImageryProvider.loadImage = function(imageryProvider, url) {};
 Cesium.Resource = function() {};
 
 /**
+ * @param {Cesium.Resource|string} resource
+ * @return {!Cesium.Resource}
+ */
+Cesium.createIfNeeded = function(resource) {};
+
+/**
  * @param {Cesium.ResourceFetchOptions} options
  * @return {Cesium.Promise<*>}
  */
 Cesium.Resource.prototype._makeRequest = function(options) {};
+
+
+/**
+ * @typedef {{
+ *   preferBlob: (boolean|undefined),
+ *   preferImageBitmap: (boolean|undefined),
+ *   flipY: (boolean|undefined)
+ * }}
+ */
+Cesium.ResourceFetchImageOptions;
+
+/**
+ * @param {Cesium.ResourceFetchImageOptions} options
+ * @return {Promise<ImageBitmap|Image>|undefined}
+ */
+Cesium.Resource.prototype.fetchImage = function(options) {}
 
 Cesium.Resource._Implementations = {};
 
