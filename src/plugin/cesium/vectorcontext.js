@@ -125,11 +125,17 @@ class VectorContext {
      */
     this.groundPrimitives = new Cesium.PrimitiveCollection();
 
-    scene.primitives.add(this.billboards);
-    scene.primitives.add(this.labels);
-    scene.primitives.add(this.polylines);
     scene.primitives.add(this.primitives);
     scene.groundPrimitives.add(this.groundPrimitives);
+
+    // Generally Cesium prefers wide scene trees over deep ones. However, none
+    // of these collections support the show property, and therefore they need
+    // to be under something that does in order to properly control visibility.
+    this.noShowCollections = new Cesium.PrimitiveCollection();
+    this.noShowCollections.add(this.billboards);
+    this.noShowCollections.add(this.labels);
+    this.noShowCollections.add(this.polylines);
+    scene.primitives.add(this.noShowCollections);
 
     /**
      * The default eye offset
@@ -153,9 +159,11 @@ class VectorContext {
       goog.dispose(this.billboardCleanupThrottle);
 
       try {
-        this.disposeCollection_(this.billboards);
-        this.disposeCollection_(this.labels);
-        this.disposeCollection_(this.polylines);
+        this.billboards.destroyPrimitives = true;
+        this.labels.destroyPrimitives = true;
+        this.polylines.destroyPrimitives = true;
+
+        this.disposeCollection_(this.noShowCollections);
         this.disposeCollection_(this.groundPrimitives);
         this.disposeCollection_(this.primitives);
       } catch (e) {
@@ -494,9 +502,7 @@ class VectorContext {
    * @param {boolean} shown
    */
   setVisibility(shown) {
-    setPrimitiveShown(this.billboards, shown);
-    setPrimitiveShown(this.labels, shown);
-    setPrimitiveShown(this.polylines, shown);
+    setPrimitiveShown(this.noShowCollections, shown);
     setPrimitiveShown(this.primitives, shown);
     setPrimitiveShown(this.groundPrimitives, shown);
   }

@@ -27,9 +27,10 @@ describe('plugin.cesium.VectorContext', () => {
 
   describe('constructor', () => {
     it('should add the collections to the scene', () => {
-      expect(scene.primitives.contains(context.billboards)).toBe(true);
-      expect(scene.primitives.contains(context.labels)).toBe(true);
-      expect(scene.primitives.contains(context.polylines)).toBe(true);
+      expect(context.noShowCollections.contains(context.billboards)).toBe(true);
+      expect(context.noShowCollections.contains(context.labels)).toBe(true);
+      expect(context.noShowCollections.contains(context.polylines)).toBe(true);
+      expect(scene.primitives.contains(context.noShowCollections)).toBe(true);
       expect(scene.primitives.contains(context.primitives)).toBe(true);
       expect(scene.groundPrimitives.contains(context.groundPrimitives)).toBe(true);
     });
@@ -39,9 +40,7 @@ describe('plugin.cesium.VectorContext', () => {
     it('should remove the collections from the scene', () => {
       context.dispose();
 
-      expect(scene.primitives.contains(context.billboards)).toBe(false);
-      expect(scene.primitives.contains(context.labels)).toBe(false);
-      expect(scene.primitives.contains(context.polylines)).toBe(false);
+      expect(scene.primitives.contains(context.noShowCollections)).toBe(false);
       expect(scene.primitives.contains(context.primitives)).toBe(false);
       expect(scene.groundPrimitives.contains(context.groundPrimitives)).toBe(false);
     });
@@ -483,9 +482,7 @@ describe('plugin.cesium.VectorContext', () => {
 
       [true, false, true].forEach((visible) => {
         context.setVisibility(visible);
-        expect(isPrimitiveShown(context.billboards)).toBe(visible);
-        expect(isPrimitiveShown(context.labels)).toBe(visible);
-        expect(isPrimitiveShown(context.polylines)).toBe(visible);
+        expect(isPrimitiveShown(context.noShowCollections)).toBe(visible);
         expect(isPrimitiveShown(context.primitives)).toBe(visible);
         expect(isPrimitiveShown(context.groundPrimitives)).toBe(visible);
       });
