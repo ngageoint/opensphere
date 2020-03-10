@@ -135,7 +135,8 @@ os.ui.windowDirective = function() {
       'windowContainer': '@',
       /* Array.<os.ui.window.HeaderBtnConfig> */
       'headerBtns': '=?',
-      'border': '='
+      'border': '=',
+      'bottom': '=?'
     },
     templateUrl: os.ROOT + 'views/window/window.html',
     controller: os.ui.WindowCtrl,
@@ -660,7 +661,10 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
     $scope['x'] = (container.width() - $scope['width']) / 2;
   }
 
-  if ($scope['y'] == 'center') {
+  if ($scope['bottom']) {
+    $element.css('top', 'auto');
+    $element.css('bottom', $scope['bottom'] + 'px');
+  } else if ($scope['y'] == 'center') {
     var maxHeight = Math.min($(window).height(), container.height());
     if ($scope['height'] == 'auto') {
       // Put the element off the screen at the top
@@ -748,7 +752,9 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
 
   var height = $scope['height'];
   if ($scope['height'] == 'auto') {
-    $element.css('bottom', 'auto');
+    if (!$scope['bottom']) {
+      $element.css('bottom', 'auto');
+    }
   } else {
     height += 'px';
   }
@@ -758,7 +764,7 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
     // if the window wasn't cascaded, position it based off the config
     $element.css('left', $scope['x'] + 'px');
 
-    if (!($scope['y'] == 'center' && $scope['height'] == 'auto')) {
+    if (!($scope['y'] == 'center' && $scope['height'] == 'auto') && !$scope['bottom']) {
       $element.css('top', $scope['y'] + 'px');
     }
   }
@@ -1078,7 +1084,7 @@ os.ui.WindowCtrl.prototype.toggle = function() {
       this.element.height(this.lastHeight_);
       this.lastHeight_ = NaN;
       content.toggle();
-      this.element.resizable('option', 'disabled', false);
+      this.element.resizable('option', 'disabled');
       this.constrainWindow_();
       this.scope['collapsed'] = false;
       this.element.find('.js-window__header').removeClass('collapsed');
@@ -1258,6 +1264,7 @@ os.ui.WindowCtrl.prototype.constrainWindow_ = function() {
   var y = parseFloat(this.element.css('top').replace('px', ''));
   var w = parseFloat(this.element.css('width').replace('px', ''));
   var h = parseFloat(this.element.css('height').replace('px', ''));
+  var b = this.element.css('bottom');
   var winContainerTop = $(this.scope['windowContainer']).offset()['top'];
 
   var size = this.vsm_.getSize();
@@ -1285,11 +1292,13 @@ os.ui.WindowCtrl.prototype.constrainWindow_ = function() {
     this.element.css('left', x + 'px');
   }
 
-  if (y < winContainerTop) {
-    this.element.css('top', winContainerTop + 'px');
-  } else if ((y + h) > size.height) {
-    y = Math.max(size.height - h, winContainerTop);
-    this.element.css('top', y + 'px');
+  if (!b) {
+    if (y < winContainerTop) {
+      this.element.css('top', winContainerTop + 'px');
+    } else if ((y + h) > size.height) {
+      y = Math.max(size.height - h, winContainerTop);
+      this.element.css('top', y + 'px');
+    }
   }
 
   // If window is height auto, force max-height on the modal-content
