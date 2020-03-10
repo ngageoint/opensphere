@@ -37,7 +37,7 @@ describe('plugin.cesium.sync.PointConverter', () => {
     os.map.PROJECTION = originalProjection;
   });
 
-  const blue = 'rbga(0,0,255,1)';
+  const blue = 'rgba(0,0,255,1)';
   const green = 'rgba(0,255,0,1)';
 
   setCircleStyle = (color) => {
@@ -54,19 +54,17 @@ describe('plugin.cesium.sync.PointConverter', () => {
     expect(context.billboards.length).toBe(0);
   });
 
-  it('should create a billboard a local canvas style', () => {
+  it('should create a billboard from a local canvas style', () => {
     setCircleStyle(green);
     const result = pointConverter.create(feature, geometry, style, context);
     expect(result).toBe(true);
     expect(context.billboards.length).toBe(1);
 
     const billboard = context.billboards.get(0);
-    expect(billboard._image).toBe(style.getImage().getImage());
 
-    // check defaults
-    expect(billboard.color.red).toBeCloseTo(1, 12);
+    expect(billboard.color.red).toBeCloseTo(0, 12);
     expect(billboard.color.green).toBeCloseTo(1, 12);
-    expect(billboard.color.blue).toBeCloseTo(1, 12);
+    expect(billboard.color.blue).toBeCloseTo(0, 12);
     expect(billboard.color.alpha).toBeCloseTo(1, 12);
 
     expect(billboard.geomRevision).toBe(geometry.getRevision());
@@ -157,6 +155,8 @@ describe('plugin.cesium.sync.PointConverter', () => {
     pointConverter.create(feature, geometry, style, context);
 
     const billboard = context.billboards.get(0);
+    const image = billboard._image;
+
     billboard.dirty = true;
     setCircleStyle(blue);
 
@@ -167,6 +167,6 @@ describe('plugin.cesium.sync.PointConverter', () => {
     expect(updatedBillboard).toBe(billboard);
     expect(billboard.dirty).toBe(false);
 
-    expect(billboard._image).toBe(style.getImage().getImage());
+    expect(billboard._image).toBe(image);
   });
 });
