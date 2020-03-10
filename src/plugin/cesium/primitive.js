@@ -106,8 +106,6 @@ const updatePrimitiveGeomInstances = (style, context, primitive) => {
         const color = styleUtils.getColor(style, context, field);
 
         if (color) {
-          primitive.show = color.alpha > 0;
-
           if (material && material.uniforms) {
             material.uniforms.color = color;
           } else {
@@ -241,6 +239,8 @@ const isGroundPrimitive = function(primitive) {
 const isPrimitiveShown = function(primitive) {
   if (Array.isArray(primitive)) {
     return primitive.length > 0 ? isPrimitiveShown(primitive[0]) : true;
+  } else if (primitive.show != null) {
+    return primitive.show;
   } else if (primitive.length != null) {
     return primitive.length > 0 ? isPrimitiveShown(primitive.get(0)) : true;
   }
@@ -259,12 +259,12 @@ const setPrimitiveShown = function(primitive, show) {
       for (let i = 0, n = primitive.length; i < n; i++) {
         setPrimitiveShown(primitive[i], show);
       }
-    } else if (primitive.length != null) {
+    } else if (primitive.show != null) {
+      primitive.show = show;
+    } else if (primitive.length) {
       for (let i = 0, n = primitive.length; i < n; i++) {
         setPrimitiveShown(primitive.get(i), show);
       }
-    } else {
-      primitive.show = show;
     }
   }
 };
