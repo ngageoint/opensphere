@@ -50,9 +50,7 @@ class Controller {
     this['cert'] = null;
 
     $scope.$watch('ctrl.cert', (newVal, oldVal) => {
-      if (newVal != oldVal) {
-        $scope.$parent['confirmValue'] = newVal;
-      }
+      $scope.$parent['confirmValue'] = newVal;
     });
   }
 
@@ -131,7 +129,6 @@ const launchConfirmCert = (url, certs) => {
 
     launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
       confirm: confirm,
-      confirmValue: certs[0],
       cancel: cancel,
       prompt: '<electronconfirmcert></electronconfirmcert>',
       windowOptions: /** @type {!osx.window.WindowOptions} */ ({
