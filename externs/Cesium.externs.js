@@ -324,6 +324,11 @@ Cesium.Billboard = function() {};
 
 
 /**
+ * @type {string|undefined}
+ */
+Cesium.Billboard.prototype._imageId;
+
+/**
  * @type {Cesium.Cartesian3}
  */
 Cesium.Billboard.prototype.alignedAxis;

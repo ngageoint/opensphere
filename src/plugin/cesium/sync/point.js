@@ -5,8 +5,7 @@ const olcsCore = goog.require('olcs.core');
 const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
 const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
 const OLIconStyle = goog.require('ol.style.Icon');
-const ImageState = goog.require('ol.ImageState');
-const {unlistenByKey} = goog.require('ol.events');
+const {listenOnce, unlistenByKey, EventType} = goog.require('ol.events');
 
 const Feature = goog.requireType('ol.Feature');
 const MultiPoint = goog.requireType('ol.geom.MultiPoint');
@@ -105,7 +104,10 @@ const updateBillboard = (feature, geometry, style, context, bb, opt_flatCoords, 
     // more memory than necessary, and is far more likely to hit the size limit for the atlas.
     //
     imageId = style.getSrc() || undefined;
-    image = iconStyleToImagePromise(feature, geometry, style, context, bb, opt_index);
+
+    if (imageId != bb.imageId && imageId != bb._imageId) {
+      image = iconStyleToImagePromise(feature, geometry, style, context, bb, opt_index);
+    }
 
     const styleColor = style.getColor();
     if (styleColor) {
@@ -121,15 +123,17 @@ const updateBillboard = (feature, geometry, style, context, bb, opt_flatCoords, 
     imageId = style['id'] || ol.getUid(image);
   }
 
-  if (image) {
-    if (bb instanceof Cesium.Billboard) {
-      bb.setImage(imageId, image);
-      bb.pixelOffset.x = 0;
-      bb.pixelOffset.y = 0;
-    } else {
-      bb.image = image;
-      bb.imageId = imageId;
-      bb.pixelOffset = bb.pixelOffset || new Cesium.Cartesian2(0, 0);
+  if (imageId) {
+    if (image && imageId != bb.imageId && imageId != bb._imageId) {
+      if (bb instanceof Cesium.Billboard) {
+        bb.setImage(imageId, image);
+        bb.pixelOffset.x = 0;
+        bb.pixelOffset.y = 0;
+      } else {
+        bb.image = image;
+        bb.imageId = imageId;
+        bb.pixelOffset = bb.pixelOffset || new Cesium.Cartesian2(0, 0);
+      }
     }
 
     // use the icon color if available, otherwise default to white to use the original image color
@@ -228,41 +232,32 @@ const iconStyleToImagePromise = (feature, geometry, style, context, bb, opt_inde
   const originalShow = bb.show;
   bb.show = false;
 
-  let listenKey = null;
+  const image = new Image();
+  const listenerKeys = [];
+
   return new Promise((resolve, reject) => {
-    const imageState = style.getImageState();
-    if (imageState < ImageState.LOADED) {
-      // listen for the image to change state
-      listenKey = style.listenImageChange(() => {
-        const imageState = style.getImageState();
-        if (imageState === ImageState.ERROR) {
-          reject(new Error('error loading icon'));
-        } else if (imageState === ImageState.LOADED) {
-          const billboard = getBillboardFromContext(geometry, context, opt_index);
-          if (billboard) {
-            updateSizeDynamicIconProperties(style, billboard);
-          }
-
-          bb.show = originalShow;
-          resolve(style.getImage(1));
-        }
-      }, null);
-
-      if (imageState === ol.ImageState.IDLE) {
-        style.load();
-      }
-    } else {
-      if (listenKey) {
-        unlistenByKey(listenKey);
+    listenerKeys.push(listenOnce(image, EventType.LOAD, () => {
+      listenerKeys.forEach(unlistenByKey);
+      const billboard = getBillboardFromContext(geometry, context, opt_index);
+      if (billboard) {
+        updateSizeDynamicIconProperties(style, billboard);
       }
 
-      if (imageState === ImageState.LOADED) {
-        bb.show = originalShow;
-        updateSizeDynamicIconProperties(style, bb);
-        resolve(style.getImage(1));
-      } else {
-        reject(new Error('error loading icon'));
-      }
+      bb.show = originalShow;
+      resolve(image);
+    }));
+
+    listenerKeys.push(listenOnce(image, EventType.ERROR, () => {
+      listenerKeys.forEach(unlistenByKey);
+      reject(new Error('error loading icon'));
+    }));
+
+    try {
+      const src = style.getSrc() || '';
+      image.crossOrigin = os.net.getCrossOrigin(src);
+      image.src = src;
+    } catch (e) {
+      reject(e);
     }
   });
 };
