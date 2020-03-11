@@ -118,15 +118,7 @@ os.ui.im.action.FilterActionImportCtrl.prototype.onLayerChange = function(layer)
   if (os.implements(layer, os.filter.IFilterable.ID)) {
     var filterable = /** @type {os.filter.IFilterable} */ (layer);
 
-    if (layer instanceof os.layer.Vector) {
-      // its a layer but for filter actions, we want to get the columns a little differently
-      var source = /** @type {os.source.ISource} */ (layer.getSource());
-      var columns = os.source.getFilterColumns(source, true, true);
-      this.columns = columns.map(os.source.definitionsToFeatureTypes);
-    } else {
-      // it's another filterable descriptor, so just get its columns
-      this.columns = filterable.getFilterColumns();
-    }
+    this.columns = os.im.action.getColumnsFromFilterable(filterable);
   }
 
   this.testColumns();
