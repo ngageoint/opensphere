@@ -130,6 +130,13 @@ os.source.Vector = function(opt_options) {
   this.lastEllipseNotification_ = 0;
 
   /**
+   * If the source is enabled.
+   * @type {boolean}
+   * @private
+   */
+  this.enabled_ = true;
+
+  /**
    * @type {boolean}
    * @private
    */
@@ -1227,6 +1234,41 @@ os.source.Vector.prototype.setId = function(value) {
 /**
  * @inheritDoc
  */
+os.source.Vector.prototype.isEnabled = function() {
+  return this.enabled_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.source.Vector.prototype.setEnabled = function(value) {
+  if (this.enabled_ !== value) {
+    this.enabled_ = value;
+    this.setEnabledInternal(value);
+    this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.ENABLED, value, !value));
+  }
+};
+
+
+/**
+ * Perform internal source actions when the enabled state changes.
+ * @param {boolean} value The new value.
+ * @protected
+ */
+os.source.Vector.prototype.setEnabledInternal = function(value) {
+  if (value) {
+    this.refresh();
+  } else {
+    this.setLocked(false);
+    this.clear();
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.source.Vector.prototype.isLoading = function() {
   return this.loading_;
 };
@@ -1307,9 +1349,10 @@ os.source.Vector.prototype.isLocked = function() {
  * @inheritDoc
  */
 os.source.Vector.prototype.setLocked = function(value) {
-  var old = this.locked_;
-  this.locked_ = value;
-  this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.LOCK, value, old));
+  if (this.locked_ !== value) {
+    this.locked_ = value;
+    this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.LOCK, value, !value));
+  }
 };
 
 

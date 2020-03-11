@@ -1,4 +1,5 @@
 goog.provide('os.data.LayerNode');
+
 goog.require('goog.events.EventType');
 goog.require('ol.events');
 goog.require('os.data.DataManager');
@@ -12,11 +13,13 @@ goog.require('os.layer.Tile');
 goog.require('os.layer.Vector');
 goog.require('os.structs.TriState');
 goog.require('os.ui.ILayerUIProvider');
+goog.require('os.ui.layer.LayerVisibilityUI');
 goog.require('os.ui.node.defaultLayerNodeUIDirective');
 goog.require('os.ui.node.featureCountDirective');
 goog.require('os.ui.node.layerTypeDirective');
 goog.require('os.ui.node.tileLoadingDirective');
 goog.require('os.ui.slick.SlickTreeNode');
+goog.require('os.ui.triStateCheckboxDirective');
 
 
 
@@ -48,7 +51,7 @@ os.implements(os.data.LayerNode, os.ui.ILayerUIProvider.ID);
  * @inheritDoc
  */
 os.data.LayerNode.prototype.disposeInternal = function() {
-  os.data.LayerNode.superClass_.disposeInternal.call(this);
+  os.data.LayerNode.base(this, 'disposeInternal');
 
   os.ui.queryManager.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onNodeChanged_, false, this);
 
@@ -79,11 +82,11 @@ os.data.LayerNode.prototype.setState = function(value) {
   var children = this.getChildren();
   if (value !== os.structs.TriState.BOTH || (children && children.length)) {
     var old = this.getState();
-    os.data.LayerNode.superClass_.setState.call(this, value);
+    os.data.LayerNode.base(this, 'setState', value);
     var s = this.getState();
 
     if (old != s && value !== os.structs.TriState.BOTH && this.layer_) {
-      this.layer_.setLayerVisible(s !== os.structs.TriState.OFF);
+      this.layer_.setEnabled(s !== os.structs.TriState.OFF);
     }
   }
 };
@@ -94,6 +97,30 @@ os.data.LayerNode.prototype.setState = function(value) {
  */
 os.data.LayerNode.prototype.getLayer = function() {
   return this.layer_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.data.LayerNode.prototype.formatCheckbox = function() {
+  const checkboxParts = [];
+
+  const layer = this.getLayer();
+  if (layer) {
+    // add a normal checkbox (layer enable/disable) if the layer is not removable
+    if (layer.isRemovable()) {
+      checkboxParts.push('<tristatecheckbox></tristatecheckbox>');
+    }
+
+    // add a separate visibility toggle for feature layers
+    if (layer instanceof os.layer.Vector) {
+      const padClass = checkboxParts.length ? 'pl-1' : '';
+      checkboxParts.push(`<layervisibility class="c-glyph ${padClass}"></layervisibility>`);
+    }
+  }
+
+  return checkboxParts.join('');
 };
 
 
@@ -123,15 +150,15 @@ os.data.LayerNode.prototype.setLayer = function(value) {
         var layers = /** @type {os.layer.LayerGroup} */ (value).getLayers();
         for (var i = 0, n = layers.length; i < n; i++) {
           if (result === undefined) {
-            result = layers[i].getLayerVisible();
-          } else if (result != layers[i].getLayerVisible()) {
+            result = layers[i].isEnabled();
+          } else if (result != layers[i].isEnabled()) {
             this.setState(os.structs.TriState.BOTH);
             result = undefined;
             break;
           }
         }
       } else {
-        result = value.getLayerVisible();
+        result = value.isEnabled();
       }
 
       if (result !== undefined) {
@@ -154,7 +181,7 @@ os.data.LayerNode.prototype.getId = function() {
     return this.layer_.getId();
   }
 
-  return os.data.LayerNode.superClass_.getId.call(this);
+  return os.data.LayerNode.base(this, 'getId');
 };
 
 
@@ -166,7 +193,7 @@ os.data.LayerNode.prototype.getLabel = function() {
     return this.layer_.getTitle();
   }
 
-  return os.data.LayerNode.superClass_.getId.call(this);
+  return this.getId();
 };
 
 
@@ -213,7 +240,7 @@ os.data.LayerNode.prototype.formatIcons = function() {
   }
 
   if (!s) {
-    return os.data.LayerNode.superClass_.formatIcons.call(this);
+    return os.data.LayerNode.base(this, 'formatIcons');
   }
 
   return s;
@@ -248,10 +275,15 @@ os.data.LayerNode.prototype.onPropertyChange = function(e) {
       case os.layer.PropertyChange.LOADING:
         this.dispatchEvent(new os.events.PropertyChangeEvent('loading', e.getOldValue(), e.getNewValue()));
         break;
-      case os.layer.PropertyChange.VISIBLE:
+      case os.layer.PropertyChange.ENABLED:
         // force the checkbox to update
         this.setState(e.getNewValue() ? os.structs.TriState.ON : os.structs.TriState.OFF);
-        this.dispatchEvent(new os.events.PropertyChangeEvent('loading'));
+        // update the label (styled differently when disabled/hidden)
+        this.dispatchEvent(new os.events.PropertyChangeEvent('label'));
+        break;
+      case os.layer.PropertyChange.VISIBLE:
+        // update the label (styled differently when disabled/hidden)
+        this.dispatchEvent(new os.events.PropertyChangeEvent('label'));
         break;
       case os.layer.PropertyChange.TITLE:
         // change the label
@@ -282,7 +314,21 @@ os.data.LayerNode.prototype.onPropertyChange = function(e) {
  */
 os.data.LayerNode.prototype.updateFrom = function(other) {
   this.setLayer(other.getLayer());
-  os.data.LayerNode.superClass_.updateFrom.call(this, other);
+  os.data.LayerNode.base(this, 'updateFrom', other);
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.data.LayerNode.prototype.formatLabel = function(value) {
+  var labelClass = 'text-truncate flex-fill';
+  if (this.layer_ && (!this.layer_.isEnabled() || !this.layer_.getLayerVisible())) {
+    // if the layer is disabled/hidden, adjust the style to indicate the change
+    labelClass += ' text-muted';
+  }
+
+  return `<span class="${labelClass}">${this.formatValue(value)}</span>`;
 };
 
 
@@ -290,7 +336,7 @@ os.data.LayerNode.prototype.updateFrom = function(other) {
  * @inheritDoc
  */
 os.data.LayerNode.prototype.formatValue = function(value) {
-  var s = os.data.LayerNode.superClass_.formatValue.call(this, value);
+  var s = os.data.LayerNode.base(this, 'formatValue', value);
   var layer = this.getLayer();
 
   if (layer instanceof os.layer.LayerGroup) {

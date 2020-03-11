@@ -66,12 +66,15 @@ os.ui.SourceAware.VALIDATION_FUNCTIONS = [];
 
 
 /**
- * @type {!Array<!string>}
+ * Events that will trigger a source update.
+ * @type {!Array<string>}
  * @const
  */
 os.ui.SourceAware.UPDATE_EVENTS = [
+  os.source.PropertyChange.ENABLED,
   os.source.PropertyChange.TITLE,
-  os.source.PropertyChange.VISIBLE];
+  os.source.PropertyChange.VISIBLE
+];
 
 
 /**

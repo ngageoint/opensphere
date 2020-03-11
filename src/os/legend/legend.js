@@ -567,7 +567,8 @@ os.legend.drawVectorLayer = function(layer, options) {
  * @return {boolean} If the source should be included.
  */
 os.legend.shouldDrawSource = function(source) {
-  return source instanceof os.source.Vector && source.getVisible() && source.getFeatureCount() > 0;
+  return source instanceof os.source.Vector && source.isEnabled() && source.getVisible() &&
+      source.getFeatureCount() > 0;
 };
 
 

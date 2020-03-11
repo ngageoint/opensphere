@@ -200,6 +200,16 @@ plugin.places.PlacesManager.prototype.addLayer = function() {
     // don't allow removing the layer via the UI
     this.placesLayer_.setRemovable(false);
 
+    if (this.placesRoot_) {
+      // the old KML visibility logic caused the layer 'visible' flag to be set to false if all places were removed,
+      // even if the checkbox was toggled on. we don't want to initialize the layer as hidden if this is the case, so
+      // always show the layer if there aren't any children.
+      var children = this.placesRoot_.getChildren();
+      if (!children || !children.length) {
+        this.placesLayer_.setLayerVisible(true);
+      }
+    }
+
     var z = os.data.ZOrder.getInstance();
     var zType = z.getZType(plugin.places.ID);
 
@@ -484,13 +494,16 @@ plugin.places.PlacesManager.prototype.onSourcePropertyChange_ = function(event) 
     if (!this.placesSource_.isLoading()) {
       this.onSourceLoaded_();
     }
-  } else if (this.saveDelay_ && (p === os.source.PropertyChange.FEATURE_VISIBILITY ||
-      p === os.source.PropertyChange.FEATURES)) {
-    // only save if a list of changed features was provided. if not, it's a general refresh event and can be ignored.
-    var newVal = event.getNewValue();
-    var oldVal = event.getOldValue();
-    if (newVal || oldVal) {
+  } else if (this.saveDelay_) {
+    if (p === os.source.PropertyChange.VISIBLE) {
       this.saveDelay_.start();
+    } else if (p === os.source.PropertyChange.FEATURE_VISIBILITY || p === os.source.PropertyChange.FEATURES) {
+      // only save if a list of changed features was provided. if not, it's a general refresh event and can be ignored.
+      var newVal = event.getNewValue();
+      var oldVal = event.getOldValue();
+      if (newVal || oldVal) {
+        this.saveDelay_.start();
+      }
     }
   }
 };

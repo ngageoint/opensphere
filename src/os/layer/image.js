@@ -168,6 +168,24 @@ os.layer.Image.prototype.setLayerOptions = function(value) {
 /**
  * @inheritDoc
  */
+os.layer.Image.prototype.isEnabled = function() {
+  // Layer does not have separate enabled/visible states, so this is a pass-through.
+  return this.getLayerVisible();
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.Image.prototype.setEnabled = function(value) {
+  // Layer does not have separate enabled/visible states, so this is a pass-through.
+  this.setLayerVisible(value);
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.layer.Image.prototype.isLoading = function() {
   return this.loading_;
 };
