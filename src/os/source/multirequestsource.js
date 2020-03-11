@@ -122,7 +122,7 @@ os.source.MultiRequest.prototype.abortRequest = function() {
 os.source.MultiRequest.prototype.loadRequest = function() {
   this.abortRequest();
 
-  if (this.requests_.length > 0 && !this.isLocked()) {
+  if (this.requests_.length > 0 && this.isEnabled() && !this.isLocked()) {
     this.durationStart_ = Date.now();
     this.setLoading(true);
 
@@ -155,7 +155,7 @@ os.source.MultiRequest.prototype.setLocked = function(value) {
  * @inheritDoc
  */
 os.source.MultiRequest.prototype.refresh = function() {
-  if (!this.isLocked()) {
+  if (this.isEnabled() && !this.isLocked()) {
     if (this.importer_) {
       this.importer_.reset();
     }

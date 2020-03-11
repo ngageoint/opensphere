@@ -356,6 +356,24 @@ plugin.cesium.Layer.prototype.setIcons = function(value) {
 /**
  * @inheritDoc
  */
+plugin.cesium.Layer.prototype.isEnabled = function() {
+  // Layer does not have separate enabled/visible states, so this is a pass-through.
+  return this.getLayerVisible();
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.Layer.prototype.setEnabled = function(value) {
+  // Layer does not have separate enabled/visible states, so this is a pass-through.
+  this.setLayerVisible(value);
+};
+
+
+/**
+ * @inheritDoc
+ */
 plugin.cesium.Layer.prototype.isLoading = function() {
   return this.loading_;
 };

@@ -68,10 +68,12 @@ os.data.SourceManager.VALIDATION_FUNCTIONS = [];
 
 
 /**
- * @type {!Array<!string>}
+ * Events that will trigger a source update.
+ * @type {!Array<string>}
  * @const
  */
 os.data.SourceManager.UPDATE_EVENTS = [
+  os.source.PropertyChange.ENABLED,
   os.source.PropertyChange.TITLE,
   os.source.PropertyChange.VISIBLE
 ];
