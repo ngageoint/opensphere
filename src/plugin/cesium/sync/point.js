@@ -226,6 +226,7 @@ const updateImageDefault = (style, bb) => {
  * @param {!(Cesium.Billboard|Cesium.optionsBillboardCollectionAdd)} bb
  */
 const updateColorAlpha = (style, context, bb) => {
+  bb.color = bb.color || new Cesium.Color(1, 1, 1, 1);
   bb.color.alpha = context.layer.getOpacity();
   const opacity = style.getOpacity();
   if (opacity != null) {
