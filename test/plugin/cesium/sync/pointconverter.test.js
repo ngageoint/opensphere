@@ -85,6 +85,42 @@ describe('plugin.cesium.sync.PointConverter', () => {
       anchor: [0.5, 1.0],
       crossOrigin: 'none',
       src: '/base/images/icons/pushpin/wht-pushpin.png',
+      opacity: 0.5,
+      scale: 0.8,
+      size: [10, 20],
+      rotation: 90
+    }));
+
+    const result = pointConverter.create(feature, geometry, style, context);
+    expect(result).toBe(true);
+    expect(context.billboards.length).toBe(1);
+
+    const imageStyle = style.getImage();
+    const billboard = context.billboards.get(0);
+    expect(billboard.image).toBe(imageStyle.getSrc());
+
+    expect(billboard.color.red).toBeCloseTo(1, 12);
+    expect(billboard.color.blue).toBeCloseTo(1, 12);
+    expect(billboard.color.green).toBeCloseTo(1, 12);
+    expect(billboard.color.alpha).toBeCloseTo(0.5, 12);
+
+    expect(billboard.scale).toBeCloseTo(imageStyle.getScale(), 12);
+    expect(billboard.rotation).toBeCloseTo(-imageStyle.getRotation(), 0); // yes, opposite direction
+
+    expect(billboard.horizontalOrigin).toBe(Cesium.HorizontalOrigin.RIGHT);
+    expect(billboard.verticalOrigin).toBe(Cesium.VerticalOrigin.BOTTOM);
+
+    expect(billboard.pixelOffset.x).toBeCloseTo(imageStyle.getScale() * (
+      imageStyle.getSize()[0] - imageStyle.getAnchor()[0]), 12);
+    expect(billboard.pixelOffset.y).toBeCloseTo(imageStyle.getScale() * (
+      imageStyle.getSize()[1] - imageStyle.getAnchor()[1]), 12);
+  });
+
+  it('should create a billboard for a colored icon style', () => {
+    style.setImage(new ol.style.Icon({
+      anchor: [0.5, 1.0],
+      crossOrigin: 'none',
+      src: '/base/images/icons/pushpin/wht-pushpin.png',
       color: green,
       opacity: 0.5,
       scale: 0.8,
