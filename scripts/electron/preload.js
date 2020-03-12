@@ -14,6 +14,9 @@ let certHandler;
  */
 const registerCertificateHandler = (handler) => {
   certHandler = handler;
+
+  // Notify the main process that the handler has been registered.
+  ipcRenderer.send('client-certificate-handler-registered');
 };
 
 
