@@ -25,6 +25,10 @@ class MultiPolygonConverter extends PolygonConverter {
    * @inheritDoc
    */
   update(feature, geometry, style, context, primitive) {
+    if (super.isFillBeingAdded(style, context, primitive)) {
+      return false;
+    }
+
     for (let i = 0, n = primitive.length; i < n; i++) {
       if (!super.update(feature, geometry, style, context, primitive[i])) {
         return false;
@@ -32,6 +36,13 @@ class MultiPolygonConverter extends PolygonConverter {
     }
 
     return true;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  isFillBeingAdded(style, context, primitive) {
+    return false;
   }
 }
 

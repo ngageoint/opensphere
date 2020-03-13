@@ -28,7 +28,7 @@ class PolygonConverter extends LineStringConverter {
    * @inheritDoc
    */
   update(feature, geometry, style, context, primitive) {
-    if (isFillBeingAdded(style, context, primitive)) {
+    if (this.isFillBeingAdded(style, context, primitive)) {
       return false;
     }
 
@@ -56,27 +56,41 @@ class PolygonConverter extends LineStringConverter {
       return true;
     }
 
-    if (isFillBeingRemoved(style, context, primitive)) {
+    if (this.isFillBeingRemoved(style, context, primitive)) {
       // leave it dirty so it will be removed
       return true;
     }
 
     return super.update(feature, geometry, style, context, primitive);
   }
+
+
+  /**
+   * @param {!Style} style
+   * @param {!VectorContext} context
+   * @param {!Array<!Cesium.Primitive>|!Cesium.Primitive} primitive
+   * @return {boolean}
+   */
+  isFillBeingAdded(style, context, primitive) {
+    const styleHasFill = style.getFill() ? getColor(style, context, GeometryInstanceId.GEOM).alpha > 0 : false;
+    const primitiveHasFill = Array.isArray(primitive) ? primitive.some(isPolygonFill) : isPolygonFill(primitive);
+    return styleHasFill && !primitiveHasFill;
+  }
+
+
+  /**
+   * @param {!Style} style
+   * @param {!VectorContext} context
+   * @param {!Cesium.Primitive} primitive
+   * @return {boolean}
+   */
+  isFillBeingRemoved(style, context, primitive) {
+    if (isPolygonFill(primitive)) {
+      return style.getFill() ? getColor(style, context, GeometryInstanceId.GEOM).alpha === 0 : true;
+    }
+    return false;
+  }
 }
-
-
-/**
- * @param {!Style} style
- * @param {!VectorContext} context
- * @param {!Array<!Cesium.Primitive>|!Cesium.Primitive} primitive
- * @return {boolean}
- */
-const isFillBeingAdded = (style, context, primitive) => {
-  const styleHasFill = style.getFill() ? getColor(style, context, GeometryInstanceId.GEOM).alpha > 0 : false;
-  const primitiveHasFill = Array.isArray(primitive) ? primitive.some(isPolygonFill) : isPolygonFill(primitive);
-  return styleHasFill && !primitiveHasFill;
-};
 
 
 /**
@@ -84,20 +98,6 @@ const isFillBeingAdded = (style, context, primitive) => {
  * @return {boolean}
  */
 const isPolygonFill = (primitive) => primitive['olLineWidth'] == null;
-
-
-/**
- * @param {!Style} style
- * @param {!VectorContext} context
- * @param {!Cesium.Primitive} primitive
- * @return {boolean}
- */
-const isFillBeingRemoved = (style, context, primitive) => {
-  if (isPolygonFill(primitive)) {
-    return style.getFill() ? getColor(style, context, GeometryInstanceId.GEOM).alpha === 0 : true;
-  }
-  return false;
-};
 
 
 exports = PolygonConverter;
