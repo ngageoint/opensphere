@@ -103,7 +103,8 @@ describe('os.source.Vector', function() {
     var mapContainer = {
       getLayer: goog.functions.constant(layer),
       getMap: goog.functions.NULL,
-      is3DEnabled: goog.functions.FALSE
+      is3DEnabled: goog.functions.FALSE,
+      is3DSupported: goog.functions.FALSE
     };
 
     spyOn(os.MapContainer, 'getInstance').andReturn(mapContainer);

@@ -41,10 +41,6 @@
     "initialOnboarding": "onboarding/intro.json",
     "caInstructions": "",
     "cesiumEnabled": false,
-    "maxFeatures": {
-      "2d": 50000,
-      "3d": 150000
-    },
     "maxLabels": 5,
     "enableReprojection": false,
     "proxy": {
@@ -228,6 +224,10 @@
   "user": {
     "dataManager": {
       "filterTime": true
+    },
+    "maxFeatures": {
+      "2d": 50000,
+      "cesium": 150000
     },
     "onboarding": {
       "showOnboarding": true
