@@ -74,6 +74,13 @@ os.webgl.AbstractWebGLRenderer = function() {
     os.config.DisplaySetting.FOG_DENSITY,
     os.config.DisplaySetting.TERRAIN_OPTIONS
   ];
+
+  /**
+   * Settings key to get the max features value for this renderer.
+   * @type {string}
+   * @protected
+   */
+  this.maxFeaturesKey = 'maxFeatures.3d';
 };
 goog.inherits(os.webgl.AbstractWebGLRenderer, goog.Disposable);
 
@@ -367,3 +374,19 @@ os.webgl.AbstractWebGLRenderer.prototype.onPostRender = function(callback) {
  * @abstract
  */
 os.webgl.AbstractWebGLRenderer.prototype.flyToFeatures = function(features) {};
+
+
+/**
+ * @inheritDoc
+ */
+os.webgl.AbstractWebGLRenderer.prototype.getMaxFeatureCount = function() {
+  return /** @type {number} */ (os.settings.get(this.maxFeaturesKey, 150000));
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.webgl.AbstractWebGLRenderer.prototype.setMaxFeatureCount = function(value) {
+  os.settings.set(this.maxFeaturesKey, value);
+};
