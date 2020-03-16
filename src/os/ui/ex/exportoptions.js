@@ -99,6 +99,7 @@ goog.inherits(os.ui.ex.ExportOptionsCtrl, goog.Disposable);
  * @private
  */
 os.ui.ex.ExportOptionsCtrl.SOURCE_EVENTS_ = [
+  os.source.PropertyChange.ENABLED,
   os.source.PropertyChange.FEATURES,
   os.source.PropertyChange.FEATURE_VISIBILITY,
   os.source.PropertyChange.VISIBLE,
@@ -178,7 +179,7 @@ os.ui.ex.ExportOptionsCtrl.prototype.initSources_ = function() {
   for (var i = 0, n = sources.length; i < n; i++) {
     var source = sources[i];
     if (this.includeSource(source)) {
-      if (source.getVisible()) {
+      if (source.isEnabled() && source.getVisible()) {
         var enabled = enabledSources == 'all' || ol.array.includes(enabledSources, source);
         this['sourceItems'].push(this.createChecklistItem_(source, enabled));
       }
@@ -215,8 +216,8 @@ os.ui.ex.ExportOptionsCtrl.prototype.onSourceChange_ = function(event) {
     var item = this.getSourceItem_(source);
     var p = event.getProperty();
 
-    if (p === os.source.PropertyChange.VISIBLE) {
-      if (!source.getVisible()) {
+    if (p === os.source.PropertyChange.ENABLED || p === os.source.PropertyChange.VISIBLE) {
+      if (!source.isEnabled() || !source.getVisible()) {
         // source isn't visible, so remove it from the list
         this.getSourceItem_(source, true);
       } else if (!item) {

@@ -18,11 +18,9 @@ goog.require('os.query.BaseAreaManager');
 os.data.DrawingLayerNode = function() {
   os.data.DrawingLayerNode.base(this, 'constructor');
 
-  // we do NOT want to bubble state. Toggling the checkbox for the drawing layer should
+  // We do NOT want to bubble state. Toggling the checkbox for the drawing layer should
   // only toggle visibility. If you actually have it toggle the children area nodes,
   // any queries based on those nodes will clear and re-fire.
-  //
-  // Yes, this is exactly the opposite of what the KML plugin does with its tree.
   this.setBubbleState(false);
 
   this.sortDelay_ = new goog.async.Delay(this.onSortDelay, 50, this);

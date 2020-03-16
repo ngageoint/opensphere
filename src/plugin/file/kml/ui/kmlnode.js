@@ -34,7 +34,6 @@ plugin.file.kml.ui.KMLNodeAction = {
 };
 
 
-
 /**
  * Base KML tree node
  *
@@ -46,6 +45,7 @@ plugin.file.kml.ui.KMLNodeAction = {
  */
 plugin.file.kml.ui.KMLNode = function() {
   plugin.file.kml.ui.KMLNode.base(this, 'constructor');
+  this.checkboxTooltip = 'Show/hide the node';
   this.nodeUI = '<kmlnodeui></kmlnodeui>';
 
   // KML nodes should save their collapsed state in the file content if needed because their getId values are not
@@ -814,7 +814,7 @@ plugin.file.kml.ui.KMLNode.prototype.formatIcons = function() {
     }
 
     // add an info icon to launch feature info
-    icons.push('<i class="fa fa-info-circle fa-fw compact gold-icon pointer" title="Feature Info" ' +
+    icons.push('<i class="fa fa-info-circle fa-fw c-glyph" title="Feature Info" ' +
         'ng-click="itemAction(\'' + plugin.file.kml.ui.KMLNodeAction.FEATURE_INFO + '\')"></i>');
 
     return icons.join('');

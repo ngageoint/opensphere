@@ -650,6 +650,24 @@ os.layer.Tile.prototype.getIconsInternal = function() {
 /**
  * @inheritDoc
  */
+os.layer.Tile.prototype.isEnabled = function() {
+  // Layer does not have separate enabled/visible states, so this is a pass-through.
+  return this.getLayerVisible();
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.Tile.prototype.setEnabled = function(value) {
+  // Layer does not have separate enabled/visible states, so this is a pass-through.
+  this.setLayerVisible(value);
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.layer.Tile.prototype.isLoading = function() {
   return this.loading_;
 };
@@ -828,8 +846,8 @@ os.layer.Tile.prototype.identify = function() {
  * @inheritDoc
  */
 os.layer.Tile.prototype.getLayerVisible = function() {
-  // always use the inherited ol3 value
-  return os.layer.Tile.superClass_.getVisible.call(this);
+  // always use the inherited OpenLayers value
+  return ol.layer.Tile.prototype.getVisible.call(this);
 };
 
 

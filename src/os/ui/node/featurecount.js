@@ -38,6 +38,13 @@ os.ui.Module.directive('featurecount', [os.ui.node.featureCountDirective]);
  */
 os.ui.node.FeatureCountCtrl = function($scope, $element) {
   /**
+   * The layer.
+   * @type {os.layer.Vector}
+   * @private
+   */
+  this.layer_ = null;
+
+  /**
    * @type {?os.source.Vector}
    * @private
    */
@@ -51,11 +58,15 @@ os.ui.node.FeatureCountCtrl = function($scope, $element) {
 
   if ('item' in $scope) {
     var node = /** @type {os.data.LayerNode} */ ($scope['item']);
-    var src = /** @type {ol.layer.Layer} */ (node.getLayer()).getSource();
+    var layer = node ? node.getLayer() : null;
+    if (layer instanceof os.layer.Vector) {
+      this.layer_ = layer;
 
-    if (src && src instanceof os.source.Vector) {
-      this.source_ = /** @type {os.source.Vector} */ (src);
-      ol.events.listen(this.source_, goog.events.EventType.PROPERTYCHANGE, this.onPropertyChange_, this);
+      var src = layer.getSource();
+      if (src && src instanceof os.source.Vector) {
+        this.source_ = /** @type {os.source.Vector} */ (src);
+        ol.events.listen(this.source_, goog.events.EventType.PROPERTYCHANGE, this.onPropertyChange_, this);
+      }
     }
   }
 
@@ -99,7 +110,11 @@ os.ui.node.FeatureCountCtrl.prototype.onPropertyChange_ = function(e) {
  */
 os.ui.node.FeatureCountCtrl.prototype.getTotal = function() {
   try {
-    if (this.source_ && !this.source_.isDisposed()) {
+    if (this.layer_ && this.source_ && !this.source_.isDisposed()) {
+      if (!this.source_.isEnabled()) {
+        return '(Disabled)';
+      }
+
       if (this.source_.isLoading()) {
         return '(Loading...)';
       }

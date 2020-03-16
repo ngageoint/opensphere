@@ -46,6 +46,20 @@ os.layer.ILayer.prototype.getSource;
 
 
 /**
+ * Whether or not the layer is enabled
+ * @return {boolean}
+ */
+os.layer.ILayer.prototype.isEnabled;
+
+
+/**
+ * Sets whether or not the layer is enabled
+ * @param {boolean} value
+ */
+os.layer.ILayer.prototype.setEnabled;
+
+
+/**
  * Whether or not the layer is loading
  * @return {boolean}
  */

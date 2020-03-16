@@ -146,6 +146,22 @@ os.ogc.getWfsParams = function(descriptor) {
  * @return {number}
  */
 os.ogc.getMaxFeatures = function(opt_key) {
-  var key = opt_key || 'maxFeatures';
-  return /** @type {number} */ (os.settings.get(key, 50000));
+  if (opt_key) {
+    // use the key if provided
+    return /** @type {number} */ (os.settings.get('maxFeatures.' + opt_key, 50000));
+  }
+
+  if (os.MapContainer) {
+    const map = os.MapContainer.getInstance();
+    if (map && map.is3DSupported() && map.is3DEnabled()) {
+      // try getting it for the 3D renderer
+      const renderer = map.getWebGLRenderer();
+      if (renderer) {
+        return renderer.getMaxFeatureCount();
+      }
+    }
+  }
+
+  // fallback to the safest option
+  return /** @type {number} */ (os.settings.get('maxFeatures.2d', 50000));
 };
