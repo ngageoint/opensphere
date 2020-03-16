@@ -79,21 +79,3 @@ plugin.ogc.getDefaultWfsOptions = function() {
 
   return options;
 };
-
-
-/**
- * Get the maxiumum number of features supported by the application, accounting for 2D/3D modes.
- *
- * @param {string=} opt_key
- * @return {number}
- */
-plugin.ogc.getMaxFeatures = function(opt_key) {
-  var mode = opt_key || os.settings.get(os.config.DisplaySetting.MAP_MODE) || os.MapMode.VIEW_2D;
-  return /** @type {number} */ (os.settings.get('maxFeatures.' + mode, 50000));
-};
-
-
-/**
- * Override the default function.
- */
-os.ogc.getMaxFeatures = plugin.ogc.getMaxFeatures;
