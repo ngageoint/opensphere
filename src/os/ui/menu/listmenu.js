@@ -1,9 +1,6 @@
 goog.provide('os.ui.menu.list');
 
 goog.require('os.command.FeaturesVisibility');
-goog.require('os.command.InvertSelect');
-goog.require('os.command.SelectAll');
-goog.require('os.command.SelectNone');
 goog.require('os.feature');
 goog.require('os.fn');
 goog.require('os.instanceOf');
