@@ -1,6 +1,6 @@
 goog.module('plugin.cesium.sync.PointConverter');
 
-const {createBillboard, updateBillboard} = goog.require('plugin.cesium.sync.point');
+const {createBillboard, updateBillboard, updateStyleAfterLoad} = goog.require('plugin.cesium.sync.point');
 const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
 
 const MultiPoint = goog.requireType('ol.geom.MultiPoint');
@@ -18,7 +18,11 @@ class PointConverter extends BaseConverter {
     const imageStyle = style.getImage();
     if (imageStyle) {
       const billboardOptions = createBillboard(feature, /** @type {!(Point)} */ (geometry), imageStyle, context);
-      context.addBillboard(billboardOptions, feature, geometry);
+      const billboard = context.addBillboard(billboardOptions, feature, geometry);
+      if (billboard) {
+        updateStyleAfterLoad(billboard, imageStyle);
+      }
+
       return true;
     }
 
@@ -32,8 +36,9 @@ class PointConverter extends BaseConverter {
   update(feature, geometry, style, context, primitive) {
     const imageStyle = style.getImage();
     if (imageStyle) {
-      updateBillboard(feature, /** @type {!(Point)} */ (geometry), imageStyle, context,
-          /** @type {!Cesium.Billboard} */ (primitive));
+      const billboard = /** @type {!Cesium.Billboard} */ (primitive);
+      updateBillboard(feature, /** @type {!(Point)} */ (geometry), imageStyle, context, billboard);
+      updateStyleAfterLoad(billboard, imageStyle);
       return true;
     }
 

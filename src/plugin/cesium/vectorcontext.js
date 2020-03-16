@@ -309,6 +309,7 @@ class VectorContext {
    * @param {!Cesium.optionsBillboardCollectionAdd} options The billboard configuration
    * @param {!Feature} feature The OL3 feature tied to the billboard
    * @param {!Geometry} geometry The billboard's geometry
+   * @return {?Cesium.Billboard}
    */
   addBillboard(options, feature, geometry) {
     if (!feature.isDisposed()) {
@@ -316,7 +317,10 @@ class VectorContext {
       this.updateGeometryMap_(geometry, billboard);
       this.addFeaturePrimitive(feature, billboard);
       this.addOLReferences(billboard, feature, geometry);
+      return billboard;
     }
+
+    return null;
   }
 
   /**

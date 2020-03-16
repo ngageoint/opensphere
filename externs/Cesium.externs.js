@@ -329,6 +329,16 @@ Cesium.Billboard = function() {};
 Cesium.Billboard.prototype._imageId;
 
 /**
+ * @type {number|undefined}
+ */
+Cesium.Billboard.prototype._imageHeight;
+
+/**
+ * @type {number|undefined}
+ */
+Cesium.Billboard.prototype._imageWidth;
+
+/**
  * @type {Cesium.Cartesian3}
  */
 Cesium.Billboard.prototype.alignedAxis;

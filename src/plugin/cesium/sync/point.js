@@ -6,6 +6,7 @@ const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
 const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
 const {drawShape} = goog.require('plugin.cesium.sync.shape');
 const OLIconStyle = goog.require('ol.style.Icon');
+const OSIconStyle = goog.require('os.style.Icon');
 const OLRegularShape = goog.require('ol.style.RegularShape');
 
 const Feature = goog.requireType('ol.Feature');
@@ -254,6 +255,22 @@ const updateBillboardImage = (bb, imageId, image) => {
 
 
 /**
+ * @param {!Cesium.Billboard} bb
+ * @param {OLImageStyle} style
+ */
+const updateStyleAfterLoad = (bb, style) => {
+  if (style instanceof OLIconStyle) {
+    if (bb._imageIndexPromise) {
+      bb._imageIndexPromise.then(() => updateStyleAfterLoad(bb, style));
+    } else if (bb._imageWidth && bb._imageHeight) {
+      updateStyleFromSize(style, bb._imageWidth, bb._imageHeight);
+      updateSizeDynamicIconProperties(style, bb);
+    }
+  }
+};
+
+
+/**
  * @type {Cesium.NearFarScalar}
  */
 let distanceScalar = null;
@@ -309,45 +326,33 @@ const updateSizeDynamicIconProperties = (style, bb) => {
  */
 const iconStyleToImagePromise = (geometry, style, context, bb, opt_index) => {
   bb.dirty = false;
-
-  const originalShow = bb.show;
-  bb.show = false;
-
   const src = style.getSrc() || '';
   const resource = Cesium.Resource.createIfNeeded(src);
-  return resource.fetchImage().then((image) => {
-    const billboard = getBillboardFromContext(geometry, context, opt_index);
-    if (billboard) {
-      updateSizeDynamicIconProperties(style, billboard);
-    }
-
-    bb.show = originalShow;
-    return image;
-  });
+  return resource.fetchImage();
 };
 
 
 /**
- * @param {!(Point|MultiPoint)} geometry
- * @param {VectorContext} context
- * @param {number=} opt_index
- * @return {Cesium.Billboard}
+ * @param {!OLIconStyle} style
+ * @param {number} width
+ * @param {number} height
+ * @suppress {accessControls}
  */
-const getBillboardFromContext = (geometry, context, opt_index) => {
-  let primitive = context.getPrimitiveForGeometry(geometry);
-  if (primitive) {
-    if (primitive instanceof Cesium.BillboardCollection) {
-      if (opt_index != null && opt_index < primitive.length) {
-        primitive = primitive.get(opt_index);
-      }
+const updateStyleFromSize = (style, width, height) => {
+  if (!style.size_) {
+    const size = [width, height];
+    if (style instanceof OSIconStyle) {
+      /** @type {OSIconStyle} */ (style).setSize(size);
+    } else {
+      style.normalizedAnchor_ = null;
+      style.size_ = size;
     }
   }
-
-  return /** @type {Cesium.Billboard} */ (primitive);
 };
 
 
 exports = {
   createBillboard,
-  updateBillboard
+  updateBillboard,
+  updateStyleAfterLoad
 };
