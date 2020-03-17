@@ -339,6 +339,11 @@ Cesium.Billboard.prototype._imageHeight;
 Cesium.Billboard.prototype._imageWidth;
 
 /**
+ * @type {Promise<number>|undefined}
+ */
+Cesium.Billboard.prototype._imageIndexPromise;
+
+/**
  * @type {Cesium.Cartesian3}
  */
 Cesium.Billboard.prototype.alignedAxis;
