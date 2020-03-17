@@ -68,6 +68,9 @@ const getFeatureStyles = (feature, resolution, layer) => {
     return null;
   }
 
+  // This block is needed to satisfy the compiler, although I haven't found a way
+  // to invoke it via tests (which I think means there's a deficiency in the OL closure
+  // type definitions).
   if (!Array.isArray(style)) {
     scratchStyleArray[0] = style;
     return scratchStyleArray;

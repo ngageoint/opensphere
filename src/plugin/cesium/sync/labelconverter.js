@@ -35,7 +35,7 @@ class LabelConverter extends BaseConverter {
    * @inheritDoc
    */
   create(feature, geometry, style, context) {
-    if (!goog.string.isEmptyOrWhitespace(goog.string.makeSafe(style.getText()))) {
+    if (style.getText()) {
       const options = /** @type {!Cesium.optionsLabelCollection} */ ({});
       this.update(feature, geometry, style, context, /** @type {!Cesium.Label} */ (options));
       context.addLabel(options, feature, geometry);
@@ -79,9 +79,7 @@ class LabelConverter extends BaseConverter {
       label.show = isPrimitiveShown(prim);
     }
 
-    if (context.scene) {
-      label.eyeOffset = context.labelEyeOffset;
-    }
+    label.eyeOffset = context.labelEyeOffset;
 
     if (isLabelInstance) {
       // mark as updated so it isn't deleted

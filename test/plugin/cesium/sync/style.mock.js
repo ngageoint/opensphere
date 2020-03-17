@@ -14,8 +14,8 @@ const normalizeColor = (color) => {
   if (!(color instanceof Cesium.Color)) {
     if (Array.isArray(color) || color instanceof Uint8Array) {
       return Cesium.Color.fromBytes.apply(null, color);
-    } else if (typeof expectedColor === 'string') {
-      return Cesium.Color.fromCssColorString(expectedColor);
+    } else if (typeof color === 'string') {
+      return Cesium.Color.fromCssColorString(color);
     }
   }
 
