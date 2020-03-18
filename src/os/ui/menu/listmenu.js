@@ -1,9 +1,6 @@
 goog.provide('os.ui.menu.list');
 
 goog.require('os.command.FeaturesVisibility');
-goog.require('os.command.InvertSelect');
-goog.require('os.command.SelectAll');
-goog.require('os.command.SelectNone');
 goog.require('os.feature');
 goog.require('os.fn');
 goog.require('os.instanceOf');
@@ -127,18 +124,18 @@ os.ui.menu.list.handleListEvent = function(event) {
     var eventType = event.type.replace(os.ui.menu.list.PREFIX_REGEXP, '');
     switch (eventType) {
       case os.action.EventType.SELECT:
-        // omit selection events from the stack to reduce clutter
-        new os.command.SelectAll(source.getId()).execute();
+        // don't create and execute a command if it's simple and we don't want it on the stack
+        source.selectAll();
         os.metrics.Metrics.getInstance().updateMetric(os.metrics.FeatureList.SELECT_ALL, 1);
         break;
       case os.action.EventType.DESELECT:
-        // omit selection events from the stack to reduce clutter
-        new os.command.SelectNone(source.getId()).execute();
+        // don't create and execute a command if it's simple and we don't want it on the stack
+        source.selectNone();
         os.metrics.Metrics.getInstance().updateMetric(os.metrics.FeatureList.DESELECT_ALL, 1);
         break;
       case os.action.EventType.INVERT:
-        // omit selection events from the stack to reduce clutter
-        new os.command.InvertSelect(source.getId()).execute();
+        // don't create and execute a command if it's simple and we don't want it on the stack
+        source.invertSelection();
         os.metrics.Metrics.getInstance().updateMetric(os.metrics.FeatureList.INVERT_SELECTION, 1);
         break;
       case os.action.EventType.HIDE_SELECTED:
