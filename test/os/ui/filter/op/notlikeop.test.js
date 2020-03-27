@@ -1,6 +1,6 @@
 goog.require('os.ui.filter.op.NotLike');
 
-describe('os.ui.filter.op.NotLike', function() {
+ddescribe('os.ui.filter.op.NotLike', function() {
   var op = new os.ui.filter.op.NotLike();
   var innerOp = op.op;
 
@@ -14,12 +14,9 @@ describe('os.ui.filter.op.NotLike', function() {
   it('should generate the proper filter function expression', function() {
     // one wildcard
     var expr = op.getEvalExpression('testVar', 'testV*');
-    expect(expr).toBe('!(/^testV.*$/i.test(testVar))');
+    expect(expr).toBe('!(/^testV.*$/im.test(testVar))');
 
-    var testVar = 'testVal';
-
-    // prevent eslint no-unused-vars
-    expect(testVar).toBeDefined();
+    var testVar = 'testVal'; // eslint-disable-line
 
     expect(eval(expr)).toBe(false);
 
@@ -31,7 +28,7 @@ describe('os.ui.filter.op.NotLike', function() {
 
     // multiple wildcards
     expr = op.getEvalExpression('testVar', '*V*');
-    expect(expr).toBe('!(/^.*V.*$/i.test(testVar))');
+    expect(expr).toBe('!(/^.*V.*$/im.test(testVar))');
 
     testVar = 'testVal';
     expect(eval(expr)).toBe(false);
@@ -47,7 +44,7 @@ describe('os.ui.filter.op.NotLike', function() {
 
     // single character wildcards
     expr = op.getEvalExpression('testVar', 'f.....uck');
-    expect(expr).toBe('!(/^f.....uck$/i.test(testVar))');
+    expect(expr).toBe('!(/^f.....uck$/im.test(testVar))');
 
     testVar = 'firetruck';
     expect(eval(expr)).toBe(false);
@@ -70,5 +67,19 @@ describe('os.ui.filter.op.NotLike', function() {
     expect(op.getEvalExpression('testVar', null)).toBe('');
     expect(op.getEvalExpression('testVar', '')).toBe('');
     expect(op.getEvalExpression('testVar', '   ')).toBe('');
+  });
+
+  it('should match multi-line strings', function() {
+    var expr = op.getEvalExpression('testVar', 'testV*');
+    expect(expr).toBe('!(/^testV.*$/im.test(testVar))');
+
+    var testVar = 'testVal'; // eslint-disable-line
+    expect(eval(expr)).toBe(false);
+
+    testVar = 'otherVal\ntestVal';
+    expect(eval(expr)).toBe(false);
+
+    testVar = 'otherVal\nline doesnt start with testVal';
+    expect(eval(expr)).toBe(true);
   });
 });
