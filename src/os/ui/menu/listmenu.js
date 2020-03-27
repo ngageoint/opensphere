@@ -4,6 +4,7 @@ goog.require('os.command.FeaturesVisibility');
 goog.require('os.feature');
 goog.require('os.fn');
 goog.require('os.instanceOf');
+goog.require('os.lang');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
@@ -58,18 +59,18 @@ os.ui.menu.list.setup = function() {
       type: os.ui.menu.MenuItemType.GROUP,
       sort: 3,
       children: [{
-        label: 'Color Selected',
+        label: os.lang.MENU_COLOR_SELECTED.label,
         eventType: os.action.EventType.COLOR_SELECTED,
-        tooltip: 'Choose a color for selected items',
+        tooltip: os.lang.MENU_COLOR_SELECTED.tooltip,
         icons: ['<i class="fa fa-fw fa-tint"></i>'],
         handler: os.ui.menu.list.onColorSelected,
         metricKey: os.metrics.FeatureList.COLOR_SELECTED,
         beforeRender: os.ui.menu.list.visibleIfHasSelected,
         sort: 0
       }, {
-        label: 'Reset Color',
+        label: os.lang.MENU_COLOR_RESET.label,
         eventType: os.action.EventType.RESET_COLOR,
-        tooltip: 'Reset all records to the default layer color',
+        tooltip: os.lang.MENU_COLOR_RESET.tooltip,
         icons: ['<i class="fa fa-fw fa-tint"></i>'],
         handler: os.ui.menu.list.onResetColor,
         metricKey: os.metrics.FeatureList.RESET_COLOR,

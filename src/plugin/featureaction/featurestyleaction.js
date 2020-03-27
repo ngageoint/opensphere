@@ -116,7 +116,20 @@ plugin.im.action.feature.StyleAction.prototype.reset = function(items) {
   // notify that the layer needs to be updated
   var layer = os.feature.getLayer(items[0]);
   if (layer) {
-    os.style.notifyStyleChange(layer, resetItems);
+    var source = /** @type {os.source.Vector} */ (layer.getSource());
+    var color = (this.styleConfig['stroke']) ? this.styleConfig['stroke']['color'] : null;
+
+    if (source && color) {
+      source.setColor(resetItems); // reset the color model's override for these items
+    }
+
+    os.style.notifyStyleChange(
+        layer,
+        resetItems,
+        undefined,
+        undefined,
+        (source && color) // bump the colormodel so dependencies can update/re-render
+    );
   }
 };
 
@@ -177,7 +190,20 @@ plugin.im.action.feature.StyleAction.prototype.execute = function(items) {
   // notify that the layer needs to be updated
   var layer = os.feature.getLayer(items[0]);
   if (layer) {
-    os.style.notifyStyleChange(layer, items);
+    var source = /** @type {os.source.Vector} */ (layer.getSource());
+    var color = (this.styleConfig['stroke']) ? this.styleConfig['stroke']['color'] : null;
+
+    if (source && color) {
+      source.setColor(items, color); // set the color model's override for these items
+    }
+
+    os.style.notifyStyleChange(
+        layer,
+        items,
+        undefined,
+        undefined,
+        (source && color) // bump the colormodel so dependencies can update/re-render
+    );
   }
 };
 
