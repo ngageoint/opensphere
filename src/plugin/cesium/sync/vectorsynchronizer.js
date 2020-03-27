@@ -455,7 +455,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.updateFeature_ = function(featur
  * @private
  */
 plugin.cesium.sync.VectorSynchronizer.prototype.refreshFeatures_ = function(features) {
-  if (this.active) {
+  if (this.active && features && features.length > 0) {
     for (var i = 0, n = features.length; i < n; i++) {
       this.updateFeature_(features[i]);
     }
