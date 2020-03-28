@@ -46,4 +46,25 @@ class ElectronPlugin extends AbstractPlugin {
 }
 
 
+//
+// Electron does not natively support document.cookie, which both OpenSphere and Closure use internally. Override the
+// native API with functions exposed in the preload script.
+//
+if (electron.isElectron()) {
+  Object.defineProperty(document, 'cookie', {
+    enumerable: true,
+    configurable: true,
+    get() {
+      return ElectronOS.getCookies();
+    },
+    set(value) {
+      ElectronOS.setCookie(value);
+    }
+  });
+
+  // Request an updated cookie list from the main process.
+  ElectronOS.updateCookies();
+}
+
+
 exports = ElectronPlugin;
