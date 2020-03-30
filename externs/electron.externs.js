@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/require-returns-check */
 /**
  * @fileoverview Externs for OpenSphere integration with Electron.
  * @externs
@@ -58,3 +59,23 @@ let ElectronOS;
  * @param {Electron.CertificateRequestFn|undefined} handler The handler.
  */
 ElectronOS.registerCertificateHandler = function(handler) {};
+
+
+/**
+ * Get cookies for the current session.
+ * @return {string} The semi-colon delimited list of cookies.
+ */
+ElectronOS.getCookies = function() {};
+
+
+/**
+ * Set a cookie in the current session.
+ * @param {string} value The cookie value.
+ */
+ElectronOS.setCookie = function(value) {};
+
+
+/**
+ * Request cookie update from the main process.
+ */
+ElectronOS.updateCookies = function() {};
