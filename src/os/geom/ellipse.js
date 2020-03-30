@@ -54,6 +54,13 @@ goog.inherits(os.geom.Ellipse, ol.geom.Polygon);
 
 
 /**
+ * Type string for ellipses
+ * @const {string}
+ */
+os.geom.Ellipse.TYPE = 'ellipse';
+
+
+/**
  * Return a copy of the ellipse as its base type, ol.geom.Polygon
  *
  * @param {os.geom.Ellipse} ellipse The ellipse to translate.
