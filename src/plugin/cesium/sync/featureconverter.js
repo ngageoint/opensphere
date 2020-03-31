@@ -1810,7 +1810,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feat
   var geomType = geometry.getType();
 
   if (geometry instanceof os.geom.Ellipse) {
-    geomType = 'ellipse';
+    geomType = os.geom.Ellipse.TYPE;
   }
 
   var heightReference = this.getHeightReference(context.layer, feature, geometry);
@@ -1855,7 +1855,7 @@ plugin.cesium.sync.FeatureConverter.prototype.olGeometryToCesium = function(feat
           primitive = this.olLineStringGeometryToCesium(feature, geometry, context, style);
         }
         break;
-      case 'ellipse':
+      case os.geom.Ellipse.TYPE:
         geometry = /** @type {!os.geom.Ellipse} */ (geometry);
 
         var layer = /** @type {os.layer.ILayer} */ (context.layer);
