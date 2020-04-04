@@ -102,6 +102,7 @@ os.ui.util.comboContainerLink = function($scope, $element, $attrs) {
       }
     };
 
+    $(document).on('scroll', updateComboPosition);
     $scope.$watch('showChoice', function(val) {
       if (val) {
         updateComboPosition();
@@ -111,6 +112,9 @@ os.ui.util.comboContainerLink = function($scope, $element, $attrs) {
 
   $scope.$on('$destroy', function() {
     $(document).off('mousedown', hideDropdown);
+    if (updateComboPosition) {
+      $(document).off('scroll', updateComboPosition);
+    }
     comboEl.remove();
   });
 };
