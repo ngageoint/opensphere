@@ -1,6 +1,6 @@
 goog.require('os.ui.filter.op.NotLike');
 
-ddescribe('os.ui.filter.op.NotLike', function() {
+describe('os.ui.filter.op.NotLike', function() {
   var op = new os.ui.filter.op.NotLike();
   var innerOp = op.op;
 
