@@ -148,3 +148,11 @@ os.fn.nodesToLayers = function(nodes) {
 };
 
 
+/**
+ * An empty function that accepts no arguments.
+ * Useful for features that offer optional callbacks.
+ * @return {undefined}
+ */
+os.fn.noop = function() {
+  // No Operation
+};
