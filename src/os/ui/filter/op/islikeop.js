@@ -30,7 +30,7 @@ os.ui.filter.op.IsLike.prototype.getEvalExpression = function(varName, literal) 
     var reStr = os.ui.filter.string.escapeRegExp(literal);
 
     // test the expression, case insensitive
-    return '/^' + reStr + '$/i.test(' + varName + ')';
+    return '/^' + reStr + '$/im.test(' + varName + ')';
   }
 
   // null/empty string is not supported, so don't return an expression

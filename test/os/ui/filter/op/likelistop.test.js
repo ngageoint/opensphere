@@ -39,12 +39,9 @@ describe('os.ui.filter.op.LikeList', function() {
   it('should generate the proper filter function expression', function() {
     // starts with 'a', ends with 'b', contains 'c', d plus two more characters
     var expr = op.getEvalExpression('testVar', 'a*, *b,   *c-*   ,   d..');
-    expect(expr).toBe('/^(a.*|.*b|.*c\\-.*|d..)$/i.test(testVar)');
+    expect(expr).toBe('/^(a.*|.*b|.*c\\-.*|d..)$/im.test(testVar)');
 
-    var testVar = 'aTest';
-
-    // prevent eslint no-unused-vars
-    expect(testVar).toBeDefined();
+    var testVar = 'aTest'; // eslint-disable-line
 
     expect(eval(expr)).toBe(true);
 
@@ -82,5 +79,14 @@ describe('os.ui.filter.op.LikeList', function() {
     expect(op.getEvalExpression('testVar', '   ')).toBe('');
     expect(op.getEvalExpression('testVar', ',,,')).toBe('');
     expect(op.getEvalExpression('testVar', ' ,  ,  ')).toBe('');
+  });
+
+  it('should match multi-line strings', function() {
+    var expr = op.getEvalExpression('testVar', 'test*, woo*');
+    expect(expr).toBe('/^(test.*|woo.*)$/im.test(testVar)');
+
+    var testVar = 'this text does not match\ntest but this does match'; // eslint-disable-line
+
+    expect(eval(expr)).toBe(true);
   });
 });
