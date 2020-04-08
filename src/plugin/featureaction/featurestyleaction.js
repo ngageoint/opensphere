@@ -111,26 +111,7 @@ plugin.im.action.feature.StyleAction.prototype.reset = function(items) {
     }
   }
 
-  os.style.setFeaturesStyle(resetItems);
-
-  // notify that the layer needs to be updated
-  var layer = os.feature.getLayer(items[0]);
-  if (layer) {
-    var source = /** @type {os.source.Vector} */ (layer.getSource());
-    var color = (this.styleConfig['stroke']) ? this.styleConfig['stroke']['color'] : null;
-
-    if (source && color) {
-      source.setColor(resetItems); // reset the color model's override for these items
-    }
-
-    os.style.notifyStyleChange(
-        layer,
-        resetItems,
-        undefined,
-        undefined,
-        (source && color) // bump the colormodel so dependencies can update/re-render
-    );
-  }
+  this.notify_(resetItems, true);
 };
 
 
@@ -184,6 +165,18 @@ plugin.im.action.feature.StyleAction.prototype.execute = function(items) {
     }
   }
 
+  this.notify_(items);
+};
+
+
+/**
+ * Send out notification(s) to the Layer, Source, and/or ColorModel
+ *
+ * @param {!Array<!ol.Feature>} items the list of features
+ * @param {boolean=} opt_resetcolor true if the color should be reset
+ * @private
+ */
+plugin.im.action.feature.StyleAction.prototype.notify_ = function(items, opt_resetcolor) {
   // update the style on all features
   os.style.setFeaturesStyle(items);
 
@@ -194,7 +187,13 @@ plugin.im.action.feature.StyleAction.prototype.execute = function(items) {
     var color = (this.styleConfig['stroke']) ? this.styleConfig['stroke']['color'] : null;
 
     if (source && color) {
-      source.setColor(items, color); // set the color model's override for these items
+      if (opt_resetcolor) {
+        // only reset the color if there was a color override
+        source.setColor(items);
+      } else {
+        // set the color model's override for these items
+        source.setColor(items, color);
+      }
     }
 
     os.style.notifyStyleChange(
