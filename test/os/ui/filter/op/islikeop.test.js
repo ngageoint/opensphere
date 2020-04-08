@@ -18,12 +18,9 @@ describe('os.ui.filter.op.IsLike', function() {
   it('should generate the proper filter function expression', function() {
     // one wildcard
     var expr = op.getEvalExpression('testVar', 'testV*');
-    expect(expr).toBe('/^testV.*$/i.test(testVar)');
+    expect(expr).toBe('/^testV.*$/im.test(testVar)');
 
-    var testVar = 'testVal';
-
-    // prevent eslint no-unused-vars
-    expect(testVar).toBeDefined();
+    var testVar = 'testVal'; // eslint-disable-line
 
     expect(eval(expr)).toBe(true);
 
@@ -35,7 +32,7 @@ describe('os.ui.filter.op.IsLike', function() {
 
     // multiple wildcards
     expr = op.getEvalExpression('testVar', '*V*');
-    expect(expr).toBe('/^.*V.*$/i.test(testVar)');
+    expect(expr).toBe('/^.*V.*$/im.test(testVar)');
 
     testVar = 'testVal';
     expect(eval(expr)).toBe(true);
@@ -51,7 +48,7 @@ describe('os.ui.filter.op.IsLike', function() {
 
     // single character wildcards
     expr = op.getEvalExpression('testVar', 'f.....uck');
-    expect(expr).toBe('/^f.....uck$/i.test(testVar)');
+    expect(expr).toBe('/^f.....uck$/im.test(testVar)');
 
     testVar = 'firetruck';
     expect(eval(expr)).toBe(true);
@@ -70,7 +67,7 @@ describe('os.ui.filter.op.IsLike', function() {
 
     // special RegExp characters
     expr = op.getEvalExpression('testVar', 'ABCD-1234');
-    expect(expr).toBe('/^ABCD\\-1234$/i.test(testVar)');
+    expect(expr).toBe('/^ABCD\\-1234$/im.test(testVar)');
 
     testVar = 'ABCD-1234';
     expect(eval(expr)).toBe(true);
@@ -80,7 +77,7 @@ describe('os.ui.filter.op.IsLike', function() {
 
     // special RegExp characters with wildcards
     expr = op.getEvalExpression('testVar', 'ABCD-12*');
-    expect(expr).toBe('/^ABCD\\-12.*$/i.test(testVar)');
+    expect(expr).toBe('/^ABCD\\-12.*$/im.test(testVar)');
 
     testVar = 'ABCD-1234';
     expect(eval(expr)).toBe(true);
@@ -97,5 +94,14 @@ describe('os.ui.filter.op.IsLike', function() {
     expect(op.getEvalExpression('testVar', null)).toBe('');
     expect(op.getEvalExpression('testVar', '')).toBe('');
     expect(op.getEvalExpression('testVar', '   ')).toBe('');
+  });
+
+  it('should match multi-line strings', function() {
+    var expr = op.getEvalExpression('testVar', '*testV*');
+    expect(expr).toBe('/^.*testV.*$/im.test(testVar)');
+
+    var testVar = 'this text does not match\nbut this does match testVal'; // eslint-disable-line
+
+    expect(eval(expr)).toBe(true);
   });
 });
