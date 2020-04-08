@@ -34,6 +34,19 @@ os.ui.menu.list.MENU = null;
 
 
 /**
+ * menu list strings
+ * @enum {string}
+ * @const
+ */
+os.ui.menu.list.Strings = {
+  COLOR_RESET_LABEL: 'Reset Color',
+  COLOR_RESET_TOOLTIP: 'Reset all item(s) to the default color from the Layer\'s Style',
+  COLOR_SELECTED_LABEL: 'Color Selected',
+  COLOR_SELECTED_TOOLTIP: 'Choose a color for the selected item(s)'
+};
+
+
+/**
  * Sets up the feature list menu.
  */
 os.ui.menu.list.setup = function() {
@@ -58,18 +71,18 @@ os.ui.menu.list.setup = function() {
       type: os.ui.menu.MenuItemType.GROUP,
       sort: 3,
       children: [{
-        label: 'Color Selected',
+        label: os.ui.menu.list.Strings.COLOR_SELECTED_LABEL,
         eventType: os.action.EventType.COLOR_SELECTED,
-        tooltip: 'Choose a color for selected items',
+        tooltip: os.ui.menu.list.Strings.COLOR_SELECTED_TOOLTIP,
         icons: ['<i class="fa fa-fw fa-tint"></i>'],
         handler: os.ui.menu.list.onColorSelected,
         metricKey: os.metrics.FeatureList.COLOR_SELECTED,
         beforeRender: os.ui.menu.list.visibleIfHasSelected,
         sort: 0
       }, {
-        label: 'Reset Color',
+        label: os.ui.menu.list.Strings.COLOR_RESET_LABEL,
         eventType: os.action.EventType.RESET_COLOR,
-        tooltip: 'Reset all records to the default layer color',
+        tooltip: os.ui.menu.list.Strings.COLOR_RESET_TOOLTIP,
         icons: ['<i class="fa fa-fw fa-tint"></i>'],
         handler: os.ui.menu.list.onResetColor,
         metricKey: os.metrics.FeatureList.RESET_COLOR,
