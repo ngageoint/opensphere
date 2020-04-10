@@ -3490,12 +3490,23 @@ os.source.Vector.prototype.setVisibleFeatures = function(features) {
     }.bind(this));
   }
 
-  this.updateFeaturesVisibility(this.getFeatures(), false);
-  this.updateFeaturesVisibility(features, true);
-
-  if (selected.length) {
-    this.setSelectedItems(selected);
-  }
+  // add a debounce as well as bit of time between large changes to the source visibility
+  os.sequence(
+      this,
+      'source.setVisibleFeatures',
+      35,
+      function() {
+        this.updateFeaturesVisibility(this.getFeatures(), false);
+      },
+      function() {
+        this.updateFeaturesVisibility(features, true);
+      },
+      function() {
+        if (selected.length) {
+          this.setSelectedItems(selected);
+        }
+      }
+  );
 };
 
 

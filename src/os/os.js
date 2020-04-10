@@ -103,6 +103,42 @@ os.operatingSystem = function() {
 
 
 /**
+ * Debounces the calls of a sequence of functions by the amount specified in wait.
+ *
+ * @param {*} scope the 'this' to apply to the function
+ * @param {string} key ID by which multiple timeout seqences can be cleared
+ * @param {number} wait Wait time in ms between steps in the sequence
+ * @param {...function()} rest The functions to call in sequence
+ */
+os.sequence = (function() {
+  var timeouts = {};
+  return function(scope, key, wait, ...functions) {
+    clearTimeout(timeouts[key]);
+    delete timeouts[key];
+
+    if (functions && functions.length > 0) {
+      timeouts[key] = setTimeout(function() {
+        var pid = timeouts[key];
+
+        // convert from a ... (rest) array to a real array
+        var fs = Array.from(functions);
+
+        // execute the first item in the sequence
+        fs.splice(0, 1)[0].apply(scope);
+
+        // fs[0]() may take a while, so check that another execution of the same sequence hasn't been started
+        // before starting the next item(s) in the sequence
+        if (pid == timeouts[key] && fs.length) {
+          fs.splice(0, 0, scope, key, wait); // scope, key, wait, f2, f3, ...
+          os.sequence.apply(scope, fs);
+        }
+      }, wait);
+    }
+  };
+})();
+
+
+/**
  * Debounces the calls of a function by the amount specified in wait.
  *
  * @param {function(...*)} func The function to call
