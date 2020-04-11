@@ -108,7 +108,7 @@ module.exports = function(config) {
     //  - coverage provides test coverage reports
     //
     preprocessors: {
-      'src/**/*.js': ['googmodule', 'coverage'],
+      'src/**/*.js': ['coverage', 'googmodule'],
       'test/**/*.mock.js': ['googmodule'],
       // support goog.module in Closure library
       [`${closureLibJsPattern}`]: ['googmodule']
