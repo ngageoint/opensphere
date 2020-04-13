@@ -7,6 +7,7 @@ goog.require('goog.string');
 goog.require('os.IPersistable');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.filter.IFilterEntry');
+goog.require('os.registerClass');
 goog.require('os.ui.filter.PropertyChange');
 
 
@@ -94,6 +95,15 @@ os.filter.FilterEntry = function() {
   this.source = '';
 };
 goog.inherits(os.filter.FilterEntry, goog.events.EventTarget);
+
+
+/**
+ * Class name
+ * @type {string}
+ * @const
+ */
+os.filter.FilterEntry.NAME = 'os.filter.FilterEntry';
+os.registerClass(os.filter.FilterEntry.NAME, os.filter.FilterEntry);
 
 
 /**
@@ -424,12 +434,12 @@ os.filter.FilterEntry.prototype.restore = function(config) {
  * @return {os.filter.FilterEntry} A filter entry created in the current window context.
  */
 os.filter.cloneToContext = function(entry) {
-  if (entry && !(entry instanceof os.filter.FilterEntry)) {
+  if (entry && !(os.instanceOf(entry, os.filter.FilterEntry.NAME))) {
     try {
       var clone = new os.filter.FilterEntry();
       clone.restore(entry.persist());
 
-      if (clone instanceof os.filter.FilterEntry) {
+      if (os.instanceOf(clone, os.filter.FilterEntry.NAME)) {
         entry = clone;
       }
     } catch (e) {
