@@ -1,6 +1,7 @@
 goog.module('os.defines');
 goog.module.declareLegacyNamespace();
 
+const os = goog.require('os');
 
 /**
  * @define {string} The root namespace for DB and storage keys
