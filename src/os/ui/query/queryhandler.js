@@ -441,7 +441,11 @@ os.ui.query.QueryHandler.prototype.createFilter = function() {
  */
 os.ui.query.QueryHandler.prototype.write = function(item) {
   if (item) {
-    return item instanceof os.filter.FilterEntry ? this.writeFilter(item) : this.writeArea(item);
+    if (os.instanceOf(item, os.filter.FilterEntry.NAME)) {
+      return this.writeFilter(/** @type {!os.filter.FilterEntry} */ (item));
+    } else {
+      return this.writeArea(/** @type {!ol.Feature} */ (item));
+    }
   }
 
   return '';
