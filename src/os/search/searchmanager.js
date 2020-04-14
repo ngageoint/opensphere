@@ -168,7 +168,7 @@ os.search.SearchManager.prototype.getEnabledSearches = function(opt_term) {
  * @inheritDoc
  */
 os.search.SearchManager.prototype.search = function(term, opt_start, opt_pageSize,
-    opt_sortBy, opt_force, opt_noFacets, opt_sortOrder) {
+    opt_sortBy, opt_force, opt_noFacets, opt_sortOrder, opt_wildcardOnly) {
   this.setTerm(term);
   this.providerResults = {};
   this.results = [];
@@ -200,7 +200,7 @@ os.search.SearchManager.prototype.search = function(term, opt_start, opt_pageSiz
 
       // do search
       for (var i = 0, n = enabled.length; i < n; i++) {
-        enabled[i].search(term, opt_start, opt_pageSize, opt_sortBy, opt_noFacets, opt_sortOrder);
+        enabled[i].search(term, opt_start, opt_pageSize, opt_sortBy, opt_noFacets, opt_sortOrder, opt_wildcardOnly);
       }
     } else {
       // nothing enabled - can't search! tell the user why.

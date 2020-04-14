@@ -233,9 +233,10 @@ os.search.AbstractSearchManager.prototype.isContainer = function() {
  * @param {boolean=} opt_force Force a search
  * @param {boolean=} opt_noFacets flag for indicating facet search is not needed
  * @param {string=} opt_sortOrder The sort order
+ * @param {boolean=} opt_wildcardOnly force wildcard search around the term
  */
 os.search.AbstractSearchManager.prototype.search = function(term, opt_start, opt_pageSize, opt_sortBy, opt_force,
-    opt_noFacets, opt_sortOrder) {};
+    opt_noFacets, opt_sortOrder, opt_wildcardOnly) {};
 
 
 /**

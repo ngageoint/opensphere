@@ -23,6 +23,7 @@ os.search.ISearch = function() {};
  *   The sort order to be used
  * @param {boolean=} opt_noFacets flag to indicate facets not needed
  * @param {string=} opt_sortOrder - the sort order
+ * @param {boolean=} opt_wildcardOnly - force wildcard search around the term
  * @return {boolean} Return true to continue, otherwise false.
  */
 os.search.ISearch.prototype.search;
