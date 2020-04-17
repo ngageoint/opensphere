@@ -1314,6 +1314,7 @@ os.time.TimelineController.prototype.getEffectiveLoadRangeSet = function() {
  * Returns all load ranges.
  *
  * @return {!Array<goog.math.Range>}
+ * @export Prevent the compiler from moving the function off the prototype.
  */
 os.time.TimelineController.prototype.getEffectiveLoadRanges = function() {
   return goog.iter.toArray(this.getEffectiveLoadRangeSet());

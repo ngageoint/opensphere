@@ -18,6 +18,9 @@ goog.require('plugin.file.kml.KMLSource');
 plugin.file.kml.ui.KMLLayerNode = function(layer) {
   plugin.file.kml.ui.KMLLayerNode.base(this, 'constructor');
 
+  // Do not bubble the node visibility state up to the layer, where the checkbox controls the enabled state.
+  this.setBubbleState(false);
+
   /**
    * The KML data source
    * @type {plugin.file.kml.KMLSource}
@@ -160,7 +163,7 @@ plugin.file.kml.ui.KMLLayerNode.prototype.setLayer = function(value) {
 plugin.file.kml.ui.KMLLayerNode.prototype.onSourceChange_ = function(e) {
   if (e instanceof os.events.PropertyChangeEvent) {
     var p = e.getProperty();
-    if (p == 'loading') {
+    if (p === os.source.PropertyChange.ENABLED || p === os.source.PropertyChange.LOADING) {
       this.updateFromSource_();
     }
   }
@@ -190,7 +193,7 @@ plugin.file.kml.ui.KMLLayerNode.prototype.updateFromSource_ = function() {
       var showRoot = true;
       var layer = this.getLayer();
       if (layer instanceof plugin.file.kml.KMLLayer) {
-        showRoot = layer.showRoot;
+        showRoot = layer.showRoot && layer.isEnabled();
       }
 
       if (rootNode) {

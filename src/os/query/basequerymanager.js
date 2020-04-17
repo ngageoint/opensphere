@@ -114,6 +114,7 @@ os.query.BaseQueryManager.prototype.load = goog.nullFunction;
  * @param {?boolean=} opt_expanded Whether to get from the original list or expanded list
  * @param {?boolean=} opt_includeNegations Whether to include negation entries in the result
  * @return {!Array<!Object<string, string|boolean>>}
+ * @export Prevent the compiler from moving the function off the prototype.
  */
 os.query.BaseQueryManager.prototype.getEntries = function(opt_layerId, opt_areaId, opt_filterId, opt_expanded,
     opt_includeNegations) {

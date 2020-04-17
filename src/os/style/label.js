@@ -234,7 +234,7 @@ os.style.label.updateShown_ = function() {
 
   for (var i = 0, ii = sources.length; i < ii; i++) {
     var source = sources[i];
-    if (source instanceof os.source.Vector && source.getVisible()) {
+    if (source instanceof os.source.Vector && source.isEnabled() && source.getVisible()) {
       var id = source.getId();
       var config = os.style.StyleManager.getInstance().getLayerConfig(id);
       if (config && config[os.style.StyleField.SHOW_LABELS]) {

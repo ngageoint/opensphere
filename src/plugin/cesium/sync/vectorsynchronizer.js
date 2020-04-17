@@ -477,7 +477,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
    * @private
    */
   refreshFeatures_(features) {
-    if (this.active) {
+    if (this.active && features) {
       for (let i = 0, n = features.length; i < n; i++) {
         this.updateFeature_(features[i]);
       }

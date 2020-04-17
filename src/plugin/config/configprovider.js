@@ -2,7 +2,6 @@ goog.provide('plugin.config.Provider');
 
 goog.require('goog.log');
 goog.require('goog.log.Logger');
-goog.require('os.MapEvent');
 goog.require('os.data');
 goog.require('os.data.BaseDescriptor');
 goog.require('os.data.ConfigDescriptor');
@@ -10,24 +9,15 @@ goog.require('os.data.DataManager');
 goog.require('os.data.DataProviderEvent');
 goog.require('os.data.DataProviderEventType');
 goog.require('os.data.IDataProvider');
-goog.require('os.map');
-goog.require('os.proj.switch');
 goog.require('os.ui.data.DescriptorNode');
 goog.require('os.ui.data.DescriptorProvider');
-goog.require('plugin.basemap');
-goog.require('plugin.basemap.BaseMapDescriptor');
-goog.require('plugin.basemap.TerrainDescriptor');
-goog.require('plugin.basemap.layer.BaseMap');
-
-
 
 /**
- * The base map provider provides access to pre-configured map layers
+ * The configuration provider provides access to configuration sources.
  *
  * @implements {os.data.IDataProvider}
  * @extends {os.ui.data.DescriptorProvider}
  * @constructor
- * @see {@link plugin.basemap.BaseMapPlugin} for configuration instructions
  */
 plugin.config.Provider = function() {
   plugin.config.Provider.base(this, 'constructor');

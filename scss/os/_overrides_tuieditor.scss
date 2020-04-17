@@ -502,3 +502,7 @@
 .te-ww-mode .te-ww-container {
   z-index: 0;
 }
+
+.tui-tooltip {
+  z-index: $zindex-tooltip;
+}

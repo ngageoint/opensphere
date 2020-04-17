@@ -35,8 +35,35 @@ class ElectronPlugin extends AbstractPlugin {
   init() {
     if (electron.isElectron()) {
       ElectronOS.registerCertificateHandler(onCertificateRequest);
+
+      /**
+       * Electron uses the file protocol, so those URL's need to be considered safe.
+       * @suppress {const}
+       */
+      goog.html.SAFE_URL_PATTERN_ = /^(?:(?:https?|mailto|ftp|file):|[^:/?#]*(?:[/?#]|$))/i;
     }
   }
+}
+
+
+//
+// Electron does not natively support document.cookie, which both OpenSphere and Closure use internally. Override the
+// native API with functions exposed in the preload script.
+//
+if (electron.isElectron()) {
+  Object.defineProperty(document, 'cookie', {
+    enumerable: true,
+    configurable: true,
+    get() {
+      return ElectronOS.getCookies();
+    },
+    set(value) {
+      ElectronOS.setCookie(value);
+    }
+  });
+
+  // Request an updated cookie list from the main process.
+  ElectronOS.updateCookies();
 }
 
 

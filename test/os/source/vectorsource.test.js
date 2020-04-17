@@ -103,7 +103,8 @@ describe('os.source.Vector', function() {
     var mapContainer = {
       getLayer: goog.functions.constant(layer),
       getMap: goog.functions.NULL,
-      is3DEnabled: goog.functions.FALSE
+      is3DEnabled: goog.functions.FALSE,
+      is3DSupported: goog.functions.FALSE
     };
 
     spyOn(os.MapContainer, 'getInstance').andReturn(mapContainer);
@@ -503,6 +504,19 @@ describe('os.source.Vector', function() {
     var newSource = new os.source.Vector(undefined);
     newSource.addFeature(f);
     expect(f.getGeometry()).toBe(null);
+  });
+
+  it('should clear the source when disabled', function() {
+    source.setEnabled(false);
+    expect(source.getFeatures().length).toBe(0);
+    expect(source.getFilteredFeatures().length).toBe(0);
+  });
+
+  it('should refresh the source when enabled', function() {
+    spyOn(source, 'refresh');
+
+    source.setEnabled(true);
+    expect(source.refresh).toHaveBeenCalled();
   });
 
   describe('columns', function() {
