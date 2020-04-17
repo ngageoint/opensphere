@@ -77,10 +77,21 @@ os.ui.DragDropStyle = {
  *
  * @param {!angular.Scope} $scope angular scope
  * @param {!angular.JQLite} $element to which this directive is applied
+ * @param {!Object.<string, string>} $attrs Directive attributes
  */
-os.ui.dragDropLink = function($scope, $element) {
-  var dragDrop = new os.ui.DragDrop($scope, $element);
-  $scope.$on('$destroy', dragDrop.destroy.bind(dragDrop));
+os.ui.dragDropLink = function($scope, $element, $attrs) {
+  let dragDrop = null;
+  $attrs.$observe('dragDrop', function(attr) {
+    if ($attrs['dragDrop'] !== undefined) {
+      if (!dragDrop) {
+        dragDrop = new os.ui.DragDrop($scope, $element);
+        $scope.$on('$destroy', dragDrop.destroy.bind(dragDrop));
+      }
+    } else if (dragDrop) {
+      dragDrop.destroy();
+      dragDrop = null;
+    }
+  });
 };
 
 
@@ -160,11 +171,13 @@ os.ui.DragDrop = function($scope, $element) {
  * Clear references to Angular/DOM elements.
  */
 os.ui.DragDrop.prototype.destroy = function() {
-  this.source_.dispose();
-  this.target_.dispose();
-  this.source_ = null;
-  this.target_ = null;
-  this.scope_ = null;
+  if (this.scope_) {
+    this.source_.dispose();
+    this.target_.dispose();
+    this.source_ = null;
+    this.target_ = null;
+    this.scope_ = null;
+  }
 };
 
 
