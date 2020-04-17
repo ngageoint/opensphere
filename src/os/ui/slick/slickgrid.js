@@ -2,6 +2,7 @@ goog.provide('os.ui.slick.SlickGridCtrl');
 goog.provide('os.ui.slick.SlickGridEvent');
 goog.provide('os.ui.slick.SlickGridUtils');
 goog.provide('os.ui.slick.slickGridDirective');
+goog.provide('os.ui.slickGridDirective');
 
 goog.require('goog.Disposable');
 goog.require('goog.Timer');

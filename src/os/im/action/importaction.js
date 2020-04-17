@@ -55,3 +55,24 @@ os.im.action.sortByLabel = function(a, b) {
   var bLabel = b ? b.getLabel() : '';
   return goog.array.defaultCompare(aLabel, bLabel);
 };
+
+
+/**
+ * Get columns from a filterable.
+ *
+ * @param {os.filter.IFilterable} filterable
+ * @return {Array<os.ogc.FeatureTypeColumn>} columns of the  filterable
+ */
+os.im.action.getColumnsFromFilterable = function(filterable) {
+  var columns = null;
+
+  if (filterable instanceof os.layer.Vector) {
+    var source = /** @type {os.source.ISource} */ (filterable.getSource());
+    columns = os.source.getFilterColumns(source, true, true);
+    columns = columns.map(os.source.definitionsToFeatureTypes);
+  } else {
+    columns = filterable.getFilterColumns();
+  }
+
+  return columns;
+};

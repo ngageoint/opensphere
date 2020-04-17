@@ -131,6 +131,9 @@ os.ui.layer.LayerPickerCtrl = function($scope, $element, $timeout) {
     this.multiple() ? this.initLayers_() : this.initLayer_();
   }.bind(this));
 
+  this.scope_.$watch('layer', this.initLayer_.bind(this));
+  this.scope_.$watch('layers', this.initLayers_.bind(this));
+
   this.scope_.$on('updateLayers', this.updateLayers.bind(this));
   this.scope_.$on('$destroy', this.destroy_.bind(this));
 };

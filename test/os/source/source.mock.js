@@ -13,6 +13,7 @@ os.source.MockSource = function() {
   this.columns = [];
   this.id = 'testSource';
   this.features = [];
+  this.enabled = true;
   this.loading = false;
   this.lockable = false;
   this.refreshInterval = 0;
@@ -135,6 +136,22 @@ os.source.MockSource.prototype.getId = function() {
  */
 os.source.MockSource.prototype.setId = function(value) {
   this.id = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.source.MockSource.prototype.isEnabled = function() {
+  return this.enabled;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.source.MockSource.prototype.setEnabled = function(value) {
+  this.enabled = value;
 };
 
 

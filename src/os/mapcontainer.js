@@ -895,7 +895,6 @@ os.MapContainer.prototype.init = function() {
   this.drawingLayer_.setExplicitType('');
   this.drawingLayer_.setRemovable(false);
   this.drawingLayer_.setDoubleClickHandler(null);
-  this.drawingLayer_.setNodeUI('');
   this.drawingLayer_.setLayerUI('');
   this.drawingLayer_.setSticky(true);
   this.drawingLayer_.setSynchronizerType(os.layer.SynchronizerType.DRAW);

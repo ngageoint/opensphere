@@ -141,7 +141,7 @@ os.source.Request.prototype.abortRequest = function() {
  * Loads the request.
  */
 os.source.Request.prototype.loadRequest = function() {
-  if (this.request && !this.isLocked()) {
+  if (this.request && this.isEnabled() && !this.isLocked()) {
     if (this.getFeatureCount() > 50000) {
       this.clear();
     } else {
@@ -194,7 +194,7 @@ os.source.Request.prototype.setLockAfterQuery = function(value) {
  * @inheritDoc
  */
 os.source.Request.prototype.refresh = function() {
-  if (!this.isLocked()) {
+  if (this.isEnabled() && !this.isLocked()) {
     if (this.importer) {
       this.importer.reset();
     }

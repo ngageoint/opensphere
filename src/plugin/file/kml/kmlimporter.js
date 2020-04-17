@@ -56,11 +56,15 @@ plugin.file.kml.KMLImporter.prototype.disposeInternal = function() {
 
 /**
  * Get the root KML tree node.
- *
+ * @param {boolean=} opt_clear If the root node should be cleared on call.
  * @return {plugin.file.kml.ui.KMLNode}
  */
-plugin.file.kml.KMLImporter.prototype.getRootNode = function() {
-  return this.rootNode_;
+plugin.file.kml.KMLImporter.prototype.getRootNode = function(opt_clear = false) {
+  var rootNode = this.rootNode_;
+  if (opt_clear) {
+    this.rootNode_ = null;
+  }
+  return rootNode;
 };
 
 
