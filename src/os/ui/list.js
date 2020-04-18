@@ -30,10 +30,10 @@ os.ui.list.ListEntry;
 
 
 /**
- * @type {Object<string, Array<os.ui.list.ListEntry>>}
+ * @type {Map<string|RegExp, Array<os.ui.list.ListEntry>>}
  * @private
  */
-os.ui.list.map_ = {};
+os.ui.list.map_ = new Map();
 
 
 /**
@@ -45,35 +45,55 @@ os.ui.list.dispatcher_ = new goog.events.EventTarget();
 
 
 /**
- * @param {string} id The list ID to which to add
+ * @param {string|RegExp} id The list ID to which to add
  * @param {string} markup The directive or markup to add
  * @param {number=} opt_priority The sort priority (lowest to highest)
  */
 os.ui.list.add = function(id, markup, opt_priority) {
   var map = os.ui.list.map_;
 
-  if (!(id in map)) {
-    map[id] = [];
+  if (!map.has(id)) {
+    if (typeof key === 'string') {
+      map.set(id, []);
+    } else {
+      const key = os.ui.list.getRegexMapKey_(id);
+      if (key) {
+        id = key;
+      } else {
+        map.set(id, []);
+      }
+    }
   }
 
-  map[id].push({
+  const newItem = {
     markup: markup,
     priority: opt_priority || 0
-  });
+  };
+  map.get(id).push(newItem);
 
-  map[id].sort(os.ui.list.sort_);
-  os.ui.list.dispatcher_.dispatchEvent(new os.events.PropertyChangeEvent(id));
+  map.get(id).sort(os.ui.list.sort_);
+
+  if (typeof id === 'string') {
+    os.ui.list.dispatcher_.dispatchEvent(new os.events.PropertyChangeEvent(id));
+  } else {
+    for (const key of os.ui.list.map_.keys()) {
+      if (typeof key === 'string' && id.test(key)) {
+        map.get(key).push(newItem);
+        os.ui.list.dispatcher_.dispatchEvent(new os.events.PropertyChangeEvent(key));
+      }
+    }
+  }
 };
 
 
 /**
- * @param {string} id The list ID to which to check
+ * @param {string|RegExp} id The list ID to which to check
  * @param {string} markup The directive or markup to delete
  */
 os.ui.list.remove = function(id, markup) {
-  var map = os.ui.list.map_[id];
-  if (map) {
-    var item = ol.array.find(map, function(item) {
+  const list = os.ui.list.get(id);
+  if (list) {
+    var item = ol.array.find(list, function(item) {
       return item.markup == markup;
     });
     if (item) {
@@ -82,9 +102,18 @@ os.ui.list.remove = function(id, markup) {
         item.scope = undefined;
       }
 
-      ol.array.remove(map, item);
-      os.ui.list.map_[id] = map;
-      os.ui.list.dispatcher_.dispatchEvent(new os.events.PropertyChangeEvent(id, null, item));
+      ol.array.remove(list, item);
+      os.ui.list.map_.set(id, list);
+
+      if (typeof id === 'string') {
+        os.ui.list.dispatcher_.dispatchEvent(new os.events.PropertyChangeEvent(id, null, item));
+      } else {
+        for (const key of os.ui.list.map_.keys()) {
+          if (typeof key === 'string' && id.test(key)) {
+            os.ui.list.remove(key, markup);
+          }
+        }
+      }
     }
   }
 };
@@ -93,12 +122,12 @@ os.ui.list.remove = function(id, markup) {
 /**
  * Remove a list by ID.
  *
- * @param {string} id The list ID to remove
+ * @param {string|RegExp} id The list ID to remove
  */
 os.ui.list.removeList = function(id) {
-  var map = os.ui.list.map_[id];
-  if (map) {
-    map.forEach(function(item) {
+  const list = os.ui.list.get(id);
+  if (list) {
+    list.forEach(function(item) {
       if (item) {
         if (item.scope) {
           item.scope.$destroy();
@@ -112,7 +141,14 @@ os.ui.list.removeList = function(id) {
       }
     });
 
-    delete os.ui.list.map_[id];
+    if (typeof id == 'string') {
+      os.ui.list.map_.delete(id);
+    } else {
+      const key = os.ui.list.getRegexMapKey_(id);
+      if (key) {
+        os.ui.list.map_.delete(key);
+      }
+    }
   }
 };
 
@@ -120,8 +156,8 @@ os.ui.list.removeList = function(id) {
 /**
  * Copy a list under a new ID.
  *
- * @param {string} sourceId The original list ID.
- * @param {string} targetId The new list ID.
+ * @param {string|RegExp} sourceId The original list ID.
+ * @param {string|RegExp} targetId The new list ID.
  */
 os.ui.list.copy = function(sourceId, targetId) {
   if (sourceId !== targetId) {
@@ -147,26 +183,48 @@ os.ui.list.sort_ = function(a, b) {
 
 
 /**
- * @param {string} id The list ID to get
+ * @param {string|RegExp} id The list ID to get
  * @return {?Array<!os.ui.list.ListEntry>} the list or null if not found
  */
 os.ui.list.get = function(id) {
-  return os.ui.list.map_[id] || null;
+  let list = os.ui.list.map_.get(id);
+  if (!list && typeof id != 'string') {
+    const key = os.ui.list.getRegexMapKey_(id);
+    if (key) {
+      list = os.ui.list.map_.get(key);
+    }
+  }
+  return list || null;
+};
+
+
+/**
+ * @param  {string|RegExp} id
+ * @return {RegExp}
+ * @private
+ */
+os.ui.list.getRegexMapKey_ = function(id) {
+  for (const key of os.ui.list.map_.keys()) {
+    if (typeof key != 'string' && id.toString() == key.toString()) {
+      return key;
+    }
+  }
+  return null;
 };
 
 
 /**
  * Checks to see if the markup already exists in the list
  *
- * @param {string} id The list ID to which to check
+ * @param {string|RegExp} id The list ID to which to check
  * @param {string} markup The directive or markup to check
  * @return {boolean} if the markup was found or not
  */
 os.ui.list.exists = function(id, markup) {
   var found = null;
-  var map = os.ui.list.map_[id];
-  if (map) {
-    found = ol.array.find(map, function(item) {
+  var list = os.ui.list.get(id);
+  if (list) {
+    found = ol.array.find(list, function(item) {
       return item.markup == markup;
     });
   }
@@ -212,7 +270,23 @@ os.ui.listLink = function(scope, element, attr, ctrl) {
   var id = attr['listId'];
   ctrl.id = id;
 
-  var list = os.ui.list.get(id) || scope.$eval(attr['listItems']);
+  var list = os.ui.list.get(id);
+  if (!list) {
+    let matchListId = null;
+    for (const key of os.ui.list.map_.keys()) {
+      if (typeof key !== 'string' && (/** @type {RegExp} */ (key)).test(id)) {
+        matchListId = key;
+        break;
+      }
+    }
+
+    if (matchListId) {
+      os.ui.list.copy(matchListId, id);
+      list = os.ui.list.get(id);
+    } else {
+      list = scope.$eval(attr['listItems']);
+    }
+  }
 
   if (list) {
     ctrl.items = /** @type {!Array<!os.ui.list.ListEntry>} */ (list);
