@@ -74,18 +74,19 @@ os.object.merge = function(from, to, opt_overwrite, opt_nullOverwrite) {
 
   for (var key in from) {
     var fval = from[key];
-    if (key in to) {
+
+    if (fval === os.object.DELETE_VAL) {
+      if (opt_overwrite) {
+        delete to[key];
+      }
+    } else if (key in to) {
       var tval = to[key];
 
       if (((fval === null || fval === undefined) && !opt_nullOverwrite) || fval === os.object.IGNORE_VAL) {
         continue;
       }
 
-      if (fval === os.object.DELETE_VAL) {
-        if (opt_overwrite) {
-          delete to[key];
-        }
-      } else if (os.object.isPrimitive(fval) || os.object.isPrimitive(tval)) {
+      if (os.object.isPrimitive(fval) || os.object.isPrimitive(tval)) {
         if (opt_overwrite) {
           to[key] = from[key];
         }
