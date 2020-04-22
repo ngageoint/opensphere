@@ -478,17 +478,7 @@ os.ui.slick.SlickGridCtrl.prototype.getOptions = function() {
  * @protected
  */
 os.ui.slick.SlickGridCtrl.prototype.getColumns = function() {
-  var columns = this.getColumnsInternal().slice();
-  var i = columns.length;
-  var removed = [];
-  while (i--) {
-    var column = columns[i];
-    if (!this.isColumnVisible(column)) {
-      removed = columns.splice(i, 1).concat(removed);
-    }
-  }
-
-  return columns;
+  return this.getColumnsInternal().filter(this.isColumnVisible, this);
 };
 
 
