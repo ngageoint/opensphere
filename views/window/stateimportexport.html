@@ -4,7 +4,7 @@
       <div class="form-group row">
         <label for="persister" class="col-3 col-form-label text-right u-required">Name</label>
         <div class="col">
-          <input statetitle type="text" class="form-control" name="title" ng-model="title" ng-init="form.title.$validate()" ng-required="true" ng-maxlength="500" />
+          <input statetitle type="text" class="form-control" name="title" ng-model="title" ng-init="form.title.$validate()" ng-required="true" ng-maxlength="500" >
           <div class="invalid-feedback" ng-show="form.title.$invalid && !form.title.$error.required && !form.title.$error.maxlength && form.title.$dirty">This name has already been used. Please try another.</div>
           <validation-message target="form.title"></validation-message>
         </div>
@@ -23,7 +23,7 @@
         <label for="desc" class="col-3 col-form-label text-right">Description</label>
         <div class="col">
           <input type="text" name="desc" class="form-control" ng-model="description" ng-maxlength="4000" placeholder="Add a custom description"
-          />
+          >
           <validation-message target="form.desc"></validation-message>
         </div>
       </div>
@@ -32,12 +32,12 @@
         <label for="tags" class="col-3 col-form-label text-right">Tags</label>
         <div class="col">
           <input type="text" name="tags" class="form-control" ng-model="tags" ng-maxlength="1000" placeholder="Tags organize states: e.g. states, population"
-          />
+          >
           <validation-message target="form.tags"></validation-message>
         </div>
       </div>
 
-      <input type="submit" class="d-none">
+      <input type="submit" hidden>
 
       <div class="container-fluid">
         <div class="row" ng-if="stateForm.showClear && !stateForm.isSaving">

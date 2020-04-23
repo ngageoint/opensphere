@@ -4,7 +4,7 @@
       <div>
         <ul class="nav nav-tabs flex-shrink-0" ng-show="showtabs">
           <li class="nav-item" ng-repeat="tab in tabs">
-            <a class="nav-link" href ng-click="selector.setTab(tab.name)" ng-class="{active: activeTab == tab.name}">{{tab.name}}</a>
+            <a class="nav-link" ng-click="selector.setTab(tab.name)" ng-class="{active: activeTab == tab.name}">{{tab.name}}</a>
           </li>
         </ul>
       </div>
@@ -13,7 +13,7 @@
   </div>
   <div class="modal-footer flex-shrink-0 d-flex justify-content-between">
     <div ng-if="selector.isValid()" class="d-flex align-items-center justify-content-center">
-      <img class="img-fluid c-icon-picker__med-icon c-icon-picker__background rounded" ng-src="{{selector.getPath(selected.path)}}" />
+      <img class="img-fluid c-icon-picker__med-icon c-icon-picker__background rounded" ng-src="{{selector.getPath(selected.path)}}" >
       <button class="btn btn-outline-danger border-0 mx-2" ng-click="selector.reset()" ng-if="tabMap[activeTab].showResetButton" title="Reset the icon to default">
         <i class="fa fa-refresh"></i>
         Reset

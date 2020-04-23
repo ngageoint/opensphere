@@ -3,8 +3,9 @@
     <form name="choiceForm" class="d-flex flex-column">
       <div ng-repeat="match in matched" ng-class="{'u-bg-body' : $index % 2 == 0}" class="flex-row border">
         <div class="col">
-          <a ng-click="columnActionPrompt.executeMatch(match, value)" href="#" 
-             title="{{columnActionPrompt.getToolTip(match, value)}}" ng-bind-html="columnActionPrompt.getDescription(match)"></a>
+          <a ng-click="columnActionPrompt.executeMatch(match, value)"
+             title="{{columnActionPrompt.getToolTip(match, value)}}"
+             ng-bind-html="columnActionPrompt.getDescription(match)"></a>
         </div>
       </div>
     </form>
@@ -12,7 +13,7 @@
   <div class="modal-footer">
     <div>
       <button class="btn btn-primary" ng-click="columnActionPrompt.close();">
-        <i class="fa fa fa-ban"></i>
+        <i class="fa fa-ban"></i>
         Cancel
       </button>
     </div>

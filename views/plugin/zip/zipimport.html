@@ -2,7 +2,7 @@
   <div class="modal-body container flex-fill">
     <div>
         <p>Unzipping file(s)... <span ng-show="!ctrl.loading">{{ctrl.valid ? 'SUCCESS' : 'ERROR'}}</span></p>
-        <p ng-show="ctrl.loading"><i class="fa fa-spinner fa-spin" /></p>
+        <p ng-show="ctrl.loading"><i class="fa fa-spinner fa-spin"></i></p>
     </div>
     <div ng-if="!ctrl.loading && ctrl.valid">
       <div>
@@ -10,7 +10,7 @@
         <p class="float-right">
           {{ctrl.count()}} file(s) selected
         </p>
-        <div style="clear: both;"></div>
+        <div class="clearfix"></div>
       </div>
       <form name="filesForm" novalidate>
         <div class="form-group form-row">
