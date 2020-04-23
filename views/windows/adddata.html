@@ -16,7 +16,7 @@
       <div class="form-group row">
         <div class="col-6">
           <div class="input-group">
-            <input class="form-control js-input-search o-add-data__search" ng-model="addData.term" ng-change="addData.search()" placeholder="Search available layers"/>
+            <input class="form-control js-input-search o-add-data__search" ng-model="addData.term" ng-change="addData.search()" placeholder="Search available layers">
             <div class="input-group-append">
               <button class="btn btn-secondary" ng-click="addData.clearSearch()" title="Clear the search term">
                 <i class="fa fa-times"></i>
@@ -38,7 +38,7 @@
       <div class="row" ng-hide="filterName">
         <label class="col-auto col-form-label">Group By</label>
         <select class="custom-select col-3" ng-model="addData.view" ng-change="addData.onGroupByChanged()"
-            ng-options="key for (key, value) in addData.views"/>
+            ng-options="key for (key, value) in addData.views"></select>
       </div>
 
       <div ng-show="filterName">

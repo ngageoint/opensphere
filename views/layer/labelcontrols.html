@@ -1,56 +1,60 @@
 <div ng-form="labelForm">
   <table>
-    <tr>
-      <td>Style</td>
-      <td class="w-100">
-        <colorpicker name="labelColor" color="labelColor" show-reset="true" title="Sets the label color"></colorpicker>
-        <input class="d-inline-block form-control w-25" type="number" min="{{labelCtrl.minSize}}" max="{{labelCtrl.maxSize}}" step="1"
-            ng-model="labelSize" name="labelSize" title="Sets the label font size"/>
-        <span class="ml-1">px</span>
-      </td>
-    </tr>
+    <tbody>
+      <tr>
+        <td>Style</td>
+        <td class="w-100">
+          <colorpicker name="labelColor" color="labelColor" show-reset="true" title="Sets the label color"></colorpicker>
+          <input class="d-inline-block form-control w-25" type="number" min="{{labelCtrl.minSize}}" max="{{labelCtrl.maxSize}}" step="1"
+              ng-model="labelSize" name="labelSize" title="Sets the label font size">
+          <span class="ml-1">px</span>
+        </td>
+      </tr>
+    </tbody>
   </table>
 
   <div ng-show="alwaysShowLabels != 'false'">
     <div class="custom-control custom-checkbox d-inline-block" title="Always show labels for this layer. If unchecked, labels will only be shown on hover.">
-      <input type="checkbox" class="custom-control-input" id="showLabels_{{$id}}" name="showLabels" ng-model="showLabels" ng-change="labelCtrl.onShowLabelsChange()"/>
+      <input type="checkbox" class="custom-control-input" id="showLabels_{{$id}}" name="showLabels" ng-model="showLabels" ng-change="labelCtrl.onShowLabelsChange()">
       <label class="custom-control-label" for="showLabels_{{$id}}"> Always Show Labels</label>
     </div>
   </div>
 
   <div class="js-label-container card-body border">
     <table>
-      <tr ng-repeat="label in labels" ng-init="checkId = $root.getUniqueString()">
-        <td class="js-handle u-cursor-grab" ng-if="labels.length > 1">
-          <i class="fa fa-bars pr-1" ng-if="label.column != null" title="Click and Drag to move this label"></i>
-        </td>
-        <td>
-          <div class="custom-control custom-checkbox d-inline-block" title="Display the column name with the label.">
-            <input type="checkbox" class="custom-control-input" id="{{'showColumn' + checkId}}" name="{{'showColumn' + $index}}"
-                ng-disabled="label.column == null"
-                ng-model="label.showColumn"
-                ng-change="labelCtrl.onColumnChange()"/>
-            <label class="custom-control-label" for="{{'showColumn' + checkId}}"> Column</label>
-          </div>
-        </td>
-        <td>
-          <select class="custom-select" ng-model="label.column" ng-change="labelCtrl.onColumnChange()"
-              title="Sets the data field used for labels"
-              ng-options="col.field as col.name for col in columns">
-            <option value="">-- None --</option>
-          </select>
-        </td>
-        <td ng-if="labels.length > 1">
-          <button type="button" class="btn btn-danger" ng-click="labelCtrl.removeLabel(label)" title="Remove this label">
-            <i class="fa fa-times"></i>
-          </button>
-        </td>
-        <td>
-          <button type="button" class="btn btn-secondary" ng-if="$last" ng-click="labelCtrl.addLabel()" title="Add a label">
-            <i class="fa fa-plus"></i>
-          </button>
-        </td>
-      </tr>
+      <tbody>
+        <tr ng-repeat="label in labels" ng-init="checkId = $root.getUniqueString()">
+          <td class="js-handle u-cursor-grab" ng-if="labels.length > 1">
+            <i class="fa fa-bars pr-1" ng-if="label.column != null" title="Click and Drag to move this label"></i>
+          </td>
+          <td>
+            <div class="custom-control custom-checkbox d-inline-block" title="Display the column name with the label.">
+              <input type="checkbox" class="custom-control-input" id="{{'showColumn' + checkId}}" name="{{'showColumn' + $index}}"
+                  ng-disabled="label.column == null"
+                  ng-model="label.showColumn"
+                  ng-change="labelCtrl.onColumnChange()">
+              <label class="custom-control-label" for="{{'showColumn' + checkId}}"> Column</label>
+            </div>
+          </td>
+          <td>
+            <select class="custom-select" ng-model="label.column" ng-change="labelCtrl.onColumnChange()"
+                title="Sets the data field used for labels"
+                ng-options="col.field as col.name for col in columns">
+              <option value="">-- None --</option>
+            </select>
+          </td>
+          <td ng-if="labels.length > 1">
+            <button type="button" class="btn btn-danger" ng-click="labelCtrl.removeLabel(label)" title="Remove this label">
+              <i class="fa fa-times"></i>
+            </button>
+          </td>
+          <td>
+            <button type="button" class="btn btn-secondary" ng-if="$last" ng-click="labelCtrl.addLabel()" title="Add a label">
+              <i class="fa fa-plus"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
     </table>
     <span class="invalid-feedback d-block" ng-if="labelForm.$error.columnRequired">
       Please choose at least one column.

@@ -5,14 +5,14 @@
         Group By
       </div>
       <div class="col">
-        <select class="custom-select" ng-model="view" ng-change="filtersCtrl.onGroupChange()" ng-options="key for (key, value) in views"/>
+        <select class="custom-select" ng-model="view" ng-change="filtersCtrl.onGroupChange()" ng-options="key for (key, value) in views"></select>
       </div>
       <div class="col-auto">
         <addfilter></addfilter>
       </div>
 
       <div class="input-group mt-1 mx-1">
-        <input class="form-control" ng-model="term" ng-change="filtersCtrl.onSearchTermChange()" placeholder="Search..." />
+        <input class="form-control" ng-model="term" ng-change="filtersCtrl.onSearchTermChange()" placeholder="Search..." >
         <div class="input-group-append">
           <button class="btn btn-secondary" ng-click="filtersCtrl.clearSearch()" title="Clear the search term">
             <i class="fa fa-times"></i>

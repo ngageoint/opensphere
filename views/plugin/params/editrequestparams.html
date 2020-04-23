@@ -5,7 +5,7 @@
         <div class="row no-gutters mb-1">
           <label class="col-form-label col-2 text-right">{{ctrl.getUrlLabel($index)}}</label>
           <div class="col form-inline">
-            <input class="ml-2 col-11 form-control" type="text" name="url{{$index}}" ng-model="ctrl.urls[$index]" ng-maxlength="1000" ng-change="ctrl.testValid()" placeholder="Server URL" />
+            <input class="ml-2 col-11 form-control" type="text" name="url{{$index}}" ng-model="ctrl.urls[$index]" ng-maxlength="1000" ng-change="ctrl.testValid()" placeholder="Server URL" >
             <button class="btn btn-outline-danger btn-sm" type="button" ng-click="ctrl.removeUrl($index)" ng-if="ctrl.urls.length > 1" title="Remove this URL">
               <i class="fa fa-times"></i>
             </button>

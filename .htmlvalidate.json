@@ -1,0 +1,21 @@
+{
+  "extends": [
+    "htmlvalidate:recommended"
+  ],
+
+  "transform": {
+    "^.*\\.html$": "html-validate-angular/html"
+  },
+
+  "rules": {
+    "element-name": "off",
+    "element-required-attributes": "off",
+    "no-inline-style": "warn",
+    "no-raw-characters": "warn",
+    "prefer-button": "warn",
+    "wcag/h30": "warn",
+    "wcag/h32": "off",
+    "wcag/h37": "off"
+  }
+}
+

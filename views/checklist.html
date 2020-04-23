@@ -5,11 +5,11 @@
   </div>
   <div class="u-overflow-y-auto">
     <div class="custom-control custom-checkbox pl-4 u-table__row" ng-repeat="item in items" title="{{item.tooltip || ('Enable/disable ' + item.label)}}">
-      <input id="{{$index + item.label}}" class="custom-control-input" type="checkbox" name="items" ng-model="item.enabled" ng-change="checklist.onItemChange(item)"/>
+      <input id="{{$index + item.label}}" class="custom-control-input" type="checkbox" name="items" ng-model="item.enabled" ng-change="checklist.onItemChange(item)">
       <label for="{{$index + item.label}}" class="custom-control-label w-100">
-        <span ng-bind-html="item.customFormat"/>
+        <span ng-bind-html="item.customFormat"></span>
         {{item.label}}
-        <span ng-bind-html="item.detailText"/>
+        <span ng-bind-html="item.detailText"></span>
       </label>
     </div>
   </div>

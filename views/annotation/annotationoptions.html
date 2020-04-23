@@ -12,7 +12,7 @@
           <input type="checkbox" class="custom-control-input" name="showAnnotation"
               id="showAnnotation{{ctrl.uid}}"
               ng-change="ctrl.updateAnnotation()"
-              ng-model="ctrl.annotationOptions.show" />
+              ng-model="ctrl.annotationOptions.show" >
           <label class="custom-control-label" for="showAnnotation{{ctrl.uid}}">
             Show Text Box
           </label>
@@ -25,7 +25,7 @@
               ng-attr-id="showBackground{{ctrl.uid}}"
               ng-change="ctrl.updateAnnotation()"
               ng-model="ctrl.annotationOptions.showBackground"
-              ng-disabled="!ctrl.annotationOptions.show" />
+              ng-disabled="!ctrl.annotationOptions.show" >
           <label class="custom-control-label" ng-attr-for="showBackground{{ctrl.uid}}">
             Show Background
           </label>
@@ -39,7 +39,7 @@
           <input type="checkbox" class="custom-control-input" name="showAnnotationName"
             id="showAnnotationName{{ctrl.uid}}"
             ng-change="ctrl.updateAnnotation()" ng-disabled="!ctrl.annotationOptions.show"
-            ng-model="ctrl.annotationOptions.showName"/>
+            ng-model="ctrl.annotationOptions.showName">
           <label class="custom-control-label" for="showAnnotationName{{ctrl.uid}}">
             Show Name
           </label>
@@ -68,7 +68,7 @@
               id="showAnnotationDescription{{ctrl.uid}}"
               ng-change="ctrl.updateAnnotation()" ng-disabled="!ctrl.annotationOptions.show"
               ng-model="ctrl.annotationOptions.showDescription"
-            />
+            >
             <label class="custom-control-label" for="showAnnotationDescription{{ctrl.uid}}">
               Show Description
             </label>
@@ -94,18 +94,18 @@
           <div class="custom-control custom-checkbox d-inline-block">
             <input ng-checked="true" type="radio" id="showAnnotationDefaultTail{{ctrl.uid}}" class="form-check-input" name="showAnnotationTail{{ctrl.uid}}"
               ng-change="ctrl.updateAnnotation()" value="default" ng-model="ctrl.annotationOptions.showTail" ng-disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showBackground"
-            />
+            >
             <label class="form-check-label" for="showAnnotationDefaultTail{{ctrl.uid}}">Default</label>
           </div>
           <div class="custom-control custom-checkbox d-inline-block">
             <input type="radio" id="showAnnotationLineTail{{ctrl.uid}}" class="form-check-input" name="showAnnotationTail{{ctrl.uid}}" value="line"
               ng-change="ctrl.updateAnnotation()" ng-model="ctrl.annotationOptions.showTail" ng-disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showBackground"
-            />
+            >
             <label class="form-check-label" for="showAnnotationLineTail{{ctrl.uid}}">Line</label>
           </div>
           <div class="custom-control custom-checkbox d-inline-block">
             <input type="radio" id="showAnnotationNoTail{{ctrl.uid}}" class="form-check-input" name="showAnnotationTail{{ctrl.uid}}" ng-change="ctrl.updateAnnotation()"
-              value="none" ng-model="ctrl.annotationOptions.showTail" ng-disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showBackground" />
+              value="none" ng-model="ctrl.annotationOptions.showTail" ng-disabled="!ctrl.annotationOptions.show || !ctrl.annotationOptions.showBackground" >
             <label class="form-check-label" for="showAnnotationNoTail{{ctrl.uid}}">None</label>
           </div>
         </div>

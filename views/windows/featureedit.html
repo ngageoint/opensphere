@@ -1,10 +1,10 @@
 <div class="d-flex flex-column flex-fill">
   <div class="modal-body" ng-form="featureEditForm" novalidate>
-    
+
       <div class="d-flex flex-row form-group">
         <label class="col-2 col-form-label text-right u-required">Name</label>
         <div class="col">
-          <input class="form-control" type="text" name="name" ng-model="ctrl.name" ng-change="ctrl.updatePreview()" required="true"/>
+          <input class="form-control" type="text" name="name" ng-model="ctrl.name" ng-change="ctrl.updatePreview()" required>
           <validation-message target="featureEditForm.name"></validation-message>
         </div>
       </div>
@@ -41,7 +41,7 @@
           <div class="col-3">
             <input class="form-control" ng-disabled="ctrl.altitudeMode == 'clampToGround'"
                 type="number" name="altitude" step="any"
-                ng-change="ctrl.updatePreview()" ng-model="ctrl.altitude" />
+                ng-change="ctrl.updatePreview()" ng-model="ctrl.altitude" >
           </div>
           <select class="custom-select col-2" ng-model="ctrl.altUnits"
               ng-disabled="ctrl.altitudeMode == 'clampToGround'"
@@ -72,7 +72,7 @@
           <label class="col-2 col-form-label text-right u-required">Semi Major</label>
           <div class="d-inline-flex col">
             <input class="form-control col-4" type="number" name="semiMajor" ng-model="ctrl.semiMajor" ng-change="ctrl.onAxisChange()"
-                min="{{ctrl.getSemiMajorMin()}}" step="any" required="true" />
+                min="{{ctrl.getSemiMajorMin()}}" step="any" required>
             <select class="custom-select ml-2 col-2" ng-model="ctrl.semiMajorUnits" ng-change="ctrl.updatePreview()"
                 ng-options="unit for unit in ctrl.units">
             </select>
@@ -92,7 +92,7 @@
           <label class="col-2 col-form-label text-right u-required">Semi Minor</label>
           <div class="d-inline-flex col">
             <input class="form-control col-4" type="number" name="semiMinor" ng-model="ctrl.semiMinor" ng-change="ctrl.onAxisChange()"
-                min="{{1e-16}}" step="any" required="true" />
+                min="{{1e-16}}" step="any" required>
             <select class="custom-select ml-2 col-2" ng-model="ctrl.semiMinorUnits" ng-change="ctrl.updatePreview()"
                 ng-options="unit for unit in ctrl.units">
             </select>
@@ -108,7 +108,7 @@
         <div class="d-flex flex-row form-group" title="{{ctrl.help.orientation}}">
           <label class="col-2 col-form-label text-right u-required">Orientation</label>
           <div class="d-inline-flex col">
-            <input class="form-control col-4" type="number" name="orientation" ng-model="ctrl.orientation" ng-change="ctrl.updatePreview()" step="any" required="true" />
+            <input class="form-control col-4" type="number" name="orientation" ng-model="ctrl.orientation" ng-change="ctrl.updatePreview()" step="any">
             <popover class="mx-2" data-title="'Ellipse Orientation'" content="ctrl.help.orientation" pos="'right'">
             </popover>
           </div>
@@ -119,7 +119,7 @@
         <div class="d-flex flex-row form-group" title="{{ctrl.help.iconRotation}}">
           <label class="col-2 col-form-label text-right">Icon Rotation</label>
           <div class="d-inline-flex col">
-            <input class="form-control col-4" type="number" name="iconRotation" ng-model="ctrl.iconRotation" ng-change="ctrl.updatePreview()" step="any" />
+            <input class="form-control col-4" type="number" name="iconRotation" ng-model="ctrl.iconRotation" ng-change="ctrl.updatePreview()" step="any">
             <div class="mx-2">degrees</div>
             <popover data-title="'Icon Rotation'" content="ctrl.help.iconRotation" pos="'right'">
             </popover>
