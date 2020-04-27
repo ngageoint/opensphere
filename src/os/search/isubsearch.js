@@ -33,7 +33,7 @@ class ISubSearch {
   isSubSearch(searchFacetDepartment) {}
 
   /**
-   * @return {Array<!Array<string>>} enabled
+   * @return {Array<!Array<string>>}
    */
   getEnabledSubSearches() {}
 
@@ -41,6 +41,11 @@ class ISubSearch {
    * @return {!Array<!Array<string>>}
    */
   getDefaultDisabledSubSearches() {}
+
+  /**
+   * @return {boolean}
+   */
+  isSubSearchCapabilityEnabled() {}
 }
 
 
