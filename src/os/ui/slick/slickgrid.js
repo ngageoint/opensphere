@@ -1109,8 +1109,8 @@ os.ui.slick.SlickGridCtrl.prototype.onContextMenu_ = function(event, opt_positio
     } else if (menu instanceof os.ui.menu.Menu) {
       const rect = this.element[0].getBoundingClientRect();
 
-      menuX -= rect['left'];
-      menuY -= rect['top'];
+      menuX -= rect.left;
+      menuY -= rect.top;
 
       menu.open(contextArgs, {
         my: 'left top',
