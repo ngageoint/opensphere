@@ -1097,10 +1097,15 @@ os.ui.slick.SlickGridCtrl.prototype.onContextMenu_ = function(event, opt_positio
         os.ui.openMenu(menu, {x: menuX, y: menuY});
       }
     } else if (menu instanceof os.ui.menu.Menu) {
+      const rect = this.element[0].getBoundingClientRect();
+
+      menuX -= rect.left;
+      menuY -= rect.top;
+
       menu.open(contextArgs, {
         my: 'left top',
         at: 'left+' + menuX + ' top+' + menuY,
-        of: os.ui.windowSelector.CONTAINER
+        of: this.element[0]
       }, this);
     }
   }
