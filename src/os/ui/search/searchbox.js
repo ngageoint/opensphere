@@ -429,6 +429,7 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearch = function(search) {
   // search types in single mode.
   if (this['allowMultiple'] || !search.isEnabled()) {
     if (os.implements(search, os.search.ISubSearch.ID) &&
+    /** @type {os.search.ISubSearch} */ (search).isSubSearchCapabilityEnabled() &&
     /** @type {os.search.ISubSearch} */ (search).getRegisteredSubSearches().length) {
       const subSearch = /** @type {os.search.ISubSearch} */ (search);
       /**
@@ -496,6 +497,7 @@ os.ui.search.SearchBoxCtrl.prototype.getSearchName = function(search) {
 os.ui.search.SearchBoxCtrl.prototype.getSearchIcon = function(search) {
   if (this['allowMultiple']) {
     if (os.implements(search, os.search.ISubSearch.ID) &&
+    /** @type {os.search.ISubSearch} */ (search).isSubSearchCapabilityEnabled() &&
     /** @type {os.search.ISubSearch} */ (search).getRegisteredSubSearches().length &&
         search.isEnabled()) {
       const ss = /** @type {os.search.ISubSearch} */ (search);
@@ -879,6 +881,7 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions = function(event) {
     enabledIds[os.structs.TriState.BOTH] = [];
     this.searchManager.getEnabledSearches().forEach((search) => {
       if (os.implements(search, os.search.ISubSearch.ID) &&
+      /** @type {os.search.ISubSearch} */ (search).isSubSearchCapabilityEnabled() &&
       /** @type {os.search.ISubSearch} */ (search).getRegisteredSubSearches().length) {
         const ss = /** @type {os.search.ISubSearch} */ (search);
         enabledIds[ss.isSubSearchEnabled()].push(os.search.getSearchId(search));
@@ -916,6 +919,7 @@ os.ui.search.SearchBoxCtrl.prototype.toggleSearchOptions = function(event) {
             newEnabledIds[os.structs.TriState.BOTH] = [];
             this.searchManager.getEnabledSearches().forEach((search) => {
               if (os.implements(search, os.search.ISubSearch.ID) &&
+              /** @type {os.search.ISubSearch} */ (search).isSubSearchCapabilityEnabled() &&
               /** @type {os.search.ISubSearch} */ (search).getRegisteredSubSearches().length) {
                 const ss = /** @type {os.search.ISubSearch} */ (search);
                 newEnabledIds[ss.isSubSearchEnabled()].push(os.search.getSearchId(search));
