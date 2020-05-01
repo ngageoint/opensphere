@@ -55,9 +55,9 @@ goog.inherits(os.histo.NumericBinMethod, os.histo.UniqueBinMethod);
 
 
 /**
-* @type {string}
-* @const
-*/
+ * @type {string}
+ * @const
+ */
 os.histo.NumericBinMethod.TYPE = 'Numeric';
 
 
@@ -447,6 +447,19 @@ os.histo.NumericBinMethod.prototype.getFilterForRange_ = function(range) {
 
   filter.push('</And>');
   return filter.join('');
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.histo.NumericBinMethod.prototype.getStatsForBin = function(bins) {
+  var result = os.histo.NumericBinMethod.base(this, 'getStatsForBin', bins);
+  if (result != null) {
+    result.step = this.getWidth() || 1; // don't allow divide by 0 errors
+    result.binCountAll = ((result.range[1] - result.range[0]) / result.step) + 1;
+  }
+  return result;
 };
 
 

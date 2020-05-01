@@ -14,7 +14,7 @@ The following example shows how the ``map`` directive was transitioned to a modu
 Creating the UI Module
 ----------------------
 
-- The ``goog.module`` value can use the original controller name, minus ``Ctrl``. The name can be adjusted if needed, for example if this convention results in a name conflict with another class.
+- The ``goog.module`` value can use the original controller name, minus ``Ctrl``. The name can be adjusted if needed, for example if this convention results in a name conflict with another class. If unsure about naming conflicts, we recommend replacing ``Ctrl`` with ``UI`` in the module name.
 - Define and export the controller class as ``Controller``, and the directive function as ``directive``. This will ensure consistency across all UI's.
 
 .. literalinclude:: src/map.js
@@ -28,19 +28,19 @@ To reference the UI in ``goog.module`` files:
 
 .. code-block:: javascript
 
-    const MapUI = goog.require('os.ui.Map');
+    const MapUI = goog.require('os.ui.MapUI');
     // reference the controller class as MapUI.Controller
     // reference the directive function as MapUI.directive
 
-.. note:: This intentionally uses the variable name convention ``<class>UI`` both for clarity that it's a UI where referenced in the file, and the avoid shadowing the native ``Map`` object.
+.. note:: This intentionally uses the name convention ``<class>UI`` both for clarity that it's a UI where referenced, and the avoid shadowing the native ``Map`` object when assigned to a variable of the same name.
 
 To reference the UI in legacy ``goog.provide`` files:
 
 .. code-block:: javascript
 
-    goog.require('os.ui.Map');
-    // reference the controller class as os.ui.Map.Controller
-    // reference the directive function as os.ui.Map.directive
+    goog.require('os.ui.MapUI');
+    // reference the controller class as os.ui.MapUI.Controller
+    // reference the directive function as os.ui.MapUI.directive
 
 Backward Compatibility Shim
 ---------------------------

@@ -136,7 +136,7 @@ describe('os.data.ZOrder', function() {
   });
 
   it('should expire old data', function() {
-    z.groups_['Tile Layers'][1].time = goog.now() - 31 * 24 * 60 * 60 * 1000;
+    z.groups_['Tile Layers'][1].time = Date.now() - 31 * 24 * 60 * 60 * 1000;
     map.getMap().getLayers().getArray()[0].getLayers().getArray().splice(1, 1);
 
     z.save();

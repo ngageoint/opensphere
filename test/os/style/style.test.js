@@ -1,7 +1,9 @@
 goog.require('goog.object');
 goog.require('ol.Feature');
+goog.require('ol.events');
+goog.require('ol.layer.Vector');
+goog.require('os.source.Vector');
 goog.require('os.style');
-
 
 describe('os.style', function() {
   it('should convert colors properly', function() {
@@ -377,6 +379,108 @@ describe('os.style', function() {
       expect(os.style.hasNonZeroStrokeOpacity(style)).toBe(true);
       stroke.setColor('rgba(1,1,1,0)');
       expect(os.style.hasNonZeroStrokeOpacity(style)).toBe(false);
+    });
+  });
+
+  describe('os.style.notifyStyleChange', function() {
+    it('should send events at the layer level ONLY by default', function() {
+      var source = new os.source.Vector();
+      source.setId('style.test.js');
+
+      var layer = new ol.layer.Vector({source});
+      var colormodel = source.createColorModel();
+      source.setColorModel(colormodel);
+
+      var on = {
+        'layer': 0,
+        'source': 0,
+        'colormodel': 0
+      };
+
+      ol.events.listen(layer, goog.events.EventType.PROPERTYCHANGE, function(evt) {
+        on['layer']++;
+      });
+
+      ol.events.listen(source, goog.events.EventType.PROPERTYCHANGE, function(evt) {
+        on['source']++;
+      });
+
+      ol.events.listen(colormodel, goog.events.EventType.PROPERTYCHANGE, function(evt) {
+        on['colormodel']++;
+      });
+
+      // the call being tested
+      os.style.notifyStyleChange(layer);
+
+      expect(on['layer']).toBe(1);
+      expect(on['source']).toBe(0);
+      expect(on['colormodel']).toBe(0);
+
+      ol.events.unlisten(layer, goog.events.EventType.PROPERTYCHANGE);
+      ol.events.unlisten(source, goog.events.EventType.PROPERTYCHANGE);
+      ol.events.unlisten(colormodel, goog.events.EventType.PROPERTYCHANGE);
+    });
+
+    it('should send events at the layer, source, and colormodel levels when configured', function() {
+      var source = new os.source.Vector();
+      source.setId('style.test.js');
+
+      var layer = new ol.layer.Vector({source});
+      var colormodel = source.createColorModel();
+      source.setColorModel(colormodel);
+
+      var on = {
+        'layer': 0,
+        'source': {
+          'total': 0,
+          'configured': 0
+        },
+        'colormodel': 0
+      };
+
+      ol.events.listen(layer, goog.events.EventType.PROPERTYCHANGE, function(evt) {
+        on['layer']++;
+      });
+
+      ol.events.listen(source, goog.events.EventType.PROPERTYCHANGE, function(evt) {
+        on['source']['total']++;
+
+        var p = evt.getProperty();
+        switch (p) {
+          case os.source.PropertyChange.VISIBLE:
+          case os.source.PropertyChange.CLEARED:
+            on['source']['configured']++;
+            break;
+          default:
+            break;
+        }
+      });
+
+      ol.events.listen(colormodel, goog.events.EventType.PROPERTYCHANGE, function(evt) {
+        on['colormodel']++;
+      });
+
+      // the call being tested
+      os.style.notifyStyleChange(
+          layer,
+          undefined,
+          os.source.PropertyChange.VISIBLE,
+          [os.source.PropertyChange.VISIBLE, os.source.PropertyChange.CLEARED], // 2
+          true
+      );
+
+      expect(on['layer']).toBe(1);
+
+      // Bumping the color model throws 3 extra propchange events on the source; don't test since
+      // that is somewhat likely to change as more source propertychange types are added
+      // expect(on['source']['total']).toBe(5);
+
+      expect(on['source']['configured']).toBe(2);
+      expect(on['colormodel']).toBe(1);
+
+      ol.events.unlisten(layer, goog.events.EventType.PROPERTYCHANGE);
+      ol.events.unlisten(source, goog.events.EventType.PROPERTYCHANGE);
+      ol.events.unlisten(colormodel, goog.events.EventType.PROPERTYCHANGE);
     });
   });
 });

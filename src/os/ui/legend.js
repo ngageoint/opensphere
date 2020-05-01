@@ -52,6 +52,7 @@ os.ui.LegendCtrl = function($scope, $element) {
   this.updateEvents = [
     os.source.PropertyChange.COLOR,
     os.source.PropertyChange.COLOR_MODEL,
+    os.source.PropertyChange.ENABLED,
     os.source.PropertyChange.FEATURES,
     os.source.PropertyChange.FEATURE_VISIBILITY,
     os.source.PropertyChange.GEOMETRY_CENTER_SHAPE,

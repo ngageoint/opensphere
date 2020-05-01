@@ -324,15 +324,21 @@ plugin.cesium.sync.VectorSynchronizer.prototype.onSourcePropertyChange_ = functi
       break;
     case os.source.PropertyChange.ANIMATION_FRAME:
       // each frame fires a map of features that changed visibility
-      var showChangeMap = /** @type {Object<number, boolean>} */ (event.getNewValue());
-      if (showChangeMap) {
-        goog.object.forEach(showChangeMap, function(shown, id) {
-          var feature = source.getFeatureById(id);
-          if (feature) {
-            this.updatePrimitiveVisibility_(feature, shown);
-          }
-        }, this);
+      const toHide = /** @type {?Array<!ol.Feature>} */ (event.getOldValue());
+      const toShow = /** @type {?Array<!ol.Feature>} */ (event.getNewValue());
+
+      if (toHide) {
+        for (let i = 0, n = toHide.length; i < n; i++) {
+          this.updatePrimitiveVisibility_(toHide[i], false);
+        }
       }
+
+      if (toShow) {
+        for (let i = 0, n = toShow.length; i < n; i++) {
+          this.updatePrimitiveVisibility_(toShow[i], true);
+        }
+      }
+
       break;
     case os.source.PropertyChange.ALTITUDE:
       if (this.source instanceof os.source.Vector) {
@@ -449,7 +455,7 @@ plugin.cesium.sync.VectorSynchronizer.prototype.updateFeature_ = function(featur
  * @private
  */
 plugin.cesium.sync.VectorSynchronizer.prototype.refreshFeatures_ = function(features) {
-  if (this.active) {
+  if (this.active && features && features.length > 0) {
     for (var i = 0, n = features.length; i < n; i++) {
       this.updateFeature_(features[i]);
     }

@@ -65,6 +65,14 @@ os.ui.im.action.FilterActionImporter.prototype.getFilterTooltip = function(entry
 
 
 /**
+ * @inheritDoc
+ */
+os.ui.im.action.FilterActionImporter.prototype.getFilterColumnsFromFilterable = function(filterable) {
+  return os.im.action.getColumnsFromFilterable(filterable);
+};
+
+
+/**
  * Get all filter action entries from matched results.
  * @param {Object} matched The matched entries.
  * @return {!Array<!os.im.action.FilterActionEntry>}

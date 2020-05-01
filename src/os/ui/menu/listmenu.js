@@ -1,9 +1,6 @@
 goog.provide('os.ui.menu.list');
 
 goog.require('os.command.FeaturesVisibility');
-goog.require('os.command.InvertSelect');
-goog.require('os.command.SelectAll');
-goog.require('os.command.SelectNone');
 goog.require('os.feature');
 goog.require('os.fn');
 goog.require('os.instanceOf');
@@ -37,6 +34,19 @@ os.ui.menu.list.MENU = null;
 
 
 /**
+ * menu list strings
+ * @enum {string}
+ * @const
+ */
+os.ui.menu.list.Strings = {
+  COLOR_RESET_LABEL: 'Reset Color',
+  COLOR_RESET_TOOLTIP: 'Reset all item(s) to the default color from the Layer\'s Style',
+  COLOR_SELECTED_LABEL: 'Color Selected',
+  COLOR_SELECTED_TOOLTIP: 'Choose a color for the selected item(s)'
+};
+
+
+/**
  * Sets up the feature list menu.
  */
 os.ui.menu.list.setup = function() {
@@ -55,6 +65,28 @@ os.ui.menu.list.setup = function() {
         beforeRender: os.ui.menu.list.visibleIfHasSelected,
         metricKey: os.metrics.FeatureList.SORT_SELECTED,
         sort: 4
+      }]
+    }, {
+      label: os.ui.menu.feature.GroupLabel.COLOR,
+      type: os.ui.menu.MenuItemType.GROUP,
+      sort: 3,
+      children: [{
+        label: os.ui.menu.list.Strings.COLOR_SELECTED_LABEL,
+        eventType: os.action.EventType.COLOR_SELECTED,
+        tooltip: os.ui.menu.list.Strings.COLOR_SELECTED_TOOLTIP,
+        icons: ['<i class="fa fa-fw fa-tint"></i>'],
+        handler: os.ui.menu.list.onColorSelected,
+        metricKey: os.metrics.FeatureList.COLOR_SELECTED,
+        beforeRender: os.ui.menu.list.visibleIfHasSelected,
+        sort: 0
+      }, {
+        label: os.ui.menu.list.Strings.COLOR_RESET_LABEL,
+        eventType: os.action.EventType.RESET_COLOR,
+        tooltip: os.ui.menu.list.Strings.COLOR_RESET_TOOLTIP,
+        icons: ['<i class="fa fa-fw fa-tint"></i>'],
+        handler: os.ui.menu.list.onResetColor,
+        metricKey: os.metrics.FeatureList.RESET_COLOR,
+        sort: 10
       }]
     }, {
       label: os.ui.menu.feature.GroupLabel.TOOLS,
@@ -105,18 +137,18 @@ os.ui.menu.list.handleListEvent = function(event) {
     var eventType = event.type.replace(os.ui.menu.list.PREFIX_REGEXP, '');
     switch (eventType) {
       case os.action.EventType.SELECT:
-        // omit selection events from the stack to reduce clutter
-        new os.command.SelectAll(source.getId()).execute();
+        // don't create and execute a command if it's simple and we don't want it on the stack
+        source.selectAll();
         os.metrics.Metrics.getInstance().updateMetric(os.metrics.FeatureList.SELECT_ALL, 1);
         break;
       case os.action.EventType.DESELECT:
-        // omit selection events from the stack to reduce clutter
-        new os.command.SelectNone(source.getId()).execute();
+        // don't create and execute a command if it's simple and we don't want it on the stack
+        source.selectNone();
         os.metrics.Metrics.getInstance().updateMetric(os.metrics.FeatureList.DESELECT_ALL, 1);
         break;
       case os.action.EventType.INVERT:
-        // omit selection events from the stack to reduce clutter
-        new os.command.InvertSelect(source.getId()).execute();
+        // don't create and execute a command if it's simple and we don't want it on the stack
+        source.invertSelection();
         os.metrics.Metrics.getInstance().updateMetric(os.metrics.FeatureList.INVERT_SELECTION, 1);
         break;
       case os.action.EventType.HIDE_SELECTED:
@@ -192,6 +224,47 @@ os.ui.menu.list.onSortSelected = function(event) {
   }
 };
 
+
+/**
+ * Handle the "Color Selected" menu event.
+ *
+ * @param {os.ui.menu.MenuEvent} event The menu event.
+ */
+os.ui.menu.list.onColorSelected = function(event) {
+  var context = event.getContext();
+  if (os.instanceOf(context, os.source.Vector.NAME)) {
+    var source = /** @type {!os.source.Vector} */ (context);
+    if (source && source.getSelectedItems()) {
+      var items = source.getSelectedItems();
+
+      // call the confirm window from this context so it doesn't appear in the wrong tab
+      os.ui.window.launchConfirmColor(function(color) {
+        source.setColor(items, os.style.toRgbaString(color));
+      }, os.feature.getFirstColor(items));
+    }
+  }
+};
+
+
+/**
+ * Handle the "Color Selected" menu event.
+ *
+ * @param {os.ui.menu.MenuEvent} event The menu event.
+ */
+os.ui.menu.list.onResetColor = function(event) {
+  var context = event.getContext();
+  if (os.instanceOf(context, os.source.Vector.NAME)) {
+    var source = /** @type {!os.source.Vector} */ (context);
+    if (source) {
+      var cm = source.getColorModel();
+      if (cm) {
+        cm.setColorMethod(os.data.histo.ColorMethod.RESET);
+      } else {
+        source.setColorModel(null);
+      }
+    }
+  }
+};
 
 /**
  * @param {os.source.Vector} context

@@ -130,6 +130,13 @@ os.source.Vector = function(opt_options) {
   this.lastEllipseNotification_ = 0;
 
   /**
+   * If the source is enabled.
+   * @type {boolean}
+   * @private
+   */
+  this.enabled_ = true;
+
+  /**
    * @type {boolean}
    * @private
    */
@@ -988,6 +995,26 @@ os.source.Vector.prototype.setColumnAutoDetectLimit = function(value) {
 
 
 /**
+ * Sets the colors of the provided features; uses the ColorModel's colorFeatures() if it exists, otherwise
+ * does a fast-color on the Features directly.
+ *
+ * @param {Array<!ol.Feature>|null} items
+ * @param {string=} opt_color rgba-color or clear with a null or undefined (which colormodel treats differently)
+ *
+ * @suppress {accessControls}
+ */
+os.source.Vector.prototype.setColor = function(items, opt_color) {
+  if (!items) return;
+  if (!this.colorModel) this.setColorModel(this.createColorModel());
+  if (this.colorModel) {
+    this.colorModel.colorFeatures(items, opt_color);
+    this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.STYLE));
+    this.changed();
+  }
+};
+
+
+/**
  * Gets the geometry shape used by features in the source.
  *
  * @return {string}
@@ -1159,7 +1186,7 @@ os.source.Vector.prototype.isNotEllipseOrLOBOrDefault = function(shapeName) {
  */
 os.source.Vector.prototype.testShapeFields_ = function(value) {
   var am = os.alert.AlertManager.getInstance();
-  var now = goog.now();
+  var now = Date.now();
 
   if (this.columns.length > 0) {
     if (os.style.ELLIPSE_REGEXP.test(value)) {
@@ -1200,6 +1227,41 @@ os.source.Vector.prototype.setId = function(value) {
     var old = this.id_;
     this.id_ = value;
     this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.ID, value, old));
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.source.Vector.prototype.isEnabled = function() {
+  return this.enabled_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.source.Vector.prototype.setEnabled = function(value) {
+  if (this.enabled_ !== value) {
+    this.enabled_ = value;
+    this.setEnabledInternal(value);
+    this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.ENABLED, value, !value));
+  }
+};
+
+
+/**
+ * Perform internal source actions when the enabled state changes.
+ * @param {boolean} value The new value.
+ * @protected
+ */
+os.source.Vector.prototype.setEnabledInternal = function(value) {
+  if (value) {
+    this.refresh();
+  } else {
+    this.setLocked(false);
+    this.clear();
   }
 };
 
@@ -1287,9 +1349,10 @@ os.source.Vector.prototype.isLocked = function() {
  * @inheritDoc
  */
 os.source.Vector.prototype.setLocked = function(value) {
-  var old = this.locked_;
-  this.locked_ = value;
-  this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.LOCK, value, old));
+  if (this.locked_ !== value) {
+    this.locked_ = value;
+    this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.LOCK, value, !value));
+  }
 };
 
 
@@ -1643,6 +1706,16 @@ os.source.Vector.prototype.createColorModel = function(opt_histogram, opt_gradie
 
 
 /**
+ * Check for a color model or manually colored items in the Source
+ *
+ * @return {boolean}
+ */
+os.source.Vector.prototype.hasColors = function() {
+  return (this.colorModel != null);
+};
+
+
+/**
  * Get the histogram used to color features on the source.
  *
  * @return {os.data.histo.ColorModel}
@@ -1660,6 +1733,7 @@ os.source.Vector.prototype.getColorModel = function() {
  * @param {os.data.histo.ColorModel} model
  */
 os.source.Vector.prototype.setColorModel = function(model) {
+  // update the color model
   if (model !== this.colorModel) {
     if (this.colorModel) {
       this.colorModel.dispose();
@@ -2581,26 +2655,8 @@ os.source.Vector.prototype.setOverlayZIndex = function(value) {
  * @suppress {accessControls} To allow direct access to feature id.
  */
 os.source.Vector.prototype.dispatchAnimationFrame = function(opt_hide, opt_show) {
-  var changeMap = {};
-  if (opt_hide) {
-    for (var i = 0, n = opt_hide.length; i < n; i++) {
-      changeMap[opt_hide[i].id_] = false;
-    }
-  }
-
-  if (opt_show) {
-    for (var i = 0, n = opt_show.length; i < n; i++) {
-      var id = opt_show[i].id_;
-      if (id in changeMap && !this.tlc.getFade()) {
-        // only remove items if we are not fading anything out
-        delete changeMap[id];
-      } else {
-        changeMap[id] = true;
-      }
-    }
-  }
-
-  this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.ANIMATION_FRAME, changeMap));
+  this.dispatchEvent(new os.events.PropertyChangeEvent(
+      os.source.PropertyChange.ANIMATION_FRAME, opt_show, opt_hide));
 };
 
 

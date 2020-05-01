@@ -58,18 +58,30 @@ class AlertManager extends goog.events.EventTarget {
 
   /**
    * Maximum number of alerts to be saved.
-   * @return {number}
+   * @type {number}
    */
   static get MAX_SAVED() {
     return maxSaved_;
   }
 
   /**
-   * Global alert manager instance.
+   * Get the global alert manager instance.
    * @return {AlertManager}
    */
   static getInstance() {
-    return instance_;
+    if (!instance) {
+      instance = new AlertManager();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global alert manager instance.
+   * @param {!AlertManager} value The AlertManager instance to set.
+   */
+  static setInstance(value) {
+    instance = value;
   }
 
   /**
@@ -167,6 +179,6 @@ class AlertManager extends goog.events.EventTarget {
  * Global alert manager instance.
  * @type {AlertManager}
  */
-const instance_ = new AlertManager();
+let instance;
 
 exports = AlertManager;

@@ -18,10 +18,29 @@ goog.require('os.layer.PropertyChange');
  * @template T
  */
 os.command.AbstractStyle = function(layerId, value, opt_oldValue) {
-  this.isAsync = false;
-  this.title = 'Change Style';
+  /**
+   * The details of the command.
+   * @type {?string}
+   */
   this.details = null;
+
+  /**
+   * Whether or not the command is asynchronous.
+   * @type {boolean}
+   */
+  this.isAsync = false;
+
+  /**
+   * Return the current state of the command.
+   * @type {!os.command.State}
+   */
   this.state = os.command.State.READY;
+
+  /**
+   * The title of the command.
+   * @type {?string}
+   */
+  this.title = 'Change Style';
 
   /**
    * @type {string}

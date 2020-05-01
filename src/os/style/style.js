@@ -1524,16 +1524,35 @@ os.style.mergeConfig = function(from, to) {
  *
  * @param {ol.layer.Layer} layer The layer
  * @param {Array<ol.Feature>=} opt_features The features that changed
- * @param {string=} opt_type The style event type
+ * @param {string=} opt_type The Layer style event type
+ * @param {Array<string>=} opt_source The Source style event type(s)
+ * @param {boolean=} opt_colormodel True if the color model should be bumped to trigger listeners
  */
-os.style.notifyStyleChange = function(layer, opt_features, opt_type) {
+os.style.notifyStyleChange = function(layer, opt_features, opt_type, opt_source, opt_colormodel) {
   // olcs will synchronize all features on this event
   var eventType = opt_type || os.layer.PropertyChange.STYLE;
   layer.dispatchEvent(new os.events.PropertyChangeEvent(eventType, opt_features));
 
   // ol map will refresh off this one. firing the event off the source causes the animation overlay to update as well.
-  var source = layer.getSource();
+  var source = /** @type {os.source.Vector} */ (layer.getSource());
   if (source) {
+    if (opt_colormodel) {
+      var colormodel = source.getColorModel();
+      if (colormodel) {
+        var cfg = colormodel.persist();
+        var cm = source.createColorModel();
+        cm.restore(cfg);
+        source.setColorModel(cm); // trigger the listeners waiting for a new color model
+        cm.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.STYLE));
+      }
+    }
+
+    if (opt_source) {
+      opt_source.forEach((type) => {
+        // send the event on the source
+        source.dispatchEvent(new os.events.PropertyChangeEvent(type, opt_features));
+      });
+    }
     source.changed();
   }
 };

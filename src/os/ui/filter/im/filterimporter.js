@@ -92,6 +92,15 @@ os.ui.filter.im.FilterImporter.prototype.onParsingComplete = function(opt_event)
 
 
 /**
+ * @param {os.filter.IFilterable} filterable
+ * @return {Array<os.ogc.FeatureTypeColumn>}
+ */
+os.ui.filter.im.FilterImporter.prototype.getFilterColumnsFromFilterable = function(filterable) {
+  return filterable ? filterable.getFilterColumns() : null;
+};
+
+
+/**
  * Process the parsed filters.
  * @protected
  */
@@ -115,7 +124,7 @@ os.ui.filter.im.FilterImporter.prototype.processData = function() {
     if (this.layerId) {
       // if we have a layer ID, we were passed some context from a filter window, so use it
       var impliedFilterable = os.ui.filter.getFilterableByType(this.layerId);
-      var columns = impliedFilterable ? impliedFilterable.getFilterColumns() : null;
+      var columns = this.getFilterColumnsFromFilterable(impliedFilterable);
 
       if (impliedFilterable && columns && (this.ignoreColumns || filter.matches(columns))) {
         // this filter matches the columns of the passed in context, so add it as such

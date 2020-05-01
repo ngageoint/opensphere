@@ -21,13 +21,13 @@ describe('os.time.TimeRange', function() {
   it('should print the correct time', function() {
     var r = new os.time.TimeRange(0, h);
 
-    expect(r.toISOString()).toBe('1970-01-01 00:00:00Z to 1970-01-01 12:00:00Z');
+    expect(r.toISOString()).toBe('1970-01-01T00:00:00Z to 1970-01-01T12:00:00Z');
     r.setStart(os.time.TimeInstant.MIN_TIME);
-    expect(r.toString()).toBe('Unbounded to 1970-01-01 12:00:00Z');
+    expect(r.toString()).toBe('Unbounded to 1970-01-01T12:00:00Z');
     r.setEnd(os.time.TimeInstant.MAX_TIME);
     expect(r.toString()).toBe('Unbounded to Unbounded');
     r.setStart(0);
-    expect(r.toString()).toBe('1970-01-01 00:00:00Z to Unbounded');
+    expect(r.toString()).toBe('1970-01-01T00:00:00Z to Unbounded');
   });
 
   it('should check equality against time instants', function() {

@@ -111,6 +111,14 @@ os.command.TransformVectors.prototype.transform = function(sourceProjection, tar
   var layers = os.MapContainer.getInstance().getLayers();
   var tx = os.command.TransformVectors.transform_.bind(null, sourceProjection, targetProjection);
 
+  // list of geometry caches to also transform which aren't generally considered part of the
+  // geometry/style set
+  const extraGeoms = [
+    os.interpolate.ORIGINAL_GEOM_FIELD,
+    os.data.RecordField.ELLIPSE,
+    os.data.RecordField.LINE_OF_BEARING,
+    os.data.RecordField.RING];
+
   for (var i = 0, n = layers.length; i < n; i++) {
     var layer = layers[i];
 
@@ -130,10 +138,9 @@ os.command.TransformVectors.prototype.transform = function(sourceProjection, tar
           for (var j = 0, m = features.length; j < m; j++) {
             os.feature.forEachGeometry(features[j], tx);
 
-            // check cached geoms just in case
-            tx(/** @type {(os.geom.Ellipse|undefined)} */ (features[j].get(os.data.RecordField.ELLIPSE)));
-            tx(/** @type {(ol.geom.LineString|undefined)} */ (features[j].get(os.data.RecordField.LINE_OF_BEARING)));
-            tx(/** @type {(ol.geom.GeometryCollection|undefined)} */ (features[j].get(os.data.RecordField.RING)));
+            for (var k = 0, l = extraGeoms.length; k < l; k++) {
+              tx(/** @type {ol.geom.Geometry|undefined} */ (features[j].get(extraGeoms[k])));
+            }
           }
 
           source.addFeatures(features);

@@ -62,7 +62,7 @@ os.ui.columnactions.AbstractColumnAction.prototype.toDisplay = function(value) {
 os.ui.columnactions.AbstractColumnAction.prototype.setRegExps = function(regexps) {
   for (var key in regexps) {
     if (key != 'replace') {
-      this.regexps[key] = new RegExp(regexps[key]);
+      this.regexps[key] = new RegExp(regexps[key], 'i');
     } else {
       this.regexps[key] = regexps[key];
     }

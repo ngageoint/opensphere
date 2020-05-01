@@ -21,7 +21,7 @@ os.ui.util.scrollFocusDirective = function() {
     restrict: 'A',
     controllerAs: 'scrollFocusCtrl',
     controller: os.ui.util.ScrollFocusCtrl,
-    link: os.ui.util.scrollFocusDirective.linker_.bind(this)
+    link: os.ui.util.scrollFocusDirective.linker_
   };
 };
 
@@ -39,7 +39,7 @@ os.ui.Module.directive('scrollFocus', [os.ui.util.scrollFocusDirective]);
  */
 os.ui.util.scrollFocusDirective.linker_ = function(scope, element, attrs, scrollFocusCtrl) {
   scope['element'] = element = element[0];
-  scope.$watch('element.scrollHeight', goog.bind(function(height) {
+  scope.$watch('element.scrollHeight', function(height) {
     if (typeof height === 'number') {
       if (scrollFocusCtrl.hasScrollBar_()) {
         element.setAttribute('tabindex', 0);
@@ -47,7 +47,7 @@ os.ui.util.scrollFocusDirective.linker_ = function(scope, element, attrs, scroll
         element.removeAttribute('tabindex');
       }
     }
-  }, this));
+  });
 };
 
 

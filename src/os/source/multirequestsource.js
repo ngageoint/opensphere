@@ -122,8 +122,8 @@ os.source.MultiRequest.prototype.abortRequest = function() {
 os.source.MultiRequest.prototype.loadRequest = function() {
   this.abortRequest();
 
-  if (this.requests_.length > 0 && !this.isLocked()) {
-    this.durationStart_ = goog.now();
+  if (this.requests_.length > 0 && this.isEnabled() && !this.isLocked()) {
+    this.durationStart_ = Date.now();
     this.setLoading(true);
 
     if (this.loadAsync_) {
@@ -155,7 +155,7 @@ os.source.MultiRequest.prototype.setLocked = function(value) {
  * @inheritDoc
  */
 os.source.MultiRequest.prototype.refresh = function() {
-  if (!this.isLocked()) {
+  if (this.isEnabled() && !this.isLocked()) {
     if (this.importer_) {
       this.importer_.reset();
     }
@@ -335,7 +335,7 @@ os.source.MultiRequest.prototype.onImporterError = function(opt_event) {
  * @protected
  */
 os.source.MultiRequest.prototype.durationString = function() {
-  var now = goog.now();
+  var now = Date.now();
   var duration = new Date(now - this.durationStart_);
   var durationString = ' in ' + os.time.formatDate(duration, 'mm:ss.SSS');
   this.durationStart_ = now;

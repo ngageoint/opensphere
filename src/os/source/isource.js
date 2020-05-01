@@ -116,6 +116,20 @@ os.source.ISource.prototype.setId;
 
 
 /**
+ * If the data source is enabled.
+ * @return {boolean}
+ */
+os.source.ISource.prototype.isEnabled;
+
+
+/**
+ * Set the enabled state of the data source.
+ * @param {boolean} value
+ */
+os.source.ISource.prototype.setEnabled;
+
+
+/**
  * Get the loading state of the data source.
  * @return {boolean}
  */

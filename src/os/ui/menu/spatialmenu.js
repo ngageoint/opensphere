@@ -266,7 +266,7 @@ os.ui.menu.spatial.setup = function() {
           label: 'Search Area...',
           tooltip: 'Searches for available data in the area',
           icons: ['<i class="fa fa-fw fa-search"></i>'],
-          beforeRender: os.ui.menu.spatial.visibleIfPolygonal,
+          beforeRender: os.ui.menu.spatial.visibleIfSearchable,
           handler: os.ui.menu.spatial.searchArea,
           sort: 1000
         }]
@@ -908,6 +908,21 @@ os.ui.menu.spatial.addLayerSubMenu = function(group, eventType, types) {
     handler: os.ui.menu.spatial.onLayerPicker_,
     sort: idx
   });
+};
+
+
+/**
+ * Shows the Search Area option if there available geosearches and the area is polygonal.
+ *
+ * @param {Object|undefined} context The menu context.
+ * @this {os.ui.menu.MenuItem}
+ */
+os.ui.menu.spatial.visibleIfSearchable = function(context) {
+  // check if there are any registered geosearches
+  var searches = os.searchManager.getRegisteredSearches();
+  var some = searches.some((s) => s && os.search.supportsGeoSearch(s));
+
+  this.visible = some && os.ui.menu.spatial.isPolygonal(context);
 };
 
 

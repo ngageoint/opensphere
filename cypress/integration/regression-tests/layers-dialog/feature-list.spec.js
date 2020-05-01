@@ -649,6 +649,7 @@ describe('Feature list', function() {
       cy.get(dialogs.featureListDialog.contextMenu.PANEL).should('contain', 'Go To');
 
       // Clean up
+      cy.get(dialogs.featureListDialog.DIALOG_HEADER).click();
       cy.get(dialogs.featureListDialog.DIALOG).type('{ctrl}', {release: false});
       cy.get(dialogs.featureListDialog.DIALOG)
           .find(shared.Grid.ROW_2)

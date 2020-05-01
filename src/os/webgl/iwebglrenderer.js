@@ -140,3 +140,17 @@ os.webgl.IWebGLRenderer.prototype.onPostRender;
  * @param {Array<ol.Feature>} features
  */
 os.webgl.IWebGLRenderer.prototype.flyToFeatures;
+
+
+/**
+ * Get the max feature count for this renderer.
+ * @return {number}
+ */
+os.webgl.IWebGLRenderer.prototype.getMaxFeatureCount;
+
+
+/**
+ * Set the max feature count for this renderer.
+ * @param {Array<ol.Feature>} features
+ */
+os.webgl.IWebGLRenderer.prototype.setMaxFeatureCount;

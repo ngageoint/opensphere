@@ -51,17 +51,13 @@ plugin.arc.query.ArcQueryHandler.LOGGER_ = goog.log.getLogger('plugin.arc.query.
 
 
 /**
- * Get the active query entries for this layer.
- *
- * @return {!Array<!Object<string, string|boolean>>}
- * @protected
+ * @inheritDoc
  */
 plugin.arc.query.ArcQueryHandler.prototype.getActiveEntries = function() {
-  var layerId = this.getLayerId();
-  var qmEntries = os.ui.queryManager.getEntries(layerId, null, null, true);
+  var qmEntries = this.getEntries(this.getLayerId());
+  var entries = [];
 
   // clone the entries
-  var entries = [];
   for (var i = 0, n = qmEntries.length; i < n; i++) {
     var entry = goog.object.clone(qmEntries[i]);
     entry['spatialRequired'] = this.spatialRequired;
@@ -69,9 +65,8 @@ plugin.arc.query.ArcQueryHandler.prototype.getActiveEntries = function() {
   }
 
   // ignore disabled areas
-  entries = entries.filter(os.ui.query.QueryHandler.shownAreas);
-
-  return entries;
+  entries = entries.filter(this.shownAreas, this);
+  return /** @type {os.ui.query.ActiveEntries} */ ({entries: entries, includes: [], excludes: []});
 };
 
 
@@ -81,9 +76,10 @@ plugin.arc.query.ArcQueryHandler.prototype.getActiveEntries = function() {
 plugin.arc.query.ArcQueryHandler.prototype.createFilter = function() {
   var result = '';
 
-  var entries = this.getActiveEntries();
-  entries = entries.filter(os.ui.query.QueryHandler.includes);
-  entries = entries.filter(os.ui.query.QueryHandler.filters);
+  var activeEntries = this.getActiveEntries();
+  var entries = activeEntries.entries;
+  entries = entries.filter(this.includes, this);
+  entries = entries.filter(this.filters, this);
 
   if (!entries.length) {
     return result;
@@ -101,7 +97,7 @@ plugin.arc.query.ArcQueryHandler.prototype.createFilter = function() {
     if (filterId && !seenIds[filterId]) {
       seenIds[filterId] = true;
 
-      var filter = os.ui.filterManager.getFilter(filterId);
+      var filter = this.getFilter(filterId);
       if (filter) {
         filters.push(filter);
       }
@@ -125,21 +121,22 @@ plugin.arc.query.ArcQueryHandler.prototype.createGeometry = function() {
   var hasInclude = false;
   var seenAreas = {};
 
-  var entries = this.getActiveEntries();
+  var activeEntries = this.getActiveEntries();
+  var entries = activeEntries.entries;
   var bucket = goog.array.bucket(entries, function(entry) {
     // track which areaIds we've already seen since the expanded entries are inherently duplicative
     var areaId = entry['areaId'];
-    if (os.ui.query.QueryHandler.includes(entry) && !seenAreas[areaId]) {
+    if (this.includes(entry) && !seenAreas[areaId]) {
       seenAreas[areaId] = true;
       hasInclude = true;
       return 'inclusion';
     }
 
-    if (os.ui.query.QueryHandler.excludes(entry) && !seenAreas[areaId]) {
+    if (this.excludes(entry) && !seenAreas[areaId]) {
       seenAreas[areaId] = true;
       return 'exclusion';
     }
-  });
+  }, this);
 
   if (!hasInclude) {
     return '';
@@ -161,7 +158,7 @@ plugin.arc.query.ArcQueryHandler.prototype.createGeometry = function() {
   for (var i = 0, ii = includeEntries.length; i < ii; i++) {
     var entry = includeEntries[i];
     var areaId = /** @type {string} */ (entry['areaId']);
-    var inclusion = areaId ? os.ui.areaManager.get(areaId) : null;
+    var inclusion = areaId ? this.getArea(areaId) : null;
 
     if (inclusion) {
       try {
@@ -185,7 +182,7 @@ plugin.arc.query.ArcQueryHandler.prototype.createGeometry = function() {
     for (var i = 0, ii = excludeEntries.length; i < ii; i++) {
       var entry = excludeEntries[i];
       var areaId = /** @type {string} */ (entry['areaId']);
-      var exclusion = areaId ? os.ui.areaManager.get(areaId) : null;
+      var exclusion = areaId ? this.getArea(areaId) : null;
 
       if (exclusion) {
         try {

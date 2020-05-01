@@ -8,6 +8,16 @@ goog.require('os.filter.IFilterFormatter');
 goog.require('os.filter.ISpatialFormatter');
 
 
+/**
+ * @typedef {{
+ *   entries: !Array<!Object<string, string|boolean>>,
+ *   includes: !Array<!Object<string, string|boolean>>,
+ *   excludes: !Array<!Object<string, string|boolean>>
+ * }}
+ */
+os.ui.query.ActiveEntries;
+
+
 
 /**
  * Class for representing a query consisting of areas and filters. Contains no actual handling logic, just
@@ -206,11 +216,11 @@ os.ui.query.QueryHandler.prototype.setSpatialRequired = function(value) {
  * @param {!Object<string, string|boolean>} item
  * @return {boolean}
  */
-os.ui.query.QueryHandler.includes = function(item) {
+os.ui.query.QueryHandler.prototype.includes = function(item) {
   var id = /** @type {string} */ (item['areaId']);
 
   if (id !== '*') {
-    var area = os.ui.areaManager.get(id);
+    var area = this.getArea(id);
     return !!area && /** @type {boolean} */ (item['includeArea']);
   }
 
@@ -222,9 +232,9 @@ os.ui.query.QueryHandler.includes = function(item) {
  * @param {!Object<string, string|boolean>} item
  * @return {boolean}
  */
-os.ui.query.QueryHandler.excludes = function(item) {
+os.ui.query.QueryHandler.prototype.excludes = function(item) {
   var id = /** @type {string} */ (item['areaId']);
-  var area = os.ui.areaManager.get(id);
+  var area = this.getArea(id);
   return !!area && !item['includeArea'];
 };
 
@@ -233,9 +243,9 @@ os.ui.query.QueryHandler.excludes = function(item) {
  * @param {!Object<string, string|boolean>} item
  * @return {boolean}
  */
-os.ui.query.QueryHandler.shownAreas = function(item) {
+os.ui.query.QueryHandler.prototype.shownAreas = function(item) {
   var id = /** @type {string} */ (item['areaId']);
-  var area = os.ui.areaManager.get(id);
+  var area = this.getArea(id);
   if (item['spatialRequired']) {
     return !!area && !!area.get('shown');
   } else {
@@ -254,10 +264,10 @@ os.ui.query.QueryHandler.shownAreas = function(item) {
  * @param {!Object<string, string|boolean>} item
  * @return {boolean}
  */
-os.ui.query.QueryHandler.filters = function(item) {
+os.ui.query.QueryHandler.prototype.filters = function(item) {
   var id = /** @type {string} */ (item['filterId']);
   if (id !== '*') {
-    var filter = os.ui.filterManager.getFilter(id);
+    var filter = this.getFilter(id);
     return !!filter && !!filter.isEnabled();
   } else {
     return true;
@@ -269,8 +279,89 @@ os.ui.query.QueryHandler.filters = function(item) {
  * @param {!Object<string, string|boolean>} item
  * @return {!ol.Feature}
  */
-os.ui.query.QueryHandler.toExclude = function(item) {
-  return /** @type {!ol.Feature} */ (os.ui.areaManager.get(/** @type {string} */ (item['areaId'])));
+os.ui.query.QueryHandler.prototype.toExclude = function(item) {
+  return this.getArea(/** @type {string} */ (item['areaId']));
+};
+
+
+/**
+ * Gets an area from an id
+ * @param {string} id
+ * @return {!ol.Feature}
+ */
+os.ui.query.QueryHandler.prototype.getArea = function(id) {
+  return /** @type {!ol.Feature} */ (os.ui.areaManager.get(id));
+};
+
+
+/**
+ * Gets a filter from an id
+ * @param {string} id
+ * @return {!os.filter.FilterEntry}
+ */
+os.ui.query.QueryHandler.prototype.getFilter = function(id) {
+  return /** @type {!os.filter.FilterEntry} */ (os.ui.filterManager.getFilter(id));
+};
+
+
+/**
+ * Gets entries from an id
+ * @param {?string} id
+ * @return {!Array<!Object<string, string|boolean>>}
+ */
+os.ui.query.QueryHandler.prototype.getEntries = function(id) {
+  return os.ui.queryManager.getEntries(id, null, null, true);
+};
+
+
+
+/**
+ * Gets entries for the filter
+ * @return {os.ui.query.ActiveEntries}
+ */
+os.ui.query.QueryHandler.prototype.getActiveEntries = function() {
+  var qmEntries = this.getEntries(this.getLayerId());
+  var entries = [];
+  var includes = [];
+  var excludes = [];
+
+  // clone the entries
+  for (var i = 0, n = qmEntries.length; i < n; i++) {
+    var entry = goog.object.clone(qmEntries[i]);
+    entry['spatialRequired'] = this.spatialRequired;
+    entries.push(entry);
+  }
+
+  // ignore disabled areas
+  entries = entries.filter(this.shownAreas, this);
+
+  if (excludes) { // exclusion areas must be handled differently
+    var excl = entries.filter(this.excludes, this).map(this.toExclude, this);
+    for (var i = 0; i < excl.length; i++) {
+      excludes.push(excl[i]);
+    }
+  }
+
+  if (includes) { // inclusion areas
+    var incl = entries.filter(this.includes, this);
+    for (var i = 0; i < incl.length; i++) {
+      includes.push(incl[i]);
+    }
+
+    if (includes.length) {
+      entries = includes.filter(this.filters, this);
+    } else {
+      // Theres no inclusions, check to see if we still have filters to apply
+      entries = entries.filter(this.filters, this);
+
+      // Since this is only for exclusions or no areas. We only need 1 of each filter
+      goog.array.removeDuplicates(entries, null, function(entry) {
+        return /** @type {string} */ (entry['filterId']);
+      });
+    }
+  }
+
+  return /** @type {os.ui.query.ActiveEntries} */ ({entries: entries, includes: includes, excludes: excludes});
 };
 
 
@@ -280,44 +371,13 @@ os.ui.query.QueryHandler.toExclude = function(item) {
  * @return {string}
  */
 os.ui.query.QueryHandler.prototype.createFilter = function() {
-  var qm = os.ui.queryManager;
-  var am = os.ui.areaManager;
-  var fm = os.ui.filterManager;
+  var activeEntries = this.getActiveEntries();
+  var entries = activeEntries.entries;
+  var includes = activeEntries.includes;
+  var excludes = activeEntries.excludes;
 
   // we don't care about layer in the order array
   var order = ['area', 'filter'];
-
-  var layerId = this.getLayerId();
-  var qmEntries = qm.getEntries(layerId, null, null, true);
-
-  // clone the entries
-  var entries = [];
-  for (var i = 0, n = qmEntries.length; i < n; i++) {
-    var entry = goog.object.clone(qmEntries[i]);
-    entry['spatialRequired'] = this.spatialRequired;
-    entries.push(entry);
-  }
-
-  // ignore disabled areas
-  entries = entries.filter(os.ui.query.QueryHandler.shownAreas);
-
-  // exclusion areas must be handled differently
-  var excludes = entries.filter(os.ui.query.QueryHandler.excludes).map(os.ui.query.QueryHandler.toExclude);
-
-  // inclusion areas
-  var includes = entries.filter(os.ui.query.QueryHandler.includes);
-
-  if (includes.length) {
-    entries = includes.filter(os.ui.query.QueryHandler.filters);
-  } else {
-    // Theres no inclusions, check to see if we still have filters to apply
-    entries = entries.filter(os.ui.query.QueryHandler.filters);
-
-    // Since this is only for exclusions or no areas. We only need 1 of each filter
-    goog.array.removeDuplicates(entries, null, function(entry) {
-      return /** @type {string} */ (entry['filterId']);
-    });
-  }
 
   var result = '';
 
@@ -342,8 +402,8 @@ os.ui.query.QueryHandler.prototype.createFilter = function() {
     var areaId = /** @type {string} */ (entry['areaId']);
     var filterId = /** @type {string} */ (entry['filterId']);
 
-    var area = areaId && entry['includeArea'] ? am.get(areaId) : null;
-    var filter = filterId ? fm.getFilter(filterId) : null;
+    var area = areaId && entry['includeArea'] ? this.getArea(areaId) : null;
+    var filter = filterId ? this.getFilter(filterId) : null;
 
     var item = id === areaId ? filter : area;
     if (id !== lastId) {
@@ -381,7 +441,11 @@ os.ui.query.QueryHandler.prototype.createFilter = function() {
  */
 os.ui.query.QueryHandler.prototype.write = function(item) {
   if (item) {
-    return item instanceof os.filter.FilterEntry ? this.writeFilter(item) : this.writeArea(item);
+    if (os.instanceOf(item, os.filter.FilterEntry.NAME)) {
+      return this.writeFilter(/** @type {!os.filter.FilterEntry} */ (item));
+    } else {
+      return this.writeArea(/** @type {!ol.Feature} */ (item));
+    }
   }
 
   return '';
@@ -456,4 +520,21 @@ os.ui.query.QueryHandler.prototype.wrap = function(filter, order, excludes, grou
  */
 os.ui.query.QueryHandler.prototype.wrapAll = function(filter) {
   return this.filterFormatter ? this.filterFormatter.wrapAll(filter) : '';
+};
+
+
+/**
+ * @param {os.ui.query.QueryHandler=} opt_result another query handler to clone to
+ * @return {os.ui.query.QueryHandler}
+ */
+os.ui.query.QueryHandler.prototype.clone = function(opt_result) {
+  var clone = opt_result ? opt_result : new os.ui.query.QueryHandler();
+  clone.setLayerId(this.getLayerId());
+  clone.setLayerName(this.getLayerName());
+  clone.setModifier(this.getModifier());
+  clone.setAreaFormatter(this.getAreaFormatter());
+  clone.setExclusionFormatter(this.getExclusionFormatter());
+  clone.setFilterFormatter(this.getFilterFormatter());
+  clone.setSpatialRequired(this.getSpatialRequired());
+  return clone;
 };

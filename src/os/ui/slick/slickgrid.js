@@ -2,6 +2,7 @@ goog.provide('os.ui.slick.SlickGridCtrl');
 goog.provide('os.ui.slick.SlickGridEvent');
 goog.provide('os.ui.slick.SlickGridUtils');
 goog.provide('os.ui.slick.slickGridDirective');
+goog.provide('os.ui.slickGridDirective');
 
 goog.require('goog.Disposable');
 goog.require('goog.Timer');
@@ -462,7 +463,7 @@ os.ui.slick.SlickGridCtrl.prototype.getOptions = function() {
 
   if (this.scope['options']) {
     var o = goog.object.clone(defaults);
-    goog.object.extend(o, this.scope['options']);
+    Object.assign(o, this.scope['options']);
     return o;
   }
 
@@ -477,17 +478,7 @@ os.ui.slick.SlickGridCtrl.prototype.getOptions = function() {
  * @protected
  */
 os.ui.slick.SlickGridCtrl.prototype.getColumns = function() {
-  var columns = this.getColumnsInternal().slice();
-  var i = columns.length;
-  var removed = [];
-  while (i--) {
-    var column = columns[i];
-    if (!this.isColumnVisible(column)) {
-      removed = columns.splice(i, 1).concat(removed);
-    }
-  }
-
-  return columns;
+  return this.getColumnsInternal().filter(this.isColumnVisible, this);
 };
 
 
@@ -1106,10 +1097,15 @@ os.ui.slick.SlickGridCtrl.prototype.onContextMenu_ = function(event, opt_positio
         os.ui.openMenu(menu, {x: menuX, y: menuY});
       }
     } else if (menu instanceof os.ui.menu.Menu) {
+      const rect = this.element[0].getBoundingClientRect();
+
+      menuX -= rect.left;
+      menuY -= rect.top;
+
       menu.open(contextArgs, {
         my: 'left top',
         at: 'left+' + menuX + ' top+' + menuY,
-        of: os.ui.windowSelector.CONTAINER
+        of: this.element[0]
       }, this);
     }
   }
@@ -1318,6 +1314,32 @@ os.ui.slick.SlickGridCtrl.prototype.refreshDataView = function(event) {
 
 
 /**
+ * Puts column objects on the sortColumn objects
+ *
+ * slickgrid doesn't have a quick getColumnById method, so we'll go ahead and
+ * put the actual column on the sort column so that it is quickly accessible in
+ * the sort methods.
+ *
+ * This changes slickgrid's internal sortColumns array
+ * @return {!Array<Slick.Grid.SortColumn>} The modified sort columns
+ * @private
+ */
+os.ui.slick.SlickGridCtrl.prototype.putRealColumnsOnSortColumns_ = function() {
+  const cols = this.grid.getSortColumns();
+  const realCols = this.grid.getColumns();
+
+  for (const col of cols) {
+    const index = this.grid.getColumnIndex(col['columnId']);
+    if (typeof index === 'number' && realCols[index]) {
+      col['column'] = realCols[index];
+    }
+  }
+
+  return cols;
+};
+
+
+/**
  * Handles changes to the sort
  *
  * @param {*=} opt_e The Event
@@ -1327,22 +1349,9 @@ os.ui.slick.SlickGridCtrl.prototype.refreshDataView = function(event) {
 os.ui.slick.SlickGridCtrl.prototype.onSortChange = function(opt_e, opt_args) {
   this.dataView.beginUpdate();
 
-  // slickgrid doesn't have a quick getColumnById method, so we'll go ahead and put
-  // the actual column on the sort column so that it is quickly accessible in the
-  // sort method
-  var cols = this.grid.getSortColumns();
-  var realCols = this.grid.getColumns();
+  const cols = this.putRealColumnsOnSortColumns_();
 
-  for (var i = 0, n = cols.length; i < n; i++) {
-    for (var j = 0, m = realCols.length; j < m; j++) {
-      if (realCols[j]['id'] == cols[i]['columnId']) {
-        cols[i]['column'] = realCols[j];
-        break;
-      }
-    }
-  }
-
-  var compare = this.scope['compare'] || this.multiColumnSort.bind(this, this.grid.getSortColumns());
+  var compare = this.scope['compare'] || this.multiColumnSort.bind(this, cols);
   this.dataView.sort(compare);
   this.dataView.endUpdate();
 
@@ -1356,7 +1365,7 @@ os.ui.slick.SlickGridCtrl.prototype.onSortChange = function(opt_e, opt_args) {
 /**
  * Compare function over multiple columns
  *
- * @param {!Array<string>} cols The sort columns
+ * @param {!Array<Slick.Grid.SortColumn>} cols The sort columns
  * @param {*} a
  * @param {*} b
  * @return {number} -1, 0, or 1 per typical compare function
@@ -1459,20 +1468,7 @@ os.ui.slick.SlickGridCtrl.prototype.multiColumnSort = function(cols, a, b) {
 os.ui.slick.SlickGridCtrl.prototype.onSortBySelectionChange = function(opt_e, opt_args) {
   this.dataView.beginUpdate();
 
-  // slickgrid doesn't have a quick getColumnById method, so we'll go ahead and put
-  // the actual column on the sort column so that it is quickly accessible in the
-  // sort method
-  var cols = this.grid.getSortColumns();
-  var realCols = this.grid.getColumns();
-
-  for (var i = 0, n = cols.length; i < n; i++) {
-    for (var j = 0, m = realCols.length; j < m; j++) {
-      if (realCols[j]['id'] == cols[i]['columnId']) {
-        cols[i]['column'] = realCols[j];
-        break;
-      }
-    }
-  }
+  const cols = this.putRealColumnsOnSortColumns_();
 
   // get the selected data from the grid and not the source!
   var data = /** @type {Slick.Data.DataView} */ (this.grid.getData());
@@ -1480,8 +1476,7 @@ os.ui.slick.SlickGridCtrl.prototype.onSortBySelectionChange = function(opt_e, op
   var selectedFeatureIndexes = data.mapRowsToIds(selectedRows);
   var selectionMap = goog.object.createSet(selectedFeatureIndexes);
 
-  var compare = this.selectColumnSort.bind(this, selectionMap,
-      this.grid.getSortColumns());
+  var compare = this.selectColumnSort.bind(this, selectionMap, cols);
   this.dataView.sort(compare);
   this.dataView.endUpdate();
 };
@@ -1491,7 +1486,7 @@ os.ui.slick.SlickGridCtrl.prototype.onSortBySelectionChange = function(opt_e, op
  * Compare function over multiple columns bringing selected items to the top
  *
  * @param {!Object<string,boolean>} sel The selected features
- * @param {!Array<string>} cols The sort columns
+ * @param {!Array<Slick.Grid.SortColumn>} cols The sort columns
  * @param {Object} a
  * @param {Object} b
  * @return {number} -1, 0, or 1 per typical compare function
@@ -1521,7 +1516,7 @@ os.ui.slick.SlickGridCtrl.prototype.onRowRender = function(e, args) {
   var s = this.scope.$new();
 
   if (goog.isObject(this.scope['rowScope'])) {
-    goog.object.extend(s, this.scope['rowScope']);
+    Object.assign(s, this.scope['rowScope']);
   }
 
   // put the data item on the scope

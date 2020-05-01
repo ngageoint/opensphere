@@ -15,7 +15,7 @@ goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
 goog.require('os.ui.menu.common');
 goog.require('os.ui.window');
-goog.require('os.ui.window.confirmDirective');
+goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -323,7 +323,7 @@ os.ui.menu.layer.onDescription_ = function(event) {
     windowOptions: windowOptions
   });
 
-  os.ui.window.launchConfirm(confirmOptions);
+  os.ui.window.ConfirmUI.launchConfirm(confirmOptions);
 };
 
 
@@ -367,11 +367,27 @@ os.ui.menu.layer.onFeatureList_ = function(event) {
  * @private
  */
 os.ui.menu.layer.onGoTo_ = function(event) {
-  var extent = os.ui.menu.layer.getLayersFromContext(event.getContext())
-      .reduce(os.fn.reduceExtentFromLayers, ol.extent.createEmpty());
+  // aggregate the features and execute os.feature.flyTo, in case they have altitude and pure extent wont cut it
+  const layers = os.ui.menu.layer.getLayersFromContext(event.getContext());
+  const features = layers.reduce((feats, layer) => {
+    let source = layer.getSource();
+    if (source instanceof ol.source.Vector) {
+      source = /** @type {ol.source.Vector} */ (source);
+      const newFeats = source.getFeatures();
+      return newFeats.length > 0 ? feats.concat(newFeats) : feats;
+    }
+    return feats;
+  }, []);
 
-  if (!ol.extent.isEmpty(extent)) {
-    os.commandStack.addCommand(new os.command.FlyToExtent(extent));
+  if (features && features.length) {
+    os.feature.flyTo(features);
+  } else {
+    var extent = os.ui.menu.layer.getLayersFromContext(event.getContext())
+        .reduce(os.fn.reduceExtentFromLayers, ol.extent.createEmpty());
+
+    if (!ol.extent.isEmpty(extent)) {
+      os.commandStack.addCommand(new os.command.FlyToExtent(extent));
+    }
   }
 };
 

@@ -13,6 +13,7 @@ goog.require('os.config');
 goog.require('os.config.Settings');
 goog.require('os.metrics');
 goog.require('os.metrics.Metrics');
+goog.require('os.mixin.fixInjectorInvoke');
 goog.require('os.net');
 goog.require('os.net.CertNazi');
 goog.require('os.net.ProxyHandler');
@@ -27,6 +28,8 @@ goog.require('os.ui.notification.NotificationManager');
 goog.require('os.ui.onboarding.OnboardingManager');
 goog.require('os.ui.onboarding.contextOnboardingDirective');
 goog.require('os.ui.onboarding.onboardingDirective');
+goog.require('os.ui.window.ConfirmUI');
+goog.require('plugin.electron.ElectronPlugin');
 
 
 /**
@@ -59,6 +62,7 @@ os.ui.AbstractMainCtrl = function($scope, $injector, rootPath, defaultAppName) {
    * @type {angular.$injector}
    */
   os.ui.injector = $injector;
+  os.mixin.fixInjectorInvoke($injector);
 
   /**
    * @type {?os.net.CertNazi}
@@ -174,7 +178,7 @@ os.ui.AbstractMainCtrl.prototype.onCertNaziFailure = function(event) {
         'for instructions on how to fix this.';
   }
 
-  os.ui.window.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+  os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
     confirm: goog.nullFunction,
     prompt: text,
     noText: '',
@@ -350,7 +354,10 @@ os.ui.AbstractMainCtrl.prototype.initXt = goog.nullFunction;
  * Add the plugins for this app
  * @protected
  */
-os.ui.AbstractMainCtrl.prototype.addPlugins = goog.nullFunction;
+os.ui.AbstractMainCtrl.prototype.addPlugins = function() {
+  const pm = os.plugin.PluginManager.getInstance();
+  pm.addPlugin(new plugin.electron.ElectronPlugin());
+};
 
 
 /**

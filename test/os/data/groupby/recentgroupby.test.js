@@ -72,7 +72,7 @@ describe('os.data.groupby.RecentGroupBy', function() {
   });
 
   it('should typically use the current date at time of init', function() {
-    var now = goog.now();
+    var now = Date.now();
     by.testDate_ = null;
     by.init();
 

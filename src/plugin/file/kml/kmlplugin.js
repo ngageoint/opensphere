@@ -3,6 +3,7 @@ goog.provide('plugin.file.kml.KMLPlugin');
 goog.require('os.data.DataManager');
 goog.require('os.data.ProviderEntry');
 goog.require('os.layer.config.LayerConfigManager');
+goog.require('os.net.Request');
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.ui.im.ImportManager');
 goog.require('plugin.file.kml.KMLDescriptor');
@@ -77,4 +78,9 @@ plugin.file.kml.KMLPlugin.prototype.init = function() {
 
   // set up actions
   plugin.file.kml.menu.treeSetup();
+
+  return new os.net.Request(os.ui.file.kml.GOOGLE_EARTH_ICON_SET[0].path).getPromise()
+      .then(goog.nullFunction, () => {
+        os.ui.file.kml.isGoogleMapsAccessible = false;
+      });
 };
