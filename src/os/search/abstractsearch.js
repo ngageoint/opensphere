@@ -30,7 +30,7 @@ os.search.AbstractSearch = function(id, name, opt_type, opt_priority, opt_defaul
    */
   this.id = id;
 
-  var defaultEnabled = opt_defaultEnabled != null ? opt_defaultEnabled : true;
+  const defaultEnabled = opt_defaultEnabled != null ? opt_defaultEnabled : true;
 
   /**
    * If the search provider is enabled.
@@ -155,7 +155,7 @@ os.search.AbstractSearch.prototype.search = function(term, opt_start, opt_pageSi
  * @inheritDoc
  */
 os.search.AbstractSearch.prototype.supportsSearchTerm = function(term) {
-  // All implementations should supprt a string search term.
+  // All implementations should support a string search term.
   if (term && typeof term === 'string') {
     return true;
   }
@@ -218,6 +218,7 @@ os.search.AbstractSearch.prototype.setExternal = function(external) {
 /**
  * DEPRECATED
  *
+ * @deprecated
  * @param {string} term
  * @param {number=} opt_start
  * @param {number=} opt_pageSize
@@ -232,6 +233,7 @@ os.search.AbstractSearch.prototype.searchFavorite = function(term, opt_start, op
  * DEPRECATED
  * Returns search favorites
  *
+ * @deprecated
  * @param {number} max max number of favorites to return
  * @return {Array<os.search.Favorite>}
  */

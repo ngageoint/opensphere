@@ -34,7 +34,7 @@ os.ui.location.degFilter = function() {
  * @return {string}
  */
 os.ui.location.degFilter.Filter = function(latdeg, londeg) {
-  if (latdeg && londeg) {
+  if (latdeg != null && londeg != null) {
     return latdeg.toFixed(5) + '°  ' + londeg.toFixed(5) + '°';
   }
   return '';

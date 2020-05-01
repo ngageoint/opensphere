@@ -103,7 +103,8 @@ describe('os.source.Vector', function() {
     var mapContainer = {
       getLayer: goog.functions.constant(layer),
       getMap: goog.functions.NULL,
-      is3DEnabled: goog.functions.FALSE
+      is3DEnabled: goog.functions.FALSE,
+      is3DSupported: goog.functions.FALSE
     };
 
     spyOn(os.MapContainer, 'getInstance').andReturn(mapContainer);
@@ -505,6 +506,19 @@ describe('os.source.Vector', function() {
     expect(f.getGeometry()).toBe(null);
   });
 
+  it('should clear the source when disabled', function() {
+    source.setEnabled(false);
+    expect(source.getFeatures().length).toBe(0);
+    expect(source.getFilteredFeatures().length).toBe(0);
+  });
+
+  it('should refresh the source when enabled', function() {
+    spyOn(source, 'refresh');
+
+    source.setEnabled(true);
+    expect(source.refresh).toHaveBeenCalled();
+  });
+
   describe('columns', function() {
     var columns;
 
@@ -898,6 +912,23 @@ describe('os.source.Vector', function() {
       // disable animation/time model for further tests
       source.setAnimationEnabled(false);
       source.setTimeEnabled(false);
+    });
+
+    it('should set the colors of features and know when it has done so', function() {
+      initDynamicFeatures();
+      var color = 'rgba(255,255,255,1.0)';
+
+      source.addFeatures(dynamicFeatures);
+      expect(source.hasColors()).toBe(false);
+
+      source.setColor([dynamicFeatures[0]], color);
+      expect(source.hasColors()).toBe(true);
+      expect(dynamicFeatures[0].values_[os.style.StyleField.COLOR]).toBe(color);
+
+      source.setColorModel(null);
+      expect(source.hasColors()).toBe(false);
+
+      dynamicFeatures = null;
     });
   });
 });

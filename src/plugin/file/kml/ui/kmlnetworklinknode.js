@@ -31,8 +31,12 @@ goog.require('plugin.file.kml.ui.NetworkLinkIcons');
  */
 plugin.file.kml.ui.KMLNetworkLinkNode = function(uri) {
   plugin.file.kml.ui.KMLNetworkLinkNode.base(this, 'constructor');
+  this.checkboxTooltip = 'Enable/disable the network link';
 
-  // network links should default to being turned off
+  // Don't bubble child state up to the network link, or disabling children will unload the link.
+  this.setBubbleState(false);
+
+  // Network links should default to being turned off.
   this.setState(os.structs.TriState.OFF);
 
   /**
@@ -160,6 +164,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.disposeInternal = function() {
 plugin.file.kml.ui.KMLNetworkLinkNode.prototype.clear_ = function() {
   if (this.source) {
     this.source.clearNode(this);
+    this.setChildren(null);
   }
 };
 
@@ -172,7 +177,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.clear_ = function() {
  * @private
  */
 plugin.file.kml.ui.KMLNetworkLinkNode.prototype.durationString_ = function() {
-  var now = goog.now();
+  var now = Date.now();
   var duration = new Date(now - this.durationStart_);
   var durationString = ' in ' + os.time.formatDate(duration, 'mm:ss.SSS');
   this.durationStart_ = now;
@@ -399,7 +404,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.onRefreshTimer_ = function() {
       uri.setParameterValue('BBOX', '{extent:west},{extent:south},{extent:east},{extent:north}');
     }
 
-    this.durationStart_ = goog.now();
+    this.durationStart_ = Date.now();
     this.request_.load();
   } else {
     this.handleError_('source is null');
@@ -547,7 +552,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.onImportComplete_ = function(eve
 
   var children = this.getChildren();
   var currentRoot = children && children.length > 0 ? children[0] : null;
-  var rootNode = this.importer_.getRootNode();
+  var rootNode = this.importer_.getRootNode(true);
   var rootChildren = rootNode ? rootNode.getChildren() : [];
   var firstRootChild = rootChildren && rootChildren.length > 0 ? rootChildren[0] : null;
   if (currentRoot !== firstRootChild || ((children) && (children.length != rootChildren.length))) {

@@ -21,6 +21,7 @@ goog.require('os.legend.ILegendRenderer');
 goog.require('os.net');
 goog.require('os.registerClass');
 goog.require('os.source');
+goog.require('os.source.ISource');
 goog.require('os.source.Request');
 goog.require('os.source.Vector');
 goog.require('os.style');
@@ -71,6 +72,13 @@ os.layer.Vector = function(options) {
    * @private
    */
   this.title_ = 'New Layer';
+
+  /**
+   * If the layer is enabled.
+   * @type {boolean}
+   * @private
+   */
+  this.enabled_ = true;
 
   /**
    * @type {boolean}
@@ -407,7 +415,7 @@ os.layer.Vector.prototype.getFASet = function() {
 
   var source = this.getSource();
   if (source instanceof os.source.Vector) {
-    if (source.getColorModel()) {
+    if (source.hasColors()) {
       icons.push(os.ui.Icons.COLOR_MODEL);
     }
   }
@@ -464,7 +472,7 @@ os.layer.Vector.prototype.getIconSet = function() {
       icons.push(os.ui.Icons.LOCK);
     }
 
-    if (source.getColorModel()) {
+    if (source.hasColors()) {
       icons.push(os.ui.Icons.COLOR_MODEL);
     }
 
@@ -494,6 +502,39 @@ os.layer.Vector.prototype.getLayerOptions = function() {
  */
 os.layer.Vector.prototype.setLayerOptions = function(value) {
   this.layerOptions_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.Vector.prototype.isEnabled = function() {
+  return this.enabled_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.Vector.prototype.setEnabled = function(value) {
+  if (this.enabled_ !== value) {
+    this.enabled_ = value;
+    this.setEnabledInternal(value);
+    this.dispatchEvent(new os.events.PropertyChangeEvent(os.layer.PropertyChange.ENABLED, value, !value));
+  }
+};
+
+
+/**
+ * Perform internal layer actions when the enabled state changes.
+ * @param {boolean} value The new value.
+ * @protected
+ */
+os.layer.Vector.prototype.setEnabledInternal = function(value) {
+  var source = this.getSource();
+  if (os.implements(source, os.source.ISource.ID)) {
+    /** @type {os.source.ISource} */ (source).setEnabled(value);
+  }
 };
 
 
@@ -1049,7 +1090,7 @@ os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
       case os.action.EventType.UNLOCK:
         return isVector && source.isLockable() && source.isLocked();
       case os.action.EventType.RESET_COLOR:
-        return isVector && source.getColorModel() != null;
+        return isVector && source.hasColors();
       default:
         // ask the source if it supports the action
         return isVector && source.getSupportsAction(type);
@@ -1128,6 +1169,7 @@ os.layer.Vector.prototype.renderLegend = function(options) {
 os.layer.Vector.prototype.persist = function(opt_to) {
   opt_to = opt_to || {};
 
+  opt_to['enabled'] = this.isEnabled();
   opt_to['visible'] = this.getLayerVisible();
   opt_to['opacity'] = this.getOpacity();
   opt_to['minResolution'] = this.getMinResolution();
@@ -1184,6 +1226,10 @@ os.layer.Vector.prototype.persist = function(opt_to) {
 os.layer.Vector.prototype.restore = function(config) {
   if (config['id'] != null) {
     this.setId(config['id']);
+  }
+
+  if (config['enabled'] != null) {
+    this.setEnabled(config['enabled']);
   }
 
   var styleConf = os.style.StyleManager.getInstance().getOrCreateLayerConfig(this.getId());

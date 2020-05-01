@@ -196,12 +196,18 @@ os.ui.UrlDragDrop.prototype.isValidTarget_ = function(event) {
  * @private
  */
 os.ui.UrlDragDrop.prototype.handleDrop_ = function(event) {
+  // always remove all drop classes, even when disabled, to ensure they don't get stuck
+  var dropEles = document.querySelectorAll('.' + os.ui.DragDropStyle.DRAG_DROP_CLASS);
+  if (dropEles && dropEles.length > 0) {
+    for (var i = 0, ii = dropEles.length; i < ii; i++) {
+      goog.dom.classlist.remove(dropEles[i], os.ui.DragDropStyle.DRAG_DROP_CLASS);
+    }
+  }
+
   if (this.scope_['enabled']) {
     var browserEvent = event.getBrowserEvent();
     browserEvent.preventDefault();
     browserEvent.stopPropagation();
-
-    goog.dom.classlist.remove(/** @type {Element} */ (browserEvent.currentTarget), os.ui.DragDropStyle.DRAG_DROP_CLASS);
 
     if (this.isValidTarget_(event) && !document.querySelector(os.ui.windowSelector.MODAL_BG)) {
       if (this.scope_['ddDrop'] != null) {

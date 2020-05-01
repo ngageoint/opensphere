@@ -76,7 +76,7 @@ os.ui.file.kml.Icon;
  * @type {string}
  * @const
  */
-os.ui.file.kml.GOOGLE_EARTH_URL = 'http://maps.google.com/mapfiles/kml/';
+os.ui.file.kml.GOOGLE_EARTH_URL = 'https://maps.google.com/mapfiles/kml/';
 
 
 /**
@@ -299,7 +299,7 @@ os.ui.file.kml.DEFAULT_ICON = {
  * @type {RegExp}
  * @const
  */
-os.ui.file.kml.GMAPS_SEARCH = /https?:\/\/maps\.google\.com\/mapfiles\/kml\//i;
+os.ui.file.kml.GMAPS_SEARCH = /^(https?:)?\/\/maps\.google\.com\/mapfiles\/kml\//i;
 
 
 /**
@@ -317,13 +317,29 @@ os.ui.file.kml.getDefaultIcon = function() {
 
 
 /**
+ * @type {boolean}
+ */
+os.ui.file.kml.isGoogleMapsAccessible = true;
+
+
+/**
  * Replace the Google icon URI with the application image path.
  *
  * @param {string|null|undefined} src The image source URL.
- * @return {string} The icon src.
+ * @return {!string} The icon src.
  */
 os.ui.file.kml.replaceGoogleUri = function(src) {
-  return src ? src.replace(os.ui.file.kml.GMAPS_SEARCH, os.ui.file.kml.ICON_PATH) : '';
+  if (os.ui.file.kml.GMAPS_SEARCH.test(src)) {
+    const secureSource = 'https:' + src.replace(/^[a-z]*:\/\//, '//');
+    const icon = os.ui.file.kml.GOOGLE_EARTH_ICON_SET.find((icon) => secureSource === icon.path);
+    if (icon) {
+      return icon.path.replace(os.ui.file.kml.GMAPS_SEARCH, os.ui.file.kml.ICON_PATH);
+    } else if (!os.ui.file.kml.isGoogleMapsAccessible) {
+      return os.ui.file.kml.DEFAULT_ICON_PATH;
+    }
+  }
+
+  return src || '';
 };
 
 

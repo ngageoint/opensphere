@@ -100,13 +100,13 @@ os.query.BaseAreaManager.FEATURE_PREFIX = 'area_';
 /**
  * @define {string} Area manager's storage save key
  */
-goog.define('os.AREA_STORAGE_KEY', 'areas');
+os.AREA_STORAGE_KEY = goog.define('os.AREA_STORAGE_KEY', 'areas');
 
 
 /**
  * @define {string} Area manager's storage save key for all current areas, including temps
  */
-goog.define('os.ALL_AREA_STORAGE_KEY', 'areasAll');
+os.ALL_AREA_STORAGE_KEY = goog.define('os.ALL_AREA_STORAGE_KEY', 'areasAll');
 
 
 /**
@@ -528,7 +528,7 @@ os.query.BaseAreaManager.prototype.getStoredAreas = function() {
  * @private
  */
 os.query.BaseAreaManager.prototype.onAreasLoaded_ = function(obj) {
-  if (obj) {
+  if (obj && obj['features']) {
     var format = new ol.format.GeoJSON();
     this.loadProj_ = os.map.PROJECTION;
 

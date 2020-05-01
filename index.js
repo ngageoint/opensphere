@@ -64,7 +64,7 @@ const overrideVersion = fs.existsSync(overrideVersionFile) ? fs.readFileSync(ove
  */
 const sharedResources = [
   {
-    source: 'src/electron',
+    source: 'scripts/electron',
     target: 'electron',
     scripts: ['electronvendorpre.js']
   },
@@ -223,9 +223,9 @@ const sharedResources = [
     scripts: ['FileSaver.js']
   },
   {
-    source: resolver.resolveModulePath('js-polyfills', __dirname),
+    source: resolver.resolveModulePath('core-js-bundle', __dirname),
     target: 'vendor/polyfill',
-    scripts: ['polyfill.min.js']
+    scripts: ['minified.js']
   },
   {
     source: resolver.resolveModulePath('zip-js/WebContent', __dirname),
@@ -237,7 +237,7 @@ const sharedResources = [
     source: 'vendor/geomag',
     target: 'vendor/geomag',
     scripts: ['cof2Obj.js', 'geomag.js'],
-    files: ['WMM.COF']
+    files: ['WMM.txt']
   },
   {
     source: resolver.resolveModulePath('jsts/dist', __dirname),
@@ -265,7 +265,7 @@ const sharedResources = [
     scripts: ['sendbeacon.js']
   },
   {
-    source: 'src/electron',
+    source: 'scripts/electron',
     target: 'electron',
     scripts: ['electronvendorpost.js']
   },
@@ -273,6 +273,11 @@ const sharedResources = [
     source: 'vendor/fonts/typeface-open-sans',
     target: 'vendor/fonts/typeface-open-sans',
     files: ['files', 'index.css']
+  },
+  {
+    source: resolver.resolveModulePath('pluralize', __dirname),
+    target: 'vendor/pluralize',
+    scripts: ['pluralize.js']
   }
 ];
 

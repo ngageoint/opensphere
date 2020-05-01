@@ -53,7 +53,7 @@ os.column.ColumnMappingManager.LOGGER_ = goog.log.getLogger('os.column.ColumnMap
 /**
  * @define {string} The storage key used for column mappings.
  */
-goog.define('os.COLUMN_MAPPINGS_STORAGE_KEY', 'columnMappings');
+os.COLUMN_MAPPINGS_STORAGE_KEY = goog.define('os.COLUMN_MAPPINGS_STORAGE_KEY', 'columnMappings');
 
 
 /**

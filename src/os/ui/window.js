@@ -135,7 +135,8 @@ os.ui.windowDirective = function() {
       'windowContainer': '@',
       /* Array.<os.ui.window.HeaderBtnConfig> */
       'headerBtns': '=?',
-      'border': '='
+      'border': '=',
+      'bottom': '=?'
     },
     templateUrl: os.ROOT + 'views/window/window.html',
     controller: os.ui.WindowCtrl,
@@ -237,7 +238,7 @@ os.ui.window.launchInternal = function(html, parent, $scope, $compile, opt_scope
   // make a new scope
   var s = $scope.$new();
   if (opt_scopeOptions != null) {
-    goog.object.extend(s, opt_scopeOptions);
+    Object.assign(s, opt_scopeOptions);
   }
 
   // compile and add
@@ -660,7 +661,10 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
     $scope['x'] = (container.width() - $scope['width']) / 2;
   }
 
-  if ($scope['y'] == 'center') {
+  if ($scope['bottom'] != null && $scope['bottom'] != 'auto') {
+    $element.css('top', 'auto');
+    $element.css('bottom', $scope['bottom'] + 'px');
+  } else if ($scope['y'] == 'center') {
     var maxHeight = Math.min($(window).height(), container.height());
     if ($scope['height'] == 'auto') {
       // Put the element off the screen at the top
@@ -726,6 +730,12 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
     $element.draggable(dragConfig);
   }
 
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.resizable_ = false;
+
   if (($scope['minWidth'] && $scope['maxWidth'] && $scope['minWidth'] != $scope['maxWidth']) ||
       ($scope['minHeight'] && $scope['maxHeight'] && $scope['minHeight'] != $scope['maxHeight'])) {
     // make the element resizable. the height/width values must be numbers, or jquery calculations won't work
@@ -740,15 +750,20 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
       'start': this.onDragStart_.bind(this),
       'stop': this.onDragStop_.bind(this)
     };
-    goog.object.extend(resizeConfig, $scope['resizeOptions'] || {});
+    Object.assign(resizeConfig, $scope['resizeOptions'] || {});
     $element.resizable(resizeConfig);
+    this.resizable_ = true;
+  } else {
+    $element.resizable({disabled: true});
   }
 
   $element.css('width', $scope['width'] + 'px');
 
   var height = $scope['height'];
   if ($scope['height'] == 'auto') {
-    $element.css('bottom', 'auto');
+    if ($scope['bottom'] == null || $scope['bottom'] == 'auto') {
+      $element.css('bottom', 'auto');
+    }
   } else {
     height += 'px';
   }
@@ -758,7 +773,8 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
     // if the window wasn't cascaded, position it based off the config
     $element.css('left', $scope['x'] + 'px');
 
-    if (!($scope['y'] == 'center' && $scope['height'] == 'auto')) {
+    if (!($scope['y'] == 'center' && $scope['height'] == 'auto') && ($scope['bottom'] == null ||
+        $scope['bottom'] == 'auto')) {
       $element.css('top', $scope['y'] + 'px');
     }
   }
@@ -1078,7 +1094,7 @@ os.ui.WindowCtrl.prototype.toggle = function() {
       this.element.height(this.lastHeight_);
       this.lastHeight_ = NaN;
       content.toggle();
-      this.element.resizable('option', 'disabled', false);
+      this.element.resizable('option', 'disabled', !this.resizable_);
       this.constrainWindow_();
       this.scope['collapsed'] = false;
       this.element.find('.js-window__header').removeClass('collapsed');
@@ -1130,6 +1146,9 @@ os.ui.WindowCtrl.prototype.onChange = function(event, ui) {
  */
 os.ui.WindowCtrl.prototype.onDragStart_ = function(event, ui) {
   this.scope.$emit(os.ui.WindowEventType.DRAGSTART);
+
+  this.scope['bottom'] = 'auto';
+  this.element.css('bottom', 'auto');
 
   // iframes kill mouse events if you roll over them while dragging, so we'll nip that in the bud
   angular.element('iframe').addClass('u-pointer-events-none');
@@ -1285,11 +1304,13 @@ os.ui.WindowCtrl.prototype.constrainWindow_ = function() {
     this.element.css('left', x + 'px');
   }
 
-  if (y < winContainerTop) {
-    this.element.css('top', winContainerTop + 'px');
-  } else if ((y + h) > size.height) {
-    y = Math.max(size.height - h, winContainerTop);
-    this.element.css('top', y + 'px');
+  if (this.scope['bottom'] == null || this.scope['bottom'] == 'auto') {
+    if (y < winContainerTop) {
+      this.element.css('top', winContainerTop + 'px');
+    } else if ((y + h) > size.height) {
+      y = Math.max(size.height - h, winContainerTop);
+      this.element.css('top', y + 'px');
+    }
   }
 
   // If window is height auto, force max-height on the modal-content

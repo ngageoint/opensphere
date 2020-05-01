@@ -940,20 +940,29 @@ Slick.Grid.prototype.setColumns = function(columnDefinitions) {};
 
 
 /**
- * @return {!Array<string>}
+ * @typedef {{columnId: (string|number), sortAsc: boolean, column: Object}} Slick.Grid.SortColumn
+ * @property {string|number} columnId The id of the sort column
+ * @property {boolean} sortAsc If true sort in ascending order
+ * @property {?Object} column Column definition object, added by us
+ */
+Slick.Grid.SortColumn;
+
+
+/**
+ * @return {!Array<Slick.Grid.SortColumn>}
  */
 Slick.Grid.prototype.getSortColumns = function() {};
 
 
 /**
- * @param {Array} columnDefinitions
+ * @param {Array<Slick.Grid.SortColumn>} columnDefinitions
  */
 Slick.Grid.prototype.setSortColumns = function(columnDefinitions) {};
 
 
 /**
- * @param {*} id
- * @return {*}
+ * @param {string|number} id
+ * @return {number|undefined}
  */
 Slick.Grid.prototype.getColumnIndex = function(id) {};
 

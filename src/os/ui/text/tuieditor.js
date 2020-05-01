@@ -30,7 +30,7 @@ os.ui.text.TuiEditor.READY = 'tui.editor.ready';
  * @type {string}
  * @const
  */
-os.ui.text.TuiEditor.SCRIPT_URL = ROOT + 'vendor/os-minified/os-tui-editor.min.js';
+os.ui.text.TuiEditor.SCRIPT_URL = os.APP_ROOT + 'vendor/os-minified/os-tui-editor.min.js';
 
 
 /**
@@ -314,9 +314,8 @@ os.ui.text.TuiEditorCtrl.prototype.init = function() {
     }
   } else {
     this.getDisplayHtml_().then(function(displayHtml) {
-      this['displayHtml'] = displayHtml;
+      this.onDisplayHtmlUpdate(displayHtml);
       this.scope.$emit(os.ui.text.TuiEditor.READY);
-      os.ui.apply(this.scope);
     }.bind(this));
   }
 };
@@ -347,6 +346,16 @@ os.ui.text.TuiEditorCtrl.prototype.getDisplayHtml_ = function() {
 
 
 /**
+ * @param {string} displayHtml
+ */
+os.ui.text.TuiEditorCtrl.prototype.onDisplayHtmlUpdate = function(displayHtml) {
+  this['displayHtml'] = displayHtml;
+  this.setTargetBlankPropertyInLinks();
+  os.ui.apply(this.scope);
+};
+
+
+/**
  * @private
  */
 os.ui.text.TuiEditorCtrl.prototype.onScopeChange_ = function() {
@@ -356,11 +365,7 @@ os.ui.text.TuiEditorCtrl.prototype.onScopeChange_ = function() {
     this['tuiEditor'].setValue(this['text']);
     os.ui.apply(this.scope);
   } else if (!this.scope['edit']) {
-    this.getDisplayHtml_().then(function(displayHtml) {
-      this['displayHtml'] = displayHtml;
-      this.setTargetBlankPropertyInLinks();
-      os.ui.apply(this.scope);
-    }.bind(this));
+    this.getDisplayHtml_().then(this.onDisplayHtmlUpdate.bind(this));
   } else {
     os.ui.apply(this.scope);
   }
@@ -466,6 +471,13 @@ os.ui.text.TuiEditorCtrl.prototype.setTargetBlankPropertyInLinks = function() {
  * Codemirror has the same issues that it did in simpleMDE with initalization.
  * Codemirror issue #798. when its put in a textarea with display none it needs a refresh
  * After Codemirror is added, call refresh on it
+ *
+ * Another issue: this broke at some point. The line that reads codeMirror['0'].innerText != 'xxxxxxxxxx'
+ * had codeMirror.length instead. Turns out codeMirror.length is always defined no matter what.
+ * But it will say 'xxxxxxxxxx' for innerText unless it is actually loaded.
+ * Note that for some reason this issue is speed sensitive.
+ * This is some borked thing deep in CodeMirror that is screwing things up.
+ *
  * Commented on tuieditor issue #191
  * @private
  */
@@ -473,12 +485,14 @@ os.ui.text.TuiEditorCtrl.prototype.fixCodemirrorInit_ = function() {
   if (this.element) {
     this.cmFixAttempt_ = this.cmFixAttempt_ ? this.cmFixAttempt_ + 1 : 1;
     var codeMirror = this.element.find('.te-md-container .CodeMirror');
-    if (this['tuiEditor'] && codeMirror.length) {
-      this.timeout_(function() {
-        this['tuiEditor'].mdEditor.cm.refresh();
-      }.bind(this));
-    } else if (this.cmFixAttempt_ < 50) {
-      goog.Timer.callOnce(this.fixCodemirrorInit_, 250, this);
+    if (codeMirror.length) {
+      if (this['tuiEditor'] && codeMirror['0'].innerText != 'xxxxxxxxxx') {
+        this.timeout_(function() {
+          this['tuiEditor'].mdEditor.cm.refresh();
+        }.bind(this));
+      } else if (this.cmFixAttempt_ < 50) {
+        goog.Timer.callOnce(this.fixCodemirrorInit_, 250, this);
+      }
     }
   }
 };

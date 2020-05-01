@@ -315,3 +315,13 @@ os.ui.search.FeatureResultCardCtrl.prototype.out = function() {
     this.removeFeatureHighlight();
   }
 };
+
+
+/**
+ * If the result has a coordinate.
+ * @return {boolean}
+ * @export
+ */
+os.ui.search.FeatureResultCardCtrl.prototype.hasCoordinate = function() {
+  return !!this.feature && !!this.feature.getGeometry();
+};

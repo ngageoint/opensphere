@@ -50,7 +50,9 @@ os.layer.preset.addDefault = function(presets) {
       // create a temporary vector layer to produce a default layer config
       var layer = os.layer.createFromOptions({
         'id': os.layer.preset.DEFAULT_PRESET_ID,
-        'type': os.layer.config.StaticLayerConfig.ID
+        'type': os.layer.config.StaticLayerConfig.ID,
+        'animate': true,
+        'visible': true
       });
 
       if (layer) {
@@ -83,15 +85,11 @@ os.layer.preset.updateDefault = function(layer, preset) {
   if (layer && preset && preset.layerConfig) {
     var config = preset.layerConfig;
     var layerOptions = layer.getLayerOptions();
-    if (layerOptions) {
+    if (layerOptions && layerOptions['baseColor']) {
       // update the default color
-      if (layerOptions['baseColor']) {
-        var color = os.style.toRgbaString(/** @type {string} */ (layerOptions['baseColor']));
-        config['color'] = color;
-        config['fillColor'] = color;
-      }
-
-      config['animate'] = !!layerOptions['animate'];
+      var color = os.style.toRgbaString(/** @type {string} */ (layerOptions['baseColor']));
+      config['color'] = color;
+      config['fillColor'] = color;
     }
   }
 };

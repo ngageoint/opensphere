@@ -1,3 +1,4 @@
+goog.provide('os.histo.BinMethodStats');
 goog.provide('os.histo.UniqueBinMethod');
 
 goog.require('os.IPersistable');
@@ -6,6 +7,18 @@ goog.require('os.histo.IBinMethod');
 goog.require('os.histo.bin');
 goog.require('os.object');
 
+
+
+/**
+ * A function used to sort features.
+ * @typedef {{
+ *   range: Array<number>,
+ *   step: number,
+ *   binCount: number,
+ *   binCountAll: number
+ * }}
+ */
+os.histo.BinMethodStats;
 
 
 /**
@@ -45,6 +58,20 @@ os.histo.UniqueBinMethod = function() {
    * @protected
    */
   this.isDate = false;
+
+  /**
+   * The graph(s) using this BinMethod instance should show the bins with count = 0
+   * @type {boolean}
+   * @protected
+   */
+  this.showEmptyBins = false;
+
+  /**
+   * Cap the amount of resources used by the crossfilter
+   * @type {number}
+   * @protected
+   */
+  this.maxBins = Infinity;
 };
 
 
@@ -191,6 +218,8 @@ os.histo.UniqueBinMethod.prototype.persist = function(opt_to) {
   opt_to['field'] = this.getField();
   opt_to['isDate'] = this.getIsDate();
   opt_to['arrayKeys'] = this.getArrayKeys();
+  opt_to['showEmptyBins'] = this.getShowEmptyBins();
+  opt_to['maxBins'] = this.getMaxBins();
 
   return opt_to;
 };
@@ -210,6 +239,16 @@ os.histo.UniqueBinMethod.prototype.restore = function(config) {
   var arrayKeys = /** @type {boolean|string|undefined} */ (config['arrayKeys']);
   if (typeof arrayKeys === 'boolean' || typeof arrayKeys === 'string') {
     this.setArrayKeys(arrayKeys);
+  }
+
+  var show = /** @type {string|boolean|undefined} */ (config['showEmptyBins']);
+  if (show != null) {
+    this.setShowEmptyBins(show == true); // loose comparison rather than ===
+  }
+
+  var maxBins = /** @type {string|number|undefined} */ (config['maxBins']);
+  if (maxBins != null && !isNaN(maxBins)) {
+    this.setMaxBins(Number(maxBins));
   }
 };
 
@@ -331,6 +370,42 @@ os.histo.UniqueBinMethod.prototype.setIsDate = function(value) {
 
 
 /**
+ * Gets the showEmptyBins property
+ * @return {boolean} true if the empty bins should be displayed by the graphing system
+ */
+os.histo.UniqueBinMethod.prototype.getShowEmptyBins = function() {
+  return this.showEmptyBins;
+};
+
+
+/**
+ * Sets the showEmptyBins property
+ * @param {boolean} value toggle to show/hide the empty bins
+ */
+os.histo.UniqueBinMethod.prototype.setShowEmptyBins = function(value) {
+  this.showEmptyBins = value;
+};
+
+
+/**
+ * Gets the maxBins property
+ * @return {number}
+ */
+os.histo.UniqueBinMethod.prototype.getMaxBins = function() {
+  return this.maxBins;
+};
+
+
+/**
+ * Sets the maxBins property
+ * @param {number} value
+ */
+os.histo.UniqueBinMethod.prototype.setMaxBins = function(value) {
+  this.maxBins = value;
+};
+
+
+/**
  * Get the filter for an individual bin.
  *
  * @param {!os.histo.Bin} bin The bin
@@ -347,6 +422,24 @@ os.histo.UniqueBinMethod.prototype.getFilterForBin = function(bin) {
   return filter.join('');
 };
 
+
+/**
+ * Get the range, step size, etc for the bins made by this method.
+ *
+ * @param {!Array<os.histo.Bin>} bins The bins made using this bin method
+ * @return {os.histo.BinMethodStats|null} The config
+ */
+os.histo.UniqueBinMethod.prototype.getStatsForBin = function(bins) {
+  if (!bins || bins.length == 0) return null;
+  var range = [bins[0]['key'], bins[bins.length - 1]['key']];
+  var step = 1; // don't allow divide by 0 errors
+  return /** @type {os.histo.BinMethodStats} */ ({
+    range: range,
+    step: step,
+    binCount: bins.length,
+    binCountAll: ((range[1] - range[0]) / step) + 1 // +1 since it needs a bin for the top and bottom entry
+  });
+};
 
 /**
  * Test if a value is contained within a set of values. Avoided ol.array.includes to prevent an extra function call.

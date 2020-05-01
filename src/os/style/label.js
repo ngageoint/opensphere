@@ -220,7 +220,7 @@ os.style.label.updateShown_ = function() {
   // reusable extent to reduce GC
   var extent = ol.extent.createEmpty();
 
-  var then = goog.now();
+  var then = Date.now();
   var labelSources = [];
   var features = [];
   var changed = {};
@@ -234,7 +234,7 @@ os.style.label.updateShown_ = function() {
 
   for (var i = 0, ii = sources.length; i < ii; i++) {
     var source = sources[i];
-    if (source instanceof os.source.Vector && source.getVisible()) {
+    if (source instanceof os.source.Vector && source.isEnabled() && source.getVisible()) {
       var id = source.getId();
       var config = os.style.StyleManager.getInstance().getLayerConfig(id);
       if (config && config[os.style.StyleField.SHOW_LABELS]) {
@@ -344,7 +344,7 @@ os.style.label.updateShown_ = function() {
     }
   }
 
-  var msg = 'Label visibility computed in ' + (goog.now() - then) + 'ms.';
+  var msg = 'Label visibility computed in ' + (Date.now() - then) + 'ms.';
   goog.log.fine(os.style.label.LOGGER_, msg);
 
   // return true to stop the conditional delay

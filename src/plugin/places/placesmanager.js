@@ -4,6 +4,7 @@ goog.require('goog.async.Delay');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
+goog.require('os.alert.AlertManager');
 goog.require('os.im.Importer');
 goog.require('os.object');
 goog.require('os.ui.im.ImportEvent');
@@ -64,6 +65,13 @@ plugin.places.PlacesManager = function() {
    * @private
    */
   this.savedEmpty_ = false;
+
+  /**
+   * If the manager failed to export Places.
+   * @type {boolean}
+   * @private
+   */
+  this.exportFailed_ = false;
 
   /**
    * Delay to dedupe saving data.
@@ -192,6 +200,16 @@ plugin.places.PlacesManager.prototype.addLayer = function() {
     // don't allow removing the layer via the UI
     this.placesLayer_.setRemovable(false);
 
+    if (this.placesRoot_) {
+      // the old KML visibility logic caused the layer 'visible' flag to be set to false if all places were removed,
+      // even if the checkbox was toggled on. we don't want to initialize the layer as hidden if this is the case, so
+      // always show the layer if there aren't any children.
+      var children = this.placesRoot_.getChildren();
+      if (!children || !children.length) {
+        this.placesLayer_.setLayerVisible(true);
+      }
+    }
+
     var z = os.data.ZOrder.getInstance();
     var zType = z.getZType(plugin.places.ID);
 
@@ -240,7 +258,7 @@ plugin.places.PlacesManager.prototype.startImport = function(opt_file) {
  * @private
  */
 plugin.places.PlacesManager.prototype.onFileReady_ = function(file) {
-  if (file) {
+  if (file && file.getContent()) {
     var config = new plugin.places.PlacesLayerConfig();
 
     var options = this.getOptions();
@@ -407,10 +425,19 @@ plugin.places.PlacesManager.prototype.onExportComplete_ = function(event) {
   var output = /** @type {ArrayBuffer|string} */ (exporter.getOutput() || '');
   exporter.dispose();
 
-  if (output != null) {
+  if (output) {
     this.saveContent_(output);
   } else {
     this.handleError_('Failed exporting places to browser storage. Content was empty.');
+
+    if (!this.exportFailed_) {
+      this.exportFailed_ = true;
+      var target = new goog.events.EventTarget();
+      var msg = 'There was a problem saving your Places to browser storage. ' +
+          'Places will no longer save during the current session.' +
+          '<br><br><b>You should export your Places to a file to ensure that they are not lost on refresh.</b>';
+      os.alert.AlertManager.getInstance().sendAlert(msg, undefined, undefined, undefined, target);
+    }
   }
 };
 
@@ -467,13 +494,16 @@ plugin.places.PlacesManager.prototype.onSourcePropertyChange_ = function(event) 
     if (!this.placesSource_.isLoading()) {
       this.onSourceLoaded_();
     }
-  } else if (this.saveDelay_ && (p === os.source.PropertyChange.FEATURE_VISIBILITY ||
-      p === os.source.PropertyChange.FEATURES)) {
-    // only save if a list of changed features was provided. if not, it's a general refresh event and can be ignored.
-    var newVal = event.getNewValue();
-    var oldVal = event.getOldValue();
-    if (newVal || oldVal) {
+  } else if (this.saveDelay_) {
+    if (p === os.source.PropertyChange.VISIBLE) {
       this.saveDelay_.start();
+    } else if (p === os.source.PropertyChange.FEATURE_VISIBILITY || p === os.source.PropertyChange.FEATURES) {
+      // only save if a list of changed features was provided. if not, it's a general refresh event and can be ignored.
+      var newVal = event.getNewValue();
+      var oldVal = event.getOldValue();
+      if (newVal || oldVal) {
+        this.saveDelay_.start();
+      }
     }
   }
 };
@@ -486,15 +516,30 @@ plugin.places.PlacesManager.prototype.onSourcePropertyChange_ = function(event) 
  */
 plugin.places.PlacesManager.prototype.onSourceLoaded_ = function() {
   if (this.placesSource_) {
-    // the root node is the kml node, so "Saved Places" is the first child.  Make that the root for places.
-    this.placesRoot_ = /** @type {plugin.file.kml.ui.KMLNode} */ (this.placesSource_.getRootNode().getChildren()[0]);
+    var rootNode = this.placesSource_.getRootNode();
+    var children = rootNode && rootNode.getChildren();
 
-    if (this.placesRoot_) {
-      this.initializeNode_(this.placesRoot_);
-      this.placesRoot_.collapsed = false;
-      this.placesRoot_.listen(goog.events.EventType.PROPERTYCHANGE, this.onRootChange_, false, this);
+    if (children) {
+      // the root node is the kml node, so "Saved Places" is the first child. Make that the root for places.
+      this.placesRoot_ = /** @type {plugin.file.kml.ui.KMLNode} */ (children[0]);
 
-      this.addLayer();
+      if (this.placesRoot_) {
+        this.initializeNode_(this.placesRoot_);
+        this.placesRoot_.collapsed = false;
+        this.placesRoot_.listen(goog.events.EventType.PROPERTYCHANGE, this.onRootChange_, false, this);
+
+        this.addLayer();
+      }
+    }
+
+    if (!this.placesRoot_) {
+      this.handleError_('Failed parsing Places root node.');
+
+      if (!this.savedEmpty_) {
+        this.savedEmpty_ = true;
+        this.saveContent_(plugin.places.PlacesManager.EMPTY_CONTENT)
+            .addCallbacks(this.initialize, this.handleError_, this);
+      }
     }
 
     this.loaded_ = true;

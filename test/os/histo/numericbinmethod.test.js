@@ -229,12 +229,14 @@ describe('os.histo.NumericBinMethod', function() {
     method.setValueFunction(fn);
     method.setWidth(55);
     method.setOffset(14);
+    method.setShowEmptyBins(true);
 
     var clone = method.clone();
     expect(clone.getField()).toBe('field');
     expect(clone.valueFunction).toBe(fn);
     expect(clone.getWidth()).toBe(55);
     expect(clone.getOffset()).toBe(14);
+    expect(clone.getShowEmptyBins()).toBe(true);
   });
 
   it('should restore correctly', function() {
@@ -243,10 +245,12 @@ describe('os.histo.NumericBinMethod', function() {
     // doesn't change width/offset if they aren't set on the restore object
     var oldWidth = method.getWidth();
     var oldOffset = method.getOffset();
+    var oldShowEmptyBins = method.getShowEmptyBins();
     method.restore({});
 
     expect(method.getWidth()).toBe(oldWidth);
     expect(method.getOffset()).toBe(oldOffset);
+    expect(method.getShowEmptyBins()).toBe(oldShowEmptyBins);
 
     // or if the values are non-numeric
     method.restore({
@@ -256,6 +260,7 @@ describe('os.histo.NumericBinMethod', function() {
 
     expect(method.getWidth()).toBe(oldWidth);
     expect(method.getOffset()).toBe(oldOffset);
+    expect(method.getShowEmptyBins()).toBe(oldShowEmptyBins);
 
     method.restore({
       'width': 'not numeric',
@@ -264,23 +269,65 @@ describe('os.histo.NumericBinMethod', function() {
 
     expect(method.getWidth()).toBe(oldWidth);
     expect(method.getOffset()).toBe(oldOffset);
+    expect(method.getShowEmptyBins()).toBe(oldShowEmptyBins);
 
     // does change them if they are set
     method.restore({
       'width': 12,
-      'offset': 34
+      'offset': 34,
+      'showEmptyBins': true
     });
 
     expect(method.getWidth()).toBe(12);
     expect(method.getOffset()).toBe(34);
+    expect(method.getShowEmptyBins()).toBe(true);
 
     // converts numeric strings to numbers
     method.restore({
       'width': '56',
-      'offset': '78'
+      'offset': '78',
+      'showEmptyBins': false
     });
 
     expect(method.getWidth()).toBe(56);
     expect(method.getOffset()).toBe(78);
+    expect(method.getShowEmptyBins()).toBe(false);
+  });
+
+  it('should provide bins statistics', function() {
+    var method = new os.histo.NumericBinMethod();
+    method.setField('field');
+    method.setWidth(5);
+
+    var min = 0;
+    var max = 40;
+    var bins = [];
+    var bin;
+
+    bin = new os.data.histo.ColorBin('#000');
+    bin['key'] = min;
+    bin['label'] = method.getLabelForKey(min);
+    bin['id'] = bin['label'];
+    bin['series'] = '';
+    bin['count'] = 0;
+    bin['sel'] = false;
+    bin['highlight'] = false;
+    bins.push(bin);
+
+    bin = new os.data.histo.ColorBin('#000');
+    bin['key'] = max;
+    bin['label'] = method.getLabelForKey(max);
+    bin['id'] = bin['label'];
+    bin['series'] = '';
+    bin['count'] = 0;
+    bin['sel'] = false;
+    bin['highlight'] = false;
+    bins.push(bin);
+
+    var stats = method.getStatsForBin(bins);
+    expect(stats.range[0]).toBe(min);
+    expect(stats.range[1]).toBe(max);
+    expect(stats.binCount).toBe(2);
+    expect(stats.binCountAll).toBe(9);
   });
 });

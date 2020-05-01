@@ -28,7 +28,7 @@ os.ui.filter.op.LikeList.prototype.getEvalExpression = function(varName, literal
       return os.ui.filter.string.escapeRegExp(str);
     });
 
-    return '/^(' + list.join('|') + ')$/i.test(' + varName + ')';
+    return '/^(' + list.join('|') + ')$/im.test(' + varName + ')';
   }
 
   // null/empty string is not supported, so don't return an expression

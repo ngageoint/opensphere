@@ -267,7 +267,7 @@ os.file.File.prototype.restore = function(config) {
 /**
  * @define {string}
  */
-goog.define('os.file.ZIP_PATH', 'vendor/zip-js');
+os.file.ZIP_PATH = goog.define('os.file.ZIP_PATH', 'vendor/zip-js');
 
 
 /**

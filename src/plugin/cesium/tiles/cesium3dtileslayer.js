@@ -179,7 +179,7 @@ plugin.cesium.tiles.Layer.prototype.getExtent = function() {
     }
   }
 
-  return undefined;
+  return plugin.cesium.tiles.Layer.base(this, 'getExtent');
 };
 
 

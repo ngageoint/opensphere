@@ -246,7 +246,7 @@ os.state.v2.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
   // write the persisted layer on top of the cloned options so we have (most) everything in one place
   var layerConfig = goog.object.clone(layer.getLayerOptions());
   if (opt_layerConfigOverride != null) {
-    goog.object.extend(layerConfig, opt_layerConfigOverride);
+    Object.assign(layerConfig, opt_layerConfigOverride);
   }
 
   layer.persist(layerConfig);

@@ -39,6 +39,13 @@ os.layer.LayerGroup = function() {
   this.layerOptions_ = null;
 
   /**
+   * If the layer is enabled.
+   * @type {boolean}
+   * @private
+   */
+  this.enabled_ = true;
+
+  /**
    * @type {boolean}
    * @private
    */
@@ -136,14 +143,37 @@ os.layer.LayerGroup.prototype.getSource = function() {
 /**
  * @inheritDoc
  */
-os.layer.LayerGroup.prototype.isLoading = function() {
-  for (var i = 0, n = this.layers_.length; i < n; i++) {
-    try {
-      if (this.layers_[i].isLoading()) {
-        return true;
-      }
-    } catch (e) {
+os.layer.LayerGroup.prototype.isEnabled = function() {
+  try {
+    if (this.layers_ && this.layers_.some((layer) => layer.isEnabled())) {
+      return true;
     }
+  } catch (e) {
+    // Likely a non-ILayer in the group, defer to the group flag.
+  }
+
+  return this.enabled_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.LayerGroup.prototype.setEnabled = function(value) {
+  this.enabled_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.LayerGroup.prototype.isLoading = function() {
+  try {
+    if (this.layers_ && this.layers_.some((layer) => layer.isLoading())) {
+      return true;
+    }
+  } catch (e) {
+    // Likely a non-ILayer in the group, defer to the group flag.
   }
 
   return this.loading_;
@@ -533,7 +563,7 @@ os.layer.LayerGroup.prototype.getNodeUI = function() {
 /**
  * @inheritDoc
  */
-os.layer.LayerGroup.prototype.setNodeUI = goog.nullFunction();
+os.layer.LayerGroup.prototype.setNodeUI = function(value) {};
 
 
 /**

@@ -23,7 +23,7 @@ os.load.LoadingTask = function(id, opt_title, opt_cpuIntensive) {
    * @type {number}
    * @protected
    */
-  this.start = goog.now();
+  this.start = Date.now();
 
   /**
    * @type {number}
@@ -73,7 +73,7 @@ os.load.LoadingTask.prototype.getCount = function() {
  * @inheritDoc
  */
 os.load.LoadingTask.prototype.getDuration = function() {
-  return goog.now() - this.start;
+  return Date.now() - this.start;
 };
 
 
