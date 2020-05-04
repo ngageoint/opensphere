@@ -1137,10 +1137,14 @@ os.geo.parse_ = function(deg, min, sec, dir) {
   sign *= d < 0 || Object.is(d, -0) ? -1 : 1;
 
   var m = parseFloat(min);
-  sign *= m < 0 || Object.is(m, -0) ? -1 : 1;
+  if (m < 0 || Object.is(m, -0)) {
+    return NaN;
+  }
 
   var s = parseFloat(sec);
-  sign *= s < 0 || Object.is(s, -0) ? -1 : 1;
+  if (m < 0 || Object.is(m, -0)) {
+    return NaN;
+  }
 
   var val = Math.abs(d);
 
