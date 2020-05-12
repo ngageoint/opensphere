@@ -11,12 +11,12 @@
   };
 
   if (!window.localStorage) {
-    status.append('<div class="error">Error: localStorage not present</div>');
+    status.append('<div class="alert alert-danger">Error: localStorage not present</div>');
     return;
   }
 
   if (!str) {
-    status.html('<div class="error">Error: No URI-encoded file path or ' +
+    status.html('<div class="alert alert-danger">Error: No URI-encoded file path or ' +
         'JSON string was found in the location fragment</div>');
     return;
   }
@@ -34,18 +34,18 @@
       data = JSON.parse(str);
       type = 'addLayer';
     } catch (e) {
-      status.append('<div class="error">Error: malformed JSON in fragment.</div>');
+      status.append('<div class="alert alert-danger">Error: malformed JSON in fragment.</div>');
     }
   }
 
   if (!data) {
-    status.html('<div class="error">Error: No URI-encoded file path or ' +
+    status.html('<div class="alert alert-danger">Error: No URI-encoded file path or ' +
         'JSON string was found in the location fragment</div>');
     return;
   }
 
   if (!type) {
-    status.html('<div class="error">Error: No message type was found</div>');
+    status.html('<div class="alert alert-danger">Error: No message type was found</div>');
     return;
   }
 
