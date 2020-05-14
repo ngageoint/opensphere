@@ -30,6 +30,10 @@
         {
           "name": "Cesium",
           "logoPath": "images/vendor/cesium.png"
+        },
+        {
+          "name": "Font Awesome",
+          "logoPath": "images/vendor/fontawesome.png"
         }
       ]
     },
