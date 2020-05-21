@@ -43,10 +43,10 @@
             <i class="fa" ng-if="searchBox.allowMultiple || searchBox.isSearchEnabled(search)"
                 ng-class="searchBox.getSearchIcon(search)"></i>
             {{searchBox.getSearchName(search)}}
-            <div class="flex-shrink-0 ml-auto">
+            <span class="flex-shrink-0 ml-auto">
               <i ng-if="searchBox.supportsTemporal(search)" class="fa fa-clock-o" title="Supports searching within the current application time"></i>
               <i ng-if="searchBox.supportsGeo(search)" class="fa fa-map-marker" title="Supports searching with geospatial filters"></i>
-            </div>
+            </span>
           </span>
         </div>
         <div ng-if="searchBox.favorites.length > 0">
@@ -77,7 +77,7 @@
           ng-model="searchBox.searchTerm"
           ng-change="searchBox.refreshAutocomplete()"
           placeholder="{{searchBox.getPlaceholderText()}}"
-          data-provide="typeahead" />
+          data-provide="typeahead" >
       <div class="input-group-append">
         <button ng-if="showClear" class="btn border border-left-0 form-control w-auto"
             type="button"
