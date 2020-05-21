@@ -144,6 +144,40 @@ describe('os.source.Vector', function() {
     source.unprocessNow();
   });
 
+  it('should remove features from the source', () => {
+    const feature = new ol.Feature(new ol.geom.Point([0, 0]));
+    const source = new os.source.Vector(undefined);
+    source.addFeature(feature);
+    source.processNow();
+    source.removeFeature(feature);
+    source.unprocessNow();
+    expect(source.getFeatures().length).toBe(0);
+    expect(source.getFeatureById(feature.getId())).toBe(null);
+  });
+
+  it('should not error on attempting multiple removes of a feature', () => {
+    const feature = new ol.Feature(new ol.geom.Point([0, 0]));
+    const source = new os.source.Vector(undefined);
+    source.addFeature(feature);
+    source.processNow();
+
+    const remove1 = () => {
+      source.removeFeature(feature);
+      source.unprocessNow();
+      source.removeFeature(feature);
+      source.unprocessNow();
+    };
+
+    const remove2 = () => {
+      source.removeFeature(feature);
+      source.removeFeature(feature);
+      source.unprocessNow();
+    };
+
+    expect(remove1).not.toThrow();
+    expect(remove2).not.toThrow();
+  });
+
   it('should select a single feature in the source', function() {
     var feature = features[0];
     expect(source.select(feature)).toBe(true);
