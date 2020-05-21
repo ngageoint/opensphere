@@ -1106,7 +1106,7 @@ os.source.Vector.updateScratchExtent_ = function(g) {
  * @suppress {accessControls}
  */
 os.source.Vector.prototype.updateIndex = function(feature) {
-  if (feature) {
+  if (feature && this.featuresRtree_) {
     var extent = os.source.Vector.scratchExtent_;
     extent[0] = Infinity;
     extent[1] = Infinity;
@@ -1969,10 +1969,11 @@ os.source.Vector.prototype.removeFeatures = function(features) {
  * @suppress {accessControls}
  */
 os.source.Vector.prototype.removeFeatureInternal = function(feature, opt_isBulk) {
-  if (feature) {
+  const featureKey = ol.getUid(feature).toString();
+
+  if (feature && this.featureChangeKeys_[featureKey]) {
     this.processNow();
 
-    var featureKey = ol.getUid(feature).toString();
     if (featureKey in this.nullGeometryFeatures_) {
       // keeping delete here because it's very rarely used, and ol.source.Vector uses "key in obj" on this map
       delete this.nullGeometryFeatures_[featureKey];
@@ -2158,17 +2159,18 @@ os.source.Vector.prototype.processImmediate = function(feature) {
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
 os.source.Vector.prototype.columnTypeDetection_ = function(feature) {
-  var keys = feature.getKeys();
-  keys.forEach(function(col) {
-    var value = feature.values_[col];
-    var type = typeof (value);
+  const keys = feature.getKeys();
+  for (let i = 0, n = keys.length; i !== n; i++) {
+    const col = keys[i];
+    let value = feature.values_[col];
+    let type = typeof (value);
 
     if (value === '') {
       type = 'empty';
     } else if (type === 'number') {
       type = Math.floor(value) === value ? 'integer' : 'decimal';
     } else if (type === 'string') {
-      if (os.string.isFloat(String(value))) {
+      if (os.string.isFloat(/** @type {string} */ (value))) {
         value = parseFloat(value);
 
         if (Math.floor(value) === value) {
@@ -2191,7 +2193,7 @@ os.source.Vector.prototype.columnTypeDetection_ = function(feature) {
     }
 
     this.stats_[col][type]++;
-  }, this);
+  }
 };
 
 
