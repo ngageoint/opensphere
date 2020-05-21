@@ -5,7 +5,7 @@
       <div class="d-flex flex-fill form-group">
         <label class="col-3 col-form-label text-right u-required">Name</label>
         <div class="col">
-          <input class="form-control" type="text" name="title" ng-model="treeExport.title" ng-maxlength="200" required/>
+          <input class="form-control" type="text" name="title" ng-model="treeExport.title" ng-maxlength="200" required>
           <validation-message target="exportForm.title"></validation-message>
         </div>
       </div>
@@ -13,8 +13,8 @@
       <div class="d-flex flex-fill form-group">
         <label class="col-3 col-form-label text-right">Save To</label>
         <div class="col">
-          <select class="custom-select" ng-model="treeExport.persister" ng-options="value as key for (key, value) in treeExport.persisters"
-          />
+          <select class="custom-select" ng-model="treeExport.persister" ng-options="value as key for (key, value) in treeExport.persisters">
+          </select>
         </div>
       </div>
 

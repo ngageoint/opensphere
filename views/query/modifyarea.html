@@ -20,15 +20,15 @@
         <label class="col-form-label col-4 text-right">Operation</label>
         <div class="col form-inline">
           <label class="mr-1" ng-disabled="modarea.loading" title="{{modarea.help.addOp}}">
-            <input class="form-check-input" type="radio" name="modifyOp" value="Add" ng-model="op" required="true" ng-disabled="modarea.loading">
+            <input class="form-check-input" type="radio" name="modifyOp" value="Add" ng-model="op" required ng-disabled="modarea.loading">
             Add
           </label>
           <label class="mr-1" ng-disabled="modarea.loading" title="{{modarea.help.removeOp}}">
-            <input class="form-check-input" type="radio" name="modifyOp" value="Remove" ng-model="op" required="true" ng-disabled="modarea.loading">
+            <input class="form-check-input" type="radio" name="modifyOp" value="Remove" ng-model="op" required ng-disabled="modarea.loading">
             Remove
           </label>
           <label class="mr-1" ng-disabled="modarea.loading" title="{{modarea.help.intersectOp}}">
-            <input class="form-check-input" type="radio" name="modifyOp" value="Intersect" ng-model="op" required="true" ng-disabled="modarea.loading">
+            <input class="form-check-input" type="radio" name="modifyOp" value="Intersect" ng-model="op" required ng-disabled="modarea.loading">
             Intersection
           </label>
           <span class="ml-auto">
@@ -57,7 +57,7 @@
       <div class="row mt-1" title="{{modarea.help.replace}}">
         <label class="col-form-label col-4 text-right">Replace Area</label>
         <div class="col form-inline">
-          <input type="checkbox" class="form-control" name="replace" ng-model="modarea.replace"/>
+          <input type="checkbox" class="form-control" name="replace" ng-model="modarea.replace">
           <span class="ml-auto">
             <popover class="float-right" x-title="'Replace Area'" x-content="modarea.help.replace" x-pos="'right'"></popover>
           </span>
@@ -66,7 +66,7 @@
       <div class="row mt-1" ng-if="!modarea.replace" title="{{modarea.help.title}}">
         <label class="col-form-label col-4 text-right u-required">Title</label>
         <div class="col form-inline">
-          <input type="text" class="form-control" name="title" ng-model="modarea.title" ng-required="!modarea.replace" ng-maxlength="128" />
+          <input type="text" class="form-control" name="title" ng-model="modarea.title" ng-required="!modarea.replace" ng-maxlength="128" >
           <span class="ml-auto">
             <popover class="float-right" x-title="'Title'" x-content="modarea.help.title" x-pos="'right'"></popover>
           </span>
