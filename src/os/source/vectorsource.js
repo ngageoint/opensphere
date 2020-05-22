@@ -1979,6 +1979,9 @@ os.source.Vector.prototype.removeFeatureInternal = function(feature, opt_isBulk)
       delete this.nullGeometryFeatures_[featureKey];
     } else if (!opt_isBulk && this.featuresRtree_) {
       this.featuresRtree_.remove(feature);
+    } else if (!this.featuresRtree_) {
+      this.dispatchEvent(new ol.source.Vector.Event(
+          ol.source.VectorEventType.REMOVEFEATURE, feature));
     }
 
     this.featureCount_ = Math.max(this.featureCount_ - 1, 0);
