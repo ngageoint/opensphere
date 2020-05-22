@@ -280,6 +280,16 @@ Cesium.Color.fromRgba = function(value) {};
 
 
 /**
+ * @param {number} red
+ * @param {number} blue
+ * @param {number} green
+ * @param {number} alpha
+ * @param {Cesium.Color=} opt_result
+ * @return {!Cesium.Color}
+ */
+Cesium.Color.fromBytes = function(red, blue, green, alpha, opt_result) {};
+
+/**
  * @param {string} name
  * @param {Cesium.Color=} opt_result
  * @return {!Cesium.Color}

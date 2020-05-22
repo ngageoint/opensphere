@@ -165,9 +165,7 @@ const updateImageIcon = (geometry, style, context, bb, opt_index) => {
   }
 
   const styleColor = style.getColor();
-  if (styleColor) {
-    bb.color = olcsCore.convertColorToCesium(styleColor);
-  }
+  bb.color = olcsCore.convertColorToCesium(styleColor || 'white');
 
   updateSizeDynamicIconProperties(style, bb);
 };
@@ -195,9 +193,7 @@ const updateImageShape = (style, bb) => {
   const color = fill ? fill.getColor() :
     stroke ? stroke.getColor() : null;
 
-  if (color) {
-    bb.color = olcsCore.convertColorToCesium(color);
-  }
+  bb.color = olcsCore.convertColorToCesium(color || 'white');
 };
 
 
