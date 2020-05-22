@@ -146,13 +146,20 @@ describe('os.source.Vector', function() {
 
   it('should remove features from the source', () => {
     const feature = new ol.Feature(new ol.geom.Point([0, 0]));
-    const source = new os.source.Vector(undefined);
-    source.addFeature(feature);
-    source.processNow();
-    source.removeFeature(feature);
-    source.unprocessNow();
-    expect(source.getFeatures().length).toBe(0);
-    expect(source.getFeatureById(feature.getId())).toBe(null);
+    const sources = [
+      new os.source.Vector(undefined),
+      new os.source.Vector({
+        useSpatialIndex: false
+      })];
+
+    sources.forEach((source) => {
+      source.addFeature(feature);
+      source.processNow();
+      source.removeFeature(feature);
+      source.unprocessNow();
+      expect(source.getFeatures().length).toBe(0);
+      expect(source.getFeatureById(feature.getId())).toBe(null);
+    });
   });
 
   it('should not error on attempting multiple removes of a feature', () => {
