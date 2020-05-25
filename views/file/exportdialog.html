@@ -5,7 +5,7 @@
       <div class="d-flex flex-fill form-group flex-shrink-0">
         <label class="col-3 col-form-label text-right u-required">Name</label>
         <div class="col">
-          <input class="form-control" type="text" name="title" ng-model="options.title" ng-maxlength="200" required/>
+          <input class="form-control" type="text" name="title" ng-model="options.title" ng-maxlength="200" required>
           <validation-message target="exportForm.title"></validation-message>
         </div>
       </div>
@@ -13,14 +13,14 @@
       <div class="d-flex flex-fill form-group flex-shrink-0" ng-show="exportdialog.getKeys(exportdialog.persisters).length">
         <label class="col-3 col-form-label text-right">Save To</label>
         <div class="col">
-          <select class="custom-select" ng-model="persister" ng-options="value as key for (key, value) in exportdialog.persisters" />
+          <select class="custom-select" ng-model="persister" ng-options="value as key for (key, value) in exportdialog.persisters"></select>
         </div>
       </div>
 
       <div class="d-flex flex-fill form-group flex-shrink-0" ng-show="exportdialog.getKeys(exportdialog.exporters).length">
         <label class="col-3 col-form-label text-right">Type</label>
         <div class="col">
-          <select class="custom-select" ng-model="exporter" ng-options="value as key for (key, value) in exportdialog.exporters" />
+          <select class="custom-select" ng-model="exporter" ng-options="value as key for (key, value) in exportdialog.exporters"></select>
         </div>
       </div>
 

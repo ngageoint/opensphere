@@ -1,7 +1,7 @@
 <div ng-form="ringOptionsForm">
   <div class="row col flex-shrink-0">
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="enabled{{ctrl.uid}}" ng-model="ctrl.options.enabled" ng-change="ctrl.update()" />
+      <input class="form-check-input" type="checkbox" id="enabled{{ctrl.uid}}" ng-model="ctrl.options.enabled" ng-change="ctrl.update()" >
       <label class="form-check-label" for="enabled{{ctrl.uid}}">Enable {{ctrl.title}}s</label>
     </div>
   </div>
@@ -12,12 +12,12 @@
         <label class="col-4 col-form-label">Type</label>
         <div class="col pl-0">
           <div class="custom-control custom-checkbox d-inline mr-2">
-            <input class="form-check-input" ng-checked="true" type="radio" id="auto{{ctrl.uid}}" value="auto" name="auto" ng-change="ctrl.update()" ng-model="ctrl.options.type" ng-disabled="!ctrl.options.enabled"/>
+            <input class="form-check-input" ng-checked="true" type="radio" id="auto{{ctrl.uid}}" value="auto" name="auto" ng-change="ctrl.update()" ng-model="ctrl.options.type" ng-disabled="!ctrl.options.enabled">
             <label class="form-check-label" for="auto{{ctrl.uid}}">Auto</label>
           </div>
 
           <div class="custom-control custom-checkbox d-inline">
-            <input class="form-check-input" type="radio" id="manual{{ctrl.uid}}" name="manual" value="manual" ng-change="ctrl.update()" ng-model="ctrl.options.type" ng-disabled="!ctrl.options.enabled"/>
+            <input class="form-check-input" type="radio" id="manual{{ctrl.uid}}" name="manual" value="manual" ng-change="ctrl.update()" ng-model="ctrl.options.type" ng-disabled="!ctrl.options.enabled">
             <label class="form-check-label" for="manual{{ctrl.uid}}">Manual</label>
           </div>
         </div>
@@ -27,7 +27,7 @@
         <label class="col-4 col-form-label" ng-class="{'u-required' : ctrl.options.type == 'auto'}">{{ctrl.options.type == 'auto' ? 'Range' : 'Units'}}</label>
         <div class="col-4" ng-if="ctrl.options.type == 'auto'">
           <div class="row">
-            <input class="form-control px-1" required type="number" name="interval" step="any" min="0" ng-change="ctrl.updateInterval(true)" ng-model="ctrl.options.interval" ng-disabled="!ctrl.options.enabled"/>
+            <input class="form-control px-1" required type="number" name="interval" step="any" min="0" ng-change="ctrl.updateInterval(true)" ng-model="ctrl.options.interval" ng-disabled="!ctrl.options.enabled">
           </div>
         </div>
         <div class="col-4 px-0">
@@ -39,13 +39,13 @@
         <label class="col-4 col-form-label u-required">Rings</label>
         <div class="col-4" ng-if="ctrl.options.type == 'auto'">
           <div class="row">
-            <input class="form-control mb-1 px-1" required type="number" name="count" step="1" min="1" max="50" ng-change="ctrl.updateCount(true)" ng-model="ctrl.count"  ng-disabled="!ctrl.options.enabled"/>
+            <input class="form-control mb-1 px-1" required type="number" name="count" step="1" min="1" max="50" ng-change="ctrl.updateCount(true)" ng-model="ctrl.count"  ng-disabled="!ctrl.options.enabled">
           </div>
         </div>
 
         <div class="col-4 overflow-auto js-ring-scroll-section" style="max-height:10rem;">
           <div class="mb-1 row" ng-repeat="ring in ctrl.options.rings | limitTo: 50">
-            <input class="form-control px-1" ng-class="ctrl.options.type == 'auto' ? 'col-12' : 'col-9'" type="number" required name="count" step="any" ng-change="ctrl.update()" ng-model="ring.radius" ng-disabled="!ctrl.options.enabled || ctrl.options.type == 'auto'"/>
+            <input class="form-control px-1" ng-class="ctrl.options.type == 'auto' ? 'col-12' : 'col-9'" type="number" required name="count" step="any" ng-change="ctrl.update()" ng-model="ring.radius" ng-disabled="!ctrl.options.enabled || ctrl.options.type == 'auto'">
             <button class="btn btn-outline-danger col-3 border-0" ng-click="ctrl.remove($index, true)" ng-if="ctrl.options.type == 'manual'" ng-disabled="!ctrl.options.enabled || ctrl.options.rings.length <= 1">
               <i class="fa fa-times"></i>
             </button>
@@ -65,12 +65,12 @@
         <label class="col-4 col-form-label">Bearing</label>
         <div class="col">
           <div class="custom-control custom-checkbox d-inline mr-2">
-            <input class="form-check-input" ng-checked="true" type="radio" id="magnetic{{ctrl.uid}}" name="magnetic" value="magnetic" ng-change="ctrl.update()" ng-model="ctrl.options.bearingType" ng-disabled="!ctrl.options.enabled"/>
+            <input class="form-check-input" ng-checked="true" type="radio" id="magnetic{{ctrl.uid}}" name="magnetic" value="magnetic" ng-change="ctrl.update()" ng-model="ctrl.options.bearingType" ng-disabled="!ctrl.options.enabled">
             <label class="form-check-label" for="magnetic{{ctrl.uid}}">Magnetic</label>
           </div>
 
           <div class="custom-control custom-checkbox d-inline">
-            <input class="form-check-input" type="radio" id="trueNorth{{ctrl.uid}}" name="trueNorth" value="trueNorth" ng-change="ctrl.update()" ng-model="ctrl.options.bearingType" ng-disabled="!ctrl.options.enabled"/>
+            <input class="form-check-input" type="radio" id="trueNorth{{ctrl.uid}}" name="trueNorth" value="trueNorth" ng-change="ctrl.update()" ng-model="ctrl.options.bearingType" ng-disabled="!ctrl.options.enabled">
             <label class="form-check-label" for="trueNorth{{ctrl.uid}}">True</label>
           </div>
         </div>
@@ -78,33 +78,33 @@
 
       <div class="form-group flex-shrink-0">
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="crosshair{{ctrl.uid}}" ng-model="ctrl.options.crosshair" ng-change="ctrl.update()"  ng-disabled="!ctrl.options.enabled"/>
+          <input class="form-check-input" type="checkbox" id="crosshair{{ctrl.uid}}" ng-model="ctrl.options.crosshair" ng-change="ctrl.update()"  ng-disabled="!ctrl.options.enabled">
           <label class="form-check-label" for="crosshair{{ctrl.uid}}">Show Crosshair</label>
         </div>
       </div>
 
       <div class="form-group flex-shrink-0">
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="labels{{ctrl.uid}}" ng-model="ctrl.options.labels" ng-change="ctrl.update()"  ng-disabled="!ctrl.options.enabled"/>
+          <input class="form-check-input" type="checkbox" id="labels{{ctrl.uid}}" ng-model="ctrl.options.labels" ng-change="ctrl.update()"  ng-disabled="!ctrl.options.enabled">
           <label class="form-check-label" for="labels{{ctrl.uid}}">Show Labels</label>
         </div>
       </div>
 
       <div class="form-group flex-shrink-0">
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="arcs{{ctrl.uid}}" ng-model="ctrl.options.arcs" ng-change="ctrl.update()"  ng-disabled="!ctrl.options.enabled"/>
+          <input class="form-check-input" type="checkbox" id="arcs{{ctrl.uid}}" ng-model="ctrl.options.arcs" ng-change="ctrl.update()"  ng-disabled="!ctrl.options.enabled">
           <label class="form-check-label" for="arcs{{ctrl.uid}}">Use Arcs</label>
         </div>
       </div>
 
       <div class="form-group row" ng-if="ctrl.options.arcs">
         <label class="col-6 col-form-label u-required">Center Azimuth °</label>
-        <input class="form-control col-4 px-1" type="number" required name="startAngle" ng-change="ctrl.update()" ng-model="ctrl.options.startAngle"  ng-disabled="!ctrl.options.enabled"/>
+        <input class="form-control col-4 px-1" type="number" required name="startAngle" ng-change="ctrl.update()" ng-model="ctrl.options.startAngle"  ng-disabled="!ctrl.options.enabled">
       </div>
 
       <div class="form-group row" ng-if="ctrl.options.arcs">
         <label class="col-6 col-form-label u-required">Width °</label>
-        <input class="form-control col-4 px-1" type="number" required name="widthAngle" min="0" max="360" ng-change="ctrl.update()" ng-model="ctrl.options.widthAngle"  ng-disabled="!ctrl.options.enabled"/>
+        <input class="form-control col-4 px-1" type="number" required name="widthAngle" min="0" max="360" ng-change="ctrl.update()" ng-model="ctrl.options.widthAngle"  ng-disabled="!ctrl.options.enabled">
       </div>
     </div>
   </div>

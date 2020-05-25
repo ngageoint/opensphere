@@ -3,7 +3,7 @@
     <div class="form-check" title="Show colors applied by Auto Color in Count By's, Charts, etc">
       <input class="form-check-input" id="legendShowAuto" type="checkbox" name="showAuto"
           ng-model="legend.options.showAuto"
-          ng-change="legend.toggle('showAuto')"/>
+          ng-change="legend.toggle('showAuto')">
       <label class="form-check-label" for="legendShowAuto">Show auto colors</label>
     </div>
   </div>
@@ -11,7 +11,7 @@
     <div class="form-check" title="Show manual colors applied in Count By's, Charts, etc">
       <input class="form-check-input" id="legendShowManual" type="checkbox" name="showManual"
           ng-model="legend.options.showManual"
-          ng-change="legend.toggle('showManual')"/>
+          ng-change="legend.toggle('showManual')">
       <label class="form-check-label" for="legendShowManual">Show manual colors</label>
     </div>
   </div>
@@ -20,7 +20,7 @@
       <input class="form-check-input" id="legendShowColumn" type="checkbox" name="showColumn"
           ng-disabled="!legend.options.showAuto && !legend.options.showManual"
           ng-model="legend.options.showColumn"
-          ng-change="legend.toggle('showColumn')"/>
+          ng-change="legend.toggle('showColumn')">
       <label class="form-check-label" for="legendShowColumn">Show column in label</label>
     </div>
   </div>

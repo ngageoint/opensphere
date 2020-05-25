@@ -7,42 +7,44 @@
     </div>
     <div id="layer-style" class="card-body collapse" data-parent="#layerControls">
       <table>
-        <tr title="Sets the opacity (inverse transparency) of the layer(s)">
-          <td>Opacity:</td>
-          <td class="w-100"><slider min="0" max="1" step="0.05" value="opacity" name="opacity"></slider></td>
-          <td class="text-right pl-2">
-            <button class="btn btn-secondary" ng-click="basemap.reset('opacity')" title="Restore default opacity">
-              <i class="fa fa-undo"></i>
-            </button>
-          </td>
-        </tr>
-        <tr title="Sets the contrast of the layer(s)">
-          <td>Contrast:</td>
-          <td class="w-100"><slider min="0" max="2" step="0.05" value="contrast" name="contrast"></slider></td>
-          <td class="text-right pl-2">
-            <button class="btn btn-secondary" ng-click="basemap.reset('contrast')" title="Restore default contrast">
-              <i class="fa fa-undo"></i>
-            </button>
-          </td>
-        </tr>
-        <tr title="Sets the brightness of the layer(s)">
-          <td>Brightness:</td>
-          <td class="w-100"><slider min="-1" max="1" step="0.05" value="brightness" name="brightness"></slider></td>
-          <td class="text-right pl-2">
-            <button class="btn btn-secondary" ng-click="basemap.reset('brightness')" title="Restore default brightness">
-              <i class="fa fa-undo"></i>
-            </button>
-          </td>
-        </tr>
-        <tr title="Sets the saturation of the layer(s)">
-          <td>Saturation:</td>
-          <td class="w-100"><slider min="0" max="1" step="0.05" value="saturation" name="saturation"></slider></td>
-          <td class="text-right pl-2">
-            <button class="btn btn-secondary" ng-click="basemap.reset('saturation')" title="Restore default saturation">
-              <i class="fa fa-undo"></i>
-            </button>
-          </td>
-        </tr>
+        <tbody>
+          <tr title="Sets the opacity (inverse transparency) of the layer(s)">
+            <td>Opacity:</td>
+            <td class="w-100"><slider min="0" max="1" step="0.05" value="opacity" name="opacity"></slider></td>
+            <td class="text-right pl-2">
+              <button class="btn btn-secondary" ng-click="basemap.reset('opacity')" title="Restore default opacity">
+                <i class="fa fa-undo"></i>
+              </button>
+            </td>
+          </tr>
+          <tr title="Sets the contrast of the layer(s)">
+            <td>Contrast:</td>
+            <td class="w-100"><slider min="0" max="2" step="0.05" value="contrast" name="contrast"></slider></td>
+            <td class="text-right pl-2">
+              <button class="btn btn-secondary" ng-click="basemap.reset('contrast')" title="Restore default contrast">
+                <i class="fa fa-undo"></i>
+              </button>
+            </td>
+          </tr>
+          <tr title="Sets the brightness of the layer(s)">
+            <td>Brightness:</td>
+            <td class="w-100"><slider min="-1" max="1" step="0.05" value="brightness" name="brightness"></slider></td>
+            <td class="text-right pl-2">
+              <button class="btn btn-secondary" ng-click="basemap.reset('brightness')" title="Restore default brightness">
+                <i class="fa fa-undo"></i>
+              </button>
+            </td>
+          </tr>
+          <tr title="Sets the saturation of the layer(s)">
+            <td>Saturation:</td>
+            <td class="w-100"><slider min="0" max="1" step="0.05" value="saturation" name="saturation"></slider></td>
+            <td class="text-right pl-2">
+              <button class="btn btn-secondary" ng-click="basemap.reset('saturation')" title="Restore default saturation">
+                <i class="fa fa-undo"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </div>
@@ -54,24 +56,26 @@
     </div>
     <div id="layer-zoom" class="card-body collapse" data-parent="#layerControls">
       <table>
-        <tr title="Sets the minimum zoom level at which the layer will display">
-          <td class="text-nowrap">Min Zoom:</td>
-          <td class="w-100">
-            <spinner min="::basemap.mapMinZoom" max="maxZoom" step="1" value="minZoom" name="minZoom"></spinner>
-          </td>
-          <td>
-            <button class="btn btn-secondary" ng-click="basemap.setCurrent('minZoom')" title="Sets the min zoom to the current zoom level">Current</button>
-          </td>
-        </tr>
-        <tr title="Sets the maximum zoom level at which the layer will display">
-          <td class="text-nowrap">Max Zoom:</td>
-          <td class="w-100">
-            <spinner min="minZoom" max="::basemap.mapMaxZoom" step="1" value="maxZoom" name="maxZoom"></spinner>
-          </td>
-          <td>
-            <button class="btn btn-secondary" ng-click="basemap.setCurrent('maxZoom')" title="Sets the max zoom to the current zoom level">Current</button>
-          </td>
-        </tr>
+        <tbody>
+          <tr title="Sets the minimum zoom level at which the layer will display">
+            <td class="text-nowrap">Min Zoom:</td>
+            <td class="w-100">
+              <spinner min="::basemap.mapMinZoom" max="maxZoom" step="1" value="minZoom" name="minZoom"></spinner>
+            </td>
+            <td>
+              <button class="btn btn-secondary" ng-click="basemap.setCurrent('minZoom')" title="Sets the min zoom to the current zoom level">Current</button>
+            </td>
+          </tr>
+          <tr title="Sets the maximum zoom level at which the layer will display">
+            <td class="text-nowrap">Max Zoom:</td>
+            <td class="w-100">
+              <spinner min="minZoom" max="::basemap.mapMaxZoom" step="1" value="maxZoom" name="maxZoom"></spinner>
+            </td>
+            <td>
+              <button class="btn btn-secondary" ng-click="basemap.setCurrent('maxZoom')" title="Sets the max zoom to the current zoom level">Current</button>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </div>

@@ -45,7 +45,7 @@
 
       <div ng-if="vector.showReplaceStyle">
         <div class="custom-control custom-checkbox d-inline-block">
-          <input type="checkbox" class="custom-control-input" id="replaceStyle" name="replaceStyle" ng-model="vector.replaceStyle" ng-change="vector.onReplaceStyleChange()"/>
+          <input type="checkbox" class="custom-control-input" id="replaceStyle" name="replaceStyle" ng-model="vector.replaceStyle" ng-change="vector.onReplaceStyleChange()">
           <label class="custom-control-label" for="replaceStyle"> Replace Feature Style</label>
         </div>
       </div>
@@ -108,7 +108,7 @@
       </div>
       <div ng-if="lockable">
         <div class="custom-control custom-checkbox d-inline-block" title="Lock this layer to prevent data from changing">
-          <input type="checkbox" class="custom-control-input" id="lockLayer" name="lockLayer" ng-model="vector.lock" ng-change="vector.onLockChange()"/>
+          <input type="checkbox" class="custom-control-input" id="lockLayer" name="lockLayer" ng-model="vector.lock" ng-change="vector.onLockChange()">
           <label class="custom-control-label" for="lockLayer"> Lock Layer</label>
         </div>
       </div>

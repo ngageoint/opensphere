@@ -17,157 +17,169 @@ describe('os.object', function() {
     return 'maybe';
   };
 
-  it('should merge objects with overwrite', function() {
-    var instance1 = new SomeClass();
-    var from = {
-      nest: {
-        val: true,
-        count: 10
-      },
-      notNest: 'someValue',
-      oldValue: os.object.DELETE_VAL,
-      instance: instance1
-    };
+  describe('merge', function() {
+    it('should merge objects with overwrite', function() {
+      var instance1 = new SomeClass();
+      var from = {
+        nest: {
+          val: true,
+          count: 10
+        },
+        notNest: 'someValue',
+        oldValue: os.object.DELETE_VAL,
+        instance: instance1
+      };
 
-    var to = {
-      notNest: {some: true},
-      oldValue: 'not used'
-    };
+      var to = {
+        notNest: {some: true},
+        oldValue: 'not used'
+      };
 
-    os.object.merge(from, to, true);
-    expect(to.nest.val).toBe(true);
-    expect(to.nest.count).toBe(10);
-    expect(to.notNest).toBe('someValue');
-    expect(to.oldValue).toBe(undefined);
-    expect(to.instance === instance1).toBe(true);
-  });
+      os.object.merge(from, to, true);
+      expect(to.nest.val).toBe(true);
+      expect(to.nest.count).toBe(10);
+      expect(to.notNest).toBe('someValue');
+      expect(to.oldValue).toBe(undefined);
+      expect(to.instance === instance1).toBe(true);
+    });
 
-  it('should merge objects without overwrite', function() {
-    var from = {
-      nest: {
-        val: true,
-        count: 10
-      },
-      notNest: 'someValue',
-      oldValue: os.object.DELETE_VAL
-    };
+    it('should merge objects without overwrite', function() {
+      var from = {
+        nest: {
+          val: true,
+          count: 10
+        },
+        notNest: 'someValue',
+        oldValue: os.object.DELETE_VAL
+      };
 
-    var to = {
-      notNest: {some: true},
-      oldValue: 'not used'
-    };
+      var to = {
+        notNest: {some: true},
+        oldValue: 'not used'
+      };
 
-    os.object.merge(from, to, false);
-    expect(to.nest.val).toBe(true);
-    expect(to.nest.count).toBe(10);
-    expect(to.notNest).not.toBe('someValue');
-    expect(to.oldValue).toBe('not used');
-  });
+      os.object.merge(from, to, false);
+      expect(to.nest.val).toBe(true);
+      expect(to.nest.count).toBe(10);
+      expect(to.notNest).not.toBe('someValue');
+      expect(to.oldValue).toBe('not used');
+    });
 
-  it('should assign values to nested keys', function() {
-    var abc = {};
+    it('should assign values to nested keys', function() {
+      var abc = {};
 
-    // test assigning a key to a path that doesn't exist
-    os.object.set(abc, ['a', 'b', 'c'], 3);
-    expect(abc.a).toBeDefined();
-    expect(abc.a.b).toBeDefined();
-    expect(abc.a.b.c).toBe(3);
+      // test assigning a key to a path that doesn't exist
+      os.object.set(abc, ['a', 'b', 'c'], 3);
+      expect(abc.a).toBeDefined();
+      expect(abc.a.b).toBeDefined();
+      expect(abc.a.b.c).toBe(3);
 
-    // test assigning muliple keys to the same root path
-    os.object.set(abc, ['a', 'b', 'c', 'x'], 'ex');
-    os.object.set(abc, ['a', 'b', 'c', 'y'], 'why');
-    os.object.set(abc, ['a', 'b', 'c', 'z'], 'zzz');
-    expect(abc.a).toBeDefined();
-    expect(abc.a.b).toBeDefined();
-    expect(abc.a.b.c).toBeDefined();
-    expect(abc.a.b.c.x).toBe('ex');
-    expect(abc.a.b.c.y).toBe('why');
-    expect(abc.a.b.c.z).toBe('zzz');
+      // test assigning muliple keys to the same root path
+      os.object.set(abc, ['a', 'b', 'c', 'x'], 'ex');
+      os.object.set(abc, ['a', 'b', 'c', 'y'], 'why');
+      os.object.set(abc, ['a', 'b', 'c', 'z'], 'zzz');
+      expect(abc.a).toBeDefined();
+      expect(abc.a.b).toBeDefined();
+      expect(abc.a.b.c).toBeDefined();
+      expect(abc.a.b.c.x).toBe('ex');
+      expect(abc.a.b.c.y).toBe('why');
+      expect(abc.a.b.c.z).toBe('zzz');
 
 
-    // test assignment of falsy values
-    os.object.set(abc, ['a', 'b', 'c', 'd'], null);
-    expect(abc.a).toBeDefined();
-    expect(abc.a.b).toBeDefined();
-    expect(abc.a.b.c).toBeDefined();
-    expect(abc.a.b.c.d).toBeNull();
+      // test assignment of falsy values
+      os.object.set(abc, ['a', 'b', 'c', 'd'], null);
+      expect(abc.a).toBeDefined();
+      expect(abc.a.b).toBeDefined();
+      expect(abc.a.b.c).toBeDefined();
+      expect(abc.a.b.c.d).toBeNull();
 
-    // test unchanged after empty array
-    os.object.set(abc, [], 'bogus');
-    expect(abc.a).toBeDefined();
-    expect(abc.a.b).toBeDefined();
-    expect(abc.a.b.c).toBeDefined();
-    expect(abc.a.b.c.d).toBeNull();
-    expect(abc.a.b.c.x).toBe('ex');
-    expect(abc.a.b.c.y).toBe('why');
-    expect(abc.a.b.c.z).toBe('zzz');
+      // test unchanged after empty array
+      os.object.set(abc, [], 'bogus');
+      expect(abc.a).toBeDefined();
+      expect(abc.a.b).toBeDefined();
+      expect(abc.a.b.c).toBeDefined();
+      expect(abc.a.b.c.d).toBeNull();
+      expect(abc.a.b.c.x).toBe('ex');
+      expect(abc.a.b.c.y).toBe('why');
+      expect(abc.a.b.c.z).toBe('zzz');
 
-    // test overwriting a key
-    os.object.set(abc, ['a', 'b'], 2);
-    expect(abc.a).toBeDefined();
-    expect(abc.a.b).toBe(2);
-    expect(abc.a.b.c).toBeUndefined();
+      // test overwriting a key
+      os.object.set(abc, ['a', 'b'], 2);
+      expect(abc.a).toBeDefined();
+      expect(abc.a.b).toBe(2);
+      expect(abc.a.b.c).toBeUndefined();
 
-    os.object.set(abc, ['a'], 'AYE');
-    expect(abc.a).toBe('AYE');
+      os.object.set(abc, ['a'], 'AYE');
+      expect(abc.a).toBe('AYE');
 
-    // test assigning as an object
-    os.object.set(abc, ['some', 'object', 'path'], { deeply: { nested: 'here' } });
-    expect(abc.some.object.path).toBeDefined();
-    expect(abc.some.object.path.deeply.nested).toBe('here');
+      // test assigning as an object
+      os.object.set(abc, ['some', 'object', 'path'], {deeply: {nested: 'here'}});
+      expect(abc.some.object.path).toBeDefined();
+      expect(abc.some.object.path.deeply.nested).toBe('here');
 
-    // test assigning a key as a number
-    os.object.set(abc, [1, 2], 'twelve');
-    expect(abc[1][2]).toBe('twelve');
-  });
+      // test assigning a key as a number
+      os.object.set(abc, [1, 2], 'twelve');
+      expect(abc[1][2]).toBe('twelve');
+    });
 
-  it('should ignore the IGNORE_VAL value during merges', function() {
-    var to = {
-      ignoreMe: 'please'
-    };
+    it('should ignore the IGNORE_VAL value during merges', function() {
+      var to = {
+        ignoreMe: 'please'
+      };
 
-    var from = {
-      ignoreMe: os.object.IGNORE_VAL,
-      other: 2
-    };
+      var from = {
+        ignoreMe: os.object.IGNORE_VAL,
+        other: 2
+      };
 
-    os.object.merge(from, to, true);
-    expect(to.ignoreMe).toBe('please');
-    expect(to.other).toBe(2);
-  });
+      os.object.merge(from, to, true);
+      expect(to.ignoreMe).toBe('please');
+      expect(to.other).toBe(2);
+    });
 
-  it('should optionally overwrite with null/undefined', function() {
-    var from = {
-      nested: {
-        field1: null,
-        field2: undefined,
-        field3: true
-      }
-    };
+    it('should optionally overwrite with null/undefined', function() {
+      var from = {
+        nested: {
+          field1: null,
+          field2: undefined,
+          field3: true
+        }
+      };
 
-    var to = {
-      nested: {
-        field1: 0,
-        field2: false,
-        field3: false
-      }
-    };
+      var to = {
+        nested: {
+          field1: 0,
+          field2: false,
+          field3: false
+        }
+      };
 
-    var result = {};
-    os.object.merge(to, result);
-    os.object.merge(from, result, true);
+      var result = {};
+      os.object.merge(to, result);
+      os.object.merge(from, result, true);
 
-    expect(result.nested.field1).toBe(null);
-    expect(result.nested.field2).toBe(undefined);
-    expect(result.nested.field3).toBe(true);
+      expect(result.nested.field1).toBe(null);
+      expect(result.nested.field2).toBe(undefined);
+      expect(result.nested.field3).toBe(true);
 
-    result = {};
-    os.object.merge(to, result);
-    os.object.merge(from, result, true, false);
+      result = {};
+      os.object.merge(to, result);
+      os.object.merge(from, result, true, false);
 
-    expect(result.nested.field1).toBe(0);
-    expect(result.nested.field2).toBe(false);
-    expect(result.nested.field3).toBe(true);
+      expect(result.nested.field1).toBe(0);
+      expect(result.nested.field2).toBe(false);
+      expect(result.nested.field3).toBe(true);
+    });
+
+    it('should handle deleting something that does not exist', function() {
+      var from = {
+        someValueWeHate: os.object.DELETE_VAL
+      };
+      var to = {};
+
+      os.object.merge(from, to);
+      expect(to.someValueWeHate).toBe(undefined);
+    });
   });
 
   it('should extract values', function() {
