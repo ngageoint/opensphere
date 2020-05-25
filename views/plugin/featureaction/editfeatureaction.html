@@ -4,28 +4,28 @@
       <div class="row mb-1">
         <label class="col-form-label col-2 text-right u-required" for="filterTitle">Title</label>
         <div class="col form-inline">
-          <input class="form-control w-50" id="filterTitle" type="text" ng-model="ctrl.title" name="title" required/>
+          <input class="form-control w-50" id="filterTitle" type="text" ng-model="ctrl.title" name="title" required>
           <validation-message target="actionForm.title"></validation-message>
         </div>
       </div>
       <div class="row mb-1">
         <label class="col-form-label col-2 text-right" for="filterDesc">Description</label>
         <div class="col form-inline">
-          <input class="form-control w-50" id="filterDesc" type="text" ng-model="ctrl.description" name="description"/>
+          <input class="form-control w-50" id="filterDesc" type="text" ng-model="ctrl.description" name="description">
         </div>
       </div>
       <div class="row mb-1">
         <label class="col-form-label col-2 text-right" for="filterTags">Tags</label>
         <div class="col form-inline">
-          <input class="form-control w-50" id="filterTags" type="text" ng-model="ctrl.tags" name="tags" placeholder="e.g. Vehicles, People"/>
+          <input class="form-control w-50" id="filterTags" type="text" ng-model="ctrl.tags" name="tags" placeholder="e.g. Vehicles, People">
         </div>
       </div>
 
       <h5 class="mt-1">For data matching the filter...</h5>
 
       <ul class="nav nav-tabs flex-shrink-0">
-        <li class="nav-item"><a href class="nav-link" ng-click="ctrl.setTab('basic')" ng-class="{active: tab == 'basic'}">Basic</a></li>
-        <li class="nav-item"><a href class="nav-link" ng-class="{active: tab == 'advanced'}" ng-click="ctrl.setTab('advanced')">Advanced</a></li>
+        <li class="nav-item"><a class="nav-link" ng-click="ctrl.setTab('basic')" ng-class="{active: tab == 'basic'}">Basic</a></li>
+        <li class="nav-item"><a class="nav-link" ng-class="{active: tab == 'advanced'}" ng-click="ctrl.setTab('advanced')">Advanced</a></li>
       </ul>
       <div class="flex-column d-flex flex-fill">
         <div class="flex-column d-flex flex-fill">

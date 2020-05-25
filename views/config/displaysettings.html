@@ -38,18 +38,20 @@
       <div class="card-header p-1">Initial Position/Zoom</div>
       <div class="card-body p-1">
         <table class="table table-borderless table-sm m-0 text-monospace" ng-if="display.cameraState">
-          <tr>
-            <td>Latitude</td>
-            <td class="col">{{display.cameraState.center[1].toFixed(4)}}</td>
-          </tr>
-          <tr>
-            <td>Longitude</td>
-            <td class="col">{{display.cameraState.center[0].toFixed(4)}}</td>
-          </tr>
-          <tr>
-            <td>Zoom</td>
-            <td class="col">{{display.getZoom()}}</td>
-          </tr>
+          <tbody>
+            <tr>
+              <td>Latitude</td>
+              <td class="col">{{display.cameraState.center[1].toFixed(4)}}</td>
+            </tr>
+            <tr>
+              <td>Longitude</td>
+              <td class="col">{{display.cameraState.center[0].toFixed(4)}}</td>
+            </tr>
+            <tr>
+              <td>Zoom</td>
+              <td class="col">{{display.getZoom()}}</td>
+            </tr>
+          </tbody>
         </table>
         <button class="btn btn-primary" type="button" ng-if="display.cameraMode == 'fixed'"
             ng-click="display.useCurrentPosition()">
@@ -64,7 +66,7 @@
     <div class="form-group">
       <div class="form-check" title="{{display.help.sky}}">
         <input class="form-check-input" id="skyEnabled" type="checkbox" ng-model="display.skyEnabled"
-            ng-change="display.updateSky()" />
+            ng-change="display.updateSky()" >
         <label class="form-check-label col-4 p-0" for="skyEnabled">Enable Sky</label>
         <popover x-title="'Enable Sky'" content="display.help.sky" pos="'right'"></popover>
       </div>
@@ -72,7 +74,7 @@
     <div class="form-group">
       <div class="form-check" title="{{display.help.sunlight}}">
         <input class="form-check-input" id="sunlightEnabled" type="checkbox" ng-model="display.sunlightEnabled"
-            ng-change="display.updateSunlight()" />
+            ng-change="display.updateSunlight()" >
         <label class="form-check-label col-4 p-0" for="sunlightEnabled">Enable Sunlight</label>
         <popover x-title="'Enable Sunlight'" content="display.help.sunlight" pos="'right'"></popover>
       </div>
@@ -80,7 +82,7 @@
     <div class="form-group" ng-if="display.supportsTerrain()">
       <div class="form-check" title="{{display.help.terrain}}">
         <input class="form-check-input" id="terrainEnabled" type="checkbox" ng-model="display.terrainEnabled"
-            ng-change="display.updateTerrain()" />
+            ng-change="display.updateTerrain()" >
         <label class="form-check-label col-4 p-0" for="terrainEnabled">Enable Terrain</label>
         <popover x-title="'Enable Terrain'" content="display.help.terrain" pos="'right'"></popover>
       </div>
@@ -88,7 +90,7 @@
     <div class="form-group" ng-if="display.supportsFog()">
       <div class="form-check" title="{{display.help.fog}}">
         <input class="form-check-input" id="fogEnabled" type="checkbox" ng-model="display.fogEnabled"
-            ng-change="display.updateFog()" />
+            ng-change="display.updateFog()" >
         <label class="form-check-label col-4 p-0" for="fogEnabled">Enable Fog</label>
         <popover x-title="'Enable Fog'" content="display.help.fog" pos="'right'"></popover>
       </div>
@@ -105,12 +107,12 @@
     <div class="form-group row flex-shrink-0" title="{{display.help.help2D}}">
       <label class="col-form-label col-2">2D Flat Map</label>
       <input class="form-control col-2" id="maxFeatures2D" type="number" min="100" max="50000" step="1"
-          ng-model="display.maxFeatures2D" ng-change="display.updateMaxFeatures()" required />
+          ng-model="display.maxFeatures2D" ng-change="display.updateMaxFeatures()" required >
     </div>
     <div class="form-group row flex-shrink-0" ng-if="display.show3DSettings" title="{{display.help.help3D}}">
       <label class="col-form-label col-2">3D Globe</label>
       <input class="form-control col-2" id="maxFeatures3D" type="number" min="100" max="2000000" step="1"
-          ng-model="display.maxFeatures3D" ng-change="display.updateMaxFeatures(true)" required />
+          ng-model="display.maxFeatures3D" ng-change="display.updateMaxFeatures(true)" required >
     </div>
   </div>
 </div>

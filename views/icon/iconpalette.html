@@ -1,7 +1,7 @@
 <div class="d-flex flex-wrap u-overflow-y-auto">
   <div ng-repeat="icon in iconSet" title="{{icon.title}}" class="c-icon-picker__large-icon d-flex p-1">
     <button class="btn btn-secondary" ng-click="palette.pick(icon.path, icon.title)">
-      <img class="img-fluid" ng-src="{{palette.getIconSrc(icon.path)}}" />
+      <img class="img-fluid" ng-src="{{palette.getIconSrc(icon.path)}}" >
     </button>
   </div>
 </div>

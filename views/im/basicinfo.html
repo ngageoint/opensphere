@@ -22,7 +22,7 @@
   <div class="row mt-1" ng-if="!config.titleColumn">
     <label class="col-form-label col-4 text-right u-required">Title</label>
     <div class="col form-inline">
-      <input class="form-control col-11" type="text" name="title" ng-model="config.title" ng-required="true" ng-maxlength="128"/>
+      <input class="form-control col-11" type="text" name="title" ng-model="config.title" ng-required="true" ng-maxlength="128">
       <span class="ml-auto">
         <popover class="float-right" ng-if="help.title" x-title="'Title'" x-content="help.title" x-pos="'right'"></popover>
       </span>
@@ -53,7 +53,7 @@
   <div class="row mt-1" ng-if="!config.descColumn">
     <label class="col-form-label col-4 text-right">Description</label>
     <div class="col form-inline">
-      <input class="form-control col-11" type="text" name="description" ng-model="config.description" ng-maxlength="1000"/>
+      <input class="form-control col-11" type="text" name="description" ng-model="config.description" ng-maxlength="1000">
       <span class="ml-auto">
         <popover class="float-right" ng-if="help.description" x-title="'Description'" x-content="help.description" x-pos="'right'"></popover>
       </span>
@@ -84,7 +84,7 @@
   <div class="row mt-1" ng-if="!config.tagsColumn">
     <label class="col-form-label col-4 text-right">Tags</label>
     <div class="col form-inline">
-      <input class="form-control col-11" type="text" name="tags" ng-model="config.tags" ng-maxlength="1000" placeholder="e.g. UK, Airports"/>
+      <input class="form-control col-11" type="text" name="tags" ng-model="config.tags" ng-maxlength="1000" placeholder="e.g. UK, Airports">
       <span class="ml-auto">
         <popover class="float-right" ng-if="help.tags" x-title="'Tags'" x-content="help.tags" x-pos="'right'"></popover>
       </span>

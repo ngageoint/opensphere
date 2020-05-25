@@ -6,14 +6,14 @@
       <div class="row mt-1">
         <label class="col-form-label col-4 text-right u-required">Replace Areas</label>
         <div class="col form-inline">
-          <input type="checkbox" class="form-control" name="replace" ng-model="ctrl.replace"/>
+          <input type="checkbox" class="form-control" name="replace" ng-model="ctrl.replace">
           <span class="ml-auto">
             <popover ng-if="ctrl.help.replace" x-title="'Replace Areas'" x-content="ctrl.help.replace" x-pos="'right'"></popover>
           </span>
         </div>
       </div>
 
-      <input type="submit" class="form-control d-none">
+      <input type="submit" hidden>
     </form>
   </div>
   <div class="modal-footer">
