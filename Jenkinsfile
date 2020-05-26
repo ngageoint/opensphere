@@ -71,6 +71,7 @@ node(getLabel()) {
         stage('package') {
           dir('dist') {
             def specialCharRegex = /[\W_&&[^\s]]/
+            env.BRANCH_NAME = env.BRANCH_NAME ? env.BRANCH_NAME : 'master'
             def branchZipName = env.BRANCH_NAME.replaceAll(specialCharRegex, '')
             sh "zip -q -r opensphere-${branchZipName}-${env.BUILD_NUMBER}.zip opensphere"
 
