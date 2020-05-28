@@ -221,6 +221,26 @@ os.config.DisplaySettingsCtrl = function($scope) {
    */
   this['maxFeatures3D'] = 150000;
 
+  /**
+   * Need a button to reset everything if the renderer changes
+   * @type {boolean}
+   */
+  this['resetButtonActive'] = false;
+
+  /**
+   * The available 3D renderers
+   * @type {Array<Object<string, string>>}
+   */
+  this['renderers3D'] = this.parseRenderers_();
+
+  /**
+   * The current 3D renderer
+   * @type {string|undefined}
+   */
+  this['renderer'] = os.settings.get(os.webgl.AbstractWebGLRenderer.ACTIVE_SETTINGS_KEY);
+
+  $scope.$watch('display.renderer', this.updateRenderer_.bind(this));
+
   $scope.$watch('display.fogEnabled', this.updateFog.bind(this));
   $scope.$watch('display.fogDensity', this.updateFog.bind(this));
 
@@ -235,6 +255,14 @@ os.config.DisplaySettingsCtrl = function($scope) {
 
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
+
+
+/**
+ * Use this if something goes wrong with retrieving renderer ids
+ * @type {string}
+ * @const
+ */
+os.config.DisplaySettingsCtrl.DEFAULT_RENDERER_ID = 'unknown';
 
 
 /**
@@ -428,6 +456,55 @@ os.config.DisplaySettingsCtrl.prototype.getZoom = function() {
   }
 
   return os.map.DEFAULT_ZOOM.toFixed(1);
+};
+
+
+/**
+ * Get some info about the renderers for display purposes
+ * @return {Array<Object<string, string>>}
+ * @private
+ */
+os.config.DisplaySettingsCtrl.prototype.parseRenderers_ = function() {
+  const retArr = [];
+  const renderers = os.MapContainer.getInstance().getWebGLRenderers();
+  if (renderers) {
+    for (const [key, val] of Object.entries(renderers)) {
+      const temp = {};
+      temp['id'] = key == val.getId() ? key : os.config.DisplaySettingsCtrl.DEFAULT_RENDERER_ID;
+      temp['label'] = val.getLabel();
+      temp['desc'] = val.getDescription();
+      retArr.push(temp);
+    }
+  }
+  return retArr.sort((a, b) => a['label'].localeCompare(b['label']));
+};
+
+
+/**
+ * Renderer updated, show the button?
+ * @private
+ */
+os.config.DisplaySettingsCtrl.prototype.updateRenderer_ = function() {
+  const currentRenderer = os.MapContainer.getInstance().getWebGLRenderer();
+  const id = currentRenderer ? currentRenderer.getId() : undefined;
+  this['resetButtonActive'] = id == this['renderer'] ? false : true;
+};
+
+
+/**
+ * Update the renderer, upon apply and reset
+ * @export
+ */
+os.config.DisplaySettingsCtrl.prototype.refreshApply = function() {
+  // default to whatever was in there before id id could not be determined
+  this['renderer'] = this['renderer'] == os.config.DisplaySettingsCtrl.DEFAULT_RENDERER_ID ?
+        os.settings.get(os.webgl.AbstractWebGLRenderer.ACTIVE_SETTINGS_KEY) : this['renderer'];
+
+  // use this renderer from now on
+  os.settings.set(os.webgl.AbstractWebGLRenderer.ACTIVE_SETTINGS_KEY, this['renderer']);
+  os.settings.save().then(() => {
+    location.reload();
+  });
 };
 
 
