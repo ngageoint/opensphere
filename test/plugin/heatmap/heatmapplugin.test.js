@@ -38,7 +38,7 @@ describe('plugin.heatmap.HeatmapPlugin', function() {
     var layer = createLayer();
     var sm = os.webgl.SynchronizerManager.getInstance();
     var synchronizer = sm.getSynchronizer(layer);
-    expect(synchronizer).toBe(plugin.heatmap.HeatmapSynchronizer);
+    expect(synchronizer).toBe(plugin.cesium.sync.HeatmapSynchronizer);
     sm.synchronizers_ = {};
 
     var dm = os.dataManager;
