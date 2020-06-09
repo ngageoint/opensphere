@@ -102,7 +102,11 @@ os.ui.Consent.prototype.process = function(data, type, sender, time) {
  */
 os.ui.Consent.prototype.update_ = function() {
   var cookie = new goog.net.Cookies(window.document);
-  cookie.set('consent', 'true', this.refresh, '/', null, false);
+  cookie.set(
+      'consent',
+      'true',
+      /** @type {!goog.net.Cookies.SetOptions} */ ({maxAge: this.refresh, path: '/', secure: false})
+  );
 };
 
 

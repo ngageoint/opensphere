@@ -78,7 +78,7 @@ os.ogc.wfs.DescribeFeatureLoader.prototype.setUrl = function(value) {
     this.url_ = value.substring(0, i);
 
     if (!this.typename_) {
-      var qd = new goog.Uri.QueryData(value.substring(i + 1), undefined, false);
+      var qd = new goog.Uri.QueryData(value.substring(i + 1), false);
       if (qd) {
         // flipping ignoreCase from false to true will lowercase all keys
         qd.setIgnoreCase(true);
