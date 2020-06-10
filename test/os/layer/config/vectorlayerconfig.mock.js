@@ -9,7 +9,7 @@ goog.require('os.source.Vector');
  * @constructor
  */
 os.layer.config.MockVectorLayerConfig = function() {
-  goog.base(this);
+  os.layer.config.MockVectorLayerConfig.base(this, 'constructor');
 };
 goog.inherits(os.layer.config.MockVectorLayerConfig, os.layer.config.AbstractLayerConfig);
 

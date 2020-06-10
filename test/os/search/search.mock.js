@@ -16,7 +16,7 @@ goog.require('os.search.SearchEventType');
  * @constructor
  */
 os.search.MockSearch = function(id, name, value, score) {
-  goog.base(this, id, name, 'test', 100);
+  os.search.MockSearch.base(this, 'constructor', id, name, 'test', 100);
   this.id_ = id;
   this.name_ = name;
   this.value_ = value;

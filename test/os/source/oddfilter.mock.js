@@ -6,7 +6,7 @@ goog.require('os.filter.AbstractFilter');
  * An odd filter, it only returns true for odd indices in the source array.
  */
 os.data.filter.OddFilter = function() {
-  goog.base(this);
+  os.data.filter.OddFilter.base(this, 'constructor');
 };
 goog.inherits(os.data.filter.OddFilter, os.filter.AbstractFilter);
 

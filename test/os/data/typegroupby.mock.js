@@ -11,7 +11,7 @@ goog.require('goog.array');
  * @constructor
  */
 os.data.groupby.MockTypeGroupBy = function() {
-  goog.base(this);
+  os.data.groupby.MockTypeGroupBy.base(this, 'constructor');
 };
 goog.inherits(os.data.groupby.MockTypeGroupBy, os.data.groupby.BaseGroupBy);
 
