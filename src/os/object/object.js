@@ -161,7 +161,7 @@ os.object.reduce = function(obj, opt_prefix, opt_delim) {
 
   // skip undefined values
   if (obj !== undefined) {
-    if (os.object.isPrimitive(obj) || goog.isArray(obj)) {
+    if (os.object.isPrimitive(obj) || Array.isArray(obj)) {
       // write primitives and arrays to the reduced result
       result[prefix] = obj;
     } else if (goog.isObject(obj)) {

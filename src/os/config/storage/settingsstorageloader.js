@@ -123,7 +123,7 @@ os.config.storage.SettingsStorageLoader.prototype.onGet_ = function(loadedConfig
   var loadedConfigCopy = /** @type {Object} */ (os.object.unsafeClone(loadedConfig));
   if (goog.object.containsKey(loadedConfigCopy, os.config.ConfigType.OVERRIDES)) {
     var overrides = loadedConfigCopy[os.config.ConfigType.OVERRIDES];
-    if (goog.isArray(overrides)) {
+    if (Array.isArray(overrides)) {
       for (var i = 0, ii = overrides.length; i < ii; i++) {
         this.registry_.addStorage(
             new os.config.storage.SettingsFile(overrides[i], true), this.currentReadIndex_ + i + 1);
@@ -146,7 +146,7 @@ os.config.storage.SettingsStorageLoader.prototype.onGet_ = function(loadedConfig
         if (key) {
           var existingKeys = os.config.ConfigType.PREFERENCE + '.' + ns + '.' + key;
           var existingVal = goog.object.getValueByKeys(this.loadConfig_, existingKeys.split('.'));
-          if (goog.isArray(existingVal) && goog.isArray(value) &&
+          if (Array.isArray(existingVal) && Array.isArray(value) &&
               JSON.stringify(existingVal) != JSON.stringify(value)) {
             goog.log.info(os.config.storage.SettingsStorageLoader.LOGGER_, 'Merging settings arrays - ' +
                 'existingVal: ' + existingVal + ', value: ' + value);

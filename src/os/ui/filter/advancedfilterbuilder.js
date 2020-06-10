@@ -191,7 +191,7 @@ os.ui.filter.AdvancedFilterBuilderCtrl.prototype.doEditExpr_ = function(expr, tr
  */
 os.ui.filter.AdvancedFilterBuilderCtrl.prototype.getAddParent_ = function() {
   var item = this['selected'];
-  if (goog.isArray(item)) {
+  if (Array.isArray(item)) {
     if (item.length > 0) {
       // pick the first one, though multi-select should be disabled
       item = /** @type {os.structs.ITreeNode} */ (item[0]);

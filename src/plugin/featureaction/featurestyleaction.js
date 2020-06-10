@@ -130,7 +130,7 @@ plugin.im.action.feature.StyleAction.prototype.execute = function(items) {
       featureConfig['temporary'] = true;
 
       // merge style changes into the feature config and set it on the feature
-      if (goog.isArray(featureConfig)) {
+      if (Array.isArray(featureConfig)) {
         for (var j = 0; j < featureConfig.length; j++) {
           featureConfig[j]['zIndex'] = 10;
           os.style.mergeConfig(this.styleConfig, featureConfig[j]);
@@ -365,7 +365,7 @@ plugin.im.action.feature.StyleAction.prototype.fromXml = function(xml) {
     var lineData = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.LINE_DASH);
     if (lineData) {
       var lineDash = JSON.parse(lineData);
-      if (lineDash && goog.isArray(lineDash)) {
+      if (lineDash && Array.isArray(lineDash)) {
         os.style.setConfigLineDash(styleConfig, /** @type {Array<number>} */ (lineDash));
       }
     }

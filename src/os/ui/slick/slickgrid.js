@@ -1181,7 +1181,7 @@ os.ui.slick.SlickGridCtrl.prototype.onSelectedChange = function(newVal, opt_oldV
 
     // Only set selection if it was clicked
     if (newVal) {
-      newVal = goog.isArray(newVal) ? newVal : [newVal];
+      newVal = Array.isArray(newVal) ? newVal : [newVal];
       this.setSelectedRows(newVal.map(this.mapItemsToRows, this));
     } else {
       this.setSelectedRows([]);

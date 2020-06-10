@@ -891,7 +891,7 @@ os.MainCtrl.prototype.onImportEvent_ = function(opt_event) {
 os.MainCtrl.prototype.onLayerConfigEvent_ = function(event) {
   var options = event.options;
   if (options) {
-    if (goog.isArray(options)) {
+    if (Array.isArray(options)) {
       var cmds = [];
       for (var i = 0, n = options.length; i < n; i++) {
         var option = goog.object.clone(options[i]);

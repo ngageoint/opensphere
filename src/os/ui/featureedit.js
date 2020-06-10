@@ -1044,7 +1044,7 @@ os.ui.FeatureEditCtrl.prototype.loadFromFeature = function(feature) {
   var config = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
   var featureColor;
   if (config) {
-    if (goog.isArray(config)) {
+    if (Array.isArray(config)) {
       // locate the label config in the array
       var labelsConfig = ol.array.find(config, os.style.isLabelConfig);
       if (labelsConfig) {
@@ -1732,7 +1732,7 @@ os.ui.FeatureEditCtrl.calculateXPosition = function(geom) {
 os.ui.FeatureEditCtrl.persistFeatureLabels = function(feature) {
   if (feature) {
     var configs = /** @type {Array|Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
-    var config = goog.isArray(configs) ? configs[0] : configs;
+    var config = Array.isArray(configs) ? configs[0] : configs;
     if (config) {
       var labels = config[os.style.StyleField.LABELS];
       var labelNames;
@@ -1778,7 +1778,7 @@ os.ui.FeatureEditCtrl.restoreFeatureLabels = function(feature) {
       feature.get(os.style.StyleType.FEATURE));
 
     if (configs) {
-      if (goog.isArray(configs)) {
+      if (Array.isArray(configs)) {
         configs.forEach(function(config) {
           os.ui.FeatureEditCtrl.restoreFeatureConfigLabels(feature, config);
         });
@@ -1841,7 +1841,7 @@ os.ui.FeatureEditCtrl.restoreFeatureConfigLabels = function(feature, config) {
 os.ui.FeatureEditCtrl.updateFeatureStyle = function(feature) {
   if (feature) {
     var configs = /** @type {Array|Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
-    var config = goog.isArray(configs) ? configs[0] : configs;
+    var config = Array.isArray(configs) ? configs[0] : configs;
     if (config) {
       var shape = /** @type {string|undefined} */ (feature.get(os.style.StyleField.SHAPE));
       if (shape != null) {

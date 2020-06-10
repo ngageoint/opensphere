@@ -87,7 +87,7 @@ os.data.xf.DataModel.prototype.add = function(items) {
   if (!this.isDisposed()) {
     var then = Date.now();
 
-    if (!goog.isArray(items)) {
+    if (!Array.isArray(items)) {
       items = [items];
     }
 

@@ -216,7 +216,7 @@ os.ui.feature.MultiFeatureInfoCtrl.prototype.getValueFromFeature = function(feat
  * @param {string=} opt_titleDetail Title of the containing layer
  */
 os.ui.feature.launchMultiFeatureInfo = function(features, opt_titleDetail) {
-  features = goog.isArray(features) ? features : [features];
+  features = Array.isArray(features) ? features : [features];
   var winLabel = opt_titleDetail || 'Feature Info';
   var windowId = 'featureInfo';
 

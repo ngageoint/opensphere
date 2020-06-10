@@ -113,7 +113,7 @@ os.data.DrawingFeatureNode.prototype.setFeature = function(feature) {
 
       if (!this.feature_.get(key)) {
         var style = this.feature_.getStyle();
-        this.feature_.set(key, goog.isArray(style) ? style : [style], true);
+        this.feature_.set(key, Array.isArray(style) ? style : [style], true);
       }
     }
   }

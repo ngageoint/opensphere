@@ -392,7 +392,7 @@ os.state.v4.BaseLayerState.prototype.layerToXML = function(layer, options, opt_e
   var type = this.getLayerType_(layer);
 
   if (opt_exclusions != null) {
-    var exclusions = goog.isArray(opt_exclusions) ? opt_exclusions : [opt_exclusions];
+    var exclusions = Array.isArray(opt_exclusions) ? opt_exclusions : [opt_exclusions];
     tagExclusions = goog.array.join(tagExclusions, exclusions);
   }
   for (var i = 0, n = tagExclusions.length; i < n; i++) {
@@ -716,7 +716,7 @@ os.state.v4.BaseLayerState.prototype.defaultConfigToXML = function(key, value, l
     }
 
     os.xml.appendElement(key, layerEl, value);
-  } else if (goog.isArray(value)) {
+  } else if (Array.isArray(value)) {
     var arr = /** @type {Array} */ (value);
     var childName = goog.string.endsWith(key, 's') ? key.substring(0, key.length - 1) : key;
     node = os.xml.appendElement(key, layerEl);
@@ -828,7 +828,7 @@ os.state.v4.BaseLayerState.prototype.analyzeOptions = function(options, id) {
       var params = layerOptions['params'];
       if (params) {
         var paramsTypeName = params.get('typename');
-        if (goog.isArray(paramsTypeName)) {
+        if (Array.isArray(paramsTypeName)) {
           typeName = paramsTypeName[0];
         } else {
           typeName = paramsTypeName;

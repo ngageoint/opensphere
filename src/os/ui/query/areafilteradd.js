@@ -406,7 +406,7 @@ os.ui.query.AreaFilterAddCtrl.prototype.add = function() {
  * @private
  */
 os.ui.query.AreaFilterAddCtrl.prototype.addFromNodes_ = function(nodes) {
-  if (!goog.isArray(nodes)) {
+  if (!Array.isArray(nodes)) {
     nodes = [nodes];
   }
 

@@ -2873,7 +2873,7 @@ os.source.Vector.prototype.onFeatureAction_ = function(event) {
   var context = event.getContext();
 
   if (context && os.action) {
-    context = !goog.isArray(context) ? [context] : context;
+    context = !Array.isArray(context) ? [context] : context;
 
     var features = [];
     for (var i = 0, n = context.length; i < n; i++) {
@@ -3208,7 +3208,7 @@ os.source.Vector.prototype.getSelectedItems = function() {
  * @inheritDoc
  */
 os.source.Vector.prototype.setSelectedItems = function(items) {
-  if (!goog.isArray(items)) {
+  if (!Array.isArray(items)) {
     items = [items];
   }
 
@@ -3242,7 +3242,7 @@ os.source.Vector.prototype.setSelectedItems = function(items) {
  * @inheritDoc
  */
 os.source.Vector.prototype.addToSelected = function(features) {
-  if (!goog.isArray(features)) {
+  if (!Array.isArray(features)) {
     features = [features];
   }
 
@@ -3271,7 +3271,7 @@ os.source.Vector.prototype.addToSelected = function(features) {
  * @param {boolean=} opt_skipStyle
  */
 os.source.Vector.prototype.removeFromSelected = function(features, opt_skipStyle) {
-  if (!goog.isArray(features)) {
+  if (!Array.isArray(features)) {
     features = [features];
   }
 
@@ -3441,7 +3441,7 @@ os.source.Vector.prototype.hideAll = function() {
  * @inheritDoc
  */
 os.source.Vector.prototype.hideFeatures = function(features) {
-  if (!goog.isArray(features)) {
+  if (!Array.isArray(features)) {
     features = [features];
   }
 
@@ -3453,7 +3453,7 @@ os.source.Vector.prototype.hideFeatures = function(features) {
  * @inheritDoc
  */
 os.source.Vector.prototype.showFeatures = function(features) {
-  if (!goog.isArray(features)) {
+  if (!Array.isArray(features)) {
     features = [features];
   }
 
@@ -3482,7 +3482,7 @@ os.source.Vector.prototype.hideById = function(ids, opt_show) {
  * @param {!ol.Feature|Array<!ol.Feature>} features
  */
 os.source.Vector.prototype.setVisibleFeatures = function(features) {
-  if (!goog.isArray(features)) {
+  if (!Array.isArray(features)) {
     features = [features];
   }
 

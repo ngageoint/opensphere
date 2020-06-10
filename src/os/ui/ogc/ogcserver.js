@@ -757,7 +757,7 @@ os.ui.ogc.OGCServer.prototype.parseWmsCapabilities = function(response, uri) {
       if (layerList) {
         // if the WMS server only has a single root layer folder, then we'll save the user a click by removing it
         var crsList;
-        if (!goog.isArray(layerList) && 'Layer' in layerList) {
+        if (!Array.isArray(layerList) && 'Layer' in layerList) {
           crsList = /** @type {?Array<string>} */ (goog.object.getValueByKeys(result, 'Capability', 'Layer', 'CRS') ||
               goog.object.getValueByKeys(result, 'Capability', 'Layer', 'SRS'));
 
@@ -1197,7 +1197,7 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
       layer.setToolTip(layerDescriptor.getDescription() || '');
 
       var childList = node['Layer'];
-      if (!goog.isArray(childList)) {
+      if (!Array.isArray(childList)) {
         childList = [childList];
       }
 

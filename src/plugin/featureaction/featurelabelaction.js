@@ -150,7 +150,7 @@ plugin.im.action.feature.LabelAction.prototype.execute = function(items) {
         featureConfig['temporary'] = true;
 
         // apply label config
-        if (goog.isArray(featureConfig)) {
+        if (Array.isArray(featureConfig)) {
           for (var j = 0; j < featureConfig.length; j++) {
             featureConfig[j][os.style.StyleField.LABELS] = labels;
             featureConfig[j][os.style.StyleField.LABEL_COLOR] = labelColor;

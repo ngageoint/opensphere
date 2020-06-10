@@ -86,7 +86,7 @@ plugin.file.kml.KMLTreeExporter.prototype.getChildren = function(item) {
  */
 plugin.file.kml.KMLTreeExporter.prototype.getColor = function(item) {
   var featureColor = os.feature.getColor(item.getFeature());
-  if (!featureColor || (typeof featureColor != 'string' && !goog.isArray(featureColor))) {
+  if (!featureColor || (typeof featureColor != 'string' && !Array.isArray(featureColor))) {
     featureColor = os.style.DEFAULT_LAYER_COLOR;
   }
 
@@ -179,7 +179,7 @@ plugin.file.kml.KMLTreeExporter.prototype.getIcon = function(item) {
     var config = /** @type {Array<Object>|Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
 
     // may be an array of configs - use the first one (feature style)
-    if (goog.isArray(config)) {
+    if (Array.isArray(config)) {
       config = feature instanceof os.feature.DynamicFeature ? config[1] : config[0];
     }
 

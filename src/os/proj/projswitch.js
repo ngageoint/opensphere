@@ -103,7 +103,7 @@ os.proj.switch.checkCommand = function(command) {
 
   var retVal = true;
   if (options) {
-    options = goog.isArray(options) ? options : [options];
+    options = Array.isArray(options) ? options : [options];
     options.forEach(function(opts) {
       var projections = /** @type {!Array<!string>} */ (opts['projections'] || []);
 

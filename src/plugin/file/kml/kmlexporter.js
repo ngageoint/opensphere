@@ -84,7 +84,7 @@ plugin.file.kml.KMLExporter.prototype.supportsMultiple = function() {
  */
 plugin.file.kml.KMLExporter.prototype.getColor = function(item) {
   var itemColor = os.feature.getColor(item, this.getSource_(item));
-  if (!itemColor || (typeof itemColor != 'string' && !goog.isArray(itemColor))) {
+  if (!itemColor || (typeof itemColor != 'string' && !Array.isArray(itemColor))) {
     itemColor = os.style.DEFAULT_LAYER_COLOR;
   }
   return os.style.toAbgrString(itemColor);
@@ -370,7 +370,7 @@ plugin.file.kml.KMLExporter.prototype.getGroupLabels = function(item) {
         // Check the layer level
         if (cfg && cfg['labels'] && this.checkLabelsNotNull_(cfg['labels'])) {
           this.labelMap[sourceId] = cfg['labels'];
-        } else if (itemStyle && goog.isArray(itemStyle)) {
+        } else if (itemStyle && Array.isArray(itemStyle)) {
           // Check the feature level
           var labels = ol.array.find(itemStyle, os.style.isLabelConfig);
           if (labels) {
