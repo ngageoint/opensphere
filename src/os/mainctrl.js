@@ -186,7 +186,7 @@ goog.require('plugin.xyz.XYZPlugin');
  * @extends {os.ui.AbstractMainCtrl}
  */
 os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
-  os.MainCtrl.base(this, 'constructor', $scope, $injector, os.ROOT, 'OpenSphere');
+  os.MainCtrl.base(this, 'constructor', $scope, $injector, os.ROOT, os.DefaultAppName);
 
   /**
    * @type {?angular.$timeout}

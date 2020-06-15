@@ -30,6 +30,12 @@ os.MainAppSelector = '.os-app';
 
 
 /**
+ * @type {string}
+ */
+os.DefaultAppName = 'OpenSphere';
+
+
+/**
  * Whether or not we're in OSX
  *
  * @return {boolean}
