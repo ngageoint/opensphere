@@ -16,7 +16,7 @@ os.ui.alert.alertLinkFilter = function($sce) {
     if (typeof text == 'string') {
       text = os.ui.sanitize(text);
       text = text.replace(/\[([^|]+)\|([^\]]+)\]/g,
-          '<a onclick="$(this).scope().$emit(\'dispatch\',\'$2\')" class="u-link-style">$1</a>');
+          '<button onclick="$(this).scope().$emit(\'dispatch\',\'$2\')" class="btn btn-link">$1</button>');
       return $sce.trustAsHtml(text);
     }
 
