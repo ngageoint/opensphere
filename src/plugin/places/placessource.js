@@ -54,5 +54,7 @@ plugin.places.PlacesSource.prototype.updateVisibilityFromNodes = function() {
  * @protected
  */
 plugin.places.PlacesSource.prototype.updateTrackZIndex = function() {
-  os.track.updateTrackZIndex(this.rootNode.getFeatures(false));
+  if (this.rootNode) {
+    os.track.updateTrackZIndex(this.rootNode.getFeatures(false));
+  }
 };
