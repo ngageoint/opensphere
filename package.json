@@ -132,7 +132,7 @@
     "copy:config": "cp .build/settings.json dist/opensphere/config",
     "copy:resources": "xargs -n 2 cp -r < .build/resources-copy-files",
     "copy": "npm run copy:files && npm run copy:images && npm run copy:onboarding && npm run copy:views && npm run copy:config && npm run copy:resources",
-    "rename": "find dist -type f | xargs perl -pi -e \"s#{APP}#$(json admin.about.application < .build/settings.json)#g\"",
+    "rename": "find dist -type f | xargs perl -pi -e \"s#{APP}#$(json -a admin.brand.opensphere admin.about.application -d '\\n'< .build/settings.json | sed '/^$/d' | head -n 1)#g\"",
     "build": "npm run init && npm run lint && npm run genlibs && npm run compile && npm run copy && npm run build:index && npm run rename",
     "build:nolint": "npm run init && npm run genlibs && npm run compile && npm run copy && npm run build:index && npm run rename",
     "build:debug": "npm run init && npm run genlibs && npm run compile:resolve && npm run compile:debugcss && npm run build:debugindex",
