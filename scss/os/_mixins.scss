@@ -61,7 +61,7 @@
     @content;
   }
 
-  .u-bg-#{$color}-text-a .u-link-style,
+  .u-bg-#{$color}-text-a .btn.btn-link,
   .u-bg-#{$color}-text-a a {
     @content;
   }
