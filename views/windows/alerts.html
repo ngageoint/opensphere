@@ -7,7 +7,8 @@
         <span class="float-right">{{alert.time}}</span>
         <span><i class="fa" ng-class="{'Error':'fa-ban','Warning':'fa-warning','Success':'fa-check','Info':'fa-info-circle'}[alert.severity]"></i>
           <strong>{{alert.severity}}</strong></span>
-        <div ng-bind-html="alert.msg | alertlink"></div>
+        <span ng-if="alert.count > 1" class="badge badge-light display-inline-block">{{alert.count}}</span>
+        <span ng-bind-html="alert.msg | alertlink" class="display-inline-block"></span>
       </div>
     </div>
   </div>
@@ -16,7 +17,6 @@
       <input id="alerts__show-popups" class="custom-control-input" type="checkbox" ng-checked="ctrl.showAlertPopups" ng-click="ctrl.toggleAlertPopups()">
       <label for="alerts__show-popups" class="custom-control-label">Show Popups</label>
     </div>
-
     <button title="Clear all alerts" type="button" class="ml-auto btn btn-secondary" ng-click="ctrl.clearAlerts()" ng-disabled="ctrl.alertArray.length <= 0">
       <i class="fa fa-times"></i>
       Clear Alerts
