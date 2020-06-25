@@ -244,6 +244,7 @@ os.ui.alert.AlertPopupCtrl.prototype.displayAlert_ = function(event) {
     var message = event.getMessage();
     var popup = {
       'id': id,
+      'count': event.getCount(),
       'msg': message,
       'severity': event.getSeverity().toString(),
       'timeout': dismiss
