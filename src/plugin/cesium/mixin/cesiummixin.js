@@ -9,39 +9,6 @@ goog.require('os.net.Request');
 
 
 /**
- * This "fixes" Cesium's lackluster crossOrigin support by setting crossOrigin on the image to an actual value.
- * Firefox will not be able to load tiles without this change.
- *
- * @param {string} url
- * @param {boolean} crossOrigin
- * @param {*} deferred
- */
-plugin.cesium.mixin.createImage = function(url, crossOrigin, deferred) {
-  var image = new Image();
-
-  /**
-   * @param {Event} e
-   */
-  image.onload = function(e) {
-    deferred.resolve(image);
-  };
-
-  /**
-   * @param {Event} e
-   */
-  image.onerror = function(e) {
-    deferred.reject(e);
-  };
-
-  if (crossOrigin) {
-    image.crossOrigin = os.net.getCrossOrigin(url);
-  }
-
-  image.src = url;
-};
-
-
-/**
  * Load Cesium mixins.
  *
  * @throws {Error} If Cesium has not been loaded.
@@ -51,10 +18,33 @@ plugin.cesium.mixin.loadCesiumMixins = function() {
     throw new Error('Cesium has not been loaded!');
   }
 
+  const oldCreateImage = Cesium.Resource._Implementations.createImage;
+
   /**
+   * This "fixes" Cesium's lackluster crossOrigin support by setting crossOrigin on the image to an actual value.
+   * Firefox will not be able to load tiles without this change.
+   *
+   * @param {Cesium.ResourceFetchOptions} options
+   * @param {boolean} crossOrigin
+   * @param {Cesium.Promise} promise
+   * @param {boolean} flipY
+   * @param {boolean} preferImageBitmap
+   *
    * @suppress {accessControls|duplicate}
    */
-  Cesium.Resource._Implementations.createImage = plugin.cesium.mixin.createImage;
+  Cesium.Resource._Implementations.createImage = (options, crossOrigin, promise, flipY, preferImageBitmap) => {
+    let url = options.url || '';
+    if (crossOrigin) {
+      const osCrossOrigin = os.net.getCrossOrigin(url);
+      if (osCrossOrigin != os.net.CrossOrigin.NONE) {
+        url = new URL(url);
+        Cesium.TrustedServers.add(url.hostname, parseInt(url.port, 10));
+      }
+    }
+
+    oldCreateImage(options, crossOrigin, promise, flipY, preferImageBitmap);
+  };
+
 
   /**
    * Hook Cesium into our request stack
@@ -114,7 +104,7 @@ plugin.cesium.mixin.loadCesiumMixins = function() {
     this.color = color;
   };
 
-  Cesium.defineProperties(Cesium.PickId.prototype, {
+  Object.defineProperties(Cesium.PickId.prototype, {
     'object': {
       get:
           /**

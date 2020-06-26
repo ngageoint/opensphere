@@ -11,7 +11,6 @@ goog.require('plugin.file.csv.CSVParserConfig');
 goog.require('plugin.file.csv.CSVProvider');
 
 
-
 /**
  * Controller for the CSV import wizard window
  *

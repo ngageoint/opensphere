@@ -62,8 +62,6 @@ goog.inherits(plugin.cesium.Camera, olcs.Camera);
 
 /**
  * Replace the olcs camera with ours.
- *
- * @suppress {checkTypes} Because hacks.
  */
 plugin.cesium.replaceCamera = function() {
   olcs.Camera = plugin.cesium.Camera;
