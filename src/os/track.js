@@ -13,7 +13,6 @@ goog.require('os.events.PropertyChangeEvent');
 goog.require('os.feature');
 goog.require('os.feature.DynamicFeature');
 goog.require('os.feature.DynamicPropertyChange');
-goog.require('os.geom.GeometryField');
 goog.require('os.interpolate');
 goog.require('os.object');
 goog.require('os.ogc.filter.OGCFilterOverride');
@@ -790,9 +789,6 @@ os.track.setGeometry = function(track, geometry) {
   os.track.updateTime(track);
   os.track.updateCurrentPosition(track);
 
-  // mark the line as dirty so the WebGL feature converter recreates it
-  geometry.set(os.geom.GeometryField.DIRTY, true);
-
   // notify listeners that the track geometry has changed
   track.dispatchEvent(new os.events.PropertyChangeEvent(os.feature.DynamicPropertyChange.GEOMETRY));
 };
@@ -1497,9 +1493,6 @@ os.track.updateCurrentLine = function(track, startTime, startIndex, endTime, end
       os.track.setShowMarker(track, true);
     }
   }
-
-  // mark the line as dirty so the WebGL feature converter recreates it
-  currentLine.set(os.geom.GeometryField.DIRTY, true);
 
   // update the current line geometry
   if (currentLine instanceof ol.geom.LineString) {

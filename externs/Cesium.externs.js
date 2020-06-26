@@ -280,6 +280,16 @@ Cesium.Color.fromRgba = function(value) {};
 
 
 /**
+ * @param {number} red
+ * @param {number} blue
+ * @param {number} green
+ * @param {number} alpha
+ * @param {Cesium.Color=} opt_result
+ * @return {!Cesium.Color}
+ */
+Cesium.Color.fromBytes = function(red, blue, green, alpha, opt_result) {};
+
+/**
  * @param {string} name
  * @param {Cesium.Color=} opt_result
  * @return {!Cesium.Color}
@@ -311,12 +321,37 @@ Cesium.Color.byteToFloat = function(component) {};
 Cesium.prototype.writeTextToCanvas = function(text, opt_description) {};
 
 
+/**
+ * @typedef {HTMLCanvasElement|HTMLVideoElement|Image|string}
+ */
+Cesium.ImageLike;
+
 
 /**
  * @constructor
  */
 Cesium.Billboard = function() {};
 
+
+/**
+ * @type {string|undefined}
+ */
+Cesium.Billboard.prototype._imageId;
+
+/**
+ * @type {number|undefined}
+ */
+Cesium.Billboard.prototype._imageHeight;
+
+/**
+ * @type {number|undefined}
+ */
+Cesium.Billboard.prototype._imageWidth;
+
+/**
+ * @type {Promise<number>|undefined}
+ */
+Cesium.Billboard.prototype._imageIndexPromise;
 
 /**
  * @type {Cesium.Cartesian3}
@@ -393,7 +428,7 @@ Cesium.Billboard.prototype.geomRevision;
 
 /**
  * @param {string|number} id The image id
- * @param {HTMLCanvasElement|HTMLVideoElement|Image|string} image The new image
+ * @param {Cesium.ImageLike|Promise<Cesium.ImageLike>|function(string=):Cesium.ImageLike} image The new image
  */
 Cesium.Billboard.prototype.setImage = function(id, image) {};
 
@@ -455,7 +490,7 @@ Cesium.BillboardCollection = function(opt_options) {};
 
 /**
  * @typedef {{
- *   image: (string|HTMLCanvasElement|HTMLImageElement|Image),
+ *   image: (Cesium.ImageLike|Promise<Cesium.ImageLike>|function(string=):Cesium.ImageLike),
  *   imageId: (string|number),
  *   color: (Cesium.Color|undefined),
  *   verticalOrigin: (Cesium.VerticalOrigin|undefined),
@@ -1831,7 +1866,7 @@ Cesium.Appearance.prototype.translucent;
  * @typedef {{
  *   asynchronous: (boolean|undefined),
  *   releaseGeometryInstances: (boolean|undefined),
- *   geometryInstances: !Cesium.GeometryInstance,
+ *   geometryInstances: !(Cesium.GeometryInstance|Array<!Cesium.GeometryInstance>),
  *   show: (boolean|undefined),
  *   appearance: !Cesium.Appearance
  * }}
@@ -1959,6 +1994,7 @@ Cesium.optionsGroundPolylinePrimitive;
 
 /**
  * @constructor
+ * @extends {Cesium.Geometry}
  * @param {Cesium.optionsGroundPolylineGeometry=} opt_opts
  */
 Cesium.GroundPolylineGeometry = function(opt_opts) {};
@@ -2366,30 +2402,22 @@ Cesium.ColorGeometryInstanceAttribute.toValue = function(color, opt_result) {};
 
 
 /**
- * @constructor
- * @struct
+ * @typedef {{
+ *  id: (!string|undefined),
+ *  geometry: !Cesium.Geometry,
+ *  attributes: (!Cesium.optionsGeometryInstanceAttribute|undefined),
+ *  modelMatrix: (!Cesium.Matrix4|undefined)
+ * }}
  */
-Cesium.optionsGeometryInstance = function() {};
+Cesium.optionsGeometryInstance;
 
 
 /**
- * @type {string}
+ * @typedef {{
+ *   color: Cesium.ColorGeometryInstanceAttribute
+ * }}
  */
-Cesium.optionsGeometryInstance.prototype.id;
-
-
-/**
- * @type {!Cesium.Geometry}
- */
-Cesium.optionsGeometryInstance.prototype.geometry;
-
-
-/**
- * @type {!Cesium.Matrix4}
- */
-Cesium.optionsGeometryInstance.prototype.modelMatrix;
-
-
+Cesium.optionsGeometryInstanceAttribute;
 
 /**
  * @constructor
@@ -2399,23 +2427,16 @@ Cesium.GeometryInstanceAttribute;
 
 
 /**
- * @type {Cesium.GeometryInstanceAttribute| undefined}
- */
-Cesium.optionsGeometryInstance.prototype.attributes;
-
-
-/**
  * @type {Cesium.ColorGeometryInstanceAttribute}
  */
 Cesium.GeometryInstanceAttribute.prototype.color;
 
 
-
 /**
  * @constructor
- * @param {Object} object
+ * @param {Cesium.optionsGeometryInstance} options
  */
-Cesium.GeometryInstance = function(object) {};
+Cesium.GeometryInstance = function(options) {};
 
 
 
@@ -2474,10 +2495,10 @@ Cesium.optionsPerInstanceColorAppearance;
 
 /**
  * @constructor
- * @param {Object} object
+ * @param {Object=} opt_options
  * @extends {Cesium.Appearance}
  */
-Cesium.PerInstanceColorAppearance = function(object) {};
+Cesium.PerInstanceColorAppearance = function(opt_options) {};
 
 
 
@@ -2688,24 +2709,40 @@ Cesium.Transforms.eastNorthUpToFixedFrame = function(origin, opt_ellipsoid, opt_
  * @param {Cesium.Ellipsoid=} opt_ellipsoid .
  * @param {Function=} opt_transform .
  * @param {Cesium.Matrix4=} opt_result .
- * @return {Cesium.Matrix4}
+ * @return {!Cesium.Matrix4}
  */
 Cesium.Transforms.headingPitchRollToFixedFrame = function(origin, hpr, opt_ellipsoid, opt_transform, opt_result) {};
 
 
 /**
  * @typedef {
+ *    !(Cesium.BillboardCollection|
+ *      Cesium.PolylineCollection|
+ *      Cesium.PrimitiveCollection|
+ *      Cesium.LabelCollection)
+ * }
+ */
+Cesium.CollectionLike;
+
+/**
+ * @typedef {
  *    !(Cesium.Polygon|
- *      Cesium.PolylineCollection|Cesium.Polyline|
- *      Cesium.BillboardCollection|Cesium.Billboard|
- *      Cesium.LabelCollection|Cesium.Label|
- *      Cesium.PrimitiveCollection|Cesium.Primitive|
- *      Cesium.GroundPrimitive|Cesium.GroundPolylinePrimitive|
+ *      Cesium.Polyline|
+ *      Cesium.Billboard|
+ *      Cesium.Label|
+ *      Cesium.Primitive|
+ *      Cesium.GroundPrimitive|
+ *      Cesium.GroundPolylinePrimitive|
  *      Cesium.Cesium3DTileset)
  * }
  */
 Cesium.PrimitiveLike;
 
+
+/**
+ * @typedef {!(Cesium.CollectionLike|Cesium.PrimitiveLike)}
+ */
+Cesium.PrimitiveOrCollection;
 
 
 /**
@@ -2716,13 +2753,13 @@ Cesium.PrimitiveCollection = function() {};
 
 
 /**
- * @param {!Cesium.PrimitiveLike} primitive
+ * @param {!Cesium.PrimitiveOrCollection} primitive
  */
 Cesium.PrimitiveCollection.prototype.add = function(primitive) {};
 
 
 /**
- * @param {!Cesium.PrimitiveLike} primitive
+ * @param {!Cesium.PrimitiveOrCollection} primitive
  * @return {boolean}
  */
 Cesium.PrimitiveCollection.prototype.contains = function(primitive) {};
@@ -2730,19 +2767,19 @@ Cesium.PrimitiveCollection.prototype.contains = function(primitive) {};
 
 /**
  * @param {number} index
- * @return {Cesium.PrimitiveLike}
+ * @return {Cesium.PrimitiveOrCollection}
  */
 Cesium.PrimitiveCollection.prototype.get = function(index) {};
 
 
 /**
- * @param {!Cesium.PrimitiveLike} primitive
+ * @param {!Cesium.PrimitiveOrCollection} primitive
  */
 Cesium.PrimitiveCollection.prototype.raiseToTop = function(primitive) {};
 
 
 /**
- * @param {!Cesium.PrimitiveLike} primitive
+ * @param {!Cesium.PrimitiveOrCollection} primitive
  */
 Cesium.PrimitiveCollection.prototype.remove = function(primitive) {};
 
@@ -3226,15 +3263,37 @@ Cesium.ImageryProvider.loadImage = function(imageryProvider, url) {};
 Cesium.Resource = function() {};
 
 /**
+ * @param {Cesium.Resource|string} resource
+ * @return {!Cesium.Resource}
+ */
+Cesium.createIfNeeded = function(resource) {};
+
+/**
  * @param {Cesium.ResourceFetchOptions} options
  * @return {Cesium.Promise<*>}
  */
 Cesium.Resource.prototype._makeRequest = function(options) {};
 
+
+/**
+ * @typedef {{
+ *   preferBlob: (boolean|undefined),
+ *   preferImageBitmap: (boolean|undefined),
+ *   flipY: (boolean|undefined)
+ * }}
+ */
+Cesium.ResourceFetchImageOptions;
+
+/**
+ * @param {Cesium.ResourceFetchImageOptions} options
+ * @return {Promise<ImageBitmap|Image>|undefined}
+ */
+Cesium.Resource.prototype.fetchImage = function(options) {}
+
 Cesium.Resource._Implementations = {};
 
 /**
- * @type {function(string, boolean, Cesium.Promise)}
+ * @type {function(Cesium.ResourceFetchOptions, boolean, Cesium.Promise, boolean, boolean)}
  */
 Cesium.Resource._Implementations.createImage;
 
