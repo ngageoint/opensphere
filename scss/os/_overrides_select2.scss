@@ -110,6 +110,11 @@
   .select2-results .select2-selection-limit {
     background: transparent;
   }
+
+  .select2-results .select2-disabled {
+    background-color: $input-bg;
+    opacity: .5;
+  }
 }
 
 // form-control sets 'width: auto' in a form-inline, which shrinks the select2. prevent that from happening.
