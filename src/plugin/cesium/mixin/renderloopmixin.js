@@ -7,7 +7,7 @@ goog.require('os.time.TimelineEventType');
 
 
 /**
- * @suppress {accessControls|checkTypes}
+ * @suppress {accessControls}
  */
 (function() {
   var origEnable = olcs.AutoRenderLoop.prototype.enable;
@@ -15,8 +15,6 @@ goog.require('os.time.TimelineEventType');
   /**
    * Overridden to listen to <code>os.MapEvent.GL_REPAINT</code> events in addition
    * to timeline show events for rendering the scene.
-   *
-   * @override
    */
   olcs.AutoRenderLoop.prototype.enable = function() {
     os.dispatcher.listen(os.MapEvent.GL_REPAINT, this.notifyRepaintRequired, false, this);
@@ -32,8 +30,6 @@ goog.require('os.time.TimelineEventType');
   /**
    * Overridden to unlisten to <code>os.MapEvent.GL_REPAINT</code> events in addition
    * to timeline show events for rendering the scene.
-   *
-   * @override
    */
   olcs.AutoRenderLoop.prototype.disable = function() {
     os.dispatcher.unlisten(os.MapEvent.GL_REPAINT, this.notifyRepaintRequired, false, this);
@@ -44,7 +40,6 @@ goog.require('os.time.TimelineEventType');
   };
 
   var origNotify = olcs.AutoRenderLoop.prototype.notifyRepaintRequired;
-
 
   var lastRepaintEventTime = 0;
 
@@ -61,7 +56,7 @@ goog.require('os.time.TimelineEventType');
   /**
    * Overridden because we only care about mouse events if a button is down
    *
-   * @override
+   * @param {Event=} opt_evt
    */
   olcs.AutoRenderLoop.prototype.notifyRepaintRequired = function(opt_evt) {
     if (opt_evt && opt_evt.type && opt_evt.type.indexOf('move') > -1) {
