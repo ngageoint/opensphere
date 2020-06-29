@@ -587,7 +587,7 @@ os.ui.query.area.UserAreaCtrl.prototype.getBbox = function() {
   if (this['canEditGeometry'] || !this.scope['geometry']) {
     var extent = this.getExtent();
 
-    if (extent) {
+    if (extent && ol.extent.getArea(extent) > 1E-6) {
       var minX = extent[0];
       var minY = extent[1];
       var maxX = extent[2];
