@@ -196,5 +196,9 @@ os.ui.ol.interaction.DragBox.prototype.cleanup = function() {
  * @inheritDoc
  */
 os.ui.ol.interaction.DragBox.prototype.getResultString = function() {
-  return 'TODO: FIX';
+  if (this.startCoord && this.endCoord) {
+    return 'Start corner: ' + this.startCoord.toString() + '. End corner: ' + this.endCoord.toString();
+  }
+
+  return 'Unknown coordinates.';
 };
