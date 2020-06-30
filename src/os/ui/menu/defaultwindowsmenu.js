@@ -41,7 +41,7 @@ os.ui.menu.windows.default.setup = function() {
     'description': 'View and manipulate layers on the map',
     'x': '0',
     'y': '96',
-    'width': '325',
+    'width': '350',
     'height': '550',
     'min-width': '300',
     'max-width': '1000',

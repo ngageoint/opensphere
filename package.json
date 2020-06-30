@@ -31,6 +31,9 @@
       "overrides_slate_compact_cb_rg",
       "overrides_slate_compact_cb_b"
     ],
+    "fonts": [
+      "typeface-open-sans"
+    ],
     "defineRoots": {
       "os.APP_ROOT": "./"
     },
@@ -125,7 +128,7 @@
     "precopy:config": "mkdirp dist/opensphere/config",
     "precopy:resources": "xargs -n 1 mkdir -p < .build/resources-copy-dirs",
     "precopy:onboarding": "mkdirp $(cat .build/version)/onboarding",
-    "copy:files": "cp .build/opensphere.min.* $(cat .build/version) && cp .build/themes/*.min.css $(cat .build/version)/styles/themes",
+    "copy:files": "cp .build/opensphere.min.* $(cat .build/version) && cp .build/themes/*.min.css $(cat .build/version)/styles/themes && cp -r .build/themes/fonts $(cat .build/version)/styles/themes",
     "copy:images": "cp -r images $(cat .build/version)/images",
     "copy:onboarding": "xargs -n 1 -I @ sh -c 'cp -rf @ $(cat .build/version)/onboarding/.' < .build/copy-onboarding-args",
     "copy:views": "xargs -n 1 -I @ sh -c 'cp -rf @ $(cat .build/version)/views/.' < .build/copy-views-args",
@@ -327,6 +330,7 @@
     "suncalc": "^1.8.0",
     "text-encoding": "^0.6.4",
     "tui-editor": "=1.4.6",
+    "typeface-open-sans": "0.0.75",
     "xml-lexer": "^0.2.2",
     "zip-js": "^0.0.2"
   },
