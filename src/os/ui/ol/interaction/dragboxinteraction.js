@@ -1,5 +1,6 @@
 goog.provide('os.ui.ol.interaction.DragBox');
 goog.require('ol.MapBrowserEvent');
+goog.require('ol.geom.Polygon');
 goog.require('os.data.RecordField');
 goog.require('os.geo2');
 goog.require('os.olm.render.Box');
@@ -28,17 +29,23 @@ os.ui.ol.interaction.DragBox = function(opt_options) {
   this.endCoord = null;
 
   /**
+   * The direction of the drawing operation. 1 = right, -1 = left, 0 = undecided.
+   * @type {?number}
+   * @protected
+   */
+  this.direction = null;
+
+  /**
+   * Whether the draw has cross the antimeridian.
+   * @type {boolean}
+   */
+  this.crossedAntimeridian = false;
+
+  /**
    * @type {!os.olm.render.Box}
    * @protected
    */
   this.box2D = new os.olm.render.Box(/** @type {ol.style.Style} */ (this.getStyle()));
-
-  /**
-   * This is the box extent in lon/lat
-   * @type {ol.Extent}
-   * @protected
-   */
-  this.extent = null;
 };
 goog.inherits(os.ui.ol.interaction.DragBox, os.ui.ol.interaction.AbstractDrag);
 
@@ -64,12 +71,9 @@ os.ui.ol.interaction.DragBox.prototype.disposeInternal = function() {
  * @inheritDoc
  */
 os.ui.ol.interaction.DragBox.prototype.getGeometry = function() {
-  var geom = this.box2D.getOriginalGeometry();
-
-  if (geom) {
-    os.geo2.normalizeGeometryCoordinates(geom);
-  }
-
+  var geom = this.box2D.getGeometry();
+  geom.set(os.geom.GeometryField.NORMALIZED, true);
+  geom.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.RHUMB);
   return geom;
 };
 
@@ -89,6 +93,8 @@ os.ui.ol.interaction.DragBox.prototype.getProperties = function() {
  * @inheritDoc
  */
 os.ui.ol.interaction.DragBox.prototype.begin = function(mapBrowserEvent) {
+  this.crossedAntimeridian = false;
+  this.direction = null;
   os.ui.ol.interaction.DragBox.base(this, 'begin', mapBrowserEvent);
   this.box2D.setMap(mapBrowserEvent.map);
 };
@@ -98,43 +104,77 @@ os.ui.ol.interaction.DragBox.prototype.begin = function(mapBrowserEvent) {
  * @inheritDoc
  */
 os.ui.ol.interaction.DragBox.prototype.update = function(mapBrowserEvent) {
+  // record the current last longitude, we'll use this to figure out the differential in the current draw call
+  var proj = this.getMap().getView().getProjection();
+  var lastEndLon = this.endCoord && ol.proj.toLonLat(this.endCoord, proj)[0];
+
   this.endCoord = mapBrowserEvent.coordinate || this.endCoord;
 
   if (this.startCoord && this.endCoord) {
-    if (!this.extent) {
-      this.extent = [];
+    var start = ol.proj.toLonLat(this.startCoord, proj);
+    var end = ol.proj.toLonLat(this.endCoord, proj);
+
+    // we need the ending longitude raw, and normalized to the start + 360 and - 360 to be sure of the direction
+    var startLon = start[0];
+    var endLon = end[0];
+    var endLonNormalizedRight = os.geo2.normalizeLongitude(endLon, startLon, startLon + 360);
+    var endLonNormalizedLeft = os.geo2.normalizeLongitude(endLon, startLon, startLon - 360);
+
+    if (lastEndLon != null) {
+      var lastEndLonNormalizedRight = os.geo2.normalizeLongitude(lastEndLon, startLon, startLon + 360);
+      var lastEndLonNormalizedLeft = os.geo2.normalizeLongitude(lastEndLon, startLon, startLon - 360);
+
+      // The check against 300 here is for the case of crossing the antimeridian. The delta between this call
+      // and the last will be ~360 degrees when you pass over the antimeridian (i.e. current lon = 179, last = -179).
+      //
+      // If and only if we've already cross the antimeridian, we need to check the last normalized differentials as
+      // well. This corresponds to the case of wrapping all the way around the world and crossing over the starting
+      // point where we need to reset the crossedAntimeridian flag.
+      if (Math.abs(endLon - lastEndLon) > 300 || (this.crossedAntimeridian &&
+          (Math.abs(endLonNormalizedRight - lastEndLonNormalizedRight) > 300 ||
+          Math.abs(endLonNormalizedLeft - lastEndLonNormalizedLeft) > 300))) {
+        this.crossedAntimeridian = !this.crossedAntimeridian;
+      }
     }
 
-    if (this.startCoord && this.endCoord) {
-      var proj = this.getMap().getView().getProjection();
-      var start = ol.proj.toLonLat(this.startCoord, proj);
-      var end = ol.proj.toLonLat(this.endCoord, proj);
-
-      this.extent[0] = os.geo2.normalizeLongitude(Math.min(start[0], end[0]),
-          start[0] - 180, start[0] + 180, os.proj.EPSG4326);
-      this.extent[1] = Math.min(start[1], end[1]);
-      this.extent[2] = os.geo2.normalizeLongitude(Math.max(start[0], end[0]),
-          start[0] - 180, start[0] + 180, os.proj.EPSG4326);
-      this.extent[3] = Math.max(start[1], end[1]);
-
-      this.extent = os.extent.normalize(this.extent, undefined, undefined, undefined, this.extent);
-
-      this.update2D(this.startCoord, this.endCoord);
+    if (!this.crossedAntimeridian && lastEndLon != null && Math.abs(endLon - lastEndLon) < 180) {
+      // 0 = no direction chosen, 1 = right, -1 = left
+      this.direction = Math.sign(Math.round((endLon - startLon)));
     }
+
+    // if we're going left, we need to use the left normalized endpoint, and vice versa.
+    if (this.direction == -1) {
+      endLon = endLonNormalizedLeft;
+    } else if (this.direction == 1) {
+      endLon = endLonNormalizedRight;
+    }
+
+    // insert a central longitude point in order to force the renderers to know which direction to render in
+    var middleLon = (endLon + startLon) / 2;
+    var minX = startLon;
+    var minY = start[1];
+    var maxX = endLon;
+    var maxY = end[1];
+    var coords = [
+      [minX, minY],
+      [minX, maxY],
+      [middleLon, maxY],
+      [maxX, maxY],
+      [maxX, minY],
+      [middleLon, minY],
+      [minX, minY]
+    ];
+
+    var geometry = new ol.geom.Polygon([coords]);
+
+    this.updateGeometry(geometry);
   }
 };
 
 
-/**
- * Updates the 2D version
- *
- * @param {ol.Coordinate} start
- * @param {ol.Coordinate} end
- * @protected
- */
-os.ui.ol.interaction.DragBox.prototype.update2D = function(start, end) {
-  if (start && end && this.extent) {
-    this.box2D.setLonLatExtent(this.extent);
+os.ui.ol.interaction.DragBox.prototype.updateGeometry = function(geometry) {
+  if (geometry) {
+    this.box2D.updateGeometry(geometry);
   }
 };
 
@@ -156,5 +196,9 @@ os.ui.ol.interaction.DragBox.prototype.cleanup = function() {
  * @inheritDoc
  */
 os.ui.ol.interaction.DragBox.prototype.getResultString = function() {
-  return this.extent ? this.extent.toString() : 'none';
+  if (this.startCoord && this.endCoord) {
+    return 'Start corner: ' + this.startCoord.toString() + '. End corner: ' + this.endCoord.toString();
+  }
+
+  return 'Unknown coordinates.';
 };

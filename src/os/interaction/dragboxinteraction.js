@@ -46,9 +46,12 @@ os.implements(os.interaction.DragBox, os.I3DSupport.ID);
 /**
  * @inheritDoc
  */
-os.interaction.DragBox.prototype.update2D = function(start, end) {
-  os.interaction.DragBox.base(this, 'update2D', start, end);
-  this.updateWebGL(start, end);
+os.interaction.DragBox.prototype.updateGeometry = function(geometry) {
+  os.interaction.DragBox.base(this, 'updateGeometry', geometry);
+
+  if (geometry) {
+    this.updateWebGL(geometry);
+  }
 };
 
 
@@ -76,8 +79,7 @@ os.interaction.DragBox.prototype.cleanupWebGL = goog.nullFunction;
 
 /**
  * Update the box in the WebGL renderer.
- * @param {ol.Coordinate} start The start coordinate.
- * @param {ol.Coordinate} end The end coordinate.
+ * @param {ol.geom.Polygon} geometry The geometry to update to.
  */
 os.interaction.DragBox.prototype.updateWebGL = goog.nullFunction;
 
