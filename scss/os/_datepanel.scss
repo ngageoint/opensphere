@@ -1,6 +1,6 @@
 .c-date-panel {
   .form-control {
-    max-width: 5.5rem;
+    max-width: (6 * $font-size-base) + $input-padding-x;
   }
 
   .c-date-panel__extended {

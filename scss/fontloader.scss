@@ -17,7 +17,7 @@
 
   // Replace the url to be local
   $web-font-path: str-replace($web-font-path,
-    'https://fonts.googleapis.com/css?family=', '../../../opensphere/vendor/fonts/typeface-');
+    'https://fonts.googleapis.com/css?family=', 'fonts/typeface-');
 
   // Replace + with -
   $web-font-path: str-replace($web-font-path, '+', '-');
