@@ -37,13 +37,11 @@ plugin.cesium.interaction.dragbox.cleanupWebGL = function() {
 
 /**
  * Draw the box in Cesium.
- *
- * @param {ol.Coordinate} start The start coordinate.
- * @param {ol.Coordinate} end The end coordinate.
+ * @param {ol.geom.Polygon} geometry
  * @this {os.interaction.DragBox}
  * @suppress {accessControls}
  */
-plugin.cesium.interaction.dragbox.updateWebGL = function(start, end) {
+plugin.cesium.interaction.dragbox.updateWebGL = function(geometry) {
   if (os.MapContainer.getInstance().is3DEnabled()) {
     if (!this.cesiumColor) {
       this.cesiumColor = new Cesium.ColorGeometryInstanceAttribute(
@@ -57,15 +55,12 @@ plugin.cesium.interaction.dragbox.updateWebGL = function(start, end) {
       os.MapContainer.getInstance().getWebGLRenderer());
     var scene = webgl ? webgl.getCesiumScene() : undefined;
 
-    start = ol.proj.toLonLat(start, this.getMap().getView().getProjection());
-    end = ol.proj.toLonLat(end, this.getMap().getView().getProjection());
-
-    if (scene && start && end) {
+    if (scene && geometry) {
       if (this.cesiumBox) {
         scene.groundPrimitives.remove(this.cesiumBox);
       }
 
-      var coords = /** @type {ol.geom.Polygon} */ (this.box2D.getGeometry()).getCoordinates()[0];
+      var coords = geometry.getCoordinates()[0];
       var lonlats = coords.map(os.interaction.DrawPolygon.coordToLonLat);
 
       this.cesiumBox = new Cesium.GroundPolylinePrimitive({

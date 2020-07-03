@@ -95,10 +95,9 @@ os.ui.query.AbstractQueryReader.parseArea = function(area) {
         olGeom = new ol.geom.Polygon([coordinates], ol.geom.GeometryLayout.XY);
       }
 
-      os.geo2.normalizeGeometryCoordinates(olGeom);
-
-      // set the geometry to not be interpolated
+      // set the geometry to not be interpolated or normalized
       olGeom.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.NONE);
+      olGeom.set(os.geom.GeometryField.NORMALIZED, true);
 
       var feature = new ol.Feature();
       var name = os.xml.unescape(area.getAttribute('areanamehint') || area.getAttribute('namehint') || 'New Area');

@@ -9,7 +9,7 @@
         <label class="col-3 col-form-label text-right" for="title">Title</label>
         <div class="col">
           <input unique-provider-title type="text" class="form-control" name="title" ng-disabled="!edit"
-              ng-model="config.label" ng-required="true" ng-maxlength="1000"/>
+              ng-model="config.label" ng-required="true" ng-maxlength="1000">
           <validation-message target="form.title"></validation-message>
         </div>
       </div>
@@ -19,7 +19,7 @@
         <label class="col-3 col-form-label text-right" for="url">URL</label>
         <div class="col">
           <input type="text" name="url" class="form-control" ng-disabled="!edit" ng-model="config.url" ng-required="true"
-              ng-maxlength="1000"/>
+              ng-maxlength="1000">
           <small class="form-text invalid-feedback" ng-if="urlExample && form.url.$valid">e.g. {{urlExample}}</small>
           <validation-message target="form.url"></validation-message>
         </div>
@@ -32,13 +32,13 @@
         <div class="col">
           <input unique-server-url type="text" name="altUrl{{$index}}" class="form-control" ng-disabled="!edit"
               ng-model="config.alternateUrls[$index]" ng-maxlength="1000"
-              placeholder="Alternate URL to server" />
+              placeholder="Alternate URL to server" >
         </div>
       </div>
 
-      <input type="submit" hidden />
+      <input type="submit" hidden >
     </form>
-    <div class="error" ng-if="error">
+    <div class="alert alert-danger" ng-if="error">
       <h5>Error!</h5>
       <p ng-bind-html="error"></p>
     </div>

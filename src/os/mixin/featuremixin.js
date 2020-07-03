@@ -124,11 +124,23 @@ ol.Feature.prototype.setId = function(id) {
   this.id_ = id;
 
   if (this['id'] == null) {
-    this['id'] = ol.Feature.nextId;
-    ol.Feature.nextId++;
+    this['id'] = ol.Feature.nextId++;
   }
 
   this.changed();
+};
+
+
+/**
+ * @return {number} The unique feature ID per session
+ * @suppress {checkTypes}
+ */
+ol.Feature.prototype.getUid = function() {
+  if (this['id'] == null) {
+    this['id'] = ol.Feature.nextId++;
+  }
+
+  return this['id'];
 };
 
 

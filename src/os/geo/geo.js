@@ -887,11 +887,6 @@ os.geo.parseLon = function(str, opt_format) {
     return NaN; // this fixes a bug where 0 is returned if str is an empty string
   }
 
-  var d = Number(str);
-  if (!isNaN(d)) {
-    return d;
-  }
-
   var confs = [];
 
   if (opt_format != null) {
@@ -963,6 +958,7 @@ os.geo.parseLon = function(str, opt_format) {
     }
   }
 
+  var d = NaN;
   if (result) {
     d = os.geo.parse_(result[conf.coords.deg], result[conf.coords.min], result[conf.coords.sec],
         result[conf.coords.dir[0]] || result[conf.coords.dir[1]]);
@@ -984,11 +980,6 @@ os.geo.parseLon = function(str, opt_format) {
 os.geo.parseLat = function(str, opt_format) {
   if (!str) {
     return NaN; // this fixes a bug where 0 is returned if str is an empty string
-  }
-
-  var d = Number(str);
-  if (!isNaN(d)) {
-    return d;
   }
 
   var confs = [];
@@ -1062,6 +1053,7 @@ os.geo.parseLat = function(str, opt_format) {
     }
   }
 
+  var d = NaN;
   if (result) {
     d = os.geo.parse_(result[conf.coords.deg], result[conf.coords.min], result[conf.coords.sec],
         result[conf.coords.dir[0]] || result[conf.coords.dir[1]]);
@@ -1139,32 +1131,33 @@ os.geo.parse_ = function(deg, min, sec, dir) {
     sec = sec.substring(0, 2) + '.' + sec.substring(2);
   }
 
-  /** @type {number} */
-  var d = parseFloat(deg);
-  /** @type {number} */
-  var m = parseFloat(min);
-  /** @type {number} */
-  var s = parseFloat(sec);
+  var sign = 1;
 
-  /** @type {number} */
+  var d = parseFloat(deg);
+  sign *= d < 0 || Object.is(d, -0) ? -1 : 1;
+
+  var m = parseFloat(min);
+  if (m < 0 || Object.is(m, -0)) {
+    return NaN;
+  }
+
+  var s = parseFloat(sec);
+  if (m < 0 || Object.is(m, -0)) {
+    return NaN;
+  }
+
   var val = Math.abs(d);
 
   if (!isNaN(m)) {
-    val += m / 60;
+    val += Math.abs(m) / 60;
   }
+
   if (!isNaN(s)) {
-    val += s / 60 / 60;
+    val += Math.abs(s) / 60 / 60;
   }
 
-  if (d < 0) {
-    val *= -1;
-  }
-
-  if (dir == 'S' || dir == 'W') {
-    val *= -1;
-  }
-
-  return val;
+  sign *= dir == 'S' || dir == 'W' ? -1 : 1;
+  return val * sign;
 };
 
 

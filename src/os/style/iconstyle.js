@@ -40,6 +40,17 @@ goog.inherits(os.style.Icon, ol.style.Icon);
 
 
 /**
+ * @param {ol.Size} size
+ * @suppress {accessControls}
+ */
+os.style.Icon.prototype.setSize = function(size) {
+  this.normalizedScale_ = 0;
+  this.normalizedAnchor_ = null;
+  this.size_ = size;
+};
+
+
+/**
  * @inheritDoc
  */
 os.style.Icon.prototype.getScale = function() {

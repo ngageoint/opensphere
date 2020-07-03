@@ -12,7 +12,7 @@
             {{ctrl.getAreaTypeName(type)}}
           </button>
         </div>
-        <hr/>
+        <hr>
       </div>
 
       <div ng-show="!ctrl.canEditGeometry">
@@ -33,6 +33,14 @@
           <label class="col-form-label col-3 text-right">Longitude First</label>
           <div class="col form-inline">
             <input class="form-control" type="checkbox" name="lonFirst" ng-model="ctrl.lonFirst" ng-change="ctrl.onLonFirstChange()">
+          </div>
+        </div>
+
+        <div class="row mb-1" ng-if="ctrl.areaType == 'bbox'">
+          <label class="col-form-label col-3 text-right">Reverse Box</label>
+          <div class="col form-inline">
+            <input class="form-control" type="checkbox" name="reverseBox" ng-model="ctrl.reverseBox" ng-change="ctrl.updateArea()">
+            <popover class="ml-2" data-title="'Reverse Box'" content="ctrl.reverseHelp" pos="'right'"></popover>
           </div>
         </div>
 
@@ -93,7 +101,7 @@
         </div>
       </div>
 
-      <input type="hidden" required ng-model="ctrl.area"/>
+      <input type="hidden" required ng-model="ctrl.area">
     </form>
   </div>
   <div class="modal-footer">
