@@ -36,6 +36,14 @@
           </div>
         </div>
 
+        <div class="row mb-1" ng-if="ctrl.areaType == 'bbox'">
+          <label class="col-form-label col-3 text-right">Reverse Box</label>
+          <div class="col form-inline">
+            <input class="form-control" type="checkbox" name="reverseBox" ng-model="ctrl.reverseBox" ng-change="ctrl.updateArea()">
+            <popover class="ml-2" data-title="'Reverse Box'" content="ctrl.reverseHelp" pos="'right'"></popover>
+          </div>
+        </div>
+
         <div ng-if="ctrl.areaType == 'bbox'">
           <div class="row mb-1">
             <label class="col-form-label col-3 text-right u-required">Corner 1</label>

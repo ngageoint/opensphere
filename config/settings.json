@@ -226,6 +226,7 @@
     }
   },
   "user": {
+    "activeWebGLRenderer": "cesium",
     "dataManager": {
       "filterTime": true
     },
