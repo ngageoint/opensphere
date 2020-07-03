@@ -5,11 +5,12 @@
         Group By
       </div>
       <div class="col">
-        <select class="custom-select" ng-model="view" ng-change="areasCtrl.search()" ng-options="key for (key, value) in views"/>
+        <select class="custom-select" ng-model="view" ng-change="areasCtrl.search()" ng-options="key for (key, value) in views">
+        </select>
       </div>
 
       <div class="input-group mt-1 mx-1">
-        <input class="form-control" ng-model="term" ng-change="areasCtrl.search()" placeholder="Search areas"/>
+        <input class="form-control" ng-model="term" ng-change="areasCtrl.search()" placeholder="Search areas">
         <div class="input-group-append">
           <button class="btn btn-secondary" ng-click="areasCtrl.clearSearch()" title="Clear the search term">
             <i class="fa fa-times"></i>
@@ -28,7 +29,15 @@
           <i class="fa fa-filter"></i> Advanced
         </button>
       </div>
-      <button class="btn btn-secondary" ng-click="areasCtrl.export()" ng-disabled="areasCtrl.exportDisabled()"><i class="fa fa-download"></i> Export</button>
+      <div class="js-export-group btn-group" ng-right-click="areasCtrl.openExportMenu()">
+        <button class="btn btn-secondary" ng-click="areasCtrl.export()" ng-disabled="areasCtrl.exportDisabled()">
+          <i class="fa fa-download"></i>
+          Export
+        </button>
+        <button class="btn btn-secondary" ng-click="areasCtrl.openExportMenu()" title="Additional area export options">
+          <i class="fa fa-chevron-down"></i>
+        </button>
+      </div>
       <div class="js-import-group btn-group" ng-right-click="areasCtrl.openImportMenu()">
         <button class="btn btn-secondary" ng-click="areasCtrl.import()" title="Import areas only">
           <i class="fa fa-sign-in"></i>

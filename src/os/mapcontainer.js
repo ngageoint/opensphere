@@ -110,6 +110,13 @@ os.MapContainer = function() {
   this.webGLRenderer_ = undefined;
 
   /**
+   * The available WebGL map/globe renderers.
+   * @type {Object<string, os.webgl.IWebGLRenderer>}
+   * @private
+   */
+  this.webGLRenderers_ = {};
+
+  /**
    * If the WebGL renderer is initializing. Disables toggling the view.
    * @type {boolean}
    * @private
@@ -275,7 +282,7 @@ os.MapContainer.prototype.disposeInternal = function() {
 
 
 /**
- * Get the WebGL renderer.
+ * Get the active WebGL renderer.
  *
  * @return {os.webgl.IWebGLRenderer|undefined}
  */
@@ -285,11 +292,35 @@ os.MapContainer.prototype.getWebGLRenderer = function() {
 
 
 /**
- * Set the WebGL renderer.
+ * Get the available WebGL renderers.
+ *
+ * @return {Object<string, os.webgl.IWebGLRenderer>}
+ */
+os.MapContainer.prototype.getWebGLRenderers = function() {
+  return this.webGLRenderers_;
+};
+
+
+/**
+ * Add a WebGL renderer
+ *
+ * @param {os.webgl.IWebGLRenderer|undefined} renderer
+ */
+os.MapContainer.prototype.addWebGLRenderer = function(renderer) {
+  if (renderer) {
+    this.webGLRenderers_[renderer.getId() || os.string.randomString()] = renderer;
+  }
+};
+
+
+/**
+ * Set the active WebGL renderer.
  *
  * @param {os.webgl.IWebGLRenderer|undefined} value The new renderer.
  */
 os.MapContainer.prototype.setWebGLRenderer = function(value) {
+  this.addWebGLRenderer(value);
+
   if (this.webGLRenderer_) {
     if (this.webGLRenderer_.isInitialized()) {
       // do not allow replacing the WebGL renderer once it has been initialized, because it may make changes to
@@ -302,6 +333,9 @@ os.MapContainer.prototype.setWebGLRenderer = function(value) {
   }
 
   this.webGLRenderer_ = value;
+  if (value && value.id) {
+    os.settings.set(os.webgl.AbstractWebGLRenderer.ACTIVE_SETTINGS_KEY, value.id);
+  }
 
   if (this.webGLRenderer_) {
     this.webGLRenderer_.setMap(this.map_);

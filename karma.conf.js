@@ -24,8 +24,10 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      {pattern: '.build/gcc-defines-test-debug.js', watched: false, included: true, served: true},
       {pattern: '.build/modernizr.js', watched: false, included: true, served: true},
       {pattern: '.build/xml-lexer.min.js', watched: false, included: true, served: true},
+      {pattern: '.build/webgl-mock.min.js', watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('opensphere-asm/dist/os-wasm.*', __dirname), watched: false, included: false, served: true},
       {pattern: resolver.resolveModulePath('opensphere-asm/dist/os-asm.*', __dirname), watched: false, included: false, served: true},
       {pattern: resolver.resolveModulePath('opensphere-asm/dist/os-load.js', __dirname), watched: false, included: true, served: true},
@@ -41,6 +43,7 @@ module.exports = function(config) {
       {pattern: resolver.resolveModulePath('crossfilter2/crossfilter.min.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('papaparse/papaparse.min.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('cesium/Build/CesiumUnminified/Cesium.js', __dirname), watched: false, included: true, served: true},
+      {pattern: resolver.resolveModulePath('cesium/Build/CesiumUnminified/**/*', __dirname), watched: false, included: false, served: true},
       {pattern: resolver.resolveModulePath('xmllint/xmllint.js', __dirname), watched: false, included: true, served: true},
       {pattern: 'vendor/geomag/WMM.txt', watched: false, included: false, served: true},
       {pattern: 'vendor/geomag/cof2Obj.js', watched: false, included: true, served: true},
@@ -66,6 +69,7 @@ module.exports = function(config) {
       {pattern: 'test/**/*.json', included: false},
       {pattern: 'test/**/*.xml', included: false},
       {pattern: 'test/resources/**/*', included: false},
+      {pattern: 'images/**/*', included: false},
 
       // source files for the script loader
       {pattern: 'src/**/*.js', watched: false, included: false, served: true},

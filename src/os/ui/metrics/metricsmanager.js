@@ -194,9 +194,10 @@ os.ui.metrics.MetricsManager.prototype.addPluginToTree_ = function(plugin) {
 os.ui.metrics.MetricsManager.prototype.setApplicationNode = function(label, description) {
   if (!this.root_) {
     this.root_ = new os.ui.metrics.MetricNode();
-    this.root_.setLabel(label);
-    this.root_.setDescription(description);
     this.root_.collapsed = false;
     this.topNode_.addChild(this.root_);
   }
+
+  this.root_.setLabel(label);
+  this.root_.setDescription(description);
 };

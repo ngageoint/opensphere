@@ -24,7 +24,7 @@
         <date-time data-value="anydate.startDate" x-disabled="anydate.startUnknown || disabled"
           is-required="anydate.dateType != 'notime' && !anydate.startUnknown">
         </date-time>
-        <input type="hidden" name="startDate" data-ng-required="anydate.dateType != 'notime' && !anydate.startUnknown" data-ng-model="anydate.startDate"/>
+        <input type="hidden" name="startDate" data-ng-required="anydate.dateType != 'notime' && !anydate.startUnknown" data-ng-model="anydate.startDate">
       </div>
     </div>
 
@@ -32,11 +32,11 @@
       <date-time class="date-time" data-value="anydate.endDate" x-disabled="anydate.endUnknown || disabled"
         is-required="anydate.dateType == 'range' && !anydate.endUnknown">
       </date-time>
-      <input type="hidden" name="endDate" data-ng-required="anydate.dateType == 'range' && !anydate.endUnknown" data-ng-model="anydate.endDate"/>
+      <input type="hidden" name="endDate" data-ng-required="anydate.dateType == 'range' && !anydate.endUnknown" data-ng-model="anydate.endDate">
     </div>
 
     <div data-ng-show="anydate.dateType == 'range' && !anydate.timesValid">
-      <input type="hidden" data-ng-required="anydate.dateType == 'range'" data-ng-model="anydate.timesValid"/>
+      <input type="hidden" data-ng-required="anydate.dateType == 'range'" data-ng-model="anydate.timesValid">
       <span class="invalid-feedback d-block">End date must be after start date!</span>
     </div>
   </div>

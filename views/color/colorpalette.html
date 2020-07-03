@@ -1,5 +1,5 @@
 <div class="c-colorpalette" ng-class="{'background': palette.showReset}">
-  <table class="c-colorpalette__table" cellspacing="0" cellpadding="0">
+  <table class="c-colorpalette__table">
     <tbody>
       <tr ng-repeat="row in rows">
         <td class="c-colorpalette__cell m-0 p-0" ng-repeat="color in row" ng-click="palette.pick(color)" title="{{palette.getTitle(color)}}">

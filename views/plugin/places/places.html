@@ -4,17 +4,17 @@
     <button class="btn btn-sm btn-success"
         ng-click="places.addFolder()" ng-disabled="!places.hasRoot()"
         title="Add a new folder under the current selection, or at the top level of the tree">
-      <i class="fa fa-folder" /> Add Folder
+      <i class="fa fa-folder"></i> Add Folder
     </button>
     <button class="btn btn-secondary btn-sm" ng-click="places.expandAll()"
         ng-disabled="!places.hasRoot()"
         title="Fully expand the tree from the selected item, or the root if nothing is selected">
-      <i class="fa fa-plus-square-o" />
+      <i class="fa fa-plus-square-o"></i>
     </button>
     <button class="btn btn-secondary btn-sm" ng-click="places.collapseAll()"
         ng-disabled="!places.hasRoot()"
         title="Fully collapse the tree from the selected item, or the root if nothing is selected">
-      <i class="fa fa-minus-square-o" />
+      <i class="fa fa-minus-square-o"></i>
     </button>
   </div>
 
@@ -26,7 +26,7 @@
 
   <div class="mt-1">
     <button class="btn btn-secondary" ng-click="places.export()" ng-disabled="!places.hasRoot()" title="Export places to KML">
-      <i class="fa fa-download"/> Export
+      <i class="fa fa-download"></i> Export
     </button>
     <button class="btn btn-secondary" ng-click="places.import()" title="Import places only">
       <i class="fa fa-sign-in"></i>

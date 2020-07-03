@@ -405,6 +405,13 @@ describe('os.geo', function() {
     expect(result.lat).toBeCloseTo(-175);
   });
 
+  it('should not parse items with too many digits as DD', () => {
+    expect(os.geo.parseLon('-0750015.1')).toBeCloseTo(os.geo.parseLon('0750015.1 W'));
+    expect(os.geo.parseLat('-750015.1')).toBeCloseTo(os.geo.parseLat('750015.1 S'));
+    expect(os.geo.parseLon('-0000015.1')).toBeCloseTo(os.geo.parseLon('0000015.1 W'));
+    expect(os.geo.parseLat('-000015.1')).toBeCloseTo(os.geo.parseLat('000015.1 S'));
+  });
+
   it('should not parse BE Numbers as coordinates', function() {
     var result = os.geo.parseLatLon('0440-01934');
     expect(result).toBeNull();

@@ -3,7 +3,7 @@
     <div class="d-flex flex-column flex-shrink-0">
       <div class="form-row mb-1">
         <div class="input-group col">
-          <input class="form-control" ng-model="term" ng-change="ctrl.search()" placeholder="Search actions" />
+          <input class="form-control" ng-model="term" ng-change="ctrl.search()" placeholder="Search actions" >
           <div class="input-group-append">
             <button class="btn btn-secondary" ng-click="ctrl.clearSearch()" title="Clear the search term">
               <i class="fa fa-times"></i>
@@ -17,7 +17,7 @@
           Group By
         </div>
         <div class="col">
-          <select class="custom-select" ng-model="view" ng-change="ctrl.search()" ng-options="key for (key, value) in views"/>
+          <select class="custom-select" ng-model="view" ng-change="ctrl.search()" ng-options="key for (key, value) in views"></select>
         </div>
       </div>
 
