@@ -85,8 +85,10 @@ os.state.v4.QueryArea.prototype.load = function(obj, id, opt_title) {
       for (var i = 0, n = areas.length; i < n; i++) {
         var geom = os.ogc.spatial.readKMLGeometry(areas[i]);
         if (geom) {
-          // KML is always in lon, lat
+          // KML is always in lon lat, assume it's normalized if it's in a state that we wrote
           geom.osTransform();
+          geom.set(os.geom.GeometryField.NORMALIZED, true);
+
           var feature = new ol.Feature(geom);
           var areaId = areas[i].getAttribute('id') || goog.string.getRandomString();
           var featTitle = areas[i].getAttribute('title');

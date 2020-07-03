@@ -19,6 +19,27 @@ os.webgl.AbstractWebGLRenderer = function() {
   os.webgl.AbstractWebGLRenderer.base(this, 'constructor');
 
   /**
+   * The renderer id
+   * @type {string}
+   * @protected
+   */
+  this.id = '';
+
+  /**
+   * The renderer label
+   * @type {string}
+   * @protected
+   */
+  this.label = '';
+
+  /**
+   * The renderer description
+   * @type {string}
+   * @protected
+   */
+  this.description = '';
+
+  /**
    * If the renderer has been initialized.
    * @type {boolean}
    * @protected
@@ -95,6 +116,14 @@ os.webgl.AbstractWebGLRenderer.LOGGER_ = goog.log.getLogger('os.webgl.AbstractWe
 
 
 /**
+ * The settings key for tracking the active renderer
+ * @type {string}
+ * @const
+ */
+os.webgl.AbstractWebGLRenderer.ACTIVE_SETTINGS_KEY = 'activeWebGLRenderer';
+
+
+/**
  * @inheritDoc
  */
 os.webgl.AbstractWebGLRenderer.prototype.disposeInternal = function() {
@@ -104,6 +133,30 @@ os.webgl.AbstractWebGLRenderer.prototype.disposeInternal = function() {
   this.watchedSettings.forEach(function(key) {
     os.settings.unlisten(key, this.onSettingChange, false, this);
   }, this);
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.webgl.AbstractWebGLRenderer.prototype.getId = function() {
+  return this.id || '';
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.webgl.AbstractWebGLRenderer.prototype.getLabel = function() {
+  return this.label || '';
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.webgl.AbstractWebGLRenderer.prototype.getDescription = function() {
+  return this.description || '';
 };
 
 
