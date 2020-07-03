@@ -11,6 +11,7 @@ goog.require('ol.array');
 goog.require('ol.geom.Point');
 goog.require('ol.geom.Polygon');
 goog.require('os.events.EventType');
+goog.require('os.extent');
 goog.require('os.geo.jsts');
 goog.require('os.interpolate');
 goog.require('os.map');
@@ -218,13 +219,25 @@ os.ui.query.area.UserAreaCtrl = function($scope, $element, $timeout) {
   ];
 
   /**
+   * Flag for whether the box should be reversed. We prefer the shorter path by default, this sets the longer path.
+   * @type {boolean}
+   */
+  this['reverseBox'] = false;
+
+  /**
    * @type {string}
    */
-  this['customPopoverContent'] = 'Enter coordinates with spaces between latitude/longitude and commas separating ' +
-      'coordinate pairs or MGRS values. The polygon will be validated/closed if necessary.<br><br>' +
-      'Takes DD, DMS, DDM or MGRS. If Lat/Lon, the first coordinate is assumed to ' +
-      'be latitude unless it is zero-padded (0683000.55 or 058.135), three-digits (105&deg;30\'10.1&quot; or ' +
-      '105.3), or contains the direction (68 30 12 W or 105 E).';
+  this['reverseHelp'] = `Reverse the horizontal direction of your box, causing it to take the longer path between 
+      your defined corners instead of the shorter one.`;
+
+  /**
+   * @type {string}
+   */
+  this['customPopoverContent'] = `Enter coordinates with spaces between latitude/longitude and commas separating 
+      coordinate pairs or MGRS values. The polygon will be validated/closed if necessary.<br><br>
+      Takes DD, DMS, DDM or MGRS. If Lat/Lon, the first coordinate is assumed to 
+      be latitude unless it is zero-padded (0683000.55 or 058.135), three-digits (105&deg;30'10.1&quot; or 
+      105.3), or contains the direction (68 30 12 W or 105 E).`;
 
   /**
    * The number of polygon coordinates that could not be parsed.
@@ -455,8 +468,14 @@ os.ui.query.area.UserAreaCtrl.prototype.setArea = function(area) {
   if (area && os.map.mapContainer) {
     // display and fly to a preview of the area
     var mapContainer = os.map.mapContainer;
-    mapContainer.addFeature(area, os.style.PREVIEW_CONFIG);
-    mapContainer.flyToExtent(area.getGeometry().getExtent(), 1.5);
+    var geometry = area.getGeometry();
+
+    if (geometry) {
+      mapContainer.addFeature(area, os.style.PREVIEW_CONFIG);
+
+      var extent = this['reverseBox'] ? geometry.getExtent() : os.extent.getFunctionalExtent(geometry);
+      mapContainer.flyToExtent(extent, 1.5);
+    }
   }
 };
 
@@ -539,13 +558,18 @@ os.ui.query.area.UserAreaCtrl.prototype.onUpdateDelay = function() {
  */
 os.ui.query.area.UserAreaCtrl.prototype.getExtent = function() {
   var extent;
-  if (this['corner1']['lon'] != null && this['corner1']['lat'] != null &&
-      this['corner2']['lon'] != null && this['corner2']['lat'] != null) {
+  var lon1 = this['corner1']['lon'];
+  var lat1 = this['corner1']['lat'];
+  var lon2 = this['corner2']['lon'];
+  var lat2 = this['corner2']['lat'];
+
+  if (lon1 != null && lat1 != null && lon2 != null && lat2 != null) {
+    // correct the order so our extent is [minX, minY, maxX, maxY]
     extent = [
-      this['corner1']['lon'],
-      this['corner1']['lat'],
-      this['corner2']['lon'],
-      this['corner2']['lat']
+      lon1 < lon2 ? lon1 : lon2,
+      lat1 < lat2 ? lat1 : lat2,
+      lon2 > lon1 ? lon2 : lon1,
+      lat2 > lat1 ? lat2 : lat1
     ];
   }
 
@@ -560,11 +584,44 @@ os.ui.query.area.UserAreaCtrl.prototype.getExtent = function() {
  * @protected
  */
 os.ui.query.area.UserAreaCtrl.prototype.getBbox = function() {
-  var geometry;
   if (this['canEditGeometry'] || !this.scope['geometry']) {
     var extent = this.getExtent();
-    if (extent) {
-      geometry = ol.geom.Polygon.fromExtent(extent);
+
+    if (extent && ol.extent.getArea(extent) > 1E-6) {
+      var minX = extent[0];
+      var minY = extent[1];
+      var maxX = extent[2];
+      var maxY = extent[3];
+      var maxXNormalizedRight = os.geo2.normalizeLongitude(maxX, minX, minX + 360);
+      var maxXNormalizedLeft = os.geo2.normalizeLongitude(maxX, minX, minX - 360);
+
+      if (this['reverseBox']) {
+        // create the geometry in the opposite direction from the extent
+        maxX = Math.abs(maxX - minX) < 180 ? maxXNormalizedLeft : maxXNormalizedRight;
+      } else {
+        // create the shortest path geometry, but still normalize it in case it crosses the antimeridian
+        maxX = Math.abs(maxX - minX) > 180 ? maxXNormalizedLeft : maxXNormalizedRight;
+      }
+
+      // construct the polygon coordinates with the center points included to force wrapping the intended direction
+      var middleLon = (minX + maxX) / 2;
+      var coords = [
+        [minX, minY],
+        [minX, maxY],
+        [middleLon, maxY],
+        [maxX, maxY],
+        [maxX, minY],
+        [middleLon, minY],
+        [minX, minY]
+      ];
+
+      var geometry = new ol.geom.Polygon([coords]);
+      geometry.set(os.geom.GeometryField.NORMALIZED, true);
+
+      // perform the rhumb interpolation
+      os.interpolate.beginTempInterpolation(undefined, os.interpolate.Method.RHUMB);
+      os.interpolate.interpolateGeom(geometry);
+      os.interpolate.endTempInterpolation();
     }
   } else {
     // editing was disabled, so send the original geometry

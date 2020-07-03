@@ -5,15 +5,32 @@ goog.require('goog.log');
 goog.require('olcs.OLCesium');
 goog.require('olcs.core');
 goog.require('os.MapEvent');
+goog.require('os.data.ProviderEntry');
+goog.require('os.layer.Group');
 goog.require('os.webgl.AbstractWebGLRenderer');
+goog.require('os.webgl.SynchronizerManager');
 goog.require('plugin.cesium');
 goog.require('plugin.cesium.Camera');
 goog.require('plugin.cesium.TerrainLayer');
 goog.require('plugin.cesium.TileGridTilingScheme');
 goog.require('plugin.cesium.command.FlyToSphere');
 goog.require('plugin.cesium.interaction');
+goog.require('plugin.cesium.menu');
 goog.require('plugin.cesium.mixin');
+goog.require('plugin.cesium.mixin.olcs');
+goog.require('plugin.cesium.mixin.renderloop');
+goog.require('plugin.cesium.sync.ImageStaticSynchronizer');
+goog.require('plugin.cesium.sync.ImageSynchronizer');
 goog.require('plugin.cesium.sync.RootSynchronizer');
+goog.require('plugin.cesium.sync.TileSynchronizer');
+goog.require('plugin.cesium.sync.VectorSynchronizer');
+goog.require('plugin.cesium.tiles');
+goog.require('plugin.cesium.tiles.Descriptor');
+goog.require('plugin.cesium.tiles.LayerConfig');
+goog.require('plugin.cesium.tiles.Provider');
+goog.require('plugin.cesium.tiles.TilesetImportUI');
+goog.require('plugin.cesium.tiles.mime');
+
 
 
 /**
@@ -26,6 +43,10 @@ plugin.cesium.CesiumRenderer = function() {
   plugin.cesium.CesiumRenderer.base(this, 'constructor');
   this.log = plugin.cesium.CesiumRenderer.LOGGER_;
   this.maxFeaturesKey = 'maxFeatures.cesium';
+
+  this.id = plugin.cesium.Plugin.ID;
+  this.label = 'Cesium';
+  this.description = 'Cesium is a 3D globe renderer for general use.';
 
   /**
    * The Openlayers/Cesium synchronizer.
@@ -108,6 +129,46 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
     return new goog.Promise(function(resolve, reject) {
       plugin.cesium.loadCesium().then(function() {
         try {
+          // register the default set of synchronizers
+          var sm = os.webgl.SynchronizerManager.getInstance();
+          sm.registerSynchronizer(os.layer.SynchronizerType.VECTOR, plugin.cesium.sync.VectorSynchronizer);
+          sm.registerSynchronizer(os.layer.SynchronizerType.TILE, plugin.cesium.sync.TileSynchronizer);
+          sm.registerSynchronizer(os.layer.SynchronizerType.IMAGE, plugin.cesium.sync.ImageSynchronizer);
+          sm.registerSynchronizer(os.layer.SynchronizerType.DRAW, plugin.cesium.sync.VectorSynchronizer);
+          sm.registerSynchronizer(os.layer.SynchronizerType.IMAGE_STATIC, plugin.cesium.sync.ImageStaticSynchronizer);
+
+          // add 3D layer group
+          var group = new os.layer.Group();
+          group.setPriority(3);
+          group.setOSType(plugin.cesium.CESIUM_ONLY_LAYER);
+          group.setCheckFunc(function(layer) {
+            if (os.implements(layer, os.layer.ILayer.ID)) {
+              return /** @type {os.layer.ILayer} */ (layer).getOSType() === plugin.cesium.CESIUM_ONLY_LAYER;
+            }
+            return false;
+          });
+
+          os.map.mapContainer.addGroup(group);
+
+          // set up menus
+          plugin.cesium.menu.importSetup();
+
+          // register 3D tiles layers
+          var lcm = os.layer.config.LayerConfigManager.getInstance();
+          lcm.registerLayerConfig(plugin.cesium.tiles.ID, plugin.cesium.tiles.LayerConfig);
+
+          var dm = os.dataManager;
+          dm.registerProviderType(new os.data.ProviderEntry(
+              plugin.cesium.tiles.ID,
+              plugin.cesium.tiles.Provider,
+              plugin.cesium.tiles.TYPE,
+              plugin.cesium.tiles.TYPE));
+          dm.registerDescriptorType(plugin.cesium.tiles.ID, plugin.cesium.tiles.Descriptor);
+
+          var im = os.ui.im.ImportManager.getInstance();
+          im.registerImportDetails(plugin.cesium.tiles.TYPE, true);
+          im.registerImportUI(plugin.cesium.tiles.mime.TYPE, new plugin.cesium.tiles.TilesetImportUI());
+
           plugin.cesium.mixin.loadCesiumMixins();
           plugin.cesium.TileGridTilingScheme.init();
 
