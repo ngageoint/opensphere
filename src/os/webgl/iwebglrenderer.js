@@ -14,6 +14,27 @@ os.webgl.IWebGLRenderer = function() {};
 
 
 /**
+ * The text id for the renderer
+ * @return {string}
+ */
+os.webgl.IWebGLRenderer.prototype.getId;
+
+
+/**
+ * A user facing label for the renderer
+ * @return {string}
+ */
+os.webgl.IWebGLRenderer.prototype.getLabel;
+
+
+/**
+ * A user facing description for the renderer
+ * @return {string}
+ */
+os.webgl.IWebGLRenderer.prototype.getDescription;
+
+
+/**
  * If the renderer is initialized.
  * @return {boolean}
  */

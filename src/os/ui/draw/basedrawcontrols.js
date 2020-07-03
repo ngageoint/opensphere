@@ -294,7 +294,7 @@ os.ui.draw.BaseDrawControlsCtrl.prototype.initControlMenu = function() {
     mi.addChild({
       label: 'Country Border',
       eventType: os.ui.menu.draw.EventType.COUNTRY_BORDER,
-      tooltip: 'Draw a box for query, selection, and zoom',
+      tooltip: 'Add a country border as an area',
       icons: ['<i class="fa fa-fw fa-globe"></i> '],
       handler: os.ui.menu.draw.handleDrawEvent,
       sort: 130

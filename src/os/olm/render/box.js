@@ -52,10 +52,10 @@ os.olm.render.Box.prototype.getOriginalGeometry = function() {
 
 
 /**
- * @param {!ol.Extent} extent The extent in lonlat
+ * @param {!ol.geom.Polygon} geometry The geometry
  */
-os.olm.render.Box.prototype.setLonLatExtent = function(extent) {
-  this.originalGeometry_ = ol.geom.Polygon.fromExtent(extent);
+os.olm.render.Box.prototype.updateGeometry = function(geometry) {
+  this.originalGeometry_ = geometry;
   this.originalGeometry_.osTransform();
   this.geometry_ = this.originalGeometry_.clone();
 

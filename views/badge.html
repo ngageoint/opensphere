@@ -1,3 +1,5 @@
-<span class="badge" ng-if="badge.count > 0" ng-class="badge.getClass()">
-  {{badge.count > 9 ? '9+' : badge.count}}
+<span>
+  <span class="badge" ng-class="badge.getClass()" ng-if="badge.count > 0">
+    {{badge.count > 9 ? '9+' : badge.count}}
+  </span>
 </span>
