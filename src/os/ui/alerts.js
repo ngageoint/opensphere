@@ -82,6 +82,7 @@ os.ui.alert.AlertsCtrl.prototype.destroy_ = function() {
  */
 os.ui.alert.AlertsCtrl.prototype.registerAlert_ = function(event) {
   this['alertArray'].unshift({
+    'count': event.getCount(),
     'msg': event.getMessage(),
     'severity': event.getSeverity().toString(),
     'time': event.getTime().toUTCIsoString(true).slice(11)

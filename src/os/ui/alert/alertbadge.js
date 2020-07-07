@@ -119,7 +119,7 @@ os.ui.alert.AlertBadgeCtrl.prototype.getClass = function() {
  */
 os.ui.alert.AlertBadgeCtrl.prototype.handleAlert_ = function(event) {
   if (!this.scope['reset']) {
-    this['count']++;
+    this['count'] += event.getCount();
 
     var severity = event.getSeverity();
     if (severity.value > this['highestAlert'].value) {
