@@ -61,6 +61,12 @@ os.ui.feature.tab.PropertiesTabCtrl = function($scope, $element) {
   this.source = null;
 
   /**
+   * If empty properties should be shown.
+   * @type {boolean}
+   */
+  this['showEmpty'] = os.settings.get(os.ui.feature.tab.PropertiesTabCtrl.SHOW_EMPTY_KEY, true);
+
+  /**
    * Array of feature property model objects.
    * @type {Array<Object<string, *>>}
    */
@@ -69,6 +75,14 @@ os.ui.feature.tab.PropertiesTabCtrl = function($scope, $element) {
   os.ui.feature.tab.PropertiesTabCtrl.base(this, 'constructor', $scope, $element);
 };
 goog.inherits(os.ui.feature.tab.PropertiesTabCtrl, os.ui.feature.tab.AbstractFeatureTabCtrl);
+
+
+/**
+ * Settings key to manage the show empty state.
+ * @type {string}
+ * @const
+ */
+os.ui.feature.tab.PropertiesTabCtrl.SHOW_EMPTY_KEY = 'ui.featureInfo.showEmptyProperties';
 
 
 /**
@@ -85,6 +99,19 @@ os.ui.feature.tab.PropertiesTabCtrl.prototype.updateTab = function(event, data) 
   if (this.source) {
     ol.events.listen(this.source, goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
   }
+
+  this.updateProperties();
+};
+
+
+/**
+ * Toggle if empty values are displayed in the table.
+ * @export
+ */
+os.ui.feature.tab.PropertiesTabCtrl.prototype.toggleEmpty = function() {
+  // Update locally and in settings, then refresh the displayed properties.
+  this['showEmpty'] = !this['showEmpty'];
+  os.settings.set(os.ui.feature.tab.PropertiesTabCtrl.SHOW_EMPTY_KEY, this['showEmpty']);
 
   this.updateProperties();
 };
@@ -119,6 +146,8 @@ os.ui.feature.tab.PropertiesTabCtrl.prototype.updateProperties = function() {
     }
   }
 
+  this.sortProperties_();
+
   os.ui.apply(this.scope);
 };
 
@@ -131,18 +160,20 @@ os.ui.feature.tab.PropertiesTabCtrl.prototype.updateProperties = function() {
  * @private
  */
 os.ui.feature.tab.PropertiesTabCtrl.prototype.addProperty = function(field, value) {
-  if (field && !os.feature.isInternalField(field) && os.object.isPrimitive(value)) {
-    this['properties'].push({
-      'id': field,
-      'field': field,
-      'value': value
-    });
-  } else if (field === os.data.RecordField.TIME) {
-    this['properties'].push({
-      'id': field,
-      'field': os.Fields.TIME,
-      'value': value
-    });
+  if (this['showEmpty'] || (value != null && value !== '')) {
+    if (field && !os.feature.isInternalField(field) && os.object.isPrimitive(value)) {
+      this['properties'].push({
+        'id': field,
+        'field': field,
+        'value': value
+      });
+    } else if (field === os.data.RecordField.TIME) {
+      this['properties'].push({
+        'id': field,
+        'field': os.Fields.TIME,
+        'value': value
+      });
+    }
   }
 };
 
@@ -162,16 +193,28 @@ os.ui.feature.tab.PropertiesTabCtrl.prototype.onSourceChange_ = function(e) {
 
 
 /**
- * Change order
- * @param {string} key
+ * Set the property order column.
+ * @param {string} key The order column.
+ * @export
  */
-os.ui.feature.tab.PropertiesTabCtrl.prototype.order = function(key) {
-  if (key === this.scope['columnToOrder']) {
-    this.scope['reverse'] = !this.scope['reverse'];
-  } else {
-    this.scope['columnToOrder'] = key;
+os.ui.feature.tab.PropertiesTabCtrl.prototype.setOrderColumn = function(key) {
+  if (key) {
+    if (key === this.scope['columnToOrder']) {
+      this.scope['reverse'] = !this.scope['reverse'];
+    } else {
+      this.scope['columnToOrder'] = key;
+    }
   }
 
+  this.sortProperties_();
+};
+
+
+/**
+ * Sort the properties.
+ * @private
+ */
+os.ui.feature.tab.PropertiesTabCtrl.prototype.sortProperties_ = function() {
   var field = this.scope['columnToOrder'];
   var reverse = this.scope['reverse'];
 
