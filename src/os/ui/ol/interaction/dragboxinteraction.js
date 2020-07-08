@@ -42,6 +42,13 @@ os.ui.ol.interaction.DragBox = function(opt_options) {
   this.crossedAntimeridian = false;
 
   /**
+   * Flag for whether the final draw result should be the original geometry or the interpolated one. We
+   * want to return the original when the box is not wider than half the world width.
+   * @type {boolean}
+   */
+  this.useOriginal = true;
+
+  /**
    * @type {!os.olm.render.Box}
    * @protected
    */
@@ -71,7 +78,7 @@ os.ui.ol.interaction.DragBox.prototype.disposeInternal = function() {
  * @inheritDoc
  */
 os.ui.ol.interaction.DragBox.prototype.getGeometry = function() {
-  var geom = this.box2D.getGeometry();
+  var geom = this.useOriginal ? this.box2D.getOriginalGeometry() : this.box2D.getGeometry();
   geom.set(os.geom.GeometryField.NORMALIZED, true);
   geom.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.RHUMB);
   return geom;
@@ -95,6 +102,8 @@ os.ui.ol.interaction.DragBox.prototype.getProperties = function() {
 os.ui.ol.interaction.DragBox.prototype.begin = function(mapBrowserEvent) {
   this.crossedAntimeridian = false;
   this.direction = null;
+  this.useOriginal = true;
+
   os.ui.ol.interaction.DragBox.base(this, 'begin', mapBrowserEvent);
   this.box2D.setMap(mapBrowserEvent.map);
 };
@@ -155,17 +164,25 @@ os.ui.ol.interaction.DragBox.prototype.update = function(mapBrowserEvent) {
     var minY = start[1];
     var maxX = endLon;
     var maxY = end[1];
-    var coords = [
-      [minX, minY],
-      [minX, maxY],
-      [middleLon, maxY],
-      [maxX, maxY],
-      [maxX, minY],
-      [middleLon, minY],
-      [minX, minY]
-    ];
+    var geometry;
 
-    var geometry = new ol.geom.Polygon([coords]);
+    if (Math.abs(maxX - minX) > 180) {
+      var coords = [
+        [minX, minY],
+        [minX, maxY],
+        [middleLon, maxY],
+        [maxX, maxY],
+        [maxX, minY],
+        [middleLon, minY],
+        [minX, minY]
+      ];
+
+      this.useOriginal = false;
+      geometry = new ol.geom.Polygon([coords]);
+    } else {
+      this.useOriginal = true;
+      geometry = ol.geom.Polygon.fromExtent([minX, minY, maxX, maxY]);
+    }
 
     this.updateGeometry(geometry);
   }
