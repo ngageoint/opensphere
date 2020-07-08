@@ -28,8 +28,9 @@ class AlertEvent extends goog.events.Event {
    * @param {AlertEventSeverity} severity The alert severity
    * @param {number=} opt_limit Maximum number of identical messages to display at once
    * @param {goog.events.EventTarget=} opt_dismissDispatcher
+   * @param {number=} opt_count Count of duplicate alert messages
    */
-  constructor(message, severity, opt_limit, opt_dismissDispatcher) {
+  constructor(message, severity, opt_limit, opt_dismissDispatcher, opt_count) {
     super(EventType.ALERT);
 
     /**
@@ -61,6 +62,13 @@ class AlertEvent extends goog.events.Event {
      * @private
      */
     this.severity_ = severity;
+
+    /**
+     * @type {number}
+     * @private
+     */
+    this.count_ = opt_count || 1;
+
     this['id'] = id_++;
   }
 
@@ -97,6 +105,13 @@ class AlertEvent extends goog.events.Event {
    */
   getDismissDispatcher() {
     return this.dismissDispatcher_;
+  }
+
+  /**
+   * @return {number}
+   */
+  getCount() {
+    return this.count_;
   }
 }
 

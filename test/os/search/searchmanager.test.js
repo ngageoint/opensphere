@@ -1,10 +1,10 @@
+
+
 goog.require('os.alert.AlertManager');
 goog.require('os.search');
 goog.require('os.search.MockSearch');
 goog.require('os.search.SearchManager');
-
-
-
+goog.require('os.structs.EventType');
 describe('os.search.SearchManager', function() {
   var alertManager = os.alert.AlertManager.getInstance();
 
@@ -24,8 +24,10 @@ describe('os.search.SearchManager', function() {
   it('should fire off an alert when no manager is registered', function() {
     alertManager.clearAlerts();
     expect(alertManager.savedAlerts_.getCount()).toBe(0);
+    alertManager.listenOnce(os.structs.EventType.ALERT, function(e) {
+      expect(alertManager.savedAlerts_.getCount()).toBe(1);
+    }, false, this);
     os.search.SearchManager.getInstance().search('test', 0, 10);
-    expect(alertManager.savedAlerts_.getCount()).toBe(1);
   });
 
   it('should register searches', function() {
