@@ -61,16 +61,29 @@ os.ui.feature.tab.PropertiesTabCtrl = function($scope, $element) {
   this.source = null;
 
   /**
-   * If empty properties should be shown.
-   * @type {boolean}
+   * Number of properties hidden from view.
+   * @type {number}
+   * @private
    */
-  this['showEmpty'] = os.settings.get(os.ui.feature.tab.PropertiesTabCtrl.SHOW_EMPTY_KEY, true);
+  this.hiddenProperties_ = 0;
 
   /**
    * Array of feature property model objects.
    * @type {Array<Object<string, *>>}
    */
   this['properties'] = null;
+
+  /**
+   * If empty properties should be shown.
+   * @type {boolean}
+   */
+  this['showEmpty'] = os.settings.get(os.ui.feature.tab.PropertiesTabCtrl.SHOW_EMPTY_KEY, true);
+
+  /**
+   * Status message to display below the table.
+   * @type {string}
+   */
+  this['status'] = '';
 
   os.ui.feature.tab.PropertiesTabCtrl.base(this, 'constructor', $scope, $element);
 };
@@ -118,10 +131,27 @@ os.ui.feature.tab.PropertiesTabCtrl.prototype.toggleEmpty = function() {
 
 
 /**
+ * Update the status message.
+ * @private
+ */
+os.ui.feature.tab.PropertiesTabCtrl.prototype.updateStatus_ = function() {
+  if (this['properties']) {
+    const fieldsText = `${this['properties'].length} fields`;
+    const hiddenText = this.hiddenProperties_ > 0 ? `(${this.hiddenProperties_} hidden)` : '';
+    this['status'] = `${fieldsText} ${hiddenText}`;
+  } else {
+    this['status'] = '';
+  }
+};
+
+
+/**
  * Updates the properties table from the current source columns.
  */
 os.ui.feature.tab.PropertiesTabCtrl.prototype.updateProperties = function() {
   this['properties'] = [];
+  this.hiddenProperties_ = 0;
+
   if (this.feature) {
     var source = os.feature.getSource(this.feature);
 
@@ -147,6 +177,7 @@ os.ui.feature.tab.PropertiesTabCtrl.prototype.updateProperties = function() {
   }
 
   this.sortProperties_();
+  this.updateStatus_();
 
   os.ui.apply(this.scope);
 };
@@ -174,6 +205,8 @@ os.ui.feature.tab.PropertiesTabCtrl.prototype.addProperty = function(field, valu
         'value': value
       });
     }
+  } else {
+    this.hiddenProperties_++;
   }
 };
 
