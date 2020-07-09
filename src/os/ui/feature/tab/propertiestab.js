@@ -136,7 +136,8 @@ os.ui.feature.tab.PropertiesTabCtrl.prototype.toggleEmpty = function() {
  */
 os.ui.feature.tab.PropertiesTabCtrl.prototype.updateStatus_ = function() {
   if (this['properties']) {
-    const fieldsText = `${this['properties'].length} fields`;
+    const numProps = this['properties'].length;
+    const fieldsText = `${numProps} field${numProps > 1 ? 's' : ''}`;
     const hiddenText = this.hiddenProperties_ > 0 ? `(${this.hiddenProperties_} hidden)` : '';
     this['status'] = `${fieldsText} ${hiddenText}`;
   } else {
