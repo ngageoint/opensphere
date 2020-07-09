@@ -1,5 +1,5 @@
 <div class="d-flex flex-column flex-fill">
-  <table class="c-properties-table table table-borderless border-bottom m-0">
+  <table class="c-properties-tab__table table table-borderless border-bottom m-0">
     <thead>
       <tr>
         <th ng-click="propctrl.setOrderColumn('field')">
@@ -16,17 +16,18 @@
                 ng-class="{'slick-sort-indicator-desc': !reverse, 'slick-sort-indicator-asc': reverse}">
               </i>
             </div>
-            <i class="fa c-glyph" ng-class="propctrl.showEmpty && 'fa-compress' || 'fa-expand'"
+            <i class="fa fa-compress c-glyph c-properties-tab__toggle-empty"
+              ng-class="!propctrl.showEmpty && 'active'"
               ng-click="propctrl.toggleEmpty()"
-              title="{{propctrl.showEmpty ? 'Hide empty values' : 'Show empty values'}}">
+              title="{{propctrl.showEmpty ? 'Hide empty fields' : 'Show empty fields'}}">
             </i>
           </div>
         </th>
       </tr>
     </thead>
   </table>
-  <div class="u-overflow-y-auto">
-    <table class="c-properties-table table table-striped table-hover m-0">
+  <div class="u-overflow-y-auto flex-fill">
+    <table class="c-properties-tab__table table table-striped table-hover m-0">
       <tbody>
         <tr ng-repeat="property in propctrl.properties" ng-click="propctrl.select($event, property)" ng-class="{'selected': selected==property}">
           <td class="text-truncate" title="{{property.field}}">{{property.field}}</td>
@@ -34,6 +35,9 @@
         </tr>
       </tbody>
     </table>
+  </div>
+  <div class="c-properties-tab__footer border-top p-1" ng-if="propctrl.status">
+    {{propctrl.status}}
   </div>
 </div>
 

@@ -1,8 +1,22 @@
-.c-properties-table {
+$header-bg-color: yiq-contrast-color($body-bg, $gray-200, $gray-800);
+
+.c-properties-tab__table {
   table-layout: fixed;
+
+  thead {
+    background: $header-bg-color;
+  }
 
   th:first-child,
   td:first-child {
     width: 40%;
   }
+}
+
+.c-properties-tab__toggle-empty.active {
+  color: $primary;
+}
+
+.c-properties-tab__footer {
+  background: $header-bg-color;
 }
