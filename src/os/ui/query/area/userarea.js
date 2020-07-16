@@ -594,34 +594,37 @@ os.ui.query.area.UserAreaCtrl.prototype.getBbox = function() {
       var maxY = extent[3];
       var maxXNormalizedRight = os.geo2.normalizeLongitude(maxX, minX, minX + 360);
       var maxXNormalizedLeft = os.geo2.normalizeLongitude(maxX, minX, minX - 360);
+      var geometry;
 
       if (this['reverseBox']) {
         // create the geometry in the opposite direction from the extent
         maxX = Math.abs(maxX - minX) < 180 ? maxXNormalizedLeft : maxXNormalizedRight;
+
+        // construct the polygon coordinates with the center points included to force wrapping the intended direction
+        var middleLon = (minX + maxX) / 2;
+        var coords = [
+          [minX, minY],
+          [minX, maxY],
+          [middleLon, maxY],
+          [maxX, maxY],
+          [maxX, minY],
+          [middleLon, minY],
+          [minX, minY]
+        ];
+
+        geometry = new ol.geom.Polygon([coords]);
+        geometry.set(os.geom.GeometryField.NORMALIZED, true);
+
+        // perform the rhumb interpolation
+        os.interpolate.beginTempInterpolation(undefined, os.interpolate.Method.RHUMB);
+        os.interpolate.interpolateGeom(geometry);
+        os.interpolate.endTempInterpolation();
       } else {
         // create the shortest path geometry, but still normalize it in case it crosses the antimeridian
+        // we only want a true rectangular polygon here as interpolating it adds unnecessary complexity
         maxX = Math.abs(maxX - minX) > 180 ? maxXNormalizedLeft : maxXNormalizedRight;
+        geometry = ol.geom.Polygon.fromExtent([minX, minY, maxX, maxY]);
       }
-
-      // construct the polygon coordinates with the center points included to force wrapping the intended direction
-      var middleLon = (minX + maxX) / 2;
-      var coords = [
-        [minX, minY],
-        [minX, maxY],
-        [middleLon, maxY],
-        [maxX, maxY],
-        [maxX, minY],
-        [middleLon, minY],
-        [minX, minY]
-      ];
-
-      var geometry = new ol.geom.Polygon([coords]);
-      geometry.set(os.geom.GeometryField.NORMALIZED, true);
-
-      // perform the rhumb interpolation
-      os.interpolate.beginTempInterpolation(undefined, os.interpolate.Method.RHUMB);
-      os.interpolate.interpolateGeom(geometry);
-      os.interpolate.endTempInterpolation();
     }
   } else {
     // editing was disabled, so send the original geometry
