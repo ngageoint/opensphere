@@ -150,16 +150,18 @@ class AlertManager extends goog.events.EventTarget {
    */
   sendAlert_(alert, opt_severity, opt_logger, opt_limit, opt_dismissDispatcher) {
     const severity = opt_severity || defaultSeverity_;
+    const throttleMap = this.throttleMap_ && this.throttleMap_[alert] ? this.throttleMap_[alert][severity] : undefined;
+    const throttleCount = throttleMap ? throttleMap.length : undefined;
+
     // fire off the alert
-    const alertEvent = new os.alert.AlertEvent(alert, severity, opt_limit, opt_dismissDispatcher,
-        this.throttleMap_[alert][severity].length);
+    const alertEvent = new os.alert.AlertEvent(alert, severity, opt_limit, opt_dismissDispatcher, throttleCount);
     this.savedAlerts_.add(alertEvent);
     this.dispatchEvent(alertEvent);
 
     // write the message to the logger if defined
     if (opt_logger != null) {
-      if (this.throttleMap_[alert][severity].length > 1) {
-        alert = `${alert} (${this.throttleMap_[alert][severity].length})`;
+      if (throttleMap && throttleMap.length > 1) {
+        alert = `${alert} (${throttleMap.length})`;
       }
       switch (severity) {
         case AlertEventSeverity.ERROR:

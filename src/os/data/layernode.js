@@ -42,6 +42,8 @@ os.data.LayerNode = function() {
   this.layer_ = null;
 
   os.ui.queryManager.listen(goog.events.EventType.PROPERTYCHANGE, this.onNodeChanged_, false, this);
+  os.im.action.ImportActionManager
+      .getInstance().listen(os.im.action.ImportActionEventType.REFRESH, this.onNodeChanged_, false, this);
 };
 goog.inherits(os.data.LayerNode, os.ui.slick.SlickTreeNode);
 os.implements(os.data.LayerNode, os.ui.ILayerUIProvider.ID);
@@ -54,6 +56,8 @@ os.data.LayerNode.prototype.disposeInternal = function() {
   os.data.LayerNode.base(this, 'disposeInternal');
 
   os.ui.queryManager.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onNodeChanged_, false, this);
+  os.im.action.ImportActionManager
+      .getInstance().unlisten(os.im.action.ImportActionEventType.REFRESH, this.onNodeChanged_, false, this);
 
   this.onMouseLeave();
   this.setLayer(null);
