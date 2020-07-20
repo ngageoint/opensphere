@@ -377,3 +377,31 @@ os.array.binaryStrideSearch = function(arr, target, stride, offset, opt_compareF
   // ~left is a shorthand for -left - 1.
   return found ? left : ~left;
 };
+
+
+/**
+ * NOTE: Copied from goog.array.toArray
+ * Converts an object to an array.
+ * @param {IArrayLike<T>|string} object  The object to convert to an
+ *     array.
+ * @return {!Array<T>} The object converted into an array. If object has a
+ *     length property, every property indexed with a non-negative number
+ *     less than length will be included in the result. If object does not
+ *     have a length property, an empty array will be returned.
+ * @template T
+ */
+os.array.toArray = function(object) {
+  var length = object.length;
+
+  // If length is not a number the following is false. This case is kept for
+  // backwards compatibility since there are callers that pass objects that are
+  // not array like.
+  if (length > 0) {
+    var rv = new Array(length);
+    for (var i = 0; i < length; i++) {
+      rv[i] = object[i];
+    }
+    return rv;
+  }
+  return [];
+};

@@ -373,3 +373,54 @@ os.object.unsafeClone = function(obj) {
 
   return obj;
 };
+
+
+/**
+ * NOTE: Copied from goog.object.findKey
+ * Searches an object for an element that satisfies the given condition and
+ * returns its key.
+ * @param {Object<K,V>} obj The object to search in.
+ * @param {function(this:T,V,string,Object<K,V>):boolean} f The
+ *      function to call for every element. Takes 3 arguments (the value,
+ *     the key and the object) and should return a boolean.
+ * @param {T=} opt_this An optional "this" context for the function.
+ * @return {string|undefined} The key of an element for which the function
+ *     returns true or undefined if no such element is found.
+ * @template T,K,V
+ */
+os.object.findKey = function(obj, f, opt_this) {
+  for (const key in obj) {
+    if (f.call(/** @type {?} */ (opt_this), obj[key], key, obj)) {
+      return key;
+    }
+  }
+  return undefined;
+};
+
+
+/**
+ * NOTE: Copied from goog.object.filter
+ * Calls a function for each element in an object/map/hash. If that call returns
+ * true, adds the element to a new object.
+ *
+ * @param {Object<K,V>} obj The object over which to iterate.
+ * @param {function(this:T,V,?,Object<K,V>):boolean} f The function to call
+ *     for every element. This
+ *     function takes 3 arguments (the value, the key and the object)
+ *     and should return a boolean. If the return value is true the
+ *     element is added to the result object. If it is false the
+ *     element is not included.
+ * @param {T=} opt_obj This is used as the 'this' object within f.
+ * @return {!Object<K,V>} a new object in which only elements that passed the
+ *     test are present.
+ * @template T,K,V
+ */
+os.object.filter = function(obj, f, opt_obj) {
+  const res = {};
+  for (const key in obj) {
+    if (f.call(/** @type {?} */ (opt_obj), obj[key], key, obj)) {
+      res[key] = obj[key];
+    }
+  }
+  return res;
+};
