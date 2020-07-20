@@ -1,8 +1,5 @@
 {
   "admin": {
-    "settingsStorage": {
-      "type": "local"
-    },
     "about": {
       "application": "OpenSphere",
       "logoPath": "images/logo.svg",
@@ -200,6 +197,11 @@
       }
     },
     "plugins": {},
+    "plugin": {
+      "storage": {
+        "persistenceHelp": "https://web.dev/persistent-storage/"
+      }
+    },
     "bearing": {
       "cofUrl": "vendor/geomag/WMM.txt",
       "cofVersion": "2015-2020",
