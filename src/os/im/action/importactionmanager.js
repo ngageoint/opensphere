@@ -610,3 +610,17 @@ os.im.action.ImportActionManager.prototype.onAddActionEntry_ = function(event) {
     os.alertManager.sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
   }
 };
+
+
+
+/**
+ * @param {string} id
+ * @return {boolean}
+ */
+os.im.action.ImportActionManager.prototype.hasActiveActions = function(id) {
+  var featureActions = id == undefined ? [] : this.getActionEntries(id);
+
+  const hasActiveActions = (action) => action.isEnabled();
+
+  return featureActions.some(hasActiveActions);
+};

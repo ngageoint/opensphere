@@ -103,7 +103,7 @@ exports.advancedDialog = {
 exports.alertsDialog = {
   DIALOG: '#alerts',
   DIALOG_HEADER: '[title=\'Alerts\']',
-  DIALOG_CLOSE: '#alerts .close',
+  DIALOG_CLOSE: '[label=\'Alerts\'] .close',
   ALERT: '.alert',
   SHOW_POPUPS_CHECKBOX: '[for=\'alerts__show-popups\']',
   CLEAR_ALERTS_BUTTON: '[title=\'Clear all alerts\']'
