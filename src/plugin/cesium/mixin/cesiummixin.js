@@ -21,6 +21,23 @@ plugin.cesium.mixin.loadCesiumMixins = function() {
   const oldCreateImage = Cesium.Resource._Implementations.createImage;
 
   /**
+   * Gets the port from a URL. Cesium requires passing a valid port to its TrustedServers API.
+   * Returns 443 for https, 80 for http and everything else that isn't specified.
+   * @param {URL} url The URL to get the port from.
+   * @return {number} The port.
+   */
+  const getPort = (url) => {
+    let port = parseInt(url.port, 10);
+
+    if (isNaN(port) || port == null) {
+      // if it's not specified, use 443 for https or 80 else
+      port = url.protocol === 'https:' ? 443 : 80;
+    }
+
+    return port;
+  };
+
+  /**
    * This "fixes" Cesium's lackluster crossOrigin support by setting crossOrigin on the image to an actual value.
    * Firefox will not be able to load tiles without this change.
    *
@@ -38,7 +55,7 @@ plugin.cesium.mixin.loadCesiumMixins = function() {
       const osCrossOrigin = os.net.getCrossOrigin(url);
       if (osCrossOrigin != os.net.CrossOrigin.NONE) {
         url = new URL(url);
-        Cesium.TrustedServers.add(url.hostname, parseInt(url.port, 10));
+        Cesium.TrustedServers.add(url.hostname, getPort(url));
       }
     }
 
