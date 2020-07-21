@@ -52,6 +52,13 @@ $web-font-path: 'https://fonts.googleapis.com/css?family=Open+Sans:400,700' !def
     &:hover {
       background: $body-bg;
     }
+
+    &:not([disabled]):not(.disabled):hover,
+    &:not([disabled]):not(.disabled):focus,
+    &:not([disabled]):not(.disabled):active,
+    &:not([disabled]):not(.disabled).active {
+      background-image: inherit;
+    }
   }
 
   .nav-link.active,
