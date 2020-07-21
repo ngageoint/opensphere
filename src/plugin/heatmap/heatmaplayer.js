@@ -198,6 +198,7 @@ plugin.heatmap.Heatmap.prototype.onPreCompose_ = function(event) {
 
       // cache the image and its data URL for the synchronizer
       this.set('url', c.toDataURL());
+      this.set('canvas', c);
     }
   }
 };
