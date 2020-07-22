@@ -1,5 +1,6 @@
 goog.provide('plugin.heatmap');
 goog.provide('plugin.heatmap.HeatmapField');
+goog.provide('plugin.heatmap.HeatmapPropertyType');
 goog.provide('plugin.heatmap.SynchronizerType');
 
 goog.require('ol.Feature');

@@ -197,8 +197,7 @@ plugin.heatmap.Heatmap.prototype.onPreCompose_ = function(event) {
       ctx.drawImage(canvas, 0, 0);
 
       // cache the image and its data URL for the synchronizer
-      this.set('url', c.toDataURL());
-      this.set('canvas', c);
+      this.set(plugin.heatmap.Heatmap.LayerValues.CANVAS, c);
     }
   }
 };
@@ -639,4 +638,13 @@ plugin.heatmap.Heatmap.drawShadow = function(context, sizeY, blur) {
   context.shadowBlur = blur;
   context.shadowColor = '#000';
   context.fill();
+};
+
+
+/**
+ * @enum {string}
+ * @const
+ */
+plugin.heatmap.Heatmap.LayerValues = {
+  CANVAS: 'canvas'
 };

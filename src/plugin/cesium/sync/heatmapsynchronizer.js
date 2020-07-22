@@ -9,7 +9,8 @@ const PropertyChange = goog.require('os.layer.PropertyChange');
 const events = goog.require('os.ol.events');
 const cesium = goog.require('plugin.cesium');
 const CesiumSynchronizer = goog.require('plugin.cesium.sync.CesiumSynchronizer');
-
+const HeatmapPropertyType = goog.require('plugin.heatmap.HeatmapPropertyType');
+const {LayerValues: HeatmapLayerValues} = goog.require('plugin.heatmap.Heatmap');
 
 /**
  * Synchronizes a single OpenLayers image layer to Cesium.
@@ -105,7 +106,8 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
     }
 
     // get the image
-    var img = /** @type {string|undefined} */ (this.layer.get('url'));
+    var canvas = /** @type {HTMLCanvasElement|undefined} */ (this.layer.get(HeatmapLayerValues.CANVAS));
+    var img = /** @type {string|null} */ (canvas ? canvas.toDataURL() : null);
     if (!img) {
       // if we don't have it, create it (that function re-calls this one)
       this.createHeatmap();
@@ -146,7 +148,9 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
           cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
           os.dispatcher.dispatchEvent(MapEvent.GL_REPAINT);
         }
-      } else if (p == 'intensity' || p == 'size' || p == 'gradient') {
+      } else if (p == HeatmapPropertyType.INTENSITY ||
+          p == HeatmapPropertyType.SIZE ||
+          p == HeatmapPropertyType.GRADIENT) {
         this.createHeatmap();
       }
     }
