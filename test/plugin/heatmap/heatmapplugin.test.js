@@ -2,8 +2,10 @@ goog.require('os.data.event.DataEvent');
 goog.require('os.source.Vector');
 goog.require('os.ui.menu.layer');
 goog.require('os.webgl.SynchronizerManager');
+goog.require('plugin.cesium.sync.HeatmapSynchronizer');
 goog.require('plugin.heatmap.HeatmapLayerConfig');
 goog.require('plugin.heatmap.HeatmapPlugin');
+goog.require('plugin.heatmap.SynchronizerType');
 goog.require('plugin.heatmap.menu');
 
 
@@ -37,6 +39,12 @@ describe('plugin.heatmap.HeatmapPlugin', function() {
 
     var layer = createLayer();
     var sm = os.webgl.SynchronizerManager.getInstance();
+
+    // now is registered by the WebGLRenderer (e.g. Cesium) plugin; spoof it
+    sm.registerSynchronizer(
+        plugin.heatmap.SynchronizerType.HEATMAP,
+        plugin.cesium.sync.HeatmapSynchronizer);
+
     var synchronizer = sm.getSynchronizer(layer);
     expect(synchronizer).toBe(plugin.cesium.sync.HeatmapSynchronizer);
     sm.synchronizers_ = {};
