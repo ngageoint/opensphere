@@ -605,13 +605,11 @@ plugin.file.kml.KMLParser.prototype.handleZipEntries = function(entries) {
 
       this.kmzImagesRemaining_++;
 
-      entry.getData(new zip.Data64URIWriter('image/' + result[1]),
-          this.processZipImage_.bind(this, entry.filename));
+      entry.getData(new zip.Data64URIWriter('image/' + result[1]), this.processZipAsset_.bind(this, entry.filename));
     } else if (collada.test(entry.filename)) {
       this.hasModel_ = true;
       this.kmzImagesRemaining_++;
-      entry.getData(new zip.TextWriter(),
-          this.processZipCollada_.bind(this, entry.filename));
+      entry.getData(new zip.TextWriter(), this.processZipAsset_.bind(this, entry.filename));
     }
   }
 
@@ -660,11 +658,12 @@ plugin.file.kml.KMLParser.prototype.imagesRemaining_ = function() {
 
 
 /**
+ * Handler for processing assets within the ZIP file. This includes images and collada model files.
  * @param {*} filename
  * @param {*} uri
  * @private
  */
-plugin.file.kml.KMLParser.prototype.processZipImage_ = function(filename, uri) {
+plugin.file.kml.KMLParser.prototype.processZipAsset_ = function(filename, uri) {
   if (typeof filename === 'string' && typeof uri === 'string') {
     this.assetMap_[filename] = uri;
     this.kmzImagesRemaining_--;
@@ -674,20 +673,6 @@ plugin.file.kml.KMLParser.prototype.processZipImage_ = function(filename, uri) {
   }
 };
 
-/**
- * @param {*} filename
- * @param {*} content
- * @private
- */
-plugin.file.kml.KMLParser.prototype.processZipCollada_ = function(filename, content) {
-  if (typeof filename === 'string' && typeof content === 'string') {
-    this.assetMap_[filename] = content;
-    this.kmzImagesRemaining_--;
-  } else {
-    goog.log.error(this.log_, 'There was a problem unzipping the KMZ!');
-    this.onError();
-  }
-};
 
 /**
  * @param {string} filename
