@@ -422,7 +422,7 @@ os.config.DisplaySettingsCtrl.prototype.useCurrentPosition = function() {
   this['cameraState'] = os.MapContainer.getInstance().persistCameraState();
 
   if (os.settings) {
-    this.updateSetting_(os.config.DisplaySetting.CAMERA_STATE, JSON.stringify(this['cameraState']));
+    this.updateSetting_(os.config.DisplaySetting.CAMERA_STATE, this['cameraState']);
   }
 };
 
