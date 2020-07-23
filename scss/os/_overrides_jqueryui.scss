@@ -146,9 +146,6 @@
   }
 
   .ui-menu-divider {
-    // This part ignores the default jquery styles
-    @include nav-divider($dropdown-divider-bg);
-
     // This gets the same styles defined for dropdown-divider. Used for when themes specify after the fact
     @extend .dropdown-divider;
   }
