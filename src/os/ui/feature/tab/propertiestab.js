@@ -44,6 +44,8 @@ os.ui.Module.directive('propertiestab', [os.ui.feature.tab.propertiesTabDirectiv
  * @ngInject
  */
 os.ui.feature.tab.PropertiesTabCtrl = function($scope, $element) {
+  os.ui.feature.tab.PropertiesTabCtrl.base(this, 'constructor', $scope, $element);
+
   $scope['columnToOrder'] = 'field';
   $scope['reverse'] = false;
   $scope['selected'] = null;
@@ -84,8 +86,6 @@ os.ui.feature.tab.PropertiesTabCtrl = function($scope, $element) {
    * @type {string}
    */
   this['status'] = '';
-
-  os.ui.feature.tab.PropertiesTabCtrl.base(this, 'constructor', $scope, $element);
 };
 goog.inherits(os.ui.feature.tab.PropertiesTabCtrl, os.ui.feature.tab.AbstractFeatureTabCtrl);
 
@@ -101,19 +101,38 @@ os.ui.feature.tab.PropertiesTabCtrl.SHOW_EMPTY_KEY = 'ui.featureInfo.showEmptyPr
 /**
  * @inheritDoc
  */
+os.ui.feature.tab.PropertiesTabCtrl.prototype.destroy = function() {
+  os.ui.feature.tab.PropertiesTabCtrl.base(this, 'destroy');
+  this.setFeature(null);
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.ui.feature.tab.PropertiesTabCtrl.prototype.updateTab = function(event, data) {
+  const feature = data instanceof ol.Feature ? /** @type {ol.Feature} */ (data) : null;
+  this.setFeature(feature);
+  this.updateProperties();
+};
+
+
+/**
+ * Set the feature displayed by the tab.
+ * @param {ol.Feature} feature The feature.
+ * @protected
+ */
+os.ui.feature.tab.PropertiesTabCtrl.prototype.setFeature = function(feature) {
   if (this.source) {
     ol.events.unlisten(this.source, goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
   }
 
-  this.feature = data instanceof ol.Feature ? /** @type {ol.Feature} */ (data) : null;
-  this.source = os.feature.getSource(this.feature);
+  this.feature = feature;
+  this.source = feature ? os.feature.getSource(feature) : null;
 
   if (this.source) {
     ol.events.listen(this.source, goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
   }
-
-  this.updateProperties();
 };
 
 
