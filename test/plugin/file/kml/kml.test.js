@@ -64,6 +64,38 @@ describe('plugin.file.kml', function() {
     expect(link['viewRefreshTime']).toBe(viewRefreshTime);
   });
 
+  it('reads a relative-URI kml:Link element with incorrect (but still supported) backslashes', function() {
+    // this covers a case of reading relative-URI assets from a KMZ file with backslash-delimited paths
+    var href = 'images\\relative\\url\\image.png';
+    var forwardSlashHref = 'images/relative/url/image.png';
+    var refreshMode = 'onInterval';
+    var refreshInterval = 10;
+    var viewRefreshMode = 'onStop';
+    var viewRefreshTime = 15;
+
+    var linkXml =
+        '<Link>' +
+        '<href>' + href + '</href>' +
+        '<refreshMode>' + refreshMode + '</refreshMode>' +
+        '<refreshInterval>' + refreshInterval + '</refreshInterval>' +
+        '<viewRefreshMode>' + viewRefreshMode + '</viewRefreshMode>' +
+        '<viewRefreshTime>' + viewRefreshTime + '</viewRefreshTime>' +
+        '</Link>';
+    var doc = goog.dom.xml.loadXml(linkXml);
+    var linkEl = goog.dom.getFirstElementChild(doc);
+
+    linkEl.assetMap = {
+      [forwardSlashHref]: 'data://fakeimagedatauri'
+    };
+
+    var link = ol.xml.pushParseAndPop({}, plugin.file.kml.OL_LINK_PARSERS(), linkEl, []);
+    expect(link['href']).toBe(forwardSlashHref);
+    expect(link['refreshMode']).toBe(refreshMode);
+    expect(link['refreshInterval']).toBe(refreshInterval);
+    expect(link['viewRefreshMode']).toBe(viewRefreshMode);
+    expect(link['viewRefreshTime']).toBe(viewRefreshTime);
+  });
+
   describe('Track and MultiTrack Support', function() {
     /**
      * Generate coord/when XML pairs to define a Track.
