@@ -9,6 +9,7 @@ goog.require('os.data.OSDataManager');
 goog.require('os.ex.ZipExporter');
 goog.require('os.file.File');
 goog.require('os.source.Vector');
+goog.require('os.time.ITime');
 goog.require('plugin.file.shp.data.SHPHeader');
 goog.require('plugin.file.shp.ui.shpExportDirective');
 
@@ -1035,8 +1036,10 @@ plugin.file.shp.SHPExporter.prototype.addMetadata_ = function(item) {
     var field = col['field'];
 
     var value = item.get(field);
-    if (field == os.data.RecordField.TIME) {
-      value = value.toISOString();
+    value = value == null ? '' : value;
+
+    if (field == os.data.RecordField.TIME && os.implements(value, os.time.ITime.ID)) {
+      value = /** @type {os.time.ITime} */ (value).toISOString();
     } else {
       value = goog.string.makeSafe(value);
       value = goog.string.trim(value);
