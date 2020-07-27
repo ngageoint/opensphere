@@ -10,7 +10,7 @@ const events = goog.require('os.ol.events');
 const cesium = goog.require('plugin.cesium');
 const CesiumSynchronizer = goog.require('plugin.cesium.sync.CesiumSynchronizer');
 const HeatmapPropertyType = goog.require('plugin.heatmap.HeatmapPropertyType');
-const {LayerValues: HeatmapLayerValues} = goog.require('plugin.heatmap.Heatmap');
+const HeatmapField = goog.require('plugin.heatmap.HeatmapField');
 
 /**
  * Synchronizes a single OpenLayers image layer to Cesium.
@@ -106,7 +106,7 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
     }
 
     // get the image
-    var canvas = /** @type {HTMLCanvasElement|undefined} */ (this.layer.get(HeatmapLayerValues.CANVAS));
+    var canvas = /** @type {HTMLCanvasElement|undefined} */ (this.layer.get(HeatmapField.CANVAS));
     var img = /** @type {string|null} */ (canvas ? canvas.toDataURL() : null);
     if (!img) {
       // if we don't have it, create it (that function re-calls this one)

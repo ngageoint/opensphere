@@ -25,7 +25,8 @@ plugin.heatmap.SynchronizerType.HEATMAP = 'heatmap';
  */
 plugin.heatmap.HeatmapField = {
   GEOMETRY_TYPE: '_geometryType',
-  HEATMAP_GEOMETRY: '_heatmapGeometry'
+  HEATMAP_GEOMETRY: '_heatmapGeometry',
+  CANVAS: '_canvas'
 };
 
 
