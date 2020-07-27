@@ -406,7 +406,7 @@ os.MapContainer.prototype.handleViewChange_ = function() {
   if (cameraMode == os.CameraMode.LAST) {
     try {
       var cameraState = this.persistCameraState();
-      os.settings.set(os.config.DisplaySetting.CAMERA_STATE, JSON.stringify(cameraState));
+      os.settings.set(os.config.DisplaySetting.CAMERA_STATE, cameraState);
     } catch (e) {
       goog.log.error(os.MapContainer.LOGGER_, 'Error persisting camera state:', e);
     }
@@ -1087,19 +1087,12 @@ os.MapContainer.prototype.initSettings = function() {
  * @protected
  */
 os.MapContainer.prototype.initCameraSettings = function() {
-  var cameraState = /** @type {string|undefined} */ (os.settings.get(os.config.DisplaySetting.CAMERA_STATE));
-  if (cameraState) {
-    try {
-      cameraState = /** @type {!osx.map.CameraState} */ (JSON.parse(cameraState));
-    } catch (e) {
-      goog.log.error(os.MapContainer.LOGGER_, 'Failed restoring camera state:', e);
-      cameraState = undefined;
-    }
-  }
+  var cameraState =
+    /** @type {osx.map.CameraState|undefined} */ (os.settings.get(os.config.DisplaySetting.CAMERA_STATE));
 
   // if a camera state was saved to settings, restore it now
   if (cameraState) {
-    this.restoreCameraState(/** @type {!osx.map.CameraState} */ (cameraState));
+    this.restoreCameraState(cameraState);
   }
 };
 
