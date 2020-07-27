@@ -940,17 +940,18 @@ os.MapContainer.prototype.init = function() {
   tileGroup.setCheckFunc(os.MapContainer.isTileLayer);
   tileGroup.setOSType(os.layer.LayerType.TILES);
 
+  var imageGroup = new os.layer.Group({
+    hidden: true
+  });
+  imageGroup.setPriority(-1);
+  imageGroup.setCheckFunc(os.MapContainer.isImageLayer);
+  imageGroup.setOSType(os.layer.LayerType.IMAGE);
+
   var vectorGroup = new os.layer.Group({
     layers: [this.drawingLayer_]
   });
   vectorGroup.setCheckFunc(os.MapContainer.isVectorLayer);
   vectorGroup.setOSType(os.layer.LayerType.FEATURES);
-
-  var imageGroup = new os.layer.Group({
-    hidden: true
-  });
-  imageGroup.setCheckFunc(os.MapContainer.isImageLayer);
-  imageGroup.setOSType(os.layer.LayerType.IMAGE);
 
   var referenceGroup = new os.layer.Group();
   referenceGroup.setPriority(100);
@@ -982,9 +983,9 @@ os.MapContainer.prototype.init = function() {
     interactions: this.interactionFunction_ ? this.interactionFunction_() : undefined,
     layers: new ol.Collection([
       tileGroup,
+      imageGroup,
       vectorGroup,
-      referenceGroup,
-      imageGroup
+      referenceGroup
     ]),
     // prevents a blank map while flyTo animates
     loadTilesWhileAnimating: true,
