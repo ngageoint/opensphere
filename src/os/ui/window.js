@@ -898,7 +898,17 @@ os.ui.WindowCtrl.prototype.disposeInternal = function() {
   }
 
   if (this.scope['modal']) {
-    this.removeModalBg();
+    const moreModalsLeft = Object.keys(os.ui.window.openWindows_).some((key) => {
+      if (key == '#' + this.scope['id']) {
+        return false;
+      }
+
+      const win = os.ui.window.getById(key);
+      const scope = win.children().first().scope();
+      return scope && scope['modal'];
+    });
+
+    this.removeModalBg(moreModalsLeft);
   }
 
   this.getWindowKeys().forEach(function(key) {
@@ -945,10 +955,14 @@ os.ui.WindowCtrl.prototype.addModalBg = function() {
 
 /**
  * Removes the modal backdrop
+ * @param {boolean=} opt_keepBodyClass Optional flag to leave modal-open on the body, defaults to false
  */
-os.ui.WindowCtrl.prototype.removeModalBg = function() {
+os.ui.WindowCtrl.prototype.removeModalBg = function(opt_keepBodyClass) {
   if (this.modalElement) {
-    $('body').removeClass('modal-open');
+    if (!opt_keepBodyClass) {
+      $('body').removeClass('modal-open');
+    }
+
     $(os.ui.windowSelector.MODAL_BG).first().remove();
     this.modalElement = null;
   }
