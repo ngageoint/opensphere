@@ -255,10 +255,12 @@ os.ui.query.BaseCombinatorCtrl.prototype.getLayerId_ = function(opt_default) {
   var layerId;
 
   // always use the layerId value if the layer chooser is hidden
-  if (!this.scope['hideLayerChooser'] && this.scope['layer']) {
-    layerId = /** @type {string|undefined} */ (this.scope['layer']['id']);
-  } else {
-    layerId = /** @type {string|undefined} */ (this.scope['layerId']);
+  if (this.scope) {
+    if (!this.scope['hideLayerChooser'] && this.scope['layer']) {
+      layerId = /** @type {string|undefined} */ (this.scope['layer']['id']);
+    } else {
+      layerId = /** @type {string|undefined} */ (this.scope['layerId']);
+    }
   }
 
   return layerId || opt_default;
