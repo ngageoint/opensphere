@@ -84,6 +84,13 @@ describe('os.geo', function() {
     expect(result.lat).toBeCloseTo(10.51);
   });
 
+  it('should parse DMS lat and lon separately with unit delimiters with direction and opt_format', function() {
+    var resultLat = os.geo.parseLat('10° 30\' 36" S', 'DMS');
+    var resultLon = os.geo.parseLon('50° 15\' 45" W', 'DMS');
+    expect(resultLat).toBeCloseTo(-10.51);
+    expect(resultLon).toBeCloseTo(-50.2625);
+  });
+
   it('should parse DMS with unit delimiters without spaces or direction', function() {
     var result = os.geo.parseLatLon('10°30\'36"50°15\'45"');
     expect(result.lon).toBeCloseTo(50.2625);
