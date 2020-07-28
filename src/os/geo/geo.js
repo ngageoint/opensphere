@@ -899,7 +899,7 @@ os.geo.parseLon = function(str, opt_format) {
         break;
       case 'DDM':
         confs.push({
-          regex: new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_RELAXED_ + os.geo.END_, 'i'),
+          regex: new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_RELAXED_ + os.geo.OPT_DIRECTION_ + os.geo.END_, 'i'),
           coords: {deg: 2, min: 3, sec: null, dir: [1, 5]}
         });
         confs.push({
@@ -913,7 +913,7 @@ os.geo.parseLon = function(str, opt_format) {
         break;
       case 'DMS':
         confs.push({
-          regex: new RegExp(os.geo.START_ + os.geo.DMS_DELIMITED_RELAXED_ + os.geo.END_, 'i'),
+          regex: new RegExp(os.geo.START_ + os.geo.DMS_DELIMITED_RELAXED_ + os.geo.OPT_DIRECTION_ + os.geo.END_, 'i'),
           coords: {deg: 2, min: 3, sec: 5, dir: [1, 7]}
         });
         confs.push({
@@ -994,7 +994,7 @@ os.geo.parseLat = function(str, opt_format) {
         break;
       case 'DDM':
         confs.push({
-          regex: new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_RELAXED_ + os.geo.END_, 'i'),
+          regex: new RegExp(os.geo.START_ + os.geo.DDM_DELIMITED_RELAXED_ + os.geo.OPT_DIRECTION_ + os.geo.END_, 'i'),
           coords: {deg: 2, min: 3, sec: null, dir: [1, 5]}
         });
         confs.push({
@@ -1008,7 +1008,7 @@ os.geo.parseLat = function(str, opt_format) {
         break;
       case 'DMS':
         confs.push({
-          regex: new RegExp(os.geo.START_ + os.geo.DMS_DELIMITED_RELAXED_ + os.geo.END_, 'i'),
+          regex: new RegExp(os.geo.START_ + os.geo.DMS_DELIMITED_RELAXED_ + os.geo.OPT_DIRECTION_ + os.geo.END_, 'i'),
           coords: {deg: 2, min: 3, sec: 5, dir: [1, 7]}
         });
         confs.push({
