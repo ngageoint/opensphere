@@ -371,12 +371,8 @@ os.ui.window.closeAll = function(opt_parent) {
   var winContainer = angular.element(container);
   if (winContainer.length) {
     var wins = winContainer.find(os.ui.windowSelector.WINDOW);
-    if (wins instanceof Array) {
-      os.array.forEach(wins, function(win) {
-        os.ui.window.close(win);
-      });
-    } else {
-      os.ui.window.close(wins);
+    if (wins.length) {
+      os.array.forEach(wins, (win) => os.ui.window.close(/** @type {angular.JQLite} */ ($(win))));
     }
   }
 };
