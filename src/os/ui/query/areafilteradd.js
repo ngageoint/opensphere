@@ -591,8 +591,9 @@ os.ui.query.AreaFilterAddCtrl.prototype.onAreasSelected_ = function(features) {
  * @param {string} label
  * @param {boolean=} opt_hideArea
  * @param {boolean=} opt_hideFilter
+ * @param {boolean=} opt_modal
  */
-os.ui.query.AreaFilterAddCtrl.launch = function(label, opt_hideArea, opt_hideFilter) {
+os.ui.query.AreaFilterAddCtrl.launch = function(label, opt_hideArea, opt_hideFilter, opt_modal) {
   var id = 'areafilteradd';
   if (os.ui.window.exists(id)) {
     os.ui.window.bringToFront(id);
@@ -611,7 +612,8 @@ os.ui.query.AreaFilterAddCtrl.launch = function(label, opt_hideArea, opt_hideFil
     'max-width': 1000,
     'height': 600,
     'min-height': 300,
-    'max-height': 1000
+    'max-height': 1000,
+    'modal': !!opt_modal
   };
 
   var template = '<areafilteradd';
