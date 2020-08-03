@@ -1,5 +1,6 @@
 goog.provide('plugin.heatmap');
 goog.provide('plugin.heatmap.HeatmapField');
+goog.provide('plugin.heatmap.HeatmapPropertyType');
 goog.provide('plugin.heatmap.SynchronizerType');
 
 goog.require('ol.Feature');
@@ -24,7 +25,8 @@ plugin.heatmap.SynchronizerType.HEATMAP = 'heatmap';
  */
 plugin.heatmap.HeatmapField = {
   GEOMETRY_TYPE: '_geometryType',
-  HEATMAP_GEOMETRY: '_heatmapGeometry'
+  HEATMAP_GEOMETRY: '_heatmapGeometry',
+  CANVAS: '_canvas'
 };
 
 

@@ -197,7 +197,7 @@ plugin.heatmap.Heatmap.prototype.onPreCompose_ = function(event) {
       ctx.drawImage(canvas, 0, 0);
 
       // cache the image and its data URL for the synchronizer
-      this.set('url', c.toDataURL());
+      this.set(plugin.heatmap.HeatmapField.CANVAS, c);
     }
   }
 };

@@ -4,7 +4,6 @@ goog.require('os.plugin.AbstractPlugin');
 goog.require('plugin.cesium.CesiumRenderer');
 
 
-
 /**
  * Provides a WebGL renderer for the map, powered by Cesium.
  *
