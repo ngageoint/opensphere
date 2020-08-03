@@ -5,10 +5,8 @@ goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.ui.action.Action');
 goog.require('os.ui.action.MenuOptions');
-goog.require('os.webgl.SynchronizerManager');
 goog.require('plugin.heatmap');
 goog.require('plugin.heatmap.HeatmapLayerConfig');
-goog.require('plugin.heatmap.HeatmapSynchronizer');
 goog.require('plugin.heatmap.menu');
 
 
@@ -45,8 +43,4 @@ plugin.heatmap.HeatmapPlugin.prototype.init = function() {
       source.setSupportsAction(plugin.heatmap.menu.EventType.GENERATE_HEATMAP, true);
     }
   });
-
-  // add our synchronizer
-  var sm = os.webgl.SynchronizerManager.getInstance();
-  sm.registerSynchronizer(plugin.heatmap.SynchronizerType.HEATMAP, plugin.heatmap.HeatmapSynchronizer);
 };
