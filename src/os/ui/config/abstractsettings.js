@@ -52,6 +52,11 @@ os.ui.config.AbstractSettingsCtrl = function($scope, $timeout) {
    */
   this.scope['selected'] = null;
 
+  /**
+   * @type {string}
+   */
+  this.scope['resetDisabledText'] = '';
+
   this.scope.$watch('selected', this.onSelected.bind(this));
   this.scope.$on('$destroy', this.destroy.bind(this));
 
@@ -110,7 +115,25 @@ os.ui.config.AbstractSettingsCtrl.prototype.getUi = function(item) {
  * @export
  */
 os.ui.config.AbstractSettingsCtrl.prototype.reset = function() {
-  os.ui.util.resetSettings();
+  if (!this.scope['resetDisabledText']) {
+    os.ui.util.resetSettings();
+  } else {
+    os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+      'prompt': this.scope['resetDisabledText'],
+      'yesText': 'Ok',
+      'noText': '',
+      'windowOptions': {
+        'id': 'resetDisabled',
+        'label': 'Reset Disabled',
+        'icon': 'fa fa-refresh',
+        'width': '400',
+        'height': 'auto',
+        'no-scroll': true,
+        'modal': true,
+        'headerClass': 'bg-danger u-bg-danger-text'
+      }
+    }));
+  }
 };
 
 

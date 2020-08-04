@@ -19,7 +19,6 @@ goog.require('os.ui.menu.MenuItemType');
 goog.require('os.ui.menu.windows');
 goog.require('os.ui.modal.aboutModalDirective');
 goog.require('os.ui.onboarding.OnboardingManager');
-goog.require('os.ui.util.ResetSettings');
 
 
 /**
@@ -210,12 +209,6 @@ os.ui.help.HelpCtrl.prototype.initialize = function() {
     sort: 150
   });
   this.menu.listen(os.ui.help.EventType.VIEW_LOG, this.onHelpAction_, false, this);
-
-
-  root.addChild(os.ui.util.resetSettingsOptions);
-  this.menu.listen(os.ui.EventType.DISPLAY_CLEAR_LOCALSTORAGE, function() {
-    os.ui.util.resetSettings();
-  });
 };
 
 

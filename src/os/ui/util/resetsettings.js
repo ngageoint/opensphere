@@ -43,16 +43,3 @@ os.ui.util.resetSettings = function(opt_parent) {
     windowOptions: windowOptions
   }));
 };
-
-
-/**
- * Action for clearing local storage. Should be added to help action managers.
- * @type {!os.ui.menu.MenuItemOptions}
- */
-os.ui.util.resetSettingsOptions = {
-  eventType: os.ui.EventType.DISPLAY_CLEAR_LOCALSTORAGE,
-  label: 'Reset Settings',
-  tooltip: 'Clears your browser\'s local storage',
-  icons: ['<i class="fa fa-fw fa-refresh"></i>'],
-  sort: 1000
-};
