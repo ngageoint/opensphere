@@ -48,14 +48,15 @@ os.ui.file.FileXTHandler.prototype.getTypes = function() {
  * @inheritDoc
  */
 os.ui.file.FileXTHandler.prototype.process = function(data, type, sender, time) {
-  var url = /** @type {string} */ (data.url);
+  const url = /** @type {string} */ (data.url);
 
   if (type === os.ui.file.FileXTHandler.TYPE) {
     if (goog.string.startsWith(url, os.file.FileScheme.LOCAL + '://')) { // local file
-      var fs = new os.file.FileStorage(os.SHARED_FILE_DB_NAME, os.SHARED_DB_VERSION); // read into memory
+      const fs = new os.file.FileStorage(os.SHARED_FILE_DB_NAME, os.SHARED_DB_VERSION); // read into memory
       fs.getFile(url).addCallbacks(this.onFileReady_, this.onFileError_, this); // local file handler??
     } else {
-      var importEvent = new os.ui.im.ImportEvent(os.ui.im.ImportEventType.URL, url);
+      const importEvent = new os.ui.im.ImportEvent(os.ui.im.ImportEventType.URL, url, undefined,
+          /** @type {!Object} */ (data));
       os.dispatcher.dispatchEvent(importEvent);
       os.ui.notification.NotificationManager.getInstance().increment();
     }
