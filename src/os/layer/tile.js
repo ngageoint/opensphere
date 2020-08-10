@@ -146,6 +146,18 @@ os.layer.Tile = function(options) {
    */
   this.colorFilter_ = this.applyColors.bind(this);
 
+  /**
+   * @type {?string}
+   * @private
+   */
+  this.groupId_ = null;
+
+  /**
+   * @type {?string}
+   * @private
+   */
+  this.groupLabel_ = null;
+
   var source = this.getSource();
   if (source) {
     ol.events.listen(source, goog.events.EventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
@@ -267,7 +279,7 @@ os.layer.Tile.prototype.setId = function(value) {
  * @inheritDoc
  */
 os.layer.Tile.prototype.getGroupId = function() {
-  return this.getId();
+  return this.groupId_ != null ? this.groupId_ : this.getId();
 };
 
 
@@ -275,7 +287,7 @@ os.layer.Tile.prototype.getGroupId = function() {
  * @inheritDoc
  */
 os.layer.Tile.prototype.getGroupLabel = function() {
-  return this.getTitle();
+  return this.groupLabel_ != null ? this.groupLabel_ : this.getTitle();
 };
 
 
@@ -1029,6 +1041,8 @@ os.layer.Tile.prototype.persist = function(opt_to) {
   opt_to['saturation'] = this.getSaturation();
   opt_to['color'] = this.getColor();
   opt_to['colorize'] = this.getColorize();
+  opt_to['groupId'] = this.getGroupId();
+  opt_to['groupLabel'] = this.getGroupLabel();
 
   // we now store min and max zoom rather than resolution because the resolutions can change
   // drastically if the user or admin switches the default projection (resulting in the layer
@@ -1115,6 +1129,14 @@ os.layer.Tile.prototype.restore = function(config) {
     if (source && source instanceof ol.source.UrlTile) {
       source.setRefreshInterval(/** @type {number} */ (config['refreshInterval']));
     }
+  }
+
+  if (config['groupId'] != null) {
+    this.groupId_ = /** @type {string} */ (config['groupId']);
+  }
+
+  if (config['groupLabel'] != null) {
+    this.groupLabel_ = /** @type {string} */ (config['groupLabel']);
   }
 
   // A layer's min/max resolution depends directly on its own tile grid.
