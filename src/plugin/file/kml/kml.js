@@ -763,6 +763,14 @@ plugin.file.kml.readURI = function(node) {
   }
 
   if (node.baseURI && (!assetMap || !(s in assetMap))) {
+    // According to the KML spec, relative paths to assets should use forward slashes. However, since this is KML
+    // and KML is the worst, we have encountered numerous files that use backslashes. The workaround here is when
+    // we fail to find an asset in the map, to check it with forward slashes, and use that URI if we find it.
+    const replaced = s.replace(/\\/gi, '/');
+    if (assetMap && replaced in assetMap) {
+      return replaced;
+    }
+
     return goog.Uri.resolve(node.baseURI, s).toString();
   }
 

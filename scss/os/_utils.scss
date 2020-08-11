@@ -132,22 +132,6 @@ $user-select-options: all, auto, text, none;
   text-align: center;
 }
 
-.u-link-style {
-  @include hover {
-    color: $link-hover-color;
-    text-decoration: $link-hover-decoration;
-  }
-
-  background-color: transparent; // Remove the gray background on active links in IE 10.
-  color: $link-color;
-  cursor: pointer;
-  text-decoration: $link-decoration;
-
-  &.nav-link {
-    text-decoration: none;
-  }
-}
-
 .u-text-stroke {
   text-shadow: -1px -1px 0 color-yiq($body-color), 1px -1px 0 color-yiq($body-color), -1px 1px 0 color-yiq($body-color), 1px 1px 0 color-yiq($body-color);
 }

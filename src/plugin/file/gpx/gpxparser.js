@@ -233,6 +233,10 @@ ol.format.GPX.appendCoordinate_ = function(flatCoordinates, layoutOptions, node,
     delete values['extensionsNode_'];
     delete values['time'];
     layoutOptions.hasM = true;
+  } else {
+    // ol.format.GPX.applyLayoutOptions_ assumes coordinates are parsed as XYZM and adjusts accordingly, so always
+    // add a time component to the coordinates
+    flatCoordinates.push(0);
   }
 
   return flatCoordinates;

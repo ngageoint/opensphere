@@ -19,6 +19,7 @@ goog.require('plugin.cesium.menu');
 goog.require('plugin.cesium.mixin');
 goog.require('plugin.cesium.mixin.olcs');
 goog.require('plugin.cesium.mixin.renderloop');
+goog.require('plugin.cesium.sync.HeatmapSynchronizer');
 goog.require('plugin.cesium.sync.ImageStaticSynchronizer');
 goog.require('plugin.cesium.sync.ImageSynchronizer');
 goog.require('plugin.cesium.sync.RootSynchronizer');
@@ -136,6 +137,7 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
           sm.registerSynchronizer(os.layer.SynchronizerType.IMAGE, plugin.cesium.sync.ImageSynchronizer);
           sm.registerSynchronizer(os.layer.SynchronizerType.DRAW, plugin.cesium.sync.VectorSynchronizer);
           sm.registerSynchronizer(os.layer.SynchronizerType.IMAGE_STATIC, plugin.cesium.sync.ImageStaticSynchronizer);
+          sm.registerSynchronizer(plugin.heatmap.SynchronizerType.HEATMAP, plugin.cesium.sync.HeatmapSynchronizer);
 
           // add 3D layer group
           var group = new os.layer.Group();

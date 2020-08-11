@@ -2,3 +2,7 @@
   max-height: 100%;
   overflow-y: auto;
 }
+
+.modal-open .c-menu {
+  z-index: $zindex-modal + 1 !important;
+}

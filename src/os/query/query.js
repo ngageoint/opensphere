@@ -62,10 +62,11 @@ os.query.launchQueryImport = function(opt_config, opt_file) {
 
 /**
  * Launches the enter coordinates window.
+ * @param {boolean=} opt_modal Optional flag if modal
  */
-os.query.launchCoordinates = function() {
+os.query.launchCoordinates = function(opt_modal) {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.LOAD_FROM_COORDINATES, 1);
-  os.ui.query.area.getUserArea().then(os.query.addArea, goog.nullFunction);
+  os.ui.query.area.getUserArea(undefined, undefined, opt_modal).then(os.query.addArea, goog.nullFunction);
 };
 
 
