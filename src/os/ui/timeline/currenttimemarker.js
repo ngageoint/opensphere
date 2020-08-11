@@ -63,6 +63,22 @@ os.ui.timeline.CurrentTimeMarker.prototype.initSVG = function(container, height)
 
 
 /**
+ * Format the date in the CurrentTimeMarker way
+ *
+ * @param {!Date} d
+ * @return {string}
+ * @private
+ */
+os.ui.timeline.CurrentTimeMarker.prototype.toDateString_ = function(d) {
+  var date = new os.time.TimeInstant(d).toISOString().split(' ');
+  if (date.length === 2) return date[1];
+  if (date.length === 3) return date.slice(1, 3).join(' '); // include offset
+  if (date.length) return date[0];
+  return '';
+};
+
+
+/**
  * Updates the current time clock and background.
  *
  * @private
@@ -77,8 +93,7 @@ os.ui.timeline.CurrentTimeMarker.prototype.updateCurrentTime_ = function() {
   var dates = [new Date(times[0]), new Date(times[1])];
   var range = this.xScale.range();
   var today = new Date();
-  var date = new os.time.TimeInstant(today).toISOString().split(' ');
-  var prettyDate = date.length === 2 ? date[1] : date.length === 3 ? date[1] + ' ' + date[2] : ''; // include offset
+  var prettyDate = this.toDateString_(today);
   var timeBackground = d3.select('.js-svg-timeline__bg-time');
   var currentDateText = d3.select('.js-svg-timeline__current-time');
   var placeholder = d3.select('#js-svg-timeline__background-time-placeholder');

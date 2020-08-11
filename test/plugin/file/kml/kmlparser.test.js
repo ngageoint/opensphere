@@ -351,4 +351,30 @@ describe('plugin.file.kml.KMLParser', function() {
       expect(geom.getGeometries().length).toBe(1);
     });
   });
+
+  it('should add parsed assets to the assetMap', function() {
+    // start fresh
+    parser.cleanup();
+    parser.clearAssets();
+
+    parser.processZipAsset_('images/fake-image.png', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8');
+    parser.processZipAsset_('models/fake-collada.png', 'fakecolladacontent');
+
+
+    expect(parser.assetMap_['models/fake-collada.png']).toBe('fakecolladacontent');
+  });
+
+  it('should error when asked to parse an improper asset', function() {
+    // start fresh
+    parser.cleanup();
+    parser.clearAssets();
+
+    const fn = () => {};
+    spyOn(parser, 'onError').andCallFake(fn);
+
+    parser.processZipAsset_('models/fake-collada.png', null);
+    parser.processZipAsset_('models/fake-collada2.png', {});
+
+    expect(parser.onError.calls.length).toBe(2);
+  });
 });

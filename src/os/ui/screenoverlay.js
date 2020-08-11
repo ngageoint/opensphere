@@ -43,7 +43,7 @@ os.ui.launchScreenOverlay = function(options) {
 
   var size = options.size || [250, 75];
   var width = Math.max(size[0], 250);
-  var height = Math.max(size[1], 75);
+  var height = size[1] === 0 ? 'auto' : Math.max(size[1], 75);
 
   var xLoc = options.xy ? options.xy[0] : 25;
   var yLoc = options.xy ? options.xy[1] : 50;
