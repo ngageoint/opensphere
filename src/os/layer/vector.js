@@ -418,6 +418,10 @@ os.layer.Vector.prototype.getFASet = function() {
     if (source.hasColors()) {
       icons.push(os.ui.Icons.COLOR_MODEL);
     }
+
+    if (os.im.action.ImportActionManager.getInstance().hasActiveActions(/** @type {string} */ (source.getId()))) {
+      icons.push(os.ui.Icons.FEATUREACTION);
+    }
   }
 
   if (os.state.isStateFile(this.getId())) {

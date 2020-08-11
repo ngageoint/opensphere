@@ -27,6 +27,6 @@ os.IGroupable.prototype.getGroupId;
 
 /**
  * Gets the group label.
- * @return {!string} The ID
+ * @return {!string} The label
  */
 os.IGroupable.prototype.getGroupLabel;

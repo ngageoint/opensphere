@@ -19,6 +19,18 @@ const AlertEventType = goog.require('os.alert.EventType');
 const maxSaved_ = 10000;
 
 /**
+ * Default severity
+ * @type {AlertEventSeverity}
+ */
+const defaultSeverity_ = AlertEventSeverity.ERROR;
+
+/**
+ * Default throttle time for alerts in milliseconds.
+ * @type {number}
+ */
+const defaultThrottleTime_ = 500;
+
+/**
  * Responsible for receiving, logging and reporting alerts
  */
 class AlertManager extends goog.events.EventTarget {
@@ -54,6 +66,13 @@ class AlertManager extends goog.events.EventTarget {
      * @private
      */
     this.onceMap_ = {};
+
+    /**
+     * Ensures that an alert is only sent once per throttle interval
+     * @type {!Object<string, !Object<AlertEventSeverity, !Array<function()>>>}
+     * @private
+     */
+    this.throttleMap_ = {};
   }
 
   /**
@@ -85,6 +104,40 @@ class AlertManager extends goog.events.EventTarget {
   }
 
   /**
+   * Send an alert
+   *
+   * @param {string} alert The alert to send and add to the window
+   * @param {AlertEventSeverity=} opt_severity Severity of the event, defaults to error
+   * @param {goog.log.Logger=} opt_logger If provided, writes the message to this logger
+   * @param {number=} opt_limit Maximum number of duplicate alerts to display, defaults to 5
+   * @param {goog.events.EventTarget=} opt_dismissDispatcher Event target which will indicate when to dismiss the alert
+   *   by dispatching a {@code os.alert.AlertEventTypes.DISMISS_ALERT}
+   * @param {number=} opt_throttleTime Time after which another duplicate alert will be allowed
+   * @return {Promise}
+   */
+  sendAlert(alert, opt_severity, opt_logger, opt_limit, opt_dismissDispatcher, opt_throttleTime) {
+    return new Promise((resolve, reject) => {
+      const severity = opt_severity || defaultSeverity_;
+      const dispatcher = opt_throttleTime === 0 ? (f, t) => f() : setTimeout;
+      this.throttleMap_[alert] = this.throttleMap_[alert] || {};
+      if (!this.throttleMap_[alert][severity]) {
+        this.throttleMap_[alert][severity] = [resolve];
+        dispatcher(() => {
+          this.sendAlert_(alert, severity, opt_logger, opt_limit, opt_dismissDispatcher);
+          this.throttleMap_[alert][severity].forEach((resolve) => resolve());
+          delete this.throttleMap_[alert][severity];
+          if (!Object.keys(this.throttleMap_[alert]).length) {
+            delete this.throttleMap_[alert];
+          }
+        }, opt_throttleTime || defaultThrottleTime_);
+      } else {
+        this.throttleMap_[alert][severity].push(resolve);
+      }
+    });
+  }
+
+
+  /**
    * Takes a string and converts it into an alert event, then dispatches it
    *
    * @param {string} alert The alert to send and add to the window
@@ -93,17 +146,23 @@ class AlertManager extends goog.events.EventTarget {
    * @param {number=} opt_limit Maximum number of duplicate alerts to display, defaults to 5
    * @param {goog.events.EventTarget=} opt_dismissDispatcher Event target which will indicate when to dismiss the alert
    *   by dispatching a {@code os.alert.AlertEventTypes.DISMISS_ALERT} event
+   * @private
    */
-  sendAlert(alert, opt_severity, opt_logger, opt_limit, opt_dismissDispatcher) {
-    const severity = opt_severity || AlertEventSeverity.ERROR;
+  sendAlert_(alert, opt_severity, opt_logger, opt_limit, opt_dismissDispatcher) {
+    const severity = opt_severity || defaultSeverity_;
+    const throttleMap = this.throttleMap_ && this.throttleMap_[alert] ? this.throttleMap_[alert][severity] : undefined;
+    const throttleCount = throttleMap ? throttleMap.length : undefined;
 
     // fire off the alert
-    const alertEvent = new os.alert.AlertEvent(alert, severity, opt_limit, opt_dismissDispatcher);
+    const alertEvent = new os.alert.AlertEvent(alert, severity, opt_limit, opt_dismissDispatcher, throttleCount);
     this.savedAlerts_.add(alertEvent);
     this.dispatchEvent(alertEvent);
 
     // write the message to the logger if defined
     if (opt_logger != null) {
+      if (throttleMap && throttleMap.length > 1) {
+        alert = `${alert} (${throttleMap.length})`;
+      }
       switch (severity) {
         case AlertEventSeverity.ERROR:
           goog.log.error(opt_logger, alert);
@@ -131,12 +190,10 @@ class AlertManager extends goog.events.EventTarget {
    *   by dispatching a {@code os.alert.AlertEventTypes.DISMISS_ALERT} event
    */
   sendAlertOnce(alert, opt_severity, opt_logger, opt_limit, opt_dismissDispatcher) {
-    if (this.onceMap_[alert]) {
-      return;
-    } else {
+    if (!this.onceMap_[alert]) {
       this.onceMap_[alert] = true;
       opt_limit = 1;
-      this.sendAlert(alert, opt_severity, opt_logger, opt_limit, opt_dismissDispatcher);
+      this.sendAlert_(alert, opt_severity, opt_logger, opt_limit, opt_dismissDispatcher);
     }
   }
 
@@ -145,6 +202,7 @@ class AlertManager extends goog.events.EventTarget {
    */
   clearAlerts() {
     this.savedAlerts_.clear();
+    this.throttleMap_ = {};
     this.dispatchEvent(AlertEventType.CLEAR_ALERTS);
   }
 

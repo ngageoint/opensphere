@@ -9,6 +9,7 @@
       <i class="fa" ng-class="{'Error':'fa-ban','Warning':'fa-warning','Success':'fa-check','Info':'fa-info-circle'}[alert.severity]"></i>
       {{alert.severity}}!
     </h4>
-    <span class="d-block c-alert-popup__text" ng-bind-html="alert.msg | alertlink"></span>
+    <span ng-if="alert.count > 1" class="badge badge-light">{{alert.count}}</span>
+    <span class="c-alert-popup__text" ng-bind-html="alert.msg | alertlink"></span>
   </div>
 </div>
