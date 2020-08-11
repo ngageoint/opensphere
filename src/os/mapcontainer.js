@@ -406,7 +406,7 @@ os.MapContainer.prototype.handleViewChange_ = function() {
   if (cameraMode == os.CameraMode.LAST) {
     try {
       var cameraState = this.persistCameraState();
-      os.settings.set(os.config.DisplaySetting.CAMERA_STATE, JSON.stringify(cameraState));
+      os.settings.set(os.config.DisplaySetting.CAMERA_STATE, cameraState);
     } catch (e) {
       goog.log.error(os.MapContainer.LOGGER_, 'Error persisting camera state:', e);
     }
@@ -940,17 +940,18 @@ os.MapContainer.prototype.init = function() {
   tileGroup.setCheckFunc(os.MapContainer.isTileLayer);
   tileGroup.setOSType(os.layer.LayerType.TILES);
 
+  var imageGroup = new os.layer.Group({
+    hidden: true
+  });
+  imageGroup.setPriority(-1);
+  imageGroup.setCheckFunc(os.MapContainer.isImageLayer);
+  imageGroup.setOSType(os.layer.LayerType.IMAGE);
+
   var vectorGroup = new os.layer.Group({
     layers: [this.drawingLayer_]
   });
   vectorGroup.setCheckFunc(os.MapContainer.isVectorLayer);
   vectorGroup.setOSType(os.layer.LayerType.FEATURES);
-
-  var imageGroup = new os.layer.Group({
-    hidden: true
-  });
-  imageGroup.setCheckFunc(os.MapContainer.isImageLayer);
-  imageGroup.setOSType(os.layer.LayerType.IMAGE);
 
   var referenceGroup = new os.layer.Group();
   referenceGroup.setPriority(100);
@@ -982,9 +983,9 @@ os.MapContainer.prototype.init = function() {
     interactions: this.interactionFunction_ ? this.interactionFunction_() : undefined,
     layers: new ol.Collection([
       tileGroup,
+      imageGroup,
       vectorGroup,
-      referenceGroup,
-      imageGroup
+      referenceGroup
     ]),
     // prevents a blank map while flyTo animates
     loadTilesWhileAnimating: true,
@@ -1087,19 +1088,12 @@ os.MapContainer.prototype.initSettings = function() {
  * @protected
  */
 os.MapContainer.prototype.initCameraSettings = function() {
-  var cameraState = /** @type {string|undefined} */ (os.settings.get(os.config.DisplaySetting.CAMERA_STATE));
-  if (cameraState) {
-    try {
-      cameraState = /** @type {!osx.map.CameraState} */ (JSON.parse(cameraState));
-    } catch (e) {
-      goog.log.error(os.MapContainer.LOGGER_, 'Failed restoring camera state:', e);
-      cameraState = undefined;
-    }
-  }
+  var cameraState =
+    /** @type {osx.map.CameraState|undefined} */ (os.settings.get(os.config.DisplaySetting.CAMERA_STATE));
 
   // if a camera state was saved to settings, restore it now
   if (cameraState) {
-    this.restoreCameraState(/** @type {!osx.map.CameraState} */ (cameraState));
+    this.restoreCameraState(cameraState);
   }
 };
 

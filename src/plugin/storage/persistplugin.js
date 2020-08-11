@@ -33,6 +33,7 @@ class PersistPlugin extends AbstractPlugin {
   init() {
     const msgs = [];
     const metrics = Metrics.getInstance();
+    const helpUrl = os.settings.get('plugin.storage.persistenceHelp', 'https://web.dev/persistent-storage/');
 
     if (navigator.storage && navigator.storage.persist) {
       navigator.storage.persisted().then((result) => {
@@ -48,12 +49,13 @@ class PersistPlugin extends AbstractPlugin {
 
               if (userDecision) {
                 msgs.push(`By declining persistent storage, your application settings may be automatically
-                  reset when under storage pressure (the conditions for that event vary by browser).`);
+                  reset when under storage pressure (the conditions for that event vary by browser). Get more info 
+                  <a href="${helpUrl}" rel="noopener" target="_blank">here</a>`);
                 this.log(msgs);
                 metrics.updateMetric(PERSISTENCE_DECLINED, 1);
               } else if (browser.isChrome()) {
                 msgs.push(`Chrome automatically manages the persistent storage permission based on the following
-                  criteria (<a href="https://developers.google.com/web/updates/2016/06/persistent-storage"
+                  criteria (<a href="${helpUrl}"
                   rel="noopener" target="_blank">source</a>):
                   <ul><li>The site is bookmarked (and the user has 5 or less bookmarks)</li>
                   <li>The site has high site engagement [not quantified]</li>
@@ -81,7 +83,8 @@ class PersistPlugin extends AbstractPlugin {
                   }
                 }
               } else {
-                msgs.push('Browser automatically declined persistence');
+                msgs.push(`Browser automatically declined persistence. Get more info 
+                  <a href="${helpUrl}" rel="noopener" target="_blank">here</a>`);
                 this.log(msgs);
                 metrics.updateMetric(PERSISTENCE_DECLINED, 1);
               }
@@ -97,13 +100,15 @@ class PersistPlugin extends AbstractPlugin {
         }
       });
     } else {
+      let msg = '';
       if (window.isSecureContext === false) {
-        msgs.push(`The application is not being served in a secure context. Persistent storage permission
-            will be automatically declined.`);
+        msg = `This application is not being served in a secure context. The persistent storage permission
+            will be automatically declined. `;
       }
 
-      msgs.push('Your application settings may be automatically reset when under storage pressure.');
-      this.log(msgs);
+      msg += `Your application settings may be automatically reset when under storage pressure. Get more info 
+        <a href="${helpUrl}" rel="noopener" target="_blank">here</a>`;
+      msgs.push(msg);
 
       metrics.updateMetric(PERSISTENCE_FAILED, 1);
       launchPersistentStorageDialog('<p>' + msgs.join('</p><p>') + '</p>');
