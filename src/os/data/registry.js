@@ -125,11 +125,12 @@ class Registry extends EventTarget {
    * Quick bind to this registry
    * @param {!function(!string)} onAddChange
    * @param {!function(!string)} onRemove
+   * @param {?=} opt_this
    */
-  on(onAddChange, onRemove) {
+  on(onAddChange, onRemove, opt_this) {
     // call for all the existing entries...
     this.keys().forEach((key) => {
-      onAddChange(key);
+      onAddChange.call(opt_this, key);
     });
 
     // then listen for changes to and run listeners as needed
@@ -137,10 +138,10 @@ class Registry extends EventTarget {
       switch (event.property_) {
         case 'add':
         case 'change':
-          onAddChange(event.newVal_);
+          onAddChange.call(opt_this, event.newVal_);
           break;
         case 'remove':
-          onRemove(event.newVal_);
+          onRemove.call(opt_this, event.newVal_);
           break;
         default:
           break;

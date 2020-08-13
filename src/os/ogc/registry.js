@@ -3,13 +3,18 @@ goog.module.declareLegacyNamespace();
 
 const Registry = goog.require('os.data.Registry');
 
+const Menu = goog.requireType('os.ui.menu.Menu');
+const MenuItemOptions = goog.requireType('os.ui.menu.MenuItemOptions');
+const OGCService = goog.requireType('os.ogc.OGCService');
+const Feature = goog.requireType('ol.Feature');
+
 
 /**
  * Helper function which makes the "normal" MenuItem for an OGC FeatureLayer. The MenuItem opens a popup with
  * a select2 which calls the callback (returned by getCallback) if provided, OR adds the Area to the AreaManager
  * and pan/zooms to it
  *
- * @param {?os.ui.menu.Menu} menu a Menu into which to add/remove OGC FeatureLayer buttons
+ * @param {?Menu} menu a Menu into which to add/remove OGC FeatureLayer buttons
  * @param {!function()} sort a function that gets/increments a numeric index; as appropriate for the menu
  * @param {?function()} getCallback returns a function(feature, feature); deals with timing of angular scope, etc
  * @param {!string} key
@@ -27,7 +32,7 @@ const onAddUpdate_ = function(menu, sort, getCallback, key) {
         root.addChild(Object.assign(
             {},
             settings,
-            /** @type {os.ui.menu.MenuItemOptions} */ ({
+            /** @type {MenuItemOptions} */ ({
               eventType: eventType,
               handler: function(service, getCallback, event) {
                 var callback = null;
@@ -45,7 +50,7 @@ const onAddUpdate_ = function(menu, sort, getCallback, key) {
 };
 
 /**
- * @param {?os.ui.menu.Menu} menu
+ * @param {?Menu} menu
  * @param {!string} key
  * @private
  */
@@ -61,7 +66,7 @@ const onRemove_ = function(menu, key) {
 };
 
 /**
- * @type {Registry<os.ogc.OGCService>}
+ * @type {Registry<OGCService>}
  */
 let instance;
 
@@ -69,7 +74,7 @@ let instance;
  * Helper function to add OGC FeatureLayer picker MenuItem(s) to a Menu; creates listeners which react to items being
  * added to the OCG Registry
  *
- * @param {os.ui.menu.Menu} menu
+ * @param {Menu} menu
  * @param {number} sort
  * @param {function()=} opt_getCallback returns a function(feature, feature); deals with timing of angular scope, etc
  */
@@ -91,7 +96,7 @@ exports.addOGCMenuItems = function(menu, sort, opt_getCallback) {
 
 /**
  * Get the singleton of this Registry
- * @return {Registry<os.ogc.OGCService>}
+ * @return {Registry<OGCService>}
  */
 exports.getInstance = function() {
   if (!instance) {
@@ -106,7 +111,7 @@ exports.getInstance = function() {
  * @return {boolean} Whether or not picking by a the service's Features is enabled
  */
 exports.isOGCServiceEnabled = function(key) {
-  const service = /** @type {?os.ogc.OGCService} */ (exports.getInstance().get(key));
+  const service = /** @type {?OGCService} */ (exports.getInstance().get(key));
   return (!!service && service.isConfigured() === true);
 };
 
@@ -116,11 +121,11 @@ exports.isOGCServiceEnabled = function(key) {
  * @param {Function=} opt_callback Optional callback function for the chosen feature.
  */
 exports.launchOGCQueryPicker = function(key, opt_callback) {
-  const service = /** @type {?os.ogc.OGCService} */ (exports.getInstance().get(key));
+  const service = /** @type {?OGCService} */ (exports.getInstance().get(key));
   if (service && service.isConfigured()) {
     const query = service.getQuery();
     if (query) {
-      query.launch(/** @type {function(ol.Feature, ol.Feature)} */ (opt_callback));
+      query.launch(/** @type {function(Feature, Feature)} */ (opt_callback));
     }
   }
 };

@@ -7,8 +7,9 @@ const registry = goog.require('os.ogc.registry');
 const services = goog.require('os.ogc.services');
 const OGCService = goog.require('os.ogc.OGCService');
 const {AreaImportType} = goog.require('plugin.areadata');
-
 const OSSettings = goog.require('os.config.Settings');
+
+const MenuItemOptions = goog.requireType('os.ui.menu.MenuItemOptions');
 
 const Settings = OSSettings.getInstance();
 
@@ -23,21 +24,21 @@ const ID = 'areadata';
  * @type {string}
  * @const
  */
-const KEYS_SETTING = 'areadata.keys';
+const SERVICES_SETTING = 'areadata.services';
 
 /**
- * Maps a non-minimized os.ui.menu.MenuItemOptions object, e.g. from settings.json, onto the minimized version
+ * Maps a non-minimized MenuItemOptions object, e.g. from settings.json, onto the minimized version
  *
  * WARNING: To avoid turning a common object into an extern, only the primitive properties defined as of 20200812
- * are mapped to a new os.ui.menu.MenuItemOptions object. Please add new mappings as needed.
+ * are mapped to a new MenuItemOptions object. Please add new mappings as needed.
  *
  * @param {Object.<string, *>|undefined|null} config
- * @return {os.ui.menu.MenuItemOptions|undefined}
+ * @return {MenuItemOptions|undefined}
  */
 const minify_ = function(config) {
   if (!config) return undefined;
 
-  return /** @type {os.ui.menu.MenuItemOptions} */ ({
+  return /** @type {MenuItemOptions} */ ({
     eventType: config['eventType'],
     label: config['label'],
     metricKey: config['metricKey'],
@@ -52,11 +53,11 @@ const minify_ = function(config) {
 };
 
 /**
- *
+ * Plugin to read AreaData services configs into the registry for use by other plugins
  */
 class AreaDataPlugin extends AbstractPlugin {
   /**
-   *
+   * constructor
    */
   constructor() {
     super();
@@ -69,21 +70,28 @@ class AreaDataPlugin extends AbstractPlugin {
    */
   init() {
     // Read the settings.json and initialize the Area importer(s)...
-    // NOTE: the "arraylike" object returned by Settings is not iterable; pass it through an Array.from()
-    const keys = Array.from(Settings.get(KEYS_SETTING) || '');
-    if (keys.length > 0) {
-      keys.forEach((key) => {
-        const settings = /** @type {pluginx.areadata.AreaMenuItemOptions} */ (Settings.get(key));
-        const type = settings.type;
-        switch (type) {
-          case AreaImportType.OGC:
-            this.registerOGCService(settings);
-            break;
-          default:
-            break;
-        }
-      });
-    }
+    const configs = /** @type {Object<?, pluginx.areadata.AreaMenuItemOptions>} */
+      (Settings.get(SERVICES_SETTING, {}));
+
+    // sort by provided order or object keys' natural ordering (alphabetical)
+    const values = Object.values(configs || {}) || [];
+    const sorted = values.sort((v1, v2) => {
+      var s1 = v1.sort || 0;
+      var s2 = v2.sort || 0;
+      return (s1 - s2); // ascending
+    });
+
+    // add in the desired order
+    sorted.forEach((settings) => {
+      const type = settings.type;
+      switch (type) {
+        case AreaImportType.OGC:
+          this.registerOGCService(settings);
+          break;
+        default:
+          break;
+      }
+    });
   }
 
   /**
@@ -93,11 +101,17 @@ class AreaDataPlugin extends AbstractPlugin {
    */
   registerOGCService(settings) {
     // parse through the settings and add the configured OGCService to the registry
-    if (settings && settings.id && settings.type == AreaImportType.OGC && settings.ogcSettings) {
+    if (settings &&
+        settings.enabled !== false && // allow null/undefined
+        settings.id &&
+        settings.type == AreaImportType.OGC &&
+        settings.ogcSettings) {
+      const lookup = services.getInstance();
       let service;
-      if (settings.clazz) { // if there is custom logic...
-        const Clazz = services.getInstance().get(settings.clazz);
-        service = (Clazz.hasOwnProperty('getInstance')) ? Clazz.getInstance() : new Clazz();
+
+      if (settings.clazzKey && lookup.has(settings.clazzKey)) { // if there is custom logic/implementation...
+        const Clazz = services.getInstance().get(settings.clazzKey);
+        service = new Clazz();
       } else { // ... otherwise use the default, configurable UI
         service = new OGCService();
       }
