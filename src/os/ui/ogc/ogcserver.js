@@ -567,7 +567,7 @@ os.ui.ogc.OGCServer.prototype.loadWmsCapabilities = function() {
       var serverUrl = this.getUrl();
       for (var i = 0; i < alternateUrls.length; i++) {
         var url = wmsUrl.replace(serverUrl, alternateUrls[i]);
-        this.testWmsUrl(url, this.onAlternateSuccess, goog.partial(this.onAlternateError, alternateUrls[i]));
+        this.testWmsUrl(url, this.onAlternateSuccess, this.onAlternateError.bind(this, alternateUrls[i]));
       }
     }
   } else {
