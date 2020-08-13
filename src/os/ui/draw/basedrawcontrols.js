@@ -9,6 +9,8 @@ goog.require('os.config.Settings');
 goog.require('os.data.RecordField');
 goog.require('os.interaction.DragZoom');
 goog.require('os.metrics.Metrics');
+goog.require('os.ogc.OGCService');
+goog.require('os.ogc.registry');
 goog.require('os.ui.GlobalMenuEventType');
 goog.require('os.ui.Module');
 goog.require('os.ui.draw.DrawEventType');
@@ -127,7 +129,6 @@ os.ui.draw.BaseDrawControlsCtrl = function($scope, $element) {
   os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWCIRCLE, this.onDrawType, false, this);
   os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWPOLYGON, this.onDrawType, false, this);
   os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWLINE, this.onDrawType, false, this);
-  os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWCOUNTRY, this.onDrawType, false, this);
 
   var selected = /** @type {string} */ (os.settings.get('drawType', os.ui.ol.interaction.DragBox.TYPE));
   this.setSelectedControl(selected);
@@ -160,7 +161,6 @@ os.ui.draw.BaseDrawControlsCtrl.prototype.disposeInternal = function() {
   os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWCIRCLE, this.onDrawType, false, this);
   os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWPOLYGON, this.onDrawType, false, this);
   os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWLINE, this.onDrawType, false, this);
-  os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWCOUNTRY, this.onDrawType, false, this);
 
   this.scope_ = null;
   this.element_ = null;
@@ -284,21 +284,14 @@ os.ui.draw.BaseDrawControlsCtrl.prototype.initControlMenu = function() {
       sort: 40
     });
   }
+
   if (this['hideExtraControls']) {
     mi.removeChild('Choose Area');
     mi.removeChild('Enter Coordinates');
     mi.removeChild('Whole World');
     mi.removeChild('drawMenuSeparator');
-  }
-  if (this.isCountryEnabled() && !this['hideExtraControls']) {
-    mi.addChild({
-      label: 'Country Border',
-      eventType: os.ui.menu.draw.EventType.COUNTRY_BORDER,
-      tooltip: 'Add a country border as an area',
-      icons: ['<i class="fa fa-fw fa-globe"></i> '],
-      handler: os.ui.menu.draw.handleDrawEvent,
-      sort: 130
-    });
+  } else {
+    os.ogc.registry.addOGCMenuItems(this['controlMenu'], 130);
   }
 };
 
@@ -364,11 +357,7 @@ os.ui.draw.BaseDrawControlsCtrl.prototype.onMenuEnd = function(opt_e) {
  */
 os.ui.draw.BaseDrawControlsCtrl.prototype.onDrawType = function(e) {
   if (e && e.type) {
-    if (e.type == 'country' && this.isCountryEnabled()) {
-      this.launchCountryPicker();
-    } else {
-      this.activateControl(e.type);
-    }
+    this.activateControl(e.type);
   }
 };
 
@@ -416,23 +405,4 @@ os.ui.draw.BaseDrawControlsCtrl.prototype.toggleMenu = function(opt_value) {
  */
 os.ui.draw.BaseDrawControlsCtrl.prototype.isActive = function() {
   return this.interaction ? this.interaction.getEnabled() : false;
-};
-
-
-/**
- * Get whether country borders are available.
- *
- * @return {boolean}
- * @export
- */
-os.ui.draw.BaseDrawControlsCtrl.prototype.isCountryEnabled = function() {
-  return os.query.isCountryEnabled();
-};
-
-
-/**
- * Launch the country border picker, if available.
- */
-os.ui.draw.BaseDrawControlsCtrl.prototype.launchCountryPicker = function() {
-  os.query.launchCountryPicker();
 };
