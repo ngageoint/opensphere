@@ -6,17 +6,20 @@ goog.require('plugin.areadata'); // touch the AreaData plugin constants to bring
 const query = goog.require('os.query');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
+const Feature = goog.requireType('ol.Feature');
+const OGCService = goog.requireType('os.ogc.OGCService');
+
 
 /**
  * Generic UI and handlers for an OGC Query
  */
 class OGCQuery {
   /**
-   * @param {!os.ogc.OGCService} service
+   * @param {!OGCService} service
    */
   constructor(service) {
     /**
-     * @type {os.ogc.OGCService}
+     * @type {OGCService}
      */
     this.service = service;
 
@@ -35,8 +38,8 @@ class OGCQuery {
 
   /**
    * Handle a area being chosen in the import area border dialog.
-   * @param {function(!ol.Feature, !ol.Feature)} callback The callback to fire when the area is loaded
-   * @param {Array<!ol.Feature>} data The requested area (array because select2 supports multi-select)
+   * @param {function(!Feature, !Feature)} callback The callback to fire when the area is loaded
+   * @param {Array<!Feature>} data The requested area (array because select2 supports multi-select)
    * @private
    */
   onChoice_(callback, data) {
@@ -52,8 +55,8 @@ class OGCQuery {
 
   /**
    * Handle area being loaded from the server. Insert into the Area manager.
-   * @param {!ol.Feature} datum The requested area
-   * @param {!ol.Feature} feature The area border feature
+   * @param {!Feature} datum The requested area
+   * @param {!Feature} feature The area border feature
    * @private
    */
   onLoaded_(datum, feature) {
@@ -76,7 +79,7 @@ class OGCQuery {
    * @param {!string} title
    * @param {!string} message
    * @param {string=} opt_icon
-   * @param {function(!ol.Feature, !ol.Feature)=} opt_callback Callback to fire when the area is chosen and available
+   * @param {function(!Feature, !Feature)=} opt_callback Callback to fire when the area is chosen and available
    */
   launchImport(title, message, opt_icon, opt_callback) {
     // inject this callback into the confirmation callback since it will be used there
@@ -106,7 +109,7 @@ class OGCQuery {
 
   /**
    * Calls launchImport() with default parameters; override this for maximum utility
-   * @param {function(!ol.Feature, !ol.Feature)=} opt_callback Callback to fire when the area is chosen and available
+   * @param {function(!Feature, !Feature)=} opt_callback Callback to fire when the area is chosen and available
    * @param {pluginx.areadata.ListUIOptions=} opt_options Will use the init() options, the defaults, or these (temporarily)
    */
   launch(opt_callback, opt_options) {

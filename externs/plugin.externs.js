@@ -33,7 +33,9 @@ pluginx.areadata.ListUIOptions;
  * @typedef {{
  *  id: (!string),
  *  type: (plugin.areadata.AreaImportType|undefined),
- *  clazz: (string|undefined),
+ *  clazzKey: (string|undefined),
+ *  sort: (number|undefined),
+ *  enabled: (boolean|undefined),
  *  menuItemOptions: (os.ui.menu.MenuItemOptions|undefined),
  *  listUIOptions: (pluginx.areadata.ListUIOptions|undefined),
  *  ogcSettings: (osx.ogc.OGCSettings|undefined)
