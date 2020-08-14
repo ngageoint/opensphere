@@ -226,7 +226,7 @@ os.ui.draw.DrawPickerCtrl.prototype.initControlMenu = function() {
 
   // use this handler to bind on-click 'OK' to whatever 'callback' is on the this.scope OR returns null to do default 'add to areas'
   var getCallback = function() {
-    return (this.scope['callback'] ? this.onOGCQueryFeatureChosen : null);
+    return (this.scope['callback'] ? this.onOGCQueryFeatureChosen.bind(this) : null);
   }.bind(this);
 
   // add any configured OGC lookups (e.g. Country Borders)
@@ -427,10 +427,8 @@ os.ui.draw.DrawPickerCtrl.prototype.onAreaChosen = function(feature) {
 
 /**
  * Handler for ogc feature chosen.
- *
- * @param {ol.Feature} garbage The chosen ogc feature.
- * @param {ol.Feature} feature The REAL chosen ogc feature.
+ * @param {ol.Feature} feature The loaded ogc feature.
  */
-os.ui.draw.DrawPickerCtrl.prototype.onOGCQueryFeatureChosen = function(garbage, feature) {
+os.ui.draw.DrawPickerCtrl.prototype.onOGCQueryFeatureChosen = function(feature) {
   this.onAreaChosen(feature);
 };

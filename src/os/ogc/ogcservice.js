@@ -196,12 +196,11 @@ class OGCService extends AbstractService {
 
   /**
    * Handle area being loaded from the server.
-   * @param {!T} datum The requested area
    * @param {!Feature} feature The area border feature
    * @return {!Feature}
    * @template T
    */
-  populateFeature(datum, feature) {
+  populateFeature(feature) {
     const tags = this.getTags(feature);
 
     feature.set('title', this.getLabel(feature));

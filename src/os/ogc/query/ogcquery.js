@@ -38,30 +38,28 @@ class OGCQuery {
 
   /**
    * Handle a area being chosen in the import area border dialog.
-   * @param {function(!Feature, !Feature)} callback The callback to fire when the area is loaded
+   * @param {function(Feature)} callback The callback to fire when the area is loaded
    * @param {Array<!Feature>} data The requested area (array because select2 supports multi-select)
    * @private
    */
   onChoice_(callback, data) {
     if (data && data.length > 0) {
       if (this.service) {
-        // inject the requested area into the callback so it has some additional context
         this.service
             .get(data[0])
-            .then(callback.bind(undefined, data[0]));
+            .then(callback);
       }
     }
   }
 
   /**
    * Handle area being loaded from the server. Insert into the Area manager.
-   * @param {!Feature} datum The requested area
    * @param {!Feature} feature The area border feature
    * @private
    */
-  onLoaded_(datum, feature) {
+  onLoaded_(feature) {
     if (this.service) {
-      feature = this.service.populateFeature(datum, feature);
+      feature = this.service.populateFeature(feature);
       feature.getGeometry().osTransform();
       query.addArea(feature);
     }
@@ -79,7 +77,7 @@ class OGCQuery {
    * @param {!string} title
    * @param {!string} message
    * @param {string=} opt_icon
-   * @param {function(!Feature, !Feature)=} opt_callback Callback to fire when the area is chosen and available
+   * @param {function(Feature)=} opt_callback Callback to fire when the area is chosen and available
    */
   launchImport(title, message, opt_icon, opt_callback) {
     // inject this callback into the confirmation callback since it will be used there
@@ -109,7 +107,7 @@ class OGCQuery {
 
   /**
    * Calls launchImport() with default parameters; override this for maximum utility
-   * @param {function(!Feature, !Feature)=} opt_callback Callback to fire when the area is chosen and available
+   * @param {function(Feature)=} opt_callback Callback to fire when the area is chosen and available
    * @param {pluginx.areadata.ListUIOptions=} opt_options Will use the init() options, the defaults, or these (temporarily)
    */
   launch(opt_callback, opt_options) {
