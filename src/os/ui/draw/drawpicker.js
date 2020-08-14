@@ -9,7 +9,6 @@ goog.require('os.interaction.DragBox');
 goog.require('os.interaction.DragCircle');
 goog.require('os.interaction.DrawLine');
 goog.require('os.interaction.DrawPolygon');
-goog.require('os.ogc.OGCService');
 goog.require('os.ogc.registry');
 goog.require('os.query');
 goog.require('os.ui.Module');

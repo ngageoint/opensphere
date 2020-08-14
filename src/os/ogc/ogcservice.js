@@ -1,5 +1,4 @@
 goog.module('os.ogc.OGCService');
-goog.module.declareLegacyNamespace();
 
 const GoogPromise = goog.require('goog.Promise');
 const Uri = goog.require('goog.Uri');

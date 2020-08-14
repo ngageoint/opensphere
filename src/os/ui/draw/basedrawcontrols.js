@@ -9,7 +9,6 @@ goog.require('os.config.Settings');
 goog.require('os.data.RecordField');
 goog.require('os.interaction.DragZoom');
 goog.require('os.metrics.Metrics');
-goog.require('os.ogc.OGCService');
 goog.require('os.ogc.registry');
 goog.require('os.ui.GlobalMenuEventType');
 goog.require('os.ui.Module');
