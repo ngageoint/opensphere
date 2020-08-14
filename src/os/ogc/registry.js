@@ -16,7 +16,7 @@ const Feature = goog.requireType('ol.Feature');
  *
  * @param {?Menu} menu a Menu into which to add/remove OGC FeatureLayer buttons
  * @param {!function()} sort a function that gets/increments a numeric index; as appropriate for the menu
- * @param {?function()} getCallback returns a function(feature, feature); deals with timing of angular scope, etc
+ * @param {?function()} getCallback returns a function(feature); deals with timing of angular scope, etc
  * @param {!string} key
  * @private
  */
@@ -125,7 +125,7 @@ exports.launchOGCQueryPicker = function(key, opt_callback) {
   if (service && service.isConfigured()) {
     const query = service.getQuery();
     if (query) {
-      query.launch(/** @type {function(Feature, Feature)} */ (opt_callback));
+      query.launch(/** @type {function(Feature)} */ (opt_callback));
     }
   }
 };
