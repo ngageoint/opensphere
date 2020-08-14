@@ -4,6 +4,10 @@ const array = goog.require('goog.array');
 const Module = goog.require('os.ui.Module');
 const registry = goog.require('os.ogc.registry');
 
+const OGCService = goog.requireType('os.ogc.OGCService');
+const Feature = goog.requireType('ol.Feature');
+const GoogPromise = goog.requireType('goog.Promise');
+
 
 /**
  * @return {angular.Directive}
@@ -60,13 +64,13 @@ class Controller {
     this.element_ = $element;
 
     /**
-     * @type {?os.ogc.OGCService}
+     * @type {?OGCService}
      * @private
      */
     this.service_;
 
     /**
-     * @type {?goog.Promise}
+     * @type {?GoogPromise}
      */
     this.allPromise;
 
@@ -78,7 +82,7 @@ class Controller {
 
     /**
      * In the angular 'ogcCtrl' scope
-     * @type {Array<ol.Feature>}
+     * @type {Array<Feature>}
      */
     this['items'] = [];
 
@@ -126,7 +130,7 @@ class Controller {
   /**
    * Prepares the data field. Looks at the values passed in on the scope to try to match it to known
    * values. If it succeeds, the select2 will be initialized to those values.
-   * @param {Array<ol.Feature>} data
+   * @param {Array<Feature>} data
    */
   prepareField(data) {
     if (!this.service_) return;
@@ -203,9 +207,9 @@ class Controller {
   }
 
   /**
-   * Gets a ol.Feature by id.
+   * Gets a Feature by id.
    * @param {string} id
-   * @return {ol.Feature}
+   * @return {Feature}
    */
   getById(id) {
     if (!this.service_) return null;
