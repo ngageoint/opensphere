@@ -277,31 +277,28 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
     }
   }
 
+  this.onDragInitFn_ = this.onDragInit.bind(this);
+  this.onDragStartFn_ = this.onDragStart.bind(this);
+  this.onDragFn_ = this.onDrag.bind(this);
+  this.onDragEndFn_ = this.onDragEnd.bind(this);
+
+  /**
+   * @type {?goog.Timer}
+   * @protected
+   */
+  this.scrollTimer = null;
+
+  /**
+   * @type {number}
+   * @private
+   */
+  this.magnitude_ = 0;
+
   if ($scope['dragEnabled']) {
-    this.grid.onDragInit.subscribe(this.onDragInit.bind(this));
-    this.grid.onDragStart.subscribe(this.onDragStart.bind(this));
-    this.grid.onDrag.subscribe(this.onDrag.bind(this));
-    this.grid.onDragEnd.subscribe(this.onDragEnd.bind(this));
-
-    /**
-     * @type {goog.Timer}
-     * @protected
-     */
-    this.scrollTimer = new goog.Timer(20);
-
-    /**
-     * @type {number}
-     * @private
-     */
-    this.magnitude_ = 0;
-
-    var viewport = this.element.find('.slick-viewport');
-    this.scrollTimer.listen(goog.Timer.TICK, function() {
-      viewport.scrollTop(viewport.scrollTop() - this.magnitude_);
-    }, false, this);
-
-    this.element.addClass('dragdrop');
+    this.onDragEnabledChange_(true);
   }
+
+  $scope.$watch('dragEnabled', this.onDragEnabledChange_.bind(this));
 
   /**
    * @type {?angular.JQLite}
@@ -449,6 +446,44 @@ os.ui.slick.SlickGridCtrl.prototype.disposeInternal = function() {
 
   this.scope['data'] = null;
   this.scope = null;
+};
+
+
+/**
+ * @param  {boolean} newValue
+ * @param  {boolean=} opt_oldValue
+ * @private
+ */
+os.ui.slick.SlickGridCtrl.prototype.onDragEnabledChange_ = function(newValue, opt_oldValue) {
+  if (newValue != opt_oldValue) {
+    if (newValue) {
+      this.grid.onDragInit.subscribe(this.onDragInitFn_);
+      this.grid.onDragStart.subscribe(this.onDragStartFn_);
+      this.grid.onDrag.subscribe(this.onDragFn_);
+      this.grid.onDragEnd.subscribe(this.onDragEndFn_);
+
+      this.scrollTimer = new goog.Timer(20);
+      this.magnitude_ = 0;
+
+      var viewport = this.element.find('.slick-viewport');
+      this.scrollTimer.listen(goog.Timer.TICK, function() {
+        viewport.scrollTop(viewport.scrollTop() - this.magnitude_);
+      }, false, this);
+
+      this.element.addClass('dragdrop');
+    } else {
+      this.grid.onDragInit.unsubscribe(this.onDragInitFn_);
+      this.grid.onDragStart.unsubscribe(this.onDragStartFn_);
+      this.grid.onDrag.unsubscribe(this.onDragFn_);
+      this.grid.onDragEnd.unsubscribe(this.onDragEndFn_);
+
+      if (this.scrollTimer) {
+        this.scrollTimer.dispose();
+      }
+
+      this.element.removeClass('dragdrop');
+    }
+  }
 };
 
 
