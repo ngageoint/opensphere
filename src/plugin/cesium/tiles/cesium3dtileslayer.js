@@ -7,8 +7,6 @@ goog.require('plugin.cesium');
 goog.require('plugin.cesium.PrimitiveLayer');
 goog.require('plugin.cesium.tiles.cesium3DTileLayerUIDirective');
 
-//const accessToken = this.accessToken || os.settings.get(plugin.cesium.SettingsKey.ACCESS_TOKEN);
-
 /**
  * @extends {plugin.cesium.PrimitiveLayer}
  * @constructor
