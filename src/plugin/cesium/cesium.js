@@ -39,6 +39,7 @@ plugin.cesium.GeometryInstanceId = {
  * @enum {string}
  */
 plugin.cesium.SettingsKey = {
+  ACCESS_TOKEN: 'cesium.accessTokens',
   ION_URL: 'cesium.ionUrl',
   LOAD_TIMEOUT: 'cesium.loadTimeout',
   SKYBOX_OPTIONS: 'cesium.skyBoxOptions'
