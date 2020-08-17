@@ -141,17 +141,77 @@ os.state.BaseStateManager.prototype.registerPersistable = function(key, clazz) {
 
 
 /**
- * Gets a registered {@link os.IPersistable} class.
+ * Gets an instance of a registered {@link os.IPersistable} class.
  *
  * @param {string} key The object key
  * @return {os.IPersistable}
+ * @suppress {checkTypes} To allow the catch() failover to exist
  */
 os.state.BaseStateManager.prototype.getPersistable = function(key) {
-  if (key in this.persistableMap_) {
-    return new this.persistableMap_[key]();
+  var instance = null;
+  if (this.isPersistable(key)) { // check for nulls, etc
+    var Clazz = this.persistableMap_[key];
+    try {
+      instance = new Clazz();
+    } catch (e) {
+      var args = [this.log, `Registered persistance class for "${key}"`];
+      var remove = false;
+
+      // a non-constructable got into the User's state configs, e.g. an arrow function
+      if (typeof Clazz != 'function') {
+        remove = true;
+        args[1] += ' could not be constructed.';
+      } else {
+        args[1] += ' is non-constructable. Tried call()...';
+        instance = Clazz();
+        if (!instance) {
+          remove = true;
+          args[1] += ' FAILED';
+        }
+      }
+
+      if (remove) {
+        // log why the persistableMap entry is being removed
+        args.push(e);
+        goog.log.error.apply(undefined, args);
+
+        // cleanup to prevent logs from being hit with repeats of the same thing
+        delete this.persistableMap_[key];
+        goog.log.error(this.log, `Removed key "${key}" from registered persistance classes. Details above.`);
+      } else {
+        // recoverable; warn that the persistableMap is getting populated improperly
+        goog.log.warning.apply(undefined, args);
+      }
+    }
   }
 
-  return null;
+  return instance;
+};
+
+
+/**
+ * Return true if there is a registered {@link os.IPersistable} class for this key
+ *
+ * @param {string} key The object key
+ * @return {boolean}
+ */
+os.state.BaseStateManager.prototype.isPersistable = function(key) {
+  // TODO swap to this simple return. Using the more complicated version for logging purposes
+  // return (this.persistableMap_[key] && this.persistableMap_.hasOwnProperty(key));
+  var persistable = false;
+
+  if (key in this.persistableMap_) {
+    // filter out null-ed map entries and object-level properties (e.g. toString)
+    persistable = (this.persistableMap_[key] && this.persistableMap_.hasOwnProperty(key));
+    if (!persistable) {
+      delete this.persistableMap_[key];
+      goog.log.error(
+          this.log,
+          `Removed key "${key}" from registered persistance classes. Null value or inherited property.`,
+          new Error(`m[${key}] is not a constructor`));
+    }
+  }
+  return persistable;
 };
 
 
