@@ -7,6 +7,7 @@ goog.require('plugin.cesium');
 goog.require('plugin.cesium.PrimitiveLayer');
 goog.require('plugin.cesium.tiles.cesium3DTileLayerUIDirective');
 
+//const accessToken = this.accessToken || os.settings.get(plugin.cesium.SettingsKey.ACCESS_TOKEN);
 
 /**
  * @extends {plugin.cesium.PrimitiveLayer}
@@ -78,11 +79,15 @@ plugin.cesium.tiles.Layer.prototype.synchronize = function() {
         url: tilesetUrl
       });
 
-      tileset.style = new Cesium.Cesium3DTileStyle({
-        'color': {
-          'evaluateColor': this.getFeatureColor.bind(this)
-        }
-      });
+      if (this.tileStyle != null) {
+        tileset.style = new Cesium.Cesium3DTileStyle(this.tileStyle);
+      } else {
+        tileset.style = new Cesium.Cesium3DTileStyle({
+          'color': {
+            'evaluateColor': this.getFeatureColor.bind(this)
+          }
+        });
+      }
 
       this.setPrimitive(tileset);
       tileset.loadProgress.addEventListener(this.onTileProgress, this);
@@ -151,12 +156,21 @@ plugin.cesium.tiles.Layer.prototype.onTileProgress = function(pendingRequests, t
 plugin.cesium.tiles.Layer.prototype.restore = function(config) {
   plugin.cesium.tiles.Layer.base(this, 'restore', config);
 
+  const layerId = this.getId();
+  const accessToken = os.settings.get(`plugin.cesium.SettingsKey.ACCESS_TOKEN.${layerId}`);
+
   if (typeof config['assetId'] == 'number') {
     this.assetId = /** @type {number} */ (config['assetId']);
   }
 
   if (config['accessToken']) {
     this.accessToken = /** @type {string} */ (config['accessToken']);
+  } else {
+    this.accessToken = /** @type {string} */ accessToken;
+  }
+
+  if (config['tileStyle']) {
+    this.tileStyle = /** @type {string} */ (config['tileStyle']);
   }
 
   if (config['url']) {
@@ -164,6 +178,26 @@ plugin.cesium.tiles.Layer.prototype.restore = function(config) {
   }
 
   this.synchronize();
+
+  // Save the current layer so that we can run synchronize() on it asynchronously
+  const layerRef = this;
+  if (!this.accessToken) {
+    os.ui.window.launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
+      confirm: function(accessTokenInput) {
+        os.settings.set(`plugin.cesium.SettingsKey.ACCESS_TOKEN.${layerId}`, accessTokenInput);
+        layerRef.accessToken = accessTokenInput;
+        layerRef.synchronize();
+      },
+      cancel: console.error('No access token given'),
+      defaultValue: '',
+      select: true,
+      prompt: 'Please provide an access token. If you do not have an access token, create an account at https://cesium.com/ion/. Once you log in, click on Access Tokens > Default Token. Copy the token and paste it below:',
+      windowOptions: /** @type {!osx.window.WindowOptions} */ ({
+        label: 'Access Token',
+        modal: true
+      })
+    }));
+  }
 };
 
 
