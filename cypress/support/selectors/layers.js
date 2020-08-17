@@ -7,7 +7,7 @@ exports.Dialog = {
 };
 
 exports.layersTab = {
-  TAB: '.nav-link:eq(0)',
+  TAB: '[tab=\'layers\'] .nav-link:eq(0)',
   GROUP_BY_DROPDOWN: '[ng-change=\'layers.onGroupByChanged()\']',
   addData: {
     BUTTON: '[label=\'Layers\'] [title=\'Add data to the map\']',
@@ -175,7 +175,7 @@ exports.layersTab = {
 };
 
 exports.areasTab = {
-  TAB: '.nav-link:eq(1)',
+  TAB: '[tab=\'layers\'] .nav-link:eq(1)',
   GROUP_BY_DROPDOWN: '[ng-model=\'view\']',
   SEARCH_INPUT: '[placeholder=\'Search areas\']',
   CLEAR_BUTTON: '[title=\'Clear the search term\']',
@@ -239,7 +239,7 @@ exports.areasTab = {
 };
 
 exports.filtersTab = {
-  TAB: '.nav-link:eq(2)',
+  TAB: '[tab=\'layers\'] .nav-link:eq(2)',
   GROUP_BY_DROPDOWN: '[ng-change=\'filtersCtrl.onGroupChange()\']',
   ADD_FILTER_BUTTON: '[title=\'Add a filter\']',
   SEARCH_INPUT: '[placeholder=\'Search...\']',
@@ -267,7 +267,7 @@ exports.filtersTab = {
 };
 
 exports.placesTab = {
-  TAB: '.nav-link:eq(3)',
+  TAB: '[tab=\'layers\'] .nav-link:eq(3)',
   ADD_FOLDER_BUTTON: '[ng-click=\'places.addFolder()\']',
   ADD_PLACE_BUTTON: '[ng-click=\'ctrl.addPlace()\']',
   EXPAND_ALL_BUTTON: '[title=\'Fully expand the tree from the selected item, or the root if nothing is selected\']',
