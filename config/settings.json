@@ -62,18 +62,6 @@
           "EPSG:3857": ["worldimagery", "streetmap"]
         },
         "maps": {
-          "osm-buildings": {
-            "baseType": "3dtiles",
-            "assetId": 96188,
-            "layerType": "3D Layers",
-            "projection": "EPSG:4326",
-            "provider": "Cesium Ion",
-            "tileStyle": {
-              "color": "color('${roof:colour}')"
-            },
-            "title": "OSM Buildings",
-            "type": "BaseMap"
-          },
           "streetmap": {
             "title": "Street Map",
             "type": "BaseMap",
