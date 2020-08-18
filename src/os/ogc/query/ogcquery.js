@@ -1,13 +1,13 @@
 goog.module('os.ogc.query.OGCQuery');
 
 goog.require('os.ui.ogc.OGCListUI'); // touch the <ogclist> directive to get it to inject...
-goog.require('plugin.areadata'); // touch the AreaData plugin constants to bring the code into core OS
 
 const query = goog.require('os.query');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 const Feature = goog.requireType('ol.Feature');
 const OGCService = goog.requireType('os.ogc.OGCService');
+const {Options: OGCListUIOptions} = goog.requireType('os.ui.ogc.OGCListUI');
 
 
 /**
@@ -24,7 +24,7 @@ class OGCQuery {
     this.service = service;
 
     /**
-     * @type {?pluginx.areadata.ListUIOptions}
+     * @type {?OGCListUIOptions}
      * @protected
      */
     this.options_;
@@ -66,7 +66,7 @@ class OGCQuery {
   }
 
   /**
-   * @param {pluginx.areadata.ListUIOptions=} opt_options
+   * @param {OGCListUIOptions=} opt_options
    */
   init(opt_options) {
     this.options_ = opt_options || null;
@@ -108,7 +108,7 @@ class OGCQuery {
   /**
    * Calls launchImport() with default parameters; override this for maximum utility
    * @param {function(Feature)=} opt_callback Callback to fire when the area is chosen and available
-   * @param {pluginx.areadata.ListUIOptions=} opt_options Will use the init() options, the defaults, or these (temporarily)
+   * @param {OGCListUIOptions=} opt_options Will use the init() options, the defaults, or these (temporarily)
    */
   launch(opt_callback, opt_options) {
     const options = opt_options || this.options_ || {};
