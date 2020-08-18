@@ -9,6 +9,7 @@ const OGCService = goog.require('os.ogc.OGCService');
 const {AreaImportType} = goog.require('plugin.areadata');
 const OSSettings = goog.require('os.config.Settings');
 
+const {Options: OGCListUIOptions} = goog.requireType('os.ui.ogc.OGCListUI');
 const MenuItemOptions = goog.requireType('os.ui.menu.MenuItemOptions');
 
 const Settings = OSSettings.getInstance();
@@ -35,7 +36,7 @@ const SERVICES_SETTING = 'areadata.services';
  * @param {Object.<string, *>|undefined|null} config
  * @return {MenuItemOptions|undefined}
  */
-const minify_ = function(config) {
+const minifyMenuItemOptions_ = function(config) {
   if (!config) return undefined;
 
   return /** @type {MenuItemOptions} */ ({
@@ -49,6 +50,21 @@ const minify_ = function(config) {
     tooltip: config['tooltip'],
     shortcut: config['shortcut'],
     sort: config['sort']
+  });
+};
+
+/**
+ * Maps a non-minimized os.ui.ogc.OGCListUI.Options object, e.g. from settings.json, onto the minimized version
+ * @param {Object.<string, *>|undefined|null} config
+ * @return {OGCListUIOptions|undefined}
+ */
+const minifyListUIOptions_ = function(config) {
+  if (!config) return undefined;
+
+  return /** @type {MenuItemOptions} */ ({
+    label: config['label'],
+    text: config['text'],
+    icon: config['icon']
   });
 };
 
@@ -119,12 +135,12 @@ class AreaDataPlugin extends AbstractPlugin {
       // configure it
       service.setServiceId(settings.id);
       service.init(settings.ogcSettings);
-      service.getQuery().init(settings.listUIOptions);
+      service.getQuery().init(minifyListUIOptions_(settings.listUIOptions));
 
       registry.getInstance().register(
           settings.id,
           service,
-          minify_(settings.menuItemOptions) // map the settings.json version to the minified version
+          minifyMenuItemOptions_(settings.menuItemOptions) // map the settings.json version to the minified version
       );
     }
   }

@@ -253,7 +253,18 @@ Controller.CHOSEN = 'dataChosen';
 Controller.BULK_CHOSEN = 'bulkDataChosen';
 
 
+/**
+ * @typedef {{
+ *  label: (string|undefined),
+ *  text: (string|undefined),
+ *  icon: (string|undefined)
+ * }}
+ */
+let Options;
+
+
 exports = {
   Controller,
-  directive
+  directive,
+  Options
 };

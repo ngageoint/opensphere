@@ -21,23 +21,13 @@ pluginx.areadata;
 
 /**
  * @typedef {{
- *  label: (string|undefined),
- *  text: (string|undefined),
- *  icon: (string|undefined)
- * }}
- */
-pluginx.areadata.ListUIOptions;
-
-
-/**
- * @typedef {{
  *  id: (!string),
- *  type: (plugin.areadata.AreaImportType|undefined),
+ *  type: (string|undefined),
  *  clazzKey: (string|undefined),
  *  sort: (number|undefined),
  *  enabled: (boolean|undefined),
- *  menuItemOptions: (os.ui.menu.MenuItemOptions|undefined),
- *  listUIOptions: (pluginx.areadata.ListUIOptions|undefined),
+ *  menuItemOptions: (Object<string, *>|undefined),
+ *  listUIOptions: (Object<string, *>|undefined),
  *  ogcSettings: (osx.ogc.OGCSettings|undefined)
  * }}
  */

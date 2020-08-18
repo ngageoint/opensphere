@@ -2,7 +2,8 @@ goog.module('os.data.Registry');
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-
+const {PROPERTYCHANGE} = goog.require('goog.events.EventType');
+const RegistryPropertyChange = goog.require('os.data.RegistryPropertyChange');
 
 /**
  * Object wrapper to serve as agnostic manager of objects/arrays/etc.
@@ -38,7 +39,7 @@ class Registry extends EventTarget {
    * @inheritDoc
    */
   dispose() {
-    this.removeAllListeners('propertychange');
+    this.removeAllListeners(PROPERTYCHANGE);
 
     super.dispose();
   }
@@ -134,13 +135,13 @@ class Registry extends EventTarget {
     });
 
     // then listen for changes to and run listeners as needed
-    this.listen('propertychange', function(event) {
-      switch (event.property_) {
-        case 'add':
-        case 'change':
+    this.listen(PROPERTYCHANGE, function(event) {
+      switch (event.getProperty()) {
+        case RegistryPropertyChange.ADD:
+        case RegistryPropertyChange.UPDATE:
           onAddChange.call(opt_this, event.newVal_);
           break;
-        case 'remove':
+        case RegistryPropertyChange.REMOVE:
           onRemove.call(opt_this, event.newVal_);
           break;
         default:
@@ -161,9 +162,9 @@ class Registry extends EventTarget {
     const had = this.has(key);
     this.map_[key] = [value, opt];
     if (!had) {
-      this.dispatchEvent(new PropertyChangeEvent('add', key));
+      this.dispatchEvent(new PropertyChangeEvent(RegistryPropertyChange.ADD, key));
     } else {
-      this.dispatchEvent(new PropertyChangeEvent('update', key));
+      this.dispatchEvent(new PropertyChangeEvent(RegistryPropertyChange.UPDATE, key));
     }
     return had;
   }
@@ -175,7 +176,7 @@ class Registry extends EventTarget {
    */
   remove(key) {
     if (this.has(key)) {
-      this.dispatchEvent(new PropertyChangeEvent('remove', key));
+      this.dispatchEvent(new PropertyChangeEvent(RegistryPropertyChange.REMOVE, key));
       delete this.map_[key];
       return true;
     }
