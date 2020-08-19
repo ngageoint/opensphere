@@ -135,7 +135,7 @@ os.state.BaseStateManager.prototype.registerPersistable = function(key, clazz) {
   if (!(key in this.persistableMap_)) {
     this.persistableMap_[key] = clazz;
   } else {
-    goog.log.error(this.log, 'Peristance class for ' + key + ' already registered!');
+    goog.log.error(this.log, 'Persistence class for ' + key + ' already registered!');
   }
 };
 
@@ -145,7 +145,6 @@ os.state.BaseStateManager.prototype.registerPersistable = function(key, clazz) {
  *
  * @param {string} key The object key
  * @return {os.IPersistable}
- * @suppress {checkTypes} To allow the catch() failover to exist
  */
 os.state.BaseStateManager.prototype.getPersistable = function(key) {
   var instance = null;
@@ -154,34 +153,21 @@ os.state.BaseStateManager.prototype.getPersistable = function(key) {
     try {
       instance = new Clazz();
     } catch (e) {
-      var args = [this.log, `Registered persistance class for "${key}"`];
-      var remove = false;
+      var msg = `Registered persistence class for "${key}"`;
 
       // a non-constructable got into the User's state configs, e.g. an arrow function
       if (typeof Clazz != 'function') {
-        remove = true;
-        args[1] += ' could not be constructed.';
+        msg += ' could not be constructed.';
       } else {
-        args[1] += ' is non-constructable. Tried call()...';
-        instance = Clazz();
-        if (!instance) {
-          remove = true;
-          args[1] += ' FAILED';
-        }
+        msg += ' is non-constructable.';
       }
 
-      if (remove) {
-        // log why the persistableMap entry is being removed
-        args.push(e);
-        goog.log.error.apply(undefined, args);
+      // log why the persistableMap entry is being removed
+      goog.log.error(this.log, msg, e);
 
-        // cleanup to prevent logs from being hit with repeats of the same thing
-        delete this.persistableMap_[key];
-        goog.log.error(this.log, `Removed key "${key}" from registered persistance classes. Details above.`);
-      } else {
-        // recoverable; warn that the persistableMap is getting populated improperly
-        goog.log.warning.apply(undefined, args);
-      }
+      // cleanup to prevent logs from being hit with repeats of the same thing
+      delete this.persistableMap_[key];
+      goog.log.error(this.log, `Removed key "${key}" from registered persistence classes. Details above.`);
     }
   }
 
@@ -207,7 +193,7 @@ os.state.BaseStateManager.prototype.isPersistable = function(key) {
       delete this.persistableMap_[key];
       goog.log.error(
           this.log,
-          `Removed key "${key}" from registered persistance classes. Null value or inherited property.`,
+          `Removed key "${key}" from registered persistence classes. Null value or inherited property.`,
           new Error(`m[${key}] is not a constructor`));
     }
   }
