@@ -29,6 +29,12 @@ plugin.cesium.tiles.Layer = function() {
   this.accessToken = '';
 
   /**
+   * @type {Cesium.Resource|Object|string}
+   * @protected
+   */
+  this.tileStyle = null;
+
+  /**
    * @type {string}
    * @protected
    */
@@ -164,11 +170,11 @@ plugin.cesium.tiles.Layer.prototype.restore = function(config) {
   if (config['accessToken']) {
     this.accessToken = /** @type {string} */ (config['accessToken']);
   } else {
-    this.accessToken = /** @type {string} */ accessToken;
+    this.accessToken = /** @type {string} */ (accessToken);
   }
 
   if (config['tileStyle']) {
-    this.tileStyle = /** @type {string} */ (config['tileStyle']);
+    this.tileStyle = /** @type {Object|string} */ (config['tileStyle']);
   }
 
   if (config['url']) {
