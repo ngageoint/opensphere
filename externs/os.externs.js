@@ -94,6 +94,18 @@ osx.ogc.TileStyle;
 
 
 /**
+ * @typedef {{
+ *  namespace: (string|undefined),
+ *  nameProperty: (string|undefined),
+ *  queryProperties: (string|undefined),
+ *  typename: (string|undefined),
+ *  url: (string|undefined)
+ * }}
+ */
+osx.ogc.OGCSettings;
+
+
+/**
  * Namespace.
  * @type {Object}
  */
