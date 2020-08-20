@@ -11,6 +11,7 @@ goog.require('os.geo2');
 goog.require('os.search.AbstractSearch');
 goog.require('os.search.SearchEvent');
 goog.require('os.search.SearchEventType');
+goog.require('os.ui.search.place');
 goog.require('os.ui.search.place.CoordinateResult');
 
 
