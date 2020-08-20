@@ -45,11 +45,6 @@ goog.inherits(plugin.basemap.BaseMapDescriptor, os.data.LayerSyncDescriptor);
  */
 plugin.basemap.BaseMapDescriptor.prototype.setConfig = function(value) {
   this.origConf_ = value;
-
-  // Layer type override from the base map config
-  if (value['layerType']) {
-    this.setType(/** @type {string} */ (value['layerType']));
-  }
 };
 
 
