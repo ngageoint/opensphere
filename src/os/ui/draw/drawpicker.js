@@ -9,6 +9,7 @@ goog.require('os.interaction.DragBox');
 goog.require('os.interaction.DragCircle');
 goog.require('os.interaction.DrawLine');
 goog.require('os.interaction.DrawPolygon');
+goog.require('os.ogc.registry');
 goog.require('os.query');
 goog.require('os.ui.Module');
 
@@ -222,16 +223,13 @@ os.ui.draw.DrawPickerCtrl.prototype.initControlMenu = function() {
     });
   }
 
-  if (os.query.isCountryEnabled()) {
-    mi.addChild({
-      label: 'Country Border',
-      eventType: os.ui.menu.draw.EventType.COUNTRY_BORDER,
-      tooltip: 'Choose a country border',
-      icons: ['<i class="fa fa-fw fa-globe"></i> '],
-      handler: onDraw,
-      sort: 130
-    });
-  }
+  // use this handler to bind on-click 'OK' to whatever 'callback' is on the this.scope OR returns null to do default 'add to areas'
+  var getCallback = function() {
+    return (this.scope['callback'] ? this.onOGCQueryFeatureChosen.bind(this) : null);
+  }.bind(this);
+
+  // add any configured OGC lookups (e.g. Country Borders)
+  os.ogc.registry.addOGCMenuItems(this.controlMenu, 130, getCallback);
 };
 
 
@@ -256,9 +254,6 @@ os.ui.draw.DrawPickerCtrl.prototype.onDrawEvent = function(event) {
       break;
     case os.ui.menu.draw.EventType.CHOOSE_AREA:
       os.ui.query.area.launchChooseArea(this.onAreaChosen.bind(this));
-      break;
-    case os.ui.menu.draw.EventType.COUNTRY_BORDER:
-      os.query.launchCountryPicker(this.onCountryChosen.bind(this));
       break;
     default:
       break;
@@ -430,14 +425,9 @@ os.ui.draw.DrawPickerCtrl.prototype.onAreaChosen = function(feature) {
 
 
 /**
- * Handler for country chosen.
- *
- * @param {ol.Feature} garbage The chosen country.
- * @param {ol.Feature} feature The REAL chosen country.
+ * Handler for ogc feature chosen.
+ * @param {ol.Feature} feature The loaded ogc feature.
  */
-os.ui.draw.DrawPickerCtrl.prototype.onCountryChosen = function(garbage, feature) {
-  var geometry = feature.getGeometry();
-  if (geometry instanceof ol.geom.SimpleGeometry) {
-    this.scope['callback'](geometry);
-  }
+os.ui.draw.DrawPickerCtrl.prototype.onOGCQueryFeatureChosen = function(feature) {
+  this.onAreaChosen(feature);
 };

@@ -134,6 +134,7 @@ os.metrics.keys.Map = {
   LOAD_FROM_AREA: 'map.features.loadFromArea',
   LOAD_FROM_COORDINATES: 'map.features.loadFromCoordinates',
   LOAD_FROM_COUNTRY: 'map.features.loadFromCountry',
+  LOAD_FROM_WATER: 'map.features.loadFromWater',
   MEASURE_TOGGLE: 'map.feature.measureToolToggle',
   MODE_2D: 'map.features.mapMode-2d',
   MODE_3D: 'map.features.mapMode-3d',
