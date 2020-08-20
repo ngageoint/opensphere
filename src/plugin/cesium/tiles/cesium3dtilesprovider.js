@@ -1,5 +1,6 @@
 goog.provide('plugin.cesium.tiles.Provider');
 
+goog.require('os.data.BaseDescriptor');
 goog.require('os.data.FileProvider');
 goog.require('plugin.cesium.tiles');
 
@@ -25,4 +26,22 @@ plugin.cesium.tiles.Provider.prototype.configure = function(config) {
   plugin.cesium.tiles.Provider.base(this, 'configure', config);
   this.setId(plugin.cesium.tiles.ID);
   this.setLabel(plugin.cesium.tiles.TYPE);
+
+  var layers = config['layers'];
+  if (layers) {
+    var dm = os.dataManager;
+    for (var key in layers) {
+      var id = this.getId() + os.data.BaseDescriptor.ID_DELIMITER + key;
+      var d = dm.getDescriptor(id);
+
+      if (!d) {
+        d = dm.createDescriptor(plugin.cesium.tiles.ID);
+        d.setId(id);
+        d.updateFromConfig(layers[key]);
+        dm.addDescriptor(d);
+      }
+
+      d.updateActiveFromTemp();
+    }
+  }
 };
