@@ -48,7 +48,7 @@ plugin.basemap.BaseMapDescriptor.prototype.setConfig = function(value) {
 
   // Layer type override from the base map config
   if (value['layerType']) {
-    this.setType(String(value['layerType']));
+    this.setType(/** @type {string} */ (value['layerType']));
   }
 };
 
