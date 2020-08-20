@@ -37,10 +37,10 @@ plugin.cesium.tiles.Provider.prototype.configure = function(config) {
       if (!d) {
         d = dm.createDescriptor(plugin.cesium.tiles.ID);
         d.setId(id);
-        d.updateFromConfig(layers[key]);
         dm.addDescriptor(d);
       }
 
+      d.updateFromConfig(layers[key]);
       d.updateActiveFromTemp();
     }
   }
