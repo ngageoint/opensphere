@@ -726,8 +726,8 @@ os.state.v4.BaseLayerState.prototype.defaultConfigToXML = function(key, value, l
     }
   } else {
     // classes
-    var persistObj = os.stateManager.getPersistable(key);
-    if (persistObj) {
+    var persistable = os.stateManager.isPersistable(key);
+    if (persistable) {
       // only try this if the key is registered with the state manager
       try {
         var obj = /** @type {os.IPersistable} */ (value).persist();
