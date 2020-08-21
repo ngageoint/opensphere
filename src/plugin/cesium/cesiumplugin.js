@@ -41,12 +41,28 @@ plugin.cesium.Plugin.ID = 'cesium';
  * @inheritDoc
  */
 plugin.cesium.Plugin.prototype.init = function() {
-  var mapContainer = os.MapContainer.getInstance();
-
   // update the Ion service URL from settings. this should be done first, as it impacts if Ion-related features are
   // loaded in the application.
   plugin.cesium.ionUrl = /** @type {string} */ (os.settings.get(plugin.cesium.SettingsKey.ION_URL,
       plugin.cesium.DEFAULT_ION_URL));
+
+  // check if cesium is the active renderer
+  var mapContainer = os.MapContainer.getInstance();
+  if (os.settings.get(os.webgl.AbstractWebGLRenderer.ACTIVE_SETTINGS_KEY) == plugin.cesium.Plugin.ID) {
+    this.registerCesiumTypes_();
+    mapContainer.setWebGLRenderer(new plugin.cesium.CesiumRenderer());
+  } else {
+    mapContainer.addWebGLRenderer(new plugin.cesium.CesiumRenderer());
+  }
+};
+
+
+/**
+ * Register OpenSphere data types used by Cesium.
+ * @private
+ */
+plugin.cesium.Plugin.prototype.registerCesiumTypes_ = function() {
+  var mapContainer = os.MapContainer.getInstance();
 
   // register 3D tiles layers
   var lcm = os.layer.config.LayerConfigManager.getInstance();
@@ -76,11 +92,4 @@ plugin.cesium.Plugin.prototype.init = function() {
   var im = os.ui.im.ImportManager.getInstance();
   im.registerImportDetails(plugin.cesium.tiles.TYPE, true);
   im.registerImportUI(plugin.cesium.tiles.mime.TYPE, new plugin.cesium.tiles.TilesetImportUI());
-
-  // check if cesium is the active renderer
-  if (os.settings.get(os.webgl.AbstractWebGLRenderer.ACTIVE_SETTINGS_KEY) == plugin.cesium.Plugin.ID) {
-    mapContainer.setWebGLRenderer(new plugin.cesium.CesiumRenderer());
-  } else {
-    mapContainer.addWebGLRenderer(new plugin.cesium.CesiumRenderer());
-  }
 };
