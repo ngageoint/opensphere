@@ -1,0 +1,20 @@
+<div ng-form="ogcListForm" class="d-flex flex-fill" autocomplete="off">
+  <!-- hidden input controls form validation, but they can't be styled so the ng-form takes care of that. -->
+  <input class="form-control" type="hidden" name="value" ng-model="value" ng-required="isRequired" autocomplete="off">
+
+  <!-- pseudo input form with loading spinner -->
+  <div ng-if="ogcCtrl.loading" class="form-control">
+    <i class="fa fa-spinner fa-spin"></i>
+    Loading...
+  </div>
+
+  <!-- select2 element -->
+  <div class="js-ogc-typeahead w-100" ng-class="{'ng-invalid': isRequired && !value, 'ng-dirty': ogcListForm.$dirty}">
+  </div>
+  <div ng-if="ogcCtrl.error" class="alert alert-danger">
+    <i class="fa fa-warning text-warning"></i>
+    <em>{{ogcCtrl.error}}</em>
+  </div>
+
+  <validation-message target="ogcListForm.value"></validation-message>
+</div>
