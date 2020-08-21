@@ -14,8 +14,7 @@ os.ui.draw.DrawEventType = {
   DRAWBOX: 'box',
   DRAWCIRCLE: 'circle',
   DRAWPOLYGON: 'polygon',
-  DRAWLINE: 'line',
-  DRAWCOUNTRY: 'country'
+  DRAWLINE: 'line'
 };
 
 
