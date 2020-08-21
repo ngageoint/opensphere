@@ -1522,11 +1522,21 @@ plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
       var regex = new RegExp(pattern);
       description = description.replace(regex, 'src="' + this.assetMap_[key] + '"');
 
+      // Replace href's
+      pattern = 'href=["\']' + key.replace(/(.)/g, '[$1]') + '["\']';
+      regex = new RegExp(pattern);
+      description = description.replace(regex, 'href="' + this.assetMap_[key] + '"');
+
       // replace properly encoded URLs
       var encodedKey = new goog.Uri(key).toString();
       pattern = 'src=["\']' + encodedKey.replace(/(.)/g, '[$1]') + '["\']';
       regex = new RegExp(pattern);
       description = description.replace(regex, 'src="' + this.assetMap_[key] + '"');
+
+      // Replace href's for encoded URLs
+      pattern = 'href=["\']' + encodedKey.replace(/(.)/g, '[$1]') + '["\']';
+      regex = new RegExp(pattern);
+      description = description.replace(regex, 'href="' + this.assetMap_[key] + '"');
     }
 
     feature.set('description', description);

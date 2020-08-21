@@ -191,19 +191,3 @@ os.query.WORLD_ZOOM_FEATURE = new ol.Feature(new ol.geom.Polygon([[
   [179, -90],
   [179, 90]
 ]]));
-
-
-/**
- * Get whether country borders are enabled.
- * @return {boolean} Whether or not picking by country is enabled
- */
-os.query.isCountryEnabled = function() {
-  return false;
-};
-
-
-/**
- * Launcher for the country picker (if registered).
- * @param {Function=} opt_callback Optional callback function for the chosen country.
- */
-os.query.launchCountryPicker = function(opt_callback) {};

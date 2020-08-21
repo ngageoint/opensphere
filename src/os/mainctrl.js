@@ -139,6 +139,7 @@ goog.require('os.ui.window.ConfirmUI');
 goog.require('os.url');
 goog.require('plugin.arc.ArcPlugin');
 goog.require('plugin.area.AreaPlugin');
+goog.require('plugin.areadata.AreaDataPlugin');
 goog.require('plugin.audio.AudioPlugin');
 goog.require('plugin.basemap.BaseMapPlugin');
 goog.require('plugin.capture.CapturePlugin');
@@ -518,6 +519,7 @@ os.MainCtrl.prototype.addPlugins = function() {
   os.ui.pluginManager.addPlugin(plugin.im.action.feature.Plugin.getInstance());
   os.ui.pluginManager.addPlugin(new plugin.descriptor.SearchPlugin());
   os.ui.pluginManager.addPlugin(new plugin.area.AreaPlugin());
+  os.ui.pluginManager.addPlugin(new plugin.areadata.AreaDataPlugin());
   os.ui.pluginManager.addPlugin(new plugin.audio.AudioPlugin());
   os.ui.pluginManager.addPlugin(plugin.capture.CapturePlugin.getInstance());
   os.ui.pluginManager.addPlugin(plugin.config.Plugin.getInstance());
