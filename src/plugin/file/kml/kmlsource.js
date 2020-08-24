@@ -196,6 +196,19 @@ plugin.file.kml.KMLSource.prototype.setRootNode = function(node) {
 /**
  * @inheritDoc
  */
+plugin.file.kml.KMLSource.prototype.setEnabledInternal = function(value) {
+  if (!value) {
+    // when the layer is disabled, drop reference to the root node to save memory
+    this.setRootNode(null);
+  }
+
+  plugin.file.kml.KMLSource.base(this, 'setEnabledInternal', value);
+};
+
+
+/**
+ * @inheritDoc
+ */
 plugin.file.kml.KMLSource.prototype.addFeature = function(feature) {
   plugin.file.kml.KMLSource.base(this, 'addFeature', feature);
 
@@ -419,7 +432,7 @@ plugin.file.kml.KMLSource.prototype.onImportProgress = function(opt_event) {
  * @inheritDoc
  */
 plugin.file.kml.KMLSource.prototype.onImportComplete = function(opt_event) {
-  this.setRootNode(this.importer.getRootNode(true));
+  this.setRootNode(this.importer.getRootNode());
   this.setMinRefreshPeriod(this.importer.getMinRefreshPeriod());
 
   if (!this.externalColumns) {
