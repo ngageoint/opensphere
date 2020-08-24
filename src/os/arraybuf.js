@@ -17,7 +17,11 @@ const BYTE_ORDER_MARKER = [0xef, 0xbb, 0xbf];
  */
 const MagicNumber = {
   ZIP: 0x504b0304,
-  PDF: 0x25504446
+  PDF: 0x25504446,
+  PNG: 0x89504E47,
+  JPG1: 0xFFD8FFE0,
+  JPG2: 0xFFD8FFDB,
+  GIF: 0x47494638
 };
 
 
@@ -134,4 +138,35 @@ const toString = function(ab) {
   return s.replace(/(^\x00+)|(\x00+$)/g, '');
 };
 
-exports = {BYTE_ORDER_MARKER, MagicNumber, isText, isTextCharacter, toString};
+
+/**
+ * Get the file type based on **MAGIC**
+ * @param {ArrayBuffer} ab
+ * @return {string}
+ */
+const getMimeType = function(ab) {
+  const dv = new DataView(ab);
+  const n = Math.min(64000, dv.byteLength);
+  if (n >= 4) {
+    const magic = dv.getUint32(0);
+    switch (magic) {
+      case MagicNumber.ZIP:
+        return 'application/zip';
+      case MagicNumber.PDF:
+        return 'application/pdf';
+      case MagicNumber.PNG:
+        return 'image/png';
+      case MagicNumber.GIF:
+        return 'image/gif';
+      case MagicNumber.JPG1:
+      case MagicNumber.JPG2:
+        return 'image/jpeg';
+      default:
+        return '';
+    }
+  } else {
+    return '';
+  }
+};
+
+exports = {BYTE_ORDER_MARKER, MagicNumber, isText, isTextCharacter, toString, getMimeType};
