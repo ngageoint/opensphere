@@ -70,10 +70,25 @@ plugin.cesium.tiles.Layer.prototype.synchronize = function() {
 
   if (!this.hasError()) {
     var tilesetUrl = '';
-    if (!isNaN(this.assetId)) {
+    if (!isNaN(this.assetId) && this.accessToken) {
       tilesetUrl = Cesium.IonResource.fromAssetId(this.assetId, {
         accessToken: this.accessToken
       });
+      tilesetUrl.then(() => {
+        console.log('Access token accepted');
+      }, () => {
+        console.log('Access token rejected');
+
+        this.error = "The provided access token was rejected. Turn the layer off and back on to provide another access token."
+        this.getIcons();
+
+        // Clear the saved access token because it was rejected
+        const layerId = this.getId();
+        os.settings.set(`plugin.cesium.SettingsKey.ACCESS_TOKEN.${layerId}`, '');
+
+        // Update the node with a new error
+        this.dispatchEvent(new os.events.PropertyChangeEvent(os.layer.PropertyChange.ERROR, this.error, ''));
+      })
     } else {
       tilesetUrl = this.url;
     }
@@ -192,7 +207,13 @@ plugin.cesium.tiles.Layer.prototype.restore = function(config) {
         layerRef.accessToken = accessTokenInput;
         layerRef.synchronize();
       },
-      cancel: console.error('No access token given'),
+      cancel: function() {
+        layerRef.error = "An access token is required to enable this layer, but one was not provided."
+        layerRef.getIcons();
+
+        // Update the node with a new error
+        layerRef.dispatchEvent(new os.events.PropertyChangeEvent(os.layer.PropertyChange.ERROR, this.error, ''));
+      },
       defaultValue: '',
       select: true,
       prompt: 'Please provide an access token. If you do not have an access token, create an account at https://cesium.com/ion/. Once you log in, click on Access Tokens > Default Token. Copy the token and paste it below:',
