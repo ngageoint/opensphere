@@ -552,7 +552,7 @@ plugin.file.kml.ui.KMLNetworkLinkNode.prototype.onImportComplete_ = function(eve
 
   var children = this.getChildren();
   var currentRoot = children && children.length > 0 ? children[0] : null;
-  var rootNode = this.importer_.getRootNode(true);
+  var rootNode = this.importer_.getRootNode();
   var rootChildren = rootNode ? rootNode.getChildren() : [];
   var firstRootChild = rootChildren && rootChildren.length > 0 ? rootChildren[0] : null;
   if (currentRoot !== firstRootChild || ((children) && (children.length != rootChildren.length))) {
