@@ -1,6 +1,8 @@
 goog.module('os.layer.VectorTile');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.layer.defaultLayerUIDirective');
+
 const {assert} = goog.require('goog.asserts');
 const GoogEventType = goog.require('goog.events.EventType');
 const {getRandomString} = goog.require('goog.string');
@@ -71,13 +73,13 @@ class VectorTile extends VectorTileLayer {
      * @type {?string}
      * @private
      */
-    this.osType_ = LayerType.TILES;
+    this.osType_ = LayerType.VECTOR_TILES;
 
     /**
      * @type {string}
      * @private
      */
-    this.explicitType_ = ExplicitLayerType.TILES;
+    this.explicitType_ = ExplicitLayerType.VECTOR_TILES;
 
     /**
      * @type {!string}
@@ -131,7 +133,7 @@ class VectorTile extends VectorTileLayer {
      * @type {!string}
      * @private
      */
-    this.layerUi_ = 'tilelayerui';
+    this.layerUi_ = 'defaultlayerui';
 
     /**
      * @type {?string}
