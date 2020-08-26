@@ -172,6 +172,16 @@ os.layer.VectorTile.prototype.getId = os.layer.Tile.prototype.getId;
  */
 os.layer.VectorTile.prototype.setId = os.layer.Tile.prototype.setId;
 
+/**
+ * @inheritDoc
+ */
+os.layer.VectorTile.prototype.getGroupId = os.layer.Tile.prototype.getGroupId;
+
+/**
+ * @inheritDoc
+ */
+os.layer.VectorTile.prototype.getGroupLabel = os.layer.Tile.prototype.getGroupLabel;
+
 os.layer.VectorTile.prototype.getDefaultColor = os.layer.Tile.prototype.getDefaultColor;
 
 os.layer.VectorTile.prototype.getColor = os.layer.Tile.prototype.getColor;
@@ -225,6 +235,11 @@ os.layer.VectorTile.prototype.updateColorFilter = os.layer.Tile.prototype.update
  * @inheritDoc
  */
 os.layer.VectorTile.prototype.getIcons = os.layer.Tile.prototype.getIcons;
+
+/**
+ * @inheritDoc
+ */
+os.layer.VectorTile.prototype.getIconsInternal = os.layer.Tile.prototype.getIconsInternal;
 
 /**
  * @inheritDoc
