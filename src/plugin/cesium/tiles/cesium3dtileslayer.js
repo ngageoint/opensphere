@@ -29,6 +29,13 @@ plugin.cesium.tiles.Layer = function() {
   this.accessToken = '';
 
   /**
+   * Error message for access token issues
+   * @type {string}
+   * @private
+   */
+  this.tokenError_ = '';
+
+  /**
    * @type {Cesium.Resource|Object|string}
    * @protected
    */
@@ -73,22 +80,19 @@ plugin.cesium.tiles.Layer.prototype.synchronize = function() {
     if (!isNaN(this.assetId) && this.accessToken) {
       tilesetUrl = Cesium.IonResource.fromAssetId(this.assetId, {
         accessToken: this.accessToken
-      });
-      tilesetUrl.then(() => {
-        console.log('Access token accepted');
+      }).then(() => {
+        // We don't care to note that it resolves, we just want a response if it doesn't
       }, () => {
-        console.log('Access token rejected');
-
-        this.error = "The provided access token was rejected. Turn the layer off and back on to provide another access token."
-        this.getIcons();
-
         // Clear the saved access token because it was rejected
         const layerId = this.getId();
         os.settings.set(`plugin.cesium.SettingsKey.ACCESS_TOKEN.${layerId}`, '');
 
-        // Update the node with a new error
-        this.dispatchEvent(new os.events.PropertyChangeEvent(os.layer.PropertyChange.ERROR, this.error, ''));
-      })
+        var errorMsg = 'The provided access token was rejected. ' +
+        'Turn the layer off and back on to provide another access token.';
+        this.setTokenError_(errorMsg);
+        this.updateError();
+        this.getIcons();
+      });
     } else {
       tilesetUrl = this.url;
     }
@@ -158,6 +162,14 @@ plugin.cesium.tiles.Layer.prototype.setOpacity = function(value) {
   }
 };
 
+/**
+ * @param {string} errorMsg The message of the error
+ * @protected
+ */
+plugin.cesium.tiles.Layer.prototype.setTokenError_ = function(errorMsg) {
+  this.tokenError_ = errorMsg;
+};
+
 
 /**
  * @param {number} pendingRequests The number of pending requests
@@ -208,11 +220,10 @@ plugin.cesium.tiles.Layer.prototype.restore = function(config) {
         layerRef.synchronize();
       },
       cancel: function() {
-        layerRef.error = "An access token is required to enable this layer, but one was not provided."
+        var errorMsg = 'An access token is required to enable this layer, but one was not provided.';
+        layerRef.setTokenError_(errorMsg);
+        layerRef.updateError();
         layerRef.getIcons();
-
-        // Update the node with a new error
-        layerRef.dispatchEvent(new os.events.PropertyChangeEvent(os.layer.PropertyChange.ERROR, this.error, ''));
       },
       defaultValue: '',
       select: true,
@@ -223,6 +234,19 @@ plugin.cesium.tiles.Layer.prototype.restore = function(config) {
       })
     }));
   }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.tiles.Layer.prototype.getErrorMessage = function() {
+  var error = plugin.cesium.tiles.Layer.base(this, 'getErrorMessage');
+  if (!error) {
+    error = this.tokenError_;
+  }
+
+  return error;
 };
 
 
