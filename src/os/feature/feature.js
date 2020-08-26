@@ -872,7 +872,7 @@ os.feature.isInternalField = function(field) {
 /**
  * Get the layer id of a feature
  *
- * @param {ol.Feature} feature The feature
+ * @param {ol.Feature|ol.render.Feature} feature The feature
  * @return {string|undefined}
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
@@ -891,7 +891,7 @@ os.feature.getLayerId = function(feature) {
  * {@link os.layer.AnimationOverlay}, which uses an OL layer/source with hit detection disabled. In that case, find
  * the original layer from the map.
  *
- * @param {ol.Feature} feature The feature
+ * @param {ol.Feature|ol.render.Feature} feature The feature
  * @return {ol.layer.Layer}
  */
 os.feature.getLayer = function(feature) {
@@ -913,7 +913,7 @@ os.feature.getLayer = function(feature) {
  * {@link os.layer.AnimationOverlay}, which uses an OL layer/source with hit detection disabled. In that case, find
  * the original source from the data manager.
  *
- * @param {ol.Feature} feature The feature
+ * @param {ol.Feature|ol.render.Feature} feature The feature
  * @param {ol.layer.Layer=} opt_layer The layer containing the feature
  * @return {os.source.Vector} The source, if it can be found
  */
