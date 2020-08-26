@@ -14,9 +14,11 @@ const VectorTileLayerRenderer = goog.require('ol.renderer.canvas.VectorTileLayer
 const TileImageSource = goog.require('ol.source.TileImage');
 const UrlTileSource = goog.require('ol.source.UrlTile');
 
+const {dispatcher} = goog.require('os');
 const IGroupable = goog.require('os.IGroupable');
 const ActionEventType = goog.require('os.action.EventType');
 const osColor = goog.require('os.color');
+const DataManager = goog.require('os.data.DataManager');
 const LayerEvent = goog.require('os.events.LayerEvent');
 const LayerEventType = goog.require('os.events.LayerEventType');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
@@ -29,7 +31,7 @@ const ILayer = goog.require('os.layer.ILayer');
 const LayerType = goog.require('os.layer.LayerType');
 const LayerPropertyChange = goog.require('os.layer.PropertyChange');
 const TileLayer = goog.require('os.layer.Tile');
-const {MAX_ZOOM, MIN_ZOOM, PROJECTION} = goog.require('os.map');
+const {mapContainer, MAX_ZOOM, MIN_ZOOM, PROJECTION} = goog.require('os.map');
 const math = goog.require('os.math');
 const registerClass = goog.require('os.registerClass');
 const SourcePropertyChange = goog.require('os.source.PropertyChange');
@@ -754,21 +756,20 @@ class VectorTile extends VectorTileLayer {
    */
   callAction(type) {
     var source = this.getSource();
-
-    if (os.action) {
+    if (source) {
       switch (type) {
         case ActionEventType.IDENTIFY:
           this.identify();
           break;
         case ActionEventType.MOST_RECENT:
-          os.dataManager.setTimeFromDescriptor(this.getId());
+          DataManager.getInstance().setTimeFromDescriptor(this.getId());
           break;
         case ActionEventType.REFRESH:
           source.refresh();
           break;
         case ActionEventType.REMOVE_LAYER:
           var removeEvent = new LayerEvent(LayerEventType.REMOVE, this.getId());
-          os.dispatcher.dispatchEvent(removeEvent);
+          dispatcher.dispatchEvent(removeEvent);
           break;
         case ActionEventType.RENAME:
           renamelayer.launchRenameDialog(this);
@@ -791,34 +792,32 @@ class VectorTile extends VectorTileLayer {
    * @see {ui.action.IActionTarget}
    */
   supportsAction(type, opt_actionArgs) {
-    if (os.action) {
-      switch (type) {
-        case ActionEventType.GOTO:
-          var projExtent = PROJECTION.getExtent();
-          var layerExtent = reduceExtentFromLayers(/** @type {!ol.Extent} */ (olExtent.createEmpty()), this);
-          var projArea = olExtent.getArea(projExtent);
-          var layerArea = olExtent.getArea(layerExtent);
-          return !olExtent.isEmpty(layerExtent) && layerArea / projArea < 0.8;
-        case ActionEventType.IDENTIFY:
-        case ActionEventType.REFRESH:
-        case ActionEventType.SHOW_DESCRIPTION:
-          return true;
-        case ActionEventType.RENAME:
-          return Array.isArray(opt_actionArgs) && opt_actionArgs.length === 1;
-        case ActionEventType.MOST_RECENT:
-          // only enable if descriptor exists and max date is greater than 0
-          var desc = os.dataManager.getDescriptor(this.getId());
-          if (desc != null) {
-            var maxDate = desc.getMaxDate();
-            return maxDate > 0 && maxDate < TimeInstant.MAX_TIME;
-          }
+    switch (type) {
+      case ActionEventType.GOTO:
+        var projExtent = PROJECTION.getExtent();
+        var layerExtent = reduceExtentFromLayers(/** @type {!ol.Extent} */ (olExtent.createEmpty()), this);
+        var projArea = olExtent.getArea(projExtent);
+        var layerArea = olExtent.getArea(layerExtent);
+        return !olExtent.isEmpty(layerExtent) && layerArea / projArea < 0.8;
+      case ActionEventType.IDENTIFY:
+      case ActionEventType.REFRESH:
+      case ActionEventType.SHOW_DESCRIPTION:
+        return true;
+      case ActionEventType.RENAME:
+        return Array.isArray(opt_actionArgs) && opt_actionArgs.length === 1;
+      case ActionEventType.MOST_RECENT:
+        // only enable if descriptor exists and max date is greater than 0
+        var desc = DataManager.getInstance().getDescriptor(this.getId());
+        if (desc != null) {
+          var maxDate = desc.getMaxDate();
+          return maxDate > 0 && maxDate < TimeInstant.MAX_TIME;
+        }
 
-          break;
-        case ActionEventType.REMOVE_LAYER:
-          return this.isRemovable();
-        default:
-          break;
-      }
+        break;
+      case ActionEventType.REMOVE_LAYER:
+        return this.isRemovable();
+      default:
+        break;
     }
 
     return false;
@@ -993,13 +992,11 @@ class VectorTile extends VectorTileLayer {
   }
 }
 
-// Register interfaces
+// Register class/interfaces
+registerClass(VectorTile.NAME, VectorTile);
 osImplements(VectorTile, ILayer.ID);
 osImplements(VectorTile, IColorableLayer.ID);
 osImplements(VectorTile, IGroupable.ID);
-
-// Register class
-registerClass(VectorTile.NAME, VectorTile);
 
 // Mixins
 
@@ -1018,15 +1015,18 @@ registerClass(VectorTile.NAME, VectorTile);
 VectorImageTile.prototype.getDrawnImage = function(layer) {
   let canvas = this.getImage(layer);
 
-  if (!canvas && layer instanceof VectorTile) {
-    const frameState = os.map.mapContainer.getMap().frameState_;
-    if (frameState) {
-      const renderer = layer.getRenderer();
+  if (!canvas && mapContainer && layer instanceof VectorTile) {
+    const map = mapContainer.getMap();
+    if (map) {
+      const frameState = map.frameState_;
+      if (frameState) {
+        const renderer = layer.getRenderer();
 
-      renderer.createReplayGroup_(this, frameState);
-      renderer.renderTileImage_(this, frameState, /** @type {ol.LayerState} */ ({}));
+        renderer.createReplayGroup_(this, frameState);
+        renderer.renderTileImage_(this, frameState, /** @type {ol.LayerState} */ ({}));
 
-      canvas = this.getImage(layer);
+        canvas = this.getImage(layer);
+      }
     }
   }
 
