@@ -1,13 +1,13 @@
-goog.provide('os.mixin.renderfeature');
+goog.module('os.mixin.renderfeature');
 
-goog.require('ol.render.Feature');
+const RenderFeature = goog.require('ol.render.Feature');
 
-Object.defineProperties(ol.render.Feature.prototype, {
+Object.defineProperties(RenderFeature.prototype, {
   values_: {
     get:
       /**
        * @return {Object}
-       * @this {ol.render.Feature}
+       * @this {RenderFeature}
        * @suppress {accessControls}
        */
       function() {

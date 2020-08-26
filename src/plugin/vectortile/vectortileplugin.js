@@ -1,57 +1,72 @@
-goog.provide('plugin.vectortile.VectorTilePlugin');
+goog.module('plugin.vectortile.VectorTilePlugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.interaction.DoubleClick');
-goog.require('os.plugin.AbstractPlugin');
-goog.require('plugin.vectortile');
-goog.require('plugin.vectortile.DoubleClick');
-goog.require('plugin.vectortile.VectorTileLayerConfig');
-
-
-
-/**
- * Plugin for arc server support in opensphere.
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
- */
-plugin.vectortile.VectorTilePlugin = function() {
-  plugin.vectortile.VectorTilePlugin.base(this, 'constructor');
-  this.id = plugin.vectortile.ID;
-};
-goog.inherits(plugin.vectortile.VectorTilePlugin, os.plugin.AbstractPlugin);
-goog.addSingletonGetter(plugin.vectortile.VectorTilePlugin);
+const MapContainer = goog.require('os.MapContainer');
+const OLDoubleClick = goog.require('os.interaction.DoubleClick');
+const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const {ID} = goog.require('plugin.vectortile');
+const DoubleClick = goog.require('plugin.vectortile.DoubleClick');
+const VectorTileLayerConfig = goog.require('plugin.vectortile.VectorTileLayerConfig');
 
 
 /**
- * @inheritDoc
+ * Plugin to add vector tile support to OpenSphere.
  */
-plugin.vectortile.VectorTilePlugin.prototype.init = function() {
-  // var dm = os.dataManager;
-  // var arcEntry = new os.data.ProviderEntry(this.id, plugin.vectortile.VectorTileServer, 'Arc Server',
-  //     'Arc servers provide feature and tile data.');
+class VectorTilePlugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = ID;
+  }
 
-  // dm.registerProviderType(arcEntry);
-  // dm.registerDescriptorType(this.id, plugin.arc.layer.ArcLayerDescriptor);
+  /**
+   * @inheritDoc
+   */
+  init() {
+    // TODO: Add provider/descriptor? Currently only configurable with config descriptors.
+    // TODO: Add import UI so users can add vector tile layers.
 
-  var lcm = os.layer.config.LayerConfigManager.getInstance();
-  lcm.registerLayerConfig(plugin.vectortile.ID, plugin.vectortile.VectorTileLayerConfig);
+    const lcm = LayerConfigManager.getInstance();
+    lcm.registerLayerConfig(ID, VectorTileLayerConfig);
 
-  var map = os.map.mapContainer.getMap();
-  var interactions = map.getInteractions();
+    const map = MapContainer.getInstance().getMap();
+    const interactions = map.getInteractions();
 
-  // find the feature double click interaction
-  var arr = interactions.getArray();
-  var i = arr.length;
-  while (i--) {
-    if (arr[i] instanceof os.interaction.DoubleClick) {
-      break;
+    // find the feature double click interaction
+    const arr = interactions.getArray();
+    let i = arr.length;
+    while (i--) {
+      if (arr[i] instanceof OLDoubleClick) {
+        break;
+      }
+    }
+
+    // ... and add ours just before it
+    if (i > -1) {
+      interactions.insertAt(i, new DoubleClick());
     }
   }
 
-  // ... and add ours just before it
-  if (i > -1) {
-    interactions.insertAt(i, new plugin.vectortile.DoubleClick());
-  }
+  /**
+   * Get the global instance.
+   * @return {!VectorTilePlugin}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new VectorTilePlugin();
+    }
 
-  // var im = os.ui.im.ImportManager.getInstance();
-  // im.registerImportUI(this.id, new os.ui.ProviderImportUI('<arcserver></arcserver>'));
-};
+    return instance;
+  }
+}
+
+/**
+ * Global VectorTilePlugin instance.
+ * @type {VectorTilePlugin|undefined}
+ */
+let instance;
+
+exports = VectorTilePlugin;

@@ -287,24 +287,40 @@ os.layer.config.AbstractTileLayerConfig.getUrlPattern = function(url) {
  * @protected
  */
 os.layer.config.AbstractTileLayerConfig.prototype.expandUrls = function() {
+  this.urls = os.layer.config.AbstractTileLayerConfig.expandUrls(this.urls);
+};
+
+
+/**
+ * Expand URLs that contain ranges for rotating tile servers.
+ * @param {Array<string>} urls The URLs to expand.
+ * @return {Array<string>} The expanded URLs.
+ */
+os.layer.config.AbstractTileLayerConfig.expandUrls = function(urls) {
   var expandedUrls = [];
-  for (var i = 0; i < this.urls.length; i++) {
-    var url = this.urls[i];
-    if (typeof url === 'string') {
-      var expanded = /** @type {Array<string>} */ (os.layer.config.AbstractTileLayerConfig.expandUrl(url));
-      for (var j = 0; j < expanded.length; j++) {
-        var expandedUrl = /** @type {string} */ (expanded[j]);
-        expandedUrls.push(expandedUrl);
+
+  if (urls) {
+    for (var i = 0; i < urls.length; i++) {
+      var url = urls[i];
+      if (typeof url === 'string') {
+        var expanded = /** @type {Array<string>} */ (os.layer.config.AbstractTileLayerConfig.expandUrl(url));
+        for (var j = 0; j < expanded.length; j++) {
+          var expandedUrl = /** @type {string} */ (expanded[j]);
+          expandedUrls.push(expandedUrl);
+        }
+      } else {
+        // pass through.
+        expandedUrls.push(url);
       }
-    } else {
-      // pass through.
-      expandedUrls.push(url);
     }
   }
+
   goog.log.fine(os.layer.config.AbstractTileLayerConfig.LOGGER_,
       'Potentially expanded URL set: ' + expandedUrls.join());
-  this.urls = expandedUrls;
+
+  return expandedUrls;
 };
+
 
 /**
  * Expand a URL that contains a range for rotating tile servers.
