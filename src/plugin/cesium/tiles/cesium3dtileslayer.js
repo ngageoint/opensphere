@@ -80,7 +80,9 @@ plugin.cesium.tiles.Layer.prototype.synchronize = function() {
     if (!isNaN(this.assetId) && this.accessToken) {
       tilesetUrl = Cesium.IonResource.fromAssetId(this.assetId, {
         accessToken: this.accessToken
-      }).then(() => {
+      });
+
+      tilesetUrl.then(() => {
         // We don't care to note that it resolves, we just want a response if it doesn't
       }, () => {
         // Clear the saved access token because it was rejected
