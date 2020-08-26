@@ -154,7 +154,7 @@ os.layer.VectorTile.prototype.setMaxResolution = os.layer.Tile.prototype.setMaxR
  * @private
  * @suppress {visibility}
  */
-os.layer.VectorTile.updateIcons_ = os.layer.Tile.prototype.updateIcons_;
+os.layer.VectorTile.prototype.updateIcons_ = os.layer.Tile.prototype.updateIcons_;
 
 /**
  * @private
@@ -225,6 +225,16 @@ os.layer.VectorTile.prototype.updateColorFilter = os.layer.Tile.prototype.update
  * @inheritDoc
  */
 os.layer.VectorTile.prototype.getIcons = os.layer.Tile.prototype.getIcons;
+
+/**
+ * @inheritDoc
+ */
+os.layer.VectorTile.prototype.isEnabled = os.layer.Tile.prototype.isEnabled;
+
+/**
+ * @inheritDoc
+ */
+os.layer.VectorTile.prototype.setEnabled = os.layer.Tile.prototype.setEnabled;
 
 /**
  * @inheritDoc

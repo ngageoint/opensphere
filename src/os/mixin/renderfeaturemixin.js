@@ -7,6 +7,8 @@ Object.defineProperties(ol.render.Feature.prototype, {
     get:
       /**
        * @return {Object}
+       * @this {ol.render.Feature}
+       * @suppress {accessControls}
        */
       function() {
         return this.properties_;
