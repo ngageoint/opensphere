@@ -1,6 +1,5 @@
 goog.provide('plugin.cesium.tiles.Layer');
 
-goog.require('goog.Promise');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('os.config.DisplaySetting');
@@ -30,14 +29,6 @@ plugin.cesium.tiles.Layer = function() {
    * @protected
    */
   this.accessToken = '';
-
-
-  /**
-   * If a prompt is currently active.
-   * @type {boolean}
-   * @protected
-   */
-  this.promptActive = false;
 
   /**
    * Error message for access token issues
@@ -99,19 +90,19 @@ plugin.cesium.tiles.Layer.prototype.synchronize = function() {
     var tilesetUrl = '';
     if (!isNaN(this.assetId)) {
       if (!this.accessToken) {
-        if (!this.promptActive) {
-          this.promptActive = true;
-
-          var prompt = plugin.cesium.tiles.Layer.prototype.promptForAccessToken(this);
-          prompt.then(() => {
-            this.promptActive = false;
-          });
-        }
+        var prompt = plugin.cesium.promptForAccessToken();
+        prompt.then((accessToken) => {
+          os.settings.set(plugin.cesium.SettingsKey.ACCESS_TOKEN, accessToken);
+          this.accessToken = accessToken;
+          this.synchronize();
+        }, () => {
+          var errorMsg = 'An access token is required to enable this layer, but one was not provided.';
+          this.setTokenError_(errorMsg);
+        });
       } else {
         tilesetUrl = Cesium.IonResource.fromAssetId(this.assetId, {
           accessToken: this.accessToken
         });
-
         tilesetUrl.then(() => {
           // We don't care to note that it resolves, we just want a response if it doesn't
         }, () => {
@@ -150,36 +141,6 @@ plugin.cesium.tiles.Layer.prototype.synchronize = function() {
 
 
 /**
- * Prompt the user to provide an access token.
- *
- * @param {plugin.cesium.tiles.Layer} layerRef Reference to the current layer
- * @return {!goog.Promise}
- */
-plugin.cesium.tiles.Layer.prototype.promptForAccessToken = function(layerRef) {
-  return new goog.Promise(function() {
-    os.ui.window.launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
-      confirm: function(accessTokenInput) {
-        os.settings.set(plugin.cesium.SettingsKey.ACCESS_TOKEN, accessTokenInput);
-        layerRef.accessToken = accessTokenInput;
-        layerRef.synchronize();
-      },
-      cancel: function() {
-        var errorMsg = 'An access token is required to enable this layer, but one was not provided.';
-        layerRef.setTokenError_(errorMsg);
-      },
-      defaultValue: '',
-      select: true,
-      prompt: 'Please provide an access token. If you do not have an access token, create an account at https://cesium.com/ion/. Once you log in, click on Access Tokens > Default Token. Copy the token and paste it below:',
-      windowOptions: /** @type {!osx.window.WindowOptions} */ ({
-        label: 'Access Token',
-        modal: true
-      })
-    }));
-  });
-};
-
-
-/**
  * @param {string} errorMsg The message of the error
  * @protected
  */
@@ -189,7 +150,7 @@ plugin.cesium.tiles.Layer.prototype.setTokenError_ = function(errorMsg) {
     this.updateError();
   }
   if (this.tokenError_) {
-    alert(this.tokenError_);
+    os.alertManager.sendAlert(this.tokenError_, os.alert.AlertEventSeverity.ERROR, plugin.cesium.tiles.Layer.LOGGER_);
   }
 };
 
@@ -273,8 +234,6 @@ plugin.cesium.tiles.Layer.prototype.restore = function(config) {
   if (config['url']) {
     this.url = /** @type {string} */ (config['url']);
   }
-
-  this.synchronize();
 };
 
 
@@ -303,11 +262,10 @@ plugin.cesium.tiles.Layer.prototype.getExtent = function() {
         return ol.proj.transformExtent(extent, os.proj.EPSG4326, os.map.PROJECTION);
       }
     }
-
-    return plugin.cesium.tiles.Layer.base(this, 'getExtent');
   } catch (e) {
     goog.log.error(plugin.cesium.tiles.Layer.LOGGER_, e);
   }
+  return plugin.cesium.tiles.Layer.base(this, 'getExtent');
 };
 
 

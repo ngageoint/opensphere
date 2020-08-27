@@ -179,6 +179,30 @@ plugin.cesium.loadCesium = function() {
 
 
 /**
+ * Prompt the user to provide an access token.
+ *
+ * @return {!goog.Promise}
+ */
+plugin.cesium.promptForAccessToken = function() {
+  return new goog.Promise(function(resolve, reject) {
+    os.ui.window.launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
+      confirm: (accessTokenInput) => {
+        resolve(accessTokenInput);
+      },
+      cancel: reject,
+      defaultValue: '',
+      select: true,
+      prompt: 'Please provide an access token. If you do not have an access token, create an account at https://cesium.com/ion/. Once you log in, click on Access Tokens > Default Token. Copy the token and paste it below:',
+      windowOptions: /** @type {!osx.window.WindowOptions} */ ({
+        label: 'Access Token',
+        modal: true
+      })
+    }));
+  });
+};
+
+
+/**
  * The default Cesium terrain provider.
  * @type {Cesium.EllipsoidTerrainProvider|undefined}
  * @private
