@@ -3,7 +3,6 @@ goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.layer.defaultLayerUIDirective');
 
-const {assert} = goog.require('goog.asserts');
 const GoogEventType = goog.require('goog.events.EventType');
 const {getRandomString} = goog.require('goog.string');
 
@@ -13,13 +12,11 @@ const olExtent = goog.require('ol.extent');
 const Property = goog.require('ol.layer.Property');
 const VectorTileLayer = goog.require('ol.layer.VectorTile');
 const VectorTileLayerRenderer = goog.require('ol.renderer.canvas.VectorTileLayer');
-const TileImageSource = goog.require('ol.source.TileImage');
 const UrlTileSource = goog.require('ol.source.UrlTile');
 
 const {dispatcher} = goog.require('os');
 const IGroupable = goog.require('os.IGroupable');
 const ActionEventType = goog.require('os.action.EventType');
-const osColor = goog.require('os.color');
 const DataManager = goog.require('os.data.DataManager');
 const LayerEvent = goog.require('os.events.LayerEvent');
 const LayerEventType = goog.require('os.events.LayerEventType');
@@ -28,22 +25,18 @@ const {reduceExtentFromLayers} = goog.require('os.fn');
 const osImplements = goog.require('os.implements');
 const layer = goog.require('os.layer');
 const ExplicitLayerType = goog.require('os.layer.ExplicitLayerType');
-const IColorableLayer = goog.require('os.layer.IColorableLayer');
 const ILayer = goog.require('os.layer.ILayer');
 const LayerType = goog.require('os.layer.LayerType');
 const LayerPropertyChange = goog.require('os.layer.PropertyChange');
-const TileLayer = goog.require('os.layer.Tile');
 const {mapContainer, MAX_ZOOM, MIN_ZOOM, PROJECTION} = goog.require('os.map');
 const math = goog.require('os.math');
 const registerClass = goog.require('os.registerClass');
 const SourcePropertyChange = goog.require('os.source.PropertyChange');
 const {isStateFile} = goog.require('os.state');
-const osStyle = goog.require('os.style');
 const TimeInstant = goog.require('os.time.TimeInstant');
 const ui = goog.require('os.ui');
 const Icons = goog.require('os.ui.Icons');
 const renamelayer = goog.require('os.ui.renamelayer');
-const tile = goog.requireType('os.tile');
 
 const OLLayer = goog.requireType('ol.layer.Layer');
 
@@ -52,7 +45,6 @@ const OLLayer = goog.requireType('ol.layer.Layer');
  * OpenSphere vector tile layer.
  *
  * @implements {ILayer}
- * @implements {IColorableLayer}
  * @implements {IGroupable}
  */
 class VectorTile extends VectorTileLayer {
@@ -148,12 +140,6 @@ class VectorTile extends VectorTileLayer {
     this.hidden_ = false;
 
     /**
-     * @type {tile.TileFilterFn}
-     * @private
-     */
-    this.colorFilter_ = TileLayer.applyColors.bind(this);
-
-    /**
      * @type {?string}
      * @private
      */
@@ -231,18 +217,6 @@ class VectorTile extends VectorTileLayer {
   }
 
   /**
-   * Update icons to use the current layer color.
-   *
-   * @private
-   */
-  updateIcons_() {
-    var color = this.getColor();
-    if (color) {
-      ui.adjustIconSet(this.getId(), osColor.toHexString(color));
-    }
-  }
-
-  /**
    * Handler for source change events.
    *
    * @param {PropertyChangeEvent} event
@@ -290,217 +264,15 @@ class VectorTile extends VectorTileLayer {
   }
 
   /**
-   * Get the default color for the tile layer.
-   *
-   * @return {?string}
-   */
-  getDefaultColor() {
-    if (this.layerOptions_) {
-      return /** @type {string} */ (this.layerOptions_['baseColor']);
-    }
-
-    return null;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  getColor() {
-    if (this.layerOptions_) {
-      return /** @type {string} */ (this.layerOptions_['color'] || this.layerOptions_['baseColor']);
-    }
-
-    return null;
-  }
-
-  /**
-   * Get the brightness for the tile layer.
-   *
-   * @return {number}
-   * @override
-   */
-  getBrightness() {
-    if (this.layerOptions_) {
-      return /** @type {number} */ (this.layerOptions_['brightness'] || 0);
-    }
-    return 0;
-  }
-
-  /**
-   * Get the brightness for the tile layer.
-   *
-   * @override
-   * @return {number}
-   */
-  getContrast() {
-    if (this.layerOptions_ && this.layerOptions_['contrast'] != null) {
-      return /** @type {number} */ (this.layerOptions_['contrast']);
-    }
-    return 1;
-  }
-
-  /**
-   * Get the saturation for the tile layer.
-   *
-   * @override
-   * @return {number}
-   */
-  getSaturation() {
-    if (this.layerOptions_ && this.layerOptions_['saturation'] != null) {
-      return /** @type {number} */ (this.layerOptions_['saturation']);
-    }
-    return 1;
-  }
-
-  /**
-   * Get the whether the tile layer is being colorized.
-   *
-   * @return {boolean}
-   */
-  getColorize() {
-    if (this.layerOptions_) {
-      return /** @type {boolean} */ (this.layerOptions_['colorize']) || false;
-    }
-
-    return false;
-  }
-
-  /**
-   * Get the whether the tile layer is being colorized.
-   *
-   * @param {boolean} value
-   */
-  setColorize(value) {
-    if (this.layerOptions_) {
-      this.layerOptions_['colorize'] = value;
-      this.updateColorFilter();
-
-      osStyle.notifyStyleChange(this);
-    }
-  }
-
-  /**
-   * @inheritDoc
-   */
-  setColor(value, opt_options) {
-    var options = opt_options || this.layerOptions_;
-    if (options) {
-      if (value && typeof value == 'string') {
-        options['color'] = osColor.toHexString(value);
-      } else {
-        // color was reset, so use the original
-        options['color'] = null;
-      }
-
-      this.updateColorFilter();
-      this.updateIcons_();
-
-      osStyle.notifyStyleChange(this);
-    }
-  }
-
-  /**
-   * Adjust the layer brightness.  A value of -1 will render the layer completely
-   * black.  A value of 0 will leave the brightness unchanged.  A value of 1 will
-   * render the layer completely white.  Other values are linear multipliers on
-   * the effect (values are clamped between -1 and 1).
-   *
-   * @override
-   * @param {number} value The brightness of the layer (values clamped between -1 and 1)
-   * @param {Object=} opt_options The layer options to use
-   */
-  setBrightness(value, opt_options) {
-    assert(value >= -1 && value <= 1, 'brightness is not between -1 and 1');
-    super.setBrightness(value);
-    var options = opt_options || this.layerOptions_;
-    if (options) {
-      options['brightness'] = value;
-      this.updateColorFilter();
-      this.updateIcons_();
-      osStyle.notifyStyleChange(this);
-    }
-  }
-
-  /**
-   * Adjust the layer contrast.  A value of 0 will render the layer completely
-   * grey.  A value of 1 will leave the contrast unchanged.  Other values are
-   * linear multipliers on the effect (and values over 1 are permitted).
-   *
-   * @override
-   * @param {number} value The contrast of the layer (values clamped between 0 and 2)
-   * @param {Object=} opt_options The layer options to use
-   */
-  setContrast(value, opt_options) {
-    assert(value >= 0 && value <= 2, 'contrast is not between 0 and 2');
-    super.setContrast(value);
-    var options = opt_options || this.layerOptions_;
-    if (options) {
-      options['contrast'] = value;
-      this.updateColorFilter();
-      this.updateIcons_();
-      osStyle.notifyStyleChange(this);
-    }
-  }
-
-  /**
-   * Adjust layer saturation.  A value of 0 will render the layer completely
-   * unsaturated.  A value of 1 will leave the saturation unchanged.  Other
-   * values are linear multipliers of the effect (and values over 1 are
-   * permitted).
-   *
-   * @override
-   * @param {number} value The saturation of the layer (values clamped between 0 and 1)
-   * @param {Object=} opt_options The layer options to use
-   */
-  setSaturation(value, opt_options) {
-    assert(value >= 0, 'saturation is greater than 0');
-    super.setSaturation(value);
-    var options = opt_options || this.layerOptions_;
-    if (options) {
-      options['saturation'] = value;
-      this.updateColorFilter();
-      this.updateIcons_();
-      osStyle.notifyStyleChange(this);
-    }
-  }
-
-  /**
-   * Updates the color filter, either adding or removing depending on whether the layer is colored to a non-default
-   * color or colorized.
-   *
-   * @protected
-   */
-  updateColorFilter() {
-    var source = this.getSource();
-    if (source instanceof TileImageSource) {
-      if (this.getColorize() || !osColor.equals(this.getColor(), this.getDefaultColor()) ||
-          this.getBrightness() != 0 || this.getContrast() != 1 || this.getSaturation() != 1) {
-        // put the colorFilter in place if we are colorized or the current color is different from the default
-        source.addTileFilter(this.colorFilter_);
-      } else {
-        source.removeTileFilter(this.colorFilter_);
-      }
-    }
-  }
-
-  /**
    * @inheritDoc
    */
   getIcons() {
-    var color;
-
     var html = '';
     if (this.error_) {
       html += '<i class="fa fa-warning text-warning" title="There were errors accessing the tiles for this layer"></i>';
     }
 
-    var layerColor = this.getColor();
-    if (layerColor) {
-      color = osColor.toRgbArray(layerColor);
-    }
-
-    html += color ? ui.createIconSet(this.getId(), this.getSVGIconsInternal(), this.getStateBadge(), color)
-      : this.getIconsInternal();
+    html += this.getIconsInternal();
     return html;
   }
 
@@ -748,9 +520,6 @@ class VectorTile extends VectorTileLayer {
    */
   setLayerOptions(value) {
     this.layerOptions_ = value;
-
-    // reapply the color filter as changing the layerOptions can change the layer color/colorize
-    this.updateColorFilter();
   }
 
   /**
@@ -861,11 +630,6 @@ class VectorTile extends VectorTileLayer {
 
     opt_to['visible'] = this.getLayerVisible();
     opt_to['opacity'] = this.getOpacity();
-    opt_to['contrast'] = this.getContrast();
-    opt_to['brightness'] = this.getBrightness();
-    opt_to['saturation'] = this.getSaturation();
-    opt_to['color'] = this.getColor();
-    opt_to['colorize'] = this.getColorize();
     opt_to['groupId'] = this.getGroupId();
     opt_to['groupLabel'] = this.getGroupLabel();
 
@@ -919,28 +683,6 @@ class VectorTile extends VectorTileLayer {
     var opacity = config['alpha'] || config['opacity'];
     if (opacity != null) {
       this.setOpacity(opacity);
-    }
-
-    if (config['contrast'] != null) {
-      this.setContrast(config['contrast']);
-    }
-
-    if (config['brightness'] != null) {
-      this.setBrightness(config['brightness']);
-    }
-
-    if (config['saturation'] != null) {
-      this.setSaturation(config['saturation']);
-    }
-
-    if (config['color']) {
-      var color = /** @type {string} */ (config['color']);
-      this.setColor(color, config);
-    }
-
-    if (config['colorize']) {
-      var colorize = /** @type {boolean} */ (config['colorize']);
-      this.setColorize(colorize);
     }
 
     if (config['refreshInterval'] !== undefined) {
@@ -997,7 +739,6 @@ class VectorTile extends VectorTileLayer {
 // Register class/interfaces
 registerClass(VectorTile.NAME, VectorTile);
 osImplements(VectorTile, ILayer.ID);
-osImplements(VectorTile, IColorableLayer.ID);
 osImplements(VectorTile, IGroupable.ID);
 
 // Mixins

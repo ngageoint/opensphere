@@ -144,7 +144,7 @@ os.layer.Tile = function(options) {
    * @type {os.tile.TileFilterFn}
    * @private
    */
-  this.colorFilter_ = os.layer.Tile.applyColors.bind(this);
+  this.colorFilter_ = this.applyColors.bind(this);
 
   /**
    * @type {?string}
@@ -539,9 +539,8 @@ os.layer.Tile.prototype.updateColorFilter = function() {
  * @param {Array<number>} data The image data.
  * @param {number} width The image width.
  * @param {number} height The image height.
- * @this {os.layer.ILayer}
  */
-os.layer.Tile.applyColors = function(data, width, height) {
+os.layer.Tile.prototype.applyColors = function(data, width, height) {
   if (!data) {
     return;
   }
@@ -553,11 +552,6 @@ os.layer.Tile.applyColors = function(data, width, height) {
   var saturation = this.getSaturation();
   var sharpness = this.getSharpness();
   var colorize = this.getColorize();
-
-  brightness = brightness !== undefined ? brightness : 0;
-  contrast = contrast !== undefined ? contrast : 1;
-  saturation = saturation !== undefined ? saturation : 1;
-
   if (colorize || !os.color.equals(srcColor, tgtColor) ||
       brightness != 0 || contrast != 1 || saturation != 1 || sharpness != 0) {
     if (tgtColor) {
@@ -1215,13 +1209,11 @@ os.layer.Tile.prototype.restore = function(config) {
     this.setMinResolution(grid.getResolution(z));
   }
 
-  if (!config['skipStyle']) {
-    var style = config['style'] || '';
-    var currStyle = this.getStyle();
+  var style = config['style'] || '';
+  var currStyle = this.getStyle();
 
-    if (!currStyle || (typeof currStyle === 'string' && style != currStyle) || style != currStyle.data) {
-      this.setStyle(style);
-    }
+  if (!currStyle || (typeof currStyle === 'string' && style != currStyle) || style != currStyle.data) {
+    this.setStyle(style);
   }
 };
 
