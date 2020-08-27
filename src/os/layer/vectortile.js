@@ -6,6 +6,7 @@ goog.require('os.ui.layer.defaultLayerUIDirective');
 const GoogEventType = goog.require('goog.events.EventType');
 const {getRandomString} = goog.require('goog.string');
 
+const {DEFAULT_MAX_ZOOM, DEFAULT_MIN_ZOOM} = goog.require('ol');
 const VectorImageTile = goog.require('ol.VectorImageTile');
 const events = goog.require('ol.events');
 const olExtent = goog.require('ol.extent');
@@ -28,7 +29,7 @@ const ExplicitLayerType = goog.require('os.layer.ExplicitLayerType');
 const ILayer = goog.require('os.layer.ILayer');
 const LayerType = goog.require('os.layer.LayerType');
 const LayerPropertyChange = goog.require('os.layer.PropertyChange');
-const {mapContainer, MAX_ZOOM, MIN_ZOOM, PROJECTION} = goog.require('os.map');
+const {mapContainer, PROJECTION} = goog.require('os.map');
 const math = goog.require('os.math');
 const registerClass = goog.require('os.registerClass');
 const SourcePropertyChange = goog.require('os.source.PropertyChange');
@@ -641,8 +642,8 @@ class VectorTile extends VectorTileLayer {
     var config = this.getLayerOptions();
     var offset = /** @type {number} */ (config ? config['zoomOffset'] || 0 : 0);
 
-    opt_to['maxZoom'] = Math.min(MAX_ZOOM, tilegrid.getZForResolution(this.getMinResolution()) - offset);
-    opt_to['minZoom'] = Math.max(MIN_ZOOM, tilegrid.getZForResolution(this.getMaxResolution()) - offset);
+    opt_to['maxZoom'] = Math.min(DEFAULT_MAX_ZOOM, tilegrid.getZForResolution(this.getMinResolution()) - offset);
+    opt_to['minZoom'] = Math.max(DEFAULT_MIN_ZOOM, tilegrid.getZForResolution(this.getMaxResolution()) - offset);
 
     var source = this.getSource();
     if (source && source instanceof UrlTileSource) {

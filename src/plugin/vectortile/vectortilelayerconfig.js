@@ -3,6 +3,7 @@ goog.module('plugin.vectortile.VectorTileLayerConfig');
 goog.require('os.mixin.vectortilesource');
 
 const log = goog.require('goog.log');
+const {DEFAULT_MAX_ZOOM, DEFAULT_MIN_ZOOM} = goog.require('ol');
 const MVT = goog.require('ol.format.MVT');
 const VectorTileRenderType = goog.require('ol.layer.VectorTileRenderType');
 const obj = goog.require('ol.obj');
@@ -106,6 +107,15 @@ class VectorTileLayerConfig extends AbstractLayerConfig {
     // Default render mode to 'image'
     if (!options['renderMode']) {
       options['renderMode'] = VectorTileRenderType.IMAGE;
+    }
+
+    // If zoom levels aren't specified, assume vector tiles can be generated at all levels
+    if (options['minZoom'] == null) {
+      options['minZoom'] = DEFAULT_MIN_ZOOM;
+    }
+
+    if (options['maxZoom'] == null) {
+      options['maxZoom'] = DEFAULT_MAX_ZOOM;
     }
   }
 
