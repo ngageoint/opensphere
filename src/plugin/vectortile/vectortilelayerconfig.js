@@ -164,6 +164,10 @@ class VectorTileLayerConfig extends AbstractLayerConfig {
 
     log.fine(logger, `layer ${this.id} crossOrigin=${this.crossOrigin}`);
 
+    if (!source.tileLoadSet) {
+      source.setTileLoadFunction(source.getTileLoadFunction());
+    }
+
     const layer = this.getLayer(source, options);
     layer.restore(options);
 
