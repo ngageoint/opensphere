@@ -29,7 +29,8 @@ const ExplicitLayerType = goog.require('os.layer.ExplicitLayerType');
 const ILayer = goog.require('os.layer.ILayer');
 const LayerType = goog.require('os.layer.LayerType');
 const LayerPropertyChange = goog.require('os.layer.PropertyChange');
-const {mapContainer, PROJECTION} = goog.require('os.map');
+const {PROJECTION} = goog.require('os.map');
+const MapContainer = goog.require('os.MapContainer');
 const math = goog.require('os.math');
 const registerClass = goog.require('os.registerClass');
 const SourcePropertyChange = goog.require('os.source.PropertyChange');
@@ -744,6 +745,8 @@ osImplements(VectorTile, IGroupable.ID);
 
 // Mixins
 
+let mapContainer;
+
 /**
  * OpenLayers does not actually draw inside the vector tiles. Rather, those
  * tiles are rendered by the vector tile renderer later. This is problematic
@@ -758,6 +761,10 @@ osImplements(VectorTile, IGroupable.ID);
  */
 VectorImageTile.prototype.getDrawnImage = function(layer) {
   let canvas = this.getImage(layer);
+
+  if (!mapContainer) {
+    mapContainer = MapContainer.getInstance();
+  }
 
   if (!canvas && mapContainer && layer instanceof VectorTile) {
     const map = mapContainer.getMap();
