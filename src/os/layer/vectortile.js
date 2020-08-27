@@ -24,7 +24,7 @@ const LayerEventType = goog.require('os.events.LayerEventType');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const {reduceExtentFromLayers} = goog.require('os.fn');
 const osImplements = goog.require('os.implements');
-const layer = goog.require('os.layer');
+const {SynchronizerType, identifyLayer} = goog.require('os.layer');
 const ExplicitLayerType = goog.require('os.layer.ExplicitLayerType');
 const ILayer = goog.require('os.layer.ILayer');
 const LayerType = goog.require('os.layer.LayerType');
@@ -132,7 +132,7 @@ class VectorTile extends VectorTileLayer {
      * @type {?string}
      * @private
      */
-    this.syncType_ = layer.SynchronizerType.TILE;
+    this.syncType_ = SynchronizerType.VECTOR_TILE;
 
     /**
      * @type {boolean}
@@ -475,7 +475,7 @@ class VectorTile extends VectorTileLayer {
    * @protected
    */
   identify() {
-    layer.identifyLayer(this);
+    identifyLayer(this);
   }
 
   /**
