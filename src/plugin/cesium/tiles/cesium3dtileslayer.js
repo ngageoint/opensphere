@@ -148,9 +148,10 @@ plugin.cesium.tiles.Layer.prototype.setTokenError_ = function(errorMsg) {
   if (this.tokenError_ !== errorMsg) {
     this.tokenError_ = errorMsg;
     this.updateError();
-  }
-  if (this.tokenError_) {
-    os.alertManager.sendAlert(this.tokenError_, os.alert.AlertEventSeverity.ERROR, plugin.cesium.tiles.Layer.LOGGER_);
+
+    if (this.tokenError_) {
+      os.alertManager.sendAlert(this.tokenError_, os.alert.AlertEventSeverity.ERROR, plugin.cesium.tiles.Layer.LOGGER_);
+    }
   }
 };
 
@@ -215,8 +216,6 @@ plugin.cesium.tiles.Layer.prototype.onTileProgress = function(pendingRequests, t
 plugin.cesium.tiles.Layer.prototype.restore = function(config) {
   plugin.cesium.tiles.Layer.base(this, 'restore', config);
 
-  const accessToken = os.settings.get(plugin.cesium.SettingsKey.ACCESS_TOKEN);
-
   if (typeof config['assetId'] == 'number') {
     this.assetId = /** @type {number} */ (config['assetId']);
   }
@@ -224,7 +223,7 @@ plugin.cesium.tiles.Layer.prototype.restore = function(config) {
   if (config['accessToken']) {
     this.accessToken = /** @type {string} */ (config['accessToken']);
   } else {
-    this.accessToken = /** @type {string} */ (accessToken);
+    this.accessToken = /** @type {string} */ (os.settings.get(plugin.cesium.SettingsKey.ACCESS_TOKEN, ''));
   }
 
   if (config['tileStyle']) {
