@@ -39,6 +39,7 @@ plugin.cesium.GeometryInstanceId = {
  * @enum {string}
  */
 plugin.cesium.SettingsKey = {
+  ACCESS_TOKEN: 'cesium.accessToken',
   ION_URL: 'cesium.ionUrl',
   LOAD_TIMEOUT: 'cesium.loadTimeout',
   SKYBOX_OPTIONS: 'cesium.skyBoxOptions'
@@ -174,6 +175,28 @@ plugin.cesium.loadCesium = function() {
   }
 
   return goog.Promise.resolve();
+};
+
+
+/**
+ * Prompt the user to provide an access token.
+ *
+ * @return {!goog.Promise}
+ */
+plugin.cesium.promptForAccessToken = function() {
+  return new goog.Promise(function(resolve, reject) {
+    os.ui.window.launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
+      confirm: resolve,
+      cancel: reject,
+      defaultValue: '',
+      select: true,
+      prompt: 'Please provide an access token. If you do not have an access token, create an account at https://cesium.com/ion/. Once you log in, click on Access Tokens > Default Token. Copy the token and paste it below:',
+      windowOptions: /** @type {!osx.window.WindowOptions} */ ({
+        label: 'Access Token',
+        modal: true
+      })
+    }));
+  });
 };
 
 
