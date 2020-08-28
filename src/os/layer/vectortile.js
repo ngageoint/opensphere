@@ -7,7 +7,6 @@ const GoogEventType = goog.require('goog.events.EventType');
 const {getRandomString} = goog.require('goog.string');
 
 const {DEFAULT_MAX_ZOOM, DEFAULT_MIN_ZOOM} = goog.require('ol');
-const VectorImageTile = goog.require('ol.VectorImageTile');
 const events = goog.require('ol.events');
 const olExtent = goog.require('ol.extent');
 const Property = goog.require('ol.layer.Property');
@@ -30,7 +29,6 @@ const ILayer = goog.require('os.layer.ILayer');
 const LayerType = goog.require('os.layer.LayerType');
 const LayerPropertyChange = goog.require('os.layer.PropertyChange');
 const {PROJECTION} = goog.require('os.map');
-const MapContainer = goog.require('os.MapContainer');
 const math = goog.require('os.math');
 const registerClass = goog.require('os.registerClass');
 const SourcePropertyChange = goog.require('os.source.PropertyChange');
@@ -39,8 +37,6 @@ const TimeInstant = goog.require('os.time.TimeInstant');
 const ui = goog.require('os.ui');
 const Icons = goog.require('os.ui.Icons');
 const renamelayer = goog.require('os.ui.renamelayer');
-
-const OLLayer = goog.requireType('ol.layer.Layer');
 
 
 /**
@@ -742,46 +738,5 @@ class VectorTile extends VectorTileLayer {
 registerClass(VectorTile.NAME, VectorTile);
 osImplements(VectorTile, ILayer.ID);
 osImplements(VectorTile, IGroupable.ID);
-
-// Mixins
-
-let mapContainer;
-
-/**
- * OpenLayers does not actually draw inside the vector tiles. Rather, those
- * tiles are rendered by the vector tile renderer later. This is problematic
- * because the OpenLayers renderers do not run when syncing to a WebGL context.
- *
- * This override copies the main tile drawing logic from the VectorTile canvas
- * renderer and runs it immediately if the `getImage` method returns nothing.
- *
- * @param {OLLayer} layer
- * @return {HTMLCanvasElement} Canvas.
- * @suppress {visibility}
- */
-VectorImageTile.prototype.getDrawnImage = function(layer) {
-  let canvas = this.getImage(layer);
-
-  if (!mapContainer) {
-    mapContainer = MapContainer.getInstance();
-  }
-
-  if (!canvas && mapContainer && layer instanceof VectorTile) {
-    const map = mapContainer.getMap();
-    if (map) {
-      const frameState = map.frameState_;
-      if (frameState) {
-        const renderer = layer.getRenderer();
-
-        renderer.createReplayGroup_(this, frameState);
-        renderer.renderTileImage_(this, frameState, /** @type {ol.LayerState} */ ({}));
-
-        canvas = this.getImage(layer);
-      }
-    }
-  }
-
-  return canvas;
-};
 
 exports = VectorTile;

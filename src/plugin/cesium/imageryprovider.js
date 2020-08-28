@@ -5,6 +5,7 @@ goog.require('ol.ImageTile');
 goog.require('ol.VectorImageTile');
 goog.require('ol.events');
 goog.require('olcs.core.OLImageryProvider');
+goog.require('os.mixin.VectorImageTile');
 goog.require('os.proj');
 goog.require('plugin.cesium.TileGridTilingScheme');
 
