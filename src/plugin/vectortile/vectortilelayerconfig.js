@@ -8,8 +8,8 @@ const MVT = goog.require('ol.format.MVT');
 const VectorTileRenderType = goog.require('ol.layer.VectorTileRenderType');
 const obj = goog.require('ol.obj');
 const {transformExtent} = goog.require('ol.proj');
-const OLVectorTileSource = goog.require('ol.source.VectorTile');
-const VectorTile = goog.require('os.layer.VectorTile');
+const VectorTileLayer = goog.require('os.layer.VectorTile');
+const VectorTileSource = goog.require('os.ol.source.VectorTile');
 const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
 const AbstractTileLayerConfig = goog.require('os.layer.config.AbstractTileLayerConfig');
 const net = goog.require('os.net');
@@ -20,6 +20,7 @@ const {getBestSupportedProjection, EPSG4326} = goog.require('os.proj');
 const StyleManager = goog.require('os.style.StyleManager');
 
 const Projection = goog.requireType('ol.proj.Projection');
+const OLVectorTileSource = goog.requireType('ol.source.VectorTile');
 
 
 /**
@@ -121,24 +122,24 @@ class VectorTileLayerConfig extends AbstractLayerConfig {
 
   /**
    * @param {Object<string, *>} options The options
-   * @return {OLVectorTileSource}
+   * @return {VectorTileSource}
    */
   getSource(options) {
     options['format'] = options['format'] !== undefined ? options['format'] : new MVT();
-    return new OLVectorTileSource(options);
+    return new VectorTileSource(options);
   }
 
   /**
    * @param {OLVectorTileSource} source The source
    * @param {Object<string, *>} options The options
-   * @return {VectorTile}
+   * @return {VectorTileLayer}
    */
   getLayer(source, options) {
     const vectorTileOptions = /** @type {olx.source.VectorTileOptions} */ (obj.assign({}, options, {
       'source': source
     }));
 
-    const layerClass = /** @type {!Function} */ (options['layerClass'] || VectorTile);
+    const layerClass = /** @type {!Function} */ (options['layerClass'] || VectorTileLayer);
     return new layerClass(vectorTileOptions);
   }
 
