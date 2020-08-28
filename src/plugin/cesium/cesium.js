@@ -186,9 +186,7 @@ plugin.cesium.loadCesium = function() {
 plugin.cesium.promptForAccessToken = function() {
   return new goog.Promise(function(resolve, reject) {
     os.ui.window.launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
-      confirm: (accessTokenInput) => {
-        resolve(accessTokenInput);
-      },
+      confirm: resolve,
       cancel: reject,
       defaultValue: '',
       select: true,
