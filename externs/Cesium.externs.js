@@ -5155,7 +5155,7 @@ Cesium.ArcGisImageServerTerrainProvider = function(options) {};
 
 /**
  * @typedef {{
- *   url: (Cesium.Resource|string),
+ *   url: (Cesium.Promise|Cesium.Resource|string),
  *   credit: (Cesium.Credit|string|undefined),
  *   ellipsoid: (Cesium.Ellipsoid|undefined),
  *   proxy: (Object|undefined),
@@ -5531,14 +5531,14 @@ Cesium.IonResource = function(endpoint, resource) {};
  * Create a Cesium Ion resource from an asset id.
  * @param {number} assetId The asset id.
  * @param {Cesium.AssetOptions} options The asset options.
- * @return {Cesium.IonResource}
+ * @return {Cesium.Promise}
  */
 Cesium.IonResource.fromAssetId = function(assetId, options) {};
 
 
 /**
  * @typedef {{
- *  url: (Cesium.IonResource|string)
+ *  url: (Cesium.IonResource|Cesium.Promise|string)
  * }}
  */
 Cesium.Cesium3DTilesetOptions;

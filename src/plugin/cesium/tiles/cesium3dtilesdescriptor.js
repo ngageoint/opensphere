@@ -29,6 +29,13 @@ plugin.cesium.tiles.Descriptor = function() {
    * @protected
    */
   this.accessToken = '';
+
+  /**
+   * Cesium 3D tiles style.
+   * @type {Object|string}
+   * @protected
+   */
+  this.tileStyle = null;
 };
 goog.inherits(plugin.cesium.tiles.Descriptor, os.data.FileDescriptor);
 
@@ -55,6 +62,10 @@ plugin.cesium.tiles.Descriptor.prototype.getLayerOptions = function() {
   if (!isNaN(this.assetId)) {
     options['assetId'] = this.assetId;
     options['accessToken'] = this.accessToken;
+  }
+
+  if (this.tileStyle) {
+    options['tileStyle'] = this.tileStyle;
   }
 
   return options;
@@ -132,5 +143,9 @@ plugin.cesium.tiles.Descriptor.prototype.updateFromConfig = function(config, opt
     this.setIonConfig(
         /** @type {number} */ (config['assetId']),
         /** @type {string|undefined} */ (config['accessToken']));
+  }
+
+  if (config['tileStyle'] != null) {
+    this.tileStyle = /** @type {Object|string} */ (config['tileStyle']);
   }
 };
