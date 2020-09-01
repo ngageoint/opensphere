@@ -3,6 +3,7 @@ goog.provide('os.search.SortOrder');
 goog.provide('os.search.SortType');
 
 goog.require('os.search.ITemporalSearch');
+goog.require('os.search.SearchFacetDepartment');
 
 
 /**
