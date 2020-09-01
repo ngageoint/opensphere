@@ -420,6 +420,7 @@ module.exports = {
   ],
   debugCss: path.join(buildDir, 'themes/default.combined.css'),
   compiledCss: path.join(version, 'styles', 'themes/default.min.css'),
+  debugJs: path.join(buildPath, 'opensphere.js'),
   compiledJs: path.join(version, 'opensphere.min.js'),
   sharedResources: sharedResources
 };
