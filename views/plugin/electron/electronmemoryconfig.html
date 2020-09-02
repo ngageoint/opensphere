@@ -1,8 +1,8 @@
-<div ng-form="memory">
+<div>
   <h5>Memory</h5>
   <div class="form-group row flex-shrink-0">
-    <label class="col-form-label col-2">Maximum memory MB</label>
-    <input class="form-control col-2" id="maxMemory" type="number" min="100" max="50000" step="1"
-        ng-model="memory.maxMemory" ng-change="memory.update()" required >
+    <label class="col-form-label col-2">Max MB</label>
+    <input class="form-control col-2" id="maxMemory" type="number" min="256" step="1"
+        ng-model="ctrl.maxMemory" ng-change="ctrl.update()" required >
   </div>
 </div>
