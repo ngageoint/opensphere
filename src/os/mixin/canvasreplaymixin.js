@@ -4,6 +4,8 @@
 
 goog.provide('os.mixin.canvasreplay');
 
+goog.require('ol.Feature');
+goog.require('ol.render.Feature');
 goog.require('ol.render.canvas.Replay');
 
 /**

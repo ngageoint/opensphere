@@ -8,6 +8,7 @@ goog.require('ol.Feature');
 goog.require('os.config.Settings');
 goog.require('os.data.RecordField');
 goog.require('os.interaction.DragZoom');
+goog.require('os.map.IMapContainer');
 goog.require('os.metrics.Metrics');
 goog.require('os.ogc.registry');
 goog.require('os.ui.GlobalMenuEventType');
@@ -98,7 +99,7 @@ os.ui.draw.BaseDrawControlsCtrl = function($scope, $element) {
   this.log = os.ui.draw.BaseDrawControlsCtrl.LOGGER_;
 
   /**
-   * @type {?os.ui.ol.OLMap}
+   * @type {os.map.IMapContainer}
    * @private
    */
   this.olMap_ = $scope['olMap'];

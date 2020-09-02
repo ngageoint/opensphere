@@ -1,6 +1,9 @@
 goog.provide('os.data.event.DataEvent');
 goog.provide('os.data.event.DataEventType');
+
 goog.require('goog.events.Event');
+goog.require('os.filter.IFilter');
+goog.require('os.source.ISource');
 
 
 /**

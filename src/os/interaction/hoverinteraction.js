@@ -3,6 +3,7 @@ goog.provide('os.interaction.Hover');
 goog.require('ol.Feature');
 goog.require('ol.ViewHint');
 goog.require('ol.events.condition');
+goog.require('ol.render.Feature');
 goog.require('os.data.DataManager');
 goog.require('os.data.RecordField');
 goog.require('os.data.event.DataEvent');
