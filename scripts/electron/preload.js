@@ -97,6 +97,25 @@ const updateCookies = () => {
   ipcRenderer.send(CookieEventType.UPDATE);
 };
 
+// Divide by half system memory and convert to MB.
+let appMemory = process.getSystemMemoryInfo().total / 2048 | 0;
+
+/**
+ * Gets the currently set maximum memory.
+ * @return {number} The semi-colon delimited list of cookies.
+ */
+const getMaxMemory = () => {
+  return appMemory;
+};
+
+/**
+ * Sets a new value for the max memory.
+ * @param {number} value The max memory value.
+ */
+const setMaxMemory = (value) => {
+  appMemory = value;
+  console.log('Setting applications maximum memory to ' + appMemory + ' MB.');
+};
 
 // Handle certificate select event from the main process.
 ipcRenderer.on(CertEventType.SELECT, selectClientCertificate);
@@ -121,5 +140,7 @@ contextBridge.exposeInMainWorld('ElectronOS', {
   getCookies,
   setCookie,
   updateCookies,
-  registerCertificateHandler
+  registerCertificateHandler,
+  getMaxMemory,
+  setMaxMemory
 });

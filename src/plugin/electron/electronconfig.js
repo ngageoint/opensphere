@@ -2,6 +2,7 @@ goog.provide('plugin.electron.ElectronConfigCtrl');
 goog.provide('plugin.electron.electronConfigDirective');
 
 goog.require('os.ui.Module');
+// const electron = goog.require('electron');
 
 /**
  * The electron configuration directive.
@@ -33,6 +34,7 @@ os.ui.Module.directive('electronconfig', [plugin.electron.electronConfigDirectiv
  * @ngInject
  */
 plugin.electron.ElectronConfigCtrl = function($scope, $element) {
+  this['maxMemory'] = ElectronOS.getMaxMemory();
 };
 
 
@@ -40,5 +42,8 @@ plugin.electron.ElectronConfigCtrl = function($scope, $element) {
  * @export
  */
 plugin.electron.ElectronConfigCtrl.prototype.update = function() {
-
+  console.log('Updating max memory ' + this['maxMemory']);
+  if (this['maxMemory']) {
+    ElectronOS.setMaxMemory(this['maxMemory']);
+  }
 };
