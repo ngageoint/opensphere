@@ -11,6 +11,7 @@ const VectorContext = goog.requireType('plugin.cesium.VectorContext');
 
 /**
  * Converter for MultiPolygons
+ * @extends {PolygonConverter<MultiPolygon, Cesium.Primitive>}
  */
 class MultiPolygonConverter extends PolygonConverter {
   /**

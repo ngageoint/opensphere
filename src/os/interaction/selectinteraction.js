@@ -4,6 +4,7 @@ goog.require('ol.Feature');
 goog.require('ol.array');
 goog.require('ol.events.condition');
 goog.require('ol.interaction.Interaction');
+goog.require('ol.render.Feature');
 goog.require('os.I3DSupport');
 goog.require('os.data.DataManager');
 goog.require('os.data.RecordField');

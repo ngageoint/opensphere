@@ -1,6 +1,8 @@
 goog.provide('os.mixin.canvasreplaygroup');
 
+goog.require('ol.Feature');
 goog.require('ol.extent');
+goog.require('ol.render.Feature');
 goog.require('ol.render.canvas.ReplayGroup');
 
 (function() {

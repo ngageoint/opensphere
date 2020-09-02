@@ -4,8 +4,11 @@ const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
 const {updatePrimitive} = goog.require('plugin.cesium.primitive');
 const {createLineStringPrimitive, isLineWidthChanging, isDashChanging} = goog.require('plugin.cesium.sync.linestring');
 
+const LineString = goog.requireType('ol.geom.LineString');
+
 /**
  * Converter for LineStrings
+ * @extends {BaseConverter<LineString, Cesium.Primitive>}
  */
 class LineStringConverter extends BaseConverter {
   /**
@@ -13,8 +16,11 @@ class LineStringConverter extends BaseConverter {
    */
   create(feature, geometry, style, context) {
     const line = createLineStringPrimitive(feature, geometry, style, context);
-    context.addPrimitive(line, feature, geometry);
-    return true;
+    if (line) {
+      context.addPrimitive(line, feature, geometry);
+      return true;
+    }
+    return false;
   }
 
   /**

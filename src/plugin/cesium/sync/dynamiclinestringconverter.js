@@ -3,8 +3,13 @@ goog.module('plugin.cesium.sync.DynamicLineStringConverter');
 const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
 const {createPolyline, updatePolyline} = goog.require('plugin.cesium.sync.DynamicLineString');
 
+const LineString = goog.requireType('ol.geom.LineString');
+const MultiLineString = goog.requireType('ol.geom.MultiLineString');
+const Ellipse = goog.requireType('os.geom.Ellipse');
+
 /**
  * Converter for DynamicFeature lines
+ * @extends {BaseConverter<(LineString|Ellipse|MultiLineString), (Cesium.Polyline|Cesium.PolylineOptions)>}
  */
 class DynamicLineStringConverter extends BaseConverter {
   /**
