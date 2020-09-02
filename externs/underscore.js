@@ -6,9 +6,9 @@
 
 
 /**
- * @private
+ * @type {Object}
  */
-var _ = this._;
+var _ = {};
 
 
 /**
