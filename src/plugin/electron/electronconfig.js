@@ -11,7 +11,7 @@ plugin.electron.electronConfigDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    templateUrl: mist.ROOT + 'src/plugin/electron/electronconfig.html',
+    templateUrl: os.ROOT + 'views/plugin/electron/electronmemoryconfig.html',
     controller: plugin.electron.ElectronConfigCtrl,
     controllerAs: 'ctrl'
   };
