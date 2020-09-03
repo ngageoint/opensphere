@@ -97,9 +97,6 @@ const updateCookies = () => {
   ipcRenderer.send(CookieEventType.UPDATE);
 };
 
-// Divide by half system memory and convert to MB.
-const appMemory = process.getSystemMemoryInfo().total / 2048 | 0;
-
 /**
  * Gets the currently set maximum memory.
  * @return {number} The semi-colon delimited list of cookies.
