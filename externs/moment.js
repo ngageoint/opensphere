@@ -1,6 +1,7 @@
+/* eslint-disable jsdoc/require-returns-check */
 /**
  * @fileoverview Externs for MomentJS.
- * @see http://ssdn-belford.stwan.bits/docs/momentjs/momentjs.com/docs/index.html
+ * @see https://momentjs.com/docs/
  * @externs
  */
 
