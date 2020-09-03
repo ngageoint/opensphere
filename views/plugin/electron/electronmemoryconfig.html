@@ -4,5 +4,11 @@
     <label class="col-form-label col-2">Max MB</label>
     <input class="form-control col-2" id="maxMemory" type="number" min="512" step="1"
         ng-model="ctrl.maxMemory" ng-change="ctrl.update()" required >
+    &nbsp;&nbsp;&nbsp;
+    <button class="btn btn-primary float-right" ng-click="ctrl.restart()" ng-disabled="!ctrl.restartButtonActive"
+        title="Restarts the application and applies the new memory settings">
+      <i class="fa fa-refresh"></i>
+      Restart and Apply
+    </button>
   </div>
 </div>

@@ -1,4 +1,4 @@
-const {contextBridge, ipcRenderer} = require('electron');
+const {contextBridge, ipcRenderer, remote} = require('electron');
 const {getMaximumMemory, setMaximumMemory} = require('../memconfig.js');
 
 /**
@@ -116,6 +116,14 @@ const setMaxMemory = (value) => {
   setMaximumMemory(value);
 };
 
+/**
+ * Restarts the application.
+ */
+const restart = () => {
+  remote.app.relaunch();
+  remote.app.exit(0);
+};
+
 // Handle certificate select event from the main process.
 ipcRenderer.on(CertEventType.SELECT, selectClientCertificate);
 
@@ -141,5 +149,6 @@ contextBridge.exposeInMainWorld('ElectronOS', {
   updateCookies,
   registerCertificateHandler,
   getMaxMemory,
-  setMaxMemory
+  setMaxMemory,
+  restart
 });

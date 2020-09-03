@@ -2,7 +2,6 @@ goog.provide('plugin.electron.ElectronConfigCtrl');
 goog.provide('plugin.electron.electronConfigDirective');
 
 goog.require('os.ui.Module');
-// const electron = goog.require('electron');
 
 /**
  * The electron configuration directive.
@@ -35,6 +34,7 @@ os.ui.Module.directive('electronconfig', [plugin.electron.electronConfigDirectiv
  */
 plugin.electron.ElectronConfigCtrl = function($scope, $element) {
   this['maxMemory'] = ElectronOS.getMaxMemory();
+  this['restartButtonActive'] = false;
 };
 
 
@@ -44,5 +44,14 @@ plugin.electron.ElectronConfigCtrl = function($scope, $element) {
 plugin.electron.ElectronConfigCtrl.prototype.update = function() {
   if (this['maxMemory']) {
     ElectronOS.setMaxMemory(this['maxMemory']);
+    this['restartButtonActive'] = true;
   }
+};
+
+/**
+ * Restarts the application.
+ * @export
+ */
+plugin.electron.ElectronConfigCtrl.prototype.restart = function() {
+  ElectronOS.restart();
 };
