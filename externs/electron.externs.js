@@ -91,3 +91,8 @@ ElectronOS.getMaxMemory = function() {};
  * @param {number} value The maximum memory application can use.
  */
 ElectronOS.setMaxMemory = function(value) {};
+
+/**
+ * Restarts the entire application.
+ */
+ElectronOS.restart = function() {};
