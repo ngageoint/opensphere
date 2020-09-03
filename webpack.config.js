@@ -15,7 +15,7 @@ module.exports = (env, argv) => {
       path: buildDir,
       filename: isProduction ? 'opensphere.min.js' : 'opensphere.js'
     },
-    devtool: 'source-map',
+    devtool: isProduction ? 'source-map' : 'eval',
     watch: !isProduction,
     optimization: {
       minimize: isProduction,
