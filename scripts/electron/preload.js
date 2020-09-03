@@ -1,5 +1,5 @@
 const {contextBridge, ipcRenderer} = require('electron');
-
+const {getMaximumMemory, setMaximumMemory} = require('../memconfig.js');
 
 /**
  * Registered certificate handler.
@@ -98,14 +98,14 @@ const updateCookies = () => {
 };
 
 // Divide by half system memory and convert to MB.
-let appMemory = process.getSystemMemoryInfo().total / 2048 | 0;
+const appMemory = process.getSystemMemoryInfo().total / 2048 | 0;
 
 /**
  * Gets the currently set maximum memory.
  * @return {number} The semi-colon delimited list of cookies.
  */
 const getMaxMemory = () => {
-  return appMemory;
+  return getMaximumMemory();
 };
 
 /**
@@ -113,8 +113,7 @@ const getMaxMemory = () => {
  * @param {number} value The max memory value.
  */
 const setMaxMemory = (value) => {
-  appMemory = value;
-  console.log('Setting applications maximum memory to ' + appMemory + ' MB.');
+  setMaximumMemory(value);
 };
 
 // Handle certificate select event from the main process.
