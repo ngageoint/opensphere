@@ -42,7 +42,6 @@ plugin.electron.ElectronConfigCtrl = function($scope, $element) {
  * @export
  */
 plugin.electron.ElectronConfigCtrl.prototype.update = function() {
-  console.log('Updating max memory ' + this['maxMemory']);
   if (this['maxMemory']) {
     ElectronOS.setMaxMemory(this['maxMemory']);
   }
