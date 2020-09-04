@@ -5,13 +5,14 @@ goog.require('goog.string');
 goog.require('ol.geom.GeometryType');
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.MultiLineString');
-goog.require('ol.render.Feature');
 goog.require('os.array');
 goog.require('os.easing');
 goog.require('os.extent');
 goog.require('os.geom.GeometryField');
 goog.require('os.mixin.geometry');
 goog.require('os.query.utils');
+
+goog.requireType('ol.render.Feature');
 
 
 

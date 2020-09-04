@@ -2,9 +2,10 @@ goog.provide('os.interaction');
 
 goog.require('ol.Feature');
 goog.require('ol.layer.Vector');
-goog.require('ol.render.Feature');
 goog.require('os.feature');
 goog.require('os.map');
+
+goog.requireType('ol.render.Feature');
 
 
 /**

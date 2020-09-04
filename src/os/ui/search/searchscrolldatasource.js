@@ -1,5 +1,7 @@
 goog.provide('os.ui.search.SearchScrollDataSource');
+
 goog.require('goog.events.EventTarget');
+goog.require('goog.string');
 goog.require('os.search.SearchEvent');
 goog.require('os.search.SearchEventType');
 goog.require('os.search.SearchManager');

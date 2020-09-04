@@ -4,7 +4,6 @@ goog.require('goog.string');
 goog.require('ol.events');
 goog.require('ol.geom.GeometryType');
 goog.require('ol.render.Event');
-goog.require('ol.render.Feature');
 goog.require('ol.style.Icon');
 goog.require('ol.style.Style');
 goog.require('os.events.LayerEvent');
@@ -22,6 +21,9 @@ goog.require('os.ui.Icons');
 goog.require('os.ui.renamelayer');
 goog.require('plugin.heatmap');
 goog.require('plugin.heatmap.heatmapLayerUIDirective');
+
+goog.requireType('ol.Feature');
+goog.requireType('ol.render.Feature');
 
 
 
