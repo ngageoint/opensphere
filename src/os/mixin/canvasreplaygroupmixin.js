@@ -1,9 +1,11 @@
 goog.provide('os.mixin.canvasreplaygroup');
 
-goog.require('ol.Feature');
 goog.require('ol.extent');
-goog.require('ol.render.Feature');
 goog.require('ol.render.canvas.ReplayGroup');
+
+goog.requireType('ol.Feature');
+goog.requireType('ol.render.Feature');
+
 
 (function() {
   var oldForEachFeatureAtCoordinate = ol.render.canvas.ReplayGroup.prototype.forEachFeatureAtCoordinate;

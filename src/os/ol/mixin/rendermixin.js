@@ -3,9 +3,10 @@
  */
 goog.provide('os.ol.mixin.render');
 
-goog.require('ol.Feature');
-goog.require('ol.render.Feature');
 goog.require('ol.render.canvas.PolygonReplay');
+
+goog.requireType('ol.Feature');
+goog.requireType('ol.render.Feature');
 
 
 /**

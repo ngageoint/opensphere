@@ -8,7 +8,6 @@ goog.require('ol.Feature');
 goog.require('os.config.Settings');
 goog.require('os.data.RecordField');
 goog.require('os.interaction.DragZoom');
-goog.require('os.map.IMapContainer');
 goog.require('os.metrics.Metrics');
 goog.require('os.ogc.registry');
 goog.require('os.ui.GlobalMenuEventType');
@@ -17,6 +16,8 @@ goog.require('os.ui.draw.DrawEventType');
 goog.require('os.ui.menu.draw');
 goog.require('os.ui.ol.interaction.AbstractDraw');
 goog.require('os.ui.ol.interaction.DragBox');
+
+goog.requireType('os.map.IMapContainer');
 
 
 /**

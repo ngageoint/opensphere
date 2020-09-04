@@ -15,7 +15,6 @@ goog.require('os.query.utils');
 goog.require('os.string');
 goog.require('plugin.cesium.ImageryProvider');
 goog.require('plugin.cesium.WMSTerrainProvider');
-goog.require('plugin.cesium.sync.IConverter');
 
 
 /**
