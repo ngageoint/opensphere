@@ -1,6 +1,7 @@
+/* eslint-disable jsdoc/require-returns-check */
 /**
  * @fileoverview Externs for MomentJS.
- * @see http://ssdn-belford.stwan.bits/docs/momentjs/momentjs.com/docs/index.html
+ * @see https://momentjs.com/docs/
  * @externs
  */
 
@@ -46,27 +47,27 @@ moment.prototype.fromNow = function() {};
 
 
 /**
- * @param {(moment|Date|Object|Array|string|number)} date
- * @param {string} type
+ * @param {(moment|Date|Object|Array|string|number)=} opt_date
+ * @param {string=} opt_type
  * @return {boolean}
  */
-moment.prototype.isSame = function(date, type) {};
+moment.prototype.isSame = function(opt_date, opt_type) {};
 
 
 /**
- * @param {(moment|Date|Object|Array|string|number)} date
- * @param {string} type
+ * @param {(moment|Date|Object|Array|string|number)=} opt_date
+ * @param {string=} opt_type
  * @return {boolean}
  */
-moment.prototype.isBefore = function(date, type) {};
+moment.prototype.isBefore = function(opt_date, opt_type) {};
 
 
 /**
- * @param {(moment|Date|Object|Array|string|number)} date
- * @param {string} type
+ * @param {(moment|Date|Object|Array|string|number)=} opt_date
+ * @param {string=} opt_type
  * @return {boolean}
  */
-moment.prototype.isAfter = function(date, type) {};
+moment.prototype.isAfter = function(opt_date, opt_type) {};
 
 
 /**
