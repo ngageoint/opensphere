@@ -1,7 +1,7 @@
+goog.require('goog.Uri');
 goog.require('os.mock');
 goog.require('os.net.RequestHandlerFactory');
 goog.require('os.net.SameDomainHandler');
-goog.require('goog.Uri');
 
 describe('os.net.RequestHandlerFactory', function() {
   var addHandler;
@@ -35,7 +35,7 @@ describe('os.net.RequestHandlerFactory', function() {
 
   it('should not generate handlers for URIs that can\'t be handled', function() {
     var handlers = os.net.RequestHandlerFactory.getHandlers(
-        'GET', new goog.Uri('https://ssdn-culebra.stwan.bits/test.html'));
+        'GET', new goog.Uri('https://www.docker.com/test.html'));
 
     expect(handlers).toBe(null);
   });
