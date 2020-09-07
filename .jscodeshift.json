@@ -1,0 +1,5 @@
+{
+  "globals": {
+    "os.dispatcher": {"require": "os.dispatch.dispatcher", "singleton": true}
+  }
+}

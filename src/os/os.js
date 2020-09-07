@@ -5,15 +5,18 @@ goog.require('goog.events.EventTarget');
 goog.require('goog.userAgent');
 goog.require('goog.userAgent.product');
 goog.require('goog.userAgent.product.isVersion');
+goog.require('os.dispatch.dispatcher');
 goog.require('os.mixin.closure');
 goog.require('os.ol.license');
 
 
 /**
+ * TODO <AT>deprecated Please use goog.require('os.dispatch.dispatcher').getInstance() instead
+ *
  * The global event dispatcher.
  * @type {goog.events.EventTarget}
  */
-os.dispatcher = new goog.events.EventTarget();
+os.dispatcher = os.dispatch.dispatcher.getInstance();
 
 
 /**
