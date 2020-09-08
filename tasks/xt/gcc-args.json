@@ -66,8 +66,7 @@
     "deprecated",
     "missingProvide",
     "unusedLocalVariables",
-    "unusedPrivateMembers",
-    "useOfGoogBase"
+    "unusedPrivateMembers"
   ],
   "language_in": "ECMASCRIPT_2017",
   "summary_detail_level": 3,
