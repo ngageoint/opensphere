@@ -70,7 +70,6 @@ os.implements(os.source.Request, os.source.IImportSource.ID);
 /**
  * Class name
  * @type {string}
- * @const
  */
 os.source.Request.NAME = 'os.source.Request';
 os.registerClass(os.source.Request.NAME, os.source.Request);
