@@ -5,18 +5,19 @@ goog.require('goog.events.EventTarget');
 goog.require('goog.userAgent');
 goog.require('goog.userAgent.product');
 goog.require('goog.userAgent.product.isVersion');
-goog.require('os.dispatch.dispatcher');
 goog.require('os.mixin.closure');
 goog.require('os.ol.license');
 
 
 /**
- * TODO <AT>deprecated Please use goog.require('os.dispatch.dispatcher').getInstance() instead
+ * TODO after running the ES6 conversion on a lot of the files, bring this deprecated to life; it'd add
+ * over a thousand warnings right now.
  *
  * The global event dispatcher.
  * @type {goog.events.EventTarget}
+ * <AT>deprecated Please use goog.require('os.Dispatcher').getInstance() instead
  */
-os.dispatcher = os.dispatch.dispatcher.getInstance();
+os.dispatcher = new goog.events.EventTarget();
 
 
 /**
