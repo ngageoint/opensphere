@@ -800,6 +800,89 @@ const adjustColor = function(data, brightness, contrast, saturation) {
   }
 };
 
+
+/**
+ * Convolution matrix for sharpness image correction.
+ * @type {!Array<number>}
+ *
+ * @see https://www.html5rocks.com/en/tutorials/canvas/imagefilters/
+ */
+const sharpnessMatrix = [
+  0, -1, 0,
+  -1, 5, -1,
+  0, -1, 0
+];
+
+
+/**
+ * Applies a sharpness transform to an array of image data.
+ *
+ * @param {!Array<number>} data The image data.
+ * @param {number} width The image width.
+ * @param {number} height The image height.
+ * @param {number} sharpness The target sharpness, between 0 and 1.
+ */
+const adjustSharpness = function(data, width, height, sharpness) {
+  // Multiply sharpness by a factor of 10 to enhance the effect of the convolution algorithm.
+  convolute(data, width, height, sharpnessMatrix, sharpness * 10);
+};
+
+
+/**
+ * Applies a convolution transform to an array of image data.
+ *
+ * @param {!Array<number>} data The image data.
+ * @param {number} width The image width.
+ * @param {number} height The image height.
+ * @param {!Array<number>} weights The convolution weights.
+ * @param {number} value The convolution value.
+ *
+ * @see https://www.html5rocks.com/en/tutorials/canvas/imagefilters/
+ */
+const convolute = function(data, width, height, weights, value) {
+  const side = Math.round(Math.sqrt(weights.length));
+  const halfSide = Math.floor(side / 2);
+  const orig = data.slice();
+
+  // pad output by the convolution matrix
+  // go through the destination image pixels
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const sy = y;
+      const sx = x;
+      const dstOff = (y * width + x) * 4;
+
+      // calculate the weighed sum of the source image pixels that
+      // fall under the convolution matrix
+      let r = 0;
+      let g = 0;
+      let b = 0;
+      let a = 0;
+
+      for (let cy = 0; cy < side; cy++) {
+        for (let cx = 0; cx < side; cx++) {
+          const scy = sy + cy - halfSide;
+          const scx = sx + cx - halfSide;
+          if (scy >= 0 && scy < height && scx >= 0 && scx < width) {
+            const srcOff = (scy * width + scx) * 4;
+            const wt = weights[cy * side + cx];
+            r += orig[srcOff] * wt;
+            g += orig[srcOff + 1] * wt;
+            b += orig[srcOff + 2] * wt;
+            a += orig[srcOff + 3] * wt;
+          }
+        }
+      }
+
+      data[dstOff] = r * value + orig[dstOff] * (1 - value);
+      data[dstOff + 1] = g * value + orig[dstOff + 1] * (1 - value);
+      data[dstOff + 2] = b * value + orig[dstOff + 2] * (1 - value);
+      data[dstOff + 3] = a;
+    }
+  }
+};
+
+
 /**
  * Applies a color transform to an array of image data. This transform takes a source and target color and blends
  * the alpha using a color transform matrix to produce a more natural version of the target color.
@@ -877,6 +960,7 @@ exports = {
   THERMAL_HEATMAP_GRADIENT_HEX,
   YIQ_TO_RGB,
   adjustColor,
+  adjustSharpness,
   calculateHueTransform,
   changeColor,
   colorSort,
