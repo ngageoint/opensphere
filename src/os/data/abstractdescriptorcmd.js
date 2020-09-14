@@ -125,7 +125,7 @@ os.data.AbstractDescriptor.prototype.canExecute = function() {
 
   if (!this.getDescriptor()) {
     this.state = os.command.State.ERROR;
-    this.details = 'Descriptor unavailable.';
+    this.details = 'Descriptor not registered in DataManager!';
     return false;
   }
 

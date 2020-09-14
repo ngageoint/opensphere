@@ -60,6 +60,13 @@ os.layer.config.AbstractTileLayerConfig = function() {
    * @protected
    */
   this.urls = [];
+
+  /**
+   * Node UI string for the layer being created.
+   * @type {?string}
+   * @protected
+   */
+  this.layerNodeUi = null;
 };
 goog.inherits(os.layer.config.AbstractTileLayerConfig, os.layer.config.AbstractLayerConfig);
 
@@ -146,6 +153,13 @@ os.layer.config.AbstractTileLayerConfig.prototype.initializeConfig = function(op
     this.crossOrigin = null;
     options['crossOrigin'] = null;
   }
+
+  if (options['layerNodeUi']) {
+    // pull the nodeUi off the options object to prevent it from being persisted by the layer
+    this.layerNodeUi = options['layerNodeUi'];
+    delete options['layerNodeUi'];
+  }
+
   // tile class
   this.layerClass = /** @type {Function} */ (options['layerClass']) || this.layerClass;
   this.tileClass = /** @type {os.TileClass} */ (options['tileClass']) || this.tileClass;
@@ -214,6 +228,10 @@ os.layer.config.AbstractTileLayerConfig.prototype.createLayer = function(options
 os.layer.config.AbstractTileLayerConfig.prototype.configureLayer = function(layer, options) {
   if (options['explicitType'] != null) {
     layer.setExplicitType(/** @type {string} */ (options['explicitType']));
+  }
+
+  if (this.layerNodeUi) {
+    layer.setNodeUI(this.layerNodeUi);
   }
 };
 
