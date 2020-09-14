@@ -87,6 +87,12 @@ ElectronOS.updateCookies = function() {};
 ElectronOS.getMaxMemory = function() {};
 
 /**
+ * Gets the total available memory for the system.
+ * @return {number} The total available memory on the system in MB.
+ */
+ElectronOS.getSystemMemory = function() {};
+
+/**
  * Set the maximum memory the application can use.
  * @param {number} value The maximum memory application can use.
  */
