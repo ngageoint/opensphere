@@ -1,0 +1,11 @@
+{
+  "globals": {
+    "os.alertManager": {"require": "os.alert.AlertManager", "singleton": true},
+    "os.dispatcher": {"require": "os.Dispatcher", "singleton": true},
+    "os.feature": {},
+    "os.geo": {},
+    "os.ui": {},
+    "os.settings": {"require": "os.config.Settings", "singleton": true},
+    "os.MapContainer": {}
+  }
+}
