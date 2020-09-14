@@ -34,8 +34,9 @@ goog.require('ol.format.GeoJSON');
     var fields = opt_options.fields;
     for (var key in properties) {
       // exclude private keys, any fields passed in, and any non-primitive value
-      if (key.indexOf('_') !== 0 && (!fields || fields.indexOf(key) > -1) &&
-          Object(properties[key]) !== properties[key]) {
+      if ((opt_options.includePrivateFields || key.indexOf('_') !== 0) &&
+          ((!fields || fields.indexOf(key) > -1) &&
+          Object(properties[key]) !== properties[key])) {
         if (!object.properties) {
           object.properties = {};
         }
