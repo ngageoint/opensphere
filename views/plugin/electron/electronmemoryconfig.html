@@ -2,7 +2,7 @@
   <h5>Memory</h5>
   <div class="form-group row flex-shrink-0">
     <label class="col-form-label col-2">Max MB</label>
-    <input class="form-control col-2" id="maxMemory" type="number" min="512" step="1"
+    <input class="form-control col-2" id="maxMemory" type="number" min="ctrl.minMemory" max="ctrl.systemMemory" step="1"
         ng-model="ctrl.maxMemory" ng-change="ctrl.update()" required >
     &nbsp;&nbsp;&nbsp;
     <button class="btn btn-primary float-right" ng-click="ctrl.restart()" ng-disabled="!ctrl.restartButtonActive"

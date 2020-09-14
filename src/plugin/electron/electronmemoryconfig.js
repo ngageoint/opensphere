@@ -34,6 +34,8 @@ os.ui.Module.directive('electronmemoryconfig', [plugin.electron.electronMemoryCo
  */
 plugin.electron.ElectronMemoryConfigCtrl = function($scope, $element) {
   this['maxMemory'] = ElectronOS.getMaxMemory();
+  this['minMemory'] = 512;
+  this['systemMemory'] = ElectronOS.getSystemMemory();
   this['restartButtonActive'] = false;
 };
 
@@ -43,7 +45,12 @@ plugin.electron.ElectronMemoryConfigCtrl = function($scope, $element) {
  */
 plugin.electron.ElectronMemoryConfigCtrl.prototype.update = function() {
   if (this['maxMemory']) {
-    this['restartButtonActive'] = true;
+    const maxMem = this['maxMemory'];
+    if (maxMem >= this['minMemory'] && maxMem <= this['systemMemory']) {
+      this['restartButtonActive'] = true;
+    } else {
+      this['restartButtonActive'] = false;
+    }
   }
 };
 
