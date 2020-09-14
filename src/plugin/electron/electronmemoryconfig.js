@@ -1,5 +1,5 @@
-goog.provide('plugin.electron.ElectronConfigCtrl');
-goog.provide('plugin.electron.electronConfigDirective');
+goog.provide('plugin.electron.ElectronMemoryConfigCtrl');
+goog.provide('plugin.electron.electronMemoryConfigDirective');
 
 goog.require('os.ui.Module');
 
@@ -7,12 +7,12 @@ goog.require('os.ui.Module');
  * The electron configuration directive.
  * @return {angular.Directive}
  */
-plugin.electron.electronConfigDirective = function() {
+plugin.electron.electronMemoryConfigDirective = function() {
   return {
     restrict: 'E',
     replace: true,
     templateUrl: os.ROOT + 'views/plugin/electron/electronmemoryconfig.html',
-    controller: plugin.electron.ElectronConfigCtrl,
+    controller: plugin.electron.ElectronMemoryConfigCtrl,
     controllerAs: 'ctrl'
   };
 };
@@ -21,7 +21,7 @@ plugin.electron.electronConfigDirective = function() {
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('electronconfig', [plugin.electron.electronConfigDirective]);
+os.ui.Module.directive('electronmemoryconfig', [plugin.electron.electronMemoryConfigDirective]);
 
 
 
@@ -32,7 +32,7 @@ os.ui.Module.directive('electronconfig', [plugin.electron.electronConfigDirectiv
  * @constructor
  * @ngInject
  */
-plugin.electron.ElectronConfigCtrl = function($scope, $element) {
+plugin.electron.ElectronMemoryConfigCtrl = function($scope, $element) {
   this['maxMemory'] = ElectronOS.getMaxMemory();
   this['restartButtonActive'] = false;
 };
@@ -41,7 +41,7 @@ plugin.electron.ElectronConfigCtrl = function($scope, $element) {
 /**
  * @export
  */
-plugin.electron.ElectronConfigCtrl.prototype.update = function() {
+plugin.electron.ElectronMemoryConfigCtrl.prototype.update = function() {
   if (this['maxMemory']) {
     ElectronOS.setMaxMemory(this['maxMemory']);
     this['restartButtonActive'] = true;
@@ -52,6 +52,6 @@ plugin.electron.ElectronConfigCtrl.prototype.update = function() {
  * Restarts the application.
  * @export
  */
-plugin.electron.ElectronConfigCtrl.prototype.restart = function() {
+plugin.electron.ElectronMemoryConfigCtrl.prototype.restart = function() {
   ElectronOS.restart();
 };
