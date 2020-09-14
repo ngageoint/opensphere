@@ -820,28 +820,17 @@ const sharpnessMatrix = [
  * @param {!Array<number>} data The image data.
  * @param {number} width The image width.
  * @param {number} height The image height.
- * @param {number} sharpness The target sharpness, between 0 and 1.
- */
-const adjustSharpness = function(data, width, height, sharpness) {
-  // Multiply sharpness by a factor of 10 to enhance the effect of the convolution algorithm.
-  convolute(data, width, height, sharpnessMatrix, sharpness * 10);
-};
-
-
-/**
- * Applies a convolution transform to an array of image data.
- *
- * @param {!Array<number>} data The image data.
- * @param {number} width The image width.
- * @param {number} height The image height.
- * @param {!Array<number>} weights The convolution weights.
- * @param {number} value The convolution value.
+ * @param {number} sharpness The sharpness value.
  *
  * @see https://www.html5rocks.com/en/tutorials/canvas/imagefilters/
  */
-const convolute = function(data, width, height, weights, value) {
-  const side = Math.round(Math.sqrt(weights.length));
+const adjustSharpness = function(data, width, height, sharpness) {
+  // sharpness is in the range [0, 1], multiply to enhance the convolution effect
+  const value = sharpness * 10;
+
+  const side = Math.round(Math.sqrt(sharpnessMatrix.length));
   const halfSide = Math.floor(side / 2);
+  const adjacentPx = sharpnessMatrix[halfSide];
   const orig = data.slice();
 
   // pad output by the convolution matrix
@@ -851,6 +840,10 @@ const convolute = function(data, width, height, weights, value) {
       const sy = y;
       const sx = x;
       const dstOff = (y * width + x) * 4;
+
+      // test if we're on an edge
+      const xEdge = x % width === 0 || x % (width - 1) === 0;
+      const yEdge = y % height === 0 || y % (height - 1) === 0;
 
       // calculate the weighed sum of the source image pixels that
       // fall under the convolution matrix
@@ -865,7 +858,19 @@ const convolute = function(data, width, height, weights, value) {
           const scx = sx + cx - halfSide;
           if (scy >= 0 && scy < height && scx >= 0 && scx < width) {
             const srcOff = (scy * width + scx) * 4;
-            const wt = weights[cy * side + cx];
+            let wt = sharpnessMatrix[cy * side + cx];
+
+            // sum of applied weights needs to be 1 to avoid impacting brightness. if we're updating the center pixel,
+            // add the adjacent offset for any intersected edge.
+            if (cy === halfSide && cx === halfSide) {
+              if (xEdge) {
+                wt += adjacentPx;
+              }
+              if (yEdge) {
+                wt += adjacentPx;
+              }
+            }
+
             r += orig[srcOff] * wt;
             g += orig[srcOff + 1] * wt;
             b += orig[srcOff + 2] * wt;
