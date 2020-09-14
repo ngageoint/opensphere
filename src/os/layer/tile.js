@@ -564,7 +564,10 @@ os.layer.Tile.prototype.applyColors = function(data, width, height) {
         os.color.transformColor(data, srcColor, tgtColor);
       }
       os.color.adjustColor(data, brightness, contrast, saturation);
-      os.color.adjustSharpness(data, width, height, sharpness);
+
+      if (sharpness > 0) {
+        os.color.adjustSharpness(data, width, height, sharpness);
+      }
     }
   }
 };
