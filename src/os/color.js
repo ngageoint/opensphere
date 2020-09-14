@@ -820,14 +820,11 @@ const sharpnessMatrix = [
  * @param {!Array<number>} data The image data.
  * @param {number} width The image width.
  * @param {number} height The image height.
- * @param {number} sharpness The sharpness value.
+ * @param {number} value The sharpness value.
  *
  * @see https://www.html5rocks.com/en/tutorials/canvas/imagefilters/
  */
-const adjustSharpness = function(data, width, height, sharpness) {
-  // sharpness is in the range [0, 1], multiply to enhance the convolution effect
-  const value = sharpness * 10;
-
+const adjustSharpness = function(data, width, height, value) {
   const side = Math.round(Math.sqrt(sharpnessMatrix.length));
   const halfSide = Math.floor(side / 2);
   const adjacentPx = sharpnessMatrix[halfSide];

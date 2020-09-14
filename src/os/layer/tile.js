@@ -566,7 +566,8 @@ os.layer.Tile.prototype.applyColors = function(data, width, height) {
       os.color.adjustColor(data, brightness, contrast, saturation);
 
       if (sharpness > 0) {
-        os.color.adjustSharpness(data, width, height, sharpness);
+        // sharpness is in the range [0, 1]. use a multiplier to enhance the convolution effect.
+        os.color.adjustSharpness(data, width, height, sharpness * 20);
       }
     }
   }
