@@ -43,7 +43,6 @@ plugin.electron.ElectronMemoryConfigCtrl = function($scope, $element) {
  */
 plugin.electron.ElectronMemoryConfigCtrl.prototype.update = function() {
   if (this['maxMemory']) {
-    ElectronOS.setMaxMemory(this['maxMemory']);
     this['restartButtonActive'] = true;
   }
 };
@@ -53,5 +52,6 @@ plugin.electron.ElectronMemoryConfigCtrl.prototype.update = function() {
  * @export
  */
 plugin.electron.ElectronMemoryConfigCtrl.prototype.restart = function() {
+  ElectronOS.setMaxMemory(this['maxMemory']);
   ElectronOS.restart();
 };
