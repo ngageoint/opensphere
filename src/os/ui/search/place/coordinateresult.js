@@ -56,21 +56,6 @@ os.implements(os.ui.search.place.CoordinateResult, os.search.ISortableResult.ID)
 
 
 /**
- * @type {Object}
- * @const
- */
-os.ui.search.place.FEATURE_CONFIG = {
-  'image': {
-    'type': 'icon',
-    'scale': 0.75,
-    'src': os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.WHT_BLANK,
-    'color': 'rgba(0,255,255,1)'
-  },
-  'text': {}
-};
-
-
-/**
  * Create a style config for a feature.
  *
  * @param {ol.Feature} feature The feature.
@@ -132,37 +117,4 @@ os.ui.search.place.CoordinateResult.prototype.getSortValue = function(sortType) 
   }
 
   return value != null ? String(value) : null;
-};
-
-
-/**
- * Creates a feature representing a coordinate result.
- *
- * @param {Object.<string, *>=} opt_options Feature options.
- * @return {!ol.Feature}
- */
-os.ui.search.place.createFeature = function(opt_options) {
-  // grab the label off the options if it exists. we don't want it on the feature.
-  var label;
-  if (opt_options && 'label' in opt_options) {
-    label = /** @type {string} */ (opt_options['label']);
-    delete opt_options['label'];
-  }
-
-  var feature = new ol.Feature(opt_options);
-  feature.setId(ol.getUid(feature));
-
-  var featureConfig = os.object.unsafeClone(os.ui.search.place.FEATURE_CONFIG);
-  feature.set(os.style.StyleType.FEATURE, featureConfig);
-
-  // configure labels for the feature
-  if (label) {
-    featureConfig[os.style.StyleField.LABELS] = [{
-      'column': label,
-      'showColumn': false
-    }];
-  }
-
-  os.style.setFeatureStyle(feature);
-  return feature;
 };

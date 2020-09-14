@@ -17,7 +17,6 @@ os.ui.menu.draw.EventType = {
   LINE: 'line',
   CHOOSE_AREA: 'chooseArea',
   ENTER_COORDINATES: 'enterCoordinates',
-  COUNTRY_BORDER: 'countryBorder',
   WHOLE_WORLD: 'queryWorld'
 };
 
@@ -132,9 +131,6 @@ os.ui.menu.draw.handleDrawEvent = function(event) {
       break;
     case os.ui.menu.draw.EventType.ENTER_COORDINATES:
       os.query.launchCoordinates();
-      break;
-    case os.ui.menu.draw.EventType.COUNTRY_BORDER:
-      os.dispatcher.dispatchEvent(new goog.events.Event(os.ui.draw.DrawEventType.DRAWCOUNTRY));
       break;
     case os.ui.menu.draw.EventType.WHOLE_WORLD:
       os.query.queryWorld();

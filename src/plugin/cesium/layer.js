@@ -189,6 +189,16 @@ plugin.cesium.Layer.prototype.onMapChange = function(event) {
  * @protected
  */
 plugin.cesium.Layer.prototype.synchronize = function() {
+  this.updateError();
+};
+
+
+/**
+ * Update the error message for the layer.
+ *
+ * @protected
+ */
+plugin.cesium.Layer.prototype.updateError = function() {
   var oldError = this.error;
   this.error = this.getErrorMessage();
 

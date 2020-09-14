@@ -10,8 +10,12 @@ goog.require('os.ol.license');
 
 
 /**
+ * TODO after running the ES6 conversion on a lot of the files, bring this deprecated to life; it'd add
+ * over a thousand warnings right now.
+ *
  * The global event dispatcher.
  * @type {goog.events.EventTarget}
+ * <AT>deprecated Please use goog.require('os.Dispatcher').getInstance() instead
  */
 os.dispatcher = new goog.events.EventTarget();
 
