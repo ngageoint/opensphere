@@ -400,7 +400,7 @@ os.data.FileDescriptor.prototype.updateFromConfig = function(config, opt_isNotPa
  */
 os.data.FileDescriptor.createFromConfig = function(descriptor, provider, config, opt_useDefaultColor) {
   var file = config['file'];
-  descriptor.setId(provider.getUniqueId());
+  descriptor.setId(/** @type {string} */ (config['id']) || provider.getUniqueId());
   descriptor.setProvider(provider.getLabel());
   if (file) {
     descriptor.setUrl(file.getUrl());
