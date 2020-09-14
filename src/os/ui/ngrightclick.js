@@ -44,7 +44,7 @@ os.ui.RightClickCtrl = function($scope, $element, $parse, $attrs) {
 
   /**
    * Right click handler.
-   * @type {?angular.$parse.Expression}
+   * @type {?angular.parse.Expression}
    * @private
    */
   this.handler_ = $parse($attrs['ngRightClick']);
