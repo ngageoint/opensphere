@@ -610,6 +610,9 @@ plugin.file.kml.KMLParser.prototype.handleZipEntries = function(entries) {
       this.hasModel_ = true;
       this.kmzImagesRemaining_++;
       entry.getData(new zip.TextWriter(), this.processZipAsset_.bind(this, entry.filename));
+    } else {
+      this.kmzImagesRemaining_++;
+      this.processUnknownZipAsset_(entry);
     }
   }
 
@@ -654,6 +657,23 @@ plugin.file.kml.KMLParser.prototype.processMainEntry_ = function(mainEntry, succ
  */
 plugin.file.kml.KMLParser.prototype.imagesRemaining_ = function() {
   return this.kmzImagesRemaining_ <= 0;
+};
+
+/**
+ * Handler for processing unknown assets within the ZIP file
+ * @param {!zip.Entry} entry
+ * @private
+ */
+plugin.file.kml.KMLParser.prototype.processUnknownZipAsset_ = function(entry) {
+  entry.getData(new zip.ArrayBufferWriter(), (data) => {
+    const type = os.arraybuf.getMimeType(/** @type {ArrayBuffer} */ (data));
+    if (type && type.substr(0, 5) === 'image') {
+      entry.getData(new zip.Data64URIWriter(type), this.processZipAsset_.bind(this, entry.filename));
+    } else {
+      // eh whatever just skip this
+      this.kmzImagesRemaining_--;
+    }
+  });
 };
 
 
@@ -1522,11 +1542,21 @@ plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
       var regex = new RegExp(pattern);
       description = description.replace(regex, 'src="' + this.assetMap_[key] + '"');
 
+      // Replace href's
+      pattern = 'href=["\']' + key.replace(/(.)/g, '[$1]') + '["\']';
+      regex = new RegExp(pattern);
+      description = description.replace(regex, 'href="' + this.assetMap_[key] + '"');
+
       // replace properly encoded URLs
       var encodedKey = new goog.Uri(key).toString();
       pattern = 'src=["\']' + encodedKey.replace(/(.)/g, '[$1]') + '["\']';
       regex = new RegExp(pattern);
       description = description.replace(regex, 'src="' + this.assetMap_[key] + '"');
+
+      // Replace href's for encoded URLs
+      pattern = 'href=["\']' + encodedKey.replace(/(.)/g, '[$1]') + '["\']';
+      regex = new RegExp(pattern);
+      description = description.replace(regex, 'href="' + this.assetMap_[key] + '"');
     }
 
     feature.set('description', description);

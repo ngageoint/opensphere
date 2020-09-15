@@ -1,4 +1,5 @@
 goog.provide('os.ui.metrics.MetricNode');
+goog.provide('os.ui.metrics.MetricNodeOptions');
 
 goog.require('os.data.ISearchable');
 goog.require('os.events.PropertyChangeEvent');

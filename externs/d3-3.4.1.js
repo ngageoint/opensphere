@@ -1,9 +1,10 @@
+/* eslint-disable jsdoc/require-returns-check */
 /**
  * @fileoverview Externs for D3 3.4.1.
  *
  * @todo Finish documenting the remaining functions in the d3 object.
  *
- * @see http://ssdn-belford.stwan.bits/docs/d3/wiki/github.com/mbostock/d3/wiki/API-Reference.html
+ * @see https://github.com/d3/d3/releases/tag/v3.4.1
  * @externs
  */
 

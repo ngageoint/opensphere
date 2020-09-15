@@ -1,12 +1,13 @@
 goog.provide('plugin.cesium.tiles.Layer');
 
+goog.require('goog.log');
+goog.require('goog.log.Logger');
 goog.require('os.config.DisplaySetting');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.layer.PropertyChange');
 goog.require('plugin.cesium');
 goog.require('plugin.cesium.PrimitiveLayer');
 goog.require('plugin.cesium.tiles.cesium3DTileLayerUIDirective');
-
 
 /**
  * @extends {plugin.cesium.PrimitiveLayer}
@@ -30,6 +31,19 @@ plugin.cesium.tiles.Layer = function() {
   this.accessToken = '';
 
   /**
+   * Error message for access token issues
+   * @type {string}
+   * @private
+   */
+  this.tokenError_ = '';
+
+  /**
+   * @type {Cesium.Resource|Object|string}
+   * @protected
+   */
+  this.tileStyle = null;
+
+  /**
    * @type {string}
    * @protected
    */
@@ -41,6 +55,15 @@ plugin.cesium.tiles.Layer = function() {
   this.setLayerUI('cesium3dtilelayerui');
 };
 goog.inherits(plugin.cesium.tiles.Layer, plugin.cesium.PrimitiveLayer);
+
+
+/**
+ * Logger
+ * @type {goog.log.Logger}
+ * @private
+ * @const
+ */
+plugin.cesium.tiles.Layer.LOGGER_ = goog.log.getLogger('plugin.cesium.tiles.Layer');
 
 
 /**
@@ -66,9 +89,31 @@ plugin.cesium.tiles.Layer.prototype.synchronize = function() {
   if (!this.hasError()) {
     var tilesetUrl = '';
     if (!isNaN(this.assetId)) {
-      tilesetUrl = Cesium.IonResource.fromAssetId(this.assetId, {
-        accessToken: this.accessToken
-      });
+      if (!this.accessToken) {
+        var prompt = plugin.cesium.promptForAccessToken();
+        prompt.then((accessToken) => {
+          os.settings.set(plugin.cesium.SettingsKey.ACCESS_TOKEN, accessToken);
+          this.accessToken = accessToken;
+          this.synchronize();
+        }, () => {
+          var errorMsg = 'An access token is required to enable this layer, but one was not provided.';
+          this.setTokenError_(errorMsg);
+        });
+      } else {
+        tilesetUrl = Cesium.IonResource.fromAssetId(this.assetId, {
+          accessToken: this.accessToken
+        });
+        tilesetUrl.then(() => {
+          // We don't care to note that it resolves, we just want a response if it doesn't
+        }, () => {
+          // Clear the saved access token because it was rejected
+          os.settings.set(plugin.cesium.SettingsKey.ACCESS_TOKEN, '');
+
+          var errorMsg = 'The provided access token was rejected. ' +
+          'Turn the layer off and back on to provide another access token.';
+          this.setTokenError_(errorMsg);
+        });
+      }
     } else {
       tilesetUrl = this.url;
     }
@@ -78,14 +123,34 @@ plugin.cesium.tiles.Layer.prototype.synchronize = function() {
         url: tilesetUrl
       });
 
-      tileset.style = new Cesium.Cesium3DTileStyle({
-        'color': {
-          'evaluateColor': this.getFeatureColor.bind(this)
-        }
-      });
+      if (this.tileStyle != null) {
+        tileset.style = new Cesium.Cesium3DTileStyle(this.tileStyle);
+      } else {
+        tileset.style = new Cesium.Cesium3DTileStyle({
+          'color': {
+            'evaluateColor': this.getFeatureColor.bind(this)
+          }
+        });
+      }
 
       this.setPrimitive(tileset);
       tileset.loadProgress.addEventListener(this.onTileProgress, this);
+    }
+  }
+};
+
+
+/**
+ * @param {string} errorMsg The message of the error
+ * @protected
+ */
+plugin.cesium.tiles.Layer.prototype.setTokenError_ = function(errorMsg) {
+  if (this.tokenError_ !== errorMsg) {
+    this.tokenError_ = errorMsg;
+    this.updateError();
+
+    if (this.tokenError_) {
+      os.alertManager.sendAlert(this.tokenError_, os.alert.AlertEventSeverity.ERROR, plugin.cesium.tiles.Layer.LOGGER_);
     }
   }
 };
@@ -157,13 +222,30 @@ plugin.cesium.tiles.Layer.prototype.restore = function(config) {
 
   if (config['accessToken']) {
     this.accessToken = /** @type {string} */ (config['accessToken']);
+  } else {
+    this.accessToken = /** @type {string} */ (os.settings.get(plugin.cesium.SettingsKey.ACCESS_TOKEN, ''));
+  }
+
+  if (config['tileStyle']) {
+    this.tileStyle = /** @type {Object|string} */ (config['tileStyle']);
   }
 
   if (config['url']) {
     this.url = /** @type {string} */ (config['url']);
   }
+};
 
-  this.synchronize();
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.tiles.Layer.prototype.getErrorMessage = function() {
+  var error = plugin.cesium.tiles.Layer.base(this, 'getErrorMessage');
+  if (!error) {
+    error = this.tokenError_;
+  }
+
+  return error;
 };
 
 
@@ -171,14 +253,17 @@ plugin.cesium.tiles.Layer.prototype.restore = function(config) {
  * @inheritDoc
  */
 plugin.cesium.tiles.Layer.prototype.getExtent = function() {
-  var tileset = /** @type {Cesium.Cesium3DTileset} */ (this.primitive);
-  if (tileset && tileset.root && tileset.root.contentBoundingVolume) {
-    var extent = plugin.cesium.rectangleToExtent(tileset.root.contentBoundingVolume.rectangle);
-    if (extent) {
-      return ol.proj.transformExtent(extent, os.proj.EPSG4326, os.map.PROJECTION);
+  try {
+    var tileset = /** @type {Cesium.Cesium3DTileset} */ (this.primitive);
+    if (tileset && tileset.root && tileset.root.contentBoundingVolume) {
+      var extent = plugin.cesium.rectangleToExtent(tileset.root.contentBoundingVolume.rectangle);
+      if (extent) {
+        return ol.proj.transformExtent(extent, os.proj.EPSG4326, os.map.PROJECTION);
+      }
     }
+  } catch (e) {
+    goog.log.error(plugin.cesium.tiles.Layer.LOGGER_, e);
   }
-
   return plugin.cesium.tiles.Layer.base(this, 'getExtent');
 };
 
