@@ -702,6 +702,16 @@ os.config.Settings.prototype.getLastReset = function() {
 };
 
 
+/**
+ * Retrieve the settings' peer info objects
+ *
+ * @param {string=} opt_type The optional message type.
+ * @return {Array<os.xt.PeerInfo>}
+ */
+os.config.Settings.prototype.getPeerInfo = function(opt_type) {
+  return this.peer_ ? this.peer_.getPeerInfo(opt_type) : null;
+};
+
 
 /**
  * Get a COPY of a config value multiple levels deep.
