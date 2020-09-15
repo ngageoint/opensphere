@@ -117,8 +117,7 @@ const setMaxMemory = (value) => {
  * Restarts the application.
  */
 const restart = () => {
-  remote.app.relaunch();
-  remote.app.exit(0);
+  ipcRenderer.send('restart');
 };
 
 // Handle certificate select event from the main process.
