@@ -1,9 +1,9 @@
 goog.require('ol.geom.Polygon');
 goog.require('ol.proj');
 goog.require('os.proj');
-goog.require('os.query');
+goog.require('os.query.utils');
 
-describe('os.query', function() {
+describe('os.query.utils', function() {
   it('should detect world queries properly', function() {
     var tests = [{
       extent: [-180, -90, 180, 90],
@@ -22,12 +22,12 @@ describe('os.query', function() {
     projections.forEach(function(code) {
       var proj = ol.proj.get(code);
       os.map.PROJECTION = proj;
-      os.query.initWorldArea();
+      os.query.utils.initWorldArea();
 
       tests.forEach(function(test) {
         var extent = ol.proj.transformExtent(test.extent, os.proj.EPSG4326, proj);
         var geom = ol.geom.Polygon.fromExtent(extent);
-        expect(os.query.isWorldQuery(geom)).toBe(test.expected);
+        expect(os.query.utils.isWorldQuery(geom)).toBe(test.expected);
       });
     });
 
