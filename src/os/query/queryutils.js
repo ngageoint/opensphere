@@ -109,3 +109,5 @@ exports.WORLD_ZOOM_FEATURE = new olFeature(new Polygon([[
 
 
 exports.WORLD_EXTENT = WORLD_EXTENT;
+exports.WORLD_COORDS = WORLD_COORDS;
+exports.WORLD_GEOM = WORLD_GEOM;
