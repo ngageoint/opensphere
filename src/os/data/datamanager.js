@@ -65,7 +65,7 @@ os.data.DataManager = function() {
    * @type {goog.async.Delay}
    * @private
    */
-  this.persistDelay_ = new goog.async.Delay(this.persistDescriptors, 50, this);
+  this.persistDelay_ = new goog.async.Delay(this.persistDescriptors_, 50, this);
 
   this.migrateDescriptors_();
 };
@@ -217,7 +217,7 @@ os.data.DataManager.prototype.addDescriptor = function(descriptor) {
     }
 
     this.dispatchEvent(new os.data.DescriptorEvent(os.data.DescriptorEventType.ADD_DESCRIPTOR, descriptor));
-    this.persistDelay_.start();
+    this.persistDescriptors();
   } else {
     goog.log.error(this.log, 'Could not add the descriptor because its ID was empty or null');
   }
@@ -236,7 +236,7 @@ os.data.DataManager.prototype.removeDescriptor = function(descriptor) {
     }
 
     this.dispatchEvent(new os.data.DescriptorEvent(os.data.DescriptorEventType.REMOVE_DESCRIPTOR, descriptor));
-    this.persistDelay_.start();
+    this.persistDescriptors();
   } else {
     goog.log.error(this.log, 'Could not remove the descriptor because its ID was empty or null');
   }
@@ -491,6 +491,14 @@ os.data.DataManager.prototype.hasError = function() {
  * @inheritDoc
  */
 os.data.DataManager.prototype.persistDescriptors = function() {
+  this.persistDelay_.start();
+};
+
+
+/**
+ * Private persist descriptors call - no delay
+ */
+os.data.DataManager.prototype.persistDescriptors_ = function() {
   var list = [];
   var aliasesSeen = {};
   var now = Date.now();
