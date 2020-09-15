@@ -90,6 +90,24 @@ os.state.titleCompare = function(a, b) {
 
 
 /**
+ * Compares states by whether or not they are supported
+ *
+ * @param {os.state.IState} a A state
+ * @param {os.state.IState} b Another state
+ * @return {number} The comparison
+ */
+os.state.supportCompare = function(a, b) {
+  if (a.getSupported() && !b.getSupported()) {
+    return -1;
+  }
+  if (!a.getSupported() && b.getSupported()) {
+    return 1;
+  }
+  return 0;
+};
+
+
+/**
  * @param {?Array<!os.data.IDataDescriptor>} list The list of state descriptors
  */
 os.state.deleteStates = function(list) {

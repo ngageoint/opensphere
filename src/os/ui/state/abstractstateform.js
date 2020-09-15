@@ -101,7 +101,9 @@ os.ui.state.AbstractStateFormCtrl.prototype.close = function() {
  */
 os.ui.state.AbstractStateFormCtrl.prototype.toggleAll = function() {
   for (var i = 0, n = this['states'].length; i < n; i++) {
-    this['states'][i].setEnabled(this['all']);
+    if (this['states'][i].getSupported()) {
+      this['states'][i].setEnabled(this['all']);
+    }
   }
 };
 
