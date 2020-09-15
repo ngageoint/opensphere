@@ -40,11 +40,12 @@ os.ui.Module.directive('stateimport', [os.ui.state.stateImportDirective]);
  *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
+ * @param {!angular.$timeout} $timeout
  * @extends {os.ui.state.AbstractStateFormCtrl}
  * @constructor
  * @ngInject
  */
-os.ui.state.StateImportCtrl = function($scope, $element) {
+os.ui.state.StateImportCtrl = function($scope, $element, $timeout) {
   os.ui.state.StateImportCtrl.base(this, 'constructor', $scope, $element);
 
   /**
@@ -80,7 +81,7 @@ os.ui.state.StateImportCtrl = function($scope, $element) {
    * @type {boolean}
    */
   this['all'] = goog.array.every(this['states'], function(state) {
-    return state.getEnabled();
+    return state.getSupported() ? state.getEnabled() : true;
   }, this);
 
   /**
@@ -102,7 +103,7 @@ os.ui.state.StateImportCtrl = function($scope, $element) {
       state.setEnabled(ol.array.includes(this.config_['loadItems'], state.toString()));
     }
   }
-  $scope.$emit(os.ui.WindowEventType.READY);
+  $timeout(() => $scope.$emit(os.ui.WindowEventType.READY));
 };
 goog.inherits(os.ui.state.StateImportCtrl, os.ui.state.AbstractStateFormCtrl);
 
