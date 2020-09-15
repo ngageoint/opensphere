@@ -286,6 +286,7 @@ os.state.BaseStateManager.prototype.getAvailable = function(opt_allVersions) {
   }
 
   list.sort(os.state.titleCompare);
+  list.sort(os.state.supportCompare);
   return list;
 };
 
