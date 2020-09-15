@@ -31,6 +31,12 @@ os.state.AbstractState = function() {
    */
   this['enabled'] = true;
 
+
+  /**
+   * @type {boolean}
+   */
+  this['supported'] = true;
+
   /**
    * @type {number}
    * @protected
@@ -60,6 +66,22 @@ os.state.AbstractState = function() {
    * @protected
    */
   this.title = '';
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.state.AbstractState.prototype.getSupported = function() {
+  return this['supported'];
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.state.AbstractState.prototype.setSupported = function(value) {
+  this['supported'] = value;
 };
 
 
