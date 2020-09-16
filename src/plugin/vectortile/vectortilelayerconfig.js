@@ -3,13 +3,19 @@ goog.module('plugin.vectortile.VectorTileLayerConfig');
 goog.require('os.mixin.vectortilesource');
 
 const log = goog.require('goog.log');
+
 const {DEFAULT_MAX_ZOOM, DEFAULT_MIN_ZOOM} = goog.require('ol');
+const olColor = goog.require('ol.color');
 const olExtent = goog.require('ol.extent');
 const MVT = goog.require('ol.format.MVT');
 const VectorTileRenderType = goog.require('ol.layer.VectorTileRenderType');
 const obj = goog.require('ol.obj');
 const {transformExtent} = goog.require('ol.proj');
 const Style = goog.require('ol.style.Style');
+
+const Settings = goog.require('os.config.Settings');
+const DisplaySetting = goog.require('os.config.DisplaySetting');
+const osColor = goog.require('os.color');
 const VectorTileLayer = goog.require('os.layer.VectorTile');
 const osMap = goog.require('os.map');
 const VectorTileSource = goog.require('os.ol.source.VectorTile');
@@ -197,7 +203,7 @@ class VectorTileLayerConfig extends AbstractLayerConfig {
     if (options['styleUrl'] && options['sources']) {
       new Request(/** @type {string} */ (options['styleUrl'])).getPromise()
           .then((resp) => {
-            return JSON.parse(resp);
+            return /** @type {!MapboxStyle} */ (JSON.parse(resp));
           })
           .then((glStyle) => {
             const sources = /** @type {string|Array<string>} */ (options['sources']);
@@ -251,6 +257,18 @@ class VectorTileLayerConfig extends AbstractLayerConfig {
             };
 
             layer.setStyle(styleFunction);
+
+            if (glStyle.layers) {
+              // if the style has a background layer, apply the color to the map/globe
+              const bgLayer = glStyle.layers.find((l) => l.type === 'background');
+              if (bgLayer && bgLayer.paint) {
+                const bgColor = /** @type {string|undefined} */ (bgLayer.paint['background-color']);
+                if (bgColor) {
+                  const rgbaArray = olColor.fromString(bgColor);
+                  Settings.getInstance().set(DisplaySetting.BG_COLOR, osColor.toHexString(rgbaArray));
+                }
+              }
+            }
           })
           .thenCatch((e) => {
             log.error(logger, `layer ${layer.getId()} could not load style from ${options['styleUrl']}`);
