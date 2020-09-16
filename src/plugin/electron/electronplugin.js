@@ -1,7 +1,7 @@
 goog.module('plugin.electron.ElectronPlugin');
 goog.module.declareLegacyNamespace();
 
-goog.require('plugin.electron.electronMemoryConfigDirective');
+goog.require('plugin.electron.ElectronMemoryConfigUI');
 
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const electron = goog.require('plugin.electron');
