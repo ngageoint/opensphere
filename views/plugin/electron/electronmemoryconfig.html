@@ -1,0 +1,15 @@
+<div>
+  <h5>Memory</h5>
+  <div class="form-group row" ng-form="electronMemory">
+    <label class="col-form-label col-2">Max MB</label>
+    <input class="form-control col-2" name="memory" type="number" min="{{ctrl.minMemory}}" max="{{ctrl.systemMemory}}" step="1"
+        ng-model="ctrl.maxMemory" ng-change="ctrl.update()" title="Maximum amount of RAM the application can use in megabytes." required >
+    &nbsp;&nbsp;&nbsp;
+    <button class="btn btn-primary float-right" ng-click="ctrl.restart()"
+      ng-disabled="!ctrl.restartButtonActive || electronMemory.memory.$error.min || electronMemory.memory.$error.max"
+      title="Restarts the application and applies the new memory settings">
+      <i class="fa fa-refresh"></i>
+      Restart and Apply
+    </button>
+  </div>
+</div>
