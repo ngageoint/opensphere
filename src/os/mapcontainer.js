@@ -68,7 +68,7 @@ goog.require('os.ol.control.MousePosition');
 goog.require('os.ol.feature');
 goog.require('os.proj');
 goog.require('os.proj.switch');
-goog.require('os.query');
+goog.require('os.query.utils');
 goog.require('os.source.Vector');
 goog.require('os.style');
 goog.require('os.style.StyleType');
@@ -704,9 +704,9 @@ os.MapContainer.prototype.onZoom_ = function(event) {
     }).filter(os.fn.filterFalsey);
 
     if (features.length) {
-      if (this.is3DEnabled() && features.length == 1 && os.query.isWorldQuery(features[0].getGeometry())) {
+      if (this.is3DEnabled() && features.length == 1 && os.query.utils.isWorldQuery(features[0].getGeometry())) {
         // while in 3D mode only, handle zooming to the world area by looking at the back of the world
-        features[0] = os.query.WORLD_ZOOM_FEATURE;
+        features[0] = os.query.utils.WORLD_ZOOM_FEATURE;
       }
 
       os.feature.flyTo(/** @type {Array<ol.Feature>} */ (features));
