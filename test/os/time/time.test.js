@@ -277,4 +277,25 @@ describe('os.time', function() {
     expect(os.time.step(d1, os.time.Duration.DAY, scale)).toBe(scale * day_);
     expect(os.time.step(d1, os.time.Duration.WEEK, scale)).toBe(scale * week_);
   });
+
+  it('should combine separate date time fields correctly', function() {
+    var d1 = '2020-12-24';
+    var t1 = '23:59:59';
+
+    var d2 = '08/29/1996';
+    var t2 = '235959';
+    var df2 = 'MM/DD/YYYY';
+    var tf2 = 'HHmmss';
+
+    var d3 = '07/25/1996';
+    var t3 = '120000';
+
+    expect(os.time.combineDateTime(d1, t1).valueOf()).toBe(new Date('2020-12-24T23:59:59Z')
+        .getTime());
+    expect(os.time.combineDateTime(d2, t2, df2, tf2).valueOf()).toBe(new Date('1996-08-29T23:59:59Z')
+        .getTime());
+    expect(isNaN(os.time.combineDateTime(d1, '').valueOf())).toBe(true);
+    expect(isNaN(os.time.combineDateTime('', t1).valueOf())).toBe(true);
+    expect(isNaN(os.time.combineDateTime(d3, t3).valueOf())).toBe(true);
+  });
 });
