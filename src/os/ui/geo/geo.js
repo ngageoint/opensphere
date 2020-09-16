@@ -1,6 +1,7 @@
 goog.provide('os.ui.geo.geoDirective');
 goog.require('os.geo');
 goog.require('os.ui.Module');
+goog.require('os.ui.geo.mgrs');
 
 
 /**
@@ -37,7 +38,7 @@ os.ui.geo.geoLinkFn = function(scope, elm, attrs, ctrl) {
       valid = true;
     } else {
       try {
-        var m = osasm.toLonLat(val);
+        var m = os.ui.geo.mgrs(val);
         valid = goog.isArray(m) && m.length === 2;
       } catch (e) {
         valid = false;
