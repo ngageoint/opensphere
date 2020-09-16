@@ -4,11 +4,14 @@ goog.require('os.mixin.vectortilesource');
 
 const log = goog.require('goog.log');
 const {DEFAULT_MAX_ZOOM, DEFAULT_MIN_ZOOM} = goog.require('ol');
+const olExtent = goog.require('ol.extent');
 const MVT = goog.require('ol.format.MVT');
 const VectorTileRenderType = goog.require('ol.layer.VectorTileRenderType');
 const obj = goog.require('ol.obj');
 const {transformExtent} = goog.require('ol.proj');
+const Style = goog.require('ol.style.Style');
 const VectorTileLayer = goog.require('os.layer.VectorTile');
+const osMap = goog.require('os.map');
 const VectorTileSource = goog.require('os.ol.source.VectorTile');
 const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
 const AbstractTileLayerConfig = goog.require('os.layer.config.AbstractTileLayerConfig');
@@ -18,6 +21,7 @@ const Request = goog.require('os.net.Request');
 const {addProxyWrapper, autoProxyCheck} = goog.require('os.ol.source.tileimage');
 const {getBestSupportedProjection, EPSG4326} = goog.require('os.proj');
 const StyleManager = goog.require('os.style.StyleManager');
+const {DEFAULT_FONT} = goog.require('os.style.label');
 
 const Projection = goog.requireType('ol.proj.Projection');
 const OLVectorTileSource = goog.requireType('ol.source.VectorTile');
@@ -28,6 +32,14 @@ const OLVectorTileSource = goog.requireType('ol.source.VectorTile');
  * @type {log.Logger}
  */
 const logger = log.getLogger('plugin.vectortile.VectorTileLayerConfig');
+
+
+/**
+ * Get fonts supported by the application.
+ * @param {Array<string>} fonts The style fonts.
+ * @return {Array<string>} The supported fonts.
+ */
+const getFonts = (fonts) => [DEFAULT_FONT];
 
 
 /**
@@ -188,7 +200,17 @@ class VectorTileLayerConfig extends AbstractLayerConfig {
             return JSON.parse(resp);
           })
           .then((glStyle) => {
-            const glStyleFunction = parseMapboxStyle(glStyle, /** @type {string|Array<string>} */ (options['sources']));
+            const sources = /** @type {string|Array<string>} */ (options['sources']);
+
+            const mapWidth = olExtent.getWidth(osMap.PROJECTION.getExtent());
+            const maxZoom = /** @type {number} */ (options['maxZoom'] || osMap.MAX_ZOOM);
+
+            const resolutions = [];
+            for (let resolution = mapWidth / 512; resolutions.length < maxZoom; resolution /= 2) {
+              resolutions.push(resolution);
+            }
+
+            const glStyleFunction = parseMapboxStyle(glStyle, sources, resolutions, getFonts);
 
             /**
              * @param {ol.Feature|ol.render.Feature} feature
@@ -206,7 +228,23 @@ class VectorTileLayerConfig extends AbstractLayerConfig {
                   }
                 }
 
-                return StyleManager.getInstance().getOrCreateStyle(styleConfig);
+                const sm = StyleManager.getInstance();
+                const featureStyle = sm.getOrCreateStyle(styleConfig);
+                if (styleConfig['text']) {
+                  // create the style using the text reader
+                  const reader = sm.getReader('text');
+                  if (reader) {
+                    const textStyle = reader.getOrCreateStyle(styleConfig['text']);
+                    const labelStyle = new Style({
+                      text: textStyle,
+                      zIndex: /** @type {number|undefined} */ (styleConfig['zIndex'])
+                    });
+
+                    return [featureStyle, labelStyle];
+                  }
+                }
+
+                return featureStyle;
               }
 
               return null;

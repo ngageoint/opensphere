@@ -28,7 +28,7 @@ const ExplicitLayerType = goog.require('os.layer.ExplicitLayerType');
 const ILayer = goog.require('os.layer.ILayer');
 const LayerType = goog.require('os.layer.LayerType');
 const LayerPropertyChange = goog.require('os.layer.PropertyChange');
-const {PROJECTION} = goog.require('os.map');
+const osMap = goog.require('os.map');
 const math = goog.require('os.math');
 const registerClass = goog.require('os.registerClass');
 const SourcePropertyChange = goog.require('os.source.PropertyChange');
@@ -563,7 +563,7 @@ class VectorTile extends VectorTileLayer {
   supportsAction(type, opt_actionArgs) {
     switch (type) {
       case ActionEventType.GOTO:
-        var projExtent = PROJECTION.getExtent();
+        var projExtent = osMap.PROJECTION.getExtent();
         var layerExtent = reduceExtentFromLayers(/** @type {!ol.Extent} */ (olExtent.createEmpty()), this);
         var projArea = olExtent.getArea(projExtent);
         var layerArea = olExtent.getArea(layerExtent);
