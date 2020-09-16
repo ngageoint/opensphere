@@ -28,11 +28,29 @@ os.style.TextReader.prototype.getOrCreateStyle = function(config) {
   var textAlign = /** @type {string|undefined} */ (config['textAlign']) || 'center';
   var textBaseline = /** @type {string|undefined} */ (config['textBaseline']) || 'middle';
   var font = /** @type {string|undefined} */ (config['font']) || os.style.label.getFont();
-  var fillColor = /** @type {string|undefined} */ (config['fillColor']) || 'rgba(255,255,255,1)';
-  var strokeColor = /** @type {string|undefined} */ (config['strokeColor']) || 'rgba(0,0,0,1)';
+
+  var fillColor;
+  if (config['fillColor']) {
+    fillColor = /** @type {string} */ (config['fillColor']);
+  } else if (config['fill'] && config['fill']['color']) {
+    fillColor = /** @type {string} */ (config['fill']['color']);
+  } else {
+    fillColor = 'rgba(255,255,255,1)';
+  }
+
+  var strokeColor;
+  if (config['strokeColor']) {
+    strokeColor = /** @type {string} */ (config['strokeColor']);
+  } else if (config['stroke'] && config['stroke']['color']) {
+    strokeColor = /** @type {string} */ (config['stroke']['color']);
+  } else {
+    strokeColor = 'rgba(0,0,0,1)';
+  }
+
   var strokeWidth = config['strokeWidth'] !== undefined ? /** @type {number} */ (config['strokeWidth']) : 2;
   var offsetX = config['offsetX'] !== undefined ? /** @type {number} */ (config['offsetX']) : 0;
   var offsetY = config['offsetY'] !== undefined ? /** @type {number} */ (config['offsetY']) : 0;
+  var placement = /** @type {ol.style.TextPlacement|undefined} */ (config['placement']);
 
   // do not cache text styles so they can be modified directly for text/color changes. these will be cached on each
   // feature instead.
@@ -49,6 +67,7 @@ os.style.TextReader.prototype.getOrCreateStyle = function(config) {
       width: strokeWidth
     }),
     offsetX: offsetX,
-    offsetY: offsetY
+    offsetY: offsetY,
+    placement: placement
   });
 };
