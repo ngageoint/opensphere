@@ -90,7 +90,7 @@ os.query.queryWorld = function() {
     var geom = world.getGeometry();
     geom.osTransform();
     geom.set(os.geom.GeometryField.NORMALIZED, true);
-    world.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.NONE, true);
+    geom.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.NONE, true);
     os.query.addArea(world, false);
   }
 };
