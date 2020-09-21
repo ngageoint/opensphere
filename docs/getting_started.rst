@@ -134,7 +134,7 @@ Example:
 .. note:: OpenSphere's webpack configuration can be found in ``opensphere/webpack.config.js``.
 
 .. _webpack: https://webpack.js.org/
-.. _closure-webpack-plugin: https://github.com/webpack-contrib/closure-webpack-plugin
+.. _closure-webpack-plugin: https://github.com/ngageoint/closure-webpack-plugin
 
 The Google Closure Compiler
 ===========================
