@@ -92,8 +92,8 @@ The most common targets are:
 
 .. code-block:: none
 
-  $ npm run build               # generates the compiled application
-  $ npm run build:debug         # generates the debug application and runs webpack in watch mode
+  $ npm run build               # generates the production application
+  $ npm run dev                 # generates the dev application and runs webpack in watch mode
   $ npm run test                # runs the unit tests
   $ npm run test:debug          # runs the unit tests with a configuration more suited to debugging
   $ npm run apidoc              # generates api documentation
@@ -163,7 +163,7 @@ The ``index-template.html`` and its corresponding ``index.js`` file define how t
 
 If you set up nginx or httpd as recommended above, accessing it might be accomplished by pointing your browser at http://localhost:8080/workspace/opensphere
 
-The ``build:debug`` target will generate the debug application, and runs webpack in watch mode. Webpack will watch all dependencies for changes and rebuild the application when needed. While webpack is running, you can make changes to files in the workspace and pick them up on the page by merely refreshing it. The ``build:debug`` target only has to be run if dependencies (``goog.module/provide/require``) change or if files are added or removed.
+The ``dev`` target will generate the debug application, and runs webpack in watch mode. Webpack will watch all dependencies for changes and rebuild the application when needed. While webpack is running, you can make changes to files in the workspace and pick them up on the page by merely refreshing it. The ``dev`` target only has to be run if dependencies (``goog.module/provide/require``) change or if files are added or removed.
 
 If the build has already been generated and you simply need to start webpack again, use the ``build:webpack-dev`` target.
 
