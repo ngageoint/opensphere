@@ -1,4 +1,4 @@
-const ClosurePlugin = require('closure-webpack-plugin');
+const ClosurePlugin = require('@ngageoint/closure-webpack-plugin');
 const path = require('path');
 
 const buildDir = path.resolve(__dirname, '.build');
@@ -20,7 +20,10 @@ module.exports = (env, argv) => {
     optimization: {
       minimize: isProduction,
       minimizer: [
-        new ClosurePlugin({mode: 'AGGRESSIVE_BUNDLE'}, gccOptions)
+        new ClosurePlugin({
+          mode: 'AGGRESSIVE_BUNDLE',
+          platform: 'java'
+        }, gccOptions)
       ],
       concatenateModules: false,
       splitChunks: {
