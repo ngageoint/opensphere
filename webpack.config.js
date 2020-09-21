@@ -6,6 +6,7 @@ const gccOptions = require(path.join(buildDir, 'gcc-webpack'));
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production' || !argv.mode;
+  const depsFile = path.join(buildDir, 'deps.js');
 
   return {
     entry: [
@@ -35,7 +36,7 @@ module.exports = (env, argv) => {
         closureLibraryBase: require.resolve('google-closure-library/closure/goog/base'),
         deps: [
           require.resolve('google-closure-library/closure/goog/deps'),
-          require.resolve('opensphere/.build/deps')
+          depsFile
         ]
       })
     ]
