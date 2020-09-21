@@ -1,9 +1,12 @@
 goog.provide('plugin.cesium.ImageryProvider');
 
 goog.require('goog.disposable.IDisposable');
+goog.require('ol');
 goog.require('ol.ImageTile');
 goog.require('ol.VectorImageTile');
 goog.require('ol.events');
+goog.require('ol.source.VectorTile');
+goog.require('ol.tilegrid');
 goog.require('olcs.core.OLImageryProvider');
 goog.require('os.mixin.VectorImageTile');
 goog.require('os.proj');
@@ -62,9 +65,25 @@ plugin.cesium.ImageryProvider.prototype.isDisposed = function() {
 plugin.cesium.ImageryProvider.prototype.handleSourceChanged_ = function() {
   if (!this.ready_ && this.source_.getState() == 'ready') {
     this.projection_ = olcs.util.getSourceProjection(this.source_) || this.fallbackProj_;
-    this.tilingScheme_ = new plugin.cesium.TileGridTilingScheme(this.source_);
-    this.rectangle_ = this.tilingScheme_.rectangle;
     this.credit_ = olcs.core.OLImageryProvider.createCreditForSource(this.source_) || null;
+
+    if (this.source_ instanceof ol.source.VectorTile) {
+      // For vector tiles, create a copy of the tile grid with min/max zoom covering all levels. This ensures Cesium
+      // will render tiles at all levels.
+      const sourceTileGrid = this.source_.getTileGrid();
+      const tileGrid = ol.tilegrid.createXYZ({
+        extent: sourceTileGrid.getExtent(),
+        maxZoom: ol.DEFAULT_MAX_ZOOM,
+        minZoom: 0,
+        tileSize: sourceTileGrid.getTileSize()
+      });
+
+      this.tilingScheme_ = new plugin.cesium.TileGridTilingScheme(this.source_, tileGrid);
+    } else {
+      this.tilingScheme_ = new plugin.cesium.TileGridTilingScheme(this.source_);
+    }
+
+    this.rectangle_ = this.tilingScheme_.rectangle;
     this.ready_ = true;
   }
 };
@@ -80,11 +99,15 @@ plugin.cesium.ImageryProvider.prototype.requestImage = function(x, y, level) {
   var y_ = -y - 1;
 
   var deferred = Cesium.when.defer();
-  var tilegrid = this.source_.getTileGridForProjection(this.projection_);
 
-  if (z_ < tilegrid.getMinZoom() - 1 || z_ > tilegrid.getMaxZoom()) {
-    deferred.resolve(this.emptyCanvas_); // no data
-    return deferred.promise;
+  // If the source doesn't have tiles at the current level, return an empty canvas.
+  if (!(this.source_ instanceof ol.source.VectorTile)) {
+    var tilegrid = this.source_.getTileGridForProjection(this.projection_);
+
+    if (z_ < tilegrid.getMinZoom() - 1 || z_ > tilegrid.getMaxZoom()) {
+      deferred.resolve(this.emptyCanvas_); // no data
+      return deferred.promise;
+    }
   }
 
   var tile = this.source_.getTile(z_, x, y_, 1, this.projection_);
@@ -130,6 +153,22 @@ plugin.cesium.ImageryProvider.prototype.requestImage = function(x, y, level) {
 // definitions of getters that are required to be present
 // in the Cesium.ImageryProvider instance:
 Object.defineProperties(plugin.cesium.ImageryProvider.prototype, {
+  maximumLevel: {
+    get:
+        /**
+         * @this plugin.cesium.ImageryProvider
+         * @return {number}
+         * @suppress {accessControls}
+         */
+        function() {
+          // Vector tiles can be rendered at all zoom levels using data from other levels.
+          if (!(this.source_ instanceof ol.source.VectorTile)) {
+            const tg = this.source_.getTileGrid();
+            return tg ? tg.getMaxZoom() : 18;
+          }
+          return ol.DEFAULT_MAX_ZOOM;
+        }
+  },
   minimumLevel: {
     get:
         /**

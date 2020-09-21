@@ -698,24 +698,9 @@ class VectorTile extends VectorTileLayer {
       this.groupLabel_ = /** @type {string} */ (config['groupLabel']);
     }
 
-    // A layer's min/max resolution depends directly on its own tile grid.
-    //
-    // Do not use MapContainer.zoomToResolution here. That is for overall map/view
-    // purposes and not for individual layers, which may have discrete tile matrices.
-    var offset = config['zoomOffset'] || 0;
-    var grid = this.getSource().getTileGrid();
-    var tgMin = grid.getMinZoom();
-    var tgMax = grid.getMaxZoom();
-
-    if (config['minZoom'] != null) {
-      var z = Math.min(tgMax, Math.max(tgMin, Math.round(config['minZoom']) + offset));
-      this.setMaxResolution(grid.getResolution(z));
-    }
-
-    if (config['maxZoom'] != null) {
-      z = Math.min(tgMax, Math.max(tgMin, Math.round(config['maxZoom']) + offset));
-      this.setMinResolution(grid.getResolution(z));
-    }
+    // Vector tiles can be rendered at all zoom levels using data from other levels.
+    this.setMinResolution(0);
+    this.setMaxResolution(Infinity);
   }
 
   /**
