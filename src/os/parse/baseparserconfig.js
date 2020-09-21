@@ -11,6 +11,11 @@ goog.require('os.data.ColumnDefinition');
  */
 os.parse.BaseParserConfig = function() {
   /**
+   * @type {?string}
+   */
+  this['id'] = null;
+
+  /**
    * @type {Array.<os.data.ColumnDefinition>}
    */
   this['columns'] = [];
@@ -49,6 +54,11 @@ os.parse.BaseParserConfig = function() {
    * @type {T}
    */
   this['previewSelection'] = null;
+
+  /**
+   * @type {?boolean}
+   */
+  this['keepUrl'] = null;
 };
 
 
