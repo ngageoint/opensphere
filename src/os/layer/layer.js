@@ -228,6 +228,17 @@ os.layer.getSaturation = function(layer) {
 
 
 /**
+ * Get the sharpness of the provided layer.
+ *
+ * @param {os.layer.ILayer} layer
+ * @return {number|undefined} The sharpness
+ */
+os.layer.getSharpness = function(layer) {
+  return layer.getSharpness();
+};
+
+
+/**
  * Set the brightness of the provided layer.
  *
  * @param {os.layer.ILayer} layer
@@ -279,6 +290,18 @@ os.layer.setOpacity = function(layer, value) {
  */
 os.layer.setSaturation = function(layer, value) {
   layer.setSaturation(value);
+};
+
+
+
+/**
+ * Set the sharpness of the provided layer.
+ *
+ * @param {os.layer.ILayer} layer
+ * @param {number} value
+ */
+os.layer.setSharpness = function(layer, value) {
+  layer.setSharpness(value);
 };
 
 

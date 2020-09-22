@@ -5,6 +5,7 @@ goog.provide('os.ui.geo.positionDirective');
 goog.require('os.geo');
 goog.require('os.ui.Module');
 goog.require('os.ui.geo.geoDirective');
+goog.require('os.ui.geo.mgrs');
 goog.require('os.ui.popover.popoverDirective');
 
 
@@ -189,19 +190,22 @@ os.ui.geo.PositionCtrl.prototype.destroy_ = function() {
  * @private
  */
 os.ui.geo.PositionCtrl.prototype.onPosText_ = function() {
-  if (this.scope_['posText']) {
-    var result = os.geo.parseLatLon(this.scope_['posText'], this.scope_['order']);
+  const text = this.scope_['posText'];
+  if (text) {
+    var result = os.geo.parseLatLon(text, this.scope_['order']);
     if (result != null && Math.abs(result.lat) > 90) {
       // If the result isnt in range, set it to null to invalidate form
       result = null;
     }
     if (result == null) {
       try {
-        var coord = osasm.toLonLat(this.scope_['posText']);
-        result = /** @type {!osx.geo.Location} */ ({
-          lon: coord[0],
-          lat: coord[1]
-        });
+        const coord = os.ui.geo.mgrs(text);
+        if (coord) {
+          result = /** @type {!osx.geo.Location} */ ({
+            lon: coord[0],
+            lat: coord[1]
+          });
+        }
       } catch (e) {
       }
     }
