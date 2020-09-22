@@ -11,6 +11,7 @@ goog.require('ol.source.WMTS');
 goog.require('olcs.core');
 goog.require('os.net');
 goog.require('os.proj');
+goog.require('os.query.utils');
 goog.require('os.string');
 goog.require('plugin.cesium.ImageryProvider');
 goog.require('plugin.cesium.WMSTerrainProvider');
@@ -468,7 +469,7 @@ plugin.cesium.reduceBoundingSphere = function(sphere, geom) {
     var type = geom.getType();
     var scratchSphere = plugin.cesium.scratchSphere_;
 
-    if (os.query.isWorldQuery(geom)) {
+    if (os.query.utils.isWorldQuery(geom)) {
       if (scratchSphere) {
         scratchSphere.center = Cesium.Cartesian3.UNIT_X;
         scratchSphere.radius = 6378137;

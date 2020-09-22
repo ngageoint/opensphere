@@ -34,6 +34,12 @@ ol.layer.Property.SATURATION = 'saturation';
 
 
 /**
+ * @type {string}
+ */
+ol.layer.Property.SHARPNESS = 'sharpness';
+
+
+/**
  * Return the brightness of the layer.
  *
  * @return {number} The brightness of the layer.
@@ -70,6 +76,16 @@ ol.layer.Base.prototype.getHue = function() {
  */
 ol.layer.Base.prototype.getSaturation = function() {
   return /** @type {number} */ (this.get(ol.layer.Property.SATURATION));
+};
+
+
+/**
+ * Return the sharpness of the layer.
+ *
+ * @return {number} The sharpness of the layer.
+ */
+ol.layer.Base.prototype.getSharpness = function() {
+  return /** @type {number} */ (this.get(ol.layer.Property.SHARPNESS));
 };
 
 
@@ -132,4 +148,14 @@ ol.layer.Base.prototype.setHue = function(hue) {
  */
 ol.layer.Base.prototype.setSaturation = function(saturation) {
   this.set(ol.layer.Property.SATURATION, saturation);
+};
+
+
+/**
+ * Adjust layer sharpness. A value of 0 will not adjust layer sharpness.
+ *
+ * @param {number} sharpness The sharpness of the layer.
+ */
+ol.layer.Base.prototype.setSharpness = function(sharpness) {
+  this.set(ol.layer.Property.SHARPNESS, sharpness);
 };

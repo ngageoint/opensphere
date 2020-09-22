@@ -207,6 +207,20 @@ os.layer.ILayer.prototype.setSaturation;
 
 
 /**
+ * Gets the sharpness of the layer
+ * @return {number|undefined} between 0 and 1
+ */
+os.layer.ILayer.prototype.getSharpness;
+
+
+/**
+ * Sets the sharpness of the layer
+ * @param {number} value Number between 0 and 1
+ */
+os.layer.ILayer.prototype.setSharpness;
+
+
+/**
  * Whether or not the layer is visible
  * @return {boolean}
  */
