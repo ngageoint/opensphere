@@ -158,7 +158,7 @@ describe('os.data.OSDataManager', function() {
 
     var d = dm.descriptors_['testy'];
     delete dm.descriptors_['testy2'];
-    dm.persistDescriptors();
+    dm.persistDescriptors_();
 
     delete dm.descriptors_['testy'];
     delete dm.descriptors_['other'];

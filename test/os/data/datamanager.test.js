@@ -23,8 +23,7 @@ describe('os.data.DataManager', function() {
 
   it('should only persist recently active descriptors', function() {
     dm.getDescriptor('1').setActive(true);
-    dm.persistDescriptors();
-
+    dm.persistDescriptors_();
     var arr = os.settings.get(dm.getDescriptorKey());
     expect(arr.length).toBe(1);
   });

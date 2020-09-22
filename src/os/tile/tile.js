@@ -2,7 +2,7 @@ goog.provide('os.tile');
 
 
 /**
- * @typedef {function(Array<number>)}
+ * @typedef {function(Array<number>, number, number)}
  */
 os.tile.TileFilterFn;
 
@@ -24,7 +24,7 @@ os.tile.filterImage = function(image, filterFns) {
 
   // apply each filter function to the image data
   filterFns.forEach(function(fn) {
-    fn(data);
+    fn(data, canvas.width, canvas.height);
   });
   context.putImageData(imageData, 0, 0);
   return canvas;
