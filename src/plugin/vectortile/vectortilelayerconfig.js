@@ -1,7 +1,5 @@
 goog.module('plugin.vectortile.VectorTileLayerConfig');
 
-goog.require('os.mixin.vectortilesource');
-
 const log = goog.require('goog.log');
 
 const {DEFAULT_MAX_ZOOM, DEFAULT_MIN_ZOOM} = goog.require('ol');

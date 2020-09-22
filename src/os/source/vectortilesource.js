@@ -34,6 +34,16 @@ class VectorTile extends OLVectorTileSource {
   /**
    * @inheritDoc
    */
+  refresh() {
+    // ol.source.Tile#refresh clears the tile cache but does not reset sourceTiles_. This instead calls the clear
+    // function, which does both.
+    this.clear();
+    this.changed();
+  }
+
+  /**
+   * @inheritDoc
+   */
   setUrl(url) {
     var urls = this.urls = expandUrl(url);
     this.setTileUrlFunction(this.createFromTemplates(urls));

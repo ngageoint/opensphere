@@ -30,6 +30,10 @@ os.style.TextReader.prototype.getOrCreateStyle = function(config) {
   var font = /** @type {string|undefined} */ (config['font']) || os.style.label.getFont();
 
   var fillColor;
+  var strokeColor;
+
+  // OpenSphere represents fill/stroke color as a direct property, while style parsers like ol-mapbox-style represent
+  // fill/stroke as an object with a color property. Support both, preferring the OpenSphere value.
   if (config['fillColor']) {
     fillColor = /** @type {string} */ (config['fillColor']);
   } else if (config['fill'] && config['fill']['color']) {
@@ -38,7 +42,6 @@ os.style.TextReader.prototype.getOrCreateStyle = function(config) {
     fillColor = 'rgba(255,255,255,1)';
   }
 
-  var strokeColor;
   if (config['strokeColor']) {
     strokeColor = /** @type {string} */ (config['strokeColor']);
   } else if (config['stroke'] && config['stroke']['color']) {
