@@ -5,7 +5,6 @@ const log = goog.require('goog.log');
 const {DEFAULT_MAX_ZOOM, DEFAULT_MIN_ZOOM} = goog.require('ol');
 const olColor = goog.require('ol.color');
 const olExtent = goog.require('ol.extent');
-const MVT = goog.require('ol.format.MVT');
 const VectorTileRenderType = goog.require('ol.layer.VectorTileRenderType');
 const obj = goog.require('ol.obj');
 const {transformExtent} = goog.require('ol.proj');
@@ -26,6 +25,7 @@ const {addProxyWrapper, autoProxyCheck} = goog.require('os.ol.source.tileimage')
 const {getBestSupportedProjection, EPSG4326} = goog.require('os.proj');
 const StyleManager = goog.require('os.style.StyleManager');
 const {DEFAULT_FONT} = goog.require('os.style.label');
+const {getVectorTileFormat, VectorTileFormat} = goog.require('plugin.vectortile.format');
 
 const Projection = goog.requireType('ol.proj.Projection');
 const OLVectorTileSource = goog.requireType('ol.source.VectorTile');
@@ -141,8 +141,13 @@ class VectorTileLayerConfig extends AbstractLayerConfig {
    * @return {VectorTileSource}
    */
   getSource(options) {
-    options['format'] = options['format'] !== undefined ? options['format'] : new MVT();
-    return new VectorTileSource(options);
+    // Copy the original options to avoid adding a non-serializable object to it.
+    const sourceOptions = Object.assign({}, options);
+
+    const vtFormat = /** @type {VectorTileFormat|undefined} */ (sourceOptions['format']);
+    sourceOptions['format'] = getVectorTileFormat(vtFormat || VectorTileFormat.MVT);
+
+    return new VectorTileSource(sourceOptions);
   }
 
   /**
