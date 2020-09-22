@@ -413,6 +413,35 @@ os.layer.LayerGroup.prototype.setSaturation = function(value) {
 /**
  * @inheritDoc
  */
+os.layer.LayerGroup.prototype.getSharpness = function() {
+  var maxSharpness = 0;
+  for (var i = 0, n = this.layers_.length; i < n; i++) {
+    try {
+      maxSharpness = Math.max(maxSharpness, this.layers_[i].getSharpness());
+    } catch (e) {
+    }
+  }
+
+  return goog.math.clamp(maxSharpness, 0, 1);
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.LayerGroup.prototype.setSharpness = function(value) {
+  for (var i = 0, n = this.layers_.length; i < n; i++) {
+    try {
+      this.layers_[i].setSharpness(value);
+    } catch (e) {
+    }
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
 os.layer.LayerGroup.prototype.getLayerVisible = function() {
   for (var i = 0, n = this.layers_.length; i < n; i++) {
     try {
