@@ -16,6 +16,7 @@ The ``module.exports`` must provide the following:
 * ``distPath``: The base directory of the distribution, typically ``dist/<app>``. This is treated as relative to ``basePath``.
 * ``templates``: HTML template files to process. This will generally be an ``index-template.html`` used to generate an ``index.html``, but other templates can be specified as well.
 * ``debugCss``: Path to the compiled debug CSS output file.
+* ``debugJs``: Path to the debug JS output file.
 * ``compiledCss``: Path to the compiled CSS output file.
 * ``compiledJs``: Path to the compiled JS output file.
 

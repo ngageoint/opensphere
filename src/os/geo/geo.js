@@ -12,6 +12,8 @@ goog.require('os.geom.GeometryField');
 goog.require('os.mixin.geometry');
 goog.require('os.query.utils');
 
+goog.requireType('ol.render.Feature');
+
 
 
 /**
@@ -1639,7 +1641,7 @@ os.geo.isGeometryRectangular = function(geometry) {
 /**
  * Tests if a geometry is polygonal.
  *
- * @param {ol.geom.Geometry|undefined} geometry The geometry to test
+ * @param {ol.geom.Geometry|ol.render.Feature|undefined} geometry The geometry to test
  * @param {boolean=} opt_testCollections If geometry collections should be inspected for polygons.
  * @return {boolean} If the feature/geometry is a polygon or multipolygon.
  */

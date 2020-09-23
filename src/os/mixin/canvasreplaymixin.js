@@ -6,6 +6,10 @@ goog.provide('os.mixin.canvasreplay');
 
 goog.require('ol.render.canvas.Replay');
 
+goog.requireType('ol.Feature');
+goog.requireType('ol.render.Feature');
+
+
 /**
  * @private
  * @param {CanvasRenderingContext2D} context Context.
