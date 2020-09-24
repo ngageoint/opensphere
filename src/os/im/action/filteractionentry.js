@@ -5,6 +5,7 @@ goog.require('os.IComparable');
 goog.require('os.filter.FilterEntry');
 goog.require('os.ui.filter.fn');
 
+goog.requireType('os.im.action.ImportActionCallbackConfig');
 
 
 /**
@@ -70,50 +71,75 @@ os.im.action.FilterActionEntry.prototype.setFilter = function(filter) {
  * Reset the features passed in
  *
  * @param {Array<T>} items The items.
+ * @return {Array<Promise<os.im.action.ImportActionCallbackConfig>>}
  */
 os.im.action.FilterActionEntry.prototype.unprocessItems = function(items) {
+  var promises = null;
   if (items) {
+    promises = [];
+
     for (var i = 0; i < this.actions.length; i++) {
-      this.actions[i].reset(items);
+      var promise = this.actions[i].reset(items);
+      if (promise) {
+        promises.push(promise);
+      }
 
       // unapply children to each item that passed the filter
       var children = this.getChildren();
       if (children) {
         for (var j = 0, jj = children.length; j < jj; j++) {
-          children[j].unprocessItems(items);
+          var ps = children[j].unprocessItems(items);
+          if (ps) {
+            ps.forEach((p) => {
+              promises.push(p);
+            });
+          }
         }
       }
     }
   }
+  return promises;
 };
 
 
 /**
  * Execute actions on items that match the filter.
- *
  * @param {Array<T>} items The items.
+ * @return {Array<Promise<os.im.action.ImportActionCallbackConfig>>}
  */
 os.im.action.FilterActionEntry.prototype.processItems = function(items) {
+  var promises = null;
   if (items) {
     items = items.filter(this.filterFn);
 
     // apply to applicable items
     if (items.length > 0) {
+      promises = [];
+
       for (var i = 0; i < this.actions.length; i++) {
-        this.actions[i].execute(items);
+        var promise = this.actions[i].execute(items);
+        if (promise) {
+          promises.push(promise);
+        }
 
         // apply children to each item that passed the filter
         var children = this.getChildren();
         if (children) {
           for (var j = 0, jj = children.length; j < jj; j++) {
             if (children[j].isEnabled()) {
-              children[j].processItems(items);
+              var ps = children[j].processItems(items);
+              if (ps) {
+                ps.forEach((p) => {
+                  promises.push(p);
+                });
+              }
             }
           }
         }
       }
     }
   }
+  return promises;
 };
 
 
