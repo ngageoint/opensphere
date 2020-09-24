@@ -103,6 +103,13 @@ os.im.action.ImportActionManager.STORAGE_KEY = 'os.importActions';
 
 
 /**
+ * @type {number}
+ * @const
+ */
+os.im.action.ImportActionManager.MIN_ITEMS_MERGE_NOTIFY_COLOR = 10000;
+
+
+/**
  * @inheritDoc
  */
 os.im.action.ImportActionManager.prototype.disposeInternal = function() {
@@ -351,6 +358,65 @@ os.im.action.ImportActionManager.prototype.getEntryItems = function(type) {
 
 /**
  * Executes enabled import action entries of a type against a set of items.
+ * @param {string} entryType The entry type.
+ * @param {Array<T>} items The items to process.
+ * @param {boolean=} opt_unprocess Reset existing items
+ * @param {boolean=} opt_unprocessOnly Do not process enabled entries
+ * @private
+ */
+os.im.action.ImportActionManager.prototype.processItemsInternal_ = function(
+    entryType,
+    items,
+    opt_unprocess,
+    opt_unprocessOnly) {
+  if (items && items.length > 0) {
+    var promises = [];
+    var entries = this.actionEntries[entryType];
+    if (entries && entries.length > 0) {
+      for (var i = 0; i < entries.length; i++) {
+        var ps = null;
+        if (!opt_unprocessOnly && entries[i].isEnabled()) {
+          ps = entries[i].processItems(items);
+        } else if (opt_unprocess || opt_unprocessOnly) {
+          ps = entries[i].unprocessItems(items);
+        }
+        if (ps) {
+          ps.forEach((p) => {
+            promises.push(p);
+          });
+        }
+      }
+    }
+
+    if (promises.length > 0) {
+      // once all processItems() are done, do a big notify of style and color changes
+      Promise.all(promises).then((results) => {
+        var config = /* @type {os.im.action.ImportActionCallbackConfig} */ ({
+          color: [],
+          labelUpdateShown: false,
+          notifyStyleChange: false,
+          setColor: false,
+          setFeaturesStyle: false
+        });
+
+        // merge the layer, source, colormodel, and label events into one
+        results.forEach((cfg) => {
+          os.im.action.ImportActionManager.mergeNotify_(config, cfg);
+        });
+
+        // optimize the colors to avoid overlaps (max N instead of N^2 events)
+        os.im.action.ImportActionManager.mergeNotifyColor_(config);
+
+        // send events to synch with renderer and bins
+        os.im.action.ImportActionManager.notify_(items, config);
+      });
+    }
+  }
+};
+
+
+/**
+ * Executes enabled import action entries of a type against a set of items.
  *
  * @param {string} entryType The entry type.
  * @param {Array<T>=} opt_items The items to process.
@@ -359,16 +425,7 @@ os.im.action.ImportActionManager.prototype.getEntryItems = function(type) {
 os.im.action.ImportActionManager.prototype.processItems = function(entryType, opt_items, opt_unprocess) {
   var items = opt_items || this.getEntryItems(entryType);
   if (items && items.length > 0) {
-    var entries = this.actionEntries[entryType];
-    if (entries && entries.length > 0) {
-      for (var i = 0; i < entries.length; i++) {
-        if (entries[i].isEnabled()) {
-          entries[i].processItems(items);
-        } else if (opt_unprocess) {
-          entries[i].unprocessItems(items);
-        }
-      }
-    }
+    this.processItemsInternal_(entryType, items, opt_unprocess);
   }
 };
 
@@ -381,12 +438,131 @@ os.im.action.ImportActionManager.prototype.processItems = function(entryType, op
  */
 os.im.action.ImportActionManager.prototype.unprocessItems = function(entryType, items) {
   if (items && items.length > 0) {
-    var entries = this.actionEntries[entryType];
-    if (entries && entries.length > 0) {
-      for (var i = 0; i < entries.length; i++) {
-        entries[i].unprocessItems(items);
+    this.processItemsInternal_(entryType, items, true, true);
+  }
+};
+
+
+/**
+ * Consolidate results of desired notification(s) from multiple FeatureActions
+ *
+ * @param {os.im.action.ImportActionCallbackConfig} config
+ * @param {os.im.action.ImportActionCallbackConfig} cfg
+ * @private
+ */
+os.im.action.ImportActionManager.mergeNotify_ = function(config, cfg) {
+  if (!config) return;
+
+  if (cfg) {
+    config.labelUpdateShown = config.labelUpdateShown || cfg.labelUpdateShown;
+    config.notifyStyleChange = config.notifyStyleChange || cfg.notifyStyleChange;
+    config.setColor = config.setColor || cfg.setColor;
+    config.setFeaturesStyle = config.setFeaturesStyle || cfg.setFeaturesStyle;
+
+    if (cfg.color) {
+      // add the next colors
+      cfg.color.forEach((color) => {
+        // TODO merge same-colors into a single color entry
+        config.color.push(color); // flatten the tree
+      });
+    }
+  }
+};
+
+/**
+ * Optimize the colors to avoid overlaps (max N instead of N^2 events)
+ *
+ * @param {os.im.action.ImportActionCallbackConfig} config
+ * @private
+ */
+os.im.action.ImportActionManager.mergeNotifyColor_ = function(config) {
+  // TODO benchmark which is faster -- removing overlaps or just re-setting them when there's 25%...100% overlap
+  var len = (config) ? config.color.length : -1;
+
+  // only do this extra step when there are more than one (possibly conflicting) color actions
+  if (len > 1) {
+    var colorItemsCount = config.color.reduce((count, colorConfig) => {
+      return count + ((colorConfig[0]) ? colorConfig[0].length : 0);
+    }, 0);
+
+    // deconflicting is expensive; only do it when there are more than N items being colored
+    if (colorItemsCount > os.im.action.ImportActionManager.MIN_ITEMS_MERGE_NOTIFY_COLOR) {
+      // the item(s) whose final color is already set
+      var all = {};
+
+      // loop backwards through colors... and remove items overlap in previous entries (last one wins)
+      for (var i = (len - 1); i >= 0; i--) {
+        var ids = {};
+        var [items] = config.color[i] || [];
+
+        // map the array by ids
+        if (i > 0) { // skip when no more loops to do
+          (items || []).reduce((map, item) => {
+            map[item.id_] = true;
+            return map;
+          }, ids);
+        }
+        // remove all's ids from these items
+        if (i != (len - 1)) { // skip when "all" is empty
+          config.color[i][0] = items.filter((item) => {
+            return !all[item.id_]; // fast lookup
+          });
+        }
+
+        // add these ids to all so they'll be filtered from prior color assignments
+        if (i > 0) { // skip when no more loops to do
+          for (var key in ids) { // for...in is faster than Object.assign(all, ids);
+            all[key] = true;
+          }
+        }
       }
     }
+  }
+};
+
+
+/**
+ * Send style event(s) to Layer, Source, and ColorModel
+ *
+ * @param {Array<T>} items The items.
+ * @param {os.im.action.ImportActionCallbackConfig} config
+ * @template T
+ * @private
+ */
+os.im.action.ImportActionManager.notify_ = function(items, config) {
+  if (config) {
+    if (config.setFeaturesStyle) {
+      os.style.setFeaturesStyle(items);
+    }
+
+    // notify that the layer needs to be updated
+    var layer = os.feature.getLayer(items[0]);
+    if (layer) {
+      var source = /** @type {os.source.Vector} */ (layer.getSource());
+      if (source && config.setColor && config.color && config.color.length > 0) {
+        var colors = (config.color != null) ? config.color : []; // useless assign to get past the closure compiler
+        colors.forEach(([coloritems, color]) => {
+          if (color) {
+            source.setColor(coloritems, color); // set the color model's override for these items
+          } else {
+            source.setColor(coloritems); // only reset the color if there was a color override
+          }
+        });
+      }
+      if (config.notifyStyleChange) {
+        os.style.notifyStyleChange(
+            layer,
+            items,
+            undefined,
+            undefined,
+            !!(source && config.setColor) // bump the colormodel so dependencies can update/re-render
+        );
+      }
+    }
+  }
+  // kick off label hit detection
+  if (config.labelUpdateShown) {
+    os.style.label.updateShown();
   }
 };
 
