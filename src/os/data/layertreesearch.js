@@ -228,7 +228,7 @@ os.data.LayerTreeSearch.prototype.getNodeGroup_ = function(node, index, array) {
       return groupId;
     }
 
-    id = groupId.split(os.ui.data.BaseProvider.ID_DELIMITER);
+    id = String(groupId).split(os.ui.data.BaseProvider.ID_DELIMITER);
     id.pop();
   }
 
