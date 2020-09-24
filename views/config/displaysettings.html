@@ -96,10 +96,19 @@
     <div class="form-group" ng-if="display.supportsTerrain()">
       <div class="form-check" title="{{display.help.terrain}}">
         <input class="form-check-input" id="terrainEnabled" type="checkbox" ng-model="display.terrainEnabled"
-            ng-change="display.updateTerrain()" >
+            ng-change="display.updateTerrainEnabled()" >
         <label class="form-check-label col-4 p-0" for="terrainEnabled">Enable Terrain</label>
         <popover x-title="'Enable Terrain'" content="display.help.terrain" pos="'right'"></popover>
       </div>
+    </div>
+    <div class="form-group" ng-if="display.supportsTerrain()">
+      <select class="custom-select col-6" id="terrainProvider"
+          title="Source for terrain data"
+          ng-disabled="!display.terrainEnabled"
+          ng-model="display.activeTerrainProvider"
+          ng-change="display.updateTerrainProvider()"
+          ng-options="provider as provider.title for provider in display.terrainProviders">
+      </select>
     </div>
     <div class="form-group" ng-if="display.supportsFog()">
       <div class="form-check" title="{{display.help.fog}}">

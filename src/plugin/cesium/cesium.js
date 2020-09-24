@@ -9,17 +9,19 @@ goog.require('ol.proj');
 goog.require('ol.source.TileImage');
 goog.require('ol.source.WMTS');
 goog.require('olcs.core');
+goog.require('os.config.DisplaySetting');
 goog.require('os.net');
 goog.require('os.proj');
 goog.require('os.query.utils');
 goog.require('os.string');
+goog.require('os.ui.window.ConfirmUI');
 goog.require('plugin.cesium.ImageryProvider');
 goog.require('plugin.cesium.WMSTerrainProvider');
 
 
 /**
  * Constructor for a Cesium terrain provider.
- * @typedef {function(...):Cesium.TerrainProvider}
+ * @typedef {function(...):!goog.Promise<Cesium.TerrainProvider>}
  */
 plugin.cesium.TerrainProviderFn;
 
@@ -43,7 +45,8 @@ plugin.cesium.SettingsKey = {
   ACCESS_TOKEN: 'cesium.accessToken',
   ION_URL: 'cesium.ionUrl',
   LOAD_TIMEOUT: 'cesium.loadTimeout',
-  SKYBOX_OPTIONS: 'cesium.skyBoxOptions'
+  SKYBOX_OPTIONS: 'cesium.skyBoxOptions',
+  SHOW_TERRAIN_PROMPT: 'cesium.showTerrainPrompt'
 };
 
 
@@ -182,19 +185,29 @@ plugin.cesium.loadCesium = function() {
 /**
  * Prompt the user to provide an access token.
  *
- * @return {!goog.Promise}
+ * @return {!goog.Promise<string>}
  */
 plugin.cesium.promptForAccessToken = function() {
   return new goog.Promise(function(resolve, reject) {
     os.ui.window.launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
-      confirm: resolve,
+      confirm: (accessToken) => {
+        os.settings.set(plugin.cesium.SettingsKey.ACCESS_TOKEN, accessToken);
+        resolve(accessToken);
+      },
       cancel: reject,
       defaultValue: '',
       select: true,
-      prompt: 'Please provide an access token. If you do not have an access token, create an account at https://cesium.com/ion/. Once you log in, click on Access Tokens > Default Token. Copy the token and paste it below:',
+      prompt: `
+        This layer requires a Cesium Ion access token. If you do not have an access token, please
+        <a href="https://cesium.com/ion/" target="_blank">create an account</a>.
+        <br><br>
+        Once logged in, click on Access Tokens > Default Token. Copy the token and paste it below:
+      `,
       windowOptions: /** @type {!osx.window.WindowOptions} */ ({
-        label: 'Access Token',
-        modal: true
+        icon: 'fa fa-warning',
+        label: 'Access Token Required',
+        modal: true,
+        width: 410
       })
     }));
   });
@@ -403,10 +416,10 @@ plugin.cesium.updateCesiumLayerProperties = function(olLayer, csLayer) {
  * Create a Cesium terrain provider instance.
  *
  * @param {Cesium.CesiumTerrainProviderOptions} options The Cesium terrain options.
- * @return {!Cesium.CesiumTerrainProvider}
+ * @return {!goog.Promise<!Cesium.CesiumTerrainProvider>}
  */
 plugin.cesium.createCesiumTerrain = function(options) {
-  return new Cesium.CesiumTerrainProvider(options);
+  return goog.Promise.resolve(new Cesium.CesiumTerrainProvider(options));
 };
 
 
@@ -414,15 +427,93 @@ plugin.cesium.createCesiumTerrain = function(options) {
  * Create a Cesium World Terrain instance.
  *
  * @param {Cesium.WorldTerrainOptions} options The Cesium World Terrain options.
- * @return {!Cesium.CesiumTerrainProvider}
+ * @return {!goog.Promise<!Cesium.CesiumTerrainProvider>}
  */
 plugin.cesium.createWorldTerrain = function(options) {
   var assetId = options.assetId != null ? options.assetId : 1;
-  return plugin.cesium.createCesiumTerrain({
+  var accessToken = options.accessToken || /** @type {string|undefined} */ (
+    os.settings.get(plugin.cesium.SettingsKey.ACCESS_TOKEN));
+
+  if (!accessToken) {
+    return plugin.cesium.promptForAccessToken().then((accessToken) => {
+      return plugin.cesium.createWorldTerrain_(assetId, accessToken);
+    });
+  } else {
+    return goog.Promise.resolve(plugin.cesium.createWorldTerrain_(assetId, accessToken));
+  }
+};
+
+
+/**
+ * Create a Cesium World Terrain instance.
+ *
+ * @param {number} assetId The Cesium World Terrain asset id.
+ * @param {string} accessToken The Cesium World Terrain access token.
+ * @return {!Cesium.CesiumTerrainProvider}
+ *
+ * @private
+ */
+plugin.cesium.createWorldTerrain_ = function(assetId, accessToken) {
+  return new Cesium.CesiumTerrainProvider({
     url: Cesium.IonResource.fromAssetId(assetId, {
-      accessToken: options.accessToken
+      accessToken
     })
   });
+};
+
+
+/**
+ * Prompt the user to activate Cesium World Terrain.
+ * @param {string} prompt The message to display.
+ */
+plugin.cesium.promptForWorldTerrain = function(prompt) {
+  const showPrompt = os.settings.get(plugin.cesium.SettingsKey.SHOW_TERRAIN_PROMPT, true);
+  if (showPrompt && !plugin.cesium.isWorldTerrainActive()) {
+    os.ui.window.ConfirmUI.launchConfirm(/** @type {!osx.window.ConfirmTextOptions} */ ({
+      confirm: plugin.cesium.enableWorldTerrain,
+      cancel: () => {
+        // Stop asking if the user says no
+        os.settings.set(plugin.cesium.SettingsKey.SHOW_TERRAIN_PROMPT, false);
+      },
+      defaultValue: '',
+      select: true,
+      prompt,
+      yesText: 'Yes',
+      noText: 'No',
+      windowOptions: /** @type {!osx.window.WindowOptions} */ ({
+        label: 'Activate Cesium World Terrain',
+        modal: true
+      })
+    }));
+  }
+};
+
+
+/**
+ * If Cesium World Terrain is the active terrain provider.
+ * @return {boolean}
+ */
+plugin.cesium.isWorldTerrainActive = function() {
+  const terrainActive = !!os.settings.get(os.config.DisplaySetting.ENABLE_TERRAIN);
+  if (terrainActive) {
+    const activeProvider = os.map.terrain.getActiveTerrainProvider();
+    return activeProvider != null && activeProvider.type === os.map.terrain.TerrainType.ION;
+  }
+
+  return false;
+};
+
+
+/**
+ * Enable the Cesium World Terrain provider, if configured.
+ */
+plugin.cesium.enableWorldTerrain = function() {
+  const providers = os.map.terrain.getTerrainProviders();
+  const worldTerrain = providers.find((p) => p.type === os.map.terrain.TerrainType.ION);
+  if (worldTerrain) {
+    os.map.terrain.setActiveTerrainProvider(worldTerrain);
+    os.settings.set(os.config.DisplaySetting.ENABLE_TERRAIN, true);
+  }
 };
 
 
@@ -430,10 +521,10 @@ plugin.cesium.createWorldTerrain = function(options) {
  * Create a Cesium WMS terrain provider instance.
  *
  * @param {!osx.cesium.WMSTerrainProviderOptions} options The WMS terrain options.
- * @return {!plugin.cesium.WMSTerrainProvider}
+ * @return {!goog.Promise<!plugin.cesium.WMSTerrainProvider>}
  */
 plugin.cesium.createWMSTerrain = function(options) {
-  return new plugin.cesium.WMSTerrainProvider(options);
+  return goog.Promise.resolve(new plugin.cesium.WMSTerrainProvider(options));
 };
 
 
