@@ -5,6 +5,7 @@ goog.require('goog.log');
 goog.require('olcs.OLCesium');
 goog.require('olcs.core');
 goog.require('os.MapEvent');
+goog.require('os.map.terrain');
 goog.require('os.webgl.AbstractWebGLRenderer');
 goog.require('os.webgl.SynchronizerManager');
 goog.require('plugin.cesium');
@@ -68,6 +69,13 @@ plugin.cesium.CesiumRenderer = function() {
    * @private
    */
   this.terrainLayer_ = undefined;
+
+  /**
+   * Promise that resolves when terrain has been activated.
+   * @type {goog.Promise|undefined}
+   * @private
+   */
+  this.terrainPromise_ = undefined;
 
   /**
    * Cesium terrain provider.
@@ -140,9 +148,9 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
           // initialize interactions that have additional support for Cesium
           plugin.cesium.interaction.loadInteractionMixins();
 
-          this.registerTerrainProviderType('cesium', plugin.cesium.createCesiumTerrain);
-          this.registerTerrainProviderType('cesium-ion', plugin.cesium.createWorldTerrain);
-          this.registerTerrainProviderType('wms', plugin.cesium.createWMSTerrain);
+          this.registerTerrainProviderType(os.map.terrain.TerrainType.CESIUM, plugin.cesium.createCesiumTerrain);
+          this.registerTerrainProviderType(os.map.terrain.TerrainType.ION, plugin.cesium.createWorldTerrain);
+          this.registerTerrainProviderType(os.map.terrain.TerrainType.WMS, plugin.cesium.createWMSTerrain);
 
           this.olCesium_ = new olcs.OLCesium({
             cameraClass: plugin.cesium.Camera,
@@ -516,13 +524,29 @@ plugin.cesium.CesiumRenderer.prototype.showSunlight = function(value) {
  */
 plugin.cesium.CesiumRenderer.prototype.showTerrain = function(value) {
   if (value) {
-    if (!this.terrainLayer_) {
-      this.terrainLayer_ = new plugin.cesium.TerrainLayer(this.terrainProvider_);
-      os.MapContainer.getInstance().addLayer(this.terrainLayer_);
-    } else {
-      this.terrainLayer_.setTerrainProvider(this.terrainProvider_);
-    }
+    this.terrainPromise_ = this.getTerrainProvider().then((provider) => {
+      this.terrainPromise_ = null;
+      this.terrainProvider_ = provider;
+
+      if (!this.terrainLayer_) {
+        this.terrainLayer_ = new plugin.cesium.TerrainLayer(this.terrainProvider_);
+        os.MapContainer.getInstance().addLayer(this.terrainLayer_);
+      } else {
+        this.terrainLayer_.setTerrainProvider(this.terrainProvider_);
+      }
+    }, (err) => {
+      const errorMessage = typeof err === 'string' ? err : 'Unable to load terrain, disabling.';
+      goog.log.error(this.log, errorMessage);
+
+      this.terrainPromise_ = null;
+      os.settings.set(os.config.DisplaySetting.ENABLE_TERRAIN, false);
+    });
   } else {
+    if (this.terrainPromise_) {
+      this.terrainPromise_.cancel();
+      this.terrainPromise_ = null;
+    }
+
     this.removeTerrainLayer_();
   }
 
@@ -561,14 +585,12 @@ plugin.cesium.CesiumRenderer.prototype.disableTerrain = function() {
 
 
 /**
- * @inheritDoc
+ * Get the terrain provider instance.
+ * @return {!goog.Promise<Cesium.TerrainProvider>}
+ * @protected
  */
-plugin.cesium.CesiumRenderer.prototype.updateTerrainProvider = function() {
-  // clean up existing layer
-  this.removeTerrainLayer_();
-
-  var terrainOptions = /** @type {osx.map.TerrainProviderOptions|undefined} */ (os.settings.get(
-      os.config.DisplaySetting.TERRAIN_OPTIONS));
+plugin.cesium.CesiumRenderer.prototype.getTerrainProvider = function() {
+  var terrainOptions = os.map.terrain.getActiveTerrainProvider();
   if (terrainOptions) {
     var terrainType = terrainOptions.type;
     if (terrainType && terrainType in this.terrainProviderTypes_) {
@@ -577,13 +599,25 @@ plugin.cesium.CesiumRenderer.prototype.updateTerrainProvider = function() {
         plugin.cesium.addTrustedServer(terrainOptions.url);
       }
 
-      this.terrainProvider_ = this.terrainProviderTypes_[terrainType](terrainOptions);
+      return this.terrainProviderTypes_[terrainType](terrainOptions);
     } else if (!terrainType) {
-      goog.log.error(this.log, 'Terrain provider type not configured.');
+      return goog.Promise.reject('Terrain provider type not configured.');
     } else if (!(terrainType in this.terrainProviderTypes_)) {
-      goog.log.error(this.log, 'Unknown terrain provider type: ' + terrainType);
+      return goog.Promise.reject(`Unknown terrain provider type: ${terrainType}`);
     }
   }
+
+  return goog.Promise.reject('Unable to create terrain provider.');
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.cesium.CesiumRenderer.prototype.updateTerrainProvider = function() {
+  // clean up existing layer/provider
+  this.removeTerrainLayer_();
+  this.terrainProvider_ = undefined;
 
   // set the provider in Cesium
   var showTerrain = !!os.settings.get(os.config.DisplaySetting.ENABLE_TERRAIN, false);

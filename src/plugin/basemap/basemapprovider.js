@@ -171,15 +171,18 @@ plugin.basemap.BaseMapProvider.prototype.addBaseMapFromConfig = function(config)
           //
           // TODO: terrain config is still set in base maps because we're adding a descriptor to inform the user that
           //       the controls for it have moved. after a release cycle, remove the descriptor and update configs to
-          //       use the new key (os.config.DisplaySetting.TERRAIN_OPTIONS).
+          //       use the new key (os.map.terrain.TerrainSetting.ACTIVE_TERRAIN).
           //
 
           // if multiple terrain descriptors are configured, the last one will win
           var terrainOptions = /** @type {osx.map.TerrainProviderOptions|undefined} */ (conf['options']);
           var terrainType = /** @type {string|undefined} */ (conf['baseType']);
           if (terrainOptions && terrainType) {
+            terrainOptions.id = id;
+            terrainOptions.title = conf['title'] || '';
             terrainOptions.type = terrainType;
-            os.settings.set(os.config.DisplaySetting.TERRAIN_OPTIONS, terrainOptions);
+
+            os.map.terrain.addTerrainProvider(terrainOptions);
           }
 
           // create a descriptor that will inform the user on where terrain was moved to

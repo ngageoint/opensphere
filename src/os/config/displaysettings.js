@@ -7,6 +7,7 @@ goog.require('os.MapMode');
 goog.require('os.config');
 goog.require('os.defines');
 goog.require('os.map');
+goog.require('os.map.terrain');
 goog.require('os.ui.Module');
 goog.require('os.ui.config.SettingPlugin');
 goog.require('os.ui.location.SimpleLocationControlsCtrl');
@@ -55,20 +56,26 @@ os.config.DisplaySetting = {
   FOG_DENSITY: os.config.DisplaySettings.BASE_KEY + 'fogDensity',
   ENABLE_SKY: os.config.DisplaySettings.BASE_KEY + 'enableSky',
   ENABLE_LIGHTING: os.config.DisplaySettings.BASE_KEY + 'enableLighting',
-  ENABLE_TERRAIN: os.config.DisplaySettings.BASE_KEY + 'enableTerrain',
-  TERRAIN_OPTIONS: os.config.DisplaySettings.BASE_KEY + 'terrainOptions'
+  ENABLE_TERRAIN: os.config.DisplaySettings.BASE_KEY + 'enableTerrain'
 };
+
+
+/**
+ * Deprecated setting key for the active terrain provider options.
+ * @type {string}
+ * @deprecated Please use os.map.terrain.TerrainSetting.ACTIVE_TERRAIN instead.
+ */
+os.config.DisplaySetting.TERRAIN_OPTIONS = os.map.terrain.TerrainSetting.ACTIVE_TERRAIN;
 
 
 /**
  * If terrain has been configured in the application.
  *
  * @return {boolean}
+ * @deprecated Please use os.map.terrain.hasTerrain() instead.
  */
 os.config.isTerrainConfigured = function() {
-  var options = /** @type {osx.map.TerrainProviderOptions|undefined} */ (os.settings.get(
-      os.config.DisplaySetting.TERRAIN_OPTIONS));
-  return !!(options && options.type);
+  return os.map.terrain.hasTerrain();
 };
 
 /**
@@ -210,6 +217,18 @@ os.config.DisplaySettingsCtrl = function($scope) {
   this['terrainEnabled'] = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.ENABLE_TERRAIN, false));
 
   /**
+   * Active terrain provider.
+   * @type {osx.map.TerrainProviderOptions|undefined}
+   */
+  this['activeTerrainProvider'] = os.map.terrain.getActiveTerrainProvider();
+
+  /**
+   * Available terrain providers.
+   * @type {!Array<!osx.map.TerrainProviderOptions>}
+   */
+  this['terrainProviders'] = os.map.terrain.getTerrainProviders();
+
+  /**
    * The max feature count for 2D.
    * @type {number}
    */
@@ -249,6 +268,7 @@ os.config.DisplaySettingsCtrl = function($scope) {
   os.settings.listen(os.config.DisplaySetting.ENABLE_SKY, this.onSkyChange_, false, this);
   os.settings.listen(os.config.DisplaySetting.ENABLE_LIGHTING, this.onSunlightChange_, false, this);
   os.settings.listen(os.config.DisplaySetting.ENABLE_TERRAIN, this.onTerrainChange_, false, this);
+  os.settings.listen(os.map.terrain.TerrainSetting.ACTIVE_TERRAIN, this.onTerrainProviderChange_, false, this);
 
   // initialize 3d support
   this.update3DSupport_();
@@ -274,6 +294,7 @@ os.config.DisplaySettingsCtrl.prototype.destroy_ = function() {
   os.settings.unlisten(os.config.DisplaySetting.ENABLE_SKY, this.onSkyChange_, false, this);
   os.settings.unlisten(os.config.DisplaySetting.ENABLE_LIGHTING, this.onSunlightChange_, false, this);
   os.settings.unlisten(os.config.DisplaySetting.ENABLE_TERRAIN, this.onTerrainChange_, false, this);
+  os.settings.unlisten(os.map.terrain.TerrainSetting.ACTIVE_TERRAIN, this.onTerrainProviderChange_, false, this);
 
   this.scope_ = null;
 };
@@ -562,13 +583,30 @@ os.config.DisplaySettingsCtrl.prototype.onTerrainChange_ = function(event) {
 
 
 /**
+ * Handle changes to the terrain provider setting.
+ *
+ * @param {os.events.SettingChangeEvent} event
+ * @private
+ */
+os.config.DisplaySettingsCtrl.prototype.onTerrainProviderChange_ = function(event) {
+  if (!this.ignoreSettingsEvents_) {
+    const activeProvider = os.map.terrain.getActiveTerrainProvider();
+    if (activeProvider !== this['activeTerrainProvider']) {
+      this['activeTerrainProvider'] = activeProvider;
+      os.ui.apply(this.scope_);
+    }
+  }
+};
+
+
+/**
  * If terrain is available in the application.
  *
  * @return {boolean}
  * @export
  */
 os.config.DisplaySettingsCtrl.prototype.supportsTerrain = function() {
-  return os.config.isTerrainConfigured();
+  return os.map.terrain.hasTerrain();
 };
 
 /**
@@ -607,8 +645,18 @@ os.config.DisplaySettingsCtrl.prototype.updateSunlight = function() {
  *
  * @export
  */
-os.config.DisplaySettingsCtrl.prototype.updateTerrain = function() {
+os.config.DisplaySettingsCtrl.prototype.updateTerrainEnabled = function() {
   this.updateSetting_(os.config.DisplaySetting.ENABLE_TERRAIN, this['terrainEnabled']);
+};
+
+
+/**
+ * Update the globe terrain provider.
+ *
+ * @export
+ */
+os.config.DisplaySettingsCtrl.prototype.updateTerrainProvider = function() {
+  os.map.terrain.setActiveTerrainProvider(this['activeTerrainProvider']);
 };
 
 

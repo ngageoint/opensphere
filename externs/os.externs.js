@@ -175,6 +175,8 @@ osx.map.FlyToOptions;
 
 /**
  * @typedef {{
+ *   id: string,
+ *   title: string,
  *   type: (string|undefined),
  *   url: (string|undefined),
  *   credit: (Cesium.Credit|string|undefined),

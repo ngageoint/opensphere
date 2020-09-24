@@ -4,6 +4,7 @@ goog.require('goog.Disposable');
 goog.require('goog.Promise');
 goog.require('os.MapEvent');
 goog.require('os.config.DisplaySetting');
+goog.require('os.map.terrain');
 goog.require('os.webgl.IWebGLRenderer');
 
 
@@ -93,7 +94,7 @@ os.webgl.AbstractWebGLRenderer = function() {
     os.config.DisplaySetting.ENABLE_TERRAIN,
     os.config.DisplaySetting.FOG_ENABLED,
     os.config.DisplaySetting.FOG_DENSITY,
-    os.config.DisplaySetting.TERRAIN_OPTIONS
+    os.map.terrain.TerrainSetting.ACTIVE_TERRAIN
   ];
 
   /**
@@ -305,7 +306,7 @@ os.webgl.AbstractWebGLRenderer.prototype.onSettingChange = function(event) {
         this.setFogDensity(event.newVal);
       }
       break;
-    case os.config.DisplaySetting.TERRAIN_OPTIONS:
+    case os.map.terrain.TerrainSetting.ACTIVE_TERRAIN:
       if (this.getEnabled()) {
         this.updateTerrainProvider();
       }
