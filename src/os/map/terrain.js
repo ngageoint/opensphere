@@ -85,8 +85,9 @@ const addTerrainProvider = (options) => {
       providers.push(options);
       os.dispatcher.dispatchEvent(TerrainEventType.PROVIDERS);
 
+      // if the terrain provider was previously active, activate it now
       const activeId = Settings.getInstance().get(TerrainSetting.ACTIVE_TERRAIN);
-      if (activeId === options.id) {
+      if (activeId && activeId === options.id) {
         setActiveTerrainProvider(options);
       }
     } else {
@@ -111,6 +112,8 @@ const getTerrainProviders = () => providers;
  */
 const getActiveTerrainProvider = () => {
   if (!activeProvider && providers.length) {
+    // if the active terrain provider has not yet been set, use the last one added. this ensures the last provider
+    // loaded from settings will be selected first.
     activeProvider = providers[providers.length - 1];
   }
 
