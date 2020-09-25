@@ -48,7 +48,7 @@ os.im.action.IImportAction.prototype.isUnique;
 /**
  * Execute the import action on the given items.
  * @param {!Array<T>} items The items.
- * @return {Promise<os.im.action.ImportActionCallbackConfig>|undefined}
+ * @return {os.im.action.ImportActionCallbackConfig|undefined}
  */
 os.im.action.IImportAction.prototype.execute;
 
@@ -63,6 +63,6 @@ os.im.action.IImportAction.prototype.clone;
 /**
  * Reset the import action.
  * @param {!Array<T>} items The items.
- * @return {Promise<os.im.action.ImportActionCallbackConfig>|undefined}
+ * @return {os.im.action.ImportActionCallbackConfig|undefined}
  */
 os.im.action.IImportAction.prototype.reset;

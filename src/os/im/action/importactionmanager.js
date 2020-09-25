@@ -370,46 +370,44 @@ os.im.action.ImportActionManager.prototype.processItemsInternal_ = function(
     opt_unprocess,
     opt_unprocessOnly) {
   if (items && items.length > 0) {
-    var promises = [];
+    var configs = [];
     var entries = this.actionEntries[entryType];
     if (entries && entries.length > 0) {
       for (var i = 0; i < entries.length; i++) {
-        var ps = null;
+        var cfgs = null;
         if (!opt_unprocessOnly && entries[i].isEnabled()) {
-          ps = entries[i].processItems(items);
+          cfgs = entries[i].processItems(items);
         } else if (opt_unprocess || opt_unprocessOnly) {
-          ps = entries[i].unprocessItems(items);
+          cfgs = entries[i].unprocessItems(items);
         }
-        if (ps) {
-          ps.forEach((p) => {
-            promises.push(p);
+        if (cfgs) {
+          cfgs.forEach((cfg) => {
+            configs.push(cfg);
           });
         }
       }
     }
 
-    if (promises.length > 0) {
+    if (configs.length > 0) {
       // once all processItems() are done, do a big notify of style and color changes
-      Promise.all(promises).then((results) => {
-        var config = /* @type {os.im.action.ImportActionCallbackConfig} */ ({
-          color: [],
-          labelUpdateShown: false,
-          notifyStyleChange: false,
-          setColor: false,
-          setFeaturesStyle: false
-        });
-
-        // merge the layer, source, colormodel, and label events into one
-        results.forEach((cfg) => {
-          os.im.action.ImportActionManager.mergeNotify_(config, cfg);
-        });
-
-        // optimize the colors to avoid overlaps (max N instead of N^2 events)
-        os.im.action.ImportActionManager.mergeNotifyColor_(config);
-
-        // send events to synch with renderer and bins
-        os.im.action.ImportActionManager.notify_(items, config);
+      var config = /* @type {os.im.action.ImportActionCallbackConfig} */ ({
+        color: [],
+        labelUpdateShown: false,
+        notifyStyleChange: false,
+        setColor: false,
+        setFeaturesStyle: false
       });
+
+      // merge the layer, source, colormodel, and label events into one
+      configs.forEach((cfg) => {
+        os.im.action.ImportActionManager.mergeNotify_(config, cfg);
+      });
+
+      // optimize the colors to avoid overlaps (max N instead of N^2 events)
+      os.im.action.ImportActionManager.mergeNotifyColor_(config);
+
+      // send events to synch with renderer and bins
+      os.im.action.ImportActionManager.notify_(items, config);
     }
   }
 };

@@ -95,26 +95,24 @@ plugin.im.action.feature.StyleAction.CONFIG_UI = 'featureactionstyleconfig';
  * @inheritDoc
  */
 plugin.im.action.feature.StyleAction.prototype.reset = function(items) {
-  return new Promise((resolve) => {
-    var resetItems = [];
+  var resetItems = [];
 
-    for (var i = 0; i < items.length; i++) {
-      var item = items[i];
-      if (item && this.isFeatureStyled(item)) {
-        item.set(plugin.im.action.feature.StyleAction.FEATURE_ID, undefined);
-        item.set(os.style.StyleField.SHAPE, undefined, true);
-        item.set(os.style.StyleField.CENTER_SHAPE, undefined, true);
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i];
+    if (item && this.isFeatureStyled(item)) {
+      item.set(plugin.im.action.feature.StyleAction.FEATURE_ID, undefined);
+      item.set(os.style.StyleField.SHAPE, undefined, true);
+      item.set(os.style.StyleField.CENTER_SHAPE, undefined, true);
 
-        // reset the original feature config
-        var originalConfig = /** @type {Array|Object|undefined} */
+      // reset the original feature config
+      var originalConfig = /** @type {Array|Object|undefined} */
             (item.get(plugin.im.action.feature.StyleType.ORIGINAL));
-        item.set(os.style.StyleType.FEATURE, originalConfig, true);
-        resetItems.push(item);
-      }
+      item.set(os.style.StyleType.FEATURE, originalConfig, true);
+      resetItems.push(item);
     }
+  }
 
-    resolve(this.configureNotify_(resetItems, true));
-  });
+  return (this.configureNotify_(resetItems, true));
 };
 
 
@@ -122,55 +120,53 @@ plugin.im.action.feature.StyleAction.prototype.reset = function(items) {
  * @inheritDoc
  */
 plugin.im.action.feature.StyleAction.prototype.execute = function(items) {
-  return new Promise((resolve) => {
-    for (var i = 0; i < items.length; i++) {
-      var item = items[i];
-      if (item) {
-        // get the existing feature config or create a new one
-        var originalConfig = /** @type {Array|Object|undefined} */ (item.get(os.style.StyleType.FEATURE));
-        var featureConfig = os.object.unsafeClone(originalConfig) || {};
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i];
+    if (item) {
+      // get the existing feature config or create a new one
+      var originalConfig = /** @type {Array|Object|undefined} */ (item.get(os.style.StyleType.FEATURE));
+      var featureConfig = os.object.unsafeClone(originalConfig) || {};
 
-        // flag this as a temporary style config
-        featureConfig['temporary'] = true;
+      // flag this as a temporary style config
+      featureConfig['temporary'] = true;
 
-        // merge style changes into the feature config and set it on the feature
-        if (goog.isArray(featureConfig)) {
-          for (var j = 0; j < featureConfig.length; j++) {
-            featureConfig[j]['zIndex'] = 10;
-            os.style.mergeConfig(this.styleConfig, featureConfig[j]);
-          }
-        } else {
-          featureConfig['zIndex'] = 10;
-          os.style.mergeConfig(this.styleConfig, featureConfig);
+      // merge style changes into the feature config and set it on the feature
+      if (goog.isArray(featureConfig)) {
+        for (var j = 0; j < featureConfig.length; j++) {
+          featureConfig[j]['zIndex'] = 10;
+          os.style.mergeConfig(this.styleConfig, featureConfig[j]);
         }
+      } else {
+        featureConfig['zIndex'] = 10;
+        os.style.mergeConfig(this.styleConfig, featureConfig);
+      }
 
-        item.set(os.style.StyleType.FEATURE, featureConfig, true);
-        item.set(plugin.im.action.feature.StyleAction.FEATURE_ID, this.uid, true);
+      item.set(os.style.StyleType.FEATURE, featureConfig, true);
+      item.set(plugin.im.action.feature.StyleAction.FEATURE_ID, this.uid, true);
 
-        if (originalConfig != null && !originalConfig['temporary'] &&
+      if (originalConfig != null && !originalConfig['temporary'] &&
             item.get(plugin.im.action.feature.StyleType.ORIGINAL) == null) {
-          // if the original config isn't already set, add a reference back to it
-          item.set(plugin.im.action.feature.StyleType.ORIGINAL, originalConfig, true);
-        }
+        // if the original config isn't already set, add a reference back to it
+        item.set(plugin.im.action.feature.StyleType.ORIGINAL, originalConfig, true);
+      }
 
-        // set the feature shape
-        var configShape = this.styleConfig[os.style.StyleField.SHAPE];
-        if (configShape && configShape != os.style.DEFAULT_SHAPE) {
-          item.set(os.style.StyleField.SHAPE, configShape, true);
-        }
+      // set the feature shape
+      var configShape = this.styleConfig[os.style.StyleField.SHAPE];
+      if (configShape && configShape != os.style.DEFAULT_SHAPE) {
+        item.set(os.style.StyleField.SHAPE, configShape, true);
+      }
 
-        // set the feature center shape
-        var configCenterShape = this.styleConfig[os.style.StyleField.CENTER_SHAPE];
-        if (configCenterShape && configCenterShape != os.style.DEFAULT_CENTER_SHAPE) {
-          item.set(os.style.StyleField.CENTER_SHAPE, configCenterShape, true);
-        } else {
-          item.set(os.style.StyleField.CENTER_SHAPE, undefined, true);
-        }
+      // set the feature center shape
+      var configCenterShape = this.styleConfig[os.style.StyleField.CENTER_SHAPE];
+      if (configCenterShape && configCenterShape != os.style.DEFAULT_CENTER_SHAPE) {
+        item.set(os.style.StyleField.CENTER_SHAPE, configCenterShape, true);
+      } else {
+        item.set(os.style.StyleField.CENTER_SHAPE, undefined, true);
       }
     }
+  }
 
-    resolve(this.configureNotify_(items));
-  });
+  return (this.configureNotify_(items));
 };
 
 
