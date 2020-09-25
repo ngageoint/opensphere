@@ -10,6 +10,7 @@ goog.require('ol.source.TileImage');
 goog.require('ol.source.WMTS');
 goog.require('olcs.core');
 goog.require('os.MapContainer');
+goog.require('os.alert.AlertManager');
 goog.require('os.config.DisplaySetting');
 goog.require('os.net');
 goog.require('os.proj');
@@ -46,8 +47,7 @@ plugin.cesium.SettingsKey = {
   ACCESS_TOKEN: 'cesium.accessToken',
   ION_URL: 'cesium.ionUrl',
   LOAD_TIMEOUT: 'cesium.loadTimeout',
-  SKYBOX_OPTIONS: 'cesium.skyBoxOptions',
-  SHOW_TERRAIN_PROMPT: 'cesium.showTerrainPrompt'
+  SKYBOX_OPTIONS: 'cesium.skyBoxOptions'
 };
 
 
@@ -447,6 +447,32 @@ plugin.cesium.createWorldTerrain = function(options) {
 
 
 /**
+ * Create a Cesium Ion resource URL.
+ *
+ * @param {number} assetId The Ion asset id.
+ * @param {string} accessToken The Ion access token.
+ * @return {Cesium.Promise}
+ */
+plugin.cesium.createIonAssetUrl = function(assetId, accessToken) {
+  const assetUrl = Cesium.IonResource.fromAssetId(assetId, {
+    accessToken
+  });
+
+  assetUrl.then(undefined, () => {
+    // If the token matches the one in settings, clear it because it's invalid.
+    if (accessToken === os.settings.get(plugin.cesium.SettingsKey.ACCESS_TOKEN)) {
+      os.settings.set(plugin.cesium.SettingsKey.ACCESS_TOKEN, '');
+    }
+
+    const am = os.alert.AlertManager.getInstance();
+    am.sendAlert('The provided Cesium Ion access token is invalid. Please reload the resource and try again.');
+  });
+
+  return assetUrl;
+};
+
+
+/**
  * Create a Cesium World Terrain instance.
  *
  * @param {number} assetId The Cesium World Terrain asset id.
@@ -457,9 +483,7 @@ plugin.cesium.createWorldTerrain = function(options) {
  */
 plugin.cesium.createWorldTerrain_ = function(assetId, accessToken) {
   return new Cesium.CesiumTerrainProvider({
-    url: Cesium.IonResource.fromAssetId(assetId, {
-      accessToken
-    })
+    url: plugin.cesium.createIonAssetUrl(assetId, accessToken)
   });
 };
 
@@ -469,14 +493,9 @@ plugin.cesium.createWorldTerrain_ = function(assetId, accessToken) {
  * @param {string} prompt The message to display.
  */
 plugin.cesium.promptForWorldTerrain = function(prompt) {
-  const showPrompt = os.settings.get(plugin.cesium.SettingsKey.SHOW_TERRAIN_PROMPT, true);
-  if (showPrompt && !plugin.cesium.isWorldTerrainActive() && plugin.cesium.hasWorldTerrain()) {
+  if (!plugin.cesium.isWorldTerrainActive() && plugin.cesium.hasWorldTerrain()) {
     os.ui.window.ConfirmUI.launchConfirm(/** @type {!osx.window.ConfirmTextOptions} */ ({
       confirm: plugin.cesium.enableWorldTerrain,
-      cancel: () => {
-        // Stop asking if the user says no
-        os.settings.set(plugin.cesium.SettingsKey.SHOW_TERRAIN_PROMPT, false);
-      },
       defaultValue: '',
       select: true,
       prompt,
@@ -496,11 +515,14 @@ plugin.cesium.promptForWorldTerrain = function(prompt) {
  * @return {boolean}
  */
 plugin.cesium.isWorldTerrainActive = function() {
-  const map = os.MapContainer.getInstance();
-  const renderer = map.getWebGLRenderer();
-  if (renderer) {
-    const activeProvider = renderer.getActiveTerrainProvider();
-    return activeProvider != null && activeProvider.type === os.map.terrain.TerrainType.ION;
+  const terrainActive = os.settings.get(os.config.DisplaySetting.ENABLE_TERRAIN);
+  if (terrainActive) {
+    const map = os.MapContainer.getInstance();
+    const renderer = map.getWebGLRenderer();
+    if (renderer) {
+      const activeProvider = renderer.getActiveTerrainProvider();
+      return activeProvider != null && activeProvider.type === os.map.terrain.TerrainType.ION;
+    }
   }
 
   return false;

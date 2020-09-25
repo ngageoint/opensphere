@@ -107,17 +107,14 @@ plugin.cesium.tiles.Layer.prototype.synchronize = function() {
           this.setTokenError_('An access token is required to enable this layer, but one was not provided.');
         });
       } else {
-        tilesetUrl = Cesium.IonResource.fromAssetId(this.assetId, {
-          accessToken: this.accessToken
-        });
+        tilesetUrl = plugin.cesium.createIonAssetUrl(this.assetId, this.accessToken);
 
-        tilesetUrl.then(undefined, () => {
-          // Clear the saved access token because it was rejected
-          os.settings.set(plugin.cesium.SettingsKey.ACCESS_TOKEN, '');
-
-          var errorMsg = 'The provided access token was rejected. ' +
-          'Turn the layer off and back on to provide another access token.';
-          this.setTokenError_(errorMsg);
+        tilesetUrl.then(() => {
+          // Access token is valid, prompt the user to enable Cesium World Terrain if configured.
+          this.checkWorldTerrain();
+        }, () => {
+          // Access token is invalid. Notify the user.
+          this.setTokenError_('The provided Cesium Ion access token is invalid.');
         });
       }
     } else {
@@ -141,15 +138,21 @@ plugin.cesium.tiles.Layer.prototype.synchronize = function() {
 
       this.setPrimitive(tileset);
       tileset.loadProgress.addEventListener(this.onTileProgress, this);
-
-      if (this.useWorldTerrain) {
-        // Prompt the user to enable Cesium World Terrain
-        const layerTitle = this.getTitle() || 'The activated layer';
-        plugin.cesium.promptForWorldTerrain(`
-          ${layerTitle} is best displayed with Cesium World Terrain. Would you like to activate it now?
-        `);
-      }
     }
+  }
+};
+
+
+/**
+ * Prompt the user to enable Cesium World Terrain if configured.
+ * @protected
+ */
+plugin.cesium.tiles.Layer.prototype.checkWorldTerrain = function() {
+  if (this.useWorldTerrain) {
+    const layerTitle = this.getTitle() || 'The activated layer';
+    plugin.cesium.promptForWorldTerrain(`
+      ${layerTitle} is best displayed with Cesium World Terrain. Would you like to activate it now?
+    `);
   }
 };
 
@@ -162,10 +165,6 @@ plugin.cesium.tiles.Layer.prototype.setTokenError_ = function(errorMsg) {
   if (this.tokenError_ !== errorMsg) {
     this.tokenError_ = errorMsg;
     this.updateError();
-
-    if (this.tokenError_) {
-      os.alertManager.sendAlert(this.tokenError_, os.alert.AlertEventSeverity.ERROR, plugin.cesium.tiles.Layer.LOGGER_);
-    }
   }
 };
 
