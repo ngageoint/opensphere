@@ -64,7 +64,10 @@ describe('plugin.basemap.BaseMapProvider', function() {
     expect(p.defaults_).toContain('two');
 
     // terrain is configured on the map
-    var terrainOptions = os.settings.get(os.map.terrain.TerrainSetting.ACTIVE_TERRAIN);
+    var providers = os.map.terrain.getTerrainProviders();
+    expect(providers.length).toBe(1);
+
+    var terrainOptions = providers[0];
     expect(terrainOptions).toBeDefined();
     expect(terrainOptions.url).toBe(expectedTerrainOptions.url);
     expect(terrainOptions.type).toBe(expectedTerrainType);

@@ -3,8 +3,6 @@ goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 
-const Settings = goog.require('os.config.Settings');
-
 
 /**
  * Terrain event types.
@@ -50,13 +48,6 @@ const providers = [];
 
 
 /**
- * The active terrain provider.
- * @type {osx.map.TerrainProviderOptions|undefined}
- */
-let activeProvider = undefined;
-
-
-/**
  * If a terrain provider is available.
  * @return {boolean}
  */
@@ -84,12 +75,6 @@ const addTerrainProvider = (options) => {
     if (!providers.some((p) => p.id === options.id)) {
       providers.push(options);
       os.dispatcher.dispatchEvent(TerrainEventType.PROVIDERS);
-
-      // if the terrain provider was previously active, activate it now
-      const activeId = Settings.getInstance().get(TerrainSetting.ACTIVE_TERRAIN);
-      if (activeId && activeId === options.id) {
-        setActiveTerrainProvider(options);
-      }
     } else {
       log.warning(logger, `Ignoring duplicate terrain provider ${options.name} with id '${options.id}'`);
     }
@@ -106,48 +91,11 @@ const addTerrainProvider = (options) => {
 const getTerrainProviders = () => providers;
 
 
-/**
- * Get the active terrain provider.
- * @return {osx.map.TerrainProviderOptions|undefined}
- */
-const getActiveTerrainProvider = () => {
-  if (!activeProvider && providers.length) {
-    // if the active terrain provider has not yet been set, use the last one added. this ensures the last provider
-    // loaded from settings will be selected first.
-    activeProvider = providers[providers.length - 1];
-  }
-
-  return activeProvider;
-};
-
-
-/**
- * Set the active terrain provider.
- * @param {osx.map.TerrainProviderOptions|string} provider The new provider.
- */
-const setActiveTerrainProvider = (provider) => {
-  let newProvider;
-
-  if (typeof provider === 'string') {
-    newProvider = providers.find((p) => p.id === provider);
-  } else {
-    newProvider = provider;
-  }
-
-  if (newProvider && newProvider !== activeProvider) {
-    activeProvider = newProvider;
-    Settings.getInstance().set(TerrainSetting.ACTIVE_TERRAIN, activeProvider.id);
-  }
-};
-
-
 exports = {
   TerrainEventType,
   TerrainSetting,
   TerrainType,
   hasTerrain,
   addTerrainProvider,
-  getTerrainProviders,
-  getActiveTerrainProvider,
-  setActiveTerrainProvider
+  getTerrainProviders
 };

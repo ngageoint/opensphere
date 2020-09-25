@@ -177,7 +177,7 @@ osx.map.FlyToOptions;
  * @typedef {{
  *   id: string,
  *   title: string,
- *   type: (string|undefined),
+ *   type: string,
  *   url: (string|undefined),
  *   credit: (Cesium.Credit|string|undefined),
  *   maxLevel: (number|undefined),

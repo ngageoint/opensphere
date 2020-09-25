@@ -220,13 +220,13 @@ os.config.DisplaySettingsCtrl = function($scope) {
    * Active terrain provider.
    * @type {osx.map.TerrainProviderOptions|undefined}
    */
-  this['activeTerrainProvider'] = os.map.terrain.getActiveTerrainProvider();
+  this['activeTerrainProvider'] = undefined;
 
   /**
    * Available terrain providers.
    * @type {!Array<!osx.map.TerrainProviderOptions>}
    */
-  this['terrainProviders'] = os.map.terrain.getTerrainProviders();
+  this['terrainProviders'] = [];
 
   /**
    * The max feature count for 2D.
@@ -263,6 +263,8 @@ os.config.DisplaySettingsCtrl = function($scope) {
   $scope.$watch('display.fogEnabled', this.updateFog.bind(this));
   $scope.$watch('display.fogDensity', this.updateFog.bind(this));
 
+  os.dispatcher.listen(os.map.terrain.TerrainEventType.PROVIDERS, this.onTerrainProvidersChange_, false, this);
+
   os.settings.listen(os.config.DisplaySetting.CAMERA_STATE, this.onCameraStateChange_, false, this);
   os.settings.listen(os.config.DisplaySetting.MAP_MODE, this.onMapModeChange_, false, this);
   os.settings.listen(os.config.DisplaySetting.ENABLE_SKY, this.onSkyChange_, false, this);
@@ -289,6 +291,8 @@ os.config.DisplaySettingsCtrl.DEFAULT_RENDERER_ID = 'unknown';
  * @private
  */
 os.config.DisplaySettingsCtrl.prototype.destroy_ = function() {
+  os.dispatcher.unlisten(os.map.terrain.TerrainEventType.PROVIDERS, this.onTerrainProvidersChange_, false, this);
+
   os.settings.unlisten(os.config.DisplaySetting.CAMERA_STATE, this.onCameraStateChange_, false, this);
   os.settings.unlisten(os.config.DisplaySetting.MAP_MODE, this.onMapModeChange_, false, this);
   os.settings.unlisten(os.config.DisplaySetting.ENABLE_SKY, this.onSkyChange_, false, this);
@@ -353,7 +357,12 @@ os.config.DisplaySettingsCtrl.prototype.update3DSupport_ = function() {
 
     if (renderer) {
       this['maxFeatures3D'] = renderer.getMaxFeatureCount();
+      this['terrainProviders'] = renderer.getSupportedTerrainProviders();
+      this['activeTerrainProvider'] = renderer.getActiveTerrainProvider();
     }
+  } else {
+    this['terrainProviders'] = [];
+    this['activeTerrainProvider'] = undefined;
   }
 };
 
@@ -590,12 +599,29 @@ os.config.DisplaySettingsCtrl.prototype.onTerrainChange_ = function(event) {
  */
 os.config.DisplaySettingsCtrl.prototype.onTerrainProviderChange_ = function(event) {
   if (!this.ignoreSettingsEvents_) {
-    const activeProvider = os.map.terrain.getActiveTerrainProvider();
-    if (activeProvider !== this['activeTerrainProvider']) {
-      this['activeTerrainProvider'] = activeProvider;
-      os.ui.apply(this.scope_);
+    const map = os.MapContainer.getInstance();
+    const renderer = map.getWebGLRenderer();
+    if (renderer) {
+      const activeProvider = renderer.getActiveTerrainProvider();
+      if (activeProvider !== this['activeTerrainProvider']) {
+        this['activeTerrainProvider'] = activeProvider;
+        os.ui.apply(this.scope_);
+      }
+    } else {
+      this['activeTerrainProvider'] = undefined;
     }
   }
+};
+
+
+/**
+ * Handle changes to the application terrain providers.
+ *
+ * @param {goog.events.Event} event The change event.
+ * @private
+ */
+os.config.DisplaySettingsCtrl.prototype.onTerrainProvidersChange_ = function(event) {
+  this.update3DSupport_();
 };
 
 
@@ -656,7 +682,11 @@ os.config.DisplaySettingsCtrl.prototype.updateTerrainEnabled = function() {
  * @export
  */
 os.config.DisplaySettingsCtrl.prototype.updateTerrainProvider = function() {
-  os.map.terrain.setActiveTerrainProvider(this['activeTerrainProvider']);
+  const map = os.MapContainer.getInstance();
+  const renderer = map.getWebGLRenderer();
+  if (renderer) {
+    renderer.setActiveTerrainProvider(this['activeTerrainProvider']);
+  }
 };
 
 
