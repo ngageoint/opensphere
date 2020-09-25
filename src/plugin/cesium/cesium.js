@@ -197,6 +197,7 @@ plugin.cesium.promptForAccessToken = function() {
       },
       cancel: reject,
       defaultValue: '',
+      limit: 2000,
       select: true,
       prompt: `
         This layer requires a Cesium Ion access token. If you do not have an access token, please
