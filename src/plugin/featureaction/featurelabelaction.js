@@ -105,23 +105,21 @@ plugin.im.action.feature.LabelAction.DEFAULT_CONFIG = {
  * @override
  */
 plugin.im.action.feature.LabelAction.prototype.reset = function(items) {
-  return new Promise((resolve) => {
-    for (var i = 0; i < items.length; i++) {
-      var item = items[i];
-      if (item && this.isFeatureLabeled(item)) {
-        // reset the original feature config
-        var originalConfig = /** @type {Array|Object|undefined} */
-            (item.get(plugin.im.action.feature.StyleType.ORIGINAL));
-        item.set(os.style.StyleType.FEATURE, originalConfig, true);
-      }
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i];
+    if (item && this.isFeatureLabeled(item)) {
+      // reset the original feature config
+      var originalConfig = /** @type {Array|Object|undefined} */
+          (item.get(plugin.im.action.feature.StyleType.ORIGINAL));
+      item.set(os.style.StyleType.FEATURE, originalConfig, true);
     }
+  }
 
-    resolve(/** {os.im.action.ImportActionCallbackConfig} */ ({
-      labelUpdateShown: false,
-      notifyStyleChange: !!(os.feature.getLayer(items[0])),
-      setColor: false,
-      setFeaturesStyle: true
-    }));
+  return /** {os.im.action.ImportActionCallbackConfig} */ ({
+    labelUpdateShown: false,
+    notifyStyleChange: !!(os.feature.getLayer(items[0])),
+    setColor: false,
+    setFeaturesStyle: true
   });
 };
 
@@ -130,77 +128,75 @@ plugin.im.action.feature.LabelAction.prototype.reset = function(items) {
  * @inheritDoc
  */
 plugin.im.action.feature.LabelAction.prototype.execute = function(items) {
-  return new Promise((resolve) => {
-    var customName = this.labelConfig['customName'] || undefined;
-    var customValue = this.labelConfig['customValue'] || undefined;
+  var customName = this.labelConfig['customName'] || undefined;
+  var customValue = this.labelConfig['customValue'] || undefined;
 
-    var labels = /** @type {Array<!os.style.label.LabelConfig>} */ (this.labelConfig['labels']);
-    labels = os.style.label.filterValid(labels);
+  var labels = /** @type {Array<!os.style.label.LabelConfig>} */ (this.labelConfig['labels']);
+  labels = os.style.label.filterValid(labels);
 
-    var labelColor = os.style.toRgbaString(this.labelConfig['color'] || os.style.DEFAULT_LAYER_COLOR);
-    var labelSize = parseInt(this.labelConfig['size'], 10) || os.style.label.DEFAULT_SIZE;
+  var labelColor = os.style.toRgbaString(this.labelConfig['color'] || os.style.DEFAULT_LAYER_COLOR);
+  var labelSize = parseInt(this.labelConfig['size'], 10) || os.style.label.DEFAULT_SIZE;
 
-    for (var i = 0; i < items.length; i++) {
-      var item = items[i];
-      if (item) {
-        // update label fields on the feature if there is at least one valid label config defined
-        if (labels.length > 0) {
-          // get the existing feature config or create a new one
-          var originalConfig = /** @type {Array|Object|undefined} */ (item.get(os.style.StyleType.FEATURE));
-          var featureConfig = os.object.unsafeClone(originalConfig) || {};
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i];
+    if (item) {
+      // update label fields on the feature if there is at least one valid label config defined
+      if (labels.length > 0) {
+        // get the existing feature config or create a new one
+        var originalConfig = /** @type {Array|Object|undefined} */ (item.get(os.style.StyleType.FEATURE));
+        var featureConfig = os.object.unsafeClone(originalConfig) || {};
 
-          // flag this as a temporary style config
-          featureConfig['temporary'] = true;
+        // flag this as a temporary style config
+        featureConfig['temporary'] = true;
 
-          // apply label config
-          if (goog.isArray(featureConfig)) {
-            for (var j = 0; j < featureConfig.length; j++) {
-              featureConfig[j][os.style.StyleField.LABELS] = labels;
-              featureConfig[j][os.style.StyleField.LABEL_COLOR] = labelColor;
-              featureConfig[j][os.style.StyleField.LABEL_SIZE] = labelSize;
-            }
-          } else {
-            featureConfig[os.style.StyleField.LABELS] = labels;
-            featureConfig[os.style.StyleField.LABEL_COLOR] = labelColor;
-            featureConfig[os.style.StyleField.LABEL_SIZE] = labelSize;
+        // apply label config
+        if (goog.isArray(featureConfig)) {
+          for (var j = 0; j < featureConfig.length; j++) {
+            featureConfig[j][os.style.StyleField.LABELS] = labels;
+            featureConfig[j][os.style.StyleField.LABEL_COLOR] = labelColor;
+            featureConfig[j][os.style.StyleField.LABEL_SIZE] = labelSize;
           }
-
-          // save the feature config(s) to the feature, and persist the label config to the feature
-          item.set(os.style.StyleType.FEATURE, featureConfig, true);
-          item.set(plugin.im.action.feature.LabelAction.FEATURE_ID, this.uid, true);
-          os.ui.FeatureEditCtrl.persistFeatureLabels(item);
-
-          if (originalConfig != null && !originalConfig['temporary'] &&
-            item.get(plugin.im.action.feature.StyleType.ORIGINAL) == null) {
-            // if the original config isn't already set, add a reference back to it
-            item.set(plugin.im.action.feature.StyleType.ORIGINAL, originalConfig, true);
-          }
+        } else {
+          featureConfig[os.style.StyleField.LABELS] = labels;
+          featureConfig[os.style.StyleField.LABEL_COLOR] = labelColor;
+          featureConfig[os.style.StyleField.LABEL_SIZE] = labelSize;
         }
 
-        // if a custom column was configured, set the value on the feature
-        if (customName && customValue) {
-          var oldVal = item.get(customName);
-          item.set(customName, customValue);
-          item.dispatchFeatureEvent(os.data.FeatureEventType.VALUECHANGE, customValue, oldVal);
+        // save the feature config(s) to the feature, and persist the label config to the feature
+        item.set(os.style.StyleType.FEATURE, featureConfig, true);
+        item.set(plugin.im.action.feature.LabelAction.FEATURE_ID, this.uid, true);
+        os.ui.FeatureEditCtrl.persistFeatureLabels(item);
+
+        if (originalConfig != null && !originalConfig['temporary'] &&
+          item.get(plugin.im.action.feature.StyleType.ORIGINAL) == null) {
+          // if the original config isn't already set, add a reference back to it
+          item.set(plugin.im.action.feature.StyleType.ORIGINAL, originalConfig, true);
         }
       }
-    }
 
-    // if a custom column was configured, add it to the source
-    if (customName && customValue) {
-      var source = os.feature.getSource(items[0]);
-      if (source) {
-        source.addColumn(customName, undefined, true, true);
-        source.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.DATA));
+      // if a custom column was configured, set the value on the feature
+      if (customName && customValue) {
+        var oldVal = item.get(customName);
+        item.set(customName, customValue);
+        item.dispatchFeatureEvent(os.data.FeatureEventType.VALUECHANGE, customValue, oldVal);
       }
     }
+  }
 
-    resolve(/** {os.im.action.ImportActionCallbackConfig} */ ({
-      labelUpdateShown: true,
-      notifyStyleChange: !!(os.feature.getLayer(items[0])),
-      setColor: false,
-      setFeaturesStyle: true
-    }));
+  // if a custom column was configured, add it to the source
+  if (customName && customValue) {
+    var source = os.feature.getSource(items[0]);
+    if (source) {
+      source.addColumn(customName, undefined, true, true);
+      source.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.DATA));
+    }
+  }
+
+  return /** {os.im.action.ImportActionCallbackConfig} */ ({
+    labelUpdateShown: true,
+    notifyStyleChange: !!(os.feature.getLayer(items[0])),
+    setColor: false,
+    setFeaturesStyle: true
   });
 };
 
