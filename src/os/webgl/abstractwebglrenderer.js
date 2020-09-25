@@ -103,6 +103,20 @@ os.webgl.AbstractWebGLRenderer = function() {
    * @protected
    */
   this.maxFeaturesKey = 'maxFeatures.3d';
+
+  /**
+   * Terrain types supported by this renderer.
+   * @type {!Array<string>}
+   * @protected
+   */
+  this.supportedTerrainTypes = [];
+
+  /**
+   * The active terrain provider options.
+   * @type {osx.map.TerrainProviderOptions|undefined}
+   * @protected
+   */
+  this.activeTerrain = undefined;
 };
 goog.inherits(os.webgl.AbstractWebGLRenderer, goog.Disposable);
 
@@ -194,6 +208,9 @@ os.webgl.AbstractWebGLRenderer.prototype.initialize = function() {
     this.watchedSettings.forEach(function(key) {
       os.settings.listen(key, this.onSettingChange, false, this);
     }, this);
+
+    // initialize the active terrain provider
+    this.getActiveTerrainProvider();
 
     this.initialized = true;
   }
@@ -368,6 +385,62 @@ os.webgl.AbstractWebGLRenderer.prototype.showSky = function(value) {
  */
 os.webgl.AbstractWebGLRenderer.prototype.showSunlight = function(value) {
   // implement to support sunlight
+};
+
+
+/**
+ * Get the active terrain provider.
+ * @return {osx.map.TerrainProviderOptions|undefined}
+ */
+os.webgl.AbstractWebGLRenderer.prototype.getActiveTerrainProvider = function() {
+  if (!this.activeTerrain) {
+    const supported = this.getSupportedTerrainProviders();
+    if (supported.length) {
+      // use the previously active terrain if supported, otherwise use the last terrain provider loaded from settings
+      const activeId = os.settings.get(os.map.terrain.TerrainSetting.ACTIVE_TERRAIN);
+      const found = activeId ? supported.find((p) => p.id === activeId) : undefined;
+
+      this.activeTerrain = found || supported[supported.length - 1];
+
+      // save the active provider to settings if it changed
+      if (activeId !== this.activeTerrain.id) {
+        os.settings.set(os.map.terrain.TerrainSetting.ACTIVE_TERRAIN, this.activeTerrain.id);
+      }
+    }
+  }
+
+  return this.activeTerrain;
+};
+
+
+/**
+ * Set the active terrain provider.
+ * @param {osx.map.TerrainProviderOptions|string} provider The new provider.
+ */
+os.webgl.AbstractWebGLRenderer.prototype.setActiveTerrainProvider = function(provider) {
+  const providers = this.getSupportedTerrainProviders();
+  let newProvider;
+
+  if (typeof provider === 'string') {
+    newProvider = providers.find((p) => p.id === provider);
+  } else {
+    newProvider = provider;
+  }
+
+  if (newProvider && newProvider !== this.activeTerrain) {
+    this.activeTerrain = newProvider;
+    os.settings.set(os.map.terrain.TerrainSetting.ACTIVE_TERRAIN, this.activeTerrain.id);
+  }
+};
+
+
+/**
+ * Get the terrain providers supported by this renderer.
+ * @return {!Array<!osx.map.TerrainProviderOptions>}
+ */
+os.webgl.AbstractWebGLRenderer.prototype.getSupportedTerrainProviders = function() {
+  return os.map.terrain.getTerrainProviders()
+      .filter((p) => this.supportedTerrainTypes.indexOf(p.type) > -1);
 };
 
 

@@ -101,10 +101,9 @@
         <popover x-title="'Enable Terrain'" content="display.help.terrain" pos="'right'"></popover>
       </div>
     </div>
-    <div class="form-group" ng-if="display.supportsTerrain()">
+    <div class="form-group" ng-if="display.supportsTerrain() && display.terrainProviders.length > 1">
       <select class="custom-select col-6" id="terrainProvider"
           title="Source for terrain data"
-          ng-disabled="!display.terrainEnabled"
           ng-model="display.activeTerrainProvider"
           ng-change="display.updateTerrainProvider()"
           ng-options="provider as provider.title for provider in display.terrainProviders">

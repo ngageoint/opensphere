@@ -9,6 +9,7 @@ goog.require('ol.proj');
 goog.require('ol.source.TileImage');
 goog.require('ol.source.WMTS');
 goog.require('olcs.core');
+goog.require('os.MapContainer');
 goog.require('os.config.DisplaySetting');
 goog.require('os.net');
 goog.require('os.proj');
@@ -468,7 +469,7 @@ plugin.cesium.createWorldTerrain_ = function(assetId, accessToken) {
  */
 plugin.cesium.promptForWorldTerrain = function(prompt) {
   const showPrompt = os.settings.get(plugin.cesium.SettingsKey.SHOW_TERRAIN_PROMPT, true);
-  if (showPrompt && !plugin.cesium.isWorldTerrainActive()) {
+  if (showPrompt && !plugin.cesium.isWorldTerrainActive() && plugin.cesium.hasWorldTerrain()) {
     os.ui.window.ConfirmUI.launchConfirm(/** @type {!osx.window.ConfirmTextOptions} */ ({
       confirm: plugin.cesium.enableWorldTerrain,
       cancel: () => {
@@ -494,10 +495,27 @@ plugin.cesium.promptForWorldTerrain = function(prompt) {
  * @return {boolean}
  */
 plugin.cesium.isWorldTerrainActive = function() {
-  const terrainActive = !!os.settings.get(os.config.DisplaySetting.ENABLE_TERRAIN);
-  if (terrainActive) {
-    const activeProvider = os.map.terrain.getActiveTerrainProvider();
+  const map = os.MapContainer.getInstance();
+  const renderer = map.getWebGLRenderer();
+  if (renderer) {
+    const activeProvider = renderer.getActiveTerrainProvider();
     return activeProvider != null && activeProvider.type === os.map.terrain.TerrainType.ION;
+  }
+
+  return false;
+};
+
+
+/**
+ * If Cesium World Terrain is available.
+ * @return {boolean}
+ */
+plugin.cesium.hasWorldTerrain = function() {
+  const map = os.MapContainer.getInstance();
+  const renderer = map.getWebGLRenderer();
+  if (renderer) {
+    const providers = renderer.getSupportedTerrainProviders();
+    return providers.some((p) => p.type === os.map.terrain.TerrainType.ION);
   }
 
   return false;
@@ -508,11 +526,15 @@ plugin.cesium.isWorldTerrainActive = function() {
  * Enable the Cesium World Terrain provider, if configured.
  */
 plugin.cesium.enableWorldTerrain = function() {
-  const providers = os.map.terrain.getTerrainProviders();
-  const worldTerrain = providers.find((p) => p.type === os.map.terrain.TerrainType.ION);
-  if (worldTerrain) {
-    os.map.terrain.setActiveTerrainProvider(worldTerrain);
-    os.settings.set(os.config.DisplaySetting.ENABLE_TERRAIN, true);
+  const map = os.MapContainer.getInstance();
+  const renderer = map.getWebGLRenderer();
+  if (renderer) {
+    const supported = renderer.getSupportedTerrainProviders();
+    const worldTerrain = supported.find((p) => p.type === os.map.terrain.TerrainType.ION);
+    if (worldTerrain) {
+      renderer.setActiveTerrainProvider(worldTerrain);
+      os.settings.set(os.config.DisplaySetting.ENABLE_TERRAIN, true);
+    }
   }
 };
 

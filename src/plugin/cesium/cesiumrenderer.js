@@ -524,7 +524,7 @@ plugin.cesium.CesiumRenderer.prototype.showSunlight = function(value) {
  */
 plugin.cesium.CesiumRenderer.prototype.showTerrain = function(value) {
   if (value) {
-    this.terrainPromise_ = this.getTerrainProvider().then((provider) => {
+    this.terrainPromise_ = this.createTerrainProvider().then((provider) => {
       this.terrainPromise_ = null;
       this.terrainProvider_ = provider;
 
@@ -562,13 +562,12 @@ plugin.cesium.CesiumRenderer.prototype.showTerrain = function(value) {
  * @protected
  */
 plugin.cesium.CesiumRenderer.prototype.registerTerrainProviderType = function(type, factory) {
-  type = type.toLowerCase();
-
   if (type in this.terrainProviderTypes_) {
     goog.log.error(this.log, 'The terrain provider type "' + type + '" already exists!');
     return;
   }
 
+  this.supportedTerrainTypes.push(type);
   this.terrainProviderTypes_[type] = factory;
 };
 
@@ -585,12 +584,12 @@ plugin.cesium.CesiumRenderer.prototype.disableTerrain = function() {
 
 
 /**
- * Get the terrain provider instance.
+ * Create a terrain provider instance for the active provider.
  * @return {!goog.Promise<Cesium.TerrainProvider>}
  * @protected
  */
-plugin.cesium.CesiumRenderer.prototype.getTerrainProvider = function() {
-  var terrainOptions = os.map.terrain.getActiveTerrainProvider();
+plugin.cesium.CesiumRenderer.prototype.createTerrainProvider = function() {
+  var terrainOptions = this.getActiveTerrainProvider();
   if (terrainOptions) {
     var terrainType = terrainOptions.type;
     if (terrainType && terrainType in this.terrainProviderTypes_) {
