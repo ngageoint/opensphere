@@ -3257,10 +3257,23 @@ Cesium.ImageryProvider.prototype.requestImage = function(x, y, level) {};
  */
 Cesium.ImageryProvider.loadImage = function(imageryProvider, url) {};
 
+
 /**
+ * @typedef {{
+ *   url: string,
+ *   queryParameters: (Object|undefined),
+ *   templateValues: (Object|undefined),
+ *   headers: (Object|undefined),
+ *   retryAttempts: (number|undefined)
+ * }}
+ */
+Cesium.ResourceOptions;
+
+/**
+ * @param {Cesium.ResourceOptions|string} options
  * @constructor
  */
-Cesium.Resource = function() {};
+Cesium.Resource = function(options) {};
 
 /**
  * @param {Cesium.Resource|string} resource
@@ -3285,8 +3298,8 @@ Cesium.Resource.prototype._makeRequest = function(options) {};
 Cesium.ResourceFetchImageOptions;
 
 /**
- * @param {Cesium.ResourceFetchImageOptions} options
- * @return {Promise<ImageBitmap|Image>|undefined}
+ * @param {Cesium.ResourceFetchImageOptions=} options
+ * @return {Promise<Cesium.ImageLike>|undefined}
  */
 Cesium.Resource.prototype.fetchImage = function(options) {}
 
