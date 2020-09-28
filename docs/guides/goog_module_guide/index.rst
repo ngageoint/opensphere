@@ -109,7 +109,7 @@ Typedefs
      *   prop2: number
      * }}
      */
-    const MyType;
+    let MyType;
 
     // Required if MyType is referenced outside the file.
     exports = {MyType};

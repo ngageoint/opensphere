@@ -14,6 +14,8 @@ goog.require('os.layer.Vector');
 goog.require('os.source.Vector');
 goog.require('os.style');
 
+goog.requireType('ol.render.Feature');
+
 
 
 /**
