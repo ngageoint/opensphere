@@ -22,6 +22,9 @@ goog.require('os.ui.renamelayer');
 goog.require('plugin.heatmap');
 goog.require('plugin.heatmap.heatmapLayerUIDirective');
 
+goog.requireType('ol.Feature');
+goog.requireType('ol.render.Feature');
+
 
 
 /**
@@ -206,7 +209,7 @@ plugin.heatmap.Heatmap.prototype.onPreCompose_ = function(event) {
 /**
  * Creates the heatmap styles for each feature to draw to the canvas.
  *
- * @param {ol.Feature} feature
+ * @param {ol.Feature|ol.render.Feature} feature
  * @param {number} resolution
  * @return {Array<ol.style.Style>}
  */
@@ -245,7 +248,7 @@ plugin.heatmap.Heatmap.prototype.styleFunc = function(feature, resolution) {
 
 
 /**
- * @param {ol.Feature} feature
+ * @param {ol.Feature|ol.render.Feature} feature
  * @return {HTMLCanvasElement} Data URL for a circle.
  * @protected
  */

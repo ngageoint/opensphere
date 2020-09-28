@@ -17,6 +17,8 @@ goog.require('os.ui.menu.draw');
 goog.require('os.ui.ol.interaction.AbstractDraw');
 goog.require('os.ui.ol.interaction.DragBox');
 
+goog.requireType('os.map.IMapContainer');
+
 
 /**
  * The draw-controls directive
@@ -98,7 +100,7 @@ os.ui.draw.BaseDrawControlsCtrl = function($scope, $element) {
   this.log = os.ui.draw.BaseDrawControlsCtrl.LOGGER_;
 
   /**
-   * @type {?os.ui.ol.OLMap}
+   * @type {os.map.IMapContainer}
    * @private
    */
   this.olMap_ = $scope['olMap'];

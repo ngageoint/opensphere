@@ -12,6 +12,8 @@ goog.require('os.implements');
 goog.require('os.interaction');
 goog.require('os.source.Vector');
 
+goog.requireType('ol.render.Feature');
+
 
 
 /**
