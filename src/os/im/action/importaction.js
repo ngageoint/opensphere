@@ -1,5 +1,4 @@
 goog.provide('os.im.action');
-goog.provide('os.im.action.ImportActionCallbackConfig');
 goog.provide('os.im.action.TagName');
 
 
@@ -42,18 +41,6 @@ os.im.action.TagName = {
   IMPORT_ACTIONS: 'importActions',
   IMPORT_ACTION: 'importAction'
 };
-
-
-/**
- * @typedef {{
- *  color: (Array<Iterable>|undefined),
- *  labelUpdateShown: boolean,
- *  notifyStyleChange: boolean,
- *  setColor: boolean,
- *  setFeaturesStyle: boolean
- * }}
- */
-os.im.action.ImportActionCallbackConfig;
 
 
 /**

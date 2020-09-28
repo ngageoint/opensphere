@@ -6,6 +6,7 @@ goog.require('goog.object');
 goog.require('ol.events');
 goog.require('os.data.OSDataManager');
 goog.require('os.data.event.DataEventType');
+goog.require('os.im.action.ImportActionCallbackConfig');
 goog.require('os.im.action.ImportActionManager');
 goog.require('os.implements');
 goog.require('os.source.IImportSource');
@@ -65,6 +66,13 @@ plugin.im.action.feature.Manager.LOGGER_ = goog.log.getLogger('plugin.im.action.
 
 
 /**
+ * @type {number}
+ * @const
+ */
+plugin.im.action.feature.Manager.MIN_ITEMS_MERGE_NOTIFY_COLOR = 10000;
+
+
+/**
  * @inheritDoc
  */
 plugin.im.action.feature.Manager.prototype.disposeInternal = function() {
@@ -114,6 +122,176 @@ plugin.im.action.feature.Manager.prototype.initialize = function() {
   var sources = dm.getSources();
   for (var i = 0, n = sources.length; i < n; i++) {
     this.addSource_(sources[i]);
+  }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.im.action.feature.Manager.prototype.processItemsProtected = function(
+    entryType,
+    items,
+    opt_unprocess,
+    opt_unprocessOnly) {
+  // run the actions normally
+  var configs = plugin.im.action.feature.Manager.base(
+      this,
+      'processItemsProtected',
+      entryType,
+      items,
+      opt_unprocess,
+      opt_unprocessOnly);
+
+  // notify
+  if (configs && configs.length) {
+    // once all processItems() are done, do a big notify of style and color changes
+    var config = /* @type {os.im.action.ImportActionCallbackConfig} */ ({
+      color: [],
+      labelUpdateShown: false,
+      notifyStyleChange: false,
+      setColor: false,
+      setFeaturesStyle: false
+    });
+
+    // merge the layer, source, colormodel, and label events into one
+    configs.forEach((cfg) => {
+      plugin.im.action.feature.Manager.mergeNotify_(config, cfg);
+    });
+
+    // optimize the colors to avoid overlaps (max N instead of N^2 events)
+    plugin.im.action.feature.Manager.mergeNotifyColor_(config);
+
+    // send events to synch with renderer and bins
+    plugin.im.action.feature.Manager.notify_(items, config);
+  }
+};
+
+
+/**
+ * Consolidate results of desired notification(s) from multiple FeatureActions
+ *
+ * @param {os.im.action.ImportActionCallbackConfig} config
+ * @param {os.im.action.ImportActionCallbackConfig} cfg
+ * @private
+ */
+plugin.im.action.feature.Manager.mergeNotify_ = function(config, cfg) {
+  if (!config) return;
+
+  if (cfg) {
+    config.labelUpdateShown = config.labelUpdateShown || cfg.labelUpdateShown;
+    config.notifyStyleChange = config.notifyStyleChange || cfg.notifyStyleChange;
+    config.setColor = config.setColor || cfg.setColor;
+    config.setFeaturesStyle = config.setFeaturesStyle || cfg.setFeaturesStyle;
+
+    if (cfg.color) {
+      // add the next colors
+      cfg.color.forEach((color) => {
+        if (!config.color) config.color = [];
+
+        // TODO merge same-colors into a single color entry
+        config.color.push(color); // flatten the tree
+      });
+    }
+  }
+};
+
+
+/**
+ * Optimize the colors to avoid overlaps (max N instead of N^2 events)
+ *
+ * @param {os.im.action.ImportActionCallbackConfig} config
+ * @suppress {accessControls} To allow direct access to feature metadata.
+ * @private
+ */
+plugin.im.action.feature.Manager.mergeNotifyColor_ = function(config) {
+  // TODO benchmark which is faster -- removing overlaps or just re-setting them when there's 25%...100% overlap
+  var len = (config && config.color) ? config.color.length : -1;
+
+  // only do this extra step when there are more than one (possibly conflicting) color actions
+  if (len > 1) {
+    var colorItemsCount = config.color.reduce((count, colorConfig) => {
+      return count + ((colorConfig[0]) ? colorConfig[0].length : 0);
+    }, 0);
+
+    // deconflicting is expensive; only do it when there are more than N items being colored
+    if (colorItemsCount > plugin.im.action.feature.Manager.MIN_ITEMS_MERGE_NOTIFY_COLOR) {
+      // the item(s) whose final color is already set
+      var all = {};
+
+      // loop backwards through colors... and remove items overlap in previous entries (last one wins)
+      for (var i = (len - 1); i >= 0; i--) {
+        var ids = {};
+        var [items] = config.color[i] || [];
+
+        // map the array by ids
+        if (i > 0) { // skip when no more loops to do
+          (items || []).reduce((map, item) => {
+            map[item.id_] = true;
+            return map;
+          }, ids);
+        }
+        // remove all's ids from these items
+        if (i != (len - 1)) { // skip when "all" is empty
+          config.color[i][0] = items.filter((item) => {
+            return !all[item.id_]; // fast lookup
+          });
+        }
+
+        // add these ids to all so they'll be filtered from prior color assignments
+        if (i > 0) { // skip when no more loops to do
+          for (var key in ids) { // for...in is faster than Object.assign(all, ids);
+            all[key] = true;
+          }
+        }
+      }
+    }
+  }
+};
+
+
+/**
+ * Send style event(s) to Layer, Source, and ColorModel
+ *
+ * @param {Array<T>} items The items.
+ * @param {os.im.action.ImportActionCallbackConfig} config
+ * @template T
+ * @private
+ */
+plugin.im.action.feature.Manager.notify_ = function(items, config) {
+  if (config) {
+    if (config.setFeaturesStyle) {
+      os.style.setFeaturesStyle(items);
+    }
+
+    // notify that the layer needs to be updated
+    var layer = os.feature.getLayer(items[0]);
+    if (layer) {
+      var source = /** @type {os.source.Vector} */ (layer.getSource());
+      if (source && config.setColor && config.color && config.color.length > 0) {
+        var colors = (config.color != null) ? config.color : []; // useless assign to get past the closure compiler
+        colors.forEach(([coloritems, color]) => {
+          if (color) {
+            source.setColor(coloritems, color); // set the color model's override for these items
+          } else {
+            source.setColor(coloritems); // only reset the color if there was a color override
+          }
+        });
+      }
+      if (config.notifyStyleChange) {
+        os.style.notifyStyleChange(
+            layer,
+            items,
+            undefined,
+            undefined,
+            !!(source && config.setColor) // bump the colormodel so dependencies can update/re-render
+        );
+      }
+    }
+  }
+  // kick off label hit detection
+  if (config.labelUpdateShown) {
+    os.style.label.updateShown();
   }
 };
 
