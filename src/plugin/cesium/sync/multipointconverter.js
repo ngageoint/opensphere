@@ -11,6 +11,7 @@ const VectorContext = goog.requireType('plugin.cesium.VectorContext');
 
 /**
  * Converter for MultiPoints
+ * @extends {BaseConverter<MultiPoint, Array<!Cesium.Billboard>>}
  */
 class MultiPointConverter extends BaseConverter {
   /**

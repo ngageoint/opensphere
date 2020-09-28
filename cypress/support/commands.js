@@ -52,7 +52,7 @@ addMatchImageSnapshotCommand({
     opensphere.Application.ALERT]
 });
 
-Cypress.Commands.add('imageComparison', function(name) {
+Cypress.Commands.add('imageComparison', function(name, options) {
   cy.wait(6000);
   cy.get(layers.layersTab.Tree.LOADING_SPINNER, {timeout: 20000}).should('not.be.visible');
   cy.get(layers.layersTab.Tree.STREET_MAP_TILES)
@@ -62,7 +62,7 @@ Cypress.Commands.add('imageComparison', function(name) {
       .find(shared.Tree.ROW_CHECKBOX)
       .click();
   cy.wait(200);
-  cy.matchImageSnapshot(name);
+  cy.matchImageSnapshot(name, options);
   cy.get(layers.layersTab.Tree.STREET_MAP_TILES)
       .find(shared.Tree.ROW_CHECKBOX)
       .click();

@@ -1,5 +1,7 @@
 goog.provide('os.ui.search.SearchScrollDataSource');
+
 goog.require('goog.events.EventTarget');
+goog.require('goog.string');
 goog.require('os.search.SearchEvent');
 goog.require('os.search.SearchEventType');
 goog.require('os.search.SearchManager');
@@ -49,9 +51,7 @@ goog.inherits(os.ui.search.SearchScrollDataSource, goog.events.EventTarget);
 
 
 /**
- * Set the data source which will execute the search
- *
- * @param {os.search.SearchManager} dataSource
+ * @inheritDoc
  */
 os.ui.search.SearchScrollDataSource.prototype.setDataSource = function(dataSource) {
   // deregister any old event handlers
@@ -171,7 +171,7 @@ os.ui.search.SearchScrollDataSource.prototype.handleSearchStart = function(event
 os.ui.search.SearchScrollDataSource.prototype.handleSearchSuccess = function(event) {
   this.loading_ = false;
   // ensure the term is set
-  if (this.term_ !== event.getSearchTerm() && !goog.string.isEmptyOrWhitespace(event.getTerm())) {
+  if (this.term_ !== event.getSearchTerm() && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(event.getTerm()))) {
     this.setTerm(event.getSearchTerm() || '');
   }
 
