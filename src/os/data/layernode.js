@@ -113,7 +113,8 @@ os.data.LayerNode.prototype.formatCheckbox = function() {
   const layer = this.getLayer();
   if (layer) {
     // add a normal checkbox (layer enable/disable) if the layer is not removable
-    if (layer.isRemovable()) {
+    const layerOptions = layer.getLayerOptions();
+    if (layer.isRemovable() && layerOptions && !layerOptions['hideDisable']) {
       checkboxParts.push('<tristatecheckbox></tristatecheckbox>');
     }
 
