@@ -518,21 +518,6 @@ os.source.Vector.prototype.changed = function() {
 
 
 /**
- * @inheritDoc
- * @suppress {accessControls}
- */
-os.source.Vector.prototype.handleFeatureChange_ = function(event) {
-  var feature = /** @type {ol.Feature} */ (event.target);
-  var featureKey = ol.getUid(feature).toString();
-  if (featureKey && this.featureChangeKeys_[featureKey]) {
-    os.source.Vector.base(this, 'handleFeatureChange_', event);
-  } else {
-    feature.removeEventListener(ol.events.EventType.CHANGE, this.handleFeatureChange_);
-  }
-};
-
-
-/**
  * The listeners Openlayers adds are never used, and are a waste of memory. This trims some fat off each feature.
  *
  * @param {string} featureKey
@@ -2002,6 +1987,8 @@ os.source.Vector.prototype.removeFeatureInternal = function(feature, opt_isBulk)
     this.featureCount_ = Math.max(this.featureCount_ - 1, 0);
     this.unprocessFeature(feature);
 
+    // Delay event listener deletion for performance gain, but still remove it from the feature
+    feature.removeEventListenerDelayed(ol.events.EventType.CHANGE, this.handleFeatureChange_);
     /** @type {Object} */ (this.featureChangeKeys_)[featureKey] = undefined;
 
     if (feature.id_ !== undefined) {

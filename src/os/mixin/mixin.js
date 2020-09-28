@@ -14,6 +14,7 @@ goog.require('ol.renderer.canvas.VectorLayer');
 goog.require('os.mixin.ResolutionConstraint');
 goog.require('os.mixin.TileImage');
 goog.require('os.mixin.UrlTileSource');
+goog.require('os.mixin.events.EventTarget');
 goog.require('os.mixin.feature');
 goog.require('os.mixin.geometry');
 goog.require('os.mixin.layerbase');
