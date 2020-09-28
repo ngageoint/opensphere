@@ -2,7 +2,7 @@ goog.provide('os.im.action.IImportAction');
 
 goog.require('os.IPersistable');
 goog.require('os.IXmlPersistable');
-goog.requireType('os.im.action.ImportActionCallbackConfig');
+goog.require('os.im.action.ImportActionCallbackConfig');
 
 
 

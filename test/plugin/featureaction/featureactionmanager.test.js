@@ -1,10 +1,8 @@
-goog.require('os.im.action.ImportActionManager');
+goog.require('os.im.action.ImportActionCallbackConfig');
+goog.require('plugin.im.action.feature.Manager');
 
-goog.requireType('os.im.action.ImportActionCallbackConfig');
-
-
-describe('os.im.action.ImportActionManager', function() {
-  const ImportActionManager = goog.module.get('os.im.action.ImportActionManager');
+describe('plugin.im.action.feature.Manager', function() {
+  const FeatureActionManager = goog.module.get('plugin.im.action.feature.Manager');
 
   it('should simplify event roll-ups from callback configs...', function() {
     const dst = /* @type {ImportActionCallbackConfig} */ ({
@@ -42,9 +40,9 @@ describe('os.im.action.ImportActionManager', function() {
       setFeaturesStyle: false
     });
 
-    ImportActionManager.mergeNotify_(dst, src1);
-    ImportActionManager.mergeNotify_(dst, src2);
-    ImportActionManager.mergeNotify_(dst, src3);
+    FeatureActionManager.mergeNotify_(dst, src1);
+    FeatureActionManager.mergeNotify_(dst, src2);
+    FeatureActionManager.mergeNotify_(dst, src3);
 
     expect(dst.labelUpdateShown).toBe(true);
     expect(dst.notifyStyleChange).toBe(true);
@@ -53,7 +51,7 @@ describe('os.im.action.ImportActionManager', function() {
     expect(dst.color.length).toBe(4);
 
     // notifyStyleChange, setFeatureStyle, etc are tested by style.test.js
-    // ImportActionManager.notify_(dst);
+    // FeatureActionManager.notify_(dst);
   });
 
 
@@ -70,8 +68,8 @@ describe('os.im.action.ImportActionManager', function() {
       setFeaturesStyle: false
     });
 
-    ImportActionManager.MIN_ITEMS_MERGE_NOTIFY_COLOR = 5; // replace the normal threshold of 10000
-    ImportActionManager.mergeNotifyColor_(config);
+    FeatureActionManager.MIN_ITEMS_MERGE_NOTIFY_COLOR = 5; // replace the normal threshold of 10000
+    FeatureActionManager.mergeNotifyColor_(config);
 
     expect(config.color[0][0].length).toBe(1);
     expect(config.color[1][0].length).toBe(1);

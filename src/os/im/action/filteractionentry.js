@@ -3,9 +3,9 @@ goog.provide('os.im.action.FilterActionEntry');
 goog.require('goog.functions');
 goog.require('os.IComparable');
 goog.require('os.filter.FilterEntry');
+goog.require('os.im.action.ImportActionCallbackConfig');
 goog.require('os.ui.filter.fn');
 
-goog.requireType('os.im.action.ImportActionCallbackConfig');
 
 
 /**
