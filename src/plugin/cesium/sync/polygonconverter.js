@@ -7,12 +7,14 @@ const {getColor} = goog.require('plugin.cesium.sync.style');
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
+const Polygon = goog.requireType('ol.geom.Polygon');
 const Style = goog.requireType('ol.style.Style');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**
  * Converter for Polygons
+ * @extends {LineStringConverter<Polygon, Cesium.Primitive>}
  */
 class PolygonConverter extends LineStringConverter {
   /**
