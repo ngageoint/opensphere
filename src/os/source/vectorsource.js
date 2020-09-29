@@ -1987,6 +1987,7 @@ os.source.Vector.prototype.removeFeatureInternal = function(feature, opt_isBulk)
     this.featureCount_ = Math.max(this.featureCount_ - 1, 0);
     this.unprocessFeature(feature);
 
+    this.featureChangeKeys_[featureKey].forEach(ol.events.unlistenByKey);
     /** @type {Object} */ (this.featureChangeKeys_)[featureKey] = undefined;
 
     if (feature.id_ !== undefined) {
