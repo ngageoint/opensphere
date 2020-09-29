@@ -882,3 +882,17 @@ os.time.step = function(date, duration, offset, opt_local) {
   var next = os.time.offset(date, duration, offset, opt_local);
   return (next.getTime() - date.getTime());
 };
+
+
+/**
+ * Combines the days and time for seperate mapped fields. Defaults to ISO 8601 format.
+ * @param {string} days The year, month, day
+ * @param {string} time The hours, minutes, seconds, milliseconds
+ * @param {string=} opt_daysFormat The format for days
+ * @param {string=} opt_timeFormat The format for time
+ * @return {moment}
+ */
+os.time.combineDateTime = function(days, time, opt_daysFormat = 'YYYY-MM-DD', opt_timeFormat = 'HH:mm:ss') {
+  var combinedTime = os.time.parseMoment(`${days} ${time}`, `${opt_daysFormat} ${opt_timeFormat}`, true);
+  return combinedTime;
+};
