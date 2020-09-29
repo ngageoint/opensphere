@@ -359,6 +359,9 @@ osx.window.WindowOptions;
  *   noButtonClass: (string|undefined),
  *   noButtonTitle: (string|undefined),
  *   formClass: (string|undefined),
+ *   checkboxText: (string|undefined),
+ *   checkboxClass: (string|undefined),
+ *   checkbox: (Function|undefined),
  *
  *   windowOptions: (osx.window.WindowOptions|undefined),
  *
