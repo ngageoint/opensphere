@@ -171,26 +171,26 @@ plugin.im.action.feature.Manager.prototype.processItemsProtected = function(
 /**
  * Consolidate results of desired notification(s) from multiple FeatureActions
  *
- * @param {os.im.action.ImportActionCallbackConfig} config
- * @param {os.im.action.ImportActionCallbackConfig} cfg
+ * @param {os.im.action.ImportActionCallbackConfig} target
+ * @param {os.im.action.ImportActionCallbackConfig} source
  * @private
  */
-plugin.im.action.feature.Manager.mergeNotify_ = function(config, cfg) {
-  if (!config) return;
+plugin.im.action.feature.Manager.mergeNotify_ = function(target, source) {
+  if (!target) return;
 
-  if (cfg) {
-    config.labelUpdateShown = config.labelUpdateShown || cfg.labelUpdateShown;
-    config.notifyStyleChange = config.notifyStyleChange || cfg.notifyStyleChange;
-    config.setColor = config.setColor || cfg.setColor;
-    config.setFeaturesStyle = config.setFeaturesStyle || cfg.setFeaturesStyle;
+  if (source) {
+    target.labelUpdateShown = target.labelUpdateShown || source.labelUpdateShown;
+    target.notifyStyleChange = target.notifyStyleChange || source.notifyStyleChange;
+    target.setColor = target.setColor || source.setColor;
+    target.setFeaturesStyle = target.setFeaturesStyle || source.setFeaturesStyle;
 
-    if (cfg.color) {
+    if (source.color) {
       // add the next colors
-      cfg.color.forEach((color) => {
-        if (!config.color) config.color = [];
+      source.color.forEach((color) => {
+        if (!target.color) target.color = [];
 
         // TODO merge same-colors into a single color entry
-        config.color.push(color); // flatten the tree
+        target.color.push(color); // flatten the tree
       });
     }
   }
