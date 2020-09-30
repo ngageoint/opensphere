@@ -2,6 +2,15 @@ goog.require('plugin.ogc.wfs.WFSLayerConfig');
 
 
 describe('plugin.ogc.wfs.WFSLayerConfig', function() {
+  const preferredTypes = plugin.ogc.wfs.WFSLayerConfig.TYPE_CONFIGS;
+  const avroConfig = {
+    regex: /^avro\/binary$/,
+    parser: 'avro',
+    type: 'avro',
+    priority: 500,
+    responseType: 'arraybuffer'
+  };
+
   it('should use provided outputformat given available supported server formats', function() {
     ['application/json', 'gml3', 'gml2'].forEach((format, i) => {
       const wfs = new plugin.ogc.wfs.WFSLayerConfig();
@@ -16,7 +25,7 @@ describe('plugin.ogc.wfs.WFSLayerConfig', function() {
 
       wfs.initializeConfig(config);
       const result = wfs.getBestType(config);
-      expect(result).toBe(i);
+      expect(result).toBe(preferredTypes[i]);
       expect(wfs.params.get('outputformat')).toBe(format);
     });
   });
@@ -34,7 +43,7 @@ describe('plugin.ogc.wfs.WFSLayerConfig', function() {
 
       wfs.initializeConfig(config);
       const result = wfs.getBestType(config);
-      expect(result).toBe(i);
+      expect(result).toBe(preferredTypes[i]);
       expect(wfs.params.get('outputformat')).toBe(format);
     });
   });
@@ -52,7 +61,7 @@ describe('plugin.ogc.wfs.WFSLayerConfig', function() {
 
     wfs.initializeConfig(config);
     const result = wfs.getBestType(config);
-    expect(result).toBe(0);
+    expect(result).toBe(preferredTypes[0]);
     expect(wfs.params.get('outputformat')).toBe('application/json');
   });
 
@@ -68,7 +77,7 @@ describe('plugin.ogc.wfs.WFSLayerConfig', function() {
 
     wfs.initializeConfig(config);
     const result = wfs.getBestType(config);
-    expect(result).toBe(1);
+    expect(result).toBe(preferredTypes[1]);
     expect(wfs.params.get('outputformat')).toBe(undefined);
   });
 
@@ -85,7 +94,31 @@ describe('plugin.ogc.wfs.WFSLayerConfig', function() {
 
     wfs.initializeConfig(config);
     const result = wfs.getBestType(config);
-    expect(result).toBe(0);
+    expect(result).toBe(preferredTypes[0]);
     expect(wfs.params.get('outputformat')).toBe('application/json');
+  });
+
+  it('should register new type configs and sort them by priority', function() {
+    plugin.ogc.wfs.WFSLayerConfig.registerType(avroConfig);
+
+    expect(preferredTypes.length).toBe(4);
+    expect(preferredTypes[0]).toBe(avroConfig);
+  });
+
+  it('should select new type configs if they match a layer', function() {
+    const wfs = new plugin.ogc.wfs.WFSLayerConfig();
+    const config = {
+      'url': 'https://example.com/geoserver/ogc',
+      'params': {
+        'typename': 'test#layer1',
+        'outputformat': 'avro/binary'
+      },
+      'formats': ['application/json', 'avro/binary', 'gml3', 'GML2']
+    };
+
+    wfs.initializeConfig(config);
+    const result = wfs.getBestType(config);
+    expect(result).toBe(avroConfig);
+    expect(wfs.params.get('outputformat')).toBe('avro/binary');
   });
 });
