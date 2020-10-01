@@ -6,7 +6,7 @@ goog.require('plugin.basemap');
 
 
 /**
- * Placeholder descriptor to point users at the new terrain control location.
+ * Descriptor to activate/deactivate terrain from the Add Data window.
  *
  * @extends {os.data.BaseDescriptor}
  * @constructor
@@ -20,20 +20,13 @@ plugin.basemap.TerrainDescriptor = function() {
   this.setType(null);
   this.descriptorType = plugin.basemap.TERRAIN_ID;
 
-  /**
-   * Flag to prevent handling settings events triggered by this descriptor.
-   * @type {boolean}
-   * @private
-   */
-  this.ignoreSettingsEvents_ = false;
-
   os.settings.listen(os.config.DisplaySetting.ENABLE_TERRAIN, this.onTerrainChange_, false, this);
 };
 goog.inherits(plugin.basemap.TerrainDescriptor, os.data.BaseDescriptor);
 
 
 /**
- * Tell the user what happened to terrain.
+ * User-facing description.
  * @type {string}
  * @const
  */
@@ -61,9 +54,7 @@ plugin.basemap.TerrainDescriptor.prototype.getIcons = function() {
  * @inheritDoc
  */
 plugin.basemap.TerrainDescriptor.prototype.setActiveInternal = function() {
-  this.ignoreSettingsEvents_ = true;
   os.settings.set(os.config.DisplaySetting.ENABLE_TERRAIN, this.isActive());
-  this.ignoreSettingsEvents_ = false;
 
   return plugin.basemap.TerrainDescriptor.base(this, 'setActiveInternal');
 };
@@ -85,7 +76,7 @@ plugin.basemap.TerrainDescriptor.prototype.restore = function(from) {
  * @private
  */
 plugin.basemap.TerrainDescriptor.prototype.onTerrainChange_ = function(event) {
-  if (!this.ignoreSettingsEvents_ && event.newVal !== this.isActive()) {
+  if (event.newVal !== this.isActive()) {
     this.setActive(/** @type {boolean} */ (event.newVal));
   }
 };

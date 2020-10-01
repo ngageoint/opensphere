@@ -36,6 +36,13 @@ plugin.cesium.tiles.Descriptor = function() {
    * @protected
    */
   this.tileStyle = null;
+
+  /**
+   * If Cesium World Terrain should be activated with this layer.
+   * @type {boolean}
+   * @protected
+   */
+  this.useWorldTerrain = false;
 };
 goog.inherits(plugin.cesium.tiles.Descriptor, os.data.FileDescriptor);
 
@@ -67,6 +74,8 @@ plugin.cesium.tiles.Descriptor.prototype.getLayerOptions = function() {
   if (this.tileStyle) {
     options['tileStyle'] = this.tileStyle;
   }
+
+  options['useWorldTerrain'] = this.useWorldTerrain;
 
   return options;
 };
@@ -147,5 +156,9 @@ plugin.cesium.tiles.Descriptor.prototype.updateFromConfig = function(config, opt
 
   if (config['tileStyle'] != null) {
     this.tileStyle = /** @type {Object|string} */ (config['tileStyle']);
+  }
+
+  if (config['useWorldTerrain'] != null) {
+    this.useWorldTerrain = !!config['useWorldTerrain'];
   }
 };
