@@ -2,6 +2,7 @@ goog.provide('os.ui.menu.map');
 
 goog.require('os.action.EventType');
 goog.require('os.legend');
+goog.require('os.map.terrain');
 goog.require('os.metrics.keys');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.menu.Menu');
@@ -236,7 +237,7 @@ os.ui.menu.map.onSky = function(event) {
  * @this {os.ui.menu.MenuItem}
  */
 os.ui.menu.map.updateTerrainItem = function() {
-  this.visible = os.MapContainer.getInstance().is3DEnabled() && os.config.isTerrainConfigured();
+  this.visible = os.MapContainer.getInstance().is3DEnabled() && os.map.terrain.hasTerrain();
   this.selected = !!os.settings.get(os.config.DisplaySetting.ENABLE_TERRAIN, false);
 };
 

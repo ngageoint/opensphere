@@ -168,27 +168,14 @@ plugin.basemap.BaseMapProvider.prototype.addBaseMapFromConfig = function(config)
       if (conf) {
         var type = conf['type'] ? conf['type'].toLowerCase() : null;
         if (type == plugin.basemap.TERRAIN_TYPE) {
-          //
-          // TODO: terrain config is still set in base maps because we're adding a descriptor to inform the user that
-          //       the controls for it have moved. after a release cycle, remove the descriptor and update configs to
-          //       use the new key (os.config.DisplaySetting.TERRAIN_OPTIONS).
-          //
-
-          // if multiple terrain descriptors are configured, the last one will win
           var terrainOptions = /** @type {osx.map.TerrainProviderOptions|undefined} */ (conf['options']);
           var terrainType = /** @type {string|undefined} */ (conf['baseType']);
           if (terrainOptions && terrainType) {
+            terrainOptions.id = id;
+            terrainOptions.title = conf['title'] || '';
             terrainOptions.type = terrainType;
-            os.settings.set(os.config.DisplaySetting.TERRAIN_OPTIONS, terrainOptions);
-          }
 
-          // create a descriptor that will inform the user on where terrain was moved to
-          var terrainId = this.getTerrainId();
-          var d = dm.getDescriptor(terrainId);
-          if (!d) {
-            d = new plugin.basemap.TerrainDescriptor();
-            d.setId(terrainId);
-            dm.addDescriptor(d);
+            os.map.terrain.addTerrainProvider(terrainOptions);
           }
         } else if (type == plugin.basemap.TYPE) {
           var mapId = this.getId() + os.data.BaseDescriptor.ID_DELIMITER + id;
@@ -209,6 +196,17 @@ plugin.basemap.BaseMapProvider.prototype.addBaseMapFromConfig = function(config)
           d.updateActiveFromTemp();
         }
       }
+    }
+  }
+
+  if (os.map.terrain.hasTerrain()) {
+    // if at least one terrain provider has been loaded, add a descriptor to enable/disable terrain
+    var terrainId = this.getTerrainId();
+    var d = dm.getDescriptor(terrainId);
+    if (!d) {
+      d = new plugin.basemap.TerrainDescriptor();
+      d.setId(terrainId);
+      dm.addDescriptor(d);
     }
   }
 };
@@ -282,8 +280,6 @@ plugin.basemap.BaseMapProvider.prototype.getTerrainId = function() {
  *
  * @param {goog.events.Event} event The event.
  * @protected
- *
- * @todo Remove when the descriptor is no longer used.
  */
 plugin.basemap.BaseMapProvider.prototype.onTerrainDisabled = function(event) {
   var descriptor = os.dataManager.getDescriptor(this.getTerrainId());
