@@ -1,3 +1,4 @@
+goog.require('goog.net.XhrIo');
 goog.require('plugin.ogc.wfs.WFSLayerConfig');
 
 
@@ -8,7 +9,7 @@ describe('plugin.ogc.wfs.WFSLayerConfig', function() {
     parser: 'avro',
     type: 'avro',
     priority: 500,
-    responseType: 'arraybuffer'
+    responseType: goog.net.XhrIo.ResponseType.ARRAY_BUFFER
   };
 
   it('should use provided outputformat given available supported server formats', function() {
@@ -120,5 +121,21 @@ describe('plugin.ogc.wfs.WFSLayerConfig', function() {
     const result = wfs.getBestType(config);
     expect(result).toBe(avroConfig);
     expect(wfs.params.get('outputformat')).toBe('avro/binary');
+  });
+
+  it('should respect the responseType defined on a type config', function() {
+    const wfs = new plugin.ogc.wfs.WFSLayerConfig();
+    const config = {
+      'url': 'https://example.com/geoserver/ogc',
+      'params': {
+        'typename': 'test#layer1',
+        'outputformat': 'avro/binary'
+      },
+      'formats': ['application/json', 'avro/binary', 'gml3', 'GML2']
+    };
+
+    wfs.initializeConfig(config);
+    const request = wfs.getRequest(config);
+    expect(request.getResponseType()).toBe(goog.net.XhrIo.ResponseType.ARRAY_BUFFER);
   });
 });
