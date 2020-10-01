@@ -2,6 +2,7 @@ goog.provide('os.im.action.IImportAction');
 
 goog.require('os.IPersistable');
 goog.require('os.IXmlPersistable');
+goog.require('os.im.action.ImportActionCallbackConfig');
 
 
 
@@ -47,6 +48,7 @@ os.im.action.IImportAction.prototype.isUnique;
 /**
  * Execute the import action on the given items.
  * @param {!Array<T>} items The items.
+ * @return {os.im.action.ImportActionCallbackConfig|undefined}
  */
 os.im.action.IImportAction.prototype.execute;
 
@@ -61,5 +63,6 @@ os.im.action.IImportAction.prototype.clone;
 /**
  * Reset the import action.
  * @param {!Array<T>} items The items.
+ * @return {os.im.action.ImportActionCallbackConfig|undefined}
  */
 os.im.action.IImportAction.prototype.reset;
