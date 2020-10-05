@@ -9,6 +9,9 @@ goog.require('plugin.cesium');
 goog.require('plugin.cesium.PrimitiveLayer');
 goog.require('plugin.cesium.tiles.cesium3DTileLayerUIDirective');
 
+goog.requireType('plugin.cesium.CesiumRenderer');
+
+
 /**
  * @extends {plugin.cesium.PrimitiveLayer}
  * @constructor
@@ -48,6 +51,13 @@ plugin.cesium.tiles.Layer = function() {
    * @protected
    */
   this.url = '';
+
+  /**
+   * If Cesium World Terrain should be activated with this layer.
+   * @type {boolean}
+   * @protected
+   */
+  this.useWorldTerrain = false;
 
   this.setOSType(plugin.cesium.CESIUM_ONLY_LAYER);
   this.setIcons(plugin.cesium.tiles.ICON);
@@ -90,28 +100,21 @@ plugin.cesium.tiles.Layer.prototype.synchronize = function() {
     var tilesetUrl = '';
     if (!isNaN(this.assetId)) {
       if (!this.accessToken) {
-        var prompt = plugin.cesium.promptForAccessToken();
-        prompt.then((accessToken) => {
-          os.settings.set(plugin.cesium.SettingsKey.ACCESS_TOKEN, accessToken);
+        plugin.cesium.promptForAccessToken().then((accessToken) => {
           this.accessToken = accessToken;
           this.synchronize();
         }, () => {
-          var errorMsg = 'An access token is required to enable this layer, but one was not provided.';
-          this.setTokenError_(errorMsg);
+          this.setTokenError_('An access token is required to enable this layer, but one was not provided.');
         });
       } else {
-        tilesetUrl = Cesium.IonResource.fromAssetId(this.assetId, {
-          accessToken: this.accessToken
-        });
-        tilesetUrl.then(() => {
-          // We don't care to note that it resolves, we just want a response if it doesn't
-        }, () => {
-          // Clear the saved access token because it was rejected
-          os.settings.set(plugin.cesium.SettingsKey.ACCESS_TOKEN, '');
+        tilesetUrl = plugin.cesium.createIonAssetUrl(this.assetId, this.accessToken);
 
-          var errorMsg = 'The provided access token was rejected. ' +
-          'Turn the layer off and back on to provide another access token.';
-          this.setTokenError_(errorMsg);
+        tilesetUrl.then(() => {
+          // Access token is valid, prompt the user to enable Cesium World Terrain if configured.
+          this.checkWorldTerrain();
+        }, () => {
+          // Access token is invalid. Notify the user.
+          this.setTokenError_('The provided Cesium Ion access token is invalid.');
         });
       }
     } else {
@@ -141,6 +144,20 @@ plugin.cesium.tiles.Layer.prototype.synchronize = function() {
 
 
 /**
+ * Prompt the user to enable Cesium World Terrain if configured.
+ * @protected
+ */
+plugin.cesium.tiles.Layer.prototype.checkWorldTerrain = function() {
+  if (this.useWorldTerrain) {
+    const layerTitle = this.getTitle() || 'The activated layer';
+    plugin.cesium.promptForWorldTerrain(`
+      ${layerTitle} is best displayed with Cesium World Terrain. Would you like to activate it now?
+    `);
+  }
+};
+
+
+/**
  * @param {string} errorMsg The message of the error
  * @protected
  */
@@ -148,10 +165,6 @@ plugin.cesium.tiles.Layer.prototype.setTokenError_ = function(errorMsg) {
   if (this.tokenError_ !== errorMsg) {
     this.tokenError_ = errorMsg;
     this.updateError();
-
-    if (this.tokenError_) {
-      os.alertManager.sendAlert(this.tokenError_, os.alert.AlertEventSeverity.ERROR, plugin.cesium.tiles.Layer.LOGGER_);
-    }
   }
 };
 
@@ -233,6 +246,8 @@ plugin.cesium.tiles.Layer.prototype.restore = function(config) {
   if (config['url']) {
     this.url = /** @type {string} */ (config['url']);
   }
+
+  this.useWorldTerrain = !!config['useWorldTerrain'];
 };
 
 
