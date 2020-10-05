@@ -45,7 +45,8 @@ plugin.file.geojson.GeoJSONLayerConfig.prototype.getImporter = function(options)
       os.im.mapping.SemiMinorMapping.ID,
       os.im.mapping.time.DateTimeMapping.ID]);
   } else {
-    importer.setAutoMappings(this.parserConfig['mappings']);
+    // setAutoMappings() ignores manual configs (e.g. custom Datetime format) since it re-autodetects
+    importer.setExecMappings(this.parserConfig['mappings']);
   }
   return importer;
 };

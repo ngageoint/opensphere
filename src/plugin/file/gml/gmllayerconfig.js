@@ -36,8 +36,9 @@ plugin.file.gml.GMLLayerConfig.prototype.initializeConfig = function(options) {
  */
 plugin.file.gml.GMLLayerConfig.prototype.getImporter = function(options) {
   var importer = plugin.file.gml.GMLLayerConfig.base(this, 'getImporter', options);
-  if (this.parserConfig['mappings'] != null) {
-    importer.setAutoMappings(this.parserConfig['mappings']);
+  if (this.parserConfig['mappings'] != null && this.parserConfig['mappings'].length) {
+    // setAutoMappings() ignores manual configs (e.g. custom Datetime format) since it re-autodetects
+    importer.setExecMappings(this.parserConfig['mappings']);
   } else {
     // there was no user interaction, so default the mappings to a set the importer would have used
     importer.selectAutoMappings([
