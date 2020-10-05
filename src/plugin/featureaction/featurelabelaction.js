@@ -4,6 +4,7 @@ goog.require('os.color');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.feature');
 goog.require('os.im.action.AbstractImportAction');
+goog.require('os.im.action.ImportActionCallbackConfig');
 goog.require('os.object');
 goog.require('os.source.PropertyChange');
 goog.require('os.style');
@@ -114,13 +115,12 @@ plugin.im.action.feature.LabelAction.prototype.reset = function(items) {
     }
   }
 
-  os.style.setFeaturesStyle(items);
-
-  // notify that the layer needs to be updated
-  var layer = os.feature.getLayer(items[0]);
-  if (layer) {
-    os.style.notifyStyleChange(layer, items);
-  }
+  return /** {os.im.action.ImportActionCallbackConfig} */ ({
+    labelUpdateShown: false,
+    notifyStyleChange: !!(os.feature.getLayer(items[0])),
+    setColor: false,
+    setFeaturesStyle: true
+  });
 };
 
 
@@ -192,17 +192,12 @@ plugin.im.action.feature.LabelAction.prototype.execute = function(items) {
     }
   }
 
-  // update the style on all features
-  os.style.setFeaturesStyle(items);
-
-  // notify that the layer needs to be updated
-  var layer = os.feature.getLayer(items[0]);
-  if (layer) {
-    os.style.notifyStyleChange(layer, items);
-  }
-
-  // kick off label hit detection
-  os.style.label.updateShown();
+  return /** {os.im.action.ImportActionCallbackConfig} */ ({
+    labelUpdateShown: true,
+    notifyStyleChange: !!(os.feature.getLayer(items[0])),
+    setColor: false,
+    setFeaturesStyle: true
+  });
 };
 
 

@@ -4,6 +4,7 @@ goog.require('goog.math');
 goog.require('os.color');
 goog.require('os.feature');
 goog.require('os.im.action.AbstractImportAction');
+goog.require('os.im.action.ImportActionCallbackConfig');
 goog.require('os.implements');
 goog.require('os.legend');
 goog.require('os.legend.ILegendRenderer');
@@ -105,13 +106,13 @@ plugin.im.action.feature.StyleAction.prototype.reset = function(items) {
 
       // reset the original feature config
       var originalConfig = /** @type {Array|Object|undefined} */
-          (item.get(plugin.im.action.feature.StyleType.ORIGINAL));
+            (item.get(plugin.im.action.feature.StyleType.ORIGINAL));
       item.set(os.style.StyleType.FEATURE, originalConfig, true);
       resetItems.push(item);
     }
   }
 
-  this.notify_(resetItems, true);
+  return (this.configureNotify_(resetItems, true));
 };
 
 
@@ -144,7 +145,7 @@ plugin.im.action.feature.StyleAction.prototype.execute = function(items) {
       item.set(plugin.im.action.feature.StyleAction.FEATURE_ID, this.uid, true);
 
       if (originalConfig != null && !originalConfig['temporary'] &&
-          item.get(plugin.im.action.feature.StyleType.ORIGINAL) == null) {
+            item.get(plugin.im.action.feature.StyleType.ORIGINAL) == null) {
         // if the original config isn't already set, add a reference back to it
         item.set(plugin.im.action.feature.StyleType.ORIGINAL, originalConfig, true);
       }
@@ -165,7 +166,7 @@ plugin.im.action.feature.StyleAction.prototype.execute = function(items) {
     }
   }
 
-  this.notify_(items);
+  return (this.configureNotify_(items));
 };
 
 
@@ -174,36 +175,33 @@ plugin.im.action.feature.StyleAction.prototype.execute = function(items) {
  *
  * @param {!Array<!ol.Feature>} items the list of features
  * @param {boolean=} opt_resetcolor true if the color should be reset
+ * @return {os.im.action.ImportActionCallbackConfig}
  * @private
  */
-plugin.im.action.feature.StyleAction.prototype.notify_ = function(items, opt_resetcolor) {
-  // update the style on all features
-  os.style.setFeaturesStyle(items);
+plugin.im.action.feature.StyleAction.prototype.configureNotify_ = function(items, opt_resetcolor) {
+  var config = /** @type {os.im.action.ImportActionCallbackConfig} */ ({
+    labelUpdateShown: false,
+    notifyStyleChange: false,
+    setColor: false,
+    setFeaturesStyle: true
+  });
 
-  // notify that the layer needs to be updated
   var layer = os.feature.getLayer(items[0]);
   if (layer) {
     var source = /** @type {os.source.Vector} */ (layer.getSource());
     var color = (this.styleConfig['stroke']) ? this.styleConfig['stroke']['color'] : null;
 
     if (source && color) {
-      if (opt_resetcolor) {
-        // only reset the color if there was a color override
-        source.setColor(items);
-      } else {
-        // set the color model's override for these items
-        source.setColor(items, color);
+      config.setColor = true;
+
+      if (!opt_resetcolor) {
+        config.color = [[items, color]];
       }
     }
 
-    os.style.notifyStyleChange(
-        layer,
-        items,
-        undefined,
-        undefined,
-        (source && color) // bump the colormodel so dependencies can update/re-render
-    );
+    config.notifyStyleChange = true;
   }
+  return config;
 };
 
 
