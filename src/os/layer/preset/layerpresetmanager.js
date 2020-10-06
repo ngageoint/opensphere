@@ -17,8 +17,6 @@ const Request = goog.require('os.net.Request');
 const Logger = goog.requireType('goog.log.Logger');
 
 
-goog.require('os.layer.config.ILayerConfig');
-
 /**
  * Manager for keeping track of available layer presets. These presets consist of a layer options object and a
  * reference to a set of default feature actions.
