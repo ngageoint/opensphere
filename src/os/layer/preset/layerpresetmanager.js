@@ -12,6 +12,7 @@ goog.require('os.implements');
 goog.require('os.layer.ILayer');
 goog.require('os.layer.config.ILayerConfig');
 goog.require('os.layer.preset');
+goog.require('os.layer.preset.SettingKey');
 goog.require('os.net.Request');
 
 
