@@ -226,13 +226,27 @@ osx.layer.RefreshOption;
 /**
  * @typedef {{
  *   label: string,
- *   id: string,
+ *   id: (string|undefined),
+ *   layerFilter: (string|undefined),
+ *   published: (boolean|undefined),
  *   default: (boolean|undefined),
  *   layerConfig: (Object<string, *>|undefined),
  *   featureActions: (Array<string>|undefined)
  * }}
  */
 osx.layer.Preset;
+
+
+/**
+ * @typedef {{
+ *   label: (Array<string>|undefined),
+ *   id: (Array<string>|undefined),
+ *   layerFilter: (Array<string>|undefined),
+ *   published: (boolean|undefined),
+ *   default: (boolean|undefined)
+ * }}
+ */
+osx.layer.PresetSearch;
 
 
 /**
