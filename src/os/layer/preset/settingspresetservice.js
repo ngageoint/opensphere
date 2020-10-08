@@ -6,6 +6,13 @@ const SettingKey = goog.require('os.layer.preset.SettingKey');
 const PresetServiceAction = goog.require('os.layer.preset.PresetServiceAction');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 
+
+/**
+ * @type {string}
+ * @const
+ */
+const ID = 'os.layer.preset.SettingsPresetService';
+
 /**
  * @extends {AbstractPresetService}
  */
@@ -20,16 +27,20 @@ class SettingsPresetService extends AbstractPresetService {
           search['layerFilterKey'] && search['layerFilterKey'].length) {
         const layerId = search['layerId'][0];
         const layerFilterKey = search['layerFilterKey'][0];
-        const faPromise = ImportActionManager.getInstance().loadDefaults(layerId);
-
-        // load feature actions first, then resolve the preset promise
-        faPromise.thenAlways(function() {
+        const fa = ImportActionManager.getInstance().loadDefaults(layerId);
+        const finish = function() {
           const configs = /** @type {!Object<Array<osx.layer.Preset>>} */
             (Settings.getInstance().get(SettingKey.PRESETS, {}));
           const layerPresets = configs[layerFilterKey] || [];
 
           resolve(layerPresets);
-        }, this);
+        };
+
+        if (fa) {
+          fa.thenAlways(finish, this); // load feature actions first, then resolve the preset promise
+        } else {
+          finish();
+        }
       } else {
         resolve(null);
       }
@@ -50,5 +61,8 @@ class SettingsPresetService extends AbstractPresetService {
     }
   }
 }
+
+SettingsPresetService.ID = ID;
+
 
 exports = SettingsPresetService;
