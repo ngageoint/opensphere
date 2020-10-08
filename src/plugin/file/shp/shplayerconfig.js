@@ -89,7 +89,10 @@ plugin.file.shp.SHPLayerConfig.prototype.createLayer = function(options) {
  */
 plugin.file.shp.SHPLayerConfig.prototype.getImporter = function(options) {
   var importer = plugin.file.shp.SHPLayerConfig.base(this, 'getImporter', options);
-  importer.setAutoMappings(this.parserConfig['mappings']);
+
+  // setAutoMappings() ignores manual configs (e.g. custom Datetime format) since it re-autodetects
+  importer.setExecMappings(this.parserConfig['mappings']);
+
   return importer;
 };
 
