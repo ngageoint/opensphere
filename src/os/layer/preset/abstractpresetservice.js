@@ -4,12 +4,51 @@ goog.module('os.layer.preset.AbstractPresetService');
 const IPresetService = goog.requireType('os.layer.preset.IPresetService');
 
 /**
+ * Class to provide stubs and simple implementation of setDefault() and setPublished()
  *
+ * @abstract
  * @implements {IPresetService}
- * @unrestricted
  */
 class AbstractPresetService {
   /**
+   * @inheritDoc
+   */
+  insert(preset) {
+    return new Promise((resolve) => {
+      resolve(null);
+    });
+  }
+
+  /**
+   * @inheritDoc
+   */
+  update(preset) {
+    return new Promise((resolve) => {
+      resolve(null);
+    });
+  }
+
+  /**
+   * @inheritDoc
+   */
+  remove(preset) {
+    return new Promise((resolve) => {
+      resolve(null);
+    });
+  }
+
+  /**
+   * @inheritDoc
+   */
+  find(search) {
+    return new Promise((resolve) => {
+      resolve(null);
+    });
+  }
+
+  /**
+   * The compiler is wrong; preset, opt_boolean, and the return are exactly as they should be
+   * @suppress {checkTypes}
    * @inheritDoc
    */
   setDefault(preset, opt_boolean) {
@@ -20,13 +59,13 @@ class AbstractPresetService {
         this.setDefaultInternal(preset, isDefault, resolve, reject);
       } else {
         this.find(/** @type {osx.layer.PresetSearch} */ ({
-          'id': [id]
+          'id': [preset]
         })).then(
             (results) => {
               if (results && results.length > 0) {
                 this.setDefaultInternal(results[0], isDefault, resolve, reject);
               } else {
-                reject(`Could not find the preset using id: ${id}. Did not set to default`);
+                reject(`Could not find the preset using id: ${preset}. Did not set to default`);
               }
             },
             (err) => {
@@ -38,15 +77,20 @@ class AbstractPresetService {
 
   /**
    * Handle setDefault
+   *
+   * @param {!osx.layer.Preset} preset
+   * @param {!boolean} isDefault
+   * @param {!Function<?>} resolve
+   * @param {!Function<?>} reject
    * @protected
    */
   setDefaultInternal(preset, isDefault, resolve, reject) {
     const id = preset['id'];
-    const layerFilter = preset['layerFilter'];
+    const layerFilterKey = preset['layerFilterKey'];
 
     // loop through all presets in the layer; set the one with ID to isDefault
     this.find(/** @type {osx.layer.PresetSearch} */ ({
-      'layerFilter': [layerFilter]
+      'layerFilterKey': [layerFilterKey]
     })).then(
         (results) => {
           if (results && results.length > 0) {
@@ -65,7 +109,9 @@ class AbstractPresetService {
                 update = promise;
               }
             });
-            updates.all((presets) => {
+
+            // don't resolve update.then() by itself; wait for all
+            Promise.all(updates).then(() => {
               if (update) {
                 update.then(
                     (updated) => {
@@ -79,7 +125,7 @@ class AbstractPresetService {
               }
             });
           } else {
-            reject(`Could not find presets using layer: ${layerFilter}. Did not set default.`);
+            reject(`Could not find presets using layer: ${layerFilterKey}. Did not set default.`);
           }
         },
         (err) => {
@@ -88,6 +134,8 @@ class AbstractPresetService {
   }
 
   /**
+   * The compiler is wrong; preset, opt_boolean, and the return are exactly as they should be
+   * @suppress {checkTypes}
    * @inheritDoc
    */
   setPublished(preset, opt_boolean) {
@@ -116,6 +164,10 @@ class AbstractPresetService {
 
   /**
    * Handle setPublished
+   * @param {!osx.layer.Preset} preset
+   * @param {!boolean} isPublished
+   * @param {!Function<?>} resolve
+   * @param {!Function<?>} reject
    * @protected
    */
   setPublishedInternal(preset, isPublished, resolve, reject) {
@@ -127,6 +179,13 @@ class AbstractPresetService {
         (err) => {
           reject(err);
         });
+  }
+
+  /**
+   * @inheritDoc
+   */
+  supports(action) {
+    return false;
   }
 }
 
