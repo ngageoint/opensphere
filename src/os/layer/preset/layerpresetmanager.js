@@ -29,6 +29,11 @@ class LayerPresetManager extends Disposable {
   constructor() {
     super();
 
+    /**
+     * TODO get this from somewhere
+     * True if the user can edit/remove/publish presets. Shows/hides UI elements, etc
+     * @type {!boolean}
+     */
     this.admin_ = true;
 
     /**
@@ -44,7 +49,10 @@ class LayerPresetManager extends Disposable {
      */
     this.presets_ = {};
 
-    this.register('', new SettingsPresetService()); // add the basic PresetService
+    // add the basic PresetService
+    this.registerService(SettingsPresetService.ID, new SettingsPresetService());
+
+    // listen for new layers
     Dispatcher.getInstance().listen(LayerEventType.ADD, this.onLayerAdded, false, this);
   }
 
@@ -77,12 +85,19 @@ class LayerPresetManager extends Disposable {
   }
 
   /**
+   * @return {!boolean}
+   */
+  isAdmin() {
+    return this.admin_;
+  }
+
+  /**
    * @param {string} key
    * @param {IPresetService} service
    * @param {...} opt
    * @return {boolean} true if prior value overwritten
    */
-  register(key, service, ...opt) {
+  registerService(key, service, ...opt) {
     return this.services_.register.apply(this.services_, [key, service].concat(opt));
   }
 
