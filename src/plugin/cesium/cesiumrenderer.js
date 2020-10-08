@@ -127,6 +127,10 @@ plugin.cesium.CesiumRenderer.prototype.isInitialized = function() {
  */
 plugin.cesium.CesiumRenderer.prototype.initialize = function() {
   if (!this.olCesium_ && this.map) {
+    // Do not allow user to turn on video tile overlay
+    if (plugin.fmv && plugin.fmv.TILE_OVERLAY_ENABLED) {
+      os.settings.set(plugin.fmv.TILE_OVERLAY_ENABLED, false);
+    }
     return new goog.Promise(function(resolve, reject) {
       plugin.cesium.loadCesium().then(function() {
         try {
