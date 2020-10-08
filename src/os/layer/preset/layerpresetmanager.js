@@ -4,17 +4,18 @@ goog.module.declareLegacyNamespace();
 const settings = goog.require('os.config.Settings');
 const Disposable = goog.require('goog.Disposable');
 const Promise = goog.require('goog.Promise');
-const log = goog.require('goog.log');
 const Dispatcher = goog.require('os.Dispatcher');
 const VectorLayerPreset = goog.require('os.command.VectorLayerPreset');
+const Registry = goog.require('os.data.Registry');
 const LayerEventType = goog.require('os.events.LayerEventType');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const osImplements = goog.require('os.implements');
 const ILayer = goog.require('os.layer.ILayer');
 const osLayerPreset = goog.require('os.layer.preset');
+const PresetServiceAction = goog.require('os.layer.preset.PresetServiceAction');
 const SettingKey = goog.require('os.layer.preset.SettingKey');
-const Request = goog.require('os.net.Request');
-const Logger = goog.requireType('goog.log.Logger');
+const SettingsPresetService = goog.require('os.layer.preset.SettingsPresetService');
+
+const IPresetService = goog.requireType('os.layer.preset.IPresetService');
 
 
 /**
@@ -28,6 +29,14 @@ class LayerPresetManager extends Disposable {
   constructor() {
     super();
 
+    this.admin_ = true;
+
+    /**
+     * @type {!Registry<IPresetService>}
+     * @private
+     */
+    this.services_ = new Registry();
+
     /**
      * The available layer presets.
      * @type {Object<string, Promise<Array<osx.layer.Preset>>>}
@@ -35,13 +44,7 @@ class LayerPresetManager extends Disposable {
      */
     this.presets_ = {};
 
-    /**
-     * Map of URLs that have already been requested.
-     * @type {Object<string, boolean>}
-     * @private
-     */
-    this.requested_ = {};
-
+    this.register('', new SettingsPresetService()); // add the basic PresetService
     Dispatcher.getInstance().listen(LayerEventType.ADD, this.onLayerAdded, false, this);
   }
 
@@ -50,6 +53,7 @@ class LayerPresetManager extends Disposable {
    */
   disposeInternal() {
     super.disposeInternal();
+    this.services_.dispose();
     Dispatcher.getInstance().unlisten(LayerEventType.ADD, this.onLayerAdded, false, this);
   }
 
@@ -73,58 +77,31 @@ class LayerPresetManager extends Disposable {
   }
 
   /**
+   * @param {string} key
+   * @param {IPresetService} service
+   * @param {...} opt
+   * @return {boolean} true if prior value overwritten
+   */
+  register(key, service, ...opt) {
+    return this.services_.register.apply(this.services_, [key, service].concat(opt));
+  }
+
+  /**
    * Gets a promise that resolves to the presets for a given layer type.
    *
    * @param {string} type
    * @param {string} url
+   * @deprecated Please create a os.layer.preset.PresetService instead
    */
-  registerPreset(type, url) {
-    var promise = this.presets_[type];
-
-    if (!this.requested_[url]) {
-      this.requested_[url] = true;
-      var request = new Request(url);
-
-      if (promise) {
-        // presets are already loaded for that type, so attempt to load the new ones and replace the promise
-        promise.then((originalPresets) => {
-          var newPromise = request.getPromise().then((result) => {
-            var presets = /** @type {Array<osx.layer.Preset>} */ (JSON.parse(result));
-
-            if (presets && originalPresets) {
-              presets = presets.concat(originalPresets);
-            }
-
-            this.presets_[type] = newPromise;
-
-            return presets;
-          }, this.handleLoadError, this);
-        }, this.handleLoadError, this);
-      } else {
-        // no presets yet, so load them
-        this.presets_[type] = request.getPromise().then((result) => {
-          var presets = /** @type {Array<osx.layer.Preset>} */ (JSON.parse(result));
-          return presets;
-        }, this.handleLoadError, this);
-      }
-    }
-  }
+  registerPreset(type, url) {}
 
   /**
    * Handler for errors in loading presets.
    *
    * @param {*} reason
+   * @deprecated
    */
-  handleLoadError(reason) {
-    var msg = 'Unspecified error.';
-    if (typeof reason == 'string') {
-      msg = reason;
-    } else if (reason instanceof Error) {
-      msg = reason.message;
-    }
-
-    log.error(LayerPresetManager.LOGGER_, 'Failed to load presets. Reason: ' + msg);
-  }
+  handleLoadError(reason) {}
 
   /**
    * Gets a promise that resolves to the presets for a given layer ID.
@@ -156,26 +133,42 @@ class LayerPresetManager extends Disposable {
       filterKey = /** @type {os.filter.IFilterable} */ (layer).getFilterKey();
     }
 
-    var presets = /** @type {!Object<Array<osx.layer.Preset>>} */
-      (settings.getInstance().get(SettingKey.PRESETS, {}));
-    var layerPresets = presets[filterKey] || [];
-
-    if (layerPresets.length) {
-      // add a preset to restore the layer to its default settings
-      // note: this could be useful for any layer, but without other preset options it seems like unnecessary UI clutter
-      osLayerPreset.addDefault(layerPresets);
-    }
-
     var promise = new Promise((resolve, reject) => {
-      // verify that the feature actions are loaded first, then resolve the preset promise
-      var faPromise = ImportActionManager.getInstance().loadDefaults(id);
-      faPromise.thenAlways(function() {
-        if (opt_applyDefault) {
-          this.applyDefaults(id, layerPresets);
-        }
+      var entries = (this.services_.entries() || []);
+      var promises = [];
 
-        resolve(layerPresets);
-      }, this);
+      for (var [, service] of entries) {
+        if (service.supports(PresetServiceAction.FIND)) {
+          promises.push(service.find(/** @type {osx.layer.PresetSearch} */ ({
+            'layerId': [id],
+            'layerFilterKey': [filterKey],
+            'published': (!this.admin_) ? true : undefined
+          })));
+        }
+      }
+
+      if (promises.length) {
+        Promise.all(promises).then((results) => {
+          var presets = results.reduce((list, result) => {
+            if (result && result.length) {
+              return list.concat(result);
+            }
+          }, []);
+
+          // add a "Default" preset to the list
+          if (presets.length > 0) osLayerPreset.addDefault(presets);
+
+          // apply the "isDefault" preset if asked
+          if (opt_applyDefault) {
+            this.applyDefaults(id, presets);
+          }
+
+          // return the list to any .then() bindings
+          resolve(presets);
+        });
+      } else {
+        resolve(null);
+      }
     });
 
     this.presets_[id] = promise;
@@ -194,7 +187,7 @@ class LayerPresetManager extends Disposable {
 
     if (Array.isArray(presets) && presets.length && !applied[id]) {
       var preset = presets.find(function(preset) {
-        return preset.default || false;
+        return preset['default'] || false;
       });
 
       if (preset) {
@@ -209,14 +202,6 @@ class LayerPresetManager extends Disposable {
 }
 
 goog.addSingletonGetter(LayerPresetManager);
-
-
-/**
- * @type {Logger}
- * @private
- * @const
- */
-LayerPresetManager.LOGGER_ = log.getLogger('os.layer.preset.LayerPresetManager');
 
 
 exports = LayerPresetManager;
