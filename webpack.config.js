@@ -31,6 +31,12 @@ module.exports = (env, argv) => {
         minSize: 0
       }
     },
+    performance: {
+      // In production, warn if the asset size exceeds 5MB
+      hints: isProduction ? 'warning' : false,
+      maxAssetSize: 5000000,
+      maxEntrypointSize: 5000000
+    },
     plugins: [
       new ClosurePlugin.LibraryPlugin({
         closureLibraryBase: require.resolve('google-closure-library/closure/goog/base'),

@@ -435,7 +435,6 @@ os.layer.Tile.prototype.setColor = function(value, opt_options) {
  */
 os.layer.Tile.prototype.setBrightness = function(value, opt_options) {
   goog.asserts.assert(value >= -1 && value <= 1, 'brightness is not between -1 and 1');
-  os.layer.Tile.base(this, 'setBrightness', value);
   var options = opt_options || this.layerOptions_;
   if (options) {
     options['brightness'] = value;
@@ -443,6 +442,7 @@ os.layer.Tile.prototype.setBrightness = function(value, opt_options) {
     this.updateIcons_();
     os.style.notifyStyleChange(this);
   }
+  os.layer.Tile.base(this, 'setBrightness', value);
 };
 
 
@@ -457,7 +457,6 @@ os.layer.Tile.prototype.setBrightness = function(value, opt_options) {
  */
 os.layer.Tile.prototype.setContrast = function(value, opt_options) {
   goog.asserts.assert(value >= 0 && value <= 2, 'contrast is not between 0 and 2');
-  os.layer.Tile.base(this, 'setContrast', value);
   var options = opt_options || this.layerOptions_;
   if (options) {
     options['contrast'] = value;
@@ -465,6 +464,7 @@ os.layer.Tile.prototype.setContrast = function(value, opt_options) {
     this.updateIcons_();
     os.style.notifyStyleChange(this);
   }
+  os.layer.Tile.base(this, 'setContrast', value);
 };
 
 
@@ -480,7 +480,6 @@ os.layer.Tile.prototype.setContrast = function(value, opt_options) {
  */
 os.layer.Tile.prototype.setSaturation = function(value, opt_options) {
   goog.asserts.assert(value >= 0, 'saturation is greater than 0');
-  os.layer.Tile.base(this, 'setSaturation', value);
   var options = opt_options || this.layerOptions_;
   if (options) {
     options['saturation'] = value;
@@ -488,6 +487,7 @@ os.layer.Tile.prototype.setSaturation = function(value, opt_options) {
     this.updateIcons_();
     os.style.notifyStyleChange(this);
   }
+  os.layer.Tile.base(this, 'setSaturation', value);
 };
 
 
@@ -501,7 +501,6 @@ os.layer.Tile.prototype.setSaturation = function(value, opt_options) {
  */
 os.layer.Tile.prototype.setSharpness = function(value, opt_options) {
   goog.asserts.assert(value >= 0 && value <= 1, 'sharpness is between 0 and 1');
-  os.layer.Tile.base(this, 'setSharpness', value);
   var options = opt_options || this.layerOptions_;
   if (options) {
     options['sharpness'] = value;
@@ -509,6 +508,7 @@ os.layer.Tile.prototype.setSharpness = function(value, opt_options) {
     this.updateIcons_();
     os.style.notifyStyleChange(this);
   }
+  os.layer.Tile.base(this, 'setSharpness', value);
 };
 
 
