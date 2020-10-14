@@ -1,6 +1,6 @@
 goog.require('os.search.SearchTermFacet');
 
-describe('os.search.SearchTermFacet', () => {
+ddescribe('os.search.SearchTermFacet', () => {
   const SearchTermFacet = goog.module.get('os.search.SearchTermFacet');
 
   const texts = [
@@ -37,6 +37,15 @@ describe('os.search.SearchTermFacet', () => {
 
   it('gets the list of terms', () => {
     let terms;
+
+    // Empty terms
+    facet.setTerm('');
+    terms = facet.getTerms();
+    expect(terms.length).toBe(0);
+
+    facet.setTerm('"   "');
+    terms = facet.getTerms();
+    expect(terms.length).toBe(0);
 
     // Single term
     facet.setTerm('Lorem');
@@ -117,5 +126,12 @@ describe('os.search.SearchTermFacet', () => {
     // Multiple quoted/unquoted terms
     facet.setTerm('"Lorem ipsum" fringilla "hendrerit nulla" rutrum');
     expect(facet.testInternal()).toBeCloseTo(5.8554438982070565, 10);
+
+    // Empty terms
+    facet.setTerm('');
+    expect(facet.testInternal()).toBe(0);
+
+    facet.setTerm('"  "');
+    expect(facet.testInternal()).toBe(0);
   });
 });
