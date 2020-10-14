@@ -102,7 +102,8 @@ os.ui.layer.DefaultLayerUICtrl = function($scope, $element, $timeout) {
     'contrast': 1,
     'hue': 0,
     'opacity': 1,
-    'saturation': 1
+    'saturation': 1,
+    'sharpness': 0
   };
 
   /**
@@ -158,7 +159,8 @@ os.ui.layer.DefaultLayerUICtrl.prototype.getProperties = function() {
     'brightness': os.layer.setBrightness,
     'contrast': os.layer.setContrast,
     'hue': os.layer.setHue,
-    'saturation': os.layer.setSaturation
+    'saturation': os.layer.setSaturation,
+    'sharpness': os.layer.setSharpness
   };
 };
 
@@ -175,6 +177,7 @@ os.ui.layer.DefaultLayerUICtrl.prototype.initUI = function() {
     this.scope['hue'] = this.getValue(os.layer.getHue, 0);
     this.scope['opacity'] = this.getOpacity();
     this.scope['saturation'] = this.getValue(os.layer.getSaturation);
+    this.scope['sharpness'] = this.getValue(os.layer.getSharpness);
 
     this.updateRefresh();
     this.initColorControls_();
@@ -342,6 +345,9 @@ os.ui.layer.DefaultLayerUICtrl.prototype.setInitialValues_ = function() {
 
       var saturation = os.layer.getSaturation(layer);
       values['saturation'] = saturation != null ? saturation : 0;
+
+      var sharpness = os.layer.getSharpness(layer);
+      values['sharpness'] = sharpness != null ? sharpness : 0;
 
       this.initialValues[layerId] = values;
     }

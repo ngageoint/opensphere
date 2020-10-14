@@ -51,6 +51,19 @@ os.ogc.COLOR_STYLE_REGEX = /(density)|(foreground color)/i;
 
 
 /**
+ * Typedef describing available WFS format types (GML, GeoJSON, etc.)
+ * @typedef {{
+ *   type: !string,
+ *   regex: !RegExp,
+ *   parser: !string,
+ *   priority: !number,
+ *   responseType: (string|undefined)
+ * }}
+ */
+os.ogc.WFSTypeConfig;
+
+
+/**
  * A validator function for requests which checks for OGC exceptions
  *
  * @param {ArrayBuffer|string} response

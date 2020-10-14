@@ -1,9 +1,15 @@
 <div class="flex-fill w-100 d-flex flex-column">
-  <div class="modal-body d-flex">
+  <div class="modal-body">
     <form class="flex-fill" ng-class="formClass" name="confirmForm"
         ng-submit="confirm.confirm()" novalidate>
       <span class="js-confirm-text" ng-transclude></span>
     </form>
+    <div class="flex-row ml-4" ng-class="checkboxClass" ng-if="checkboxText">
+      <label class="form-check-label" for="checkboxText">
+        <input class="form-check-input" ng-model="checkboxSelection" type="checkbox" id="checkboxText" ng-change="confirm.updateCheckbox(checkboxSelection)">
+        {{checkboxText}}
+      </label>
+    </div>
   </div>
   <div class="modal-footer">
     <button class="btn" type="submit" ng-class="yesButtonClass" ng-click="confirm.confirm()"

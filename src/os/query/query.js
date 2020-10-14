@@ -7,6 +7,7 @@ goog.require('ol.proj');
 goog.require('os.interpolate');
 goog.require('os.metrics.MapMetrics');
 goog.require('os.metrics.Metrics');
+goog.require('os.query.utils');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportProcess');
 goog.require('os.ui.menu.MenuEvent');
@@ -83,111 +84,13 @@ os.query.launchChooseArea = function() {
  * Adds an area area covering the whole world.
  */
 os.query.queryWorld = function() {
-  var world = os.query.WORLD_AREA.clone();
+  var world = os.query.utils.WORLD_AREA.clone();
   if (world) {
     os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.QUERY_WORLD, 1);
     var geom = world.getGeometry();
     geom.osTransform();
     geom.set(os.geom.GeometryField.NORMALIZED, true);
-    world.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.NONE, true);
+    geom.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.NONE, true);
     os.query.addArea(world, false);
   }
 };
-
-
-/**
- * Checks if an existing geometry is of type "world query"
- *
- * @param {ol.geom.Geometry|undefined} geometry The geometry to verify.
- * @return {boolean} true the query matches os.query.WORLD_GEOM
- */
-os.query.isWorldQuery = function(geometry) {
-  if (os.query.worldArea_ == null) {
-    os.query.initWorldArea();
-  }
-
-  if (os.query.worldArea_ && geometry && geometry.getType() === ol.geom.GeometryType.POLYGON) {
-    // transform the world extent to the current projection to compute the area
-    var geomArea = /** @type {ol.geom.Polygon} */ (geometry).getArea();
-    return goog.math.nearlyEquals(geomArea / os.query.worldArea_, 1, 1E-4) || geomArea == 0;
-  }
-
-  return false;
-};
-
-
-/**
- * calculates world area
- *
- * @param {boolean=} opt_reset
- */
-os.query.initWorldArea = function(opt_reset) {
-  if (opt_reset) {
-    os.query.worldArea_ = undefined;
-  } else {
-    var worldExtent = ol.proj.transformExtent(os.query.WORLD_EXTENT, os.proj.EPSG4326, os.map.PROJECTION);
-    os.query.worldArea_ = ol.extent.getArea(worldExtent);
-  }
-};
-
-
-/**
- * The world extent in EPSG:4326. This is the max precision that a polygon can handle.
- * @type {ol.Extent}
- * @const
- */
-os.query.WORLD_EXTENT = [-179.9999999999999, -89.99999999999999, 180, 90];
-
-
-/**
- * The world coordinates in EPSG:4326. This is the max precision that a polygon can handle.
- * Note: this includes coordinates at 0 latitude to ensure directionality of the vertical line components in 3D.
- * @type {Array<Array<Array<number>>>}
- * @const
- */
-os.query.WORLD_COORDS = [[
-  [-179.9999999999999, -89.99999999999999],
-  [-179.9999999999999, 0],
-  [-179.9999999999999, 90],
-  [180, 90],
-  [180, 0],
-  [180, -89.99999999999999],
-  [-179.9999999999999, -89.99999999999999]
-]];
-
-
-/**
- * Polygon representing the whole world.
- * @type {ol.geom.Polygon}
- */
-os.query.WORLD_GEOM = new ol.geom.Polygon(os.query.WORLD_COORDS);
-
-
-/**
- * @type {number|undefined}
- * @private
- */
-os.query.worldArea_ = undefined;
-
-
-/**
- * Feature representing the whole world.
- * @type {ol.Feature}
- */
-os.query.WORLD_AREA = new ol.Feature({
-  'geometry': os.query.WORLD_GEOM,
-  'title': 'Whole World'
-});
-
-
-/**
- * Feature representing the area we want to zoom to when zooming to the whole world.
- * @type {ol.Feature}
- */
-os.query.WORLD_ZOOM_FEATURE = new ol.Feature(new ol.geom.Polygon([[
-  [179, 90],
-  [181, 90],
-  [181, -90],
-  [179, -90],
-  [179, 90]
-]]));

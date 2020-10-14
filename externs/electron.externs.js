@@ -79,3 +79,26 @@ ElectronOS.setCookie = function(value) {};
  * Request cookie update from the main process.
  */
 ElectronOS.updateCookies = function() {};
+
+/**
+ * Get the maximum memory application can use.
+ * @return {number} The maximum memory application can use.
+ */
+ElectronOS.getMaxMemory = function() {};
+
+/**
+ * Gets the total available memory for the system.
+ * @return {number} The total available memory on the system in MB.
+ */
+ElectronOS.getSystemMemory = function() {};
+
+/**
+ * Set the maximum memory the application can use.
+ * @param {number} value The maximum memory application can use.
+ */
+ElectronOS.setMaxMemory = function(value) {};
+
+/**
+ * Restarts the entire application.
+ */
+ElectronOS.restart = function() {};

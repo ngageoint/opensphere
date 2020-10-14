@@ -11,6 +11,20 @@ os.state.IState = function() {};
 
 
 /**
+ * Get if the state is supported
+ * @return {boolean} If the state is supported
+ */
+os.state.IState.prototype.getSupported;
+
+
+/**
+ * Set if the state is supported
+ * @param {boolean} value The new supported value
+ */
+os.state.IState.prototype.setSupported;
+
+
+/**
  * Get if the state is enabled.
  * @return {boolean} If the state is enabled
  */

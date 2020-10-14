@@ -312,19 +312,34 @@ const updateSizeDynamicIconProperties = (style, bb) => {
 
 
 /**
+ * Map of icon src to Promise created with Cesium.Resource.fetchImage.
+ * @type {!Object<string, !Promise<Cesium.ImageLike>>}
+ */
+const iconPromises = {};
+
+
+/**
  *
  * @param {!(Point|MultiPoint)} geometry
  * @param {!OLIconStyle} style
  * @param {!VectorContext} context
  * @param {!(Cesium.Billboard|Cesium.optionsBillboardCollectionAdd)} bb
  * @param {number=} opt_index
- * @return {!Promise<HTMLCanvasElement>}
+ * @return {Promise<Cesium.ImageLike>}
  */
 const iconStyleToImagePromise = (geometry, style, context, bb, opt_index) => {
   bb.dirty = false;
   const src = style.getSrc() || '';
-  const resource = Cesium.Resource.createIfNeeded(src);
-  return resource.fetchImage();
+  let iconPromise = iconPromises[src];
+  if (!iconPromise) {
+    const resource = new Cesium.Resource(src);
+    iconPromise = resource.fetchImage();
+
+    if (iconPromise) {
+      iconPromises[src] = iconPromise;
+    }
+  }
+  return iconPromise || null;
 };
 
 

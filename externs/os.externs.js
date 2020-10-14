@@ -175,7 +175,9 @@ osx.map.FlyToOptions;
 
 /**
  * @typedef {{
- *   type: (string|undefined),
+ *   id: string,
+ *   title: string,
+ *   type: string,
  *   url: (string|undefined),
  *   credit: (Cesium.Credit|string|undefined),
  *   maxLevel: (number|undefined),
@@ -359,6 +361,9 @@ osx.window.WindowOptions;
  *   noButtonClass: (string|undefined),
  *   noButtonTitle: (string|undefined),
  *   formClass: (string|undefined),
+ *   checkboxText: (string|undefined),
+ *   checkboxClass: (string|undefined),
+ *   checkbox: (Function|undefined),
  *
  *   windowOptions: (osx.window.WindowOptions|undefined),
  *

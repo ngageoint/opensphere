@@ -1,0 +1,24 @@
+name: 'Merge Release to Master'
+
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  release-to-master:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Merge Release to Master
+      uses: robotology/gh-action-nightly-merge@v1.2.0
+      with:
+        stable_branch: 'release'
+        development_branch: 'master'
+        allow_forks: false
+        user_name: 'Release to Master Merge Action'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
