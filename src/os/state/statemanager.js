@@ -228,7 +228,7 @@ os.state.StateManager.prototype.startExport = function(opt_method) {
     scopeOptions['tags'] = descriptor.getTags() ? descriptor.getTags().join(', ') : undefined;
   }
 
-  var template = '<stateexport method="method" title="title"></stateexport>';
+  var template = '<stateexport method="method"></stateexport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
 

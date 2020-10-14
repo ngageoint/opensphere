@@ -183,6 +183,11 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.getRequest = function(options) {
     request.setDataFormatter(new os.ogc.wfs.WFSFormatter());
   }
 
+  const type = this.getBestType(options);
+  if (type && type.responseType != null) {
+    request.setResponseType(/** @type {goog.net.XhrIo.ResponseType} */ (type.responseType));
+  }
+
   return request;
 };
 
@@ -352,64 +357,44 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.addMappings = function(layer, options) {
 
 
 /**
- * @type {Array<RegExp>}
- */
-plugin.ogc.wfs.WFSLayerConfig.PREFERRED_TYPES = [
-  /^application\/json$/,
-  /gml\/?3/i,
-  /gml\/?2/i
-];
-
-
-/**
- * @enum {number}
- */
-plugin.ogc.wfs.WFSLayerConfig.TYPES = {
-  GEOJSON: 0,
-  GML3: 1,
-  GML2: 2
-};
-
-
-/**
  * @param {Object<string, *>} options
- * @return {number} 0 = JSON, 1 = GML3, 2 = GML2
+ * @return {Object} The type config to use.
  * @protected
  */
 plugin.ogc.wfs.WFSLayerConfig.prototype.getBestType = function(options) {
   var formats = /** @type {Array<string>|undefined} */ (options['formats']);
   var format = /** @type {string} */ (this.params.get('outputformat'));
-  var preferred = plugin.ogc.wfs.WFSLayerConfig.PREFERRED_TYPES;
+  var preferred = plugin.ogc.wfs.WFSLayerConfig.TYPE_CONFIGS;
 
   // see if the given format is one mutually supported by the layer and this plugin
   if (format && (!formats || formats.includes(format))) {
     for (var i = 0, n = preferred.length; i < n; i++) {
-      var regex = preferred[i];
-      if (regex.test(format)) {
-        return i;
+      var pref = preferred[i];
+      if (pref.regex.test(format)) {
+        return pref;
       }
     }
   }
 
   // otherwise, check the available formats for one we support and set that on the params
   if (formats) {
-    for (i = 0, n = preferred.length; i < n; i++) {
-      regex = preferred[i];
+    for (var i = 0, n = preferred.length; i < n; i++) {
+      var pref = preferred[i];
 
       for (var j = 0, m = formats.length; j < m; j++) {
-        if (regex.test(formats[j])) {
+        if (pref.regex.test(formats[j])) {
           if (this.params) {
             this.params.set('outputformat', formats[j]);
           }
 
-          return i;
+          return pref;
         }
       }
     }
   }
 
   this.params.remove('outputformat');
-  return 1;
+  return plugin.ogc.wfs.WFSLayerConfig.GML3_CONFIG;
 };
 
 
@@ -417,29 +402,25 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.getBestType = function(options) {
  * @inheritDoc
  */
 plugin.ogc.wfs.WFSLayerConfig.prototype.getParser = function(options) {
-  var type = this.getBestType(options);
+  var typeConfig = this.getBestType(options);
+  var im = os.ui.im.ImportManager.getInstance();
+  var type = typeConfig.type;
+  var parser = im.getParser(type, options);
 
-  var parser = null;
-  var types = plugin.ogc.wfs.WFSLayerConfig.TYPES;
-
-  if (type === types.GEOJSON) {
-    var im = os.ui.im.ImportManager.getInstance();
-    parser = im.getParser('geojson');
-
+  // special case handling
+  if (type === 'geojson') {
+    // geojson needs a reference to the source for style merging purposes
     if (!parser) {
       parser = new plugin.file.geojson.GeoJSONParser();
     }
 
     parser.setSourceId(this.id);
-  } else {
-    parser = new plugin.file.gml.GMLParser();
-
-    if (type === types.GML2) {
-      parser.useGML2Format(true);
-    }
+  } else if (type == 'gml2') {
+    // tell the parser to use it
+    /** @type {plugin.file.gml.GMLParser} */ (parser).useGML2Format(true);
   }
 
-  return /** @type {!os.parse.IParser.<ol.Feature>} */ (parser);
+  return /** @type {!os.parse.IParser<ol.Feature>} */ (parser);
 };
 
 
@@ -464,4 +445,68 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.getSource = function(options) {
   var source = plugin.ogc.wfs.WFSLayerConfig.base(this, 'getSource', options);
   source.setLockable(this.lockable);
   return source;
+};
+
+
+/**
+ * Type config for GeoJSON parsing.
+ * @type {os.ogc.WFSTypeConfig}
+ */
+plugin.ogc.wfs.WFSLayerConfig.GEOJSON_CONFIG = {
+  regex: /^application\/json$/,
+  parser: 'geojson',
+  type: 'geojson',
+  priority: 100
+};
+
+
+/**
+ * Type config for GML3 parsing.
+ * @type {os.ogc.WFSTypeConfig}
+ */
+plugin.ogc.wfs.WFSLayerConfig.GML3_CONFIG = {
+  regex: /gml\/?3/i,
+  parser: 'gml',
+  type: 'gml3',
+  priority: 50
+};
+
+
+/**
+ * Type config for GML2 parsing.
+ * @type {os.ogc.WFSTypeConfig}
+ */
+plugin.ogc.wfs.WFSLayerConfig.GML2_CONFIG = {
+  regex: /gml\/?2/i,
+  parser: 'gml',
+  type: 'gml2',
+  priority: -100
+};
+
+
+/**
+ * The available WFS type config objects. Plugins can add supported parser types to this.
+ * @type {Array<os.ogc.WFSTypeConfig>}
+ */
+plugin.ogc.wfs.WFSLayerConfig.TYPE_CONFIGS = [
+  plugin.ogc.wfs.WFSLayerConfig.GEOJSON_CONFIG,
+  plugin.ogc.wfs.WFSLayerConfig.GML3_CONFIG,
+  plugin.ogc.wfs.WFSLayerConfig.GML2_CONFIG
+];
+
+
+/**
+ * Register a type config object.
+ * @param {!os.ogc.WFSTypeConfig} config
+ * @protected
+ */
+plugin.ogc.wfs.WFSLayerConfig.registerType = function(config) {
+  const configs = plugin.ogc.wfs.WFSLayerConfig.TYPE_CONFIGS;
+
+  if (!configs.find((c) => c.type === config.type)) {
+    configs.push(config);
+  }
+
+  // sort them by priority, highest first
+  configs.sort((a, b) => b.priority - a.priority);
 };

@@ -18,6 +18,8 @@ goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.dragDropDirective');
 
+goog.requireType('os.ui.search.SearchScrollDataSource');
+
 
 /**
  * The search-box directive

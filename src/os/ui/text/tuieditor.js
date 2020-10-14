@@ -249,7 +249,7 @@ os.ui.text.TuiEditorCtrl.prototype.onKeyboardEvent_ = function(event) {
 os.ui.text.TuiEditorCtrl.prototype.getWordCount = function() {
   var len = this['text'] ? this['text'].length : 0;
   var value = len;
-  if (this.scope['maxlength']) {
+  if (this.scope && this.scope['maxlength']) {
     value += ' / ' + this.scope['maxlength'];
   }
 

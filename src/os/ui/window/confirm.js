@@ -53,6 +53,9 @@ const launchConfirm = function(opt_options, opt_scopeOptions) {
   scopeOptions['noButtonTitle'] = options.noButtonTitle || '';
   scopeOptions['noButtonClass'] = options.noButtonClass || 'btn-secondary';
   scopeOptions['formClass'] = options.formClass || 'form-horizontal';
+  scopeOptions['checkboxText'] = options.checkboxText || '';
+  scopeOptions['checkboxClass'] = options.checkboxClass || '';
+  scopeOptions['checkboxCallback'] = options.checkbox || goog.nullFunction;
 
   var windowOverrides = /** @type {!osx.window.WindowOptions} */ (options.windowOptions || {});
 
@@ -126,6 +129,11 @@ class Controller {
     }
 
     /**
+     * @type {boolean}
+     */
+    this.scope_['checkboxSelection'] = false;
+
+    /**
      * @type {!KeyHandler}
      * @private
      */
@@ -188,6 +196,17 @@ class Controller {
 
     this.close_();
   }
+
+
+  /**
+   * Fire the dont show again callback to save user choice
+   * @param {boolean} checkbox
+   * @export
+   */
+  updateCheckbox(checkbox) {
+    this.scope_['checkboxCallback'](checkbox);
+  }
+
 
   /**
    * Close the window.
