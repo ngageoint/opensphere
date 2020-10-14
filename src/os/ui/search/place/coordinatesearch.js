@@ -11,6 +11,7 @@ goog.require('os.geo2');
 goog.require('os.search.AbstractSearch');
 goog.require('os.search.SearchEvent');
 goog.require('os.search.SearchEventType');
+goog.require('os.ui.geo.mgrs');
 goog.require('os.ui.search.place');
 goog.require('os.ui.search.place.CoordinateResult');
 
@@ -89,9 +90,8 @@ os.ui.search.place.CoordinateSearch.prototype.searchTerm = function(term, opt_st
         throw new Error(msg);
       }
     } else {
-      var mgrs = term.replace(/\s+/g, '').toUpperCase();
-      if (mgrs.match(os.geo.MGRS_REGEXP)) {
-        var coord = osasm.toLonLat(mgrs);
+      const coord = os.ui.geo.mgrs(term);
+      if (coord) {
         var feature = os.ui.search.place.createFeature({
           'geometry': new ol.geom.Point(coord).osTransform(),
           'label': term

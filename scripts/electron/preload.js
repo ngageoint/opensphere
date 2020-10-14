@@ -1,5 +1,5 @@
-const {contextBridge, ipcRenderer} = require('electron');
-
+const {contextBridge, ipcRenderer, remote} = require('electron');
+const {getMaximumMemory, getSystemMemory, setMaximumMemory} = require('../memconfig.js');
 
 /**
  * Registered certificate handler.
@@ -97,6 +97,28 @@ const updateCookies = () => {
   ipcRenderer.send(CookieEventType.UPDATE);
 };
 
+/**
+ * Gets the currently set maximum memory.
+ * @return {number} The semi-colon delimited list of cookies.
+ */
+const getMaxMemory = () => {
+  return getMaximumMemory();
+};
+
+/**
+ * Sets a new value for the max memory.
+ * @param {number} value The max memory value.
+ */
+const setMaxMemory = (value) => {
+  setMaximumMemory(value);
+};
+
+/**
+ * Restarts the application.
+ */
+const restart = () => {
+  ipcRenderer.send('restart');
+};
 
 // Handle certificate select event from the main process.
 ipcRenderer.on(CertEventType.SELECT, selectClientCertificate);
@@ -121,5 +143,9 @@ contextBridge.exposeInMainWorld('ElectronOS', {
   getCookies,
   setCookie,
   updateCookies,
-  registerCertificateHandler
+  registerCertificateHandler,
+  getMaxMemory,
+  getSystemMemory,
+  setMaxMemory,
+  restart
 });

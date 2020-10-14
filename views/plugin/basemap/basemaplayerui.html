@@ -44,6 +44,15 @@
               </button>
             </td>
           </tr>
+          <tr title="Sets the sharpness of the layer(s)">
+            <td>Sharpness:</td>
+            <td class="w-100"><slider min="0" max="1" step="0.05" value="sharpness" name="sharpness"></slider></td>
+            <td class="text-right pl-2">
+              <button class="btn btn-secondary" ng-click="basemap.reset('sharpness')" title="Restore default sharpness">
+                <i class="fa fa-undo"></i>
+              </button>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>

@@ -130,7 +130,8 @@ os.ui.data.DescriptorNodeUICtrl.prototype.removeDescriptor = function() {
     // remove the descriptor from the data manager
     dm.removeDescriptor(descriptor);
 
-    var provider = /** @type {os.ui.data.DescriptorProvider} */ (dm.getProvider(descriptor.getId()));
+    var provider = /** @type {os.ui.data.DescriptorProvider} */ (dm.getProvider(descriptor.getId()) ||
+        dm.getProviderByLabel(descriptor.getProvider() || ''));
     if (provider && provider instanceof os.ui.data.DescriptorProvider) {
       // remove the descriptor from the provider
       provider.removeDescriptor(descriptor, true);

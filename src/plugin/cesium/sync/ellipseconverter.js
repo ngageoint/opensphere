@@ -19,6 +19,7 @@ const IConverter = goog.requireType('plugin.cesium.sync.IConverter');
 
 /**
  * Converter for Ellipses
+ * @extends {BaseConverter<Ellipse, (Cesium.Polyline|Cesium.PolylineOptions)>}
  */
 class EllipseConverter extends BaseConverter {
   /**

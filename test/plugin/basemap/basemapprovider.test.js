@@ -1,4 +1,5 @@
 goog.require('goog.events.EventTarget');
+goog.require('os.map.terrain');
 goog.require('os.mock');
 goog.require('plugin.basemap.BaseMapProvider');
 
@@ -63,7 +64,10 @@ describe('plugin.basemap.BaseMapProvider', function() {
     expect(p.defaults_).toContain('two');
 
     // terrain is configured on the map
-    var terrainOptions = os.settings.get(os.config.DisplaySetting.TERRAIN_OPTIONS);
+    var providers = os.map.terrain.getTerrainProviders();
+    expect(providers.length).toBe(1);
+
+    var terrainOptions = providers[0];
     expect(terrainOptions).toBeDefined();
     expect(terrainOptions.url).toBe(expectedTerrainOptions.url);
     expect(terrainOptions.type).toBe(expectedTerrainType);

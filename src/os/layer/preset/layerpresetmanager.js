@@ -4,12 +4,15 @@ goog.require('goog.Disposable');
 goog.require('goog.Promise');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('os.Dispatcher');
 goog.require('os.command.VectorLayerPreset');
+goog.require('os.events.LayerEventType');
 goog.require('os.im.action.ImportActionManager');
+goog.require('os.implements');
+goog.require('os.layer.ILayer');
 goog.require('os.layer.config.ILayerConfig');
 goog.require('os.layer.preset');
 goog.require('os.net.Request');
-
 
 
 /**
@@ -35,6 +38,8 @@ os.layer.preset.LayerPresetManager = function() {
    * @private
    */
   this.requested_ = {};
+
+  os.Dispatcher.getInstance().listen(os.events.LayerEventType.ADD, this.onLayerAdded, false, this);
 };
 goog.inherits(os.layer.preset.LayerPresetManager, goog.Disposable);
 goog.addSingletonGetter(os.layer.preset.LayerPresetManager);
@@ -46,6 +51,35 @@ goog.addSingletonGetter(os.layer.preset.LayerPresetManager);
  * @const
  */
 os.layer.preset.LayerPresetManager.LOGGER_ = goog.log.getLogger('os.layer.preset.LayerPresetManager');
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.preset.LayerPresetManager.prototype.disposeInternal = function() {
+  os.layer.preset.LayerPresetManager.base(this, 'disposeInternal');
+  os.Dispatcher.getInstance().unlisten(os.events.LayerEventType.ADD, this.onLayerAdded, false, this);
+};
+
+
+/**
+ * Handle layer added to the map.
+ * @param {!os.events.LayerEvent} event The layer event.
+ * @protected
+ */
+os.layer.preset.LayerPresetManager.prototype.onLayerAdded = function(event) {
+  const layer = os.implements(event.layer, os.layer.ILayer.ID) ?
+      /** @type {os.layer.ILayer} */ (event.layer) : undefined;
+
+  if (layer) {
+    const layerId = layer.getId();
+    const layerOptions = layer.getLayerOptions();
+    if (layerId && layerOptions && layerOptions['applyDefaultPresets']) {
+      // Apply default presets to the layer when configured.
+      this.getPresets(layerId, true);
+    }
+  }
+};
 
 
 /**
