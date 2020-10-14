@@ -1,6 +1,8 @@
 goog.module('plugin.electron.ElectronPlugin');
 goog.module.declareLegacyNamespace();
 
+goog.require('plugin.electron.ElectronMemoryConfigUI');
+
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const electron = goog.require('plugin.electron');
 const ElectronConfirmCertUI = goog.require('plugin.electron.ElectronConfirmCertUI');
@@ -35,6 +37,7 @@ class ElectronPlugin extends AbstractPlugin {
   init() {
     if (electron.isElectron()) {
       ElectronOS.registerCertificateHandler(onCertificateRequest);
+      os.ui.list.add('pluginMemoryConfig', '<electronmemoryconfig></electronmemoryconfig>');
 
       /**
        * Electron uses the file protocol, so those URL's need to be considered safe.

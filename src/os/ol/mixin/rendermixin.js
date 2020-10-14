@@ -5,6 +5,9 @@ goog.provide('os.ol.mixin.render');
 
 goog.require('ol.render.canvas.PolygonReplay');
 
+goog.requireType('ol.Feature');
+goog.requireType('ol.render.Feature');
+
 
 /**
  * Empty fill style used in our overrides of OL3 polygon rendering functions.
@@ -57,7 +60,7 @@ ol.render.canvas.PolygonReplay.prototype.drawPolygon = function(polygonGeometry,
  * sucked worse.
  *
  * @param {ol.geom.MultiPolygon} multiPolygonGeometry
- * @param {ol.Feature} feature
+ * @param {ol.Feature|ol.render.Feature} feature
  * @suppress {duplicate|accessControls}
  * @override
  */
@@ -103,7 +106,7 @@ ol.render.canvas.PolygonReplay.prototype.drawMultiPolygon = function(multiPolygo
  * sucked worse.
  *
  * @param {ol.geom.Circle} circleGeometry
- * @param {ol.Feature} feature
+ * @param {ol.Feature|ol.render.Feature} feature
  * @suppress {duplicate|accessControls}
  * @override
  */

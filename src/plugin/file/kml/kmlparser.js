@@ -601,7 +601,7 @@ plugin.file.kml.KMLParser.prototype.handleZipEntries = function(entries) {
       this.kmlEntries_[entry.filename] = entry;
     } else if (img.test(entry.filename)) {
       var result = img.exec(entry.filename);
-      result.lastIndex = 0;
+      img.lastIndex = 0;
 
       this.kmzImagesRemaining_++;
 

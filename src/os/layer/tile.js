@@ -360,6 +360,20 @@ os.layer.Tile.prototype.getSaturation = function() {
 
 
 /**
+ * Get the sharpness for the tile layer.
+ *
+ * @override
+ * @return {number}
+ */
+os.layer.Tile.prototype.getSharpness = function() {
+  if (this.layerOptions_ && this.layerOptions_['sharpness'] != null) {
+    return /** @type {number} */ (this.layerOptions_['sharpness']);
+  }
+  return 0;
+};
+
+
+/**
  * Get the whether the tile layer is being colorized.
  *
  * @return {boolean}
@@ -421,7 +435,6 @@ os.layer.Tile.prototype.setColor = function(value, opt_options) {
  */
 os.layer.Tile.prototype.setBrightness = function(value, opt_options) {
   goog.asserts.assert(value >= -1 && value <= 1, 'brightness is not between -1 and 1');
-  os.layer.Tile.base(this, 'setBrightness', value);
   var options = opt_options || this.layerOptions_;
   if (options) {
     options['brightness'] = value;
@@ -429,6 +442,7 @@ os.layer.Tile.prototype.setBrightness = function(value, opt_options) {
     this.updateIcons_();
     os.style.notifyStyleChange(this);
   }
+  os.layer.Tile.base(this, 'setBrightness', value);
 };
 
 
@@ -443,7 +457,6 @@ os.layer.Tile.prototype.setBrightness = function(value, opt_options) {
  */
 os.layer.Tile.prototype.setContrast = function(value, opt_options) {
   goog.asserts.assert(value >= 0 && value <= 2, 'contrast is not between 0 and 2');
-  os.layer.Tile.base(this, 'setContrast', value);
   var options = opt_options || this.layerOptions_;
   if (options) {
     options['contrast'] = value;
@@ -451,6 +464,7 @@ os.layer.Tile.prototype.setContrast = function(value, opt_options) {
     this.updateIcons_();
     os.style.notifyStyleChange(this);
   }
+  os.layer.Tile.base(this, 'setContrast', value);
 };
 
 
@@ -466,7 +480,6 @@ os.layer.Tile.prototype.setContrast = function(value, opt_options) {
  */
 os.layer.Tile.prototype.setSaturation = function(value, opt_options) {
   goog.asserts.assert(value >= 0, 'saturation is greater than 0');
-  os.layer.Tile.base(this, 'setSaturation', value);
   var options = opt_options || this.layerOptions_;
   if (options) {
     options['saturation'] = value;
@@ -474,6 +487,28 @@ os.layer.Tile.prototype.setSaturation = function(value, opt_options) {
     this.updateIcons_();
     os.style.notifyStyleChange(this);
   }
+  os.layer.Tile.base(this, 'setSaturation', value);
+};
+
+
+/**
+ * Adjust layer sharpness. A value of 0 will not adjust layer sharpness. A value of 1 will apply the maximum
+ * sharpness adjustment to the image.
+ *
+ * @override
+ * @param {number} value The sharpness of the layer (values clamped between 0 and 1)
+ * @param {Object=} opt_options The layer options to use
+ */
+os.layer.Tile.prototype.setSharpness = function(value, opt_options) {
+  goog.asserts.assert(value >= 0 && value <= 1, 'sharpness is between 0 and 1');
+  var options = opt_options || this.layerOptions_;
+  if (options) {
+    options['sharpness'] = value;
+    this.updateColorFilter();
+    this.updateIcons_();
+    os.style.notifyStyleChange(this);
+  }
+  os.layer.Tile.base(this, 'setSharpness', value);
 };
 
 
@@ -487,7 +522,7 @@ os.layer.Tile.prototype.updateColorFilter = function() {
   var source = this.getSource();
   if (source instanceof ol.source.TileImage) {
     if (this.getColorize() || !os.color.equals(this.getColor(), this.getDefaultColor()) ||
-        this.getBrightness() != 0 || this.getContrast() != 1 || this.getSaturation() != 1) {
+        this.getBrightness() != 0 || this.getContrast() != 1 || this.getSaturation() != 1 || this.getSharpness() != 0) {
       // put the colorFilter in place if we are colorized or the current color is different from the default
       source.addTileFilter(this.colorFilter_);
     } else {
@@ -501,18 +536,25 @@ os.layer.Tile.prototype.updateColorFilter = function() {
  * Filter function that applies the layer color tile image data. This filter is always in the filter array, but it
  * only runs if the current color is different from the default or if the colorize option is active.
  *
- * @param {Array<number>} data
+ * @param {Array<number>} data The image data.
+ * @param {number} width The image width.
+ * @param {number} height The image height.
  * @protected
  */
-os.layer.Tile.prototype.applyColors = function(data) {
+os.layer.Tile.prototype.applyColors = function(data, width, height) {
+  if (!data) {
+    return;
+  }
+
   var srcColor = this.getDefaultColor() || '#fffffe';
   var tgtColor = this.getColor() || '#fffffe';
   var brightness = this.getBrightness();
   var contrast = this.getContrast();
   var saturation = this.getSaturation();
+  var sharpness = this.getSharpness();
   var colorize = this.getColorize();
   if (colorize || !os.color.equals(srcColor, tgtColor) ||
-      this.getBrightness() != 0 || this.getContrast() != 1 || this.getSaturation() != 1) {
+      brightness != 0 || contrast != 1 || saturation != 1 || sharpness != 0) {
     if (tgtColor) {
       if (colorize) {
         // colorize will set all of the colors to the target
@@ -522,6 +564,11 @@ os.layer.Tile.prototype.applyColors = function(data) {
         os.color.transformColor(data, srcColor, tgtColor);
       }
       os.color.adjustColor(data, brightness, contrast, saturation);
+
+      if (sharpness > 0) {
+        // sharpness is in the range [0, 1]. use a multiplier to enhance the convolution effect.
+        os.color.adjustSharpness(data, width, height, sharpness * 20);
+      }
     }
   }
 };
@@ -1039,6 +1086,7 @@ os.layer.Tile.prototype.persist = function(opt_to) {
   opt_to['contrast'] = this.getContrast();
   opt_to['brightness'] = this.getBrightness();
   opt_to['saturation'] = this.getSaturation();
+  opt_to['sharpness'] = this.getSharpness();
   opt_to['color'] = this.getColor();
   opt_to['colorize'] = this.getColorize();
   opt_to['groupId'] = this.getGroupId();
@@ -1112,6 +1160,10 @@ os.layer.Tile.prototype.restore = function(config) {
 
   if (config['saturation'] != null) {
     this.setSaturation(config['saturation']);
+  }
+
+  if (config['sharpness'] != null) {
+    this.setSharpness(config['sharpness']);
   }
 
   if (config['color']) {

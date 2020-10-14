@@ -205,4 +205,34 @@ describe('plugin.cesium.sync.PointConverter', () => {
 
     expect(billboard._image).toBe(image);
   });
+
+  it('should reuse image resources', () => {
+    style.setImage(new ol.style.Icon({
+      src: '/base/images/icons/pushpin/wht-pushpin.png'
+    }));
+
+    const createBillboard = () => {
+      const geometry = new ol.geom.Point([0, 0]);
+      const feature = new ol.Feature(geometry);
+      return pointConverter.create(feature, geometry, style, context);
+    };
+
+    createBillboard();
+    createBillboard();
+
+    const bb1 = context.billboards.get(0);
+    const bb2 = context.billboards.get(1);
+    expect(bb1._image).toBe(bb2._image);
+    expect(bb1._imageId).toBe(bb2._imageId);
+
+    style.setImage(new ol.style.Icon({
+      src: '/base/images/icons/pushpin/blue-pushpin.png'
+    }));
+
+    createBillboard();
+
+    const bb3 = context.billboards.get(2);
+    expect(bb1._image).not.toBe(bb3._image);
+    expect(bb1._imageId).not.toBe(bb3._imageId);
+  });
 });

@@ -74,11 +74,7 @@ While not required, we highly recommend setting up nginx or Apache httpd to serv
 
 You can also use the ``start-server`` target, for example:
 
-``` yarn start-server ```
-
-or
-
-``` npm run start-server ```
+``yarn start-server`` or ``npm run start-server``
 
 
 The Build
@@ -96,12 +92,13 @@ The most common targets are:
 
 .. code-block:: none
 
-  $ npm run build       # runs the full build for both debug and compiled mode
-  $ npm run build:debug # runs the debug build only
-  $ npm run test        # runs the unit tests
-  $ npm run test:debug  # runs the unit tests with a configuration more suited to debugging
-  $ npm run apidoc      # generates api documentation
-  $ npm run guide       # generates this documentation
+  $ npm run build               # generates the production application
+  $ npm run dev                 # generates the dev application and runs webpack in watch mode
+  $ npm run test                # runs the unit tests
+  $ npm run test:debug          # runs the unit tests with a configuration more suited to debugging
+  $ npm run apidoc              # generates api documentation
+  $ npm run guide               # generates this documentation
+  $ npm run build:webpack-dev   # runs webpack in watch mode, for development
 
 Each target runs its individual pieces through npm scripts as well. Several of those pieces are highly useful when run by themselves just to see if you fixed an error in that part of the build before restarting the entire thing.
 
@@ -121,6 +118,24 @@ opensphere-build-resolver_ runs through all of an application's dependencies, pl
 
 .. _opensphere-build-resolver: https://github.com/ngageoint/opensphere-build-resolver
 
+Webpack
+=======
+
+OpenSphere's source is bundled using `webpack`_ and the `closure-webpack-plugin`_. The plugin allows webpack to identify Google Closure files using ``goog.module`` and ``goog.provide`` as build dependencies.
+
+Webpack will also resolve ES6 modules and CommonJS modules imported with ``require``. Modules should be imported using the Webpack/Node resolution method, with paths relative to the package containing the module.
+
+Example:
+
+.. code-block:: javascript
+
+  const theModule = require('some-package/path/to/module');
+
+.. note:: OpenSphere's webpack configuration can be found in ``opensphere/webpack.config.js``.
+
+.. _webpack: https://webpack.js.org/
+.. _closure-webpack-plugin: https://github.com/ngageoint/closure-webpack-plugin
+
 The Google Closure Compiler
 ===========================
 
@@ -137,23 +152,25 @@ Because the `Closure Compiler`_ does so much more than just minification, the bu
 
 Some of the intricacies from using the compiler are documented in the `Compiler Caveats`_ section below.
 
-The debug build output
-======================
+The Debug Build
+===============
 
-The ``index-template.html`` and its corresponding ``index.js`` file define how the main page is packaged up by opensphere-build-index_. That script produces ``index.html``, which is the debug instance. It contains all of the vendor scripts and css in addition to source files that load the application using Closure's debug loader.
+To support various module types in a debug build of the application, webpack bundles all source into a single file. This file includes source maps so individual source files can be viewed within the browser's developer tools.
+
+The ``index-template.html`` and its corresponding ``index.js`` file define how the main page is packaged up by opensphere-build-index_. That script produces ``index.html``, which is the debug instance. It contains all of the vendor scripts and css in addition to the application bundle produced by webpack.
 
 .. _opensphere-build-index: https://github.com/ngageoint/opensphere-build-index
 
 If you set up nginx or httpd as recommended above, accessing it might be accomplished by pointing your browser at http://localhost:8080/workspace/opensphere
 
-.. note:: The debug instance references each individual Javascript file in place, resulting in the debug page loading thousands of individual files. Modern browsers tend to handle this well, but debugging on older browsers can be an unpleasant experience.
+The ``dev`` target will generate the debug application, and runs webpack in watch mode. Webpack will watch all dependencies for changes and rebuild the application when needed. While webpack is running, you can make changes to files in the workspace and pick them up on the page by merely refreshing it. The ``dev`` target only has to be run if dependencies (``goog.module/provide/require``) change or if files are added or removed.
 
-Once you have run the build once, you can make changes to files in the workspace and pick them up on the page by merely refreshing it. The build only has to be run if dependencies (``goog.require/provide``) change or if files are added or removed.
+If the build has already been generated and you simply need to start webpack again, use the ``build:webpack-dev`` target.
 
-The compiled build output
-=========================
+The Compiled Build
+==================
 
-The compiled build output is available in ``dist/opensphere``. You will need to test your changes in both places, but generally compiled mode should be checked after you have largely completed the feature on which you are working. It does contain source maps for debugging, and also loads much quicker in Firefox and IE since all the code is compiled and minified to a single file.
+The compiled build output is available in ``dist/opensphere``. You will need to test your changes in both the debug and compiled application, but generally compiled mode should be checked after you have largely completed the feature on which you are working. It does contain source maps for debugging, and also loads much quicker since all the code is compiled and minified to a smaller file.
 
 Testing
 *******

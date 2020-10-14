@@ -5,6 +5,7 @@ goog.require('goog.events.EventType');
 goog.require('goog.log');
 goog.require('ol.array');
 goog.require('os.im.action.FilterActionEntry');
+goog.require('os.im.action.ImportActionCallbackConfig');
 goog.require('os.im.action.ImportActionEventType');
 goog.require('os.im.action.TagName');
 goog.require('os.im.action.cmd.FilterActionAdd');
@@ -351,6 +352,43 @@ os.im.action.ImportActionManager.prototype.getEntryItems = function(type) {
 
 /**
  * Executes enabled import action entries of a type against a set of items.
+ * @param {string} entryType The entry type.
+ * @param {Array<T>} items The items to process.
+ * @param {boolean=} opt_unprocess Reset existing items
+ * @param {boolean=} opt_unprocessOnly Do not process enabled entries
+ * @return {Array<os.im.action.ImportActionCallbackConfig>|undefined}
+ * @protected
+ */
+os.im.action.ImportActionManager.prototype.processItemsProtected = function(
+    entryType,
+    items,
+    opt_unprocess,
+    opt_unprocessOnly) {
+  if (items && items.length > 0) {
+    var configs = [];
+    var entries = this.actionEntries[entryType];
+    if (entries && entries.length > 0) {
+      for (var i = 0; i < entries.length; i++) {
+        var cfgs = null;
+        if (!opt_unprocessOnly && entries[i].isEnabled()) {
+          cfgs = entries[i].processItems(items);
+        } else if (opt_unprocess || opt_unprocessOnly) {
+          cfgs = entries[i].unprocessItems(items);
+        }
+        if (cfgs) {
+          cfgs.forEach((cfg) => {
+            configs.push(cfg);
+          });
+        }
+      }
+    }
+    return configs;
+  }
+};
+
+
+/**
+ * Executes enabled import action entries of a type against a set of items.
  *
  * @param {string} entryType The entry type.
  * @param {Array<T>=} opt_items The items to process.
@@ -359,16 +397,7 @@ os.im.action.ImportActionManager.prototype.getEntryItems = function(type) {
 os.im.action.ImportActionManager.prototype.processItems = function(entryType, opt_items, opt_unprocess) {
   var items = opt_items || this.getEntryItems(entryType);
   if (items && items.length > 0) {
-    var entries = this.actionEntries[entryType];
-    if (entries && entries.length > 0) {
-      for (var i = 0; i < entries.length; i++) {
-        if (entries[i].isEnabled()) {
-          entries[i].processItems(items);
-        } else if (opt_unprocess) {
-          entries[i].unprocessItems(items);
-        }
-      }
-    }
+    this.processItemsProtected(entryType, items, opt_unprocess);
   }
 };
 
@@ -381,12 +410,7 @@ os.im.action.ImportActionManager.prototype.processItems = function(entryType, op
  */
 os.im.action.ImportActionManager.prototype.unprocessItems = function(entryType, items) {
   if (items && items.length > 0) {
-    var entries = this.actionEntries[entryType];
-    if (entries && entries.length > 0) {
-      for (var i = 0; i < entries.length; i++) {
-        entries[i].unprocessItems(items);
-      }
-    }
+    this.processItemsProtected(entryType, items, true, true);
   }
 };
 
