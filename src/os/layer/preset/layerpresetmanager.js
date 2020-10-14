@@ -85,6 +85,15 @@ class LayerPresetManager extends Disposable {
   }
 
   /**
+   * Handle preset service added.
+   * @param {!os.events.LayerEvent} event The layer event.
+   * @protected
+   */
+  onServiceRegistered(event) {
+    // update all of the promise collections with the new find() results
+  }
+
+  /**
    * @return {!boolean}
    */
   isAdmin() {
@@ -98,7 +107,17 @@ class LayerPresetManager extends Disposable {
    * @return {boolean} true if prior value overwritten
    */
   registerService(key, service, ...opt) {
+    this.presets_ = {}; // set presets to reload every layer
     return this.services_.register.apply(this.services_, [key, service].concat(opt));
+  }
+
+  /**
+   * @param {string} key
+   * @return {boolean} true if prior value dropped
+   */
+  unregisterService(key) {
+    this.presets_ = {}; // set presets to reload every layer
+    return this.services_.remove(key);
   }
 
   /**
@@ -168,6 +187,7 @@ class LayerPresetManager extends Disposable {
             if (result && result.length) {
               return list.concat(result);
             }
+            return list;
           }, []);
 
           // add a "Default" preset to the list
