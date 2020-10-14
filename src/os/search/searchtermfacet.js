@@ -96,19 +96,46 @@ os.search.SearchTermFacet.prototype.getTexts = function(item) {
 
 
 /**
+ * Get the terms from the search string.
+ * @return {!Array<string>} The terms.
+ * @protected
+ */
+os.search.SearchTermFacet.prototype.getTerms = function() {
+  const terms = [];
+  if (this.term_) {
+    const termRegex = /[^\s"]+|"([^"]*)"/gi;
+    let match = termRegex.exec(this.term_);
+    while (match) {
+      if (match) {
+        // Index 1 in the array is the captured group if it exists
+        // Index 0 is the matched text, which we use if no captured group exists
+        terms.push((match[1] ? match[1] : match[0]).toLowerCase());
+      }
+      match = termRegex.exec(this.term_);
+    }
+  }
+
+  // Remove duplicates
+  return [...new Set(terms)];
+};
+
+
+/**
  * @param {RegExp} regex
  * @param {!string} text
  * @param {number=} opt_base Defaults to 3
  * @return {number}
  * @protected
  */
-os.search.SearchTermFacet.prototype.getScore = function(regex, text, opt_base) {
-  opt_base = opt_base || 3;
-  var score = 0;
+os.search.SearchTermFacet.prototype.getScore = function(regex, text, opt_base = 3) {
   var results = regex.exec(text);
+  if (results && results.length === 1) {
+    // Matched but there weren't any capture groups. Return the base score.
+    return opt_base;
+  }
 
   // set up the term map
-  var terms = this.term_ ? this.term_.split(' ') : [];
+  var terms = this.getTerms();
   var termMap = {};
 
   for (var i = 0, n = terms.length; i < n; i++) {
@@ -118,6 +145,7 @@ os.search.SearchTermFacet.prototype.getScore = function(regex, text, opt_base) {
   }
 
   // check the text for matches
+  var score = 0;
   while (results && results.length) {
     for (i = 1, n = results.length; i < n; i++) {
       score += opt_base * results[i].length / text.length;
