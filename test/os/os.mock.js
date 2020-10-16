@@ -50,11 +50,8 @@ beforeEach(function() {
   }
 
   if (!os.ui.injector) {
-    // Register the injector after the call stack clears so tests may call angular.mock.module.
-    setTimeout(() => {
-      inject(function($injector) {
-        os.ui.injector = $injector;
-      });
+    inject(function($injector) {
+      os.ui.injector = $injector;
     });
   }
 
