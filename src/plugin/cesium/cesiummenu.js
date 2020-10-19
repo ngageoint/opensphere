@@ -1,5 +1,6 @@
 goog.provide('plugin.cesium.menu');
 
+goog.require('os.ui.menu.import');
 goog.require('plugin.cesium');
 goog.require('plugin.cesium.importIonAssetDirective');
 
@@ -17,7 +18,7 @@ plugin.cesium.menu.EventType = {
  * Add Cesium items to the import menu.
  */
 plugin.cesium.menu.importSetup = function() {
-  if (plugin.cesium.isIonEnabled()) {
+  if (os.ui.menu.import.MENU && plugin.cesium.isIonEnabled()) {
     var group = os.ui.menu.import.MENU.getRoot().find(os.ui.menu.import.GroupType.MAJOR);
     group.addChild({
       label: 'Add Cesium Ion Asset',
