@@ -281,6 +281,7 @@
     "karma-googmodule-preprocessor": "^1.0.1",
     "karma-jasmine": "^0.1.0",
     "karma-junit-reporter": "^1.2.0",
+    "karma-ng-html2js-preprocessor": "^1.0.0",
     "lolex": "=2.3.2",
     "mkdirp": "^0.5.1",
     "node-sass": "^4.12.0",
