@@ -942,7 +942,7 @@ os.config.Settings.prototype.alertFailure_ = function(opt_delay) {
  */
 os.config.Settings.prototype.alertOneFailed_ = function(opt_delay) {
   var alertMgr = os.alert.AlertManager.getInstance();
-  alertMgr.sendAlert('Settings failed to load from one or more sources.  This session will continue to run, but ' +
+  alertMgr.sendAlertOnce('Settings failed to load from one or more sources.  This session will continue to run, but ' +
       'you may notice some of your previously saved preferences are not available.',
   os.alert.AlertEventSeverity.WARNING);
 };
