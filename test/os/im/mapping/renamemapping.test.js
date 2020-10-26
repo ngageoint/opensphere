@@ -36,6 +36,26 @@ describe('os.im.mapping.RenameMapping', function() {
     expect(record.TestField).toBe(true);
   });
 
+  it('should rename with falsey values', function() {
+    const values = [false, 0, ''];
+    values.forEach((v) => {
+      const record = {TestField: v};
+      rm.execute(record);
+      expect(record.ResultField).toBe(v);
+      expect(record.TestField).toBe(undefined);
+    });
+  });
+
+  it('should not rename with null/undefined values', function() {
+    const values = [null, undefined];
+    values.forEach((v) => {
+      const record = {TestField: v};
+      rm.execute(record);
+      expect(record.hasOwnProperty('ResultField')).toBe(false);
+      expect(record.TestField).toBe(v);
+    });
+  });
+
   it('should report a null sosType (meaning no autodetection)', function() {
     expect(rm.getScoreType()).toBe(os.im.mapping.DEFAULT_SCORETYPE);
   });
