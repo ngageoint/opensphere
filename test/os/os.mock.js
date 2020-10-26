@@ -37,6 +37,10 @@ goog.require('test.os.config.SettingsUtil');
 angular.element(document.body).append('<div id="map-container"></div');
 
 beforeEach(function() {
+  const Settings = goog.module.get('os.config.Settings');
+
+  const settings = Settings.getInstance();
+
   // the bracket notation gets the compiler to quit complaining about this
   os['config']['appNs'] = 'unittest';
 
@@ -55,12 +59,12 @@ beforeEach(function() {
     });
   }
 
-  if (!os.settings.isLoaded() || !os.settings.isInitialized()) {
-    os.settings.getStorageRegistry().addStorage(new os.config.storage.SettingsObjectStorage(['unit']));
-    test.os.config.SettingsUtil.initAndLoad(os.settings);
+  if (!settings.isLoaded() || !settings.isInitialized()) {
+    settings.getStorageRegistry().addStorage(new os.config.storage.SettingsObjectStorage(['unit']));
+    test.os.config.SettingsUtil.initAndLoad(settings);
 
     waitsFor(function() {
-      return os.settings.isLoaded() && os.settings.isInitialized();
+      return settings.isLoaded() && settings.isInitialized();
     });
   }
 
@@ -69,12 +73,12 @@ beforeEach(function() {
 
   runs(function() {
     // vector source will need this
-    if (!os.settings.get('maxFeatures.2d')) {
-      os.settings.set('maxFeatures.2d', 50000);
+    if (!settings.get('maxFeatures.2d')) {
+      settings.set('maxFeatures.2d', 50000);
     }
 
-    if (!os.settings.get('maxFeatures.3d')) {
-      os.settings.set('maxFeatures.3d', 150000);
+    if (!settings.get('maxFeatures.3d')) {
+      settings.set('maxFeatures.3d', 150000);
     }
 
     if (!os.dataManager || !os.osDataManager) {
@@ -106,6 +110,25 @@ beforeEach(function() {
     if (!os.settingsManager) {
       os.settingsManager = os.ui.config.SettingsManager.getInstance();
     }
+  });
+});
+
+
+//
+// Verify test initialization is complete.
+//
+// If UI tests are using ddescribe or iit, this must also be included to ensure angular.mock.module calls succeed.
+//
+describe('OpenSphere Test Initialization', () => {
+  const Settings = goog.module.get('os.config.Settings');
+
+  const settings = Settings.getInstance();
+
+  it('initializes globals for tests', () => {
+    expect(settings.isLoaded()).toBe(true);
+    expect(settings.isInitialized()).toBe(true);
+
+    expect(os.ui.injector).toBeDefined();
   });
 });
 
