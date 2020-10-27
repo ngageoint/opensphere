@@ -80,7 +80,7 @@ os.im.mapping.RenameMapping.prototype.getFieldsChanged = function() {
 os.im.mapping.RenameMapping.prototype.execute = function(item) {
   if (this.field && this.toField && this.toField != this.field) {
     var current = os.im.mapping.getItemField(item, this.field);
-    if (current) {
+    if (current != null) {
       os.im.mapping.setItemField(item, this.toField, current);
 
       if (!this.keepOriginal) {
