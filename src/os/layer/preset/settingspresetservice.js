@@ -32,7 +32,9 @@ class SettingsPresetService extends AbstractPresetService {
           const configs = /** @type {!Object<Array<osx.layer.Preset>>} */
             (Settings.getInstance().get(SettingKey.PRESETS, {}));
           const layerPresets = configs[layerFilterKey] || [];
-
+          layerPresets.forEach((preset) => {
+            preset.published = true;
+          });
           resolve(layerPresets);
         };
 

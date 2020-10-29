@@ -41,8 +41,10 @@ const addDefault = function(presets) {
       if (layer) {
         defaultPreset_ = {
           id: DEFAULT_PRESET_ID,
-          label: 'Default',
-          layerConfig: layer.persist()
+          label: 'Basic',
+          layerConfig: layer.persist(),
+          default: false,
+          published: true
         };
 
         goog.dispose(layer);
