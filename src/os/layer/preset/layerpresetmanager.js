@@ -30,11 +30,10 @@ class LayerPresetManager extends Disposable {
     super();
 
     /**
-     * TODO get this from somewhere
      * True if the user can edit/remove/publish presets. Shows/hides UI elements, etc
      * @type {!boolean}
      */
-    this.admin_ = true;
+    this.admin_ = false;
 
     /**
      * @type {!Registry<IPresetService>}
@@ -49,8 +48,8 @@ class LayerPresetManager extends Disposable {
      */
     this.presets_ = {};
 
-    // add the basic PresetService
-    this.registerService(SettingsPresetService.ID, new SettingsPresetService());
+    // add the basic PresetService; not an admin
+    this.registerService(SettingsPresetService.ID, new SettingsPresetService(), false);
 
     // listen for new layers
     Dispatcher.getInstance().listen(LayerEventType.ADD, this.onLayerAdded, false, this);
@@ -85,18 +84,13 @@ class LayerPresetManager extends Disposable {
   }
 
   /**
-   * Handle preset service added.
-   * @param {!os.events.LayerEvent} event The layer event.
-   * @protected
-   */
-  onServiceRegistered(event) {
-    // update all of the promise collections with the new find() results
-  }
-
-  /**
+   * @param {boolean|undefined} b
    * @return {!boolean}
    */
-  isAdmin() {
+  isAdmin(b) {
+    if (b === true || b === false) {
+      this.admin_ = (b === true);
+    }
     return this.admin_;
   }
 
@@ -171,12 +165,16 @@ class LayerPresetManager extends Disposable {
       var entries = (this.services_.entries() || []);
       var promises = [];
 
-      for (var [, service] of entries) {
+      this.isAdmin(false); // disable the admin UI
+
+      for (var [, service, isAdmin] of entries) {
+        if (isAdmin) this.isAdmin(true); // enable the admin UI if User has admin in any service
+
         if (service.supports(PresetServiceAction.FIND)) {
           promises.push(service.find(/** @type {osx.layer.PresetSearch} */ ({
-            'layerId': [id],
-            'layerFilterKey': [filterKey],
-            'published': (!this.admin_) ? true : undefined
+            layerId: [id],
+            layerFilterKey: [filterKey],
+            published: (!isAdmin) ? true : undefined
           })));
         }
       }
@@ -190,7 +188,7 @@ class LayerPresetManager extends Disposable {
             return list;
           }, []);
 
-          // add a "Default" preset to the list
+          // add a "Basic" preset to the list if there are user-defined ones
           if (presets.length > 0) osLayerPreset.addDefault(presets);
 
           // apply the "isDefault" preset if asked
