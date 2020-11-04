@@ -124,9 +124,18 @@ module.exports = function(config) {
     //
     // Angular template preprocessor.
     //
+    // In debug/tests, templateUrl paths have os.ROOT prepended. This config adds each preloaded template to the
+    // template cache using the debug path so Angular will not try to request it.
+    //
+    // Tests using Angular directives should load this module before each test with:
+    //
+    //   beforeEach(module('app'));
+    //
     ngHtml2JsPreprocessor: {
       // Prepend os.ROOT to the preprocessed template path
-      prependPrefix: '../opensphere/'
+      prependPrefix: '../opensphere/',
+      // Register templates with the 'app' module
+      moduleName: 'app'
     },
 
     junitReporter: {
