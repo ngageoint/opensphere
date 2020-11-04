@@ -142,10 +142,10 @@ class VectorTileLayerConfig extends AbstractLayerConfig {
    */
   getSource(options) {
     // Copy the original options to avoid adding a non-serializable object to it.
-    const sourceOptions = Object.assign({}, options);
+    const sourceOptions = /** @type {olx.source.VectorTileOptions} */ (Object.assign({}, options));
 
     const vtFormat = /** @type {VectorTileFormat|undefined} */ (sourceOptions['format']);
-    sourceOptions['format'] = getVectorTileFormat(vtFormat || VectorTileFormat.MVT);
+    sourceOptions.format = getVectorTileFormat(vtFormat || VectorTileFormat.MVT);
 
     return new VectorTileSource(sourceOptions);
   }
