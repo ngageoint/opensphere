@@ -2,6 +2,10 @@ goog.require('os.net.URLModifier');
 
 
 describe('os.net.URLModifier', function() {
+  afterEach(() => {
+    os.net.URLModifier.replace_.length = 0;
+  });
+
   it('should not modify without replacements', function() {
     var mod = new os.net.URLModifier();
 
