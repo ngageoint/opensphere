@@ -28,6 +28,7 @@ goog.require('os.command.style');
 goog.require('os.data.OSDataManager');
 goog.require('os.defines');
 goog.require('os.layer.preset.LayerPresetManager');
+goog.require('os.layer.preset.PresetMenuButtonDirective');
 goog.require('os.style');
 goog.require('os.ui.Module');
 goog.require('os.ui.file.kml');
