@@ -309,6 +309,19 @@ os.metrics.Layer = {
 
 
 /**
+ * Preset metrics
+ * @enum {string}
+ */
+os.metrics.keys.Presets = {
+  OPEN: 'preset.menu.open',
+  REMOVE: 'preset.remove',
+  SAVE: 'preset.saveupdate',
+  TOGGLE_DEFAULT: 'preset.toggle.default',
+  TOGGLE_PUBLISHED: 'preset.toggle.published'
+};
+
+
+/**
  * Feature metrics
  * @enum {string}
  */
