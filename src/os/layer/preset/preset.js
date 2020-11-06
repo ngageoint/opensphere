@@ -3,6 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const object = goog.require('goog.object');
 const style = goog.require('os.style');
+const OsLayer = goog.require('os.layer');
 
 
 /**
@@ -24,6 +25,27 @@ const DEFAULT_PRESET_ID = '__default__';
 let defaultPreset_ = undefined;
 
 /**
+ * @enum {string}
+ */
+const PresetServiceAction = {
+  INSERT: 'insert',
+  UPDATE: 'update',
+  FIND: 'find',
+  REMOVE: 'remove',
+  SET_DEFAULT: 'setDefault',
+  SET_PUBLISHED: 'setPublished'
+};
+
+/**
+ * Settings keys for layer presets.
+ * @enum {string}
+ */
+const SettingKey = {
+  APPLIED_DEFAULTS: BASE_KEY + 'appliedDefaults',
+  PRESETS: BASE_KEY + 'presets'
+};
+
+/**
  * Add the default preset to an existing set.
  * @param {Array<osx.layer.Preset>} presets The current layer presets.
  */
@@ -31,9 +53,9 @@ const addDefault = function(presets) {
   if (presets) {
     if (!defaultPreset_) {
       // create a temporary vector layer to produce a default layer config
-      var layer = os.layer.createFromOptions({
+      var layer = OsLayer.createFromOptions({
         'id': DEFAULT_PRESET_ID,
-        'type': os.layer.config.StaticLayerConfig.ID,
+        'type': os.layer.config.StaticLayerConfig.ID, // HACK: TODO resolve circular dependency
         'animate': true,
         'visible': true
       });
@@ -81,6 +103,8 @@ const updateDefault = function(layer, preset) {
 exports = {
   BASE_KEY,
   DEFAULT_PRESET_ID,
+  PresetServiceAction,
+  SettingKey,
   addDefault,
   updateDefault
 };

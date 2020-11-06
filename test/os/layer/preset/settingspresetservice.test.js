@@ -1,10 +1,10 @@
-goog.require('os.layer.preset.PresetServiceAction');
+goog.require('os.layer.preset');
 goog.require('os.layer.preset.SettingsPresetService');
 
 
 describe('os.layer.preset.SettingsPresetService', function() {
   const SettingsPresetService = goog.module.get('os.layer.preset.SettingsPresetService');
-  const PresetServiceAction = goog.module.get('os.layer.preset.PresetServiceAction');
+  const {PresetServiceAction} = goog.module.get('os.layer.preset');
 
   it('should instantiate', function() {
     expect(new SettingsPresetService()).not.toBe(null);

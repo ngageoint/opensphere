@@ -2,8 +2,7 @@ goog.module('os.layer.preset.SettingsPresetService');
 
 const Settings = goog.require('os.config.Settings');
 const AbstractPresetService = goog.require('os.layer.preset.AbstractPresetService');
-const SettingKey = goog.require('os.layer.preset.SettingKey');
-const PresetServiceAction = goog.require('os.layer.preset.PresetServiceAction');
+const {PresetServiceAction, SettingKey} = goog.require('os.layer.preset');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 
 

@@ -1,4 +1,4 @@
-goog.require('os.layer.preset.PresetServiceAction');
+goog.require('os.layer.preset');
 goog.require('os.layer.preset.SettingsPresetService');
 
 describe('os.layer.preset.LayerPresetManager', function() {
