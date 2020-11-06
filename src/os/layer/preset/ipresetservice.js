@@ -1,7 +1,6 @@
 goog.module('os.layer.preset.IPresetService');
-goog.module.declareLegacyNamespace();
 
-const PresetServiceAction = goog.requireType('os.layer.preset.PresetServiceAction');
+const {PresetServiceAction} = goog.requireType('os.layer.preset');
 
 
 /**

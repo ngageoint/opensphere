@@ -10,10 +10,9 @@ const Registry = goog.require('os.data.Registry');
 const LayerEventType = goog.require('os.events.LayerEventType');
 const osImplements = goog.require('os.implements');
 const ILayer = goog.require('os.layer.ILayer');
-const osLayerPreset = goog.require('os.layer.preset');
-const PresetServiceAction = goog.require('os.layer.preset.PresetServiceAction');
-const SettingKey = goog.require('os.layer.preset.SettingKey');
+const OsLayerPreset = goog.require('os.layer.preset');
 const SettingsPresetService = goog.require('os.layer.preset.SettingsPresetService');
+const IFilterable = goog.require('os.filter.IFilterable');
 
 const IPresetService = goog.requireType('os.layer.preset.IPresetService');
 
@@ -102,7 +101,7 @@ class LayerPresetManager extends Disposable {
    */
   registerService(key, service, ...opt) {
     this.presets_ = {}; // set presets to reload every layer
-    return this.services_.register.apply(this.services_, [key, service].concat(opt));
+    return this.services_.register(...[key, service].concat(opt));
   }
 
   /**
@@ -113,23 +112,6 @@ class LayerPresetManager extends Disposable {
     this.presets_ = {}; // set presets to reload every layer
     return this.services_.remove(key);
   }
-
-  /**
-   * Gets a promise that resolves to the presets for a given layer type.
-   *
-   * @param {string} type
-   * @param {string} url
-   * @deprecated Please create a os.layer.preset.PresetService instead
-   */
-  registerPreset(type, url) {}
-
-  /**
-   * Handler for errors in loading presets.
-   *
-   * @param {*} reason
-   * @deprecated
-   */
-  handleLoadError(reason) {}
 
   /**
    * Gets a promise that resolves to the presets for a given layer ID.
@@ -156,9 +138,13 @@ class LayerPresetManager extends Disposable {
   initPreset(id, opt_applyDefault) {
     // use the filter key to pull the value from settings
     var filterKey;
+
+    // HACK: doing goog.require('os.MapContainer') properly creates a circular dependency somewhere in
+    // the os.layer chain. TODO Fix it when there's time
     var layer = os.map.mapContainer.getLayer(id);
-    if (osImplements(layer, os.filter.IFilterable.ID)) {
-      filterKey = /** @type {os.filter.IFilterable} */ (layer).getFilterKey();
+
+    if (osImplements(layer, IFilterable.ID)) {
+      filterKey = /** @type {IFilterable} */ (layer).getFilterKey();
     }
 
     var promise = new Promise((resolve, reject) => {
@@ -170,7 +156,7 @@ class LayerPresetManager extends Disposable {
       for (var [, service, isAdmin] of entries) {
         if (isAdmin) this.isAdmin(true); // enable the admin UI if User has admin in any service
 
-        if (service.supports(PresetServiceAction.FIND)) {
+        if (service.supports(OsLayerPreset.PresetServiceAction.FIND)) {
           promises.push(service.find(/** @type {osx.layer.PresetSearch} */ ({
             layerId: [id],
             layerFilterKey: [filterKey],
@@ -189,7 +175,7 @@ class LayerPresetManager extends Disposable {
           }, []);
 
           // add a "Basic" preset to the list if there are user-defined ones
-          if (presets.length > 0) osLayerPreset.addDefault(presets);
+          if (presets.length > 0) OsLayerPreset.addDefault(presets);
 
           // apply the "isDefault" preset if asked
           if (opt_applyDefault) {
@@ -216,7 +202,7 @@ class LayerPresetManager extends Disposable {
    */
   applyDefaults(id, presets) {
     var applied = /** @type {!Object<boolean>} */
-      (settings.getInstance().get(SettingKey.APPLIED_DEFAULTS, {}));
+      (settings.getInstance().get(OsLayerPreset.SettingKey.APPLIED_DEFAULTS, {}));
 
     if (Array.isArray(presets) && presets.length && !applied[id]) {
       var preset = presets.find(function(preset) {
@@ -229,7 +215,7 @@ class LayerPresetManager extends Disposable {
       }
 
       applied[id] = true;
-      settings.getInstance().set(SettingKey.APPLIED_DEFAULTS, applied);
+      settings.getInstance().set(OsLayerPreset.SettingKey.APPLIED_DEFAULTS, applied);
     }
   }
 }

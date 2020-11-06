@@ -58,9 +58,13 @@ class AbstractPresetService {
       if (typeof preset == 'object') {
         this.setDefaultInternal(preset, isDefault, resolve, reject);
       } else {
+        // If the developer gave us an ID instead of a preset, load the Preset first and then modify it
         this.find(/** @type {osx.layer.PresetSearch} */ ({
           'id': [preset]
         })).then(
+            /**
+             * @param {Array<osx.layer.Preset>} results - Array containing the Preset we're looking to update
+             */
             (results) => {
               if (results && results.length > 0) {
                 this.setDefaultInternal(results[0], isDefault, resolve, reject);
@@ -85,32 +89,37 @@ class AbstractPresetService {
    * @protected
    */
   setDefaultInternal(preset, isDefault, resolve, reject) {
-    const id = preset['id'];
-    const layerFilterKey = preset['layerFilterKey'];
+    const id = preset.id;
+    const layerFilterKey = preset.layerFilterKey;
 
     // loop through all presets in the layer; set the one with ID to isDefault
     this.find(/** @type {osx.layer.PresetSearch} */ ({
       'layerFilterKey': [layerFilterKey]
     })).then(
+        /**
+         * @param {Array<osx.layer.Preset>} results
+         */
         (results) => {
           if (results && results.length > 0) {
             const updates = [];
             let update = null;
+
+            // update presets individually
             results.forEach((result) => {
-              const prev = result['default'];
-              const target = result['id'] == id;
+              const prev = result.default;
+              const target = result.id == id;
               if (prev && !target) { // was true and is not the target
-                result['default'] = false;
+                result.default = false;
                 updates.push(this.update(result));
               } else if (!prev && isDefault && target) { // was false, changing, and is the target
-                result['default'] = true;
+                result.default = true;
                 const promise = this.update(result);
                 updates.push(promise);
                 update = promise;
               }
             });
 
-            // don't resolve update.then() by itself; wait for all
+            // don't resolve update.then() by itself; wait for all to complete
             Promise.all(updates).then(() => {
               if (update) {
                 update.then(
@@ -145,9 +154,13 @@ class AbstractPresetService {
       if (typeof preset == 'object') {
         this.setPublishedInternal(preset, isPublished, resolve, reject);
       } else {
+        // If the developer gave us an ID instead of a preset, load the Preset first and then modify it
         this.find(/** @type {osx.layer.PresetSearch} */ ({
           'id': [preset]
         })).then(
+            /**
+             * @param {Array<osx.layer.Preset>} results
+             */
             (results) => {
               if (results && results.length > 0) {
                 this.setPublishedInternal(results[0], isPublished, resolve, reject);
@@ -171,7 +184,7 @@ class AbstractPresetService {
    * @protected
    */
   setPublishedInternal(preset, isPublished, resolve, reject) {
-    preset['published'] = isPublished;
+    preset.published = isPublished;
     this.update(preset).then(
         (updated) => {
           resolve(updated);
