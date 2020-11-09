@@ -487,6 +487,11 @@ $u-parent-resizer-count: 0;
   @include button-variant($u-theme-variables--bg-offset, $u-theme-variables--bg-offset);
 }
 
+.u-btn-inverse {
+  $u-btn-bg-contrast-color: yiq-contrast-color($body-bg, $light, $dark);
+  @include button-variant(color-yiq($u-btn-bg-contrast-color), $u-btn-bg-contrast-color);
+}
+
 .u-bg-flyout {
   background-color: rgba($modal-content-bg, .95);
 }

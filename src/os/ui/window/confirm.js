@@ -143,16 +143,12 @@ class Controller {
     $timeout(function() {
       $scope.$emit(WindowEventType.READY);
     });
-
-    $scope.$on('$destroy', this.onDestroy_.bind(this));
   }
 
   /**
-   * Clean up
-   *
-   * @private
+   * Angular $onDestroy lifecycle hook.
    */
-  onDestroy_() {
+  $onDestroy() {
     goog.dispose(this.keyHandler_);
 
     this.element_ = null;
