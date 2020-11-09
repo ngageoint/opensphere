@@ -2,6 +2,7 @@ goog.provide('os.interaction');
 
 goog.require('ol.Feature');
 goog.require('ol.layer.Vector');
+goog.require('ol.layer.VectorTile');
 goog.require('os.feature');
 goog.require('os.map');
 
@@ -81,7 +82,11 @@ os.interaction.getZoomDelta = function(boost, inverse) {
  * @return {boolean} Include.
  */
 os.interaction.defaultLayerFilter = function(layer) {
-  // unmanaged layers aren't automatically included in hit detection, so the ol.layer.Vector check is intended to
-  // cover those layers
-  return layer instanceof ol.layer.Vector;
+  //
+  // Unmanaged layers aren't automatically included in hit detection, so the ol.layer.Vector check is intended to
+  // cover those layers.
+  //
+  // Vector Tiles are excluded because they implement more specific interactions for performance reasons.
+  //
+  return layer instanceof ol.layer.Vector && !(layer instanceof ol.layer.VectorTile);
 };
