@@ -8,6 +8,7 @@ describe('os.ui.window.ConfirmUI', () => {
   let compile;
   let rootScope;
   let controller;
+  let element;
   let scope;
 
   /**
@@ -19,11 +20,11 @@ describe('os.ui.window.ConfirmUI', () => {
 
     scope = Object.assign(rootScope.$new(true), opt_scope);
 
-    const $element = angular.element(`<confirm></confirm>`);
-    compile($element)(scope);
+    element = angular.element(`<confirm></confirm>`);
+    compile(element)(scope);
     scope.$apply();
 
-    controller = $element.controller('confirm');
+    controller = element.controller('confirm');
   };
 
   /**
@@ -37,9 +38,8 @@ describe('os.ui.window.ConfirmUI', () => {
     }
   };
 
-  // Load the Angular module and template
+  // Load the Angular module
   beforeEach(module('app'));
-  beforeEach(module(`${os.ROOT}views/window/confirm.html`));
 
   beforeEach(inject(($compile, $rootScope) => {
     compile = $compile;
@@ -52,7 +52,10 @@ describe('os.ui.window.ConfirmUI', () => {
 
   it('should initialize', () => {
     initComponent();
+    expect(controller.scope_).toBeDefined();
+    expect(controller.scope_.$parent).toBe(scope);
     expect(controller.scope_.valid).toBe(true);
+    expect(controller.element_[0]).toBe(element[0]);
 
     initComponent({valid: false});
     expect(controller.scope_.valid).toBe(false);
@@ -65,6 +68,37 @@ describe('os.ui.window.ConfirmUI', () => {
     expect(controller.scope_).toBeNull();
     expect(controller.element_).toBeNull();
     expect(controller.keyHandler_.isDisposed()).toBe(true);
+  });
+
+  it('should create yes/no buttons from scope options', () => {
+    const options = {
+      yesText: 'Yes Test',
+      yesIcon: 'fa-yep',
+      yesButtonTitle: 'Yes tooltip',
+      noText: 'No Test',
+      noIcon: 'fa-nope',
+      noButtonTitle: 'No tooltip'
+    };
+
+    initComponent(options);
+
+    const yesButton = element.find('button[type="submit"]');
+    expect(yesButton.length).toBe(1);
+    expect(yesButton[0].innerText.trim()).toBe(options.yesText);
+    expect(yesButton[0].title).toBe(options.yesButtonTitle);
+    expect(yesButton.find('i').hasClass(options.yesIcon)).toBe(true);
+
+    let noButton = element.find('button[type="button"]');
+    expect(noButton.length).toBe(1);
+    expect(noButton[0].innerText.trim()).toBe(options.noText);
+    expect(noButton[0].title).toBe(options.noButtonTitle);
+    expect(noButton.find('i').hasClass(options.noIcon)).toBe(true);
+
+    options.hideCancel = true;
+    initComponent(options);
+
+    noButton = element.find('button[type="button"]');
+    expect(noButton.length).toBe(0);
   });
 
   it('should fire a callback and close when cancelled', () => {
