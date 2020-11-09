@@ -47,17 +47,19 @@ class AbstractPresetService {
   }
 
   /**
-   * The compiler is wrong; preset, opt_boolean, and the return are exactly as they should be
-   * @suppress {checkTypes}
-   * @inheritDoc
+   * Re-set the params and return instead of inheritDoc.
+   * The compiler is wrong; preset, opt_boolean, and the return are exactly as they should be.
+   *
+   * @param {osx.layer.Preset|string} preset
+   * @param {boolean=} opt_boolean
+   * @return {!Promise<osx.layer.Preset|null,?>}
+   * @override
    */
   setDefault(preset, opt_boolean) {
     return new Promise((resolve, reject) => {
       const isDefault = (opt_boolean !== false);
 
-      if (typeof preset == 'object') {
-        this.setDefaultInternal(preset, isDefault, resolve, reject);
-      } else {
+      if (typeof preset == 'string') {
         // If the developer gave us an ID instead of a preset, load the Preset first and then modify it
         this.find(/** @type {osx.layer.PresetSearch} */ ({
           'id': [preset]
@@ -75,6 +77,8 @@ class AbstractPresetService {
             (err) => {
               reject(err);
             });
+      } else {
+        this.setDefaultInternal(preset, isDefault, resolve, reject);
       }
     });
   }
@@ -84,7 +88,7 @@ class AbstractPresetService {
    *
    * @param {!osx.layer.Preset} preset
    * @param {!boolean} isDefault
-   * @param {!Function<?>} resolve
+   * @param {!Function<osx.layer.Preset|null>} resolve
    * @param {!Function<?>} reject
    * @protected
    */
@@ -143,17 +147,19 @@ class AbstractPresetService {
   }
 
   /**
-   * The compiler is wrong; preset, opt_boolean, and the return are exactly as they should be
-   * @suppress {checkTypes}
-   * @inheritDoc
+   * Re-set the params and return instead of inheritDoc.
+   * The compiler is wrong; preset, opt_boolean, and the return are exactly as they should be.
+   *
+   * @param {osx.layer.Preset|string} preset
+   * @param {boolean=} opt_boolean
+   * @return {!Promise<osx.layer.Preset|null,?>}
+   * @override
    */
   setPublished(preset, opt_boolean) {
     return new Promise((resolve, reject) => {
       const isPublished = (opt_boolean !== false);
 
-      if (typeof preset == 'object') {
-        this.setPublishedInternal(preset, isPublished, resolve, reject);
-      } else {
+      if (typeof preset == 'string') {
         // If the developer gave us an ID instead of a preset, load the Preset first and then modify it
         this.find(/** @type {osx.layer.PresetSearch} */ ({
           'id': [preset]
@@ -171,6 +177,8 @@ class AbstractPresetService {
             (err) => {
               reject(err);
             });
+      } else {
+        this.setPublishedInternal(preset, isPublished, resolve, reject);
       }
     });
   }
@@ -179,7 +187,7 @@ class AbstractPresetService {
    * Handle setPublished
    * @param {!osx.layer.Preset} preset
    * @param {!boolean} isPublished
-   * @param {!Function<?>} resolve
+   * @param {!Function<osx.layer.Preset|null>} resolve
    * @param {!Function<?>} reject
    * @protected
    */

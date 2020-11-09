@@ -43,18 +43,18 @@ class IPresetService {
   /**
    * Sets one preset to "isDefault" = opt_boolean (default true) and the others to false
    *
-   * @param {?osx.layer.Preset|string} preset
+   * @param {osx.layer.Preset|string} preset
    * @param {boolean=} opt_boolean
-   * @return {!Promise<osx.layer.Preset|null>}
+   * @return {!Promise<osx.layer.Preset|null,?>}
    */
   setDefault(preset, opt_boolean) {}
 
   /**
    * Sets preset to "isPublished" = opt_boolean (default true)
    *
-   * @param {?osx.layer.Preset|string} preset
+   * @param {osx.layer.Preset|string} preset
    * @param {boolean=} opt_boolean
-   * @return {!Promise<osx.layer.Preset|null>}
+   * @return {!Promise<osx.layer.Preset|null,?>}
    */
   setPublished(preset, opt_boolean) {}
 
