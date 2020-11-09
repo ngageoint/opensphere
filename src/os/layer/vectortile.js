@@ -684,9 +684,21 @@ class VectorTile extends VectorTileLayer {
       this.groupLabel_ = /** @type {string} */ (config['groupLabel']);
     }
 
-    // Vector tiles can be rendered at all zoom levels using data from other levels.
+    if (config['minZoom'] != null) {
+      // Max resolution depends directly on the layer's tile grid. This ensures tiles are not requested until the first
+      // supported zoom level.
+      const offset = config['zoomOffset'] || 0;
+      const grid = this.getSource().getTileGrid();
+      const tgMin = grid.getMinZoom();
+      const tgMax = grid.getMaxZoom();
+
+      const z = Math.min(tgMax, Math.max(tgMin, Math.round(config['minZoom']) + offset));
+      this.setMaxResolution(grid.getResolution(z));
+    }
+
+    // Vector tiles can be rendered at higher zoom levels using data from previous levels. Setting maxZoom will only
+    // impact when tiles will no longer be requested from the service.
     this.setMinResolution(0);
-    this.setMaxResolution(Infinity);
   }
 
   /**
