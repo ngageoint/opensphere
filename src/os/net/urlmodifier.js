@@ -28,8 +28,6 @@ os.net.URLModifier.replace_ = [];
  * @param {?Object<string, string>} options
  */
 os.net.URLModifier.configure = function(options) {
-  os.net.URLModifier.replace_.length = 0;
-
   if (options) {
     for (var pattern in options) {
       os.net.URLModifier.replace_.push({
