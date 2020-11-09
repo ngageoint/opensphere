@@ -1,13 +1,17 @@
 goog.module('os.layer.preset.PresetMenuButton');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.layer.preset.PresetModal');
+
 const LayerPresetManager = goog.require('os.layer.preset.LayerPresetManager');
 const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
 const Menu = goog.require('os.ui.menu.Menu');
 const MenuItem = goog.require('os.ui.menu.MenuItem');
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 const Module = goog.require('os.ui.Module');
+const OsWindow = goog.require('os.ui.window');
 const {Presets: Metrics} = goog.require('os.metrics.keys');
+
 
 
 /**
@@ -55,7 +59,7 @@ class Controller extends MenuButtonCtrl {
    * @private
    */
   init_() {
-    this['isAdmin'] = LayerPresetManager.getInstance().isAdmin(); // requires ng-if
+    this['isAdmin'] = LayerPresetManager.getInstance().isAdmin(undefined); // requires ng-if
 
     // build the menu
     this.menu = new Menu(new MenuItem({
@@ -148,9 +152,29 @@ class Controller extends MenuButtonCtrl {
    *
    */
   save() {
-    const preset = this.scope['preset'];
+    const preset = this.scope['parentCtrl']['preset'];
+    // console.log(`preset.save(${preset.label})`, preset);
 
-    console.log(`preset.save(${preset.label})`, preset);
+    var html = '<preset-modal params="params"></preset-modal>';
+    var options = {
+      'icon': '',
+      'width': 550,
+      'height': 'auto',
+      'label': '',
+      'show-close': true,
+      'modal': true,
+      'x': 'center',
+      'y': 'center'
+    };
+
+    var scopeOptions = {
+      'params': {
+        'preset': preset
+      }
+    };
+
+    // Create the modal window
+    OsWindow.create(options, html, undefined, undefined, undefined, scopeOptions);
   }
 
   /**

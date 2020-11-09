@@ -1,0 +1,15 @@
+<div>
+  <p>local -- {{local.id}}: {{local.label}}</p>
+  <p>params -- {{params.preset.id}}: {{}}</p>
+  <p>
+    Label:
+      <input type="text" ng-model="local.label">
+      <label><input type="checkbox" ng-disabled="!params.preset.id"
+        ng-checked="!local.id"
+        ng-click="ctrl.toggleSaveAs">Save as New...
+      </label>
+  </p>
+  <p>Current Styles, Labels, and Feature Actions will be saved as Prest '{{local.label}}'</p>
+  <p ng-if="ctrl.thinking">Thinking...</p>
+</div>
+
