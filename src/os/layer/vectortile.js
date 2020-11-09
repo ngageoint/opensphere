@@ -17,7 +17,6 @@ const UrlTileSource = goog.require('ol.source.UrlTile');
 const {dispatcher} = goog.require('os');
 const IGroupable = goog.require('os.IGroupable');
 const ActionEventType = goog.require('os.action.EventType');
-const DataManager = goog.require('os.data.DataManager');
 const LayerEvent = goog.require('os.events.LayerEvent');
 const LayerEventType = goog.require('os.events.LayerEventType');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
@@ -33,7 +32,6 @@ const math = goog.require('os.math');
 const registerClass = goog.require('os.registerClass');
 const SourcePropertyChange = goog.require('os.source.PropertyChange');
 const {isStateFile} = goog.require('os.state');
-const TimeInstant = goog.require('os.time.TimeInstant');
 const ui = goog.require('os.ui');
 const Icons = goog.require('os.ui.Icons');
 const renamelayer = goog.require('os.ui.renamelayer');
@@ -530,9 +528,6 @@ class VectorTile extends VectorTileLayer {
         case ActionEventType.IDENTIFY:
           this.identify();
           break;
-        case ActionEventType.MOST_RECENT:
-          DataManager.getInstance().setTimeFromDescriptor(this.getId());
-          break;
         case ActionEventType.REFRESH:
           source.refresh();
           break;
@@ -574,15 +569,6 @@ class VectorTile extends VectorTileLayer {
         return true;
       case ActionEventType.RENAME:
         return Array.isArray(opt_actionArgs) && opt_actionArgs.length === 1;
-      case ActionEventType.MOST_RECENT:
-        // only enable if descriptor exists and max date is greater than 0
-        var desc = DataManager.getInstance().getDescriptor(this.getId());
-        if (desc != null) {
-          var maxDate = desc.getMaxDate();
-          return maxDate > 0 && maxDate < TimeInstant.MAX_TIME;
-        }
-
-        break;
       case ActionEventType.REMOVE_LAYER:
         return this.isRemovable();
       default:
