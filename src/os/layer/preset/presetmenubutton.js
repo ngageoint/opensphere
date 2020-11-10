@@ -1,7 +1,7 @@
 goog.module('os.layer.preset.PresetMenuButton');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.layer.preset.PresetModal');
+goog.require('os.layer.preset.PresetModalUI');
 
 const LayerPresetManager = goog.require('os.layer.preset.LayerPresetManager');
 const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
@@ -59,7 +59,7 @@ class Controller extends MenuButtonCtrl {
    * @private
    */
   init_() {
-    this['isAdmin'] = LayerPresetManager.getInstance().isAdmin(undefined); // requires ng-if
+    this['isAdmin'] = LayerPresetManager.getInstance().isAdmin(); // requires ng-if
 
     // build the menu
     this.menu = new Menu(new MenuItem({
@@ -155,16 +155,17 @@ class Controller extends MenuButtonCtrl {
     const preset = this.scope['parentCtrl']['preset'];
     // console.log(`preset.save(${preset.label})`, preset);
 
-    var html = '<preset-modal params="params"></preset-modal>';
+    var html = '<presetmodal params="params"></presetmodal>';
     var options = {
+      'id': 'presetmodal',
       'icon': '',
-      'width': 550,
+      'width': 400,
       'height': 'auto',
-      'label': '',
+      'label': 'Save Preset...',
       'show-close': true,
       'modal': true,
       'x': 'center',
-      'y': 'center'
+      'y': '100'
     };
 
     var scopeOptions = {
@@ -211,6 +212,14 @@ class Controller extends MenuButtonCtrl {
       if (publishFalse) publishFalse.visible = preset.published;
       if (defaultTrue) defaultTrue.visible = !preset.default;
       if (defaultFalse) defaultFalse.visible = preset.default;
+
+      // TODO remove these "disables" as the feature(s) are implemented
+      const remove = this.menu.getRoot().find(EventType.REMOVE);
+      if (remove) remove.enabled = false;
+      if (publishTrue) publishTrue.enabled = false;
+      if (publishFalse) publishFalse.enabled = false;
+      if (defaultTrue) defaultTrue.enabled = false;
+      if (defaultFalse) defaultFalse.enabled = false;
     }
   }
 }

@@ -48,8 +48,10 @@ const SettingKey = {
 /**
  * Add the default preset to an existing set.
  * @param {Array<osx.layer.Preset>} presets The current layer presets.
+ * @param {string=} opt_layerId
+ * @param {string=} opt_layerFilterKey
  */
-const addDefault = function(presets) {
+const addDefault = function(presets, opt_layerId, opt_layerFilterKey) {
   if (presets) {
     if (!defaultPreset_) {
       // create a temporary vector layer to produce a default layer config
@@ -68,6 +70,9 @@ const addDefault = function(presets) {
           default: false,
           published: true
         };
+
+        if (opt_layerId) defaultPreset_.layerId = opt_layerId;
+        if (opt_layerFilterKey) defaultPreset_.layerFilterKey = opt_layerFilterKey;
 
         goog.dispose(layer);
       }

@@ -1,15 +1,29 @@
-<div>
-  <p>local -- {{local.id}}: {{local.label}}</p>
-  <p>params -- {{params.preset.id}}: {{}}</p>
-  <p>
-    Label:
-      <input type="text" ng-model="local.label">
-      <label><input type="checkbox" ng-disabled="!params.preset.id"
-        ng-checked="!local.id"
-        ng-click="ctrl.toggleSaveAs">Save as New...
-      </label>
-  </p>
-  <p>Current Styles, Labels, and Feature Actions will be saved as Prest '{{local.label}}'</p>
-  <p ng-if="ctrl.thinking">Thinking...</p>
+<div class="modal-content">
+  <div class="modal-body">
+    <div class="form-group row">
+      <label class="col-3">Label</label>
+      <input type="text" class="form-control col-9" ng-model="ctrl.dirty.label">
+    </div>
+    <div class="form-group row">
+        <label class="col-3">Create New</label>
+        <label class="col-9">
+          <input type="checkbox" ng-disabled="!ctrl.clean.id || ctrl.clean.id == '__default__'"
+            ng-checked="!ctrl.dirty.id"
+            ng-click="ctrl.toggleSaveNew()">
+        </label>
+      </div>
+      <div class="alert alert-info" style="display: none;">
+      <span>Current Styles, Labels, and Feature Actions will be saved as<strong ng-show="!ctrl.dirty.id"> new</strong> Preset "{{ctrl.dirty.label}}"</span>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-disabled="ctrl.thinking" ng-click="ctrl.saveClick()" >
+      <i class="fa" ng-class="ctrl.thinking && 'fa-spin fa-spinner'"></i>
+      Save
+    </button>
+    <button type="button" class="btn btn-secondary" ng-disabled="ctrl.thinking" ng-click="ctrl.cancelClick()">
+      <i class="fa fa-times"></i>
+      Cancel
+    </button>
+  </div>
 </div>
-

@@ -105,7 +105,7 @@ class LayerPresetManager extends Disposable {
    */
   service(opt_key) {
     let key = opt_key;
-    if (opt_key != undefined) {
+    if (opt_key == undefined) {
       key = this.serviceKey_;
     }
     return (key) ? this.services_.get(key) : null;
@@ -200,8 +200,10 @@ class LayerPresetManager extends Disposable {
             return list;
           }, []);
 
-          // add a "Basic" preset to the list if there are user-defined ones
-          if (presets.length > 0) OsLayerPreset.addDefault(presets);
+          // add a "Basic" preset to the list if there are user-defined ones OR the user is an admin
+          if (presets.length > 0 || this.isAdmin()) {
+            OsLayerPreset.addDefault(presets, id, filterKey);
+          }
 
           // apply the "isDefault" preset if asked
           if (opt_applyDefault) {
