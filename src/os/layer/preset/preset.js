@@ -1,65 +1,72 @@
-goog.provide('os.layer.preset');
-goog.provide('os.layer.preset.SettingKey');
+goog.module('os.layer.preset');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.object');
-goog.require('os.style');
-
+const object = goog.require('goog.object');
+const style = goog.require('os.style');
+const OsLayer = goog.require('os.layer');
 
 
 /**
  * Base settings key for layer presets.
  * @type {string}
- * @const
  */
-os.layer.preset.BASE_KEY = 'os.layerPreset.';
+const BASE_KEY = 'os.layerPreset.';
 
+/**
+ * ID for the default preset.
+ * @type {string}
+ */
+const DEFAULT_PRESET_ID = '__default__';
+
+/**
+ * The default preset.
+ * @type {osx.layer.Preset|undefined}
+ */
+let defaultPreset_ = undefined;
+
+/**
+ * @enum {string}
+ */
+const PresetServiceAction = {
+  INSERT: 'insert',
+  UPDATE: 'update',
+  FIND: 'find',
+  REMOVE: 'remove',
+  SET_DEFAULT: 'setDefault',
+  SET_PUBLISHED: 'setPublished'
+};
 
 /**
  * Settings keys for layer presets.
  * @enum {string}
  */
-os.layer.preset.SettingKey = {
-  APPLIED_DEFAULTS: os.layer.preset.BASE_KEY + 'appliedDefaults',
-  PRESETS: os.layer.preset.BASE_KEY + 'presets'
+const SettingKey = {
+  APPLIED_DEFAULTS: BASE_KEY + 'appliedDefaults',
+  PRESETS: BASE_KEY + 'presets'
 };
-
-
-/**
- * ID for the default preset.
- * @type {string}
- * @const
- */
-os.layer.preset.DEFAULT_PRESET_ID = '__default__';
-
-
-/**
- * The default preset.
- * @type {osx.layer.Preset|undefined}
- * @private
- */
-os.layer.preset.defaultPreset_ = undefined;
-
 
 /**
  * Add the default preset to an existing set.
  * @param {Array<osx.layer.Preset>} presets The current layer presets.
  */
-os.layer.preset.addDefault = function(presets) {
+const addDefault = function(presets) {
   if (presets) {
-    if (!os.layer.preset.defaultPreset_) {
+    if (!defaultPreset_) {
       // create a temporary vector layer to produce a default layer config
-      var layer = os.layer.createFromOptions({
-        'id': os.layer.preset.DEFAULT_PRESET_ID,
-        'type': os.layer.config.StaticLayerConfig.ID,
+      var layer = OsLayer.createFromOptions({
+        'id': DEFAULT_PRESET_ID,
+        'type': os.layer.config.StaticLayerConfig.ID, // HACK: TODO resolve circular dependency
         'animate': true,
         'visible': true
       });
 
       if (layer) {
-        os.layer.preset.defaultPreset_ = {
-          id: os.layer.preset.DEFAULT_PRESET_ID,
-          label: 'Default',
-          layerConfig: layer.persist()
+        defaultPreset_ = {
+          id: DEFAULT_PRESET_ID,
+          label: 'Basic',
+          layerConfig: layer.persist(),
+          default: false,
+          published: true
         };
 
         goog.dispose(layer);
@@ -67,29 +74,37 @@ os.layer.preset.addDefault = function(presets) {
     }
 
     var hasDefault = presets.some(function(p) {
-      return !!p && p.id === os.layer.preset.DEFAULT_PRESET_ID;
+      return !!p && p.id === DEFAULT_PRESET_ID;
     });
-    if (!hasDefault && os.layer.preset.defaultPreset_) {
-      presets.unshift(goog.object.unsafeClone(os.layer.preset.defaultPreset_));
+    if (!hasDefault && defaultPreset_) {
+      presets.unshift(object.unsafeClone(defaultPreset_));
     }
   }
 };
-
 
 /**
  * Update the default preset for a layer.
  * @param {os.layer.ILayer} layer The layer.
  * @param {osx.layer.Preset} preset The default preset.
  */
-os.layer.preset.updateDefault = function(layer, preset) {
+const updateDefault = function(layer, preset) {
   if (layer && preset && preset.layerConfig) {
     var config = preset.layerConfig;
     var layerOptions = layer.getLayerOptions();
     if (layerOptions && layerOptions['baseColor']) {
       // update the default color
-      var color = os.style.toRgbaString(/** @type {string} */ (layerOptions['baseColor']));
+      var color = style.toRgbaString(/** @type {string} */ (layerOptions['baseColor']));
       config['color'] = color;
       config['fillColor'] = color;
     }
   }
+};
+
+exports = {
+  BASE_KEY,
+  DEFAULT_PRESET_ID,
+  PresetServiceAction,
+  SettingKey,
+  addDefault,
+  updateDefault
 };
