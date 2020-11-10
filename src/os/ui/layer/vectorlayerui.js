@@ -370,8 +370,12 @@ os.ui.layer.VectorLayerUICtrl.prototype.loadPresets = function() {
             var currentPreset = this['preset'] ? presets.find(function(p) {
               return p && p.id === this['preset'].id;
             }, this) : undefined;
+
             // set the current selection, with priority as current > default > first
             this['preset'] = currentPreset || defaultPreset || presets[0];
+
+            // tell the directive to re-render now that we have a new list of presets
+            os.ui.apply(this.scope);
           }
         }, undefined, this);
       }
