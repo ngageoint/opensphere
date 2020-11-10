@@ -52,7 +52,7 @@ class AbstractPresetService {
    *
    * @param {osx.layer.Preset|string} preset
    * @param {boolean=} opt_boolean
-   * @return {!Promise<osx.layer.Preset|null,?>}
+   * @return {!Promise<osx.layer.Preset>}
    * @override
    */
   setDefault(preset, opt_boolean) {
@@ -88,8 +88,8 @@ class AbstractPresetService {
    *
    * @param {!osx.layer.Preset} preset
    * @param {!boolean} isDefault
-   * @param {!Function<osx.layer.Preset|null>} resolve
-   * @param {!Function<?>} reject
+   * @param {!Function<osx.layer.Preset>} resolve
+   * @param {!Function<*>} reject
    * @protected
    */
   setDefaultInternal(preset, isDefault, resolve, reject) {
@@ -152,7 +152,7 @@ class AbstractPresetService {
    *
    * @param {osx.layer.Preset|string} preset
    * @param {boolean=} opt_boolean
-   * @return {!Promise<osx.layer.Preset|null,?>}
+   * @return {!Promise<osx.layer.Preset>}
    * @override
    */
   setPublished(preset, opt_boolean) {
@@ -187,8 +187,8 @@ class AbstractPresetService {
    * Handle setPublished
    * @param {!osx.layer.Preset} preset
    * @param {!boolean} isPublished
-   * @param {!Function<osx.layer.Preset|null>} resolve
-   * @param {!Function<?>} reject
+   * @param {!Function<osx.layer.Preset>} resolve
+   * @param {!Function<*>} reject
    * @protected
    */
   setPublishedInternal(preset, isPublished, resolve, reject) {

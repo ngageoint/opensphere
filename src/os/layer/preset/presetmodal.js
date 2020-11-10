@@ -1,7 +1,13 @@
-goog.module('os.layer.preset.PresetModal');
+goog.module('os.layer.preset.PresetModalUI');
 
 const LayerPresetManager = goog.require('os.layer.preset.LayerPresetManager');
 const Module = goog.require('os.ui.Module');
+const ImportActionManager = goog.require('os.im.action.ImportActionManager');
+const AlertManager = goog.require('os.alert.AlertManager');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+
+const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+
 
 /**
  * The controller for the preset directive; make use of the MenuButtonController
@@ -16,17 +22,17 @@ class Controller {
    */
   constructor($scope, $element) {
     /**
-     * @type {Object<string, ?>}
+     * @type {!osx.layer.Preset}
      */
-    this.params = $scope['params'];
+    this['clean'] = $scope['params']['preset']; // requires, at a minimum, the "Basic" preset;
 
     /**
-     * @type {osx.layer.Preset}
+     * @type {!osx.layer.Preset}
      */
-    this['local'] = Object.assign({}, $scope['params']['preset']); // copy the scope preset so we can edit it locally
+    this['dirty'] = Object.assign({}, this['clean']); // copy the clean preset so we can edit it locally
 
     /**
-     * @type {boolean}
+     * @type {!boolean}
      */
     this['thinking'] = false;
 
@@ -37,6 +43,43 @@ class Controller {
    * @private
    */
   init_() {
+    // lock to "new" if copying the "Basic" preset
+    if (this['clean'].id == '__default__') {
+      this['dirty'].id = null;
+    }
+
+    // get the current layerConfig as a JSON string
+    const json = JSON.stringify(this['clean'].layerConfig); // TODO get from layer
+
+    this['dirty'].layerConfigJSON = json;
+    delete this['dirty'].layerConfig;
+
+    const iam = ImportActionManager.getInstance();
+
+    // get the currently active FeatureAction ID's as a list
+    const entries = /** @type {Array<FilterActionEntry>} */((iam.getActionEntries() || []).filter((entry) => {
+      return (entry.enabled && entry.type == this['dirty'].layerId);
+    }));
+
+    if (entries && entries.length > 0) {
+      const ids = entries.map((entry) => {
+        return entry.getId();
+      });
+      this['dirty'].featureActions = ids;
+
+      // export the currently active FeatureActions into an XML string
+      const rootNode = os.xml.createElementNS(iam.xmlGroup, 'http://www.bit-sys.com/state/v4');
+      const entryXmls = os.im.action.filter.exportEntries(entries, false);
+
+      (entryXmls || []).forEach((entryXml) => {
+        rootNode.appendChild(entryXml);
+      });
+      const xml = os.xml.serialize(rootNode);
+
+      this['dirty'].featureActionsXML = xml;
+    } else {
+      delete this['dirty'].featureActions;
+    }
   }
 
   /**
@@ -44,7 +87,24 @@ class Controller {
    */
   $onDestroy() {
     this.params = null;
-    this['local'] = null;
+    this['dirty'] = null;
+    this['clean'] = null;
+  }
+
+  /**
+   *
+   */
+  cancelClick() {
+    // TODO get the modal and close it
+  }
+
+
+  /**
+   *
+   */
+  saveClick() {
+    // TODO if "new", check that there's not already a Preset with this name
+    this.save();
   }
 
   /**
@@ -53,23 +113,50 @@ class Controller {
   save() {
     const lpm = LayerPresetManager.getInstance();
     const service = lpm.service();
+
     if (service != null) {
-      if (this['local']['id']) {
-        service.update(this['local']);
+      this['thinking'] = true;
+
+      if (this['dirty'].id) {
+        service.update(this['dirty']).then(
+            (result) => {
+              this.saveResolve(result);
+            });
       } else {
-        service.insert(this['local']);
+        service.insert(this['dirty']).then(
+            (result) => {
+              this.saveResolve(result);
+            });
       }
+    } else {
+      // TODO alert
+    }
+  }
+
+  /**
+   * Handle return from service update/insert
+   * @param {osx.layer.Preset} result
+   */
+  saveResolve(result) {
+    this['thinking'] = false;
+
+    if (!result) {
+      AlertManager.getInstance().sendAlert(`Could not save Preset "${this['dirty'].label}"`, AlertEventSeverity.ERROR);
+    } else {
+      // TODO update the list
+      // const lpm = LayerPresetManager.getInstance();
+      // lpm.updatePreset(result);
     }
   }
 
   /**
    * Create a new Preset if there's no ID
    */
-  toggleSaveAs() {
-    if (!this['local']['id']) {
-      this['local']['id'] = this.params['preset']['id'];
+  toggleSaveNew() {
+    if (!this['dirty'].id) {
+      this['dirty'].id = this['clean'].id;
     } else {
-      this['local']['id'] = null;
+      this['dirty'].id = null;
     }
   }
 }
@@ -93,7 +180,7 @@ const directive = () => ({
 /**
  * Add the directive to the module.
  */
-Module.directive('presetModal', [directive]);
+Module.directive('presetmodal', [directive]);
 
 
 exports = {directive, Controller};
