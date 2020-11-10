@@ -30,6 +30,7 @@ const EventType = {
 
 /**
  * The controller for the preset directive; make use of the MenuButtonController
+ * @unrestricted
  */
 class Controller extends MenuButtonCtrl {
   /**
