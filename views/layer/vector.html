@@ -15,7 +15,7 @@
               ng-options="((preset.published === true ? '' : '*') + preset.label + (preset.default === true ? ' (default)' : '')) for preset in vector.presets track by preset.id">
             </select>
             <div class="col-5">
-                <presetmenubutton parent-ctrl="vector"></presetmenubutton>
+                <presetmenubutton preset="vector.preset"></presetmenubutton>
             </div>
         </div>
       </div>

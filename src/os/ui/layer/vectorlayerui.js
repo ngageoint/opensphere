@@ -28,7 +28,7 @@ goog.require('os.command.style');
 goog.require('os.data.OSDataManager');
 goog.require('os.defines');
 goog.require('os.layer.preset.LayerPresetManager');
-goog.require('os.layer.preset.PresetMenuButtonDirective');
+goog.require('os.layer.preset.PresetMenuButton');
 goog.require('os.style');
 goog.require('os.ui.Module');
 goog.require('os.ui.file.kml');
@@ -185,6 +185,7 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
   $scope.$on(os.ui.layer.LabelControlsEventType.SHOW_LABELS_CHANGE, this.onShowLabelsChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.SHOW_ROTATION_CHANGE, this.onShowRotationChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.ROTATION_COLUMN_CHANGE, this.onRotationColumnChange.bind(this));
+  $scope.$on(os.layer.preset.PresetMenuButton.EventType.APPLY_PRESET, this.applyPreset.bind(this));
 };
 goog.inherits(os.ui.layer.VectorLayerUICtrl, os.ui.layer.DefaultLayerUICtrl);
 
