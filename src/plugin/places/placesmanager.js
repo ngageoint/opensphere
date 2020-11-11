@@ -34,10 +34,25 @@ const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
  */
 let PlacesManagerInstance;
 
+/**
+ * The Places storage location.
+ * @type {string}
+ * @const
+ */
 const STORAGE_NAME = '//plugin.places';
 
+/**
+ * The Places local storage URL.
+ * @type {string}
+ * @const
+ */
 const STORAGE_URL = getLocalUrl(btoa(STORAGE_NAME));
 
+/**
+ * The setting name to save layer options.
+ * @type {string}
+ * @const
+ */
 const LAYER_OPTIONS = 'places.options';
 
 

@@ -166,13 +166,6 @@ class AbstractKMLManager extends GoogEventTarget {
    */
   addLayer() {
     if (!this.isLayerPresent_() && this.layer_) {
-      if (this.root_) {
-        const children = this.root_.getChildren();
-        if (!children || !children.length) {
-          this.layer_.setVisible(true);
-        }
-      }
-
       MapContainer.getInstance().addLayer(this.layer_);
     }
   }
