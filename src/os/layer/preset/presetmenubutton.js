@@ -1,7 +1,7 @@
 goog.module('os.layer.preset.PresetMenuButton');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.layer.preset.PresetModalUI');
+goog.require('os.layer.preset.PresetModal');
 
 const LayerPresetManager = goog.require('os.layer.preset.LayerPresetManager');
 const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
