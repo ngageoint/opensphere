@@ -1,12 +1,15 @@
-goog.module('os.layer.preset.PresetModalUI');
+goog.module('os.layer.preset.PresetModal');
 
+// const MapContainer = goog.require('os.MapContainer'); // circular dependency
 const LayerPresetManager = goog.require('os.layer.preset.LayerPresetManager');
 const Module = goog.require('os.ui.Module');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const AlertManager = goog.require('os.alert.AlertManager');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const OsWindow = goog.require('os.ui.window');
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const ILayer = goog.requireType('os.layer.ILayer');
 
 
 /**
@@ -21,6 +24,12 @@ class Controller {
    * @ngInject
    */
   constructor($scope, $element) {
+    /**
+     * @type {!angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
+
     /**
      * @type {!osx.layer.Preset}
      */
@@ -49,14 +58,16 @@ class Controller {
     }
 
     // get the current layerConfig as a JSON string
-    const json = JSON.stringify(this['clean'].layerConfig); // TODO get from layer
+    const layer = os.MapContainer.getInstance().getLayer(this['dirty'].layerId); // TODO fix global reference
+    if (layer) {
+      const json = JSON.stringify(/** @type {os.layer.ILayer} */ (layer).persist());
 
-    this['dirty'].layerConfigJSON = json;
-    delete this['dirty'].layerConfig;
-
-    const iam = ImportActionManager.getInstance();
+      this['dirty'].layerConfigJSON = json;
+      delete this['dirty'].layerConfig;
+    }
 
     // get the currently active FeatureAction ID's as a list
+    const iam = ImportActionManager.getInstance();
     const entries = /** @type {Array<FilterActionEntry>} */((iam.getActionEntries() || []).filter((entry) => {
       return (entry.enabled && entry.type == this['dirty'].layerId);
     }));
@@ -92,10 +103,10 @@ class Controller {
   }
 
   /**
-   *
+   * Close the parent window
    */
   cancelClick() {
-    // TODO get the modal and close it
+    this.close_();
   }
 
 
@@ -129,7 +140,7 @@ class Controller {
             });
       }
     } else {
-      // TODO alert
+      AlertManager.getInstance().sendAlert('No services found that support SAVE action', AlertEventSeverity.ERROR);
     }
   }
 
@@ -146,6 +157,8 @@ class Controller {
       // TODO update the list
       // const lpm = LayerPresetManager.getInstance();
       // lpm.updatePreset(result);
+
+      this.close_();
     }
   }
 
@@ -158,6 +171,14 @@ class Controller {
     } else {
       this['dirty'].id = null;
     }
+  }
+
+  /**
+   * close the window
+   * @private
+   */
+  close_() {
+    OsWindow.close(this.element_);
   }
 }
 
