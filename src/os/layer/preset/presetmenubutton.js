@@ -20,6 +20,7 @@ const MENU_FLAG = 'presets';
  * @enum {string}
  */
 const EventType = {
+  APPLY_PRESET: 'apply-preset',
   REMOVE: 'remove',
   SAVE: 'save',
   TOGGLE_DEFAULT_TRUE: 'toggle-default-true',
@@ -73,7 +74,7 @@ class Controller extends MenuButtonCtrl {
           metricKey: Metrics.SAVE,
           sort: 0
         }, {
-          label: 'Publish',
+          label: 'Make public',
           eventType: EventType.TOGGLE_PUBLISHED_TRUE,
           tooltip: 'Make Preset visible to everyone',
           icons: ['<i class="fa fa-fw fa-eye"></i>'],
@@ -81,9 +82,9 @@ class Controller extends MenuButtonCtrl {
           metricKey: Metrics.TOGGLE_PUBLISHED,
           sort: 10
         }, {
-          label: 'Draft',
+          label: 'Make admin only',
           eventType: EventType.TOGGLE_PUBLISHED_FALSE,
-          tooltip: 'Return Preset to draft mode',
+          tooltip: 'Return Preset to hidden (admin only) mode',
           icons: ['<i class="fa fa-fw fa-eye-slash"></i>'],
           handler: this.togglePublished.bind(this),
           metricKey: Metrics.TOGGLE_PUBLISHED,
@@ -127,10 +128,18 @@ class Controller extends MenuButtonCtrl {
   }
 
   /**
+   * Bubble up to parent(s), asking to applyPreset()
+   * @export
+   */
+  notifyApplyPreset() {
+    this.scope.$emit(EventType.APPLY_PRESET);
+  }
+
+  /**
    *
    */
   remove() {
-    const preset = this.scope['parentCtrl']['preset'];
+    const preset = this.scope['preset'];
 
     console.log(`preset.remove(${preset.label})`);
   }
@@ -139,7 +148,7 @@ class Controller extends MenuButtonCtrl {
    *
    */
   save() {
-    const preset = this.scope['parentCtrl']['preset'];
+    const preset = this.scope['preset'];
 
     console.log(`preset.save(${preset.label})`, preset);
   }
@@ -148,7 +157,7 @@ class Controller extends MenuButtonCtrl {
    *
    */
   toggleDefault() {
-    const preset = this.scope['parentCtrl']['preset'];
+    const preset = this.scope['preset'];
 
     console.log(`preset.toggleDefault(${preset.label}), was: ${preset.default}`);
   }
@@ -157,7 +166,7 @@ class Controller extends MenuButtonCtrl {
    *
    */
   togglePublished() {
-    const preset = this.scope['parentCtrl']['preset'];
+    const preset = this.scope['preset'];
 
     console.log(`preset.togglePublished(${preset.label}), was: ${preset.published}`);
   }
@@ -166,7 +175,7 @@ class Controller extends MenuButtonCtrl {
    *
    */
   visibility() {
-    const preset = this.scope['parentCtrl']['preset'];
+    const preset = this.scope['preset'];
 
     if (preset) {
       const publishTrue = this.menu.getRoot().find(EventType.TOGGLE_PUBLISHED_TRUE);
@@ -190,13 +199,13 @@ const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: {
-    'parentCtrl': '='
+    'preset': '='
   },
   controller: Controller,
   controllerAs: 'ctrl',
   template: `
 <div class="btn-group o-add-data-button" ng-right-click="ctrl.openMenu()">
-  <button type="button" class="btn btn-primary col-auto" ng-click="parentCtrl.applyPreset()"
+  <button type="button" class="btn btn-primary col-auto" ng-click="ctrl.notifyApplyPreset()"
     title="Apply the layer style preset">
     <i class="fa fa-check"></i>
     Apply
@@ -217,4 +226,4 @@ const directive = () => ({
 Module.directive('presetmenubutton', [directive]);
 
 
-exports = {directive, Controller};
+exports = {directive, Controller, EventType};
