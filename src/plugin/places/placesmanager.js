@@ -1,582 +1,275 @@
-goog.provide('plugin.places.PlacesManager');
+goog.module('plugin.places.PlacesManager');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.async.Delay');
-goog.require('goog.events.Event');
-goog.require('goog.events.EventTarget');
-goog.require('goog.events.EventType');
-goog.require('os.alert.AlertManager');
-goog.require('os.im.Importer');
-goog.require('os.object');
-goog.require('os.ui.im.ImportEvent');
-goog.require('os.ui.im.ImportProcess');
-goog.require('plugin.file.kml.KMLParser');
 goog.require('plugin.file.kml.ui');
-goog.require('plugin.file.kml.ui.KMLNode');
-goog.require('plugin.places');
-goog.require('plugin.places.PlacesLayerConfig');
 goog.require('plugin.places.ui.placesNodeUIDirective');
 
+const ActionEventType = goog.require('os.action.EventType');
+const config = goog.require('os.config');
+const ZOrder = goog.require('os.data.ZOrder');
+const dispatcher = goog.require('os.Dispatcher');
+const OsEventType = goog.require('os.events.EventType');
+const {getLocalUrl} = goog.require('os.file');
+const LayerType = goog.require('os.layer.LayerType');
+const MapContainer = goog.require('os.MapContainer');
+const {merge} = goog.require('os.object');
+const {incrementResetTasks, decrementResetTasks} = goog.require('os.storage');
+const {DEFAULT_LAYER_COLOR} = goog.require('os.style');
+const ImportEvent = goog.require('os.ui.im.ImportEvent');
+const ImportEventType = goog.require('os.ui.im.ImportEventType');
+const ImportProcess = goog.require('os.ui.im.ImportProcess');
+const places = goog.require('plugin.places');
+const AbstractKMLManager = goog.require('plugin.places.AbstractKMLManager');
+const PlacesLayerConfig = goog.require('plugin.places.PlacesLayerConfig');
+
+const OsFile = goog.requireType('os.file.File');
+const KMLLayer = goog.requireType('plugin.file.kml.KMLLayer');
+const KMLSource = goog.requireType('plugin.file.kml.KMLSource');
+const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
+
+
+/**
+ * The PlacesManager instance.
+ * @type {PlacesManager}
+ */
+let PlacesManagerInstance;
+
+const STORAGE_NAME = '//plugin.places';
+
+const STORAGE_URL = getLocalUrl(btoa(STORAGE_NAME));
+
+const LAYER_OPTIONS = 'places.options';
 
 
 /**
  * Allows the user to manage saved features as a KML tree.
- *
- * @extends {goog.events.EventTarget}
- * @constructor
  */
-plugin.places.PlacesManager = function() {
-  plugin.places.PlacesManager.base(this, 'constructor');
+class PlacesManager extends AbstractKMLManager {
+  /**
+   * @inheritDoc
+   */
+  constructor(options) {
+    super(options);
+
+    // clear storage when the reset event is fired
+    dispatcher.getInstance().listen(OsEventType.RESET, this.onSettingsReset_, false, this);
+
+    // // handle edit time change/cancel
+    dispatcher.getInstance().listen(ActionEventType.SAVE_FEATURE, this.reindexTimeModel_, false, this);
+    dispatcher.getInstance().listen(ActionEventType.RESTORE_FEATURE, this.reindexTimeModel_, false, this);
+  }
 
   /**
-   * The logger
-   * @type {goog.log.Logger}
-   * @private
+   * Pass-through to getRoot.
+   * @return {KMLNode}
    */
-  this.log_ = plugin.places.PlacesManager.LOGGER_;
+  getPlacesRoot() {
+    return this.getRoot();
+  }
 
   /**
-   * @type {plugin.file.kml.KMLLayer}
-   * @private
+   * Pass-through to getLayer.
+   * @return {KMLLayer}
    */
-  this.placesLayer_ = null;
+  getPlacesLayer() {
+    return this.getLayer();
+  }
 
   /**
-   * @type {plugin.file.kml.KMLSource}
-   * @private
+   * Pass-through to getSource.
+   * @return {KMLSource}
    */
-  this.placesSource_ = null;
+  getPlacesSource() {
+    return this.getSource();
+  }
 
   /**
-   * @type {plugin.file.kml.ui.KMLNode}
-   * @private
+   * @inheritDoc
    */
-  this.placesRoot_ = null;
+  addLayer() {
+    const layer = this.getLayer();
+    const root = this.getRoot();
+    const id = this.options['id'];
 
-  /**
-   * If the manager has finished loading places.
-   * @type {boolean}
-   * @private
-   */
-  this.loaded_ = false;
+    if (!places.isLayerPresent() && layer) {
+      // don't allow removing the layer via the UI
+      layer.setRemovable(false);
 
-  /**
-   * If the manager tried saving empty places to storage.
-   * @type {boolean}
-   * @private
-   */
-  this.savedEmpty_ = false;
+      if (root) {
+        // the old KML visibility logic caused the layer 'visible' flag to be set to false if all places were removed,
+        // even if the checkbox was toggled on. we don't want to initialize the layer as hidden if this is the case, so
+        // always show the layer if there aren't any children.
+        const children = root.getChildren();
+        if (!children || !children.length) {
+          layer.setLayerVisible(true);
+        }
+      }
 
-  /**
-   * If the manager failed to export Places.
-   * @type {boolean}
-   * @private
-   */
-  this.exportFailed_ = false;
+      const z = ZOrder.getInstance();
+      const zType = z.getZType(id);
 
-  /**
-   * Delay to dedupe saving data.
-   * @type {goog.async.Delay}
-   * @private
-   */
-  this.saveDelay_ = new goog.async.Delay(this.saveInternal_, 250, this);
+      MapContainer.getInstance().addLayer(layer);
 
-  // clear storage when the reset event is fired
-  os.dispatcher.listen(os.events.EventType.RESET, this.onSettingsReset_, false, this);
-
-  // // handle edit time change/cancel
-  os.dispatcher.listen(os.action.EventType.SAVE_FEATURE, this.reindexTimeModel_, false, this);
-  os.dispatcher.listen(os.action.EventType.RESTORE_FEATURE, this.reindexTimeModel_, false, this);
-};
-goog.inherits(plugin.places.PlacesManager, goog.events.EventTarget);
-goog.addSingletonGetter(plugin.places.PlacesManager);
-
-
-/**
- * Logger for plugin.places.PlacesManager
- * @type {goog.log.Logger}
- * @private
- * @const
- */
-plugin.places.PlacesManager.LOGGER_ = goog.log.getLogger('plugin.places.PlacesManager');
-
-
-/**
- * The storage key used for places.
- * @type {string}
- * @const
- */
-plugin.places.PlacesManager.STORAGE_NAME = '//plugin.places';
-
-
-/**
- * The storage key used for places.
- *
- * Note that this is base64-encoded for compatibility reasons. os.file.getLocalUrl() no longer
- * does that for us since btoa does not support character sets outside of latin1.
- * @type {string}
- * @const
- */
-plugin.places.PlacesManager.STORAGE_URL = os.file.getLocalUrl(btoa(plugin.places.PlacesManager.STORAGE_NAME));
-
-
-/**
- * @type {string}
- * @const
- */
-plugin.places.PlacesManager.LAYER_OPTIONS = 'places.options';
-
-
-/**
- * The storage key used for places.
- * @type {string}
- * @const
- */
-plugin.places.PlacesManager.EMPTY_CONTENT = '<kml xmlns="http://www.opengis.net/kml/2.2">' +
-    '<Document><name>' + plugin.places.TITLE + '</name></Document></kml>';
-
-
-/**
- * @inheritDoc
- */
-plugin.places.PlacesManager.prototype.disposeInternal = function() {
-  plugin.places.PlacesManager.base(this, 'disposeInternal');
-  this.clearPlaces_();
-};
-
-
-/**
- * Initialize the manager, loading data from storage.
- */
-plugin.places.PlacesManager.prototype.initialize = function() {
-  os.file.FileStorage.getInstance().getFile(plugin.places.PlacesManager.STORAGE_URL)
-      .addCallbacks(this.onFileReady_, this.handleError_, this);
-};
-
-
-/**
- * If the manager has finished loading.
- *
- * @return {boolean}
- */
-plugin.places.PlacesManager.prototype.isLoaded = function() {
-  return this.loaded_;
-};
-
-
-/**
- * Get the places KML root node.
- *
- * @return {plugin.file.kml.ui.KMLNode}
- */
-plugin.places.PlacesManager.prototype.getPlacesRoot = function() {
-  return this.placesRoot_;
-};
-
-
-/**
- * Get the places KML layer.
- *
- * @return {plugin.file.kml.KMLLayer}
- */
-plugin.places.PlacesManager.prototype.getPlacesLayer = function() {
-  return this.placesLayer_;
-};
-
-
-/**
- * Get the places KML source.
- * @return {plugin.file.kml.KMLSource}
- */
-plugin.places.PlacesManager.prototype.getPlacesSource = function() {
-  return this.placesSource_;
-};
-
-
-/**
- * Add the Places layer to the map.
- */
-plugin.places.PlacesManager.prototype.addLayer = function() {
-  if (!plugin.places.isLayerPresent() && this.placesLayer_) {
-    // don't allow removing the layer via the UI
-    this.placesLayer_.setRemovable(false);
-
-    if (this.placesRoot_) {
-      // the old KML visibility logic caused the layer 'visible' flag to be set to false if all places were removed,
-      // even if the checkbox was toggled on. we don't want to initialize the layer as hidden if this is the case, so
-      // always show the layer if there aren't any children.
-      var children = this.placesRoot_.getChildren();
-      if (!children || !children.length) {
-        this.placesLayer_.setLayerVisible(true);
+      if (!zType) {
+        // when adding the places layer for the first time, make sure it is at a lower z-index than the drawing layer
+        z.moveBefore(id, MapContainer.DRAW_ID);
+        z.update();
+        z.save();
       }
     }
+  }
 
-    var z = os.data.ZOrder.getInstance();
-    var zType = z.getZType(plugin.places.ID);
+  /**
+   * Start the places import process.
+   * @param {OsFile=} opt_file Optional file to use in the import.
+   */
+  startImport(opt_file) {
+    const importProcess = new ImportProcess(os.placesImportManager, os.placesFileManager);
+    importProcess.setEvent(new ImportEvent(ImportEventType.FILE, opt_file, undefined));
+    importProcess.begin();
+  }
 
-    os.MapContainer.getInstance().addLayer(this.placesLayer_);
+  /**
+   * @inheritDoc
+   */
+  getLayerConfig() {
+    return new PlacesLayerConfig();
+  }
 
-    if (!zType) {
-      // when adding the places layer for the first time, make sure it is at a lower z-index than the drawing layer
-      z.moveBefore(plugin.places.ID, os.MapContainer.DRAW_ID);
-      z.update();
-      z.save();
+  /**
+   * @inheritDoc
+   */
+  setupLayer(layer, options) {
+    layer.setRemovable(false);
+    layer.setSticky(true);
+
+    super.setupLayer(layer, options);
+
+    layer.setExplicitType('');
+    layer.setLayerUI('');
+    layer.setNodeUI('<placesnodeui></placesnodeui>');
+    layer.renderLegend = goog.nullFunction;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getOptions() {
+    const options = this.options;
+    // see if any layer options were persisted to settings
+    const saved = /** @type {?Object} */ (os.settings.get(LAYER_OPTIONS));
+    if (saved) {
+      merge(saved, options, true);
+    }
+
+    return options;
+  }
+
+  /**
+   * Clears the storage key when application settings are reset.
+   *
+   * @param {goog.events.Event} event
+   * @private
+   */
+  onSettingsReset_(event) {
+    // clear local data
+    this.clear();
+
+    // clear stored data
+    incrementResetTasks();
+    this.saveContent(this.EMPTY_CONTENT).addCallbacks(decrementResetTasks, decrementResetTasks);
+  }
+
+  /**
+   * @override
+   */
+  createExporter(node) {
+    return places.createExporter(node);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  saveInternal() {
+    super.saveInternal();
+
+    const layer = this.getLayer();
+    if (layer) {
+      os.settings.set(LAYER_OPTIONS, layer.persist());
     }
   }
-};
 
-
-/**
- * Remove the Places layer from the map.
- */
-plugin.places.PlacesManager.prototype.removeLayer = function() {
-  if (this.placesLayer_) {
-    this.placesLayer_.setRemovable(true);
-
-    // remove it from the map but don't dispose of it so we still have the tree available
-    os.MapContainer.getInstance().removeLayer(this.placesLayer_, false);
-  }
-};
-
-
-/**
- * Start the places import process.
- *
- * @param {os.file.File=} opt_file Optional file to use in the import.
- */
-plugin.places.PlacesManager.prototype.startImport = function(opt_file) {
-  var importProcess = new os.ui.im.ImportProcess(os.placesImportManager, os.placesFileManager);
-  importProcess.setEvent(new os.ui.im.ImportEvent(os.ui.im.ImportEventType.FILE, opt_file, undefined));
-  importProcess.begin();
-};
-
-
-
-/**
- * Handle the file.
- *
- * @param {os.file.File} file The stored file
- * @private
- */
-plugin.places.PlacesManager.prototype.onFileReady_ = function(file) {
-  if (file && file.getContent()) {
-    var config = new plugin.places.PlacesLayerConfig();
-
-    var options = this.getOptions();
-    this.placesLayer_ = /** @type {!plugin.file.kml.KMLLayer} */ (config.createLayer(options));
-    this.placesLayer_.setRemovable(false);
-    this.placesLayer_.setSticky(true);
-
-    // these are set for the sake of saving to a state file. we omit the UI's from options so they don't end up in the
-    // saved state.
-    this.placesLayer_.setLayerOptions(options);
-    this.placesLayer_.setExplicitType('');
-    this.placesLayer_.setLayerUI('');
-    this.placesLayer_.setNodeUI('<placesnodeui></placesnodeui>');
-    this.placesLayer_.renderLegend = goog.nullFunction;
-
-    this.placesSource_ = /** @type {plugin.file.kml.KMLSource} */ (this.placesLayer_.getSource());
-    ol.events.listen(this.placesSource_, goog.events.EventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
-
-    if (!this.placesSource_.isLoading()) {
-      this.onSourceLoaded_();
-    }
-  } else if (!this.savedEmpty_) {
-    this.savedEmpty_ = true;
-    this.saveContent_(plugin.places.PlacesManager.EMPTY_CONTENT).addCallbacks(this.initialize, this.handleError_, this);
-  } else {
-    this.handleError_('Failed saving empty place content to storage.');
-  }
-};
-
-
-/**
- * @return {Object<string, *>} the layer options
- * @protected
- */
-plugin.places.PlacesManager.prototype.getOptions = function() {
-  //
-  // options used to create the places layer
-  //
-  // Notes:
-  // * THIN-7476: animate will need to be updated/persisted when time is supported.
-  // * THIN-7503: showLabels is set to false so labels won't be collision detected
-  // * if a descriptor is created for this layer, we'll need to revisit the local data
-  //   state logic to make sure the places URL doesn't get replaced on upload. this URL must always point to the IDB
-  //   storage URL.
-  //
-  var options = {
-    'animate': true,
-    'color': os.style.DEFAULT_LAYER_COLOR,
-    'collapsed': true,
-    'columns': plugin.places.SourceFields,
-    'editable': true,
-    'id': plugin.places.ID,
-    'layerType': os.layer.LayerType.REF,
-    'load': true,
-    'provider': os.config.getAppName() || null,
-    'showLabels': false,
-    'showRoot': false,
-    'title': plugin.places.TITLE,
-    'type': plugin.places.PlacesLayerConfig.ID,
-    'url': plugin.places.PlacesManager.STORAGE_URL
-  };
-
-  // see if any layer options were persisted to settings
-  var saved = /** @type {?Object} */ (os.settings.get(plugin.places.PlacesManager.LAYER_OPTIONS));
-  if (saved) {
-    os.object.merge(saved, options, true);
-  }
-
-  return options;
-};
-
-
-/**
- * Log an error.
- *
- * @param {string} msg The error message
- * @param {Error=} opt_error The caught error
- * @private
- */
-plugin.places.PlacesManager.prototype.handleError_ = function(msg, opt_error) {
-  goog.log.error(this.log_, msg, opt_error);
-};
-
-
-/**
- * Clears all local places data from the application.
- *
- * @private
- */
-plugin.places.PlacesManager.prototype.clearPlaces_ = function() {
-  this.removeLayer();
-
-  // dispose of the layer, which will also dispose of the source/root node
-  goog.dispose(this.placesLayer_);
-  this.placesLayer_ = null;
-  this.placesSource_ = null;
-  this.placesRoot_ = null;
-};
-
-
-/**
- * Clears the storage key when application settings are reset.
- *
- * @param {goog.events.Event} event
- * @private
- */
-plugin.places.PlacesManager.prototype.onSettingsReset_ = function(event) {
-  // clear local data
-  this.clearPlaces_();
-
-  // clear stored data
-  os.storage.incrementResetTasks();
-  this.saveContent_(plugin.places.PlacesManager.EMPTY_CONTENT).addCallbacks(os.storage.decrementResetTasks,
-      os.storage.decrementResetTasks);
-};
-
-
-/**
- * Save places to storage.
- *
- * @param {!(ArrayBuffer|string)} content The file content
- * @return {!goog.async.Deferred} The deferred store request.
- * @private
- */
-plugin.places.PlacesManager.prototype.saveContent_ = function(content) {
-  var storage = os.file.FileStorage.getInstance();
-  var file = os.file.createFromContent(plugin.places.TITLE, plugin.places.PlacesManager.STORAGE_URL, undefined,
-      content);
-  return storage.storeFile(file, true);
-};
-
-
-/**
- * Save data to storage.
- *
- * @private
- */
-plugin.places.PlacesManager.prototype.saveInternal_ = function() {
-  if (this.placesRoot_) {
-    // export the tree to a KMZ
-    var exporter = plugin.places.createExporter(this.placesRoot_);
-    exporter.setCompress(true);
-
-    exporter.listenOnce(os.events.EventType.COMPLETE, this.onExportComplete_, false, this);
-    exporter.listenOnce(os.events.EventType.ERROR, this.onExportError_, false, this);
-    exporter.process();
-  }
-
-  if (this.placesLayer_) {
-    os.settings.set(plugin.places.PlacesManager.LAYER_OPTIONS, this.placesLayer_.persist());
-  }
-};
-
-
-/**
- * Success callback for exporting data. Adds the areas to Area Manager
- *
- * @param {goog.events.Event} event
- * @private
- */
-plugin.places.PlacesManager.prototype.onExportComplete_ = function(event) {
-  // save it to storage
-  var exporter = /** @type {plugin.file.kml.KMLTreeExporter} */ (event.target);
-  var output = /** @type {ArrayBuffer|string} */ (exporter.getOutput() || '');
-  exporter.dispose();
-
-  if (output) {
-    this.saveContent_(output);
-  } else {
-    this.handleError_('Failed exporting places to browser storage. Content was empty.');
-
-    if (!this.exportFailed_) {
-      this.exportFailed_ = true;
-      var target = new goog.events.EventTarget();
-      var msg = 'There was a problem saving your Places to browser storage. ' +
-          'Places will no longer save during the current session.' +
-          '<br><br><b>You should export your Places to a file to ensure that they are not lost on refresh.</b>';
-      os.alert.AlertManager.getInstance().sendAlert(msg, undefined, undefined, undefined, target);
-    }
-  }
-};
-
-
-/**
- * Error callback for exporting data.
- *
- * @param {goog.events.Event} event
- * @private
- */
-plugin.places.PlacesManager.prototype.onExportError_ = function(event) {
-  var exporter = /** @type {plugin.file.kml.KMLTreeExporter} */ (event.target);
-  exporter.dispose();
-
-  this.handleError_('Failed exporting places to browser storage.');
-};
-
-
-/**
- * Initialize a KML node, making it editable and removable unless it's the root node.
- *
- * @param {plugin.file.kml.ui.KMLNode} node The node
- * @private
- */
-plugin.places.PlacesManager.prototype.initializeNode_ = function(node) {
-  if (node) {
+  /**
+   * @override
+   */
+  setCanAddChildren(node) {
     node.canAddChildren = node.isFolder();
-
-    if (node !== this.placesRoot_) {
-      node.editable = true;
-      node.internalDrag = true;
-      node.removable = true;
-    }
-
-    var children = node.getChildren();
-    if (children) {
-      for (var i = 0; i < children.length; i++) {
-        this.initializeNode_(/** @type {plugin.file.kml.ui.KMLNode} */ (children[i]));
-      }
-    }
   }
-};
 
-
-/**
- * Handles source property change events.
- *
- * @param {os.events.PropertyChangeEvent} event
- * @private
- */
-plugin.places.PlacesManager.prototype.onSourcePropertyChange_ = function(event) {
-  var p = event.getProperty();
-  if (p === os.source.PropertyChange.LOADING) {
-    if (!this.placesSource_.isLoading()) {
-      this.onSourceLoaded_();
-    }
-  } else if (this.saveDelay_) {
-    if (p === os.source.PropertyChange.VISIBLE) {
-      this.saveDelay_.start();
-    } else if (p === os.source.PropertyChange.FEATURE_VISIBILITY || p === os.source.PropertyChange.FEATURES) {
-      // only save if a list of changed features was provided. if not, it's a general refresh event and can be ignored.
-      var newVal = event.getNewValue();
-      var oldVal = event.getOldValue();
-      if (newVal || oldVal) {
-        this.saveDelay_.start();
-      }
-    }
+  /**
+   * @override
+   */
+  setCanEdit(node) {
+    node.editable = true;
   }
-};
 
-
-/**
- * Handle the source finishing loading.
- *
- * @private
- */
-plugin.places.PlacesManager.prototype.onSourceLoaded_ = function() {
-  if (this.placesSource_) {
-    var rootNode = this.placesSource_.getRootNode();
-    var children = rootNode && rootNode.getChildren();
-
-    if (children) {
-      // the root node is the kml node, so "Saved Places" is the first child. Make that the root for places.
-      this.placesRoot_ = /** @type {plugin.file.kml.ui.KMLNode} */ (children[0]);
-
-      if (this.placesRoot_) {
-        this.initializeNode_(this.placesRoot_);
-        this.placesRoot_.collapsed = false;
-        this.placesRoot_.listen(goog.events.EventType.PROPERTYCHANGE, this.onRootChange_, false, this);
-
-        this.addLayer();
-      }
-    }
-
-    if (!this.placesRoot_) {
-      this.handleError_('Failed parsing Places root node.');
-
-      if (!this.savedEmpty_) {
-        this.savedEmpty_ = true;
-        this.saveContent_(plugin.places.PlacesManager.EMPTY_CONTENT)
-            .addCallbacks(this.initialize, this.handleError_, this);
-      }
-    }
-
-    this.loaded_ = true;
-    this.dispatchEvent(os.config.EventType.LOADED);
+  /**
+   * @override
+   */
+  setCanDragInternal(node) {
+    node.internalDrag = true;
   }
-};
 
-
-/**
- * Handles changes on the root node
- *
- * @param {os.events.PropertyChangeEvent} e The event
- * @private
- */
-plugin.places.PlacesManager.prototype.onRootChange_ = function(e) {
-  // save the tree when something changes
-  if (this.saveDelay_) {
-    this.saveDelay_.start();
+  /**
+   * @override
+   */
+  setCanRemove(node) {
+    node.romvable = true;
   }
-};
 
+  /**
+   * Reindex the source time model
+   * @private
+   */
+  reindexTimeModel_() {
+    this.getSource().reindexTimeModel();
+  }
 
-/**
- * Reindex the source time model
- *
- * @private
- */
-plugin.places.PlacesManager.prototype.reindexTimeModel_ = function() {
-  this.placesSource_.reindexTimeModel();
-};
+  /**
+   * Get the root annotations folder. Currently, this is just the overall root.
+   * @return {KMLNode}
+   */
+  getAnnotationsFolder() {
+    return this.getRoot();
+  }
 
+  /**
+   * @return {PlacesManager}
+   */
+  static getInstance() {
+    if (!PlacesManagerInstance) {
+      const OPTIONS = {
+        'animate': true,
+        'color': DEFAULT_LAYER_COLOR,
+        'collapsed': true,
+        'columns': places.SourceFields,
+        'editable': true,
+        'id': places.ID,
+        'layerType': LayerType.REF,
+        'load': true,
+        'logger': 'plugin.places.PlacesManager',
+        'provider': config.getAppName() || null,
+        'showLabels': false,
+        'showRoot': false,
+        'title': places.TITLE,
+        'type': PlacesLayerConfig.ID,
+        'url': STORAGE_URL
+      };
 
-/**
- * Get the root annotations folder. Currently, this is just the overall root.
- *
- * @return {plugin.file.kml.ui.KMLNode}
- */
-plugin.places.PlacesManager.prototype.getAnnotationsFolder = function() {
-  return this.placesRoot_;
-};
+      PlacesManagerInstance = new PlacesManager(OPTIONS);
+    }
+    return PlacesManagerInstance;
+  }
+}
+
+exports = PlacesManager;
