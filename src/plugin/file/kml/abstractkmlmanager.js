@@ -1,4 +1,4 @@
-goog.module('plugin.places.AbstractKMLManager');
+goog.module('plugin.file.kml.AbstractKMLManager');
 
 const Delay = goog.require('goog.async.Delay');
 const GoogEventTarget = goog.require('goog.events.EventTarget');
@@ -23,7 +23,7 @@ const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**
- * Abstract KML manager class for Saved Places.
+ * Abstract KML manager class for persistent layers (e.g. Places).
  * @abstract
  */
 class AbstractKMLManager extends GoogEventTarget {
