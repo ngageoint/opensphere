@@ -18,8 +18,8 @@ const {DEFAULT_LAYER_COLOR} = goog.require('os.style');
 const ImportEvent = goog.require('os.ui.im.ImportEvent');
 const ImportEventType = goog.require('os.ui.im.ImportEventType');
 const ImportProcess = goog.require('os.ui.im.ImportProcess');
+const AbstractKMLManager = goog.require('plugin.file.kml.AbstractKMLManager');
 const places = goog.require('plugin.places');
-const AbstractKMLManager = goog.require('plugin.places.AbstractKMLManager');
 const PlacesLayerConfig = goog.require('plugin.places.PlacesLayerConfig');
 
 const OsFile = goog.requireType('os.file.File');
