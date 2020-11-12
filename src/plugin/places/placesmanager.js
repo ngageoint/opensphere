@@ -239,7 +239,7 @@ class PlacesManager extends AbstractKMLManager {
    * @override
    */
   setCanRemove(node) {
-    node.romvable = true;
+    node.removable = true;
   }
 
   /**
