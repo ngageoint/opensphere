@@ -996,7 +996,7 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
       if (this.urlModifier_) {
         var newURI = new goog.Uri(wfsURL);
         this.urlModifier_.modify(newURI);
-        goog.log.finer(this.log, 'Modifying WFS layer URL from ' + wfsURL + ' to ' + newURI.toString());
+        goog.log.fine(this.log, 'Modifying WFS layer URL from ' + wfsURL + ' to ' + newURI.toString());
         wfsURL = newURI.toString();
       }
       descriptor.setWfsUrl(wfsURL);
@@ -1194,7 +1194,7 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
         if (this.urlModifier_) {
           var newURI = new goog.Uri(wmsURL);
           this.urlModifier_.modify(newURI);
-          goog.log.finer(this.log, 'Modifying WMS layer URL from ' + wmsURL + ' to ' + newURI.toString());
+          goog.log.fine(this.log, 'Modifying WMS layer URL from ' + wmsURL + ' to ' + newURI.toString());
           wmsURL = newURI.toString();
         }
         layerDescriptor.setWmsUrl(wmsURL);
