@@ -19,6 +19,7 @@ goog.require('os.file');
 goog.require('os.layer.LayerType');
 goog.require('os.net.HandlerType');
 goog.require('os.net.Request');
+goog.require('os.net.URLModifier');
 goog.require('os.ui.Icons');
 goog.require('os.ui.data.DescriptorNode');
 goog.require('os.ui.server.AbstractLoadingServer');
@@ -79,6 +80,12 @@ plugin.wmts.Server = function() {
    * @private
    */
   this.timeFormat_ = '';
+
+  /**
+   * @type {os.net.URLModifier}
+   * @private
+   */
+  this.urlModifier_ = null;
 };
 goog.inherits(plugin.wmts.Server, os.ui.server.AbstractLoadingServer);
 os.implements(plugin.wmts.Server, os.data.IDataProvider.ID);
@@ -207,6 +214,10 @@ plugin.wmts.Server.prototype.configure = function(config) {
   this.setLowerCase(/** @type {boolean} */ (config['lowerCase']));
   this.setDateFormat(/** @type {string} */ (config['dateFormat']));
   this.setTimeFormat(/** @type {string} */ (config['timeFormat']));
+
+  if ('urlReplace' in config && config['urlReplace'] === true) {
+    this.urlModifier_ = new os.net.URLModifier();
+  }
 
   this.setParams('params' in config ? new goog.Uri.QueryData(/** @type {string} */ (config['params'])) : null);
 };
@@ -427,6 +438,19 @@ plugin.wmts.Server.prototype.parseCapabilities = function(response, uri) {
 
         config['crossOrigin'] = crossOrigin;
         config['projections'] = config['wmtsOptions'].map(plugin.wmts.Server.wmtsOptionsToProjection_);
+
+        if (config['wmtsOptions'] && this.urlModifier_) {
+          config['wmtsOptions'].forEach((optionSet, i) => {
+            var newURLs = [];
+            optionSet.urls.forEach((wmtsURL, j) => {
+              var newURI = new goog.Uri(wmtsURL);
+              this.urlModifier_.modify(newURI);
+              goog.log.finer(this.log, 'Modifying WMTS URL from ' + wmtsURL + ' to ' + newURI.toString());
+              newURLs.push(newURI.toString());
+            });
+            optionSet.urls = newURLs;
+          });
+        }
 
         if (config['wmtsOptions'].length) {
           var descriptor = /** @type {os.data.ConfigDescriptor} */ (os.dataManager.getDescriptor(fullId));
