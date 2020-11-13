@@ -445,7 +445,7 @@ plugin.wmts.Server.prototype.parseCapabilities = function(response, uri) {
             optionSet.urls.forEach((wmtsURL, j) => {
               var newURI = new goog.Uri(wmtsURL);
               this.urlModifier_.modify(newURI);
-              goog.log.finer(this.log, 'Modifying WMTS URL from ' + wmtsURL + ' to ' + newURI.toString());
+              goog.log.fine(this.log, 'Modifying WMTS URL from ' + wmtsURL + ' to ' + newURI.toString());
               newURLs.push(newURI.toString());
             });
             optionSet.urls = newURLs;
