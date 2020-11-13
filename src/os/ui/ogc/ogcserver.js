@@ -19,6 +19,7 @@ goog.require('os.data.IDataProvider');
 goog.require('os.file');
 goog.require('os.net.HandlerType');
 goog.require('os.net.Request');
+goog.require('os.net.URLModifier');
 goog.require('os.ogc');
 goog.require('os.ui.data.DescriptorNode');
 goog.require('os.ui.ogc.wms.IWMSLayerParser');
@@ -164,6 +165,12 @@ os.ui.ogc.OGCServer = function() {
    * @private
    */
   this.wpsUrl_ = '';
+
+  /**
+   * @type {os.net.URLModifier}
+   * @private
+   */
+  this.urlModifier_ = null;
 };
 goog.inherits(os.ui.ogc.OGCServer, os.ui.server.AbstractLoadingServer);
 os.implements(os.ui.ogc.OGCServer, os.data.IDataProvider.ID);
@@ -414,8 +421,11 @@ os.ui.ogc.OGCServer.prototype.configure = function(config) {
   this.setLowerCase(/** @type {boolean} */ (config['lowerCase']));
   this.setWpsUrl(/** @type {string} */ (config['wps']));
 
-  var wfsUrl = this.getWfsUrl();
+  if ('urlReplace' in config && config['urlReplace'] === true) {
+    this.urlModifier_ = new os.net.URLModifier();
+  }
 
+  var wfsUrl = this.getWfsUrl();
   if ('wfsParams' in config) {
     this.setWfsParams(new goog.Uri.QueryData(/** @type {string} */ (config['wfsParams'])));
   } else if (wfsUrl) {
@@ -982,7 +992,14 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
       }
 
       descriptor.setWfsEnabled(true);
-      descriptor.setWfsUrl(this.getWfsUrl());
+      var wfsURL = this.getWfsUrl();
+      if (this.urlModifier_) {
+        var newURI = new goog.Uri(wfsURL);
+        this.urlModifier_.modify(newURI);
+        goog.log.finer(this.log, 'Modifying WFS layer URL from ' + wfsURL + ' to ' + newURI.toString());
+        wfsURL = newURI.toString();
+      }
+      descriptor.setWfsUrl(wfsURL);
       descriptor.setUsePost(this.getWfsPost());
       descriptor.setWfsName(name);
       descriptor.setWfsNamespace(nameSpace);
@@ -1173,7 +1190,14 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
         layerDescriptor.setWmsEnabled(true);
         layerDescriptor.setWmsParams(this.getWmsParams());
         layerDescriptor.setWmsVersion(version);
-        layerDescriptor.setWmsUrl(this.getWmsUrl());
+        var wmsURL = this.getWmsUrl();
+        if (this.urlModifier_) {
+          var newURI = new goog.Uri(wmsURL);
+          this.urlModifier_.modify(newURI);
+          goog.log.finer(this.log, 'Modifying WMS layer URL from ' + wmsURL + ' to ' + newURI.toString());
+          wmsURL = newURI.toString();
+        }
+        layerDescriptor.setWmsUrl(wmsURL);
         layerDescriptor.setWmsDateFormat(this.getWmsDateFormat());
         layerDescriptor.setWmsTimeFormat(this.getWmsTimeFormat());
         layerDescriptor.setProvider(this.getLabel());
