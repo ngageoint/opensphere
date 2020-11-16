@@ -83,7 +83,7 @@ class LayerPresetManager extends Disposable {
   }
 
   /**
-   * @param {boolean|undefined} b
+   * @param {boolean=} b
    * @return {!boolean}
    */
   isAdmin(b) {
