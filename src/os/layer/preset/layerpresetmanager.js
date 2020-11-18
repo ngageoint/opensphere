@@ -100,15 +100,18 @@ class LayerPresetManager extends Disposable {
   }
 
   /**
-   * @param {string=} opt_key
-   * @return {IPresetService|null}
+   * Returns a list of PresetServices which support the action
+   *
+   * @param {OsLayerPreset.PresetServiceAction} action
+   * @return {Array<IPresetService>}
    */
-  service(opt_key) {
-    let key = opt_key;
-    if (opt_key == undefined) {
-      key = this.serviceKey_;
+  supporting(action) {
+    const services = [];
+    const entries = (this.services_.entries() || []);
+    for (var [, service] of entries) {
+      if (service.supports(action)) services.push(service);
     }
-    return (key) ? this.services_.get(key) : null;
+    return services;
   }
 
   /**
