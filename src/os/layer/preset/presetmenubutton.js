@@ -272,8 +272,8 @@ class Controller extends MenuButtonCtrl {
     if (!preset) {
       return; // canceled by user
     }
-    const prompt = '<p><b>Success!</b>&nbsp;&nbsp;Next, refresh the application to reinitialize Preset Feature ' +
-        ' Actions and Style settings.</p>';
+    const prompt = '<p><strong>Success!</strong>&nbsp;&nbsp;Next, reload the application to reinitialize ' +
+        ' Preset Feature Actions and Style settings.</p>';
 
     // As a future improvement, overwrite the result in the promise.all and flag the affeted FA's in
     // the ImportActionManager as 'Presets'
@@ -287,16 +287,16 @@ class Controller extends MenuButtonCtrl {
       }),
       cancel: (() => {
         const cancelMessage = 'Remember - changes to the Preset are saved. You will see them when the ' +
-            ' application is refreshed.';
+            ' application is reloaded.';
         AlertManager.getInstance().sendAlert(cancelMessage, AlertEventSeverity.INFO);
       }),
       prompt,
       windowOptions: {
-        'label': '',
+        'label': 'Saved',
         'icon': 'fa fa-floppy-o',
         'x': 'center',
-        'y': 'center',
-        'width': '300',
+        'y': 100,
+        'width': 400,
         'height': 'auto',
         'modal': 'true',
         'show-close': 'true',

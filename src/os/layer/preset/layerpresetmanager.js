@@ -35,12 +35,6 @@ class LayerPresetManager extends Disposable {
     this.admin_ = false;
 
     /**
-     * The ID of the first service that supports INSERT/UPDATE
-     * @type {!string}
-     */
-    this.serviceKey_ = '';
-
-    /**
      * @type {!Registry<IPresetService>}
      * @private
      */
@@ -122,13 +116,6 @@ class LayerPresetManager extends Disposable {
    */
   registerService(key, service, ...opt) {
     this.presets_ = {}; // set presets to reload every layer
-
-    // TODO Just use the first one that supports INSERT and UPDATE
-    if (this.serviceKey_ == ''
-        && service.supports(OsLayerPreset.PresetServiceAction.INSERT)
-        && service.supports(OsLayerPreset.PresetServiceAction.UPDATE)) {
-      this.serviceKey_ = key;
-    }
 
     return this.services_.register(...[key, service].concat(opt));
   }
