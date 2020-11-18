@@ -71,9 +71,6 @@ const addDefault = function(presets, opt_layerId, opt_layerFilterKey) {
           published: true
         };
 
-        if (opt_layerId) defaultPreset_.layerId = opt_layerId;
-        if (opt_layerFilterKey) defaultPreset_.layerFilterKey = opt_layerFilterKey;
-
         goog.dispose(layer);
       }
     }
@@ -81,8 +78,12 @@ const addDefault = function(presets, opt_layerId, opt_layerFilterKey) {
     var hasDefault = presets.some(function(p) {
       return !!p && p.id === DEFAULT_PRESET_ID;
     });
+
     if (!hasDefault && defaultPreset_) {
-      presets.unshift(object.unsafeClone(defaultPreset_));
+      var preset = object.unsafeClone(defaultPreset_);
+      if (opt_layerId) preset.layerId = opt_layerId;
+      if (opt_layerFilterKey) preset.layerFilterKey = opt_layerFilterKey;
+      presets.unshift(preset); // drop it into the first entry
     }
   }
 };
