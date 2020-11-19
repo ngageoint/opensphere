@@ -232,7 +232,8 @@ osx.layer.RefreshOption;
  *   published: (boolean|undefined),
  *   default: (boolean|undefined),
  *   layerConfig: (Object<string, *>|undefined),
- *   featureActions: (Array<string>|undefined)
+ *   featureActions: (Array<string>|undefined),
+ *   featureActionsXML: (string|undefined)
  * }}
  */
 osx.layer.Preset;
