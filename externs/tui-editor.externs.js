@@ -75,6 +75,25 @@ tui.Editor.prototype.insertText = function(text) {};
 
 
 /**
+ * @param {Object} range
+ * @return {Object}
+ */
+tui.Editor.prototype.getTextObject = function(range) {};
+
+
+/**
+ * @param {string} text
+ */
+tui.Editor.prototype.replaceContent = function(text) {};
+
+
+/**
+ * @return {string}
+ */
+tui.Editor.prototype.getTextContent = function() {};
+
+
+/**
  * @type {Object}
  */
 tui.Editor.markdownit = {};
