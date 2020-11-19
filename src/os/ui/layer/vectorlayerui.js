@@ -186,6 +186,7 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.SHOW_ROTATION_CHANGE, this.onShowRotationChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.ROTATION_COLUMN_CHANGE, this.onRotationColumnChange.bind(this));
   $scope.$on(os.layer.preset.PresetMenuButton.EventType.APPLY_PRESET, this.applyPreset.bind(this));
+  $scope.$on(os.layer.preset.PresetMenuButton.EventType.TOGGLE_PRESET, this.togglePreset.bind(this));
 };
 goog.inherits(os.ui.layer.VectorLayerUICtrl, os.ui.layer.DefaultLayerUICtrl);
 
@@ -370,7 +371,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.loadPresets = function() {
 
             // the preset objects may change, so resolve the current selection by id
             var currentPreset = this['preset'] ? presets.find(function(p) {
-              return p && p.id === this['preset'].id;
+              return p && p.id == this['preset'].id;
             }, this) : undefined;
 
             // set the current selection, with priority as current > default > first
@@ -388,8 +389,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.loadPresets = function() {
 
 /**
  * Apply the layer preset.
- *
- * @export
  */
 os.ui.layer.VectorLayerUICtrl.prototype.applyPreset = function() {
   var items = /** @type {Array} */ (this.scope['items']);
@@ -406,6 +405,14 @@ os.ui.layer.VectorLayerUICtrl.prototype.applyPreset = function() {
 
     this.createCommand(fn);
   }
+};
+
+
+/**
+ * Update the UI when the layer preset booleans are toggled
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.togglePreset = function() {
+  os.ui.apply(this.scope);
 };
 
 

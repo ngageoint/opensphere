@@ -224,7 +224,7 @@ class LayerPresetManager extends Disposable {
 
     if (Array.isArray(presets) && presets.length && !applied[id]) {
       var preset = presets.find(function(preset) {
-        return preset['default'] || false;
+        return preset.default || false;
       });
 
       if (preset) {

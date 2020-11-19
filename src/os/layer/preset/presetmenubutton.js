@@ -35,6 +35,7 @@ const EventType = {
   APPLY_PRESET: 'apply-preset',
   REMOVE: 'remove',
   SAVE: 'save',
+  TOGGLE_PRESET: 'toggle-preset',
   TOGGLE_DEFAULT_TRUE: 'toggle-default-true',
   TOGGLE_DEFAULT_FALSE: 'toggle-default-false',
   TOGGLE_PUBLISHED_TRUE: 'toggle-published-true',
@@ -234,6 +235,26 @@ class Controller extends MenuButtonCtrl {
   }
 
   /**
+   * @param {!OsLayerPreset.PresetServiceAction} action
+   * @return {Promise<IPresetService>}
+   */
+  getService(action) {
+    // get PresetService(s) that support save()
+    const services = LayerPresetManager.getInstance().supporting(action);
+
+    // TODO if more than one, open a dropdown modal to select one
+    const service = (services && services.length > 0) ? services[0] : null;
+
+    return new Promise((resolve, reject) => {
+      if (service) {
+        resolve(service);
+      } else {
+        reject(`No services found that support the ${action.toLowerCase()} action`);
+      }
+    });
+  }
+
+  /**
    * Bubble up to parent(s), asking to applyPreset()
    * @export
    */
@@ -259,13 +280,14 @@ class Controller extends MenuButtonCtrl {
     const preset = this.clone(source);
 
     // get PresetService(s) that support save()
-    const services = LayerPresetManager.getInstance().supporting(OsLayerPreset.PresetServiceAction.UPDATE);
-    if (services && services.length > 0) {
-      // TODO if more than one, open a dropdown modal to select one
-      services[0].update(preset).then(this.saveSuccess.bind(this), this.saveFailure.bind(this));
-    } else {
-      GoogLog.error(LOGGER, 'No services found that support SAVE action');
-    }
+    this.getService(OsLayerPreset.PresetServiceAction.UPDATE).then(
+        (service) => {
+          service.update(preset).then(this.saveSuccess.bind(this), this.saveFailure.bind(this));
+        },
+        (msg) => {
+          GoogLog.error(LOGGER, 'No services found that support SAVE action');
+        }
+    );
   }
 
   /**
@@ -328,16 +350,65 @@ class Controller extends MenuButtonCtrl {
   toggleDefault() {
     const preset = this.scope['preset'];
 
-    console.log(`preset.toggleDefault(${preset.label}), was: ${preset.default}`);
+    // get PresetService(s) that support setDefault()
+    this.getService(OsLayerPreset.PresetServiceAction.SET_DEFAULT).then(
+        (service) => {
+          service
+              .setDefault(preset, !preset.default)
+              .then(this.saveSuccess.bind(this), this.saveFailure.bind(this));
+        },
+        (msg) => {
+          AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.ERROR);
+        }
+    );
   }
 
   /**
    *
    */
   togglePublished() {
-    const preset = this.scope['preset'];
+    const source = this.scope['preset'];
+    const preset = Object.assign({}, source); // make a quick copy
 
-    console.log(`preset.togglePublished(${preset.label}), was: ${preset.published}`);
+    // get PresetService(s) that support setPublished()
+    this.getService(OsLayerPreset.PresetServiceAction.SET_PUBLISHED).then(
+        (service) => {
+          service
+              .setPublished(preset, !preset.published)
+              .then(this.toggleSuccess.bind(this), this.toggleFailure.bind(this));
+        },
+        (msg) => {
+          AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.ERROR);
+        }
+    );
+  }
+
+  /**
+   * Handle when the Preset is properly saved to the desired service
+   * @param {osx.layer.Preset} preset
+   */
+  toggleSuccess(preset) {
+    if (!preset) {
+      return; // canceled by user
+    }
+
+    this.scope['preset'].published = preset.published;
+    this.scope['preset'].default = preset.default;
+
+    this.scope.$emit(EventType.TOGGLE_PRESET);
+  }
+
+  /**
+   * Handle when the preset is NOT saved
+   * @param {*} error
+   */
+  toggleFailure(error) {
+    const msg = ['Could not update preset.'];
+    if (error) {
+      msg.push('\n');
+      msg.push(error['msg'] || error['message'] || error);
+    }
+    AlertManager.getInstance().sendAlert(msg.join(''));
   }
 
   /**
@@ -360,10 +431,6 @@ class Controller extends MenuButtonCtrl {
       // TODO remove these "disables" as the feature(s) are implemented
       const remove = this.menu.getRoot().find(EventType.REMOVE);
       if (remove) remove.enabled = false;
-      if (publishTrue) publishTrue.enabled = false;
-      if (publishFalse) publishFalse.enabled = false;
-      if (defaultTrue) defaultTrue.enabled = false;
-      if (defaultFalse) defaultFalse.enabled = false;
     }
   }
 }
