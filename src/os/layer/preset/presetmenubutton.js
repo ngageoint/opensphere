@@ -19,6 +19,8 @@ const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
 const ILayer = goog.requireType('os.layer.ILayer');
 
+const GoogLog = goog.require('goog.log');
+
 
 /**
  * @const {string}
@@ -38,6 +40,8 @@ const EventType = {
   TOGGLE_PUBLISHED_TRUE: 'toggle-published-true',
   TOGGLE_PUBLISHED_FALSE: 'toggle-published-false'
 };
+
+const LOGGER = GoogLog.getLogger('os.layer.preset.PresetMenuButton');
 
 /**
  * The controller for the preset directive; make use of the MenuButtonController
@@ -260,7 +264,7 @@ class Controller extends MenuButtonCtrl {
       // TODO if more than one, open a dropdown modal to select one
       services[0].update(preset).then(this.saveSuccess.bind(this), this.saveFailure.bind(this));
     } else {
-      AlertManager.getInstance().sendAlert('No services found that support SAVE action', AlertEventSeverity.ERROR);
+      GoogLog.error(LOGGER, 'No services found that support SAVE action');
     }
   }
 
