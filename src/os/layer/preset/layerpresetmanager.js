@@ -220,11 +220,11 @@ class LayerPresetManager extends Disposable {
    */
   applyDefaults(id, presets) {
     var applied = /** @type {!Object<boolean>} */
-      (settings.getInstance().get(OsLayerPreset.SettingKey.APPLIED_DEFAULTS, {}));
+        (settings.getInstance().get(OsLayerPreset.SettingKey.APPLIED_DEFAULTS, {}));
 
     if (Array.isArray(presets) && presets.length && !applied[id]) {
       var preset = presets.find(function(preset) {
-        return preset.default || false;
+        return preset.default || false; // TODO gets the first one; instead, look for the first and latest updated
       });
 
       if (preset) {
@@ -232,6 +232,7 @@ class LayerPresetManager extends Disposable {
         cmd.execute();
       }
 
+      // apply the Default style for a layer only once as long as the settings remain intact
       applied[id] = true;
       settings.getInstance().set(OsLayerPreset.SettingKey.APPLIED_DEFAULTS, applied);
     }

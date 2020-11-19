@@ -15,9 +15,13 @@ const {Presets: OsMetrics} = goog.require('os.metrics.keys');
 const AlertManager = goog.require('os.alert.AlertManager');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
+const OsUi = goog.require('os.ui');
+const {DEFAULT_PRESET_ID} = goog.require('os.layer.preset');
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
 const ILayer = goog.requireType('os.layer.ILayer');
+const IPresetService = goog.requireType('os.layer.preset.IPresetService');
+
 
 const GoogLog = goog.require('goog.log');
 
@@ -62,6 +66,11 @@ class Controller extends MenuButtonCtrl {
      * @type {boolean}
      */
     this['isAdmin'] = false;
+
+    /**
+     * @type {boolean}
+     */
+    this['thinking'] = false;
 
     this.init_();
   }
@@ -235,10 +244,15 @@ class Controller extends MenuButtonCtrl {
   }
 
   /**
+   * Get a service that will be able to do the requested action
+   *
    * @param {!OsLayerPreset.PresetServiceAction} action
+   * @param {osx.layer.Preset=} opt_preset
    * @return {Promise<IPresetService>}
    */
-  getService(action) {
+  getService(action, opt_preset) {
+    // TODO if the user passes in a Preset, get the service from which the preset came
+
     // get PresetService(s) that support save()
     const services = LayerPresetManager.getInstance().supporting(action);
 
@@ -266,9 +280,18 @@ class Controller extends MenuButtonCtrl {
    * Delete the Preset from its source service
    */
   remove() {
+    // clone existing preset then update clone with latest settings
     const preset = this.scope['preset'];
 
-    console.log(`preset.remove(${preset.label})`);
+    // get PresetService(s) that support remove()
+    this.getService(OsLayerPreset.PresetServiceAction.REMOVE).then(
+        (service) => {
+          service.remove(preset).then(this.saveSuccess.bind(this), this.saveFailure.bind(this));
+        },
+        (msg) => {
+          GoogLog.error(LOGGER, 'No services found that support remove action');
+        }
+    );
   }
 
   /**
@@ -279,13 +302,13 @@ class Controller extends MenuButtonCtrl {
     const source = this.scope['preset'];
     const preset = this.clone(source);
 
-    // get PresetService(s) that support save()
+    // get PresetService(s) that support uodate()
     this.getService(OsLayerPreset.PresetServiceAction.UPDATE).then(
         (service) => {
           service.update(preset).then(this.saveSuccess.bind(this), this.saveFailure.bind(this));
         },
         (msg) => {
-          GoogLog.error(LOGGER, 'No services found that support SAVE action');
+          GoogLog.error(LOGGER, 'No services found that support save action');
         }
     );
   }
@@ -348,17 +371,21 @@ class Controller extends MenuButtonCtrl {
    *
    */
   toggleDefault() {
-    const preset = this.scope['preset'];
+    const source = this.scope['preset'];
+    const preset = Object.assign({}, source); // make a quick copy
 
     // get PresetService(s) that support setDefault()
     this.getService(OsLayerPreset.PresetServiceAction.SET_DEFAULT).then(
         (service) => {
+          this['thinking'] = true;
+          OsUi.apply(this.scope); // outside the angular digest cycle; need to reapply scope
+
           service
               .setDefault(preset, !preset.default)
-              .then(this.saveSuccess.bind(this), this.saveFailure.bind(this));
+              .then(this.toggleSuccess.bind(this), this.toggleFailure.bind(this));
         },
         (msg) => {
-          AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.ERROR);
+          GoogLog.error(LOGGER, 'No services found that support setDefault action');
         }
     );
   }
@@ -373,12 +400,15 @@ class Controller extends MenuButtonCtrl {
     // get PresetService(s) that support setPublished()
     this.getService(OsLayerPreset.PresetServiceAction.SET_PUBLISHED).then(
         (service) => {
+          this['thinking'] = true;
+          OsUi.apply(this.scope); // outside the angular digest cycle; need to reapply scope
+
           service
               .setPublished(preset, !preset.published)
               .then(this.toggleSuccess.bind(this), this.toggleFailure.bind(this));
         },
         (msg) => {
-          AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.ERROR);
+          GoogLog.error(LOGGER, 'No services found that support setPublished action');
         }
     );
   }
@@ -388,14 +418,18 @@ class Controller extends MenuButtonCtrl {
    * @param {osx.layer.Preset} preset
    */
   toggleSuccess(preset) {
+    this['thinking'] = false;
+    OsUi.apply(this.scope); // callback from outside the angular digest cycle; need to reapply scope
+
     if (!preset) {
       return; // canceled by user
     }
 
+    // update local copy of 'preset' to match the value returned by the service
     this.scope['preset'].published = preset.published;
     this.scope['preset'].default = preset.default;
 
-    this.scope.$emit(EventType.TOGGLE_PRESET);
+    this.scope.$emit(EventType.TOGGLE_PRESET, preset);
   }
 
   /**
@@ -403,6 +437,9 @@ class Controller extends MenuButtonCtrl {
    * @param {*} error
    */
   toggleFailure(error) {
+    this['thinking'] = false;
+    OsUi.apply(this.scope); // callback from outside the angular digest cycle; need to reapply scope
+
     const msg = ['Could not update preset.'];
     if (error) {
       msg.push('\n');
@@ -418,19 +455,32 @@ class Controller extends MenuButtonCtrl {
     const preset = this.scope['preset'];
 
     if (preset) {
+      const isBasic = (preset.id == DEFAULT_PRESET_ID);
       const publishTrue = this.menu.getRoot().find(EventType.TOGGLE_PUBLISHED_TRUE);
       const publishFalse = this.menu.getRoot().find(EventType.TOGGLE_PUBLISHED_FALSE);
       const defaultTrue = this.menu.getRoot().find(EventType.TOGGLE_DEFAULT_TRUE);
       const defaultFalse = this.menu.getRoot().find(EventType.TOGGLE_DEFAULT_FALSE);
-
-      if (publishTrue) publishTrue.visible = !preset.published;
-      if (publishFalse) publishFalse.visible = preset.published;
-      if (defaultTrue) defaultTrue.visible = !preset.default;
-      if (defaultFalse) defaultFalse.visible = preset.default;
-
-      // TODO remove these "disables" as the feature(s) are implemented
       const remove = this.menu.getRoot().find(EventType.REMOVE);
-      if (remove) remove.enabled = false;
+
+      if (publishTrue) {
+        publishTrue.visible = !preset.published;
+        publishTrue.enabled = !isBasic;
+      }
+      if (publishFalse) {
+        publishFalse.visible = preset.published;
+        publishFalse.enabled = !isBasic;
+      }
+      if (defaultTrue) {
+        defaultTrue.visible = !preset.default;
+        defaultTrue.enabled = !isBasic;
+      }
+      if (defaultFalse) {
+        defaultFalse.visible = preset.default;
+        defaultFalse.enabled = !isBasic;
+      }
+      if (remove) {
+        remove.enabled = !isBasic;
+      }
     }
   }
 }
@@ -449,15 +499,18 @@ const directive = () => ({
   controllerAs: 'ctrl',
   template: `
 <div class="btn-group o-add-data-button" ng-right-click="ctrl.openMenu()">
-  <button type="button" class="btn btn-primary col-auto" ng-click="ctrl.notifyApplyPreset()"
-    title="Apply the layer style preset">
-    <i class="fa fa-check"></i>
+  <button type="button" class="btn btn-primary col-auto" 
+      ng-click="ctrl.notifyApplyPreset()"
+      title="Apply the layer style preset">
+    <i class='fa fa-check'></i>
     Apply
   </button>
   <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" 
-    ng-if="ctrl.isAdmin" 
-    ng-click="ctrl.openMenu()"
-    ng-class="{active: menu}">
+      ng-if="ctrl.isAdmin" 
+      ng-click="ctrl.openMenu()"
+      ng-class="{active: menu}"
+      ng-disabled="ctrl.thinking">
+    <i class="fa" ng-class="ctrl.thinking && 'fa-spin fa-spinner'"></i>
   </button>
 </div>
 `
