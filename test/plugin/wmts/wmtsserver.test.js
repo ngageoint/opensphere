@@ -1,5 +1,4 @@
 goog.require('os.data.DataProviderEventType');
-goog.require('os.net.URLModifier');
 goog.require('plugin.wmts.Server');
 
 describe('plugin.wmts.Server', function() {

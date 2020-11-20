@@ -19,7 +19,6 @@ goog.require('os.file');
 goog.require('os.layer.LayerType');
 goog.require('os.net.HandlerType');
 goog.require('os.net.Request');
-goog.require('os.net.URLModifier');
 goog.require('os.ui.Icons');
 goog.require('os.ui.data.DescriptorNode');
 goog.require('os.ui.server.AbstractLoadingServer');

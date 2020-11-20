@@ -1,5 +1,4 @@
 goog.require('os.data.DataProviderEventType');
-goog.require('os.net.URLModifier');
 goog.require('os.ui.ogc.OGCServer');
 
 describe('os.ui.ogc.OGCServer', function() {
