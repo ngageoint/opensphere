@@ -22,7 +22,6 @@ const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
 const ILayer = goog.requireType('os.layer.ILayer');
 const IPresetService = goog.requireType('os.layer.preset.IPresetService');
 
-
 const GoogLog = goog.require('goog.log');
 
 
@@ -46,6 +45,9 @@ const EventType = {
   TOGGLE_PUBLISHED_FALSE: 'toggle-published-false'
 };
 
+/**
+ * @const {GoogLog.Logger}
+ */
 const LOGGER = GoogLog.getLogger('os.layer.preset.PresetMenuButton');
 
 /**
@@ -282,16 +284,58 @@ class Controller extends MenuButtonCtrl {
   remove() {
     // clone existing preset then update clone with latest settings
     const preset = this.scope['preset'];
+    const prompt = `<span>Permanently delete Preset "${preset.label}"? This cannot be undone.</span>`;
 
-    // get PresetService(s) that support remove()
-    this.getService(OsLayerPreset.PresetServiceAction.REMOVE).then(
-        (service) => {
-          service.remove(preset).then(this.saveSuccess.bind(this), this.saveFailure.bind(this));
-        },
-        (msg) => {
-          GoogLog.error(LOGGER, 'No services found that support remove action');
-        }
-    );
+    // As a future improvement, overwrite the result in the promise.all and flag the affeted FA's in
+    // the ImportActionManager as 'Presets'
+
+    // Refresh the application
+    ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+      yesText: 'Delete',
+      yesIcon: 'fa fa-trash-o',
+      yesButtonClass: 'btn-danger',
+      confirm: (() => {
+        // get PresetService(s) that support remove()
+        this.getService(OsLayerPreset.PresetServiceAction.REMOVE).then(
+            (service) => {
+              this['thinking'] = true;
+              OsUi.apply(this.scope); // outside the angular digest cycle; need to reapply scope
+
+              service.remove(preset).then(
+                  this.removeSuccess.bind(this),
+                  this.onServiceFailure.bind(this, 'Could not delete preset'));
+            },
+            (msg) => {
+              GoogLog.error(LOGGER, 'No services found that support remove action');
+            }
+        );
+      }),
+      prompt,
+      windowOptions: {
+        'label': 'Delete...',
+        'icon': 'fa fa-floppy-o',
+        'x': 'center',
+        'y': 100,
+        'width': 400,
+        'height': 'auto',
+        'modal': 'true',
+        'show-close': 'true',
+        'no-scroll': 'true'
+      }
+    }));
+  }
+
+  /**
+   * Handle when the Preset is properly saved to the desired service
+   * @param {?boolean} b
+   */
+  removeSuccess(b) {
+    this['thinking'] = false;
+    OsUi.apply(this.scope); // outside the angular digest cycle; need to reapply scope
+
+    if (b === true) {
+      this.saveSuccessConfirm();
+    }
   }
 
   /**
@@ -305,7 +349,9 @@ class Controller extends MenuButtonCtrl {
     // get PresetService(s) that support uodate()
     this.getService(OsLayerPreset.PresetServiceAction.UPDATE).then(
         (service) => {
-          service.update(preset).then(this.saveSuccess.bind(this), this.saveFailure.bind(this));
+          service.update(preset).then(
+              this.saveSuccess.bind(this),
+              this.onServiceFailure.bind(this, 'Could not save Preset'));
         },
         (msg) => {
           GoogLog.error(LOGGER, 'No services found that support save action');
@@ -321,6 +367,13 @@ class Controller extends MenuButtonCtrl {
     if (!preset) {
       return; // canceled by user
     }
+    this.saveSuccessConfirm();
+  }
+
+  /**
+   * Reusable confirm
+   */
+  saveSuccessConfirm() {
     const prompt = '<p><strong>Success!</strong>&nbsp;&nbsp;Next, reload the application to reinitialize ' +
         ' Preset Feature Actions and Style settings.</p>';
 
@@ -355,16 +408,20 @@ class Controller extends MenuButtonCtrl {
   }
 
   /**
-   * Handle when the preset is NOT saved
+   * Handle when the presetservice or one of its dependencies fail
+   *
+   * @param {!string} message
    * @param {*} error
    */
-  saveFailure(error) {
-    const msg = ['Could not save preset.'];
+  onServiceFailure(message, error) {
+    this['thinking'] = false;
+    OsUi.apply(this.scope); // outside the angular digest cycle; need to reapply scope
+
+    const msg = [message];
     if (error) {
-      msg.push('\n');
       msg.push(error['msg'] || error['message'] || error);
     }
-    AlertManager.getInstance().sendAlert(msg.join(''));
+    AlertManager.getInstance().sendAlert(msg.join(' : '));
   }
 
   /**
@@ -382,7 +439,7 @@ class Controller extends MenuButtonCtrl {
 
           service
               .setDefault(preset, !preset.default)
-              .then(this.toggleSuccess.bind(this), this.toggleFailure.bind(this));
+              .then(this.toggleSuccess.bind(this), this.onServiceFailure.bind(this, 'Could not update Preset'));
         },
         (msg) => {
           GoogLog.error(LOGGER, 'No services found that support setDefault action');
@@ -405,7 +462,7 @@ class Controller extends MenuButtonCtrl {
 
           service
               .setPublished(preset, !preset.published)
-              .then(this.toggleSuccess.bind(this), this.toggleFailure.bind(this));
+              .then(this.toggleSuccess.bind(this), this.onServiceFailure.bind(this, 'Could not update Preset'));
         },
         (msg) => {
           GoogLog.error(LOGGER, 'No services found that support setPublished action');
@@ -430,22 +487,6 @@ class Controller extends MenuButtonCtrl {
     this.scope['preset'].default = preset.default;
 
     this.scope.$emit(EventType.TOGGLE_PRESET, preset);
-  }
-
-  /**
-   * Handle when the preset is NOT saved
-   * @param {*} error
-   */
-  toggleFailure(error) {
-    this['thinking'] = false;
-    OsUi.apply(this.scope); // callback from outside the angular digest cycle; need to reapply scope
-
-    const msg = ['Could not update preset.'];
-    if (error) {
-      msg.push('\n');
-      msg.push(error['msg'] || error['message'] || error);
-    }
-    AlertManager.getInstance().sendAlert(msg.join(''));
   }
 
   /**

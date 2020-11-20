@@ -190,6 +190,15 @@ class LayerPresetManager extends Disposable {
             return list;
           }, []);
 
+          // sort
+          if (presets.length > 0) {
+            presets.sort((a, b) => {
+              const aLabel = a ? a.label : '';
+              const bLabel = b ? b.label : '';
+              return (aLabel || '').localeCompare(bLabel || '');
+            });
+          }
+
           // add a "Basic" preset to the list if there are user-defined ones OR the user is an admin
           if (presets.length > 0 || this.isAdmin()) {
             OsLayerPreset.addDefault(presets, id, filterKey || undefined);
