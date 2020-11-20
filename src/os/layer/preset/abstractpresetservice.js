@@ -33,7 +33,7 @@ class AbstractPresetService {
    */
   remove(preset) {
     return new Promise((resolve) => {
-      resolve(null);
+      resolve(false);
     });
   }
 
