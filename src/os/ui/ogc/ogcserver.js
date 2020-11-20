@@ -19,7 +19,6 @@ goog.require('os.data.IDataProvider');
 goog.require('os.file');
 goog.require('os.net.HandlerType');
 goog.require('os.net.Request');
-goog.require('os.net.URLModifier');
 goog.require('os.ogc');
 goog.require('os.ui.data.DescriptorNode');
 goog.require('os.ui.ogc.wms.IWMSLayerParser');
