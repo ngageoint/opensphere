@@ -80,12 +80,6 @@ plugin.wmts.Server = function() {
    * @private
    */
   this.timeFormat_ = '';
-
-  /**
-   * @type {os.net.URLModifier}
-   * @private
-   */
-  this.urlModifier_ = null;
 };
 goog.inherits(plugin.wmts.Server, os.ui.server.AbstractLoadingServer);
 os.implements(plugin.wmts.Server, os.data.IDataProvider.ID);
@@ -214,10 +208,6 @@ plugin.wmts.Server.prototype.configure = function(config) {
   this.setLowerCase(/** @type {boolean} */ (config['lowerCase']));
   this.setDateFormat(/** @type {string} */ (config['dateFormat']));
   this.setTimeFormat(/** @type {string} */ (config['timeFormat']));
-
-  if ('urlReplace' in config && config['urlReplace'] === true) {
-    this.urlModifier_ = new os.net.URLModifier();
-  }
 
   this.setParams('params' in config ? new goog.Uri.QueryData(/** @type {string} */ (config['params'])) : null);
 };
@@ -372,7 +362,7 @@ plugin.wmts.Server.prototype.parseCapabilities = function(response, uri) {
       // prune sets in unsupported projections since OL will throw an exception if it can't find the projection
       var matrixSets = result['Contents']['TileMatrixSet'] = result['Contents']['TileMatrixSet'].filter(
           function(matrixSet) {
-          // openlayers/src/ol/source/wmts.js is the source for these lines
+            // openlayers/src/ol/source/wmts.js is the source for these lines
             var code = matrixSet['SupportedCRS'];
             return code && !!(ol.proj.get(code.replace(/urn:ogc:def:crs:(\w+):(.*:)?(\w+)$/, '$1:$3')) ||
               ol.proj.get(code));
@@ -438,19 +428,6 @@ plugin.wmts.Server.prototype.parseCapabilities = function(response, uri) {
 
         config['crossOrigin'] = crossOrigin;
         config['projections'] = config['wmtsOptions'].map(plugin.wmts.Server.wmtsOptionsToProjection_);
-
-        if (config['wmtsOptions'] && this.urlModifier_) {
-          config['wmtsOptions'].forEach((optionSet, i) => {
-            var newURLs = [];
-            optionSet.urls.forEach((wmtsURL, j) => {
-              var newURI = new goog.Uri(wmtsURL);
-              this.urlModifier_.modify(newURI);
-              goog.log.fine(this.log, 'Modifying WMTS URL from ' + wmtsURL + ' to ' + newURI.toString());
-              newURLs.push(newURI.toString());
-            });
-            optionSet.urls = newURLs;
-          });
-        }
 
         if (config['wmtsOptions'].length) {
           var descriptor = /** @type {os.data.ConfigDescriptor} */ (os.dataManager.getDescriptor(fullId));
