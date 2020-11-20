@@ -26,7 +26,8 @@ const GoogLog = goog.require('goog.log');
 
 
 /**
- * @const {string}
+ * @type {string}
+ * @const
  */
 const MENU_FLAG = 'presets';
 
@@ -46,7 +47,8 @@ const EventType = {
 };
 
 /**
- * @const {GoogLog.Logger}
+ * @type {GoogLog.Logger}
+ * @const
  */
 const LOGGER = GoogLog.getLogger('os.layer.preset.PresetMenuButton');
 
@@ -306,7 +308,7 @@ class Controller extends MenuButtonCtrl {
                   this.onServiceFailure.bind(this, 'Could not delete preset'));
             },
             (msg) => {
-              GoogLog.error(LOGGER, 'No services found that support remove action');
+              GoogLog.error(LOGGER, '' + msg);
             }
         );
       }),
@@ -354,7 +356,7 @@ class Controller extends MenuButtonCtrl {
               this.onServiceFailure.bind(this, 'Could not save Preset'));
         },
         (msg) => {
-          GoogLog.error(LOGGER, 'No services found that support save action');
+          GoogLog.error(LOGGER, '' + msg);
         }
     );
   }
@@ -442,7 +444,7 @@ class Controller extends MenuButtonCtrl {
               .then(this.toggleSuccess.bind(this), this.onServiceFailure.bind(this, 'Could not update Preset'));
         },
         (msg) => {
-          GoogLog.error(LOGGER, 'No services found that support setDefault action');
+          GoogLog.error(LOGGER, '' + msg);
         }
     );
   }
@@ -465,7 +467,7 @@ class Controller extends MenuButtonCtrl {
               .then(this.toggleSuccess.bind(this), this.onServiceFailure.bind(this, 'Could not update Preset'));
         },
         (msg) => {
-          GoogLog.error(LOGGER, 'No services found that support setPublished action');
+          GoogLog.error(LOGGER, '' + msg);
         }
     );
   }
@@ -513,7 +515,7 @@ class Controller extends MenuButtonCtrl {
       }
       if (defaultTrue) {
         defaultTrue.visible = !preset.default;
-        defaultTrue.enabled = !isBasic;
+        defaultTrue.enabled = !isBasic && preset.published;
       }
       if (defaultFalse) {
         defaultFalse.visible = preset.default;
@@ -543,7 +545,7 @@ const directive = () => ({
   <button type="button" class="btn btn-primary col-auto" 
       ng-click="ctrl.notifyApplyPreset()"
       title="Apply the layer style preset">
-    <i class='fa fa-check'></i>
+    <i class="fa fa-check"></i>
     Apply
   </button>
   <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" 
