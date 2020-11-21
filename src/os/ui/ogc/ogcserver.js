@@ -165,18 +165,6 @@ os.ui.ogc.OGCServer = function() {
   this.wpsUrl_ = '';
 
   /**
-   * @type {string}
-   * @private
-   */
-  this.wmsOperationURL_ = '';
-
-  /**
-   * @type {string}
-   * @private
-   */
-  this.wfsOperationURL_ = '';
-
-  /**
    * Flag to indicate whether GetMap & GetFeature operation URLs should
    * be parsed from the Capabilities documents and used for layer queries.
    * If false, the original URLs set in the server config will be used
@@ -404,38 +392,6 @@ os.ui.ogc.OGCServer.prototype.getWpsUrl = function() {
  */
 os.ui.ogc.OGCServer.prototype.setWpsUrl = function(value) {
   this.wpsUrl_ = value;
-};
-
-
-/**
- * @param {string} url
- */
-os.ui.ogc.OGCServer.prototype.setWMSOperationURL = function(url) {
-  this.wmsOperationURL_ = url;
-};
-
-
-/**
- * @return {string}
- */
-os.ui.ogc.OGCServer.prototype.getWMSOperationURL = function() {
-  return this.wmsOperationURL_ || this.getWmsUrl();
-};
-
-
-/**
- * @param {string} url
- */
-os.ui.ogc.OGCServer.prototype.setWFSOperationURL = function(url) {
-  this.wfsOperationURL_ = url;
-};
-
-
-/**
- * @return {string}
- */
-os.ui.ogc.OGCServer.prototype.getWFSOperationURL = function() {
-  return this.wfsOperationURL_ || this.getWfsUrl();
 };
 
 
@@ -797,7 +753,7 @@ os.ui.ogc.OGCServer.prototype.parseWmsCapabilities = function(response, uri) {
           } else {
             newWms = resource;
           }
-          this.setWMSOperationURL(newWms);
+          this.setWmsUrl(newWms);
           if (newParams != null) {
             if (!this.wmsParams_) {
               this.wmsParams_ = new goog.Uri.QueryData();
@@ -1037,7 +993,7 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
       }
 
       descriptor.setWfsEnabled(true);
-      descriptor.setWfsUrl(this.getWFSOperationURL());
+      descriptor.setWfsUrl(this.getWfsUrl());
       descriptor.setUsePost(this.getWfsPost());
       descriptor.setWfsName(name);
       descriptor.setWfsNamespace(nameSpace);
@@ -1228,7 +1184,7 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
         layerDescriptor.setWmsEnabled(true);
         layerDescriptor.setWmsParams(this.getWmsParams());
         layerDescriptor.setWmsVersion(version);
-        layerDescriptor.setWmsUrl(this.getWMSOperationURL());
+        layerDescriptor.setWmsUrl(this.getWmsUrl());
         layerDescriptor.setWmsDateFormat(this.getWmsDateFormat());
         layerDescriptor.setWmsTimeFormat(this.getWmsTimeFormat());
         layerDescriptor.setProvider(this.getLabel());
