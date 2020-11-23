@@ -48,8 +48,10 @@ const SettingKey = {
 /**
  * Add the default preset to an existing set.
  * @param {Array<osx.layer.Preset>} presets The current layer presets.
+ * @param {string=} opt_layerId
+ * @param {string=} opt_layerFilterKey
  */
-const addDefault = function(presets) {
+const addDefault = function(presets, opt_layerId, opt_layerFilterKey) {
   if (presets) {
     if (!defaultPreset_) {
       // create a temporary vector layer to produce a default layer config
@@ -76,8 +78,12 @@ const addDefault = function(presets) {
     var hasDefault = presets.some(function(p) {
       return !!p && p.id === DEFAULT_PRESET_ID;
     });
+
     if (!hasDefault && defaultPreset_) {
-      presets.unshift(object.unsafeClone(defaultPreset_));
+      var preset = object.unsafeClone(defaultPreset_);
+      if (opt_layerId) preset.layerId = opt_layerId;
+      if (opt_layerFilterKey) preset.layerFilterKey = opt_layerFilterKey;
+      presets.unshift(preset); // drop it into the first entry
     }
   }
 };
