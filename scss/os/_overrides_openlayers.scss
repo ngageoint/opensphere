@@ -50,7 +50,7 @@
 // If the draw controls are absolutely positioned, position to top left
 .draw-controls {
   bottom: auto;
-  left: .75rem;
+  left: 3rem;
   right: auto;
   top: .75rem;
   z-index: $u-zindex-base + 1;
@@ -60,8 +60,8 @@
 // + / - zoom control buttons
 .ol-zoom {
   bottom: auto;
-  left: auto;
-  right: .75rem;
+  left: .75rem;
+  right: auto;
   top: .75rem;
 }
 
@@ -105,21 +105,12 @@
 .ol-layer-switcher {
   bottom: auto;
   left: auto;
-  right: 3rem;
+  right: .75rem;
   text-align: left;
   top: .75rem;
 
   .panel {
     padding: 0 5px;
-  }
-
-  .layers-inner {
-    background-image: url('../../images/layers.png');
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 2.5rem;
-    margin-left: auto;
-    width: 2.5rem;
   }
 
   .form-check-input,
@@ -169,7 +160,7 @@
 
 // Scale Line
 .ol-scale-line {
-  bottom: .75rem;
+  bottom: 3rem;
   cursor: pointer;
   font-family: monospace;
   left: .75rem;
@@ -223,8 +214,8 @@
   cursor: pointer;
   font-family: monospace;
   font-size: 110%;
-  left: auto;
-  right: .75rem;
+  left: .75rem;
+  right: auto;
   top: auto;
 }
 
