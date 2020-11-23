@@ -405,7 +405,7 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.getParser = function(options) {
   var typeConfig = this.getBestType(options);
   var im = os.ui.im.ImportManager.getInstance();
   var type = typeConfig.type;
-  var parser = im.getParser(type, options);
+  var parser = im.getParser(typeConfig.parser, options);
 
   // special case handling
   if (type === 'geojson') {
