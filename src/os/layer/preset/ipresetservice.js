@@ -12,7 +12,7 @@ class IPresetService {
    * Saves a preset
    *
    * @param {!osx.layer.Preset} preset
-   * @return {!Promise<osx.layer.Preset|null>}
+   * @return {!Promise<osx.layer.Preset>}
    */
   insert(preset) {}
 
@@ -20,7 +20,7 @@ class IPresetService {
    * Modifies a preset
    *
    * @param {!osx.layer.Preset} preset
-   * @return {!Promise<osx.layer.Preset|null>}
+   * @return {!Promise<osx.layer.Preset>}
    */
   update(preset) {}
 
@@ -28,7 +28,7 @@ class IPresetService {
    * Deletes a preset
    *
    * @param {!osx.layer.Preset|string} preset
-   * @return {!Promise<osx.layer.Preset|null>}
+   * @return {!Promise<osx.layer.Preset>}
    */
   remove(preset) {}
 
@@ -45,7 +45,7 @@ class IPresetService {
    *
    * @param {osx.layer.Preset|string} preset
    * @param {boolean=} opt_boolean
-   * @return {!Promise<osx.layer.Preset|null,?>}
+   * @return {!Promise<osx.layer.Preset>}
    */
   setDefault(preset, opt_boolean) {}
 
@@ -54,7 +54,7 @@ class IPresetService {
    *
    * @param {osx.layer.Preset|string} preset
    * @param {boolean=} opt_boolean
-   * @return {!Promise<osx.layer.Preset|null,?>}
+   * @return {!Promise<osx.layer.Preset>}
    */
   setPublished(preset, opt_boolean) {}
 

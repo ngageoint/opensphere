@@ -2,12 +2,24 @@ goog.module('os.layer.preset.PresetMenuButton');
 goog.module.declareLegacyNamespace();
 
 const LayerPresetManager = goog.require('os.layer.preset.LayerPresetManager');
+const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
 const Menu = goog.require('os.ui.menu.Menu');
 const MenuItem = goog.require('os.ui.menu.MenuItem');
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 const Module = goog.require('os.ui.Module');
-const {Presets: Metrics} = goog.require('os.metrics.keys');
+const OsLayerPreset = goog.require('os.layer.preset');
+const OsXml = goog.require('os.xml');
+const OsFilter = goog.require('os.im.action.filter');
+const {Presets: OsMetrics} = goog.require('os.metrics.keys');
+const AlertManager = goog.require('os.alert.AlertManager');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
+
+const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const ILayer = goog.requireType('os.layer.ILayer');
+
+const GoogLog = goog.require('goog.log');
 
 
 /**
@@ -28,6 +40,8 @@ const EventType = {
   TOGGLE_PUBLISHED_TRUE: 'toggle-published-true',
   TOGGLE_PUBLISHED_FALSE: 'toggle-published-false'
 };
+
+const LOGGER = GoogLog.getLogger('os.layer.preset.PresetMenuButton');
 
 /**
  * The controller for the preset directive; make use of the MenuButtonController
@@ -71,7 +85,7 @@ class Controller extends MenuButtonCtrl {
           tooltip: 'Save Preset',
           icons: ['<i class="fa fa-fw fa-floppy-o"></i>'],
           handler: this.save.bind(this),
-          metricKey: Metrics.SAVE,
+          metricKey: OsMetrics.SAVE,
           sort: 0
         }, {
           label: 'Make public',
@@ -79,7 +93,7 @@ class Controller extends MenuButtonCtrl {
           tooltip: 'Make Preset visible to everyone',
           icons: ['<i class="fa fa-fw fa-eye"></i>'],
           handler: this.togglePublished.bind(this),
-          metricKey: Metrics.TOGGLE_PUBLISHED,
+          metricKey: OsMetrics.TOGGLE_PUBLISHED,
           sort: 10
         }, {
           label: 'Make admin only',
@@ -87,7 +101,7 @@ class Controller extends MenuButtonCtrl {
           tooltip: 'Return Preset to hidden (admin only) mode',
           icons: ['<i class="fa fa-fw fa-eye-slash"></i>'],
           handler: this.togglePublished.bind(this),
-          metricKey: Metrics.TOGGLE_PUBLISHED,
+          metricKey: OsMetrics.TOGGLE_PUBLISHED,
           sort: 11
         }, {
           label: 'Set as Default',
@@ -95,7 +109,7 @@ class Controller extends MenuButtonCtrl {
           tooltip: 'Make Preset the default style when layer added',
           icons: ['<i class="fa fa-fw fa-star"></i>'],
           handler: this.toggleDefault.bind(this),
-          metricKey: Metrics.TOGGLE_DEFAULT,
+          metricKey: OsMetrics.TOGGLE_DEFAULT,
           sort: 20
         }, {
           label: 'Revoke Default',
@@ -103,21 +117,21 @@ class Controller extends MenuButtonCtrl {
           tooltip: 'Undo making Preset the default style when layer added',
           icons: ['<i class="fa fa-fw fa-star-o"></i>'],
           handler: this.toggleDefault.bind(this),
-          metricKey: Metrics.TOGGLE_DEFAULT,
+          metricKey: OsMetrics.TOGGLE_DEFAULT,
           sort: 21
         }, {
           label: 'Delete',
           eventType: EventType.REMOVE,
           tooltip: 'Permanently delete Preset',
-          icons: ['<i class="fa fa-fw fa-close"></i>'],
+          icons: ['<i class="fa fa-fw fa-trash-o"></i>'],
           handler: this.remove.bind(this),
-          metricKey: Metrics.REMOVE,
+          metricKey: OsMetrics.REMOVE,
           sort: 30
         }]
       }]
     }));
     this.flag = MENU_FLAG;
-    this.metricKey = Metrics.OPEN;
+    this.metricKey = OsMetrics.OPEN;
   }
 
   /**
@@ -125,6 +139,98 @@ class Controller extends MenuButtonCtrl {
    */
   $onDestroy() {
     this.scope = null;
+  }
+
+  /**
+   * Clone source, then update the configs and feature actions to currently selected values
+   *
+   * @param {!osx.layer.Preset} source
+   * @return {!osx.layer.Preset}
+   */
+  clone(source) {
+    const clone = /** @type {osx.layer.Preset} */ (Object.assign({}, source));
+
+    // get the current layerConfig
+    if (clone.layerId) {
+      const layer = os.MapContainer.getInstance().getLayer(clone.layerId); // TODO fix global reference
+      if (layer) {
+        const config = /** @type {ILayer} */ (layer).persist();
+        clone.layerConfig = config;
+      }
+    }
+
+    const iam = ImportActionManager.getInstance();
+
+    /**
+     * Depth-first traversal of tree; returns ID's of active FeatureActions
+     * @param {string|undefined} type
+     * @param {Array<FilterActionEntry>=} entries
+     * @return {!Array<string>}
+     */
+    const traverse = function(type, entries) {
+      let ids = [];
+      (entries || []).forEach((entry) => {
+        if (entry.enabled && entry.type == type) {
+          ids.push(entry.getId());
+        }
+        ids = ids.concat(traverse(type, entry.getChildren()));
+      });
+      return ids;
+    };
+
+    // get the currently active FeatureAction ID's as a list
+    const ids = traverse(clone.layerId, iam.getActionEntries());
+
+    /**
+     * Get simplified list of active FeatureActions (no repeats via children)
+     * @param {string|undefined} type
+     * @param {FilterActionEntry=} entry
+     * @return {!boolean}
+     */
+    const active = function(type, entry) {
+      let isActive = false;
+
+      if (entry && entry.enabled && entry.type == type) {
+        isActive = true;
+      } else if (entry) {
+        const entries = entry.getChildren();
+        const len = entries ? entries.length : 0;
+
+        // use a for loop so it can be broken out of
+        for (let i = 0; i < len; i++) {
+          const e = entries[i];
+          if (active(type, e)) {
+            isActive = true;
+            break;
+          }
+        }
+      }
+      return isActive;
+    };
+
+    // only return top-level feature actions, not specific sub-entries
+    const entries = iam.getActionEntries().filter((entry) => {
+      return active(clone.layerId, entry);
+    });
+
+    if (entries && entries.length > 0 && ids && ids.length > 0) {
+      clone.featureActions = ids;
+
+      // export the currently active FeatureActions into an XML string
+      const rootNode = OsXml.createElementNS(iam.xmlGroup, 'http://www.bit-sys.com/state/v4');
+      const entryXmls = OsFilter.exportEntries(entries, false);
+
+      (entryXmls || []).forEach((entryXml) => {
+        rootNode.appendChild(entryXml);
+      });
+      const xml = OsXml.serialize(rootNode);
+
+      clone.featureActionsXML = xml;
+    } else {
+      clone.featureActions = [];
+    }
+
+    return clone;
   }
 
   /**
@@ -136,7 +242,7 @@ class Controller extends MenuButtonCtrl {
   }
 
   /**
-   *
+   * Delete the Preset from its source service
    */
   remove() {
     const preset = this.scope['preset'];
@@ -145,12 +251,75 @@ class Controller extends MenuButtonCtrl {
   }
 
   /**
-   *
+   * Save the Preset to the chosen service
    */
   save() {
-    const preset = this.scope['preset'];
+    // clone existing preset then update clone with latest settings
+    const source = this.scope['preset'];
+    const preset = this.clone(source);
 
-    console.log(`preset.save(${preset.label})`, preset);
+    // get PresetService(s) that support save()
+    const services = LayerPresetManager.getInstance().supporting(OsLayerPreset.PresetServiceAction.UPDATE);
+    if (services && services.length > 0) {
+      // TODO if more than one, open a dropdown modal to select one
+      services[0].update(preset).then(this.saveSuccess.bind(this), this.saveFailure.bind(this));
+    } else {
+      GoogLog.error(LOGGER, 'No services found that support SAVE action');
+    }
+  }
+
+  /**
+   * Handle when the Preset is properly saved to the desired service
+   * @param {osx.layer.Preset} preset
+   */
+  saveSuccess(preset) {
+    if (!preset) {
+      return; // canceled by user
+    }
+    const prompt = '<p><strong>Success!</strong>&nbsp;&nbsp;Next, reload the application to reinitialize ' +
+        ' Preset Feature Actions and Style settings.</p>';
+
+    // As a future improvement, overwrite the result in the promise.all and flag the affeted FA's in
+    // the ImportActionManager as 'Presets'
+
+    // Refresh the application
+    ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+      yesText: 'Reload',
+      noText: 'Keep Working',
+      confirm: (() => {
+        location.reload();
+      }),
+      cancel: (() => {
+        const cancelMessage = 'Remember - changes to the Preset are saved. You will see them when the ' +
+            ' application is reloaded.';
+        AlertManager.getInstance().sendAlert(cancelMessage, AlertEventSeverity.INFO);
+      }),
+      prompt,
+      windowOptions: {
+        'label': 'Saved',
+        'icon': 'fa fa-floppy-o',
+        'x': 'center',
+        'y': 100,
+        'width': 400,
+        'height': 'auto',
+        'modal': 'true',
+        'show-close': 'true',
+        'no-scroll': 'true'
+      }
+    }));
+  }
+
+  /**
+   * Handle when the preset is NOT saved
+   * @param {*} error
+   */
+  saveFailure(error) {
+    const msg = ['Could not save preset.'];
+    if (error) {
+      msg.push('\n');
+      msg.push(error['msg'] || error['message'] || error);
+    }
+    AlertManager.getInstance().sendAlert(msg.join(''));
   }
 
   /**
@@ -187,6 +356,14 @@ class Controller extends MenuButtonCtrl {
       if (publishFalse) publishFalse.visible = preset.published;
       if (defaultTrue) defaultTrue.visible = !preset.default;
       if (defaultFalse) defaultFalse.visible = preset.default;
+
+      // TODO remove these "disables" as the feature(s) are implemented
+      const remove = this.menu.getRoot().find(EventType.REMOVE);
+      if (remove) remove.enabled = false;
+      if (publishTrue) publishTrue.enabled = false;
+      if (publishFalse) publishFalse.enabled = false;
+      if (defaultTrue) defaultTrue.enabled = false;
+      if (defaultFalse) defaultFalse.enabled = false;
     }
   }
 }
