@@ -137,7 +137,7 @@
     "copy:views": "xargs -n 1 -I @ sh -c 'cp -rf @ $(cat .build/version)/views/.' < .build/copy-views-args",
     "copy:config": "cp .build/settings.json dist/opensphere/config",
     "copy:resources": "xargs -n 2 cp -r < .build/resources-copy-files",
-    "copy": "npm run copy:files && npm run copy:images && npm run copy:onboarding && npm run copy:views && npm run copy:config && npm run copy:resources",
+    "copy": "npm-run-all -s copy:files copy:images copy:onboarding copy:views copy:config copy:resources",
     "rename": "find dist -type f | xargs perl -pi -e \"s#{APP}#$(json -a admin.brand.opensphere admin.about.application -d '\\n'< .build/settings.json | sed '/^$/d' | head -n 1)#g\"",
     "build": "npm-run-all -s init -p lint genlibs -s compile copy build:index rename",
     "build:nolint": "npm run init && npm run genlibs && npm run compile && npm run copy && npm run build:index && npm run rename",
