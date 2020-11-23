@@ -94,6 +94,21 @@ class LayerPresetManager extends Disposable {
   }
 
   /**
+   * Returns a list of PresetServices which support the action
+   *
+   * @param {OsLayerPreset.PresetServiceAction} action
+   * @return {Array<IPresetService>}
+   */
+  supporting(action) {
+    const services = [];
+    const entries = (this.services_.entries() || []);
+    for (var [, service] of entries) {
+      if (service.supports(action)) services.push(service);
+    }
+    return services;
+  }
+
+  /**
    * @param {string} key
    * @param {IPresetService} service
    * @param {...} opt
@@ -101,6 +116,7 @@ class LayerPresetManager extends Disposable {
    */
   registerService(key, service, ...opt) {
     this.presets_ = {}; // set presets to reload every layer
+
     return this.services_.register(...[key, service].concat(opt));
   }
 
@@ -174,8 +190,10 @@ class LayerPresetManager extends Disposable {
             return list;
           }, []);
 
-          // add a "Basic" preset to the list if there are user-defined ones
-          if (presets.length > 0) OsLayerPreset.addDefault(presets);
+          // add a "Basic" preset to the list if there are user-defined ones OR the user is an admin
+          if (presets.length > 0 || this.isAdmin()) {
+            OsLayerPreset.addDefault(presets, id, filterKey || undefined);
+          }
 
           // apply the "isDefault" preset if asked
           if (opt_applyDefault) {
