@@ -361,7 +361,7 @@ plugin.wmts.Server.prototype.parseCapabilities = function(response, uri) {
       // prune sets in unsupported projections since OL will throw an exception if it can't find the projection
       var matrixSets = result['Contents']['TileMatrixSet'] = result['Contents']['TileMatrixSet'].filter(
           function(matrixSet) {
-          // openlayers/src/ol/source/wmts.js is the source for these lines
+            // openlayers/src/ol/source/wmts.js is the source for these lines
             var code = matrixSet['SupportedCRS'];
             return code && !!(ol.proj.get(code.replace(/urn:ogc:def:crs:(\w+):(.*:)?(\w+)$/, '$1:$3')) ||
               ol.proj.get(code));

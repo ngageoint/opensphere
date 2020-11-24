@@ -190,6 +190,15 @@ class LayerPresetManager extends Disposable {
             return list;
           }, []);
 
+          // sort
+          if (presets.length > 0) {
+            presets.sort((a, b) => {
+              const aLabel = a ? a.label : '';
+              const bLabel = b ? b.label : '';
+              return (aLabel || '').localeCompare(bLabel || '');
+            });
+          }
+
           // add a "Basic" preset to the list if there are user-defined ones OR the user is an admin
           if (presets.length > 0 || this.isAdmin()) {
             OsLayerPreset.addDefault(presets, id, filterKey || undefined);
@@ -220,11 +229,11 @@ class LayerPresetManager extends Disposable {
    */
   applyDefaults(id, presets) {
     var applied = /** @type {!Object<boolean>} */
-      (settings.getInstance().get(OsLayerPreset.SettingKey.APPLIED_DEFAULTS, {}));
+        (settings.getInstance().get(OsLayerPreset.SettingKey.APPLIED_DEFAULTS, {}));
 
     if (Array.isArray(presets) && presets.length && !applied[id]) {
       var preset = presets.find(function(preset) {
-        return preset['default'] || false;
+        return preset.default || false; // TODO gets the first one; instead, look for the first and latest updated
       });
 
       if (preset) {
@@ -232,6 +241,7 @@ class LayerPresetManager extends Disposable {
         cmd.execute();
       }
 
+      // apply the Default style for a layer only once as long as the settings remain intact
       applied[id] = true;
       settings.getInstance().set(OsLayerPreset.SettingKey.APPLIED_DEFAULTS, applied);
     }
