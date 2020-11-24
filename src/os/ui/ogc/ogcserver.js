@@ -37,7 +37,6 @@ os.ui.ogc.OGCFolderType = {
 };
 
 
-
 /**
  * The OGC server provider
  *
@@ -164,6 +163,17 @@ os.ui.ogc.OGCServer = function() {
    * @private
    */
   this.wpsUrl_ = '';
+
+  /**
+   * Flag to indicate whether GetMap & GetFeature operation URLs should
+   * be parsed from the Capabilities documents and used for layer queries.
+   * If false, the original URLs set in the server config will be used
+   * for layer queries.
+   *
+   * @type {boolean}
+   * @private
+   */
+  this.parseOperationURLs_ = true;
 };
 goog.inherits(os.ui.ogc.OGCServer, os.ui.server.AbstractLoadingServer);
 os.implements(os.ui.ogc.OGCServer, os.data.IDataProvider.ID);
@@ -413,9 +423,11 @@ os.ui.ogc.OGCServer.prototype.configure = function(config) {
   this.setOriginalWfsUrl(/** @type {string} */ (config['wfs']));
   this.setLowerCase(/** @type {boolean} */ (config['lowerCase']));
   this.setWpsUrl(/** @type {string} */ (config['wps']));
+  if (config['parseOperationURLs'] !== undefined) {
+    this.parseOperationURLs_ = /** @type {boolean} */ (config['parseOperationURLs']);
+  }
 
   var wfsUrl = this.getWfsUrl();
-
   if ('wfsParams' in config) {
     this.setWfsParams(new goog.Uri.QueryData(/** @type {string} */ (config['wfsParams'])));
   } else if (wfsUrl) {
@@ -724,26 +736,31 @@ os.ui.ogc.OGCServer.prototype.parseWmsCapabilities = function(response, uri) {
         this.parser_ = os.ui.ogc.wms.LayerParsers['1.1.1'];
       }
 
-      // see if we need another link for GetMap requests
-      var newWms = null;
-      var newParams = null;
-      var resource = /** @type {string} */ (goog.object.getValueByKeys(result, 'Capability', 'Request', 'GetMap',
-          'DCPType', 0, 'HTTP', 'Get', 'OnlineResource'));
-      if (resource) {
-        var q = resource.indexOf('?');
-        if (q > -1) {
-          newWms = resource.substring(0, q);
-          if (q < newWms.length - 1) {
-            var query = newWms.substring(q + 1);
-            newParams = new goog.Uri.QueryData(query);
+      // If desired, find the URL specified for GetMap requests
+      if (this.parseOperationURLs_) {
+        var resource = /** @type {string} */ (goog.object.getValueByKeys(result, 'Capability', 'Request',
+            'GetMap', 'DCPType', 0, 'HTTP', 'Get', 'OnlineResource'));
+        if (resource) {
+          var newWms = null;
+          var newParams = null;
+          var q = resource.indexOf('?');
+          if (q > -1) {
+            newWms = resource.substring(0, q);
+            if (q < newWms.length - 1) {
+              var query = newWms.substring(q + 1);
+              newParams = new goog.Uri.QueryData(query);
+            }
+          } else {
+            newWms = resource;
           }
-        } else {
-          newWms = resource;
+          this.setWmsUrl(newWms);
+          if (newParams != null) {
+            if (!this.wmsParams_) {
+              this.wmsParams_ = new goog.Uri.QueryData();
+            }
+            this.wmsParams_.extend(newParams);
+          }
         }
-      }
-
-      if (newWms != null) {
-        this.wmsUrl_ = newWms || this.wmsUrl_;
       }
 
       this.displayConsentAlerts(result);
@@ -772,14 +789,6 @@ os.ui.ogc.OGCServer.prototype.parseWmsCapabilities = function(response, uri) {
             this.toAdd_.push(child);
           }
         }
-      }
-
-      if (newParams != null) {
-        if (!this.wmsParams_) {
-          this.wmsParams_ = new goog.Uri.QueryData();
-        }
-
-        this.wmsParams_.extend(newParams);
       }
     }
 
@@ -857,17 +866,19 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
     if (op) {
       var getFeatureEl = op.querySelector('Post');
       if (getFeatureEl != null) {
-        if (getFeatureEl.hasAttributeNS(ol.format.XLink.NAMESPACE_URI, 'href')) {
-          this.setWfsUrl(getFeatureEl.getAttributeNS(ol.format.XLink.NAMESPACE_URI, 'href'));
-        } else {
-          var attr = getFeatureEl.attributes[0];
-          // Attr.value is the DOM4 property, while Attr.nodeValue inherited from Node should work on older browsers
-          this.setWfsUrl(attr.value || attr.nodeValue);
+        if (this.parseOperationURLs_) {
+          if (getFeatureEl.hasAttributeNS(ol.format.XLink.NAMESPACE_URI, 'href')) {
+            this.setWfsUrl(getFeatureEl.getAttributeNS(ol.format.XLink.NAMESPACE_URI, 'href'));
+          } else {
+            var attr = getFeatureEl.attributes[0];
+            // Attr.value is the DOM4 property, while Attr.nodeValue inherited from Node should work on older browsers
+            this.setWfsUrl(attr.value || attr.nodeValue);
+          }
         }
         this.setWfsPost(true);
       } else {
         getFeatureEl = op.querySelector('Get');
-        if (getFeatureEl != null) {
+        if (getFeatureEl != null && this.parseOperationURLs_) {
           if (getFeatureEl.hasAttributeNS(ol.format.XLink.NAMESPACE_URI, 'href')) {
             this.setWfsUrl(getFeatureEl.getAttributeNS(ol.format.XLink.NAMESPACE_URI, 'href'));
           } else {
