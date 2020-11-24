@@ -28,7 +28,7 @@ class IPresetService {
    * Deletes a preset
    *
    * @param {!osx.layer.Preset|string} preset
-   * @return {!Promise<osx.layer.Preset>}
+   * @return {!Promise<boolean>}
    */
   remove(preset) {}
 

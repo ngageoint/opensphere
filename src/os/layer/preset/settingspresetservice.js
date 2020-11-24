@@ -33,6 +33,8 @@ class SettingsPresetService extends AbstractPresetService {
           const layerPresets = configs[layerFilterKey] || [];
           layerPresets.forEach((preset) => {
             preset.published = true;
+            preset.layerId = layerId;
+            preset.layerFilterKey = layerFilterKey;
           });
           resolve(layerPresets);
         };
