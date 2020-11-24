@@ -1723,8 +1723,9 @@ os.MapContainer.prototype.addFeatures = function(features, opt_style) {
   var added = [];
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.ADD_FEATURES, 1);
   for (var i = 0, n = features.length; i < n; i++) {
-    if (this.addFeature(features[i], opt_style)) {
-      added.push(features[i]);
+    var addedFeature = this.addFeature(features[i], opt_style);
+    if (addedFeature) {
+      added.push(addedFeature);
     }
   }
 
