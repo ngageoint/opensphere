@@ -81,6 +81,10 @@ const addDefault = function(presets, opt_layerId, opt_layerFilterKey) {
 
     if (!hasDefault && defaultPreset_) {
       var preset = object.unsafeClone(defaultPreset_);
+      preset.default = !presets.some(function(p) {
+        return !!p && p.default === true;
+      }); // if nothing else is the default, flag "Basic" as default
+
       if (opt_layerId) preset.layerId = opt_layerId;
       if (opt_layerFilterKey) preset.layerFilterKey = opt_layerFilterKey;
       presets.unshift(preset); // drop it into the first entry
