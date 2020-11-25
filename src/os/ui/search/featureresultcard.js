@@ -42,18 +42,28 @@ os.ui.search.FeatureResultCardCtrl = function($scope, $element) {
   this.log = os.ui.search.FeatureResultCardCtrl.LOGGER_;
 
   /**
+   * The search result.
    * @type {os.search.AbstractSearchResult<!ol.Feature>}
    * @protected
    */
   this.result = /** @type {os.search.AbstractSearchResult<!ol.Feature>} */ (this.scope['result']);
 
   /**
+   * The feature representing the search result.
    * @type {ol.Feature}
    * @protected
    */
   this.feature = this.result.getResult();
 
   /**
+   * The style config to use when highlighting the search result.
+   * @type {!Object}
+   * @protected
+   */
+  this.highlightConfig = os.style.DEFAULT_HIGHLIGHT_CONFIG;
+
+  /**
+   * The search layer.
    * @type {os.layer.Vector}
    * @protected
    */
@@ -168,7 +178,7 @@ os.ui.search.FeatureResultCardCtrl.prototype.removeFeatureFromLayer = function()
  */
 os.ui.search.FeatureResultCardCtrl.prototype.addFeatureHighlight = function() {
   if (this.feature && this.layer) {
-    this.feature.set(os.style.StyleType.HIGHLIGHT, os.style.DEFAULT_HIGHLIGHT_CONFIG);
+    this.feature.set(os.style.StyleType.HIGHLIGHT, this.highlightConfig);
     os.style.setFeatureStyle(this.feature);
     os.style.notifyStyleChange(this.layer, [this.feature]);
   }
@@ -184,6 +194,34 @@ os.ui.search.FeatureResultCardCtrl.prototype.removeFeatureHighlight = function()
     this.feature.set(os.style.StyleType.HIGHLIGHT, undefined);
     os.style.setFeatureStyle(this.feature);
     os.style.notifyStyleChange(this.layer, [this.feature]);
+  }
+};
+
+
+/**
+ * Set the card's highlighted state.
+ * @param {boolean} value If the card is highlighted.
+ * @protected
+ */
+os.ui.search.FeatureResultCardCtrl.prototype.setCardHighlighted = function(value) {
+  if (value) {
+    this.element.addClass('u-card-highlight');
+  } else {
+    this.element.removeClass('u-card-highlight');
+  }
+};
+
+
+/**
+ * Set the card's selected state.
+ * @param {boolean} value If the card is selected.
+ * @protected
+ */
+os.ui.search.FeatureResultCardCtrl.prototype.setCardSelected = function(value) {
+  if (value) {
+    this.element.addClass('u-card-selected');
+  } else {
+    this.element.removeClass('u-card-selected');
   }
 };
 
@@ -235,33 +273,27 @@ os.ui.search.FeatureResultCardCtrl.prototype.addSearchLayer = function() {
  */
 os.ui.search.FeatureResultCardCtrl.prototype.onSourceChange_ = function(event, item) {
   if (event instanceof os.events.PropertyChangeEvent) {
-    var p = event.getProperty();
-    var feature = event.getNewValue();
+    const p = event.getProperty();
 
-    // unhighlight case
-    if (!feature) {
-      feature = event.getOldValue();
-    }
+    const newValue = event.getNewValue();
+    const newContainsFeature = Array.isArray(newValue) && newValue.indexOf(this.feature) > -1;
 
-    if (feature && feature.length) {
-      var hoverWrapper = this.element;
-      for (var y = 0; y < feature.length; y++) {
-        if (feature[y] === this.feature) {
-          if (p === os.events.SelectionType.ADDED) {
-            hoverWrapper.addClass('u-card-selected');
-          } else if (p === os.events.SelectionType.REMOVED) {
-            hoverWrapper.removeClass('u-card-selected');
-          } else if (p === os.source.PropertyChange.HIGHLIGHTED_ITEMS) {
-            if (!event.getNewValue()) { // unhighlight event
-              hoverWrapper.removeClass('u-card-highlight'); // use two classes to enforce proper selection color
-            } else {
-              hoverWrapper.addClass('u-card-highlight');
-            }
-          }
-        } else if (hoverWrapper.hasClass('u-card-highlight')) { // address case where overlapping features stay highlighted
-          hoverWrapper.removeClass('u-card-highlight');
-        }
+    if (p === os.events.SelectionType.ADDED) {
+      // If the feature was added to the selection, select the card.
+      if (newContainsFeature) {
+        this.setCardSelected(true);
       }
+    } else if (p === os.events.SelectionType.REMOVED) {
+      // If the feature was removed from the selection, deselect the card.
+      if (newContainsFeature) {
+        this.setCardSelected(false);
+      }
+    } else if (p === os.events.SelectionType.CHANGED) {
+      // When the selection changes, select the card if the feature is in the new array, otherwise deselect.
+      this.setCardSelected(newContainsFeature);
+    } else if (p === os.source.PropertyChange.HIGHLIGHTED_ITEMS) {
+      // When the highlight changes, highlight the card if the feature is in the new array, otherwise remove highlight.
+      this.setCardHighlighted(newContainsFeature);
     }
   }
 };
