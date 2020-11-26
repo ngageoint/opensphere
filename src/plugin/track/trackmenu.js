@@ -593,10 +593,11 @@ plugin.track.menu.handleAddCreateTrackEvent_ = function(event) {
 
     if (features && features.length) {
       if (event.type === plugin.track.EventType.CREATE_TRACK) {
-        os.track.promptForTitle(title).then(function(title) {
+        os.track.promptForTitleAndMetadata(title).then(function({includeMetadata, title}) {
           os.track.getSortField(features[0]).then(function(sortField) {
             var options = /** @type {!os.track.CreateOptions} */ ({
               features: features,
+              includeMetadata,
               name: title,
               sortField: sortField
             });
@@ -607,9 +608,12 @@ plugin.track.menu.handleAddCreateTrackEvent_ = function(event) {
       } else if (event.type === plugin.track.EventType.ADD_TO) {
         plugin.track.promptForTrack().then(function(track) {
           if (track) {
+            var metadataMap = track.get(os.track.TrackField.METADATA_MAP);
             os.track.addToTrack({
               track: track,
-              features: features
+              features: features,
+              // Include metadata if previously included.
+              includeMetadata: !!metadataMap
             });
           }
         });
