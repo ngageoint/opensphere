@@ -117,11 +117,16 @@ describe('os.ui.window.ConfirmUI', () => {
     expect(controller.close_).toHaveBeenCalled();
   });
 
-  it('should fire a callback and close when confirmed', () => {
+  it('should fire callbacks and close when confirmed', () => {
     const expected = 'It works!';
+
     let confirmValue;
+    let checkValue;
 
     initComponent({
+      checkboxCallback: (value) => {
+        checkValue = value;
+      },
       confirmCallback: (value) => {
         confirmValue = value;
       },
@@ -130,26 +135,12 @@ describe('os.ui.window.ConfirmUI', () => {
 
     spyOn(controller, 'close_');
 
+    controller.checkboxSelection = true;
     controller.confirm();
 
     expect(confirmValue).toBe(expected);
-    expect(controller.close_).toHaveBeenCalled();
-  });
-
-  it('should fire a callback on checkbox change', () => {
-    let checkValue;
-
-    initComponent({
-      checkboxCallback: (value) => {
-        checkValue = value;
-      }
-    });
-
-    controller.updateCheckbox(true);
     expect(checkValue).toBe(true);
-
-    controller.updateCheckbox(false);
-    expect(checkValue).toBe(false);
+    expect(controller.close_).toHaveBeenCalled();
   });
 
   it('should close on Escape keypress', () => {

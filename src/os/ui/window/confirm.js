@@ -56,6 +56,7 @@ const launchConfirm = function(opt_options, opt_scopeOptions) {
   scopeOptions['checkboxText'] = options.checkboxText || '';
   scopeOptions['checkboxClass'] = options.checkboxClass || '';
   scopeOptions['checkboxCallback'] = options.checkbox || goog.nullFunction;
+  scopeOptions['checkboxValue'] = !!options.checkboxValue;
 
   var windowOverrides = /** @type {!osx.window.WindowOptions} */ (options.windowOptions || {});
 
@@ -129,9 +130,10 @@ class Controller {
     }
 
     /**
+     * The current checkbox state.
      * @type {boolean}
      */
-    this.scope_['checkboxSelection'] = false;
+    this['checkboxSelection'] = !!this.scope_['checkboxValue'];
 
     /**
      * @type {!KeyHandler}
@@ -187,22 +189,16 @@ class Controller {
         value = transScope['confirmValue'];
       }
 
+      var checkboxCallback = this.scope_['checkboxCallback'];
+      if (typeof checkboxCallback === 'function') {
+        checkboxCallback(this['checkboxSelection']);
+      }
+
       this.scope_['confirmCallback'](value);
     }
 
     this.close_();
   }
-
-
-  /**
-   * Fire the dont show again callback to save user choice
-   * @param {boolean} checkbox
-   * @export
-   */
-  updateCheckbox(checkbox) {
-    this.scope_['checkboxCallback'](checkbox);
-  }
-
 
   /**
    * Close the window.

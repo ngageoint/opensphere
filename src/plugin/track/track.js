@@ -570,11 +570,26 @@ plugin.track.updateTrackSource = function(track) {
   if (track) {
     var source = os.feature.getSource(track);
     if (source) {
+      // Add track-specific columns to the source for display in feature UI's.
       source.addColumn(os.track.TrackField.ELAPSED_AVERAGE_SPEED);
       source.addColumn(os.track.TrackField.ELAPSED_DISTANCE);
       source.addColumn(os.track.TrackField.ELAPSED_DURATION);
       source.addColumn(os.track.TrackField.TOTAL_DISTANCE);
       source.addColumn(os.track.TrackField.TOTAL_DURATION);
+
+      // Add metadata fields captured from the original data to the source, for display in feature UI's.
+      // This assumes all added features have the same fields to avoid unnecessary iteration over the entire map.
+      var metadataMap = track.get(os.track.TrackField.METADATA_MAP);
+      if (metadataMap) {
+        for (var key in metadataMap) {
+          var first = metadataMap[key];
+          for (var field in first) {
+            source.addColumn(field);
+          }
+
+          break;
+        }
+      }
     }
   }
 };
