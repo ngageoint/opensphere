@@ -28,9 +28,10 @@
             Create
           </button>
         </div>
-        <div class="form-check form-check-inline" ng-if="ctrl.hasDefaultActions" title="Show default feature actions in the list. Uncheck to declutter the view.">
-          <input class="form-check-input" type="checkbox" id="showDefaultActions" ng-model="ctrl.showDefaultActions" ng-change="ctrl.toggleDefaultActions()">
-          <label class="form-check-label" for="showDefaultActions">Show Default Feature Actions</label>
+        <div class="form-check" ng-if="ctrl.hasDefaultActions" title="Show default feature actions in the list. Uncheck to declutter the view.">
+          <label class="form-check-label">
+            <input class="form-check-input" type="checkbox" ng-model="ctrl.showDefaultActions" ng-change="ctrl.toggleDefaultActions()"> Show Default Feature Actions
+          </label>
         </div>
         <div class="col-auto text-right">
           <popover ng-show="helpTitle && helpText" x-title="helpTitle" x-content="helpText" x-pos="'right'"></popover>
