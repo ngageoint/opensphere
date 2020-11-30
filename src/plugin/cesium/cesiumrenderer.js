@@ -676,11 +676,17 @@ plugin.cesium.CesiumRenderer.prototype.setCesiumMoving_ = function(value) {
   if (this.cesiumMoving_ !== value) {
     this.cesiumMoving_ = value;
 
+    // Update the OpenLayers interacting flag, to disable performance-intensive operations during animation.
     if (this.map) {
       var view = this.map.getView();
       if (view) {
         view.setHint(ol.ViewHint.INTERACTING, value ? 1 : -1);
       }
+    }
+
+    // Update synchronizers when the camera stops moving, to update view-based rendering.
+    if (!value && this.rootSynchronizer) {
+      this.rootSynchronizer.updateFromCamera();
     }
   }
 };
