@@ -64,6 +64,7 @@ describe('os.ui.query.BasicQueryReader', function() {
       var area = os.ui.areaManager.items_[0];
       expect(area.get('title')).toBe('Some Area');
       expect(area.get('description')).toBe('Some Description');
+      expect(area.getId()).toBe('&ID');
       expect(area.get(os.interpolate.METHOD_FIELD)).toBe(os.interpolate.Method.NONE);
       expect(area.get('temp')).toBe(true);
       expect(area.get('shown')).toBe(true);
