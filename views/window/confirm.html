@@ -6,7 +6,7 @@
     </form>
     <div class="flex-row ml-4" ng-class="checkboxClass" ng-if="checkboxText">
       <label class="form-check-label" for="checkboxText">
-        <input class="form-check-input" ng-model="checkboxSelection" type="checkbox" id="checkboxText" ng-change="confirm.updateCheckbox(checkboxSelection)">
+        <input class="form-check-input" ng-model="confirm.checkboxSelection" type="checkbox" id="checkboxText">
         {{checkboxText}}
       </label>
     </div>
