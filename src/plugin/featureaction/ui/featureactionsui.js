@@ -47,6 +47,18 @@ plugin.im.action.feature.ui.FeatureActionsCtrl = function($scope, $element) {
    */
   this['contextMenu'] = plugin.im.action.feature.node.MENU;
 
+  /**
+   * Flag for whether to show default feature actions.
+   * @type {boolean}
+   */
+  this['showDefaultActions'] = true;
+
+  /**
+   * Flag for whether to show default feature actions.
+   * @type {boolean|undefined}
+   */
+  this['hasDefaultActions'] = undefined;
+
   plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'constructor', $scope, $element);
   os.dataManager.listen(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
 };
@@ -120,4 +132,27 @@ plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.editEntry = function(op
   if (this.entryType) {
     plugin.im.action.feature.editEntry(this.entryType, opt_entry);
   }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.onSearch = function() {
+  plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'onSearch');
+
+  if (this['hasDefaultActions'] === undefined && this.scope['entries'] && this.scope['entries'].length > 0) {
+    this['hasDefaultActions'] = this.scope['entries'].some((node) => node.getEntry().isDefault());
+    os.ui.apply(this.scope);
+  }
+};
+
+
+/**
+ * Toggles showing default feature actions.
+ * @export
+ */
+plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.toggleDefaultActions = function() {
+  this.treeSearch.setShowDefaultActions(this['showDefaultActions']);
+  this.onSearch();
 };
