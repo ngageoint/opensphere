@@ -588,9 +588,13 @@ os.MapContainer.prototype.flyTo = function(options) {
         camera.flyTo(options);
       }
     } else {
+      // translate 3D heading to OpenLayers rotation if defined and non-zero
+      var rotation = options.heading ? ol.math.toRadians(-options.heading) : 0;
+
       var animateOptions = /** @type {!olx.AnimationOptions} */ ({
-        center: center,
-        duration: duration
+        center,
+        duration,
+        rotation
       });
 
       if (options.zoom !== undefined) {
