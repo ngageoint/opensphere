@@ -252,6 +252,9 @@ plugin.cesium.CesiumRenderer.prototype.setEnabled = function(value) {
     }
 
     this.csListeners_.length = 0;
+
+    // flag as no longer moving to ensure the ViewHint is updated
+    this.setCesiumMoving_(false);
   }
 };
 
@@ -665,27 +668,38 @@ plugin.cesium.CesiumRenderer.prototype.createCesiumSynchronizers_ = function(map
 
 
 /**
+ * Set if Cesium is currently moving the camera.
+ * @param {boolean} value If the camera is moving.
+ * @private
+ */
+plugin.cesium.CesiumRenderer.prototype.setCesiumMoving_ = function(value) {
+  if (this.cesiumMoving_ !== value) {
+    this.cesiumMoving_ = value;
+
+    // Update the OpenLayers interacting flag, to disable performance-intensive operations during animation.
+    if (this.map) {
+      var view = this.map.getView();
+      if (view) {
+        view.setHint(ol.ViewHint.INTERACTING, value ? 1 : -1);
+      }
+    }
+
+    // Update synchronizers when the camera stops moving, to update view-based rendering.
+    if (!value && this.rootSynchronizer) {
+      this.rootSynchronizer.updateFromCamera();
+    }
+  }
+};
+
+
+/**
  * Handles Cesium camera move start/end events.
  *
  * @param {boolean} isMoving If the camera is moving.
  * @private
  */
 plugin.cesium.CesiumRenderer.prototype.onCesiumCameraMoveChange_ = function(isMoving) {
-  if (this.map) {
-    // fool proof this to ensure we only increment/decrement by 1
-    var view = this.map.getView();
-    if (isMoving && !this.cesiumMoving_) {
-      this.cesiumMoving_ = true;
-      view.setHint(ol.ViewHint.INTERACTING, 1);
-    } else if (!isMoving && this.cesiumMoving_) {
-      this.cesiumMoving_ = false;
-      view.setHint(ol.ViewHint.INTERACTING, -1);
-
-      if (this.rootSynchronizer) {
-        this.rootSynchronizer.updateFromCamera();
-      }
-    }
-  }
+  this.setCesiumMoving_(isMoving);
 };
 
 

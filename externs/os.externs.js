@@ -381,6 +381,7 @@ osx.window.WindowOptions;
  *   checkboxText: (string|undefined),
  *   checkboxClass: (string|undefined),
  *   checkbox: (Function|undefined),
+ *   checkboxValue: (boolean|undefined),
  *
  *   windowOptions: (osx.window.WindowOptions|undefined),
  *
@@ -397,16 +398,24 @@ osx.window.ConfirmOptions;
  *   cancel: (Function|undefined),
  *   yesText: (string|undefined),
  *   yesButtonClass: (string|undefined),
+ *   yesButtonTitle: (string|undefined),
  *   yesIcon: (string|undefined),
  *   noText: (string|undefined),
  *   noIcon: (string|undefined),
  *   noButtonClass: (string|undefined),
+ *   noButtonTitle: (string|undefined),
+ *   checkboxText: (string|undefined),
+ *   checkboxClass: (string|undefined),
+ *   checkbox: (Function|undefined),
+ *   checkboxValue: (boolean|undefined),
  *
  *   windowOptions: (osx.window.WindowOptions|undefined),
  *
  *   prompt: (string|undefined),
  *   defaultValue: (string|undefined),
- *   formLabel: (string|undefined)
+ *   formLabel: (string|undefined),
+ *   limit: (number|undefined),
+ *   select: (boolean|undefined)
  * }}
  */
 osx.window.ConfirmTextOptions;
