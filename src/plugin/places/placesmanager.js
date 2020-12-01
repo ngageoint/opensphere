@@ -29,12 +29,6 @@ const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**
- * The PlacesManager instance.
- * @type {PlacesManager}
- */
-let PlacesManagerInstance;
-
-/**
  * The Places storage location.
  * @type {string}
  * @const
@@ -55,16 +49,39 @@ const STORAGE_URL = getLocalUrl(btoa(STORAGE_NAME));
  */
 const LAYER_OPTIONS = 'places.options';
 
+/**
+ * Places layer options.
+ * @type {Object}
+ * @const
+ */
+const OPTIONS = {
+  'animate': true,
+  'color': DEFAULT_LAYER_COLOR,
+  'collapsed': true,
+  'columns': places.SourceFields,
+  'editable': true,
+  'id': places.ID,
+  'layerType': LayerType.REF,
+  'load': true,
+  'logger': 'plugin.places.PlacesManager',
+  'showLabels': false,
+  'showRoot': false,
+  'title': places.TITLE,
+  'type': PlacesLayerConfig.ID,
+  'url': STORAGE_URL
+};
+
 
 /**
  * Allows the user to manage saved features as a KML tree.
  */
 class PlacesManager extends AbstractKMLManager {
   /**
-   * @inheritDoc
+   * Constructor
    */
-  constructor(options) {
-    super(options);
+  constructor() {
+    OPTIONS['provider'] = config.getAppName() || null;
+    super(OPTIONS);
 
     // clear storage when the reset event is fired
     dispatcher.getInstance().listen(OsEventType.RESET, this.onSettingsReset_, false, this);
@@ -257,34 +274,7 @@ class PlacesManager extends AbstractKMLManager {
   getAnnotationsFolder() {
     return this.getRoot();
   }
-
-  /**
-   * @return {PlacesManager}
-   */
-  static getInstance() {
-    if (!PlacesManagerInstance) {
-      const OPTIONS = {
-        'animate': true,
-        'color': DEFAULT_LAYER_COLOR,
-        'collapsed': true,
-        'columns': places.SourceFields,
-        'editable': true,
-        'id': places.ID,
-        'layerType': LayerType.REF,
-        'load': true,
-        'logger': 'plugin.places.PlacesManager',
-        'provider': config.getAppName() || null,
-        'showLabels': false,
-        'showRoot': false,
-        'title': places.TITLE,
-        'type': PlacesLayerConfig.ID,
-        'url': STORAGE_URL
-      };
-
-      PlacesManagerInstance = new PlacesManager(OPTIONS);
-    }
-    return PlacesManagerInstance;
-  }
 }
+goog.addSingletonGetter(PlacesManager);
 
 exports = PlacesManager;
