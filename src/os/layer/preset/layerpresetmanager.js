@@ -74,10 +74,11 @@ class LayerPresetManager extends Disposable {
 
     if (layer) {
       const layerId = layer.getId();
-      const layerOptions = layer.getLayerOptions();
-      if (layerId && layerOptions && layerOptions['applyDefaultPresets']) {
-        // Apply default presets to the layer when configured.
-        this.getPresets(layerId, true);
+      const promise = this.getPresets(layerId);
+      if (promise) {
+        promise.then((presets) => {
+          this.applyDefaults(layerId, presets);
+        });
       }
     }
   }
@@ -137,11 +138,21 @@ class LayerPresetManager extends Disposable {
    * @return {Promise<Array<osx.layer.Preset>>|undefined}
    */
   getPresets(id, opt_applyDefault) {
-    if (!this.presets_[id]) {
-      this.initPreset(id, opt_applyDefault);
+    var promise = this.presets_[id];
+
+    if (!promise) {
+      // Do NOT pass opt_applyDefault down to initPreset; applyDefaults() is called on-demand below, possibly
+      // on an already-resolved promise
+      promise = this.initPreset(id);
     }
 
-    return this.presets_[id];
+    // handle this separately from the initPreset so future calls to getPresets can try to applyDefaults()
+    if (promise && opt_applyDefault) {
+      promise.then((presets) => {
+        this.applyDefaults(id, presets);
+      });
+    }
+    return promise;
   }
 
   /**
@@ -172,7 +183,7 @@ class LayerPresetManager extends Disposable {
       for (var [, service, isAdmin] of entries) {
         if (isAdmin) this.isAdmin(true); // enable the admin UI if User has admin in any service
 
-        if (service.supports(OsLayerPreset.PresetServiceAction.FIND)) {
+        if (filterKey && service.supports(OsLayerPreset.PresetServiceAction.FIND)) {
           promises.push(service.find(/** @type {osx.layer.PresetSearch} */ ({
             layerId: [id],
             layerFilterKey: [filterKey],
@@ -204,11 +215,6 @@ class LayerPresetManager extends Disposable {
             OsLayerPreset.addDefault(presets, id, filterKey || undefined);
           }
 
-          // apply the "isDefault" preset if asked
-          if (opt_applyDefault) {
-            this.applyDefaults(id, presets);
-          }
-
           // return the list to any .then() bindings
           resolve(presets);
         });
@@ -216,6 +222,13 @@ class LayerPresetManager extends Disposable {
         resolve(null);
       }
     });
+
+    // apply the "isDefault" preset if asked
+    if (opt_applyDefault) {
+      promise.then((presets) => {
+        this.applyDefaults(id, presets);
+      });
+    }
 
     this.presets_[id] = promise;
   }
@@ -228,22 +241,24 @@ class LayerPresetManager extends Disposable {
    * @protected
    */
   applyDefaults(id, presets) {
-    var applied = /** @type {!Object<boolean>} */
-        (settings.getInstance().get(OsLayerPreset.SettingKey.APPLIED_DEFAULTS, {}));
+    if (Array.isArray(presets) && presets.length) {
+      var applied = /** @type {!Object<boolean>} */
+          (settings.getInstance().get(OsLayerPreset.SettingKey.APPLIED_DEFAULTS, {}));
 
-    if (Array.isArray(presets) && presets.length && !applied[id]) {
-      var preset = presets.find(function(preset) {
-        return preset.default || false; // TODO gets the first one; instead, look for the first and latest updated
-      });
+      if (!applied[id]) {
+        var preset = presets.find(function(preset) {
+          return preset.default || false; // TODO gets the first one; instead, look for the first and latest updated
+        });
 
-      if (preset) {
-        var cmd = new VectorLayerPreset(id, preset);
-        cmd.execute();
+        if (preset) {
+          var cmd = new VectorLayerPreset(id, preset);
+          cmd.execute();
+        }
+
+        // apply the Default style for a layer only once as long as the settings remain intact
+        applied[id] = true;
+        settings.getInstance().set(OsLayerPreset.SettingKey.APPLIED_DEFAULTS, applied);
       }
-
-      // apply the Default style for a layer only once as long as the settings remain intact
-      applied[id] = true;
-      settings.getInstance().set(OsLayerPreset.SettingKey.APPLIED_DEFAULTS, applied);
     }
   }
 }
