@@ -50,26 +50,10 @@ const STORAGE_URL = getLocalUrl(btoa(STORAGE_NAME));
 const LAYER_OPTIONS = 'places.options';
 
 /**
- * Places layer options.
- * @type {Object}
- * @const
+ * The PlacesManager instance.
+ * @type {PlacesManager}
  */
-const OPTIONS = {
-  'animate': true,
-  'color': DEFAULT_LAYER_COLOR,
-  'collapsed': true,
-  'columns': places.SourceFields,
-  'editable': true,
-  'id': places.ID,
-  'layerType': LayerType.REF,
-  'load': true,
-  'logger': 'plugin.places.PlacesManager',
-  'showLabels': false,
-  'showRoot': false,
-  'title': places.TITLE,
-  'type': PlacesLayerConfig.ID,
-  'url': STORAGE_URL
-};
+let PlacesManagerInstance;
 
 
 /**
@@ -77,10 +61,9 @@ const OPTIONS = {
  */
 class PlacesManager extends AbstractKMLManager {
   /**
-   * Constructor
+   * @inheritDoc
    */
-  constructor() {
-    OPTIONS['provider'] = config.getAppName() || null;
+  constructor(options) {
     super(OPTIONS);
 
     // clear storage when the reset event is fired
@@ -274,7 +257,44 @@ class PlacesManager extends AbstractKMLManager {
   getAnnotationsFolder() {
     return this.getRoot();
   }
+
+  /**
+   * Get a singleton instance of the PlacesManager.
+   * @return {!PlacesManager}
+   */
+  static getInstance() {
+    if (!PlacesManagerInstance) {
+      const OPTIONS = {
+        'animate': true,
+        'color': DEFAULT_LAYER_COLOR,
+        'collapsed': true,
+        'columns': places.SourceFields,
+        'editable': true,
+        'id': places.ID,
+        'layerType': LayerType.REF,
+        'load': true,
+        'logger': 'plugin.places.PlacesManager',
+        'provider': config.getAppName() || null,
+        'showLabels': false,
+        'showRoot': false,
+        'title': places.TITLE,
+        'type': PlacesLayerConfig.ID,
+        'url': STORAGE_URL
+      };
+
+      PlacesManagerInstance = new PlacesManager(OPTIONS);
+    }
+
+    return PlacesManagerInstance;
+  }
+
+  /**
+   * Set a singleton instance of the PlacesManager.
+   * @param {!PlacesManager} value The singleton instance.
+   */
+  static setInstance(value) {
+    PlacesManagerInstance = value;
+  }
 }
-goog.addSingletonGetter(PlacesManager);
 
 exports = PlacesManager;
