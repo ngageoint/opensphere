@@ -76,8 +76,7 @@ os.ui.im.launchFileExists = function(file, confirm) {
       'width': 400,
       'height': 'auto',
       'modal': true,
-      'show-close': true,
-      'no-scroll': true
+      'show-close': true
     }
   });
 

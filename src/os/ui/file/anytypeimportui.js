@@ -48,8 +48,7 @@ os.ui.file.AnyTypeImportUI.prototype.launchUI = function(file, opt_config) {
       'y': 'center',
       'width': '450',
       'height': 'auto',
-      'show-close': 'true',
-      'no-scroll': 'true'
+      'show-close': 'true'
     };
     os.ui.window.create(windowOptions, 'anytypeimport', undefined, undefined, undefined, scopeOptions);
   } else {

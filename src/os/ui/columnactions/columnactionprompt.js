@@ -127,8 +127,7 @@ os.ui.columnactions.launchColumnActionPrompt = function(matched, value, colDef) 
     'width': '450',
     'height': '350',
     'modal': 'true',
-    'show-close': 'true',
-    'no-scroll': 'true'
+    'show-close': 'true'
   };
 
   var template = '<columnactions class="d-flex flex-fill"></columnactions>';

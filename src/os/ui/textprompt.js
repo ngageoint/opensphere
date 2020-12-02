@@ -156,8 +156,7 @@ os.ui.launchTextPrompt = function(opt_options) {
     'min-height': minHeight,
     'max-height': maxHeight,
     'modal': windowOverrides.modal != null ? windowOverrides.modal : true,
-    'show-close': windowOverrides.showClose != null ? windowOverrides.showClose : true,
-    'no-scroll': windowOverrides.noScroll != null ? windowOverrides.noScroll : true
+    'show-close': windowOverrides.showClose != null ? windowOverrides.showClose : true
   };
 
   os.ui.window.create(windowOptions, 'textprompt', undefined, undefined, undefined, scopeOptions);

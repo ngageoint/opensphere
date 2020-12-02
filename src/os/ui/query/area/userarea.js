@@ -752,7 +752,6 @@ os.ui.query.area.getUserArea = function(opt_area, opt_areaTypes, opt_modal) {
       'height': 'auto',
       'width': 500,
       'modal': opt_modal || false,
-      'no-scroll': true,
       'show-close': true
     };
 

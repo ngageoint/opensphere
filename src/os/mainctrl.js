@@ -1063,7 +1063,6 @@ os.MainCtrl.prototype.suggestOtherBrowser = function() {
         'width': '400',
         'height': 'auto',
         'modal': 'true',
-        'no-scroll': 'true',
         'headerClass': 'bg-warning u-bg-warning-text'
       }
     }));
