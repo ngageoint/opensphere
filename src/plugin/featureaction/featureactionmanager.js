@@ -9,10 +9,10 @@ goog.require('os.data.event.DataEventType');
 goog.require('os.im.action.ImportActionCallbackConfig');
 goog.require('os.im.action.ImportActionManager');
 goog.require('os.implements');
+goog.require('os.layer.preset.LayerPresetManager');
 goog.require('os.source.IImportSource');
 goog.require('plugin.im.action.feature');
 goog.require('plugin.im.action.feature.Entry');
-
 
 
 /**
@@ -309,9 +309,15 @@ plugin.im.action.feature.Manager.prototype.addSource_ = function(source) {
       this.sourceListeners_[id] = ol.events.listen(/** @type {ol.events.EventTarget} */ (source),
           goog.events.EventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
 
-      this.loadDefaults(id).thenAlways(function() {
+      var promise = os.layer.preset.LayerPresetManager.getInstance().getPresets(id);
+
+      if (promise) {
+        promise.thenAlways(() => {
+          this.processItems(id);
+        });
+      } else {
         this.processItems(id);
-      }, this);
+      }
     }
   }
 };
