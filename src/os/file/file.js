@@ -118,7 +118,11 @@ os.file.File.prototype.getContent = function() {
  * @param {?(ArrayBuffer|Object|string)} value
  */
 os.file.File.prototype.setContent = function(value) {
-  this.content_ = value;
+  if (value instanceof ArrayBuffer) {
+    this.content_ = os.file.normalizeWhitespace(new TextDecoder('utf-8').decode(value));
+  } else {
+    this.content_ = value;
+  }
 };
 
 
@@ -439,4 +443,15 @@ os.file.deserializeFile = function(data) {
  */
 os.file.serializeFile = function(file) {
   return file ? file.persist() : undefined;
+};
+
+
+/**
+ * Normalizes all whitespace excluding newlines to std space
+ * @param {?(ArrayBuffer|string)} string
+ * @return {string}
+ */
+os.file.normalizeWhitespace = function(string) {
+  // Convert whitespace (-newlines) to standard space
+  return string.replace(/[^\S\n]/g, '\u0020');
 };
