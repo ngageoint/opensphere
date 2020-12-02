@@ -309,7 +309,7 @@ plugin.im.action.feature.Manager.prototype.addSource_ = function(source) {
       this.sourceListeners_[id] = ol.events.listen(/** @type {ol.events.EventTarget} */ (source),
           goog.events.EventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
 
-      var promise = os.layer.preset.LayerPresetManager.getInstance().getPresets(id);
+      var promise = os.layer.preset.LayerPresetManager.getInstance().getPresets(id, true);
 
       if (promise) {
         promise.thenAlways(() => {
