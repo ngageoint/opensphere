@@ -64,7 +64,7 @@ class PlacesManager extends AbstractKMLManager {
    * @inheritDoc
    */
   constructor(options) {
-    super(OPTIONS);
+    super(options);
 
     // clear storage when the reset event is fired
     dispatcher.getInstance().listen(OsEventType.RESET, this.onSettingsReset_, false, this);
