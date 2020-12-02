@@ -26,7 +26,6 @@ os.ui.util.resetSettings = function(opt_parent) {
         'icon': 'fa fa-refresh',
         'width': '400',
         'height': 'auto',
-        'no-scroll': true,
         'modal': true,
         'headerClass': 'bg-danger u-bg-danger-text'
       }
@@ -40,7 +39,6 @@ os.ui.util.resetSettings = function(opt_parent) {
       'width': 400,
       'height': 'auto',
       'modal': true,
-      'no-scroll': true,
       'disable-drag': true,
       'headerClass': 'bg-danger u-bg-danger-text'
     };

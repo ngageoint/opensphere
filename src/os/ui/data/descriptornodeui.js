@@ -81,8 +81,7 @@ os.ui.data.DescriptorNodeUICtrl.prototype.getRemoveWindowOptions = function() {
     'y': 'center',
     'width': '325',
     'height': 'auto',
-    'modal': 'true',
-    'no-scroll': 'true'
+    'modal': 'true'
   };
 };
 

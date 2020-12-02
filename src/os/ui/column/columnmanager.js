@@ -488,7 +488,6 @@ os.ui.column.launchColumnManager = function(columns, callback) {
     'min-height': '350',
     'max-height': '1000',
     'show-close': true,
-    'no-scroll': true,
     'modal': true
   };
 
@@ -522,7 +521,6 @@ os.ui.column.launchColumnManagerWithShownCallback = function(columns, header, ca
     'min-height': '350',
     'max-height': '1000',
     'show-close': true,
-    'no-scroll': true,
     'modal': true
   };
 
