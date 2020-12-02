@@ -1029,6 +1029,25 @@ os.feature.getStrokeColor = function(feature, opt_source, opt_default) {
   return os.feature.getColor(feature, opt_source, opt_default || null, os.style.StyleField.STROKE);
 };
 
+/**
+ * Get the stroke width of a feature.
+ * @param {ol.Feature} feature The feature.
+ * @return {number|null} The stroke width.
+ */
+os.feature.getStrokeWidth = function(feature) {
+  if (feature.getStyle() && feature.getStyle().length > 0) {
+    var style = /** @type {Array<ol.style.Style>} */(feature.getStyle())[0];
+    if (style.getStroke() && style.getStroke().getWidth()) {
+      var width = style.getStroke().getWidth();
+      if (width !== undefined) {
+        return width;
+      } else {
+        return null;
+      }
+    }
+  }
+  return null;
+};
 
 /**
  * Gets the shape name for a feature.
