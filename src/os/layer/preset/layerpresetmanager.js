@@ -74,11 +74,13 @@ class LayerPresetManager extends Disposable {
 
     if (layer) {
       const layerId = layer.getId();
-      const promise = this.getPresets(layerId);
-      if (promise) {
-        promise.then((presets) => {
-          this.applyDefaults(layerId, presets);
-        });
+      if (layerId) {
+        const promise = this.getPresets(layerId);
+        if (promise) {
+          promise.then((presets) => {
+            this.applyDefaults(layerId, presets);
+          });
+        }
       }
     }
   }
@@ -143,7 +145,8 @@ class LayerPresetManager extends Disposable {
     if (!promise) {
       // Do NOT pass opt_applyDefault down to initPreset; applyDefaults() is called on-demand below, possibly
       // on an already-resolved promise
-      promise = this.initPreset(id);
+      this.initPreset(id);
+      promise = this.presets_[id];
     }
 
     // handle this separately from the initPreset so future calls to getPresets can try to applyDefaults()
@@ -168,7 +171,9 @@ class LayerPresetManager extends Disposable {
 
     // HACK: doing goog.require('os.MapContainer') properly creates a circular dependency somewhere in
     // the os.layer chain. TODO Fix it when there's time
-    var layer = os.map.mapContainer.getLayer(id);
+    var layer = (os.map.mapContainer) ? os.map.mapContainer.getLayer(id) : null;
+
+    if (!layer) return; // extra check; can't do presets without a working layer to which to add them
 
     if (osImplements(layer, IFilterable.ID)) {
       filterKey = /** @type {IFilterable} */ (layer).getFilterKey();
