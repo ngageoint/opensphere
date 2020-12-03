@@ -133,6 +133,11 @@ os.webgl.IWebGLRenderer.prototype.getPixelFromCoordinate;
  */
 os.webgl.IWebGLRenderer.prototype.forEachFeatureAtPixel;
 
+/**
+ * Indicates if this renderer can show video within tile overlays.
+ * @return {boolean} True if the renderer can show video in tile overlays, false if it cannot.
+ */
+os.webgl.IWebGLRenderer.prototype.supportsVideoOverlay;
 
 /**
  * Toggles user movement of the globe.
