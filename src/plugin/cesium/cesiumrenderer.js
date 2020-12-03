@@ -429,13 +429,6 @@ plugin.cesium.CesiumRenderer.prototype.renderSync = function() {
 /**
  * @inheritDoc
  */
-plugin.cesium.CesiumRenderer.prototype.supportsVideoOverlay = function() {
-  return false;
-};
-
-/**
- * @inheritDoc
- */
 plugin.cesium.CesiumRenderer.prototype.toggleMovement = function(value) {
   if (this.olCesium_) {
     var scene = this.olCesium_.getCesiumScene();
