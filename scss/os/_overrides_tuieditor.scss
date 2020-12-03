@@ -102,11 +102,106 @@
       @include img-fluid;
     }
 
+    p {
+      color: color-yiq($u-theme-variables--bg-offset);
+      font-family: $font-family-sans-serif;
+      font-size: $font-size-base;
+      margin-bottom: 1rem;
+      margin-top: 0;
+    }
+
+    hr {
+      border: 0;
+      border-top: 1px solid rgba($white, .35);
+      margin-bottom: .2rem;
+      margin-top: .2rem;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: color-yiq($u-theme-variables--bg-offset);
+      margin-bottom: .5rem;
+      margin-top: 0;
+      padding-bottom: 0;
+    }
+
+    h1 {
+      border-bottom: 0;
+      font-size: 2.1875rem;
+      font-weight: normal;
+    }
+
+    h2 {
+      border-bottom: 0;
+      font-size: 1.75rem;
+      font-weight: normal;
+    }
+
+    h3 {
+      font-size: 1.53125rem;
+      font-weight: normal;
+    }
+
+    h4 {
+      font-size: 1.3125rem;
+      font-weight: normal;
+    }
+
+    h5 {
+      font-size: 1.09375rem;
+      font-weight: normal;
+    }
+
+    h6 {
+      font-size: .875rem;
+      font-weight: normal;
+    }
+
+    @media (max-width: 1200px) {
+      h1 {
+        font-size: calc(1.34375rem + 1.125vw);
+      }
+
+      h2 {
+        font-size: calc(1.3rem + .6vw);
+      }
+
+      h3 {
+        font-size: calc(1.27812rem + .3375vw);
+      }
+
+      h4 {
+        font-size: calc(1.25625rem + .075vw);
+      }
+    }
+
+    .tui-md-block-quote.tui-md-marked-text,
+    .tui-md-list-item.tui-md-meta {
+      color: color-yiq($u-theme-variables--bg-offset);
+    }
+
+    ol,
+    ul {
+      color: color-yiq($u-theme-variables--bg-offset);
+      margin-bottom: 1rem;
+      margin-top: 0;
+    }
+
+    ol > li::before {
+      color: color-yiq($u-theme-variables--bg-offset);
+    }
+
     pre {
       background-color: $u-theme-variables--bg-offset;
+      padding: 0;
     }
 
     code {
+      background-color: unset;
       color: $danger;
       font-family: $font-family-monospace;
     }
@@ -114,6 +209,14 @@
     blockquote {
       // sass-lint:disable-block no-extends, placeholder-in-extend
       @extend .blockquote;
+      border-left: 4px solid $gray-600;
+      margin-bottom: 1rem;
+      margin-top: 0;
+      padding: 0 1rem;
+
+      p {
+        color: $gray-600;
+      }
     }
 
     attr {
@@ -496,6 +599,13 @@
         content: '\f031';
       }
     }
+  }
+}
+
+.te-md-container {
+  .CodeMirror {
+    color: inherit;
+    font-family: $font-family-monospace;
   }
 }
 
