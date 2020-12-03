@@ -426,6 +426,12 @@ plugin.cesium.CesiumRenderer.prototype.renderSync = function() {
   }
 };
 
+/**
+ * @inheritDoc
+ */
+plugin.cesium.CesiumRenderer.prototype.supportsVideoOverlay = function() {
+  return false;
+};
 
 /**
  * @inheritDoc
