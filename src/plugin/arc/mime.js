@@ -13,11 +13,12 @@ goog.require('plugin.arc');
  * @return {!goog.Promise<*|undefined>}
  */
 plugin.arc.mime.detectArc = function(buffer, file, opt_context) {
+  var url = file ? file.getUrl() : null;
   var content = typeof opt_context === 'string' ? opt_context :
   /** @type {os.file.mime.xml.Context} */ (opt_context.content);
   return /** @type {!goog.Promise<*|undefined>} */ (goog.Promise.resolve((content &&
     plugin.arc.CONTENT_REGEXP.test(content)) ||
-    (file && file.getUrl() && plugin.arc.URI_REGEXP.test(file.getUrl()))));
+    (plugin.arc.URI_REGEXP.test(url) && !plugin.arc.WMS_URI_REGEXP.test(url))));
 };
 
 
