@@ -95,16 +95,16 @@ os.ui.menu.spatial.Group = {
 /**
  * @type {os.ui.menu.SpatialMenu|undefined}
  */
-os.ui.menu.SPATIAL = undefined;
+os.ui.menu.spatial.MENU = undefined;
 
 
 /**
  * Set up the menu.
  */
 os.ui.menu.spatial.setup = function() {
-  var menu = os.ui.menu.SPATIAL;
+  var menu = os.ui.menu.spatial.MENU;
   if (!menu) {
-    menu = os.ui.menu.SPATIAL = new os.ui.menu.SpatialMenu(new os.ui.menu.MenuItem({
+    menu = os.ui.menu.spatial.MENU = new os.ui.menu.SpatialMenu(new os.ui.menu.MenuItem({
       type: os.ui.menu.MenuItemType.ROOT,
       beforeRender: os.ui.menu.spatial.updateTemporaryItems,
       children: [{
@@ -296,8 +296,8 @@ os.ui.menu.spatial.setup = function() {
  * Dispose the menu.
  */
 os.ui.menu.spatial.dispose = function() {
-  goog.dispose(os.ui.menu.SPATIAL);
-  os.ui.menu.SPATIAL = undefined;
+  goog.dispose(os.ui.menu.spatial.MENU);
+  os.ui.menu.spatial.MENU = undefined;
 };
 
 

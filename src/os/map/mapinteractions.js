@@ -91,10 +91,10 @@ os.map.interaction.getInteractions = function() {
   var reset = new os.interaction.Reset();
 
   goog.asserts.assert(os.ui.menu.MAP != null, 'map manager has not been initialized');
-  goog.asserts.assert(os.ui.menu.SPATIAL != null, 'spatial manager has not been initialized');
+  goog.asserts.assert(os.ui.menu.spatial.MENU != null, 'spatial manager has not been initialized');
 
   var contextOptions = /** @type {os.ui.ol.interaction.ContextMenuOptions} */ ({
-    featureMenu: os.ui.menu.SPATIAL,
+    featureMenu: os.ui.menu.spatial.MENU,
     mapMenu: os.ui.menu.MAP
   });
   var contextMenu = new os.interaction.ContextMenu(contextOptions);
