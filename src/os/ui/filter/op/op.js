@@ -303,9 +303,13 @@ os.ui.filter.op.Op.prototype.validate = function(value, key) {
  * @const
  */
 os.ui.filter.op.Op.TEXT = {
-  CASE_INSENSITIVE: '  (NOTE: not case-sensitive)',
-  CASE_INSENSITIVE_DETAIL: 'Typically, case-<i>in</i>sensitive text search is available for "like" filters. Some ' +
-  'OGC Servers may not implement it.',
+  CASE_INSENSITIVE: '  (INFO: not case-sensitive)',
+  CASE_INSENSITIVE_DETAIL: '<strong>Case-insensitive</strong><sup>1</sup>, i.e. "A" == "a" and<br />' +
+  '<strong>Wildcard</strong> support, i.e. "a*" == "ab"<br /><br /><sup>1</sup>&nbsp;Typically, case' +
+  '-<i>in</i>sensitive text search is available for "like" filters. Some OGC Servers may not implement it.',
   CASE_INSENSITIVE_TITLE: 'Additional Info',
-  CASE_SENSITIVE: '  (NOTE: case-sensitive)'
+  CASE_SENSITIVE_DETAIL: '<strong>Case-sensitive</strong>, i.e. "A" != "a" and<br /><strong>Exact match</strong> ' +
+  'only, i.e. "ab" != "a"<br /><br />See "like" filters for wildcard "*" search as well as case-insensitivity.',
+  CASE_SENSITIVE_TITLE: 'Additional Info',
+  CASE_SENSITIVE: '  (INFO: case-sensitive)'
 };
