@@ -15,8 +15,14 @@ goog.require('os.xsd.DataType');
  */
 os.ui.filter.op.IsLike = function() {
   os.ui.filter.op.IsLike.base(this, 'constructor',
-      'PropertyIsLike', 'is like', 'like', [os.xsd.DataType.STRING],
-      'wildCard="*" singleChar="." escape="\\"', 'e.g. abc*');
+      'PropertyIsLike', 'is like', 'like',
+      [os.xsd.DataType.STRING], 'matchCase="false" wildCard="*" singleChar="." escape="\\"',
+      'e.g. abc*' + os.ui.filter.op.Op.TEXT.CASE_INSENSITIVE,
+      undefined,
+      undefined,
+      os.ui.filter.op.Op.TEXT.CASE_INSENSITIVE_TITLE,
+      os.ui.filter.op.Op.TEXT.CASE_INSENSITIVE_DETAIL
+  );
 };
 goog.inherits(os.ui.filter.op.IsLike, os.ui.filter.op.Op);
 

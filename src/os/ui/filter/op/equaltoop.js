@@ -12,7 +12,8 @@ goog.require('os.ui.filter.string');
  */
 os.ui.filter.op.EqualTo = function() {
   os.ui.filter.op.EqualTo.base(this, 'constructor',
-      'PropertyIsEqualTo', 'is equal to', '=');
+      'PropertyIsEqualTo', 'is equal to', '=',
+      undefined, undefined, 'e.g. Abc' + os.ui.filter.op.Op.TEXT.CASE_SENSITIVE);
 };
 goog.inherits(os.ui.filter.op.EqualTo, os.ui.filter.op.Op);
 

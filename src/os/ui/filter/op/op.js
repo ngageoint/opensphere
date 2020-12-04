@@ -15,10 +15,12 @@ goog.require('os.xsd.DataType');
  * @param {string=} opt_hint Hint text for the UI
  * @param {string=} opt_ui The UI rendered next to the op select
  * @param {boolean=} opt_noLiteral Whether to exclude the literal value
+ * @param {string=} opt_popoverTitle title for a popover, if wanted; default "Info"
+ * @param {string=} opt_popoverContent content for a popover, if wanted
  * @constructor
  */
 os.ui.filter.op.Op = function(localName, title, opt_shortTitle, opt_supportedTypes, opt_attributes, opt_hint, opt_ui,
-    opt_noLiteral) {
+    opt_noLiteral, opt_popoverTitle, opt_popoverContent) {
   /**
    * @type {string}
    * @protected
@@ -59,6 +61,16 @@ os.ui.filter.op.Op = function(localName, title, opt_shortTitle, opt_supportedTyp
    * @type {!string}
    */
   this['hint'] = opt_hint || '';
+
+  /**
+   * @type {!string}
+   */
+  this['popoverTitle'] = opt_popoverTitle || 'Info';
+
+  /**
+   * @type {?string}
+   */
+  this['popoverContent'] = opt_popoverContent;
 
   /**
    * String for matching the hint saved to the filter XML.
@@ -282,4 +294,18 @@ os.ui.filter.op.Op.prototype.validate = function(value, key) {
   }
 
   return false;
+};
+
+
+/**
+ * Text reused in several ops; to save on total the KB of the min file
+ * @enum {string}
+ * @const
+ */
+os.ui.filter.op.Op.TEXT = {
+  CASE_INSENSITIVE: '  (NOTE: not case-sensitive)',
+  CASE_INSENSITIVE_DETAIL: 'Typically, case-<i>in</i>sensitive text search is available for "like" filters. Some ' +
+  'OGC Servers may not implement it.',
+  CASE_INSENSITIVE_TITLE: 'Additional Info',
+  CASE_SENSITIVE: '  (NOTE: case-sensitive)'
 };
