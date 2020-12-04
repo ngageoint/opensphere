@@ -11,7 +11,8 @@ goog.require('os.ui.filter.op.Op');
  */
 os.ui.filter.op.NotEqualTo = function() {
   os.ui.filter.op.NotEqualTo.base(this, 'constructor',
-      'PropertyIsNotEqualTo', 'is not equal to', '!=');
+      'PropertyIsNotEqualTo', 'is not equal to', '!=',
+      undefined, undefined, 'e.g. Abc' + os.ui.filter.op.Op.TEXT.CASE_SENSITIVE);
 };
 goog.inherits(os.ui.filter.op.NotEqualTo, os.ui.filter.op.Op);
 
