@@ -103,7 +103,7 @@ os.ui.menu.buffer.mapDispose = function() {
  * Set up buffer region listeners on the map.
  */
 os.ui.menu.buffer.spatialSetup = function() {
-  var menu = os.ui.menu.SPATIAL;
+  var menu = os.ui.menu.spatial.MENU;
   if (menu) {
     var root = menu.getRoot();
     var group = root.find(os.ui.menu.spatial.Group.TOOLS);
@@ -125,7 +125,7 @@ os.ui.menu.buffer.spatialSetup = function() {
  * Clean up buffer region listeners on the spatial.
  */
 os.ui.menu.buffer.spatialDispose = function() {
-  var menu = os.ui.menu.SPATIAL;
+  var menu = os.ui.menu.spatial.MENU;
   if (menu) {
     var root = menu.getRoot();
     var group = root.find(os.ui.menu.spatial.Group.TOOLS);

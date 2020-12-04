@@ -306,7 +306,7 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   os.ui.menu.windows.default.setup();
 
   // assign the spatial menu
-  os.ui.draw.MENU = os.ui.menu.SPATIAL;
+  os.ui.draw.MENU = os.ui.menu.spatial.MENU;
 
   // register base legend plugins
   os.data.histo.legend.registerLegendPlugin();

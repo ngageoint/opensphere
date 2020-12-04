@@ -48,7 +48,7 @@ os.data.AreaNode.prototype.disposeInternal = function() {
  * @inheritDoc
  */
 os.data.AreaNode.prototype.getMenu = function() {
-  return os.ui.menu.SPATIAL;
+  return os.ui.menu.spatial.MENU;
 };
 
 

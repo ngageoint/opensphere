@@ -349,7 +349,7 @@ plugin.places.menu.mapDispose = function() {
  * Set up places items in the spatial menu.
  */
 plugin.places.menu.spatialSetup = function() {
-  var menu = os.ui.menu.SPATIAL;
+  var menu = os.ui.menu.spatial.MENU;
 
   if (menu && !menu.getRoot().find(plugin.places.menu.GROUP_LABEL)) {
     var root = menu.getRoot();

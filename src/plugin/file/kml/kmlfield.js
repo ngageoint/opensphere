@@ -1,3 +1,4 @@
+goog.provide('plugin.file.kml.JsonField');
 goog.provide('plugin.file.kml.KMLField');
 
 goog.require('os.Fields');
