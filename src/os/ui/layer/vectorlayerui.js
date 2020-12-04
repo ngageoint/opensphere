@@ -390,6 +390,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.loadPresets = function() {
 
 /**
  * Apply the layer preset.
+ * @export
  */
 os.ui.layer.VectorLayerUICtrl.prototype.applyPreset = function() {
   var items = /** @type {Array} */ (this.scope['items']);
@@ -400,9 +401,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.applyPreset = function() {
          * @param {os.layer.ILayer} layer
          * @return {os.command.ICommand}
          */
-        function(layer) {
-          return new os.command.VectorLayerPreset(layer.getId(), value);
-        };
+        (layer) => new os.command.VectorLayerPreset(layer.getId(), value);
 
     this.createCommand(fn);
   }
