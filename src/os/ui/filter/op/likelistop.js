@@ -15,7 +15,10 @@ os.ui.filter.op.LikeList = function() {
       'is like list', 'like list', ['string'],
       'hint="like list"',
       'e.g. a, b*, ...' + os.ui.filter.op.Op.TEXT.CASE_INSENSITIVE,
-      'fb-list', os.ui.filter.op.Op.TEXT.CASE_INSENSITIVE_TITLE, os.ui.filter.op.Op.TEXT.CASE_INSENSITIVE_DETAIL);
+      'fb-list',
+      undefined,
+      os.ui.filter.op.Op.TEXT.CASE_INSENSITIVE_TITLE,
+      os.ui.filter.op.Op.TEXT.CASE_INSENSITIVE_DETAIL);
   this.matchHint = 'like list';
 };
 goog.inherits(os.ui.filter.op.LikeList, os.ui.filter.op.InList);

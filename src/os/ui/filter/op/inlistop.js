@@ -13,6 +13,7 @@ goog.require('os.ui.filter.string');
  * @param {string=} opt_attrs
  * @param {string=} opt_hint
  * @param {string=} opt_ui
+ * @param {boolean=} opt_noLiteral Whether to exclude the literal value
  * @param {string=} opt_popoverTitle title for a popover, if wanted; default "Info"
  * @param {string=} opt_popoverContent content for a popover, if wanted
  * @constructor
@@ -20,18 +21,20 @@ goog.require('os.ui.filter.string');
  */
 os.ui.filter.op.InList = function(opt_title, opt_shortTitle, opt_supportedTypes,
     opt_attrs, opt_hint, opt_ui,
-    opt_popoverTitle, opt_popoverContent) {
+    opt_noLiteral, opt_popoverTitle, opt_popoverContent) {
   opt_title = opt_title || 'is in list';
   opt_shortTitle = opt_shortTitle || 'in list';
   opt_supportedTypes = opt_supportedTypes || null;
   opt_attrs = opt_attrs || 'hint="in list"';
   opt_hint = opt_hint || 'e.g. A, b, ...' + os.ui.filter.op.Op.TEXT.CASE_SENSITIVE;
   opt_ui = opt_ui || 'fb-list';
+  opt_popoverTitle = opt_popoverTitle || os.ui.filter.op.Op.TEXT.CASE_SENSITIVE_TITLE;
+  opt_popoverContent = opt_popoverContent || os.ui.filter.op.Op.TEXT.CASE_SENSITIVE_DETAIL;
 
   os.ui.filter.op.InList.base(this, 'constructor',
       'Or', opt_title, opt_shortTitle,
       opt_supportedTypes, opt_attrs, opt_hint,
-      opt_ui, undefined, opt_popoverTitle,
+      opt_ui, opt_noLiteral, opt_popoverTitle,
       opt_popoverContent);
   this.matchHint = 'in list';
 };
