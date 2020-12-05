@@ -1,4 +1,5 @@
 goog.provide('os.bearing');
+goog.provide('os.bearing.BearingSettingsKeys');
 goog.provide('os.bearing.BearingType');
 
 goog.require('os.config.Settings');
