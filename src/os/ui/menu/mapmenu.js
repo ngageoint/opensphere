@@ -12,8 +12,15 @@ goog.require('os.ui.window.confirmColorDirective');
 
 /**
  * @type {os.ui.menu.Menu<ol.Coordinate>|undefined}
+ * @deprecated
  */
 os.ui.menu.MAP = undefined;
+
+
+/**
+ * @type {os.ui.menu.Menu<ol.Coordinate>|undefined}
+ */
+os.ui.menu.map.MENU = undefined;
 
 
 /**
@@ -47,7 +54,7 @@ os.ui.menu.map.setup = function() {
     return;
   }
 
-  os.ui.menu.MAP = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
+  os.ui.menu.MAP = os.ui.menu.map.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
     type: os.ui.menu.MenuItemType.ROOT,
     children: [{
       label: os.ui.menu.map.GroupLabel.MAP,
@@ -137,7 +144,7 @@ os.ui.menu.map.setup = function() {
  */
 os.ui.menu.map.dispose = function() {
   goog.dispose(os.ui.menu.MAP);
-  os.ui.menu.MAP = undefined;
+  os.ui.menu.MAP = os.ui.menu.map.MENU = undefined;
 };
 
 

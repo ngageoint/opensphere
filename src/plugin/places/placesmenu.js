@@ -287,7 +287,7 @@ plugin.places.menu.visibleIfLayerNodeSupported_ = function(context) {
  * Set up places items on the map.
  */
 plugin.places.menu.mapSetup = function() {
-  var menu = os.ui.menu.MAP;
+  var menu = os.ui.menu.map.MENU;
 
   if (menu && !menu.getRoot().find(plugin.places.menu.GROUP_LABEL)) {
     var root = menu.getRoot();
@@ -335,7 +335,7 @@ plugin.places.menu.mapSetup = function() {
  * Clean up places items on the map.
  */
 plugin.places.menu.mapDispose = function() {
-  var menu = os.ui.menu.MAP;
+  var menu = os.ui.menu.map.MENU;
   if (menu) {
     var group = menu.getRoot().find(os.ui.menu.map.GroupLabel.COORDINATE);
     if (group) {
@@ -406,7 +406,7 @@ plugin.places.menu.spatialSetup = function() {
  * Clean up places items in the spatial menu.
  */
 plugin.places.menu.spatialDispose = function() {
-  var menu = os.ui.menu.MAP;
+  var menu = os.ui.menu.map.MENU;
   if (menu) {
     var group = menu.getRoot().find(os.ui.menu.spatial.Group.TOOLS);
     if (group) {
