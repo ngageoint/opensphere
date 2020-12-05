@@ -69,7 +69,7 @@ os.ui.menu.buffer.layerDispose = function() {
  * Set up buffer region listeners on the map.
  */
 os.ui.menu.buffer.mapSetup = function() {
-  var menu = os.ui.menu.MAP;
+  var menu = os.ui.menu.map.MENU;
   if (menu && !menu.getRoot().find(os.action.EventType.BUFFER)) {
     var group = menu.getRoot().find(os.ui.menu.map.GroupLabel.COORDINATE);
     goog.asserts.assert(group, 'Group should exist! Check spelling?');
@@ -89,7 +89,7 @@ os.ui.menu.buffer.mapSetup = function() {
  * Clean up buffer region listeners on the map.
  */
 os.ui.menu.buffer.mapDispose = function() {
-  var menu = os.ui.menu.MAP;
+  var menu = os.ui.menu.map.MENU;
   if (menu) {
     var group = menu.getRoot().find(os.ui.menu.map.GroupLabel.COORDINATE);
     if (group) {

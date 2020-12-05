@@ -32,7 +32,7 @@ plugin.weather.WeatherPlugin.ID = 'weather';
  */
 plugin.weather.WeatherPlugin.prototype.init = function() {
   var url = plugin.weather.getUrl_();
-  var menu = os.ui.menu.MAP;
+  var menu = os.ui.menu.map.MENU;
 
   if (url && menu) {
     var group = menu.getRoot().find(os.ui.menu.map.GroupLabel.COORDINATE);

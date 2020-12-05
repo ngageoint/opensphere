@@ -35,8 +35,8 @@ plugin.position.PositionPlugin.ID = 'position';
  * @inheritDoc
  */
 plugin.position.PositionPlugin.prototype.init = function() {
-  if (os.ui.menu.MAP) {
-    var menu = os.ui.menu.MAP;
+  if (os.ui.menu.map.MENU) {
+    var menu = os.ui.menu.map.MENU;
 
     var group = menu.getRoot().find(os.ui.menu.map.GroupLabel.COORDINATE);
     if (group) {
