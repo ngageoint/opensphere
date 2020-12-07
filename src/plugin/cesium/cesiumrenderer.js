@@ -426,7 +426,6 @@ plugin.cesium.CesiumRenderer.prototype.renderSync = function() {
   }
 };
 
-
 /**
  * @inheritDoc
  */

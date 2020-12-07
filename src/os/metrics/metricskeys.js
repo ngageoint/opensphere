@@ -363,6 +363,7 @@ os.metrics.Places = {
   SAVE_TO: 'places.contextMenu.saveTo',
   EXPORT_CONTEXT: 'places.contextMenu.export',
   QUICK_ADD_PLACES: 'places.quickAdd',
+  FEATURE_LIST: 'places.featureList',
   REMOVE_PLACE: 'places.removePlace',
   REMOVE_ALL: 'places.removeAll'
 };
