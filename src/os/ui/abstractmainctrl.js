@@ -191,7 +191,6 @@ os.ui.AbstractMainCtrl.prototype.onCertNaziFailure = function(event) {
       'width': '350',
       'height': 'auto',
       'modal': 'true',
-      'no-scroll': 'true',
       'headerClass': 'bg-warning u-bg-warning-text'
     }
   }));

@@ -74,7 +74,6 @@ os.ui.help.ControlsCtrl.launch = function() {
       'y': 'center',
       'label': 'Controls',
       'show-close': true,
-      'no-scroll': false,
       'min-width': 850,
       'min-height': 750,
       'max-width': 900,

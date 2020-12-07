@@ -321,8 +321,7 @@ class Controller extends MenuButtonCtrl {
         'width': 400,
         'height': 'auto',
         'modal': 'true',
-        'show-close': 'true',
-        'no-scroll': 'true'
+        'show-close': 'true'
       }
     }));
   }
@@ -403,8 +402,7 @@ class Controller extends MenuButtonCtrl {
         'width': 400,
         'height': 'auto',
         'modal': 'true',
-        'show-close': 'true',
-        'no-scroll': 'true'
+        'show-close': 'true'
       }
     }));
   }

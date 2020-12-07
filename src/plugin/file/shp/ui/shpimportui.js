@@ -73,8 +73,7 @@ plugin.file.shp.ui.SHPImportUI.prototype.launchUI = function(file, opt_config) {
     'min-height': '300',
     'max-height': '1000',
     'modal': 'true',
-    'show-close': 'true',
-    'no-scroll': 'true'
+    'show-close': 'true'
   };
   var template = '<shpimport resize-with="' + os.ui.windowSelector.WINDOW + '"></shpimport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);

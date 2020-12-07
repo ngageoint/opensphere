@@ -168,7 +168,6 @@ os.ui.data.AddColumnCtrl.launch = function(source) {
     'y': 'center',
     'label': 'Add column to ' + source.getTitle(),
     'show-close': true,
-    'no-scroll': false,
     'modal': true,
     'width': 500,
     'height': 'auto',
