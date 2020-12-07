@@ -32,7 +32,10 @@ os.ui.im.action.FilterActionTreeSearch = function(property, onObj, opt_type) {
   this.showDefaultActions = true;
 
   // filter out default actions when the flag is false
-  this.setFilterFunction((node) => this.showDefaultActions ? true : !node.getEntry().isDefault());
+  this.setFilterFunction((node) => {
+    var entry = node.getEntry();
+    return !entry.getParent() && (this.showDefaultActions || !entry.isDefault());
+  });
 };
 goog.inherits(os.ui.im.action.FilterActionTreeSearch, os.ui.slick.AbstractGroupByTreeSearch);
 

@@ -4,6 +4,7 @@ goog.provide('plugin.im.action.feature.ui.featureActionsDirective');
 goog.require('os.source');
 goog.require('os.ui.Module');
 goog.require('os.ui.im.action.FilterActionsCtrl');
+goog.require('os.ui.slick.TreeSearch');
 goog.require('plugin.im.action.feature');
 goog.require('plugin.im.action.feature.node');
 
@@ -142,7 +143,9 @@ plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.onSearch = function() {
   plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'onSearch');
 
   if (this['hasDefaultActions'] === undefined && this.scope['entries'] && this.scope['entries'].length > 0) {
-    this['hasDefaultActions'] = this.scope['entries'].some((node) => node.getEntry().isDefault());
+    this['hasDefaultActions'] = this.scope['entries'].some((node) => {
+      return node.getId() != os.ui.slick.TreeSearch.NO_RESULT_ID && node.getEntry().isDefault();
+    });
     os.ui.apply(this.scope);
   }
 };
