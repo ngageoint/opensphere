@@ -79,7 +79,7 @@
     <And>
       <And>
         <Or>
-          <Intersects description="Some Description" namehint="Some Area" xmlns="http://www.opengis.net/ogc">
+          <Intersects description="Some Description" namehint="Some Area" id="&amp;ID" xmlns="http://www.opengis.net/ogc">
             <PropertyName>GEOM</PropertyName>
             <Polygon xmlns="http://www.opengis.net/gml">
               <exterior>
