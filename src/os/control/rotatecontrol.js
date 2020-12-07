@@ -53,7 +53,8 @@ os.control.Rotate.render = function(mapEvent) {
       return;
     }
 
-    rotation = camera.getHeading();
+    // OpenLayers rotation is in the opposite direction of WebGL camera heading.
+    rotation = -camera.getHeading();
   } else {
     var frameState = mapEvent.frameState;
     if (!frameState) {
