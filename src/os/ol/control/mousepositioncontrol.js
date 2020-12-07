@@ -135,8 +135,9 @@ os.ol.control.MousePosition.DDM = function(coordinate) {
 os.ol.control.MousePosition.elevation = function(coordinate) {
   let coordString = '';
   if (coordinate && coordinate.length > 2 && os.settings.get(os.config.DisplaySetting.ENABLE_TERRAIN)) {
-    const elevation = coordinate[2];
-    coordString = ' ' + goog.string.padNumber(elevation, 0, 0) + ' m';
+    const um = os.unit.UnitManager.getInstance();
+    const elevation = um.formatToBestFit('distance', coordinate[2], 'm', um.getBaseSystem(), 2);
+    coordString = ' ' + elevation;
   }
   return coordString;
 };
