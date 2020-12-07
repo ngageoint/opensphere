@@ -322,7 +322,6 @@ plugin.im.action.feature.ui.launchEditFeatureAction = function(type, columns, ca
     'x': 'center',
     'y': 'center',
     'show-close': true,
-    'no-scroll': false,
     'min-width': 850,
     'min-height': 500,
     'max-width': 1500,

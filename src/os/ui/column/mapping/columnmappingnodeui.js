@@ -74,7 +74,6 @@ os.ui.column.mapping.ColumnMappingNodeUICtrl.prototype.tryRemove = function() {
       'width': 325,
       'height': 'auto',
       'modal': 'true',
-      'no-scroll': 'true',
       'headerClass': 'bg-danger u-bg-danger-text'
     }
   }));

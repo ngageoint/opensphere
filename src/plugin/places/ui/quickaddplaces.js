@@ -265,8 +265,7 @@ plugin.places.ui.QuickAddPlacesCtrl.launch = function(opt_root, opt_initial) {
     'y': 'center',
     'width': 300,
     'height': 'auto',
-    'show-close': true,
-    'no-scroll': true
+    'show-close': true
   };
 
   var template = '<quickaddplaces root="root" initial="initial"></quickaddplaces>';

@@ -559,7 +559,6 @@ os.ui.query.AreaFilterAddCtrl.prototype.launchAddObjectAreas = function() {
     'y': 'center',
     'label': 'Add Areas from Objects',
     'show-close': true,
-    'no-scroll': false,
     'width': 500,
     'height': 'auto',
     'modal': true
@@ -606,7 +605,6 @@ os.ui.query.AreaFilterAddCtrl.launch = function(label, opt_hideArea, opt_hideFil
     'y': 'center',
     'label': label,
     'show-close': true,
-    'no-scroll': false,
     'width': 400,
     'min-width': 300,
     'max-width': 1000,

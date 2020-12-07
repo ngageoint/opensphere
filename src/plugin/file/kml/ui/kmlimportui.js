@@ -53,8 +53,7 @@ plugin.file.kml.ui.KMLImportUI.prototype.launchUI = function(file, opt_config) {
     'max-width': 800,
     'height': 'auto',
     'modal': true,
-    'show-close': true,
-    'no-scroll': true
+    'show-close': true
   };
   var template = '<kmlimport></kmlimport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);

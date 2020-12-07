@@ -128,7 +128,6 @@ os.ui.windowDirective = function() {
       'showClose': '=',
       'showHide': '=',
       'showCollapse': '=',
-      'noScroll': '@',
       'overlay': '@',
       'modal': '=',
       'disableDrag': '@',
