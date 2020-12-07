@@ -3,6 +3,7 @@
   <div class="flex-shrink-0 mb-1 w-100">
     <simple-location latdeg="lat" londeg="lon" ng-if="lat !== undefined && lon !== undefined"></simple-location>
     <span ng-if="alt">Altitude: {{alt}}</span>
+    <simple-properties items="items"></simple-properties>
   </div>
   <div class="flex-shrink-0" ng-if="info.numTabsShown > 1">
     <ul class="nav nav-tabs border-0">
