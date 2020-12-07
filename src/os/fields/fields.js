@@ -56,7 +56,7 @@ os.fields.DEFAULT_BEARING_UNIT = 'degrees';
 
 
 /**
- * Deafult units for Semi Min/Semi Maj
+ * Default units for Semi Min/Semi Maj
  * @type {string}
  */
 os.fields.DEFAULT_RADIUS_UNIT = 'nmi';
