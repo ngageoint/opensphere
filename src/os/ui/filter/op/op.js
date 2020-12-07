@@ -306,7 +306,7 @@ os.ui.filter.op.Op.TEXT = {
   CASE_INSENSITIVE: '  (INFO: not case-sensitive)',
   CASE_INSENSITIVE_DETAIL: '<strong>Case-insensitive</strong><sup>1</sup>, i.e. "A" == "a" and<br />' +
   '<strong>Wildcard</strong> support, i.e. "a*" == "ab"<br /><br /><sup>1</sup>&nbsp;Typically, case' +
-  '-<i>in</i>sensitive text search is available for "like" filters. Some OGC Servers may not implement it.',
+  '-<i>in</i>sensitive text search is available for "like" filters. Some Data Providers may not support it.',
   CASE_INSENSITIVE_TITLE: 'Additional Info',
   CASE_SENSITIVE_DETAIL: '<strong>Case-sensitive</strong>, i.e. "A" != "a" and<br /><strong>Exact match</strong> ' +
   'only, i.e. "ab" != "a"<br /><br />See "like" filters for wildcard "*" search as well as case-insensitivity.',
