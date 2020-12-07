@@ -5,6 +5,7 @@ goog.require('ol.ViewHint');
 goog.require('ol.control.MousePosition');
 goog.require('ol.coordinate');
 goog.require('os.bearing');
+goog.require('os.config.DisplaySettings');
 goog.require('os.config.Settings');
 goog.require('os.geo');
 goog.require('os.ui.location');
@@ -133,11 +134,9 @@ os.ol.control.MousePosition.DDM = function(coordinate) {
  */
 os.ol.control.MousePosition.elevation = function(coordinate) {
   let coordString = '';
-  if (coordinate && coordinate.length > 2) {
+  if (coordinate && coordinate.length > 2 && os.settings.get(os.config.DisplaySetting.ENABLE_TERRAIN)) {
     const elevation = coordinate[2];
-    if (elevation != 0) {
-      coordString = ' ' + goog.string.padNumber(elevation, 0, 0) + ' m';
-    }
+    coordString = ' ' + goog.string.padNumber(elevation, 0, 0) + ' m';
   }
   return coordString;
 };
