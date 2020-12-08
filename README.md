@@ -104,20 +104,6 @@ If you'd like to contribute to this project, please make a pull request. We'll r
 
 Software source code previously released under an open source license and then modified by NGA staff is considered a "joint work" (see 17 USC § 101); it is partially copyrighted, partially public domain, and as a whole is protected by the copyrights of the non-government authors and must be released according to the terms of the original open source license.
 
-## End to End Tests
-End to end tests for Opensphere are written using [Cypress](https://github.com/cypress-io/cypress).
-
-### Setup
-By default the ```baseURL``` is set to the local compiled build: http://localhost:8282/workspace/opensphere/dist/opensphere.  This can be changed in [cypress.json](https://github.com/ngageoint/opensphere/blob/master/cypress.json) to an alternate  target.
-
-### Running Tests
-Run all tests via the command line ```yarn test:cypress-all```, individual specs via the command line ```yarn test:cypress-spec folder/test.spec.js```, or run tests interactively with the [Test Runner](https://docs.cypress.io/guides/core-concepts/test-runner.html) via ```yarn test:cypress```.
-
-
-### Adding and modifying tests
-
-[Optional] For VS Code, clone [opensphere-tests-vscode](https://github.com/justin-bits/opensphere-tests-vscode) for useful snippets and settings created specifically for testing OpenSphere.
-
 ## License
 
 Copyright 2017 BIT Systems
