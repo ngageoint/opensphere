@@ -45,13 +45,14 @@ os.ogc.filter.OGCSpatialFormatter.prototype.format = function(feature) {
     // name/desc does not matter.
     var name = os.xml.escape(/** @type {string} */ (feature.get('title') || 'New Area'));
     var description = os.xml.escape(/** @type {string} */ (feature.get('description')));
+    var id = feature.getId() != null ? os.xml.escape(feature.getId().toString()) : undefined;
 
     switch (type) {
       case ol.geom.GeometryType.CIRCLE:
         geometry = /** @type {ol.geom.Circle} */ (geometry);
 
         var polyCircle = new ol.geom.Polygon([os.geo.interpolateCircle(geometry.getCenter(), geometry.getRadius())]);
-        result = os.ogc.spatial.formatGMLIntersection(polyCircle, this.column_, name, description) || '';
+        result = os.ogc.spatial.formatGMLIntersection(polyCircle, this.column_, name, description, id) || '';
         break;
       case ol.geom.GeometryType.MULTI_LINE_STRING:
       case ol.geom.GeometryType.POLYGON:
@@ -59,17 +60,17 @@ os.ogc.filter.OGCSpatialFormatter.prototype.format = function(feature) {
         var coords = geometry.getCoordinates();
 
         if (coords.length == 1 && os.geo.isRectangular(coords[0], geometry.getExtent())) {
-          result = os.ogc.spatial.formatExtent(geometry.getExtent(), this.column_, name, description);
+          result = os.ogc.spatial.formatExtent(geometry.getExtent(), this.column_, name, description, id);
         } else {
-          result = os.ogc.spatial.formatGMLIntersection(geometry, this.column_, name, description) || '';
+          result = os.ogc.spatial.formatGMLIntersection(geometry, this.column_, name, description, id) || '';
         }
         break;
       case ol.geom.GeometryType.LINE_STRING:
       case ol.geom.GeometryType.MULTI_POLYGON:
-        result = os.ogc.spatial.formatGMLIntersection(geometry, this.column_, name, description) || '';
+        result = os.ogc.spatial.formatGMLIntersection(geometry, this.column_, name, description, id) || '';
         break;
       default:
-        result = os.ogc.spatial.formatExtent(geometry.getExtent(), this.column_, name, description);
+        result = os.ogc.spatial.formatExtent(geometry.getExtent(), this.column_, name, description, id);
         break;
     }
   }

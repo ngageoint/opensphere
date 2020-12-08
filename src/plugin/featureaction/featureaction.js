@@ -112,7 +112,6 @@ plugin.im.action.feature.launchForLayer = function(layerId) {
       'width': 500,
       'height': 500,
       'show-close': true,
-      'no-scroll': true,
       'min-width': 300,
       'max-width': 2000,
       'min-height': 400,

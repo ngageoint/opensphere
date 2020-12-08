@@ -18,6 +18,7 @@ goog.require('os.interaction.KeyboardPan');
 goog.require('os.interaction.KeyboardTiltRotate');
 goog.require('os.interaction.KeyboardZoom');
 goog.require('os.interaction.Measure');
+goog.require('os.interaction.MouseRotate');
 goog.require('os.interaction.MouseZoom');
 goog.require('os.interaction.PinchZoom');
 goog.require('os.interaction.Reset');
@@ -45,6 +46,9 @@ os.map.interaction.getInteractions = function() {
   var mwZoom = new os.ui.ol.interaction.MouseWheelZoom(options);
   var mZoom = new os.interaction.MouseZoom(options);
   var dcZoom = new os.interaction.DoubleClickZoom();
+
+  // Mouse rotate
+  var mRotate = new os.interaction.MouseRotate(options);
 
   // Screen pinch-zoom
   var pinchZoom = new os.interaction.PinchZoom();
@@ -107,6 +111,7 @@ os.map.interaction.getInteractions = function() {
     mwZoom,
     mZoom,
     dcZoom,
+    mRotate,
     contextMenu,
     select,
     drawBox,

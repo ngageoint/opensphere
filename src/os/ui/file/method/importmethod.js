@@ -103,8 +103,7 @@ os.ui.file.method.ImportMethod.prototype.loadFile = function(opt_options) {
       'max-width': '400',
       'height': 'auto',
       'modal': 'true',
-      'show-close': 'true',
-      'no-scroll': 'true'
+      'show-close': 'true'
     };
 
     var template = '<importdialog manager="manager" method="method"></importdialog>';

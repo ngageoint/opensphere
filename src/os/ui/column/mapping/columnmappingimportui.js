@@ -56,7 +56,6 @@ os.ui.column.mapping.ColumnMappingImportUI.prototype.launchUI = function(file, o
         'y': 'center',
         'label': 'Import Column Associations',
         'show-close': false,
-        'no-scroll': true,
         'width': 400,
         'height': 'auto',
         'icon': 'fa fa-sign-in'

@@ -58,8 +58,7 @@ plugin.georss.GeoRSSImportUI.prototype.launchUI = function(file, opt_config) {
     'max-width': 600,
     'height': 'auto',
     'modal': true,
-    'show-close': true,
-    'no-scroll': true
+    'show-close': true
   };
   var template = '<georssimport></georssimport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
