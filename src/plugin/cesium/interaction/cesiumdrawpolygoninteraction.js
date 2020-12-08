@@ -1,7 +1,10 @@
-goog.provide('plugin.cesium.interaction.drawpolygon');
+goog.module('plugin.cesium.interaction.drawpolygon');
+goog.module.declareLegacyNamespace();
 
-goog.require('olcs.core');
-goog.require('os.interaction.DrawPolygon');
+const dispatcher = goog.require('os.Dispatcher');
+const MapContainer = goog.require('os.MapContainer');
+const core = goog.require('olcs.core');
+const DrawPolygon = goog.require('os.interaction.DrawPolygon');
 
 
 /**
@@ -9,7 +12,7 @@ goog.require('os.interaction.DrawPolygon');
  * @type {Cesium.ColorGeometryInstanceAttribute|undefined}
  * @protected
  */
-os.interaction.DrawPolygon.prototype.cesiumColor = undefined;
+DrawPolygon.prototype.cesiumColor = undefined;
 
 
 /**
@@ -17,17 +20,17 @@ os.interaction.DrawPolygon.prototype.cesiumColor = undefined;
  * @type {Cesium.GroundPolylinePrimitive|undefined}
  * @protected
  */
-os.interaction.DrawPolygon.prototype.cesiumLine = undefined;
+DrawPolygon.prototype.cesiumLine = undefined;
 
 
 /**
  * Clean up the draw polygon interaction in Cesium.
  *
- * @this {os.interaction.DrawPolygon}
+ * @this {DrawPolygon}
  */
-plugin.cesium.interaction.drawpolygon.cleanupWebGL = function() {
+const cleanupWebGL = function() {
   var webgl = /** @type {plugin.cesium.CesiumRenderer|undefined} */ (
-    os.MapContainer.getInstance().getWebGLRenderer());
+    MapContainer.getInstance().getWebGLRenderer());
   var scene = webgl ? webgl.getCesiumScene() : undefined;
   if (scene) {
     this.cesiumColor = undefined;
@@ -39,15 +42,14 @@ plugin.cesium.interaction.drawpolygon.cleanupWebGL = function() {
   }
 };
 
-
 /**
  * Draw the polygon in Cesium.
  *
- * @this {os.interaction.DrawPolygon}
+ * @this {DrawPolygon}
  * @suppress {accessControls}
  */
-plugin.cesium.interaction.drawpolygon.updateWebGL = function() {
-  if (os.MapContainer.getInstance().is3DEnabled()) {
+const updateWebGL = function() {
+  if (MapContainer.getInstance().is3DEnabled()) {
     if (!this.cesiumColor) {
       this.cesiumColor = new Cesium.ColorGeometryInstanceAttribute(
           Cesium.Color.byteToFloat(this.color[0]),
@@ -57,11 +59,11 @@ plugin.cesium.interaction.drawpolygon.updateWebGL = function() {
     }
 
     var webgl = /** @type {plugin.cesium.CesiumRenderer|undefined} */ (
-      os.MapContainer.getInstance().getWebGLRenderer());
+      MapContainer.getInstance().getWebGLRenderer());
     var scene = webgl ? webgl.getCesiumScene() : undefined;
 
     var coords = /** @type {ol.geom.LineString} */ (this.line2D.getGeometry()).getCoordinates();
-    var lonlats = coords.map(os.interaction.DrawPolygon.coordToLonLat);
+    var lonlats = coords.map(DrawPolygon.coordToLonLat);
 
     var l = lonlats.length;
     if (l > 1 && Math.abs(lonlats[l - 1][0] - lonlats[l - 2][0]) < 1E-12 &&
@@ -81,7 +83,7 @@ plugin.cesium.interaction.drawpolygon.updateWebGL = function() {
         appearance: new Cesium.PolylineColorAppearance(),
         geometryInstances: new Cesium.GeometryInstance({
           geometry: new Cesium.GroundPolylineGeometry({
-            positions: olcs.core.ol4326CoordinateArrayToCsCartesians(lonlats),
+            positions: core.ol4326CoordinateArrayToCsCartesians(lonlats),
             arcType: os.interpolate.getMethod() === os.interpolate.Method.RHUMB ?
               Cesium.ArcType.RHUMB : Cesium.ArcType.GEODESIC,
             width: 2
@@ -93,7 +95,12 @@ plugin.cesium.interaction.drawpolygon.updateWebGL = function() {
       });
 
       scene.groundPrimitives.add(this.cesiumLine);
-      os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
+      dispatcher.getInstance().dispatchEvent(os.MapEvent.GL_REPAINT);
     }
   }
+};
+
+exports = {
+  cleanupWebGL,
+  updateWebGL
 };

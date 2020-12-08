@@ -1,10 +1,11 @@
-goog.provide('plugin.cesium.interaction');
+goog.module('plugin.cesium.interaction');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.map');
-goog.require('plugin.cesium.interaction.dragbox');
-goog.require('plugin.cesium.interaction.dragcircle');
-goog.require('plugin.cesium.interaction.drawpolygon');
-goog.require('plugin.cesium.interaction.measure');
+const map = goog.require('os.map');
+const dragbox = goog.require('plugin.cesium.interaction.dragbox');
+const dragcircle = goog.require('plugin.cesium.interaction.dragcircle');
+const drawpolygon = goog.require('plugin.cesium.interaction.drawpolygon');
+const measure = goog.require('plugin.cesium.interaction.measure');
 
 
 /**
@@ -13,9 +14,9 @@ goog.require('plugin.cesium.interaction.measure');
  * @param {!plugin.cesium.Camera} camera The camera.
  * @param {Cesium.ScreenSpaceCameraController} sscc The camera controller.
  */
-plugin.cesium.interaction.configureCesium = function(camera, sscc) {
+const configureCesium = function(camera, sscc) {
   // allow zooming out further in the 3D view
-  var maxResolution = os.map.zoomToResolution(0, os.map.PROJECTION);
+  var maxResolution = map.zoomToResolution(0, map.PROJECTION);
   sscc.maximumZoomDistance = camera.calcDistanceForResolution(maxResolution, 0);
 
   // shift + right drag to change the camera direction
@@ -53,20 +54,24 @@ plugin.cesium.interaction.configureCesium = function(camera, sscc) {
   sscc.inertiaZoom = 0;
 };
 
-
 /**
  * Load Cesium mixins for OpenSphere interactions.
  */
-plugin.cesium.interaction.loadInteractionMixins = function() {
-  os.interaction.DragBox.prototype.cleanupWebGL = plugin.cesium.interaction.dragbox.cleanupWebGL;
-  os.interaction.DragBox.prototype.updateWebGL = plugin.cesium.interaction.dragbox.updateWebGL;
+const loadInteractionMixins = function() {
+  os.interaction.DragBox.prototype.cleanupWebGL = dragbox.cleanupWebGL;
+  os.interaction.DragBox.prototype.updateWebGL = dragbox.updateWebGL;
 
-  os.interaction.DragCircle.prototype.cleanupWebGL = plugin.cesium.interaction.dragcircle.cleanupWebGL;
-  os.interaction.DragCircle.prototype.updateWebGL = plugin.cesium.interaction.dragcircle.updateWebGL;
+  os.interaction.DragCircle.prototype.cleanupWebGL = dragcircle.cleanupWebGL;
+  os.interaction.DragCircle.prototype.updateWebGL = dragcircle.updateWebGL;
 
-  os.interaction.DrawPolygon.prototype.cleanupWebGL = plugin.cesium.interaction.drawpolygon.cleanupWebGL;
-  os.interaction.DrawPolygon.prototype.updateWebGL = plugin.cesium.interaction.drawpolygon.updateWebGL;
+  os.interaction.DrawPolygon.prototype.cleanupWebGL = drawpolygon.cleanupWebGL;
+  os.interaction.DrawPolygon.prototype.updateWebGL = drawpolygon.updateWebGL;
 
-  os.interaction.Measure.prototype.cleanupWebGL = plugin.cesium.interaction.measure.cleanupWebGL;
-  os.interaction.Measure.prototype.updateWebGL = plugin.cesium.interaction.measure.updateWebGL;
+  os.interaction.Measure.prototype.cleanupWebGL = measure.cleanupWebGL;
+  os.interaction.Measure.prototype.updateWebGL = measure.updateWebGL;
+};
+
+exports = {
+  configureCesium,
+  loadInteractionMixins
 };

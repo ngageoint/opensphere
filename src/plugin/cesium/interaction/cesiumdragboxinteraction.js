@@ -1,32 +1,35 @@
-goog.provide('plugin.cesium.interaction.dragbox');
+goog.module('plugin.cesium.interaction.dragbox');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.interaction.DragBox');
-goog.require('os.interaction.DrawPolygon');
-goog.require('plugin.cesium');
+const dispatcher = goog.require('os.Dispatcher');
+const MapContainer = goog.require('os.MapContainer');
+const DragBox = goog.require('os.interaction.DragBox');
+const DrawPolygon = goog.require('os.interaction.DrawPolygon');
+const cesium = goog.require('plugin.cesium');
 
 
 /**
  * The Cesium box primitive.
  * @type {Cesium.Primitive|undefined}
  */
-os.interaction.DragBox.prototype.cesiumBox = undefined;
+DragBox.prototype.cesiumBox = undefined;
 
 
 /**
  * The Cesium box color.
  * @type {Cesium.ColorGeometryInstanceAttribute|undefined}
  */
-os.interaction.DragBox.prototype.cesiumColor = undefined;
+DragBox.prototype.cesiumColor = undefined;
 
 
 /**
  * Clean up the drag box interaction in Cesium.
  *
- * @this {os.interaction.DragBox}
+ * @this {DragBox}
  */
-plugin.cesium.interaction.dragbox.cleanupWebGL = function() {
-  var webgl = /** @type {plugin.cesium.CesiumRenderer|undefined} */ (
-    os.MapContainer.getInstance().getWebGLRenderer());
+const cleanupWebGL = function() {
+  var webgl = /** @type {cesium.CesiumRenderer|undefined} */ (
+    MapContainer.getInstance().getWebGLRenderer());
   var scene = webgl ? webgl.getCesiumScene() : undefined;
   if (scene && this.cesiumBox) {
     scene.groundPrimitives.remove(this.cesiumBox);
@@ -34,15 +37,14 @@ plugin.cesium.interaction.dragbox.cleanupWebGL = function() {
   }
 };
 
-
 /**
  * Draw the box in Cesium.
  * @param {ol.geom.Polygon} geometry
- * @this {os.interaction.DragBox}
+ * @this {DragBox}
  * @suppress {accessControls}
  */
-plugin.cesium.interaction.dragbox.updateWebGL = function(geometry) {
-  if (os.MapContainer.getInstance().is3DEnabled()) {
+const updateWebGL = function(geometry) {
+  if (MapContainer.getInstance().is3DEnabled()) {
     if (!this.cesiumColor) {
       this.cesiumColor = new Cesium.ColorGeometryInstanceAttribute(
           Cesium.Color.byteToFloat(this.color[0]),
@@ -51,8 +53,8 @@ plugin.cesium.interaction.dragbox.updateWebGL = function(geometry) {
           this.color[3]);
     }
 
-    var webgl = /** @type {plugin.cesium.CesiumRenderer|undefined} */ (
-      os.MapContainer.getInstance().getWebGLRenderer());
+    var webgl = /** @type {cesium.CesiumRenderer|undefined} */ (
+      MapContainer.getInstance().getWebGLRenderer());
     var scene = webgl ? webgl.getCesiumScene() : undefined;
 
     if (scene && geometry) {
@@ -61,12 +63,12 @@ plugin.cesium.interaction.dragbox.updateWebGL = function(geometry) {
       }
 
       var coords = geometry.getCoordinates()[0];
-      var lonlats = coords.map(os.interaction.DrawPolygon.coordToLonLat);
+      var lonlats = coords.map(DrawPolygon.coordToLonLat);
 
       this.cesiumBox = new Cesium.GroundPolylinePrimitive({
         asynchronous: false,
         geometryInstances: new Cesium.GeometryInstance({
-          id: plugin.cesium.GeometryInstanceId.GEOM_OUTLINE,
+          id: cesium.GeometryInstanceId.GEOM_OUTLINE,
           geometry: new Cesium.GroundPolylineGeometry({
             positions: olcs.core.ol4326CoordinateArrayToCsCartesians(lonlats),
             arcType: Cesium.ArcType.RHUMB,
@@ -80,7 +82,12 @@ plugin.cesium.interaction.dragbox.updateWebGL = function(geometry) {
       });
 
       scene.groundPrimitives.add(this.cesiumBox);
-      os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
+      dispatcher.getInstance().dispatchEvent(os.MapEvent.GL_REPAINT);
     }
   }
+};
+
+exports = {
+  cleanupWebGL,
+  updateWebGL
 };
