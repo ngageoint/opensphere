@@ -1,11 +1,11 @@
-goog.provide('os.ui.feature.tab.DescriptionTabCtrl');
-goog.provide('os.ui.feature.tab.descriptionEnableFunction');
-goog.provide('os.ui.feature.tab.descriptionTabDirective');
+goog.module('os.ui.feature.tab.DescriptionTabUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.Feature');
-goog.require('os.data.RecordField');
-goog.require('os.ui.Module');
-goog.require('os.ui.feature.tab.AbstractFeatureTabCtrl');
+const RecordField = goog.require('os.data.RecordField');
+const Module = goog.require('os.ui.Module');
+const AbstractFeatureTabCtrl = goog.require('os.ui.feature.tab.AbstractFeatureTabCtrl');
+
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
@@ -13,91 +13,70 @@ goog.require('os.ui.feature.tab.AbstractFeatureTabCtrl');
  *
  * @return {angular.Directive}
  */
-os.ui.feature.tab.descriptionTabDirective = function() {
-  return {
-    restrict: 'E',
-    scope: false,
-    replace: true,
-    templateUrl: os.ROOT + 'views/feature/tab/descriptiontab.html',
-    controller: os.ui.feature.tab.DescriptionTabCtrl,
-    controllerAs: 'descctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  scope: false,
+  replace: true,
+  templateUrl: os.ROOT + 'views/feature/tab/descriptiontab.html',
+  controller: Controller,
+  controllerAs: 'descctrl'
+});
 
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('descriptiontab', [os.ui.feature.tab.descriptionTabDirective]);
+Module.directive('descriptiontab', [directive]);
 
 
 
 /**
  * Controller function for the descriptionTabDirective directive
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @extends {os.ui.feature.tab.AbstractFeatureTabCtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.feature.tab.DescriptionTabCtrl = function($scope, $element) {
-  os.ui.feature.tab.DescriptionTabCtrl.base(this, 'constructor', $scope, $element);
-};
-goog.inherits(os.ui.feature.tab.DescriptionTabCtrl, os.ui.feature.tab.AbstractFeatureTabCtrl);
+class Controller extends AbstractFeatureTabCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
+  }
 
+  /**
+   * @inheritDoc
+   */
+  updateTab(event, data) {
+    if (data) {
+      var feature = /** @type {Feature|undefined} */ (data);
+      if (feature) {
+        var properties = feature.getProperties();
+        var description = properties[RecordField.HTML_DESCRIPTION];
+        if (!description) {
+          description = /** @type {string|undefined} */ (goog.object.findValue(properties, function(val, key) {
+            return os.fields.DESC_REGEXP.test(key) && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(val));
+          })) || '';
+        }
 
-/**
- * @inheritDoc
- */
-os.ui.feature.tab.DescriptionTabCtrl.prototype.updateTab = function(event, data) {
-  if (data) {
-    var feature = /** @type {ol.Feature|undefined} */ (data);
-    if (feature) {
-      var properties = feature.getProperties();
-      var description = properties[os.data.RecordField.HTML_DESCRIPTION];
-      if (!description) {
-        description = /** @type {string|undefined} */ (goog.object.findValue(properties, function(val, key) {
-          return os.fields.DESC_REGEXP.test(key) && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(val));
-        })) || '';
-      }
+        if (description != null && description != '') {
+          description = description.replace(/<a /g, '<a target="_blank" ');
 
-      if (description != null && description != '') {
-        description = description.replace(/<a /g, '<a target="_blank" ');
-
-        var iframe = this.element.find('iframe')[0];
-        if (iframe) {
-          var frameDoc = iframe.contentWindow.document;
-          frameDoc.open();
-          frameDoc.write(description);
-          frameDoc.close();
+          var iframe = this.element.find('iframe')[0];
+          if (iframe) {
+            var frameDoc = iframe.contentWindow.document;
+            frameDoc.open();
+            frameDoc.write(description);
+            frameDoc.close();
+          }
         }
       }
     }
   }
-};
+}
 
-
-/**
- * The tab enable function for the description tab.
- *
- * @param {?Object} tabData The data represented in tab
- * @return {!boolean} true if tab should be shown
- */
-os.ui.feature.tab.descriptionEnableFunction = function(tabData) {
-  var feature = /** @type {ol.Feature|undefined} */ (tabData);
-  if (feature) {
-    var properties = feature.getProperties();
-    var description = properties[os.data.RecordField.HTML_DESCRIPTION];
-    if (!description) {
-      description = /** @type {string|undefined} */ (goog.object.findValue(properties, function(val, key) {
-        return os.fields.DESC_REGEXP.test(key) && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(val));
-      })) || '';
-    }
-
-    if (description != null && description != '') {
-      return true;
-    }
-  }
-  return false;
+exports = {
+  Controller,
+  directive
 };
