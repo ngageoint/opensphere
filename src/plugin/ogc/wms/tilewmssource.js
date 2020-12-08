@@ -1,6 +1,9 @@
 goog.module('plugin.ogc.wms.TileWMSSource');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.source.IFilterableTileSource');
+goog.require('os.tile.ColorableTile');
+
 const TileWMS = goog.require('ol.source.TileWMS');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const osImplements = goog.require('os.implements');
@@ -8,9 +11,6 @@ const IStyle = goog.require('os.source.IStyle');
 const ILoadingSource = goog.requireType('os.ol.source.ILoadingSource');
 
 
-goog.require('os.source.IFilterableTileSource');
-
-goog.require('os.tile.ColorableTile');
 
 /**
  * Layer source for tile data from WMS servers. This source fires a property change event when its
