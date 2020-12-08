@@ -1,44 +1,114 @@
-goog.provide('plugin.basemap.v2.BaseMapState');
-goog.provide('plugin.basemap.v2.BaseMapTag');
+goog.module('plugin.basemap.v2.BaseMapState');
+goog.module.declareLegacyNamespace();
+
+const ui = goog.require('os.ui');
+const MapContainer = goog.require('os.MapContainer');
+const net = goog.require('os.net');
+const LayerState = goog.require('os.state.v2.LayerState');
+const basemap = goog.require('plugin.basemap');
+const BaseMap = goog.require('plugin.basemap.layer.BaseMap');
+const BaseMapTag = goog.require('plugin.basemap.v2.BaseMapTag');
+
 
 goog.require('goog.string');
-goog.require('os.net');
-goog.require('os.state.v2.LayerState');
-goog.require('plugin.basemap');
-goog.require('plugin.basemap.layer.BaseMap');
-
 
 /**
- * XML tags for base map state
- * @enum {string}
  */
-plugin.basemap.v2.BaseMapTag = {
-  MAX_ZOOM: 'maxZoom',
-  MIN_ZOOM: 'minZoom'
-};
+class BaseMapState extends LayerState {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.description = 'Saves the current map layers';
+    this['enabled'] = false;
+    this.rootAttrs = {
+      'type': 'map'
+    };
+    this.title = 'Map Layers';
 
-
-
-/**
- * @extends {os.state.v2.LayerState}
- * @constructor
- */
-plugin.basemap.v2.BaseMapState = function() {
-  plugin.basemap.v2.BaseMapState.base(this, 'constructor');
-  this.description = 'Saves the current map layers';
-  this['enabled'] = false;
-  this.rootAttrs = {
-    'type': 'map'
-  };
-  this.title = 'Map Layers';
+    /**
+     * @type {goog.log.Logger}
+     * @protected
+     */
+    this.logger = BaseMapState.LOGGER_;
+  }
 
   /**
-   * @type {goog.log.Logger}
-   * @protected
+   * @inheritDoc
    */
-  this.logger = plugin.basemap.v2.BaseMapState.LOGGER_;
-};
-goog.inherits(plugin.basemap.v2.BaseMapState, os.state.v2.LayerState);
+  isValid(layer) {
+    try {
+      return layer instanceof BaseMap && layer.getLayerOptions() != null;
+    } catch (e) {
+      // may not be a os.layer.ILayer... so don't persist it
+    }
+
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  layerToXML(layer, options, opt_exclusions, opt_layerConfig) {
+    var layerEl = super.layerToXML(layer, options, opt_exclusions, opt_layerConfig);
+    if (layerEl) {
+      goog.dom.xml.setAttributes(layerEl, {
+        'type': layer.getLayerOptions()['baseType'] || 'wms'
+      });
+    }
+    return layerEl;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  defaultConfigToXML(key, value, layerEl) {
+    switch (key) {
+      case 'minResolution':
+        var maxZoom = Math.round(MapContainer.getInstance().resolutionToZoom(/** @type {number} */ (value)) - 1);
+        os.xml.appendElement(BaseMapTag.MAX_ZOOM, layerEl, maxZoom);
+        break;
+      case 'maxResolution':
+        var minZoom = Math.round(MapContainer.getInstance().resolutionToZoom(/** @type {number} */ (value)) - 1);
+        os.xml.appendElement(BaseMapTag.MIN_ZOOM, layerEl, minZoom);
+        break;
+      case 'minZoom':
+      case 'maxZoom':
+        // ignore these - min/max resolution will be converted instead
+        break;
+      default:
+        super.defaultConfigToXML(key, value, layerEl);
+        break;
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  xmlToOptions(node) {
+    var options = super.xmlToOptions(node);
+    options['baseType'] = options['type'].toUpperCase();
+    options['layerType'] = basemap.LAYER_TYPE;
+    options['type'] = basemap.TYPE;
+    options['id'] = options['id'].replace(ui.data.BaseProvider.ID_DELIMITER, '-');
+
+    if (typeof options['url'] == 'string') {
+      options['crossOrigin'] = net.getCrossOrigin(/** @type {string} */ (options['url']));
+    }
+
+    // zoom is 1 higher in opensphere than in legacy apps
+    if (typeof options['minZoom'] === 'number') {
+      options['minZoom'] = options['minZoom'] + 1;
+    }
+
+    if (typeof options['maxZoom'] === 'number') {
+      options['maxZoom'] = options['maxZoom'] + 1;
+    }
+
+    return options;
+  }
+}
 
 
 /**
@@ -47,84 +117,7 @@ goog.inherits(plugin.basemap.v2.BaseMapState, os.state.v2.LayerState);
  * @private
  * @const
  */
-plugin.basemap.v2.BaseMapState.LOGGER_ = goog.log.getLogger('plugin.basemap.v2.BaseMapState');
+BaseMapState.LOGGER_ = goog.log.getLogger('plugin.basemap.v2.BaseMapState');
 
 
-/**
- * @inheritDoc
- */
-plugin.basemap.v2.BaseMapState.prototype.isValid = function(layer) {
-  try {
-    return layer instanceof plugin.basemap.layer.BaseMap && layer.getLayerOptions() != null;
-  } catch (e) {
-    // may not be a os.layer.ILayer... so don't persist it
-  }
-
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.basemap.v2.BaseMapState.prototype.layerToXML = function(layer, options, opt_exclusions, opt_layerConfig) {
-  var layerEl = plugin.basemap.v2.BaseMapState.base(this, 'layerToXML',
-      layer, options, opt_exclusions, opt_layerConfig);
-  if (layerEl) {
-    goog.dom.xml.setAttributes(layerEl, {
-      'type': layer.getLayerOptions()['baseType'] || 'wms'
-    });
-  }
-  return layerEl;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.basemap.v2.BaseMapState.prototype.defaultConfigToXML = function(key, value, layerEl) {
-  switch (key) {
-    case 'minResolution':
-      var maxZoom = Math.round(os.MapContainer.getInstance().resolutionToZoom(/** @type {number} */ (value)) - 1);
-      os.xml.appendElement(plugin.basemap.v2.BaseMapTag.MAX_ZOOM, layerEl, maxZoom);
-      break;
-    case 'maxResolution':
-      var minZoom = Math.round(os.MapContainer.getInstance().resolutionToZoom(/** @type {number} */ (value)) - 1);
-      os.xml.appendElement(plugin.basemap.v2.BaseMapTag.MIN_ZOOM, layerEl, minZoom);
-      break;
-    case 'minZoom':
-    case 'maxZoom':
-      // ignore these - min/max resolution will be converted instead
-      break;
-    default:
-      plugin.basemap.v2.BaseMapState.base(this, 'defaultConfigToXML', key, value, layerEl);
-      break;
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.basemap.v2.BaseMapState.prototype.xmlToOptions = function(node) {
-  var options = plugin.basemap.v2.BaseMapState.base(this, 'xmlToOptions', node);
-  options['baseType'] = options['type'].toUpperCase();
-  options['layerType'] = plugin.basemap.LAYER_TYPE;
-  options['type'] = plugin.basemap.TYPE;
-  options['id'] = options['id'].replace(os.ui.data.BaseProvider.ID_DELIMITER, '-');
-
-  if (typeof options['url'] == 'string') {
-    options['crossOrigin'] = os.net.getCrossOrigin(/** @type {string} */ (options['url']));
-  }
-
-  // zoom is 1 higher in opensphere than in legacy apps
-  if (typeof options['minZoom'] === 'number') {
-    options['minZoom'] = options['minZoom'] + 1;
-  }
-
-  if (typeof options['maxZoom'] === 'number') {
-    options['maxZoom'] = options['maxZoom'] + 1;
-  }
-
-  return options;
-};
+exports = BaseMapState;
