@@ -1,11 +1,12 @@
 goog.module('plugin.basemap.layer.BaseMap');
 goog.module.declareLegacyNamespace();
 
+goog.require('plugin.basemap.ui.baseMapLayerUIDirective');
+
 const alertManager = goog.require('os.alert.AlertManager');
 const Tile = goog.require('os.layer.Tile');
 
 
-goog.require('plugin.basemap.ui.baseMapLayerUIDirective');
 
 /**
  */
@@ -35,7 +36,9 @@ class BaseMap extends Tile {
     super.setLoading(value);
 
     if (this.getError() && !BaseMap.warningShown_) {
-      alertManager.getInstance().sendAlert('One or more Map Layers are having issues reaching the remote server. Please try ' +
+      alertManager.getInstance()
+.sendAlert('One or more Map Layers are having issues reaching the remote server. Please try ' +
+
           'adding another Map Layer or [click here to add a working one|basemapAddFailover].',
       os.alert.AlertEventSeverity.WARNING);
       BaseMap.warningShown_ = true;
