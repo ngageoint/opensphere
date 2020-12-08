@@ -29,12 +29,6 @@ const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**
- * The PlacesManager instance.
- * @type {PlacesManager}
- */
-let PlacesManagerInstance;
-
-/**
  * The Places storage location.
  * @type {string}
  * @const
@@ -54,6 +48,12 @@ const STORAGE_URL = getLocalUrl(btoa(STORAGE_NAME));
  * @const
  */
 const LAYER_OPTIONS = 'places.options';
+
+/**
+ * The PlacesManager instance.
+ * @type {PlacesManager}
+ */
+let PlacesManagerInstance;
 
 
 /**
@@ -259,7 +259,8 @@ class PlacesManager extends AbstractKMLManager {
   }
 
   /**
-   * @return {PlacesManager}
+   * Get a singleton instance of the PlacesManager.
+   * @return {!PlacesManager}
    */
   static getInstance() {
     if (!PlacesManagerInstance) {
@@ -283,7 +284,16 @@ class PlacesManager extends AbstractKMLManager {
 
       PlacesManagerInstance = new PlacesManager(OPTIONS);
     }
+
     return PlacesManagerInstance;
+  }
+
+  /**
+   * Set a singleton instance of the PlacesManager.
+   * @param {!PlacesManager} value The singleton instance.
+   */
+  static setInstance(value) {
+    PlacesManagerInstance = value;
   }
 }
 

@@ -370,8 +370,7 @@ os.ui.im.action.launchActionConfig = function(action, type) {
       'max-width': 2000,
       'height': 'auto',
       'modal': true,
-      'show-close': false,
-      'no-scroll': true
+      'show-close': false
     };
 
     var template = '<confirm><' + ui + '></' + ui + '></confirm>';

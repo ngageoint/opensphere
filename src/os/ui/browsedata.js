@@ -98,7 +98,6 @@ os.ui.BrowseDataCtrl.launch = function(facets) {
       'width': 800,
       'height': 600,
       'show-close': true,
-      'no-scroll': true,
       'min-width': 300,
       'max-width': 1000,
       'min-height': 200,

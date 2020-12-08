@@ -56,7 +56,8 @@ os.config.DisplaySetting = {
   FOG_DENSITY: os.config.DisplaySettings.BASE_KEY + 'fogDensity',
   ENABLE_SKY: os.config.DisplaySettings.BASE_KEY + 'enableSky',
   ENABLE_LIGHTING: os.config.DisplaySettings.BASE_KEY + 'enableLighting',
-  ENABLE_TERRAIN: os.config.DisplaySettings.BASE_KEY + 'enableTerrain'
+  ENABLE_TERRAIN: os.config.DisplaySettings.BASE_KEY + 'enableTerrain',
+  RESET_ROTATION_2D: os.config.DisplaySettings.BASE_KEY + 'resetRotation2d'
 };
 
 
@@ -136,7 +137,9 @@ os.config.DisplaySettingsCtrl = function($scope) {
     'sunlight': 'Light the 3D scene with the Sun.',
     'terrain': 'Show terrain on the 3D globe.',
     'help2D': 'Maximum feature count for 2D mode. Valid range: 100-50,000.',
-    'help3D': 'Maximum feature count for 3D mode. Valid range: 100-2,000,000'
+    'help3D': 'Maximum feature count for 3D mode. Valid range: 100-2,000,000',
+    'resetRotation2d': 'When switching to 2D, rotation will be reset so north is up. In some situations, rotating ' +
+        'the 2D map may reduce performance.'
   };
 
   /**
@@ -153,13 +156,18 @@ os.config.DisplaySettingsCtrl = function($scope) {
   this['mapMode'] = os.settings.get(os.config.DisplaySetting.MAP_MODE, os.MapMode.VIEW_3D);
   this.scope_.$watch('display.mapMode', this.updateMapMode_.bind(this));
 
-  var settingsState = /** @type {string|undefined} */ (os.settings.get(os.config.DisplaySetting.CAMERA_STATE));
+  var settingsState = /** @type {osx.map.CameraState|string|undefined} */ (os.settings.get(
+      os.config.DisplaySetting.CAMERA_STATE));
   var cameraState;
   if (settingsState) {
-    try {
-      cameraState = /** @type {!osx.map.CameraState} */ (JSON.parse(settingsState));
-    } catch (e) {
-      cameraState = undefined;
+    if (typeof settingsState === 'string') {
+      try {
+        cameraState = /** @type {!osx.map.CameraState} */ (JSON.parse(settingsState));
+      } catch (e) {
+        cameraState = undefined;
+      }
+    } else {
+      cameraState = settingsState;
     }
   }
 
@@ -239,6 +247,12 @@ os.config.DisplaySettingsCtrl = function($scope) {
    * @type {number}
    */
   this['maxFeatures3D'] = 150000;
+
+  /**
+   * If rotation should be reset when switching from 3D to 2D.
+   * @type {number}
+   */
+  this['resetRotation2d'] = /** @type {boolean} */ (os.settings.get(os.config.DisplaySetting.RESET_ROTATION_2D, false));
 
   /**
    * Need a button to reset everything if the renderer changes
@@ -705,4 +719,14 @@ os.config.DisplaySettingsCtrl.prototype.updateMaxFeatures = function(update3D) {
   } else if (this['maxFeatures2D'] != null) {
     os.settings.set('maxFeatures.2d', this['maxFeatures2D']);
   }
+};
+
+
+/**
+ * Update the globe terrain display.
+ *
+ * @export
+ */
+os.config.DisplaySettingsCtrl.prototype.updateResetRotation = function() {
+  this.updateSetting_(os.config.DisplaySetting.RESET_ROTATION_2D, this['resetRotation2d']);
 };

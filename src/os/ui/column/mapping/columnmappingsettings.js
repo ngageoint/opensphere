@@ -227,7 +227,6 @@ os.ui.column.mapping.ColumnMappingSettings.launchColumnMappingWindow = function(
     y: 'center',
     label: (opt_cm ? 'Edit' : 'Create') + ' Column Association',
     'show-close': true,
-    'no-scroll': true,
     modal: true,
     width: 800,
     height: 400,

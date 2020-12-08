@@ -202,7 +202,6 @@ os.ui.TimelinePanelCtrl.prototype.settings = function() {
     'width': '525',
     'height': 'auto',
     'modal': 'true',
-    'no-scroll': 'true',
     'show-close': 'true'
   };
 
@@ -237,8 +236,7 @@ os.ui.TimelinePanelCtrl.prototype.animationSettings = function() {
     'max-width': '600',
     'min-width': '450',
     'height': 'auto',
-    'modal': 'true',
-    'no-scroll': 'true'
+    'modal': 'true'
   };
 
   os.ui.window.create(windowOptions, this.getAnimationSettingsTemplate(), undefined, undefined, undefined, scopOptions);

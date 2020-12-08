@@ -76,8 +76,7 @@ os.ui.util.deprecated.launchDeprecatedLayersWindow_ = function() {
         'y': 'center',
         'width': '500',
         'height': 'auto',
-        'modal': 'true',
-        'no-scroll': 'true'
+        'modal': 'true'
       }
     }));
 
