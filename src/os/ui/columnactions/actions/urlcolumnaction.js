@@ -1,12 +1,13 @@
 goog.module('os.ui.columnactions.actions.UrlColumnAction');
 goog.module.declareLegacyNamespace();
 
+goog.require('goog.Uri');
+
 const googString = goog.require('goog.string');
 const window = goog.require('goog.window');
 const AbstractColumnAction = goog.require('os.ui.columnactions.AbstractColumnAction');
 
 
-goog.require('goog.Uri');
 
 /**
  */
