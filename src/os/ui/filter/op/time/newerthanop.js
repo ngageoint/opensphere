@@ -18,13 +18,13 @@ class NewerThan extends Op {
    */
   constructor() {
     super(
-      'PropertyIsLessThan',
-      'newer than',
-      '<',
-      ['recordtime'],
-      'hint="newer"',
-      'find records newer than this',
-      'newerolderthan'
+        'PropertyIsLessThan',
+        'newer than',
+        '<',
+        ['recordtime'],
+        'hint="newer"',
+        'find records newer than this',
+        'newerolderthan'
     );
     this.matchHint = 'newer';
   }
