@@ -1,69 +1,76 @@
-goog.provide('os.ui.state.cmd.StateClear');
-goog.require('os.command.ICommand');
-goog.require('os.command.State');
+goog.module('os.ui.state.cmd.StateClear');
+goog.module.declareLegacyNamespace();
 
+const ui = goog.require('os.ui');
+const State = goog.require('os.command.State');
+
+const ICommand = goog.requireType('os.command.ICommand');
 
 
 /**
  * Command for clearing (deactivating) states loaded in the application.
  *
- * @implements {os.command.ICommand}
- * @constructor
+ * @implements {ICommand}
  */
-os.ui.state.cmd.StateClear = function() {
-  this.isAsync = false;
-  this.title = 'Clear States';
-  this.details = null;
-  this.state = os.command.State.READY;
+class StateClear {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    this.isAsync = false;
+    this.title = 'Clear States';
+    this.details = null;
+    this.state = State.READY;
+
+    /**
+     * @type {!Array.<string>}
+     * @private
+     */
+    this.lastActive_ = [];
+  }
 
   /**
-   * @type {!Array.<string>}
-   * @private
+   * @inheritDoc
    */
-  this.lastActive_ = [];
-};
+  execute() {
+    this.state = State.EXECUTING;
+    this.lastActive_.length = 0;
 
-
-/**
- * @inheritDoc
- */
-os.ui.state.cmd.StateClear.prototype.execute = function() {
-  this.state = os.command.State.EXECUTING;
-  this.lastActive_.length = 0;
-
-  var dm = os.dataManager;
-  var descriptors = dm.getDescriptors();
-  for (var i = 0, n = descriptors.length; i < n; i++) {
-    var descriptor = descriptors[i];
-    if (descriptor instanceof os.ui.state.AbstractStateDescriptor && descriptor.isActive()) {
-      this.lastActive_.push(descriptor.getId());
+    var dm = os.dataManager;
+    var descriptors = dm.getDescriptors();
+    for (var i = 0, n = descriptors.length; i < n; i++) {
+      var descriptor = descriptors[i];
+      if (descriptor instanceof ui.state.AbstractStateDescriptor && descriptor.isActive()) {
+        this.lastActive_.push(descriptor.getId());
+      }
     }
+
+    os.stateManager.clearStates();
+
+    this.state = State.SUCCESS;
+    return true;
   }
 
-  os.stateManager.clearStates();
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    this.state = State.REVERTING;
 
-  this.state = os.command.State.SUCCESS;
-  return true;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.state.cmd.StateClear.prototype.revert = function() {
-  this.state = os.command.State.REVERTING;
-
-  var dm = os.dataManager;
-  for (var i = 0, n = this.lastActive_.length; i < n; i++) {
-    var descriptor = /** @type {os.ui.state.IStateDescriptor} */ (dm.getDescriptor(this.lastActive_[i]));
-    if (descriptor) {
-      // activate the state without putting a command on the stack
-      descriptor.setActive(true);
+    var dm = os.dataManager;
+    for (var i = 0, n = this.lastActive_.length; i < n; i++) {
+      var descriptor = /** @type {ui.state.IStateDescriptor} */ (dm.getDescriptor(this.lastActive_[i]));
+      if (descriptor) {
+        // activate the state without putting a command on the stack
+        descriptor.setActive(true);
+      }
     }
+
+    this.lastActive_.length = 0;
+
+    this.state = State.READY;
+    return true;
   }
+}
 
-  this.lastActive_.length = 0;
-
-  this.state = os.command.State.READY;
-  return true;
-};
+exports = StateClear;

@@ -1,47 +1,53 @@
-goog.provide('os.ui.state.cmd.StateDelete');
-goog.require('os.command.ICommand');
-goog.require('os.command.State');
+goog.module('os.ui.state.cmd.StateDelete');
+goog.module.declareLegacyNamespace();
 
+const State = goog.require('os.command.State');
+
+const ICommand = goog.requireType('os.command.ICommand');
 
 
 /**
  * Commnad removes local states
  *
- * @implements {os.command.ICommand}
- * @constructor
+ * @implements {ICommand}
  */
-os.ui.state.cmd.StateDelete = function() {
-  this.isAsync = false;
-  this.title = 'Delete States';
-  this.details = null;
-  this.state = os.command.State.READY;
+class StateDelete {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    this.isAsync = false;
+    this.title = 'Delete States';
+    this.details = null;
+    this.state = State.READY;
+
+    /**
+     * @type {!Array.<string>}
+     * @private
+     */
+    this.lastActive_ = [];
+  }
 
   /**
-   * @type {!Array.<string>}
-   * @private
+   * @inheritDoc
    */
-  this.lastActive_ = [];
-};
+  execute() {
+    this.state = State.EXECUTING;
+    this.lastActive_.length = 0;
 
+    os.stateManager.deleteStates();
 
-/**
- * @inheritDoc
- */
-os.ui.state.cmd.StateDelete.prototype.execute = function() {
-  this.state = os.command.State.EXECUTING;
-  this.lastActive_.length = 0;
+    this.state = State.SUCCESS;
+    return true;
+  }
 
-  os.stateManager.deleteStates();
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    // this command cannot be reverted
+    return false;
+  }
+}
 
-  this.state = os.command.State.SUCCESS;
-  return true;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.state.cmd.StateDelete.prototype.revert = function() {
-  // this command cannot be reverted
-  return false;
-};
+exports = StateDelete;
