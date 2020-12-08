@@ -1,6 +1,8 @@
 goog.module('plugin.basemap.v2.BaseMapState');
 goog.module.declareLegacyNamespace();
 
+goog.require('goog.string');
+
 const ui = goog.require('os.ui');
 const MapContainer = goog.require('os.MapContainer');
 const net = goog.require('os.net');
@@ -10,7 +12,6 @@ const BaseMap = goog.require('plugin.basemap.layer.BaseMap');
 const BaseMapTag = goog.require('plugin.basemap.v2.BaseMapTag');
 
 
-goog.require('goog.string');
 
 /**
  */
