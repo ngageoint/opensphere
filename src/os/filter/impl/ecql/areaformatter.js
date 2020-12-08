@@ -1,115 +1,117 @@
-goog.provide('os.filter.impl.ecql.AreaFormatter');
+goog.module('os.filter.impl.ecql.AreaFormatter');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.format.WKT');
-goog.require('os.filter.ISpatialFormatter');
-goog.require('os.filter.impl.ecql.FilterFormatter');
-goog.require('os.geo');
-goog.require('os.interpolate');
+const geo = goog.require('os.geo');
+const WKT = goog.require('ol.format.WKT');
+const FilterFormatter = goog.require('os.filter.impl.ecql.FilterFormatter');
+const interpolate = goog.require('os.interpolate');
 
-
-/**
- * @param {string=} opt_column The geometry column name
- * @implements {os.filter.ISpatialFormatter}
- * @constructor
- */
-os.filter.impl.ecql.AreaFormatter = function(opt_column) {
-  /**
-   * @type {string}
-   * @protected
-   */
-  this.column = opt_column || 'geometry';
-
-  /**
-   * @type {ol.format.WKT}
-   * @protected
-   */
-  this.wkt = new ol.format.WKT();
-
-  /**
-   * @type {string}
-   * @protected
-   */
-  this.spatialPredicate = 'INTERSECTS';
-
-  /**
-   * @type {string}
-   * @protected
-   */
-  this.group = 'OR';
-
-  /**
-   * @type {boolean}
-   * @protected
-   */
-  this.supportsAltitude = true;
-};
+const ISpatialFormatter = goog.requireType('os.filter.ISpatialFormatter');
 
 
 /**
- * @return {boolean}
+ * @implements {ISpatialFormatter}
  */
-os.filter.impl.ecql.AreaFormatter.prototype.getSupportsAltitude = function() {
-  return this.supportsAltitude;
-};
+class AreaFormatter {
+  /**
+   * Constructor.
+   * @param {string=} opt_column The geometry column name
+   */
+  constructor(opt_column) {
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.column = opt_column || 'geometry';
 
+    /**
+     * @type {WKT}
+     * @protected
+     */
+    this.wkt = new WKT();
 
-/**
- * @param {boolean} value
- */
-os.filter.impl.ecql.AreaFormatter.prototype.setSupportsAltitude = function(value) {
-  this.supportsAltitude = value;
-};
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.spatialPredicate = 'INTERSECTS';
 
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.group = 'OR';
 
-/**
- * @param {Array} coords The array of coords, rings, or polygons
- */
-os.filter.impl.ecql.AreaFormatter.stripAltitude = function(coords) {
-  if (coords[0].length === undefined) {
-    coords.length = 2;
-  } else {
-    coords.forEach(os.filter.impl.ecql.AreaFormatter.stripAltitude);
+    /**
+     * @type {boolean}
+     * @protected
+     */
+    this.supportsAltitude = true;
   }
-};
 
+  /**
+   * @return {boolean}
+   */
+  getSupportsAltitude() {
+    return this.supportsAltitude;
+  }
 
-/**
- * @inheritDoc
- */
-os.filter.impl.ecql.AreaFormatter.prototype.format = function(feature) {
-  var result = '';
-  var geom = /** @type {ol.geom.Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD)) || feature.getGeometry();
+  /**
+   * @param {boolean} value
+   */
+  setSupportsAltitude(value) {
+    this.supportsAltitude = value;
+  }
 
-  if (geom) {
-    geom = geom.clone().toLonLat();
-    os.geo.normalizeGeometryCoordinates(geom);
+  /**
+   * @inheritDoc
+   */
+  format(feature) {
+    var result = '';
+    var geom = /** @type {ol.geom.Geometry} */ (feature.get(interpolate.ORIGINAL_GEOM_FIELD)) || feature.getGeometry();
 
-    if (!this.supportsAltitude) {
-      var poly = /** @type {ol.geom.MultiPolygon|ol.geom.Polygon} */ (geom);
+    if (geom) {
+      geom = geom.clone().toLonLat();
+      geo.normalizeGeometryCoordinates(geom);
 
-      var coords = poly.getCoordinates();
-      os.filter.impl.ecql.AreaFormatter.stripAltitude(coords);
-      poly.setCoordinates(coords);
+      if (!this.supportsAltitude) {
+        var poly = /** @type {ol.geom.MultiPolygon|ol.geom.Polygon} */ (geom);
+
+        var coords = poly.getCoordinates();
+        AreaFormatter.stripAltitude(coords);
+        poly.setCoordinates(coords);
+      }
+
+      result += '(' + this.spatialPredicate + '(' + this.column + ',' + this.wkt.writeGeometry(geom) + '))';
     }
 
-    result += '(' + this.spatialPredicate + '(' + this.column + ',' + this.wkt.writeGeometry(geom) + '))';
+    return result;
   }
 
-  return result;
-};
+  /**
+   * @inheritDoc
+   */
+  supportsMultiple() {
+    return true;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  wrapMultiple(value) {
+    return value ? FilterFormatter.wrapGeneric(value, this.group) : '';
+  }
 
-/**
- * @inheritDoc
- */
-os.filter.impl.ecql.AreaFormatter.prototype.supportsMultiple = function() {
-  return true;
-};
+  /**
+   * @param {Array} coords The array of coords, rings, or polygons
+   */
+  static stripAltitude(coords) {
+    if (coords[0].length === undefined) {
+      coords.length = 2;
+    } else {
+      coords.forEach(AreaFormatter.stripAltitude);
+    }
+  }
+}
 
-
-/**
- * @inheritDoc
- */
-os.filter.impl.ecql.AreaFormatter.prototype.wrapMultiple = function(value) {
-  return value ? os.filter.impl.ecql.FilterFormatter.wrapGeneric(value, this.group) : '';
-};
+exports = AreaFormatter;
