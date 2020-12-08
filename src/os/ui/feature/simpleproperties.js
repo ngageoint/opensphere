@@ -15,96 +15,122 @@ const Feature = goog.requireType('ol.Feature');
  * @type {!string}
  * @const
  */
-const SIMPLE_PROPERTIES = 'feature.info.simple';
+const SIMPLE_PROPERTIES_BASE_KEY = 'featureInfo.simpleProperties';
+
+/**
+ * The columns that should appear at the top of the FeatureInfo card; in the following format:
+ *   {
+ *     "CALLSIGN": ["^flight_[number|no]+$"], // column name, with alternative regex(s) in preference order
+ *     "ALT": null, // additional column to show
+ *     ...
+ *   }
+ * @type {!string}
+ * @const
+ */
+const SIMPLE_PROPERTIES_COLUMNS_KEY = SIMPLE_PROPERTIES_BASE_KEY + '.columns';
 
 
 /**
- * Reuse the simple properties column filter across controller instances
+ * Declare local variables in a SEAF and reuse the simple properties column filter across controller instances
+ *
  * @param {Feature} feature
  * @return {Array<Object<string, *>>}
  * @private
  */
 const getProperties_ = (() => {
   // flag for first run
-  var initialized_ = false;
-
-  // get the desired columns from config
-  var config_ = null;
-
-  // lookup by source
-  var lookup_ = {};
-
-  // lookup by column name/field
-  var matches_ = {};
+  let initialized_ = false;
 
   /**
-   * Check the configs against the current column. If the key matches one of the configs, save it
-   * into matches_ for faster comparisons in the future
-   * @param {string} key
-   * @return {boolean}
+   * get the desired columns from config
+   * @type {Object<string, Array<string>>}
    */
-  var match = function(key) {
-    if (matches_[key]) return true;
+  let config_ = null;
 
-    // TODO loosen this up; use regex?
-    var found = config_[key];
+  // lookup array of columns/fields by source
+  const lookup_ = {};
 
-    if (found) {
-      matches_[key] = true; // this column hit on one or more of the configs; save it for future use
+  // lookup column/field by config key
+  const best_ = {};
+
+  /**
+   * Get the best field for this key
+   * @param {!string} key
+   * @param {Array<string>} regexes
+   * @param {Array<string>} fields
+   * @return {string}
+   */
+  const best = function(key, regexes, fields) {
+    // prefer exact match
+    let field = fields.find((f) => {
+      return f && f.toLocaleLowerCase().localeCompare(key.toLocaleLowerCase()) == 0; // case insensitive
+    });
+    if (!field && regexes && regexes.length > 0) {
+      // regex match
+      field = regexes.reduce((agg, regex, idx, arr) => {
+        if (!agg) {
+          const expr = /** @type {?RegExp} */ (regex && new RegExp(regex, 'i')); // case insensitive
+          agg = fields.find((f) => {
+            return expr.test(f);
+          });
+        }
+        return agg;
+      }, false);
     }
-
-    return found;
+    return field;
   };
 
   return (feature) => {
     var properties = [];
 
     if (!initialized_) {
-      config_ = OsSettings.getInstance().get(SIMPLE_PROPERTIES, {
-        'CALLSIGN': true
-      });
+      config_ = /** @type {Object<string, Array<string>>} */ (OsSettings.getInstance()
+          .get(SIMPLE_PROPERTIES_COLUMNS_KEY)
+      );
       initialized_ = true;
     }
 
     if (config_) {
-      var source = OsFeature.getSource(feature);
+      const source = OsFeature.getSource(feature);
+      let fields = (source) ? lookup_[source.getId()] : null;
 
-      if (source) {
-        // try the lookup... otherwise build a list of column(s)
-        var columns = lookup_[source.getId()] || source.getColumns().filter(
-            (column) => {
-              return match(column['field']);
-            });
+      if (!fields) {
+        fields = [];
 
-        // save the entire collection of columns for next time
-        if (!lookup_[source.getId()]) {
-          lookup_[source.getId()] = columns;
+        // for each config, get the column and build the property
+        const map = Object.entries(config_);
+        for ([key, regexes] of map) {
+          // get the field for this key
+          let field = null;
+          if (best_[key] && feature.get(best_[key])) {
+            field = best_[key];
+          } else {
+            const featureFields = (source)
+              ? source.getColumns().map((c) => c['field']) // for source, reuse the column definition
+              : Object.keys(feature.getProperties()); // for non-source, map the individual feature
+            field = best(key, regexes, featureFields);
+          }
+
+          if (field) {
+            best_[key] = field; // save it for next time, i.e. "ALT" >> "Altitude (m)"
+            fields.push(field);
+          }
         }
+      }
 
-        // get values of configured columns
-        columns.forEach(function(col) {
-          var field = /** @type {string} */ (col['field']);
-          var value = feature.get(field);
-
+      // drop in the values for the identified fields
+      if (fields.length > 0) {
+        // save this mapping for later
+        if (source && !lookup_[source.getId()]) {
+          lookup_[source.getId()] = fields;
+        }
+        fields.forEach(function(field) {
           properties.push({
             'id': field,
             'field': field,
-            'value': value
+            'value': feature.get(field)
           });
-        }, this);
-      } else {
-        // if we don't have a source, look at the properties by hand
-        var featureProperties = feature.getProperties();
-
-        for (var key in featureProperties) {
-          if (match(key)) {
-            properties.push({
-              'id': key,
-              'field': key,
-              'value': featureProperties[key]
-            });
-          }
-        }
+        });
       }
     }
 
@@ -113,7 +139,9 @@ const getProperties_ = (() => {
 })();
 
 /**
- * The controller for the simple properties directive; automatically finds and displays property(ies) as configured
+ * The controller for the simple properties directive; automatically finds and displays property(ies) as configured.
+ * Configurations are layer-agnostic. Basically, if you want to always put an emphasis on columns (or alternate
+ * regular expression(s) match on them), then this will add list those values.
  * @unrestricted
  */
 class Controller {
@@ -197,5 +225,6 @@ OsModule.directive('simpleProperties', [directive]);
 
 exports = {
   Controller,
-  directive
+  directive,
+  SIMPLE_PROPERTIES_COLUMNS_KEY
 };
