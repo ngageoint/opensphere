@@ -2,10 +2,13 @@
  * @fileoverview mixins for Cesium
  * @suppress {missingProvide}
  */
-goog.provide('plugin.cesium.mixin');
+goog.module('plugin.cesium.mixin');
 
-goog.require('os.MapEvent');
-goog.require('os.net.Request');
+goog.module.declareLegacyNamespace();
+
+const dispatcher = goog.require('os.Dispatcher');
+const MapEvent = goog.require('os.MapEvent');
+const Request = goog.require('os.net.Request');
 
 
 /**
@@ -13,7 +16,7 @@ goog.require('os.net.Request');
  *
  * @throws {Error} If Cesium has not been loaded.
  */
-plugin.cesium.mixin.loadCesiumMixins = function() {
+const loadCesiumMixins = function() {
   if (window.Cesium === undefined) {
     throw new Error('Cesium has not been loaded!');
   }
@@ -70,7 +73,7 @@ plugin.cesium.mixin.loadCesiumMixins = function() {
    * @return {Cesium.Promise<*>}
    */
   Cesium.Resource.prototype._makeRequest = function(options) {
-    var req = new os.net.Request(options.url || this.url);
+    var req = new Request(options.url || this.url);
     var headers = options.headers || this.headers;
 
     if (headers) {
@@ -91,7 +94,7 @@ plugin.cesium.mixin.loadCesiumMixins = function() {
       // The old olcs render loop fired a repaint when requests returned. While that shouldn't
       // be necessary with Cesium's new explicit rendering, there are still cases like async
       // Billboard/Icon loading which do not appear to be triggering a render request.
-      os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
+      dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     });
 
     return deferred.promise;
@@ -198,4 +201,8 @@ plugin.cesium.mixin.loadCesiumMixins = function() {
     return new Cesium.PickId(this, key, Cesium.Color.fromRgba(key));
   };
   Cesium.Context.prototype['createPickId'] = Cesium.Context.prototype.createPickId;
+};
+
+exports = {
+  loadCesiumMixins
 };
