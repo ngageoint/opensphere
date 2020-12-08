@@ -1,49 +1,54 @@
-goog.provide('plugin.basemap.layer.BaseMap');
+goog.module('plugin.basemap.layer.BaseMap');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.layer.Tile');
+const alertManager = goog.require('os.alert.AlertManager');
+const Tile = goog.require('os.layer.Tile');
+
+
 goog.require('plugin.basemap.ui.baseMapLayerUIDirective');
 
-
-
 /**
- * @extends {os.layer.Tile}
- * @param {olx.layer.TileOptions} options Tile layer options
- * @constructor
  */
-plugin.basemap.layer.BaseMap = function(options) {
-  plugin.basemap.layer.BaseMap.base(this, 'constructor', options);
+class BaseMap extends Tile {
+  /**
+   * Constructor.
+   * @param {olx.layer.TileOptions} options Tile layer options
+   */
+  constructor(options) {
+    super(options);
 
-  // omit base maps from the legend by default
-  this.renderLegend = goog.nullFunction;
-};
-goog.inherits(plugin.basemap.layer.BaseMap, os.layer.Tile);
+    // omit base maps from the legend by default
+    this.renderLegend = goog.nullFunction;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getLayerUI() {
+    return 'basemaplayerui';
+  }
 
-/**
- * @inheritDoc
- */
-plugin.basemap.layer.BaseMap.prototype.getLayerUI = function() {
-  return 'basemaplayerui';
-};
+  /**
+   * @inheritDoc
+   */
+  setLoading(value) {
+    super.setLoading(value);
+
+    if (this.getError() && !BaseMap.warningShown_) {
+      alertManager.getInstance().sendAlert('One or more Map Layers are having issues reaching the remote server. Please try ' +
+          'adding another Map Layer or [click here to add a working one|basemapAddFailover].',
+      os.alert.AlertEventSeverity.WARNING);
+      BaseMap.warningShown_ = true;
+    }
+  }
+}
 
 
 /**
  * @type {boolean}
  * @private
  */
-plugin.basemap.layer.BaseMap.warningShown_ = false;
+BaseMap.warningShown_ = false;
 
 
-/**
- * @inheritDoc
- */
-plugin.basemap.layer.BaseMap.prototype.setLoading = function(value) {
-  plugin.basemap.layer.BaseMap.base(this, 'setLoading', value);
-
-  if (this.getError() && !plugin.basemap.layer.BaseMap.warningShown_) {
-    os.alertManager.sendAlert('One or more Map Layers are having issues reaching the remote server. Please try ' +
-        'adding another Map Layer or [click here to add a working one|basemapAddFailover].',
-    os.alert.AlertEventSeverity.WARNING);
-    plugin.basemap.layer.BaseMap.warningShown_ = true;
-  }
-};
+exports = BaseMap;
