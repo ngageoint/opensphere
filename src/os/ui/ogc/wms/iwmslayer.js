@@ -1,194 +1,167 @@
-goog.provide('os.ui.ogc.wms.IWMSLayer');
-
+goog.module('os.ui.ogc.wms.IWMSLayer');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * @interface
  */
-os.ui.ogc.wms.IWMSLayer = function() {};
+class IWMSLayer {
+  /**
+   * Gets the layer title.
+   * @return {?string}
+   */
+  getTitle() {}
 
+  /**
+   * Sets the layer title.
+   * @param {?string} value
+   */
+  setTitle(value) {}
 
-/**
- * Gets the layer title.
- * @return {?string}
- */
-os.ui.ogc.wms.IWMSLayer.prototype.getTitle;
+  /**
+   * Gets the layer name.
+   * @return {?string}
+   */
+  getWmsName() {}
 
+  /**
+   * Sets the layer name.
+   * @param {?string} value
+   */
+  setWmsName(value) {}
 
-/**
- * Sets the layer title.
- * @param {?string} value
- */
-os.ui.ogc.wms.IWMSLayer.prototype.setTitle;
+  /**
+   * Gets the layer abstract (description).
+   * @return {?string}
+   */
+  getAbstract() {}
 
+  /**
+   * Sets the layer abstract (description).
+   * @param {?string} value
+   */
+  setAbstract(value) {}
 
-/**
- * Gets the layer name.
- * @return {?string}
- */
-os.ui.ogc.wms.IWMSLayer.prototype.getWmsName;
+  /**
+   * Gets the layer attribution.
+   * @return {?string}
+   */
+  getAttribution() {}
 
+  /**
+   * Sets the layer attribution.
+   * @param {?string} value
+   */
+  setAttribution(value) {}
 
-/**
- * Sets the layer name.
- * @param {?string} value
- */
-os.ui.ogc.wms.IWMSLayer.prototype.setWmsName;
+  /**
+   * @return {?Array.<osx.ogc.TileStyle>}
+   */
+  getStyles() {}
 
+  /**
+   * @param {?Array.<osx.ogc.TileStyle>} value
+   */
+  setStyles(value) {}
 
-/**
- * Gets the layer abstract (description).
- * @return {?string}
- */
-os.ui.ogc.wms.IWMSLayer.prototype.getAbstract;
+  /**
+   * Gets the color of the layer.
+   * @return {?string}
+   */
+  getColor() {}
 
+  /**
+   * Sets the color of the layer.
+   * @param {?string} value
+   */
+  setColor(value) {}
 
-/**
- * Sets the layer abstract (description).
- * @param {?string} value
- */
-os.ui.ogc.wms.IWMSLayer.prototype.setAbstract;
+  /**
+   * @return {boolean}
+   */
+  getOpaque() {}
 
+  /**
+   * @param {boolean} value
+   */
+  setOpaque(value) {}
 
-/**
- * Gets the layer attribution.
- * @return {?string}
- */
-os.ui.ogc.wms.IWMSLayer.prototype.getAttribution;
+  /**
+   * @return {Object.<string, string>}
+   */
+  getDimensions() {}
 
+  /**
+   * @param {Object.<string, string>} value
+   */
+  setDimensions(value) {}
 
-/**
- * Sets the layer attribution.
- * @param {?string} value
- */
-os.ui.ogc.wms.IWMSLayer.prototype.setAttribution;
+  /**
+   * @return {ol.Extent}
+   */
+  getBBox() {}
 
+  /**
+   * @param {ol.Extent} value
+   */
+  setBBox(value) {}
 
-/**
- * @return {?Array.<osx.ogc.TileStyle>}
- */
-os.ui.ogc.wms.IWMSLayer.prototype.getStyles;
+  /**
+   * @return {Array.<string>}
+   */
+  getKeywords() {}
 
+  /**
+   * @param {Array.<string>} value
+   */
+  setKeywords(value) {}
 
-/**
- * @param {?Array.<osx.ogc.TileStyle>} value
- */
-os.ui.ogc.wms.IWMSLayer.prototype.setStyles;
+  /**
+   * @return {?Array.<!string>}
+   */
+  getLegends() {}
 
+  /**
+   * @param {?Array.<!string>} value
+   */
+  setLegends(value) {}
 
-/**
- * Gets the color of the layer.
- * @return {?string}
- */
-os.ui.ogc.wms.IWMSLayer.prototype.getColor;
+  /**
+   * @param {string} key
+   * @param {string} value
+   */
+  addDimension(key, value) {}
 
+  /**
+   * @return {boolean}
+   */
+  isFolder() {}
 
-/**
- * Sets the color of the layer.
- * @param {?string} value
- */
-os.ui.ogc.wms.IWMSLayer.prototype.setColor;
+  /**
+   * @return {boolean}
+   */
+  isBaseLayer() {}
 
+  /**
+   * @return {boolean}
+   */
+  hasTimeExtent() {}
 
-/**
- * @return {boolean}
- */
-os.ui.ogc.wms.IWMSLayer.prototype.getOpaque;
+  /**
+   * @param {Object} node
+   * @param {string=} opt_forcedCrs
+   */
+  parseBBox(node, opt_forcedCrs) {}
 
+  /**
+   * @return {?Array<!string>}
+   */
+  getSupportedCRS() {}
 
-/**
- * @param {boolean} value
- */
-os.ui.ogc.wms.IWMSLayer.prototype.setOpaque;
+  /**
+   * @param {?Array<!string>} values
+   */
+  setSupportedCRS(values) {}
+}
 
-
-/**
- * @return {Object.<string, string>}
- */
-os.ui.ogc.wms.IWMSLayer.prototype.getDimensions;
-
-
-/**
- * @param {Object.<string, string>} value
- */
-os.ui.ogc.wms.IWMSLayer.prototype.setDimensions;
-
-
-/**
- * @return {ol.Extent}
- */
-os.ui.ogc.wms.IWMSLayer.prototype.getBBox;
-
-
-/**
- * @param {ol.Extent} value
- */
-os.ui.ogc.wms.IWMSLayer.prototype.setBBox;
-
-
-/**
- * @return {Array.<string>}
- */
-os.ui.ogc.wms.IWMSLayer.prototype.getKeywords;
-
-
-/**
- * @param {Array.<string>} value
- */
-os.ui.ogc.wms.IWMSLayer.prototype.setKeywords;
-
-
-/**
- * @return {?Array.<!string>}
- */
-os.ui.ogc.wms.IWMSLayer.prototype.getLegends;
-
-
-/**
- * @param {?Array.<!string>} value
- */
-os.ui.ogc.wms.IWMSLayer.prototype.setLegends;
-
-
-/**
- * @param {string} key
- * @param {string} value
- */
-os.ui.ogc.wms.IWMSLayer.prototype.addDimension;
-
-
-/**
- * @return {boolean}
- */
-os.ui.ogc.wms.IWMSLayer.prototype.isFolder;
-
-
-/**
- * @return {boolean}
- */
-os.ui.ogc.wms.IWMSLayer.prototype.isBaseLayer;
-
-
-/**
- * @return {boolean}
- */
-os.ui.ogc.wms.IWMSLayer.prototype.hasTimeExtent;
-
-
-/**
- * @param {Object} node
- * @param {string=} opt_forcedCrs
- */
-os.ui.ogc.wms.IWMSLayer.prototype.parseBBox;
-
-
-/**
- * @return {?Array<!string>}
- */
-os.ui.ogc.wms.IWMSLayer.prototype.getSupportedCRS;
-
-
-/**
- * @param {?Array<!string>} values
- */
-os.ui.ogc.wms.IWMSLayer.prototype.setSupportedCRS;
+exports = IWMSLayer;

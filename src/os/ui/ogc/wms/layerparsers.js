@@ -1,13 +1,15 @@
-goog.provide('os.ui.ogc.wms.LayerParsers');
-goog.require('os.ui.ogc.wms.WMSLayerParserV111');
-goog.require('os.ui.ogc.wms.WMSLayerParserV130');
+goog.module('os.ui.ogc.wms.LayerParsers');
+goog.module.declareLegacyNamespace();
+
+const WMSLayerParserV111 = goog.require('os.ui.ogc.wms.WMSLayerParserV111');
+const WMSLayerParserV130 = goog.require('os.ui.ogc.wms.WMSLayerParserV130');
 
 
 /**
  * @enum {os.ui.ogc.wms.IWMSLayerParser}
  * @const
  */
-os.ui.ogc.wms.LayerParsers = {
-  '1.1.1': new os.ui.ogc.wms.WMSLayerParserV111(),
-  '1.3.0': new os.ui.ogc.wms.WMSLayerParserV130()
+exports = {
+  '1.1.1': new WMSLayerParserV111(),
+  '1.3.0': new WMSLayerParserV130()
 };

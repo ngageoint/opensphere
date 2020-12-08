@@ -1,119 +1,122 @@
-goog.provide('os.ui.ogc.wms.WMSLayerParserV111');
+goog.module('os.ui.ogc.wms.WMSLayerParserV111');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.array');
-goog.require('os.ogc');
-goog.require('os.ui.ogc.wms.AbstractWMSLayerParser');
-
-
-
-/**
- * @extends {os.ui.ogc.wms.AbstractWMSLayerParser}
- * @constructor
- */
-os.ui.ogc.wms.WMSLayerParserV111 = function() {
-  os.ui.ogc.wms.WMSLayerParserV111.base(this, 'constructor');
-};
-goog.inherits(os.ui.ogc.wms.WMSLayerParserV111, os.ui.ogc.wms.AbstractWMSLayerParser);
+const array = goog.require('ol.array');
+const ogc = goog.require('os.ogc');
+const AbstractWMSLayerParser = goog.require('os.ui.ogc.wms.AbstractWMSLayerParser');
 
 
 /**
- * @inheritDoc
  */
-os.ui.ogc.wms.WMSLayerParserV111.prototype.parseLayer = function(node, layer) {
-  var i;
+class WMSLayerParserV111 extends AbstractWMSLayerParser {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
 
-  if (node && layer) {
-    layer.setTitle(/** @type {string} */ (node['Title'] || ''));
-    layer.setAbstract(/** @type {string} */ (node['Abstract'] || ''));
+  /**
+   * @inheritDoc
+   */
+  parseLayer(node, layer) {
+    var i;
 
-    this.addAttribution(node, layer);
+    if (node && layer) {
+      layer.setTitle(/** @type {string} */ (node['Title'] || ''));
+      layer.setAbstract(/** @type {string} */ (node['Abstract'] || ''));
 
-    // only do the rest if the layer is not a folder
-    var name = /** @type {string} */ (node['Name']);
-    if (name) {
-      layer.setWmsName(name);
+      this.addAttribution(node, layer);
 
-      var opaque = String(node['opaque']).toLowerCase();
-      layer.setOpaque(opaque == '1' || opaque == 'true');
+      // only do the rest if the layer is not a folder
+      var name = /** @type {string} */ (node['Name']);
+      if (name) {
+        layer.setWmsName(name);
 
-      var dimensionSets = ['Extent', 'Dimension'];
-      dimensionSets.forEach(function(set) {
-        var dimensions = node[set];
-        if (dimensions) {
-          for (i = 0; i < dimensions.length; i++) {
-            layer.addDimension(String(dimensions[i]['name']), String(dimensions[i]['values']));
+        var opaque = String(node['opaque']).toLowerCase();
+        layer.setOpaque(opaque == '1' || opaque == 'true');
+
+        var dimensionSets = ['Extent', 'Dimension'];
+        dimensionSets.forEach(function(set) {
+          var dimensions = node[set];
+          if (dimensions) {
+            for (i = 0; i < dimensions.length; i++) {
+              layer.addDimension(String(dimensions[i]['name']), String(dimensions[i]['values']));
+            }
           }
-        }
-      });
+        });
 
-      layer.setSupportedCRS(/** @type {?Array<!string>} */ (node['CRS']));
-      var bboxArray = node['LatLonBoundingBox'];
-      if (bboxArray && bboxArray.length > 0) {
-        for (i = 0; i < bboxArray.length; i++) {
-          if (bboxArray[i]['crs'] == 'EPSG:4326') {
-            layer.setBBox(/** @type {ol.Extent} */ (goog.array.clone(bboxArray[i]['extent'])));
-            break;
-          }
-        }
-      }
-
-      var styles = node['Style'];
-      if (styles) {
-        var styleArr = [];
-        var legendArr = [];
-        // Since each layer will also need a "default" style that will not send a style to the server,
-        // let's add it to the array
-        styleArr.push(goog.object.clone(os.ogc.DEFAULT_TILE_STYLE));
-
-        for (i = 0; i < styles.length; i++) {
-          var style = styles[i];
-          var styleTitle = String(style['Title']);
-          var styleName = String(style['Name']);
-          var item = /** @type {!osx.ogc.TileStyle} */ ({
-            label: styleTitle ? styleTitle : styleName,
-            data: styleName
-          });
-          styleArr.push(item);
-
-          if (os.ogc.COLOR_STYLE_REGEX.test(styleTitle)) {
-            layer.setColor(styleName);
-
-            // clear data on the color style for the default color, since this affects what is sent to the server
-            item.data = '';
-
-            // The foreground color/density style typically comes with a legend that we don't want to show
-            // legendArr.push(null);
-          } else {
-            var legend = goog.object.getValueByKeys(style, ['LegendURL', 0]);
-            if (legend) {
-              legendArr.push(legend);
+        layer.setSupportedCRS(/** @type {?Array<!string>} */ (node['CRS']));
+        var bboxArray = node['LatLonBoundingBox'];
+        if (bboxArray && bboxArray.length > 0) {
+          for (i = 0; i < bboxArray.length; i++) {
+            if (bboxArray[i]['crs'] == 'EPSG:4326') {
+              layer.setBBox(/** @type {ol.Extent} */ (goog.array.clone(bboxArray[i]['extent'])));
+              break;
             }
           }
         }
 
-        if (styleArr.length) {
-          layer.setStyles(styleArr);
-        }
+        var styles = node['Style'];
+        if (styles) {
+          var styleArr = [];
+          var legendArr = [];
+          // Since each layer will also need a "default" style that will not send a style to the server,
+          // let's add it to the array
+          styleArr.push(goog.object.clone(ogc.DEFAULT_TILE_STYLE));
 
-        if (legendArr.length) {
-          layer.setLegends(legendArr);
-        }
-      }
+          for (i = 0; i < styles.length; i++) {
+            var style = styles[i];
+            var styleTitle = String(style['Title']);
+            var styleName = String(style['Name']);
+            var item = /** @type {!osx.ogc.TileStyle} */ ({
+              label: styleTitle ? styleTitle : styleName,
+              data: styleName
+            });
+            styleArr.push(item);
 
-      // get keywords
-      var kList = goog.object.getValueByKeys(node, ['KeywordList']);
-      if (kList) {
-        var keywords = [];
-        i = kList.length;
-        while (i--) {
-          var keyword = String(kList[i]);
-          if (!ol.array.includes(keywords, keyword)) {
-            keywords.push(keyword);
+            if (ogc.COLOR_STYLE_REGEX.test(styleTitle)) {
+              layer.setColor(styleName);
+
+              // clear data on the color style for the default color, since this affects what is sent to the server
+              item.data = '';
+
+              // The foreground color/density style typically comes with a legend that we don't want to show
+              // legendArr.push(null);
+            } else {
+              var legend = goog.object.getValueByKeys(style, ['LegendURL', 0]);
+              if (legend) {
+                legendArr.push(legend);
+              }
+            }
+          }
+
+          if (styleArr.length) {
+            layer.setStyles(styleArr);
+          }
+
+          if (legendArr.length) {
+            layer.setLegends(legendArr);
           }
         }
 
-        layer.setKeywords(keywords);
+        // get keywords
+        var kList = goog.object.getValueByKeys(node, ['KeywordList']);
+        if (kList) {
+          var keywords = [];
+          i = kList.length;
+          while (i--) {
+            var keyword = String(kList[i]);
+            if (!array.includes(keywords, keyword)) {
+              keywords.push(keyword);
+            }
+          }
+
+          layer.setKeywords(keywords);
+        }
       }
     }
   }
-};
+}
+
+exports = WMSLayerParserV111;

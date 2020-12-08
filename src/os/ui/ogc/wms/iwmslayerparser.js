@@ -1,30 +1,30 @@
-goog.provide('os.ui.ogc.wms.IWMSLayerParser');
-goog.require('os.ui.ogc.wms.IWMSLayer');
+goog.module('os.ui.ogc.wms.IWMSLayerParser');
+goog.module.declareLegacyNamespace();
 
+const IWMSLayer = goog.requireType('os.ui.ogc.wms.IWMSLayer');
 
 
 /**
  * @interface
  */
-os.ui.ogc.wms.IWMSLayerParser = function() {};
+class IWMSLayerParser {
+  /**
+   * @param {Object} node
+   * @return {?string}
+   */
+  parseLayerId(node) {}
 
+  /**
+   * @param {Object} node
+   * @return {?string}
+   */
+  parseLayerTitle(node) {}
 
-/**
- * @param {Object} node
- * @return {?string}
- */
-os.ui.ogc.wms.IWMSLayerParser.prototype.parseLayerId;
+  /**
+   * @param {Object} node
+   * @param {IWMSLayer} layer
+   */
+  parseLayer(node, layer) {}
+}
 
-
-/**
- * @param {Object} node
- * @return {?string}
- */
-os.ui.ogc.wms.IWMSLayerParser.prototype.parseLayerTitle;
-
-
-/**
- * @param {Object} node
- * @param {os.ui.ogc.wms.IWMSLayer} layer
- */
-os.ui.ogc.wms.IWMSLayerParser.prototype.parseLayer;
+exports = IWMSLayerParser;
