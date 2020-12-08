@@ -59,8 +59,7 @@ os.ui.window.launchConfirmColor = function(confirm, opt_default) {
     'width': 195,
     'height': 'auto',
     'modal': 'true',
-    'show-close': 'false',
-    'no-scroll': 'true'
+    'show-close': 'false'
   };
 
   os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({

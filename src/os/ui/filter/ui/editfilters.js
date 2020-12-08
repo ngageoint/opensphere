@@ -253,7 +253,6 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.onRemove_ = function(event, node) {
         'y': 'center',
         'label': 'Remove Items',
         'show-close': false,
-        'no-scroll': true,
         'width': 300,
         'height': 'auto',
         'icon': 'fa fa-warning',

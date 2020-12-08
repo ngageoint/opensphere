@@ -78,8 +78,7 @@ const launchConfirm = function(opt_options, opt_scopeOptions) {
     'min-height': windowOverrides.minHeight,
     'max-height': windowOverrides.maxHeight,
     'modal': windowOverrides.modal != null ? windowOverrides.modal : true,
-    'show-close': windowOverrides.showClose != null ? windowOverrides.showClose : false,
-    'no-scroll': windowOverrides.noScroll != null ? windowOverrides.noScroll : true
+    'show-close': windowOverrides.showClose != null ? windowOverrides.showClose : false
   };
 
   if (windowOverrides.id) {

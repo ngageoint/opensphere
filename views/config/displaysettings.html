@@ -122,6 +122,14 @@
       <slider class="col-6" min="0" max="1" step="0.1" value="display.fogDensity" live="true" name="fogDensity">
       </slider>
     </div>
+    <div class="form-group">
+      <div class="form-check" title="{{display.help.resetRotation2d}}">
+        <input class="form-check-input" id="resetRotation2d" type="checkbox" ng-model="display.resetRotation2d"
+            ng-change="display.updateResetRotation()" >
+        <label class="form-check-label col-4 p-0" for="resetRotation2d">Reset Rotation in 2D</label>
+        <popover x-title="'Reset Rotation in 2D'" content="display.help.resetRotation2d" pos="'right'"></popover>
+      </div>
+    </div>
   </div>
 
   <div ng-form="features">

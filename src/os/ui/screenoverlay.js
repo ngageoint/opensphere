@@ -65,7 +65,6 @@ os.ui.launchScreenOverlay = function(options) {
     'modal': false,
     'show-hide': !!options.showHide,
     'show-close': !!options.showClose,
-    'no-scroll': true,
     'overlay': true,
     'border': false
   };

@@ -117,8 +117,7 @@ plugin.track.launchConfirmTrack = function(confirm, cancel) {
     'max-width': 1200,
     'height': 'auto',
     'modal': 'true',
-    'show-close': 'false',
-    'no-scroll': 'true'
+    'show-close': 'false'
   };
 
   var template = '<confirm><confirmtrack></confirmtrack></confirm>';

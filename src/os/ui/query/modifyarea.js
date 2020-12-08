@@ -422,8 +422,7 @@ os.ui.query.launchModifyArea = function(config) {
       'y': 'center',
       'width': 400,
       'height': 'auto',
-      'show-close': true,
-      'no-scroll': true
+      'show-close': true
     };
 
     // the null defaults prevent the choosearea directive from picking a default value

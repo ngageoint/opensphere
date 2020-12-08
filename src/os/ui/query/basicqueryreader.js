@@ -84,6 +84,9 @@ os.ui.query.BasicQueryReader.prototype.parseEntries_ = function(ele) {
       var title = os.xml.unescape(ele.getAttribute('areanamehint') || ele.getAttribute('namehint') || 'New Area');
       area.set('title', title);
       area.set('description', os.xml.unescape(ele.getAttribute('description')));
+      if (ele.getAttribute('id')) {
+        area.setId(os.xml.unescape(ele.getAttribute('id')));
+      }
       area.set('shown', true);
       area.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.NONE);
       os.ui.areaManager.add(area);
@@ -108,6 +111,9 @@ os.ui.query.BasicQueryReader.prototype.parseEntries_ = function(ele) {
       var title = os.xml.unescape(ele.getAttribute('areanamehint') || ele.getAttribute('namehint') || 'New Area');
       excArea.set('title', title);
       excArea.set('description', os.xml.unescape(ele.getAttribute('description')));
+      if (ele.getAttribute('id')) {
+        excArea.setId(os.xml.unescape(ele.getAttribute('id')));
+      }
       excArea.set('shown', true);
       excArea.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.NONE);
       os.ui.areaManager.add(excArea);

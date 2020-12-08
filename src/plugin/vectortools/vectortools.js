@@ -313,7 +313,6 @@ plugin.vectortools.launchMergeWindow = function(sourceIds) {
   os.ui.window.create({
     'label': title,
     'icon': 'fa ' + plugin.vectortools.Icons.MERGE_ICON,
-    'no-scroll': 'true',
     'x': 'center',
     'y': 'center',
     'width': '400',
@@ -335,7 +334,6 @@ plugin.vectortools.launchJoinWindow = function(sourceIds) {
   os.ui.window.create({
     'label': title,
     'icon': 'fa ' + plugin.vectortools.Icons.JOIN_ICON,
-    'no-scroll': 'true',
     'x': 'center',
     'y': 'center',
     'width': '500',
