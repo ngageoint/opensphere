@@ -1,6 +1,8 @@
 goog.module('plugin.arc.node.ArcServiceNode');
 goog.module.declareLegacyNamespace();
 
+goog.require('goog.log.Logger');
+
 const ui = goog.require('os.ui');
 const log = goog.require('goog.log');
 const Request = goog.require('os.net.Request');
@@ -9,7 +11,6 @@ const LoadingNode = goog.require('os.ui.slick.LoadingNode');
 const ArcLayerDescriptor = goog.require('plugin.arc.layer.ArcLayerDescriptor');
 
 
-goog.require('goog.log.Logger');
 
 /**
  * Loads the capabilities from an Arc server and constructs the tree.
