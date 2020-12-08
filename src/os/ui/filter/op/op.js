@@ -15,10 +15,12 @@ goog.require('os.xsd.DataType');
  * @param {string=} opt_hint Hint text for the UI
  * @param {string=} opt_ui The UI rendered next to the op select
  * @param {boolean=} opt_noLiteral Whether to exclude the literal value
+ * @param {string=} opt_popoverTitle title for a popover, if wanted; default "Info"
+ * @param {string=} opt_popoverContent content for a popover, if wanted
  * @constructor
  */
 os.ui.filter.op.Op = function(localName, title, opt_shortTitle, opt_supportedTypes, opt_attributes, opt_hint, opt_ui,
-    opt_noLiteral) {
+    opt_noLiteral, opt_popoverTitle, opt_popoverContent) {
   /**
    * @type {string}
    * @protected
@@ -59,6 +61,16 @@ os.ui.filter.op.Op = function(localName, title, opt_shortTitle, opt_supportedTyp
    * @type {!string}
    */
   this['hint'] = opt_hint || '';
+
+  /**
+   * @type {!string}
+   */
+  this['popoverTitle'] = opt_popoverTitle || 'Info';
+
+  /**
+   * @type {?string}
+   */
+  this['popoverContent'] = opt_popoverContent;
 
   /**
    * String for matching the hint saved to the filter XML.
@@ -282,4 +294,22 @@ os.ui.filter.op.Op.prototype.validate = function(value, key) {
   }
 
   return false;
+};
+
+
+/**
+ * Text reused in several ops; to save on total the KB of the min file
+ * @enum {string}
+ * @const
+ */
+os.ui.filter.op.Op.TEXT = {
+  CASE_INSENSITIVE: '  (INFO: not case-sensitive)',
+  CASE_INSENSITIVE_DETAIL: '<strong>Case-insensitive</strong><sup>1</sup>, i.e. "A" == "a" and<br />' +
+  '<strong>Wildcard</strong> support, i.e. "a*" == "ab"<br /><br /><sup>1</sup>&nbsp;Typically, case' +
+  '-<i>in</i>sensitive text search is available for "like" filters. Some Data Providers may not support it.',
+  CASE_INSENSITIVE_TITLE: 'Additional Info',
+  CASE_SENSITIVE_DETAIL: '<strong>Case-sensitive</strong>, i.e. "A" != "a" and<br /><strong>Exact match</strong> ' +
+  'only, i.e. "ab" != "a"<br /><br />See "like" filters for wildcard "*" search as well as case-insensitivity.',
+  CASE_SENSITIVE_TITLE: 'Additional Info',
+  CASE_SENSITIVE: '  (INFO: case-sensitive)'
 };

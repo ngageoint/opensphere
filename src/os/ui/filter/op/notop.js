@@ -22,6 +22,16 @@ os.ui.filter.op.Not = function(op) {
    * @type {!string}
    */
   this['hint'] = op['hint'] || '';
+
+  /**
+   * @type {!string}
+   */
+  this['popoverTitle'] = op['popoverTitle'] || '';
+
+  /**
+   * @type {?string}
+   */
+  this['popoverContent'] = op['popoverContent'];
 };
 goog.inherits(os.ui.filter.op.Not, os.ui.filter.op.Op);
 

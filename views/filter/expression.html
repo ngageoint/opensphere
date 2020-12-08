@@ -6,6 +6,11 @@
     <span class="col-3">
       <select class="custom-select" ng-model="expr.op" ng-options="value.getTitle() for value in ops" required></select>
     </span>
-    <opuiswitch class="col-6" items="expr.op" directive-function="exprCtrl.getUi" generic="text" expr="expr"></opuiswitch>
+    <div class="col-6 row">
+      <opuiswitch class="col-11" items="expr.op" directive-function="exprCtrl.getUi" generic="text" expr="expr"></opuiswitch>
+      <span class="col-1">
+        <popover x-title="expr.op.popoverTitle" x-content="expr.op.popoverContent" x-pos="'right'" ng-if="expr.op.popoverContent"></popover>
+      </span>
+    </div>
 	</div>
 </div>
