@@ -1,6 +1,8 @@
 goog.module('os.ui.feature.tab.PropertiesTabUI');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.feature.featureInfoCellDirective');
+
 const ui = goog.require('os.ui');
 const osFeature = goog.require('os.feature');
 const settings = goog.require('os.config.Settings');
@@ -11,7 +13,6 @@ const Module = goog.require('os.ui.Module');
 const AbstractFeatureTabCtrl = goog.require('os.ui.feature.tab.AbstractFeatureTabCtrl');
 
 
-goog.require('os.ui.feature.featureInfoCellDirective');
 
 /**
  * The PropertiesTabDirective
