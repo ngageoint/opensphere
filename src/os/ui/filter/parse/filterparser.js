@@ -1,13 +1,14 @@
 goog.module('os.ui.filter.parse.FilterParser');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.filter');
+
 const dom = goog.require('goog.dom');
 const xml = goog.require('goog.dom.xml');
 const FilterEntry = goog.require('os.filter.FilterEntry');
 const IParser = goog.requireType('os.parse.IParser');
 
 
-goog.require('os.ui.filter');
 
 /**
  * Parses XML filter data to create filter entries.
