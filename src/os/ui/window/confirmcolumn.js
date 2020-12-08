@@ -1,9 +1,10 @@
-goog.provide('os.ui.window.ConfirmColumnCtrl');
-goog.provide('os.ui.window.confirmColumnDirective');
+goog.module('os.ui.window.ConfirmColumnUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
-goog.require('os.ui.window');
-goog.require('os.ui.window.ConfirmUI');
+const ui = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+const window = goog.require('os.ui.window');
+const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -11,45 +12,46 @@ goog.require('os.ui.window.ConfirmUI');
  *
  * @return {angular.Directive}
  */
-os.ui.window.confirmColumnDirective = function() {
-  return {
-    replace: true,
-    restrict: 'E',
-    templateUrl: os.ROOT + 'views/window/confirmcolumn.html',
-    controller: os.ui.window.ConfirmColumnCtrl,
-    controllerAs: 'confirm'
-  };
-};
-
+const directive = () => ({
+  replace: true,
+  restrict: 'E',
+  templateUrl: os.ROOT + 'views/window/confirmcolumn.html',
+  controller: Controller,
+  controllerAs: 'confirm'
+});
 
 /**
- * Add the directive to the os.ui module
+ * Add the directive to the ui module
  */
-os.ui.Module.directive('confirmcolumn', [os.ui.window.confirmColumnDirective]);
+Module.directive('confirmcolumn', [directive]);
 
 
 
 /**
  * Controller for the color confirmation window.
- *
- * @param {!angular.Scope} $scope
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.window.ConfirmColumnCtrl = function($scope) {
+class Controller {
   /**
-   * @type {os.data.ColumnDefinition}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @ngInject
    */
-  this['column'] = null;
+  constructor($scope) {
+    /**
+     * @type {os.data.ColumnDefinition}
+     */
+    this['column'] = null;
 
-  $scope.$watch('confirm.column', function(newVal, oldVal) {
-    if (newVal != oldVal) {
-      $scope.$parent['confirmValue'] = newVal;
-    }
-  });
+    $scope.$watch('confirm.column', function(newVal, oldVal) {
+      if (newVal != oldVal) {
+        $scope.$parent['confirmValue'] = newVal;
+      }
+    });
 
-  $scope.$emit(os.ui.WindowEventType.READY);
-};
+    $scope.$emit(ui.WindowEventType.READY);
+  }
+}
 
 
 /**
@@ -57,7 +59,7 @@ os.ui.window.ConfirmColumnCtrl = function($scope) {
  *
  * @param {!osx.window.ConfirmColumnOptions} options
  */
-os.ui.window.launchConfirmColumn = function(options) {
+window.launchConfirmColumn = function(options) {
   var scopeOptions = {
     'columns': options.columns,
     'prompt': options.prompt
@@ -67,11 +69,16 @@ os.ui.window.launchConfirmColumn = function(options) {
   windowOptions.label = windowOptions.label || 'Choose Column';
   windowOptions.height = 'auto';
 
-  os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+  ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
     confirm: options.confirm,
     confirmValue: options.defaultValue,
     cancel: options.cancel,
     prompt: '<confirmcolumn></confirmcolumn>',
     windowOptions: windowOptions
   }), scopeOptions);
+};
+
+exports = {
+  Controller,
+  directive
 };

@@ -1,57 +1,60 @@
-goog.provide('os.ui.window.ConfirmTextCtrl');
-goog.provide('os.ui.window.confirmTextDirective');
+goog.module('os.ui.window.ConfirmTextUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
+const ui = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+const window = goog.require('os.ui.window');
 goog.require('os.ui.util.validationMessageDirective');
-goog.require('os.ui.window');
-goog.require('os.ui.window.ConfirmUI');
 
+
+goog.require('os.ui.window.ConfirmUI');
 
 /**
  * Text confirmation dialog.
  *
  * @return {angular.Directive}
  */
-os.ui.window.confirmTextDirective = function() {
-  return {
-    restrict: 'E',
-    templateUrl: os.ROOT + 'views/window/confirmtext.html',
-    controller: os.ui.window.ConfirmTextCtrl,
-    controllerAs: 'confirmtext'
-  };
-};
-
+const directive = () => ({
+  restrict: 'E',
+  templateUrl: os.ROOT + 'views/window/confirmtext.html',
+  controller: Controller,
+  controllerAs: 'confirmtext'
+});
 
 /**
- * Add the directive to the os.ui module
+ * Add the directive to the ui module
  */
-os.ui.Module.directive('confirmtext', [os.ui.window.confirmTextDirective]);
+Module.directive('confirmtext', [directive]);
 
 
 
 /**
  * Controller for the text confirmation window.
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.window.ConfirmTextCtrl = function($scope, $element) {
-  if ($scope.$parent['select']) {
-    setTimeout(function() {
-      $element.find('[name="title"]').select();
-    }, 10);
-  }
-
-  $scope.$watch('confirmValue', function(newVal, oldVal) {
-    if (newVal != oldVal) {
-      $scope.$parent['confirmValue'] = newVal;
+class Controller {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    if ($scope.$parent['select']) {
+      setTimeout(function() {
+        $element.find('[name="title"]').select();
+      }, 10);
     }
-  });
 
-  $scope.$emit(os.ui.WindowEventType.READY);
-};
+    $scope.$watch('confirmValue', function(newVal, oldVal) {
+      if (newVal != oldVal) {
+        $scope.$parent['confirmValue'] = newVal;
+      }
+    });
+
+    $scope.$emit(ui.WindowEventType.READY);
+  }
+}
 
 
 /**
@@ -59,7 +62,7 @@ os.ui.window.ConfirmTextCtrl = function($scope, $element) {
  *
  * @param {osx.window.ConfirmTextOptions=} opt_options The window options
  */
-os.ui.window.launchConfirmText = function(opt_options) {
+window.launchConfirmText = function(opt_options) {
   var options = /** @type {!osx.window.ConfirmTextOptions} */ (opt_options || {});
   var scopeOptions = {
     'confirmCallback': options.confirm || goog.nullFunction,
@@ -98,5 +101,10 @@ os.ui.window.launchConfirmText = function(opt_options) {
   };
 
   var template = '<confirm><confirmtext></confirmtext></confirm>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+};
+
+exports = {
+  Controller,
+  directive
 };
