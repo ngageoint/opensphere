@@ -1,16 +1,12 @@
-goog.provide('plugin.arc.state.v2.arcstate');
+goog.module('plugin.arc.state.v2.arcstate');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.xml');
+const olXml = goog.require('ol.xml');
+const xml = goog.require('os.xml');
 goog.require('os.ogc.spatial');
+
+
 goog.require('os.state.v2.FilterTag');
-goog.require('os.xml');
-
-
-/**
- * @fileoverview This class provides a couple of Arc state pre/post processor functions to alter Arc tile layers for
- * compatibility with legacy applications.
- */
-
 
 /**
  * opensphere uses the `<layer type="arctile">` to directly fetch a layer config for LayerConfigManager. The load
@@ -19,13 +15,13 @@ goog.require('os.xml');
  *
  * @param {!Element} el
  */
-plugin.arc.state.v2.arcstate.load = function(el) {
+const load = function(el) {
   var wmsLayers = el.querySelectorAll('layer[type="wms"]');
   for (var i = 0, ii = wmsLayers.length; i < ii; i++) {
     var layer = wmsLayers[i];
     var providerEle = layer.querySelector('provider');
     if (providerEle) {
-      var content = ol.xml.getAllTextContent(providerEle, true).trim();
+      var content = olXml.getAllTextContent(providerEle, true).trim();
       if (content === 'ArcMap') {
         // we found an Arc layer, modify it to match what opensphere expects
         goog.dom.removeNode(providerEle);
@@ -35,7 +31,7 @@ plugin.arc.state.v2.arcstate.load = function(el) {
 
     var urlElement = layer.querySelector('url');
     if (urlElement) {
-      var url = ol.xml.getAllTextContent(urlElement, true).trim();
+      var url = olXml.getAllTextContent(urlElement, true).trim();
       if (goog.string.endsWith(url, '/export')) {
         // prune off the /export since OL3's TileArcGISRestSource doesn't like it
         var newUrl = url.substring(0, url.length - 7);
@@ -52,7 +48,6 @@ plugin.arc.state.v2.arcstate.load = function(el) {
   }
 };
 
-
 /**
  * In legacy apps, all tile layers are considered to be of type WMS, while the `<provider>` tag in the layer
  * determines what the actual type is (i.e. Arc vs. OGC WMS). The save function facilities this by changing
@@ -61,19 +56,19 @@ plugin.arc.state.v2.arcstate.load = function(el) {
  *
  * @param {!Element} el
  */
-plugin.arc.state.v2.arcstate.save = function(el) {
+const save = function(el) {
   var arcTileLayers = el.querySelectorAll('layer[type="' + plugin.arc.layer.ArcTileLayerConfig.ID + '"]');
   for (var i = 0, ii = arcTileLayers.length; i < ii; i++) {
     var layer = arcTileLayers[i];
     // change the type from arctile to wms
     layer.setAttribute('type', 'wms');
     // add the provider element with ArcMap for content
-    os.xml.appendElement('provider', layer, 'ArcMap');
+    xml.appendElement('provider', layer, 'ArcMap');
 
     // check whether the URL ends with /export
     var urlElement = layer.querySelector('url');
     if (urlElement) {
-      var url = ol.xml.getAllTextContent(urlElement, true).trim();
+      var url = olXml.getAllTextContent(urlElement, true).trim();
       if (!goog.string.endsWith(url, '/export')) {
         // add /export to the end since 2D expects that
         var newUrl = url + '/export';
@@ -88,4 +83,9 @@ plugin.arc.state.v2.arcstate.save = function(el) {
     var featureLayer = arcFeatureLayers[j];
     featureLayer.setAttribute('type', 'arc');
   }
+};
+
+exports = {
+  load,
+  save
 };
