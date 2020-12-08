@@ -130,8 +130,7 @@ os.ui.file.method.FileMethod.prototype.loadFile = function(opt_options) {
       'height': 'auto',
       'min-height': '225',
       'modal': 'true',
-      'show-close': 'true',
-      'no-scroll': 'true'
+      'show-close': 'true'
     };
     var template = '<fileimport></fileimport>';
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);

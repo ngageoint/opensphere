@@ -99,8 +99,7 @@ class OGCQuery {
         'width': '300',
         'height': 'auto',
         'modal': 'true',
-        'show-close': 'true',
-        'no-scroll': 'true'
+        'show-close': 'true'
       }
     }));
   }

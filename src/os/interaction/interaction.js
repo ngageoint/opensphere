@@ -9,6 +9,14 @@ goog.requireType('ol.render.Feature');
 
 
 /**
+ * Rotation delta, in radians.
+ * @type {number}
+ * @const
+ */
+os.interaction.ROTATE_DELTA = Math.PI / 60;
+
+
+/**
  * Feature hit detection callback.
  *
  * @param {(ol.Feature|ol.render.Feature)} feature The feature

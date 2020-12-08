@@ -68,8 +68,7 @@ plugin.file.csv.ui.CSVImportUI.prototype.launchUI = function(file, opt_config) {
     'min-height': '500',
     'max-height': '2000',
     'modal': true,
-    'show-close': true,
-    'no-scroll': true
+    'show-close': true
   };
   var template = '<csvimport resize-with="' + os.ui.windowSelector.WINDOW + '"></csvimport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);

@@ -346,7 +346,6 @@ osx.window;
  *   icon: (string|undefined),
  *   modal: (boolean|undefined),
  *   showClose: (boolean|undefined),
- *   noScroll: (boolean|undefined),
  *   string: (string|undefined),
  *
  *   height: (string|number|undefined),

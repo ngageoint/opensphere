@@ -42,7 +42,6 @@ os.ui.text.copy = function(text, opt_msg) {
         'y': 'center',
         'label': 'Copy',
         'show-close': true,
-        'no-scroll': true,
         'min-width': 200,
         'min-height': 90,
         'max-width': 1000,

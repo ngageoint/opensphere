@@ -5,6 +5,7 @@ goog.require('ol.ViewHint');
 goog.require('ol.control.MousePosition');
 goog.require('ol.coordinate');
 goog.require('os.bearing');
+goog.require('os.config.DisplaySettings');
 goog.require('os.config.Settings');
 goog.require('os.geo');
 goog.require('os.ui.location');
@@ -89,7 +90,7 @@ os.ol.control.MousePosition.LON_LAT_FORMAT = function(coordinate) {
     lat = '+' + lat;
   }
 
-  return lat + ', ' + lon + ' (DD)';
+  return lat + ', ' + lon + ' (DD)' + os.ol.control.MousePosition.elevation(coordinate);
 };
 
 
@@ -98,7 +99,7 @@ os.ol.control.MousePosition.LON_LAT_FORMAT = function(coordinate) {
  * @return {string}
  */
 os.ol.control.MousePosition.MGRS_FORMAT = function(coordinate) {
-  return osasm.toMGRS(coordinate) + ' (MGRS)';
+  return osasm.toMGRS(coordinate) + ' (MGRS)' + os.ol.control.MousePosition.elevation(coordinate);
 };
 
 
@@ -110,7 +111,7 @@ os.ol.control.MousePosition.SEXAGESIMAL_FORMAT = function(coordinate) {
   return (os.geo.toSexagesimal(coordinate[1], false, false) + ' ' +
     os.geo.toSexagesimal(
         os.geo2.normalizeLongitude(coordinate[0], undefined, undefined, os.proj.EPSG4326),
-        true, false) + ' (DMS)').replace(/°/g, '&deg;');
+        true, false) + ' (DMS)').replace(/°/g, '&deg;') + os.ol.control.MousePosition.elevation(coordinate);
 };
 
 
@@ -123,9 +124,23 @@ os.ol.control.MousePosition.DDM = function(coordinate) {
     os.geo.toDegreesDecimalMinutes(
         os.geo2.normalizeLongitude(coordinate[0], undefined, undefined, os.proj.EPSG4326),
         true, false) + ' (DDM)')
-      .replace(/°/g, '&deg;');
+      .replace(/°/g, '&deg;') + os.ol.control.MousePosition.elevation(coordinate);
 };
 
+/**
+ * If coordinate has elevation, it will add the elevation to the coordinate string.
+ * @param {ol.Coordinate} coordinate The coordinate.
+ * @return {string} The coordinate string with elevation appended to it if available.
+ */
+os.ol.control.MousePosition.elevation = function(coordinate) {
+  let coordString = '';
+  if (coordinate && coordinate.length > 2 && os.settings.get(os.config.DisplaySetting.ENABLE_TERRAIN)) {
+    const um = os.unit.UnitManager.getInstance();
+    const elevation = um.formatToBestFit('distance', coordinate[2], 'm', um.getBaseSystem(), 2);
+    coordString = ' ' + elevation;
+  }
+  return coordString;
+};
 
 /**
  * @type {!Object<string, ol.CoordinateFormatType>}

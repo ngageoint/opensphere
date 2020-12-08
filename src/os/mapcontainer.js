@@ -872,6 +872,11 @@ os.MapContainer.prototype.addHelpControls_ = function() {
     'or', os.ui.help.Controls.FONT.RIGHT,
     'or', os.ui.help.Controls.FONT.UP,
     'or', os.ui.help.Controls.FONT.DOWN]);
+  controls.addControl(moveGrp, 2, 'Rotate View',
+      null, [os.ui.help.Controls.MOUSE.MIDDLE_MOUSE, 'or', os.ui.help.Controls.MOUSE.RIGHT_MOUSE, '+',
+        os.ui.help.Controls.FONT.HORIZONTAL]);
+  controls.addControl(moveGrp, 2, 'Rotate View',
+      [goog.events.KeyCodes.SHIFT, '+'], [os.ui.help.Controls.FONT.LEFT, 'or', os.ui.help.Controls.FONT.RIGHT]);
 
   // Zoom
   controls.addControl(zoomGrp, 3, 'Zoom to Box',
@@ -1206,7 +1211,7 @@ os.MapContainer.prototype.persistCameraState = function() {
   return /** @type {!osx.map.CameraState} */ ({
     center: center,
     altitude: altitude,
-    heading: rotation,
+    heading: -rotation,
     roll: 0,
     tilt: 0,
     zoom: zoom
@@ -1271,7 +1276,7 @@ os.MapContainer.prototype.restoreCameraStateInternal_ = function(cameraState) {
     // camera state is saved in EPSG:4326
     var center = ol.proj.fromLonLat(cameraState.center, os.map.PROJECTION);
     view.setCenter(center);
-    view.setRotation(goog.math.toRadians(cameraState.heading));
+    view.setRotation(goog.math.toRadians(-cameraState.heading));
     view.setZoom(zoom);
   } catch (e) {
     goog.log.error(os.MapContainer.LOGGER_, 'Error restoring camera state:', e);
@@ -1368,16 +1373,28 @@ os.MapContainer.prototype.setWebGLEnabled = function(enabled, opt_silent) {
     this.setWebGLEnabled_(enabled);
 
     if (!enabled) {
-      // in 2D mode, always put north toward the top of the screen. this *must* be called after setWebGLEnabled_ above
-      // or the camera synchronizer will make the rotation something very close to 0, but not 0. this causes the canvas
-      // renderer to go down a less performant code path.
+      //
+      // The OpenLayers canvas renderer goes down a less optimal path when rotation is non-zero. Resetting to 0 when
+      // switching to 2D may be desirable for performance reasons, but preserving the view is the preferred default
+      // behavior.
+      //
+      // Change this value to true in admin/user settings to reset rotation when switching to 2D.
+      //
       // @see {@link ol.renderer.canvas.Layer#composeFrame}
-      this.resetRotation();
+      //
+      const resetRotation = os.settings.get(os.config.DisplaySetting.RESET_ROTATION_2D, false);
+      if (resetRotation) {
+        this.resetRotation();
+      }
+
+      // Use the default fly to features behavior.
       os.feature.flyToOverride = undefined;
     } else {
       // reset all synchronizers to a clean state. this needs to be called after WebGL is enabled/rendering to ensure
       // synchronized objects are reset in the correct state.
       this.webGLRenderer_.resetSync();
+
+      // Use the WebGL renderer when flying to feature for a more accurate 3D view.
       os.feature.flyToOverride = this.webGLRenderer_.flyToFeatures.bind(this.webGLRenderer_);
     }
 

@@ -76,8 +76,7 @@ os.ui.im.launchURLExists = function(url, current, confirm) {
       'width': 450,
       'height': 'auto',
       'modal': true,
-      'show-close': true,
-      'no-scroll': true
+      'show-close': true
     }
   });
 

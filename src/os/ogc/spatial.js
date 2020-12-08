@@ -99,17 +99,21 @@ os.ogc.spatial.formatCoords = function(coords, opt_separator) {
  * @param {string} column The BBOX column
  * @param {string=} opt_name The namehint for the BBOX
  * @param {string=} opt_description The description for the BBOX
+ * @param {string=} opt_id The id for the BBOX
  * @return {string}
  *
  * @todo KML support?
  */
-os.ogc.spatial.formatExtent = function(extent, column, opt_name, opt_description) {
+os.ogc.spatial.formatExtent = function(extent, column, opt_name, opt_description, opt_id) {
   var bbox = '<BBOX';
   if (opt_name) {
     bbox += ' areanamehint="' + opt_name + '"';
   }
   if (opt_description) {
     bbox += ' description="' + opt_description + '"';
+  }
+  if (opt_id) {
+    bbox += ' id="' + opt_id + '"';
   }
   bbox += '>';
   return bbox + '<PropertyName>' + column + '</PropertyName><gml:Envelope srsName="CRS:84">' +
@@ -126,9 +130,10 @@ os.ogc.spatial.formatExtent = function(extent, column, opt_name, opt_description
  * @param {string=} opt_column The column name
  * @param {string=} opt_name The namehint
  * @param {string=} opt_description The description
+ * @param {string=} opt_id The id
  * @return {?string} The serialized polygon, or null if the geometry is not supported
  */
-os.ogc.spatial.formatGMLIntersection = function(geom, opt_column, opt_name, opt_description) {
+os.ogc.spatial.formatGMLIntersection = function(geom, opt_column, opt_name, opt_description, opt_id) {
   os.interpolate.interpolateGeom(geom);
 
   var parts = [];
@@ -141,6 +146,9 @@ os.ogc.spatial.formatGMLIntersection = function(geom, opt_column, opt_name, opt_
     }
     if (opt_description) {
       parts.push(' description="' + opt_description + '"');
+    }
+    if (opt_id) {
+      parts.push(' id="' + opt_id + '"');
     }
 
     parts.push('>', '<PropertyName>', (opt_column || 'none'), '</PropertyName>', formattedPolygon, '</Intersects>');

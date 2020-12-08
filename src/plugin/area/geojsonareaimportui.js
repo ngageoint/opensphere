@@ -64,8 +64,7 @@ plugin.area.GeoJSONAreaImportUI.prototype.launchUI = function(file, opt_config) 
     'min-height': '300',
     'max-height': '1000',
     'modal': 'true',
-    'show-close': 'true',
-    'no-scroll': 'true'
+    'show-close': 'true'
   };
   var template = '<geojsonareaimport resize-with="' + os.ui.windowSelector.WINDOW + '"></geojsonareaimport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
