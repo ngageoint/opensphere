@@ -1,12 +1,13 @@
 goog.module('os.ui.ogc.wms.AbstractWMSLayerParser');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.ogc.IOGCDescriptor');
+
 const ui = goog.require('os.ui');
 const IWMSLayer = goog.requireType('os.ui.ogc.wms.IWMSLayer');
 const IWMSLayerParser = goog.requireType('os.ui.ogc.wms.IWMSLayerParser');
 
 
-goog.require('os.ui.ogc.IOGCDescriptor');
 
 /**
  * @abstract
