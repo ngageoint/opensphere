@@ -1,26 +1,30 @@
-goog.provide('plugin.arc.query.ArcFilterModifier');
-goog.require('os.net.ParamModifier');
+goog.module('plugin.arc.query.ArcFilterModifier');
+goog.module.declareLegacyNamespace();
 
-
-
-/**
- * @extends {os.net.ParamModifier}
- * @constructor
- */
-plugin.arc.query.ArcFilterModifier = function() {
-  plugin.arc.query.ArcFilterModifier.base(this, 'constructor', 'ArcFilter', 'where', '', '', 100);
-};
-goog.inherits(plugin.arc.query.ArcFilterModifier, os.net.ParamModifier);
+const ParamModifier = goog.require('os.net.ParamModifier');
 
 
 /**
- * @inheritDoc
  */
-plugin.arc.query.ArcFilterModifier.prototype.modify = function(uri) {
-  var replacement = this.getReplacement();
-  if (replacement) {
-    uri.getQueryData().set('where', replacement);
-  } else {
-    uri.getQueryData().remove('where');
+class ArcFilterModifier extends ParamModifier {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super('ArcFilter', 'where', '', '', 100);
   }
-};
+
+  /**
+   * @inheritDoc
+   */
+  modify(uri) {
+    var replacement = this.getReplacement();
+    if (replacement) {
+      uri.getQueryData().set('where', replacement);
+    } else {
+      uri.getQueryData().remove('where');
+    }
+  }
+}
+
+exports = ArcFilterModifier;

@@ -1,18 +1,24 @@
-goog.provide('plugin.arc.query.ArcTemporalFormatter');
-goog.require('os.query.ITemporalFormatter');
+goog.module('plugin.arc.query.ArcTemporalFormatter');
+goog.module.declareLegacyNamespace();
 
-
-
-/**
- * @implements {os.query.ITemporalFormatter}
- * @constructor
- */
-plugin.arc.query.ArcTemporalFormatter = function() {};
+const ITemporalFormatter = goog.requireType('os.query.ITemporalFormatter');
 
 
 /**
- * @inheritDoc
+ * @implements {ITemporalFormatter}
  */
-plugin.arc.query.ArcTemporalFormatter.prototype.format = function(controller) {
-  return controller.getStart() + ', ' + controller.getEnd();
-};
+class ArcTemporalFormatter {
+  /**
+   * Constructor.
+   */
+  constructor() {}
+
+  /**
+   * @inheritDoc
+   */
+  format(controller) {
+    return controller.getStart() + ', ' + controller.getEnd();
+  }
+}
+
+exports = ArcTemporalFormatter;
