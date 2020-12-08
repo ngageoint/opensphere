@@ -1,12 +1,13 @@
 goog.module('plugin.arc.state.v2.arcstate');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ogc.spatial');
+goog.require('os.state.v2.FilterTag');
+
 const olXml = goog.require('ol.xml');
 const xml = goog.require('os.xml');
-goog.require('os.ogc.spatial');
 
 
-goog.require('os.state.v2.FilterTag');
 
 /**
  * opensphere uses the `<layer type="arctile">` to directly fetch a layer config for LayerConfigManager. The load
