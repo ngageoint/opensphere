@@ -1,13 +1,14 @@
 goog.module('os.ui.window.ConfirmTextUI');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.util.validationMessageDirective');
+goog.require('os.ui.window.ConfirmUI');
+
 const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const window = goog.require('os.ui.window');
-goog.require('os.ui.util.validationMessageDirective');
 
 
-goog.require('os.ui.window.ConfirmUI');
 
 /**
  * Text confirmation dialog.

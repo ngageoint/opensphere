@@ -1,12 +1,13 @@
 goog.module('os.ui.window.ConfirmColorUI');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.color.colorPickerDirective');
+
 const Module = goog.require('os.ui.Module');
 const window = goog.require('os.ui.window');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 
-goog.require('os.ui.color.colorPickerDirective');
 
 /**
  * Color confirmation dialog.
