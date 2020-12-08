@@ -1,11 +1,12 @@
 goog.module('os.im.action.cmd.AbstractFilterAction');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.query.cmd.QueryEntries');
+
 const State = goog.require('os.command.State');
 const ICommand = goog.requireType('os.command.ICommand');
 
 
-goog.require('os.ui.query.cmd.QueryEntries');
 
 /**
  * Abstract command for adding/removing filter actions.
