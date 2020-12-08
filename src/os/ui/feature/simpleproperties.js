@@ -10,7 +10,6 @@ const OsSettings = goog.require('os.config.Settings');
 const Feature = goog.requireType('ol.Feature');
 
 
-
 /**
  * @type {!string}
  * @const
@@ -43,15 +42,18 @@ const getProperties_ = (() => {
 
   /**
    * get the desired columns from config
-   * @type {Object<string, Array<string>>}
+   * @type {Object<string, osx.feature.SimplePropertyOptions>}
    */
   let config_ = null;
 
-  // lookup array of columns/fields by source
+  // lookup array of fields by source
   const lookup_ = {};
 
-  // lookup column/field by config key
+  // lookup field by config key
   const best_ = {};
+
+  // lookup default by config key OR field
+  const default_ = {};
 
   /**
    * Get the best field for this key
@@ -63,7 +65,7 @@ const getProperties_ = (() => {
   const best = function(key, regexes, fields) {
     // prefer exact match
     let field = fields.find((f) => {
-      return f && f.toLocaleLowerCase().localeCompare(key.toLocaleLowerCase()) == 0; // case insensitive
+      return !!f && f.toLocaleLowerCase().localeCompare(key.toLocaleLowerCase()) == 0; // case insensitive
     });
     if (!field && regexes && regexes.length > 0) {
       // regex match
@@ -84,7 +86,7 @@ const getProperties_ = (() => {
     var properties = [];
 
     if (!initialized_) {
-      config_ = /** @type {Object<string, Array<string>>} */ (OsSettings.getInstance()
+      config_ = /** @type {Object<string, osx.feature.SimplePropertyOptions>} */ (OsSettings.getInstance()
           .get(SIMPLE_PROPERTIES_COLUMNS_KEY)
       );
       initialized_ = true;
@@ -99,20 +101,32 @@ const getProperties_ = (() => {
 
         // for each config, get the column and build the property
         const map = Object.entries(config_);
-        for ([key, regexes] of map) {
+        for (let [key, options] of map) {
+          // help out the compiler
+          key = /** @type {string} */ (key);
+          options = /** @type {osx.feature.SimplePropertyOptions} */ (options);
+
           // get the field for this key
           let field = null;
           if (best_[key] && feature.get(best_[key])) {
             field = best_[key];
           } else {
+            const regexes = (options) ? options['regexes'] : null;
             const featureFields = (source)
               ? source.getColumns().map((c) => c['field']) // for source, reuse the column definition
               : Object.keys(feature.getProperties()); // for non-source, map the individual feature
             field = best(key, regexes, featureFields);
           }
 
+          // even if the field can't be found, add an entry when there's a default
+          if (options && options['default']) {
+            if (!field) fields.push(key);
+            default_[field || key] = options['default'];
+          }
+
+          // return the mapping
           if (field) {
-            best_[key] = field; // save it for next time, i.e. "ALT" >> "Altitude (m)"
+            best_[key] = field; // save for reuse, e.g. "ALT" >> "Altitude (m)"
             fields.push(field);
           }
         }
@@ -128,7 +142,7 @@ const getProperties_ = (() => {
           properties.push({
             'id': field,
             'field': field,
-            'value': feature.get(field)
+            'value': feature.get(field) || default_[field]
           });
         });
       }
