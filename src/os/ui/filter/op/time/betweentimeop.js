@@ -1,11 +1,12 @@
 goog.module('os.ui.filter.op.time.Between');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.filter.op.time.betweenTimeDirective');
+
 const ui = goog.require('os.ui');
 const Op = goog.require('os.ui.filter.op.Op');
 
 
-goog.require('os.ui.filter.op.time.betweenTimeDirective');
 
 /**
  * Operator for times between a start and an end.

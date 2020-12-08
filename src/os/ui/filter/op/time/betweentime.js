@@ -1,12 +1,13 @@
 goog.module('os.ui.filter.op.time.BetweenTimeUI');
 goog.module.declareLegacyNamespace();
 
-const Module = goog.require('os.ui.Module');
 goog.require('os.ui.datetime.durationDirective');
 goog.require('os.ui.filter.colTypeCheckValidation');
-
-
 goog.require('os.ui.popover.popoverDirective');
+
+const Module = goog.require('os.ui.Module');
+
+
 
 /**
  * The between time directive

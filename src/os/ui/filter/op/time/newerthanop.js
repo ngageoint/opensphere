@@ -1,12 +1,13 @@
 goog.module('os.ui.filter.op.time.NewerThan');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.filter.op.time.newerOlderThanDirective');
+goog.require('os.ui.filter.string');
+
 const googString = goog.require('goog.string');
 const Op = goog.require('os.ui.filter.op.Op');
-goog.require('os.ui.filter.op.time.newerOlderThanDirective');
 
 
-goog.require('os.ui.filter.string');
 
 /**
  * Operator for times newer than a set value.
