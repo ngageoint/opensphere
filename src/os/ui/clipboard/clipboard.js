@@ -1,4 +1,5 @@
-goog.provide('os.ui.clipboard');
+goog.module('os.ui.clipboard');
+goog.module.declareLegacyNamespace();
 
 
 /**
@@ -8,7 +9,7 @@ goog.provide('os.ui.clipboard');
  * @param {string=} opt_type The type of data to retrieve, defaults to 'text'
  * @return {?string} The data or null if not available
  */
-os.ui.clipboard.getData = function(event, opt_type) {
+const getData = function(event, opt_type) {
   var type = opt_type || 'text';
   var result = null;
   if (event && event.clipboardData) {
@@ -17,4 +18,8 @@ os.ui.clipboard.getData = function(event, opt_type) {
     result = window.clipboardData.getData(type);
   }
   return result !== undefined ? result : null;
+};
+
+exports = {
+  getData
 };
