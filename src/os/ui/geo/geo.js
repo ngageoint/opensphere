@@ -1,7 +1,10 @@
-goog.provide('os.ui.geo.geoDirective');
-goog.require('os.geo');
-goog.require('os.ui.Module');
-goog.require('os.ui.geo.mgrs');
+goog.module('os.ui.geo.geoDirective');
+goog.module.declareLegacyNamespace();
+
+const geo = goog.require('os.geo');
+const ui = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+const mgrs = goog.require('os.ui.geo.mgrs');
 
 
 /**
@@ -9,12 +12,10 @@ goog.require('os.ui.geo.mgrs');
  *
  * @return {angular.Directive}
  */
-os.ui.geo.geoDirective = function() {
-  return {
-    require: 'ngModel',
-    link: os.ui.geo.geoLinkFn
-  };
-};
+const directive = () => ({
+  require: 'ngModel',
+  link: ui.geo.geoLinkFn
+});
 
 
 /**
@@ -25,10 +26,10 @@ os.ui.geo.geoDirective = function() {
  * @param {Object} attrs Directive attributes
  * @param {!angular.NgModelController} ctrl The model controller
  */
-os.ui.geo.geoLinkFn = function(scope, elm, attrs, ctrl) {
+ui.geo.geoLinkFn = function(scope, elm, attrs, ctrl) {
   var validate = function(val) {
     var origText = val;
-    var result = os.geo.parseLatLon(val);
+    var result = geo.parseLatLon(val);
     if (result != null && Math.abs(result.lat) > 90) {
       // If the result isnt in range, set it to null to invalidate form
       result = null;
@@ -38,7 +39,7 @@ os.ui.geo.geoLinkFn = function(scope, elm, attrs, ctrl) {
       valid = true;
     } else {
       try {
-        var m = os.ui.geo.mgrs(val);
+        var m = mgrs(val);
         valid = goog.isArray(m) && m.length === 2;
       } catch (e) {
         valid = false;
@@ -71,4 +72,5 @@ os.ui.geo.geoLinkFn = function(scope, elm, attrs, ctrl) {
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('geo', [os.ui.geo.geoDirective]);
+Module.directive('geo', [directive]);
+exports = directive;

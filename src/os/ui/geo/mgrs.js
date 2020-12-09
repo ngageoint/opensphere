@@ -3,6 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const {MGRS_REGEXP} = goog.require('os.geo');
 
+
 /**
  * @param {string} text
  * @return {ol.Coordinate|undefined}
