@@ -1,17 +1,19 @@
-goog.provide('os.ogc.wps');
+goog.module('os.ogc.wps');
+goog.module.declareLegacyNamespace();
 
 goog.require('os.net.VariableReplacer');
 goog.require('os.time');
 goog.require('os.time.TimeRange');
 goog.require('os.time.TimeRangePresets');
-goog.require('os.time.TimelineController');
 
+
+goog.require('os.time.TimelineController');
 
 /**
  * WPS parameter names
  * @enum {string}
  */
-os.ogc.wps.WPSParams = {
+const WPSParams = {
   AREA: 'area',
   AREA_NAMES: 'areanames',
   DATA: 'data',
@@ -25,7 +27,6 @@ os.ogc.wps.WPSParams = {
   ROOT_NAME: 'exposedWpsProcesses'
 };
 
-
 /**
  * This method preserves the parameter capitalization since some OGC servers do not implement the OGC spec and use
  * case-sensitive parameters.
@@ -35,7 +36,7 @@ os.ogc.wps.WPSParams = {
  * @param {*} value The value
  * @param {boolean=} opt_replace If an existing param should be replaced. Defaults to true.
  */
-os.ogc.wps.setParam = function(params, key, value, opt_replace) {
+const setParam = function(params, key, value, opt_replace) {
   var replace = opt_replace != null ? opt_replace : true;
   var lcKey = key.toLowerCase();
   var keys = params.getKeys();
@@ -52,4 +53,9 @@ os.ogc.wps.setParam = function(params, key, value, opt_replace) {
   } else if (!foundKey) {
     params.set(key, value);
   }
+};
+
+exports = {
+  WPSParams,
+  setParam
 };
