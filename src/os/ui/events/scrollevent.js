@@ -1,45 +1,47 @@
-goog.provide('os.ui.events.ScrollEvent');
-goog.require('goog.events.Event');
+goog.module('os.ui.events.ScrollEvent');
+goog.module.declareLegacyNamespace();
 
+const Event = goog.require('goog.events.Event');
 
 
 /**
  * Event that carries a selector to tell a section to scroll.
- *
- * @param {string} selector The selector to scroll to
- * @param {string=} opt_focus Optional element to focus
- * @extends {goog.events.Event}
- * @constructor
  */
-os.ui.events.ScrollEvent = function(selector, opt_focus) {
-  os.ui.events.ScrollEvent.base(this, 'constructor', 'scrollto');
+class ScrollEvent extends Event {
+  /**
+   * Constructor.
+   * @param {string} selector The selector to scroll to
+   * @param {string=} opt_focus Optional element to focus
+   */
+  constructor(selector, opt_focus) {
+    super('scrollto');
+
+    /**
+     * @type {string}
+     * @private
+     */
+    this.selector_ = selector;
+
+    /**
+     * @type {string|undefined}
+     * @private
+     */
+    this.focus_ = opt_focus;
+  }
 
   /**
-   * @type {string}
-   * @private
+   * @return {string}
    */
-  this.selector_ = selector;
+  getSelector() {
+    return this.selector_;
+  }
 
   /**
-   * @type {string|undefined}
-   * @private
+   * @return {string|undefined}
    */
-  this.focus_ = opt_focus;
-};
-goog.inherits(os.ui.events.ScrollEvent, goog.events.Event);
+  getFocus() {
+    return this.focus_;
+  }
+}
 
-
-/**
- * @return {string}
- */
-os.ui.events.ScrollEvent.prototype.getSelector = function() {
-  return this.selector_;
-};
-
-
-/**
- * @return {string|undefined}
- */
-os.ui.events.ScrollEvent.prototype.getFocus = function() {
-  return this.focus_;
-};
+exports = ScrollEvent;
