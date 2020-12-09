@@ -1,52 +1,43 @@
-goog.provide('os.data.event.DataEvent');
-goog.provide('os.data.event.DataEventType');
+goog.module('os.data.event.DataEvent');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.Event');
+const Event = goog.require('goog.events.Event');
 
 goog.requireType('os.filter.IFilter');
+
+
 goog.requireType('os.source.ISource');
 
 
 /**
- * @enum {string}
- */
-os.data.event.DataEventType = {
-  SOURCE_ADDED: 'dataSourceAdded',
-  SOURCE_REMOVED: 'dataSourceRemoved',
-  SOURCE_REMOVED_NO_DESTROY: 'dataSourceRemovedNotDestroyed',
-  FILTERS_CHANGED: 'filtersChanged',
-  DATA_ADDED: 'dataAdded',
-  DATA_REMOVED: 'dataRemoved',
-  MAX_FEATURES: 'maxFeatures'
-};
-
-
-
-/**
- * @param {string} type
- * @param {os.source.ISource} source
- * @param {os.filter.IFilter=} opt_filter
- * @param {Array.<T>=} opt_items
- * @extends {goog.events.Event}
- * @constructor
  * @template T
  */
-os.data.event.DataEvent = function(type, source, opt_filter, opt_items) {
-  os.data.event.DataEvent.base(this, 'constructor', type);
-
+class DataEvent extends Event {
   /**
-   * @type {os.source.ISource}
+   * Constructor.
+   * @param {string} type
+   * @param {os.source.ISource} source
+   * @param {os.filter.IFilter=} opt_filter
+   * @param {Array.<T>=} opt_items
    */
-  this.source = source;
+  constructor(type, source, opt_filter, opt_items) {
+    super(type);
 
-  /**
-   * @type {?os.filter.IFilter}
-   */
-  this.filter = opt_filter || null;
+    /**
+     * @type {os.source.ISource}
+     */
+    this.source = source;
 
-  /**
-   * @type {?Array.<T>}
-   */
-  this.items = opt_items || null;
-};
-goog.inherits(os.data.event.DataEvent, goog.events.Event);
+    /**
+     * @type {?os.filter.IFilter}
+     */
+    this.filter = opt_filter || null;
+
+    /**
+     * @type {?Array.<T>}
+     */
+    this.items = opt_items || null;
+  }
+}
+
+exports = DataEvent;
