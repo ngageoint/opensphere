@@ -3,16 +3,6 @@ goog.require('os.file.mime.mock');
 goog.require('os.file.mime.text');
 
 describe('os.file.mime.text', function() {
-  it('should not detect files that are not text files', function() {
-    os.file.mime.mock.testFiles([
-      '/base/test/resources/zip/test.zip',
-      '/base/test/resources/zip/test.kmz',
-      '/base/test/resources/bin/rand.bin'],
-        function(buffer, file) {
-          expect(os.file.mime.text.getText(buffer)).toBeFalsy();
-        });
-  });
-
   it('should detect files that are text files', function() {
     os.file.mime.mock.testFiles([
       '/base/test/plugin/file/geojson/10k.json',

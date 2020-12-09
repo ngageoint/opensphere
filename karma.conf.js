@@ -28,9 +28,8 @@ module.exports = function(config) {
       {pattern: '.build/modernizr.js', watched: false, included: true, served: true},
       {pattern: '.build/xml-lexer.min.js', watched: false, included: true, served: true},
       {pattern: '.build/webgl-mock.min.js', watched: false, included: true, served: true},
-      {pattern: resolver.resolveModulePath('opensphere-asm/dist/os-wasm.*', __dirname), watched: false, included: false, served: true},
-      {pattern: resolver.resolveModulePath('opensphere-asm/dist/os-asm.*', __dirname), watched: false, included: false, served: true},
       {pattern: resolver.resolveModulePath('opensphere-asm/dist/os-load.js', __dirname), watched: false, included: true, served: true},
+      {pattern: resolver.resolveModulePath('opensphere-asm/dist/*', __dirname), watched: false, included: false, served: true},
       {pattern: resolver.resolveModulePath('jquery/dist/jquery.min.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('angular/angular.min.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('angular-animate/angular-animate.js', __dirname), watched: false, included: true, served: true},
@@ -51,7 +50,8 @@ module.exports = function(config) {
       {pattern: 'vendor/geomag/cof2Obj.js', watched: false, included: true, served: true},
       {pattern: 'vendor/geomag/geomag.js', watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('css-element-queries/src/ResizeSensor.js'), watched: false, included: true, served: true},
-      {pattern: resolver.resolveModulePath('jschardet/dist/jschardet.min.js'), watched: false, included: true, served: true},
+      {pattern: resolver.resolveModulePath('chardetng-wasm/dist/es5/chardetng.es5.min.js'), watched: false, included: true, served: true},
+      {pattern: resolver.resolveModulePath('chardetng-wasm/dist/es5/*'), watched: false, included: false, served: true},
       {pattern: resolver.resolveModulePath('oboe/dist/oboe-browser.min.js'), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('lolex/lolex.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('zip-js/WebContent/zip.js', __dirname), watched: false, included: true, served: true},
@@ -87,6 +87,10 @@ module.exports = function(config) {
       {pattern: '.build/gcc-test-manifest', watched: false, included: false, served: true},
       resolver.resolveModulePath('opensphere-build-index/karma-test-loader.js', __dirname)
     ],
+
+    mime: {
+      'application/wasm': ['wasm']
+    },
 
     proxies: {
       // the test loader uses this path to resolve the manifest
