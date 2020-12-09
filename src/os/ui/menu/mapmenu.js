@@ -49,7 +49,7 @@ os.ui.menu.map.GroupLabel = {
  * Set up the menu
  */
 os.ui.menu.map.setup = function() {
-  if (os.ui.menu.MAP) {
+  if (os.ui.menu.map.MENU) {
     // already created
     return;
   }
@@ -143,7 +143,7 @@ os.ui.menu.map.setup = function() {
  * Disposes map menu
  */
 os.ui.menu.map.dispose = function() {
-  goog.dispose(os.ui.menu.MAP);
+  goog.dispose(os.ui.menu.map.MENU);
   os.ui.menu.MAP = os.ui.menu.map.MENU = undefined;
 };
 
