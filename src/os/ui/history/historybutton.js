@@ -1,11 +1,12 @@
 goog.module('os.ui.history.HistoryButtonUI');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.historyDirective');
+
 const MenuButtonCtrl = goog.require('os.ui.MenuButtonCtrl');
 const Module = goog.require('os.ui.Module');
 
 
-goog.require('os.ui.historyDirective');
 
 /**
  * The alert button directive
