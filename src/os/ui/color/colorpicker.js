@@ -1,14 +1,14 @@
 goog.module('os.ui.color.ColorPickerUI');
 goog.module.declareLegacyNamespace();
 
+goog.require('goog.events.EventType');
+goog.require('os.ui.color.colorPaletteDirective');
+
 const ui = goog.require('os.ui');
 const osColor = goog.require('os.color');
 const Module = goog.require('os.ui.Module');
 const ColorPaletteCtrl = goog.require('os.ui.color.ColorPaletteCtrl');
-goog.require('goog.events.EventType');
 
-
-goog.require('os.ui.color.colorPaletteDirective');
 
 
 /**
