@@ -1,11 +1,15 @@
 /**
  * @fileoverview This file explicitly contains a set of mixins for the OL3 canvas renderer.
  */
-goog.provide('os.ol.mixin.render');
+goog.module('os.ol.mixin.render');
 
-goog.require('ol.render.canvas.PolygonReplay');
+goog.module.declareLegacyNamespace();
+
+const PolygonReplay = goog.require('ol.render.canvas.PolygonReplay');
 
 goog.requireType('ol.Feature');
+
+
 goog.requireType('ol.render.Feature');
 
 
@@ -13,7 +17,7 @@ goog.requireType('ol.render.Feature');
  * Empty fill style used in our overrides of OL3 polygon rendering functions.
  * @type {string}
  */
-os.ol.mixin.render.EMPTY_FILL = 'rgba(0,0,0,0)';
+const EMPTY_FILL = 'rgba(0,0,0,0)';
 
 
 /**
@@ -28,7 +32,7 @@ os.ol.mixin.render.EMPTY_FILL = 'rgba(0,0,0,0)';
  * @suppress {duplicate|accessControls}
  * @override
  */
-ol.render.canvas.PolygonReplay.prototype.drawPolygon = function(polygonGeometry, feature) {
+PolygonReplay.prototype.drawPolygon = function(polygonGeometry, feature) {
   var state = this.state;
   this.setFillStrokeStyles_(polygonGeometry);
   this.beginGeometry(polygonGeometry, feature);
@@ -38,7 +42,7 @@ ol.render.canvas.PolygonReplay.prototype.drawPolygon = function(polygonGeometry,
   // or be empty.
   this.hitDetectionInstructions.push(
       [ol.render.canvas.Instruction.SET_FILL_STYLE,
-        state.fillStyle ? state.fillStyle : os.ol.mixin.render.EMPTY_FILL]);
+        state.fillStyle ? state.fillStyle : EMPTY_FILL]);
 
   if (state.strokeStyle !== undefined) {
     this.hitDetectionInstructions.push([
@@ -64,7 +68,7 @@ ol.render.canvas.PolygonReplay.prototype.drawPolygon = function(polygonGeometry,
  * @suppress {duplicate|accessControls}
  * @override
  */
-ol.render.canvas.PolygonReplay.prototype.drawMultiPolygon = function(multiPolygonGeometry, feature) {
+PolygonReplay.prototype.drawMultiPolygon = function(multiPolygonGeometry, feature) {
   var state = this.state;
   var fillStyle = state.fillStyle;
   var strokeStyle = state.strokeStyle;
@@ -78,7 +82,7 @@ ol.render.canvas.PolygonReplay.prototype.drawMultiPolygon = function(multiPolygo
   // version. The hit detection instruction for fills needs to use the available value from the frame state
   // or be empty.
   this.hitDetectionInstructions.push(
-      [ol.render.canvas.Instruction.SET_FILL_STYLE, fillStyle ? fillStyle : os.ol.mixin.render.EMPTY_FILL]);
+      [ol.render.canvas.Instruction.SET_FILL_STYLE, fillStyle ? fillStyle : EMPTY_FILL]);
 
   if (state.strokeStyle !== undefined) {
     this.hitDetectionInstructions.push([
@@ -110,7 +114,7 @@ ol.render.canvas.PolygonReplay.prototype.drawMultiPolygon = function(multiPolygo
  * @suppress {duplicate|accessControls}
  * @override
  */
-ol.render.canvas.PolygonReplay.prototype.drawCircle = function(circleGeometry, feature) {
+PolygonReplay.prototype.drawCircle = function(circleGeometry, feature) {
   var state = this.state;
   var fillStyle = state.fillStyle;
   var strokeStyle = state.strokeStyle;
@@ -124,7 +128,7 @@ ol.render.canvas.PolygonReplay.prototype.drawCircle = function(circleGeometry, f
   // version. The hit detection instruction for fills needs to use the available value from the frame state
   // or be empty.
   this.hitDetectionInstructions.push(
-      [ol.render.canvas.Instruction.SET_FILL_STYLE, fillStyle ? fillStyle : os.ol.mixin.render.EMPTY_FILL]);
+      [ol.render.canvas.Instruction.SET_FILL_STYLE, fillStyle ? fillStyle : EMPTY_FILL]);
 
   if (state.strokeStyle !== undefined) {
     this.hitDetectionInstructions.push([
@@ -153,4 +157,8 @@ ol.render.canvas.PolygonReplay.prototype.drawCircle = function(circleGeometry, f
     this.hitDetectionInstructions.push(strokeInstruction);
   }
   this.endGeometry(circleGeometry, feature);
+};
+
+exports = {
+  EMPTY_FILL
 };
