@@ -1,12 +1,13 @@
 goog.module('os.ui.popover.PopoverUI');
 goog.module.declareLegacyNamespace();
 
+goog.require('goog.dom');
+
 const ui = goog.require('os.ui');
 const googString = goog.require('goog.string');
 const Module = goog.require('os.ui.Module');
 
 
-goog.require('goog.dom');
 
 /**
  * A popover directive to generate a popover for tooltips
