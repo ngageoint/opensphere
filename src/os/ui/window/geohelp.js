@@ -1,8 +1,8 @@
-goog.module('os.ui.window.GeoHelpUI');
-goog.module.declareLegacyNamespace();
+goog.provide('os.ui.window.GeoHelpCtrl');
+goog.provide('os.ui.window.geoHelpDirective');
 
-const Module = goog.require('os.ui.Module');
-const window = goog.require('os.ui.window');
+goog.require('os.ui.Module');
+goog.require('os.ui.window');
 
 
 /**
@@ -10,27 +10,29 @@ const window = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
-  restrict: 'E',
-  replace: true,
-  templateUrl: os.ROOT + 'views/window/geohelp.html',
-  controller: Controller,
-  controllerAs: 'th'
-});
+os.ui.window.geoHelpDirective = function() {
+  return {
+    restrict: 'E',
+    replace: true,
+    templateUrl: os.ROOT + 'views/window/geohelp.html',
+    controller: os.ui.window.GeoHelpCtrl,
+    controllerAs: 'th'
+  };
+};
 
 
 /**
  * Add the directive to the core module
  */
-Module.directive('geohelp', [directive]);
+os.ui.Module.directive('geohelp', [os.ui.window.geoHelpDirective]);
 
 
 /**
  * Launches the date/time formatting help dialog if one isn't displayed already.
  */
-window.launchGeoHelp = function() {
+os.ui.window.launchGeoHelp = function() {
   if (!document.getElementById('geo-help')) {
-    window.create({
+    os.ui.window.create({
       'label': 'Location Formats',
       'icon': 'fa fa-map-marker',
       'x': '-10',
@@ -51,44 +53,37 @@ window.launchGeoHelp = function() {
 
 /**
  * Controller for date/time format help.
- * @unrestricted
+ *
+ * @param {!angular.Scope} $scope
+ * @param {!angular.JQLite} $element
+ * @constructor
+ * @ngInject
  */
-class Controller {
+os.ui.window.GeoHelpCtrl = function($scope, $element) {
   /**
-   * Constructor.
-   * @param {!angular.Scope} $scope
-   * @param {!angular.JQLite} $element
-   * @ngInject
-   */
-  constructor($scope, $element) {
-    /**
-     * @type {?angular.JQLite}
-     * @private
-     */
-    this.element_ = $element;
-    $scope.$on('$destroy', goog.bind(this.destroy_, this));
-  }
-
-  /**
-   * Clean up references.
-   *
+   * @type {?angular.JQLite}
    * @private
    */
-  destroy_() {
-    this.element_ = null;
-  }
+  this.element_ = $element;
+  $scope.$on('$destroy', goog.bind(this.destroy_, this));
+};
 
-  /**
-   * Close the window
-   *
-   * @export
-   */
-  close() {
-    window.close(this.element_);
-  }
-}
 
-exports = {
-  Controller,
-  directive
+/**
+ * Clean up references.
+ *
+ * @private
+ */
+os.ui.window.GeoHelpCtrl.prototype.destroy_ = function() {
+  this.element_ = null;
+};
+
+
+/**
+ * Close the window
+ *
+ * @export
+ */
+os.ui.window.GeoHelpCtrl.prototype.close = function() {
+  os.ui.window.close(this.element_);
 };

@@ -1,8 +1,8 @@
-goog.module('os.ui.window.TimeHelpUI');
-goog.module.declareLegacyNamespace();
+goog.provide('os.ui.window.TimeHelpCtrl');
+goog.provide('os.ui.window.timeHelpDirective');
 
-const Module = goog.require('os.ui.Module');
-const window = goog.require('os.ui.window');
+goog.require('os.ui.Module');
+goog.require('os.ui.window');
 
 
 /**
@@ -10,27 +10,29 @@ const window = goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-const directive = () => ({
-  restrict: 'E',
-  replace: true,
-  templateUrl: os.ROOT + 'views/window/timehelp.html',
-  controller: Controller,
-  controllerAs: 'th'
-});
+os.ui.window.timeHelpDirective = function() {
+  return {
+    restrict: 'E',
+    replace: true,
+    templateUrl: os.ROOT + 'views/window/timehelp.html',
+    controller: os.ui.window.TimeHelpCtrl,
+    controllerAs: 'th'
+  };
+};
 
 
 /**
  * Add the directive to the os module
  */
-Module.directive('timehelp', [directive]);
+os.ui.Module.directive('timehelp', [os.ui.window.timeHelpDirective]);
 
 
 /**
  * Launches the date/time formatting help dialog if one isn't displayed already.
  */
-window.launchTimeHelp = function() {
+os.ui.window.launchTimeHelp = function() {
   if (!document.getElementById('time-help')) {
-    window.create({
+    os.ui.window.create({
       'label': 'Custom Date/Time Formats',
       'icon': 'fa fa-clock-o',
       'x': '-10',
@@ -51,44 +53,37 @@ window.launchTimeHelp = function() {
 
 /**
  * Controller for date/time format help.
- * @unrestricted
+ *
+ * @param {!angular.Scope} $scope
+ * @param {!angular.JQLite} $element
+ * @constructor
+ * @ngInject
  */
-class Controller {
+os.ui.window.TimeHelpCtrl = function($scope, $element) {
   /**
-   * Constructor.
-   * @param {!angular.Scope} $scope
-   * @param {!angular.JQLite} $element
-   * @ngInject
-   */
-  constructor($scope, $element) {
-    /**
-     * @type {?angular.JQLite}
-     * @private
-     */
-    this.element_ = $element;
-    $scope.$on('$destroy', this.destroy_.bind(this));
-  }
-
-  /**
-   * Clean up references.
-   *
+   * @type {?angular.JQLite}
    * @private
    */
-  destroy_() {
-    this.element_ = null;
-  }
+  this.element_ = $element;
+  $scope.$on('$destroy', this.destroy_.bind(this));
+};
 
-  /**
-   * Close the window
-   *
-   * @export
-   */
-  close() {
-    window.close(this.element_);
-  }
-}
 
-exports = {
-  Controller,
-  directive
+/**
+ * Clean up references.
+ *
+ * @private
+ */
+os.ui.window.TimeHelpCtrl.prototype.destroy_ = function() {
+  this.element_ = null;
+};
+
+
+/**
+ * Close the window
+ *
+ * @export
+ */
+os.ui.window.TimeHelpCtrl.prototype.close = function() {
+  os.ui.window.close(this.element_);
 };
