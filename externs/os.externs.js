@@ -106,6 +106,16 @@ osx.ogc.OGCSettings;
 
 
 /**
+ * @typedef {{
+ *  label: string,
+ *  tags: (Array<string>|undefined),
+ *  default: (string|undefined)
+ * }}
+ */
+osx.ogc.ServerProperty;
+
+
+/**
  * Namespace.
  * @type {Object}
  */

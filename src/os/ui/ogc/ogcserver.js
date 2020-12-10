@@ -13,6 +13,8 @@ goog.require('ol.format.XLink');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
 goog.require('os.color');
+goog.require('os.config.Settings');
+goog.require('os.data.BaseDescriptor');
 goog.require('os.data.DataProviderEvent');
 goog.require('os.data.DataProviderEventType');
 goog.require('os.data.IDataProvider');
@@ -165,6 +167,15 @@ os.ui.ogc.OGCServer = function() {
   this.wpsUrl_ = '';
 
   /**
+   * @type {Object<string, ?Array<string>>}
+   * @protected
+   */
+  this.description = {
+    WMS: null,
+    WFS: null
+  };
+
+  /**
    * Flag to indicate whether GetMap & GetFeature operation URLs should
    * be parsed from the Capabilities documents and used for layer queries.
    * If false, the original URLs set in the server config will be used
@@ -201,6 +212,13 @@ os.ui.ogc.OGCServer.DEFAULT_WMS_VERSION = '1.3.0';
  * @type {string}
  */
 os.ui.ogc.OGCServer.DEFAULT_COLOR = 'rgba(255,255,255,1)';
+
+
+/**
+ * @type {string}
+ * @const
+ */
+os.ui.ogc.OGCServer.DESCRIPTION_KEY = 'ogc.serverInfo.columns';
 
 
 /**
@@ -722,6 +740,10 @@ os.ui.ogc.OGCServer.prototype.parseWmsCapabilities = function(response, uri) {
     if (result) {
       var version = result['version'];
 
+      this.description.WMS = this.getProperties(
+          /** @type {string} */ (goog.object.getValueByKeys(result, 'Service', 'AccessConstraints'))
+      );
+
       if (!this.getLabel()) {
         try {
           this.setLabel(result['Service']['Title']);
@@ -805,7 +827,7 @@ os.ui.ogc.OGCServer.prototype.parseWmsCapabilities = function(response, uri) {
  * Display the consent alerts
  */
 os.ui.ogc.OGCServer.prototype.displayConsentAlerts = function(result) {
-  if (result && !this.getPing() && !os.settings.get(['devSanity'], false)) {
+  if (result && !this.getPing() && !os.config.Settings.getInstance().get(['devSanity'], false)) {
     // DO NOT REMOVE THIS WARNING BLOCK!
     // Display government warning.
     var constraints = /** @type {string} */ (goog.object.getValueByKeys(result, 'Service', 'AccessConstraints'));
@@ -818,6 +840,64 @@ os.ui.ogc.OGCServer.prototype.displayConsentAlerts = function(result) {
       }
     }
   }
+};
+
+
+/**
+ * Extract relevant information from the GetCapabilities result for display in Descriptors, HoverText, etc
+ * @param {string} constraints
+ * @return {?Array<string>}
+ */
+os.ui.ogc.OGCServer.prototype.getProperties = function(constraints) {
+  var properties = [];
+  var xmlDocument = null;
+
+  if (constraints && constraints.indexOf('xml version') && window.DOMParser) {
+    if (constraints.indexOf('&amp;lt;') >= 0) {
+      constraints = constraints.replace(/&amp;/g, '&');
+    }
+    try {
+      // clean up the HTML-encoded strings, e.g. &gt;
+      xmlDocument = (new DOMParser()).parseFromString(goog.string.unescapeEntities(constraints), 'text/xml');
+    } catch (e) {
+      goog.log.error(os.ui.ogc.OGCServer.LOGGER_, 'Could not parse XML for OGCServer additional information', e);
+    }
+  }
+
+  try {
+    var setting = /** @type {Object<?, osx.ogc.ServerProperty>} */ (os.config.Settings.getInstance()
+        .get(os.ui.ogc.OGCServer.DESCRIPTION_KEY, {}));
+    if (setting) {
+      var configs = Object.entries(setting);
+
+      // Display info
+      configs.forEach(([key, config]) => {
+        // help out the compiler
+        key = /** @type {string} */ (key);
+        config = /** @type {osx.ogc.ServerProperty} */ (config);
+
+        var elements = xmlDocument && xmlDocument.getElementsByTagName(key);
+        if (xmlDocument && (!elements || elements.length == 0) && config['tags'] && config['tags'].length) {
+          // try each tag, in order
+          var idx = 0;
+          var len = config['tags'].length;
+          while ((!elements || elements.length == 0) && idx < len) {
+            elements = xmlDocument.getElementsByTagName(config['tags'][idx]);
+            idx++;
+          }
+        }
+        var element = elements && elements.length > 0 && elements[0] || null;
+        var val = element && element.innerHTML || config['default'];
+        if (val) {
+          properties.push(config['label'] + ': ' + val);
+        }
+      });
+    }
+  } catch (e) {
+    goog.log.error(os.ui.ogc.OGCServer.LOGGER_, 'Could not find data for OGCServer additional information', e);
+  }
+
+  return properties.length > 0 ? properties : null;
 };
 
 
@@ -853,6 +933,8 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
       this.logError('The response XML for ' + link + ' is invalid!');
       return;
     }
+
+    this.description.WFS = this.getProperties(wfsCapabilities.querySelector('AccessConstraints').innerHTML);
 
     if (!this.getLabel()) {
       try {
@@ -981,6 +1063,11 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
         }
 
         descriptor.setKeywords(tags);
+      }
+
+      if (descriptor instanceof os.data.BaseDescriptor) {
+        /** @type {os.data.BaseDescriptor} */ (descriptor)
+            .setProperties(this.description.WFS || this.description.WMS);
       }
 
       if (os.ui.util.deprecated.isLayerDeprecated(localName)) {
@@ -1151,6 +1238,11 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
     // parse the layer on top of the existing descriptor, or a new one if it wasn't found
     var layerDescriptor = existing || this.createDescriptor();
     layerDescriptor.setProviderType(this.providerType);
+
+    if (layerDescriptor instanceof os.data.BaseDescriptor) {
+      /** @type {os.data.BaseDescriptor} */ (layerDescriptor)
+          .setProperties(this.description.WFS || this.description.WMS);
+    }
 
     this.parser_.parseLayer(node, layerDescriptor);
 

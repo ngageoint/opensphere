@@ -136,6 +136,12 @@ os.data.BaseDescriptor = function() {
   this.tags = null;
 
   /**
+   * @type {?Array<string>}
+   * @protected
+   */
+  this.properties = null;
+
+  /**
    * @type {!string}
    * @protected
    */
@@ -607,6 +613,24 @@ os.data.BaseDescriptor.prototype.setTags = function(value) {
 
 
 /**
+ * Gets the Properties HTML
+ * @return {?Array<string>}
+ */
+os.data.BaseDescriptor.prototype.getProperties = function() {
+  return this.properties;
+};
+
+
+/**
+ * Sets the Properties XML
+ * @param {?Array<string>} value
+ */
+os.data.BaseDescriptor.prototype.setProperties = function(value) {
+  this.properties = value;
+};
+
+
+/**
  * @inheritDoc
  */
 os.data.BaseDescriptor.prototype.getSearchText = function() {
@@ -661,6 +685,7 @@ os.data.BaseDescriptor.prototype.persist = function(opt_obj) {
   opt_obj['lastActive'] = this.getLastActive();
   opt_obj['deleteTime'] = this.getDeleteTime();
   opt_obj['tags'] = this.getTags();
+  opt_obj['properties'] = this.getProperties();
   opt_obj['dType'] = this.getDescriptorType();
   opt_obj['active'] = this.isActive();
 
@@ -698,6 +723,7 @@ os.data.BaseDescriptor.prototype.restore = function(from) {
   this.lastActive_ = from['lastActive'] || NaN;
   this.deleteTime_ = from['deleteTime'] || NaN;
   this.setTags(from['tags']);
+  this.setProperties(from['properties']);
   this.tempActive = from['active'];
 
   var columns = from['columns'];
@@ -721,10 +747,27 @@ os.data.BaseDescriptor.prototype.restore = function(from) {
  * @inheritDoc
  */
 os.data.BaseDescriptor.prototype.getHtmlDescription = function() {
-  var text = 'Layer Name: ' + this.getTitle() + '<br>';
+  var linebreak = '<br />';
+
+  var propertiesHTML = null;
+  var properties = this.getProperties();
+  if (properties && properties.length > 0) {
+    propertiesHTML = properties.join(linebreak);
+  }
+
+  var text = [];
+
+  if (propertiesHTML) {
+    text.push(propertiesHTML);
+    text.push(linebreak);
+    text.push(linebreak);
+  }
+
+  text.push('Layer Name: ' + this.getTitle() + linebreak);
+
   var provider = this.getProvider();
   if (provider) {
-    text += 'Provider: ' + provider + '<br>';
+    text.push('Provider: ' + provider + linebreak);
   }
   var type = this.getType() || '';
   if (goog.string.endsWith(type, 's')) {
@@ -732,7 +775,7 @@ os.data.BaseDescriptor.prototype.getHtmlDescription = function() {
   }
 
   if (type) {
-    text += 'Type: ' + type + '<br>';
+    text.push('Type: ' + type + linebreak);
   }
 
   if (!isNaN(this.getMinDate()) && !isNaN(this.getMaxDate())) {
@@ -742,16 +785,16 @@ os.data.BaseDescriptor.prototype.getHtmlDescription = function() {
     var e = new goog.date.UtcDateTime();
     e.setTime(this.getMaxDate());
 
-    text += 'Time: ' + s.toUTCIsoString(true, true) + ' to ' + e.toUTCIsoString(true, true) + '<br>';
+    text.push('Time: ' + s.toUTCIsoString(true, true) + ' to ' + e.toUTCIsoString(true, true) + linebreak);
   }
 
-  text += '<br>';
+  text.push(linebreak);
 
   var desc = this.getDescription();
-  text += (desc ? desc : 'No description provided') + '<br><br>';
-  text += 'Tags: ' + (this.getTags() ? this.getTags().join(', ') : '(none)');
-  text += '<br><br>';
-  return text;
+  text.push((desc ? desc : 'No description provided') + linebreak + linebreak);
+  text.push('Tags: ' + (this.getTags() ? this.getTags().join(', ') : '(none)') + linebreak);
+
+  return text.join('');
 };
 
 
