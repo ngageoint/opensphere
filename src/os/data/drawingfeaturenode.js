@@ -48,7 +48,7 @@ os.data.DrawingFeatureNode.ORIGINAL_STYLE = '_originalStyle';
  * @inheritDoc
  */
 os.data.DrawingFeatureNode.prototype.getMenu = function() {
-  return os.ui.menu.SPATIAL;
+  return os.ui.menu.spatial.MENU;
 };
 
 

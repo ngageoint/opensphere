@@ -244,7 +244,7 @@ plugin.track.menu.visibleIfTrackNode = function(context) {
  * Set up track items in the spatial menu.
  */
 plugin.track.menu.spatialSetup = function() {
-  var menu = os.ui.menu.SPATIAL;
+  var menu = os.ui.menu.spatial.MENU;
   if (menu) {
     var root = menu.getRoot();
     var group = root.find(os.ui.menu.spatial.Group.FEATURES);
