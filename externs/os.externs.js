@@ -585,3 +585,12 @@ osx.feature.RingDefinition;
  * }}
  */
 osx.feature.RingOptions;
+
+
+/**
+ * @typedef {{
+ *   regexes: (Array<string>|undefined),
+ *   default: (string|undefined)
+ * }}
+ */
+osx.feature.SimplePropertyOptions;
