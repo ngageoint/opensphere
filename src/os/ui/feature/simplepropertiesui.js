@@ -1,4 +1,4 @@
-goog.module('os.ui.feature.simpleproperties');
+goog.module('os.ui.feature.SimplePropertiesUI');
 goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.feature.featureInfoCellDirective');
@@ -239,6 +239,5 @@ OsModule.directive('simpleProperties', [directive]);
 
 exports = {
   Controller,
-  directive,
-  SIMPLE_PROPERTIES_COLUMNS_KEY
+  directive
 };
