@@ -747,7 +747,7 @@ os.data.BaseDescriptor.prototype.restore = function(from) {
  * @inheritDoc
  */
 os.data.BaseDescriptor.prototype.getHtmlDescription = function() {
-  var linebreak = '<br />';
+  var linebreak = '<br>';
 
   var propertiesHTML = null;
   var properties = this.getProperties();
@@ -792,7 +792,7 @@ os.data.BaseDescriptor.prototype.getHtmlDescription = function() {
 
   var desc = this.getDescription();
   text.push((desc ? desc : 'No description provided') + linebreak + linebreak);
-  text.push('Tags: ' + (this.getTags() ? this.getTags().join(', ') : '(none)') + linebreak);
+  text.push('Tags: ' + (this.getTags() ? this.getTags().join(', ') : '(none)') + linebreak + linebreak);
 
   return text.join('');
 };
