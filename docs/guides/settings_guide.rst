@@ -347,3 +347,34 @@ Example:
 
 .. _Cesium World Terrain: https://cesium.com/content/cesium-world-terrain/
 .. _Cesium Ion: https://cesium.com/ion/
+
+columnActions
+-------------
+``admin.columnActions``
+
+Column Actions are specific actions that are performed when displaying field data from a feature.
+
+The only action Opensphere currently supports is the ``UrlColumnAction``.  When displaying feature information, this action will scan column names and values via regular expression to create a clickable link.
+
+Example:
+
+.. code-block:: json
+  {
+    "admin": {
+      "columnActions": {
+        "googleMapsAction": {
+          "type": "url",
+          "description": "Create a link to a location on Google Maps.",
+          "regex": {
+            "col": "^DD_LAT_LON$",
+            "val": "[\-\d]\d+\.\d+",
+            "search": "\w",
+            "replace": ","
+          },
+          "action": "https://www.google.com/maps/@%s"
+        }
+      }
+    }
+  }
+
+One of ``"col"`` or ``"val"`` is required. ``"search"`` and ``"replace"`` can be used to transform the text before substituting into the URL, but are entirely optional.
