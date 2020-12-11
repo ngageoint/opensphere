@@ -853,28 +853,24 @@ os.ui.ogc.OGCServer.prototype.getProperties = function(constraints) {
   var xmlDocument = null;
 
   if (constraints && constraints.indexOf('xml version') && window.DOMParser) {
-    if (constraints.indexOf('&amp;lt;') >= 0) {
-      constraints = constraints.replace(/&amp;/g, '&');
-    }
+    // The WMS response double-HTML-encodes the xml (e.g. "<" becomes "&lt;" becomes "&amp;lt;").
+    // Clean that up before unescaping normally. In the order that os.xml.unescape() is written, it'll
+    // just happen to handle that case, but not the full gamut of HTML encoding... Just use it anyway.
     try {
-      // clean up the HTML-encoded strings, e.g. &gt;
-      xmlDocument = (new DOMParser()).parseFromString(goog.string.unescapeEntities(constraints), 'text/xml');
+      // clean up the HTML-encoded strings, e.g. &gt; and convert to an XML Document
+      xmlDocument = os.xml.loadXml(os.xml.unescape(constraints));
     } catch (e) {
       goog.log.error(os.ui.ogc.OGCServer.LOGGER_, 'Could not parse XML for OGCServer additional information', e);
     }
   }
 
   try {
-    var setting = /** @type {Object<?, osx.ogc.ServerProperty>} */ (os.config.Settings.getInstance()
+    var configs = /** @type {Object<string, osx.ogc.ServerProperty>} */ (os.config.Settings.getInstance()
         .get(os.ui.ogc.OGCServer.DESCRIPTION_KEY, {}));
-    if (setting) {
-      var configs = Object.entries(setting);
-
+    if (configs) {
       // Display info
-      configs.forEach(([key, config]) => {
-        // help out the compiler
-        key = /** @type {string} */ (key);
-        config = /** @type {osx.ogc.ServerProperty} */ (config);
+      for (var key in configs) {
+        var config = configs[key];
 
         var elements = xmlDocument && xmlDocument.getElementsByTagName(key);
         if (xmlDocument && (!elements || elements.length == 0) && config['tags'] && config['tags'].length) {
@@ -891,7 +887,7 @@ os.ui.ogc.OGCServer.prototype.getProperties = function(constraints) {
         if (val) {
           properties.push(config['label'] + ': ' + val);
         }
-      });
+      }
     }
   } catch (e) {
     goog.log.error(os.ui.ogc.OGCServer.LOGGER_, 'Could not find data for OGCServer additional information', e);
@@ -1067,7 +1063,7 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
 
       if (descriptor instanceof os.data.BaseDescriptor) {
         /** @type {os.data.BaseDescriptor} */ (descriptor)
-            .setProperties(this.description.WFS || this.description.WMS);
+            .setProperties(this.description.WFS);
       }
 
       if (os.ui.util.deprecated.isLayerDeprecated(localName)) {
@@ -1241,7 +1237,7 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
 
     if (layerDescriptor instanceof os.data.BaseDescriptor) {
       /** @type {os.data.BaseDescriptor} */ (layerDescriptor)
-          .setProperties(this.description.WFS || this.description.WMS);
+          .setProperties(this.description.WMS);
     }
 
     this.parser_.parseLayer(node, layerDescriptor);
