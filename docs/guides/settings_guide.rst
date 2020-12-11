@@ -378,3 +378,5 @@ Example:
   }
 
 One of ``"col"`` or ``"val"`` is required. ``"search"`` and ``"replace"`` can be used to transform the text before substituting into the URL, but are entirely optional.
+
+While this is only executed on visible cells in SlickGrid, it is applied to every field/column and may cause performance problems depending on the complexity of the regex. If you know specific columns that you want to apply actions to, and know their format in advance, it may be better to simply match on the exact column name.
