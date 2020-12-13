@@ -466,6 +466,7 @@ plugin.track.updateTrackZIndex = os.track.updateTrackZIndex;
  *
  * @param {!os.track.CreateOptions} options The options object for the track.
  * @return {os.track.TrackFeatureLike|undefined} The track feature.
+ * @suppress {accessControls} for onFeatureChange access
  */
 plugin.track.createAndAdd = function(options) {
   var track = os.track.createTrack(options);
@@ -479,6 +480,7 @@ plugin.track.createAndAdd = function(options) {
   var trackNode = plugin.file.kml.ui.updatePlacemark({
     'feature': track
   });
+  ol.events.listen(track, goog.events.EventType.PROPERTYCHANGE, trackNode.onFeatureChange, trackNode);
 
   var rootNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
   if (rootNode) {
