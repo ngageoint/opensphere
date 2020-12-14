@@ -91,6 +91,13 @@ plugin.arc.URI_REGEXP = /arcgis/i;
  * @type {RegExp}
  * @const
  */
+plugin.arc.WMS_URI_REGEXP = /(\/WMSServer|service=WMS)/i;
+
+
+/**
+ * @type {RegExp}
+ * @const
+ */
 plugin.arc.CONTENT_REGEXP = /ArcGIS REST Services Directory/i;
 
 

@@ -86,7 +86,7 @@ plugin.cookbook_metrics.CookbookMetrics.prototype.init = function() {
   var metricsManager = os.ui.metrics.MetricsManager.getInstance();
   metricsManager.addMetricsPlugin(new plugin.cookbook_metrics.Metrics());
 
-  var menu = os.ui.menu.SPATIAL;
+  var menu = os.ui.menu.spatial.MENU;
   if (menu) {
     var root = menu.getRoot();
     var group = root.find(plugin.cookbook_metrics.MYGROUP);

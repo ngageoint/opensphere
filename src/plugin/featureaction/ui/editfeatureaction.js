@@ -1,3 +1,4 @@
+goog.provide('plugin.im.action.feature.ui');
 goog.provide('plugin.im.action.feature.ui.EditFeatureActionCtrl');
 goog.provide('plugin.im.action.feature.ui.editFeatureActionDirective');
 

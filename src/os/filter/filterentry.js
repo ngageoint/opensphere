@@ -1,4 +1,5 @@
 goog.provide('os.filter.FilterEntry');
+goog.provide('os.filter.cloneToContext');
 
 goog.require('goog.dom.xml');
 goog.require('goog.events.EventTarget');
