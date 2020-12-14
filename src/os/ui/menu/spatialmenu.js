@@ -101,7 +101,7 @@ os.ui.menu.spatial.MENU = undefined;
 /**
  * Old reference, maintained for compatibility.
  * @type {os.ui.menu.SpatialMenu|undefined}
- * @deprecated
+ * @deprecated use os.ui.menu.spatial.MENU instead
  */
 os.ui.menu.SPATIAL = undefined;
 
