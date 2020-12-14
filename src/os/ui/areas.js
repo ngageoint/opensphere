@@ -60,7 +60,7 @@ os.ui.AreasCtrl = function($scope, $element) {
 
   this.title = 'areas';
   try {
-    this.scope['contextMenu'] = os.ui.menu.SPATIAL;
+    this.scope['contextMenu'] = os.ui.menu.spatial.MENU;
   } catch (e) {
   }
 

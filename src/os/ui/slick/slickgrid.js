@@ -696,7 +696,7 @@ os.ui.slick.SlickGridCtrl.prototype.onUpdateResize = function() {
 
 
 /**
- * Copys rows in the grid.
+ * Copies rows in the grid.
  *
  * @param {angular.Scope.Event} event
  * @param {function(*):string} mapFn Function to map grid items to text.
@@ -1880,11 +1880,6 @@ os.ui.slick.SlickGridCtrl.prototype.doMove = function(rows, insertBefore) {
   }
 
   data = left.concat(extractedRows.concat(right));
-
-  var selectedRows = [];
-  for (i = 0, n = rows.length; i < n; i++) {
-    selectedRows.push(left.length + i);
-  }
 
   this.scope['data'] = data;
   this.onDataChange();

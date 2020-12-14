@@ -22,13 +22,13 @@ Extend the existing menu with Group, SubMenu and Item elements to provide your p
 Discussion
 ----------
 
-The Spatial menu (:code:`os.ui.menu.SPATIAL`) is extensible from plugins. You can then attach groups, separators, submenus and items (plain items, checkboxes, or radio buttons) to the root, or to sub-items. In the image and code, a group item is added to the root, then submenus are nested below that group, and some items are available for selection.
+The Spatial menu (:code:`os.ui.menu.spatial.MENU`) is extensible from plugins. You can then attach groups, separators, submenus and items (plain items, checkboxes, or radio buttons) to the root, or to sub-items. In the image and code, a group item is added to the root, then submenus are nested below that group, and some items are available for selection.
 
 If your plugin has all items known in advance, its possible to use the :code:`children` property to nest the whole structure, as shown here:
 
 .. code-block:: javascript
 
-  var menu = os.ui.menu.SPATIAL;
+  var menu = os.ui.menu.spatial.MENU;
   if (menu) {
     var root = menu.getRoot();
     var group = root.find(plugin.cookbook_submenu.MYGROUP);

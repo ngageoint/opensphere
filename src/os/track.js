@@ -1,4 +1,10 @@
 goog.provide('os.track');
+goog.provide('os.track.AddOptions');
+goog.provide('os.track.CreateOptions');
+goog.provide('os.track.SplitOptions');
+goog.provide('os.track.TrackFeatureLike');
+goog.provide('os.track.TrackField');
+goog.provide('os.track.TrackLike');
 
 goog.require('goog.Promise');
 goog.require('ol.Feature');
