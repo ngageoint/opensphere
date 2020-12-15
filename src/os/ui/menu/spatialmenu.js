@@ -1,6 +1,7 @@
 goog.provide('os.ui.menu.SpatialMenu');
 goog.provide('os.ui.menu.spatial');
 
+goog.require('ol.Collection');
 goog.require('ol.Feature');
 goog.require('ol.array');
 goog.require('os.action.EventType');
@@ -11,6 +12,7 @@ goog.require('os.data.AreaNode');
 goog.require('os.defines');
 goog.require('os.events.PayloadEvent');
 goog.require('os.fn');
+goog.require('os.interaction.Modify');
 goog.require('os.query.BaseAreaManager');
 goog.require('os.query.ui.mergeAreasDirective');
 goog.require('os.query.ui.modifyAreaDirective');
@@ -21,6 +23,7 @@ goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
 goog.require('os.ui.query');
 goog.require('os.ui.query.cmd.AreaAdd');
+goog.require('os.ui.query.cmd.AreaModify');
 goog.require('os.ui.query.cmd.AreaRemove');
 
 
@@ -215,6 +218,13 @@ os.ui.menu.spatial.setup = function() {
           tooltip: 'Modify the area',
           icons: ['<i class="fa fa-fw fa-edit"></i>'],
           beforeRender: os.ui.menu.spatial.visibleIfCanModify
+        }, {
+          label: 'Modify Geometry...',
+          eventType: 'modifyGeometry',
+          tooltip: 'Modify the the geometry',
+          icons: ['<i class="fa fa-fw fa-edit"></i>'],
+          handler: os.ui.menu.spatial.onMenuEvent,
+          beforeRender: os.ui.menu.spatial.visibleIfInAreaManager
         }]
       }, {
         label: os.ui.menu.spatial.Group.AREA,
@@ -707,6 +717,50 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
             }
 
             os.ui.query.launchModifyArea(conf);
+            break;
+          case 'modifyGeometry':
+            // start by cloning the feature so we don't modify the existing geom
+            const clone = feature.clone();
+
+            // use the original geom, interpolated coordinates make for a weird UX
+            const originalGeom = /** @type {ol.geom.Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD));
+            clone.setGeometry(originalGeom);
+
+            // style it and add it to the drawing layer to modify
+            const editStyles = ol.style.Style.createDefaultEditing();
+            const style = editStyles[ol.geom.GeometryType.LINE_STRING]
+                .concat(editStyles[ol.geom.GeometryType.POLYGON]);
+            clone.setStyle(style);
+            clone.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
+            clone.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.NONE);
+            clone.setId(goog.string.getRandomString());
+            os.MapContainer.getInstance().addFeature(clone);
+
+            const interaction = new os.interaction.Modify({
+              features: new ol.Collection([clone])
+            });
+
+            os.MapContainer.getInstance().getMap().addInteraction(interaction);
+            interaction.setActive(true);
+
+            const completeListener = (event) => {
+              const geometry = clone.getGeometry();
+
+              if (feature && geometry) {
+                const modifyCmd = new os.ui.query.cmd.AreaModify(feature, geometry);
+                os.command.CommandProcessor.getInstance().addCommand(modifyCmd);
+              }
+
+              os.MapContainer.getInstance().removeFeature(clone);
+            };
+
+            const cancelListener = (event) => {
+              os.MapContainer.getInstance().removeFeature(clone);
+            };
+
+            ol.events.listen(interaction, 'complete', completeListener);
+            ol.events.listen(interaction, 'cancel', cancelListener);
+
             break;
           case os.action.EventType.MERGE_AREAS:
           case os.action.EventType.EXPORT:
