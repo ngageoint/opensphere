@@ -12,7 +12,7 @@ goog.require('os.ui.window.confirmColorDirective');
 
 /**
  * @type {os.ui.menu.Menu<ol.Coordinate>|undefined}
- * @deprecated
+ * @deprecated use os.ui.menu.map.MENU instead
  */
 os.ui.menu.MAP = undefined;
 
