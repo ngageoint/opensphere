@@ -105,12 +105,6 @@ os.ui.feature.FeatureInfoCellCtrl.prototype.init_ = function() {
     this.scope_['actions'] =
         os.ui.columnactions.ColumnActionManager.getInstance().getActions(null, this.scope_['ca'], value);
 
-    // make all string cells copyable
-    if (typeof value === 'string') {
-      this.copyValue_ = value;
-      this.element_.parent().dblclick(this.onDblClick_.bind(this));
-    }
-
     if (property['field'] == os.Fields.PROPERTIES && typeof value === 'object') {
       // add the View Properties link
       this.scope_['type'] = 'prop';
@@ -126,9 +120,12 @@ os.ui.feature.FeatureInfoCellCtrl.prototype.init_ = function() {
       this.scope_['type'] = 'desc';
     } else {
       // default case, just show it
+      this.copyValue_ = this.scope_['property']['value'];
       this.scope_['property']['value'] =
-          // We want Angular to trust the HTML we generate. We do NOT trust the value, and it is sanitized elsewhere.
+          // We want Angular to trust the HTML we generate. We do NOT trust the value, and it is sanitized
+          // elsewhere.
           this.sce_.trustAsHtml('<span>' + os.ui.formatter.urlNewTabFormatter(value) + '</span>');
+      this.element_.parent().dblclick(this.onDblClick_.bind(this));
     }
   }
 };
