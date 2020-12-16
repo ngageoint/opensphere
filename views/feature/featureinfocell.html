@@ -1,7 +1,7 @@
 <span ng-switch="type">
   <span ng-switch-when="cx" ng-click="cell.viewCxReport()">Launch Report</span>
   <span ng-switch-when="prop" ng-click="cell.viewProperties()">Show Properties</span>
-  <span ng-switch-when="desc" ng-click="cell.showDescription()">Show Description</span>
+  <a href="" ng-switch-when="desc" ng-click="cell.showDescription()">Show Description</a>
   <span ng-switch-when="ca">
     <span>{{property.value}} </span>
     <span ng-if="actions.length == 1" data-colvalue="property.value">
