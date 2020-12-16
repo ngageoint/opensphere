@@ -84,6 +84,7 @@ goog.require('os.style.StyleManager');
 goog.require('os.time');
 goog.require('os.time.TimelineController');
 goog.require('os.ui.AbstractMainCtrl');
+goog.require('os.ui.AddExportOptionsUI');
 goog.require('os.ui.alertsDirective');
 goog.require('os.ui.areasDirective');
 goog.require('os.ui.clear.ClearEntry');
