@@ -304,6 +304,11 @@ WMS Tiles
               "baseType": "wms",
               "options": {
                 "url": "<server url>"
+                "layers": [{
+                  "layerName": "<elevation layer>",
+                  "minLevel": <level number>,
+                  "maxLevel": <level number>
+                }]
               },
             }
           }
@@ -311,6 +316,9 @@ WMS Tiles
       }
     }
   }
+
+Where the `<server url>` would be something like `https://yourgeoserver:8080/geoserver/ows` 
+and the `layers` entries have corresponding layer names and resolution ranges.
 
 Cesium World Terrain
 ********************
