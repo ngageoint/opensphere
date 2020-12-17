@@ -99,7 +99,11 @@ os.ui.feature.FeatureInfoCellCtrl.prototype.destroy_ = function() {
 os.ui.feature.FeatureInfoCellCtrl.prototype.init_ = function() {
   var property = this.scope_['property'];
   var value = property['value'];
+
+  this.element_.parent().dblclick(this.onDblClick_.bind(this));
+  this.copyValue_ = value;
   this.scope_['type'] = '';
+
   if (value) {
     this.scope_['ca'] = new os.ui.columnactions.SimpleColumnActionModel(property['field']);
     this.scope_['actions'] =
@@ -107,6 +111,13 @@ os.ui.feature.FeatureInfoCellCtrl.prototype.init_ = function() {
 
     if (property['field'] == os.Fields.PROPERTIES && typeof value === 'object') {
       // add the View Properties link
+      try {
+        this.copyValue_ = JSON.stringify(value);
+      } catch (e) {
+        // not serializable, womp womp
+        this.copyValue_ = '';
+      }
+
       this.scope_['type'] = 'prop';
     } else if (this.scope_['actions'].length > 0) {
       // we have column actions, use those
@@ -120,12 +131,9 @@ os.ui.feature.FeatureInfoCellCtrl.prototype.init_ = function() {
       this.scope_['type'] = 'desc';
     } else {
       // default case, just show it
-      this.copyValue_ = this.scope_['property']['value'];
-      this.scope_['property']['value'] =
-          // We want Angular to trust the HTML we generate. We do NOT trust the value, and it is sanitized
-          // elsewhere.
-          this.sce_.trustAsHtml('<span>' + os.ui.formatter.urlNewTabFormatter(value) + '</span>');
-      this.element_.parent().dblclick(this.onDblClick_.bind(this));
+      // We want Angular to trust the HTML we generate. We do NOT trust the value, and it is sanitized
+      // elsewhere.
+      property['value'] = this.sce_.trustAsHtml('<span>' + os.ui.formatter.urlNewTabFormatter(value) + '</span>');
     }
   }
 };
