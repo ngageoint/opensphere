@@ -1,6 +1,7 @@
 goog.provide('plugin.places.PlacesSource');
 
 goog.require('os.geom.GeometryField');
+goog.require('os.source.IModifiableSource');
 goog.require('os.track');
 goog.require('plugin.file.kml.KMLSource');
 goog.require('plugin.file.kml.ui.KMLNode');
@@ -10,6 +11,7 @@ goog.require('plugin.file.kml.ui.KMLNode');
 /**
  * Vector source to manage places created in the application. Also adds specialized handling for tracks.
  * @param {olx.source.VectorOptions=} opt_options OpenLayers vector source options.
+ * @implements {os.source.IModifiableSource}
  * @extends {plugin.file.kml.KMLSource}
  * @constructor
  */
@@ -20,6 +22,36 @@ plugin.places.PlacesSource = function(opt_options) {
   this.refreshEnabled = false;
 };
 goog.inherits(plugin.places.PlacesSource, plugin.file.kml.KMLSource);
+os.implements(plugin.places.PlacesSource, os.source.IModifiableSource.ID);
+
+
+/**
+ * @inheritDoc
+ */
+plugin.places.PlacesSource.prototype.supportsModify = function() {
+  return true;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.places.PlacesSource.prototype.getModifyFunction = function() {
+  return (originalFeature, modifiedFeature) => {
+    const node = this.getFeatureNode(originalFeature);
+
+    if (node) {
+      originalFeature.setGeometry(modifiedFeature.getGeometry());
+      const options = {
+        'node': node,
+        'feature': originalFeature
+      };
+
+      plugin.file.kml.ui.updatePlacemark(options);
+      os.style.notifyStyleChange(plugin.places.PlacesManager.getInstance().getPlacesLayer());
+    }
+  };
+};
 
 
 /**

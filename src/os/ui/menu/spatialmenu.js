@@ -11,11 +11,13 @@ goog.require('os.command.SequenceCommand');
 goog.require('os.data.AreaNode');
 goog.require('os.defines');
 goog.require('os.events.PayloadEvent');
+goog.require('os.feature');
 goog.require('os.fn');
 goog.require('os.interaction.Modify');
 goog.require('os.query.BaseAreaManager');
 goog.require('os.query.ui.mergeAreasDirective');
 goog.require('os.query.ui.modifyAreaDirective');
+goog.require('os.source.IModifiableSource');
 goog.require('os.ui.ex.AreaExportCtrl');
 goog.require('os.ui.feature.featureInfoDirective');
 goog.require('os.ui.menu.Menu');
@@ -220,11 +222,11 @@ os.ui.menu.spatial.setup = function() {
           beforeRender: os.ui.menu.spatial.visibleIfCanModify
         }, {
           label: 'Modify Geometry...',
-          eventType: 'modifyGeometry',
+          eventType: os.action.EventType.MODIFY_GEOMETRY,
           tooltip: 'Modify the the geometry',
           icons: ['<i class="fa fa-fw fa-edit"></i>'],
           handler: os.ui.menu.spatial.onMenuEvent,
-          beforeRender: os.ui.menu.spatial.visibleIfInAreaManager
+          beforeRender: os.ui.menu.spatial.visibleIfCanModifyGeometry
         }]
       }, {
         label: os.ui.menu.spatial.Group.AREA,
@@ -585,6 +587,28 @@ os.ui.menu.spatial.notVisibleIfInAreaManager = function(context) {
 
 
 /**
+ * Shows a menu item if the context is in the area manager.
+ *
+ * @param {Object|undefined} context The menu context.
+ * @this {os.ui.menu.MenuItem}
+ */
+os.ui.menu.spatial.visibleIfCanModifyGeometry = function(context) {
+  let supportsModify = false;
+  const features = os.ui.menu.spatial.getFeaturesFromContext(context);
+
+  if (features.length == 1) {
+    const feature = features[0];
+    const source = os.feature.getSource(feature);
+    if (os.implements(source, os.source.IModifiableSource.ID)) {
+      supportsModify = /** @type {os.source.IModifiableSource} */ (source).supportsModify();
+    }
+  }
+
+  this.visible = supportsModify || os.ui.menu.spatial.inAreaManager(context);
+};
+
+
+/**
  * Shows a menu item if the context is polygonal and not in the area manager.
  *
  * @param {Object|undefined} context The menu context.
@@ -718,7 +742,7 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
 
             os.ui.query.launchModifyArea(conf);
             break;
-          case 'modifyGeometry':
+          case os.action.EventType.MODIFY_GEOMETRY:
             // start by cloning the feature so we don't modify the existing geom
             const clone = feature.clone();
 
@@ -743,23 +767,47 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
             os.MapContainer.getInstance().getMap().addInteraction(interaction);
             interaction.setActive(true);
 
+            /**
+             * Callback handler for successfully completing a modify of a geometry.
+             * @param {goog.events.Event} event
+             */
             const completeListener = (event) => {
-              const geometry = clone.getGeometry();
-
-              if (feature && geometry) {
-                const modifyCmd = new os.ui.query.cmd.AreaModify(feature, geometry);
-                os.command.CommandProcessor.getInstance().addCommand(modifyCmd);
+              const source = os.feature.getSource(feature);
+              let modifyFunction;
+              if (os.implements(source, os.source.IModifiableSource.ID)) {
+                modifyFunction = /** @type {os.source.IModifiableSource} */ (source).getModifyFunction();
               }
 
+              if (modifyFunction) {
+                // call the modify function to finalize the update
+                modifyFunction(feature, clone);
+              } else {
+                // default behavior is to assume that we're modifying an area, so update it in AreaManager
+                const geometry = clone.getGeometry();
+                if (feature && geometry) {
+                  const modifyCmd = new os.ui.query.cmd.AreaModify(feature, geometry);
+                  os.command.CommandProcessor.getInstance().addCommand(modifyCmd);
+                }
+              }
+
+              // remove the clone and the interaction from the map
               os.MapContainer.getInstance().removeFeature(clone);
+              os.MapContainer.getInstance().getMap().removeInteraction(interaction);
+              interaction.dispose();
             };
 
+            /**
+             * Callback handler for canceling a modify.
+             * @param {goog.events.Event} event
+             */
             const cancelListener = (event) => {
               os.MapContainer.getInstance().removeFeature(clone);
+              os.MapContainer.getInstance().getMap().removeInteraction(interaction);
+              interaction.dispose();
             };
 
-            ol.events.listen(interaction, 'complete', completeListener);
-            ol.events.listen(interaction, 'cancel', cancelListener);
+            ol.events.listen(interaction, os.interaction.ModifyEventType.COMPLETE, completeListener);
+            ol.events.listen(interaction, os.interaction.ModifyEventType.CANCEL, cancelListener);
 
             break;
           case os.action.EventType.MERGE_AREAS:

@@ -5,10 +5,11 @@ const I3DSupport = goog.require('os.I3DSupport');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyHandler = goog.require('goog.events.KeyHandler');
 const OLModify = goog.require('ol.interaction.Modify');
+const PayloadEvent = goog.require('os.events.PayloadEvent');
 const osImplements = goog.require('os.implements');
 const {MODAL_SELECTOR} = goog.require('os.ui');
+const {ModifyEventType} = goog.require('os.interaction');
 const {notifyStyleChange} = goog.require('os.style');
-const PayloadEvent = goog.require('os.events.PayloadEvent');
 
 const KeyEvent = goog.requireType('goog.events.KeyEvent');
 
@@ -61,18 +62,18 @@ class Modify extends OLModify {
     if (!document.querySelector(MODAL_SELECTOR)) {
       switch (event.keyCode) {
         case KeyCodes.ESC:
-          this.dispatchEvent(new PayloadEvent('cancel', this.features_));
+          this.dispatchEvent(new PayloadEvent(ModifyEventType.CANCEL, this.features_));
           this.setActive(false);
-          this.dispose();
           break;
         case KeyCodes.ENTER:
-          this.dispatchEvent(new PayloadEvent('complete', this.features_));
+          this.dispatchEvent(new PayloadEvent(ModifyEventType.COMPLETE, this.features_));
           this.setActive(false);
-          this.dispose();
           break;
         default:
           break;
       }
+
+      notifyStyleChange(this.overlay_, [this.features_.getArray()[0]]);
     }
   }
 
