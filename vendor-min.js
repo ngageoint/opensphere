@@ -11,8 +11,7 @@ const {resolveModulePath} = require('opensphere-build-resolver/utils');
  * Path to the tui-editor module.
  * @type {string}
  */
-const tuiPath = resolveModulePath('tui-editor', __dirname);
-
+const tuiPath = resolveModulePath('@toast-ui/editor', __dirname);
 
 /**
  * Resources for tuiEditor
@@ -20,31 +19,13 @@ const tuiPath = resolveModulePath('tui-editor', __dirname);
  */
 const tuiEditorResources = [
   {
-    source: resolveModulePath('to-mark/dist', __dirname),
-    scripts: ['to-mark.min.js']
-  },
-  {
-    source: resolveModulePath('highlight.js/lib', __dirname),
-    scripts: ['highlight.js']
-  },
-  {
-    source: resolveModulePath('squire-rte/build', __dirname),
-    scripts: ['squire.js']
-  },
-  {
     source: resolveModulePath('codemirror/lib', __dirname),
     scripts: ['codemirror.js']
   },
   {
-    // Resolve the dependency from tui-editor. This prevents resolving a different version hoisted from other deps.
-    source: resolveModulePath('tui-code-snippet/dist', tuiPath),
-    scripts: ['tui-code-snippet.min.js']
-  },
-  {
     source: path.join(tuiPath, 'dist'),
     scripts: [
-      'tui-editor-Editor.min.js',
-      'tui-editor-extTable.min.js'
+      'toastui-editor.js'
     ]
   }
 ];
@@ -71,4 +52,4 @@ const vendorMinify = function(resources, output, opt_optimizationLevel = 'SIMPLE
   });
 };
 
-vendorMinify(tuiEditorResources, 'vendor/os-minified/os-tui-editor.min.js');
+vendorMinify(tuiEditorResources, 'vendor/os-minified/os-toastui-editor.min.js');
