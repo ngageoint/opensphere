@@ -1643,6 +1643,9 @@ os.ui.slick.SlickGridCtrl.prototype.onDblClick = function(e, args) {
   if (!this.inEvent) {
     this.inEvent = true;
     var value = angular.element(this.grid.getCellNode(args['row'], args['cell'])).text();
+    if (value) {
+      value = value.trim();
+    }
     os.ui.text.copy(value);
     this.inEvent = false;
   }

@@ -226,6 +226,8 @@ os.ui.UrlDragDrop.prototype.handleDrop_ = function(event) {
         }
 
         if (sourceUri) {
+          sourceUri = sourceUri.trim(); // clean up newlines and spaces
+
           if (os.url.URL_REGEXP.test(sourceUri)) {
             os.url.UrlManager.getInstance().handleUrl(sourceUri);
           } else {
