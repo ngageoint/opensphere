@@ -12,7 +12,7 @@
       <div class="d-flex align-items-center">
         <div class="col-form-label mr-2 flex-shrink-0">Accessibility Options</div>
         <select class="custom-select" ng-options="key as key for (key, value) in ctrl.accessibleThemes[ctrl.theme]"
-          ng-change="ctrl.onAccessableThemeChange()" ng-model="ctrl.accessibleTheme">
+          ng-change="ctrl.onAccessibleThemeChange()" ng-model="ctrl.accessibleTheme">
           <option value="" ng-value="null">Default</option>
         </select>
       </div>
