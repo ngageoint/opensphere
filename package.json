@@ -137,7 +137,7 @@
     "build": "npm-run-all -s init -p lint genlibs -s compile copy build:index rename",
     "build:nolint": "npm run init && npm run genlibs && npm run compile && npm run copy && npm run build:index && npm run rename",
     "build:index": "xargs -n 1 os-index < .build/resources-pages",
-    "dev": "npm-run-all -s init genlibs compile:resolve gen:deps -p compile:debugcss build:webpack-dev build:devindex",
+    "dev": "npm-run-all -s init genlibs compile:vendor-min compile:resolve gen:deps -p compile:debugcss build:webpack-dev build:devindex",
     "build:devindex": "xargs -n 1 os-index --debug < .build/resources-pages",
     "build:xt": "mkdirp .build dist/opensphere; tasks/xt/build.js; cp src/os/xt/xt-example.html dist/opensphere",
     "build:webpack": "webpack --mode production",
