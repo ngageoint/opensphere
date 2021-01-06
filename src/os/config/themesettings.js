@@ -1,4 +1,5 @@
 goog.provide('os.config.ThemeSettings');
+goog.provide('os.config.ThemeSettingsAccessibilityChangeEvent');
 goog.provide('os.config.ThemeSettingsChangeEvent');
 goog.provide('os.config.ThemeSettingsCtrl');
 
@@ -205,8 +206,11 @@ os.config.ThemeSettingsCtrl.prototype.onThemeChange = function(newVal, oldVal) {
  * @param {string} oldVal
  * @export
  */
-os.config.ThemeSettingsCtrl.prototype.onAccessableThemeChange = function(newVal, oldVal) {
+os.config.ThemeSettingsCtrl.prototype.onAccessibleThemeChange = function(newVal, oldVal) {
   os.settings.set(os.config.ThemeSettings.Keys.ACCESSIBLE_THEME, this['accessibleTheme']);
+  if (os.dispatcher) {
+    os.dispatcher.dispatchEvent(new goog.events.Event(os.config.ThemeSettingsAccessibilityChangeEvent));
+  }
 };
 
 
@@ -437,3 +441,10 @@ os.config.ThemeSettings.themeUpdated = function() {
  * @type {string}
  */
 os.config.ThemeSettingsChangeEvent = 'theme.changed';
+
+
+/**
+ * If anything reacts to an accessibility theme change, update
+ * @type {string}
+ */
+os.config.ThemeSettingsAccessibilityChangeEvent = 'accessibility.changed';
