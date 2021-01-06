@@ -6,7 +6,6 @@ const {DEFAULT_MAX_ZOOM, DEFAULT_MIN_ZOOM} = goog.require('ol');
 const olColor = goog.require('ol.color');
 const olExtent = goog.require('ol.extent');
 const VectorTileRenderType = goog.require('ol.layer.VectorTileRenderType');
-const obj = goog.require('ol.obj');
 const {transformExtent} = goog.require('ol.proj');
 const Style = goog.require('ol.style.Style');
 
@@ -93,14 +92,14 @@ class VectorTileLayerConfig extends AbstractLayerConfig {
       this.urls = /** @type {!Array<string>} */ (options['urls']);
     } else if (this.url) {
       // make sure the "urls" property is set in the options for multiple URL support
-      options['urls'] = this.urls = [this.url];
-
-      // remove the "url" property to avoid confusion
-      options['url'] = undefined;
+      this.urls = [this.url];
     }
 
+    // remove URL properties so they can be set manually on the source when ready to load
+    options['url'] = undefined;
+    options['urls'] = undefined;
+
     this.expandUrls();
-    options['urls'] = this.urls;
 
     const projection = getBestSupportedProjection(options);
     if (!projection) {
@@ -127,6 +126,11 @@ class VectorTileLayerConfig extends AbstractLayerConfig {
     if (this.crossOrigin === CrossOrigin.NONE) {
       this.crossOrigin = null;
       options['crossOrigin'] = null;
+    }
+
+    // Default declutter to true to avoid label collision.
+    if (options['declutter'] !== false) {
+      options['declutter'] = true;
     }
 
     // Default render mode to 'image'
@@ -164,9 +168,8 @@ class VectorTileLayerConfig extends AbstractLayerConfig {
    * @return {VectorTileLayer}
    */
   getLayer(source, options) {
-    const vectorTileOptions = /** @type {olx.source.VectorTileOptions} */ (obj.assign({}, options, {
-      'source': source
-    }));
+    const vectorTileOptions = /** @type {olx.source.VectorTileOptions} */ (Object.assign({}, options));
+    vectorTileOptions.source = source;
 
     const layerClass = /** @type {!Function} */ (options['layerClass'] || VectorTileLayer);
     return new layerClass(vectorTileOptions);
@@ -241,7 +244,7 @@ class VectorTileLayerConfig extends AbstractLayerConfig {
                   if (styleConfig.length === 1) {
                     styleConfig = styleConfig[0];
                   } else {
-                    styleConfig = obj.assign.apply(null, styleConfig);
+                    styleConfig = Object.assign(...styleConfig);
                   }
                 }
 
@@ -276,6 +279,10 @@ class VectorTileLayerConfig extends AbstractLayerConfig {
 
             layer.setStyle(styleFunction);
 
+            // set URL's on the source and refresh to load the layer
+            source.setUrls(this.urls);
+            source.refresh();
+
             if (glStyle.layers) {
               // if the style has a background layer, apply the color to the map/globe
               const bgLayer = glStyle.layers.find((l) => l.type === 'background');
@@ -291,6 +298,8 @@ class VectorTileLayerConfig extends AbstractLayerConfig {
           .thenCatch((e) => {
             log.error(logger, `layer ${layer.getId()} could not load style from ${options['styleUrl']}`);
           });
+    } else {
+      source.setUrls(this.urls);
     }
 
     return layer;
