@@ -30,6 +30,7 @@ os.style.TextReader.prototype.getOrCreateStyle = function(config) {
   var font = /** @type {string|undefined} */ (config['font']) || os.style.label.getFont();
 
   var fillColor;
+  var stroke;
   var strokeColor;
 
   // OpenSphere represents fill/stroke color as a direct property, while style parsers like ol-mapbox-style represent
@@ -46,11 +47,19 @@ os.style.TextReader.prototype.getOrCreateStyle = function(config) {
     strokeColor = /** @type {string} */ (config['strokeColor']);
   } else if (config['stroke'] && config['stroke']['color']) {
     strokeColor = /** @type {string} */ (config['stroke']['color']);
-  } else {
+  } else if (config['stroke'] !== null) {
+    // Set stroke to null for no stroke, undefined for default stroke.
     strokeColor = 'rgba(0,0,0,1)';
   }
 
-  var strokeWidth = config['strokeWidth'] !== undefined ? /** @type {number} */ (config['strokeWidth']) : 2;
+  if (strokeColor) {
+    var strokeWidth = config['strokeWidth'] !== undefined ? /** @type {number} */ (config['strokeWidth']) : 2;
+    stroke = new ol.style.Stroke({
+      color: strokeColor,
+      width: strokeWidth
+    });
+  }
+
   var offsetX = config['offsetX'] !== undefined ? /** @type {number} */ (config['offsetX']) : 0;
   var offsetY = config['offsetY'] !== undefined ? /** @type {number} */ (config['offsetY']) : 0;
   var placement = /** @type {ol.style.TextPlacement|undefined} */ (config['placement']);
@@ -65,10 +74,7 @@ os.style.TextReader.prototype.getOrCreateStyle = function(config) {
     fill: new ol.style.Fill({
       color: fillColor
     }),
-    stroke: new ol.style.Stroke({
-      color: strokeColor,
-      width: strokeWidth
-    }),
+    stroke: stroke,
     offsetX: offsetX,
     offsetY: offsetY,
     placement: placement

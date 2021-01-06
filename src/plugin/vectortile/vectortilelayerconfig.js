@@ -43,7 +43,15 @@ const logger = log.getLogger('plugin.vectortile.VectorTileLayerConfig');
  * @param {Array<string>} fonts The style fonts.
  * @return {Array<string>} The supported fonts.
  */
-const getFonts = (fonts) => [DEFAULT_FONT];
+const getFonts = (fonts) => {
+  const defaultLC = DEFAULT_FONT.toLowerCase();
+  const supported = fonts.filter((f) => !!f && f.toLowerCase().indexOf(defaultLC) > -1);
+  if (!supported.length) {
+    supported.push(DEFAULT_FONT);
+  }
+
+  return supported;
+};
 
 
 /**
@@ -239,11 +247,18 @@ class VectorTileLayerConfig extends AbstractLayerConfig {
 
                 const sm = StyleManager.getInstance();
                 const featureStyle = sm.getOrCreateStyle(styleConfig);
-                if (styleConfig['text']) {
+
+                const textConfig = styleConfig['text'];
+                if (textConfig) {
+                  // if a stroke is not defined, set it to null so a default stroke isn't applied
+                  if (!textConfig['stroke']) {
+                    textConfig['stroke'] = null;
+                  }
+
                   // create the style using the text reader
                   const reader = sm.getReader('text');
                   if (reader) {
-                    const textStyle = reader.getOrCreateStyle(styleConfig['text']);
+                    const textStyle = reader.getOrCreateStyle(textConfig);
                     const labelStyle = new Style({
                       text: textStyle,
                       zIndex: /** @type {number|undefined} */ (styleConfig['zIndex'])
