@@ -94,6 +94,24 @@ toastui.Editor.prototype.getTextContent = function() {};
 
 
 /**
+ * @return {Object}
+ */
+toastui.Editor.prototype.getUI = function() {};
+
+
+/**
+ * @type {Object}
+ */
+toastui.Editor.defaultUI = {};
+
+
+/**
+ * @return {Object}
+ */
+toastui.Editor.defaultUI.prototype.getToolbar = function() {};
+
+
+/**
  * @type {Object}
  */
 toastui.Editor.markdownit = {};
@@ -128,6 +146,38 @@ toastui.Editor.mdEditor.cm = {};
  * kicks codemirror to update
  */
 toastui.Editor.mdEditor.cm.refresh = function() {};
+
+
+/**
+ * @type {Object}
+ */
+toastui.Editor.toolbar = {};
+
+
+/**
+ * @return {Array<Object>}
+ */
+toastui.Editor.toolbar.prototype.getItems = function() {};
+
+
+/**
+ * @param {number} toolbarItemIndex
+ * @param {boolean} deleteItem
+ * @return {Object | undefined}
+ */
+toastui.Editor.toolbar.prototype.removeItem = function(toolbarItemIndex, deleteItem) {};
+
+
+/**
+ * @type {Object}
+ */
+toastui.Editor.toolbarItem = {};
+
+
+/**
+ * @return {string}
+ */
+toastui.Editor.toolbarItem.prototype.getName = function() {};
 
 
 /**
