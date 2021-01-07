@@ -87,6 +87,10 @@ os.ui.file.ExportDialogCtrl = function($scope, $element, $compile) {
     }
   }
 
+  if (this.options.additionalOptions) {
+    this['additionalOptions'] = this.options.additionalOptions;
+  }
+
   /**
    * @type {Object.<string, os.ex.IPersistenceMethod>}
    */
@@ -119,6 +123,10 @@ os.ui.file.ExportDialogCtrl = function($scope, $element, $compile) {
   $scope.$watch('exporter', this.onExporterChange.bind(this));
   $scope.$watch('persister', this.onPersisterChange.bind(this));
   $scope.$on('$destroy', this.destroy.bind(this));
+
+  $scope.$on('addexportoptions.updateitem', goog.bind(function(event, items) {
+    this.options.items = items;
+  }, this));
 };
 
 
