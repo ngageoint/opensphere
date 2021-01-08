@@ -744,17 +744,12 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
             break;
           case os.action.EventType.MODIFY_GEOMETRY:
             // start by cloning the feature so we don't modify the existing geom
-            const clone = feature.clone();
+            const clone = new os.feature.DynamicFeature();
 
             // use the original geom, interpolated coordinates make for a weird UX
             const originalGeom = /** @type {ol.geom.Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD));
-            clone.setGeometry(originalGeom);
-
-            // style it and add it to the drawing layer to modify
-            const editStyles = ol.style.Style.createDefaultEditing();
-            const style = editStyles[ol.geom.GeometryType.LINE_STRING]
-                .concat(editStyles[ol.geom.GeometryType.POLYGON]);
-            clone.setStyle(style);
+            clone.setGeometry(originalGeom.clone());
+            clone.setStyle(os.interaction.Modify.STYLE);
             clone.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
             clone.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.NONE);
             clone.setId(goog.string.getRandomString());

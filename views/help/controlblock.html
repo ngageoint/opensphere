@@ -1,0 +1,25 @@
+<div class="card-body">
+  <div ng-repeat="ctrl in controls" class="row align-items-center mb-1">
+    <div class="text-right col-5 col-form-label">{{ctrl.text}} </div>
+    <div class="col-7">
+      <span ng-repeat="keyCode in ctrl.keys track by $index">
+        <span ng-if="$even" class="d-inline-block px-2 bg-secondary u-bg-secondary-text rounded border border-secondary">
+          <span class="text-monospace">
+            {{controlBlock.getKey(keyCode)}}
+          </span>
+        </span>
+        <span ng-if="$odd"> {{keyCode}} </span>
+      </span>
+      <span ng-repeat="otherText in ctrl.other track by $index">
+        <span ng-if="$even">
+          <img ng-if="controlBlock.getMouse(otherText)" ng-src="{{controlBlock.getMouse(otherText)}}">
+          <span ng-if="controlBlock.getFont(otherText)" class="d-inline-block px-1 bg-secondary u-bg-secondary-text rounded border border-secondary" ng-class="controlBlock.getFontClass(otherText)">
+            <i ng-class="controlBlock.getFont(otherText)"></i>
+          </span>
+          <span ng-if="!controlBlock.getMouse(otherText) && !controlBlock.getFont(otherText)" class="d-inline-block px-2 bg-secondary u-bg-secondary-text rounded border border-secondary">{{otherText}}</span>
+        </span>
+        <span ng-if="$odd"> {{otherText}} </span>
+      </span>
+    </div>
+  </div>
+</div>
