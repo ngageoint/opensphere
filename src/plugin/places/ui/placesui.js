@@ -3,6 +3,7 @@ goog.provide('plugin.places.ui.placesDirective');
 
 goog.require('goog.Disposable');
 goog.require('os.defines');
+goog.require('os.ex.ExportOptions');
 goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
 goog.require('os.ui.Module');
@@ -139,11 +140,49 @@ plugin.places.ui.PlacesCtrl.prototype.hasRoot = function() {
  */
 plugin.places.ui.PlacesCtrl.prototype.export = function() {
   if (this.placesRoot_) {
-    plugin.file.kml.ui.launchTreeExport(this.placesRoot_, 'Export Places');
+    var activePlaces = this.getActivePlaces(this.placesRoot_);
+
+    var options = /** @type {os.ex.ExportOptions} */ ({
+      allData: this.placesRoot_.getChildren(),
+      selectedData: this['selected'],
+      activeData: activePlaces,
+      additionalOptions: true,
+      items: this.placesRoot_.getChildren(),
+      fields: []
+    });
+
+    plugin.file.kml.ui.launchTreeExport(this.placesRoot_, 'Export Places', options);
     os.metrics.Metrics.getInstance().updateMetric(os.metrics.Places.EXPORT, 1);
   } else {
     os.alertManager.sendAlert('Nothing to export.', os.alert.AlertEventSeverity.WARNING);
   }
+};
+
+
+/**
+ * Get active nodes from root
+ * @param {!plugin.file.kml.ui.KMLNode} root
+ * @return {Array<plugin.file.kml.ui.KMLNode>}
+ */
+plugin.places.ui.PlacesCtrl.prototype.getActivePlaces = function(root) {
+  var places = root.getChildren() || [];
+  var activePlaces = [];
+
+  for (var i = 0; i < places.length; i++) {
+    var place = places[i];
+
+    if (place.canAddChildren) {
+      var active = this.getActivePlaces(places[i]);
+      var clone = place.clone();
+
+      clone.setChildren(active);
+      activePlaces.push(clone);
+    } else if (place.getState() == 'on') {
+      activePlaces.push(place);
+    }
+  }
+
+  return activePlaces;
 };
 
 

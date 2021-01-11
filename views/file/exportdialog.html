@@ -24,6 +24,12 @@
         </div>
       </div>
 
+      <div class="" ng-show="exportdialog.additionalOptions">
+        <div class="js-additional-ui__container">
+          <addexportoptions options="options"></addexportoptions>
+        </div>
+      </div>
+
       <div class="js-export-ui__wrapper" ng-show="exporter && exportdialog.getExporterUI()">
         <h5 class="text-center">{{exportdialog.getExporterLabel()}} Options</h5>
         <div class="js-export-ui__container"></div>

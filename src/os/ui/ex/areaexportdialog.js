@@ -63,8 +63,10 @@ goog.inherits(os.ui.ex.AreaExportCtrl, os.ui.file.ExportDialogCtrl);
  * Starts the export process for the provided areas.
  *
  * @param {Array<ol.Feature>} areas
+ * @param {Array<ol.Feature>=} opt_selected
+ * @param {Array<ol.Feature>=} opt_active
  */
-os.ui.ex.AreaExportCtrl.start = function(areas) {
+os.ui.ex.AreaExportCtrl.start = function(areas, opt_selected, opt_active) {
   if (!areas) {
     areas = [];
   }
@@ -83,6 +85,10 @@ os.ui.ex.AreaExportCtrl.start = function(areas) {
   var title = areas.length == 1 ? areas[0].get('title') : null;
   var scopeOptions = {
     'options': /** @type {os.ex.ExportOptions} */ ({
+      allData: areas,
+      selectedData: opt_selected,
+      activeData: opt_active,
+      additionalOptions: true,
       exporter: null,
       fields: [],
       items: areas,
