@@ -66,8 +66,6 @@ os.ui.AreasCtrl = function($scope, $element) {
 
   this.scope['views'] = os.ui.AreasCtrl.VIEWS;
 
-  this.scope['activeAreas'] = [];
-
   /**
    * @type {?os.data.AreaTreeSearch}
    */
@@ -155,7 +153,9 @@ os.ui.AreasCtrl.prototype.exportDisabled = function() {
  * @export
  */
 os.ui.AreasCtrl.prototype.export = function() {
-  os.ui.AreasCtrl.exportAreas(this.scope['areas']);
+  var activeAreas = this.activeAreas();
+
+  os.ui.AreasCtrl.exportAreas(this.scope['areas'], this.scope['selected'], activeAreas);
 };
 
 
@@ -163,9 +163,26 @@ os.ui.AreasCtrl.prototype.export = function() {
  * Pop up area export gui
  *
  * @param {Array<os.ui.query.AreaNode>} areas
+ * @param {Array<os.data.AreaNode>=} opt_selected
+ * @param {Array<os.data.AreaNode>=} opt_active
  * @export
  */
-os.ui.AreasCtrl.exportAreas = function(areas) {
+os.ui.AreasCtrl.exportAreas = function(areas, opt_selected, opt_active) {
+  var allAreas = os.ui.AreasCtrl.formatAreas(areas);
+  var selectedAreas = opt_selected ? os.ui.AreasCtrl.formatAreas(opt_selected) : undefined;
+  var activeAreas = opt_active ? os.ui.AreasCtrl.formatAreas(opt_active) : undefined;
+
+  os.ui.ex.AreaExportCtrl.start(allAreas, selectedAreas, activeAreas);
+};
+
+
+/**
+ * Format areas for export
+ *
+ * @param {Array<os.ui.query.AreaNode>} areas
+ * @return {Array<ol.Feature>}
+ */
+os.ui.AreasCtrl.formatAreas = function(areas) {
   var formattedAreas = /** @type {Array<os.structs.ITreeNode>} */ (areas).map(
       /**
        * @param {os.structs.ITreeNode} node The tree node
@@ -183,71 +200,12 @@ os.ui.AreasCtrl.exportAreas = function(areas) {
         return null;
       }).filter(os.fn.filterFalsey);
 
-  os.ui.ex.AreaExportCtrl.start(formattedAreas);
+  return formattedAreas;
 };
 
 
 /**
- * Events fired by the query area import menu.
- * @enum {string}
- */
-os.ui.AreasCtrl.EventType = {
-  ALL: 'areaexport:all',
-  SELECTED: 'areaexport:selected',
-  ACTIVE: 'areaexport:active'
-};
-
-
-/**
- * Opens the area export menu.
- *
- * @export
- */
-os.ui.AreasCtrl.prototype.openExportMenu = function() {
-  var target = this.element.find('.js-export-group');
-  var menu = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
-    type: os.ui.menu.MenuItemType.ROOT,
-    children: [{
-      label: 'Export All',
-      eventType: os.ui.AreasCtrl.EventType.ALL,
-      tooltip: 'Export all areas',
-      handler: this.exportEventHandler_.bind(this),
-      sort: 1
-    }, {
-      label: 'Export Selected',
-      eventType: os.ui.AreasCtrl.EventType.SELECTED,
-      tooltip: 'Export only selected areas',
-      handler: this.exportEventHandler_.bind(this),
-      sort: 2
-    }, {
-      label: 'Export Active',
-      eventType: os.ui.AreasCtrl.EventType.ACTIVE,
-      tooltip: 'Export only active areas',
-      handler: this.exportEventHandler_.bind(this),
-      sort: 3
-    }]
-  }));
-
-  var menuRoot = menu.getRoot();
-
-  this.scope['activeAreas'] = this.scope['areas'][0].getLabel() == 'No results' ? [] : this.activeAreas();
-
-  menuRoot.find(os.ui.AreasCtrl.EventType.ALL).enabled = (this.scope['areas'][0].getLabel() != 'No results');
-  menuRoot.find(os.ui.AreasCtrl.EventType.SELECTED).enabled = (this.scope['selected'].length > 0);
-  menuRoot.find(os.ui.AreasCtrl.EventType.ACTIVE).enabled = (this.scope['activeAreas'].length > 0);
-
-  if (menu && target && target.length) {
-    menu.open(undefined, {
-      my: 'left top+4',
-      at: 'left bottom',
-      of: target
-    });
-  }
-};
-
-
-/**
- * @return {Array<!os.data.AreaNode>} Array of active areas
+ * @return {Array<os.data.AreaNode>} Array of active areas
  */
 os.ui.AreasCtrl.prototype.activeAreas = function() {
   var allAreas = this.scope['areas'];
@@ -260,29 +218,6 @@ os.ui.AreasCtrl.prototype.activeAreas = function() {
   });
 
   return activeAreas;
-};
-
-
-/**
- * Handle menu area export events.
- *
- * @param {!os.ui.menu.MenuEvent} event The menu event.
- * @private
- */
-os.ui.AreasCtrl.prototype.exportEventHandler_ = function(event) {
-  switch (event.type) {
-    case os.ui.AreasCtrl.EventType.ALL:
-      os.ui.AreasCtrl.exportAreas(this.scope['areas']);
-      break;
-    case os.ui.AreasCtrl.EventType.SELECTED:
-      os.ui.AreasCtrl.exportAreas(this.scope['selected']);
-      break;
-    case os.ui.AreasCtrl.EventType.ACTIVE:
-      os.ui.AreasCtrl.exportAreas(this.scope['activeAreas']);
-      break;
-    default:
-      break;
-  }
 };
 
 
