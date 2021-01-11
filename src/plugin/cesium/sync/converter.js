@@ -2,6 +2,8 @@ goog.module('plugin.cesium.sync.converter');
 
 const DynamicFeature = goog.require('os.feature.DynamicFeature');
 const DynamicLineStringConverter = goog.require('plugin.cesium.sync.DynamicLineStringConverter');
+const DynamicMultiPolygonConverter = goog.require('plugin.cesium.sync.DynamicMultiPolygonConverter');
+const DynamicPolygonConverter = goog.require('plugin.cesium.sync.DynamicPolygonConverter');
 const Ellipse = goog.require('os.geom.Ellipse');
 const EllipseConverter = goog.require('plugin.cesium.sync.EllipseConverter');
 const GeometryCollectionConverter = goog.require('plugin.cesium.sync.GeometryCollectionConverter');
@@ -64,8 +66,8 @@ GeometryCollectionConverter.setConvertFunction(convertGeometry);
 const dynamicConverters = {
   [GeometryType.LINE_STRING]: new DynamicLineStringConverter,
   [GeometryType.MULTI_LINE_STRING]: new MultiDynamicLineStringConverter,
-  [GeometryType.POLYGON]: new DynamicLineStringConverter,
-  [GeometryType.MULTI_POLYGON]: new MultiDynamicLineStringConverter
+  [GeometryType.POLYGON]: new DynamicPolygonConverter,
+  [GeometryType.MULTI_POLYGON]: new DynamicMultiPolygonConverter
 };
 
 

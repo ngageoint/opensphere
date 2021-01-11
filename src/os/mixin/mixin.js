@@ -199,7 +199,7 @@ ol.interaction.Modify.handleDragEvent_ = function(evt) {
 
     if (coordinates) {
       this.setGeometryCoordinates_(geometry, coordinates);
-      os.style.notifyStyleChange(os.feature.getLayer(segmentData.feature), segmentData.feature);
+      os.style.notifyStyleChange(os.feature.getLayer(segmentData.feature), [segmentData.feature]);
     }
   }
   this.createOrUpdateVertexFeature_(vertex);

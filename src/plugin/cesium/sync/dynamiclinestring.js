@@ -6,16 +6,18 @@ const {getDashPattern, getLineStringPositions} = goog.require('plugin.cesium.syn
 const Feature = goog.requireType('ol.Feature');
 const {GeometryInstanceId} = goog.require('plugin.cesium');
 
+const Ellipse = goog.requireType('os.geom.Ellipse');
 const LineString = goog.requireType('ol.geom.LineString');
 const MultiLineString = goog.requireType('ol.geom.MultiLineString');
-const Ellipse = goog.requireType('os.geom.Ellipse');
+const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
+const Polygon = goog.requireType('ol.geom.Polygon');
 const Style = goog.requireType('ol.style.Style');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
 
 
 /**
  * @param {!Feature} feature Ol3 feature..
- * @param {!(LineString|Ellipse|MultiLineString)} geometry Ol3 line string geometry.
+ * @param {!(LineString|Ellipse|MultiLineString|Polygon|MultiPolygon)} geometry Ol3 line string geometry.
  * @param {!Style} style
  * @param {!VectorContext} context
  * @param {Array<number>=} opt_flatCoords The flat coordinates from a multiline
@@ -32,7 +34,7 @@ const createPolyline = (feature, geometry, style, context, opt_flatCoords, opt_o
 
 /**
  * @param {!Feature} feature Ol3 feature..
- * @param {!(LineString|Ellipse|MultiLineString)} geometry Ol3 line string geometry.
+ * @param {!(LineString|Ellipse|MultiLineString|Polygon|MultiPolygon)} geometry Ol3 line string geometry.
  * @param {!Style} style
  * @param {!VectorContext} context
  * @param {!(Cesium.Polyline|Cesium.PolylineOptions)} polyline The polyline, for updates.
@@ -78,7 +80,38 @@ const updatePolyline = (feature, geometry, style, context, polyline, opt_flatCoo
 };
 
 
+/**
+ * Creates or updates an individual polygon/linestring segment as a Cesium.Polyline.
+ * @param {!number} i Index representing the ring within the polygon
+ * @param {!Feature} feature
+ * @param {!(LineString|Ellipse|MultiLineString|Polygon|MultiPolygon)} polygon
+ * @param {!Style} style
+ * @param {!VectorContext} context
+ * @param {Array<number>} flatCoords
+ * @param {number} offset Coordinate offset in the flat coordinates.
+ * @param {number} end Coordinate end index in the flat coordinates.
+ * @param {Array<!Cesium.Polyline>=} opt_primitives
+ */
+const createOrUpdateSegment = (i, feature, polygon, style, context, flatCoords, offset, end, opt_primitives) => {
+  let primitive;
+  if (opt_primitives && i < opt_primitives.length) {
+    primitive = opt_primitives[i];
+  }
+
+  if (!primitive) {
+    primitive = createPolyline(feature, polygon, style, context, flatCoords, offset, end);
+
+    if (primitive) {
+      context.addPolyline(primitive, feature, polygon);
+    }
+  } else {
+    updatePolyline(feature, polygon, style, context, primitive, flatCoords, offset, end);
+  }
+};
+
+
 exports = {
   createPolyline,
-  updatePolyline
+  updatePolyline,
+  createOrUpdateSegment
 };

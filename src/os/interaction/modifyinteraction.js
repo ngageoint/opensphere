@@ -192,7 +192,7 @@ class Modify extends OLModify {
       feature.changed();
     }
 
-    notifyStyleChange(this.overlay_, [feature, this.features_.getArray()[0]]);
+    notifyStyleChange(this.overlay_, [feature]);
 
     return feature;
   }
