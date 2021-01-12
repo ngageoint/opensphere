@@ -13,6 +13,7 @@
   .modal-body {
     background: $modal-content-bg;
     color: $body-color;
+    overflow-x: hidden;
     overflow-y: auto;
   }
 

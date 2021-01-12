@@ -116,7 +116,6 @@ os.ui.history.HistoryViewCtrl.prototype.clearHistory = function() {
       'width': '325',
       'height': 'auto',
       'modal': 'true',
-      'noScroll': 'true',
       'headerClass': 'bg-danger u-bg-danger-text'
     }
   }));

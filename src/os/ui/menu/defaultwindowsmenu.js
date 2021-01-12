@@ -29,7 +29,6 @@ os.ui.menu.windows.default.setup = function() {
     'min-height': '300',
     'max-height': '1000',
     'show-close': 'true',
-    'no-scroll': 'true',
     'help-context': 'addData',
     'html': 'adddata'
   }, true);
@@ -48,7 +47,6 @@ os.ui.menu.windows.default.setup = function() {
     'min-height': '250',
     'max-height': '2000',
     'show-close': 'true',
-    'no-scroll': 'true',
     'help-context': 'layers',
     'shortcut': 'alt+l',
     'html': '<layerswin tab="layers"></layerswin>',
@@ -82,7 +80,6 @@ os.ui.menu.windows.default.setup = function() {
     'min-height': '300',
     'max-height': '2000',
     'show-close': 'true',
-    'no-scroll': 'true',
     'html': 'settings'
   }, true);
 
@@ -99,7 +96,6 @@ os.ui.menu.windows.default.setup = function() {
     'min-height': '300',
     'max-height': '1000',
     'show-close': 'true',
-    'no-scroll': 'false',
     'html': '<alerts resize-with="' + os.ui.windowSelector.WINDOW + '"></alerts>'
   });
 
@@ -132,7 +128,6 @@ os.ui.menu.windows.default.setup = function() {
     'min-height': '300',
     'max-height': '1000',
     'show-close': 'true',
-    'no-scroll': 'true',
     'html': '<history resize-with="' + os.ui.windowSelector.WINDOW + '"></history>'
   }, false, undefined);
 
@@ -150,7 +145,6 @@ os.ui.menu.windows.default.setup = function() {
       'min-height': '300',
       'max-height': '1000',
       'show-close': 'true',
-      'no-scroll': 'true',
       'html': 'metrics'
     }, false, undefined);
   }

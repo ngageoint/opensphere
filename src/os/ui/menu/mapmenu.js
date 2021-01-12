@@ -12,8 +12,15 @@ goog.require('os.ui.window.confirmColorDirective');
 
 /**
  * @type {os.ui.menu.Menu<ol.Coordinate>|undefined}
+ * @deprecated use os.ui.menu.map.MENU instead
  */
 os.ui.menu.MAP = undefined;
+
+
+/**
+ * @type {os.ui.menu.Menu<ol.Coordinate>|undefined}
+ */
+os.ui.menu.map.MENU = undefined;
 
 
 /**
@@ -42,12 +49,12 @@ os.ui.menu.map.GroupLabel = {
  * Set up the menu
  */
 os.ui.menu.map.setup = function() {
-  if (os.ui.menu.MAP) {
+  if (os.ui.menu.map.MENU) {
     // already created
     return;
   }
 
-  os.ui.menu.MAP = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
+  os.ui.menu.MAP = os.ui.menu.map.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
     type: os.ui.menu.MenuItemType.ROOT,
     children: [{
       label: os.ui.menu.map.GroupLabel.MAP,
@@ -136,8 +143,8 @@ os.ui.menu.map.setup = function() {
  * Disposes map menu
  */
 os.ui.menu.map.dispose = function() {
-  goog.dispose(os.ui.menu.MAP);
-  os.ui.menu.MAP = undefined;
+  goog.dispose(os.ui.menu.map.MENU);
+  os.ui.menu.MAP = os.ui.menu.map.MENU = undefined;
 };
 
 

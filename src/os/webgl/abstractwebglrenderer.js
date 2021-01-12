@@ -236,6 +236,12 @@ os.webgl.AbstractWebGLRenderer.prototype.resetSync = function() {
   }
 };
 
+/**
+ * @inheritDoc
+ */
+os.webgl.AbstractWebGLRenderer.prototype.supportsVideoOverlay = function() {
+  return false;
+};
 
 /**
  * @abstract

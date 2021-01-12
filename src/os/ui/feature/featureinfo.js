@@ -10,6 +10,7 @@ goog.require('os.map');
 goog.require('os.plugin.PluginManager');
 goog.require('os.ui.Module');
 goog.require('os.ui.feature.FeatureInfoTabManager');
+goog.require('os.ui.feature.SimplePropertiesUI');
 goog.require('os.ui.location.SimpleLocationDirective');
 goog.require('os.ui.tab.FeatureTab');
 goog.require('os.ui.uiSwitchDirective');

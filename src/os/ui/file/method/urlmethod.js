@@ -167,8 +167,7 @@ os.ui.file.method.UrlMethod.prototype.loadFile = function(opt_options) {
       'max-width': '400',
       'height': 'auto',
       'modal': true,
-      'show-close': true,
-      'no-scroll': true
+      'show-close': true
     };
     var template = '<urlimport></urlimport>';
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);

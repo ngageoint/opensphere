@@ -18,6 +18,7 @@ goog.require('os.interaction.KeyboardPan');
 goog.require('os.interaction.KeyboardTiltRotate');
 goog.require('os.interaction.KeyboardZoom');
 goog.require('os.interaction.Measure');
+goog.require('os.interaction.MouseRotate');
 goog.require('os.interaction.MouseZoom');
 goog.require('os.interaction.PinchZoom');
 goog.require('os.interaction.Reset');
@@ -45,6 +46,9 @@ os.map.interaction.getInteractions = function() {
   var mwZoom = new os.ui.ol.interaction.MouseWheelZoom(options);
   var mZoom = new os.interaction.MouseZoom(options);
   var dcZoom = new os.interaction.DoubleClickZoom();
+
+  // Mouse rotate
+  var mRotate = new os.interaction.MouseRotate(options);
 
   // Screen pinch-zoom
   var pinchZoom = new os.interaction.PinchZoom();
@@ -86,12 +90,12 @@ os.map.interaction.getInteractions = function() {
 
   var reset = new os.interaction.Reset();
 
-  goog.asserts.assert(os.ui.menu.MAP != null, 'map manager has not been initialized');
-  goog.asserts.assert(os.ui.menu.SPATIAL != null, 'spatial manager has not been initialized');
+  goog.asserts.assert(os.ui.menu.map.MENU != null, 'map manager has not been initialized');
+  goog.asserts.assert(os.ui.menu.spatial.MENU != null, 'spatial manager has not been initialized');
 
   var contextOptions = /** @type {os.ui.ol.interaction.ContextMenuOptions} */ ({
-    featureMenu: os.ui.menu.SPATIAL,
-    mapMenu: os.ui.menu.MAP
+    featureMenu: os.ui.menu.spatial.MENU,
+    mapMenu: os.ui.menu.map.MENU
   });
   var contextMenu = new os.interaction.ContextMenu(contextOptions);
 
@@ -107,6 +111,7 @@ os.map.interaction.getInteractions = function() {
     mwZoom,
     mZoom,
     dcZoom,
+    mRotate,
     contextMenu,
     select,
     drawBox,

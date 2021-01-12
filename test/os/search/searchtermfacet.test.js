@@ -1,6 +1,6 @@
 goog.require('os.search.SearchTermFacet');
 
-ddescribe('os.search.SearchTermFacet', () => {
+describe('os.search.SearchTermFacet', () => {
   const SearchTermFacet = goog.module.get('os.search.SearchTermFacet');
 
   const texts = [

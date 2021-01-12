@@ -55,8 +55,7 @@ plugin.file.gml.GMLImportUI.prototype.launchUI = function(file, opt_config) {
     'max-width': 800,
     'height': 'auto',
     'modal': true,
-    'show-close': true,
-    'no-scroll': true
+    'show-close': true
   };
   var template = '<gmlimport></gmlimport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);

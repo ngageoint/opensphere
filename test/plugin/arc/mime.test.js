@@ -11,8 +11,12 @@ describe('plugin.arc.mime', function() {
       '/base/test/resources/ogc/wms-111.xml',
       '/base/test/resources/ogc/wfs-200.xml',
       '/base/test/resources/ogc/wfs-110.xml',
-      '/base/test/resources/ogc/exception-report.xml'],
-        os.file.mime.mock.testNo(plugin.arc.ID));
+      '/base/test/resources/ogc/exception-report.xml',
+      // Test URL-based detection. "arcgis" is a positive match, but "/wmsserver" should be negative.
+      '/base/test/resources/arc/arcgis/wmsserver/wms-130.xml',
+      // Similarly, "arcgis" is a positive match, but "service=WMS" should be negative.
+      '/base/test/resources/arc/arcgis/wms-130.xml?service=WMS&request=GetCapabilities'
+    ], os.file.mime.mock.testNo(plugin.arc.ID));
   });
 
   it('should detect files that are ArcGIS Server files', function() {

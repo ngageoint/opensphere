@@ -30,7 +30,7 @@ os.ui.text.TuiEditor.READY = 'tui.editor.ready';
  * @type {string}
  * @const
  */
-os.ui.text.TuiEditor.SCRIPT_URL = os.APP_ROOT + 'vendor/os-minified/os-tui-editor.min.js';
+os.ui.text.TuiEditor.SCRIPT_URL = os.APP_ROOT + 'vendor/os-minified/os-toastui-editor.min.js';
 
 
 /**
@@ -261,7 +261,7 @@ os.ui.text.TuiEditorCtrl.prototype.getWordCount = function() {
  * @return {Object}
  */
 os.ui.text.TuiEditorCtrl.prototype.getOptions = function() {
-  var options = {
+  const options = {
     'el': this.element.find('.js-tui-editor__editor')[0],
     'height': 'auto',
     'min-height': '10rem',
@@ -270,7 +270,6 @@ os.ui.text.TuiEditorCtrl.prototype.getOptions = function() {
     },
     'initialValue': this['text'],
     'initialEditType': this.initialEditType,
-    'toolbarItems': this.getToolbar(),
     'events': {
       'change': this.onEditorChange_.bind(this)
     },
@@ -281,6 +280,12 @@ os.ui.text.TuiEditorCtrl.prototype.getOptions = function() {
     'exts': this.getExtensions(),
     'hooks': this.getHooks()
   };
+
+  const toolbarItems = this.getToolbar();
+
+  if (toolbarItems instanceof Array && toolbarItems.length > 0) {
+    options['toolbarItems'] = toolbarItems;
+  }
 
   return options;
 };
@@ -297,10 +302,10 @@ os.ui.text.TuiEditorCtrl.prototype.init = function() {
   }
 
   if (this.scope['edit']) {
-    if (tui.Editor) {
+    if (toastui.Editor) {
       this['textAreaBackup'] = false;
       this['loading'] = false;
-      this['tuiEditor'] = new tui.Editor(this.getOptions());
+      this['tuiEditor'] = new toastui.Editor(this.getOptions());
       this.scope.$emit(os.ui.text.TuiEditor.READY);
 
       if (os.settings.get(os.ui.text.TuiEditor.MODE_KEY) == os.ui.text.TuiEditor.Mode.MARKDOWN) {
@@ -361,8 +366,8 @@ os.ui.text.TuiEditorCtrl.prototype.onDisplayHtmlUpdate = function(displayHtml) {
 os.ui.text.TuiEditorCtrl.prototype.onScopeChange_ = function() {
   this['text'] = this.scope['text'];
 
-  if (this.scope['edit'] && this['tuiEditor'] && this['text'] != this['tuiEditor'].getValue()) {
-    this['tuiEditor'].setValue(this['text']);
+  if (this.scope['edit'] && this['tuiEditor'] && this['text'] != this.getCurrentValue_()) {
+    this.setCurrentValue_(this['text']);
     os.ui.apply(this.scope);
   } else if (!this.scope['edit']) {
     this.getDisplayHtml_().then(this.onDisplayHtmlUpdate.bind(this));
@@ -374,14 +379,47 @@ os.ui.text.TuiEditorCtrl.prototype.onScopeChange_ = function() {
 
 /**
  * @private
+ * @return {string}
+ */
+os.ui.text.TuiEditorCtrl.prototype.getCurrentValue_ = function() {
+  let currentValue;
+
+  if (this['tuiEditor']['currentMode'] == 'markdown') {
+    currentValue = this['tuiEditor']['mdEditor'].getValue();
+  } else if (this['tuiEditor']['currentMode'] == 'wysiwyg') {
+    currentValue = this['tuiEditor']['wwEditor'].getValue();
+  }
+
+  return currentValue;
+};
+
+
+/**
+ * @private
+ * @param {string} value
+ */
+os.ui.text.TuiEditorCtrl.prototype.setCurrentValue_ = function(value) {
+  if (this['tuiEditor']['currentMode'] == 'markdown') {
+    this['tuiEditor']['mdEditor'].setValue(value);
+  } else if (this['tuiEditor']['currentMode'] == 'wysiwyg') {
+    this['tuiEditor']['wwEditor'].setValue(value);
+  }
+};
+
+
+/**
+ * @private
  */
 os.ui.text.TuiEditorCtrl.prototype.onEditorChange_ = function() {
-  if (this.scope && this.scope['tuiEditorForm'] && this['tuiEditor'].getValue() &&
-  this['tuiEditor'].getValue() !== this.initialText_) {
+  if (
+    this.scope && this.scope['tuiEditorForm'] &&
+    this['tuiEditor'] && this.getCurrentValue_() &&
+    this.getCurrentValue_() !== this.initialText_
+  ) {
     this.scope['tuiEditorForm'].$setDirty();
   }
 
-  this['text'] = this.scope['text'] = this['tuiEditor'].getValue();
+  this['text'] = this.scope['text'] = this.getCurrentValue_();
   os.ui.apply(this.scope);
 };
 

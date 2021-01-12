@@ -1,4 +1,5 @@
 goog.provide('plugin.places.ui.SavePlacesCtrl');
+goog.provide('plugin.places.ui.launchSavePlaces');
 goog.provide('plugin.places.ui.savePlacesDirective');
 
 goog.require('os.defines');

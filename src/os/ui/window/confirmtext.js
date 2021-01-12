@@ -68,13 +68,19 @@ os.ui.window.launchConfirmText = function(opt_options) {
     'yesText': options.yesText || 'OK',
     'yesIcon': options.yesIcon || 'fa fa-check',
     'yesButtonClass': options.yesButtonClass || 'btn-primary',
+    'yesButtonTitle': options.yesButtonTitle || '',
     'noText': options.noText || 'Cancel',
     'noIcon': options.noIcon || 'fa fa-ban',
     'noButtonClass': options.noButtonClass || 'btn-secondary',
-    'select': !!options.select,
-    'limit': options.limit || 200,
+    'noButtonTitle': options.noButtonTitle || '',
+    'checkboxText': options.checkboxText || '',
+    'checkboxClass': options.checkboxClass || '',
+    'checkboxCallback': options.checkbox || goog.nullFunction,
+    'checkboxValue': !!options.checkboxValue,
 
     // confirm text options
+    'select': !!options.select,
+    'limit': options.limit || 200,
     'formLabel': options.formLabel,
     'prompt': options.prompt
   };
@@ -88,8 +94,7 @@ os.ui.window.launchConfirmText = function(opt_options) {
     'width': windowOverrides.width || 325,
     'height': windowOverrides.height || 'auto',
     'modal': windowOverrides.modal != null ? windowOverrides.modal : 'true',
-    'show-close': windowOverrides.showClose != null ? windowOverrides.showClose : 'false',
-    'no-scroll': windowOverrides.noScroll != null ? windowOverrides.noScroll : 'true'
+    'show-close': windowOverrides.showClose != null ? windowOverrides.showClose : 'false'
   };
 
   var template = '<confirm><confirmtext></confirmtext></confirm>';

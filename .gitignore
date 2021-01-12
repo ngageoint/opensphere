@@ -45,10 +45,3 @@ Thumbs.db
 # node generated files #
 ########################
 package-lock.json
-
-
-# cypress generated files #
-###########################
-cypress/videos/
-cypress/screenshots/
-__diff_output__

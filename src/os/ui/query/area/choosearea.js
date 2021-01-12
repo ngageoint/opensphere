@@ -127,7 +127,6 @@ os.ui.query.area.launchChooseArea = function(confirm, opt_default) {
       'width': '400',
       'height': 'auto',
       'show-close': 'true',
-      'no-scroll': 'true',
       'modal': 'true'
     }
   }));
