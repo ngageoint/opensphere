@@ -104,32 +104,3 @@ plugin.ogc.wfs.QueryWFSLayerConfig.prototype.addMappings = function(layer, optio
     }
   }
 };
-
-
-/**
- * Launch the filter manager
- *
- * @param {!os.layer.Vector} layer The layer
- */
-plugin.ogc.wfs.launchFilterManager = function(layer) {
-  os.ui.query.CombinatorCtrl.launchForLayer(layer.getId());
-};
-
-
-/**
- * Get the filterable columns
- *
- * @param {!os.layer.Vector} layer The layer
- * @return {?Array<os.ogc.FeatureTypeColumn>} the columns
- */
-plugin.ogc.wfs.getFilterColumns = function(layer) {
-  var layerOptions = layer.getLayerOptions();
-  if (layerOptions && layerOptions['featureType']) {
-    var featureType = /** @type {os.ogc.IFeatureType} */ (layerOptions['featureType']);
-    if (featureType) {
-      return featureType.getColumns();
-    }
-  }
-
-  return null;
-};
