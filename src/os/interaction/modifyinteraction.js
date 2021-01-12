@@ -180,7 +180,6 @@ class Modify extends OLModify {
     let feature = this.vertexFeature_;
     if (!feature) {
       feature = new Feature(new Point(coordinates));
-      // feature.set(RecordField.SOURCE_ID, os.map.mapContainer.DRAW_ID);
       feature.set(RecordField.DRAWING_LAYER_NODE, false);
       feature.setStyle(VERTEX_STYLE);
 
@@ -209,7 +208,18 @@ Modify.STYLE = [
     stroke: new Stroke({
       color: [0, 153, 255, 1],
       width: 3
-    })
+    }),
+    image: new Circle({
+      radius: 6,
+      fill: new Fill({
+        color: [0, 153, 255, 1]
+      }),
+      stroke: new Stroke({
+        color: [255, 255, 255, 1],
+        width: 2
+      })
+    }),
+    zIndex: Infinity
   })
 ];
 

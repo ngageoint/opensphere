@@ -598,9 +598,13 @@ os.ui.menu.spatial.visibleIfCanModifyGeometry = function(context) {
 
   if (features.length == 1) {
     const feature = features[0];
-    const source = os.feature.getSource(feature);
-    if (os.implements(source, os.source.IModifiableSource.ID)) {
-      supportsModify = /** @type {os.source.IModifiableSource} */ (source).supportsModify();
+    if (feature) {
+      const source = os.feature.getSource(feature);
+      const geometry = /** @type {!ol.geom.Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD) ||
+          feature.getGeometry());
+      if (geometry && os.implements(source, os.source.IModifiableSource.ID)) {
+        supportsModify = /** @type {os.source.IModifiableSource} */ (source).supportsModify();
+      }
     }
   }
 
@@ -747,7 +751,8 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
             const clone = new os.feature.DynamicFeature();
 
             // use the original geom, interpolated coordinates make for a weird UX
-            const originalGeom = /** @type {ol.geom.Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD));
+            const originalGeom = /** @type {!ol.geom.Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD) ||
+                feature.getGeometry());
             clone.setGeometry(originalGeom.clone());
             clone.setStyle(os.interaction.Modify.STYLE);
             clone.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
