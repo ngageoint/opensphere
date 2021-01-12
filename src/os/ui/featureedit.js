@@ -1276,16 +1276,21 @@ os.ui.FeatureEditCtrl.prototype.saveToFeature = function(feature) {
     feature.set(os.style.StyleField.SHAPE, this['shape'], true);
     feature.set(os.style.StyleField.CENTER_SHAPE, this['centerShape'], true);
 
-    if (!this.isFeatureDynamic() && (this.showIcon() || this.showCenterIcon())) {
-      feature.set(os.Fields.BEARING, typeof this['iconRotation'] === 'number' ? this['iconRotation'] % 360 : undefined,
-          true);
-      feature.set(os.style.StyleField.SHOW_ROTATION, true, true);
-      feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING, true);
-    } else {
-      feature.set(os.Fields.BEARING, undefined, true);
-      feature.set(os.style.StyleField.SHOW_ROTATION, false, true);
-      feature.set(os.style.StyleField.ROTATION_COLUMN, undefined, true);
+    // Dynamic features will manage bearing/rotation internally.
+    if (!this.isFeatureDynamic()) {
+      if (this.showIcon() || this.showCenterIcon()) {
+        feature.set(os.Fields.BEARING,
+            typeof this['iconRotation'] === 'number' ? this['iconRotation'] % 360 : undefined,
+            true);
+        feature.set(os.style.StyleField.SHOW_ROTATION, true, true);
+        feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING, true);
+      } else {
+        feature.set(os.Fields.BEARING, undefined, true);
+        feature.set(os.style.StyleField.SHOW_ROTATION, false, true);
+        feature.set(os.style.StyleField.ROTATION_COLUMN, undefined, true);
+      }
     }
+
     os.ui.FeatureEditCtrl.updateFeatureStyle(feature);
 
     if (Array.isArray(configs)) {
@@ -1423,14 +1428,17 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
       feature.set(os.data.RecordField.RING_OPTIONS, this['ringOptions']);
       os.feature.createRings(feature, true);
 
-      if (!this.isFeatureDynamic() && (this.showIcon() || this.showCenterIcon()) && this['iconRotation'] != null) {
-        feature.set(os.style.StyleField.SHOW_ROTATION, true, true);
-        feature.set(os.Fields.BEARING, this['iconRotation'] % 360, true);
-        feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING, true);
-      } else {
-        feature.set(os.Fields.BEARING, undefined, true);
-        feature.set(os.style.StyleField.SHOW_ROTATION, false, true);
-        feature.set(os.style.StyleField.ROTATION_COLUMN, '', true);
+      // Dynamic features will manage bearing/rotation internally.
+      if (!this.isFeatureDynamic()) {
+        if ((this.showIcon() || this.showCenterIcon()) && this['iconRotation'] != null) {
+          feature.set(os.style.StyleField.SHOW_ROTATION, true, true);
+          feature.set(os.Fields.BEARING, this['iconRotation'] % 360, true);
+          feature.set(os.style.StyleField.ROTATION_COLUMN, os.Fields.BEARING, true);
+        } else {
+          feature.set(os.Fields.BEARING, undefined, true);
+          feature.set(os.style.StyleField.SHOW_ROTATION, false, true);
+          feature.set(os.style.StyleField.ROTATION_COLUMN, '', true);
+        }
       }
     }
   } else if (this.originalGeometry && (!geom || geom === this.originalGeometry)) {

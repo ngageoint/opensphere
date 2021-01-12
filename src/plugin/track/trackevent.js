@@ -6,11 +6,15 @@ goog.require('goog.events.Event');
 
 /**
  * Events for the track plugin.
+ *
+ * Track events operating on selected data only should be suffixed with ':selected'. See
  * @enum {string}
  */
 plugin.track.EventType = {
   CREATE_TRACK: 'track:create',
+  CREATE_FROM_SELECTED: 'track:create:selected',
   ADD_TO: 'track:addTo',
+  ADD_FROM_SELECTED: 'track:addTo:selected',
   FOLLOW: 'track:followTrack',
   UNFOLLOW: 'track:unfollowTrack',
   HIDE_LINE: 'track:hideLine',
@@ -75,3 +79,13 @@ plugin.track.Event = function(type) {
   this.sourceId = undefined;
 };
 goog.inherits(plugin.track.Event, goog.events.Event);
+
+
+/**
+ * If the event is operating on selected features only.
+ * @param {string|undefined} eventType The event type.
+ * @return {boolean}
+ */
+plugin.track.Event.isSelectedEvent = function(eventType) {
+  return eventType != null && eventType.endsWith(':selected');
+};

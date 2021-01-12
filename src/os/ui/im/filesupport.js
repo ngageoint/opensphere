@@ -230,8 +230,7 @@ os.ui.im.launchFileSupport = function(file) {
       'max-width': 800,
       'height': 'auto',
       'modal': true,
-      'show-close': true,
-      'no-scroll': true
+      'show-close': true
     };
 
     var template = '<filesupport></filesupport>';

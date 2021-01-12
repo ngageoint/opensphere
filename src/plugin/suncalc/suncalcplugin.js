@@ -31,7 +31,7 @@ plugin.suncalc.ID = 'suncalc';
  * @inheritDoc
  */
 plugin.suncalc.Plugin.prototype.init = function() {
-  var menu = os.ui.menu.MAP;
+  var menu = os.ui.menu.map.MENU;
   if (menu) {
     var group = menu.getRoot().find(os.ui.menu.map.GroupLabel.COORDINATE);
 

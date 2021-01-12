@@ -40,6 +40,7 @@ plugin.places.menu.EventType = {
   EDIT_FOLDER: 'places:editFolder',
   EDIT_PLACEMARK: 'places:editPlacemark',
   QUICK_ADD_PLACES: 'places:quickAdd',
+  FEATURE_LIST: 'places:featureList',
   REMOVE_PLACE: 'places:removePlace',
   REMOVE_ALL: 'places:removeAll'
 };
@@ -86,6 +87,16 @@ plugin.places.menu.layerSetup = function() {
           handler: plugin.places.menu.onLayerEvent_,
           metricKey: os.metrics.Places.QUICK_ADD_PLACES,
           sort: 120
+        },
+        {
+          label: 'Show Features',
+          eventType: plugin.places.menu.EventType.FEATURE_LIST,
+          tooltip: 'Displays features in the layer',
+          icons: ['<i class="fa fa-fw fa-table"></i>'],
+          beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
+          handler: plugin.places.menu.onLayerEvent_,
+          metricKey: os.metrics.Places.FEATURE_LIST,
+          sort: 125
         },
         {
           label: 'Edit Folder...',
@@ -202,6 +213,9 @@ plugin.places.menu.visibleIfLayerNodeSupported_ = function(context) {
         case plugin.places.menu.EventType.EXPORT:
           this.visible = placesRoot != null && node.getRoot() == placesRoot;
           break;
+        case plugin.places.menu.EventType.FEATURE_LIST:
+          this.visible = node.isFolder() || node.hasChildren();
+          break;
         case plugin.places.menu.EventType.REMOVE_PLACE:
           if (node.isFolder() || node.hasChildren()) {
             this.visible = false;
@@ -229,6 +243,7 @@ plugin.places.menu.visibleIfLayerNodeSupported_ = function(context) {
         case plugin.places.menu.EventType.QUICK_ADD_PLACES:
           this.visible = isPlacesLayer && node.isEditable();
           break;
+        case plugin.places.menu.EventType.FEATURE_LIST:
         case plugin.places.menu.EventType.REMOVE_ALL:
           this.visible = isPlacesLayer && node.hasChildren();
           break;
@@ -272,7 +287,7 @@ plugin.places.menu.visibleIfLayerNodeSupported_ = function(context) {
  * Set up places items on the map.
  */
 plugin.places.menu.mapSetup = function() {
-  var menu = os.ui.menu.MAP;
+  var menu = os.ui.menu.map.MENU;
 
   if (menu && !menu.getRoot().find(plugin.places.menu.GROUP_LABEL)) {
     var root = menu.getRoot();
@@ -320,7 +335,7 @@ plugin.places.menu.mapSetup = function() {
  * Clean up places items on the map.
  */
 plugin.places.menu.mapDispose = function() {
-  var menu = os.ui.menu.MAP;
+  var menu = os.ui.menu.map.MENU;
   if (menu) {
     var group = menu.getRoot().find(os.ui.menu.map.GroupLabel.COORDINATE);
     if (group) {
@@ -334,7 +349,7 @@ plugin.places.menu.mapDispose = function() {
  * Set up places items in the spatial menu.
  */
 plugin.places.menu.spatialSetup = function() {
-  var menu = os.ui.menu.SPATIAL;
+  var menu = os.ui.menu.spatial.MENU;
 
   if (menu && !menu.getRoot().find(plugin.places.menu.GROUP_LABEL)) {
     var root = menu.getRoot();
@@ -391,7 +406,7 @@ plugin.places.menu.spatialSetup = function() {
  * Clean up places items in the spatial menu.
  */
 plugin.places.menu.spatialDispose = function() {
-  var menu = os.ui.menu.MAP;
+  var menu = os.ui.menu.map.MENU;
   if (menu) {
     var group = menu.getRoot().find(os.ui.menu.spatial.Group.TOOLS);
     if (group) {
@@ -502,6 +517,11 @@ plugin.places.menu.onLayerEvent_ = function(event) {
             break;
           case plugin.places.menu.EventType.QUICK_ADD_PLACES:
             plugin.places.ui.QuickAddPlacesCtrl.launch(node);
+            break;
+          case plugin.places.menu.EventType.FEATURE_LIST:
+            if (source instanceof os.source.Vector) {
+              os.ui.launchFeatureList(source);
+            }
             break;
           case plugin.places.menu.EventType.EDIT_FOLDER:
             plugin.file.kml.ui.createOrEditFolder(/** @type {!plugin.file.kml.ui.FolderOptions} */ ({

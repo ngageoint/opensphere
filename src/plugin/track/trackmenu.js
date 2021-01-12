@@ -15,100 +15,128 @@ goog.require('plugin.track.confirmTrackDirective');
 
 
 /**
+ * Menu group for track actions.
+ * @type {string}
+ * @const
+ */
+plugin.track.menu.TRACK_GROUP = 'Tracks';
+
+
+/**
  * Add track items to the layer menu.
  */
 plugin.track.menu.layerSetup = function() {
   var menu = os.ui.menu.layer.MENU;
-  if (menu && !menu.getRoot().find(plugin.track.EventType.CREATE_TRACK)) {
+  if (menu && !menu.getRoot().find(plugin.track.menu.TRACK_GROUP)) {
     var group = menu.getRoot().find(os.ui.menu.layer.GroupLabel.TOOLS);
     goog.asserts.assert(group, 'Group should exist! Check spelling?');
 
     group.addChild({
-      label: 'Create Track',
-      eventType: plugin.track.EventType.CREATE_TRACK,
-      tooltip: 'Creates a new track by linking selected features (or all features if none are selected) in time order.',
+      label: plugin.track.menu.TRACK_GROUP,
       icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
-      metricKey: plugin.track.Metrics.Keys.CREATE_LAYER,
-      beforeRender: plugin.track.menu.visibleIfHasFeatures,
-      handler: plugin.track.menu.handleAddCreateTrackEvent_,
-      sort: 200
-    });
-
-    group.addChild({
-      label: 'Add to Track...',
-      eventType: plugin.track.EventType.ADD_TO,
-      tooltip: 'Adds selected features (or all features if none are selected) to an existing track.',
-      icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
-      metricKey: plugin.track.Metrics.Keys.ADD_TO_LAYER,
-      beforeRender: plugin.track.menu.visibleIfTracksExist,
-      handler: plugin.track.menu.handleAddCreateTrackEvent_,
-      sort: 210
-    });
-
-    group.addChild({
-      label: 'Follow Track',
-      eventType: plugin.track.EventType.FOLLOW,
-      tooltip: 'Follow the track as it animates.',
-      icons: ['<i class="fa fa-fw fa-globe"></i>'],
-      metricKey: plugin.track.Metrics.Keys.FOLLOW_TRACK,
-      beforeRender: plugin.track.menu.visibleIfIsNotFollowed,
-      handler: plugin.track.menu.handleFollowTrackEvent,
-      sort: 220
-    });
-
-    group.addChild({
-      label: 'Unfollow Track',
-      eventType: plugin.track.EventType.UNFOLLOW,
-      tooltip: 'Cancel following the track during animation.',
-      icons: ['<i class="fa fa-fw fa-globe"></i>'],
-      metricKey: plugin.track.Metrics.Keys.UNFOLLOW_TRACK,
-      beforeRender: plugin.track.menu.visibleIfIsFollowed,
-      handler: plugin.track.menu.handleUnfollowTrackEvent,
-      sort: 220
-    });
-
-    group.addChild({
-      label: 'Hide Track Line',
-      eventType: plugin.track.EventType.HIDE_LINE,
-      tooltip: 'Do not show the track line.',
-      icons: ['<i class="fa fa-fw fa-level-up"></i>'],
-      metricKey: plugin.track.Metrics.Keys.HIDE_TRACK_LINE,
-      beforeRender: plugin.track.menu.visibleIfLineIsShown,
-      handler: goog.partial(plugin.track.menu.setShowTrackLine, false),
-      sort: 230
-    });
-
-    group.addChild({
-      label: 'Show Track Line',
-      eventType: plugin.track.EventType.SHOW_LINE,
-      tooltip: 'Show the track line.',
-      icons: ['<i class="fa fa-fw fa-level-up"></i>'],
-      metricKey: plugin.track.Metrics.Keys.SHOW_TRACK_LINE,
-      beforeRender: plugin.track.menu.visibleIfLineIsHidden,
-      handler: goog.partial(plugin.track.menu.setShowTrackLine, true),
-      sort: 230
-    });
-
-    group.addChild({
-      label: 'Disable Track Interpolation',
-      eventType: plugin.track.EventType.ENABLE_INTERPOLATE_MARKER,
-      tooltip: 'Only move track marker when there is a supporting feature.',
-      icons: ['<i class="fa fa-fw fa-star-half-o fa-rotate-270"></i>'],
-      metricKey: plugin.track.Metrics.Keys.ENABLE_INTERPOLATE_MARKER,
-      beforeRender: plugin.track.menu.visibleIfMarkerInterpolationEnabled,
-      handler: goog.partial(plugin.track.menu.setMarkerInterpolationEnabled, false),
-      sort: 240
-    });
-
-    group.addChild({
-      label: 'Enable Track Interpolation',
-      eventType: plugin.track.EventType.DISABLE_INTERPOLATE_MARKER,
-      tooltip: 'Show the interpolated position of the track marker.',
-      icons: ['<i class="fa fa-fw fa-star-half-o fa-rotate-270"></i>'],
-      metricKey: plugin.track.Metrics.Keys.DISABLE_INTERPOLATE_MARKER,
-      beforeRender: plugin.track.menu.visibleIfMarkerInterpolationDisabled,
-      handler: goog.partial(plugin.track.menu.setMarkerInterpolationEnabled, true),
-      sort: 250
+      type: os.ui.menu.MenuItemType.SUBMENU,
+      children: [
+        {
+          label: 'Create Track',
+          eventType: plugin.track.EventType.CREATE_TRACK,
+          tooltip: 'Creates a new track by linking all features in time order.',
+          icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
+          metricKey: plugin.track.Metrics.Keys.CREATE_LAYER,
+          beforeRender: plugin.track.menu.visibleIfHasFeatures,
+          handler: plugin.track.menu.handleAddCreateTrackEvent_,
+          sort: 200
+        },
+        {
+          label: 'Create Track From Selected',
+          eventType: plugin.track.EventType.CREATE_FROM_SELECTED,
+          tooltip: 'Creates a new track by linking selected features in time order.',
+          icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
+          metricKey: plugin.track.Metrics.Keys.CREATE_LAYER,
+          beforeRender: plugin.track.menu.visibleIfHasFeatures,
+          handler: plugin.track.menu.handleAddCreateTrackEvent_,
+          sort: 201
+        },
+        {
+          label: 'Add to Track...',
+          eventType: plugin.track.EventType.ADD_TO,
+          tooltip: 'Adds all features to an existing track.',
+          icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
+          metricKey: plugin.track.Metrics.Keys.ADD_TO_LAYER,
+          beforeRender: plugin.track.menu.visibleIfTracksExist,
+          handler: plugin.track.menu.handleAddCreateTrackEvent_,
+          sort: 210
+        },
+        {
+          label: 'Add Selected to Track...',
+          eventType: plugin.track.EventType.ADD_FROM_SELECTED,
+          tooltip: 'Adds selected features to an existing track.',
+          icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
+          metricKey: plugin.track.Metrics.Keys.ADD_TO_LAYER,
+          beforeRender: plugin.track.menu.visibleIfTracksExist,
+          handler: plugin.track.menu.handleAddCreateTrackEvent_,
+          sort: 211
+        },
+        {
+          label: 'Follow Track',
+          eventType: plugin.track.EventType.FOLLOW,
+          tooltip: 'Follow the track as it animates.',
+          icons: ['<i class="fa fa-fw fa-globe"></i>'],
+          metricKey: plugin.track.Metrics.Keys.FOLLOW_TRACK,
+          beforeRender: plugin.track.menu.visibleIfIsNotFollowed,
+          handler: plugin.track.menu.handleFollowTrackEvent,
+          sort: 220
+        },
+        {
+          label: 'Unfollow Track',
+          eventType: plugin.track.EventType.UNFOLLOW,
+          tooltip: 'Cancel following the track during animation.',
+          icons: ['<i class="fa fa-fw fa-globe"></i>'],
+          metricKey: plugin.track.Metrics.Keys.UNFOLLOW_TRACK,
+          beforeRender: plugin.track.menu.visibleIfIsFollowed,
+          handler: plugin.track.menu.handleUnfollowTrackEvent,
+          sort: 220
+        },
+        {
+          label: 'Hide Track Line',
+          eventType: plugin.track.EventType.HIDE_LINE,
+          tooltip: 'Do not show the track line.',
+          icons: ['<i class="fa fa-fw fa-level-up"></i>'],
+          metricKey: plugin.track.Metrics.Keys.HIDE_TRACK_LINE,
+          beforeRender: plugin.track.menu.visibleIfLineIsShown,
+          handler: goog.partial(plugin.track.menu.setShowTrackLine, false),
+          sort: 230
+        },
+        {
+          label: 'Show Track Line',
+          eventType: plugin.track.EventType.SHOW_LINE,
+          tooltip: 'Show the track line.',
+          icons: ['<i class="fa fa-fw fa-level-up"></i>'],
+          metricKey: plugin.track.Metrics.Keys.SHOW_TRACK_LINE,
+          beforeRender: plugin.track.menu.visibleIfLineIsHidden,
+          handler: goog.partial(plugin.track.menu.setShowTrackLine, true),
+          sort: 230
+        },
+        {
+          label: 'Disable Track Interpolation',
+          eventType: plugin.track.EventType.ENABLE_INTERPOLATE_MARKER,
+          tooltip: 'Only move track marker when there is a supporting feature.',
+          icons: ['<i class="fa fa-fw fa-star-half-o fa-rotate-270"></i>'],
+          metricKey: plugin.track.Metrics.Keys.ENABLE_INTERPOLATE_MARKER,
+          beforeRender: plugin.track.menu.visibleIfMarkerInterpolationEnabled,
+          handler: goog.partial(plugin.track.menu.setMarkerInterpolationEnabled, false),
+          sort: 240
+        },
+        {
+          label: 'Enable Track Interpolation',
+          eventType: plugin.track.EventType.DISABLE_INTERPOLATE_MARKER,
+          tooltip: 'Show the interpolated position of the track marker.',
+          icons: ['<i class="fa fa-fw fa-star-half-o fa-rotate-270"></i>'],
+          metricKey: plugin.track.Metrics.Keys.DISABLE_INTERPOLATE_MARKER,
+          beforeRender: plugin.track.menu.visibleIfMarkerInterpolationDisabled,
+          handler: goog.partial(plugin.track.menu.setMarkerInterpolationEnabled, true),
+          sort: 250
+        }
+      ]
     });
   }
 };
@@ -142,13 +170,41 @@ plugin.track.menu.hasFeatures = function(context) {
 
 
 /**
+ * Test if a layer menu context has selected features.
+ *
+ * @param {os.ui.menu.layer.Context} context The menu context.
+ * @return {boolean} If the context has a single layer containing one or more selected features.
+ */
+plugin.track.menu.hasSelectedFeatures = function(context) {
+  if (context && context.length == 1) {
+    var node = context[0];
+    if (node instanceof os.data.LayerNode) {
+      var layer = node.getLayer();
+      if (layer instanceof os.layer.Vector) {
+        var source = layer.getSource();
+        if (source instanceof os.source.Vector) {
+          return source.getSelectedItems().length > 0;
+        }
+      }
+    }
+  }
+
+  return false;
+};
+
+
+/**
  * Show a menu item if one or more tracks exist and the layer has features.
  *
  * @param {os.ui.menu.layer.Context} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
 plugin.track.menu.visibleIfHasFeatures = function(context) {
-  this.visible = plugin.track.menu.hasFeatures(context);
+  if (plugin.track.Event.isSelectedEvent(this.eventType)) {
+    this.visible = plugin.track.menu.hasSelectedFeatures(context);
+  } else {
+    this.visible = plugin.track.menu.hasFeatures(context);
+  }
 };
 
 
@@ -160,7 +216,11 @@ plugin.track.menu.visibleIfHasFeatures = function(context) {
  */
 plugin.track.menu.visibleIfTracksExist = function(context) {
   var trackNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
-  this.visible = trackNode != null && trackNode.hasFeatures() && plugin.track.menu.hasFeatures(context);
+  if (plugin.track.Event.isSelectedEvent(this.eventType)) {
+    this.visible = trackNode != null && trackNode.hasFeatures() && plugin.track.menu.hasSelectedFeatures(context);
+  } else {
+    this.visible = trackNode != null && trackNode.hasFeatures() && plugin.track.menu.hasFeatures(context);
+  }
 };
 
 
@@ -184,7 +244,7 @@ plugin.track.menu.visibleIfTrackNode = function(context) {
  * Set up track items in the spatial menu.
  */
 plugin.track.menu.spatialSetup = function() {
-  var menu = os.ui.menu.SPATIAL;
+  var menu = os.ui.menu.spatial.MENU;
   if (menu) {
     var root = menu.getRoot();
     var group = root.find(os.ui.menu.spatial.Group.FEATURES);
@@ -579,9 +639,9 @@ plugin.track.menu.handleAddCreateTrackEvent_ = function(event) {
 
         var source = layer.getSource();
         if (source) {
-          features = source.getSelectedItems();
-
-          if (features.length == 0) {
+          if (plugin.track.Event.isSelectedEvent(event.type)) {
+            features = source.getSelectedItems();
+          } else {
             features = source.getFeatures();
           }
         }
@@ -592,11 +652,12 @@ plugin.track.menu.handleAddCreateTrackEvent_ = function(event) {
     }
 
     if (features && features.length) {
-      if (event.type === plugin.track.EventType.CREATE_TRACK) {
-        os.track.promptForTitle(title).then(function(title) {
+      if (event.type.startsWith(plugin.track.EventType.CREATE_TRACK)) {
+        os.track.promptForTitleAndMetadata(title).then(function({includeMetadata, title}) {
           os.track.getSortField(features[0]).then(function(sortField) {
             var options = /** @type {!os.track.CreateOptions} */ ({
               features: features,
+              includeMetadata,
               name: title,
               sortField: sortField
             });
@@ -604,12 +665,15 @@ plugin.track.menu.handleAddCreateTrackEvent_ = function(event) {
             plugin.track.createAndAdd(options);
           });
         });
-      } else if (event.type === plugin.track.EventType.ADD_TO) {
+      } else if (event.type.startsWith(plugin.track.EventType.ADD_TO)) {
         plugin.track.promptForTrack().then(function(track) {
           if (track) {
+            var metadataMap = track.get(os.track.TrackField.METADATA_MAP);
             os.track.addToTrack({
               track: track,
-              features: features
+              features: features,
+              // Include metadata if previously included.
+              includeMetadata: !!metadataMap
             });
           }
         });

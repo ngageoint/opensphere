@@ -28,6 +28,7 @@ goog.require('os.command.style');
 goog.require('os.data.OSDataManager');
 goog.require('os.defines');
 goog.require('os.layer.preset.LayerPresetManager');
+goog.require('os.layer.preset.PresetMenuButton');
 goog.require('os.style');
 goog.require('os.ui.Module');
 goog.require('os.ui.file.kml');
@@ -184,6 +185,8 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
   $scope.$on(os.ui.layer.LabelControlsEventType.SHOW_LABELS_CHANGE, this.onShowLabelsChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.SHOW_ROTATION_CHANGE, this.onShowRotationChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.ROTATION_COLUMN_CHANGE, this.onRotationColumnChange.bind(this));
+  $scope.$on(os.layer.preset.PresetMenuButton.EventType.APPLY_PRESET, this.applyPreset.bind(this));
+  $scope.$on(os.layer.preset.PresetMenuButton.EventType.TOGGLE_PRESET, this.togglePreset.bind(this));
 };
 goog.inherits(os.ui.layer.VectorLayerUICtrl, os.ui.layer.DefaultLayerUICtrl);
 
@@ -357,21 +360,26 @@ os.ui.layer.VectorLayerUICtrl.prototype.loadPresets = function() {
       if (promise) {
         promise.then(function(presets) {
           if (presets && presets.length) {
-            var defaultPreset = presets.find(function(p) {
+            var basicPreset = presets.find(function(p) {
               return p.id === os.layer.preset.DEFAULT_PRESET_ID;
             });
-            if (defaultPreset) {
-              os.layer.preset.updateDefault(layer, defaultPreset);
+            // tweak the colors to match the layer
+            if (basicPreset) {
+              os.layer.preset.updateDefault(layer, basicPreset);
             }
 
             this['presets'] = presets;
 
             // the preset objects may change, so resolve the current selection by id
             var currentPreset = this['preset'] ? presets.find(function(p) {
-              return p && p.id === this['preset'].id;
+              return p && p.id == this['preset'].id;
             }, this) : undefined;
+
             // set the current selection, with priority as current > default > first
-            this['preset'] = currentPreset || defaultPreset || presets[0];
+            this['preset'] = currentPreset || basicPreset || presets[0];
+
+            // tell the directive to re-render now that we have a new list of presets
+            os.ui.apply(this.scope);
           }
         }, undefined, this);
       }
@@ -382,7 +390,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.loadPresets = function() {
 
 /**
  * Apply the layer preset.
- *
  * @export
  */
 os.ui.layer.VectorLayerUICtrl.prototype.applyPreset = function() {
@@ -394,11 +401,28 @@ os.ui.layer.VectorLayerUICtrl.prototype.applyPreset = function() {
          * @param {os.layer.ILayer} layer
          * @return {os.command.ICommand}
          */
-        function(layer) {
-          return new os.command.VectorLayerPreset(layer.getId(), value);
-        };
+        (layer) => new os.command.VectorLayerPreset(layer.getId(), value);
 
     this.createCommand(fn);
+  }
+};
+
+
+/**
+ * Update the UI when the layer preset booleans are toggled
+ * @param {angular.Scope.Event} event
+ * @param {osx.layer.Preset} preset
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.togglePreset = function(event, preset) {
+  var found = (this['presets'] || []).find((p) => {
+    return p.id == preset.id;
+  });
+
+  // update local to match value returned by service
+  if (found) {
+    found.default = preset.default;
+    found.published = preset.published;
+    os.ui.apply(this.scope);
   }
 };
 

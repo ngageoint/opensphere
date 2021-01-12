@@ -4,6 +4,7 @@ goog.provide('plugin.im.action.feature.ui.featureActionsDirective');
 goog.require('os.source');
 goog.require('os.ui.Module');
 goog.require('os.ui.im.action.FilterActionsCtrl');
+goog.require('os.ui.slick.TreeSearch');
 goog.require('plugin.im.action.feature');
 goog.require('plugin.im.action.feature.node');
 
@@ -46,6 +47,18 @@ plugin.im.action.feature.ui.FeatureActionsCtrl = function($scope, $element) {
    * @type {os.ui.menu.Menu<os.ui.menu.layer.Context>|undefined}
    */
   this['contextMenu'] = plugin.im.action.feature.node.MENU;
+
+  /**
+   * Flag for whether to show default feature actions.
+   * @type {boolean}
+   */
+  this['showDefaultActions'] = true;
+
+  /**
+   * Flag for whether to show default feature actions.
+   * @type {boolean|undefined}
+   */
+  this['hasDefaultActions'] = undefined;
 
   plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'constructor', $scope, $element);
   os.dataManager.listen(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
@@ -120,4 +133,29 @@ plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.editEntry = function(op
   if (this.entryType) {
     plugin.im.action.feature.editEntry(this.entryType, opt_entry);
   }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.onSearch = function() {
+  plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'onSearch');
+
+  if (this['hasDefaultActions'] === undefined && this.scope['entries'] && this.scope['entries'].length > 0) {
+    this['hasDefaultActions'] = this.scope['entries'].some((node) => {
+      return node.getId() != os.ui.slick.TreeSearch.NO_RESULT_ID && node.getEntry().isDefault();
+    });
+    os.ui.apply(this.scope);
+  }
+};
+
+
+/**
+ * Toggles showing default feature actions.
+ * @export
+ */
+plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.toggleDefaultActions = function() {
+  this.treeSearch.setShowDefaultActions(this['showDefaultActions']);
+  this.onSearch();
 };

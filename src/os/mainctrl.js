@@ -84,6 +84,7 @@ goog.require('os.style.StyleManager');
 goog.require('os.time');
 goog.require('os.time.TimelineController');
 goog.require('os.ui.AbstractMainCtrl');
+goog.require('os.ui.AddExportOptionsUI');
 goog.require('os.ui.alertsDirective');
 goog.require('os.ui.areasDirective');
 goog.require('os.ui.clear.ClearEntry');
@@ -306,7 +307,7 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   os.ui.menu.windows.default.setup();
 
   // assign the spatial menu
-  os.ui.draw.MENU = os.ui.menu.SPATIAL;
+  os.ui.draw.MENU = os.ui.menu.spatial.MENU;
 
   // register base legend plugins
   os.data.histo.legend.registerLegendPlugin();
@@ -1063,7 +1064,6 @@ os.MainCtrl.prototype.suggestOtherBrowser = function() {
         'width': '400',
         'height': 'auto',
         'modal': 'true',
-        'no-scroll': 'true',
         'headerClass': 'bg-warning u-bg-warning-text'
       }
     }));

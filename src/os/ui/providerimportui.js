@@ -68,8 +68,7 @@ os.ui.ProviderImportUI.prototype.launchUI = function(file, opt_config) {
       'min-height': '250',
       'max-height': '500',
       'modal': 'true',
-      'show-close': 'true',
-      'no-scroll': 'true'
+      'show-close': 'true'
     };
     os.ui.window.create(windowOptions, this.ui, undefined, undefined, undefined, scopeOptions);
   } else {

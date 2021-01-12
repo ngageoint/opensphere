@@ -97,4 +97,30 @@ describe('os.ui.ogc.OGCServer', function() {
       }
     });
   });
+
+  it('should keep configured WMS operation URLs', function() {
+    var server = new os.ui.ogc.OGCServer();
+    loadAndRun(server, {
+      wms: '/base/test/resources/ogc/wms-130.xml',
+      parseOperationURLs: false
+    },
+    function() {
+      var d = os.dataManager.getDescriptor('testogc#inherit');
+      expect(d).toBeTruthy();
+      expect(d.getWmsUrl()).toBe('/base/test/resources/ogc/wms-130.xml');
+    });
+  });
+
+  it('should keep configured WFS operation URLs', function() {
+    var server = new os.ui.ogc.OGCServer();
+    loadAndRun(server, {
+      wfs: '/base/test/resources/ogc/wfs-110.xml',
+      parseOperationURLs: false
+    },
+    function() {
+      var d = os.dataManager.getDescriptor('testogc#OSDS:Layer_2');
+      expect(d).toBeTruthy();
+      expect(d.getWfsUrl()).toBe('/base/test/resources/ogc/wfs-110.xml');
+    });
+  });
 });

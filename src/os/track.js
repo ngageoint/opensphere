@@ -1,4 +1,10 @@
 goog.provide('os.track');
+goog.provide('os.track.AddOptions');
+goog.provide('os.track.CreateOptions');
+goog.provide('os.track.SplitOptions');
+goog.provide('os.track.TrackFeatureLike');
+goog.provide('os.track.TrackField');
+goog.provide('os.track.TrackLike');
 
 goog.require('goog.Promise');
 goog.require('ol.Feature');
@@ -1146,6 +1152,41 @@ os.track.promptForTitle = function(opt_default) {
       confirm: resolve,
       cancel: reject,
       defaultValue: opt_default,
+      select: true,
+      prompt: 'Please provide a name for the track:',
+      windowOptions: /** @type {!osx.window.WindowOptions} */ ({
+        label: 'Track Name',
+        icon: 'fa ' + os.track.ICON,
+        modal: true
+      })
+    }));
+  });
+};
+
+
+/**
+ * Prompt the user to choose a track title, and if original metadata should be included.
+ *
+ * @param {string=} opt_default The default title. Defaults to an empty string.
+ * @param {boolean=} opt_includeMetadata If metadata should be included. Defaults to false.
+ * @return {!goog.Promise}
+ */
+os.track.promptForTitleAndMetadata = function(opt_default = '', opt_includeMetadata = false) {
+  let includeMetadata = opt_includeMetadata;
+  const setIncludeMetadata = (value) => {
+    includeMetadata = value;
+  };
+
+  return new goog.Promise(function(resolve, reject) {
+    os.ui.window.launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
+      confirm: (title) => {
+        resolve({title, includeMetadata});
+      },
+      cancel: reject,
+      defaultValue: opt_default,
+      checkboxText: 'Include original metadata in track',
+      checkbox: setIncludeMetadata,
+      checkValue: includeMetadata,
       select: true,
       prompt: 'Please provide a name for the track:',
       windowOptions: /** @type {!osx.window.WindowOptions} */ ({

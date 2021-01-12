@@ -56,6 +56,7 @@ const launchConfirm = function(opt_options, opt_scopeOptions) {
   scopeOptions['checkboxText'] = options.checkboxText || '';
   scopeOptions['checkboxClass'] = options.checkboxClass || '';
   scopeOptions['checkboxCallback'] = options.checkbox || goog.nullFunction;
+  scopeOptions['checkboxValue'] = !!options.checkboxValue;
 
   var windowOverrides = /** @type {!osx.window.WindowOptions} */ (options.windowOptions || {});
 
@@ -77,8 +78,7 @@ const launchConfirm = function(opt_options, opt_scopeOptions) {
     'min-height': windowOverrides.minHeight,
     'max-height': windowOverrides.maxHeight,
     'modal': windowOverrides.modal != null ? windowOverrides.modal : true,
-    'show-close': windowOverrides.showClose != null ? windowOverrides.showClose : false,
-    'no-scroll': windowOverrides.noScroll != null ? windowOverrides.noScroll : true
+    'show-close': windowOverrides.showClose != null ? windowOverrides.showClose : false
   };
 
   if (windowOverrides.id) {
@@ -129,9 +129,10 @@ class Controller {
     }
 
     /**
+     * The current checkbox state.
      * @type {boolean}
      */
-    this.scope_['checkboxSelection'] = false;
+    this['checkboxSelection'] = !!this.scope_['checkboxValue'];
 
     /**
      * @type {!KeyHandler}
@@ -143,16 +144,12 @@ class Controller {
     $timeout(function() {
       $scope.$emit(WindowEventType.READY);
     });
-
-    $scope.$on('$destroy', this.onDestroy_.bind(this));
   }
 
   /**
-   * Clean up
-   *
-   * @private
+   * Angular $onDestroy lifecycle hook.
    */
-  onDestroy_() {
+  $onDestroy() {
     goog.dispose(this.keyHandler_);
 
     this.element_ = null;
@@ -191,22 +188,16 @@ class Controller {
         value = transScope['confirmValue'];
       }
 
+      var checkboxCallback = this.scope_['checkboxCallback'];
+      if (typeof checkboxCallback === 'function') {
+        checkboxCallback(this['checkboxSelection']);
+      }
+
       this.scope_['confirmCallback'](value);
     }
 
     this.close_();
   }
-
-
-  /**
-   * Fire the dont show again callback to save user choice
-   * @param {boolean} checkbox
-   * @export
-   */
-  updateCheckbox(checkbox) {
-    this.scope_['checkboxCallback'](checkbox);
-  }
-
 
   /**
    * Close the window.

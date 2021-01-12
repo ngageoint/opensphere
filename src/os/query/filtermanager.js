@@ -121,7 +121,6 @@ os.query.FilterManager.prototype.open = function(opt_type, opt_columns) {
       y: 'center',
       label: 'Filters',
       'show-close': true,
-      'no-scroll': true,
       'min-width': 300,
       'min-height': 300,
       'max-width': 1000,

@@ -33,8 +33,10 @@ module.exports = function(config) {
       {pattern: resolver.resolveModulePath('opensphere-asm/dist/os-load.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('jquery/dist/jquery.min.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('angular/angular.min.js', __dirname), watched: false, included: true, served: true},
+      {pattern: resolver.resolveModulePath('angular-animate/angular-animate.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('angular-sanitize/angular-sanitize.min.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('angular-mocks/angular-mocks.js', __dirname), watched: false, included: true, served: true},
+      {pattern: 'vendor/angular-ui/angular-ui.js', watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('d3/d3.min.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('jsts/dist/jsts.min.js', __dirname), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('proj4/dist/proj4.js', __dirname), watched: false, included: true, served: true},
@@ -63,6 +65,9 @@ module.exports = function(config) {
 
       // initialization to run prior to tests
       'test/init.js',
+
+      // Load Angular templates. These will be preprocessed into JS by ng-html2js.
+      'views/**/*.html',
 
       // test resources
       {pattern: 'test/**/*.test.worker.js', included: false},
@@ -111,7 +116,26 @@ module.exports = function(config) {
       'src/**/*.js': ['googmodule', 'coverage'],
       'test/**/*.mock.js': ['googmodule'],
       // support goog.module in Closure library
-      [`${closureLibJsPattern}`]: ['googmodule']
+      [`${closureLibJsPattern}`]: ['googmodule'],
+      // preprocess Angular templates
+      'views/**/*.html': ['ng-html2js']
+    },
+
+    //
+    // Angular template preprocessor.
+    //
+    // In debug/tests, templateUrl paths have os.ROOT prepended. This config adds each preloaded template to the
+    // template cache using the debug path so Angular will not try to request it.
+    //
+    // Tests using Angular directives should load this module before each test with:
+    //
+    //   beforeEach(module('app'));
+    //
+    ngHtml2JsPreprocessor: {
+      // Prepend os.ROOT to the preprocessed template path
+      prependPrefix: '../opensphere/',
+      // Register templates with the 'app' module
+      moduleName: 'app'
     },
 
     junitReporter: {
