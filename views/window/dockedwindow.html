@@ -1,0 +1,47 @@
+<div class="docked-window d-flex" ng-class="active && 'active shadow' || 'shadow-sm'">
+    <div class="modal-content d-flex flex-column flex-fill" ng-class="{'bg-transparent': overlay, 'border-0': !border}">
+      <div class="c-docked-window__buttons">
+        <span class="text-truncate flex-fill" title="{{label}}">
+          <i ng-if="icon" ng-class="icon" class="mr-1"></i>
+          <span ng-if="iconHtml" ng-bind-html="iconHtml"></span>
+          {{label}}
+        </span>
+
+        <span ng-if="helpContext" class="d-inline-flex">
+          <context-onboarding context="{{helpContext}}"></context-onboarding>
+        </span>
+
+        <span ng-repeat="headerBtnCfg in headerBtns"
+            ng-click="windowCtrl.onHeaderBtnClick($event, headerBtnCfg);"
+            title="{{headerBtnCfg.tooltip}}">
+          <i class="{{'c-glyph ' + headerBtnCfg.iconClass}}"></i>
+        </span>
+
+        <span ng-if="showCollapse" 
+            ng-click="windowCtrl.toggle()" 
+            title="{{collapsed ? 'Expand' : 'Collapse'}}" 
+            class="d-inline-flex">
+          <i class="fa c-glyph window-close" ng-class="{'fa-compress': !collapsed, 'fa-expand': collapsed}"></i>
+        </span>
+
+        <span ng-if="showClose" 
+            ng-click="windowCtrl.close(true)" 
+            class="close flex-shrink-0" 
+            aria-label="Close">
+          <span class="c-glyph" aria-hidden="true">&times;</span>
+        </span>
+
+        <span ng-if="showHide" 
+            type="button" 
+            class="close flex-shrink-0" 
+            ng-click="windowCtrl.hide()" 
+            aria-label="Hide">
+          <span class="c-glyph" aria-hidden="true">&times;</span>
+        </span>
+      </div>
+      <div class="c-docked-window__content w-100 flex-fill d-flex flex-column">
+        <div class="js-window__wrapper d-flex flex-column flex-fill" ng-transclude></div>
+      </div>
+    </div>
+  </div>
+  

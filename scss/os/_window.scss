@@ -44,3 +44,30 @@
     display: none;
   }
 }
+
+.docked-window {
+  .modal-content {
+    border-radius: 0;
+  }
+
+  .c-docked-window__buttons {
+    background: $body-bg;
+    border-left: 1px solid $border-color;
+    border-radius: .25rem 0 0;
+    border-top: 1px solid $border-color;
+    margin-top: -1.45rem;
+    padding: 0 .25rem;
+    position: absolute;
+    right: 0;
+    visibility: hidden;
+    z-index: $u-zindex-base + 1;
+  }
+
+  .c-docked-window__content {
+    border-top: 1px solid $border-color;
+  }
+
+  &:hover  .c-docked-window__buttons {
+    visibility: visible;
+  }
+}

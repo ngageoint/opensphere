@@ -35,6 +35,7 @@ os.ui.windowSelector = {
   HEADER_TEXT: '.js-window__header-text',
   MODAL_BG: '.modal-backdrop',
   WINDOW: '.js-window',
+  DOCKED: '.docked-window',
   WRAPPER: '.js-window__wrapper'
 };
 
@@ -177,7 +178,16 @@ os.ui.window.create = function(options, html, opt_parent, opt_scope, opt_compile
     html = '<' + html + '></' + html + '>';
   }
 
-  var win = '<' + ('key' in options ? 'savedwindow' : 'window');
+  // TODO rewrite so this is handled with a manager; so there are no circular dependencies
+  var tag = 'window';
+  if ('dock' in options) {
+    tag = 'docked-window';
+  } else if ('key' in options) {
+    tag = 'savedwindow';
+  }
+
+  var win = '<' + tag;
+
 
   for (var key in options) {
     var val = options[key];
@@ -187,7 +197,7 @@ os.ui.window.create = function(options, html, opt_parent, opt_scope, opt_compile
     win += ' ' + key + '="' + val + '"';
   }
 
-  win += '>' + html + '</' + ('key' in options ? 'savedwindow' : 'window') + '>';
+  win += '>' + html + '</' + tag + '>';
   os.ui.window.launch(win, opt_parent, opt_scope, opt_compile, opt_scopeOptions);
 };
 
@@ -339,8 +349,9 @@ os.ui.window.disableModality = function(id) {
  */
 os.ui.window.close = function(el) {
   if (el) {
-    var scope = el.is(os.ui.windowSelector.WINDOW) ?
+    var scope = (el.is(os.ui.windowSelector.WINDOW) || el.is(os.ui.windowSelector.DOCKED)) ?
       el.children().scope() : el.parents(os.ui.windowSelector.WINDOW).children().scope();
+
     if (scope && scope['windowCtrl']) {
       // scope for a window directive, so call the close function
       /** @type {os.ui.WindowCtrl} */ (scope['windowCtrl']).close();
