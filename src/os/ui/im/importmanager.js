@@ -1,4 +1,6 @@
 goog.provide('os.ui.im.ImportManager');
+goog.provide('os.ui.im.ImporterConfig');
+
 goog.require('goog.array');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
