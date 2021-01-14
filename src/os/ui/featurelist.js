@@ -1,7 +1,6 @@
 goog.provide('os.ui.FeatureListCtrl');
 goog.provide('os.ui.featureListDirective');
 
-goog.require('goog.Disposable');
 goog.require('goog.asserts');
 goog.require('goog.events.EventType');
 goog.require('os.source.PropertyChange');
@@ -43,13 +42,10 @@ os.ui.Module.directive('featurelist', [os.ui.featureListDirective]);
  *
  * @param {!angular.Scope} $scope The Angular scope.
  * @param {!angular.JQLite} $element The root DOM element.
- * @extends {goog.Disposable}
  * @constructor
  * @ngInject
  */
 os.ui.FeatureListCtrl = function($scope, $element) {
-  os.ui.FeatureListCtrl.base(this, 'constructor');
-
   /**
    * The Angular scope.
    * @type {?angular.Scope}
@@ -117,7 +113,6 @@ os.ui.FeatureListCtrl = function($scope, $element) {
   this.updateRowHeight_();
   this.updateStatus_();
 };
-goog.inherits(os.ui.FeatureListCtrl, goog.Disposable);
 
 
 /**
@@ -129,11 +124,9 @@ os.ui.FeatureListCtrl.DEFAULT_ROW_HEIGHT = 21;
 
 
 /**
- * @inheritDoc
+ * Angular $onDestroy lifecycle hook.
  */
-os.ui.FeatureListCtrl.prototype.disposeInternal = function() {
-  os.ui.FeatureListCtrl.base(this, 'disposeInternal');
-
+os.ui.FeatureListCtrl.prototype.$onDestroy = function() {
   var map = os.MapContainer.getInstance();
   map.unlisten(os.events.LayerEventType.REMOVE, this.onLayerRemoved_, false, this);
 
