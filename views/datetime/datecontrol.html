@@ -3,17 +3,18 @@
     <div class="input-group-prepend">
       <button class="btn btn-secondary flex-shrink-0" title="Previous {{dateControl.duration}}"
           ng-click="dateControl.shiftDate(-1)"
-          ng-disabled="dateControl.disabled"
-          ng-if="dateControl.duration !== 'custom'">
+          ng-disabled="dateControl.disabled">
         <i class="fa fa-chevron-left"></i>
       </button>
     </div>
-    <wheel-date title="Start date"
+    <wheel-date id="timelineStartDate"
+        title="Start date"
         blur-on-select="true"
         date="dateControl.startDate"
         disable="dateControl.disabled">
     </wheel-date>
-    <wheel-date title="End date (inclusive)"
+    <wheel-date id="timelineEndDate"
+        title="End date (inclusive)"
         blur-on-select="true"
         date="dateControl.endDate"
         disable="dateControl.disabled"
@@ -22,8 +23,7 @@
     <div class="input-group-append">
       <button class="btn btn-secondary flex-shrink-0" title="Next {{dateControl.duration}}"
           ng-click="dateControl.shiftDate(1)"
-          ng-disabled="dateControl.disabled"
-          ng-if="dateControl.duration !== 'custom'">
+          ng-disabled="dateControl.disabled">
         <i class="fa fa-chevron-right"></i>
       </button>
     </div>

@@ -25,6 +25,9 @@ os.time.Duration = {
   WEEK: 'week',
   MONTH: 'month',
   YEAR: 'year',
+  LAST7DAYS: 'last 7 days',
+  LAST14DAYS: 'last 14 days',
+  LAST30DAYS: 'last 30 days',
   CUSTOM: 'custom'
 };
 
@@ -428,7 +431,8 @@ os.time.offset = function(date, duration, offset, opt_local) {
 
   switch (duration) {
     case os.time.Duration.CUSTOM:
-      // fall through
+      newDate.setUTCDate(newDate.getUTCDate() + offset);
+      break;
     case os.time.Duration.HOURS:
       newDate.setUTCHours(newDate.getUTCHours() + offset);
       break;
@@ -558,6 +562,19 @@ os.time.userizeFormat_ = function(format) {
 
 
 /**
+ * Resets day, month, year, and time to be the beginning of today's date
+ *
+ * @param {Date} date The date to reset
+ */
+os.time.resetDate = function(date) {
+  const currentDate = new Date();
+  date.setUTCDate(currentDate.getUTCDate());
+  date.setUTCMonth(currentDate.getUTCMonth());
+  date.setUTCFullYear(currentDate.getUTCFullYear());
+  date.setUTCHours(0, 0, 0, 0);
+};
+
+/**
  * Rounds a date to the specified duration, rounding to the UTC time zone. Rounds down by default.
  * Example, rounding down from 2008-06-15 to month is 2008-06-01
  *
@@ -605,6 +622,18 @@ os.time.round = function(date, duration, opt_roundDown) {
       if (!roundDown && date.getTime() > testDate.getTime()) {
         testDate.setUTCDate(testDate.getUTCDate() + 1);
       }
+      break;
+    case 'last 7 days':
+      os.time.resetDate(testDate);
+      testDate.setUTCDate(testDate.getUTCDate() - 7);
+      break;
+    case 'last 14 days':
+      os.time.resetDate(testDate);
+      testDate.setUTCDate(testDate.getUTCDate() - 14);
+      break;
+    case 'last 30 days':
+      os.time.resetDate(testDate);
+      testDate.setUTCDate(testDate.getUTCDate() - 30);
       break;
     case 'hour':
       testDate.setUTCMinutes(0, 0, 0);
