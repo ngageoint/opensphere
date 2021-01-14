@@ -11,7 +11,7 @@
           <context-onboarding context="{{helpContext}}"></context-onboarding>
         </span>
 
-        <span ng-repeat="headerBtnCfg in headerBtns"
+        <span ng-repeat="headerBtnCfg in headerBtns | reverse"
             ng-click="windowCtrl.onHeaderBtnClick($event, headerBtnCfg);"
             title="{{headerBtnCfg.tooltip}}">
           <i class="{{'c-glyph ' + headerBtnCfg.iconClass}}"></i>

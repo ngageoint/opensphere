@@ -48,6 +48,7 @@
 .docked-window {
   .modal-content {
     border-radius: 0;
+    border-top: 1px solid $border-color;
   }
 
   .c-docked-window__buttons {
@@ -63,11 +64,30 @@
     z-index: $u-zindex-base + 1;
   }
 
-  .c-docked-window__content {
-    border-top: 1px solid $border-color;
-  }
-
   &:hover  .c-docked-window__buttons {
     visibility: visible;
+  }
+}
+
+.js-navbottom {
+  .docked-window {
+    font-size: .8em;
+    height: 2.5em;
+    line-height: 1.25em;
+
+    .modal-body {
+      box-shadow: none;
+      padding: 0;
+    }
+
+    .modal-content {
+      background-color: none !important;
+      box-shadow: none !important;
+    }
+
+    .c-docked-window__buttons {
+      font-size: 1.25em;
+      margin-top: -1.42rem;
+    }
   }
 }

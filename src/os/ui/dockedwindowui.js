@@ -8,15 +8,18 @@ const {ROOT} = goog.require('os');
 
 const DOCKED_WINDOW_ATTR = 'dock';
 const DOCKED_WINDOW_BOTTOM_SELECTOR = '#js-dock-bottom__container';
+const DOCKED_WINDOW_BOTTOM_MICRO_SELECTOR = '#js-dock-bottom-micro__container';
 
 /**
  * Controller for the docked window directive.
- *   It's overkill to do everything perfectly in the proof of concept. Suggested areas of development if
+ *   Not everything is perfect in the proof of concept. Suggested areas of development if
  *   this gets reused in the future:
  *    - Rewrite os.ui.window utility functions to work in an object-oriented way
- *    - Update positioning
- *    - Handle pop-out (i.e. convert to normal Window) and pop-in (i.e. convert window to docked window) in
- *      this controller (see Clocks headerButtons for an example)
+ *    - Update positioning (see constructor)
+ *    - Handle these actions in this controller:
+ *        pop-out (i.e. convert to normal Window) and
+ *        pop-in (i.e. convert window to docked window)
+ *        pop-in micro (i.e. convert window to a docked window in the bottom nav bar)
  *    - Animate grow/shrink
  *
  * @unrestricted
@@ -70,5 +73,6 @@ exports = {
   Controller,
   directive,
   DOCKED_WINDOW_ATTR,
-  DOCKED_WINDOW_BOTTOM_SELECTOR
+  DOCKED_WINDOW_BOTTOM_SELECTOR,
+  DOCKED_WINDOW_BOTTOM_MICRO_SELECTOR
 };
