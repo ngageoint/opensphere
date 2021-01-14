@@ -108,7 +108,7 @@ os.ui.datetime.DateControlCtrl = function($scope) {
    * If the end date calendar should be opened after the start date calender is closed
    * @type {boolean}
    */
-  this['showEndDatePicker'] = true;
+  this['showEndDateCalendar'] = true;
 
   // take over updating the timeline controller
   this.assumeControl();
@@ -177,10 +177,10 @@ os.ui.datetime.DateControlCtrl.prototype.onStartDateChanged_ = function(newVal, 
 
     // open the datepicker for the end date
     const endDatePicker = $('#timelineEndDate');
-    if (endDatePicker && this['showEndDatePicker']) {
+    if (endDatePicker && this['showEndDateCalendar']) {
       endDatePicker.datepicker('show');
     } else {
-      this['showEndDatePicker'] = true;
+      this['showEndDateCalendar'] = true;
     }
   }
 };
@@ -201,7 +201,7 @@ os.ui.datetime.DateControlCtrl.prototype.onEndDateChanged_ = function(newVal, ol
     if (this['startDate'] > this['endDate']) {
       // if start is after end, make them the same (end is inclusive)
       this['startDate'] = new Date(this['endDate']);
-      this['showEndDatePicker'] = false;
+      this['showEndDateCalendar'] = false;
     }
 
     if (!this['disabled']) {
@@ -287,6 +287,7 @@ os.ui.datetime.DateControlCtrl.prototype.shiftDate = function(direction) {
       const millisecondsPerDay = 1000 * 60 * 60 * 24;
       modifier = (this['endDate'] - this['startDate']) / millisecondsPerDay;
     }
+    this['showEndDateCalendar'] = false;
     this['startDate'] = os.time.offset(this['startDate'], this['duration'], direction * modifier, true);
     this['endDate'] = os.time.offset(this['endDate'], this['duration'], direction * modifier, true);
   }
