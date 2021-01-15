@@ -2,7 +2,6 @@ goog.provide('plugin.places.PlacesSource');
 
 goog.require('os.feature');
 goog.require('os.geom.GeometryField');
-goog.require('os.source.IModifiableSource');
 goog.require('os.track');
 goog.require('plugin.file.kml.KMLSource');
 goog.require('plugin.file.kml.ui.KMLNode');
@@ -12,7 +11,6 @@ goog.require('plugin.file.kml.ui.KMLNode');
 /**
  * Vector source to manage places created in the application. Also adds specialized handling for tracks.
  * @param {olx.source.VectorOptions=} opt_options OpenLayers vector source options.
- * @implements {os.source.IModifiableSource}
  * @extends {plugin.file.kml.KMLSource}
  * @constructor
  */
@@ -50,7 +48,7 @@ plugin.places.PlacesSource.prototype.getModifyFunction = function() {
 
       plugin.file.kml.ui.updatePlacemark(options);
       os.feature.createEllipse(originalFeature, true);
-      os.style.notifyStyleChange(plugin.places.PlacesManager.getInstance().getPlacesLayer());
+      this.notifyDataChange();
     }
   };
 };
