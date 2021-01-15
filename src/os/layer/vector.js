@@ -200,7 +200,6 @@ os.implements(os.layer.Vector, os.legend.ILegendRenderer.ID);
 /**
  * Class name
  * @type {string}
- * @const
  */
 os.layer.Vector.NAME = 'os.layer.Vector';
 os.registerClass(os.layer.Vector.NAME, os.layer.Vector);
