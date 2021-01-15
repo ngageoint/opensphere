@@ -287,6 +287,8 @@ os.ui.text.TuiEditorCtrl.prototype.getOptions = function() {
     options['toolbarItems'] = toolbarItems;
   }
 
+  options['plugins'] = this.getPlugins();
+
   return options;
 };
 
@@ -489,6 +491,15 @@ os.ui.text.TuiEditorCtrl.prototype.getExtensions = function() {
  */
 os.ui.text.TuiEditorCtrl.prototype.getToolbar = function() {
   return undefined;
+};
+
+
+/**
+ * Get any plugins to be added
+ * @return {Array}
+ */
+os.ui.text.TuiEditorCtrl.prototype.getPlugins = function() {
+  return [];
 };
 
 
