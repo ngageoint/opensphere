@@ -2,6 +2,7 @@ goog.module('os.interaction.Modify');
 goog.module.declareLegacyNamespace();
 
 const Circle = goog.require('ol.style.Circle');
+const Controls = goog.require('os.ui.help.Controls');
 const Feature = goog.require('ol.Feature');
 const Fill = goog.require('ol.style.Fill');
 const I3DSupport = goog.require('os.I3DSupport');
@@ -13,12 +14,15 @@ const Point = goog.require('ol.geom.Point');
 const RecordField = goog.require('os.data.RecordField');
 const Stroke = goog.require('ol.style.Stroke');
 const Style = goog.require('ol.style.Style');
+const olEvents = goog.require('ol.events');
+const olModifyEventType = goog.require('ol.interaction.ModifyEventType');
 const osImplements = goog.require('os.implements');
-const {MODAL_SELECTOR} = goog.require('os.ui');
-const {ModifyEventType} = goog.require('os.interaction');
-const {notifyStyleChange} = goog.require('os.style');
 const osWindow = goog.require('os.ui.window');
 const windowSelector = goog.require('os.ui.windowSelector');
+const {MODAL_SELECTOR} = goog.require('os.ui');
+const {ModifyEventType} = goog.require('os.interaction');
+const {getUid} = goog.require('ol');
+const {notifyStyleChange} = goog.require('os.style');
 
 const KeyEvent = goog.requireType('goog.events.KeyEvent');
 const OSMap = goog.requireType('os.Map');
@@ -33,8 +37,6 @@ class Modify extends OLModify {
   /**
    * Constructor.
    * @param {olx.interaction.ModifyOptions=} opt_options Options.
-   *
-   * @suppress {accessControls}
    */
   constructor(opt_options) {
     const options = opt_options || {};
@@ -51,11 +53,8 @@ class Modify extends OLModify {
 
     // jank alert: the functions that are called when the interaction starts and ends are hard to override, so instead
     // listen to our own events and toggle the map movement on and off
-    ol.events.listen(this, ol.interaction.ModifyEventType.MODIFYSTART, this.handleStart, this);
-    ol.events.listen(this, ol.interaction.ModifyEventType.MODIFYEND, this.handleEnd, this);
-
-    // use the drawing layer as the overlay layer so that geometries are synced to WebGL automatically
-    this.overlay_ = os.map.mapContainer.getDrawingLayer();
+    olEvents.listen(this, olModifyEventType.MODIFYSTART, this.handleStart, this);
+    olEvents.listen(this, olModifyEventType.MODIFYEND, this.handleEnd, this);
 
     this.showControls();
   }
@@ -66,8 +65,8 @@ class Modify extends OLModify {
   disposeInternal() {
     goog.dispose(this.keyHandler);
 
-    ol.events.unlisten(this, ol.interaction.ModifyEventType.MODIFYSTART, this.handleStart, this);
-    ol.events.unlisten(this, ol.interaction.ModifyEventType.MODIFYEND, this.handleEnd, this);
+    olEvents.unlisten(this, ol.interaction.ModifyEventType.MODIFYSTART, this.handleStart, this);
+    olEvents.unlisten(this, ol.interaction.ModifyEventType.MODIFYEND, this.handleEnd, this);
 
     this.removeControls();
   }
@@ -77,6 +76,16 @@ class Modify extends OLModify {
    */
   is3DSupported() {
     return true;
+  }
+
+  /**
+   * Set an overlay to use instead of the default one used by the interaction.
+   * @param {ol.layer.Vector} layer
+   *
+   * @suppress {accessControls}
+   */
+  setOverlay(layer) {
+    this.overlay_ = layer;
   }
 
   /**
@@ -127,13 +136,14 @@ class Modify extends OLModify {
    * Shows control information for this interaction.
    */
   showControls() {
-    const injector = angular.element(windowSelector.CONTAINER).injector();
+    const container = angular.element(windowSelector.CONTAINER);
+    const injector = container.injector();
     const scope = injector.get('$rootScope').$new();
     const controls = [
       {
         'text': 'Remove Vertex',
         'keys': [KeyCodes.ALT, '+'],
-        'other': [os.ui.help.Controls.MOUSE.LEFT_MOUSE]
+        'other': [Controls.MOUSE.LEFT_MOUSE]
       },
       {
         'text': 'Save Changes',
@@ -153,7 +163,7 @@ class Modify extends OLModify {
       'id': WIN_ID,
       'label': 'Modify Geometry Controls',
       'x': 'center',
-      'y': 1100,
+      'y': container.height() - 220,
       'width': 290,
       'height': 'auto',
       'show-close': true
@@ -182,9 +192,10 @@ class Modify extends OLModify {
       feature = new Feature(new Point(coordinates));
       feature.set(RecordField.DRAWING_LAYER_NODE, false);
       feature.setStyle(VERTEX_STYLE);
+      feature.setId(getUid(feature));
 
       this.vertexFeature_ = feature;
-      os.map.mapContainer.addFeature(feature);
+      this.overlay_.getSource().addFeature(feature);
     } else {
       var geometry = /** @type {Point} */ (feature.getGeometry());
       geometry.setCoordinates(coordinates);

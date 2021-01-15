@@ -747,6 +747,7 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
             os.ui.query.launchModifyArea(conf);
             break;
           case os.action.EventType.MODIFY_GEOMETRY:
+            const mc = os.MapContainer.getInstance();
             // start by cloning the feature so we don't modify the existing geom
             const clone = new os.feature.DynamicFeature();
 
@@ -758,13 +759,14 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
             clone.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
             clone.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.NONE);
             clone.setId(goog.string.getRandomString());
-            os.MapContainer.getInstance().addFeature(clone);
+            mc.addFeature(clone);
 
             const interaction = new os.interaction.Modify({
               features: new ol.Collection([clone])
             });
+            interaction.setOverlay(/** @type {ol.layer.Vector} */ (mc.getDrawingLayer()));
 
-            os.MapContainer.getInstance().getMap().addInteraction(interaction);
+            mc.getMap().addInteraction(interaction);
             interaction.setActive(true);
 
             /**
