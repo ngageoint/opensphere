@@ -2,9 +2,11 @@ goog.module('os.ui.DockedWindowUI');
 goog.module.declareLegacyNamespace();
 
 const OsModule = goog.require('os.ui.Module');
-const SavedWindowCtrl = goog.require('os.ui.SavedWindowCtrl');
-const savedWindowDirective = goog.require('os.ui.savedWindowDirective');
+const {
+  Controller: SavedWindowCtrl,
+  directive: savedWindowDirective} = goog.require('os.ui.SavedWindowUI');
 const {ROOT} = goog.require('os');
+const windowSelector = goog.require('os.ui.windowSelector');
 
 const DOCKED_WINDOW_ATTR = 'dock';
 const DOCKED_WINDOW_BOTTOM_SELECTOR = '#js-dock-bottom__container';
@@ -39,6 +41,14 @@ class Controller extends SavedWindowCtrl {
     $element.css('top', '0');
     $element.css('left', '0');
     $element.css('width', 'auto');
+  }
+
+  /**
+   * @inheritDoc
+   */
+  onHeaderBtnClick(event, headerBtnCfg) {
+    var winEl = $(event.target).parents(windowSelector.DOCKED);
+    headerBtnCfg.onClick(winEl);
   }
 }
 

@@ -81,12 +81,13 @@
     }
 
     .modal-content {
-      background-color: none !important;
+      background-color: rgba(0, 0, 0, 0);
       box-shadow: none !important;
     }
 
     .c-docked-window__buttons {
       font-size: 1.25em;
+      line-height: 1.5em;
       margin-top: -1.42rem;
     }
   }
