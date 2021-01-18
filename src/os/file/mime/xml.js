@@ -1,4 +1,6 @@
 goog.provide('os.file.mime.xml');
+goog.provide('os.file.mime.xml.Context');
+goog.provide('os.file.mime.xml.Types');
 
 goog.require('goog.Promise');
 goog.require('os.file.mime');

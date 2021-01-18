@@ -1,4 +1,5 @@
 goog.provide('os.ui.feature.MultiFeatureInfoCtrl');
+goog.provide('os.ui.feature.launchMultiFeatureInfo');
 goog.provide('os.ui.feature.multiFeatureInfoDirective');
 
 goog.require('goog.Disposable');

@@ -1,4 +1,6 @@
 goog.provide('os.ogc');
+goog.provide('os.ogc.LayerType');
+goog.provide('os.ogc.WFSTypeConfig');
 
 goog.require('goog.Uri.QueryData');
 goog.require('goog.dom.xml');

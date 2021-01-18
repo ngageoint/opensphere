@@ -355,3 +355,38 @@ Example:
 
 .. _Cesium World Terrain: https://cesium.com/content/cesium-world-terrain/
 .. _Cesium Ion: https://cesium.com/ion/
+
+columnActions
+-------------
+``admin.columnActions``
+
+Column Actions are specific actions that are performed when displaying field data from a feature.
+
+The only action Opensphere currently supports is the ``UrlColumnAction``.  When displaying feature information, this action will scan column names and values via regular expression to create a clickable link.
+
+The value of the matched field will be substituted for ``%s`` in the ``"action"`` string.
+
+Example:
+
+.. code-block:: json
+  {
+    "admin": {
+      "columnActions": {
+        "googleMapsAction": {
+          "type": "url",
+          "description": "Create a link to a location on Google Maps.",
+          "regex": {
+            "col": "^DD_LAT_LON$",
+            "val": "[\-\d]\d+\.\d+",
+            "search": "\w",
+            "replace": ","
+          },
+          "action": "https://www.google.com/maps/@%s"
+        }
+      }
+    }
+  }
+
+One of ``"col"`` or ``"val"`` is required. ``"search"`` and ``"replace"`` can be used to transform the text before substituting into the URL, but are entirely optional.
+
+While this is only executed on visible cells in Slickgrid, it is applied to every field's column and value and may cause performance problems depending on the complexity and specificity of the regular expression. If you know specific columns that you want to apply actions to, and know their format in advance, it may be better to simply match on the exact column name.
