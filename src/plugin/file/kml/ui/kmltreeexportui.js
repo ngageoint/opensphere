@@ -108,10 +108,12 @@ plugin.file.kml.ui.KMLTreeExportCtrl = function($scope, $element) {
    */
   this['persister'] = null;
 
+  const options = this.scope['options'];
+
   /**
    * @type {boolean}
    */
-  this['additionalOptions'] = this.scope['options'].additionalOptions || false;
+  this['additionalOptions'] = (options && options.additionalOptions) || false;
 
   /**
    * The data to be exported
