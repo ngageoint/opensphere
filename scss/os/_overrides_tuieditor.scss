@@ -236,6 +236,8 @@
     }
 
     table {
+      color: $body-color;
+
       th {
         background-color: $u-theme-variables--bg-offset;
         color: color-yiq($u-theme-variables--bg-offset);
