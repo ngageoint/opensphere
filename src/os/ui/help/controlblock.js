@@ -32,6 +32,16 @@ Module.directive('controlblock', [directive]);
 
 
 /**
+ * Map of keycodes to their OSX equivalents.
+ * @type {Object<KeyCodes<number>, string>}
+ */
+const osxKeyCodeMap = {
+  [KeyCodes.META]: 'Command',
+  [KeyCodes.ALT]: 'Option'
+};
+
+
+/**
  * Controller function for the controlblock directive
  * @unrestricted
  */
@@ -71,8 +81,8 @@ class Controller {
    * @export
    */
   getKey(key) {
-    if (key === KeyCodes.META && isOSX()) {
-      return 'Command';
+    if (isOSX() && key in osxKeyCodeMap) {
+      return osxKeyCodeMap[key];
     }
 
     return toTitleCase(KeyNames[key]);

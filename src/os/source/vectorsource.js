@@ -3730,7 +3730,6 @@ os.source.Vector.prototype.persist = function(opt_to) {
   options['timeEnabled'] = this.getTimeEnabled();
   options['altitudeMode'] = this.getAltitudeMode();
   options['refreshInterval'] = this.refreshInterval;
-  options['supportsModify'] = this.canModify;
 
   if (this.uniqueId_) {
     options['uniqueId'] = this.uniqueId_.persist();
