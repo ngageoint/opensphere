@@ -85,7 +85,7 @@ class Controller {
    * @export
    */
   getMouse(other) {
-    // TODO: os.ui.help.Controls is a mess that needs to be decomposed to clean up this global reference
+    // TODO: requiring os.ui.help.Controls creates a circular dependency, so file class needs to be decomposed
     var mouse = os.ui.help.Controls.MOUSE_IMAGE[other];
     if (mouse) {
       return mouse;
