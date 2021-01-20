@@ -69,6 +69,11 @@ node(getLabel()) {
         } */
 
         stage('package') {
+          try {
+            beforePackage()
+          } catch (NoSuchMethodError e) {
+          }
+
           dir('dist') {
             def specialCharRegex = /[\W_&&[^\s]]/
             env.BRANCH_NAME = env.BRANCH_NAME ? env.BRANCH_NAME : 'master'
