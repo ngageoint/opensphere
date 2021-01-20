@@ -115,20 +115,25 @@ class Modify extends OLModify {
    */
   handleKeyEvent(event) {
     if (!document.querySelector(MODAL_SELECTOR)) {
+      let handled = false;
       switch (event.keyCode) {
         case KeyCodes.ESC:
           this.dispatchEvent(new PayloadEvent(ModifyEventType.CANCEL, this.features_));
           this.setActive(false);
+          handled = true;
           break;
         case KeyCodes.ENTER:
           this.dispatchEvent(new PayloadEvent(ModifyEventType.COMPLETE, this.features_));
           this.setActive(false);
+          handled = true;
           break;
         default:
           break;
       }
 
-      notifyStyleChange(this.overlay_, [this.features_.getArray()[0]]);
+      if (handled) {
+        this.notifyFeatureChange();
+      }
     }
   }
 
@@ -182,9 +187,18 @@ class Modify extends OLModify {
   }
 
   /**
-   * @inheritDoc
+   * Notify that the feature being modified has changed.
    *
    * @suppress {accessControls}
+   */
+  notifyFeatureChange() {
+    notifyStyleChange(this.overlay_, this.features_.getArray());
+  }
+
+  /**
+   * @inheritDoc
+   *
+   * @suppress {accessControls} Overriding to add feature change notifications.
    */
   createOrUpdateVertexFeature_(coordinates) {
     let feature = this.vertexFeature_;
@@ -202,9 +216,34 @@ class Modify extends OLModify {
       feature.changed();
     }
 
+    // update the vertex feature
     notifyStyleChange(this.overlay_, [feature]);
 
     return feature;
+  }
+
+  /**
+   * @inheritDoc
+   *
+   * @suppress {accessControls} Overriding to handle null coordinate case in 3D.
+   */
+  handlePointerAtPixel_(pixel, map) {
+    if (map.getCoordinateFromPixel(pixel) != null) {
+      super.handlePointerAtPixel_(pixel, map);
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  removePoint() {
+    const removed = super.removePoint();
+
+    if (removed) {
+      this.notifyFeatureChange();
+    }
+
+    return removed;
   }
 }
 
