@@ -165,8 +165,8 @@ os.ui.datetime.DateControlCtrl.prototype.onStartDateChanged_ = function(newVal, 
       if (this['startDate'] > this['endDate']) {
         this['endDate'] = new Date(this['startDate']);
       }
-    } else {
-      // for all other durations, set the end date from the start date
+    } else if (!this['relativeDuration']) {
+      // for all other durations (that aren't relative), set the end date from the start date
       this['endDate'] = os.time.offset(this['startDate'], this['duration'], 1, true);
     }
 
