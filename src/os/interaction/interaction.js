@@ -9,6 +9,16 @@ goog.requireType('ol.render.Feature');
 
 
 /**
+ * Event types for the modify interaction.
+ * @enum {string}
+ */
+os.interaction.ModifyEventType = {
+  COMPLETE: 'modify:complete',
+  CANCEL: 'modify:cancel'
+};
+
+
+/**
  * Rotation delta, in radians.
  * @type {number}
  * @const

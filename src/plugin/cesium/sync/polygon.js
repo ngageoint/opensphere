@@ -341,5 +341,6 @@ const createPolygonHierarchy = (geometry, opt_flats, opt_offset, opt_ringEnds, o
 
 exports = {
   createAndAddPolygon,
-  createPolygon
+  createPolygon,
+  createPolygonHierarchy
 };
