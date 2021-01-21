@@ -1,7 +1,13 @@
 (function() {
   var type;
   var status = $('#status');
-  var to = 'opensphere';
+  var to;
+
+  to = new URLSearchParams(window.location.search).get('to');
+  if (!to) {
+    to = 'opensphere';
+  }
+
   var from = to + '-addLayer.' + Date.now();
   var str = window.location.hash;
 
