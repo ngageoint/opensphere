@@ -3,7 +3,8 @@
     <div class="input-group-prepend">
       <button class="btn btn-secondary flex-shrink-0" title="Previous {{dateControl.duration}}"
           ng-click="dateControl.shiftDate(-1)"
-          ng-disabled="dateControl.disabled">
+          ng-disabled="dateControl.disabled"
+          ng-if="!dateControl.relativeDuration">
         <i class="fa fa-chevron-left"></i>
       </button>
     </div>
@@ -12,7 +13,8 @@
         blur-on-select="true"
         date="dateControl.startDate"
         disable="dateControl.disabled"
-        name="startDate">
+        name="startDate"
+        ng-if="!dateControl.relativeDuration">
     </wheel-date>
     <wheel-date class="js-datecontrol__endDate"
         title="End date (inclusive)"
@@ -25,7 +27,8 @@
     <div class="input-group-append">
       <button class="btn btn-secondary flex-shrink-0" title="Next {{dateControl.duration}}"
           ng-click="dateControl.shiftDate(1)"
-          ng-disabled="dateControl.disabled">
+          ng-disabled="dateControl.disabled"
+          ng-if="!dateControl.relativeDuration">
         <i class="fa fa-chevron-right"></i>
       </button>
     </div>

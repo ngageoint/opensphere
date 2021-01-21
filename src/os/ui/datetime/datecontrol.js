@@ -105,6 +105,12 @@ os.ui.datetime.DateControlCtrl = function($scope) {
    */
   this['disabled'] = false;
 
+  /**
+   * If the duration is relative to the current date.
+   * @type {boolean}
+   */
+  this['relativeDuration'] = false;
+
   // take over updating the timeline controller
   this.assumeControl();
 
@@ -215,30 +221,27 @@ os.ui.datetime.DateControlCtrl.prototype.onDurationChanged = function() {
 
     switch (this['duration']) {
       case os.time.Duration.LAST24HOURS:
-        os.time.resetDate(this['startDate']);
-        this['startDate'].setUTCDate(this['startDate'].getUTCDate() - 1);
+        this.setRelativeDateRange(1);
         break;
       case os.time.Duration.LAST48HOURS:
-        os.time.resetDate(this['startDate']);
-        this['startDate'].setUTCDate(this['startDate'].getUTCDate() - 2);
+        this.setRelativeDateRange(2);
         break;
       case os.time.Duration.LAST7DAYS:
-        os.time.resetDate(this['startDate']);
-        this['startDate'].setUTCDate(this['startDate'].getUTCDate() - 7);
+        this.setRelativeDateRange(7);
         break;
       case os.time.Duration.LAST14DAYS:
-        os.time.resetDate(this['startDate']);
-        this['startDate'].setUTCDate(this['startDate'].getUTCDate() - 14);
+        this.setRelativeDateRange(14);
         break;
       case os.time.Duration.LAST30DAYS:
-        os.time.resetDate(this['startDate']);
-        this['startDate'].setUTCDate(this['startDate'].getUTCDate() - 30);
+        this.setRelativeDateRange(30);
         break;
       case os.time.Duration.CUSTOM:
+        this['relativeDuration'] = false;
         // for custom duration, make dates the same (end is inclusive)
         this['endDate'] = new Date(this['startDate']);
         break;
       default:
+        this['relativeDuration'] = false;
         // for all other durations, set the end date from the start date
         this['endDate'] = os.time.offset(this['startDate'], this['duration'], 1, true);
         break;
@@ -248,6 +251,20 @@ os.ui.datetime.DateControlCtrl.prototype.onDurationChanged = function() {
     goog.log.fine(os.ui.datetime.DateControlCtrl.LOGGER_,
         'duration changed: ' + this['startDate'].toUTCString() + ' to ' + this['endDate'].toUTCString());
   }
+};
+
+
+/**
+ * Set the duration to a date range relative to now.
+ *
+ * @param {number} days
+ * @private
+ */
+os.ui.datetime.DateControlCtrl.prototype.setRelativeDateRange = function(days) {
+  this['relativeDuration'] = true;
+  os.time.resetDate(this['startDate']);
+  os.time.resetDate(this['endDate']);
+  this['startDate'].setUTCDate(this['startDate'].getUTCDate() - days);
 };
 
 
