@@ -663,8 +663,9 @@ os.ui.slick.SlickGridCtrl.prototype.onRowCountChanged = function(e, args) {
 
 /**
  * Resizes the grid
+ * @param {Object} dimensions
  */
-os.ui.slick.SlickGridCtrl.prototype.resize = function() {
+os.ui.slick.SlickGridCtrl.prototype.resize = function(dimensions) {
   this.resizeDelay.start();
 };
 
