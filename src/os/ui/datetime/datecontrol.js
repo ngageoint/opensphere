@@ -118,10 +118,7 @@ os.ui.datetime.DateControlCtrl = function($scope) {
   $scope.$watch('dateControl.startDate', this.onStartDateChanged_.bind(this));
   $scope.$watch('dateControl.endDate', this.onEndDateChanged_.bind(this));
 
-  $scope.$on('startDate.userSelected', function(e) {
-    e.stopPropagation();
-    $scope.$broadcast('endDate.open');
-  });
+  $scope.$on('startDate.userSelected', this.onStartDateSelected_.bind(this));
   $scope.$on('$destroy', this.dispose.bind(this));
 };
 goog.inherits(os.ui.datetime.DateControlCtrl, goog.Disposable);
@@ -184,6 +181,18 @@ os.ui.datetime.DateControlCtrl.prototype.onStartDateChanged_ = function(newVal, 
 
 
 /**
+ * Selection handler for start date control.
+ *
+ * @param {angular.Scope.Event} event
+ * @private
+ */
+os.ui.datetime.DateControlCtrl.prototype.onStartDateSelected_ = function(event) {
+  event.stopPropagation();
+  this.scope_.$broadcast('endDate.open');
+};
+
+
+/**
  * Change handler for the end date control.
  *
  * @param {?Date} newVal The new value.
@@ -217,6 +226,7 @@ os.ui.datetime.DateControlCtrl.prototype.onEndDateChanged_ = function(newVal, ol
  */
 os.ui.datetime.DateControlCtrl.prototype.onDurationChanged = function() {
   if (!this['disabled']) {
+    this['relativeDuration'] = false;
     this['startDate'] = os.time.floor(this['startDate'], this['duration'], true);
 
     switch (this['duration']) {
@@ -236,12 +246,10 @@ os.ui.datetime.DateControlCtrl.prototype.onDurationChanged = function() {
         this.setRelativeDateRange(30);
         break;
       case os.time.Duration.CUSTOM:
-        this['relativeDuration'] = false;
         // for custom duration, make dates the same (end is inclusive)
         this['endDate'] = new Date(this['startDate']);
         break;
       default:
-        this['relativeDuration'] = false;
         // for all other durations, set the end date from the start date
         this['endDate'] = os.time.offset(this['startDate'], this['duration'], 1, true);
         break;
@@ -262,8 +270,8 @@ os.ui.datetime.DateControlCtrl.prototype.onDurationChanged = function() {
  */
 os.ui.datetime.DateControlCtrl.prototype.setRelativeDateRange = function(days) {
   this['relativeDuration'] = true;
-  os.time.resetDate(this['startDate']);
-  os.time.resetDate(this['endDate']);
+  this['startDate'] = new Date();
+  this['endDate'] = new Date();
   this['startDate'].setUTCDate(this['startDate'].getUTCDate() - days);
 };
 

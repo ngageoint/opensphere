@@ -562,21 +562,6 @@ os.time.userizeFormat_ = function(format) {
   });
 };
 
-
-/**
- * Resets day, month, year, and time to be the beginning of today's date
- *
- * @param {Date} date The date to reset
- */
-os.time.resetDate = function(date) {
-  const currentDate = new Date();
-  date.setUTCDate(currentDate.getUTCDate());
-  date.setUTCMonth(currentDate.getUTCMonth());
-  date.setUTCFullYear(currentDate.getUTCFullYear());
-  date.setUTCHours(currentDate.getUTCHours(), currentDate.getUTCMinutes(), currentDate.getUTCSeconds(),
-      currentDate.getUTCMilliseconds());
-};
-
 /**
  * Rounds a date to the specified duration, rounding to the UTC time zone. Rounds down by default.
  * Example, rounding down from 2008-06-15 to month is 2008-06-01
