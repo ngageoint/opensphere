@@ -37,7 +37,6 @@ os.ui.Module.directive('dateControl', [os.ui.datetime.dateControlDirective]);
 
 /**
  * Controller for the date-control directive.
- *
  * @param {!angular.Scope} $scope The Angular scope.
  * @extends {goog.Disposable}
  * @constructor
@@ -92,6 +91,8 @@ os.ui.datetime.DateControlCtrl = function($scope) {
     os.time.Duration.DAY,
     os.time.Duration.WEEK,
     os.time.Duration.MONTH,
+    os.time.Duration.LAST24HOURS,
+    os.time.Duration.LAST48HOURS,
     os.time.Duration.LAST7DAYS,
     os.time.Duration.LAST14DAYS,
     os.time.Duration.LAST30DAYS,
@@ -104,12 +105,6 @@ os.ui.datetime.DateControlCtrl = function($scope) {
    */
   this['disabled'] = false;
 
-  /**
-   * If the end date calendar should be opened after the start date calender is closed
-   * @type {boolean}
-   */
-  this['showEndDateCalendar'] = true;
-
   // take over updating the timeline controller
   this.assumeControl();
 
@@ -117,6 +112,10 @@ os.ui.datetime.DateControlCtrl = function($scope) {
   $scope.$watch('dateControl.startDate', this.onStartDateChanged_.bind(this));
   $scope.$watch('dateControl.endDate', this.onEndDateChanged_.bind(this));
 
+  $scope.$on('startDate.userSelected', function(e) {
+    e.stopPropagation();
+    $scope.$broadcast('endDate.open');
+  });
   $scope.$on('$destroy', this.dispose.bind(this));
 };
 goog.inherits(os.ui.datetime.DateControlCtrl, goog.Disposable);
@@ -174,14 +173,6 @@ os.ui.datetime.DateControlCtrl.prototype.onStartDateChanged_ = function(newVal, 
 
     goog.log.fine(os.ui.datetime.DateControlCtrl.LOGGER_,
         'start changed: ' + this['startDate'].toUTCString() + ' to ' + this['endDate'].toUTCString());
-
-    // open the datepicker for the end date
-    const endDatePicker = $('#timelineEndDate');
-    if (endDatePicker && this['showEndDateCalendar']) {
-      endDatePicker.datepicker('show');
-    } else {
-      this['showEndDateCalendar'] = true;
-    }
   }
 };
 
@@ -201,7 +192,6 @@ os.ui.datetime.DateControlCtrl.prototype.onEndDateChanged_ = function(newVal, ol
     if (this['startDate'] > this['endDate']) {
       // if start is after end, make them the same (end is inclusive)
       this['startDate'] = new Date(this['endDate']);
-      this['showEndDateCalendar'] = false;
     }
 
     if (!this['disabled']) {
@@ -223,12 +213,35 @@ os.ui.datetime.DateControlCtrl.prototype.onDurationChanged = function() {
   if (!this['disabled']) {
     this['startDate'] = os.time.floor(this['startDate'], this['duration'], true);
 
-    if (this['duration'] === os.time.Duration.CUSTOM) {
-      // for custom duration, make dates the same (end is inclusive)
-      this['endDate'] = new Date(this['startDate']);
-    } else {
-      // for all other durations, set the end date from the start date
-      this['endDate'] = os.time.offset(this['startDate'], this['duration'], 1, true);
+    switch (this['duration']) {
+      case os.time.Duration.LAST24HOURS:
+        os.time.resetDate(this['startDate']);
+        this['startDate'].setUTCDate(this['startDate'].getUTCDate() - 1);
+        break;
+      case os.time.Duration.LAST48HOURS:
+        os.time.resetDate(this['startDate']);
+        this['startDate'].setUTCDate(this['startDate'].getUTCDate() - 2);
+        break;
+      case os.time.Duration.LAST7DAYS:
+        os.time.resetDate(this['startDate']);
+        this['startDate'].setUTCDate(this['startDate'].getUTCDate() - 7);
+        break;
+      case os.time.Duration.LAST14DAYS:
+        os.time.resetDate(this['startDate']);
+        this['startDate'].setUTCDate(this['startDate'].getUTCDate() - 14);
+        break;
+      case os.time.Duration.LAST30DAYS:
+        os.time.resetDate(this['startDate']);
+        this['startDate'].setUTCDate(this['startDate'].getUTCDate() - 30);
+        break;
+      case os.time.Duration.CUSTOM:
+        // for custom duration, make dates the same (end is inclusive)
+        this['endDate'] = new Date(this['startDate']);
+        break;
+      default:
+        // for all other durations, set the end date from the start date
+        this['endDate'] = os.time.offset(this['startDate'], this['duration'], 1, true);
+        break;
     }
     this.startControllerUpdate_();
 
@@ -287,7 +300,6 @@ os.ui.datetime.DateControlCtrl.prototype.shiftDate = function(direction) {
       const millisecondsPerDay = 1000 * 60 * 60 * 24;
       modifier = (this['endDate'] - this['startDate']) / millisecondsPerDay;
     }
-    this['showEndDateCalendar'] = false;
     this['startDate'] = os.time.offset(this['startDate'], this['duration'], direction * modifier, true);
     this['endDate'] = os.time.offset(this['endDate'], this['duration'], direction * modifier, true);
   }

@@ -26,7 +26,8 @@ os.ui.datetime.wheelDateDirective = function() {
       'disable': '=',
       'isRequired': '=',
       'blurOnSelect': '=?',
-      'eventContainer': '@'
+      'eventContainer': '@',
+      'name': '@'
     },
     templateUrl: os.ROOT + 'views/datetime/wheeldate.html',
     controller: os.ui.datetime.WheelDateCtrl,
@@ -107,6 +108,12 @@ os.ui.datetime.WheelDateCtrl = function($scope, $element, $timeout) {
    */
   this.timeout_ = $timeout;
 
+  /**
+   * @type {string}
+   * @private
+   */
+  this.name_ = this.scope_['name'] || 'default';
+
   var fixFocusIE = false;
 
   /**
@@ -127,8 +134,11 @@ os.ui.datetime.WheelDateCtrl = function($scope, $element, $timeout) {
          * @param {*} inst
          * @this Element
          */
-        function(dateText, inst) {
+        (dateText, inst) => {
           fixFocusIE = true;
+          $timeout(() => {
+            $scope.$emit(this.name_ + '.userSelected');
+          });
         },
     'beforeShow':
         /**
@@ -200,6 +210,8 @@ os.ui.datetime.WheelDateCtrl = function($scope, $element, $timeout) {
   }
 
   $scope.$watch('date', this.onDateChanged_.bind(this));
+
+  $scope.$on(this.name_ + '.open', this.openDatePicker.bind(this));
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
 
@@ -249,6 +261,16 @@ os.ui.datetime.WheelDateCtrl.prototype.onDateChanged_ = function(newVal, oldVal)
 
     goog.log.fine(os.ui.datetime.WheelDateCtrl.LOGGER_, 'Wheel date changed to: ' + newVal.toUTCString());
   }
+};
+
+
+/**
+ * Open the current element's datepicker.
+ *
+ * @private
+ */
+os.ui.datetime.WheelDateCtrl.prototype.openDatePicker = function() {
+  this.element_.focus();
 };
 
 

@@ -25,6 +25,8 @@ os.time.Duration = {
   WEEK: 'week',
   MONTH: 'month',
   YEAR: 'year',
+  LAST24HOURS: 'last 24 hours',
+  LAST48HOURS: 'last 48 hours',
   LAST7DAYS: 'last 7 days',
   LAST14DAYS: 'last 14 days',
   LAST30DAYS: 'last 30 days',
@@ -571,7 +573,8 @@ os.time.resetDate = function(date) {
   date.setUTCDate(currentDate.getUTCDate());
   date.setUTCMonth(currentDate.getUTCMonth());
   date.setUTCFullYear(currentDate.getUTCFullYear());
-  date.setUTCHours(0, 0, 0, 0);
+  date.setUTCHours(currentDate.getUTCHours(), currentDate.getUTCMinutes(), currentDate.getUTCSeconds(),
+      currentDate.getUTCMilliseconds());
 };
 
 /**
@@ -622,18 +625,6 @@ os.time.round = function(date, duration, opt_roundDown) {
       if (!roundDown && date.getTime() > testDate.getTime()) {
         testDate.setUTCDate(testDate.getUTCDate() + 1);
       }
-      break;
-    case 'last 7 days':
-      os.time.resetDate(testDate);
-      testDate.setUTCDate(testDate.getUTCDate() - 7);
-      break;
-    case 'last 14 days':
-      os.time.resetDate(testDate);
-      testDate.setUTCDate(testDate.getUTCDate() - 14);
-      break;
-    case 'last 30 days':
-      os.time.resetDate(testDate);
-      testDate.setUTCDate(testDate.getUTCDate() - 30);
       break;
     case 'hour':
       testDate.setUTCMinutes(0, 0, 0);
