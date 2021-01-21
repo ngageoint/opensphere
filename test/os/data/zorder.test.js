@@ -27,7 +27,7 @@ describe('os.data.ZOrder', function() {
       groups[i].getLayers().clear();
     }
 
-    expect(groups.length).toBe(4);
+    expect(groups.length).toBe(5);
   });
 
   it('should init to an empty object', function() {

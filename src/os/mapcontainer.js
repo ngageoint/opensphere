@@ -24,6 +24,7 @@ goog.require('ol.easing');
 goog.require('ol.events');
 goog.require('ol.layer.Tile');
 goog.require('ol.layer.Vector');
+goog.require('ol.layer.VectorTile');
 goog.require('ol.proj');
 goog.require('ol.renderer.Type');
 goog.require('ol.source.Vector');
@@ -525,7 +526,19 @@ os.MapContainer.isTileLayer = function(layer) {
  * @return {boolean}
  */
 os.MapContainer.isVectorLayer = function(layer) {
-  return layer instanceof ol.layer.Vector && !os.MapContainer.isImageLayer(layer);
+  return layer instanceof ol.layer.Vector && !os.MapContainer.isImageLayer(layer) &&
+      !os.MapContainer.isVectorTileLayer(layer);
+};
+
+
+/**
+ * Whether or not the given value is a vector tile layer.
+ *
+ * @param {*} layer The value to test.
+ * @return {boolean}
+ */
+os.MapContainer.isVectorTileLayer = function(layer) {
+  return layer instanceof ol.layer.VectorTile;
 };
 
 
@@ -962,6 +975,10 @@ os.MapContainer.prototype.init = function() {
   vectorGroup.setCheckFunc(os.MapContainer.isVectorLayer);
   vectorGroup.setOSType(os.layer.LayerType.FEATURES);
 
+  var vectorTileGroup = new os.layer.Group();
+  vectorTileGroup.setCheckFunc(os.MapContainer.isVectorTileLayer);
+  vectorTileGroup.setOSType(os.layer.LayerType.VECTOR_TILES);
+
   var referenceGroup = new os.layer.Group();
   referenceGroup.setPriority(100);
   referenceGroup.setOSType(os.layer.LayerType.REF);
@@ -993,6 +1010,7 @@ os.MapContainer.prototype.init = function() {
     layers: new ol.Collection([
       tileGroup,
       imageGroup,
+      vectorTileGroup,
       vectorGroup,
       referenceGroup
     ]),

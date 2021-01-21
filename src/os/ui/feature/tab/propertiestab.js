@@ -3,6 +3,7 @@ goog.provide('os.ui.feature.tab.propertiesTabDirective');
 
 
 goog.require('ol.Feature');
+goog.require('ol.render.Feature');
 goog.require('os.Fields');
 goog.require('os.data.RecordField');
 goog.require('os.ui.Module');
@@ -52,7 +53,7 @@ os.ui.feature.tab.PropertiesTabCtrl = function($scope, $element) {
 
   /**
    * The feature.
-   * @type {ol.Feature}
+   * @type {ol.Feature|ol.render.Feature}
    */
   this.feature = null;
 
@@ -111,7 +112,7 @@ os.ui.feature.tab.PropertiesTabCtrl.prototype.destroy = function() {
  * @inheritDoc
  */
 os.ui.feature.tab.PropertiesTabCtrl.prototype.updateTab = function(event, data) {
-  const feature = data instanceof ol.Feature ? /** @type {ol.Feature} */ (data) : null;
+  const feature = this.isFeature(data) ? /** @type {ol.Feature|ol.render.Feature} */ (data) : null;
   this.setFeature(feature);
   this.updateProperties();
 };
@@ -119,7 +120,7 @@ os.ui.feature.tab.PropertiesTabCtrl.prototype.updateTab = function(event, data) 
 
 /**
  * Set the feature displayed by the tab.
- * @param {ol.Feature} feature The feature.
+ * @param {ol.Feature|ol.render.Feature} feature The feature.
  * @protected
  */
 os.ui.feature.tab.PropertiesTabCtrl.prototype.setFeature = function(feature) {

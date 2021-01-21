@@ -8,11 +8,12 @@ goog.require('os.proj');
 
 
 /**
- * @param {!ol.source.TileImage} source
+ * @param {!ol.source.TileImage} source The source.
+ * @param {ol.tilegrid.TileGrid=} opt_tileGrid The tile grid. If not provided, the source's tile grid will be used.
  * @extends {Cesium.TilingScheme}
  * @constructor
  */
-plugin.cesium.TileGridTilingScheme = function(source) {
+plugin.cesium.TileGridTilingScheme = function(source, opt_tileGrid) {
   throw new Error('TileGridTilingScheme created before initialization!');
 };
 
@@ -22,12 +23,13 @@ plugin.cesium.TileGridTilingScheme = function(source) {
  */
 plugin.cesium.TileGridTilingScheme.init = function() {
   /**
-   * @param {!ol.source.TileImage} source
+   * @param {!ol.source.TileImage} source The source.
+   * @param {ol.tilegrid.TileGrid=} opt_tileGrid The tile grid. If not provided, the source's tile grid will be used.
    * @extends {Cesium.TilingScheme}
    * @constructor
    */
-  plugin.cesium.TileGridTilingScheme = function(source) {
-    var tg = source.getTileGrid();
+  plugin.cesium.TileGridTilingScheme = function(source, opt_tileGrid) {
+    var tg = opt_tileGrid || source.getTileGrid();
     goog.asserts.assert(tg);
 
     /**

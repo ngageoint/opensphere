@@ -1,5 +1,8 @@
 goog.provide('os.ui.feature.tab.AbstractFeatureTabCtrl');
 
+goog.require('ol.Feature');
+goog.require('ol.render.Feature');
+
 
 
 /**
@@ -43,6 +46,18 @@ os.ui.feature.tab.AbstractFeatureTabCtrl = function($scope, $element) {
 os.ui.feature.tab.AbstractFeatureTabCtrl.prototype.destroy = function() {
   this.scope = null;
   this.element = null;
+};
+
+
+/**
+ * If the provided value is a feature.
+ *
+ * @param {*} value The value.
+ * @return {boolean}
+ * @protected
+ */
+os.ui.feature.tab.AbstractFeatureTabCtrl.prototype.isFeature = function(value) {
+  return value instanceof ol.Feature || value instanceof ol.render.Feature;
 };
 
 
