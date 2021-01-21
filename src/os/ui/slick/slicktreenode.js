@@ -113,6 +113,14 @@ os.ui.slick.SlickTreeNode = function() {
   this.bold = true;
 
   /**
+   * @type {Object}
+   */
+  this.icons = {
+    'collapsed': os.ui.NodeToggleCtrl.DEFAULT_COLLAPSED,
+    'expanded': os.ui.NodeToggleCtrl.DEFAULT_EXPANDED
+  };
+
+  /**
    * @type {boolean}
    * @private
    */
@@ -395,6 +403,30 @@ os.ui.slick.SlickTreeNode.prototype.getIcons = function() {
  */
 os.ui.slick.SlickTreeNode.prototype.formatIcons = function() {
   return '&nbsp;';
+};
+
+
+/**
+ * API call to get the HTML for the toggle icons
+ * Toggle Icons can be: classIcon
+ * @return {Object<string, string>} The toggle icons HTML
+ * @export
+ */
+os.ui.slick.SlickTreeNode.prototype.getToggleIcons = function() {
+  return this.icons;
+};
+
+
+/**
+ * API call to get the HTML for the toggle icons
+ * Toggle Icons can be: classIcon
+ * @param {string} collapsed
+ * @param {string} expanded
+ * @export
+ */
+os.ui.slick.SlickTreeNode.prototype.setToggleIcons = function(collapsed, expanded) {
+  this.icons['collapsed'] = collapsed;
+  this.icons['expanded'] = expanded;
 };
 
 
