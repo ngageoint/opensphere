@@ -133,6 +133,12 @@ plugin.file.kml.KMLTreeExporter.prototype.getStrokeColor = function(item) {
   return featureColor ? os.style.toAbgrString(featureColor) : null;
 };
 
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLTreeExporter.prototype.getStrokeWidth = function(item) {
+  return os.feature.getStrokeWidth(item.getFeature());
+};
 
 /**
  * @inheritDoc
