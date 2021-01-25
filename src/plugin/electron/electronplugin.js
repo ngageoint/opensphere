@@ -3,8 +3,9 @@ goog.module.declareLegacyNamespace();
 
 goog.require('plugin.electron.ElectronMemoryConfigUI');
 
+const Request = goog.require('os.net.Request');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const electron = goog.require('plugin.electron');
+const {ID, SettingKey, isElectron} = goog.require('plugin.electron');
 const ElectronConfirmCertUI = goog.require('plugin.electron.ElectronConfirmCertUI');
 
 
@@ -20,6 +21,26 @@ const onCertificateRequest = (url, certs) => {
 
 
 /**
+ * Check for app updates.
+ * @protected
+ */
+const checkForUpdates = () => {
+  const releaseUrl = os.settings.get(SettingKey.RELEASE_URL, '');
+  if (releaseUrl) {
+    const request = new Request(`${releaseUrl}/latest.yml`);
+    request.getPromise().then((response) => {
+      if (response) {
+        // Update file exists, notify the main process to check it.
+        ElectronOS.checkForUpdates();
+      }
+    }, () => {
+      // Couldn't retrieve update file, don't check for updates.
+    });
+  }
+};
+
+
+/**
  * Plugin to integrate Electron support.
  */
 class ElectronPlugin extends AbstractPlugin {
@@ -28,14 +49,14 @@ class ElectronPlugin extends AbstractPlugin {
    */
   constructor() {
     super();
-    this.id = electron.ID;
+    this.id = ID;
   }
 
   /**
    * @inheritDoc
    */
   init() {
-    if (electron.isElectron()) {
+    if (isElectron()) {
       ElectronOS.registerCertificateHandler(onCertificateRequest);
       os.ui.list.add('pluginMemoryConfig', '<electronmemoryconfig></electronmemoryconfig>');
 
@@ -44,6 +65,8 @@ class ElectronPlugin extends AbstractPlugin {
        * @suppress {const}
        */
       goog.html.SAFE_URL_PATTERN_ = /^(?:(?:https?|mailto|ftp|file):|[^:/?#]*(?:[/?#]|$))/i;
+
+      checkForUpdates();
     }
   }
 }
@@ -53,7 +76,7 @@ class ElectronPlugin extends AbstractPlugin {
 // Electron does not natively support document.cookie, which both OpenSphere and Closure use internally. Override the
 // native API with functions exposed in the preload script.
 //
-if (electron.isElectron()) {
+if (isElectron()) {
   Object.defineProperty(document, 'cookie', {
     enumerable: true,
     configurable: true,
