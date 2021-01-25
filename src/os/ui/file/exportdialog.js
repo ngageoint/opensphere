@@ -125,7 +125,7 @@ os.ui.file.ExportDialogCtrl = function($scope, $element, $compile) {
   $scope.$on('$destroy', this.destroy.bind(this));
 
   $scope.$on('addexportoptions.updateitem', goog.bind(function(event, items) {
-    this.options.items = items;
+    this.options.items = items || [];
   }, this));
 };
 
