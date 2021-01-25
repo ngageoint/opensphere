@@ -1,6 +1,10 @@
 goog.provide('plugin.cesium.sync.RootSynchronizer');
 
 goog.require('goog.asserts');
+goog.require('os.layer.Image');
+goog.require('os.layer.Tile');
+goog.require('os.layer.Vector');
+goog.require('os.layer.VectorTile');
 goog.require('os.webgl.AbstractRootSynchronizer');
 
 
@@ -72,6 +76,9 @@ plugin.cesium.sync.RootSynchronizer.prototype.updateGroupZ = function(group) {
     } else if (layers[0] instanceof os.layer.Image) {
       layerCount = os.MapContainer.getInstance().getLayerCount(os.layer.Image);
       startIndex = this.getGroupStartIndex_(group);
+    } else if (layers[0] instanceof os.layer.VectorTile) {
+      layerCount = os.MapContainer.getInstance().getLayerCount(os.layer.VectorTile);
+      startIndex = this.getGroupStartIndex_(group);
     }
 
     for (var i = 0, n = layers.length; i < n; i++) {
@@ -106,7 +113,8 @@ plugin.cesium.sync.RootSynchronizer.prototype.getGroupStartIndex_ = function(gro
       var previousLayers = /** @type {os.layer.Group} */ (groups[idx]).getLayers().getArray();
       if (previousLayers.length > 0) {
         var layer = previousLayers[previousLayers.length - 1];
-        if (layer instanceof os.layer.Image || layer instanceof os.layer.Tile) {
+        if (layer instanceof os.layer.Image || layer instanceof os.layer.Tile ||
+            layer instanceof os.layer.VectorTile) {
           var layerId = /** @type {os.layer.ILayer} */ (layer).getId();
           var synchronizer = this.synchronizers[layerId];
           if (synchronizer) {

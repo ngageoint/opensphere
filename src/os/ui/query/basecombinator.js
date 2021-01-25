@@ -194,7 +194,7 @@ os.ui.query.BaseCombinatorCtrl.ORDERS_ = [
  */
 os.ui.query.BaseCombinatorCtrl.prototype.apply = function() {
   this.createEntriesFromTree();
-  var entries = this.getEntries_();
+  var entries = this.getEntries();
 
   // filter entries to current layer id and don't merge if layerId == 'all'!
   var layerId = this.getLayerId_(os.ui.query.ALL_ID);
@@ -269,9 +269,9 @@ os.ui.query.BaseCombinatorCtrl.prototype.getLayerId_ = function(opt_default) {
 
 /**
  * @return {!Array<Object<string, string|boolean>>}
- * @private
+ * @protected
  */
-os.ui.query.BaseCombinatorCtrl.prototype.getEntries_ = function() {
+os.ui.query.BaseCombinatorCtrl.prototype.getEntries = function() {
   if (!this.entries_) {
     this.entries_ = this.getGoldCopy_();
   }
@@ -689,7 +689,7 @@ os.ui.query.BaseCombinatorCtrl.prototype.applyEntries = function(opt_restoreStat
   var entries = undefined;
 
   if (opt_restoreState) {
-    entries = this.getEntries_();
+    entries = this.getEntries();
 
     if (entries && entries.length) {
       // merge new items in the gold list with the entries list

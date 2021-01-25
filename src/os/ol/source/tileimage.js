@@ -10,7 +10,7 @@ goog.require('os.net.Request');
  * Wraps the tileUrlFunction of the given source so that it goes through the
  * proxy configured in os.net.ProxyHandler
  *
- * @param {ol.source.TileImage} source
+ * @param {ol.source.TileImage|ol.source.VectorTile} source
  */
 os.ol.source.tileimage.addProxyWrapper = function(source) {
   // wrap the tileUrlFunction with the proxy
@@ -39,7 +39,7 @@ os.ol.source.tileimage.addProxyWrapper = function(source) {
 /**
  * Automatically wrap the source with the proxy if CORS fails and the proxy succeeds.
  *
- * @param {ol.source.TileImage} source
+ * @param {ol.source.TileImage|ol.source.VectorTile} source
  * @param {ol.proj.Projection} proj
  */
 os.ol.source.tileimage.autoProxyCheck = function(source, proj) {

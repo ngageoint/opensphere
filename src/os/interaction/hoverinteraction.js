@@ -140,8 +140,6 @@ os.interaction.Hover.prototype.onMouseMove_ = function(mapBrowserEvent) {
 
           return null;
         }
-
-        return feature;
       }, {
         layerFilter: this.layerFilter
       }));

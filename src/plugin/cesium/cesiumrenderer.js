@@ -133,6 +133,7 @@ plugin.cesium.CesiumRenderer.prototype.initialize = function() {
           // register the default set of synchronizers
           var sm = os.webgl.SynchronizerManager.getInstance();
           sm.registerSynchronizer(os.layer.SynchronizerType.VECTOR, plugin.cesium.sync.VectorSynchronizer);
+          sm.registerSynchronizer(os.layer.SynchronizerType.VECTOR_TILE, plugin.cesium.sync.TileSynchronizer);
           sm.registerSynchronizer(os.layer.SynchronizerType.TILE, plugin.cesium.sync.TileSynchronizer);
           sm.registerSynchronizer(os.layer.SynchronizerType.IMAGE, plugin.cesium.sync.ImageSynchronizer);
           sm.registerSynchronizer(os.layer.SynchronizerType.DRAW, plugin.cesium.sync.VectorSynchronizer);

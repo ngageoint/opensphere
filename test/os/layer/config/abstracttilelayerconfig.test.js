@@ -10,26 +10,23 @@ describe('os.layer.config.AbstractTileLayerConfig', function() {
   it('configures for an explicitType', function() {
     var lc = new os.layer.config.AbstractTileLayerConfig();
     var layer = new os.layer.MockLayer();
-    var options = { 'explicitType' : 'someType' };
+    var options = {'explicitType': 'someType'};
     lc.configureLayer(layer, options);
     expect(layer.getExplicitType()).toBe('someType');
   });
 
   it('correctly replaces URLs with rotating numeric ranges', function() {
-    var lc = new os.layer.config.AbstractTileLayerConfig();
-    var expandedURL = lc.getUrlPattern('https://{0-4}.tile.bits/{x}/{y}/{z}.png');
+    var expandedURL = os.layer.config.AbstractTileLayerConfig.getUrlPattern('https://{0-4}.tile.bits/{x}/{y}/{z}.png');
     expect(expandedURL.toString()).toBe('/^https:\\/\\/\\d.tile.bits\\/\\d+\\/\\d+\\/\\d+.png/');
   });
 
   it('correctly replaces URLs with rotating alpha ranges', function() {
-    var lc = new os.layer.config.AbstractTileLayerConfig();
-    var expandedURL = lc.getUrlPattern('https://{d-f}.tile.bits/{x}/{y}/{z}.png');
+    var expandedURL = os.layer.config.AbstractTileLayerConfig.getUrlPattern('https://{d-f}.tile.bits/{x}/{y}/{z}.png');
     expect(expandedURL.toString()).toBe('/^https:\\/\\/[a-zA-Z].tile.bits\\/\\d+\\/\\d+\\/\\d+.png/');
   });
 
   it('returns URLs as Regexp when no rotating range', function() {
-    var lc = new os.layer.config.AbstractTileLayerConfig();
-    var expandedURL = lc.getUrlPattern('https://abc.tile.bits/{x}/{y}/{z}.png');
+    var expandedURL = os.layer.config.AbstractTileLayerConfig.getUrlPattern('https://abc.tile.bits/{x}/{y}/{z}.png');
     expect(expandedURL.toString()).toBe('/^https:\\/\\/abc.tile.bits\\/\\d+\\/\\d+\\/\\d+.png/');
   });
 
@@ -91,10 +88,11 @@ describe('os.layer.config.AbstractTileLayerConfig', function() {
     os.layerConfigManager.registerLayerConfig(os.layer.config.MockTileLayerConfig.TYPE,
         os.layer.config.MockTileLayerConfig);
     var lc = new os.layer.config.AbstractTileLayerConfig();
-    spyOn(lc, 'getSource').andCallFake(function() {return source;});
+    spyOn(lc, 'getSource').andCallFake(function() {
+      return source;
+    });
     var layer = lc.createLayer(testOptions);
     expect(layer.getSource().getAttributions()[0].getHTML()).toBe('mock attribution');
     expect(layer.getSource().getAttributions()[1].getHTML()).toBe('ex libris');
   });
-
 });

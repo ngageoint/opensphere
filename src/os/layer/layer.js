@@ -17,6 +17,7 @@ goog.require('os.source.ISource');
  */
 os.layer.SynchronizerType = {
   VECTOR: 'vector',
+  VECTOR_TILE: 'vectortile',
   TILE: 'tile',
   IMAGE: 'image',
   IMAGE_STATIC: 'imageStatic',
