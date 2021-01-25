@@ -2,6 +2,8 @@ goog.module('os.ui.AddExportOptionsUI');
 
 const Module = goog.require('os.ui.Module');
 
+const ExportOptions = goog.requireType('os.ex.ExportOptions');
+
 
 /**
  * Directive
@@ -62,23 +64,25 @@ class Controller {
      */
     this['showcount'] = this.scope['showcount'] || false;
 
+    const exportOptions = /** @type {ExportOptions|undefined} */ (this.scope['options']);
+
     /**
      * All data
-     * @type {string}
+     * @type {Array}
      */
-    this['allData'] = this.scope['options'].allData;
+    this['allData'] = exportOptions && exportOptions.allData || [];
 
     /**
      * Only selected Data
-     * @type {string}
+     * @type {Array}
      */
-    this['selectedData'] = this.scope['options'].selectedData;
+    this['selectedData'] = exportOptions && exportOptions.selectedData || [];
 
     /**
      * Only active (checked) data
-     * @type {string}
+     * @type {Array}
      */
-    this['activeData'] = this.scope['options'].activeData;
+    this['activeData'] = exportOptions && exportOptions.activeData || [];
 
     this.scope.$watch('option', function(newVal) {
       this.scope.$emit('addexportoptions.updateitem', this[newVal]);

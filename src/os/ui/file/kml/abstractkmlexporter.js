@@ -726,12 +726,13 @@ os.ui.file.kml.AbstractKMLExporter.prototype.addGeometryNode = function(item, no
  * @param {string} styleId The style id
  * @param {string} color The item color
  * @param {?string} fillColor The item fill color
- * @param {?string} strokeColor The item fill color
+ * @param {?string} strokeColor The item line (stroke) color
  * @param {os.ui.file.kml.Icon=} opt_icon The item icon
+ * @param {?number=} opt_strokeWidth the width of the line (stroke)
  * @protected
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.createStyle = function(item, styleId, color, fillColor, strokeColor,
-    opt_icon) {
+    opt_icon, opt_strokeWidth) {
   var styleEl = os.xml.createElementNS('Style', this.kmlNS, this.doc, undefined, {
     'id': styleId
   });
@@ -768,7 +769,7 @@ os.ui.file.kml.AbstractKMLExporter.prototype.createStyle = function(item, styleI
 
   var lineStyleEl = os.xml.appendElementNS('LineStyle', this.kmlNS, styleEl);
   os.xml.appendElementNS('color', this.kmlNS, lineStyleEl, strokeColor || color);
-  os.xml.appendElementNS('width', this.kmlNS, lineStyleEl, 2);
+  os.xml.appendElementNS('width', this.kmlNS, lineStyleEl, opt_strokeWidth || 2);
 
   var polyStyleEl = os.xml.appendElementNS('PolyStyle', this.kmlNS, styleEl);
   os.xml.appendElementNS('color', this.kmlNS, polyStyleEl, fillColor || color);
@@ -850,6 +851,15 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getFillColor = function(item) {};
  * @protected
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.getStrokeColor = function(item) {};
+
+/**
+ * Get the stroke width of an item.
+ * @abstract
+ * @param {T} item The item
+ * @return {?number} The item's stroke width as an integer, or null to use default value
+ * @protected
+ */
+os.ui.file.kml.AbstractKMLExporter.prototype.getStrokeWidth = function(item) {};
 
 
 /**
@@ -1064,11 +1074,14 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getStyleId = function(item) {
     }
   }
 
+  var strokeWidth = this.getStrokeWidth(item);
+  styleParts.push(strokeWidth);
+
   // hyphen separate the id components
   styleId = styleParts.join('-');
 
   if (!(styleId in this.styles_)) {
-    this.createStyle(item, styleId, color, fillColor, strokeColor, icon);
+    this.createStyle(item, styleId, color, fillColor, strokeColor, icon, strokeWidth);
   }
 
   return styleId;

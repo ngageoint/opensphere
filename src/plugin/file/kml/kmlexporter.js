@@ -128,6 +128,12 @@ plugin.file.kml.KMLExporter.prototype.getStrokeColor = function(item) {
   return itemColor ? os.style.toAbgrString(itemColor) : null;
 };
 
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLExporter.prototype.getStrokeWidth = function(item) {
+  return os.feature.getStrokeWidth(item);
+};
 
 /**
  * @inheritDoc

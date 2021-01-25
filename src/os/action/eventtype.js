@@ -65,6 +65,7 @@ os.action.EventType = {
   RESTORE_FEATURE: 'spatial:restoreFeature',
   EXCLUDE: 'exclude',
   ADD_EXCLUDE: 'add_exclude',
+  MODIFY_GEOMETRY: 'spatial:modifyGeometry',
 
   // feature
   FEATURE_INFO: 'featureInfo',

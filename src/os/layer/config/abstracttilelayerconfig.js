@@ -83,7 +83,6 @@ os.layer.config.AbstractTileLayerConfig.LOGGER_ = goog.log.getLogger('os.layer.c
 /**
  * Regular expression matcher for rotating tile server names in alpha range.
  * @type {RegExp}
- * @private
  * @const
  */
 os.layer.config.AbstractTileLayerConfig.RotatingAlphaRegexp = new RegExp(/{[a-zA-Z]-[a-zA-Z]}/g);
@@ -92,7 +91,6 @@ os.layer.config.AbstractTileLayerConfig.RotatingAlphaRegexp = new RegExp(/{[a-zA
 /**
  * Regular expression matcher for rotating tile server names in numerical range.
  * @type {RegExp}
- * @private
  * @const
  */
 os.layer.config.AbstractTileLayerConfig.RotatingNumericRegexp = new RegExp(/{\d-\d}/g);
@@ -144,7 +142,7 @@ os.layer.config.AbstractTileLayerConfig.prototype.initializeConfig = function(op
       var url = this.urls[i];
 
       // register the cross origin value by URL pattern so that our Cesium.loadImage mixin can find it
-      os.net.registerCrossOrigin(this.getUrlPattern(url), this.crossOrigin);
+      os.net.registerCrossOrigin(os.layer.config.AbstractTileLayerConfig.getUrlPattern(url), this.crossOrigin);
     }
   }
 
@@ -268,9 +266,8 @@ os.layer.config.AbstractTileLayerConfig.prototype.getTileHeight = function(optio
 /**
  * @param {string} url The url
  * @return {RegExp} The url pattern
- * @protected
  */
-os.layer.config.AbstractTileLayerConfig.prototype.getUrlPattern = function(url) {
+os.layer.config.AbstractTileLayerConfig.getUrlPattern = function(url) {
   // replace {z}, {x}, {y}, and {-y} with number regexps
   url = url.replace(/{-?[zxy]}/g, '\\d+');
 
@@ -290,24 +287,40 @@ os.layer.config.AbstractTileLayerConfig.prototype.getUrlPattern = function(url) 
  * @protected
  */
 os.layer.config.AbstractTileLayerConfig.prototype.expandUrls = function() {
+  this.urls = os.layer.config.AbstractTileLayerConfig.expandUrls(this.urls);
+};
+
+
+/**
+ * Expand URLs that contain ranges for rotating tile servers.
+ * @param {Array<string>} urls The URLs to expand.
+ * @return {Array<string>} The expanded URLs.
+ */
+os.layer.config.AbstractTileLayerConfig.expandUrls = function(urls) {
   var expandedUrls = [];
-  for (var i = 0; i < this.urls.length; i++) {
-    var url = this.urls[i];
-    if (typeof url === 'string') {
-      var expanded = /** @type {Array<string>} */ (os.layer.config.AbstractTileLayerConfig.expandUrl(url));
-      for (var j = 0; j < expanded.length; j++) {
-        var expandedUrl = /** @type {string} */ (expanded[j]);
-        expandedUrls.push(expandedUrl);
+
+  if (urls) {
+    for (var i = 0; i < urls.length; i++) {
+      var url = urls[i];
+      if (typeof url === 'string') {
+        var expanded = /** @type {Array<string>} */ (os.layer.config.AbstractTileLayerConfig.expandUrl(url));
+        for (var j = 0; j < expanded.length; j++) {
+          var expandedUrl = /** @type {string} */ (expanded[j]);
+          expandedUrls.push(expandedUrl);
+        }
+      } else {
+        // pass through.
+        expandedUrls.push(url);
       }
-    } else {
-      // pass through.
-      expandedUrls.push(url);
     }
   }
+
   goog.log.fine(os.layer.config.AbstractTileLayerConfig.LOGGER_,
       'Potentially expanded URL set: ' + expandedUrls.join());
-  this.urls = expandedUrls;
+
+  return expandedUrls;
 };
+
 
 /**
  * Expand a URL that contains a range for rotating tile servers.
