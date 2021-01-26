@@ -68,7 +68,6 @@ class Controller {
     if (this.scope) {
       const certs = /** @type {Array<!Electron.Certificate>} */ (this.scope['certs']);
       if (certs) {
-        certs.sort(sortCerts);
         this['cert'] = certs[0];
       }
 
@@ -77,29 +76,20 @@ class Controller {
   }
 
   /**
-   * Get the user-facing name for a certificate.
+   * Format the certificate expiry to a date string.
    * @param {Electron.Certificate} cert The certificate.
-   * @return {string} The name.
+   * @return {string} The formatted expiry.
    * @export
    */
-  getName(cert) {
-    return cert ? `${cert.subjectName} (${cert.issuerName})` : 'Unknown Certificate';
+  formatExpiry(cert) {
+    let expiry = 'Unknown';
+    if (cert && cert.validExpiry > 0) {
+      expiry = moment(cert.validExpiry * 1000).format('dddd, MMMM D, YYYY');
+    }
+
+    return expiry;
   }
 }
-
-
-/**
- * Sort client certificates by subject/issuer name.
- * @param {Electron.Certificate} a First certificate.
- * @param {Electron.Certificate} b Second certificate.
- * @return {number} The sort value.
- */
-const sortCerts = (a, b) => {
-  // Sort by subject name, then issuer name.
-  return a.subjectName === b.subjectName ?
-      (a.issuerName > b.issuerName ? 1 : a.issuerName === b.issuerName ? 0 : -1) :
-      (a.subjectName > b.subjectName ? 1 : -1);
-};
 
 
 /**
@@ -133,13 +123,15 @@ const launchConfirmCert = (url, certs) => {
       prompt: '<electronconfirmcert></electronconfirmcert>',
       windowOptions: /** @type {!osx.window.WindowOptions} */ ({
         label: 'Select a Certificate',
+        icon: 'fa fa-key',
         height: 'auto',
+        width: 450,
         modal: true,
         parent: windowSelector.APP
       })
     }), {
       'certs': certs,
-      'prompt': `Select a certificate to authenticate yourself to ${url}`
+      'prompt': `Please select a certificate to authenticate yourself to <span class="text-monospace">${url}</span>.`
     });
   });
 };
