@@ -214,15 +214,39 @@ plugin.arc.ArcLoader.prototype.onLoad = function(event) {
     if (services && goog.isArray(services)) {
       for (var j = 0, jj = services.length; j < jj; j++) {
         var service = services[j];
-        var type = service['type'];
-        if (type === plugin.arc.MAP_SERVER) {
-          var name = /** @type {string} */ (service['name']);
-          name = name.substring(name.lastIndexOf('/') + 1);
-          var serviceNode = new plugin.arc.node.ArcServiceNode(this.server_);
+        var type = /** @type {string} */ (service['type']);
+        var name = /** @type {string} */ (service['name']);
+        name = name.substring(name.lastIndexOf('/') + 1);
+        var url = this.url_ + '/' + name + '/' + type;
+        var serviceNode;
+
+        if (type === plugin.arc.ServerType.MAP_SERVER) {
+          serviceNode = new plugin.arc.node.ArcServiceNode(this.server_);
+          serviceNode.setServiceType(plugin.arc.ServerType.MAP_SERVER);
           serviceNode.setLabel(name);
           serviceNode.listen(goog.net.EventType.SUCCESS, this.onChildLoad, false, this);
           serviceNode.listen(goog.net.EventType.ERROR, this.onChildLoad, false, this);
-          serviceNode.load(this.url_ + '/' + name);
+          serviceNode.load(url);
+          this.toLoad_.push(serviceNode);
+        }
+
+        if (type === plugin.arc.ServerType.FEATURE_SERVER) {
+          serviceNode = new plugin.arc.node.ArcServiceNode(this.server_);
+          serviceNode.setLabel(name);
+          serviceNode.setServiceType(plugin.arc.ServerType.FEATURE_SERVER);
+          serviceNode.listen(goog.net.EventType.SUCCESS, this.onChildLoad, false, this);
+          serviceNode.listen(goog.net.EventType.ERROR, this.onChildLoad, false, this);
+          serviceNode.load(url);
+          this.toLoad_.push(serviceNode);
+        }
+
+        if (type === plugin.arc.ServerType.IMAGE_SERVER) {
+          serviceNode = new plugin.arc.node.ArcServiceNode(this.server_);
+          serviceNode.setLabel(name);
+          serviceNode.setServiceType(plugin.arc.ServerType.IMAGE_SERVER);
+          serviceNode.listen(goog.net.EventType.SUCCESS, this.onChildLoad, false, this);
+          serviceNode.listen(goog.net.EventType.ERROR, this.onChildLoad, false, this);
+          serviceNode.load(url);
           this.toLoad_.push(serviceNode);
         }
       }
@@ -234,6 +258,9 @@ plugin.arc.ArcLoader.prototype.onLoad = function(event) {
       var lastIdx = this.url_.lastIndexOf('/MapServer');
       if (lastIdx == -1) {
         lastIdx = this.url_.lastIndexOf('/FeatureServer');
+      }
+      if (lastIdx == -1) {
+        lastIdx = this.url_.lastIndexOf('/ImageServer');
       }
 
       if (lastIdx != -1) {

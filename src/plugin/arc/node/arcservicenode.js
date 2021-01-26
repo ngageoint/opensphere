@@ -1,9 +1,13 @@
 goog.provide('plugin.arc.node.ArcServiceNode');
+
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('os.data.ConfigDescriptor');
+goog.require('os.data.DataManager');
 goog.require('os.net.Request');
 goog.require('os.ui.data.DescriptorNode');
 goog.require('os.ui.slick.LoadingNode');
+goog.require('plugin.arc.layer.ArcImageLayerConfig');
 goog.require('plugin.arc.layer.ArcLayerDescriptor');
 
 
@@ -18,6 +22,12 @@ goog.require('plugin.arc.layer.ArcLayerDescriptor');
 plugin.arc.node.ArcServiceNode = function(server) {
   plugin.arc.node.ArcServiceNode.base(this, 'constructor');
   this.log = plugin.arc.node.ArcServiceNode.LOGGER_;
+
+  /**
+   * @type {?string}
+   * @private
+   */
+  this.serviceType_ = null;
 
   /**
    * @type {?string}
@@ -49,6 +59,15 @@ goog.inherits(plugin.arc.node.ArcServiceNode, os.ui.slick.LoadingNode);
 plugin.arc.node.ArcServiceNode.LOGGER_ = goog.log.getLogger('plugin.arc.node.ArcServiceNode');
 
 
+/**
+ * Sets the service type for this node (FeatureServer, MapServer, or ImageServer).
+ *
+ * @param {string} type
+ */
+plugin.arc.node.ArcServiceNode.prototype.setServiceType = function(type) {
+  this.serviceType_ = type;
+};
+
 
 /**
  * Sets the URL to load. This keeps the URL only to the folder/service level and strips off anything after that
@@ -57,12 +76,9 @@ plugin.arc.node.ArcServiceNode.LOGGER_ = goog.log.getLogger('plugin.arc.node.Arc
  * @param {string} url
  */
 plugin.arc.node.ArcServiceNode.prototype.setUrl = function(url) {
-  var featureServerIdx = url.indexOf('/FeatureServer');
-  var mapServerIdx = url.indexOf('/MapServer');
-  if (featureServerIdx > -1) {
-    url = url.substring(0, featureServerIdx);
-  } else if (mapServerIdx > -1) {
-    url = url.substring(0, mapServerIdx);
+  const endSlash = url.lastIndexOf('/');
+  if (endSlash == url.length) {
+    url = url.substring(0, endSlash);
   }
 
   this.url_ = url;
@@ -83,7 +99,7 @@ plugin.arc.node.ArcServiceNode.prototype.load = function(url) {
   this.setUrl(url);
 
   // request the folder plus the MapServer info in order to get the full layer metadata
-  url = this.url_ + '/MapServer/layers?f=json';
+  url = this.url_ + '/layers?f=json';
   this.request_ = new os.net.Request(url);
   this.request_.setHeader('Accept', '*/*');
   this.request_.listen(goog.net.EventType.SUCCESS, this.onLoad_, false, this);
@@ -107,18 +123,25 @@ plugin.arc.node.ArcServiceNode.prototype.onLoad_ = function(event) {
 
   var json = null;
   try {
-    json = JSON.parse(response);
+    json = /** @type {Object<string, *>} */ (JSON.parse(response));
   } catch (e) {
     // wah wah
   }
 
   if (json && this.server_) {
-    var layers = /** @type {Array<Object>} */ (json['layers']);
-    if (layers && layers.length > 0) {
-      for (var i = 0, ii = layers.length; i < ii; i++) {
-        var layer = layers[i];
-        this.addLayer_(layer, this.server_);
+    // MapServer and FeatureServer contain multiple sublayers, so add each of them
+    if (this.serviceType_ == plugin.arc.ServerType.MAP_SERVER ||
+        this.serviceType_ == plugin.arc.ServerType.FEATURE_SERVER) {
+      var layers = /** @type {Array<Object>} */ (json['layers']);
+      if (layers && layers.length > 0) {
+        for (var i = 0, ii = layers.length; i < ii; i++) {
+          var layer = layers[i];
+          this.addLayer_(layer);
+        }
       }
+    } else if (this.serviceType_ == plugin.arc.ServerType.IMAGE_SERVER) {
+      // ImageServers represent a single layer, so create and add it
+      this.addImageLayer_(json);
     }
   }
 
@@ -127,36 +150,73 @@ plugin.arc.node.ArcServiceNode.prototype.onLoad_ = function(event) {
 
 
 /**
- * Creates and adds layer descriptors for each Arc service.
+ * Creates and adds layer descriptors for Arc Feature/Map Servers.
  *
  * @param {Object} layer
- * @param {plugin.arc.ArcServer} server
  * @private
  */
-plugin.arc.node.ArcServiceNode.prototype.addLayer_ = function(layer, server) {
-  var dm = os.dataManager;
-
-  var uniquePath = '';
+plugin.arc.node.ArcServiceNode.prototype.addLayer_ = function(layer) {
   if (this.url_) {
-    uniquePath = this.url_.replace(server.getUrl(), '');
+    var dm = os.data.DataManager.getInstance();
+    var uniquePath = this.url_.replace(this.server_.getUrl(), '');
+    var layerId = goog.string.hashCode(uniquePath + '|' + layer['id']);
+    var id = this.server_.getId() + os.ui.data.BaseProvider.ID_DELIMITER + layerId;
+    var d = /** @type {plugin.arc.layer.ArcLayerDescriptor} */ (dm.getDescriptor(id));
+
+    if (!d) {
+      d = new plugin.arc.layer.ArcLayerDescriptor();
+    }
+
+    d.setProvider(this.server_.getLabel());
+    d.configureDescriptor(layer, id, this.url_);
+    d.setDataProvider(this.server_);
+
+    dm.addDescriptor(d);
+
+    var node = new os.ui.data.DescriptorNode();
+    node.setDescriptor(d);
+
+    this.addChild(node);
+  }
+};
+
+
+/**
+ * Creates and adds layer descriptors for Arc ImageServers.
+ *
+ * @param {Object<string, *>} json The layer info JSON.
+ * @private
+ */
+plugin.arc.node.ArcServiceNode.prototype.addImageLayer_ = function(json) {
+  const id = this.server_.getId() + os.ui.data.BaseProvider.ID_DELIMITER + /** @type {string} */ (json['name']);
+  const extent = /** @type {Object<string, number>} */ (json['extent']);
+  const config = {
+    'id': id,
+    'url': this.url_,
+    'type': plugin.arc.layer.ArcImageLayerConfig.ID,
+    'description': json['description'],
+    'provider': this.server_.getLabel(),
+    'title': json['name'],
+    'extent': [extent['xmin'], extent['ymin'], extent['xmax'], extent['ymax']],
+    'extentProjection': 'EPSG:3857',
+    'layerType': os.layer.LayerType.TILES,
+    'icons': os.ui.Icons.TILES
+  };
+
+  const dm = os.data.DataManager.getInstance();
+  let descriptor = /** @type {os.data.ConfigDescriptor} */ (dm.getDescriptor(id));
+  if (!descriptor) {
+    descriptor = new os.data.ConfigDescriptor();
   }
 
-  var layerId = goog.string.hashCode(uniquePath + '|' + layer['id']);
-  var id = server.getId() + os.ui.data.BaseProvider.ID_DELIMITER + layerId;
-  var d = /** @type {plugin.arc.layer.ArcLayerDescriptor} */ (dm.getDescriptor(id));
+  descriptor.setBaseConfig(config);
+  descriptor.setProvider(this.server_.getLabel());
+  descriptor.setDataProvider(this.server_);
 
-  if (!d) {
-    d = new plugin.arc.layer.ArcLayerDescriptor();
-  }
-
-  d.setProvider(server.getLabel());
-  d.configureDescriptor(layer, id, this.url_ + '/MapServer');
-  d.setDataProvider(server);
-
-  dm.addDescriptor(d);
+  dm.addDescriptor(descriptor);
 
   var node = new os.ui.data.DescriptorNode();
-  node.setDescriptor(d);
+  node.setDescriptor(descriptor);
 
   this.addChild(node);
 };

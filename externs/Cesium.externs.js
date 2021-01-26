@@ -1670,7 +1670,7 @@ Cesium.Polygon.prototype.material;
  * @typedef {{
  *   color: (Cesium.Color|undefined),
  *   horizontal: (boolean|undefined),
- *   image: (string|undefined),
+ *   image: (string|HTMLCanvasElement|HTMLVideoElement|Image|undefined),
  *   repeat: (number|undefined),
  *   evenColor: (Cesium.Color|undefined),
  *   oddColor: (Cesium.Color|undefined),
