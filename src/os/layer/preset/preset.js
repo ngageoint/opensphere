@@ -4,6 +4,7 @@ goog.module.declareLegacyNamespace();
 const object = goog.require('goog.object');
 const style = goog.require('os.style');
 const OsLayer = goog.require('os.layer');
+const Settings = goog.require('os.config.Settings');
 
 
 /**
@@ -42,7 +43,9 @@ const PresetServiceAction = {
  */
 const SettingKey = {
   APPLIED_DEFAULTS: BASE_KEY + 'appliedDefaults',
-  PRESETS: BASE_KEY + 'presets'
+  PRESETS: BASE_KEY + 'presets',
+  SAVED_PRESET_IDS: BASE_KEY + 'saved.presetIds',
+  SAVED_PRESET_CLEANS: BASE_KEY + 'saved.presetCleans'
 };
 
 /**
@@ -110,11 +113,65 @@ const updateDefault = function(layer, preset) {
   }
 };
 
+/**
+ * Get the selected Preset ID from saved Settings for the desired Layer
+ *
+ * @param {string} id The layer ID
+ * @return {?string}
+ */
+const getSavedPresetId = function(id) {
+  var lookup = /** @type {!Object<string, ?string>} */
+      (Settings.getInstance().get(SettingKey.SAVED_PRESET_IDS, {}));
+  return lookup[id];
+};
+
+/**
+ * Get the selected Preset ID from saved Settings for the desired Layer
+ *
+ * @param {string} id The layer ID
+ * @param {?string=} opt_presetId
+ */
+const setSavedPresetId = function(id, opt_presetId) {
+  var lookup = /** @type {!Object<string, ?string>} */
+      (Settings.getInstance().get(SettingKey.SAVED_PRESET_IDS, {}));
+  lookup[id] = opt_presetId || null;
+  Settings.getInstance().set(SettingKey.SAVED_PRESET_IDS, lookup);
+};
+
+/**
+ * Get the selected Preset ID from saved Settings for the desired Layer
+ *
+ * @param {string} id The layer ID
+ * @return {!boolean}
+ */
+const getSavedPresetClean = function(id) {
+  var lookup = /** @type {!Object<string, boolean>} */
+      (Settings.getInstance().get(SettingKey.SAVED_PRESET_CLEANS, {}));
+  return (lookup[id] === false) ? false : true;
+};
+
+/**
+ * Get the selected Preset ID from saved Settings for the desired Layer
+ *
+ * @param {string} id The layer ID
+ * @param {boolean} clean Is clean
+ */
+const setSavedPresetClean = function(id, clean) {
+  var lookup = /** @type {!Object<string, boolean>} */
+      (Settings.getInstance().get(SettingKey.SAVED_PRESET_CLEANS, {}));
+  lookup[id] = clean;
+  Settings.getInstance().set(SettingKey.SAVED_PRESET_CLEANS, lookup);
+};
+
 exports = {
   BASE_KEY,
   DEFAULT_PRESET_ID,
   PresetServiceAction,
   SettingKey,
   addDefault,
-  updateDefault
+  updateDefault,
+  getSavedPresetClean,
+  setSavedPresetClean,
+  getSavedPresetId,
+  setSavedPresetId
 };

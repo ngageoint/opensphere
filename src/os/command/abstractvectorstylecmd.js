@@ -2,9 +2,9 @@ goog.provide('os.command.AbstractVectorStyle');
 
 goog.require('os.command.AbstractStyle');
 goog.require('os.data.OSDataManager');
+goog.require('os.layer.preset');
 goog.require('os.style');
 goog.require('os.style.StyleManager');
-
 
 
 /**
@@ -55,4 +55,5 @@ os.command.AbstractVectorStyle.prototype.finish = function(config) {
   var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.layerId));
   goog.asserts.assert(layer);
   os.style.notifyStyleChange(layer);
+  os.layer.preset.setSavedPresetClean(this.layerId, false);
 };

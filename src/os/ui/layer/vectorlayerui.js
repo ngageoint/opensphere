@@ -27,6 +27,7 @@ goog.require('os.command.VectorUniqueIdCmd');
 goog.require('os.command.style');
 goog.require('os.data.OSDataManager');
 goog.require('os.defines');
+goog.require('os.layer.preset');
 goog.require('os.layer.preset.LayerPresetManager');
 goog.require('os.layer.preset.PresetMenuButton');
 goog.require('os.style');
@@ -132,6 +133,12 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
    * @type {boolean}
    */
   this['showAltitudeModes'] = false;
+
+  /**
+   * If the Styles are "dirty" or equal to a Preset
+   * @type {boolean}
+   */
+  this['showPresetsDropdown'] = true;
 
   /**
    * The unique identifier for the layer.
@@ -360,14 +367,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.loadPresets = function() {
       if (promise) {
         promise.then(function(presets) {
           if (presets && presets.length) {
-            var basicPreset = presets.find(function(p) {
-              return p.id === os.layer.preset.DEFAULT_PRESET_ID;
-            });
-            // tweak the colors to match the layer
-            if (basicPreset) {
-              os.layer.preset.updateDefault(layer, basicPreset);
-            }
-
             this['presets'] = presets;
 
             // the preset objects may change, so resolve the current selection by id
@@ -375,8 +374,20 @@ os.ui.layer.VectorLayerUICtrl.prototype.loadPresets = function() {
               return p && p.id == this['preset'].id;
             }, this) : undefined;
 
-            // set the current selection, with priority as current > default > first
-            this['preset'] = currentPreset || basicPreset || presets[0];
+            // the preset might be saved in settings
+            var settingsPreset = null;
+            var settingsPresetId = os.layer.preset.getSavedPresetId(id);
+            if (settingsPresetId) {
+              settingsPreset = presets.find(function(p) {
+                return p && p.id == settingsPresetId;
+              }, this);
+            }
+
+            // set the current selection, with priority as current > settings > first
+            this['preset'] = settingsPreset || currentPreset || presets[0];
+
+            var isCleanPreset = os.layer.preset.getSavedPresetClean(id);
+            this['showPresetsDropdown'] = isCleanPreset;
 
             // tell the directive to re-render now that we have a new list of presets
             os.ui.apply(this.scope);
