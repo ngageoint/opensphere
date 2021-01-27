@@ -1,31 +1,123 @@
 goog.module('os.interaction.Modify');
 goog.module.declareLegacyNamespace();
 
-const Circle = goog.require('ol.style.Circle');
-const Controls = goog.require('os.ui.help.Controls');
-const Feature = goog.require('ol.Feature');
-const Fill = goog.require('ol.style.Fill');
-const I3DSupport = goog.require('os.I3DSupport');
+const {getRandomString} = goog.require('goog.string');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyHandler = goog.require('goog.events.KeyHandler');
-const OLModify = goog.require('ol.interaction.Modify');
-const PayloadEvent = goog.require('os.events.PayloadEvent');
+const {getUid} = goog.require('ol');
+const Collection = goog.require('ol.Collection');
+const Circle = goog.require('ol.style.Circle');
+const Feature = goog.require('ol.Feature');
+const olEvents = goog.require('ol.events');
 const Point = goog.require('ol.geom.Point');
-const RecordField = goog.require('os.data.RecordField');
+const OLModify = goog.require('ol.interaction.Modify');
+const olModifyEventType = goog.require('ol.interaction.ModifyEventType');
+const Fill = goog.require('ol.style.Fill');
 const Stroke = goog.require('ol.style.Stroke');
 const Style = goog.require('ol.style.Style');
-const olEvents = goog.require('ol.events');
-const olModifyEventType = goog.require('ol.interaction.ModifyEventType');
+const I3DSupport = goog.require('os.I3DSupport');
+const RecordField = goog.require('os.data.RecordField');
+const PayloadEvent = goog.require('os.events.PayloadEvent');
+const DynamicFeature = goog.require('os.feature.DynamicFeature');
 const osImplements = goog.require('os.implements');
+const {ModifyEventType} = goog.require('os.interaction');
+const interpolate = goog.require('os.interpolate');
+const {notifyStyleChange} = goog.require('os.style');
+const Controls = goog.require('os.ui.help.Controls');
 const osWindow = goog.require('os.ui.window');
 const windowSelector = goog.require('os.ui.windowSelector');
 const {MODAL_SELECTOR} = goog.require('os.ui');
-const {ModifyEventType} = goog.require('os.interaction');
-const {getUid} = goog.require('ol');
-const {notifyStyleChange} = goog.require('os.style');
 
 const KeyEvent = goog.requireType('goog.events.KeyEvent');
 const OSMap = goog.requireType('os.Map');
+
+
+/**
+ * Style for the feature being modified.
+ * @type {Array<Style>}
+ */
+const FEATURE_STYLE = [
+  new Style({
+    stroke: new Stroke({
+      color: [0, 153, 255, 1],
+      width: 3
+    }),
+    image: new Circle({
+      radius: 6,
+      fill: new Fill({
+        color: [0, 153, 255, 1]
+      }),
+      stroke: new Stroke({
+        color: [255, 255, 255, 1],
+        width: 2
+      })
+    }),
+    zIndex: Infinity
+  })
+];
+
+
+/**
+ * Style for the vertex feature.
+ * @type {Array<Style>}
+ */
+const VERTEX_STYLE = [
+  new Style({
+    image: new Circle({
+      radius: 6,
+      fill: new Fill({
+        color: [0, 153, 255, 1]
+      }),
+      stroke: new Stroke({
+        color: [255, 255, 255, 1],
+        width: 2
+      })
+    }),
+    zIndex: Infinity
+  })
+];
+
+
+/**
+ * ID for the control window.
+ * @type {string}
+ * @const
+ */
+const WIN_ID = 'modifyControls';
+
+
+/**
+ * Clone the feature to be modified.
+ * @param {!Feature} feature The feature.
+ * @return {!Feature} The clone.
+ */
+const cloneFeature = (feature) => {
+  // use the original geom, interpolated coordinates make for a weird UX
+  const originalGeom = /** @type {!ol.geom.Geometry} */ (feature.get(interpolate.ORIGINAL_GEOM_FIELD) ||
+      feature.getGeometry());
+
+  // clone the feature so we don't modify the existing geom
+  const clone = new DynamicFeature(originalGeom.clone());
+
+  clone.setStyle(FEATURE_STYLE);
+  clone.set(RecordField.DRAWING_LAYER_NODE, false);
+  clone.set(interpolate.METHOD_FIELD, interpolate.Method.NONE);
+  clone.setId(getRandomString());
+
+  os.MapContainer.getInstance().addFeature(clone);
+
+  //
+  // enable events on the feature and force an update on the geometry listener. these events will be used
+  // by the WebGL renderer to update the geometry as it changes.
+  //
+  // this is intentionally done after adding the feature to the drawing layer, because the addFeature call
+  // will interpolate and update the geometry.
+  //
+  clone.enableEvents();
+  clone.setGeometryName(clone.getGeometryName());
+
+  return clone;
+};
 
 
 /**
@@ -36,12 +128,22 @@ const OSMap = goog.requireType('os.Map');
 class Modify extends OLModify {
   /**
    * Constructor.
-   * @param {olx.interaction.ModifyOptions=} opt_options Options.
+   * @param {!Feature} feature The feature to modify.
    */
-  constructor(opt_options) {
-    const options = opt_options || {};
+  constructor(feature) {
+    const clone = cloneFeature(feature);
+    const options = {
+      features: new Collection([clone])
+    };
 
     super(options);
+
+    /**
+     * The cloned feature.
+     * @type {!Feature}
+     * @private
+     */
+    this.clone_ = clone;
 
     /**
      * @type {KeyHandler}
@@ -63,6 +165,8 @@ class Modify extends OLModify {
    * @inheritDoc
    */
   disposeInternal() {
+    os.MapContainer.getInstance().removeFeature(this.clone_);
+
     goog.dispose(this.keyHandler);
 
     olEvents.unlisten(this, ol.interaction.ModifyEventType.MODIFYSTART, this.handleStart, this);
@@ -118,13 +222,11 @@ class Modify extends OLModify {
       let handled = false;
       switch (event.keyCode) {
         case KeyCodes.ESC:
-          this.dispatchEvent(new PayloadEvent(ModifyEventType.CANCEL, this.features_));
-          this.setActive(false);
+          this.onCancel();
           handled = true;
           break;
         case KeyCodes.ENTER:
-          this.dispatchEvent(new PayloadEvent(ModifyEventType.COMPLETE, this.features_));
-          this.setActive(false);
+          this.onComplete();
           handled = true;
           break;
         default:
@@ -135,6 +237,30 @@ class Modify extends OLModify {
         this.notifyFeatureChange();
       }
     }
+  }
+
+  /**
+   * Cancel the modify operation.
+   * @protected
+   */
+  onCancel() {
+    this.dispatchEvent(new PayloadEvent(ModifyEventType.CANCEL, this.clone_));
+    this.setActive(false);
+  }
+
+  /**
+   * Complete the modify operation.
+   * @protected
+   */
+  onComplete() {
+    const geometry = this.clone_.getGeometry();
+    if (geometry) {
+      // Clear the interpolate method from the geometry so the original feature can determine interpolation.
+      geometry.unset(interpolate.METHOD_FIELD);
+    }
+
+    this.dispatchEvent(new PayloadEvent(ModifyEventType.COMPLETE, this.clone_));
+    this.setActive(false);
   }
 
   /**
@@ -246,62 +372,6 @@ class Modify extends OLModify {
     return removed;
   }
 }
-
-
-/**
- * Style for the feature being modified.
- * @type {Array<Style>}
- * @const
- */
-Modify.STYLE = [
-  new Style({
-    stroke: new Stroke({
-      color: [0, 153, 255, 1],
-      width: 3
-    }),
-    image: new Circle({
-      radius: 6,
-      fill: new Fill({
-        color: [0, 153, 255, 1]
-      }),
-      stroke: new Stroke({
-        color: [255, 255, 255, 1],
-        width: 2
-      })
-    }),
-    zIndex: Infinity
-  })
-];
-
-
-/**
- * Style for the vertex feature.
- * @type {Array<Style>}
- * @const
- */
-const VERTEX_STYLE = [
-  new Style({
-    image: new Circle({
-      radius: 6,
-      fill: new Fill({
-        color: [0, 153, 255, 1]
-      }),
-      stroke: new Stroke({
-        color: [255, 255, 255, 1],
-        width: 2
-      })
-    }),
-    zIndex: Infinity
-  })
-];
-
-
-/**
- * ID for the control window.
- * @type {string}
- * @const
- */
-const WIN_ID = 'modifyControls';
 
 osImplements(Modify, I3DSupport.ID);
 
