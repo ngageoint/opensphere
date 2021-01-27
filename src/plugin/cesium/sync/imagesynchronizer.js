@@ -206,9 +206,6 @@ plugin.cesium.sync.ImageSynchronizer.prototype.syncInternal = function(opt_force
     this.lastExtent_ = extent.slice();
 
     if (url && extent) {
-      // clamp the extent or Cesium will complain about the rectangle
-      // extent = os.extent.clamp(extent, os.map.PROJECTION.getWorldExtent());
-
       if (changed) {
         var primitive = new Cesium.Primitive({
           geometryInstances: new Cesium.GeometryInstance({
