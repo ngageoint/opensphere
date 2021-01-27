@@ -18,10 +18,8 @@
         </div>
       </div>
 
-      <div>
-        <div class="js-additional-ui__container" ng-show="treeExport.additionalOptions">
-          <addexportoptions options="options" showcount="true"></addexportoptions>
-        </div>
+      <div class="js-additional-ui__container" ng-if="treeExport.additionalOptions">
+        <addexportoptions options="options" showcount="true"></addexportoptions>
       </div>
 
       <h5 class="mt-3 text-center">KML Options</h5>
