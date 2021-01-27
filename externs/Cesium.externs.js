@@ -1393,6 +1393,15 @@ Cesium.Cartesian3.fromDegrees = function(lon, lat, opt_alt, opt_ellipsoid, opt_r
 
 
 /**
+ * @param {Array<number>} coordinates The coordinates in degrees
+ * @param {Cesium.Ellipsoid=} opt_ellipsoid The ellipsoid.
+ * @param {Array<Cesium.Cartesian3>=} opt_result Altitude in meters
+ * @return {!Array<Cesium.Cartesian3>}
+ */
+Cesium.Cartesian3.fromDegreesArray = function(coordinates, opt_ellipsoid, opt_result) {};
+
+
+/**
  * @param {Cesium.Cartesian3} right
  * @return {boolean}
  */

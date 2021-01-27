@@ -190,6 +190,7 @@ plugin.arc.node.ArcServiceNode.prototype.addLayer_ = function(layer) {
 plugin.arc.node.ArcServiceNode.prototype.addImageLayer_ = function(json) {
   const id = this.server_.getId() + os.ui.data.BaseProvider.ID_DELIMITER + /** @type {string} */ (json['name']);
   const extent = /** @type {Object<string, number>} */ (json['extent']);
+  const wkid = /** @type {number} */ (extent['spatialReference']['latestWkid']);
   const config = {
     'id': id,
     'url': this.url_,
@@ -198,7 +199,7 @@ plugin.arc.node.ArcServiceNode.prototype.addImageLayer_ = function(json) {
     'provider': this.server_.getLabel(),
     'title': json['name'],
     'extent': [extent['xmin'], extent['ymin'], extent['xmax'], extent['ymax']],
-    'extentProjection': 'EPSG:3857',
+    'extentProjection': wkid === 3857 ? 'EPSG:3857' : 'EPSG:4326',
     'layerType': os.layer.LayerType.TILES,
     'icons': os.ui.Icons.TILES
   };

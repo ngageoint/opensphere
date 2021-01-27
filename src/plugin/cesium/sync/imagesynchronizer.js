@@ -168,6 +168,11 @@ plugin.cesium.sync.ImageSynchronizer.prototype.syncInternal = function(opt_force
             ol.events.listen(img, ol.events.EventType.CHANGE, this.onSyncChange, this);
           }
 
+          if (imageState == ol.ImageState.ERROR) {
+            // don't do anything, leave the old image rendered
+            return;
+          }
+
           if (imageState == ol.ImageState.IDLE) {
             img.load();
           }
@@ -207,10 +212,18 @@ plugin.cesium.sync.ImageSynchronizer.prototype.syncInternal = function(opt_force
 
     if (url && extent) {
       if (changed) {
-        var primitive = new Cesium.Primitive({
+        var minX = viewExtent[0];
+        var minY = viewExtent[1];
+        var maxX = viewExtent[2] - os.geo.EPSILON;
+        var maxY = viewExtent[3] - os.geo.EPSILON;
+        var flatCoordinates = [minX, minY, minX, maxY, maxX, maxY, maxX, minY, minX, minY];
+
+        var primitive = new Cesium.GroundPrimitive({
           geometryInstances: new Cesium.GeometryInstance({
-            geometry: new Cesium.RectangleGeometry({
-              rectangle: Cesium.Rectangle.fromDegrees(viewExtent[0], viewExtent[1], viewExtent[2], viewExtent[3])
+            geometry: new Cesium.PolygonGeometry({
+              polygonHierarchy: new Cesium.PolygonHierarchy(Cesium.Cartesian3.fromDegreesArray(flatCoordinates)),
+              height: 5000,
+              arcType: Cesium.ArcType.RHUMB
             }),
             id: this.layer.getId() + '.' + (this.nextId_++)
           }),
