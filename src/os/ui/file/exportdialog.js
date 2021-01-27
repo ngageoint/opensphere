@@ -105,6 +105,11 @@ os.ui.file.ExportDialogCtrl = function($scope, $element, $compile) {
     }
   }
 
+  /**
+   * @type {boolean}
+   */
+  this['additionalOptions'] = this.options.additionalOptions || false;
+
   // add application-specific UI
   var customContainer = this.element.find('.js-custom-ui');
   var customOptions = this.getCustomOptions();
