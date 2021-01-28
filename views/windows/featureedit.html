@@ -73,7 +73,7 @@
           <div class="d-inline-flex col">
             <input class="form-control col-4" type="number" name="semiMajor" ng-model="ctrl.semiMajor" ng-change="ctrl.onAxisChange()"
                 min="{{ctrl.getSemiMajorMin()}}" step="any" required>
-            <select class="custom-select ml-2 col-2" ng-model="ctrl.semiMajorUnits" ng-change="ctrl.updatePreview()"
+            <select class="custom-select ml-2 col-2" ng-model="ctrl.semiMajorUnits"
                 ng-options="unit for unit in ctrl.units">
             </select>
             <popover  class="mx-2" data-title="'Semi-Major Axis'" content="ctrl.help.semiMajor" pos="'right'">
@@ -93,7 +93,7 @@
           <div class="d-inline-flex col">
             <input class="form-control col-4" type="number" name="semiMinor" ng-model="ctrl.semiMinor" ng-change="ctrl.onAxisChange()"
                 min="{{1e-16}}" step="any" required>
-            <select class="custom-select ml-2 col-2" ng-model="ctrl.semiMinorUnits" ng-change="ctrl.updatePreview()"
+            <select class="custom-select ml-2 col-2" ng-model="ctrl.semiMinorUnits"
                 ng-options="unit for unit in ctrl.units">
             </select>
             <popover class="mx-2" data-title="'Semi-Minor Axis'" content="ctrl.help.semiMinor" pos="'right'">
@@ -108,7 +108,7 @@
         <div class="d-flex flex-row form-group" title="{{ctrl.help.orientation}}">
           <label class="col-2 col-form-label text-right u-required">Orientation</label>
           <div class="d-inline-flex col">
-            <input class="form-control col-4" type="number" name="orientation" ng-model="ctrl.orientation" ng-change="ctrl.updatePreview()" step="any">
+            <input class="form-control col-4" type="number" name="orientation" ng-model="ctrl.orientation" step="any">
             <popover class="mx-2" data-title="'Ellipse Orientation'" content="ctrl.help.orientation" pos="'right'">
             </popover>
           </div>
