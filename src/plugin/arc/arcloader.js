@@ -217,37 +217,18 @@ plugin.arc.ArcLoader.prototype.onLoad = function(event) {
         var type = /** @type {string} */ (service['type']);
         var name = /** @type {string} */ (service['name']);
         name = name.substring(name.lastIndexOf('/') + 1);
-        var url = this.url_ + '/' + name + '/' + type;
-        var serviceNode;
 
-        if (type === plugin.arc.ServerType.MAP_SERVER) {
-          serviceNode = new plugin.arc.node.ArcServiceNode(this.server_);
-          serviceNode.setServiceType(plugin.arc.ServerType.MAP_SERVER);
+        if (Object.values(plugin.arc.ServerType).includes(type)) {
+          var url = this.url_ + '/' + name + '/' + type;
+          var serviceNode = new plugin.arc.node.ArcServiceNode(this.server_);
+          serviceNode.setServiceType(type);
           serviceNode.setLabel(name);
           serviceNode.listen(goog.net.EventType.SUCCESS, this.onChildLoad, false, this);
           serviceNode.listen(goog.net.EventType.ERROR, this.onChildLoad, false, this);
           serviceNode.load(url);
           this.toLoad_.push(serviceNode);
-        }
-
-        if (type === plugin.arc.ServerType.FEATURE_SERVER) {
-          serviceNode = new plugin.arc.node.ArcServiceNode(this.server_);
-          serviceNode.setLabel(name);
-          serviceNode.setServiceType(plugin.arc.ServerType.FEATURE_SERVER);
-          serviceNode.listen(goog.net.EventType.SUCCESS, this.onChildLoad, false, this);
-          serviceNode.listen(goog.net.EventType.ERROR, this.onChildLoad, false, this);
-          serviceNode.load(url);
-          this.toLoad_.push(serviceNode);
-        }
-
-        if (type === plugin.arc.ServerType.IMAGE_SERVER) {
-          serviceNode = new plugin.arc.node.ArcServiceNode(this.server_);
-          serviceNode.setLabel(name);
-          serviceNode.setServiceType(plugin.arc.ServerType.IMAGE_SERVER);
-          serviceNode.listen(goog.net.EventType.SUCCESS, this.onChildLoad, false, this);
-          serviceNode.listen(goog.net.EventType.ERROR, this.onChildLoad, false, this);
-          serviceNode.load(url);
-          this.toLoad_.push(serviceNode);
+        } else {
+          goog.log.info(this.log, `Skipping unsupported layer "${name}" with type "${type}".`);
         }
       }
     }
@@ -302,6 +283,8 @@ plugin.arc.ArcLoader.prototype.onChildLoad = function(evt) {
   ol.array.remove(this.toLoad_, node);
 
   if (this.toLoad_.length === 0) {
+    // cull any folders that have only one child to reduce tree clutter
+    this.futureChildren_.forEach(plugin.arc.ArcLoader.collapseFolders);
     this.node_.setChildren(this.futureChildren_);
     this.futureChildren_ = [];
     this.dispatchEvent(goog.net.EventType.SUCCESS);
@@ -335,4 +318,22 @@ plugin.arc.ArcLoader.prototype.onError = function(event) {
   goog.log.error(this.log, msg);
 
   this.dispatchEvent(goog.net.EventType.ERROR);
+};
+
+
+/**
+ * Removes folders that have only 1 child node and promotes the child up the tree by one.
+ * @param {os.structs.ITreeNode} child The child of whose grandchildren to examine.
+ * @param {number} i The index.
+ * @param {Array<os.structs.ITreeNode>} arr The array.
+ */
+plugin.arc.ArcLoader.collapseFolders = function(child, i, arr) {
+  const grandChildren = child.getChildren();
+  if (grandChildren) {
+    if (grandChildren.length == 1) {
+      arr[i] = grandChildren[0];
+    }
+
+    grandChildren.forEach(plugin.arc.ArcLoader.collapseFolders);
+  }
 };
