@@ -131,9 +131,13 @@ plugin.file.kml.ui.KMLTreeExportCtrl = function($scope, $element) {
   }
 
   $scope.$on('$destroy', this.destroy.bind(this));
-  $scope.$on('addexportoptions.updateitem', goog.bind(function(event, items) {
-    this.scope['exportData'] = items;
-  }, this));
+
+  // Don't listen for this if we don't have additional options
+  if (this['additionalOptions']) {
+    $scope.$on('addexportoptions.updateitem', goog.bind(function(event, items) {
+      this.scope['exportData'] = items || [];
+    }, this));
+  }
 
   // fire auto height event
   setTimeout(function() {
