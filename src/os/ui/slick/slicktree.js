@@ -96,11 +96,6 @@ os.ui.slick.slickTreeDirective = function() {
       'winLauncherClass': '@',
 
       /**
-       * Whether to show a border
-       */
-      'showBorder': '=?',
-
-      /**
        * Options Override
        */
       'options': '=?',
@@ -144,14 +139,6 @@ os.ui.slick.SlickTreeCtrl = function($scope, $element, $compile) {
    * @protected
    */
   this.multiSelect = $scope['multiSelect'] == 'true';
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.showBorder_ = $scope['showBorder'] || false;
-
-  $scope['getItemMetadata'] = (this.showBorder_) ? (this.getRowStyleBorder) : (this.getRowStyle);
 
   os.ui.slick.SlickTreeCtrl.base(this, 'constructor', $scope, $element, $compile);
 
@@ -300,37 +287,6 @@ os.ui.slick.SlickTreeCtrl.prototype.getColumns = function() {
     'sortable': false,
     'formatter': this.treeFormatter.bind(this)
   }];
-};
-
-
-/**
- * @param {Object} dimensions
- * @override
- */
-os.ui.slick.SlickTreeCtrl.prototype.resize = function(dimensions) {
-  this.grid.resizeCanvas();
-
-  if (this.showBorder_) {
-    $(this.grid.getCanvasNode()).css('width', (dimensions['width'] - 3) + 'px');
-  }
-};
-
-
-/**
- * @param {number} row
- * @return {Object}
- */
-os.ui.slick.SlickTreeCtrl.prototype.getRowStyleBorder = function(row) {
-  return {'cssClasses': 'border'};
-};
-
-
-/**
- * @param {number} row
- * @return {Object}
- */
-os.ui.slick.SlickTreeCtrl.prototype.getRowStyle = function(row) {
-  return {};
 };
 
 

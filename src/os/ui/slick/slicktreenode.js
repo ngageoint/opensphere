@@ -473,6 +473,7 @@ os.ui.slick.SlickTreeNode.prototype.performAction = function(type) {
 os.ui.slick.SlickTreeNode.prototype.updateFrom = function(other) {
   var node = /** @type {os.ui.slick.SlickTreeNode} */ (other);
 
+  this.nodeUI = node.nodeUI;
   this.collapsed = node.collapsed;
   this.setToolTip(node.getToolTip());
   this.setCheckboxVisible(node.getCheckboxVisible());
