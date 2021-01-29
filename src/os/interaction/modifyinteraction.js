@@ -141,7 +141,7 @@ class Modify extends OLModify {
    */
   constructor(feature) {
     const interpolationMethod = /** @type {interpolate.Method} */ (feature.get(interpolate.METHOD_FIELD)) ||
-        interpolate.Method.RHUMB;
+        interpolate.getMethod();
     const clone = cloneFeature(feature);
     const options = {
       features: new Collection([clone])
