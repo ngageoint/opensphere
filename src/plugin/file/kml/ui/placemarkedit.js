@@ -244,6 +244,7 @@ plugin.file.kml.ui.PlacemarkEditCtrl.prototype.saveToFeature = function(feature)
 
 /**
  * @inheritDoc
+ * @export
  */
 plugin.file.kml.ui.PlacemarkEditCtrl.prototype.updatePreview = function() {
   plugin.file.kml.ui.PlacemarkEditCtrl.base(this, 'updatePreview');
