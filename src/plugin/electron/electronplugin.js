@@ -3,6 +3,7 @@ goog.module.declareLegacyNamespace();
 
 goog.require('plugin.electron.ElectronMemoryConfigUI');
 
+const Settings = goog.require('os.config.Settings');
 const Request = goog.require('os.net.Request');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const {ID, SettingKey, isElectron} = goog.require('plugin.electron');
@@ -25,9 +26,11 @@ const onCertificateRequest = (url, certs) => {
  * @protected
  */
 const checkForUpdates = () => {
-  const releaseUrl = os.settings.get(SettingKey.RELEASE_URL, '');
+  const settings = Settings.getInstance();
+  const releaseUrl = settings.get(SettingKey.RELEASE_URL, '');
   if (releaseUrl) {
-    const request = new Request(`${releaseUrl}/latest.yml`);
+    const releaseChannel = /** @type {string} */ (settings.get(SettingKey.RELEASE_CHANNEL, 'latest'));
+    const request = new Request(`${releaseUrl}/${releaseChannel}.yml`);
     request.getPromise().then((response) => {
       if (response) {
         // Update file exists, notify the main process to check it.
