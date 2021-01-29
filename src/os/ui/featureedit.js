@@ -540,7 +540,6 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   $scope.$watch('ctrl.labelColor', this.updatePreview.bind(this));
   $scope.$watch('ctrl.labelSize', this.updatePreview.bind(this));
   $scope.$watch('ctrl.showLabels', this.updatePreview.bind(this));
-
   $scope.$on('opacity.slide', this.onOpacityValueChange.bind(this));
   $scope.$on('fillColor.change', this.onFillColorChange.bind(this));
   $scope.$on('fillColor.reset', this.onFillColorReset.bind(this));

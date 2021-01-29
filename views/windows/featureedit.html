@@ -119,8 +119,7 @@
         <div class="d-flex flex-row form-group" title="{{ctrl.help.iconRotation}}">
           <label class="col-2 col-form-label text-right">Icon Rotation</label>
           <div class="d-inline-flex col">
-            <input class="form-control col-4" type="number" name="iconRotation" ng-model="ctrl.iconRotation"
-                ng-change="ctrl.updatePreview()" step="any">
+            <input class="form-control col-4" type="number" name="iconRotation" ng-model="ctrl.iconRotation" ng-change="ctrl.updatePreview()" step="any">
             <div class="mx-2">degrees</div>
             <popover data-title="'Icon Rotation'" content="ctrl.help.iconRotation" pos="'right'">
             </popover>
