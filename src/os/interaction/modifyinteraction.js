@@ -525,7 +525,9 @@ OLModify.handleDownEvent_ = function(evt) {
   const result = oldHandleDownEvent.call(this, evt);
 
   // Call the drag handler so the rendered geometry is updated relative to the interpolated geometry.
-  this.handleDragEvent_(evt);
+  if (this.vertexFeature_) {
+    this.handleDragEvent_(evt);
+  }
 
   this.inDownEvent_ = false;
 
