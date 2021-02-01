@@ -55,6 +55,12 @@ let ElectronOS;
 
 
 /**
+ * Notify the main process that it should check for updates.
+ */
+ElectronOS.checkForUpdates = function() {};
+
+
+/**
  * Register a certificate request handler with Electron.
  * @param {Electron.CertificateRequestFn|undefined} handler The handler.
  */

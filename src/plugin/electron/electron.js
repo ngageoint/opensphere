@@ -9,6 +9,15 @@ const ID = 'electron';
 
 
 /**
+ * Electron settings keys.
+ * @enum {string}
+ */
+const SettingKey = {
+  RELEASE_URL: 'plugin.electron.releaseUrl'
+};
+
+
+/**
  * If the app is running within Electron.
  * @return {boolean}
  */
@@ -17,4 +26,4 @@ const isElectron = () => {
 };
 
 
-exports = {ID, isElectron};
+exports = {ID, SettingKey, isElectron};
