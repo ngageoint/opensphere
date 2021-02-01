@@ -55,5 +55,4 @@ os.command.AbstractVectorStyle.prototype.finish = function(config) {
   var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.layerId));
   goog.asserts.assert(layer);
   os.style.notifyStyleChange(layer);
-  os.layer.preset.setSavedPresetClean(this.layerId, false);
 };

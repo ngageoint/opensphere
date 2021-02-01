@@ -117,14 +117,9 @@ os.command.VectorLayerPreset.prototype.applyFeatureActions = function(layer) {
  * @inheritDoc
  */
 os.command.VectorLayerPreset.prototype.finish = function(config) {
-  // call base before doing this command's finish()
-  os.command.VectorLayerPreset.base(this, 'finish', config);
-
   // dispatch the color change event on the source for the histogram
   var source = os.osDataManager.getSource(this.layerId);
-
-  os.layer.preset.setSavedPresetId(this.layerId, this.preset.id || null);
-  os.layer.preset.setSavedPresetClean(this.layerId, true);
-
   source.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.COLOR, this.value));
+
+  os.command.VectorLayerPreset.base(this, 'finish', config);
 };
