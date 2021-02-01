@@ -84,7 +84,7 @@ class Controller {
   formatExpiry(cert) {
     let expiry = 'Unknown';
     if (cert && cert.validExpiry > 0) {
-      expiry = moment(cert.validExpiry * 1000).format('dddd, MMMM D, YYYY');
+      expiry = moment(cert.validExpiry * 1000).format('YYYY MMM D');
     }
 
     return expiry;
