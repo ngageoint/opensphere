@@ -436,16 +436,17 @@ class Modify extends OLModify {
       feature.setStyle(VERTEX_STYLE);
       feature.setId(getUid(feature));
 
+      // The feature mixin disables events by default for performance reasons. We want this feature to update when the
+      // geometry changes, so enable events and update the geometry listener.
+      feature.enableEvents();
+      feature.setGeometryName(feature.getGeometryName());
+
       this.vertexFeature_ = feature;
       this.overlay_.getSource().addFeature(feature);
     } else {
       const geometry = /** @type {Point} */ (feature.getGeometry());
       geometry.setCoordinates(coordinates);
-      feature.changed();
     }
-
-    // update the vertex feature
-    notifyStyleChange(this.overlay_, [feature]);
 
     return feature;
   }
