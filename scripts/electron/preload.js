@@ -1,4 +1,4 @@
-const {contextBridge, ipcRenderer, remote} = require('electron');
+const {contextBridge, ipcRenderer} = require('electron');
 const {getMaximumMemory, getSystemMemory, setMaximumMemory} = require('../memconfig.js');
 
 /**
@@ -16,23 +16,18 @@ let cookies = '';
 
 
 /**
- * User certificate event types.
+ * General event types.
  * @enum {string}
  */
-const CertEventType = {
-  HANDLER_REGISTERED: 'client-certificate-handler-registered',
-  SELECT: 'select-client-certificate',
-  SELECTED: 'client-certificate-selected'
-};
+const EventType = {
+  UPDATE_CHECK: 'check-for-updates',
 
+  CERT_HANDLER_REGISTERED: 'client-certificate-handler-registered',
+  CERT_SELECT: 'select-client-certificate',
+  CERT_SELECTED: 'client-certificate-selected',
 
-/**
- * Cookie event types.
- * @enum {string}
- */
-const CookieEventType = {
-  SET: 'set-cookie',
-  UPDATE: 'update-cookies'
+  COOKIE_SET: 'set-cookie',
+  COOKIE_UPDATE: 'update-cookies'
 };
 
 
@@ -44,7 +39,15 @@ const registerCertificateHandler = (handler) => {
   certHandler = handler;
 
   // Notify the main process that the handler has been registered.
-  ipcRenderer.send(CertEventType.HANDLER_REGISTERED);
+  ipcRenderer.send(EventType.CERT_HANDLER_REGISTERED);
+};
+
+
+/**
+ * Notify the main process that it should check for updates.
+ */
+const checkForUpdates = () => {
+  ipcRenderer.send(EventType.UPDATE_CHECK);
 };
 
 
@@ -58,16 +61,16 @@ const selectClientCertificate = (event, url, list) => {
   if (certHandler) {
     certHandler(url, list).then((cert) => {
       // Sent the selected certificate to the main process.
-      ipcRenderer.send(CertEventType.SELECTED, url, cert);
+      ipcRenderer.send(EventType.CERT_SELECTED, url, cert);
     }, (reason) => {
       // The Electron handler will delete the promise if undefined is returned, as the user did not make a choice. A
       // null value indicates the user cancelled the request and a cert should not be used.
       const value = reason === 'unload' ? undefined : null;
-      ipcRenderer.send(CertEventType.SELECTED, url, value);
+      ipcRenderer.send(EventType.CERT_SELECTED, url, value);
     });
   } else {
     // No handler regisered, use Electron's default behavior.
-    ipcRenderer.send(CertEventType.SELECTED, url, list[0]);
+    ipcRenderer.send(EventType.CERT_SELECTED, url, list[0]);
   }
 };
 
@@ -86,7 +89,7 @@ const getCookies = () => {
  * @param {string} value The cookie value.
  */
 const setCookie = (value) => {
-  ipcRenderer.send(CookieEventType.SET, value);
+  ipcRenderer.send(EventType.COOKIE_SET, value);
 };
 
 
@@ -94,7 +97,7 @@ const setCookie = (value) => {
  * Request cookie update from the main process.
  */
 const updateCookies = () => {
-  ipcRenderer.send(CookieEventType.UPDATE);
+  ipcRenderer.send(EventType.COOKIE_UPDATE);
 };
 
 /**
@@ -121,11 +124,11 @@ const restart = () => {
 };
 
 // Handle certificate select event from the main process.
-ipcRenderer.on(CertEventType.SELECT, selectClientCertificate);
+ipcRenderer.on(EventType.CERT_SELECT, selectClientCertificate);
 
 
 // Handle cookie initialization from the main process.
-ipcRenderer.on(CookieEventType.UPDATE, (event, value) => {
+ipcRenderer.on(EventType.COOKIE_UPDATE, (event, value) => {
   cookies = value;
 });
 
@@ -140,6 +143,7 @@ ipcRenderer.on(CookieEventType.UPDATE, (event, value) => {
 // https://www.electronjs.org/docs/tutorial/security#3-enable-context-isolation-for-remote-content
 //
 contextBridge.exposeInMainWorld('ElectronOS', {
+  checkForUpdates,
   getCookies,
   setCookie,
   updateCookies,
