@@ -349,7 +349,10 @@ os.state.v4.TimeState.prototype.saveInternal = function(options, rootObj) {
       rootObj.appendChild(this.sliceRangesToXml_(tlc.getSliceRanges()));
     }
 
-    os.xml.appendElement(os.state.v4.TimeTag.DURATION, rootObj, tlc.getDuration());
+    // if the duration is relative, make sure the saved state reflects the exact time saved and is not relative itself
+    var duration = os.time.isRelativeDuration(tlc.getDuration()) ? os.time.Duration.CUSTOM : tlc.getDuration();
+
+    os.xml.appendElement(os.state.v4.TimeTag.DURATION, rootObj, duration);
     os.xml.appendElement(os.state.v4.TimeTag.LOCK, rootObj, tlc.getLock());
     os.xml.appendElement(os.state.v4.TimeTag.AUTO_CONFIGURE, rootObj, tlc.getAutoConfigure());
 
