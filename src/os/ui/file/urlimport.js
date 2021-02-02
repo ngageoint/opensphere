@@ -66,6 +66,22 @@ os.ui.file.UrlImportCtrl = function($scope, $element) {
    */
   this['url'] = '';
 
+  /**
+   * @type {string}
+   */
+  this['serverType'] = 'hello';
+
+  /**
+   * Available server type choices in the UI.
+   * @type {!Array<string>}
+   */
+  this['serverTypes'] = [
+    'GeoServer',
+    'ArcGIS',
+    'WFS/WMS',
+    'WMTS'
+  ];
+
   // bring focus to the url input
   this.element_.find('input[name="url"]').focus();
 
@@ -172,4 +188,15 @@ os.ui.file.UrlImportCtrl.prototype.onLoadError_ = function(event) {
 
   this['loading'] = false;
   os.ui.apply(this.scope_);
+};
+
+
+/**
+ * Handle server type selection change.
+ *
+ * @export
+ */
+os.ui.file.UrlImportCtrl.prototype.onServerTypeChanged = function() {
+  console.log(this['serverType']);
+  console.log(this.scope_);
 };
