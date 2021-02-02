@@ -1,7 +1,6 @@
 goog.provide('os.ui.menu.SpatialMenu');
 goog.provide('os.ui.menu.spatial');
 
-goog.require('ol.Collection');
 goog.require('ol.Feature');
 goog.require('ol.array');
 goog.require('os.action.EventType');
@@ -748,22 +747,8 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
             break;
           case os.action.EventType.MODIFY_GEOMETRY:
             const mc = os.MapContainer.getInstance();
-            // start by cloning the feature so we don't modify the existing geom
-            const clone = new os.feature.DynamicFeature();
 
-            // use the original geom, interpolated coordinates make for a weird UX
-            const originalGeom = /** @type {!ol.geom.Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD) ||
-                feature.getGeometry());
-            clone.setGeometry(originalGeom.clone());
-            clone.setStyle(os.interaction.Modify.STYLE);
-            clone.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
-            clone.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.NONE);
-            clone.setId(goog.string.getRandomString());
-            mc.addFeature(clone);
-
-            const interaction = new os.interaction.Modify({
-              features: new ol.Collection([clone])
-            });
+            const interaction = new os.interaction.Modify(feature);
             interaction.setOverlay(/** @type {ol.layer.Vector} */ (mc.getDrawingLayer()));
 
             mc.getMap().addInteraction(interaction);
@@ -771,9 +756,11 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
 
             /**
              * Callback handler for successfully completing a modify of a geometry.
-             * @param {goog.events.Event} event
+             * @param {os.events.PayloadEvent} event
              */
             const completeListener = (event) => {
+              const clone = /** @type {!ol.Feature} */ (event.getPayload());
+
               const source = os.feature.getSource(feature);
               let modifyFunction;
               if (os.implements(source, os.source.IModifiableSource.ID)) {
@@ -784,26 +771,24 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
                 // call the modify function to finalize the update
                 modifyFunction(feature, clone);
               } else {
-                // default behavior is to assume that we're modifying an area, so update it in AreaManager
                 const geometry = clone.getGeometry();
                 if (feature && geometry) {
+                  // default behavior is to assume that we're modifying an area, so update it in AreaManager
                   const modifyCmd = new os.ui.query.cmd.AreaModify(feature, geometry);
                   os.command.CommandProcessor.getInstance().addCommand(modifyCmd);
                 }
               }
 
               // remove the clone and the interaction from the map
-              os.MapContainer.getInstance().removeFeature(clone);
               os.MapContainer.getInstance().getMap().removeInteraction(interaction);
               interaction.dispose();
             };
 
             /**
              * Callback handler for canceling a modify.
-             * @param {goog.events.Event} event
+             * @param {os.events.PayloadEvent} event
              */
             const cancelListener = (event) => {
-              os.MapContainer.getInstance().removeFeature(clone);
               os.MapContainer.getInstance().getMap().removeInteraction(interaction);
               interaction.dispose();
             };

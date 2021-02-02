@@ -314,8 +314,8 @@ plugin.arc.layer.ArcLayerDescriptor.prototype.configureDescriptor = function(con
   var capabilities = /** @type {string} */ (config['capabilities']);
   if (capabilities) {
     var capsArr = capabilities.split(/\s*,\s*/);
-    this.setTilesEnabled(ol.array.includes(capsArr, 'Map'));
-    this.setFeaturesEnabled(ol.array.includes(capsArr, 'Data'));
+    this.setTilesEnabled(capsArr.includes('Map'));
+    this.setFeaturesEnabled(capsArr.includes('Data') || capsArr.includes('Query'));
   } else {
     this.setTilesEnabled(true);
     this.setFeaturesEnabled(true);

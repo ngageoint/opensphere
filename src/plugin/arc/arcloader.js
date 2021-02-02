@@ -183,7 +183,7 @@ plugin.arc.ArcLoader.prototype.onLoad = function(event) {
 
   var json = null;
   try {
-    json = JSON.parse(response);
+    json = /** @type {Object} */ (JSON.parse(response));
   } catch (e) {
     goog.log.error(this.log, 'The Arc response JSON was invalid!');
   }
@@ -192,6 +192,12 @@ plugin.arc.ArcLoader.prototype.onLoad = function(event) {
   this.futureChildren_.length = 0;
 
   if (json) {
+    if (json['error']) {
+      // if this is defined, the server returned an internal error, so handle it instead of loading successfully
+      this.handleError(json);
+      return;
+    }
+
     var version = /** @type {string} */ (json['currentVersion']);
     if (this.node_ instanceof plugin.arc.ArcServer && version) {
       this.node_.setVersion(version + '');
@@ -214,16 +220,21 @@ plugin.arc.ArcLoader.prototype.onLoad = function(event) {
     if (services && goog.isArray(services)) {
       for (var j = 0, jj = services.length; j < jj; j++) {
         var service = services[j];
-        var type = service['type'];
-        if (type === plugin.arc.MAP_SERVER) {
-          var name = /** @type {string} */ (service['name']);
-          name = name.substring(name.lastIndexOf('/') + 1);
+        var type = /** @type {string} */ (service['type']);
+        var name = /** @type {string} */ (service['name']);
+        name = name.substring(name.lastIndexOf('/') + 1);
+
+        if (Object.values(plugin.arc.ServerType).includes(type)) {
+          var url = this.url_ + '/' + name + '/' + type;
           var serviceNode = new plugin.arc.node.ArcServiceNode(this.server_);
+          serviceNode.setServiceType(type);
           serviceNode.setLabel(name);
           serviceNode.listen(goog.net.EventType.SUCCESS, this.onChildLoad, false, this);
           serviceNode.listen(goog.net.EventType.ERROR, this.onChildLoad, false, this);
-          serviceNode.load(this.url_ + '/' + name);
+          serviceNode.load(url);
           this.toLoad_.push(serviceNode);
+        } else {
+          goog.log.info(this.log, `Skipping unsupported service "${name}" with type "${type}".`);
         }
       }
     }
@@ -232,8 +243,14 @@ plugin.arc.ArcLoader.prototype.onLoad = function(event) {
     if (layers && goog.isArray(layers)) {
       var name = 'Folder';
       var lastIdx = this.url_.lastIndexOf('/MapServer');
+      var type = plugin.arc.ServerType.MAP_SERVER;
       if (lastIdx == -1) {
         lastIdx = this.url_.lastIndexOf('/FeatureServer');
+        type = plugin.arc.ServerType.FEATURE_SERVER;
+      }
+      if (lastIdx == -1) {
+        lastIdx = this.url_.lastIndexOf('/ImageServer');
+        type = plugin.arc.ServerType.IMAGE_SERVER;
       }
 
       if (lastIdx != -1) {
@@ -241,14 +258,17 @@ plugin.arc.ArcLoader.prototype.onLoad = function(event) {
         var url = this.url_ .substring(0, lastIdx);
         var slashIndex = url.lastIndexOf('/') + 1;
         name = url.substring(slashIndex);
-      }
 
-      var serviceNode = new plugin.arc.node.ArcServiceNode(this.server_);
-      serviceNode.setLabel(name);
-      serviceNode.listen(goog.net.EventType.SUCCESS, this.onChildLoad, false, this);
-      serviceNode.listen(goog.net.EventType.ERROR, this.onChildLoad, false, this);
-      serviceNode.load(this.url_);
-      this.toLoad_.push(serviceNode);
+        var serviceNode = new plugin.arc.node.ArcServiceNode(this.server_);
+        serviceNode.setServiceType(type);
+        serviceNode.setLabel(name);
+        serviceNode.listen(goog.net.EventType.SUCCESS, this.onChildLoad, false, this);
+        serviceNode.listen(goog.net.EventType.ERROR, this.onChildLoad, false, this);
+        serviceNode.load(this.url_);
+        this.toLoad_.push(serviceNode);
+      } else {
+        goog.log.info(this.log, `Skipping unsupported layer with URL "${this.url_}" and type "${type}".`);
+      }
     }
   }
 
@@ -275,6 +295,8 @@ plugin.arc.ArcLoader.prototype.onChildLoad = function(evt) {
   ol.array.remove(this.toLoad_, node);
 
   if (this.toLoad_.length === 0) {
+    // cull any folders that have only one child to reduce tree clutter
+    this.futureChildren_.forEach(plugin.arc.ArcLoader.collapseFolders);
     this.node_.setChildren(this.futureChildren_);
     this.futureChildren_ = [];
     this.dispatchEvent(goog.net.EventType.SUCCESS);
@@ -293,7 +315,7 @@ plugin.arc.ArcLoader.prototype.shouldAddNode = function(node) {
 
 
 /**
- * Handler for Arc load errors. Fires an error event.
+ * Listener for Arc load request errors.
  *
  * @param {goog.events.Event} event
  * @protected
@@ -305,7 +327,46 @@ plugin.arc.ArcLoader.prototype.onError = function(event) {
 
   var href = uri.toString();
   var msg = 'Arc loading failed for URL: ' + href;
-  goog.log.error(this.log, msg);
+  this.handleError(msg);
+};
 
+
+/**
+ * Handler for Arc load errors. Fires an error event.
+ *
+ * @param {(string|Object<string, *>)} error
+ * @protected
+ */
+plugin.arc.ArcLoader.prototype.handleError = function(error) {
+  var msg;
+  if (typeof error == 'string') {
+    msg = error;
+  } else if (typeof error == 'object') {
+    // handle an Arc error code response
+    var errorObj = error['error'] || {};
+    msg = `Error loading Arc server. Code: ${errorObj['code']}. Reason: ${error['message']}.`;
+  } else {
+    msg = 'An unknown error occurred.';
+  }
+
+  goog.log.error(this.log, msg);
   this.dispatchEvent(goog.net.EventType.ERROR);
+};
+
+
+/**
+ * Removes folders that have only 1 child node and promotes the child up the tree by one.
+ * @param {os.structs.ITreeNode} child The child of whose grandchildren to examine.
+ * @param {number} i The index.
+ * @param {Array<os.structs.ITreeNode>} arr The array.
+ */
+plugin.arc.ArcLoader.collapseFolders = function(child, i, arr) {
+  const grandChildren = child.getChildren();
+  if (grandChildren) {
+    if (grandChildren.length == 1) {
+      arr[i] = grandChildren[0];
+    }
+
+    grandChildren.forEach(plugin.arc.ArcLoader.collapseFolders);
+  }
 };

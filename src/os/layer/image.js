@@ -123,6 +123,11 @@ os.layer.Image = function(options) {
    */
   this.hidden_ = true;
 
+  var source = this.getSource();
+  if (source) {
+    ol.events.listen(source, goog.events.EventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
+  }
+
   this.setZIndex(999);
 };
 goog.inherits(os.layer.Image, ol.layer.Image);
@@ -549,6 +554,22 @@ os.layer.Image.prototype.callAction = function(type) {
         break;
       default:
         break;
+    }
+  }
+};
+
+
+/**
+ * Handler for source change events.
+ *
+ * @param {os.events.PropertyChangeEvent} event
+ * @private
+ */
+os.layer.Image.prototype.onSourcePropertyChange_ = function(event) {
+  if (event instanceof os.events.PropertyChangeEvent) {
+    var p = event.getProperty();
+    if (p == os.source.PropertyChange.LOADING) {
+      this.setLoading(/** @type {boolean} */ (event.getNewValue()));
     }
   }
 };

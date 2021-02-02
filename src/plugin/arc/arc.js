@@ -26,6 +26,17 @@ plugin.arc.MAP_SERVER = 'MapServer';
 
 
 /**
+ * Enum of supported server types.
+ * @enum {string}
+ */
+plugin.arc.ServerType = {
+  MAP_SERVER: 'MapServer',
+  IMAGE_SERVER: 'ImageServer',
+  FEATURE_SERVER: 'FeatureServer'
+};
+
+
+/**
  * @type {string}
  * @const
  */
