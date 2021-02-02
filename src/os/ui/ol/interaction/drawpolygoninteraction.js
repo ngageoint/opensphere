@@ -108,12 +108,7 @@ os.ui.ol.interaction.DrawPolygon.prototype.getGeometry = function() {
   var normalizationPoint = os.geo2.computeWindingOrder(geom.getCoordinates()[0]) ? 0 : undefined;
   os.geo2.normalizeGeometryCoordinates(geom, normalizationPoint, os.proj.EPSG4326);
 
-  // then interpolate so the coordinates reflect what was drawn
-  os.interpolate.beginTempInterpolation(os.proj.EPSG4326, method);
-  os.interpolate.interpolateGeom(geom);
-  os.interpolate.endTempInterpolation();
-
-  // finally validate the geometry to ensure it's accepted in server queries
+  // validate the geometry to ensure it's accepted in server queries
   geom = os.geo.jsts.validate(geom);
 
   geom.osTransform();

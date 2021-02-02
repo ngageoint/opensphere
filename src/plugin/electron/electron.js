@@ -13,6 +13,9 @@ const ID = 'electron';
  * @enum {string}
  */
 const SettingKey = {
+  // publish.channel from the electron-builder config
+  RELEASE_CHANNEL: 'plugin.electron.releaseChannel',
+  // electron.releaseUrl from the app settings
   RELEASE_URL: 'plugin.electron.releaseUrl'
 };
 
