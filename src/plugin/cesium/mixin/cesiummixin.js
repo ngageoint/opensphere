@@ -53,7 +53,7 @@ plugin.cesium.mixin.loadCesiumMixins = function() {
     let url = options.url || '';
     if (crossOrigin) {
       const osCrossOrigin = os.net.getCrossOrigin(url);
-      if (osCrossOrigin != os.net.CrossOrigin.NONE) {
+      if (osCrossOrigin == os.net.CrossOrigin.USE_CREDENTIALS) {
         url = new URL(url);
         Cesium.TrustedServers.add(url.hostname, getPort(url));
       }
