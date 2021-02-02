@@ -904,33 +904,18 @@ os.time.combineDateTime = function(days, time, opt_daysFormat = 'YYYY-MM-DD', op
 
 
 /**
+ * Regular expression to test for a relative duration string.
+ * @type {RegExp}
+ */
+os.time.RELATIVE_DURATION_REGEXP = /^last /i;
+
+
+/**
  * Determines whether a duration is relative or not
  *
  * @param {string} duration The duration that will be analyzed
  * @return {boolean} Whether the duration is relative or not
  */
 os.time.isRelativeDuration = function(duration) {
-  var isRelativeDuration = false;
-
-  switch (duration) {
-    case os.time.Duration.LAST24HOURS:
-      isRelativeDuration = true;
-      break;
-    case os.time.Duration.LAST48HOURS:
-      isRelativeDuration = true;
-      break;
-    case os.time.Duration.LAST7DAYS:
-      isRelativeDuration = true;
-      break;
-    case os.time.Duration.LAST14DAYS:
-      isRelativeDuration = true;
-      break;
-    case os.time.Duration.LAST30DAYS:
-      isRelativeDuration = true;
-      break;
-    default:
-      break;
-  }
-
-  return isRelativeDuration;
+  return os.time.RELATIVE_DURATION_REGEXP.test(duration);
 };
