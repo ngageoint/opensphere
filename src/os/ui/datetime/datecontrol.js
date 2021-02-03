@@ -109,7 +109,7 @@ os.ui.datetime.DateControlCtrl = function($scope) {
    * If the duration is relative to the current date.
    * @type {boolean}
    */
-  this['relativeDuration'] = false;
+  this['relativeDuration'] = os.time.isRelativeDuration(this['duration']);
 
   // take over updating the timeline controller
   this.assumeControl();
@@ -226,8 +226,11 @@ os.ui.datetime.DateControlCtrl.prototype.onEndDateChanged_ = function(newVal, ol
  */
 os.ui.datetime.DateControlCtrl.prototype.onDurationChanged = function() {
   if (!this['disabled']) {
-    this['relativeDuration'] = false;
-    this['startDate'] = os.time.floor(this['startDate'], this['duration'], true);
+    // If switching from a relative duration, determine the new start relative to now.
+    var from = this['relativeDuration'] ? new Date() : this['startDate'];
+
+    this['startDate'] = os.time.floor(from, this['duration'], true);
+    this['relativeDuration'] = os.time.isRelativeDuration(this['duration']);
 
     switch (this['duration']) {
       case os.time.Duration.LAST24HOURS:
@@ -269,7 +272,6 @@ os.ui.datetime.DateControlCtrl.prototype.onDurationChanged = function() {
  * @private
  */
 os.ui.datetime.DateControlCtrl.prototype.setRelativeDateRange = function(days) {
-  this['relativeDuration'] = true;
   this['startDate'] = new Date();
   this['endDate'] = new Date();
   this['startDate'].setUTCDate(this['startDate'].getUTCDate() - days);
@@ -296,10 +298,10 @@ os.ui.datetime.DateControlCtrl.prototype.startControllerUpdate_ = function() {
 os.ui.datetime.DateControlCtrl.prototype.updateController_ = function() {
   if (this.tlc_) {
     // convert local dates to utc before setting timeline controller values
-    var utcStart = os.time.toUTCDate(this['startDate']);
-    var utcEnd = this.getControllerEndDate();
-    var startTime = utcStart.getTime();
-    var endTime = utcEnd.getTime();
+    var controllerStart = this.getControllerStartDate();
+    var controllerEnd = this.getControllerEndDate();
+    var startTime = controllerStart.getTime();
+    var endTime = controllerEnd.getTime();
 
     this.tlc_.setSuppressShowEvents(true);
     this.tlc_.setRange(this.tlc_.buildRange(startTime, endTime));
@@ -358,9 +360,10 @@ os.ui.datetime.DateControlCtrl.prototype.releaseControl = function() {
  */
 os.ui.datetime.DateControlCtrl.prototype.update = function() {
   if (this.tlc_) {
-    this['startDate'] = os.time.toLocalDate(new Date(this.tlc_.getStart()));
-    this['endDate'] = this.getUIEndDate();
     this['duration'] = this.getDuration();
+    this['relativeDuration'] = os.time.isRelativeDuration(this['duration']);
+    this['startDate'] = this.getUIStartDate();
+    this['endDate'] = this.getUIEndDate();
 
     os.ui.apply(this.scope_);
   }
@@ -379,18 +382,48 @@ os.ui.datetime.DateControlCtrl.prototype.getDuration = function() {
 
 
 /**
+ * Get the start date from the UI to set in the timeline controller.
+ *
+ * @return {Date} The start date.
+ * @protected
+ */
+os.ui.datetime.DateControlCtrl.prototype.getControllerStartDate = function() {
+  // Dates relative to "now" should not be translated to UTC because they did not come from jQueryUI.
+  return this['relativeDuration'] ? this['startDate'] : os.time.toUTCDate(this['startDate']);
+};
+
+
+/**
  * Get the end date from the UI to set in the timeline controller.
  *
  * @return {Date} The end date.
  * @protected
  */
 os.ui.datetime.DateControlCtrl.prototype.getControllerEndDate = function() {
-  var endDate = os.time.toUTCDate(this['endDate']);
+  // Dates relative to "now" should not be translated to UTC because they did not come from jQueryUI.
+  var endDate = this['relativeDuration'] ? this['endDate'] : os.time.toUTCDate(this['endDate']);
   if (this['duration'] === os.time.Duration.CUSTOM) {
     endDate.setDate(endDate.getDate() + 1);
   }
 
   return endDate;
+};
+
+
+/**
+ * Get the start date from the timeline controller to display in the UI.
+ *
+ * @return {Date} The start date.
+ * @protected
+ */
+os.ui.datetime.DateControlCtrl.prototype.getUIStartDate = function() {
+  if (this.tlc_) {
+    // Dates relative to "now" should not be translated from UTC because they will not be used by jQueryUI.
+    var tlcStartDate = new Date(this.tlc_.getStart());
+    return this['relativeDuration'] ? tlcStartDate : os.time.toLocalDate(tlcStartDate);
+  }
+
+  return null;
 };
 
 
@@ -402,7 +435,9 @@ os.ui.datetime.DateControlCtrl.prototype.getControllerEndDate = function() {
  */
 os.ui.datetime.DateControlCtrl.prototype.getUIEndDate = function() {
   if (this.tlc_) {
-    var endDate = os.time.toLocalDate(new Date(this.tlc_.getEnd()));
+    // Dates relative to "now" should not be translated from UTC because they will not be used by jQueryUI.
+    var tlcEndDate = new Date(this.tlc_.getEnd());
+    var endDate = this['relativeDuration'] ? tlcEndDate : os.time.toLocalDate(tlcEndDate);
 
     if (this['duration'] === os.time.Duration.CUSTOM) {
       endDate.setDate(endDate.getDate() - 1);

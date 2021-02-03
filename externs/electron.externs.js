@@ -20,7 +20,9 @@ let Electron;
  *   subject: Electron.CertificatePrincipal,
  *   subjectName: string,
  *   serialNumber: string,
- *   fingerprint: string
+ *   fingerprint: string,
+ *   validExpiry: number,
+ *   validStart: number
  * }}
  */
 Electron.Certificate;
