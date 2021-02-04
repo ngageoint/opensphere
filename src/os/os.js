@@ -5,7 +5,7 @@ goog.require('goog.events.EventTarget');
 goog.require('goog.userAgent');
 goog.require('goog.userAgent.product');
 goog.require('goog.userAgent.product.isVersion');
-goog.require('ol.ext');
+goog.require('ol.typedefs');
 goog.require('os.mixin.closure');
 goog.require('os.ol.license');
 
