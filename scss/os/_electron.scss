@@ -1,0 +1,14 @@
+.c-electron-confirm-cert {
+  .card {
+    background-color: $secondary;
+
+    &.active {
+      background-color: $primary;
+    }
+
+    &:hover {
+      background-color: darken($primary, 10%);
+      color: $white;
+    }
+  }
+}

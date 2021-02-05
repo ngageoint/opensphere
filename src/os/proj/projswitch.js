@@ -534,7 +534,7 @@ os.proj.switch.SwitchProjection.prototype.binLayers = function() {
     var layer = /** @type {os.layer.ILayer} */ (layers[i]);
     var options = layer.getLayerOptions();
 
-    if (layer instanceof ol.layer.Tile) {
+    if (layer instanceof ol.layer.Tile || layer instanceof ol.layer.VectorTile) {
       if (os.implements(layer, os.layer.ILayer.ID)) {
         var projections = /** @type {!Array<!string>} */ (options['projections'] || []);
 

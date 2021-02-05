@@ -1,7 +1,7 @@
 goog.module('plugin.cesium.sync.MultiDynamicLineStringConverter');
 
 const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
-const {createPolyline, updatePolyline} = goog.require('plugin.cesium.sync.DynamicLineString');
+const {createOrUpdateSegment} = goog.require('plugin.cesium.sync.DynamicLineString');
 
 const Feature = goog.requireType('ol.Feature');
 const MultiLineString = goog.requireType('ol.geom.MultiLineString');
@@ -45,26 +45,10 @@ const createOrUpdateDynamicMultiLineString = (feature, multiLine, style, context
 
   let offset = 0;
 
-  for (let i = 0, ii = lineEnds.length; i < ii; i++) {
-    const lineEnd = lineEnds[i];
-
-    let line;
-    if (opt_primitives && i < opt_primitives.length) {
-      line = opt_primitives[i];
-    }
-
-    if (!line) {
-      line = createPolyline(feature, multiLine, style, context, lineFlats, offset, lineEnd);
-
-      if (line) {
-        context.addPolyline(line, feature, multiLine);
-      }
-    } else {
-      updatePolyline(feature, multiLine, style, context, line, lineFlats, offset, lineEnd);
-    }
-
-    offset = lineEnd;
-  }
+  lineEnds.forEach((end, i) => {
+    createOrUpdateSegment(i, feature, multiLine, style, context, lineFlats, offset, end, opt_primitives);
+    offset = end;
+  });
 };
 
 

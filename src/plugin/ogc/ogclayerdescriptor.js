@@ -199,7 +199,6 @@ goog.inherits(plugin.ogc.OGCLayerDescriptor, os.data.LayerSyncDescriptor);
 /**
  * Class name
  * @type {string}
- * @const
  */
 plugin.ogc.OGCLayerDescriptor.NAME = 'plugin.ogc.OGCLayerDescriptor';
 os.registerClass(plugin.ogc.OGCLayerDescriptor.NAME, plugin.ogc.OGCLayerDescriptor);

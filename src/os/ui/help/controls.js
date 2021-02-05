@@ -7,6 +7,7 @@ goog.require('goog.events.KeyNames');
 goog.require('ol.array');
 goog.require('os.ui');
 goog.require('os.ui.Module');
+goog.require('os.ui.help.ControlBlockUI');
 goog.require('os.ui.window');
 
 
@@ -85,71 +86,6 @@ os.ui.help.ControlsCtrl.launch = function() {
     }, 'controlshelp');
   }
 };
-
-
-/**
- * Get the key text
- *
- * @param {goog.events.KeyCodes} key
- * @return {string}
- * @export
- */
-os.ui.help.ControlsCtrl.prototype.getKey = function(key) {
-  if (key === goog.events.KeyCodes.META && os.isOSX()) {
-    return 'Command';
-  }
-
-  return goog.string.toTitleCase(goog.events.KeyNames[key]);
-};
-
-
-/**
- * Get the key text
- *
- * @param {string} other
- * @return {?string}
- * @export
- */
-os.ui.help.ControlsCtrl.prototype.getMouse = function(other) {
-  var mouse = os.ui.help.Controls.MOUSE_IMAGE[other];
-  if (mouse) {
-    return mouse;
-  }
-  return null;
-};
-
-
-/**
- * Get the key text
- *
- * @param {string} other
- * @return {?string}
- * @export
- */
-os.ui.help.ControlsCtrl.prototype.getFont = function(other) {
-  var font = os.ui.help.Controls.FONT_CLASS[other];
-  if (font) {
-    return os.ui.help.Controls.FONT_CLASS[other]['font'];
-  }
-  return null;
-};
-
-
-/**
- * Get the key text
- *
- * @param {string} other
- * @return {?string}
- * @export
- */
-os.ui.help.ControlsCtrl.prototype.getFontClass = function(other) {
-  var font = os.ui.help.Controls.FONT_CLASS[other];
-  if (font) {
-    return os.ui.help.Controls.FONT_CLASS[other]['class'];
-  }
-  return null;
-};
-
 
 
 /**

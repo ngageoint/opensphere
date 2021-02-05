@@ -18,7 +18,8 @@ plugin.file.kml.ui.kmlTreeExportDirective = function() {
   return {
     restrict: 'E',
     scope: {
-      'rootNode': '='
+      'rootNode': '=',
+      'options': '='
     },
     templateUrl: os.ROOT + 'views/plugin/kml/kmltreeexport.html',
     controller: plugin.file.kml.ui.KMLTreeExportCtrl,
@@ -35,13 +36,14 @@ os.ui.Module.directive('kmltreeexport', [plugin.file.kml.ui.kmlTreeExportDirecti
 
 /**
  * Launch a KML tree export dialog.
- *
  * @param {!plugin.file.kml.ui.KMLNode} rootNode The root node to export.
  * @param {string=} opt_winLabel The window label
+ * @param {os.ex.ExportOptions=} opt_addOptions
  */
-plugin.file.kml.ui.launchTreeExport = function(rootNode, opt_winLabel) {
+plugin.file.kml.ui.launchTreeExport = function(rootNode, opt_winLabel, opt_addOptions) {
   var scopeOptions = {
-    'rootNode': rootNode
+    'rootNode': rootNode,
+    'options': opt_addOptions
   };
 
   var windowOptions = {
@@ -56,7 +58,7 @@ plugin.file.kml.ui.launchTreeExport = function(rootNode, opt_winLabel) {
     'show-close': true
   };
 
-  var template = '<kmltreeexport root-node="rootNode"></kmltreeexport>';
+  var template = '<kmltreeexport root-node="rootNode" options="options"></kmltreeexport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
 
@@ -106,6 +108,19 @@ plugin.file.kml.ui.KMLTreeExportCtrl = function($scope, $element) {
    */
   this['persister'] = null;
 
+  const options = this.scope['options'];
+
+  /**
+   * @type {boolean}
+   */
+  this['additionalOptions'] = (options && options.additionalOptions) || false;
+
+  /**
+   * The data to be exported
+   * @type {boolean}
+   */
+  this.scope['exportData'] = this.scope['rootNode'].getChildren();
+
   var persisters = os.ui.exportManager.getPersistenceMethods();
   if (persisters && persisters.length > 0) {
     this['persister'] = persisters[0];
@@ -116,6 +131,13 @@ plugin.file.kml.ui.KMLTreeExportCtrl = function($scope, $element) {
   }
 
   $scope.$on('$destroy', this.destroy.bind(this));
+
+  // Don't listen for this if we don't have additional options
+  if (this['additionalOptions']) {
+    $scope.$on('addexportoptions.updateitem', goog.bind(function(event, items) {
+      this.scope['exportData'] = items || [];
+    }, this));
+  }
 
   // fire auto height event
   setTimeout(function() {
@@ -160,6 +182,7 @@ plugin.file.kml.ui.KMLTreeExportCtrl.prototype.confirm = function() {
   var root = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['rootNode']);
   if (root) {
     var items = root.getChildren() || [root];
+    items = this['additionalOptions'] ? this.scope['exportData'] : items;
     os.ui.exportManager.exportItems(items, null, this['title'], this['exporter'], this['persister']);
     this.close_();
   }
@@ -173,4 +196,18 @@ plugin.file.kml.ui.KMLTreeExportCtrl.prototype.confirm = function() {
  */
 plugin.file.kml.ui.KMLTreeExportCtrl.prototype.close_ = function() {
   os.ui.window.close(this.element);
+};
+
+
+/**
+ * Disables the OK button.
+ * @return {boolean}
+ * @export
+ */
+plugin.file.kml.ui.KMLTreeExportCtrl.prototype.disable = function() {
+  if (this['additionalOptions'] && this.scope['exportData']) {
+    return this.scope['exportData'].length <= 0;
+  } else {
+    return false;
+  }
 };

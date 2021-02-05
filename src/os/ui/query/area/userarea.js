@@ -1,4 +1,5 @@
 goog.provide('os.ui.query.area.UserAreaCtrl');
+goog.provide('os.ui.query.area.getUserArea');
 goog.provide('os.ui.query.area.userAreaDirective');
 
 goog.require('goog.Disposable');

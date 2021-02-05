@@ -84,6 +84,7 @@ goog.require('os.style.StyleManager');
 goog.require('os.time');
 goog.require('os.time.TimelineController');
 goog.require('os.ui.AbstractMainCtrl');
+goog.require('os.ui.AddExportOptionsUI');
 goog.require('os.ui.alertsDirective');
 goog.require('os.ui.areasDirective');
 goog.require('os.ui.clear.ClearEntry');
@@ -167,6 +168,7 @@ goog.require('plugin.position.PositionPlugin');
 goog.require('plugin.storage.PersistPlugin');
 goog.require('plugin.suncalc.Plugin');
 goog.require('plugin.track.TrackPlugin');
+goog.require('plugin.vectortile.VectorTilePlugin');
 goog.require('plugin.vectortools.VectorToolsPlugin');
 goog.require('plugin.weather.WeatherPlugin');
 goog.require('plugin.wmts.Plugin');
@@ -549,6 +551,7 @@ os.MainCtrl.prototype.addPlugins = function() {
   os.ui.pluginManager.addPlugin(plugin.track.TrackPlugin.getInstance());
   os.ui.pluginManager.addPlugin(plugin.openpage.Plugin.getInstance());
   os.ui.pluginManager.addPlugin(new plugin.storage.PersistPlugin());
+  os.ui.pluginManager.addPlugin(plugin.vectortile.VectorTilePlugin.getInstance());
 };
 
 

@@ -1,4 +1,6 @@
 goog.provide('plugin.ogc.wfs.QueryWFSLayerConfig');
+goog.provide('plugin.ogc.wfs.getFilterColumns');
+goog.provide('plugin.ogc.wfs.launchFilterManager');
 
 goog.require('os.net.ParamModifier');
 goog.require('os.ogc.filter.OGCFilterModifier');

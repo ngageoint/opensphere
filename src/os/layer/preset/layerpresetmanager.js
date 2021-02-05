@@ -218,6 +218,9 @@ class LayerPresetManager extends Disposable {
           // add a "Basic" preset to the list if there are user-defined ones OR the user is an admin
           if (presets.length > 0 || this.isAdmin()) {
             OsLayerPreset.addDefault(presets, id, filterKey || undefined);
+            OsLayerPreset.updateDefault(/** @type {ILayer} */ (layer), presets.find((preset) => {
+              return preset.id == OsLayerPreset.DEFAULT_PRESET_ID;
+            }));
           }
 
           // return the list to any .then() bindings

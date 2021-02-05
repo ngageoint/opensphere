@@ -1,4 +1,5 @@
 goog.provide('os.ui.feature.MultiFeatureInfoCtrl');
+goog.provide('os.ui.feature.launchMultiFeatureInfo');
 goog.provide('os.ui.feature.multiFeatureInfoDirective');
 
 goog.require('goog.Disposable');
@@ -212,7 +213,7 @@ os.ui.feature.MultiFeatureInfoCtrl.prototype.getValueFromFeature = function(feat
 /**
  * Launches a feature info window for the provided feature(s).
  *
- * @param {Array<ol.Feature>|ol.Feature} features The feature or array of features to show.
+ * @param {Array<ol.Feature|ol.render.Feature>|ol.Feature|ol.render.Feature} features The feature or array of features to show.
  * @param {string=} opt_titleDetail Title of the containing layer
  */
 os.ui.feature.launchMultiFeatureInfo = function(features, opt_titleDetail) {

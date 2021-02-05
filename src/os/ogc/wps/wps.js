@@ -1,4 +1,5 @@
 goog.provide('os.ogc.wps');
+goog.provide('os.ogc.wps.WPSParams');
 
 goog.require('os.net.VariableReplacer');
 goog.require('os.time');

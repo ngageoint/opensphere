@@ -524,12 +524,19 @@ os.style.label.updateLabelStyle = function(labelStyle, feature, config, opt_laye
   textStyle.setFont(labelFont);
 
   var labelColor = os.style.label.getColor(feature, config, opt_layerConfig);
-  textStyle.getFill().setColor(labelColor);
 
-  var fillColor = ol.color.asArray(labelColor);
-  var strokeColor = ol.color.asArray(/** @type {Array<number>|string} */ (textStyle.getStroke().getColor()));
-  strokeColor[3] = fillColor[3];
-  textStyle.getStroke().setColor(os.style.toRgbaString(strokeColor));
+  var fill = textStyle.getFill();
+  if (fill) {
+    fill.setColor(labelColor);
+  }
+
+  var stroke = textStyle.getStroke();
+  if (stroke) {
+    var fillColor = ol.color.asArray(labelColor);
+    var strokeColor = ol.color.asArray(/** @type {Array<number>|string} */ (stroke.getColor()));
+    strokeColor[3] = fillColor[3];
+    stroke.setColor(os.style.toRgbaString(strokeColor));
+  }
 };
 
 

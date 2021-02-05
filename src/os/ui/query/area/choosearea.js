@@ -1,5 +1,6 @@
 goog.provide('os.ui.query.area.ChooseAreaCtrl');
 goog.provide('os.ui.query.area.chooseAreaDirective');
+goog.provide('os.ui.query.area.launchChooseArea');
 
 goog.require('goog.Disposable');
 goog.require('os.ui.Module');

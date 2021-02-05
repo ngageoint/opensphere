@@ -8,6 +8,7 @@ goog.require('plugin.arc');
 goog.require('plugin.arc.ArcServer');
 goog.require('plugin.arc.arcImportDirective');
 goog.require('plugin.arc.layer.ArcFeatureLayerConfig');
+goog.require('plugin.arc.layer.ArcImageLayerConfig');
 goog.require('plugin.arc.layer.ArcLayerDescriptor');
 goog.require('plugin.arc.layer.ArcTileLayerConfig');
 goog.require('plugin.arc.mime');
@@ -42,6 +43,7 @@ plugin.arc.ArcPlugin.prototype.init = function() {
   var lcm = os.layer.config.LayerConfigManager.getInstance();
   lcm.registerLayerConfig(plugin.arc.layer.ArcFeatureLayerConfig.ID, plugin.arc.layer.ArcFeatureLayerConfig);
   lcm.registerLayerConfig(plugin.arc.layer.ArcTileLayerConfig.ID, plugin.arc.layer.ArcTileLayerConfig);
+  lcm.registerLayerConfig(plugin.arc.layer.ArcImageLayerConfig.ID, plugin.arc.layer.ArcImageLayerConfig);
 
   var im = os.ui.im.ImportManager.getInstance();
   im.registerImportUI(this.id, new os.ui.ProviderImportUI('<arcserver></arcserver>'));

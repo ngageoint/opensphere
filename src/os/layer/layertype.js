@@ -11,7 +11,8 @@ os.layer.LayerType = {
   FEATURES: 'Feature Layers',
   REF: 'Reference Layers',
   TERRAIN: 'Terrain',
-  IMAGE: 'Image'
+  IMAGE: 'Image',
+  VECTOR_TILES: 'Vector Tiles'
 };
 
 
@@ -21,5 +22,6 @@ os.layer.LayerType = {
 os.layer.ExplicitLayerType = {
   TILES: 'Tiles',
   FEATURES: 'Features',
-  IMAGE: 'Image'
+  IMAGE: 'Image',
+  VECTOR_TILES: 'Vector Tiles'
 };
