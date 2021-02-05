@@ -158,7 +158,8 @@ os.ui.datetime.DateControlCtrl.prototype.disposeInternal = function() {
  */
 os.ui.datetime.DateControlCtrl.prototype.onStartDateChanged_ = function(newVal, oldVal) {
   if (newVal && oldVal && newVal.getTime() != oldVal.getTime()) {
-    this['startDate'] = os.time.floor(newVal, this['duration'], true);
+    // this['startDate'] = os.time.floor(newVal, this['duration'], true);
+    this['startDate'] = newVal;
 
     if (this['duration'] === os.time.Duration.CUSTOM) {
       // if the start date is after the end date for custom duration, make them the same (end is inclusive)
@@ -202,7 +203,8 @@ os.ui.datetime.DateControlCtrl.prototype.onStartDateSelected_ = function(event) 
 os.ui.datetime.DateControlCtrl.prototype.onEndDateChanged_ = function(newVal, oldVal) {
   // this can only be changed by the user for custom duration, so let the controller handle it otherwise
   if (this['duration'] === os.time.Duration.CUSTOM && newVal && oldVal && newVal.getTime() != oldVal.getTime()) {
-    this['endDate'] = os.time.floor(newVal, os.time.Duration.DAY, true);
+    // this['endDate'] = os.time.floor(newVal, os.time.Duration.DAY, true);
+    this['endDate'] = newVal;
 
     if (this['startDate'] > this['endDate']) {
       // if start is after end, make them the same (end is inclusive)
@@ -227,9 +229,10 @@ os.ui.datetime.DateControlCtrl.prototype.onEndDateChanged_ = function(newVal, ol
 os.ui.datetime.DateControlCtrl.prototype.onDurationChanged = function() {
   if (!this['disabled']) {
     // If switching from a relative duration, determine the new start relative to now.
-    var from = this['relativeDuration'] ? new Date() : this['startDate'];
+    // var from = this['relativeDuration'] ? new Date() : this['startDate'];
+    this['startDate'] = this['relativeDuration'] ? new Date() : this['startDate'];
 
-    this['startDate'] = os.time.floor(from, this['duration'], true);
+    // this['startDate'] = os.time.floor(from, this['duration'], true);
     this['relativeDuration'] = os.time.isRelativeDuration(this['duration']);
 
     switch (this['duration']) {
