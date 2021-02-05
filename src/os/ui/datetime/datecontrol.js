@@ -158,8 +158,11 @@ os.ui.datetime.DateControlCtrl.prototype.disposeInternal = function() {
  */
 os.ui.datetime.DateControlCtrl.prototype.onStartDateChanged_ = function(newVal, oldVal) {
   if (newVal && oldVal && newVal.getTime() != oldVal.getTime()) {
-    // this['startDate'] = os.time.floor(newVal, this['duration'], true);
-    this['startDate'] = newVal;
+    if (!this['relativeDuration'] && this['duration'] != os.time.Duration.CUSTOM) {
+      this['startDate'] = os.time.floor(newVal, this['duration'], true);
+    } else {
+      this['startDate'] = newVal;
+    }
 
     if (this['duration'] === os.time.Duration.CUSTOM) {
       // if the start date is after the end date for custom duration, make them the same (end is inclusive)
@@ -203,7 +206,6 @@ os.ui.datetime.DateControlCtrl.prototype.onStartDateSelected_ = function(event) 
 os.ui.datetime.DateControlCtrl.prototype.onEndDateChanged_ = function(newVal, oldVal) {
   // this can only be changed by the user for custom duration, so let the controller handle it otherwise
   if (this['duration'] === os.time.Duration.CUSTOM && newVal && oldVal && newVal.getTime() != oldVal.getTime()) {
-    // this['endDate'] = os.time.floor(newVal, os.time.Duration.DAY, true);
     this['endDate'] = newVal;
 
     if (this['startDate'] > this['endDate']) {
@@ -228,11 +230,17 @@ os.ui.datetime.DateControlCtrl.prototype.onEndDateChanged_ = function(newVal, ol
  */
 os.ui.datetime.DateControlCtrl.prototype.onDurationChanged = function() {
   if (!this['disabled']) {
-    // If switching from a relative duration, determine the new start relative to now.
-    // var from = this['relativeDuration'] ? new Date() : this['startDate'];
-    this['startDate'] = this['relativeDuration'] ? new Date() : this['startDate'];
+    // If switching from a relative duration, make the new start relative to now.
+    if (this['relativeDuration']) {
+      this['startDate'] = new Date();
+    }
 
-    // this['startDate'] = os.time.floor(from, this['duration'], true);
+    // We only want to round times that are neither custom nor relative
+    if (!this['relativeDuration'] && this['duration'] != os.time.Duration.CUSTOM) {
+      this['startDate'] = os.time.floor(this['startDate'], this['duration'], true);
+    }
+
+    // Check if the NEW duration is relative
     this['relativeDuration'] = os.time.isRelativeDuration(this['duration']);
 
     switch (this['duration']) {
