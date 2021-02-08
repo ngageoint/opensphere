@@ -1,8 +1,9 @@
-goog.module('plugin.cesium.sync.IConverter');
+goog.declareModuleId('plugin.cesium.sync.IConverterTemp');
 
 const Feature = goog.requireType('ol.Feature');
 const Style = goog.requireType('ol.style.Style');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
+
 
 /**
  * @interface
@@ -48,4 +49,4 @@ class IConverter {
   delete(feature, geometry, style, context, primitive) {}
 }
 
-exports = IConverter;
+export default IConverter;

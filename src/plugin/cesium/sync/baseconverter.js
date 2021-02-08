@@ -1,6 +1,6 @@
-goog.module('plugin.cesium.sync.BaseConverter');
+goog.declareModuleId('plugin.cesium.sync.BaseConverterTemp');
 
-const {getPrimitive, deletePrimitive} = goog.require('plugin.cesium.primitive');
+import {getPrimitive, deletePrimitive} from '../primitive';
 
 const IConverter = goog.requireType('plugin.cesium.sync.IConverter');
 
@@ -22,4 +22,4 @@ BaseConverter.prototype.retrieve = getPrimitive;
  */
 BaseConverter.prototype.delete = deletePrimitive;
 
-exports = BaseConverter;
+export default BaseConverter;
