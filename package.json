@@ -51,7 +51,6 @@
         "google-closure-compiler/contrib/externs/angular-1.5-resource.js",
         "google-closure-compiler/contrib/externs/angular-1.5-q_templated.js",
         "google-closure-compiler/contrib/externs/svg.js",
-        "openlayers/src/ol/typedefs.js",
         "openlayers/externs/closure-compiler.js",
         "openlayers/externs/geojson.js",
         "openlayers/externs/oli.js",

@@ -16,7 +16,7 @@ os.ui.query.comboNodeUIDirective = function() {
     template: '<span class="form-inline">' +
         '<span ng-if="nodeUi.isGroup()" title="Whether to pass all filters (AND) or any filter (OR)">' +
         '<span><select class="custom-select" ng-model="nodeUi.activeGroup" ng-change="nodeUi.toggleGroup()"' +
-        'ng-options="item as item for item in nodeUi.groups"/></span>' +
+        'ng-options="item as item for item in nodeUi.groups"/></select></span>' +
         '</span>' +
         '<span class="ml-2">' +
         '<span ng-if="nodeUi.isArea() && nodeUi.isEnabled()" ng-click="nodeUi.toggleQuery()" title="' +
