@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.sync.runConverter');
+goog.declareModuleId('plugin.cesium.sync.runConverter');
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
@@ -14,7 +14,7 @@ const IConverter = goog.requireType('plugin.cesium.sync.IConverter');
  * @param {!Style} style
  * @param {!VectorContext} context
  */
-const runConverter = (converter, feature, geometry, style, context) => {
+export const runConverter = (converter, feature, geometry, style, context) => {
   const primitive = converter.retrieve(feature, geometry, style, context);
   if (primitive) {
     const updateSuccessful = converter.update(feature, geometry, style, context, primitive);
@@ -26,9 +26,4 @@ const runConverter = (converter, feature, geometry, style, context) => {
   }
 
   converter.create(feature, geometry, style, context);
-};
-
-
-exports = {
-  runConverter
 };

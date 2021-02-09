@@ -306,10 +306,10 @@ WMS Tiles
                 "url": "<server url>"
                 "layers": [{
                   "layerName": "<elevation layer>",
-                  "minLevel": <level number>,
-                  "maxLevel": <level number>
+                  "minLevel": 0,
+                  "maxLevel": 10
                 }]
-              },
+              }
             }
           }
         }
@@ -317,7 +317,7 @@ WMS Tiles
     }
   }
 
-Where the `<server url>` would be something like `https://yourgeoserver:8080/geoserver/ows` 
+Where the `<server url>` would be something like `https://yourgeoserver:8080/geoserver/ows`
 and the `layers` entries have corresponding layer names and resolution ranges.
 
 Cesium World Terrain
@@ -369,6 +369,7 @@ The value of the matched field will be substituted for ``%s`` in the ``"action"`
 Example:
 
 .. code-block:: json
+
   {
     "admin": {
       "columnActions": {
