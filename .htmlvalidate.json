@@ -8,6 +8,7 @@
   },
 
   "rules": {
+    "attribute-allowed-values": "warn",
     "element-name": "off",
     "element-required-attributes": "off",
     "no-inline-style": "warn",

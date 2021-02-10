@@ -4,7 +4,7 @@
       <div>
         <ul class="nav nav-tabs flex-shrink-0" ng-show="showtabs">
           <li class="nav-item" ng-repeat="tab in tabs">
-            <a class="nav-link" ng-click="selector.setTab(tab.name)" ng-class="{active: activeTab == tab.name}">{{tab.name}}</a>
+            <a href class="nav-link" ng-click="selector.setTab(tab.name)" ng-class="{active: activeTab == tab.name}">{{tab.name}}</a>
           </li>
         </ul>
       </div>
