@@ -1,12 +1,17 @@
 goog.provide('os.data.LayerTreeSearch');
-goog.require('os.data.DataManager');
+
+goog.require('os.data.FolderNode');
 goog.require('os.data.LayerNode');
 goog.require('os.data.groupby.LayerZOrderGroupBy');
+goog.require('os.layer.FolderManager');
 goog.require('os.layer.ILayer');
 goog.require('os.layer.LayerGroup');
+goog.require('os.menu.folder');
 goog.require('os.structs.ITreeNodeSupplier');
 goog.require('os.ui.data.BaseProvider');
+goog.require('os.ui.node.FolderNodeUI');
 goog.require('os.ui.slick.AbstractGroupByTreeSearch');
+goog.require('os.ui.slick.SlickTreeNode');
 goog.require('os.ui.slick.TreeSearch');
 
 
@@ -22,6 +27,7 @@ goog.require('os.ui.slick.TreeSearch');
  */
 os.data.LayerTreeSearch = function(setAs, onObj, opt_noResultLabel) {
   os.data.LayerTreeSearch.base(this, 'constructor', [], setAs, onObj, opt_noResultLabel);
+  os.menu.folder.setup();
 };
 goog.inherits(os.data.LayerTreeSearch, os.ui.slick.AbstractGroupByTreeSearch);
 
@@ -122,59 +128,123 @@ os.data.LayerTreeSearch.prototype.fillListFromSearch = function(list) {
  */
 os.data.LayerTreeSearch.prototype.makeGroups_ = function(results, parent) {
   if (results && results.length > 1) {
-    var idBuckets = /** @type {!Object<string, !Array<!os.structs.ITreeNode>>} */
-        (goog.array.bucket(results, this.getNodeGroup_.bind(this)));
-    results.length = 0;
+    var folders = os.layer.FolderManager.getInstance().getFolders();
+    var resultsClone = results.slice();
+    // results.length = 0;
 
-    for (var id in idBuckets) {
-      var bucket = idBuckets[id];
+    if (folders) {
+      var foldersArr = Object.values(folders);
+      var folderNodeMap = {};
 
-      if (bucket.length > 1) {
-        var min = Number.MAX_VALUE;
-        var title = 'Unknown';
+      /**
+       * Recursively build the tree from the folder options saved in FolderManager.
+       * @param {osx.layer.FolderOptions} folder
+       * @param {os.structs.ITreeNode} currentParent
+       * @param {(string|osx.layer.FolderOptions)} child
+       */
+      var fn = (folder, currentParent, child) => {
+        if (typeof child == 'string') {
+          // look for the result
+          var result = resultsClone.find((result) => result.getId() === child);
+          if (result) {
+            var folderNode = folderNodeMap[folder.id];
 
-        // pick the shortest title as the label for the group
-        for (var i = 0, n = bucket.length; i < n; i++) {
-          var node = /** @type {os.data.LayerNode} */ (bucket[i]);
-          var layer = node.getLayer();
-          var t = os.implements(layer, os.IGroupable.ID) ?
-            /** @type {os.IGroupable} */ (layer).getGroupLabel() : layer.getTitle();
+            if (!folderNode) {
+              folderNode = new os.data.FolderNode();
+              folderNode.setId(folder.id);
+              folderNode.setLabel(folder.name);
+              folderNode.collapsed = folder.collapsed || true;
 
-          if (t.length < min) {
-            title = t;
-            min = t.length;
-          }
-        }
+              // index the folder node by its ID so other results that belong to it can be founded
+              folderNodeMap[folder.id] = folderNode;
 
-        var groupLayer = new os.layer.LayerGroup();
-        groupLayer.setId(id + os.ui.data.BaseProvider.ID_DELIMITER + '_group');
-        groupLayer.setTitle(title);
-
-        var groupNode = new os.data.LayerNode();
-
-        for (i = 0, n = bucket.length; i < n; i++) {
-          var node = bucket[i];
-          if (node) {
-            var layer = node.getLayer();
-            if (layer) {
-              groupLayer.addLayer(layer);
+              // add the folder to the parent
+              currentParent.addChild(folderNode);
             }
 
-            groupNode.addChild(node);
+            folderNode.addChild(result);
+            goog.array.remove(results, result);
           }
-        }
+        } else {
+          // it's another folder, we need to go deeper
+          var folderNode = folderNodeMap[folder.id];
 
-        groupNode.setLayer(groupLayer);
-        results.push(groupNode);
-      } else if (bucket.length == 1) {
-        results.push(bucket[0]);
-      }
+          if (!folderNode) {
+            folderNode = new os.data.FolderNode();
+            folderNode.setId(folder.id);
+            folderNode.setLabel(folder.name);
+
+            // index the folder node by its ID so other results that belong to it can be founded
+            folderNodeMap[folder.id] = folderNode;
+
+            // add the folder to the parent
+            // currentParent.addChild(folderNode);
+          }
+
+          child.children.forEach(fn.bind(undefined, child, folderNode));
+        }
+      };
+
+      foldersArr.forEach((folder) => {
+        if (folder.children) {
+          folder.children.forEach(fn.bind(undefined, folder, parent));
+        }
+      });
     }
+
+    // var idBuckets = /** @type {!Object<string, !Array<!os.structs.ITreeNode>>} */
+    //     (goog.array.bucket(results, this.getNodeGroup.bind(this)));
+    // results.length = 0;
+
+    // for (var id in idBuckets) {
+    //   var bucket = idBuckets[id];
+
+    //   if (bucket.length > 1) {
+    //     var min = Number.MAX_VALUE;
+    //     var title = 'Unknown';
+
+    //     // pick the shortest title as the label for the group
+    //     for (var i = 0, n = bucket.length; i < n; i++) {
+    //       var node = /** @type {os.data.LayerNode} */ (bucket[i]);
+    //       var layer = node.getLayer();
+    //       var t = os.implements(layer, os.IGroupable.ID) ?
+    //         /** @type {os.IGroupable} */ (layer).getGroupLabel() : layer.getTitle();
+
+    //       if (t.length < min) {
+    //         title = t;
+    //         min = t.length;
+    //       }
+    //     }
+
+    //     var groupLayer = new os.layer.LayerGroup();
+    //     groupLayer.setId(id + os.ui.data.BaseProvider.ID_DELIMITER + '_group');
+    //     groupLayer.setTitle(title);
+
+    //     var groupNode = new os.data.LayerNode();
+
+    //     for (i = 0, n = bucket.length; i < n; i++) {
+    //       var node = bucket[i];
+    //       if (node) {
+    //         var layer = node.getLayer();
+    //         if (layer) {
+    //           groupLayer.addLayer(layer);
+    //         }
+
+    //         groupNode.addChild(node);
+    //       }
+    //     }
+
+    //     groupNode.setLayer(groupLayer);
+    //     results.push(groupNode);
+    //   } else if (bucket.length == 1) {
+    //     results.push(bucket[0]);
+    //   }
+    // }
 
     // Update the parent count
     // Essentially this takes the "(1)" or "(1 of 2)" portion and applies the difference in count to both numbers.
     var label = parent.getLabel();
-    i = label.indexOf('(');
+    var i = label.indexOf('(');
 
     /**
      * @type {Array<string|number>}
@@ -209,9 +279,9 @@ os.data.LayerTreeSearch.prototype.makeGroups_ = function(results, parent) {
  * @param {number} index
  * @param {!IArrayLike<!os.structs.ITreeNode>} array
  * @return {string}
- * @private
+ * @protected
  */
-os.data.LayerTreeSearch.prototype.getNodeGroup_ = function(node, index, array) {
+os.data.LayerTreeSearch.prototype.getNodeGroup = function(node, index, array) {
   var groupId = node.getId();
   var id;
 

@@ -15,6 +15,7 @@ goog.require('os.data.groupby.LayerTypeGroupBy');
 goog.require('os.data.groupby.LayerZOrderGroupBy');
 goog.require('os.defines');
 goog.require('os.events.LayerEventType');
+goog.require('os.layer.FolderManager');
 goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
 goog.require('os.object');
@@ -119,6 +120,10 @@ os.ui.LayersCtrl = function($scope, $element) {
   map.listen(os.events.LayerEventType.REMOVE, this.search, false, this);
   map.listen(os.events.LayerEventType.CHANGE, this.search, false, this);
 
+  var fm = os.layer.FolderManager.getInstance();
+  fm.listen(os.layer.folder.FolderEventType.FOLDER_CREATED, this.search, false, this);
+  fm.listen(os.layer.folder.FolderEventType.FOLDER_REMOVED, this.search, false, this);
+
   // refresh on changed favorites
   os.settings.listen(os.user.settings.FavoriteManager.KEY, this.search, false, this);
 
@@ -160,6 +165,10 @@ os.ui.LayersCtrl.prototype.disposeInternal = function() {
   map.unlisten(os.events.LayerEventType.ADD, this.search, false, this);
   map.unlisten(os.events.LayerEventType.REMOVE, this.search, false, this);
   map.unlisten(os.events.LayerEventType.CHANGE, this.search, false, this);
+
+  var fm = os.layer.FolderManager.getInstance();
+  fm.unlisten(os.layer.folder.FolderEventType.FOLDER_CREATED, this.search, false, this);
+  fm.unlisten(os.layer.folder.FolderEventType.FOLDER_REMOVED, this.search, false, this);
 
   os.settings.unlisten(os.user.settings.FavoriteManager.KEY, this.search, false, this);
 
