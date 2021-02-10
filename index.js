@@ -245,9 +245,10 @@ const sharedResources = [
     scripts: ['jsts.min.js']
   },
   {
-    source: resolver.resolveModulePath('jschardet/dist', __dirname),
-    target: 'vendor/jschardet',
-    scripts: ['jschardet.min.js']
+    source: resolver.resolveModulePath('chardetng-wasm/dist/es5', __dirname),
+    target: 'vendor/chardetng-wasm',
+    scripts: ['chardetng.es5.min.js'],
+    files: ['*.+(wasm|js)']
   },
   {
     source: buildPath,
