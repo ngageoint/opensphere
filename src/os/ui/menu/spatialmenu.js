@@ -92,7 +92,8 @@ os.ui.menu.spatial.Group = {
   EXCLUDE: 'Exclude',
   FEATURES: 'Features',
   TOOLS: 'Tools',
-  AREA: 'Area'
+  AREA: 'Area',
+  BOOK: 'Intelbook'
 };
 
 
@@ -227,6 +228,10 @@ os.ui.menu.spatial.setup = function() {
           handler: os.ui.menu.spatial.onMenuEvent,
           beforeRender: os.ui.menu.spatial.visibleIfCanModifyGeometry
         }]
+      }, {
+        label: os.ui.menu.spatial.Group.BOOK,
+        type: os.ui.menu.MenuItemType.GROUP,
+        sort: 45
       }, {
         label: os.ui.menu.spatial.Group.AREA,
         type: os.ui.menu.MenuItemType.GROUP,
