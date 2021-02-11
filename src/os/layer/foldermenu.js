@@ -36,12 +36,12 @@ const createFolder = function(event) {
 
     // determine if we need to assign them to a parent
     const parent = nodes[0].getParent();
-    if (parent instanceof FolderNode) {
+    if (parent) {
       parentId = parent.getId();
-      const sharedParent = nodes.every((n) => n.getParent().getId() == parentId);
-      if (!sharedParent) {
-        parentId = undefined;
-      }
+      // const sharedParent = nodes.every((n) => n.getParent().getId() == parentId);
+      // if (!sharedParent) {
+      //   parentId = undefined;
+      // }
     }
   }
 
@@ -49,8 +49,9 @@ const createFolder = function(event) {
     id: getRandomString(),
     children: layerIds,
     name: 'New Folder',
+    parentId: parentId,
     collapsed: false
-  }, parentId);
+  });
 };
 
 

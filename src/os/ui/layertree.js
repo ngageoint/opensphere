@@ -58,7 +58,7 @@ os.ui.LayerTreeCtrl.prototype.canDragRows = function(rows) {
   }
 
   // Only allow dragging past depth 1 if the node supports it
-  var isLayerNode = firstNode instanceof os.data.LayerNode;
+  var isLayerNode = firstNode instanceof os.data.LayerNode || firstNode instanceof os.data.FolderNode;
   if (!isLayerNode && !firstNode.supportsInternalDrag()) {
     return false;
   }
@@ -107,7 +107,7 @@ os.ui.LayerTreeCtrl.prototype.canDragMove = function(rows, insertBefore) {
     return false;
   }
 
-  if (firstRow instanceof os.data.LayerNode) {
+  if (firstRow instanceof os.data.LayerNode || firstRow instanceof os.data.FolderNode) {
     // Layer Node Drag Rules:
     // 1. Only same depth can be dragged
     // 2. Cannot be dragged to new parent
@@ -145,7 +145,8 @@ os.ui.LayerTreeCtrl.prototype.canDragMove = function(rows, insertBefore) {
 
       // rule 3: cannot be dragged to a different Z-Order group
       var z = os.data.ZOrder.getInstance();
-      if (z.getZType(item.getId()) !== z.getZType(beforeItem.getId())) {
+      var differentZ = z.getZType(item.getId()) !== z.getZType(beforeItem.getId());
+      if (differentZ && item instanceof os.data.LayerNode && beforeItem instanceof os.data.LayerNode) {
         return false;
       }
     }
@@ -182,14 +183,14 @@ os.ui.LayerTreeCtrl.prototype.doMove = function(rows, insertBefore) {
     return;
   }
 
-  if (firstRow instanceof os.data.LayerNode) {
+  if (firstRow instanceof os.data.LayerNode || firstRow instanceof os.data.FolderNode) {
     var after = false;
     var item = /** @type {os.data.LayerNode} */ (this.grid.getDataItem(insertBefore));
 
     while (!(item instanceof os.data.LayerNode) || item.depth !== firstRow.depth) {
       after = true;
       insertBefore--;
-      item = /** @type {os.data.LayerNode} */ (this.grid.getDataItem(insertBefore));
+      item = /** @type {(os.data.LayerNode|os.data.FolderNode)} */ (this.grid.getDataItem(insertBefore));
     }
 
     if (item) {
@@ -197,16 +198,31 @@ os.ui.LayerTreeCtrl.prototype.doMove = function(rows, insertBefore) {
       var ids = [layer.getId()];
       var z = os.data.ZOrder.getInstance();
 
+      if (item instanceof os.data.LayerNode) {
+        layer = item.getLayer();
+        ids = [layer.getId()];
+      } else {
+        var children = layer.getChildren();
+        ids = children.map((child) => child.getLayer().getId());
+      }
+
       if (layer instanceof os.layer.LayerGroup) {
         ids = /** @type {os.layer.LayerGroup} */ (layer).getLayers().map(os.layer.mapLayersToIds);
       }
 
       for (var i = 0, n = rows.length; i < n; i++) {
-        item = /** @type {os.data.LayerNode} */ (this.grid.getDataItem(rows[i]));
+        item = /** @type {(os.data.LayerNode|os.data.FolderNode)} */ (this.grid.getDataItem(rows[i]));
 
         if (item) {
-          layer = item.getLayer();
-          var moveIds = [layer.getId()];
+          var moveIds;
+
+          if (item instanceof os.data.LayerNode) {
+            layer = item.getLayer();
+            moveIds = [layer.getId()];
+          } else {
+            var children = item.getChildren();
+            moveIds = children.map((child) => child.getLayer().getId());
+          }
 
           if (layer instanceof os.layer.LayerGroup) {
             moveIds = /** @type {os.layer.LayerGroup} */ (layer).getLayers().map(os.layer.mapLayersToIds);

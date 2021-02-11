@@ -11,10 +11,21 @@ const Vector = goog.requireType('os.layer.Vector');
  */
 class FolderNode extends SlickTreeNode {
   /**
+   * @param {osx.layer.FolderOptions} options
    */
-  constructor() {
+  constructor(options) {
     super();
+
     this.nodeUI = '<foldernodeui></foldernodeui>';
+
+    /**
+     * The folder options.
+     * @type {osx.layer.FolderOptions}
+     * @protected
+     */
+    this.options = null;
+
+    this.setOptions(options);
   }
 
   /**
@@ -22,6 +33,25 @@ class FolderNode extends SlickTreeNode {
    */
   disposeInternal() {
     super.disposeInternal();
+  }
+
+  /**
+   * Get the folder options.
+   * @return {osx.layer.FolderOptions}
+   */
+  getOptions() {
+    return this.options;
+  }
+
+  /**
+   * Set the folder options.
+   * @param {osx.layer.FolderOptions} options
+   */
+  setOptions(options) {
+    this.options = options;
+    this.setId(options.id);
+    this.setLabel(options.name);
+    this.collapsed = options.collapsed || false;
   }
 
   /**

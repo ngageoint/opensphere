@@ -130,36 +130,28 @@ os.data.LayerTreeSearch.prototype.makeGroups_ = function(results, parent) {
   if (results && results.length > 1) {
     var folders = os.layer.FolderManager.getInstance().getFolders();
     var resultsClone = results.slice();
-    // results.length = 0;
 
     if (folders) {
-      var foldersArr = Object.values(folders);
+      var foldersArr = Object.values(folders).filter((f) => f.parentId === parent.getId());
       var folderNodeMap = {};
 
       /**
        * Recursively build the tree from the folder options saved in FolderManager.
-       * @param {osx.layer.FolderOptions} folder
-       * @param {os.structs.ITreeNode} currentParent
-       * @param {(string|osx.layer.FolderOptions)} child
+       * @param {osx.layer.FolderOptions} parentFolder
+       * @param {os.structs.ITreeNode} parentNode
+       * @param {(string|osx.layer.FolderOptions)} childFolderOrId
        */
-      var fn = (folder, currentParent, child) => {
-        if (typeof child == 'string') {
+      var fn = (parentFolder, parentNode, childFolderOrId) => {
+        if (typeof childFolderOrId == 'string') {
           // look for the result
-          var result = resultsClone.find((result) => result.getId() === child);
+          var result = resultsClone.find((result) => result.getId() === childFolderOrId);
           if (result) {
-            var folderNode = folderNodeMap[folder.id];
+            var folderNode = folderNodeMap[parentFolder.id];
 
             if (!folderNode) {
-              folderNode = new os.data.FolderNode();
-              folderNode.setId(folder.id);
-              folderNode.setLabel(folder.name);
-              folderNode.collapsed = folder.collapsed || true;
-
-              // index the folder node by its ID so other results that belong to it can be founded
-              folderNodeMap[folder.id] = folderNode;
-
-              // add the folder to the parent
-              currentParent.addChild(folderNode);
+              folderNode = new os.data.FolderNode(parentFolder);
+              folderNodeMap[folderNode.getId()] = folderNode;
+              parentNode.addChild(folderNode);
             }
 
             folderNode.addChild(result);
@@ -167,30 +159,32 @@ os.data.LayerTreeSearch.prototype.makeGroups_ = function(results, parent) {
           }
         } else {
           // it's another folder, we need to go deeper
-          var folderNode = folderNodeMap[folder.id];
+          var folderNode = folderNodeMap[childFolderOrId.id];
 
           if (!folderNode) {
-            folderNode = new os.data.FolderNode();
-            folderNode.setId(folder.id);
-            folderNode.setLabel(folder.name);
-
-            // index the folder node by its ID so other results that belong to it can be founded
-            folderNodeMap[folder.id] = folderNode;
-
-            // add the folder to the parent
-            // currentParent.addChild(folderNode);
+            folderNode = new os.data.FolderNode(childFolderOrId);
+            folderNodeMap[childFolderOrId.id] = folderNode;
+            parentNode.addChild(folderNode);
           }
 
-          child.children.forEach(fn.bind(undefined, child, folderNode));
+          if (childFolderOrId.children) {
+            childFolderOrId.children.forEach(fn.bind(undefined, childFolderOrId, folderNode));
+          }
         }
       };
 
       foldersArr.forEach((folder) => {
+        const folderNode = new os.data.FolderNode(folder);
+        folderNodeMap[folderNode.getId()] = folderNode;
+        parent.addChild(folderNode);
+
         if (folder.children) {
-          folder.children.forEach(fn.bind(undefined, folder, parent));
+          folder.children.forEach(fn.bind(undefined, folder, folderNode));
         }
       });
     }
+
+
 
     // var idBuckets = /** @type {!Object<string, !Array<!os.structs.ITreeNode>>} */
     //     (goog.array.bucket(results, this.getNodeGroup.bind(this)));

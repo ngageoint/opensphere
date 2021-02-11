@@ -56,16 +56,24 @@ class FolderManager extends EventTarget {
   /**
    * Create a new folder.
    * @param {osx.layer.FolderOptions} options The folder options
-   * @param {string=} opt_parentId Optional parent to add the folder options to.
    */
-  createFolder(options, opt_parentId) {
-    if (opt_parentId) {
-      var parentFolder = this.getFolder(opt_parentId);
+  createFolder(options) {
+    if (!options.children) {
+      options.children = [];
+    }
+
+    if (options.parentId) {
+      const parentFolder = this.getFolder(options.parentId);
       if (parentFolder) {
         parentFolder.children.unshift(options);
-        options.children.forEach((child) => {
-          goog.array.remove(parentFolder.children, child);
-        });
+
+        if (options.children) {
+          options.children.forEach((child) => {
+            goog.array.remove(parentFolder.children, child);
+          });
+        }
+      } else {
+        this.folderMap[options.id] = options;
       }
     } else {
       this.folderMap[options.id] = options;
@@ -80,7 +88,16 @@ class FolderManager extends EventTarget {
    * @param {string} id The folder ID to remove
    */
   removeFolder(id) {
-    delete this.folderMap[id];
+    if (this.folderMap[id]) {
+      delete this.folderMap[id];
+    } else {
+      const folder = this.getFolder(id);
+      if (folder) {
+        const parent = this.getFolder(folder.parentId);
+        goog.array.remove(parent.children, folder);
+      }
+    }
+
     this.dispatchEvent(FolderEventType.FOLDER_REMOVED);
     this.persist();
   }
@@ -99,12 +116,28 @@ class FolderManager extends EventTarget {
    * @return {Object<string, osx.layer.FolderOptions>}
    */
   getFolder(id) {
-    var folder = this.folderMap[id];
+    let folder = this.folderMap[id];
 
     if (!folder) {
-      for (var key in this.folderMap) {
-        var options = this.folderMap[key];
-        folder = options.children.find((child) => child == id);
+      const finder = function(options) {
+        if (folder) {
+          return;
+        }
+
+        if (options.id == id) {
+          folder = options;
+          return;
+        }
+
+        const children = options.children;
+        if (children) {
+          children.forEach(finder);
+        }
+      };
+
+      for (const key in this.folderMap) {
+        const options = this.folderMap[key];
+        options.children.forEach(finder);
       }
     }
 
@@ -114,14 +147,14 @@ class FolderManager extends EventTarget {
   /**
    * Callback for folder name.
    * @param {!osx.layer.FolderOptions} options The folder options.
-   * @param {string} parentId
    * @param {string} name The chosen folder name.
    * @protected
    */
-  onFolderName(options, parentId, name) {
+  onFolderName(options, name) {
     this.removeFolder(options.id);
     options.name = name;
-    this.createFolder(options, parentId);
+    this.createFolder(options);
+    // this.dispatchEvent(FolderEventType.FOLDER_CREATED);
   }
 
   /**
@@ -130,13 +163,12 @@ class FolderManager extends EventTarget {
    * @param {string=} opt_parentId
    */
   createOrEditFolder(options, opt_parentId) {
-    var node = options['node'];
-    var label = node ? node.getLabel() : 'New Folder';
-    var winLabel = (node ? 'Edit' : 'Add') + ' Folder';
-    var parentId = opt_parentId || '';
+    const existing = this.getFolder(options.id);
+    const label = existing ? existing.name : 'New Folder';
+    const winLabel = (existing ? 'Edit' : 'Add') + ' Folder';
 
-    var confirmOptions = /** @type {!osx.window.ConfirmTextOptions} */ ({
-      confirm: this.onFolderName.bind(this, options, parentId),
+    const confirmOptions = /** @type {!osx.window.ConfirmTextOptions} */ ({
+      confirm: this.onFolderName.bind(this, options),
       defaultValue: label,
       prompt: 'Please choose a label for the folder:',
       windowOptions: /** @type {!osx.window.WindowOptions} */ ({

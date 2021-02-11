@@ -56,7 +56,7 @@ class Controller extends AbstractNodeUICtrl {
     var node = /** @type {os.data.FolderNode} */ (this.scope['item']);
     if (node) {
       FolderManager.getInstance().createOrEditFolder(
-          /** @type {!osx.layer.FolderOptions} */ ({id: goog.string.getRandomString()}), node.getId());
+          /** @type {!osx.layer.FolderOptions} */ ({id: goog.string.getRandomString(), parentId: node.getId()}));
     }
   }
 
@@ -67,7 +67,6 @@ class Controller extends AbstractNodeUICtrl {
   tryRemove() {
     var node = /** @type {FolderNode} */ (this.scope['item']);
     if (node) {
-      // FolderManager.getInstance().tryRemove(node.getId());
       if (node.hasChildren()) {
         var label = node.getLabel();
         var prompt = 'Are you sure you want to remove the folder? This will remove all its descendants.';
@@ -102,10 +101,7 @@ class Controller extends AbstractNodeUICtrl {
   edit() {
     var node = /** @type {FolderNode} */ (this.scope['item']);
     if (node) {
-      const options = {
-        id: node.getId(),
-        name: node.getLabel() || 'New Folder'
-      };
+      const options = node.getOptions();
       FolderManager.getInstance().createOrEditFolder(options);
     }
   }
