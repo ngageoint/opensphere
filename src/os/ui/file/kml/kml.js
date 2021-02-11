@@ -1,5 +1,7 @@
 goog.provide('os.ui.file.kml');
 
+goog.require('os.config.Settings');
+
 
 /**
  * Refresh modes for KML links and icons.
@@ -323,8 +325,14 @@ os.ui.file.kml.isGoogleMapsAccessible = true;
 
 
 /**
+ * Full URL to the kml icons that can be exported in reports, etc. Override by setting "plugin.file.kml.icon.mirror"
+ * @type {string}
+ */
+os.ui.file.kml.mirror = window.location.origin + window.location.pathname + 'images/icons/kml/';
+
+
+/**
  * Replace the Google icon URI with the application image path.
- *
  * @param {string|null|undefined} src The image source URL.
  * @return {!string} The icon src.
  */
@@ -341,6 +349,41 @@ os.ui.file.kml.replaceGoogleUri = function(src) {
 
   return src || '';
 };
+
+
+/**
+ * Replace the Google icon URL with the non-relative image URL.
+ *
+ * @param {string|null|undefined} src The image source URL.
+ * @return {!string} The icon src.
+ */
+os.ui.file.kml.exportableIconUri = (function() {
+  /**
+   * Helper object to speed up src to exportable translations
+   * @type {Object<string, string>}
+   */
+  const lookup = {};
+
+  return (src) => {
+    if (!os.ui.file.kml.isGoogleMapsAccessible && // fastest test
+        !lookup[src] &&
+        os.ui.file.kml.GMAPS_SEARCH.test(src)) { // slowest test
+      let converted = null;
+
+      const secureSource = 'https:' + src.replace(/^[a-z]*:\/\//, '//');
+      const icon = os.ui.file.kml.GOOGLE_EARTH_ICON_SET.find((icon) => secureSource === icon.path);
+
+      if (icon) {
+        converted = icon.path.replace(os.ui.file.kml.GMAPS_SEARCH, os.ui.file.kml.mirror);
+      } else {
+        converted = os.ui.file.kml.DEFAULT_ICON_PATH.replace(os.ui.file.kml.GMAPS_SEARCH, os.ui.file.kml.mirror);
+      }
+
+      lookup[src] = converted; // save to prevent re-work
+    }
+    return lookup[src] || src || '';
+  };
+})();
 
 
 /**
