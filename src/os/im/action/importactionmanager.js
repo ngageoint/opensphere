@@ -636,7 +636,6 @@ os.im.action.ImportActionManager.prototype.onAddActionEntry_ = function(event) {
 };
 
 
-
 /**
  * @param {string} id
  * @return {boolean}
@@ -647,4 +646,78 @@ os.im.action.ImportActionManager.prototype.hasActiveActions = function(id) {
   const hasActiveActions = (action) => action.isEnabled();
 
   return featureActions.some(hasActiveActions);
+};
+
+
+/**
+ * Depth-first traversal of tree; returns ID's of active FeatureActions
+ *
+ * @param {string|undefined} type
+ * @param {Array<os.im.action.FilterActionEntry<T>>} entries
+ * @return {!Array<string>}
+ * @private
+ */
+os.im.action.ImportActionManager.prototype.getActiveActionEntryIds_ = function(type, entries) {
+  let ids = [];
+  (entries || []).forEach((entry) => {
+    if (entry.enabled && entry.type == type) {
+      ids.push(entry.getId());
+    }
+    ids = ids.concat(this.getActiveActionEntryIds_(type, entry.getChildren()));
+  });
+  return ids;
+};
+
+
+/**
+ * Depth-first traversal of tree; returns ID's of active FeatureActions
+ *
+ * @param {string|undefined} type
+ * @return {!Array<string>}
+ */
+os.im.action.ImportActionManager.prototype.getActiveActionEntryIds = function(type) {
+  return this.getActiveActionEntryIds_(type, this.getActionEntries());
+};
+
+
+/**
+ * Get simplified list of active FeatureActions (no repeats via children)
+ *
+ * @param {string|undefined} type
+ * @param {os.im.action.FilterActionEntry<T>=} entry
+ * @return {!boolean}
+ * @private
+ */
+os.im.action.ImportActionManager.prototype.getRootActiveActionEntries_ = function(type, entry) {
+  let isActive = false;
+
+  if (entry && entry.enabled && entry.type == type) {
+    isActive = true;
+  } else if (entry) {
+    const entries = entry.getChildren();
+    const len = entries ? entries.length : 0;
+
+    // use a for loop so it can be broken out of
+    for (let i = 0; i < len; i++) {
+      const e = entries[i];
+      if (this.getRootActiveActionEntries_(type, e)) {
+        isActive = true;
+        break;
+      }
+    }
+  }
+  return isActive;
+};
+
+
+/**
+ * Depth-first traversal of tree; returns ID's of active FeatureActions
+ *
+ * @param {string|undefined} type
+ * @return {!Array<os.im.action.FilterActionEntry<T>>}
+ */
+os.im.action.ImportActionManager.prototype.getRootActiveActionEntries = function(type) {
+  return this.getActionEntries().filter((entry) => {
+    return this.getRootActiveActionEntries_(type, entry);
+  });
 };

@@ -182,6 +182,15 @@ class Registry extends EventTarget {
     }
     return false;
   }
+
+  /**
+   * Empty out the Registry
+   */
+  clear() {
+    this.keys().forEach((key) => {
+      this.remove(key);
+    });
+  }
 }
 
 exports = Registry;
