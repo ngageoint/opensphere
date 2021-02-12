@@ -35,6 +35,13 @@ os.ui.im.IImportUI.prototype.launchUI;
 
 
 /**
+ * Sanitizes the contents of the file being imported
+ * @param {os.file.File} file
+ */
+os.ui.im.IImportUI.prototype.sanitizeFile;
+
+
+/**
  * Merges one import configuration into another.
  * @param {T} from The import configuration to merge from
  * @param {T} to The import configuration to merge to

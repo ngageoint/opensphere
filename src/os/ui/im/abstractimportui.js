@@ -36,6 +36,12 @@ os.ui.im.AbstractImportUI.prototype.launchUI = function(file, config) {};
 /**
  * @inheritDoc
  */
+os.ui.im.AbstractImportUI.prototype.sanitizeFile = function(file) {};
+
+
+/**
+ * @inheritDoc
+ */
 os.ui.im.AbstractImportUI.prototype.mergeConfig = function(from, to) {
   to['color'] = from['color'];
   to['icon'] = from['icon'];
