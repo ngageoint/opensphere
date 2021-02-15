@@ -17,12 +17,6 @@ os.ui.capture.TimelineRenderer = function(opt_options) {
   this.title = 'Timeline';
 
   /**
-   * @type {string}
-   * @private
-   */
-  this.fill_ = options['fill'] || '#fff';
-
-  /**
    * @type {boolean}
    * @private
    */
@@ -35,7 +29,7 @@ goog.inherits(os.ui.capture.TimelineRenderer, os.ui.capture.SvgRenderer);
  * @inheritDoc
  */
 os.ui.capture.TimelineRenderer.prototype.getFill = function() {
-  return this.fill_;
+  return window.getComputedStyle(this.getRenderElement())['fill'];
 };
 
 

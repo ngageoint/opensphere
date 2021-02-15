@@ -119,9 +119,7 @@ plugin.capture.CapturePlugin.prototype.initRenderers = function() {
   ];
 
   if (!goog.userAgent.IE) {
-    renderers.push(new os.ui.capture.TimelineRenderer({
-      'fill': '#888'
-    }));
+    renderers.push(new os.ui.capture.TimelineRenderer());
   }
 
   return renderers;
