@@ -150,7 +150,9 @@
     "stop-server:darwin:linux": "pkill -f http-server",
     "stop-server:windows": "taskkill -F -PID $(netstat -ano | findstr 0.0.0.0:8282 | awk '{print $5}')",
     "symlink": "run-script-os",
-    "symlink:nix": "./tasks/symlink.sh"
+    "symlink:nix": "./tasks/symlink.sh",
+    "symlink:windows": "echo 'cannot symlink on windows'",
+    "symlink:default": "echo 'symlink not configured'"
   },
   "keywords": [
     "geospatial",
