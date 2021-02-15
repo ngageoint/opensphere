@@ -856,7 +856,7 @@ plugin.places.menu.saveKMLToPlaces_ = function(nodes) {
     return;
   }
 
-  if (!goog.isArray(nodes)) {
+  if (!Array.isArray(nodes)) {
     nodes = [nodes];
   }
 

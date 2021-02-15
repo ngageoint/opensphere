@@ -22,7 +22,7 @@ goog.addSingletonGetter(os.webgl.SynchronizerManager);
 
 
 /**
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @const
  * @private
  */

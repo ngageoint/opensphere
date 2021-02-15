@@ -161,7 +161,7 @@ os.object.reduce = function(obj, opt_prefix, opt_delim) {
 
   // skip undefined values
   if (obj !== undefined) {
-    if (os.object.isPrimitive(obj) || goog.isArray(obj)) {
+    if (os.object.isPrimitive(obj) || Array.isArray(obj)) {
       // write primitives and arrays to the reduced result
       result[prefix] = obj;
     } else if (goog.isObject(obj)) {
@@ -286,7 +286,7 @@ os.object.getFirstValue = function(key, var_args) {
  */
 os.object.getValueExtractor = function(attribute) {
   return function(i) {
-    return goog.isFunction(i[attribute]) ? i[attribute]() : i[attribute];
+    return typeof i[attribute] === 'function' ? i[attribute]() : i[attribute];
   };
 };
 
@@ -322,7 +322,7 @@ os.object.getCompareFieldValue_ = function(field, o) {
   if (o != null) {
     var value;
     if (o[field]) {
-      if (goog.isFunction(o[field])) {
+      if (typeof o[field] === 'function') {
         value = o[field]();
       } else {
         value = o[field];

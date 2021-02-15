@@ -192,7 +192,7 @@ os.array.removeDuplicates = function(arr, opt_rv, opt_hashFn) {
   // the stringified array
   var defaultHashFn = function(item) {
     return goog.isObject(current) ?
-      goog.isArray(current) ?
+      Array.isArray(current) ?
         'a' + JSON.stringify(current)
         : 'o' + goog.getUid(current)
       : (typeof current).slice(0, 2) + current;
