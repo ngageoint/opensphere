@@ -33,8 +33,9 @@ const directive = function() {
     restrict: 'E',
     replace: true,
     scope: true,
-    template: '<li class="pointer" id="scale-line" ng-click="ctrl.openMenu()" ng-right-click="ctrl.openMenu()">' +
-        '<div class="unit-group"></div></li>',
+    template: '<li class="pointer js-menu__toggle" id="scale-line" ' +
+      'ng-click="ctrl.openMenu()" ng-right-click="ctrl.openMenu()">' +
+      '<div class="unit-group"></div></li>',
     controller: Controller,
     controllerAs: 'ctrl'
   };

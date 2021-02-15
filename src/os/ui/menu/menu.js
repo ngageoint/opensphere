@@ -328,5 +328,9 @@ os.ui.menu.Menu.prototype.dispatchEvent = function(evt) {
  * @return {boolean}
  */
 os.ui.menu.Menu.supportsToggle = function(el) {
-  return !!el && (el.nodeName.toLowerCase() == 'button' || goog.dom.classlist.contains(el, 'btn-group'));
+  return !!el
+    && (el.nodeName.toLowerCase() == 'button'
+      || goog.dom.classlist.contains(el, 'btn-group')
+      || goog.dom.classlist.contains(el, 'js-menu__toggle')
+    );
 };
