@@ -46,6 +46,13 @@ plugin.file.kml.KMLPlugin.TYPE = 'KML Layers';
 
 
 /**
+ * @type {string}
+ * @const
+ */
+plugin.file.kml.KMLPlugin.ICON_MIRROR = 'plugin.file.kml.icon.mirror';
+
+
+/**
  * @inheritDoc
  */
 plugin.file.kml.KMLPlugin.prototype.init = function() {
@@ -79,8 +86,14 @@ plugin.file.kml.KMLPlugin.prototype.init = function() {
   // set up actions
   plugin.file.kml.menu.treeSetup();
 
+  // try to load the first google earth icon; if it fails, set the mirror and flag
   return new os.net.Request(os.ui.file.kml.GOOGLE_EARTH_ICON_SET[0].path).getPromise()
       .then(goog.nullFunction, () => {
+        const settings = os.config.Settings.getInstance();
+        const mirror = /** @type {string|null} */ (settings.get(plugin.file.kml.KMLPlugin.ICON_MIRROR));
+        if (mirror) {
+          os.ui.file.kml.mirror = mirror;
+        }
         os.ui.file.kml.isGoogleMapsAccessible = false;
       });
 };
