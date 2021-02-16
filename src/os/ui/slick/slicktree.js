@@ -305,7 +305,7 @@ os.ui.slick.SlickTreeCtrl.prototype.getContextArgs = function(opt_event) {
 
   if (targetNode) {
     if (!this.scope['selected'] || (!this.multiSelect && this.scope['selected'] != targetNode) ||
-        (goog.isArray(this.scope['selected']) && !ol.array.includes(this.scope['selected'], targetNode))) {
+        (Array.isArray(this.scope['selected']) && !ol.array.includes(this.scope['selected'], targetNode))) {
       this.scope['selected'] = [targetNode];
     }
   }
@@ -354,7 +354,7 @@ os.ui.slick.SlickTreeCtrl.prototype.changeData_ = function(newVal) {
     this.disposeRoot_();
   }
 
-  if (!goog.isArray(newVal)) {
+  if (!Array.isArray(newVal)) {
     newVal = [newVal];
   }
 
@@ -695,7 +695,7 @@ os.ui.slick.SlickTreeCtrl.prototype.onItemAction_ = function(item, type) {
  */
 os.ui.slick.SlickTreeCtrl.prototype.getData = function() {
   var data = this.scope['data'] || [];
-  if (!goog.isArray(data)) {
+  if (!Array.isArray(data)) {
     data = [data];
   }
   return data;

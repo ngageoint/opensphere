@@ -132,7 +132,7 @@ plugin.file.csv.CSVExporter.prototype.processItem = function(item) {
           value = '';
         }
 
-        if (os.object.isPrimitive(value) && !goog.isArray(value)) {
+        if (os.object.isPrimitive(value) && !Array.isArray(value)) {
           result[field] = value;
         }
       }

@@ -153,7 +153,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getColor = function() {
         var config = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
 
         if (config) {
-          if (goog.isArray(config)) {
+          if (Array.isArray(config)) {
             config = config[0];
           }
           var color = /** @type {Array<number>|string|undefined} */ (os.style.getConfigColor(config)) ||
@@ -183,7 +183,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getFillColor = function() {
         var config = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
 
         if (config) {
-          if (goog.isArray(config)) {
+          if (Array.isArray(config)) {
             config = config[0];
           }
 
@@ -214,7 +214,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getFillOpacity = function() {
         var config = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
 
         if (config) {
-          if (goog.isArray(config)) {
+          if (Array.isArray(config)) {
             config = config[0];
           }
           var color = os.style.getConfigColor(config, true, os.style.StyleField.FILL);
@@ -244,7 +244,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getSize = function() {
         var config = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
 
         if (config) {
-          if (goog.isArray(config)) {
+          if (Array.isArray(config)) {
             config = config[0];
           }
           size = os.style.getConfigSize(config) || os.style.DEFAULT_FEATURE_SIZE;
@@ -271,7 +271,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getLineDash = function() {
         var config = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
 
         if (config) {
-          if (goog.isArray(config)) {
+          if (Array.isArray(config)) {
             config = config[0];
           }
           lineDash = os.style.getConfigLineDash(config);
@@ -298,7 +298,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getIcon = function() {
         var config = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
 
         if (config) {
-          if (goog.isArray(config)) {
+          if (Array.isArray(config)) {
             config = config.length > 1 ? config[1] : config[0];
           }
           icon = os.style.getConfigIcon(config) || os.ui.file.kml.getDefaultIcon();
@@ -405,7 +405,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getOpacity = function() {
         var config = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
 
         if (config) {
-          if (goog.isArray(config)) {
+          if (Array.isArray(config)) {
             config = config[0];
           }
 
@@ -469,7 +469,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.getColumn = function() {
       if (feature) {
         var config = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
         if (config) {
-          if (goog.isArray(config)) {
+          if (Array.isArray(config)) {
             // locate the label config in the array
             var labelsConfig = ol.array.find(config, os.style.isLabelConfig);
             if (labelsConfig) {
@@ -564,7 +564,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onLockChange = function() {
  * @inheritDoc
  */
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.onColorChange = function(event, value) {
-  if (!os.color.isColorString(value) && !goog.isArray(value)) {
+  if (!os.color.isColorString(value) && !Array.isArray(value)) {
     return;
   }
   event.stopPropagation();
@@ -661,7 +661,7 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onColorChange = function(event, val
  * @inheritDoc
  */
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.onFillColorChange = function(event, value) {
-  if (!os.color.isColorString(value) && !goog.isArray(value)) {
+  if (!os.color.isColorString(value) && !Array.isArray(value)) {
     return;
   }
   event.stopPropagation();

@@ -321,7 +321,7 @@ os.ui.filter.im.FilterImporter.prototype.getTitleFromFilterable = function(filte
  */
 os.ui.filter.im.FilterImporter.getFilterCount = function(filters, opt_count) {
   var count = opt_count || 0;
-  filters = goog.isArray(filters) ? filters : [filters];
+  filters = Array.isArray(filters) ? filters : [filters];
   filters.forEach(function(filter) {
     count++;
 

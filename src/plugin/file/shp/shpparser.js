@@ -397,7 +397,7 @@ plugin.file.shp.SHPParser.prototype.setSource = function(source) {
     return;
   }
 
-  if (goog.isArray(source)) {
+  if (Array.isArray(source)) {
     var i = source.length;
     while (i--) {
       if (source[i] instanceof ArrayBuffer) {

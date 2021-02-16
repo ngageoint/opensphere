@@ -40,7 +40,7 @@ goog.inherits(os.style.FallbackIconImage, ol.style.IconImage);
 /**
  * The logger.
  * @const
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @private
  */
 os.style.FallbackIconImage.LOGGER_ = goog.log.getLogger('os.style.FallbackIconImage');

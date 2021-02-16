@@ -147,7 +147,7 @@ os.data.LayerSyncDescriptor.prototype.getLayerOptions = function() {};
 os.data.LayerSyncDescriptor.prototype.getOptions = function() {
   var options = this.getLayerOptions();
   if (options) {
-    if (!goog.isArray(options)) {
+    if (!Array.isArray(options)) {
       options['defaults'] = this.extractConfigDefaults(options);
       options = [options];
     }
