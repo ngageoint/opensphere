@@ -46,6 +46,7 @@ plugin.wmts.ImportCtrl = function($scope, $element) {
   $scope['config']['url'] = file ? file.getUrl() : this.getUrl();
   $scope['config']['type'] = plugin.wmts.ID;
   $scope['urlExample'] = 'http://www.example.com/path/to/wmts';
+  $scope['helpText'] = 'The following are examples of valid WMTS URLs:\nhttp://www.example.com/path/to/wmts';
 };
 goog.inherits(plugin.wmts.ImportCtrl, os.ui.SingleUrlProviderImportCtrl);
 

@@ -1,0 +1,28 @@
+<div class="flex-fill w-100 d-flex flex-column">
+  <div class="modal-body container flex-fill">
+    <form ng-submit="ctrl.accept()">
+      <div class="form-group m-0">
+        <label for="serverType">Select a server type</label>
+        <select title="ServerType" class="custom-select"
+            ng-model="ctrl.serverType"
+            ng-change="ctrl.onServerTypeChange_">
+          <option ng-repeat="serverType in ctrl.serverTypes">{{serverType}}</option>
+        </select>
+      </div>
+    </form>
+  </div>
+  <div>
+    <uiswitch items="ctrl.serverType" directive-function="ctrl.getUi"></uiswitch>
+  </div>
+  <div class="modal-footer d-flex">
+    <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="!ctrl.serverType || ctrl.loading" title="Add server of the selected type">
+      <i class="fa" ng-class="ctrl.loading && 'fa-spin fa-spinner' || 'fa-chevron-circle-right'"></i>
+      <span ng-if="!ctrl.loading">Next</span>
+      <span ng-if="ctrl.loading">Loading</span>
+    </button>
+    <button class="btn btn-secondary" ng-click="ctrl.close()" title="Cancel Adding Server">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
+  </div>
+</div>

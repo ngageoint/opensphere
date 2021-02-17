@@ -51,6 +51,7 @@ plugin.ogc.ui.GeoserverImportCtrl = function($scope, $element) {
   $scope['config']['type'] = 'geoserver';
 
   $scope['urlExample'] = 'http://www.example.com/geoserver/ows';
+  $scope['helpText'] = 'The following are examples of valid GeoServer URLs:\nhttp://www.example.com/geoserver/ows';
 };
 goog.inherits(plugin.ogc.ui.GeoserverImportCtrl, os.ui.SingleUrlProviderImportCtrl);
 

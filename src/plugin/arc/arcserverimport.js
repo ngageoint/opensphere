@@ -47,6 +47,7 @@ plugin.arc.ArcImportCtrl = function($scope, $element) {
   $scope['urlExample'] = 'https://www.example.com/arcgis/rest/services';
   $scope['config']['type'] = 'arc';
   $scope['config']['label'] = this.getLabel() || 'ArcGIS Server';
+  $scope['helpText'] = 'The following are examples of valid ArcGIS URLs:\nhttps://www.example.com/arcgis/rest/services';
 };
 goog.inherits(plugin.arc.ArcImportCtrl, os.ui.SingleUrlProviderImportCtrl);
 
