@@ -9,17 +9,23 @@ goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('ol.array');
 goog.require('ol.format.WMSCapabilities');
+goog.require('ol.format.WMTSCapabilities');
 goog.require('ol.format.XLink');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
 goog.require('os.color');
+goog.require('os.data.ConfigDescriptor');
 goog.require('os.data.DataProviderEvent');
 goog.require('os.data.DataProviderEventType');
 goog.require('os.data.IDataProvider');
 goog.require('os.file');
+goog.require('os.layer.LayerType');
 goog.require('os.net.HandlerType');
 goog.require('os.net.Request');
 goog.require('os.ogc');
+goog.require('os.ogc.LayerType');
+goog.require('os.ogc.wmts');
+goog.require('os.ui.Icons');
 goog.require('os.ui.data.DescriptorNode');
 goog.require('os.ui.ogc.wms.IWMSLayerParser');
 goog.require('os.ui.ogc.wms.LayerParsers');
@@ -99,6 +105,12 @@ os.ui.ogc.OGCServer = function() {
   this.originalWmsUrl_ = '';
 
   /**
+   * @type {string}
+   * @private
+   */
+  this.originalWmtsUrl_ = '';
+
+  /**
    * @type {goog.Uri.QueryData}
    * @private
    */
@@ -147,10 +159,40 @@ os.ui.ogc.OGCServer = function() {
   this.wmsUrl_ = '';
 
   /**
+   * @type {goog.Uri.QueryData}
+   * @private
+   */
+  this.wmtsParams_ = null;
+
+  /**
+   * @type {string}
+   * @private
+   */
+  this.wmtsDateFormat_ = '';
+
+  /**
+   * @type {string}
+   * @private
+   */
+  this.wmtsTimeFormat_ = '';
+
+  /**
+   * @type {string}
+   * @private
+   */
+  this.wmtsUrl_ = '';
+
+  /**
    * @type {boolean}
    * @private
    */
   this.wmsDone_ = false;
+
+  /**
+   * @type {boolean}
+   * @private
+   */
+  this.wmtsDone_ = false;
 
   /**
    * @type {boolean}
@@ -193,6 +235,13 @@ os.ui.ogc.OGCServer.LOGGER_ = goog.log.getLogger('os.ui.ogc.OGCServer');
  * @type {string}
  */
 os.ui.ogc.OGCServer.DEFAULT_WMS_VERSION = '1.3.0';
+
+
+/**
+ * @const
+ * @type {string}
+ */
+os.ui.ogc.OGCServer.DEFAULT_WMTS_VERSION = '1.0.0';
 
 
 /**
@@ -256,6 +305,22 @@ os.ui.ogc.OGCServer.prototype.getOriginalWmsUrl = function() {
  */
 os.ui.ogc.OGCServer.prototype.setOriginalWmsUrl = function(value) {
   this.originalWmsUrl_ = value;
+};
+
+
+/**
+ * @return {string}
+ */
+os.ui.ogc.OGCServer.prototype.getOriginalWmtsUrl = function() {
+  return this.originalWmtsUrl_ || this.wmtsUrl_;
+};
+
+
+/**
+ * @param {string} value
+ */
+os.ui.ogc.OGCServer.prototype.setOriginalWmtsUrl = function(value) {
+  this.originalWmtsUrl_ = value;
 };
 
 
@@ -382,6 +447,70 @@ os.ui.ogc.OGCServer.prototype.setWmsUrl = function(value) {
 /**
  * @return {string}
  */
+os.ui.ogc.OGCServer.prototype.getWmtsDateFormat = function() {
+  return this.wmtsDateFormat_;
+};
+
+
+/**
+ * @param {string} dateFormat The date format
+ */
+os.ui.ogc.OGCServer.prototype.setWmtsDateFormat = function(dateFormat) {
+  this.wmtsDateFormat_ = dateFormat;
+};
+
+
+/**
+ * @return {goog.Uri.QueryData}
+ */
+os.ui.ogc.OGCServer.prototype.getWmtsParams = function() {
+  return this.wmtsParams_;
+};
+
+
+/**
+ * @param {goog.Uri.QueryData} value
+ */
+os.ui.ogc.OGCServer.prototype.setWmtsParams = function(value) {
+  this.wmtsParams_ = value;
+};
+
+
+/**
+ * @return {string}
+ */
+os.ui.ogc.OGCServer.prototype.getWmtsTimeFormat = function() {
+  return this.wmtsTimeFormat_;
+};
+
+
+/**
+ * @param {string} timeFormat The time format
+ */
+os.ui.ogc.OGCServer.prototype.setWmtsTimeFormat = function(timeFormat) {
+  this.wmtsTimeFormat_ = timeFormat;
+};
+
+
+/**
+ * @return {string}
+ */
+os.ui.ogc.OGCServer.prototype.getWmtsUrl = function() {
+  return this.wmtsUrl_ || this.getOriginalWmtsUrl();
+};
+
+
+/**
+ * @param {string} value
+ */
+os.ui.ogc.OGCServer.prototype.setWmtsUrl = function(value) {
+  this.wmtsUrl_ = value;
+};
+
+
+/**
+ * @return {string}
+ */
 os.ui.ogc.OGCServer.prototype.getWpsUrl = function() {
   return this.wpsUrl_;
 };
@@ -419,10 +548,21 @@ os.ui.ogc.OGCServer.prototype.configure = function(config) {
   this.setOriginalWmsUrl(/** @type {string} */ (config['wms']));
   this.setWmsTimeFormat(/** @type {string} */ (config['wmsTimeFormat']));
   this.setWmsDateFormat(/** @type {string} */ (config['wmsDateFormat']));
+
+  this.setWmtsUrl(/** @type {string} */ (config['wmts']));
+  this.setOriginalWmtsUrl(/** @type {string} */ (config['wmts']));
+  this.setWmtsDateFormat(/** @type {string} */ (config['wmtsDateFormat']));
+  this.setWmtsTimeFormat(/** @type {string} */ (config['wmtsTimeFormat']));
+
+  var wmtsParams = /** @type {string|undefined} */ (config['wmtsParams']);
+  this.setWmtsParams(wmtsParams ? new goog.Uri.QueryData(wmtsParams) : null);
+
   this.setWfsUrl(/** @type {string} */ (config['wfs']));
   this.setOriginalWfsUrl(/** @type {string} */ (config['wfs']));
+
   this.setLowerCase(/** @type {boolean} */ (config['lowerCase']));
   this.setWpsUrl(/** @type {string} */ (config['wps']));
+
   if (config['parseOperationURLs'] !== undefined) {
     this.parseOperationURLs_ = /** @type {boolean} */ (config['parseOperationURLs']);
   }
@@ -493,10 +633,12 @@ os.ui.ogc.OGCServer.prototype.load = function(opt_ping) {
   this.setChildren(null);
 
   this.wmsDone_ = false;
+  this.wmtsDone_ = false;
   this.wfsDone_ = false;
   this.pendingAlternateTests_ = 0;
 
   this.loadWmsCapabilities();
+  this.loadWmtsCapabilities();
   this.loadWfsCapabilities();
 };
 
@@ -506,7 +648,7 @@ os.ui.ogc.OGCServer.prototype.load = function(opt_ping) {
  */
 os.ui.ogc.OGCServer.prototype.isLoaded = function() {
   return os.ui.ogc.OGCServer.base(this, 'isLoaded') &&
-      this.wmsDone_ && this.wfsDone_ && this.pendingAlternateTests_ <= 0;
+      this.wmsDone_ && this.wmtsDone_ && this.wfsDone_ && this.pendingAlternateTests_ <= 0;
 };
 
 
@@ -647,6 +789,217 @@ os.ui.ogc.OGCServer.prototype.testWmsUrl = function(url, opt_success, opt_error)
   goog.log.fine(os.ui.ogc.OGCServer.LOGGER_, 'Loading WMS GetCapabilities from URL: ' + uri.toString());
   this.setLoading(true);
   request.load();
+};
+
+
+/**
+ * Updates query data from the WMTS params.
+ *
+ * @param {goog.Uri.QueryData} queryData The query data.
+ * @private
+ */
+os.ui.ogc.OGCServer.prototype.updateWmtsQueryData_ = function(queryData) {
+  queryData.setIgnoreCase(true);
+
+  if (this.wmtsParams_) {
+    queryData.extend(this.wmtsParams_);
+  }
+
+  if (!queryData.containsKey('request')) {
+    queryData.set('request', 'GetCapabilities');
+  }
+
+  if (!queryData.containsKey('service')) {
+    queryData.set('service', 'WMTS');
+  }
+
+  if (!queryData.containsKey('version')) {
+    queryData.set('version', os.ui.ogc.OGCServer.DEFAULT_WMTS_VERSION);
+  }
+};
+
+
+/**
+ * Loads WMTS GetCapabilities from the configured server.
+ *
+ * @protected
+ */
+os.ui.ogc.OGCServer.prototype.loadWmtsCapabilities = function() {
+  var url = this.getOriginalWmtsUrl();
+  if (url) {
+    goog.log.info(os.ui.ogc.OGCServer.LOGGER_, this.getLabel() + ' requesting WMTS GetCapabilities');
+    this.testWmtsUrl(url);
+  } else {
+    this.wmtsDone_ = true;
+    this.finish();
+  }
+};
+
+
+/**
+ * Test a WMTS URL to check if its GetCapabilities is valid.
+ *
+ * @param {string} url The WMTS URL
+ * @param {function(goog.events.Event)=} opt_success The success handler
+ * @param {function(goog.events.Event)=} opt_error The error handler
+ * @protected
+ */
+os.ui.ogc.OGCServer.prototype.testWmtsUrl = function(url, opt_success, opt_error) {
+  var uri = new goog.Uri(url);
+  this.updateWmtsQueryData_(uri.getQueryData());
+
+  var onSuccess = opt_success || this.handleWmtsCapabilities;
+  var onError = opt_error || this.onOGCError;
+
+  var request = new os.net.Request(uri);
+  request.setHeader('Accept', '*/*');
+  request.listen(goog.net.EventType.SUCCESS, onSuccess, false, this);
+  request.listen(goog.net.EventType.ERROR, onError, false, this);
+  request.setValidator(os.ogc.getException);
+
+  goog.log.fine(os.ui.ogc.OGCServer.LOGGER_, 'Loading WMTS GetCapabilities from URL: ' + uri.toString());
+  this.setLoading(true);
+  request.load();
+};
+
+
+/**
+ * @param {goog.events.Event} event
+ * @protected
+ */
+os.ui.ogc.OGCServer.prototype.handleWmtsCapabilities = function(event) {
+  goog.log.info(os.ui.ogc.OGCServer.LOGGER_, this.getLabel() +
+      ' WMTS GetCapabilities request completed. Parsing data...');
+
+  var req = /** @type {os.net.Request} */ (event.target);
+  req.unlisten(goog.net.EventType.SUCCESS, this.handleWmtsCapabilities);
+  req.unlisten(goog.net.EventType.ERROR, this.onOGCError);
+  var response = /** @type {string} */ (req.getResponse());
+
+  this.parseWmtsCapabilities(response, req.getUri().toString());
+};
+
+
+/**
+ * @param {string} response
+ * @param {string} uri
+ */
+os.ui.ogc.OGCServer.prototype.parseWmtsCapabilities = function(response, uri) {
+  var link = '<a target="_blank" href="' + uri + '">WMTS Capabilities</a>';
+  if (response) {
+    var doc = undefined;
+    var result = undefined;
+    try {
+      doc = goog.dom.xml.loadXml(response);
+      result = new ol.format.WMTSCapabilities().read(doc);
+    } catch (e) {
+      this.logError('The response XML for ' + link + ' is invalid!');
+      return;
+    }
+
+    if (result) {
+      if (!this.getLabel()) {
+        try {
+          this.setLabel(/** @type {string} */ (goog.object.getValueByKeys(result, 'ServiceIdentification', 'Title')));
+        } catch (e) {
+        }
+      }
+
+      var serviceAbstract = goog.object.getValueByKeys(result, 'ServiceIdentification', 'Abstract');
+      if (serviceAbstract && typeof serviceAbstract === 'string') {
+        this.abstracts_.push(serviceAbstract);
+      }
+
+      // prune sets in unsupported projections since OL will throw an exception if it can't find the projection
+      var matrixSets = result['Contents']['TileMatrixSet'] = result['Contents']['TileMatrixSet'].filter(
+          function(matrixSet) {
+            // openlayers/src/ol/source/wmts.js is the source for these lines
+            var code = matrixSet['SupportedCRS'];
+            return code && !!(ol.proj.get(code.replace(/urn:ogc:def:crs:(\w+):(.*:)?(\w+)$/, '$1:$3')) ||
+              ol.proj.get(code));
+          });
+
+      var availableSets = matrixSets.reduce(function(map, matrixSet) {
+        map[matrixSet['Identifier']] = true;
+        return map;
+      }, {});
+
+      var layers = goog.object.getValueByKeys(result, 'Contents', 'Layer');
+
+      this.toAdd_ = [];
+      layers.forEach(function(layer) {
+        var id = layer['Identifier'];
+        var fullId = this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + id;
+
+        var hasTimeExtent = 'Dimension' in layer ?
+          ol.array.find(layer['Dimension'], os.ogc.wmts.hasTimeExtent) : false;
+
+        var overrides = {};
+        if (!this.getWmtsDateFormat() && !this.getWmtsTimeFormat()) {
+          os.ogc.wmts.detectDateTimeFormats(layer['Dimension'], overrides);
+        }
+
+        var config = {
+          'id': fullId,
+          'type': os.ogc.LayerType.WMTS,
+          'description': layer['Abstract'],
+          'provider': this.getLabel(),
+          'title': layer['Title'],
+          'extent': layer['WGS84BoundingBox'],
+          'extentProjection': 'EPSG:4326',
+          'layerType': os.layer.LayerType.TILES,
+          'icons': os.ui.Icons.TILES + (hasTimeExtent ? os.ui.Icons.TIME : ''),
+          'animate': hasTimeExtent,
+          'dateFormat': this.getWmtsDateFormat() || null,
+          'timeFormat': this.getWmtsTimeFormat() || null,
+          'delayUpdateActive': true
+        };
+
+        ol.obj.assign(config, overrides);
+
+        // OpenLayers defaults to the first format so get them sorted in our preferred order
+        layer['Format'].sort(os.ogc.wmts.sortFormats);
+
+        var crossOrigin = null;
+        config['wmtsOptions'] = layer['TileMatrixSetLink'].reduce(function(wmtsOptions, setLink) {
+          if (setLink['TileMatrixSet'] in availableSets) {
+            var options = ol.source.WMTS.optionsFromCapabilities(/** @type {!Object} */ (result), {
+              'layer': id,
+              'matrixSet': setLink['TileMatrixSet']
+            });
+            options.crossOrigin = os.net.getCrossOrigin(options.urls[0]);
+            if (!crossOrigin) {
+              crossOrigin = options.crossOrigin;
+            }
+            wmtsOptions.push(options);
+          }
+
+          return wmtsOptions;
+        }, []);
+
+        config['crossOrigin'] = crossOrigin;
+        config['projections'] = config['wmtsOptions'].map(os.ogc.wmts.optionsToProjection);
+
+        if (config['wmtsOptions'].length) {
+          var descriptor = /** @type {os.data.ConfigDescriptor} */ (os.dataManager.getDescriptor(fullId));
+          if (!descriptor) {
+            descriptor = new os.data.ConfigDescriptor();
+          }
+
+          descriptor.setBaseConfig(config);
+          var node = new os.ui.data.DescriptorNode();
+          node.setDescriptor(descriptor);
+          this.toAdd_.push(node);
+          this.addDescriptor(descriptor);
+        }
+      }, this);
+    }
+
+    this.wmtsDone_ = true;
+    this.finish();
+  } else {
+    this.logError(link + ' response is empty!');
+  }
 };
 
 
@@ -1406,7 +1759,7 @@ os.ui.ogc.OGCServer.prototype.findNode_ = function(descriptor, children) {
  * @const
  * @private
  */
-os.ui.ogc.OGCServer.URI_REGEXP_ = /w[mf]s/i;
+os.ui.ogc.OGCServer.URI_REGEXP_ = /(wms|wmts|wfs)/i;
 
 
 /**
@@ -1414,7 +1767,7 @@ os.ui.ogc.OGCServer.URI_REGEXP_ = /w[mf]s/i;
  * @const
  * @private
  */
-os.ui.ogc.OGCServer.CONTENT_REGEXP_ = /W[MF]S_Capabilities/;
+os.ui.ogc.OGCServer.CONTENT_REGEXP_ = /(WMS|WMTS|WFS)_Capabilities/;
 
 
 /**
