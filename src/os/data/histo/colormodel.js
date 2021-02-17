@@ -298,7 +298,7 @@ os.data.histo.ColorModel.prototype.setColorMethod = function(value, opt_bins, op
   }
 
   // update the manual color map
-  if (value == os.data.histo.ColorMethod.MANUAL && goog.isArray(opt_bins) && opt_color) {
+  if (value == os.data.histo.ColorMethod.MANUAL && Array.isArray(opt_bins) && opt_color) {
     for (var i = 0, n = opt_bins.length; i < n; i++) {
       var label = opt_bins[i].getLabel();
       this.binColors_[label] = opt_color;

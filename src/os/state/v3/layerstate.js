@@ -287,7 +287,7 @@ os.state.v3.LayerState.prototype.layerToXML = function(layer, options, opt_exclu
   var type = typeof layerConfig['type'] === 'string' ? layerConfig['type'].toLowerCase() : '';
 
   if (opt_exclusions != null) {
-    var exclusions = goog.isArray(opt_exclusions) ? opt_exclusions : [opt_exclusions];
+    var exclusions = Array.isArray(opt_exclusions) ? opt_exclusions : [opt_exclusions];
     tagExclusions = goog.array.join(tagExclusions, exclusions);
   }
   for (var i = 0, n = tagExclusions.length; i < n; i++) {
@@ -517,7 +517,7 @@ os.state.v3.LayerState.prototype.defaultConfigToXML = function(key, value, layer
     }
 
     os.xml.appendElement(key, layerEl, value);
-  } else if (goog.isArray(value)) {
+  } else if (Array.isArray(value)) {
     var arr = /** @type {Array} */ (value);
     var childName = goog.string.endsWith(key, 's') ? key.substring(0, key.length - 1) : key;
     node = os.xml.appendElement(key, layerEl);
@@ -536,7 +536,7 @@ os.state.v3.LayerState.prototype.defaultConfigToXML = function(key, value, layer
       } catch (e) {
         // don't persist it
       }
-    } else if (goog.isObject(value) && !goog.isFunction(value)) {
+    } else if (goog.isObject(value) && typeof value !== 'function') {
       // plain objects
       // create the node for this key and recurse
       node = os.xml.appendElement(key, layerEl);
@@ -629,7 +629,7 @@ os.state.v3.LayerState.prototype.analyzeOptions = function(options, id) {
       var params = layerOptions['params'];
       if (params) {
         var paramsTypeName = params.get('typename');
-        if (goog.isArray(paramsTypeName)) {
+        if (Array.isArray(paramsTypeName)) {
           typeName = paramsTypeName[0];
         } else {
           typeName = paramsTypeName;

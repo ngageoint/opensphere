@@ -507,7 +507,7 @@ os.time.parseMoment = function(value, formats, opt_utc, opt_strict) {
   var strict = opt_strict !== undefined ? opt_strict : true;
 
   var momentFormats = [];
-  if (goog.isArray(formats)) {
+  if (Array.isArray(formats)) {
     for (var i = 0, n = formats.length; i < n; i++) {
       momentFormats.push(os.time.normalizeFormat_(formats[i]));
     }

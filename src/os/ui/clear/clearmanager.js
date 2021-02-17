@@ -15,7 +15,7 @@ goog.require('os.ui.clear.ClearEntry');
  */
 os.ui.clear.ClearManager = function() {
   /**
-   * @type {goog.debug.Logger}
+   * @type {goog.log.Logger}
    * @private
    */
   this.log_ = os.ui.clear.ClearManager.LOGGER_;
@@ -31,7 +31,7 @@ goog.addSingletonGetter(os.ui.clear.ClearManager);
 
 /**
  * The logger.
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @const
  * @private
  */

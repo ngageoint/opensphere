@@ -353,11 +353,10 @@ plugin.file.shp.SHPParser.prototype.addFields_ = function(feature) {
           value = Boolean(value);
         }
 
-        // TODO: Figure out what else needs to be ported here
-
-        position += field.length;
         feature.set(field.name, value);
       }
+
+      position += field.length;
     }
   }
 };
@@ -398,7 +397,7 @@ plugin.file.shp.SHPParser.prototype.setSource = function(source) {
     return;
   }
 
-  if (goog.isArray(source)) {
+  if (Array.isArray(source)) {
     var i = source.length;
     while (i--) {
       if (source[i] instanceof ArrayBuffer) {
@@ -620,7 +619,11 @@ plugin.file.shp.SHPParser.prototype.setupSHPFile_ = function(source) {
  * @private
  */
 plugin.file.shp.SHPParser.prototype.setupDBFFile_ = function(source) {
-  /*                                                                  Byte
+  /**
+   * The following is for dBASE Versions III Plus, IV, and 5.
+   * @see https://www.loc.gov/preservation/digital/formats/fdd/fdd000325.shtml
+   *
+   *                                                                   Byte
    * Position   Field                          Units         Type      Order
    * Byte 0     Version                        Version       Byte      n/a
    * Byte 1     Year                           Year+1900     Byte      n/a
@@ -644,7 +647,7 @@ plugin.file.shp.SHPParser.prototype.setupDBFFile_ = function(source) {
    *
    * Within Fields
    * Byte 0    Field Name                                    Byte[11]  n/a
-   * Byte 12   Field Type                                    Byte      n/a
+   * Byte 11   Field Type                                    Byte      n/a
    * Byte 16   Field Length                                  Byte      n/a
    */
   var dbf = this.header_ ? this.header_.dbf : null;
@@ -665,7 +668,7 @@ plugin.file.shp.SHPParser.prototype.setupDBFFile_ = function(source) {
       break;
     }
 
-    var type = String.fromCharCode(dv.getUint8(position + 12));
+    var type = String.fromCharCode(dv.getUint8(position + 11));
     var length = dv.getUint8(position + 16);
     name = goog.string.trim(name);
     dbf.fields.push(new plugin.file.shp.data.DBFField(name, type, length));

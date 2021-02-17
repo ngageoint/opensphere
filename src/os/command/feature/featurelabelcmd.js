@@ -37,7 +37,7 @@ os.command.FeatureLabel.prototype.getOldValue = function() {
   var config = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
   var labelColumns = [];
   if (config) {
-    if (goog.isArray(config)) {
+    if (Array.isArray(config)) {
       // locate the label config in the array
       var labelsConfig = ol.array.find(config, os.style.isLabelConfig);
       if (labelsConfig) {

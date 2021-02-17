@@ -45,7 +45,7 @@ ol.source.Image.prototype.loadingDelay_ = null;
  * @inheritDoc
  */
 ol.source.Image.prototype.disposeInternal = function() {
-  ol.source.Image.prototype.disposeInternal.call(this);
+  ol.source.Source.prototype.disposeInternal.call(this);
 
   if (this.loadingDelay_) {
     this.loadingDelay_.dispose();

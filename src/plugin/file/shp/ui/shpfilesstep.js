@@ -208,8 +208,14 @@ plugin.file.shp.ui.SHPFilesStepCtrl.prototype.onFileChange_ = function(event) {
   if (inputEl.files && inputEl.files.length > 0) {
     this['loading'] = true;
 
-    var reader = os.file.createFromFile(inputEl.files[0]);
-    reader.addCallbacks(goog.partial(this.handleResult_, type), goog.partial(this.handleError_, type), this);
+    const file = inputEl.files[0];
+    if (file.path && os.file.FILE_URL_ENABLED) {
+      this[type + 'Name'] = os.file.getFileUrl(file.path);
+      this.loadUrl(type);
+    } else {
+      var reader = os.file.createFromFile(file);
+      reader.addCallbacks(goog.partial(this.handleResult_, type), goog.partial(this.handleError_, type), this);
+    }
   } else {
     this.onClear(type);
   }

@@ -76,7 +76,7 @@ plugin.osm.nom.NominatimSearch.prototype.onSearchSuccess = function(evt) {
     while (parser.hasNext()) {
       var next = parser.parseNext();
       if (next) {
-        if (goog.isArray(next)) {
+        if (Array.isArray(next)) {
           this.results.concat(next.map(function(f) {
             return f ? new plugin.osm.nom.SearchResult(f) : undefined;
           }).filter(os.fn.filterFalsey));
@@ -170,7 +170,7 @@ plugin.osm.nom.feelingLucky = function(term) {
  * @return {ol.Feature|undefined} The parsed feature, or undefined if none could be parsed.
  */
 plugin.osm.nom.parseFirst = function(response) {
-  if (typeof response === 'string' || goog.isArray(response)) {
+  if (typeof response === 'string' || Array.isArray(response)) {
     var parser = new plugin.osm.nom.NominatimParser();
     parser.setSource(response);
 
@@ -180,7 +180,7 @@ plugin.osm.nom.parseFirst = function(response) {
     }
 
     if (next) {
-      return goog.isArray(next) ? next[0] : next;
+      return Array.isArray(next) ? next[0] : next;
     }
   }
 

@@ -43,7 +43,7 @@ os.command.FeatureShape.prototype.applyValue = function(configs, value) {
   feature.set(os.style.StyleField.SHAPE, value);
 
   var config = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
-  if (goog.isArray(config)) {
+  if (Array.isArray(config)) {
     config = config[0];
   }
   if (value == os.style.ShapeType.NONE) {

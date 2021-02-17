@@ -921,11 +921,11 @@ os.ui.layer.VectorLayerUICtrl.prototype.getFillOpacity = function() {
         var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
 
         if (config) {
-          if (goog.isArray(config)) {
+          if (Array.isArray(config)) {
             config = config[0];
           }
           var color = os.style.getConfigColor(config, true, os.style.StyleField.FILL);
-          if (goog.isArray(color) && color.length >= 4) {
+          if (Array.isArray(color) && color.length >= 4) {
             opacity = color[3];
           }
         }

@@ -70,7 +70,7 @@ os.layer.AnimationOverlay = function(opt_options) {
     this.setStyle(options.style);
   }
 
-  if (options.features != null && goog.isArray(options.features)) {
+  if (options.features != null && Array.isArray(options.features)) {
     this.setFeatures(goog.array.clone(options.features));
   }
 
