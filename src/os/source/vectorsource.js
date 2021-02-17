@@ -3713,8 +3713,14 @@ os.source.Vector.prototype.supportsModify = function() {
  */
 os.source.Vector.prototype.getModifyFunction = function() {
   return (originalFeature, modifiedFeature) => {
+    // Replace the geometry on the feature and interpolate the new geometry.
     originalFeature.setGeometry(modifiedFeature.getGeometry());
+    originalFeature.unset(os.interpolate.ORIGINAL_GEOM_FIELD, true);
+    os.interpolate.interpolateFeature(originalFeature);
+
+    // Update the ellipse, if needed.
     os.feature.createEllipse(originalFeature, true);
+
     this.notifyDataChange();
   };
 };
