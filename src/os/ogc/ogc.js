@@ -29,7 +29,19 @@ os.ogc.defaultProjection = 'EPSG:4326';
 os.ogc.LayerType = {
   WFS: 'wfs',
   WMS: 'wms',
+  WMTS: 'wmts',
   WPS: 'wps'
+};
+
+
+/**
+ * Regular expressions to detect OGC GetCapabilities root elements.
+ * @enum {RegExp}
+ */
+os.ogc.GetCapsRootRegexp = {
+  WMS: /^WM(T_M)?S_Capabilities$/i,
+  WMTS: /^Capabilities$/i,
+  WFS: /^WFS_Capabilities$/i
 };
 
 
