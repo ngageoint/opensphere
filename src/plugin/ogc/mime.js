@@ -11,7 +11,7 @@ goog.require('plugin.ogc.GeoServer');
 /**
  * @private
  */
-plugin.ogc.mime.capTest_ = os.file.mime.xml.createDetect(/^W((MT_)?M|F)S_Capabilities$/i, null);
+plugin.ogc.mime.capTest_ = os.file.mime.xml.createDetect(/^(W((MT_)?M|F)S_)?Capabilities$/i, null);
 
 /**
  * @private
