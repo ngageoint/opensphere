@@ -134,15 +134,23 @@ describe('os.ui.ogc.OGCServer', function() {
 
       var d = os.dataManager.getDescriptor('testogc#test-3857-1');
       expect(d).toBeTruthy();
-      expect(d.getLayerOptions()['wmtsOptions'][0]['format']).toBe('image/png');
-      expect(d.getLayerOptions()['wmtsOptions'][0]['urls'][0]).toBe('https://wmts.example.com/ows?');
-      expect(d.getLayerOptions()['projections'][0]).toBe('EPSG:3857');
+
+      var wmtsOptions = d.getWmtsOptions();
+      expect(wmtsOptions).toBeDefined();
+      expect(wmtsOptions.length).toBe(1);
+      expect(wmtsOptions[0]['format']).toBe('image/png');
+      expect(wmtsOptions[0]['urls'][0]).toBe('https://wmts.example.com/ows?');
+      expect(wmtsOptions[0]['projection'].getCode()).toBe('EPSG:3857');
 
       var d = os.dataManager.getDescriptor('testogc#test-4326-1');
       expect(d).toBeTruthy();
-      expect(d.getLayerOptions()['wmtsOptions'][0]['format']).toBe('image/png');
-      expect(d.getLayerOptions()['wmtsOptions'][0]['urls'][0]).toBe('https://wmts.example.com/ows?');
-      expect(d.getLayerOptions()['projections'][0]).toBe('EPSG:4326');
+
+      wmtsOptions = d.getWmtsOptions();
+      expect(wmtsOptions).toBeDefined();
+      expect(wmtsOptions.length).toBe(1);
+      expect(wmtsOptions[0]['format']).toBe('image/png');
+      expect(wmtsOptions[0]['urls'][0]).toBe('https://wmts.example.com/ows?');
+      expect(wmtsOptions[0]['projection'].getCode()).toBe('EPSG:4326');
     });
   });
 });
