@@ -40,6 +40,24 @@ const detectDateTimeFormats = (dimensions, config) => {
 
 
 /**
+ * Get the time key from a set of WMTS dimensions.
+ * @param {Object} dimensions The dimensions.
+ * @return {?string} The key, or null if not found.
+ */
+const getTimeKey = (dimensions) => {
+  if (dimensions) {
+    for (const key in dimensions) {
+      if (/time/i.test(key)) {
+        return key;
+      }
+    }
+  }
+
+  return null;
+};
+
+
+/**
  * If a dimension has a time extent.
  * @param {Object} dimension The dimension.
  * @return {boolean}
@@ -75,6 +93,7 @@ const sortFormats = (a, b) => {
 
 exports = {
   detectDateTimeFormats,
+  getTimeKey,
   hasTimeExtent,
   optionsToProjection,
   sortFormats
