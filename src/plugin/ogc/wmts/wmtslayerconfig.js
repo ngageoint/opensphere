@@ -5,6 +5,7 @@ const olProj = goog.require('ol.proj');
 const WMTSSource = goog.require('ol.source.WMTS');
 const AnimatedTile = goog.require('os.layer.AnimatedTile');
 const AbstractTileLayerConfig = goog.require('os.layer.config.AbstractTileLayerConfig');
+const {getTimeKey} = goog.require('os.ogc.wmts');
 
 
 /**
@@ -77,13 +78,7 @@ class WMTSLayerConfig extends AbstractTileLayerConfig {
 
     // ensure the time key in URL templates matches the case in the dimension set
     if (wmtsOptions.dimensions) {
-      let timeKey;
-      for (const key in wmtsOptions.dimensions) {
-        if (/time/i.test(key)) {
-          timeKey = key;
-        }
-      }
-
+      const timeKey = getTimeKey(wmtsOptions.dimensions);
       if (timeKey) {
         wmtsOptions.urls = wmtsOptions.urls.map((url) => url.replace(/\{time\}/ig, '{' + timeKey + '}'));
       }
@@ -101,8 +96,13 @@ class WMTSLayerConfig extends AbstractTileLayerConfig {
   static timeFunction_(timeValue) {
     const source = /** @type {WMTSSource} */ (this.getSource());
     const dimensions = source.getDimensions();
-    dimensions['time'] = timeValue;
-    source.updateDimensions(dimensions);
+
+    // update the time value if a time key is present in the dimensions
+    const timeKey = getTimeKey(dimensions);
+    if (timeKey) {
+      dimensions[timeKey] = timeValue;
+      source.updateDimensions(dimensions);
+    }
   }
 }
 
