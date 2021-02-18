@@ -220,10 +220,10 @@ os.ui.menu.spatial.setup = function() {
           icons: ['<i class="fa fa-fw fa-edit"></i>'],
           beforeRender: os.ui.menu.spatial.visibleIfCanModify
         }, {
-          label: 'Modify Geometry...',
+          label: 'Modify Freeform...',
           eventType: os.action.EventType.MODIFY_GEOMETRY,
-          tooltip: 'Modify the the geometry',
-          icons: ['<i class="fa fa-fw fa-edit"></i>'],
+          tooltip: 'Modify the geometry with a click-and-drag interaction',
+          icons: ['<i class="fa fa-fw fa-hand-pointer-o"></i>'],
           handler: os.ui.menu.spatial.onMenuEvent,
           beforeRender: os.ui.menu.spatial.visibleIfCanModifyGeometry
         }]
