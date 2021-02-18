@@ -204,6 +204,37 @@ class LayerPresetManager extends Disposable {
       // check the layer configs
       const config1 = meta.selected.layerConfig;
       const config2 = /** @type {ILayer} */ (layer).persist();
+
+      // "basic" preset doesn't have all the details of a real layer
+      if (meta.selected.id == OsLayerPreset.DEFAULT_PRESET_ID) {
+        config2['icon'] = null;
+        delete config2['colorModel'];
+        delete config2['replaceStyle'];
+        delete config2['showRotation'];
+      }
+
+      // TODO remove this after fixing the "layer.restore()" to treat -no value- as a "clear"
+      // if not applying a new "border" style or "unique identifier", ignore the current one
+      if (!config1['lineDash']) {
+        delete config2['lineDash'];
+      }
+      if (!config1['uniqueId']) {
+        delete config2['uniqueId'];
+      }
+      if (!config1['threshold'] && config2['threshold']) {
+        delete config2['ageOffActive'];
+        delete config2['ageOffTime'];
+        delete config2['lateData'];
+        delete config2['lateDataMillis'];
+        delete config2['play'];
+        delete config2['sound'];
+        delete config2['streamBinCreateTracks'];
+        delete config2['streamBins'];
+        delete config2['streamBinsActive'];
+        delete config2['streamBinSize'];
+        delete config2['threshold'];
+      }
+
       dirty = (JSON.stringify(config1) != JSON.stringify(config2));
 
       // check the active Feature Actions if not dirty yet
