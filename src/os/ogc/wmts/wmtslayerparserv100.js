@@ -1,0 +1,102 @@
+goog.declareModuleId('os.ogc.wmts.WMTSLayerParserV100');
+
+import AbstractWMTSLayerParser from './abstractwmtslayerparser';
+
+const olProj = goog.require('ol.proj');
+const {optionsFromCapabilities} = goog.require('ol.source.WMTS');
+const {detectDateTimeFormats, sortFormats} = goog.require('os.ogc.wmts');
+const {getCrossOrigin} = goog.require('os.net');
+
+
+/**
+ * WMTS 1.0.0 layer parser.
+ */
+export default class WMTSLayerParserV100 extends AbstractWMTSLayerParser {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * Tile matrix sets.
+     * @type {!Object<string, boolean>}
+     * @protected
+     */
+    this.tileMatrixSets = {};
+  }
+
+  /**
+   * @inheritDoc
+   */
+  parseLayer(capabilities, layer, descriptor) {
+    if (capabilities && layer && descriptor) {
+      const title = /** @type {string} */ (layer['Title']);
+      if (title) {
+        descriptor.setTitle(title);
+      }
+
+      const description = /** @type {string} */ (layer['Abstract']);
+      if (description) {
+        descriptor.setDescription(description);
+      }
+
+      const dateTimeFormats = detectDateTimeFormats(layer['Dimension']);
+      if (dateTimeFormats.dateFormat) {
+        descriptor.setWmtsDateFormat(dateTimeFormats.dateFormat);
+      }
+      if (dateTimeFormats.timeFormat) {
+        descriptor.setWmtsTimeFormat(dateTimeFormats.timeFormat);
+      }
+
+      const bbox = /** @type {ol.Extent} */ (layer['WGS84BoundingBox']);
+      if (bbox && bbox.length === 4) {
+        descriptor.setBBox(bbox);
+      }
+
+      // OpenLayers defaults to the first format so get them sorted in our preferred order
+      layer['Format'].sort(sortFormats);
+
+      const id = this.parseLayerId(layer);
+      const wmtsOptions = layer['TileMatrixSetLink'].reduce((wmtsOptions, setLink) => {
+        if (id && setLink['TileMatrixSet'] in this.tileMatrixSets) {
+          const options = optionsFromCapabilities(capabilities, {
+            'layer': id,
+            'matrixSet': setLink['TileMatrixSet']
+          });
+          options.crossOrigin = getCrossOrigin(options.urls[0]);
+          wmtsOptions.push(options);
+        }
+
+        return wmtsOptions;
+      }, []);
+
+      if (wmtsOptions.length) {
+        descriptor.setWmtsOptions(wmtsOptions);
+      }
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  parseTileMatrixSets(capabilities) {
+    this.tileMatrixSets = {};
+
+    if (capabilities && capabilities['Contents'] && capabilities['Contents']['TileMatrixSet']) {
+      const tileMatrixSet = /** @type {!Array} */ (capabilities['Contents']['TileMatrixSet']);
+
+      // add sets in supported projections since OL will throw an exception if it can't find the projection
+      tileMatrixSet.forEach((matrixSet) => {
+        // openlayers/src/ol/source/wmts.js is the source for these lines
+        const code = matrixSet['SupportedCRS'];
+        if (code && !!(olProj.get(code.replace(/urn:ogc:def:crs:(\w+):(.*:)?(\w+)$/, '$1:$3')) || olProj.get(code))) {
+          const identifier = /** @type {string} */ (matrixSet['Identifier']);
+          if (identifier) {
+            this.tileMatrixSets[identifier] = true;
+          }
+        }
+      });
+    }
+  }
+}

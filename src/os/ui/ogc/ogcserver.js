@@ -7,31 +7,26 @@ goog.require('goog.dom');
 goog.require('goog.dom.xml');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
-goog.require('ol.array');
 goog.require('ol.format.WMSCapabilities');
 goog.require('ol.format.WMTSCapabilities');
 goog.require('ol.format.XLink');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
 goog.require('os.color');
-goog.require('os.data.ConfigDescriptor');
-goog.require('os.data.DataProviderEvent');
-goog.require('os.data.DataProviderEventType');
 goog.require('os.data.IDataProvider');
 goog.require('os.file');
-goog.require('os.layer.LayerType');
-goog.require('os.net.HandlerType');
 goog.require('os.net.Request');
 goog.require('os.ogc');
 goog.require('os.ogc.LayerType');
 goog.require('os.ogc.wmts');
-goog.require('os.ui.Icons');
+goog.require('os.ogc.wmts.WMTSLayerParsers');
 goog.require('os.ui.data.DescriptorNode');
-goog.require('os.ui.ogc.wms.IWMSLayerParser');
 goog.require('os.ui.ogc.wms.LayerParsers');
 goog.require('os.ui.server.AbstractLoadingServer');
 goog.require('os.ui.slick.SlickTreeNode');
 goog.require('os.ui.util.deprecated');
+
+goog.requireType('os.ui.ogc.wms.IWMSLayerParser');
 
 
 /**
@@ -56,7 +51,7 @@ os.ui.ogc.OGCServer = function() {
   this.providerType = os.ogc.ID;
 
   /**
-   * @type {Array.<string>}
+   * @type {Array<string>}
    * @private
    */
   this.abstracts_ = [];
@@ -81,10 +76,10 @@ os.ui.ogc.OGCServer = function() {
   this.wfsOnlyFolder = new os.ui.slick.SlickTreeNode();
 
   /**
-   * @type {?Array.<!os.ui.slick.SlickTreeNode>}
+   * @type {!Array<!os.structs.ITreeNode>}
    * @private
    */
-  this.toAdd_ = null;
+  this.toAdd_ = [];
 
   /**
    * @type {boolean}
@@ -109,6 +104,13 @@ os.ui.ogc.OGCServer = function() {
    * @private
    */
   this.originalWmtsUrl_ = '';
+
+  /**
+   * If WMTS is preferred over WMS, when both are available.
+   * @type {boolean}
+   * @private
+   */
+  this.wmtsPreferred_ = false;
 
   /**
    * @type {goog.Uri.QueryData}
@@ -157,6 +159,13 @@ os.ui.ogc.OGCServer = function() {
    * @private
    */
   this.wmsUrl_ = '';
+
+  /**
+   * The WMTS capabilities document.
+   * @type {Object}
+   * @private
+   */
+  this.wmtsCapabilities_ = null;
 
   /**
    * @type {goog.Uri.QueryData}
@@ -253,7 +262,7 @@ os.ui.ogc.OGCServer.DEFAULT_COLOR = 'rgba(255,255,255,1)';
 
 
 /**
- * @return {Array.<string>}
+ * @return {Array<string>}
  */
 os.ui.ogc.OGCServer.prototype.getAbstracts = function() {
   return this.abstracts_;
@@ -321,6 +330,24 @@ os.ui.ogc.OGCServer.prototype.getOriginalWmtsUrl = function() {
  */
 os.ui.ogc.OGCServer.prototype.setOriginalWmtsUrl = function(value) {
   this.originalWmtsUrl_ = value;
+};
+
+
+/**
+ * If WMTS is preferred over WMS, when both are available.
+ * @return {boolean}
+ */
+os.ui.ogc.OGCServer.prototype.isWmtsPreferred = function() {
+  return this.wmtsPreferred_;
+};
+
+
+/**
+ * Set if WMTS is preferred over WMS, when both are available.
+ * @param {boolean} value
+ */
+os.ui.ogc.OGCServer.prototype.setWmtsPreferred = function(value) {
+  this.wmtsPreferred_ = value;
 };
 
 
@@ -557,6 +584,9 @@ os.ui.ogc.OGCServer.prototype.configure = function(config) {
   var wmtsParams = /** @type {string|undefined} */ (config['wmtsParams']);
   this.setWmtsParams(wmtsParams ? new goog.Uri.QueryData(wmtsParams) : null);
 
+  // default to using WMS
+  this.setWmtsPreferred(!!config['wmtsPreferred']);
+
   this.setWfsUrl(/** @type {string} */ (config['wfs']));
   this.setOriginalWfsUrl(/** @type {string} */ (config['wfs']));
 
@@ -602,9 +632,9 @@ os.ui.ogc.OGCServer.prototype.configure = function(config) {
  */
 os.ui.ogc.OGCServer.prototype.finish = function() {
   if (this.isLoaded()) {
-    if (this.toAdd_) {
+    if (this.toAdd_.length) {
       this.addChildren(this.toAdd_);
-      this.toAdd_ = null;
+      this.toAdd_.length = 0;
 
       this.addParentTags_(this);
     }
@@ -619,7 +649,7 @@ os.ui.ogc.OGCServer.prototype.finish = function() {
       this.markAllDescriptors();
     }
 
-    os.ui.ogc.OGCServer.superClass_.finish.call(this);
+    os.ui.ogc.OGCServer.base(this, 'finish');
   }
 };
 
@@ -631,6 +661,8 @@ os.ui.ogc.OGCServer.prototype.load = function(opt_ping) {
   os.ui.ogc.OGCServer.base(this, 'load', opt_ping);
 
   this.setChildren(null);
+  this.toAdd_.length = 0;
+  this.wmtsCapabilities_ = null;
 
   this.wmsDone_ = false;
   this.wmtsDone_ = false;
@@ -881,17 +913,19 @@ os.ui.ogc.OGCServer.prototype.handleWmtsCapabilities = function(event) {
 
 
 /**
- * @param {string} response
- * @param {string} uri
+ * Parse the WMTS GetCapabilities document.
+ * @param {string} response The WMTS capabilities response.
+ * @param {string} uri The WMTS URI.
+ * @protected
  */
 os.ui.ogc.OGCServer.prototype.parseWmtsCapabilities = function(response, uri) {
-  var link = '<a target="_blank" href="' + uri + '">WMTS Capabilities</a>';
+  const link = '<a target="_blank" href="' + uri + '">WMTS Capabilities</a>';
   if (response) {
-    var doc = undefined;
-    var result = undefined;
+    let doc = undefined;
+    let result = undefined;
     try {
       doc = goog.dom.xml.loadXml(response);
-      result = new ol.format.WMTSCapabilities().read(doc);
+      result = /** @type {Object} */ (new ol.format.WMTSCapabilities().read(doc));
     } catch (e) {
       this.logError('The response XML for ' + link + ' is invalid!');
       return;
@@ -905,101 +939,99 @@ os.ui.ogc.OGCServer.prototype.parseWmtsCapabilities = function(response, uri) {
         }
       }
 
-      var serviceAbstract = goog.object.getValueByKeys(result, 'ServiceIdentification', 'Abstract');
+      const serviceAbstract = goog.object.getValueByKeys(result, 'ServiceIdentification', 'Abstract');
       if (serviceAbstract && typeof serviceAbstract === 'string') {
         this.abstracts_.push(serviceAbstract);
       }
 
-      // prune sets in unsupported projections since OL will throw an exception if it can't find the projection
-      var matrixSets = result['Contents']['TileMatrixSet'] = result['Contents']['TileMatrixSet'].filter(
-          function(matrixSet) {
-            // openlayers/src/ol/source/wmts.js is the source for these lines
-            var code = matrixSet['SupportedCRS'];
-            return code && !!(ol.proj.get(code.replace(/urn:ogc:def:crs:(\w+):(.*:)?(\w+)$/, '$1:$3')) ||
-              ol.proj.get(code));
-          });
+      const version = /** @type {string} */ (result['version']);
+      const parserClass = os.ogc.wmts.WMTSLayerParsers[version] ||
+          os.ogc.wmts.WMTSLayerParsers[os.ui.ogc.OGCServer.DEFAULT_WMTS_VERSION];
 
-      var availableSets = matrixSets.reduce(function(map, matrixSet) {
-        map[matrixSet['Identifier']] = true;
-        return map;
-      }, {});
+      this.wmtsLayerParser_ = new parserClass();
+      this.wmtsLayerParser_.parseTileMatrixSets(result);
 
-      var layers = goog.object.getValueByKeys(result, 'Contents', 'Layer');
-
-      this.toAdd_ = [];
-      layers.forEach(function(layer) {
-        var id = layer['Identifier'];
-        var fullId = this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + id;
-
-        var hasTimeExtent = 'Dimension' in layer ?
-          ol.array.find(layer['Dimension'], os.ogc.wmts.hasTimeExtent) : false;
-
-        var overrides = {};
-        if (!this.getWmtsDateFormat() && !this.getWmtsTimeFormat()) {
-          os.ogc.wmts.detectDateTimeFormats(layer['Dimension'], overrides);
-        }
-
-        var config = {
-          'id': fullId,
-          'type': os.ogc.LayerType.WMTS,
-          'description': layer['Abstract'],
-          'provider': this.getLabel(),
-          'title': layer['Title'],
-          'extent': layer['WGS84BoundingBox'],
-          'extentProjection': 'EPSG:4326',
-          'layerType': os.layer.LayerType.TILES,
-          'icons': os.ui.Icons.TILES + (hasTimeExtent ? os.ui.Icons.TIME : ''),
-          'animate': hasTimeExtent,
-          'dateFormat': this.getWmtsDateFormat() || null,
-          'timeFormat': this.getWmtsTimeFormat() || null,
-          'delayUpdateActive': true
-        };
-
-        ol.obj.assign(config, overrides);
-
-        // OpenLayers defaults to the first format so get them sorted in our preferred order
-        layer['Format'].sort(os.ogc.wmts.sortFormats);
-
-        var crossOrigin = null;
-        config['wmtsOptions'] = layer['TileMatrixSetLink'].reduce(function(wmtsOptions, setLink) {
-          if (setLink['TileMatrixSet'] in availableSets) {
-            var options = ol.source.WMTS.optionsFromCapabilities(/** @type {!Object} */ (result), {
-              'layer': id,
-              'matrixSet': setLink['TileMatrixSet']
-            });
-            options.crossOrigin = os.net.getCrossOrigin(options.urls[0]);
-            if (!crossOrigin) {
-              crossOrigin = options.crossOrigin;
-            }
-            wmtsOptions.push(options);
-          }
-
-          return wmtsOptions;
-        }, []);
-
-        config['crossOrigin'] = crossOrigin;
-        config['projections'] = config['wmtsOptions'].map(os.ogc.wmts.optionsToProjection);
-
-        if (config['wmtsOptions'].length) {
-          var descriptor = /** @type {os.data.ConfigDescriptor} */ (os.dataManager.getDescriptor(fullId));
-          if (!descriptor) {
-            descriptor = new os.data.ConfigDescriptor();
-          }
-
-          descriptor.setBaseConfig(config);
-          var node = new os.ui.data.DescriptorNode();
-          node.setDescriptor(descriptor);
-          this.toAdd_.push(node);
-          this.addDescriptor(descriptor);
-        }
-      }, this);
+      // parse WMTS layers after WMS has completed, so WMTS can update descriptors as needed.
+      if (this.wmsDone_) {
+        this.parseWmtsLayers(result);
+      } else {
+        this.wmtsCapabilities_ = result;
+      }
+    } else {
+      this.wmtsDone_ = true;
+      this.finish();
     }
-
-    this.wmtsDone_ = true;
-    this.finish();
   } else {
     this.logError(link + ' response is empty!');
   }
+};
+
+
+/**
+ * Parse WMTS layers from the capabilities document.
+ * @param {!Object} capabilities The capabilities document.
+ * @protected
+ */
+os.ui.ogc.OGCServer.prototype.parseWmtsLayers = function(capabilities) {
+  const layers = goog.object.getValueByKeys(capabilities, 'Contents', 'Layer');
+  layers.forEach((layer) => {
+    // check if the descriptor already exists
+    let existing;
+    let descriptorId;
+
+    const layerId = this.wmtsLayerParser_.parseLayerId(layer);
+    if (layerId) {
+      descriptorId = this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + layerId;
+      existing = /** @type {os.ui.ogc.IOGCDescriptor} */ (os.dataManager.getDescriptor(descriptorId));
+    }
+
+    if (!existing) {
+      const title = this.wmtsLayerParser_.parseLayerTitle(layer);
+      existing = title ? this.getDescriptorByTitle(title) : undefined;
+    }
+
+    let layerDescriptor;
+
+    // if the existing descriptor does not implement IOGCDescriptor, it will not be compatible with following code and
+    // must be recreated. this may happen if an old WMTS-only descriptor is present.
+    if (existing && os.implements(existing, os.ui.ogc.IOGCDescriptor.ID)) {
+      layerDescriptor = existing;
+      this.removeFromWfsOnly(existing);
+    } else if (descriptorId) {
+      layerDescriptor = this.createDescriptor();
+      layerDescriptor.setId(descriptorId);
+      layerDescriptor.setProvider(this.getLabel());
+      layerDescriptor.setProviderType(this.providerType);
+    }
+
+    this.wmtsLayerParser_.parseLayer(capabilities, layer, layerDescriptor);
+
+    if (this.isValidWMTSLayer(layerDescriptor)) {
+      layerDescriptor.setWmtsEnabled(true);
+
+      // override the date/time formats if set on the server
+      if (!layerDescriptor.getWmtsDateFormat()) {
+        layerDescriptor.setWmtsDateFormat(this.getWmtsDateFormat());
+      }
+      if (!layerDescriptor.getWmtsTimeFormat()) {
+        layerDescriptor.setWmtsTimeFormat(this.getWmtsTimeFormat());
+      }
+
+      if (layerDescriptor.isWmsEnabled()) {
+        layerDescriptor.setWmsEnabled(false);
+      } else {
+        this.addDescriptor(layerDescriptor);
+
+        const node = new os.ui.data.DescriptorNode();
+        node.setDescriptor(layerDescriptor);
+        this.toAdd_.push(node);
+      }
+    }
+  });
+
+  this.wmtsCapabilities_ = null;
+  this.wmtsDone_ = true;
+  this.finish();
 };
 
 
@@ -1134,8 +1166,6 @@ os.ui.ogc.OGCServer.prototype.parseWmsCapabilities = function(response, uri) {
           layerList = layerList['Layer'];
         }
 
-        this.toAdd_ = [];
-
         for (var i = 0, n = layerList.length; i < n; i++) {
           var child = this.parseLayer(layerList[i], version, crsList);
           if (child) {
@@ -1143,6 +1173,11 @@ os.ui.ogc.OGCServer.prototype.parseWmsCapabilities = function(response, uri) {
           }
         }
       }
+    }
+
+    // if the WMTS capabilities document hasn't been parsed yet, do so now.
+    if (this.wmtsCapabilities_) {
+      this.parseWmtsLayers(this.wmtsCapabilities_);
     }
 
     this.wmsDone_ = true;
@@ -1352,7 +1387,7 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
       descriptor.setWfsNamespace(nameSpace);
       descriptor.setWfsFormats(this.getWfsFormats());
 
-      if (!descriptor.isWmsEnabled()) {
+      if (!descriptor.isWmsEnabled() && !descriptor.isWmtsEnabled()) {
         node = new os.ui.data.DescriptorNode();
         node.setDescriptor(descriptor);
 
@@ -1398,7 +1433,7 @@ os.ui.ogc.OGCServer.prototype.getDescriptorByTitle = function(title) {
       var desc = list[i];
 
       if (desc.getDescriptorType() === os.ogc.ID && desc.getTitle() == title &&
-          (desc.isWmsEnabled() || desc.isWfsEnabled())) {
+          (desc.isWmsEnabled() || desc.isWmtsEnabled() || desc.isWfsEnabled())) {
         return list[i];
       }
     }
@@ -1462,6 +1497,26 @@ os.ui.ogc.OGCServer.prototype.logError = function(msg) {
 
 
 /**
+ * Remove a descriptor from the WFS-only folder, if present.
+ * @param {os.ui.ogc.IOGCDescriptor} descriptor The descriptor.
+ * @protected
+ */
+os.ui.ogc.OGCServer.prototype.removeFromWfsOnly = function(descriptor) {
+  if (descriptor) {
+    var children = this.wfsOnlyFolder.getChildren();
+    if (children) {
+      for (var i = 0, n = children.length; i < n; i++) {
+        if (children[i].getId() == descriptor.getId()) {
+          this.wfsOnlyFolder.removeChild(children[i]);
+          break;
+        }
+      }
+    }
+  }
+};
+
+
+/**
  * @param {Object} node
  * @param {string} version
  * @param {undefined|Array<!string>|null} crsList
@@ -1489,17 +1544,7 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
       }
     }
 
-    if (existing) {
-      var children = this.wfsOnlyFolder.getChildren();
-      if (children) {
-        for (var i = 0, n = children.length; i < n; i++) {
-          if (children[i].getId() == existing.getId()) {
-            this.wfsOnlyFolder.removeChild(children[i]);
-            break;
-          }
-        }
-      }
-    }
+    this.removeFromWfsOnly(existing);
 
     // parse the layer on top of the existing descriptor, or a new one if it wasn't found
     var layerDescriptor = existing || this.createDescriptor();
@@ -1518,9 +1563,7 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
     var isFolder = false;
     if (this.isValidWMSLayer(layerDescriptor)) {
       // node is a wms layer
-      layer = new os.ui.data.DescriptorNode();
       var name = layerDescriptor.getWmsName();
-
       if (name && name != 'IWMSLayer') {
         if (layerDescriptor.hasTimeExtent()) {
           // TODO: Does the server node need min/max date?
@@ -1545,14 +1588,14 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
 
         this.addDescriptor(layerDescriptor);
 
-        // add the complete descriptor to the layer
+        layer = new os.ui.data.DescriptorNode();
         layer.setDescriptor(layerDescriptor);
       } else {
         isFolder = true;
       }
     }
 
-    if ('Layer' in node) {
+    if (!layer && 'Layer' in node) {
       // node is a folder
       isFolder = true;
       layer = new os.ui.slick.SlickTreeNode();
@@ -1565,7 +1608,7 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
         childList = [childList];
       }
 
-      for (i = 0, n = childList.length; i < n; i++) {
+      for (var i = 0, n = childList.length; i < n; i++) {
         var child = this.parseLayer(childList[i], version, newCRSList, opt_attribution);
         if (child) {
           layer.addChild(child);
@@ -1574,7 +1617,7 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
     }
 
     if (isFolder) {
-      children = layer.getChildren();
+      var children = layer.getChildren();
       if (!children || children.length === 0) {
         return null;
       }
@@ -1591,6 +1634,22 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
  */
 os.ui.ogc.OGCServer.prototype.isValidWMSLayer = function(layerDescriptor) {
   return !layerDescriptor.getOpaque();
+};
+
+
+/**
+ * If WMTS should be enabled for a descriptor.
+ * @param {os.ui.ogc.IOGCDescriptor|undefined} descriptor The descriptor.
+ * @return {boolean}
+ * @protected
+ */
+os.ui.ogc.OGCServer.prototype.isValidWMTSLayer = function(descriptor) {
+  if (descriptor && (this.isWmtsPreferred() || !descriptor.isWmsEnabled())) {
+    const wmtsOptions = descriptor.getWmtsOptions();
+    return !!wmtsOptions && wmtsOptions.length > 0;
+  }
+
+  return false;
 };
 
 
@@ -1621,7 +1680,7 @@ os.ui.ogc.OGCServer.prototype.addFolder = function(folder) {
 
 /**
  * @param {os.structs.ITreeNode} node
- * @param {Array.<string>=} opt_tags
+ * @param {Array<string>=} opt_tags
  * @private
  */
 os.ui.ogc.OGCServer.prototype.addParentTags_ = function(node, opt_tags) {
@@ -1658,7 +1717,7 @@ os.ui.ogc.OGCServer.prototype.addParentTags_ = function(node, opt_tags) {
         var keywords = descriptor.getKeywords();
         for (i = 0, n = opt_tags.length; i < n; i++) {
           var tag = opt_tags[i];
-          if (!ol.array.includes(keywords, tag)) {
+          if (!keywords.includes(tag)) {
             keywords.push(tag);
           }
         }
@@ -1728,7 +1787,7 @@ os.ui.ogc.OGCServer.prototype.removeDescriptor = function(descriptor) {
 
 /**
  * @param {os.ui.ogc.IOGCDescriptor} descriptor
- * @param {?Array.<!os.structs.ITreeNode>} children
+ * @param {?Array<!os.structs.ITreeNode>} children
  * @return {?os.structs.ITreeNode}
  * @private
  */

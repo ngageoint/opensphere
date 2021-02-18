@@ -12,11 +12,25 @@ const preferredFormats = ['image/vnd.jpeg-png', 'image/png', 'image/jpeg'];
 
 
 /**
+ * @typedef {{
+ *   dateFormat: string,
+ *   timeFormat: string
+ * }}
+ */
+let WMTSDateTimeFormats;
+
+
+/**
  * Detect WMTS date/time formats.
  * @param {Array<Object>} dimensions Dimensions from the capabilities document.
- * @param {Object<string, *>} config The WMTS config object.
+ * @return {!WMTSDateTimeFormats} config The WMTS config object.
  */
-const detectDateTimeFormats = (dimensions, config) => {
+const detectDateTimeFormats = (dimensions) => {
+  const result = {
+    dateFormat: '',
+    timeFormat: ''
+  };
+
   if (dimensions) {
     const timeDimension = dimensions.find(hasTimeExtent);
     if (timeDimension) {
@@ -31,11 +45,13 @@ const detectDateTimeFormats = (dimensions, config) => {
           timeFormat += '/{end}';
         }
 
-        config['dateFormat'] = DATETIME_FORMATS[0].substring(0, defaultValue.length);
-        config['timeFormat'] = timeFormat;
+        result.dateFormat = DATETIME_FORMATS[0].substring(0, defaultValue.length);
+        result.timeFormat = timeFormat;
       }
     }
   }
+
+  return result;
 };
 
 
@@ -92,6 +108,7 @@ const sortFormats = (a, b) => {
 
 
 exports = {
+  WMTSDateTimeFormats,
   detectDateTimeFormats,
   getTimeKey,
   hasTimeExtent,
