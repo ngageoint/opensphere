@@ -382,7 +382,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.loadPresets = function() {
               }, this);
             }
 
-            // set the current selection, with priority as current > settings > first
+            // set the current selection for the UI
             this['preset'] = settingsPreset || currentPreset || presets[0];
 
             var isCleanPreset = os.layer.preset.getSavedPresetClean(id);

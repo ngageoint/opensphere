@@ -106,7 +106,7 @@ class LayerPresetManager extends Disposable {
   }
 
   /**
-   * Handle layer removed the map.
+   * Handle when layer removed from the map.
    * @param {!LayerEvent} event The layer event.
    * @protected
    */
