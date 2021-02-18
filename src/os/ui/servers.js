@@ -73,7 +73,7 @@ os.ui.ServersCtrl = function($scope) {
 /**
  * The logger.
  * @const
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @private
  */
 os.ui.ServersCtrl.LOGGER_ = goog.log.getLogger('os.ui.ServersCtrl');

@@ -69,7 +69,7 @@ plugin.file.gml.GMLParser.prototype.parsePreview = function(source, opt_mappings
   while (this.hasNext() && count--) {
     var featureSet = this.parseNext();
 
-    if (goog.isArray(featureSet)) {
+    if (Array.isArray(featureSet)) {
       for (var i = 0, n = featureSet.length; i < n; i++) {
         var feature = featureSet[i];
         feature.setId(String(ol.getUid(feature)));

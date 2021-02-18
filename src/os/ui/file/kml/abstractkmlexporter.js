@@ -123,7 +123,7 @@ os.ui.file.kml.AbstractKMLExporter = function() {
    * @type {os.ui.file.kml.Icon}
    * @private
    */
-  this.defaultIcon_ = /** @type {os.ui.file.kml.Icon} */ (goog.object.clone(os.ui.file.kml.DEFAULT_ICON));
+  this.defaultIcon_ = /** @type {os.ui.file.kml.Icon} */ ({});
 
   /**
    * The icon to use for placemarks.
@@ -166,6 +166,12 @@ os.ui.file.kml.AbstractKMLExporter = function() {
    * @protected
    */
   this.useCenterPoint = false;
+
+  // initial setup
+  this.setDefaultIcon(
+      os.ui.file.kml.DEFAULT_ICON.href,
+      os.ui.file.kml.DEFAULT_ICON.scale,
+      os.ui.file.kml.DEFAULT_ICON.options);
 };
 goog.inherits(os.ui.file.kml.AbstractKMLExporter, os.ex.ZipExporter);
 
