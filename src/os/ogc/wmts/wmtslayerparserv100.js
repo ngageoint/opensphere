@@ -29,6 +29,13 @@ export default class WMTSLayerParserV100 extends AbstractWMTSLayerParser {
   /**
    * @inheritDoc
    */
+  initialize(capabilities) {
+    this.parseTileMatrixSets(capabilities);
+  }
+
+  /**
+   * @inheritDoc
+   */
   parseLayer(capabilities, layer, descriptor) {
     if (capabilities && layer && descriptor) {
       const title = /** @type {string} */ (layer['Title']);
@@ -78,7 +85,9 @@ export default class WMTSLayerParserV100 extends AbstractWMTSLayerParser {
   }
 
   /**
-   * @inheritDoc
+   * Parse tile matrix sets.
+   * @param {Object} capabilities The WMTS capabilities object.
+   * @protected
    */
   parseTileMatrixSets(capabilities) {
     this.tileMatrixSets = {};
