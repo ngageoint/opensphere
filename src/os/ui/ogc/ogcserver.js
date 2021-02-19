@@ -949,7 +949,7 @@ os.ui.ogc.OGCServer.prototype.parseWmtsCapabilities = function(response, uri) {
           os.ogc.wmts.WMTSLayerParsers[os.ui.ogc.OGCServer.DEFAULT_WMTS_VERSION];
 
       this.wmtsLayerParser_ = new parserClass();
-      this.wmtsLayerParser_.parseTileMatrixSets(result);
+      this.wmtsLayerParser_.initialize(result);
 
       // parse WMTS layers after WMS has completed, so WMTS can update descriptors as needed.
       if (this.wmsDone_) {
