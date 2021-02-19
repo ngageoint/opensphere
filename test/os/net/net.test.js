@@ -50,6 +50,15 @@ describe('os.net', function() {
     expect(os.net.getCrossOrigin(uri2)).toBe(os.net.CrossOrigin.USE_CREDENTIALS);
   });
 
+  it('clears the crossOrigin cache', function() {
+    os.net.resetCrossOriginCache();
+
+    var uri = new goog.Uri('http://somewhere.com');
+    var uri2 = new goog.Uri('https://somewhere.com');
+    expect(os.net.getCrossOrigin(uri)).toBe(os.net.CrossOrigin.ANONYMOUS);
+    expect(os.net.getCrossOrigin(uri2)).toBe(os.net.CrossOrigin.ANONYMOUS);
+  });
+
   it('detects trusted URIs', function() {
     var url1 = 'https://trust.me/';
     var url2 = 'https://trust.me/also/';

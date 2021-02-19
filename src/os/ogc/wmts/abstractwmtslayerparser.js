@@ -18,13 +18,13 @@ export default class AbstractWMTSLayerParser {
    * @inheritDoc
    */
   parseLayerId(layer) {
-    return layer ? /** @type {string} */ (layer['Identifier']) : null;
+    return layer && /** @type {string} */ (layer['Identifier']) || null;
   }
 
   /**
    * @inheritDoc
    */
   parseLayerTitle(layer) {
-    return layer ? /** @type {string} */ (layer['Title']) : null;
+    return layer && /** @type {string} */ (layer['Title']) || null;
   }
 }

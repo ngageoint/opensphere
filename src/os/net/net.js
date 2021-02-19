@@ -93,7 +93,7 @@ os.net.isValidCrossOrigin = function(crossOrigin) {
  * Load the crossOrigin cache from config.
  */
 os.net.loadCrossOriginCache = function() {
-  os.net.crossOriginCache_.length = 0;
+  os.net.resetCrossOriginCache();
 
   var crossOrigin = /** @type {!Object} */ (os.settings.get('crossOrigin', {}));
 
@@ -160,6 +160,14 @@ os.net.registerCrossOrigin = function(pattern, crossOrigin, opt_priority, opt_sk
   if (!opt_skipSort) {
     os.net.crossOriginCache_.sort(os.net.sortCache_);
   }
+};
+
+
+/**
+ * Reset the cross origin cache.
+ */
+os.net.resetCrossOriginCache = function() {
+  os.net.crossOriginCache_.length = 0;
 };
 
 

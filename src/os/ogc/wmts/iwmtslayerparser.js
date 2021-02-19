@@ -10,27 +10,30 @@ const IOGCDescriptor = goog.requireType('os.ui.ogc.IOGCDescriptor');
  */
 export default class IWMTSLayerParser {
   /**
-   * @param {Object} layer
+   * Initialize the parser from the WMTS capabilities object.
+   * @param {Object} capabilities The WMTS capabilities object.
+   */
+  initialize(capabilities) {}
+
+  /**
+   * Parse the identifier from the Layer object.
+   * @param {Object} layer The Layer object.
    * @return {?string}
    */
   parseLayerId(layer) {}
 
   /**
-   * @param {Object} layer
+   * Parse the title from the Layer object.
+   * @param {Object} layer The Layer object.
    * @return {?string}
    */
   parseLayerTitle(layer) {}
 
   /**
+   * Parse the Layer object and update an OGC descriptor.
    * @param {Object} capabilities The WMTS capabilities object.
    * @param {Object} layer The WMTS layer object.
    * @param {IOGCDescriptor} descriptor The descriptor to update.
    */
   parseLayer(capabilities, layer, descriptor) {}
-
-  /**
-   * Parse tile matrix sets.
-   * @param {Object} capabilities The WMTS capabilities object.
-   */
-  parseTileMatrixSets(capabilities) {}
 }
