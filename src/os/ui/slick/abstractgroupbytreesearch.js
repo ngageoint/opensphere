@@ -79,7 +79,7 @@ os.ui.slick.AbstractGroupByTreeSearch.prototype.searchNodes = function(exp, resu
     }
   }
 
-  this.finalizeSearch(groupBy, results);
+  // this.finalizeSearch(groupBy, results);
 };
 
 

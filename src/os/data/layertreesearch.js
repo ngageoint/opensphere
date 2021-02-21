@@ -127,61 +127,131 @@ os.data.LayerTreeSearch.prototype.fillListFromSearch = function(list) {
  * @private
  */
 os.data.LayerTreeSearch.prototype.makeGroups_ = function(results, parent) {
-  if (results && results.length > 1) {
-    var folders = os.layer.FolderManager.getInstance().getFolders();
-    var resultsClone = results.slice();
+  if (results && results.length > 0) {
+    var foldersArr = os.layer.FolderManager.getInstance().getFolders().filter((f) => f.parentId === parent.getId());
+    var count = results.length;
 
-    if (folders) {
-      var foldersArr = Object.values(folders).filter((f) => f.parentId === parent.getId());
+    if (foldersArr.length > 0) {
       var folderNodeMap = {};
+
+      // goog.array.forEachRight(results, (layerNode, i, arr) => {
+      //   var layerId = layerNode.getId();
+      //   var parentFolder;
+
+      //   /**
+      //    * Recursively build the tree from the folder options saved in FolderManager.
+      //    * @param {osx.layer.FolderOptions} options
+      //    * @param {os.structs.ITreeNode=} opt_nodeToAdd
+      //    */
+      //   var createFolderHierarchy = function(options, opt_nodeToAdd) {
+      //     var folderNode = folderNodeMap[options.id];
+      //     var grandParentOptions = os.layer.FolderManager.getInstance().getFolder(options.parentId);
+
+      //     if (!folderNode) {
+      //       folderNode = new os.data.FolderNode(options);
+      //       folderNodeMap[folderNode.getId()] = folderNode;
+
+      //       if (grandParentOptions) {
+      //         createFolderHierarchy(grandParentOptions, folderNode);
+      //       }
+      //     }
+
+      //     if (opt_nodeToAdd) {
+      //       folderNode.addChild(opt_nodeToAdd);
+      //     }
+
+      //     if (!grandParentOptions && !arr.includes(folderNode)) {
+      //       arr[i] = folderNode;
+      //     }
+
+      //     if (opt_nodeToAdd === layerNode) {
+      //       goog.array.remove(arr, layerNode);
+      //     }
+      //   };
+
+      //   /**
+      //    * Iterates up the tree to construct folders for layers.
+      //    * @param {osx.layer.FolderOptions} options
+      //    */
+      //   var finder = function(options) {
+      //     if (parentFolder) {
+      //       return;
+      //     }
+
+      //     const children = options.children;
+      //     if (children) {
+      //       if (children.includes(layerId)) {
+      //         parentFolder = options;
+      //         createFolderHierarchy(options, layerNode);
+      //         return;
+      //       } else if (!children.length) {
+      //         // add the empty folder
+      //         parentFolder = options;
+      //         createFolderHierarchy(options);
+      //       }
+
+      //       children.forEach(finder);
+
+      //       if (!folderNodeMap[options.id]) {
+      //         var emptyFolder = new os.data.FolderNode(options);
+      //         folderNodeMap[emptyFolder.getId()] = emptyFolder;
+      //         results.push(emptyFolder);
+      //       }
+      //     }
+      //   };
+
+      //   foldersArr.forEach(finder);
+      // });
+
+      // results.reverse();
+
+      const resultsClone = results.slice();
 
       /**
        * Recursively build the tree from the folder options saved in FolderManager.
-       * @param {osx.layer.FolderOptions} parentFolder
-       * @param {os.structs.ITreeNode} parentNode
-       * @param {(string|osx.layer.FolderOptions)} childFolderOrId
+       * @param {(osx.layer.FolderOptions|string)} folder
+       * @param {number} i
+       * @param {Array<(osx.layer.FolderOptions|string)>} arr
        */
-      var fn = (parentFolder, parentNode, childFolderOrId) => {
-        if (typeof childFolderOrId == 'string') {
-          // look for the result
-          var result = resultsClone.find((result) => result.getId() === childFolderOrId);
-          if (result) {
-            var folderNode = folderNodeMap[parentFolder.id];
+      var fn = (folder, i, arr) => {
+        if (typeof folder == 'object') {
+          const folderNode = new os.data.FolderNode(folder);
+          folderNodeMap[folderNode.getId()] = folderNode;
 
-            if (!folderNode) {
-              folderNode = new os.data.FolderNode(parentFolder);
-              folderNodeMap[folderNode.getId()] = folderNode;
-              parentNode.addChild(folderNode);
-            }
+          const parentNode = folderNodeMap[folder.parentId];
+          if (parentNode) {
+            parentNode.addChild(folderNode);
+          } else {
+            parent.addChild(folderNode, undefined, i);
+          }
 
-            folderNode.addChild(result);
-            goog.array.remove(results, result);
+          if (folder.children) {
+            folder.children.forEach((child) => {
+              if (typeof child == 'string') {
+                folderNodeMap[child] = folderNode;
+              }
+            });
           }
         } else {
-          // it's another folder, we need to go deeper
-          var folderNode = folderNodeMap[childFolderOrId.id];
+          const childId = folder;
+          const child = resultsClone.find((layerNode) => layerNode.getId() === childId);
 
-          if (!folderNode) {
-            folderNode = new os.data.FolderNode(childFolderOrId);
-            folderNodeMap[childFolderOrId.id] = folderNode;
-            parentNode.addChild(folderNode);
-          }
+          if (child) {
+            const parentNode = folderNodeMap[child.getId()];
 
-          if (childFolderOrId.children) {
-            childFolderOrId.children.forEach(fn.bind(undefined, childFolderOrId, folderNode));
+            if (parent) {
+              parentNode.addChild(child);
+              goog.array.remove(results, child);
+            }
           }
+        }
+
+        if (folder.children) {
+          folder.children.forEach(fn);
         }
       };
 
-      foldersArr.forEach((folder) => {
-        const folderNode = new os.data.FolderNode(folder);
-        folderNodeMap[folderNode.getId()] = folderNode;
-        parent.addChild(folderNode);
-
-        if (folder.children) {
-          folder.children.forEach(fn.bind(undefined, folder, folderNode));
-        }
-      });
+      foldersArr.forEach(fn);
     }
 
 
@@ -257,7 +327,7 @@ os.data.LayerTreeSearch.prototype.makeGroups_ = function(results, parent) {
       counts[i] = parseInt(counts[i], 10);
 
       if (i === 0) {
-        var ratio = results.length / counts[0];
+        var ratio = count / counts[0];
       }
 
       counts[i] *= ratio;

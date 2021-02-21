@@ -1448,6 +1448,8 @@ os.ui.layer.VectorLayerUICtrl.prototype.onMapView3DChange_ = function(event) {
  */
 os.ui.layer.VectorLayerUICtrl.prototype.disposeInternal = function() {
   os.map.mapContainer.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onMapView3DChange_, false, this);
+  goog.dispose(this.labelSizeChangeDelay);
+
   os.ui.layer.VectorLayerUICtrl.base(this, 'disposeInternal');
 };
 

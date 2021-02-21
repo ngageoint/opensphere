@@ -28,8 +28,8 @@ const createFolder = function(event) {
   const nodes = event.getContext();
   const layers = getLayersFromContext(nodes);
   const fm = FolderManager.getInstance();
-  let layerIds;
-  let parentId;
+  let parentId = '';
+  let layerIds = [];
 
   if (layers) {
     layerIds = layers.map((l) => l.getId());
@@ -38,10 +38,6 @@ const createFolder = function(event) {
     const parent = nodes[0].getParent();
     if (parent) {
       parentId = parent.getId();
-      // const sharedParent = nodes.every((n) => n.getParent().getId() == parentId);
-      // if (!sharedParent) {
-      //   parentId = undefined;
-      // }
     }
   }
 

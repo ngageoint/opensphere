@@ -4,6 +4,7 @@ goog.module.declareLegacyNamespace();
 const {FolderEventType} = goog.require('os.layer.folder');
 const EventTarget = goog.require('goog.events.EventTarget');
 const Settings = goog.require('os.config.Settings');
+const ZOrder = goog.require('os.data.ZOrder');
 
 
 /**
@@ -11,6 +12,22 @@ const Settings = goog.require('os.config.Settings');
  * @type {FolderManager}
  */
 let instance;
+
+
+/**
+ * Sorts options by their current ZOrder state.
+ * @param {osx.layer.FolderOptions|string} options The folder options
+ */
+const sortFromZOrder = (options) => {
+  const zOrder = ZOrder.getInstance();
+  if (options.children) {
+    options.children.sort((a, b) => {
+      const aI = zOrder.getIndex(a);
+      const bI = zOrder.getIndex(b);
+      return bI - aI;
+    });
+  }
+};
 
 
 /**
@@ -25,32 +42,21 @@ class FolderManager extends EventTarget {
 
     /**
      * Map for tracking existing folders.
-     * @type {Object<string, osx.layer.FolderOptions>}
+     * @type {Array<osx.layer.FolderOptions>}
      * @protected
      */
-    this.folderMap = {};
+    this.folders = [];
+
+    ZOrder.getInstance().listen('zOrder:update', this.onZOrderChange, false, this);
 
     this.restore();
   }
 
   /**
-   * Get the global folder manager instance.
-   * @return {FolderManager}
+   * @inheritDoc
    */
-  static getInstance() {
-    if (!instance) {
-      instance = new FolderManager();
-    }
-
-    return instance;
-  }
-
-  /**
-   * Set the global folder manager instance.
-   * @param {!FolderManager} value The FolderManager instance to set.
-   */
-  static setInstance(value) {
-    instance = value;
+  disposeInternal() {
+    ZOrder.getInstance().unlisten('zOrder:update', this.onZOrderChange, false, this);
   }
 
   /**
@@ -58,26 +64,18 @@ class FolderManager extends EventTarget {
    * @param {osx.layer.FolderOptions} options The folder options
    */
   createFolder(options) {
-    if (!options.children) {
-      options.children = [];
-    }
+    const parentFolder = this.getFolder(options.parentId);
+    if (parentFolder) {
+      parentFolder.children.push(options);
 
-    if (options.parentId) {
-      const parentFolder = this.getFolder(options.parentId);
-      if (parentFolder) {
-        parentFolder.children.unshift(options);
-
-        if (options.children) {
-          options.children.forEach((child) => {
-            goog.array.remove(parentFolder.children, child);
-          });
-        }
-      } else {
-        this.folderMap[options.id] = options;
-      }
+      options.children.forEach((child) => {
+        goog.array.remove(parentFolder.children, child);
+      });
     } else {
-      this.folderMap[options.id] = options;
+      this.folders.push(options);
     }
+
+    sortFromZOrder(options);
 
     this.dispatchEvent(FolderEventType.FOLDER_CREATED);
     this.persist();
@@ -88,58 +86,57 @@ class FolderManager extends EventTarget {
    * @param {string} id The folder ID to remove
    */
   removeFolder(id) {
-    if (this.folderMap[id]) {
-      delete this.folderMap[id];
-    } else {
-      const folder = this.getFolder(id);
-      if (folder) {
-        const parent = this.getFolder(folder.parentId);
-        goog.array.remove(parent.children, folder);
+    const folder = this.getFolder(id);
+    let removed = false;
+
+    if (folder) {
+      // check if it has a parent, if so, remove it from there
+      const parent = this.getFolder(folder.parentId);
+      if (parent) {
+        removed = goog.array.remove(parent.children, folder);
+      } else {
+        removed = goog.array.remove(this.folders, folder);
       }
     }
 
-    this.dispatchEvent(FolderEventType.FOLDER_REMOVED);
-    this.persist();
+    if (removed) {
+      this.dispatchEvent(FolderEventType.FOLDER_REMOVED);
+      this.persist();
+    }
   }
 
   /**
    * Gets the folder map.
-   * @return {Object<string, osx.layer.FolderOptions>}
+   * @return {Array<osx.layer.FolderOptions>}
    */
   getFolders() {
-    return this.folderMap;
+    return this.folders;
   }
 
   /**
    * Gets the folder map.
-   * @param {string} id The folder ID to find.
-   * @return {Object<string, osx.layer.FolderOptions>}
+   * @param {?string} id The folder ID to find.
+   * @return {osx.layer.FolderOptions}
    */
   getFolder(id) {
-    let folder = this.folderMap[id];
+    let folder;
 
-    if (!folder) {
-      const finder = function(options) {
-        if (folder) {
-          return;
-        }
+    const finder = function(options) {
+      if (folder) {
+        return;
+      }
 
-        if (options.id == id) {
-          folder = options;
-          return;
-        }
+      if (options.id == id) {
+        folder = options;
+        return;
+      }
 
-        const children = options.children;
-        if (children) {
-          children.forEach(finder);
-        }
-      };
-
-      for (const key in this.folderMap) {
-        const options = this.folderMap[key];
+      if (options.children) {
         options.children.forEach(finder);
       }
-    }
+    };
+
+    this.folders.forEach(finder);
 
     return folder;
   }
@@ -154,7 +151,6 @@ class FolderManager extends EventTarget {
     this.removeFolder(options.id);
     options.name = name;
     this.createFolder(options);
-    // this.dispatchEvent(FolderEventType.FOLDER_CREATED);
   }
 
   /**
@@ -181,18 +177,53 @@ class FolderManager extends EventTarget {
   }
 
   /**
+   * Handler for Z-Order update events.
+   */
+  onZOrderChange() {
+    const updateSort = (folder) => {
+      sortFromZOrder(folder);
+      if (folder.children) {
+        folder.children.forEach(updateSort);
+      }
+    };
+
+    // this.folders.sort(sortFromZOrder);
+    this.folders.forEach(updateSort);
+    this.dispatchEvent(FolderEventType.FOLDER_CREATED);
+  }
+
+  /**
    * Saves the folders to settings.
    */
   persist() {
-    Settings.getInstance().set('layers.folders', this.folderMap);
+    Settings.getInstance().set('layers.folders', this.folders);
   }
 
   /**
    * Restores the settings.
    */
   restore() {
-    this.folderMap = /** @type {Object<string, osx.layer.FolderOptions>} */
-        (Settings.getInstance().get('layers.folders', {}));
+    this.folders = /** @type {Array<osx.layer.FolderOptions>} */ (Settings.getInstance().get('layers.folders', []));
+  }
+
+  /**
+   * Get the global folder manager instance.
+   * @return {FolderManager}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new FolderManager();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global folder manager instance.
+   * @param {!FolderManager} value The FolderManager instance to set.
+   */
+  static setInstance(value) {
+    instance = value;
   }
 }
 

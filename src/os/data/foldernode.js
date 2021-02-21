@@ -15,7 +15,6 @@ class FolderNode extends SlickTreeNode {
    */
   constructor(options) {
     super();
-
     this.nodeUI = '<foldernodeui></foldernodeui>';
 
     /**
@@ -23,7 +22,7 @@ class FolderNode extends SlickTreeNode {
      * @type {osx.layer.FolderOptions}
      * @protected
      */
-    this.options = null;
+    this.options;
 
     this.setOptions(options);
   }

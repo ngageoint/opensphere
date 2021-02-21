@@ -2,6 +2,7 @@ goog.provide('os.data.ZOrder');
 goog.provide('os.data.ZOrderEntry');
 goog.provide('os.data.ZOrderEventType');
 
+goog.require('goog.events.EventTarget');
 goog.require('ol.array');
 goog.require('os.config.Settings');
 
@@ -24,9 +25,12 @@ os.data.ZOrderEntry;
 /**
  * Maintains Z-Order for layers between sessions
  *
+ * @extends {goog.events.EventTarget}
  * @constructor
  */
 os.data.ZOrder = function() {
+  os.data.ZOrder.base(this, 'constructor');
+
   /**
    * @type {?ol.Map}
    * @private
@@ -39,6 +43,7 @@ os.data.ZOrder = function() {
    */
   this.groups_ = null;
 };
+goog.inherits(os.data.ZOrder, goog.events.EventTarget);
 goog.addSingletonGetter(os.data.ZOrder);
 
 
@@ -102,6 +107,30 @@ os.data.ZOrder.prototype.getZType = function(id) {
   }
 
   return null;
+};
+
+
+/**
+ * Gets the Z-order index for a layer's ID.
+ * @param {string} id
+ * @return {number} The Z-Order group type
+ */
+os.data.ZOrder.prototype.getIndex = function(id) {
+  if (!this.groups_ || !id) {
+    return -1;
+  }
+
+  for (var type in this.groups_) {
+    var list = /** @type {Array.<os.data.ZOrderEntry>} */ (this.groups_[type] || []);
+
+    for (var i = 0, n = list.length; i < n; i++) {
+      if (list[i].id == id) {
+        return i;
+      }
+    }
+  }
+
+  return -1;
 };
 
 
@@ -201,6 +230,8 @@ os.data.ZOrder.prototype.update = function() {
       }
     }
   }
+
+  this.dispatchEvent('zOrder:update');
 };
 
 
