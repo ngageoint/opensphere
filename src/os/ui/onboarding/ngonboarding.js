@@ -267,7 +267,7 @@ os.ui.onboarding.NgOnboardingCtrl.prototype.onIndexChange_ = function(newVal, ol
   for (var key in this.curStep_) {
     // allow storing descriptions as arrays for readability in JSON files.
     var val = this.curStep_[key];
-    if (key == 'description' && goog.isArray(val)) {
+    if (key == 'description' && Array.isArray(val)) {
       val = val.join('');
     }
     this.scope_[key] = val;

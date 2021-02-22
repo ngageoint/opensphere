@@ -35,7 +35,7 @@ plugin.ogc.GeoServer.TYPE = 'geoserver';
 /**
  * The logger.
  * @const
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @private
  */
 plugin.ogc.GeoServer.LOGGER_ = goog.log.getLogger('plugin.ogc.GeoServer');

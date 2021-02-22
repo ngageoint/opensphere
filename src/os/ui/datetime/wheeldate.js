@@ -206,7 +206,7 @@ os.ui.datetime.WheelDateCtrl = function($scope, $element, $timeout) {
 
 /**
  * The logger.
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @const
  * @private
  */

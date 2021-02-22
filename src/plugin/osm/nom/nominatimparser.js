@@ -66,7 +66,7 @@ plugin.osm.nom.NominatimParser.prototype.setSource = function(source) {
       goog.log.error(plugin.osm.nom.NominatimParser.LOGGER_, 'Failed parsing response:', e);
       results = undefined;
     }
-  } else if (goog.isArray(source)) {
+  } else if (Array.isArray(source)) {
     results = source;
   }
 

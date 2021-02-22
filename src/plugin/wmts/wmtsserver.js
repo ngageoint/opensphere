@@ -87,7 +87,7 @@ os.implements(plugin.wmts.Server, os.data.IDataProvider.ID);
 /**
  * The logger.
  * @const
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @private
  */
 plugin.wmts.Server.LOGGER_ = goog.log.getLogger('plugin.wmts.Server');

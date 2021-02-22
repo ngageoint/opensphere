@@ -550,7 +550,7 @@ os.ui.ol.OLMap.prototype.getFocused = function() {
 os.ui.ol.OLMap.prototype.onZoom_ = function(event) {
   try {
     var context = event.getContext();
-    if (!goog.isArray(context)) {
+    if (!Array.isArray(context)) {
       context = [context];
     }
 

@@ -142,7 +142,7 @@ goog.inherits(os.ui.draw.BaseDrawControlsCtrl, goog.Disposable);
 /**
  * The logger.
  * @const
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @private
  */
 os.ui.draw.BaseDrawControlsCtrl.LOGGER_ = goog.log.getLogger('os.ui.draw.BaseDrawControlsCtrl');

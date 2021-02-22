@@ -124,7 +124,7 @@ os.histo.Histogram.prototype.onDataChange = function() {
  * @export Prevent the compiler from moving the function off the prototype.
  */
 os.histo.Histogram.prototype.addItems = function(items) {
-  if (!goog.isArray(items)) {
+  if (!Array.isArray(items)) {
     items = [items];
   }
 
@@ -141,7 +141,7 @@ os.histo.Histogram.prototype.addItems = function(items) {
  * @export Prevent the compiler from moving the function off the prototype.
  */
 os.histo.Histogram.prototype.removeItems = function(items) {
-  if (!goog.isArray(items)) {
+  if (!Array.isArray(items)) {
     items = [items];
   }
 

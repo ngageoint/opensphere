@@ -59,7 +59,7 @@ os.ui.file.ExportManager.LOGGER_ = goog.log.getLogger('os.ui.file.ExportManager'
  * @param {!(Array.<!os.ex.IExportMethod>|os.ex.IExportMethod)} method The method or array of methods
  */
 os.ui.file.ExportManager.prototype.registerExportMethod = function(method) {
-  if (goog.isArray(method)) {
+  if (Array.isArray(method)) {
     for (var i = 0, n = method.length; i < n; i++) {
       this.registerExportMethod(method[i]);
     }
@@ -95,7 +95,7 @@ os.ui.file.ExportManager.prototype.getExportMethods = function() {
  * @param {!(Array.<!os.ex.IPersistenceMethod>|os.ex.IPersistenceMethod)} method The method or array of methods
  */
 os.ui.file.ExportManager.prototype.registerPersistenceMethod = function(method) {
-  if (goog.isArray(method)) {
+  if (Array.isArray(method)) {
     for (var i = 0, n = method.length; i < n; i++) {
       this.registerPersistenceMethod(method[i]);
     }

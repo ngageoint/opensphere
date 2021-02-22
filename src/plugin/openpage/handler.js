@@ -26,7 +26,7 @@ plugin.openpage.Handler.prototype.getTypes = function() {
  */
 plugin.openpage.Handler.prototype.process = function(data, type, sender, time) {
   if (data) {
-    if (!goog.isArray(data)) {
+    if (!Array.isArray(data)) {
       data = [data];
     }
 

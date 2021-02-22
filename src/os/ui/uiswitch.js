@@ -166,7 +166,7 @@ os.ui.UISwitchCtrl.prototype.onDataChange_ = function(newVal, oldVal) {
 os.ui.UISwitchCtrl.prototype.update_ = function() {
   var x = this.scope['items'];
 
-  var items = goog.isArray(x) ? /** @type {Array} */ (x) : [x];
+  var items = Array.isArray(x) ? /** @type {Array} */ (x) : [x];
   var ui = /** @type {function(*):string} */ (this.scope['directiveFunction']);
   var generic = /** @type {string} */ (this.scope['generic']) || null;
 

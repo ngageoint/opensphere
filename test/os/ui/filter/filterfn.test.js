@@ -179,7 +179,7 @@ describe('os.ui.filter.fn', function() {
 
     // create from the root AND node, should pass the filter
     var fn = os.ui.filter.fn.createFromNode(andNode);
-    expect(goog.isFunction(fn)).toBe(true);
+    expect(typeof fn === 'function').toBe(true);
     expect(fn(testObj)).toBe(true);
 
     // changing a value should return false
@@ -192,7 +192,7 @@ describe('os.ui.filter.fn', function() {
 
     // create a filter from the first expression only (test AND1)
     fn = os.ui.filter.fn.createFromNode(andNode.childNodes[0]);
-    expect(goog.isFunction(fn)).toBe(true);
+    expect(typeof fn === 'function').toBe(true);
     expect(fn(testObj)).toBe(true);
 
     // changing AND2 shouldn't affect the result
@@ -205,7 +205,7 @@ describe('os.ui.filter.fn', function() {
 
     // create the filter on the AND2 expression - value is wrong so it shouldn't pass
     fn = os.ui.filter.fn.createFromNode(andNode.childNodes[1]);
-    expect(goog.isFunction(fn)).toBe(true);
+    expect(typeof fn === 'function').toBe(true);
     expect(fn(testObj)).toBe(false);
 
     // changing AND2 back should make the result true
@@ -232,12 +232,12 @@ describe('os.ui.filter.fn', function() {
     // no filter should return a function that always returns false
     var emptyEntry = new os.filter.FilterEntry();
     var fn = os.ui.filter.fn.createFromEntry(emptyEntry);
-    expect(goog.isFunction(fn)).toBe(true);
+    expect(typeof fn === 'function').toBe(true);
     expect(fn(testObj)).toBe(false);
 
     // create a function from the AND filter
     fn = os.ui.filter.fn.createFromEntry(andEntry);
-    expect(goog.isFunction(fn)).toBe(true);
+    expect(typeof fn === 'function').toBe(true);
 
     // all values match
     expect(fn(testObj)).toBe(true);
@@ -260,7 +260,7 @@ describe('os.ui.filter.fn', function() {
 
     // create a function from the OR filter
     fn = os.ui.filter.fn.createFromEntry(orEntry);
-    expect(goog.isFunction(fn)).toBe(true);
+    expect(typeof fn === 'function').toBe(true);
     expect(fn(testObj)).toBe(true);
 
     // function matches until all OR values are changed
@@ -275,7 +275,7 @@ describe('os.ui.filter.fn', function() {
 
     // create a function from the OR filter
     fn = os.ui.filter.fn.createFromEntry(notEntry);
-    expect(goog.isFunction(fn)).toBe(true);
+    expect(typeof fn === 'function').toBe(true);
     expect(fn(testObj)).toBe(true);
 
     // function matches until all OR values are changed
