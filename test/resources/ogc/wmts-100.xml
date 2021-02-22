@@ -52,7 +52,7 @@
   <Contents>
     <Layer>
       <ows:Title>WMTS 3857 Layer 1</ows:Title>
-      <ows:Abstract></ows:Abstract>
+      <ows:Abstract>Description of WMTS 3857 Layer 1.</ows:Abstract>
       <ows:WGS84BoundingBox>
         <ows:LowerCorner>-180.0 -85.0511287798066</ows:LowerCorner>
         <ows:UpperCorner>180.0 85.05112877980659</ows:UpperCorner>
@@ -84,7 +84,7 @@
     </Layer>
     <Layer>
       <ows:Title>WMTS 4326 Layer 1</ows:Title>
-      <ows:Abstract></ows:Abstract>
+      <ows:Abstract>Description of WMTS 4326 Layer 1.</ows:Abstract>
       <ows:WGS84BoundingBox>
         <ows:LowerCorner>-180.0 -90.0</ows:LowerCorner>
         <ows:UpperCorner>180.0 90.0</ows:UpperCorner>
@@ -97,6 +97,13 @@
       <TileMatrixSetLink>
         <TileMatrixSet>GLOBAL_PLATECARREE</TileMatrixSet>
       </TileMatrixSetLink>
+      <Dimension>
+        <ows:Identifier>Time</ows:Identifier>
+        <ows:UOM>ISO8601</ows:UOM>
+        <Default>2021-02-10</Default>
+        <Current>false</Current>
+        <Value>2021-01-01/2021-02-10/P1D</Value>
+      </Dimension>
     </Layer>
     <Layer>
       <ows:Title>WMTS 4326 Layer 2</ows:Title>
