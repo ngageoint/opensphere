@@ -96,6 +96,11 @@ os.ui.slick.slickTreeDirective = function() {
       'winLauncherClass': '@',
 
       /**
+       * Options Override
+       */
+      'options': '=?',
+
+      /**
        * Whether or not there is a root node. This fixes the case where you dont want to show the root
        * And you also want slicktree to create the root
        */
@@ -254,7 +259,7 @@ os.ui.slick.SlickTreeCtrl.prototype.disposeRoot_ = function() {
  */
 os.ui.slick.SlickTreeCtrl.prototype.getOptions = function() {
   var selectable = this.scope['disableSelection'] != 'true';
-  return {
+  var defaults = {
     // prevent the slick index behavior when selection is disabled, not very useful in our trees - THIN-6977
     'enableCellNavigation': selectable,
     'fullWidthRows': true,
@@ -264,6 +269,10 @@ os.ui.slick.SlickTreeCtrl.prototype.getOptions = function() {
     'headerRowHeight': 0,
     'rowHeight': 21
   };
+  if (this.scope['options']) {
+    return Object.assign(defaults, this.scope['options']);
+  }
+  return defaults;
 };
 
 
