@@ -140,7 +140,7 @@ os.fn.nodesToLayers = function(nodes) {
     return [];
   }
 
-  if (!goog.isArray(nodes)) {
+  if (!Array.isArray(nodes)) {
     nodes = [nodes];
   }
 

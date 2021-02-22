@@ -31,7 +31,7 @@ goog.inherits(os.command.FeatureIcon, os.command.AbstractFeatureStyle);
 os.command.FeatureIcon.prototype.getOldValue = function() {
   var feature = /** @type {ol.Feature} */ (this.getFeature());
   var configs = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
-  if (goog.isArray(configs)) {
+  if (Array.isArray(configs)) {
     configs = configs.length > 1 ? configs[1] : configs[0];
   }
 

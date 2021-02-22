@@ -136,7 +136,7 @@ os.ui.menu.windows.openWindow = function(evt) {
     var config = os.ui.menu.windows.configs_[id];
 
     if (config) {
-      if (goog.isFunction(config)) {
+      if (typeof config === 'function') {
         config();
       } else {
         config = goog.object.clone(config);

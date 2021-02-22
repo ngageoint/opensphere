@@ -46,7 +46,7 @@ os.implements(plugin.config.Provider, os.data.IDataProvider.ID);
 /**
  * The logger.
  * @const
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @private
  */
 plugin.config.Provider.LOGGER_ = goog.log.getLogger('plugin.config.Provider');
