@@ -67,7 +67,7 @@ goog.inherits(plugin.arc.ArcLoader, goog.events.EventTarget);
 
 /**
  * @const
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @private
  */
 plugin.arc.ArcLoader.LOGGER_ = goog.log.getLogger('plugin.arc.ArcLoader');
@@ -204,7 +204,7 @@ plugin.arc.ArcLoader.prototype.onLoad = function(event) {
     }
 
     var folders = /** @type {Array<string>} */ (json['folders']);
-    if (folders && goog.isArray(folders)) {
+    if (folders && Array.isArray(folders)) {
       for (var i = 0, ii = folders.length; i < ii; i++) {
         var folder = folders[i];
         var folderNode = new plugin.arc.node.ArcFolderNode(this.server_);
@@ -217,7 +217,7 @@ plugin.arc.ArcLoader.prototype.onLoad = function(event) {
     }
 
     var services = /** @type {Array<Object<string, string>>} */ (json['services']);
-    if (services && goog.isArray(services)) {
+    if (services && Array.isArray(services)) {
       for (var j = 0, jj = services.length; j < jj; j++) {
         var service = services[j];
         var type = /** @type {string} */ (service['type']);
@@ -240,7 +240,7 @@ plugin.arc.ArcLoader.prototype.onLoad = function(event) {
     }
 
     var layers = /** @type {Array<Object<string, string>>} */ (json['layers']);
-    if (layers && goog.isArray(layers)) {
+    if (layers && Array.isArray(layers)) {
       var name = 'Folder';
       var lastIdx = this.url_.lastIndexOf('/MapServer');
       var type = plugin.arc.ServerType.MAP_SERVER;

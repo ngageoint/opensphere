@@ -13,7 +13,7 @@ os.ui.menu.common.getSourcesFromContext = function(context) {
     if (os.instanceOf(context, os.source.Vector.NAME)) {
       // single source passed as context (list tool)
       sources.push(context);
-    } else if (goog.isArray(context)) {
+    } else if (Array.isArray(context)) {
       for (var i = 0, n = context.length; i < n; i++) {
         if (os.instanceOf(context[i], os.source.Vector.NAME)) {
           sources.push(context[i]);

@@ -59,7 +59,7 @@ os.layer.config.StaticLayerConfig.prototype.initializeConfig = function(options)
 
   this.animate = options['animate'] !== undefined ? options['animate'] : false;
 
-  if (goog.isArray(options['data'])) {
+  if (Array.isArray(options['data'])) {
     // make sure the array was created in this context
     this.data = options['data'] = options['data'] instanceof Array ? options['data'] :
       goog.array.clone(options['data']);

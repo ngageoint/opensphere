@@ -54,7 +54,7 @@ os.state.JSONStateManager.prototype.analyze = function(obj) {
   }
 
   var list = [];
-  if (obj instanceof Object && goog.isArray(obj[os.state.Tag.STATE])) {
+  if (obj instanceof Object && Array.isArray(obj[os.state.Tag.STATE])) {
     var statesArray = obj[os.state.Tag.STATE];
     var v = obj[os.state.Tag.VERSION];
 
@@ -93,7 +93,7 @@ os.state.JSONStateManager.prototype.loadState = function(obj, states, stateId, o
       }
     }
 
-    if (obj instanceof Object && goog.isArray(obj[os.state.Tag.STATE])) {
+    if (obj instanceof Object && Array.isArray(obj[os.state.Tag.STATE])) {
       states.sort(os.state.priorityCompare);
 
       var children = obj[os.state.Tag.STATE];

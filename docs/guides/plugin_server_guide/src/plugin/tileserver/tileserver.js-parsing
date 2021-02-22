@@ -58,7 +58,7 @@ plugin.tileserver.Tileserver.prototype.onLoad = function(response) {
     return;
   }
 
-  if (!goog.isArray(layers)) {
+  if (!Array.isArray(layers)) {
     // not sure what we got but it isn't an array of layers
     this.onError('Expected an array of layers but got something else');
     return;
@@ -137,6 +137,6 @@ plugin.tileserver.Tileserver.prototype.toChildNode = function(layer) {
  * @protected
  */
 plugin.tileserver.Tileserver.prototype.onError = function(e) {
-  var msg = goog.isArray(e) ? e.join(' ') : e.toString();
+  var msg = Array.isArray(e) ? e.join(' ') : e.toString();
   this.setErrorMessage(msg);
 };
