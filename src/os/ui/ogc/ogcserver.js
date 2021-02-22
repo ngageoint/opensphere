@@ -1616,7 +1616,7 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
       }
     }
 
-    if (isFolder) {
+    if (layer && isFolder) {
       var children = layer.getChildren();
       if (!children || children.length === 0) {
         return null;
