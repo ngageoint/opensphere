@@ -48,7 +48,7 @@ os.file.mime.text.BOMS_ = [
 
 /**
  * The logger.
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @const
  * @private
  */

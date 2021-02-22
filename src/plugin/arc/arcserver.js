@@ -45,7 +45,7 @@ os.implements(plugin.arc.ArcServer, os.data.IDataProvider.ID);
 /**
  * The logger.
  * @const
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @private
  */
 plugin.arc.ArcServer.LOGGER_ = goog.log.getLogger('plugin.arc.ArcServer');

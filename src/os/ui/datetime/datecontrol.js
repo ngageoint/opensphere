@@ -115,7 +115,7 @@ goog.inherits(os.ui.datetime.DateControlCtrl, goog.Disposable);
 
 /**
  * The logger.
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @const
  * @private
  */

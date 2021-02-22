@@ -712,7 +712,7 @@ os.MapContainer.prototype.flyToExtent = function(extent, opt_buffer, opt_maxZoom
 os.MapContainer.prototype.onZoom_ = function(event) {
   try {
     var context = event.getContext();
-    if (!goog.isArray(context)) {
+    if (!Array.isArray(context)) {
       context = [context];
     }
 

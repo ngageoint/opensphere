@@ -78,7 +78,7 @@ plugin.file.kml.export.getRotationColumn = function(feature) {
 plugin.file.kml.export.getLineDash = function(feature) {
   if (feature) {
     var layerConfig = os.style.getBaseFeatureConfig(feature);
-    return os.style.getConfigLineDash(goog.isArray(layerConfig) ? layerConfig[0] : layerConfig);
+    return os.style.getConfigLineDash(Array.isArray(layerConfig) ? layerConfig[0] : layerConfig);
   }
   return undefined;
 };

@@ -86,7 +86,7 @@ os.im.ChainingImporter.prototype.executeNext_ = function(source) {
     this.current_ = -1;
 
     // set the final data
-    if (goog.isArray(source)) {
+    if (Array.isArray(source)) {
       this.data_ = source;
     }
 

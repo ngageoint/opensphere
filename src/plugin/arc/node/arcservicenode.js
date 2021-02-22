@@ -53,7 +53,7 @@ goog.inherits(plugin.arc.node.ArcServiceNode, os.ui.slick.LoadingNode);
 /**
  * The logger.
  * @const
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @private
  */
 plugin.arc.node.ArcServiceNode.LOGGER_ = goog.log.getLogger('plugin.arc.node.ArcServiceNode');
