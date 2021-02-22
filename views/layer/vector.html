@@ -10,14 +10,14 @@
         <div class="col-3">
           Presets
         </div>
-        <div class="d-flex col" ng-show="!vector.showPresetsDropdown">
-            <span><i>Customized</i>&nbsp;</span>
-            <button class="btn btn-link text-muted" ng-click="vector.showPresetsDropdown = true;">
-              Apply a Preset <i class="fa fa-fw fa-arrow-right"></i>
-            </button>
+        <div class="d-flex col mb-1px" ng-show="!vector.showPresetsDropdown">
+          <span class="btn disabled"><i>Customized</i>&nbsp;</span>
+          <button class="btn btn-link text-muted" ng-click="vector.showPresetsDropdown = true;">
+            Apply a Preset <i class="fa fa-fw fa-arrow-right"></i>
+          </button>
         </div>
         <div class="d-flex col" ng-show="vector.showPresetsDropdown">
-          <select class="custom-select col-7" ng-model="vector.preset"
+          <select class="custom-select col" ng-model="vector.preset"
               ng-options="((preset.published === true ? '' : '*') + preset.label + (preset.default === true ? ' (default)' : '')) for preset in vector.presets track by preset.id+preset.layerId">
           </select>
           <presetmenubutton preset="vector.preset"></presetmenubutton>

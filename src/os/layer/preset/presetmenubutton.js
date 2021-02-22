@@ -505,7 +505,7 @@ const directive = () => ({
       ng-click="ctrl.openMenu()"
       ng-class="{active: menu}"
       ng-disabled="ctrl.thinking">
-    <i class="fa" ng-class="ctrl.thinking && 'fa-spin fa-spinner'"></i>
+    <i class="fa fa-spin fa-spinner" ng-if="ctrl.thinking"></i>
   </button>
 </div>
 `

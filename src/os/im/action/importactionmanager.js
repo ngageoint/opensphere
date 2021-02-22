@@ -658,13 +658,15 @@ os.im.action.ImportActionManager.prototype.hasActiveActions = function(id) {
  * @private
  */
 os.im.action.ImportActionManager.prototype.getActiveActionEntryIds_ = function(type, entries) {
-  let ids = [];
-  (entries || []).forEach((entry) => {
-    if (entry.enabled && entry.type == type) {
-      ids.push(entry.getId());
-    }
-    ids = ids.concat(this.getActiveActionEntryIds_(type, entry.getChildren()));
-  });
+  const ids = [];
+  if (entries) {
+    entries.forEach((entry) => {
+      if (entry.enabled && entry.type == type) {
+        ids.push(entry.getId());
+      }
+      ids.push(...this.getActiveActionEntryIds_(type, entry.getChildren()));
+    });
+  }
   return ids;
 };
 
@@ -695,15 +697,11 @@ os.im.action.ImportActionManager.prototype.getRootActiveActionEntries_ = functio
     isActive = true;
   } else if (entry) {
     const entries = entry.getChildren();
-    const len = entries ? entries.length : 0;
 
-    // use a for loop so it can be broken out of
-    for (let i = 0; i < len; i++) {
-      const e = entries[i];
-      if (this.getRootActiveActionEntries_(type, e)) {
-        isActive = true;
-        break;
-      }
+    if (entries) {
+      isActive = entries.some((e) => {
+        return this.getRootActiveActionEntries_(type, e);
+      });
     }
   }
   return isActive;

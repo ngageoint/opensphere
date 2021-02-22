@@ -127,8 +127,7 @@ class LayerPresetManager extends Disposable {
    */
   listenToLayerStyleChange(layerId, preset) {
     const layer = this.getLayer_(layerId);
-    let [,, meta] = /** @type {!Array<*>} */ (this.presets_.entry(layerId));
-    meta = /** @type {!LayerPresetsMetaData} */ (meta);
+    const meta = /** @type {!LayerPresetsMetaData} */ (this.presets_.entry(layerId)[2]);
 
     // only have one listener at a time
     if (layer && meta && !meta.listener) {
@@ -150,8 +149,7 @@ class LayerPresetManager extends Disposable {
    * @protected
    */
   onLayerStyleChanged(layerId, layer, check, event) {
-    let [,, meta] = /** @type {!Array<*>} */ (this.presets_.entry(layerId));
-    meta = /** @type {!LayerPresetsMetaData} */ (meta);
+    const meta = /** @type {!LayerPresetsMetaData} */ (this.presets_.entry(layerId)[2]);
 
     // get the debouncer for this layerId
     if (meta && !meta.debouncer.isDisposed()) {
@@ -170,9 +168,8 @@ class LayerPresetManager extends Disposable {
   onLayerStyleChanged_(layerId, layer, check, event) {
     // check that the style does/doesn't match the Preset. If not, set the clean over to false and stop listening
     if (layer && event['getProperty'] && event.getProperty() == 'style') {
-      if (this.isLayerStyleDirty_(layerId, layer, check, event)) {
-        let [,, meta] = /** @type {!Array<*>} */ (this.presets_.entry(layerId));
-        meta = /** @type {!LayerPresetsMetaData} */ (meta);
+      if (this.isLayerStyleDirty(layerId, layer, check, event)) {
+        const meta = /** @type {!LayerPresetsMetaData} */ (this.presets_.entry(layerId)[2]);
 
         const key = /** @type {OlEventsKey} */ (meta.listener);
         if (key && layer) {
@@ -193,53 +190,35 @@ class LayerPresetManager extends Disposable {
    * @param {!boolean} check True if the current style needs to be tested extensively against the Preset style
    * @param {!PropertyChangeEvent} event The layer event.
    * @return {boolean} true if the style is what the preset says it should be
-   * @private
+   * @protected
    */
-  isLayerStyleDirty_(layerId, layer, check, event) {
+  isLayerStyleDirty(layerId, layer, check, event) {
     let dirty = false;
-    let [,, meta] = /** @type {!Array<*>} */ (this.presets_.entry(layerId));
-    meta = /** @type {!LayerPresetsMetaData} */ (meta);
+    const meta = /** @type {!LayerPresetsMetaData} */ (this.presets_.entry(layerId)[2]);
 
     if (meta && meta.selected) {
       // check the layer configs
-      const config1 = meta.selected.layerConfig;
+      const config1 = /** @type {!Object} */ (meta.selected.layerConfig);
       const config2 = /** @type {ILayer} */ (layer).persist();
 
-      // "basic" preset doesn't have all the details of a real layer
-      if (meta.selected.id == OsLayerPreset.DEFAULT_PRESET_ID) {
-        config2['icon'] = null;
-        delete config2['colorModel'];
-        delete config2['replaceStyle'];
-        delete config2['showRotation'];
-      }
+      // ignore null and undefined in comparison;
+      // TODO update this if/when layer.restore() does a "clear" when applying a null/undefined
+      const keys = Object.keys(config1).filter((key) => {
+        return !(config1[key] == null || config1[key] == undefined);
+      });
 
-      // TODO remove this after fixing the "layer.restore()" to treat -no value- as a "clear"
-      // if not applying a new "border" style or "unique identifier", ignore the current one
-      if (!config1['lineDash']) {
-        delete config2['lineDash'];
-      }
-      if (!config1['uniqueId']) {
-        delete config2['uniqueId'];
-      }
-      if (!config1['threshold'] && config2['threshold']) {
-        delete config2['ageOffActive'];
-        delete config2['ageOffTime'];
-        delete config2['lateData'];
-        delete config2['lateDataMillis'];
-        delete config2['play'];
-        delete config2['sound'];
-        delete config2['streamBinCreateTracks'];
-        delete config2['streamBins'];
-        delete config2['streamBinsActive'];
-        delete config2['streamBinSize'];
-        delete config2['threshold'];
-      }
-
-      dirty = (JSON.stringify(config1) != JSON.stringify(config2));
+      // compare on keys that are present in both config1 (the preset) and config2 (the layer)
+      dirty = (keys.some((key) => {
+        // use a some() to break out of the comparison on the first inequality
+        if (config2[key] || config2[key] === false || config2[key] === 0 || config2[key] == '') {
+          return (JSON.stringify(config1[key]) != JSON.stringify(config2[key]));
+        }
+        return true;
+      }));
 
       // check the active Feature Actions if not dirty yet
-      if (!dirty && meta.selected.featureActions && meta.selected.featureActions.length > 0) {
-        const ids1 = meta.selected.featureActions;
+      if (!dirty) {
+        const ids1 = meta.selected.featureActions || [];
         const ids2 = ImportActionManager.getInstance().getActiveActionEntryIds(layerId);
         dirty = (ids1.join('') != ids2.join(''));
       }
@@ -515,8 +494,7 @@ class LayerPresetManager extends Disposable {
    * @param {!osx.layer.Preset} preset The preset.
    */
   applyPreset(id, preset) {
-    let [,, meta] = /** @type {!Array<*>} */ (this.presets_.entry(id));
-    meta = /** @type {!LayerPresetsMetaData} */ (meta);
+    const meta = /** @type {!LayerPresetsMetaData} */ (this.presets_.entry(id)[2]);
     meta.selected = preset;
 
     OsLayerPreset.setSavedPresetId(id, preset.id || null);
