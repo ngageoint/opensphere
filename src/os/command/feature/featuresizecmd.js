@@ -29,7 +29,7 @@ goog.inherits(os.command.FeatureSize, os.command.AbstractFeatureStyle);
 os.command.FeatureSize.prototype.getOldValue = function() {
   var feature = /** @type {ol.Feature} */ (this.getFeature());
   var config = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
-  if (goog.isArray(config)) {
+  if (Array.isArray(config)) {
     config = config[0];
   }
 

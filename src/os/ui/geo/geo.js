@@ -39,7 +39,7 @@ os.ui.geo.geoLinkFn = function(scope, elm, attrs, ctrl) {
     } else {
       try {
         var m = os.ui.geo.mgrs(val);
-        valid = goog.isArray(m) && m.length === 2;
+        valid = Array.isArray(m) && m.length === 2;
       } catch (e) {
         valid = false;
       }
