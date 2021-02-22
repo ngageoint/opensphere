@@ -114,7 +114,13 @@ os.ui.draw.BaseDrawControlsCtrl = function($scope, $element) {
    * If the line control is supported.
    * @type {boolean}
    */
-  this['supportsLines'] = this['supportsLines'] || false;
+  this['supportsLines'] = $scope['supportsLines'] || false;
+
+  /**
+   * If extra controls should be hidden.
+   * @type {boolean}
+   */
+  this['hideExtraControls'] = $scope['hideExtraControls'] || false;
 
   /**
    * @type {os.ui.menu.Menu|undefined}
