@@ -5,8 +5,8 @@
         <label for="serverType">Select a server type</label>
         <select title="ServerType" class="custom-select"
             ng-model="ctrl.serverType"
-            ng-change="ctrl.onServerTypeChange_">
-          <option ng-repeat="serverType in ctrl.serverTypes">{{serverType}}</option>
+            ng-change="ctrl.onServerTypeChange_",
+            ng-options="key for (key, value) in ctrl.items">
         </select>
       </div>
     </form>

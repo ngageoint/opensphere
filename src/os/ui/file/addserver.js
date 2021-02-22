@@ -2,6 +2,7 @@ goog.module('os.ui.file.AddServer');
 goog.module.declareLegacyNamespace();
 
 const File = goog.require('os.file.File');
+const FileParserConfig = goog.require('os.parse.FileParserConfig');
 const Module = goog.require('os.ui.Module');
 const ImportManager = goog.require('os.ui.im.ImportManager');
 const uiWindow = goog.require('os.ui.window');
@@ -100,12 +101,24 @@ class Controller {
      * Available server type choices in the UI.
      * @type {!Array<string>}
      */
-    this['serverTypes'] = [
-      'GeoServer',
-      'ArcGIS',
-      'WFS/WMS',
-      'WMTS'
-    ];
+    this['items'] = {
+      'GeoServer': {
+        type: 'geoserver',
+        config: new FileParserConfig()
+      },
+      'ArcGIS': {
+        type: 'arc',
+        config: new FileParserConfig()
+      },
+      'WFS/WMS': {
+        type: '',
+        config: new FileParserConfig()
+      },
+      'WMTS': {
+        type: 'wmts',
+        config: new FileParserConfig()
+      }
+    };
 
     this['file'].setUrl('');
 
@@ -143,25 +156,25 @@ class Controller {
    */
   getUi(item) {
     if (item) {
-      var type = '';
-      switch (item) {
-        case 'GeoServer':
-          type = 'geoserver';
-          break;
-        case 'ArcGIS':
-          type = 'arc';
-          break;
-        case 'WFS/WMS':
-          type = ''; // TBD
-          break;
-        case 'WMTS':
-          type = 'wmts';
-          break;
-        default:
-          break;
-      }
+      // var type = '';
+      // switch (item) {
+      //   case 'GeoServer':
+      //     type = 'geoserver';
+      //     break;
+      //   case 'ArcGIS':
+      //     type = 'arc';
+      //     break;
+      //   case 'WFS/WMS':
+      //     type = ''; // TBD
+      //     break;
+      //   case 'WMTS':
+      //     type = 'wmts';
+      //     break;
+      //   default:
+      //     break;
+      // }
 
-      return ImportManager.getInstance().getImportUI(type).ui;
+      return ImportManager.getInstance().getImportUI(item['type']).ui;
     }
 
     return null;
@@ -172,23 +185,7 @@ class Controller {
    * @param {string} serverType
    */
   launchSpecificServerWindow(serverType) {
-    var type = '';
-    switch (serverType) {
-      case 'GeoServer':
-        type = 'geoserver';
-        break;
-      case 'ArcGIS':
-        type = 'arc';
-        break;
-      case 'WFS/WMS':
-        type = ''; // TBD
-        break;
-      case 'WMTS':
-        type = 'wmts';
-        break;
-      default:
-        break;
-    }
+    var type = serverType.type || '';
 
     this['file'].setType(type);
     var ui = this['im'].getImportUI(type);
