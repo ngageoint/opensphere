@@ -47,7 +47,11 @@ os.ui.Module.directive('osDrawControls', [os.ui.draw.drawControlsDirective]);
  * @ngInject
  */
 os.ui.draw.DrawControlsCtrl = function($scope, $element) {
-  this['supportsLines'] = true;
+  // If we haven't set supportsLines on scope, it should be 'true'
+  if ($scope['supportsLines'] == null) {
+    $scope['supportsLines'] = true;
+  }
+
   os.ui.draw.DrawControlsCtrl.base(this, 'constructor', $scope, $element);
   this.log = os.ui.draw.DrawControlsCtrl.LOGGER_;
 };
