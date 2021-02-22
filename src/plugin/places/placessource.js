@@ -2,6 +2,7 @@ goog.provide('plugin.places.PlacesSource');
 
 goog.require('os.feature');
 goog.require('os.geom.GeometryField');
+goog.require('os.interpolate');
 goog.require('os.track');
 goog.require('plugin.file.kml.KMLSource');
 goog.require('plugin.file.kml.ui.KMLNode');
@@ -41,6 +42,9 @@ plugin.places.PlacesSource.prototype.getModifyFunction = function() {
 
     if (node) {
       originalFeature.setGeometry(modifiedFeature.getGeometry());
+      originalFeature.unset(os.interpolate.ORIGINAL_GEOM_FIELD, true);
+      os.interpolate.interpolateFeature(originalFeature);
+
       const options = {
         'node': node,
         'feature': originalFeature

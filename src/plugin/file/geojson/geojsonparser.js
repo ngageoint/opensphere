@@ -93,7 +93,7 @@ plugin.file.geojson.GeoJSONParser.prototype.setSource = function(source) {
     source = os.file.mime.text.getText(source) || null;
   }
 
-  if (goog.isArray(source) && source.length == 1 && (typeof source[0] === 'string' || goog.isObject(source[0]))) {
+  if (Array.isArray(source) && source.length == 1 && (typeof source[0] === 'string' || goog.isObject(source[0]))) {
     // source likely came from a chaining importer
     src = source[0];
   } else if (goog.isObject(source)) {
@@ -105,7 +105,7 @@ plugin.file.geojson.GeoJSONParser.prototype.setSource = function(source) {
   }
 
   if (src) {
-    if (goog.isArray(src)) {
+    if (Array.isArray(src)) {
       // this isn't quite valid GeoJSON, but... no harm no foul?
       this.features = src;
     } else {
@@ -184,7 +184,7 @@ plugin.file.geojson.GeoJSONParser.prototype.parsePreview = function(source, opt_
   while (this.hasNext() && count--) {
     var featureSet = this.parseNext();
 
-    if (goog.isArray(featureSet)) {
+    if (Array.isArray(featureSet)) {
       for (var i = 0, n = featureSet.length; i < n; i++) {
         var feature = featureSet[i];
         feature.setId(String(ol.getUid(feature)));

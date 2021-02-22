@@ -46,7 +46,7 @@ goog.inherits(os.ui.menu.SpatialMenu, os.ui.menu.Menu);
  * @inheritDoc
  */
 os.ui.menu.SpatialMenu.prototype.open = function(context, position, opt_target) {
-  if (goog.isArray(context)) {
+  if (Array.isArray(context)) {
     var container = os.MapContainer.getInstance();
 
     context = context.map(function(item) {
@@ -220,10 +220,10 @@ os.ui.menu.spatial.setup = function() {
           icons: ['<i class="fa fa-fw fa-edit"></i>'],
           beforeRender: os.ui.menu.spatial.visibleIfCanModify
         }, {
-          label: 'Modify Geometry...',
+          label: 'Modify Freeform...',
           eventType: os.action.EventType.MODIFY_GEOMETRY,
-          tooltip: 'Modify the the geometry',
-          icons: ['<i class="fa fa-fw fa-edit"></i>'],
+          tooltip: 'Modify the geometry with a click-and-drag interaction',
+          icons: ['<i class="fa fa-fw fa-hand-pointer-o"></i>'],
           handler: os.ui.menu.spatial.onMenuEvent,
           beforeRender: os.ui.menu.spatial.visibleIfCanModifyGeometry
         }]
@@ -328,7 +328,7 @@ os.ui.menu.spatial.dispose = function() {
  */
 os.ui.menu.spatial.getGeometriesFromContext = function(context) {
   if (context) {
-    var list = !goog.isArray(context) ? [context] : context;
+    var list = !Array.isArray(context) ? [context] : context;
     var geometries = list.map(function(item) {
       var geometry = /** @type {ol.geom.Geometry|undefined} */ (item.geometry);
       if (!geometry) {
@@ -358,7 +358,7 @@ os.ui.menu.spatial.getGeometriesFromContext = function(context) {
  */
 os.ui.menu.spatial.getFeaturesFromContext = function(context) {
   if (context) {
-    var list = !goog.isArray(context) ? [context] : context;
+    var list = !Array.isArray(context) ? [context] : context;
     var features = list.map(function(item) {
       return /** @type {ol.Feature} */ (item.feature);
     }).filter(os.fn.filterFalsey);
@@ -415,7 +415,7 @@ os.ui.menu.spatial.hasMultiple = function(context) {
  * @return {boolean}
  */
 os.ui.menu.spatial.hasSingle = function(context) {
-  return !!(context && (context.length === 1 || !goog.isArray(context)));
+  return !!(context && (context.length === 1 || !Array.isArray(context)));
 };
 
 
@@ -683,7 +683,7 @@ os.ui.menu.spatial.visibleIfNotShown = function(context) {
 os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
   var context = event.getContext();
   if (context) {
-    if (!goog.isArray(context)) {
+    if (!Array.isArray(context)) {
       context = [context];
     }
 
@@ -1033,7 +1033,7 @@ os.ui.menu.spatial.searchArea = function(event) {
   var context = /** @type {Array<Object>} */ (event.getContext());
 
   if (context) {
-    if (!goog.isArray(context)) {
+    if (!Array.isArray(context)) {
       context = [context];
     }
 

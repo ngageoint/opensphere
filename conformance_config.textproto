@@ -151,6 +151,12 @@ requirement: {
 #                 'assign the property directly for aliases.'
 #}
 
+#requirement: {
+#  type: BANNED_NAME
+#  value: 'goog.isArray'
+#  error_message: 'goog.isArray(value) is not permitted. Use Array.isArray instead.'
+#}
+
 requirement: {
   type: BANNED_NAME
   value: 'goog.isBoolean'
@@ -168,6 +174,12 @@ requirement: {
   value: 'goog.isDefAndNotNull'
   error_message: 'goog.isDefAndNotNull(value) is not permitted. Use value != null instead.'
 }
+
+#requirement: {
+#  type: BANNED_NAME
+#  value: 'goog.isFunction'
+#  error_message: 'goog.isFunction(value) is not permitted. Use typeof value === \'function\' instead.'
+#}
 
 requirement: {
   type: BANNED_NAME

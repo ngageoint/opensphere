@@ -35,7 +35,7 @@ os.hist.maxBinCount = function(histograms, opt_combine) {
 
     // find the largest count
     for (var key in binCounts) {
-      var count = /** @type {number} */ (goog.isArray(binCounts[key]) ? binCounts[key].length : binCounts[key]);
+      var count = /** @type {number} */ (Array.isArray(binCounts[key]) ? binCounts[key].length : binCounts[key]);
       if (count > max) {
         max = count;
       }
