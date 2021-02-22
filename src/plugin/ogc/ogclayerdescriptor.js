@@ -18,6 +18,7 @@ goog.require('os.filter.IFilterable');
 goog.require('os.implements');
 goog.require('os.layer.LayerType');
 goog.require('os.ogc.wfs.DescribeFeatureLoader');
+goog.require('os.ogc.wmts');
 goog.require('os.ui.ControlType');
 goog.require('os.ui.Icons');
 goog.require('os.ui.filter.ui.filterableDescriptorNodeUIDirective');
@@ -57,7 +58,7 @@ plugin.ogc.OGCLayerDescriptor = function() {
   this.describeCallback = null;
 
   /**
-   * @type {?Object.<string, string>}
+   * @type {?Object<string, string>}
    * @private
    */
   this.dimensions_ = null;
@@ -69,7 +70,7 @@ plugin.ogc.OGCLayerDescriptor = function() {
   this.featureType_ = null;
 
   /**
-   * @type {?Array.<!string>}
+   * @type {?Array<!string>}
    * @private
    */
   this.legends_ = null;
@@ -81,7 +82,7 @@ plugin.ogc.OGCLayerDescriptor = function() {
   this.opaque_ = false;
 
   /**
-   * @type {?Array.<osx.ogc.TileStyle>}
+   * @type {?Array<osx.ogc.TileStyle>}
    * @private
    */
   this.styles_ = null;
@@ -177,6 +178,34 @@ plugin.ogc.OGCLayerDescriptor = function() {
   this.wmsSupportedCRS_ = null;
 
   /**
+   * If WMTS is enabled for this descriptor.
+   * @type {boolean}
+   * @private
+   */
+  this.wmtsEnabled_ = false;
+
+  /**
+   * The WMTS date format.
+   * @type {?string}
+   * @private
+   */
+  this.wmtsDateFormat_ = null;
+
+  /**
+   * The WMTS options.
+   * @type {Array<olx.source.WMTSOptions>}
+   * @private
+   */
+  this.wmtsOptions_ = null;
+
+  /**
+   * The WMTS time format.
+   * @type {?string}
+   * @private
+   */
+  this.wmtsTimeFormat_ = null;
+
+  /**
    * Marker for whether the layer is deprecated. If a layer is deprecated, it will pop up a notification to the user
    * to stop using it when the descriptor is activated.
    * @type {boolean}
@@ -228,9 +257,10 @@ plugin.ogc.OGCLayerDescriptor.prototype.getSearchType = function() {
  * @inheritDoc
  */
 plugin.ogc.OGCLayerDescriptor.prototype.getType = function() {
-  if (this.wmsEnabled_ && this.wfsEnabled_) {
+  const hasTileLayer = this.wmsEnabled_ || this.wmtsEnabled_;
+  if (hasTileLayer && this.wfsEnabled_) {
     return os.layer.LayerType.GROUPS;
-  } else if (this.wmsEnabled_) {
+  } else if (hasTileLayer) {
     return os.layer.LayerType.TILES;
   } else if (this.wfsEnabled_) {
     return os.layer.LayerType.FEATURES;
@@ -266,7 +296,7 @@ plugin.ogc.OGCLayerDescriptor.prototype.getIcons = function() {
 plugin.ogc.OGCLayerDescriptor.prototype.getSVGSet = function() {
   var iconsSVG = [];
 
-  if (this.wmsEnabled_) {
+  if (this.wmsEnabled_ || this.wmtsEnabled_) {
     iconsSVG.push(os.ui.IconsSVG.TILES);
   }
 
@@ -304,11 +334,11 @@ plugin.ogc.OGCLayerDescriptor.prototype.setAbstract = function(value) {
 plugin.ogc.OGCLayerDescriptor.prototype.getExplicitTitle = function() {
   var title = '';
 
-  if (this.isWmsEnabled()) {
+  if (this.isWmsEnabled() || this.isWmtsEnabled()) {
     title = 'Tiles';
   }
   if (this.isWfsEnabled()) {
-    title += this.wmsEnabled_ ? ' and Features' : 'Features';
+    title += title ? ' and Features' : 'Features';
   }
 
   return title;
@@ -320,7 +350,7 @@ plugin.ogc.OGCLayerDescriptor.prototype.getExplicitTitle = function() {
  */
 plugin.ogc.OGCLayerDescriptor.prototype.getAliases = function() {
   var aliases = [this.getId()];
-  if (this.wmsEnabled_) {
+  if (this.wmsEnabled_ || this.wmtsEnabled_) {
     aliases.push(this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + 'tiles');
   }
   if (this.wfsEnabled_) {
@@ -686,6 +716,70 @@ plugin.ogc.OGCLayerDescriptor.prototype.setWmsVersion = function(value) {
 /**
  * @inheritDoc
  */
+plugin.ogc.OGCLayerDescriptor.prototype.isWmtsEnabled = function() {
+  return this.wmtsEnabled_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.ogc.OGCLayerDescriptor.prototype.setWmtsEnabled = function(value) {
+  this.wmtsEnabled_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.ogc.OGCLayerDescriptor.prototype.getWmtsDateFormat = function() {
+  return this.wmtsDateFormat_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.ogc.OGCLayerDescriptor.prototype.setWmtsDateFormat = function(value) {
+  this.wmtsDateFormat_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.ogc.OGCLayerDescriptor.prototype.getWmtsOptions = function() {
+  return this.wmtsOptions_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.ogc.OGCLayerDescriptor.prototype.setWmtsOptions = function(value) {
+  this.wmtsOptions_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.ogc.OGCLayerDescriptor.prototype.getWmtsTimeFormat = function() {
+  return this.wmtsTimeFormat_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.ogc.OGCLayerDescriptor.prototype.setWmtsTimeFormat = function(value) {
+  this.wmtsTimeFormat_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
 plugin.ogc.OGCLayerDescriptor.prototype.getUsePost = function() {
   return this.usePost_;
 };
@@ -837,6 +931,10 @@ plugin.ogc.OGCLayerDescriptor.prototype.hasTimeExtent = function() {
     return this.dimensions_ != null && 'time' in this.dimensions_;
   }
 
+  if (this.isWmtsEnabled() && this.wmtsOptions_) {
+    return this.wmtsOptions_.some((options) => !!os.ogc.wmts.getTimeKey(options && options.dimensions || null));
+  }
+
   if (this.featureType_ != null) {
     return this.featureType_.getStartDateColumnName() !== null || this.featureType_.getEndDateColumnName() !== null;
   }
@@ -893,6 +991,10 @@ plugin.ogc.OGCLayerDescriptor.prototype.getLayerOptions = function() {
     options.push(this.getWmsOptions());
   }
 
+  if (this.isWmtsEnabled()) {
+    options.push(this.getWmtsLayerOptions());
+  }
+
   if (this.isWfsEnabled()) {
     options.push(this.getWfsOptions());
   }
@@ -902,7 +1004,7 @@ plugin.ogc.OGCLayerDescriptor.prototype.getLayerOptions = function() {
 
 
 /**
- * @return {Object.<string, *>}
+ * @return {Object<string, *>}
  * @protected
  */
 plugin.ogc.OGCLayerDescriptor.prototype.getWmsOptions = function() {
@@ -961,6 +1063,35 @@ plugin.ogc.OGCLayerDescriptor.prototype.getWmsOptions = function() {
     options['visible'] = os.settings.get(
         [os.data.ProviderKey.ADMIN, this.getProvider().toLowerCase(), 'visible'], true);
   }
+
+  return options;
+};
+
+
+/**
+ * Get the options object for the WMTS layer.
+ * @return {Object<string, *>}
+ * @protected
+ */
+plugin.ogc.OGCLayerDescriptor.prototype.getWmtsLayerOptions = function() {
+  const id = this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + 'tiles';
+  const wmtsOptions = this.getWmtsOptions();
+  const projections = wmtsOptions.map(os.ogc.wmts.optionsToProjection);
+
+  const options = {
+    'id': id,
+    'type': os.ogc.LayerType.WMTS,
+    'provider': this.getProvider(),
+    'title': this.getTitle(),
+    'extent': this.getBBox(),
+    'layerType': this.getType(),
+    'animate': this.hasTimeExtent(),
+    'dateFormat': this.getWmtsDateFormat(),
+    'timeFormat': this.getWmtsTimeFormat(),
+    'crossOrigin': wmtsOptions.crossOrigin,
+    'projections': projections,
+    'wmtsOptions': wmtsOptions
+  };
 
   return options;
 };
