@@ -268,7 +268,7 @@ os.interaction.Hover.prototype.setHighlightFeature_ = function(feature, opt_sour
         pointerStyle = 'pointer';
       } else if (mm.containsFeature(feature) && feature.get(os.data.RecordField.INTERACTIVE)) {
         // drawing layer, but also interactive, so hover it
-        // feature.values_[os.style.StyleType.HIGHLIGHT] = os.style.DEFAULT_SELECT_CONFIG;
+        feature.values_[os.style.StyleType.HIGHLIGHT] = os.style.DEFAULT_SELECT_CONFIG;
         os.style.setFeatureStyle(feature);
         os.feature.update(feature, drawSource);
         pointerStyle = 'pointer';
