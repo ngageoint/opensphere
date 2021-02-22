@@ -130,7 +130,7 @@ os.ui.ActionMenuCtrl.prototype.killRightClick_ = function(event) {
  */
 os.ui.ActionMenuCtrl.prototype.invoke = function(action) {
   var provider = this.scope['provider'];
-  if (action && goog.isFunction(action.getEventType)) {
+  if (action && typeof action.getEventType === 'function') {
     // record action metric
     os.metrics.Metrics.getInstance().updateMetric(action.getMetricKey(), 1);
     provider.invoke(action.getEventType());

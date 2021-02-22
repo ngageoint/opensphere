@@ -33,7 +33,7 @@ os.ui.query.AbstractQueryReader = function() {
 /**
  * The logger.
  * @const
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @private
  */
 os.ui.query.AbstractQueryReader.LOGGER_ = goog.log.getLogger('os.ui.query.AbstractQueryReader');

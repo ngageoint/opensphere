@@ -319,7 +319,7 @@ os.ui.data.AddDataCtrl.prototype.getInfo = function() {
   }
 
   var node = this.scope['selected'];
-  if (goog.isArray(node) && node.length == 1) {
+  if (Array.isArray(node) && node.length == 1) {
     node = node[0];
   }
 

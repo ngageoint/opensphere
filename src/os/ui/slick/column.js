@@ -1,5 +1,6 @@
 goog.provide('os.ui.slick.ColumnContext');
 goog.provide('os.ui.slick.ColumnEventType');
+goog.provide('os.ui.slick.ColumnMenuGroup');
 goog.provide('os.ui.slick.column');
 
 goog.require('goog.array');
