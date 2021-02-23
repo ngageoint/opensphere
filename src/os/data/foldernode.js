@@ -28,13 +28,6 @@ class FolderNode extends SlickTreeNode {
   }
 
   /**
-   * @inheritDoc
-   */
-  disposeInternal() {
-    super.disposeInternal();
-  }
-
-  /**
    * Get the folder options.
    * @return {osx.layer.FolderOptions}
    */
@@ -58,7 +51,7 @@ class FolderNode extends SlickTreeNode {
    */
   formatIcons() {
     const open = this.hasChildren() && !this.collapsed;
-    return '<i class="fa fa-folder' + (open ? '-open' : '') + ' fa-fw"></i>';
+    return `<i class="fa fa-folder${open ? '-open' : ''} fa-fw"></i>`;
   }
 }
 

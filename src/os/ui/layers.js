@@ -123,6 +123,8 @@ os.ui.LayersCtrl = function($scope, $element) {
   var fm = os.layer.FolderManager.getInstance();
   fm.listen(os.layer.folder.FolderEventType.FOLDER_CREATED, this.search, false, this);
   fm.listen(os.layer.folder.FolderEventType.FOLDER_REMOVED, this.search, false, this);
+  fm.listen(os.layer.folder.FolderEventType.FOLDER_UPDATED, this.search, false, this);
+  fm.listen(os.layer.folder.FolderEventType.FOLDERS_CLEARED, this.search, false, this);
 
   // refresh on changed favorites
   os.settings.listen(os.user.settings.FavoriteManager.KEY, this.search, false, this);
@@ -169,6 +171,8 @@ os.ui.LayersCtrl.prototype.disposeInternal = function() {
   var fm = os.layer.FolderManager.getInstance();
   fm.unlisten(os.layer.folder.FolderEventType.FOLDER_CREATED, this.search, false, this);
   fm.unlisten(os.layer.folder.FolderEventType.FOLDER_REMOVED, this.search, false, this);
+  fm.unlisten(os.layer.folder.FolderEventType.FOLDER_UPDATED, this.search, false, this);
+  fm.unlisten(os.layer.folder.FolderEventType.FOLDERS_CLEARED, this.search, false, this);
 
   os.settings.unlisten(os.user.settings.FavoriteManager.KEY, this.search, false, this);
 

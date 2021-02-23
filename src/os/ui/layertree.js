@@ -109,9 +109,8 @@ os.ui.LayerTreeCtrl.prototype.canDragMove = function(rows, insertBefore) {
 
   if (nodeToMove instanceof os.data.LayerNode || nodeToMove instanceof os.data.FolderNode) {
     // Layer Node Drag Rules:
-    // 1. Only same depth can be dragged
-    // 2. Cannot be dragged to new parent
-    // 3. Cannot be dragged to a different Z-Order group
+    // 1. Layers can only remain within their z-order group.
+    // 2. Layers can be reparented to valid folders that are also in their z-order group.
 
     for (var i = 0, n = rows.length; i < n; i++) {
       // no point in moving before or after itself
@@ -120,30 +119,13 @@ os.ui.LayerTreeCtrl.prototype.canDragMove = function(rows, insertBefore) {
       }
 
       var item = /** @type {os.ui.slick.SlickTreeNode} */ (this.grid.getDataItem(rows[i]));
-
-      // rule 1: only same depth can be dragged
-      if (item.depth < nodeToMove.depth) {
-        return false;
-      }
-
       beforeItem = /** @type {os.ui.slick.SlickTreeNode} */ (this.grid.getDataItem(insertBefore));
 
-      // if there isn't a target item or it has a different depth, go back and find the last item in the tree with the
-      // same depth
-      if (!beforeItem || beforeItem.depth !== nodeToMove.depth) {
-        var j = insertBefore;
-        while (j >= 0 && (!beforeItem || beforeItem.depth !== nodeToMove.depth)) {
-          j--;
-          beforeItem = /** @type {os.ui.slick.SlickTreeNode} */ (this.grid.getDataItem(j));
-        }
-      }
-
-      // rule 2: cannot be dragged outside of parent
-      if (!beforeItem || beforeItem.parentIndex !== item.parentIndex) {
+      if (!beforeItem) {
         return false;
       }
 
-      // rule 3: cannot be dragged to a different Z-Order group
+      // cannot be dragged to a different Z-Order group
       var z = os.data.ZOrder.getInstance();
       var differentZ = z.getZType(item.getId()) !== z.getZType(beforeItem.getId());
       if (differentZ && item instanceof os.data.LayerNode && beforeItem instanceof os.data.LayerNode) {
@@ -188,7 +170,7 @@ os.ui.LayerTreeCtrl.prototype.doMove = function(rows, insertBefore) {
     var targetNode = /** @type {os.data.LayerNode} */ (this.grid.getDataItem(insertBefore));
 
     // iterate up the tree to ensure we're dropping onto another layer or a folder
-    while (!(targetNode instanceof os.data.LayerNode || targetNode instanceof os.data.FolderNode)) {
+    while (targetNode && !(targetNode instanceof os.data.LayerNode || targetNode instanceof os.data.FolderNode)) {
       after = true;
       insertBefore--;
       targetNode = /** @type {(os.data.LayerNode|os.data.FolderNode)} */ (this.grid.getDataItem(insertBefore));
@@ -196,7 +178,7 @@ os.ui.LayerTreeCtrl.prototype.doMove = function(rows, insertBefore) {
 
     if (targetNode) {
       var layer;
-      var targetIds;
+      var targetIds = [];
       var z = os.data.ZOrder.getInstance();
 
       if (targetNode instanceof os.data.LayerNode) {
@@ -204,28 +186,68 @@ os.ui.LayerTreeCtrl.prototype.doMove = function(rows, insertBefore) {
         targetIds = [layer.getId()];
       } else {
         var children = targetNode.getChildren();
-        targetIds = children.map((child) => child.getLayer().getId());
+        if (children) {
+          targetIds = children.map((child) => child instanceof os.data.LayerNode ? child.getLayer().getId() : null)
+              .filter(os.fn.filterFalsey);
+        }
       }
 
       if (layer instanceof os.layer.LayerGroup) {
         targetIds = /** @type {os.layer.LayerGroup} */ (layer).getLayers().map(os.layer.mapLayersToIds);
       }
 
+      // handle folder reparenting
+      var targetParent = targetNode.getParent();
+      var currentParent = nodeToMove.getParent();
+      if (targetNode instanceof os.data.FolderNode) {
+        // add it to the target folder node
+        var options = targetNode.getOptions();
+        options.children.push(nodeToMove.getId());
+
+        if (currentParent instanceof os.data.FolderNode) {
+          // remove it from its old parent if necessary
+          var currentParentOptions = currentParent.getOptions();
+          goog.array.remove(currentParentOptions.children, nodeToMove.getId());
+        }
+      } else if (targetParent instanceof os.data.FolderNode) {
+        // if the target's parent is a folder, add it to that folder
+        var parentOptions = targetParent.getOptions();
+        parentOptions.children.push(nodeToMove.getId());
+
+        if (currentParent instanceof os.data.FolderNode) {
+          // remove it from its old parent if necessary
+          var currentParentOptions = currentParent.getOptions();
+          goog.array.remove(currentParentOptions.children, nodeToMove.getId());
+        }
+      }
+
+      if (targetParent.constructor === os.ui.slick.SlickTreeNode) {
+        // handle reparenting from a folder back to the root level in the tree
+        if (currentParent instanceof os.data.FolderNode) {
+          var options = currentParent.getOptions();
+          goog.array.remove(options.children, nodeToMove.getId());
+        }
+      }
+
       for (var i = 0, n = rows.length; i < n; i++) {
         targetNode = /** @type {(os.data.LayerNode|os.data.FolderNode)} */ (this.grid.getDataItem(rows[i]));
 
         if (targetNode) {
-          var moveIds;
+          var moveIds = [];
 
           if (targetNode instanceof os.data.LayerNode) {
             layer = targetNode.getLayer();
             moveIds = [layer.getId()];
           } else {
+            // move all of the folder's children in the z-order
             var children = targetNode.getChildren();
-            moveIds = children.map((child) => child.getLayer().getId());
+            if (children) {
+              moveIds = children.map((child) => child.getLayer().getId());
+            }
           }
 
           if (layer instanceof os.layer.LayerGroup) {
+            // move all the layer group's children in the z-order
             moveIds = /** @type {os.layer.LayerGroup} */ (layer).getLayers().map(os.layer.mapLayersToIds);
           }
 

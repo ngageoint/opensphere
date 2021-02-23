@@ -55,8 +55,13 @@ class Controller extends AbstractNodeUICtrl {
   addFolder() {
     var node = /** @type {os.data.FolderNode} */ (this.scope['item']);
     if (node) {
-      FolderManager.getInstance().createOrEditFolder(
-          /** @type {!osx.layer.FolderOptions} */ ({id: goog.string.getRandomString(), parentId: node.getId()}));
+      const folder = {
+        name: 'New Folder',
+        id: goog.string.getRandomString(),
+        parentId: node.getId(),
+        children: []
+      };
+      FolderManager.getInstance().createOrEditFolder(folder);
     }
   }
 

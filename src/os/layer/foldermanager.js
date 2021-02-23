@@ -1,10 +1,11 @@
 goog.module('os.layer.FolderManager');
 goog.module.declareLegacyNamespace();
 
-const {FolderEventType} = goog.require('os.layer.folder');
 const EventTarget = goog.require('goog.events.EventTarget');
 const Settings = goog.require('os.config.Settings');
 const ZOrder = goog.require('os.data.ZOrder');
+const {FolderEventType, SettingsKey} = goog.require('os.layer.folder');
+const {remove} = goog.require('goog.array');
 
 
 /**
@@ -47,7 +48,7 @@ class FolderManager extends EventTarget {
      */
     this.folders = [];
 
-    ZOrder.getInstance().listen('zOrder:update', this.onZOrderChange, false, this);
+    ZOrder.getInstance().listen('zOrder:update', this.updateZOrder, false, this);
 
     this.restore();
   }
@@ -56,7 +57,7 @@ class FolderManager extends EventTarget {
    * @inheritDoc
    */
   disposeInternal() {
-    ZOrder.getInstance().unlisten('zOrder:update', this.onZOrderChange, false, this);
+    ZOrder.getInstance().unlisten('zOrder:update', this.updateZOrder, false, this);
   }
 
   /**
@@ -69,14 +70,13 @@ class FolderManager extends EventTarget {
       parentFolder.children.push(options);
 
       options.children.forEach((child) => {
-        goog.array.remove(parentFolder.children, child);
+        remove(parentFolder.children, child);
       });
     } else {
       this.folders.push(options);
     }
 
-    sortFromZOrder(options);
-
+    this.updateZOrder();
     this.dispatchEvent(FolderEventType.FOLDER_CREATED);
     this.persist();
   }
@@ -93,9 +93,9 @@ class FolderManager extends EventTarget {
       // check if it has a parent, if so, remove it from there
       const parent = this.getFolder(folder.parentId);
       if (parent) {
-        removed = goog.array.remove(parent.children, folder);
+        removed = remove(parent.children, folder);
       } else {
-        removed = goog.array.remove(this.folders, folder);
+        removed = remove(this.folders, folder);
       }
     }
 
@@ -178,8 +178,9 @@ class FolderManager extends EventTarget {
 
   /**
    * Handler for Z-Order update events.
+   * @protected
    */
-  onZOrderChange() {
+  updateZOrder() {
     const updateSort = (folder) => {
       sortFromZOrder(folder);
       if (folder.children) {
@@ -189,21 +190,31 @@ class FolderManager extends EventTarget {
 
     // this.folders.sort(sortFromZOrder);
     this.folders.forEach(updateSort);
-    this.dispatchEvent(FolderEventType.FOLDER_CREATED);
+    this.dispatchEvent(FolderEventType.FOLDER_UPDATED);
+  }
+
+  /**
+   * Clears the manager.
+   */
+  clear() {
+    this.folders = [];
+    this.dispatchEvent(FolderEventType.FOLDERS_CLEARED);
   }
 
   /**
    * Saves the folders to settings.
+   * @protected
    */
   persist() {
-    Settings.getInstance().set('layers.folders', this.folders);
+    Settings.getInstance().set(SettingsKey.FOLDERS, this.folders);
   }
 
   /**
    * Restores the settings.
+   * @protected
    */
   restore() {
-    this.folders = /** @type {Array<osx.layer.FolderOptions>} */ (Settings.getInstance().get('layers.folders', []));
+    this.folders = /** @type {Array<osx.layer.FolderOptions>} */ (Settings.getInstance().get(SettingsKey.FOLDERS, []));
   }
 
   /**
