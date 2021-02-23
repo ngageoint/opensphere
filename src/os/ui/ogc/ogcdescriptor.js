@@ -156,6 +156,34 @@ os.ui.ogc.OGCDescriptor = function() {
   this.wmsSupportedCRS_ = null;
 
   /**
+   * If WMTS is enabled for this descriptor.
+   * @type {boolean}
+   * @private
+   */
+  this.wmtsEnabled_ = false;
+
+  /**
+   * The WMTS date format.
+   * @type {?string}
+   * @private
+   */
+  this.wmtsDateFormat_ = null;
+
+  /**
+   * The WMTS options.
+   * @type {Array<olx.source.WMTSOptions>}
+   * @private
+   */
+  this.wmtsOptions_ = null;
+
+  /**
+   * The WMTS time format.
+   * @type {?string}
+   * @private
+   */
+  this.wmtsTimeFormat_ = null;
+
+  /**
    * Marker for whether the layer is deprecated.
    * @type {boolean}
    * @private
@@ -215,7 +243,7 @@ os.ui.ogc.OGCDescriptor.prototype.setAbstract = function(value) {
  * @inheritDoc
  */
 os.ui.ogc.OGCDescriptor.prototype.setActive = function(value) {
-  if (this.isWmsEnabled() || this.isWfsEnabled()) {
+  if (this.isWmsEnabled() || this.isWmtsEnabled() || this.isWfsEnabled()) {
     // only activate the descriptor if at least one layer type is enabled
     os.ui.ogc.OGCDescriptor.base(this, 'setActive', value);
   } else {
@@ -551,6 +579,70 @@ os.ui.ogc.OGCDescriptor.prototype.getWmsUrl = function() {
  */
 os.ui.ogc.OGCDescriptor.prototype.setWmsUrl = function(value) {
   this.wmsUrl_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.ogc.OGCDescriptor.prototype.isWmtsEnabled = function() {
+  return this.wmtsEnabled_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.ogc.OGCDescriptor.prototype.setWmtsEnabled = function(value) {
+  this.wmtsEnabled_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.ogc.OGCDescriptor.prototype.getWmtsDateFormat = function() {
+  return this.wmtsDateFormat_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.ogc.OGCDescriptor.prototype.setWmtsDateFormat = function(value) {
+  this.wmtsDateFormat_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.ogc.OGCDescriptor.prototype.getWmtsOptions = function() {
+  return this.wmtsOptions_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.ogc.OGCDescriptor.prototype.setWmtsOptions = function(value) {
+  this.wmtsOptions_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.ogc.OGCDescriptor.prototype.getWmtsTimeFormat = function() {
+  return this.wmtsTimeFormat_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.ogc.OGCDescriptor.prototype.setWmtsTimeFormat = function(value) {
+  this.wmtsTimeFormat_ = value;
 };
 
 

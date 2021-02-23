@@ -1,5 +1,6 @@
 goog.provide('os.ui.ogc.wms.IWMSLayerParser');
-goog.require('os.ui.ogc.wms.IWMSLayer');
+
+goog.requireType('os.ui.ogc.wms.IWMSLayer');
 
 
 

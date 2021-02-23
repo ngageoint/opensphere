@@ -1,5 +1,6 @@
 goog.provide('plugin.file.shp.SHPExporter');
 
+goog.require('goog.crypt');
 goog.require('goog.log');
 goog.require('ol.Feature');
 goog.require('ol.geom.GeometryCollection');
@@ -140,6 +141,15 @@ plugin.file.shp.SHPExporter.LOGGER_ = goog.log.getLogger('plugin.file.shp.SHPExp
 plugin.file.shp.SHPExporter.PRJ_WGS84 = 'GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",' +
     'SPHEROID["WGS_1984",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]]';
 
+/**
+ * Code Page content for WGS84.
+ *
+ * This is used to indicate the file encoding, and is provided in a side-car (.cpg) file.
+ *
+ * @type {string}
+ * @const
+ */
+plugin.file.shp.SHPExporter.CPG_UTF8 = 'UTF-8';
 
 /**
  * @inheritDoc
@@ -235,12 +245,13 @@ plugin.file.shp.SHPExporter.prototype.parseColumn_ = function(item, col) {
 
       this.columnName_[name] = fieldName;
     }
+    var valueAsByteArrayLength = goog.crypt.stringToUtf8ByteArray(value).length;
 
     // determine the maximum length for column values
     if (name in this.columnTypes_) {
-      this.columnLengths_[name] = Math.min(Math.max(this.columnLengths_[name], value.length), 255);
+      this.columnLengths_[name] = Math.min(Math.max(this.columnLengths_[name], valueAsByteArrayLength), 255);
     } else {
-      this.columnLengths_[name] = Math.min(value.length, 255);
+      this.columnLengths_[name] = Math.min(valueAsByteArrayLength, 255);
       this.columns_.push(col);
     }
 
@@ -619,13 +630,16 @@ plugin.file.shp.SHPExporter.prototype.appendSHXHeader = function() {
  *
  * @param {DataView} dv
  * @param {number} pos - the position
- * @param {string} str - the string to conver to bytes
+ * @param {string} str - the string to convert to bytes
+ * @return {number} the number of bytes written
  */
 plugin.file.shp.SHPExporter.prototype.writeMultiByte = function(dv, pos, str) {
-  for (var i = 0; str && i < str.length; ++i) {
-    dv.setUint8(pos, str.charCodeAt(i));
+  var ba = goog.crypt.stringToUtf8ByteArray(str);
+  for (var i = 0; ba && i < ba.length; ++i) {
+    dv.setUint8(pos, ba[i]);
     pos++;
   }
+  return ba.length;
 };
 
 
@@ -1049,10 +1063,10 @@ plugin.file.shp.SHPExporter.prototype.addMetadata_ = function(item) {
       value = value.substr(0, this.columnLengths_[name]);
     }
 
-    this.writeMultiByte(this.dvDbf_, this.header_.dbf.position, value);
+    var numBytes = this.writeMultiByte(this.dvDbf_, this.header_.dbf.position, value);
 
     // fill with nulls
-    for (var i = value.length; i < this.columnLengths_[name]; ++i) {
+    for (var i = numBytes; i < this.columnLengths_[name]; ++i) {
       this.dvDbf_.setUint8(this.header_.dbf.position + i, 0x0);
     }
 
@@ -1110,6 +1124,11 @@ plugin.file.shp.SHPExporter.prototype.appendFooter = function() {
   prjFile.setContent(plugin.file.shp.SHPExporter.PRJ_WGS84);
   prjFile.setFileName(this.name + '.prj');
   this.addFile(prjFile);
+
+  var cpgFile = new os.file.File();
+  cpgFile.setContent(plugin.file.shp.SHPExporter.CPG_UTF8);
+  cpgFile.setFileName(this.name + '.cpg');
+  this.addFile(cpgFile);
 };
 
 
