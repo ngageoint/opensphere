@@ -1563,6 +1563,7 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
     var isFolder = false;
     if (this.isValidWMSLayer(layerDescriptor)) {
       // node is a wms layer
+      layer = new os.ui.data.DescriptorNode();
       var name = layerDescriptor.getWmsName();
       if (name && name != 'IWMSLayer') {
         if (layerDescriptor.hasTimeExtent()) {
@@ -1588,14 +1589,14 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
 
         this.addDescriptor(layerDescriptor);
 
-        layer = new os.ui.data.DescriptorNode();
+        // add the complete descriptor to the layer
         layer.setDescriptor(layerDescriptor);
       } else {
         isFolder = true;
       }
     }
 
-    if (!layer && 'Layer' in node) {
+    if ('Layer' in node) {
       // node is a folder
       isFolder = true;
       layer = new os.ui.slick.SlickTreeNode();
@@ -1616,7 +1617,7 @@ os.ui.ogc.OGCServer.prototype.parseLayer = function(node, version, crsList, opt_
       }
     }
 
-    if (isFolder) {
+    if (layer && isFolder) {
       var children = layer.getChildren();
       if (!children || children.length === 0) {
         return null;
