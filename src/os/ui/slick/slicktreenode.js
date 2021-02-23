@@ -113,6 +113,14 @@ os.ui.slick.SlickTreeNode = function() {
   this.bold = true;
 
   /**
+   * @type {Object}
+   */
+  this.icons = {
+    'collapsed': os.ui.NodeToggleCtrl.DEFAULT_COLLAPSED,
+    'expanded': os.ui.NodeToggleCtrl.DEFAULT_EXPANDED
+  };
+
+  /**
    * @type {boolean}
    * @private
    */
@@ -399,6 +407,30 @@ os.ui.slick.SlickTreeNode.prototype.formatIcons = function() {
 
 
 /**
+ * API call to get the HTML for the toggle icons
+ * Toggle Icons can be: classIcon
+ * @return {Object<string, string>} The toggle icons HTML
+ * @export
+ */
+os.ui.slick.SlickTreeNode.prototype.getToggleIcons = function() {
+  return this.icons;
+};
+
+
+/**
+ * API call to get the HTML for the toggle icons
+ * Toggle Icons can be: classIcon
+ * @param {string} collapsed
+ * @param {string} expanded
+ * @export
+ */
+os.ui.slick.SlickTreeNode.prototype.setToggleIcons = function(collapsed, expanded) {
+  this.icons['collapsed'] = collapsed;
+  this.icons['expanded'] = expanded;
+};
+
+
+/**
  * Gets the HTML for the node UI
  *
  * @return {!string} The node UI HTML
@@ -441,6 +473,7 @@ os.ui.slick.SlickTreeNode.prototype.performAction = function(type) {
 os.ui.slick.SlickTreeNode.prototype.updateFrom = function(other) {
   var node = /** @type {os.ui.slick.SlickTreeNode} */ (other);
 
+  this.nodeUI = node.nodeUI;
   this.collapsed = node.collapsed;
   this.setToolTip(node.getToolTip());
   this.setCheckboxVisible(node.getCheckboxVisible());
