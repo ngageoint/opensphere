@@ -48,7 +48,7 @@ os.file.mime.text.BOMS_ = [
 
 /**
  * The logger.
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @const
  * @private
  */
@@ -65,22 +65,12 @@ os.file.mime.text.getText = function(buffer, opt_file) {
     var s = os.file.mime.text.hasDeclaredEncoding_(buffer, opt_file);
 
     if (!s) {
-      // I'm aware this looks dumb and doubles the memory, but jschardet lacks the ability
-      // to take a typed array as input.
-      var binaryString = '';
       var arr = new Uint8Array(buffer);
-      // Don't send jschardet more than 16KB of data. It is pretty sluggish on large files
-      var max = Math.min(arr.length, 16 * 1024);
-      for (var i = 0; i < max; i++) {
-        binaryString += String.fromCharCode(arr[i]);
-      }
-
-      var encoding = jschardet.detect(binaryString).encoding;
+      var encoding = chardetng.detect(buffer);
       if (encoding) {
         // strip any UTF BOMs before decoding
         var boms = os.file.mime.text.BOMS_;
-        var n;
-        for (i = 0, n = boms.length; i < n; i++) {
+        for (var i = 0, n = boms.length; i < n; i++) {
           var bom = boms[i];
           if (arr.length >= bom.length && goog.array.equals(arr.slice(0, bom.length), bom)) {
             buffer = buffer.slice(bom.length);

@@ -9,7 +9,7 @@ goog.require('os.ui.ogc.OGCServer');
 
 
 /**
- * The GeoFusebox server provider
+ * The GeoServer server provider.
  *
  * @implements {os.data.IDataProvider}
  * @extends {os.ui.ogc.OGCServer}
@@ -35,7 +35,7 @@ plugin.ogc.GeoServer.TYPE = 'geoserver';
 /**
  * The logger.
  * @const
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @private
  */
 plugin.ogc.GeoServer.LOGGER_ = goog.log.getLogger('plugin.ogc.GeoServer');

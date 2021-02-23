@@ -75,7 +75,7 @@ goog.addSingletonGetter(os.data.DataManager);
 
 /**
  * The logger.
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @const
  * @private
  */

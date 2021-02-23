@@ -728,7 +728,7 @@ os.config.Settings.prototype.get = function(keys, opt_default) {
 
   if (this.loaded_) {
     var val = goog.object.getValueByKeys(this.mergedConfig_, keys);
-    if (goog.isArray(val)) {
+    if (Array.isArray(val)) {
       val = goog.array.clone(val);
     } else if (goog.isObject(val)) {
       val = goog.object.clone(val);

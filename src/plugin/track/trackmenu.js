@@ -597,7 +597,7 @@ plugin.track.menu.getTracks = function(context) {
   if (context) {
     if (context.feature && os.track.isTrackFeature(context.feature)) {
       tracks.push(/** @type {!ol.Feature} */ (context.feature));
-    } else if (goog.isArray(context)) {
+    } else if (Array.isArray(context)) {
       var trackNodes = plugin.track.menu.getTrackNodes(context);
       if (trackNodes && trackNodes.length === context.length) {
         for (var i = 0; i < trackNodes.length; i++) {

@@ -1559,7 +1559,7 @@ os.track.updateTrackZIndex = function(tracks) {
   for (var i = 0; i < tracks.length; i++) {
     var track = tracks[i];
     var trackStyles = /** @type {!Array<!Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
-    if (!goog.isArray(trackStyles)) {
+    if (!Array.isArray(trackStyles)) {
       trackStyles = [trackStyles];
     }
 

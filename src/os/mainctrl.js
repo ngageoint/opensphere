@@ -171,7 +171,6 @@ goog.require('plugin.track.TrackPlugin');
 goog.require('plugin.vectortile.VectorTilePlugin');
 goog.require('plugin.vectortools.VectorToolsPlugin');
 goog.require('plugin.weather.WeatherPlugin');
-goog.require('plugin.wmts.Plugin');
 goog.require('plugin.xyz.XYZPlugin');
 
 
@@ -541,7 +540,6 @@ os.MainCtrl.prototype.addPlugins = function() {
   os.ui.pluginManager.addPlugin(new plugin.weather.WeatherPlugin());
   os.ui.pluginManager.addPlugin(new plugin.overview.OverviewPlugin());
   os.ui.pluginManager.addPlugin(new plugin.arc.ArcPlugin());
-  os.ui.pluginManager.addPlugin(new plugin.wmts.Plugin());
   os.ui.pluginManager.addPlugin(plugin.places.PlacesPlugin.getInstance());
   os.ui.pluginManager.addPlugin(plugin.position.PositionPlugin.getInstance());
   os.ui.pluginManager.addPlugin(plugin.vectortools.VectorToolsPlugin.getInstance());
@@ -896,7 +894,7 @@ os.MainCtrl.prototype.onImportEvent_ = function(opt_event) {
 os.MainCtrl.prototype.onLayerConfigEvent_ = function(event) {
   var options = event.options;
   if (options) {
-    if (goog.isArray(options)) {
+    if (Array.isArray(options)) {
       var cmds = [];
       for (var i = 0, n = options.length; i < n; i++) {
         var option = goog.object.clone(options[i]);
