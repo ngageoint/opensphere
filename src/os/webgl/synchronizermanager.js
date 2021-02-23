@@ -2,6 +2,8 @@ goog.provide('os.webgl.SynchronizerManager');
 
 goog.require('os.layer.SynchronizerType');
 
+goog.requireType('os.webgl.AbstractWebGLSynchronizer');
+
 
 
 /**
