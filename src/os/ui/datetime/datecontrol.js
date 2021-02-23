@@ -335,10 +335,9 @@ os.ui.datetime.DateControlCtrl.prototype.shiftDate = function(direction) {
   if (!this['disabled']) {
     if (this['duration'] === os.time.Duration.CUSTOM) {
       // For custom durations, multiply the offset by the difference in days between the start and end dates
-      const millisecondsPerDay = 1000 * 60 * 60 * 24;
       const startDate = this['startDate'].getTime();
-      const endDate = this['endDate'].getTime() + millisecondsPerDay;
-      modifier = (endDate - startDate) / millisecondsPerDay;
+      const endDate = this['endDate'].getTime() + os.time.millisecondsInDay;
+      modifier = (endDate - startDate) / os.time.millisecondsInDay;
     }
     this['startDate'] = os.time.offset(this['startDate'], this['duration'], direction * modifier, true);
     this['endDate'] = os.time.offset(this['endDate'], this['duration'], direction * modifier, true);
