@@ -114,18 +114,35 @@ os.ui.draw.BaseDrawControlsCtrl = function($scope, $element) {
    * If the line control is supported.
    * @type {boolean}
    */
-  this['supportsLines'] = $scope['supportsLines'] || false;
+  this['supportsLines'] = false;
 
   /**
    * If extra controls should be hidden.
    * @type {boolean}
    */
-  this['hideExtraControls'] = $scope['hideExtraControls'] || false;
+  this['hideExtraControls'] = false;
 
   /**
    * @type {os.ui.menu.Menu|undefined}
    */
   this['controlMenu'] = os.ui.menu.draw.MENU;
+};
+goog.inherits(os.ui.draw.BaseDrawControlsCtrl, goog.Disposable);
+
+
+/**
+ * The logger.
+ * @const
+ * @type {goog.log.Logger}
+ * @private
+ */
+os.ui.draw.BaseDrawControlsCtrl.LOGGER_ = goog.log.getLogger('os.ui.draw.BaseDrawControlsCtrl');
+
+
+/**
+ * Angular initialization hook. Sets up event listening and our controls menu.
+ */
+os.ui.draw.BaseDrawControlsCtrl.prototype.$onInit = function() {
   this.initControlMenu();
 
   os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWSTART, this.apply, false, this);
@@ -139,19 +156,15 @@ os.ui.draw.BaseDrawControlsCtrl = function($scope, $element) {
 
   var selected = /** @type {string} */ (os.settings.get('drawType', os.ui.ol.interaction.DragBox.TYPE));
   this.setSelectedControl(selected);
-
-  $scope.$on('$destroy', this.dispose.bind(this));
 };
-goog.inherits(os.ui.draw.BaseDrawControlsCtrl, goog.Disposable);
 
 
 /**
- * The logger.
- * @const
- * @type {goog.log.Logger}
- * @private
+ * Angular destruction hook.
  */
-os.ui.draw.BaseDrawControlsCtrl.LOGGER_ = goog.log.getLogger('os.ui.draw.BaseDrawControlsCtrl');
+os.ui.draw.BaseDrawControlsCtrl.prototype.$onDestroy = function() {
+  this.dispose();
+};
 
 
 /**

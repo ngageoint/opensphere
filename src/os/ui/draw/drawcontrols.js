@@ -47,12 +47,11 @@ os.ui.Module.directive('osDrawControls', [os.ui.draw.drawControlsDirective]);
  * @ngInject
  */
 os.ui.draw.DrawControlsCtrl = function($scope, $element) {
-  // If we haven't set supportsLines on scope, it should be 'true'
-  if ($scope['supportsLines'] == null) {
-    $scope['supportsLines'] = true;
-  }
-
   os.ui.draw.DrawControlsCtrl.base(this, 'constructor', $scope, $element);
+
+  // Base draw controller doesn't support lines as a default.
+  this['supportsLines'] = true;
+
   this.log = os.ui.draw.DrawControlsCtrl.LOGGER_;
 };
 goog.inherits(os.ui.draw.DrawControlsCtrl, os.ui.draw.BaseDrawControlsCtrl);
