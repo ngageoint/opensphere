@@ -1,4 +1,5 @@
 goog.provide('os.layer.AnimatedTile');
+
 goog.require('goog.async.Delay');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.layer.PropertyChange');
@@ -9,6 +10,9 @@ goog.require('os.time.TimelineController');
 goog.require('os.ui.Icons');
 goog.require('os.ui.IconsSVG');
 goog.require('os.ui.ScreenOverlayCtrl');
+
+goog.requireType('ol.source.TileArcGISRest');
+goog.requireType('ol.source.TileWMS');
 
 
 
