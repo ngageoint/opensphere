@@ -13,6 +13,8 @@ goog.require('os.im.action.default');
 goog.require('os.plugin.PluginManager');
 goog.require('os.ui.filter');
 
+goog.requireType('os.im.action.IImportAction');
+
 
 /**
  * Manager for import actions.
