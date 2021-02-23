@@ -2,9 +2,9 @@ goog.module('os.ui.node.FolderNodeUI');
 goog.module.declareLegacyNamespace();
 
 const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
-const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const FolderManager = goog.require('os.layer.FolderManager');
 const Module = goog.require('os.ui.Module');
+const {launchRemoveFolder} = goog.require('os.layer.folder');
 
 const FolderNode = goog.requireType('os.data.FolderNode');
 
@@ -20,7 +20,7 @@ const directive = () => ({
   template: `<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">
       <span ng-click="nodeUi.addFolder()"><i class="fa fa-folder fa-fw c-glyph" title="Create a new folder"></i></span>
       <span ng-click="nodeUi.edit()"><i class="fa fa-pencil fa-fw c-glyph" title="Edit the folder"></i></span>
-      <span ng-click="nodeUi.tryRemove()"><i class="fa fa-times fa-fw c-glyph" title="Remove the folder"></i></span>
+      <span ng-click="nodeUi.tryRemove()"><i class="fa fa-times fa-fw c-glyph" title="Unfolder"></i></span>
       </span>`.trim(),
   controller: Controller,
   controllerAs: 'nodeUi'
@@ -73,17 +73,7 @@ class Controller extends AbstractNodeUICtrl {
     var node = /** @type {FolderNode} */ (this.scope['item']);
     if (node) {
       if (node.hasChildren()) {
-        var label = node.getLabel();
-        var prompt = 'Are you sure you want to remove the folder? This will remove all its descendants.';
-
-        ConfirmUI.launchConfirm(/** @type {!osx.window.ConfirmOptions} */ ({
-          confirm: this.removeNodeInternal.bind(this, node),
-          prompt: prompt,
-          windowOptions: /** @type {!osx.window.WindowOptions} */ ({
-            icon: 'fa fa-trash-o',
-            label: 'Remove ' + label
-          })
-        }));
+        launchRemoveFolder(node.getOptions(), this.removeNodeInternal.bind(this, node));
       } else {
         this.removeNodeInternal(node);
       }

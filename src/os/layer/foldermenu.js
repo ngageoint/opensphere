@@ -4,7 +4,7 @@ goog.module.declareLegacyNamespace();
 const FolderManager = goog.require('os.layer.FolderManager');
 const FolderNode = goog.require('os.data.FolderNode');
 const layerMenu = goog.require('os.ui.menu.layer');
-const {FolderEventType} = goog.require('os.layer.folder');
+const {FolderEventType, launchRemoveFolder} = goog.require('os.layer.folder');
 const {getLayersFromContext} = goog.require('os.ui.menu.layer');
 const {getRandomString} = goog.require('goog.string');
 
@@ -55,13 +55,45 @@ const createFolder = function(event) {
  * Removes a folder.
  * @param {MenuEvent<Context>} event
  */
-const removeFolder = function(event) {
-  const context = event.getContext();
-  const fm = FolderManager.getInstance();
+const unfolder = function(event) {
+  const context = event.getContext()[0];
 
-  if (context.id) {
-    fm.removeFolder(context.id);
+  if (context instanceof FolderNode) {
+    launchRemoveFolder(context.getOptions(), onUnfolder.bind(undefined, context.getId()));
   }
+};
+
+
+/**
+ * Handle unfoldering a folder.
+ * @param {!string} id The ID to remove.
+ * @protected
+ */
+const onUnfolder = (id) => {
+  FolderManager.getInstance().removeFolder(id);
+};
+
+
+/**
+ * Removes a folder.
+ * @param {MenuEvent<Context>} event
+ */
+const removeFolder = function(event) {
+  const context = event.getContext()[0];
+
+  if (context instanceof FolderNode) {
+    launchRemoveFolder(context.getOptions(), onRemoveFolder.bind(undefined, context), true);
+  }
+};
+
+
+/**
+ * Handle removing a folder and its child layers.
+ * @param {!FolderNode} folderNode The folder node to remove.
+ * @protected
+ */
+const onRemoveFolder = (folderNode) => {
+  FolderManager.getInstance().removeFolder(folderNode.getId());
 };
 
 
@@ -86,6 +118,24 @@ const showCreateFolder = function(context) {
  * @this {MenuItem}
  */
 const showRemoveFolder = function(context) {
+  this.visible = false;
+
+  if (context && context.length == 1) {
+    const folder = /** @type {FolderNode} */ (context[0]);
+
+    if (folder instanceof FolderNode) {
+      this.visible = folder.hasChildren();
+    }
+  }
+};
+
+
+/**
+ * Show a menu item if the context supports unfoldering.
+ * @param {Context} context The menu context.
+ * @this {MenuItem}
+ */
+const showUnfolder = function(context) {
   this.visible = false;
 
   if (context && context.length == 1) {
@@ -117,14 +167,25 @@ const setup = function() {
     });
 
     group.addChild({
-      label: 'Remove Folder',
+      label: 'Remove Folder and Children',
       eventType: FolderEventType.REMOVE_FOLDER,
-      tooltip: 'Remove the folder.',
-      icons: ['<i class="fa fa-fw fa-folder"></i>'],
+      tooltip: 'Removes the folder and its children.',
+      icons: ['<i class="fa fa-fw fa-times"></i>'],
       metricKey: 'os.layer.removeFolder',
       beforeRender: showRemoveFolder,
       handler: removeFolder,
-      sort: 0
+      sort: 20
+    });
+
+    group.addChild({
+      label: 'Unfolder',
+      eventType: FolderEventType.UNFOLDER,
+      tooltip: 'Unfolder the layers.',
+      icons: ['<i class="fa fa-fw fa-folder"></i>'],
+      metricKey: 'os.layer.unfolder',
+      beforeRender: showUnfolder,
+      handler: unfolder,
+      sort: 10
     });
   }
 };

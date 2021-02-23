@@ -94,6 +94,11 @@ class FolderManager extends EventTarget {
       const parent = this.getFolder(folder.parentId);
       if (parent) {
         removed = remove(parent.children, folder);
+
+        if (folder.children) {
+          parent.children.push(...folder.children);
+          this.updateZOrder();
+        }
       } else {
         removed = remove(this.folders, folder);
       }
