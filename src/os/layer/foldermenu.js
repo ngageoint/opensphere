@@ -75,29 +75,6 @@ const onUnfolder = (id) => {
 
 
 /**
- * Removes a folder.
- * @param {MenuEvent<Context>} event
- */
-const removeFolder = function(event) {
-  const context = event.getContext()[0];
-
-  if (context instanceof FolderNode) {
-    launchRemoveFolder(context.getOptions(), onRemoveFolder.bind(undefined, context), true);
-  }
-};
-
-
-/**
- * Handle removing a folder and its child layers.
- * @param {!FolderNode} folderNode The folder node to remove.
- * @protected
- */
-const onRemoveFolder = (folderNode) => {
-  FolderManager.getInstance().removeFolder(folderNode.getId());
-};
-
-
-/**
  * Show a menu item if the context supports creating a folder.
  * @param {Context} context The menu context.
  * @this {MenuItem}
@@ -108,24 +85,6 @@ const showCreateFolder = function(context) {
   if (context && context.length > 0) {
     var layers = os.ui.menu.layer.getLayersFromContext(context);
     this.visible = layers.length == context.length;
-  }
-};
-
-
-/**
- * Show a menu item if the context supports removing a folder.
- * @param {Context} context The menu context.
- * @this {MenuItem}
- */
-const showRemoveFolder = function(context) {
-  this.visible = false;
-
-  if (context && context.length == 1) {
-    const folder = /** @type {FolderNode} */ (context[0]);
-
-    if (folder instanceof FolderNode) {
-      this.visible = folder.hasChildren();
-    }
   }
 };
 
@@ -164,17 +123,6 @@ const setup = function() {
       beforeRender: showCreateFolder,
       handler: createFolder,
       sort: 0
-    });
-
-    group.addChild({
-      label: 'Remove Folder and Children',
-      eventType: FolderEventType.REMOVE_FOLDER,
-      tooltip: 'Removes the folder and its children.',
-      icons: ['<i class="fa fa-fw fa-times"></i>'],
-      metricKey: 'os.layer.removeFolder',
-      beforeRender: showRemoveFolder,
-      handler: removeFolder,
-      sort: 20
     });
 
     group.addChild({
