@@ -69,8 +69,8 @@ os.ui.draw.DrawControlsCtrl.LOGGER_ = goog.log.getLogger('os.ui.draw.DrawControl
 /**
  * @inheritDoc
  */
-os.ui.draw.DrawControlsCtrl.prototype.disposeInternal = function() {
-  os.ui.draw.DrawControlsCtrl.base(this, 'disposeInternal');
+os.ui.draw.DrawControlsCtrl.prototype.$onDestroy = function() {
+  os.ui.draw.DrawControlsCtrl.base(this, '$onDestroy');
   goog.events.unlisten(os.MapContainer.getInstance(), os.MapEvent.MAP_READY, this.onMapReady, false, this);
 };
 

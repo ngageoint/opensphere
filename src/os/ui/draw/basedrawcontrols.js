@@ -1,7 +1,6 @@
 goog.provide('os.ui.draw.BaseDrawControlsCtrl');
 goog.provide('os.ui.draw.baseDrawControlsDirective');
 
-goog.require('goog.Disposable');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('ol.Feature');
@@ -54,7 +53,6 @@ os.ui.Module.directive('drawControls', [os.ui.draw.baseDrawControlsDirective]);
  *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
- * @extends {goog.Disposable}
  * @constructor
  * @ngInject
  */
@@ -127,7 +125,6 @@ os.ui.draw.BaseDrawControlsCtrl = function($scope, $element) {
    */
   this['controlMenu'] = os.ui.menu.draw.MENU;
 };
-goog.inherits(os.ui.draw.BaseDrawControlsCtrl, goog.Disposable);
 
 
 /**
@@ -140,7 +137,7 @@ os.ui.draw.BaseDrawControlsCtrl.LOGGER_ = goog.log.getLogger('os.ui.draw.BaseDra
 
 
 /**
- * Angular initialization hook. Sets up event listening and our controls menu.
+ * Angular initialization lifecycle function. Sets up event listening and our controls menu.
  */
 os.ui.draw.BaseDrawControlsCtrl.prototype.$onInit = function() {
   this.initControlMenu();
@@ -160,19 +157,9 @@ os.ui.draw.BaseDrawControlsCtrl.prototype.$onInit = function() {
 
 
 /**
- * Angular destruction hook.
+ * Angular destruction lifecycle function. Stop event listening.
  */
 os.ui.draw.BaseDrawControlsCtrl.prototype.$onDestroy = function() {
-  this.dispose();
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.draw.BaseDrawControlsCtrl.prototype.disposeInternal = function() {
-  os.ui.draw.BaseDrawControlsCtrl.base(this, 'disposeInternal');
-
   os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWSTART, this.apply, false, this);
   os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWEND, this.onDrawEnd, false, this);
   os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWCANCEL, this.apply, false, this);
