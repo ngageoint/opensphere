@@ -144,6 +144,14 @@ class Registry extends EventTarget {
         case RegistryPropertyChange.REMOVE:
           onRemove.call(opt_this, event.newVal_);
           break;
+        case RegistryPropertyChange.CLEAR:
+          const keys = event.newVal_;
+          if (keys && keys.length > 0) {
+            keys.forEach((key) => {
+              onRemove.call(opt_this, key);
+            });
+          }
+          break;
         default:
           break;
       }
@@ -187,9 +195,8 @@ class Registry extends EventTarget {
    * Empty out the Registry
    */
   clear() {
-    this.keys().forEach((key) => {
-      this.remove(key);
-    });
+    this.dispatchEvent(new PropertyChangeEvent(RegistryPropertyChange.CLEAR, this.keys()));
+    this.map_ = /** @type {!Object<string, T>} */ ({});
   }
 }
 
