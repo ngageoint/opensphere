@@ -14,6 +14,8 @@ const OsLayerPreset = goog.require('os.layer.preset');
 const SettingsPresetService = goog.require('os.layer.preset.SettingsPresetService');
 const IFilterable = goog.require('os.filter.IFilterable');
 
+const osState = goog.require('os.state');
+
 const IPresetService = goog.requireType('os.layer.preset.IPresetService');
 
 
@@ -76,7 +78,7 @@ class LayerPresetManager extends Disposable {
       const layerId = layer.getId();
       if (layerId) {
         const promise = this.getPresets(layerId);
-        if (promise) {
+        if (!osState.isStateFile(layerId) && promise) {
           promise.then((presets) => {
             this.applyDefaults(layerId, presets);
           });
