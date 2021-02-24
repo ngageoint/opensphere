@@ -57,8 +57,6 @@ os.ui.Module.directive('drawControls', [os.ui.draw.baseDrawControlsDirective]);
  * @ngInject
  */
 os.ui.draw.BaseDrawControlsCtrl = function($scope, $element) {
-  os.ui.draw.BaseDrawControlsCtrl.base(this, 'constructor');
-
   /**
    * @type {?angular.Scope}
    * @private
