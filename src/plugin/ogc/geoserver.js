@@ -9,7 +9,7 @@ goog.require('os.ui.ogc.OGCServer');
 
 
 /**
- * The GeoFusebox server provider
+ * The GeoServer server provider.
  *
  * @implements {os.data.IDataProvider}
  * @extends {os.ui.ogc.OGCServer}

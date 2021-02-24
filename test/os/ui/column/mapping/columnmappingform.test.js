@@ -1,13 +1,16 @@
 goog.require('os.data.ConfigDescriptor');
 goog.require('os.ui.column.mapping.ColumnMappingFormCtrl');
 goog.require('os.ui.column.mapping.columnMappingFormDirective');
-goog.require('plugin.ogc.OGCLayerDescriptor');
 goog.require('plugin.ogc.GeoServer');
-goog.require('plugin.wmts.Server');
+goog.require('plugin.ogc.OGCLayerDescriptor');
+goog.require('plugin.ogc.wmts.WMTSServer');
 
 
 describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
-  var $scope, cmForm, element;
+  var $scope;
+  var cmForm;
+  var element;
+
   var mapping = new os.column.ColumnMapping();
 
   var ogclayerMock = new plugin.ogc.OGCLayerDescriptor;
@@ -17,7 +20,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
   var descriptorList = [];
 
 
-  // eslint-disable-next-line require-jsdoc
+  // eslint-disable-next-line
   function timeout(fn, delay, invokeApply) {
 
   }
@@ -36,7 +39,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
           '<input ng-model="model.somenum" name="somenum" integer />' +
           '</form>'
       ).appendTo(parent);
-      $scope.model = { somenum: null };
+      $scope.model = {somenum: null};
       $compile(element)($scope);
       $scope['columnMapping'] = mapping;
 
@@ -73,7 +76,6 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
   });
 
   it('should increase tree when adding a new column', function() {
-
     descriptorList.push(ogclayerMock);
     descriptorList.push(ogclayerMock);
     descriptorList.push(ogclayerMock2);
@@ -110,12 +112,11 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
   });
 
   it('should validate if more than one colomn exists', function() {
-
     var column = new os.column.ColumnMapping;
 
-    column.addColumn('bob','test2');
+    column.addColumn('bob', 'test2');
     spyOn(os.column.ColumnMappingManager.getInstance(), 'getOwnerMapping').andReturn(column);
-    column.addColumn('bob','test2');
+    column.addColumn('bob', 'test2');
 
     var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
 
@@ -126,7 +127,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
     expect(cmForm.$valid).toBe(false);
   });
 
-  it('should return the all descriptros in the descriptor list', function() {
+  it('should return the all descriptors in the descriptor list', function() {
     descriptorList.push(ogclayerMock);
     descriptorList.push(ogclayerMock);
     var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
@@ -140,7 +141,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
     descriptorList.push(ogclayerMock);
 
     var invalidDescriptor = new os.data.ConfigDescriptor;
-    var wmtsServer = new plugin.wmts.Server;
+    var wmtsServer = new plugin.ogc.wmts.WMTSServer;
     spyOn(wmtsServer, 'getEnabled').andReturn(true);
     spyOn(invalidDescriptor, 'getDataProvider').andReturn(wmtsServer);
     descriptorList.push(invalidDescriptor);
