@@ -11,6 +11,7 @@ goog.require('os.im.action.ImportActionManager');
 goog.require('os.implements');
 goog.require('os.layer.preset.LayerPresetManager');
 goog.require('os.source.IImportSource');
+goog.require('os.state');
 goog.require('plugin.im.action.feature');
 goog.require('plugin.im.action.feature.Entry');
 
@@ -309,7 +310,7 @@ plugin.im.action.feature.Manager.prototype.addSource_ = function(source) {
       this.sourceListeners_[id] = ol.events.listen(/** @type {ol.events.EventTarget} */ (source),
           goog.events.EventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
 
-      var promise = os.layer.preset.LayerPresetManager.getInstance().getPresets(id, true);
+      var promise = os.layer.preset.LayerPresetManager.getInstance().getPresets(id, !os.state.isStateFile(id));
 
       if (promise) {
         promise.thenAlways(() => {
