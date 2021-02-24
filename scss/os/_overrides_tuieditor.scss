@@ -367,6 +367,8 @@
   //////////// EDITOR POPUP WINDOWS //////////
   .tui-popup-wrapper,
   .tui-editor-popup {
+    z-index: $u-zindex-base;
+
     .tui-popup-body,
     button:not(.tui-popup-close-button):not(.te-ok-button):not(.te-close-button) {
       background-color: $u-theme-variables--bg-offset;
