@@ -69,6 +69,10 @@ plugin.file.shp.SHPPlugin.prototype.init = function() {
   im.registerImportUI(plugin.file.shp.mime.TYPE, new plugin.file.shp.ui.SHPImportUI());
   im.registerImportUI(plugin.file.shp.mime.ZIP_TYPE, new plugin.file.shp.ui.ZipSHPImportUI());
   im.registerParser(this.id, plugin.file.shp.SHPParser);
+  os.placesImportManager.registerImportDetails('Shapefile (SHP/DBF or ZIP)', true);
+  os.placesImportManager.registerImportUI(plugin.file.shp.mime.TYPE, new plugin.file.shp.ui.SHPImportUI());
+  os.placesImportManager.registerImportUI(plugin.file.shp.mime.ZIP_TYPE, new plugin.file.shp.ui.ZipSHPImportUI());
+  os.placesImportManager.registerParser(this.id, plugin.file.shp.SHPParser);
 
   // register the shp exporter
   os.ui.exportManager.registerExportMethod(new plugin.file.shp.SHPExporter());

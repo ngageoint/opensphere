@@ -70,6 +70,10 @@ plugin.file.geojson.GeoJSONPlugin.prototype.init = function() {
   im.registerImportUI(plugin.file.geojson.mime.TYPE, new plugin.file.geojson.GeoJSONImportUI());
   im.registerParser(this.id, plugin.file.geojson.GeoJSONSimpleStyleParser);
   im.registerParser(this.id + '-simplespec', plugin.file.geojson.GeoJSONSimpleStyleParser);
+  os.placesImportManager.registerImportDetails('GeoJSON', true);
+  os.placesImportManager.registerImportUI(plugin.file.geojson.mime.TYPE, new plugin.file.geojson.GeoJSONImportUI());
+  os.placesImportManager.registerParser(this.id, plugin.file.geojson.GeoJSONSimpleStyleParser);
+  os.placesImportManager.registerParser(this.id + '-simplespec', plugin.file.geojson.GeoJSONSimpleStyleParser);
 
   // register the geojson exporter
   os.ui.exportManager.registerExportMethod(new plugin.file.geojson.GeoJSONExporter());

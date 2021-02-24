@@ -79,6 +79,9 @@ plugin.file.kml.KMLPlugin.prototype.init = function() {
   im.registerImportUI(plugin.file.kml.mime.KMZ_TYPE, new plugin.file.kml.ui.KMLImportUI());
   im.registerParser(this.id, plugin.file.kml.KMLParser);
   im.registerParser('kmlfeature', plugin.file.kml.KMLFeatureParser);
+  os.placesImportManager.registerImportDetails('KML/KMZ', true);
+  os.placesImportManager.registerParser(this.id, plugin.file.kml.KMLParser);
+  os.placesImportManager.registerParser('kmlfeature', plugin.file.kml.KMLFeatureParser);
 
   // register the kml exporter
   os.ui.exportManager.registerExportMethod(new plugin.file.kml.KMLExporter());

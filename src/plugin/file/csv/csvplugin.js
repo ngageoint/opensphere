@@ -67,6 +67,9 @@ plugin.file.csv.CSVPlugin.prototype.init = function() {
   im.registerImportDetails('CSV', true);
   im.registerImportUI(os.file.mime.csv.TYPE, new plugin.file.csv.ui.CSVImportUI());
   im.registerParser(this.id, plugin.file.csv.CSVParser);
+  os.placesImportManager.registerImportDetails('CSV', true);
+  os.placesImportManager.registerImportUI(os.file.mime.csv.TYPE, new plugin.file.csv.ui.CSVImportUI());
+  os.placesImportManager.registerParser(this.id, plugin.file.csv.CSVParser);
 
   // register the csv exporter
   os.ui.exportManager.registerExportMethod(new plugin.file.csv.CSVExporter());
