@@ -505,8 +505,18 @@ os.style.label.updateLabelStyle = function(labelStyle, feature, config, opt_laye
  * @return {!Object}
  */
 os.style.label.getLabelConfig = function(featureConfig, opt_layerConfig) {
-  return /** @type {Object|undefined} */ (
+  const config = /** @type {Object|undefined} */ (
     os.object.getFirstValue('text', featureConfig, opt_layerConfig)) || {};
+
+  const fill = /** @type {Object|undefined} */
+    (os.object.getFirstValue('fill', featureConfig, opt_layerConfig)) || {};
+
+  const stroke = /** @type {Object|undefined} */ (
+    os.object.getFirstValue('stroke', featureConfig, opt_layerConfig)) || {};
+
+  os.style.mergeConfig(fill, config);
+  os.style.mergeConfig(stroke, config);
+  return config;
 };
 
 /**
