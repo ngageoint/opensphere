@@ -423,11 +423,11 @@ os.style.label.createOrUpdate = function(feature, config, opt_layerConfig) {
         });
       }
 
-      os.style.label.updateLabelStyle(labelStyle, feature, baseLabelConfig, opt_layerConfig);
+      os.style.label.updateLabelStyle(labelStyle, feature, config, opt_layerConfig);
 
       os.style.label.updateText(labelStyle, labelText);
-      os.style.label.updateDefaultOffsetX(labelStyle, baseLabelConfig);
-      os.style.label.updateDefaultTextAlign(labelStyle, baseLabelConfig, 'left');
+      os.style.label.updateDefaultOffsetX(labelStyle, config);
+      os.style.label.updateDefaultTextAlign(labelStyle, config, 'left');
 
       // update the cache on the feature
       feature.set(os.style.StyleType.LABEL, labelStyle, true);
