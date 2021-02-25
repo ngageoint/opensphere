@@ -2,24 +2,23 @@
   <div class="modal-body container flex-fill">
     <form ng-submit="ctrl.accept()">
       <div class="form-group m-0">
-        <label for="serverType">Select a server type</label>
-        <select title="ServerType" class="custom-select"
+        <label for="serverType">Select a server type:</label>
+        <select title="ServerType" class="custom-select w-50"
             ng-model="ctrl.serverType"
-            ng-change="ctrl.onServerTypeChange_",
+            ng-change="ctrl.onServerTypeChange_()",
             ng-options="key for (key, value) in ctrl.items">
         </select>
+        <button class="btn btn-secondary" ng-click="ctrl.launchHelp()" title="Help for server specific URL formats">
+          <i class="fa fa-question-circle"></i>
+          Format Help
+        </button>
       </div>
     </form>
   </div>
   <div>
     <uiswitch items="ctrl.serverType" directive-function="ctrl.getUi"></uiswitch>
   </div>
-  <div class="modal-footer d-flex">
-    <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="!ctrl.serverType || ctrl.loading" title="Add server of the selected type">
-      <i class="fa" ng-class="ctrl.loading && 'fa-spin fa-spinner' || 'fa-chevron-circle-right'"></i>
-      <span ng-if="!ctrl.loading">Next</span>
-      <span ng-if="ctrl.loading">Loading</span>
-    </button>
+  <div class="modal-footer d-flex" ng-if="ctrl.serverType == null">
     <button class="btn btn-secondary" ng-click="ctrl.close()" title="Cancel Adding Server">
       <i class="fa fa-ban"></i>
       Cancel

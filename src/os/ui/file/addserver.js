@@ -6,6 +6,7 @@ const FileParserConfig = goog.require('os.parse.FileParserConfig');
 const Module = goog.require('os.ui.Module');
 const ImportManager = goog.require('os.ui.im.ImportManager');
 const uiWindow = goog.require('os.ui.window');
+const {launchAddServerUrlFormatHelpWindow} = goog.require('os.ui.window.AddServerUrlFormatHelpUI');
 
 
 /**
@@ -98,26 +99,78 @@ class Controller {
     this['serverType'] = null;
 
     /**
+     * @type {string}
+     */
+    this['currentItem'] = null;
+
+    /**
      * Available server type choices in the UI.
-     * @type {!Array<string>}
+     * @type {Object}
      */
     this['items'] = {
+      'ArcGIS Server': { // TBD: remove redundant key
+        type: 'arc',
+        config: new FileParserConfig(),
+        helpText: 'ArcGIS servers can be added in a couple of ways.\n' +
+        'To add all layers on the server, use a URL like:\n\n' +
+        'https://example.com/arc/rest/services\n\n' +
+        'To add a single layer, use a URL like:\n\n' +
+        'https://example.com/arc/rest/services/groupname/layername',
+        title: 'ArcGIS Server'
+      },
       'GeoServer': {
         type: 'geoserver',
-        config: new FileParserConfig()
+        config: new FileParserConfig(),
+        helpText: 'OGC Servers (like GeoServer) can provide map data via Web Map Service (WMS) ' +
+        'or Web Map Tile Service (WMTS) and feature data via Web Feature Service (WFS).\n\n' +
+        'A WMS URL looks like:\n\n' +
+        'https//example.com/ogc?service=WMS&version=1.1.0\n' +
+        'or\n' +
+        'https://example.com/mapservice/wms?version=1.0.0\n\n' +
+        'Supported WMS versions are: 1.0.0, 1.1.0, and 1.2.0\n\n' +
+        'A WFS URL looks like:\n\n' +
+        'https//example.com/ogc?service=WFS&version=1.1.0\n' +
+        'or\n' +
+        'https://example.com/mapservice/wfs?version=1.0.0\n\n' +
+        'Supported WFS versions are: 1.0.0, 1.1.0, and 1.2.0\n\n' +
+        'A WMTS URL looks like:\n\n' +
+        'https//example.com/ogc?service=WMTS&version=1.1.0\n' +
+        'or\n' +
+        'https://example.com/mapservice/wmts?version=1.0.0\n\n' +
+        'Supported WMTS versions are: 1.0.0, 1.1.0, and 1.2.0',
+        title: 'GeoServer'
       },
-      'ArcGIS': {
-        type: 'arc',
-        config: new FileParserConfig()
-      },
-      'WFS/WMS': {
-        type: '',
-        config: new FileParserConfig()
-      },
-      'WMTS': {
-        type: 'wmts',
-        config: new FileParserConfig()
+      'OGC Server': {
+        type: 'ogc',
+        config: new FileParserConfig(),
+        helpText: 'OGC Servers (like GeoServer) can provide map data via Web Map Service (WMS) ' +
+        'or Web Map Tile Service (WMTS) and feature data via Web Feature Service (WFS).\n\n' +
+        'A WMS URL looks like:\n\n' +
+        'https//example.com/ogc?service=WMS&version=1.1.0\n' +
+        'or\n' +
+        'https://example.com/mapservice/wms?version=1.0.0\n\n' +
+        'Supported WMS versions are: 1.0.0, 1.1.0, and 1.2.0\n\n' +
+        'A WFS URL looks like:\n\n' +
+        'https//example.com/ogc?service=WFS&version=1.1.0\n' +
+        'or\n' +
+        'https://example.com/mapservice/wfs?version=1.0.0\n\n' +
+        'Supported WFS versions are: 1.0.0, 1.1.0, and 1.2.0\n\n' +
+        'A WMTS URL looks like:\n\n' +
+        'https//example.com/ogc?service=WMTS&version=1.1.0\n' +
+        'or\n' +
+        'https://example.com/mapservice/wmts?version=1.0.0\n\n' +
+        'Supported WMTS versions are: 1.0.0, 1.1.0, and 1.2.0',
+        title: 'OGC Server'
       }
+    };
+
+    /**
+     * Mappings between server keyword and type.
+     * @type {Object}
+     */
+    this['itemTypeMappings'] = {
+      'arc': 'ArcGIS Server',
+      'geoserver': 'OGC/GeoServer'
     };
 
     this['file'].setUrl('');
@@ -144,9 +197,9 @@ class Controller {
    * @export
    */
   accept() {
-    this['loading'] = true;
-    this.close();
-    this.launchSpecificServerWindow(this['serverType']);
+    // this['loading'] = true;
+    // this.close();
+    // this.launchSpecificServerWindow(this['serverType']);
   }
 
   /**
@@ -181,16 +234,11 @@ class Controller {
   }
 
   /**
-   * Open a window for the selected server type.
-   * @param {string} serverType
+   * Launches the server specific URL help dialog.
+   * @export
    */
-  launchSpecificServerWindow(serverType) {
-    var type = serverType.type || '';
-
-    this['file'].setType(type);
-    var ui = this['im'].getImportUI(type);
-    this['ui'] = ui.ui;
-    ui.launchUI(this['file'], null);
+  launchHelp() {
+    launchAddServerUrlFormatHelpWindow(this['currentItem'], this['serverType']['helpText']);
   }
 
   /**
@@ -255,7 +303,7 @@ class Controller {
    * @private
    */
   onServerTypeChange_() {
-    console.log('hello');
+    this['currentItem'] = this['serverType']['title'];
   }
 }
 
@@ -274,9 +322,9 @@ const launchAddServerWindow = function() {
       'icon': 'fa fa-cloud-download',
       'x': 'center',
       'y': 'center',
-      'width': '400',
-      'min-width': '400',
-      'max-width': '400',
+      'width': '500',
+      'min-width': '500',
+      'max-width': '500',
       'height': 'auto',
       'modal': true,
       'show-close': true
@@ -290,3 +338,7 @@ exports = {
   directive,
   launchAddServerWindow
 };
+
+// some current known bugs:
+// visual issue with loading uiswitch where "< >>" appears
+// changing server types fails due to new scope
