@@ -1,10 +1,10 @@
-goog.require('os.time.TimelineController');
-goog.require('os.layer.AnimatedTile');
 goog.require('ol.source.TileWMS');
+goog.require('os.layer.AnimatedTile');
+goog.require('os.time.TimelineController');
 
 
 describe('os.layer.AnimatedTile', function() {
-  var tlc, layer, durationListeners, resetListeners, showListeners;
+  var tlc; var layer; var durationListeners; var resetListeners; var showListeners;
 
   it('should setup the TLC and layer', function() {
     tlc = os.time.TimelineController.getInstance();
@@ -56,19 +56,39 @@ describe('os.layer.AnimatedTile', function() {
 
   it('should get time parameters correctly for tiles', function() {
     // days should have a / and the next day's date
-    expect(os.layer.AnimatedTile.getTimeParameter(
-        'YYYY-MM-DD', '{start}/{end}', 1472947200000, 1473033600000, os.time.Duration.DAY)).toBe('2016-09-04/2016-09-05');
+    expect(os.layer.AnimatedTile.getTimeParameter('YYYY-MM-DD', '{start}/{end}', 1472947200000, 1473033600000,
+        os.time.Duration.DAY)).toBe('2016-09-04/2016-09-05');
 
     // weeks should be fully qualified
-    expect(os.layer.AnimatedTile.getTimeParameter(
-        'YYYY-MM-DD', '{start}/{end}', 1472947200000, 1473552000000, os.time.Duration.WEEK)).toBe('2016-09-04/2016-09-11');
+    expect(os.layer.AnimatedTile.getTimeParameter('YYYY-MM-DD', '{start}/{end}', 1472947200000, 1473552000000,
+        os.time.Duration.WEEK)).toBe('2016-09-04/2016-09-11');
 
     // months should increment to the first day of next month
-    expect(os.layer.AnimatedTile.getTimeParameter(
-        'YYYY-MM-DD', '{start}/{end}', 1472688000000, 1475280000000, os.time.Duration.MONTH)).toBe('2016-09-01/2016-10-01');
+    expect(os.layer.AnimatedTile.getTimeParameter('YYYY-MM-DD', '{start}/{end}', 1472688000000, 1475280000000,
+        os.time.Duration.MONTH)).toBe('2016-09-01/2016-10-01');
+
+    // last 24 hours should query the last 24 hours
+    expect(os.layer.AnimatedTile.getTimeParameter('YYYY-MM-DD', '{start}/{end}', 1472688000000, 1472774400000,
+        os.time.Duration.LAST24HOURS)).toBe('2016-09-01/2016-09-02');
+
+    // last 48 hours should query the last 48 hours
+    expect(os.layer.AnimatedTile.getTimeParameter('YYYY-MM-DD', '{start}/{end}', 1472688000000, 1472860800000,
+        os.time.Duration.LAST48HOURS)).toBe('2016-09-01/2016-09-03');
+
+    // last 7 days should query the last 7 days
+    expect(os.layer.AnimatedTile.getTimeParameter('YYYY-MM-DD', '{start}/{end}', 1472688000000, 1473292800000,
+        os.time.Duration.LAST7DAYS)).toBe('2016-09-01/2016-09-08');
+
+    // last 14 days should query the last 14 days
+    expect(os.layer.AnimatedTile.getTimeParameter('YYYY-MM-DD', '{start}/{end}', 1472688000000, 1473897600000,
+        os.time.Duration.LAST14DAYS)).toBe('2016-09-01/2016-09-15');
+
+    // last 30 days should query the last 30 days
+    expect(os.layer.AnimatedTile.getTimeParameter('YYYY-MM-DD', '{start}/{end}', 1472688000000, 1475280000000,
+        os.time.Duration.LAST30DAYS)).toBe('2016-09-01/2016-10-01');
 
     // custom should add a day, i.e. this case would show as 2016/09/01 - 2016/09/06 on the date chooser
-    expect(os.layer.AnimatedTile.getTimeParameter(
-        'YYYY-MM-DD', '{start}/{end}', 1472688000000, 1473206399000, os.time.Duration.CUSTOM)).toBe('2016-09-01/2016-09-07');
+    expect(os.layer.AnimatedTile.getTimeParameter('YYYY-MM-DD', '{start}/{end}', 1472688000000, 1473206399000,
+        os.time.Duration.CUSTOM)).toBe('2016-09-01/2016-09-07');
   });
 });
