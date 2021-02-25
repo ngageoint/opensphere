@@ -1,5 +1,6 @@
 goog.provide('os.data.LayerNode');
 
+goog.require('core.text.Sanitize');
 goog.require('goog.events.EventType');
 goog.require('ol.events');
 goog.require('os.data.DataManager');
@@ -341,7 +342,7 @@ os.data.LayerNode.prototype.formatLabel = function(value) {
  * @inheritDoc
  */
 os.data.LayerNode.prototype.formatValue = function(value) {
-  var s = os.data.LayerNode.base(this, 'formatValue', value);
+  var s = os.data.LayerNode.base(this, 'formatValue', core.text.Sanitize.sanitizeField(value));
   var layer = this.getLayer();
 
   if (layer instanceof os.layer.LayerGroup) {
