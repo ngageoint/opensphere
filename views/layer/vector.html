@@ -6,17 +6,21 @@
       Style
     </div>
     <div id="layer-style" class="card-body collapse" data-parent="#layerControls">
-      <div class="form-group row" ng-if="vector.presets && vector.presets.length" title="Choose a layer style preset.">
+      <div class="form-group row" ng-if="vector.presets && vector.presets.length" title="Quickly sets Styles, Labels, and Feature Action(s).">
         <div class="col-3">
-          Preset
+          Presets
         </div>
-        <div class="d-flex col">
-            <select class="custom-select col-7" ng-model="vector.preset"
+        <div class="d-flex col mb-1px" ng-show="!vector.showPresetsDropdown">
+          <span class="btn disabled"><i>Customized</i>&nbsp;</span>
+          <button class="btn btn-link text-muted" ng-click="vector.showPresetsDropdown = true;">
+            Apply a Preset <i class="fa fa-fw fa-arrow-right"></i>
+          </button>
+        </div>
+        <div class="d-flex col" ng-show="vector.showPresetsDropdown">
+          <select class="custom-select col" ng-model="vector.preset"
               ng-options="((preset.published === true ? '' : '*') + preset.label + (preset.default === true ? ' (default)' : '')) for preset in vector.presets track by preset.id+preset.layerId">
-            </select>
-            <div class="col-5">
-                <presetmenubutton preset="vector.preset"></presetmenubutton>
-            </div>
+          </select>
+          <presetmenubutton preset="vector.preset"></presetmenubutton>
         </div>
       </div>
 
