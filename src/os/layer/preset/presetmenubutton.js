@@ -175,57 +175,11 @@ class Controller extends MenuButtonCtrl {
 
     const iam = ImportActionManager.getInstance();
 
-    /**
-     * Depth-first traversal of tree; returns ID's of active FeatureActions
-     * @param {string|undefined} type
-     * @param {Array<FilterActionEntry>=} entries
-     * @return {!Array<string>}
-     */
-    const traverse = function(type, entries) {
-      let ids = [];
-      (entries || []).forEach((entry) => {
-        if (entry.enabled && entry.type == type) {
-          ids.push(entry.getId());
-        }
-        ids = ids.concat(traverse(type, entry.getChildren()));
-      });
-      return ids;
-    };
-
     // get the currently active FeatureAction ID's as a list
-    const ids = traverse(clone.layerId, iam.getActionEntries());
-
-    /**
-     * Get simplified list of active FeatureActions (no repeats via children)
-     * @param {string|undefined} type
-     * @param {FilterActionEntry=} entry
-     * @return {!boolean}
-     */
-    const active = function(type, entry) {
-      let isActive = false;
-
-      if (entry && entry.enabled && entry.type == type) {
-        isActive = true;
-      } else if (entry) {
-        const entries = entry.getChildren();
-        const len = entries ? entries.length : 0;
-
-        // use a for loop so it can be broken out of
-        for (let i = 0; i < len; i++) {
-          const e = entries[i];
-          if (active(type, e)) {
-            isActive = true;
-            break;
-          }
-        }
-      }
-      return isActive;
-    };
+    const ids = iam.getActiveActionEntryIds(clone.layerId);
 
     // only return top-level feature actions, not specific sub-entries
-    const entries = iam.getActionEntries().filter((entry) => {
-      return active(clone.layerId, entry);
-    });
+    const entries = iam.getRootActiveActionEntries(clone.layerId);
 
     if (entries && entries.length > 0 && ids && ids.length > 0) {
       clone.featureActions = ids;
@@ -551,7 +505,7 @@ const directive = () => ({
       ng-click="ctrl.openMenu()"
       ng-class="{active: menu}"
       ng-disabled="ctrl.thinking">
-    <i class="fa" ng-class="ctrl.thinking && 'fa-spin fa-spinner'"></i>
+    <i class="fa fa-spin fa-spinner" ng-if="ctrl.thinking"></i>
   </button>
 </div>
 `
