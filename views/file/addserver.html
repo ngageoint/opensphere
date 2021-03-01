@@ -6,9 +6,9 @@
         <select title="ServerType" class="custom-select w-50"
             ng-model="ctrl.serverType"
             ng-change="ctrl.onServerTypeChange_()",
-            ng-options="key for (key, value) in ctrl.items">
+            ng-options="value.label for value in ctrl.items">
         </select>
-        <button class="btn btn-secondary" ng-click="ctrl.launchHelp()" title="Help for server specific URL formats">
+        <button class="btn btn-secondary" ng-click="ctrl.launchHelp()" ng-if="ctrl.serverType" title="Help for server specific URL formats">
           <i class="fa fa-question-circle"></i>
           Format Help
         </button>
@@ -18,7 +18,7 @@
   <div>
     <uiswitch items="ctrl.serverType" directive-function="ctrl.getUi"></uiswitch>
   </div>
-  <div class="modal-footer d-flex" ng-if="ctrl.serverType == null">
+  <div class="modal-footer d-flex" ng-if="!ctrl.serverType">
     <button class="btn btn-secondary" ng-click="ctrl.close()" title="Cancel Adding Server">
       <i class="fa fa-ban"></i>
       Cancel

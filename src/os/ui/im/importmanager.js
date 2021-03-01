@@ -33,6 +33,12 @@ os.ui.im.ImportManager = function() {
   this.importUIs_ = {};
 
   /**
+   * @type {Object<string, Object>}
+   * @private
+   */
+  this.serverTypes_ = {};
+
+  /**
    * @type {Object<string, function(new:os.im.IImporter, ...)>}
    * @private
    */
@@ -94,6 +100,35 @@ os.ui.im.ImportManager.prototype.getImportUI = function(type) {
   }
 
   return null;
+};
+
+
+/**
+ * Get a registered server type.
+ *
+ * @param {?string} type
+ * @return {Object}
+ */
+os.ui.im.ImportManager.prototype.getServerType = function(type) {
+  if (type) {
+    type = type.toLowerCase();
+
+    if (type in this.serverTypes_) {
+      return this.serverTypes_[type];
+    }
+  }
+
+  return null;
+};
+
+
+/**
+ * Get all registered server types.
+ *
+ * @return {Object}
+ */
+os.ui.im.ImportManager.prototype.getServerTypes = function() {
+  return this.serverTypes_;
 };
 
 
@@ -207,6 +242,25 @@ os.ui.im.ImportManager.prototype.registerImportUI = function(type, ui) {
 
 
 /**
+ * Register a server type.
+ *
+ * @param {string} type The server type
+ * @param {Object} options The options associated with the server type
+ */
+os.ui.im.ImportManager.prototype.registerServerType = function(type, options) {
+  type = type.toLowerCase();
+
+  if (type in this.serverTypes_) {
+    // log a warning, but allow it.
+    var msg = 'The import UI "' + type + '" has already been registered with the import manager!';
+    goog.log.warning(os.ui.im.ImportManager.LOGGER_, msg);
+  }
+
+  this.serverTypes_[type] = options;
+};
+
+
+/**
  * Register an importer class.
  *
  * @param {string} type The importer type
@@ -254,6 +308,23 @@ os.ui.im.ImportManager.prototype.unregisterImportUI = function(type, opt_ui) {
   if (type in this.importUIs_) {
     if ((opt_ui && this.importUIs_[type] === opt_ui) || !opt_ui) {
       delete this.importUIs_[type];
+    }
+  }
+};
+
+
+/**
+ * Unregister a server type.
+ *
+ * @param {string} type
+ * @param {Object} options
+ */
+os.ui.im.ImportManager.prototype.unregisterServerType = function(type, options) {
+  type = type.toLowerCase();
+
+  if (type in this.serverTypes_) {
+    if ((options && this.serverTypes_[type] === options) || !options) {
+      delete this.serverTypes_[type];
     }
   }
 };

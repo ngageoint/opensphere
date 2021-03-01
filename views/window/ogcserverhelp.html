@@ -1,0 +1,50 @@
+<div id="time-help" class="flex-fill w-100 d-flex flex-column">
+  <div class="modal-body container flex-fill">
+    OGC Servers (like GeoServer) can provide map data via Web Map Service (WMS) or Web Map Tile Service (WMTS) and feature data via Web Feature Service (WFS).
+    <br>
+    <br>
+    A WMS URL looks like:
+    <br>
+    <br>
+    https//example.com/ogc?service=WMS&version=1.1.0
+    <br>
+    or
+    <br>
+    https://example.com/mapservice/wms?version=1.0.0
+    <br>
+    <br>
+    Supported WMS versions are: 1.0.0, 1.1.0, and 1.2.0
+    <br>
+    <br>
+    A WFS URL looks like:
+    <br>
+    <br>
+    https//example.com/ogc?service=WFS&version=1.1.0
+    <br>
+    or
+    <br>
+    https://example.com/mapservice/wfs?version=1.0.0
+    <br>
+    <br>
+    Supported WFS versions are: 1.0.0, 1.1.0, and 1.2.0
+    <br>
+    <br>
+    A WMTS URL looks like:
+    <br>
+    <br>
+    https//example.com/ogc?service=WMTS&version=1.1.0
+    <br>
+    or
+    <br>
+    https://example.com/mapservice/wmts?version=1.0.0
+    <br>
+    <br>
+    Supported WMTS versions are: 1.0.0, 1.1.0, and 1.2.0,
+  </div>
+  <div class="modal-footer d-flex">
+    <button class="btn btn-primary" ng-click="ctrl.close()">
+      <i class="fa fa-check"></i>
+      Close
+    </button>
+  </div>
+</div>
