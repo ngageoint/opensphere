@@ -1,7 +1,6 @@
 goog.module('os.ui.file.AddServer');
 goog.module.declareLegacyNamespace();
 
-const File = goog.require('os.file.File');
 const Module = goog.require('os.ui.Module');
 const ImportManager = goog.require('os.ui.im.ImportManager');
 const uiWindow = goog.require('os.ui.window');
@@ -73,25 +72,9 @@ class Controller {
     this['loading'] = false;
 
     /**
-     * @type {string}
-     */
-    this['url'] = '';
-
-    /**
      * @type {os.ui.im.ImportManager}
      */
     this['im'] = ImportManager.getInstance();
-
-    /**
-     * @type {os.ui.ProviderImportUI}
-     */
-    this['ui'] = null;
-
-    /**
-     * Generic file object that is used to launch UI
-     * @type {os.file.File}
-     */
-    this['file'] = new File();
 
     /**
      * @type {string}
@@ -103,8 +86,6 @@ class Controller {
      * @type {Array}
      */
     this['items'] = Object.values(ImportManager.getInstance().getServerTypes());
-
-    this['file'].setUrl('');
 
     $scope.$emit(os.ui.WindowEventType.READY);
     $scope.$on('$destroy', this.onDestroy_.bind(this));

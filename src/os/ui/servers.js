@@ -328,10 +328,6 @@ os.ui.ServersCtrl.prototype.toggleAll = function() {
  * @export
  */
 os.ui.ServersCtrl.prototype.add = function() {
-  // os.metrics.Metrics.getInstance().updateMetric(os.metrics.Servers.ADD_SERVER, 1);
-  // var importProcess = new os.im.ImportProcess();
-  // importProcess.setEvent(new os.ui.im.ImportEvent(os.ui.im.ImportEventType.URL));
-  // importProcess.begin();
   os.ui.file.AddServer.launchAddServerWindow();
 };
 
