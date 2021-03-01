@@ -5,23 +5,21 @@
       <div>Testing...</div>
     </div>
     <form class="container-fluid" ng-show="!testing" name="form" ng-submit="ctrl.accept()" novalidate>
-      <div class="form-group row" title="The title for the server">
-        <label class="col-3 col-form-label text-right" for="title">Title</label>
-        <div class="col">
-          <input unique-provider-title type="text" class="form-control" name="title" ng-disabled="!edit"
-              ng-model="config.label" ng-required="true" ng-maxlength="1000">
-          <validation-message target="form.title"></validation-message>
-        </div>
+      <div class="form-group" title="The title for the server">
+        <label for="title">Title</label>
+        <input unique-provider-title type="text" class="form-control" name="title" ng-disabled="!edit"
+            ng-model="config.label" ng-required="true" ng-maxlength="1000">
+        <validation-message target="form.title"></validation-message>
+        <small class="form-text text-muted">Please enter a title</small>
       </div>
 
-      <div class="form-group row" title="The URL for the server">
-        <label class="col-3 col-form-label text-right" for="url">URL</label>
-        <div class="col">
-          <input type="text" name="url" class="form-control" ng-disabled="!edit" ng-model="config.url" ng-required="true"
-              ng-maxlength="1000">
-          <small class="form-text invalid-feedback" ng-if="urlExample && form.url.$valid">e.g. {{urlExample}}</small>
-          <validation-message target="form.url"></validation-message>
-        </div>
+      <div class="form-group" title="The URL for the server">
+        <label for="url">URL</label>
+        <input type="text" name="url" class="form-control" ng-disabled="!edit" ng-model="config.url" ng-required="true"
+            ng-maxlength="1000">
+        <small class="form-text invalid-feedback" ng-if="urlExample && form.url.$valid">e.g. {{urlExample}}</small>
+        <validation-message target="form.url"></validation-message>
+        <small class="form-text text-muted">Please enter a URL</small>
       </div>
       <input type="submit" hidden>
     </form>
