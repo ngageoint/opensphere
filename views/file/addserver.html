@@ -5,7 +5,7 @@
         <label for="serverType">Select a server type:</label>
         <select title="ServerType" class="custom-select w-50"
             ng-model="ctrl.serverType"
-            ng-change="ctrl.onServerTypeChange_()",
+            ng-change="ctrl.onServerTypeChange_()"
             ng-options="value.label for value in ctrl.items">
         </select>
         <button class="btn btn-secondary" ng-click="ctrl.launchHelp()" ng-if="ctrl.serverType" title="Help for server specific URL formats">
