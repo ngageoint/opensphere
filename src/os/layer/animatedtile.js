@@ -1,4 +1,5 @@
 goog.provide('os.layer.AnimatedTile');
+
 goog.require('goog.async.Delay');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.layer.PropertyChange');
@@ -9,6 +10,9 @@ goog.require('os.time.TimelineController');
 goog.require('os.ui.Icons');
 goog.require('os.ui.IconsSVG');
 goog.require('os.ui.ScreenOverlayCtrl');
+
+goog.requireType('ol.source.TileArcGISRest');
+goog.requireType('ol.source.TileWMS');
 
 
 
@@ -327,7 +331,8 @@ os.layer.AnimatedTile.updateParams = function(timeValue) {
 os.layer.AnimatedTile.prototype.getFormattedDate = function() {
   var tlc = os.time.TimelineController.getInstance();
   var duration = tlc.getDuration();
-  var start = duration == os.time.Duration.CUSTOM ? tlc.getStart() : tlc.getCurrent() - tlc.getOffset();
+  var isDurationCustomOrRelative = (duration == os.time.Duration.CUSTOM || os.time.isRelativeDuration(duration));
+  var start = isDurationCustomOrRelative ? tlc.getStart() : tlc.getCurrent() - tlc.getOffset();
   var end = tlc.getCurrent();
 
   return os.layer.AnimatedTile.getTimeParameter(this.dateFormat_, this.timeFormat_, start, end, duration);
@@ -377,7 +382,7 @@ os.layer.AnimatedTile.prototype.restore = function(config) {
 os.layer.AnimatedTile.getTimeParameter = function(dateFormat, timeFormat, start, end, duration) {
   var actualStart;
   var actualEnd;
-  if (duration != os.time.Duration.CUSTOM) {
+  if (duration != os.time.Duration.CUSTOM && !os.time.isRelativeDuration(duration)) {
     actualStart = actualEnd = (start + end) / 2;
   } else {
     actualStart = start;
@@ -411,7 +416,7 @@ os.layer.AnimatedTile.getFormattedTimes = function(tlc, dateFormat, timeFormat) 
     var time;
     var times = [];
 
-    if (duration == os.time.Duration.CUSTOM) {
+    if (duration == os.time.Duration.CUSTOM || os.time.isRelativeDuration(duration)) {
       var e = os.time.ceil(new Date(tlc.getEnd()), 'day');
 
       return [timeFormat.replace(/{start}/g, os.time.momentFormat(date, dateFormat, true))

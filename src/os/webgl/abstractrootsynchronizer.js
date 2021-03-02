@@ -11,6 +11,8 @@ goog.require('os.layer.Image');
 goog.require('os.layer.Tile');
 goog.require('os.webgl.SynchronizerManager');
 
+goog.requireType('os.webgl.AbstractWebGLSynchronizer');
+
 
 /**
  * An abstract root synchronizer for a WebGL renderer.
