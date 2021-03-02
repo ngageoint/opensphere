@@ -95,8 +95,9 @@ $web-font-path: 'https://fonts.googleapis.com/css?family=Open+Sans:400,700' !def
   }
 }
 
-// Nav tabs within a modal (or window)
-.modal-content {
+// Nav tabs within a modal/window/search flyout
+.modal-content,
+.u-bg-flyout {
   .nav-tabs {
     .nav-link {
       background: $nav-tabs-link-active-bg;

@@ -1,6 +1,8 @@
 goog.provide('os.im.action');
 goog.provide('os.im.action.TagName');
 
+goog.requireType('os.im.action.IImportAction');
+
 
 /**
  * Identifier for import action components.
