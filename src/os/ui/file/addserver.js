@@ -85,7 +85,7 @@ class Controller {
      * Available server type choices in the UI.
      * @type {Array}
      */
-    this['items'] = Object.values(ImportManager.getInstance().getServerTypes());
+    this['items'] = Object.values(ImportManager.getInstance().getServerTypes() || {});
 
     $scope.$emit(os.ui.WindowEventType.READY);
     $scope.$on('$destroy', this.onDestroy_.bind(this));
