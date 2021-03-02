@@ -7,6 +7,8 @@ goog.require('os.config.DisplaySetting');
 goog.require('os.map.terrain');
 goog.require('os.webgl.IWebGLRenderer');
 
+goog.requireType('os.webgl.AbstractRootSynchronizer');
+
 
 /**
  * Abstract WebGL renderer implementation.
