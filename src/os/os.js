@@ -9,6 +9,8 @@ goog.require('ol.typedefs');
 goog.require('os.mixin.closure');
 goog.require('os.ol.license');
 
+goog.requireType('os.debug.FancierWindow');
+
 
 /**
  * TODO after running the ES6 conversion on a lot of the files, bring this deprecated to life; it'd add
