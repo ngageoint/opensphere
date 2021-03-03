@@ -2,6 +2,8 @@ goog.provide('os.webgl.SynchronizerManager');
 
 goog.require('os.layer.SynchronizerType');
 
+goog.requireType('os.webgl.AbstractWebGLSynchronizer');
+
 
 
 /**
@@ -22,7 +24,7 @@ goog.addSingletonGetter(os.webgl.SynchronizerManager);
 
 
 /**
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @const
  * @private
  */

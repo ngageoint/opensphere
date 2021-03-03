@@ -245,9 +245,10 @@ const sharedResources = [
     scripts: ['jsts.min.js']
   },
   {
-    source: resolver.resolveModulePath('jschardet/dist', __dirname),
-    target: 'vendor/jschardet',
-    scripts: ['jschardet.min.js']
+    source: resolver.resolveModulePath('chardetng-wasm/dist/es5', __dirname),
+    target: 'vendor/chardetng-wasm',
+    scripts: ['chardetng.es5.min.js'],
+    files: ['*.+(wasm|js)']
   },
   {
     source: buildPath,
@@ -258,6 +259,11 @@ const sharedResources = [
     source: resolver.resolveModulePath('oboe/dist', __dirname),
     target: 'vendor/oboe',
     scripts: ['oboe-browser.min.js']
+  },
+  {
+    source: 'vendor/ol-mapbox-style',
+    target: 'vendor/ol-mapbox-style',
+    scripts: ['stylefunction.js']
   },
   {
     source: resolver.resolveModulePath('navigator.sendbeacon', __dirname),

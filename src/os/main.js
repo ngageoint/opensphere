@@ -32,11 +32,17 @@ goog.require('os.ui.triStateCheckboxDirective');
  * Angular module 'os'
  * @type {angular.Module}
  */
-os.Module = angular.module('os', [
-  'ngAnimate',
-  'ngSanitize',
-  'ngRoute',
-  'os.ui']);
+os.Module = angular
+    .module('os', [
+      'ngAnimate',
+      'ngSanitize',
+      'ngRoute',
+      'os.ui'])
+    .filter('reverse', function() {
+      return function(items) {
+        return items.slice().reverse();
+      };
+    });
 
 
 /**

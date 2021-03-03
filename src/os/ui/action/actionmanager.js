@@ -110,7 +110,7 @@ os.ui.action.ActionManager.prototype.withActionArgs = function(x) {
  * @return {*}
  */
 os.ui.action.ActionManager.prototype.getActionArgs = function() {
-  if (!goog.isFunction(this.actionArgs_)) {
+  if (typeof this.actionArgs_ !== 'function') {
     return this.actionArgs_;
   }
   if (this.gettingActionArgs_) {
@@ -152,7 +152,7 @@ os.ui.action.ActionManager.prototype.withActionTarget = function(x) {
  * @return {*}
  */
 os.ui.action.ActionManager.prototype.getActionTarget = function() {
-  if (!goog.isFunction(this.actionTarget_)) {
+  if (typeof this.actionTarget_ !== 'function') {
     return this.actionTarget_;
   }
   if (this.gettingActionTarget_) {

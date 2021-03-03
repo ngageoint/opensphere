@@ -1503,7 +1503,7 @@ plugin.file.kml.KMLParser.prototype.applyStyles_ = function(el, feature) {
     var existingStyle = /** @type {Array<!Object>|Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
     if (existingStyle) {
       // if the feature already has a style config, merge in the KML style
-      if (goog.isArray(existingStyle)) {
+      if (Array.isArray(existingStyle)) {
         for (var i = 0; i < existingStyle.length; i++) {
           os.object.merge(mergedStyle, existingStyle[i]);
         }

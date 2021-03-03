@@ -15,7 +15,7 @@ External Plugins
 
   .. code-block:: javascript
 
-      {pattern: resolver.resolveModulePath('jschardet/dist/jschardet.min.js'), watched: false, included: true, served: true},
+      {pattern: resolver.resolveModulePath('chardetng-wasm/dist/es5/chardetng.es5.min.js'), watched: false, included: true, served: true},
       {pattern: '../opensphere/.build/xml-lexer.min.js', watched: false, included: true, served: true},
 
 

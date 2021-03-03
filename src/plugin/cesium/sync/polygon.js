@@ -1,4 +1,5 @@
 goog.module('plugin.cesium.sync.polygon');
+goog.module.declareLegacyNamespace();
 
 const olcsCore = goog.require('olcs.core');
 const {GeometryInstanceId} = goog.require('plugin.cesium');
@@ -341,5 +342,6 @@ const createPolygonHierarchy = (geometry, opt_flats, opt_offset, opt_ringEnds, o
 
 exports = {
   createAndAddPolygon,
-  createPolygon
+  createPolygon,
+  createPolygonHierarchy
 };

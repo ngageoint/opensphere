@@ -137,7 +137,7 @@ plugin.file.kml.ui.KMLExportCtrl.prototype.updateExporter_ = function() {
     this.exporter_.setUseCenterPoint(this['useCenterPoint']);
     if (this['icon']) {
       var kmlIcon = {// osx.icon.Icon to os.ui.file.kml.Icon
-        'href': this['icon']['path'],
+        'href': os.ui.file.kml.exportableIconUri(this['icon']['path']),
         'options': this['icon']['options']
       };
       this.exporter_.setIcon(kmlIcon);

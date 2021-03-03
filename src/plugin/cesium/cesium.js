@@ -6,7 +6,7 @@ goog.require('goog.html.TrustedResourceUrl');
 goog.require('goog.net.jsloader');
 goog.require('ol.layer.Tile');
 goog.require('ol.proj');
-goog.require('ol.source.TileImage');
+goog.require('ol.source.Tile');
 goog.require('ol.source.WMTS');
 goog.require('olcs.core');
 goog.require('os.MapContainer');
@@ -347,14 +347,10 @@ plugin.cesium.rectangleToExtent = function(rectangle) {
  * @return {?Cesium.ImageryLayer} null if not possible (or supported)
  */
 plugin.cesium.tileLayerToImageryLayer = function(olLayer, viewProj) {
-  if (!(olLayer instanceof ol.layer.Tile)) {
-    return null;
-  }
-
   var source = olLayer.getSource();
   var provider = null;
 
-  if (source instanceof ol.source.TileImage) {
+  if (source instanceof ol.source.Tile) {
     var projection = source.getProjection();
 
     if (!projection) {
@@ -365,12 +361,12 @@ plugin.cesium.tileLayerToImageryLayer = function(olLayer, viewProj) {
     var is3857 = ol.proj.equivalent(projection, ol.proj.get(os.proj.EPSG3857));
     var is4326 = ol.proj.equivalent(projection, ol.proj.get(os.proj.EPSG4326));
     if (is3857 || is4326) {
-      provider = new plugin.cesium.ImageryProvider(source, viewProj);
+      provider = new plugin.cesium.ImageryProvider(source, olLayer, viewProj);
     } else {
       return null;
     }
   } else {
-    // sources other than TileImage are currently not supported
+    // sources other than Tile are currently not supported
     return null;
   }
 

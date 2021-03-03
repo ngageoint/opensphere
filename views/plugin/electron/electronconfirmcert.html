@@ -1,7 +1,20 @@
-<div>
-  <div class="form-group">{{prompt}}</div>
+<div class="c-electron-confirm-cert px-1">
+  <div class="form-group" ng-bind-html="prompt"></div>
   <div class="form-group">
-    <select class="custom-select" placeholder="Select certificate..." ng-model="ctrl.cert" required
-        ng-options="cert as ctrl.getName(cert) for cert in certs"></select>
+    <div class="card mt-2 user-select-none"
+        ng-class="ctrl.cert === cert && 'active'"
+        ng-click="ctrl.cert = cert"
+        ng-repeat="cert in certs">
+      <div class="card-body d-flex align-items-center">
+        <div class="flex-fill">
+          <div class="font-weight-bold">{{ cert.subjectName }}</div>
+          <div>Issued By: {{ cert.issuerName }}</div>
+          <div>Expires: {{ ctrl.formatExpiry(cert) }}</div>
+        </div>
+        <div ng-if="ctrl.cert === cert">
+          <i class="fa fa-check"></i>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

@@ -96,6 +96,11 @@ os.ui.slick.slickTreeDirective = function() {
       'winLauncherClass': '@',
 
       /**
+       * Options Override
+       */
+      'options': '=?',
+
+      /**
        * Whether or not there is a root node. This fixes the case where you dont want to show the root
        * And you also want slicktree to create the root
        */
@@ -254,7 +259,7 @@ os.ui.slick.SlickTreeCtrl.prototype.disposeRoot_ = function() {
  */
 os.ui.slick.SlickTreeCtrl.prototype.getOptions = function() {
   var selectable = this.scope['disableSelection'] != 'true';
-  return {
+  var defaults = {
     // prevent the slick index behavior when selection is disabled, not very useful in our trees - THIN-6977
     'enableCellNavigation': selectable,
     'fullWidthRows': true,
@@ -264,6 +269,10 @@ os.ui.slick.SlickTreeCtrl.prototype.getOptions = function() {
     'headerRowHeight': 0,
     'rowHeight': 21
   };
+  if (this.scope['options']) {
+    return Object.assign(defaults, this.scope['options']);
+  }
+  return defaults;
 };
 
 
@@ -305,7 +314,7 @@ os.ui.slick.SlickTreeCtrl.prototype.getContextArgs = function(opt_event) {
 
   if (targetNode) {
     if (!this.scope['selected'] || (!this.multiSelect && this.scope['selected'] != targetNode) ||
-        (goog.isArray(this.scope['selected']) && !ol.array.includes(this.scope['selected'], targetNode))) {
+        (Array.isArray(this.scope['selected']) && !ol.array.includes(this.scope['selected'], targetNode))) {
       this.scope['selected'] = [targetNode];
     }
   }
@@ -354,7 +363,7 @@ os.ui.slick.SlickTreeCtrl.prototype.changeData_ = function(newVal) {
     this.disposeRoot_();
   }
 
-  if (!goog.isArray(newVal)) {
+  if (!Array.isArray(newVal)) {
     newVal = [newVal];
   }
 
@@ -695,7 +704,7 @@ os.ui.slick.SlickTreeCtrl.prototype.onItemAction_ = function(item, type) {
  */
 os.ui.slick.SlickTreeCtrl.prototype.getData = function() {
   var data = this.scope['data'] || [];
-  if (!goog.isArray(data)) {
+  if (!Array.isArray(data)) {
     data = [data];
   }
   return data;

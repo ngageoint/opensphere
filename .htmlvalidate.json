@@ -16,7 +16,8 @@
     "wcag/h30": "warn",
     "wcag/h32": "off",
     "wcag/h37": "off",
-    "prefer-native-element": "warn"
+    "prefer-native-element": "warn",
+    "text-content": "off"
   }
 }
 

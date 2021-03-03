@@ -6,6 +6,7 @@ goog.module('os.data.RegistryPropertyChange');
  */
 const PropertyChange = {
   ADD: 'registry:add',
+  CLEAR: 'registry:clear',
   REMOVE: 'registry:remove',
   UPDATE: 'registry:update'
 };

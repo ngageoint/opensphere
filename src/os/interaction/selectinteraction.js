@@ -39,7 +39,7 @@ os.interaction.Select = function(opt_options) {
 
   var layerFilter;
   if (options.layers != null) {
-    if (goog.isFunction(options.layers)) {
+    if (typeof options.layers === 'function') {
       layerFilter = options.layers;
     } else {
       var layers = options.layers;

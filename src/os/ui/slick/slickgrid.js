@@ -703,7 +703,7 @@ os.ui.slick.SlickGridCtrl.prototype.onUpdateResize = function() {
  * @protected
  */
 os.ui.slick.SlickGridCtrl.prototype.onCopyRows = function(event, mapFn) {
-  if (goog.isFunction(mapFn)) {
+  if (typeof mapFn === 'function') {
     this.copyRows(mapFn);
   }
 };
@@ -1216,7 +1216,7 @@ os.ui.slick.SlickGridCtrl.prototype.onSelectedChange = function(newVal, opt_oldV
 
     // Only set selection if it was clicked
     if (newVal) {
-      newVal = goog.isArray(newVal) ? newVal : [newVal];
+      newVal = Array.isArray(newVal) ? newVal : [newVal];
       this.setSelectedRows(newVal.map(this.mapItemsToRows, this));
     } else {
       this.setSelectedRows([]);

@@ -54,6 +54,6 @@ plugin.tileserver.Tileserver.prototype.onLoad = function(response) {
  * @protected
  */
 plugin.tileserver.Tileserver.prototype.onError = function(e) {
-  var msg = goog.isArray(e) ? e.join(' ') : e.toString();
+  var msg = Array.isArray(e) ? e.join(' ') : e.toString();
   this.setErrorMessage(msg);
 };

@@ -13,6 +13,7 @@ As a step toward modernizing our codebase, OpenSphere plans to migrate all code 
   :caption: Guides
 
   goog_module_guide/index
+  goog_module_to_es6_guide/index
   es6_class_guide/index
   angular_module_guide/index
   unit_test_module_guide/index

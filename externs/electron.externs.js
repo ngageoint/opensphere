@@ -20,7 +20,9 @@ let Electron;
  *   subject: Electron.CertificatePrincipal,
  *   subjectName: string,
  *   serialNumber: string,
- *   fingerprint: string
+ *   fingerprint: string,
+ *   validExpiry: number,
+ *   validStart: number
  * }}
  */
 Electron.Certificate;
@@ -52,6 +54,12 @@ Electron.CertificateRequestFn;
  * @type {Object}
  */
 let ElectronOS;
+
+
+/**
+ * Notify the main process that it should check for updates.
+ */
+ElectronOS.checkForUpdates = function() {};
 
 
 /**

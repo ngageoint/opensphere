@@ -54,10 +54,10 @@ os.annotation.UI_TEMPLATE =
             '<button class="btn btn-success mr-1" title="Save the name" ' +
                 'ng-click="ctrl.saveAnnotation()" ' +
                 'ng-disabled="!ctrl.name">' +
-              '<i class="fa fa-check"/> OK' +
+              '<i class="fa fa-check"></i> OK' +
             '</button>' +
             '<button class="btn btn-secondary" title="Cancel editing the text box" ng-click="ctrl.cancelEdit()">' +
-              '<i class="fa fa-ban"/> Cancel' +
+              '<i class="fa fa-ban"></i> Cancel' +
             '</button>' +
           '</div>' +
         '</div>' +
@@ -70,10 +70,10 @@ os.annotation.UI_TEMPLATE =
         '</tuieditor>' +
         '<div class="text-right mt-1" ng-if="ctrl.editingDescription">' +
           '<button class="btn btn-success mr-1" title="Save the text box" ng-click="ctrl.saveAnnotation()">' +
-            '<i class="fa fa-check"/> OK' +
+            '<i class="fa fa-check"></i> OK' +
           '</button>' +
           '<button class="btn btn-secondary" title="Cancel editing the text box" ng-click="ctrl.cancelEdit()">' +
-            '<i class="fa fa-ban"/> Cancel' +
+            '<i class="fa fa-ban"></i> Cancel' +
           '</button>' +
         '</div>' +
       '</div>' +

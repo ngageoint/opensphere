@@ -1,5 +1,10 @@
 goog.provide('plugin.cesium.interaction');
 
+goog.require('os.interaction.DragBox');
+goog.require('os.interaction.DragCircle');
+goog.require('os.interaction.DrawPolygon');
+goog.require('os.interaction.Measure');
+goog.require('os.interaction.Modify');
 goog.require('os.map');
 goog.require('plugin.cesium.interaction.dragbox');
 goog.require('plugin.cesium.interaction.dragcircle');

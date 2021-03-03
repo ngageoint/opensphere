@@ -50,7 +50,8 @@ describe('plugin.arc.node.ArcServiceNode', function() {
     };
 
     var node = new plugin.arc.node.ArcServiceNode(server);
-    node.addLayer_(layerConfig, server);
+    node.setUrl(server.getUrl());
+    node.addLayer_(layerConfig);
 
     expect(node.getChildren().length).toBe(1);
     var dNode = node.getChildren()[0];
