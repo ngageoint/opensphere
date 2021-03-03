@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - release
+  workflow_dispatch:
 
 jobs:
   release-to-master:
@@ -21,6 +22,7 @@ jobs:
         stable_branch: 'release'
         development_branch: 'master'
         allow_forks: false
+        push_token: 'GH_TOKEN'
         user_name: 'Release to Master Merge Action'
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
