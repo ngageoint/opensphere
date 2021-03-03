@@ -264,15 +264,17 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
 
   // Stack this new window on top of others
   $timeout(function() {
-    // notify anyone listening that this window opened
-    var eventScope = this.element.scope() || this.scope;
-    eventScope.$emit(os.ui.WindowEventType.OPEN, this.element);
+    if (this.element && this.scope) {
+      // notify anyone listening that this window opened
+      var eventScope = this.element.scope() || this.scope;
+      eventScope.$emit(os.ui.WindowEventType.OPEN, this.element);
 
-    this.bringToFront();
+      this.bringToFront();
 
-    if (this.element && !this.resizeFn_) {
-      this.resizeFn_ = this.onWindowResize_.bind(this);
-      os.ui.resize(this.element, this.resizeFn_);
+      if (!this.resizeFn_) {
+        this.resizeFn_ = this.onWindowResize_.bind(this);
+        os.ui.resize(this.element, this.resizeFn_);
+      }
     }
   }.bind(this));
 };
