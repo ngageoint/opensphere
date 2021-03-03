@@ -1,5 +1,5 @@
 $close-tab-padding-x: .25rem !default;
-$close-tab-font-size: .5rem !default;
+$close-tab-font-size: 1rem !default;
 
 //
 // A tab for closing flyout panels.
@@ -28,7 +28,7 @@ $close-tab-font-size: .5rem !default;
 .c-close-tab-left {
   @include close-tab();
   border-radius: $border-radius-sm 0 0 $border-radius-sm;
-  left: -($close-tab-padding-x * 2 + $close-tab-font-size);
+  left: -($close-tab-padding-x + $close-tab-font-size);
 
   // Equivalent to "fa fa-chevron-right"
   &::before {
