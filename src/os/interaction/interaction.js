@@ -36,8 +36,9 @@ os.interaction.ROTATE_DELTA = Math.PI / 60;
  */
 os.interaction.getFeatureResult = function(feature, layer) {
   if (feature instanceof ol.Feature) {
-    // do not hit detect "preview" features
-    if (feature.get(os.data.RecordField.DRAWING_LAYER_NODE) === false) {
+    // do not hit detect "preview" features unless they are flagged as interactive
+    if (feature.get(os.data.RecordField.DRAWING_LAYER_NODE) === false &&
+        !feature.get(os.data.RecordField.INTERACTIVE)) {
       return undefined;
     }
 
