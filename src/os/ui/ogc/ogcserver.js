@@ -1126,20 +1126,16 @@ os.ui.ogc.OGCServer.prototype.parseWmsCapabilities = function(response, uri) {
         var resource = /** @type {string} */ (goog.object.getValueByKeys(result, 'Capability', 'Request',
             'GetMap', 'DCPType', 0, 'HTTP', 'Get', 'OnlineResource'));
         if (resource) {
-          var newWms = null;
-          var newParams = null;
-          var q = resource.indexOf('?');
-          if (q > -1) {
-            newWms = resource.substring(0, q);
-            if (q < newWms.length - 1) {
-              var query = newWms.substring(q + 1);
-              newParams = new goog.Uri.QueryData(query);
-            }
-          } else {
-            newWms = resource;
+          const newWms = goog.Uri.resolve(uri, resource);
+          let newParams = null;
+
+          if (newWms.getQuery()) {
+            newParams = newWms.getQueryData();
+            newWms.setQuery('');
           }
-          this.setWmsUrl(newWms);
-          if (newParams != null) {
+
+          this.setWmsUrl(newWms.toString());
+          if (newParams) {
             if (!this.wmsParams_) {
               this.wmsParams_ = new goog.Uri.QueryData();
             }
@@ -1225,7 +1221,6 @@ os.ui.ogc.OGCServer.prototype.handleWfsGetCapabilities = function(event) {
   this.parseWfsCapabilities(response, req.getUri().toString());
 };
 
-
 /**
  * @param {string} response
  * @param {string} uri
@@ -1252,29 +1247,22 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
 
     var op = wfsCapabilities.querySelector('Operation[name=GetFeature]');
     if (op) {
+      const updateUrls = (getFeatureEl) => {
+        if (this.parseOperationURLs_ && getFeatureEl) {
+          const attr = getFeatureEl.attributes[0];
+          const url = getFeatureEl.getAttributeNS(ol.format.XLink.NAMESPACE_URI, 'href') ||
+            attr.value || attr.nodeValue;
+          this.setWfsUrl(goog.Uri.resolve(uri, url).toString());
+        }
+      };
+
       var getFeatureEl = op.querySelector('Post');
       if (getFeatureEl != null) {
-        if (this.parseOperationURLs_) {
-          if (getFeatureEl.hasAttributeNS(ol.format.XLink.NAMESPACE_URI, 'href')) {
-            this.setWfsUrl(getFeatureEl.getAttributeNS(ol.format.XLink.NAMESPACE_URI, 'href'));
-          } else {
-            var attr = getFeatureEl.attributes[0];
-            // Attr.value is the DOM4 property, while Attr.nodeValue inherited from Node should work on older browsers
-            this.setWfsUrl(attr.value || attr.nodeValue);
-          }
-        }
+        updateUrls(getFeatureEl);
         this.setWfsPost(true);
       } else {
         getFeatureEl = op.querySelector('Get');
-        if (getFeatureEl != null && this.parseOperationURLs_) {
-          if (getFeatureEl.hasAttributeNS(ol.format.XLink.NAMESPACE_URI, 'href')) {
-            this.setWfsUrl(getFeatureEl.getAttributeNS(ol.format.XLink.NAMESPACE_URI, 'href'));
-          } else {
-            var attr = getFeatureEl.attributes[0];
-            // Attr.value is the DOM4 property, while Attr.nodeValue inherited from Node should work on older browsers
-            this.setWfsUrl(attr.value || attr.nodeValue);
-          }
-        }
+        updateUrls(getFeatureEl);
       }
 
       // CSS3 does not have a good backwards-compatible case-insensitive query
