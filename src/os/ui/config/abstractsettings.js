@@ -120,11 +120,13 @@ os.ui.config.AbstractSettingsCtrl.prototype.reset = function() {
 os.ui.config.AbstractSettingsCtrl.prototype.refresh_ = function() {
   this.scope['settingsNodes'] = this.settingsManager.getChildren();
 
-  this.timeout_(goog.bind(function() {
-    this.scope['selected'] = this.settingsManager.getSelected();
-    if (!this.scope['selected']) {
-      // nothing selected - select the first setting
-      this.scope['selected'] = this.settingsManager.initSelection();
+  this.timeout_(function() {
+    if (this.scope && this.settingsManager) {
+      this.scope['selected'] = this.settingsManager.getSelected();
+      if (!this.scope['selected']) {
+        // nothing selected - select the first setting
+        this.scope['selected'] = this.settingsManager.initSelection();
+      }
     }
-  }, this));
+  }.bind(this));
 };
