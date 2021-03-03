@@ -1,4 +1,4 @@
-goog.module('os.ui.window.OgcServerHelpUI');
+goog.module('plugin.arc.ArcServerHelpUI');
 goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
@@ -14,7 +14,7 @@ const directive = () => {
   return {
     restrict: 'E',
     replace: true,
-    templateUrl: os.ROOT + 'views/window/ogcserverhelp.html',
+    templateUrl: os.ROOT + 'views/plugin/arc/arcserverhelp.html',
     controller: Controller,
     controllerAs: 'ctrl'
   };
@@ -25,7 +25,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'ogcserverhelp';
+const directiveTag = 'arcserverhelp';
 
 
 /**
@@ -43,13 +43,14 @@ class Controller {
    * Constructor.
    * @param {!angular.Scope} $scope
    * @param {!angular.JQLite} $element
+   * @ngInject
    */
   constructor($scope, $element) {
     /**
      * @type {?angular.JQLite}
      * @private
      */
-    this.element_ = $element;
+    this['element_'] = $element;
 
     $scope.$on('$destroy', this.onDestroy_.bind(this));
   }
@@ -59,7 +60,7 @@ class Controller {
    * @export
    */
   close() {
-    window.close(this.element_);
+    window.close(this['element_']);
   }
 
   /**
@@ -67,7 +68,7 @@ class Controller {
    * @private
    */
   onDestroy_() {
-    this.element_ = null;
+    this['element_'] = null;
   }
 }
 

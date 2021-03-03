@@ -1,12 +1,13 @@
 <div class="flex-fill w-100 d-flex flex-column">
   <div class="modal-body container flex-fill">
-    <form ng-submit="ctrl.accept()">
-      <div class="form-group m-0">
+    <form>
+      <div class="form-group m-0" ng-if="!ctrl.loading">
         <label for="serverType">Select a server type:</label>
         <select title="ServerType" class="custom-select w-50"
             ng-model="ctrl.serverType"
             ng-change="ctrl.onServerTypeChange_()"
-            ng-options="value.label for value in ctrl.items">
+            ng-options="value.label for value in ctrl.items"
+            ng-disabled="ctrl.loading">
         </select>
         <button class="btn btn-secondary" ng-click="ctrl.launchHelp()" ng-if="ctrl.serverType" title="Help for server specific URL formats">
           <i class="fa fa-question-circle"></i>
@@ -16,7 +17,7 @@
     </form>
   </div>
   <div>
-    <uiswitch items="ctrl.serverType" directive-function="ctrl.getUi"></uiswitch>
+    <uiswitch items="ctrl.serverType" directive-function="ctrl.getUi" scope-update-function="ctrl.updateUiScope"></uiswitch>
   </div>
   <div class="modal-footer d-flex" ng-if="!ctrl.serverType">
     <button class="btn btn-secondary" ng-click="ctrl.close()" title="Cancel Adding Server">

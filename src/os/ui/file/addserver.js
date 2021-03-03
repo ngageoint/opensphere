@@ -1,8 +1,10 @@
 goog.module('os.ui.file.AddServer');
 goog.module.declareLegacyNamespace();
 
+const FileParserConfig = goog.require('os.parse.FileParserConfig');
 const Module = goog.require('os.ui.Module');
 const ImportManager = goog.require('os.ui.im.ImportManager');
+const ProviderImportLoadEvents = goog.require('os.ui.ProviderImportLoadEvents');
 const uiWindow = goog.require('os.ui.window');
 
 const helpWindowId = 'url-help';
@@ -46,25 +48,20 @@ class Controller {
    * Constructor.
    * @param {!angular.Scope} $scope
    * @param {!angular.JQLite} $element
+   * @ngInject
    */
   constructor($scope, $element) {
     /**
      * @type {?angular.Scope}
      * @private
      */
-    this.scope_ = $scope;
+    this['scope_'] = $scope;
 
     /**
      * @type {?angular.JQLite}
      * @private
      */
-    this.element_ = $element;
-
-    /**
-     * @type {boolean}
-     * @private
-     */
-    this.methodLoaded_ = false;
+    this['element_'] = $element;
 
     /**
      * @type {boolean}
@@ -88,6 +85,8 @@ class Controller {
     this['items'] = Object.values(ImportManager.getInstance().getServerTypes() || {});
 
     $scope.$emit(os.ui.WindowEventType.READY);
+    $scope.$on(ProviderImportLoadEvents['start'], this.onFormLoadingStatusChange_.bind(this));
+    $scope.$on(ProviderImportLoadEvents['stop'], this.onFormLoadingStatusChange_.bind(this));
     $scope.$on('$destroy', this.onDestroy_.bind(this));
   }
 
@@ -96,12 +95,8 @@ class Controller {
    * @private
    */
   onDestroy_() {
-    if (!this.methodLoaded_) {
-      this.cancelMethod_();
-    }
-
-    this.scope_ = null;
-    this.element_ = null;
+    this['scope_'] = null;
+    this['element_'] = null;
   }
 
   /**
@@ -118,14 +113,26 @@ class Controller {
   }
 
   /**
+   * Update the uiswitch scope.
+   * @param {angular.Scope} scope The scope.
+   * @export
+   */
+  updateUiScope(scope) {
+    const config = new FileParserConfig();
+    config['enabled'] = true;
+
+    scope['config'] = config;
+  }
+
+  /**
    * Launches the server specific URL help dialog.
    * @export
    */
   launchHelp() {
     if (!uiWindow.exists(helpWindowId)) {
-      var currentItem = this['serverType']['label'] + ' ';
+      var item = this['serverType']['label'] + ' URL ';
       uiWindow.create({
-        'label': currentItem + 'Formats',
+        'label': item + 'Formats',
         'icon': 'fa fa-clock-o',
         'x': '-10',
         'y': 'center',
@@ -143,61 +150,32 @@ class Controller {
    * @export
    */
   close() {
-    if (this.element_) {
-      os.ui.window.close(this.element_);
+    if (this['element_']) {
+      os.ui.window.close(this['element_']);
     }
   }
 
   /**
-   * Fires a cancel event on the method so listeners can respond appropriately.
+   * Handles loading form.
+   * @param {angular.Scope.Event} event
    * @private
    */
-  cancelMethod_() {
-    var method = /** @type {os.ui.file.method.UrlMethod} */ (this.scope_['method']);
-    if (method) {
-      method.unlisten(os.events.EventType.COMPLETE, this.onLoadComplete_, false, this);
-      method.unlisten(os.events.EventType.CANCEL, this.onLoadComplete_, false, this);
-      method.unlisten(os.events.EventType.ERROR, this.onLoadError_, false, this);
-      method.unlisten(os.events.EventType.ERROR, this.onServerTypeChange_, false, this);
-
-      method.dispatchEvent(os.events.EventType.CANCEL);
+  onFormLoadingStatusChange_(event) {
+    switch (event.name) {
+      case ProviderImportLoadEvents['start']:
+        this['loading'] = true;
+        break;
+      case ProviderImportLoadEvents['stop']:
+        this['loading'] = false;
+        break;
+      default:
+        break;
     }
-  }
-
-  /**
-   * Handle URL method load complete.
-   * @param {goog.events.Event} event The event
-   * @private
-   */
-  onLoadComplete_(event) {
-    var method = /** @type {os.ui.file.method.UrlMethod} */ (event.target);
-    method.unlisten(os.events.EventType.COMPLETE, this.onLoadComplete_, false, this);
-    method.unlisten(os.events.EventType.CANCEL, this.onLoadComplete_, false, this);
-    method.unlisten(os.events.EventType.ERROR, this.onLoadError_, false, this);
-
-    this.methodLoaded_ = true;
-    this['loading'] = false;
-    this.close();
-  }
-
-  /**
-   * Handle URL method load error. This should not close the form so the user can correct the error.
-   * @param {goog.events.Event} event The event
-   * @private
-   */
-  onLoadError_(event) {
-    var method = /** @type {os.ui.file.method.UrlMethod} */ (event.target);
-    method.unlisten(os.events.EventType.COMPLETE, this.onLoadComplete_, false, this);
-    method.unlisten(os.events.EventType.CANCEL, this.onLoadComplete_, false, this);
-    method.unlisten(os.events.EventType.ERROR, this.onLoadError_, false, this);
-
-    this['loading'] = false;
-    os.ui.apply(this.scope_);
   }
 
   /**
    * Handles server type change.
-   * @private
+   * @export
    */
   onServerTypeChange_() {
     const helpWindow = uiWindow.getById(helpWindowId);

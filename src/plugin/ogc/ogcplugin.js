@@ -4,17 +4,16 @@ goog.require('os.data.DataManager');
 goog.require('os.data.ProviderEntry');
 goog.require('os.ogc');
 goog.require('os.ogc.LayerType');
-goog.require('os.parse.FileParserConfig');
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.ui.ProviderImportUI');
 goog.require('os.ui.action.Action');
 goog.require('os.ui.im.ImportManager');
 goog.require('os.ui.ogc.OGCServer');
-goog.require('os.ui.window.GeoServerHelpUI');
-goog.require('os.ui.window.OgcServerHelpUI');
 goog.require('plugin.ogc.GeoServer');
 goog.require('plugin.ogc.OGCLayerDescriptor');
 goog.require('plugin.ogc.mime');
+goog.require('plugin.ogc.ui.GeoServerHelpUI');
+goog.require('plugin.ogc.ui.OgcServerHelpUI');
 goog.require('plugin.ogc.ui.geoserverDirective');
 goog.require('plugin.ogc.ui.ogcserverDirective');
 goog.require('plugin.ogc.wfs.QueryWFSLayerConfig');
@@ -70,20 +69,18 @@ plugin.ogc.OGCPlugin.prototype.init = function() {
   var im = os.ui.im.ImportManager.getInstance();
   im.registerImportUI(os.ogc.ID, new os.ui.ProviderImportUI('<ogcserver></ogcserver>'));
   im.registerServerType(os.ogc.ID, {
-    type: 'ogc',
-    config: new os.parse.FileParserConfig(),
-    helpUi: os.ui.window.OgcServerHelpUI.directiveTag,
-    ui: 'ogcserver',
-    label: 'OGC Server'
+    'type': 'ogc',
+    'helpUi': plugin.ogc.ui.OgcServerHelpUI.directiveTag,
+    'ui': 'ogcserver',
+    'label': 'OGC Server'
   });
   im.registerImportUI(plugin.ogc.mime.GEOSERVER_TYPE,
       new os.ui.ProviderImportUI('<geoserver></geoserver>'));
   im.registerServerType(plugin.ogc.mime.GEOSERVER_TYPE, {
-    type: 'geoserver',
-    config: new os.parse.FileParserConfig(),
-    helpUi: os.ui.window.GeoServerHelpUI.directiveTag,
-    ui: 'geoserver',
-    label: 'GeoServer'
+    'type': 'geoserver',
+    'helpUi': plugin.ogc.ui.GeoServerHelpUI.directiveTag,
+    'ui': 'geoserver',
+    'label': 'GeoServer'
   });
 };
 

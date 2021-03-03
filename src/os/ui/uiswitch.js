@@ -39,6 +39,7 @@ os.ui.uiSwitchDirective = function() {
       'items': '=',
       'directiveFunction': '=',
       'options': '=?',
+      'scopeUpdateFunction': '=?',
       'generic': '@',
       'alwaysSwitch': '@'
     },
@@ -165,7 +166,6 @@ os.ui.UISwitchCtrl.prototype.onDataChange_ = function(newVal, oldVal) {
  */
 os.ui.UISwitchCtrl.prototype.update_ = function() {
   var x = this.scope['items'];
-  var config = x ? x['config'] : null;
 
   var items = Array.isArray(x) ? /** @type {Array} */ (x) : [x];
   var ui = /** @type {function(*):string} */ (this.scope['directiveFunction']);
@@ -205,7 +205,6 @@ os.ui.UISwitchCtrl.prototype.update_ = function() {
 
       // put the items on the scope
       s['items'] = items;
-      s['config'] = config;
 
       this.addToScope(s);
 
@@ -237,7 +236,10 @@ os.ui.UISwitchCtrl.prototype.update_ = function() {
  * @protected
  */
 os.ui.UISwitchCtrl.prototype.addToScope = function(scope) {
-  // this is really for sub-classes
+  var scopeUpdateFunction = /** @type {function(angular.Scope)} */ (this.scope['scopeUpdateFunction']);
+  if (scopeUpdateFunction) {
+    scopeUpdateFunction(scope);
+  }
 };
 
 

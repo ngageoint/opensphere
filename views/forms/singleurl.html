@@ -9,8 +9,9 @@
         <label for="title">Title</label>
         <input unique-provider-title type="text" class="form-control" name="title" ng-disabled="!edit"
             ng-model="config.label" ng-required="true" ng-maxlength="1000">
-        <validation-message target="form.title"></validation-message>
-        <small class="form-text text-muted">Please enter a title</small>
+        <small class="form-text text-muted" data-ng-show="form.title.$error.maxlength">Title is too long!</small>
+        <small class="form-text text-muted" data-ng-show="form.title.$error.unique">Title is not unique!</small>
+        <small class="form-text text-muted" data-ng-show="form.title.$error.required">Please enter a title</small>
       </div>
 
       <div class="form-group" title="The URL for the server">
@@ -18,8 +19,8 @@
         <input type="text" name="url" class="form-control" ng-disabled="!edit" ng-model="config.url" ng-required="true"
             ng-maxlength="1000">
         <small class="form-text invalid-feedback" ng-if="urlExample && form.url.$valid">e.g. {{urlExample}}</small>
-        <validation-message target="form.url"></validation-message>
-        <small class="form-text text-muted">Please enter a URL</small>
+        <small class="form-text text-muted" data-ng-show="form.wms.$error.maxlength">URL is too long!</small>
+        <small class="form-text text-muted" data-ng-show="form.url.$error.required">Please enter a URL</small>
       </div>
       <input type="submit" hidden>
     </form>

@@ -1,4 +1,5 @@
 goog.provide('os.ui.ProviderImportCtrl');
+goog.provide('os.ui.ProviderImportLoadEvents');
 
 goog.require('goog.events.EventType');
 goog.require('goog.string');
@@ -7,6 +8,14 @@ goog.require('os.data');
 goog.require('os.ui.window');
 
 
+
+/**
+ * @type {Object<string, string>}
+ */
+os.ui.ProviderImportLoadEvents = {
+  'start': 'startedLoadingForm',
+  'stop': 'stoppedLoadingForm'
+};
 
 /**
  * Controller for the provider import UI
@@ -58,6 +67,7 @@ os.ui.ProviderImportCtrl.prototype.initialize = function() {
  * @export
  */
 os.ui.ProviderImportCtrl.prototype.accept = function() {
+  this.scope.$emit(os.ui.ProviderImportLoadEvents['start']);
   if (!this.scope['form']['$invalid'] && !this.scope['testing']) {
     this.cleanConfig();
 
@@ -133,6 +143,7 @@ os.ui.ProviderImportCtrl.prototype.onTestFinished = function(event) {
     if (!this.dp.getError()) {
       this.saveAndClose();
     } else {
+      this.scope.$emit(os.ui.ProviderImportLoadEvents['stop']);
       this.apply();
     }
   }

@@ -33,7 +33,7 @@ os.ui.im.ImportManager = function() {
   this.importUIs_ = {};
 
   /**
-   * @type {Object<string, Object>}
+   * @type {Object<string, osx.import.ServerType>}
    * @private
    */
   this.serverTypes_ = {};
@@ -107,7 +107,7 @@ os.ui.im.ImportManager.prototype.getImportUI = function(type) {
  * Get a registered server type.
  *
  * @param {?string} type
- * @return {Object}
+ * @return {?osx.import.ServerType}
  */
 os.ui.im.ImportManager.prototype.getServerType = function(type) {
   if (type) {
@@ -125,7 +125,7 @@ os.ui.im.ImportManager.prototype.getServerType = function(type) {
 /**
  * Get all registered server types.
  *
- * @return {Object}
+ * @return {Object<string, osx.import.ServerType>}
  */
 os.ui.im.ImportManager.prototype.getServerTypes = function() {
   return this.serverTypes_;
@@ -245,7 +245,7 @@ os.ui.im.ImportManager.prototype.registerImportUI = function(type, ui) {
  * Register a server type.
  *
  * @param {string} type The server type
- * @param {Object} options The options associated with the server type
+ * @param {osx.import.ServerType} options The options associated with the server type
  */
 os.ui.im.ImportManager.prototype.registerServerType = function(type, options) {
   type = type.toLowerCase();
@@ -317,7 +317,7 @@ os.ui.im.ImportManager.prototype.unregisterImportUI = function(type, opt_ui) {
  * Unregister a server type.
  *
  * @param {string} type
- * @param {Object} options
+ * @param {osx.import.ServerType} options
  */
 os.ui.im.ImportManager.prototype.unregisterServerType = function(type, options) {
   type = type.toLowerCase();
