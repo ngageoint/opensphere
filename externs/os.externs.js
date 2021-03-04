@@ -556,7 +556,7 @@ osx.import.FileWrapper;
 /**
  * @typedef {{
  *   type: string,
- *   helpUi: string,
+ *   helpUi: (string|undefined),
  *   ui: string,
  *   label: string
  * }}

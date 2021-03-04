@@ -9,7 +9,7 @@
             ng-options="value.label for value in ctrl.items"
             ng-disabled="ctrl.loading">
         </select>
-        <button class="btn btn-secondary" ng-click="ctrl.launchHelp()" ng-if="ctrl.serverType" title="Help for server specific URL formats">
+        <button class="btn btn-secondary" ng-click="ctrl.launchHelp()" ng-if="ctrl.serverType.helpUi" title="Help for server specific URL formats">
           <i class="fa fa-question-circle"></i>
           Format Help
         </button>

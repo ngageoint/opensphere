@@ -103,6 +103,7 @@ class Controller {
    * Get the appropriate UI for the serverType.
    * @param {?string} item
    * @return {?string} UI
+   * @export
    */
   getUi(item) {
     if (item) {
@@ -129,7 +130,7 @@ class Controller {
    * @export
    */
   launchHelp() {
-    if (!uiWindow.exists(helpWindowId)) {
+    if (!uiWindow.exists(helpWindowId) && this['serverType']['helpUi']) {
       var item = this['serverType']['label'] + ' URL ';
       uiWindow.create({
         'label': item + 'Formats',
