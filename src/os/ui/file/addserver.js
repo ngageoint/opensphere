@@ -4,7 +4,7 @@ goog.module.declareLegacyNamespace();
 const FileParserConfig = goog.require('os.parse.FileParserConfig');
 const Module = goog.require('os.ui.Module');
 const ImportManager = goog.require('os.ui.im.ImportManager');
-const ProviderImportLoadEvents = goog.require('os.ui.ProviderImportLoadEvents');
+const ProviderImportLoadEventType = goog.require('os.ui.ProviderImportLoadEventType');
 const uiWindow = goog.require('os.ui.window');
 
 const helpWindowId = 'url-help';
@@ -85,8 +85,8 @@ class Controller {
     this['items'] = Object.values(ImportManager.getInstance().getServerTypes() || {});
 
     $scope.$emit(os.ui.WindowEventType.READY);
-    $scope.$on(ProviderImportLoadEvents['start'], this.onFormLoadingStatusChange_.bind(this));
-    $scope.$on(ProviderImportLoadEvents['stop'], this.onFormLoadingStatusChange_.bind(this));
+    $scope.$on(ProviderImportLoadEventType['start'], this.onFormLoadingStatusChange_.bind(this));
+    $scope.$on(ProviderImportLoadEventType['stop'], this.onFormLoadingStatusChange_.bind(this));
     $scope.$on('$destroy', this.onDestroy_.bind(this));
   }
 
@@ -162,10 +162,10 @@ class Controller {
    */
   onFormLoadingStatusChange_(event) {
     switch (event.name) {
-      case ProviderImportLoadEvents['start']:
+      case ProviderImportLoadEventType['start']:
         this['loading'] = true;
         break;
-      case ProviderImportLoadEvents['stop']:
+      case ProviderImportLoadEventType['stop']:
         this['loading'] = false;
         break;
       default:

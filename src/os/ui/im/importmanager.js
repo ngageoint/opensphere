@@ -30,37 +30,37 @@ os.ui.im.ImportManager = function() {
    * @type {Object<string, os.ui.im.IImportUI>}
    * @private
    */
-  this.importUIs_ = {};
+  this['importUIs_'] = {};
 
   /**
    * @type {Object<string, osx.import.ServerType>}
    * @private
    */
-  this.serverTypes_ = {};
+  this['serverTypes_'] = {};
 
   /**
    * @type {Object<string, function(new:os.im.IImporter, ...)>}
    * @private
    */
-  this.importers_ = {};
+  this['importers_'] = {};
 
   /**
    * @type {Object<string, function(new:os.parse.IParser, ...)>}
    * @private
    */
-  this.parsers_ = {};
+  this['parsers_'] = {};
 
   /**
    * @type {!Array<string>}
    * @private
    */
-  this.details_ = [];
+  this['details_'] = [];
 
   /**
    * @type {!Array<string>}
    * @private
    */
-  this.dataTypes_ = [];
+  this['dataTypes_'] = [];
 
   this.registerImporter(os.ui.im.ImportManager.DEFAULT_IMPORTER, os.im.Importer);
 };
@@ -94,8 +94,8 @@ os.ui.im.ImportManager.prototype.getImportUI = function(type) {
   if (type) {
     type = type.toLowerCase();
 
-    if (type in this.importUIs_) {
-      return this.importUIs_[type];
+    if (type in this['importUIs_']) {
+      return this['importUIs_'][type];
     }
   }
 
@@ -113,8 +113,8 @@ os.ui.im.ImportManager.prototype.getServerType = function(type) {
   if (type) {
     type = type.toLowerCase();
 
-    if (type in this.serverTypes_) {
-      return this.serverTypes_[type];
+    if (type in this['serverTypes_']) {
+      return this['serverTypes_'][type];
     }
   }
 
@@ -128,7 +128,7 @@ os.ui.im.ImportManager.prototype.getServerType = function(type) {
  * @return {Object<string, osx.import.ServerType>}
  */
 os.ui.im.ImportManager.prototype.getServerTypes = function() {
-  return this.serverTypes_;
+  return this['serverTypes_'];
 };
 
 
@@ -138,9 +138,9 @@ os.ui.im.ImportManager.prototype.getServerTypes = function() {
  * @return {!Array<string>}
  */
 os.ui.im.ImportManager.prototype.getImportDetails = function() {
-  var details = this.details_.slice();
-  if (this.dataTypes_.length > 0) {
-    details.unshift('Supported data formats: ' + this.dataTypes_.join(', ') + '.');
+  var details = this['details_'].slice();
+  if (this['dataTypes_'].length > 0) {
+    details.unshift('Supported data formats: ' + this['dataTypes_'].join(', ') + '.');
   }
 
   return details;
@@ -158,8 +158,8 @@ os.ui.im.ImportManager.prototype.getImporter = function(type, opt_options) {
   if (type) {
     type = type.toLowerCase();
 
-    if (type in this.importers_) {
-      return new this.importers_[type](opt_options);
+    if (type in this['importers_']) {
+      return new this['importers_'][type](opt_options);
     }
   }
 
@@ -175,7 +175,7 @@ os.ui.im.ImportManager.prototype.getImporter = function(type, opt_options) {
  */
 os.ui.im.ImportManager.prototype.getImporters = function() {
   var importers = [];
-  goog.object.forEach(this.importUIs_, function(importer) {
+  goog.object.forEach(this['importUIs_'], function(importer) {
     importers.push(importer);
   });
   goog.array.removeDuplicates(importers, null, function(importer) {
@@ -196,8 +196,8 @@ os.ui.im.ImportManager.prototype.getParser = function(type, opt_options) {
   if (type) {
     type = type.toLowerCase();
 
-    if (type in this.parsers_) {
-      return new this.parsers_[type](opt_options);
+    if (type in this['parsers_']) {
+      return new this['parsers_'][type](opt_options);
     }
   }
 
@@ -213,11 +213,11 @@ os.ui.im.ImportManager.prototype.getParser = function(type, opt_options) {
  */
 os.ui.im.ImportManager.prototype.registerImportDetails = function(details, opt_isData) {
   if (opt_isData) {
-    this.dataTypes_.push(details);
-    this.dataTypes_.sort(goog.array.defaultCompare);
+    this['dataTypes_'].push(details);
+    this['dataTypes_'].sort(goog.array.defaultCompare);
   } else {
-    this.details_.push(details);
-    this.details_.sort(goog.array.defaultCompare);
+    this['details_'].push(details);
+    this['details_'].sort(goog.array.defaultCompare);
   }
 };
 
@@ -231,13 +231,13 @@ os.ui.im.ImportManager.prototype.registerImportDetails = function(details, opt_i
 os.ui.im.ImportManager.prototype.registerImportUI = function(type, ui) {
   type = type.toLowerCase();
 
-  if (type in this.importUIs_) {
+  if (type in this['importUIs_']) {
     // log a warning, but allow it.
     var msg = 'The import UI "' + type + '" has already been registered with the import manager!';
     goog.log.warning(os.ui.im.ImportManager.LOGGER_, msg);
   }
 
-  this.importUIs_[type] = ui;
+  this['importUIs_'][type] = ui;
 };
 
 
@@ -250,13 +250,13 @@ os.ui.im.ImportManager.prototype.registerImportUI = function(type, ui) {
 os.ui.im.ImportManager.prototype.registerServerType = function(type, options) {
   type = type.toLowerCase();
 
-  if (type in this.serverTypes_) {
+  if (type in this['serverTypes_']) {
     // log a warning, but allow it.
     var msg = 'The import UI "' + type + '" has already been registered with the import manager!';
     goog.log.warning(os.ui.im.ImportManager.LOGGER_, msg);
   }
 
-  this.serverTypes_[type] = options;
+  this['serverTypes_'][type] = options;
 };
 
 
@@ -269,11 +269,11 @@ os.ui.im.ImportManager.prototype.registerServerType = function(type, options) {
 os.ui.im.ImportManager.prototype.registerImporter = function(type, clazz) {
   type = type.toLowerCase();
 
-  if (type in this.importers_) {
+  if (type in this['importers_']) {
     var msg = 'The importer type "' + type + '" has already been registered with the import manager!';
     goog.log.info(os.ui.im.ImportManager.LOGGER_, msg);
   } else {
-    this.importers_[type] = clazz;
+    this['importers_'][type] = clazz;
   }
 };
 
@@ -287,11 +287,11 @@ os.ui.im.ImportManager.prototype.registerImporter = function(type, clazz) {
 os.ui.im.ImportManager.prototype.registerParser = function(type, clazz) {
   type = type.toLowerCase();
 
-  if (type in this.parsers_) {
+  if (type in this['parsers_']) {
     var msg = 'The parser type "' + type + '" has already been registered with the import manager!';
     goog.log.info(os.ui.im.ImportManager.LOGGER_, msg);
   } else {
-    this.parsers_[type] = clazz;
+    this['parsers_'][type] = clazz;
   }
 };
 
@@ -305,9 +305,9 @@ os.ui.im.ImportManager.prototype.registerParser = function(type, clazz) {
 os.ui.im.ImportManager.prototype.unregisterImportUI = function(type, opt_ui) {
   type = type.toLowerCase();
 
-  if (type in this.importUIs_) {
-    if ((opt_ui && this.importUIs_[type] === opt_ui) || !opt_ui) {
-      delete this.importUIs_[type];
+  if (type in this['importUIs_']) {
+    if ((opt_ui && this['importUIs_'][type] === opt_ui) || !opt_ui) {
+      delete this['importUIs_'][type];
     }
   }
 };
@@ -322,9 +322,9 @@ os.ui.im.ImportManager.prototype.unregisterImportUI = function(type, opt_ui) {
 os.ui.im.ImportManager.prototype.unregisterServerType = function(type, options) {
   type = type.toLowerCase();
 
-  if (type in this.serverTypes_) {
-    if ((options && this.serverTypes_[type] === options) || !options) {
-      delete this.serverTypes_[type];
+  if (type in this['serverTypes_']) {
+    if ((options && this['serverTypes_'][type] === options) || !options) {
+      delete this['serverTypes_'][type];
     }
   }
 };
