@@ -59,15 +59,6 @@ node(getLabel()) {
           }
         }
 
-        /* stage('docs')
-        sh 'npm run compile:dossier'
-
-        stage('deploy-docs')
-        try {
-          deployDocs()
-        } catch (NoSuchMethodError e) {
-        } */
-
         stage('package') {
           try {
             beforePackage()

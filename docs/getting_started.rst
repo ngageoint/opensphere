@@ -96,7 +96,6 @@ The most common targets are:
   $ npm run dev                 # generates the dev application and runs webpack in watch mode
   $ npm run test                # runs the unit tests
   $ npm run test:debug          # runs the unit tests with a configuration more suited to debugging
-  $ npm run apidoc              # generates api documentation
   $ npm run guide               # generates this documentation
   $ npm run build:webpack-dev   # runs webpack in watch mode, for development
 
