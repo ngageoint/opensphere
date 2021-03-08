@@ -78,7 +78,7 @@ Even though IE should work, if you use it, you are going to have a bad time. Edg
 
 ## Documentation
 
-Check out our guides at [opensphere.readthedocs.io](https://opensphere.readthedocs.io). API documentation can be built locally by running `npm run apidoc`, which outputs to `dist/apidoc`. We will have a hosted version of that soon.
+Check out our guides at [opensphere.readthedocs.io](https://opensphere.readthedocs.io). Guides can be built locally by running `npm run guide`, which outputs to `docs/_build/html`.
 
 ## Bugs
 
