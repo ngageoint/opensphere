@@ -14,10 +14,12 @@ goog.require('ol.style.Style');
 goog.require('ol.style.Text');
 goog.require('os.bearing');
 goog.require('os.config.Settings');
+goog.require('os.data.RecordField');
 goog.require('os.feature.measure');
 goog.require('os.geo2');
 goog.require('os.interaction.DrawPolygon');
 goog.require('os.math');
+goog.require('os.webgl.AltitudeMode');
 
 
 
@@ -118,6 +120,7 @@ os.interaction.Measure.prototype.getGeometry = function() {
 os.interaction.Measure.prototype.getProperties = function() {
   var props = {};
   props[os.interpolate.METHOD_FIELD] = os.interaction.Measure.method;
+  props[os.data.RecordField.ALTITUDE_MODE] = os.webgl.AltitudeMode.ABSOLUTE;
   return props;
 };
 
@@ -362,4 +365,17 @@ os.interaction.Measure.prototype.onChange_ = function() {
       this.line2D.setStyle(this.getStyle());
     }
   }
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.interaction.Measure.prototype.addCoord = function(coord, mapBrowserEvent) {
+  // the measure operation is currently only calculated over the ellipsoid surface
+  if (coord.length > 2) {
+    coord[2] = 0;
+  }
+
+  os.interaction.Measure.base(this, 'addCoord', coord, mapBrowserEvent);
 };
