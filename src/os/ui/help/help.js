@@ -134,11 +134,11 @@ os.ui.help.HelpCtrl.prototype.initialize = function() {
     root.addChild({
       eventType: os.ui.help.EventType.HELP_VIDEO,
       label: 'Help Videos',
+      link: videoUrl,
       tooltip: 'View help videos for ' + appName,
       icons: ['<i class="fa fa-fw fa-question-circle"></i>'],
       sort: 20
     });
-    this.menu.listen(os.ui.help.EventType.HELP_VIDEO, this.onHelpAction_, false, this);
   }
 
   root.addChild({
@@ -172,13 +172,11 @@ os.ui.help.HelpCtrl.prototype.initialize = function() {
     root.addChild({
       eventType: os.ui.help.EventType.VIDEO_CARD,
       label: 'Graphics Card Help',
+      link: videoCardUrl,
       tooltip: 'Troubleshoot 3D view',
       icons: ['<i class="fa fa-fw fa-desktop"></i>'],
       sort: 120
     });
-    this.menu.listen(os.ui.help.EventType.VIDEO_CARD, function() {
-      window.open(videoCardUrl);
-    }, false, this);
   }
 
   if (os.settings.get('onboarding') && os.settings.get('onboarding')['hideTips'] !== true) {
@@ -246,10 +244,6 @@ os.ui.help.HelpCtrl.prototype.onHelpAction_ = function(event) {
       break;
     case os.ui.help.EventType.VIEW_ALERTS:
       this.scope.$emit(os.ui.help.EventType.VIEW_ALERTS);
-      break;
-    case os.ui.help.EventType.HELP_VIDEO:
-      var videoUrl = /** @type {string} */ (os.settings.get('helpVideoUrl'));
-      window.open(videoUrl);
       break;
     case os.ui.help.EventType.CONTROLS:
       os.ui.help.ControlsCtrl.launch();

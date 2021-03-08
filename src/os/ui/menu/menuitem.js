@@ -33,9 +33,21 @@ os.ui.menu.UnclickableTypes = [
 
 /**
  * @typedef {{
+ *  href: !string,
+ *  target: (string|undefined),
+ *  opener: (boolean|undefined),
+ *  referrer: (boolean|undefined)
+ * }}
+ */
+os.ui.menu.MenuItemLink;
+
+
+/**
+ * @typedef {{
  *  type: (os.ui.menu.MenuItemType|undefined),
  *  eventType: (string|undefined),
  *  label: (string|undefined),
+ *  link: (string|os.ui.menu.MenuItemLink|undefined),
  *  metricKey: (string|undefined),
  *  visible: (boolean|undefined),
  *  enabled: (boolean|undefined),
@@ -71,6 +83,7 @@ os.ui.menu.MenuItem = function(options) {
   this.shortcut = options.shortcut;
   this.sort = options.sort || 0;
   this.closeOnSelect = options.closeOnSelect != null ? options.closeOnSelect : true;
+  this.link = options.link;
 
   /**
    * @type {Array<!os.ui.menu.MenuItem<T>>|undefined}
@@ -275,6 +288,8 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
   // start wrapper div (required by jquery-ui 1.12+)
   html += '<div>';
 
+  html += this.renderLinkOpen_();
+
   // hotkey/shortcut
   if (this.shortcut) {
     html += '<span class="text-muted d-inline-block float-right pl-2">' + this.shortcut + '</span>';
@@ -300,6 +315,8 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
   // label
   html += '<span class="text-truncate">' + this.label + '</span>';
 
+  html += this.renderLinkClose_();
+
   // end wrapper div (required by jquery-ui 1.12+)
   html += '</div>';
 
@@ -314,6 +331,50 @@ os.ui.menu.MenuItem.prototype.render = function(context, opt_target) {
   }
 
   return html;
+};
+
+
+/**
+ * @return {!string}
+ */
+os.ui.menu.MenuItem.prototype.renderLinkOpen_ = function() {
+  let html = '';
+
+  if (this.link) {
+    if (typeof this.link === 'string') {
+      html += '<a href="' + this.link + '" rel="noreferrer noopener">';
+    } else {
+      html += '<a href="' + this.link.href + '"';
+      if (!this.link.referrer || !this.link.opener) {
+        html += ' rel="';
+        if (!this.link.referrer) {
+          html += 'noreferrer ';
+        }
+
+        if (!this.link.opener) {
+          html += 'noopener';
+        }
+
+        html += '"';
+      }
+
+      if (this.link.target) {
+        html += ' target="' + this.link.target + '"';
+      }
+
+      html += '>';
+    }
+  }
+
+  return html;
+};
+
+
+/**
+ * @return {!string}
+ */
+os.ui.menu.MenuItem.prototype.renderLinkClose_ = function() {
+  return this.link ? '</a>' : '';
 };
 
 
