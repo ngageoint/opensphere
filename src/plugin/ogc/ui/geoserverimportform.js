@@ -1,21 +1,39 @@
 goog.module('plugin.ogc.ui.GeoserverImportForm');
 goog.module.declareLegacyNamespace();
 
+const Module = goog.require('os.ui.Module');
 const Controller = goog.require('plugin.ogc.ui.GeoserverImportCtrl');
 const geoserverDirective = goog.require('plugin.ogc.ui.geoserverDirective');
-const os = goog.require('os.defines');
+const {ROOT} = goog.require('os');
 
 
+/**
+ * A dialog with information about custom date/time formats, as implemented by Moment.js.
+ *
+ * @return {angular.Directive}
+ */
 const directive = () => {
   const original = geoserverDirective();
-  original.templateUrl = os.ROOT + 'views/forms/singleurlform.html';
+  original.templateUrl = ROOT + 'views/forms/singleurlform.html';
   return original;
 };
 
-Module.directive('geoserverform', [directive]);
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'geoserverform';
+
+
+/**
+ * Add the directive to the os module
+ */
+Module.directive(directiveTag, [directive]);
 
 
 exports = {
   Controller,
-  directive
+  directive,
+  directiveTag
 };

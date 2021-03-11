@@ -5,6 +5,7 @@ goog.require('os.plugin.AbstractPlugin');
 goog.require('os.state.StateManager');
 goog.require('os.ui.ProviderImportUI');
 goog.require('plugin.arc');
+goog.require('plugin.arc.ArcImportForm');
 goog.require('plugin.arc.ArcServer');
 goog.require('plugin.arc.ArcServerHelpUI');
 goog.require('plugin.arc.arcImportDirective');
@@ -52,7 +53,7 @@ plugin.arc.ArcPlugin.prototype.init = function() {
     'type': 'arc',
     'helpUi': plugin.arc.ArcServerHelpUI.directiveTag,
     'ui': 'arcserver',
-    'formUi': 'arcserverform',
+    'formUi': plugin.arc.ArcImportForm.directiveTag,
     'label': 'ArcGIS Server'
   });
 

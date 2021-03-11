@@ -13,7 +13,9 @@ goog.require('plugin.ogc.GeoServer');
 goog.require('plugin.ogc.OGCLayerDescriptor');
 goog.require('plugin.ogc.mime');
 goog.require('plugin.ogc.ui.GeoServerHelpUI');
+goog.require('plugin.ogc.ui.GeoserverImportForm');
 goog.require('plugin.ogc.ui.OgcServerHelpUI');
+goog.require('plugin.ogc.ui.OgcServerImportForm');
 goog.require('plugin.ogc.ui.geoserverDirective');
 goog.require('plugin.ogc.ui.ogcserverDirective');
 goog.require('plugin.ogc.wfs.QueryWFSLayerConfig');
@@ -72,7 +74,7 @@ plugin.ogc.OGCPlugin.prototype.init = function() {
     'type': 'ogc',
     'helpUi': plugin.ogc.ui.OgcServerHelpUI.directiveTag,
     'ui': 'ogcserver',
-    'formUi': 'ogcserverform',
+    'formUi': plugin.ogc.ui.OgcServerImportForm.directiveTag,
     'label': 'OGC Server'
   });
   im.registerImportUI(plugin.ogc.mime.GEOSERVER_TYPE,
@@ -81,7 +83,7 @@ plugin.ogc.OGCPlugin.prototype.init = function() {
     'type': 'geoserver',
     'helpUi': plugin.ogc.ui.GeoServerHelpUI.directiveTag,
     'ui': 'geoserver',
-    'formUi': 'geoserverform',
+    'formUi': plugin.ogc.ui.GeoserverImportForm.directiveTag,
     'label': 'GeoServer'
   });
 };

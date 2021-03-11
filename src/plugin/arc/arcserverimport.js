@@ -7,7 +7,6 @@ goog.require('os.ui.window');
 goog.require('plugin.arc.ArcServer');
 
 
-
 /**
  * The Arc server import directive
  *
@@ -57,7 +56,7 @@ goog.inherits(plugin.arc.ArcImportCtrl, os.ui.SingleUrlProviderImportCtrl);
  */
 plugin.arc.ArcImportCtrl.prototype.getDataProvider = function() {
   var dp = new plugin.arc.ArcServer();
-  dp.configure($scope['config']);
+  dp.configure(this.scope['config']);
   return dp;
 };
 
