@@ -1,0 +1,23 @@
+<form class="container-fluid" ng-show="!testing" name="form" ng-submit="ctrl.accept()" novalidate>
+  <div class="form-group" title="The title for the server">
+    <label for="title">Title</label>
+    <input unique-provider-title type="text" class="form-control" name="title" ng-disabled="!edit"
+        ng-model="config.label" ng-required="true" ng-maxlength="1000">
+    <small class="form-text text-muted" data-ng-show="form.title.$error.maxlength">Title is too long!</small>
+    <small class="form-text text-muted" data-ng-show="form.title.$error.unique">Title is not unique!</small>
+    <small class="form-text text-muted" data-ng-show="!form.title.$error.maxlength && !form.title.$error.unique">Please enter a title</small>
+  </div>
+
+  <div class="form-group" title="The URL for the server">
+    <label for="url">URL</label>
+    <button class="btn border-0" ng-click="ctrl.launchHelp()" title="Help for server specific URL formats">
+      <i class="fa fa-question-circle"></i>
+    </button>
+    <input type="text" name="url" class="form-control" ng-disabled="!edit" ng-model="config.url" ng-required="true"
+        ng-maxlength="1000">
+    <small class="form-text text-muted" data-ng-show="form.wms.$error.maxlength">URL is too long!</small>
+    <small class="form-text text-muted" data-ng-show="!form.wms.$error.maxlength" ng-if="urlExample">Please enter a URL (e.g. {{urlExample}})</small>
+    <small class="form-text text-muted" data-ng-show="!form.wms.$error.maxlength" ng-if="!urlExample">Please enter a URL</small>
+  </div>
+  <input type="submit" hidden>
+</form>

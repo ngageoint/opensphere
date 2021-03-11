@@ -49,7 +49,6 @@ plugin.ogc.ui.GeoserverImportCtrl = function($scope, $element) {
   $scope['config']['url'] = file ? file.getUrl().replace(/(\/geoserver|\/.*?gs)(\/.*)(web|ows)[#?\/].*$/, '/geoserver$1ows') :
     this.getUrl();
   $scope['config']['type'] = 'geoserver';
-
   $scope['urlExample'] = 'http://www.example.com/geoserver/ows';
 };
 goog.inherits(plugin.ogc.ui.GeoserverImportCtrl, os.ui.SingleUrlProviderImportCtrl);

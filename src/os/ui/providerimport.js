@@ -51,6 +51,7 @@ os.ui.ProviderImportCtrl = function($scope, $element) {
   this.initialize();
 
   $scope.$emit(os.ui.WindowEventType.READY);
+  $scope.$on('accept', this.onAccept_.bind(this));
 };
 
 
@@ -68,8 +69,8 @@ os.ui.ProviderImportCtrl.prototype.initialize = function() {
  * @export
  */
 os.ui.ProviderImportCtrl.prototype.accept = function() {
-  this.scope.$emit(os.ui.ProviderImportLoadEventType['start']);
   if (!this.scope['form']['$invalid'] && !this.scope['testing']) {
+    this.scope.$emit(os.ui.ProviderImportLoadEventType['start']);
     this.cleanConfig();
 
     if (!this.dp || this.scope['error'] || (this.dp.getEditable() && this.formDiff())) {
@@ -148,6 +149,22 @@ os.ui.ProviderImportCtrl.prototype.onTestFinished = function(event) {
       this.apply();
     }
   }
+};
+
+
+/**
+ * Accept handler
+ */
+os.ui.ProviderImportCtrl.prototype.onAccept_ = function() {
+  this.accept();
+};
+
+
+/**
+ * Launches help window
+ */
+os.ui.ProviderImportCtrl.prototype.launchHelp = function() {
+  this.scope.$emit('launchHelp');
 };
 
 

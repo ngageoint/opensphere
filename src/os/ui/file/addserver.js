@@ -87,6 +87,7 @@ class Controller {
     $scope.$emit(os.ui.WindowEventType.READY);
     $scope.$on(ProviderImportLoadEventType['start'], this.onFormLoadingStatusChange_.bind(this));
     $scope.$on(ProviderImportLoadEventType['stop'], this.onFormLoadingStatusChange_.bind(this));
+    $scope.$on('launchHelp', this.onLaunchHelp_.bind(this));
     $scope.$on('$destroy', this.onDestroy_.bind(this));
   }
 
@@ -107,7 +108,7 @@ class Controller {
    */
   getUi(item) {
     if (item) {
-      return ImportManager.getInstance().getServerType(item['type']).ui;
+      return ImportManager.getInstance().getServerType(item['type'])['formUi'];
     }
 
     return null;
@@ -135,15 +136,24 @@ class Controller {
       uiWindow.create({
         'label': item + 'Formats',
         'icon': 'fa fa-clock-o',
-        'x': '-10',
+        'x': '-100',
         'y': 'center',
         'width': '550',
-        'height': '500',
+        'height': '470',
         'show-close': true,
         'modal': true,
         'id': helpWindowId
       }, this['serverType']['helpUi']);
     }
+  }
+
+  /**
+   * Save button handler
+   *
+   * @export
+   */
+  accept() {
+    this['scope_'].$broadcast('accept');
   }
 
   /**
@@ -184,6 +194,14 @@ class Controller {
       uiWindow.close(helpWindow);
     }
   }
+
+  /**
+   * Handles launching help windows.
+   * @export
+   */
+  onLaunchHelp_() {
+    this.launchHelp();
+  }
 }
 
 
@@ -204,7 +222,7 @@ const launchAddServerWindow = function() {
       'width': '500',
       'min-width': '500',
       'max-width': '500',
-      'height': 'auto',
+      'height': '470',
       'modal': true,
       'show-close': true
     }, 'addserver');

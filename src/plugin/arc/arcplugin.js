@@ -52,6 +52,7 @@ plugin.arc.ArcPlugin.prototype.init = function() {
     'type': 'arc',
     'helpUi': plugin.arc.ArcServerHelpUI.directiveTag,
     'ui': 'arcserver',
+    'formUi': 'arcserverform',
     'label': 'ArcGIS Server'
   });
 

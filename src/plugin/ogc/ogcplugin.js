@@ -72,6 +72,7 @@ plugin.ogc.OGCPlugin.prototype.init = function() {
     'type': 'ogc',
     'helpUi': plugin.ogc.ui.OgcServerHelpUI.directiveTag,
     'ui': 'ogcserver',
+    'formUi': 'ogcserverform',
     'label': 'OGC Server'
   });
   im.registerImportUI(plugin.ogc.mime.GEOSERVER_TYPE,
@@ -80,6 +81,7 @@ plugin.ogc.OGCPlugin.prototype.init = function() {
     'type': 'geoserver',
     'helpUi': plugin.ogc.ui.GeoServerHelpUI.directiveTag,
     'ui': 'geoserver',
+    'formUi': 'geoserverform',
     'label': 'GeoServer'
   });
 };
