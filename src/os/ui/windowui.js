@@ -91,14 +91,16 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
       var readyPromise;
       var readyOff;
       var onWindowReady = function() {
-        // Try cascading the window first. If there aren't any windows to cascade against, use the config.
-        if (!this.cascade()) {
-          var height = $element.height();
-          $scope['y'] = (maxHeight - height) / 2;
-          $element.css('top', $scope['y'] + 'px');
-        }
+        if (this.element && this.scope) {
+          // Try cascading the window first. If there aren't any windows to cascade against, use the config.
+          if (!this.cascade()) {
+            var height = this.element.height();
+            this.scope['y'] = (maxHeight - height) / 2;
+            this.element.css('top', this.scope['y'] + 'px');
+          }
 
-        this.constrainWindow_();
+          this.constrainWindow_();
+        }
       }.bind(this);
 
       // make sure the window gets positioned eventually. windows should fire a os.ui.WindowEventType.READY event to
