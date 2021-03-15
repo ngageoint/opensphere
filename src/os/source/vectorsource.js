@@ -3399,7 +3399,8 @@ os.source.Vector.prototype.select = function(feature) {
         feature.id_ != null && this.idIndex_[feature.id_] && this.shownRecordMap[feature.id_]) {
       goog.array.binaryInsert(this.selected_, feature, os.feature.idCompare);
       this.selectedById_[id] = true;
-      feature.set(os.style.StyleType.SELECT, os.style.DEFAULT_SELECT_CONFIG);
+      var selectCfg = feature.get(os.style.StyleType.CUSTOM_SELECT) || os.style.DEFAULT_SELECT_CONFIG;
+      feature.set(os.style.StyleType.SELECT, selectCfg);
       return true;
     }
   }

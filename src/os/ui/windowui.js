@@ -638,9 +638,7 @@ os.ui.WindowCtrl.prototype.onToggleModal_ = function(opt_new, opt_old) {
  * @private
  */
 os.ui.WindowCtrl.prototype.updateZIndex_ = function() {
-  if (!this.scope['modal']) {
-    this.bringToFront();
-  }
+  this.bringToFront();
 
   if (!this.scope['active']) {
     this.scope['active'] = true;
