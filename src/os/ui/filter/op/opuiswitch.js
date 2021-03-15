@@ -46,5 +46,5 @@ goog.inherits(os.ui.filter.op.OPUISwitchCtrl, os.ui.UISwitchCtrl);
  * @inheritDoc
  */
 os.ui.filter.op.OPUISwitchCtrl.prototype.addToScope = function(scope) {
-  scope['expr'] = this['scope']['expr'];
+  scope['expr'] = this.scope['expr'];
 };

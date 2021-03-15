@@ -5,8 +5,16 @@ const FileParserConfig = goog.require('os.parse.FileParserConfig');
 const Module = goog.require('os.ui.Module');
 const ImportManager = goog.require('os.ui.im.ImportManager');
 const ProviderImportLoadEventType = goog.require('os.ui.ProviderImportLoadEventType');
+const {ROOT} = goog.require('os');
 const window = goog.require('os.ui.window');
+const WindowEventType = goog.require('os.ui.WindowEventType');
 
+
+
+/**
+ * HTML ID for the Format Help windows
+ * @type {string}
+ */
 const helpWindowId = 'url-help';
 
 
@@ -19,7 +27,7 @@ const directive = () => {
     restrict: 'E',
     replace: true,
     scope: true,
-    templateUrl: os.ROOT + 'views/file/addserver.html',
+    templateUrl: ROOT + 'views/file/addserver.html',
     controller: Controller,
     controllerAs: 'ctrl'
   };
@@ -79,18 +87,16 @@ class Controller {
      */
     this.items = Object.values(ImportManager.getInstance().getServerTypes() || {});
 
-    $scope.$emit(os.ui.WindowEventType.READY);
+    $scope.$emit(WindowEventType.READY);
     $scope.$on(ProviderImportLoadEventType.start, this.onFormLoadingStatusChange_.bind(this));
     $scope.$on(ProviderImportLoadEventType.stop, this.onFormLoadingStatusChange_.bind(this));
     $scope.$on('launchHelp', this.onLaunchHelp_.bind(this));
-    $scope.$on('$destroy', this.onDestroy_.bind(this));
   }
 
   /**
    * Clean up references/listeners.
-   * @private
    */
-  onDestroy_() {
+  $onDestroy() {
     this.scope_ = null;
     this.element_ = null;
   }
@@ -127,10 +133,10 @@ class Controller {
    */
   launchHelp() {
     if (!window.exists(helpWindowId) && this.serverType.helpUi) {
-      var item = this.serverType.label + ' URL ';
+      var item = this.serverType.label + ' URL Format Help';
       window.create({
         'label': item + 'Formats',
-        'icon': 'fa fa-clock-o',
+        'icon': 'fa-question-circle',
         'x': '-100',
         'y': 'center',
         'width': '550',
