@@ -50,7 +50,7 @@ class Controller {
      * @type {?angular.JQLite}
      * @private
      */
-    this['element_'] = $element;
+    this.element_ = $element;
 
     $scope.$on('$destroy', this.onDestroy_.bind(this));
   }
@@ -60,7 +60,7 @@ class Controller {
    * @export
    */
   close() {
-    window.close(this['element_']);
+    window.close(this.element_);
   }
 
   /**
@@ -68,7 +68,7 @@ class Controller {
    * @private
    */
   onDestroy_() {
-    this['element_'] = null;
+    this.element_ = null;
   }
 }
 
