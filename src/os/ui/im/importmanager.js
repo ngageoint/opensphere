@@ -291,7 +291,7 @@ os.ui.im.ImportManager.prototype.registerParser = function(type, clazz) {
     var msg = 'The parser type "' + type + '" has already been registered with the import manager!';
     goog.log.info(os.ui.im.ImportManager.LOGGER_, msg);
   } else {
-    this['parsers_'][type] = clazz;
+    this.parsers_[type] = clazz;
   }
 };
 
@@ -305,9 +305,9 @@ os.ui.im.ImportManager.prototype.registerParser = function(type, clazz) {
 os.ui.im.ImportManager.prototype.unregisterImportUI = function(type, opt_ui) {
   type = type.toLowerCase();
 
-  if (type in this['importUIs_']) {
-    if ((opt_ui && this['importUIs_'][type] === opt_ui) || !opt_ui) {
-      delete this['importUIs_'][type];
+  if (type in this.importUIs_) {
+    if ((opt_ui && this.importUIs_[type] === opt_ui) || !opt_ui) {
+      delete this.importUIs_[type];
     }
   }
 };
@@ -322,9 +322,9 @@ os.ui.im.ImportManager.prototype.unregisterImportUI = function(type, opt_ui) {
 os.ui.im.ImportManager.prototype.unregisterServerType = function(type, options) {
   type = type.toLowerCase();
 
-  if (type in this['serverTypes_']) {
-    if ((options && this['serverTypes_'][type] === options) || !options) {
-      delete this['serverTypes_'][type];
+  if (type in this.serverTypes_) {
+    if ((options && this.serverTypes_[type] === options) || !options) {
+      delete this.serverTypes_[type];
     }
   }
 };
