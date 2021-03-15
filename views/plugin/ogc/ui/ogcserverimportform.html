@@ -1,41 +1,47 @@
-<form ng-show="!testing" name="form" ng-submit="ctrl.accept()">
-  <div class="form-group">
-    <label for="title">Title</label>
-    <input unique-provider-title type="text" class="form-control" name="title" ng-disabled="!edit"
-        ng-model="config.label" ng-required="true" ng-maxlength="1000">
-    <small class="form-text text-muted" data-ng-show="form.title.$error.maxlength">Title is too long!</small>
-    <small class="form-text text-muted" data-ng-show="form.title.$error.unique">Title is not unique!</small>
-    <small class="form-text text-muted" data-ng-show="!form.title.$error.maxlength && !form.title.$error.unique">Please enter a title</small>
+<div>
+  <form ng-show="!testing" name="form" ng-submit="ctrl.accept()">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input unique-provider-title type="text" class="form-control" name="title" ng-disabled="!edit"
+          ng-model="config.label" ng-required="true" ng-maxlength="1000">
+      <small class="form-text text-muted" data-ng-show="form.title.$error.maxlength">Title is too long!</small>
+      <small class="form-text text-muted" data-ng-show="form.title.$error.unique">Title is not unique!</small>
+      <small class="form-text text-muted" data-ng-show="!form.title.$error.maxlength && !form.title.$error.unique">Please enter a title</small>
+    </div>
+    <div class="form-group">
+      <label for="wms" class="pr-1">WMS (Tile) Server URL</label>
+      <button class="btn btn-primary" ng-click="ctrl.launchHelp()" title="Help for server specific URL formats">
+        <i class="fa fa-fw fa-question-circle"></i>
+      </button>
+      <input type="text" name="wms" class="form-control" ng-disabled="!edit" ng-model="config.wms"
+          ng-required="!config.wms && !config.wmts && !config.wfs" ng-maxlength="1000">
+      <small class="form-text text-muted" data-ng-show="form.wms.$error.maxlength">URL is too long!</small>
+      <small class="form-text text-muted" data-ng-show="!form.wms.$error.maxlength && !form.wms.$error.unique">Please enter a URL (e.g. http://www.example.com/ogcserver/wms)</small>
+    </div>
+    <div class="form-group">
+      <label for="wmts" class="pr-1">WMTS (Tile) Server URL</label>
+      <button class="btn btn-primary" ng-click="ctrl.launchHelp()" title="Help for server specific URL formats">
+        <i class="fa fa-fw fa-fw fa-question-circle"></i>
+      </button>
+      <input type="text" name="wmts" class="form-control" ng-disabled="!edit" ng-model="config.wmts"
+          ng-required="!config.wms && !config.wmts && !config.wfs" ng-maxlength="1000">
+      <small class="form-text text-muted" data-ng-show="form.wmts.$error.maxlength">URL is too long!</small>
+      <small class="form-text text-muted" data-ng-show="!form.wmts.$error.maxlength && !form.wmts.$error.unique">Please enter a URL (e.g. http://www.example.com/ogcserver/wmts)</small>
+    </div>
+    <div class="form-group">
+      <label for="wfs" class="pr-1">WFS (Features) Server URL</label>
+      <button class="btn btn-primary" ng-click="ctrl.launchHelp()" title="Help for server specific URL formats">
+        <i class="fa fa-fw fa-fw fa-question-circle"></i>
+      </button>
+      <input type="text" name="wfs" class="form-control" ng-disabled="!edit" ng-model="config.wfs"
+          ng-required="!config.wms && !config.wmts && !config.wfs" ng-maxlength="1000">
+      <small class="form-text text-muted" data-ng-show="form.wfs.$error.maxlength">URL is too long!</small>
+      <small class="form-text text-muted" data-ng-show="!form.wfs.$error.maxlength && !form.wfs.$error.unique">Please enter a URL (e.g. http://www.example.com/ogcserver/wfs)</small>
+    </div>
+    <input type="submit" hidden>
+  </form>
+  <div class="alert alert-danger" ng-if="error">
+    <h5>Error!</h5>
+    <p ng-bind-html="error" class="m-0"></p>
   </div>
-  <div class="form-group">
-    <label for="wms">WMS (Tile) Server URL</label>
-    <button class="btn border-0" ng-click="ctrl.launchHelp()" title="Help for server specific URL formats">
-      <i class="fa fa-question-circle"></i>
-    </button>
-    <input type="text" name="wms" class="form-control" ng-disabled="!edit" ng-model="config.wms"
-        ng-required="!config.wms && !config.wmts && !config.wfs" ng-maxlength="1000">
-    <small class="form-text text-muted" data-ng-show="form.wms.$error.maxlength">URL is too long!</small>
-    <small class="form-text text-muted" data-ng-show="!form.wms.$error.maxlength && !form.wms.$error.unique">Please enter a URL (e.g. http://www.example.com/ogcserver/wms)</small>
-  </div>
-  <div class="form-group">
-    <label for="wms">WMTS (Tile) Server URL</label>
-    <button class="btn border-0" ng-click="ctrl.launchHelp()" title="Help for server specific URL formats">
-      <i class="fa fa-question-circle"></i>
-    </button>
-    <input type="text" name="wmts" class="form-control" ng-disabled="!edit" ng-model="config.wmts"
-        ng-required="!config.wms && !config.wmts && !config.wfs" ng-maxlength="1000">
-    <small class="form-text text-muted" data-ng-show="form.wmts.$error.maxlength">URL is too long!</small>
-    <small class="form-text text-muted" data-ng-show="!form.wmts.$error.maxlength && !form.wmts.$error.unique">Please enter a URL (e.g. http://www.example.com/ogcserver/wmts)</small>
-  </div>
-  <div class="form-group">
-    <label for="wfs">WFS (Features) Server URL</label>
-    <button class="btn border-0" ng-click="ctrl.launchHelp()" title="Help for server specific URL formats">
-      <i class="fa fa-question-circle"></i>
-    </button>
-    <input type="text" name="wfs" class="form-control" ng-disabled="!edit" ng-model="config.wfs"
-        ng-required="!config.wms && !config.wmts && !config.wfs" ng-maxlength="1000">
-    <small class="form-text text-muted" data-ng-show="form.wfs.$error.maxlength">URL is too long!</small>
-    <small class="form-text text-muted" data-ng-show="!form.wfs.$error.maxlength && !form.wfs.$error.unique">Please enter a URL (e.g. http://www.example.com/ogcserver/wfs)</small>
-  </div>
-  <input type="submit" hidden>
-</form>
+</div>

@@ -70,7 +70,7 @@ os.ui.ProviderImportCtrl.prototype.initialize = function() {
  */
 os.ui.ProviderImportCtrl.prototype.accept = function() {
   if (!this.scope['form']['$invalid'] && !this.scope['testing']) {
-    this.scope.$emit(os.ui.ProviderImportLoadEventType['start']);
+    this.scope.$emit(os.ui.ProviderImportLoadEventType.start);
     this.cleanConfig();
 
     if (!this.dp || this.scope['error'] || (this.dp.getEditable() && this.formDiff())) {
@@ -145,7 +145,7 @@ os.ui.ProviderImportCtrl.prototype.onTestFinished = function(event) {
     if (!this.dp.getError()) {
       this.saveAndClose();
     } else {
-      this.scope.$emit(os.ui.ProviderImportLoadEventType['stop']);
+      this.scope.$emit(os.ui.ProviderImportLoadEventType.stop);
       this.apply();
     }
   }

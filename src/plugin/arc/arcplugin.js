@@ -52,7 +52,6 @@ plugin.arc.ArcPlugin.prototype.init = function() {
   im.registerServerType(this.id, {
     'type': 'arc',
     'helpUi': plugin.arc.ArcServerHelpUI.directiveTag,
-    'ui': 'arcserver',
     'formUi': plugin.arc.ArcImportForm.directiveTag,
     'label': 'ArcGIS Server'
   });

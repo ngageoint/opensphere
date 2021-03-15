@@ -73,7 +73,6 @@ plugin.ogc.OGCPlugin.prototype.init = function() {
   im.registerServerType(os.ogc.ID, {
     'type': 'ogc',
     'helpUi': plugin.ogc.ui.OgcServerHelpUI.directiveTag,
-    'ui': 'ogcserver',
     'formUi': plugin.ogc.ui.OgcServerImportForm.directiveTag,
     'label': 'OGC Server'
   });
@@ -82,7 +81,6 @@ plugin.ogc.OGCPlugin.prototype.init = function() {
   im.registerServerType(plugin.ogc.mime.GEOSERVER_TYPE, {
     'type': 'geoserver',
     'helpUi': plugin.ogc.ui.GeoServerHelpUI.directiveTag,
-    'ui': 'geoserver',
     'formUi': plugin.ogc.ui.GeoserverImportForm.directiveTag,
     'label': 'GeoServer'
   });

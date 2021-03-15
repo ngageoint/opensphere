@@ -5,7 +5,7 @@ const FileParserConfig = goog.require('os.parse.FileParserConfig');
 const Module = goog.require('os.ui.Module');
 const ImportManager = goog.require('os.ui.im.ImportManager');
 const ProviderImportLoadEventType = goog.require('os.ui.ProviderImportLoadEventType');
-const uiWindow = goog.require('os.ui.window');
+const window = goog.require('os.ui.window');
 
 const helpWindowId = 'url-help';
 
@@ -55,38 +55,33 @@ class Controller {
      * @type {?angular.Scope}
      * @private
      */
-    this['scope_'] = $scope;
+    this.scope_ = $scope;
 
     /**
      * @type {?angular.JQLite}
      * @private
      */
-    this['element_'] = $element;
+    this.element_ = $element;
 
     /**
      * @type {boolean}
      */
-    this['loading'] = false;
-
-    /**
-     * @type {os.ui.im.ImportManager}
-     */
-    this['im'] = ImportManager.getInstance();
+    this.loading = false;
 
     /**
      * @type {string}
      */
-    this['serverType'] = null;
+    this.serverType = null;
 
     /**
      * Available server type choices in the UI.
      * @type {Array}
      */
-    this['items'] = Object.values(ImportManager.getInstance().getServerTypes() || {});
+    this.items = Object.values(ImportManager.getInstance().getServerTypes() || {});
 
     $scope.$emit(os.ui.WindowEventType.READY);
-    $scope.$on(ProviderImportLoadEventType['start'], this.onFormLoadingStatusChange_.bind(this));
-    $scope.$on(ProviderImportLoadEventType['stop'], this.onFormLoadingStatusChange_.bind(this));
+    $scope.$on(ProviderImportLoadEventType.start, this.onFormLoadingStatusChange_.bind(this));
+    $scope.$on(ProviderImportLoadEventType.stop, this.onFormLoadingStatusChange_.bind(this));
     $scope.$on('launchHelp', this.onLaunchHelp_.bind(this));
     $scope.$on('$destroy', this.onDestroy_.bind(this));
   }
@@ -96,8 +91,8 @@ class Controller {
    * @private
    */
   onDestroy_() {
-    this['scope_'] = null;
-    this['element_'] = null;
+    this.scope_ = null;
+    this.element_ = null;
   }
 
   /**
@@ -108,7 +103,7 @@ class Controller {
    */
   getUi(item) {
     if (item) {
-      return ImportManager.getInstance().getServerType(item['type'])['formUi'];
+      return ImportManager.getInstance().getServerType(item.type).formUi;
     }
 
     return null;
@@ -121,9 +116,9 @@ class Controller {
    */
   updateUiScope(scope) {
     const config = new FileParserConfig();
-    config['enabled'] = true;
+    config.enabled = true;
 
-    scope['config'] = config;
+    scope.config = config;
   }
 
   /**
@@ -131,19 +126,19 @@ class Controller {
    * @export
    */
   launchHelp() {
-    if (!uiWindow.exists(helpWindowId) && this['serverType']['helpUi']) {
-      var item = this['serverType']['label'] + ' URL ';
-      uiWindow.create({
+    if (!window.exists(helpWindowId) && this.serverType.helpUi) {
+      var item = this.serverType.label + ' URL ';
+      window.create({
         'label': item + 'Formats',
         'icon': 'fa fa-clock-o',
         'x': '-100',
         'y': 'center',
         'width': '550',
-        'height': '470',
+        'height': '500',
         'show-close': true,
         'modal': true,
         'id': helpWindowId
-      }, this['serverType']['helpUi']);
+      }, this.serverType.helpUi);
     }
   }
 
@@ -153,7 +148,19 @@ class Controller {
    * @export
    */
   accept() {
-    this['scope_'].$broadcast('accept');
+    this.closeHelpWindow();
+    this.scope_.$broadcast('accept');
+  }
+
+  /**
+   * Close the help window.
+   * @export
+   */
+  closeHelpWindow() {
+    const helpWindow = window.getById(helpWindowId);
+    if (helpWindow) {
+      window.close(helpWindow);
+    }
   }
 
   /**
@@ -161,8 +168,9 @@ class Controller {
    * @export
    */
   close() {
-    if (this['element_']) {
-      os.ui.window.close(this['element_']);
+    this.closeHelpWindow();
+    if (this.element_) {
+      window.close(this.element_);
     }
   }
 
@@ -173,11 +181,17 @@ class Controller {
    */
   onFormLoadingStatusChange_(event) {
     switch (event.name) {
-      case ProviderImportLoadEventType['start']:
-        this['loading'] = true;
+      case ProviderImportLoadEventType.start:
+        this.loading = true;
         break;
-      case ProviderImportLoadEventType['stop']:
-        this['loading'] = false;
+      case ProviderImportLoadEventType.stop:
+        this.loading = false;
+
+        // Scroll to the bottom to show any error messages
+        this.scope_.$applyAsync(() => {
+          const container = this.element_.find('.modal-body');
+          container.animate({'scrollTop': container[0].scrollHeight}, 500);
+        });
         break;
       default:
         break;
@@ -189,10 +203,7 @@ class Controller {
    * @export
    */
   onServerTypeChange_() {
-    const helpWindow = uiWindow.getById(helpWindowId);
-    if (helpWindow) {
-      uiWindow.close(helpWindow);
-    }
+    this.closeHelpWindow();
   }
 
   /**
@@ -210,10 +221,10 @@ class Controller {
  */
 const launchAddServerWindow = function() {
   const id = 'addServer';
-  if (uiWindow.exists(id)) {
-    uiWindow.bringToFront(id);
+  if (window.exists(id)) {
+    window.bringToFront(id);
   } else {
-    uiWindow.create({
+    window.create({
       'id': id,
       'label': 'Add Server',
       'icon': 'fa fa-cloud-download',
@@ -222,7 +233,7 @@ const launchAddServerWindow = function() {
       'width': '500',
       'min-width': '500',
       'max-width': '500',
-      'height': '470',
+      'height': '500',
       'modal': true,
       'show-close': true
     }, 'addserver');

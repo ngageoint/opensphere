@@ -11,11 +11,11 @@
         </select>
       </div>
     </form>
+    <uiswitch items="ctrl.serverType" directive-function="ctrl.getUi" scope-update-function="ctrl.updateUiScope"></uiswitch>
     <div class="text-center" ng-show="ctrl.loading">
       <div><i class="fa fa-4x fa-spin fa-smooth fa-spinner"></i></div>
-      <div>Testing...</div>
+      <div>Loading...</div>
     </div>
-    <uiswitch items="ctrl.serverType" directive-function="ctrl.getUi" scope-update-function="ctrl.updateUiScope"></uiswitch>
   </div>
   <div class="modal-footer d-flex">
     <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="form.$invalid || testing">
@@ -28,6 +28,3 @@
     </button>
   </div>
 </div>
-
-<!-- flex-box, or move the window right next to the window -->
-<!-- fire event to change window properties -->
