@@ -71,7 +71,7 @@ class Controller {
     /**
      * @type {string}
      */
-    this.serverType = null;
+    this.serverType = '';
 
     /**
      * Available server type choices in the UI.
