@@ -11,7 +11,13 @@
         </select>
       </div>
     </form>
-    <uiswitch items="ctrl.serverType" directive-function="ctrl.getUi" scope-update-function="ctrl.updateUiScope"></uiswitch>
+    <div>
+      <uiswitch items="ctrl.serverType" directive-function="ctrl.getUi" scope-update-function="ctrl.updateUiScope"></uiswitch>
+      <div class="alert alert-danger" ng-if="error">
+        <h5>Error!</h5>
+        <p ng-bind-html="error" class="m-0"></p>
+      </div>
+    </div>
     <div class="text-center" ng-show="ctrl.loading">
       <div><i class="fa fa-4x fa-spin fa-smooth fa-spinner"></i></div>
       <div>Loading...</div>

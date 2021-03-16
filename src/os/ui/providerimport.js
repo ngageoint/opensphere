@@ -145,7 +145,7 @@ os.ui.ProviderImportCtrl.prototype.onTestFinished = function(event) {
     if (!this.dp.getError()) {
       this.saveAndClose();
     } else {
-      this.scope.$emit(os.ui.ProviderImportLoadEventType.stop);
+      this.scope.$emit(os.ui.ProviderImportLoadEventType.stop, this.scope['error']);
       this.apply();
     }
   }

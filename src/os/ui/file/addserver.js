@@ -145,6 +145,8 @@ class Controller {
         'modal': true,
         'id': helpWindowId
       }, this.serverType.helpUi);
+    } else {
+      this.closeHelpWindow();
     }
   }
 
@@ -183,15 +185,20 @@ class Controller {
   /**
    * Handles loading form.
    * @param {angular.Scope.Event} event
+   * @param {?string} error
    * @private
    */
-  onFormLoadingStatusChange_(event) {
+  onFormLoadingStatusChange_(event, error) {
     switch (event.name) {
       case ProviderImportLoadEventType.start:
         this.loading = true;
         break;
       case ProviderImportLoadEventType.stop:
         this.loading = false;
+
+        if (error) {
+          this.scope_['error'] = error;
+        }
 
         // Scroll to the bottom to show any error messages
         this.scope_.$applyAsync(() => {
@@ -209,6 +216,7 @@ class Controller {
    * @export
    */
   onServerTypeChange_() {
+    this.scope_['error'] = null;
     this.closeHelpWindow();
   }
 
