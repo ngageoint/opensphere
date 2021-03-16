@@ -1,7 +1,6 @@
 goog.provide('os.ui.draw.BaseDrawControlsCtrl');
 goog.provide('os.ui.draw.baseDrawControlsDirective');
 
-goog.require('goog.Disposable');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('ol.Feature');
@@ -54,13 +53,10 @@ os.ui.Module.directive('drawControls', [os.ui.draw.baseDrawControlsDirective]);
  *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
- * @extends {goog.Disposable}
  * @constructor
  * @ngInject
  */
 os.ui.draw.BaseDrawControlsCtrl = function($scope, $element) {
-  os.ui.draw.BaseDrawControlsCtrl.base(this, 'constructor');
-
   /**
    * @type {?angular.Scope}
    * @private
@@ -114,12 +110,34 @@ os.ui.draw.BaseDrawControlsCtrl = function($scope, $element) {
    * If the line control is supported.
    * @type {boolean}
    */
-  this['supportsLines'] = this['supportsLines'] || false;
+  this['supportsLines'] = false;
+
+  /**
+   * If extra controls should be hidden.
+   * @type {boolean}
+   */
+  this['hideExtraControls'] = false;
 
   /**
    * @type {os.ui.menu.Menu|undefined}
    */
   this['controlMenu'] = os.ui.menu.draw.MENU;
+};
+
+
+/**
+ * The logger.
+ * @const
+ * @type {goog.log.Logger}
+ * @private
+ */
+os.ui.draw.BaseDrawControlsCtrl.LOGGER_ = goog.log.getLogger('os.ui.draw.BaseDrawControlsCtrl');
+
+
+/**
+ * Angular initialization lifecycle function. Sets up event listening and our controls menu.
+ */
+os.ui.draw.BaseDrawControlsCtrl.prototype.$onInit = function() {
   this.initControlMenu();
 
   os.dispatcher.listen(os.ui.draw.DrawEventType.DRAWSTART, this.apply, false, this);
@@ -133,27 +151,13 @@ os.ui.draw.BaseDrawControlsCtrl = function($scope, $element) {
 
   var selected = /** @type {string} */ (os.settings.get('drawType', os.ui.ol.interaction.DragBox.TYPE));
   this.setSelectedControl(selected);
-
-  $scope.$on('$destroy', this.dispose.bind(this));
 };
-goog.inherits(os.ui.draw.BaseDrawControlsCtrl, goog.Disposable);
 
 
 /**
- * The logger.
- * @const
- * @type {goog.log.Logger}
- * @private
+ * Angular destruction lifecycle function. Stop event listening.
  */
-os.ui.draw.BaseDrawControlsCtrl.LOGGER_ = goog.log.getLogger('os.ui.draw.BaseDrawControlsCtrl');
-
-
-/**
- * @inheritDoc
- */
-os.ui.draw.BaseDrawControlsCtrl.prototype.disposeInternal = function() {
-  os.ui.draw.BaseDrawControlsCtrl.base(this, 'disposeInternal');
-
+os.ui.draw.BaseDrawControlsCtrl.prototype.$onDestroy = function() {
   os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWSTART, this.apply, false, this);
   os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWEND, this.onDrawEnd, false, this);
   os.dispatcher.unlisten(os.ui.draw.DrawEventType.DRAWCANCEL, this.apply, false, this);
