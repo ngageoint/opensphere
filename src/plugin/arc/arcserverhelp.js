@@ -51,8 +51,6 @@ class Controller {
      * @private
      */
     this.element_ = $element;
-
-    $scope.$on('$destroy', this.onDestroy_.bind(this));
   }
 
   /**
@@ -65,9 +63,8 @@ class Controller {
 
   /**
    * Clean up references.
-   * @private
    */
-  onDestroy_() {
+  $onDestroy() {
     this.element_ = null;
   }
 }

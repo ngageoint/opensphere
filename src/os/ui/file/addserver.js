@@ -85,7 +85,7 @@ class Controller {
      * Available server type choices in the UI.
      * @type {Array}
      */
-    this.items = Object.values(ImportManager.getInstance().getServerTypes() || {});
+    this.items = Object.values(ImportManager.getInstance().getServerTypes() || []);
 
     $scope.$emit(WindowEventType.READY);
     $scope.$on(ProviderImportLoadEventType.start, this.onFormLoadingStatusChange_.bind(this));
@@ -133,9 +133,9 @@ class Controller {
    */
   launchHelp() {
     if (!window.exists(helpWindowId) && this.serverType.helpUi) {
-      var item = this.serverType.label + ' URL Format Help';
+      var label = this.serverType.label + ' URL Format Help';
       window.create({
-        'label': item + 'Formats',
+        'label': label,
         'icon': 'fa-question-circle',
         'x': '-100',
         'y': 'center',

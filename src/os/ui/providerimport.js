@@ -162,6 +162,7 @@ os.ui.ProviderImportCtrl.prototype.onAccept_ = function() {
 
 /**
  * Launches help window
+ * @export
  */
 os.ui.ProviderImportCtrl.prototype.launchHelp = function() {
   this.scope.$emit('launchHelp');
