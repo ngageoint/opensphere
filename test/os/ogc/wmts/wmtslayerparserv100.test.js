@@ -13,7 +13,7 @@ describe('os.ogc.wmts.WMTSLayerParserV100', () => {
   const {loadXml} = goog.module.get('goog.dom.xml');
   const {isEmpty: isObjectEmpty} = goog.module.get('goog.object');
   const WMTSCapabilities = goog.module.get('ol.format.WMTSCapabilities');
-  const {registerCrossOrigin, resetCrossOriginCache} = goog.module.get('os.net');
+  const {registerCrossOrigin} = goog.module.get('os.net');
   const CrossOrigin = goog.module.get('os.net.CrossOrigin');
   const Request = goog.module.get('os.net.Request');
   const {default: WMTSLayerParserV100} = goog.module.get('os.ogc.wmts.WMTSLayerParserV100');
@@ -49,7 +49,6 @@ describe('os.ogc.wmts.WMTSLayerParserV100', () => {
 
   it('parses a layer and updates a descriptor', () => {
     // Verify the cross origin is properly set. Both patterns match the URL, but the second is higher priority.
-    resetCrossOriginCache();
     registerCrossOrigin(/^https:\/\//, CrossOrigin.USE_CREDENTIALS);
     registerCrossOrigin(/^https:\/\/wmts\.example\.com\/ows/, CrossOrigin.ANONYMOUS, 1000);
 

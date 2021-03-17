@@ -31,6 +31,12 @@ os.net.SameDomainHandler = function() {
    * @type {boolean}
    */
   this.handled = false;
+
+  /**
+   * The backing XHR.
+   * @type {goog.net.XhrIo}
+   */
+  this.req = null;
 };
 goog.inherits(os.net.SameDomainHandler, os.net.AbstractRequestHandler);
 
@@ -99,7 +105,16 @@ os.net.SameDomainHandler.prototype.getResponse = function() {
  */
 os.net.SameDomainHandler.prototype.getResponseHeaders = function() {
   if (this.req) {
-    return this.req.getResponseHeaders();
+    const xhrHeaders = this.req.getResponseHeaders();
+
+    // The HTTP/2 specification lower cases all headers, and modern browsers will already have lowercase header names.
+    // This ensures headers behave the same in older browsers.
+    const headers = {};
+    for (const key in xhrHeaders) {
+      headers[key.toLowerCase()] = xhrHeaders[key];
+    }
+
+    return headers;
   }
 
   return null;

@@ -68,6 +68,8 @@ plugin.ogc.OGCPlugin.prototype.init = function() {
   im.registerImportUI(os.ogc.ID, new os.ui.ProviderImportUI('<ogcserver></ogcserver>'));
   im.registerImportUI(plugin.ogc.mime.GEOSERVER_TYPE,
       new os.ui.ProviderImportUI('<geoserver></geoserver>'));
+
+  os.net.registerDefaultValidator(os.ogc.getException);
 };
 
 

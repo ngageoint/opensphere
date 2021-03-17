@@ -14,6 +14,7 @@ goog.require('os.net.Request');
 goog.require('os.net.RequestEvent');
 goog.require('os.net.RequestEventType');
 goog.require('os.ui.file.urlImportDirective');
+goog.require('os.ui.help.EventType');
 goog.require('os.ui.window');
 
 
@@ -201,6 +202,9 @@ os.ui.file.method.UrlMethod.prototype.loadUrl = function() {
   this.request_ = new os.net.Request(this.url_);
   this.request_.setHeader('Accept', '*/*');
 
+  // use default validators to try to auto-detect specific errors
+  this.request_.setUseDefaultValidators(true);
+
   if (!goog.userAgent.IE || goog.userAgent.isVersionOrHigher(10)) {
     // IE9 doesn't support arraybuffer as a response type
     this.request_.setResponseType(goog.net.XhrIo.ResponseType.ARRAY_BUFFER);
@@ -226,8 +230,7 @@ os.ui.file.method.UrlMethod.prototype.onLoad = function(event) {
 
   // There is a header that can be used if it exists instead of the filename
   if (headers) {
-    // starting with Chrome 60, all HTTP headers are lowercase, so check both to support all versions
-    var contentDisposition = headers['Content-Disposition'] || headers['content-disposition'];
+    var contentDisposition = /** @type {string|undefined} */ (headers['content-disposition']);
     if (contentDisposition) {
       // Use the value in the content-disposition ex: attachment; filename="Super Awesome Dataz.kmz"
       var re = /filename="(.*?)"/;
@@ -250,8 +253,10 @@ os.ui.file.method.UrlMethod.prototype.onLoad = function(event) {
 
   if (!this.file_.getContentType() && headers) {
     // extract the content-type header if possible
-    var contentType = headers['Content-Type'] || headers['content-type'];
-    this.file_.setContentType(contentType);
+    var contentType = /** @type {string|undefined} */ (headers['content-type']);
+    if (contentType) {
+      this.file_.setContentType(contentType);
+    }
   }
 
   this.dispatchEvent(os.events.EventType.COMPLETE);
@@ -264,11 +269,17 @@ os.ui.file.method.UrlMethod.prototype.onLoad = function(event) {
  * @protected
  */
 os.ui.file.method.UrlMethod.prototype.onError = function(event) {
-  var msg = '<strong>Unable to load URL "' + this.url_ + '"!</strong><br>Please check that it was entered correctly.';
-
+  const errors = this.request_.getErrors();
   this.request_.dispose();
   this.request_ = null;
 
+  let msg = 'Unable to load the provided URL, please check that it was entered correctly.';
+  if (errors.length) {
+    // Add server error(s) to the message if available.
+    msg += ` The request failed with: ${errors.join(', ')}`;
+  }
+
+  // sendAlert is async and we want the log messages in order, so log the error separately.
   os.alertManager.sendAlert(msg, os.alert.AlertEventSeverity.ERROR, os.ui.file.method.UrlMethod.LOGGER_);
 
   // notify listeners that the load failed

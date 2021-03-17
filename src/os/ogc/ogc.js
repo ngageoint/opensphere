@@ -6,6 +6,7 @@ goog.require('goog.Uri.QueryData');
 goog.require('goog.dom.xml');
 goog.require('goog.string');
 goog.require('os.config.Settings');
+goog.require('os.file.mime.text');
 
 
 /**
@@ -65,6 +66,14 @@ os.ogc.COLOR_STYLE_REGEX = /(density)|(foreground color)/i;
 
 
 /**
+ * Regular expression to detect an OGC error response.
+ * @type {RegExp}
+ * @const
+ */
+os.ogc.ERROR_REGEX = /(ExceptionText|ServiceException)/i;
+
+
+/**
  * Typedef describing available WFS format types (GML, GeoJSON, etc.)
  * @typedef {{
  *   type: !string,
@@ -86,16 +95,15 @@ os.ogc.WFSTypeConfig;
  */
 os.ogc.getException = function(response, opt_contentType) {
   try {
-    var isXml = opt_contentType && goog.string.contains(opt_contentType, '/xml');
-
-    // THIN-5464
-    // if there are headers and the header is xml and the response is a string try to parse the xml.
-    // if no headers and response is a string, just try it and deal with the error in the console in IE and firefox.
-    if (isXml || !opt_contentType) {
-      var doc = typeof response === 'string' ? goog.dom.xml.loadXml(response) : response;
-      var ex = doc.querySelector('ExceptionText, ServiceException');
-      if (ex) {
-        return ex.textContent;
+    // Try to parse the response as XML and determine if it appears to be an OGC exception report.
+    if (response && (!opt_contentType || opt_contentType.indexOf('/xml') != -1)) {
+      const strResponse = typeof response === 'string' ? response : os.file.mime.text.getText(response);
+      if (strResponse && os.ogc.ERROR_REGEX.test(strResponse)) {
+        const doc = goog.dom.xml.loadXml(strResponse);
+        const ex = doc.querySelector('ExceptionText, ServiceException');
+        if (ex) {
+          return ex.textContent;
+        }
       }
     }
   } catch (e) {
