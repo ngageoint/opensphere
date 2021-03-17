@@ -51,4 +51,6 @@ plugin.arc.ArcPlugin.prototype.init = function() {
   var sm = os.state.StateManager.getInstance();
   sm.addLoadFunction(plugin.arc.state.v2.arcstate.load);
   sm.addSaveFunction(plugin.arc.state.v2.arcstate.save);
+
+  os.net.registerDefaultValidator(plugin.arc.getException);
 };

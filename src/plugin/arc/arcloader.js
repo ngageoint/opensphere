@@ -1,8 +1,10 @@
 goog.provide('plugin.arc.ArcLoader');
+
 goog.require('goog.events.EventTarget');
 goog.require('goog.log.Logger');
 goog.require('ol.array');
 goog.require('os.net.Request');
+goog.require('plugin.arc');
 goog.require('plugin.arc.node.ArcFolderNode');
 goog.require('plugin.arc.node.ArcServiceNode');
 
@@ -43,6 +45,12 @@ plugin.arc.ArcLoader = function(node, url, server) {
    * @private
    */
   this.request_ = null;
+
+  /**
+   * @type {Array<string>}
+   * @private
+   */
+  this.errors_ = null;
 
   /**
    * @type {goog.log.Logger}
@@ -86,6 +94,16 @@ plugin.arc.ArcLoader.prototype.disposeInternal = function() {
     goog.dispose(this.request_);
     this.request_ = null;
   }
+};
+
+
+/**
+ * Get errors from the request.
+ *
+ * @return {Array<string>}
+ */
+plugin.arc.ArcLoader.prototype.getErrors = function() {
+  return this.errors_;
 };
 
 
@@ -160,7 +178,10 @@ plugin.arc.ArcLoader.prototype.load = function() {
   var requestUrl = this.url_ + '?f=json';
   goog.log.fine(this.log, 'Loading Arc capabilities from URL: ' + requestUrl);
 
+  this.errors_ = null;
+
   this.request_ = new os.net.Request(requestUrl);
+  this.request_.setValidator(plugin.arc.getException);
   this.request_.setHeader('Accept', '*/*');
   this.request_.listen(goog.net.EventType.SUCCESS, this.onLoad, false, this);
   this.request_.listen(goog.net.EventType.ERROR, this.onError, false, this);
@@ -321,6 +342,8 @@ plugin.arc.ArcLoader.prototype.shouldAddNode = function(node) {
  * @protected
  */
 plugin.arc.ArcLoader.prototype.onError = function(event) {
+  this.errors_ = this.request_.getErrors();
+
   var uri = this.request_.getUri();
   goog.dispose(this.request_);
   this.request_ = null;
@@ -344,7 +367,9 @@ plugin.arc.ArcLoader.prototype.handleError = function(error) {
   } else if (typeof error == 'object') {
     // handle an Arc error code response
     var errorObj = error['error'] || {};
-    msg = `Error loading Arc server. Code: ${errorObj['code']}. Reason: ${error['message']}.`;
+    msg = `Error loading Arc server. Code: ${errorObj['code']}. Reason: ${errorObj['message']}.`;
+
+    this.errors_ = [errorObj['message']];
   } else {
     msg = 'An unknown error occurred.';
   }

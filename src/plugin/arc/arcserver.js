@@ -143,12 +143,16 @@ plugin.arc.ArcServer.prototype.onLoad = function(event) {
  * @protected
  */
 plugin.arc.ArcServer.prototype.onError = function(event) {
+  var errors = this.loader_.getErrors();
   this.loader_.unlisten(goog.net.EventType.SUCCESS, this.onLoad, false, this);
   this.loader_.unlisten(goog.net.EventType.ERROR, this.onError, false, this);
   this.disposeLoader_();
 
   var href = this.getUrl();
   var msg = 'Request failed for <a target="_blank" href="' + href + '">Arc Server Capabilities</a>';
+  if (errors && errors.length) {
+    msg += `: ${errors.join(', ')}`;
+  }
 
   this.logError(msg);
   this.setLoading(false);

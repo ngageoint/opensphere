@@ -92,6 +92,15 @@ plugin.arc.getFilterColumns = function(layer) {
 
 
 /**
+ * Regular expression to detect an error response. The default ArcGIS error page displays "ArcGIS REST Framework" at
+ * the top, and the error/code below.
+ * @type {RegExp}
+ * @const
+ */
+plugin.arc.ERROR_REGEXP = /ArcGIS[\s\S]+Error:[\s\S]+Code:/;
+
+
+/**
  * @type {RegExp}
  * @const
  */
@@ -174,4 +183,36 @@ plugin.arc.createFeatureType = function(config) {
   }
 
   return featureType;
+};
+
+
+/**
+ * A validator function for requests which checks for ArcGIS errors
+ *
+ * @param {ArrayBuffer|string} response
+ * @param {?string=} opt_contentType
+ * @return {?string} An error message if one was found, or null if the response is OK
+ */
+plugin.arc.getException = function(response, opt_contentType) {
+  try {
+    // Try to parse the response as HTML and determine if the response is an Arc error page.
+    if (response && (!opt_contentType || opt_contentType.indexOf('text/html') != -1)) {
+      const strResponse = typeof response === 'string' ? response : os.file.mime.text.getText(response);
+      if (strResponse && plugin.arc.ERROR_REGEXP.test(strResponse)) {
+        const doc = goog.dom.xml.loadXml(strResponse);
+        const titleEl = doc.querySelector('title');
+        if (titleEl) {
+          // Arc error pages display a user-friendly error in the page title.
+          const titleContent = titleEl.textContent.trim();
+          if (titleContent.startsWith('Error:')) {
+            // Strip the "Error: " prefix
+            return titleContent.replace(/^Error:\s*/, '');
+          }
+        }
+      }
+    }
+  } catch (e) {
+  }
+
+  return null;
 };
