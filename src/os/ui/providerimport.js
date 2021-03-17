@@ -186,9 +186,8 @@ os.ui.ProviderImportCtrl.prototype.onAccept_ = function() {
  */
 os.ui.ProviderImportCtrl.prototype.launchHelp = function() {
   if (!os.ui.window.exists(this.helpWindowId) && this['helpUi']) {
-    var label = 'URL Format Help';
     os.ui.window.create({
-      'label': label,
+      'label': 'URL Format Help',
       'icon': 'fa fa-question-circle',
       'x': '-10',
       'y': 'center',
