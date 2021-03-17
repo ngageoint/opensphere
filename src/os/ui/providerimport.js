@@ -48,10 +48,30 @@ os.ui.ProviderImportCtrl = function($scope, $element) {
    */
   this.dp = this.scope['config']['provider'] || null;
 
+  /**
+   * HTML ID for the Format Help windows
+   * @type {string}
+   */
+  this.helpWindowId = 'url-help';
+
+  /**
+   * The help UI for this provider.
+   * @type {string}
+   */
+  this['helpUi'] = null;
+
   this.initialize();
 
   $scope.$emit(os.ui.WindowEventType.READY);
   $scope.$on('accept', this.onAccept_.bind(this));
+};
+
+
+/**
+ * Angular $onDestroy lifecycle hook.
+ */
+os.ui.ProviderImportCtrl.prototype.$onDestroy = function() {
+  this.closeHelpWindow();
 };
 
 
@@ -165,7 +185,34 @@ os.ui.ProviderImportCtrl.prototype.onAccept_ = function() {
  * @export
  */
 os.ui.ProviderImportCtrl.prototype.launchHelp = function() {
-  this.scope.$emit('launchHelp');
+  if (!os.ui.window.exists(this.helpWindowId) && this['helpUi']) {
+    var label = 'URL Format Help';
+    os.ui.window.create({
+      'label': label,
+      'icon': 'fa fa-question-circle',
+      'x': '-10',
+      'y': 'center',
+      'width': '550',
+      'height': '500',
+      'show-close': true,
+      'modal': true,
+      'id': this.helpWindowId
+    }, this['helpUi']);
+  } else {
+    this.closeHelpWindow();
+  }
+};
+
+
+/**
+ * Launches help window
+ * @export
+ */
+os.ui.ProviderImportCtrl.prototype.closeHelpWindow = function() {
+  const helpWindow = os.ui.window.getById(this.helpWindowId);
+  if (helpWindow) {
+    os.ui.window.close(helpWindow);
+  }
 };
 
 

@@ -10,7 +10,10 @@
 
   <div class="form-group" title="The URL for the server">
     <label for="url" class="pr-2">URL</label>
-    <button class="btn btn-primary" type="button" ng-click="ctrl.launchHelp()" title="Help for server specific URL formats">
+    <button class="btn btn-primary" type="button"
+        ng-click="ctrl.launchHelp()"
+        ng-if="ctrl.helpUi"
+        title="Help for server specific URL formats">
       <i class="fa fa-fw fa-question-circle"></i>
     </button>
     <input type="text" name="url" class="form-control" ng-disabled="!edit" ng-model="config.url" ng-required="true"

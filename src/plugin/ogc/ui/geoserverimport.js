@@ -1,11 +1,14 @@
 goog.provide('plugin.ogc.ui.GeoserverImportCtrl');
 goog.provide('plugin.ogc.ui.geoserverDirective');
+
 goog.require('os.defines');
 goog.require('os.ui.Module');
 goog.require('os.ui.SingleUrlProviderImportCtrl');
 goog.require('os.ui.WindowEventType');
+goog.require('os.ui.singleUrlFormDirective');
 goog.require('os.ui.window');
 goog.require('plugin.ogc.GeoServer');
+goog.require('plugin.ogc.ui.GeoServerHelpUI');
 
 
 /**
@@ -42,6 +45,7 @@ os.ui.Module.directive('geoserver', [plugin.ogc.ui.geoserverDirective]);
  */
 plugin.ogc.ui.GeoserverImportCtrl = function($scope, $element) {
   plugin.ogc.ui.GeoserverImportCtrl.base(this, 'constructor', $scope, $element);
+  this['helpUi'] = plugin.ogc.ui.GeoServerHelpUI.directiveTag;
 
   var file = /** @type {os.file.File} */ ($scope['config']['file']);
   // regex handles URLs of the sort /geoserver(/stuff)/ows(/otherstuff), where it keeps (/stuff) intact, but removes

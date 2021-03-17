@@ -4,26 +4,7 @@
       <div><i class="fa fa-4x fa-spin fa-smooth fa-spinner"></i></div>
       <div>Testing...</div>
     </div>
-    <form class="container-fluid" ng-show="!testing" name="form" ng-submit="ctrl.accept()" novalidate>
-      <div class="form-group" title="The title for the server">
-        <label for="title">Title</label>
-        <input unique-provider-title type="text" class="form-control" name="title" ng-disabled="!edit"
-            ng-model="config.label" ng-required="true" ng-maxlength="1000">
-        <small class="form-text text-muted" data-ng-show="form.title.$error.maxlength">Title is too long!</small>
-        <small class="form-text text-muted" data-ng-show="form.title.$error.unique">Title is not unique!</small>
-        <small class="form-text text-muted" data-ng-show="!form.title.$error.maxlength && !form.title.$error.unique">Please enter a title</small>
-      </div>
-
-      <div class="form-group" title="The URL for the server">
-        <label for="url">URL</label>
-        <input type="text" name="url" class="form-control" ng-disabled="!edit" ng-model="config.url" ng-required="true"
-            ng-maxlength="1000">
-        <small class="form-text invalid-feedback" ng-if="urlExample && form.url.$valid">e.g. {{urlExample}}</small>
-        <small class="form-text text-muted" data-ng-show="form.wms.$error.maxlength">URL is too long!</small>
-        <small class="form-text text-muted" data-ng-show="!form.wms.$error.maxlength">Please enter a URL</small>
-      </div>
-      <input type="submit" hidden>
-    </form>
+    <singleurlform></singleurlform>
     <div class="alert alert-danger" ng-if="error">
       <h5>Error!</h5>
       <p ng-bind-html="error" class="m-0"></p>

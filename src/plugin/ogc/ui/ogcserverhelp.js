@@ -2,7 +2,7 @@ goog.module('plugin.ogc.ui.OgcServerHelpUI');
 goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
-const window = goog.require('os.ui.window');
+const osWindow = goog.require('os.ui.window');
 
 
 /**
@@ -58,7 +58,7 @@ class Controller {
    * @export
    */
   close() {
-    window.close(this.element_);
+    osWindow.close(this.element_);
   }
 
   /**

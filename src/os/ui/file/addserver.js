@@ -6,16 +6,8 @@ const Module = goog.require('os.ui.Module');
 const ImportManager = goog.require('os.ui.im.ImportManager');
 const ProviderImportLoadEventType = goog.require('os.ui.ProviderImportLoadEventType');
 const {ROOT} = goog.require('os');
-const window = goog.require('os.ui.window');
+const osWindow = goog.require('os.ui.window');
 const WindowEventType = goog.require('os.ui.WindowEventType');
-
-
-
-/**
- * HTML ID for the Format Help windows
- * @type {string}
- */
-const helpWindowId = 'url-help';
 
 
 /**
@@ -90,7 +82,6 @@ class Controller {
     $scope.$emit(WindowEventType.READY);
     $scope.$on(ProviderImportLoadEventType.start, this.onFormLoadingStatusChange_.bind(this));
     $scope.$on(ProviderImportLoadEventType.stop, this.onFormLoadingStatusChange_.bind(this));
-    $scope.$on('launchHelp', this.onLaunchHelp_.bind(this));
   }
 
   /**
@@ -128,47 +119,12 @@ class Controller {
   }
 
   /**
-   * Launches the server specific URL help dialog.
-   * @export
-   */
-  launchHelp() {
-    if (!window.exists(helpWindowId) && this.serverType.helpUi) {
-      var label = this.serverType.label + ' URL Format Help';
-      window.create({
-        'label': label,
-        'icon': 'fa-question-circle',
-        'x': '-100',
-        'y': 'center',
-        'width': '550',
-        'height': '500',
-        'show-close': true,
-        'modal': true,
-        'id': helpWindowId
-      }, this.serverType.helpUi);
-    } else {
-      this.closeHelpWindow();
-    }
-  }
-
-  /**
    * Save button handler
    *
    * @export
    */
   accept() {
-    this.closeHelpWindow();
     this.scope_.$broadcast('accept');
-  }
-
-  /**
-   * Close the help window.
-   * @export
-   */
-  closeHelpWindow() {
-    const helpWindow = window.getById(helpWindowId);
-    if (helpWindow) {
-      window.close(helpWindow);
-    }
   }
 
   /**
@@ -176,9 +132,8 @@ class Controller {
    * @export
    */
   close() {
-    this.closeHelpWindow();
     if (this.element_) {
-      window.close(this.element_);
+      osWindow.close(this.element_);
     }
   }
 
@@ -217,15 +172,6 @@ class Controller {
    */
   onServerTypeChange_() {
     this.scope_['error'] = null;
-    this.closeHelpWindow();
-  }
-
-  /**
-   * Handles launching help windows.
-   * @export
-   */
-  onLaunchHelp_() {
-    this.launchHelp();
   }
 }
 
@@ -235,10 +181,10 @@ class Controller {
  */
 const launchAddServerWindow = function() {
   const id = 'addServer';
-  if (window.exists(id)) {
-    window.bringToFront(id);
+  if (osWindow.exists(id)) {
+    osWindow.bringToFront(id);
   } else {
-    window.create({
+    osWindow.create({
       'id': id,
       'label': 'Add Server',
       'icon': 'fa fa-cloud-download',

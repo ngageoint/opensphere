@@ -2,7 +2,6 @@ goog.module('plugin.arc.ArcImportForm');
 goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
-const Controller = goog.require('plugin.arc.ArcImportCtrl');
 const arcserverDirective = goog.require('plugin.arc.arcImportDirective');
 const {ROOT} = goog.require('os');
 
@@ -33,7 +32,6 @@ Module.directive(directiveTag, [directive]);
 
 
 exports = {
-  Controller,
   directive,
   directiveTag
 };

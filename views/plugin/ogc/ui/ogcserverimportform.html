@@ -15,7 +15,7 @@
     <input type="text" name="wms" class="form-control" ng-disabled="!edit" ng-model="config.wms"
         ng-required="!config.wms && !config.wmts && !config.wfs" ng-maxlength="1000">
     <small class="form-text text-muted" data-ng-show="form.wms.$error.maxlength">URL is too long!</small>
-    <small class="form-text text-muted" data-ng-show="!form.wms.$error.maxlength && !form.wms.$error.unique">Please enter a URL (e.g. http://www.example.com/ogcserver/wms)</small>
+    <small class="form-text text-muted" data-ng-show="!form.wms.$error.maxlength">Please enter a URL (e.g. http://www.example.com/ogcserver/wms)</small>
   </div>
   <div class="form-group">
     <label for="wmts" class="pr-1">WMTS (Tile) Server URL</label>
@@ -25,7 +25,7 @@
     <input type="text" name="wmts" class="form-control" ng-disabled="!edit" ng-model="config.wmts"
         ng-required="!config.wms && !config.wmts && !config.wfs" ng-maxlength="1000">
     <small class="form-text text-muted" data-ng-show="form.wmts.$error.maxlength">URL is too long!</small>
-    <small class="form-text text-muted" data-ng-show="!form.wmts.$error.maxlength && !form.wmts.$error.unique">Please enter a URL (e.g. http://www.example.com/ogcserver/wmts)</small>
+    <small class="form-text text-muted" data-ng-show="!form.wmts.$error.maxlength">Please enter a URL (e.g. http://www.example.com/ogcserver/wmts)</small>
   </div>
   <div class="form-group">
     <label for="wfs" class="pr-1">WFS (Features) Server URL</label>
@@ -35,7 +35,7 @@
     <input type="text" name="wfs" class="form-control" ng-disabled="!edit" ng-model="config.wfs"
         ng-required="!config.wms && !config.wmts && !config.wfs" ng-maxlength="1000">
     <small class="form-text text-muted" data-ng-show="form.wfs.$error.maxlength">URL is too long!</small>
-    <small class="form-text text-muted" data-ng-show="!form.wfs.$error.maxlength && !form.wfs.$error.unique">Please enter a URL (e.g. http://www.example.com/ogcserver/wfs)</small>
+    <small class="form-text text-muted" data-ng-show="!form.wfs.$error.maxlength">Please enter a URL (e.g. http://www.example.com/ogcserver/wfs)</small>
   </div>
   <input type="submit" hidden>
 </form>

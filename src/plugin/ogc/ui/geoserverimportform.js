@@ -2,7 +2,6 @@ goog.module('plugin.ogc.ui.GeoserverImportForm');
 goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
-const Controller = goog.require('plugin.ogc.ui.GeoserverImportCtrl');
 const geoserverDirective = goog.require('plugin.ogc.ui.geoserverDirective');
 const {ROOT} = goog.require('os');
 
@@ -33,7 +32,6 @@ Module.directive(directiveTag, [directive]);
 
 
 exports = {
-  Controller,
   directive,
   directiveTag
 };

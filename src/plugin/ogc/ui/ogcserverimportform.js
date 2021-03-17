@@ -2,7 +2,6 @@ goog.module('plugin.ogc.ui.OgcServerImportForm');
 goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
-const Controller = goog.require('plugin.ogc.ui.OgcServerImportCtrl');
 const ogcserverDirective = goog.require('plugin.ogc.ui.ogcserverDirective');
 const {ROOT} = goog.require('os');
 
@@ -33,7 +32,6 @@ Module.directive(directiveTag, [directive]);
 
 
 exports = {
-  Controller,
   directive,
   directiveTag
 };
