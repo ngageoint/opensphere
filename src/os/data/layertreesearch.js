@@ -92,8 +92,6 @@ os.data.LayerTreeSearch.prototype.finalizeSearch = function(groupBy, results) {
 os.data.LayerTreeSearch.prototype.setSort = function(list) {
   if (this.getGroupBy()) {
     list.sort(os.ui.slick.TreeSearch.idCompare);
-  } else {
-    list.sort(os.ui.slick.TreeSearch.labelCompare);
   }
 };
 
@@ -105,14 +103,117 @@ os.data.LayerTreeSearch.prototype.setSort = function(list) {
  */
 os.data.LayerTreeSearch.prototype.fillListFromSearch = function(list) {
   var map = os.MapContainer.getInstance();
-  var l = map.getLayers();
+  var layers = map.getLayers();
 
-  if (l && l.length > 0) {
-    for (var i = 0, n = l.length; i < n; i++) {
-      var node = new os.data.LayerNode();
-      node.setLayer(/** @type {!os.layer.ILayer} */ (l[i]));
-      list.push(node);
+  if (layers && layers.length > 0) {
+    const layerNodes = [];
+    for (var i = 0, n = layers.length; i < n; i++) {
+      var layer = /** @type {!os.layer.ILayer} */ (layers[i]);
+      var node;
+
+      if (layer.getTreeNode) {
+        node = /** @type {!os.structs.ITreeNodeSupplier} */ (layer).getTreeNode();
+      } else {
+        node = new os.data.LayerNode();
+        node.setLayer(layer);
+      }
+
+      layerNodes.push(node);
     }
+
+    const optionsArray = os.layer.FolderManager.getInstance().getItems();
+    const folderNodeMap = {};
+
+    if (optionsArray.length > 0) {
+      /**
+       * Recursively build the tree from the folder options saved in FolderManager.
+       * @param {osx.layer.FolderOptions} options
+       * @param {number} i
+       * @param {Array<(osx.layer.FolderOptions|string)>} arr
+       */
+      var builder = (options, i, arr) => {
+        if (options.type == 'folder') {
+          const folderNode = new os.data.FolderNode(options);
+          folderNodeMap[options.id] = folderNode;
+
+          if (folderNodeMap[options.parentId]) {
+            folderNodeMap[options.parentId].addChild(folderNode);
+          } else {
+            list.push(folderNode);
+          }
+
+          if (options.children) {
+            options.children.forEach(builder);
+          }
+        } else {
+          var layerNode = layerNodes.find((node) => node.getId() === options.id);
+          if (layerNode) {
+            if (folderNodeMap[options.parentId]) {
+              folderNodeMap[options.parentId].addChild(layerNode);
+            } else {
+              list.push(layerNode);
+            }
+          }
+        }
+      };
+
+      optionsArray.forEach(builder);
+      list;
+    }
+
+    // const foldersArr = os.layer.FolderManager.getInstance().getItems().filter((item) => item.type == 'folder');
+
+    // if (foldersArr.length > 0) {
+    //   const folderNodeMap = {};
+    //   const resultsClone = list.slice();
+
+    // /**
+    //  * Recursively build the tree from the folder options saved in FolderManager.
+    //  * @param {(osx.layer.FolderOptions|string)} folder
+    //  * @param {number} i
+    //  * @param {Array<(osx.layer.FolderOptions|string)>} arr
+    //  */
+    // var fn = (folder, i, arr) => {
+    //   if (folder.type == 'folder') {
+    //     const folderNode = new os.data.FolderNode(folder);
+    //     folderNodeMap[folderNode.getId()] = folderNode;
+
+    //     const parentNode = folderNodeMap[folder.parentId];
+    //     if (parentNode) {
+    //       parentNode.addChild(folderNode);
+    //     } else {
+    //       list.push(folderNode);
+    //       // parent.addChild(folderNode, undefined, i);
+    //     }
+
+    //     if (folder.children) {
+    //       folder.children.forEach((child) => {
+    //         if (child.type == 'layer') {
+    //           folderNodeMap[child.id] = folderNode;
+    //         }
+    //       });
+    //     }
+    //   } else {
+    //     const childId = folder.id;
+    //     const child = resultsClone.find((layerNode) => layerNode.getId() === childId);
+
+    //     if (child) {
+    //       const parentNode = folderNodeMap[child.getId()];
+
+    //       if (parentNode) {
+    //         parentNode.addChild(child);
+    //         goog.array.remove(list, child);
+    //       }
+    //     }
+    //   }
+
+    //   if (folder.children) {
+    //     folder.children.forEach(fn);
+    //   }
+    // };
+
+    //   foldersArr.forEach(fn);
+    // }
   } else {
     this.addNoResult(list);
   }
@@ -128,58 +229,58 @@ os.data.LayerTreeSearch.prototype.fillListFromSearch = function(list) {
  */
 os.data.LayerTreeSearch.prototype.makeGroups_ = function(results, parent) {
   if (results && results.length > 0) {
-    const foldersArr = os.layer.FolderManager.getInstance().getFolders().filter((f) => f.parentId === parent.getId());
+    const foldersArr = [];
     const count = results.length;
 
     if (foldersArr.length > 0) {
-      const folderNodeMap = {};
-      const resultsClone = results.slice();
+      // const folderNodeMap = {};
+      // const resultsClone = results.slice();
 
-      /**
-       * Recursively build the tree from the folder options saved in FolderManager.
-       * @param {(osx.layer.FolderOptions|string)} folder
-       * @param {number} i
-       * @param {Array<(osx.layer.FolderOptions|string)>} arr
-       */
-      var fn = (folder, i, arr) => {
-        if (typeof folder == 'object') {
-          const folderNode = new os.data.FolderNode(folder);
-          folderNodeMap[folderNode.getId()] = folderNode;
+      // /**
+      //  * Recursively build the tree from the folder options saved in FolderManager.
+      //  * @param {(osx.layer.FolderOptions|string)} folder
+      //  * @param {number} i
+      //  * @param {Array<(osx.layer.FolderOptions|string)>} arr
+      //  */
+      // var fn = (folder, i, arr) => {
+      //   if (typeof folder == 'object') {
+      //     const folderNode = new os.data.FolderNode(folder);
+      //     folderNodeMap[folderNode.getId()] = folderNode;
 
-          const parentNode = folderNodeMap[folder.parentId];
-          if (parentNode) {
-            parentNode.addChild(folderNode);
-          } else {
-            parent.addChild(folderNode, undefined, i);
-          }
+      //     const parentNode = folderNodeMap[folder.parentId];
+      //     if (parentNode) {
+      //       parentNode.addChild(folderNode);
+      //     } else {
+      //       parent.addChild(folderNode, undefined, i);
+      //     }
 
-          if (folder.children) {
-            folder.children.forEach((child) => {
-              if (typeof child == 'string') {
-                folderNodeMap[child] = folderNode;
-              }
-            });
-          }
-        } else {
-          const childId = folder;
-          const child = resultsClone.find((layerNode) => layerNode.getId() === childId);
+      //     if (folder.children) {
+      //       folder.children.forEach((child) => {
+      //         if (typeof child == 'string') {
+      //           folderNodeMap[child] = folderNode;
+      //         }
+      //       });
+      //     }
+      //   } else {
+      //     const childId = folder;
+      //     const child = resultsClone.find((layerNode) => layerNode.getId() === childId);
 
-          if (child) {
-            const parentNode = folderNodeMap[child.getId()];
+      //     if (child) {
+      //       const parentNode = folderNodeMap[child.getId()];
 
-            if (parent) {
-              parentNode.addChild(child);
-              goog.array.remove(results, child);
-            }
-          }
-        }
+      //       if (parent) {
+      //         parentNode.addChild(child);
+      //         goog.array.remove(results, child);
+      //       }
+      //     }
+      //   }
 
-        if (folder.children) {
-          folder.children.forEach(fn);
-        }
-      };
+      //   if (folder.children) {
+      //     folder.children.forEach(fn);
+      //   }
+      // };
 
-      foldersArr.forEach(fn);
+      // foldersArr.forEach(fn);
     } else {
       // if there are no user-created folders, fall back to grouping them automatically
       var idBuckets = /** @type {!Object<string, !Array<!os.structs.ITreeNode>>} */

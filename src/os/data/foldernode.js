@@ -42,7 +42,7 @@ class FolderNode extends SlickTreeNode {
   setOptions(options) {
     this.options = options;
     this.setId(options.id);
-    this.setLabel(options.name);
+    this.setLabel(options.name || 'New Folder');
     this.collapsed = options.collapsed || false;
   }
 

@@ -3,7 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const Settings = goog.require('os.config.Settings');
-const ZOrder = goog.require('os.data.ZOrder');
+const MapContainer = goog.require('os.MapContainer');
 const {FolderEventType, SettingsKey} = goog.require('os.layer.folder');
 const {remove} = goog.require('goog.array');
 
@@ -13,22 +13,6 @@ const {remove} = goog.require('goog.array');
  * @type {FolderManager}
  */
 let instance;
-
-
-/**
- * Sorts options by their current ZOrder state.
- * @param {osx.layer.FolderOptions|string} options The folder options
- */
-const sortFromZOrder = (options) => {
-  const zOrder = ZOrder.getInstance();
-  if (options.children) {
-    options.children.sort((a, b) => {
-      const aI = zOrder.getIndex(a);
-      const bI = zOrder.getIndex(b);
-      return bI - aI;
-    });
-  }
-};
 
 
 /**
@@ -42,13 +26,13 @@ class FolderManager extends EventTarget {
     super();
 
     /**
-     * Map for tracking existing folders.
+     * Map for tracking existing layers and folders.
      * @type {Array<osx.layer.FolderOptions>}
      * @protected
      */
-    this.folders = [];
+    this.items = [];
 
-    ZOrder.getInstance().listen('zOrder:update', this.updateZOrder, false, this);
+    MapContainer.getInstance().listen(os.events.LayerEventType.ADD, this.mergeFromMap_, false, this);
 
     this.restore();
   }
@@ -57,7 +41,28 @@ class FolderManager extends EventTarget {
    * @inheritDoc
    */
   disposeInternal() {
-    ZOrder.getInstance().unlisten('zOrder:update', this.updateZOrder, false, this);
+    MapContainer.getInstance().unlisten(os.events.LayerEventType.ADD, this.mergeFromMap_, false, this);
+  }
+
+  /**
+   * Merges in any new layers from the map.
+   * @private
+   */
+  mergeFromMap_() {
+    const layers = MapContainer.getInstance().getLayers();
+
+    for (let j = 0, m = layers.length; j < m; j++) {
+      const layer = /** @type {os.layer.ILayer} */ (layers[j]);
+      const found = this.getItem(layer.getId());
+
+      if (!found) {
+        this.items.push(/** @type {osx.layer.FolderOptions} */ ({
+          id: layer.getId(),
+          type: 'layer',
+          parentId: ''
+        }));
+      }
+    }
   }
 
   /**
@@ -65,18 +70,23 @@ class FolderManager extends EventTarget {
    * @param {osx.layer.FolderOptions} options The folder options
    */
   createFolder(options) {
-    const parentFolder = this.getFolder(options.parentId);
+    const parentFolder = this.getItem(options.parentId);
     if (parentFolder) {
       parentFolder.children.push(options);
-
-      options.children.forEach((child) => {
-        remove(parentFolder.children, child);
-      });
     } else {
-      this.folders.push(options);
+      this.items.push(options);
     }
 
-    this.updateZOrder();
+    options.children.forEach((child) => {
+      const children = parentFolder ? parentFolder.children : this.items;
+      if (children) {
+        remove(children, child);
+      }
+
+      child.parentId = options.id;
+    });
+
+    this.mergeFromMap_();
     this.dispatchEvent(FolderEventType.FOLDER_CREATED);
     this.persist();
   }
@@ -86,44 +96,47 @@ class FolderManager extends EventTarget {
    * @param {string} id The folder ID to remove
    */
   removeFolder(id) {
-    const folder = this.getFolder(id);
+    const folder = this.getItem(id);
     let removed = false;
 
     if (folder) {
       // check if it has a parent, if so, remove it from there
-      const parent = this.getFolder(folder.parentId);
+      const parent = this.getItem(folder.parentId);
       if (parent) {
-        removed = remove(parent.children, folder);
+        const children = parent.children;
+        if (children) {
+          removed = remove(children, folder);
 
-        if (folder.children) {
-          parent.children.push(...folder.children);
-          this.updateZOrder();
+          if (folder.children) {
+            parent.children.push(...folder.children);
+          }
         }
       } else {
-        removed = remove(this.folders, folder);
+        removed = remove(this.items, folder);
       }
     }
 
     if (removed) {
+      this.mergeFromMap_();
       this.dispatchEvent(FolderEventType.FOLDER_REMOVED);
       this.persist();
     }
   }
 
   /**
-   * Gets the folder map.
+   * Gets the folders.
    * @return {Array<osx.layer.FolderOptions>}
    */
-  getFolders() {
-    return this.folders;
+  getItems() {
+    return this.items;
   }
 
   /**
-   * Gets the folder map.
+   * Gets a folder or layer item.
    * @param {?string} id The folder ID to find.
    * @return {osx.layer.FolderOptions}
    */
-  getFolder(id) {
+  getItem(id) {
     let folder;
 
     const finder = function(options) {
@@ -141,9 +154,49 @@ class FolderManager extends EventTarget {
       }
     };
 
-    this.folders.forEach(finder);
+    this.items.forEach(finder);
 
     return folder;
+  }
+
+  /**
+   * Moves an item before or after another item. This handles reparenting and ordering.
+   * @param {string} id
+   * @param {string} otherId
+   * @param {boolean=} opt_after True if id comes after otherId, False for id before otherId. Defaults to false
+   */
+  move(id, otherId, opt_after) {
+    if (id === otherId) {
+      return;
+    }
+
+    const otherItem = this.getItem(otherId);
+    const otherParent = this.getItem(otherItem.parentId);
+    const list = otherParent ? otherParent.children : this.items;
+
+    let index = -1;
+    let otherIndex = -1;
+
+    for (let i = 0, n = list.length; i < n; i++) {
+      if (list[i].id == id) {
+        index = i;
+      }
+
+      if (list[i].id == otherId) {
+        otherIndex = i;
+      }
+
+      if (index > -1 && otherIndex > -1) {
+        const item = list.splice(index, 1)[0];
+
+        if (index < otherIndex) {
+          otherIndex--;
+        }
+
+        list.splice(otherIndex + (opt_after ? 1 : 0), 0, item);
+        break;
+      }
+    }
   }
 
   /**
@@ -164,7 +217,7 @@ class FolderManager extends EventTarget {
    * @param {string=} opt_parentId
    */
   createOrEditFolder(options, opt_parentId) {
-    const existing = this.getFolder(options.id);
+    const existing = this.getItem(options.id);
     const label = existing ? existing.name : 'New Folder';
     const winLabel = (existing ? 'Edit' : 'Add') + ' Folder';
 
@@ -182,27 +235,10 @@ class FolderManager extends EventTarget {
   }
 
   /**
-   * Handler for Z-Order update events.
-   * @protected
-   */
-  updateZOrder() {
-    const updateSort = (folder) => {
-      sortFromZOrder(folder);
-      if (folder.children) {
-        folder.children.forEach(updateSort);
-      }
-    };
-
-    // this.folders.sort(sortFromZOrder);
-    this.folders.forEach(updateSort);
-    this.dispatchEvent(FolderEventType.FOLDER_UPDATED);
-  }
-
-  /**
    * Clears the manager.
    */
   clear() {
-    this.folders = [];
+    this.items = [];
     this.dispatchEvent(FolderEventType.FOLDERS_CLEARED);
   }
 
@@ -211,7 +247,7 @@ class FolderManager extends EventTarget {
    * @protected
    */
   persist() {
-    Settings.getInstance().set(SettingsKey.FOLDERS, this.folders);
+    Settings.getInstance().set(SettingsKey.FOLDERS, this.items);
   }
 
   /**
@@ -219,7 +255,7 @@ class FolderManager extends EventTarget {
    * @protected
    */
   restore() {
-    this.folders = /** @type {Array<osx.layer.FolderOptions>} */ (Settings.getInstance().get(SettingsKey.FOLDERS, []));
+    this.items = /** @type {Array<osx.layer.FolderOptions>} */ (Settings.getInstance().get(SettingsKey.FOLDERS, []));
   }
 
   /**

@@ -29,10 +29,10 @@ const createFolder = function(event) {
   const layers = getLayersFromContext(nodes);
   const fm = FolderManager.getInstance();
   let parentId = '';
-  let layerIds = [];
+  let layerOptions = [];
 
   if (layers) {
-    layerIds = layers.map((l) => l.getId());
+    layerOptions = layers.map((l) => fm.getItem(l.getId()));
 
     // determine if we need to assign them to a parent
     const parent = nodes[0].getParent();
@@ -43,7 +43,8 @@ const createFolder = function(event) {
 
   fm.createOrEditFolder({
     id: getRandomString(),
-    children: layerIds,
+    type: 'folder',
+    children: layerOptions,
     name: 'New Folder',
     parentId: parentId,
     collapsed: false

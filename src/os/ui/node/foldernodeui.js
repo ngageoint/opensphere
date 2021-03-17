@@ -57,6 +57,7 @@ class Controller extends AbstractNodeUICtrl {
     if (node) {
       const folder = {
         name: 'New Folder',
+        type: 'folder',
         id: goog.string.getRandomString(),
         parentId: node.getId(),
         children: []
