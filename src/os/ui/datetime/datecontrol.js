@@ -37,7 +37,6 @@ os.ui.Module.directive('dateControl', [os.ui.datetime.dateControlDirective]);
 
 /**
  * Controller for the date-control directive.
- *
  * @param {!angular.Scope} $scope The Angular scope.
  * @extends {goog.Disposable}
  * @constructor
@@ -92,6 +91,11 @@ os.ui.datetime.DateControlCtrl = function($scope) {
     os.time.Duration.DAY,
     os.time.Duration.WEEK,
     os.time.Duration.MONTH,
+    os.time.Duration.LAST24HOURS,
+    os.time.Duration.LAST48HOURS,
+    os.time.Duration.LAST7DAYS,
+    os.time.Duration.LAST14DAYS,
+    os.time.Duration.LAST30DAYS,
     os.time.Duration.CUSTOM
   ];
 
@@ -101,6 +105,12 @@ os.ui.datetime.DateControlCtrl = function($scope) {
    */
   this['disabled'] = false;
 
+  /**
+   * If the duration is relative to the current date.
+   * @type {boolean}
+   */
+  this['relativeDuration'] = os.time.isRelativeDuration(this['duration']);
+
   // take over updating the timeline controller
   this.assumeControl();
 
@@ -108,6 +118,7 @@ os.ui.datetime.DateControlCtrl = function($scope) {
   $scope.$watch('dateControl.startDate', this.onStartDateChanged_.bind(this));
   $scope.$watch('dateControl.endDate', this.onEndDateChanged_.bind(this));
 
+  $scope.$on('startDate.userSelected', this.onStartDateSelected_.bind(this));
   $scope.$on('$destroy', this.dispose.bind(this));
 };
 goog.inherits(os.ui.datetime.DateControlCtrl, goog.Disposable);
@@ -115,7 +126,7 @@ goog.inherits(os.ui.datetime.DateControlCtrl, goog.Disposable);
 
 /**
  * The logger.
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @const
  * @private
  */
@@ -147,15 +158,19 @@ os.ui.datetime.DateControlCtrl.prototype.disposeInternal = function() {
  */
 os.ui.datetime.DateControlCtrl.prototype.onStartDateChanged_ = function(newVal, oldVal) {
   if (newVal && oldVal && newVal.getTime() != oldVal.getTime()) {
-    this['startDate'] = os.time.floor(newVal, this['duration'], true);
+    if (!this['relativeDuration'] && this['duration'] != os.time.Duration.CUSTOM) {
+      this['startDate'] = os.time.floor(newVal, this['duration'], true);
+    } else {
+      this['startDate'] = newVal;
+    }
 
     if (this['duration'] === os.time.Duration.CUSTOM) {
       // if the start date is after the end date for custom duration, make them the same (end is inclusive)
       if (this['startDate'] > this['endDate']) {
         this['endDate'] = new Date(this['startDate']);
       }
-    } else {
-      // for all other durations, set the end date from the start date
+    } else if (!this['relativeDuration']) {
+      // for all other durations (that aren't relative), set the end date from the start date
       this['endDate'] = os.time.offset(this['startDate'], this['duration'], 1, true);
     }
 
@@ -170,6 +185,18 @@ os.ui.datetime.DateControlCtrl.prototype.onStartDateChanged_ = function(newVal, 
 
 
 /**
+ * Selection handler for start date control.
+ *
+ * @param {angular.Scope.Event} event
+ * @private
+ */
+os.ui.datetime.DateControlCtrl.prototype.onStartDateSelected_ = function(event) {
+  event.stopPropagation();
+  this.scope_.$broadcast('endDate.open');
+};
+
+
+/**
  * Change handler for the end date control.
  *
  * @param {?Date} newVal The new value.
@@ -179,7 +206,7 @@ os.ui.datetime.DateControlCtrl.prototype.onStartDateChanged_ = function(newVal, 
 os.ui.datetime.DateControlCtrl.prototype.onEndDateChanged_ = function(newVal, oldVal) {
   // this can only be changed by the user for custom duration, so let the controller handle it otherwise
   if (this['duration'] === os.time.Duration.CUSTOM && newVal && oldVal && newVal.getTime() != oldVal.getTime()) {
-    this['endDate'] = os.time.floor(newVal, os.time.Duration.DAY, true);
+    this['endDate'] = newVal;
 
     if (this['startDate'] > this['endDate']) {
       // if start is after end, make them the same (end is inclusive)
@@ -203,20 +230,62 @@ os.ui.datetime.DateControlCtrl.prototype.onEndDateChanged_ = function(newVal, ol
  */
 os.ui.datetime.DateControlCtrl.prototype.onDurationChanged = function() {
   if (!this['disabled']) {
-    this['startDate'] = os.time.floor(this['startDate'], this['duration'], true);
+    // If switching from a relative duration, make the new start relative to now.
+    if (this['relativeDuration']) {
+      this['startDate'] = new Date();
+    }
 
-    if (this['duration'] === os.time.Duration.CUSTOM) {
-      // for custom duration, make dates the same (end is inclusive)
-      this['endDate'] = new Date(this['startDate']);
-    } else {
-      // for all other durations, set the end date from the start date
-      this['endDate'] = os.time.offset(this['startDate'], this['duration'], 1, true);
+    // We only want to round times that are neither custom nor relative
+    if (!this['relativeDuration'] && this['duration'] != os.time.Duration.CUSTOM) {
+      this['startDate'] = os.time.floor(this['startDate'], this['duration'], true);
+    }
+
+    // Check if the NEW duration is relative
+    this['relativeDuration'] = os.time.isRelativeDuration(this['duration']);
+
+    switch (this['duration']) {
+      case os.time.Duration.LAST24HOURS:
+        this.setRelativeDateRange(1);
+        break;
+      case os.time.Duration.LAST48HOURS:
+        this.setRelativeDateRange(2);
+        break;
+      case os.time.Duration.LAST7DAYS:
+        this.setRelativeDateRange(7);
+        break;
+      case os.time.Duration.LAST14DAYS:
+        this.setRelativeDateRange(14);
+        break;
+      case os.time.Duration.LAST30DAYS:
+        this.setRelativeDateRange(30);
+        break;
+      case os.time.Duration.CUSTOM:
+        // for custom duration, make dates the same (end is inclusive)
+        this['endDate'] = new Date(this['startDate']);
+        break;
+      default:
+        // for all other durations, set the end date from the start date
+        this['endDate'] = os.time.offset(this['startDate'], this['duration'], 1, true);
+        break;
     }
     this.startControllerUpdate_();
 
     goog.log.fine(os.ui.datetime.DateControlCtrl.LOGGER_,
         'duration changed: ' + this['startDate'].toUTCString() + ' to ' + this['endDate'].toUTCString());
   }
+};
+
+
+/**
+ * Set the duration to a date range relative to now.
+ *
+ * @param {number} days
+ * @private
+ */
+os.ui.datetime.DateControlCtrl.prototype.setRelativeDateRange = function(days) {
+  this['startDate'] = new Date();
+  this['endDate'] = new Date();
+  this['startDate'].setUTCDate(this['startDate'].getUTCDate() - days);
 };
 
 
@@ -240,10 +309,10 @@ os.ui.datetime.DateControlCtrl.prototype.startControllerUpdate_ = function() {
 os.ui.datetime.DateControlCtrl.prototype.updateController_ = function() {
   if (this.tlc_) {
     // convert local dates to utc before setting timeline controller values
-    var utcStart = os.time.toUTCDate(this['startDate']);
-    var utcEnd = this.getControllerEndDate();
-    var startTime = utcStart.getTime();
-    var endTime = utcEnd.getTime();
+    var controllerStart = this.getControllerStartDate();
+    var controllerEnd = this.getControllerEndDate();
+    var startTime = controllerStart.getTime();
+    var endTime = controllerEnd.getTime();
 
     this.tlc_.setSuppressShowEvents(true);
     this.tlc_.setRange(this.tlc_.buildRange(startTime, endTime));
@@ -262,9 +331,16 @@ os.ui.datetime.DateControlCtrl.prototype.updateController_ = function() {
  * @export
  */
 os.ui.datetime.DateControlCtrl.prototype.shiftDate = function(direction) {
+  var modifier = 1;
   if (!this['disabled']) {
-    this['startDate'] = os.time.offset(this['startDate'], this['duration'], direction, true);
-    this['endDate'] = os.time.offset(this['endDate'], this['duration'], direction, true);
+    if (this['duration'] === os.time.Duration.CUSTOM) {
+      // For custom durations, multiply the offset by the difference in days between the start and end dates
+      const startDate = this['startDate'].getTime();
+      const endDate = this['endDate'].getTime() + os.time.millisecondsInDay;
+      modifier = (endDate - startDate) / os.time.millisecondsInDay;
+    }
+    this['startDate'] = os.time.offset(this['startDate'], this['duration'], direction * modifier, true);
+    this['endDate'] = os.time.offset(this['endDate'], this['duration'], direction * modifier, true);
   }
 };
 
@@ -296,9 +372,10 @@ os.ui.datetime.DateControlCtrl.prototype.releaseControl = function() {
  */
 os.ui.datetime.DateControlCtrl.prototype.update = function() {
   if (this.tlc_) {
-    this['startDate'] = os.time.toLocalDate(new Date(this.tlc_.getStart()));
-    this['endDate'] = this.getUIEndDate();
     this['duration'] = this.getDuration();
+    this['relativeDuration'] = os.time.isRelativeDuration(this['duration']);
+    this['startDate'] = this.getUIStartDate();
+    this['endDate'] = this.getUIEndDate();
 
     os.ui.apply(this.scope_);
   }
@@ -317,18 +394,48 @@ os.ui.datetime.DateControlCtrl.prototype.getDuration = function() {
 
 
 /**
+ * Get the start date from the UI to set in the timeline controller.
+ *
+ * @return {Date} The start date.
+ * @protected
+ */
+os.ui.datetime.DateControlCtrl.prototype.getControllerStartDate = function() {
+  // Dates relative to "now" should not be translated to UTC because they did not come from jQueryUI.
+  return this['relativeDuration'] ? this['startDate'] : os.time.toUTCDate(this['startDate']);
+};
+
+
+/**
  * Get the end date from the UI to set in the timeline controller.
  *
  * @return {Date} The end date.
  * @protected
  */
 os.ui.datetime.DateControlCtrl.prototype.getControllerEndDate = function() {
-  var endDate = os.time.toUTCDate(this['endDate']);
+  // Dates relative to "now" should not be translated to UTC because they did not come from jQueryUI.
+  var endDate = this['relativeDuration'] ? this['endDate'] : os.time.toUTCDate(this['endDate']);
   if (this['duration'] === os.time.Duration.CUSTOM) {
     endDate.setDate(endDate.getDate() + 1);
   }
 
   return endDate;
+};
+
+
+/**
+ * Get the start date from the timeline controller to display in the UI.
+ *
+ * @return {Date} The start date.
+ * @protected
+ */
+os.ui.datetime.DateControlCtrl.prototype.getUIStartDate = function() {
+  if (this.tlc_) {
+    // Dates relative to "now" should not be translated from UTC because they will not be used by jQueryUI.
+    var tlcStartDate = new Date(this.tlc_.getStart());
+    return this['relativeDuration'] ? tlcStartDate : os.time.toLocalDate(tlcStartDate);
+  }
+
+  return null;
 };
 
 
@@ -340,7 +447,9 @@ os.ui.datetime.DateControlCtrl.prototype.getControllerEndDate = function() {
  */
 os.ui.datetime.DateControlCtrl.prototype.getUIEndDate = function() {
   if (this.tlc_) {
-    var endDate = os.time.toLocalDate(new Date(this.tlc_.getEnd()));
+    // Dates relative to "now" should not be translated from UTC because they will not be used by jQueryUI.
+    var tlcEndDate = new Date(this.tlc_.getEnd());
+    var endDate = this['relativeDuration'] ? tlcEndDate : os.time.toLocalDate(tlcEndDate);
 
     if (this['duration'] === os.time.Duration.CUSTOM) {
       endDate.setDate(endDate.getDate() - 1);

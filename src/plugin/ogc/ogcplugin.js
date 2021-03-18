@@ -3,6 +3,7 @@ goog.provide('plugin.ogc.OGCPlugin');
 goog.require('os.data.DataManager');
 goog.require('os.data.ProviderEntry');
 goog.require('os.ogc');
+goog.require('os.ogc.LayerType');
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.ui.ProviderImportUI');
 goog.require('os.ui.action.Action');
@@ -15,6 +16,8 @@ goog.require('plugin.ogc.ui.geoserverDirective');
 goog.require('plugin.ogc.ui.ogcserverDirective');
 goog.require('plugin.ogc.wfs.QueryWFSLayerConfig');
 goog.require('plugin.ogc.wms.WMSLayerConfig');
+goog.require('plugin.ogc.wmts.WMTSLayerConfig');
+goog.require('plugin.ogc.wmts.WMTSServer');
 
 
 
@@ -43,18 +46,22 @@ plugin.ogc.OGCPlugin.prototype.init = function() {
 
   var geo = new os.data.ProviderEntry(plugin.ogc.mime.GEOSERVER_TYPE, plugin.ogc.GeoServer, 'GeoServer', '');
 
+  var wmts = new os.data.ProviderEntry(plugin.ogc.wmts.WMTSServer.TYPE, plugin.ogc.wmts.WMTSServer, 'WMTS Server', '');
+
   // register the ogc provider types
   dm.registerProviderType(ogc);
   dm.registerProviderType(geo);
+  dm.registerProviderType(wmts);
 
   // register the ogc descriptor types
   dm.registerDescriptorType(os.ogc.ID, plugin.ogc.OGCLayerDescriptor);
 
   // register the layer configurations
   var lcm = os.layer.config.LayerConfigManager.getInstance();
-  lcm.registerLayerConfig('WMS', plugin.ogc.wms.WMSLayerConfig);
-  lcm.registerLayerConfig('WFS', plugin.ogc.wfs.QueryWFSLayerConfig);
-  lcm.registerDefaultLayerConfig('WFS', plugin.ogc.getDefaultWfsOptions);
+  lcm.registerLayerConfig(os.ogc.LayerType.WMS, plugin.ogc.wms.WMSLayerConfig);
+  lcm.registerLayerConfig(os.ogc.LayerType.WFS, plugin.ogc.wfs.QueryWFSLayerConfig);
+  lcm.registerLayerConfig(os.ogc.LayerType.WMTS, plugin.ogc.wmts.WMTSLayerConfig);
+  lcm.registerDefaultLayerConfig(os.ogc.LayerType.WFS, plugin.ogc.getDefaultWfsOptions);
 
   // register the server forms for adding/editing servers
   var im = os.ui.im.ImportManager.getInstance();

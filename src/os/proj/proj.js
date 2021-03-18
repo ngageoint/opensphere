@@ -51,7 +51,7 @@ os.proj.GOOGLE = 'EPSG:900913';
 /**
  * The logger.
  * @const
- * @type {goog.debug.Logger}
+ * @type {goog.log.Logger}
  * @private
  */
 os.proj.LOGGER_ = goog.log.getLogger('os.proj');

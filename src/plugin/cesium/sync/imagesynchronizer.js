@@ -75,6 +75,13 @@ plugin.cesium.sync.ImageSynchronizer = function(layer, map, scene) {
    */
   this.lastUrl_;
 
+  /**
+   * Flag for fixing a bug with the first render loop pass.
+   * @type {boolean}
+   * @private
+   */
+  this.firstLoopFixed_ = false;
+
   this.onPrimitiveReady_ = this.onPrimitiveReadyInternal.bind(this);
   this.scene.primitives.add(this.collection_);
 
@@ -108,12 +115,13 @@ plugin.cesium.sync.ImageSynchronizer.prototype.synchronize = function() {
   this.syncInternal();
 };
 
+
 /**
  * @param {boolean=} opt_force Force an update regardless of the current source revision
  * @protected
  */
 plugin.cesium.sync.ImageSynchronizer.prototype.syncInternal = function(opt_force) {
-  if (this.lastRevision_ !== this.source_.getRevision() || opt_force) {
+  if (this.source_ && (this.lastRevision_ !== this.source_.getRevision() || opt_force)) {
     this.lastRevision_ = this.source_.getRevision();
 
     if (this.activePrimitive_) {
@@ -122,33 +130,60 @@ plugin.cesium.sync.ImageSynchronizer.prototype.syncInternal = function(opt_force
 
     var map = /** @type {os.Map} */ (os.map.mapContainer.getMap());
     var viewExtent = map.getExtent();
+    if (ol.extent.containsExtent(viewExtent, os.map.PROJECTION.getWorldExtent())) {
+      // never allow an extent larger than the world to be requested
+      return;
+    }
+
+    // normalize the extent across the antimeridian
+    viewExtent = os.extent.normalize(viewExtent, -360, 0);
 
     if (!viewExtent) {
       this.removeImmediate_();
       return;
     }
 
-    var pixelExtent = map.getPixelFromCoordinate(ol.extent.getBottomLeft(viewExtent)).concat(
-        map.getPixelFromCoordinate(ol.extent.getTopRight(viewExtent)));
-
-    var resolution = ol.extent.getWidth(viewExtent) / Math.abs(ol.extent.getWidth(pixelExtent));
-    if (isNaN(resolution)) {
-      return;
-    }
-
-    var img = this.source_.getImage(viewExtent, resolution, window.devicePixelRatio, os.map.PROJECTION);
-    if (img) {
-      if (img !== this.image_) {
-        if (this.image_) {
-          ol.events.unlisten(this.image_, ol.events.EventType.CHANGE, this.onSyncChange, this);
-        }
-
-        this.image_ = img;
-        ol.events.listen(this.image_, ol.events.EventType.CHANGE, this.onSyncChange, this);
+    var resolution = map.getView().getResolution();
+    let img;
+    if (!isNaN(resolution) && resolution != null) {
+      if (!this.firstLoopFixed_) {
+        // HACK ALERT: when initially loading into Cesium, the image for this layer has already been created and loaded
+        // by a single render call on the 2D map. The extent for this request is incompatible with 3D since it's
+        // often wider than the world extent. OL also caches the bad image, so this tiny change to the resolution
+        // is designed to defeat that cache.
+        resolution += os.geo.EPSILON;
+        this.firstLoopFixed_ = true;
       }
-    } else {
-      this.removeImmediate_();
-      return;
+
+      img = this.source_.getImage(viewExtent, resolution, window.devicePixelRatio, os.map.PROJECTION);
+
+      if (img) {
+        if (img !== this.image_) {
+          if (this.image_) {
+            ol.events.unlisten(this.image_, ol.events.EventType.CHANGE, this.onSyncChange, this);
+          }
+
+          var imageState = img.getState();
+          if (imageState != ol.ImageState.LOADED && imageState != ol.ImageState.ERROR) {
+            ol.events.listen(img, ol.events.EventType.CHANGE, this.onSyncChange, this);
+          }
+
+          if (imageState == ol.ImageState.ERROR) {
+            // don't do anything, leave the old image rendered
+            return;
+          }
+
+          if (imageState == ol.ImageState.IDLE) {
+            img.load();
+          }
+
+          this.image_ = img;
+          return;
+        }
+      } else {
+        this.removeImmediate_();
+        return;
+      }
     }
 
     var url;
@@ -175,19 +210,26 @@ plugin.cesium.sync.ImageSynchronizer.prototype.syncInternal = function(opt_force
     }
     this.lastExtent_ = extent.slice();
 
-
     if (url && extent) {
       if (changed) {
-        var primitive = new Cesium.Primitive({
+        var minX = viewExtent[0];
+        var minY = viewExtent[1];
+        var maxX = viewExtent[2] - os.geo.EPSILON;
+        var maxY = viewExtent[3] - os.geo.EPSILON;
+        var flatCoordinates = [minX, minY, minX, maxY, maxX, maxY, maxX, minY, minX, minY];
+
+        var primitive = new Cesium.GroundPrimitive({
           geometryInstances: new Cesium.GeometryInstance({
-            geometry: new Cesium.RectangleGeometry({
-              rectangle: Cesium.Rectangle.fromDegrees(extent[0], extent[1], extent[2], extent[3])
+            geometry: new Cesium.PolygonGeometry({
+              polygonHierarchy: new Cesium.PolygonHierarchy(Cesium.Cartesian3.fromDegreesArray(flatCoordinates)),
+              height: 5000,
+              arcType: Cesium.ArcType.RHUMB
             }),
             id: this.layer.getId() + '.' + (this.nextId_++)
           }),
           appearance: new Cesium.MaterialAppearance({
             material: Cesium.Material.fromType('Image', {
-              image: url
+              image: el
             })
           }),
           show: this.layer.getVisible()
@@ -195,6 +237,7 @@ plugin.cesium.sync.ImageSynchronizer.prototype.syncInternal = function(opt_force
 
         primitive.readyPromise.then(this.onPrimitiveReady_);
         this.collection_.add(primitive);
+        os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
       }
     } else {
       this.removeImmediate_();
@@ -209,7 +252,9 @@ plugin.cesium.sync.ImageSynchronizer.prototype.syncInternal = function(opt_force
  */
 plugin.cesium.sync.ImageSynchronizer.prototype.onPrimitiveReadyInternal = function(primitive) {
   this.activePrimitive_ = primitive;
-  for (var i = this.collection_.length - 1; i; i--) {
+
+  let i = this.collection_.length;
+  while (i--) {
     var item = this.collection_.get(i);
 
     if (item !== this.activePrimitive_) {

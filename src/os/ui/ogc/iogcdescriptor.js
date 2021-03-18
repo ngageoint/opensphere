@@ -214,6 +214,62 @@ os.ui.ogc.IOGCDescriptor.prototype.setWmsUrl;
 
 
 /**
+ * If WMTS is enabled.
+ * @return {boolean}
+ */
+os.ui.ogc.IOGCDescriptor.prototype.isWmtsEnabled;
+
+
+/**
+ * Set if WMTS is enabled.
+ * @param {boolean} value
+ */
+os.ui.ogc.IOGCDescriptor.prototype.setWmtsEnabled;
+
+
+/**
+ * Get the date format for WMTS requests.
+ * @return {?string}
+ */
+os.ui.ogc.IOGCDescriptor.prototype.getWmtsDateFormat;
+
+
+/**
+ * Set the date format for WMTS requests.
+ * @param {?string} value
+ */
+os.ui.ogc.IOGCDescriptor.prototype.setWmtsDateFormat;
+
+
+/**
+ * Get the WMTS options.
+ * @return {Array<olx.source.WMTSOptions>}
+ */
+os.ui.ogc.IOGCDescriptor.prototype.getWmtsOptions;
+
+
+/**
+ * Set the WMTS options.
+ * @param {Array<olx.source.WMTSOptions>} value
+ */
+os.ui.ogc.IOGCDescriptor.prototype.setWmtsOptions;
+
+
+/**
+ * Get the time format for WMTS requests.
+ * @return {?string}
+ */
+os.ui.ogc.IOGCDescriptor.prototype.getWmtsTimeFormat;
+
+
+/**
+ * Set the time format for WMTS requests.
+ * @param {?string} value
+ */
+os.ui.ogc.IOGCDescriptor.prototype.setWmtsTimeFormat;
+
+
+/**
  * Get if requests should use POST instead of GET.
  * @return {boolean}
  */

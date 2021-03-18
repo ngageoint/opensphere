@@ -240,8 +240,9 @@ plugin.cesium.sync.TileSynchronizer.prototype.getLastIndex = function() {
  * @private
  */
 plugin.cesium.sync.TileSynchronizer.prototype.createSingle_ = function() {
-  goog.asserts.assertInstanceof(this.layer, ol.layer.Tile);
-  goog.asserts.assert(this.view !== null);
+  // goog.asserts.assertInstanceof(this.layer, ol.layer.Tile);
+  goog.asserts.assert(this.layer != null);
+  goog.asserts.assert(this.view != null);
 
   ol.events.listen(this.layer, goog.events.EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
   this.activeLayer_ = plugin.cesium.tileLayerToImageryLayer(this.layer, this.view.getProjection());
@@ -462,7 +463,7 @@ plugin.cesium.sync.TileSynchronizer.prototype.getLayerByTime_ = function(timePar
   params['TIME'] = timeParam;
   source.updateParams(params);
 
-  var provider = new plugin.cesium.ImageryProvider(source);
+  var provider = new plugin.cesium.ImageryProvider(source, null);
   var cesiumLayer = new Cesium.ImageryLayer(provider);
   return cesiumLayer;
 };

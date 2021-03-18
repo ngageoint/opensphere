@@ -2,21 +2,28 @@ goog.module('plugin.cesium.sync.linestring');
 
 const olcsCore = goog.require('olcs.core');
 
-const {createGeometryInstance} = goog.require('plugin.cesium.primitive');
+const GeometryType = goog.require('ol.geom.GeometryType');
+const InterpolationMethod = goog.require('os.interpolate.Method');
+const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
+const interpolate = goog.require('os.interpolate');
 const {GeometryInstanceId} = goog.require('plugin.cesium');
+const {assert} = goog.require('goog.asserts');
+const {createGeometryInstance} = goog.require('plugin.cesium.primitive');
+const {dashPatternToOptions} = goog.require('os.style');
 const {getColor, getLineWidthFromStyle} = goog.require('plugin.cesium.sync.style');
 const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
-const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
-const {dashPatternToOptions} = goog.require('os.style');
 
+const Ellipse = goog.requireType('os.geom.Ellipse');
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
 const LineString = goog.requireType('ol.geom.LineString');
 const MultiLineString = goog.requireType('ol.geom.MultiLineString');
+const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
+const Polygon = goog.requireType('ol.geom.Polygon');
 const Style = goog.requireType('ol.style.Style');
 const Text = goog.requireType('ol.style.Style');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
-const InterpolationMethod = goog.requireType('os.interpolate.Method');
+const {Coordinate} = goog.requireType('ol');
 
 
 /**
@@ -34,14 +41,13 @@ const InterpolationMethod = goog.requireType('os.interpolate.Method');
  */
 const createLineStringPrimitive = (feature, geometry, style, context, opt_flatCoords, opt_offset, opt_end,
     opt_index) => {
-  goog.asserts.assert(geometry.getType() == ol.geom.GeometryType.LINE_STRING ||
-      geometry.getType() == ol.geom.GeometryType.MULTI_LINE_STRING);
+  assert(geometry.getType() == GeometryType.LINE_STRING || geometry.getType() == GeometryType.MULTI_LINE_STRING);
 
   const heightReference = getHeightReference(context.layer, feature, geometry, opt_index);
   const lineGeometryToCreate = geometry.get('extrude') ? 'WallGeometry' :
     heightReference === Cesium.HeightReference.CLAMP_TO_GROUND ? 'GroundPolylineGeometry' : 'PolylineGeometry';
   const positions = getLineStringPositions(geometry, opt_flatCoords, opt_offset, opt_end);
-  const method = /** @type {InterpolationMethod} */ (feature.get(os.interpolate.METHOD_FIELD));
+  const method = /** @type {InterpolationMethod} */ (feature.get(interpolate.METHOD_FIELD));
   return createLinePrimitive(positions, context, style, lineGeometryToCreate, method);
 };
 
@@ -58,7 +64,7 @@ const createLineStringPrimitive = (feature, geometry, style, context, opt_flatCo
  */
 const createLinePrimitive = (positions, context, style, opt_type, opt_method) => {
   const type = opt_type || 'PolylineGeometry';
-  opt_method = opt_method || os.interpolate.getMethod();
+  opt_method = opt_method || interpolate.getMethod();
 
   let geometryId = GeometryInstanceId.GEOM_OUTLINE;
   let color = getColor(style, context, geometryId);
@@ -87,7 +93,7 @@ const createLinePrimitive = (positions, context, style, opt_type, opt_method) =>
   const geometry = new Cesium[type]({
     positions: positions,
     vertexFormat: appearance.vertexFormat,
-    arcType: opt_method === os.interpolate.Method.RHUMB ? Cesium.ArcType.RHUMB : Cesium.ArcType.GEODESIC,
+    arcType: opt_method === InterpolationMethod.RHUMB ? Cesium.ArcType.RHUMB : Cesium.ArcType.GEODESIC,
     width: width
   });
 
@@ -192,21 +198,21 @@ const isDashPatternChanging = (primitive, dashPattern) => {
 
 
 /**
- * @type {!ol.Coordinate}
+ * @type {!Coordinate}
  * @const
  */
 const scratchCoord1 = [];
 
 
 /**
- * @type {!ol.Coordinate}
+ * @type {!Coordinate}
  * @const
  */
 const scratchCoord2 = [];
 
 
 /**
- * @param {!(ol.geom.LineString|os.geom.Ellipse|ol.geom.MultiLineString)} geometry Ol3 line string geometry.
+ * @param {!(LineString|Ellipse|MultiLineString|Polygon|MultiPolygon)} geometry Ol3 line string geometry.
  * @param {Array<number>=} opt_flatCoords The flat coordinates from a multiline
  * @param {number=} opt_offset
  * @param {number=} opt_end

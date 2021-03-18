@@ -371,7 +371,7 @@ os.im.Importer.prototype.parseOne = function() {
  */
 os.im.Importer.prototype.addItem = function(item) {
   if (item) {
-    if (goog.isArray(item)) {
+    if (Array.isArray(item)) {
       var arr = /** @type {Array<T>} */ (item);
 
       for (var i = 0, n = arr.length; i < n; i++) {

@@ -40,6 +40,7 @@ goog.require('os.mixin.rbush');
 goog.require('os.ogc');
 goog.require('os.registerClass');
 goog.require('os.source');
+goog.require('os.source.IModifiableSource');
 goog.require('os.source.ISource');
 goog.require('os.source.PropertyChange');
 goog.require('os.source.column');
@@ -58,6 +59,7 @@ goog.require('os.webgl');
  * @extends {ol.source.Vector}
  * @implements {os.source.ISource}
  * @implements {os.hist.IHistogramProvider}
+ * @implements {os.source.IModifiableSource}
  * @param {olx.source.VectorOptions=} opt_options OpenLayers vector source options.
  * @constructor
  */
@@ -400,6 +402,13 @@ os.source.Vector = function(opt_options) {
    */
   this.detectColumnTypes_ = false;
 
+  /**
+   * Flag for what this source supports modify
+   * @type {boolean}
+   * @protected
+   */
+  this.canModify = true;
+
   if (!options['disableAreaSelection']) {
     os.dispatcher.listen(os.action.EventType.SELECT, this.onFeatureAction_, false, this);
     os.dispatcher.listen(os.action.EventType.SELECT_EXCLUSIVE, this.onFeatureAction_, false, this);
@@ -416,6 +425,7 @@ os.source.Vector = function(opt_options) {
 goog.inherits(os.source.Vector, ol.source.Vector);
 os.implements(os.source.Vector, os.hist.IHistogramProvider.ID);
 os.implements(os.source.Vector, os.source.ISource.ID);
+os.implements(os.source.Vector, os.source.IModifiableSource.ID);
 
 
 /**
@@ -2597,7 +2607,7 @@ os.source.Vector.prototype.updateAnimationOverlay = function() {
 
       // notify data consumers if dynamic data has changed
       if (hasDynamic) {
-        this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.DATA));
+        this.notifyDataChange();
       }
     } else {
       this.animationOverlay.setFeatures(undefined);
@@ -2797,7 +2807,7 @@ os.source.Vector.prototype.disposeDynamicAnimation = function() {
 
   if (hasDynamic) {
     // notify data consumers that the dynamic data has changed
-    this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.DATA));
+    this.notifyDataChange();
   }
 };
 
@@ -2873,7 +2883,7 @@ os.source.Vector.prototype.onFeatureAction_ = function(event) {
   var context = event.getContext();
 
   if (context && os.action) {
-    context = !goog.isArray(context) ? [context] : context;
+    context = !Array.isArray(context) ? [context] : context;
 
     var features = [];
     for (var i = 0, n = context.length; i < n; i++) {
@@ -3208,7 +3218,7 @@ os.source.Vector.prototype.getSelectedItems = function() {
  * @inheritDoc
  */
 os.source.Vector.prototype.setSelectedItems = function(items) {
-  if (!goog.isArray(items)) {
+  if (!Array.isArray(items)) {
     items = [items];
   }
 
@@ -3242,7 +3252,7 @@ os.source.Vector.prototype.setSelectedItems = function(items) {
  * @inheritDoc
  */
 os.source.Vector.prototype.addToSelected = function(features) {
-  if (!goog.isArray(features)) {
+  if (!Array.isArray(features)) {
     features = [features];
   }
 
@@ -3271,7 +3281,7 @@ os.source.Vector.prototype.addToSelected = function(features) {
  * @param {boolean=} opt_skipStyle
  */
 os.source.Vector.prototype.removeFromSelected = function(features, opt_skipStyle) {
-  if (!goog.isArray(features)) {
+  if (!Array.isArray(features)) {
     features = [features];
   }
 
@@ -3441,7 +3451,7 @@ os.source.Vector.prototype.hideAll = function() {
  * @inheritDoc
  */
 os.source.Vector.prototype.hideFeatures = function(features) {
-  if (!goog.isArray(features)) {
+  if (!Array.isArray(features)) {
     features = [features];
   }
 
@@ -3453,7 +3463,7 @@ os.source.Vector.prototype.hideFeatures = function(features) {
  * @inheritDoc
  */
 os.source.Vector.prototype.showFeatures = function(features) {
-  if (!goog.isArray(features)) {
+  if (!Array.isArray(features)) {
     features = [features];
   }
 
@@ -3482,7 +3492,7 @@ os.source.Vector.prototype.hideById = function(ids, opt_show) {
  * @param {!ol.Feature|Array<!ol.Feature>} features
  */
 os.source.Vector.prototype.setVisibleFeatures = function(features) {
-  if (!goog.isArray(features)) {
+  if (!Array.isArray(features)) {
     features = [features];
   }
 
@@ -3683,6 +3693,40 @@ os.source.Vector.prototype.setUniqueId = function(value) {
 
 
 /**
+ * Fire a data change notify event.
+ */
+os.source.Vector.prototype.notifyDataChange = function() {
+  this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.DATA));
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.source.Vector.prototype.supportsModify = function() {
+  return this.canModify;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.source.Vector.prototype.getModifyFunction = function() {
+  return (originalFeature, modifiedFeature) => {
+    // Replace the geometry on the feature and interpolate the new geometry.
+    originalFeature.setGeometry(modifiedFeature.getGeometry());
+    originalFeature.unset(os.interpolate.ORIGINAL_GEOM_FIELD, true);
+    os.interpolate.interpolateFeature(originalFeature);
+
+    // Update the ellipse, if needed.
+    os.feature.createEllipse(originalFeature, true);
+
+    this.notifyDataChange();
+  };
+};
+
+
+/**
  * @inheritDoc
  */
 os.source.Vector.prototype.persist = function(opt_to) {
@@ -3748,5 +3792,9 @@ os.source.Vector.prototype.restore = function(config) {
 
   if (config['detectColumnTypes']) {
     this.setDetectColumnTypes(config['detectColumnTypes']);
+  }
+
+  if (config['supportsModify'] != null) {
+    this.canModify = /** @type {boolean} */ (config['supportsModify']);
   }
 };

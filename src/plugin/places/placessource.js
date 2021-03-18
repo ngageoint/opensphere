@@ -1,6 +1,8 @@
 goog.provide('plugin.places.PlacesSource');
 
+goog.require('os.feature');
 goog.require('os.geom.GeometryField');
+goog.require('os.interpolate');
 goog.require('os.track');
 goog.require('plugin.file.kml.KMLSource');
 goog.require('plugin.file.kml.ui.KMLNode');
@@ -20,6 +22,40 @@ plugin.places.PlacesSource = function(opt_options) {
   this.refreshEnabled = false;
 };
 goog.inherits(plugin.places.PlacesSource, plugin.file.kml.KMLSource);
+os.implements(plugin.places.PlacesSource, os.source.IModifiableSource.ID);
+
+
+/**
+ * @inheritDoc
+ */
+plugin.places.PlacesSource.prototype.supportsModify = function() {
+  return true;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.places.PlacesSource.prototype.getModifyFunction = function() {
+  return (originalFeature, modifiedFeature) => {
+    const node = this.getFeatureNode(originalFeature);
+
+    if (node) {
+      originalFeature.setGeometry(modifiedFeature.getGeometry());
+      originalFeature.unset(os.interpolate.ORIGINAL_GEOM_FIELD, true);
+      os.interpolate.interpolateFeature(originalFeature);
+
+      const options = {
+        'node': node,
+        'feature': originalFeature
+      };
+
+      plugin.file.kml.ui.updatePlacemark(options);
+      os.feature.createEllipse(originalFeature, true);
+      this.notifyDataChange();
+    }
+  };
+};
 
 
 /**

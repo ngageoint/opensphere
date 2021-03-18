@@ -1,4 +1,4 @@
-goog.module('plugin.cesium.primitive');
+goog.declareModuleId('plugin.cesium.primitive');
 
 const Delay = goog.require('goog.async.Delay');
 const {GeometryInstanceId} = goog.require('plugin.cesium');
@@ -8,9 +8,9 @@ const styleUtils = goog.require('plugin.cesium.sync.style');
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
-const IConverter = goog.requireType('plugin.cesium.sync.IConverter');
 const Style = goog.requireType('ol.style.Style');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
+
 
 /**
  * @param {!Feature} feature
@@ -18,12 +18,10 @@ const VectorContext = goog.requireType('plugin.cesium.VectorContext');
  * @param {!Style} style
  * @param {!VectorContext} context
  * @return {!Array<!Cesium.PrimitiveLike>|!Cesium.PrimitiveLike|null|undefined}
- * @this {IConverter}
  */
-const getPrimitive = (feature, geometry, style, context) => {
+export const getPrimitive = (feature, geometry, style, context) => {
   return context.getPrimitiveForGeometry(geometry);
 };
-
 
 /**
  * @param {!Feature} feature
@@ -33,12 +31,11 @@ const getPrimitive = (feature, geometry, style, context) => {
  * @param {!Cesium.PrimitiveLike} primitive
  * @return {boolean}
  */
-const shouldUpdatePrimitive = (feature, geometry, style, context, primitive) => {
+export const shouldUpdatePrimitive = (feature, geometry, style, context, primitive) => {
   const heightReference = getHeightReference(context.layer, feature, geometry);
   return !isPrimitiveClassTypeChanging(heightReference, primitive);
 };
 
-
 /**
  * @param {!Feature} feature
  * @param {!Geometry} geometry
@@ -46,9 +43,8 @@ const shouldUpdatePrimitive = (feature, geometry, style, context, primitive) => 
  * @param {!VectorContext} context
  * @param {!Cesium.PrimitiveLike} primitive
  * @return {boolean}
- * @this {IConverter}
  */
-const updatePrimitive = (feature, geometry, style, context, primitive) => {
+export const updatePrimitive = (feature, geometry, style, context, primitive) => {
   if (!shouldUpdatePrimitive(feature, geometry, style, context, primitive)) {
     return false;
   }
@@ -126,9 +122,8 @@ const updatePrimitiveGeomInstances = (style, context, primitive) => {
  * @param {!VectorContext} context
  * @param {!Array<!Cesium.PrimitiveLike>|!Cesium.PrimitiveLike} primitive
  * @return {boolean}
- * @this {IConverter}
  */
-const deletePrimitive = (feature, geometry, style, context, primitive) => {
+export const deletePrimitive = (feature, geometry, style, context, primitive) => {
   if (Array.isArray(primitive)) {
     for (let i = 0, n = primitive.length; i < n; i++) {
       deletePrimitive(feature, geometry, style, context, primitive[i]);
@@ -139,7 +134,6 @@ const deletePrimitive = (feature, geometry, style, context, primitive) => {
   context.removePrimitive(primitive);
   return true;
 };
-
 
 /**
  * Basics primitive creation using a color attribute.
@@ -153,7 +147,8 @@ const deletePrimitive = (feature, geometry, style, context, primitive) => {
  * @param {!Cesium.Matrix4=} opt_modelMatrix
  * @return {!Cesium.Primitive}
  */
-const createColoredPrimitive = (geometry, color, opt_lineWidth, opt_instanceFn, opt_primitiveType, opt_modelMatrix) => {
+export const createColoredPrimitive = (geometry, color, opt_lineWidth, opt_instanceFn, opt_primitiveType,
+    opt_modelMatrix) => {
   const options = unsafeClone(BASE_PRIMITIVE_OPTIONS);
   if (opt_lineWidth != null) {
     updateLineWidth(options, opt_lineWidth);
@@ -172,7 +167,6 @@ const createColoredPrimitive = (geometry, color, opt_lineWidth, opt_instanceFn, 
   return primitive;
 };
 
-
 /**
  * Create a Cesium geometry instance
  *
@@ -182,7 +176,7 @@ const createColoredPrimitive = (geometry, color, opt_lineWidth, opt_instanceFn, 
  * @param {!Cesium.Matrix4=} opt_modelMatrix
  * @return {!Cesium.GeometryInstance}
  */
-const createGeometryInstance = (id, geometry, color, opt_modelMatrix) => {
+export const createGeometryInstance = (id, geometry, color, opt_modelMatrix) => {
   return new Cesium.GeometryInstance({
     id,
     geometry,
@@ -193,23 +187,21 @@ const createGeometryInstance = (id, geometry, color, opt_modelMatrix) => {
   });
 };
 
-
 /**
  * @param {!Object} options
  * @param {number} lineWidth
  */
-const updateLineWidth = (options, lineWidth) => {
+export const updateLineWidth = (options, lineWidth) => {
   options.renderState.lineWidth = goog.math.clamp(lineWidth, Cesium.ContextLimits.minimumAliasedLineWidth,
       Cesium.ContextLimits.maximumAliasedLineWidth);
 };
-
 
 /**
  * Base Cesium primitive render options.
  * @type {!Object}
  * @const
  */
-const BASE_PRIMITIVE_OPTIONS = {
+export const BASE_PRIMITIVE_OPTIONS = {
   flat: true,
   renderState: {
     depthTest: {
@@ -218,12 +210,11 @@ const BASE_PRIMITIVE_OPTIONS = {
   }
 };
 
-
 /**
  * @param {!Cesium.PrimitiveLike} primitive
  * @return {boolean}
  */
-const isGroundPrimitive = function(primitive) {
+export const isGroundPrimitive = function(primitive) {
   if (primitive) {
     return primitive instanceof Cesium.GroundPrimitive || primitive instanceof Cesium.GroundPolylinePrimitive;
   }
@@ -231,12 +222,11 @@ const isGroundPrimitive = function(primitive) {
   return false;
 };
 
-
 /**
  * @param {?(Array<Cesium.PrimitiveLike>|Cesium.PrimitiveLike|Cesium.CollectionLike)} primitive The primitive
  * @return {!boolean}
  */
-const isPrimitiveShown = function(primitive) {
+export const isPrimitiveShown = function(primitive) {
   if (Array.isArray(primitive)) {
     return primitive.length > 0 ? isPrimitiveShown(primitive[0]) : true;
   } else if (primitive.show != null) {
@@ -248,12 +238,11 @@ const isPrimitiveShown = function(primitive) {
   return !!primitive.show;
 };
 
-
 /**
  * @param {?(Array<Cesium.PrimitiveLike>|Cesium.PrimitiveLike|Cesium.CollectionLike)} primitive The primitive
  * @param {boolean} show Whether or not to show the primitive
  */
-const setPrimitiveShown = function(primitive, show) {
+export const setPrimitiveShown = function(primitive, show) {
   if (primitive) {
     if (Array.isArray(primitive)) {
       for (let i = 0, n = primitive.length; i < n; i++) {
@@ -267,19 +256,4 @@ const setPrimitiveShown = function(primitive, show) {
       }
     }
   }
-};
-
-
-exports = {
-  BASE_PRIMITIVE_OPTIONS,
-  createColoredPrimitive,
-  createGeometryInstance,
-  deletePrimitive,
-  getPrimitive,
-  isGroundPrimitive,
-  isPrimitiveShown,
-  setPrimitiveShown,
-  shouldUpdatePrimitive,
-  updateLineWidth,
-  updatePrimitive
 };

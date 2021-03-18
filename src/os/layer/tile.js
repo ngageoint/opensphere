@@ -539,7 +539,6 @@ os.layer.Tile.prototype.updateColorFilter = function() {
  * @param {Array<number>} data The image data.
  * @param {number} width The image width.
  * @param {number} height The image height.
- * @protected
  */
 os.layer.Tile.prototype.applyColors = function(data, width, height) {
   if (!data) {

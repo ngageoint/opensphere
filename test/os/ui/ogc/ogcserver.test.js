@@ -123,4 +123,34 @@ describe('os.ui.ogc.OGCServer', function() {
       expect(d.getWfsUrl()).toBe('/base/test/resources/ogc/wfs-110.xml');
     });
   });
+
+  it('should parse WMTS 1.0.0 properly', function() {
+    var server = new os.ui.ogc.OGCServer();
+    loadAndRun(server, {
+      wmts: '/base/test/resources/ogc/wmts-100.xml'
+    }, function() {
+      expect(server.getId()).toBe('testogc');
+      expect(server.getLabel()).toBe('Test WMTS');
+
+      var d = os.dataManager.getDescriptor('testogc#test-3857-1');
+      expect(d).toBeTruthy();
+
+      var wmtsOptions = d.getWmtsOptions();
+      expect(wmtsOptions).toBeDefined();
+      expect(wmtsOptions.length).toBe(1);
+      expect(wmtsOptions[0]['format']).toBe('image/png');
+      expect(wmtsOptions[0]['urls'][0]).toBe('https://wmts.example.com/ows?');
+      expect(wmtsOptions[0]['projection'].getCode()).toBe('EPSG:3857');
+
+      var d = os.dataManager.getDescriptor('testogc#test-4326-1');
+      expect(d).toBeTruthy();
+
+      wmtsOptions = d.getWmtsOptions();
+      expect(wmtsOptions).toBeDefined();
+      expect(wmtsOptions.length).toBe(1);
+      expect(wmtsOptions[0]['format']).toBe('image/png');
+      expect(wmtsOptions[0]['urls'][0]).toBe('https://wmts.example.com/ows?');
+      expect(wmtsOptions[0]['projection'].getCode()).toBe('EPSG:4326');
+    });
+  });
 });

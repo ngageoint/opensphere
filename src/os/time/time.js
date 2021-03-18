@@ -25,6 +25,11 @@ os.time.Duration = {
   WEEK: 'week',
   MONTH: 'month',
   YEAR: 'year',
+  LAST24HOURS: 'last 24 hours',
+  LAST48HOURS: 'last 48 hours',
+  LAST7DAYS: 'last 7 days',
+  LAST14DAYS: 'last 14 days',
+  LAST30DAYS: 'last 30 days',
   CUSTOM: 'custom'
 };
 
@@ -428,7 +433,8 @@ os.time.offset = function(date, duration, offset, opt_local) {
 
   switch (duration) {
     case os.time.Duration.CUSTOM:
-      // fall through
+      newDate.setUTCDate(newDate.getUTCDate() + offset);
+      break;
     case os.time.Duration.HOURS:
       newDate.setUTCHours(newDate.getUTCHours() + offset);
       break;
@@ -501,7 +507,7 @@ os.time.parseMoment = function(value, formats, opt_utc, opt_strict) {
   var strict = opt_strict !== undefined ? opt_strict : true;
 
   var momentFormats = [];
-  if (goog.isArray(formats)) {
+  if (Array.isArray(formats)) {
     for (var i = 0, n = formats.length; i < n; i++) {
       momentFormats.push(os.time.normalizeFormat_(formats[i]));
     }
@@ -555,7 +561,6 @@ os.time.userizeFormat_ = function(format) {
     return match.length == 1 ? (match + match) : match;
   });
 };
-
 
 /**
  * Rounds a date to the specified duration, rounding to the UTC time zone. Rounds down by default.
@@ -895,4 +900,22 @@ os.time.step = function(date, duration, offset, opt_local) {
 os.time.combineDateTime = function(days, time, opt_daysFormat = 'YYYY-MM-DD', opt_timeFormat = 'HH:mm:ss') {
   var combinedTime = os.time.parseMoment(`${days} ${time}`, `${opt_daysFormat} ${opt_timeFormat}`, true);
   return combinedTime;
+};
+
+
+/**
+ * Regular expression to test for a relative duration string.
+ * @type {RegExp}
+ */
+os.time.RELATIVE_DURATION_REGEXP = /^last /i;
+
+
+/**
+ * Determines whether a duration is relative or not
+ *
+ * @param {string} duration The duration that will be analyzed
+ * @return {boolean} Whether the duration is relative or not
+ */
+os.time.isRelativeDuration = function(duration) {
+  return os.time.RELATIVE_DURATION_REGEXP.test(duration);
 };

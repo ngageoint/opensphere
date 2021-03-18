@@ -9,6 +9,8 @@ goog.require('os.map');
 goog.require('os.proj');
 goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.DynamicLineStringConverter');
+goog.require('plugin.cesium.sync.DynamicMultiPolygonConverter');
+goog.require('plugin.cesium.sync.DynamicPolygonConverter');
 goog.require('plugin.cesium.sync.EllipseConverter');
 goog.require('plugin.cesium.sync.GeometryCollectionConverter');
 goog.require('plugin.cesium.sync.LabelConverter');
@@ -40,6 +42,8 @@ describe('plugin.cesium.sync.converter', () => {
   const PointConverter = goog.module.get('plugin.cesium.sync.PointConverter');
   const PolygonConverter = goog.module.get('plugin.cesium.sync.PolygonConverter');
   const VectorContext = goog.module.get('plugin.cesium.VectorContext');
+  const DynamicPolygonConverter = goog.module.get('plugin.cesium.sync.DynamicPolygonConverter');
+  const DynamicMultiPolygonConverter = goog.module.get('plugin.cesium.sync.DynamicMultiPolygonConverter');
 
   let feature;
   let geometry;
@@ -112,9 +116,9 @@ describe('plugin.cesium.sync.converter', () => {
         [GeometryType.LINE_STRING]: DynamicLineStringConverter,
         [GeometryType.MULTI_LINE_STRING]: MultiDynamicLineStringConverter,
         [GeometryType.MULTI_POINT]: MultiPointConverter,
-        [GeometryType.MULTI_POLYGON]: MultiPolygonConverter,
+        [GeometryType.MULTI_POLYGON]: DynamicMultiPolygonConverter,
         [GeometryType.POINT]: PointConverter,
-        [GeometryType.POLYGON]: PolygonConverter
+        [GeometryType.POLYGON]: DynamicPolygonConverter
       });
     });
 
