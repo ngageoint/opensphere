@@ -4,7 +4,6 @@ goog.module.declareLegacyNamespace();
 const FileParserConfig = goog.require('os.parse.FileParserConfig');
 const Module = goog.require('os.ui.Module');
 const ImportManager = goog.require('os.ui.im.ImportManager');
-const ProviderImportLoadEventType = goog.require('os.ui.ProviderImportLoadEventType');
 const {ROOT} = goog.require('os');
 const osWindow = goog.require('os.ui.window');
 const WindowEventType = goog.require('os.ui.WindowEventType');
@@ -80,8 +79,6 @@ class Controller {
     this.items = Object.values(ImportManager.getInstance().getServerTypes() || []);
 
     $scope.$emit(WindowEventType.READY);
-    $scope.$on(ProviderImportLoadEventType.start, this.onFormLoadingStatusChange_.bind(this));
-    $scope.$on(ProviderImportLoadEventType.stop, this.onFormLoadingStatusChange_.bind(this));
   }
 
   /**
@@ -134,35 +131,6 @@ class Controller {
   close() {
     if (this.element_) {
       osWindow.close(this.element_);
-    }
-  }
-
-  /**
-   * Handles loading form.
-   * @param {angular.Scope.Event} event
-   * @param {?string} error
-   * @private
-   */
-  onFormLoadingStatusChange_(event, error) {
-    switch (event.name) {
-      case ProviderImportLoadEventType.start:
-        this.loading = true;
-        break;
-      case ProviderImportLoadEventType.stop:
-        this.loading = false;
-
-        if (error) {
-          this.scope_['error'] = error;
-        }
-
-        // Scroll to the bottom to show any error messages
-        this.scope_.$applyAsync(() => {
-          const container = this.element_.find('.modal-body');
-          container.animate({'scrollTop': container[0].scrollHeight}, 500);
-        });
-        break;
-      default:
-        break;
     }
   }
 

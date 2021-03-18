@@ -1,14 +1,6 @@
 <div class="c-ogcserver-form flex-fill w-100 d-flex flex-column">
   <div class="modal-body container flex-fill">
-    <div class="text-center" ng-show="testing">
-      <div><i class="fa fa-4x fa-spin fa-smooth fa-spinner"></i></div>
-      <div>Testing...</div>
-    </div>
     <ogcserverform></ogcserverform>
-    <div class="alert alert-danger" ng-if="error">
-      <h5>Error!</h5>
-      <p ng-bind-html="error"></p>
-    </div>
   </div>
   <div class="modal-footer d-flex">
     <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="form.$invalid || testing">

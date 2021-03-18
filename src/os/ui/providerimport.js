@@ -1,5 +1,4 @@
 goog.provide('os.ui.ProviderImportCtrl');
-goog.provide('os.ui.ProviderImportLoadEventType');
 
 goog.require('goog.events.EventType');
 goog.require('goog.string');
@@ -8,15 +7,6 @@ goog.require('os.data');
 goog.require('os.ui.window');
 
 
-
-/**
- * Provider import load event types
- * @enum {string}
- */
-os.ui.ProviderImportLoadEventType = {
-  'start': 'startedLoadingForm',
-  'stop': 'stoppedLoadingForm'
-};
 
 /**
  * Controller for the provider import UI
@@ -90,7 +80,6 @@ os.ui.ProviderImportCtrl.prototype.initialize = function() {
  */
 os.ui.ProviderImportCtrl.prototype.accept = function() {
   if (!this.scope['form']['$invalid'] && !this.scope['testing']) {
-    this.scope.$emit(os.ui.ProviderImportLoadEventType.start);
     this.cleanConfig();
 
     if (!this.dp || this.scope['error'] || (this.dp.getEditable() && this.formDiff())) {
@@ -165,8 +154,13 @@ os.ui.ProviderImportCtrl.prototype.onTestFinished = function(event) {
     if (!this.dp.getError()) {
       this.saveAndClose();
     } else {
-      this.scope.$emit(os.ui.ProviderImportLoadEventType.stop, this.scope['error']);
       this.apply();
+
+      // Scroll to the bottom to show any error messages
+      this.scope.$applyAsync(() => {
+        const container = this.element.closest('.modal-body');
+        container.animate({'scrollTop': container[0].scrollHeight}, 500);
+      });
     }
   }
 };
