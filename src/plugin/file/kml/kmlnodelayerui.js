@@ -1092,9 +1092,13 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.isFeatureFillable = function() {
   var features = this.getFeatures();
   var feature = features.length > 0 ? features[0] : null;
   if (feature) {
-    var geometry = feature.getGeometry();
+    let hasPolyGeom = false;
 
-    return os.geo.isGeometryPolygonal(geometry);
+    os.feature.forEachGeometry(feature, (geom) => {
+      hasPolyGeom = os.geo.isGeometryPolygonal(geom, true) || hasPolyGeom;
+    });
+
+    return hasPolyGeom;
   }
 
   return false;
