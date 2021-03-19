@@ -52,7 +52,10 @@ os.ui.ProviderImportCtrl = function($scope, $element) {
 
   this.initialize();
 
-  $scope.$emit(os.ui.WindowEventType.READY);
+  setTimeout(() => {
+    // This event is sent before window content is fully populated, so delay emitting it
+    $scope.$emit(os.ui.WindowEventType.READY);
+  }, 500);
   $scope.$on('accept', this.onAccept_.bind(this));
 };
 
@@ -155,6 +158,7 @@ os.ui.ProviderImportCtrl.prototype.onTestFinished = function(event) {
       this.saveAndClose();
     } else {
       this.apply();
+      this.scope.$emit('error');
 
       // Scroll to the bottom to show any error messages
       this.scope.$applyAsync(() => {

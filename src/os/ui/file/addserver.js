@@ -70,15 +70,16 @@ class Controller {
     /**
      * @type {string}
      */
-    this.serverType = '';
+    this['serverType'] = '';
 
     /**
      * Available server type choices in the UI.
      * @type {Array}
      */
-    this.items = Object.values(ImportManager.getInstance().getServerTypes() || []);
+    this['items'] = Object.values(ImportManager.getInstance().getServerTypes() || []);
 
     $scope.$emit(WindowEventType.READY);
+    $scope.$on('error', this.onError_.bind(this));
   }
 
   /**
@@ -117,10 +118,10 @@ class Controller {
 
   /**
    * Save button handler
-   *
    * @export
    */
   accept() {
+    this.loading = true;
     this.scope_.$broadcast('accept');
   }
 
@@ -135,11 +136,11 @@ class Controller {
   }
 
   /**
-   * Handles server type change.
+   * Error handler
    * @export
    */
-  onServerTypeChange_() {
-    this.scope_['error'] = null;
+  onError_() {
+    this.loading = false;
   }
 }
 
