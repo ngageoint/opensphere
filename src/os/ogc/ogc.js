@@ -97,7 +97,12 @@ os.ogc.WFSTypeConfig;
 os.ogc.getException = function(response, opt_contentType, opt_codes) {
   try {
     // Try to parse the response as XML and determine if it appears to be an OGC exception report.
-    if (response && (!opt_contentType || opt_contentType.indexOf('/xml') != -1)) {
+    //  - Ignore if the content type is not XML
+    //  - Ignore if the response codes contain 200 OK. Geoserver will return a 200 code for exceptions to the /ows
+    //    endpoint, which we should be able to handle and load the server with appropriate parameters.
+    if (response &&
+        (!opt_contentType || opt_contentType.indexOf('/xml') != -1) &&
+        (!opt_codes || opt_codes.some((c) => c === 200))) {
       const strResponse = typeof response === 'string' ? response : os.file.mime.text.getText(response);
       if (strResponse && os.ogc.ERROR_REGEX.test(strResponse)) {
         const doc = goog.dom.xml.loadXml(strResponse);
