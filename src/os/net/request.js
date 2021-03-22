@@ -824,6 +824,8 @@ os.net.Request.prototype.onHandlerError_ = function(opt_event) {
     this.statusCodes_ = [];
   }
 
+  this.statusCodes_.push(this.handler_.getStatusCode());
+
   // Try to get the specific error using the validator(s), otherwise use the response error.
   var contentType = this.responseHeaders_ ? this.responseHeaders_['content-type'] : null;
   var error = this.validateResponse_(/** @type {ArrayBuffer|string} */ (this.response_), contentType);
@@ -835,8 +837,6 @@ os.net.Request.prototype.onHandlerError_ = function(opt_event) {
       errors.forEach(this.addError_, this);
     }
   }
-
-  this.statusCodes_.push(this.handler_.getStatusCode());
 
   if (this.handlers_ && this.handlers_.length && !this.handler_.isHandled()) {
     this.executeHandlers_();
@@ -877,13 +877,13 @@ os.net.Request.prototype.validateResponse_ = function(response, opt_contentType)
   var error = null;
 
   if (this.validator_) {
-    error = this.validator_(response, opt_contentType);
+    error = this.validator_(response, opt_contentType, this.statusCodes_);
   }
 
   if (!error && this.useDefaultValidators_) {
     var validators = os.net.getDefaultValidators();
     for (var i = 0; i < validators.length && !error; i++) {
-      error = validators[i](response, opt_contentType);
+      error = validators[i](response, opt_contentType, this.statusCodes_);
     }
   }
 

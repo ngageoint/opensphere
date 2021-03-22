@@ -41,7 +41,7 @@ os.net.CrossOriginEntry;
 
 
 /**
- * @typedef {function((ArrayBuffer|string), ?string=):?string}
+ * @typedef {function((ArrayBuffer|string), ?string=, Array<number>=):?string}
  */
 os.net.RequestValidator;
 

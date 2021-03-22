@@ -89,11 +89,12 @@ os.ogc.WFSTypeConfig;
 /**
  * A validator function for requests which checks for OGC exceptions
  *
- * @param {ArrayBuffer|string} response
- * @param {?string=} opt_contentType
+ * @param {ArrayBuffer|string} response The response.
+ * @param {?string=} opt_contentType The content type of the response, if available.
+ * @param {Array<number>=} opt_codes Response codes, if available.
  * @return {?string} An error message if one was found, or null if the response is OK
  */
-os.ogc.getException = function(response, opt_contentType) {
+os.ogc.getException = function(response, opt_contentType, opt_codes) {
   try {
     // Try to parse the response as XML and determine if it appears to be an OGC exception report.
     if (response && (!opt_contentType || opt_contentType.indexOf('/xml') != -1)) {
