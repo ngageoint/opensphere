@@ -3,7 +3,9 @@ goog.provide('plugin.arc.ESRIType');
 
 goog.require('os.ui.query.CombinatorCtrl');
 goog.require('plugin.arc.ArcFeatureType');
-goog.require('plugin.arc.ArcLoader');
+
+goog.requireType('plugin.arc.ArcServer');
+goog.requireType('plugin.arc.IArcLoader');
 
 
 /**
@@ -122,16 +124,35 @@ plugin.arc.CONTENT_REGEXP = /ArcGIS REST Services Directory/i;
 
 
 /**
+ * The ArcGIS loader class.
+ * @type {?function(new: plugin.arc.IArcLoader, ...)}
+ */
+plugin.arc.loaderClass_ = null;
+
+
+/**
  * Instantiates and returns a new Arc loader. This
  *
- * @param {os.ui.slick.SlickTreeNode} node
- * @param {string} url
- * @param {plugin.arc.ArcServer} server
- * @return {plugin.arc.ArcLoader}
+ * @param {os.ui.slick.SlickTreeNode} node The root tree node.
+ * @param {string} url The Arc service URL for the node.
+ * @param {plugin.arc.ArcServer} server The Arc server instance.
+ * @return {plugin.arc.IArcLoader}
  */
 plugin.arc.getArcLoader = function(node, url, server) {
-  var loader = new plugin.arc.ArcLoader(node, url, server);
-  return loader;
+  if (plugin.arc.loaderClass_) {
+    return new plugin.arc.loaderClass_(node, url, server);
+  }
+
+  return null;
+};
+
+
+/**
+ * Set the ArcGIS loader class.
+ * @param {?function(new: plugin.arc.IArcLoader, ...)} clazz The class.
+ */
+plugin.arc.setLoaderClass = function(clazz) {
+  plugin.arc.loaderClass_ = clazz;
 };
 
 
@@ -189,11 +210,12 @@ plugin.arc.createFeatureType = function(config) {
 /**
  * A validator function for requests which checks for ArcGIS errors
  *
- * @param {ArrayBuffer|string} response
- * @param {?string=} opt_contentType
+ * @param {ArrayBuffer|string} response The response.
+ * @param {?string=} opt_contentType The content type of the response, if available.
+ * @param {Array<number>=} opt_codes Response codes, if available.
  * @return {?string} An error message if one was found, or null if the response is OK
  */
-plugin.arc.getException = function(response, opt_contentType) {
+plugin.arc.getException = function(response, opt_contentType, opt_codes) {
   try {
     // Try to parse the response as HTML and determine if the response is an Arc error page.
     if (response && (!opt_contentType || opt_contentType.indexOf('text/html') != -1)) {

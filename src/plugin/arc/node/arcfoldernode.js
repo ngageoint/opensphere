@@ -1,6 +1,10 @@
 goog.provide('plugin.arc.node.ArcFolderNode');
+
 goog.require('os.ui.slick.LoadingNode');
 goog.require('os.ui.slick.SlickTreeNode');
+
+goog.requireType('plugin.arc.ArcServer');
+goog.requireType('plugin.arc.IArcLoader');
 
 
 
@@ -21,7 +25,7 @@ plugin.arc.node.ArcFolderNode = function(server) {
   this.server_ = server;
 
   /**
-   * @type {?plugin.arc.ArcLoader}
+   * @type {plugin.arc.IArcLoader}
    * @private
    */
   this.loader_ = null;

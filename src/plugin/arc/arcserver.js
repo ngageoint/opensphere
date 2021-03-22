@@ -7,6 +7,8 @@ goog.require('os.ui.server.AbstractLoadingServer');
 goog.require('os.ui.slick.LoadingNode');
 goog.require('os.ui.slick.SlickTreeNode');
 
+goog.requireType('plugin.arc.IArcLoader');
+
 
 
 /**
@@ -21,7 +23,7 @@ plugin.arc.ArcServer = function() {
   this.providerType = os.ogc.ID;
 
   /**
-   * @type {?plugin.arc.ArcLoader}
+   * @type {plugin.arc.IArcLoader}
    * @private
    */
   this.loader_ = null;

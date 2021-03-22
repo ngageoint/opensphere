@@ -5,6 +5,7 @@ goog.require('os.plugin.AbstractPlugin');
 goog.require('os.state.StateManager');
 goog.require('os.ui.ProviderImportUI');
 goog.require('plugin.arc');
+goog.require('plugin.arc.ArcLoader');
 goog.require('plugin.arc.ArcServer');
 goog.require('plugin.arc.arcImportDirective');
 goog.require('plugin.arc.layer.ArcFeatureLayerConfig');
@@ -53,4 +54,7 @@ plugin.arc.ArcPlugin.prototype.init = function() {
   sm.addSaveFunction(plugin.arc.state.v2.arcstate.save);
 
   os.net.registerDefaultValidator(plugin.arc.getException);
+
+  // Set the class used to load an ArcGIS service/node.
+  plugin.arc.setLoaderClass(plugin.arc.ArcLoader);
 };
