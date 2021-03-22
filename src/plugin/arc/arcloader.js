@@ -386,3 +386,6 @@ plugin.arc.ArcLoader.collapseFolders = function(child, i, arr) {
     grandChildren.forEach(plugin.arc.ArcLoader.collapseFolders);
   }
 };
+
+// Use this as the default class for loading an ArcGIS service/node.
+plugin.arc.setLoaderClass(plugin.arc.ArcLoader);
