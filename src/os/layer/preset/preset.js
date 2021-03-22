@@ -75,6 +75,7 @@ const addDefault = function(presets, opt_layerId, opt_layerFilterKey) {
           default: false,
           published: true
         };
+        defaultPreset_.layerConfig['fillOpacity'] = 0;
 
         goog.dispose(layer);
       }

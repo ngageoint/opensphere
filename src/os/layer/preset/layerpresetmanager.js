@@ -20,6 +20,8 @@ const settings = goog.require('os.config.Settings');
 const olEvents = goog.require('ol.events');
 const osImplements = goog.require('os.implements');
 
+const osState = goog.require('os.state');
+
 const IPresetService = goog.requireType('os.layer.preset.IPresetService');
 const LayerEvent = goog.requireType('os.events.LayerEvent');
 const {EventsKey: OlEventsKey} = goog.requireType('ol');
@@ -100,7 +102,12 @@ class LayerPresetManager extends Disposable {
     if (layer) {
       const layerId = layer.getId();
       if (layerId) {
-        this.getPresets(layerId, true);
+        const promise = this.getPresets(layerId);
+        if (!osState.isStateFile(layerId) && promise) {
+          promise.then((presets) => {
+            this.applyDefaults(layerId, presets);
+          });
+        }
       }
     }
   }
