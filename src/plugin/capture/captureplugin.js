@@ -1,3 +1,4 @@
+goog.provide('plugin.capture');
 goog.provide('plugin.capture.CapturePlugin');
 
 goog.require('goog.Promise');
