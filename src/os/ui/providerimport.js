@@ -55,7 +55,7 @@ os.ui.ProviderImportCtrl = function($scope, $element) {
   setTimeout(() => {
     // This event is sent before window content is fully populated, so delay emitting it
     $scope.$emit(os.ui.WindowEventType.READY);
-  }, 500);
+  }, 0);
   $scope.$on('accept', this.onAccept_.bind(this));
 };
 
@@ -73,6 +73,16 @@ os.ui.ProviderImportCtrl.prototype.$onDestroy = function() {
  */
 os.ui.ProviderImportCtrl.prototype.initialize = function() {
   this.scope['edit'] = this.dp ? this.dp.getEditable() : true;
+};
+
+
+/**
+ * Set testing state.
+ * @param {boolean} value
+ */
+os.ui.ProviderImportCtrl.prototype.setTesting = function(value) {
+  this.scope['testing'] = value;
+  this.scope.$emit('testing', value);
 };
 
 
@@ -128,7 +138,7 @@ os.ui.ProviderImportCtrl.prototype.apply = function() {
  * @protected
  */
 os.ui.ProviderImportCtrl.prototype.test = function() {
-  this.scope['testing'] = true;
+  this.setTesting(true);
   var id = this.dp ? this.dp.getId() : goog.string.getRandomString();
 
   this.dp = this.getDataProvider();
@@ -149,7 +159,7 @@ os.ui.ProviderImportCtrl.prototype.onTestFinished = function(event) {
   if (event.getProperty() == 'loading' && !event.getNewValue()) {
     this.dp.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onTestFinished, false, this);
 
-    this.scope['testing'] = false;
+    this.setTesting(false);
     this.afterTest();
 
     this.scope['error'] = this.dp.getErrorMessage();
@@ -158,7 +168,6 @@ os.ui.ProviderImportCtrl.prototype.onTestFinished = function(event) {
       this.saveAndClose();
     } else {
       this.apply();
-      this.scope.$emit('error');
 
       // Scroll to the bottom to show any error messages
       this.scope.$applyAsync(() => {

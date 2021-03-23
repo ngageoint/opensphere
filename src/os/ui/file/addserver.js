@@ -65,7 +65,7 @@ class Controller {
     /**
      * @type {boolean}
      */
-    this.loading = false;
+    this['loading'] = false;
 
     /**
      * @type {string}
@@ -79,7 +79,7 @@ class Controller {
     this['items'] = Object.values(ImportManager.getInstance().getServerTypes() || []);
 
     $scope.$emit(WindowEventType.READY);
-    $scope.$on('error', this.onError_.bind(this));
+    $scope.$on('testing', this.onTesting_.bind(this));
   }
 
   /**
@@ -121,7 +121,6 @@ class Controller {
    * @export
    */
   accept() {
-    this.loading = true;
     this.scope_.$broadcast('accept');
   }
 
@@ -136,11 +135,13 @@ class Controller {
   }
 
   /**
-   * Error handler
+   * Testing status change handler
+   * @param {angular.Scope.Event} event
+   * @param {boolean} value
    * @export
    */
-  onError_() {
-    this.loading = false;
+  onTesting_(event, value) {
+    this['loading'] = !!value;
   }
 }
 
