@@ -473,7 +473,8 @@ Cesium.NearFarScalar = function(near, nearValue, far, farValue) {};
  * @typedef {{
  *   blendOption: (Cesium.BlendOption|undefined),
  *   debugShowBoundingVolume: (boolean|undefined),
- *   scene: (Cesium.Scene|undefined)
+ *   scene: (Cesium.Scene|undefined),
+ *   show: (boolean|undefined)
  * }}
  */
 Cesium.BillboardCollectionOptions;
@@ -538,6 +539,12 @@ Cesium.BillboardCollection.prototype.length;
  * @param {Cesium.Billboard} what .
  */
 Cesium.BillboardCollection.prototype.remove = function(what) {};
+
+
+/**
+ * @type {boolean} .
+ */
+Cesium.BillboardCollection.prototype.show;
 
 
 /**
@@ -1733,6 +1740,12 @@ Cesium.PolylineCollection.prototype.remove = function(polyline) {};
 Cesium.PolylineCollection.prototype.removeAll = function() {};
 
 
+/**
+ * @type {boolean}
+ */
+Cesium.PolylineCollection.prototype.show;
+
+
 
 /**
  * @constructor
@@ -2203,6 +2216,12 @@ Cesium.LabelCollection.prototype.removeAll = function() {};
  * @type {Cesium.Matrix4}
  */
 Cesium.LabelCollection.prototype.modelMatrix;
+
+
+/**
+ * @type {boolean}
+ */
+Cesium.LabelCollection.prototype.show;
 
 
 
@@ -2814,6 +2833,12 @@ Cesium.PrimitiveCollection.prototype.destroyPrimitives;
  * @type {number}
  */
 Cesium.PrimitiveCollection.prototype.length;
+
+
+/**
+ * @type {boolean}
+ */
+Cesium.PrimitiveCollection.prototype.show;
 
 
 
