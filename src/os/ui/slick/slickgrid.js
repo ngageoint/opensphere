@@ -21,6 +21,7 @@ goog.require('os.string');
 goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.ResizeEventType');
+goog.require('os.ui.column');
 goog.require('os.ui.column.columnManagerDirective');
 goog.require('os.ui.globalMenuDirective');
 goog.require('os.ui.menu.IMenuSupplier');
