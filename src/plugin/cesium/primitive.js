@@ -231,11 +231,9 @@ export const isPrimitiveShown = function(primitive) {
     return primitive.length > 0 ? isPrimitiveShown(primitive[0]) : true;
   } else if (primitive.show != null) {
     return primitive.show;
-  } else if (primitive.length != null) {
-    return primitive.length > 0 ? isPrimitiveShown(primitive.get(0)) : true;
   }
 
-  return !!primitive.show;
+  return false;
 };
 
 /**
@@ -250,10 +248,6 @@ export const setPrimitiveShown = function(primitive, show) {
       }
     } else if (primitive.show != null) {
       primitive.show = show;
-    } else if (primitive.length) {
-      for (let i = 0, n = primitive.length; i < n; i++) {
-        setPrimitiveShown(primitive.get(i), show);
-      }
     }
   }
 };

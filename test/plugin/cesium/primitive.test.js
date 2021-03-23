@@ -352,7 +352,7 @@ describe('plugin.cesium.primitive', () => {
       });
     });
 
-    it('should get the shown value of the first item for collections', () => {
+    it('should get the shown value of collections', () => {
       const billboardCollection = new Cesium.BillboardCollection();
       const polylineCollection = new Cesium.PolylineCollection();
 
@@ -366,6 +366,9 @@ describe('plugin.cesium.primitive', () => {
 
       const collections = [billboardCollection, polylineCollection];
       collections.forEach((collection) => {
+        expect(isPrimitiveShown(collection)).toBe(true);
+
+        collection.show = false;
         expect(isPrimitiveShown(collection)).toBe(false);
       });
     });
@@ -397,7 +400,7 @@ describe('plugin.cesium.primitive', () => {
       expect(isPrimitiveShown(genericPrimitives)).toBe(true);
     });
 
-    it('should set the shown value of all items in collections', () => {
+    it('should set the shown value of collections', () => {
       const billboardCollection = new Cesium.BillboardCollection();
       const billboard1 = primitiveUtils.createBillboard([0, 0, 0]);
       const billboard2 = primitiveUtils.createBillboard([1, 1, 1]);
@@ -413,10 +416,13 @@ describe('plugin.cesium.primitive', () => {
       const collections = [billboardCollection, polylineCollection];
       collections.forEach((collection) => {
         setPrimitiveShown(collection, false);
+        expect(isPrimitiveShown(collection)).toBe(false);
         for (let i = 0, n = collection.length; i < n; i++) {
-          expect(isPrimitiveShown(collection.get(i))).toBe(false);
+          expect(isPrimitiveShown(collection.get(i))).toBe(true);
         }
+
         setPrimitiveShown(collection, true);
+        expect(isPrimitiveShown(collection)).toBe(true);
         for (let i = 0, n = collection.length; i < n; i++) {
           expect(isPrimitiveShown(collection.get(i))).toBe(true);
         }
