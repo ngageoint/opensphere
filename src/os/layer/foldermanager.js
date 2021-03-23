@@ -6,6 +6,9 @@ const Settings = goog.require('os.config.Settings');
 const MapContainer = goog.require('os.MapContainer');
 const {FolderEventType, SettingsKey} = goog.require('os.layer.folder');
 const {remove} = goog.require('goog.array');
+const log = goog.require('goog.log');
+
+const Logger = goog.requireType('goog.log.Logger');
 
 
 /**
@@ -13,6 +16,13 @@ const {remove} = goog.require('goog.array');
  * @type {FolderManager}
  */
 let instance;
+
+
+/**
+ * Logger for the manager.
+ * @type {Logger}
+ */
+const logger = log.getLogger('os.layer.FolderManager');
 
 
 /**
@@ -70,11 +80,30 @@ class FolderManager extends EventTarget {
    * @param {osx.layer.FolderOptions} options The folder options
    */
   createFolder(options) {
+    if (this.getItem(options.id)) {
+      // don't allow creation of a duplicate folder ID
+      log.warning(logger, `Skipping folder creation with duplicate ID: ${options.id}.
+          Details: ${JSON.stringify(options)}`);
+      return;
+    }
+
     const parentFolder = this.getItem(options.parentId);
+    let index;
+
     if (parentFolder) {
-      parentFolder.children.push(options);
+      index = parentFolder.children.indexOf(options.children[0]);
+      if (index > -1) {
+        parentFolder.children.splice(1, 0, options);
+      } else {
+        parentFolder.children.push(options);
+      }
     } else {
-      this.items.push(options);
+      index = this.items.indexOf(options.children[0]);
+      if (index > -1) {
+        this.items.splice(index, 0, options);
+      } else {
+        this.items.push(options);
+      }
     }
 
     options.children.forEach((child) => {
@@ -97,26 +126,18 @@ class FolderManager extends EventTarget {
    */
   removeFolder(id) {
     const folder = this.getItem(id);
-    let removed = false;
 
     if (folder) {
       // check if it has a parent, if so, remove it from there
       const parent = this.getItem(folder.parentId);
-      if (parent) {
-        const children = parent.children;
-        if (children) {
-          removed = remove(children, folder);
+      const array = parent ? parent.children : this.items;
+      const currentIndex = array.indexOf(folder);
 
-          if (folder.children) {
-            parent.children.push(...folder.children);
-          }
-        }
-      } else {
-        removed = remove(this.items, folder);
-      }
-    }
+      // remove the folder, and insert any children it has where it in its containing array
+      folder.children.forEach((child) => child.parentId = parent ? parent.id : '');
+      array.splice(currentIndex, 1, ...folder.children);
 
-    if (removed) {
+      // update from the map and notify listeners
       this.mergeFromMap_();
       this.dispatchEvent(FolderEventType.FOLDER_REMOVED);
       this.persist();
@@ -124,7 +145,7 @@ class FolderManager extends EventTarget {
   }
 
   /**
-   * Gets the folders.
+   * Gets the foldered items.
    * @return {Array<osx.layer.FolderOptions>}
    */
   getItems() {
@@ -160,42 +181,66 @@ class FolderManager extends EventTarget {
   }
 
   /**
-   * Moves an item before or after another item. This handles reparenting and ordering.
-   * @param {string} id
-   * @param {string} otherId
-   * @param {boolean=} opt_after True if id comes after otherId, False for id before otherId. Defaults to false
+   * Gets the parent folder to an item.
+   * @param {?string} id The folder ID to find.
+   * @return {?(osx.layer.FolderOptions|Array<osx.layer.FolderOptions>)}
    */
-  move(id, otherId, opt_after) {
-    if (id === otherId) {
+  getParent(id) {
+    const item = this.getItem(id);
+    let parent = null;
+
+    if (item) {
+      parent = this.getItem(item.parentId) || this.items;
+    }
+
+    return parent;
+  }
+
+  /**
+   * Moves an item before or after another item. This handles reparenting and ordering.
+   * @param {string} id The ID of the item to move.
+   * @param {string} targetId The ID of the target item.
+   * @param {boolean=} opt_after True if the item should be moved after the target item.
+   */
+  move(id, targetId, opt_after) {
+    if (id === targetId) {
       return;
     }
 
-    const otherItem = this.getItem(otherId);
-    const otherParent = this.getItem(otherItem.parentId);
-    const list = otherParent ? otherParent.children : this.items;
+    // find the item we're moving and the list it's in
+    const item = this.getItem(id);
+    const itemParent = this.getItem(item.parentId);
+    const list = itemParent && itemParent.type == 'folder' ? itemParent.children : this.items;
+    const index = list.indexOf(item);
 
-    let index = -1;
-    let otherIndex = -1;
+    // find the target item and a) its children if it's a folder or b) the array it is in
+    const targetItem = this.getItem(targetId);
+    let targetParent;
+    let targetList;
+    let targetIndex;
 
-    for (let i = 0, n = list.length; i < n; i++) {
-      if (list[i].id == id) {
-        index = i;
+    if (targetItem && targetItem.type === 'folder') {
+      // dropped directly on a folder, so use its children and put the item in the 0th position
+      targetParent = targetItem;
+      targetList = targetItem.children;
+      targetIndex = 0;
+    } else {
+      // locate the correct parent list and target index
+      targetParent = this.getItem(targetItem.parentId);
+      targetList = targetParent && targetParent.type == 'folder' ? targetParent.children : this.items;
+      targetIndex = targetList.indexOf(targetItem);
+    }
+
+    if (index > -1 && targetIndex > -1) {
+      list.splice(index, 1);
+      item.parentId = targetParent ? targetParent.id : '';
+
+      if (list === targetList && index < targetIndex) {
+        // shift the target index back by one if the item was removed from in front of the target
+        targetIndex--;
       }
 
-      if (list[i].id == otherId) {
-        otherIndex = i;
-      }
-
-      if (index > -1 && otherIndex > -1) {
-        const item = list.splice(index, 1)[0];
-
-        if (index < otherIndex) {
-          otherIndex--;
-        }
-
-        list.splice(otherIndex + (opt_after ? 1 : 0), 0, item);
-        break;
-      }
+      targetList.splice(targetIndex + (opt_after ? 1 : 0), 0, item);
     }
   }
 
@@ -244,7 +289,6 @@ class FolderManager extends EventTarget {
 
   /**
    * Saves the folders to settings.
-   * @protected
    */
   persist() {
     Settings.getInstance().set(SettingsKey.FOLDERS, this.items);
@@ -252,7 +296,6 @@ class FolderManager extends EventTarget {
 
   /**
    * Restores the settings.
-   * @protected
    */
   restore() {
     this.items = /** @type {Array<osx.layer.FolderOptions>} */ (Settings.getInstance().get(SettingsKey.FOLDERS, []));

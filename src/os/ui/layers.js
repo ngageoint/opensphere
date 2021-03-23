@@ -156,7 +156,7 @@ os.ui.LayersCtrl.VIEWS = {
   'Tag': new os.ui.data.groupby.TagGroupBy(true),
   'Type': new os.data.groupby.LayerTypeGroupBy(),
   'Z-Order': new os.data.groupby.LayerZOrderGroupBy(),
-  'Folder': -1
+  'Folder': null
 };
 
 

@@ -1,3 +1,4 @@
+goog.require('os.MapContainer');
 goog.require('os.data.ZOrder');
 goog.require('os.layer.FolderManager');
 goog.require('os.layer.folder');
@@ -9,28 +10,56 @@ describe('os.layer.FolderManager', () => {
   const FolderManager = goog.module.get('os.layer.FolderManager');
   const Settings = goog.module.get('os.config.Settings');
   const {FolderEventType, SettingsKey} = goog.module.get('os.layer.folder');
-  const ZOrder = goog.module.get('os.data.ZOrder');
+  const MapContainer = goog.module.get('os.MapContainer');
+
   let folder;
   let childFolder;
+  let layer0;
+  let layer1;
+  let childLayer0;
 
   beforeEach(() => {
     // clean up the global instance before each
     FolderManager.getInstance().clear();
 
+    const map = MapContainer.getInstance();
+    map.getLayers().forEach((layer) => map.removeLayer(layer));
+
+    // reset the layer objects
+    layer0 = {
+      id: 'layer0',
+      type: 'layer',
+      parentId: 'folder0'
+    };
+
+    layer1 = {
+      id: 'layer1',
+      type: 'layer',
+      parentId: 'folder0'
+    };
+
+    childLayer0 = {
+      id: 'childLayer0',
+      type: 'layer',
+      parentId: 'childFolder'
+    };
+
     // reset the test folder objects
     folder = {
       id: 'folder0',
+      type: 'folder',
       name: 'My Folder',
       parentId: 'Feature Layers',
-      children: ['layer0', 'layer1'],
+      children: [childFolder, layer0, layer1],
       collapsed: true
     };
 
     childFolder = {
       id: 'childFolder',
+      type: 'folder',
       name: 'My Folder',
       parentId: 'folder0',
-      children: ['childLayer0'],
+      children: [childLayer0],
       collapsed: false
     };
   });
@@ -39,35 +68,66 @@ describe('os.layer.FolderManager', () => {
     const mockFolders = [
       {
         id: 'folder0',
+        type: 'folder',
         name: 'My Folder',
-        parentId: 'Feature Layers',
-        children: ['layer0', 'layer1'],
+        parentId: '',
+        children: [layer0, layer1],
         collapsed: true
+      },
+      {
+        id: 'rootLayer0',
+        type: 'layer',
+        parentId: ''
+      },
+      {
+        id: 'rootLayer1',
+        type: 'layer',
+        parentId: ''
       }
     ];
     Settings.getInstance().set(SettingsKey.FOLDERS, mockFolders);
 
     // create a fresh instance and check that it has the right folders
     const instance = new FolderManager();
-    const folders = instance.getFolders();
+    const items = instance.getItems();
 
-    expect(folders.length).toBe(1);
-    expect(folders[0].id).toBe('folder0');
-    expect(folders[0].name).toBe('My Folder');
-    expect(folders[0].parentId).toBe('Feature Layers');
-    expect(folders[0].children.length).toBe(2);
-    expect(folders[0].children[0]).toBe('layer0');
-    expect(folders[0].children[1]).toBe('layer1');
-    expect(folders[0].collapsed).toBe(true);
+    expect(items.length).toBe(3);
+    expect(items[0].id).toBe('folder0');
+    expect(items[0].type).toBe('folder');
+    expect(items[0].name).toBe('My Folder');
+    expect(items[0].parentId).toBe('');
+    expect(items[0].children.length).toBe(2);
+    expect(items[0].collapsed).toBe(true);
+
+    const testChild0 = items[0].children[0];
+    expect(testChild0.id).toBe('layer0');
+    expect(testChild0.type).toBe('layer');
+    expect(testChild0.parentId).toBe('folder0');
+
+    const testChild1 = items[0].children[1];
+    expect(testChild1.id).toBe('layer1');
+    expect(testChild1.type).toBe('layer');
+    expect(testChild1.parentId).toBe('folder0');
+
+    expect(items[1].id).toBe('rootLayer0');
+    expect(items[1].type).toBe('layer');
+    expect(items[1].parentId).toBe('');
+
+    expect(items[2].id).toBe('rootLayer1');
+    expect(items[2].type).toBe('layer');
+    expect(items[2].parentId).toBe('');
+
+    Settings.getInstance().set(SettingsKey.FOLDERS, undefined);
   });
 
   it('should create and add folders', () => {
     const fm = FolderManager.getInstance();
     fm.createFolder(folder);
 
-    const folders = fm.getFolders();
-    expect(folders.length).toBe(1);
-    expect(folders[0]).toEqual(folder);
+    const items = fm.getItems();
+    expect(items.length).toBe(2);
+    expect(items[0]).toEqual(folder);
+    expect(items[1].id).toBe('draw');
   });
 
   it('should create and add child folders to other folders', () => {
@@ -75,12 +135,23 @@ describe('os.layer.FolderManager', () => {
     fm.createFolder(folder);
     fm.createFolder(childFolder);
 
-    const folders = fm.getFolders();
-    expect(folders.length).toBe(1);
-    expect(folders[0]).toEqual(folder);
+    const items = fm.getItems();
+    expect(items.length).toBe(2);
+    expect(items[0]).toEqual(folder);
 
-    const managedChildFolder = folders[0].children.find((c) => c.id === 'childFolder');
+    const managedChildFolder = fm.getItem('childFolder');
     expect(managedChildFolder).toEqual(childFolder);
+  });
+
+  it('should not allow creation of folders with duplicate IDs', () => {
+    const fm = FolderManager.getInstance();
+    fm.createFolder(folder);
+
+    expect(fm.getItems().length).toBe(2);
+
+    fm.createFolder(folder);
+
+    expect(fm.getItems().length).toBe(2);
   });
 
   it('should remove folders', () => {
@@ -88,26 +159,31 @@ describe('os.layer.FolderManager', () => {
     fm.createFolder(folder);
     fm.removeFolder('folder0');
 
-    expect(fm.getFolders().length).toBe(0);
+    // folder0 has 3 children: 1 folder, and 2 layers, which should now live at the root (+ the drawing layer)
+    expect(fm.getItems().length).toBe(4);
+    expect(fm.getItem('folder0')).toBe(undefined);
+
+    fm.removeFolder('childFolder');
+    expect(fm.getItems().length).toBe(4);
+    expect(fm.getItem('childFolder')).toBe(undefined);
   });
 
   it('should remove folders that are children of other folders', () => {
     const fm = FolderManager.getInstance();
     fm.createFolder(folder);
-    fm.createFolder(childFolder);
     fm.removeFolder('childFolder');
 
-    const folders = fm.getFolders();
-    expect(folders.length).toBe(1);
-    expect(folders[0]).toEqual(folder);
-    expect(folders[0].children.includes(childFolder)).toBe(false);
+    const items = fm.getItems();
+    expect(items.length).toBe(2);
+    expect(items[0]).toEqual(folder);
+    expect(items[0].children.includes(childFolder)).toBe(false);
   });
 
   it('should get folders by ID', () => {
     const fm = FolderManager.getInstance();
     fm.createFolder(folder);
 
-    const result = fm.getFolder('folder0');
+    const result = fm.getItem('folder0');
     expect(result).toEqual(folder);
   });
 
@@ -116,7 +192,7 @@ describe('os.layer.FolderManager', () => {
     fm.createFolder(folder);
     fm.createFolder(childFolder);
 
-    const result = fm.getFolder('childFolder');
+    const result = fm.getItem('childFolder');
     expect(result).toEqual(childFolder);
   });
 
@@ -132,56 +208,6 @@ describe('os.layer.FolderManager', () => {
 
     expect(calledOptions.defaultValue).toBe('New Folder');
     expect(calledOptions.windowOptions.label).toBe('Add Folder');
-  });
-
-  it('should sort from z-order', () => {
-    const fm = FolderManager.getInstance();
-    const zMap = {
-      'layer0': 1,
-      'layer1': 2,
-      'layer2': 3,
-      'layer3': 4,
-      'layer4': 5,
-      'layer5': 6,
-      'layer6': 7,
-      'layer7': 8
-    };
-    spyOn(ZOrder.getInstance(), 'getIndex').andCallFake((id) => {
-      return zMap[id];
-    });
-
-    // setup a folder with a child to apply the z-order sort to
-    const zChildFolder = {
-      id: 'zChildFolder',
-      name: 'Z Child Folder Test',
-      parentId: 'zFolder',
-      children: ['layer3', 'layer4', 'layer2', 'layer6'],
-      collapsed: true
-    };
-    const zFolder = {
-      id: 'zFolder',
-      name: 'Z Folder Test',
-      parentId: 'Feature Layers',
-      children: [zChildFolder, 'layer1', 'layer0', 'layer5', 'layer7'],
-      collapsed: true
-    };
-
-    // add the root folder and check the sort
-    fm.createFolder(zFolder);
-
-    // the ZOrder class sorts descending, so the number order will be reversed
-    const sortedFolder = fm.getFolder('zFolder');
-    expect(sortedFolder.children[0]).toBe(zChildFolder);
-    expect(sortedFolder.children[1]).toBe('layer7');
-    expect(sortedFolder.children[2]).toBe('layer5');
-    expect(sortedFolder.children[3]).toBe('layer1');
-    expect(sortedFolder.children[4]).toBe('layer0');
-
-    const sortedChildFolder = fm.getFolder('zChildFolder');
-    expect(sortedChildFolder.children[0]).toBe('layer6');
-    expect(sortedChildFolder.children[1]).toBe('layer4');
-    expect(sortedChildFolder.children[2]).toBe('layer3');
-    expect(sortedChildFolder.children[3]).toBe('layer2');
   });
 
   it('should fire change events', () => {

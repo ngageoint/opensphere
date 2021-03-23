@@ -6,6 +6,7 @@ goog.require('os.data.ZOrder');
 goog.require('os.layer');
 goog.require('os.layer.FolderManager');
 goog.require('os.layer.LayerGroup');
+goog.require('os.structs.ITreeNode');
 goog.require('os.ui.Module');
 goog.require('os.ui.slick.SlickTreeCtrl');
 goog.require('os.ui.slick.slickTreeDirective');
@@ -18,7 +19,8 @@ goog.require('os.ui.slick.slickTreeDirective');
  */
 os.ui.layerTreeDirective = function() {
   var dir = os.ui.slick.slickTreeDirective();
-  dir['controller'] = os.ui.LayerTreeCtrl;
+  dir.controller = os.ui.LayerTreeCtrl;
+  dir.scope['groupBy'] = '=';
   return dir;
 };
 
@@ -108,13 +110,16 @@ os.ui.LayerTreeCtrl.prototype.canDragMove = function(rows, insertBefore) {
     return false;
   }
 
-  if (nodeToMove instanceof os.data.FolderNode) {
-    // folders can always be dragged
-    return true;
-  } else if (nodeToMove instanceof os.data.LayerNode) {
+  var hasFolderOrLayer = rows.some((row) => {
+    var node = /** @type {os.ui.slick.SlickTreeNode} */ (this.dataView.getItem(row));
+    return node instanceof os.data.FolderNode || node instanceof os.data.LayerNode;
+  });
+
+  if (hasFolderOrLayer) {
     // Layer Node Drag Rules:
     // 1. Layers can only remain within their z-order group.
     // 2. Layers can be reparented to valid folders.
+    // 3. Folders cannot be their own parents.
 
     for (var i = 0, n = rows.length; i < n; i++) {
       // no point in moving before or after itself
@@ -126,18 +131,41 @@ os.ui.LayerTreeCtrl.prototype.canDragMove = function(rows, insertBefore) {
       beforeItem = /** @type {os.ui.slick.SlickTreeNode} */ (this.grid.getDataItem(insertBefore));
 
       if (item instanceof os.data.FolderNode) {
-        return true;
+        // check if this action would reparent the folder to itself (circular parentages aren't allowed)
+        var value = false;
+
+        /**
+         * @param {os.structs.ITreeNode} node
+         */
+        var isSelfParent = (node) => {
+          value = item === node;
+          if (!value) {
+            var parent = node.getParent();
+            if (parent) {
+              isSelfParent(parent);
+            }
+          }
+        };
+
+        isSelfParent(beforeItem);
+
+        return !value;
       }
 
       if (!beforeItem) {
         return false;
       }
 
-      // cannot be dragged to a different Z-Order group
-      var z = os.data.ZOrder.getInstance();
-      var differentZ = z.getZType(item.getId()) !== z.getZType(beforeItem.getId());
-      if (differentZ && item instanceof os.data.LayerNode && beforeItem instanceof os.data.LayerNode) {
-        // return false;
+      if (this.scope['groupBy']) {
+        // layers cannot be dragged to a different Z-Order group
+        var z = os.data.ZOrder.getInstance();
+        var differentZ = z.getZType(item.getId()) !== z.getZType(beforeItem.getId());
+        if (differentZ && item instanceof os.data.LayerNode && beforeItem instanceof os.data.LayerNode) {
+          return false;
+        }
+      } else {
+        // we are only working with folders
+        return true;
       }
     }
   } else {
@@ -193,11 +221,7 @@ os.ui.LayerTreeCtrl.prototype.doMove = function(rows, insertBefore) {
       if (targetNode instanceof os.data.LayerNode) {
         targetIds = [layer.getId()];
       } else if (targetNode instanceof os.data.FolderNode) {
-        var children = targetNode.getChildren();
-        if (children) {
-          targetIds = children.map((child) => child instanceof os.data.LayerNode ? child.getLayer().getId() : null)
-              .filter(os.fn.filterFalsey);
-        }
+        targetIds = [targetNode.getId()];
       } else if (layer instanceof os.layer.LayerGroup) {
         targetIds = /** @type {os.layer.LayerGroup} */ (layer).getLayers().map(os.layer.mapLayersToIds);
       }
@@ -211,24 +235,23 @@ os.ui.LayerTreeCtrl.prototype.doMove = function(rows, insertBefore) {
           if (moveNode instanceof os.data.LayerNode) {
             layer = moveNode.getLayer();
             moveIds = [layer.getId()];
-          } else {
-            // move all of the folder's children in the z-order
-            var children = moveNode.getChildren();
-            if (children) {
-              moveIds = children.map((child) => child.getLayer().getId());
-            }
-          }
-
-          if (layer instanceof os.layer.LayerGroup) {
+          } else if (moveNode instanceof os.data.FolderNode) {
+            moveIds = [moveNode.getId()];
+          } else if (layer instanceof os.layer.LayerGroup) {
             // move all the layer group's children in the z-order
             moveIds = /** @type {os.layer.LayerGroup} */ (layer).getLayers().map(os.layer.mapLayersToIds);
           }
 
           for (var j = 0, m = moveIds.length; j < m; j++) {
             for (var k = 0, l = targetIds.length; k < l; k++) {
-              // use !after since the tree is sorted by descending z-index
-              z.move(moveIds[j], targetIds[k], !after);
-              fm.move(moveIds[j], targetIds[k], after);
+              if (this.scope['groupBy']) {
+                // use !after since the tree is sorted by descending z-index
+                z.move(moveIds[j], targetIds[k], !after);
+              } else {
+                // update the folder manager
+                fm.move(moveIds[j], targetIds[k], after);
+                fm.persist();
+              }
             }
           }
         }
@@ -236,7 +259,6 @@ os.ui.LayerTreeCtrl.prototype.doMove = function(rows, insertBefore) {
 
       z.update();
       z.save();
-      fm.persist();
     }
   } else if (nodeToMove.supportsInternalDrag()) {
     // use default tree drag behavior

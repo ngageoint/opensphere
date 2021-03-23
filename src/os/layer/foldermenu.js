@@ -32,6 +32,17 @@ const createFolder = function(event) {
   let layerOptions = [];
 
   if (layers) {
+    let parentItems = fm.getParent(layers[0].getId());
+    parentItems = Array.isArray(parentItems) ? parentItems : parentItems.children;
+
+    // the order of the layers returned from the context depends on the selection order
+    // we want the order to match the view, so sort against the map
+    layers.sort((layerA, layerB) => {
+      const indexA = parentItems.findIndex((item) => item.id === layerA.getId());
+      const indexB = parentItems.findIndex((item) => item.id === layerB.getId());
+
+      return indexA - indexB;
+    });
     layerOptions = layers.map((l) => fm.getItem(l.getId()));
 
     // determine if we need to assign them to a parent
@@ -39,16 +50,16 @@ const createFolder = function(event) {
     if (parent) {
       parentId = parent.getId();
     }
-  }
 
-  fm.createOrEditFolder({
-    id: getRandomString(),
-    type: 'folder',
-    children: layerOptions,
-    name: 'New Folder',
-    parentId: parentId,
-    collapsed: false
-  });
+    fm.createOrEditFolder({
+      id: getRandomString(),
+      type: 'folder',
+      children: layerOptions,
+      name: 'New Folder',
+      parentId: parentId,
+      collapsed: false
+    });
+  }
 };
 
 
