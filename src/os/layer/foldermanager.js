@@ -201,8 +201,9 @@ class FolderManager extends EventTarget {
    * @param {string} id The ID of the item to move.
    * @param {string} targetId The ID of the target item.
    * @param {boolean=} opt_after True if the item should be moved after the target item.
+   * @param {boolean=} opt_sibling True for the case of dropping a node above a target folder.
    */
-  move(id, targetId, opt_after) {
+  move(id, targetId, opt_after = false, opt_sibling = false) {
     if (id === targetId) {
       return;
     }
@@ -220,10 +221,16 @@ class FolderManager extends EventTarget {
     let targetIndex;
 
     if (targetItem && targetItem.type === 'folder') {
-      // dropped directly on a folder, so use its children and put the item in the 0th position
-      targetParent = targetItem;
-      targetList = targetItem.children;
-      targetIndex = 0;
+      if (opt_sibling) {
+        targetParent = this.getItem(targetItem.parentId);
+        targetList = targetParent ? targetParent.children : this.items;
+        targetIndex = targetList.indexOf(targetItem);
+      } else {
+        // dropped directly on a folder, so use its children and put the item in the 0th position
+        targetParent = targetItem;
+        targetList = targetItem.children;
+        targetIndex = 0;
+      }
     } else {
       // locate the correct parent list and target index
       targetParent = this.getItem(targetItem.parentId);

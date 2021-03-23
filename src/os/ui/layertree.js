@@ -248,8 +248,13 @@ os.ui.LayerTreeCtrl.prototype.doMove = function(rows, insertBefore) {
                 // use !after since the tree is sorted by descending z-index
                 z.move(moveIds[j], targetIds[k], !after);
               } else {
+                // This covers the case of dropping a layer into the space above a folder. This case is nasty
+                // because the target ID is the folder in both cases, so we need to know if we're making it a child
+                // to that folder or a sibling to that folder
+                const sibling = this.moveMode != os.ui.slick.SlickTreeNode.MOVE_MODE.REPARENT;
+
                 // update the folder manager
-                fm.move(moveIds[j], targetIds[k], after);
+                fm.move(moveIds[j], targetIds[k], after, sibling);
                 fm.persist();
               }
             }
