@@ -1,12 +1,15 @@
 goog.provide('plugin.ogc.ui.OgcServerImportCtrl');
 goog.provide('plugin.ogc.ui.ogcserverDirective');
+
 goog.require('goog.dom.xml');
 goog.require('os.defines');
 goog.require('os.ui.Module');
 goog.require('os.ui.ProviderImportCtrl');
 goog.require('os.ui.WindowEventType');
 goog.require('os.ui.ogc.OGCServer');
+goog.require('os.ui.singleUrlFormDirective');
 goog.require('os.ui.window');
+goog.require('plugin.ogc.ui.OgcServerHelpUI');
 
 
 /**
@@ -43,6 +46,7 @@ os.ui.Module.directive('ogcserver', [plugin.ogc.ui.ogcserverDirective]);
  */
 plugin.ogc.ui.OgcServerImportCtrl = function($scope, $element) {
   plugin.ogc.ui.OgcServerImportCtrl.base(this, 'constructor', $scope, $element);
+  this['helpUi'] = plugin.ogc.ui.OgcServerHelpUI.directiveTag;
 
   $scope['config']['type'] = 'ogc';
   var file = /** @type {os.file.File} */ ($scope['config']['file']);

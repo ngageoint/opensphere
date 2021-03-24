@@ -38,9 +38,33 @@ os.ui.ProviderImportCtrl = function($scope, $element) {
    */
   this.dp = this.scope['config']['provider'] || null;
 
+  /**
+   * HTML ID for the Format Help windows
+   * @type {string}
+   */
+  this.helpWindowId = 'url-help';
+
+  /**
+   * The help UI for this provider.
+   * @type {string}
+   */
+  this['helpUi'] = null;
+
   this.initialize();
 
-  $scope.$emit(os.ui.WindowEventType.READY);
+  setTimeout(() => {
+    // This event is sent before window content is fully populated, so delay emitting it
+    $scope.$emit(os.ui.WindowEventType.READY);
+  }, 0);
+  $scope.$on('accept', this.onAccept_.bind(this));
+};
+
+
+/**
+ * Angular $onDestroy lifecycle hook.
+ */
+os.ui.ProviderImportCtrl.prototype.$onDestroy = function() {
+  this.closeHelpWindow();
 };
 
 
@@ -49,6 +73,16 @@ os.ui.ProviderImportCtrl = function($scope, $element) {
  */
 os.ui.ProviderImportCtrl.prototype.initialize = function() {
   this.scope['edit'] = this.dp ? this.dp.getEditable() : true;
+};
+
+
+/**
+ * Set testing state.
+ * @param {boolean} value
+ */
+os.ui.ProviderImportCtrl.prototype.setTesting = function(value) {
+  this.scope['testing'] = value;
+  this.scope.$emit('testing', value);
 };
 
 
@@ -104,7 +138,7 @@ os.ui.ProviderImportCtrl.prototype.apply = function() {
  * @protected
  */
 os.ui.ProviderImportCtrl.prototype.test = function() {
-  this.scope['testing'] = true;
+  this.setTesting(true);
   var id = this.dp ? this.dp.getId() : goog.string.getRandomString();
 
   this.dp = this.getDataProvider();
@@ -125,7 +159,7 @@ os.ui.ProviderImportCtrl.prototype.onTestFinished = function(event) {
   if (event.getProperty() == 'loading' && !event.getNewValue()) {
     this.dp.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onTestFinished, false, this);
 
-    this.scope['testing'] = false;
+    this.setTesting(false);
     this.afterTest();
 
     this.scope['error'] = this.dp.getErrorMessage();
@@ -134,7 +168,56 @@ os.ui.ProviderImportCtrl.prototype.onTestFinished = function(event) {
       this.saveAndClose();
     } else {
       this.apply();
+
+      // Scroll to the bottom to show any error messages
+      this.scope.$applyAsync(() => {
+        const container = this.element.closest('.modal-body');
+        container.animate({'scrollTop': container[0].scrollHeight}, 500);
+      });
     }
+  }
+};
+
+
+/**
+ * Accept handler
+ */
+os.ui.ProviderImportCtrl.prototype.onAccept_ = function() {
+  this.accept();
+};
+
+
+/**
+ * Launches help window
+ * @export
+ */
+os.ui.ProviderImportCtrl.prototype.launchHelp = function() {
+  if (!os.ui.window.exists(this.helpWindowId) && this['helpUi']) {
+    os.ui.window.create({
+      'label': 'URL Format Help',
+      'icon': 'fa fa-question-circle',
+      'x': '-10',
+      'y': 'center',
+      'width': '550',
+      'height': '500',
+      'show-close': true,
+      'modal': true,
+      'id': this.helpWindowId
+    }, this['helpUi']);
+  } else {
+    this.closeHelpWindow();
+  }
+};
+
+
+/**
+ * Launches help window
+ * @export
+ */
+os.ui.ProviderImportCtrl.prototype.closeHelpWindow = function() {
+  const helpWindow = os.ui.window.getById(this.helpWindowId);
+  if (helpWindow) {
+    os.ui.window.close(helpWindow);
   }
 };
 
