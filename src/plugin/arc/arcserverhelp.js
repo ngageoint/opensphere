@@ -1,23 +1,20 @@
 goog.module('plugin.arc.ArcServerHelpUI');
 goog.module.declareLegacyNamespace();
 
+const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
-const osWindow = goog.require('os.ui.window');
+const {directive: baseDirective} = goog.require('os.ui.window.BaseWindowUI');
 
 
 /**
- * A dialog with information about custom date/time formats, as implemented by Moment.js.
+ * Provides help adding an ArcGIS server to the application.
  *
  * @return {angular.Directive}
  */
 const directive = () => {
-  return {
-    restrict: 'E',
-    replace: true,
-    templateUrl: os.ROOT + 'views/plugin/arc/arcserverhelp.html',
-    controller: Controller,
-    controllerAs: 'ctrl'
-  };
+  const directive = baseDirective();
+  directive.templateUrl = ROOT + 'views/plugin/arc/arcserverhelp.html';
+  return directive;
 };
 
 
@@ -34,44 +31,7 @@ const directiveTag = 'arcserverhelp';
 Module.directive(directiveTag, [directive]);
 
 
-/**
- * Controller for the addserver directive.
- * @unrestricted
- */
-class Controller {
-  /**
-   * Constructor.
-   * @param {!angular.Scope} $scope
-   * @param {!angular.JQLite} $element
-   * @ngInject
-   */
-  constructor($scope, $element) {
-    /**
-     * @type {?angular.JQLite}
-     * @private
-     */
-    this.element_ = $element;
-  }
-
-  /**
-   * Close the window
-   * @export
-   */
-  close() {
-    osWindow.close(this.element_);
-  }
-
-  /**
-   * Clean up references.
-   */
-  $onDestroy() {
-    this.element_ = null;
-  }
-}
-
-
 exports = {
-  Controller,
   directive,
   directiveTag
 };

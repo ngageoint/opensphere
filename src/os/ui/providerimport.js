@@ -198,8 +198,8 @@ os.ui.ProviderImportCtrl.prototype.launchHelp = function() {
       'icon': 'fa fa-question-circle',
       'x': '-10',
       'y': 'center',
-      'width': '550',
-      'height': '500',
+      'width': '500',
+      'height': 'auto',
       'show-close': true,
       'modal': true,
       'id': this.helpWindowId

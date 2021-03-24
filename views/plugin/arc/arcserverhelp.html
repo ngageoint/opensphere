@@ -1,17 +1,16 @@
 <div id="time-help" class="flex-fill w-100 d-flex flex-column">
   <div class="modal-body container flex-fill">
-    ArcGIS servers can be added in a couple of ways.
+    ArcGIS servers can be added from any level of the ArcGIS REST Services Directory. All supported layers detected under the specified URL will be made available in the application.
+    <br>
     <br>
     To add all layers on the server, use a URL like:
-    <br>
     <br>
     https://example.com/arc/rest/services
     <br>
     <br>
-    To add a single layer, use a URL like:
+    To add a folder or layer, use a URL like:
     <br>
-    <br>
-    https://example.com/arc/rest/services/groupname/layername
+    https://example.com/arc/rest/services/FolderName/LayerName
   </div>
   <div class="modal-footer d-flex">
     <button class="btn btn-primary" ng-click="ctrl.close()">
