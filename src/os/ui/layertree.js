@@ -123,7 +123,8 @@ os.ui.LayerTreeCtrl.prototype.canDragMove = function(rows, insertBefore) {
 
     for (var i = 0, n = rows.length; i < n; i++) {
       // no point in moving before or after itself
-      if (rows[i] == insertBefore || rows[i] == insertBefore - 1) {
+      if (this.moveMode == os.ui.slick.SlickTreeNode.MOVE_MODE.SIBLING &&
+          (rows[i] == insertBefore || rows[i] == insertBefore - 1)) {
         return false;
       }
 
@@ -135,6 +136,7 @@ os.ui.LayerTreeCtrl.prototype.canDragMove = function(rows, insertBefore) {
         var value = false;
 
         /**
+         * Tests if an item is being moved to a place where it would be its own parent, which is not allowed.
          * @param {os.structs.ITreeNode} node
          */
         var isSelfParent = (node) => {
@@ -147,13 +149,11 @@ os.ui.LayerTreeCtrl.prototype.canDragMove = function(rows, insertBefore) {
           }
         };
 
-        isSelfParent(beforeItem);
+        if (beforeItem) {
+          isSelfParent(beforeItem);
+        }
 
         return !value;
-      }
-
-      if (!beforeItem) {
-        return false;
       }
 
       if (this.scope['groupBy']) {
@@ -208,7 +208,7 @@ os.ui.LayerTreeCtrl.prototype.doMove = function(rows, insertBefore) {
     var targetNode = /** @type {(os.data.LayerNode|os.data.FolderNode)} */ (this.grid.getDataItem(insertBefore));
 
     // iterate up the tree to ensure we're dropping onto another layer or a folder
-    while (targetNode && !(targetNode instanceof os.data.LayerNode || targetNode instanceof os.data.FolderNode)) {
+    while (!targetNode) {
       after = true;
       insertBefore--;
       targetNode = /** @type {(os.data.LayerNode|os.data.FolderNode)} */ (this.grid.getDataItem(insertBefore));
@@ -245,6 +245,11 @@ os.ui.LayerTreeCtrl.prototype.doMove = function(rows, insertBefore) {
           if (layer instanceof os.layer.LayerGroup) {
             // move all the layer group's children in the z-order
             moveIds = /** @type {os.layer.LayerGroup} */ (layer).getLayers().map(os.layer.mapLayersToIds);
+          }
+
+          if (!after) {
+            // dropping directly on top of a node should put the result after if its moving down the tree
+            after = this.moveMode == os.ui.slick.SlickTreeNode.MOVE_MODE.REPARENT && insertBefore >= rows[i];
           }
 
           for (var j = 0, m = moveIds.length; j < m; j++) {

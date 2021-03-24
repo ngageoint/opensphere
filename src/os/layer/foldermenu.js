@@ -5,7 +5,6 @@ const FolderManager = goog.require('os.layer.FolderManager');
 const FolderNode = goog.require('os.data.FolderNode');
 const layerMenu = goog.require('os.ui.menu.layer');
 const {FolderEventType, launchRemoveFolder, createOrEditFolder, getFolderMenuEnabled} = goog.require('os.layer.folder');
-const {getLayersFromContext} = goog.require('os.ui.menu.layer');
 const {getRandomString} = goog.require('goog.string');
 
 const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
@@ -21,47 +20,66 @@ let initialized = false;
 
 
 /**
+ * Gets the folder items from the context.
+ * @param {Context} nodes
+ * @return {Array<osx.layer.FolderOptions>}
+ */
+const getItemsFromContext = (nodes) => {
+  const fm = FolderManager.getInstance();
+  let options;
+
+  if (nodes && nodes.length > 0) {
+    // don't allow creating a folder with nodes that live at different depths
+    const depth = nodes[0].depth;
+    const sameDepth = nodes.every((node) => node.depth === depth);
+    if (sameDepth) {
+      options = nodes.map((node) => fm.getItem(node.getId()));
+    }
+  }
+
+  return options || [];
+};
+
+
+/**
  * Creates a folder.
  * @param {MenuEvent<Context>} event
  */
 const createFolder = function(event) {
   const nodes = event.getContext();
-  const layers = getLayersFromContext(nodes);
+  const items = getItemsFromContext(nodes);
   const fm = FolderManager.getInstance();
   let parentId = '';
-  let layerOptions = [];
 
-  if (layers) {
-    let parentItems = fm.getParent(layers[0].getId());
+  if (items && items.length > 0) {
+    let parentItems = fm.getParent(items[0].id);
     parentItems = Array.isArray(parentItems) ? parentItems : parentItems.children;
 
     // the order of the layers returned from the context depends on the selection order
     // we want the order to match the view, so sort against the map
-    layers.sort((layerA, layerB) => {
-      const indexA = parentItems.findIndex((item) => item.id === layerA.getId());
-      const indexB = parentItems.findIndex((item) => item.id === layerB.getId());
-
+    items.sort((itemA, itemB) => {
+      const indexA = parentItems.findIndex((item) => item.id === itemA.id);
+      const indexB = parentItems.findIndex((item) => item.id === itemB.id);
       return indexA - indexB;
     });
-    layerOptions = layers.map((l) => fm.getItem(l.getId()));
 
     // determine if we need to assign them to a parent
     const parent = nodes[0].getParent();
     if (parent) {
       parentId = parent.getId();
     }
-
-    const createOptions = {
-      id: getRandomString(),
-      type: 'folder',
-      children: layerOptions,
-      name: 'New Folder',
-      parentId: parentId,
-      collapsed: false
-    };
-
-    createOrEditFolder(createOptions, onCreateFolder.bind(undefined, createOptions));
   }
+
+  const createOptions = {
+    id: getRandomString(),
+    type: 'folder',
+    children: items,
+    name: 'New Folder',
+    parentId: parentId,
+    collapsed: false
+  };
+
+  createOrEditFolder(createOptions, onCreateFolder.bind(undefined, createOptions));
 };
 
 
@@ -108,9 +126,9 @@ const onUnfolder = (id) => {
 const showCreateFolder = function(context) {
   this.visible = false;
 
-  if (getFolderMenuEnabled() && context && context.length > 0) {
-    var layers = layerMenu.getLayersFromContext(context);
-    this.visible = layers.length == context.length;
+  const items = getItemsFromContext(context);
+  if (items && items.length > 0 || context.length == 0) {
+    this.visible = getFolderMenuEnabled();
   }
 };
 
