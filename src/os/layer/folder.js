@@ -62,9 +62,36 @@ const launchRemoveFolder = (options, callback, opt_removeChildren) => {
 };
 
 
+/**
+ * Flag for keeping track of whether the folder menu items should appear.
+ * @type {boolean}
+ */
+let folderMenuEnabled = true;
+
+
+/**
+ * Set whether the folder menu is enabled.
+ * @param {boolean} value
+ */
+const setFolderMenuEnabled = (value) => {
+  folderMenuEnabled = value;
+};
+
+
+/**
+ * Get whether the folder menu is abled
+ * @return {boolean}
+ */
+const getFolderMenuEnabled = () => {
+  return folderMenuEnabled;
+};
+
+
 exports = {
   FolderEventType,
   MetricKey,
   SettingsKey,
-  launchRemoveFolder
+  launchRemoveFolder,
+  setFolderMenuEnabled,
+  getFolderMenuEnabled
 };

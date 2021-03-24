@@ -160,7 +160,7 @@ os.ui.LayerTreeCtrl.prototype.canDragMove = function(rows, insertBefore) {
         // layers cannot be dragged to a different Z-Order group
         var z = os.data.ZOrder.getInstance();
         var differentZ = z.getZType(item.getId()) !== z.getZType(beforeItem.getId());
-        if (differentZ && item instanceof os.data.LayerNode && beforeItem instanceof os.data.LayerNode) {
+        if (differentZ) {
           return false;
         }
       } else {
@@ -222,7 +222,10 @@ os.ui.LayerTreeCtrl.prototype.doMove = function(rows, insertBefore) {
         targetIds = [layer.getId()];
       } else if (targetNode instanceof os.data.FolderNode) {
         targetIds = [targetNode.getId()];
-      } else if (layer instanceof os.layer.LayerGroup) {
+      }
+
+      if (layer instanceof os.layer.LayerGroup) {
+        // use all of the IDs in the group for the target IDs
         targetIds = /** @type {os.layer.LayerGroup} */ (layer).getLayers().map(os.layer.mapLayersToIds);
       }
 
@@ -230,14 +233,16 @@ os.ui.LayerTreeCtrl.prototype.doMove = function(rows, insertBefore) {
         var moveNode = /** @type {(os.data.LayerNode|os.data.FolderNode)} */ (this.grid.getDataItem(rows[i]));
 
         if (moveNode) {
+          layer = moveNode instanceof os.data.LayerNode ? moveNode.getLayer() : null;
           var moveIds = [];
 
           if (moveNode instanceof os.data.LayerNode) {
-            layer = moveNode.getLayer();
             moveIds = [layer.getId()];
           } else if (moveNode instanceof os.data.FolderNode) {
             moveIds = [moveNode.getId()];
-          } else if (layer instanceof os.layer.LayerGroup) {
+          }
+
+          if (layer instanceof os.layer.LayerGroup) {
             // move all the layer group's children in the z-order
             moveIds = /** @type {os.layer.LayerGroup} */ (layer).getLayers().map(os.layer.mapLayersToIds);
           }

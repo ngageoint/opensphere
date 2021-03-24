@@ -42,7 +42,7 @@ class FolderManager extends EventTarget {
      */
     this.items = [];
 
-    MapContainer.getInstance().listen(os.events.LayerEventType.ADD, this.mergeFromMap_, false, this);
+    MapContainer.getInstance().listen(os.events.LayerEventType.ADD, this.mergeFromMap, false, this);
 
     this.restore();
   }
@@ -51,14 +51,14 @@ class FolderManager extends EventTarget {
    * @inheritDoc
    */
   disposeInternal() {
-    MapContainer.getInstance().unlisten(os.events.LayerEventType.ADD, this.mergeFromMap_, false, this);
+    MapContainer.getInstance().unlisten(os.events.LayerEventType.ADD, this.mergeFromMap, false, this);
   }
 
   /**
    * Merges in any new layers from the map.
-   * @private
+   * @protected
    */
-  mergeFromMap_() {
+  mergeFromMap() {
     const layers = MapContainer.getInstance().getLayers();
 
     for (let j = 0, m = layers.length; j < m; j++) {
@@ -115,7 +115,7 @@ class FolderManager extends EventTarget {
       child.parentId = options.id;
     });
 
-    this.mergeFromMap_();
+    this.mergeFromMap();
     this.dispatchEvent(FolderEventType.FOLDER_CREATED);
     this.persist();
   }
@@ -138,7 +138,7 @@ class FolderManager extends EventTarget {
       array.splice(currentIndex, 1, ...folder.children);
 
       // update from the map and notify listeners
-      this.mergeFromMap_();
+      this.mergeFromMap();
       this.dispatchEvent(FolderEventType.FOLDER_REMOVED);
       this.persist();
     }
@@ -210,44 +210,50 @@ class FolderManager extends EventTarget {
 
     // find the item we're moving and the list it's in
     const item = this.getItem(id);
-    const itemParent = this.getItem(item.parentId);
-    const list = itemParent && itemParent.type == 'folder' ? itemParent.children : this.items;
-    const index = list.indexOf(item);
 
     // find the target item and a) its children if it's a folder or b) the array it is in
     const targetItem = this.getItem(targetId);
-    let targetParent;
-    let targetList;
-    let targetIndex;
 
-    if (targetItem && targetItem.type === 'folder') {
-      if (opt_sibling) {
-        targetParent = this.getItem(targetItem.parentId);
-        targetList = targetParent ? targetParent.children : this.items;
-        targetIndex = targetList.indexOf(targetItem);
+    if (item && targetItem) {
+      const itemParent = this.getItem(item.parentId);
+      const list = itemParent && itemParent.type == 'folder' ? itemParent.children : this.items;
+      const index = list.indexOf(item);
+
+      let targetParent;
+      let targetList;
+      let targetIndex;
+
+      if (targetItem && targetItem.type === 'folder') {
+        if (opt_sibling) {
+          targetParent = this.getItem(targetItem.parentId);
+          targetList = targetParent ? targetParent.children : this.items;
+          targetIndex = targetList.indexOf(targetItem);
+        } else {
+          // dropped directly on a folder, so use its children and put the item in the 0th position
+          targetParent = targetItem;
+          targetList = targetItem.children;
+          targetIndex = 0;
+        }
       } else {
-        // dropped directly on a folder, so use its children and put the item in the 0th position
-        targetParent = targetItem;
-        targetList = targetItem.children;
-        targetIndex = 0;
+        // locate the correct parent list and target index
+        targetParent = this.getItem(targetItem.parentId);
+        targetList = targetParent && targetParent.type == 'folder' ? targetParent.children : this.items;
+        targetIndex = targetList.indexOf(targetItem);
+      }
+
+      if (index > -1 && targetIndex > -1) {
+        list.splice(index, 1);
+        item.parentId = targetParent ? targetParent.id : '';
+
+        if (list === targetList && index < targetIndex) {
+          // shift the target index back by one if the item was removed from in front of the target
+          targetIndex--;
+        }
+
+        targetList.splice(targetIndex + (opt_after ? 1 : 0), 0, item);
       }
     } else {
-      // locate the correct parent list and target index
-      targetParent = this.getItem(targetItem.parentId);
-      targetList = targetParent && targetParent.type == 'folder' ? targetParent.children : this.items;
-      targetIndex = targetList.indexOf(targetItem);
-    }
-
-    if (index > -1 && targetIndex > -1) {
-      list.splice(index, 1);
-      item.parentId = targetParent ? targetParent.id : '';
-
-      if (list === targetList && index < targetIndex) {
-        // shift the target index back by one if the item was removed from in front of the target
-        targetIndex--;
-      }
-
-      targetList.splice(targetIndex + (opt_after ? 1 : 0), 0, item);
+      log.warning(logger, `Failed to move item with ID: ${id} to target item with ID: ${targetId}.`);
     }
   }
 

@@ -4,7 +4,7 @@ goog.module.declareLegacyNamespace();
 const FolderManager = goog.require('os.layer.FolderManager');
 const FolderNode = goog.require('os.data.FolderNode');
 const layerMenu = goog.require('os.ui.menu.layer');
-const {FolderEventType, launchRemoveFolder} = goog.require('os.layer.folder');
+const {FolderEventType, launchRemoveFolder, getFolderMenuEnabled} = goog.require('os.layer.folder');
 const {getLayersFromContext} = goog.require('os.ui.menu.layer');
 const {getRandomString} = goog.require('goog.string');
 
@@ -94,8 +94,8 @@ const onUnfolder = (id) => {
 const showCreateFolder = function(context) {
   this.visible = false;
 
-  if (context && context.length > 0) {
-    var layers = os.ui.menu.layer.getLayersFromContext(context);
+  if (getFolderMenuEnabled() && context && context.length > 0) {
+    var layers = layerMenu.getLayersFromContext(context);
     this.visible = layers.length == context.length;
   }
 };
@@ -109,7 +109,7 @@ const showCreateFolder = function(context) {
 const showUnfolder = function(context) {
   this.visible = false;
 
-  if (context && context.length == 1) {
+  if (getFolderMenuEnabled() && context && context.length == 1) {
     this.visible = context[0] instanceof FolderNode;
   }
 };

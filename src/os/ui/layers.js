@@ -16,6 +16,7 @@ goog.require('os.data.groupby.LayerZOrderGroupBy');
 goog.require('os.defines');
 goog.require('os.events.LayerEventType');
 goog.require('os.layer.FolderManager');
+goog.require('os.layer.folder');
 goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
 goog.require('os.object');
@@ -135,6 +136,8 @@ os.ui.LayersCtrl = function($scope, $element) {
   this.scope['featuresBtnIcon'] = os.ROOT + 'images/features-base.png';
 
   this.init();
+
+  os.layer.folder.setFolderMenuEnabled(!this.scope['view']);
 };
 goog.inherits(os.ui.LayersCtrl, os.ui.slick.AbstractGroupByTreeSearchCtrl);
 
@@ -151,12 +154,12 @@ os.ui.LayersCtrl.SKIP_TOGGLE_FUNCS = [];
  * @type {!Object<string, os.data.groupby.INodeGroupBy>}
  */
 os.ui.LayersCtrl.VIEWS = {
+  'Folder': null,
   'Recently Updated': new os.data.groupby.DateGroupBy(true),
   'Source': new os.data.groupby.LayerProviderGroupBy(),
   'Tag': new os.ui.data.groupby.TagGroupBy(true),
   'Type': new os.data.groupby.LayerTypeGroupBy(),
-  'Z-Order': new os.data.groupby.LayerZOrderGroupBy(),
-  'Folder': null
+  'Z-Order': new os.data.groupby.LayerZOrderGroupBy()
 };
 
 
@@ -196,6 +199,7 @@ os.ui.LayersCtrl.prototype.close = function() {
  */
 os.ui.LayersCtrl.prototype.onGroupByChanged = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.AddData.GROUP_BY, 1);
+  os.layer.folder.setFolderMenuEnabled(!this.scope['view']);
   this.search();
 };
 
