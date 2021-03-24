@@ -6,6 +6,7 @@ goog.require('os.state.StateManager');
 goog.require('os.ui.ProviderImportUI');
 goog.require('plugin.arc');
 goog.require('plugin.arc.ArcImportForm');
+goog.require('plugin.arc.ArcLoader');
 goog.require('plugin.arc.ArcServer');
 goog.require('plugin.arc.ArcServerHelpUI');
 goog.require('plugin.arc.arcImportDirective');
@@ -60,5 +61,9 @@ plugin.arc.ArcPlugin.prototype.init = function() {
   sm.addLoadFunction(plugin.arc.state.v2.arcstate.load);
   sm.addSaveFunction(plugin.arc.state.v2.arcstate.save);
 
+  // Register a default validator to detect Arc server exceptions.
   os.net.registerDefaultValidator(plugin.arc.getException);
+
+  // Set the base class for loading an Arc server.
+  plugin.arc.setLoaderClass(plugin.arc.ArcLoader);
 };
