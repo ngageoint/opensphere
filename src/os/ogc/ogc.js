@@ -102,7 +102,7 @@ os.ogc.getException = function(response, opt_contentType, opt_codes) {
     //    endpoint, which we should be able to handle and load the server with appropriate parameters.
     if (response &&
         (!opt_contentType || opt_contentType.indexOf('/xml') != -1) &&
-        (!opt_codes || opt_codes.some((c) => c === 200))) {
+        (!opt_codes || opt_codes.indexOf(200) === -1)) {
       const strResponse = typeof response === 'string' ? response : os.file.mime.text.getText(response);
       if (strResponse && os.ogc.ERROR_REGEX.test(strResponse)) {
         const doc = goog.dom.xml.loadXml(strResponse);
