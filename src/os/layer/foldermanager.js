@@ -258,41 +258,6 @@ class FolderManager extends EventTarget {
   }
 
   /**
-   * Callback for folder name.
-   * @param {!osx.layer.FolderOptions} options The folder options.
-   * @param {string} name The chosen folder name.
-   * @protected
-   */
-  onFolderName(options, name) {
-    this.removeFolder(options.id);
-    options.name = name;
-    this.createFolder(options);
-  }
-
-  /**
-   * Create or e edit a folder.
-   * @param {osx.layer.FolderOptions} options
-   * @param {string=} opt_parentId
-   */
-  createOrEditFolder(options, opt_parentId) {
-    const existing = this.getItem(options.id);
-    const label = existing ? existing.name : 'New Folder';
-    const winLabel = (existing ? 'Edit' : 'Add') + ' Folder';
-
-    const confirmOptions = /** @type {!osx.window.ConfirmTextOptions} */ ({
-      confirm: this.onFolderName.bind(this, options),
-      defaultValue: label,
-      prompt: 'Please choose a label for the folder:',
-      windowOptions: /** @type {!osx.window.WindowOptions} */ ({
-        icon: 'fa fa-folder',
-        label: winLabel
-      })
-    });
-
-    os.ui.window.launchConfirmText(confirmOptions);
-  }
-
-  /**
    * Clears the manager.
    */
   clear() {

@@ -1,6 +1,8 @@
 goog.module('os.layer.folder');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.window.confirmTextDirective');
+
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 
@@ -63,6 +65,30 @@ const launchRemoveFolder = (options, callback, opt_removeChildren) => {
 
 
 /**
+ * Create or e edit a folder.
+ * @param {osx.layer.FolderOptions} options
+ * @param {Function} callback
+ * @param {boolean=} opt_isEdit
+ */
+const createOrEditFolder = (options, callback, opt_isEdit = false) => {
+  const label = opt_isEdit ? options.name : 'New Folder';
+  const winLabel = (opt_isEdit ? 'Edit' : 'Add') + ' Folder';
+
+  const confirmOptions = /** @type {!osx.window.ConfirmTextOptions} */ ({
+    confirm: callback,
+    defaultValue: label,
+    prompt: 'Please choose a label for the folder:',
+    windowOptions: /** @type {!osx.window.WindowOptions} */ ({
+      icon: 'fa fa-folder',
+      label: winLabel
+    })
+  });
+
+  os.ui.window.launchConfirmText(confirmOptions);
+};
+
+
+/**
  * Flag for keeping track of whether the folder menu items should appear.
  * @type {boolean}
  */
@@ -92,6 +118,7 @@ exports = {
   MetricKey,
   SettingsKey,
   launchRemoveFolder,
+  createOrEditFolder,
   setFolderMenuEnabled,
   getFolderMenuEnabled
 };

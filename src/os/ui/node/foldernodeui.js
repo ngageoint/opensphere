@@ -4,7 +4,7 @@ goog.module.declareLegacyNamespace();
 const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
 const FolderManager = goog.require('os.layer.FolderManager');
 const Module = goog.require('os.ui.Module');
-const {launchRemoveFolder} = goog.require('os.layer.folder');
+const {launchRemoveFolder, createOrEditFolder} = goog.require('os.layer.folder');
 
 const FolderNode = goog.requireType('os.data.FolderNode');
 
@@ -55,15 +55,26 @@ class Controller extends AbstractNodeUICtrl {
   addFolder() {
     var node = /** @type {os.data.FolderNode} */ (this.scope['item']);
     if (node) {
-      const folder = {
+      const options = {
         name: 'New Folder',
         type: 'folder',
         id: goog.string.getRandomString(),
         parentId: node.getId(),
         children: []
       };
-      FolderManager.getInstance().createOrEditFolder(folder);
+
+      createOrEditFolder(options, this.onCreateFolder.bind(this, options));
     }
+  }
+
+  /**
+   * Handles creating a new folder.
+   * @param {!osx.layer.FolderOptions} options The folder options.
+   * @param {string} name The chosen folder name.
+   */
+  onCreateFolder(options, name) {
+    options.name = name;
+    FolderManager.getInstance().createFolder(options);
   }
 
   /**
@@ -98,8 +109,20 @@ class Controller extends AbstractNodeUICtrl {
     var node = /** @type {FolderNode} */ (this.scope['item']);
     if (node) {
       const options = node.getOptions();
-      FolderManager.getInstance().createOrEditFolder(options);
+      createOrEditFolder(options, this.onEditFolder.bind(this, options), true);
     }
+  }
+
+  /**
+   * Handles editing a folder.
+   * @param {osx.layer.FolderOptions} options The folder options.
+   * @param {string} name The chosen folder name.
+   */
+  onEditFolder(options, name) {
+    const fm = FolderManager.getInstance();
+    fm.removeFolder(options.id);
+    options.name = name;
+    fm.createFolder(options);
   }
 }
 

@@ -4,7 +4,7 @@ goog.module.declareLegacyNamespace();
 const FolderManager = goog.require('os.layer.FolderManager');
 const FolderNode = goog.require('os.data.FolderNode');
 const layerMenu = goog.require('os.ui.menu.layer');
-const {FolderEventType, launchRemoveFolder, getFolderMenuEnabled} = goog.require('os.layer.folder');
+const {FolderEventType, launchRemoveFolder, createOrEditFolder, getFolderMenuEnabled} = goog.require('os.layer.folder');
 const {getLayersFromContext} = goog.require('os.ui.menu.layer');
 const {getRandomString} = goog.require('goog.string');
 
@@ -51,15 +51,29 @@ const createFolder = function(event) {
       parentId = parent.getId();
     }
 
-    fm.createOrEditFolder({
+    const createOptions = {
       id: getRandomString(),
       type: 'folder',
       children: layerOptions,
       name: 'New Folder',
       parentId: parentId,
       collapsed: false
-    });
+    };
+
+    createOrEditFolder(createOptions, onCreateFolder.bind(undefined, createOptions));
   }
+};
+
+
+/**
+ * Handle creating a folder.
+ * @param {osx.layer.FolderOptions} createOptions The ID to remove.
+ * @param {string} name The chosen folder name.
+ * @protected
+ */
+const onCreateFolder = (createOptions, name) => {
+  createOptions.name = name;
+  FolderManager.getInstance().createFolder(createOptions);
 };
 
 

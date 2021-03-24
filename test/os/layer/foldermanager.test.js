@@ -6,7 +6,6 @@ goog.require('os.layer.config.MockTileLayerConfig');
 goog.require('os.layer.config.MockVectorLayerConfig');
 goog.require('os.layer.folder');
 goog.require('os.mock');
-goog.require('os.ui.window');
 
 
 describe('os.layer.FolderManager', () => {
@@ -368,20 +367,6 @@ describe('os.layer.FolderManager', () => {
     expect(folder0.children[0].id).toBe('layer0');
     expect(folder0.children[1].id).toBe('moveLayer4');
     expect(folder0.children[2].id).toBe('childFolder');
-  });
-
-  it('should launch the create window UI', () => {
-    let calledOptions;
-    const mockLaunch = (options) => {
-      calledOptions = options;
-    };
-    spyOn(os.ui.window, 'launchConfirmText').andCallFake(mockLaunch);
-
-    const fm = FolderManager.getInstance();
-    fm.createOrEditFolder(folder);
-
-    expect(calledOptions.defaultValue).toBe('New Folder');
-    expect(calledOptions.windowOptions.label).toBe('Add Folder');
   });
 
   it('should fire change events', () => {
