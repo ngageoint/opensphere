@@ -554,6 +554,17 @@ osx.import.FileWrapper;
 
 
 /**
+ * @typedef {{
+ *   type: string,
+ *   helpUi: (string|undefined),
+ *   formUi: string,
+ *   label: string
+ * }}
+ */
+osx.import.ServerType;
+
+
+/**
  * Namespace.
  * @type {Object}
  */

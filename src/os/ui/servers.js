@@ -15,6 +15,7 @@ goog.require('os.metrics');
 goog.require('os.metrics.Metrics');
 goog.require('os.ui');
 goog.require('os.ui.Module');
+goog.require('os.ui.file.AddServer');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportEventType');
 goog.require('os.ui.server.AbstractLoadingServer');
@@ -327,10 +328,7 @@ os.ui.ServersCtrl.prototype.toggleAll = function() {
  * @export
  */
 os.ui.ServersCtrl.prototype.add = function() {
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.Servers.ADD_SERVER, 1);
-  var importProcess = new os.im.ImportProcess();
-  importProcess.setEvent(new os.ui.im.ImportEvent(os.ui.im.ImportEventType.URL));
-  importProcess.begin();
+  os.ui.file.AddServer.launchAddServerWindow();
 };
 
 

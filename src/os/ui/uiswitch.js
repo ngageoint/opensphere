@@ -39,6 +39,7 @@ os.ui.uiSwitchDirective = function() {
       'items': '=',
       'directiveFunction': '=',
       'options': '=?',
+      'scopeUpdateFunction': '=?',
       'generic': '@',
       'alwaysSwitch': '@'
     },
@@ -235,7 +236,10 @@ os.ui.UISwitchCtrl.prototype.update_ = function() {
  * @protected
  */
 os.ui.UISwitchCtrl.prototype.addToScope = function(scope) {
-  // this is really for sub-classes
+  var scopeUpdateFunction = /** @type {function(angular.Scope)} */ (this.scope['scopeUpdateFunction']);
+  if (scopeUpdateFunction) {
+    scopeUpdateFunction(scope);
+  }
 };
 
 

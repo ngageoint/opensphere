@@ -5,7 +5,9 @@ goog.require('os.plugin.AbstractPlugin');
 goog.require('os.state.StateManager');
 goog.require('os.ui.ProviderImportUI');
 goog.require('plugin.arc');
+goog.require('plugin.arc.ArcImportForm');
 goog.require('plugin.arc.ArcServer');
+goog.require('plugin.arc.ArcServerHelpUI');
 goog.require('plugin.arc.arcImportDirective');
 goog.require('plugin.arc.layer.ArcFeatureLayerConfig');
 goog.require('plugin.arc.layer.ArcImageLayerConfig');
@@ -47,6 +49,12 @@ plugin.arc.ArcPlugin.prototype.init = function() {
 
   var im = os.ui.im.ImportManager.getInstance();
   im.registerImportUI(this.id, new os.ui.ProviderImportUI('<arcserver></arcserver>'));
+  im.registerServerType(this.id, {
+    type: 'arc',
+    helpUi: plugin.arc.ArcServerHelpUI.directiveTag,
+    formUi: plugin.arc.ArcImportForm.directiveTag,
+    label: 'ArcGIS Server'
+  });
 
   var sm = os.state.StateManager.getInstance();
   sm.addLoadFunction(plugin.arc.state.v2.arcstate.load);
