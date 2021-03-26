@@ -52,6 +52,13 @@ os.im.action.ImportActionManager = function() {
   this.actionEntries = {};
 
   /**
+   * The last action entries applied.
+   * @type {!Object<string, !Array<!os.im.action.FilterActionEntry<T>>>}
+   * @protected
+   */
+  this.lastActionEntries = {};
+
+  /**
    * Registered import actions.
    * @type {!Object<string, !os.im.action.IImportAction<T>>}
    * @protected
@@ -367,23 +374,36 @@ os.im.action.ImportActionManager.prototype.processItemsProtected = function(
     opt_unprocess,
     opt_unprocessOnly) {
   if (items && items.length > 0) {
-    var configs = [];
-    var entries = this.actionEntries[entryType];
-    if (entries && entries.length > 0) {
-      for (var i = 0; i < entries.length; i++) {
-        var cfgs = null;
-        if (!opt_unprocessOnly && entries[i].isEnabled()) {
+    const configs = [];
+    const entries = this.actionEntries[entryType];
+    let last = this.lastActionEntries[entryType] || [];
+
+    if ((opt_unprocess || opt_unprocessOnly) && last.length > 0) {
+      let cfgs = null;
+      for (let i = 0; i < last.length; i++) {
+        cfgs = last[i].unprocessItems(items);
+
+        if (cfgs) {
+          configs.push(...cfgs);
+        }
+      }
+      last = [];
+    }
+
+    if (!opt_unprocessOnly && entries && entries.length > 0) {
+      for (let i = 0; i < entries.length; i++) {
+        let cfgs = null;
+        if (entries[i].isEnabled()) {
           cfgs = entries[i].processItems(items);
-        } else if (opt_unprocess || opt_unprocessOnly) {
-          cfgs = entries[i].unprocessItems(items);
+          last.push(entries[i]);
         }
         if (cfgs) {
-          cfgs.forEach((cfg) => {
-            configs.push(cfg);
-          });
+          configs.push(...cfgs);
         }
       }
     }
+
+    this.lastActionEntries[entryType] = last;
     return configs;
   }
 };
