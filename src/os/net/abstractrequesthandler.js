@@ -156,9 +156,6 @@ os.net.AbstractRequestHandler.prototype.getErrorMessage = function(request) {
       case s >= 500:
         msg = 'The remote server experienced an error (' + s + ').';
         break;
-      case s === 400:
-        msg = 'Bad request.';
-        break;
       case s === 401:
         // unauthorized
         msg = 'You do not have proper authorization to perform this action.';

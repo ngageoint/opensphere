@@ -71,19 +71,21 @@ plugin.ogc.OGCPlugin.prototype.init = function() {
   var im = os.ui.im.ImportManager.getInstance();
   im.registerImportUI(os.ogc.ID, new os.ui.ProviderImportUI('<ogcserver></ogcserver>'));
   im.registerServerType(os.ogc.ID, {
-    'type': 'ogc',
-    'helpUi': plugin.ogc.ui.OgcServerHelpUI.directiveTag,
-    'formUi': plugin.ogc.ui.OgcServerImportForm.directiveTag,
-    'label': 'OGC Server'
+    type: 'ogc',
+    helpUi: plugin.ogc.ui.OgcServerHelpUI.directiveTag,
+    formUi: plugin.ogc.ui.OgcServerImportForm.directiveTag,
+    label: 'OGC Server'
   });
   im.registerImportUI(plugin.ogc.mime.GEOSERVER_TYPE,
       new os.ui.ProviderImportUI('<geoserver></geoserver>'));
   im.registerServerType(plugin.ogc.mime.GEOSERVER_TYPE, {
-    'type': 'geoserver',
-    'helpUi': plugin.ogc.ui.GeoServerHelpUI.directiveTag,
-    'formUi': plugin.ogc.ui.GeoserverImportForm.directiveTag,
-    'label': 'GeoServer'
+    type: 'geoserver',
+    helpUi: plugin.ogc.ui.GeoServerHelpUI.directiveTag,
+    formUi: plugin.ogc.ui.GeoserverImportForm.directiveTag,
+    label: 'GeoServer'
   });
+
+  os.net.registerDefaultValidator(os.ogc.getException);
 };
 
 

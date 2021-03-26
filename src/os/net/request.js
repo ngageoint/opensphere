@@ -132,10 +132,17 @@ os.net.Request = function(opt_uri, opt_method, opt_timeout) {
 
   /**
    * The validator function for the response.
-   * @type {?function((ArrayBuffer|string), ?string):?string}
+   * @type {?os.net.RequestValidator}
    * @private
    */
   this.validator_ = null;
+
+  /**
+   * If default validators should be used to detect errors in the response.
+   * @type {boolean}
+   * @private
+   */
+  this.useDefaultValidators_ = false;
 
   /**
    * Type of the handler that completed the request.
@@ -516,7 +523,7 @@ os.net.Request.prototype.setResponseType = function(responseType) {
 
 
 /**
- * @return {?function((ArrayBuffer|string), ?string):?string} The response validator function
+ * @return {?os.net.RequestValidator} The response validator function
  */
 os.net.Request.prototype.getValidator = function() {
   return this.validator_;
@@ -526,10 +533,28 @@ os.net.Request.prototype.getValidator = function() {
 /**
  * Sets the response validator function
  *
- * @param {?function((ArrayBuffer|string)):?string} value The function
+ * @param {?os.net.RequestValidator} value The function
  */
 os.net.Request.prototype.setValidator = function(value) {
   this.validator_ = value;
+};
+
+
+/**
+ * If the request will use default validators on the response.
+ * @return {boolean}
+ */
+os.net.Request.prototype.getUseDefaultValidators = function() {
+  return this.useDefaultValidators_;
+};
+
+
+/**
+ * Set if the request will use default validators on the response.
+ * @param {boolean} value The value.
+ */
+os.net.Request.prototype.setUseDefaultValidators = function(value) {
+  this.useDefaultValidators_ = value;
 };
 
 
@@ -752,11 +777,12 @@ os.net.Request.prototype.onHandlerComplete_ = function(opt_event) {
   }
   this.statusCodes_.push(this.handler_.getStatusCode());
 
-  if (this.response_ && this.validator_) {
-    var error = this.validator_(/** @type {ArrayBuffer|string} */ (this.response_),
-        this.responseHeaders_['Content-Type']);
-
-    this.addError_(error);
+  if (this.response_) {
+    var contentType = this.responseHeaders_ ? this.responseHeaders_['content-type'] : undefined;
+    var error = this.validateResponse_(/** @type {ArrayBuffer|string} */ (this.response_), contentType);
+    if (error) {
+      this.addError_(error);
+    }
   }
 
   this.handlerCleanup_();
@@ -798,12 +824,19 @@ os.net.Request.prototype.onHandlerError_ = function(opt_event) {
     this.statusCodes_ = [];
   }
 
-  var errors = this.handler_.getErrors();
-  if (errors) {
-    errors.forEach(this.addError_, this);
-  }
-
   this.statusCodes_.push(this.handler_.getStatusCode());
+
+  // Try to get the specific error using the validator(s), otherwise use the response error.
+  var contentType = this.responseHeaders_ ? this.responseHeaders_['content-type'] : null;
+  var error = this.validateResponse_(/** @type {ArrayBuffer|string} */ (this.response_), contentType);
+  if (error) {
+    this.addError_(error);
+  } else {
+    var errors = this.handler_.getErrors();
+    if (errors) {
+      errors.forEach(this.addError_, this);
+    }
+  }
 
   if (this.handlers_ && this.handlers_.length && !this.handler_.isHandled()) {
     this.executeHandlers_();
@@ -830,6 +863,31 @@ os.net.Request.prototype.handlerCleanup_ = function() {
 
   this.handler_ = null;
   this.handlers_ = null;
+};
+
+
+/**
+ * Run validators against a response.
+ * @param {string|ArrayBuffer} response The response.
+ * @param {?string=} opt_contentType The content type.
+ * @return {?string} The error message, or null if the response is valid.
+ * @private
+ */
+os.net.Request.prototype.validateResponse_ = function(response, opt_contentType) {
+  var error = null;
+
+  if (this.validator_) {
+    error = this.validator_(response, opt_contentType, this.statusCodes_);
+  }
+
+  if (!error && this.useDefaultValidators_) {
+    var validators = os.net.getDefaultValidators();
+    for (var i = 0; i < validators.length && !error; i++) {
+      error = validators[i](response, opt_contentType, this.statusCodes_);
+    }
+  }
+
+  return error || null;
 };
 
 

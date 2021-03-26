@@ -28,12 +28,7 @@ os.file.mime.mock.testFiles = function(files, testFunc, len) {
 
       var headers = req.getResponseHeaders();
       if (headers) {
-        for (var header in headers) {
-          if (header.toLowerCase() === 'content-type') {
-            file.setContentType(headers[header]);
-            break;
-          }
-        }
+        file.setContentType(headers['content-type']);
       }
 
       // take first chunk

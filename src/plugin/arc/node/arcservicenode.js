@@ -10,6 +10,8 @@ goog.require('os.ui.slick.LoadingNode');
 goog.require('plugin.arc.layer.ArcImageLayerConfig');
 goog.require('plugin.arc.layer.ArcLayerDescriptor');
 
+goog.requireType('plugin.arc.ArcServer');
+
 
 
 /**

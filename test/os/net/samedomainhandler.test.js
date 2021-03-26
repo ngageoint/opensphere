@@ -1,6 +1,6 @@
-goog.require('os.net.SameDomainHandler');
 goog.require('goog.Uri');
 goog.require('goog.net.EventType');
+goog.require('os.net.SameDomainHandler');
 
 describe('os.net.SameDomainHandler', function() {
   var sdh = new os.net.SameDomainHandler();
@@ -106,5 +106,17 @@ describe('os.net.SameDomainHandler', function() {
     expect(sdh.req.send).toHaveBeenCalled();
     var sentHeaders = sdh.req.send.mostRecentCall.args[3];
     expect(sentHeaders['Test']).toBe('i-want-to-live');
+  });
+
+  it('should return lower case response headers', function() {
+    const originalHeaders = {
+      'Test-Key': 'Test Value'
+    };
+
+    spyOn(sdh.req, 'getResponseHeaders').andReturn(originalHeaders);
+
+    const headers = sdh.getResponseHeaders();
+    expect(headers['test-key']).toBe('Test Value');
+    expect(headers['Test-Key']).toBeUndefined();
   });
 });
