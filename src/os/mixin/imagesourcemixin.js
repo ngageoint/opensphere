@@ -18,6 +18,125 @@ os.implements(ol.source.Image, os.ol.source.ILoadingSource.ID);
 
 
 /**
+ * Set of filters to run against images that are loaded by this source.
+ * @type {Array<function(Array<number>, number, number)>}
+ * @protected
+ */
+ol.source.Image.prototype.imageFilters = null;
+
+/**
+ * The filtered copy of the canvas.
+ * @type {HTMLCanvasElement}
+ * @private
+ */
+this.filtered_ = null;
+
+
+/**
+ * @inheritDoc
+ */
+ol.source.Image.prototype.addImageFilter = function(fn) {
+  if (!this.imageFilters) {
+    this.imageFilters = [];
+  }
+
+  goog.array.insert(this.imageFilters, fn);
+  this.applyImageFilters();
+};
+
+
+/**
+ * @inheritDoc
+ */
+ol.source.Image.prototype.removeImageFilter = function(fn) {
+  if (!this.imageFilters) {
+    this.imageFilters = [];
+  }
+
+  ol.array.remove(this.imageFilters, fn);
+  this.applyImageFilters();
+};
+
+
+/**
+ * @inheritDoc
+ */
+ol.source.Image.prototype.getImageFilters = function() {
+  if (!this.imageFilters) {
+    this.imageFilters = [];
+  }
+
+  return this.imageFilters;
+};
+
+
+/**
+ * Get the image element for this source.
+ *
+ * @inheritDoc
+ * @suppress {accessControls}
+ */
+ol.source.Image.prototype.getImage = function() {
+  if (this.image_ && this.image_.width && this.image_.height) {
+    var filterFns = this.getImageFilters();
+    if (filterFns.length > 0) {
+      if (!this.filtered_) {
+        // create a cached copy of the filtered image
+        this.filtered_ = this.filterImage(this.image_, filterFns);
+      }
+
+      return this.filtered_;
+    }
+  }
+
+  return this.image_;
+};
+
+
+/**
+ * Resets the cached image. Allows the filters to be reapplied on the next render call.
+ */
+ol.source.Image.prototype.reset = function() {
+  this.filtered_ = null;
+};
+
+
+/**
+ * @inheritDoc
+ */
+ol.source.Image.prototype.applyImageFilters = function() {
+  var image = this.getImage();
+  if (image) {
+    image.reset();
+  }
+};
+
+
+/**
+ * Applies a set of filter functions to an image and returns a new, filtered copy.
+ *
+ * @param {HTMLCanvasElement|Image} image The image to filter
+ * @param {Array<Function>} filterFns The filter functions to apply
+ * @return {HTMLCanvasElement} A new, filtered copy of the image canvas
+ */
+ol.source.Image.filterImage = function(image, filterFns) {
+  var context = ol.dom.createCanvasContext2D(image.width, image.height);
+  context.drawImage(image, 0, 0);
+
+  var canvas = context.canvas;
+  var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+  var data = imageData.data;
+
+  // apply each filter function to the image data
+  filterFns.forEach(function(fn) {
+    fn(data, canvas.width, canvas.height);
+  });
+  context.putImageData(imageData, 0, 0);
+  return canvas;
+};
+
+
+/**
  * Loading flag for the image layer.
  * @type {boolean}
  * @private

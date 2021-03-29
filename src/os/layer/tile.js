@@ -128,6 +128,7 @@ os.layer.Tile = function(options) {
    * @type {!string}
    * @private
    */
+  // this.layerUi_ = 'defaultlayerui';
   this.layerUi_ = 'tilelayerui';
 
   /**
@@ -334,7 +335,7 @@ os.layer.Tile.prototype.getBrightness = function() {
 
 
 /**
- * Get the brightness for the tile layer.
+ * Get the contrast for the tile layer.
  *
  * @override
  * @return {number}

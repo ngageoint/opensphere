@@ -5,6 +5,7 @@ goog.require('ol.events');
 goog.require('ol.layer.Image');
 goog.require('os.IGroupable');
 goog.require('os.MapChange');
+goog.require('os.color');
 goog.require('os.events.LayerEvent');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.implements');
@@ -17,10 +18,11 @@ goog.require('os.registerClass');
 goog.require('os.source');
 goog.require('os.source.ImageStatic');
 goog.require('os.style');
+goog.require('os.ui');
 goog.require('os.ui.Icons');
 goog.require('os.ui.IconsSVG');
 goog.require('os.ui.icons');
-goog.require('os.ui.layer.defaultLayerUIDirective');
+goog.require('os.ui.layer.ImageLayerUI');
 goog.require('os.ui.renamelayer');
 goog.require('os.ui.window');
 
@@ -29,6 +31,7 @@ goog.require('os.ui.window');
 /**
  * @extends {ol.layer.Image}
  * @implements {os.layer.ILayer}
+ * @implements {os.layer.IColorableLayer}
  * @implements {os.IGroupable}
  * @param {olx.layer.ImageOptions} options image layer options
  * @constructor
@@ -95,10 +98,24 @@ os.layer.Image = function(options) {
   this.layerOptions_ = null;
 
   /**
+   * The current layer style.
+   * @type {?osx.ogc.ImageStyle}
+   * @private
+   */
+  this.style_ = null;
+
+  /**
+   * @type {?Array<!osx.ogc.ImageStyle>}
+   * @private
+   */
+  this.styles_ = null;
+
+  /**
    * @type {string}
    * @private
    */
-  this.layerUi_ = 'defaultlayerui';
+  // this.layerUi_ = 'defaultlayerui';
+  this.layerUi_ = os.ui.layer.ImageLayerUI.directiveTag;
 
   /**
    * @type {boolean}
@@ -124,6 +141,12 @@ os.layer.Image = function(options) {
    * @private
    */
   this.hidden_ = true;
+
+  /**
+   * @type {function(Array<number>, number, number)}
+   * @private
+   */
+  this.colorFilter_ = this.applyColors.bind(this);
 
   var source = this.getSource();
   if (source) {
@@ -419,6 +442,359 @@ os.layer.Image.prototype.setLayerUI = function(value) {
  */
 os.layer.Image.prototype.getSVGSet = function() {
   return [os.ui.IconsSVG.FEATURES];
+};
+
+
+/**
+ * Get the default color for the image layer.
+ *
+ * @return {?string}
+ */
+os.layer.Image.prototype.getDefaultColor = function() {
+  if (this.layerOptions_) {
+    return /** @type {string} */ (this.layerOptions_['baseColor']);
+  }
+
+  return null;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.layer.Image.prototype.getColor = function() {
+  if (this.layerOptions_) {
+    return /** @type {string} */ (this.layerOptions_['color'] || this.layerOptions_['baseColor']);
+  }
+
+  return null;
+};
+
+
+/**
+ * Get the brightness for the image layer.
+ *
+ * @return {number}
+ * @override
+ */
+os.layer.Image.prototype.getBrightness = function() {
+  if (this.layerOptions_) {
+    return /** @type {number} */ (this.layerOptions_['brightness'] || 0);
+  }
+  return 0;
+};
+
+
+/**
+ * Get the contrast for the image layer.
+ *
+ * @override
+ * @return {number}
+ */
+os.layer.Image.prototype.getContrast = function() {
+  if (this.layerOptions_ && this.layerOptions_['contrast'] != null) {
+    return /** @type {number} */ (this.layerOptions_['contrast']);
+  }
+  return 1;
+};
+
+
+/**
+ * Get the saturation for the image layer.
+ *
+ * @override
+ * @return {number}
+ */
+os.layer.Image.prototype.getSaturation = function() {
+  if (this.layerOptions_ && this.layerOptions_['saturation'] != null) {
+    return /** @type {number} */ (this.layerOptions_['saturation']);
+  }
+  return 1;
+};
+
+
+/**
+ * Get the sharpness for the image layer.
+ *
+ * @override
+ * @return {number}
+ */
+os.layer.Image.prototype.getSharpness = function() {
+  if (this.layerOptions_ && this.layerOptions_['sharpness'] != null) {
+    return /** @type {number} */ (this.layerOptions_['sharpness']);
+  }
+  return 0;
+};
+
+
+/**
+ * Get the whether the image layer is being colorized.
+ *
+ * @return {boolean}
+ */
+os.layer.Image.prototype.getColorize = function() {
+  if (this.layerOptions_) {
+    return /** @type {boolean} */ (this.layerOptions_['colorize']) || false;
+  }
+
+  return false;
+};
+
+
+/**
+ * Get the whether the image layer is being colorized.
+ *
+ * @param {boolean} value
+ */
+os.layer.Image.prototype.setColorize = function(value) {
+  if (this.layerOptions_) {
+    this.layerOptions_['colorize'] = value;
+    this.updateColorFilter();
+
+    os.style.notifyStyleChange(this);
+  }
+};
+
+
+/**
+ * Adjust the layer brightness.  A value of -1 will render the layer completely
+ * black.  A value of 0 will leave the brightness unchanged.  A value of 1 will
+ * render the layer completely white.  Other values are linear multipliers on
+ * the effect (values are clamped between -1 and 1).
+ *
+ * @override
+ * @param {number} value The brightness of the layer (values clamped between -1 and 1)
+ * @param {Object=} opt_options The layer options to use
+ */
+os.layer.Image.prototype.setBrightness = function(value, opt_options) {
+  goog.asserts.assert(value >= -1 && value <= 1, 'brightness is not between -1 and 1');
+  var options = opt_options || this.layerOptions_;
+  if (options) {
+    options['brightness'] = value;
+    this.updateColorFilter();
+    this.updateIcons_();
+    os.style.notifyStyleChange(this);
+  }
+  os.layer.Image.base(this, 'setBrightness', value);
+};
+
+
+/**
+ * Adjust the layer contrast.  A value of 0 will render the layer completely
+ * grey.  A value of 1 will leave the contrast unchanged.  Other values are
+ * linear multipliers on the effect (and values over 1 are permitted).
+ *
+ * @override
+ * @param {number} value The contrast of the layer (values clamped between 0 and 2)
+ * @param {Object=} opt_options The layer options to use
+ */
+os.layer.Image.prototype.setContrast = function(value, opt_options) {
+  goog.asserts.assert(value >= 0 && value <= 2, 'contrast is not between 0 and 2');
+  var options = opt_options || this.layerOptions_;
+  if (options) {
+    options['contrast'] = value;
+    this.updateColorFilter();
+    this.updateIcons_();
+    os.style.notifyStyleChange(this);
+  }
+  os.layer.Image.base(this, 'setContrast', value);
+};
+
+
+/**
+ * Adjust layer saturation.  A value of 0 will render the layer completely
+ * unsaturated.  A value of 1 will leave the saturation unchanged.  Other
+ * values are linear multipliers of the effect (and values over 1 are
+ * permitted).
+ *
+ * @override
+ * @param {number} value The saturation of the layer (values clamped between 0 and 1)
+ * @param {Object=} opt_options The layer options to use
+ */
+os.layer.Image.prototype.setSaturation = function(value, opt_options) {
+  goog.asserts.assert(value >= 0, 'saturation is greater than 0');
+  var options = opt_options || this.layerOptions_;
+  if (options) {
+    options['saturation'] = value;
+    this.updateColorFilter();
+    this.updateIcons_();
+    os.style.notifyStyleChange(this);
+  }
+  os.layer.Image.base(this, 'setSaturation', value);
+};
+
+
+/**
+ * Adjust layer sharpness. A value of 0 will not adjust layer sharpness. A value of 1 will apply the maximum
+ * sharpness adjustment to the image.
+ *
+ * @override
+ * @param {number} value The sharpness of the layer (values clamped between 0 and 1)
+ * @param {Object=} opt_options The layer options to use
+ */
+os.layer.Image.prototype.setSharpness = function(value, opt_options) {
+  goog.asserts.assert(value >= 0 && value <= 1, 'sharpness is between 0 and 1');
+  var options = opt_options || this.layerOptions_;
+  if (options) {
+    options['sharpness'] = value;
+    this.updateColorFilter();
+    this.updateIcons_();
+    os.style.notifyStyleChange(this);
+  }
+  os.layer.Image.base(this, 'setSharpness', value);
+};
+
+
+/**
+ * Updates the color filter, either adding or removing depending on whether the layer is colored to a non-default
+ * color or colorized.
+ *
+ * @protected
+ */
+os.layer.Image.prototype.updateColorFilter = function() {
+  var source = this.getSource();
+  if (source instanceof ol.source.Image) {
+    if (this.getColorize() || !os.color.equals(this.getColor(), this.getDefaultColor()) ||
+        this.getBrightness() != 0 || this.getContrast() != 1 || this.getSaturation() != 1 || this.getSharpness() != 0) {
+      // put the colorFilter in place if we are colorized or the current color is different from the default
+      source.addImageFilter(this.colorFilter_);
+    } else {
+      source.removeImageFilter(this.colorFilter_);
+    }
+  }
+};
+
+
+/**
+ * Update icons to use the current layer color.
+ *
+ * @private
+ */
+os.layer.Image.prototype.updateIcons_ = function() {
+  var color = this.getColor();
+  if (color) {
+    os.ui.adjustIconSet(this.getId(), os.color.toHexString(color));
+  }
+};
+
+
+/**
+ * @return {?Array<!osx.ogc.ImageStyle>}
+ */
+os.layer.Image.prototype.getStyles = function() {
+  return this.styles_;
+};
+
+
+/**
+ * @param {?Array<!osx.ogc.ImageStyle>} value
+ */
+os.layer.Image.prototype.setStyles = function(value) {
+  this.styles_ = value;
+};
+
+
+/**
+ * Get the default server style.
+ *
+ * @return {?osx.ogc.ImageStyle}
+ */
+os.layer.Image.prototype.getDefaultStyle = function() {
+  if (this.styles_) {
+    for (var i = 0; i < this.styles_.length; i++) {
+      if (this.styles_[i].label == os.ogc.DEFAULT_IMAGE_STYLE.label) {
+        return this.styles_[i];
+      }
+    }
+  }
+
+  return null;
+};
+
+
+/**
+ * @return {?(string|osx.ogc.ImageStyle)}
+ */
+os.layer.Image.prototype.getStyle = function() {
+  var style = this.style_;
+  if (!style) {
+    var source = this.getSource();
+
+    if (os.implements(source, os.source.IStyle.ID)) {
+      style = /** @type {os.source.IStyle} */ (source).getStyle();
+      var styles = this.getStyles();
+
+      if (styles) {
+        // find style in styles and return that
+        for (var i = 0, n = styles.length; i < n; i++) {
+          if (styles[i].data == style) {
+            return styles[i];
+          }
+        }
+      }
+    }
+  }
+
+  return style;
+};
+
+
+/**
+ * @param {?(string|osx.ogc.ImageStyle)} value
+ */
+os.layer.Image.prototype.setStyle = function(value) {
+  if (typeof value == 'string') {
+    value = this.styles_ ? ol.array.find(this.styles_, os.layer.Image.findStyleByData.bind(this, value)) : null;
+  }
+
+  this.style_ = value;
+
+  var source = this.getSource();
+  if (os.implements(source, os.source.IStyle.ID)) {
+    /** @type {os.source.IStyle} */ (source).setStyle(value);
+    os.style.notifyStyleChange(this);
+  }
+};
+
+
+/**
+ * Filter function that applies the layer color image data. This filter is always in the filter array, but it
+ * only runs if the current color is different from the default or if the colorize option is active.
+ *
+ * @param {Array<number>} data The image data.
+ * @param {number} width The image width.
+ * @param {number} height The image height.
+ */
+os.layer.Image.prototype.applyColors = function(data, width, height) {
+  if (!data) {
+    return;
+  }
+
+  var srcColor = this.getDefaultColor() || '#fffffe';
+  var tgtColor = this.getColor() || '#fffffe';
+  var brightness = this.getBrightness();
+  var contrast = this.getContrast();
+  var saturation = this.getSaturation();
+  var sharpness = this.getSharpness();
+  var colorize = this.getColorize();
+  if (colorize || !os.color.equals(srcColor, tgtColor) ||
+      brightness != 0 || contrast != 1 || saturation != 1 || sharpness != 0) {
+    if (tgtColor) {
+      if (colorize) {
+        // colorize will set all of the colors to the target
+        os.color.colorize(data, tgtColor);
+      } else if (!os.color.equals(srcColor, tgtColor)) {
+        // transformColor blends between the src and target color, leaving densitization intact
+        os.color.transformColor(data, srcColor, tgtColor);
+      }
+      os.color.adjustColor(data, brightness, contrast, saturation);
+
+      if (sharpness > 0) {
+        // sharpness is in the range [0, 1]. use a multiplier to enhance the convolution effect.
+        os.color.adjustSharpness(data, width, height, sharpness * 10);
+      }
+    }
+  }
 };
 
 

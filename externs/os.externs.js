@@ -95,6 +95,15 @@ osx.ogc.TileStyle;
 
 /**
  * @typedef {{
+ *   data: string,
+ *   label: string
+ * }}
+ */
+osx.ogc.ImageStyle;
+
+
+/**
+ * @typedef {{
  *  namespace: (string|undefined),
  *  nameProperty: (string|undefined),
  *  queryProperties: (string|undefined),

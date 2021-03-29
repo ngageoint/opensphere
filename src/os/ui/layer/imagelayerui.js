@@ -23,9 +23,9 @@ const directive = () => {
   return {
     restrict: 'AE',
     replace: true,
-    templateUrl: ROOT + 'views/layer/tile.html',
+    templateUrl: ROOT + 'views/layer/image.html',
     controller: Controller,
-    controllerAs: 'tile'
+    controllerAs: 'ctrl'
   };
 };
 
@@ -47,44 +47,27 @@ Module.directive(directiveTag, [directive]);
  * Controller for the addserver directive.
  * @unrestricted
  */
-class Controller {
+class Controller extends DefaultLayerUICtrl {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope
    * @param {!angular.JQLite} $element
    * @param {!angular.$timeout} $timeout
-   * @extends {DefaultLayerUICtrl}
    * @ngInject
    */
   constructor($scope, $element, $timeout) {
-    /**
-     * @type {?angular.Scope}
-     * @private
-     */
-    this.scope_ = $scope;
+    super($scope, $element, $timeout);
+    this.initUI();
 
-    /**
-     * @type {?angular.JQLite}
-     * @private
-     */
-    this.element_ = $element;
-
-    $scope.$on('color.change', this.onColorChange.bind(this));
-    $scope.$on('color.reset', this.onColorReset.bind(this));
-  }
-
-  /**
-   * @inheritDoc
-   */
-  initUI() {
-    layer.TileLayerUICtrl.base(this, 'initUI');
-
-    if (this.scope_) {
-      this.scope_['color'] = this.getColor_();
-      this.scope_['styles'] = this.getValue(layer.getStyles);
-      this.scope_['style'] = this.getValue(layer.getStyle);
-      this.scope_['colorize'] = this.getValue(layer.getColorize);
+    if (this.scope) {
+      this.scope['color'] = this.getColor_();
+      this.scope['styles'] = this.getValue(layer.getStyles);
+      this.scope['style'] = this.getValue(layer.getStyle);
+      this.scope['colorize'] = this.getValue(layer.getColorize);
     }
+
+    $scope.$on('color.change', this.onColorChange_.bind(this));
+    $scope.$on('color.reset', this.onColorReset_.bind(this));
   }
 
   /**
@@ -94,7 +77,7 @@ class Controller {
    * @private
    */
   getColor_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope_['items']);
+    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
 
     if (items) {
       for (var i = 0, n = items.length; i < n; i++) {
@@ -119,7 +102,7 @@ class Controller {
    * @param {string} value
    * @protected
    */
-  onColorChange(event, value) {
+  onColorChange_(event, value) {
     var fn =
         /**
          * @param {os.layer.ILayer} layer
@@ -138,12 +121,12 @@ class Controller {
    * @param {angular.Scope.Event} event
    * @protected
    */
-  onColorReset(event) {
+  onColorReset_(event) {
     // clear the label color config value
-    this.onColorChange(event, '');
+    this.onColorChange_(event, '');
 
     // reset to the layer color
-    this.scope_['color'] = this.getColor_();
+    this.scope['color'] = this.getColor_();
   }
 
   /**
@@ -151,10 +134,10 @@ class Controller {
    *
    * @export
    */
-  onStyleChange() {
-    var items = /** @type {Array} */ (this.scope_['items']);
-    if (items && items.length === 1 && this.scope_['style'] != null) {
-      var value = /** @type {(string|osx.ogc.TileStyle)} */ (this.scope_['style']);
+  onStyleChange_() {
+    var items = /** @type {Array} */ (this.scope['items']);
+    if (items && items.length === 1 && this.scope['style'] != null) {
+      var value = /** @type {(string|osx.ogc.TileStyle)} */ (this.scope['style']);
       var fn =
           /**
            * @param {os.layer.ILayer} layer
@@ -173,8 +156,8 @@ class Controller {
    *
    * @export
    */
-  onColorizeChange() {
-    var value = /** @type {boolean} */ (this.scope_['colorize']);
+  onColorizeChange_() {
+    var value = /** @type {boolean} */ (this.scope['colorize']);
     var fn =
         /**
          * @param {os.layer.ILayer} layer
@@ -191,5 +174,6 @@ class Controller {
 
 exports = {
   Controller,
-  directive
+  directive,
+  directiveTag
 };
