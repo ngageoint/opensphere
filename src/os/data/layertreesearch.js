@@ -6,7 +6,6 @@ goog.require('os.data.groupby.LayerZOrderGroupBy');
 goog.require('os.layer.FolderManager');
 goog.require('os.layer.ILayer');
 goog.require('os.layer.LayerGroup');
-goog.require('os.menu.folder');
 goog.require('os.structs.ITreeNodeSupplier');
 goog.require('os.ui.data.BaseProvider');
 goog.require('os.ui.node.FolderNodeUI');
@@ -27,7 +26,6 @@ goog.require('os.ui.slick.TreeSearch');
  */
 os.data.LayerTreeSearch = function(setAs, onObj, opt_noResultLabel) {
   os.data.LayerTreeSearch.base(this, 'constructor', [], setAs, onObj, opt_noResultLabel);
-  os.menu.folder.setup();
 };
 goog.inherits(os.data.LayerTreeSearch, os.ui.slick.AbstractGroupByTreeSearch);
 

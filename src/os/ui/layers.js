@@ -99,7 +99,7 @@ os.ui.LayersCtrl = function($scope, $element) {
   }
 
   this.scope['views'] = os.ui.LayersCtrl.VIEWS;
-  this.viewDefault = 'Z-Order';
+  this.viewDefault = /** @type {string} */ (os.settings.get('layers.viewDefault', 'Z-Order'));
 
   /**
    * @type {?os.data.LayerTreeSearch}

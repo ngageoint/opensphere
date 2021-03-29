@@ -1,7 +1,6 @@
 goog.module('os.data.FolderNode');
 goog.module.declareLegacyNamespace();
 
-const Feature = goog.requireType('ol.Feature');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 const Vector = goog.requireType('os.layer.Vector');
 
