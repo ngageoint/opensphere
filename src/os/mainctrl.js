@@ -65,6 +65,7 @@ goog.require('os.layer.config.StaticLayerConfig');
 goog.require('os.load.LoadingManager');
 goog.require('os.map');
 goog.require('os.map.interaction');
+goog.require('os.menu.folder');
 goog.require('os.metrics.AddDataMetrics');
 goog.require('os.metrics.FiltersMetrics');
 goog.require('os.metrics.LayersMetrics');
@@ -305,6 +306,7 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   os.ui.state.menu.setup();
   os.ui.menu.buffer.setup();
   os.ui.menu.windows.default.setup();
+  os.menu.folder.setup();
 
   // assign the spatial menu
   os.ui.draw.MENU = os.ui.menu.spatial.MENU;

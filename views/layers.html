@@ -41,7 +41,7 @@
   </div>
 
   <div class="d-flex flex-row flex-fill mt-1">
-    <layertree class="border" x-data="layerTree" drag-enabled="true" selected="selected" context-menu="contextMenu" checkbox-tooltip="Enable or disable the layer" multi-select="true" disposable="true"></layertree>
+    <layertree class="border" x-data="layerTree" drag-enabled="true" selected="selected" context-menu="contextMenu" checkbox-tooltip="Enable or disable the layer" multi-select="true" disposable="true" no-root="true" group-by="view"></layertree>
   </div>
 
   <uiswitch items="selected" directive-function="layers.getUi" generic="defaultlayerui"></uiswitch>

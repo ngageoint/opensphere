@@ -863,7 +863,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onShowLabelsChange = function(event, val
  * @protected
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getColor = function() {
-  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  var items = this.getLayerNodes();
 
   if (items) {
     for (var i = 0, n = items.length; i < n; i++) {
@@ -890,7 +890,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getColor = function() {
  * @protected
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getFillColor = function() {
-  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  var items = this.getLayerNodes();
 
   if (items) {
     for (var i = 0, n = items.length; i < n; i++) {
@@ -919,7 +919,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getFillColor = function() {
  * @protected
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getFillOpacity = function() {
-  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  var items = this.getLayerNodes();
   var opacity = os.style.DEFAULT_FILL_ALPHA;
 
   if (items) {
@@ -952,7 +952,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getFillOpacity = function() {
  * @return {number} The size
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getSize = function() {
-  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  var items = this.getLayerNodes();
   var size;
 
   if (items) {
@@ -979,7 +979,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getSize = function() {
  * @return {Array<number>|undefined} The line
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getLineDash = function() {
-  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  var items = this.getLayerNodes();
   var lineDash;
 
   if (items) {
@@ -1006,7 +1006,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getLineDash = function() {
  * @return {?osx.icon.Icon} The icon
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getIcon = function() {
-  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  var items = this.getLayerNodes();
   var icon = null;
 
   if (items && items.length > 0) {
@@ -1027,7 +1027,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getIcon = function() {
  * @return {?osx.icon.Icon} The icon.
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getCenterIcon = function() {
-  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  var items = this.getLayerNodes();
   var icon = null;
 
   if (items && items.length > 0) {
@@ -1048,7 +1048,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getCenterIcon = function() {
  * @return {string} The shape
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getShape = function() {
-  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  var items = this.getLayerNodes();
   var shape;
 
   if (items && items.length > 0) {
@@ -1068,7 +1068,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShape = function() {
  * @return {Array<string>} The available shape options
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getShapes = function() {
-  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  var items = this.getLayerNodes();
   var shapes = goog.object.getKeys(os.style.SHAPES);
 
   if (items && items.length > 0) {
@@ -1090,7 +1090,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShapes = function() {
  * @return {string} The shape
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getCenterShape = function() {
-  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  var items = this.getLayerNodes();
   var shape;
 
   if (items && items.length > 0) {
@@ -1113,7 +1113,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getCenterShape = function() {
  * @return {Array<string>} The available shape options
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getCenterShapes = function() {
-  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  var items = this.getLayerNodes();
   var shapes = goog.object.getKeys(os.style.SHAPES);
 
   if (items && items.length > 0) {
@@ -1353,7 +1353,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onUniqueIdChange = function() {
  * @return {string}
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getRotationColumn = function() {
-  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  var items = this.getLayerNodes();
   if (items && items.length > 0) {
     var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
     if (config) {
@@ -1371,7 +1371,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getRotationColumn = function() {
  * @return {boolean}
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getShowRotation = function() {
-  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+  var items = this.getLayerNodes();
   if (items && items.length > 0) {
     var config = os.style.StyleManager.getInstance().getLayerConfig(items[0].getId());
     if (config) {
@@ -1448,6 +1448,8 @@ os.ui.layer.VectorLayerUICtrl.prototype.onMapView3DChange_ = function(event) {
  */
 os.ui.layer.VectorLayerUICtrl.prototype.disposeInternal = function() {
   os.map.mapContainer.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onMapView3DChange_, false, this);
+  goog.dispose(this.labelSizeChangeDelay);
+
   os.ui.layer.VectorLayerUICtrl.base(this, 'disposeInternal');
 };
 
