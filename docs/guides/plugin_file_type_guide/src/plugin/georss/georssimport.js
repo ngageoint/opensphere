@@ -6,7 +6,7 @@ goog.require('os.file.FileStorage');
 goog.require('os.ui.Module');
 goog.require('os.ui.file.ui.AbstractFileImportCtrl');
 goog.require('os.ui.window');
-goog.require('plugin.georss.defines');
+goog.require('plugin.georss');
 
 
 /**
