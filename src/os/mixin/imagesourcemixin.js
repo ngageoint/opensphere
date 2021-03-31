@@ -41,7 +41,7 @@ ol.source.Image.prototype.addImageFilter = function(fn) {
   }
 
   goog.array.insert(this.imageFilters, fn);
-  this.applyImageFilters();
+  this.reset();
 };
 
 
@@ -54,7 +54,7 @@ ol.source.Image.prototype.removeImageFilter = function(fn) {
   }
 
   ol.array.remove(this.imageFilters, fn);
-  this.applyImageFilters();
+  this.reset();
 };
 
 
@@ -73,42 +73,73 @@ ol.source.Image.prototype.getImageFilters = function() {
 /**
  * Get the image element for this source.
  *
- * @inheritDoc
- * @suppress {accessControls}
+ * @param {ol.Extent} extent Extent.
+ * @param {number} resolution Resolution.
+ * @param {number} pixelRatio Pixel ratio.
+ * @param {ol.proj.Projection} projection Projection.
+ * @return {ol.ImageBase} Single image.
  */
-ol.source.Image.prototype.getImage = function() {
-  if (this.image_ && this.image_.width && this.image_.height) {
+ol.source.Image.prototype.originalGetImage = ol.source.Image.prototype.getImage;
+
+
+/**
+ * Get the image element for this source.
+ *
+ * @param {ol.Extent} extent Extent.
+ * @param {number} resolution Resolution.
+ * @param {number} pixelRatio Pixel ratio.
+ * @param {ol.proj.Projection} projection Projection.
+ * @return {ol.ImageBase} Single image.
+ *
+ * @suppress {accessControls}
+ * @suppress {duplicate}
+ */
+ol.source.Image.prototype.getImage = function(extent, resolution, pixelRatio, projection) {
+  const image = this.originalGetImage(extent, resolution, pixelRatio, projection);
+  if (image && image.width && image.height) {
     var filterFns = this.getImageFilters();
     if (filterFns.length > 0) {
       if (!this.filtered_) {
         // create a cached copy of the filtered image
-        this.filtered_ = this.filterImage(this.image_, filterFns);
+        this.filtered_ = this.filterImage(image, filterFns);
       }
 
       return this.filtered_;
     }
   }
-
-  return this.image_;
+  return image;
 };
+
+
+// /**
+//  * Get the image element for this source.
+//  *
+//  * @inheritDoc
+//  * @suppress {accessControls}
+//  */
+// ol.source.Image.prototype.getFilteredImage = function() {
+//   var image = this.getImage();
+//   if (image && image.width && image.height) {
+//     var filterFns = this.getImageFilters();
+//     if (filterFns.length > 0) {
+//       if (!this.filtered_) {
+//         // create a cached copy of the filtered image
+//         this.filtered_ = this.filterImage(image, filterFns);
+//       }
+
+//       return this.filtered_;
+//     }
+//   }
+
+//   return image;
+// };
 
 
 /**
  * Resets the cached image. Allows the filters to be reapplied on the next render call.
  */
 ol.source.Image.prototype.reset = function() {
-  this.filtered_ = null;
-};
-
-
-/**
- * @inheritDoc
- */
-ol.source.Image.prototype.applyImageFilters = function() {
-  var image = this.getImage();
-  if (image) {
-    image.reset();
-  }
+  // this.filtered_ = null;
 };
 
 
@@ -119,7 +150,7 @@ ol.source.Image.prototype.applyImageFilters = function() {
  * @param {Array<Function>} filterFns The filter functions to apply
  * @return {HTMLCanvasElement} A new, filtered copy of the image canvas
  */
-ol.source.Image.filterImage = function(image, filterFns) {
+ol.source.Image.prototype.filterImage = function(image, filterFns) {
   var context = ol.dom.createCanvasContext2D(image.width, image.height);
   context.drawImage(image, 0, 0);
 
