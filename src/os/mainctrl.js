@@ -6,6 +6,7 @@ goog.require('goog.dom');
 goog.require('goog.dom.TagName');
 goog.require('goog.events.KeyHandler');
 goog.require('ol.ViewHint');
+goog.require('os');
 goog.require('os.MapContainer');
 goog.require('os.MapEvent');
 goog.require('os.action.EventType');

@@ -1,7 +1,8 @@
 goog.provide('os.config');
 goog.provide('os.config.ConfigType');
 goog.provide('os.config.EventType');
-goog.require('os.defines');
+
+goog.require('os');
 
 
 /**

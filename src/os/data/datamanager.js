@@ -4,6 +4,7 @@ goog.require('goog.async.Delay');
 goog.require('goog.events.EventTarget');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('os');
 goog.require('os.data');
 goog.require('os.data.DataProviderEvent');
 goog.require('os.data.DescriptorEvent');
@@ -13,7 +14,6 @@ goog.require('os.data.IDataManager');
 goog.require('os.data.IDataProvider');
 goog.require('os.data.IUrlDescriptor');
 goog.require('os.data.ProviderEntry');
-goog.require('os.defines');
 goog.require('os.ui.server.AbstractLoadingServer');
 goog.require('os.ui.slick.SlickTreeNode');
 

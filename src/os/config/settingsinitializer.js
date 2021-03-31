@@ -1,4 +1,6 @@
 goog.provide('os.config.SettingsInitializer');
+
+goog.require('os');
 goog.require('os.config');
 goog.require('os.config.Settings');
 goog.require('os.config.storage.SettingsFile');

@@ -6,8 +6,8 @@ goog.require('goog.db.Error');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('goog.string.path');
+goog.require('os');
 goog.require('os.config');
-goog.require('os.defines');
 goog.require('os.file');
 goog.require('os.storage.AsyncStorageWrapper');
 goog.require('os.storage.IDBStorage');
@@ -56,24 +56,6 @@ goog.addSingletonGetter(os.file.FileStorage);
  * @private
  */
 os.file.FileStorage.LOGGER_ = goog.log.getLogger('os.file.FileStorage');
-
-
-/**
- * @define {string} The database name. Override this in the application to use a separate database for storage.
- */
-os.FILE_DB_NAME = goog.define('os.FILE_DB_NAME', os.NAMESPACE + '.files');
-
-
-/**
- * @define {number} The database version.
- */
-os.FILE_DB_VERSION = goog.define('os.FILE_DB_VERSION', 2);
-
-
-/**
- * @define {string} The file store name
- */
-os.FILE_STORE_NAME = goog.define('os.FILE_STORE_NAME', 'files');
 
 
 /**

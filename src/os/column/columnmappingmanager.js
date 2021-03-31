@@ -1,6 +1,7 @@
 goog.provide('os.column.ColumnMappingManager');
 
 goog.require('goog.async.Delay');
+goog.require('os');
 goog.require('os.column.ColumnMapping');
 goog.require('os.column.ColumnMappingEventType');
 goog.require('os.column.IColumnMapping');
@@ -48,12 +49,6 @@ goog.addSingletonGetter(os.column.ColumnMappingManager);
  * @private
  */
 os.column.ColumnMappingManager.LOGGER_ = goog.log.getLogger('os.column.ColumnMappingManager');
-
-
-/**
- * @define {string} The storage key used for column mappings.
- */
-os.COLUMN_MAPPINGS_STORAGE_KEY = goog.define('os.COLUMN_MAPPINGS_STORAGE_KEY', 'columnMappings');
 
 
 /**
