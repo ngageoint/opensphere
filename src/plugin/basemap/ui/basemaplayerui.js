@@ -1,8 +1,9 @@
 goog.provide('plugin.basemap.ui.BaseMapLayerUICtrl');
 goog.provide('plugin.basemap.ui.baseMapLayerUIDirective');
+
 goog.require('goog.async.Delay');
+goog.require('os');
 goog.require('os.MapContainer');
-goog.require('os.defines');
 goog.require('os.map');
 goog.require('os.ui.Module');
 goog.require('os.ui.layer.TileLayerUICtrl');

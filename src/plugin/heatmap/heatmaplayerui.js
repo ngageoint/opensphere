@@ -1,7 +1,8 @@
 goog.provide('plugin.heatmap.HeatmapLayerUICtrl');
 goog.provide('plugin.heatmap.heatmapLayerUIDirective');
+
 goog.require('goog.async.Delay');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.style');
 goog.require('os.ui.Module');
 goog.require('os.ui.layer');

@@ -32,7 +32,6 @@ goog.require('os.config.UnitSettings');
 goog.require('os.control');
 goog.require('os.data.OSDataManager');
 goog.require('os.data.histo.legend');
-goog.require('os.defines');
 goog.require('os.events');
 goog.require('os.events.EventFactory');
 goog.require('os.events.LayerConfigEvent');

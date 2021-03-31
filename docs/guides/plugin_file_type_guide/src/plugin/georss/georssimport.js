@@ -24,7 +24,7 @@ plugin.georss.georssImportDirective = function() {
     // plugin. You do not necessarily need a ROOT define per plugin, but rather per project
     // so that the OpenSphere build can find the files properly.
     //
-    // For an internal plugin, just require os.defines and use os.ROOT.
+    // For an internal plugin, just require os and use os.ROOT.
     templateUrl: plugin.georss.ROOT + 'views/plugin/georss/georssimport.html',
     controller: plugin.georss.GeoRSSImportCtrl,
     controllerAs: 'georssImport'

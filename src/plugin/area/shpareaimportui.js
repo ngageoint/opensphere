@@ -2,7 +2,7 @@ goog.provide('plugin.area.SHPAreaCtrl');
 goog.provide('plugin.area.SHPAreaImportUI');
 goog.provide('plugin.area.shpAreaDirective');
 
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.im.Importer');
 goog.require('os.ui.im.FileImportUI');
 goog.require('os.ui.query');

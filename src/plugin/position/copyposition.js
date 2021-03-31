@@ -1,9 +1,10 @@
 goog.provide('plugin.position.CopyPositionCtrl');
 goog.provide('plugin.position.copyPositionDirective');
+
 goog.require('goog.Disposable');
 goog.require('goog.events');
+goog.require('os');
 goog.require('os.action.EventType');
-goog.require('os.defines');
 goog.require('os.ui.Module');
 
 

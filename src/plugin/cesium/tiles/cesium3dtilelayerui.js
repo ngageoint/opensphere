@@ -1,8 +1,8 @@
 goog.provide('plugin.cesium.tiles.Cesium3DTileLayerUICtrl');
 goog.provide('plugin.cesium.tiles.cesium3DTileLayerUIDirective');
 
+goog.require('os');
 goog.require('os.command.LayerColor');
-goog.require('os.defines');
 goog.require('os.implements');
 goog.require('os.ui.Module');
 goog.require('os.ui.layer');

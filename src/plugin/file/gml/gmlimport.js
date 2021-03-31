@@ -1,7 +1,7 @@
 goog.provide('plugin.file.gml.GMLImportCtrl');
 goog.provide('plugin.file.gml.gmlImportDirective');
 
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui.Module');
 goog.require('os.ui.file.ui.AbstractFileImportCtrl');
 goog.require('plugin.file.gml.GMLDescriptor');

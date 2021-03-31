@@ -1,7 +1,7 @@
 goog.provide('plugin.google.places.AttrCardCtrl');
 goog.provide('plugin.google.places.attrCardDirective');
 
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui.Module');
 
 

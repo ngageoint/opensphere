@@ -3,6 +3,7 @@ goog.provide('os.ui.layer.vectorLayerUIDirective');
 
 goog.require('goog.async.Delay');
 goog.require('goog.color');
+goog.require('os');
 goog.require('os.MapChange');
 goog.require('os.array');
 goog.require('os.command.LayerStyle');
@@ -25,7 +26,6 @@ goog.require('os.command.VectorLayerSize');
 goog.require('os.command.VectorUniqueIdCmd');
 goog.require('os.command.style');
 goog.require('os.data.OSDataManager');
-goog.require('os.defines');
 goog.require('os.layer.preset');
 goog.require('os.layer.preset.LayerPresetManager');
 goog.require('os.layer.preset.PresetMenuButton');

@@ -4,8 +4,8 @@ goog.provide('os.audio.AudioSetting');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('goog.object');
+goog.require('os');
 goog.require('os.config.Settings');
-goog.require('os.defines');
 
 
 /**

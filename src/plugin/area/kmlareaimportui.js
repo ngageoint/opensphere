@@ -1,7 +1,7 @@
 goog.provide('plugin.area.KMLAreaCtrl');
 goog.provide('plugin.area.KMLAreaImportUI');
 
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.im.Importer');
 goog.require('os.im.mapping.RenameMapping');
 goog.require('os.parse.FileParserConfig');

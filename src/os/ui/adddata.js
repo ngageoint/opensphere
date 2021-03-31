@@ -1,10 +1,10 @@
 goog.provide('os.ui.AddDataCtrl');
 goog.provide('os.ui.addDataDirective');
 
+goog.require('os');
 goog.require('os.data.groupby.DateGroupBy');
 goog.require('os.data.groupby.RecentGroupBy');
 goog.require('os.data.groupby.TypeGroupBy');
-goog.require('os.defines');
 goog.require('os.metrics.Metrics');
 goog.require('os.ui.Module');
 goog.require('os.ui.data.AddDataCtrl');

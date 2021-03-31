@@ -1,7 +1,7 @@
 goog.provide('plugin.cesium.tiles.TilesetImportCtrl');
 goog.provide('plugin.cesium.tiles.tilesetImportDirective');
 
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui.Module');
 goog.require('os.ui.file.ui.AbstractFileImportCtrl');
 goog.require('plugin.cesium.tiles.Descriptor');

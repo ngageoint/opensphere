@@ -2,7 +2,7 @@ goog.provide('os.config.LegendSettings');
 goog.provide('os.config.LegendSettingsCtrl');
 
 goog.require('goog.Disposable');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.legend');
 goog.require('os.ui.Module');
 goog.require('os.ui.config.SettingPlugin');

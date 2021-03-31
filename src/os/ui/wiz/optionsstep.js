@@ -1,7 +1,7 @@
 goog.provide('os.ui.wiz.OptionsStep');
 goog.provide('os.ui.wiz.OptionsStepCtrl');
 
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui.Module');
 goog.require('os.ui.color.colorPickerDirective');
 goog.require('os.ui.icon.iconPickerDirective');

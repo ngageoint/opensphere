@@ -1,9 +1,9 @@
 goog.provide('os.ui.modal.AboutModalCtrl');
 goog.provide('os.ui.modal.aboutModalDirective');
 
+goog.require('os');
 goog.require('os.config');
 goog.require('os.config.Settings');
-goog.require('os.defines');
 goog.require('os.ui.Module');
 goog.require('os.ui.modal');
 goog.require('os.ui.modal.modalAutoSizeDirective');

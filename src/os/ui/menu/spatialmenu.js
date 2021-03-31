@@ -3,12 +3,12 @@ goog.provide('os.ui.menu.spatial');
 
 goog.require('ol.Feature');
 goog.require('ol.array');
+goog.require('os');
 goog.require('os.action.EventType');
 goog.require('os.array');
 goog.require('os.command.AreaToggle');
 goog.require('os.command.SequenceCommand');
 goog.require('os.data.AreaNode');
-goog.require('os.defines');
 goog.require('os.events.PayloadEvent');
 goog.require('os.feature');
 goog.require('os.fn');

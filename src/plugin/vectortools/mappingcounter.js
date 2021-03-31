@@ -1,8 +1,8 @@
 goog.provide('plugin.vectortools.MappingCounterCtrl');
 goog.provide('plugin.vectortools.mappingCounterDirective');
 
+goog.require('os');
 goog.require('os.column.ColumnMappingManager');
-goog.require('os.defines');
 goog.require('os.ui.Module');
 goog.require('os.ui.menu.windows');
 

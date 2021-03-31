@@ -3,8 +3,8 @@ goog.provide('os.ui.legendDirective');
 
 goog.require('goog.async.Throttle');
 goog.require('goog.async.nextTick');
+goog.require('os');
 goog.require('os.data.SourceManager');
-goog.require('os.defines');
 goog.require('os.legend');
 goog.require('os.ui.Module');
 goog.require('os.ui.events.UIEvent');

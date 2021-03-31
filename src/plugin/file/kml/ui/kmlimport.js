@@ -1,7 +1,7 @@
 goog.provide('plugin.file.kml.ui.KMLImportCtrl');
 goog.provide('plugin.file.kml.ui.kmlImportDirective');
 
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui.Module');
 goog.require('os.ui.file.ui.AbstractFileImportCtrl');
 goog.require('plugin.file.kml.KMLDescriptor');

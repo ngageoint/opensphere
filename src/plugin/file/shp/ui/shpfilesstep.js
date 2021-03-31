@@ -2,7 +2,7 @@ goog.provide('plugin.file.shp.ui.SHPFilesStep');
 goog.provide('plugin.file.shp.ui.SHPFilesStepCtrl');
 
 goog.require('goog.log');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.file.File');
 goog.require('os.ui.Module');
 goog.require('os.ui.file.method.UrlMethod');
