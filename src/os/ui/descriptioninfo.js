@@ -2,12 +2,13 @@ goog.provide('os.ui.DescriptionInfoCtrl');
 goog.provide('os.ui.SlickDescriptionAsyncRenderer');
 goog.provide('os.ui.descriptionInfoDirective');
 goog.provide('os.ui.formatter.DescriptionFormatter');
+
 goog.require('goog.object');
 goog.require('goog.string');
 goog.require('ol.geom.Point');
+goog.require('os');
 goog.require('os.Fields');
 goog.require('os.data.RecordField');
-goog.require('os.defines');
 goog.require('os.style');
 goog.require('os.ui');
 goog.require('os.ui.Module');

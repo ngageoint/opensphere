@@ -1,8 +1,8 @@
 goog.provide('plugin.descriptor.ResultCardCtrl');
 goog.provide('plugin.descriptor.descriptorResultCardDirective');
 
+goog.require('os');
 goog.require('os.data.DescriptorEvent');
-goog.require('os.defines');
 goog.require('os.ui.Module');
 
 

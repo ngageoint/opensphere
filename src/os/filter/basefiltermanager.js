@@ -5,6 +5,7 @@ goog.require('goog.array');
 goog.require('goog.events.EventTarget');
 goog.require('goog.string');
 goog.require('ol.array');
+goog.require('os');
 goog.require('os.IPersistable');
 goog.require('os.array');
 goog.require('os.config.Settings');
@@ -97,12 +98,6 @@ os.filter.BaseFilterManager = function() {
 };
 goog.inherits(os.filter.BaseFilterManager, goog.events.EventTarget);
 goog.addSingletonGetter(os.filter.BaseFilterManager);
-
-
-/**
- * @define {string} The storage key for filters
- */
-os.FILTER_STORAGE_KEY = goog.define('os.FILTER_STORAGE_KEY', 'filters');
 
 
 /**

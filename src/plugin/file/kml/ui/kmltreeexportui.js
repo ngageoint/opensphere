@@ -2,7 +2,7 @@ goog.provide('plugin.file.kml.ui.KMLTreeExportCtrl');
 goog.provide('plugin.file.kml.ui.kmlTreeExportDirective');
 
 goog.require('goog.asserts');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui.Module');
 goog.require('os.ui.window');
 goog.require('plugin.file.kml.KMLTreeExporter');

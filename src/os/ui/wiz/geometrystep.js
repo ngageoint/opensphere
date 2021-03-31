@@ -3,7 +3,7 @@ goog.provide('os.ui.wiz.GeometryStepCtrl');
 
 goog.require('goog.array');
 goog.require('goog.async.Delay');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.geo');
 goog.require('os.im.mapping.AltMapping');
 goog.require('os.im.mapping.BearingMapping');

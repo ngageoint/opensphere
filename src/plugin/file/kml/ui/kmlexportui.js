@@ -1,7 +1,7 @@
 goog.provide('plugin.file.kml.ui.KMLExportCtrl');
 goog.provide('plugin.file.kml.ui.kmlExportDirective');
 
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui.Module');
 goog.require('os.ui.file.kml');
 goog.require('os.ui.icon.IconPickerCtrl');

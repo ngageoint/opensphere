@@ -1,8 +1,9 @@
 goog.provide('os.ui.Icons');
 goog.provide('os.ui.IconsSVG');
+
 goog.require('goog.crypt.hash32');
+goog.require('os');
 goog.require('os.color');
-goog.require('os.defines');
 
 
 /**

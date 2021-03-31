@@ -4,7 +4,7 @@ goog.provide('os.ui.draw.drawPickerDirective');
 goog.require('goog.Disposable');
 goog.require('goog.events.KeyHandler');
 goog.require('ol.geom.Point');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.interaction.DragBox');
 goog.require('os.interaction.DragCircle');
 goog.require('os.interaction.DrawLine');

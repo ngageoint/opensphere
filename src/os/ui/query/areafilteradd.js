@@ -3,6 +3,7 @@ goog.provide('os.ui.query.areaFilterAddDirective');
 
 goog.require('goog.async.Delay');
 goog.require('goog.events.EventTarget');
+goog.require('os');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.filter.BaseFilterManager');
 goog.require('os.query.BaseAreaManager');

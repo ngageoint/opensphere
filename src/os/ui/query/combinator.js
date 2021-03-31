@@ -1,9 +1,9 @@
 goog.provide('os.ui.query.CombinatorCtrl');
 goog.provide('os.ui.query.combinatorDirective');
 
+goog.require('os');
 goog.require('os.command.CommandProcessor');
 goog.require('os.command.SequenceCommand');
-goog.require('os.defines');
 goog.require('os.implements');
 goog.require('os.layer.ILayer');
 goog.require('os.ui.Module');

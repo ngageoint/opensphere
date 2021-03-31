@@ -1,7 +1,7 @@
 goog.provide('plugin.ogc.ui.GeoserverImportCtrl');
 goog.provide('plugin.ogc.ui.geoserverDirective');
 
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui.Module');
 goog.require('os.ui.SingleUrlProviderImportCtrl');
 goog.require('os.ui.WindowEventType');

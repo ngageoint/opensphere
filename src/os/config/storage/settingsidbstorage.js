@@ -1,9 +1,11 @@
 goog.provide('os.config.storage.SettingsIDBStorage');
+
 goog.require('goog.array');
 goog.require('goog.async.Deferred');
 goog.require('goog.async.DeferredList');
 goog.require('goog.functions');
 goog.require('goog.object');
+goog.require('os');
 goog.require('os.config.storage.BaseLocalSettingsStorage');
 goog.require('os.config.storage.ISettingsReadableStorage');
 goog.require('os.config.storage.ISettingsStorage');

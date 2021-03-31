@@ -2,7 +2,7 @@ goog.provide('plugin.ogc.ui.OgcServerImportCtrl');
 goog.provide('plugin.ogc.ui.ogcserverDirective');
 
 goog.require('goog.dom.xml');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui.Module');
 goog.require('os.ui.ProviderImportCtrl');
 goog.require('os.ui.WindowEventType');

@@ -2,7 +2,7 @@ goog.provide('os.ui.DatePanelCtrl');
 goog.provide('os.ui.datePanelDirective');
 
 goog.require('goog.math.RangeSet');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui.Module');
 goog.require('os.ui.datetime.dateControlDirective');
 goog.require('os.ui.events.UIEvent');

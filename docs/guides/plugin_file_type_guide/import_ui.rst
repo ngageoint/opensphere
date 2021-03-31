@@ -1,10 +1,10 @@
 Import UI
 ---------
 
-For external plugins, you will need to create at least one define for your project. This will allow Angular to find your templates properly.
+For external plugins, you will need to create at least one ``goog.define`` for your project. This will allow Angular to find your templates properly.
 
-.. literalinclude:: src/plugin/georss/defines.js
-  :caption: ``src/plugin/georss/defines.js``
+.. literalinclude:: src/plugin/georss/georss.js
+  :caption: ``src/plugin/georss/georss.js``
   :linenos:
   :language: javascript
 

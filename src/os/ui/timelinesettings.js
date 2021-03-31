@@ -4,7 +4,7 @@ goog.provide('os.ui.timeSettingsDirective');
 goog.require('goog.events.KeyHandler');
 goog.require('goog.math.Range');
 goog.require('goog.math.RangeSet');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.metrics.Metrics');
 goog.require('os.time');
 goog.require('os.time.TimelineController');

@@ -1,6 +1,6 @@
 goog.provide('os.ui.osNavTopDirective');
 
-goog.require('os.defines');
+goog.require('os');
 
 
 /**

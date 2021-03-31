@@ -1,7 +1,7 @@
 goog.provide('os.ui.search.place.CoordinateResultCardCtrl');
 goog.provide('os.ui.search.place.coordResultCardDirective');
 
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.map');
 goog.require('os.ui.Module');
 goog.require('os.ui.search.FeatureResultCardCtrl');

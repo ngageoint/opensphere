@@ -1,8 +1,9 @@
 goog.provide('os.ui.buffer.BufferDialogCtrl');
 goog.provide('os.ui.buffer.bufferDialogDirective');
+
 goog.require('ol.Feature');
 goog.require('ol.proj.EPSG3857');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui.Module');
 goog.require('os.ui.buffer.bufferFormDirective');
 

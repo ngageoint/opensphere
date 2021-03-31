@@ -1,7 +1,7 @@
 goog.provide('plugin.file.gpx.ui.GPXImportCtrl');
 goog.provide('plugin.file.gpx.ui.gpxImportDirective');
 
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui.Module');
 goog.require('os.ui.file.ui.AbstractFileImportCtrl');
 goog.require('plugin.file.gpx.GPXDescriptor');

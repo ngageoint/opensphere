@@ -2,9 +2,9 @@ goog.provide('plugin.vectortools.MergeCtrl');
 goog.provide('plugin.vectortools.mergeDirective');
 
 goog.require('ol.array');
+goog.require('os');
 goog.require('os.data.OSDataManager');
 goog.require('os.data.SourceManager');
-goog.require('os.defines');
 goog.require('os.source.PropertyChange');
 goog.require('os.ui.Module');
 goog.require('os.ui.util.validationMessageDirective');

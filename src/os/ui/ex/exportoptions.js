@@ -1,9 +1,10 @@
 goog.provide('os.ui.ex.ExportOptionsCtrl');
 goog.provide('os.ui.ex.ExportOptionsEvent');
 goog.provide('os.ui.ex.exportOptionsDirective');
+
 goog.require('goog.Disposable');
 goog.require('ol.array');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.events.SelectionType');
 goog.require('os.source.PropertyChange');
 goog.require('os.ui.Module');

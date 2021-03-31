@@ -1,8 +1,8 @@
 goog.provide('plugin.places.KMLPlacesCtrl');
 goog.provide('plugin.places.KMLPlacesImportUI');
 
+goog.require('os');
 goog.require('os.command.SequenceCommand');
-goog.require('os.defines');
 goog.require('os.im.Importer');
 goog.require('os.im.mapping.RenameMapping');
 goog.require('os.parse.FileParserConfig');

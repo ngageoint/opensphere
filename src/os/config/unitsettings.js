@@ -2,7 +2,7 @@ goog.provide('os.config.UnitSettings');
 goog.provide('os.config.UnitSettingsCtrl');
 
 goog.require('goog.userAgent');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.map');
 goog.require('os.ui.config.SettingPlugin');
 goog.require('os.ui.location.SimpleLocationControlsCtrl');

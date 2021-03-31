@@ -1,10 +1,11 @@
 goog.provide('os.config.SettingsInitializer');
+
+goog.require('os');
 goog.require('os.config');
 goog.require('os.config.Settings');
 goog.require('os.config.storage.SettingsFile');
 goog.require('os.config.storage.SettingsIDBStorage');
 goog.require('os.config.storage.SettingsLocalStorage');
-goog.require('os.defines');
 goog.require('os.ui.config.AngularAppSettingsInitializer');
 
 

@@ -24,7 +24,6 @@ goog.require('os.data.event.DataEvent');
 goog.require('os.data.event.DataEventType');
 goog.require('os.data.histo.ColorModel');
 goog.require('os.data.histo.SourceHistogram');
-goog.require('os.defines');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.events.SelectionType');
 goog.require('os.feature.DynamicPropertyChange');

@@ -3,11 +3,11 @@ goog.provide('os.ui.layer.defaultLayerUIDirective');
 
 goog.require('goog.array');
 goog.require('ol.array');
+goog.require('os');
 goog.require('os.command.LayerAutoRefresh');
 goog.require('os.command.LayerStyle');
 goog.require('os.command.ParallelCommand');
 goog.require('os.config.Settings');
-goog.require('os.defines');
 goog.require('os.layer');
 goog.require('os.ui.ControlType');
 goog.require('os.ui.Module');

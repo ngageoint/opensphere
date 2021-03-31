@@ -2,10 +2,10 @@ goog.provide('os.ui.AreasCtrl');
 goog.provide('os.ui.areasDirective');
 
 goog.require('goog.async.Delay');
+goog.require('os');
 goog.require('os.data.AreaNode');
 goog.require('os.data.AreaTreeSearch');
 goog.require('os.data.groupby.SourceGroupBy');
-goog.require('os.defines');
 goog.require('os.query.AreaManager');
 goog.require('os.ui.Module');
 goog.require('os.ui.data.groupby.TagGroupBy');

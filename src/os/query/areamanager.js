@@ -8,6 +8,7 @@ goog.require('ol.Feature');
 goog.require('ol.format.GeoJSON');
 goog.require('ol.source.Vector');
 goog.require('ol.source.VectorEventType');
+goog.require('os');
 goog.require('os.array');
 goog.require('os.command.TransformAreas');
 goog.require('os.config.Settings');

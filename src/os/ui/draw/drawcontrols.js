@@ -3,8 +3,8 @@ goog.provide('os.ui.draw.drawControlsDirective');
 
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('os');
 goog.require('os.MapEvent');
-goog.require('os.defines');
 goog.require('os.ui.Module');
 goog.require('os.ui.draw');
 goog.require('os.ui.draw.BaseDrawControlsCtrl');

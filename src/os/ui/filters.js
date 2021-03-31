@@ -1,11 +1,11 @@
 goog.provide('os.ui.FiltersCtrl');
 goog.provide('os.ui.filtersDirective');
 
+goog.require('os');
 goog.require('os.MapContainer');
 goog.require('os.command.SequenceCommand');
 goog.require('os.data.FilterTreeSearch');
 goog.require('os.data.groupby.SourceGroupBy');
-goog.require('os.defines');
 goog.require('os.layer');
 goog.require('os.metrics.Metrics');
 goog.require('os.query');

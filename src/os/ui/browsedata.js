@@ -2,9 +2,9 @@ goog.provide('os.ui.BrowseDataCtrl');
 goog.provide('os.ui.browseDataDirective');
 
 goog.require('goog.events.EventType');
+goog.require('os');
 goog.require('os.data.DataProviderEventType');
 goog.require('os.data.DescriptorEventType');
-goog.require('os.defines');
 goog.require('os.ui.Module');
 goog.require('os.ui.im.ImportEventType');
 goog.require('os.ui.search.FacetedSearchCtrl');

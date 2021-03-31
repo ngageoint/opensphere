@@ -2,9 +2,9 @@ goog.provide('plugin.vectortools.JoinCtrl');
 goog.provide('plugin.vectortools.joinDirective');
 
 goog.require('ol.array');
+goog.require('os');
 goog.require('os.data.OSDataManager');
 goog.require('os.data.SourceManager');
-goog.require('os.defines');
 goog.require('os.ui.Module');
 goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');

@@ -9,6 +9,7 @@ goog.require('ol.Feature');
 goog.require('ol.format.GeoJSON');
 goog.require('ol.source.Vector');
 goog.require('ol.source.VectorEventType');
+goog.require('os');
 goog.require('os.array');
 goog.require('os.data.CollectionManager');
 goog.require('os.data.RecordField');
@@ -95,18 +96,6 @@ os.query.DRAW_ID = 'draw';
  * @const
  */
 os.query.BaseAreaManager.FEATURE_PREFIX = 'area_';
-
-
-/**
- * @define {string} Area manager's storage save key
- */
-os.AREA_STORAGE_KEY = goog.define('os.AREA_STORAGE_KEY', 'areas');
-
-
-/**
- * @define {string} Area manager's storage save key for all current areas, including temps
- */
-os.ALL_AREA_STORAGE_KEY = goog.define('os.ALL_AREA_STORAGE_KEY', 'areasAll');
 
 
 /**

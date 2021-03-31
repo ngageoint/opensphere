@@ -2,7 +2,7 @@ goog.provide('os.ui.ScreenOverlayCtrl');
 goog.provide('os.ui.screenOverlayDrective');
 
 goog.require('goog.events.KeyHandler');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui.Module');
 goog.require('os.ui.window');
 

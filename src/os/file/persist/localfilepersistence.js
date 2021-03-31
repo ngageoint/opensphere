@@ -1,5 +1,7 @@
 goog.provide('os.file.persist.LocalFilePersistence');
+
 goog.require('goog.events.Event');
+goog.require('os');
 goog.require('os.ex.IPersistenceMethod');
 goog.require('os.file.File');
 goog.require('os.file.FileStorage');

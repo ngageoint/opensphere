@@ -2,7 +2,7 @@ goog.provide('plugin.places.ui.PlacesCtrl');
 goog.provide('plugin.places.ui.placesDirective');
 
 goog.require('goog.Disposable');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ex.ExportOptions');
 goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');

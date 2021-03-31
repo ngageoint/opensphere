@@ -1,7 +1,7 @@
 goog.provide('plugin.arc.ArcImportCtrl');
 goog.provide('plugin.arc.arcImportDirective');
 
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui.Module');
 goog.require('os.ui.SingleUrlProviderImportCtrl');
 goog.require('os.ui.singleUrlFormDirective');
