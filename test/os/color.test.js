@@ -164,24 +164,24 @@ describe('os.color', function() {
 
   it('should adjust values for brightness, contrast, and saturation', function() {
     // Tests brightness and clamps
-    var data = [225, 0, 0, 0];
+    var data = new Uint8ClampedArray([225, 0, 0, 0]);
     os.color.adjustColor(data, -1, 1, 1);
     expect(data).toEqual([0, 0, 0, 0]);
 
     // Tests contrast
     data = [100, 50, 50, 0];
     os.color.adjustColor(data, 0, 2, 1);
-    expect(data).toEqual([200, 100, 100, 0]);
+    expect(data).toEqual([199.5, 99.5, 99.5, 0]);
 
     // Tests saturation
     data = [20, 20, 200, 0];
     os.color.adjustColor(data, 0, 1, 0);
-    expect(data).toEqual([35, 35, 35, 0]);
+    expect(data).toEqual([34.760000000000005, 34.760000000000005, 34.760000000000005, 0]);
 
     // Tests all 3
     data = [0, 225, 225, 0];
     os.color.adjustColor(data, 0.5, 0.5, 0.5);
-    expect(data).toEqual([152, 208, 208, 0]);
+    expect(data).toEqual([151.64125, 207.89125, 207.89125, 0]);
   });
 
   it('should convert integer color representations to hex color strings', function() {
