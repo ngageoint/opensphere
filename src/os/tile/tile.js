@@ -2,7 +2,7 @@ goog.provide('os.tile');
 
 
 /**
- * @typedef {function(Array<number>, number, number)}
+ * @typedef {function(Uint8ClampedArray, number, number)}
  */
 os.tile.TileFilterFn;
 

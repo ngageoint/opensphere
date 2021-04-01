@@ -536,7 +536,7 @@ os.layer.Tile.prototype.updateColorFilter = function() {
  * Filter function that applies the layer color tile image data. This filter is always in the filter array, but it
  * only runs if the current color is different from the default or if the colorize option is active.
  *
- * @param {Array<number>} data The image data.
+ * @param {Uint8ClampedArray} data The image data.
  * @param {number} width The image width.
  * @param {number} height The image height.
  */

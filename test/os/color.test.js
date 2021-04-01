@@ -164,9 +164,9 @@ describe('os.color', function() {
 
   it('should adjust values for brightness, contrast, and saturation', function() {
     // Tests brightness and clamps
-    var data = [225, 0, 0, 0];
+    var data = new Uint8ClampedArray([225, 0, 0, 0]);
     os.color.adjustColor(data, -1, 1, 1);
-    expect(data).toEqual([0, -225, -225, 0]);
+    expect(data).toEqual([0, 0, 0, 0]);
 
     // Tests contrast
     data = [100, 50, 50, 0];
