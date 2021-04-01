@@ -238,7 +238,7 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   im.registerImporter('os', os.im.FeatureImporter);
 
   // secure importer against injection attacks
-  os.im.FeatureImporter.sanitize = /** @type {angular.$sanitize} */ (os.ui.injector.get('$sanitize'));
+  os.im.FeatureImporter.sanitize = os.ui.sanitize;
 
   // set up file storage
   os.file.FileStorage.getInstance();
