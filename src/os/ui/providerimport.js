@@ -199,7 +199,7 @@ os.ui.ProviderImportCtrl.prototype.launchHelp = function() {
       'x': '-10',
       'y': 'center',
       'width': '500',
-      'height': 'auto',
+      'height': '500',
       'show-close': true,
       'modal': true,
       'id': this.helpWindowId
