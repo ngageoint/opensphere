@@ -9,17 +9,24 @@ goog.require('os.ui.menu.MenuItemType');
 /**
  * @type {os.ui.menu.Menu<undefined>|undefined}
  */
-os.ui.menu.UNIT = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
+os.ui.menu.unit.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
   type: os.ui.menu.MenuItemType.ROOT,
   children: []
 }));
 
 
 /**
+ * @type {os.ui.menu.Menu<undefined>|undefined}
+ * @deprecated
+ */
+os.ui.menu.UNIT = os.ui.menu.unit.MENU;
+
+
+/**
  * Set up the menu
  */
 os.ui.menu.unit.setup = function() {
-  var menu = os.ui.menu.UNIT;
+  var menu = os.ui.menu.unit.MENU;
   if (menu) {
     var root = menu.getRoot();
     var um = os.unit.UnitManager.getInstance();
@@ -65,7 +72,9 @@ os.ui.menu.unit.setup = function() {
  * Dispose unit actions.
  */
 os.ui.menu.unit.dispose = function() {
-  goog.dispose(os.ui.menu.UNIT);
+  goog.dispose(os.ui.menu.unit.MENU);
+
+  os.ui.menu.unit.MENU = undefined;
   os.ui.menu.UNIT = undefined;
 };
 
