@@ -156,11 +156,14 @@ class LayerPresetManager extends Disposable {
    * @protected
    */
   onLayerStyleChanged(layerId, layer, check, event) {
-    const meta = /** @type {!LayerPresetsMetaData} */ (this.presets_.entry(layerId)[2]);
+    const regEntry = this.presets_.entry(layerId);
+    if (regEntry !== null) {
+      const meta = /** @type {!LayerPresetsMetaData} */ (regEntry[2]);
 
-    // get the debouncer for this layerId
-    if (meta && !meta.debouncer.isDisposed()) {
-      meta.debouncer.fire(check, event);
+      // get the debouncer for this layerId
+      if (meta && !meta.debouncer.isDisposed()) {
+        meta.debouncer.fire(check, event);
+      }
     }
   }
 
