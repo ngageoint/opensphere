@@ -6,6 +6,8 @@ const objectUtils = goog.require('goog.object');
 const events = goog.require('ol.events');
 const OLVectorLayer = goog.require('ol.layer.Vector');
 const VectorEventType = goog.require('ol.source.VectorEventType');
+const dispatcher = goog.require('os.Dispatcher');
+const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const SelectionType = goog.require('os.events.SelectionType');
 const LayerPropertyChange = goog.require('os.layer.PropertyChange');
@@ -190,7 +192,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
       this.csContext.dispose();
       this.csContext = null;
 
-      os.dispatcher.dispatchEvent(MapEvent.GL_REPAINT);
+      dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }
 
@@ -202,7 +204,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
   onLayerVisibility_(opt_event) {
     if (this.csContext && this.layer) {
       this.csContext.setVisibility(this.layer.getVisible());
-      os.dispatcher.dispatchEvent(MapEvent.GL_REPAINT);
+      dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }
 
@@ -464,7 +466,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
           this.initializePrimitives_([feature]);
         }
 
-        os.dispatcher.dispatchEvent(MapEvent.GL_REPAINT);
+        dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
       }
     }
   }
@@ -509,7 +511,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
         this.updatePrimitiveVisibility_(feature, !!shown);
       }
 
-      os.dispatcher.dispatchEvent(MapEvent.GL_REPAINT);
+      dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }
 
@@ -531,7 +533,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
         this.initializePrimitive(primitives[i], feature);
       }
 
-      os.dispatcher.dispatchEvent(MapEvent.GL_REPAINT);
+      dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     } else {
       // primitive(s) haven't been created, so mark if they should be shown on creation. this typically happens when an
       // icon needs to be loaded prior to creating a billboard.
@@ -551,7 +553,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
 
     if (feature !== null && this.csContext) {
       this.csContext.cleanup(feature);
-      os.dispatcher.dispatchEvent(MapEvent.GL_REPAINT);
+      dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }
 
@@ -619,7 +621,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
       }
     }
 
-    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
+    dispatcher.getInstance().dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 
 
@@ -650,7 +652,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
    * Update the eye offsets of all labels
    */
   updateLabelOffsets() {
-    const camera = os.MapContainer.getInstance().getWebGLCamera();
+    const camera = MapContainer.getInstance().getWebGLCamera();
     if (this.csContext && camera) {
       // Find the z-index step from the camera altitude
       const cameraDistance = camera.getDistanceToCenter();
@@ -685,7 +687,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
       }
     }
 
-    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
+    dispatcher.getInstance().dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 
 
@@ -695,7 +697,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
    * @private
    */
   setFeatureHighlight_(primitive, value) {
-    const camera = /** @type {Camera} */ (os.MapContainer.getInstance().getWebGLCamera());
+    const camera = /** @type {Camera} */ (MapContainer.getInstance().getWebGLCamera());
 
     if (primitive && primitive.eyeOffset) {
       if (value && camera) {
@@ -747,7 +749,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
    * Update the billboard offsets
    */
   updateBillboardOffsets() {
-    const camera = os.MapContainer.getInstance().getWebGLCamera();
+    const camera = MapContainer.getInstance().getWebGLCamera();
     if (camera) {
       // Find the z-index step from the camera altitude
       const cameraDistance = camera.getDistanceToCenter();
@@ -768,7 +770,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
   updateFromCamera() {
     this.updateLabelOffsets();
     this.updateBillboardOffsets();
-    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
+    dispatcher.getInstance().dispatchEvent(os.MapEvent.GL_REPAINT);
   }
 }
 

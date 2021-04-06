@@ -1,28 +1,33 @@
-goog.provide('plugin.cesium.sync.CesiumSynchronizer');
+goog.module('plugin.cesium.sync.CesiumSynchronizer');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.webgl.AbstractWebGLSynchronizer');
-
+const AbstractWebGLSynchronizer = goog.require('os.webgl.AbstractWebGLSynchronizer');
 
 
 /**
  * Abstract class to synchronize an OpenLayers layer to Cesium.
  *
  * @abstract
- * @param {!T} layer The OpenLayers layer.
- * @param {!ol.PluggableMap} map The OpenLayers map.
- * @param {!Cesium.Scene} scene The Cesium scene.
- * @extends {os.webgl.AbstractWebGLSynchronizer<T>}
- * @constructor
+ * @extends {AbstractWebGLSynchronizer<T>}
  * @template T
  */
-plugin.cesium.sync.CesiumSynchronizer = function(layer, map, scene) {
-  plugin.cesium.sync.CesiumSynchronizer.base(this, 'constructor', layer, map);
-
+class CesiumSynchronizer extends AbstractWebGLSynchronizer {
   /**
-   * The Cesium scene.
-   * @type {!Cesium.Scene}
-   * @protected
+   * Constructor.
+   * @param {!T} layer The OpenLayers layer.
+   * @param {!ol.PluggableMap} map The OpenLayers map.
+   * @param {!Cesium.Scene} scene The Cesium scene.
    */
-  this.scene = scene;
-};
-goog.inherits(plugin.cesium.sync.CesiumSynchronizer, os.webgl.AbstractWebGLSynchronizer);
+  constructor(layer, map, scene) {
+    super(layer, map);
+
+    /**
+     * The Cesium scene.
+     * @type {!Cesium.Scene}
+     * @protected
+     */
+    this.scene = scene;
+  }
+}
+
+exports = CesiumSynchronizer;

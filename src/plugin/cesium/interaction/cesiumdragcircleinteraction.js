@@ -1,41 +1,44 @@
-goog.provide('plugin.cesium.interaction.dragcircle');
+goog.module('plugin.cesium.interaction.dragcircle');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.interaction.DragCircle');
-goog.require('plugin.cesium');
+const dispatcher = goog.require('os.Dispatcher');
+const MapContainer = goog.require('os.MapContainer');
+const DragCircle = goog.require('os.interaction.DragCircle');
+const cesium = goog.require('plugin.cesium');
 
 
 /**
  * The Cesium circle primitive.
  * @type {Cesium.Primitive|undefined}
  */
-os.interaction.DragCircle.prototype.cesiumCircle = undefined;
+DragCircle.prototype.cesiumCircle = undefined;
 
 /**
  * The Cesium label collection.
  * @type {Cesium.LabelCollection|undefined}
  */
-os.interaction.DragCircle.prototype.cesiumLabels = undefined;
+DragCircle.prototype.cesiumLabels = undefined;
 
 /**
  * The Cesium label.
  * @type {Cesium.Label|undefined}
  */
-os.interaction.DragCircle.prototype.cesiumLabel = undefined;
+DragCircle.prototype.cesiumLabel = undefined;
 
 /**
  * The Cesium circle color.
  * @type {Cesium.ColorGeometryInstanceAttribute|undefined}
  */
-os.interaction.DragCircle.prototype.cesiumColor = undefined;
+DragCircle.prototype.cesiumColor = undefined;
 
 
 /**
  * Clean up the drag circle interaction in Cesium.
  *
- * @this {os.interaction.DragCircle}
+ * @this {DragCircle}
  */
-plugin.cesium.interaction.dragcircle.cleanupWebGL = function() {
-  var webgl = /** @type {plugin.cesium.CesiumRenderer|undefined} */ (os.MapContainer.getInstance().getWebGLRenderer());
+const cleanupWebGL = function() {
+  var webgl = /** @type {cesium.CesiumRenderer|undefined} */ (MapContainer.getInstance().getWebGLRenderer());
   var scene = webgl ? webgl.getCesiumScene() : undefined;
   if (scene) {
     if (this.cesiumCircle) {
@@ -52,23 +55,22 @@ plugin.cesium.interaction.dragcircle.cleanupWebGL = function() {
   }
 };
 
-
 /**
  * Draw the circle in Cesium.
  *
  * @param {ol.Coordinate} start The start coordinate.
  * @param {ol.Coordinate} end The end coordinate.
- * @this {os.interaction.DragCircle}
+ * @this {DragCircle}
  * @suppress {accessControls}
  */
-plugin.cesium.interaction.dragcircle.updateWebGL = function(start, end) {
-  if (os.MapContainer.getInstance().is3DEnabled()) {
+const updateWebGL = function(start, end) {
+  if (MapContainer.getInstance().is3DEnabled()) {
     if (!this.cesiumColor) {
       this.cesiumColor = new Cesium.ColorGeometryInstanceAttribute(0, 1, 1, 1);
     }
 
-    var webgl = /** @type {plugin.cesium.CesiumRenderer|undefined} */ (
-      os.MapContainer.getInstance().getWebGLRenderer());
+    var webgl = /** @type {cesium.CesiumRenderer|undefined} */ (
+      MapContainer.getInstance().getWebGLRenderer());
     var scene = webgl ? webgl.getCesiumScene() : undefined;
 
     start = ol.proj.toLonLat(start, this.getMap().getView().getProjection());
@@ -111,7 +113,7 @@ plugin.cesium.interaction.dragcircle.updateWebGL = function(start, end) {
         appearance: new Cesium.PolylineColorAppearance(),
         geometryInstances: new Cesium.GeometryInstance({
           geometry: new Cesium.GroundPolylineGeometry({
-            positions: plugin.cesium.generateCirclePositions(center, this.distance),
+            positions: cesium.generateCirclePositions(center, this.distance),
             arcType: os.interpolate.getMethod() === os.interpolate.Method.RHUMB ?
               Cesium.ArcType.RHUMB : Cesium.ArcType.GEODESIC,
             width: 2
@@ -127,7 +129,12 @@ plugin.cesium.interaction.dragcircle.updateWebGL = function(start, end) {
       this.cesiumLabel.show = true;
 
       scene.groundPrimitives.add(this.cesiumCircle);
-      os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
+      dispatcher.getInstance().dispatchEvent(os.MapEvent.GL_REPAINT);
     }
   }
+};
+
+exports = {
+  cleanupWebGL,
+  updateWebGL
 };

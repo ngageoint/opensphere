@@ -79,4 +79,3 @@ exports = {
   getColor,
   getLineWidthFromStyle
 };
-

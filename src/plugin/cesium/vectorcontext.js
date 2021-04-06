@@ -14,7 +14,6 @@ const OLVectorLayer = goog.requireType('ol.layer.Vector');
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 
 
-
 /**
  * Logger for plugin.cesium.VectorContext
  * @type {log.Logger}

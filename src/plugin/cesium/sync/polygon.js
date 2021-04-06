@@ -2,6 +2,7 @@ goog.module('plugin.cesium.sync.polygon');
 goog.module.declareLegacyNamespace();
 
 const olcsCore = goog.require('olcs.core');
+const geo = goog.require('os.geo');
 const {GeometryInstanceId} = goog.require('plugin.cesium');
 const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
 const {getColor, getLineWidthFromStyle} = goog.require('plugin.cesium.sync.style');
@@ -62,7 +63,7 @@ const createPolygon = (feature, geometry, style, context, opt_polyFlats, opt_off
   // extruded polygons cannot be rendered as a polyline. since polygons will not respect line width on Windows, make
   // sure the geometry is both extruded and has an altitude before using the polygon primitive.
   const extrude = opt_extrude != undefined ? opt_extrude : !!geometry.get('extrude');
-  if (extrude && os.geo.hasAltitudeGeometry(geometry)) {
+  if (extrude && geo.hasAltitudeGeometry(geometry)) {
     return createPolygonPrimitive(feature, geometry, style, context, groupPrimitive, opt_polyFlats, opt_offset,
         opt_ringEnds, opt_extrude, opt_index);
   }

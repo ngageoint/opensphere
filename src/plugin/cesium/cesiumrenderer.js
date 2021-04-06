@@ -1,728 +1,706 @@
-goog.provide('plugin.cesium.CesiumRenderer');
+goog.module('plugin.cesium.CesiumRenderer');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Promise');
-goog.require('goog.log');
-goog.require('olcs.OLCesium');
-goog.require('olcs.core');
-goog.require('os.MapEvent');
-goog.require('os.map.terrain');
-goog.require('os.webgl.AbstractWebGLRenderer');
-goog.require('os.webgl.SynchronizerManager');
-goog.require('plugin.cesium');
-goog.require('plugin.cesium.Camera');
-goog.require('plugin.cesium.TerrainLayer');
-goog.require('plugin.cesium.TileGridTilingScheme');
-goog.require('plugin.cesium.command.FlyToSphere');
-goog.require('plugin.cesium.interaction');
-goog.require('plugin.cesium.menu');
-goog.require('plugin.cesium.mixin');
 goog.require('plugin.cesium.mixin.olcs');
 goog.require('plugin.cesium.mixin.renderloop');
-goog.require('plugin.cesium.sync.HeatmapSynchronizer');
-goog.require('plugin.cesium.sync.ImageStaticSynchronizer');
-goog.require('plugin.cesium.sync.ImageSynchronizer');
-goog.require('plugin.cesium.sync.RootSynchronizer');
-goog.require('plugin.cesium.sync.TileSynchronizer');
-goog.require('plugin.cesium.sync.VectorSynchronizer');
 
-
-
-/**
- * A WebGL renderer powered by Cesium.
- *
- * @extends {os.webgl.AbstractWebGLRenderer}
- * @constructor
- */
-plugin.cesium.CesiumRenderer = function() {
-  plugin.cesium.CesiumRenderer.base(this, 'constructor');
-  this.log = plugin.cesium.CesiumRenderer.LOGGER_;
-  this.maxFeaturesKey = 'maxFeatures.cesium';
-
-  this.id = plugin.cesium.Plugin.ID;
-  this.label = 'Cesium';
-  this.description = 'Cesium is a 3D globe renderer for general use.';
-
-  /**
-   * The Openlayers/Cesium synchronizer.
-   * @type {olcs.OLCesium|undefined}
-   * @private
-   */
-  this.olCesium_ = undefined;
-
-  /**
-   * Flag to double check Cesium Camera movement events
-   * @type {boolean}
-   * @private
-   */
-  this.cesiumMoving_ = false;
-
-  /**
-   * Cesium event listeners
-   * @type {!Array<function()>}
-   * @private
-   */
-  this.csListeners_ = [];
-
-  /**
-   * OpenLayers layer to sync Cesium terrain.
-   * @type {plugin.cesium.TerrainLayer|undefined}
-   * @private
-   */
-  this.terrainLayer_ = undefined;
-
-  /**
-   * Promise that resolves when terrain has been activated.
-   * @type {goog.Promise|undefined}
-   * @private
-   */
-  this.terrainPromise_ = undefined;
-
-  /**
-   * Cesium terrain provider.
-   * @type {Cesium.TerrainProvider|undefined}
-   * @private
-   */
-  this.terrainProvider_ = undefined;
-
-  /**
-   * Map of terrain provider types.
-   * @type {!Object<string, !plugin.cesium.TerrainProviderFn>}
-   * @private
-   */
-  this.terrainProviderTypes_ = {};
-};
-goog.inherits(plugin.cesium.CesiumRenderer, os.webgl.AbstractWebGLRenderer);
+const osFeature = goog.require('os.feature');
+const MapContainer = goog.require('os.MapContainer');
+const dispatcher = goog.require('os.Dispatcher');
+const settings = goog.require('os.config.Settings');
+const Promise = goog.require('goog.Promise');
+const log = goog.require('goog.log');
+const OLCesium = goog.require('olcs.OLCesium');
+const MapEvent = goog.require('os.MapEvent');
+const terrain = goog.require('os.map.terrain');
+const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');
+const SynchronizerManager = goog.require('os.webgl.SynchronizerManager');
+const cesium = goog.require('plugin.cesium');
+const Camera = goog.require('plugin.cesium.Camera');
+const TerrainLayer = goog.require('plugin.cesium.TerrainLayer');
+const FlyToSphere = goog.require('plugin.cesium.command.FlyToSphere');
+const interaction = goog.require('plugin.cesium.interaction');
+const menu = goog.require('plugin.cesium.menu');
+const mixin = goog.require('plugin.cesium.mixin');
+const HeatmapSynchronizer = goog.require('plugin.cesium.sync.HeatmapSynchronizer');
+const ImageStaticSynchronizer = goog.require('plugin.cesium.sync.ImageStaticSynchronizer');
+const ImageSynchronizer = goog.require('plugin.cesium.sync.ImageSynchronizer');
+const RootSynchronizer = goog.require('plugin.cesium.sync.RootSynchronizer');
+const TileSynchronizer = goog.require('plugin.cesium.sync.TileSynchronizer');
+const VectorSynchronizer = goog.require('plugin.cesium.sync.VectorSynchronizer');
 
 
 /**
  * The logger.
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {log.Logger}
  */
-plugin.cesium.CesiumRenderer.LOGGER_ = goog.log.getLogger('plugin.cesium.CesiumRenderer');
+const logger = log.getLogger('plugin.cesium.CesiumRenderer');
 
 
 /**
- * Get the Cesium scene object.
- *
- * @return {Cesium.Scene|undefined}
+ * A WebGL renderer powered by Cesium.
  */
-plugin.cesium.CesiumRenderer.prototype.getCesiumScene = function() {
-  return this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
-};
+class CesiumRenderer extends AbstractWebGLRenderer {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.log = logger;
+    this.maxFeaturesKey = 'maxFeatures.cesium';
 
+    this.id = cesium.Plugin.ID;
+    this.label = 'Cesium';
+    this.description = 'Cesium is a 3D globe renderer for general use.';
 
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.isInitialized = function() {
-  return !!this.olCesium_;
-};
+    /**
+     * The Openlayers/Cesium synchronizer.
+     * @type {OLCesium|undefined}
+     * @private
+     */
+    this.olCesium_ = undefined;
 
+    /**
+     * Flag to double check Cesium Camera movement events
+     * @type {boolean}
+     * @private
+     */
+    this.cesiumMoving_ = false;
 
-/**
- * @inheritDoc
- * @suppress {accessControls}
- */
-plugin.cesium.CesiumRenderer.prototype.initialize = function() {
-  if (!this.olCesium_ && this.map) {
-    return new goog.Promise(function(resolve, reject) {
-      plugin.cesium.loadCesium().then(function() {
-        try {
-          // register the default set of synchronizers
-          var sm = os.webgl.SynchronizerManager.getInstance();
-          sm.registerSynchronizer(os.layer.SynchronizerType.VECTOR, plugin.cesium.sync.VectorSynchronizer);
-          sm.registerSynchronizer(os.layer.SynchronizerType.VECTOR_TILE, plugin.cesium.sync.TileSynchronizer);
-          sm.registerSynchronizer(os.layer.SynchronizerType.TILE, plugin.cesium.sync.TileSynchronizer);
-          sm.registerSynchronizer(os.layer.SynchronizerType.IMAGE, plugin.cesium.sync.ImageSynchronizer);
-          sm.registerSynchronizer(os.layer.SynchronizerType.DRAW, plugin.cesium.sync.VectorSynchronizer);
-          sm.registerSynchronizer(os.layer.SynchronizerType.IMAGE_STATIC, plugin.cesium.sync.ImageStaticSynchronizer);
-          sm.registerSynchronizer(plugin.heatmap.SynchronizerType.HEATMAP, plugin.cesium.sync.HeatmapSynchronizer);
+    /**
+     * Cesium event listeners
+     * @type {!Array<function()>}
+     * @private
+     */
+    this.csListeners_ = [];
 
-          // set up menus
-          plugin.cesium.menu.importSetup();
+    /**
+     * OpenLayers layer to sync Cesium terrain.
+     * @type {TerrainLayer|undefined}
+     * @private
+     */
+    this.terrainLayer_ = undefined;
 
-          plugin.cesium.mixin.loadCesiumMixins();
-          plugin.cesium.TileGridTilingScheme.init();
+    /**
+     * Promise that resolves when terrain has been activated.
+     * @type {Promise|undefined}
+     * @private
+     */
+    this.terrainPromise_ = undefined;
 
-          // initialize interactions that have additional support for Cesium
-          plugin.cesium.interaction.loadInteractionMixins();
+    /**
+     * Cesium terrain provider.
+     * @type {Cesium.TerrainProvider|undefined}
+     * @private
+     */
+    this.terrainProvider_ = undefined;
 
-          this.registerTerrainProviderType(os.map.terrain.TerrainType.CESIUM, plugin.cesium.createCesiumTerrain);
-          this.registerTerrainProviderType(os.map.terrain.TerrainType.ION, plugin.cesium.createWorldTerrain);
-          this.registerTerrainProviderType(os.map.terrain.TerrainType.WMS, plugin.cesium.createWMSTerrain);
+    /**
+     * Map of terrain provider types.
+     * @type {!Object<string, !cesium.TerrainProviderFn>}
+     * @private
+     */
+    this.terrainProviderTypes_ = {};
+  }
 
-          this.olCesium_ = new olcs.OLCesium({
-            cameraClass: plugin.cesium.Camera,
-            createSynchronizers: this.createCesiumSynchronizers_.bind(this),
-            map: this.map,
-            time: plugin.cesium.getJulianDate
-          });
+  /**
+   * Get the Cesium scene object.
+   *
+   * @return {Cesium.Scene|undefined}
+   */
+  getCesiumScene() {
+    return this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
+  }
 
-          goog.dom.classlist.add(this.olCesium_.canvas_, os.map.WEBGL_CANVAS_CLASS);
+  /**
+   * @inheritDoc
+   */
+  isInitialized() {
+    return !!this.olCesium_;
+  }
 
-          this.olCesium_.setTargetFrameRate(this.targetFrameRate);
+  /**
+   * @inheritDoc
+   * @suppress {accessControls}
+   */
+  initialize() {
+    if (!this.olCesium_ && this.map) {
+      const mapInstance = /** @type {!ol.Map} */ (this.map);
+      return new Promise((resolve, reject) => {
+        cesium.loadCesium().then(() => {
+          try {
+            // register the default set of synchronizers
+            var sm = SynchronizerManager.getInstance();
+            sm.registerSynchronizer(os.layer.SynchronizerType.VECTOR, VectorSynchronizer);
+            sm.registerSynchronizer(os.layer.SynchronizerType.VECTOR_TILE, TileSynchronizer);
+            sm.registerSynchronizer(os.layer.SynchronizerType.TILE, TileSynchronizer);
+            sm.registerSynchronizer(os.layer.SynchronizerType.IMAGE, ImageSynchronizer);
+            sm.registerSynchronizer(os.layer.SynchronizerType.DRAW, VectorSynchronizer);
+            sm.registerSynchronizer(os.layer.SynchronizerType.IMAGE_STATIC, ImageStaticSynchronizer);
+            sm.registerSynchronizer(plugin.heatmap.SynchronizerType.HEATMAP, HeatmapSynchronizer);
 
-          var scene = this.olCesium_.getCesiumScene();
+            // set up menus
+            menu.importSetup();
 
-          // Our users are more interested in color accuracy with the underlying imagery rather than attempting
-          // to mimic atmospheric lighting effects
-          scene.globe.showGroundAtmosphere = false;
-          scene.highDynamicRange = false;
+            mixin.loadCesiumMixins();
 
-          // set the FOV to 60 degrees to match Google Earth
-          scene.camera.frustum.fov = Cesium.Math.PI_OVER_THREE;
+            // initialize interactions that have additional support for Cesium
+            interaction.loadInteractionMixins();
 
-          // update the globe base color from application settings
-          var bgColor = /** @type {string} */ (os.settings.get(['bgColor'], '#000000'));
-          scene.globe.baseColor = Cesium.Color.fromCssColorString(bgColor);
+            this.registerTerrainProviderType(terrain.TerrainType.CESIUM, cesium.createCesiumTerrain);
+            this.registerTerrainProviderType(terrain.TerrainType.ION, cesium.createWorldTerrain);
+            this.registerTerrainProviderType(terrain.TerrainType.WMS, cesium.createWMSTerrain);
 
-          // only render 25% of the terrain data to improve performance. terrain data is typically much denser than
-          // necessary to render a quality terrain model.
-          //
-          // reduce the quality further in Firefox since it is not as fast
-          Cesium.TerrainProvider.heightmapTerrainQuality = goog.userAgent.GECKO ? 0.05 : 0.25;
-          this.updateTerrainProvider();
+            this.olCesium_ = new OLCesium({
+              cameraClass: Camera,
+              createSynchronizers: this.createCesiumSynchronizers_.bind(this),
+              map: mapInstance,
+              time: cesium.getJulianDate
+            });
 
-          // configure WebGL features
-          this.showFog(!!os.settings.get(os.config.DisplaySetting.FOG_ENABLED, true));
-          this.showSunlight(!!os.settings.get(os.config.DisplaySetting.ENABLE_LIGHTING, false));
-          this.showSky(!!os.settings.get(os.config.DisplaySetting.ENABLE_SKY, false));
+            goog.dom.classlist.add(this.olCesium_.canvas_, os.map.WEBGL_CANVAS_CLASS);
 
-          // legacy code saved density as the Cesium fog density value. now it is saved as a percentage from 0-1. if
-          // the settings value is non-zero (no fog) and less than 5% (not allowed by our UI), reset it to the default.
-          var density = /** @type {number} */ (os.settings.get(os.config.DisplaySetting.FOG_DENSITY,
-              plugin.cesium.DEFAULT_FOG_DENSITY));
-          if (density != 0 && density < 0.05) {
-            density = plugin.cesium.DEFAULT_FOG_DENSITY;
+            this.olCesium_.setTargetFrameRate(this.targetFrameRate);
+
+            var scene = this.olCesium_.getCesiumScene();
+
+            // Our users are more interested in color accuracy with the underlying imagery rather than attempting
+            // to mimic atmospheric lighting effects
+            scene.globe.showGroundAtmosphere = false;
+            scene.highDynamicRange = false;
+
+            // set the FOV to 60 degrees to match Google Earth
+            scene.camera.frustum.fov = Cesium.Math.PI_OVER_THREE;
+
+            // update the globe base color from application settings
+            var bgColor = /** @type {string} */ (settings.getInstance().get(['bgColor'], '#000000'));
+            scene.globe.baseColor = Cesium.Color.fromCssColorString(bgColor);
+
+            // only render 25% of the terrain data to improve performance. terrain data is typically much denser than
+            // necessary to render a quality terrain model.
+            //
+            // reduce the quality further in Firefox since it is not as fast
+            Cesium.TerrainProvider.heightmapTerrainQuality = goog.userAgent.GECKO ? 0.05 : 0.25;
+            this.updateTerrainProvider();
+
+            // configure WebGL features
+            this.showFog(!!settings.getInstance().get(os.config.DisplaySetting.FOG_ENABLED, true));
+            this.showSunlight(!!settings.getInstance().get(os.config.DisplaySetting.ENABLE_LIGHTING, false));
+            this.showSky(!!settings.getInstance().get(os.config.DisplaySetting.ENABLE_SKY, false));
+
+            // legacy code saved density as the Cesium fog density value. now it is saved as a percentage from 0-1. if
+            // the settings value is non-zero (no fog) and less than 5% (not allowed by our UI), reset it to the default.
+            var density = /** @type {number} */ (settings.getInstance().get(os.config.DisplaySetting.FOG_DENSITY,
+                cesium.DEFAULT_FOG_DENSITY));
+            if (density != 0 && density < 0.05) {
+              density = cesium.DEFAULT_FOG_DENSITY;
+            }
+
+            this.setFogDensity(density);
+
+            // create our camera handler
+            var camera = this.olCesium_.camera_ = new Camera(scene, mapInstance);
+
+            // configure camera interactions. do not move this before the camera is created!
+            interaction.configureCesium(camera, scene.screenSpaceCameraController);
+
+            // only render the scene when something changes
+            this.olCesium_.enableAutoRenderLoop();
+
+            // call the parent function last to ensure Cesium init succeeded
+            super.initialize();
+            resolve();
+          } catch (e) {
+            log.error(this.log, 'Failed to create 3D view!', e);
+            reject();
           }
+        }, reject, this);
+      });
+    }
 
-          this.setFogDensity(density);
+    return Promise.resolve();
+  }
 
-          // create our camera handler
-          var camera = this.olCesium_.camera_ = new plugin.cesium.Camera(scene, this.map);
+  /**
+   * @inheritDoc
+   */
+  setEnabled(value) {
+    super.setEnabled(value);
 
-          // configure camera interactions. do not move this before the camera is created!
-          plugin.cesium.interaction.configureCesium(camera, scene.screenSpaceCameraController);
+    if (!this.olCesium_) {
+      // OLCS was not set up correctly or has been disposed, don't do anything
+      return;
+    }
 
-          // only render the scene when something changes
-          this.olCesium_.enableAutoRenderLoop();
+    this.olCesium_.setEnabled(value);
 
-          // call the parent function last to ensure Cesium init succeeded
-          os.webgl.AbstractWebGLRenderer.prototype.initialize.call(this);
-          resolve();
-        } catch (e) {
-          goog.log.error(this.log, 'Failed to create 3D view!', e);
-          reject();
+    if (value) {
+      var scene = this.olCesium_.getCesiumScene();
+      if (scene) {
+        // add Cesium listeners
+        this.csListeners_.push(
+            scene.camera.moveStart.addEventListener(this.onCesiumCameraMoveChange_.bind(this, true)));
+        this.csListeners_.push(
+            scene.camera.moveEnd.addEventListener(this.onCesiumCameraMoveChange_.bind(this, false)));
+      }
+    } else {
+      // remove Cesium listeners
+      for (var i = 0, n = this.csListeners_.length; i < n; i++) {
+        this.csListeners_[i]();
+      }
+
+      this.csListeners_.length = 0;
+
+      // flag as no longer moving to ensure the ViewHint is updated
+      this.setCesiumMoving_(false);
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getCamera() {
+    return this.olCesium_ ? /** @type {Camera} */ (this.olCesium_.getCamera()) : undefined;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getCoordinateFromPixel(pixel) {
+    // verify the pixel is valid and numeric. key events in particular can provide NaN pixels.
+    if (this.olCesium_ && pixel && pixel.length == 2 && !isNaN(pixel[0]) && !isNaN(pixel[1])) {
+      var cartesian = Cesium.Cartesian2.fromArray(pixel);
+      var scene = this.olCesium_.getCesiumScene();
+      var removeHeight;
+      if (scene && scene.camera && scene.globe) {
+        // The Cesium team recommends different methods here based on whether terrain is enabled
+        // see https://github.com/AnalyticalGraphicsInc/cesium/issues/4368#issuecomment-406639086
+        if (!scene.terrainProvider || scene.terrainProvider instanceof Cesium.EllipsoidTerrainProvider) {
+          // this is the "no terrain" case
+          cartesian = scene.camera.pickEllipsoid(cartesian);
+          // both the docs and the forums indicate that method should return a height of zero, but
+          // it slightly doesn't
+          removeHeight = true;
+        } else {
+          var pickRay = scene.camera.getPickRay(cartesian);
+          cartesian = scene.globe.pick(pickRay, scene);
         }
-      }, reject, this);
-    }, this);
-  }
 
-  return goog.Promise.resolve();
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.setEnabled = function(value) {
-  plugin.cesium.CesiumRenderer.base(this, 'setEnabled', value);
-
-  if (!this.olCesium_) {
-    // OLCS was not set up correctly or has been disposed, don't do anything
-    return;
-  }
-
-  this.olCesium_.setEnabled(value);
-
-  if (value) {
-    var scene = this.olCesium_.getCesiumScene();
-    if (scene) {
-      // add Cesium listeners
-      this.csListeners_.push(
-          scene.camera.moveStart.addEventListener(this.onCesiumCameraMoveChange_.bind(this, true)));
-      this.csListeners_.push(
-          scene.camera.moveEnd.addEventListener(this.onCesiumCameraMoveChange_.bind(this, false)));
-    }
-  } else {
-    // remove Cesium listeners
-    for (var i = 0, n = this.csListeners_.length; i < n; i++) {
-      this.csListeners_[i]();
+        if (cartesian) {
+          var cartographic = scene.globe.ellipsoid.cartesianToCartographic(cartesian);
+          if (removeHeight) {
+            cartographic.height = 0;
+          }
+          return [
+            Cesium.Math.toDegrees(cartographic.longitude),
+            Cesium.Math.toDegrees(cartographic.latitude),
+            cartographic.height
+          ];
+        }
+      }
     }
 
-    this.csListeners_.length = 0;
-
-    // flag as no longer moving to ensure the ViewHint is updated
-    this.setCesiumMoving_(false);
+    return null;
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  getPixelFromCoordinate(coordinate, opt_inView) {
+    var result = null;
 
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.getCamera = function() {
-  return this.olCesium_ ? /** @type {plugin.cesium.Camera} */ (this.olCesium_.getCamera()) : undefined;
-};
+    if (this.olCesium_) {
+      var scene = this.olCesium_.getCesiumScene();
+      var cartesian = null;
 
+      // verify the coordinate is defined and numeric.
+      if (coordinate && coordinate.length >= 2 && !isNaN(coordinate[0]) && !isNaN(coordinate[1])) {
+        var height = coordinate[2] || 0;
+        cartesian = Cesium.Cartesian3.fromDegrees(coordinate[0], coordinate[1], height);
+      }
 
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.getCoordinateFromPixel = function(pixel) {
-  // verify the pixel is valid and numeric. key events in particular can provide NaN pixels.
-  if (this.olCesium_ && pixel && pixel.length == 2 && !isNaN(pixel[0]) && !isNaN(pixel[1])) {
-    var cartesian = Cesium.Cartesian2.fromArray(pixel);
-    var scene = this.olCesium_.getCesiumScene();
-    var removeHeight;
-    if (scene && scene.camera && scene.globe) {
-      // The Cesium team recommends different methods here based on whether terrain is enabled
-      // see https://github.com/AnalyticalGraphicsInc/cesium/issues/4368#issuecomment-406639086
-      if (!scene.terrainProvider || scene.terrainProvider instanceof Cesium.EllipsoidTerrainProvider) {
-        // this is the "no terrain" case
-        cartesian = scene.camera.pickEllipsoid(cartesian);
-        // both the docs and the forums indicate that method should return a height of zero, but
-        // it slightly doesn't
-        removeHeight = true;
-      } else {
-        var pickRay = scene.camera.getPickRay(cartesian);
-        cartesian = scene.globe.pick(pickRay, scene);
+      if (opt_inView && cartesian && this.olCesium_) {
+        var camera = scene.camera;
+
+        // check if coordinate is behind the horizon
+        var ellipsoidBoundingSphere = new Cesium.BoundingSphere(new Cesium.Cartesian3(), 6356752);
+        var occluder = new Cesium.Occluder(ellipsoidBoundingSphere, camera.position);
+        if (!occluder.isPointVisible(cartesian)) {
+          cartesian = null;
+        }
+
+        // check if coordinate is visible from the camera
+        var cullingVolume = camera.frustum.computeCullingVolume(camera.position, camera.direction, camera.up);
+        if (cullingVolume.computeVisibility(new Cesium.BoundingSphere(cartesian)) !== 1) {
+          cartesian = null;
+        }
       }
 
       if (cartesian) {
-        var cartographic = scene.globe.ellipsoid.cartesianToCartographic(cartesian);
-        if (removeHeight) {
-          cartographic.height = 0;
+        var pixelCartesian = scene.cartesianToCanvasCoordinates(cartesian);
+        if (pixelCartesian) {
+          result = [pixelCartesian.x, pixelCartesian.y];
         }
-        return [
-          Cesium.Math.toDegrees(cartographic.longitude),
-          Cesium.Math.toDegrees(cartographic.latitude),
-          cartographic.height
-        ];
       }
     }
+
+    return result;
   }
 
-  return null;
-};
+  /**
+   * @inheritDoc
+   */
+  forEachFeatureAtPixel(pixel, callback, opt_options) {
+    if (this.olCesium_) {
+      var cartesian = new Cesium.Cartesian2(pixel[0], pixel[1]);
+      var drillPick = opt_options ? opt_options['drillPick'] : false;
+      var scene = this.olCesium_.getCesiumScene();
+      var primitives;
 
-
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.getPixelFromCoordinate = function(coordinate, opt_inView) {
-  var result = null;
-
-  if (this.olCesium_) {
-    var scene = this.olCesium_.getCesiumScene();
-    var cartesian = null;
-
-    // verify the coordinate is defined and numeric.
-    if (coordinate && coordinate.length >= 2 && !isNaN(coordinate[0]) && !isNaN(coordinate[1])) {
-      var height = coordinate[2] || 0;
-      cartesian = Cesium.Cartesian3.fromDegrees(coordinate[0], coordinate[1], height);
-    }
-
-    if (opt_inView && cartesian && this.olCesium_) {
-      var camera = scene.camera;
-
-      // check if coordinate is behind the horizon
-      var ellipsoidBoundingSphere = new Cesium.BoundingSphere(new Cesium.Cartesian3(), 6356752);
-      var occluder = new Cesium.Occluder(ellipsoidBoundingSphere, camera.position);
-      if (!occluder.isPointVisible(cartesian)) {
-        cartesian = null;
+      if (drillPick) {
+        // drillPick is extremely slow and should only be used in cases where it's needed (such as launching feature
+        // info for stacked features)
+        primitives = /** @type {Array<Cesium.Primitive>} */ (scene.drillPick(cartesian));
+      } else {
+        var primitive = /** @type {Cesium.Primitive} */ (scene.pick(cartesian));
+        if (primitive) {
+          primitives = [primitive];
+        }
       }
 
-      // check if coordinate is visible from the camera
-      var cullingVolume = camera.frustum.computeCullingVolume(camera.position, camera.direction, camera.up);
-      if (cullingVolume.computeVisibility(new Cesium.BoundingSphere(cartesian)) !== 1) {
-        cartesian = null;
-      }
-    }
+      if (primitives && primitives.length > 0) {
+        for (var i = 0, ii = primitives.length; i < ii; i++) {
+          // convert primitive to feature
+          var primitive = primitives[i];
+          var feature = primitive.primitive.olFeature;
+          var layer = primitive.primitive.olLayer;
 
-    if (cartesian) {
-      var pixelCartesian = scene.cartesianToCanvasCoordinates(cartesian);
-      if (pixelCartesian) {
-        result = [pixelCartesian.x, pixelCartesian.y];
-      }
-    }
-  }
-
-  return result;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.forEachFeatureAtPixel = function(pixel, callback, opt_options) {
-  if (this.olCesium_) {
-    var cartesian = new Cesium.Cartesian2(pixel[0], pixel[1]);
-    var drillPick = opt_options ? opt_options['drillPick'] : false;
-    var scene = this.olCesium_.getCesiumScene();
-    var primitives;
-
-    if (drillPick) {
-      // drillPick is extremely slow and should only be used in cases where it's needed (such as launching feature
-      // info for stacked features)
-      primitives = /** @type {Array<Cesium.Primitive>} */ (scene.drillPick(cartesian));
-    } else {
-      var primitive = /** @type {Cesium.Primitive} */ (scene.pick(cartesian));
-      if (primitive) {
-        primitives = [primitive];
-      }
-    }
-
-    if (primitives && primitives.length > 0) {
-      for (var i = 0, ii = primitives.length; i < ii; i++) {
-        // convert primitive to feature
-        var primitive = primitives[i];
-        var feature = primitive.primitive.olFeature;
-        var layer = primitive.primitive.olLayer;
-
-        if (feature && layer) {
-          var layerFilter = opt_options ? opt_options.layerFilter : undefined;
-          if (!layerFilter || layerFilter(layer)) {
-            var value = callback(feature, layer) || null;
-            if (value) {
-              return value;
+          if (feature && layer) {
+            var layerFilter = opt_options ? opt_options.layerFilter : undefined;
+            if (!layerFilter || layerFilter(layer)) {
+              var value = callback(feature, layer) || null;
+              if (value) {
+                return value;
+              }
             }
           }
         }
       }
     }
+
+    return null;
   }
 
-  return null;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.onPostRender = function(callback) {
-  if (this.olCesium_) {
-    var scene = this.olCesium_.getCesiumScene();
-    if (scene) {
-      return scene.postRender.addEventListener(callback);
-    }
-  }
-
-  return undefined;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.renderSync = function() {
-  if (this.olCesium_) {
-    var scene = this.olCesium_.getCesiumScene();
-    if (scene) {
-      scene.initializeFrame();
-      scene.forceRender(plugin.cesium.getJulianDate());
-    }
-  }
-};
-
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.toggleMovement = function(value) {
-  if (this.olCesium_) {
-    var scene = this.olCesium_.getCesiumScene();
-    if (scene && scene.screenSpaceCameraController) {
-      scene.screenSpaceCameraController.enableInputs = value;
-    }
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.setBGColor = function(value) {
-  if (this.olCesium_) {
-    this.olCesium_.getCesiumScene().globe.baseColor = Cesium.Color.fromCssColorString(value);
-    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.showFog = function(value) {
-  var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
-  if (scene && scene.fog.enabled != value) {
-    scene.fog.enabled = value;
-    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.setFogDensity = function(value) {
-  var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
-  if (scene) {
-    // density value should be between 0 (no fog) and the maximum density allowed by the application
-    var newDensity = goog.math.clamp(value * plugin.cesium.MAX_FOG_DENSITY, 0, plugin.cesium.MAX_FOG_DENSITY);
-    if (scene.fog.density != newDensity) {
-      scene.fog.density = newDensity;
-    }
-    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.showSky = function(value) {
-  var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
-  if (scene) {
-    if (!scene.skyBox && value) {
-      var skyBoxOptions = /** @type {Cesium.SkyBoxOptions|undefined} */ (os.settings.get(
-          plugin.cesium.SettingsKey.SKYBOX_OPTIONS));
-      if (!skyBoxOptions) {
-        skyBoxOptions = plugin.cesium.getDefaultSkyBoxOptions();
+  /**
+   * @inheritDoc
+   */
+  onPostRender(callback) {
+    if (this.olCesium_) {
+      var scene = this.olCesium_.getCesiumScene();
+      if (scene) {
+        return scene.postRender.addEventListener(callback);
       }
-
-      scene.skyBox = new Cesium.SkyBox(skyBoxOptions);
     }
 
-    if (scene.skyBox) {
-      scene.skyBox.show = value;
-    }
-
-    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
+    return undefined;
   }
-};
 
-
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.showSunlight = function(value) {
-  var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
-  if (scene) {
-    if (!scene.sun) {
-      scene.sun = new Cesium.Sun();
-    }
-
-    scene.sun.show = value;
-    scene.globe.enableLighting = value;
-
-    os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.showTerrain = function(value) {
-  if (value) {
-    this.terrainPromise_ = this.createTerrainProvider().then((provider) => {
-      this.terrainPromise_ = null;
-      this.terrainProvider_ = provider;
-
-      if (!this.terrainLayer_) {
-        this.terrainLayer_ = new plugin.cesium.TerrainLayer(this.terrainProvider_);
-        os.MapContainer.getInstance().addLayer(this.terrainLayer_);
-      } else {
-        this.terrainLayer_.setTerrainProvider(this.terrainProvider_);
+  /**
+   * @inheritDoc
+   */
+  renderSync() {
+    if (this.olCesium_) {
+      var scene = this.olCesium_.getCesiumScene();
+      if (scene) {
+        scene.initializeFrame();
+        scene.forceRender(cesium.getJulianDate());
       }
-    }, (err) => {
-      const errorMessage = typeof err === 'string' ? err : 'Unable to load terrain, disabling.';
-      goog.log.error(this.log, errorMessage);
-
-      this.terrainPromise_ = null;
-      os.settings.set(os.config.DisplaySetting.ENABLE_TERRAIN, false);
-    });
-  } else {
-    if (this.terrainPromise_) {
-      this.terrainPromise_.cancel();
-      this.terrainPromise_ = null;
     }
-
-    this.removeTerrainLayer_();
   }
 
-  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
-};
-
-
-/**
- * Register a new Cesium terrain provider type.
- *
- * @param {string} type The type id.
- * @param {!plugin.cesium.TerrainProviderFn} factory Factory function to create a terrain provider instance.
- * @protected
- */
-plugin.cesium.CesiumRenderer.prototype.registerTerrainProviderType = function(type, factory) {
-  if (type in this.terrainProviderTypes_) {
-    goog.log.error(this.log, 'The terrain provider type "' + type + '" already exists!');
-    return;
-  }
-
-  this.supportedTerrainTypes.push(type);
-  this.terrainProviderTypes_[type] = factory;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.disableTerrain = function() {
-  // remove the provider first so it's gone when any active terrain gets updated
-  this.removeTerrainLayer_();
-
-  plugin.cesium.CesiumRenderer.base(this, 'disableTerrain');
-};
-
-
-/**
- * Create a terrain provider instance for the active provider.
- * @return {!goog.Promise<Cesium.TerrainProvider>}
- * @protected
- */
-plugin.cesium.CesiumRenderer.prototype.createTerrainProvider = function() {
-  var terrainOptions = this.getActiveTerrainProvider();
-  if (terrainOptions) {
-    var terrainType = terrainOptions.type;
-    if (terrainType && terrainType in this.terrainProviderTypes_) {
-      if (terrainOptions.url) {
-        // instruct Cesium to trust terrain servers (controlled by app configuration)
-        plugin.cesium.addTrustedServer(terrainOptions.url);
+  /**
+   * @inheritDoc
+   */
+  toggleMovement(value) {
+    if (this.olCesium_) {
+      var scene = this.olCesium_.getCesiumScene();
+      if (scene && scene.screenSpaceCameraController) {
+        scene.screenSpaceCameraController.enableInputs = value;
       }
-
-      return this.terrainProviderTypes_[terrainType](terrainOptions);
-    } else if (!terrainType) {
-      return goog.Promise.reject('Terrain provider type not configured.');
-    } else if (!(terrainType in this.terrainProviderTypes_)) {
-      return goog.Promise.reject(`Unknown terrain provider type: ${terrainType}`);
     }
   }
 
-  return goog.Promise.reject('Unable to create terrain provider.');
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.updateTerrainProvider = function() {
-  // clean up existing layer/provider
-  this.removeTerrainLayer_();
-  this.terrainProvider_ = undefined;
-
-  // set the provider in Cesium
-  var showTerrain = !!os.settings.get(os.config.DisplaySetting.ENABLE_TERRAIN, false);
-  this.showTerrain(showTerrain);
-};
-
-
-/**
- * Clean up the terrain layer.
- *
- * @private
- */
-plugin.cesium.CesiumRenderer.prototype.removeTerrainLayer_ = function() {
-  if (this.terrainLayer_) {
-    os.MapContainer.getInstance().removeLayer(this.terrainLayer_);
-
-    goog.dispose(this.terrainLayer_);
-    this.terrainLayer_ = undefined;
+  /**
+   * @inheritDoc
+   */
+  setBGColor(value) {
+    if (this.olCesium_) {
+      this.olCesium_.getCesiumScene().globe.baseColor = Cesium.Color.fromCssColorString(value);
+      dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
+    }
   }
 
-  var provider = plugin.cesium.getDefaultTerrainProvider();
-  if (provider) {
+  /**
+   * @inheritDoc
+   */
+  showFog(value) {
+    var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
+    if (scene && scene.fog.enabled != value) {
+      scene.fog.enabled = value;
+      dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setFogDensity(value) {
     var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
     if (scene) {
-      scene.terrainProvider = provider;
+      // density value should be between 0 (no fog) and the maximum density allowed by the application
+      var newDensity = goog.math.clamp(value * cesium.MAX_FOG_DENSITY, 0, cesium.MAX_FOG_DENSITY);
+      if (scene.fog.density != newDensity) {
+        scene.fog.density = newDensity;
+      }
+      dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  showSky(value) {
+    var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
+    if (scene) {
+      if (!scene.skyBox && value) {
+        var skyBoxOptions = /** @type {Cesium.SkyBoxOptions|undefined} */ (settings.getInstance().get(
+            cesium.SettingsKey.SKYBOX_OPTIONS));
+        if (!skyBoxOptions) {
+          skyBoxOptions = cesium.getDefaultSkyBoxOptions();
+        }
 
-/**
- * Create the layer synchronizers for olcs.OLCesium instance.
- *
- * @param {!ol.Map} map
- * @param {!Cesium.Scene} scene
- * @return {Array<olcs.AbstractSynchronizer>}
- * @private
- */
-plugin.cesium.CesiumRenderer.prototype.createCesiumSynchronizers_ = function(map, scene) {
-  if (!this.rootSynchronizer) {
-    this.rootSynchronizer = new plugin.cesium.sync.RootSynchronizer(map, scene);
+        scene.skyBox = new Cesium.SkyBox(skyBoxOptions);
+      }
+
+      if (scene.skyBox) {
+        scene.skyBox.show = value;
+      }
+
+      dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
+    }
   }
 
-  return [this.rootSynchronizer];
-};
+  /**
+   * @inheritDoc
+   */
+  showSunlight(value) {
+    var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
+    if (scene) {
+      if (!scene.sun) {
+        scene.sun = new Cesium.Sun();
+      }
 
+      scene.sun.show = value;
+      scene.globe.enableLighting = value;
 
-/**
- * Set if Cesium is currently moving the camera.
- * @param {boolean} value If the camera is moving.
- * @private
- */
-plugin.cesium.CesiumRenderer.prototype.setCesiumMoving_ = function(value) {
-  if (this.cesiumMoving_ !== value) {
-    this.cesiumMoving_ = value;
+      dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
+    }
+  }
 
-    // Update the OpenLayers interacting flag, to disable performance-intensive operations during animation.
-    if (this.map) {
-      var view = this.map.getView();
-      if (view) {
-        view.setHint(ol.ViewHint.INTERACTING, value ? 1 : -1);
+  /**
+   * @inheritDoc
+   */
+  showTerrain(value) {
+    if (value) {
+      this.terrainPromise_ = this.createTerrainProvider().then((provider) => {
+        this.terrainPromise_ = null;
+        this.terrainProvider_ = provider;
+
+        if (!this.terrainLayer_) {
+          this.terrainLayer_ = new TerrainLayer(this.terrainProvider_);
+          MapContainer.getInstance().addLayer(this.terrainLayer_);
+        } else {
+          this.terrainLayer_.setTerrainProvider(this.terrainProvider_);
+        }
+      }, (err) => {
+        const errorMessage = typeof err === 'string' ? err : 'Unable to load terrain, disabling.';
+        log.error(this.log, errorMessage);
+
+        this.terrainPromise_ = null;
+        settings.getInstance().set(os.config.DisplaySetting.ENABLE_TERRAIN, false);
+      });
+    } else {
+      if (this.terrainPromise_) {
+        this.terrainPromise_.cancel();
+        this.terrainPromise_ = null;
+      }
+
+      this.removeTerrainLayer_();
+    }
+
+    dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
+  }
+
+  /**
+   * Register a new Cesium terrain provider type.
+   *
+   * @param {string} type The type id.
+   * @param {!cesium.TerrainProviderFn} factory Factory function to create a terrain provider instance.
+   * @protected
+   */
+  registerTerrainProviderType(type, factory) {
+    if (type in this.terrainProviderTypes_) {
+      log.error(this.log, 'The terrain provider type "' + type + '" already exists!');
+      return;
+    }
+
+    this.supportedTerrainTypes.push(type);
+    this.terrainProviderTypes_[type] = factory;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  disableTerrain() {
+    // remove the provider first so it's gone when any active terrain gets updated
+    this.removeTerrainLayer_();
+
+    super.disableTerrain();
+  }
+
+  /**
+   * Create a terrain provider instance for the active provider.
+   * @return {!Promise<Cesium.TerrainProvider>}
+   * @protected
+   */
+  createTerrainProvider() {
+    var terrainOptions = this.getActiveTerrainProvider();
+    if (terrainOptions) {
+      var terrainType = terrainOptions.type;
+      if (terrainType && terrainType in this.terrainProviderTypes_) {
+        if (terrainOptions.url) {
+          // instruct Cesium to trust terrain servers (controlled by app configuration)
+          cesium.addTrustedServer(terrainOptions.url);
+        }
+
+        return this.terrainProviderTypes_[terrainType](terrainOptions);
+      } else if (!terrainType) {
+        return Promise.reject('Terrain provider type not configured.');
+      } else if (!(terrainType in this.terrainProviderTypes_)) {
+        return Promise.reject(`Unknown terrain provider type: ${terrainType}`);
       }
     }
 
-    // Update synchronizers when the camera stops moving, to update view-based rendering.
-    if (!value && this.rootSynchronizer) {
-      this.rootSynchronizer.updateFromCamera();
+    return Promise.reject('Unable to create terrain provider.');
+  }
+
+  /**
+   * @inheritDoc
+   */
+  updateTerrainProvider() {
+    // clean up existing layer/provider
+    this.removeTerrainLayer_();
+    this.terrainProvider_ = undefined;
+
+    // set the provider in Cesium
+    var showTerrain = !!settings.getInstance().get(os.config.DisplaySetting.ENABLE_TERRAIN, false);
+    this.showTerrain(showTerrain);
+  }
+
+  /**
+   * Clean up the terrain layer.
+   *
+   * @private
+   */
+  removeTerrainLayer_() {
+    if (this.terrainLayer_) {
+      MapContainer.getInstance().removeLayer(this.terrainLayer_);
+
+      goog.dispose(this.terrainLayer_);
+      this.terrainLayer_ = undefined;
+    }
+
+    var provider = cesium.getDefaultTerrainProvider();
+    if (provider) {
+      var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
+      if (scene) {
+        scene.terrainProvider = provider;
+      }
     }
   }
-};
 
+  /**
+   * Create the layer synchronizers for OLCesium instance.
+   *
+   * @param {!ol.Map} map
+   * @param {!Cesium.Scene} scene
+   * @return {Array<olcs.AbstractSynchronizer>}
+   * @private
+   */
+  createCesiumSynchronizers_(map, scene) {
+    if (!this.rootSynchronizer) {
+      this.rootSynchronizer = new RootSynchronizer(map, scene);
+    }
 
-/**
- * Handles Cesium camera move start/end events.
- *
- * @param {boolean} isMoving If the camera is moving.
- * @private
- */
-plugin.cesium.CesiumRenderer.prototype.onCesiumCameraMoveChange_ = function(isMoving) {
-  this.setCesiumMoving_(isMoving);
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.getAltitudeModes = function() {
-  return [
-    os.webgl.AltitudeMode.CLAMP_TO_GROUND,
-    os.webgl.AltitudeMode.ABSOLUTE,
-    os.webgl.AltitudeMode.RELATIVE_TO_GROUND
-  ];
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.CesiumRenderer.prototype.flyToFeatures = function(features) {
-  var sphere = os.feature.getGeometries(features).reduce(plugin.cesium.reduceBoundingSphere, null);
-
-  if (sphere) {
-    var cmd = new plugin.cesium.command.FlyToSphere(sphere);
-    os.commandStack.addCommand(cmd);
+    return [this.rootSynchronizer];
   }
-};
+
+  /**
+   * Set if Cesium is currently moving the camera.
+   * @param {boolean} value If the camera is moving.
+   * @private
+   */
+  setCesiumMoving_(value) {
+    if (this.cesiumMoving_ !== value) {
+      this.cesiumMoving_ = value;
+
+      // Update the OpenLayers interacting flag, to disable performance-intensive operations during animation.
+      if (this.map) {
+        var view = this.map.getView();
+        if (view) {
+          view.setHint(ol.ViewHint.INTERACTING, value ? 1 : -1);
+        }
+      }
+
+      // Update synchronizers when the camera stops moving, to update view-based rendering.
+      if (!value && this.rootSynchronizer) {
+        this.rootSynchronizer.updateFromCamera();
+      }
+    }
+  }
+
+  /**
+   * Handles Cesium camera move start/end events.
+   *
+   * @param {boolean} isMoving If the camera is moving.
+   * @private
+   */
+  onCesiumCameraMoveChange_(isMoving) {
+    this.setCesiumMoving_(isMoving);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getAltitudeModes() {
+    return [
+      os.webgl.AltitudeMode.CLAMP_TO_GROUND,
+      os.webgl.AltitudeMode.ABSOLUTE,
+      os.webgl.AltitudeMode.RELATIVE_TO_GROUND
+    ];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  flyToFeatures(features) {
+    var sphere = osFeature.getGeometries(features).reduce(cesium.reduceBoundingSphere, null);
+
+    if (sphere) {
+      var cmd = new FlyToSphere(sphere);
+      os.commandStack.addCommand(cmd);
+    }
+  }
+}
+
+exports = CesiumRenderer;

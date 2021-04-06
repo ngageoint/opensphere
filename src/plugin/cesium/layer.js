@@ -1,818 +1,762 @@
-goog.provide('plugin.cesium.Layer');
+goog.module('plugin.cesium.Layer');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.async.Delay');
-goog.require('goog.log');
-goog.require('goog.string');
-goog.require('ol.events');
-goog.require('ol.layer.Layer');
-goog.require('os.IGroupable');
-goog.require('os.color');
-goog.require('os.events.LayerEvent');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.implements');
-goog.require('os.layer');
-goog.require('os.layer.IColorableLayer');
-goog.require('os.layer.ILayer');
-goog.require('os.layer.PropertyChange');
-goog.require('os.ui');
-goog.require('os.ui.Icons');
-goog.require('os.ui.renamelayer');
-
+const dispatcher = goog.require('os.Dispatcher');
+const ui = goog.require('os.ui');
+const mapContainer = goog.require('os.MapContainer');
+const MapContainer = goog.require('os.MapContainer');
+const Delay = goog.require('goog.async.Delay');
+const log = goog.require('goog.log');
+const googString = goog.require('goog.string');
+const olLayerLayer = goog.require('ol.layer.Layer');
+const IGroupable = goog.require('os.IGroupable');
+const osColor = goog.require('os.color');
+const LayerEvent = goog.require('os.events.LayerEvent');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const osImplements = goog.require('os.implements');
+const IColorableLayer = goog.require('os.layer.IColorableLayer');
+const ILayer = goog.require('os.layer.ILayer');
+const PropertyChange = goog.require('os.layer.PropertyChange');
 
 
 /**
- * @extends {ol.layer.Layer}
- * @implements {os.layer.ILayer}
- * @implements {os.layer.IColorableLayer}
- * @implements {os.IGroupable}
- * @constructor
+ * @implements {ILayer}
+ * @implements {IColorableLayer}
+ * @implements {IGroupable}
  */
-plugin.cesium.Layer = function() {
-  plugin.cesium.Layer.base(this, 'constructor', {});
-
+class Layer extends olLayerLayer {
   /**
-   * @type {!string}
-   * @private
+   * Constructor.
    */
-  this.id_ = goog.string.getRandomString();
+  constructor() {
+    super({});
+
+    /**
+     * @type {!string}
+     * @private
+     */
+    this.id_ = googString.getRandomString();
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.osType_ = null;
+
+    /**
+     * @type {!string}
+     * @private
+     */
+    this.title_ = '';
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.loading_ = false;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.provider_ = null;
+
+    /**
+     * @type {?Array.<!string>}
+     * @private
+     */
+    this.tags_ = null;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.removable_ = true;
+
+    /**
+     * @type {Object.<string, *>}
+     * @private
+     */
+    this.layerOptions_ = null;
+
+    /**
+     * @type {!string}
+     * @private
+     */
+    this.nodeUI_ = '<defaultlayernodeui></defaultlayernodeui>';
+
+    /**
+     * @type {!string}
+     * @private
+     */
+    this.layerUi_ = '';
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.hidden_ = false;
+
+    /**
+     * @type {number}
+     * @private
+     */
+    this.loadCount_ = 0;
+
+    /**
+     * @type {?Delay}
+     * @private
+     */
+    this.loadingDelay_ = null;
+
+    /**
+     * @type {!string}
+     */
+    this.icons_ = '';
+
+    /**
+     * @type {!string}
+     */
+    this.explicitType_ = '';
+
+    /**
+     * The logger.
+     * @type {log.Logger}
+     * @protected
+     */
+    this.log = Layer.LOGGER_;
+
+    // set the openlayers type to something that won't find a renderer, because there's
+    // no way to render Cesium-specific items in OpenLayers anyway
+    this.type = /** @type {ol.LayerType} */ ('cesium');
+
+    /**
+     * @type {string}
+     * @private
+     */
+    this.error = '';
+
+    MapContainer.getInstance().listen(goog.events.EventType.PROPERTYCHANGE, this.onMapChange, false, this);
+
+    // allow extending classes to finish initializing before trying to sync
+    setTimeout(this.synchronize.bind(this), 0);
+  }
 
   /**
-   * @type {?string}
-   * @private
+   * @inheritDoc
    */
-  this.osType_ = null;
+  disposeInternal() {
+    super.disposeInternal();
+
+    MapContainer.getInstance().unlisten(goog.events.EventType.PROPERTYCHANGE, this.onMapChange, false, this);
+
+    if (this.loadingDelay_) {
+      this.loadingDelay_.dispose();
+      this.loadingDelay_ = null;
+    }
+  }
 
   /**
-   * @type {!string}
-   * @private
-   */
-  this.title_ = '';
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.loading_ = false;
-
-  /**
-   * @type {?string}
-   * @private
-   */
-  this.provider_ = null;
-
-  /**
-   * @type {?Array.<!string>}
-   * @private
-   */
-  this.tags_ = null;
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.removable_ = true;
-
-  /**
-   * @type {Object.<string, *>}
-   * @private
-   */
-  this.layerOptions_ = null;
-
-  /**
-   * @type {!string}
-   * @private
-   */
-  this.nodeUI_ = '<defaultlayernodeui></defaultlayernodeui>';
-
-  /**
-   * @type {!string}
-   * @private
-   */
-  this.layerUi_ = '';
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.hidden_ = false;
-
-  /**
-   * @type {number}
-   * @private
-   */
-  this.loadCount_ = 0;
-
-  /**
-   * @type {?goog.async.Delay}
-   * @private
-   */
-  this.loadingDelay_ = null;
-
-  /**
-   * @type {!string}
-   */
-  this.icons_ = '';
-
-  /**
-   * @type {!string}
-   */
-  this.explicitType_ = '';
-
-  /**
-   * The logger.
-   * @type {goog.log.Logger}
+   * Handle map change events.
+   *
+   * @param {PropertyChangeEvent} event The event.
    * @protected
    */
-  this.log = plugin.cesium.Layer.LOGGER_;
-
-  // set the openlayers type to something that won't find a renderer, because there's
-  // no way to render Cesium-specific items in OpenLayers anyway
-  this.type = /** @type {ol.LayerType} */ ('cesium');
+  onMapChange(event) {
+    if (event && event.getProperty() === os.MapChange.VIEW3D) {
+      this.synchronize();
+    }
+  }
 
   /**
-   * @type {string}
+   * Test if Cesium is enabled and synchronize with Cesium.
+   *
+   * @protected
+   */
+  synchronize() {
+    this.updateError();
+  }
+
+  /**
+   * Update the error message for the layer.
+   *
+   * @protected
+   */
+  updateError() {
+    var oldError = this.error;
+    this.error = this.getErrorMessage();
+
+    if (oldError != this.error) {
+      this.dispatchEvent(new PropertyChangeEvent(PropertyChange.ERROR, this.error, oldError));
+    }
+  }
+
+  /**
+   * Get the error message to display on the layer.
+   *
+   * @return {string} The message.
+   * @protected
+   */
+  getErrorMessage() {
+    if (!window.Cesium || !mapContainer.getInstance().is3DEnabled()) {
+      return 'This layer is only visible in 3D mode';
+    }
+
+    return '';
+  }
+
+  /**
+   * @return {boolean}
+   */
+  hasError() {
+    return !!this.error;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getId() {
+    return this.id_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setId(value) {
+    this.id_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getGroupId() {
+    return this.getId();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getGroupLabel() {
+    return this.getTitle();
+  }
+
+  /**
+   * Get the default color for the layer.
+   *
+   * @return {?string}
+   */
+  getDefaultColor() {
+    return null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getColor() {
+    var color;
+    if (this.layerOptions_) {
+      color = /** @type {string} */ (this.layerOptions_['color'] || this.layerOptions_['baseColor']);
+    }
+
+    return color || os.style.DEFAULT_LAYER_COLOR;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setColor(value, opt_options) {
+    var options = this.layerOptions_ || opt_options;
+    if (options) {
+      if (value && typeof value == 'string') {
+        options['color'] = osColor.toHexString(value);
+      } else {
+        // color was reset, so use the original
+        options['color'] = null;
+      }
+
+      this.updateIcons_();
+
+      os.style.notifyStyleChange(this);
+    }
+  }
+
+  /**
+   * Update icons to use the current layer color.
+   *
    * @private
    */
-  this.error = '';
+  updateIcons_() {
+    var color = this.getColor();
+    if (color) {
+      ui.adjustIconSet(this.getId(), osColor.toHexString(color));
+    }
+  }
 
-  os.MapContainer.getInstance().listen(goog.events.EventType.PROPERTYCHANGE, this.onMapChange, false, this);
+  /**
+   * @return {?(string|osx.ogc.TileStyle)}
+   */
+  getStyle() {
+    return null;
+  }
 
-  // allow extending classes to finish initializing before trying to sync
-  setTimeout(this.synchronize.bind(this), 0);
-};
-goog.inherits(plugin.cesium.Layer, ol.layer.Layer);
-os.implements(plugin.cesium.Layer, os.layer.ILayer.ID);
-os.implements(plugin.cesium.Layer, os.layer.IColorableLayer.ID);
-os.implements(plugin.cesium.Layer, os.IGroupable.ID);
+  /**
+   * @param {?(string|osx.ogc.TileStyle)} value
+   */
+  setStyle(value) {
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getIcons() {
+    var color;
+
+    var html = '';
+    if (this.hasError()) {
+      html += '<i class="fa fa-warning text-warning" title="' + this.error + '"></i>';
+    }
+
+    var layerColor = this.getColor();
+    if (layerColor) {
+      color = osColor.toRgbArray(layerColor);
+    }
+
+    html += color ? ui.createIconSet(this.getId(), null, [this.icons_], color) : this.icons_;
+    return html;
+  }
+
+  /**
+   * @param {string} value
+   */
+  setIcons(value) {
+    this.icons_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  isEnabled() {
+    // Layer does not have separate enabled/visible states, so this is a pass-through.
+    return this.getLayerVisible();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setEnabled(value) {
+    // Layer does not have separate enabled/visible states, so this is a pass-through.
+    this.setLayerVisible(value);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  isLoading() {
+    return this.loading_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setLoading(value) {
+    if (this.loading_ !== value) {
+      this.loading_ = value;
+      var delay = this.getLoadingDelay();
+
+      if (delay) {
+        if (this.loading_) {
+          // always notify the UI when the layer starts loading
+          delay.fire();
+        } else {
+          // add a delay when notifying the UI loading is complete in case it starts loading again soon. this prevents
+          // flickering of the loading state, particularly when using Cesium.
+          delay.start();
+          this.loadCount_ = 0;
+        }
+      }
+    }
+  }
+
+  /**
+   * @return {?Delay}
+   * @protected
+   */
+  getLoadingDelay() {
+    if (!this.loadingDelay_ && !this.isDisposed()) {
+      this.loadingDelay_ = new Delay(this.fireLoadingEvent_, 500, this);
+    }
+
+    return this.loadingDelay_;
+  }
+
+  /**
+   * Fires an event to indicate a loading change.
+   *
+   * @private
+   */
+  fireLoadingEvent_() {
+    if (!this.isDisposed()) {
+      this.dispatchEvent(new PropertyChangeEvent('loading', this.loading_, !this.loading_));
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getTitle() {
+    return this.title_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setTitle(value) {
+    this.title_ = value;
+    this.dispatchEvent(new PropertyChangeEvent(PropertyChange.TITLE, value));
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getOSType() {
+    return this.osType_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setOSType(value) {
+    this.osType_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getExplicitType() {
+    return this.explicitType_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setExplicitType(value) {
+    this.explicitType_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getProvider() {
+    return this.provider_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setProvider(value) {
+    this.provider_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getTags() {
+    return this.tags_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setTags(value) {
+    this.tags_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  isRemovable() {
+    return this.removable_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setRemovable(value) {
+    this.removable_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getNodeUI() {
+    return this.nodeUI_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setNodeUI(value) {
+    this.nodeUI_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getLayerUI() {
+    return this.layerUi_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setLayerUI(value) {
+    this.layerUi_ = value;
+  }
+
+  /**
+   * @return {!function(!olLayerLayer)}
+   */
+  getRefreshFunction() {
+    return goog.nullFunction;
+  }
+
+  /**
+   * @param {!function(!olLayerLayer)} refreshFunction
+   */
+  setRefreshFunction(refreshFunction) {
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getLayerVisible() {
+    return this.getVisible();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setLayerVisible(value) {
+    if (value !== this.getLayerVisible()) {
+      this.setVisible(value);
+      this.dispatchEvent(new PropertyChangeEvent(PropertyChange.VISIBLE, value, !value));
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setBaseVisible(value) {
+    this.setVisible(value);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getBaseVisible() {
+    return this.getVisible();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getLayerOptions() {
+    return this.layerOptions_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setLayerOptions(value) {
+    this.layerOptions_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  callAction(type) {
+    if (os.action) {
+      switch (type) {
+        case os.action.EventType.REMOVE_LAYER:
+          var removeEvent = new LayerEvent(os.events.LayerEventType.REMOVE, this.getId());
+          dispatcher.getInstance().dispatchEvent(removeEvent);
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getGroupUI() {
+    return null;
+  }
+
+  /**
+   * @inheritDoc
+   * @see {ui.action.IActionTarget}
+   */
+  supportsAction(type, opt_actionArgs) {
+    if (os.action) {
+      switch (type) {
+        case os.action.EventType.REMOVE_LAYER:
+          return this.isRemovable();
+        default:
+          break;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getSynchronizerType() {
+    return null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setSynchronizerType(value) {}
+
+  /**
+   * @inheritDoc
+   */
+  getHidden() {
+    return this.hidden_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setHidden(value) {
+    this.hidden_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  persist(opt_to) {
+    opt_to = opt_to || {};
+    opt_to['visible'] = this.getVisible();
+    opt_to['opacity'] = this.getOpacity();
+    opt_to['color'] = this.getColor();
+    return opt_to;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  restore(config) {
+    if (config['id'] != null) {
+      this.setId(config['id']);
+    }
+
+    if (config['provider'] != null) {
+      this.setProvider(config['provider']);
+    }
+
+    if (config['tags'] != null) {
+      this.setTags(config['tags']);
+    }
+
+    if (config['title'] != null) {
+      this.setTitle(config['title']);
+    }
+
+    if (config['layerType'] != null) {
+      this.setOSType(config['layerType']);
+    }
+
+    if (config['visible'] != undefined) {
+      this.setLayerVisible(!!config['visible']);
+    }
+
+    if (config['color']) {
+      var color = /** @type {string} */ (config['color']);
+      this.setColor(color, config);
+    }
+
+    var opacity = config['opacity'];
+    if (opacity != null) {
+      this.setOpacity(opacity);
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getLayerStatesArray() {
+    return [];
+  }
+
+  /**
+   * @return {Cesium.Scene|undefined}
+   * @protected
+   */
+  getScene() {
+    if (mapContainer.getInstance()) {
+      var renderer = mapContainer.getInstance().getWebGLRenderer();
+      if (renderer) {
+        return /** @type {plugin.cesium.CesiumRenderer} */ (renderer).getCesiumScene();
+      }
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Decrements loading
+   */
+  decrementLoading() {
+    this.loadCount_ = Math.max(this.loadCount_ - 1, 0);
+
+    if (this.loadCount_ === 0) {
+      this.setLoading(false);
+    }
+  }
+
+  /**
+   * Increments loading
+   */
+  incrementLoading() {
+    this.loadCount_++;
+
+    if (this.loadCount_ === 1) {
+      this.setLoading(true);
+    }
+  }
+}
+
+osImplements(Layer, ILayer.ID);
+osImplements(Layer, IColorableLayer.ID);
+osImplements(Layer, IGroupable.ID);
 
 
 /**
  * The logger.
- * @type {goog.log.Logger}
+ * @type {log.Logger}
  * @private
  * @const
  */
-plugin.cesium.Layer.LOGGER_ = goog.log.getLogger('plugin.cesium.Layer');
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.disposeInternal = function() {
-  plugin.cesium.Layer.base(this, 'disposeInternal');
-
-  os.MapContainer.getInstance().unlisten(goog.events.EventType.PROPERTYCHANGE, this.onMapChange, false, this);
-
-  if (this.loadingDelay_) {
-    this.loadingDelay_.dispose();
-    this.loadingDelay_ = null;
-  }
-};
-
-
-/**
- * Handle map change events.
- *
- * @param {os.events.PropertyChangeEvent} event The event.
- * @protected
- */
-plugin.cesium.Layer.prototype.onMapChange = function(event) {
-  if (event && event.getProperty() === os.MapChange.VIEW3D) {
-    this.synchronize();
-  }
-};
-
-
-/**
- * Test if Cesium is enabled and synchronize with Cesium.
- *
- * @protected
- */
-plugin.cesium.Layer.prototype.synchronize = function() {
-  this.updateError();
-};
-
-
-/**
- * Update the error message for the layer.
- *
- * @protected
- */
-plugin.cesium.Layer.prototype.updateError = function() {
-  var oldError = this.error;
-  this.error = this.getErrorMessage();
-
-  if (oldError != this.error) {
-    this.dispatchEvent(new os.events.PropertyChangeEvent(os.layer.PropertyChange.ERROR, this.error, oldError));
-  }
-};
-
-
-/**
- * Get the error message to display on the layer.
- *
- * @return {string} The message.
- * @protected
- */
-plugin.cesium.Layer.prototype.getErrorMessage = function() {
-  if (!window.Cesium || !os.map.mapContainer.is3DEnabled()) {
-    return 'This layer is only visible in 3D mode';
-  }
-
-  return '';
-};
-
-
-/**
- * @return {boolean}
- */
-plugin.cesium.Layer.prototype.hasError = function() {
-  return !!this.error;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getId = function() {
-  return this.id_;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.setId = function(value) {
-  this.id_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getGroupId = function() {
-  return this.getId();
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getGroupLabel = function() {
-  return this.getTitle();
-};
-
-
-/**
- * Get the default color for the layer.
- *
- * @return {?string}
- */
-plugin.cesium.Layer.prototype.getDefaultColor = function() {
-  return null;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getColor = function() {
-  var color;
-  if (this.layerOptions_) {
-    color = /** @type {string} */ (this.layerOptions_['color'] || this.layerOptions_['baseColor']);
-  }
-
-  return color || os.style.DEFAULT_LAYER_COLOR;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.setColor = function(value, opt_options) {
-  var options = this.layerOptions_ || opt_options;
-  if (options) {
-    if (value && typeof value == 'string') {
-      options['color'] = os.color.toHexString(value);
-    } else {
-      // color was reset, so use the original
-      options['color'] = null;
-    }
-
-    this.updateIcons_();
-
-    os.style.notifyStyleChange(this);
-  }
-};
-
-
-/**
- * Update icons to use the current layer color.
- *
- * @private
- */
-plugin.cesium.Layer.prototype.updateIcons_ = function() {
-  var color = this.getColor();
-  if (color) {
-    os.ui.adjustIconSet(this.getId(), os.color.toHexString(color));
-  }
-};
-
-
-/**
- * @return {?(string|osx.ogc.TileStyle)}
- */
-plugin.cesium.Layer.prototype.getStyle = function() {
-  return null;
-};
-
-
-/**
- * @param {?(string|osx.ogc.TileStyle)} value
- */
-plugin.cesium.Layer.prototype.setStyle = function(value) {
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getIcons = function() {
-  var color;
-
-  var html = '';
-  if (this.hasError()) {
-    html += '<i class="fa fa-warning text-warning" title="' + this.error + '"></i>';
-  }
-
-  var layerColor = this.getColor();
-  if (layerColor) {
-    color = os.color.toRgbArray(layerColor);
-  }
-
-  html += color ? os.ui.createIconSet(this.getId(), null, [this.icons_], color) : this.icons_;
-  return html;
-};
-
-
-/**
- * @param {string} value
- */
-plugin.cesium.Layer.prototype.setIcons = function(value) {
-  this.icons_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.isEnabled = function() {
-  // Layer does not have separate enabled/visible states, so this is a pass-through.
-  return this.getLayerVisible();
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.setEnabled = function(value) {
-  // Layer does not have separate enabled/visible states, so this is a pass-through.
-  this.setLayerVisible(value);
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.isLoading = function() {
-  return this.loading_;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.setLoading = function(value) {
-  if (this.loading_ !== value) {
-    this.loading_ = value;
-    var delay = this.getLoadingDelay();
-
-    if (delay) {
-      if (this.loading_) {
-        // always notify the UI when the layer starts loading
-        delay.fire();
-      } else {
-        // add a delay when notifying the UI loading is complete in case it starts loading again soon. this prevents
-        // flickering of the loading state, particularly when using Cesium.
-        delay.start();
-        this.loadCount_ = 0;
-      }
-    }
-  }
-};
-
-
-/**
- * @return {?goog.async.Delay}
- * @protected
- */
-plugin.cesium.Layer.prototype.getLoadingDelay = function() {
-  if (!this.loadingDelay_ && !this.isDisposed()) {
-    this.loadingDelay_ = new goog.async.Delay(this.fireLoadingEvent_, 500, this);
-  }
-
-  return this.loadingDelay_;
-};
-
-
-/**
- * Fires an event to indicate a loading change.
- *
- * @private
- */
-plugin.cesium.Layer.prototype.fireLoadingEvent_ = function() {
-  if (!this.isDisposed()) {
-    this.dispatchEvent(new os.events.PropertyChangeEvent('loading', this.loading_, !this.loading_));
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getTitle = function() {
-  return this.title_;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.setTitle = function(value) {
-  this.title_ = value;
-  this.dispatchEvent(new os.events.PropertyChangeEvent(os.layer.PropertyChange.TITLE, value));
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getOSType = function() {
-  return this.osType_;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.setOSType = function(value) {
-  this.osType_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getExplicitType = function() {
-  return this.explicitType_;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.setExplicitType = function(value) {
-  this.explicitType_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getProvider = function() {
-  return this.provider_;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.setProvider = function(value) {
-  this.provider_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getTags = function() {
-  return this.tags_;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.setTags = function(value) {
-  this.tags_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.isRemovable = function() {
-  return this.removable_;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.setRemovable = function(value) {
-  this.removable_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getNodeUI = function() {
-  return this.nodeUI_;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.setNodeUI = function(value) {
-  this.nodeUI_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getLayerUI = function() {
-  return this.layerUi_;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.setLayerUI = function(value) {
-  this.layerUi_ = value;
-};
-
-
-/**
- * @return {!function(!ol.layer.Layer)}
- */
-plugin.cesium.Layer.prototype.getRefreshFunction = function() {
-  return goog.nullFunction;
-};
-
-
-/**
- * @param {!function(!ol.layer.Layer)} refreshFunction
- */
-plugin.cesium.Layer.prototype.setRefreshFunction = function(refreshFunction) {
-};
+Layer.LOGGER_ = log.getLogger('plugin.cesium.Layer');
 
 
 /**
  * Forces the layer to refresh.
  * @protected
  */
-plugin.cesium.Layer.prototype.refresh = goog.nullFunction;
+Layer.prototype.refresh = goog.nullFunction;
 
 
 /**
  * Identify the layer on the map.
  * @protected
  */
-plugin.cesium.Layer.prototype.identify = goog.nullFunction;
+Layer.prototype.identify = goog.nullFunction;
 
 
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getLayerVisible = function() {
-  return this.getVisible();
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.setLayerVisible = function(value) {
-  if (value !== this.getLayerVisible()) {
-    this.setVisible(value);
-    this.dispatchEvent(new os.events.PropertyChangeEvent(os.layer.PropertyChange.VISIBLE, value, !value));
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.setBaseVisible = function(value) {
-  this.setVisible(value);
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getBaseVisible = function() {
-  return this.getVisible();
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getLayerOptions = function() {
-  return this.layerOptions_;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.setLayerOptions = function(value) {
-  this.layerOptions_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.callAction = function(type) {
-  if (os.action) {
-    switch (type) {
-      case os.action.EventType.REMOVE_LAYER:
-        var removeEvent = new os.events.LayerEvent(os.events.LayerEventType.REMOVE, this.getId());
-        os.dispatcher.dispatchEvent(removeEvent);
-        break;
-      default:
-        break;
-    }
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getGroupUI = function() {
-  return null;
-};
-
-
-/**
- * @inheritDoc
- * @see {os.ui.action.IActionTarget}
- */
-plugin.cesium.Layer.prototype.supportsAction = function(type, opt_actionArgs) {
-  if (os.action) {
-    switch (type) {
-      case os.action.EventType.REMOVE_LAYER:
-        return this.isRemovable();
-      default:
-        break;
-    }
-  }
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getSynchronizerType = function() {
-  return null;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.setSynchronizerType = function(value) {};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getHidden = function() {
-  return this.hidden_;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.setHidden = function(value) {
-  this.hidden_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.persist = function(opt_to) {
-  opt_to = opt_to || {};
-  opt_to['visible'] = this.getVisible();
-  opt_to['opacity'] = this.getOpacity();
-  opt_to['color'] = this.getColor();
-  return opt_to;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.restore = function(config) {
-  if (config['id'] != null) {
-    this.setId(config['id']);
-  }
-
-  if (config['provider'] != null) {
-    this.setProvider(config['provider']);
-  }
-
-  if (config['tags'] != null) {
-    this.setTags(config['tags']);
-  }
-
-  if (config['title'] != null) {
-    this.setTitle(config['title']);
-  }
-
-  if (config['layerType'] != null) {
-    this.setOSType(config['layerType']);
-  }
-
-  if (config['visible'] != undefined) {
-    this.setLayerVisible(!!config['visible']);
-  }
-
-  if (config['color']) {
-    var color = /** @type {string} */ (config['color']);
-    this.setColor(color, config);
-  }
-
-  var opacity = config['opacity'];
-  if (opacity != null) {
-    this.setOpacity(opacity);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Layer.prototype.getLayerStatesArray = function() {
-  return [];
-};
-
-
-/**
- * @return {Cesium.Scene|undefined}
- * @protected
- */
-plugin.cesium.Layer.prototype.getScene = function() {
-  if (os.map.mapContainer) {
-    var renderer = os.map.mapContainer.getWebGLRenderer();
-    if (renderer) {
-      return /** @type {plugin.cesium.CesiumRenderer} */ (renderer).getCesiumScene();
-    }
-  }
-
-  return undefined;
-};
-
-
-/**
- * Decrements loading
- */
-plugin.cesium.Layer.prototype.decrementLoading = function() {
-  this.loadCount_ = Math.max(this.loadCount_ - 1, 0);
-
-  if (this.loadCount_ === 0) {
-    this.setLoading(false);
-  }
-};
-
-
-/**
- * Increments loading
- */
-plugin.cesium.Layer.prototype.incrementLoading = function() {
-  this.loadCount_++;
-
-  if (this.loadCount_ === 1) {
-    this.setLoading(true);
-  }
-};
+exports = Layer;

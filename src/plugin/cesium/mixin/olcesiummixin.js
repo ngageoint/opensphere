@@ -1,21 +1,22 @@
-goog.provide('plugin.cesium.mixin.olcs');
+goog.module('plugin.cesium.mixin.olcs');
+goog.module.declareLegacyNamespace();
 
-goog.require('olcs.OLCesium');
-goog.require('os.I3DSupport');
+const OLCesium = goog.require('olcs.OLCesium');
+const I3DSupport = goog.require('os.I3DSupport');
 
 
 /**
  * Timeout id to resize the Cesium canvas.
  * @type {number|undefined}
  */
-olcs.OLCesium.prototype.resizeTimeout;
+OLCesium.prototype.resizeTimeout;
 
 
 /**
  * @private
  * @suppress {accessControls|duplicate|unusedPrivateMembers}
  */
-olcs.OLCesium.prototype.handleResize_ = function() {
+OLCesium.prototype.handleResize_ = function() {
   var width = this.canvas_.clientWidth;
   var height = this.canvas_.clientHeight;
 
@@ -66,7 +67,7 @@ olcs.OLCesium.prototype.handleResize_ = function() {
  * @param {boolean} enable
  * @suppress {accessControls|duplicate}
  */
-olcs.OLCesium.prototype.setEnabled = function(enable) {
+OLCesium.prototype.setEnabled = function(enable) {
   if (this.enabled_ === enable) {
     return;
   }
@@ -81,8 +82,8 @@ olcs.OLCesium.prototype.setEnabled = function(enable) {
       var interactions = this.map_.getInteractions();
       interactions.forEach(function(el, i, arr) {
         var interaction = /** @type {ol.interaction.Interaction} */ (el);
-        if (!os.implements(interaction, os.I3DSupport.ID) ||
-            !(/** @type {os.I3DSupport} */ (interaction)).is3DSupported()) {
+        if (!os.implements(interaction, I3DSupport.ID) ||
+            !(/** @type {I3DSupport} */ (interaction)).is3DSupported()) {
           interaction.setActive(false);
         }
       });
@@ -107,8 +108,8 @@ olcs.OLCesium.prototype.setEnabled = function(enable) {
       interactions = this.map_.getInteractions();
       interactions.forEach(function(el, i, arr) {
         var interaction = /** @type {ol.interaction.Interaction} */ (el);
-        if (!os.implements(interaction, os.I3DSupport.ID) ||
-              !(/** @type {os.I3DSupport} */ (interaction)).is3DSupported()) {
+        if (!os.implements(interaction, I3DSupport.ID) ||
+              !(/** @type {I3DSupport} */ (interaction)).is3DSupported()) {
           interaction.setActive(true);
         }
       });

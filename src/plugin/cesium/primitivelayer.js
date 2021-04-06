@@ -1,122 +1,121 @@
-goog.provide('plugin.cesium.PrimitiveLayer');
+goog.module('plugin.cesium.PrimitiveLayer');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.MapEvent');
-goog.require('plugin.cesium.Layer');
+const geo = goog.require('os.geo');
+const dispatcher = goog.require('os.Dispatcher');
+const MapEvent = goog.require('os.MapEvent');
+const Layer = goog.require('plugin.cesium.Layer');
 
 
 /**
- * @extends {plugin.cesium.Layer}
- * @constructor
  */
-plugin.cesium.PrimitiveLayer = function() {
-  plugin.cesium.PrimitiveLayer.base(this, 'constructor');
+class PrimitiveLayer extends Layer {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * @type {?Cesium.PrimitiveLike}
+     * @protected
+     */
+    this.primitive = null;
+  }
 
   /**
-   * @type {?Cesium.PrimitiveLike}
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
+    this.removePrimitive();
+  }
+
+  /**
+   * @return {?Cesium.PrimitiveLike}
+   */
+  getPrimitive() {
+    return this.primitive;
+  }
+
+  /**
+   * @param {?Cesium.PrimitiveLike} value
+   */
+  setPrimitive(value) {
+    this.removePrimitive();
+    this.primitive = value;
+    this.addPrimitive();
+    this.updatePrimitive();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setLayerVisible(value) {
+    super.setLayerVisible(value);
+    this.updatePrimitive();
+  }
+
+  /**
    * @protected
    */
-  this.primitive = null;
-};
-goog.inherits(plugin.cesium.PrimitiveLayer, plugin.cesium.Layer);
+  addPrimitive() {
+    var primitive = this.getPrimitive();
+    var scene = this.getScene();
+    if (primitive && scene) {
+      scene.primitives.add(primitive);
+    }
 
-
-/**
- * @inheritDoc
- */
-plugin.cesium.PrimitiveLayer.prototype.disposeInternal = function() {
-  plugin.cesium.PrimitiveLayer.base(this, 'disposeInternal');
-  this.removePrimitive();
-};
-
-
-/**
- * @return {?Cesium.PrimitiveLike}
- */
-plugin.cesium.PrimitiveLayer.prototype.getPrimitive = function() {
-  return this.primitive;
-};
-
-
-/**
- * @param {?Cesium.PrimitiveLike} value
- */
-plugin.cesium.PrimitiveLayer.prototype.setPrimitive = function(value) {
-  this.removePrimitive();
-  this.primitive = value;
-  this.addPrimitive();
-  this.updatePrimitive();
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.PrimitiveLayer.prototype.setLayerVisible = function(value) {
-  plugin.cesium.PrimitiveLayer.base(this, 'setLayerVisible', value);
-  this.updatePrimitive();
-};
-
-
-/**
- * @protected
- */
-plugin.cesium.PrimitiveLayer.prototype.addPrimitive = function() {
-  var primitive = this.getPrimitive();
-  var scene = this.getScene();
-  if (primitive && scene) {
-    scene.primitives.add(primitive);
+    dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
   }
 
-  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
-};
+  /**
+   * @protected
+   */
+  updatePrimitive() {
+    var primitive = this.getPrimitive();
 
+    if (primitive) {
+      primitive.show = this.getVisible();
+    }
 
-/**
- * @protected
- */
-plugin.cesium.PrimitiveLayer.prototype.updatePrimitive = function() {
-  var primitive = this.getPrimitive();
-
-  if (primitive) {
-    primitive.show = this.getVisible();
+    dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
   }
 
-  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
-};
+  /**
+   * @protected
+   */
+  removePrimitive() {
+    var primitive = this.getPrimitive();
+    var scene = this.getScene();
+    if (primitive && scene) {
+      scene.primitives.remove(primitive);
+    }
 
-
-/**
- * @protected
- */
-plugin.cesium.PrimitiveLayer.prototype.removePrimitive = function() {
-  var primitive = this.getPrimitive();
-  var scene = this.getScene();
-  if (primitive && scene) {
-    scene.primitives.remove(primitive);
+    dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
   }
 
-  os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
-};
+  /**
+   * @inheritDoc
+   */
+  getExtent() {
+    var primitive = this.getPrimitive();
 
+    if (primitive && primitive.ready && primitive.boundingSphere) {
+      var sphere = primitive.boundingSphere;
+      var angle = Math.atan2(sphere.radius, Cesium.Cartesian3.magnitude(sphere.center));
+      var cartographicCenter = Cesium.Cartographic.fromCartesian(sphere.center);
+      var extent = [
+        geo.R2D * (cartographicCenter.longitude - angle),
+        geo.R2D * (cartographicCenter.latitude - angle),
+        geo.R2D * (cartographicCenter.longitude + angle),
+        geo.R2D * (cartographicCenter.latitude + angle)];
 
-/**
- * @inheritDoc
- */
-plugin.cesium.PrimitiveLayer.prototype.getExtent = function() {
-  var primitive = this.getPrimitive();
+      return ol.proj.transformExtent(extent, os.proj.EPSG4326, os.map.PROJECTION);
+    }
 
-  if (primitive && primitive.ready && primitive.boundingSphere) {
-    var sphere = primitive.boundingSphere;
-    var angle = Math.atan2(sphere.radius, Cesium.Cartesian3.magnitude(sphere.center));
-    var cartographicCenter = Cesium.Cartographic.fromCartesian(sphere.center);
-    var extent = [
-      os.geo.R2D * (cartographicCenter.longitude - angle),
-      os.geo.R2D * (cartographicCenter.latitude - angle),
-      os.geo.R2D * (cartographicCenter.longitude + angle),
-      os.geo.R2D * (cartographicCenter.latitude + angle)];
-
-    return ol.proj.transformExtent(extent, os.proj.EPSG4326, os.map.PROJECTION);
+    return undefined;
   }
+}
 
-  return undefined;
-};
+exports = PrimitiveLayer;

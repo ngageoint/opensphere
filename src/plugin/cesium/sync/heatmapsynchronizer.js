@@ -4,6 +4,8 @@ goog.module.declareLegacyNamespace();
 const asserts = goog.require('goog.asserts');
 const Delay = goog.require('goog.async.Delay');
 const EventType = goog.require('goog.events.EventType');
+const dispatcher = goog.require('os.Dispatcher');
+const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const PropertyChange = goog.require('os.layer.PropertyChange');
 const events = goog.require('os.ol.events');
@@ -127,7 +129,7 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
       asserts.assert(this.activeLayer_);
       asserts.assert(this.layer);
       cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
-      os.dispatcher.dispatchEvent(MapEvent.GL_REPAINT);
+      dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }
 
@@ -146,7 +148,7 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
 
         if (this.layer && this.activeLayer_) {
           cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
-          os.dispatcher.dispatchEvent(MapEvent.GL_REPAINT);
+          dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
         }
       } else if (p == HeatmapPropertyType.INTENSITY ||
           p == HeatmapPropertyType.SIZE ||
@@ -166,7 +168,7 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
     asserts.assert(this.layer !== null);
     asserts.assert(this.activeLayer_ !== null);
     cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
-    os.dispatcher.dispatchEvent(MapEvent.GL_REPAINT);
+    dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
   }
 
   /**
@@ -176,7 +178,7 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
    * @suppress {accessControls}
    */
   createHeatmap(opt_event) {
-    if (!os.MapContainer.getInstance().is3DEnabled() || !this.visible_) {
+    if (!MapContainer.getInstance().is3DEnabled() || !this.visible_) {
       return;
     }
 

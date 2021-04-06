@@ -1,36 +1,25 @@
-goog.provide('plugin.cesium.TileGridTilingScheme');
+goog.module('plugin.cesium.TileGridTilingScheme');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.asserts');
-goog.require('ol.proj');
-goog.require('os.geo');
-goog.require('os.map');
-goog.require('os.proj');
-
-
-/**
- * @param {!ol.source.TileImage} source The source.
- * @param {ol.tilegrid.TileGrid=} opt_tileGrid The tile grid. If not provided, the source's tile grid will be used.
- * @extends {Cesium.TilingScheme}
- * @constructor
- */
-plugin.cesium.TileGridTilingScheme = function(source, opt_tileGrid) {
-  throw new Error('TileGridTilingScheme created before initialization!');
-};
+const geo = goog.require('os.geo');
+const asserts = goog.require('goog.asserts');
+const olProj = goog.require('ol.proj');
+const map = goog.require('os.map');
+const osProj = goog.require('os.proj');
 
 
 /**
- * Initialize the class. This must be done asynchronously after Cesium has been loaded
+ * @implements {Cesium.TilingScheme}
  */
-plugin.cesium.TileGridTilingScheme.init = function() {
+class TileGridTilingScheme {
   /**
+   * Constructor.
    * @param {!ol.source.TileImage} source The source.
    * @param {ol.tilegrid.TileGrid=} opt_tileGrid The tile grid. If not provided, the source's tile grid will be used.
-   * @extends {Cesium.TilingScheme}
-   * @constructor
    */
-  plugin.cesium.TileGridTilingScheme = function(source, opt_tileGrid) {
+  constructor(source, opt_tileGrid) {
     var tg = opt_tileGrid || source.getTileGrid();
-    goog.asserts.assert(tg);
+    asserts.assert(tg);
 
     /**
      * @type {!ol.tilegrid.TileGrid}
@@ -38,10 +27,10 @@ plugin.cesium.TileGridTilingScheme.init = function() {
      */
     this.tilegrid_ = tg;
 
-    var proj = source.getProjection() || os.map.PROJECTION;
-    goog.asserts.assert(proj);
-    var isGeographic = ol.proj.equivalent(proj, ol.proj.get(os.proj.EPSG4326));
-    var isWebMercator = ol.proj.equivalent(proj, ol.proj.get(os.proj.EPSG3857));
+    var proj = source.getProjection() || map.PROJECTION;
+    asserts.assert(proj);
+    var isGeographic = olProj.equivalent(proj, olProj.get(osProj.EPSG4326));
+    var isWebMercator = olProj.equivalent(proj, olProj.get(osProj.EPSG3857));
 
     if (!isGeographic && !isWebMercator && !ol.ENABLE_RASTER_REPROJECTION) {
       throw new Error('Cesium only supports EPSG:4326 and EPSG:3857 projections');
@@ -60,14 +49,14 @@ plugin.cesium.TileGridTilingScheme.init = function() {
       new Cesium.WebMercatorProjection(this.ellipsoid_);
 
     /**
-     * @type {!ol.proj.Projection}
+     * @type {!olProj.Projection}
      * @private
      */
-    this.projection_ = /** @type {!ol.proj.Projection} */ (proj);
+    this.projection_ = /** @type {!olProj.Projection} */ (proj);
 
-    var extent = ol.proj.transformExtent(this.tilegrid_.getExtent(), this.projection_, os.proj.EPSG4326);
+    var extent = olProj.transformExtent(this.tilegrid_.getExtent(), this.projection_, osProj.EPSG4326);
     extent = extent.map(function(deg) {
-      return deg * os.geo.D2R;
+      return deg * geo.D2R;
     });
 
     /**
@@ -75,54 +64,34 @@ plugin.cesium.TileGridTilingScheme.init = function() {
      * @private
      */
     this.rectangle_ = new Cesium.Rectangle(extent[0], extent[1], extent[2], extent[3]);
-  };
-  goog.inherits(plugin.cesium.TileGridTilingScheme, Cesium.TilingScheme);
-
-  // after creating the class, ensure this function can still be called without consequence.
-  plugin.cesium.TileGridTilingScheme.init = goog.nullFunction;
-
-
-  Object.defineProperties(plugin.cesium.TileGridTilingScheme.prototype, {
-    'ellipsoid': {
-      get:
-        /**
-         * @return {!Cesium.Ellipsoid}
-         * @this plugin.cesium.TileGridTilingScheme
-         */
-        function() {
-          return this.ellipsoid_;
-        }
-    },
-
-    'rectangle': {
-      get:
-        /**
-         * @return {!Cesium.Rectangle} rectangle in radians covered by the tiling scheme
-         * @this plugin.cesium.TileGridTilingScheme
-         */
-        function() {
-          return this.rectangle_;
-        }
-    },
-
-    'projection': {
-      get:
-        /**
-         * @return {!(Cesium.GeographicProjection|Cesium.WebMercatorProjection)}
-         * @this plugin.cesium.TileGridTilingScheme
-         */
-        function() {
-          return this.cesiumProjection_;
-        }
-    }
-  });
-
+  }
 
   /**
    * @inheritDoc
-   * @suppress {accessControls}
    */
-  plugin.cesium.TileGridTilingScheme.prototype.getNumberOfXTilesAtLevel = function(level) {
+  get ellipsoid() {
+    return this.ellipsoid_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  get rectangle() {
+    return this.rectangle_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  get projection() {
+    return this.cesiumProjection_;
+  }
+
+  /**
+   * @inheritDoc
+   * @suppress {accessControls} To allow access to tilegrid private properties.
+   */
+  getNumberOfXTilesAtLevel(level) {
     var tileRange = this.tilegrid_.getFullTileRange(level);
     if (tileRange) {
       return tileRange.maxX - tileRange.minX + 1;
@@ -140,14 +109,13 @@ plugin.cesium.TileGridTilingScheme.init = function() {
     }
 
     return 0;
-  };
-
+  }
 
   /**
    * @inheritDoc
-   * @suppress {accessControls}
+   * @suppress {accessControls} To allow access to tilegrid private properties.
    */
-  plugin.cesium.TileGridTilingScheme.prototype.getNumberOfYTilesAtLevel = function(level) {
+  getNumberOfYTilesAtLevel(level) {
     var tileRange = this.tilegrid_.getFullTileRange(level);
     if (tileRange) {
       return tileRange.maxY - tileRange.minY + 1;
@@ -164,22 +132,21 @@ plugin.cesium.TileGridTilingScheme.init = function() {
     }
 
     return 0;
-  };
-
+  }
 
   /**
    * @inheritDoc
    */
-  plugin.cesium.TileGridTilingScheme.prototype.rectangleToNativeRectangle = function(rectangle, opt_result) {
-    goog.asserts.assert(rectangle);
+  rectangleToNativeRectangle(rectangle, opt_result) {
+    asserts.assert(rectangle);
 
     var extent = [
-      rectangle.west * os.geo.R2D,
-      rectangle.south * os.geo.R2D,
-      rectangle.east * os.geo.R2D,
-      rectangle.north * os.geo.R2D];
+      rectangle.west * geo.R2D,
+      rectangle.south * geo.R2D,
+      rectangle.east * geo.R2D,
+      rectangle.north * geo.R2D];
 
-    extent = ol.proj.transformExtent(extent, os.proj.EPSG4326, this.projection_);
+    extent = olProj.transformExtent(extent, osProj.EPSG4326, this.projection_);
 
     var result = opt_result || new Cesium.Rectangle();
     result.west = extent[0];
@@ -188,44 +155,43 @@ plugin.cesium.TileGridTilingScheme.init = function() {
     result.north = extent[3];
 
     return result;
-  };
+  }
 
   /**
    * @inheritDoc
    */
-  plugin.cesium.TileGridTilingScheme.prototype.tileXYToNativeRectangle = function(x, y, level, opt_result) {
+  tileXYToNativeRectangle(x, y, level, opt_result) {
     var rectangle = this.tileXYToRectangle(x, y, level, opt_result);
     return this.rectangleToNativeRectangle(rectangle, opt_result);
-  };
-
+  }
 
   /**
    * @inheritDoc
    */
-  plugin.cesium.TileGridTilingScheme.prototype.tileXYToRectangle = function(x, y, level, opt_result) {
+  tileXYToRectangle(x, y, level, opt_result) {
     var extent = this.tilegrid_.getTileCoordExtent([level, x, -y - 1]);
-    extent = ol.proj.transformExtent(extent, this.projection_, os.proj.EPSG4326);
+    extent = olProj.transformExtent(extent, this.projection_, osProj.EPSG4326);
 
     var result = opt_result || new Cesium.Rectangle();
-    result.west = extent[0] * os.geo.D2R;
-    result.south = extent[1] * os.geo.D2R;
-    result.east = extent[2] * os.geo.D2R;
-    result.north = extent[3] * os.geo.D2R;
+    result.west = extent[0] * geo.D2R;
+    result.south = extent[1] * geo.D2R;
+    result.east = extent[2] * geo.D2R;
+    result.north = extent[3] * geo.D2R;
 
     return result;
-  };
+  }
 
   /**
    * @inheritDoc
-   * @suppress {accessControls}
+   * @suppress {accessControls} To allow access to tilegrid private properties.
    */
-  plugin.cesium.TileGridTilingScheme.prototype.positionToTileXY = function(position, level, opt_result) {
+  positionToTileXY(position, level, opt_result) {
     if (!this.contains(position)) {
       // outside bounds of tiling scheme
       return undefined;
     }
 
-    var coord = ol.proj.fromLonLat([position.longitude * os.geo.R2D, position.latitude * os.geo.R2D], this.projection_);
+    var coord = olProj.fromLonLat([position.longitude * geo.R2D, position.latitude * geo.R2D], this.projection_);
 
     var origin = this.tilegrid_.getOrigin(level);
     var resolution = this.tilegrid_.getResolution(level);
@@ -239,13 +205,13 @@ plugin.cesium.TileGridTilingScheme.init = function() {
     result.y = Math.floor(y);
 
     return result;
-  };
+  }
 
   /**
    * @param {Cesium.Cartographic} position The lon/lat in radians
    * @return {boolean} Whether or not the position is within the tiling scheme
    */
-  plugin.cesium.TileGridTilingScheme.prototype.contains = function(position) {
+  contains(position) {
     var epsilon = 1E-12;
     var rectangle = this.rectangle_;
 
@@ -253,5 +219,7 @@ plugin.cesium.TileGridTilingScheme.init = function() {
         position.latitude - rectangle.south < -epsilon ||
         position.longitude - rectangle.west < -epsilon ||
         position.longitude - rectangle.east > epsilon);
-  };
-};
+  }
+}
+
+exports = TileGridTilingScheme;

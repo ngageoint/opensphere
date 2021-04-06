@@ -1,8 +1,10 @@
-goog.provide('plugin.cesium.interaction.measure');
+goog.module('plugin.cesium.interaction.measure');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.interaction.DrawPolygon');
-goog.require('os.interaction.Measure');
-goog.require('plugin.cesium.interaction.drawpolygon');
+const MapContainer = goog.require('os.MapContainer');
+const DrawPolygon = goog.require('os.interaction.DrawPolygon');
+const Measure = goog.require('os.interaction.Measure');
+const drawpolygon = goog.require('plugin.cesium.interaction.drawpolygon');
 
 
 /**
@@ -10,18 +12,18 @@ goog.require('plugin.cesium.interaction.drawpolygon');
  * @type {Cesium.LabelCollection|undefined}
  * @protected
  */
-os.interaction.Measure.prototype.cesiumLabels = undefined;
+Measure.prototype.cesiumLabels = undefined;
 
 
 /**
  * Clean up the draw polygon interaction in Cesium.
  *
- * @this {os.interaction.Measure}
+ * @this {Measure}
  */
-plugin.cesium.interaction.measure.cleanupWebGL = function() {
-  plugin.cesium.interaction.drawpolygon.cleanupWebGL.call(this);
+const cleanupWebGL = function() {
+  drawpolygon.cleanupWebGL.call(this);
 
-  var webgl = /** @type {plugin.cesium.CesiumRenderer|undefined} */ (os.MapContainer.getInstance().getWebGLRenderer());
+  var webgl = /** @type {plugin.cesium.CesiumRenderer|undefined} */ (MapContainer.getInstance().getWebGLRenderer());
   var scene = webgl ? webgl.getCesiumScene() : undefined;
   if (scene) {
     if (this.cesiumLabels) {
@@ -31,25 +33,24 @@ plugin.cesium.interaction.measure.cleanupWebGL = function() {
   }
 };
 
-
 /**
  * Draw the measure line in Cesium.
  *
- * @this {os.interaction.Measure}
+ * @this {Measure}
  * @suppress {accessControls}
  */
-plugin.cesium.interaction.measure.updateWebGL = function() {
-  plugin.cesium.interaction.drawpolygon.updateWebGL.call(this);
+const updateWebGL = function() {
+  drawpolygon.updateWebGL.call(this);
 
-  if (os.MapContainer.getInstance().is3DEnabled()) {
+  if (MapContainer.getInstance().is3DEnabled()) {
     var webgl = /** @type {plugin.cesium.CesiumRenderer|undefined} */ (
-      os.MapContainer.getInstance().getWebGLRenderer());
+      MapContainer.getInstance().getWebGLRenderer());
     var scene = webgl ? webgl.getCesiumScene() : undefined;
 
-    var lonlats = this.coords.map(os.interaction.DrawPolygon.coordToLonLat);
+    var lonlats = this.coords.map(DrawPolygon.coordToLonLat);
 
     if (scene && lonlats.length > 1) {
-      var camera = os.MapContainer.getInstance().getWebGLCamera();
+      var camera = MapContainer.getInstance().getWebGLCamera();
 
       if (!this.cesiumLabels) {
         this.cesiumLabels = new Cesium.LabelCollection();
@@ -69,7 +70,7 @@ plugin.cesium.interaction.measure.updateWebGL = function() {
       var i = this.distances_.length - 1;
       label.show = false;
       label.eyeOffset = new Cesium.Cartesian3(0.0, 0.0, -(camera.getDistanceToCenter() / 5));
-      label.font = os.style.label.getFont(os.interaction.Measure.LABEL_FONT_SIZE_);
+      label.font = os.style.label.getFont(Measure.LABEL_FONT_SIZE_);
       label.style = Cesium.LabelStyle.FILL_AND_OUTLINE;
       label.outlineWidth = 2;
       label.outlineColor = new Cesium.Color(0, 0, 0);
@@ -79,4 +80,9 @@ plugin.cesium.interaction.measure.updateWebGL = function() {
       label.show = true;
     }
   }
+};
+
+exports = {
+  cleanupWebGL,
+  updateWebGL
 };
