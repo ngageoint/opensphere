@@ -259,29 +259,25 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
       // NOTE: This initUI method can get called a-lot, depending on some events that get routed to this method.
       this.scope['columns'] = this.getColumns();
       this['uniqueId'] = this.getValue(os.ui.layer.getUniqueId);
-
-      this.reconcileLabelsState_();
-
-      if (this.scope['showLabels'] !== this.getShowLabel()) {
-        this.scope['showLabels'] = this.getShowLabel();
-      }
-
-      if (this.scope['labelColor'] !== this.getLabelColor()) {
-        this.scope['labelColor'] = this.getLabelColor();
-      }
-
-      if (this.scope['labelSize'] !== this.getLabelSize() ||
-          this.scope['labelSize'] !== os.style.label.DEFAULT_SIZE) {
-        this.scope['labelSize'] = this.getLabelSize() || os.style.label.DEFAULT_SIZE;
-      }
     } else {
       this.scope['columns'] = null;
       this.scope['column'] = null;
-      this.scope['showLabels'] = false;
-      this.scope['labelColor'] = '';
-      this.scope['labelSize'] = 0;
-
       this['uniqueId'] = null;
+    }
+
+    this.reconcileLabelsState_();
+
+    if (this.scope['showLabels'] !== this.getShowLabel()) {
+      this.scope['showLabels'] = this.getShowLabel();
+    }
+
+    if (this.scope['labelColor'] !== this.getLabelColor()) {
+      this.scope['labelColor'] = this.getLabelColor();
+    }
+
+    if (this.scope['labelSize'] !== this.getLabelSize() ||
+        this.scope['labelSize'] !== os.style.label.DEFAULT_SIZE) {
+      this.scope['labelSize'] = this.getLabelSize() || os.style.label.DEFAULT_SIZE;
     }
 
     var webGLRenderer = os.map.mapContainer.getWebGLRenderer();
@@ -840,19 +836,16 @@ os.ui.layer.VectorLayerUICtrl.prototype.onLabelColumnChange = function(event) {
 os.ui.layer.VectorLayerUICtrl.prototype.onShowLabelsChange = function(event, value) {
   event.stopPropagation();
 
-  var items = /** @type {Array} */ (this.scope['items']);
-  if (items && items.length === 1) {
-    var fn =
-        /**
-         * @param {os.layer.ILayer} layer
-         * @return {os.command.ICommand}
-         */
-        function(layer) {
-          return new os.command.VectorLayerShowLabel(layer.getId(), value);
-        };
+  var fn =
+      /**
+       * @param {os.layer.ILayer} layer
+       * @return {os.command.ICommand}
+       */
+      function(layer) {
+        return new os.command.VectorLayerShowLabel(layer.getId(), value);
+      };
 
-    this.createCommand(fn);
-  }
+  this.createCommand(fn);
 };
 
 
