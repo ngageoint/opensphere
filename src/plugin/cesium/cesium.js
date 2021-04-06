@@ -1,7 +1,6 @@
 goog.module('plugin.cesium');
 
 const MapContainer = goog.require('os.MapContainer');
-const ui = goog.require('os.ui');
 const settings = goog.require('os.config.Settings');
 const Promise = goog.require('goog.Promise');
 const Uri = goog.require('goog.Uri');
@@ -16,6 +15,7 @@ const net = goog.require('os.net');
 const proj = goog.require('os.proj');
 const utils = goog.require('os.query.utils');
 const osString = goog.require('os.string');
+const osWindow = goog.require('os.ui.window');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const ImageryProvider = goog.require('plugin.cesium.ImageryProvider');
 
@@ -187,7 +187,7 @@ const loadCesium = function() {
  */
 const promptForAccessToken = function() {
   return new Promise(function(resolve, reject) {
-    ui.window.launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
+    osWindow.launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
       confirm: (accessToken) => {
         settings.getInstance().set(SettingsKey.ACCESS_TOKEN, accessToken);
         resolve(accessToken);

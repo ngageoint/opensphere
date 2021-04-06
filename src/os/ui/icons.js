@@ -1,9 +1,11 @@
 goog.provide('os.ui.Icons');
 goog.provide('os.ui.IconsSVG');
+goog.provide('os.ui.icons');
 
 goog.require('goog.crypt.hash32');
 goog.require('os');
 goog.require('os.color');
+goog.require('os.ui');
 
 
 /**
@@ -47,14 +49,14 @@ os.ui.Icons = {
  * @const
  * @private
  */
-os.ui.white_ = [0xff, 0xff, 0xff];
+os.ui.icons.white_ = [0xff, 0xff, 0xff];
 
 
 /**
  * @type {number}
  * @const
  */
-os.ui.ICON_WIDTH = 16;
+os.ui.icons.ICON_WIDTH = 16;
 
 
 /**
@@ -64,14 +66,14 @@ os.ui.ICON_WIDTH = 16;
  * @param {Array<number>|string} color The icon color
  * @return {string}
  */
-os.ui.createIconSet = function(id, svgIcons, faIcons, color) {
+os.ui.icons.createIconSet = function(id, svgIcons, faIcons, color) {
   var html = '';
-  id = os.ui.hashIconId(id);
+  id = os.ui.icons.hashIconId(id);
 
   if (svgIcons && svgIcons.length > 0) {
     var arrColor = typeof color === 'string' ? os.color.toRgbArray(color) : color;
-    var values = os.color.changeColor(os.ui.white_, arrColor || os.ui.white_);
-    var width = os.ui.ICON_WIDTH * svgIcons.length;
+    var values = os.color.changeColor(os.ui.icons.white_, arrColor || os.ui.icons.white_);
+    var width = os.ui.icons.ICON_WIDTH * svgIcons.length;
     var filter = 'filter_';
     var matrix = 'matrix_';
     html += '<svg width="' + width + 'px" height="16px" class="align-middle" ' +
@@ -80,8 +82,8 @@ os.ui.createIconSet = function(id, svgIcons, faIcons, color) {
     html += svgIcons.join('');
     var re = /x="(\d+)"/g;
 
-    os.ui.xReplaceI_ = 0;
-    html = html.replace(re, os.ui.xReplace_);
+    os.ui.icons.xReplaceI_ = 0;
+    html = html.replace(re, os.ui.icons.xReplace_);
     html += '<filter id="' + filter + id + '">';
     html += '<feColorMatrix id="' + matrix + id + '" values="' + values.join(' ') + '"/>';
     html += '</filter></svg>';
@@ -101,21 +103,43 @@ os.ui.createIconSet = function(id, svgIcons, faIcons, color) {
 
 
 /**
+ * @param {string} id The layer id
+ * @param {Array<string>} svgIcons SVG icons
+ * @param {Array<string>} faIcons Font Awesome icons
+ * @param {Array<number>|string} color The icon color
+ * @return {string}
+ *
+ * @deprecated Please use `os.ui.icons.createIconSet` instead.
+ */
+os.ui.createIconSet = os.ui.icons.createIconSet;
+
+
+/**
  * Hashes an icon ID. This prevents us from putting invalid special characters in an ID selector.
  *
  * @param {string} id
  * @return {string}
  */
-os.ui.hashIconId = function(id) {
+os.ui.icons.hashIconId = function(id) {
   return String(goog.crypt.hash32.encodeString(id));
 };
+
+
+/**
+ * Hashes an icon ID. This prevents us from putting invalid special characters in an ID selector.
+ * @param {string} id
+ * @return {string}
+ *
+ * @deprecated Please use `os.ui.icons.hashIconId` instead.
+ */
+os.ui.hashIconId = os.ui.icons.hashIconId;
 
 
 /**
  * @type {number}
  * @private
  */
-os.ui.xReplaceI_ = 0;
+os.ui.icons.xReplaceI_ = 0;
 
 
 /**
@@ -126,9 +150,9 @@ os.ui.xReplaceI_ = 0;
  * @return {string}
  * @private
  */
-os.ui.xReplace_ = function(match, p1, offset, whole) {
-  var x = os.ui.xReplaceI_ * os.ui.ICON_WIDTH;
-  os.ui.xReplaceI_++;
+os.ui.icons.xReplace_ = function(match, p1, offset, whole) {
+  var x = os.ui.icons.xReplaceI_ * os.ui.icons.ICON_WIDTH;
+  os.ui.icons.xReplaceI_++;
   return match.replace(p1, x.toString());
 };
 
@@ -137,16 +161,25 @@ os.ui.xReplace_ = function(match, p1, offset, whole) {
  * @param {string} id
  * @param {Array<number>|string} color
  */
-os.ui.adjustIconSet = function(id, color) {
+os.ui.icons.adjustIconSet = function(id, color) {
   if (typeof color === 'string') {
     color = os.color.toRgbArray(color);
   }
 
-  var values = os.color.changeColor(os.ui.white_, color || os.ui.white_);
-  id = os.ui.hashIconId(id);
+  var values = os.color.changeColor(os.ui.icons.white_, color || os.ui.icons.white_);
+  id = os.ui.icons.hashIconId(id);
   var matrix = angular.element('#matrix_' + id);
   matrix.attr('values', values.join(' '));
 
-  var hexColor = os.color.toHexString(color || os.ui.white_);
+  var hexColor = os.color.toHexString(color || os.ui.icons.white_);
   angular.element('i.fa.layer-icon-' + id).css('color', hexColor);
 };
+
+
+/**
+ * @param {string} id
+ * @param {Array<number>|string} color
+ *
+ * @deprecated Please use `os.ui.icons.adjustIconSet` instead.
+ */
+os.ui.adjustIconSet = os.ui.icons.adjustIconSet;

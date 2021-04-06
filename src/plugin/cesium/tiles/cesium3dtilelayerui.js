@@ -2,7 +2,7 @@ goog.module('plugin.cesium.tiles.Cesium3DTileLayerUI');
 
 goog.require('os.ui.sliderDirective');
 
-const os = goog.require('os');
+const {ROOT} = goog.require('os');
 const LayerColor = goog.require('os.command.LayerColor');
 const osImplements = goog.require('os.implements');
 const Module = goog.require('os.ui.Module');
@@ -17,7 +17,7 @@ const DefaultLayerUICtrl = goog.require('os.ui.layer.DefaultLayerUICtrl');
 const directive = () => ({
   restrict: 'AE',
   replace: true,
-  templateUrl: os.ROOT + 'views/plugin/cesium/cesium3dtile.html',
+  templateUrl: ROOT + 'views/plugin/cesium/cesium3dtile.html',
   controller: Controller,
   controllerAs: 'ctrl'
 });

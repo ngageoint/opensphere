@@ -1,7 +1,7 @@
 goog.module('plugin.cesium.menu');
 
-const ui = goog.require('os.ui');
 const osUiMenuImport = goog.require('os.ui.menu.import');
+const osWindow = goog.require('os.ui.window');
 const cesium = goog.require('plugin.cesium');
 const {directiveTag: importIonAssetTag} = goog.require('plugin.cesium.ImportIonAssetUI');
 
@@ -51,7 +51,7 @@ const launchAddIonAsset = function() {
   };
 
   var template = `<${importIonAssetTag}></${importIonAssetTag}>`;
-  ui.window.create(windowOptions, template);
+  osWindow.create(windowOptions, template);
 };
 
 exports = {

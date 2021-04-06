@@ -1,6 +1,6 @@
 goog.module('plugin.cesium.tiles.TilesetImport');
 
-const os = goog.require('os');
+const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
 const AbstractFileImportCtrl = goog.require('os.ui.file.ui.AbstractFileImportCtrl');
 const Descriptor = goog.require('plugin.cesium.tiles.Descriptor');
@@ -16,7 +16,7 @@ const directive = () => ({
   restrict: 'E',
   replace: true,
   scope: true,
-  templateUrl: os.ROOT + 'views/file/genericfileimport.html',
+  templateUrl: ROOT + 'views/file/genericfileimport.html',
   controller: Controller,
   controllerAs: 'ctrl'
 });

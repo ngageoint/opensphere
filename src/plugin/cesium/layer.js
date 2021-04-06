@@ -1,7 +1,6 @@
 goog.module('plugin.cesium.Layer');
 
 const dispatcher = goog.require('os.Dispatcher');
-const ui = goog.require('os.ui');
 const mapContainer = goog.require('os.MapContainer');
 const MapContainer = goog.require('os.MapContainer');
 const Delay = goog.require('goog.async.Delay');
@@ -16,6 +15,9 @@ const osImplements = goog.require('os.implements');
 const IColorableLayer = goog.require('os.layer.IColorableLayer');
 const ILayer = goog.require('os.layer.ILayer');
 const PropertyChange = goog.require('os.layer.PropertyChange');
+const {adjustIconSet, createIconSet} = goog.require('os.ui.icons');
+
+const IActionTarget = goog.requireType('os.ui.action.IActionTarget');
 
 
 /**
@@ -294,7 +296,7 @@ class Layer extends OLLayer {
   updateIcons_() {
     var color = this.getColor();
     if (color) {
-      ui.adjustIconSet(this.getId(), osColor.toHexString(color));
+      adjustIconSet(this.getId(), osColor.toHexString(color));
     }
   }
 
@@ -327,7 +329,7 @@ class Layer extends OLLayer {
       color = osColor.toRgbArray(layerColor);
     }
 
-    html += color ? ui.createIconSet(this.getId(), null, [this.icons_], color) : this.icons_;
+    html += color ? createIconSet(this.getId(), null, [this.icons_], color) : this.icons_;
     return html;
   }
 
@@ -602,7 +604,7 @@ class Layer extends OLLayer {
 
   /**
    * @inheritDoc
-   * @see {ui.action.IActionTarget}
+   * @see {IActionTarget}
    */
   supportsAction(type, opt_actionArgs) {
     if (os.action) {

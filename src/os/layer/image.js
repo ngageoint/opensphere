@@ -18,6 +18,8 @@ goog.require('os.source');
 goog.require('os.source.ImageStatic');
 goog.require('os.style');
 goog.require('os.ui.Icons');
+goog.require('os.ui.IconsSVG');
+goog.require('os.ui.icons');
 goog.require('os.ui.layer.defaultLayerUIDirective');
 goog.require('os.ui.renamelayer');
 goog.require('os.ui.window');
@@ -438,7 +440,7 @@ os.layer.Image.prototype.getIcons = function() {
   if (config) {
     var color = os.style.getConfigColor(config, true);
     if (color) {
-      return os.ui.createIconSet(this.getId(), this.getSVGSet(), this.getFASet(), color);
+      return os.ui.icons.createIconSet(this.getId(), this.getSVGSet(), this.getFASet(), color);
     }
   }
 
