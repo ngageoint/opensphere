@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.sync.polygon');
-goog.module.declareLegacyNamespace();
 
 const olcsCore = goog.require('olcs.core');
 const geo = goog.require('os.geo');

@@ -1,6 +1,6 @@
 goog.module('test.plugin.cesium.scene');
 
-goog.require('plugin.cesium');
+const {getJulianDate} = goog.require('plugin.cesium');
 const {fixContextLimits} = goog.require('test.plugin.cesium');
 
 const getFakeScene = () => ({
@@ -43,7 +43,7 @@ const getRealScene = () => {
 const renderScene = (scene) => {
   if (scene instanceof Cesium.Scene) {
     scene.initializeFrame();
-    scene.forceRender(plugin.cesium.getJulianDate());
+    scene.forceRender(getJulianDate());
   } else {
     throw new Error('Only real Cesium scenes can be rendered. Did you mean to use getRealScene()?');
   }

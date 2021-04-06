@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.sync.ImageSynchronizer');
-goog.module.declareLegacyNamespace();
 
 const dispatcher = goog.require('os.Dispatcher');
 const geo = goog.require('os.geo');

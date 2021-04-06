@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.VectorContext');
-goog.module.declareLegacyNamespace();
 
 const Throttle = goog.require('goog.async.Throttle');
 const arrayUtils = goog.require('ol.array');

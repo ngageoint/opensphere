@@ -1,8 +1,10 @@
 goog.module('plugin.cesium.command.FlyToSphere');
-goog.module.declareLegacyNamespace();
 
-const mapContainer = goog.require('os.MapContainer');
+const MapContainer = goog.require('os.MapContainer');
 const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');
+const FlyToExtent = goog.require('os.command.FlyToExtent');
+const State = goog.require('os.command.State');
+const {MAX_AUTO_ZOOM, PROJECTION, zoomToResolution} = goog.require('os.map');
 
 
 /**
@@ -28,25 +30,25 @@ class FlyToSphere extends AbstractSyncCommand {
      * @type {osx.map.CameraState}
      * @private
      */
-    this.oldPosition_ = mapContainer.getInstance().persistCameraState();
+    this.oldPosition_ = MapContainer.getInstance().persistCameraState();
 
-    var cam = /** @type {plugin.cesium.Camera} */ (mapContainer.getInstance().getWebGLCamera());
+    var cam = /** @type {plugin.cesium.Camera} */ (MapContainer.getInstance().getWebGLCamera());
     var minRange = cam.calcDistanceForResolution(
-        os.map.zoomToResolution(os.map.MAX_AUTO_ZOOM, os.map.PROJECTION), 0);
+        zoomToResolution(MAX_AUTO_ZOOM, PROJECTION), 0);
 
     sphere.radius = sphere.radius || 10;
 
     // gets the default offset
-    var camera = /** @type {plugin.cesium.Camera} */ (mapContainer.getInstance().getWebGLCamera());
+    var camera = /** @type {plugin.cesium.Camera} */ (MapContainer.getInstance().getWebGLCamera());
     var offset = new Cesium.HeadingPitchRange(camera.cam_.heading, camera.cam_.pitch,
-        os.command.FlyToExtent.DEFAULT_BUFFER * 2 * sphere.radius);
+        FlyToExtent.DEFAULT_BUFFER * 2 * sphere.radius);
 
     offset.range = Math.max(offset.range, minRange);
 
     // the min range needs to include the furthest eye offset for the given sphere altitude
     // @see plugin.cesium.sync.VectorSynchronizer.updateLabelOffsets
     var distance = Cesium.Cartographic.fromCartesian(sphere.center).height + offset.range;
-    offset.range += os.command.FlyToExtent.DEFAULT_BUFFER * distance / 10;
+    offset.range += FlyToExtent.DEFAULT_BUFFER * distance / 10;
 
     /**
      * @type {Cesium.optionsCameraFlyToBoundingSphere}
@@ -62,14 +64,14 @@ class FlyToSphere extends AbstractSyncCommand {
    * @suppress {accessControls}
    */
   execute() {
-    this.state = os.command.State.EXECUTING;
+    this.state = State.EXECUTING;
 
-    this.sphere_.radius *= os.command.FlyToExtent.DEFAULT_BUFFER;
+    this.sphere_.radius *= FlyToExtent.DEFAULT_BUFFER;
 
-    var cam = /** @type {plugin.cesium.Camera} */ (mapContainer.getInstance().getWebGLCamera());
+    var cam = /** @type {plugin.cesium.Camera} */ (MapContainer.getInstance().getWebGLCamera());
     cam.cam_.flyToBoundingSphere(this.sphere_, this.options_);
 
-    this.sphere_.radius /= os.command.FlyToExtent.DEFAULT_BUFFER;
+    this.sphere_.radius /= FlyToExtent.DEFAULT_BUFFER;
 
     return this.finish();
   }
@@ -78,10 +80,10 @@ class FlyToSphere extends AbstractSyncCommand {
    * @inheritDoc
    */
   revert() {
-    this.state = os.command.State.REVERTING;
+    this.state = State.REVERTING;
 
     if (this.oldPosition_) {
-      mapContainer.getInstance().restoreCameraState(this.oldPosition_);
+      MapContainer.getInstance().restoreCameraState(this.oldPosition_);
     }
 
     return super.revert();

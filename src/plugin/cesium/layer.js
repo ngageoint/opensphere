@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.Layer');
-goog.module.declareLegacyNamespace();
 
 const dispatcher = goog.require('os.Dispatcher');
 const ui = goog.require('os.ui');
@@ -8,7 +7,7 @@ const MapContainer = goog.require('os.MapContainer');
 const Delay = goog.require('goog.async.Delay');
 const log = goog.require('goog.log');
 const googString = goog.require('goog.string');
-const olLayerLayer = goog.require('ol.layer.Layer');
+const OLLayer = goog.require('ol.layer.Layer');
 const IGroupable = goog.require('os.IGroupable');
 const osColor = goog.require('os.color');
 const LayerEvent = goog.require('os.events.LayerEvent');
@@ -20,11 +19,18 @@ const PropertyChange = goog.require('os.layer.PropertyChange');
 
 
 /**
+ * The logger.
+ * @type {log.Logger}
+ */
+const logger = log.getLogger('plugin.cesium.Layer');
+
+
+/**
  * @implements {ILayer}
  * @implements {IColorableLayer}
  * @implements {IGroupable}
  */
-class Layer extends olLayerLayer {
+class Layer extends OLLayer {
   /**
    * Constructor.
    */
@@ -124,7 +130,7 @@ class Layer extends olLayerLayer {
      * @type {log.Logger}
      * @protected
      */
-    this.log = Layer.LOGGER_;
+    this.log = logger;
 
     // set the openlayers type to something that won't find a renderer, because there's
     // no way to render Cesium-specific items in OpenLayers anyway
@@ -514,14 +520,14 @@ class Layer extends olLayerLayer {
   }
 
   /**
-   * @return {!function(!olLayerLayer)}
+   * @return {!function(!OLLayer)}
    */
   getRefreshFunction() {
     return goog.nullFunction;
   }
 
   /**
-   * @param {!function(!olLayerLayer)} refreshFunction
+   * @param {!function(!OLLayer)} refreshFunction
    */
   setRefreshFunction(refreshFunction) {
   }
@@ -729,34 +735,22 @@ class Layer extends olLayerLayer {
       this.setLoading(true);
     }
   }
-}
 
+  /**
+   * Identify the layer on the map.
+   * @protected
+   */
+  identify() {}
+
+  /**
+   * Forces the layer to refresh.
+   * @protected
+   */
+  refresh() {}
+}
 osImplements(Layer, ILayer.ID);
 osImplements(Layer, IColorableLayer.ID);
 osImplements(Layer, IGroupable.ID);
-
-
-/**
- * The logger.
- * @type {log.Logger}
- * @private
- * @const
- */
-Layer.LOGGER_ = log.getLogger('plugin.cesium.Layer');
-
-
-/**
- * Forces the layer to refresh.
- * @protected
- */
-Layer.prototype.refresh = goog.nullFunction;
-
-
-/**
- * Identify the layer on the map.
- * @protected
- */
-Layer.prototype.identify = goog.nullFunction;
 
 
 exports = Layer;

@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.ImportIonAssetUI');
-goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const DataManager = goog.require('os.data.DataManager');

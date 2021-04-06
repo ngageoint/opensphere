@@ -1,10 +1,9 @@
 goog.module('plugin.cesium.tiles.TilesetImportUI');
-goog.module.declareLegacyNamespace();
 
 const {directiveTag} = goog.require('plugin.cesium.tiles.TilesetImport');
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
-const window = goog.require('os.ui.window');
-const tiles = goog.require('plugin.cesium.tiles');
+const osWindow = goog.require('os.ui.window');
+const {TYPE} = goog.require('plugin.cesium.tiles');
 
 
 /**
@@ -24,7 +23,7 @@ class TilesetImportUI extends FileImportUI {
    * @inheritDoc
    */
   getTitle() {
-    return tiles.TYPE;
+    return TYPE;
   }
 
   /**
@@ -45,7 +44,7 @@ class TilesetImportUI extends FileImportUI {
       'config': config
     };
     var windowOptions = {
-      'label': 'Import ' + tiles.TYPE,
+      'label': 'Import ' + TYPE,
       'icon': 'fa fa-sign-in',
       'x': 'center',
       'y': 'center',
@@ -57,7 +56,7 @@ class TilesetImportUI extends FileImportUI {
       'show-close': true
     };
     var template = `<${directiveTag}></${directiveTag}>`;
-    window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+    osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 }
 

@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.tiles.Descriptor');
-goog.module.declareLegacyNamespace();
 
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const ColorControlType = goog.require('os.ui.ColorControlType');

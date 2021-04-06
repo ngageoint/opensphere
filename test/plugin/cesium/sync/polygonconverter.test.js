@@ -9,7 +9,6 @@ goog.require('os.layer.Vector');
 goog.require('os.map');
 goog.require('os.proj');
 goog.require('os.webgl.AltitudeMode');
-goog.require('plugin.cesium');
 goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.PolygonConverter');
 goog.require('test.plugin.cesium.scene');

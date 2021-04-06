@@ -2,9 +2,10 @@
  * @fileoverview mixins for Cesium
  * @suppress {missingProvide}
  */
-goog.module('plugin.cesium.mixin');
+goog.declareModuleId('plugin.cesium.mixin');
 
-goog.module.declareLegacyNamespace();
+import {load as loadOLCesiumMixin} from './olcesiummixin';
+import {load as loadRenderLoopMixin} from './renderloopmixin';
 
 const dispatcher = goog.require('os.Dispatcher');
 const MapEvent = goog.require('os.MapEvent');
@@ -12,14 +13,27 @@ const Request = goog.require('os.net.Request');
 
 
 /**
+ * If the mixin has been loaded.
+ * @type {boolean}
+ */
+let loaded = false;
+
+
+/**
  * Load Cesium mixins.
  *
  * @throws {Error} If Cesium has not been loaded.
  */
-const loadCesiumMixins = function() {
+export const load = function() {
   if (window.Cesium === undefined) {
     throw new Error('Cesium has not been loaded!');
   }
+
+  if (loaded) {
+    return;
+  }
+
+  loaded = true;
 
   const oldCreateImage = Cesium.Resource._Implementations.createImage;
 
@@ -201,8 +215,7 @@ const loadCesiumMixins = function() {
     return new Cesium.PickId(this, key, Cesium.Color.fromRgba(key));
   };
   Cesium.Context.prototype['createPickId'] = Cesium.Context.prototype.createPickId;
-};
 
-exports = {
-  loadCesiumMixins
+  loadOLCesiumMixin();
+  loadRenderLoopMixin();
 };

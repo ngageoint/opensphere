@@ -13,6 +13,7 @@ goog.require('test.plugin.cesium.primitive');
 goog.require('test.plugin.cesium.scene');
 
 describe('plugin.cesium.primitive', () => {
+  const {GeometryInstanceId} = goog.module.get('plugin.cesium');
   const syncUtils = goog.module.get('plugin.cesium.primitive');
   const primitiveUtils = goog.module.get('test.plugin.cesium.primitive');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
@@ -234,12 +235,12 @@ describe('plugin.cesium.primitive', () => {
 
     it('should assume a geometry ID rather than an outline', () => {
       const result = syncUtils.createColoredPrimitive(geometry, color, undefined, undefined, MockPrimitive);
-      expect(result.options.geometryInstances.id).toBe(plugin.cesium.GeometryInstanceId.GEOM);
+      expect(result.options.geometryInstances.id).toBe(GeometryInstanceId.GEOM);
     });
 
     it('should use an outline ID when an outline is provided', () => {
       const result = syncUtils.createColoredPrimitive(geometry, color, 3, undefined, MockPrimitive);
-      expect(result.options.geometryInstances.id).toBe(plugin.cesium.GeometryInstanceId.GEOM_OUTLINE);
+      expect(result.options.geometryInstances.id).toBe(GeometryInstanceId.GEOM_OUTLINE);
     });
 
     it('should add the line width to the appearance renderState', () => {
@@ -266,7 +267,7 @@ describe('plugin.cesium.primitive', () => {
       const customCreate = (id, geometry, color) => ({id, geometry, color});
       const result = syncUtils.createColoredPrimitive(geometry, color, undefined, customCreate, MockPrimitive);
       expect(result.options.geometryInstances).toEqual({
-        id: plugin.cesium.GeometryInstanceId.GEOM,
+        id: GeometryInstanceId.GEOM,
         geometry,
         color
       });

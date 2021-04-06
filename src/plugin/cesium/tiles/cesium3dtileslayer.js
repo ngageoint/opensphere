@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.tiles.Layer');
-goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const {transformExtent} = goog.require('ol.proj');

@@ -1,26 +1,27 @@
 goog.module('plugin.cesium.interaction');
-goog.module.declareLegacyNamespace();
 
 const DragBox = goog.require('os.interaction.DragBox');
 const DragCircle = goog.require('os.interaction.DragCircle');
 const DrawPolygon = goog.require('os.interaction.DrawPolygon');
 const Measure = goog.require('os.interaction.Measure');
-const map = goog.require('os.map');
+const {PROJECTION, zoomToResolution} = goog.require('os.map');
 const dragbox = goog.require('plugin.cesium.interaction.dragbox');
 const dragcircle = goog.require('plugin.cesium.interaction.dragcircle');
 const drawpolygon = goog.require('plugin.cesium.interaction.drawpolygon');
 const measure = goog.require('plugin.cesium.interaction.measure');
 
+const Camera = goog.requireType('plugin.cesium.Camera');
+
 
 /**
  * Configure Cesium interactions.
  *
- * @param {!plugin.cesium.Camera} camera The camera.
+ * @param {!Camera} camera The camera.
  * @param {Cesium.ScreenSpaceCameraController} sscc The camera controller.
  */
 const configureCesium = function(camera, sscc) {
   // allow zooming out further in the 3D view
-  var maxResolution = map.zoomToResolution(0, map.PROJECTION);
+  var maxResolution = zoomToResolution(0, PROJECTION);
   sscc.maximumZoomDistance = camera.calcDistanceForResolution(maxResolution, 0);
 
   // shift + right drag to change the camera direction

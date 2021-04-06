@@ -11,10 +11,19 @@ goog.require('test.plugin.cesium.scene');
 goog.require('test.plugin.cesium.sync.dynamiclinestring');
 
 describe('plugin.cesium.sync.DynamicPolygonConverter', () => {
+  const Polygon = goog.module.get('ol.geom.Polygon');
+  const Feature = goog.module.get('ol.Feature');
+  const olProj = goog.module.get('ol.proj');
+  const Style = goog.module.get('ol.style.Style');
+
+  const Vector = goog.module.get('os.layer.Vector');
+  const {EPSG4326} = goog.module.get('os.proj');
   const VectorContext = goog.module.get('plugin.cesium.VectorContext');
+  const DynamicPolygonConverter = goog.module.get('plugin.cesium.sync.DynamicPolygonConverter');
+
   const {testLine} = goog.module.get('test.plugin.cesium.sync.dynamiclinestring');
   const {getRealScene, renderScene} = goog.module.get('test.plugin.cesium.scene');
-  const DynamicPolygonConverter = goog.module.get('plugin.cesium.sync.DynamicPolygonConverter');
+
   const polygonConverter = new DynamicPolygonConverter();
 
   let feature;
@@ -24,12 +33,12 @@ describe('plugin.cesium.sync.DynamicPolygonConverter', () => {
 
   beforeEach(() => {
     enableWebGLMock();
-    geometry = new ol.geom.Polygon([[[0, 0], [0, 5], [5, 5], [5, 0], [0, 0]]]);
-    feature = new ol.Feature(geometry);
-    style = new ol.style.Style();
-    layer = new os.layer.Vector();
+    geometry = new Polygon([[[0, 0], [0, 5], [5, 5], [5, 0], [0, 0]]]);
+    feature = new Feature(geometry);
+    style = new Style();
+    layer = new Vector();
     scene = getRealScene();
-    context = new VectorContext(scene, layer, ol.proj.get(os.proj.EPSG4326));
+    context = new VectorContext(scene, layer, olProj.get(EPSG4326));
   });
 
   const originalProjection = os.map.PROJECTION;

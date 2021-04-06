@@ -1,5 +1,4 @@
 goog.module('plugin.cesium');
-goog.module.declareLegacyNamespace();
 
 const MapContainer = goog.require('os.MapContainer');
 const ui = goog.require('os.ui');
@@ -19,7 +18,6 @@ const utils = goog.require('os.query.utils');
 const osString = goog.require('os.string');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const ImageryProvider = goog.require('plugin.cesium.ImageryProvider');
-const WMSTerrainProvider = goog.require('plugin.cesium.WMSTerrainProvider');
 
 
 /**
@@ -48,6 +46,12 @@ const SettingsKey = {
   LOAD_TIMEOUT: 'cesium.loadTimeout',
   SKYBOX_OPTIONS: 'cesium.skyBoxOptions'
 };
+
+/**
+ * Identifier for Cesium plugin components
+ * @type {string}
+ */
+const ID = 'cesium';
 
 /**
  * @type {string}
@@ -531,16 +535,6 @@ const enableWorldTerrain = function() {
 };
 
 /**
- * Create a Cesium WMS terrain provider instance.
- *
- * @param {!osx.cesium.WMSTerrainProviderOptions} options The WMS terrain options.
- * @return {!Promise<!WMSTerrainProvider>}
- */
-const createWMSTerrain = function(options) {
-  return Promise.resolve(new WMSTerrainProvider(options));
-};
-
-/**
  * @type {?Cesium.Cartesian3}
  */
 let scratchCartesian_ = null;
@@ -619,6 +613,8 @@ const reduceBoundingSphere = function(sphere, geom) {
 exports = {
   GeometryInstanceId,
   SettingsKey,
+  TerrainProviderFn,
+  ID,
   CESIUM_ONLY_LAYER,
   ELLIPSOID_REGEXP,
   OUTLINE_REGEXP,
@@ -647,7 +643,5 @@ exports = {
   isWorldTerrainActive,
   hasWorldTerrain,
   enableWorldTerrain,
-  createWMSTerrain,
-  reduceBoundingSphere,
-  TerrainProviderFn
+  reduceBoundingSphere
 };

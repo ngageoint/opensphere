@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.TileGridTilingScheme');
-goog.module.declareLegacyNamespace();
 
 const geo = goog.require('os.geo');
 const asserts = goog.require('goog.asserts');

@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.tiles.Provider');
-goog.module.declareLegacyNamespace();
 
 const BaseDescriptor = goog.require('os.data.BaseDescriptor');
 const FileProvider = goog.require('os.data.FileProvider');

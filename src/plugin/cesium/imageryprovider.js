@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.ImageryProvider');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.mixin.VectorImageTile');
 

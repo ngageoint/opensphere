@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.sync.HeatmapSynchronizer');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const Delay = goog.require('goog.async.Delay');

@@ -1,9 +1,18 @@
 goog.module('plugin.cesium.WMSTerrainProvider');
-goog.module.declareLegacyNamespace();
 
+const Promise = goog.require('goog.Promise');
 const asserts = goog.require('goog.asserts');
 const ProxyHandler = goog.require('os.net.ProxyHandler');
 const AbstractTerrainProvider = goog.require('plugin.cesium.AbstractTerrainProvider');
+
+
+/**
+ * Compare WMS terrain layer options in order of descending max level.
+ * @param {osx.cesium.WMSTerrainLayerOptions} a First layer options.
+ * @param {osx.cesium.WMSTerrainLayerOptions} b Second layer options.
+ * @return {number}
+ */
+const wmsTerrainLayerCompare = (a, b) => b.maxLevel - a.maxLevel;
 
 
 /**
@@ -25,7 +34,7 @@ class WMSTerrainProvider extends AbstractTerrainProvider {
      * @private
      */
     this.layers_ = options.layers;
-    this.layers_.sort(plugin.cesium.wmsTerrainLayerCompare);
+    this.layers_.sort(wmsTerrainLayerCompare);
 
     // for now, name the provider based on the first layer name so it can be of use in the layers window
     // we could change name based on zoom level but it's problematic because tiles are requested for multiple zoom levels
@@ -193,16 +202,15 @@ class WMSTerrainProvider extends AbstractTerrainProvider {
     }
     return result;
   }
+
+  /**
+   * Create a Cesium WMS terrain provider instance.
+   * @param {!osx.cesium.WMSTerrainProviderOptions} options The WMS terrain options.
+   * @return {!Promise<!WMSTerrainProvider>}
+   */
+  static create(options) {
+    return Promise.resolve(new WMSTerrainProvider(options));
+  }
 }
 
-
-/**
- * @param {Object} a
- * @param {Object} b
- * @return {number}
- */
-plugin.cesium.wmsTerrainLayerCompare = function(a, b) {
-  // sort in order of descending maxLevel
-  return goog.array.defaultCompare(b.maxLevel, a.maxLevel);
-};
 exports = WMSTerrainProvider;

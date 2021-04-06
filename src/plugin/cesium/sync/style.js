@@ -1,6 +1,8 @@
 goog.module('plugin.cesium.sync.style');
 
-const olcsCore = goog.require('olcs.core');
+const {convertColorToCesium} = goog.require('olcs.core');
+const {DEFAULT_FEATURE_SIZE, DEFAULT_HIGHLIGHT_CONFIG} = goog.require('os.style');
+const {OUTLINE_REGEXP} = goog.require('plugin.cesium');
 
 const Style = goog.requireType('ol.style.Style');
 const Text = goog.requireType('ol.style.Text');
@@ -14,7 +16,7 @@ const VectorContext = goog.requireType('plugin.cesium.VectorContext');
  * @return {!Cesium.Color}
  */
 const getColor = (style, context, geometryInstanceId) => {
-  const isOutline = plugin.cesium.OUTLINE_REGEXP.test(geometryInstanceId);
+  const isOutline = OUTLINE_REGEXP.test(geometryInstanceId);
   const color = getColorFromStyle(style, isOutline);
 
   if (isOutline && !isHighlightStyle(style) && !style.getStroke()) {
@@ -36,8 +38,7 @@ const getColor = (style, context, geometryInstanceId) => {
  */
 const getLineWidthFromStyle = (style) => {
   // make sure the width is at least 1px
-  return Math.max(1, /** @type {number} */ (style.getStroke() && style.getStroke().getWidth() ||
-      os.style.DEFAULT_FEATURE_SIZE));
+  return Math.max(1, /** @type {number} */ (style.getStroke() && style.getStroke().getWidth() || DEFAULT_FEATURE_SIZE));
 };
 
 
@@ -59,7 +60,7 @@ const getColorFromStyle = (style, isOutline) => {
     olColor = fillColor;
   }
 
-  return olcsCore.convertColorToCesium(olColor);
+  return convertColorToCesium(olColor);
 };
 
 
@@ -69,7 +70,7 @@ const getColorFromStyle = (style, isOutline) => {
  */
 const isHighlightStyle = (style) => {
   if (style && style.getStroke()) {
-    return (os.style.DEFAULT_HIGHLIGHT_CONFIG.stroke.color === style.getStroke().getColor());
+    return (DEFAULT_HIGHLIGHT_CONFIG.stroke.color === style.getStroke().getColor());
   }
   return false;
 };

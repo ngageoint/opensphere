@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.sync.RootSynchronizer');
-goog.module.declareLegacyNamespace();
 
 const dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');

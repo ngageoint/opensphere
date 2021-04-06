@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.sync.VectorSynchronizer');
-goog.module.declareLegacyNamespace();
 
 const EventType = goog.require('goog.events.EventType');
 const objectUtils = goog.require('goog.object');
@@ -183,7 +182,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
       events.unlisten(this.source, EventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
 
       // sources don't listen to these events (see above)
-      if (!(this.source instanceof os.source.Vector)) {
+      if (!(this.source instanceof VectorSource)) {
         events.unlisten(this.source, VectorEventType.ADDFEATURE, this.onAddFeature_, this);
         events.unlisten(this.source, VectorEventType.REMOVEFEATURE, this.onRemoveFeature_, this);
         events.unlisten(this.source, VectorEventType.CLEAR, this.clearFeatures_, this);
@@ -322,7 +321,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
       return;
     }
 
-    const source = /** @type {os.source.Vector} */ (this.source);
+    const source = /** @type {VectorSource} */ (this.source);
 
     let oldVal;
     let newVal;
@@ -366,7 +365,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
 
         break;
       case SourcePropertyChange.ALTITUDE:
-        if (this.source instanceof os.source.Vector) {
+        if (this.source instanceof VectorSource) {
           this.refreshFeatures_(source.getFeatures());
         }
         break;
@@ -461,7 +460,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
 
         // added to fix initial primitive.show state when the geometry changes on a feature
         // putting this in featureconverter causes ellipse flickers
-        if (this.source instanceof os.source.Vector &&
+        if (this.source instanceof VectorSource &&
             (!this.source.getTimeEnabled() || !this.source.getAnimationEnabled())) {
           this.initializePrimitives_([feature]);
         }
@@ -566,7 +565,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
    * @protected
    */
   shouldShowFeature(feature) {
-    if (this.source instanceof os.source.Vector) {
+    if (this.source instanceof VectorSource) {
       //
       // show the feature if:
       //  - it is not hidden
@@ -590,7 +589,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
    * @protected
    */
   initializePrimitive(primitive, feature) {
-    if (this.source instanceof os.source.Vector) {
+    if (this.source instanceof VectorSource) {
       const featureId = feature.getUid();
       this.csContext.featureToShownMap[featureId] = this.shouldShowFeature(feature);
       setPrimitiveShown(primitive, !!this.csContext.featureToShownMap[featureId]);
@@ -621,7 +620,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
       }
     }
 
-    dispatcher.getInstance().dispatchEvent(os.MapEvent.GL_REPAINT);
+    dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
   }
 
 
@@ -687,7 +686,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
       }
     }
 
-    dispatcher.getInstance().dispatchEvent(os.MapEvent.GL_REPAINT);
+    dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
   }
 
 
@@ -770,7 +769,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
   updateFromCamera() {
     this.updateLabelOffsets();
     this.updateBillboardOffsets();
-    dispatcher.getInstance().dispatchEvent(os.MapEvent.GL_REPAINT);
+    dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
   }
 }
 

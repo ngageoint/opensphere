@@ -12,7 +12,7 @@ const testPolygon = (polygon, options) => {
 
   if (!options.cleanedGeometryInstances) {
     expect(Array.isArray(polygon.geometryInstances)).toBe(false);
-    expect(polygon.geometryInstances.id).toBe(plugin.cesium.GeometryInstanceId.GEOM);
+    expect(polygon.geometryInstances.id).toBe(GeometryInstanceId.GEOM);
     expect(polygon.geometryInstances.geometry.constructor).toBe(Cesium.PolygonGeometry);
   }
 

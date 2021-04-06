@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.tiles.mime');
-goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const {register} = goog.require('os.file.mime');

@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.sync.CesiumSynchronizer');
-goog.module.declareLegacyNamespace();
 
 const AbstractWebGLSynchronizer = goog.require('os.webgl.AbstractWebGLSynchronizer');
 

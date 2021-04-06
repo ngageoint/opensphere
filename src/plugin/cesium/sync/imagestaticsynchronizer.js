@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.sync.ImageStaticSynchronizer');
-goog.module.declareLegacyNamespace();
 
 const dispatcher = goog.require('os.Dispatcher');
 const olSourceImageStatic = goog.require('ol.source.ImageStatic');

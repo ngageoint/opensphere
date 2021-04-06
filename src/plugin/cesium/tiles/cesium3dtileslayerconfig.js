@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.tiles.LayerConfig');
-goog.module.declareLegacyNamespace();
 
 const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
 const Layer = goog.require('plugin.cesium.tiles.Layer');

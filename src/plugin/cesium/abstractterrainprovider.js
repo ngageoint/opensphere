@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.AbstractTerrainProvider');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 

@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.menu');
-goog.module.declareLegacyNamespace();
 
 const ui = goog.require('os.ui');
 const osUiMenuImport = goog.require('os.ui.menu.import');

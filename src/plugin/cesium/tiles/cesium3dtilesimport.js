@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.tiles.TilesetImport');
-goog.module.declareLegacyNamespace();
 
 const os = goog.require('os');
 const Module = goog.require('os.ui.Module');

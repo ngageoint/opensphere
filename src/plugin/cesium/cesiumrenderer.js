@@ -1,8 +1,4 @@
 goog.module('plugin.cesium.CesiumRenderer');
-goog.module.declareLegacyNamespace();
-
-goog.require('plugin.cesium.mixin.olcs');
-goog.require('plugin.cesium.mixin.renderloop');
 
 const osFeature = goog.require('os.feature');
 const MapContainer = goog.require('os.MapContainer');
@@ -15,19 +11,35 @@ const MapEvent = goog.require('os.MapEvent');
 const terrain = goog.require('os.map.terrain');
 const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');
 const SynchronizerManager = goog.require('os.webgl.SynchronizerManager');
-const cesium = goog.require('plugin.cesium');
+const {
+  DEFAULT_FOG_DENSITY,
+  ID,
+  MAX_FOG_DENSITY,
+  SettingsKey,
+  addTrustedServer,
+  createCesiumTerrain,
+  createWorldTerrain,
+  getDefaultSkyBoxOptions,
+  getDefaultTerrainProvider,
+  getJulianDate,
+  loadCesium,
+  reduceBoundingSphere
+} = goog.require('plugin.cesium');
 const Camera = goog.require('plugin.cesium.Camera');
 const TerrainLayer = goog.require('plugin.cesium.TerrainLayer');
+const WMSTerrainProvider = goog.require('plugin.cesium.WMSTerrainProvider');
 const FlyToSphere = goog.require('plugin.cesium.command.FlyToSphere');
 const interaction = goog.require('plugin.cesium.interaction');
 const menu = goog.require('plugin.cesium.menu');
-const mixin = goog.require('plugin.cesium.mixin');
+const {load: loadCesiumMixins} = goog.require('plugin.cesium.mixin');
 const HeatmapSynchronizer = goog.require('plugin.cesium.sync.HeatmapSynchronizer');
 const ImageStaticSynchronizer = goog.require('plugin.cesium.sync.ImageStaticSynchronizer');
 const ImageSynchronizer = goog.require('plugin.cesium.sync.ImageSynchronizer');
 const RootSynchronizer = goog.require('plugin.cesium.sync.RootSynchronizer');
 const TileSynchronizer = goog.require('plugin.cesium.sync.TileSynchronizer');
 const VectorSynchronizer = goog.require('plugin.cesium.sync.VectorSynchronizer');
+
+const {TerrainProviderFn} = goog.requireType('plugin.cesium');
 
 
 /**
@@ -49,7 +61,7 @@ class CesiumRenderer extends AbstractWebGLRenderer {
     this.log = logger;
     this.maxFeaturesKey = 'maxFeatures.cesium';
 
-    this.id = cesium.Plugin.ID;
+    this.id = ID;
     this.label = 'Cesium';
     this.description = 'Cesium is a 3D globe renderer for general use.';
 
@@ -97,7 +109,7 @@ class CesiumRenderer extends AbstractWebGLRenderer {
 
     /**
      * Map of terrain provider types.
-     * @type {!Object<string, !cesium.TerrainProviderFn>}
+     * @type {!Object<string, !TerrainProviderFn>}
      * @private
      */
     this.terrainProviderTypes_ = {};
@@ -127,7 +139,7 @@ class CesiumRenderer extends AbstractWebGLRenderer {
     if (!this.olCesium_ && this.map) {
       const mapInstance = /** @type {!ol.Map} */ (this.map);
       return new Promise((resolve, reject) => {
-        cesium.loadCesium().then(() => {
+        loadCesium().then(() => {
           try {
             // register the default set of synchronizers
             var sm = SynchronizerManager.getInstance();
@@ -142,20 +154,20 @@ class CesiumRenderer extends AbstractWebGLRenderer {
             // set up menus
             menu.importSetup();
 
-            mixin.loadCesiumMixins();
+            loadCesiumMixins();
 
             // initialize interactions that have additional support for Cesium
             interaction.loadInteractionMixins();
 
-            this.registerTerrainProviderType(terrain.TerrainType.CESIUM, cesium.createCesiumTerrain);
-            this.registerTerrainProviderType(terrain.TerrainType.ION, cesium.createWorldTerrain);
-            this.registerTerrainProviderType(terrain.TerrainType.WMS, cesium.createWMSTerrain);
+            this.registerTerrainProviderType(terrain.TerrainType.CESIUM, createCesiumTerrain);
+            this.registerTerrainProviderType(terrain.TerrainType.ION, createWorldTerrain);
+            this.registerTerrainProviderType(terrain.TerrainType.WMS, WMSTerrainProvider.create);
 
             this.olCesium_ = new OLCesium({
               cameraClass: Camera,
               createSynchronizers: this.createCesiumSynchronizers_.bind(this),
               map: mapInstance,
-              time: cesium.getJulianDate
+              time: getJulianDate
             });
 
             goog.dom.classlist.add(this.olCesium_.canvas_, os.map.WEBGL_CANVAS_CLASS);
@@ -191,9 +203,9 @@ class CesiumRenderer extends AbstractWebGLRenderer {
             // legacy code saved density as the Cesium fog density value. now it is saved as a percentage from 0-1. if
             // the settings value is non-zero (no fog) and less than 5% (not allowed by our UI), reset it to the default.
             var density = /** @type {number} */ (settings.getInstance().get(os.config.DisplaySetting.FOG_DENSITY,
-                cesium.DEFAULT_FOG_DENSITY));
+                DEFAULT_FOG_DENSITY));
             if (density != 0 && density < 0.05) {
-              density = cesium.DEFAULT_FOG_DENSITY;
+              density = DEFAULT_FOG_DENSITY;
             }
 
             this.setFogDensity(density);
@@ -413,7 +425,7 @@ class CesiumRenderer extends AbstractWebGLRenderer {
       var scene = this.olCesium_.getCesiumScene();
       if (scene) {
         scene.initializeFrame();
-        scene.forceRender(cesium.getJulianDate());
+        scene.forceRender(getJulianDate());
       }
     }
   }
@@ -458,7 +470,7 @@ class CesiumRenderer extends AbstractWebGLRenderer {
     var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
     if (scene) {
       // density value should be between 0 (no fog) and the maximum density allowed by the application
-      var newDensity = goog.math.clamp(value * cesium.MAX_FOG_DENSITY, 0, cesium.MAX_FOG_DENSITY);
+      var newDensity = goog.math.clamp(value * MAX_FOG_DENSITY, 0, MAX_FOG_DENSITY);
       if (scene.fog.density != newDensity) {
         scene.fog.density = newDensity;
       }
@@ -474,9 +486,9 @@ class CesiumRenderer extends AbstractWebGLRenderer {
     if (scene) {
       if (!scene.skyBox && value) {
         var skyBoxOptions = /** @type {Cesium.SkyBoxOptions|undefined} */ (settings.getInstance().get(
-            cesium.SettingsKey.SKYBOX_OPTIONS));
+            SettingsKey.SKYBOX_OPTIONS));
         if (!skyBoxOptions) {
-          skyBoxOptions = cesium.getDefaultSkyBoxOptions();
+          skyBoxOptions = getDefaultSkyBoxOptions();
         }
 
         scene.skyBox = new Cesium.SkyBox(skyBoxOptions);
@@ -545,7 +557,7 @@ class CesiumRenderer extends AbstractWebGLRenderer {
    * Register a new Cesium terrain provider type.
    *
    * @param {string} type The type id.
-   * @param {!cesium.TerrainProviderFn} factory Factory function to create a terrain provider instance.
+   * @param {!TerrainProviderFn} factory Factory function to create a terrain provider instance.
    * @protected
    */
   registerTerrainProviderType(type, factory) {
@@ -580,7 +592,7 @@ class CesiumRenderer extends AbstractWebGLRenderer {
       if (terrainType && terrainType in this.terrainProviderTypes_) {
         if (terrainOptions.url) {
           // instruct Cesium to trust terrain servers (controlled by app configuration)
-          cesium.addTrustedServer(terrainOptions.url);
+          addTrustedServer(terrainOptions.url);
         }
 
         return this.terrainProviderTypes_[terrainType](terrainOptions);
@@ -620,7 +632,7 @@ class CesiumRenderer extends AbstractWebGLRenderer {
       this.terrainLayer_ = undefined;
     }
 
-    var provider = cesium.getDefaultTerrainProvider();
+    var provider = getDefaultTerrainProvider();
     if (provider) {
       var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
       if (scene) {
@@ -694,7 +706,7 @@ class CesiumRenderer extends AbstractWebGLRenderer {
    * @inheritDoc
    */
   flyToFeatures(features) {
-    var sphere = osFeature.getGeometries(features).reduce(cesium.reduceBoundingSphere, null);
+    var sphere = osFeature.getGeometries(features).reduce(reduceBoundingSphere, null);
 
     if (sphere) {
       var cmd = new FlyToSphere(sphere);

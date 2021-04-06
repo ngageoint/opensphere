@@ -10,9 +10,18 @@ goog.require('plugin.cesium.sync.DynamicMultiPolygonConverter');
 goog.require('test.plugin.cesium.scene');
 
 describe('plugin.cesium.sync.DynamicMultiPolygonConverter', () => {
-  const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
+  const MultiPolygon = goog.module.get('ol.geom.MultiPolygon');
+  const Style = goog.module.get('ol.style.Style');
+  const olProj = goog.module.get('ol.proj');
+
+  const DynamicFeature = goog.module.get('os.feature.DynamicFeature');
+  const Vector = goog.module.get('os.layer.Vector');
+  const {EPSG4326} = goog.module.get('os.proj');
   const VectorContext = goog.module.get('plugin.cesium.VectorContext');
   const DynamicMultiPolygonConverter = goog.module.get('plugin.cesium.sync.DynamicMultiPolygonConverter');
+
+  const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
+
   const converter = new DynamicMultiPolygonConverter();
 
   let feature;
@@ -29,12 +38,12 @@ describe('plugin.cesium.sync.DynamicMultiPolygonConverter', () => {
         [[10, 10], [10, 20], [20, 20], [20, 10], [10, 10]]
       ]
     ];
-    geometry = new ol.geom.MultiPolygon(coords);
-    feature = new os.feature.DynamicFeature(geometry);
-    style = new ol.style.Style();
-    layer = new os.layer.Vector();
+    geometry = new MultiPolygon(coords);
+    feature = new DynamicFeature(geometry);
+    style = new Style();
+    layer = new Vector();
     scene = getFakeScene();
-    context = new VectorContext(scene, layer, ol.proj.get(os.proj.EPSG4326));
+    context = new VectorContext(scene, layer, olProj.get(EPSG4326));
   });
 
   const originalProjection = os.map.PROJECTION;

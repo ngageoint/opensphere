@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.TerrainLayer');
-goog.module.declareLegacyNamespace();
 
 goog.require('plugin.basemap.terrainNodeUIDirective');
 

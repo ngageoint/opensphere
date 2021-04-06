@@ -1,5 +1,4 @@
 goog.module('plugin.cesium.PrimitiveLayer');
-goog.module.declareLegacyNamespace();
 
 const geo = goog.require('os.geo');
 const dispatcher = goog.require('os.Dispatcher');
