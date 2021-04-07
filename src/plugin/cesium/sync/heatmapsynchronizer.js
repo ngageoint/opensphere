@@ -1,16 +1,25 @@
 goog.module('plugin.cesium.sync.HeatmapSynchronizer');
-goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const Delay = goog.require('goog.async.Delay');
 const EventType = goog.require('goog.events.EventType');
+const olEvents = goog.require('ol.events');
+const {scaleFromCenter} = goog.require('ol.extent');
+const dispatcher = goog.require('os.Dispatcher');
+const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const PropertyChange = goog.require('os.layer.PropertyChange');
 const events = goog.require('os.ol.events');
 const cesium = goog.require('plugin.cesium');
 const CesiumSynchronizer = goog.require('plugin.cesium.sync.CesiumSynchronizer');
 const HeatmapPropertyType = goog.require('plugin.heatmap.HeatmapPropertyType');
 const HeatmapField = goog.require('plugin.heatmap.HeatmapField');
+
+const GoogEvent = goog.requireType('goog.events.Event');
+const OLObject = goog.requireType('ol.Object');
+const PluggableMap = goog.requireType('ol.PluggableMap');
+const MapCanvasRenderer = goog.requireType('ol.renderer.canvas.Map');
 
 /**
  * Synchronizes a single OpenLayers image layer to Cesium.
@@ -21,7 +30,7 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
   /**
    * Constructor.
    * @param {!plugin.heatmap.Heatmap} layer The OpenLayers heatmap layer.
-   * @param {!ol.PluggableMap} map The OpenLayers map.
+   * @param {!PluggableMap} map The OpenLayers map.
    * @param {!Cesium.Scene} scene The Cesium scene.
    */
   constructor(layer, map, scene) {
@@ -59,7 +68,7 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
      */
     this.syncDelay_ = new Delay(this.synchronizeInternal, 75, this);
 
-    ol.events.listen(this.layer, EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
+    olEvents.listen(this.layer, EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
     events.listenEach(this.layer, HeatmapSynchronizer.STYLE_KEYS_, this.onStyleChange_, this);
   }
 
@@ -70,7 +79,7 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
     goog.dispose(this.syncDelay_);
     this.syncDelay_ = null;
 
-    ol.events.unlisten(this.layer, EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
+    olEvents.unlisten(this.layer, EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
     events.unlistenEach(this.layer, HeatmapSynchronizer.STYLE_KEYS_, this.onStyleChange_, this);
 
     this.cesiumLayers_.remove(this.activeLayer_);
@@ -117,7 +126,7 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
     if (img) {
       // scale back the extent so the image is positioned in the correct location
       var extent = this.layer.getExtent().slice();
-      ol.extent.scaleFromCenter(extent, 1 / plugin.heatmap.EXTENT_SCALE_FACTOR);
+      scaleFromCenter(extent, 1 / plugin.heatmap.EXTENT_SCALE_FACTOR);
 
       this.activeLayer_ = this.cesiumLayers_.addImageryProvider(new Cesium.SingleTileImageryProvider({
         url: img,
@@ -127,26 +136,26 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
       asserts.assert(this.activeLayer_);
       asserts.assert(this.layer);
       cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
-      os.dispatcher.dispatchEvent(MapEvent.GL_REPAINT);
+      dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }
 
   /**
    * Handle visibility
    *
-   * @param {os.events.PropertyChangeEvent} event
+   * @param {PropertyChangeEvent} event
    * @private
    */
   onLayerPropertyChange_(event) {
     // ol3 also fires 'propertychange' events, so ignore those
-    if (event instanceof os.events.PropertyChangeEvent) {
+    if (event instanceof PropertyChangeEvent) {
       var p = event.getProperty();
       if (p == PropertyChange.VISIBLE) {
         this.visible_ = /** @type {boolean} */ (event.getNewValue());
 
         if (this.layer && this.activeLayer_) {
           cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
-          os.dispatcher.dispatchEvent(MapEvent.GL_REPAINT);
+          dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
         }
       } else if (p == HeatmapPropertyType.INTENSITY ||
           p == HeatmapPropertyType.SIZE ||
@@ -159,30 +168,30 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
   /**
    * Update Cesium layer properties when the style changes.
    *
-   * @param {ol.Object.Event} event
+   * @param {OLObject.Event} event
    * @private
    */
   onStyleChange_(event) {
     asserts.assert(this.layer !== null);
     asserts.assert(this.activeLayer_ !== null);
     cesium.updateCesiumLayerProperties(this.layer, this.activeLayer_);
-    os.dispatcher.dispatchEvent(MapEvent.GL_REPAINT);
+    dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
   }
 
   /**
    * Re-create the heatmap by forcing a call to OpenLayers.
    *
-   * @param {goog.events.Event=} opt_event
+   * @param {GoogEvent=} opt_event
    * @suppress {accessControls}
    */
   createHeatmap(opt_event) {
-    if (!os.MapContainer.getInstance().is3DEnabled() || !this.visible_) {
+    if (!MapContainer.getInstance().is3DEnabled() || !this.visible_) {
       return;
     }
 
     // force the 2D map to adjust to our new zoom/location
     this.map.renderSync();
-    var renderer = /** @type {ol.renderer.canvas.Map} */ (this.map.getRenderer());
+    var renderer = /** @type {MapCanvasRenderer} */ (this.map.getRenderer());
     var frameState = this.map.frameState_;
 
     // always make the heatmap visible
@@ -196,7 +205,7 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
         frameState.layerStatesArray[i].extent = undefined;
 
         var extent = frameState.extent.slice();
-        ol.extent.scaleFromCenter(extent, 2);
+        scaleFromCenter(extent, 2);
         frameState.extent = extent;
       }
     }

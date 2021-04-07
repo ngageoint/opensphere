@@ -495,6 +495,9 @@ osx.cesium.WMSTerrainLayerOptions;
 
 /**
  * @typedef {{
+ *   id: string,
+ *   title: string,
+ *   type: string,
  *   layers: !Array<!osx.cesium.WMSTerrainLayerOptions>,
  *   url: string,
  *   credit: (Cesium.Credit|string|undefined),

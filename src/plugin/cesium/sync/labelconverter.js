@@ -1,18 +1,19 @@
 goog.module('plugin.cesium.sync.LabelConverter');
 
-goog.require('goog.asserts');
-goog.require('goog.string');
-
-const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
+const asserts = goog.require('goog.asserts');
+const olExtent = goog.require('ol.extent');
+const Geometry = goog.require('ol.geom.Geometry');
 const GeometryType = goog.require('ol.geom.GeometryType');
+const SimpleGeometry = goog.require('ol.geom.SimpleGeometry');
+const olcsCore = goog.require('olcs.core');
+const osLabel = goog.require('os.style.label');
 const {GeometryInstanceId} = goog.require('plugin.cesium');
 const {getColor, getLineWidthFromStyle} = goog.require('plugin.cesium.sync.style');
 const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
 const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
 const {isPrimitiveShown} = goog.require('plugin.cesium.primitive');
-const olcsCore = goog.require('olcs.core');
+const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
 
-const Geometry = goog.requireType('ol.geom.Geometry');
 const MultiPoint = goog.requireType('ol.geom.MultiPoint');
 const Point = goog.requireType('ol.geom.Point');
 const Text = goog.requireType('ol.style.Text');
@@ -57,8 +58,8 @@ class LabelConverter extends BaseConverter {
     }
 
     const geom = style.getGeometry();
-    if (geom instanceof ol.geom.Geometry) {
-      geometry = /** @type {!ol.geom.Geometry} */ (geom);
+    if (geom instanceof Geometry) {
+      geometry = /** @type {!Geometry} */ (geom);
     }
 
     const textStyle = style.getText();
@@ -70,7 +71,7 @@ class LabelConverter extends BaseConverter {
     updateVerticalOrigin(label, textStyle);
     updateText(label, textStyle);
 
-    label.font = textStyle.getFont() || os.style.label.getFont();
+    label.font = textStyle.getFont() || osLabel.getFont();
     label.pixelOffset = new Cesium.Cartesian2(textStyle.getOffsetX(), textStyle.getOffsetY());
 
     // check if there is an associated primitive, and if it is shown
@@ -108,7 +109,7 @@ const updatePosition = (label, geometry) => {
         labelPosition = transform(labelPosition);
       }
 
-      if (geometry instanceof ol.geom.SimpleGeometry) {
+      if (geometry instanceof SimpleGeometry) {
         let first = geometry.getFirstCoordinate();
         if (transform) {
           first = transform(first, undefined, first.length);
@@ -132,7 +133,7 @@ const scratchCoord = [];
 /**
  * Get the label position for a geometry.
  *
- * @param {!ol.geom.Geometry} geometry The geometry.
+ * @param {!Geometry} geometry The geometry.
  * @return {Array<number>} The position to use for the label.
  */
 const getLabelPosition = (geometry) => {
@@ -150,7 +151,7 @@ const getLabelPosition = (geometry) => {
 
       return scratchCoord;
     default:
-      return ol.extent.getCenter(geometry.getExtent());
+      return olExtent.getCenter(geometry.getExtent());
   }
 };
 
@@ -216,7 +217,7 @@ const updateHorizontalOrigin = (label, textStyle) => {
     if (textAlign in textAlignMap) {
       label.horizontalOrigin = textAlignMap[textAlign];
     } else {
-      goog.asserts.fail('unhandled text align ' + textAlign);
+      asserts.fail('unhandled text align ' + textAlign);
     }
   }
 };
@@ -257,7 +258,7 @@ const updateVerticalOrigin = (label, textStyle) => {
     if (textBaseline in textBaselineMap) {
       label.verticalOrigin = textBaselineMap[textBaseline];
     } else {
-      goog.asserts.fail('unhandled baseline ' + textBaseline);
+      asserts.fail('unhandled baseline ' + textBaseline);
     }
   }
 };

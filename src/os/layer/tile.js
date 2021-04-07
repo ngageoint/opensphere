@@ -26,6 +26,8 @@ goog.require('os.style');
 goog.require('os.tile');
 goog.require('os.ui');
 goog.require('os.ui.Icons');
+goog.require('os.ui.IconsSVG');
+goog.require('os.ui.icons');
 goog.require('os.ui.layer.tileLayerUIDirective');
 goog.require('os.ui.renamelayer');
 
@@ -234,7 +236,7 @@ os.layer.Tile.prototype.setMaxResolution = function(value) {
 os.layer.Tile.prototype.updateIcons_ = function() {
   var color = this.getColor();
   if (color) {
-    os.ui.adjustIconSet(this.getId(), os.color.toHexString(color));
+    os.ui.icons.adjustIconSet(this.getId(), os.color.toHexString(color));
   }
 };
 
@@ -668,7 +670,7 @@ os.layer.Tile.prototype.getIcons = function() {
     color = os.color.toRgbArray(layerColor);
   }
 
-  html += color ? os.ui.createIconSet(this.getId(), this.getSVGIconsInternal(), this.getStateBadge(), color)
+  html += color ? os.ui.icons.createIconSet(this.getId(), this.getSVGIconsInternal(), this.getStateBadge(), color)
     : this.getIconsInternal();
   return html;
 };

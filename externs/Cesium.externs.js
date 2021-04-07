@@ -2916,7 +2916,7 @@ Cesium.Credit = function(html, opt_showOnScreen) {};
 
 
 /**
- * @constructor
+ * @interface
  */
 Cesium.TilingScheme = function() {};
 
@@ -2931,6 +2931,12 @@ Cesium.TilingScheme.prototype.ellipsoid;
  * @type {Cesium.Rectangle}
  */
 Cesium.TilingScheme.prototype.rectangle;
+
+
+/**
+ * @type {Cesium.GeographicProjection|Cesium.WebMercatorProjection}
+ */
+Cesium.TilingScheme.prototype.projection;
 
 
 /**
@@ -2997,7 +3003,7 @@ Cesium.GeographicTilingSchemeOptions;
 
 /**
  * @param {Cesium.GeographicTilingSchemeOptions=} opt_options
- * @extends {Cesium.TilingScheme}
+ * @implements {Cesium.TilingScheme}
  * @constructor
  */
 Cesium.GeographicTilingScheme = function(opt_options) {};
@@ -3018,7 +3024,7 @@ Cesium.WebMercatorTilingSchemeOptions;
 
 /**
  * @param {Cesium.WebMercatorTilingSchemeOptions=} opt_options
- * @extends {Cesium.TilingScheme}
+ * @implements {Cesium.TilingScheme}
  * @constructor
  */
 Cesium.WebMercatorTilingScheme = function(opt_options) {};
@@ -5096,7 +5102,7 @@ Cesium.TileProviderError.prototype.error;
 
 
 /**
- * @constructor
+ * @interface
  */
 Cesium.TerrainProvider = function() {};
 
@@ -5194,7 +5200,7 @@ Cesium.ArcGisImageServerTerrainProviderOptions;
 
 /**
  * @param {!Cesium.ArcGisImageServerTerrainProviderOptions} options
- * @extends {Cesium.TerrainProvider}
+ * @implements {Cesium.TerrainProvider}
  * @constructor
  */
 Cesium.ArcGisImageServerTerrainProvider = function(options) {};
@@ -5216,7 +5222,7 @@ Cesium.CesiumTerrainProviderOptions;
 
 /**
  * @param {!Cesium.CesiumTerrainProviderOptions} options
- * @extends {Cesium.TerrainProvider}
+ * @implements {Cesium.TerrainProvider}
  * @constructor
  */
 Cesium.CesiumTerrainProvider = function(options) {};
@@ -5234,7 +5240,7 @@ Cesium.EllipsoidTerrainProviderOptions;
 
 /**
  * @param {Cesium.EllipsoidTerrainProviderOptions=} opt_options
- * @extends {Cesium.TerrainProvider}
+ * @implements {Cesium.TerrainProvider}
  * @constructor
  */
 Cesium.EllipsoidTerrainProvider = function(opt_options) {};

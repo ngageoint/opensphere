@@ -1,5 +1,6 @@
 goog.require('ol.geom.MultiPolygon');
 goog.require('ol.proj');
+goog.require('ol.style.Stroke');
 goog.require('ol.style.Style');
 goog.require('os.feature.DynamicFeature');
 goog.require('os.layer.Vector');
@@ -10,9 +11,20 @@ goog.require('plugin.cesium.sync.DynamicMultiPolygonConverter');
 goog.require('test.plugin.cesium.scene');
 
 describe('plugin.cesium.sync.DynamicMultiPolygonConverter', () => {
-  const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
+  const MultiPolygon = goog.module.get('ol.geom.MultiPolygon');
+  const Stroke = goog.module.get('ol.style.Stroke');
+  const Style = goog.module.get('ol.style.Style');
+  const olProj = goog.module.get('ol.proj');
+
+  const DynamicFeature = goog.module.get('os.feature.DynamicFeature');
+  const Vector = goog.module.get('os.layer.Vector');
+  const osMap = goog.module.get('os.map');
+  const {EPSG4326} = goog.module.get('os.proj');
   const VectorContext = goog.module.get('plugin.cesium.VectorContext');
   const DynamicMultiPolygonConverter = goog.module.get('plugin.cesium.sync.DynamicMultiPolygonConverter');
+
+  const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
+
   const converter = new DynamicMultiPolygonConverter();
 
   let feature;
@@ -29,17 +41,17 @@ describe('plugin.cesium.sync.DynamicMultiPolygonConverter', () => {
         [[10, 10], [10, 20], [20, 20], [20, 10], [10, 10]]
       ]
     ];
-    geometry = new ol.geom.MultiPolygon(coords);
-    feature = new os.feature.DynamicFeature(geometry);
-    style = new ol.style.Style();
-    layer = new os.layer.Vector();
+    geometry = new MultiPolygon(coords);
+    feature = new DynamicFeature(geometry);
+    style = new Style();
+    layer = new Vector();
     scene = getFakeScene();
-    context = new VectorContext(scene, layer, ol.proj.get(os.proj.EPSG4326));
+    context = new VectorContext(scene, layer, olProj.get(EPSG4326));
   });
 
-  const originalProjection = os.map.PROJECTION;
+  const originalProjection = osMap.PROJECTION;
   afterEach(() => {
-    os.map.PROJECTION = originalProjection;
+    osMap.PROJECTION = originalProjection;
   });
 
   const blue = 'rgba(0,0,255,1)';
@@ -61,8 +73,8 @@ describe('plugin.cesium.sync.DynamicMultiPolygonConverter', () => {
           [[12, 12], [12, 18], [18, 18], [18, 12], [12, 12]]
         ]
       ];
-      geometry = new ol.geom.MultiPolygon(coords);
-      feature = new os.feature.DynamicFeature(geometry);
+      geometry = new MultiPolygon(coords);
+      feature = new DynamicFeature(geometry);
 
       expect(converter.create(feature, geometry, style, context)).toBe(true);
       expect(context.polylines.length).toBe(4);
@@ -75,7 +87,7 @@ describe('plugin.cesium.sync.DynamicMultiPolygonConverter', () => {
       const primitives = converter.retrieve(feature, geometry, style, context);
       expect(context.polylines.length).toBe(2);
 
-      style.setStroke(new ol.style.Stroke({
+      style.setStroke(new Stroke({
         color: blue,
         width: 2
       }));

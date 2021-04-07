@@ -6,6 +6,7 @@ goog.require('plugin.cesium');
 goog.require('plugin.cesium.sync.style');
 
 describe('plugin.cesium.sync.style', () => {
+  const {GeometryInstanceId} = goog.module.get('plugin.cesium');
   const {getColor, getLineWidthFromStyle} = goog.module.get('plugin.cesium.sync.style');
 
   describe('getColor', () => {
@@ -49,32 +50,32 @@ describe('plugin.cesium.sync.style', () => {
 
         it('should default to black', () => {
           const style = new ol.style.Style();
-          const color = getColor(style, context, plugin.cesium.GeometryInstanceId.GEOM);
+          const color = getColor(style, context, GeometryInstanceId.GEOM);
           compareColor(color, black);
         });
 
         it('should prefer the fill color for geometries', () => {
           const style = getStyle();
-          let color = getColor(style, context, plugin.cesium.GeometryInstanceId.GEOM);
+          let color = getColor(style, context, GeometryInstanceId.GEOM);
           compareColor(color, blue);
-          color = getColor(style, context, plugin.cesium.GeometryInstanceId.ELLIPSOID);
+          color = getColor(style, context, GeometryInstanceId.ELLIPSOID);
           compareColor(color, blue);
         });
 
         it('should prefer the stroke color for outline geometries', () => {
           const style = getStyle();
-          let color = getColor(style, context, plugin.cesium.GeometryInstanceId.GEOM_OUTLINE);
+          let color = getColor(style, context, GeometryInstanceId.GEOM_OUTLINE);
           compareColor(color, red);
-          color = getColor(style, context, plugin.cesium.GeometryInstanceId.ELLIPSOID_OUTLINE);
+          color = getColor(style, context, GeometryInstanceId.ELLIPSOID_OUTLINE);
           compareColor(color, red);
         });
 
         it('should use 0 alpha for non-highlight styles if the stroke is missing', () => {
           const style = getStyle();
           style.setStroke(null);
-          let color = getColor(style, context, plugin.cesium.GeometryInstanceId.GEOM_OUTLINE);
+          let color = getColor(style, context, GeometryInstanceId.GEOM_OUTLINE);
           compareColor(color, blue, 0);
-          color = getColor(style, context, plugin.cesium.GeometryInstanceId.ELLIPSOID_OUTLINE);
+          color = getColor(style, context, GeometryInstanceId.ELLIPSOID_OUTLINE);
           compareColor(color, blue, 0);
         });
       });

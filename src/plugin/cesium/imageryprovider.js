@@ -1,215 +1,203 @@
-goog.provide('plugin.cesium.ImageryProvider');
+goog.module('plugin.cesium.ImageryProvider');
 
-goog.require('goog.disposable.IDisposable');
-goog.require('ol');
-goog.require('ol.ImageTile');
-goog.require('ol.VectorImageTile');
-goog.require('ol.events');
-goog.require('ol.source.VectorTile');
-goog.require('ol.tilegrid');
-goog.require('olcs.core.OLImageryProvider');
 goog.require('os.mixin.VectorImageTile');
-goog.require('os.proj');
-goog.require('plugin.cesium.TileGridTilingScheme');
+
+const ol = goog.require('ol');
+const TileState = goog.require('ol.TileState');
+const ImageTile = goog.require('ol.ImageTile');
+const VectorImageTile = goog.require('ol.VectorImageTile');
+const events = goog.require('ol.events');
+const VectorTile = goog.require('ol.source.VectorTile');
+const olTilegrid = goog.require('ol.tilegrid');
+const OLImageryProvider = goog.require('olcs.core.OLImageryProvider');
+const {getSourceProjection} = goog.require('olcs.util');
+const TileGridTilingScheme = goog.require('plugin.cesium.TileGridTilingScheme');
+const IDisposable = goog.requireType('goog.disposable.IDisposable');
+
+const Layer = goog.requireType('ol.layer.Layer');
+const Projection = goog.requireType('ol.proj.Projection');
+const TileSource = goog.requireType('ol.source.Tile');
+const TileImageSource = goog.requireType('ol.source.TileImage');
 
 
 /**
- * @param {!ol.source.Tile} source
- * @param {?ol.layer.Layer} layer
- * @param {ol.proj.Projection=} opt_fallbackProj Projection to assume if the projection of the source is not defined.
- * @extends {olcs.core.OLImageryProvider}
- * @implements {goog.disposable.IDisposable}
- * @constructor
+ * @implements {IDisposable}
  *
  * @suppress {invalidCasts}
  */
-plugin.cesium.ImageryProvider = function(source, layer, opt_fallbackProj) {
-  plugin.cesium.ImageryProvider.base(this, 'constructor',
-      /** @type {!ol.source.TileImage} */ (source), opt_fallbackProj);
-
+class ImageryProvider extends OLImageryProvider {
   /**
-   * @type {boolean}
-   * @private
+   * Constructor.
+   * @param {!TileSource} source
+   * @param {?Layer} layer
+   * @param {Projection=} opt_fallbackProj Projection to assume if the projection of the source is not defined.
    */
-  this.disposed_ = false;
+  constructor(source, layer, opt_fallbackProj) {
+    super(/** @type {!TileImageSource} */ (source), opt_fallbackProj);
 
-  /**
-   * @type {?ol.layer.Layer}
-   * @private
-   */
-  this.layer_ = layer;
-};
-goog.inherits(plugin.cesium.ImageryProvider, olcs.core.OLImageryProvider);
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.disposed_ = false;
 
-
-/**
- * @inheritDoc
- */
-plugin.cesium.ImageryProvider.prototype.dispose = function() {
-  this.disposed_ = true;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.ImageryProvider.prototype.isDisposed = function() {
-  return this.disposed_;
-};
-
-
-/**
- * @inheritDoc
- * @suppress {accessControls}
- */
-plugin.cesium.ImageryProvider.prototype.handleSourceChanged_ = function() {
-  if (!this.ready_ && this.source_.getState() == 'ready') {
-    this.projection_ = olcs.util.getSourceProjection(this.source_) || this.fallbackProj_;
-    this.credit_ = olcs.core.OLImageryProvider.createCreditForSource(this.source_) || null;
-
-    if (this.source_ instanceof ol.source.VectorTile) {
-      // For vector tiles, create a copy of the tile grid with min/max zoom covering all levels. This ensures Cesium
-      // will render tiles at all levels.
-      const sourceTileGrid = this.source_.getTileGrid();
-      const tileGrid = ol.tilegrid.createXYZ({
-        extent: sourceTileGrid.getExtent(),
-        maxZoom: ol.DEFAULT_MAX_ZOOM,
-        minZoom: 0,
-        tileSize: sourceTileGrid.getTileSize()
-      });
-
-      this.tilingScheme_ = new plugin.cesium.TileGridTilingScheme(this.source_, tileGrid);
-    } else {
-      this.tilingScheme_ = new plugin.cesium.TileGridTilingScheme(this.source_);
-    }
-
-    this.rectangle_ = this.tilingScheme_.rectangle;
-    this.ready_ = true;
-  }
-};
-
-
-/**
- * @override
- * @suppress {accessControls}
- * @export
- */
-plugin.cesium.ImageryProvider.prototype.requestImage = function(x, y, level) {
-  var z_ = level;
-  var y_ = -y - 1;
-
-  var deferred = Cesium.when.defer();
-
-  // If the source doesn't have tiles at the current level, return an empty canvas.
-  if (!(this.source_ instanceof ol.source.VectorTile)) {
-    var tilegrid = this.source_.getTileGridForProjection(this.projection_);
-
-    if (z_ < tilegrid.getMinZoom() - 1 || z_ > tilegrid.getMaxZoom()) {
-      deferred.resolve(this.emptyCanvas_); // no data
-      return deferred.promise;
-    }
+    /**
+     * @type {?Layer}
+     * @private
+     */
+    this.layer_ = layer;
   }
 
-  var tile = this.source_.getTile(z_, x, y_, 1, this.projection_);
-  var state = tile.getState();
+  /**
+   * @inheritDoc
+   */
+  dispose() {
+    this.disposed_ = true;
+  }
 
-  if (state === ol.TileState.EMPTY) {
-    deferred.resolve(this.emptyCanvas_);
-  } else if (state === ol.TileState.LOADED) {
-    if (tile instanceof ol.ImageTile) {
-      deferred.resolve(tile.getImage());
-    } else if (tile instanceof ol.VectorImageTile) {
-      deferred.resolve(tile.getDrawnImage(this.layer_));
-    }
-  } else if (state === ol.TileState.ERROR) {
-    deferred.resolve(this.emptyCanvas_);
-  } else {
-    tile.load();
+  /**
+   * @inheritDoc
+   */
+  isDisposed() {
+    return this.disposed_;
+  }
 
-    var layer = this.layer_;
-    var unlisten = ol.events.listen(tile, ol.events.EventType.CHANGE, function() {
-      var state = tile.getState();
-      if (state === ol.TileState.EMPTY) {
-        deferred.resolve(this.emptyCanvas_);
-        ol.events.unlistenByKey(unlisten);
-      } else if (state === ol.TileState.LOADED) {
-        if (tile instanceof ol.ImageTile) {
-          deferred.resolve(tile.getImage());
-        } else if (tile instanceof ol.VectorImageTile) {
-          deferred.resolve(tile.getDrawnImage(layer));
-        }
-        ol.events.unlistenByKey(unlisten);
-      } else if (state === ol.TileState.ERROR) {
-        deferred.resolve(this.emptyCanvas_);
-        ol.events.unlistenByKey(unlisten);
+  /**
+   * @inheritDoc
+   * @suppress {accessControls}
+   */
+  handleSourceChanged_() {
+    if (!this.ready_ && this.source_.getState() == 'ready') {
+      this.projection_ = getSourceProjection(this.source_) || this.fallbackProj_;
+      this.credit_ = OLImageryProvider.createCreditForSource(this.source_) || null;
+
+      if (this.source_ instanceof VectorTile) {
+        // For vector tiles, create a copy of the tile grid with min/max zoom covering all levels. This ensures Cesium
+        // will render tiles at all levels.
+        const sourceTileGrid = this.source_.getTileGrid();
+        const tileGrid = olTilegrid.createXYZ({
+          extent: sourceTileGrid.getExtent(),
+          maxZoom: ol.DEFAULT_MAX_ZOOM,
+          minZoom: 0,
+          tileSize: sourceTileGrid.getTileSize()
+        });
+
+        this.tilingScheme_ = new TileGridTilingScheme(this.source_, tileGrid);
+      } else {
+        this.tilingScheme_ = new TileGridTilingScheme(this.source_);
       }
-    });
+
+      this.rectangle_ = this.tilingScheme_.rectangle;
+      this.ready_ = true;
+    }
   }
 
-  return deferred.promise;
-};
+  /**
+   * @override
+   * @suppress {accessControls}
+   * @export
+   */
+  requestImage(x, y, level) {
+    var z_ = level;
+    var y_ = -y - 1;
 
+    var deferred = Cesium.when.defer();
 
-// definitions of getters that are required to be present
-// in the Cesium.ImageryProvider instance:
-Object.defineProperties(plugin.cesium.ImageryProvider.prototype, {
-  maximumLevel: {
-    get:
-        /**
-         * @this plugin.cesium.ImageryProvider
-         * @return {number}
-         * @suppress {accessControls}
-         */
-        function() {
-          // Vector tiles can be rendered at all zoom levels using data from other levels.
-          if (!(this.source_ instanceof ol.source.VectorTile)) {
-            const tg = this.source_.getTileGrid();
-            return tg ? tg.getMaxZoom() : 18;
+    // If the source doesn't have tiles at the current level, return an empty canvas.
+    if (!(this.source_ instanceof VectorTile)) {
+      var tilegrid = this.source_.getTileGridForProjection(this.projection_);
+
+      if (z_ < tilegrid.getMinZoom() - 1 || z_ > tilegrid.getMaxZoom()) {
+        deferred.resolve(this.emptyCanvas_); // no data
+        return deferred.promise;
+      }
+    }
+
+    var tile = this.source_.getTile(z_, x, y_, 1, this.projection_);
+    var state = tile.getState();
+
+    if (state === TileState.EMPTY) {
+      deferred.resolve(this.emptyCanvas_);
+    } else if (state === TileState.LOADED) {
+      if (tile instanceof ImageTile) {
+        deferred.resolve(tile.getImage());
+      } else if (tile instanceof VectorImageTile) {
+        deferred.resolve(tile.getDrawnImage(this.layer_));
+      }
+    } else if (state === TileState.ERROR) {
+      deferred.resolve(this.emptyCanvas_);
+    } else {
+      tile.load();
+
+      var layer = this.layer_;
+      var unlisten = events.listen(tile, events.EventType.CHANGE, function() {
+        var state = tile.getState();
+        if (state === TileState.EMPTY) {
+          deferred.resolve(this.emptyCanvas_);
+          events.unlistenByKey(unlisten);
+        } else if (state === TileState.LOADED) {
+          if (tile instanceof ImageTile) {
+            deferred.resolve(tile.getImage());
+          } else if (tile instanceof VectorImageTile) {
+            deferred.resolve(tile.getDrawnImage(layer));
           }
-          return ol.DEFAULT_MAX_ZOOM;
+          events.unlistenByKey(unlisten);
+        } else if (state === TileState.ERROR) {
+          deferred.resolve(this.emptyCanvas_);
+          events.unlistenByKey(unlisten);
         }
-  },
-  minimumLevel: {
-    get:
-        /**
-         * @this plugin.cesium.ImageryProvider
-         * @return {number}
-         */
-        function() {
-          // apparently level 0 tiles look like garbage and we're just gonna pass on those
-          return 1;
-        }
-  },
-  tileWidth: {
-    get:
-        /**
-         * @this plugin.cesium.ImageryProvider
-         * @return {number}
-         * @suppress {accessControls}
-         */
-        function() {
-          var tg = this.source_.getTileGrid();
-          if (tg) {
-            var tileSize = tg.getTileSize(tg.getMinZoom());
-            return Array.isArray(tileSize) ? tileSize[0] : tileSize;
-          }
-          return 256;
-        }
-  },
-  tileHeight: {
-    get:
-        /**
-         * @this plugin.cesium.ImageryProvider
-         * @return {number}
-         * @suppress {accessControls}
-         */
-        function() {
-          var tg = this.source_.getTileGrid();
-          if (tg) {
-            var tileSize = tg.getTileSize(tg.getMinZoom());
-            return Array.isArray(tileSize) ? tileSize[1] : tileSize;
-          }
-          return 256;
-        }
+      });
+    }
+
+    return deferred.promise;
   }
-});
+
+  /**
+   * @inheritDoc
+   * @suppress {accessControls}
+   */
+  get maximumLevel() {
+    // Vector tiles can be rendered at all zoom levels using data from other levels.
+    if (!(this.source_ instanceof VectorTile)) {
+      const tg = this.source_.getTileGrid();
+      return tg ? tg.getMaxZoom() : 18;
+    }
+    return ol.DEFAULT_MAX_ZOOM;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  get minimumLevel() {
+    // apparently level 0 tiles look like garbage and we're just gonna pass on those
+    return 1;
+  }
+
+  /**
+   * @inheritDoc
+   * @suppress {accessControls}
+   */
+  get tileWidth() {
+    var tg = this.source_.getTileGrid();
+    if (tg) {
+      var tileSize = tg.getTileSize(tg.getMinZoom());
+      return Array.isArray(tileSize) ? tileSize[0] : tileSize;
+    }
+    return 256;
+  }
+
+  /**
+   * @inheritDoc
+   * @suppress {accessControls}
+   */
+  get tileHeight() {
+    var tg = this.source_.getTileGrid();
+    if (tg) {
+      var tileSize = tg.getTileSize(tg.getMinZoom());
+      return Array.isArray(tileSize) ? tileSize[1] : tileSize;
+    }
+    return 256;
+  }
+}
+
+exports = ImageryProvider;

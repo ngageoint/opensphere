@@ -6,7 +6,6 @@ goog.require('os.map');
 goog.require('os.proj');
 goog.require('os.style.StyleField');
 goog.require('os.style.StyleManager');
-goog.require('plugin.cesium');
 goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.EllipseConverter');
 goog.require('test.plugin.cesium.scene');

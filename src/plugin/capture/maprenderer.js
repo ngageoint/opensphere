@@ -3,7 +3,6 @@ goog.provide('plugin.capture.MapRenderer');
 goog.require('goog.Promise');
 goog.require('os.map');
 goog.require('os.ui.capture.CanvasRenderer');
-goog.require('plugin.cesium');
 
 
 

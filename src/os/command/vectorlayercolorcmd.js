@@ -5,6 +5,7 @@ goog.require('os.command.style');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.metrics');
 goog.require('os.source.PropertyChange');
+goog.require('os.ui.icons');
 
 
 
@@ -99,7 +100,7 @@ os.command.VectorLayerColor.prototype.applyValue = function(config, value) {
     os.style.setFillColor(config, fillColor);
 
     // update the layer icons to reflect the color change
-    os.ui.adjustIconSet(this.layerId, value);
+    os.ui.icons.adjustIconSet(this.layerId, value);
   }
 
   os.command.VectorLayerColor.base(this, 'applyValue', config, value);

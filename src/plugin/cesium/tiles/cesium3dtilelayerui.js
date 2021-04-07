@@ -1,13 +1,18 @@
-goog.provide('plugin.cesium.tiles.Cesium3DTileLayerUICtrl');
-goog.provide('plugin.cesium.tiles.cesium3DTileLayerUIDirective');
+goog.module('plugin.cesium.tiles.Cesium3DTileLayerUI');
 
-goog.require('os');
-goog.require('os.command.LayerColor');
-goog.require('os.implements');
-goog.require('os.ui.Module');
-goog.require('os.ui.layer');
-goog.require('os.ui.layer.DefaultLayerUICtrl');
 goog.require('os.ui.sliderDirective');
+
+const {ROOT} = goog.require('os');
+const {toHexString} = goog.require('os.color');
+const LayerColor = goog.require('os.command.LayerColor');
+const osImplements = goog.require('os.implements');
+const IColorableLayer = goog.require('os.layer.IColorableLayer');
+const Module = goog.require('os.ui.Module');
+const DefaultLayerUICtrl = goog.require('os.ui.layer.DefaultLayerUICtrl');
+
+const ICommand = goog.requireType('os.command.ICommand');
+const LayerNode = goog.requireType('os.data.LayerNode');
+const ILayer = goog.requireType('os.layer.ILayer');
 
 
 /**
@@ -15,112 +20,121 @@ goog.require('os.ui.sliderDirective');
  *
  * @return {angular.Directive}
  */
-plugin.cesium.tiles.cesium3DTileLayerUIDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    templateUrl: os.ROOT + 'views/plugin/cesium/cesium3dtile.html',
-    controller: plugin.cesium.tiles.Cesium3DTileLayerUICtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  templateUrl: ROOT + 'views/plugin/cesium/cesium3dtile.html',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
+
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'cesium3dtilelayerui';
 
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('cesium3dtilelayerui', [plugin.cesium.tiles.cesium3DTileLayerUIDirective]);
+Module.directive(directiveTag, [directive]);
 
 
 
 /**
  * Controller for the Cesium 3D tile layer UI.
- *
- * @param {!angular.Scope} $scope The Angular scope.
- * @param {!angular.JQLite} $element The root DOM element.
- * @param {!angular.$timeout} $timeout The Angular $timeout service.
- * @extends {os.ui.layer.DefaultLayerUICtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-plugin.cesium.tiles.Cesium3DTileLayerUICtrl = function($scope, $element, $timeout) {
-  plugin.cesium.tiles.Cesium3DTileLayerUICtrl.base(this, 'constructor', $scope, $element, $timeout);
+class Controller extends DefaultLayerUICtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope The Angular scope.
+   * @param {!angular.JQLite} $element The root DOM element.
+   * @param {!angular.$timeout} $timeout The Angular $timeout service.
+   * @ngInject
+   */
+  constructor($scope, $element, $timeout) {
+    super($scope, $element, $timeout);
 
-  $scope.$on('color.change', this.onColorChange.bind(this));
-  $scope.$on('color.reset', this.onColorReset.bind(this));
-};
-goog.inherits(plugin.cesium.tiles.Cesium3DTileLayerUICtrl, os.ui.layer.DefaultLayerUICtrl);
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.tiles.Cesium3DTileLayerUICtrl.prototype.initUI = function() {
-  plugin.cesium.tiles.Cesium3DTileLayerUICtrl.base(this, 'initUI');
-
-  if (this.scope) {
-    this.scope['color'] = this.getColor_();
+    $scope.$on('color.change', this.onColorChange.bind(this));
+    $scope.$on('color.reset', this.onColorReset.bind(this));
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  initUI() {
+    super.initUI();
 
-/**
- * Gets the color from the item(s)
- *
- * @return {?string} a hex color string
- * @private
- */
-plugin.cesium.tiles.Cesium3DTileLayerUICtrl.prototype.getColor_ = function() {
-  var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
-
-  if (items) {
-    for (var i = 0, n = items.length; i < n; i++) {
-      try {
-        var layer = items[i].getLayer();
-        if (os.implements(layer, os.layer.IColorableLayer.ID)) {
-          var color = /** @type {os.layer.IColorableLayer} */ (layer).getColor();
-          return color ? os.color.toHexString(color) : color;
-        }
-      } catch (e) {
-      }
+    if (this.scope) {
+      this.scope['color'] = this.getColor_();
     }
   }
 
-  return null;
-};
+  /**
+   * Gets the color from the item(s)
+   *
+   * @return {?string} a hex color string
+   * @private
+   */
+  getColor_() {
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
 
+    if (items) {
+      for (var i = 0, n = items.length; i < n; i++) {
+        try {
+          var layer = items[i].getLayer();
+          if (osImplements(layer, IColorableLayer.ID)) {
+            var color = /** @type {IColorableLayer} */ (layer).getColor();
+            return color ? toHexString(color) : color;
+          }
+        } catch (e) {
+        }
+      }
+    }
 
-/**
- * Handles changes to color
- *
- * @param {angular.Scope.Event} event
- * @param {string} value
- * @protected
- */
-plugin.cesium.tiles.Cesium3DTileLayerUICtrl.prototype.onColorChange = function(event, value) {
-  var fn =
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.LayerColor(layer.getId(), value);
-      };
+    return null;
+  }
 
-  this.createCommand(fn);
-};
+  /**
+   * Handles changes to color
+   *
+   * @param {angular.Scope.Event} event
+   * @param {string} value
+   * @protected
+   */
+  onColorChange(event, value) {
+    var fn =
+        /**
+         * @param {ILayer} layer
+         * @return {ICommand}
+         */
+        function(layer) {
+          return new LayerColor(layer.getId(), value);
+        };
 
+    this.createCommand(fn);
+  }
 
-/**
- * Handles color reset
- *
- * @param {angular.Scope.Event} event
- * @protected
- */
-plugin.cesium.tiles.Cesium3DTileLayerUICtrl.prototype.onColorReset = function(event) {
-  // clear the label color config value
-  this.onColorChange(event, '');
+  /**
+   * Handles color reset
+   *
+   * @param {angular.Scope.Event} event
+   * @protected
+   */
+  onColorReset(event) {
+    // clear the label color config value
+    this.onColorChange(event, '');
 
-  // reset to the layer color
-  this.scope['color'] = this.getColor_();
+    // reset to the layer color
+    this.scope['color'] = this.getColor_();
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

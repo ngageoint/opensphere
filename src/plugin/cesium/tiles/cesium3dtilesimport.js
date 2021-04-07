@@ -1,11 +1,12 @@
-goog.provide('plugin.cesium.tiles.TilesetImportCtrl');
-goog.provide('plugin.cesium.tiles.tilesetImportDirective');
+goog.module('plugin.cesium.tiles.TilesetImport');
 
-goog.require('os');
-goog.require('os.ui.Module');
-goog.require('os.ui.file.ui.AbstractFileImportCtrl');
-goog.require('plugin.cesium.tiles.Descriptor');
-goog.require('plugin.cesium.tiles.Provider');
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const AbstractFileImportCtrl = goog.require('os.ui.file.ui.AbstractFileImportCtrl');
+const Descriptor = goog.require('plugin.cesium.tiles.Descriptor');
+const Provider = goog.require('plugin.cesium.tiles.Provider');
+
+const FileParserConfig = goog.requireType('os.parse.FileParserConfig');
 
 
 /**
@@ -13,61 +14,74 @@ goog.require('plugin.cesium.tiles.Provider');
  *
  * @return {angular.Directive}
  */
-plugin.cesium.tiles.tilesetImportDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    templateUrl: os.ROOT + 'views/file/genericfileimport.html',
-    controller: plugin.cesium.tiles.TilesetImportCtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: true,
+  templateUrl: ROOT + 'views/file/genericfileimport.html',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
+
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'tilesetimport';
 
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('tilesetimport', [plugin.cesium.tiles.tilesetImportDirective]);
+Module.directive(directiveTag, [directive]);
 
 
 
 /**
  * Controller for the 3D tiles import dialog
  *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @extends {os.ui.file.ui.AbstractFileImportCtrl<!Object,!plugin.cesium.tiles.Descriptor>}
- * @constructor
- * @ngInject
+ * @extends {AbstractFileImportCtrl<!Object,!Descriptor>}
+ * @unrestricted
  */
-plugin.cesium.tiles.TilesetImportCtrl = function($scope, $element) {
-  plugin.cesium.tiles.TilesetImportCtrl.base(this, 'constructor', $scope, $element);
-};
-goog.inherits(plugin.cesium.tiles.TilesetImportCtrl, os.ui.file.ui.AbstractFileImportCtrl);
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.tiles.TilesetImportCtrl.prototype.createDescriptor = function() {
-  var descriptor = null;
-  if (this.config['descriptor']) {
-    // existing descriptor, update it
-    descriptor = /** @type {!plugin.cesium.tiles.Descriptor} */ (this.config['descriptor']);
-    descriptor.updateFromConfig(/** @type {!os.parse.FileParserConfig} */ (this.config));
-  } else {
-    // this is a new import
-    descriptor = plugin.cesium.tiles.Descriptor.createFromConfig(this.config);
+class Controller extends AbstractFileImportCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
   }
 
-  return descriptor;
-};
+  /**
+   * @inheritDoc
+   */
+  createDescriptor() {
+    var descriptor = null;
+    if (this.config['descriptor']) {
+      // existing descriptor, update it
+      descriptor = /** @type {!Descriptor} */ (this.config['descriptor']);
+      descriptor.updateFromConfig(/** @type {!FileParserConfig} */ (this.config));
+    } else {
+      // this is a new import
+      descriptor = Descriptor.create(this.config);
+    }
 
+    return descriptor;
+  }
 
-/**
- * @inheritDoc
- */
-plugin.cesium.tiles.TilesetImportCtrl.prototype.getProvider = function() {
-  return plugin.cesium.tiles.Provider.getInstance();
+  /**
+   * @inheritDoc
+   */
+  getProvider() {
+    return Provider.getInstance();
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

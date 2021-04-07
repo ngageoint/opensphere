@@ -27,8 +27,10 @@ goog.require('os.source.Vector');
 goog.require('os.style');
 goog.require('os.style.label');
 goog.require('os.ui.Icons');
+goog.require('os.ui.IconsSVG');
 goog.require('os.ui.feature.featureInfoDirective');
 goog.require('os.ui.feature.multiFeatureInfoDirective');
+goog.require('os.ui.icons');
 goog.require('os.ui.layer.vectorLayerUIDirective');
 goog.require('os.ui.node.defaultLayerNodeUIDirective');
 goog.require('os.ui.renamelayer');
@@ -395,7 +397,7 @@ os.layer.Vector.prototype.getIcons = function() {
   if (config) {
     var color = os.style.getConfigColor(config, true);
     if (color) {
-      return os.ui.createIconSet(this.getId(), this.getSVGSet(), this.getFASet(), color);
+      return os.ui.icons.createIconSet(this.getId(), this.getSVGSet(), this.getFASet(), color);
     }
   }
 

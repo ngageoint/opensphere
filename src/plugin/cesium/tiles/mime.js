@@ -1,45 +1,46 @@
-goog.provide('plugin.cesium.tiles.mime');
+goog.module('plugin.cesium.tiles.mime');
 
-goog.require('goog.Promise');
-goog.require('os.file.mime.json');
+const Promise = goog.require('goog.Promise');
+const {register} = goog.require('os.file.mime');
+const json = goog.require('os.file.mime.json');
+
+const OSFile = goog.requireType('os.file.File');
+
 
 /**
- * @const
  * @type {string}
  */
-plugin.cesium.tiles.mime.TYPE = 'application/vnd.tileset+json';
-
+const TYPE = 'application/vnd.tileset+json';
 
 /**
  * @param {ArrayBuffer} buffer
- * @param {os.file.File=} opt_file
+ * @param {OSFile=} opt_file
  * @param {*=} opt_context
- * @return {!goog.Promise<*|undefined>}
+ * @return {!Promise<*|undefined>}
  */
-plugin.cesium.tiles.mime.isTilesetJSON = function(buffer, opt_file, opt_context) {
+const isTilesetJSON = function(buffer, opt_file, opt_context) {
   var retVal;
 
-  if (opt_context && plugin.cesium.tiles.mime.find_(/** @type {Object|null} */ (opt_context))) {
+  if (opt_context && testContext(/** @type {Object|null} */ (opt_context))) {
     retVal = opt_context;
   }
 
-  return goog.Promise.resolve(retVal);
+  return Promise.resolve(retVal);
 };
-
 
 /**
  * @param {Array|Object} obj
  * @return {boolean}
- * @private
  */
-plugin.cesium.tiles.mime.find_ = function(obj) {
+const testContext = function(obj) {
   // geometricError is the only required property by spec, but also require a root tile
   return typeof obj['geometricError'] === 'number' &&
       obj['root'] && typeof obj['root']['geometricError'] === 'number';
 };
 
-os.file.mime.register(
-    plugin.cesium.tiles.mime.TYPE,
-    plugin.cesium.tiles.mime.isTilesetJSON,
-    1000,
-    os.file.mime.json.TYPE);
+register(TYPE, isTilesetJSON, 1000, json.TYPE);
+
+exports = {
+  TYPE,
+  isTilesetJSON
+};

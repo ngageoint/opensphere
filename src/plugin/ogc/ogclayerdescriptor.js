@@ -21,7 +21,9 @@ goog.require('os.ogc.wfs.DescribeFeatureLoader');
 goog.require('os.ogc.wmts');
 goog.require('os.ui.ControlType');
 goog.require('os.ui.Icons');
+goog.require('os.ui.IconsSVG');
 goog.require('os.ui.filter.ui.filterableDescriptorNodeUIDirective');
+goog.require('os.ui.icons');
 goog.require('os.ui.ogc.IOGCDescriptor');
 goog.require('os.ui.query.BaseCombinatorCtrl');
 goog.require('os.ui.query.CombinatorCtrl');
@@ -282,7 +284,7 @@ plugin.ogc.OGCLayerDescriptor.prototype.getIcons = function() {
     s += os.ui.Icons.DEPRECATED;
   }
 
-  s += os.ui.createIconSet(goog.string.getRandomString(), iconsSVG, [], color);
+  s += os.ui.icons.createIconSet(goog.string.getRandomString(), iconsSVG, [], color);
 
   return s;
 };

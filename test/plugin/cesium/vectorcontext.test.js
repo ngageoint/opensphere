@@ -2,6 +2,7 @@ goog.require('ol.Feature');
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.Point');
 goog.require('ol.geom.Polygon');
+goog.require('ol.proj');
 goog.require('os.layer.Vector');
 goog.require('os.proj');
 goog.require('plugin.cesium.VectorContext');
@@ -10,19 +11,25 @@ goog.require('test.plugin.cesium.primitive');
 goog.require('test.plugin.cesium.scene');
 
 describe('plugin.cesium.VectorContext', () => {
-  const primitiveUtils = goog.module.get('test.plugin.cesium.primitive');
-  const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
+  const Feature = goog.module.get('ol.Feature');
+  const Point = goog.module.get('ol.geom.Point');
+  const Polygon = goog.module.get('ol.geom.Polygon');
+  const olProj = goog.module.get('ol.proj');
+  const VectorLayer = goog.module.get('os.layer.Vector');
+  const osProj = goog.module.get('os.proj');
   const VectorContext = goog.module.get('plugin.cesium.VectorContext');
   const {isPrimitiveShown} = goog.module.get('plugin.cesium.primitive');
+  const primitiveUtils = goog.module.get('test.plugin.cesium.primitive');
+  const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
 
   let layer;
   let scene;
   let context;
 
   beforeEach(() => {
-    layer = new os.layer.Vector();
+    layer = new VectorLayer();
     scene = getFakeScene();
-    context = new VectorContext(scene, layer, ol.proj.get(os.proj.EPSG4326));
+    context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
   });
 
   describe('constructor', () => {
@@ -99,8 +106,8 @@ describe('plugin.cesium.VectorContext', () => {
     let geometry;
 
     beforeEach(() => {
-      geometry = new ol.geom.Point([0, 0]);
-      feature = new ol.Feature(geometry);
+      geometry = new Point([0, 0]);
+      feature = new Feature(geometry);
     });
 
     it('should handle undefined primitives', () => {
@@ -127,8 +134,8 @@ describe('plugin.cesium.VectorContext', () => {
     let geometry;
 
     beforeEach(() => {
-      geometry = new ol.geom.Point([0, 0]);
-      feature = new ol.Feature(geometry);
+      geometry = new Point([0, 0]);
+      feature = new Feature(geometry);
     });
 
     it('should handle undefined primitives', () => {
@@ -169,7 +176,7 @@ describe('plugin.cesium.VectorContext', () => {
   describe('markDirty', () => {
     let feature;
     beforeEach(() => {
-      feature = new ol.Feature(new ol.geom.Point([0, 0]));
+      feature = new Feature(new Point([0, 0]));
     });
 
     it('should handle no associated primitives', () => {
@@ -187,7 +194,7 @@ describe('plugin.cesium.VectorContext', () => {
   describe('removeDirty', () => {
     let feature;
     beforeEach(() => {
-      feature = new ol.Feature(new ol.geom.Point([0, 0]));
+      feature = new Feature(new Point([0, 0]));
     });
 
     it('should handle no associated primitives', () => {
@@ -209,7 +216,7 @@ describe('plugin.cesium.VectorContext', () => {
   describe('cleanup', () => {
     let feature;
     beforeEach(() => {
-      feature = new ol.Feature(new ol.geom.Point([0, 0]));
+      feature = new Feature(new Point([0, 0]));
     });
 
     it('should handle no associated primitives', () => {
@@ -236,8 +243,8 @@ describe('plugin.cesium.VectorContext', () => {
     let geometry;
 
     beforeEach(() => {
-      geometry = new ol.geom.Point([0, 0]);
-      feature = new ol.Feature(geometry);
+      geometry = new Point([0, 0]);
+      feature = new Feature(geometry);
     });
 
     it('should add a billboard properly', () => {
@@ -272,7 +279,7 @@ describe('plugin.cesium.VectorContext', () => {
 
     beforeEach(() => {
       geometry = new ol.geom.LineString([[0, 0], [5, 5]]);
-      feature = new ol.Feature(geometry);
+      feature = new Feature(geometry);
     });
 
     it('should add a polyline properly', () => {
@@ -306,8 +313,8 @@ describe('plugin.cesium.VectorContext', () => {
     let geometry;
 
     beforeEach(() => {
-      geometry = new ol.geom.Polygon.fromExtent([-5, -5, 5, 5]);
-      feature = new ol.Feature(geometry);
+      geometry = Polygon.fromExtent([-5, -5, 5, 5]);
+      feature = new Feature(geometry);
     });
 
     it('should add a primitive properly', () => {
@@ -355,8 +362,8 @@ describe('plugin.cesium.VectorContext', () => {
     let geometry;
 
     beforeEach(() => {
-      geometry = new ol.geom.Point([0, 0]);
-      feature = new ol.Feature(geometry);
+      geometry = new Point([0, 0]);
+      feature = new Feature(geometry);
     });
 
     it('should add a label properly', () => {
@@ -390,8 +397,8 @@ describe('plugin.cesium.VectorContext', () => {
     let geometry;
 
     beforeEach(() => {
-      geometry = new ol.geom.Point([0, 0]);
-      feature = new ol.Feature(geometry);
+      geometry = new Point([0, 0]);
+      feature = new Feature(geometry);
     });
 
     it('should remove each item type', () => {
@@ -432,14 +439,14 @@ describe('plugin.cesium.VectorContext', () => {
   });
 
   describe('getLabelForGeometry', () => {
-    const geometry = new ol.geom.Point([0, 0]);
+    const geometry = new Point([0, 0]);
 
     it('should return null by default', () => {
       expect(context.getLabelForGeometry(geometry)).toBe(null);
     });
 
     it('should return a label if one exists', () => {
-      const feature = new ol.Feature(geometry);
+      const feature = new Feature(geometry);
       const labelOptions = primitiveUtils.createLabelOptions();
       context.addLabel(labelOptions, feature, geometry);
 
@@ -450,7 +457,7 @@ describe('plugin.cesium.VectorContext', () => {
   });
 
   describe('getPrimitiveForGeometry', () => {
-    const geometry = new ol.geom.Point([0, 0]);
+    const geometry = new Point([0, 0]);
 
     it('should return undefined by default', () => {
       expect(context.getPrimitiveForGeometry(geometry)).toBe(undefined);
@@ -458,7 +465,7 @@ describe('plugin.cesium.VectorContext', () => {
 
     it('should return the primitive for the geometry if one exists', () => {
       const billboardOptions = primitiveUtils.createBillboard([0, 0, 0]);
-      const feature = new ol.Feature(geometry);
+      const feature = new Feature(geometry);
       context.addBillboard(billboardOptions, feature, geometry);
       const billboard = context.billboards.get(0);
 
@@ -532,7 +539,7 @@ describe('plugin.cesium.VectorContext', () => {
   });
 
   describe('isFeatureShown', () => {
-    const feature = new ol.Feature();
+    const feature = new Feature();
 
     it('should default to true', () => {
       expect(context.isFeatureShown(feature)).toBe(true);

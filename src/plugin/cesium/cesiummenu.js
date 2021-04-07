@@ -1,41 +1,40 @@
-goog.provide('plugin.cesium.menu');
+goog.module('plugin.cesium.menu');
 
-goog.require('os.ui.menu.import');
-goog.require('plugin.cesium');
-goog.require('plugin.cesium.importIonAssetDirective');
+const importMenu = goog.require('os.ui.menu.import');
+const osWindow = goog.require('os.ui.window');
+const cesium = goog.require('plugin.cesium');
+const {directiveTag: importIonAssetTag} = goog.require('plugin.cesium.ImportIonAssetUI');
 
 
 /**
  * Cesium menu event types.
  * @enum {string}
  */
-plugin.cesium.menu.EventType = {
+const EventType = {
   ADD_ION_RESOURCE: 'cesium:addIonResource'
 };
-
 
 /**
  * Add Cesium items to the import menu.
  */
-plugin.cesium.menu.importSetup = function() {
-  if (os.ui.menu.import.MENU && plugin.cesium.isIonEnabled()) {
-    var group = os.ui.menu.import.MENU.getRoot().find(os.ui.menu.import.GroupType.MAJOR);
+const importSetup = function() {
+  if (importMenu.MENU && cesium.isIonEnabled()) {
+    var group = importMenu.MENU.getRoot().find(importMenu.GroupType.MAJOR);
     group.addChild({
       label: 'Add Cesium Ion Asset',
-      eventType: plugin.cesium.menu.EventType.ADD_ION_RESOURCE,
+      eventType: EventType.ADD_ION_RESOURCE,
       tooltip: 'Loads a Cesium Ion asset in 3D mode',
       icons: ['<i class="fa fa-fw fa-plus"></i>'],
-      handler: plugin.cesium.menu.launchAddIonAsset,
+      handler: launchAddIonAsset,
       sort: 10
     });
   }
 };
 
-
 /**
  * Launch a dialog to add a Cesium Ion asset.
  */
-plugin.cesium.menu.launchAddIonAsset = function() {
+const launchAddIonAsset = function() {
   var windowId = 'importIonAsset';
   var windowOptions = {
     'id': windowId,
@@ -51,6 +50,12 @@ plugin.cesium.menu.launchAddIonAsset = function() {
     'modal': false
   };
 
-  var template = '<importionasset></importionasset>';
-  os.ui.window.create(windowOptions, template);
+  var template = `<${importIonAssetTag}></${importIonAssetTag}>`;
+  osWindow.create(windowOptions, template);
+};
+
+exports = {
+  EventType,
+  importSetup,
+  launchAddIonAsset
 };
