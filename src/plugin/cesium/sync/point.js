@@ -1,11 +1,13 @@
 goog.module('plugin.cesium.sync.point');
 
-
+const {hashCode} = goog.require('goog.string');
+const {getUid} = goog.require('ol');
 const olcsCore = goog.require('olcs.core');
 const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
 const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
 const {drawShape} = goog.require('plugin.cesium.sync.shape');
 const OLIconStyle = goog.require('ol.style.Icon');
+const {ZoomScale} = goog.require('os.map');
 const OSIconStyle = goog.require('os.style.Icon');
 const OLRegularShape = goog.require('ol.style.RegularShape');
 
@@ -183,7 +185,7 @@ const updateImageShape = (style, bb) => {
   hash = 31 * hash + (fill ? 1 : 0) >>> 0;
   hash = 31 * hash + style.getPoints() >>> 0;
   hash = 31 * hash + style.getRadius() >>> 0;
-  hash = 31 * hash + goog.string.hashCode(style.getAngle().toString()) >>> 0;
+  hash = 31 * hash + hashCode(style.getAngle().toString()) >>> 0;
 
   const imageId = hash.toString();
   if (imageId && imageId != bb.imageId && imageId != bb._imageId) {
@@ -206,7 +208,7 @@ const updateImageShape = (style, bb) => {
  */
 const updateImageDefault = (style, bb) => {
   const image = style.getImage(1);
-  const imageId = style['id'] || ol.getUid(image);
+  const imageId = style['id'] || getUid(image);
 
   if (image && imageId != bb.imageId && imageId != bb._imageId) {
     updateBillboardImage(bb, imageId, image);
@@ -279,8 +281,8 @@ const getDistanceScalar = () => {
   if (!distanceScalar) {
     // this sets up the constant after Cesium is initialized
     distanceScalar = new Cesium.NearFarScalar(
-        os.map.ZoomScale.NEAR, os.map.ZoomScale.NEAR_SCALE,
-        os.map.ZoomScale.FAR, os.map.ZoomScale.FAR_SCALE);
+        ZoomScale.NEAR, ZoomScale.NEAR_SCALE,
+        ZoomScale.FAR, ZoomScale.FAR_SCALE);
   }
   return distanceScalar;
 };

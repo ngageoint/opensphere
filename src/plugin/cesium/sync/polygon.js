@@ -1,5 +1,6 @@
 goog.module('plugin.cesium.sync.polygon');
 
+const asserts = goog.require('goog.asserts');
 const olcsCore = goog.require('olcs.core');
 const geo = goog.require('os.geo');
 const {GeometryInstanceId} = goog.require('plugin.cesium');
@@ -99,7 +100,7 @@ const createPolygonAsPolyline = (feature, geometry, style, context, result, opt_
     });
   }
 
-  goog.asserts.assert(csRings.length > 0);
+  asserts.assert(csRings.length > 0);
 
   const width = getLineWidthFromStyle(style);
   const lineDash = getDashPattern(style);

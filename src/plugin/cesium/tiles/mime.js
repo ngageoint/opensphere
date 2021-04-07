@@ -4,6 +4,8 @@ const Promise = goog.require('goog.Promise');
 const {register} = goog.require('os.file.mime');
 const json = goog.require('os.file.mime.json');
 
+const OSFile = goog.requireType('os.file.File');
+
 
 /**
  * @type {string}
@@ -12,7 +14,7 @@ const TYPE = 'application/vnd.tileset+json';
 
 /**
  * @param {ArrayBuffer} buffer
- * @param {os.file.File=} opt_file
+ * @param {OSFile=} opt_file
  * @param {*=} opt_context
  * @return {!Promise<*|undefined>}
  */

@@ -5,6 +5,7 @@ goog.require('ol.style.Circle');
 goog.require('ol.style.Fill');
 goog.require('ol.style.Image');
 goog.require('ol.style.Style');
+goog.require('os.map');
 goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.DynamicPolygonConverter');
 goog.require('test.plugin.cesium.scene');
@@ -17,6 +18,7 @@ describe('plugin.cesium.sync.DynamicPolygonConverter', () => {
   const Style = goog.module.get('ol.style.Style');
 
   const Vector = goog.module.get('os.layer.Vector');
+  const osMap = goog.module.get('os.map');
   const {EPSG4326} = goog.module.get('os.proj');
   const VectorContext = goog.module.get('plugin.cesium.VectorContext');
   const DynamicPolygonConverter = goog.module.get('plugin.cesium.sync.DynamicPolygonConverter');
@@ -41,10 +43,10 @@ describe('plugin.cesium.sync.DynamicPolygonConverter', () => {
     context = new VectorContext(scene, layer, olProj.get(EPSG4326));
   });
 
-  const originalProjection = os.map.PROJECTION;
+  const originalProjection = osMap.PROJECTION;
   afterEach(() => {
     disableWebGLMock();
-    os.map.PROJECTION = originalProjection;
+    osMap.PROJECTION = originalProjection;
   });
 
   const bluish = 'rgba(20,50,255,1)';

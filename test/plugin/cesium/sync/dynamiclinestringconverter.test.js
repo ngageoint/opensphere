@@ -4,7 +4,11 @@ goog.require('ol.proj');
 goog.require('ol.style.Circle');
 goog.require('ol.style.Fill');
 goog.require('ol.style.Image');
+goog.require('ol.style.Stroke');
 goog.require('ol.style.Style');
+goog.require('os.layer.Vector');
+goog.require('os.map');
+goog.require('os.proj');
 goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.DynamicLineStringConverter');
 goog.require('test.plugin.cesium.scene');
@@ -14,9 +18,11 @@ describe('plugin.cesium.sync.DynamicLineStringConverter', () => {
   const Feature = goog.module.get('ol.Feature');
   const LineString = goog.module.get('ol.geom.LineString');
   const olProj = goog.module.get('ol.proj');
+  const Stroke = goog.module.get('ol.style.Stroke');
   const Style = goog.module.get('ol.style.Style');
 
   const Vector = goog.module.get('os.layer.Vector');
+  const osMap = goog.module.get('os.map');
   const {EPSG4326} = goog.module.get('os.proj');
   const VectorContext = goog.module.get('plugin.cesium.VectorContext');
   const DynamicLineStringConverter = goog.module.get('plugin.cesium.sync.DynamicLineStringConverter');
@@ -41,10 +47,10 @@ describe('plugin.cesium.sync.DynamicLineStringConverter', () => {
     context = new VectorContext(scene, layer, olProj.get(EPSG4326));
   });
 
-  const originalProjection = os.map.PROJECTION;
+  const originalProjection = osMap.PROJECTION;
   afterEach(() => {
     disableWebGLMock();
-    os.map.PROJECTION = originalProjection;
+    osMap.PROJECTION = originalProjection;
   });
 
   const blue = 'rgba(0,0,255,1)';
@@ -59,7 +65,7 @@ describe('plugin.cesium.sync.DynamicLineStringConverter', () => {
     });
 
     it('should create a line with a given stroke style', () => {
-      style.setStroke(new ol.style.Stroke({
+      style.setStroke(new Stroke({
         color: green,
         width: 4
       }));
@@ -70,7 +76,7 @@ describe('plugin.cesium.sync.DynamicLineStringConverter', () => {
     });
 
     it('should create a dashed line if the stroke contains a dash', () => {
-      const stroke = new ol.style.Stroke({
+      const stroke = new Stroke({
         color: green,
         width: 1
       });
@@ -89,7 +95,7 @@ describe('plugin.cesium.sync.DynamicLineStringConverter', () => {
 
   describe('update', () => {
     it('should update changing line widths', () => {
-      style.setStroke(new ol.style.Stroke({
+      style.setStroke(new Stroke({
         color: blue,
         width: 3
       }));
@@ -98,7 +104,7 @@ describe('plugin.cesium.sync.DynamicLineStringConverter', () => {
 
       const linestring = context.polylines.get(0);
 
-      style.setStroke(new ol.style.Stroke({
+      style.setStroke(new Stroke({
         color: green,
         width: 4
       }));
@@ -108,7 +114,7 @@ describe('plugin.cesium.sync.DynamicLineStringConverter', () => {
     });
 
     it('should update changing dash patterns', () => {
-      const stroke = new ol.style.Stroke({
+      const stroke = new Stroke({
         color: green,
         width: 1
       });
@@ -125,7 +131,7 @@ describe('plugin.cesium.sync.DynamicLineStringConverter', () => {
     });
 
     it('should update lines with new colors', () => {
-      style.setStroke(new ol.style.Stroke({
+      style.setStroke(new Stroke({
         color: green,
         width: 4
       }));

@@ -2,6 +2,8 @@ goog.module('plugin.cesium.sync.CesiumSynchronizer');
 
 const AbstractWebGLSynchronizer = goog.require('os.webgl.AbstractWebGLSynchronizer');
 
+const PluggableMap = goog.requireType('ol.PluggableMap');
+
 
 /**
  * Abstract class to synchronize an OpenLayers layer to Cesium.
@@ -14,7 +16,7 @@ class CesiumSynchronizer extends AbstractWebGLSynchronizer {
   /**
    * Constructor.
    * @param {!T} layer The OpenLayers layer.
-   * @param {!ol.PluggableMap} map The OpenLayers map.
+   * @param {!PluggableMap} map The OpenLayers map.
    * @param {!Cesium.Scene} scene The Cesium scene.
    */
   constructor(layer, map, scene) {

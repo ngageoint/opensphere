@@ -7,6 +7,13 @@ const tiles = goog.require('plugin.cesium.tiles');
 
 
 /**
+ * The global instance.
+ * @type {Provider|undefined}
+ */
+let instance;
+
+
+/**
  * Cesium 3D tiles provider.
  */
 class Provider extends FileProvider {
@@ -43,9 +50,26 @@ class Provider extends FileProvider {
       }
     }
   }
+
+  /**
+   * Get the global instance.
+   * @return {!Provider} The instance.
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new Provider();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {Provider|undefined} value The instance.
+   */
+  static setInstance(value) {
+    instance = value;
+  }
 }
-
-goog.addSingletonGetter(Provider);
-
 
 exports = Provider;
