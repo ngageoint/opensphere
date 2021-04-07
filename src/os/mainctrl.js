@@ -1,5 +1,6 @@
 goog.provide('os.MainCtrl');
 
+goog.require('coreui.mixin.ICSanitizeMixin');
 goog.require('goog.Uri');
 goog.require('goog.async.Deferred');
 goog.require('goog.dom');

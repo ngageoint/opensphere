@@ -78,11 +78,6 @@ os.im.FeatureImporter.prototype.setTrustHTML = function(value) {
  * @suppress {accessControls} For speed.
  */
 os.im.FeatureImporter.prototype.addItemInternal = function(item) {
-  console.log('----- Feature Importer (addItemInternal) ---------');
-  console.log(item); // DAMB
-  console.log(new Error().stack); // DAMB
-  console.log('--------------------------------------------------');
-
   var feature;
   if (item instanceof ol.Feature) {
     feature = /** @type {!ol.Feature} */ (item);
@@ -146,11 +141,6 @@ os.im.FeatureImporter.prototype.sanitize = function(item) {
 
     for (var key in props) {
       var value = props[key];
-
-      console.log('----- Feature Importer (sanitize) ----------------');
-      console.log(value); // DAMB
-      console.log(os.im.FeatureImporter.NEEDS_SANITIZE_.test(value)); // DAMB
-      console.log('--------------------------------------------------');
 
       if (typeof value === 'string' && os.im.FeatureImporter.NEEDS_SANITIZE_.test(value)) {
         // save the HTML description to its own property to control where it gets displayed
