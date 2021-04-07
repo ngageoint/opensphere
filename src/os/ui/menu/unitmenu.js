@@ -17,7 +17,7 @@ os.ui.menu.unit.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
 
 /**
  * @type {os.ui.menu.Menu<undefined>|undefined}
- * @deprecated
+ * @deprecated Please use MENU from goog.require('os.ui.menu.unit') instead.
  */
 os.ui.menu.UNIT = os.ui.menu.unit.MENU;
 
