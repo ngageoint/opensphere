@@ -3,9 +3,11 @@ goog.module('plugin.cesium.sync.TileSynchronizer');
 const asserts = goog.require('goog.asserts');
 const Delay = goog.require('goog.async.Delay');
 const EventType = goog.require('goog.events.EventType');
+const googObject = goog.require('goog.object');
 const googString = goog.require('goog.string');
 const olEvents = goog.require('ol.events');
 const TileWMS = goog.require('ol.source.TileWMS');
+
 const Dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
@@ -15,9 +17,14 @@ const AnimatedTile = goog.require('os.layer.AnimatedTile');
 const PropertyChange = goog.require('os.layer.PropertyChange');
 const osMap = goog.require('os.map');
 const events = goog.require('os.ol.events');
+const osTime = goog.require('os.time');
 const {tileLayerToImageryLayer, updateCesiumLayerProperties} = goog.require('plugin.cesium');
 const ImageryProvider = goog.require('plugin.cesium.ImageryProvider');
 const CesiumSynchronizer = goog.require('plugin.cesium.sync.CesiumSynchronizer');
+
+const GoogEvent = goog.requireType('goog.events.Event');
+const OLObject = goog.requireType('ol.Object');
+const PluggableMap = goog.requireType('ol.PluggableMap');
 
 
 /**
@@ -53,7 +60,7 @@ class TileSynchronizer extends CesiumSynchronizer {
   /**
    * Constructor.
    * @param {!osLayer.Tile} layer The OpenLayers tile layer.
-   * @param {!ol.PluggableMap} map The OpenLayers map.
+   * @param {!PluggableMap} map The OpenLayers map.
    * @param {!Cesium.Scene} scene The Cesium scene.
    */
   constructor(layer, map, scene) {
@@ -157,7 +164,7 @@ class TileSynchronizer extends CesiumSynchronizer {
   /**
    * Handles min/max zoom
    *
-   * @param {goog.events.Event=} opt_evt
+   * @param {GoogEvent=} opt_evt
    * @private
    */
   onZoomChange_(opt_evt) {
@@ -220,7 +227,7 @@ class TileSynchronizer extends CesiumSynchronizer {
   getLastIndex() {
     var lastIndex = this.getFirstIndex();
     if (lastIndex > -1 && this.animationCache_) {
-      lastIndex += goog.object.getCount(this.animationCache_);
+      lastIndex += googObject.getCount(this.animationCache_);
     }
 
     return lastIndex;
@@ -384,8 +391,8 @@ class TileSynchronizer extends CesiumSynchronizer {
     var end = this.tlc.getCurrent();
 
     return AnimatedTile.getTimeParameter(dateFormat, timeFormat,
-        os.time.offset(new Date(start), duration, offset).getTime(),
-        os.time.offset(new Date(end), duration, offset).getTime(),
+        osTime.offset(new Date(start), duration, offset).getTime(),
+        osTime.offset(new Date(end), duration, offset).getTime(),
         duration);
   }
 
@@ -455,7 +462,7 @@ class TileSynchronizer extends CesiumSynchronizer {
   /**
    * Update Cesium layer properties when the style changes.
    *
-   * @param {ol.Object.Event} event
+   * @param {OLObject.Event} event
    * @private
    */
   onStyleChange_(event) {
@@ -468,7 +475,7 @@ class TileSynchronizer extends CesiumSynchronizer {
   /**
    * Handle generic 'change' events on the tile layer.
    *
-   * @param {ol.Object.Event} event
+   * @param {OLObject.Event} event
    * @private
    */
   onChange_(event) {

@@ -1,8 +1,11 @@
 goog.module('plugin.cesium.PrimitiveLayer');
 
-const geo = goog.require('os.geo');
+const olProj = goog.require('ol.proj');
 const dispatcher = goog.require('os.Dispatcher');
 const MapEvent = goog.require('os.MapEvent');
+const geo = goog.require('os.geo');
+const osMap = goog.require('os.map');
+const osProj = goog.require('os.proj');
 const Layer = goog.require('plugin.cesium.Layer');
 
 
@@ -110,7 +113,7 @@ class PrimitiveLayer extends Layer {
         geo.R2D * (cartographicCenter.longitude + angle),
         geo.R2D * (cartographicCenter.latitude + angle)];
 
-      return ol.proj.transformExtent(extent, os.proj.EPSG4326, os.map.PROJECTION);
+      return olProj.transformExtent(extent, osProj.EPSG4326, osMap.PROJECTION);
     }
 
     return undefined;

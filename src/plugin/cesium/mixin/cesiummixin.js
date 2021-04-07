@@ -9,6 +9,9 @@ import {load as loadRenderLoopMixin} from './renderloopmixin';
 
 const dispatcher = goog.require('os.Dispatcher');
 const MapEvent = goog.require('os.MapEvent');
+const {prune} = goog.require('os.object');
+const {getCrossOrigin} = goog.require('os.net');
+const CrossOrigin = goog.require('os.net.CrossOrigin');
 const Request = goog.require('os.net.Request');
 
 
@@ -69,8 +72,8 @@ export const load = function() {
   Cesium.Resource._Implementations.createImage = (options, crossOrigin, promise, flipY, preferImageBitmap) => {
     let url = options.url || '';
     if (crossOrigin) {
-      const osCrossOrigin = os.net.getCrossOrigin(url);
-      if (osCrossOrigin == os.net.CrossOrigin.USE_CREDENTIALS) {
+      const osCrossOrigin = getCrossOrigin(url);
+      if (osCrossOrigin == CrossOrigin.USE_CREDENTIALS) {
         url = new URL(url);
         Cesium.TrustedServers.add(url.hostname, getPort(url));
       }
@@ -175,7 +178,7 @@ export const load = function() {
    * Remove undefined values from the pick id array.
    */
   Cesium.Context.prototype.cleanupPickIds = function() {
-    this._pickObjects = os.object.prune(this._pickObjects);
+    this._pickObjects = prune(this._pickObjects);
   };
 
 

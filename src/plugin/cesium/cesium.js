@@ -1,23 +1,37 @@
 goog.module('plugin.cesium');
 
-const MapContainer = goog.require('os.MapContainer');
-const settings = goog.require('os.config.Settings');
 const Promise = goog.require('goog.Promise');
 const Uri = goog.require('goog.Uri');
 const TrustedResourceUrl = goog.require('goog.html.TrustedResourceUrl');
 const jsloader = goog.require('goog.net.jsloader');
+const GeometryType = goog.require('ol.geom.GeometryType');
 const olProj = goog.require('ol.proj');
 const Tile = goog.require('ol.source.Tile');
 const core = goog.require('olcs.core');
+
+const {ROOT} = goog.require('os');
+const MapContainer = goog.require('os.MapContainer');
 const AlertManager = goog.require('os.alert.AlertManager');
 const DisplaySetting = goog.require('os.config.DisplaySetting');
+const settings = goog.require('os.config.Settings');
+const osMap = goog.require('os.map');
+const {TerrainType} = goog.require('os.map.terrain');
 const net = goog.require('os.net');
 const proj = goog.require('os.proj');
 const utils = goog.require('os.query.utils');
 const osString = goog.require('os.string');
+const TimelineController = goog.require('os.time.TimelineController');
 const osWindow = goog.require('os.ui.window');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 const ImageryProvider = goog.require('plugin.cesium.ImageryProvider');
+
+const Deferred = goog.requireType('goog.async.Deferred');
+const Geometry = goog.requireType('ol.geom.Geometry');
+const GeometryCollection = goog.requireType('ol.geom.GeometryCollection');
+const LayerBase = goog.requireType('ol.layer.Base');
+const Layer = goog.requireType('ol.layer.Layer');
+const SimpleGeometry = goog.requireType('ol.geom.SimpleGeometry');
+const Projection = goog.requireType('ol.proj.Projection');
 
 
 /**
@@ -157,12 +171,12 @@ const isIonEnabled = function() {
 /**
  * Load the Cesium library.
  *
- * @return {!(Promise|goog.async.Deferred)} A promise that resolves when Cesium has been loaded.
+ * @return {!(Promise|Deferred)} A promise that resolves when Cesium has been loaded.
  */
 const loadCesium = function() {
   if (window.Cesium === undefined) {
     // tell Cesium where to find its resources
-    var cesiumPath = os.ROOT + LIBRARY_BASE_PATH;
+    var cesiumPath = ROOT + LIBRARY_BASE_PATH;
     window['CESIUM_BASE_URL'] = cesiumPath;
 
     // load Cesium
@@ -238,7 +252,7 @@ const getDefaultTerrainProvider = function() {
  * @return {!Cesium.SkyBoxOptions}
  */
 const getDefaultSkyBoxOptions = function() {
-  var baseUrl = os.ROOT + LIBRARY_BASE_PATH + '/Assets/Textures/SkyBox/';
+  var baseUrl = ROOT + LIBRARY_BASE_PATH + '/Assets/Textures/SkyBox/';
   return /** @type {!Cesium.SkyBoxOptions} */ ({
     sources: {
       positiveX: baseUrl + 'tycho2t3_80_px.jpg',
@@ -255,7 +269,7 @@ const getDefaultSkyBoxOptions = function() {
  * The Cesium Julian date object.
  * @type {Cesium.JulianDate|undefined}
  */
-let julianDate_ = undefined;
+let julianDate = undefined;
 
 /**
  * Gets the Julian date from the timeline current date.
@@ -263,10 +277,8 @@ let julianDate_ = undefined;
  * @return {Cesium.JulianDate} The Julian date of the application.
  */
 const getJulianDate = function() {
-  julianDate_ = Cesium.JulianDate.fromDate(new Date(
-      os.time.TimelineController.getInstance().getCurrent()
-  ), julianDate_);
-  return julianDate_;
+  julianDate = Cesium.JulianDate.fromDate(new Date(TimelineController.getInstance().getCurrent()), julianDate);
+  return julianDate;
 };
 
 /**
@@ -296,7 +308,7 @@ const generateCirclePositions = function(center, radius) {
   // Send back a list of positions as we expect them to be.
   var positions = [];
   while (flatpos.length > 0) {
-    var pos = goog.array.splice(flatpos, 0, 3);
+    var pos = flatpos.splice(0, 3);
     var cartPos = new Cesium.Cartesian3(pos[0], pos[1], pos[2]);
     positions.push(cartPos);
   }
@@ -329,8 +341,8 @@ const rectangleToExtent = function(rectangle) {
  * Creates Cesium.ImageryLayer best corresponding to the given ol.layer.Layer. Only supports raster layers.
  * This replaces {@link core.tileLayerToImageryLayer} to use our custom provider supporting tile load counts.
  *
- * @param {!ol.layer.Layer} olLayer
- * @param {?olProj.Projection} viewProj Projection of the view.
+ * @param {!Layer} olLayer
+ * @param {?Projection} viewProj Projection of the view.
  * @return {?Cesium.ImageryLayer} null if not possible (or supported)
  */
 const tileLayerToImageryLayer = function(olLayer, viewProj) {
@@ -373,7 +385,7 @@ const tileLayerToImageryLayer = function(olLayer, viewProj) {
 /**
  * Synchronizes the layer rendering properties (opacity, visible) to the given Cesium ImageryLayer.
  *
- * @param {!ol.layer.Base} olLayer
+ * @param {!LayerBase} olLayer
  * @param {!Cesium.ImageryLayer} csLayer
  */
 const updateCesiumLayerProperties = function(olLayer, csLayer) {
@@ -496,7 +508,7 @@ const isWorldTerrainActive = function() {
     const renderer = map.getWebGLRenderer();
     if (renderer) {
       const activeProvider = renderer.getActiveTerrainProvider();
-      return activeProvider != null && activeProvider.type === os.map.terrain.TerrainType.ION;
+      return activeProvider != null && activeProvider.type === TerrainType.ION;
     }
   }
 
@@ -512,7 +524,7 @@ const hasWorldTerrain = function() {
   const renderer = map.getWebGLRenderer();
   if (renderer) {
     const providers = renderer.getSupportedTerrainProviders();
-    return providers.some((p) => p.type === os.map.terrain.TerrainType.ION);
+    return providers.some((p) => p.type === TerrainType.ION);
   }
 
   return false;
@@ -526,7 +538,7 @@ const enableWorldTerrain = function() {
   const renderer = map.getWebGLRenderer();
   if (renderer) {
     const supported = renderer.getSupportedTerrainProviders();
-    const worldTerrain = supported.find((p) => p.type === os.map.terrain.TerrainType.ION);
+    const worldTerrain = supported.find((p) => p.type === TerrainType.ION);
     if (worldTerrain) {
       renderer.setActiveTerrainProvider(worldTerrain);
       settings.getInstance().set(DisplaySetting.ENABLE_TERRAIN, true);
@@ -551,7 +563,7 @@ let scratchCoord_ = [];
 
 /**
  * @param {Cesium.BoundingSphere} sphere
- * @param {?ol.geom.Geometry|undefined} geom
+ * @param {?Geometry|undefined} geom
  * @return {Cesium.BoundingSphere}
  */
 const reduceBoundingSphere = function(sphere, geom) {
@@ -570,11 +582,11 @@ const reduceBoundingSphere = function(sphere, geom) {
       return scratchSphere;
     }
 
-    if (type === ol.geom.GeometryType.GEOMETRY_COLLECTION) {
-      var geoms = /** @type {ol.geom.GeometryCollection} */ (geom).getGeometriesArray();
+    if (type === GeometryType.GEOMETRY_COLLECTION) {
+      var geoms = /** @type {GeometryCollection} */ (geom).getGeometriesArray();
       sphere = geoms.reduce(reduceBoundingSphere, sphere);
     } else {
-      geom = /** @type {ol.geom.SimpleGeometry} */ (geom);
+      geom = /** @type {SimpleGeometry} */ (geom);
       var flats = geom.getFlatCoordinates();
       var stride = geom.getStride();
       var scratchCartesian = scratchCartesian_ || new Cesium.Cartesian3();
@@ -585,8 +597,8 @@ const reduceBoundingSphere = function(sphere, geom) {
         scratchCoord[1] = flats[i + 1];
         scratchCoord[2] = stride > 2 ? flats[i + 2] || 0 : 0;
 
-        if (!olProj.equivalent(os.map.PROJECTION, olProj.get(proj.EPSG4326))) {
-          scratchCoord = olProj.toLonLat(scratchCoord, os.map.PROJECTION);
+        if (!olProj.equivalent(osMap.PROJECTION, olProj.get(proj.EPSG4326))) {
+          scratchCoord = olProj.toLonLat(scratchCoord, osMap.PROJECTION);
         }
 
         scratchCartesian = Cesium.Cartesian3.fromDegrees(

@@ -2,12 +2,19 @@ goog.module('plugin.cesium.sync.RootSynchronizer');
 
 const dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
+const MapEvent = goog.require('os.MapEvent');
 const asserts = goog.require('goog.asserts');
 const Image = goog.require('os.layer.Image');
 const Tile = goog.require('os.layer.Tile');
 const Vector = goog.require('os.layer.Vector');
 const VectorTile = goog.require('os.layer.VectorTile');
 const AbstractRootSynchronizer = goog.require('os.webgl.AbstractRootSynchronizer');
+
+const PluggableMap = goog.requireType('ol.PluggableMap');
+const OLLayer = goog.requireType('ol.layer.Layer');
+const ILayer = goog.requireType('os.layer.ILayer');
+const Group = goog.requireType('os.layer.Group');
+const AbstractWebGLSynchronizer = goog.requireType('os.webgl.AbstractWebGLSynchronizer');
 
 
 /**
@@ -16,7 +23,7 @@ const AbstractRootSynchronizer = goog.require('os.webgl.AbstractRootSynchronizer
 class RootSynchronizer extends AbstractRootSynchronizer {
   /**
    * Constructor.
-   * @param {!ol.PluggableMap} map The OpenLayers map.
+   * @param {!PluggableMap} map The OpenLayers map.
    * @param {!Cesium.Scene} scene The Cesium scene.
    */
   constructor(map, scene) {
@@ -28,9 +35,6 @@ class RootSynchronizer extends AbstractRootSynchronizer {
      * @private
      */
     this.scene_ = scene;
-
-    // Initialize ol-cesium library
-    olcs.core.glAliasedLineWidthRange = this.scene_.maximumAliasedLineWidth;
   }
 
   /**
@@ -49,8 +53,8 @@ class RootSynchronizer extends AbstractRootSynchronizer {
     asserts.assert(!!this.scene_);
     asserts.assert(!!layer);
 
-    return /** @type {!os.webgl.AbstractWebGLSynchronizer} */ (new
-    /** @type {function(new: Object, ol.layer.Layer, ol.PluggableMap, (Cesium.Scene|undefined))} */ (
+    return /** @type {!AbstractWebGLSynchronizer} */ (new
+    /** @type {function(new: Object, OLLayer, PluggableMap, (Cesium.Scene|undefined))} */ (
       constructor)(layer, this.map, this.scene_));
   }
 
@@ -81,14 +85,14 @@ class RootSynchronizer extends AbstractRootSynchronizer {
       }
 
       for (var i = 0, n = layers.length; i < n; i++) {
-        var layerId = /** @type {os.layer.ILayer} */ (layers[i]).getId();
+        var layerId = /** @type {ILayer} */ (layers[i]).getId();
         var synchronizer = this.synchronizers[layerId];
         if (synchronizer) {
           startIndex = synchronizer.reposition(startIndex, layerCount);
         }
       }
 
-      dispatcher.getInstance().dispatchEvent(os.MapEvent.GL_REPAINT);
+      dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }
 
@@ -96,7 +100,7 @@ class RootSynchronizer extends AbstractRootSynchronizer {
    * Gets the start index of the provided tile or image group by looking up the last index of the previous group,
    * or 0 if passed the first group on the map.
    *
-   * @param {!os.layer.Group} group The group to look up
+   * @param {!Group} group The group to look up
    * @return {number} The first index in the layers array
    * @private
    */
@@ -108,12 +112,12 @@ class RootSynchronizer extends AbstractRootSynchronizer {
     if (idx > 0) {
       // find the first group with layers and get its start index
       while (idx--) {
-        var previousLayers = /** @type {os.layer.Group} */ (groups[idx]).getLayers().getArray();
+        var previousLayers = /** @type {Group} */ (groups[idx]).getLayers().getArray();
         if (previousLayers.length > 0) {
           var layer = previousLayers[previousLayers.length - 1];
           if (layer instanceof Image || layer instanceof Tile ||
               layer instanceof VectorTile) {
-            var layerId = /** @type {os.layer.ILayer} */ (layer).getId();
+            var layerId = /** @type {ILayer} */ (layer).getId();
             var synchronizer = this.synchronizers[layerId];
             if (synchronizer) {
               startIndex = synchronizer.getLastIndex() + 1;
@@ -130,7 +134,7 @@ class RootSynchronizer extends AbstractRootSynchronizer {
   /**
    * Gets the start index of the provided vector group by counting the number of previous vector layers.
    *
-   * @param {!os.layer.Group} group The group to look up
+   * @param {!Group} group The group to look up
    * @return {number} The first index in the layers array
    * @private
    */
@@ -144,7 +148,7 @@ class RootSynchronizer extends AbstractRootSynchronizer {
         break;
       }
 
-      var previousLayers = /** @type {os.layer.Group} */ (groups[i]).getLayers().getArray();
+      var previousLayers = /** @type {Group} */ (groups[i]).getLayers().getArray();
       if (previousLayers.length > 0 && previousLayers[previousLayers.length - 1] instanceof Vector) {
         startIndex += previousLayers.length;
       }

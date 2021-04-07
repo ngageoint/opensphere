@@ -1,5 +1,6 @@
 goog.module('plugin.cesium.sync.VectorSynchronizer');
 
+const asserts = goog.require('goog.asserts');
 const EventType = goog.require('goog.events.EventType');
 const objectUtils = goog.require('goog.object');
 const events = goog.require('ol.events');
@@ -10,6 +11,7 @@ const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const SelectionType = goog.require('os.events.SelectionType');
 const LayerPropertyChange = goog.require('os.layer.PropertyChange');
+const VectorLayer = goog.require('os.layer.Vector');
 const SourcePropertyChange = goog.require('os.source.PropertyChange');
 const VectorSource = goog.require('os.source.Vector');
 const styleUtils = goog.require('os.style');
@@ -18,7 +20,11 @@ const {isPrimitiveShown, setPrimitiveShown} = goog.require('plugin.cesium.primit
 const CesiumSynchronizer = goog.require('plugin.cesium.sync.CesiumSynchronizer');
 const convert = goog.require('plugin.cesium.sync.convert');
 
+const GoogEvent = goog.requireType('goog.events.Event');
+const Feature = goog.requireType('ol.Feature');
+const OLObject = goog.requireType('ol.Object');
 const PluggableMap = goog.requireType('ol.PluggableMap');
+const View = goog.requireType('ol.View');
 const OLVectorSource = goog.requireType('ol.source.Vector');
 const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
 const Camera = goog.requireType('plugin.cesium.Camera');
@@ -110,8 +116,8 @@ class VectorSynchronizer extends CesiumSynchronizer {
    * @private
    */
   createLayerPrimitives_() {
-    goog.asserts.assertInstanceof(this.layer, OLVectorLayer);
-    goog.asserts.assert(this.view !== null);
+    asserts.assertInstanceof(this.layer, OLVectorLayer);
+    asserts.assert(this.view !== null);
 
     this.csContext = this.createVectorContext(this.layer, this.view);
     this.onLayerVisibility_();
@@ -139,8 +145,8 @@ class VectorSynchronizer extends CesiumSynchronizer {
   }
 
   /**
-   * @param {!ol.layer.Vector} layer
-   * @param {!ol.View} view
+   * @param {!OLVectorLayer} layer
+   * @param {!View} view
    * @return {!VectorContext}
    * @protected
    */
@@ -197,7 +203,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
 
 
   /**
-   * @param {ol.Object.Event=} opt_event
+   * @param {OLObject.Event=} opt_event
    * @private
    */
   onLayerVisibility_(opt_event) {
@@ -211,7 +217,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
   /**
    * Handle style changes to the layer, updating all features.
    *
-   * @param {goog.events.Event} event
+   * @param {GoogEvent} event
    * @private
    */
   onLayerOpacity_(event) {
@@ -228,11 +234,11 @@ class VectorSynchronizer extends CesiumSynchronizer {
    * @private
    */
   onLayerPropertyChange_(event) {
-    goog.asserts.assertInstanceof(this.layer, os.layer.Vector, 'not an os layer');
+    asserts.assertInstanceof(this.layer, VectorLayer, 'not an os layer');
 
     let p;
     try {
-      // openlayers' ol.ObjectEventType.PROPERTYCHANGE is the same as goog.events.EventType.PROPERTYCHANGE, so make sure
+      // openlayers' ObjectEventType.PROPERTYCHANGE is the same as goog.events.EventType.PROPERTYCHANGE, so make sure
       // the event is from us
       p = event.getProperty();
     } catch (e) {
@@ -240,7 +246,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
     }
 
     if (this.source && p && REFRESH_PROPERTIES[p]) {
-      const features = /** @type {Array<!ol.Feature>} */ (event.getNewValue() || this.source.getFeatures());
+      const features = /** @type {Array<!Feature>} */ (event.getNewValue() || this.source.getFeatures());
       this.refreshFeatures_(features);
     }
   }
@@ -249,12 +255,12 @@ class VectorSynchronizer extends CesiumSynchronizer {
   /**
    * Handle feature add event from the source.
    *
-   * @param {ol.source.Vector.Event} event
+   * @param {OLVectorSource.Event} event
    * @private
    */
   onAddFeature_(event) {
     const feature = event.feature;
-    goog.asserts.assert(feature != null);
+    asserts.assert(feature != null);
     this.addFeature(feature);
   }
 
@@ -262,12 +268,12 @@ class VectorSynchronizer extends CesiumSynchronizer {
   /**
    * Handle feature remove event from the source.
    *
-   * @param {ol.source.Vector.Event} event
+   * @param {OLVectorSource.Event} event
    * @private
    */
   onRemoveFeature_(event) {
     const feature = event.feature;
-    goog.asserts.assert(feature != null);
+    asserts.assert(feature != null);
     this.removeFeature(feature);
   }
 
@@ -275,12 +281,12 @@ class VectorSynchronizer extends CesiumSynchronizer {
   /**
    * Handle feature change event from the source.
    *
-   * @param {ol.source.Vector.Event} event
+   * @param {OLVectorSource.Event} event
    * @private
    */
   onChangeFeature_(event) {
     const feature = event.feature;
-    goog.asserts.assert(feature != null);
+    asserts.assert(feature != null);
     this.updateFeature_(feature);
   }
 
@@ -292,7 +298,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
    * @private
    */
   clearFeatures_(opt_event) {
-    goog.asserts.assert(this.csContext != null);
+    asserts.assert(this.csContext != null);
     objectUtils.forEach(this.csContext.featureToCesiumMap,
         /**
          * @param {Array<!Cesium.PrimitiveLike>|undefined} val
@@ -314,7 +320,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
   onSourcePropertyChange_(event) {
     let p;
     try {
-      // openlayers' ol.ObjectEventType.PROPERTYCHANGE is the same as goog.events.EventType.PROPERTYCHANGE, so make sure
+      // openlayers' ObjectEventType.PROPERTYCHANGE is the same as goog.events.EventType.PROPERTYCHANGE, so make sure
       // the event is from us
       p = event.getProperty();
     } catch (e) {
@@ -334,7 +340,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
         // primitive visibility below.
         if (!source.getTimeEnabled() || !source.getAnimationEnabled()) {
           // handle visibility toggled via the list tool or other means
-          const features = /** @type {Array<!ol.Feature>} */ (event.getNewValue());
+          const features = /** @type {Array<!Feature>} */ (event.getNewValue());
           if (features) {
             for (let i = 0, n = features.length; i < n; i++) {
               const feature = features[i];
@@ -346,10 +352,10 @@ class VectorSynchronizer extends CesiumSynchronizer {
           }
         }
         break;
-      case os.source.PropertyChange.ANIMATION_FRAME:
+      case SourcePropertyChange.ANIMATION_FRAME:
         // each frame fires a map of features that changed visibility
-        const toHide = /** @type {?Array<!ol.Feature>} */ (event.getOldValue());
-        const toShow = /** @type {?Array<!ol.Feature>} */ (event.getNewValue());
+        const toHide = /** @type {?Array<!Feature>} */ (event.getOldValue());
+        const toShow = /** @type {?Array<!Feature>} */ (event.getNewValue());
 
         if (toHide) {
           for (let i = 0, n = toHide.length; i < n; i++) {
@@ -376,7 +382,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
         break;
       case SourcePropertyChange.FEATURES:
         // handle new features added to the source
-        const added = /** @type {Array<!ol.Feature>} */ (event.getNewValue());
+        const added = /** @type {Array<!Feature>} */ (event.getNewValue());
         if (added) {
           for (let i = 0, n = added.length; i < n; i++) {
             this.addFeature(added[i]);
@@ -384,7 +390,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
         }
 
         // handle features removed from the source
-        const removed = /** @type {Array<!ol.Feature>} */ (event.getOldValue());
+        const removed = /** @type {Array<!Feature>} */ (event.getOldValue());
         if (removed) {
           for (let i = 0, n = removed.length; i < n; i++) {
             this.removeFeature(removed[i]);
@@ -394,12 +400,12 @@ class VectorSynchronizer extends CesiumSynchronizer {
         }
         break;
       case SourcePropertyChange.HIGHLIGHTED_ITEMS:
-        oldVal = /** @type {Array<!ol.Feature>} */ (event.getOldValue());
+        oldVal = /** @type {Array<!Feature>} */ (event.getOldValue());
         if (oldVal) {
           this.updateHighlightedItems_(oldVal, false);
         }
 
-        newVal = /** @type {Array<!ol.Feature>} */ (event.getNewValue());
+        newVal = /** @type {Array<!Feature>} */ (event.getNewValue());
         if (newVal) {
           this.updateHighlightedItems_(newVal, true);
         }
@@ -410,7 +416,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
         const shape = source.getGeometryShape();
         const isSelectedShape = shape.match(styleUtils.SELECTED_REGEXP);
 
-        let features = /** @type {Array<!ol.Feature>} */ (event.getNewValue());
+        let features = /** @type {Array<!Feature>} */ (event.getNewValue());
         if (isSelectedShape) {
           this.resetFeatures_(features);
         } else {
@@ -418,7 +424,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
         }
 
         if (p == SelectionType.CHANGED) {
-          features = /** @type {Array<!ol.Feature>} */ (event.getOldValue());
+          features = /** @type {Array<!Feature>} */ (event.getOldValue());
           if (isSelectedShape) {
             this.resetFeatures_(features);
           } else {
@@ -445,7 +451,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
   /**
    * Refreshes the Cesium primitive style for a set of features.
    *
-   * @param {!ol.Feature} feature The features to refresh
+   * @param {!Feature} feature The features to refresh
    * @private
    *
    * @suppress {accessControls} To allow checking if the feature exists on the source without a function call.
@@ -474,7 +480,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
   /**
    * Refreshes the Cesium primitive style for a set of features.
    *
-   * @param {Array<!ol.Feature>} features The features to refresh
+   * @param {Array<!Feature>} features The features to refresh
    * @private
    */
   refreshFeatures_(features) {
@@ -489,17 +495,17 @@ class VectorSynchronizer extends CesiumSynchronizer {
   /**
    * Removes and adds features so their Cesium objects are recreated.
    *
-   * @param {Array<ol.Feature>} features The features to reset
+   * @param {Array<Feature>} features The features to reset
    * @param {boolean=} opt_force If the reset should be forced
    * @private
    */
   resetFeatures_(features, opt_force) {
-    goog.asserts.assert(this.csContext !== null);
+    asserts.assert(this.csContext !== null);
 
     if (this.active || opt_force) {
       for (let i = 0, n = features.length; i < n; i++) {
         const feature = features[i];
-        goog.asserts.assert(feature !== null);
+        asserts.assert(feature !== null);
 
         const prims = this.csContext.featureToCesiumMap[feature.getUid()];
         const shown = prims && prims.length > 0 && isPrimitiveShown(prims[0]);
@@ -516,12 +522,12 @@ class VectorSynchronizer extends CesiumSynchronizer {
 
 
   /**
-   * @param {!ol.Feature} feature
+   * @param {!Feature} feature
    * @protected
    */
   addFeature(feature) {
-    goog.asserts.assert(this.view !== null);
-    goog.asserts.assert(this.csContext !== null);
+    asserts.assert(this.view !== null);
+    asserts.assert(this.csContext !== null);
 
     this.updateFeature_(feature);
 
@@ -542,7 +548,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
 
 
   /**
-   * @param {ol.Feature|number|string} feature Feature or feature id.
+   * @param {Feature|number|string} feature Feature or feature id.
    * @protected
    */
   removeFeature(feature) {
@@ -560,7 +566,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
   /**
    * Check if a feature is hidden on the source.
    *
-   * @param {!ol.Feature} feature The OpenLayers feature
+   * @param {!Feature} feature The OpenLayers feature
    * @return {boolean} If the feature is hidden on the source.
    * @protected
    */
@@ -585,7 +591,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
    * Performs initialization actions on a Cesium primitive.
    *
    * @param {!Cesium.PrimitiveLike} primitive The Cesium primitive
-   * @param {!ol.Feature} feature The OpenLayers feature
+   * @param {!Feature} feature The OpenLayers feature
    * @protected
    */
   initializePrimitive(primitive, feature) {
@@ -604,7 +610,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
   /**
    * Refreshes the Cesium primitive style for a set of features.
    *
-   * @param {Array<!ol.Feature>} features The features to refresh
+   * @param {Array<!Feature>} features The features to refresh
    * @private
    */
   initializePrimitives_(features) {
@@ -625,7 +631,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
 
 
   /**
-   * @param {Array<!ol.Feature>} features
+   * @param {Array<!Feature>} features
    * @param {boolean} value
    * @private
    */
@@ -663,7 +669,7 @@ class VectorSynchronizer extends CesiumSynchronizer {
 
 
   /**
-   * @param {!ol.Feature} feature The OpenLayers feature or feature id to update
+   * @param {!Feature} feature The OpenLayers feature or feature id to update
    * @param {boolean} shown If the feature is shown
    * @private
    */

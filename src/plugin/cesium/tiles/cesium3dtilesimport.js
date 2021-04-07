@@ -6,6 +6,8 @@ const AbstractFileImportCtrl = goog.require('os.ui.file.ui.AbstractFileImportCtr
 const Descriptor = goog.require('plugin.cesium.tiles.Descriptor');
 const Provider = goog.require('plugin.cesium.tiles.Provider');
 
+const FileParserConfig = goog.requireType('os.parse.FileParserConfig');
+
 
 /**
  * The 3D tiles import directive
@@ -61,7 +63,7 @@ class Controller extends AbstractFileImportCtrl {
     if (this.config['descriptor']) {
       // existing descriptor, update it
       descriptor = /** @type {!Descriptor} */ (this.config['descriptor']);
-      descriptor.updateFromConfig(/** @type {!os.parse.FileParserConfig} */ (this.config));
+      descriptor.updateFromConfig(/** @type {!FileParserConfig} */ (this.config));
     } else {
       // this is a new import
       descriptor = Descriptor.create(this.config);

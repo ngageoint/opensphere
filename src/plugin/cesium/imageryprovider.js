@@ -3,12 +3,14 @@ goog.module('plugin.cesium.ImageryProvider');
 goog.require('os.mixin.VectorImageTile');
 
 const ol = goog.require('ol');
+const TileState = goog.require('ol.TileState');
 const ImageTile = goog.require('ol.ImageTile');
 const VectorImageTile = goog.require('ol.VectorImageTile');
 const events = goog.require('ol.events');
 const VectorTile = goog.require('ol.source.VectorTile');
 const olTilegrid = goog.require('ol.tilegrid');
 const OLImageryProvider = goog.require('olcs.core.OLImageryProvider');
+const {getSourceProjection} = goog.require('olcs.util');
 const TileGridTilingScheme = goog.require('plugin.cesium.TileGridTilingScheme');
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 
@@ -66,7 +68,7 @@ class ImageryProvider extends OLImageryProvider {
    */
   handleSourceChanged_() {
     if (!this.ready_ && this.source_.getState() == 'ready') {
-      this.projection_ = olcs.util.getSourceProjection(this.source_) || this.fallbackProj_;
+      this.projection_ = getSourceProjection(this.source_) || this.fallbackProj_;
       this.credit_ = OLImageryProvider.createCreditForSource(this.source_) || null;
 
       if (this.source_ instanceof VectorTile) {
@@ -114,15 +116,15 @@ class ImageryProvider extends OLImageryProvider {
     var tile = this.source_.getTile(z_, x, y_, 1, this.projection_);
     var state = tile.getState();
 
-    if (state === ol.TileState.EMPTY) {
+    if (state === TileState.EMPTY) {
       deferred.resolve(this.emptyCanvas_);
-    } else if (state === ol.TileState.LOADED) {
+    } else if (state === TileState.LOADED) {
       if (tile instanceof ImageTile) {
         deferred.resolve(tile.getImage());
       } else if (tile instanceof VectorImageTile) {
         deferred.resolve(tile.getDrawnImage(this.layer_));
       }
-    } else if (state === ol.TileState.ERROR) {
+    } else if (state === TileState.ERROR) {
       deferred.resolve(this.emptyCanvas_);
     } else {
       tile.load();
@@ -130,17 +132,17 @@ class ImageryProvider extends OLImageryProvider {
       var layer = this.layer_;
       var unlisten = events.listen(tile, events.EventType.CHANGE, function() {
         var state = tile.getState();
-        if (state === ol.TileState.EMPTY) {
+        if (state === TileState.EMPTY) {
           deferred.resolve(this.emptyCanvas_);
           events.unlistenByKey(unlisten);
-        } else if (state === ol.TileState.LOADED) {
+        } else if (state === TileState.LOADED) {
           if (tile instanceof ImageTile) {
             deferred.resolve(tile.getImage());
           } else if (tile instanceof VectorImageTile) {
             deferred.resolve(tile.getDrawnImage(layer));
           }
           events.unlistenByKey(unlisten);
-        } else if (state === ol.TileState.ERROR) {
+        } else if (state === TileState.ERROR) {
           deferred.resolve(this.emptyCanvas_);
           events.unlistenByKey(unlisten);
         }

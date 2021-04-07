@@ -1,6 +1,6 @@
 goog.module('plugin.cesium.menu');
 
-const osUiMenuImport = goog.require('os.ui.menu.import');
+const importMenu = goog.require('os.ui.menu.import');
 const osWindow = goog.require('os.ui.window');
 const cesium = goog.require('plugin.cesium');
 const {directiveTag: importIonAssetTag} = goog.require('plugin.cesium.ImportIonAssetUI');
@@ -18,8 +18,8 @@ const EventType = {
  * Add Cesium items to the import menu.
  */
 const importSetup = function() {
-  if (osUiMenuImport.MENU && cesium.isIonEnabled()) {
-    var group = osUiMenuImport.MENU.getRoot().find(osUiMenuImport.GroupType.MAJOR);
+  if (importMenu.MENU && cesium.isIonEnabled()) {
+    var group = importMenu.MENU.getRoot().find(importMenu.GroupType.MAJOR);
     group.addChild({
       label: 'Add Cesium Ion Asset',
       eventType: EventType.ADD_ION_RESOURCE,

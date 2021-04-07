@@ -1,10 +1,15 @@
 goog.module('plugin.cesium.TileGridTilingScheme');
 
+const ol = goog.require('ol');
+const {toSize} = goog.require('ol.size');
 const geo = goog.require('os.geo');
 const asserts = goog.require('goog.asserts');
 const olProj = goog.require('ol.proj');
 const map = goog.require('os.map');
 const osProj = goog.require('os.proj');
+
+const TileImageSource = goog.requireType('ol.source.TileImage');
+const TileGrid = goog.requireType('ol.tilegrid.TileGrid');
 
 
 /**
@@ -13,15 +18,15 @@ const osProj = goog.require('os.proj');
 class TileGridTilingScheme {
   /**
    * Constructor.
-   * @param {!ol.source.TileImage} source The source.
-   * @param {ol.tilegrid.TileGrid=} opt_tileGrid The tile grid. If not provided, the source's tile grid will be used.
+   * @param {!TileImageSource} source The source.
+   * @param {TileGrid=} opt_tileGrid The tile grid. If not provided, the source's tile grid will be used.
    */
   constructor(source, opt_tileGrid) {
     var tg = opt_tileGrid || source.getTileGrid();
     asserts.assert(tg);
 
     /**
-     * @type {!ol.tilegrid.TileGrid}
+     * @type {!TileGrid}
      * @private
      */
     this.tilegrid_ = tg;
@@ -194,7 +199,7 @@ class TileGridTilingScheme {
 
     var origin = this.tilegrid_.getOrigin(level);
     var resolution = this.tilegrid_.getResolution(level);
-    var tileSize = ol.size.toSize(this.tilegrid_.getTileSize(level), this.tilegrid_.tmpSize_);
+    var tileSize = toSize(this.tilegrid_.getTileSize(level), this.tilegrid_.tmpSize_);
 
     var x = ((coord[0] - origin[0]) / resolution) / tileSize[0];
     var y = ((origin[1] - coord[1]) / resolution) / tileSize[1];

@@ -13,6 +13,8 @@ const CesiumSynchronizer = goog.require('plugin.cesium.sync.CesiumSynchronizer')
 const HeatmapPropertyType = goog.require('plugin.heatmap.HeatmapPropertyType');
 const HeatmapField = goog.require('plugin.heatmap.HeatmapField');
 
+const GoogEvent = goog.requireType('goog.events.Event');
+
 /**
  * Synchronizes a single OpenLayers image layer to Cesium.
  *
@@ -173,7 +175,7 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
   /**
    * Re-create the heatmap by forcing a call to OpenLayers.
    *
-   * @param {goog.events.Event=} opt_event
+   * @param {GoogEvent=} opt_event
    * @suppress {accessControls}
    */
   createHeatmap(opt_event) {

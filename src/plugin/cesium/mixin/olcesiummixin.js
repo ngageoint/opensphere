@@ -1,7 +1,9 @@
 goog.declareModuleId('plugin.cesium.mixin.olcs');
 
 const OLCesium = goog.require('olcs.OLCesium');
+const {supportsImageRenderingPixelated} = goog.require('olcs.util');
 const I3DSupport = goog.require('os.I3DSupport');
+const osImplements = goog.require('os.implements');
 
 const Interaction = goog.requireType('ol.interaction.Interaction');
 
@@ -57,7 +59,7 @@ export const load = () => {
 
       this.resizeTimeout = setTimeout(function() {
         var resolutionScale = this.resolutionScale_;
-        if (!olcs.util.supportsImageRenderingPixelated()) {
+        if (!supportsImageRenderingPixelated()) {
           resolutionScale *= window.devicePixelRatio || 1.0;
         }
         this.resolutionScaleChanged_ = false;
@@ -100,7 +102,7 @@ export const load = () => {
         var interactions = this.map_.getInteractions();
         interactions.forEach(function(el, i, arr) {
           var interaction = /** @type {Interaction} */ (el);
-          if (!os.implements(interaction, I3DSupport.ID) ||
+          if (!osImplements(interaction, I3DSupport.ID) ||
               !(/** @type {I3DSupport} */ (interaction)).is3DSupported()) {
             interaction.setActive(false);
           }
@@ -126,7 +128,7 @@ export const load = () => {
         interactions = this.map_.getInteractions();
         interactions.forEach(function(el, i, arr) {
           var interaction = /** @type {Interaction} */ (el);
-          if (!os.implements(interaction, I3DSupport.ID) ||
+          if (!osImplements(interaction, I3DSupport.ID) ||
                 !(/** @type {I3DSupport} */ (interaction)).is3DSupported()) {
             interaction.setActive(true);
           }

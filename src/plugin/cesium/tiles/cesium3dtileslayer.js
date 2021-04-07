@@ -2,11 +2,14 @@ goog.module('plugin.cesium.tiles.Layer');
 
 const log = goog.require('goog.log');
 const {transformExtent} = goog.require('ol.proj');
-const settings = goog.require('os.config.Settings');
 const dispatcher = goog.require('os.Dispatcher');
+const MapEvent = goog.require('os.MapEvent');
 const ActionEventType = goog.require('os.action.EventType');
+const settings = goog.require('os.config.Settings');
 const {PROJECTION} = goog.require('os.map');
 const {EPSG4326} = goog.require('os.proj');
+const osStyle = goog.require('os.style');
+
 const {
   CESIUM_ONLY_LAYER,
   promptForAccessToken,
@@ -182,7 +185,7 @@ class Layer extends PrimitiveLayer {
    * @return {Cesium.Color} The color.
    */
   getFeatureColor(feature, result) {
-    var cssColor = this.getColor() || os.style.DEFAULT_LAYER_COLOR;
+    var cssColor = this.getColor() || osStyle.DEFAULT_LAYER_COLOR;
     var cesiumColor = Cesium.Color.fromCssColorString(cssColor, result);
     cesiumColor.alpha = this.getOpacity();
 
@@ -198,7 +201,7 @@ class Layer extends PrimitiveLayer {
     var tileset = /** @type {Cesium.Cesium3DTileset} */ (this.getPrimitive());
     if (tileset) {
       tileset.makeStyleDirty();
-      dispatcher.getInstance().dispatchEvent(os.MapEvent.GL_REPAINT);
+      dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }
 
@@ -211,7 +214,7 @@ class Layer extends PrimitiveLayer {
     var tileset = /** @type {Cesium.Cesium3DTileset} */ (this.getPrimitive());
     if (tileset) {
       tileset.makeStyleDirty();
-      dispatcher.getInstance().dispatchEvent(os.MapEvent.GL_REPAINT);
+      dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }
 
@@ -285,13 +288,11 @@ class Layer extends PrimitiveLayer {
    * @inheritDoc
    */
   supportsAction(type, opt_actionArgs) {
-    if (os.action) {
-      switch (type) {
-        case ActionEventType.GOTO:
-          return this.getExtent() != null;
-        default:
-          break;
-      }
+    switch (type) {
+      case ActionEventType.GOTO:
+        return this.getExtent() != null;
+      default:
+        break;
     }
     return super.supportsAction(type, opt_actionArgs);
   }

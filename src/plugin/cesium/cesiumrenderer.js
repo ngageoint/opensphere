@@ -1,16 +1,28 @@
 goog.module('plugin.cesium.CesiumRenderer');
 
-const osFeature = goog.require('os.feature');
-const MapContainer = goog.require('os.MapContainer');
-const dispatcher = goog.require('os.Dispatcher');
-const settings = goog.require('os.config.Settings');
 const Promise = goog.require('goog.Promise');
+const classlist = goog.require('goog.dom.classlist');
 const log = goog.require('goog.log');
+const {clamp} = goog.require('goog.math');
+const userAgent = goog.require('goog.userAgent');
+const ViewHint = goog.require('ol.ViewHint');
 const OLCesium = goog.require('olcs.OLCesium');
+
 const MapEvent = goog.require('os.MapEvent');
 const terrain = goog.require('os.map.terrain');
+const MapContainer = goog.require('os.MapContainer');
+const dispatcher = goog.require('os.Dispatcher');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const DisplaySetting = goog.require('os.config.DisplaySetting');
+const settings = goog.require('os.config.Settings');
+const osFeature = goog.require('os.feature');
+const SynchronizerType = goog.require('os.layer.SynchronizerType');
+const {WEBGL_CANVAS_CLASS} = goog.require('os.map');
 const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');
+const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 const SynchronizerManager = goog.require('os.webgl.SynchronizerManager');
+const HeatmapSynchronizerType = goog.require('plugin.heatmap.SynchronizerType');
+
 const {
   DEFAULT_FOG_DENSITY,
   ID,
@@ -39,6 +51,8 @@ const RootSynchronizer = goog.require('plugin.cesium.sync.RootSynchronizer');
 const TileSynchronizer = goog.require('plugin.cesium.sync.TileSynchronizer');
 const VectorSynchronizer = goog.require('plugin.cesium.sync.VectorSynchronizer');
 
+const OLMap = goog.requireType('ol.Map');
+const AbstractSynchronizer = goog.requireType('olcs.AbstractSynchronizer');
 const {TerrainProviderFn} = goog.requireType('plugin.cesium');
 
 
@@ -137,19 +151,19 @@ class CesiumRenderer extends AbstractWebGLRenderer {
    */
   initialize() {
     if (!this.olCesium_ && this.map) {
-      const mapInstance = /** @type {!ol.Map} */ (this.map);
+      const mapInstance = /** @type {!OLMap} */ (this.map);
       return new Promise((resolve, reject) => {
         loadCesium().then(() => {
           try {
             // register the default set of synchronizers
             var sm = SynchronizerManager.getInstance();
-            sm.registerSynchronizer(os.layer.SynchronizerType.VECTOR, VectorSynchronizer);
-            sm.registerSynchronizer(os.layer.SynchronizerType.VECTOR_TILE, TileSynchronizer);
-            sm.registerSynchronizer(os.layer.SynchronizerType.TILE, TileSynchronizer);
-            sm.registerSynchronizer(os.layer.SynchronizerType.IMAGE, ImageSynchronizer);
-            sm.registerSynchronizer(os.layer.SynchronizerType.DRAW, VectorSynchronizer);
-            sm.registerSynchronizer(os.layer.SynchronizerType.IMAGE_STATIC, ImageStaticSynchronizer);
-            sm.registerSynchronizer(plugin.heatmap.SynchronizerType.HEATMAP, HeatmapSynchronizer);
+            sm.registerSynchronizer(SynchronizerType.VECTOR, VectorSynchronizer);
+            sm.registerSynchronizer(SynchronizerType.VECTOR_TILE, TileSynchronizer);
+            sm.registerSynchronizer(SynchronizerType.TILE, TileSynchronizer);
+            sm.registerSynchronizer(SynchronizerType.IMAGE, ImageSynchronizer);
+            sm.registerSynchronizer(SynchronizerType.DRAW, VectorSynchronizer);
+            sm.registerSynchronizer(SynchronizerType.IMAGE_STATIC, ImageStaticSynchronizer);
+            sm.registerSynchronizer(HeatmapSynchronizerType.HEATMAP, HeatmapSynchronizer);
 
             // set up menus
             menu.importSetup();
@@ -170,7 +184,7 @@ class CesiumRenderer extends AbstractWebGLRenderer {
               time: getJulianDate
             });
 
-            goog.dom.classlist.add(this.olCesium_.canvas_, os.map.WEBGL_CANVAS_CLASS);
+            classlist.add(this.olCesium_.canvas_, WEBGL_CANVAS_CLASS);
 
             this.olCesium_.setTargetFrameRate(this.targetFrameRate);
 
@@ -192,17 +206,17 @@ class CesiumRenderer extends AbstractWebGLRenderer {
             // necessary to render a quality terrain model.
             //
             // reduce the quality further in Firefox since it is not as fast
-            Cesium.TerrainProvider.heightmapTerrainQuality = goog.userAgent.GECKO ? 0.05 : 0.25;
+            Cesium.TerrainProvider.heightmapTerrainQuality = userAgent.GECKO ? 0.05 : 0.25;
             this.updateTerrainProvider();
 
             // configure WebGL features
-            this.showFog(!!settings.getInstance().get(os.config.DisplaySetting.FOG_ENABLED, true));
-            this.showSunlight(!!settings.getInstance().get(os.config.DisplaySetting.ENABLE_LIGHTING, false));
-            this.showSky(!!settings.getInstance().get(os.config.DisplaySetting.ENABLE_SKY, false));
+            this.showFog(!!settings.getInstance().get(DisplaySetting.FOG_ENABLED, true));
+            this.showSunlight(!!settings.getInstance().get(DisplaySetting.ENABLE_LIGHTING, false));
+            this.showSky(!!settings.getInstance().get(DisplaySetting.ENABLE_SKY, false));
 
             // legacy code saved density as the Cesium fog density value. now it is saved as a percentage from 0-1. if
             // the settings value is non-zero (no fog) and less than 5% (not allowed by our UI), reset it to the default.
-            var density = /** @type {number} */ (settings.getInstance().get(os.config.DisplaySetting.FOG_DENSITY,
+            var density = /** @type {number} */ (settings.getInstance().get(DisplaySetting.FOG_DENSITY,
                 DEFAULT_FOG_DENSITY));
             if (density != 0 && density < 0.05) {
               density = DEFAULT_FOG_DENSITY;
@@ -470,7 +484,7 @@ class CesiumRenderer extends AbstractWebGLRenderer {
     var scene = this.olCesium_ ? this.olCesium_.getCesiumScene() : undefined;
     if (scene) {
       // density value should be between 0 (no fog) and the maximum density allowed by the application
-      var newDensity = goog.math.clamp(value * MAX_FOG_DENSITY, 0, MAX_FOG_DENSITY);
+      var newDensity = clamp(value * MAX_FOG_DENSITY, 0, MAX_FOG_DENSITY);
       if (scene.fog.density != newDensity) {
         scene.fog.density = newDensity;
       }
@@ -539,7 +553,7 @@ class CesiumRenderer extends AbstractWebGLRenderer {
         log.error(this.log, errorMessage);
 
         this.terrainPromise_ = null;
-        settings.getInstance().set(os.config.DisplaySetting.ENABLE_TERRAIN, false);
+        settings.getInstance().set(DisplaySetting.ENABLE_TERRAIN, false);
       });
     } else {
       if (this.terrainPromise_) {
@@ -615,7 +629,7 @@ class CesiumRenderer extends AbstractWebGLRenderer {
     this.terrainProvider_ = undefined;
 
     // set the provider in Cesium
-    var showTerrain = !!settings.getInstance().get(os.config.DisplaySetting.ENABLE_TERRAIN, false);
+    var showTerrain = !!settings.getInstance().get(DisplaySetting.ENABLE_TERRAIN, false);
     this.showTerrain(showTerrain);
   }
 
@@ -644,9 +658,9 @@ class CesiumRenderer extends AbstractWebGLRenderer {
   /**
    * Create the layer synchronizers for OLCesium instance.
    *
-   * @param {!ol.Map} map
+   * @param {!OLMap} map
    * @param {!Cesium.Scene} scene
-   * @return {Array<olcs.AbstractSynchronizer>}
+   * @return {Array<AbstractSynchronizer>}
    * @private
    */
   createCesiumSynchronizers_(map, scene) {
@@ -670,7 +684,7 @@ class CesiumRenderer extends AbstractWebGLRenderer {
       if (this.map) {
         var view = this.map.getView();
         if (view) {
-          view.setHint(ol.ViewHint.INTERACTING, value ? 1 : -1);
+          view.setHint(ViewHint.INTERACTING, value ? 1 : -1);
         }
       }
 
@@ -696,9 +710,9 @@ class CesiumRenderer extends AbstractWebGLRenderer {
    */
   getAltitudeModes() {
     return [
-      os.webgl.AltitudeMode.CLAMP_TO_GROUND,
-      os.webgl.AltitudeMode.ABSOLUTE,
-      os.webgl.AltitudeMode.RELATIVE_TO_GROUND
+      AltitudeMode.CLAMP_TO_GROUND,
+      AltitudeMode.ABSOLUTE,
+      AltitudeMode.RELATIVE_TO_GROUND
     ];
   }
 
@@ -710,7 +724,7 @@ class CesiumRenderer extends AbstractWebGLRenderer {
 
     if (sphere) {
       var cmd = new FlyToSphere(sphere);
-      os.commandStack.addCommand(cmd);
+      CommandProcessor.getInstance().addCommand(cmd);
     }
   }
 }

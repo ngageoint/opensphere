@@ -4,11 +4,14 @@ goog.module.declareLegacyNamespace();
 const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const MapContainer = goog.require('os.MapContainer');
 const settings = goog.require('os.config.Settings');
+const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
+const osImplements = goog.require('os.implements');
 const Group = goog.require('os.layer.Group');
 const ILayer = goog.require('os.layer.ILayer');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const ImportManager = goog.require('os.ui.im.ImportManager');
+const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');
 const {
   ID,
   CESIUM_ONLY_LAYER,
@@ -48,7 +51,7 @@ class Plugin extends AbstractPlugin {
 
     // check if cesium is the active renderer
     var mapContainer = MapContainer.getInstance();
-    if (settings.getInstance().get(os.webgl.AbstractWebGLRenderer.ACTIVE_SETTINGS_KEY) == ID) {
+    if (settings.getInstance().get(AbstractWebGLRenderer.ACTIVE_SETTINGS_KEY) == ID) {
       this.registerCesiumTypes_();
       mapContainer.setWebGLRenderer(new CesiumRenderer());
     } else {
@@ -67,7 +70,7 @@ class Plugin extends AbstractPlugin {
     var lcm = LayerConfigManager.getInstance();
     lcm.registerLayerConfig(tiles.ID, LayerConfig);
 
-    var dm = os.dataManager;
+    var dm = DataManager.getInstance();
     dm.registerProviderType(new ProviderEntry(
         tiles.ID,
         Provider,
@@ -80,11 +83,8 @@ class Plugin extends AbstractPlugin {
     group.setPriority(3);
     group.setOSType(CESIUM_ONLY_LAYER);
     group.setCheckFunc(function(layer) {
-      if (os.implements(layer, ILayer.ID)) {
-        return (
-          /** @type {ILayer} */
-          (layer).getOSType() === CESIUM_ONLY_LAYER
-        );
+      if (osImplements(layer, ILayer.ID)) {
+        return /** @type {ILayer} */ (layer).getOSType() === CESIUM_ONLY_LAYER;
       }
       return false;
     });

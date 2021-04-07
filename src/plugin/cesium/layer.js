@@ -1,22 +1,29 @@
 goog.module('plugin.cesium.Layer');
 
-const dispatcher = goog.require('os.Dispatcher');
-const mapContainer = goog.require('os.MapContainer');
-const MapContainer = goog.require('os.MapContainer');
+const GoogEventType = goog.require('goog.events.EventType');
+
 const Delay = goog.require('goog.async.Delay');
 const log = goog.require('goog.log');
 const googString = goog.require('goog.string');
 const OLLayer = goog.require('ol.layer.Layer');
+
+const dispatcher = goog.require('os.Dispatcher');
 const IGroupable = goog.require('os.IGroupable');
+const MapChange = goog.require('os.MapChange');
+const MapContainer = goog.require('os.MapContainer');
+const ActionEventType = goog.require('os.action.EventType');
 const osColor = goog.require('os.color');
 const LayerEvent = goog.require('os.events.LayerEvent');
+const LayerEventType = goog.require('os.events.LayerEventType');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const osImplements = goog.require('os.implements');
 const IColorableLayer = goog.require('os.layer.IColorableLayer');
 const ILayer = goog.require('os.layer.ILayer');
 const PropertyChange = goog.require('os.layer.PropertyChange');
+const osStyle = goog.require('os.style');
 const {adjustIconSet, createIconSet} = goog.require('os.ui.icons');
 
+const LayerType = goog.requireType('ol.LayerType');
 const IActionTarget = goog.requireType('os.ui.action.IActionTarget');
 
 
@@ -136,7 +143,7 @@ class Layer extends OLLayer {
 
     // set the openlayers type to something that won't find a renderer, because there's
     // no way to render Cesium-specific items in OpenLayers anyway
-    this.type = /** @type {ol.LayerType} */ ('cesium');
+    this.type = /** @type {LayerType} */ ('cesium');
 
     /**
      * @type {string}
@@ -144,7 +151,7 @@ class Layer extends OLLayer {
      */
     this.error = '';
 
-    MapContainer.getInstance().listen(goog.events.EventType.PROPERTYCHANGE, this.onMapChange, false, this);
+    MapContainer.getInstance().listen(GoogEventType.PROPERTYCHANGE, this.onMapChange, false, this);
 
     // allow extending classes to finish initializing before trying to sync
     setTimeout(this.synchronize.bind(this), 0);
@@ -156,7 +163,7 @@ class Layer extends OLLayer {
   disposeInternal() {
     super.disposeInternal();
 
-    MapContainer.getInstance().unlisten(goog.events.EventType.PROPERTYCHANGE, this.onMapChange, false, this);
+    MapContainer.getInstance().unlisten(GoogEventType.PROPERTYCHANGE, this.onMapChange, false, this);
 
     if (this.loadingDelay_) {
       this.loadingDelay_.dispose();
@@ -171,7 +178,7 @@ class Layer extends OLLayer {
    * @protected
    */
   onMapChange(event) {
-    if (event && event.getProperty() === os.MapChange.VIEW3D) {
+    if (event && event.getProperty() === MapChange.VIEW3D) {
       this.synchronize();
     }
   }
@@ -206,7 +213,7 @@ class Layer extends OLLayer {
    * @protected
    */
   getErrorMessage() {
-    if (!window.Cesium || !mapContainer.getInstance().is3DEnabled()) {
+    if (!window.Cesium || !MapContainer.getInstance().is3DEnabled()) {
       return 'This layer is only visible in 3D mode';
     }
 
@@ -266,7 +273,7 @@ class Layer extends OLLayer {
       color = /** @type {string} */ (this.layerOptions_['color'] || this.layerOptions_['baseColor']);
     }
 
-    return color || os.style.DEFAULT_LAYER_COLOR;
+    return color || osStyle.DEFAULT_LAYER_COLOR;
   }
 
   /**
@@ -284,7 +291,7 @@ class Layer extends OLLayer {
 
       this.updateIcons_();
 
-      os.style.notifyStyleChange(this);
+      osStyle.notifyStyleChange(this);
     }
   }
 
@@ -525,7 +532,7 @@ class Layer extends OLLayer {
    * @return {!function(!OLLayer)}
    */
   getRefreshFunction() {
-    return goog.nullFunction;
+    return () => {};
   }
 
   /**
@@ -583,15 +590,13 @@ class Layer extends OLLayer {
    * @inheritDoc
    */
   callAction(type) {
-    if (os.action) {
-      switch (type) {
-        case os.action.EventType.REMOVE_LAYER:
-          var removeEvent = new LayerEvent(os.events.LayerEventType.REMOVE, this.getId());
-          dispatcher.getInstance().dispatchEvent(removeEvent);
-          break;
-        default:
-          break;
-      }
+    switch (type) {
+      case ActionEventType.REMOVE_LAYER:
+        var removeEvent = new LayerEvent(LayerEventType.REMOVE, this.getId());
+        dispatcher.getInstance().dispatchEvent(removeEvent);
+        break;
+      default:
+        break;
     }
   }
 
@@ -607,14 +612,13 @@ class Layer extends OLLayer {
    * @see {IActionTarget}
    */
   supportsAction(type, opt_actionArgs) {
-    if (os.action) {
-      switch (type) {
-        case os.action.EventType.REMOVE_LAYER:
-          return this.isRemovable();
-        default:
-          break;
-      }
+    switch (type) {
+      case ActionEventType.REMOVE_LAYER:
+        return this.isRemovable();
+      default:
+        break;
     }
+
     return false;
   }
 
@@ -706,8 +710,8 @@ class Layer extends OLLayer {
    * @protected
    */
   getScene() {
-    if (mapContainer.getInstance()) {
-      var renderer = mapContainer.getInstance().getWebGLRenderer();
+    if (MapContainer.getInstance()) {
+      var renderer = MapContainer.getInstance().getWebGLRenderer();
       if (renderer) {
         return /** @type {plugin.cesium.CesiumRenderer} */ (renderer).getCesiumScene();
       }

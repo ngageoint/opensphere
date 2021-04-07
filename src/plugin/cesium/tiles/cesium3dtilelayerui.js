@@ -3,10 +3,16 @@ goog.module('plugin.cesium.tiles.Cesium3DTileLayerUI');
 goog.require('os.ui.sliderDirective');
 
 const {ROOT} = goog.require('os');
+const {toHexString} = goog.require('os.color');
 const LayerColor = goog.require('os.command.LayerColor');
 const osImplements = goog.require('os.implements');
+const IColorableLayer = goog.require('os.layer.IColorableLayer');
 const Module = goog.require('os.ui.Module');
 const DefaultLayerUICtrl = goog.require('os.ui.layer.DefaultLayerUICtrl');
+
+const ICommand = goog.requireType('os.command.ICommand');
+const LayerNode = goog.requireType('os.data.LayerNode');
+const ILayer = goog.requireType('os.layer.ILayer');
 
 
 /**
@@ -74,15 +80,15 @@ class Controller extends DefaultLayerUICtrl {
    * @private
    */
   getColor_() {
-    var items = /** @type {Array<!os.data.LayerNode>} */ (this.scope['items']);
+    var items = /** @type {Array<!LayerNode>} */ (this.scope['items']);
 
     if (items) {
       for (var i = 0, n = items.length; i < n; i++) {
         try {
           var layer = items[i].getLayer();
-          if (osImplements(layer, os.layer.IColorableLayer.ID)) {
-            var color = /** @type {os.layer.IColorableLayer} */ (layer).getColor();
-            return color ? os.color.toHexString(color) : color;
+          if (osImplements(layer, IColorableLayer.ID)) {
+            var color = /** @type {IColorableLayer} */ (layer).getColor();
+            return color ? toHexString(color) : color;
           }
         } catch (e) {
         }
@@ -102,8 +108,8 @@ class Controller extends DefaultLayerUICtrl {
   onColorChange(event, value) {
     var fn =
         /**
-         * @param {os.layer.ILayer} layer
-         * @return {os.command.ICommand}
+         * @param {ILayer} layer
+         * @return {ICommand}
          */
         function(layer) {
           return new LayerColor(layer.getId(), value);

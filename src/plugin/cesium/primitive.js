@@ -1,6 +1,7 @@
 goog.declareModuleId('plugin.cesium.primitive');
 
 const Delay = goog.require('goog.async.Delay');
+const {clamp} = goog.require('goog.math');
 const {GeometryInstanceId} = goog.require('plugin.cesium');
 const {unsafeClone} = goog.require('os.object');
 const {getHeightReference, isPrimitiveClassTypeChanging} = goog.require('plugin.cesium.sync.HeightReference');
@@ -192,7 +193,7 @@ export const createGeometryInstance = (id, geometry, color, opt_modelMatrix) => 
  * @param {number} lineWidth
  */
 export const updateLineWidth = (options, lineWidth) => {
-  options.renderState.lineWidth = goog.math.clamp(lineWidth, Cesium.ContextLimits.minimumAliasedLineWidth,
+  options.renderState.lineWidth = clamp(lineWidth, Cesium.ContextLimits.minimumAliasedLineWidth,
       Cesium.ContextLimits.maximumAliasedLineWidth);
 };
 

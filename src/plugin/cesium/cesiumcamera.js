@@ -4,16 +4,19 @@
  */
 goog.module('plugin.cesium.Camera');
 
+const asserts = goog.require('goog.asserts');
 const Throttle = goog.require('goog.async.Throttle');
 const googMath = goog.require('goog.math');
-const proj = goog.require('ol.proj');
+const olProj = goog.require('ol.proj');
 const OLCSCamera = goog.require('olcs.Camera');
 const core = goog.require('olcs.core');
 const MapContainer = goog.require('os.MapContainer');
 const osMap = goog.require('os.map');
 const FlightMode = goog.require('os.map.FlightMode');
 const math = goog.require('os.math');
+const osProj = goog.require('os.proj');
 
+const OLMap = goog.requireType('ol.Map');
 const View = goog.requireType('ol.View');
 const IWebGLCamera = goog.requireType('os.webgl.IWebGLCamera');
 
@@ -156,7 +159,7 @@ class Camera extends OLCSCamera {
   /**
    * Constructor.
    * @param {!Cesium.Scene} scene
-   * @param {!ol.Map} map
+   * @param {!OLMap} map
    */
   constructor(scene, map) {
     super(scene, map);
@@ -550,7 +553,7 @@ class Camera extends OLCSCamera {
 
       var target;
       if (options.center) {
-        var center = proj.transform(options.center, osMap.PROJECTION, os.proj.EPSG4326);
+        var center = olProj.transform(options.center, osMap.PROJECTION, osProj.EPSG4326);
         target = new Cesium.Cartographic(Cesium.Math.toRadians(center[0]), Cesium.Math.toRadians(center[1]));
       } else {
         // clone the current position or Cesium won't animate the change
@@ -684,8 +687,8 @@ class Camera extends OLCSCamera {
     if (!center) {
       return;
     }
-    var ll = proj.transform(center, osMap.PROJECTION, os.proj.EPSG4326);
-    goog.asserts.assert(ll != null);
+    var ll = olProj.transform(center, osMap.PROJECTION, osProj.EPSG4326);
+    asserts.assert(ll != null);
 
     var carto = new Cesium.Cartographic(Cesium.Math.toRadians(ll[0]),
         Cesium.Math.toRadians(ll[1]));
@@ -726,8 +729,8 @@ class Camera extends OLCSCamera {
       return;
     }
 
-    var ll = proj.transform(center, osMap.PROJECTION, os.proj.EPSG4326);
-    goog.asserts.assert(ll != null);
+    var ll = olProj.transform(center, osMap.PROJECTION, osProj.EPSG4326);
+    asserts.assert(ll != null);
 
     // determine distance at equator so the projection doesn't cause a large difference between 2d/3d
     var resolution = view.getResolution() || 0;
@@ -768,9 +771,9 @@ class Camera extends OLCSCamera {
     var latitude = bestTargetCartographic ? bestTargetCartographic.latitude : 0;
 
 
-    view.setCenter(proj.transform([
+    view.setCenter(olProj.transform([
       Cesium.Math.toDegrees(longitude),
-      Cesium.Math.toDegrees(latitude)], os.proj.EPSG4326, osMap.PROJECTION));
+      Cesium.Math.toDegrees(latitude)], osProj.EPSG4326, osMap.PROJECTION));
 
     // determine distance at equator so the projection doesn't cause a large difference between 2d/3d
     var resolution = this.calcResolutionForDistance(this.distance_, 0);
@@ -891,7 +894,7 @@ class Camera extends OLCSCamera {
    * @inheritDoc
    */
   persist() {
-    goog.asserts.assert(!!this.cam_, 'camera not defined');
+    asserts.assert(!!this.cam_, 'camera not defined');
 
     var carto = this.cam_.positionCartographic;
     var latitude = math.roundWithPrecision(googMath.toDegrees(carto.latitude), 12) || 0;
@@ -925,7 +928,7 @@ class Camera extends OLCSCamera {
    * @inheritDoc
    */
   restore(cameraState) {
-    goog.asserts.assert(!!this.cam_, 'camera not defined');
+    asserts.assert(!!this.cam_, 'camera not defined');
 
     var carto = new Cesium.Cartographic(googMath.toRadians(cameraState.center[0]),
         googMath.toRadians(cameraState.center[1]), cameraState.altitude);

@@ -1,6 +1,7 @@
 goog.module('plugin.cesium.tiles.Provider');
 
 const BaseDescriptor = goog.require('os.data.BaseDescriptor');
+const DataManager = goog.require('os.data.DataManager');
 const FileProvider = goog.require('os.data.FileProvider');
 const tiles = goog.require('plugin.cesium.tiles');
 
@@ -26,7 +27,7 @@ class Provider extends FileProvider {
 
     var layers = config['layers'];
     if (layers) {
-      var dm = os.dataManager;
+      var dm = DataManager.getInstance();
       for (var key in layers) {
         var id = this.getId() + BaseDescriptor.ID_DELIMITER + key;
         var d = dm.getDescriptor(id);

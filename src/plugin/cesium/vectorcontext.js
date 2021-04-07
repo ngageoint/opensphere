@@ -10,6 +10,7 @@ const {isGroundPrimitive, isPrimitiveShown, setPrimitiveShown} = goog.require('p
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
 const OLVectorLayer = goog.requireType('ol.layer.Vector');
+const Projection = goog.requireType('ol.proj.Projection');
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 
 
@@ -28,8 +29,8 @@ const LOGGER = log.getLogger('plugin.cesium.VectorContext');
 class VectorContext {
   /**
    * @param {!Cesium.Scene} scene The Cesium scene
-   * @param {!ol.layer.Vector} layer The OL3 layer
-   * @param {!(ol.proj.Projection|string)} projection The map projection
+   * @param {!OLVectorLayer} layer The OL3 layer
+   * @param {!(Projection|string)} projection The map projection
    */
   constructor(scene, layer, projection) {
     /**
@@ -62,13 +63,13 @@ class VectorContext {
 
     /**
      * The OL3 vector layer
-     * @type {!ol.layer.Vector}
+     * @type {!OLVectorLayer}
      */
     this.layer = layer;
 
     /**
      * The map projection
-     * @type {!(ol.proj.Projection|string)}
+     * @type {!(Projection|string)}
      */
     this.projection = projection;
 

@@ -1,28 +1,41 @@
 goog.module('plugin.cesium.sync.ImageSynchronizer');
 
-const dispatcher = goog.require('os.Dispatcher');
-const geo = goog.require('os.geo');
-const mapContainer = goog.require('os.MapContainer');
 const googEventsEventType = goog.require('goog.events.EventType');
+const ImageState = goog.require('ol.ImageState');
+const OLObject = goog.require('ol.Object');
 const events = goog.require('ol.events');
+const olExtent = goog.require('ol.extent');
 const EventType = goog.require('ol.events.EventType');
+const olProj = goog.require('ol.proj');
+
+const dispatcher = goog.require('os.Dispatcher');
+const mapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
+const osExtent = goog.require('os.extent');
+const geo = goog.require('os.geo');
 const PropertyChange = goog.require('os.layer.PropertyChange');
+const osMap = goog.require('os.map');
+const osProj = goog.require('os.proj');
 const CesiumSynchronizer = goog.require('plugin.cesium.sync.CesiumSynchronizer');
 
-const Map = goog.requireType('os.Map');
+const ImageBase = goog.requireType('ol.ImageBase');
+const PluggableMap = goog.requireType('ol.PluggableMap');
+const ImageSource = goog.requireType('ol.source.Image');
+const OSMap = goog.requireType('os.Map');
+const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const ImageLayer = goog.requireType('os.layer.Image');
 
 
 /**
  * Synchronizes a single OpenLayers image layer to Cesium.
  *
- * @extends {CesiumSynchronizer.<os.layer.Image>}
+ * @extends {CesiumSynchronizer<ImageLayer>}
  */
 class ImageSynchronizer extends CesiumSynchronizer {
   /**
    * Constructor.
-   * @param {!os.layer.Image} layer The OpenLayers image layer.
-   * @param {!ol.PluggableMap} map The OpenLayers map.
+   * @param {!ImageLayer} layer The OpenLayers image layer.
+   * @param {!PluggableMap} map The OpenLayers map.
    * @param {!Cesium.Scene} scene The Cesium scene.
    */
   constructor(layer, map, scene) {
@@ -35,7 +48,7 @@ class ImageSynchronizer extends CesiumSynchronizer {
     this.activePrimitive_ = null;
 
     /**
-     * @type {ol.source.Image}
+     * @type {ImageSource}
      * @private
      */
     this.source_ = this.layer.getSource();
@@ -59,7 +72,7 @@ class ImageSynchronizer extends CesiumSynchronizer {
     this.nextId_ = 0;
 
     /**
-     * @type {ol.ImageBase|undefined}
+     * @type {ImageBase|undefined}
      * @private
      */
     this.image_;
@@ -125,15 +138,15 @@ class ImageSynchronizer extends CesiumSynchronizer {
         this.activePrimitive_.show = this.layer.getVisible();
       }
 
-      var map = /** @type {Map} */ (mapContainer.getInstance().getMap());
+      var map = /** @type {OSMap} */ (mapContainer.getInstance().getMap());
       var viewExtent = map.getExtent();
-      if (ol.extent.containsExtent(viewExtent, os.map.PROJECTION.getWorldExtent())) {
+      if (olExtent.containsExtent(viewExtent, osMap.PROJECTION.getWorldExtent())) {
         // never allow an extent larger than the world to be requested
         return;
       }
 
       // normalize the extent across the antimeridian
-      viewExtent = os.extent.normalize(viewExtent, -360, 0);
+      viewExtent = osExtent.normalize(viewExtent, -360, 0);
 
       if (!viewExtent) {
         this.removeImmediate_();
@@ -152,7 +165,7 @@ class ImageSynchronizer extends CesiumSynchronizer {
           this.firstLoopFixed_ = true;
         }
 
-        img = this.source_.getImage(viewExtent, resolution, window.devicePixelRatio, os.map.PROJECTION);
+        img = this.source_.getImage(viewExtent, resolution, window.devicePixelRatio, osMap.PROJECTION);
 
         if (img) {
           if (img !== this.image_) {
@@ -161,16 +174,16 @@ class ImageSynchronizer extends CesiumSynchronizer {
             }
 
             var imageState = img.getState();
-            if (imageState != ol.ImageState.LOADED && imageState != ol.ImageState.ERROR) {
+            if (imageState != ImageState.LOADED && imageState != ImageState.ERROR) {
               events.listen(img, EventType.CHANGE, this.onSyncChange, this);
             }
 
-            if (imageState == ol.ImageState.ERROR) {
+            if (imageState == ImageState.ERROR) {
               // don't do anything, leave the old image rendered
               return;
             }
 
-            if (imageState == ol.ImageState.IDLE) {
+            if (imageState == ImageState.IDLE) {
               img.load();
             }
 
@@ -194,7 +207,7 @@ class ImageSynchronizer extends CesiumSynchronizer {
 
       var changed = this.lastUrl_ !== url;
       this.lastUrl_ = url;
-      var extent = ol.proj.transformExtent(img.getExtent(), os.map.PROJECTION, os.proj.EPSG4326);
+      var extent = olProj.transformExtent(img.getExtent(), osMap.PROJECTION, osProj.EPSG4326);
       if (this.lastExtent_) {
         for (var i = 0, n = extent.length; i < n; i++) {
           if (Math.abs(extent[i] - this.lastExtent_[i]) > 1E-12) {
@@ -287,11 +300,11 @@ class ImageSynchronizer extends CesiumSynchronizer {
   /**
    * Handle visibility
    *
-   * @param {os.events.PropertyChangeEvent} event
+   * @param {PropertyChangeEvent} event
    * @protected
    */
   onLayerPropertyChange(event) {
-    if (event instanceof ol.Object.Event && event.key == PropertyChange.VISIBLE) {
+    if (event instanceof OLObject.Event && event.key == PropertyChange.VISIBLE) {
       this.syncInternal(true);
     }
   }
