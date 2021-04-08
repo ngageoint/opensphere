@@ -8,7 +8,9 @@
     "os.ui.filterManager": {"require": "os.query.FilterManager", "singleton": true},
     "os.layerConfigManager": {"require": "os.layer.config.LayerConfigManager", "singleton": true},
     "os.settings": {"require": "os.config.Settings", "singleton": true},
-    "os.map.mapContainer": {"require": "os.MapContainer", "singleton": true}
+    "os.map.mapContainer": {"require": "os.MapContainer", "singleton": true},
+    "os.queryManager": {"require": "os.query.QueryManager", "singleton": true},
+    "os.ui.queryManager": {"require": "os.query.QueryManager", "singleton": true}
   },
   "globalRootNamespaces": [
     "plugin",
