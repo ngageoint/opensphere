@@ -6,24 +6,33 @@ goog.require('os.data.RecordField');
 goog.require('os.mock');
 goog.require('os.source.Vector');
 goog.require('os.webgl');
+goog.require('os.webgl.AltitudeMode');
 goog.require('plugin.cesium.sync.HeightReference');
 
+
 describe('plugin.cesium.sync.HeightReference', () => {
+  const Feature = goog.module.get('ol.Feature');
+  const Point = goog.module.get('ol.geom.Point');
+  const OLVectorLayer = goog.module.get('ol.layer.Vector');
+  const OLVectorSource = goog.module.get('ol.source.Vector');
+  const RecordField = goog.module.get('os.data.RecordField');
+  const VectorSource = goog.module.get('os.source.Vector');
+  const AltitudeMode = goog.module.get('os.webgl.AltitudeMode');
   const {getHeightReference, isPrimitiveClassTypeChanging} = goog.module.get('plugin.cesium.sync.HeightReference');
   const primitiveUtils = goog.module.get('test.plugin.cesium.primitive');
 
   describe('getHeightReference', () => {
-    const altModeField = os.data.RecordField.ALTITUDE_MODE;
+    const altModeField = RecordField.ALTITUDE_MODE;
     let geometry;
     let feature;
     let source;
     let layer;
 
     beforeEach(() => {
-      geometry = new ol.geom.Point([0, 0]);
-      feature = new ol.Feature(geometry);
-      source = new os.source.Vector();
-      layer = new ol.layer.Vector();
+      geometry = new Point([0, 0]);
+      feature = new Feature(geometry);
+      source = new VectorSource();
+      layer = new OLVectorLayer();
 
       layer.setSource(source);
       source.addFeature(feature);
@@ -34,51 +43,51 @@ describe('plugin.cesium.sync.HeightReference', () => {
     });
 
     it('should prefer altitude mode from the geometry', () => {
-      geometry.set(altModeField, os.webgl.AltitudeMode.RELATIVE_TO_GROUND);
-      feature.set(altModeField, os.webgl.AltitudeMode.ABSOLUTE);
-      layer.set(altModeField, os.webgl.AltitudeMode.ABSOLUTE);
-      source.setAltitudeMode(os.webgl.AltitudeMode.ABSOLUTE);
+      geometry.set(altModeField, AltitudeMode.RELATIVE_TO_GROUND);
+      feature.set(altModeField, AltitudeMode.ABSOLUTE);
+      layer.set(altModeField, AltitudeMode.ABSOLUTE);
+      source.setAltitudeMode(AltitudeMode.ABSOLUTE);
 
       expect(getHeightReference(layer, feature, geometry)).toBe(Cesium.HeightReference.RELATIVE_TO_GROUND);
     });
 
     it('should prefer altitude mode from the feature if not on the geometry', () => {
-      feature.set(altModeField, os.webgl.AltitudeMode.CLAMP_TO_GROUND);
-      layer.set(altModeField, os.webgl.AltitudeMode.ABSOLUTE);
-      source.setAltitudeMode(os.webgl.AltitudeMode.ABSOLUTE);
+      feature.set(altModeField, AltitudeMode.CLAMP_TO_GROUND);
+      layer.set(altModeField, AltitudeMode.ABSOLUTE);
+      source.setAltitudeMode(AltitudeMode.ABSOLUTE);
       expect(getHeightReference(layer, feature, geometry)).toBe(Cesium.HeightReference.CLAMP_TO_GROUND);
     });
 
     it('should prefer altitude mode the layer if not on the feature', () => {
-      layer.set(altModeField, os.webgl.AltitudeMode.RELATIVE_TO_GROUND);
-      source.setAltitudeMode(os.webgl.AltitudeMode.ABSOLUTE);
+      layer.set(altModeField, AltitudeMode.RELATIVE_TO_GROUND);
+      source.setAltitudeMode(AltitudeMode.ABSOLUTE);
       expect(getHeightReference(layer, feature, geometry)).toBe(Cesium.HeightReference.RELATIVE_TO_GROUND);
     });
 
     it('should prefer altitude mode from the source if not on the layer', () => {
-      source.setAltitudeMode(os.webgl.AltitudeMode.CLAMP_TO_GROUND);
+      source.setAltitudeMode(AltitudeMode.CLAMP_TO_GROUND);
       expect(getHeightReference(layer, feature, geometry)).toBe(Cesium.HeightReference.CLAMP_TO_GROUND);
     });
 
     it('should not check altitude mode from non-opensphere source implementations', () => {
-      const otherSource = new ol.source.Vector();
-      const otherLayer = new ol.layer.Vector();
+      const otherSource = new OLVectorSource();
+      const otherLayer = new OLVectorLayer();
       otherLayer.setSource(otherSource);
       expect(getHeightReference(otherLayer, feature, geometry)).toBe(Cesium.HeightReference.NONE);
     });
 
     it('should default to the first index in an altitude mode array', () => {
-      geometry.set(altModeField, [os.webgl.AltitudeMode.CLAMP_TO_GROUND, os.webgl.AltitudeMode.RELATIVE_TO_GROUND]);
+      geometry.set(altModeField, [AltitudeMode.CLAMP_TO_GROUND, AltitudeMode.RELATIVE_TO_GROUND]);
       expect(getHeightReference(layer, feature, geometry)).toBe(Cesium.HeightReference.CLAMP_TO_GROUND);
     });
 
     it('should get the altitude mode at the given index', () => {
-      geometry.set(altModeField, [os.webgl.AltitudeMode.CLAMP_TO_GROUND, os.webgl.AltitudeMode.RELATIVE_TO_GROUND]);
+      geometry.set(altModeField, [AltitudeMode.CLAMP_TO_GROUND, AltitudeMode.RELATIVE_TO_GROUND]);
       expect(getHeightReference(layer, feature, geometry, 1)).toBe(Cesium.HeightReference.RELATIVE_TO_GROUND);
     });
 
     it('should default out of range indexes to absolute', () => {
-      geometry.set(altModeField, [os.webgl.AltitudeMode.CLAMP_TO_GROUND, os.webgl.AltitudeMode.RELATIVE_TO_GROUND]);
+      geometry.set(altModeField, [AltitudeMode.CLAMP_TO_GROUND, AltitudeMode.RELATIVE_TO_GROUND]);
       expect(getHeightReference(layer, feature, geometry, 2)).toBe(Cesium.HeightReference.NONE);
       expect(getHeightReference(layer, feature, geometry, -1)).toBe(Cesium.HeightReference.NONE);
     });

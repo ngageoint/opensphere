@@ -1,3 +1,5 @@
+goog.require('goog.dispose');
+goog.require('ol');
 goog.require('ol.Feature');
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.Point');
@@ -10,7 +12,11 @@ goog.require('plugin.cesium.primitive');
 goog.require('test.plugin.cesium.primitive');
 goog.require('test.plugin.cesium.scene');
 
+
 describe('plugin.cesium.VectorContext', () => {
+  const dispose = goog.module.get('goog.dispose');
+  const LineString = goog.module.get('ol.geom.LineString');
+  const ol = goog.module.get('ol');
   const Feature = goog.module.get('ol.Feature');
   const Point = goog.module.get('ol.geom.Point');
   const Polygon = goog.module.get('ol.geom.Polygon');
@@ -266,7 +272,7 @@ describe('plugin.cesium.VectorContext', () => {
 
     it('should not add a disposed feature', () => {
       const billboardOptions = primitiveUtils.createBillboard([0, 0, 0]);
-      goog.dispose(feature);
+      dispose(feature);
       context.addBillboard(billboardOptions, feature, geometry);
       expect(context.billboards.length).toBe(0);
       expect(context.geometryToCesiumMap[ol.getUid(geometry)]).toBe(undefined);
@@ -278,7 +284,7 @@ describe('plugin.cesium.VectorContext', () => {
     let geometry;
 
     beforeEach(() => {
-      geometry = new ol.geom.LineString([[0, 0], [5, 5]]);
+      geometry = new LineString([[0, 0], [5, 5]]);
       feature = new Feature(geometry);
     });
 
@@ -301,7 +307,7 @@ describe('plugin.cesium.VectorContext', () => {
 
     it('should not add a disposed feature', () => {
       const polylineOptions = primitiveUtils.createPolyline(geometry.getCoordinates());
-      goog.dispose(feature);
+      dispose(feature);
       context.addPolyline(polylineOptions, feature, geometry);
       expect(context.polylines.length).toBe(0);
       expect(context.geometryToCesiumMap[ol.getUid(geometry)]).toBe(undefined);
@@ -337,7 +343,7 @@ describe('plugin.cesium.VectorContext', () => {
 
     it('should not add a disposed feature', () => {
       const primitive = primitiveUtils.createPrimitive(geometry.getExtent());
-      goog.dispose(feature);
+      dispose(feature);
       context.addPrimitive(primitive, feature, geometry);
       expect(context.primitives.length).toBe(0);
       expect(context.geometryToCesiumMap[ol.getUid(geometry)]).toBe(undefined);
@@ -385,7 +391,7 @@ describe('plugin.cesium.VectorContext', () => {
 
     it('should not add a disposed feature', () => {
       const labelOptions = primitiveUtils.createLabelOptions();
-      goog.dispose(feature);
+      dispose(feature);
       context.addLabel(labelOptions, feature, geometry);
       expect(context.labels.length).toBe(0);
       expect(context.geometryToLabelMap[ol.getUid(geometry)]).toBe(undefined);

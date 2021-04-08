@@ -25,7 +25,9 @@ goog.require('plugin.cesium.sync.PolygonConverter');
 goog.require('plugin.cesium.sync.converter');
 goog.require('test.plugin.cesium.scene');
 
+
 describe('plugin.cesium.sync.converter', () => {
+  const Text = goog.module.get('ol.style.Text');
   const Feature = goog.module.get('ol.Feature');
   const GeometryType = goog.module.get('ol.geom.GeometryType');
   const Point = goog.module.get('ol.geom.Point');
@@ -132,7 +134,7 @@ describe('plugin.cesium.sync.converter', () => {
     });
 
     it('should return the label converter if the style contains a text style', () => {
-      style.setText(new ol.style.Text());
+      style.setText(new Text());
       runTests({
         [GeometryType.GEOMETRY_COLLECTION]: LabelConverter,
         [GeometryType.LINE_STRING]: LabelConverter,

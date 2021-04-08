@@ -10,6 +10,7 @@ goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.DynamicMultiPolygonConverter');
 goog.require('test.plugin.cesium.scene');
 
+
 describe('plugin.cesium.sync.DynamicMultiPolygonConverter', () => {
   const MultiPolygon = goog.module.get('ol.geom.MultiPolygon');
   const Stroke = goog.module.get('ol.style.Stroke');

@@ -14,6 +14,7 @@ goog.require('plugin.cesium.sync.DynamicLineStringConverter');
 goog.require('test.plugin.cesium.scene');
 goog.require('test.plugin.cesium.sync.dynamiclinestring');
 
+
 describe('plugin.cesium.sync.DynamicLineStringConverter', () => {
   const Feature = goog.module.get('ol.Feature');
   const LineString = goog.module.get('ol.geom.LineString');
@@ -165,4 +166,3 @@ describe('plugin.cesium.sync.DynamicLineStringConverter', () => {
     });
   });
 });
-

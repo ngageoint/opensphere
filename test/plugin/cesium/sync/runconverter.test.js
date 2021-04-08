@@ -10,7 +10,14 @@ goog.require('plugin.cesium.sync.runConverter');
 goog.require('test.plugin.cesium.primitive');
 goog.require('test.plugin.cesium.scene');
 
+
 describe('plugin.cesium.sync.runConverter', () => {
+  const Feature = goog.module.get('ol.Feature');
+  const Point = goog.module.get('ol.geom.Point');
+  const olProj = goog.module.get('ol.proj');
+  const Style = goog.module.get('ol.style.Style');
+  const VectorLayer = goog.module.get('os.layer.Vector');
+  const osProj = goog.module.get('os.proj');
   const {runConverter} = goog.module.get('plugin.cesium.sync.runConverter');
   const primitiveUtils = goog.module.get('test.plugin.cesium.primitive');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
@@ -24,12 +31,12 @@ describe('plugin.cesium.sync.runConverter', () => {
   let context;
 
   beforeEach(() => {
-    geometry = new ol.geom.Point([0, 0]);
-    feature = new ol.Feature(geometry);
-    style = new ol.style.Style();
-    layer = new os.layer.Vector();
+    geometry = new Point([0, 0]);
+    feature = new Feature(geometry);
+    style = new Style();
+    layer = new VectorLayer();
     scene = getFakeScene();
-    context = new VectorContext(scene, layer, ol.proj.get(os.proj.EPSG4326));
+    context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
   });
 
   it('should create the primitive if it does not exist', () => {

@@ -3,6 +3,7 @@ goog.module('test.plugin.cesium.sync.polygon');
 const {GeometryInstanceId} = goog.require('plugin.cesium');
 const {testColor} = goog.require('test.plugin.cesium.sync.style');
 
+
 const testPolygon = (polygon, options) => {
   options = options || {};
   options.primitiveClass = options.primitiveClass || Cesium.Primitive;

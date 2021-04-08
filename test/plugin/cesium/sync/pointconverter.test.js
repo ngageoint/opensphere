@@ -3,6 +3,7 @@ goog.require('ol.geom.Point');
 goog.require('ol.proj');
 goog.require('ol.style.Circle');
 goog.require('ol.style.Fill');
+goog.require('ol.style.Icon');
 goog.require('ol.style.Image');
 goog.require('ol.style.Style');
 goog.require('os.layer.Vector');
@@ -13,6 +14,16 @@ goog.require('plugin.cesium.sync.PointConverter');
 
 
 describe('plugin.cesium.sync.PointConverter', () => {
+  const Feature = goog.module.get('ol.Feature');
+  const Point = goog.module.get('ol.geom.Point');
+  const olProj = goog.module.get('ol.proj');
+  const Circle = goog.module.get('ol.style.Circle');
+  const Fill = goog.module.get('ol.style.Fill');
+  const Icon = goog.module.get('ol.style.Icon');
+  const Style = goog.module.get('ol.style.Style');
+  const VectorLayer = goog.module.get('os.layer.Vector');
+  const osMap = goog.module.get('os.map');
+  const osProj = goog.module.get('os.proj');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
   const VectorContext = goog.module.get('plugin.cesium.VectorContext');
   const PointConverter = goog.module.get('plugin.cesium.sync.PointConverter');
@@ -24,26 +35,26 @@ describe('plugin.cesium.sync.PointConverter', () => {
   let context;
 
   beforeEach(() => {
-    geometry = new ol.geom.Point([0, 0]);
-    feature = new ol.Feature(geometry);
-    style = new ol.style.Style();
-    layer = new os.layer.Vector();
+    geometry = new Point([0, 0]);
+    feature = new Feature(geometry);
+    style = new Style();
+    layer = new VectorLayer();
     scene = getFakeScene();
-    context = new VectorContext(scene, layer, ol.proj.get(os.proj.EPSG4326));
+    context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
   });
 
-  const originalProjection = os.map.PROJECTION;
+  const originalProjection = osMap.PROJECTION;
   afterEach(() => {
-    os.map.PROJECTION = originalProjection;
+    osMap.PROJECTION = originalProjection;
   });
 
   const blue = 'rgba(0,0,255,1)';
   const green = 'rgba(0,255,0,1)';
 
   setCircleStyle = (color) => {
-    style.setImage(new ol.style.Circle({
+    style.setImage(new Circle({
       radius: 3,
-      fill: new ol.style.Fill({
+      fill: new Fill({
         color: color
       })
     }));
@@ -81,7 +92,7 @@ describe('plugin.cesium.sync.PointConverter', () => {
   });
 
   it('should create a billboard for an icon style', () => {
-    style.setImage(new ol.style.Icon({
+    style.setImage(new Icon({
       anchor: [0.5, 1.0],
       crossOrigin: 'none',
       src: '/base/images/icons/pushpin/wht-pushpin.png',
@@ -117,7 +128,7 @@ describe('plugin.cesium.sync.PointConverter', () => {
   });
 
   it('should create a billboard for a colored icon style', () => {
-    style.setImage(new ol.style.Icon({
+    style.setImage(new Icon({
       anchor: [0.5, 1.0],
       crossOrigin: 'none',
       src: '/base/images/icons/pushpin/wht-pushpin.png',
@@ -155,9 +166,9 @@ describe('plugin.cesium.sync.PointConverter', () => {
 
   it('should create a billboard and transform other projection coordinates', () => {
     // pretend we swapped to EPSG:3857
-    os.map.PROJECTION = ol.proj.get(os.proj.EPSG3857);
+    osMap.PROJECTION = olProj.get(osProj.EPSG3857);
 
-    style.setImage(new ol.style.Icon({
+    style.setImage(new Icon({
       anchor: [0.5, 1.0],
       crossOrigin: 'none',
       src: '/base/images/icons/pushpin/wht-pushpin.png',
@@ -167,7 +178,7 @@ describe('plugin.cesium.sync.PointConverter', () => {
       rotation: 90
     }));
 
-    geometry.setCoordinates(ol.proj.transform([-105, 40], os.proj.EPSG4326, os.proj.EPSG3857));
+    geometry.setCoordinates(olProj.transform([-105, 40], osProj.EPSG4326, osProj.EPSG3857));
 
     const result = pointConverter.create(feature, geometry, style, context);
     expect(result).toBe(true);
@@ -207,13 +218,13 @@ describe('plugin.cesium.sync.PointConverter', () => {
   });
 
   it('should reuse image resources', () => {
-    style.setImage(new ol.style.Icon({
+    style.setImage(new Icon({
       src: '/base/images/icons/pushpin/wht-pushpin.png'
     }));
 
     const createBillboard = () => {
-      const geometry = new ol.geom.Point([0, 0]);
-      const feature = new ol.Feature(geometry);
+      const geometry = new Point([0, 0]);
+      const feature = new Feature(geometry);
       return pointConverter.create(feature, geometry, style, context);
     };
 
@@ -225,7 +236,7 @@ describe('plugin.cesium.sync.PointConverter', () => {
     expect(bb1._image).toBe(bb2._image);
     expect(bb1._imageId).toBe(bb2._imageId);
 
-    style.setImage(new ol.style.Icon({
+    style.setImage(new Icon({
       src: '/base/images/icons/pushpin/blue-pushpin.png'
     }));
 

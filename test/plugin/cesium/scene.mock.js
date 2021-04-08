@@ -3,6 +3,7 @@ goog.module('test.plugin.cesium.scene');
 const {getJulianDate} = goog.require('plugin.cesium');
 const {fixContextLimits} = goog.require('test.plugin.cesium');
 
+
 const getFakeScene = () => ({
   primitives: new Cesium.PrimitiveCollection(),
   groundPrimitives: new Cesium.PrimitiveCollection(),
