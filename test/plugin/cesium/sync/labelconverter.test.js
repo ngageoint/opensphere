@@ -3,6 +3,8 @@ goog.require('ol.extent');
 goog.require('ol.geom.Point');
 goog.require('ol.geom.Polygon');
 goog.require('ol.proj');
+goog.require('ol.style.Fill');
+goog.require('ol.style.Stroke');
 goog.require('ol.style.Style');
 goog.require('ol.style.Text');
 goog.require('os.layer.Vector');
@@ -16,6 +18,18 @@ goog.require('test.plugin.cesium.sync.style');
 
 
 describe('plugin.cesium.sync.LabelConverter', () => {
+  const Feature = goog.module.get('ol.Feature');
+  const olExtent = goog.module.get('ol.extent');
+  const Point = goog.module.get('ol.geom.Point');
+  const Polygon = goog.module.get('ol.geom.Polygon');
+  const olProj = goog.module.get('ol.proj');
+  const Fill = goog.module.get('ol.style.Fill');
+  const Stroke = goog.module.get('ol.style.Stroke');
+  const Style = goog.module.get('ol.style.Style');
+  const Text = goog.module.get('ol.style.Text');
+  const VectorLayer = goog.module.get('os.layer.Vector');
+  const osMap = goog.module.get('os.map');
+  const osProj = goog.module.get('os.proj');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
   const primitiveUtils = goog.module.get('test.plugin.cesium.primitive');
   const VectorContext = goog.module.get('plugin.cesium.VectorContext');
@@ -29,17 +43,17 @@ describe('plugin.cesium.sync.LabelConverter', () => {
   let context;
 
   beforeEach(() => {
-    geometry = new ol.geom.Point([0, 0]);
-    feature = new ol.Feature(geometry);
-    style = new ol.style.Style();
-    layer = new os.layer.Vector();
+    geometry = new Point([0, 0]);
+    feature = new Feature(geometry);
+    style = new Style();
+    layer = new VectorLayer();
     scene = getFakeScene();
-    context = new VectorContext(scene, layer, ol.proj.get(os.proj.EPSG4326));
+    context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
   });
 
-  const originalProjection = os.map.PROJECTION;
+  const originalProjection = osMap.PROJECTION;
   afterEach(() => {
-    os.map.PROJECTION = originalProjection;
+    osMap.PROJECTION = originalProjection;
   });
 
   const blue = 'rgba(0,0,255,1)';
@@ -65,7 +79,7 @@ describe('plugin.cesium.sync.LabelConverter', () => {
     });
 
     it('should process text styles', () => {
-      style.setText(new ol.style.Text({
+      style.setText(new Text({
         text: 'Test'
       }));
 
@@ -74,8 +88,8 @@ describe('plugin.cesium.sync.LabelConverter', () => {
     });
 
     it('should position itself at the extent center for polygons', () => {
-      geometry = ol.geom.Polygon.fromExtent([5, 5, 10, 10]);
-      style.setText(new ol.style.Text({
+      geometry = Polygon.fromExtent([5, 5, 10, 10]);
+      style.setText(new Text({
         text: 'Test'
       }));
 
@@ -83,7 +97,7 @@ describe('plugin.cesium.sync.LabelConverter', () => {
       expect(context.labels.length).toBe(1);
 
       const label = context.labels.get(0);
-      const center = ol.extent.getCenter(geometry.getExtent());
+      const center = olExtent.getCenter(geometry.getExtent());
       const expectedPosition = Cesium.Cartesian3.fromDegrees(center[0], center[1], 0);
 
       expect(label.position.x).toBeCloseTo(expectedPosition.x, 12);
@@ -93,13 +107,13 @@ describe('plugin.cesium.sync.LabelConverter', () => {
 
     it('should create a label and transform other projection coordinates', () => {
       // pretend we swapped to EPSG:3857
-      os.map.PROJECTION = ol.proj.get(os.proj.EPSG3857);
+      osMap.PROJECTION = olProj.get(osProj.EPSG3857);
 
-      style.setText(new ol.style.Text({
+      style.setText(new Text({
         text: 'Test'
       }));
 
-      geometry.setCoordinates(ol.proj.transform([-105, 40], os.proj.EPSG4326, os.proj.EPSG3857));
+      geometry.setCoordinates(olProj.transform([-105, 40], osProj.EPSG4326, osProj.EPSG3857));
       expect(labelConverter.create(feature, geometry, style, context)).toBe(true);
       expect(context.labels.length).toBe(1);
 
@@ -112,7 +126,7 @@ describe('plugin.cesium.sync.LabelConverter', () => {
     });
 
     it('should properly read styles with neither a stroke nor a fill', () => {
-      style.setText(new ol.style.Text({
+      style.setText(new Text({
         text: 'Test'
       }));
 
@@ -127,11 +141,11 @@ describe('plugin.cesium.sync.LabelConverter', () => {
     });
 
     it('should properly read styles with a fill but no stroke', () => {
-      style.setText(new ol.style.Text({
+      style.setText(new Text({
         text: 'Test'
       }));
 
-      style.getText().setFill(new ol.style.Fill({
+      style.getText().setFill(new Fill({
         color: green
       }));
 
@@ -145,12 +159,12 @@ describe('plugin.cesium.sync.LabelConverter', () => {
     });
 
     it('should properly read styles with a stroke but no fill', () => {
-      style.setText(new ol.style.Text({
+      style.setText(new Text({
         text: 'Test'
       }));
 
       style.getText().setFill(null);
-      style.getText().setStroke(new ol.style.Stroke({
+      style.getText().setStroke(new Stroke({
         color: blue,
         width: 2
       }));
@@ -166,15 +180,15 @@ describe('plugin.cesium.sync.LabelConverter', () => {
     });
 
     it('should properly read styles with both a stroke and a fill', () => {
-      style.setText(new ol.style.Text({
+      style.setText(new Text({
         text: 'Test'
       }));
 
-      style.getText().setFill(new ol.style.Fill({
+      style.getText().setFill(new Fill({
         color: green
       }));
 
-      style.getText().setStroke(new ol.style.Stroke({
+      style.getText().setStroke(new Stroke({
         color: blue,
         width: 2
       }));
@@ -191,7 +205,7 @@ describe('plugin.cesium.sync.LabelConverter', () => {
     });
 
     it('should properly read styles with a textAlign value', () => {
-      style.setText(new ol.style.Text({
+      style.setText(new Text({
         text: 'Test',
         textAlign: 'right'
       }));
@@ -204,7 +218,7 @@ describe('plugin.cesium.sync.LabelConverter', () => {
     });
 
     it('should fail when a bad textAlign value is found', () => {
-      style.setText(new ol.style.Text({
+      style.setText(new Text({
         text: 'Test',
         textAlign: 'bogus'
       }));
@@ -213,7 +227,7 @@ describe('plugin.cesium.sync.LabelConverter', () => {
     });
 
     it('should properly read styles with a textBaseline value', () => {
-      style.setText(new ol.style.Text({
+      style.setText(new Text({
         text: 'Test',
         textBaseline: 'bottom'
       }));
@@ -226,7 +240,7 @@ describe('plugin.cesium.sync.LabelConverter', () => {
     });
 
     it('should fail when a bad textBaseline value is found', () => {
-      style.setText(new ol.style.Text({
+      style.setText(new Text({
         text: 'Test',
         textBaseline: 'bogus'
       }));
@@ -239,7 +253,7 @@ describe('plugin.cesium.sync.LabelConverter', () => {
     it('should not operate on destroyed items', () => {
       context.addLabel(primitiveUtils.createLabelOptions('Test'), feature, geometry);
 
-      style.setText(new ol.style.Text({
+      style.setText(new Text({
         text: 'Test 1'
       }));
 
@@ -249,9 +263,9 @@ describe('plugin.cesium.sync.LabelConverter', () => {
     });
 
     it('should use the style\'s geometry when available', () => {
-      style.setGeometry(new ol.geom.Point([10, 15]));
+      style.setGeometry(new Point([10, 15]));
 
-      style.setText(new ol.style.Text({
+      style.setText(new Text({
         text: 'Test 1'
       }));
 
@@ -271,7 +285,7 @@ describe('plugin.cesium.sync.LabelConverter', () => {
     });
 
     it('should fall back on using the original geometry', () => {
-      style.setText(new ol.style.Text({
+      style.setText(new Text({
         text: 'Test 1'
       }));
 
@@ -291,7 +305,7 @@ describe('plugin.cesium.sync.LabelConverter', () => {
     });
 
     it('should update dirty items', () => {
-      style.setText(new ol.style.Text({
+      style.setText(new Text({
         text: 'Test'
       }));
 
@@ -311,7 +325,7 @@ describe('plugin.cesium.sync.LabelConverter', () => {
         show: false
       });
 
-      style.setText(new ol.style.Text({
+      style.setText(new Text({
         text: 'Test'
       }));
 

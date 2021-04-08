@@ -1,5 +1,6 @@
 goog.require('ol.Feature');
 goog.require('ol.proj');
+goog.require('ol.style.Style');
 goog.require('os.geom.Ellipse');
 goog.require('os.layer.Vector');
 goog.require('os.map');
@@ -13,6 +14,14 @@ goog.require('test.plugin.cesium.sync.linestring');
 
 
 describe('plugin.cesium.sync.EllipseConverter', () => {
+  const Feature = goog.module.get('ol.Feature');
+  const olProj = goog.module.get('ol.proj');
+  const Style = goog.module.get('ol.style.Style');
+  const Ellipse = goog.module.get('os.geom.Ellipse');
+  const VectorLayer = goog.module.get('os.layer.Vector');
+  const osProj = goog.module.get('os.proj');
+  const StyleField = goog.module.get('os.style.StyleField');
+  const StyleManager = goog.module.get('os.style.StyleManager');
   const {getRealScene} = goog.module.get('test.plugin.cesium.scene');
   const {getLineRetriever, testLine} = goog.module.get('test.plugin.cesium.sync.linestring');
   const VectorContext = goog.module.get('plugin.cesium.VectorContext');
@@ -29,12 +38,12 @@ describe('plugin.cesium.sync.EllipseConverter', () => {
 
   beforeEach(() => {
     enableWebGLMock();
-    geometry = new os.geom.Ellipse([-5, -5], 100000, 50000, 45);
-    feature = new ol.Feature(geometry);
-    style = new ol.style.Style();
-    layer = new os.layer.Vector();
+    geometry = new Ellipse([-5, -5], 100000, 50000, 45);
+    feature = new Feature(geometry);
+    style = new Style();
+    layer = new VectorLayer();
     scene = getRealScene();
-    context = new VectorContext(scene, layer, ol.proj.get(os.proj.EPSG4326));
+    context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
     getLine = getLineRetriever(context, scene);
   });
 
@@ -52,8 +61,8 @@ describe('plugin.cesium.sync.EllipseConverter', () => {
     });
 
     it('should not create a ground reference for ellipses without altitude', () => {
-      const config = os.style.StyleManager.getInstance().createLayerConfig(layer.getId());
-      config[os.style.StyleField.SHOW_GROUND_REF] = true;
+      const config = StyleManager.getInstance().createLayerConfig(layer.getId());
+      config[StyleField.SHOW_GROUND_REF] = true;
       const result = ellipseConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
       expect(context.primitives.length).toBe(1);
@@ -61,9 +70,9 @@ describe('plugin.cesium.sync.EllipseConverter', () => {
     });
 
     it('should create a ground reference for ellipses with altitude', () => {
-      geometry = new os.geom.Ellipse([-5, -5, 1000], 100000, 50000, 45);
-      const config = os.style.StyleManager.getInstance().createLayerConfig(layer.getId());
-      config[os.style.StyleField.SHOW_GROUND_REF] = true;
+      geometry = new Ellipse([-5, -5, 1000], 100000, 50000, 45);
+      const config = StyleManager.getInstance().createLayerConfig(layer.getId());
+      config[StyleField.SHOW_GROUND_REF] = true;
       const result = ellipseConverter.create(feature, geometry, style, context);
       expect(result).toBe(true);
       expect(context.primitives.length).toBe(1);
@@ -86,8 +95,8 @@ describe('plugin.cesium.sync.EllipseConverter', () => {
     });
 
     it('should not update a ground reference for ellipses without altitude', () => {
-      const config = os.style.StyleManager.getInstance().createLayerConfig(layer.getId());
-      config[os.style.StyleField.SHOW_GROUND_REF] = true;
+      const config = StyleManager.getInstance().createLayerConfig(layer.getId());
+      config[StyleField.SHOW_GROUND_REF] = true;
       ellipseConverter.create(feature, geometry, style, context);
 
       geometry.setCenter([0, 0]);
@@ -100,9 +109,9 @@ describe('plugin.cesium.sync.EllipseConverter', () => {
     });
 
     it('should create a ground reference for ellipses with altitude', () => {
-      geometry = new os.geom.Ellipse([-5, -5, 1000], 100000, 50000, 45);
-      const config = os.style.StyleManager.getInstance().createLayerConfig(layer.getId());
-      config[os.style.StyleField.SHOW_GROUND_REF] = true;
+      geometry = new Ellipse([-5, -5, 1000], 100000, 50000, 45);
+      const config = StyleManager.getInstance().createLayerConfig(layer.getId());
+      config[StyleField.SHOW_GROUND_REF] = true;
       ellipseConverter.create(feature, geometry, style, context);
 
       geometry.setCenter([0, 0, 1000]);

@@ -1,8 +1,11 @@
 goog.module('test.plugin.cesium.sync.linestring');
 
+const cesium = goog.require('plugin.cesium');
+
 const {GeometryInstanceId} = goog.require('plugin.cesium');
 const {testColor} = goog.require('test.plugin.cesium.sync.style');
 const {renderScene} = goog.require('test.plugin.cesium.scene');
+
 
 const testLine = (line, options) => {
   options = options || {};
@@ -25,7 +28,7 @@ const testLine = (line, options) => {
     const expectedColor = Cesium.Color.fromCssColorString(options.color);
 
     if (options.geometryClass === Cesium.PolylineGeometry || options.geometryClass === Cesium.GroundPolylineGeometry) {
-      expect(line.geometryInstances.id).toBe(plugin.cesium.GeometryInstanceId.GEOM_OUTLINE);
+      expect(line.geometryInstances.id).toBe(cesium.GeometryInstanceId.GEOM_OUTLINE);
       if (options.dashPattern) {
         expect(line.appearance.constructor).toBe(Cesium.PolylineMaterialAppearance);
         expect(line.appearance.material.type).toBe(Cesium.Material.PolylineDashType);

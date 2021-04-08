@@ -4,15 +4,37 @@
     "os.areaManager": {"require": "os.query.AreaManager", "singleton": true},
     "os.ui.areaManager": {"require": "os.query.AreaManager", "singleton": true},
     "os.dispatcher": {"require": "os.Dispatcher", "singleton": true},
-    "os.feature": {},
     "os.filterManager": {"require": "os.query.FilterManager", "singleton": true},
     "os.ui.filterManager": {"require": "os.query.FilterManager", "singleton": true},
-    "os.geo": {},
     "os.layerConfigManager": {"require": "os.layer.config.LayerConfigManager", "singleton": true},
-    "os.layer.config.LayerConfigManager": {},
-    "os.ui": {},
     "os.settings": {"require": "os.config.Settings", "singleton": true},
     "os.map.mapContainer": {"require": "os.MapContainer", "singleton": true},
-    "os.MapContainer": {}
+    "os.queryManager": {"require": "os.query.QueryManager", "singleton": true},
+    "os.ui.queryManager": {"require": "os.query.QueryManager", "singleton": true}
+  },
+  "globalRootNamespaces": [
+    "plugin",
+    "os",
+    "olcs",
+    "ol",
+    "goog"
+  ],
+  "moduleBlacklist": [
+    "goog",
+    "goog.module"
+  ],
+  "moduleVarNames": {
+    "ol.extent": "olExtent",
+    "ol.layer.Vector": "OLVectorLayer",
+    "ol.proj": "olProj",
+    "ol.source.Vector": "OLVectorSource",
+
+    "os.extent": "osExtent",
+    "os.feature": "osFeature",
+    "os.layer.Vector": "VectorLayer",
+    "os.map": "osMap",
+    "os.proj": "osProj",
+    "os.source.Vector": "VectorSource",
+    "os.ui.window": "osWindow"
   }
 }

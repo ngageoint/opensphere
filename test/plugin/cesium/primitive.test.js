@@ -1,4 +1,6 @@
 goog.require('goog.async.Delay');
+goog.require('goog.dispose');
+goog.require('ol');
 goog.require('ol.Feature');
 goog.require('ol.geom.Point');
 goog.require('ol.proj');
@@ -13,7 +15,10 @@ goog.require('plugin.cesium.primitive');
 goog.require('test.plugin.cesium.primitive');
 goog.require('test.plugin.cesium.scene');
 
+
 describe('plugin.cesium.primitive', () => {
+  const dispose = goog.module.get('goog.dispose');
+  const ol = goog.module.get('ol');
   const Delay = goog.module.get('goog.async.Delay');
 
   const Feature = goog.module.get('ol.Feature');
@@ -190,7 +195,7 @@ describe('plugin.cesium.primitive', () => {
 
     it('should stop retrying disposed primitives and mark them for removal', () => {
       primitive.ready = true;
-      goog.dispose(feature);
+      dispose(feature);
       expect(syncUtils.updatePrimitive(feature, geometry, style, context, primitive)).toBe(true);
       expect(primitive.dirty).toBe(true);
     });
