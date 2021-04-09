@@ -62,7 +62,7 @@ os.ogc.DEFAULT_TILE_STYLE = /** @type {!osx.ogc.TileStyle} */ ({
  * @type {!osx.ogc.ImageStyle}
  * @const
  */
-os.ogc.DEFAULT_IMAGE_STYLE = /** @type {!osx.ogc.TileStyle} */ ({
+os.ogc.DEFAULT_IMAGE_STYLE = /** @type {!osx.ogc.ImageStyle} */ ({
   label: 'Default',
   data: ''
 });

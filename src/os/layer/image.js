@@ -31,7 +31,6 @@ goog.require('os.ui.window');
 /**
  * @extends {ol.layer.Image}
  * @implements {os.layer.ILayer}
- * @implements {os.layer.IColorableLayer}
  * @implements {os.IGroupable}
  * @param {olx.layer.ImageOptions} options image layer options
  * @constructor
@@ -114,7 +113,6 @@ os.layer.Image = function(options) {
    * @type {string}
    * @private
    */
-  // this.layerUi_ = 'defaultlayerui';
   this.layerUi_ = os.ui.layer.ImageLayerUI.directiveTag;
 
   /**
@@ -446,32 +444,6 @@ os.layer.Image.prototype.getSVGSet = function() {
 
 
 /**
- * Get the default color for the image layer.
- *
- * @return {?string}
- */
-os.layer.Image.prototype.getDefaultColor = function() {
-  if (this.layerOptions_) {
-    return /** @type {string} */ (this.layerOptions_['baseColor']);
-  }
-
-  return null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.layer.Image.prototype.getColor = function() {
-  if (this.layerOptions_) {
-    return /** @type {string} */ (this.layerOptions_['color'] || this.layerOptions_['baseColor']);
-  }
-
-  return null;
-};
-
-
-/**
  * Get the brightness for the image layer.
  *
  * @return {number}
@@ -528,35 +500,6 @@ os.layer.Image.prototype.getSharpness = function() {
 
 
 /**
- * Get the whether the image layer is being colorized.
- *
- * @return {boolean}
- */
-os.layer.Image.prototype.getColorize = function() {
-  if (this.layerOptions_) {
-    return /** @type {boolean} */ (this.layerOptions_['colorize']) || false;
-  }
-
-  return false;
-};
-
-
-/**
- * Get the whether the image layer is being colorized.
- *
- * @param {boolean} value
- */
-os.layer.Image.prototype.setColorize = function(value) {
-  if (this.layerOptions_) {
-    this.layerOptions_['colorize'] = value;
-    this.updateColorFilter();
-
-    os.style.notifyStyleChange(this);
-  }
-};
-
-
-/**
  * Adjust the layer brightness.  A value of -1 will render the layer completely
  * black.  A value of 0 will leave the brightness unchanged.  A value of 1 will
  * render the layer completely white.  Other values are linear multipliers on
@@ -572,7 +515,6 @@ os.layer.Image.prototype.setBrightness = function(value, opt_options) {
   if (options) {
     options['brightness'] = value;
     this.updateColorFilter();
-    this.updateIcons_();
     os.style.notifyStyleChange(this);
   }
   os.layer.Image.base(this, 'setBrightness', value);
@@ -594,7 +536,6 @@ os.layer.Image.prototype.setContrast = function(value, opt_options) {
   if (options) {
     options['contrast'] = value;
     this.updateColorFilter();
-    this.updateIcons_();
     os.style.notifyStyleChange(this);
   }
   os.layer.Image.base(this, 'setContrast', value);
@@ -617,7 +558,6 @@ os.layer.Image.prototype.setSaturation = function(value, opt_options) {
   if (options) {
     options['saturation'] = value;
     this.updateColorFilter();
-    this.updateIcons_();
     os.style.notifyStyleChange(this);
   }
   os.layer.Image.base(this, 'setSaturation', value);
@@ -638,7 +578,6 @@ os.layer.Image.prototype.setSharpness = function(value, opt_options) {
   if (options) {
     options['sharpness'] = value;
     this.updateColorFilter();
-    this.updateIcons_();
     os.style.notifyStyleChange(this);
   }
   os.layer.Image.base(this, 'setSharpness', value);
@@ -654,26 +593,12 @@ os.layer.Image.prototype.setSharpness = function(value, opt_options) {
 os.layer.Image.prototype.updateColorFilter = function() {
   var source = this.getSource();
   if (source instanceof ol.source.Image) {
-    if (this.getColorize() || !os.color.equals(this.getColor(), this.getDefaultColor()) ||
-        this.getBrightness() != 0 || this.getContrast() != 1 || this.getSaturation() != 1 || this.getSharpness() != 0) {
+    if (this.getBrightness() != 0 || this.getContrast() != 1 || this.getSaturation() != 1 || this.getSharpness() != 0) {
       // put the colorFilter in place if we are colorized or the current color is different from the default
       source.addImageFilter(this.colorFilter_);
     } else {
       source.removeImageFilter(this.colorFilter_);
     }
-  }
-};
-
-
-/**
- * Update icons to use the current layer color.
- *
- * @private
- */
-os.layer.Image.prototype.updateIcons_ = function() {
-  var color = this.getColor();
-  if (color) {
-    os.ui.adjustIconSet(this.getId(), os.color.toHexString(color));
   }
 };
 
@@ -770,29 +695,16 @@ os.layer.Image.prototype.applyColors = function(data, width, height) {
     return;
   }
 
-  var srcColor = this.getDefaultColor() || '#fffffe';
-  var tgtColor = this.getColor() || '#fffffe';
   var brightness = this.getBrightness();
   var contrast = this.getContrast();
   var saturation = this.getSaturation();
   var sharpness = this.getSharpness();
-  var colorize = this.getColorize();
-  if (colorize || !os.color.equals(srcColor, tgtColor) ||
-      brightness != 0 || contrast != 1 || saturation != 1 || sharpness != 0) {
-    if (tgtColor) {
-      if (colorize) {
-        // colorize will set all of the colors to the target
-        os.color.colorize(data, tgtColor);
-      } else if (!os.color.equals(srcColor, tgtColor)) {
-        // transformColor blends between the src and target color, leaving densitization intact
-        os.color.transformColor(data, srcColor, tgtColor);
-      }
-      os.color.adjustColor(data, brightness, contrast, saturation);
+  if (brightness != 0 || contrast != 1 || saturation != 1 || sharpness != 0) {
+    os.color.adjustColor(data, brightness, contrast, saturation);
 
-      if (sharpness > 0) {
-        // sharpness is in the range [0, 1]. use a multiplier to enhance the convolution effect.
-        os.color.adjustSharpness(data, width, height, sharpness * 10);
-      }
+    if (sharpness > 0) {
+      // sharpness is in the range [0, 1]. use a multiplier to enhance the convolution effect.
+      os.color.adjustSharpness(data, width, height, sharpness * 10);
     }
   }
 };

@@ -128,7 +128,6 @@ os.layer.Tile = function(options) {
    * @type {!string}
    * @private
    */
-  // this.layerUi_ = 'defaultlayerui';
   this.layerUi_ = 'tilelayerui';
 
   /**
