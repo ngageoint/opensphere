@@ -141,7 +141,7 @@ os.layer.Image = function(options) {
   this.hidden_ = true;
 
   /**
-   * @type {function(Array<number>, number, number)}
+   * @type {function(Uint8ClampedArray, number, number)}
    * @private
    */
   this.colorFilter_ = this.applyColors.bind(this);
@@ -686,7 +686,7 @@ os.layer.Image.prototype.setStyle = function(value) {
  * Filter function that applies the layer color image data. This filter is always in the filter array, but it
  * only runs if the current color is different from the default or if the colorize option is active.
  *
- * @param {Array<number>} data The image data.
+ * @param {Uint8ClampedArray} data The image data.
  * @param {number} width The image width.
  * @param {number} height The image height.
  */
@@ -928,4 +928,14 @@ os.layer.Image.prototype.restore = function(config) {
 
   this.setMinResolution(config['minResolution'] || this.getMinResolution());
   this.setMaxResolution(config['maxResolution'] || this.getMaxResolution());
+};
+
+
+/**
+ * @param {string} data The style data
+ * @param {!osx.ogc.ImageStyle} style The style
+ * @return {boolean}
+ */
+os.layer.Image.findStyleByData = function(data, style) {
+  return style.data == data;
 };

@@ -24,16 +24,10 @@ os.implements(ol.source.Image, os.ol.source.ILoadingSource.ID);
  */
 ol.source.Image.prototype.imageFilters = null;
 
-/**
- * The filtered copy of the canvas.
- * @type {HTMLCanvasElement}
- * @private
- */
-this.filtered_ = null;
-
 
 /**
- * @inheritDoc
+ * Adds a tile filter function to the source.
+ * @param {function(Uint8ClampedArray, number, number)} fn
  */
 ol.source.Image.prototype.addImageFilter = function(fn) {
   if (!this.imageFilters) {
@@ -41,12 +35,12 @@ ol.source.Image.prototype.addImageFilter = function(fn) {
   }
 
   goog.array.insert(this.imageFilters, fn);
-  this.reset();
 };
 
 
 /**
- * @inheritDoc
+ * Removes a tile filter function from the source.
+ * @param {function(Uint8ClampedArray, number, number)} fn
  */
 ol.source.Image.prototype.removeImageFilter = function(fn) {
   if (!this.imageFilters) {
@@ -54,12 +48,12 @@ ol.source.Image.prototype.removeImageFilter = function(fn) {
   }
 
   ol.array.remove(this.imageFilters, fn);
-  this.reset();
 };
 
 
 /**
- * @inheritDoc
+ * Gets the set of tile filters.
+ * @return {Array<function(Uint8ClampedArray, number, number)>}
  */
 ol.source.Image.prototype.getImageFilters = function() {
   if (!this.imageFilters) {
@@ -98,14 +92,6 @@ ol.source.Image.prototype.getImage = function(extent, resolution, pixelRatio, pr
   const image = this.originalGetImage(extent, resolution, pixelRatio, projection);
   image.olSource = this;
   return image;
-};
-
-
-/**
- * Resets the cached image. Allows the filters to be reapplied on the next render call.
- */
-ol.source.Image.prototype.reset = function() {
-  this.filtered_ = null;
 };
 
 

@@ -16,12 +16,7 @@ ol.Image.prototype.getImage = function() {
     // make sure getImageFilters exists on the source
     var filterFns = this.olSource.getImageFilters ? this.olSource.getImageFilters() : [];
     if (filterFns.length > 0) {
-      if (!this.filtered_) {
-        // create a cached copy of the filtered image
-        this.filtered_ = os.tile.filterImage(this.image_, filterFns);
-      }
-
-      return this.filtered_;
+      return os.tile.filterImage(/** @type {HTMLCanvasElement|Image} */ (this.image_), filterFns);
     }
   }
   return this.image_;
