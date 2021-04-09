@@ -117,12 +117,6 @@ os.im.FeatureImporter.prototype.addItemInternal = function(item) {
 
 
 /**
- * @type {?angular.$sanitize}
- */
-os.im.FeatureImporter.sanitize = null;
-
-
-/**
  * @type {RegExp}
  * @const
  * @private
@@ -136,25 +130,23 @@ os.im.FeatureImporter.NEEDS_SANITIZE_ = /[<>]/;
  * @suppress {accessControls}
  */
 os.im.FeatureImporter.prototype.sanitize = function(item) {
-  if (os.im.FeatureImporter.sanitize) {
-    var props = item.values_;
+  var props = item.values_;
 
-    for (var key in props) {
-      var value = props[key];
+  for (var key in props) {
+    var value = props[key];
 
-      if (typeof value === 'string' && os.im.FeatureImporter.NEEDS_SANITIZE_.test(value)) {
-        // save the HTML description to its own property to control where it gets displayed
-        if (this.trustHTML && !props[os.data.RecordField.HTML_DESCRIPTION] && os.fields.DESC_REGEXP.test(key)) {
-          props[os.data.RecordField.HTML_DESCRIPTION] = value;
-        }
+    if (typeof value === 'string' && os.im.FeatureImporter.NEEDS_SANITIZE_.test(value)) {
+      // save the HTML description to its own property to control where it gets displayed
+      if (this.trustHTML && !props[os.data.RecordField.HTML_DESCRIPTION] && os.fields.DESC_REGEXP.test(key)) {
+        props[os.data.RecordField.HTML_DESCRIPTION] = value;
+      }
 
-        try {
-          props[key] = os.im.FeatureImporter.sanitize(value).trim();
-        } catch (e) {
-          var msg = 'Could not sanitize value';
-          goog.log.error(os.im.FeatureImporter.LOGGER_, msg);
-          props[key] = 'Error: ' + msg;
-        }
+      try {
+        props[key] = os.ui.sanitize(value).trim();
+      } catch (e) {
+        var msg = 'Could not sanitize value';
+        goog.log.error(os.im.FeatureImporter.LOGGER_, msg);
+        props[key] = 'Error: ' + msg;
       }
     }
   }
