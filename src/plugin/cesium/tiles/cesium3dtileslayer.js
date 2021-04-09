@@ -6,6 +6,8 @@ const dispatcher = goog.require('os.Dispatcher');
 const MapEvent = goog.require('os.MapEvent');
 const ActionEventType = goog.require('os.action.EventType');
 const settings = goog.require('os.config.Settings');
+const LayerEvent = goog.require('os.events.LayerEvent');
+const LayerEventType = goog.require('os.events.LayerEventType');
 const {PROJECTION} = goog.require('os.map');
 const {EPSG4326} = goog.require('os.proj');
 const osStyle = goog.require('os.style');
@@ -112,10 +114,13 @@ class Layer extends PrimitiveLayer {
       if (!isNaN(this.assetId)) {
         if (!this.accessToken) {
           promptForAccessToken().then((accessToken) => {
+            // Access token provided, synchronize again to test it.
             this.accessToken = accessToken;
             this.synchronize();
           }, () => {
-            this.setTokenError_('An access token is required to enable this layer, but one was not provided.');
+            // Remove the layer if the access token prompt was canceled.
+            const removeEvent = new LayerEvent(LayerEventType.REMOVE, this.getId());
+            dispatcher.getInstance().dispatchEvent(removeEvent);
           });
         } else {
           tilesetUrl = createIonAssetUrl(this.assetId, this.accessToken);
