@@ -96,74 +96,16 @@ ol.source.Image.prototype.originalGetImage = ol.source.Image.prototype.getImage;
  */
 ol.source.Image.prototype.getImage = function(extent, resolution, pixelRatio, projection) {
   const image = this.originalGetImage(extent, resolution, pixelRatio, projection);
-  if (image && image.width && image.height) {
-    var filterFns = this.getImageFilters();
-    if (filterFns.length > 0) {
-      if (!this.filtered_) {
-        // create a cached copy of the filtered image
-        this.filtered_ = this.filterImage(image, filterFns);
-      }
-
-      return this.filtered_;
-    }
-  }
+  image.olSource = this;
   return image;
 };
-
-
-// /**
-//  * Get the image element for this source.
-//  *
-//  * @inheritDoc
-//  * @suppress {accessControls}
-//  */
-// ol.source.Image.prototype.getFilteredImage = function() {
-//   var image = this.getImage();
-//   if (image && image.width && image.height) {
-//     var filterFns = this.getImageFilters();
-//     if (filterFns.length > 0) {
-//       if (!this.filtered_) {
-//         // create a cached copy of the filtered image
-//         this.filtered_ = this.filterImage(image, filterFns);
-//       }
-
-//       return this.filtered_;
-//     }
-//   }
-
-//   return image;
-// };
 
 
 /**
  * Resets the cached image. Allows the filters to be reapplied on the next render call.
  */
 ol.source.Image.prototype.reset = function() {
-  // this.filtered_ = null;
-};
-
-
-/**
- * Applies a set of filter functions to an image and returns a new, filtered copy.
- *
- * @param {HTMLCanvasElement|Image} image The image to filter
- * @param {Array<Function>} filterFns The filter functions to apply
- * @return {HTMLCanvasElement} A new, filtered copy of the image canvas
- */
-ol.source.Image.prototype.filterImage = function(image, filterFns) {
-  var context = ol.dom.createCanvasContext2D(image.width, image.height);
-  context.drawImage(image, 0, 0);
-
-  var canvas = context.canvas;
-  var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-  var data = imageData.data;
-
-  // apply each filter function to the image data
-  filterFns.forEach(function(fn) {
-    fn(data, canvas.width, canvas.height);
-  });
-  context.putImageData(imageData, 0, 0);
-  return canvas;
+  this.filtered_ = null;
 };
 
 
