@@ -18,7 +18,7 @@ class Controller extends os.ui.menu.MenuButtonCtrl {
   constructor($scope, $element) {
     super($scope, $element);
 
-    this.menu = os.ui.menu.UNIT;
+    this.menu = os.ui.menu.unit.MENU;
     this.btnPosition = 'right top';
     this.menuPosition = 'right bottom-4';
   }
