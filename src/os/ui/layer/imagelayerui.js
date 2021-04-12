@@ -2,7 +2,6 @@ goog.module('os.ui.layer.ImageLayerUI');
 goog.module.declareLegacyNamespace();
 
 const Module = goog.require('os.ui.Module');
-const layer = goog.require('os.ui.layer');
 const DefaultLayerUICtrl = goog.require('os.ui.layer.DefaultLayerUICtrl');
 const {ROOT} = goog.require('os');
 
@@ -52,11 +51,6 @@ class Controller extends DefaultLayerUICtrl {
   constructor($scope, $element, $timeout) {
     super($scope, $element, $timeout);
     this.initUI();
-
-    if (this.scope) {
-      this.scope['styles'] = this.getValue(layer.getStyles);
-      this.scope['style'] = this.getValue(layer.getStyle);
-    }
   }
 }
 

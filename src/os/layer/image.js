@@ -97,19 +97,6 @@ os.layer.Image = function(options) {
   this.layerOptions_ = null;
 
   /**
-   * The current layer style.
-   * @type {?osx.ogc.ImageStyle}
-   * @private
-   */
-  this.style_ = null;
-
-  /**
-   * @type {?Array<!osx.ogc.ImageStyle>}
-   * @private
-   */
-  this.styles_ = null;
-
-  /**
    * @type {string}
    * @private
    */
@@ -172,8 +159,6 @@ os.layer.Image.prototype.disposeInternal = function() {
   if (source) {
     source.dispose();
   }
-
-  os.style.StyleManager.getInstance().removeLayerConfig(this.getId());
 };
 
 
@@ -515,7 +500,6 @@ os.layer.Image.prototype.setBrightness = function(value, opt_options) {
   if (options) {
     options['brightness'] = value;
     this.updateColorFilter();
-    os.style.notifyStyleChange(this);
   }
   os.layer.Image.base(this, 'setBrightness', value);
 };
@@ -536,7 +520,6 @@ os.layer.Image.prototype.setContrast = function(value, opt_options) {
   if (options) {
     options['contrast'] = value;
     this.updateColorFilter();
-    os.style.notifyStyleChange(this);
   }
   os.layer.Image.base(this, 'setContrast', value);
 };
@@ -558,7 +541,6 @@ os.layer.Image.prototype.setSaturation = function(value, opt_options) {
   if (options) {
     options['saturation'] = value;
     this.updateColorFilter();
-    os.style.notifyStyleChange(this);
   }
   os.layer.Image.base(this, 'setSaturation', value);
 };
@@ -578,7 +560,6 @@ os.layer.Image.prototype.setSharpness = function(value, opt_options) {
   if (options) {
     options['sharpness'] = value;
     this.updateColorFilter();
-    os.style.notifyStyleChange(this);
   }
   os.layer.Image.base(this, 'setSharpness', value);
 };
@@ -599,85 +580,6 @@ os.layer.Image.prototype.updateColorFilter = function() {
     } else {
       source.removeImageFilter(this.colorFilter_);
     }
-  }
-};
-
-
-/**
- * @return {?Array<!osx.ogc.ImageStyle>}
- */
-os.layer.Image.prototype.getStyles = function() {
-  return this.styles_;
-};
-
-
-/**
- * @param {?Array<!osx.ogc.ImageStyle>} value
- */
-os.layer.Image.prototype.setStyles = function(value) {
-  this.styles_ = value;
-};
-
-
-/**
- * Get the default server style.
- *
- * @return {?osx.ogc.ImageStyle}
- */
-os.layer.Image.prototype.getDefaultStyle = function() {
-  if (this.styles_) {
-    for (var i = 0; i < this.styles_.length; i++) {
-      if (this.styles_[i].label == os.ogc.DEFAULT_IMAGE_STYLE.label) {
-        return this.styles_[i];
-      }
-    }
-  }
-
-  return null;
-};
-
-
-/**
- * @return {?(string|osx.ogc.ImageStyle)}
- */
-os.layer.Image.prototype.getStyle = function() {
-  var style = this.style_;
-  if (!style) {
-    var source = this.getSource();
-
-    if (os.implements(source, os.source.IStyle.ID)) {
-      style = /** @type {os.source.IStyle} */ (source).getStyle();
-      var styles = this.getStyles();
-
-      if (styles) {
-        // find style in styles and return that
-        for (var i = 0, n = styles.length; i < n; i++) {
-          if (styles[i].data == style) {
-            return styles[i];
-          }
-        }
-      }
-    }
-  }
-
-  return style;
-};
-
-
-/**
- * @param {?(string|osx.ogc.ImageStyle)} value
- */
-os.layer.Image.prototype.setStyle = function(value) {
-  if (typeof value == 'string') {
-    value = this.styles_ ? ol.array.find(this.styles_, os.layer.Image.findStyleByData.bind(this, value)) : null;
-  }
-
-  this.style_ = value;
-
-  var source = this.getSource();
-  if (os.implements(source, os.source.IStyle.ID)) {
-    /** @type {os.source.IStyle} */ (source).setStyle(value);
-    os.style.notifyStyleChange(this);
   }
 };
 
@@ -723,15 +625,6 @@ os.layer.Image.prototype.getIconSet = function() {
  * @inheritDoc
  */
 os.layer.Image.prototype.getIcons = function() {
-  var config = os.style.StyleManager.getInstance().getLayerConfig(this.getId());
-
-  if (config) {
-    var color = os.style.getConfigColor(config, true);
-    if (color) {
-      return os.ui.icons.createIconSet(this.getId(), this.getSVGSet(), this.getFASet(), color);
-    }
-  }
-
   return this.getIconSet().join('');
 };
 
@@ -876,14 +769,6 @@ os.layer.Image.prototype.persist = function(opt_to) {
   opt_to['minResolution'] = this.getMinResolution();
   opt_to['maxResolution'] = this.getMaxResolution();
 
-  // style
-  var config = os.style.StyleManager.getInstance().getLayerConfig(this.getId());
-
-  if (config) {
-    opt_to[os.style.StyleField.COLOR] = os.style.getConfigColor(config);
-    opt_to[os.style.StyleField.SIZE] = os.style.getConfigSize(config);
-  }
-
   return opt_to;
 };
 
@@ -928,14 +813,4 @@ os.layer.Image.prototype.restore = function(config) {
 
   this.setMinResolution(config['minResolution'] || this.getMinResolution());
   this.setMaxResolution(config['maxResolution'] || this.getMaxResolution());
-};
-
-
-/**
- * @param {string} data The style data
- * @param {!osx.ogc.ImageStyle} style The style
- * @return {boolean}
- */
-os.layer.Image.findStyleByData = function(data, style) {
-  return style.data == data;
 };

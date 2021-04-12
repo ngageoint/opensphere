@@ -1,7 +1,9 @@
-goog.provide('os.mixin.Image');
+goog.module('os.mixin.Image');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.Image');
-goog.require('ol.ImageState');
+const olImage = goog.require('ol.Image');
+const ImageState = goog.require('ol.ImageState');
+const tile = goog.require('os.tile');
 
 
 /**
@@ -10,13 +12,13 @@ goog.require('ol.ImageState');
  * @inheritDoc
  * @suppress {accessControls}
  */
-ol.Image.prototype.getImage = function() {
+olImage.prototype.getImage = function() {
   if (this.image_ && this.image_.width && this.image_.height && this.olSource
-    && this.getState() == ol.ImageState.LOADED) {
+    && this.getState() == ImageState.LOADED) {
     // make sure getImageFilters exists on the source
     var filterFns = this.olSource.getImageFilters ? this.olSource.getImageFilters() : [];
     if (filterFns.length > 0) {
-      return os.tile.filterImage(/** @type {HTMLCanvasElement|Image} */ (this.image_), filterFns);
+      return tile.filterImage(/** @type {HTMLCanvasElement|Image} */ (this.image_), filterFns);
     }
   }
   return this.image_;

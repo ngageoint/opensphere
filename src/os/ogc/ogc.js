@@ -58,17 +58,6 @@ os.ogc.DEFAULT_TILE_STYLE = /** @type {!osx.ogc.TileStyle} */ ({
 
 
 /**
- * The default image style object.
- * @type {!osx.ogc.ImageStyle}
- * @const
- */
-os.ogc.DEFAULT_IMAGE_STYLE = /** @type {!osx.ogc.ImageStyle} */ ({
-  label: 'Default',
-  data: ''
-});
-
-
-/**
  * Regular expression to detect tile styles that support changing the tile color.
  * @type {RegExp}
  * @const
