@@ -1,6 +1,6 @@
 <div class="flex-fill w-100 d-flex flex-column">
   <div class="modal-body container flex-fill">
-    <form>
+    <form name="addServerForm" ng-submit="ctrl.accept()">
       <div class="form-group m-0">
         <label for="serverType">Select a server type:</label>
         <select title="ServerType" class="custom-select w-50"
@@ -9,13 +9,12 @@
             ng-options="value.label for value in ctrl.items">
         </select>
       </div>
+      <uiswitch items="ctrl.serverType" directive-function="ctrl.getUi" scope-update-function="ctrl.updateUiScope">
+      </uiswitch>
     </form>
-    <div>
-      <uiswitch items="ctrl.serverType" directive-function="ctrl.getUi" scope-update-function="ctrl.updateUiScope"></uiswitch>
-    </div>
   </div>
   <div class="modal-footer d-flex">
-    <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="form.$invalid || testing">
+    <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="addServerForm.$invalid || testing">
       <i class="fa fa-check"></i>
       Save
     </button>

@@ -188,13 +188,19 @@ os.ui.ProviderImportCtrl.prototype.onAccept_ = function() {
 
 
 /**
- * Launches help window
+ * Launches the import help window.
+ * @param {string=} opt_providerName The user-facing name for the provider.
  * @export
  */
-os.ui.ProviderImportCtrl.prototype.launchHelp = function() {
+os.ui.ProviderImportCtrl.prototype.launchHelp = function(opt_providerName) {
   if (!os.ui.window.exists(this.helpWindowId) && this['helpUi']) {
+    let label = 'URL Format Help';
+    if (opt_providerName) {
+      label = `${opt_providerName} ${label}`;
+    }
+
     os.ui.window.create({
-      'label': 'URL Format Help',
+      'label': label,
       'icon': 'fa fa-question-circle',
       'x': '-10',
       'y': 'center',
