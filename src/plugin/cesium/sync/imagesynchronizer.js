@@ -169,19 +169,14 @@ class ImageSynchronizer extends CesiumSynchronizer {
         img = this.source_.getImage(viewExtent, resolution, window.devicePixelRatio, osMap.PROJECTION);
 
         if (img) {
+          var imageState = img.getState();
           if (img !== this.image_) {
             if (this.image_) {
               events.unlisten(this.image_, EventType.CHANGE, this.onSyncChange, this);
             }
 
-            var imageState = img.getState();
             if (imageState != ImageState.LOADED && imageState != ImageState.ERROR) {
               events.listen(img, EventType.CHANGE, this.onSyncChange, this);
-            }
-
-            if (imageState == ImageState.ERROR) {
-              // don't do anything, leave the old image rendered
-              return;
             }
 
             if (imageState == ImageState.IDLE) {
@@ -189,6 +184,10 @@ class ImageSynchronizer extends CesiumSynchronizer {
             }
 
             this.image_ = img;
+          }
+
+          // Don't continue unless the image is loaded.
+          if (imageState !== ImageState.LOADED) {
             return;
           }
         } else {
@@ -223,10 +222,17 @@ class ImageSynchronizer extends CesiumSynchronizer {
 
       if (url && extent) {
         if (changed) {
+          //
+          // Compute min/max x/y values to create a Cesium Rectangle. This corrects for a few things:
+          //  - East/west values are expected to be between -180 and +180, and a rectangle spanning the antimeridian
+          //    will have values where west > east. Normalize the longitudes to account for this.
+          //  - Cesium will not create the geometry if north/south or east/west values are within a given threshold of
+          //    each other. Use Cesium's epsilon value to ensure this doesn't happen.
+          //
           var minX = normalizeLongitude(viewExtent[0]);
           var minY = viewExtent[1];
-          var maxX = normalizeLongitude(viewExtent[2] - geo.EPSILON);
-          var maxY = viewExtent[3] - geo.EPSILON;
+          var maxX = normalizeLongitude(viewExtent[2] - Cesium.Math.EPSILON8);
+          var maxY = viewExtent[3] - Cesium.Math.EPSILON8;
 
           var primitive = new Cesium.GroundPrimitive({
             geometryInstances: new Cesium.GeometryInstance({
