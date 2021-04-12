@@ -1,12 +1,29 @@
+goog.require('goog.object');
 goog.require('ol.Feature');
+goog.require('ol.geom.Point');
+goog.require('os.Fields');
 goog.require('os.data.RecordField');
 goog.require('os.feature.DynamicFeature');
 goog.require('os.style');
+goog.require('os.style.StyleField');
+goog.require('os.style.StyleType');
 goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 goog.require('os.track');
+goog.require('os.track.TrackField');
+
 
 describe('os.track', function() {
+  const object = goog.module.get('goog.object');
+  const Feature = goog.module.get('ol.Feature');
+  const Point = goog.module.get('ol.geom.Point');
+  const Fields = goog.module.get('os.Fields');
+  const RecordField = goog.module.get('os.data.RecordField');
+  const DynamicFeature = goog.module.get('os.feature.DynamicFeature');
+  const style = goog.module.get('os.style');
+  const TimeInstant = goog.module.get('os.time.TimeInstant');
+  const TimeRange = goog.module.get('os.time.TimeRange');
+  const osTrack = goog.module.get('os.track');
   var metadataField = 'testField';
   var sortIncrement = 1000;
 
@@ -23,7 +40,7 @@ describe('os.track', function() {
     var i = count;
     while (i--) {
       var coordinate = [i * 0.1, i * 0.1, 0];
-      if (sortField === os.data.RecordField.TIME) {
+      if (sortField === RecordField.TIME) {
         coordinate.push(sortStart + i * sortIncrement);
       } else {
         coordinate.push(sortStart + i);
@@ -46,9 +63,9 @@ describe('os.track', function() {
     var coordinates = generateCoordinates(count, sortField, sortStart);
     return coordinates.map(function(coordinate, idx, arr) {
       var sortValue = coordinate.pop();
-      var feature = new ol.Feature(new ol.geom.Point(coordinate));
-      if (sortField === os.data.RecordField.TIME) {
-        feature.set(sortField, new os.time.TimeInstant(sortValue));
+      var feature = new Feature(new Point(coordinate));
+      if (sortField === RecordField.TIME) {
+        feature.set(sortField, new TimeInstant(sortValue));
       } else {
         feature.set(sortField, sortValue);
       }
@@ -82,29 +99,29 @@ describe('os.track', function() {
   };
 
   it('gets a value from a feature by field', function() {
-    var feature = new ol.Feature({
+    var feature = new Feature({
       field1: 'value1',
       field2: 'value2'
     });
 
-    expect(os.track.getFeatureValue('field1', feature)).toBe('value1');
-    expect(os.track.getFeatureValue('field2', feature)).toBe('value2');
-    expect(os.track.getFeatureValue('field3', feature)).toBeUndefined();
+    expect(osTrack.getFeatureValue('field1', feature)).toBe('value1');
+    expect(osTrack.getFeatureValue('field2', feature)).toBe('value2');
+    expect(osTrack.getFeatureValue('field3', feature)).toBeUndefined();
 
-    expect(os.track.getFeatureValue('field1', undefined)).toBeUndefined();
-    expect(os.track.getFeatureValue('field1', null)).toBeUndefined();
+    expect(osTrack.getFeatureValue('field1', undefined)).toBeUndefined();
+    expect(osTrack.getFeatureValue('field1', null)).toBeUndefined();
   });
 
   it('gets the start time from a feature', function() {
-    var feature = new ol.Feature();
-    expect(os.track.getStartTime(feature)).toBeUndefined();
+    var feature = new Feature();
+    expect(osTrack.getStartTime(feature)).toBeUndefined();
 
     var now = Date.now();
-    feature.set(os.data.RecordField.TIME, new os.time.TimeInstant(now));
-    expect(os.track.getStartTime(feature)).toBe(now);
+    feature.set(RecordField.TIME, new TimeInstant(now));
+    expect(osTrack.getStartTime(feature)).toBe(now);
 
-    feature.set(os.data.RecordField.TIME, new os.time.TimeRange(now, now + 1000));
-    expect(os.track.getStartTime(feature)).toBe(now);
+    feature.set(RecordField.TIME, new TimeRange(now, now + 1000));
+    expect(osTrack.getStartTime(feature)).toBe(now);
   });
 
   it('sorts coordinates by increasing M value', function() {
@@ -117,49 +134,49 @@ describe('os.track', function() {
       [0, 0, 0, 0]
     ];
 
-    coordinates.sort(os.track.sortCoordinatesByValue);
+    coordinates.sort(osTrack.sortCoordinatesByValue);
     verifyCoordinateSort(coordinates);
   });
 
   it('gets sorted coordinates from a set of features', function() {
     var testGetTrackCoordinates = function(sortField, sortStart) {
       var features = generateFeatures(20, sortField, sortStart);
-      var coordinates = os.track.getTrackCoordinates(features, sortField);
+      var coordinates = osTrack.getTrackCoordinates(features, sortField);
       expect(coordinates.length).toBe(features.length);
       verifyCoordinateSort(coordinates);
     };
 
     // sorts by time
-    testGetTrackCoordinates(os.data.RecordField.TIME, Date.now());
+    testGetTrackCoordinates(RecordField.TIME, Date.now());
 
     // sorts by arbitrary sortable values
     testGetTrackCoordinates('testSortField', 0);
   });
 
   it('does not create a track without features or coordinates', function() {
-    var track = os.track.createTrack({});
+    var track = osTrack.createTrack({});
     expect(track).toBeUndefined();
 
-    track = os.track.createTrack({
+    track = osTrack.createTrack({
       features: []
     });
     expect(track).toBeUndefined();
 
-    track = os.track.createTrack({
+    track = osTrack.createTrack({
       coordinates: []
     });
     expect(track).toBeUndefined();
   });
 
   it('creates a track from a set of features', function() {
-    var sortField = os.data.RecordField.TIME;
+    var sortField = RecordField.TIME;
     var features = generateFeatures(20, sortField, Date.now());
     var color = 'rgba(0, 255, 0, 1)';
     var id = 'testId';
     var name = 'Test Track';
     var label = 'labelField';
 
-    var track = os.track.createTrack({
+    var track = osTrack.createTrack({
       color: color,
       features: features,
       id: id,
@@ -167,7 +184,7 @@ describe('os.track', function() {
       name: name
     });
 
-    expect(track instanceof os.feature.DynamicFeature).toBe(true);
+    expect(track instanceof DynamicFeature).toBe(true);
 
     var geometry = track.getGeometry();
     expect(geometry).toBeDefined();
@@ -177,19 +194,19 @@ describe('os.track', function() {
     verifyCoordinateSort(coordinates);
 
     expect(track.getId()).toBe(id);
-    expect(track.get(os.Fields.ID)).toBe(id);
-    expect(track.get(os.Fields.LOWERCASE_NAME)).toBe(name);
-    expect(track.get(os.track.TrackField.SORT_FIELD)).toBe(sortField);
-    expect(track.get(os.track.TrackField.METADATA_MAP)).toBeUndefined();
+    expect(track.get(Fields.ID)).toBe(id);
+    expect(track.get(Fields.LOWERCASE_NAME)).toBe(name);
+    expect(track.get(osTrack.TrackField.SORT_FIELD)).toBe(sortField);
+    expect(track.get(osTrack.TrackField.METADATA_MAP)).toBeUndefined();
 
-    var featureStyle = track.get(os.style.StyleType.FEATURE);
+    var featureStyle = track.get(style.StyleType.FEATURE);
     expect(featureStyle).toBeDefined();
     expect(Array.isArray(featureStyle)).toBe(true);
     expect(featureStyle.length).toBe(2);
-    expect(os.style.getConfigColor(featureStyle[0])).toBe(color);
-    expect(os.style.getConfigColor(featureStyle[1])).toBe(color);
+    expect(style.getConfigColor(featureStyle[0])).toBe(color);
+    expect(style.getConfigColor(featureStyle[1])).toBe(color);
 
-    var labelStyle = featureStyle[1][os.style.StyleField.LABELS];
+    var labelStyle = featureStyle[1][style.StyleField.LABELS];
     expect(labelStyle).toBeDefined();
     expect(Array.isArray(labelStyle)).toBe(true);
     expect(labelStyle.length).toBe(1);
@@ -197,39 +214,39 @@ describe('os.track', function() {
   });
 
   it('creates a track with default values', function() {
-    var features = generateFeatures(20, os.data.RecordField.TIME, Date.now());
-    var track = os.track.createTrack({
+    var features = generateFeatures(20, RecordField.TIME, Date.now());
+    var track = osTrack.createTrack({
       features: features
     });
 
     var actualId = track.getId();
     expect(actualId).toBeDefined();
-    expect(track.get(os.Fields.ID)).toBe(actualId);
-    expect(track.get(os.Fields.LOWERCASE_NAME)).toBe(actualId);
-    expect(track.get(os.track.TrackField.SORT_FIELD)).toBe(os.data.RecordField.TIME);
+    expect(track.get(Fields.ID)).toBe(actualId);
+    expect(track.get(Fields.LOWERCASE_NAME)).toBe(actualId);
+    expect(track.get(osTrack.TrackField.SORT_FIELD)).toBe(RecordField.TIME);
 
-    var featureStyle = track.get(os.style.StyleType.FEATURE);
+    var featureStyle = track.get(style.StyleType.FEATURE);
     expect(featureStyle).toBeDefined();
     expect(Array.isArray(featureStyle)).toBe(true);
     expect(featureStyle.length).toBe(2);
-    expect(os.style.getConfigColor(featureStyle[0])).toBe(os.style.DEFAULT_LAYER_COLOR);
-    expect(os.style.getConfigColor(featureStyle[1])).toBe(os.style.DEFAULT_LAYER_COLOR);
+    expect(style.getConfigColor(featureStyle[0])).toBe(style.DEFAULT_LAYER_COLOR);
+    expect(style.getConfigColor(featureStyle[1])).toBe(style.DEFAULT_LAYER_COLOR);
 
-    var labelStyle = featureStyle[1][os.style.StyleField.LABELS];
+    var labelStyle = featureStyle[1][style.StyleField.LABELS];
     expect(labelStyle).toBeDefined();
     expect(Array.isArray(labelStyle)).toBe(true);
     expect(labelStyle.length).toBe(1);
-    expect(labelStyle[0]['column']).toBe(os.Fields.LOWERCASE_NAME);
+    expect(labelStyle[0]['column']).toBe(Fields.LOWERCASE_NAME);
   });
 
   it('creates a track with metadata from the feature', function() {
-    var features = generateFeatures(20, os.data.RecordField.TIME, Date.now());
-    var track = os.track.createTrack({
+    var features = generateFeatures(20, RecordField.TIME, Date.now());
+    var track = osTrack.createTrack({
       features: features,
       includeMetadata: true
     });
 
-    var metadataMap = track.get(os.track.TrackField.METADATA_MAP);
+    var metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
     expect(metadataMap).toBeDefined();
 
     var keys = Object.keys(metadataMap);
@@ -244,12 +261,12 @@ describe('os.track', function() {
   });
 
   it('creates a track from a set of coordinates', function() {
-    var coordinates = generateCoordinates(20, os.data.RecordField.TIME, Date.now());
-    var track = os.track.createTrack({
+    var coordinates = generateCoordinates(20, RecordField.TIME, Date.now());
+    var track = osTrack.createTrack({
       coordinates: coordinates
     });
 
-    expect(track instanceof os.feature.DynamicFeature).toBe(true);
+    expect(track instanceof DynamicFeature).toBe(true);
 
     var geometry = track.getGeometry();
     expect(geometry).toBeDefined();
@@ -262,13 +279,13 @@ describe('os.track', function() {
   it('creates a track without a time-based sort', function() {
     var sortField = 'testSortField';
     var features = generateFeatures(20, sortField, 0);
-    var track = os.track.createTrack({
+    var track = osTrack.createTrack({
       features: features,
       sortField: sortField
     });
 
-    expect(track instanceof os.feature.DynamicFeature).toBe(false);
-    expect(track.get(os.track.TrackField.SORT_FIELD)).toBe(sortField);
+    expect(track instanceof DynamicFeature).toBe(false);
+    expect(track.get(osTrack.TrackField.SORT_FIELD)).toBe(sortField);
 
     var geometry = track.getGeometry();
     expect(geometry).toBeDefined();
@@ -280,16 +297,16 @@ describe('os.track', function() {
 
   it('adds features to an existing track', function() {
     var startTime = Date.now();
-    var features = generateFeatures(20, os.data.RecordField.TIME, startTime);
-    var track = os.track.createTrack({
+    var features = generateFeatures(20, RecordField.TIME, startTime);
+    var track = osTrack.createTrack({
       features: features
     });
 
     // overlap by 2 features to verify those are skipped
     startTime += 18 * 1000;
 
-    var moreFeatures = generateFeatures(20, os.data.RecordField.TIME, startTime);
-    var added = os.track.addToTrack({
+    var moreFeatures = generateFeatures(20, RecordField.TIME, startTime);
+    var added = osTrack.addToTrack({
       features: moreFeatures,
       track: track
     });
@@ -306,25 +323,25 @@ describe('os.track', function() {
 
   it('adds features to an existing track with metadata', function() {
     var startTime = Date.now();
-    var features = generateFeatures(20, os.data.RecordField.TIME, startTime);
-    var track = os.track.createTrack({
+    var features = generateFeatures(20, RecordField.TIME, startTime);
+    var track = osTrack.createTrack({
       features: features
     });
 
-    var metadataMap = track.get(os.track.TrackField.METADATA_MAP);
+    var metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
     expect(metadataMap).toBeUndefined();
 
     // overlap by 2 features to verify those are skipped
     startTime += 18 * 1000;
 
-    var moreFeatures = generateFeatures(20, os.data.RecordField.TIME, startTime);
-    os.track.addToTrack({
+    var moreFeatures = generateFeatures(20, RecordField.TIME, startTime);
+    osTrack.addToTrack({
       features: moreFeatures,
       track: track,
       includeMetadata: true
     });
 
-    metadataMap = track.get(os.track.TrackField.METADATA_MAP);
+    metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
     expect(metadataMap).toBeDefined();
 
     var keys = Object.keys(metadataMap);
@@ -337,16 +354,16 @@ describe('os.track', function() {
 
   it('adds coordinates to an existing track', function() {
     var startTime = Date.now();
-    var coordinates = generateCoordinates(20, os.data.RecordField.TIME, startTime);
-    var track = os.track.createTrack({
+    var coordinates = generateCoordinates(20, RecordField.TIME, startTime);
+    var track = osTrack.createTrack({
       coordinates: coordinates
     });
 
     // overlap by 2 coordinates to verify those are skipped
     startTime += 18 * 1000;
 
-    var moreCoordinates = generateCoordinates(20, os.data.RecordField.TIME, startTime);
-    var added = os.track.addToTrack({
+    var moreCoordinates = generateCoordinates(20, RecordField.TIME, startTime);
+    var added = osTrack.addToTrack({
       coordinates: moreCoordinates,
       track: track
     });
@@ -364,11 +381,11 @@ describe('os.track', function() {
   it('splits features into tracks', function() {
     var startTime = Date.now();
     var trackField = 'trackField';
-    expect(os.track.splitIntoTracks({}).length).toBe(0);
+    expect(osTrack.splitIntoTracks({}).length).toBe(0);
 
-    var featuresA = generateFeatures(20, os.data.RecordField.TIME, startTime);
-    var featuresB = generateFeatures(20, os.data.RecordField.TIME, startTime);
-    var featuresC = generateFeatures(20, os.data.RecordField.TIME, startTime);
+    var featuresA = generateFeatures(20, RecordField.TIME, startTime);
+    var featuresB = generateFeatures(20, RecordField.TIME, startTime);
+    var featuresC = generateFeatures(20, RecordField.TIME, startTime);
     featuresA.forEach(function(feature) {
       feature.set(trackField, 'A');
     });
@@ -379,22 +396,22 @@ describe('os.track', function() {
     var features = featuresA.concat(featuresB, featuresC);
 
     // both features and field must be provided
-    expect(os.track.splitIntoTracks({
+    expect(osTrack.splitIntoTracks({
       features: features
     }).length).toBe(0);
-    expect(os.track.splitIntoTracks({
+    expect(osTrack.splitIntoTracks({
       field: trackField
     }).length).toBe(0);
 
-    var tracks = os.track.splitIntoTracks({
+    var tracks = osTrack.splitIntoTracks({
       features: features,
       field: trackField
     });
 
     // featuresA and featuresB merged into tracks, featuresC added directly because they don't contain the track field
     expect(tracks.length).toBe(2 + featuresC.length);
-    expect(tracks[0].get(os.data.RecordField.FEATURE_TYPE)).toBe(os.track.ID);
-    expect(tracks[1].get(os.data.RecordField.FEATURE_TYPE)).toBe(os.track.ID);
+    expect(tracks[0].get(RecordField.FEATURE_TYPE)).toBe(osTrack.ID);
+    expect(tracks[1].get(RecordField.FEATURE_TYPE)).toBe(osTrack.ID);
 
     for (var i = 2; i < tracks.length; i++) {
       expect(tracks[i]).toBe(featuresC[i - 2]);
@@ -402,8 +419,8 @@ describe('os.track', function() {
   });
 
   it('truncates a track to a fixed size', function() {
-    var features = generateFeatures(20, os.data.RecordField.TIME, Date.now());
-    var track = os.track.createTrack({
+    var features = generateFeatures(20, RecordField.TIME, Date.now());
+    var track = osTrack.createTrack({
       features: features,
       includeMetadata: true
     });
@@ -411,46 +428,46 @@ describe('os.track', function() {
     var geometry = track.getGeometry();
     expect(geometry.flatCoordinates.length).toBe(20 * geometry.stride);
 
-    var metadataMap = track.get(os.track.TrackField.METADATA_MAP);
-    expect(goog.object.getCount(metadataMap)).toBe(20);
+    var metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+    expect(object.getCount(metadataMap)).toBe(20);
 
     var lastTimeValue = geometry.flatCoordinates[geometry.flatCoordinates.length - 1];
 
     // does nothing if the size is greater than the number of coordinates
-    os.track.truncate(track, 50);
+    osTrack.truncate(track, 50);
     geometry = track.getGeometry();
     expect(geometry.flatCoordinates.length).toBe(20 * geometry.stride);
     expect(geometry.flatCoordinates[geometry.flatCoordinates.length - 1]).toBe(lastTimeValue);
 
-    metadataMap = track.get(os.track.TrackField.METADATA_MAP);
-    expect(goog.object.getCount(metadataMap)).toBe(20);
+    metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+    expect(object.getCount(metadataMap)).toBe(20);
 
     verifyMetadata(geometry.flatCoordinates, geometry.stride, metadataMap);
 
     // truncates to the number of coordinates specified
-    os.track.truncate(track, 10);
+    osTrack.truncate(track, 10);
     geometry = track.getGeometry();
     expect(geometry.flatCoordinates.length).toBe(10 * geometry.stride);
     expect(geometry.flatCoordinates[geometry.flatCoordinates.length - 1]).toBe(lastTimeValue);
 
-    metadataMap = track.get(os.track.TrackField.METADATA_MAP);
-    expect(goog.object.getCount(metadataMap)).toBe(10);
+    metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+    expect(object.getCount(metadataMap)).toBe(10);
 
     verifyMetadata(geometry.flatCoordinates, geometry.stride, metadataMap);
 
     // truncates to zero if a negative value is provided
-    os.track.truncate(track, 0);
+    osTrack.truncate(track, 0);
     geometry = track.getGeometry();
     expect(geometry.flatCoordinates.length).toBe(0);
 
-    metadataMap = track.get(os.track.TrackField.METADATA_MAP);
-    expect(goog.object.getCount(metadataMap)).toBe(0);
+    metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+    expect(object.getCount(metadataMap)).toBe(0);
   });
 
   it('clamps a track within a sort range', function() {
     var start = Date.now();
-    var features = generateFeatures(20, os.data.RecordField.TIME, start);
-    var track = os.track.createTrack({
+    var features = generateFeatures(20, RecordField.TIME, start);
+    var track = osTrack.createTrack({
       features: features,
       includeMetadata: true
     });
@@ -458,25 +475,25 @@ describe('os.track', function() {
     var geometry = track.getGeometry();
     expect(geometry.flatCoordinates.length).toBe(20 * geometry.stride);
 
-    var metadataMap = track.get(os.track.TrackField.METADATA_MAP);
-    expect(goog.object.getCount(metadataMap)).toBe(20);
+    var metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+    expect(object.getCount(metadataMap)).toBe(20);
 
     var originalCoordinates = geometry.flatCoordinates.slice();
 
     // does nothing if the clamp range includes the entire track
-    os.track.clamp(track, start, start * sortIncrement * 20);
+    osTrack.clamp(track, start, start * sortIncrement * 20);
     geometry = track.getGeometry();
     expect(geometry.flatCoordinates.length).toBe(20 * geometry.stride);
     expect(geometry.flatCoordinates[geometry.flatCoordinates.length - 1])
         .toBe(originalCoordinates[originalCoordinates.length - 1]);
 
-    metadataMap = track.get(os.track.TrackField.METADATA_MAP);
-    expect(goog.object.getCount(metadataMap)).toBe(20);
+    metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+    expect(object.getCount(metadataMap)).toBe(20);
 
     verifyMetadata(geometry.flatCoordinates, geometry.stride, metadataMap);
 
     // clamps the track within the provided sort range
-    os.track.clamp(track, start + sortIncrement * 5, start + sortIncrement * 14);
+    osTrack.clamp(track, start + sortIncrement * 5, start + sortIncrement * 14);
     geometry = track.getGeometry();
     expect(geometry.flatCoordinates.length).toBe(10 * geometry.stride);
     expect(geometry.flatCoordinates[geometry.stride - 1])
@@ -484,17 +501,17 @@ describe('os.track', function() {
     expect(geometry.flatCoordinates[geometry.flatCoordinates.length - 1])
         .toBe(originalCoordinates[15 * geometry.stride - 1]);
 
-    metadataMap = track.get(os.track.TrackField.METADATA_MAP);
-    expect(goog.object.getCount(metadataMap)).toBe(10);
+    metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+    expect(object.getCount(metadataMap)).toBe(10);
 
     verifyMetadata(geometry.flatCoordinates, geometry.stride, metadataMap);
 
     // result is empty if the clamp range does not contain any points
-    os.track.clamp(track, start + sortIncrement * 5 + 1, start + sortIncrement * 5 + 2);
+    osTrack.clamp(track, start + sortIncrement * 5 + 1, start + sortIncrement * 5 + 2);
     geometry = track.getGeometry();
     expect(geometry.flatCoordinates.length).toBe(0);
 
-    metadataMap = track.get(os.track.TrackField.METADATA_MAP);
-    expect(goog.object.getCount(metadataMap)).toBe(0);
+    metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+    expect(object.getCount(metadataMap)).toBe(0);
   });
 });
