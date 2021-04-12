@@ -211,10 +211,13 @@ const promptForAccessToken = function() {
       limit: 2000,
       select: true,
       prompt: `
-        This layer requires a Cesium Ion access token. If you do not have an access token, please
-        <a href="https://cesium.com/ion/" target="_blank">create an account</a>.
+        This layer is provided by <a href="https://cesium.com/platform/cesium-ion/" target="_blank">Cesium Ion</a>
+        and requires an access token to use. Please provide a Cesium Ion access token, or click Cancel to remove the
+        layer.
         <br><br>
-        Once logged in, click on Access Tokens > Default Token. Copy the token and paste it below:
+        If you do not have a Cesium Ion account, you can
+        <a href="https://cesium.com/ion/" target="_blank">create one here</a>. Once logged in, click on Access Tokens >
+        Default Token. Copy the token and paste it below:
       `,
       windowOptions: /** @type {!osx.window.WindowOptions} */ ({
         icon: 'fa fa-warning',

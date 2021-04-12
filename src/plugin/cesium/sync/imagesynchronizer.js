@@ -13,6 +13,7 @@ const mapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const osExtent = goog.require('os.extent');
 const geo = goog.require('os.geo');
+const {normalizeLongitude} = goog.require('os.geo2');
 const PropertyChange = goog.require('os.layer.PropertyChange');
 const osMap = goog.require('os.map');
 const osProj = goog.require('os.proj');
@@ -222,18 +223,15 @@ class ImageSynchronizer extends CesiumSynchronizer {
 
       if (url && extent) {
         if (changed) {
-          var minX = viewExtent[0];
+          var minX = normalizeLongitude(viewExtent[0]);
           var minY = viewExtent[1];
-          var maxX = viewExtent[2] - geo.EPSILON;
+          var maxX = normalizeLongitude(viewExtent[2] - geo.EPSILON);
           var maxY = viewExtent[3] - geo.EPSILON;
-          var flatCoordinates = [minX, minY, minX, maxY, maxX, maxY, maxX, minY, minX, minY];
 
           var primitive = new Cesium.GroundPrimitive({
             geometryInstances: new Cesium.GeometryInstance({
-              geometry: new Cesium.PolygonGeometry({
-                polygonHierarchy: new Cesium.PolygonHierarchy(Cesium.Cartesian3.fromDegreesArray(flatCoordinates)),
-                height: 5000,
-                arcType: Cesium.ArcType.RHUMB
+              geometry: new Cesium.RectangleGeometry({
+                rectangle: Cesium.Rectangle.fromDegrees(minX, minY, maxX, maxY)
               }),
               id: this.layer.getId() + '.' + (this.nextId_++)
             }),

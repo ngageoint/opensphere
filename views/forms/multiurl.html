@@ -4,13 +4,17 @@
       <div><i class="fa fa-4x fa-spin fa-smooth fa-spinner"></i></div>
       <div>Testing...</div>
     </div>
-    <form class="container-fluid" ng-show="!testing" name="form" ng-submit="ctrl.accept()" novalidate>
+    <div class="container-fluid" ng-form="form" ng-show="!testing" ng-submit="ctrl.accept()" novalidate>
       <div class="form-group row" title="The title for the server">
         <label class="col-3 col-form-label text-right" for="title">Title</label>
         <div class="col">
           <input unique-provider-title type="text" class="form-control" name="title" ng-disabled="!edit"
               ng-model="config.label" ng-required="true" ng-maxlength="1000">
-          <validation-message target="form.title"></validation-message>
+          <small class="form-text text-danger" ng-if="form.title.$error.maxlength">Title is too long!</small>
+          <small class="form-text text-danger" ng-if="form.title.$error.unique">Title is not unique!</small>
+          <small class="form-text text-muted" ng-if="form.title.$valid || form.title.$error.required">
+            Please enter a title <span ng-if="typeName">for the {{typeName}}</span>
+          </small>
         </div>
       </div>
 
@@ -18,10 +22,12 @@
       <div class="form-group row" title="The primary URL for the server">
         <label class="col-3 col-form-label text-right" for="url">URL</label>
         <div class="col">
-          <input type="text" name="url" class="form-control" ng-disabled="!edit" ng-model="config.url" ng-required="true"
-              ng-maxlength="1000">
-          <small class="form-text invalid-feedback" ng-if="urlExample && form.url.$valid">e.g. {{urlExample}}</small>
-          <validation-message target="form.url"></validation-message>
+          <input type="text" name="url" class="form-control" ng-disabled="!edit" ng-model="config.url"
+              ng-required="true" ng-maxlength="1000">
+          <small class="form-text text-danger" ng-if="form.url.$error.maxlength">URL is too long!</small>
+          <small class="form-text text-muted" ng-if="form.url.$valid || form.url.$error.required">
+            Please enter a URL <span ng-if="urlExample">(e.g. {{urlExample}})</span>
+          </small>
         </div>
       </div>
 
@@ -36,11 +42,12 @@
         </div>
       </div>
 
-      <input type="submit" hidden >
-    </form>
-    <div class="alert alert-danger" ng-if="error">
-      <h5>Error!</h5>
-      <p ng-bind-html="error"></p>
+      <input type="submit" hidden>
+
+      <div class="alert alert-danger" ng-if="error">
+        <h5>Error!</h5>
+        <p ng-bind-html="error"></p>
+      </div>
     </div>
   </div>
   <div class="modal-footer d-flex">

@@ -48,6 +48,7 @@ plugin.arc.ArcImportCtrl = function($scope, $element) {
 
   var file = /** @type {os.file.File} */ ($scope['config']['file']);
   $scope['config']['url'] = file ? file.getUrl() : this.getUrl();
+  $scope['typeName'] = 'ArcGIS Server';
   $scope['urlExample'] = 'https://www.example.com/arcgis/rest/services';
   $scope['config']['type'] = 'arc';
   $scope['config']['label'] = this.getLabel() || 'ArcGIS Server';

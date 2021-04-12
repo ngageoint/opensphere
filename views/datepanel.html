@@ -9,37 +9,36 @@
     </div>
   </div>
 
-  <div id="js-slice-panel" class="u-pointer-events-all" ng-show="ctrl.extended">
-    <div class="c-date-panel__extended d-flex w-100 px-1 pb-1 mt-1 flex-shrink-0 justify-content-center rounded-bottom">
-      <div class="d-flex align-items-center">
-        <div class="mx-1 d-flex align-items-center">
-          <input class="form-control" type="number" min="0" max="23" step="1" ng-model="ctrl.startHour"
-              ng-change="ctrl.onChange('startHour', 0, 23, '{{ctrl.startHour}}')">
-          <span class="flex-shrink-0 ml-1">h</span>
-        </div>
-        <div class="mx-1 d-flex align-items-center">
-          <input class="form-control" type="number" min="0" max="59" step="1" ng-model="ctrl.startMinute"
-              ng-change="ctrl.onChange('startMinute', 0, 59, '{{ctrl.startMinute}}')">
-          <span class="flex-shrink-0 ml-1">m to</span>
-        </div>
-        <div class="mx-1 d-flex align-items-center">
-          <input class="form-control" type="number" min="0" max="23" step="1" ng-model="ctrl.endHour"
-              ng-change="ctrl.onChange('endHour', 0, 23, '{{ctrl.endHour}}')">
-          <span class="flex-shrink-0 ml-1">h</span>
-        </div>
-        <div class="mx-1 d-flex align-items-center">
-          <input class="form-control" type="number" min="0" max="59" step="1" ng-model="ctrl.endMinute"
-              ng-change="ctrl.onChange('endMinute', 0, 59, '{{ctrl.endMinute}}')">
-          <span class="flex-shrink-0 ml-1">m {{ctrl.getOffset()}}</span>
-        </div>
-        <div class="mx-1 d-flex align-items-center flex-shrink-0">
-          <button class="btn" ng-class="{'btn-primary': !ctrl.active, 'btn-secondary': ctrl.active}" ng-click="ctrl.applySlice()" title="Apply time slice" ng-disabled="!ctrl.sliceValid() || ctrl.active">
-            <i class="fa fa-fw fa-check"></i>
-          </button>
-        </div>
-        <div>
-          <popover data-title="ctrl.sliceTitle" content="ctrl.sliceDescription" data-pos="'bottom'"></popover>
-        </div>
+  <div id="js-slice-panel" class="c-date-panel__container d-flex justify-content-center u-pointer-events-all"
+      ng-if="ctrl.extended">
+    <div class="c-date-panel__extended d-flex align-items-center flex-shrink-0 p-1 rounded-bottom">
+      <div class="mx-1 d-flex align-items-center">
+        <input class="form-control" type="number" min="0" max="23" step="1" ng-model="ctrl.startHour"
+            ng-change="ctrl.onChange('startHour', 0, 23, '{{ctrl.startHour}}')">
+        <span class="flex-shrink-0 ml-1">h</span>
+      </div>
+      <div class="mx-1 d-flex align-items-center">
+        <input class="form-control" type="number" min="0" max="59" step="1" ng-model="ctrl.startMinute"
+            ng-change="ctrl.onChange('startMinute', 0, 59, '{{ctrl.startMinute}}')">
+        <span class="flex-shrink-0 ml-1">m to</span>
+      </div>
+      <div class="mx-1 d-flex align-items-center">
+        <input class="form-control" type="number" min="0" max="23" step="1" ng-model="ctrl.endHour"
+            ng-change="ctrl.onChange('endHour', 0, 23, '{{ctrl.endHour}}')">
+        <span class="flex-shrink-0 ml-1">h</span>
+      </div>
+      <div class="mx-1 d-flex align-items-center">
+        <input class="form-control" type="number" min="0" max="59" step="1" ng-model="ctrl.endMinute"
+            ng-change="ctrl.onChange('endMinute', 0, 59, '{{ctrl.endMinute}}')">
+        <span class="flex-shrink-0 ml-1">m {{ctrl.getOffset()}}</span>
+      </div>
+      <div class="mx-1 d-flex align-items-center flex-shrink-0">
+        <button class="btn" ng-class="{'btn-primary': !ctrl.active, 'btn-secondary': ctrl.active}" ng-click="ctrl.applySlice()" title="Apply time slice" ng-disabled="!ctrl.sliceValid() || ctrl.active">
+          <i class="fa fa-fw fa-check"></i>
+        </button>
+      </div>
+      <div>
+        <popover data-title="ctrl.sliceTitle" content="ctrl.sliceDescription" data-pos="'bottom'"></popover>
       </div>
     </div>
   </div>

@@ -48,6 +48,8 @@ plugin.ogc.ui.OgcServerImportCtrl = function($scope, $element) {
   plugin.ogc.ui.OgcServerImportCtrl.base(this, 'constructor', $scope, $element);
   this['helpUi'] = plugin.ogc.ui.OgcServerHelpUI.directiveTag;
 
+  $scope['typeName'] = 'OGC Server';
+
   $scope['config']['type'] = 'ogc';
   var file = /** @type {os.file.File} */ ($scope['config']['file']);
 
