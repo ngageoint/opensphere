@@ -1,11 +1,11 @@
-goog.provide('plugin.track.ConfirmTrackCtrl');
-goog.provide('plugin.track.confirmTrackDirective');
+goog.module('plugin.track.ConfirmTrackUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Promise');
-goog.require('os.track');
-goog.require('os.ui.Module');
-goog.require('os.ui.window');
-goog.require('plugin.places.PlacesManager');
+const Promise = goog.require('goog.Promise');
+const osTrack = goog.require('os.track');
+const Module = goog.require('os.ui.Module');
+const osWindow = goog.require('os.ui.window');
+const PlacesManager = goog.require('plugin.places.PlacesManager');
 
 
 /**
@@ -13,77 +13,77 @@ goog.require('plugin.places.PlacesManager');
  *
  * @return {angular.Directive}
  */
-plugin.track.confirmTrackDirective = function() {
-  return {
-    restrict: 'E',
-    templateUrl: os.ROOT + 'views/plugin/track/confirmtrack.html',
-    controller: plugin.track.ConfirmTrackCtrl,
-    controllerAs: 'confirm'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  templateUrl: os.ROOT + 'views/plugin/track/confirmtrack.html',
+  controller: Controller,
+  controllerAs: 'confirm'
+});
 
 
 /**
  * Add the directive to the coreui module
  */
-os.ui.Module.directive('confirmtrack', [plugin.track.confirmTrackDirective]);
+Module.directive('confirmtrack', [directive]);
 
 
 
 /**
  * Controller for the track selection window.
- *
- * @param {!angular.Scope} $scope
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-plugin.track.ConfirmTrackCtrl = function($scope) {
-  var trackNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
-
+class Controller {
   /**
-   * The available tracks.
-   * @type {!Array<!ol.Feature>}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @ngInject
    */
-  this['tracks'] = trackNode ? trackNode.getFeatures() : [];
+  constructor($scope) {
+    var trackNode = PlacesManager.getInstance().getPlacesRoot();
 
-  /**
-   * The selected track.
-   * @type {ol.Feature|undefined}
-   */
-  this['track'] = this['tracks'][0] || undefined;
+    /**
+     * The available tracks.
+     * @type {!Array<!ol.Feature>}
+     */
+    this['tracks'] = trackNode ? trackNode.getFeatures() : [];
 
-  $scope.$watch('confirm.track', function(newVal, oldVal) {
-    $scope.$parent['confirmValue'] = newVal;
-  });
+    /**
+     * The selected track.
+     * @type {ol.Feature|undefined}
+     */
+    this['track'] = this['tracks'][0] || undefined;
 
-  $scope.$emit(os.ui.WindowEventType.READY);
-};
+    $scope.$watch('confirm.track', function(newVal, oldVal) {
+      $scope.$parent['confirmValue'] = newVal;
+    });
 
-
-/**
- * Get the name of a track.
- *
- * @param {!ol.Feature} track The track
- * @return {string} The name
- * @export
- */
-plugin.track.ConfirmTrackCtrl.prototype.getTrackName = function(track) {
-  var trackName = /** @type {string|undefined} */ (track.get(plugin.file.kml.KMLField.NAME));
-  if (!trackName) {
-    return 'Unnamed Track (id =' + track.getId() + ')';
+    $scope.$emit(os.ui.WindowEventType.READY);
   }
 
-  return trackName;
-};
+  /**
+   * Get the name of a track.
+   *
+   * @param {!ol.Feature} track The track
+   * @return {string} The name
+   * @export
+   */
+  getTrackName(track) {
+    var trackName = /** @type {string|undefined} */ (track.get(plugin.file.kml.KMLField.NAME));
+    if (!trackName) {
+      return 'Unnamed Track (id =' + track.getId() + ')';
+    }
 
+    return trackName;
+  }
+}
 
 /**
  * Prompt the user to choose a track.
  *
- * @return {!goog.Promise}
+ * @return {!Promise}
  */
 plugin.track.promptForTrack = function() {
-  return new goog.Promise(function(resolve, reject) {
+  return new Promise(function(resolve, reject) {
     plugin.track.launchConfirmTrack(resolve, reject);
   });
 };
@@ -109,7 +109,7 @@ plugin.track.launchConfirmTrack = function(confirm, cancel) {
 
   var windowOptions = {
     'label': 'Choose a Track',
-    'icon': 'fa ' + os.track.ICON,
+    'icon': 'fa ' + osTrack.ICON,
     'x': 'center',
     'y': 'center',
     'width': 300,
@@ -121,5 +121,10 @@ plugin.track.launchConfirmTrack = function(confirm, cancel) {
   };
 
   var template = '<confirm><confirmtrack></confirmtrack></confirm>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+};
+
+exports = {
+  Controller,
+  directive
 };
