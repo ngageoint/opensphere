@@ -157,7 +157,7 @@ const launchAddServerWindow = function() {
     osWindow.create({
       'id': id,
       'label': 'Add Server',
-      'icon': 'fa fa-cloud-download',
+      'icon': 'fa fa-database',
       'x': 'center',
       'y': 'center',
       'width': '500',
