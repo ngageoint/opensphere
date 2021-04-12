@@ -10,9 +10,10 @@ const os = goog.require('os');
  */
 const JSCHARDET_BASE_PATH = goog.define('JSCHARDET_BASE_PATH', 'vendor/jschardet');
 
-if (window.chardetng && !window.WebAssembly) {
+if (!window.WebAssembly) {
   // Web Assembly is not supported, so polyfill chardetng.detect()
   // with jschardet.
+  window.chardetng = window.chardetng || {};
 
   // load jschardet only if needed
   if (window.jschardet === undefined) {
@@ -22,7 +23,7 @@ if (window.chardetng && !window.WebAssembly) {
   }
 
   // polyfill
-  chardetng.detect = (uint8Array) => {
+  window.chardetng.detect = (uint8Array) => {
     // I'm aware this looks dumb and doubles the memory, but jschardet lacks the ability
     // to take a typed array as input.
     let binaryString = '';
