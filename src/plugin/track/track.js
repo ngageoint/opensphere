@@ -1,6 +1,14 @@
 goog.module('plugin.track');
 goog.module.declareLegacyNamespace();
 
+const googArray = goog.require('goog.array');
+const log = goog.require('goog.log');
+const array = goog.require('os.array');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const osFeature = goog.require('os.feature');
+const geo = goog.require('os.geo');
+const PlacesManager = goog.require('plugin.places.PlacesManager');
+
 const alertManager = goog.require('os.alert.AlertManager');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const interpolate = goog.require('os.interpolate');
@@ -9,13 +17,11 @@ const kml = goog.require('plugin.file.kml');
 const KMLNodeAdd = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
 
 
-goog.require('os.style');
-
 /**
  * Base logger for the track plugin.
- * @type {goog.log.Logger}
+ * @type {log.Logger}
  */
-const LOGGER_ = goog.log.getLogger('plugin.track');
+const LOGGER_ = log.getLogger('plugin.track');
 
 /**
  * Identifier for track plugin components.
@@ -98,7 +104,7 @@ const getTrackCoordinates = osTrack.getTrackCoordinates;
  * Creates a track from the provided options.
  *
  * @param {!osTrack.CreateOptions} options The track creation options.
- * @return {os.track.TrackFeatureLike|undefined} The track feature.
+ * @return {osTrack.TrackFeatureLike|undefined} The track feature.
  *
  * @deprecated Please use `os.track.createTrack` instead.
  */
@@ -424,9 +430,9 @@ const updateTrackZIndex = osTrack.updateTrackZIndex;
  * Creates a track and adds it to the Saved Places layer.
  *
  * @param {!osTrack.CreateOptions} options The options object for the track.
- * @return {os.track.TrackFeatureLike|undefined} The track feature.
+ * @return {osTrack.TrackFeatureLike|undefined} The track feature.
  */
-const createAndAdd = function(options) {
+let createAndAdd_ = function(options) {
   var track = osTrack.createTrack(options);
 
   if (!track) {
@@ -439,20 +445,39 @@ const createAndAdd = function(options) {
     'feature': track
   });
 
-  var rootNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
+  var rootNode = PlacesManager.getInstance().getPlacesRoot();
   if (rootNode) {
     var cmd = new KMLNodeAdd(trackNode, rootNode);
     cmd.title = 'Create Track';
-    os.command.CommandProcessor.getInstance().addCommand(cmd);
+    CommandProcessor.getInstance().addCommand(cmd);
 
     updateTrackSource(track);
 
     return track;
   } else {
-    goog.log.error(LOGGER_, 'Unable to create track: track layer missing');
+    log.error(LOGGER_, 'Unable to create track: track layer missing');
   }
 
   return;
+};
+
+/**
+ * Creates a track and adds it to the Saved Places layer.
+ *
+ * @param {!osTrack.CreateOptions} options The options object for the track.
+ * @return {osTrack.TrackFeatureLike|undefined} The track feature.
+ */
+const createAndAdd = function(options) {
+  return createAndAdd_(options);
+};
+
+/**
+ * Replace default createAndAdd implementation
+ *
+ * @param {!function(!osTrack.CreateOptions):(osTrack.TrackFeatureLike|undefined)} f The new implementation
+ */
+const setCreateAndAdd = function(f) {
+  createAndAdd_ = f;
 };
 
 /**
@@ -470,7 +495,7 @@ const addFeaturesToTrack = function(track, features) {
   var addedFeatures = /** @type {!Array<!ol.Feature>} */ ([]);
   var sortField = /** @type {string|undefined} */ (track.get(osTrack.TrackField.SORT_FIELD));
   if (!sortField) {
-    goog.log.error(LOGGER_, 'Unable to add features to track: track is missing sorting data.');
+    log.error(LOGGER_, 'Unable to add features to track: track is missing sorting data.');
     return addedFeatures;
   }
 
@@ -484,7 +509,7 @@ const addFeaturesToTrack = function(track, features) {
 
     // merge the split line so features can be added in the correct location
     geometry.toLonLat();
-    geometry = os.geo.mergeLineGeometry(geometry);
+    geometry = geo.mergeLineGeometry(geometry);
     geometry.osTransform();
 
     var flatCoordinates = geometry.flatCoordinates;
@@ -496,10 +521,10 @@ const addFeaturesToTrack = function(track, features) {
       // figure out where the value fits in the array. if the value value already exists, just skip the feature to
       // avoid duplicate values.
       var value = /** @type {number|undefined} */ (coordinate[coordinate.length - 1]);
-      var insertIndex = os.array.binaryStrideSearch(flatCoordinates, value, stride, stride - 1);
+      var insertIndex = array.binaryStrideSearch(flatCoordinates, value, stride, stride - 1);
       if (insertIndex < 0) {
         // insert coordinates in the corresponding location
-        goog.array.insertArrayAt(flatCoordinates, coordinate, ~insertIndex);
+        googArray.insertArrayAt(flatCoordinates, coordinate, ~insertIndex);
         addedFeatures.push(features[i]); // coordinates should be at the same index as the features
       } else {
         skipped++;
@@ -513,7 +538,7 @@ const addFeaturesToTrack = function(track, features) {
   }
 
   if (skipped) {
-    goog.log.info(LOGGER_, 'Skipped ' + skipped + ' features due to missing/duplicate sort value.');
+    log.info(LOGGER_, 'Skipped ' + skipped + ' features due to missing/duplicate sort value.');
   }
 
   return addedFeatures;
@@ -525,7 +550,7 @@ const addFeaturesToTrack = function(track, features) {
  */
 const updateTrackSource = function(track) {
   if (track) {
-    var source = os.feature.getSource(track);
+    var source = osFeature.getSource(track);
     if (source) {
       // Add track-specific columns to the source for display in feature UI's.
       source.addColumn(osTrack.TrackField.ELAPSED_AVERAGE_SPEED);
@@ -592,6 +617,7 @@ exports = {
   updateCurrentLine,
   updateTrackZIndex,
   createAndAdd,
+  setCreateAndAdd,
   addFeaturesToTrack,
   updateTrackSource
 };

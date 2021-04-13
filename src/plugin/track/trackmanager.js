@@ -1,6 +1,12 @@
 goog.module('plugin.track.TrackManager');
 goog.module.declareLegacyNamespace();
 
+const dispose = goog.require('goog.dispose');
+const MapContainer = goog.require('os.MapContainer');
+const osMap = goog.require('os.map');
+const TimelineController = goog.require('os.time.TimelineController');
+const PlacesManager = goog.require('plugin.places.PlacesManager');
+
 const googArray = goog.require('goog.array');
 const asserts = goog.require('goog.asserts');
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
@@ -41,17 +47,17 @@ class TrackManager extends EventTarget {
 
     /**
      * The map container instance
-     * @type {os.MapContainer|undefined}
+     * @type {MapContainer|undefined}
      * @private
      */
-    this.mc_ = os.MapContainer.getInstance();
+    this.mc_ = MapContainer.getInstance();
 
     /**
      * The timeline controller instance.
-     * @type {os.time.TimelineController|undefined}
+     * @type {TimelineController|undefined}
      * @private
      */
-    this.tlc_ = os.time.TimelineController.getInstance();
+    this.tlc_ = TimelineController.getInstance();
 
     /**
      * Defers attempting to follow a segment if the view is not ready
@@ -72,10 +78,10 @@ class TrackManager extends EventTarget {
    * @inheritDoc
    */
   disposeInternal() {
-    goog.dispose(this.mapReadyDelay_);
+    dispose(this.mapReadyDelay_);
     this.mapReadyDelay_ = undefined;
 
-    goog.dispose(this.trackThrottle_);
+    dispose(this.trackThrottle_);
     this.trackThrottle_ = undefined;
 
     this.following_.forEach(function(track) {
@@ -190,7 +196,7 @@ class TrackManager extends EventTarget {
       var resolution = view.getResolution();
 
       var viewExtent = this.mc_.getViewExtent();
-      if (olExtent.equals(viewExtent, os.map.ZERO_EXTENT)) {
+      if (olExtent.equals(viewExtent, osMap.ZERO_EXTENT)) {
         return false;
       }
 
@@ -218,7 +224,7 @@ class TrackManager extends EventTarget {
   setActiveTracks_() {
     // get the current animation range and determine which tracks are "active"
     var range = this.tlc_.getAnimationRange();
-    var source = plugin.places.PlacesManager.getInstance().getPlacesSource();
+    var source = PlacesManager.getInstance().getPlacesSource();
 
     if (source) {
       // find any tracks that overlap the timerange
