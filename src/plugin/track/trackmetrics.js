@@ -4,8 +4,6 @@ goog.module.declareLegacyNamespace();
 const MetricsPlugin = goog.require('os.ui.metrics.MetricsPlugin');
 
 
-goog.require('os.ui.metrics.MetricNode');
-
 /**
  */
 class Metrics extends MetricsPlugin {

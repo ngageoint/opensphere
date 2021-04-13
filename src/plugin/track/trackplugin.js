@@ -1,6 +1,8 @@
 goog.module('plugin.track.TrackPlugin');
 goog.module.declareLegacyNamespace();
 
+const ui = goog.require('os.ui');
+
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const track = goog.require('plugin.track');
 const Metrics = goog.require('plugin.track.Metrics');
@@ -26,7 +28,7 @@ class TrackPlugin extends AbstractPlugin {
     menu.layerSetup();
     menu.spatialSetup();
 
-    os.ui.metricsManager.addMetricsPlugin(new Metrics());
+    ui.metricsManager.addMetricsPlugin(new Metrics());
   }
 }
 

@@ -1,6 +1,13 @@
 goog.module('plugin.track.menu');
 goog.module.declareLegacyNamespace();
 
+goog.require('plugin.track.ConfirmTrackUI');
+const asserts = goog.require('goog.asserts');
+const OLVectorLayer = goog.require('ol.layer.Vector');
+const LayerNode = goog.require('os.data.LayerNode');
+const VectorLayer = goog.require('os.layer.Vector');
+const MenuItemType = goog.require('os.ui.menu.MenuItemType');
+
 const DynamicFeature = goog.require('os.feature.DynamicFeature');
 const instanceOf = goog.require('os.instanceOf');
 const osSource = goog.require('os.source');
@@ -11,10 +18,9 @@ const PlacesManager = goog.require('plugin.places.PlacesManager');
 const pluginTrack = goog.require('plugin.track');
 const Event = goog.require('plugin.track.Event');
 const EventType = goog.require('plugin.track.EventType');
+const KMLNode = goog.require('plugin.file.kml.ui.KMLNode');
 const TrackManager = goog.require('plugin.track.TrackManager');
 
-
-goog.require('plugin.track.confirmTrackDirective');
 
 /**
  * Menu group for track actions.
@@ -29,12 +35,12 @@ const layerSetup = function() {
   var menu = osUiMenuLayer.MENU;
   if (menu && !menu.getRoot().find(TRACK_GROUP)) {
     var group = menu.getRoot().find(osUiMenuLayer.GroupLabel.TOOLS);
-    goog.asserts.assert(group, 'Group should exist! Check spelling?');
+    asserts.assert(group, 'Group should exist! Check spelling?');
 
     group.addChild({
       label: TRACK_GROUP,
       icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
-      type: os.ui.menu.MenuItemType.SUBMENU,
+      type: MenuItemType.SUBMENU,
       children: [
         {
           label: 'Create Track',
@@ -150,15 +156,15 @@ const layerSetup = function() {
 const hasFeatures = function(context) {
   if (context && context.length == 1) {
     var node = context[0];
-    if (node instanceof os.data.LayerNode) {
+    if (node instanceof LayerNode) {
       var layer = node.getLayer();
-      if (layer instanceof os.layer.Vector) {
+      if (layer instanceof VectorLayer) {
         var source = layer.getSource();
         if (source instanceof osSource.Vector) {
           return source.getFeatureCount() > 0;
         }
       }
-    } else if (node instanceof plugin.file.kml.ui.KMLNode) {
+    } else if (node instanceof KMLNode) {
       var features = node.getFeatures();
       return features != null && features.length > 0;
     }
@@ -176,9 +182,9 @@ const hasFeatures = function(context) {
 const hasSelectedFeatures = function(context) {
   if (context && context.length == 1) {
     var node = context[0];
-    if (node instanceof os.data.LayerNode) {
+    if (node instanceof LayerNode) {
       var layer = node.getLayer();
-      if (layer instanceof os.layer.Vector) {
+      if (layer instanceof VectorLayer) {
         var source = layer.getSource();
         if (source instanceof osSource.Vector) {
           return source.getSelectedItems().length > 0;
@@ -242,7 +248,7 @@ const spatialSetup = function() {
   if (menu) {
     var root = menu.getRoot();
     var group = root.find(spatial.Group.FEATURES);
-    goog.asserts.assert(group, 'Group "' + spatial.Group.FEATURES + '" should exist! Check spelling?');
+    asserts.assert(group, 'Group "' + spatial.Group.FEATURES + '" should exist! Check spelling?');
 
     group.addChild({
       eventType: EventType.FOLLOW,
@@ -341,7 +347,7 @@ const visibleIfMarkerInterpolationDisabled = function(context) {
  */
 const isMarkerInterpolationOn = function(opt_context) {
   if (opt_context) {
-    var tracks = getTracks( (opt_context));
+    var tracks = getTracks(/** @type {Object|null|undefined} */ (opt_context));
     if (tracks.length > 0) {
       return osTrack.getInterpolateMarker(/** @type {!ol.Feature} */ (tracks[0]));
     }
@@ -358,7 +364,7 @@ const isMarkerInterpolationOn = function(opt_context) {
  */
 const isMarkerInterpolationOff = function(opt_context) {
   if (opt_context) {
-    return getTracks( (opt_context)).length > 0 &&
+    return getTracks(/** @type {Object|null|undefined} */ (opt_context)).length > 0 &&
       !isMarkerInterpolationOn(opt_context);
   }
 
@@ -394,7 +400,7 @@ const visibleIfLineIsHidden = function(context) {
  */
 const isLineShown = function(opt_context) {
   if (opt_context) {
-    var tracks = getTracks( (opt_context));
+    var tracks = getTracks(/** @type {Object|null|undefined} */ (opt_context));
     if (tracks.length > 0) {
       return osTrack.getShowLine(/** @type {!ol.Feature} */ (tracks[0]));
     }
@@ -411,7 +417,7 @@ const isLineShown = function(opt_context) {
  */
 const isLineHidden = function(opt_context) {
   if (opt_context) {
-    return getTracks( (opt_context)).length > 0 &&
+    return getTracks(/** @type {Object|null|undefined} */ (opt_context)).length > 0 &&
       !isLineShown(opt_context);
   }
 
@@ -458,7 +464,7 @@ const visibleIfIsFollowed = function(context) {
 const isFollowed = function(opt_context) {
   if (opt_context) {
     var tm = TrackManager.getInstance();
-    var tracks = getTracks( (opt_context));
+    var tracks = getTracks(/** @type {Object|null|undefined} */ (opt_context));
     if (tracks.length > 0) {
       return tm.isFollowed(tracks);
     }
@@ -475,7 +481,7 @@ const isFollowed = function(opt_context) {
  */
 const isNotFollowed = function(opt_context) {
   if (opt_context) {
-    return getTracks( (opt_context)).length > 0 &&
+    return getTracks(/** @type {Object|null|undefined} */ (opt_context)).length > 0 &&
       !isFollowed(opt_context);
   }
 
@@ -486,13 +492,13 @@ const isNotFollowed = function(opt_context) {
  * Get track nodes from menu event context.
  *
  * @param {*=} opt_context The menu event context.
- * @return {Array<!plugin.file.kml.ui.KMLNode>}
+ * @return {Array<!KMLNode>}
  */
 const getTrackNodes = function(opt_context) {
   if (opt_context && opt_context.length > 0) {
-    return (
-      /** @type {!Array<!plugin.file.kml.ui.KMLNode>} */ opt_context.filter(function(arg) {
-        return arg instanceof plugin.file.kml.ui.KMLNode && arg.getFeature() != null &&
+    return /** @type {!Array<!KMLNode>} */ (
+      opt_context.filter(function(arg) {
+        return arg instanceof KMLNode && arg.getFeature() != null &&
             instanceOf(arg.getFeature(), DynamicFeature.NAME);
       })
     );
@@ -509,7 +515,7 @@ const getTrackNodes = function(opt_context) {
 const handleFollowTrackEvent = function(event) {
   var context = event.getContext();
   if (context) {
-    var tracks = getTracks( (context));
+    var tracks = getTracks((context));
     if (tracks.length > 0) {
       TrackManager.getInstance().followTracks(tracks);
     }
@@ -524,7 +530,7 @@ const handleFollowTrackEvent = function(event) {
 const handleUnfollowTrackEvent = function(event) {
   var context = event.getContext();
   if (context) {
-    var tracks = getTracks( (context));
+    var tracks = getTracks((context));
     if (tracks.length > 0) {
       TrackManager.getInstance().unfollowTracks(tracks);
     }
@@ -540,7 +546,7 @@ const handleUnfollowTrackEvent = function(event) {
 const setShowTrackLine = function(show, event) {
   var context = event.getContext();
   if (context) {
-    var tracks = getTracks( (context));
+    var tracks = getTracks((context));
     for (var i = 0; i < tracks.length; i++) {
       osTrack.setShowLine(/** @type {!ol.Feature} */ (tracks[i]), show);
     }
@@ -556,7 +562,7 @@ const setShowTrackLine = function(show, event) {
 const setMarkerInterpolationEnabled = function(show, event) {
   var context = event.getContext();
   if (context) {
-    var tracks = getTracks( (context));
+    var tracks = getTracks((context));
     for (var i = 0; i < tracks.length; i++) {
       osTrack.setInterpolateMarker(/** @type {!ol.Feature} */ (tracks[i]), show);
     }
@@ -607,9 +613,9 @@ const handleAddCreateTrackEvent_ = function(event) {
     var features;
     var title;
 
-    if (node instanceof os.data.LayerNode) {
+    if (node instanceof LayerNode) {
       var layer = node.getLayer();
-      if (layer instanceof ol.layer.Vector) {
+      if (layer instanceof OLVectorLayer) {
         title = layer.getTitle() + ' Track';
 
         var source = layer.getSource();
@@ -621,7 +627,7 @@ const handleAddCreateTrackEvent_ = function(event) {
           }
         }
       }
-    } else if (node instanceof plugin.file.kml.ui.KMLNode) {
+    } else if (node instanceof KMLNode) {
       features = node.getFeatures();
       title = node.getLabel() + ' Track';
     }

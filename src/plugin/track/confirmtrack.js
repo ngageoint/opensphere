@@ -1,6 +1,11 @@
 goog.module('plugin.track.ConfirmTrackUI');
 goog.module.declareLegacyNamespace();
 
+const os = goog.require('os');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const KMLField = goog.require('plugin.file.kml.KMLField');
+const pluginTrack = goog.require('plugin.track');
+
 const Promise = goog.require('goog.Promise');
 const osTrack = goog.require('os.track');
 const Module = goog.require('os.ui.Module');
@@ -57,7 +62,7 @@ class Controller {
       $scope.$parent['confirmValue'] = newVal;
     });
 
-    $scope.$emit(os.ui.WindowEventType.READY);
+    $scope.$emit(WindowEventType.READY);
   }
 
   /**
@@ -68,7 +73,7 @@ class Controller {
    * @export
    */
   getTrackName(track) {
-    var trackName = /** @type {string|undefined} */ (track.get(plugin.file.kml.KMLField.NAME));
+    var trackName = /** @type {string|undefined} */ (track.get(KMLField.NAME));
     if (!trackName) {
       return 'Unnamed Track (id =' + track.getId() + ')';
     }
@@ -82,9 +87,9 @@ class Controller {
  *
  * @return {!Promise}
  */
-plugin.track.promptForTrack = function() {
+pluginTrack.promptForTrack = function() {
   return new Promise(function(resolve, reject) {
-    plugin.track.launchConfirmTrack(resolve, reject);
+    pluginTrack.launchConfirmTrack(resolve, reject);
   });
 };
 
@@ -95,7 +100,7 @@ plugin.track.promptForTrack = function() {
  * @param {function(!ol.Feature)} confirm The confirm callback
  * @param {function(*)} cancel The cancel callback
  */
-plugin.track.launchConfirmTrack = function(confirm, cancel) {
+pluginTrack.launchConfirmTrack = function(confirm, cancel) {
   var scopeOptions = {
     'confirmCallback': confirm,
     'cancelCallback': cancel,

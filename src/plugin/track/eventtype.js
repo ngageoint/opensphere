@@ -1,6 +1,7 @@
 goog.module('plugin.track.EventType');
 goog.module.declareLegacyNamespace();
 
+
 /**
  * Events for the track plugin.
  *
