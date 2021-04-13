@@ -141,20 +141,28 @@ class ImageSynchronizer extends CesiumSynchronizer {
 
       var map = /** @type {OSMap} */ (mapContainer.getInstance().getMap());
       var viewExtent = map.getExtent();
+      var mapZoom = map.getView().getZoom();
+
+      if (!viewExtent || mapZoom == null) {
+        // If required map properties aren't available, remove the image.
+        this.removeImmediate_();
+        return;
+      }
+
       if (olExtent.containsExtent(viewExtent, osMap.PROJECTION.getWorldExtent())) {
         // never allow an extent larger than the world to be requested
         return;
       }
 
-      // normalize the extent across the antimeridian
+      // We always want to use EPSG:4326 in Cesium so the image will be rendered properly on the map. Other projections
+      // may shift the image so it appears in the wrong location. Transform the extent to degrees and normalize across
+      // the antimeridian
+      viewExtent = olProj.transformExtent(viewExtent, osMap.PROJECTION, osProj.EPSG4326);
       viewExtent = osExtent.normalize(viewExtent, -360, 0);
 
-      if (!viewExtent) {
-        this.removeImmediate_();
-        return;
-      }
+      var epsg4326 = olProj.get(osProj.EPSG4326);
+      var resolution = osMap.zoomToResolution(mapZoom, epsg4326);
 
-      var resolution = map.getView().getResolution();
       let img;
       if (!isNaN(resolution) && resolution != null) {
         if (!this.firstLoopFixed_) {
@@ -166,7 +174,8 @@ class ImageSynchronizer extends CesiumSynchronizer {
           this.firstLoopFixed_ = true;
         }
 
-        img = this.source_.getImage(viewExtent, resolution, window.devicePixelRatio, osMap.PROJECTION);
+        // Request the image through the OL source, reprojecting to EPSG:4326 if necessary.
+        img = this.source_.getImage(viewExtent, resolution, window.devicePixelRatio, epsg4326);
 
         if (img) {
           var imageState = img.getState();
@@ -207,20 +216,20 @@ class ImageSynchronizer extends CesiumSynchronizer {
 
       var changed = this.lastUrl_ !== url;
       this.lastUrl_ = url;
-      var extent = olProj.transformExtent(img.getExtent(), osMap.PROJECTION, osProj.EPSG4326);
+
       if (this.lastExtent_) {
-        for (var i = 0, n = extent.length; i < n; i++) {
-          if (Math.abs(extent[i] - this.lastExtent_[i]) > 1E-12) {
+        for (var i = 0, n = viewExtent.length; i < n; i++) {
+          if (Math.abs(viewExtent[i] - this.lastExtent_[i]) > geo.EPSILON) {
+            this.lastExtent_[i] = viewExtent[i];
             changed = true;
-            break;
           }
         }
       } else {
+        this.lastExtent_ = viewExtent.slice();
         changed = true;
       }
-      this.lastExtent_ = extent.slice();
 
-      if (url && extent) {
+      if (url && viewExtent) {
         if (changed) {
           //
           // Compute min/max x/y values to create a Cesium Rectangle. This corrects for a few things:
@@ -229,9 +238,9 @@ class ImageSynchronizer extends CesiumSynchronizer {
           //  - Cesium will not create the geometry if north/south or east/west values are within a given threshold of
           //    each other. Use Cesium's epsilon value to ensure this doesn't happen.
           //
-          var minX = normalizeLongitude(viewExtent[0]);
+          var minX = normalizeLongitude(viewExtent[0], undefined, undefined, osProj.EPSG4326);
           var minY = viewExtent[1];
-          var maxX = normalizeLongitude(viewExtent[2] - Cesium.Math.EPSILON8);
+          var maxX = normalizeLongitude(viewExtent[2] - Cesium.Math.EPSILON8, undefined, undefined, osProj.EPSG4326);
           var maxY = viewExtent[3] - Cesium.Math.EPSILON8;
 
           var primitive = new Cesium.GroundPrimitive({
