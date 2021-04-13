@@ -4,7 +4,7 @@ const MapContainer = goog.require('os.MapContainer');
 const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');
 const FlyToExtent = goog.require('os.command.FlyToExtent');
 const State = goog.require('os.command.State');
-const {MAX_AUTO_ZOOM, PROJECTION, zoomToResolution} = goog.require('os.map');
+const osMap = goog.require('os.map');
 
 
 /**
@@ -34,7 +34,7 @@ class FlyToSphere extends AbstractSyncCommand {
 
     var cam = /** @type {plugin.cesium.Camera} */ (MapContainer.getInstance().getWebGLCamera());
     var minRange = cam.calcDistanceForResolution(
-        zoomToResolution(MAX_AUTO_ZOOM, PROJECTION), 0);
+        osMap.zoomToResolution(osMap.MAX_AUTO_ZOOM, osMap.PROJECTION), 0);
 
     sphere.radius = sphere.radius || 10;
 
