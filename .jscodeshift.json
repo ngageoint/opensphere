@@ -34,6 +34,7 @@
     "os.layer.Vector": "VectorLayer",
     "os.map": "osMap",
     "os.proj": "osProj",
+    "os.source.Request": "RequestSource",
     "os.source.Vector": "VectorSource",
     "os.ui.window": "osWindow"
   }
