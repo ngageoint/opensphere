@@ -8,7 +8,7 @@ const ActionEventType = goog.require('os.action.EventType');
 const settings = goog.require('os.config.Settings');
 const LayerEvent = goog.require('os.events.LayerEvent');
 const LayerEventType = goog.require('os.events.LayerEventType');
-const {PROJECTION} = goog.require('os.map');
+const osMap = goog.require('os.map');
 const {EPSG4326} = goog.require('os.proj');
 const osStyle = goog.require('os.style');
 
@@ -280,7 +280,7 @@ class Layer extends PrimitiveLayer {
       if (tileset && tileset.root && tileset.root.contentBoundingVolume) {
         var extent = rectangleToExtent(tileset.root.contentBoundingVolume.rectangle);
         if (extent) {
-          return transformExtent(extent, EPSG4326, PROJECTION);
+          return transformExtent(extent, EPSG4326, osMap.PROJECTION);
         }
       }
     } catch (e) {
