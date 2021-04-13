@@ -14,7 +14,7 @@ goog.require('os.ui.Module');
 os.ui.alert.alertLinkFilter = function($sce) {
   return function(text) {
     if (typeof text == 'string') {
-      text = os.ui.sanitize(text);
+      text = /** @type {angular.$sanitize} */ (os.ui.injector.get('$sanitize'))(text);
       text = text.replace(/\[([^|]+)\|([^\]]+)\]/g,
           '<button onclick="$(this).scope().$emit(\'dispatch\',\'$2\')" class="btn btn-link border-0 p-0" ' +
           'type="button">$1</button>'
