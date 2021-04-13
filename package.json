@@ -78,7 +78,8 @@
     },
     "moduleDefines": {
       "os.file.ZIP_PATH": "zip-js/WebContent",
-      "plugin.cesium.LIBRARY_BASE_PATH": "cesium/Build/CesiumUnminified"
+      "plugin.cesium.LIBRARY_BASE_PATH": "cesium/Build/CesiumUnminified",
+      "JSCHARDET_BASE_PATH": "jschardet/dist"
     }
   },
   "scripts": {
