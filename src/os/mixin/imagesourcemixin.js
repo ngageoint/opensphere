@@ -19,7 +19,7 @@ os.implements(ol.source.Image, os.ol.source.ILoadingSource.ID);
 
 /**
  * Set of filters to run against images that are loaded by this source.
- * @type {Array<function(Array<number>, number, number)>}
+ * @type {Array<os.tile.TileFilterFn>}
  * @protected
  */
 ol.source.Image.prototype.imageFilters = null;

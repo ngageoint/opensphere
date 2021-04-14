@@ -242,9 +242,7 @@ class ImageSynchronizer extends CesiumSynchronizer {
               id: this.layer.getId() + '.' + (this.nextId_++)
             }),
             appearance: new Cesium.MaterialAppearance({
-              material: Cesium.Material.fromType('Image', {
-                image: el
-              })
+              material: this.createImageMaterial(el)
             }),
             show: this.layer.getVisible()
           });
@@ -302,14 +300,32 @@ class ImageSynchronizer extends CesiumSynchronizer {
   }
 
   /**
+   * Create a Cesium material from an image
+   *
+   * @param {HTMLCanvasElement|HTMLVideoElement|Image} image
+   * @return {Cesium.Material}
+   */
+  createImageMaterial(image) {
+    return Cesium.Material.fromType('Image', {
+      image: image,
+      color: new Cesium.Color(1, 1, 1, this.layer.getOpacity())
+    });
+  }
+
+  /**
    * Handle visibility
    *
    * @param {PropertyChangeEvent} event
    * @protected
    */
   onLayerPropertyChange(event) {
-    if (event instanceof OLObject.Event && event.key == PropertyChange.VISIBLE) {
-      this.syncInternal(true);
+    if (event instanceof OLObject.Event) {
+      if (event.key == PropertyChange.VISIBLE) {
+        this.syncInternal(true);
+      } else if (event.key == 'opacity' && this.activePrimitive_) {
+        this.activePrimitive_.appearance.material = this.createImageMaterial(this.image_.getImage());
+        dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
+      }
     }
   }
 }

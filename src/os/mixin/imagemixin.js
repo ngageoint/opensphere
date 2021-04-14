@@ -5,6 +5,15 @@ const olImage = goog.require('ol.Image');
 const ImageState = goog.require('ol.ImageState');
 const tile = goog.require('os.tile');
 
+const ImageSource = goog.requireType('ol.source.Image');
+
+
+/**
+ * The Image source
+ * @type {ImageSource}
+ */
+ol.Image.prototype.olSource = null;
+
 
 /**
  * Get the image element for this source.

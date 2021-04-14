@@ -26,6 +26,8 @@ goog.require('os.ui.layer.ImageLayerUI');
 goog.require('os.ui.renamelayer');
 goog.require('os.ui.window');
 
+goog.requireType('ol.source.Image');
+
 
 
 /**
@@ -133,6 +135,18 @@ os.layer.Image = function(options) {
    */
   this.colorFilter_ = this.applyColors.bind(this);
 
+  /**
+   * @type {?string}
+   * @private
+   */
+  this.groupId_ = null;
+
+  /**
+   * @type {?string}
+   * @private
+   */
+  this.groupLabel_ = null;
+
   var source = this.getSource();
   if (source) {
     ol.events.listen(source, goog.events.EventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
@@ -175,6 +189,9 @@ os.layer.Image.prototype.getLayerOptions = function() {
  */
 os.layer.Image.prototype.setLayerOptions = function(value) {
   this.layerOptions_ = value;
+
+  // reapply the color filter as changing the layerOptions can change the layer color/colorize
+  this.updateColorFilter();
 };
 
 
@@ -236,7 +253,7 @@ os.layer.Image.prototype.setId = function(value) {
  * @inheritDoc
  */
 os.layer.Image.prototype.getGroupId = function() {
-  return this.getId();
+  return this.groupId_ != null ? this.groupId_ : this.getId();
 };
 
 
@@ -244,7 +261,7 @@ os.layer.Image.prototype.getGroupId = function() {
  * @inheritDoc
  */
 os.layer.Image.prototype.getGroupLabel = function() {
-  return this.getTitle();
+  return this.groupLabel_ != null ? this.groupLabel_ : this.getTitle();
 };
 
 
@@ -500,6 +517,7 @@ os.layer.Image.prototype.setBrightness = function(value, opt_options) {
   if (options) {
     options['brightness'] = value;
     this.updateColorFilter();
+    os.style.notifyStyleChange(this);
   }
   os.layer.Image.base(this, 'setBrightness', value);
 };
@@ -520,6 +538,7 @@ os.layer.Image.prototype.setContrast = function(value, opt_options) {
   if (options) {
     options['contrast'] = value;
     this.updateColorFilter();
+    os.style.notifyStyleChange(this);
   }
   os.layer.Image.base(this, 'setContrast', value);
 };
@@ -541,6 +560,7 @@ os.layer.Image.prototype.setSaturation = function(value, opt_options) {
   if (options) {
     options['saturation'] = value;
     this.updateColorFilter();
+    os.style.notifyStyleChange(this);
   }
   os.layer.Image.base(this, 'setSaturation', value);
 };
@@ -560,6 +580,7 @@ os.layer.Image.prototype.setSharpness = function(value, opt_options) {
   if (options) {
     options['sharpness'] = value;
     this.updateColorFilter();
+    os.style.notifyStyleChange(this);
   }
   os.layer.Image.base(this, 'setSharpness', value);
 };
@@ -606,7 +627,7 @@ os.layer.Image.prototype.applyColors = function(data, width, height) {
 
     if (sharpness > 0) {
       // sharpness is in the range [0, 1]. use a multiplier to enhance the convolution effect.
-      os.color.adjustSharpness(data, width, height, sharpness * 10);
+      os.color.adjustSharpness(data, width, height, sharpness * 2);
     }
   }
 };
@@ -766,8 +787,14 @@ os.layer.Image.prototype.persist = function(opt_to) {
 
   opt_to['visible'] = this.getLayerVisible();
   opt_to['opacity'] = this.getOpacity();
+  opt_to['contrast'] = this.getContrast();
+  opt_to['brightness'] = this.getBrightness();
+  opt_to['saturation'] = this.getSaturation();
+  opt_to['sharpness'] = this.getSharpness();
   opt_to['minResolution'] = this.getMinResolution();
   opt_to['maxResolution'] = this.getMaxResolution();
+  opt_to['groupId'] = this.getGroupId();
+  opt_to['groupLabel'] = this.getGroupLabel();
 
   return opt_to;
 };
@@ -777,38 +804,61 @@ os.layer.Image.prototype.persist = function(opt_to) {
  * @inheritDoc
  */
 os.layer.Image.prototype.restore = function(config) {
-  if (config['id'] !== undefined) {
+  if (config['id'] != null) {
     this.setId(config['id']);
   }
 
-  if (config['provider'] !== undefined) {
+  if (config['provider'] != null) {
     this.setProvider(config['provider']);
   }
 
-  if (config['tags'] !== undefined) {
+  if (config['tags'] != null) {
     this.setTags(config['tags']);
   }
 
-  if (config['title'] !== undefined) {
+  if (config['title'] != null) {
     this.setTitle(config['title']);
   }
 
-  if (config['layerType'] !== undefined) {
+  if (config['layerType'] != null) {
     this.setOSType(config['layerType']);
   }
 
-  if (config['explicitType'] !== undefined) {
+  if (config['explicitType'] != null) {
     this.setExplicitType(config['explicitType']);
   }
 
-  if (config['visible'] !== undefined) {
+  if (config['visible'] != null) {
     this.setLayerVisible(config['visible']);
   }
 
-  var opacity = config['opacity'];
-
-  if (opacity !== undefined) {
+  var opacity = config['alpha'] || config['opacity'];
+  if (opacity != null) {
     this.setOpacity(opacity);
+  }
+
+  if (config['contrast'] != null) {
+    this.setContrast(config['contrast']);
+  }
+
+  if (config['brightness'] != null) {
+    this.setBrightness(config['brightness']);
+  }
+
+  if (config['saturation'] != null) {
+    this.setSaturation(config['saturation']);
+  }
+
+  if (config['sharpness'] != null) {
+    this.setSharpness(config['sharpness']);
+  }
+
+  if (config['groupId'] != null) {
+    this.groupId_ = /** @type {string} */ (config['groupId']);
+  }
+
+  if (config['groupLabel'] != null) {
+    this.groupLabel_ = /** @type {string} */ (config['groupLabel']);
   }
 
   this.setMinResolution(config['minResolution'] || this.getMinResolution());
