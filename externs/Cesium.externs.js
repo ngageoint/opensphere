@@ -524,6 +524,13 @@ Cesium.BillboardCollection.prototype.contains = function(opt_bb) {};
 
 
 /**
+ * @param {number} index
+ * @return {Cesium.Billboard} .
+ */
+Cesium.BillboardCollection.prototype.get = function(index) {};
+
+
+/**
  * @return {boolean} .
  */
 Cesium.BillboardCollection.prototype.isDestroyed = function() {};

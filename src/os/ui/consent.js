@@ -40,16 +40,33 @@ os.ui.Consent = function($scope, $element) {
   this.peer_ = os.xt.Peer.getInstance();
   this.peer_.addHandler(this);
 
+  /**
+   * Timer to refresh the cookie.
+   * @type {goog.Timer}
+   * @private
+   */
+  this.timer_ = null;
+
+  /**
+   * The cookie max age.
+   * @type {number}
+   */
+  this.maxAge = -1;
+
   this['server'] = location.host;
 
   var cookie = new goog.net.Cookies(window.document);
   var consent = os.settings.get(['consent']);
 
   if (consent && consent['text']) {
-    this.refresh = consent['refresh'];
+    const refresh = /** @type {number|undefined} */ (consent['refresh']);
+    if (refresh) {
+      this.maxAge = refresh;
+      this.timer_ = new goog.Timer(refresh * 900);
+      this.timer_.listen(goog.Timer.TICK, this.update_, false, this);
+    }
+
     this['text'] = consent['text'];
-    this.timer_ = new goog.Timer(this.refresh * 900);
-    this.timer_.listen(goog.Timer.TICK, this.update_, false, this);
 
     if (cookie && !cookie.get('consent')) {
       os.ui.modal.open($element, {
@@ -58,7 +75,9 @@ os.ui.Consent = function($scope, $element) {
       });
       $('body').addClass('c-consent');
     } else {
-      this.timer_.start();
+      if (this.timer_) {
+        this.timer_.start();
+      }
       this.update_();
     }
   }
@@ -72,6 +91,10 @@ os.ui.Consent = function($scope, $element) {
  */
 os.ui.Consent.prototype.destroy = function() {
   $('body').removeClass('c-consent');
+
+  goog.dispose(this.timer_);
+  this.timer_ = null;
+
   this.scope_ = null;
   this.element_ = null;
   this.timeout_ = null;
@@ -91,7 +114,9 @@ os.ui.Consent.prototype.getTypes = function() {
  */
 os.ui.Consent.prototype.process = function(data, type, sender, time) {
   this.element_.modal('hide');
-  this.timer_.start();
+  if (this.timer_) {
+    this.timer_.start();
+  }
 };
 
 
@@ -102,7 +127,12 @@ os.ui.Consent.prototype.process = function(data, type, sender, time) {
  */
 os.ui.Consent.prototype.update_ = function() {
   var cookie = new goog.net.Cookies(window.document);
-  cookie.set('consent', 'true', this.refresh, '/', null, false);
+  cookie.set('consent', 'true', {
+    maxAge: this.maxAge,
+    path: '/',
+    domain: null,
+    secure: false
+  });
 };
 
 
@@ -127,7 +157,9 @@ os.ui.Consent.launch = function() {
 os.ui.Consent.prototype.saveCookie = function() {
   this.update_();
   this.element_.modal('hide');
-  this.timer_.start();
+  if (this.timer_) {
+    this.timer_.start();
+  }
   this.peer_.send('consent', '');
 };
 

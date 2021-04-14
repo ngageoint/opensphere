@@ -1,5 +1,5 @@
 goog.provide('os.command.CommandProcessor');
-goog.require('goog.debug.LogManager');
+
 goog.require('goog.events.Event');
 goog.require('goog.events.EventTarget');
 goog.require('goog.log');

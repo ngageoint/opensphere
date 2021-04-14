@@ -1708,14 +1708,14 @@ os.ui.slick.SlickGridCtrl.prototype.onDragStart = function(e, dragInfo) {
   dragInfo['rect'] = $('<div class=\'slick-reorder-proxy\'/>').
       css('position', 'absolute').
       css('zIndex', '99999').
-      css('width', $(canvas).innerWidth()).
+      css('width', /** @type {number} */ ($(canvas).innerWidth())).
       css('height', rowHeight * rows.length).
       appendTo(canvas);
 
   dragInfo['guide'] = $('<div class=\'slick-reorder-guide\'/>').
       css('position', 'absolute').
       css('zIndex', '99998').
-      css('width', $(canvas).innerWidth()).
+      css('width', /** @type {number} */ ($(canvas).innerWidth())).
       css('top', -1000).
       appendTo(canvas);
 

@@ -188,8 +188,8 @@ os.source.titleCompare = function(a, b) {
 /**
  * Compares sources by z-index in descending order.
  *
- * @param {os.source.ISource} a A source
- * @param {os.source.ISource} b Another source
+ * @param {ol.source.Source} a A source
+ * @param {ol.source.Source} b Another source
  * @return {number} The comparison
  */
 os.source.zIndexCompare = function(a, b) {
