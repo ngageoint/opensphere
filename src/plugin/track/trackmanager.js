@@ -1,24 +1,27 @@
 goog.module('plugin.track.TrackManager');
 goog.module.declareLegacyNamespace();
 
-const dispose = goog.require('goog.dispose');
-const MapContainer = goog.require('os.MapContainer');
-const osMap = goog.require('os.map');
-const TimelineController = goog.require('os.time.TimelineController');
-const PlacesManager = goog.require('plugin.places.PlacesManager');
-
-const googArray = goog.require('goog.array');
-const asserts = goog.require('goog.asserts');
-const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
-const Throttle = goog.require('goog.async.Throttle');
-const EventTarget = goog.require('goog.events.EventTarget');
-const log = goog.require('goog.log');
 const array = goog.require('ol.array');
+const asserts = goog.require('goog.asserts');
+const dispose = goog.require('goog.dispose');
 const events = goog.require('ol.events');
+const googArray = goog.require('goog.array');
+const log = goog.require('goog.log');
 const olExtent = goog.require('ol.extent');
-const TimeRange = goog.require('os.time.TimeRange');
+const osFeature = goog.require('os.feature');
+const osMap = goog.require('os.map');
 const osTrack = goog.require('os.track');
+const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
+const EventTarget = goog.require('goog.events.EventTarget');
+const MapContainer = goog.require('os.MapContainer');
+const PlacesManager = goog.require('plugin.places.PlacesManager');
+const Throttle = goog.require('goog.async.Throttle');
+const TimelineController = goog.require('os.time.TimelineController');
+const TimeRange = goog.require('os.time.TimeRange');
+const TrackInteraction = goog.require('plugin.track.TrackInteraction');
+
 const Logger = goog.requireType('goog.log.Logger');
+const OlFeature = goog.requireType('ol.Feature');
 
 
 /**
@@ -33,14 +36,14 @@ class TrackManager extends EventTarget {
 
     /**
      * The list tracks currently being followed.
-     * @type {!Array<!ol.Feature>}
+     * @type {!Array<!OlFeature>}
      * @private
      */
     this.following_ = [];
 
     /**
      * The list of features that are in the current animation timeframe.
-     * @type {!Array<!ol.Feature>}
+     * @type {!Array<!OlFeature>}
      * @private
      */
     this.activeTracks_ = [];
@@ -100,7 +103,7 @@ class TrackManager extends EventTarget {
   /**
    * Add the track(s) to the list of followed tracks
    *
-   * @param {Array<ol.Feature>} tracks
+   * @param {Array<OlFeature>} tracks
    */
   followTracks(tracks) {
     tracks.forEach(function(track) {
@@ -114,7 +117,7 @@ class TrackManager extends EventTarget {
   /**
    * Remove the track(s) from the list of followed tracks
    *
-   * @param {Array<ol.Feature>} tracks
+   * @param {Array<OlFeature>} tracks
    */
   unfollowTracks(tracks) {
     tracks.forEach(function(track) {
@@ -130,7 +133,7 @@ class TrackManager extends EventTarget {
         });
 
         // also need to remove it from the active tracks
-        for (var k = 0; k < this.activeTracks_.length; k++) {
+        for (let k = 0; k < this.activeTracks_.length; k++) {
           if (this.activeTracks_[k] == track) {
             googArray.removeAt(this.activeTracks_, k);
           }
@@ -142,11 +145,11 @@ class TrackManager extends EventTarget {
   /**
    * Return whether a set of tracks is being followed.
    *
-   * @param {Array<ol.Feature>} tracks
+   * @param {Array<OlFeature>} tracks
    * @return {boolean} false if any of the tracks passed in are not followed
    */
   isFollowed(tracks) {
-    for (var j = 0; j < tracks.length; j++) {
+    for (let j = 0; j < tracks.length; j++) {
       if (!array.includes(this.following_, tracks[j])) {
         return false;
       }
@@ -188,20 +191,20 @@ class TrackManager extends EventTarget {
   showActiveTracks_() {
     try {
       // if the map/view aren't ready, return false so the conditional delay will keep trying
-      var view = this.mc_.getMap().getView();
+      const view = this.mc_.getMap().getView();
       if (!view || !view.isDef()) {
         return false;
       }
 
-      var resolution = view.getResolution();
+      const resolution = view.getResolution();
 
-      var viewExtent = this.mc_.getViewExtent();
+      const viewExtent = this.mc_.getViewExtent();
       if (olExtent.equals(viewExtent, osMap.ZERO_EXTENT)) {
         return false;
       }
 
       if (this.mc_.getMap().isRendered()) {
-        var extent = this.getActiveExtent(this.activeTracks_);
+        const extent = this.getActiveExtent(this.activeTracks_);
 
         if (!olExtent.isEmpty(extent) &&
             !olExtent.containsExtent(olExtent.buffer(viewExtent, -2), extent)) {
@@ -223,17 +226,17 @@ class TrackManager extends EventTarget {
    */
   setActiveTracks_() {
     // get the current animation range and determine which tracks are "active"
-    var range = this.tlc_.getAnimationRange();
-    var source = PlacesManager.getInstance().getPlacesSource();
+    const range = this.tlc_.getAnimationRange();
+    const source = PlacesManager.getInstance().getPlacesSource();
 
     if (source) {
       // find any tracks that overlap the timerange
-      var timeRange = new TimeRange(range.start, range.end);
-      this.activeTracks_ = /** @type {!Array<!ol.Feature>} */ (source.getTimeModel().intersection(
+      const timeRange = new TimeRange(range.start, range.end);
+      this.activeTracks_ = /** @type {!Array<!OlFeature>} */ (source.getTimeModel().intersection(
           timeRange, false, false));
 
       // check which of the active tracks are to be followed
-      for (var i = 0; i < this.activeTracks_.length; i++) {
+      for (let i = 0; i < this.activeTracks_.length; i++) {
         if (!array.includes(this.following_, this.activeTracks_[i])) {
           googArray.removeAt(this.activeTracks_, i);
         }
@@ -244,16 +247,16 @@ class TrackManager extends EventTarget {
   /**
    * Generate an extent for all multiple tracks combined.
    *
-   * @param {Array<ol.Feature>} tracks
+   * @param {Array<OlFeature>} tracks
    * @return {ol.Extent}
    */
   getActiveExtent(tracks) {
     // generate the appropriate extent for the track(s) that are
     // active so that everything is appropriately shown
-    var coordinates = [];
+    const coordinates = [];
     if (tracks) {
-      for (var i = 0; i < tracks.length; i++) {
-        var trackPos = tracks[i].get(osTrack.TrackField.CURRENT_POSITION);
+      for (let i = 0; i < tracks.length; i++) {
+        const trackPos = tracks[i].get(osTrack.TrackField.CURRENT_POSITION);
         if (trackPos) {
           coordinates.push(trackPos.getCoordinates());
         }
@@ -261,6 +264,72 @@ class TrackManager extends EventTarget {
     }
 
     return olExtent.boundingExtent(coordinates);
+  }
+
+  /**
+   * Kick off TrackInteraction. Follow mouse until user clicks or types Esc
+   *
+   * @param {Array<!OlFeature>} tracks
+   */
+  promptForTrackPrediction(tracks) {
+    const interaction = this.getTrackInteraction_();
+    if (interaction) {
+      const toggle = !interaction.getActive();
+      if (toggle) {
+        // TODO copy the last point of the track into a few feature; setting the styles as desired
+        const track = osFeature.copyFeature(tracks[0]);
+        track.setStyle(interaction.getStyle());
+
+        interaction.config(/** @type {pluginx.track.TrackOptions} */ ({
+          callback: this.interactionCallback_.bind(this, interaction, track),
+          track: track
+        }));
+      }
+      interaction.setEnabled(toggle);
+      interaction.setActive(toggle);
+    }
+  }
+
+  /**
+   * Append new coordinates to the track
+   *
+   * @param {!TrackInteraction} interaction
+   * @param {!OlFeature} track
+   * @param {Array<number>} coords
+   */
+  interactionCallback_(interaction, track, coords) {
+    interaction.setEnabled(false);
+    interaction.setActive(false);
+
+    if (track && coords.length > 0) {
+      const coordinates = [];
+
+      let alt = coords[0][2];
+      let time = coords[0][3];
+      for (let i = 1; i < coords.length; i++) {
+        alt += 0; // TODO fix alt. for now, just repeat the starting altitude
+        time += 3600000; // TODO fix time. for now, increment time by one hour
+
+        // take the Lat/Lon from coord, but splice in altitude and time
+        const coord = coords[i];
+        coord.splice(2, 2, alt, time);
+        coordinates.push(coord);
+      }
+
+      osTrack.addToTrack({track, coordinates});
+    }
+  }
+
+  /**
+   * @return {?TrackInteraction} The measure interaction
+   * @private
+   */
+  getTrackInteraction_() {
+    const interactions = this.mc_.getMap().getInteractions().getArray();
+    const interaction = interactions.find((i) => {
+      return (i instanceof TrackInteraction && i.isType('track')); // TODO constant
+    });
+    return /** @type {TrackInteraction} */ (interaction);
   }
 }
 

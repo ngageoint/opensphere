@@ -1,12 +1,16 @@
 goog.module('plugin.track.TrackPlugin');
 goog.module.declareLegacyNamespace();
 
-const ui = goog.require('os.ui');
-
-const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const track = goog.require('plugin.track');
-const Metrics = goog.require('plugin.track.Metrics');
 const menu = goog.require('plugin.track.menu');
+const track = goog.require('plugin.track');
+const ui = goog.require('os.ui');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const MapContainer = goog.require('os.MapContainer');
+const Metrics = goog.require('plugin.track.Metrics');
+const Settings = goog.require('os.config.Settings');
+const TrackInteraction = goog.require('plugin.track.TrackInteraction');
+
+const settings = Settings.getInstance();
 
 
 /**
@@ -25,10 +29,16 @@ class TrackPlugin extends AbstractPlugin {
    * @inheritDoc
    */
   init() {
-    menu.layerSetup();
-    menu.spatialSetup();
+    const predict = (settings.get(track.PREDICT, false) === true);
+
+    menu.layerSetup(predict);
+    menu.spatialSetup(predict);
 
     ui.metricsManager.addMetricsPlugin(new Metrics());
+
+    if (predict) {
+      MapContainer.getInstance().getMap().getInteractions().push(new TrackInteraction());
+    }
   }
 }
 

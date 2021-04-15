@@ -36,19 +36,19 @@ os.interaction.Measure = function(opt_options) {
 
   /**
    * @type {number}
-   * @private
+   * @protected
    */
   this.lastlen_ = 0;
 
   /**
    * @type {Array<number>}
-   * @private
+   * @protected
    */
   this.bearings_ = [];
 
   /**
    * @type {Array<number>}
-   * @private
+   * @protected
    */
   this.distances_ = [];
 
@@ -62,7 +62,7 @@ os.interaction.Measure = function(opt_options) {
 
   /**
    * @type {!Array<!ol.style.Style>}
-   * @private
+   * @protected
    */
   this.waypoints_ = [];
 
@@ -253,28 +253,29 @@ os.interaction.Measure.prototype.update2D = function() {
  */
 os.interaction.Measure.prototype.end = function(mapBrowserEvent) {
   if (this.drawing) {
-    // add a total distance waypoint if there are multiple points
-    if (this.waypoints_.length > 1) {
-      var um = os.unit.UnitManager.getInstance();
-      var text = um.formatToBestFit('distance', this.getTotalDistance_(), 'm', um.getBaseSystem(),
-          os.feature.measure.numDecimalPlaces);
+    if (this.isType('measure')) {
+      // add a total distance waypoint if there are multiple points
+      if (this.waypoints_.length > 1) {
+        var um = os.unit.UnitManager.getInstance();
+        var text = um.formatToBestFit('distance', this.getTotalDistance_(), 'm', um.getBaseSystem(),
+            os.feature.measure.numDecimalPlaces);
 
-      this.waypoints_.push(new ol.style.Style({
-        geometry: new ol.geom.Point(this.coords[this.coords.length - 1]),
-        text: os.interaction.Measure.getTextStyle_(text)
-      }));
+        this.waypoints_.push(new ol.style.Style({
+          geometry: new ol.geom.Point(this.coords[this.coords.length - 1]),
+          text: os.interaction.Measure.getTextStyle_(text)
+        }));
 
-      this.line2D.setStyle(this.getStyle());
+        this.line2D.setStyle(this.getStyle());
+      }
+
+      var type = os.interaction.Measure.method;
+      type = type.substring(0, 1).toUpperCase() + type.substring(1);
+
+      os.interaction.Measure.nextId++;
+      this.line2D.set('title', type + ' Measure ' + os.interaction.Measure.nextId);
+      this.line2D.set('icons', ' <i class="fa fa-arrows-h" title="Measure feature"></i> ');
+      os.MapContainer.getInstance().addFeature(this.line2D);
     }
-
-    var type = os.interaction.Measure.method;
-    type = type.substring(0, 1).toUpperCase() + type.substring(1);
-
-    os.interaction.Measure.nextId++;
-    this.line2D.set('title', type + ' Measure ' + os.interaction.Measure.nextId);
-    this.line2D.set('icons', ' <i class="fa fa-arrows-h" title="Measure feature"></i> ');
-    os.MapContainer.getInstance().addFeature(this.line2D);
-
     os.interaction.Measure.base(this, 'end', mapBrowserEvent);
   }
 };

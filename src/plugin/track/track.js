@@ -30,6 +30,12 @@ const LOGGER_ = log.getLogger('plugin.track');
 const ID = 'track';
 
 /**
+ * Settings key to enable/disable the "Predicted" Tracks feature
+ * @type {string}
+ */
+const PREDICT = 'plugin.track.predict';
+
+/**
  * The FontAwesome track icon.
  * @type {string}
  *
@@ -579,6 +585,7 @@ const updateTrackSource = function(track) {
 exports = {
   ID,
   ICON,
+  PREDICT,
   TrackField,
   isTrackFeature,
   getFeatureValue,

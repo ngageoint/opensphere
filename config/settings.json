@@ -200,6 +200,9 @@
     "plugin": {
       "storage": {
         "persistenceHelp": "https://web.dev/persistent-storage/"
+      },
+      "track": {
+        "predict": true
       }
     },
     "bearing": {

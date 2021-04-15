@@ -21,6 +21,9 @@ const EventType = goog.require('plugin.track.EventType');
 const KMLNode = goog.require('plugin.file.kml.ui.KMLNode');
 const TrackManager = goog.require('plugin.track.TrackManager');
 
+const ActionEvent = goog.requireType('os.ui.action.ActionEvent');
+const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+
 
 /**
  * Menu group for track actions.
@@ -30,119 +33,152 @@ const TRACK_GROUP = 'Tracks';
 
 /**
  * Add track items to the layer menu.
+ * @param {boolean=} opt_enablePredict true to include "Predict" track capabilities
  */
-const layerSetup = function() {
-  var menu = osUiMenuLayer.MENU;
+const layerSetup = function(opt_enablePredict = false) {
+  const menu = osUiMenuLayer.MENU;
   if (menu && !menu.getRoot().find(TRACK_GROUP)) {
-    var group = menu.getRoot().find(osUiMenuLayer.GroupLabel.TOOLS);
+    const group = menu.getRoot().find(osUiMenuLayer.GroupLabel.TOOLS);
     asserts.assert(group, 'Group should exist! Check spelling?');
+
+    const children = [
+      {
+        label: 'Create Track',
+        eventType: EventType.CREATE_TRACK,
+        tooltip: 'Creates a new track by linking all features in time order.',
+        icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
+        metricKey: pluginTrack.Metrics.Keys.CREATE_LAYER,
+        beforeRender: visibleIfHasFeatures,
+        handler: handleAddCreateTrackEvent_,
+        sort: 200
+      },
+      {
+        label: 'Create Track From Selected',
+        eventType: EventType.CREATE_FROM_SELECTED,
+        tooltip: 'Creates a new track by linking selected features in time order.',
+        icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
+        metricKey: pluginTrack.Metrics.Keys.CREATE_LAYER,
+        beforeRender: visibleIfHasFeatures,
+        handler: handleAddCreateTrackEvent_,
+        sort: 201
+      },
+      {
+        label: 'Add to Track...',
+        eventType: EventType.ADD_TO,
+        tooltip: 'Adds all features to an existing track.',
+        icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
+        metricKey: pluginTrack.Metrics.Keys.ADD_TO_LAYER,
+        beforeRender: visibleIfTracksExist,
+        handler: handleAddCreateTrackEvent_,
+        sort: 210
+      },
+      {
+        label: 'Add Selected to Track...',
+        eventType: EventType.ADD_FROM_SELECTED,
+        tooltip: 'Adds selected features to an existing track.',
+        icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
+        metricKey: pluginTrack.Metrics.Keys.ADD_TO_LAYER,
+        beforeRender: visibleIfTracksExist,
+        handler: handleAddCreateTrackEvent_,
+        sort: 211
+      },
+      {
+        label: 'Follow Track',
+        eventType: EventType.FOLLOW,
+        tooltip: 'Follow the track as it animates.',
+        icons: ['<i class="fa fa-fw fa-globe"></i>'],
+        metricKey: pluginTrack.Metrics.Keys.FOLLOW_TRACK,
+        beforeRender: visibleIfIsNotFollowed,
+        handler: handleFollowTrackEvent,
+        sort: 220
+      },
+      {
+        label: 'Unfollow Track',
+        eventType: EventType.UNFOLLOW,
+        tooltip: 'Cancel following the track during animation.',
+        icons: ['<i class="fa fa-fw fa-globe"></i>'],
+        metricKey: pluginTrack.Metrics.Keys.UNFOLLOW_TRACK,
+        beforeRender: visibleIfIsFollowed,
+        handler: handleUnfollowTrackEvent,
+        sort: 220
+      },
+      {
+        label: 'Hide Track Line',
+        eventType: EventType.HIDE_LINE,
+        tooltip: 'Do not show the track line.',
+        icons: ['<i class="fa fa-fw fa-level-up"></i>'],
+        metricKey: pluginTrack.Metrics.Keys.HIDE_TRACK_LINE,
+        beforeRender: visibleIfLineIsShown,
+        handler: goog.partial(setShowTrackLine, false),
+        sort: 230
+      },
+      {
+        label: 'Show Track Line',
+        eventType: EventType.SHOW_LINE,
+        tooltip: 'Show the track line.',
+        icons: ['<i class="fa fa-fw fa-level-up"></i>'],
+        metricKey: pluginTrack.Metrics.Keys.SHOW_TRACK_LINE,
+        beforeRender: visibleIfLineIsHidden,
+        handler: goog.partial(setShowTrackLine, true),
+        sort: 230
+      },
+      {
+        label: 'Disable Track Interpolation',
+        eventType: EventType.ENABLE_INTERPOLATE_MARKER,
+        tooltip: 'Only move track marker when there is a supporting feature.',
+        icons: ['<i class="fa fa-fw fa-star-half-o fa-rotate-270"></i>'],
+        metricKey: pluginTrack.Metrics.Keys.ENABLE_INTERPOLATE_MARKER,
+        beforeRender: visibleIfMarkerInterpolationEnabled,
+        handler: goog.partial(setMarkerInterpolationEnabled, false),
+        sort: 240
+      },
+      {
+        label: 'Enable Track Interpolation',
+        eventType: EventType.DISABLE_INTERPOLATE_MARKER,
+        tooltip: 'Show the interpolated position of the track marker.',
+        icons: ['<i class="fa fa-fw fa-star-half-o fa-rotate-270"></i>'],
+        metricKey: pluginTrack.Metrics.Keys.DISABLE_INTERPOLATE_MARKER,
+        beforeRender: visibleIfMarkerInterpolationDisabled,
+        handler: goog.partial(setMarkerInterpolationEnabled, true),
+        sort: 250
+      }
+    ];
+
+    if (opt_enablePredict) {
+      children.push({
+        label: 'Predict',
+        type: MenuItemType.SUBMENU,
+        tooltip: 'Extend the Track past the latest data.',
+        icons: ['<i class="fa fa-fw fa-long-arrow-right"></i>'],
+        children: [
+          {
+            label: 'Track to... (rhumb)',
+            eventType: EventType.PREDICT_TRACK_RHUMB,
+            tooltip: 'Extend the Track using constant-heading rhumb line.',
+            icons: ['<i class="fa fa-fw fa-share"></i>'],
+            metricKey: pluginTrack.Metrics.Keys.PREDICT_TRACK_RHUMB,
+            handler: handlePredictRhumb,
+            sort: 10
+          },
+          {
+            label: 'Track to... (geodesic)',
+            eventType: EventType.PREDICT_TRACK_GEODESIC,
+            tooltip: 'Extend the Track using shortest path geodesic line.',
+            icons: ['<i class="fa fa-fw fa-long-arrow-right"></i>'],
+            metricKey: pluginTrack.Metrics.Keys.PREDICT_TRACK_GEODESIC,
+            handler: handlePredictGeodesic,
+            sort: 20
+          }
+        ],
+        sort: 260
+      });
+    }
 
     group.addChild({
       label: TRACK_GROUP,
       icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
       type: MenuItemType.SUBMENU,
-      children: [
-        {
-          label: 'Create Track',
-          eventType: EventType.CREATE_TRACK,
-          tooltip: 'Creates a new track by linking all features in time order.',
-          icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
-          metricKey: pluginTrack.Metrics.Keys.CREATE_LAYER,
-          beforeRender: visibleIfHasFeatures,
-          handler: handleAddCreateTrackEvent_,
-          sort: 200
-        },
-        {
-          label: 'Create Track From Selected',
-          eventType: EventType.CREATE_FROM_SELECTED,
-          tooltip: 'Creates a new track by linking selected features in time order.',
-          icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
-          metricKey: pluginTrack.Metrics.Keys.CREATE_LAYER,
-          beforeRender: visibleIfHasFeatures,
-          handler: handleAddCreateTrackEvent_,
-          sort: 201
-        },
-        {
-          label: 'Add to Track...',
-          eventType: EventType.ADD_TO,
-          tooltip: 'Adds all features to an existing track.',
-          icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
-          metricKey: pluginTrack.Metrics.Keys.ADD_TO_LAYER,
-          beforeRender: visibleIfTracksExist,
-          handler: handleAddCreateTrackEvent_,
-          sort: 210
-        },
-        {
-          label: 'Add Selected to Track...',
-          eventType: EventType.ADD_FROM_SELECTED,
-          tooltip: 'Adds selected features to an existing track.',
-          icons: ['<i class="fa fa-fw fa-share-alt"></i>'],
-          metricKey: pluginTrack.Metrics.Keys.ADD_TO_LAYER,
-          beforeRender: visibleIfTracksExist,
-          handler: handleAddCreateTrackEvent_,
-          sort: 211
-        },
-        {
-          label: 'Follow Track',
-          eventType: EventType.FOLLOW,
-          tooltip: 'Follow the track as it animates.',
-          icons: ['<i class="fa fa-fw fa-globe"></i>'],
-          metricKey: pluginTrack.Metrics.Keys.FOLLOW_TRACK,
-          beforeRender: visibleIfIsNotFollowed,
-          handler: handleFollowTrackEvent,
-          sort: 220
-        },
-        {
-          label: 'Unfollow Track',
-          eventType: EventType.UNFOLLOW,
-          tooltip: 'Cancel following the track during animation.',
-          icons: ['<i class="fa fa-fw fa-globe"></i>'],
-          metricKey: pluginTrack.Metrics.Keys.UNFOLLOW_TRACK,
-          beforeRender: visibleIfIsFollowed,
-          handler: handleUnfollowTrackEvent,
-          sort: 220
-        },
-        {
-          label: 'Hide Track Line',
-          eventType: EventType.HIDE_LINE,
-          tooltip: 'Do not show the track line.',
-          icons: ['<i class="fa fa-fw fa-level-up"></i>'],
-          metricKey: pluginTrack.Metrics.Keys.HIDE_TRACK_LINE,
-          beforeRender: visibleIfLineIsShown,
-          handler: goog.partial(setShowTrackLine, false),
-          sort: 230
-        },
-        {
-          label: 'Show Track Line',
-          eventType: EventType.SHOW_LINE,
-          tooltip: 'Show the track line.',
-          icons: ['<i class="fa fa-fw fa-level-up"></i>'],
-          metricKey: pluginTrack.Metrics.Keys.SHOW_TRACK_LINE,
-          beforeRender: visibleIfLineIsHidden,
-          handler: goog.partial(setShowTrackLine, true),
-          sort: 230
-        },
-        {
-          label: 'Disable Track Interpolation',
-          eventType: EventType.ENABLE_INTERPOLATE_MARKER,
-          tooltip: 'Only move track marker when there is a supporting feature.',
-          icons: ['<i class="fa fa-fw fa-star-half-o fa-rotate-270"></i>'],
-          metricKey: pluginTrack.Metrics.Keys.ENABLE_INTERPOLATE_MARKER,
-          beforeRender: visibleIfMarkerInterpolationEnabled,
-          handler: goog.partial(setMarkerInterpolationEnabled, false),
-          sort: 240
-        },
-        {
-          label: 'Enable Track Interpolation',
-          eventType: EventType.DISABLE_INTERPOLATE_MARKER,
-          tooltip: 'Show the interpolated position of the track marker.',
-          icons: ['<i class="fa fa-fw fa-star-half-o fa-rotate-270"></i>'],
-          metricKey: pluginTrack.Metrics.Keys.DISABLE_INTERPOLATE_MARKER,
-          beforeRender: visibleIfMarkerInterpolationDisabled,
-          handler: goog.partial(setMarkerInterpolationEnabled, true),
-          sort: 250
-        }
-      ]
+      children: children
     });
   }
 };
@@ -155,17 +191,17 @@ const layerSetup = function() {
  */
 const hasFeatures = function(context) {
   if (context && context.length == 1) {
-    var node = context[0];
+    const node = context[0];
     if (node instanceof LayerNode) {
-      var layer = node.getLayer();
+      const layer = node.getLayer();
       if (layer instanceof VectorLayer) {
-        var source = layer.getSource();
+        const source = layer.getSource();
         if (source instanceof osSource.Vector) {
           return source.getFeatureCount() > 0;
         }
       }
     } else if (node instanceof KMLNode) {
-      var features = node.getFeatures();
+      const features = node.getFeatures();
       return features != null && features.length > 0;
     }
   }
@@ -181,11 +217,11 @@ const hasFeatures = function(context) {
  */
 const hasSelectedFeatures = function(context) {
   if (context && context.length == 1) {
-    var node = context[0];
+    const node = context[0];
     if (node instanceof LayerNode) {
-      var layer = node.getLayer();
+      const layer = node.getLayer();
       if (layer instanceof VectorLayer) {
-        var source = layer.getSource();
+        const source = layer.getSource();
         if (source instanceof osSource.Vector) {
           return source.getSelectedItems().length > 0;
         }
@@ -217,7 +253,7 @@ const visibleIfHasFeatures = function(context) {
  * @this {os.ui.menu.MenuItem}
  */
 const visibleIfTracksExist = function(context) {
-  var trackNode = PlacesManager.getInstance().getPlacesRoot();
+  const trackNode = PlacesManager.getInstance().getPlacesRoot();
   if (Event.isSelectedEvent(this.eventType)) {
     this.visible = trackNode != null && trackNode.hasFeatures() && hasSelectedFeatures(context);
   } else {
@@ -235,19 +271,20 @@ const visibleIfTrackNode = function(context) {
   this.visible = false;
 
   if (context) {
-    var trackNodes = getTrackNodes(context);
+    const trackNodes = getTrackNodes(context);
     this.visible = trackNodes && trackNodes.length === context.length;
   }
 };
 
 /**
  * Set up track items in the spatial menu.
+ * @param {boolean=} opt_enablePredict true to include "Predict" track capabilities
  */
-const spatialSetup = function() {
-  var menu = spatial.MENU;
+const spatialSetup = function(opt_enablePredict = false) {
+  const menu = spatial.MENU;
   if (menu) {
-    var root = menu.getRoot();
-    var group = root.find(spatial.Group.FEATURES);
+    const root = menu.getRoot();
+    const group = root.find(spatial.Group.FEATURES);
     asserts.assert(group, 'Group "' + spatial.Group.FEATURES + '" should exist! Check spelling?');
 
     group.addChild({
@@ -315,6 +352,36 @@ const spatialSetup = function() {
       beforeRender: visibleIfMarkerInterpolationDisabled,
       handler: goog.partial(setMarkerInterpolationEnabled, true)
     });
+
+    if (opt_enablePredict) {
+      group.addChild({
+        label: 'Predict',
+        type: MenuItemType.SUBMENU,
+        tooltip: 'Extend the Track past the latest data.',
+        icons: ['<i class="fa fa-fw fa-long-arrow-right"></i>'],
+        children: [
+          {
+            label: 'Track to... (rhumb)',
+            eventType: EventType.PREDICT_TRACK_RHUMB,
+            tooltip: 'Extend the Track using constant-heading rhumb line.',
+            icons: ['<i class="fa fa-fw fa-share"></i>'],
+            metricKey: pluginTrack.Metrics.Keys.PREDICT_TRACK_RHUMB,
+            handler: handlePredictRhumb,
+            sort: 10
+          },
+          {
+            label: 'Track to... (geodesic)',
+            eventType: EventType.PREDICT_TRACK_GEODESIC,
+            tooltip: 'Extend the Track using shortest path geodesic line.',
+            icons: ['<i class="fa fa-fw fa-long-arrow-right"></i>'],
+            metricKey: pluginTrack.Metrics.Keys.PREDICT_TRACK_GEODESIC,
+            handler: handlePredictGeodesic,
+            sort: 20
+          }
+        ],
+        sort: 260
+      });
+    }
   }
 };
 
@@ -347,7 +414,7 @@ const visibleIfMarkerInterpolationDisabled = function(context) {
  */
 const isMarkerInterpolationOn = function(opt_context) {
   if (opt_context) {
-    var tracks = getTracks(/** @type {Object|null|undefined} */ (opt_context));
+    const tracks = getTracks(/** @type {Object|null|undefined} */ (opt_context));
     if (tracks.length > 0) {
       return osTrack.getInterpolateMarker(/** @type {!ol.Feature} */ (tracks[0]));
     }
@@ -400,7 +467,7 @@ const visibleIfLineIsHidden = function(context) {
  */
 const isLineShown = function(opt_context) {
   if (opt_context) {
-    var tracks = getTracks(/** @type {Object|null|undefined} */ (opt_context));
+    const tracks = getTracks(/** @type {Object|null|undefined} */ (opt_context));
     if (tracks.length > 0) {
       return osTrack.getShowLine(/** @type {!ol.Feature} */ (tracks[0]));
     }
@@ -463,8 +530,8 @@ const visibleIfIsFollowed = function(context) {
  */
 const isFollowed = function(opt_context) {
   if (opt_context) {
-    var tm = TrackManager.getInstance();
-    var tracks = getTracks(/** @type {Object|null|undefined} */ (opt_context));
+    const tm = TrackManager.getInstance();
+    const tracks = getTracks(/** @type {Object|null|undefined} */ (opt_context));
     if (tracks.length > 0) {
       return tm.isFollowed(tracks);
     }
@@ -510,12 +577,12 @@ const getTrackNodes = function(opt_context) {
 /**
  * Handle the follow track menu event.
  *
- * @param {!(os.ui.action.ActionEvent|os.ui.menu.MenuEvent)} event The menu event.
+ * @param {!(ActionEvent|MenuEvent)} event The menu event.
  */
 const handleFollowTrackEvent = function(event) {
-  var context = event.getContext();
+  const context = event.getContext();
   if (context) {
-    var tracks = getTracks((context));
+    const tracks = getTracks((context));
     if (tracks.length > 0) {
       TrackManager.getInstance().followTracks(tracks);
     }
@@ -525,12 +592,12 @@ const handleFollowTrackEvent = function(event) {
 /**
  * Handle the unfollow track menu event.
  *
- * @param {!(os.ui.action.ActionEvent|os.ui.menu.MenuEvent)} event The menu event.
+ * @param {!(ActionEvent|MenuEvent)} event The menu event.
  */
 const handleUnfollowTrackEvent = function(event) {
-  var context = event.getContext();
+  const context = event.getContext();
   if (context) {
-    var tracks = getTracks((context));
+    const tracks = getTracks((context));
     if (tracks.length > 0) {
       TrackManager.getInstance().unfollowTracks(tracks);
     }
@@ -541,13 +608,13 @@ const handleUnfollowTrackEvent = function(event) {
  * Handle the show track line menu event.
  *
  * @param {boolean} show
- * @param {!(os.ui.action.ActionEvent|os.ui.menu.MenuEvent)} event The menu event.
+ * @param {!(ActionEvent|MenuEvent)} event The menu event.
  */
 const setShowTrackLine = function(show, event) {
-  var context = event.getContext();
+  const context = event.getContext();
   if (context) {
-    var tracks = getTracks((context));
-    for (var i = 0; i < tracks.length; i++) {
+    const tracks = getTracks((context));
+    for (let i = 0; i < tracks.length; i++) {
       osTrack.setShowLine(/** @type {!ol.Feature} */ (tracks[i]), show);
     }
   }
@@ -557,13 +624,13 @@ const setShowTrackLine = function(show, event) {
  * Handle the show track line menu event.
  *
  * @param {boolean} show
- * @param {!(os.ui.action.ActionEvent|os.ui.menu.MenuEvent)} event The menu event.
+ * @param {!(ActionEvent|MenuEvent)} event The menu event.
  */
 const setMarkerInterpolationEnabled = function(show, event) {
-  var context = event.getContext();
+  const context = event.getContext();
   if (context) {
-    var tracks = getTracks((context));
-    for (var i = 0; i < tracks.length; i++) {
+    const tracks = getTracks((context));
+    for (let i = 0; i < tracks.length; i++) {
       osTrack.setInterpolateMarker(/** @type {!ol.Feature} */ (tracks[i]), show);
     }
   }
@@ -576,21 +643,21 @@ const setMarkerInterpolationEnabled = function(show, event) {
  * @return {Array<ol.Feature>}
  */
 const getTracks = function(context) {
-  var tracks = [];
+  const tracks = [];
   if (context) {
     if (context.feature && osTrack.isTrackFeature(context.feature)) {
       tracks.push(/** @type {!ol.Feature} */ (context.feature));
     } else if (Array.isArray(context)) {
-      var trackNodes = getTrackNodes(context);
+      const trackNodes = getTrackNodes(context);
       if (trackNodes && trackNodes.length === context.length) {
-        for (var i = 0; i < trackNodes.length; i++) {
+        for (let i = 0; i < trackNodes.length; i++) {
           tracks.push(trackNodes[i].getFeature());
         }
       }
     } else if (instanceOf(context, osSource.Vector.NAME)) {
-      var source = /** @type {!osSource.Vector} */ (context);
-      var temp = source.getSelectedItems();
-      for (var i = 0; i < temp.length; i++) {
+      const source = /** @type {!osSource.Vector} */ (context);
+      const temp = source.getSelectedItems();
+      for (let i = 0; i < temp.length; i++) {
         if (osTrack.isTrackFeature(temp[i])) {
           tracks.push(temp[i]);
         }
@@ -604,21 +671,21 @@ const getTracks = function(context) {
 /**
  * Handle add/create events from the layer menu.
  *
- * @param {!os.ui.menu.MenuEvent<osUiMenuLayer.Context>} event The menu event.
+ * @param {!MenuEvent<osUiMenuLayer.Context>} event The menu event.
  */
 const handleAddCreateTrackEvent_ = function(event) {
-  var context = event.getContext();
+  const context = event.getContext();
   if (context && context.length == 1) {
-    var node = context[0];
-    var features;
-    var title;
+    const node = context[0];
+    let features;
+    let title;
 
     if (node instanceof LayerNode) {
-      var layer = node.getLayer();
+      const layer = node.getLayer();
       if (layer instanceof OLVectorLayer) {
         title = layer.getTitle() + ' Track';
 
-        var source = layer.getSource();
+        const source = layer.getSource();
         if (source) {
           if (Event.isSelectedEvent(event.type)) {
             features = source.getSelectedItems();
@@ -636,7 +703,7 @@ const handleAddCreateTrackEvent_ = function(event) {
       if (event.type.startsWith(EventType.CREATE_TRACK)) {
         osTrack.promptForTitleAndMetadata(title).then(function({includeMetadata, title}) {
           osTrack.getSortField(features[0]).then(function(sortField) {
-            var options = /** @type {!osTrack.CreateOptions} */ ({
+            const options = /** @type {!osTrack.CreateOptions} */ ({
               features: features,
               includeMetadata,
               name: title,
@@ -649,7 +716,7 @@ const handleAddCreateTrackEvent_ = function(event) {
       } else if (event.type.startsWith(EventType.ADD_TO)) {
         pluginTrack.promptForTrack().then(function(track) {
           if (track) {
-            var metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
+            const metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
             osTrack.addToTrack({
               track: track,
               features: features,
@@ -662,6 +729,46 @@ const handleAddCreateTrackEvent_ = function(event) {
     }
   }
 };
+
+/**
+ * Handle the predict rhumb menu event.
+ *
+ * @param {!(ActionEvent|MenuEvent)} event The menu event.
+ */
+const handlePredictRhumb = function(event) {
+  // TODO set the interpolation method
+  handlePredict_(event);
+};
+
+/**
+ * Handle the predict geodesic menu event.
+ *
+ * @param {!(ActionEvent|MenuEvent)} event The menu event.
+ */
+const handlePredictGeodesic = function(event) {
+  // TODO set the interpolation method
+  handlePredict_(event);
+};
+
+/**
+ * Handle the predict geodesic menu event.
+ *
+ * @param {!(ActionEvent|MenuEvent)} event The menu event.
+ * @protected
+ */
+const handlePredict_ = function(event) {
+  // TODO set the drawing mode based on event.type
+  const context = event.getContext();
+  if (context) {
+    console.log(event.type, event, context);
+    // TODO if a feature, create a track
+    const tm = TrackManager.getInstance();
+    const tracks = getTracks(/** */ (context));
+
+    tm.promptForTrackPrediction(tracks);
+  }
+};
+
 
 exports = {
   TRACK_GROUP,
@@ -690,5 +797,7 @@ exports = {
   handleUnfollowTrackEvent,
   setShowTrackLine,
   setMarkerInterpolationEnabled,
-  getTracks
+  getTracks,
+  handlePredictRhumb,
+  handlePredictGeodesic
 };
