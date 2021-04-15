@@ -78,7 +78,8 @@
     },
     "moduleDefines": {
       "os.file.ZIP_PATH": "zip-js/WebContent",
-      "plugin.cesium.LIBRARY_BASE_PATH": "cesium/Build/CesiumUnminified"
+      "plugin.cesium.LIBRARY_BASE_PATH": "cesium/Build/CesiumUnminified",
+      "JSCHARDET_BASE_PATH": "jschardet/dist"
     }
   },
   "scripts": {
@@ -322,6 +323,7 @@
     "google-closure-library": "^20200112.0.0",
     "html2canvas": "=1.0.0-rc.4",
     "jquery": "3.5.0",
+    "jschardet": "^2.3.0",
     "jsts": "^1.5.0",
     "modernizr": "^3.8.0",
     "moment": "~2.20.1",
