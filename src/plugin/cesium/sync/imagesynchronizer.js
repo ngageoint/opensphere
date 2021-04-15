@@ -97,6 +97,13 @@ class ImageSynchronizer extends CesiumSynchronizer {
      */
     this.firstLoopFixed_ = false;
 
+    /**
+     * Event keys that correspond to modifiable styles
+     * @type {Array<string>}
+     * @protected
+     */
+    this.styleChangeKeys = ['opacity', 'brightness', 'contrast', 'saturation', 'sharpness'];
+
     this.onPrimitiveReady_ = this.onPrimitiveReadyInternal.bind(this);
     this.scene.primitives.add(this.collection_);
 
@@ -322,7 +329,7 @@ class ImageSynchronizer extends CesiumSynchronizer {
     if (event instanceof OLObject.Event) {
       if (event.key == PropertyChange.VISIBLE) {
         this.syncInternal(true);
-      } else if (event.key == 'opacity' && this.activePrimitive_) {
+      } else if (this.styleChangeKeys.includes(event.key) && this.activePrimitive_) {
         this.activePrimitive_.appearance.material = this.createImageMaterial(this.image_.getImage());
         dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
       }

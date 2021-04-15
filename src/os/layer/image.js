@@ -517,7 +517,6 @@ os.layer.Image.prototype.setBrightness = function(value, opt_options) {
   if (options) {
     options['brightness'] = value;
     this.updateColorFilter();
-    os.style.notifyStyleChange(this);
   }
   os.layer.Image.base(this, 'setBrightness', value);
 };
@@ -538,7 +537,6 @@ os.layer.Image.prototype.setContrast = function(value, opt_options) {
   if (options) {
     options['contrast'] = value;
     this.updateColorFilter();
-    os.style.notifyStyleChange(this);
   }
   os.layer.Image.base(this, 'setContrast', value);
 };
@@ -560,7 +558,6 @@ os.layer.Image.prototype.setSaturation = function(value, opt_options) {
   if (options) {
     options['saturation'] = value;
     this.updateColorFilter();
-    os.style.notifyStyleChange(this);
   }
   os.layer.Image.base(this, 'setSaturation', value);
 };
@@ -580,7 +577,6 @@ os.layer.Image.prototype.setSharpness = function(value, opt_options) {
   if (options) {
     options['sharpness'] = value;
     this.updateColorFilter();
-    os.style.notifyStyleChange(this);
   }
   os.layer.Image.base(this, 'setSharpness', value);
 };

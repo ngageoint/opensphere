@@ -78,7 +78,7 @@ os.data.LayerSyncDescriptor.LOGGER_ = goog.log.getLogger('os.data.LayerSyncDescr
  * @const
  * @private
  */
-os.data.LayerSyncDescriptor.STYLE_KEYS_ = ['opacity', 'contrast', 'brightness', 'saturation'];
+os.data.LayerSyncDescriptor.STYLE_KEYS_ = ['opacity', 'contrast', 'brightness', 'saturation', 'sharpness'];
 
 
 /**
