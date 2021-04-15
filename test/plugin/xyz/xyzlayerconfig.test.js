@@ -1,9 +1,13 @@
-goog.require('os.net.ProxyHandler');
 goog.require('ol.proj');
+goog.require('os.net.ProxyHandler');
 goog.require('plugin.xyz.XYZLayerConfig');
 
 
 describe('plugin.xyz.XYZLayerConfig', function() {
+  const olProj = goog.module.get('ol.proj');
+  const ProxyHandler = goog.module.get('os.net.ProxyHandler');
+  const XYZLayerConfig = goog.module.get('plugin.xyz.XYZLayerConfig');
+
   it('should proxy URLs properly', function() {
     var options = {
       url: 'http://www.example.com/wms',
@@ -11,7 +15,7 @@ describe('plugin.xyz.XYZLayerConfig', function() {
       title: 'Test'
     };
 
-    var lc = new plugin.xyz.XYZLayerConfig();
+    var lc = new XYZLayerConfig();
     var original = lc.createLayer(options);
 
     options['proxy'] = true;
@@ -22,12 +26,12 @@ describe('plugin.xyz.XYZLayerConfig', function() {
 
     var tileCoord = [0, 0, 0];
     var pixelRatio = 1;
-    var proj = ol.proj.get('EPSG:4326');
+    var proj = olProj.get('EPSG:4326');
 
     var originalUrl = originalFunc(tileCoord, pixelRatio, proj);
     var proxyUrl = proxyFunc(tileCoord, pixelRatio, proj);
 
-    expect(proxyUrl).toBe(os.net.ProxyHandler.getProxyUri(originalUrl));
+    expect(proxyUrl).toBe(ProxyHandler.getProxyUri(originalUrl));
   });
 
   it('should handle single URLs properly', function() {
@@ -36,14 +40,14 @@ describe('plugin.xyz.XYZLayerConfig', function() {
       title: 'TestA'
     };
 
-    var lc = new plugin.xyz.XYZLayerConfig();
+    var lc = new XYZLayerConfig();
     var layer = lc.createLayer(options);
 
     var tileFn = layer.getSource().getTileUrlFunction();
 
     var tileCoord = [3, 2, -1];
     var pixelRatio = 1;
-    var proj = ol.proj.get('EPSG:3857');
+    var proj = olProj.get('EPSG:3857');
 
     var resultURL = tileFn(tileCoord, pixelRatio, proj);
 
@@ -56,14 +60,14 @@ describe('plugin.xyz.XYZLayerConfig', function() {
       title: 'TestB'
     };
 
-    var lc = new plugin.xyz.XYZLayerConfig();
+    var lc = new XYZLayerConfig();
     var layer = lc.createLayer(options);
 
     var tileFn = layer.getSource().getTileUrlFunction();
 
     var tileCoord = [3, 2, -1];
     var pixelRatio = 1;
-    var proj = ol.proj.get('EPSG:3857');
+    var proj = olProj.get('EPSG:3857');
 
     var resultURL = tileFn(tileCoord, pixelRatio, proj);
 
@@ -76,14 +80,14 @@ describe('plugin.xyz.XYZLayerConfig', function() {
       title: 'Test2'
     };
 
-    var lc = new plugin.xyz.XYZLayerConfig();
+    var lc = new XYZLayerConfig();
     var layer = lc.createLayer(options);
 
     var tileFn = layer.getSource().getTileUrlFunction();
 
     var tileCoord = [3, 2, -1];
     var pixelRatio = 1;
-    var proj = ol.proj.get('EPSG:3857');
+    var proj = olProj.get('EPSG:3857');
 
     var resultURL = tileFn(tileCoord, pixelRatio, proj);
 
@@ -96,14 +100,14 @@ describe('plugin.xyz.XYZLayerConfig', function() {
       title: 'TestABC'
     };
 
-    var lc = new plugin.xyz.XYZLayerConfig();
+    var lc = new XYZLayerConfig();
     var layer = lc.createLayer(options);
 
     var tileFn = layer.getSource().getTileUrlFunction();
 
     var tileCoord = [3, 2, -1];
     var pixelRatio = 1;
-    var proj = ol.proj.get('EPSG:3857');
+    var proj = olProj.get('EPSG:3857');
 
     var resultURL = tileFn(tileCoord, pixelRatio, proj);
     expect(resultURL).toMatch('http://[a-c].tiles.example.com/osm/2/2/0.png');
@@ -118,14 +122,14 @@ describe('plugin.xyz.XYZLayerConfig', function() {
       title: 'Test04'
     };
 
-    var lc = new plugin.xyz.XYZLayerConfig();
+    var lc = new XYZLayerConfig();
     var layer = lc.createLayer(options);
 
     var tileFn = layer.getSource().getTileUrlFunction();
 
     var tileCoord = [3, 2, -1];
     var pixelRatio = 1;
-    var proj = ol.proj.get('EPSG:3857');
+    var proj = olProj.get('EPSG:3857');
 
     var resultURL = tileFn(tileCoord, pixelRatio, proj);
     expect(resultURL).toMatch('http://[0-4].tiles.example.com/osm/2/2/0.png');
