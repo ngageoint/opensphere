@@ -16,7 +16,7 @@ goog.require('os.search.SearchEventType');
  * @constructor
  */
 os.search.MockSearch = function(id, name, value, score) {
-  goog.base(this, id, name, 'test', 100);
+  os.search.MockSearch.base(this, 'constructor', id, name, 'test', 100);
   this.id_ = id;
   this.name_ = name;
   this.value_ = value;
@@ -38,7 +38,7 @@ os.search.MockSearch.prototype.searchTerm = function(term, opt_start, opt_pageSi
   for (var i = 0; i < pageSize; i++) {
     results.push({
       value: this.value_,
-      getScore: function() { return score; },
+      getScore: () => score,
       setScore: function(score) {}
     });
   }
@@ -63,7 +63,7 @@ os.search.MockSearch.prototype.searchFavorite = function(term, opt_start, opt_pa
   for (var i = 0; i < pageSize; i++) {
     results.push({
       value: this.value_,
-      getScore: function() { return score; }
+      getScore: () => score
     });
   }
 
@@ -93,7 +93,7 @@ os.search.MockSearch.prototype.autocomplete = function(term, opt_maxResults) {
   var results = [];
 
   for (var i = 0; i < pageSize; i++) {
-    results.push({ value: this.value_ });
+    results.push({value: this.value_});
   }
 
   this.dispatchEvent(new os.search.SearchEvent(os.search.SearchEventType.AUTOCOMPLETED, term, results,

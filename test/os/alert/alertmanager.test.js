@@ -1,12 +1,16 @@
 goog.require('goog.events.EventTarget');
+goog.require('goog.log');
+goog.require('goog.log.LogRecord');
 goog.require('os.alert.AlertEvent');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
 goog.require('os.structs.EventType');
 
 describe('os.alert.AlertManager', function() {
-  let alertManager = new os.alert.AlertManager();
-  let waitTime = os.alert.AlertManager.DEFAULT_THROTTLE_TIME + 250;
+  const loggerName = 'os.alert.AlertManagerTest';
+  const logger = goog.log.getLogger(loggerName);
+
+  const alertManager = new os.alert.AlertManager();
 
   it('should handle alerts and and add them to its buffer', function() {
     const alert1 = 'test alert';
@@ -61,15 +65,25 @@ describe('os.alert.AlertManager', function() {
     const clientId = 'testalertclient';
 
     const callback = {
-      handleAlert: function () {
+      handleAlert: function() {
       }
     };
     spyOn(callback, 'handleAlert');
 
-    const promises = [];
-    promises.push(am.sendAlert('alert1'));
-    promises.push(am.sendAlert('alert2'));
-    Promise.all(promises).then((resolve, reject) => {
+    let alertsSent = false;
+
+    runs(() => {
+      Promise.all([
+        am.sendAlert('alert1'),
+        am.sendAlert('alert2')
+      ]).then((resolve, reject) => {
+        alertsSent = true;
+      });
+    });
+
+    waitsFor(() => alertsSent, 'alerts to be sent');
+
+    runs(() => {
       // handle missed
       am.processMissedAlerts(clientId, callback.handleAlert);
       expect(callback.handleAlert.calls.length).toBe(2);
@@ -78,83 +92,91 @@ describe('os.alert.AlertManager', function() {
       am.processMissedAlerts(clientId, callback.handleAlert);
       expect(callback.handleAlert.calls.length).toBe(2);
 
+      alertsSent = false;
+
       // one more alert
       am.sendAlert('alert3').then(() => {
-        // subsequent calls to processMissedAlerts should be ignored
-        am.processMissedAlerts(clientId, callback.handleAlert);
-        expect(callback.handleAlert.calls.length).toBe(2);
+        alertsSent = true;
       });
+    });
+
+    waitsFor(() => alertsSent, 'third alert to be sent');
+
+    runs(() => {
+      // subsequent calls to processMissedAlerts should be ignored
+      am.processMissedAlerts(clientId, callback.handleAlert);
+      expect(callback.handleAlert.calls.length).toBe(2);
     });
   });
 
   it('should optionally log alerts', function() {
-    // mock up a logger
-    const MockLogger = function () {
-      this.records = [];
-      this.any = function (severity, message, opt_exception) {
-        this.records.push({
-          level: severity,
-          msg: message,
-          exception: opt_exception
-        });
-      };
+    const logRecords = [];
+    let alertsSent = false;
 
-      this.info = function (message, e) {
-        this.any(os.alert.AlertEventSeverity.INFO, message, e);
-      };
-
-      this.warning = function (message, e) {
-        this.any(os.alert.AlertEventSeverity.WARNING, message, e);
-      };
-
-      this.severe = function (message, e) {
-        this.any(os.alert.AlertEventSeverity.ERROR, message, e);
-      };
-    };
-
-    const am = new os.alert.AlertManager();
-    const logger = new MockLogger();
-    const promises = [];
-
-    for (let key in os.alert.AlertEventSeverity) {
-      promises.push(am.sendAlert('alert', os.alert.AlertEventSeverity[key], logger));
-    }
-
-    Promise.all(promises).then(() => {
-      // 4 unique alerts
-      expect(logger.records.length).toBe(4);
-      expect(logger.records.filter((r) => r.level.name  === os.alert.AlertEventSeverity.INFO.name).length).toBe(2);
-      expect(logger.records.filter((r) => r.level.name  === os.alert.AlertEventSeverity.WARNING.name).length).toBe(1);
-      expect(logger.records.filter((r) => r.level.name  === os.alert.AlertEventSeverity.ERROR.name).length).toBe(1);
+    const logBuffer = goog.log.LogBuffer.getInstance();
+    spyOn(logBuffer, 'addRecord').andCallFake((level, msg, name) => {
+      logRecords.push(new goog.log.LogRecord(level, msg, name));
     });
 
-    const am2 = new os.alert.AlertManager();
-    const logger2 = new MockLogger();
-    const promises2 = [];
+    const am = new os.alert.AlertManager();
 
-    for (let key in os.alert.AlertEventSeverity) {
-      if (os.alert.AlertEventSeverity[key] === os.alert.AlertEventSeverity.WARNING) {
-        promises2.push(am2.sendAlert(`${key} alert`, os.alert.AlertEventSeverity[key], logger2));
-        promises2.push(am2.sendAlert(`${key} alert`, os.alert.AlertEventSeverity[key], logger2));
-      } else if (os.alert.AlertEventSeverity[key] === os.alert.AlertEventSeverity.ERROR) {
-        promises2.push(am2.sendAlert(`${key} alert`, os.alert.AlertEventSeverity[key], logger2));
-      } else {
-        promises2.push(am2.sendAlert(`${key} alert`, os.alert.AlertEventSeverity[key], logger2));
-        promises2.push(am2.sendAlert(`${key} alert`, os.alert.AlertEventSeverity[key], logger2));
-        promises2.push(am2.sendAlert(`${key} alert`, os.alert.AlertEventSeverity[key], logger2));
+    runs(() => {
+      const promises = [];
+
+      for (const key in os.alert.AlertEventSeverity) {
+        promises.push(am.sendAlert('alert', os.alert.AlertEventSeverity[key], logger));
       }
-    }
 
-    Promise.all(promises2).then(() => {
-      expect(logger2.records.filter((r) => r.level.name === os.alert.AlertEventSeverity.INFO.name).length).toBe(2);
-      expect(logger2.records.filter((r) => r.level.name === os.alert.AlertEventSeverity.INFO.name &&
-          r.msg.indexOf(' (6)')).length).toBeGreaterThan(-1);
-      expect(logger2.records.filter((r) => r.level.name === os.alert.AlertEventSeverity.WARNING.name).length).toBe(1);
-      expect(logger2.records.filter((r) => r.level.name === os.alert.AlertEventSeverity.WARNING.name &&
-          r.msg.indexOf(' (2)')).length).toBeGreaterThan(-1);
-      expect(logger2.records.filter((r) => r.level.name === os.alert.AlertEventSeverity.ERROR.name).length).toBe(1);
-      expect(logger2.records.filter((r) => r.level.name === os.alert.AlertEventSeverity.ERROR.name &&
-          r.msg.match(/\s+\(\d+\)$/)).length).toBe(0);
+      Promise.all(promises).then(() => {
+        alertsSent = true;
+      });
+    });
+
+    waitsFor(() => alertsSent, 'alerts to be sent');
+
+    runs(() => {
+      // 4 unique alerts
+      expect(logRecords.length).toBe(4);
+      expect(logRecords.filter((r) => r.getLevel().name === goog.log.Level.INFO.name).length).toBe(2);
+      expect(logRecords.filter((r) => r.getLevel().name === goog.log.Level.WARNING.name).length).toBe(1);
+      expect(logRecords.filter((r) => r.getLevel().name === goog.log.Level.SEVERE.name).length).toBe(1);
+
+      logRecords.length = 0;
+      alertsSent = false;
+
+      const am = new os.alert.AlertManager();
+      const promises = [];
+
+      for (const key in os.alert.AlertEventSeverity) {
+        if (os.alert.AlertEventSeverity[key] === os.alert.AlertEventSeverity.WARNING) {
+          promises.push(am.sendAlert(`${key} alert`, os.alert.AlertEventSeverity[key], logger));
+          promises.push(am.sendAlert(`${key} alert`, os.alert.AlertEventSeverity[key], logger));
+        } else if (os.alert.AlertEventSeverity[key] === os.alert.AlertEventSeverity.ERROR) {
+          promises.push(am.sendAlert(`${key} alert`, os.alert.AlertEventSeverity[key], logger));
+        } else {
+          promises.push(am.sendAlert(`${key} alert`, os.alert.AlertEventSeverity[key], logger));
+          promises.push(am.sendAlert(`${key} alert`, os.alert.AlertEventSeverity[key], logger));
+          promises.push(am.sendAlert(`${key} alert`, os.alert.AlertEventSeverity[key], logger));
+        }
+      }
+
+      Promise.all(promises).then(() => {
+        alertsSent = true;
+      });
+    });
+
+    waitsFor(() => alertsSent, 'alerts to be sent');
+
+    runs(() => {
+      expect(logRecords.filter((r) => r.getLevel().name === goog.log.Level.INFO.name).length).toBe(2);
+      expect(logRecords.filter((r) => r.getLevel().name === goog.log.Level.INFO.name &&
+          r.getMessage().indexOf(' (6)')).length).toBeGreaterThan(-1);
+      expect(logRecords.filter((r) => r.getLevel().name === goog.log.Level.WARNING.name).length).toBe(1);
+      expect(logRecords.filter((r) => r.getLevel().name === goog.log.Level.WARNING.name &&
+          r.getMessage().indexOf(' (2)')).length).toBeGreaterThan(-1);
+      expect(logRecords.filter((r) => r.getLevel().name === goog.log.Level.SEVERE.name).length).toBe(1);
+      expect(logRecords.filter((r) => r.getLevel().name === goog.log.Level.SEVERE.name &&
+          r.getMessage().match(/\s+\(\d+\)$/)).length).toBe(0);
     });
   });
 

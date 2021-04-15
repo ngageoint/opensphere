@@ -175,7 +175,7 @@ os.ui.header.ScrollHeaderCtrl.prototype.updatePositions_ = function() {
  */
 os.ui.header.ScrollHeaderCtrl.prototype.updateHeight_ = function() {
   if (this.filler_) {
-    this.filler_.css('height', this.element_.outerHeight());
+    this.filler_.css('height', /** @type {number} */ (this.element_.outerHeight()));
   }
 };
 
