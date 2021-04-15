@@ -1,32 +1,49 @@
+goog.require('goog.object');
 goog.require('ol.Feature');
+goog.require('ol.geom.Point');
 goog.require('os.column.ColumnMapping');
 goog.require('os.column.ColumnMappingManager');
 goog.require('os.data.ColumnDefinition');
+goog.require('os.data.DataManager');
+goog.require('os.data.RecordField');
 goog.require('os.source.Vector');
 goog.require('os.style.StyleType');
 goog.require('plugin.vectortools');
 
 
 describe('plugin.vectortools', function() {
+  const googObject = goog.module.get('goog.object');
+  const Feature = goog.module.get('ol.Feature');
+  const Point = goog.module.get('ol.geom.Point');
+  const ColumnMapping = goog.module.get('os.column.ColumnMapping');
+  const ColumnMappingManager = goog.module.get('os.column.ColumnMappingManager');
+  const ColumnDefinition = goog.module.get('os.data.ColumnDefinition');
+  const DataManager = goog.module.get('os.data.DataManager');
+  const RecordField = goog.module.get('os.data.RecordField');
+  const VectorSource = goog.module.get('os.source.Vector');
+  const StyleType = goog.module.get('os.style.StyleType');
+  const vectortools = goog.module.get('plugin.vectortools');
+
   it('should clear selected and highlighted styles on feature clone', function() {
-    var feature = new ol.Feature(new ol.geom.Point([0, 0]));
-    feature.set(os.style.StyleType.SELECT, 42);
-    feature.set(os.style.StyleType.HIGHLIGHT, 42);
+    var feature = new Feature(new Point([0, 0]));
+    feature.set(StyleType.SELECT, 42);
+    feature.set(StyleType.HIGHLIGHT, 42);
     feature.set('other', 'test');
 
-    var cloneFn = plugin.vectortools.getFeatureCloneFunction(123);
+    var cloneFn = vectortools.getFeatureCloneFunction(123);
     var clone = cloneFn(feature);
 
     expect(clone.get('other')).toBe('test');
-    expect(clone.get(os.style.StyleType.SELECT)).toBe(undefined);
-    expect(clone.get(os.style.StyleType.HIGHLIGHT)).toBe(undefined);
-    expect(clone.get(os.data.RecordField.SOURCE_ID)).toBe(123);
+    expect(clone.get(StyleType.SELECT)).toBe(undefined);
+    expect(clone.get(StyleType.HIGHLIGHT)).toBe(undefined);
+    expect(clone.get(RecordField.SOURCE_ID)).toBe(123);
   });
 
   it('should get column mappings correctly', function() {
-    spyOn(plugin.vectortools, 'mapIdToFilterKey_').andCallFake(function(id) {
-      return id;
-    });
+    const dataManager = DataManager.getInstance();
+
+    // Skip the getFilterKey path and directly return the id.
+    spyOn(dataManager, 'getDescriptor').andReturn(null);
 
     var mappingString = '<columnMapping name="My Mapping" type="decimal" description="some description">' +
         '<column layer="https://fake.server.bits/ogc/wfsServer!!fake:layer1">layer1_column1</column>' +
@@ -48,26 +65,26 @@ describe('plugin.vectortools', function() {
       'id': id2
     };
 
-    var mapping = new os.column.ColumnMapping();
+    var mapping = new ColumnMapping();
     mapping.restore(config);
-    var mapping2 = new os.column.ColumnMapping();
+    var mapping2 = new ColumnMapping();
     mapping2.restore(config2);
 
-    var cmm = os.column.ColumnMappingManager.getInstance();
+    var cmm = ColumnMappingManager.getInstance();
     cmm.add(mapping);
     cmm.add(mapping2);
 
-    var mappings = plugin.vectortools.getColumnMappings(['https://fake.server.bits/ogc/wfsServer!!fake:layer1',
+    var mappings = vectortools.getColumnMappings(['https://fake.server.bits/ogc/wfsServer!!fake:layer1',
       'https://fake.server.bits/ogc/wfsServer!!fake:layer2']);
 
-    expect(goog.object.getCount(mappings)).toBe(1);
+    expect(googObject.getCount(mappings)).toBe(1);
     expect(mappings['https://fake.server.bits/ogc/wfsServer!!fake:layer2']['layer2_column5']).toBe('layer1_column1');
 
-    var mappings = plugin.vectortools.getColumnMappings(['https://fake.server.bits/ogc/wfsServer!!fake:layer1',
+    var mappings = vectortools.getColumnMappings(['https://fake.server.bits/ogc/wfsServer!!fake:layer1',
       'https://fake.server.bits/ogc/wfsServer!!fake:layer2', 'https://fake.server.bits/ogc/wfsServer!!fake:layer3',
       'https://fake.server.bits/ogc/wfsServer!!fake:layer4']);
 
-    expect(goog.object.getCount(mappings)).toBe(2);
+    expect(googObject.getCount(mappings)).toBe(2);
     expect(mappings['https://fake.server.bits/ogc/wfsServer!!fake:layer2']['layer2_column5']).toBe('layer1_column1');
     expect(mappings['https://fake.server.bits/ogc/wfsServer!!fake:layer4']['layer4_column5']).toBe('layer3_column1');
   });
@@ -78,21 +95,21 @@ describe('plugin.vectortools', function() {
       'column1': 'column2'
     };
 
-    var feature = new ol.Feature();
+    var feature = new Feature();
     feature.set('column1', 'value1');
     feature.set('column2', undefined);
 
-    plugin.vectortools.runColumnMapping(mapping, feature);
+    vectortools.runColumnMapping(mapping, feature);
 
     expect(feature.get('column1')).toBe(undefined);
     expect(feature.get('column2')).toBe('value1');
 
     // it shouldn't overwrite a value that is already set
-    var feature = new ol.Feature();
+    var feature = new Feature();
     feature.set('column1', 'value1');
     feature.set('column2', 'value2');
 
-    plugin.vectortools.runColumnMapping(mapping, feature);
+    vectortools.runColumnMapping(mapping, feature);
 
     expect(feature.get('column1')).toBe('value1');
     expect(feature.get('column2')).toBe('value2');
@@ -107,22 +124,22 @@ describe('plugin.vectortools', function() {
       }
     };
 
-    var source = new os.source.Vector();
+    var source = new VectorSource();
     source.setId('https://fake.server.bits/ogc/wfsServer!!fake:layer1');
 
     // add ID column because vector sources will add it anyway
     var columns = ['ID', 'column1', 'column2', 'column3'];
     source.setColumns(columns);
 
-    var burritoSource = new os.source.Vector();
+    var burritoSource = new VectorSource();
     burritoSource.setId('https://fake.server.bits/ogc/wfsServer!!fake:burritoLayer');
     var burritoColumns = [
-      new os.data.ColumnDefinition('tacos'),
-      new os.data.ColumnDefinition('burritos')
+      new ColumnDefinition('tacos'),
+      new ColumnDefinition('burritos')
     ];
     burritoSource.setColumns(burritoColumns);
 
-    var combinedColumns = plugin.vectortools.getCombinedColumns([source, burritoSource], mappings);
+    var combinedColumns = vectortools.getCombinedColumns([source, burritoSource], mappings);
     expect(combinedColumns.length).toBe(4);
     expect(combinedColumns[0]['field']).toBe('ID');
     expect(combinedColumns[1]['field']).toBe('column3');
