@@ -43,7 +43,7 @@
       ]
     },
     "gcc": {
-      "language_in": "ECMASCRIPT_2018",
+      "language_in": "ECMASCRIPT_2020",
       "conformance_configs": "conformance_config.textproto",
       "externs": [
         "google-closure-compiler/contrib/externs/jquery-3.3.js",
