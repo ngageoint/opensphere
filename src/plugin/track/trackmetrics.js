@@ -83,6 +83,8 @@ Metrics.Keys = {
   HIDE_TRACK_LINE: 'track.hideTrackLine',
   SHOW_TRACK_LINE: 'track.showTrackLine',
   ENABLE_INTERPOLATE_MARKER: 'track.enableInterplateMarker',
-  DISABLE_INTERPOLATE_MARKER: 'track.disableInterpolateMarker'
+  DISABLE_INTERPOLATE_MARKER: 'track.disableInterpolateMarker',
+  PREDICT_TRACK_GEODESIC: 'track.predictGeodesic',
+  PREDICT_TRACK_RHUMB: 'track.predictRhumb'
 };
 exports = Metrics;

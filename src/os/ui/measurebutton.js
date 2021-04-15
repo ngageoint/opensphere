@@ -135,14 +135,10 @@ os.ui.MeasureButtonCtrl.prototype.onDrawEnd_ = function(evt) {
  */
 os.ui.MeasureButtonCtrl.prototype.getMeasureInteraction_ = function() {
   var interactions = os.MapContainer.getInstance().getMap().getInteractions().getArray();
-
-  for (var i = 0, n = interactions.length; i < n; i++) {
-    if (interactions[i] instanceof os.interaction.Measure) {
-      return /** @type {os.interaction.Measure} */ (interactions[i]);
-    }
-  }
-
-  return null;
+  var measure = interactions.find((interaction) => {
+    return (interaction instanceof os.interaction.Measure && interaction.isType('measure'));
+  });
+  return /** @type {os.interaction.Measure} */ (measure);
 };
 
 
