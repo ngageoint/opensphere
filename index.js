@@ -251,6 +251,11 @@ const sharedResources = [
     files: ['*.+(wasm|js)']
   },
   {
+    source: resolver.resolveModulePath('jschardet/dist', __dirname),
+    target: 'vendor/jschardet',
+    files: ['jschardet.min.js']
+  },
+  {
     source: buildPath,
     target: 'vendor/xml-lexer',
     scripts: ['xml-lexer.min.js']

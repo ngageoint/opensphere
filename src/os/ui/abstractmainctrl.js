@@ -30,6 +30,8 @@ goog.require('os.ui.onboarding.contextOnboardingDirective');
 goog.require('os.ui.onboarding.onboardingDirective');
 goog.require('os.ui.window.ConfirmUI');
 goog.require('plugin.electron.ElectronPlugin');
+goog.require('polyfill.chardetng');
+
 
 
 /**
