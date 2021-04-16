@@ -74,6 +74,11 @@ os.ui.file.ExportDialogCtrl = function($scope, $element, $compile) {
    */
   this['exporters'] = {};
 
+  /**
+   * @type {string|undefined}
+   */
+  this['appName'] = undefined;
+
   $scope['exporter'] = this.options.exporter;
   $scope['initialExporter'] = !!$scope['exporter'];
   if (!$scope['exporter']) {
@@ -231,9 +236,7 @@ os.ui.file.ExportDialogCtrl.prototype.onExporterChange = function(opt_new, opt_o
  * @protected
  */
 os.ui.file.ExportDialogCtrl.prototype.onPersisterChange = function(opt_new, opt_old) {
-  if (opt_new) {
-    this.options.persister = opt_new;
-  }
+  this.options.persister = opt_new;
 };
 
 
@@ -254,7 +257,6 @@ os.ui.file.ExportDialogCtrl.prototype.cancel = function() {
  */
 os.ui.file.ExportDialogCtrl.prototype.confirm = function() {
   goog.asserts.assert(this.options.exporter != null, 'exporter is not defined');
-  goog.asserts.assert(this.options.persister != null, 'persister is not defined');
   goog.asserts.assert(this.options.title != null, 'export title is null');
   goog.asserts.assert(this.options.items.length > 0, 'no items to export');
   goog.asserts.assert(this.options.fields.length > 0, 'no fields defined on export');

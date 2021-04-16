@@ -1,11 +1,15 @@
 goog.provide('plugin.file.shp.ui.ZipSHPImportUI');
+
+goog.require('os.data.DataManager');
 goog.require('os.file');
 goog.require('os.file.File');
 goog.require('os.ui.im.FileImportUI');
 goog.require('os.ui.window');
 goog.require('os.ui.wiz.OptionsStep');
 goog.require('os.ui.wiz.step.TimeStep');
+goog.require('plugin.file.shp.SHPDescriptor');
 goog.require('plugin.file.shp.SHPParserConfig');
+goog.require('plugin.file.shp.SHPProvider');
 goog.require('plugin.file.shp.mime');
 goog.require('plugin.file.shp.ui.shpImportDirective');
 
@@ -63,9 +67,21 @@ plugin.file.shp.ui.ZipSHPImportUI.prototype.launchUI = function(file, opt_config
     this.config_ = opt_config;
   }
 
-  var content = /** @type {ArrayBuffer} */ (file.getContent());
-  zip.createReader(new zip.ArrayBufferReader(content),
-      this.handleZipReader.bind(this), this.handleZipReaderError.bind(this));
+  const content = /** @type {ArrayBuffer|Blob} */ (file.getContent());
+
+  if (content instanceof ArrayBuffer) {
+    zip.createReader(new zip.ArrayBufferReader(content),
+        this.handleZipReader.bind(this), this.handleZipReaderError.bind(this));
+  } else {
+    // convert the blob to an ArrayBuffer and proceed down the normal path
+    content.arrayBuffer().then((arrayBuffer) => {
+      this.zipFile_.setContent(arrayBuffer);
+      zip.createReader(new zip.ArrayBufferReader(arrayBuffer),
+          this.handleZipReader.bind(this), this.handleZipReaderError.bind(this));
+    }, (reason) => {
+      // womp womp
+    });
+  }
 };
 
 
@@ -134,15 +150,12 @@ plugin.file.shp.ui.ZipSHPImportUI.prototype.processEntry_ = function(entry, cont
  */
 plugin.file.shp.ui.ZipSHPImportUI.prototype.launchUIInternal_ = function() {
   if (this.shpFile_ && this.dbfFile_) {
-    var steps = [
-      new os.ui.wiz.step.TimeStep(),
-      new os.ui.wiz.OptionsStep()
-    ];
-
     var config = new plugin.file.shp.SHPParserConfig();
+    let defaultImport = false;
 
     // if a configuration was provided, merge it in
     if (this.config_) {
+      defaultImport = this.config_['defaultImport'] || false;
       this.mergeConfig(this.config_, config);
       this.config_ = null;
     }
@@ -163,6 +176,16 @@ plugin.file.shp.ui.ZipSHPImportUI.prototype.launchUIInternal_ = function() {
         config['mappings'] = mappings;
       }
     }
+
+    if (defaultImport) {
+      this.handleDefaultImport(this.shpFile_, config);
+      return;
+    }
+
+    var steps = [
+      new os.ui.wiz.step.TimeStep(),
+      new os.ui.wiz.OptionsStep()
+    ];
 
     var scopeOptions = {
       'config': config,
@@ -197,4 +220,20 @@ plugin.file.shp.ui.ZipSHPImportUI.prototype.launchUIInternal_ = function() {
   this.shpFile_ = null;
   this.dbfFile_ = null;
   this.zipFile_ = null;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.shp.ui.ZipSHPImportUI.prototype.handleDefaultImport = function(file, config) {
+  config = this.getDefaultConfig(file, config);
+
+  // create the descriptor and add it
+  if (config) {
+    const descriptor = plugin.file.shp.SHPDescriptor.createFromConfig(config);
+    os.data.DataManager.getInstance().addDescriptor(descriptor);
+    plugin.file.shp.SHPProvider.getInstance().addDescriptor(descriptor);
+    descriptor.setActive(true);
+  }
 };

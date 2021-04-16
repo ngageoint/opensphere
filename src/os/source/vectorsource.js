@@ -3726,6 +3726,17 @@ os.source.Vector.prototype.getModifyFunction = function() {
     originalFeature.changed();
 
     this.notifyDataChange();
+
+    const descriptor = os.dataManager.getDescriptor(this.getId());
+    if (descriptor instanceof os.data.FileDescriptor) {
+      const options = /** @type {os.ex.ExportOptions} */ ({
+        sources: [this],
+        items: this.getFeatures(),
+        fields: null
+      });
+
+      descriptor.onDataChange(options);
+    }
   };
 };
 

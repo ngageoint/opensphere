@@ -40,3 +40,20 @@ os.ui.im.IImportUI.prototype.launchUI;
  * @param {T} to The import configuration to merge to
  */
 os.ui.im.IImportUI.prototype.mergeConfig;
+
+
+/**
+ * Gets the default config for the import UI.
+ * @param {os.file.File} file The file being imported by the UI
+ * @param {T} config The base import configuration
+ * @return {!T} config The default import config for the UI.
+ */
+os.ui.im.IImportUI.prototype.getDefaultConfig;
+
+
+/**
+ * Handles the default import path, skipping the UI.
+ * @param {os.file.File} file The file being imported by the UI
+ * @param {T} config The import configuration
+ */
+os.ui.im.IImportUI.prototype.handleDefaultImport;

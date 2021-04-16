@@ -1,9 +1,13 @@
 goog.provide('plugin.file.geojson.GeoJSONImportUI');
+
+goog.require('os.data.DataManager');
 goog.require('os.ui.im.FileImportUI');
 goog.require('os.ui.window');
 goog.require('os.ui.wiz.OptionsStep');
 goog.require('os.ui.wiz.step.TimeStep');
+goog.require('plugin.file.geojson.GeoJSONDescriptor');
 goog.require('plugin.file.geojson.GeoJSONParserConfig');
+goog.require('plugin.file.geojson.GeoJSONProvider');
 goog.require('plugin.file.geojson.geojsonImportDirective');
 
 
@@ -31,12 +35,8 @@ plugin.file.geojson.GeoJSONImportUI.prototype.getTitle = function() {
  */
 plugin.file.geojson.GeoJSONImportUI.prototype.launchUI = function(file, opt_config) {
   plugin.file.geojson.GeoJSONImportUI.base(this, 'launchUI', file, opt_config);
-  var steps = [
-    new os.ui.wiz.step.TimeStep(),
-    new os.ui.wiz.OptionsStep()
-  ];
 
-  var config = new plugin.file.geojson.GeoJSONParserConfig();
+  const config = new plugin.file.geojson.GeoJSONParserConfig();
 
   // if a configuration was provided, merge it in
   if (opt_config) {
@@ -61,11 +61,21 @@ plugin.file.geojson.GeoJSONImportUI.prototype.launchUI = function(file, opt_conf
   } catch (e) {
   }
 
-  var scopeOptions = {
+  if (opt_config && opt_config['defaultImport']) {
+    this.handleDefaultImport(file, config);
+    return;
+  }
+
+  const steps = [
+    new os.ui.wiz.step.TimeStep(),
+    new os.ui.wiz.OptionsStep()
+  ];
+
+  const scopeOptions = {
     'config': config,
     'steps': steps
   };
-  var windowOptions = {
+  const windowOptions = {
     'label': 'Import GeoJSON',
     'icon': 'fa fa-sign-in',
     'x': 'center',
@@ -81,4 +91,20 @@ plugin.file.geojson.GeoJSONImportUI.prototype.launchUI = function(file, opt_conf
   };
   var template = '<geojsonimport resize-with="' + os.ui.windowSelector.WINDOW + '"></geojsonimport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.geojson.GeoJSONImportUI.prototype.handleDefaultImport = function(file, config) {
+  config = this.getDefaultConfig(file, config);
+
+  // create the descriptor and add it
+  if (config) {
+    const descriptor = plugin.file.geojson.GeoJSONDescriptor.createFromConfig(config);
+    plugin.file.geojson.GeoJSONProvider.getInstance().addDescriptor(descriptor);
+    os.data.DataManager.getInstance().addDescriptor(descriptor);
+    descriptor.setActive(true);
+  }
 };

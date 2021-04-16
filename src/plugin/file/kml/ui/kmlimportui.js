@@ -1,7 +1,11 @@
 goog.provide('plugin.file.kml.ui.KMLImportUI');
+
+goog.require('os.data.DataManager');
 goog.require('os.parse.FileParserConfig');
 goog.require('os.ui.im.FileImportUI');
 goog.require('os.ui.window');
+goog.require('plugin.file.kml.KMLDescriptor');
+goog.require('plugin.file.kml.KMLProvider');
 goog.require('plugin.file.kml.ui.kmlImportDirective');
 
 
@@ -40,6 +44,11 @@ plugin.file.kml.ui.KMLImportUI.prototype.launchUI = function(file, opt_config) {
   config['file'] = file;
   config['title'] = file.getFileName();
 
+  if (opt_config && opt_config['defaultImport']) {
+    this.handleDefaultImport(file, config);
+    return;
+  }
+
   var scopeOptions = {
     'config': config
   };
@@ -55,6 +64,23 @@ plugin.file.kml.ui.KMLImportUI.prototype.launchUI = function(file, opt_config) {
     'modal': true,
     'show-close': true
   };
+
   var template = '<kmlimport></kmlimport>';
   os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.ui.KMLImportUI.prototype.handleDefaultImport = function(file, config) {
+  config = this.getDefaultConfig(file, config);
+
+  // create the descriptor and add it
+  if (config) {
+    const descriptor = plugin.file.kml.KMLDescriptor.createFromConfig(config);
+    plugin.file.kml.KMLProvider.getInstance().addDescriptor(descriptor);
+    os.data.DataManager.getInstance().addDescriptor(descriptor);
+    descriptor.setActive(true);
+  }
 };

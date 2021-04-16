@@ -1,7 +1,9 @@
 goog.provide('plugin.file.shp.SHPDescriptor');
+
 goog.require('os.data.FileDescriptor');
 goog.require('os.file.FileStorage');
 goog.require('os.layer.LayerType');
+goog.require('plugin.file.shp.SHPExporter');
 goog.require('plugin.file.shp.SHPParserConfig');
 goog.require('plugin.file.shp.SHPProvider');
 
@@ -113,6 +115,14 @@ plugin.file.shp.SHPDescriptor.prototype.clearData = function() {
     var fs = os.file.FileStorage.getInstance();
     fs.deleteFile(url2);
   }
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.shp.SHPDescriptor.prototype.getExporter = function() {
+  return new plugin.file.shp.SHPExporter();
 };
 
 

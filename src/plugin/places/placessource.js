@@ -22,7 +22,6 @@ plugin.places.PlacesSource = function(opt_options) {
   this.refreshEnabled = false;
 };
 goog.inherits(plugin.places.PlacesSource, plugin.file.kml.KMLSource);
-os.implements(plugin.places.PlacesSource, os.source.IModifiableSource.ID);
 
 
 /**

@@ -12,6 +12,7 @@ goog.require('os.file.File');
 goog.require('os.source.Vector');
 goog.require('os.time.ITime');
 goog.require('plugin.file.shp.data.SHPHeader');
+goog.require('plugin.file.shp.mime');
 goog.require('plugin.file.shp.ui.shpExportDirective');
 
 
@@ -171,7 +172,7 @@ plugin.file.shp.SHPExporter.prototype.getLabel = function() {
  * @inheritDoc
  */
 plugin.file.shp.SHPExporter.prototype.getMimeType = function() {
-  return 'application/zip';
+  return plugin.file.shp.mime.ZIP_TYPE;
 };
 
 

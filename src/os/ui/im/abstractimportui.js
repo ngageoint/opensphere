@@ -30,7 +30,7 @@ os.ui.im.AbstractImportUI.prototype.getTitle = function() {
  * @abstract
  * @inheritDoc
  */
-os.ui.im.AbstractImportUI.prototype.launchUI = function(file, config) {};
+os.ui.im.AbstractImportUI.prototype.launchUI = function(file, opt_config) {};
 
 
 /**
@@ -44,4 +44,21 @@ os.ui.im.AbstractImportUI.prototype.mergeConfig = function(from, to) {
   to['mappings'] = from['mappings'];
   to['tags'] = from['tags'];
   to['title'] = from['title'];
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.im.AbstractImportUI.prototype.getDefaultConfig = function(file, config) {
+  // implement a good default config for the individual import types
+  return config;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.im.AbstractImportUI.prototype.handleDefaultImport = function(file, config) {
+  // implemented by extending classes to support importing files with a known structure
 };

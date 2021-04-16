@@ -1,6 +1,8 @@
 goog.provide('plugin.file.csv.CSVDescriptor');
+
 goog.require('os.data.FileDescriptor');
 goog.require('os.layer.LayerType');
+goog.require('plugin.file.csv.CSVExporter');
 goog.require('plugin.file.csv.CSVParserConfig');
 goog.require('plugin.file.csv.CSVProvider');
 
@@ -121,6 +123,14 @@ plugin.file.csv.CSVDescriptor.prototype.getUseHeader = function() {
  */
 plugin.file.csv.CSVDescriptor.prototype.setUseHeader = function(useHeader) {
   this.parserConfig['useHeader'] = useHeader;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.csv.CSVDescriptor.prototype.getExporter = function() {
+  return new plugin.file.csv.CSVExporter();
 };
 
 

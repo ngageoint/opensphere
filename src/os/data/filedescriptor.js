@@ -5,10 +5,14 @@ goog.require('os.command.LayerRemove');
 goog.require('os.data.IReimport');
 goog.require('os.data.IUrlDescriptor');
 goog.require('os.data.LayerSyncDescriptor');
+goog.require('os.ex.IExportMethod');
+goog.require('os.file.File');
 goog.require('os.file.FileStorage');
 goog.require('os.im.ImportProcess');
 goog.require('os.implements');
 goog.require('os.parse.FileParserConfig');
+goog.require('os.source');
+goog.require('os.source.Vector');
 goog.require('os.ui.file.ui.defaultFileNodeUIDirective');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportEventType');
@@ -323,6 +327,67 @@ os.data.FileDescriptor.prototype.reimport = function() {
   process.setConfig(this.getParserConfig());
   process.setSkipDuplicates(true);
   process.begin();
+};
+
+
+/**
+ * Get the exporter method associated with this file type.
+ * @return {?os.ex.IExportMethod}
+ */
+os.data.FileDescriptor.prototype.getExporter = function() {
+  return null;
+};
+
+
+/**
+ * Handles changes to the underlying layer data. Updates the file in storage.
+ * @param {os.ex.ExportOptions} options
+ */
+os.data.FileDescriptor.prototype.onDataChange = function(options) {
+  const source = /** @type {os.source.Vector} */ (options.sources[0]);
+  const exporter = this.getExporter();
+
+  if (exporter) {
+    const fields = os.source.getExportFields(source, false, exporter.supportsTime());
+    const name = this.getTitle() || 'New File';
+    exporter.setItems(options.items);
+    exporter.setFields(fields);
+    exporter.setName(name);
+
+    if (exporter.isAsync()) {
+      var et = /** @type {goog.events.EventTarget} */ (exporter);
+      et.listen(os.events.EventType.COMPLETE, (event) => {
+        const result = event.target.getOutput();
+        const file = new os.file.File();
+        file.setFileName(name);
+        file.setUrl(os.file.getLocalUrl(name));
+        file.setContent(result);
+        file.setContentType(exporter.getMimeType());
+
+        // always replace. if we got here the application should have done duplicate file detection already.
+        const fs = os.file.FileStorage.getInstance();
+        fs.storeFile(file, true);
+      }, false, this);
+      et.listen(os.events.EventType.ERROR, (event) => {
+
+      }, false, this);
+
+      exporter.process();
+    } else {
+      exporter.process();
+
+      const result = exporter.getOutput();
+      const file = new os.file.File();
+      file.setFileName(name);
+      file.setUrl(os.file.getLocalUrl(name));
+      file.setContent(result);
+      file.setContentType(exporter.getMimeType());
+
+      // always replace. if we got here the application should have done duplicate file detection already.
+      const fs = os.file.FileStorage.getInstance();
+      fs.storeFile(file, true);
+    }
+  }
 };
 
 
