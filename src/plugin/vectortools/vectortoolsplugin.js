@@ -1,9 +1,6 @@
 goog.module('plugin.vectortools.VectorToolsPlugin');
 goog.module.declareLegacyNamespace();
 
-goog.require('plugin.vectortools.JoinUI');
-goog.require('plugin.vectortools.MergeUI');
-
 const asserts = goog.require('goog.asserts');
 const os = goog.require('os');
 const MapContainer = goog.require('os.MapContainer');
@@ -19,11 +16,10 @@ const VectorLayer = goog.require('os.layer.Vector');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 const osUiMenuLayer = goog.require('os.ui.menu.layer');
-const osWindow = goog.require('os.ui.window');
 
 const vectortools = goog.require('plugin.vectortools');
-const Icons = goog.require('plugin.vectortools.Icons');
 const CopyLayer = goog.require('plugin.vectortools.CopyLayer');
+const {launchJoinWindow, launchMergeWindow} = goog.require('plugin.vectortools.ui');
 
 
 /**
@@ -258,46 +254,6 @@ const nodeToSource = function(node) {
 const nodeToCopyCommand = function(node) {
   var layer = fn.mapNodeToLayer(node);
   return layer ? new CopyLayer(layer.getId()) : undefined;
-};
-
-/**
- * Launches the Merge Layer window.
- *
- * @param {Array<string>} sourceIds The source/layer IDs to merge
- */
-const launchMergeWindow = function(sourceIds) {
-  var title = 'Merge ' + sourceIds.length + ' Layers';
-  osWindow.create({
-    'label': title,
-    'icon': 'fa ' + Icons.MERGE_ICON,
-    'x': 'center',
-    'y': 'center',
-    'width': '400',
-    'height': 'auto',
-    'show-close': true
-  }, `<merge></merge>`, undefined, undefined, undefined, {
-    'sourceIds': sourceIds
-  });
-};
-
-/**
- * Launches the Join Layer window.
- *
- * @param {Array<string>} sourceIds The source/layer IDs to join
- */
-const launchJoinWindow = function(sourceIds) {
-  var title = 'Join ' + sourceIds.length + ' Layers';
-  osWindow.create({
-    'label': title,
-    'icon': 'fa ' + Icons.JOIN_ICON,
-    'x': 'center',
-    'y': 'center',
-    'width': '500',
-    'height': 'auto',
-    'show-close': true
-  }, `<join></join>`, undefined, undefined, undefined, {
-    'sourceIds': sourceIds
-  });
 };
 
 exports = VectorToolsPlugin;
