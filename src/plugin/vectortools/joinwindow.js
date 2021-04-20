@@ -1,5 +1,4 @@
 goog.module('plugin.vectortools.JoinUI');
-goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.util.validationMessageDirective');
 goog.require('plugin.vectortools.MappingCounterUI');
