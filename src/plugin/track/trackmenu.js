@@ -763,7 +763,11 @@ const handlePredict_ = function(event) {
     console.log(event.type, event, context);
     // TODO if a feature, create a track
     const tm = TrackManager.getInstance();
-    const tracks = getTracks(/** */ (context));
+    let tracks = getTracks(/** */ (context));
+
+    if (tracks && tracks.length == 0) {
+      tracks = [context.feature]; // single feature
+    }
 
     tm.promptForTrackPrediction(tracks);
   }

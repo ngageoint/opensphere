@@ -1,6 +1,7 @@
 goog.module('plugin.track.TrackInteraction');
 
 const osObject = goog.require('os.object');
+const {LINE_STYLE_OPTIONS} = goog.require('os.style');
 const MeasureInteraction = goog.require('os.interaction.Measure');
 // const OlMapBrowserEvent = goog.require('ol.MapBrowserEvent');
 const OlStroke = goog.require('ol.style.Stroke');
@@ -14,9 +15,9 @@ const OlLineString = goog.requireType('ol.geom.LineString');
  */
 const DEFAULT_STYLE = new OlStyle({
   stroke: new OlStroke({
-    color: [255, 255, 255, .35],
+    color: [255, 255, 255, .45],
     lineCap: 'square',
-    lineDash: [7, 4, 1, 4],
+    lineDash: LINE_STYLE_OPTIONS[6].pattern,
     width: 2
   })
 });
@@ -43,7 +44,7 @@ class TrackInteraction extends MeasureInteraction {
 
     this.type = 'track';
 
-    this.color = [255, 255, 255, .35]; // TODO get this from the feature/track
+    this.color = [255, 255, 255, .45];
 
     this.setStyle(DEFAULT_STYLE);
   }
