@@ -12,6 +12,7 @@ goog.require('ol.style.Fill');
 goog.require('ol.style.Stroke');
 goog.require('ol.style.Style');
 goog.require('ol.style.Text');
+goog.require('os.fn');
 goog.require('os.histo.NumericBinMethod');
 goog.require('os.implements');
 goog.require('os.legend.ILegendRenderer');
@@ -243,7 +244,7 @@ os.legend.getOptionsFromSettings = function() {
  */
 os.legend.layerFilter = function(layer, idx, layers) {
   return os.implements(layer, os.legend.ILegendRenderer.ID) &&
-  /** @type {!os.legend.ILegendRenderer} */ (layer).renderLegend !== goog.nullFunction;
+  /** @type {!os.legend.ILegendRenderer} */ (layer).renderLegend !== os.fn.noop;
 };
 
 

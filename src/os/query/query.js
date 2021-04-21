@@ -4,6 +4,7 @@ goog.require('ol.Feature');
 goog.require('ol.extent');
 goog.require('ol.geom.Polygon');
 goog.require('ol.proj');
+goog.require('os.fn');
 goog.require('os.interpolate');
 goog.require('os.metrics.MapMetrics');
 goog.require('os.metrics.Metrics');
@@ -67,7 +68,7 @@ os.query.launchQueryImport = function(opt_config, opt_file) {
  */
 os.query.launchCoordinates = function(opt_modal) {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.LOAD_FROM_COORDINATES, 1);
-  os.ui.query.area.getUserArea(undefined, undefined, opt_modal).then(os.query.addArea, goog.nullFunction);
+  os.ui.query.area.getUserArea(undefined, undefined, opt_modal).then(os.query.addArea, os.fn.noop);
 };
 
 

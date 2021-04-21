@@ -10,6 +10,7 @@ const ZOrder = goog.require('os.data.ZOrder');
 const dispatcher = goog.require('os.Dispatcher');
 const OsEventType = goog.require('os.events.EventType');
 const {getLocalUrl} = goog.require('os.file');
+const {noop} = goog.require('os.fn');
 const LayerType = goog.require('os.layer.LayerType');
 const MapContainer = goog.require('os.MapContainer');
 const {merge} = goog.require('os.object');
@@ -163,7 +164,7 @@ class PlacesManager extends AbstractKMLManager {
     layer.setExplicitType('');
     layer.setLayerUI('');
     layer.setNodeUI('<placesnodeui></placesnodeui>');
-    layer.renderLegend = goog.nullFunction;
+    layer.renderLegend = noop;
   }
 
   /**

@@ -1,6 +1,7 @@
 goog.provide('plugin.im.action.feature.ui.ActionConfigCtrl');
 
 goog.require('goog.Disposable');
+goog.require('os.fn');
 goog.require('os.ui.window');
 
 
@@ -83,4 +84,4 @@ plugin.im.action.feature.ui.ActionConfigCtrl.prototype.initialize = function() {
  * Save changes to the action.
  * @protected
  */
-plugin.im.action.feature.ui.ActionConfigCtrl.prototype.saveAction = goog.nullFunction;
+plugin.im.action.feature.ui.ActionConfigCtrl.prototype.saveAction = os.fn.noop;

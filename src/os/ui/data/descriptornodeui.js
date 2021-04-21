@@ -1,6 +1,7 @@
 goog.provide('os.ui.data.DescriptorNodeUICtrl');
 goog.provide('os.ui.data.descriptorNodeUIDirective');
 
+goog.require('os.fn');
 goog.require('os.ui.Module');
 goog.require('os.ui.data.DescriptorProvider');
 goog.require('os.ui.slick.AbstractNodeUICtrl');
@@ -51,7 +52,7 @@ goog.inherits(os.ui.data.DescriptorNodeUICtrl, os.ui.slick.AbstractNodeUICtrl);
 os.ui.data.DescriptorNodeUICtrl.prototype.tryRemove = function() {
   os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
     confirm: this.remove.bind(this),
-    cancel: goog.nullFunction,
+    cancel: os.fn.noop,
     prompt: this.getRemoveWindowText(),
     yesText: 'Remove',
     yesIcon: 'fa fa-trash-o',

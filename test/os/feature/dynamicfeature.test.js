@@ -1,15 +1,16 @@
 goog.require('ol.Feature');
 goog.require('ol.geom.Point');
 goog.require('os.feature.DynamicFeature');
+goog.require('os.fn');
 
 
 describe('os.feature.DynamicFeature', function() {
   it('initializes properly', function() {
     var df = new os.feature.DynamicFeature();
     expect(df instanceof ol.Feature).toBe(true);
-    expect(df.initFn).toBe(goog.nullFunction);
-    expect(df.disposeFn).toBe(goog.nullFunction);
-    expect(df.updateFn).toBe(goog.nullFunction);
+    expect(df.initFn).toBe(os.fn.noop);
+    expect(df.disposeFn).toBe(os.fn.noop);
+    expect(df.updateFn).toBe(os.fn.noop);
 
     var initFn = function() {};
     var disposeFn = function() {};

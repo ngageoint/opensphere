@@ -11,6 +11,7 @@ goog.require('os.alert.AlertEvent');
 goog.require('os.alert.AlertManager');
 goog.require('os.config');
 goog.require('os.config.Settings');
+goog.require('os.fn');
 goog.require('os.metrics');
 goog.require('os.metrics.Metrics');
 goog.require('os.mixin.fixInjectorInvoke');
@@ -181,7 +182,7 @@ os.ui.AbstractMainCtrl.prototype.onCertNaziFailure = function(event) {
   }
 
   os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
-    confirm: goog.nullFunction,
+    confirm: os.fn.noop,
     prompt: text,
     noText: '',
     noIcon: '',
@@ -320,35 +321,35 @@ os.ui.AbstractMainCtrl.prototype.onPluginsLoaded = function(opt_e) {
  * What we do when the window closes
  * @protected
  */
-os.ui.AbstractMainCtrl.prototype.onClose = goog.nullFunction;
+os.ui.AbstractMainCtrl.prototype.onClose = os.fn.noop;
 
 
 /**
  * @param {Object} event
  * @protected
  */
-os.ui.AbstractMainCtrl.prototype.onLogWindow = goog.nullFunction;
+os.ui.AbstractMainCtrl.prototype.onLogWindow = os.fn.noop;
 
 
 /**
  * Registers event listeners for the controller.
  * @protected
  */
-os.ui.AbstractMainCtrl.prototype.registerListeners = goog.nullFunction;
+os.ui.AbstractMainCtrl.prototype.registerListeners = os.fn.noop;
 
 
 /**
  * Removes event listeners for the controller.
  * @protected
  */
-os.ui.AbstractMainCtrl.prototype.removeListeners = goog.nullFunction;
+os.ui.AbstractMainCtrl.prototype.removeListeners = os.fn.noop;
 
 
 /**
  * Initialize the peer
  * @protected
  */
-os.ui.AbstractMainCtrl.prototype.initXt = goog.nullFunction;
+os.ui.AbstractMainCtrl.prototype.initXt = os.fn.noop;
 
 
 /**
@@ -365,4 +366,4 @@ os.ui.AbstractMainCtrl.prototype.addPlugins = function() {
  * Add the metrics plugins for this app
  * @protected
  */
-os.ui.AbstractMainCtrl.prototype.addMetricsPlugins = goog.nullFunction;
+os.ui.AbstractMainCtrl.prototype.addMetricsPlugins = os.fn.noop;

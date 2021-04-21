@@ -26,6 +26,7 @@ goog.require('os.command.VectorLayerSize');
 goog.require('os.command.VectorUniqueIdCmd');
 goog.require('os.command.style');
 goog.require('os.data.OSDataManager');
+goog.require('os.fn');
 goog.require('os.layer.preset');
 goog.require('os.layer.preset.LayerPresetManager');
 goog.require('os.layer.preset.PresetMenuButton');
@@ -317,7 +318,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShapeUIInternal = function() {
 os.ui.layer.VectorLayerUICtrl.prototype.getProperties = function() {
   return {
     'opacity': os.layer.setOpacity,
-    'fillOpacity': goog.nullFunction,
+    'fillOpacity': os.fn.noop,
     'brightness': os.layer.setBrightness,
     'contrast': os.layer.setContrast,
     'hue': os.layer.setHue,

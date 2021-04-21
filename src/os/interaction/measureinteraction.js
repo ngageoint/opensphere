@@ -15,6 +15,7 @@ goog.require('ol.style.Text');
 goog.require('os.bearing');
 goog.require('os.config.Settings');
 goog.require('os.feature.measure');
+goog.require('os.fn');
 goog.require('os.geo2');
 goog.require('os.interaction.DrawPolygon');
 goog.require('os.math');
@@ -282,7 +283,7 @@ os.interaction.Measure.prototype.end = function(mapBrowserEvent) {
 /**
  * @inheritDoc
  */
-os.interaction.Measure.prototype.saveLast = goog.nullFunction;
+os.interaction.Measure.prototype.saveLast = os.fn.noop;
 
 
 /**

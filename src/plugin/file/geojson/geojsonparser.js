@@ -5,6 +5,7 @@ goog.require('goog.disposable.IDisposable');
 goog.require('ol.format.GeoJSON');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.file.mime.text');
+goog.require('os.fn');
 goog.require('os.map');
 goog.require('os.parse.IParser');
 
@@ -165,7 +166,7 @@ plugin.file.geojson.GeoJSONParser.prototype.parseNext = function() {
  * Method for doing additional processing on features parsed by the GeoJSON format.
  * @param {ol.Feature} feature
  */
-plugin.file.geojson.GeoJSONParser.prototype.process = goog.nullFunction;
+plugin.file.geojson.GeoJSONParser.prototype.process = os.fn.noop;
 
 
 /**

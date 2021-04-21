@@ -3,6 +3,7 @@ goog.provide('os.control.Attribution');
 goog.require('goog.dom.safe');
 goog.require('goog.html.SafeHtml');
 goog.require('ol.control.Attribution');
+goog.require('os.fn');
 
 /**
  * @constructor
@@ -130,7 +131,7 @@ os.control.Attribution.prototype.updateElement_ = function(frameState) {
 /**
  * @suppress {accessControls}
  */
-ol.control.Attribution.prototype.insertLogos_ = goog.nullFunction;
+ol.control.Attribution.prototype.insertLogos_ = os.fn.noop;
 
 
 /**

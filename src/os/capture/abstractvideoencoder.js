@@ -6,6 +6,7 @@ goog.require('goog.log');
 goog.require('goog.net.jsloader');
 goog.require('goog.string.Const');
 goog.require('os.capture.IVideoEncoder');
+goog.require('os.fn');
 
 
 
@@ -115,7 +116,7 @@ os.capture.AbstractVideoEncoder.prototype.disposeInternal = function() {
 /**
  * @inheritDoc
  */
-os.capture.AbstractVideoEncoder.prototype.abort = goog.nullFunction;
+os.capture.AbstractVideoEncoder.prototype.abort = os.fn.noop;
 
 
 /**

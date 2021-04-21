@@ -1,5 +1,7 @@
 goog.provide('plugin.im.action.feature.SoundAction');
+
 goog.require('os.feature');
+goog.require('os.fn');
 goog.require('os.im.action.AbstractImportAction');
 goog.require('os.implements');
 goog.require('os.object');
@@ -108,7 +110,7 @@ plugin.im.action.feature.SoundAction.DEFAULT_CONFIG = {
 /**
  * @inheritDoc
  */
-plugin.im.action.feature.SoundAction.prototype.reset = goog.nullFunction;
+plugin.im.action.feature.SoundAction.prototype.reset = os.fn.noop;
 
 
 /**

@@ -1,6 +1,7 @@
 goog.provide('os.webgl.AbstractWebGLSynchronizer');
 
 goog.require('goog.Disposable');
+goog.require('os.fn');
 
 
 /**
@@ -96,4 +97,4 @@ os.webgl.AbstractWebGLSynchronizer.prototype.reposition = function(start, end) {
  * Called after the WebGL camera finishes changing. Useful for synchronizers that need to perform actions once the
  * camera move is done and the render is finished.
  */
-os.webgl.AbstractWebGLSynchronizer.prototype.updateFromCamera = goog.nullFunction;
+os.webgl.AbstractWebGLSynchronizer.prototype.updateFromCamera = os.fn.noop;

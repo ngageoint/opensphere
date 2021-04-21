@@ -1,5 +1,6 @@
 goog.provide('plugin.basemap.layer.BaseMap');
 
+goog.require('os.fn');
 goog.require('os.layer.Tile');
 goog.require('plugin.basemap.ui.baseMapLayerUIDirective');
 
@@ -14,7 +15,7 @@ plugin.basemap.layer.BaseMap = function(options) {
   plugin.basemap.layer.BaseMap.base(this, 'constructor', options);
 
   // omit base maps from the legend by default
-  this.renderLegend = goog.nullFunction;
+  this.renderLegend = os.fn.noop;
 };
 goog.inherits(plugin.basemap.layer.BaseMap, os.layer.Tile);
 

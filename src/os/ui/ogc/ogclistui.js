@@ -1,8 +1,9 @@
 goog.module('os.ui.ogc.OGCListUI');
 
 const array = goog.require('goog.array');
-const Module = goog.require('os.ui.Module');
+const {noop} = goog.require('os.fn');
 const registry = goog.require('os.ogc.registry');
+const Module = goog.require('os.ui.Module');
 
 const OGCService = goog.requireType('os.ogc.OGCService');
 const Feature = goog.requireType('ol.Feature');
@@ -103,7 +104,7 @@ class Controller {
       this.service_ = null;
     } else {
       this.allPromise = this.service_.getAll();
-      this.allPromise.then(this.prepareField, goog.nullFunction, this);
+      this.allPromise.then(this.prepareField, noop, this);
     }
 
     $scope.$on(Controller.BULK_CHOSEN, function(event, val) {
