@@ -202,7 +202,7 @@ class Controller {
         this.scope_.$emit(Controller.CHOSEN, items);
       }
     }).select2('val', selectInitItems)
-        .on('change', goog.bind(this.onChange, this));
+        .on('change', this.onChange.bind(this));
 
     os.ui.apply(this.scope_);
   }

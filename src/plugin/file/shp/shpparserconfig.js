@@ -73,7 +73,7 @@ plugin.file.shp.SHPParserConfig.prototype.updateZipPreview = function(callback) 
   var parser = new plugin.file.shp.SHPParser(this);
   parser.setSource(this['zipFile'].getContent());
 
-  goog.events.listen(parser, os.events.EventType.COMPLETE, goog.bind(function() {
+  goog.events.listen(parser, os.events.EventType.COMPLETE, function() {
     this['preview'] = parser.parsePreview();
     this['columns'] = parser.getColumns() || [];
 
@@ -86,7 +86,7 @@ plugin.file.shp.SHPParserConfig.prototype.updateZipPreview = function(callback) 
     callback();
 
     parser.dispose();
-  }, this), false, this);
+  }.bind(this), false, this);
 };
 
 

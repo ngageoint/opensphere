@@ -63,7 +63,7 @@ os.array.forEach = function(arr, f, opt_obj) {
 
 
 /**
- * Sort items by the specified field in ascending order. Inject the field using goog.bind or goog.partial.
+ * Sort items by the specified field in ascending order. Inject the field using bind or goog.partial.
  *
  * @param {string} field
  * @param {VALUE} a
@@ -77,7 +77,7 @@ os.array.sortByField = function(field, a, b) {
 
 
 /**
- * Sort items by the specified field in descending order. Inject the field using goog.bind or goog.partial.
+ * Sort items by the specified field in descending order. Inject the field using bind or goog.partial.
  *
  * @param {string} field
  * @param {VALUE} a

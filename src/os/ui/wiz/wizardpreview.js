@@ -141,7 +141,7 @@ os.ui.wiz.WizardPreviewCtrl.prototype.onResize_ = function(event, opt_delay) {
  * @private
  */
 os.ui.wiz.WizardPreviewCtrl.prototype.resizePreview_ = function(opt_delay) {
-  this.timeout_(goog.bind(function() {
+  this.timeout_(function() {
     if (this.element_ && this.scope_) {
       var sibHeight = 0;
       var siblings = this.element_.siblings();
@@ -156,7 +156,7 @@ os.ui.wiz.WizardPreviewCtrl.prototype.resizePreview_ = function(opt_delay) {
         this.scope_.$broadcast('resize');
       }
     }
-  }, this), opt_delay);
+  }.bind(this), opt_delay);
 };
 
 

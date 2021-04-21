@@ -181,19 +181,19 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
   this.destroyers.push($scope.$watch('columns', this.onColumnsChange.bind(this)));
   this.destroyers.push($scope.$watch('options', this.onOptionsChange.bind(this)));
   this.destroyers.push($scope.$on('$destroy', this.dispose.bind(this)));
-  var unWatchSortColumn = $scope.$watch('defaultSortColumn', goog.bind(function(newVal) {
+  var unWatchSortColumn = $scope.$watch('defaultSortColumn', function(newVal) {
     if (newVal && ol.array.find($scope['columns'], function(col) {
       return newVal == col['id'];
     })) {
-      setTimeout(goog.bind(function() {
+      setTimeout(function() {
         unWatchSortColumn();
         if (this.grid) {
           this.grid.setSortColumn(newVal, this.scope['defaultSortOrder'] !== 'desc');
           this.onSortChange();
         }
-      }, this), 100);
+      }.bind(this), 100);
     }
-  }, this));
+  }.bind(this));
 
   /**
    * The column menu.

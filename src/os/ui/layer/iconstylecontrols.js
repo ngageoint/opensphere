@@ -58,7 +58,7 @@ os.ui.layer.IconStyleControlsCtrl = function($scope) {
     this.scope['rotationColumn'] = '';
   }
 
-  $scope.$on('$destroy', goog.bind(this.dispose, this));
+  $scope.$on('$destroy', this.dispose.bind(this));
 };
 goog.inherits(os.ui.layer.IconStyleControlsCtrl, goog.Disposable);
 

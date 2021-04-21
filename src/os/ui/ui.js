@@ -540,13 +540,13 @@ os.ui.TypeaheadEventType = {
       var oldEnforceFocus = $.fn.typeahead['Constructor'].prototype['enforceFocus'];
       $.extend($.fn.typeahead['Constructor'].prototype, {
         'enforceFocus': function(e) {
-          $(document).on('focusin.modal', goog.bind(function(e) {
+          $(document).on('focusin.modal', function(e) {
             if ($(e.target).hasClass('select2-input')) {
               return;
             } else {
               oldEnforceFocus.call(this); // eslint-disable-line no-invalid-this
             }
-          }, this));
+          }.bind(this));
         }
       });
     }

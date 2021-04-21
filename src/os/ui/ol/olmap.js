@@ -185,9 +185,9 @@ os.ui.ol.OLMap.prototype.init = function(opt_container) {
   os.query.BaseAreaManager.getInstance().setMap(this);
 
   // If any control element gets clicked. set the map focus
-  $('.ol-overlaycontainer-stopevent > div, .ol-overlaycontainer-stopevent > div *').click(goog.bind(function() {
+  $('.ol-overlaycontainer-stopevent > div, .ol-overlaycontainer-stopevent > div *').click(function() {
     this.setFocused(true);
-  }, this));
+  }.bind(this));
 };
 
 

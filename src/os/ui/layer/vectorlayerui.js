@@ -813,14 +813,13 @@ os.ui.layer.VectorLayerUICtrl.prototype.onLabelColumnChange = function(event) {
 
   var items = /** @type {Array} */ (this.scope['items']);
   if (items && items.length === 1) {
-    var fn = goog.bind(
-        /**
-         * @param {os.layer.ILayer} layer
-         * @return {os.command.ICommand}
-         */
-        function(layer) {
-          return new os.command.VectorLayerLabel(layer.getId(), this.scope['labels']);
-        }, this);
+    /**
+     * @param {os.layer.ILayer} layer
+     * @return {os.command.ICommand}
+     */
+    var fn = function(layer) {
+      return new os.command.VectorLayerLabel(layer.getId(), this.scope['labels']);
+    }.bind(this);
 
     this.createCommand(fn);
   }
@@ -1409,14 +1408,13 @@ os.ui.layer.VectorLayerUICtrl.prototype.onShowRotationChange = function(event, v
 os.ui.layer.VectorLayerUICtrl.prototype.onRotationColumnChange = function(event, value) {
   var items = /** @type {Array} */ (this.scope['items']);
   if (items && items.length > 0) {
-    var fn = goog.bind(
-        /**
-         * @param {os.layer.ILayer} layer
-         * @return {os.command.ICommand}
-         */
-        function(layer) {
-          return new os.command.VectorLayerRotation(layer.getId(), value);
-        }, this);
+    /**
+     * @param {os.layer.ILayer} layer
+     * @return {os.command.ICommand}
+     */
+    var fn = function(layer) {
+      return new os.command.VectorLayerRotation(layer.getId(), value);
+    };
 
     this.createCommand(fn);
   }

@@ -137,12 +137,12 @@ os.ui.metrics.MetricsContainerCtrl.prototype.save = function() {
 os.ui.metrics.MetricsContainerCtrl.prototype.refresh_ = function() {
   this.scope['metricsNodes'] = this.metricsManager_.getRootNode().getChildren();
 
-  this.timeout_(goog.bind(function() {
+  this.timeout_(function() {
     this.scope['selected'] = this.metricsManager_.getSelected();
 
     if (!this.scope['selected']) {
       // nothing selected - select the first setting
       this.scope['selected'] = this.metricsManager_.initSelection();
     }
-  }, this));
+  }.bind(this));
 };

@@ -133,7 +133,7 @@ os.ui.layer.DefaultLayerUICtrl = function($scope, $element, $timeout) {
   this.initUI();
   this.setInitialValues_();
 
-  $timeout(goog.bind(function() {
+  $timeout(function() {
     if (this.element) {
       var selector = /** @type {string} */ (os.settings.get('layercontrols', ''));
       if (selector) {
@@ -143,7 +143,7 @@ os.ui.layer.DefaultLayerUICtrl = function($scope, $element, $timeout) {
         }
       }
     }
-  }, this));
+  }.bind(this));
 };
 goog.inherits(os.ui.layer.DefaultLayerUICtrl, os.ui.layer.AbstractLayerUICtrl);
 

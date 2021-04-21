@@ -65,7 +65,7 @@ os.ui.window.GeoHelpCtrl = function($scope, $element) {
    * @private
    */
   this.element_ = $element;
-  $scope.$on('$destroy', goog.bind(this.destroy_, this));
+  $scope.$on('$destroy', this.destroy_.bind(this));
 };
 
 

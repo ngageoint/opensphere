@@ -95,9 +95,9 @@ os.ui.column.mapping.ColumnMappingFormCtrl = function($scope, $element, $timeout
 
   this.init_();
 
-  $timeout(goog.bind(function() {
+  $timeout(function() {
     this.element_.find('input[name="name"]').focus();
-  }, this));
+  }.bind(this));
 
   $scope.$on('layerpicker.layerselected', this.validateLayers_.bind(this));
   $scope.$on('columnpicker.columnselected', this.validateLayers_.bind(this));

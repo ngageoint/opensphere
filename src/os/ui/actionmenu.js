@@ -358,7 +358,7 @@ os.ui.ActionMenuCtrl.prototype.position = function() {
  * @export
  */
 os.ui.ActionMenuCtrl.prototype.positionSubmenu = function() {
-  this.timeout(goog.bind(function() {
+  this.timeout(function() {
     if (this.element && !this.scope['isFlat']) {
       var submenus = this.element.find('.js-action-menu-item-list .js-dropdown-submenu');
       var submenu = submenus.find('.js-action-menu-item-list');
@@ -399,7 +399,7 @@ os.ui.ActionMenuCtrl.prototype.positionSubmenu = function() {
         }
       }
     }
-  }, this), 50, true);
+  }.bind(this), 50, true);
 };
 
 /**

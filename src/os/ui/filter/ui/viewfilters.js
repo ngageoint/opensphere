@@ -79,7 +79,7 @@ os.ui.filter.ui.ViewFiltersCtrl = function($scope, $element) {
 
   this.create_();
 
-  $scope.$on('$destroy', goog.bind(this.onDestroy_, this));
+  $scope.$on('$destroy', this.onDestroy_.bind(this));
 };
 
 

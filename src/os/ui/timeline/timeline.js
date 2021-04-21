@@ -470,7 +470,7 @@ os.ui.timeline.TimelineCtrl = function($scope, $element, $timeout) {
   this.initTime_();
 
   // watch for start/end changes before initializing
-  this.scope_.$watch('startEnd', goog.bind(this.onStartEndChange_, this));
+  this.scope_.$watch('startEnd', this.onStartEndChange_.bind(this));
   this.timeout_(this.init_.bind(this));
 
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.OPEN, 1);
