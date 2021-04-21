@@ -1,55 +1,71 @@
-// Import Worker libraries
-var CLOSURE_BASE_PATH = '/google-closure-library/closure/goog/';
-importScripts(
-    CLOSURE_BASE_PATH + 'bootstrap/webworkers.js',
-    CLOSURE_BASE_PATH + 'base.js',
-    CLOSURE_BASE_PATH + 'deps.js',
-    '/base/src/os/job/jobevent.js',
-    '/base/src/os/job/job.js'
-);
+/**
+ * Worker control commands. Duplicated to avoid needing to load Closure scripts in a worker.
+ * @enum {number}
+ */
+const JobCommand = {
+  'START': 0,
+  'STOP': 1,
+  'PAUSE': 2
+};
 
 
-goog.require('os.job.JobCommand');
-goog.require('os.job.JobState');
-goog.require('goog.async.Delay');
+/**
+ * Worker execution states. Duplicated to avoid needing to load Closure scripts in a worker.
+ * @enum {number}
+ */
+const JobState = {
+  'IDLE': 0,
+  'EXECUTING': 1,
+  'COMPLETE': 2,
+  'PAUSED': 3,
+  'STOPPED': 4,
+  'ERROR': 5,
+  'LOG': 6
+};
 
 
-// This test job will execute for 500ms before firing a complete event
-var delayOverride = undefined;
-var delay = new goog.async.Delay(function(event) {
-  postMessage({state: os.job.JobState.COMPLETE});
-}, 100, this);
+// Default time to "execute" the job before firing the complete event.
+const defaultTimeout = 100;
 
-var state = os.job.JobState.IDLE;
-var startExecution = function() {
+let timeoutId;
+let timeoutOverride;
+
+let state = JobState.IDLE;
+const startExecution = function() {
   // start the job (delay) if it hasn't been already
-  if (state != os.job.JobState.EXECUTING) {
-    state = os.job.JobState.EXECUTING;
+  if (state != JobState.EXECUTING) {
+    state = JobState.EXECUTING;
     postMessage({state: state});
 
-    delay.start(delayOverride);
+    timeoutId = setTimeout(() => {
+      timeoutId = undefined;
+      postMessage({state: JobState.COMPLETE});
+    }, timeoutOverride || defaultTimeout);
   }
 };
 
-var stopExecution = function() {
+const stopExecution = function() {
   // stop the job (delay) if it is running and fire a stopped event, then
   // close the worker
-  if (delay.isActive()) {
-    delay.stop();
+  if (timeoutId != null) {
+    clearTimeout(timeoutId);
+    timeoutId = undefined;
 
-    state = os.job.JobState.STOPPED;
+    state = JobState.STOPPED;
     postMessage({state: state});
 
     self.close();
   }
 };
 
-var pauseExecution = function() {
+const pauseExecution = function() {
   // pause execution of the job. starting will actually reset the delay but
   // this is just a test, so that's not a problem.
-  if (state == os.job.JobState.EXECUTING && delay.isActive()) {
-    delay.stop();
-    state = os.job.JobState.PAUSED;
+  if (state == JobState.EXECUTING && timeoutId != null) {
+    clearTimeout(timeoutId);
+    timeoutId = undefined;
+
+    state = JobState.PAUSED;
     postMessage({state: state});
   }
 };
@@ -57,15 +73,14 @@ var pauseExecution = function() {
 onmessage = function(event) {
   // handle messages from the parent {os.job.Job}
   if (event && event.data) {
-    var data = event.data;
-    if (data.command == os.job.JobCommand.START) {
-      if (data.data) {
-        delayOverride = data.data;
-      }
+    const data = event.data;
+    if (data.command == JobCommand.START) {
+      timeoutOverride = typeof data.data === 'number' ? data.data : undefined;
+
       startExecution();
-    } else if (data.command == os.job.JobCommand.STOP) {
+    } else if (data.command == JobCommand.STOP) {
       stopExecution();
-    } else if (data.command == os.job.JobCommand.PAUSE) {
+    } else if (data.command == JobCommand.PAUSE) {
       pauseExecution();
     }
   }
