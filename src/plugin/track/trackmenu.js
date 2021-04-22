@@ -2,6 +2,7 @@ goog.module('plugin.track.menu');
 goog.module.declareLegacyNamespace();
 
 goog.require('plugin.track.ConfirmTrackUI');
+
 const asserts = goog.require('goog.asserts');
 const OLVectorLayer = goog.require('ol.layer.Vector');
 const LayerNode = goog.require('os.data.LayerNode');
@@ -20,10 +21,17 @@ const Event = goog.require('plugin.track.Event');
 const EventType = goog.require('plugin.track.EventType');
 const KMLNode = goog.require('plugin.file.kml.ui.KMLNode');
 const TrackManager = goog.require('plugin.track.TrackManager');
+const OsMeasure = goog.require('os.interaction.Measure');
+const OsInterpolateMethod = goog.require('os.interpolate.Method');
+const Settings = goog.require('os.config.Settings');
 
 const ActionEvent = goog.requireType('os.ui.action.ActionEvent');
 const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const OlFeature = goog.requireType('ol.Feature');
+const OsMenuItem = goog.requireType('os.ui.menu.MenuItem');
 
+
+const settings = Settings.getInstance();
 
 /**
  * Menu group for track actions.
@@ -236,7 +244,7 @@ const hasSelectedFeatures = function(context) {
  * Show a menu item if one or more tracks exist and the layer has features.
  *
  * @param {osUiMenuLayer.Context} context The menu context.
- * @this {os.ui.menu.MenuItem}
+ * @this {OsMenuItem}
  */
 const visibleIfHasFeatures = function(context) {
   if (Event.isSelectedEvent(this.eventType)) {
@@ -250,7 +258,7 @@ const visibleIfHasFeatures = function(context) {
  * Show a menu item if one or more tracks exist and the layer has features.
  *
  * @param {osUiMenuLayer.Context} context The menu context.
- * @this {os.ui.menu.MenuItem}
+ * @this {OsMenuItem}
  */
 const visibleIfTracksExist = function(context) {
   const trackNode = PlacesManager.getInstance().getPlacesRoot();
@@ -265,7 +273,7 @@ const visibleIfTracksExist = function(context) {
  * Show a menu item if one or more tracks exist and the layer has features.
  *
  * @param {osUiMenuLayer.Context} context The menu context.
- * @this {os.ui.menu.MenuItem}
+ * @this {OsMenuItem}
  */
 const visibleIfTrackNode = function(context) {
   this.visible = false;
@@ -389,7 +397,7 @@ const spatialSetup = function(opt_enablePredict = false) {
  * Shows a menu item if the menu context contains tracks where their line is shown.
  *
  * @param {Object|undefined} context The menu context.
- * @this {os.ui.menu.MenuItem}
+ * @this {OsMenuItem}
  */
 const visibleIfMarkerInterpolationEnabled = function(context) {
   this.visible = !!context && isMarkerInterpolationOn(context);
@@ -399,7 +407,7 @@ const visibleIfMarkerInterpolationEnabled = function(context) {
  * Shows a menu item if the menu context contains tracks where their line is hidden.
  *
  * @param {Object|undefined} context The menu context.
- * @this {os.ui.menu.MenuItem}
+ * @this {OsMenuItem}
  */
 const visibleIfMarkerInterpolationDisabled = function(context) {
   this.visible = !!context && getTracks(context).length > 0
@@ -416,7 +424,7 @@ const isMarkerInterpolationOn = function(opt_context) {
   if (opt_context) {
     const tracks = getTracks(/** @type {Object|null|undefined} */ (opt_context));
     if (tracks.length > 0) {
-      return osTrack.getInterpolateMarker(/** @type {!ol.Feature} */ (tracks[0]));
+      return osTrack.getInterpolateMarker(/** @type {!OlFeature} */ (tracks[0]));
     }
   }
 
@@ -442,7 +450,7 @@ const isMarkerInterpolationOff = function(opt_context) {
  * Shows a menu item if the menu context contains tracks where their line is shown.
  *
  * @param {Object|undefined} context The menu context.
- * @this {os.ui.menu.MenuItem}
+ * @this {OsMenuItem}
  */
 const visibleIfLineIsShown = function(context) {
   this.visible = !!context && isLineShown(context);
@@ -452,7 +460,7 @@ const visibleIfLineIsShown = function(context) {
  * Shows a menu item if the menu context contains tracks where their line is hidden.
  *
  * @param {Object|undefined} context The menu context.
- * @this {os.ui.menu.MenuItem}
+ * @this {OsMenuItem}
  */
 const visibleIfLineIsHidden = function(context) {
   this.visible = !!context && getTracks(context).length > 0
@@ -469,7 +477,7 @@ const isLineShown = function(opt_context) {
   if (opt_context) {
     const tracks = getTracks(/** @type {Object|null|undefined} */ (opt_context));
     if (tracks.length > 0) {
-      return osTrack.getShowLine(/** @type {!ol.Feature} */ (tracks[0]));
+      return osTrack.getShowLine(/** @type {!OlFeature} */ (tracks[0]));
     }
   }
 
@@ -495,7 +503,7 @@ const isLineHidden = function(opt_context) {
  * Shows a menu item if the menu context contains a single track feature.
  *
  * @param {Object|undefined} context The menu context.
- * @this {os.ui.menu.MenuItem}
+ * @this {OsMenuItem}
  */
 const visibleIfTrackFeature = function(context) {
   this.visible = !!context && !!context.feature && osTrack.isTrackFeature(context.feature);
@@ -505,7 +513,7 @@ const visibleIfTrackFeature = function(context) {
  * Shows a menu item if the menu context contains tracks that are not followed.
  *
  * @param {Object|undefined} context The menu context.
- * @this {os.ui.menu.MenuItem}
+ * @this {OsMenuItem}
  */
 const visibleIfIsNotFollowed = function(context) {
   this.visible = !!context && isNotFollowed(context);
@@ -515,7 +523,7 @@ const visibleIfIsNotFollowed = function(context) {
  * Shows a menu item if the menu context contains tracks that are are followed.
  *
  * @param {Object|undefined} context The menu context.
- * @this {os.ui.menu.MenuItem}
+ * @this {OsMenuItem}
  */
 const visibleIfIsFollowed = function(context) {
   this.visible = !!context && getTracks(context).length > 0 &&
@@ -615,7 +623,7 @@ const setShowTrackLine = function(show, event) {
   if (context) {
     const tracks = getTracks((context));
     for (let i = 0; i < tracks.length; i++) {
-      osTrack.setShowLine(/** @type {!ol.Feature} */ (tracks[i]), show);
+      osTrack.setShowLine(/** @type {!OlFeature} */ (tracks[i]), show);
     }
   }
 };
@@ -631,7 +639,7 @@ const setMarkerInterpolationEnabled = function(show, event) {
   if (context) {
     const tracks = getTracks((context));
     for (let i = 0; i < tracks.length; i++) {
-      osTrack.setInterpolateMarker(/** @type {!ol.Feature} */ (tracks[i]), show);
+      osTrack.setInterpolateMarker(/** @type {!OlFeature} */ (tracks[i]), show);
     }
   }
 };
@@ -640,13 +648,13 @@ const setMarkerInterpolationEnabled = function(show, event) {
  * Determine the track based on the received event
  *
  * @param {Array<Object>|Object|undefined} context The menu context.
- * @return {Array<ol.Feature>}
+ * @return {Array<OlFeature>}
  */
 const getTracks = function(context) {
   const tracks = [];
   if (context) {
     if (context.feature && osTrack.isTrackFeature(context.feature)) {
-      tracks.push(/** @type {!ol.Feature} */ (context.feature));
+      tracks.push(/** @type {!OlFeature} */ (context.feature));
     } else if (Array.isArray(context)) {
       const trackNodes = getTrackNodes(context);
       if (trackNodes && trackNodes.length === context.length) {
@@ -736,7 +744,10 @@ const handleAddCreateTrackEvent_ = function(event) {
  * @param {!(ActionEvent|MenuEvent)} event The menu event.
  */
 const handlePredictRhumb = function(event) {
-  // TODO set the interpolation method
+  // set the interpolation method
+  OsMeasure.method = OsInterpolateMethod.RHUMB;
+  settings.set('measureMethod', OsInterpolateMethod.RHUMB);
+
   handlePredict_(event);
 };
 
@@ -746,7 +757,10 @@ const handlePredictRhumb = function(event) {
  * @param {!(ActionEvent|MenuEvent)} event The menu event.
  */
 const handlePredictGeodesic = function(event) {
-  // TODO set the interpolation method
+  // set the interpolation method
+  OsMeasure.method = OsInterpolateMethod.GEODESIC;
+  settings.set('measureMethod', OsInterpolateMethod.GEODESIC);
+
   handlePredict_(event);
 };
 
@@ -760,7 +774,6 @@ const handlePredict_ = function(event) {
   // TODO set the drawing mode based on event.type
   const context = event.getContext();
   if (context) {
-    console.log(event.type, event, context);
     // TODO if a feature, create a track
     const tm = TrackManager.getInstance();
     let tracks = getTracks(/** */ (context));
