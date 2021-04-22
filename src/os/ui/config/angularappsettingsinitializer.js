@@ -60,14 +60,14 @@ os.ui.config.AngularAppSettingsInitializer.prototype.onSettingsLoaded = function
     // Theme loaded - bootstrap Angular.
     if (this.ngAppSelector && this.ngAppModule) {
       var bootstrapEl = document.querySelector(this.ngAppSelector);
-      angular.element(bootstrapEl).ready(goog.bind(function() {
+      angular.element(bootstrapEl).ready(function() {
         angular.bootstrap(bootstrapEl, [this.ngAppModule]);
 
         // On settings change, update the theme
         os.settings.listen(os.config.ThemeSettings.Keys.THEME, os.config.ThemeSettings.updateTheme, false, this);
         os.settings.listen(os.config.ThemeSettings.Keys.ACCESSIBLE_THEME,
             os.config.ThemeSettings.updateTheme, false, this);
-      }, this));
+      }.bind(this));
     }
   }, function(error) {
     // Theme failed to load, which will result in a blank page. Throw an error so something shows up in the console.

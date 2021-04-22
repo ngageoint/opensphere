@@ -8,6 +8,7 @@ goog.require('goog.string');
 goog.require('ol.array');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.filter.BaseFilterManager');
+goog.require('os.fn');
 goog.require('os.query');
 goog.require('os.query.BaseAreaManager');
 goog.require('os.ui.query');
@@ -97,14 +98,14 @@ os.query.BaseQueryManager.LOGGER_ = goog.log.getLogger('os.query.BaseQueryManage
  * Saves the entry data
  * @protected
  */
-os.query.BaseQueryManager.prototype.save = goog.nullFunction;
+os.query.BaseQueryManager.prototype.save = os.fn.noop;
 
 
 /**
  * Loads the entry data
  * @protected
  */
-os.query.BaseQueryManager.prototype.load = goog.nullFunction;
+os.query.BaseQueryManager.prototype.load = os.fn.noop;
 
 
 /**

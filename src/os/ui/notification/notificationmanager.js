@@ -189,7 +189,7 @@ os.ui.notification.NotificationManager.prototype.createNotification_ = function(
  */
 os.ui.notification.NotificationManager.prototype.requestPermissionAndCreateNotification_ =
     function(title, resolve, reject, opt_options) {
-      Notification.requestPermission(goog.bind(function(permission) {
+      Notification.requestPermission(function(permission) {
         if (permission === 'granted') {
           // create the notification and pass it back in the resolve promise function
           var notification = new Notification(title, opt_options);
@@ -198,7 +198,7 @@ os.ui.notification.NotificationManager.prototype.requestPermissionAndCreateNotif
           // Reject the promise, letting the client know the notification failed.
           reject();
         }
-      }, this));
+      });
     };
 
 

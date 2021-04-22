@@ -86,7 +86,7 @@ os.ui.column.mapping.MappingExpressionCtrl = function($scope, $element, $timeout
     this.setLayer_(this['layer']);
   }
 
-  this.timeout_(goog.bind(function() {
+  this.timeout_(function() {
     var selElement = this.element_.find('.js-mapping-expression__column-select');
     selElement.select2({
       'placeholder': 'Select column...'
@@ -97,7 +97,7 @@ os.ui.column.mapping.MappingExpressionCtrl = function($scope, $element, $timeout
       // if the columns aren't available, disable it
       selElement.select2('disable');
     }
-  }, this));
+  }.bind(this));
 
   $scope.$on('layerpicker.layerselected', this.onLayerChange_.bind(this));
   $scope.$watch('exprCtrl.column', this.onColumnChange_.bind(this));
@@ -197,10 +197,10 @@ os.ui.column.mapping.MappingExpressionCtrl.prototype.setColumns_ = function(colu
 
   this.model_['column'] = (this['column'] == null) ? null : this.model_['column'];
 
-  this.timeout_(goog.bind(function() {
+  this.timeout_(function() {
     // this tells the select2 to update to reflect the new set of columns
     this.element_.find('.js-mapping-expression__column-select').change().select2('enable');
-  }, this));
+  }.bind(this));
 };
 
 

@@ -1,5 +1,7 @@
 goog.provide('plugin.file.kml.tour.AbstractTourPrimitive');
 
+goog.require('os.fn');
+
 
 /**
  * Abstract KML tour primitive.
@@ -28,10 +30,10 @@ plugin.file.kml.tour.AbstractTourPrimitive.prototype.execute = function() {};
 /**
  * Pause tour instruction execution.
  */
-plugin.file.kml.tour.AbstractTourPrimitive.prototype.pause = goog.nullFunction;
+plugin.file.kml.tour.AbstractTourPrimitive.prototype.pause = os.fn.noop;
 
 
 /**
  * Reset the tour primitive.
  */
-plugin.file.kml.tour.AbstractTourPrimitive.prototype.reset = goog.nullFunction;
+plugin.file.kml.tour.AbstractTourPrimitive.prototype.reset = os.fn.noop;

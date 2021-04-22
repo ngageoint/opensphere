@@ -112,7 +112,7 @@ os.ui.layer.VectorStyleControlsCtrl = function($scope, $element) {
    */
   this.scope['lineDashOption'] = name ? name : this.scope['lineDashOptions'][1];
 
-  $scope.$on('$destroy', goog.bind(this.dispose, this));
+  $scope.$on('$destroy', this.dispose.bind(this));
 };
 goog.inherits(os.ui.layer.VectorStyleControlsCtrl, goog.Disposable);
 

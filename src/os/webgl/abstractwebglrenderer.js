@@ -4,6 +4,7 @@ goog.require('goog.Disposable');
 goog.require('goog.Promise');
 goog.require('os.MapEvent');
 goog.require('os.config.DisplaySetting');
+goog.require('os.fn');
 goog.require('os.map.terrain');
 goog.require('os.webgl.IWebGLRenderer');
 
@@ -224,7 +225,7 @@ os.webgl.AbstractWebGLRenderer.prototype.initialize = function() {
 /**
  * @inheritDoc
  */
-os.webgl.AbstractWebGLRenderer.prototype.renderSync = goog.nullFunction;
+os.webgl.AbstractWebGLRenderer.prototype.renderSync = os.fn.noop;
 
 
 /**

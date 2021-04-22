@@ -135,9 +135,9 @@ os.ui.column.mapping.ColumnMappingSettingsCtrl.prototype.onMappingsChange_ = fun
   this['mappingTree'] = mappings.map(os.ui.column.mapping.ColumnMappingSettings.mapFn_);
   os.ui.apply(this.scope_);
 
-  this.timeout_(goog.bind(function() {
+  this.timeout_(function() {
     this.scope_.$broadcast('slickgrid.invalidateRows');
-  }, this));
+  }.bind(this));
 };
 
 

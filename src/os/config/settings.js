@@ -922,7 +922,7 @@ os.config.Settings.prototype.fail_ = function(opt_error) {
  */
 os.config.Settings.prototype.alertFailure_ = function(opt_delay) {
   // {@todo is there a better way to fire alert before alert directive is ready than settimeout?}
-  setTimeout(goog.bind(function() {
+  setTimeout(function() {
     var dismissAlertEventTarget = new goog.events.EventTarget();
     var dismissAlert = function() {
       dismissAlertEventTarget.dispatchEvent(new goog.events.Event(os.alert.AlertEventTypes.DISMISS_ALERT));
@@ -932,7 +932,7 @@ os.config.Settings.prototype.alertFailure_ = function(opt_delay) {
     alertMgr.sendAlert('<strong>Settings are unavailable!</strong> This session will continue to run without any ' +
         'previously saved options, and any changes you make will not be remembered for the next session.',
     os.alert.AlertEventSeverity.ERROR, undefined, 1, dismissAlertEventTarget);
-  }, this), opt_delay || 2500);
+  }.bind(this), opt_delay || 2500);
 };
 
 

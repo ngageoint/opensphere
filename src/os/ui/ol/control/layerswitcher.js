@@ -209,9 +209,9 @@ os.ui.ol.control.LayerSwitcher.prototype.renderLayer_ = function(lyr, idx) {
     input.id = lyrId;
     input.className = 'form-check-input';
     input.checked = lyr.get('visible');
-    input.onchange = goog.bind(function(e) {
+    input.onchange = function(e) {
       this_.setVisible_(lyr, e.target.checked);
-    }, this);
+    };
     layerDiv.appendChild(input);
     label.htmlFor = lyrId;
     goog.dom.safe.setInnerHtml(label, lyrTitle);

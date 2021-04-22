@@ -2,6 +2,7 @@ goog.provide('os.feature.DynamicFeature');
 goog.provide('os.feature.DynamicPropertyChange');
 
 goog.require('ol.Feature');
+goog.require('os.fn');
 
 
 /**
@@ -35,19 +36,19 @@ os.feature.DynamicFeature = function(opt_geometryOrProperties, opt_initFn, opt_d
    * Initialize the feature into the animating state.
    * @type {function(!ol.Feature)}
    */
-  this.initFn = opt_initFn || goog.nullFunction;
+  this.initFn = opt_initFn || os.fn.noop;
 
   /**
    * Restore the feature to the non-animating state.
    * @type {function(!ol.Feature, boolean=)}
    */
-  this.disposeFn = opt_disposeFn || goog.nullFunction;
+  this.disposeFn = opt_disposeFn || os.fn.noop;
 
   /**
    * Update the animating state for the given timestamp.
    * @type {function(!ol.Feature, number, number)}
    */
-  this.updateFn = opt_updateFn || goog.nullFunction;
+  this.updateFn = opt_updateFn || os.fn.noop;
 
   /**
    * Whether the track is being dynamic or not

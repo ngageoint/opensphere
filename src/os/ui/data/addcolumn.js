@@ -96,7 +96,7 @@ os.ui.data.AddColumnCtrl = function($scope, $element, $timeout) {
   });
 
   $scope.$emit(os.ui.WindowEventType.READY);
-  $scope.$on('$destroy', goog.bind(this.destroy_, this));
+  $scope.$on('$destroy', this.destroy_.bind(this));
 };
 
 

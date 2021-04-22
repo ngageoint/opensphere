@@ -34,7 +34,7 @@ os.ui.feature.tab.AbstractFeatureTabCtrl = function($scope, $element) {
   }
 
   this.scope.$on(os.ui.feature.FeatureInfoCtrl.UPDATE_TABS, this.updateTab.bind(this));
-  this.scope.$on('$destroy', goog.bind(this.destroy, this));
+  this.scope.$on('$destroy', this.destroy.bind(this));
 };
 
 

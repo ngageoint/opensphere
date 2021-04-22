@@ -7,6 +7,7 @@ goog.require('ol.events');
 goog.require('os.filter.FilterEntry');
 goog.require('os.filter.IFilterFormatter');
 goog.require('os.filter.ISpatialFormatter');
+goog.require('os.fn');
 goog.require('os.ui.query.QueryHandler');
 
 
@@ -22,7 +23,7 @@ os.query.QueryHandler = function() {
    * @type {function(this:os.source.Request)}
    * @private
    */
-  this.origSourceRefresh_ = goog.nullFunction;
+  this.origSourceRefresh_ = os.fn.noop;
 
   /**
    * @type {boolean}
@@ -90,7 +91,7 @@ os.query.QueryHandler.prototype.setSource = function(source) {
   if (this.source) {
     // restore the original refresh function
     this.source.refresh = this.origSourceRefresh_;
-    this.origSourceRefresh_ = goog.nullFunction;
+    this.origSourceRefresh_ = os.fn.noop;
 
     this.setLayerId(null);
     this.setLayerName(null);

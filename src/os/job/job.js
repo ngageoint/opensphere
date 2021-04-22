@@ -118,8 +118,7 @@ os.job.Job = function(src, name, details) {
    * @type {Worker}
    */
   this.worker_ = new Worker(src);
-  this.worker_.onmessage = os.job.Job.onMessage;
-  this.worker_.job = this;
+  this.worker_.onmessage = os.job.Job.onMessage.bind(this);
 
   /**
    * Timer to update job execution time.
@@ -238,15 +237,15 @@ os.job.Job.prototype.handleWorkerMessage = function(msg) {
 
 
 /**
- * Worker message handler. Context for 'this' will be the Worker.
- *
- * @this Worker
- * @protected
+ * Worker message handler. Context for 'this' will be the Job.
  * @param {string|Object} event Message from the Worker.
+ *
+ * @this os.job.Job
+ * @protected
  */
 os.job.Job.onMessage = function(event) {
   if (event && event.data) {
-    this.job.handleWorkerMessage(event.data);
+    this.handleWorkerMessage(event.data);
   }
 };
 

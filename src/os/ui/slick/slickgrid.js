@@ -181,19 +181,19 @@ os.ui.slick.SlickGridCtrl = function($scope, $element, $compile) {
   this.destroyers.push($scope.$watch('columns', this.onColumnsChange.bind(this)));
   this.destroyers.push($scope.$watch('options', this.onOptionsChange.bind(this)));
   this.destroyers.push($scope.$on('$destroy', this.dispose.bind(this)));
-  var unWatchSortColumn = $scope.$watch('defaultSortColumn', goog.bind(function(newVal) {
+  var unWatchSortColumn = $scope.$watch('defaultSortColumn', function(newVal) {
     if (newVal && ol.array.find($scope['columns'], function(col) {
       return newVal == col['id'];
     })) {
-      setTimeout(goog.bind(function() {
+      setTimeout(function() {
         unWatchSortColumn();
         if (this.grid) {
           this.grid.setSortColumn(newVal, this.scope['defaultSortOrder'] !== 'desc');
           this.onSortChange();
         }
-      }, this), 100);
+      }.bind(this), 100);
     }
-  }, this));
+  }.bind(this));
 
   /**
    * The column menu.
@@ -1708,14 +1708,14 @@ os.ui.slick.SlickGridCtrl.prototype.onDragStart = function(e, dragInfo) {
   dragInfo['rect'] = $('<div class=\'slick-reorder-proxy\'/>').
       css('position', 'absolute').
       css('zIndex', '99999').
-      css('width', $(canvas).innerWidth()).
+      css('width', /** @type {number} */ ($(canvas).innerWidth())).
       css('height', rowHeight * rows.length).
       appendTo(canvas);
 
   dragInfo['guide'] = $('<div class=\'slick-reorder-guide\'/>').
       css('position', 'absolute').
       css('zIndex', '99998').
-      css('width', $(canvas).innerWidth()).
+      css('width', /** @type {number} */ ($(canvas).innerWidth())).
       css('top', -1000).
       appendTo(canvas);
 

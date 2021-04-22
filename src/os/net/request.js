@@ -4,11 +4,11 @@ goog.provide('os.net.Request.STATUS_CODE_MSG');
 goog.require('goog.Promise');
 goog.require('goog.Uri');
 goog.require('goog.array');
-goog.require('goog.debug.Logger.Level');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventLike');
 goog.require('goog.events.EventTarget');
 goog.require('goog.log');
+goog.require('goog.log.Level');
 goog.require('goog.log.Logger');
 goog.require('goog.net.EventType');
 goog.require('os');
@@ -160,10 +160,10 @@ os.net.Request = function(opt_uri, opt_method, opt_timeout) {
 
   /**
    * The default log level.
-   * @type {!goog.debug.Logger.Level}
+   * @type {!goog.log.Level}
    * @private
    */
-  this.logLevel_ = goog.debug.Logger.Level.INFO;
+  this.logLevel_ = goog.log.Level.INFO;
 
   if (opt_uri) {
     this.setUri(opt_uri);
@@ -914,7 +914,7 @@ os.net.Request.prototype.setTimeout = function(timeout) {
 /**
  * Gets the default log level for the request.
  *
- * @return {!goog.debug.Logger.Level}
+ * @return {!goog.log.Level}
  */
 os.net.Request.prototype.getLogLevel = function() {
   return this.logLevel_;
@@ -924,7 +924,7 @@ os.net.Request.prototype.getLogLevel = function() {
 /**
  * Sets the default log level for the request.
  *
- * @param {!goog.debug.Logger.Level} level The log level.
+ * @param {!goog.log.Level} level The log level.
  */
 os.net.Request.prototype.setLogLevel = function(level) {
   this.logLevel_ = level;

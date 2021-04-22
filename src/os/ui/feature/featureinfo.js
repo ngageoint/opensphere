@@ -71,7 +71,7 @@ os.ui.feature.FeatureInfoCtrl = function($scope, $element) {
   /**
    * @type {function(os.ui.tab.FeatureTab):string}
    */
-  this['getUi'] = goog.bind(this.getUi_, this);
+  this['getUi'] = this.getUi_.bind(this);
 
   /**
    * The displayed title for the active feature.

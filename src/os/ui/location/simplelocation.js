@@ -215,9 +215,9 @@ os.ui.location.SimpleLocationControlsCtrl = function($scope) {
   this.change_({'opt_format': this['format']});
 
   this.scope_.$on('$destroy', this.destroy_.bind(this));
-  this.scope_.$watch('formatDefault', goog.bind(function(format) {
+  this.scope_.$watch('formatDefault', function(format) {
     this['format'] = format;
-  }, this));
+  }.bind(this));
 
   os.settings.listen(os.ui.location.LocationSetting.POSITION, this.locationControlChanged, false, this);
 };

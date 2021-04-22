@@ -1,6 +1,8 @@
 goog.provide('os.ui.help.webGLPerfCaveatDirective');
+
 goog.require('goog.userAgent');
 goog.require('os.config');
+goog.require('os.fn');
 goog.require('os.ui.Module');
 goog.require('os.ui.util.LinkyFilter');
 goog.require('os.ui.window');
@@ -33,8 +35,8 @@ os.ui.Module.directive('webglperfcaveat', [os.ui.help.webGLPerfCaveatDirective])
  */
 os.ui.help.launchWebGLPerfCaveatDialog = function(opt_title, opt_overrideCallback) {
   var scopeOptions = {
-    'confirmCallback': goog.nullFunction,
-    'cancelCallback': opt_overrideCallback || goog.nullFunction,
+    'confirmCallback': os.fn.noop,
+    'cancelCallback': opt_overrideCallback || os.fn.noop,
     'hideCancel': !opt_overrideCallback,
     'supportLink': /** @type {string|undefined} */ (os.settings.get('webgl.performanceCaveat.supportLink')),
     'yesText': 'Got it!',

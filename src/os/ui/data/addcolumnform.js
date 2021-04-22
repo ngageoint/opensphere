@@ -48,7 +48,7 @@ os.ui.data.AddColumnFormCtrl = function($scope, $timeout) {
    */
   this.scope_ = $scope;
 
-  $scope.$on('$destroy', goog.bind(this.destroy_, this));
+  $scope.$on('$destroy', this.destroy_.bind(this));
 
   $timeout(this.addValidators_.bind(this));
 };

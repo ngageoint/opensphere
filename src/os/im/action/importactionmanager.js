@@ -4,6 +4,7 @@ goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
 goog.require('goog.log');
 goog.require('ol.array');
+goog.require('os.fn');
 goog.require('os.im.action.FilterActionEntry');
 goog.require('os.im.action.ImportActionCallbackConfig');
 goog.require('os.im.action.ImportActionEventType');
@@ -568,7 +569,7 @@ os.im.action.ImportActionManager.prototype.loadDefaults = function(id) {
 /**
  * Initialize the manager when entries have been loaded.
  */
-os.im.action.ImportActionManager.prototype.initialize = goog.nullFunction;
+os.im.action.ImportActionManager.prototype.initialize = os.fn.noop;
 
 
 /**

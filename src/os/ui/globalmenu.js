@@ -39,9 +39,9 @@ os.ui.GlobalMenuCtrl = function($scope, $element, $timeout) {
   this.target = null;
 
   /**
-   * @type {Object?}
+   * @type {({left:number,top:number}|undefined|!jQuery)}
    */
-  this.targetOffset = null;
+  this.targetOffset = undefined;
 
   /**
    * @type {goog.async.Delay}
@@ -74,7 +74,7 @@ os.ui.GlobalMenuCtrl.prototype.close = function(opt_dispatch) {
   }
 
   this.target = null;
-  this.targetOffset = null;
+  this.targetOffset = undefined;
 
   if (this.element.hasClass('show')) {
     if (opt_dispatch && os.dispatcher) {

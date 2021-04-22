@@ -11,6 +11,7 @@ goog.require('ol.layer.Vector');
 goog.require('ol.source.Vector');
 goog.require('os.I3DSupport');
 goog.require('os.MapEvent');
+goog.require('os.fn');
 goog.require('os.geo');
 goog.require('os.implements');
 goog.require('os.interpolate');
@@ -77,13 +78,13 @@ os.interaction.DrawPolygon.prototype.cleanup = function() {
 /**
  * Clean up the WebGL renderer.
  */
-os.interaction.DrawPolygon.prototype.cleanupWebGL = goog.nullFunction;
+os.interaction.DrawPolygon.prototype.cleanupWebGL = os.fn.noop;
 
 
 /**
  * Update the polygon in the WebGL renderer.
  */
-os.interaction.DrawPolygon.prototype.updateWebGL = goog.nullFunction;
+os.interaction.DrawPolygon.prototype.updateWebGL = os.fn.noop;
 
 
 /**
