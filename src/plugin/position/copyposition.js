@@ -1,14 +1,18 @@
-goog.provide('plugin.position.CopyPositionCtrl');
-goog.provide('plugin.position.copyPositionDirective');
+goog.module('plugin.position.CopyPositionUI');
 
-goog.require('goog.Disposable');
-goog.require('goog.dom');
-goog.require('goog.events.KeyCodes');
-goog.require('goog.events.KeyEvent');
-goog.require('goog.events.KeyHandler');
-goog.require('os');
-goog.require('os.action.EventType');
-goog.require('os.ui.Module');
+const dispose = goog.require('goog.dispose');
+const dom = goog.require('goog.dom');
+const KeyCodes = goog.require('goog.events.KeyCodes');
+const KeyEvent = goog.require('goog.events.KeyEvent');
+const KeyHandler = goog.require('goog.events.KeyHandler');
+const {ROOT} = goog.require('os');
+const MapContainer = goog.require('os.MapContainer');
+const Metrics = goog.require('os.metrics.Metrics');
+const keys = goog.require('os.metrics.keys');
+const MousePosition = goog.require('os.ol.control.MousePosition');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const osWindow = goog.require('os.ui.window');
 
 
 /**
@@ -16,90 +20,89 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-plugin.position.copyPositionDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    scope: {
-      'value': '='
-    },
-    templateUrl: os.ROOT + 'views/plugin/position/positionplugin.html',
-    controller: plugin.position.CopyPositionCtrl,
-    controllerAs: 'copyPosition'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+
+  scope: {
+    'value': '='
+  },
+
+  templateUrl: ROOT + 'views/plugin/position/positionplugin.html',
+  controller: Controller,
+  controllerAs: 'copyPosition'
+});
+
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'copy-position';
 
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('copyPosition', [plugin.position.copyPositionDirective]);
-
+Module.directive('copyPosition', [directive]);
 
 
 /**
  * Create a popup with the current map (mouse) location information to be copied
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @extends {goog.Disposable}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-plugin.position.CopyPositionCtrl = function($scope, $element) {
-  plugin.position.CopyPositionCtrl.base(this, 'constructor');
-
+class Controller {
   /**
-   * @type {?angular.JQLite}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
    */
-  this.element_ = $element;
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
 
-  /**
-   * @type {!goog.events.KeyHandler}
-   * @private
-   */
-  this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
-  this.keyHandler_.listen(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
+    /**
+     * @type {!KeyHandler}
+     * @private
+     */
+    this.keyHandler_ = new KeyHandler(dom.getDocument());
+    this.keyHandler_.listen(KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
 
-  $scope.$emit(os.ui.WindowEventType.READY);
-
-  $scope.$on('$destroy', this.onDestroy_.bind(this));
-};
-goog.inherits(plugin.position.CopyPositionCtrl, goog.Disposable);
-
-
-/**
- * Clean up
- *
- * @private
- */
-plugin.position.CopyPositionCtrl.prototype.onDestroy_ = function() {
-  goog.dispose(this.keyHandler_);
-
-  this.element_ = null;
-};
-
-
-/**
- * Close the window
- */
-plugin.position.CopyPositionCtrl.prototype.close = function() {
-  os.ui.window.close(this.element_);
-};
-
-
-/**
- * Close the window if the user hits ENTER
- *
- * @param {goog.events.KeyEvent} event
- * @private
- */
-plugin.position.CopyPositionCtrl.prototype.handleKeyEvent_ = function(event) {
-  if (event.keyCode == goog.events.KeyCodes.ENTER) {
-    this.close();
+    $scope.$emit(WindowEventType.READY);
   }
-};
+
+  /**
+   * Angular $onDestroy lifecycle hook.
+   */
+  $onDestroy() {
+    dispose(this.keyHandler_);
+
+    this.element_ = null;
+  }
+
+  /**
+   * Close the window
+   */
+  close() {
+    osWindow.close(this.element_);
+  }
+
+  /**
+   * Close the window if the user hits ENTER
+   *
+   * @param {KeyEvent} event
+   * @private
+   */
+  handleKeyEvent_(event) {
+    if (event.keyCode == KeyCodes.ENTER) {
+      this.close();
+    }
+  }
+}
 
 
 /**
@@ -107,11 +110,11 @@ plugin.position.CopyPositionCtrl.prototype.handleKeyEvent_ = function(event) {
  *
  * @param {string} value
  */
-plugin.position.CopyPositionCtrl.launch = function(value) {
+const launchCopyPositionWindow = (value) => {
   var id = 'copyPosition';
 
-  if (os.ui.window.exists(id)) {
-    os.ui.window.bringToFront(id);
+  if (osWindow.exists(id)) {
+    osWindow.bringToFront(id);
   } else {
     var windowOptions = {
       'id': id,
@@ -127,7 +130,37 @@ plugin.position.CopyPositionCtrl.launch = function(value) {
       'value': value
     };
 
-    var template = '<copy-position value="value"></copy-position>';
-    os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+    var template = `<${directiveTag} value="value"></${directiveTag}>`;
+    osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
+};
+
+/**
+ * @param {ol.Coordinate=} opt_coord The coordinate
+ */
+const launchCopy = function(opt_coord) {
+  Metrics.getInstance().updateMetric(keys.Map.COPY_COORDINATES, 1);
+  var controls = MapContainer.getInstance().getMap().getControls().getArray();
+  var mousePos = null;
+  for (var i = 0, n = controls.length; i < n; i++) {
+    if (controls[i] instanceof MousePosition) {
+      mousePos = /** @type {os.ol.control.MousePosition} */ (controls[i]);
+      break;
+    }
+  }
+
+  if (mousePos) {
+    var positionString = mousePos.getPositionString(opt_coord);
+    if (positionString) {
+      launchCopyPositionWindow(positionString);
+    }
+  }
+};
+
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  launchCopy,
+  launchCopyPositionWindow
 };

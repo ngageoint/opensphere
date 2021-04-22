@@ -1,88 +1,93 @@
-goog.provide('plugin.position.PositionPlugin');
+goog.module('plugin.position.PositionPlugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.map');
-goog.require('os.plugin.AbstractPlugin');
-goog.require('os.ui.action.Action');
-goog.require('os.ui.action.MenuOptions');
-goog.require('os.ui.menu.map');
-goog.require('plugin.position.PositionInteraction');
-goog.require('plugin.position.copyPositionDirective');
+const MapContainer = goog.require('os.MapContainer');
+const EventType = goog.require('os.action.EventType');
+const keys = goog.require('os.metrics.keys');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const mapMenu = goog.require('os.ui.menu.map');
+const PositionInteraction = goog.require('plugin.position.PositionInteraction');
+const {launchCopy} = goog.require('plugin.position.CopyPositionUI');
 
+
+/**
+ * Plugin identifier.
+ * @type {string}
+ */
+const ID = 'position';
 
 
 /**
  * Provides map layer support
- *
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
  */
-plugin.position.PositionPlugin = function() {
-  plugin.position.PositionPlugin.base(this, 'constructor');
-  this.id = plugin.position.PositionPlugin.ID;
-};
-goog.inherits(plugin.position.PositionPlugin, os.plugin.AbstractPlugin);
-goog.addSingletonGetter(plugin.position.PositionPlugin);
-
-
-/**
- * @type {string}
- * @const
- */
-plugin.position.PositionPlugin.ID = 'position';
-
-
-/**
- * @inheritDoc
- */
-plugin.position.PositionPlugin.prototype.init = function() {
-  if (os.ui.menu.map.MENU) {
-    var menu = os.ui.menu.map.MENU;
-
-    var group = menu.getRoot().find(os.ui.menu.map.GroupLabel.COORDINATE);
-    if (group) {
-      group.addChild({
-        label: 'Copy Coordinates',
-        eventType: os.action.EventType.COPY,
-        tooltip: 'Copy coordinates to clipboard',
-        icons: ['<i class="fa fa-fw fa-sticky-note"></i>'],
-        shortcut: '.',
-        metricKey: os.metrics.keys.Map.COPY_COORDINATES_CONTEXT_MENU
-      });
-    }
-
-    menu.listen(os.action.EventType.COPY, plugin.position.onCopy_);
+class PositionPlugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = ID;
   }
 
-  os.MapContainer.getInstance().getMap().getInteractions().push(new plugin.position.PositionInteraction());
-};
+  /**
+   * @inheritDoc
+   */
+  init() {
+    if (mapMenu.MENU) {
+      var menu = mapMenu.MENU;
+
+      var group = menu.getRoot().find(mapMenu.GroupLabel.COORDINATE);
+      if (group) {
+        group.addChild({
+          label: 'Copy Coordinates',
+          eventType: EventType.COPY,
+          tooltip: 'Copy coordinates to clipboard',
+          icons: ['<i class="fa fa-fw fa-sticky-note"></i>'],
+          shortcut: '.',
+          metricKey: keys.Map.COPY_COORDINATES_CONTEXT_MENU
+        });
+      }
+
+      menu.listen(EventType.COPY, onCopy);
+    }
+
+    MapContainer.getInstance().getMap().getInteractions().push(new PositionInteraction());
+  }
+
+  /**
+   * Get the global alert instance.
+   * @return {!PositionPlugin}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new PositionPlugin();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {PositionPlugin} value The instance.
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
+
+
+/**
+ * The global instance.
+ * @type {PositionPlugin}
+ */
+let instance = null;
 
 
 /**
  * @param {os.ui.menu.MenuEvent} evt The menu event
  */
-plugin.position.onCopy_ = function(evt) {
-  plugin.position.launchCopy(/** @type {ol.Coordinate} */ (evt.getContext()));
+const onCopy = function(evt) {
+  launchCopy(/** @type {ol.Coordinate} */ (evt.getContext()));
 };
 
-
-/**
- * @param {ol.Coordinate=} opt_coord The coordinate
- */
-plugin.position.launchCopy = function(opt_coord) {
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.COPY_COORDINATES, 1);
-  var controls = os.MapContainer.getInstance().getMap().getControls().getArray();
-  var mousePos = null;
-  for (var i = 0, n = controls.length; i < n; i++) {
-    if (controls[i] instanceof os.ol.control.MousePosition) {
-      mousePos = /** @type {os.ol.control.MousePosition} */ (controls[i]);
-      break;
-    }
-  }
-
-  if (mousePos) {
-    var positionString = mousePos.getPositionString(opt_coord);
-    if (positionString) {
-      plugin.position.CopyPositionCtrl.launch(positionString);
-    }
-  }
-};
+exports = PositionPlugin;
