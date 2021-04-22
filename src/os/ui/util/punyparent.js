@@ -60,7 +60,7 @@ os.ui.util.PunyParentCtrl = function($scope, $element) {
 
   /**
    * Children that are watched for size changes.
-   * @type {!Array<!Node>}
+   * @type {!Array<!Element>}
    * @private
    */
   this.watchedChildren_ = [];
@@ -159,10 +159,13 @@ os.ui.util.PunyParentCtrl.prototype.onMutation_ = function(mutationsList, observ
  * @private
  */
 os.ui.util.PunyParentCtrl.prototype.watchChild_ = function(child) {
-  const childEl = $(child);
-  if (!childEl.hasClass('resize-triggers') && !childEl.hasClass('resize-sensor')) {
-    os.ui.resize(childEl, this.onChildResizeFn_);
-    this.watchedChildren_.push(child);
+  // Ignore non-Element children (like comments), which cannot be watched for resize.
+  if (child instanceof Element) {
+    const childEl = $(child);
+    if (!childEl.hasClass('resize-triggers') && !childEl.hasClass('resize-sensor')) {
+      os.ui.resize(childEl, this.onChildResizeFn_);
+      this.watchedChildren_.push(child);
+    }
   }
 };
 
@@ -173,11 +176,14 @@ os.ui.util.PunyParentCtrl.prototype.watchChild_ = function(child) {
  * @private
  */
 os.ui.util.PunyParentCtrl.prototype.unwatchChild_ = function(child) {
-  const index = this.watchedChildren_.indexOf(child);
-  if (index > -1) {
-    const childEl = $(child);
-    os.ui.removeResize(childEl, this.onChildResizeFn_);
-    this.watchedChildren_.splice(index, 1);
+  // Ignore non-Element children (like comments), which cannot be watched for resize.
+  if (child instanceof Element) {
+    const index = this.watchedChildren_.indexOf(child);
+    if (index > -1) {
+      const childEl = $(child);
+      os.ui.removeResize(childEl, this.onChildResizeFn_);
+      this.watchedChildren_.splice(index, 1);
+    }
   }
 };
 
