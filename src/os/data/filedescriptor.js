@@ -12,6 +12,7 @@ goog.require('os.im.ImportProcess');
 goog.require('os.implements');
 goog.require('os.parse.FileParserConfig');
 goog.require('os.source');
+goog.require('os.source.PropertyChange');
 goog.require('os.source.Vector');
 goog.require('os.ui.file.ui.defaultFileNodeUIDirective');
 goog.require('os.ui.im.ImportEvent');
@@ -354,19 +355,24 @@ os.data.FileDescriptor.prototype.getExporter = function() {
 os.data.FileDescriptor.prototype.onLayerChange = function(e) {
   os.data.FileDescriptor.base(this, 'onLayerChange', e);
 
-  const layer = /** @type {os.layer.Vector} */ (e.target);
+  if (e instanceof os.events.PropertyChangeEvent) {
+    const layer = /** @type {os.layer.Vector} */ (e.target);
+    const p = e.getProperty() || '';
 
-  if (layer instanceof os.layer.Vector) {
-    const source = /** @type {os.source.Vector} */ (layer.getSource());
+    if (p == os.source.PropertyChange.HAS_MODIFICATIONS) {
+      if (layer instanceof os.layer.Vector) {
+        const source = /** @type {os.source.Vector} */ (layer.getSource());
 
-    if (os.settings.get('os.file.autoSaveFiles', true) && source instanceof os.source.Vector) {
-      const options = /** @type {os.ex.ExportOptions} */ ({
-        sources: [source],
-        items: source.getFeatures(),
-        fields: null
-      });
+        if (os.settings.get('os.file.autoSaveFiles', true) && source instanceof os.source.Vector) {
+          const options = /** @type {os.ex.ExportOptions} */ ({
+            sources: [source],
+            items: source.getFeatures(),
+            fields: null
+          });
 
-      this.onDataChange(options);
+          this.onDataChange(options);
+        }
+      }
     }
   }
 };
@@ -381,13 +387,19 @@ os.data.FileDescriptor.prototype.onDataChange = function(options) {
   const exporter = this.getExporter();
 
   if (exporter) {
+    const name = this.getTitle() || 'New File';
     options.exporter = exporter;
     options.fields = os.source.getExportFields(source, false, exporter.supportsTime());
-    options.title = this.getTitle() || 'New File';
+    options.title = name;
     options.keepTitle = true;
 
     // export via export manager, this will not prompt the user
+    // possible TODO: have this function return a promise that resolves/rejects if the export succeeds/fails
     os.ui.file.ExportManager.getInstance().exportItems(options);
+
+    // update this descriptor's URL to point to the file, set the source back to having no modifications
+    const url = os.file.getLocalUrl(name);
+    this.setUrl(url);
     source.setHasModifications(false);
   }
 };

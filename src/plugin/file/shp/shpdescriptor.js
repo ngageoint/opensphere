@@ -133,10 +133,6 @@ plugin.file.shp.SHPDescriptor.prototype.onDataChange = function(options) {
   plugin.file.shp.SHPDescriptor.base(this, 'onDataChange', options);
 
   // ensure that the URL is set correctly in case we are converting from a shp/dbf file to a zip shp file
-  const name = this.getTitle() || 'New File';
-  const url = os.file.getLocalUrl(name);
-
-  this.setUrl(url);
   this.setUrl2('');
 };
 

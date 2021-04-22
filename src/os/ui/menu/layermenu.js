@@ -4,6 +4,8 @@ goog.require('goog.Timer');
 goog.require('ol.array');
 goog.require('ol.extent');
 goog.require('os.action.EventType');
+goog.require('os.alert.AlertEventSeverity');
+goog.require('os.alert.AlertManager');
 goog.require('os.command.FlyToExtent');
 goog.require('os.fn');
 goog.require('os.layer.ILayer');
@@ -358,6 +360,9 @@ os.ui.menu.layer.onSave_ = function(event) {
 
       os.ui.file.ExportManager.getInstance().exportItems(options);
       source.setHasModifications(false);
+
+      const msg = `${source.getTitle()} changes saved successfully.`;
+      os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.SUCCESS);
     }
   }
 };
