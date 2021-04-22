@@ -10,6 +10,7 @@ const log = goog.require('goog.log');
 const olExtent = goog.require('ol.extent');
 const osColor = goog.require('os.color');
 const osFeature = goog.require('os.feature');
+const osInterpolate = goog.require('os.interpolate');
 const osObject = goog.require('os.object');
 const osMap = goog.require('os.map');
 const osStyle = goog.require('os.style');
@@ -19,6 +20,7 @@ const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
 const EventTarget = goog.require('goog.events.EventTarget');
 const Fields = goog.require('os.Fields');
 const MapContainer = goog.require('os.MapContainer');
+const OsMeasure = goog.require('os.interaction.Measure');
 const PlacesManager = goog.require('plugin.places.PlacesManager');
 const RecordField = goog.require('os.data.RecordField');
 const StyleField = goog.require('os.style.StyleField');
@@ -390,6 +392,7 @@ class TrackManager extends EventTarget {
             style[StyleField.STROKE] = stroke;
             newTrack.set(StyleType.FEATURE, styles);
           }
+          newTrack.getGeometry().set(osInterpolate.METHOD_FIELD, OsMeasure.method);
         }
       }
     }
