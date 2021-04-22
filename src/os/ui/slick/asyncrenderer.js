@@ -16,7 +16,7 @@ os.ui.slick.asyncrenderer.slickColActAsyncRenderer = function(node, elem, row, d
   var $formatted = $elem.find('.col-act-mult');
   if ($formatted.length > 0) {
     var value = $formatted.data()['colvalue'];
-    $formatted.click(goog.partial(os.ui.slick.asyncrenderer.openDialog, value, colDef,
+    $formatted.on('click', goog.partial(os.ui.slick.asyncrenderer.openDialog, value, colDef,
         {'sourceId': node['sourceId']}));
   }
 };

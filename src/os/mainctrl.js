@@ -762,7 +762,7 @@ os.MainCtrl.prototype.handleKeyEvent_ = function(event) {
         if (ctrlOr) {
           os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.SEARCH_KB, 1);
           event.preventDefault();
-          $('.search-box .search-query').focus();
+          $('.search-box .search-query').trigger('focus');
         }
         break;
       case goog.events.KeyCodes.L:
