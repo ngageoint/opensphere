@@ -82,7 +82,6 @@ goog.require('os.ui.help.webGLSupportDirective');
 goog.require('os.ui.window');
 goog.require('os.ui.window.ConfirmUI');
 goog.require('os.webgl');
-goog.require('plugin.position.copyPositionDirective');
 
 
 
