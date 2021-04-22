@@ -68,11 +68,20 @@ os.data.FileDescriptor = function() {
    */
   this.date_ = null;
 
+  this.log = os.data.FileDescriptor.LOGGER_;
   this.descriptorType = 'file';
 };
 goog.inherits(os.data.FileDescriptor, os.data.LayerSyncDescriptor);
 os.implements(os.data.FileDescriptor, 'os.data.IReimport');
 os.implements(os.data.FileDescriptor, os.data.IUrlDescriptor.ID);
+
+
+/**
+ * @type {goog.log.Logger}
+ * @private
+ * @const
+ */
+os.data.FileDescriptor.LOGGER_ = goog.log.getLogger('os.data.FileDescriptor');
 
 
 /**
@@ -340,6 +349,30 @@ os.data.FileDescriptor.prototype.getExporter = function() {
 
 
 /**
+ * @inheritDoc
+ */
+os.data.FileDescriptor.prototype.onLayerChange = function(e) {
+  os.data.FileDescriptor.base(this, 'onLayerChange', e);
+
+  const layer = /** @type {os.layer.Vector} */ (e.target);
+
+  if (layer instanceof os.layer.Vector) {
+    const source = /** @type {os.source.Vector} */ (layer.getSource());
+
+    if (os.settings.get('os.file.autoSaveFiles', true) && source instanceof os.source.Vector) {
+      const options = /** @type {os.ex.ExportOptions} */ ({
+        sources: [source],
+        items: source.getFeatures(),
+        fields: null
+      });
+
+      this.onDataChange(options);
+    }
+  }
+};
+
+
+/**
  * Handles changes to the underlying layer data. Updates the file in storage.
  * @param {os.ex.ExportOptions} options
  */
@@ -348,45 +381,14 @@ os.data.FileDescriptor.prototype.onDataChange = function(options) {
   const exporter = this.getExporter();
 
   if (exporter) {
-    const fields = os.source.getExportFields(source, false, exporter.supportsTime());
-    const name = this.getTitle() || 'New File';
-    exporter.setItems(options.items);
-    exporter.setFields(fields);
-    exporter.setName(name);
+    options.exporter = exporter;
+    options.fields = os.source.getExportFields(source, false, exporter.supportsTime());
+    options.title = this.getTitle() || 'New File';
+    options.keepTitle = true;
 
-    if (exporter.isAsync()) {
-      var et = /** @type {goog.events.EventTarget} */ (exporter);
-      et.listen(os.events.EventType.COMPLETE, (event) => {
-        const result = event.target.getOutput();
-        const file = new os.file.File();
-        file.setFileName(name);
-        file.setUrl(os.file.getLocalUrl(name));
-        file.setContent(result);
-        file.setContentType(exporter.getMimeType());
-
-        // always replace. if we got here the application should have done duplicate file detection already.
-        const fs = os.file.FileStorage.getInstance();
-        fs.storeFile(file, true);
-      }, false, this);
-      et.listen(os.events.EventType.ERROR, (event) => {
-
-      }, false, this);
-
-      exporter.process();
-    } else {
-      exporter.process();
-
-      const result = exporter.getOutput();
-      const file = new os.file.File();
-      file.setFileName(name);
-      file.setUrl(os.file.getLocalUrl(name));
-      file.setContent(result);
-      file.setContentType(exporter.getMimeType());
-
-      // always replace. if we got here the application should have done duplicate file detection already.
-      const fs = os.file.FileStorage.getInstance();
-      fs.storeFile(file, true);
-    }
+    // export via export manager, this will not prompt the user
+    os.ui.file.ExportManager.getInstance().exportItems(options);
+    source.setHasModifications(false);
   }
 };
 

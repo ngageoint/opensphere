@@ -326,6 +326,7 @@ os.layer.Vector.prototype.onSourceChange = function(event) {
           event.getOldValue());
       this.dispatchEvent(e);
       break;
+    case os.source.PropertyChange.HAS_MODIFICATIONS:
     case os.source.PropertyChange.COLUMNS:
     case os.source.PropertyChange.COLUMN_ADDED:
       this.dispatchEvent(new os.events.PropertyChangeEvent(p));
@@ -1096,6 +1097,8 @@ os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
         return isVector && source.isLockable() && source.isLocked();
       case os.action.EventType.RESET_COLOR:
         return isVector && source.hasColors();
+      case os.action.EventType.SAVE_LAYER:
+        return isVector && source.getHasModifications();
       default:
         // ask the source if it supports the action
         return isVector && source.getSupportsAction(type);

@@ -81,6 +81,7 @@ os.action.EventType = {
 
   // export
   EXPORT: 'export',
+  SAVE_LAYER: 'saveLayer',
 
   // feature list
   INVERT: 'invert',

@@ -261,8 +261,7 @@ os.ui.file.ExportDialogCtrl.prototype.confirm = function() {
   goog.asserts.assert(this.options.items.length > 0, 'no items to export');
   goog.asserts.assert(this.options.fields.length > 0, 'no fields defined on export');
 
-  os.ui.exportManager.exportItems(this.options.items, this.options.fields, this.options.title,
-      this.options.exporter, this.options.persister);
+  os.ui.exportManager.exportItems(this.options);
   this.close_();
 };
 

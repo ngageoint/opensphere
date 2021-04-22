@@ -1,6 +1,7 @@
 goog.provide('plugin.file.csv.ui.CSVImportUI');
 
 goog.require('os.data.DataManager');
+goog.require('os.ui.file.csv');
 goog.require('os.ui.file.ui.csv.ConfigStep');
 goog.require('os.ui.im.FileImportUI');
 goog.require('os.ui.window');
@@ -102,12 +103,13 @@ plugin.file.csv.ui.CSVImportUI.prototype.mergeConfig = function(from, to) {
  */
 plugin.file.csv.ui.CSVImportUI.prototype.getDefaultConfig = function(file, config) {
   // use the default expected CSV config values before doing the preview and mapping autodetection
-  config['color'] = '#ffffff';
-  config['commentChar'] = '#';
-  config['dataRow'] = 2;
-  config['delimiter'] = ',';
-  config['headerRow'] = 1;
-  config['useHeader'] = true;
+  const conf = os.ui.file.csv.DEFAULT_CONFIG;
+  config['color'] = conf['color'];
+  config['commentChar'] = conf['commentChar'];
+  config['dataRow'] = conf['dataRow'];
+  config['delimiter'] = conf['delimiter'];
+  config['headerRow'] = conf['headerRow'];
+  config['useHeader'] = conf['useHeader'];
 
   try {
     config.updatePreview();

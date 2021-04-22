@@ -67,6 +67,15 @@ os.ui.menu.layer.setup = function() {
       type: os.ui.menu.MenuItemType.GROUP,
       sort: os.ui.menu.layer.GroupSort.GROUPS++,
       children: [{
+        label: 'Save',
+        eventType: os.action.EventType.SAVE_LAYER,
+        tooltip: 'Saves the changes to the layer',
+        icons: ['<i class="fa fa-fw fa-save"></i>'],
+        beforeRender: os.ui.menu.layer.visibleIfSupported,
+        handler: os.ui.menu.layer.onSave_,
+        metricKey: os.metrics.Layer.SAVE,
+        sort: -10000 // we want this to appear at the top when its available
+      }, {
         label: 'Go To',
         eventType: os.action.EventType.GOTO,
         tooltip: 'Repositions the map to show the layer',
@@ -324,6 +333,33 @@ os.ui.menu.layer.onDescription_ = function(event) {
   });
 
   os.ui.window.ConfirmUI.launchConfirm(confirmOptions);
+};
+
+
+/**
+ * Handle the "Save" menu event.
+ *
+ * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
+ * @private
+ */
+os.ui.menu.layer.onSave_ = function(event) {
+  var context = event.getContext();
+  if (context) {
+    const sources = os.ui.menu.common.getSourcesFromContext(context);
+    if (sources && sources.length == 1) {
+      const source = sources[0];
+      const exporter = os.ui.file.ExportManager.getInstance().getExportMethods()[1];
+      const options = /** @type {os.ex.ExportOptions} */ ({
+        items: source.getFeatures(),
+        fields: os.source.getExportFields(source, false, exporter.supportsTime()),
+        title: source.getTitle(),
+        exporter: exporter
+      });
+
+      os.ui.file.ExportManager.getInstance().exportItems(options);
+      source.setHasModifications(false);
+    }
+  }
 };
 
 

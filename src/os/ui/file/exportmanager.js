@@ -7,6 +7,7 @@ goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
+goog.require('os.data.DataManager');
 goog.require('os.ex.ExportOptions');
 goog.require('os.file.File');
 goog.require('os.file.FileStorage');
@@ -136,37 +137,24 @@ os.ui.file.ExportManager.prototype.getPersistenceMethods = function(opt_getAll) 
 /**
  * Launches a dialog to export items from the application
  *
- * @param {Array<*>} items The items to export
- * @param {Array<string>} fields The fields to export from each item
- * @param {string} title The title of the export source, or the file name when the methods are provided
- * @param {os.ex.IExportMethod=} opt_exporter The export method to use
- * @param {os.ex.IPersistenceMethod=} opt_persister The persistence method to use
+ * @param {os.ex.ExportOptions} options The export options.
  */
-os.ui.file.ExportManager.prototype.exportItems = function(items, fields, title, opt_exporter, opt_persister) {
-  // TODO: refactor the argument to this function to just be export options
-  const options = /** @type {os.ex.ExportOptions} */ ({
-    items: items,
-    fields: fields,
-    title: title,
-    exporter: opt_exporter,
-    persister: opt_persister
-  });
-
-  if (items == null || items.length == 0) {
+os.ui.file.ExportManager.prototype.exportItems = function(options) {
+  if (options.items == null || options.items.length == 0) {
     goog.log.error(os.ui.file.ExportManager.LOGGER_, 'No data was supplied for the export.');
     return;
   }
 
-  if (opt_exporter != null) {
+  if (options.exporter != null) {
     this.doExport_(options);
   } else if (this.exporters_.length > 0 && this.persisters_.length > 0) {
     this.launchExportDialog_(options);
   } else if (this.exporters_.length == 0) {
     goog.log.error(os.ui.file.ExportManager.LOGGER_,
-        'There are no export methods defined. Can not export "' + title + '".');
+        'There are no export methods defined. Can not export "' + options.title + '".');
   } else if (this.persisters_.length == 0) {
     goog.log.error(os.ui.file.ExportManager.LOGGER_,
-        'There are no persistence methods defined. Can not export "' + title + '".');
+        'There are no persistence methods defined. Can not export "' + options.title + '".');
   }
 };
 
@@ -216,13 +204,15 @@ os.ui.file.ExportManager.prototype.onExportComplete_ = async function(options, o
   const exporter = options.exporter;
   var result = exporter.getOutput();
   var name = exporter.getName();
-  var extension = '.' + exporter.getExtension();
   exporter.dispose();
 
   if (result && name) {
-    // append the extension if it hasn't been already
-    if (!goog.string.endsWith(name, extension) && extension.length > 1) {
-      name += extension;
+    if (!options.keepTitle) {
+      // append the extension if it hasn't been already
+      var extension = '.' + exporter.getExtension();
+      if (!goog.string.endsWith(name, extension) && extension.length > 1) {
+        name += extension;
+      }
     }
 
     if (options.persister) {
@@ -239,10 +229,15 @@ os.ui.file.ExportManager.prototype.onExportComplete_ = async function(options, o
         file.setContent(result);
         file.setContentType(exporter.getMimeType());
 
-        os.file.FileStorage.getInstance().setUniqueFileName(file);
+        const fs = os.file.FileStorage.getInstance();
+
+        if (!options.keepTitle) {
+          // ensure we don't have a name collision
+          // when true, we are overriding the file in storage, so don't set a unique name
+          fs.setUniqueFileName(file);
+        }
 
         // always replace. if we got here the application should have done duplicate file detection already.
-        const fs = os.file.FileStorage.getInstance();
         fs.storeFile(file, true).addCallbacks(this.onFileSuccess_.bind(this, file, options),
             this.onFileError_, this);
       } catch (e) {
@@ -275,24 +270,26 @@ os.ui.file.ExportManager.prototype.onExportError_ = function(event) {
  * @private
  */
 os.ui.file.ExportManager.prototype.onFileSuccess_ = function(file, options) {
-  const dm = os.dataManager;
-  const descriptors = dm.getDescriptors();
-  const url = file.getUrl() || '';
-  let descriptor = null;
+  if (!options.keepTitle) {
+    const dm = os.data.DataManager.getInstance();
+    const descriptors = dm.getDescriptors();
+    const url = file.getUrl() || '';
+    let descriptor = null;
 
-  if (url) {
-    descriptor = descriptors.find((d) => d.matchesURL(url));
-    options['descriptor'] = descriptor;
-  }
+    if (url) {
+      descriptor = descriptors.find((d) => d.matchesURL(url));
+      options['descriptor'] = descriptor;
+    }
 
-  options['defaultImport'] = true;
+    options['defaultImport'] = true;
 
-  const importUI = os.ui.im.ImportManager.getInstance().getImportUI(options.exporter.getMimeType());
+    const importUI = os.ui.im.ImportManager.getInstance().getImportUI(options.exporter.getMimeType());
 
-  if (importUI) {
-    importUI.launchUI(file, options);
-  } else {
-    goog.log.error(this.log, 'Failed to find import method for exported file.');
+    if (importUI) {
+      importUI.launchUI(file, options);
+    } else {
+      goog.log.error(this.log, 'Failed to find import method for exported file.');
+    }
   }
 };
 

@@ -290,6 +290,7 @@ os.data.LayerNode.prototype.onPropertyChange = function(e) {
         // update the label (styled differently when disabled/hidden)
         this.dispatchEvent(new os.events.PropertyChangeEvent('label'));
         break;
+      case os.source.PropertyChange.HAS_MODIFICATIONS:
       case os.layer.PropertyChange.TITLE:
         // change the label
         this.setLabel(this.layer_.getTitle());
@@ -351,6 +352,11 @@ os.data.LayerNode.prototype.formatValue = function(value) {
 
     if (layer instanceof os.layer.Vector) {
       s += ' <featurecount></featurecount>';
+
+      var source = layer.getSource();
+      if (source instanceof os.source.Vector && source.getHasModifications()) {
+        s = '<span title="This layer has unsaved changes. Right click to save them."> • </span>' + s;
+      }
     } else if (layer instanceof os.layer.Tile) {
       s += ' <tileloading></tileloading>';
     }

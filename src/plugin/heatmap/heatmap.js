@@ -212,7 +212,14 @@ const onImageComplete = function(layer, event) {
     exporter.addFile(imageFile);
     exporter.setCompress(true);
 
-    exportManager.exportItems([kmlFile], [''], layerTitle + '.kmz', exporter);
+    var options = /** @type {os.ex.ExportOptions} */ ({
+      items: [kmlFile],
+      fields: [''],
+      title: layerTitle + '.kmz',
+      exporter: exporter
+    });
+
+    exportManager.exportItems(options);
   } else {
     AlertManager.getInstance().sendAlert('Failed saving canvas to PNG');
   }

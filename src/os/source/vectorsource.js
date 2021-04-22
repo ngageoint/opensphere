@@ -403,11 +403,18 @@ os.source.Vector = function(opt_options) {
   this.detectColumnTypes_ = false;
 
   /**
-   * Flag for what this source supports modify
+   * Flag for whether this source supports modify.
    * @type {boolean}
    * @protected
    */
   this.canModify = true;
+
+  /**
+   * Flag for whether this source has pending modifications.
+   * @type {boolean}
+   * @protected
+   */
+  this.hasModifications = false;
 
   if (!options['disableAreaSelection']) {
     os.dispatcher.listen(os.action.EventType.SELECT, this.onFeatureAction_, false, this);
@@ -3725,19 +3732,31 @@ os.source.Vector.prototype.getModifyFunction = function() {
     // Notify that the feature/geometry changed, in case previous steps did not do this.
     originalFeature.changed();
 
+    this.setHasModifications(true);
     this.notifyDataChange();
-
-    const descriptor = os.dataManager.getDescriptor(this.getId());
-    if (descriptor instanceof os.data.FileDescriptor) {
-      const options = /** @type {os.ex.ExportOptions} */ ({
-        sources: [this],
-        items: this.getFeatures(),
-        fields: null
-      });
-
-      descriptor.onDataChange(options);
-    }
   };
+};
+
+
+/**
+ * Gets whether the source has pending changes.
+ * @return {boolean}
+ */
+os.source.Vector.prototype.getHasModifications = function() {
+  return this.hasModifications;
+};
+
+
+/**
+ * Gets whether the source has pending changes.
+ * @param {boolean} value
+ */
+os.source.Vector.prototype.setHasModifications = function(value) {
+  if (value != this.hasModifications) {
+    const old = this.hasModifications;
+    this.hasModifications = value;
+    this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.HAS_MODIFICATIONS, value, old));
+  }
 };
 
 
