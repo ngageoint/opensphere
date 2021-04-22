@@ -1,11 +1,15 @@
 goog.require('os.config.Settings');
-goog.require('plugin.suncalc.Plugin');
+goog.require('os.ui.config.SettingsManager');
+goog.require('plugin.suncalc.SunCalcPlugin');
 
-describe('plugin.suncalc.Plugin', function() {
+describe('plugin.suncalc.SunCalcPlugin', function() {
+  const SettingsManager = goog.module.get('os.ui.config.SettingsManager');
+  const SunCalcPlugin = goog.module.get('plugin.suncalc.SunCalcPlugin');
+
   it('should add settings plugin on init()', function() {
-    var mockSettingsManager = spyOn(os.ui.config.SettingsManager, 'getInstance').andCallThrough();
+    var mockSettingsManager = spyOn(SettingsManager, 'getInstance').andCallThrough();
 
-    var suncalcPlugin = new plugin.suncalc.Plugin();
+    var suncalcPlugin = new SunCalcPlugin();
     suncalcPlugin.init();
 
     expect(mockSettingsManager).toHaveBeenCalled();
