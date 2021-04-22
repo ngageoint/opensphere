@@ -4,6 +4,7 @@ goog.provide('os.ui.featureEditDirective');
 goog.require('goog.Disposable');
 goog.require('goog.asserts');
 goog.require('goog.dom.classlist');
+goog.require('goog.events.KeyEvent');
 goog.require('goog.events.KeyHandler');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
@@ -887,7 +888,7 @@ os.ui.FeatureEditCtrl.prototype.onMapEnabled_ = function(event, isEnabled) {
       // listen for ESC to cancel waiting for a mouse click
       if (!this.keyHandler) {
         this.keyHandler = new goog.events.KeyHandler(goog.dom.getDocument());
-        this.keyHandler.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent, false, this);
+        this.keyHandler.listen(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent, false, this);
       }
     } else {
       goog.dispose(this.keyHandler);

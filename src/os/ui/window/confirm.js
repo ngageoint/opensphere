@@ -3,6 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const {getDocument} = goog.require('goog.dom');
 const KeyCodes = goog.require('goog.events.KeyCodes');
+const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
 const {noop} = goog.require('os.fn');
 const Module = goog.require('os.ui.Module');
@@ -140,7 +141,7 @@ class Controller {
      * @private
      */
     this.keyHandler_ = new KeyHandler(getDocument());
-    this.keyHandler_.listen(KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+    this.keyHandler_.listen(KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
 
     $timeout(function() {
       $scope.$emit(WindowEventType.READY);

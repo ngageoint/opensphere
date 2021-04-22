@@ -3,6 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const {getRandomString} = goog.require('goog.string');
 const KeyCodes = goog.require('goog.events.KeyCodes');
+const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
 const {getUid} = goog.require('ol');
 const Collection = goog.require('ol.Collection');
@@ -30,7 +31,6 @@ const osWindow = goog.require('os.ui.window');
 const windowSelector = goog.require('os.ui.windowSelector');
 const {MODAL_SELECTOR} = goog.require('os.ui');
 
-const KeyEvent = goog.requireType('goog.events.KeyEvent');
 const MapBrowserPointerEvent = goog.requireType('ol.MapBrowserPointerEvent');
 const Geometry = goog.requireType('ol.geom.Geometry');
 const OSMap = goog.requireType('os.Map');
@@ -182,7 +182,7 @@ class Modify extends OLModify {
      * @protected
      */
     this.keyHandler = new KeyHandler(document, true);
-    this.keyHandler.listen(KeyHandler.EventType.KEY, this.handleKeyEvent, true, this);
+    this.keyHandler.listen(KeyEvent.EventType.KEY, this.handleKeyEvent, true, this);
 
     // jank alert: the functions that are called when the interaction starts and ends are hard to override, so instead
     // listen to our own events and toggle the map movement on and off

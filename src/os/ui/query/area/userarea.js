@@ -6,6 +6,7 @@ goog.require('goog.Disposable');
 goog.require('goog.Promise');
 goog.require('goog.async.Delay');
 goog.require('goog.dom');
+goog.require('goog.events.KeyEvent');
 goog.require('goog.events.KeyHandler');
 goog.require('ol.Feature');
 goog.require('ol.array');
@@ -122,7 +123,7 @@ os.ui.query.area.UserAreaCtrl = function($scope, $element, $timeout) {
    * @protected
    */
   this.keyHandler = new goog.events.KeyHandler(goog.dom.getDocument());
-  this.keyHandler.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent, false, this);
+  this.keyHandler.listen(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent, false, this);
 
   /**
    * Delay to update the area from the form.
@@ -228,16 +229,16 @@ os.ui.query.area.UserAreaCtrl = function($scope, $element, $timeout) {
   /**
    * @type {string}
    */
-  this['reverseHelp'] = `Reverse the horizontal direction of your box, causing it to take the longer path between 
+  this['reverseHelp'] = `Reverse the horizontal direction of your box, causing it to take the longer path between
       your defined corners instead of the shorter one.`;
 
   /**
    * @type {string}
    */
-  this['customPopoverContent'] = `Enter coordinates with spaces between latitude/longitude and commas separating 
+  this['customPopoverContent'] = `Enter coordinates with spaces between latitude/longitude and commas separating
       coordinate pairs or MGRS values. The polygon will be validated/closed if necessary.<br><br>
-      Takes DD, DMS, DDM or MGRS. If Lat/Lon, the first coordinate is assumed to 
-      be latitude unless it is zero-padded (0683000.55 or 058.135), three-digits (105&deg;30'10.1&quot; or 
+      Takes DD, DMS, DDM or MGRS. If Lat/Lon, the first coordinate is assumed to
+      be latitude unless it is zero-padded (0683000.55 or 058.135), three-digits (105&deg;30'10.1&quot; or
       105.3), or contains the direction (68 30 12 W or 105 E).`;
 
   /**
