@@ -5,6 +5,7 @@
  */
 
 goog.provide('os.interpolate');
+goog.provide('os.interpolate.Config');
 goog.provide('os.interpolate.Method');
 
 goog.require('ol.View');
@@ -468,4 +469,16 @@ os.interpolate.interpolateLine = function(line) {
       line.splice(i + offset, 1, coord);
     }
   }
+};
+
+/**
+ * Utility function to manually configure the interpolation settings
+ * @param {Array<ol.Coordinate>} line The line
+ * @param {!os.interpolate.Config} config The config
+ */
+os.interpolate.interpolateLineWithConfig = function(line, config) {
+  const oldConfig = os.interpolate.tmpConfig_; // save current settings
+  os.interpolate.tmpConfig_ = config; // use these settings
+  os.interpolate.interpolateLine(line);
+  os.interpolate.tmpConfig_ = oldConfig; // restore settings
 };

@@ -33,13 +33,14 @@ const TrackInteraction = goog.require('plugin.track.TrackInteraction');
 
 const Logger = goog.requireType('goog.log.Logger');
 const OlFeature = goog.requireType('ol.Feature');
-
+// const OlCoordinate = goog.requireType('ol.Coordinate');
+const OsInterpolateConfig = goog.requireType('os.interpolate.Config');
 
 /**
  * @type {string}
  * @const
  */
-const PREDICTED_TRACK_LABEL = '(Predicted)';
+const PREDICTED_TRACK_LABEL = '[Predicted';
 
 /**
  * Manager for handling tracks that are being followed during animation.
@@ -357,7 +358,8 @@ class TrackManager extends EventTarget {
       if (isPredictedTrack) {
         osTrack.addToTrack({
           track,
-          coordinates});
+          coordinates
+        });
       } else {
         this.nextPredictedTrack++;
 
@@ -367,8 +369,19 @@ class TrackManager extends EventTarget {
 
         // add the end of the old track as the start of the predicted one
         coordinates.splice(0, 0, coords[0]);
+
+        // fill in points so Tracks can draw with Interpolation.Method = NONE
+        osInterpolate.interpolateLineWithConfig(
+            /** @type {Array<ol.Coordinate>} */ (coordinates),
+            /** @type {OsInterpolateConfig} */ ({
+              method: OsMeasure.method,
+              distance: 100000
+            })
+        );
+
         const newTrack = pluginTrack.createAndAdd({
-          name: [PREDICTED_TRACK_LABEL, this.nextPredictedTrack, '|', (name || 'Track')].join(' '),
+          name: [PREDICTED_TRACK_LABEL, ', ', OsMeasure.method, '] ',
+            this.nextPredictedTrack, ' | ', (name || 'Track')].join(''),
           includeMetadata: true,
           color,
           coordinates
@@ -383,7 +396,7 @@ class TrackManager extends EventTarget {
             // edit style stroke
             let stroke = style[StyleField.STROKE];
             if (!stroke) {
-              stroke = osObject.unsafeClone(interaction.getStyle().getStroke()); // TODO convert ol.Style
+              stroke = osObject.unsafeClone(interaction.getStyle().getStroke());
             } else {
               stroke['color'] = color;
               stroke['width'] = 2;
@@ -392,7 +405,6 @@ class TrackManager extends EventTarget {
             style[StyleField.STROKE] = stroke;
             newTrack.set(StyleType.FEATURE, styles);
           }
-          newTrack.getGeometry().set(osInterpolate.METHOD_FIELD, OsMeasure.method);
         }
       }
     }
