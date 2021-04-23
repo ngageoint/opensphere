@@ -3721,6 +3721,9 @@ os.source.Vector.prototype.getModifyFunction = function() {
     // Update the ellipse, if needed.
     os.feature.createEllipse(originalFeature, true);
 
+    // Notify that the feature/geometry changed, in case previous steps did not do this.
+    originalFeature.changed();
+
     this.notifyDataChange();
   };
 };
