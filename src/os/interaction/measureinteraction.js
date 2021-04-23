@@ -36,19 +36,19 @@ os.interaction.Measure = function(opt_options) {
 
   /**
    * @type {number}
-   * @protected
+   * @private
    */
   this.lastlen_ = 0;
 
   /**
    * @type {Array<number>}
-   * @protected
+   * @private
    */
   this.bearings_ = [];
 
   /**
    * @type {Array<number>}
-   * @protected
+   * @private
    */
   this.distances_ = [];
 
@@ -62,7 +62,7 @@ os.interaction.Measure = function(opt_options) {
 
   /**
    * @type {!Array<!ol.style.Style>}
-   * @protected
+   * @private
    */
   this.waypoints_ = [];
 
@@ -107,7 +107,7 @@ os.interaction.Measure.prototype.disposeInternal = function() {
  */
 os.interaction.Measure.prototype.getGeometry = function() {
   this.coords.length = this.coords.length - 1;
-  var geom = new ol.geom.LineString(this.coords);
+  const geom = new ol.geom.LineString(this.coords);
   os.geo2.normalizeGeometryCoordinates(geom);
   return geom;
 };
@@ -117,7 +117,7 @@ os.interaction.Measure.prototype.getGeometry = function() {
  * @inheritDoc
  */
 os.interaction.Measure.prototype.getProperties = function() {
-  var props = {};
+  const props = {};
   props[os.interpolate.METHOD_FIELD] = os.interaction.Measure.method;
   return props;
 };
@@ -152,14 +152,14 @@ os.interaction.Measure.prototype.begin = function(mapBrowserEvent) {
  * @inheritDoc
  */
 os.interaction.Measure.prototype.beforeUpdate = function(opt_mapBrowserEvent) {
-  var result;
-  var len = this.coords.length;
+  let result;
+  const len = this.coords.length;
   if (len > 1) {
-    var j = this.coords.length - 1;
-    var i = j - 1;
+    const j = this.coords.length - 1;
+    const i = j - 1;
 
-    var start = ol.proj.toLonLat(this.coords[i], os.map.PROJECTION);
-    var end = ol.proj.toLonLat(this.coords[j], os.map.PROJECTION);
+    const start = ol.proj.toLonLat(this.coords[i], os.map.PROJECTION);
+    const end = ol.proj.toLonLat(this.coords[j], os.map.PROJECTION);
 
     if (os.interaction.Measure.method === os.interpolate.Method.GEODESIC) {
       result = osasm.geodesicInverse(start, end);
@@ -186,7 +186,7 @@ os.interaction.Measure.prototype.beforeUpdate = function(opt_mapBrowserEvent) {
  * @inheritDoc
  */
 os.interaction.Measure.prototype.getStyle = function() {
-  var style = os.interaction.Measure.base(this, 'getStyle');
+  const style = os.interaction.Measure.base(this, 'getStyle');
   return [style].concat(this.waypoints_);
 };
 
@@ -222,7 +222,7 @@ os.interaction.Measure.prototype.update2D = function() {
   this.createOverlay();
 
   // add/update waypoints while drawing the line
-  var waypoint = null;
+  let waypoint = null;
   if (this.waypoints_.length === this.distances_.length) {
     // modify the last one
     waypoint = this.waypoints_[this.waypoints_.length - 1];
@@ -235,7 +235,7 @@ os.interaction.Measure.prototype.update2D = function() {
     this.waypoints_.push(waypoint);
   }
 
-  var i = this.distances_.length - 1;
+  const i = this.distances_.length - 1;
 
   waypoint.setGeometry(new ol.geom.Point(this.coords[i]));
   waypoint.getText().setText(this.getDistanceText_(i));
@@ -256,8 +256,8 @@ os.interaction.Measure.prototype.end = function(mapBrowserEvent) {
     if (this.isType('measure')) {
       // add a total distance waypoint if there are multiple points
       if (this.waypoints_.length > 1) {
-        var um = os.unit.UnitManager.getInstance();
-        var text = um.formatToBestFit('distance', this.getTotalDistance_(), 'm', um.getBaseSystem(),
+        const um = os.unit.UnitManager.getInstance();
+        const text = um.formatToBestFit('distance', this.getTotalDistance_(), 'm', um.getBaseSystem(),
             os.feature.measure.numDecimalPlaces);
 
         this.waypoints_.push(new ol.style.Style({
@@ -268,7 +268,7 @@ os.interaction.Measure.prototype.end = function(mapBrowserEvent) {
         this.line2D.setStyle(this.getStyle());
       }
 
-      var type = os.interaction.Measure.method;
+      let type = os.interaction.Measure.method;
       type = type.substring(0, 1).toUpperCase() + type.substring(1);
 
       os.interaction.Measure.nextId++;
@@ -296,17 +296,17 @@ os.interaction.Measure.prototype.saveLast = os.fn.noop;
  * @private
  */
 os.interaction.Measure.prototype.getDistanceText_ = function(i, opt_noBearing) {
-  var d = this.distances_[i];
-  var coord = /** @type {ol.geom.Point} */ (this.waypoints_[i].getGeometry()).getCoordinates();
-  var u = os.unit.UnitManager.getInstance();
-  var text = u.formatToBestFit('distance', d, 'm', u.getBaseSystem(), os.feature.measure.numDecimalPlaces);
+  const d = this.distances_[i];
+  const coord = /** @type {ol.geom.Point} */ (this.waypoints_[i].getGeometry()).getCoordinates();
+  const u = os.unit.UnitManager.getInstance();
+  let text = u.formatToBestFit('distance', d, 'm', u.getBaseSystem(), os.feature.measure.numDecimalPlaces);
 
-  var bearing = this.bearings_[i];
-  var date = new Date(os.time.TimelineController.getInstance().getCurrent());
+  let bearing = this.bearings_[i];
+  const date = new Date(os.time.TimelineController.getInstance().getCurrent());
 
   if (bearing !== undefined && !opt_noBearing && coord) {
     bearing = os.bearing.modifyBearing(bearing, coord, date);
-    var formattedBearing = os.bearing.getFormattedBearing(bearing, os.feature.measure.numDecimalPlaces);
+    const formattedBearing = os.bearing.getFormattedBearing(bearing, os.feature.measure.numDecimalPlaces);
     text += ' Bearing: ' + formattedBearing;
   }
 
@@ -321,8 +321,8 @@ os.interaction.Measure.prototype.getDistanceText_ = function(i, opt_noBearing) {
  * @private
  */
 os.interaction.Measure.prototype.getTotalDistance_ = function() {
-  var totalDist = 0;
-  for (var i = 0; i < this.distances_.length; i++) {
+  let totalDist = 0;
+  for (let i = 0; i < this.distances_.length; i++) {
     totalDist += this.distances_[i];
   }
   return totalDist;
@@ -350,13 +350,13 @@ os.interaction.Measure.prototype.onUnitsChange_ = function(event) {
  */
 os.interaction.Measure.prototype.onChange_ = function() {
   if (this.waypoints_.length > 0) {
-    var n = this.waypoints_.length - 1;
-    for (var i = 1; i < n; i++) {
-      var dist = this.getDistanceText_(i);
+    const n = this.waypoints_.length - 1;
+    for (let i = 1; i < n; i++) {
+      const dist = this.getDistanceText_(i);
       this.waypoints_[i].getText().setText(dist);
     }
-    var um = os.unit.UnitManager.getInstance();
-    var totalDist = um.formatToBestFit('distance', this.getTotalDistance_(), 'm', um.getBaseSystem(),
+    const um = os.unit.UnitManager.getInstance();
+    const totalDist = um.formatToBestFit('distance', this.getTotalDistance_(), 'm', um.getBaseSystem(),
         os.feature.measure.numDecimalPlaces);
     this.waypoints_[n].getText().setText(totalDist);
 

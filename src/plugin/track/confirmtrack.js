@@ -12,6 +12,8 @@ const Module = goog.require('os.ui.Module');
 const osWindow = goog.require('os.ui.window');
 const PlacesManager = goog.require('plugin.places.PlacesManager');
 
+const OlFeature = goog.requireType('ol.Feature');
+
 
 /**
  * Dialog that prompts the user to pick a track.
@@ -48,13 +50,13 @@ class Controller {
 
     /**
      * The available tracks.
-     * @type {!Array<!ol.Feature>}
+     * @type {!Array<!OlFeature>}
      */
     this['tracks'] = trackNode ? trackNode.getFeatures() : [];
 
     /**
      * The selected track.
-     * @type {ol.Feature|undefined}
+     * @type {OlFeature|undefined}
      */
     this['track'] = this['tracks'][0] || undefined;
 
@@ -68,7 +70,7 @@ class Controller {
   /**
    * Get the name of a track.
    *
-   * @param {!ol.Feature} track The track
+   * @param {!OlFeature} track The track
    * @return {string} The name
    * @export
    */
@@ -97,7 +99,7 @@ pluginTrack.promptForTrack = function() {
 /**
  * Launch a dialog prompting the user to pick a color.
  *
- * @param {function(!ol.Feature)} confirm The confirm callback
+ * @param {function(!OlFeature)} confirm The confirm callback
  * @param {function(*)} cancel The cancel callback
  */
 pluginTrack.launchConfirmTrack = function(confirm, cancel) {

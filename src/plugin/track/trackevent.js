@@ -3,6 +3,10 @@ goog.module.declareLegacyNamespace();
 
 const googEventsEvent = goog.require('goog.events.Event');
 
+const ColorBin = goog.requireType('os.data.histo.ColorBin');
+const FilterEntry = goog.requireType('os.filter.FilterEntry');
+const OlFeature = goog.requireType('ol.Feature');
+
 
 /**
  * Event for the track plugin.
@@ -17,25 +21,25 @@ class Event extends googEventsEvent {
 
     /**
      * The existing track feature.
-     * @type {ol.Feature|undefined}
+     * @type {OlFeature|undefined}
      */
     this.track = undefined;
 
     /**
      * The features used to assemble the track.
-     * @type {Array<!ol.Feature>|undefined}
+     * @type {Array<!OlFeature>|undefined}
      */
     this.features = undefined;
 
     /**
      * The histogram bins used to create the track.
-     * @type {Array<!os.data.histo.ColorBin>|undefined}
+     * @type {Array<!ColorBin>|undefined}
      */
     this.bins = undefined;
 
     /**
      * The filters used to match track features. Must match up to the bins array.
-     * @type {Array<!os.filter.FilterEntry>|undefined}
+     * @type {Array<!FilterEntry>|undefined}
      */
     this.filters = undefined;
 

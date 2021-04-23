@@ -350,7 +350,6 @@ os.track.createTrack = function(options) {
     }
 
     if (coordinates && coordinates.length) {
-      // TODO use the current interpolation method and add points to the coordinates to make the track look right
       geometry = new ol.geom.LineString(coordinates, ol.geom.GeometryLayout.XYZM);
     }
   }
