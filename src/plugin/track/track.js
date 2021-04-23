@@ -16,6 +16,8 @@ const osTrack = goog.require('os.track');
 const kml = goog.require('plugin.file.kml');
 const KMLNodeAdd = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
 
+const OlFeature = goog.requireType('ol.Feature');
+const OlGeometry = goog.requireType('ol.geom.Geometry');
 
 /**
  * Base logger for the track plugin.
@@ -54,7 +56,7 @@ const TrackField = osTrack.TrackField;
 /**
  * Test if a feature is a track.
  *
- * @param {ol.Feature} feature The feature.
+ * @param {OlFeature} feature The feature.
  * @return {boolean} If the feature is a track.
  *
  * @deprecated Please use `osTrack.isTrackFeature` instead.
@@ -65,7 +67,7 @@ const isTrackFeature = osTrack.isTrackFeature;
  * Gets a field value from a feature.
  *
  * @param {string} field
- * @param {ol.Feature} feature
+ * @param {OlFeature} feature
  * @return {*} The value
  *
  * @deprecated Please use `osTrack.getFeatureValue` instead.
@@ -75,7 +77,7 @@ const getFeatureValue = osTrack.getFeatureValue;
 /**
  * Get the start time for a feature.
  *
- * @param {ol.Feature} feature
+ * @param {OlFeature} feature
  * @return {number|undefined} The value
  *
  * @deprecated Please use `osTrack.getStartTime` instead.
@@ -98,7 +100,7 @@ const sortCoordinatesByValue = osTrack.sortCoordinatesByValue;
  * values that can be naturally sorted. Any features lacking a point geometry or a value in the sort field will be
  * ignored. If sorted by `os.data.RecordField.TIME`, the track may be animated over time.
  *
- * @param {!Array<!ol.Feature>} features The features.
+ * @param {!Array<!OlFeature>} features The features.
  * @param {string} sortField The track sort field.
  * @return {!Array<!ol.Coordinate>|undefined} The coordinates, or undefined if no coordinates were found.
  *
@@ -119,7 +121,7 @@ const createTrack = osTrack.createTrack;
 /**
  * Adds coordinates or features to an existing track.
  * @param {!osTrack.AddOptions} options The options.
- * @return {!Array<!(ol.Coordinate|ol.Feature)>} The added coordinates or features, depending on the options.
+ * @return {!Array<!(ol.Coordinate|OlFeature)>} The added coordinates or features, depending on the options.
  *
  * @deprecated Please use `os.track.addToTrack` instead.
  */
@@ -128,7 +130,7 @@ const addToTrack = osTrack.addToTrack;
 /**
  * Clamp track points within the provided sort range.
  *
- * @param {!ol.Feature} track The track.
+ * @param {!OlFeature} track The track.
  * @param {string|number} start The start value.
  * @param {string|number} end The end value.
  *
@@ -139,7 +141,7 @@ const clamp = osTrack.clamp;
 /**
  * Dispose of the current position/line geometries and remove them from the feature.
  *
- * @param {!ol.Feature} track The track
+ * @param {!OlFeature} track The track
  *
  * @deprecated Please use `osTrack.disposeAnimationGeometries` instead.
  */
@@ -148,7 +150,7 @@ const disposeAnimationGeometries = osTrack.disposeAnimationGeometries;
 /**
  * Shows or hides the track line
  *
- * @param {!ol.Feature} track The track
+ * @param {!OlFeature} track The track
  * @param {boolean} show
  * @param {boolean=} opt_update
  *
@@ -159,7 +161,7 @@ const setShowLine = osTrack.setShowLine;
 /**
  * Shows or hides the track line
  *
- * @param {!ol.Feature} track The track
+ * @param {!OlFeature} track The track
  * @return {boolean}
  *
  * @deprecated Please use `osTrack.getShowLine` instead.
@@ -169,7 +171,7 @@ const getShowLine = osTrack.getShowLine;
 /**
  * Shows or hides the track marker
  *
- * @param {!ol.Feature} track The track
+ * @param {!OlFeature} track The track
  * @param {boolean} show
  * @param {boolean=} opt_update
  *
@@ -180,7 +182,7 @@ const setShowMarker = osTrack.setShowMarker;
 /**
  * Turn interpolation of track marker on or off
  *
- * @param {!ol.Feature} track The track
+ * @param {!OlFeature} track The track
  * @param {boolean} doInterpolation
  *
  * @deprecated Please use `osTrack.setInterpolateMarker` instead.
@@ -190,7 +192,7 @@ const setInterpolateMarker = osTrack.setInterpolateMarker;
 /**
  * Get if interpolation of track marker is on or off
  *
- * @param {!ol.Feature} track The track
+ * @param {!OlFeature} track The track
  * @return {boolean}
  *
  * @deprecated Please use `osTrack.getInterpolateMarker` instead.
@@ -200,8 +202,8 @@ const getInterpolateMarker = osTrack.getInterpolateMarker;
 /**
  * Update the geometry for a track.
  *
- * @param {!ol.Feature} track The track
- * @param {!ol.geom.Geometry} geometry The track geometry.
+ * @param {!OlFeature} track The track
+ * @param {!OlGeometry} geometry The track geometry.
  *
  * @deprecated Please use `osTrack.setGeometry` instead.
  */
@@ -210,7 +212,7 @@ const setGeometry = osTrack.setGeometry;
 /**
  * Update the current position displayed on a track.
  *
- * @param {!ol.Feature} track The track
+ * @param {!OlFeature} track The track
  *
  * @deprecated Please use `osTrack.updateCurrentPosition` instead.
  */
@@ -219,7 +221,7 @@ const updateCurrentPosition = osTrack.updateCurrentPosition;
 /**
  * Update the distance column(s) on a track.
  *
- * @param {!ol.Feature} track The track to update.
+ * @param {!OlFeature} track The track to update.
  * @param {boolean=} opt_updateTotal If the total distance should be updated.
  * @return {number} applied distance
  *
@@ -230,7 +232,7 @@ const updateDistance = osTrack.updateDistance;
 /**
  * Update the duration column on a track.
  *
- * @param {!ol.Feature} track The track to update
+ * @param {!OlFeature} track The track to update
  * @return {number} the elapsed duration
  *
  * @deprecated Please use `osTrack.updateDuration` instead.
@@ -240,7 +242,7 @@ const updateDuration = osTrack.updateDuration;
 /**
  * Update the average speed on a track
  *
- * @param {!ol.Feature} track The track to update
+ * @param {!OlFeature} track The track to update
  * @param {number} distance
  * @param {number} duration
  *
@@ -251,7 +253,7 @@ const updateAverageSpeed = osTrack.updateAverageSpeed;
 /**
  * Update the time range on a track.
  *
- * @param {!ol.Feature} track The track to update
+ * @param {!OlFeature} track The track to update
  *
  * @deprecated Please use `osTrack.updateTime` instead.
  */
@@ -260,7 +262,7 @@ const updateTime = osTrack.updateTime;
 /**
  * Get the distance for a line geometry.
  *
- * @param {ol.geom.Geometry|undefined} geometry The geometry.
+ * @param {OlGeometry|undefined} geometry The geometry.
  * @return {number} The distance.
  *
  * @deprecated Please use `osTrack.getGeometryDistance` instead.
@@ -290,7 +292,7 @@ const getMultiLineDistance = osTrack.getMultiLineDistance;
 /**
  * Get the time for a line geometry.
  *
- * @param {ol.geom.Geometry|undefined} geometry The geometry.
+ * @param {OlGeometry|undefined} geometry The geometry.
  * @return {number} The time
  *
  * @deprecated Please use `osTrack.getGeometryTime` instead.
@@ -320,7 +322,7 @@ const getMultiLineTime = osTrack.getMultiLineTime;
 /**
  * Test a feature to check if it has a value in the sort field.
  *
- * @param {!ol.Feature} feature The feature
+ * @param {!OlFeature} feature The feature
  * @param {string=} opt_sortField The sort field
  * @return {!goog.Promise}
  *
@@ -352,7 +354,7 @@ const promptForField = osTrack.promptForField;
 /**
  * Switch the track to its animating state.
  *
- * @param {!ol.Feature} track The track feature.
+ * @param {!OlFeature} track The track feature.
  *
  * @deprecated Please use `osTrack.initDynamic` instead.
  */
@@ -361,7 +363,7 @@ const initDynamic = osTrack.initDynamic;
 /**
  * Switch the track to its non-animating state.
  *
- * @param {!ol.Feature} track The track feature.
+ * @param {!OlFeature} track The track feature.
  * @param {boolean=} opt_disposing If the feature is being disposed.
  *
  * @deprecated Please use `osTrack.disposeDynamic` instead.
@@ -371,7 +373,7 @@ const disposeDynamic = osTrack.disposeDynamic;
 /**
  * Update a track feature to represent the track at a provided timestamp.
  *
- * @param {!ol.Feature} track The track.
+ * @param {!OlFeature} track The track.
  * @param {number} startTime The start timestamp.
  * @param {number} endTime The end timestamp.
  *
@@ -395,7 +397,7 @@ const getTimeIndex = osTrack.getTimeIndex;
  * Get the position of a track at a given time. If the time falls between known points on the track, the position will
  * be linearly interpolated between the known points.
  *
- * @param {!ol.Feature} track The track.
+ * @param {!OlFeature} track The track.
  * @param {number} timestamp The timestamp.
  * @param {number} index The index of the most recent known coordinate.
  * @param {!Array<number>} coordinates The flat track coordinate array.
@@ -409,7 +411,7 @@ const getTrackPositionAt = osTrack.getTrackPositionAt;
 /**
  * Update the track's line geometry to display its position up to the provided timestamp.
  *
- * @param {!ol.Feature} track The track.
+ * @param {!OlFeature} track The track.
  * @param {number} startTime The start timestamp.
  * @param {number} startIndex The start index of the starting coordinate.
  * @param {number} endTime The end timestamp.
@@ -426,7 +428,7 @@ const updateCurrentLine = osTrack.updateCurrentLine;
  * Update the z-index for a list of tracks. Ensures the current position icon for all tracks will be displayed on top
  * of the line string for every other track passed to the function.
  *
- * @param {!Array<!ol.Feature>} tracks The track features.
+ * @param {!Array<!OlFeature>} tracks The track features.
  *
  * @deprecated Please use `osTrack.updateTrackZIndex` instead.
  */
@@ -489,16 +491,16 @@ const setCreateAndAdd = function(f) {
 /**
  * Adds a set of features to a track.
  *
- * @param {!ol.Feature} track The track
- * @param {!Array<!ol.Feature>} features The features to add to the track
- * @return {!Array<!ol.Feature>} return the non-duplicate features
+ * @param {!OlFeature} track The track
+ * @param {!Array<!OlFeature>} features The features to add to the track
+ * @return {!Array<!OlFeature>} return the non-duplicate features
  *
  * @suppress {accessControls}
  *
  * @deprecated Please use `osTrack.addToTrack` instead.
  */
 const addFeaturesToTrack = function(track, features) {
-  var addedFeatures = /** @type {!Array<!ol.Feature>} */ ([]);
+  var addedFeatures = /** @type {!Array<!OlFeature>} */ ([]);
   var sortField = /** @type {string|undefined} */ (track.get(osTrack.TrackField.SORT_FIELD));
   if (!sortField) {
     log.error(LOGGER_, 'Unable to add features to track: track is missing sorting data.');
