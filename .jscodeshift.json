@@ -47,16 +47,21 @@
     "ol.source.Vector": "OLVectorSource",
     "ol.string": "olString",
 
+    "os.alertManager": "AlertManager",
     "os.array": "osArray",
     "os.extent": "osExtent",
     "os.feature": "osFeature",
+    "os.file": "osFile",
+    "os.file.File": "OSFile",
     "os.layer.Vector": "VectorLayer",
     "os.map": "osMap",
     "os.object": "osObject",
     "os.proj": "osProj",
+    "os.settings": "Settings",
     "os.source.Request": "RequestSource",
     "os.source.Vector": "VectorSource",
     "os.string": "osString",
+    "os.ui.menu.layer": "layerMenu",
     "os.ui.menu.map": "mapMenu",
     "os.ui.window": "osWindow"
   }
