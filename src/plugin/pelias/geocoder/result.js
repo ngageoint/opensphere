@@ -1,25 +1,27 @@
-goog.provide('plugin.pelias.geocoder.Result');
+goog.module('plugin.pelias.geocoder.Result');
 
-goog.require('os.ui.search.place.CoordinateResult');
-goog.require('plugin.pelias.geocoder.resultCardDirective');
-
-
-
-/**
- * @param {ol.Feature} result
- * @extends {os.ui.search.place.CoordinateResult}
- * @constructor
- */
-plugin.pelias.geocoder.Result = function(result) {
-  plugin.pelias.geocoder.Result.base(this, 'constructor', result, 'name');
-  this.score = 95 + /** @type {number} */ (result.get('confidence'));
-};
-goog.inherits(plugin.pelias.geocoder.Result, os.ui.search.place.CoordinateResult);
+const CoordinateResult = goog.require('os.ui.search.place.CoordinateResult');
+const {directiveTag: resultCardEl} = goog.require('plugin.pelias.geocoder.ResultCardUI');
 
 
 /**
- * @inheritDoc
  */
-plugin.pelias.geocoder.Result.prototype.getSearchUI = function() {
-  return '<peliasgeocoderresultcard result="result"></peliasgeocoderresultcard>';
-};
+class Result extends CoordinateResult {
+  /**
+   * Constructor.
+   * @param {ol.Feature} result
+   */
+  constructor(result) {
+    super(result, 'name');
+    this.score = 95 + /** @type {number} */ (result.get('confidence'));
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getSearchUI() {
+    return `<${resultCardEl} result="result"></${resultCardEl}>`;
+  }
+}
+
+exports = Result;
