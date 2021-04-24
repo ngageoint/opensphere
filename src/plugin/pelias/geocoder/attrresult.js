@@ -1,26 +1,29 @@
-goog.provide('plugin.pelias.geocoder.AttrResult');
+goog.module('plugin.pelias.geocoder.AttrResult');
 
-goog.require('os.search.AbstractSearchResult');
-goog.require('plugin.pelias.geocoder.attrCardDirective');
-
+const AbstractSearchResult = goog.require('os.search.AbstractSearchResult');
+const {directiveTag: attrCardEl} = goog.require('plugin.pelias.geocoder.AttrCardUI');
 
 
 /**
  * HTML Attribution result for Google Places API
  *
- * @param {Array<!string>} attributions
- * @extends {os.search.AbstractSearchResult<Array<!string>>}
- * @constructor
+ * @extends {AbstractSearchResult<Array<!string>>}
  */
-plugin.pelias.geocoder.AttrResult = function(attributions) {
-  plugin.pelias.geocoder.AttrResult.base(this, 'constructor', attributions, 96);
-};
-goog.inherits(plugin.pelias.geocoder.AttrResult, os.search.AbstractSearchResult);
+class AttrResult extends AbstractSearchResult {
+  /**
+   * Constructor.
+   * @param {Array<!string>} attributions
+   */
+  constructor(attributions) {
+    super(attributions, 96);
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getSearchUI() {
+    return `<${attrCardEl} result="result"></${attrCardEl}>`;
+  }
+}
 
-/**
- * @inheritDoc
- */
-plugin.pelias.geocoder.AttrResult.prototype.getSearchUI = function() {
-  return '<peliasgeocoderattrcard result="result"></peliasgeocoderattrcard>';
-};
+exports = AttrResult;

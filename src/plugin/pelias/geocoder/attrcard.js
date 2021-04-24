@@ -1,8 +1,9 @@
-goog.provide('plugin.pelias.geocoder.AttrCardCtrl');
-goog.provide('plugin.pelias.geocoder.attrCardDirective');
+goog.module('plugin.pelias.geocoder.AttrCardUI');
 
-goog.require('os');
-goog.require('os.ui.Module');
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+
+const AttrResult = goog.requireType('plugin.pelias.geocoder.AttrResult');
 
 
 /**
@@ -10,39 +11,52 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-plugin.pelias.geocoder.attrCardDirective = function() {
-  return {
-    replace: true,
-    restrict: 'E',
-    templateUrl: os.ROOT + 'views/plugin/pelias/geocoder/attrcard.html',
-    controller: plugin.pelias.geocoder.AttrCardCtrl,
-    controllerAs: 'attrCtrl'
-  };
-};
+const directive = () => ({
+  replace: true,
+  restrict: 'E',
+  templateUrl: ROOT + 'views/plugin/pelias/geocoder/attrcard.html',
+  controller: Controller,
+  controllerAs: 'attrCtrl'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'peliasgeocoderattrcard';
 
 
 /**
  * Register the directive.
  */
-os.ui.Module.directive('peliasgeocoderattrcard', [plugin.pelias.geocoder.attrCardDirective]);
-
+Module.directive('peliasgeocoderattrcard', [directive]);
 
 
 /**
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-plugin.pelias.geocoder.AttrCardCtrl = function($scope, $element) {
-  // just plop the result HTML in
-  var attrs = /** @type {plugin.pelias.geocoder.AttrResult} */ ($scope['result']).getResult();
+class Controller {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    // just plop the result HTML in
+    var attrs = /** @type {AttrResult} */ ($scope['result']).getResult();
 
-  var html = '';
-  for (var i = 0, n = attrs.length; i < n; i++) {
-    html += '<div>' + attrs[i] + '</div>';
+    var html = '';
+    for (var i = 0, n = attrs.length; i < n; i++) {
+      html += '<div>' + attrs[i] + '</div>';
+    }
+
+    $element.html(html);
   }
+}
 
-  $element.html(html);
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
-

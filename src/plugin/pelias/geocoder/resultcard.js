@@ -1,11 +1,8 @@
-goog.provide('plugin.pelias.geocoder.ResultCardCtrl');
-goog.provide('plugin.pelias.geocoder.resultCardDirective');
+goog.module('plugin.pelias.geocoder.ResultCardUI');
 
-goog.require('goog.async.Delay');
-goog.require('ol.extent');
-goog.require('os');
-goog.require('os.ui.Module');
-goog.require('os.ui.search.FeatureResultCardCtrl');
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const FeatureResultCardCtrl = goog.require('os.ui.search.FeatureResultCardCtrl');
 
 
 /**
@@ -13,33 +10,44 @@ goog.require('os.ui.search.FeatureResultCardCtrl');
  *
  * @return {angular.Directive}
  */
-plugin.pelias.geocoder.resultCardDirective = function() {
-  return {
-    restrict: 'E',
-    templateUrl: os.ROOT + 'views/plugin/pelias/geocoder/resultcard.html',
-    controller: plugin.pelias.geocoder.ResultCardCtrl,
-    controllerAs: 'resultCtrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  templateUrl: ROOT + 'views/plugin/pelias/geocoder/resultcard.html',
+  controller: Controller,
+  controllerAs: 'resultCtrl'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'peliasgeocoderresultcard';
 
 
 /**
  * Register the directive.
  */
-os.ui.Module.directive('peliasgeocoderresultcard', [plugin.pelias.geocoder.resultCardDirective]);
+Module.directive('peliasgeocoderresultcard', [directive]);
 
 
 /**
  * Controller for the resultcard directive.
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @extends {os.ui.search.FeatureResultCardCtrl}
- * @ngInject
+ * @unrestricted
  */
-plugin.pelias.geocoder.ResultCardCtrl = function($scope, $element) {
-  plugin.pelias.geocoder.ResultCardCtrl.base(this, 'constructor', $scope, $element);
-};
-goog.inherits(plugin.pelias.geocoder.ResultCardCtrl, os.ui.search.FeatureResultCardCtrl);
+class Controller extends FeatureResultCardCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
+  }
+}
 
+exports = {
+  Controller,
+  directive,
+  directiveTag
+};
