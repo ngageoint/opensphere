@@ -1,106 +1,113 @@
-goog.provide('plugin.overview.OverviewMap');
+goog.module('plugin.overview.OverviewMap');
 
-goog.require('ol.MapProperty');
-goog.require('ol.View');
-goog.require('ol.control.OverviewMap');
-goog.require('os.map');
+const MapContainer = goog.require('os.MapContainer');
+const Settings = goog.require('os.config.Settings');
+const MapProperty = goog.require('ol.MapProperty');
+const View = goog.require('ol.View');
+const OLOverviewMap = goog.require('ol.control.OverviewMap');
+const osMap = goog.require('os.map');
 
+const Collection = goog.requireType('ol.Collection');
+const LayerBase = goog.requireType('ol.layer.Base');
 
 
 /**
- * @param {olx.control.OverviewMapOptions=} opt_opts
- * @extends {ol.control.OverviewMap}
- * @constructor
- *
- * @suppress {accessControls} To allow access to the box overlay.
+ * Overview map control.
  */
-plugin.overview.OverviewMap = function(opt_opts) {
-  plugin.overview.OverviewMap.base(this, 'constructor', opt_opts);
-  this.updateView_();
+class OverviewMap extends OLOverviewMap {
+  /**
+   * Constructor.
+   * @param {olx.control.OverviewMapOptions=} opt_opts
+   * @suppress {accessControls} To allow access to box overlay.
+   */
+  constructor(opt_opts) {
+    super(opt_opts);
+    this.updateView_();
 
-  /* Interactive map in 3D mode */
+    /* Interactive map in 3D mode */
 
-  var ovmap = this.ovmap_;
-  var endMoving = function(event) {
-    var mapContainer = os.MapContainer.getInstance();
-    if (mapContainer.is3DEnabled()) {
-      var coordinates = ovmap.getEventCoordinate(event);
+    var endMoving = (event) => {
+      var ovmap = this.getOverviewMap();
+      var mapContainer = MapContainer.getInstance();
+      if (mapContainer.is3DEnabled()) {
+        var coordinates = ovmap.getEventCoordinate(event);
 
-      mapContainer.flyTo(/** @type {!osx.map.FlyToOptions} */ ({
-        center: coordinates
-      }));
+        mapContainer.flyTo(/** @type {!osx.map.FlyToOptions} */ ({
+          center: coordinates
+        }));
+      }
+
+      window.removeEventListener('mouseup', endMoving);
+    };
+
+    this.boxOverlay_.getElement().addEventListener('mousedown', function() {
+      window.addEventListener('mouseup', endMoving);
+    });
+  }
+
+  /**
+   * @return {Collection<LayerBase>}
+   */
+  getLayers() {
+    var ovmap = this.getOverviewMap();
+    return ovmap ? ovmap.getLayers() : null;
+  }
+
+  /**
+   * @inheritDoc
+   * @suppress {accessControls} To allow extending private function.
+   */
+  handleMapPropertyChange_(evt) {
+    if (evt.key === MapProperty.VIEW) {
+      this.updateView_();
     }
 
-    window.removeEventListener('mouseup', endMoving);
-  };
+    super.handleMapPropertyChange_(evt);
+  }
 
-  this.boxOverlay_.getElement().addEventListener('mousedown', function() {
-    window.addEventListener('mouseup', endMoving);
-  });
-};
-goog.inherits(plugin.overview.OverviewMap, ol.control.OverviewMap);
+  /**
+   * Updates the view with the current projection
+   *
+   * @private
+   */
+  updateView_() {
+    var view = new View({
+      projection: osMap.PROJECTION,
+      minZoom: osMap.MIN_ZOOM,
+      maxZoom: osMap.MAX_ZOOM
+    });
+
+    if (this.getMap()) {
+      var mainView = this.getMap().getView();
+
+      if (mainView) {
+        view.setCenter(mainView.getCenter());
+        view.setResolution(mainView.getResolution());
+      }
+    }
+
+    var ovmap = this.getOverviewMap();
+    if (ovmap) {
+      ovmap.setView(view);
+    }
+  }
+
+  /**
+   * @inheritDoc
+   * @suppress {accessControls} To allow extending private function.
+   */
+  handleClick_(event) {
+    super.handleClick_(event);
+    Settings.getInstance().set(OverviewMap.SHOW_KEY, this.getCollapsed());
+  }
+}
 
 
 /**
  * @type {!Array<string>}
  * @const
  */
-plugin.overview.OverviewMap.SHOW_KEY = ['overview', 'show'];
+OverviewMap.SHOW_KEY = ['overview', 'show'];
 
 
-/**
- * @return {ol.Collection<ol.layer.Base>}
- * @suppress {accessControls}
- */
-plugin.overview.OverviewMap.prototype.getLayers = function() {
-  return this.ovmap_.getLayers();
-};
-
-
-/**
- * @inheritDoc
- * @suppress {accessControls}
- */
-plugin.overview.OverviewMap.prototype.handleMapPropertyChange_ = function(evt) {
-  if (evt.key === ol.MapProperty.VIEW) {
-    this.updateView_();
-  }
-
-  plugin.overview.OverviewMap.base(this, 'handleMapPropertyChange_', evt);
-};
-
-
-/**
- * Updates the view with the current projection
- *
- * @private
- * @suppress {accessControls}
- */
-plugin.overview.OverviewMap.prototype.updateView_ = function() {
-  var view = new ol.View({
-    projection: os.map.PROJECTION,
-    minZoom: os.map.MIN_ZOOM,
-    maxZoom: os.map.MAX_ZOOM
-  });
-
-  if (this.getMap()) {
-    var mainView = this.getMap().getView();
-
-    if (mainView) {
-      view.setCenter(mainView.getCenter());
-      view.setResolution(mainView.getResolution());
-    }
-  }
-
-  this.ovmap_.setView(view);
-};
-
-
-/**
- * @inheritDoc
- * @suppress {accessControls}
- */
-plugin.overview.OverviewMap.prototype.handleClick_ = function(event) {
-  plugin.overview.OverviewMap.base(this, 'handleClick_', event);
-  os.settings.set(plugin.overview.OverviewMap.SHOW_KEY, this.getCollapsed());
-};
+exports = OverviewMap;

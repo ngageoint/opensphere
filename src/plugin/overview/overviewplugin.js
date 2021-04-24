@@ -1,45 +1,48 @@
-goog.provide('plugin.overview.OverviewPlugin');
+goog.module('plugin.overview.OverviewPlugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.plugin.AbstractPlugin');
-goog.require('plugin.basemap');
-goog.require('plugin.overview.OverviewMap');
-
+const MapContainer = goog.require('os.MapContainer');
+const Settings = goog.require('os.config.Settings');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const OverviewMap = goog.require('plugin.overview.OverviewMap');
 
 
 /**
  * Adds an overview map to the map controls that syncs with the current base maps
- *
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
  */
-plugin.overview.OverviewPlugin = function() {
-  plugin.overview.OverviewPlugin.base(this, 'constructor');
-  this.id = 'overview';
+class OverviewPlugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = 'overview';
+
+    /**
+     * @type {?OverviewMap}
+     * @protected
+     */
+    this.control = null;
+  }
 
   /**
-   * @type {?plugin.overview.OverviewMap}
-   * @protected
+   * @inheritDoc
    */
-  this.control = null;
-};
-goog.inherits(plugin.overview.OverviewPlugin, os.plugin.AbstractPlugin);
+  init() {
+    // add the overview map control
+    var collapsed = /** @type {boolean} */ (Settings.getInstance().get(OverviewMap.SHOW_KEY, false));
 
+    this.control = new OverviewMap({
+      collapsed: collapsed,
+      label: '\u00AB',
+      collapseLabel: '\u00BB',
+      layers: [
+        // just grab the base map group
+        MapContainer.getInstance().getMap().getLayers().getArray()[0]
+      ]});
 
-/**
- * @inheritDoc
- */
-plugin.overview.OverviewPlugin.prototype.init = function() {
-  // add the overview map control
-  var collapsed = /** @type {boolean} */ (os.settings.get(plugin.overview.OverviewMap.SHOW_KEY, false));
+    MapContainer.getInstance().getMap().getControls().push(this.control);
+  }
+}
 
-  this.control = new plugin.overview.OverviewMap({
-    collapsed: collapsed,
-    label: '\u00AB',
-    collapseLabel: '\u00BB',
-    layers: [
-      // just grab the base map group
-      os.MapContainer.getInstance().getMap().getLayers().getArray()[0]
-    ]});
-
-  os.MapContainer.getInstance().getMap().getControls().push(this.control);
-};
+exports = OverviewPlugin;
