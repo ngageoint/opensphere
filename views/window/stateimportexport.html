@@ -37,7 +37,7 @@
         </div>
       </div>
 
-      <input type="submit" hidden>
+      <button type="submit" hidden></button>
 
       <div class="container-fluid">
         <div class="row" ng-if="stateForm.showClear && !stateForm.isSaving">
@@ -97,7 +97,7 @@
       <i class="fa fa-check"></i>
       OK
     </button>
-    <button class="btn btn-secondary" ng-click="stateForm.close()">
+    <button class="btn btn-secondary" type="button" ng-click="stateForm.close()">
       <i class="fa fa-ban"></i>
       Cancel
     </button>

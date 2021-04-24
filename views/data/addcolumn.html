@@ -2,17 +2,17 @@
   <div class="modal-body">
     <form name="addColumnForm" ng-submit="addcolumn.finish()" novalidate>
       <addcolumnform name="addcolumn.name" value="addcolumn.value" validators="addcolumn.validators"></addcolumnform>
-      <input type="submit" class="d-none">
+      <button type="submit" hidden></button>
     </form>
   </div>
   <div class="modal-footer">
-      <button class="btn btn-primary" ng-click="addcolumn.finish()" ng-disabled="addColumnForm.$invalid">
-        <i class="fa fa-check"></i>
-        OK
-      </button>
-      <button class="btn btn-secondary" ng-click="addcolumn.cancel()">
-        <i class="fa fa-ban"></i>
-        Cancel
-      </button>
+    <button class="btn btn-primary" ng-click="addcolumn.finish()" ng-disabled="addColumnForm.$invalid">
+      <i class="fa fa-check"></i>
+      OK
+    </button>
+    <button class="btn btn-secondary" type="button" ng-click="addcolumn.cancel()">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
   </div>
 </div>

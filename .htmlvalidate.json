@@ -13,12 +13,8 @@
     "no-inline-style": ["error", {
       "exclude": ["ng-style"]
     }],
-    "no-raw-characters": "warn",
-    "prefer-button": "warn",
-    "wcag/h30": "warn",
     "wcag/h32": "off",
     "wcag/h37": "off",
-    "prefer-native-element": "warn",
     "text-content": "off"
   }
 }

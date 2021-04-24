@@ -1,25 +1,31 @@
 <div class="d-flex flex-column flex-fill">
-  <div ng-form="importForm" class="modal-body">
+  <form class="modal-body" name="importForm" ng-submit="importdialog.accept()">
     <div class="input-group">
       <input type="text" class="form-control" placeholder="Choose a file or enter a URL" name="url" ng-model="importdialog.url" ng-required="true" ng-maxlength="1000" ng-readonly="importdialog.fileChosen || importdialog.loading">
       <div class="input-group-append">
-        <button class="btn form-control w-auto border border-left-0 u-border-color-input" ng-click="importdialog.clearFile()" ng-disabled="importdialog.loading"
+        <button class="btn form-control w-auto border border-left-0 u-border-color-input" type="button"
+            ng-click="importdialog.clearFile()"
+            ng-disabled="importdialog.loading"
             title="Clear the file/URL">
           <i class="fa fa-times"></i>
         </button>
-        <button class="btn btn-secondary" ng-click="importdialog.openFileBrowser()" ng-disabled="importdialog.loading" title="Choose a local file">
+        <button class="btn btn-secondary" type="button"
+            ng-click="importdialog.openFileBrowser()"
+            ng-disabled="importdialog.loading"
+            title="Choose a local file">
           Browse
         </button>
       </div>
     </div>
     <validation-message target="importForm.url"></validation-message>
-  </div>
+  </form>
   <div class="modal-footer">
     <button class="btn btn-primary" ng-click="importdialog.accept()" ng-disabled="importForm.$invalid || importdialog.loading" title="Load the file for import">
       <i class="fa" ng-class="importdialog.loading && 'fa-spin fa-spinner' || 'fa-chevron-circle-right'"></i>
       <span>{{importdialog.loading ? 'Loading' : confirmText}}</span>
     </button>
-    <button ng-if="!importdialog.hideCancel" class="btn btn-secondary" ng-click="importdialog.cancel()" title="Cancel file import">
+    <button ng-if="!importdialog.hideCancel" class="btn btn-secondary" type="button"
+        ng-click="importdialog.cancel()" title="Cancel file import">
       <i class="fa fa-ban"></i>
       Cancel
     </button>
