@@ -5,7 +5,7 @@
   <span ng-switch-when="ca">
     <span>{{property.value}} </span>
     <span ng-if="actions.length == 1" data-colvalue="property.value">
-      <a ng-href="{{action}}" target="_blank">
+      <a ng-href="{{action}}" target="_blank" aria-label="{{description}}">
         <i class="fa fa-external-link-square" title="{{description}}"></i>
       </a>
     </span>
