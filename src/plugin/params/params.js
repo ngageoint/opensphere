@@ -1,40 +1,39 @@
-goog.provide('plugin.params');
+goog.module('plugin.params');
 
-goog.require('goog.Uri.QueryData');
-goog.require('goog.uri.utils');
-goog.require('os.action.EventType');
-goog.require('os.file.File');
-goog.require('os.object');
-goog.require('os.ol.source.IUrlSource');
-goog.require('os.source.Request');
-goog.require('os.url');
+const QueryData = goog.require('goog.Uri.QueryData');
+const {split: splitUrl} = goog.require('goog.uri.utils');
+const ComponentIndex = goog.require('goog.uri.utils.ComponentIndex');
+const osActionEventType = goog.require('os.action.EventType');
+const osFile = goog.require('os.file');
+const osImplements = goog.require('os.implements');
+const ILayer = goog.require('os.layer.ILayer');
+const osObject = goog.require('os.object');
+const IUrlSource = goog.require('os.ol.source.IUrlSource');
+const RequestSource = goog.require('os.source.Request');
+const osUrl = goog.require('os.url');
 
 
 /**
  * Identifier for params plugin components.
  * @type {string}
- * @const
  */
-plugin.params.ID = 'params';
-
+const ID = 'params';
 
 /**
  * Events for the params plugin.
  * @enum {string}
  */
-plugin.params.EventType = {
+const EventType = {
   EDIT_PARAMS: 'params:edit'
 };
-
 
 /**
  * Metric keys for the params plugin.
  * @enum {string}
  */
-plugin.params.Metrics = {
+const Metrics = {
   EDIT_PARAMS: 'params.editParams'
 };
-
 
 /**
  * If a URI supports parameter modification.
@@ -42,10 +41,9 @@ plugin.params.Metrics = {
  * @param {!goog.Uri} uri The URI.
  * @return {boolean}
  */
-plugin.params.isUriSupported = function(uri) {
-  return uri.getScheme() !== os.file.FileScheme.FILE && uri.getScheme() !== os.file.FileScheme.LOCAL;
+const isUriSupported = function(uri) {
+  return uri.getScheme() !== osFile.FileScheme.FILE && uri.getScheme() !== osFile.FileScheme.LOCAL;
 };
-
 
 /**
  * Check if a layer supports request parameter overrides.
@@ -53,21 +51,20 @@ plugin.params.isUriSupported = function(uri) {
  * @param {ol.layer.Layer} layer The layer.
  * @return {boolean} If the layer supports request parameter overrides.
  */
-plugin.params.supportsParamOverrides = function(layer) {
+const supportsParamOverrides = function(layer) {
   var source = layer.getSource();
-  if (source instanceof os.source.Request) {
+  if (source instanceof RequestSource) {
     var request = source.getRequest();
     if (request) {
       var uri = request.getUri();
-      return uri != null && plugin.params.isUriSupported(uri);
+      return uri != null && isUriSupported(uri);
     }
-  } else if (os.implements(layer, os.layer.ILayer.ID) && os.implements(source, os.ol.source.IUrlSource.ID)) {
+  } else if (osImplements(layer, ILayer.ID) && osImplements(source, IUrlSource.ID)) {
     return true;
   }
 
   return false;
 };
-
 
 /**
  * Get the request parameters for a layer.
@@ -75,31 +72,30 @@ plugin.params.supportsParamOverrides = function(layer) {
  * @param {ol.layer.Layer} layer The layer.
  * @return {Object} The request parameters.
  */
-plugin.params.getParamsFromLayer = function(layer) {
+const getParamsFromLayer = function(layer) {
   var params = null;
 
   var source = layer.getSource();
-  if (source instanceof os.source.Request) {
+  if (source instanceof RequestSource) {
     var request = source.getRequest();
     if (request) {
       var uri = request.getUri();
-      if (uri && plugin.params.isUriSupported(uri)) {
+      if (uri && isUriSupported(uri)) {
         // copy the existing params onto the object
-        params = os.url.queryDataToObject(uri.getQueryData());
+        params = osUrl.queryDataToObject(uri.getQueryData());
       }
     }
-  } else if (os.implements(source, os.ol.source.IUrlSource.ID)) {
-    source = /** @type {os.ol.source.IUrlSource} */ (source);
+  } else if (osImplements(source, IUrlSource.ID)) {
+    source = /** @type {IUrlSource} */ (source);
 
     var sourceParams = source.getParams();
     if (sourceParams) {
-      params = os.object.unsafeClone(sourceParams);
+      params = osObject.unsafeClone(sourceParams);
     }
   }
 
   return params;
 };
-
 
 /**
  * Set the request parameters for a layer.
@@ -108,16 +104,16 @@ plugin.params.getParamsFromLayer = function(layer) {
  * @param {!Object} params The new parameters.
  * @param {Array<string>=} opt_remove Keys to remove.
  */
-plugin.params.setParamsForLayer = function(layer, params, opt_remove) {
+const setParamsForLayer = function(layer, params, opt_remove) {
   var source = layer.getSource();
-  if (source instanceof os.source.Request) {
+  if (source instanceof RequestSource) {
     var request = source.getRequest();
     if (request) {
       var uri = request.getUri();
-      if (uri && plugin.params.isUriSupported(uri)) {
+      if (uri && isUriSupported(uri)) {
         var qd = uri.getQueryData();
         if (!qd) {
-          qd = new goog.Uri.QueryData();
+          qd = new QueryData();
           uri.setQueryData(qd);
         }
 
@@ -134,8 +130,8 @@ plugin.params.setParamsForLayer = function(layer, params, opt_remove) {
         source.refresh();
       }
     }
-  } else if (os.implements(source, os.ol.source.IUrlSource.ID)) {
-    source = /** @type {os.ol.source.IUrlSource} */ (source);
+  } else if (osImplements(source, IUrlSource.ID)) {
+    source = /** @type {IUrlSource} */ (source);
 
     var oldParams = source.getParams();
     if (oldParams) {
@@ -152,7 +148,6 @@ plugin.params.setParamsForLayer = function(layer, params, opt_remove) {
   }
 };
 
-
 /**
  * Get the request URL(s) for a layer.
  *
@@ -160,12 +155,12 @@ plugin.params.setParamsForLayer = function(layer, params, opt_remove) {
  * @return {Array<string>|string|null} An array if multiple URL's are supported, string for single-URL sources,
  *                                     null if the URL could not be resolved.
  */
-plugin.params.getUrlsForLayer = function(layer) {
+const getUrlsForLayer = function(layer) {
   var urls = null;
 
   if (layer) {
     var source = layer.getSource();
-    if (source instanceof os.source.Request) {
+    if (source instanceof RequestSource) {
       var request = source.getRequest();
       if (request) {
         var uri = request.getUri();
@@ -173,8 +168,8 @@ plugin.params.getUrlsForLayer = function(layer) {
           urls = uri.toString().replace(/\?.*/, '') || null;
         }
       }
-    } else if (os.implements(source, os.ol.source.IUrlSource.ID)) {
-      source = /** @type {os.ol.source.IUrlSource} */ (source);
+    } else if (osImplements(source, IUrlSource.ID)) {
+      source = /** @type {IUrlSource} */ (source);
 
       var sourceUrls = source.getUrls();
       if (sourceUrls) {
@@ -186,34 +181,33 @@ plugin.params.getUrlsForLayer = function(layer) {
   return urls;
 };
 
-
 /**
  * Set the request URL(s) for a layer.
  *
  * @param {ol.layer.Layer} layer The layer.
  * @param {!(Array<string>|string)} urls The URL's.
  */
-plugin.params.setUrlsForLayer = function(layer, urls) {
+const setUrlsForLayer = function(layer, urls) {
   if (layer) {
     var source = layer.getSource();
-    if (source instanceof os.source.Request) {
+    if (source instanceof RequestSource) {
       var url = typeof urls == 'string' ? urls : urls[0];
       var request = source.getRequest();
       if (request) {
         var uri = request.getUri();
         if (uri) {
-          var m = goog.uri.utils.split(String(url));
-          uri.setScheme(m[goog.uri.utils.ComponentIndex.SCHEME] || '', true);
-          uri.setUserInfo(m[goog.uri.utils.ComponentIndex.USER_INFO] || '', true);
-          uri.setDomain(m[goog.uri.utils.ComponentIndex.DOMAIN] || '', true);
-          uri.setPort(m[goog.uri.utils.ComponentIndex.PORT]);
-          uri.setPath(m[goog.uri.utils.ComponentIndex.PATH] || '', true);
+          var m = splitUrl(String(url));
+          uri.setScheme(m[ComponentIndex.SCHEME] || '', true);
+          uri.setUserInfo(m[ComponentIndex.USER_INFO] || '', true);
+          uri.setDomain(m[ComponentIndex.DOMAIN] || '', true);
+          uri.setPort(m[ComponentIndex.PORT]);
+          uri.setPath(m[ComponentIndex.PATH] || '', true);
 
           source.refresh();
         }
       }
-    } else if (os.implements(source, os.ol.source.IUrlSource.ID)) {
-      source = /** @type {os.ol.source.IUrlSource} */ (source);
+    } else if (osImplements(source, IUrlSource.ID)) {
+      source = /** @type {IUrlSource} */ (source);
 
       if (urls) {
         if (typeof urls == 'string') {
@@ -223,9 +217,21 @@ plugin.params.setUrlsForLayer = function(layer, urls) {
         }
       }
 
-      if (os.implements(layer, os.layer.ILayer.ID)) {
-        /** @type {!os.layer.ILayer} */ (layer).callAction(os.action.EventType.REFRESH);
+      if (osImplements(layer, ILayer.ID)) {
+        /** @type {!os.layer.ILayer} */ (layer).callAction(osActionEventType.REFRESH);
       }
     }
   }
+};
+
+exports = {
+  ID,
+  EventType,
+  Metrics,
+  isUriSupported,
+  supportsParamOverrides,
+  getParamsFromLayer,
+  setParamsForLayer,
+  getUrlsForLayer,
+  setUrlsForLayer
 };
