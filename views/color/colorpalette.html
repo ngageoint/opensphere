@@ -3,7 +3,8 @@
     <tbody>
       <tr ng-repeat="row in rows">
         <td class="c-colorpalette__cell m-0 p-0" ng-repeat="color in row" ng-click="palette.pick(color)" title="{{palette.getTitle(color)}}">
-          <div class="c-colorpalette__colorswatch" ng-class="{'c-colorpalette__selected': value === color}"  ng-style="{'background-color': color}"></div>
+          <div class="c-colorpalette__colorswatch" ng-class="{'c-colorpalette__selected': value === color}"
+              ng-style="{'background-color': color}"></div>
         </td>
       </tr>
     </tbody>

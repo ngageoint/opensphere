@@ -43,7 +43,7 @@
           </div>
         </div>
 
-        <div class="col-4 overflow-auto js-ring-scroll-section" style="max-height:10rem;">
+        <div class="col-4 overflow-auto c-ring-scroll-section js-ring-scroll-section">
           <div class="mb-1 row" ng-repeat="ring in ctrl.options.rings | limitTo: 50">
             <input class="form-control px-1" ng-class="ctrl.options.type == 'auto' ? 'col-12' : 'col-9'" type="number" required name="count" step="any" ng-change="ctrl.update()" ng-model="ring.radius" ng-disabled="!ctrl.options.enabled || ctrl.options.type == 'auto'">
             <button class="btn btn-outline-danger col-3 border-0" ng-click="ctrl.remove($index, true)" ng-if="ctrl.options.type == 'manual'" ng-disabled="!ctrl.options.enabled || ctrl.options.rings.length <= 1">

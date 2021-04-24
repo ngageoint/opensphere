@@ -10,7 +10,9 @@
   "rules": {
     "element-name": "off",
     "element-required-attributes": "off",
-    "no-inline-style": "warn",
+    "no-inline-style": ["error", {
+      "exclude": ["ng-style"]
+    }],
     "no-raw-characters": "warn",
     "prefer-button": "warn",
     "wcag/h30": "warn",
