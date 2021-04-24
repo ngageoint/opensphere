@@ -11,7 +11,8 @@
     "os.settingsManager": {"require": "os.ui.config.SettingsManager", "singleton": true},
     "os.map.mapContainer": {"require": "os.MapContainer", "singleton": true},
     "os.queryManager": {"require": "os.query.QueryManager", "singleton": true},
-    "os.ui.queryManager": {"require": "os.query.QueryManager", "singleton": true}
+    "os.ui.queryManager": {"require": "os.query.QueryManager", "singleton": true},
+    "os.ui.metricsManager": {"require": "os.ui.metrics.MetricsManager", "singleton": true}
   },
   "globalRootNamespaces": [
     "plugin",
@@ -22,10 +23,18 @@
   ],
   "moduleBlacklist": [
     "goog",
-    "goog.module"
+    "goog.declareModuleId",
+    "goog.module",
+    "goog.partial",
+    "goog.provide",
+    "goog.require",
+    "goog.requireType"
   ],
   "moduleVarNames": {
     "goog.array": "googArray",
+    "goog.events": "googEvents",
+    "goog.events.Event": "GoogEvent",
+    "goog.events.EventType": "GoogEventType",
     "goog.string": "googString",
     "goog.object": "googObject",
 
