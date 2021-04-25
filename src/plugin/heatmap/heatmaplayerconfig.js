@@ -1,94 +1,87 @@
-goog.provide('plugin.heatmap.HeatmapLayerConfig');
+goog.module('plugin.heatmap.HeatmapLayerConfig');
 
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('ol.source.Vector');
-goog.require('os.layer.config.AbstractLayerConfig');
-goog.require('plugin.heatmap.Heatmap');
+const log = goog.require('goog.log');
+const OLVectorSource = goog.require('ol.source.Vector');
+const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
+const heatmap = goog.require('plugin.heatmap');
+const Heatmap = goog.require('plugin.heatmap.Heatmap');
 
+const Logger = goog.requireType('goog.log.Logger');
 
 
 /**
  * Config for a layer containing heatmap data.
  *
- * @extends {os.layer.config.AbstractLayerConfig}
- * @constructor
  * @template T
  */
-plugin.heatmap.HeatmapLayerConfig = function() {
-  plugin.heatmap.HeatmapLayerConfig.base(this, 'constructor');
-  this.log = plugin.heatmap.HeatmapLayerConfig.LOGGER_;
+class HeatmapLayerConfig extends AbstractLayerConfig {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.log = logger;
+
+    /**
+     * @type {boolean}
+     * @protected
+     */
+    this.animate = false;
+  }
 
   /**
-   * @type {boolean}
+   * @inheritDoc
+   */
+  createLayer(options) {
+    this.initializeConfig(options);
+
+    var source = this.getSource(options);
+    var layer = this.getLayer(source, options);
+    layer.setId(/** @type {string} */ (options['id']));
+
+    if (options['explicitType'] != null) {
+      layer.setExplicitType(/** @type {string} */ (options['explicitType']));
+    }
+
+    return layer;
+  }
+
+  /**
+   * @param {OLVectorSource} source The layer source.
+   * @param {Object<string, *>} options
+   * @return {Heatmap}
    * @protected
    */
-  this.animate = false;
-};
-goog.inherits(plugin.heatmap.HeatmapLayerConfig, os.layer.config.AbstractLayerConfig);
+  getLayer(source, options) {
+    return new Heatmap({
+      'source': source,
+      'title': options['title']
+    });
+  }
 
+  /**
+   * @param {Object} options Layer configuration options.
+   * @return {OLVectorSource}
+   * @protected
+   *
+   * @suppress {checkTypes}
+   */
+  getSource(options) {
+    options = options || {};
 
-/**
- * Id for this layer config
- * @type {string}
- * @const
- */
-plugin.heatmap.HeatmapLayerConfig.ID = 'heatmap';
+    var sourceId = /** @type {string|undefined} */ (options['sourceId']);
+    options.features = heatmap.getSourceFeatures(sourceId);
+
+    return new OLVectorSource(options);
+  }
+}
 
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {Logger}
  */
-plugin.heatmap.HeatmapLayerConfig.LOGGER_ = goog.log.getLogger('plugin.heatmap.HeatmapLayerConfig');
+const logger = log.getLogger('plugin.heatmap.HeatmapLayerConfig');
 
 
-/**
- * @inheritDoc
- */
-plugin.heatmap.HeatmapLayerConfig.prototype.createLayer = function(options) {
-  this.initializeConfig(options);
-
-  var source = this.getSource(options);
-  var layer = this.getLayer(source, options);
-  layer.setId(/** @type {string} */ (options['id']));
-
-  if (options['explicitType'] != null) {
-    layer.setExplicitType(/** @type {string} */ (options['explicitType']));
-  }
-
-  return layer;
-};
-
-
-/**
- * @param {ol.source.Vector} source The layer source.
- * @param {Object<string, *>} options
- * @return {plugin.heatmap.Heatmap}
- * @protected
- */
-plugin.heatmap.HeatmapLayerConfig.prototype.getLayer = function(source, options) {
-  return new plugin.heatmap.Heatmap({
-    'source': source,
-    'title': options['title']
-  });
-};
-
-
-/**
- * @param {Object} options Layer configuration options.
- * @return {ol.source.Vector}
- * @protected
- *
- * @suppress {checkTypes}
- */
-plugin.heatmap.HeatmapLayerConfig.prototype.getSource = function(options) {
-  options = options || {};
-
-  var sourceId = /** @type {string|undefined} */ (options['sourceId']);
-  options.features = plugin.heatmap.getSourceFeatures(sourceId);
-
-  return new ol.source.Vector(options);
-};
+exports = HeatmapLayerConfig;
