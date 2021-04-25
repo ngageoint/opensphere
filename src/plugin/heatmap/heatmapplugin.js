@@ -1,46 +1,73 @@
-goog.provide('plugin.heatmap.HeatmapPlugin');
+goog.module('plugin.heatmap.HeatmapPlugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.DataManager');
-goog.require('os.layer.config.LayerConfigManager');
-goog.require('os.plugin.AbstractPlugin');
-goog.require('os.ui.action.Action');
-goog.require('os.ui.action.MenuOptions');
-goog.require('plugin.heatmap');
-goog.require('plugin.heatmap.HeatmapLayerConfig');
-goog.require('plugin.heatmap.menu');
+const DataEventType = goog.require('os.data.event.DataEventType');
+const VectorSource = goog.require('os.source.Vector');
 
+const DataManager = goog.require('os.data.DataManager');
+const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const {ID} = goog.require('plugin.heatmap');
+const HeatmapLayerConfig = goog.require('plugin.heatmap.HeatmapLayerConfig');
+const heatmapMenu = goog.require('plugin.heatmap.menu');
 
 
 /**
  * Adds the ability to generate a heatmap layer from any vector layer.
- *
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
  */
-plugin.heatmap.HeatmapPlugin = function() {
-  plugin.heatmap.HeatmapPlugin.base(this, 'constructor');
-  this.id = 'heatmap';
-};
-goog.inherits(plugin.heatmap.HeatmapPlugin, os.plugin.AbstractPlugin);
-goog.addSingletonGetter(plugin.heatmap.HeatmapPlugin);
+class HeatmapPlugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = ID;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  init() {
+    LayerConfigManager.getInstance().registerLayerConfig(ID, HeatmapLayerConfig);
+
+    // setup the layer action manager
+    heatmapMenu.setup();
+
+    // listen for source add so that we can set the action as supported
+    var dm = DataManager.getInstance();
+    dm.listen(DataEventType.SOURCE_ADDED, function(event) {
+      var source = event.source;
+      if (source && source instanceof VectorSource) {
+        source.setSupportsAction(heatmapMenu.EventType.GENERATE_HEATMAP, true);
+      }
+    });
+  }
+
+  /**
+   * Get the global instance.
+   * @return {!HeatmapPlugin}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new HeatmapPlugin();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {HeatmapPlugin} value
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
 
 /**
- * @inheritDoc
+ * Global instance.
+ * @type {HeatmapPlugin|undefined}
  */
-plugin.heatmap.HeatmapPlugin.prototype.init = function() {
-  os.layer.config.LayerConfigManager.getInstance().registerLayerConfig(plugin.heatmap.HeatmapLayerConfig.ID,
-      plugin.heatmap.HeatmapLayerConfig);
+let instance;
 
-  // setup the layer action manager
-  plugin.heatmap.menu.setup();
-
-  // listen for source add so that we can set the action as supported
-  var dm = os.dataManager;
-  dm.listen(os.data.event.DataEventType.SOURCE_ADDED, function(event) {
-    var source = event.source;
-    if (source && source instanceof os.source.Vector) {
-      source.setSupportsAction(plugin.heatmap.menu.EventType.GENERATE_HEATMAP, true);
-    }
-  });
-};
+exports = HeatmapPlugin;

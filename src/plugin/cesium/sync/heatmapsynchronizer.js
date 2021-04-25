@@ -13,6 +13,7 @@ const PropertyChange = goog.require('os.layer.PropertyChange');
 const events = goog.require('os.ol.events');
 const cesium = goog.require('plugin.cesium');
 const CesiumSynchronizer = goog.require('plugin.cesium.sync.CesiumSynchronizer');
+const {EXTENT_SCALE_FACTOR} = goog.require('plugin.heatmap');
 const HeatmapPropertyType = goog.require('plugin.heatmap.HeatmapPropertyType');
 const HeatmapField = goog.require('plugin.heatmap.HeatmapField');
 
@@ -126,7 +127,7 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
     if (img) {
       // scale back the extent so the image is positioned in the correct location
       var extent = this.layer.getExtent().slice();
-      scaleFromCenter(extent, 1 / plugin.heatmap.EXTENT_SCALE_FACTOR);
+      scaleFromCenter(extent, 1 / EXTENT_SCALE_FACTOR);
 
       this.activeLayer_ = this.cesiumLayers_.addImageryProvider(new Cesium.SingleTileImageryProvider({
         url: img,
