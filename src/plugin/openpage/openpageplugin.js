@@ -1,27 +1,56 @@
-goog.provide('plugin.openpage.Plugin');
+goog.module('plugin.openpage.Plugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.plugin.AbstractPlugin');
-goog.require('plugin.openpage.Handler');
-
-
-/**
- * Provides a Weather menu option when right-clicking the map. The resulting location is then
- * opened in a new tab with the configured weather URL.
- *
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
- */
-plugin.openpage.Plugin = function() {
-  plugin.openpage.Plugin.base(this, 'constructor');
-  this.id = plugin.openpage.ID;
-};
-goog.inherits(plugin.openpage.Plugin, os.plugin.AbstractPlugin);
-goog.addSingletonGetter(plugin.openpage.Plugin);
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const Peer = goog.require('os.xt.Peer');
+const {ID} = goog.require('plugin.openpage');
+const Handler = goog.require('plugin.openpage.Handler');
 
 
 /**
- * @inheritDoc
+ * Adds layers from XT messages sent by the addlayer.html page.
  */
-plugin.openpage.Plugin.prototype.init = function() {
-  os.xt.Peer.getInstance().addHandler(new plugin.openpage.Handler());
-};
+class Plugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = ID;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  init() {
+    Peer.getInstance().addHandler(new Handler());
+  }
+
+  /**
+   * Get the global instance.
+   * @return {!Plugin}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new Plugin();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {Plugin} value
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
+
+/**
+ * Global instance.
+ * @type {Plugin|undefined}
+ */
+let instance;
+
+exports = Plugin;
