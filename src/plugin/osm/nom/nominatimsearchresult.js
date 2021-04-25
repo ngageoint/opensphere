@@ -1,31 +1,34 @@
-goog.provide('plugin.osm.nom.SearchResult');
+goog.module('plugin.osm.nom.SearchResult');
 
-goog.require('os.ui.search.place.CoordinateResult');
-goog.require('plugin.osm.nom');
-goog.require('plugin.osm.nom.resultCardDirective');
-
+const style = goog.require('os.style');
+const StyleType = goog.require('os.style.StyleType');
+const CoordinateResult = goog.require('os.ui.search.place.CoordinateResult');
+const {LABEL_FIELD, VECTOR_CONFIG, getSearchScore} = goog.require('plugin.osm.nom');
+const {directiveTag: resultCardEl} = goog.require('plugin.osm.nom.ResultCardUI');
 
 
 /**
  * Search result card for Nominatim results.
- *
- * @param {ol.Feature} result The result feature.
- * @extends {os.ui.search.place.CoordinateResult}
- * @constructor
  */
-plugin.osm.nom.SearchResult = function(result) {
-  var score = plugin.osm.nom.getSearchScore(result);
-  plugin.osm.nom.SearchResult.base(this, 'constructor', result, plugin.osm.nom.LABEL_FIELD, score);
+class SearchResult extends CoordinateResult {
+  /**
+   * Constructor.
+   * @param {ol.Feature} result The result feature.
+   */
+  constructor(result) {
+    var score = getSearchScore(result);
+    super(result, LABEL_FIELD, score);
 
-  result.set(os.style.StyleType.FEATURE, plugin.osm.nom.VECTOR_CONFIG, true);
-  os.style.setFeatureStyle(result);
-};
-goog.inherits(plugin.osm.nom.SearchResult, os.ui.search.place.CoordinateResult);
+    result.set(StyleType.FEATURE, VECTOR_CONFIG, true);
+    style.setFeatureStyle(result);
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getSearchUI() {
+    return `<${resultCardEl} result="result"></${resultCardEl}>`;
+  }
+}
 
-/**
- * @inheritDoc
- */
-plugin.osm.nom.SearchResult.prototype.getSearchUI = function() {
-  return '<nominatimresultcard result="result"></nominatimresultcard>';
-};
+exports = SearchResult;

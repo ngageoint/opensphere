@@ -1,137 +1,140 @@
-goog.provide('plugin.osm.nom.NominatimParser');
+goog.module('plugin.osm.nom.NominatimParser');
 
-goog.require('goog.log');
-goog.require('ol.Feature');
-goog.require('ol.format.GeoJSON');
-goog.require('ol.geom.Point');
-goog.require('os.file.mime.text');
-goog.require('os.parse.IParser');
-
+const log = goog.require('goog.log');
+const {getUid} = goog.require('ol');
+const Feature = goog.require('ol.Feature');
+const GeoJSON = goog.require('ol.format.GeoJSON');
+const Point = goog.require('ol.geom.Point');
+const text = goog.require('os.file.mime.text');
+const IParser = goog.requireType('os.parse.IParser');
+const nom = goog.require('plugin.osm.nom');
 
 
 /**
  * Parses JSON results from the OSM Nominatim API.
  *
- * @implements {os.parse.IParser<ol.Feature|undefined>}
- * @constructor
+ * @implements {IParser<Feature|undefined>}
  */
-plugin.osm.nom.NominatimParser = function() {
+class NominatimParser {
   /**
-   * Raw JSON results from Nominatim.
-   * @type {Array|undefined}
-   * @protected
+   * Constructor.
    */
-  this.results = undefined;
+  constructor() {
+    /**
+     * Raw JSON results from Nominatim.
+     * @type {Array|undefined}
+     * @protected
+     */
+    this.results = undefined;
+
+    /**
+     * The index of the next result to parse.
+     * @type {number}
+     * @protected
+     */
+    this.nextIndex = 0;
+
+    /**
+     * The GeoJSON formatter.
+     * @type {GeoJSON}
+     * @protected
+     */
+    this.format = new GeoJSON();
+  }
 
   /**
-   * The index of the next result to parse.
-   * @type {number}
-   * @protected
+   * @inheritDoc
    */
-  this.nextIndex = 0;
+  setSource(source) {
+    this.cleanup();
+
+    if (source instanceof ArrayBuffer) {
+      source = text.getText(source) || null;
+    }
+
+    var results;
+    if (typeof source === 'string') {
+      try {
+        results = /** @type {Array} */ (JSON.parse(source));
+      } catch (e) {
+        log.error(NominatimParser.LOGGER_, 'Failed parsing response:', e);
+        results = undefined;
+      }
+    } else if (Array.isArray(source)) {
+      results = source;
+    }
+
+    if (results) {
+      this.results = results;
+    }
+  }
 
   /**
-   * The GeoJSON formatter.
-   * @type {ol.format.GeoJSON}
-   * @protected
+   * @inheritDoc
    */
-  this.format = new ol.format.GeoJSON();
-};
+  cleanup() {
+    this.results = undefined;
+    this.nextIndex = 0;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  hasNext() {
+    return !!this.results && this.results.length > this.nextIndex;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  parseNext() {
+    var result;
+
+    // unshift is very slow in browsers other than Chrome, so leave the array intact while parsing
+    var next = this.results[this.nextIndex++];
+    if (next) {
+      try {
+        // no need to show this in the UI, so remove it
+        delete next[nom.ResultField.BBOX];
+
+        var geoJson = /** @type {Object|undefined} */ (next[nom.ResultField.GEOJSON]);
+        if (geoJson) {
+          // parse the geometry from the provided GeoJSON
+          var geometry = this.format.readGeometry(geoJson);
+          if (geometry) {
+            geometry.osTransform();
+            next['geometry'] = geometry;
+          }
+
+          // no longer need the source GeoJSON, so remove it
+          delete next[nom.ResultField.GEOJSON];
+        } else if (next[nom.ResultField.LON] && next[nom.ResultField.LAT]) {
+          // parse a point from lat/lon
+          var lon = Number(next[nom.ResultField.LON]);
+          var lat = Number(next[nom.ResultField.LAT]);
+          if (!isNaN(lon) && !isNaN(lat)) {
+            next['geometry'] = new Point([lon, lat]);
+          }
+        }
+
+        result = new Feature(next);
+        result.setId(getUid(result) + '');
+      } catch (e) {
+        log.error(NominatimParser.LOGGER_, 'Failed reading feature:', e);
+      }
+    }
+
+    return result;
+  }
+}
 
 /**
  * Logger for plugin.osm.nom.NominatimParser
- * @type {goog.log.Logger}
+ * @type {log.Logger}
  * @private
  * @const
  */
-plugin.osm.nom.NominatimParser.LOGGER_ = goog.log.getLogger('plugin.osm.nom.NominatimParser');
+NominatimParser.LOGGER_ = log.getLogger('plugin.osm.nom.NominatimParser');
 
 
-/**
- * @inheritDoc
- */
-plugin.osm.nom.NominatimParser.prototype.setSource = function(source) {
-  this.cleanup();
-
-  if (source instanceof ArrayBuffer) {
-    source = os.file.mime.text.getText(source) || null;
-  }
-
-  var results;
-  if (typeof source === 'string') {
-    try {
-      results = /** @type {Array} */ (JSON.parse(source));
-    } catch (e) {
-      goog.log.error(plugin.osm.nom.NominatimParser.LOGGER_, 'Failed parsing response:', e);
-      results = undefined;
-    }
-  } else if (Array.isArray(source)) {
-    results = source;
-  }
-
-  if (results) {
-    this.results = results;
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.osm.nom.NominatimParser.prototype.cleanup = function() {
-  this.results = undefined;
-  this.nextIndex = 0;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.osm.nom.NominatimParser.prototype.hasNext = function() {
-  return !!this.results && this.results.length > this.nextIndex;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.osm.nom.NominatimParser.prototype.parseNext = function() {
-  var result;
-
-  // unshift is very slow in browsers other than Chrome, so leave the array intact while parsing
-  var next = this.results[this.nextIndex++];
-  if (next) {
-    try {
-      // no need to show this in the UI, so remove it
-      delete next[plugin.osm.nom.ResultField.BBOX];
-
-      var geoJson = /** @type {Object|undefined} */ (next[plugin.osm.nom.ResultField.GEOJSON]);
-      if (geoJson) {
-        // parse the geometry from the provided GeoJSON
-        var geometry = this.format.readGeometry(geoJson);
-        if (geometry) {
-          geometry.osTransform();
-          next['geometry'] = geometry;
-        }
-
-        // no longer need the source GeoJSON, so remove it
-        delete next[plugin.osm.nom.ResultField.GEOJSON];
-      } else if (next[plugin.osm.nom.ResultField.LON] && next[plugin.osm.nom.ResultField.LAT]) {
-        // parse a point from lat/lon
-        var lon = Number(next[plugin.osm.nom.ResultField.LON]);
-        var lat = Number(next[plugin.osm.nom.ResultField.LAT]);
-        if (!isNaN(lon) && !isNaN(lat)) {
-          next['geometry'] = new ol.geom.Point([lon, lat]);
-        }
-      }
-
-      result = new ol.Feature(next);
-      result.setId(ol.getUid(result) + '');
-    } catch (e) {
-      goog.log.error(plugin.osm.nom.NominatimParser.LOGGER_, 'Failed reading feature:', e);
-    }
-  }
-
-  return result;
-};
+exports = NominatimParser;

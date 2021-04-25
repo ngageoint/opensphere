@@ -1,15 +1,21 @@
 goog.require('goog.net.EventType');
 goog.require('goog.net.XhrIo');
+goog.require('ol.Feature');
 goog.require('plugin.osm.nom.NominatimParser');
 
 describe('plugin.osm.nom.NominatimParser', function() {
-  var parser = new plugin.osm.nom.NominatimParser();
+  const EventType = goog.module.get('goog.net.EventType');
+  const XhrIo = goog.module.get('goog.net.XhrIo');
+  const Feature = goog.module.get('ol.Feature');
+  const NominatimParser = goog.module.get('plugin.osm.nom.NominatimParser');
+
+  var parser = new NominatimParser();
   var response;
 
   var loadResponse = function() {
     if (!response) {
-      var xhr = new goog.net.XhrIo();
-      xhr.listen(goog.net.EventType.SUCCESS, function() {
+      var xhr = new XhrIo();
+      xhr.listen(EventType.SUCCESS, function() {
         response = xhr.getResponse();
       }, false);
 
@@ -40,7 +46,7 @@ describe('plugin.osm.nom.NominatimParser', function() {
     while (parser.hasNext()) {
       next = parser.parseNext();
       expect(next).toBeDefined();
-      expect(next instanceof ol.Feature).toBe(true);
+      expect(next instanceof Feature).toBe(true);
       expect(next.getGeometry()).toBeDefined();
 
       numResults++;

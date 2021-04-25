@@ -1,8 +1,10 @@
-goog.provide('plugin.osm.nom.ResultCardCtrl');
-goog.provide('plugin.osm.nom.resultCardDirective');
+goog.module('plugin.osm.nom.ResultCardUI');
 
-goog.require('os.ui.Module');
-goog.require('os.ui.search.FeatureResultCardCtrl');
+const googString = goog.require('goog.string');
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const FeatureResultCardCtrl = goog.require('os.ui.search.FeatureResultCardCtrl');
+const nom = goog.require('plugin.osm.nom');
 
 
 /**
@@ -10,81 +12,92 @@ goog.require('os.ui.search.FeatureResultCardCtrl');
  *
  * @return {angular.Directive}
  */
-plugin.osm.nom.resultCardDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    templateUrl: os.ROOT + 'views/plugin/osm/nom/nominatimresultcard.html',
-    controller: plugin.osm.nom.ResultCardCtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  templateUrl: ROOT + 'views/plugin/osm/nom/nominatimresultcard.html',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'nominatimresultcard';
 
 
 /**
  * Register the nominatimresultcard directive.
  */
-os.ui.Module.directive('nominatimresultcard', [plugin.osm.nom.resultCardDirective]);
+Module.directive('nominatimresultcard', [directive]);
 
 
 /**
  * Controller for the nominatimresultcard directive.
- *
- * @param {!angular.Scope} $scope The Angular scope.
- * @param {!angular.JQLite} $element The root DOM element.
- * @constructor
- * @extends {os.ui.search.FeatureResultCardCtrl}
- * @ngInject
+ * @unrestricted
  */
-plugin.osm.nom.ResultCardCtrl = function($scope, $element) {
-  plugin.osm.nom.ResultCardCtrl.base(this, 'constructor', $scope, $element);
-
+class Controller extends FeatureResultCardCtrl {
   /**
-   * Details to display in the result card.
-   * @type {string}
+   * Constructor.
+   * @param {!angular.Scope} $scope The Angular scope.
+   * @param {!angular.JQLite} $element The root DOM element.
+   * @ngInject
    */
-  this['details'] = '';
+  constructor($scope, $element) {
+    super($scope, $element);
 
-  var details = [];
+    /**
+     * Details to display in the result card.
+     * @type {string}
+     */
+    this['details'] = '';
 
-  var category = this.getField(plugin.osm.nom.ResultField.CATEGORY);
-  var type = this.getField(plugin.osm.nom.ResultField.TYPE);
-  if (category && type) {
-    category = goog.string.toTitleCase(category);
-    type = goog.string.toTitleCase(type);
+    var details = [];
 
-    details.push(category + ' (' + type + ')');
-  }
+    var category = this.getField(nom.ResultField.CATEGORY);
+    var type = this.getField(nom.ResultField.TYPE);
+    if (category && type) {
+      category = googString.toTitleCase(category);
+      type = googString.toTitleCase(type);
 
-  var extraTags = /** @type {Object|undefined} */ (this.feature.get(plugin.osm.nom.ResultField.EXTRA_TAGS));
-  if (extraTags) {
-    var place = /** @type {string|undefined} */ (extraTags[plugin.osm.nom.ExtraDataField.PLACE]);
-    if (place) {
-      details.push(goog.string.toTitleCase(place));
+      details.push(category + ' (' + type + ')');
     }
 
-    var population = /** @type {string|undefined} */ (extraTags[plugin.osm.nom.ExtraDataField.POPULATION]);
-    if (population) {
-      var popNum = Number(population);
-      if (!isNaN(popNum)) {
-        details.push('Population: ' + popNum.toLocaleString());
-      } else {
-        details.push('Population: ' + population);
+    var extraTags = /** @type {Object|undefined} */ (this.feature.get(nom.ResultField.EXTRA_TAGS));
+    if (extraTags) {
+      var place = /** @type {string|undefined} */ (extraTags[nom.ExtraDataField.PLACE]);
+      if (place) {
+        details.push(googString.toTitleCase(place));
+      }
+
+      var population = /** @type {string|undefined} */ (extraTags[nom.ExtraDataField.POPULATION]);
+      if (population) {
+        var popNum = Number(population);
+        if (!isNaN(popNum)) {
+          details.push('Population: ' + popNum.toLocaleString());
+        } else {
+          details.push('Population: ' + population);
+        }
       }
     }
+
+    this['details'] = details.join(' - ');
   }
 
-  this['details'] = details.join(' - ');
-};
-goog.inherits(plugin.osm.nom.ResultCardCtrl, os.ui.search.FeatureResultCardCtrl);
+  /**
+   * Get the title to display on the card.
+   *
+   * @return {string} The title.
+   * @export
+   */
+  getTitle() {
+    return /** @type {string} */ (this.feature.get(nom.ResultField.DISPLAY_NAME)) || 'Unknown Result';
+  }
+}
 
-
-/**
- * Get the title to display on the card.
- *
- * @return {string} The title.
- * @export
- */
-plugin.osm.nom.ResultCardCtrl.prototype.getTitle = function() {
-  return /** @type {string} */ (this.feature.get(plugin.osm.nom.ResultField.DISPLAY_NAME) || 'Unknown Result');
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
