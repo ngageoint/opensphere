@@ -1,13 +1,16 @@
-goog.provide('plugin.openpage');
+goog.module('plugin.openpage');
 
 /**
- * @const
  * @type {string}
  */
-plugin.openpage.ID = 'openpage';
+const ID = 'openpage';
 
 /**
- * @const
  * @type {string}
  */
-plugin.openpage.TYPE = 'addLayer';
+const TYPE = 'addLayer';
+
+exports = {
+  ID,
+  TYPE
+};
