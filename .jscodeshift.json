@@ -2,17 +2,20 @@
   "globals": {
     "os.alertManager": {"require": "os.alert.AlertManager", "singleton": true},
     "os.areaManager": {"require": "os.query.AreaManager", "singleton": true},
-    "os.ui.areaManager": {"require": "os.query.AreaManager", "singleton": true},
+    "os.commandStack": {"require": "os.command.CommandProcessor", "singleton": true},
+    "os.dataManager": {"require": "os.data.DataManager", "singleton": true},
     "os.dispatcher": {"require": "os.Dispatcher", "singleton": true},
     "os.filterManager": {"require": "os.query.FilterManager", "singleton": true},
-    "os.ui.filterManager": {"require": "os.query.FilterManager", "singleton": true},
     "os.layerConfigManager": {"require": "os.layer.config.LayerConfigManager", "singleton": true},
+    "os.map.mapContainer": {"require": "os.MapContainer", "singleton": true},
+    "os.osDataManager": {"require": "os.data.OSDataManager", "singleton": true},
+    "os.queryManager": {"require": "os.query.QueryManager", "singleton": true},
     "os.settings": {"require": "os.config.Settings", "singleton": true},
     "os.settingsManager": {"require": "os.ui.config.SettingsManager", "singleton": true},
-    "os.map.mapContainer": {"require": "os.MapContainer", "singleton": true},
-    "os.queryManager": {"require": "os.query.QueryManager", "singleton": true},
-    "os.ui.queryManager": {"require": "os.query.QueryManager", "singleton": true},
-    "os.ui.metricsManager": {"require": "os.ui.metrics.MetricsManager", "singleton": true}
+    "os.ui.areaManager": {"require": "os.query.AreaManager", "singleton": true},
+    "os.ui.filterManager": {"require": "os.query.FilterManager", "singleton": true},
+    "os.ui.metricsManager": {"require": "os.ui.metrics.MetricsManager", "singleton": true},
+    "os.ui.queryManager": {"require": "os.query.QueryManager", "singleton": true}
   },
   "globalRootNamespaces": [
     "plugin",
@@ -49,6 +52,9 @@
 
     "os.alertManager": "AlertManager",
     "os.array": "osArray",
+    "os.commandStack": "CommandProcessor",
+    "os.dataManager": "DataManager",
+    "os.osDataManager": "OSDataManager",
     "os.extent": "osExtent",
     "os.feature": "osFeature",
     "os.file": "osFile",
