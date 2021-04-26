@@ -7,6 +7,7 @@ goog.require('goog.async.Delay');
 goog.require('goog.dom.ViewportSizeMonitor');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
+goog.require('goog.events.KeyEvent');
 goog.require('goog.events.KeyHandler');
 goog.require('goog.log');
 goog.require('ol.array');
@@ -236,7 +237,7 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
   // If its a closeable window modal, let ESC close it
   if ($scope['showClose'] && $scope['modal']) {
     this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
-    this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+    this.keyHandler_.listen(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
   }
 
   // listen for mousedown so z-index can be updated
@@ -302,7 +303,7 @@ os.ui.WindowCtrl.prototype.disposeInternal = function() {
   }
 
   if (this.keyHandler_) {
-    this.keyHandler_.unlisten(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+    this.keyHandler_.unlisten(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
     this.keyHandler_.dispose();
     this.keyHandler_ = null;
   }

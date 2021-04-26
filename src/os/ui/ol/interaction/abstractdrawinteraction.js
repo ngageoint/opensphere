@@ -3,6 +3,7 @@ goog.provide('os.ui.ol.interaction.AbstractDraw');
 goog.require('goog.dom');
 goog.require('goog.events.BrowserEvent');
 goog.require('goog.events.KeyCodes');
+goog.require('goog.events.KeyEvent');
 goog.require('goog.events.KeyHandler');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
@@ -216,7 +217,7 @@ os.ui.ol.interaction.AbstractDraw.prototype.setActive = function(active) {
  */
 os.ui.ol.interaction.AbstractDraw.prototype.handleEvent = function(mapBrowserEvent) {
   var stopEvent = false;
-  if (mapBrowserEvent.type == goog.events.KeyHandler.EventType.KEY) {
+  if (mapBrowserEvent.type == goog.events.KeyEvent.EventType.KEY) {
     var browserEvent = new goog.events.BrowserEvent(mapBrowserEvent.originalEvent);
     stopEvent = browserEvent.keyCode == goog.events.KeyCodes.ESC;
 
@@ -242,7 +243,7 @@ os.ui.ol.interaction.AbstractDraw.prototype.begin = function(mapBrowserEvent) {
   if (map && !this.drawing) {
     this.drawing = true;
     this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument(), true);
-    this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.onKey, true, this);
+    this.keyHandler_.listen(goog.events.KeyEvent.EventType.KEY, this.onKey, true, this);
     map.getView().setHint(ol.ViewHint.INTERACTING, 1);
     this.dispatchEvent(new os.ui.draw.DrawEvent(os.ui.draw.DrawEventType.DRAWSTART,
         mapBrowserEvent.coordinate));
@@ -311,7 +312,7 @@ os.ui.ol.interaction.AbstractDraw.prototype.cleanup = function() {
   }
 
   if (this.keyHandler_) {
-    this.keyHandler_.unlisten(goog.events.KeyHandler.EventType.KEY, this.onKey, true, this);
+    this.keyHandler_.unlisten(goog.events.KeyEvent.EventType.KEY, this.onKey, true, this);
     this.keyHandler_.dispose();
     this.keyHandler_ = null;
   }

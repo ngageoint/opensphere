@@ -2,6 +2,7 @@ goog.provide('os.ui.draw.DrawPickerCtrl');
 goog.provide('os.ui.draw.drawPickerDirective');
 
 goog.require('goog.Disposable');
+goog.require('goog.events.KeyEvent');
 goog.require('goog.events.KeyHandler');
 goog.require('ol.geom.Point');
 goog.require('os');
@@ -126,7 +127,7 @@ os.ui.draw.DrawPickerCtrl = function($scope, $element) {
    * @protected
    */
   this.keyHandler = new goog.events.KeyHandler(goog.dom.getDocument());
-  this.keyHandler.listen(goog.events.KeyHandler.EventType.KEY, this.onKey, false, this);
+  this.keyHandler.listen(goog.events.KeyEvent.EventType.KEY, this.onKey, false, this);
 
   if ($scope['menu']) {
     /**

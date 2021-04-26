@@ -52,7 +52,7 @@ os.ui.Module.directive('wheelDate', [os.ui.datetime.wheelDateDirective]);
 os.ui.datetime.newToday_ = function(id) {
   os.ui.datetime.oldToday_.call(this, id);
   this['_selectDate'](id);
-  $(id).blur();
+  $(id).trigger('blur');
 };
 
 

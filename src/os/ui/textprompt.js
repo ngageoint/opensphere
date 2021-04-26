@@ -4,6 +4,7 @@ goog.provide('os.ui.textPromptDirective');
 goog.require('goog.async.Delay');
 goog.require('goog.dom');
 goog.require('goog.events.KeyCodes');
+goog.require('goog.events.KeyEvent');
 goog.require('goog.events.KeyHandler');
 goog.require('os.ui.Module');
 goog.require('os.ui.window');
@@ -51,7 +52,7 @@ os.ui.TextPromptCtrl = function($scope, $element) {
    * @private
    */
   this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
-  this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+  this.keyHandler_.listen(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
   this.delay_ = new goog.async.Delay(this.select_, 50, this);
   $scope.$emit(os.ui.WindowEventType.READY);
   $scope.$watch('value', this.onValueChange_.bind(this));

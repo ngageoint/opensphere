@@ -4,6 +4,7 @@ goog.require('goog.Uri');
 goog.require('goog.async.Deferred');
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
+goog.require('goog.events.KeyEvent');
 goog.require('goog.events.KeyHandler');
 goog.require('ol.ViewHint');
 goog.require('os');
@@ -595,7 +596,7 @@ os.MainCtrl.prototype.onPluginsLoaded = function(opt_e) {
   os.ui.onboarding.OnboardingManager.getInstance().displayOnboarding(os.ROOT + 'onboarding/intro.json');
 
   // set up key handlers
-  this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+  this.keyHandler_.listen(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
 };
 
 
@@ -761,7 +762,7 @@ os.MainCtrl.prototype.handleKeyEvent_ = function(event) {
         if (ctrlOr) {
           os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.SEARCH_KB, 1);
           event.preventDefault();
-          $('.search-box .search-query').focus();
+          $('.search-box .search-query').trigger('focus');
         }
         break;
       case goog.events.KeyCodes.L:

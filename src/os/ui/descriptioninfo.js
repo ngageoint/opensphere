@@ -178,7 +178,7 @@ os.ui.SlickDescriptionAsyncRenderer = function(elem, row, dataContext, colDef) {
       var $elem = $(elem);
       var doc = elem.ownerDocument;
       var myWin = doc.defaultView || doc.parentWindow;
-      $elem.click(function() {
+      $elem.on('click', function() {
         if (os.inIframe(myWin)) {
           os.ui.launchDescriptionInfo(id, desc);
         } else {

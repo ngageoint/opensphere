@@ -205,7 +205,7 @@ os.ui.SlickPropertiesAsyncRenderer = function(elem, row, dataContext, colDef) {
       var doc = elem.ownerDocument;
       var myWin = doc.defaultView || doc.parentWindow;
       goog.object.forEach(properties, os.ui.processProperty);
-      $elem.click(function() {
+      $elem.on('click', function() {
         if (os.inIframe(myWin)) {
           os.ui.launchPropertyInfo(id, properties);
         } else {

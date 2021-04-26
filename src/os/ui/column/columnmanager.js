@@ -1,6 +1,7 @@
 goog.provide('os.ui.column.ColumnManagerCtrl');
 goog.provide('os.ui.column.columnManagerDirective');
 
+goog.require('goog.events.KeyEvent');
 goog.require('goog.events.KeyHandler');
 goog.require('goog.string');
 goog.require('ol.array');
@@ -189,9 +190,9 @@ os.ui.column.ColumnManagerCtrl.prototype.destroy_ = function() {
  */
 os.ui.column.ColumnManagerCtrl.prototype.listenForKeys = function(enableListen) {
   if (enableListen) {
-    this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+    this.keyHandler_.listen(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
   } else {
-    this.keyHandler_.unlisten(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+    this.keyHandler_.unlisten(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
   }
 };
 

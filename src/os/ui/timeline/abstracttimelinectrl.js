@@ -2,6 +2,7 @@ goog.provide('os.ui.timeline.AbstractTimelineCtrl');
 
 goog.require('goog.async.Delay');
 goog.require('goog.events.KeyCodes');
+goog.require('goog.events.KeyEvent');
 goog.require('goog.events.KeyHandler');
 goog.require('goog.math.Range');
 goog.require('os.config.Settings');
@@ -236,7 +237,7 @@ os.ui.timeline.AbstractTimelineCtrl = function($scope, $element, $timeout) {
    * @private
    */
   this.keyHandler_ = new goog.events.KeyHandler(this.element[0]);
-  this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.onKey, false, this);
+  this.keyHandler_.listen(goog.events.KeyEvent.EventType.KEY, this.onKey, false, this);
 
   /**
    * @type {os.ui.menu.Menu|undefined}
