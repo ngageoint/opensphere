@@ -1,6 +1,8 @@
 <div class="c-ogcserver-form flex-fill w-100 d-flex flex-column">
   <div class="modal-body container flex-fill">
-    <ogcserverform></ogcserverform>
+    <form name="ogcServerForm" ng-submit="ctrl.accept()">
+      <ogcserverform></ogcserverform>
+    </form>
   </div>
   <div class="modal-footer d-flex">
     <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="form.$invalid || testing">

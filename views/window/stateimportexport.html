@@ -37,7 +37,7 @@
         </div>
       </div>
 
-      <input type="submit" hidden>
+      <button type="submit" hidden></button>
 
       <div class="container-fluid">
         <div class="row" ng-if="stateForm.showClear && !stateForm.isSaving">
@@ -75,7 +75,7 @@
                              x-content="stateForm.getDescription(s)"></popover>
                       </label>
                     </div>
-                    <div ng-if="!s.supported" class="d-flex" style="justify-content: space-between">
+                    <div ng-if="!s.supported" class="d-flex justify-content-between">
                       <div><i class="fa fa-lg fa-times text-danger mr-1"></i> {{stateForm.getTitle(s)}}</div>
                       <popover ng-show="help" class="pt-1" icon="'fa fa-lg fa-question-circle-o'"
                           x-pos="'right'" x-title="stateForm.getTitle(s)"
@@ -97,7 +97,7 @@
       <i class="fa fa-check"></i>
       OK
     </button>
-    <button class="btn btn-secondary" ng-click="stateForm.close()">
+    <button class="btn btn-secondary" type="button" ng-click="stateForm.close()">
       <i class="fa fa-ban"></i>
       Cancel
     </button>

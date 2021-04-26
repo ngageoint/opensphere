@@ -1,13 +1,15 @@
 <div class="flex-fill w-100 d-flex flex-column">
   <div class="modal-body container flex-fill">
-    <singleurlform></singleurlform>
+    <form name="singleUrlForm" ng-submit="ctrl.accept()">
+      <singleurlform></singleurlform>
+    </form>
   </div>
   <div class="modal-footer d-flex">
     <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="form.$invalid || testing">
       <i class="fa fa-check"></i>
       {{edit ? 'Save' : 'OK'}}
     </button>
-    <button class="btn btn-secondary" ng-click="ctrl.close()">
+    <button class="btn btn-secondary" type="button" ng-click="ctrl.close()">
       <i class="fa fa-ban"></i>
       Cancel
     </button>
