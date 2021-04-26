@@ -1,16 +1,11 @@
 goog.module('plugin.track.ConfirmTrackUI');
 goog.module.declareLegacyNamespace();
 
-const os = goog.require('os');
-const WindowEventType = goog.require('os.ui.WindowEventType');
+const {ROOT} = goog.require('os');
 const KMLField = goog.require('plugin.file.kml.KMLField');
-const pluginTrack = goog.require('plugin.track');
-
-const Promise = goog.require('goog.Promise');
-const osTrack = goog.require('os.track');
 const Module = goog.require('os.ui.Module');
-const osWindow = goog.require('os.ui.window');
 const PlacesManager = goog.require('plugin.places.PlacesManager');
+const WindowEventType = goog.require('os.ui.WindowEventType');
 
 const OlFeature = goog.requireType('ol.Feature');
 
@@ -22,7 +17,7 @@ const OlFeature = goog.requireType('ol.Feature');
  */
 const directive = () => ({
   restrict: 'E',
-  templateUrl: os.ROOT + 'views/plugin/track/confirmtrack.html',
+  templateUrl: ROOT + 'views/plugin/track/confirmtrack.html',
   controller: Controller,
   controllerAs: 'confirm'
 });
@@ -83,53 +78,6 @@ class Controller {
     return trackName;
   }
 }
-
-/**
- * Prompt the user to choose a track.
- *
- * @return {!Promise}
- */
-pluginTrack.promptForTrack = function() {
-  return new Promise(function(resolve, reject) {
-    pluginTrack.launchConfirmTrack(resolve, reject);
-  });
-};
-
-
-/**
- * Launch a dialog prompting the user to pick a color.
- *
- * @param {function(!OlFeature)} confirm The confirm callback
- * @param {function(*)} cancel The cancel callback
- */
-pluginTrack.launchConfirmTrack = function(confirm, cancel) {
-  var scopeOptions = {
-    'confirmCallback': confirm,
-    'cancelCallback': cancel,
-    'yesText': 'OK',
-    'yesIcon': 'fa fa-check',
-    'yesButtonClass': 'btn-primary',
-    'noText': 'Cancel',
-    'noIcon': 'fa fa-ban',
-    'noButtonClass': 'btn-secondary'
-  };
-
-  var windowOptions = {
-    'label': 'Choose a Track',
-    'icon': 'fa ' + osTrack.ICON,
-    'x': 'center',
-    'y': 'center',
-    'width': 300,
-    'min-width': 200,
-    'max-width': 1200,
-    'height': 'auto',
-    'modal': 'true',
-    'show-close': 'false'
-  };
-
-  var template = '<confirm><confirmtrack></confirmtrack></confirm>';
-  osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
-};
 
 exports = {
   Controller,

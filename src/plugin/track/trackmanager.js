@@ -1,6 +1,8 @@
 goog.module('plugin.track.TrackManager');
 goog.module.declareLegacyNamespace();
 
+goog.require('plugin.track.ConfirmTrackUI');
+
 const array = goog.require('ol.array');
 const asserts = goog.require('goog.asserts');
 const dispose = goog.require('goog.dispose');
@@ -15,6 +17,7 @@ const osObject = goog.require('os.object');
 const osMap = goog.require('os.map');
 const osStyle = goog.require('os.style');
 const osTrack = goog.require('os.track');
+const osWindow = goog.require('os.ui.window');
 const pluginTrack = goog.require('plugin.track');
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
 const EventTarget = goog.require('goog.events.EventTarget');
@@ -288,6 +291,53 @@ class TrackManager extends EventTarget {
     }
 
     return olExtent.boundingExtent(coordinates);
+  }
+
+  /**
+   * Prompt the user to choose a track.
+   *
+   * @return {!Promise}
+   */
+  promptForTrack() {
+    // use a regular promise
+    return new Promise(function(resolve, reject) {
+      this.launchConfirmTrack(resolve, reject);
+    }.bind(this));
+  }
+
+  /**
+   * Launch a dialog prompting the user to pick a color.
+   *
+   * @param {function(!OlFeature)} confirm The confirm callback
+   * @param {function(*)} cancel The cancel callback
+   */
+  launchConfirmTrack(confirm, cancel) {
+    var scopeOptions = {
+      'confirmCallback': confirm,
+      'cancelCallback': cancel,
+      'yesText': 'OK',
+      'yesIcon': 'fa fa-check',
+      'yesButtonClass': 'btn-primary',
+      'noText': 'Cancel',
+      'noIcon': 'fa fa-ban',
+      'noButtonClass': 'btn-secondary'
+    };
+
+    var windowOptions = {
+      'label': 'Choose a Track',
+      'icon': 'fa ' + osTrack.ICON,
+      'x': 'center',
+      'y': 'center',
+      'width': 300,
+      'min-width': 200,
+      'max-width': 1200,
+      'height': 'auto',
+      'modal': 'true',
+      'show-close': 'false'
+    };
+
+    var template = '<confirm><confirmtrack></confirmtrack></confirm>';
+    osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 
   /**

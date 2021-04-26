@@ -1,8 +1,6 @@
 goog.module('plugin.track.menu');
 goog.module.declareLegacyNamespace();
 
-goog.require('plugin.track.ConfirmTrackUI');
-
 const asserts = goog.require('goog.asserts');
 const OLVectorLayer = goog.require('ol.layer.Vector');
 const LayerNode = goog.require('os.data.LayerNode');
@@ -722,7 +720,8 @@ const handleAddCreateTrackEvent_ = function(event) {
           });
         });
       } else if (event.type.startsWith(EventType.ADD_TO)) {
-        pluginTrack.promptForTrack().then(function(track) {
+        const tm = TrackManager.getInstance();
+        tm.promptForTrack().then(function(track) {
           if (track) {
             const metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
             osTrack.addToTrack({
