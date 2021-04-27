@@ -18,6 +18,7 @@ goog.require('os.mixin.fixInjectorInvoke');
 goog.require('os.net');
 goog.require('os.net.CertNazi');
 goog.require('os.net.ProxyHandler');
+goog.require('os.net.ProxylessDomainHandler');
 goog.require('os.net.RequestHandlerFactory');
 goog.require('os.plugin.PluginManager');
 goog.require('os.ui');
@@ -240,6 +241,8 @@ os.ui.AbstractMainCtrl.prototype.initialize = function() {
   // configure the proxy via settings & only add the handler if it's successful
   if (os.net.ProxyHandler.configure(/** @type {?Object} */ (os.settings.get(['proxy'])))) {
     os.net.RequestHandlerFactory.addHandler(os.net.ProxyHandler);
+  } else {
+    os.net.RequestHandlerFactory.addHandler(os.net.ProxylessDomainHandler);
   }
 
   // set if mixed content should be enabled
