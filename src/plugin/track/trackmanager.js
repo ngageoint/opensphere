@@ -19,6 +19,8 @@ const osStyle = goog.require('os.style');
 const osTrack = goog.require('os.track');
 const osWindow = goog.require('os.ui.window');
 const pluginTrack = goog.require('plugin.track');
+const AlertManager = goog.require('os.alert.AlertManager');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
 const EventTarget = goog.require('goog.events.EventTarget');
 const Fields = goog.require('os.Fields');
@@ -36,8 +38,8 @@ const TrackInteraction = goog.require('plugin.track.TrackInteraction');
 
 const Logger = goog.requireType('goog.log.Logger');
 const OlFeature = goog.requireType('ol.Feature');
-// const OlCoordinate = goog.requireType('ol.Coordinate');
 const OsInterpolateConfig = goog.requireType('os.interpolate.Config');
+
 
 /**
  * @type {string}
@@ -367,20 +369,58 @@ class TrackManager extends EventTarget {
    * @param {!TrackInteraction} interaction
    * @param {!OlFeature} track
    * @param {Array<Array<number>>} coords
+   * @private
    */
   interactionCallback_(interaction, track, coords) {
     interaction.setEnabled(false);
     interaction.setActive(false);
 
     if (track && coords.length > 0) {
-      const name = track.get(Fields.NAME) || track.get(Fields.NAME.toLowerCase());
-      const isPredictedTrack = (name && name.indexOf(PREDICTED_TRACK_LABEL) >= 0);
-      const coordinates = [];
+      const name = /** @type {string|undefined} */ (track.get(Fields.NAME) || track.get(Fields.NAME.toLowerCase()));
+      const isPredictedTrack = /** @type {boolean} */ (name && name.indexOf(PREDICTED_TRACK_LABEL) >= 0);
+      const time = this.getTime_(track, coords);
 
-      let alt = coords[0][2];
-      let time;
-      if (coords[0].length == 3) {
-        time = track.get(RecordField.TIME);
+      if (!time) {
+        // fail gracefully
+        var msg = 'Track creation failed. There were no valid timestamps from which to create a track.';
+        AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.WARNING);
+      } else {
+        // build the coordinates, interpolating as necessary
+        const coordinates = this.getCoordinates_(coords, isPredictedTrack);
+        if (isPredictedTrack) {
+          osTrack.addToTrack(/** @type {osTrack.AddOptions} */ ({
+            track,
+            coordinates
+          }));
+        } else {
+          this.addTrack_(interaction, track, coordinates, name);
+        }
+      }
+    }
+  }
+
+  /**
+   * Fill in the time part of the coordinates
+   * @param {!OlFeature} track
+   * @param {Array<Array<number>>} coords
+   * @return {number|undefined}
+   * @private
+   */
+  getTime_(track, coords) {
+    let time;
+    if (coords[0].length < 4) {
+      // add a 0 altitude if need be
+      if (coords[0].length < 3) {
+        coords.forEach((coord) => {
+          if (coord.length == 2) {
+            coord.push(0);
+          }
+        });
+      }
+
+      // get the starting time
+      time = track.get(RecordField.TIME);
+      if (time) {
         if (time instanceof TimeInstant) {
           time = time.getStart();
         } else if (time instanceof TimeRange) {
@@ -389,73 +429,98 @@ class TrackManager extends EventTarget {
           time = /** @type {number} */ (time);
         }
         coords[0].push(time);
-      } else {
-        time = /** @type {number} */ (coords[0][3]);
       }
+    } else {
+      time = coords[0][3];
+    }
+    return /** @type {number} */ (time);
+  }
 
-      for (let i = 1; i < coords.length; i++) {
-        alt += 0; // TODO fix alt. for now, just repeat the starting altitude
-        time += 3600000; // TODO fix time. for now, increment time by one hour
+  /**
+   * Fill in the Coordinates
+   * @param {Array<Array<number>>} coords
+   * @param {boolean} isPredictedTrack
+   * @return {Array<ol.Coordinate>}
+   * @private
+   */
+  getCoordinates_(coords, isPredictedTrack) {
+    const coordinates = /** @type {Array<ol.Coordinate>} */ ([]);
+    let alt = coords[0][2];
+    let time = coords[0][3];
 
-        // take the Lat/Lon from coord, but splice in altitude and time
-        const coord = coords[i];
-        if (coord) {
-          coord.splice(2, 2, alt, time);
-          coordinates.push(coord);
-        }
+    // add the end of the old track as the start of the predicted one
+    coordinates.push(coords[0]);
+
+    for (let i = 1; i < coords.length; i++) {
+      alt += 0; // TODO fix alt. for now, just repeat the starting altitude
+      time += 3600000; // TODO fix time. for now, increment time by one hour
+
+      // take the Lat/Lon from coord, but splice in altitude and time
+      const coord = coords[i];
+      if (coord) {
+        coord.splice(2, 2, alt, time);
+        coordinates.push(coord);
       }
+    }
 
-      if (isPredictedTrack) {
-        osTrack.addToTrack({
-          track,
-          coordinates
-        });
-      } else {
-        this.nextPredictedTrack++;
+    // fill in points so Tracks can draw with Interpolation.Method = NONE
+    osInterpolate.interpolateLineWithConfig(
+        coordinates,
+        /** @type {OsInterpolateConfig} */ ({
+          method: OsMeasure.method,
+          distance: 100000
+        })
+    );
 
-        let color = osColor.toRgbArray(osObject.unsafeClone(osFeature.getColor(track)));
-        color[3] = .45;
-        color = osStyle.toRgbaString(color);
+    // remove the first coordinate since it's already part of the track we'll extend
+    if (isPredictedTrack) {
+      coordinates.splice(0, 1);
+    }
 
-        // add the end of the old track as the start of the predicted one
-        coordinates.splice(0, 0, coords[0]);
+    return coordinates;
+  }
 
-        // fill in points so Tracks can draw with Interpolation.Method = NONE
-        osInterpolate.interpolateLineWithConfig(
-            /** @type {Array<ol.Coordinate>} */ (coordinates),
-            /** @type {OsInterpolateConfig} */ ({
-              method: OsMeasure.method,
-              distance: 100000
-            })
-        );
+  /**
+   * Add a new track with the appropriate "Predicted" name and styles
+   * @param {!TrackInteraction} interaction
+   * @param {!OlFeature} track
+   * @param {Array<ol.Coordinate>} coordinates
+   * @param {string=} opt_name
+   * @private
+   */
+  addTrack_(interaction, track, coordinates, opt_name = 'Track') {
+    this.nextPredictedTrack++;
 
-        const newTrack = pluginTrack.createAndAdd({
-          name: [PREDICTED_TRACK_LABEL, ', ', OsMeasure.method, '] ',
-            this.nextPredictedTrack, ' | ', (name || 'Track')].join(''),
-          includeMetadata: true,
-          color,
-          coordinates
-        });
-        if (newTrack) {
-          const styles = osObject.unsafeClone(track.get(StyleType.FEATURE) || newTrack.get(StyleType.FEATURE));
-          let style = styles;
-          if (style) {
-            if (Array.isArray(style)) {
-              style = style[0];
-            }
-            // edit style stroke
-            let stroke = style[StyleField.STROKE];
-            if (!stroke) {
-              stroke = osObject.unsafeClone(interaction.getStyle().getStroke());
-            } else {
-              stroke['color'] = color;
-              stroke['width'] = 2;
-              stroke['lineDash'] = osStyle.LINE_STYLE_OPTIONS[6].pattern;
-            }
-            style[StyleField.STROKE] = stroke;
-            newTrack.set(StyleType.FEATURE, styles);
-          }
+    let color = osColor.toRgbArray(osObject.unsafeClone(osFeature.getColor(track)));
+    color[3] = .45;
+    color = osStyle.toRgbaString(color);
+
+    const newTrack = pluginTrack.createAndAdd(/** @type {osTrack.CreateOptions} */ ({
+      name: [PREDICTED_TRACK_LABEL, ', ', OsMeasure.method, '] ',
+        this.nextPredictedTrack, ' | ', opt_name].join(''),
+      includeMetadata: true,
+      color,
+      coordinates: coordinates
+    }));
+
+    if (newTrack) {
+      const styles = osObject.unsafeClone(track.get(StyleType.FEATURE) || newTrack.get(StyleType.FEATURE));
+      let style = styles;
+      if (style) {
+        if (Array.isArray(style)) {
+          style = style[0];
         }
+        // edit style stroke
+        let stroke = style[StyleField.STROKE];
+        if (!stroke) {
+          stroke = osObject.unsafeClone(interaction.getStyle().getStroke());
+        } else {
+          stroke['color'] = color;
+          stroke['width'] = 2;
+          stroke['lineDash'] = osStyle.LINE_STYLE_OPTIONS[6].pattern;
+        }
+        style[StyleField.STROKE] = stroke;
+        newTrack.set(StyleType.FEATURE, styles);
       }
     }
   }

@@ -9,7 +9,7 @@ const osFeature = goog.require('os.feature');
 const geo = goog.require('os.geo');
 const PlacesManager = goog.require('plugin.places.PlacesManager');
 
-const alertManager = goog.require('os.alert.AlertManager');
+const AlertManager = goog.require('os.alert.AlertManager');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const interpolate = goog.require('os.interpolate');
 const osTrack = goog.require('os.track');
@@ -445,7 +445,7 @@ let createAndAdd_ = function(options) {
 
   if (!track) {
     var msg = 'Track creation failed. There were no valid features/coordinates to create a track.';
-    alertManager.getInstance().sendAlert(msg, AlertEventSeverity.WARNING);
+    AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.WARNING);
     return;
   }
 
