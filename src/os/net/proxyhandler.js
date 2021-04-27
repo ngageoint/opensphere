@@ -66,25 +66,32 @@ os.net.ProxyHandler.ENCODE = true;
 
 /**
  * @param {?Object} conf
+ * @return {boolean} whether or not configuration exists
  */
 os.net.ProxyHandler.configure = function(conf) {
+  var configured = false;
   if (conf) {
     if (conf['schemes'] !== undefined) {
       os.net.ProxyHandler.SCHEMES = /** @type {Array<string>} */ (conf['schemes']);
+      configured = true;
     }
 
     if (conf['methods'] !== undefined) {
       os.net.ProxyHandler.METHODS = /** @type {Array<string>} */ (conf['methods']);
+      configured = true;
     }
 
     if (conf['encode'] !== undefined) {
       os.net.ProxyHandler.ENCODE = /** @type {boolean} */ (conf['encode']);
+      configured = true;
     }
 
     if (conf['url'] !== undefined) {
       os.net.ProxyHandler.PROXY_URL = /** @type {string} */ (conf['url']);
+      configured = true;
     }
   }
+  return configured;
 };
 
 
