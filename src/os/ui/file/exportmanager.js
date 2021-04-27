@@ -240,7 +240,7 @@ os.ui.file.ExportManager.prototype.onExportComplete_ = async function(options, o
         // always replace. if we got here the application should have done duplicate file detection already.
         fs.storeFile(file, true).addCallbacks(this.onFileSuccess_.bind(this, file, options), this.onFileError_, this);
       } catch (e) {
-        goog.log.error(this.log, 'Error exporting file to storage. Details: ' + e.message, e);
+        goog.log.error(os.ui.file.ExportManager.LOGGER_, 'Error exporting file to storage. Details: ' + e.message, e);
       }
     }
   } else {
@@ -287,7 +287,7 @@ os.ui.file.ExportManager.prototype.onFileSuccess_ = function(file, options) {
     if (importUI) {
       importUI.launchUI(file, options);
     } else {
-      goog.log.error(this.log, 'Failed to find import method for exported file.');
+      goog.log.error(os.ui.file.ExportManager.LOGGER_, 'Failed to find import method for exported file.');
     }
   }
 };
@@ -304,7 +304,7 @@ os.ui.file.ExportManager.prototype.onFileError_ = function(error) {
     msg += ' Error: ' + error;
   }
 
-  goog.log.error(this.log, msg);
+  goog.log.error(os.ui.file.ExportManager.LOGGER_, msg);
 };
 
 
