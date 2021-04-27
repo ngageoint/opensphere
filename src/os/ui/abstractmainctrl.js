@@ -238,7 +238,12 @@ os.ui.AbstractMainCtrl.prototype.initialize = function() {
   }
 
   // configure the proxy via settings & only add the handler if it's successful
-  if (os.net.ProxyHandler.configure(/** @type {?Object} */ (os.settings.get(['proxy'])))) {
+  var proxyConfig = /** @type {?Object} */ (os.settings.get(['proxy']));
+  var proxyUrl = /** @type {?string} */ (os.settings.get(['proxyUrl']));
+
+  if (proxyConfig || proxyUrl) {
+    os.net.ProxyHandler.PROXY_URL = proxyUrl || os.net.ProxyHandler.PROXY_URL;
+    os.net.ProxyHandler.configure(proxyConfig);
     os.net.RequestHandlerFactory.addHandler(os.net.ProxyHandler);
   }
 
