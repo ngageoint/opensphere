@@ -356,7 +356,7 @@ os.data.LayerNode.prototype.formatValue = function(value) {
       var source = layer.getSource();
       if (source instanceof os.source.Vector && source.getHasModifications()) {
         s = `<span title="This layer has unsaved changes. Right click to save them." 
-            style="font-weight:900;">  •  </span>${s}`;
+            class="font-weight-bolder">  •  </span>${s}`;
       }
     } else if (layer instanceof os.layer.Tile) {
       s += ' <tileloading></tileloading>';

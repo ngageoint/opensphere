@@ -72,14 +72,14 @@ plugin.file.shp.ui.ZipSHPImportUI.prototype.launchUI = function(file, opt_config
   if (content instanceof ArrayBuffer) {
     zip.createReader(new zip.ArrayBufferReader(content),
         this.handleZipReader.bind(this), this.handleZipReaderError.bind(this));
-  } else {
+  } else if (content instanceof ArrayBuffer) {
     // convert the blob to an ArrayBuffer and proceed down the normal path
     content.arrayBuffer().then((arrayBuffer) => {
       this.zipFile_.setContent(arrayBuffer);
       zip.createReader(new zip.ArrayBufferReader(arrayBuffer),
           this.handleZipReader.bind(this), this.handleZipReaderError.bind(this));
     }, (reason) => {
-      // womp womp
+      this.handleZipReaderError(reason);
     });
   }
 };
@@ -96,11 +96,20 @@ plugin.file.shp.ui.ZipSHPImportUI.prototype.handleZipReader = function(reader) {
 
 
 /**
+ * Handles ZIP reader errors.
+ * @param {*} opt_error Optional error message/exception.
  * @protected
  */
-plugin.file.shp.ui.ZipSHPImportUI.prototype.handleZipReaderError = function() {
+plugin.file.shp.ui.ZipSHPImportUI.prototype.handleZipReaderError = function(opt_error) {
   // failed reading the zip file
   var msg = 'Error reading zip file!"';
+
+  if (typeof opt_error == 'string') {
+    msg += ` Details: ${opt_error}`;
+  } else if (opt_error instanceof Error) {
+    msg += ` Details: ${opt_error.message}.`;
+  }
+
   os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
 };
 

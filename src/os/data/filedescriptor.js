@@ -2,10 +2,12 @@ goog.provide('os.data.FileDescriptor');
 
 goog.require('os.command.LayerAdd');
 goog.require('os.command.LayerRemove');
+goog.require('os.config.Settings');
 goog.require('os.data.IReimport');
 goog.require('os.data.IUrlDescriptor');
 goog.require('os.data.LayerSyncDescriptor');
 goog.require('os.ex.IExportMethod');
+goog.require('os.file');
 goog.require('os.file.File');
 goog.require('os.file.FileStorage');
 goog.require('os.im.ImportProcess');
@@ -363,8 +365,10 @@ os.data.FileDescriptor.prototype.onLayerChange = function(e) {
     if (p == os.source.PropertyChange.HAS_MODIFICATIONS && newVal) {
       if (layer instanceof os.layer.Vector) {
         const source = /** @type {os.source.Vector} */ (layer.getSource());
+        const settings = os.config.Settings.getInstance();
+        const key = os.file.FileSetting.AUTO_SAVE;
 
-        if (os.settings.get('os.file.autoSaveFiles', true) && source instanceof os.source.Vector) {
+        if (settings.get(key, os.file.FileSettingDefault[key]) && source instanceof os.source.Vector) {
           const options = /** @type {os.ex.ExportOptions} */ ({
             sources: [source],
             items: source.getFeatures(),

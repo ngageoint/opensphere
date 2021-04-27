@@ -220,7 +220,7 @@ os.ui.file.ExportManager.prototype.onExportComplete_ = async function(options, o
     } else {
       try {
         if (result instanceof Blob) {
-          await result.arrayBuffer().then((arrayBuffer) => result = arrayBuffer);
+          result = await result.arrayBuffer();
         }
 
         const file = new os.file.File();
@@ -240,7 +240,7 @@ os.ui.file.ExportManager.prototype.onExportComplete_ = async function(options, o
         // always replace. if we got here the application should have done duplicate file detection already.
         fs.storeFile(file, true).addCallbacks(this.onFileSuccess_.bind(this, file, options), this.onFileError_, this);
       } catch (e) {
-        goog.log.error(this.log, 'error saving state file to local storage: ' + e.message, e);
+        goog.log.error(this.log, 'Error exporting file to storage. Details: ' + e.message, e);
       }
     }
   } else {

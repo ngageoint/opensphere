@@ -1,6 +1,7 @@
 goog.provide('plugin.file.shp.SHPDescriptor');
 
 goog.require('os.data.FileDescriptor');
+goog.require('os.file');
 goog.require('os.file.FileStorage');
 goog.require('os.layer.LayerType');
 goog.require('plugin.file.shp.SHPExporter');
@@ -133,7 +134,12 @@ plugin.file.shp.SHPDescriptor.prototype.onFileChange = function(options) {
   plugin.file.shp.SHPDescriptor.base(this, 'onFileChange', options);
 
   // ensure that the URL is set correctly in case we are converting from a shp/dbf file to a zip shp file
-  this.setUrl2('');
+  const url2 = this.getUrl2();
+  if (url2 && os.file.isLocal(url2)) {
+    const fs = os.file.FileStorage.getInstance();
+    fs.deleteFile(url2);
+    this.setUrl2('');
+  }
 };
 
 

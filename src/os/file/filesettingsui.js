@@ -1,7 +1,9 @@
 goog.module('os.file.FileSettingsUI');
 
-const Settings = goog.require('os.config.Settings');
 const Module = goog.require('os.ui.Module');
+const Settings = goog.require('os.config.Settings');
+const {BaseSettingKey, FileSetting, FileSettingDefault} = goog.require('os.file');
+const {ROOT} = goog.require('os');
 
 
 /**
@@ -11,7 +13,7 @@ const Module = goog.require('os.ui.Module');
 const directive = () => ({
   restrict: 'E',
   replace: true,
-  templateUrl: os.ROOT + 'views/file/filesettings.html',
+  templateUrl: ROOT + 'views/file/filesettings.html',
   controller: Controller,
   controllerAs: 'ctrl'
 });
@@ -25,22 +27,6 @@ const directiveTag = 'filesettings';
 
 
 Module.directive(directiveTag, [directive]);
-
-
-/**
- * Base file setting key.
- * @type {string}
- */
-const BaseKey = 'os.file';
-
-
-/**
- * File settings keys.
- * @enum {string}
- */
-const FileSetting = {
-  AUTO_SAVE: BaseKey + '.autoSaveFiles'
-};
 
 
 /**
@@ -64,12 +50,12 @@ class Controller {
      * Setting value for auto saving files.
      * @type {boolean}
      */
-    this['autoSaveFiles'] = Settings.getInstance().get(FileSetting.AUTO_SAVE, true);
+    this['autoSaveFiles'] = Settings.getInstance().get(FileSetting.AUTO_SAVE,
+        FileSettingDefault[FileSetting.AUTO_SAVE]);
   }
 
   /**
    * Clean up.
-   * @protected
    */
   $onDestroy() {
     this.scope = null;
@@ -81,7 +67,7 @@ class Controller {
    * @export
    */
   toggle(type) {
-    const settingKey = BaseKey + '.' + type;
+    const settingKey = BaseSettingKey + '.' + type;
     Settings.getInstance().set(settingKey, this['autoSaveFiles']);
   }
 }

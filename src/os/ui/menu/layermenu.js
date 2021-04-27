@@ -359,18 +359,25 @@ os.ui.menu.layer.onSave_ = function(event) {
   var context = event.getContext();
   if (context) {
     const sources = os.ui.menu.common.getSourcesFromContext(context);
+
     if (sources && sources.length == 1) {
+      let exporter = os.ui.file.ExportManager.getInstance().getExportMethods()[1];
       const source = sources[0];
-      const exporter = os.ui.file.ExportManager.getInstance().getExportMethods()[1];
-      const descriptor = os.data.DataManager.getInstance().getDescriptor(source.getId());
       const layerName = source.getTitle(true);
+      const descriptor = os.data.DataManager.getInstance().getDescriptor(source.getId());
+
+      if (descriptor instanceof os.data.FileDescriptor) {
+        exporter = descriptor.getExporter();
+      }
+
       const options = /** @type {os.ex.ExportOptions} */ ({
         items: source.getFeatures(),
+        sources: [source],
         fields: os.source.getExportFields(source, false, exporter.supportsTime()),
         title: layerName,
-        exporter: exporter,
         keepTitle: true,
-        createDescriptor: !(descriptor instanceof os.data.FileDescriptor)
+        createDescriptor: !(descriptor instanceof os.data.FileDescriptor),
+        exporter
       });
 
       os.ui.file.ExportManager.getInstance().exportItems(options);
@@ -403,7 +410,7 @@ os.ui.menu.layer.onSaveAs_ = function(event) {
         sources: [source],
         fields: os.source.getExportFields(source, false, exporter.supportsTime()),
         title: layerName,
-        exporter: exporter
+        exporter
       });
 
       const confirmOptions = /** @type {!osx.window.ConfirmTextOptions} */ ({

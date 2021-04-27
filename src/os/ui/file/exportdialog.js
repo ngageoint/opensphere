@@ -225,6 +225,8 @@ os.ui.file.ExportDialogCtrl.prototype.onExporterChange = function(opt_new, opt_o
       this.compile(uiContainer.contents())(this.scope);
     }
   }
+
+  this.options.createDescriptor = !!opt_new;
 };
 
 
