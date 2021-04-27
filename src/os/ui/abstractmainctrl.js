@@ -18,6 +18,7 @@ goog.require('os.mixin.fixInjectorInvoke');
 goog.require('os.net');
 goog.require('os.net.CertNazi');
 goog.require('os.net.ProxyHandler');
+goog.require('os.net.RequestHandlerFactory');
 goog.require('os.plugin.PluginManager');
 goog.require('os.ui');
 goog.require('os.ui.alert.alertPopupDirective');
@@ -236,13 +237,17 @@ os.ui.AbstractMainCtrl.prototype.initialize = function() {
     os.settings.set(['about', 'version'], this.scope['version']);
   }
 
-  // set the proxy url
-  os.net.ProxyHandler.PROXY_URL = /** @type {string} */ (os.settings.get(['proxyUrl'], os.net.ProxyHandler.PROXY_URL));
+  // configure the proxy via settings & only add the handler if it's successful
+  var proxyConfig = /** @type {?Object} */ (os.settings.get(['proxy']));
+  var proxyUrl = /** @type {?string} */ (os.settings.get(['proxyUrl']));
 
-  // set up the proxy the new way
-  os.net.ProxyHandler.configure(/** @type {?Object} */ (os.settings.get(['proxy'])));
+  if (proxyConfig || proxyUrl) {
+    os.net.ProxyHandler.PROXY_URL = proxyUrl || os.net.ProxyHandler.PROXY_URL;
+    os.net.ProxyHandler.configure(proxyConfig);
+    os.net.RequestHandlerFactory.addHandler(os.net.ProxyHandler);
+  }
 
-  // set if mixed content should be enabled
+  // set if mixed content should be enabled -- this should be true if proxy is not configured
   os.net.ExtDomainHandler.MIXED_CONTENT_ENABLED = /** @type {boolean} */ (os.settings.get('mixedContent', false));
 
   // set if file:// URL's should be supported

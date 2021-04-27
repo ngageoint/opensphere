@@ -6,7 +6,6 @@ goog.require('goog.Uri.QueryData');
 goog.require('goog.array');
 goog.require('os.net.ExtDomainHandler');
 goog.require('os.net.LocalFileHandler');
-goog.require('os.net.ProxyHandler');
 goog.require('os.net.SameDomainHandler');
 goog.require('os.registerClass');
 
@@ -138,7 +137,6 @@ os.net.addDefaultHandlers = function() {
   os.net.RequestHandlerFactory.addHandler(os.net.LocalFileHandler);
   os.net.RequestHandlerFactory.addHandler(os.net.SameDomainHandler);
   os.net.RequestHandlerFactory.addHandler(os.net.ExtDomainHandler);
-  os.net.RequestHandlerFactory.addHandler(os.net.ProxyHandler);
 };
 
 
