@@ -329,7 +329,7 @@ os.layer.Vector.prototype.onSourceChange = function(event) {
     case os.source.PropertyChange.HAS_MODIFICATIONS:
     case os.source.PropertyChange.COLUMNS:
     case os.source.PropertyChange.COLUMN_ADDED:
-      this.dispatchEvent(new os.events.PropertyChangeEvent(p));
+      this.dispatchEvent(new os.events.PropertyChangeEvent(p, event.getNewValue(), event.getOldValue()));
       break;
     case os.source.PropertyChange.ALTITUDE:
       // forward as a layer event
@@ -1098,6 +1098,7 @@ os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
       case os.action.EventType.RESET_COLOR:
         return isVector && source.hasColors();
       case os.action.EventType.SAVE_LAYER:
+      case os.action.EventType.SAVE_LAYER_AS:
         return isVector && source.getHasModifications();
       default:
         // ask the source if it supports the action

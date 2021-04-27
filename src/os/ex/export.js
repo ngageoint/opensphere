@@ -13,7 +13,8 @@ goog.provide('os.ex.ExportOptions');
  *   persister: (os.ex.IPersistenceMethod|undefined),
  *   sources: (Array.<*>|undefined),
  *   title: (string|undefined),
- *   keepTitle: (boolean|undefined)
+ *   keepTitle: (boolean|undefined),
+ *   createDescriptor: (boolean|undefined)
  * }}
  */
 os.ex.ExportOptions;

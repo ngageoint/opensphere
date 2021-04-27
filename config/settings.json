@@ -58,7 +58,7 @@
       "basemap": {
         "type": "basemap",
         "defaults": {
-          "EPSG:4326": ["worldimagery-4326", "streetmap-4326"],
+          "EPSG:4326": ["streetmap-4326"],
           "EPSG:3857": ["worldimagery", "streetmap"]
         },
         "maps": {
@@ -95,6 +95,7 @@
             "zoomOffset": -1,
             "projection": "EPSG:4326",
             "tileSize": 256,
+            "opacity": 0.5,
             "description": "This worldwide street map presents highway-level data for the world and street-level data for the United States, Canada, Europe, Southern Africa and elsewhere. This comprehensive street map includes highways, major roads, minor roads, railways, water features, administrative boundaries, cities, parks, and landmarks, overlaid on shaded relief imagery for added context. The street map was developed by Esri using DeLorme data and NAVTEQ street data. Coverage for street-level data elsewhere in the world includes Mexico (Mexico City only), Russia (Moscow, St. Petersburg only), and Turkey (Istanbul, Ankara only). For more information on this map, including our terms of use, visit us online at http://goto.arcgisonline.com/maps/ESRI_StreetMap_World_2D\n\nSources: Esri, DeLorme, NAVTEQ, USGS, NRCAN, METI, iPC, TomTom",
             "attributions": [
               "Esri",

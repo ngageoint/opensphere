@@ -238,8 +238,7 @@ os.ui.file.ExportManager.prototype.onExportComplete_ = async function(options, o
         }
 
         // always replace. if we got here the application should have done duplicate file detection already.
-        fs.storeFile(file, true).addCallbacks(this.onFileSuccess_.bind(this, file, options),
-            this.onFileError_, this);
+        fs.storeFile(file, true).addCallbacks(this.onFileSuccess_.bind(this, file, options), this.onFileError_, this);
       } catch (e) {
         goog.log.error(this.log, 'error saving state file to local storage: ' + e.message, e);
       }
@@ -270,7 +269,7 @@ os.ui.file.ExportManager.prototype.onExportError_ = function(event) {
  * @private
  */
 os.ui.file.ExportManager.prototype.onFileSuccess_ = function(file, options) {
-  if (!options.keepTitle) {
+  if (options.createDescriptor) {
     const dm = os.data.DataManager.getInstance();
     const descriptors = dm.getDescriptors();
     const url = file.getUrl() || '';

@@ -358,8 +358,9 @@ os.data.FileDescriptor.prototype.onLayerChange = function(e) {
   if (e instanceof os.events.PropertyChangeEvent) {
     const layer = /** @type {os.layer.Vector} */ (e.target);
     const p = e.getProperty() || '';
+    const newVal = e.getNewValue();
 
-    if (p == os.source.PropertyChange.HAS_MODIFICATIONS) {
+    if (p == os.source.PropertyChange.HAS_MODIFICATIONS && newVal) {
       if (layer instanceof os.layer.Vector) {
         const source = /** @type {os.source.Vector} */ (layer.getSource());
 
@@ -370,7 +371,7 @@ os.data.FileDescriptor.prototype.onLayerChange = function(e) {
             fields: null
           });
 
-          this.onDataChange(options);
+          this.updateFile(options);
         }
       }
     }
@@ -379,10 +380,10 @@ os.data.FileDescriptor.prototype.onLayerChange = function(e) {
 
 
 /**
- * Handles changes to the underlying layer data. Updates the file in storage.
+ * Updates to the underlying layer data. Updates the file in storage.
  * @param {os.ex.ExportOptions} options
  */
-os.data.FileDescriptor.prototype.onDataChange = function(options) {
+os.data.FileDescriptor.prototype.updateFile = function(options) {
   const source = /** @type {os.source.Vector} */ (options.sources[0]);
   const exporter = this.getExporter();
 
@@ -397,11 +398,23 @@ os.data.FileDescriptor.prototype.onDataChange = function(options) {
     // possible TODO: have this function return a promise that resolves/rejects if the export succeeds/fails
     os.ui.file.ExportManager.getInstance().exportItems(options);
 
-    // update this descriptor's URL to point to the file, set the source back to having no modifications
-    const url = os.file.getLocalUrl(name);
-    this.setUrl(url);
-    source.setHasModifications(false);
+    this.onFileChange(options);
   }
+};
+
+
+/**
+ * Handles changes to the underlying layer data. Updates the file in storage.
+ * @param {os.ex.ExportOptions} options
+ */
+os.data.FileDescriptor.prototype.onFileChange = function(options) {
+  // update this descriptor's URL to point to the file, set the source back to having no modifications
+  const name = this.getTitle() || 'New File';
+  const url = os.file.getLocalUrl(name);
+  this.setUrl(url);
+
+  const source = /** @type {os.source.Vector} */ (options.sources[0]);
+  source.setHasModifications(false);
 };
 
 

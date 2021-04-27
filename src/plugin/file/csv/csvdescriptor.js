@@ -138,8 +138,8 @@ plugin.file.csv.CSVDescriptor.prototype.getExporter = function() {
 /**
  * @inheritDoc
  */
-plugin.file.csv.CSVDescriptor.prototype.onDataChange = function(options) {
-  plugin.file.csv.CSVDescriptor.base(this, 'onDataChange', options);
+plugin.file.csv.CSVDescriptor.prototype.onFileChange = function(options) {
+  plugin.file.csv.CSVDescriptor.base(this, 'onFileChange', options);
 
   // update the parser config to match the default parser config
   const conf = os.ui.file.csv.DEFAULT_CONFIG;

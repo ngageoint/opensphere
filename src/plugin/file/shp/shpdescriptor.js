@@ -129,8 +129,8 @@ plugin.file.shp.SHPDescriptor.prototype.getExporter = function() {
 /**
  * @inheritDoc
  */
-plugin.file.shp.SHPDescriptor.prototype.onDataChange = function(options) {
-  plugin.file.shp.SHPDescriptor.base(this, 'onDataChange', options);
+plugin.file.shp.SHPDescriptor.prototype.onFileChange = function(options) {
+  plugin.file.shp.SHPDescriptor.base(this, 'onFileChange', options);
 
   // ensure that the URL is set correctly in case we are converting from a shp/dbf file to a zip shp file
   this.setUrl2('');
