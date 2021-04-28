@@ -1,155 +1,146 @@
-goog.provide('plugin.arc.ArcFeatureType');
-goog.require('os.ogc.IFeatureType');
+goog.module('plugin.arc.ArcFeatureType');
 
+const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
+const IFeatureType = goog.requireType('os.ogc.IFeatureType');
 
 
 /**
  * Feature type representing Arc features.
  *
- * @param {string=} opt_typeName
- * @param {Array<!os.ogc.FeatureTypeColumn>=} opt_columns
- * @implements {os.ogc.IFeatureType}
- * @constructor
+ * @implements {IFeatureType}
  */
-plugin.arc.ArcFeatureType = function(opt_typeName, opt_columns) {
+class ArcFeatureType {
   /**
-   * @type {Array<!os.ogc.FeatureTypeColumn>}
-   * @private
+   * Constructor.
+   * @param {string=} opt_typeName
+   * @param {Array<!FeatureTypeColumn>=} opt_columns
    */
-  this.columns_ = opt_columns || null;
+  constructor(opt_typeName, opt_columns) {
+    /**
+     * @type {Array<!FeatureTypeColumn>}
+     * @private
+     */
+    this.columns_ = opt_columns || null;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.geometryColumnName_ = null;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.startDateColumnName_ = null;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.endDateColumnName_ = null;
+
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.typeName_ = opt_typeName || null;
+  }
 
   /**
-   * @type {?string}
-   * @private
+   * @inheritDoc
    */
-  this.geometryColumnName_ = null;
+  getTypeName() {
+    return this.typeName_;
+  }
 
   /**
-   * @type {?string}
-   * @private
+   * @inheritDoc
    */
-  this.startDateColumnName_ = null;
+  setTypeName(value) {
+    this.typeName_ = value;
+  }
 
   /**
-   * @type {?string}
-   * @private
+   * @inheritDoc
    */
-  this.endDateColumnName_ = null;
-
+  getTimeColumns() {
+    return [];
+  }
 
   /**
-   * @type {?string}
-   * @private
+   * @inheritDoc
    */
-  this.typeName_ = opt_typeName || null;
-};
+  getGeometryColumnName() {
+    return this.geometryColumnName_;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  setGeometryColumnName(value) {
+    this.geometryColumnName_ = value;
+  }
 
-/**
- * @inheritDoc
- */
-plugin.arc.ArcFeatureType.prototype.getTypeName = function() {
-  return this.typeName_;
-};
+  /**
+   * @inheritDoc
+   */
+  getStartDateColumnName() {
+    return this.startDateColumnName_;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  setStartDateColumnName(value) {
+    this.startDateColumnName_ = value;
+  }
 
-/**
- * @inheritDoc
- */
-plugin.arc.ArcFeatureType.prototype.setTypeName = function(value) {
-  this.typeName_ = value;
-};
+  /**
+   * @inheritDoc
+   */
+  getEndDateColumnName() {
+    return this.endDateColumnName_;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  setEndDateColumnName(value) {
+    this.endDateColumnName_ = value;
+  }
 
-/**
- * @inheritDoc
- */
-plugin.arc.ArcFeatureType.prototype.getTimeColumns = function() {
-  return [];
-};
+  /**
+   * @inheritDoc
+   */
+  getColumns() {
+    return this.columns_;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  setColumns(value) {
+    this.columns_ = value;
+  }
 
-/**
- * @inheritDoc
- */
-plugin.arc.ArcFeatureType.prototype.getGeometryColumnName = function() {
-  return this.geometryColumnName_;
-};
+  /**
+   * @inheritDoc
+   */
+  getNeedsTimeColumns() {
+    return false;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  persist(opt_to) {}
 
-/**
- * @inheritDoc
- */
-plugin.arc.ArcFeatureType.prototype.setGeometryColumnName = function(value) {
-  this.geometryColumnName_ = value;
-};
+  /**
+   * @inheritDoc
+   */
+  restore(config) {}
+}
 
-
-/**
- * @inheritDoc
- */
-plugin.arc.ArcFeatureType.prototype.getStartDateColumnName = function() {
-  return this.startDateColumnName_;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.arc.ArcFeatureType.prototype.setStartDateColumnName = function(value) {
-  this.startDateColumnName_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.arc.ArcFeatureType.prototype.getEndDateColumnName = function() {
-  return this.endDateColumnName_;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.arc.ArcFeatureType.prototype.setEndDateColumnName = function(value) {
-  this.endDateColumnName_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.arc.ArcFeatureType.prototype.getColumns = function() {
-  return this.columns_;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.arc.ArcFeatureType.prototype.setColumns = function(value) {
-  this.columns_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.arc.ArcFeatureType.prototype.getNeedsTimeColumns = function() {
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.arc.ArcFeatureType.prototype.persist = function(opt_to) {
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.arc.ArcFeatureType.prototype.restore = function(config) {
-};
+exports = ArcFeatureType;

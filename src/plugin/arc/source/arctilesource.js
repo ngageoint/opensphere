@@ -1,49 +1,49 @@
-goog.provide('plugin.arc.source.ArcTileSource');
-goog.require('ol.source.TileArcGISRest');
-goog.require('os.ol.source.ILoadingSource');
-goog.require('os.source.IFilterableTileSource');
-goog.require('os.tile.ColorableTile');
+goog.module('plugin.arc.source.ArcTileSource');
 
+const TileArcGISRest = goog.require('ol.source.TileArcGISRest');
+const ILoadingSource = goog.requireType('os.ol.source.ILoadingSource');
 
 
 /**
  * Extension of the base OL3 Arc tile source. This implements ILoadingSource so that we have a loading spinner
  * in the layers window.
  *
- * @param {olx.source.TileArcGISRestOptions=} opt_options
- * @implements {os.ol.source.ILoadingSource}
- * @extends {ol.source.TileArcGISRest}
- * @constructor
+ * @implements {ILoadingSource}
  */
-plugin.arc.source.ArcTileSource = function(opt_options) {
-  plugin.arc.source.ArcTileSource.base(this, 'constructor', opt_options);
-  this.refreshEnabled = true;
-};
-goog.inherits(plugin.arc.source.ArcTileSource, ol.source.TileArcGISRest);
-
-
-/**
- * This resets the params key that is used by the renderer to determine whether it needs to fetch a
- * new tile.
- *
- * @private
- */
-plugin.arc.source.ArcTileSource.prototype.resetParamsKey_ = function() {
-  var i = 0;
-  var res = [];
-  var params = this.getParams();
-  for (var key in params) {
-    res[i++] = key + '-' + params[key];
+class ArcTileSource extends TileArcGISRest {
+  /**
+   * Constructor.
+   * @param {olx.source.TileArcGISRestOptions=} opt_options
+   */
+  constructor(opt_options) {
+    super(opt_options);
+    this.refreshEnabled = true;
   }
 
-  this.setKey(res.join('/'));
-};
+  /**
+   * This resets the params key that is used by the renderer to determine whether it needs to fetch a
+   * new tile.
+   *
+   * @private
+   */
+  resetParamsKey_() {
+    var i = 0;
+    var res = [];
+    var params = this.getParams();
+    for (var key in params) {
+      res[i++] = key + '-' + params[key];
+    }
 
+    this.setKey(res.join('/'));
+  }
 
-/**
- * @inheritDoc
- */
-plugin.arc.source.ArcTileSource.prototype.updateParams = function(params) {
-  this.resetParamsKey_();
-  plugin.arc.source.ArcTileSource.base(this, 'updateParams', params);
-};
+  /**
+   * @inheritDoc
+   */
+  updateParams(params) {
+    this.resetParamsKey_();
+    super.updateParams(params);
+  }
+}
+
+exports = ArcTileSource;

@@ -5,8 +5,6 @@ goog.require('os.state.XMLStateOptions');
 goog.require('os.state.v4.LayerState');
 goog.require('os.test.xsd');
 goog.require('os.xml');
-goog.require('plugin.arc.layer.ArcFeatureLayerConfig');
-goog.require('plugin.arc.layer.ArcLayerDescriptor');
 goog.require('plugin.file.kml.KMLField');
 goog.require('plugin.ogc.OGCLayerDescriptor');
 goog.require('plugin.ogc.wfs.WFSLayerConfig');

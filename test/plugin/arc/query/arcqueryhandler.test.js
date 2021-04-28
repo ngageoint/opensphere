@@ -1,10 +1,22 @@
-goog.require('os.mock');
 goog.require('ol.Feature');
 goog.require('ol.geom.Polygon');
+goog.require('os.filter.FilterEntry');
+goog.require('os.mock');
+goog.require('os.query.AreaManager');
+goog.require('os.query.FilterManager');
+goog.require('os.query.QueryManager');
 goog.require('plugin.arc.query.ArcQueryHandler');
 
 
 describe('plugin.arc.query.ArcQueryHandler', function() {
+  const Feature = goog.module.get('ol.Feature');
+  const Polygon = goog.module.get('ol.geom.Polygon');
+  const FilterEntry = goog.module.get('os.filter.FilterEntry');
+  const AreaManager = goog.module.get('os.query.AreaManager');
+  const FilterManager = goog.module.get('os.query.FilterManager');
+  const QueryManager = goog.module.get('os.query.QueryManager');
+  const ArcQueryHandler = goog.module.get('plugin.arc.query.ArcQueryHandler');
+
   var filterXml = '<And xmlns="http://www.opengis.net/ogc" namehint="Test Keep Filter Name">' +
       '<PropertyIsLike escape="\\" singleChar="." wildCard="*">' +
       '<PropertyName>PROPERTY</PropertyName>' +
@@ -30,8 +42,8 @@ describe('plugin.arc.query.ArcQueryHandler', function() {
       '</And>';
 
   it('should create arc filters', function() {
-    var handler = new plugin.arc.query.ArcQueryHandler();
-    spyOn(os.ui.queryManager, 'getEntries').andCallFake(function() {
+    var handler = new ArcQueryHandler();
+    spyOn(QueryManager.getInstance(), 'getEntries').andCallFake(function() {
       return [{
         'layerId': 'myArcLayer',
         'filterId': 'myFilterId',
@@ -42,21 +54,21 @@ describe('plugin.arc.query.ArcQueryHandler', function() {
     });
 
     // spy on the area manager getter so that it gets my area
-    var area = new ol.Feature();
-    var geom = new ol.geom.Polygon([[[50, 60], [30, 40], [20, 10], [50, 60]]]);
+    var area = new Feature();
+    var geom = new Polygon([[[50, 60], [30, 40], [20, 10], [50, 60]]]);
     area.setGeometry(geom);
     area.setId('myAreaId');
     area.set('shown', true);
-    spyOn(os.ui.areaManager, 'get').andCallFake(function() {
+    spyOn(AreaManager.getInstance(), 'get').andCallFake(function() {
       return area;
     });
 
     // spy on the filter manager getter so that it gets my filter
-    var filter = new os.filter.FilterEntry();
+    var filter = new FilterEntry();
     filter.setId('myFilterId');
     filter.setFilter(filterXml);
     filter.setEnabled(true);
-    spyOn(os.ui.filterManager, 'getFilter').andCallFake(function() {
+    spyOn(FilterManager.getInstance(), 'getFilter').andCallFake(function() {
       return filter;
     });
 
@@ -66,8 +78,8 @@ describe('plugin.arc.query.ArcQueryHandler', function() {
 
 
   it('should create arc filters for is like with no wildcards', function() {
-    var handler = new plugin.arc.query.ArcQueryHandler();
-    spyOn(os.ui.queryManager, 'getEntries').andCallFake(function() {
+    var handler = new ArcQueryHandler();
+    spyOn(QueryManager.getInstance(), 'getEntries').andCallFake(function() {
       return [{
         'layerId': 'myArcLayer',
         'filterId': 'myFilterId',
@@ -78,21 +90,21 @@ describe('plugin.arc.query.ArcQueryHandler', function() {
     });
 
     // spy on the area manager getter so that it gets my area
-    var area = new ol.Feature();
-    var geom = new ol.geom.Polygon([[[50, 60], [30, 40], [20, 10], [50, 60]]]);
+    var area = new Feature();
+    var geom = new Polygon([[[50, 60], [30, 40], [20, 10], [50, 60]]]);
     area.setGeometry(geom);
     area.setId('myAreaId');
     area.set('shown', true);
-    spyOn(os.ui.areaManager, 'get').andCallFake(function() {
+    spyOn(AreaManager.getInstance(), 'get').andCallFake(function() {
       return area;
     });
 
     // spy on the filter manager getter so that it gets my filter
-    var filter = new os.filter.FilterEntry();
+    var filter = new FilterEntry();
     filter.setId('myFilterId');
     filter.setFilter(noWildcardFilterXml);
     filter.setEnabled(true);
-    spyOn(os.ui.filterManager, 'getFilter').andCallFake(function() {
+    spyOn(FilterManager.getInstance(), 'getFilter').andCallFake(function() {
       return filter;
     });
 
@@ -102,15 +114,15 @@ describe('plugin.arc.query.ArcQueryHandler', function() {
 
 
   it('should use the grouping of the first filter', function() {
-    var handler = new plugin.arc.query.ArcQueryHandler();
-    spyOn(os.ui.queryManager, 'getEntries').andCallFake(function() {
+    var handler = new ArcQueryHandler();
+    spyOn(QueryManager.getInstance(), 'getEntries').andCallFake(function() {
       return [{
         'layerId': 'myArcLayer',
         'filterId': 'myOrFilter',
         'areaId': 'myAreaId',
         'includeArea': true,
         'filterGroup': false
-      },{
+      }, {
         'layerId': 'myArcLayer',
         'filterId': 'myAndFilter',
         'areaId': 'myAreaId',
@@ -120,21 +132,21 @@ describe('plugin.arc.query.ArcQueryHandler', function() {
     });
 
     // spy on the area manager getter so that it gets my area
-    var area = new ol.Feature();
-    var geom = new ol.geom.Polygon([[[50, 60], [30, 40], [20, 10], [50, 60]]]);
+    var area = new Feature();
+    var geom = new Polygon([[[50, 60], [30, 40], [20, 10], [50, 60]]]);
     area.setGeometry(geom);
     area.setId('myAreaId');
     area.set('shown', true);
-    spyOn(os.ui.areaManager, 'get').andCallFake(function() {
+    spyOn(AreaManager.getInstance(), 'get').andCallFake(function() {
       return area;
     });
 
     // spy on the filter manager getter so that it gets my filter
-    var orFilter = new os.filter.FilterEntry();
+    var orFilter = new FilterEntry();
     orFilter.setId('myFilterId');
     orFilter.setFilter(filterXml);
     orFilter.setEnabled(true);
-    var andFilter = new os.filter.FilterEntry();
+    var andFilter = new FilterEntry();
     andFilter.setId('myFilterId2');
     andFilter.setFilter(otherXml);
     andFilter.setEnabled(true);
@@ -144,7 +156,7 @@ describe('plugin.arc.query.ArcQueryHandler', function() {
       'myAndFilter': andFilter
     };
 
-    spyOn(os.ui.filterManager, 'getFilter').andCallFake(function(id) {
+    spyOn(FilterManager.getInstance(), 'getFilter').andCallFake(function(id) {
       return filters[id];
     });
 

@@ -1,14 +1,24 @@
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.MultiPoint');
+goog.require('ol.geom.MultiPolygon');
 goog.require('ol.geom.Point');
 goog.require('ol.geom.Polygon');
 goog.require('plugin.arc.ArcJSONParser');
 
 
 describe('plugin.arc.ArcJSONParser', function() {
+  const LineString = goog.module.get('ol.geom.LineString');
+  const MultiPoint = goog.module.get('ol.geom.MultiPoint');
+  const MultiPolygon = goog.module.get('ol.geom.MultiPolygon');
+  const Point = goog.module.get('ol.geom.Point');
+  const Polygon = goog.module.get('ol.geom.Polygon');
+  const ArcJSONParser = goog.module.get('plugin.arc.ArcJSONParser');
+
   it('should add new features to its parse queue if they are added separately', function() {
-    var parser = new plugin.arc.ArcJSONParser();
+    var parser = new ArcJSONParser();
+    /* eslint-disable-next-line max-len */
     var source1 = '{"displayFieldName": "full_name","features": [{"attributes": {"full_name": "wutface","type": "meme"},"geometry": {"x": 38,"y": 34}},{"attributes": {"full_name": "kappa","type": "meme"},"geometry": {"x": 31,"y": 33}},{"attributes": {"full_name": "elegiggle","type": "meme"},"geometry": {"x": -331,"y": 85}}]}';
+    /* eslint-disable-next-line max-len */
     var source2 = '{"displayFieldName": "full_name","features": [{"attributes": {"full_name": "4head","type": "meme"},"geometry": {"x": 38,"y": 34}},{"attributes": {"full_name": "LUL","type": "meme"},"geometry": {"x": 31,"y": 33}},{"attributes": {"full_name": "babyrage","type": "meme"},"geometry": {"x": -331,"y": 85}}]}';
     parser.setSource(source1);
     expect(parser.features_.length).toBe(3);
@@ -17,20 +27,20 @@ describe('plugin.arc.ArcJSONParser', function() {
   });
 
   it('should parse Arc point geometries', function() {
-    var parser = new plugin.arc.ArcJSONParser();
+    var parser = new ArcJSONParser();
     var arcPoint = {
       'x': 99,
       'y': -30
     };
 
     var olGeom = parser.parsePointGeometry_(arcPoint);
-    expect(olGeom instanceof ol.geom.Point).toBe(true);
+    expect(olGeom instanceof Point).toBe(true);
     expect(olGeom.getCoordinates()[0]).toBe(99);
     expect(olGeom.getCoordinates()[1]).toBe(-30);
   });
 
   it('should parse Arc linestring geometries', function() {
-    var parser = new plugin.arc.ArcJSONParser();
+    var parser = new ArcJSONParser();
     var arcLineString = {
       'paths': [
         [
@@ -43,14 +53,14 @@ describe('plugin.arc.ArcJSONParser', function() {
     };
 
     var olGeom = parser.parseLineStringGeometry_(arcLineString);
-    expect(olGeom instanceof ol.geom.LineString).toBe(true);
+    expect(olGeom instanceof LineString).toBe(true);
     expect(olGeom.getCoordinates()[1][0]).toBe(6);
     expect(olGeom.getCoordinates()[1][1]).toBe(8);
     expect(olGeom.getCoordinates()[3][0]).toBe(9);
   });
 
   it('should parse Arc polygon geometries', function() {
-    var parser = new plugin.arc.ArcJSONParser();
+    var parser = new ArcJSONParser();
 
     // Testing one Polygon
     var arcPolygon = {
@@ -62,9 +72,9 @@ describe('plugin.arc.ArcJSONParser', function() {
           [0, 18]
         ]
       ]
-    }
+    };
     var olGeom = parser.parsePolygonGeometry_(arcPolygon);
-    expect(olGeom instanceof ol.geom.Polygon).toBe(true);
+    expect(olGeom instanceof Polygon).toBe(true);
     expect(olGeom.getCoordinates()[0][0][0]).toBe(0);
     expect(olGeom.getCoordinates()[0][0][1]).toBe(18);
     expect(olGeom.getCoordinates()[0][3][0]).toBe(0);
@@ -89,7 +99,7 @@ describe('plugin.arc.ArcJSONParser', function() {
     };
 
     olGeom = parser.parsePolygonGeometry_(arcPolygon);
-    expect(olGeom instanceof ol.geom.MultiPolygon).toBe(true);
+    expect(olGeom instanceof MultiPolygon).toBe(true);
     expect(olGeom.getCoordinates()[0][0][0][0]).toBe(0);
     expect(olGeom.getCoordinates()[0][0][0][1]).toBe(18);
     expect(olGeom.getCoordinates()[0][0][3][0]).toBe(0);
@@ -102,7 +112,7 @@ describe('plugin.arc.ArcJSONParser', function() {
   });
 
   it('should parse Arc multipoint geometries', function() {
-    var parser = new plugin.arc.ArcJSONParser();
+    var parser = new ArcJSONParser();
     var arcMultiPoint = {
       'points': [
         [0, 18],
@@ -117,7 +127,7 @@ describe('plugin.arc.ArcJSONParser', function() {
     };
 
     var olGeom = parser.parseMultiPointGeometry_(arcMultiPoint);
-    expect(olGeom instanceof ol.geom.MultiPoint).toBe(true);
+    expect(olGeom instanceof MultiPoint).toBe(true);
     expect(olGeom.getCoordinates()[0][1]).toBe(18);
     expect(olGeom.getCoordinates()[3][0]).toBe(0);
     expect(olGeom.getCoordinates()[5][1]).toBe(50);
@@ -125,7 +135,7 @@ describe('plugin.arc.ArcJSONParser', function() {
   });
 
   it('should parse Arc BBOX geometries', function() {
-    var parser = new plugin.arc.ArcJSONParser();
+    var parser = new ArcJSONParser();
     var arcBBOX = {
       'xmin': 9,
       'xmax': 10,
@@ -134,7 +144,7 @@ describe('plugin.arc.ArcJSONParser', function() {
     };
 
     var olGeom = parser.parseBBOXGeometry_(arcBBOX);
-    expect(olGeom instanceof ol.geom.Polygon).toBe(true);
+    expect(olGeom instanceof Polygon).toBe(true);
     expect(olGeom.getCoordinates()[0][0][0]).toBe(9);
     expect(olGeom.getCoordinates()[0][0][1]).toBe(11);
     expect(olGeom.getCoordinates()[0][2][0]).toBe(10);

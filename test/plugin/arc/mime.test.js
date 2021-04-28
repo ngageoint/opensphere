@@ -1,9 +1,17 @@
+goog.require('os.file.mime');
 goog.require('os.file.mime.mock');
+goog.require('plugin.arc');
 goog.require('plugin.arc.mime');
 
 describe('plugin.arc.mime', function() {
+  const mime = goog.module.get('os.file.mime');
+  const arc = goog.module.get('plugin.arc');
+  const {registerMimeTypes} = goog.module.get('plugin.arc.mime');
+
+  registerMimeTypes();
+
   it('should not detect files that are not ArcGIS Server files', function() {
-    os.file.mime.mock.testFiles([
+    mime.mock.testFiles([
       '/base/test/plugin/file/kml/kml_test.xml',
       '/base/test/resources/bin/rand.bin',
       '/base/test/resources/json/partial_object.json',
@@ -16,16 +24,16 @@ describe('plugin.arc.mime', function() {
       '/base/test/resources/arc/arcgis/wmsserver/wms-130.xml',
       // Similarly, "arcgis" is a positive match, but "service=WMS" should be negative.
       '/base/test/resources/arc/arcgis/wms-130.xml?service=WMS&request=GetCapabilities'
-    ], os.file.mime.mock.testNo(plugin.arc.ID));
+    ], mime.mock.testNo(arc.ID));
   });
 
   it('should detect files that are ArcGIS Server files', function() {
-    os.file.mime.mock.testFiles(['/base/test/resources/arc/arc.html'],
-        os.file.mime.mock.testYes(plugin.arc.ID));
+    mime.mock.testFiles(['/base/test/resources/arc/arc.html'],
+        mime.mock.testYes(arc.ID));
   });
 
   it('should register itself with mime detection', function() {
-    var chain = os.file.mime.getTypeChain(plugin.arc.ID).join(', ');
-    expect(chain).toBe('application/octet-stream, text/plain, text/html, ' + plugin.arc.ID);
+    var chain = mime.getTypeChain(arc.ID).join(', ');
+    expect(chain).toBe('application/octet-stream, text/plain, text/html, ' + arc.ID);
   });
 });
