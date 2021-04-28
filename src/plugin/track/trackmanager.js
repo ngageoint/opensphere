@@ -504,7 +504,7 @@ class TrackManager extends EventTarget {
     }));
 
     if (newTrack) {
-      const styles = osObject.unsafeClone(track.get(StyleType.FEATURE) || newTrack.get(StyleType.FEATURE));
+      const styles = osObject.unsafeClone(newTrack.get(StyleType.FEATURE) || track.get(StyleType.FEATURE));
       let style = styles;
       if (style) {
         if (Array.isArray(style)) {
