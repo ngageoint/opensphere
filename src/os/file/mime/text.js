@@ -66,7 +66,7 @@ os.file.mime.text.getText = function(buffer, opt_file) {
 
     if (!s) {
       var arr = new Uint8Array(buffer);
-      var encoding = chardetng.detect(buffer);
+      var encoding = chardetng.detect(arr);
       if (encoding) {
         // strip any UTF BOMs before decoding
         var boms = os.file.mime.text.BOMS_;
