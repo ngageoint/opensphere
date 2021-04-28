@@ -72,7 +72,7 @@ plugin.file.shp.ui.ZipSHPImportUI.prototype.launchUI = function(file, opt_config
   if (content instanceof ArrayBuffer) {
     zip.createReader(new zip.ArrayBufferReader(content),
         this.handleZipReader.bind(this), this.handleZipReaderError.bind(this));
-  } else if (content instanceof ArrayBuffer) {
+  } else if (content instanceof Blob) {
     // convert the blob to an ArrayBuffer and proceed down the normal path
     content.arrayBuffer().then((arrayBuffer) => {
       this.zipFile_.setContent(arrayBuffer);

@@ -35,16 +35,21 @@ os.ui.Module.directive('confirmtext', [os.ui.window.confirmTextDirective]);
  *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
- * @param {!angular.$timeout} $timeout
  * @constructor
  * @ngInject
  */
-os.ui.window.ConfirmTextCtrl = function($scope, $element, $timeout) {
-  if ($scope.$parent['select']) {
-    setTimeout(function() {
-      $element.find('[name="title"]').select();
-    }, 10);
-  }
+os.ui.window.ConfirmTextCtrl = function($scope, $element) {
+  /**
+   * @type {?angular.Scope}
+   * @private
+   */
+  this.scope_ = $scope;
+
+  /**
+   * @type {?angular.JQLite}
+   * @private
+   */
+  this.element_ = $element;
 
   $scope.$watch('confirmValue', function(newVal, oldVal) {
     if (newVal != oldVal) {
@@ -52,11 +57,19 @@ os.ui.window.ConfirmTextCtrl = function($scope, $element, $timeout) {
     }
   });
 
-  $timeout(function() {
-    $element.find('.js-confirm-input').focus();
-  });
-
   $scope.$emit(os.ui.WindowEventType.READY);
+};
+
+
+/**
+ * Angular initialization lifecycle function.
+ */
+os.ui.window.ConfirmTextCtrl.prototype.$onInit = function() {
+  if (this.scope_.$parent['select']) {
+    this.element_.find('.js-confirm-input').select();
+  }
+
+  this.element_.find('.js-confirm-input').focus();
 };
 
 
