@@ -5,8 +5,8 @@ goog.require('goog.async.Deferred');
 goog.require('goog.fs.FileReader');
 goog.require('goog.net.jsloader');
 goog.require('goog.userAgent');
+goog.require('os');
 goog.require('os.IPersistable');
-goog.require('os.defines');
 goog.require('os.file.mime.text');
 goog.require('os.file.mime.zip');
 

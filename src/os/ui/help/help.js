@@ -5,8 +5,8 @@ goog.provide('os.ui.help.helpDirective');
 
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('os');
 goog.require('os.config.Settings');
-goog.require('os.defines');
 goog.require('os.ui');
 goog.require('os.ui.EventType');
 goog.require('os.ui.Module');

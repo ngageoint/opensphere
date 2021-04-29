@@ -1,17 +1,24 @@
 goog.require('ol.Feature');
 goog.require('ol.proj');
+goog.require('ol.style.Style');
 goog.require('os.geom.Ellipse');
 goog.require('os.layer.Vector');
 goog.require('os.map');
 goog.require('os.proj');
 goog.require('os.style.StyleField');
 goog.require('os.style.StyleManager');
-goog.require('plugin.cesium');
 goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.EllipsoidConverter');
 goog.require('test.plugin.cesium.scene');
 
+
 describe('plugin.cesium.sync.EllipsoidConverter', () => {
+  const Feature = goog.module.get('ol.Feature');
+  const olProj = goog.module.get('ol.proj');
+  const Style = goog.module.get('ol.style.Style');
+  const Ellipse = goog.module.get('os.geom.Ellipse');
+  const VectorLayer = goog.module.get('os.layer.Vector');
+  const osProj = goog.module.get('os.proj');
   const {getRealScene} = goog.module.get('test.plugin.cesium.scene');
   const VectorContext = goog.module.get('plugin.cesium.VectorContext');
   const EllipsoidConverter = goog.module.get('plugin.cesium.sync.EllipsoidConverter');
@@ -26,12 +33,12 @@ describe('plugin.cesium.sync.EllipsoidConverter', () => {
 
   beforeEach(() => {
     enableWebGLMock();
-    geometry = new os.geom.Ellipse([-5, -5], 100000, 50000, 45);
-    feature = new ol.Feature(geometry);
-    style = new ol.style.Style();
-    layer = new os.layer.Vector();
+    geometry = new Ellipse([-5, -5], 100000, 50000, 45);
+    feature = new Feature(geometry);
+    style = new Style();
+    layer = new VectorLayer();
     scene = getRealScene();
-    context = new VectorContext(scene, layer, ol.proj.get(os.proj.EPSG4326));
+    context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
   });
 
   afterEach(() => {

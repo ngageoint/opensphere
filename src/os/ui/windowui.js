@@ -7,6 +7,7 @@ goog.require('goog.async.Delay');
 goog.require('goog.dom.ViewportSizeMonitor');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
+goog.require('goog.events.KeyEvent');
 goog.require('goog.events.KeyHandler');
 goog.require('goog.log');
 goog.require('ol.array');
@@ -91,14 +92,16 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
       var readyPromise;
       var readyOff;
       var onWindowReady = function() {
-        // Try cascading the window first. If there aren't any windows to cascade against, use the config.
-        if (!this.cascade()) {
-          var height = $element.height();
-          $scope['y'] = (maxHeight - height) / 2;
-          $element.css('top', $scope['y'] + 'px');
-        }
+        if (this.element && this.scope) {
+          // Try cascading the window first. If there aren't any windows to cascade against, use the config.
+          if (!this.cascade()) {
+            var height = this.element.height();
+            this.scope['y'] = (maxHeight - height) / 2;
+            this.element.css('top', this.scope['y'] + 'px');
+          }
 
-        this.constrainWindow_();
+          this.constrainWindow_();
+        }
       }.bind(this);
 
       // make sure the window gets positioned eventually. windows should fire a os.ui.WindowEventType.READY event to
@@ -234,7 +237,7 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
   // If its a closeable window modal, let ESC close it
   if ($scope['showClose'] && $scope['modal']) {
     this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
-    this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+    this.keyHandler_.listen(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
   }
 
   // listen for mousedown so z-index can be updated
@@ -264,15 +267,17 @@ os.ui.WindowCtrl = function($scope, $element, $timeout) {
 
   // Stack this new window on top of others
   $timeout(function() {
-    // notify anyone listening that this window opened
-    var eventScope = this.element.scope() || this.scope;
-    eventScope.$emit(os.ui.WindowEventType.OPEN, this.element);
+    if (this.element && this.scope) {
+      // notify anyone listening that this window opened
+      var eventScope = this.element.scope() || this.scope;
+      eventScope.$emit(os.ui.WindowEventType.OPEN, this.element);
 
-    this.bringToFront();
+      this.bringToFront();
 
-    if (this.element && !this.resizeFn_) {
-      this.resizeFn_ = this.onWindowResize_.bind(this);
-      os.ui.resize(this.element, this.resizeFn_);
+      if (!this.resizeFn_) {
+        this.resizeFn_ = this.onWindowResize_.bind(this);
+        os.ui.resize(this.element, this.resizeFn_);
+      }
     }
   }.bind(this));
 };
@@ -298,7 +303,7 @@ os.ui.WindowCtrl.prototype.disposeInternal = function() {
   }
 
   if (this.keyHandler_) {
-    this.keyHandler_.unlisten(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+    this.keyHandler_.unlisten(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
     this.keyHandler_.dispose();
     this.keyHandler_ = null;
   }
@@ -636,9 +641,7 @@ os.ui.WindowCtrl.prototype.onToggleModal_ = function(opt_new, opt_old) {
  * @private
  */
 os.ui.WindowCtrl.prototype.updateZIndex_ = function() {
-  if (!this.scope['modal']) {
-    this.bringToFront();
-  }
+  this.bringToFront();
 
   if (!this.scope['active']) {
     this.scope['active'] = true;

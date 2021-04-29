@@ -11,12 +11,14 @@ goog.require('os.alert.AlertEvent');
 goog.require('os.alert.AlertManager');
 goog.require('os.config');
 goog.require('os.config.Settings');
+goog.require('os.fn');
 goog.require('os.metrics');
 goog.require('os.metrics.Metrics');
 goog.require('os.mixin.fixInjectorInvoke');
 goog.require('os.net');
 goog.require('os.net.CertNazi');
 goog.require('os.net.ProxyHandler');
+goog.require('os.net.RequestHandlerFactory');
 goog.require('os.plugin.PluginManager');
 goog.require('os.ui');
 goog.require('os.ui.alert.alertPopupDirective');
@@ -181,7 +183,7 @@ os.ui.AbstractMainCtrl.prototype.onCertNaziFailure = function(event) {
   }
 
   os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
-    confirm: goog.nullFunction,
+    confirm: os.fn.noop,
     prompt: text,
     noText: '',
     noIcon: '',
@@ -235,13 +237,17 @@ os.ui.AbstractMainCtrl.prototype.initialize = function() {
     os.settings.set(['about', 'version'], this.scope['version']);
   }
 
-  // set the proxy url
-  os.net.ProxyHandler.PROXY_URL = /** @type {string} */ (os.settings.get(['proxyUrl'], os.net.ProxyHandler.PROXY_URL));
+  // configure the proxy via settings & only add the handler if it's successful
+  var proxyConfig = /** @type {?Object} */ (os.settings.get(['proxy']));
+  var proxyUrl = /** @type {?string} */ (os.settings.get(['proxyUrl']));
 
-  // set up the proxy the new way
-  os.net.ProxyHandler.configure(/** @type {?Object} */ (os.settings.get(['proxy'])));
+  if (proxyConfig || proxyUrl) {
+    os.net.ProxyHandler.PROXY_URL = proxyUrl || os.net.ProxyHandler.PROXY_URL;
+    os.net.ProxyHandler.configure(proxyConfig);
+    os.net.RequestHandlerFactory.addHandler(os.net.ProxyHandler);
+  }
 
-  // set if mixed content should be enabled
+  // set if mixed content should be enabled -- this should be true if proxy is not configured
   os.net.ExtDomainHandler.MIXED_CONTENT_ENABLED = /** @type {boolean} */ (os.settings.get('mixedContent', false));
 
   // set if file:// URL's should be supported
@@ -320,35 +326,35 @@ os.ui.AbstractMainCtrl.prototype.onPluginsLoaded = function(opt_e) {
  * What we do when the window closes
  * @protected
  */
-os.ui.AbstractMainCtrl.prototype.onClose = goog.nullFunction;
+os.ui.AbstractMainCtrl.prototype.onClose = os.fn.noop;
 
 
 /**
  * @param {Object} event
  * @protected
  */
-os.ui.AbstractMainCtrl.prototype.onLogWindow = goog.nullFunction;
+os.ui.AbstractMainCtrl.prototype.onLogWindow = os.fn.noop;
 
 
 /**
  * Registers event listeners for the controller.
  * @protected
  */
-os.ui.AbstractMainCtrl.prototype.registerListeners = goog.nullFunction;
+os.ui.AbstractMainCtrl.prototype.registerListeners = os.fn.noop;
 
 
 /**
  * Removes event listeners for the controller.
  * @protected
  */
-os.ui.AbstractMainCtrl.prototype.removeListeners = goog.nullFunction;
+os.ui.AbstractMainCtrl.prototype.removeListeners = os.fn.noop;
 
 
 /**
  * Initialize the peer
  * @protected
  */
-os.ui.AbstractMainCtrl.prototype.initXt = goog.nullFunction;
+os.ui.AbstractMainCtrl.prototype.initXt = os.fn.noop;
 
 
 /**
@@ -365,4 +371,4 @@ os.ui.AbstractMainCtrl.prototype.addPlugins = function() {
  * Add the metrics plugins for this app
  * @protected
  */
-os.ui.AbstractMainCtrl.prototype.addMetricsPlugins = goog.nullFunction;
+os.ui.AbstractMainCtrl.prototype.addMetricsPlugins = os.fn.noop;

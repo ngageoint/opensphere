@@ -1,4 +1,5 @@
 goog.require('goog.Uri');
+goog.require('os.fn');
 goog.require('os.mock');
 goog.require('os.net.RequestHandlerFactory');
 goog.require('os.net.SameDomainHandler');
@@ -10,7 +11,7 @@ describe('os.net.RequestHandlerFactory', function() {
   it('should prevent the os.mock beforeEach from meddling with the test', function() {
     originalList = os.net.RequestHandlerFactory.list_;
     addHandler = os.net.RequestHandlerFactory.addHandler;
-    os.net.RequestHandlerFactory.addHandler = goog.nullFunction;
+    os.net.RequestHandlerFactory.addHandler = os.fn.noop;
 
     // ensure we start with an empty factory
     os.net.RequestHandlerFactory.list_ = null;

@@ -1,61 +1,63 @@
-goog.provide('plugin.cesium.tiles.TilesetImportUI');
+goog.module('plugin.cesium.tiles.TilesetImportUI');
 
-goog.require('os.ui.im.FileImportUI');
-goog.require('os.ui.window');
-goog.require('plugin.cesium.tiles');
-goog.require('plugin.cesium.tiles.tilesetImportDirective');
-
+const {directiveTag} = goog.require('plugin.cesium.tiles.TilesetImport');
+const FileImportUI = goog.require('os.ui.im.FileImportUI');
+const osWindow = goog.require('os.ui.window');
+const {TYPE} = goog.require('plugin.cesium.tiles');
 
 
 /**
  * Import UI for 3D tiles.
  *
- * @extends {os.ui.im.FileImportUI<Object>}
- * @constructor
+ * @extends {FileImportUI<Object>}
  */
-plugin.cesium.tiles.TilesetImportUI = function() {
-  plugin.cesium.tiles.TilesetImportUI.base(this, 'constructor');
-};
-goog.inherits(plugin.cesium.tiles.TilesetImportUI, os.ui.im.FileImportUI);
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.tiles.TilesetImportUI.prototype.getTitle = function() {
-  return plugin.cesium.tiles.TYPE;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.tiles.TilesetImportUI.prototype.launchUI = function(file, opt_config) {
-  var config = {};
-
-  // if a configuration was provided, merge it in
-  if (opt_config) {
-    this.mergeConfig(opt_config, config);
+class TilesetImportUI extends FileImportUI {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
   }
 
-  config['file'] = file;
-  config['title'] = 'New 3D Tile Layer';
+  /**
+   * @inheritDoc
+   */
+  getTitle() {
+    return TYPE;
+  }
 
-  var scopeOptions = {
-    'config': config
-  };
-  var windowOptions = {
-    'label': 'Import ' + plugin.cesium.tiles.TYPE,
-    'icon': 'fa fa-sign-in',
-    'x': 'center',
-    'y': 'center',
-    'width': 400,
-    'min-width': 400,
-    'max-width': 800,
-    'height': 'auto',
-    'modal': true,
-    'show-close': true
-  };
-  var template = '<tilesetimport></tilesetimport>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
-};
+  /**
+   * @inheritDoc
+   */
+  launchUI(file, opt_config) {
+    var config = {};
+
+    // if a configuration was provided, merge it in
+    if (opt_config) {
+      this.mergeConfig(opt_config, config);
+    }
+
+    config['file'] = file;
+    config['title'] = 'New 3D Tile Layer';
+
+    var scopeOptions = {
+      'config': config
+    };
+    var windowOptions = {
+      'label': 'Import ' + TYPE,
+      'icon': 'fa fa-sign-in',
+      'x': 'center',
+      'y': 'center',
+      'width': 400,
+      'min-width': 400,
+      'max-width': 800,
+      'height': 'auto',
+      'modal': true,
+      'show-close': true
+    };
+    var template = `<${directiveTag}></${directiveTag}>`;
+    osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  }
+}
+
+exports = TilesetImportUI;

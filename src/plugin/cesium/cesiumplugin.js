@@ -1,95 +1,100 @@
-goog.provide('plugin.cesium.Plugin');
+goog.module('plugin.cesium.Plugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.MapContainer');
-goog.require('os.data.ProviderEntry');
-goog.require('os.layer.Group');
-goog.require('os.layer.ILayer');
-goog.require('os.plugin.AbstractPlugin');
-goog.require('os.ui.im.ImportManager');
-goog.require('plugin.cesium');
-goog.require('plugin.cesium.CesiumRenderer');
-goog.require('plugin.cesium.tiles');
-goog.require('plugin.cesium.tiles.Descriptor');
-goog.require('plugin.cesium.tiles.LayerConfig');
-goog.require('plugin.cesium.tiles.Provider');
-goog.require('plugin.cesium.tiles.TilesetImportUI');
-goog.require('plugin.cesium.tiles.mime');
+const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
+const MapContainer = goog.require('os.MapContainer');
+const settings = goog.require('os.config.Settings');
+const DataManager = goog.require('os.data.DataManager');
+const ProviderEntry = goog.require('os.data.ProviderEntry');
+const osImplements = goog.require('os.implements');
+const Group = goog.require('os.layer.Group');
+const ILayer = goog.require('os.layer.ILayer');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const ImportManager = goog.require('os.ui.im.ImportManager');
+const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');
+const {
+  ID,
+  CESIUM_ONLY_LAYER,
+  DEFAULT_ION_URL,
+  SettingsKey,
+  setIonUrl
+} = goog.require('plugin.cesium');
+const CesiumRenderer = goog.require('plugin.cesium.CesiumRenderer');
+const tiles = goog.require('plugin.cesium.tiles');
+const Descriptor = goog.require('plugin.cesium.tiles.Descriptor');
+const LayerConfig = goog.require('plugin.cesium.tiles.LayerConfig');
+const Provider = goog.require('plugin.cesium.tiles.Provider');
+const TilesetImportUI = goog.require('plugin.cesium.tiles.TilesetImportUI');
+const mime = goog.require('plugin.cesium.tiles.mime');
 
 
 /**
  * Provides a WebGL renderer for the map, powered by Cesium.
- *
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
  */
-plugin.cesium.Plugin = function() {
-  plugin.cesium.Plugin.base(this, 'constructor');
-  this.id = plugin.cesium.Plugin.ID;
-};
-goog.inherits(plugin.cesium.Plugin, os.plugin.AbstractPlugin);
-
-
-/**
- * The plugin identifier.
- * @type {string}
- * @const
- */
-plugin.cesium.Plugin.ID = 'cesium';
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.Plugin.prototype.init = function() {
-  // update the Ion service URL from settings. this should be done first, as it impacts if Ion-related features are
-  // loaded in the application.
-  plugin.cesium.ionUrl = /** @type {string} */ (os.settings.get(plugin.cesium.SettingsKey.ION_URL,
-      plugin.cesium.DEFAULT_ION_URL));
-
-  // check if cesium is the active renderer
-  var mapContainer = os.MapContainer.getInstance();
-  if (os.settings.get(os.webgl.AbstractWebGLRenderer.ACTIVE_SETTINGS_KEY) == plugin.cesium.Plugin.ID) {
-    this.registerCesiumTypes_();
-    mapContainer.setWebGLRenderer(new plugin.cesium.CesiumRenderer());
-  } else {
-    mapContainer.addWebGLRenderer(new plugin.cesium.CesiumRenderer());
+class Plugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = ID;
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  init() {
+    // update the Ion service URL from settings. this should be done first, as it impacts if Ion-related features are
+    // loaded in the application.
+    const ionUrl = /** @type {string} */ (settings.getInstance().get(SettingsKey.ION_URL, DEFAULT_ION_URL));
+    setIonUrl(ionUrl);
 
-/**
- * Register OpenSphere data types used by Cesium.
- * @private
- */
-plugin.cesium.Plugin.prototype.registerCesiumTypes_ = function() {
-  var mapContainer = os.MapContainer.getInstance();
-
-  // register 3D tiles layers
-  var lcm = os.layer.config.LayerConfigManager.getInstance();
-  lcm.registerLayerConfig(plugin.cesium.tiles.ID, plugin.cesium.tiles.LayerConfig);
-
-  var dm = os.dataManager;
-  dm.registerProviderType(new os.data.ProviderEntry(
-      plugin.cesium.tiles.ID,
-      plugin.cesium.tiles.Provider,
-      plugin.cesium.tiles.TYPE,
-      plugin.cesium.tiles.TYPE));
-  dm.registerDescriptorType(plugin.cesium.tiles.ID, plugin.cesium.tiles.Descriptor);
-
-  // add 3D layer group
-  var group = new os.layer.Group();
-  group.setPriority(3);
-  group.setOSType(plugin.cesium.CESIUM_ONLY_LAYER);
-  group.setCheckFunc(function(layer) {
-    if (os.implements(layer, os.layer.ILayer.ID)) {
-      return /** @type {os.layer.ILayer} */ (layer).getOSType() === plugin.cesium.CESIUM_ONLY_LAYER;
+    // check if cesium is the active renderer
+    var mapContainer = MapContainer.getInstance();
+    if (settings.getInstance().get(AbstractWebGLRenderer.ACTIVE_SETTINGS_KEY) == ID) {
+      this.registerCesiumTypes_();
+      mapContainer.setWebGLRenderer(new CesiumRenderer());
+    } else {
+      mapContainer.addWebGLRenderer(new CesiumRenderer());
     }
-    return false;
-  });
+  }
 
-  mapContainer.addGroup(group);
+  /**
+   * Register OpenSphere data types used by Cesium.
+   * @private
+   */
+  registerCesiumTypes_() {
+    var mapContainer = MapContainer.getInstance();
 
-  var im = os.ui.im.ImportManager.getInstance();
-  im.registerImportDetails(plugin.cesium.tiles.TYPE, true);
-  im.registerImportUI(plugin.cesium.tiles.mime.TYPE, new plugin.cesium.tiles.TilesetImportUI());
-};
+    // register 3D tiles layers
+    var lcm = LayerConfigManager.getInstance();
+    lcm.registerLayerConfig(tiles.ID, LayerConfig);
+
+    var dm = DataManager.getInstance();
+    dm.registerProviderType(new ProviderEntry(
+        tiles.ID,
+        Provider,
+        tiles.TYPE,
+        tiles.TYPE));
+    dm.registerDescriptorType(tiles.ID, Descriptor);
+
+    // add 3D layer group
+    var group = new Group();
+    group.setPriority(3);
+    group.setOSType(CESIUM_ONLY_LAYER);
+    group.setCheckFunc(function(layer) {
+      if (osImplements(layer, ILayer.ID)) {
+        return /** @type {ILayer} */ (layer).getOSType() === CESIUM_ONLY_LAYER;
+      }
+      return false;
+    });
+
+    mapContainer.addGroup(group);
+
+    var im = ImportManager.getInstance();
+    im.registerImportDetails(tiles.TYPE, true);
+    im.registerImportUI(mime.TYPE, new TilesetImportUI());
+  }
+}
+
+exports = Plugin;

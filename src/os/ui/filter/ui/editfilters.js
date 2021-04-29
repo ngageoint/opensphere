@@ -103,8 +103,8 @@ os.ui.filter.ui.EditFiltersCtrl = function($scope, $element) {
    */
   $scope['tab'] = this['isComplex'] ? 'advanced' : 'basic';
 
-  $scope.$on('filterbuilder.remove', goog.bind(this.onRemove_, this));
-  $scope.$on('$destroy', goog.bind(this.onDestroy, this));
+  $scope.$on('filterbuilder.remove', this.onRemove_.bind(this));
+  $scope.$on('$destroy', this.onDestroy.bind(this));
   if (this.entry.getFilter()) {
     os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Filters.EDIT, 1);
   } else {

@@ -2,6 +2,7 @@ goog.require('ol.Feature');
 goog.require('ol.geom.Polygon');
 goog.require('ol.proj');
 goog.require('ol.style.Fill');
+goog.require('ol.style.Stroke');
 goog.require('ol.style.Style');
 goog.require('olcs.core');
 goog.require('os.interpolate');
@@ -9,7 +10,6 @@ goog.require('os.layer.Vector');
 goog.require('os.map');
 goog.require('os.proj');
 goog.require('os.webgl.AltitudeMode');
-goog.require('plugin.cesium');
 goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.sync.PolygonConverter');
 goog.require('test.plugin.cesium.scene');
@@ -18,6 +18,14 @@ goog.require('test.plugin.cesium.sync.polygon');
 
 
 describe('plugin.cesium.sync.PolygonConverter', () => {
+  const Feature = goog.module.get('ol.Feature');
+  const Polygon = goog.module.get('ol.geom.Polygon');
+  const olProj = goog.module.get('ol.proj');
+  const Fill = goog.module.get('ol.style.Fill');
+  const Stroke = goog.module.get('ol.style.Stroke');
+  const Style = goog.module.get('ol.style.Style');
+  const VectorLayer = goog.module.get('os.layer.Vector');
+  const osProj = goog.module.get('os.proj');
   const {getRealScene} = goog.module.get('test.plugin.cesium.scene');
   const {getLineRetriever, testLine} = goog.module.get('test.plugin.cesium.sync.linestring');
   const {testPolygon} = goog.module.get('test.plugin.cesium.sync.polygon');
@@ -35,12 +43,12 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
 
   beforeEach(() => {
     enableWebGLMock();
-    geometry = new ol.geom.Polygon.fromExtent([-5, -5, 5, 5]);
-    feature = new ol.Feature(geometry);
-    style = new ol.style.Style();
-    layer = new os.layer.Vector();
+    geometry = new Polygon.fromExtent([-5, -5, 5, 5]);
+    feature = new Feature(geometry);
+    style = new Style();
+    layer = new VectorLayer();
     scene = getRealScene();
-    context = new VectorContext(scene, layer, ol.proj.get(os.proj.EPSG4326));
+    context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
     getLine = getLineRetriever(context, scene);
   });
 
@@ -60,7 +68,7 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
     });
 
     it('should create an outline with a given stroke style', () => {
-      style.setStroke(new ol.style.Stroke({
+      style.setStroke(new Stroke({
         color: green,
         width: 4
       }));
@@ -76,7 +84,7 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
     });
 
     it('should create a dashed line if the stroke contains a dash', () => {
-      const stroke = new ol.style.Stroke({
+      const stroke = new Stroke({
         color: green,
         width: 1
       });
@@ -94,7 +102,7 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
     });
 
     it('should create an outline for every ring of the polygon', () => {
-      const otherRing = ol.geom.Polygon.fromExtent([-2, -2, 2, 2]);
+      const otherRing = Polygon.fromExtent([-2, -2, 2, 2]);
       const coords = geometry.getCoordinates();
       coords.push(otherRing.getCoordinates()[0]);
       geometry.setCoordinates(coords);
@@ -110,12 +118,12 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
     });
 
     it('should create a single fill if one exists on the style', () => {
-      style.setStroke(new ol.style.Stroke({
+      style.setStroke(new Stroke({
         color: green,
         width: 4
       }));
 
-      style.setFill(new ol.style.Fill({
+      style.setFill(new Fill({
         color: blue
       }));
 
@@ -142,7 +150,7 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
 
   describe('update', () => {
     it('should not update if a fill is being added', () => {
-      style.setStroke(new ol.style.Stroke({
+      style.setStroke(new Stroke({
         color: green,
         width: 4
       }));
@@ -154,7 +162,7 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
       expect(polygon).toBeTruthy();
       expect(context.primitives.length).toBe(1);
 
-      style.setFill(new ol.style.Fill({
+      style.setFill(new Fill({
         color: blue
       }));
 
@@ -162,12 +170,12 @@ describe('plugin.cesium.sync.PolygonConverter', () => {
     });
 
     it('should not update the dirty flag for the fill if the fill is being removed', () => {
-      style.setStroke(new ol.style.Stroke({
+      style.setStroke(new Stroke({
         color: green,
         width: 4
       }));
 
-      style.setFill(new ol.style.Fill({
+      style.setFill(new Fill({
         color: blue
       }));
 

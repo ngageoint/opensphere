@@ -3,6 +3,7 @@ goog.provide('os.query.FilterManager');
 goog.require('goog.array');
 goog.require('goog.events.EventTarget');
 goog.require('goog.string');
+goog.require('os');
 goog.require('os.config.Settings');
 goog.require('os.filter.BaseFilterManager');
 goog.require('os.filter.FilterEntry');

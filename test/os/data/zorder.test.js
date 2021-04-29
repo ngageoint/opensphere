@@ -101,6 +101,22 @@ describe('os.data.ZOrder', function() {
     expect(z.groups_['Feature Layers'][1].id).toBe('vectorLayer1');
   });
 
+  it('should get the z-order type for a layer ID', () => {
+    let type = z.getZType('tileLayer3');
+    expect(type).toBe('Tile Layers');
+
+    type = z.getZType('vectorLayer2');
+    expect(type).toBe('Feature Layers');
+  });
+
+  it('should get the z-order index for a layer ID', () => {
+    let index = z.getIndex('tileLayer3');
+    expect(index).toBe(0);
+
+    index = z.getIndex('vectorLayer1');
+    expect(index).toBe(1);
+  });
+
   it('should update the map from the z-order data', function() {
     var groups = z.getMap().getLayers().getArray();
     groups.forEach(function(group) {

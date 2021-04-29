@@ -1,0 +1,26 @@
+<div class="flex-fill w-100 d-flex flex-column">
+  <div class="modal-body container flex-fill">
+    <form name="addServerForm" ng-submit="ctrl.accept()">
+      <div class="form-group m-0">
+        <label for="serverType">Select a server type:</label>
+        <select title="ServerType" class="custom-select w-50"
+            ng-model="ctrl.serverType"
+            ng-disabled="ctrl.loading"
+            ng-options="value.label for value in ctrl.items">
+        </select>
+      </div>
+      <uiswitch items="ctrl.serverType" directive-function="ctrl.getUi" scope-update-function="ctrl.updateUiScope">
+      </uiswitch>
+    </form>
+  </div>
+  <div class="modal-footer d-flex">
+    <button class="btn btn-primary" ng-click="ctrl.accept()" ng-disabled="addServerForm.$invalid || testing">
+      <i class="fa fa-check"></i>
+      Save
+    </button>
+    <button class="btn btn-secondary" ng-click="ctrl.close()">
+      <i class="fa fa-ban"></i>
+      Cancel
+    </button>
+  </div>
+</div>

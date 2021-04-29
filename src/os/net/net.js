@@ -6,7 +6,6 @@ goog.require('goog.Uri.QueryData');
 goog.require('goog.array');
 goog.require('os.net.ExtDomainHandler');
 goog.require('os.net.LocalFileHandler');
-goog.require('os.net.ProxyHandler');
 goog.require('os.net.SameDomainHandler');
 goog.require('os.registerClass');
 
@@ -41,10 +40,32 @@ os.net.CrossOriginEntry;
 
 
 /**
+ * @typedef {function((ArrayBuffer|string), ?string=, Array<number>=):?string}
+ */
+os.net.RequestValidator;
+
+
+/**
+ * @typedef {{
+ *   validator: !os.net.RequestValidator,
+ *   priority: number
+ * }}
+ */
+os.net.RequestValidatorEntry;
+
+
+/**
  * @type {!Array<os.net.CrossOriginEntry>}
  * @private
  */
 os.net.crossOriginCache_ = [];
+
+
+/**
+ * List of default request validators.
+ * @type {!Array<!os.net.RequestValidatorEntry>}
+ */
+os.net.defaultValidators_ = [];
 
 
 /**
@@ -62,13 +83,60 @@ os.net.LOCAL_URI = new goog.Uri(window.location);
 
 
 /**
+ * Get the default request validators.
+ * @return {!Array<!os.net.RequestValidator>}
+ */
+os.net.getDefaultValidators = function() {
+  return os.net.defaultValidators_.map((entry) => entry.validator);
+};
+
+
+/**
+ * Register a request validator. The validator should process response data and return an error if found, otherwise it
+ * should return null or an empty string.
+ * @param {!os.net.RequestValidator} validator The validation function.
+ * @param {number=} opt_priority The priority. Defaults to 0, higher priority will execute first.
+ * @param {boolean=} opt_skipSort If sorting should be skipped.
+ */
+os.net.registerDefaultValidator = function(validator, opt_priority = 0, opt_skipSort = false) {
+  os.net.defaultValidators_.push({
+    validator,
+    priority: opt_priority
+  });
+
+  if (!opt_skipSort) {
+    os.net.defaultValidators_.sort(os.net.sortValidators_);
+  }
+};
+
+
+/**
+ * Reset the default request validators.
+ */
+os.net.resetDefaultValidators = function() {
+  os.net.defaultValidators_.length = 0;
+};
+
+
+/**
+ * Sort request validator entries.
+ * @param {os.net.RequestValidatorEntry} a Thing 1
+ * @param {os.net.RequestValidatorEntry} b Thing 2
+ * @return {number} per typical compare functions
+ * @private
+ */
+os.net.sortValidators_ = function(a, b) {
+  return b.priority - a.priority;
+};
+
+
+/**
  * Adds the default set of handlers to the factory.
  */
 os.net.addDefaultHandlers = function() {
   os.net.RequestHandlerFactory.addHandler(os.net.LocalFileHandler);
   os.net.RequestHandlerFactory.addHandler(os.net.SameDomainHandler);
   os.net.RequestHandlerFactory.addHandler(os.net.ExtDomainHandler);
-  os.net.RequestHandlerFactory.addHandler(os.net.ProxyHandler);
 };
 
 

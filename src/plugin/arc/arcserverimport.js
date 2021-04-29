@@ -1,10 +1,13 @@
 goog.provide('plugin.arc.ArcImportCtrl');
 goog.provide('plugin.arc.arcImportDirective');
-goog.require('os.defines');
+
+goog.require('os');
 goog.require('os.ui.Module');
 goog.require('os.ui.SingleUrlProviderImportCtrl');
+goog.require('os.ui.singleUrlFormDirective');
 goog.require('os.ui.window');
 goog.require('plugin.arc.ArcServer');
+goog.require('plugin.arc.ArcServerHelpUI');
 
 
 /**
@@ -41,9 +44,11 @@ os.ui.Module.directive('arcserver', [plugin.arc.arcImportDirective]);
  */
 plugin.arc.ArcImportCtrl = function($scope, $element) {
   plugin.arc.ArcImportCtrl.base(this, 'constructor', $scope, $element);
+  this['helpUi'] = plugin.arc.ArcServerHelpUI.directiveTag;
 
   var file = /** @type {os.file.File} */ ($scope['config']['file']);
   $scope['config']['url'] = file ? file.getUrl() : this.getUrl();
+  $scope['typeName'] = 'ArcGIS Server';
   $scope['urlExample'] = 'https://www.example.com/arcgis/rest/services';
   $scope['config']['type'] = 'arc';
   $scope['config']['label'] = this.getLabel() || 'ArcGIS Server';

@@ -1,5 +1,6 @@
 goog.require('ol.geom.GeometryType');
 goog.require('ol.geom.Point');
+goog.require('ol.proj');
 goog.require('ol.style.Style');
 goog.require('ol.style.Text');
 goog.require('os.feature.DynamicFeature');
@@ -24,13 +25,23 @@ goog.require('plugin.cesium.sync.PolygonConverter');
 goog.require('plugin.cesium.sync.converter');
 goog.require('test.plugin.cesium.scene');
 
+
 describe('plugin.cesium.sync.converter', () => {
+  const Text = goog.module.get('ol.style.Text');
+  const Feature = goog.module.get('ol.Feature');
+  const GeometryType = goog.module.get('ol.geom.GeometryType');
+  const Point = goog.module.get('ol.geom.Point');
+  const olProj = goog.module.get('ol.proj');
+  const Style = goog.module.get('ol.style.Style');
+
   const {convertGeometry, getConverter} = goog.module.get('plugin.cesium.sync.converter');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
   const DynamicFeature = goog.module.get('os.feature.DynamicFeature');
-  const GeometryType = goog.module.get('ol.geom.GeometryType');
   const DynamicLineStringConverter = goog.module.get('plugin.cesium.sync.DynamicLineStringConverter');
   const Ellipse = goog.module.get('os.geom.Ellipse');
+  const Vector = goog.module.get('os.layer.Vector');
+  const {EPSG4326} = goog.module.get('os.proj');
+
   const EllipseConverter = goog.module.get('plugin.cesium.sync.EllipseConverter');
   const GeometryCollectionConverter = goog.module.get('plugin.cesium.sync.GeometryCollectionConverter');
   const LabelConverter = goog.module.get('plugin.cesium.sync.LabelConverter');
@@ -53,12 +64,12 @@ describe('plugin.cesium.sync.converter', () => {
   let context;
 
   beforeEach(() => {
-    geometry = new ol.geom.Point([0, 0]);
-    feature = new ol.Feature(geometry);
-    style = new ol.style.Style();
-    layer = new os.layer.Vector();
+    geometry = new Point([0, 0]);
+    feature = new Feature(geometry);
+    style = new Style();
+    layer = new Vector();
     scene = getFakeScene();
-    context = new VectorContext(scene, layer, ol.proj.get(os.proj.EPSG4326));
+    context = new VectorContext(scene, layer, olProj.get(EPSG4326));
   });
 
   describe('converterGeometry', () => {
@@ -123,7 +134,7 @@ describe('plugin.cesium.sync.converter', () => {
     });
 
     it('should return the label converter if the style contains a text style', () => {
-      style.setText(new ol.style.Text());
+      style.setText(new Text());
       runTests({
         [GeometryType.GEOMETRY_COLLECTION]: LabelConverter,
         [GeometryType.LINE_STRING]: LabelConverter,

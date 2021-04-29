@@ -1,305 +1,349 @@
-goog.provide('plugin.cesium.sync.ImageSynchronizer');
+goog.module('plugin.cesium.sync.ImageSynchronizer');
 
-goog.require('goog.asserts');
-goog.require('goog.events.EventType');
-goog.require('ol.events');
-goog.require('ol.events.EventType');
-goog.require('ol.layer.Tile');
-goog.require('os.Map');
-goog.require('os.MapContainer');
-goog.require('os.MapEvent');
-goog.require('os.events.SelectionType');
-goog.require('os.layer.PropertyChange');
-goog.require('os.source.ImageStatic');
-goog.require('plugin.cesium.sync.CesiumSynchronizer');
+const googEventsEventType = goog.require('goog.events.EventType');
+const ImageState = goog.require('ol.ImageState');
+const OLObject = goog.require('ol.Object');
+const events = goog.require('ol.events');
+const olExtent = goog.require('ol.extent');
+const EventType = goog.require('ol.events.EventType');
+const olProj = goog.require('ol.proj');
 
+const dispatcher = goog.require('os.Dispatcher');
+const mapContainer = goog.require('os.MapContainer');
+const MapEvent = goog.require('os.MapEvent');
+const osExtent = goog.require('os.extent');
+const geo = goog.require('os.geo');
+const {normalizeLongitude} = goog.require('os.geo2');
+const PropertyChange = goog.require('os.layer.PropertyChange');
+const osMap = goog.require('os.map');
+const osProj = goog.require('os.proj');
+const CesiumSynchronizer = goog.require('plugin.cesium.sync.CesiumSynchronizer');
+
+const ImageBase = goog.requireType('ol.ImageBase');
+const PluggableMap = goog.requireType('ol.PluggableMap');
+const ImageSource = goog.requireType('ol.source.Image');
+const OSMap = goog.requireType('os.Map');
+const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const ImageLayer = goog.requireType('os.layer.Image');
 
 
 /**
  * Synchronizes a single OpenLayers image layer to Cesium.
  *
- * @param {!os.layer.Image} layer The OpenLayers image layer.
- * @param {!ol.PluggableMap} map The OpenLayers map.
- * @param {!Cesium.Scene} scene The Cesium scene.
- * @extends {plugin.cesium.sync.CesiumSynchronizer.<os.layer.Image>}
- * @constructor
+ * @extends {CesiumSynchronizer<ImageLayer>}
  */
-plugin.cesium.sync.ImageSynchronizer = function(layer, map, scene) {
-  plugin.cesium.sync.ImageSynchronizer.base(this, 'constructor', layer, map, scene);
+class ImageSynchronizer extends CesiumSynchronizer {
+  /**
+   * Constructor.
+   * @param {!ImageLayer} layer The OpenLayers image layer.
+   * @param {!PluggableMap} map The OpenLayers map.
+   * @param {!Cesium.Scene} scene The Cesium scene.
+   */
+  constructor(layer, map, scene) {
+    super(layer, map, scene);
+
+    /**
+     * @type {Cesium.Primitive}
+     * @private
+     */
+    this.activePrimitive_ = null;
+
+    /**
+     * @type {ImageSource}
+     * @private
+     */
+    this.source_ = this.layer.getSource();
+
+    /**
+     * @type {number}
+     * @private
+     */
+    this.lastRevision_ = -1;
+
+    /**
+     * @type {!Cesium.PrimitiveCollection}
+     * @private
+     */
+    this.collection_ = new Cesium.PrimitiveCollection();
+
+    /**
+     * @type {number}
+     * @private
+     */
+    this.nextId_ = 0;
+
+    /**
+     * @type {ImageBase|undefined}
+     * @private
+     */
+    this.image_;
+
+    /**
+     * @type {ol.Extent|undefined}
+     * @private
+     */
+    this.lastExtent_;
+
+    /**
+     * @type {string|undefined}
+     * @private
+     */
+    this.lastUrl_;
+
+    /**
+     * Flag for fixing a bug with the first render loop pass.
+     * @type {boolean}
+     * @private
+     */
+    this.firstLoopFixed_ = false;
+
+    /**
+     * Event keys that correspond to modifiable styles
+     * @type {Array<string>}
+     * @protected
+     */
+    this.styleChangeKeys = ['opacity', 'brightness', 'contrast', 'saturation', 'sharpness'];
+
+    this.onPrimitiveReady_ = this.onPrimitiveReadyInternal.bind(this);
+    this.scene.primitives.add(this.collection_);
+
+    events.listen(this.layer, googEventsEventType.PROPERTYCHANGE, this.onLayerPropertyChange, this);
+    events.listen(this.source_, EventType.CHANGE, this.syncInternal, this);
+    mapContainer.getInstance().listen(MapEvent.VIEW_CHANGE, this.onSyncChange, false, this);
+  }
 
   /**
-   * @type {Cesium.Primitive}
-   * @private
+   * @inheritDoc
    */
-  this.activePrimitive_ = null;
+  disposeInternal() {
+    events.unlisten(this.layer, googEventsEventType.PROPERTYCHANGE, this.onLayerPropertyChange, this);
+    events.unlisten(this.source_, EventType.CHANGE, this.syncInternal, this);
+    mapContainer.getInstance().unlisten(MapEvent.VIEW_CHANGE, this.onSyncChange, false, this);
+
+    this.activePrimitive_ = null;
+    this.source_ = null;
+
+    this.scene.primitives.remove(this.collection_);
+    super.disposeInternal();
+  }
 
   /**
-   * @type {ol.source.Image}
-   * @private
+   * @inheritDoc
    */
-  this.source_ = this.layer.getSource();
+  synchronize() {
+    this.syncInternal();
+  }
 
   /**
-   * @type {number}
-   * @private
+   * @param {boolean=} opt_force Force an update regardless of the current source revision
+   * @protected
    */
-  this.lastRevision_ = -1;
+  syncInternal(opt_force) {
+    if (this.source_ && (this.lastRevision_ !== this.source_.getRevision() || opt_force)) {
+      this.lastRevision_ = this.source_.getRevision();
 
-  /**
-   * @type {!Cesium.PrimitiveCollection}
-   * @private
-   */
-  this.collection_ = new Cesium.PrimitiveCollection();
-
-  /**
-   * @type {number}
-   * @private
-   */
-  this.nextId_ = 0;
-
-  /**
-   * @type {ol.ImageBase|undefined}
-   * @private
-   */
-  this.image_;
-
-  /**
-   * @type {ol.Extent|undefined}
-   * @private
-   */
-  this.lastExtent_;
-
-  /**
-   * @type {string|undefined}
-   * @private
-   */
-  this.lastUrl_;
-
-  /**
-   * Flag for fixing a bug with the first render loop pass.
-   * @type {boolean}
-   * @private
-   */
-  this.firstLoopFixed_ = false;
-
-  this.onPrimitiveReady_ = this.onPrimitiveReadyInternal.bind(this);
-  this.scene.primitives.add(this.collection_);
-
-  ol.events.listen(this.layer, goog.events.EventType.PROPERTYCHANGE, this.onLayerPropertyChange, this);
-  ol.events.listen(this.source_, ol.events.EventType.CHANGE, this.syncInternal, this);
-  os.map.mapContainer.listen(os.MapEvent.VIEW_CHANGE, this.onSyncChange, false, this);
-};
-goog.inherits(plugin.cesium.sync.ImageSynchronizer, plugin.cesium.sync.CesiumSynchronizer);
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.sync.ImageSynchronizer.prototype.disposeInternal = function() {
-  ol.events.unlisten(this.layer, goog.events.EventType.PROPERTYCHANGE, this.onLayerPropertyChange, this);
-  ol.events.unlisten(this.source_, ol.events.EventType.CHANGE, this.syncInternal, this);
-  os.map.mapContainer.unlisten(os.MapEvent.VIEW_CHANGE, this.onSyncChange, false, this);
-
-  this.activePrimitive_ = null;
-  this.source_ = null;
-
-  this.scene.primitives.remove(this.collection_);
-  plugin.cesium.sync.ImageSynchronizer.base(this, 'disposeInternal');
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.sync.ImageSynchronizer.prototype.synchronize = function() {
-  this.syncInternal();
-};
-
-
-/**
- * @param {boolean=} opt_force Force an update regardless of the current source revision
- * @protected
- */
-plugin.cesium.sync.ImageSynchronizer.prototype.syncInternal = function(opt_force) {
-  if (this.source_ && (this.lastRevision_ !== this.source_.getRevision() || opt_force)) {
-    this.lastRevision_ = this.source_.getRevision();
-
-    if (this.activePrimitive_) {
-      this.activePrimitive_.show = this.layer.getVisible();
-    }
-
-    var map = /** @type {os.Map} */ (os.map.mapContainer.getMap());
-    var viewExtent = map.getExtent();
-    if (ol.extent.containsExtent(viewExtent, os.map.PROJECTION.getWorldExtent())) {
-      // never allow an extent larger than the world to be requested
-      return;
-    }
-
-    // normalize the extent across the antimeridian
-    viewExtent = os.extent.normalize(viewExtent, -360, 0);
-
-    if (!viewExtent) {
-      this.removeImmediate_();
-      return;
-    }
-
-    var resolution = map.getView().getResolution();
-    let img;
-    if (!isNaN(resolution) && resolution != null) {
-      if (!this.firstLoopFixed_) {
-        // HACK ALERT: when initially loading into Cesium, the image for this layer has already been created and loaded
-        // by a single render call on the 2D map. The extent for this request is incompatible with 3D since it's
-        // often wider than the world extent. OL also caches the bad image, so this tiny change to the resolution
-        // is designed to defeat that cache.
-        resolution += os.geo.EPSILON;
-        this.firstLoopFixed_ = true;
+      if (this.activePrimitive_) {
+        this.activePrimitive_.show = this.layer.getVisible();
       }
 
-      img = this.source_.getImage(viewExtent, resolution, window.devicePixelRatio, os.map.PROJECTION);
+      var map = /** @type {OSMap} */ (mapContainer.getInstance().getMap());
+      var viewExtent = map.getExtent();
+      var mapZoom = map.getView().getZoom();
 
-      if (img) {
-        if (img !== this.image_) {
-          if (this.image_) {
-            ol.events.unlisten(this.image_, ol.events.EventType.CHANGE, this.onSyncChange, this);
-          }
-
-          var imageState = img.getState();
-          if (imageState != ol.ImageState.LOADED && imageState != ol.ImageState.ERROR) {
-            ol.events.listen(img, ol.events.EventType.CHANGE, this.onSyncChange, this);
-          }
-
-          if (imageState == ol.ImageState.ERROR) {
-            // don't do anything, leave the old image rendered
-            return;
-          }
-
-          if (imageState == ol.ImageState.IDLE) {
-            img.load();
-          }
-
-          this.image_ = img;
-          return;
-        }
-      } else {
+      if (!viewExtent || mapZoom == null) {
+        // If required map properties aren't available, remove the image.
         this.removeImmediate_();
         return;
       }
-    }
 
-    var url;
-    var el = img.getImage();
+      if (olExtent.containsExtent(viewExtent, osMap.PROJECTION.getWorldExtent())) {
+        // never allow an extent larger than the world to be requested
+        return;
+      }
 
-    if (el instanceof HTMLVideoElement || el instanceof Image) {
-      url = el.src;
-    } else if (el instanceof HTMLCanvasElement) {
-      url = el.toDataURL();
-    }
+      // We always want to use EPSG:4326 in Cesium so the image will be rendered properly on the map. Other projections
+      // may shift the image so it appears in the wrong location. Transform the extent to degrees and normalize across
+      // the antimeridian
+      viewExtent = olProj.transformExtent(viewExtent, osMap.PROJECTION, osProj.EPSG4326);
+      viewExtent = osExtent.normalize(viewExtent, -360, 0);
 
-    var changed = this.lastUrl_ !== url;
-    this.lastUrl_ = url;
-    var extent = ol.proj.transformExtent(img.getExtent(), os.map.PROJECTION, os.proj.EPSG4326);
-    if (this.lastExtent_) {
-      for (var i = 0, n = extent.length; i < n; i++) {
-        if (Math.abs(extent[i] - this.lastExtent_[i]) > 1E-12) {
-          changed = true;
-          break;
+      var epsg4326 = olProj.get(osProj.EPSG4326);
+      var resolution = osMap.zoomToResolution(mapZoom, epsg4326);
+
+      let img;
+      if (!isNaN(resolution) && resolution != null) {
+        if (!this.firstLoopFixed_) {
+          // HACK ALERT: when initially loading into Cesium, the image for this layer has already been created and loaded
+          // by a single render call on the 2D map. The extent for this request is incompatible with 3D since it's
+          // often wider than the world extent. OL also caches the bad image, so this tiny change to the resolution
+          // is designed to defeat that cache.
+          resolution += geo.EPSILON;
+          this.firstLoopFixed_ = true;
+        }
+
+        // Request the image through the OL source, reprojecting to EPSG:4326 if necessary.
+        img = this.source_.getImage(viewExtent, resolution, window.devicePixelRatio, epsg4326);
+
+        if (img) {
+          var imageState = img.getState();
+          if (img !== this.image_) {
+            if (this.image_) {
+              events.unlisten(this.image_, EventType.CHANGE, this.onSyncChange, this);
+            }
+
+            if (imageState != ImageState.LOADED && imageState != ImageState.ERROR) {
+              events.listen(img, EventType.CHANGE, this.onSyncChange, this);
+            }
+
+            if (imageState == ImageState.IDLE) {
+              img.load();
+            }
+
+            this.image_ = img;
+          }
+
+          // Don't continue unless the image is loaded.
+          if (imageState !== ImageState.LOADED) {
+            return;
+          }
+        } else {
+          this.removeImmediate_();
+          return;
         }
       }
-    } else {
-      changed = true;
-    }
-    this.lastExtent_ = extent.slice();
 
-    if (url && extent) {
-      if (changed) {
-        var minX = viewExtent[0];
-        var minY = viewExtent[1];
-        var maxX = viewExtent[2] - os.geo.EPSILON;
-        var maxY = viewExtent[3] - os.geo.EPSILON;
-        var flatCoordinates = [minX, minY, minX, maxY, maxX, maxY, maxX, minY, minX, minY];
+      var url;
+      var el = img.getImage();
 
-        var primitive = new Cesium.GroundPrimitive({
-          geometryInstances: new Cesium.GeometryInstance({
-            geometry: new Cesium.PolygonGeometry({
-              polygonHierarchy: new Cesium.PolygonHierarchy(Cesium.Cartesian3.fromDegreesArray(flatCoordinates)),
-              height: 5000,
-              arcType: Cesium.ArcType.RHUMB
-            }),
-            id: this.layer.getId() + '.' + (this.nextId_++)
-          }),
-          appearance: new Cesium.MaterialAppearance({
-            material: Cesium.Material.fromType('Image', {
-              image: el
-            })
-          }),
-          show: this.layer.getVisible()
-        });
-
-        primitive.readyPromise.then(this.onPrimitiveReady_);
-        this.collection_.add(primitive);
-        os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
+      if (el instanceof HTMLVideoElement || el instanceof Image) {
+        url = el.src;
+      } else if (el instanceof HTMLCanvasElement) {
+        url = el.toDataURL();
       }
-    } else {
-      this.removeImmediate_();
+
+      var changed = this.lastUrl_ !== url;
+      this.lastUrl_ = url;
+
+      if (this.lastExtent_) {
+        for (var i = 0, n = viewExtent.length; i < n; i++) {
+          if (Math.abs(viewExtent[i] - this.lastExtent_[i]) > geo.EPSILON) {
+            this.lastExtent_[i] = viewExtent[i];
+            changed = true;
+          }
+        }
+      } else {
+        this.lastExtent_ = viewExtent.slice();
+        changed = true;
+      }
+
+      if (url && viewExtent) {
+        if (changed) {
+          //
+          // Compute min/max x/y values to create a Cesium Rectangle. This corrects for a few things:
+          //  - East/west values are expected to be between -180 and +180, and a rectangle spanning the antimeridian
+          //    will have values where west > east. Normalize the longitudes to account for this.
+          //  - Cesium will not create the geometry if north/south or east/west values are within a given threshold of
+          //    each other. Use Cesium's epsilon value to ensure this doesn't happen.
+          //
+          var minX = normalizeLongitude(viewExtent[0], undefined, undefined, osProj.EPSG4326);
+          var minY = viewExtent[1];
+          var maxX = normalizeLongitude(viewExtent[2] - Cesium.Math.EPSILON8, undefined, undefined, osProj.EPSG4326);
+          var maxY = viewExtent[3] - Cesium.Math.EPSILON8;
+
+          var primitive = new Cesium.GroundPrimitive({
+            geometryInstances: new Cesium.GeometryInstance({
+              geometry: new Cesium.RectangleGeometry({
+                rectangle: Cesium.Rectangle.fromDegrees(minX, minY, maxX, maxY)
+              }),
+              id: this.layer.getId() + '.' + (this.nextId_++)
+            }),
+            appearance: new Cesium.MaterialAppearance({
+              material: this.createImageMaterial(el)
+            }),
+            show: this.layer.getVisible()
+          });
+
+          primitive.readyPromise.then(this.onPrimitiveReady_);
+          this.collection_.add(primitive);
+          dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
+        }
+      } else {
+        this.removeImmediate_();
+      }
     }
   }
-};
 
+  /**
+   * @param {!Cesium.Primitive} primitive
+   * @protected
+   */
+  onPrimitiveReadyInternal(primitive) {
+    this.activePrimitive_ = primitive;
 
-/**
- * @param {!Cesium.Primitive} primitive
- * @protected
- */
-plugin.cesium.sync.ImageSynchronizer.prototype.onPrimitiveReadyInternal = function(primitive) {
-  this.activePrimitive_ = primitive;
+    let i = this.collection_.length;
+    while (i--) {
+      var item = this.collection_.get(i);
 
-  let i = this.collection_.length;
-  while (i--) {
-    var item = this.collection_.get(i);
-
-    if (item !== this.activePrimitive_) {
-      this.collection_.remove(item);
+      if (item !== this.activePrimitive_) {
+        this.collection_.remove(item);
+      }
     }
   }
-};
 
-
-/**
- * @protected
- */
-plugin.cesium.sync.ImageSynchronizer.prototype.onSyncChange = function() {
-  this.syncInternal(true);
-};
-
-
-/**
- * Immediately remove the primitive
- * @private
- */
-plugin.cesium.sync.ImageSynchronizer.prototype.removeImmediate_ = function() {
-  this.activePrimitive_ = null;
-  this.lastExtent_ = undefined;
-  this.lastUrl_ = undefined;
-  this.collection_.removeAll();
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.sync.ImageSynchronizer.prototype.reset = function() {
-  this.syncInternal(true);
-};
-
-
-/**
- * Handle visibility
- *
- * @param {os.events.PropertyChangeEvent} event
- * @protected
- */
-plugin.cesium.sync.ImageSynchronizer.prototype.onLayerPropertyChange = function(event) {
-  if (event instanceof ol.Object.Event && event.key == os.layer.PropertyChange.VISIBLE) {
+  /**
+   * @protected
+   */
+  onSyncChange() {
     this.syncInternal(true);
   }
-};
+
+  /**
+   * Immediately remove the primitive
+   * @private
+   */
+  removeImmediate_() {
+    this.activePrimitive_ = null;
+    this.lastExtent_ = undefined;
+    this.lastUrl_ = undefined;
+    this.collection_.removeAll();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  reset() {
+    this.syncInternal(true);
+  }
+
+  /**
+   * Create a Cesium material from an image
+   *
+   * @param {HTMLCanvasElement|HTMLVideoElement|Image} image
+   * @return {Cesium.Material}
+   */
+  createImageMaterial(image) {
+    return Cesium.Material.fromType('Image', {
+      image: image,
+      color: new Cesium.Color(1, 1, 1, this.layer.getOpacity())
+    });
+  }
+
+  /**
+   * Handle visibility
+   *
+   * @param {PropertyChangeEvent} event
+   * @protected
+   */
+  onLayerPropertyChange(event) {
+    if (event instanceof OLObject.Event) {
+      if (event.key == PropertyChange.VISIBLE) {
+        this.syncInternal(true);
+      } else if (this.styleChangeKeys.includes(event.key) && this.activePrimitive_) {
+        this.activePrimitive_.appearance.material = this.createImageMaterial(this.image_.getImage());
+        dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
+      }
+    }
+  }
+}
+
+exports = ImageSynchronizer;

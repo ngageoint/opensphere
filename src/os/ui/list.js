@@ -333,7 +333,7 @@ os.ui.ListCtrl.prototype.update_ = function() {
   var prefix = this.prefix || '';
   var suffix = this.suffix || '';
 
-  if (items) {
+  if (this.scope && items) {
     for (var i = 0, n = items.length; i < n; i++) {
       var item = items[i];
 
@@ -344,17 +344,20 @@ os.ui.ListCtrl.prototype.update_ = function() {
         }
 
         var html = prefix + dir + suffix;
+        var elScope = this.scope.$new();
+        item.element = this.compile_(html)(elScope);
+        item.scope = elScope;
 
-        if (this.scope) {
-          var elScope = this.scope.$new();
-          item.element = this.compile_(html)(elScope);
-          item.scope = elScope;
+        // Assumption: existing items will not change in priority. If they do, they must be removed and added again.
+        if (i === 0) {
+          // Insert as the first child.
+          this.element_.prepend(item.element);
+        } else {
+          // Insert after the previous item's element. This takes the extra precaution to insert after the last element,
+          // in case the previous markup produced multiple elements.
+          const previous = items[i - 1].element;
+          item.element.insertAfter(previous[previous.length - 1]);
         }
-      }
-
-      if (item.element) {
-        // Appending an element that already exists in the DOM will update the element's position
-        this.element_.append(item.element);
       }
     }
 

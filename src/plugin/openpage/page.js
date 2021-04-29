@@ -1,7 +1,7 @@
 goog.provide('plugin.openpage.Page');
 
 goog.require('goog.dom.safe');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.xt.Peer');
 goog.require('plugin.openpage');
 

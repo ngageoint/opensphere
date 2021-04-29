@@ -3,7 +3,9 @@ goog.module.declareLegacyNamespace();
 
 const {getDocument} = goog.require('goog.dom');
 const KeyCodes = goog.require('goog.events.KeyCodes');
+const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
+const {noop} = goog.require('os.fn');
 const Module = goog.require('os.ui.Module');
 const {create: createWindow, close: closeWindow} = goog.require('os.ui.window');
 const WindowEventType = goog.require('os.ui.WindowEventType');
@@ -41,9 +43,9 @@ const launchConfirm = function(opt_options, opt_scopeOptions) {
   var options = /** @type {!osx.window.ConfirmOptions} */ (opt_options || {});
   var scopeOptions = (opt_scopeOptions || {});
 
-  scopeOptions['confirmCallback'] = options.confirm || goog.nullFunction;
+  scopeOptions['confirmCallback'] = options.confirm || noop;
   scopeOptions['confirmValue'] = options.confirmValue || undefined;
-  scopeOptions['cancelCallback'] = options.cancel || goog.nullFunction;
+  scopeOptions['cancelCallback'] = options.cancel || noop;
   scopeOptions['yesText'] = options.yesText || 'OK';
   scopeOptions['yesIcon'] = options.yesIcon || 'fa fa-check';
   scopeOptions['yesButtonClass'] = options.yesButtonClass || 'btn-primary';
@@ -55,7 +57,7 @@ const launchConfirm = function(opt_options, opt_scopeOptions) {
   scopeOptions['formClass'] = options.formClass || 'form-horizontal';
   scopeOptions['checkboxText'] = options.checkboxText || '';
   scopeOptions['checkboxClass'] = options.checkboxClass || '';
-  scopeOptions['checkboxCallback'] = options.checkbox || goog.nullFunction;
+  scopeOptions['checkboxCallback'] = options.checkbox || noop;
   scopeOptions['checkboxValue'] = !!options.checkboxValue;
 
   var windowOverrides = /** @type {!osx.window.WindowOptions} */ (options.windowOptions || {});
@@ -139,7 +141,7 @@ class Controller {
      * @private
      */
     this.keyHandler_ = new KeyHandler(getDocument());
-    this.keyHandler_.listen(KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+    this.keyHandler_.listen(KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
 
     $timeout(function() {
       $scope.$emit(WindowEventType.READY);

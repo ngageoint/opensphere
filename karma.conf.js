@@ -49,6 +49,7 @@ module.exports = function(config) {
       {pattern: 'vendor/geomag/WMM.txt', watched: false, included: false, served: true},
       {pattern: 'vendor/geomag/cof2Obj.js', watched: false, included: true, served: true},
       {pattern: 'vendor/geomag/geomag.js', watched: false, included: true, served: true},
+      {pattern: 'vendor/os-minified/os-toastui-editor.min.js', watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('css-element-queries/src/ResizeSensor.js'), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('chardetng-wasm/dist/es5/chardetng.es5.min.js'), watched: false, included: true, served: true},
       {pattern: resolver.resolveModulePath('chardetng-wasm/dist/es5/*'), watched: false, included: false, served: true},

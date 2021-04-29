@@ -253,6 +253,19 @@ osx.layer.PresetSearch;
 
 
 /**
+ * @typedef {{
+ *   id: !string,
+ *   type: !string,
+ *   parentId: !string,
+ *   name: (string|undefined),
+ *   children: (Array<(osx.layer.FolderOptions)>|undefined),
+ *   collapsed: (boolean|undefined)
+ * }}
+ */
+osx.layer.FolderOptions;
+
+
+/**
  * Namespace.
  * @type {Object}
  */
@@ -482,6 +495,9 @@ osx.cesium.WMSTerrainLayerOptions;
 
 /**
  * @typedef {{
+ *   id: string,
+ *   title: string,
+ *   type: string,
  *   layers: !Array<!osx.cesium.WMSTerrainLayerOptions>,
  *   url: string,
  *   credit: (Cesium.Credit|string|undefined),
@@ -551,6 +567,17 @@ osx.import;
  * }}
  */
 osx.import.FileWrapper;
+
+
+/**
+ * @typedef {{
+ *   type: string,
+ *   helpUi: (string|undefined),
+ *   formUi: string,
+ *   label: string
+ * }}
+ */
+osx.import.ServerType;
 
 
 /**

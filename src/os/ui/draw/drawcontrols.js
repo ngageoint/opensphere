@@ -3,8 +3,8 @@ goog.provide('os.ui.draw.drawControlsDirective');
 
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('os');
 goog.require('os.MapEvent');
-goog.require('os.defines');
 goog.require('os.ui.Module');
 goog.require('os.ui.draw');
 goog.require('os.ui.draw.BaseDrawControlsCtrl');
@@ -47,8 +47,11 @@ os.ui.Module.directive('osDrawControls', [os.ui.draw.drawControlsDirective]);
  * @ngInject
  */
 os.ui.draw.DrawControlsCtrl = function($scope, $element) {
-  this['supportsLines'] = true;
   os.ui.draw.DrawControlsCtrl.base(this, 'constructor', $scope, $element);
+
+  // Base draw controller doesn't support lines as a default.
+  this['supportsLines'] = true;
+
   this.log = os.ui.draw.DrawControlsCtrl.LOGGER_;
 };
 goog.inherits(os.ui.draw.DrawControlsCtrl, os.ui.draw.BaseDrawControlsCtrl);
@@ -66,8 +69,8 @@ os.ui.draw.DrawControlsCtrl.LOGGER_ = goog.log.getLogger('os.ui.draw.DrawControl
 /**
  * @inheritDoc
  */
-os.ui.draw.DrawControlsCtrl.prototype.disposeInternal = function() {
-  os.ui.draw.DrawControlsCtrl.base(this, 'disposeInternal');
+os.ui.draw.DrawControlsCtrl.prototype.$onDestroy = function() {
+  os.ui.draw.DrawControlsCtrl.base(this, '$onDestroy');
   goog.events.unlisten(os.MapContainer.getInstance(), os.MapEvent.MAP_READY, this.onMapReady, false, this);
 };
 

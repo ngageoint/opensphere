@@ -1,7 +1,7 @@
 goog.provide('plugin.pelias.geocoder.AttrCardCtrl');
 goog.provide('plugin.pelias.geocoder.attrCardDirective');
 
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui.Module');
 
 

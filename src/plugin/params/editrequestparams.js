@@ -3,8 +3,8 @@ goog.provide('plugin.params.editRequestParamsDirective');
 
 goog.require('goog.Disposable');
 goog.require('ol.array');
+goog.require('os');
 goog.require('os.data.ColumnDefinition');
-goog.require('os.defines');
 goog.require('os.ui.Module');
 goog.require('os.ui.slick.slickGridDirective');
 

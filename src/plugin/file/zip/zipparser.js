@@ -154,17 +154,15 @@ plugin.file.zip.ZIPParser.prototype.unzip = function() {
     goog.events.listenOnce(
         this,
         [os.events.EventType.COMPLETE, os.events.EventType.ERROR],
-        goog.bind(
-            function(evt) {
-              // push the unzipped files to the UI
-              var files = this.getFiles();
-              if (files) {
-                for (var i = 0; i < files.length; i++) this.config_['files'].push(files[i]);
-              }
-              this.config_['status'] = (evt.type == os.events.EventType.COMPLETE) ? 0 : -2; // done
-              this.dispose(); // clean up the memory
-            },
-            this),
+        function(evt) {
+          // push the unzipped files to the UI
+          var files = this.getFiles();
+          if (files) {
+            for (var i = 0; i < files.length; i++) this.config_['files'].push(files[i]);
+          }
+          this.config_['status'] = (evt.type == os.events.EventType.COMPLETE) ? 0 : -2; // done
+          this.dispose(); // clean up the memory
+        }.bind(this),
         false, this);
 
     this.config_['status'] = 1; // flag UI that parser is working...

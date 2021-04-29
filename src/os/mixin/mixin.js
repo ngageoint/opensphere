@@ -12,6 +12,7 @@ goog.require('ol.interaction.Modify');
 goog.require('ol.math');
 goog.require('ol.renderer.canvas.Map');
 goog.require('ol.renderer.canvas.VectorLayer');
+goog.require('os.mixin.Image');
 goog.require('os.mixin.ImageSource');
 goog.require('os.mixin.ResolutionConstraint');
 goog.require('os.mixin.TileImage');

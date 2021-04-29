@@ -2,6 +2,7 @@ goog.provide('plugin.file.kml.KMLPlugin');
 
 goog.require('os.data.DataManager');
 goog.require('os.data.ProviderEntry');
+goog.require('os.fn');
 goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.net.Request');
 goog.require('os.plugin.AbstractPlugin');
@@ -88,7 +89,7 @@ plugin.file.kml.KMLPlugin.prototype.init = function() {
 
   // try to load the first google earth icon; if it fails, set the mirror and flag
   return new os.net.Request(os.ui.file.kml.GOOGLE_EARTH_ICON_SET[0].path).getPromise()
-      .then(goog.nullFunction, () => {
+      .then(os.fn.noop, () => {
         const settings = os.config.Settings.getInstance();
         const mirror = /** @type {string|null} */ (settings.get(plugin.file.kml.KMLPlugin.ICON_MIRROR));
         if (mirror) {

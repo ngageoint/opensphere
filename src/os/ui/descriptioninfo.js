@@ -2,12 +2,13 @@ goog.provide('os.ui.DescriptionInfoCtrl');
 goog.provide('os.ui.SlickDescriptionAsyncRenderer');
 goog.provide('os.ui.descriptionInfoDirective');
 goog.provide('os.ui.formatter.DescriptionFormatter');
+
 goog.require('goog.object');
 goog.require('goog.string');
 goog.require('ol.geom.Point');
+goog.require('os');
 goog.require('os.Fields');
 goog.require('os.data.RecordField');
-goog.require('os.defines');
 goog.require('os.style');
 goog.require('os.ui');
 goog.require('os.ui.Module');
@@ -177,7 +178,7 @@ os.ui.SlickDescriptionAsyncRenderer = function(elem, row, dataContext, colDef) {
       var $elem = $(elem);
       var doc = elem.ownerDocument;
       var myWin = doc.defaultView || doc.parentWindow;
-      $elem.click(function() {
+      $elem.on('click', function() {
         if (os.inIframe(myWin)) {
           os.ui.launchDescriptionInfo(id, desc);
         } else {

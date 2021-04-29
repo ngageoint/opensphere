@@ -4,7 +4,7 @@ goog.provide('os.config.ProjectionSettingsCtrl');
 goog.require('goog.string');
 goog.require('goog.userAgent');
 goog.require('ol.events');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.map');
 goog.require('os.proj');
 goog.require('os.proj.switch');

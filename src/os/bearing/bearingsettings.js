@@ -81,8 +81,8 @@ os.bearing.BearingSettingsCtrl = function($scope) {
   this.scope_['cofVersion'] = cofVersion;
   this.scope_['helpUrl'] = helpUrl;
 
-  this.scope_.$watch('ctrl.format', goog.bind(this.update, this));
-  this.scope_.$on('$destroy', goog.bind(this.destroy_, this));
+  this.scope_.$watch('ctrl.format', this.update.bind(this));
+  this.scope_.$on('$destroy', this.destroy_.bind(this));
 };
 
 

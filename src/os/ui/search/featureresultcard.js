@@ -5,6 +5,7 @@ goog.require('goog.array');
 goog.require('goog.log');
 goog.require('ol.extent');
 goog.require('os.Fields');
+goog.require('os.fn');
 goog.require('os.layer.Vector');
 goog.require('os.source.Vector');
 
@@ -250,7 +251,7 @@ os.ui.search.FeatureResultCardCtrl.prototype.addSearchLayer = function() {
   searchLayer.setNodeUI('');
   searchLayer.setLayerUI('');
   searchLayer.setSticky(true);
-  searchLayer.renderLegend = goog.nullFunction;
+  searchLayer.renderLegend = os.fn.noop;
 
   var layerConfig = os.style.StyleManager.getInstance().getOrCreateLayerConfig(
       os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_ID);

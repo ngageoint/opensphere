@@ -2,6 +2,7 @@ goog.require('ol.Feature');
 goog.require('ol.layer.Vector');
 goog.require('os.data.BaseDescriptor');
 goog.require('os.data.RecordField');
+goog.require('os.fn');
 goog.require('os.layer.Vector');
 goog.require('os.mock');
 goog.require('os.source');
@@ -45,7 +46,7 @@ describe('os.source', function() {
     expect(os.source.isFilterable(source)).toBe(false,
         'should not be filterable if the layer is not filterable');
 
-    layer.setFilterLauncher(goog.nullFunction);
+    layer.setFilterLauncher(os.fn.noop);
     expect(os.source.isFilterable(source)).toBe(true,
         'should be filterable if the layer is filterable');
 

@@ -1,0 +1,24 @@
+<div id="time-help" class="flex-fill w-100 d-flex flex-column">
+  <div class="modal-body container flex-fill">
+    GeoServers can provide map data via Web Map Service (WMS) and feature data via Web Feature Service (WFS). These services will be automatically detected from the base OWS URL.
+    <br>
+    <br>
+    Please provide the OWS URL, similar to the format below:
+    <br>
+    https://example.com/geoserver/ows
+    <br>
+    <br>
+    To provide specific service URL's or for WMTS support, add the server as an OGC Server instead.
+    <br>
+    <br>
+    Supported WMS versions: 1.1.1, 1.3.0
+    <br>
+    Supported WFS versions: 1.1.0
+  </div>
+  <div class="modal-footer d-flex">
+    <button class="btn btn-primary" ng-click="ctrl.close()">
+      <i class="fa fa-check"></i>
+      Close
+    </button>
+  </div>
+</div>

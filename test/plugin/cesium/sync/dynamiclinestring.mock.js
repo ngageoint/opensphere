@@ -2,6 +2,7 @@ goog.module('test.plugin.cesium.sync.dynamiclinestring');
 
 const {testColor} = goog.require('test.plugin.cesium.sync.style');
 
+
 const testLine = (line, options) => {
   options = options || {};
   options.color = options.color || 'rgba(0,0,0,0)';

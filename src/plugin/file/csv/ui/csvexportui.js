@@ -1,6 +1,6 @@
 goog.provide('plugin.file.csv.ui.CSVExportCtrl');
 goog.provide('plugin.file.csv.ui.csvExportDirective');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui.Module');
 goog.require('os.ui.icon.IconPickerCtrl');
 goog.require('os.ui.icon.iconPickerDirective');

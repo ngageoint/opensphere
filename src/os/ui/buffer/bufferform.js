@@ -3,7 +3,7 @@ goog.provide('os.ui.buffer.bufferFormDirective');
 
 goog.require('goog.userAgent');
 goog.require('ol.proj');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.geo.jsts');
 goog.require('os.math.UnitLabels');
 goog.require('os.math.Units');

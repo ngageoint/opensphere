@@ -1,4 +1,4 @@
-goog.provide('plugin.georss.defines');
+goog.provide('plugin.georss');
 
 
 /**

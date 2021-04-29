@@ -9,6 +9,7 @@ goog.require('goog.math');
 goog.require('goog.math.Size');
 goog.require('goog.string');
 goog.require('goog.userAgent');
+goog.require('os.fn');
 
 
 /**
@@ -531,7 +532,7 @@ os.ui.TypeaheadEventType = {
       // Select2 has trouble with Bootstrap modals in IE only
       if (goog.userAgent.IE) {
         // so tell it to do nothing
-        $.fn.modal['Constructor'].prototype['enforceFocus'] = goog.nullFunction;
+        $.fn.modal['Constructor'].prototype['enforceFocus'] = os.fn.noop;
       }
 
       // Overwriting enforceFocus and extending functionality
@@ -539,13 +540,13 @@ os.ui.TypeaheadEventType = {
       var oldEnforceFocus = $.fn.typeahead['Constructor'].prototype['enforceFocus'];
       $.extend($.fn.typeahead['Constructor'].prototype, {
         'enforceFocus': function(e) {
-          $(document).on('focusin.modal', goog.bind(function(e) {
+          $(document).on('focusin.modal', function(e) {
             if ($(e.target).hasClass('select2-input')) {
               return;
             } else {
               oldEnforceFocus.call(this); // eslint-disable-line no-invalid-this
             }
-          }, this));
+          }.bind(this));
         }
       });
     }

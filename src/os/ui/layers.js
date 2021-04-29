@@ -5,6 +5,7 @@ goog.provide('os.ui.layersDirective');
 goog.require('goog.Disposable');
 goog.require('goog.async.Delay');
 goog.require('goog.object');
+goog.require('os');
 goog.require('os.MapContainer');
 goog.require('os.config.Settings');
 goog.require('os.data.LayerNode');
@@ -13,8 +14,9 @@ goog.require('os.data.groupby.DateGroupBy');
 goog.require('os.data.groupby.LayerProviderGroupBy');
 goog.require('os.data.groupby.LayerTypeGroupBy');
 goog.require('os.data.groupby.LayerZOrderGroupBy');
-goog.require('os.defines');
 goog.require('os.events.LayerEventType');
+goog.require('os.layer.FolderManager');
+goog.require('os.layer.folder');
 goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
 goog.require('os.object');
@@ -97,7 +99,7 @@ os.ui.LayersCtrl = function($scope, $element) {
   }
 
   this.scope['views'] = os.ui.LayersCtrl.VIEWS;
-  this.viewDefault = 'Z-Order';
+  this.viewDefault = /** @type {string} */ (os.settings.get('layers.viewDefault', 'Z-Order'));
 
   /**
    * @type {?os.data.LayerTreeSearch}
@@ -119,6 +121,12 @@ os.ui.LayersCtrl = function($scope, $element) {
   map.listen(os.events.LayerEventType.REMOVE, this.search, false, this);
   map.listen(os.events.LayerEventType.CHANGE, this.search, false, this);
 
+  var fm = os.layer.FolderManager.getInstance();
+  fm.listen(os.layer.folder.FolderEventType.FOLDER_CREATED, this.search, false, this);
+  fm.listen(os.layer.folder.FolderEventType.FOLDER_REMOVED, this.search, false, this);
+  fm.listen(os.layer.folder.FolderEventType.FOLDER_UPDATED, this.search, false, this);
+  fm.listen(os.layer.folder.FolderEventType.FOLDERS_CLEARED, this.search, false, this);
+
   // refresh on changed favorites
   os.settings.listen(os.user.settings.FavoriteManager.KEY, this.search, false, this);
 
@@ -128,6 +136,8 @@ os.ui.LayersCtrl = function($scope, $element) {
   this.scope['featuresBtnIcon'] = os.ROOT + 'images/features-base.png';
 
   this.init();
+
+  os.layer.folder.setFolderMenuEnabled(!this.scope['view']);
 };
 goog.inherits(os.ui.LayersCtrl, os.ui.slick.AbstractGroupByTreeSearchCtrl);
 
@@ -144,6 +154,7 @@ os.ui.LayersCtrl.SKIP_TOGGLE_FUNCS = [];
  * @type {!Object<string, os.data.groupby.INodeGroupBy>}
  */
 os.ui.LayersCtrl.VIEWS = {
+  'Folder': null,
   'Recently Updated': new os.data.groupby.DateGroupBy(true),
   'Source': new os.data.groupby.LayerProviderGroupBy(),
   'Tag': new os.ui.data.groupby.TagGroupBy(true),
@@ -160,6 +171,12 @@ os.ui.LayersCtrl.prototype.disposeInternal = function() {
   map.unlisten(os.events.LayerEventType.ADD, this.search, false, this);
   map.unlisten(os.events.LayerEventType.REMOVE, this.search, false, this);
   map.unlisten(os.events.LayerEventType.CHANGE, this.search, false, this);
+
+  var fm = os.layer.FolderManager.getInstance();
+  fm.unlisten(os.layer.folder.FolderEventType.FOLDER_CREATED, this.search, false, this);
+  fm.unlisten(os.layer.folder.FolderEventType.FOLDER_REMOVED, this.search, false, this);
+  fm.unlisten(os.layer.folder.FolderEventType.FOLDER_UPDATED, this.search, false, this);
+  fm.unlisten(os.layer.folder.FolderEventType.FOLDERS_CLEARED, this.search, false, this);
 
   os.settings.unlisten(os.user.settings.FavoriteManager.KEY, this.search, false, this);
 
@@ -182,6 +199,7 @@ os.ui.LayersCtrl.prototype.close = function() {
  */
 os.ui.LayersCtrl.prototype.onGroupByChanged = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.AddData.GROUP_BY, 1);
+  os.layer.folder.setFolderMenuEnabled(!this.scope['view']);
   this.search();
 };
 

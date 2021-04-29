@@ -1,5 +1,6 @@
 goog.provide('os.ui.historyDirective');
-goog.require('os.defines');
+
+goog.require('os');
 goog.require('os.ui.Module');
 goog.require('os.ui.history.HistoryViewCtrl');
 

@@ -12,8 +12,8 @@ const EllipsoidConverter = goog.require('plugin.cesium.sync.EllipsoidConverter')
 const PolygonConverter = goog.require('plugin.cesium.sync.PolygonConverter');
 
 const Feature = goog.requireType('ol.Feature');
-const Ellipse = goog.requireType('os.geom.Ellipse');
 const Style = goog.requireType('ol.style.Style');
+const Ellipse = goog.requireType('os.geom.Ellipse');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
 const IConverter = goog.requireType('plugin.cesium.sync.IConverter');
 
@@ -66,7 +66,7 @@ const getConverter = (context) => isEllipsoid(context) ? ellipsoidConverter : po
  * @return {boolean}
  */
 const isEllipsoid = (context) => {
-  const layer = /** @type {os.layer.ILayer} */ (context.layer);
+  const layer = /** @type {ILayer} */ (context.layer);
   const config = StyleManager.getInstance().getLayerConfig(layer.getId());
   return config && config[StyleField.SHOW_ELLIPSOIDS];
 };

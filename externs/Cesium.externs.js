@@ -473,7 +473,8 @@ Cesium.NearFarScalar = function(near, nearValue, far, farValue) {};
  * @typedef {{
  *   blendOption: (Cesium.BlendOption|undefined),
  *   debugShowBoundingVolume: (boolean|undefined),
- *   scene: (Cesium.Scene|undefined)
+ *   scene: (Cesium.Scene|undefined),
+ *   show: (boolean|undefined)
  * }}
  */
 Cesium.BillboardCollectionOptions;
@@ -523,6 +524,13 @@ Cesium.BillboardCollection.prototype.contains = function(opt_bb) {};
 
 
 /**
+ * @param {number} index
+ * @return {Cesium.Billboard} .
+ */
+Cesium.BillboardCollection.prototype.get = function(index) {};
+
+
+/**
  * @return {boolean} .
  */
 Cesium.BillboardCollection.prototype.isDestroyed = function() {};
@@ -538,6 +546,12 @@ Cesium.BillboardCollection.prototype.length;
  * @param {Cesium.Billboard} what .
  */
 Cesium.BillboardCollection.prototype.remove = function(what) {};
+
+
+/**
+ * @type {boolean} .
+ */
+Cesium.BillboardCollection.prototype.show;
 
 
 /**
@@ -1733,6 +1747,12 @@ Cesium.PolylineCollection.prototype.remove = function(polyline) {};
 Cesium.PolylineCollection.prototype.removeAll = function() {};
 
 
+/**
+ * @type {boolean}
+ */
+Cesium.PolylineCollection.prototype.show;
+
+
 
 /**
  * @constructor
@@ -2203,6 +2223,12 @@ Cesium.LabelCollection.prototype.removeAll = function() {};
  * @type {Cesium.Matrix4}
  */
 Cesium.LabelCollection.prototype.modelMatrix;
+
+
+/**
+ * @type {boolean}
+ */
+Cesium.LabelCollection.prototype.show;
 
 
 
@@ -2816,6 +2842,12 @@ Cesium.PrimitiveCollection.prototype.destroyPrimitives;
 Cesium.PrimitiveCollection.prototype.length;
 
 
+/**
+ * @type {boolean}
+ */
+Cesium.PrimitiveCollection.prototype.show;
+
+
 
 /**
  * @constructor
@@ -2891,7 +2923,7 @@ Cesium.Credit = function(html, opt_showOnScreen) {};
 
 
 /**
- * @constructor
+ * @interface
  */
 Cesium.TilingScheme = function() {};
 
@@ -2906,6 +2938,12 @@ Cesium.TilingScheme.prototype.ellipsoid;
  * @type {Cesium.Rectangle}
  */
 Cesium.TilingScheme.prototype.rectangle;
+
+
+/**
+ * @type {Cesium.GeographicProjection|Cesium.WebMercatorProjection}
+ */
+Cesium.TilingScheme.prototype.projection;
 
 
 /**
@@ -2972,7 +3010,7 @@ Cesium.GeographicTilingSchemeOptions;
 
 /**
  * @param {Cesium.GeographicTilingSchemeOptions=} opt_options
- * @extends {Cesium.TilingScheme}
+ * @implements {Cesium.TilingScheme}
  * @constructor
  */
 Cesium.GeographicTilingScheme = function(opt_options) {};
@@ -2993,7 +3031,7 @@ Cesium.WebMercatorTilingSchemeOptions;
 
 /**
  * @param {Cesium.WebMercatorTilingSchemeOptions=} opt_options
- * @extends {Cesium.TilingScheme}
+ * @implements {Cesium.TilingScheme}
  * @constructor
  */
 Cesium.WebMercatorTilingScheme = function(opt_options) {};
@@ -5071,7 +5109,7 @@ Cesium.TileProviderError.prototype.error;
 
 
 /**
- * @constructor
+ * @interface
  */
 Cesium.TerrainProvider = function() {};
 
@@ -5169,7 +5207,7 @@ Cesium.ArcGisImageServerTerrainProviderOptions;
 
 /**
  * @param {!Cesium.ArcGisImageServerTerrainProviderOptions} options
- * @extends {Cesium.TerrainProvider}
+ * @implements {Cesium.TerrainProvider}
  * @constructor
  */
 Cesium.ArcGisImageServerTerrainProvider = function(options) {};
@@ -5191,7 +5229,7 @@ Cesium.CesiumTerrainProviderOptions;
 
 /**
  * @param {!Cesium.CesiumTerrainProviderOptions} options
- * @extends {Cesium.TerrainProvider}
+ * @implements {Cesium.TerrainProvider}
  * @constructor
  */
 Cesium.CesiumTerrainProvider = function(options) {};
@@ -5209,7 +5247,7 @@ Cesium.EllipsoidTerrainProviderOptions;
 
 /**
  * @param {Cesium.EllipsoidTerrainProviderOptions=} opt_options
- * @extends {Cesium.TerrainProvider}
+ * @implements {Cesium.TerrainProvider}
  * @constructor
  */
 Cesium.EllipsoidTerrainProvider = function(opt_options) {};

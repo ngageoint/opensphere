@@ -1,10 +1,12 @@
-goog.provide('plugin.cesium.ImportIonAssetCtrl');
-goog.provide('plugin.cesium.importIonAssetDirective');
+goog.module('plugin.cesium.ImportIonAssetUI');
 
-goog.require('goog.Disposable');
-goog.require('os.ui');
-goog.require('os.ui.Module');
-goog.require('os.ui.window');
+const {ROOT} = goog.require('os');
+const DataManager = goog.require('os.data.DataManager');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const osWindow = goog.require('os.ui.window');
+const TilesDescriptor = goog.require('plugin.cesium.tiles.Descriptor');
+const TilesProvider = goog.require('plugin.cesium.tiles.Provider');
 
 
 /**
@@ -12,111 +14,116 @@ goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-plugin.cesium.importIonAssetDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    templateUrl: os.ROOT + 'views/plugin/cesium/importionasset.html',
-    controller: plugin.cesium.ImportIonAssetCtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: true,
+  templateUrl: ROOT + 'views/plugin/cesium/importionasset.html',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
 
 
 /**
- * Add the directive to the os.ui module
+ * The element tag for the directive.
+ * @type {string}
  */
-os.ui.Module.directive('importionasset', [plugin.cesium.importIonAssetDirective]);
+const directiveTag = 'importionasset';
+
+
+/**
+ * Add the directive to the ui module
+ */
+Module.directive(directiveTag, [directive]);
 
 
 
 /**
  * Controller for the Ion asset import dialog.
- *
- * @param {!angular.Scope} $scope The Angular scope.
- * @param {!angular.JQLite} $element The root DOM element.
- * @extends {goog.Disposable}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-plugin.cesium.ImportIonAssetCtrl = function($scope, $element) {
-  plugin.cesium.ImportIonAssetCtrl.base(this, 'constructor');
+class Controller {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope The Angular scope.
+   * @param {!angular.JQLite} $element The root DOM element.
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
+
+    /**
+     * @type {number}
+     */
+    this['assetId'] = 0;
+
+    /**
+     * @type {string}
+     */
+    this['accessToken'] = '';
+
+    /**
+     * @type {string}
+     */
+    this['title'] = 'New Ion Asset';
+
+    /**
+     * @type {string}
+     */
+    this['description'] = '';
+
+    /**
+     * @type {string}
+     */
+    this['tags'] = '';
+
+    $scope.$emit(WindowEventType.READY);
+  }
 
   /**
-   * @type {?angular.JQLite}
-   * @private
+   * Angular $onDestroy lifecycle hook.
    */
-  this.element_ = $element;
+  $onDestroy() {
+    this.element_ = null;
+  }
 
   /**
-   * @type {number}
+   * Import the asset and close the window.
+   *
+   * @export
    */
-  this['assetId'] = 0;
+  accept() {
+    const descriptor = TilesDescriptor.create({
+      'accessToken': this['accessToken'],
+      'assetId': this['assetId'],
+      'title': this['title'],
+      'description': this['description'],
+      'tags': this['tags']
+    });
+    DataManager.getInstance().addDescriptor(descriptor);
+
+    const provider = TilesProvider.getInstance();
+    provider.addDescriptor(descriptor);
+
+    this.close();
+  }
 
   /**
-   * @type {string}
+   * Close the window.
+   *
+   * @export
    */
-  this['accessToken'] = '';
+  close() {
+    osWindow.close(this.element_);
+  }
+}
 
-  /**
-   * @type {string}
-   */
-  this['title'] = 'New Ion Asset';
-
-  /**
-   * @type {string}
-   */
-  this['description'] = '';
-
-  /**
-   * @type {string}
-   */
-  this['tags'] = '';
-
-  $scope.$emit(os.ui.WindowEventType.READY);
-  $scope.$on('$destroy', this.dispose.bind(this));
-};
-goog.inherits(plugin.cesium.ImportIonAssetCtrl, goog.Disposable);
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.ImportIonAssetCtrl.prototype.disposeInternal = function() {
-  plugin.cesium.ImportIonAssetCtrl.base(this, 'disposeInternal');
-
-  this.element_ = null;
-};
-
-
-/**
- * Import the asset and close the window.
- *
- * @export
- */
-plugin.cesium.ImportIonAssetCtrl.prototype.accept = function() {
-  var descriptor = plugin.cesium.tiles.Descriptor.createFromConfig({
-    'accessToken': this['accessToken'],
-    'assetId': this['assetId'],
-    'title': this['title'],
-    'description': this['description'],
-    'tags': this['tags']
-  });
-  os.dataManager.addDescriptor(descriptor);
-
-  var provider = plugin.cesium.tiles.Provider.getInstance();
-  provider.addDescriptor(descriptor);
-
-  this.close();
-};
-
-
-/**
- * Close the window.
- *
- * @export
- */
-plugin.cesium.ImportIonAssetCtrl.prototype.close = function() {
-  os.ui.window.close(this.element_);
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

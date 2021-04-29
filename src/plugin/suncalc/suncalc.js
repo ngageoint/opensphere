@@ -2,7 +2,7 @@ goog.provide('plugin.suncalc.SunCalcCtrl');
 goog.provide('plugin.suncalc.sunCalcDirective');
 
 goog.require('goog.array');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui.Module');
 goog.require('os.ui.window');
 

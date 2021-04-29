@@ -54,7 +54,7 @@ os.command.MockCommand.prototype.details = 'Incremented value by 1';
 
 // AsyncMockCommand is an asynchronous command
 os.command.AsyncMockCommand = function() {
-  goog.base(this);
+  os.command.AsyncMockCommand.base(this, 'constructor');
 };
 goog.inherits(os.command.AsyncMockCommand, goog.events.EventTarget);
 
@@ -104,7 +104,7 @@ os.command.AsyncMockCommand.prototype.details = 'Async Incremented value by 1';
 
 // MockCommandString helps test command sets
 os.command.MockCommandString = function() {
-  goog.base(this);
+  os.command.MockCommandString.base(this, 'constructor');
 };
 goog.inherits(os.command.MockCommandString, os.command.MockCommand);
 
@@ -125,7 +125,7 @@ os.command.MockCommandString.prototype.revert = function() {
 
 // here's the Async version of that
 os.command.AsyncMockCommandString = function() {
-  goog.base(this);
+  os.command.AsyncMockCommandString.base(this, 'constructor');
 };
 goog.inherits(os.command.AsyncMockCommandString, os.command.AsyncMockCommand);
 

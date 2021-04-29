@@ -9,7 +9,7 @@ goog.require('os.ex.AbstractExporter');
  * @constructor
  */
 os.ui.file.MockExportMethod = function() {
-  goog.base(this);
+  os.ui.file.MockExportMethod.base(this, 'constructor');
   this.cancelled = false;
   this.processed = false;
 };
@@ -85,7 +85,7 @@ os.ui.file.MockExportMethod.prototype.cancel = function() {
  * Resets the exporter to its default state.
  */
 os.ui.file.MockExportMethod.prototype.reset = function() {
-  goog.base(this, 'reset');
+  os.ui.file.MockExportMethod.base(this, 'reset');
   this.cancelled = false;
   this.processed = false;
 };

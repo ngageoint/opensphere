@@ -1,5 +1,6 @@
 goog.provide('plugin.places.PlacesLayer');
 
+goog.require('os.fn');
 goog.require('plugin.file.kml.KMLLayer');
 
 
@@ -14,6 +15,6 @@ plugin.places.PlacesLayer = function(options) {
   plugin.places.PlacesLayer.base(this, 'constructor', options);
 
   // TODO add specialized legend rendering for Places
-  this.renderLegend = goog.nullFunction;
+  this.renderLegend = os.fn.noop;
 };
 goog.inherits(plugin.places.PlacesLayer, plugin.file.kml.KMLLayer);

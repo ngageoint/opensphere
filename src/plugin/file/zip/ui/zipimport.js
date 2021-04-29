@@ -1,10 +1,10 @@
 goog.provide('plugin.file.zip.ui.ZIPImportCtrl');
 goog.provide('plugin.file.zip.ui.zipImportDirective');
 
+goog.require('os');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
 goog.require('os.data.FileDescriptor');
-goog.require('os.defines');
 goog.require('os.file.File');
 goog.require('os.im.ImportProcess');
 goog.require('os.ui.Module');

@@ -14,7 +14,7 @@ goog.require('os.events.EventType');
  * @constructor
  */
 os.im.AsyncImporter = function() {
-  goog.base(this);
+  os.im.AsyncImporter.base(this, 'constructor');
 
   /**
    * @type {Array<*>}
@@ -29,7 +29,7 @@ goog.inherits(os.im.AsyncImporter, goog.events.EventTarget);
  */
 os.im.AsyncImporter.prototype.disposeInternal = function() {
   this.reset();
-  goog.base(this, 'disposeInternal');
+  os.im.AsyncImporter.base(this, 'disposeInternal');
 };
 
 

@@ -1,7 +1,7 @@
 goog.provide('os.ui.search.SearchResultsCtrl');
 goog.provide('os.ui.search.searchResultsDirective');
 
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.search.SearchEvent');
 goog.require('os.search.SearchEventType');
 goog.require('os.ui');

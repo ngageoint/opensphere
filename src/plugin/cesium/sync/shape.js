@@ -1,5 +1,9 @@
 goog.module('plugin.cesium.sync.shape');
 
+const {asColorLike} = goog.require('ol.colorlike');
+const {createCanvasContext2D} = goog.require('ol.dom');
+const has = goog.require('ol.has');
+const renderCanvas = goog.require('ol.render.canvas');
 const OLRegularShape = goog.require('ol.style.RegularShape');
 
 
@@ -39,7 +43,7 @@ const drawShape = (style) => {
   scratchFakeShape.fill_ = style.getFill();
   scratchFakeShape.stroke_ = style.getStroke();
 
-  const context = ol.dom.createCanvasContext2D(renderOptions.size, renderOptions.size);
+  const context = createCanvasContext2D(renderOptions.size, renderOptions.size);
   renderOptions.size = context.canvas.width;
   OLRegularShape.prototype.draw_.call(scratchFakeShape, renderOptions, context, 0, 0);
 
@@ -68,30 +72,30 @@ const getRenderOptions = (style) => {
   if (stroke) {
     strokeStyle = stroke.getColor();
     if (strokeStyle === null) {
-      strokeStyle = ol.render.canvas.defaultStrokeStyle;
+      strokeStyle = renderCanvas.defaultStrokeStyle;
     }
-    strokeStyle = ol.colorlike.asColorLike(strokeStyle);
+    strokeStyle = asColorLike(strokeStyle);
     strokeWidth = stroke.getWidth();
     if (strokeWidth === undefined) {
-      strokeWidth = ol.render.canvas.defaultLineWidth;
+      strokeWidth = renderCanvas.defaultLineWidth;
     }
     lineDash = stroke.getLineDash();
     lineDashOffset = stroke.getLineDashOffset();
-    if (!ol.has.CANVAS_LINE_DASH) {
+    if (!has.CANVAS_LINE_DASH) {
       lineDash = null;
       lineDashOffset = 0;
     }
     lineJoin = stroke.getLineJoin();
     if (lineJoin === undefined) {
-      lineJoin = ol.render.canvas.defaultLineJoin;
+      lineJoin = renderCanvas.defaultLineJoin;
     }
     lineCap = stroke.getLineCap();
     if (lineCap === undefined) {
-      lineCap = ol.render.canvas.defaultLineCap;
+      lineCap = renderCanvas.defaultLineCap;
     }
     miterLimit = stroke.getMiterLimit();
     if (miterLimit === undefined) {
-      miterLimit = ol.render.canvas.defaultMiterLimit;
+      miterLimit = renderCanvas.defaultMiterLimit;
     }
   }
 

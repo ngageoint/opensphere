@@ -1,0 +1,62 @@
+<div>
+  <div class="text-center" ng-show="testing">
+    <div><i class="fa fa-4x fa-spin fa-smooth fa-spinner"></i></div>
+    <div>Testing...</div>
+  </div>
+  <div ng-form="form" ng-show="!testing" ng-submit="ctrl.accept()">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input unique-provider-title type="text" class="form-control" name="title" ng-disabled="!edit"
+          ng-model="config.label" ng-required="true" ng-maxlength="1000">
+      <small class="form-text text-danger" ng-if="form.title.$error.maxlength">Title is too long!</small>
+      <small class="form-text text-danger" ng-if="form.title.$error.unique">Title is not unique!</small>
+      <small class="form-text text-muted" ng-if="form.title.$valid || form.title.$error.required">
+        Please enter a title <span ng-if="typeName">for the {{typeName}}</span>
+      </small>
+    </div>
+    <div class="form-group">
+      <label for="wms" class="pr-1">WMS (Tile) Server URL</label>
+      <button class="btn btn-primary" type="button" ng-click="ctrl.launchHelp(typeName)"
+          title="Help for server specific URL formats">
+        <i class="fa fa-fw fa-question-circle"></i>
+      </button>
+      <input type="text" name="wms" class="form-control" ng-disabled="!edit" ng-model="config.wms"
+          ng-required="!config.wms && !config.wmts && !config.wfs" ng-maxlength="1000">
+      <small class="form-text text-danger" ng-if="form.wms.$error.maxlength">URL is too long!</small>
+        <small class="form-text text-muted" ng-if="form.wms.$valid || form.wms.$error.required">
+          Please enter the WMS URL (e.g. https://www.example.com/ogcserver/wms)
+        </small>
+    </div>
+    <div class="form-group">
+      <label for="wmts" class="pr-1">WMTS (Tile) Server URL</label>
+      <button class="btn btn-primary" type="button" ng-click="ctrl.launchHelp(typeName)"
+          title="Help for server specific URL formats">
+        <i class="fa fa-fw fa-question-circle"></i>
+      </button>
+      <input type="text" name="wmts" class="form-control" ng-disabled="!edit" ng-model="config.wmts"
+          ng-required="!config.wms && !config.wmts && !config.wfs" ng-maxlength="1000">
+      <small class="form-text text-danger" ng-if="form.wmts.$error.maxlength">URL is too long!</small>
+      <small class="form-text text-muted" ng-if="form.wmts.$valid || form.wmts.$error.required">
+        Please enter the WMTS URL (e.g. https://www.example.com/ogcserver/wmts)
+      </small>
+    </div>
+    <div class="form-group">
+      <label for="wfs" class="pr-1">WFS (Features) Server URL</label>
+      <button class="btn btn-primary" type="button" ng-click="ctrl.launchHelp(typeName)"
+          title="Help for server specific URL formats">
+        <i class="fa fa-fw fa-question-circle"></i>
+      </button>
+      <input type="text" name="wfs" class="form-control" ng-disabled="!edit" ng-model="config.wfs"
+          ng-required="!config.wms && !config.wmts && !config.wfs" ng-maxlength="1000">
+      <small class="form-text text-danger" ng-if="form.wfs.$error.maxlength">URL is too long!</small>
+      <small class="form-text text-muted" ng-if="form.wfs.$valid || form.wfs.$error.required">
+        Please enter the WFS URL (e.g. https://www.example.com/ogcserver/wfs)
+      </small>
+    </div>
+    <button type="submit" hidden></button>
+    <div class="alert alert-danger" ng-if="error">
+      <h5>Error!</h5>
+      <p ng-bind-html="error" class="m-0"></p>
+    </div>
+  </div>
+</div>

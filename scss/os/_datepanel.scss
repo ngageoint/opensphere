@@ -3,15 +3,19 @@
     max-width: (6 * $font-size-base) + $input-padding-x;
   }
 
+  .c-date-panel__container {
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 2.5rem;
+    z-index: $u-zindex-base + 1;
+  }
+
   .c-date-panel__extended {
     background: lighten($body-bg, 5%) !important;
     border: 1px solid $border-color;
     border-top: 0;
     color: $body-color;
-    left: 0;
-    min-width: 35rem;
-    position: absolute;
-    right: 0;
-    z-index: $u-zindex-base + 1;
+    max-width: 35rem;
   }
 }

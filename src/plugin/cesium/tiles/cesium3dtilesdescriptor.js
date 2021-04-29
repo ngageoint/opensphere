@@ -1,164 +1,163 @@
-goog.provide('plugin.cesium.tiles.Descriptor');
+goog.module('plugin.cesium.tiles.Descriptor');
 
-goog.require('os.data.FileDescriptor');
-goog.require('plugin.cesium');
-goog.require('plugin.cesium.tiles');
-goog.require('plugin.cesium.tiles.Provider');
+const FileDescriptor = goog.require('os.data.FileDescriptor');
+const ColorControlType = goog.require('os.ui.ColorControlType');
+const ControlType = goog.require('os.ui.ControlType');
+const cesium = goog.require('plugin.cesium');
+const {ID, ICON} = goog.require('plugin.cesium.tiles');
+const Provider = goog.require('plugin.cesium.tiles.Provider');
+
+const FileParserConfig = goog.requireType('os.parse.FileParserConfig');
 
 
 /**
  * Cesium 3D tiles descriptor.
- *
- * @extends {os.data.FileDescriptor}
- * @constructor
  */
-plugin.cesium.tiles.Descriptor = function() {
-  plugin.cesium.tiles.Descriptor.base(this, 'constructor');
-  this.descriptorType = plugin.cesium.tiles.ID;
+class Descriptor extends FileDescriptor {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.descriptorType = ID;
+
+    /**
+     * Cesium Ion asset id.
+     * @type {number}
+     * @protected
+     */
+    this.assetId = NaN;
+
+    /**
+     * Cesium Ion access token.
+     * @type {string}
+     * @protected
+     */
+    this.accessToken = '';
+
+    /**
+     * Cesium 3D tiles style.
+     * @type {Object|string}
+     * @protected
+     */
+    this.tileStyle = null;
+
+    /**
+     * If Cesium World Terrain should be activated with this layer.
+     * @type {boolean}
+     * @protected
+     */
+    this.useWorldTerrain = false;
+  }
 
   /**
-   * Cesium Ion asset id.
-   * @type {number}
-   * @protected
+   * @inheritDoc
    */
-  this.assetId = NaN;
+  getIcons() {
+    return ICON;
+  }
 
   /**
-   * Cesium Ion access token.
-   * @type {string}
-   * @protected
+   * @inheritDoc
    */
-  this.accessToken = '';
+  getLayerOptions() {
+    var options = super.getLayerOptions();
+    options['type'] = ID;
+
+    // allow resetting the layer color to the default
+    options[ControlType.COLOR] = ColorControlType.PICKER_RESET;
+
+    // add Ion config
+    if (!isNaN(this.assetId)) {
+      options['assetId'] = this.assetId;
+      options['accessToken'] = this.accessToken;
+    }
+
+    if (this.tileStyle) {
+      options['tileStyle'] = this.tileStyle;
+    }
+
+    options['useWorldTerrain'] = this.useWorldTerrain;
+
+    return options;
+  }
 
   /**
-   * Cesium 3D tiles style.
-   * @type {Object|string}
-   * @protected
+   * Set the Ion asset configuration.
+   *
+   * @param {number} assetId The asset id.
+   * @param {string=} opt_accessToken The access token.
    */
-  this.tileStyle = null;
+  setIonConfig(assetId, opt_accessToken) {
+    this.assetId = assetId;
+
+    if (opt_accessToken) {
+      this.accessToken = opt_accessToken;
+    }
+
+    // set a URL so the descriptor gets persisted
+    this.setUrl(cesium.getIonUrl());
+  }
 
   /**
-   * If Cesium World Terrain should be activated with this layer.
-   * @type {boolean}
-   * @protected
+   * @inheritDoc
    */
-  this.useWorldTerrain = false;
-};
-goog.inherits(plugin.cesium.tiles.Descriptor, os.data.FileDescriptor);
+  persist(opt_obj) {
+    var obj = super.persist(opt_obj);
+    obj['assetId'] = this.assetId;
+    obj['accessToken'] = this.accessToken;
 
-
-/**
- * @inheritDoc
- */
-plugin.cesium.tiles.Descriptor.prototype.getIcons = function() {
-  return plugin.cesium.tiles.ICON;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.tiles.Descriptor.prototype.getLayerOptions = function() {
-  var options = plugin.cesium.tiles.Descriptor.base(this, 'getLayerOptions');
-  options['type'] = plugin.cesium.tiles.ID;
-
-  // allow resetting the layer color to the default
-  options[os.ui.ControlType.COLOR] = os.ui.ColorControlType.PICKER_RESET;
-
-  // add Ion config
-  if (!isNaN(this.assetId)) {
-    options['assetId'] = this.assetId;
-    options['accessToken'] = this.accessToken;
+    return obj;
   }
 
-  if (this.tileStyle) {
-    options['tileStyle'] = this.tileStyle;
+  /**
+   * @inheritDoc
+   */
+  restore(conf) {
+    if (typeof conf['assetId'] == 'number') {
+      this.assetId = /** @type {number} */ (conf['assetId']);
+    }
+
+    if (conf['accessToken']) {
+      this.accessToken = /** @type {string} */ (conf['accessToken']);
+    }
+
+    super.restore(conf);
   }
 
-  options['useWorldTerrain'] = this.useWorldTerrain;
+  /**
+   * @inheritDoc
+   */
+  updateFromConfig(config, opt_useConfigForParser) {
+    super.updateFromConfig(config, true);
 
-  return options;
-};
+    if (typeof config['assetId'] == 'number') {
+      this.setIonConfig(
+          /** @type {number} */ (config['assetId']),
+          /** @type {string|undefined} */ (config['accessToken']));
+    }
 
+    if (config['tileStyle'] != null) {
+      this.tileStyle = /** @type {Object|string} */ (config['tileStyle']);
+    }
 
-/**
- * Set the Ion asset configuration.
- *
- * @param {number} assetId The asset id.
- * @param {string=} opt_accessToken The access token.
- */
-plugin.cesium.tiles.Descriptor.prototype.setIonConfig = function(assetId, opt_accessToken) {
-  this.assetId = assetId;
-
-  if (opt_accessToken) {
-    this.accessToken = opt_accessToken;
+    if (config['useWorldTerrain'] != null) {
+      this.useWorldTerrain = !!config['useWorldTerrain'];
+    }
   }
 
-  // set a URL so the descriptor gets persisted
-  this.setUrl(plugin.cesium.ionUrl);
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.tiles.Descriptor.prototype.persist = function(opt_obj) {
-  var obj = plugin.cesium.tiles.Descriptor.base(this, 'persist', opt_obj);
-  obj['assetId'] = this.assetId;
-  obj['accessToken'] = this.accessToken;
-
-  return obj;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.tiles.Descriptor.prototype.restore = function(conf) {
-  if (typeof conf['assetId'] == 'number') {
-    this.assetId = /** @type {number} */ (conf['assetId']);
+  /**
+   * Creates a new descriptor from a parser configuration.
+   *
+   * @param {!Object} config
+   * @return {!Descriptor}
+   */
+  static create(config) {
+    var descriptor = new Descriptor();
+    var provider = Provider.getInstance();
+    FileDescriptor.createFromConfig(descriptor, provider, /** @type {!FileParserConfig} */ (config));
+    return descriptor;
   }
+}
 
-  if (conf['accessToken']) {
-    this.accessToken = /** @type {string} */ (conf['accessToken']);
-  }
-
-  plugin.cesium.tiles.Descriptor.base(this, 'restore', conf);
-};
-
-
-/**
- * Creates a new descriptor from a parser configuration.
- *
- * @param {!Object} config
- * @return {!plugin.cesium.tiles.Descriptor}
- */
-plugin.cesium.tiles.Descriptor.createFromConfig = function(config) {
-  var descriptor = new plugin.cesium.tiles.Descriptor();
-  var provider = plugin.cesium.tiles.Provider.getInstance();
-  os.data.FileDescriptor.createFromConfig(descriptor, provider, /** @type {!os.parse.FileParserConfig} */ (config));
-  return descriptor;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.cesium.tiles.Descriptor.prototype.updateFromConfig = function(config, opt_useConfigForParser) {
-  plugin.cesium.tiles.Descriptor.base(this, 'updateFromConfig',
-      /** @type {!os.parse.FileParserConfig} */ (config), true);
-
-  if (typeof config['assetId'] == 'number') {
-    this.setIonConfig(
-        /** @type {number} */ (config['assetId']),
-        /** @type {string|undefined} */ (config['accessToken']));
-  }
-
-  if (config['tileStyle'] != null) {
-    this.tileStyle = /** @type {Object|string} */ (config['tileStyle']);
-  }
-
-  if (config['useWorldTerrain'] != null) {
-    this.useWorldTerrain = !!config['useWorldTerrain'];
-  }
-};
+exports = Descriptor;

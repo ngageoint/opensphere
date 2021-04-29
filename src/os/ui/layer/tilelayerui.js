@@ -1,10 +1,10 @@
 goog.provide('os.ui.layer.TileLayerUICtrl');
 goog.provide('os.ui.layer.tileLayerUIDirective');
 
+goog.require('os');
 goog.require('os.command.LayerColor');
 goog.require('os.command.TileLayerColorize');
 goog.require('os.command.TileLayerStyle');
-goog.require('os.defines');
 goog.require('os.ui.ControlType');
 goog.require('os.ui.Module');
 goog.require('os.ui.layer');

@@ -26,6 +26,8 @@ goog.require('os.style');
 goog.require('os.tile');
 goog.require('os.ui');
 goog.require('os.ui.Icons');
+goog.require('os.ui.IconsSVG');
+goog.require('os.ui.icons');
 goog.require('os.ui.layer.tileLayerUIDirective');
 goog.require('os.ui.renamelayer');
 
@@ -234,7 +236,7 @@ os.layer.Tile.prototype.setMaxResolution = function(value) {
 os.layer.Tile.prototype.updateIcons_ = function() {
   var color = this.getColor();
   if (color) {
-    os.ui.adjustIconSet(this.getId(), os.color.toHexString(color));
+    os.ui.icons.adjustIconSet(this.getId(), os.color.toHexString(color));
   }
 };
 
@@ -332,7 +334,7 @@ os.layer.Tile.prototype.getBrightness = function() {
 
 
 /**
- * Get the brightness for the tile layer.
+ * Get the contrast for the tile layer.
  *
  * @override
  * @return {number}
@@ -536,7 +538,7 @@ os.layer.Tile.prototype.updateColorFilter = function() {
  * Filter function that applies the layer color tile image data. This filter is always in the filter array, but it
  * only runs if the current color is different from the default or if the colorize option is active.
  *
- * @param {Array<number>} data The image data.
+ * @param {Uint8ClampedArray} data The image data.
  * @param {number} width The image width.
  * @param {number} height The image height.
  */
@@ -566,7 +568,7 @@ os.layer.Tile.prototype.applyColors = function(data, width, height) {
 
       if (sharpness > 0) {
         // sharpness is in the range [0, 1]. use a multiplier to enhance the convolution effect.
-        os.color.adjustSharpness(data, width, height, sharpness * 10);
+        os.color.adjustSharpness(data, width, height, sharpness * 2);
       }
     }
   }
@@ -668,7 +670,7 @@ os.layer.Tile.prototype.getIcons = function() {
     color = os.color.toRgbArray(layerColor);
   }
 
-  html += color ? os.ui.createIconSet(this.getId(), this.getSVGIconsInternal(), this.getStateBadge(), color)
+  html += color ? os.ui.icons.createIconSet(this.getId(), this.getSVGIconsInternal(), this.getStateBadge(), color)
     : this.getIconsInternal();
   return html;
 };

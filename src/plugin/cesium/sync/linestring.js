@@ -257,4 +257,3 @@ exports = {
   isDashChanging,
   isLineWidthChanging
 };
-

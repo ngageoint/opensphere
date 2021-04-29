@@ -48,13 +48,9 @@ describe('os.net', function() {
 
     expect(os.net.getCrossOrigin(uri)).toBe(os.net.CrossOrigin.ANONYMOUS);
     expect(os.net.getCrossOrigin(uri2)).toBe(os.net.CrossOrigin.USE_CREDENTIALS);
-  });
 
-  it('clears the crossOrigin cache', function() {
     os.net.resetCrossOriginCache();
 
-    var uri = new goog.Uri('http://somewhere.com');
-    var uri2 = new goog.Uri('https://somewhere.com');
     expect(os.net.getCrossOrigin(uri)).toBe(os.net.CrossOrigin.ANONYMOUS);
     expect(os.net.getCrossOrigin(uri2)).toBe(os.net.CrossOrigin.ANONYMOUS);
   });
@@ -122,5 +118,22 @@ describe('os.net', function() {
 
     expect(qd instanceof goog.Uri.QueryData).toBe(true);
     expect(qd.getCount()).toBe(0);
+  });
+
+  it('registers and sorts default request validators', function() {
+    const fn1 = () => {};
+    const fn2 = () => {};
+    os.net.registerDefaultValidator(fn1);
+    os.net.registerDefaultValidator(fn2, 100);
+
+    let validators = os.net.getDefaultValidators();
+    expect(validators.length).toBe(2);
+    expect(validators[0]).toBe(fn2);
+    expect(validators[1]).toBe(fn1);
+
+    os.net.resetDefaultValidators();
+
+    validators = os.net.getDefaultValidators();
+    expect(validators.length).toBe(0);
   });
 });

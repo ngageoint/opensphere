@@ -7,6 +7,8 @@ goog.require('os.ui.server.AbstractLoadingServer');
 goog.require('os.ui.slick.LoadingNode');
 goog.require('os.ui.slick.SlickTreeNode');
 
+goog.requireType('plugin.arc.IArcLoader');
+
 
 
 /**
@@ -21,7 +23,7 @@ plugin.arc.ArcServer = function() {
   this.providerType = os.ogc.ID;
 
   /**
-   * @type {?plugin.arc.ArcLoader}
+   * @type {plugin.arc.IArcLoader}
    * @private
    */
   this.loader_ = null;
@@ -143,12 +145,16 @@ plugin.arc.ArcServer.prototype.onLoad = function(event) {
  * @protected
  */
 plugin.arc.ArcServer.prototype.onError = function(event) {
+  var errors = this.loader_.getErrors();
   this.loader_.unlisten(goog.net.EventType.SUCCESS, this.onLoad, false, this);
   this.loader_.unlisten(goog.net.EventType.ERROR, this.onError, false, this);
   this.disposeLoader_();
 
   var href = this.getUrl();
   var msg = 'Request failed for <a target="_blank" href="' + href + '">Arc Server Capabilities</a>';
+  if (errors && errors.length) {
+    msg += `: ${errors.join(', ')}`;
+  }
 
   this.logError(msg);
   this.setLoading(false);

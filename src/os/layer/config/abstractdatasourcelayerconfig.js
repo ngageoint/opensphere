@@ -7,6 +7,7 @@ goog.require('goog.log.Logger');
 goog.require('os.Fields');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.data.RecordField');
+goog.require('os.fn');
 goog.require('os.geo');
 goog.require('os.im.FeatureImporter');
 goog.require('os.layer.Vector');
@@ -119,7 +120,7 @@ os.layer.config.AbstractDataSourceLayerConfig.prototype.restore = function(layer
  * @protected
  * @todo Implement mappings.
  */
-os.layer.config.AbstractDataSourceLayerConfig.prototype.addMappings = goog.nullFunction;
+os.layer.config.AbstractDataSourceLayerConfig.prototype.addMappings = os.fn.noop;
 
 
 /**

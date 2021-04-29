@@ -9,7 +9,7 @@ goog.require('os.layer.config.AbstractLayerConfig');
  * @constructor
  */
 os.layer.config.MockTileLayerConfig = function() {
-  goog.base(this);
+  os.layer.config.MockTileLayerConfig.base(this, 'constructor');
 };
 goog.inherits(os.layer.config.MockTileLayerConfig, os.layer.config.AbstractLayerConfig);
 

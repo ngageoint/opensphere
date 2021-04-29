@@ -1,3 +1,6 @@
+goog.require('goog.async.Delay');
+goog.require('goog.dispose');
+goog.require('ol');
 goog.require('ol.Feature');
 goog.require('ol.geom.Point');
 goog.require('ol.proj');
@@ -5,27 +8,42 @@ goog.require('ol.style.Style');
 goog.require('os.data.RecordField');
 goog.require('os.layer.Vector');
 goog.require('os.proj');
-goog.require('os.webgl');
+goog.require('os.webgl.AltitudeMode');
 goog.require('plugin.cesium');
 goog.require('plugin.cesium.VectorContext');
 goog.require('plugin.cesium.primitive');
 goog.require('test.plugin.cesium.primitive');
 goog.require('test.plugin.cesium.scene');
 
+
 describe('plugin.cesium.primitive', () => {
+  const dispose = goog.module.get('goog.dispose');
+  const ol = goog.module.get('ol');
+  const Delay = goog.module.get('goog.async.Delay');
+
+  const Feature = goog.module.get('ol.Feature');
+  const Point = goog.module.get('ol.geom.Point');
+  const olProj = goog.module.get('ol.proj');
+  const Style = goog.module.get('ol.style.Style');
+  const RecordField = goog.module.get('os.data.RecordField');
+  const VectorLayer = goog.module.get('os.layer.Vector');
+  const osProj = goog.module.get('os.proj');
+  const AltitudeMode = goog.module.get('os.webgl.AltitudeMode');
+
+  const {GeometryInstanceId} = goog.module.get('plugin.cesium');
+  const VectorContext = goog.module.get('plugin.cesium.VectorContext');
   const syncUtils = goog.module.get('plugin.cesium.primitive');
   const primitiveUtils = goog.module.get('test.plugin.cesium.primitive');
   const {getFakeScene} = goog.module.get('test.plugin.cesium.scene');
-  const VectorContext = goog.module.get('plugin.cesium.VectorContext');
 
   describe('getPrimitive', () => {
     it('should retrieve the primitive', () => {
       const scene = getFakeScene();
-      const layer = new os.layer.Vector();
-      const context = new VectorContext(scene, layer, ol.proj.get(os.proj.EPSG4326));
+      const layer = new VectorLayer();
+      const context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
 
-      const geometry = new ol.geom.Point([0, 0]);
-      const feature = new ol.Feature(geometry);
+      const geometry = new Point([0, 0]);
+      const feature = new Feature(geometry);
       const billboard = primitiveUtils.createBillboard([0, 0, 0]);
 
       context.geometryToCesiumMap[ol.getUid(geometry)] = billboard;
@@ -45,12 +63,12 @@ describe('plugin.cesium.primitive', () => {
     let scene;
 
     beforeEach(() => {
-      geometry = new ol.geom.Point([0, 0]);
-      feature = new ol.Feature(geometry);
-      style = new ol.style.Style();
-      layer = new os.layer.Vector();
+      geometry = new Point([0, 0]);
+      feature = new Feature(geometry);
+      style = new Style();
+      layer = new VectorLayer();
       scene = getFakeScene();
-      context = new VectorContext(scene, layer, ol.proj.get(os.proj.EPSG4326));
+      context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
     });
 
     it('should allow updates on everything for unchanged altitude modes', () => {
@@ -65,7 +83,7 @@ describe('plugin.cesium.primitive', () => {
 
     it('should allow updates on billboards changing altitude modes', () => {
       const billboard = primitiveUtils.createBillboard([0, 0, 0]);
-      geometry.set(os.data.RecordField.ALTITUDE_MODE, os.webgl.AltitudeMode.CLAMP_TO_GROUND);
+      geometry.set(RecordField.ALTITUDE_MODE, AltitudeMode.CLAMP_TO_GROUND);
       expect(syncUtils.shouldUpdatePrimitive(feature, geometry, style, context, billboard)).toBe(true);
     });
 
@@ -73,7 +91,7 @@ describe('plugin.cesium.primitive', () => {
       const primitive = primitiveUtils.createPrimitive([-5, -5, 5, 5]);
       const polyline = primitiveUtils.createPolyline([[0, 0], [10, 10]]);
 
-      geometry.set(os.data.RecordField.ALTITUDE_MODE, os.webgl.AltitudeMode.CLAMP_TO_GROUND);
+      geometry.set(RecordField.ALTITUDE_MODE, AltitudeMode.CLAMP_TO_GROUND);
       [primitive, polyline].forEach((item) =>
         expect(syncUtils.shouldUpdatePrimitive(feature, geometry, style, context, item)).toBe(false));
     });
@@ -93,17 +111,17 @@ describe('plugin.cesium.primitive', () => {
     let material;
 
     beforeEach(() => {
-      geometry = new ol.geom.Point([0, 0]);
-      feature = new ol.Feature(geometry);
-      style = new ol.style.Style();
-      layer = new os.layer.Vector();
+      geometry = new Point([0, 0]);
+      feature = new Feature(geometry);
+      style = new Style();
+      layer = new VectorLayer();
       scene = getFakeScene();
-      context = new VectorContext(scene, layer, ol.proj.get(os.proj.EPSG4326));
+      context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
 
       // switch the delay to 1ms so that we don't have to wait so long to test
       // multiple tries
-      const oldStart = goog.async.Delay.prototype.start;
-      spyOn(goog.async.Delay.prototype, 'start').andCallFake(function(interval) {
+      const oldStart = Delay.prototype.start;
+      spyOn(Delay.prototype, 'start').andCallFake(function(interval) {
         oldStart.call(this, 1);
       });
 
@@ -125,7 +143,7 @@ describe('plugin.cesium.primitive', () => {
       const primitive = primitiveUtils.createPrimitive([-5, -5, 5, 5]);
       const polyline = primitiveUtils.createPolyline([[0, 0], [10, 10]]);
 
-      geometry.set(os.data.RecordField.ALTITUDE_MODE, os.webgl.AltitudeMode.CLAMP_TO_GROUND);
+      geometry.set(RecordField.ALTITUDE_MODE, AltitudeMode.CLAMP_TO_GROUND);
       [primitive, polyline].forEach((item) =>
         expect(syncUtils.updatePrimitive(feature, geometry, style, context, item)).toBe(false));
     });
@@ -177,7 +195,7 @@ describe('plugin.cesium.primitive', () => {
 
     it('should stop retrying disposed primitives and mark them for removal', () => {
       primitive.ready = true;
-      goog.dispose(feature);
+      dispose(feature);
       expect(syncUtils.updatePrimitive(feature, geometry, style, context, primitive)).toBe(true);
       expect(primitive.dirty).toBe(true);
     });
@@ -193,11 +211,11 @@ describe('plugin.cesium.primitive', () => {
   describe('deletePrimitive', () => {
     it('should delete the primitive', () => {
       const scene = getFakeScene();
-      const layer = new os.layer.Vector();
-      const context = new VectorContext(scene, layer, ol.proj.get(os.proj.EPSG4326));
+      const layer = new VectorLayer();
+      const context = new VectorContext(scene, layer, olProj.get(osProj.EPSG4326));
 
-      const geometry = new ol.geom.Point([0, 0]);
-      const feature = new ol.Feature(geometry);
+      const geometry = new Point([0, 0]);
+      const feature = new Feature(geometry);
       const billboard = primitiveUtils.createBillboard([0, 0, 0]);
 
       context.geometryToCesiumMap[ol.getUid(geometry)] = billboard;
@@ -234,12 +252,12 @@ describe('plugin.cesium.primitive', () => {
 
     it('should assume a geometry ID rather than an outline', () => {
       const result = syncUtils.createColoredPrimitive(geometry, color, undefined, undefined, MockPrimitive);
-      expect(result.options.geometryInstances.id).toBe(plugin.cesium.GeometryInstanceId.GEOM);
+      expect(result.options.geometryInstances.id).toBe(GeometryInstanceId.GEOM);
     });
 
     it('should use an outline ID when an outline is provided', () => {
       const result = syncUtils.createColoredPrimitive(geometry, color, 3, undefined, MockPrimitive);
-      expect(result.options.geometryInstances.id).toBe(plugin.cesium.GeometryInstanceId.GEOM_OUTLINE);
+      expect(result.options.geometryInstances.id).toBe(GeometryInstanceId.GEOM_OUTLINE);
     });
 
     it('should add the line width to the appearance renderState', () => {
@@ -266,7 +284,7 @@ describe('plugin.cesium.primitive', () => {
       const customCreate = (id, geometry, color) => ({id, geometry, color});
       const result = syncUtils.createColoredPrimitive(geometry, color, undefined, customCreate, MockPrimitive);
       expect(result.options.geometryInstances).toEqual({
-        id: plugin.cesium.GeometryInstanceId.GEOM,
+        id: GeometryInstanceId.GEOM,
         geometry,
         color
       });
@@ -352,7 +370,7 @@ describe('plugin.cesium.primitive', () => {
       });
     });
 
-    it('should get the shown value of the first item for collections', () => {
+    it('should get the shown value of collections', () => {
       const billboardCollection = new Cesium.BillboardCollection();
       const polylineCollection = new Cesium.PolylineCollection();
 
@@ -366,6 +384,9 @@ describe('plugin.cesium.primitive', () => {
 
       const collections = [billboardCollection, polylineCollection];
       collections.forEach((collection) => {
+        expect(isPrimitiveShown(collection)).toBe(true);
+
+        collection.show = false;
         expect(isPrimitiveShown(collection)).toBe(false);
       });
     });
@@ -397,7 +418,7 @@ describe('plugin.cesium.primitive', () => {
       expect(isPrimitiveShown(genericPrimitives)).toBe(true);
     });
 
-    it('should set the shown value of all items in collections', () => {
+    it('should set the shown value of collections', () => {
       const billboardCollection = new Cesium.BillboardCollection();
       const billboard1 = primitiveUtils.createBillboard([0, 0, 0]);
       const billboard2 = primitiveUtils.createBillboard([1, 1, 1]);
@@ -413,10 +434,13 @@ describe('plugin.cesium.primitive', () => {
       const collections = [billboardCollection, polylineCollection];
       collections.forEach((collection) => {
         setPrimitiveShown(collection, false);
+        expect(isPrimitiveShown(collection)).toBe(false);
         for (let i = 0, n = collection.length; i < n; i++) {
-          expect(isPrimitiveShown(collection.get(i))).toBe(false);
+          expect(isPrimitiveShown(collection.get(i))).toBe(true);
         }
+
         setPrimitiveShown(collection, true);
+        expect(isPrimitiveShown(collection)).toBe(true);
         for (let i = 0, n = collection.length; i < n; i++) {
           expect(isPrimitiveShown(collection.get(i))).toBe(true);
         }

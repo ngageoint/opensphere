@@ -4,7 +4,7 @@ goog.provide('os.ui.layer.labelControlsDirective');
 goog.require('goog.Disposable');
 goog.require('goog.array');
 goog.require('ol.array');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.metrics.Metrics');
 goog.require('os.style.label');
 goog.require('os.ui.Module');

@@ -276,6 +276,57 @@ describe('os.net.Request', function() {
     });
   });
 
+  it('should not use default validators when not enabled', function() {
+    os.net.registerDefaultValidator((value) => 'Error!');
+
+    var r = new os.net.Request(window.location.toString());
+
+    var count = 0;
+    var listener = function() {
+      count++;
+    };
+
+    r.listen(goog.net.EventType.SUCCESS, listener);
+
+    runs(function() {
+      r.load();
+    });
+
+    waitsFor(function() {
+      return count === 1;
+    }, 'request to succeed');
+
+    runs(function() {
+      expect(r.getErrors()).toBeNull();
+    });
+  });
+
+  it('should use default validators when enabled', function() {
+    os.net.registerDefaultValidator((value) => 'Error!');
+
+    var r = new os.net.Request(window.location.toString());
+    r.setUseDefaultValidators(true);
+
+    var count = 0;
+    var listener = function() {
+      count++;
+    };
+
+    r.listen(goog.net.EventType.ERROR, listener);
+
+    runs(function() {
+      r.load();
+    });
+
+    waitsFor(function() {
+      return count === 1;
+    }, 'request to error out');
+
+    runs(function() {
+      expect(r.getErrors()).toContain('Error!');
+    });
+  });
+
   describe('promise', function() {
     it('should load a request and resolve to the response', function() {
       var r = new os.net.Request(window.location.toString());

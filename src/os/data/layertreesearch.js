@@ -1,12 +1,16 @@
 goog.provide('os.data.LayerTreeSearch');
-goog.require('os.data.DataManager');
+
+goog.require('os.data.FolderNode');
 goog.require('os.data.LayerNode');
 goog.require('os.data.groupby.LayerZOrderGroupBy');
+goog.require('os.layer.FolderManager');
 goog.require('os.layer.ILayer');
 goog.require('os.layer.LayerGroup');
 goog.require('os.structs.ITreeNodeSupplier');
 goog.require('os.ui.data.BaseProvider');
+goog.require('os.ui.node.FolderNodeUI');
 goog.require('os.ui.slick.AbstractGroupByTreeSearch');
+goog.require('os.ui.slick.SlickTreeNode');
 goog.require('os.ui.slick.TreeSearch');
 
 
@@ -73,9 +77,15 @@ os.data.LayerTreeSearch.prototype.setupNode = function(item) {
  * @override
  */
 os.data.LayerTreeSearch.prototype.finalizeSearch = function(groupBy, results) {
-  var i = results.length;
-  while (i--) {
-    this.makeGroups_(results[i].getChildren(), /** @type {!os.ui.slick.SlickTreeNode} */ (results[i]));
+  if (groupBy) {
+    var i = results.length;
+    while (i--) {
+      this.makeGroups_(results[i].getChildren(), /** @type {!os.ui.slick.SlickTreeNode} */ (results[i]));
+    }
+  } else {
+    var layerNodes = results.slice();
+    results.length = 0;
+    this.createResults(results, layerNodes);
   }
 };
 
@@ -86,8 +96,6 @@ os.data.LayerTreeSearch.prototype.finalizeSearch = function(groupBy, results) {
 os.data.LayerTreeSearch.prototype.setSort = function(list) {
   if (this.getGroupBy()) {
     list.sort(os.ui.slick.TreeSearch.idCompare);
-  } else {
-    list.sort(os.ui.slick.TreeSearch.labelCompare);
   }
 };
 
@@ -99,14 +107,25 @@ os.data.LayerTreeSearch.prototype.setSort = function(list) {
  */
 os.data.LayerTreeSearch.prototype.fillListFromSearch = function(list) {
   var map = os.MapContainer.getInstance();
-  var l = map.getLayers();
+  var layers = map.getLayers();
 
-  if (l && l.length > 0) {
-    for (var i = 0, n = l.length; i < n; i++) {
-      var node = new os.data.LayerNode();
-      node.setLayer(/** @type {!os.layer.ILayer} */ (l[i]));
-      list.push(node);
+  if (layers && layers.length > 0) {
+    const layerNodes = [];
+    for (var i = 0, n = layers.length; i < n; i++) {
+      var layer = /** @type {!os.layer.ILayer} */ (layers[i]);
+      var node;
+
+      if (layer.getTreeNode) {
+        node = /** @type {!os.structs.ITreeNodeSupplier} */ (layer).getTreeNode();
+      } else {
+        node = new os.data.LayerNode();
+        node.setLayer(layer);
+      }
+
+      layerNodes.push(node);
     }
+
+    this.createResults(list, layerNodes);
   } else {
     this.addNoResult(list);
   }
@@ -121,9 +140,10 @@ os.data.LayerTreeSearch.prototype.fillListFromSearch = function(list) {
  * @private
  */
 os.data.LayerTreeSearch.prototype.makeGroups_ = function(results, parent) {
-  if (results && results.length > 1) {
+  if (results && results.length > 0) {
+    // if there are no user-created folders, fall back to grouping them automatically
     var idBuckets = /** @type {!Object<string, !Array<!os.structs.ITreeNode>>} */
-        (goog.array.bucket(results, this.getNodeGroup_.bind(this)));
+        (goog.array.bucket(results, this.getNodeGroup.bind(this)));
     results.length = 0;
 
     for (var id in idBuckets) {
@@ -174,7 +194,8 @@ os.data.LayerTreeSearch.prototype.makeGroups_ = function(results, parent) {
     // Update the parent count
     // Essentially this takes the "(1)" or "(1 of 2)" portion and applies the difference in count to both numbers.
     var label = parent.getLabel();
-    i = label.indexOf('(');
+    var i = label.indexOf('(');
+    var count = results.length;
 
     /**
      * @type {Array<string|number>}
@@ -193,7 +214,7 @@ os.data.LayerTreeSearch.prototype.makeGroups_ = function(results, parent) {
       counts[i] = parseInt(counts[i], 10);
 
       if (i === 0) {
-        var ratio = results.length / counts[0];
+        var ratio = count / counts[0];
       }
 
       counts[i] *= ratio;
@@ -205,13 +226,66 @@ os.data.LayerTreeSearch.prototype.makeGroups_ = function(results, parent) {
 
 
 /**
+ * Creates the final results.
+ *
+ * @param {!Array<!os.structs.ITreeNode>} results
+ * @param {!Array<!os.structs.ITreeNode>} layerNodes
+ * @private
+ */
+os.data.LayerTreeSearch.prototype.createResults = function(results, layerNodes) {
+  const items = os.layer.FolderManager.getInstance().getItems();
+  const folderNodeMap = {};
+
+  if (items.length > 0) {
+    /**
+     * Recursively build the tree from the folder options saved in FolderManager.
+     * @param {osx.layer.FolderOptions} options
+     * @param {number} i
+     * @param {Array<(osx.layer.FolderOptions|string)>} arr
+     */
+    var builder = (options, i, arr) => {
+      if (options.type == 'folder') {
+        const folderNode = new os.data.FolderNode(options);
+        folderNodeMap[options.id] = folderNode;
+
+        if (folderNodeMap[options.parentId]) {
+          folderNodeMap[options.parentId].addChild(folderNode);
+        } else {
+          results.push(folderNode);
+        }
+
+        if (options.children) {
+          options.children.forEach(builder);
+        }
+      } else {
+        var layerNode = layerNodes.find((node) => node.getId() === options.id);
+        if (layerNode) {
+          if (folderNodeMap[options.parentId]) {
+            folderNodeMap[options.parentId].addChild(layerNode);
+          } else {
+            results.push(layerNode);
+          }
+        }
+      }
+    };
+
+    items.forEach(builder);
+  } else {
+    // just use all of the layer nodes
+    results.splice(0, 0, ...layerNodes);
+    results.sort(os.ui.slick.TreeSearch.labelCompare);
+  }
+};
+
+
+/**
  * @param {!os.structs.ITreeNode} node
  * @param {number} index
  * @param {!IArrayLike<!os.structs.ITreeNode>} array
  * @return {string}
- * @private
+ * @protected
  */
-os.data.LayerTreeSearch.prototype.getNodeGroup_ = function(node, index, array) {
+os.data.LayerTreeSearch.prototype.getNodeGroup = function(node, index, array) {
   var groupId = node.getId();
   var id;
 

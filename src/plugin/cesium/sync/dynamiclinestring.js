@@ -1,17 +1,16 @@
 goog.module('plugin.cesium.sync.DynamicLineString');
 
+const {GeometryInstanceId} = goog.require('plugin.cesium');
 const {getColor, getLineWidthFromStyle} = goog.require('plugin.cesium.sync.style');
 const {getDashPattern, getLineStringPositions} = goog.require('plugin.cesium.sync.linestring');
 
 const Feature = goog.requireType('ol.Feature');
-const {GeometryInstanceId} = goog.require('plugin.cesium');
-
-const Ellipse = goog.requireType('os.geom.Ellipse');
 const LineString = goog.requireType('ol.geom.LineString');
 const MultiLineString = goog.requireType('ol.geom.MultiLineString');
 const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
 const Polygon = goog.requireType('ol.geom.Polygon');
 const Style = goog.requireType('ol.style.Style');
+const Ellipse = goog.requireType('os.geom.Ellipse');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
 
 

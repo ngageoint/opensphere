@@ -1,8 +1,8 @@
 goog.provide('os.ui.alert.AlertsCtrl');
 goog.provide('os.ui.alertsDirective');
 
+goog.require('os');
 goog.require('os.alertManager');
-goog.require('os.defines');
 goog.require('os.ui.Module');
 
 

@@ -6,6 +6,7 @@ goog.require('goog.Uri.QueryData');
 goog.require('goog.dom.xml');
 goog.require('goog.string');
 goog.require('os.config.Settings');
+goog.require('os.file.mime.text');
 
 
 /**
@@ -65,6 +66,14 @@ os.ogc.COLOR_STYLE_REGEX = /(density)|(foreground color)/i;
 
 
 /**
+ * Regular expression to detect an OGC error response.
+ * @type {RegExp}
+ * @const
+ */
+os.ogc.ERROR_REGEX = /(ExceptionText|ServiceException)/i;
+
+
+/**
  * Typedef describing available WFS format types (GML, GeoJSON, etc.)
  * @typedef {{
  *   type: !string,
@@ -80,22 +89,27 @@ os.ogc.WFSTypeConfig;
 /**
  * A validator function for requests which checks for OGC exceptions
  *
- * @param {ArrayBuffer|string} response
- * @param {?string=} opt_contentType
+ * @param {ArrayBuffer|string} response The response.
+ * @param {?string=} opt_contentType The content type of the response, if available.
+ * @param {Array<number>=} opt_codes Response codes, if available.
  * @return {?string} An error message if one was found, or null if the response is OK
  */
-os.ogc.getException = function(response, opt_contentType) {
+os.ogc.getException = function(response, opt_contentType, opt_codes) {
   try {
-    var isXml = opt_contentType && goog.string.contains(opt_contentType, '/xml');
-
-    // THIN-5464
-    // if there are headers and the header is xml and the response is a string try to parse the xml.
-    // if no headers and response is a string, just try it and deal with the error in the console in IE and firefox.
-    if (isXml || !opt_contentType) {
-      var doc = typeof response === 'string' ? goog.dom.xml.loadXml(response) : response;
-      var ex = doc.querySelector('ExceptionText, ServiceException');
-      if (ex) {
-        return ex.textContent;
+    // Try to parse the response as XML and determine if it appears to be an OGC exception report.
+    //  - Ignore if the content type is not XML
+    //  - Ignore if the response codes contain 200 OK. Geoserver will return a 200 code for exceptions to the /ows
+    //    endpoint, which we should be able to handle and load the server with appropriate parameters.
+    if (response &&
+        (!opt_contentType || opt_contentType.indexOf('/xml') != -1) &&
+        (!opt_codes || opt_codes.indexOf(200) === -1)) {
+      const strResponse = typeof response === 'string' ? response : os.file.mime.text.getText(response);
+      if (strResponse && os.ogc.ERROR_REGEX.test(strResponse)) {
+        const doc = goog.dom.xml.loadXml(strResponse);
+        const ex = doc.querySelector('ExceptionText, ServiceException');
+        if (ex) {
+          return ex.textContent;
+        }
       }
     }
   } catch (e) {

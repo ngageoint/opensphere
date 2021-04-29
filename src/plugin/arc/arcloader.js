@@ -1,8 +1,12 @@
 goog.provide('plugin.arc.ArcLoader');
+
 goog.require('goog.events.EventTarget');
 goog.require('goog.log.Logger');
 goog.require('ol.array');
 goog.require('os.net.Request');
+goog.require('plugin.arc');
+goog.require('plugin.arc.ArcServer');
+goog.require('plugin.arc.IArcLoader');
 goog.require('plugin.arc.node.ArcFolderNode');
 goog.require('plugin.arc.node.ArcServiceNode');
 
@@ -14,7 +18,10 @@ goog.require('plugin.arc.node.ArcServiceNode');
  * @param {os.ui.slick.SlickTreeNode} node
  * @param {string} url
  * @param {plugin.arc.ArcServer} server
+ *
+ * @implements {plugin.arc.IArcLoader}
  * @extends {goog.events.EventTarget}
+ *
  * @constructor
  */
 plugin.arc.ArcLoader = function(node, url, server) {
@@ -43,6 +50,12 @@ plugin.arc.ArcLoader = function(node, url, server) {
    * @private
    */
   this.request_ = null;
+
+  /**
+   * @type {Array<string>}
+   * @private
+   */
+  this.errors_ = null;
 
   /**
    * @type {goog.log.Logger}
@@ -90,9 +103,15 @@ plugin.arc.ArcLoader.prototype.disposeInternal = function() {
 
 
 /**
- * Get the URL
- *
- * @return {string}
+ * @inheritDoc
+ */
+plugin.arc.ArcLoader.prototype.getErrors = function() {
+  return this.errors_;
+};
+
+
+/**
+ * @inheritDoc
  */
 plugin.arc.ArcLoader.prototype.getUrl = function() {
   return this.url_;
@@ -100,9 +119,7 @@ plugin.arc.ArcLoader.prototype.getUrl = function() {
 
 
 /**
- * Set the URL
- *
- * @param {string} value
+ * @inheritDoc
  */
 plugin.arc.ArcLoader.prototype.setUrl = function(value) {
   this.url_ = value;
@@ -110,9 +127,7 @@ plugin.arc.ArcLoader.prototype.setUrl = function(value) {
 
 
 /**
- * Get the node
- *
- * @return {?os.ui.slick.SlickTreeNode}
+ * @inheritDoc
  */
 plugin.arc.ArcLoader.prototype.getNode = function() {
   return this.node_;
@@ -120,9 +135,7 @@ plugin.arc.ArcLoader.prototype.getNode = function() {
 
 
 /**
- * Set the node
- *
- * @param {os.ui.slick.SlickTreeNode} value
+ * @inheritDoc
  */
 plugin.arc.ArcLoader.prototype.setNode = function(value) {
   this.node_ = value;
@@ -130,9 +143,7 @@ plugin.arc.ArcLoader.prototype.setNode = function(value) {
 
 
 /**
- * Get the server
- *
- * @return {?plugin.arc.ArcServer}
+ * @inheritDoc
  */
 plugin.arc.ArcLoader.prototype.getServer = function() {
   return this.server_;
@@ -140,9 +151,7 @@ plugin.arc.ArcLoader.prototype.getServer = function() {
 
 
 /**
- * Set the server
- *
- * @param {?plugin.arc.ArcServer} value
+ * @inheritDoc
  */
 plugin.arc.ArcLoader.prototype.setServer = function(value) {
   this.server_ = value;
@@ -150,7 +159,7 @@ plugin.arc.ArcLoader.prototype.setServer = function(value) {
 
 
 /**
- * Loads Arc node capabilities.
+ * @inheritDoc
  */
 plugin.arc.ArcLoader.prototype.load = function() {
   goog.asserts.assert(this.url_, 'No URL provided to the Arc Loader!');
@@ -160,7 +169,10 @@ plugin.arc.ArcLoader.prototype.load = function() {
   var requestUrl = this.url_ + '?f=json';
   goog.log.fine(this.log, 'Loading Arc capabilities from URL: ' + requestUrl);
 
+  this.errors_ = null;
+
   this.request_ = new os.net.Request(requestUrl);
+  this.request_.setValidator(plugin.arc.getException);
   this.request_.setHeader('Accept', '*/*');
   this.request_.listen(goog.net.EventType.SUCCESS, this.onLoad, false, this);
   this.request_.listen(goog.net.EventType.ERROR, this.onError, false, this);
@@ -321,6 +333,8 @@ plugin.arc.ArcLoader.prototype.shouldAddNode = function(node) {
  * @protected
  */
 plugin.arc.ArcLoader.prototype.onError = function(event) {
+  this.errors_ = this.request_.getErrors();
+
   var uri = this.request_.getUri();
   goog.dispose(this.request_);
   this.request_ = null;
@@ -344,7 +358,9 @@ plugin.arc.ArcLoader.prototype.handleError = function(error) {
   } else if (typeof error == 'object') {
     // handle an Arc error code response
     var errorObj = error['error'] || {};
-    msg = `Error loading Arc server. Code: ${errorObj['code']}. Reason: ${error['message']}.`;
+    msg = `Error loading Arc server. Code: ${errorObj['code']}. Reason: ${errorObj['message']}.`;
+
+    this.errors_ = [errorObj['message']];
   } else {
     msg = 'An unknown error occurred.';
   }
@@ -370,3 +386,6 @@ plugin.arc.ArcLoader.collapseFolders = function(child, i, arr) {
     grandChildren.forEach(plugin.arc.ArcLoader.collapseFolders);
   }
 };
+
+// Use this as the default class for loading an ArcGIS service/node.
+plugin.arc.setLoaderClass(plugin.arc.ArcLoader);

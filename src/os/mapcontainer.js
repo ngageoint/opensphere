@@ -29,6 +29,7 @@ goog.require('ol.proj');
 goog.require('ol.renderer.Type');
 goog.require('ol.source.Vector');
 goog.require('ol.tilegrid');
+goog.require('os');
 goog.require('os.Map');
 goog.require('os.MapChange');
 goog.require('os.MapEvent');
@@ -42,7 +43,6 @@ goog.require('os.config.DisplaySetting');
 goog.require('os.control.ZoomLevel');
 goog.require('os.data.DeactivateDescriptor');
 goog.require('os.data.ZOrder');
-goog.require('os.defines');
 goog.require('os.events');
 goog.require('os.events.LayerEvent');
 goog.require('os.events.LayerEventType');
@@ -954,7 +954,7 @@ os.MapContainer.prototype.init = function() {
   this.drawingLayer_.setLayerUI('');
   this.drawingLayer_.setSticky(true);
   this.drawingLayer_.setSynchronizerType(os.layer.SynchronizerType.DRAW);
-  this.drawingLayer_.renderLegend = goog.nullFunction;
+  this.drawingLayer_.renderLegend = os.fn.noop;
   this.drawingLayer_.set(os.data.RecordField.ALTITUDE_MODE, os.webgl.AltitudeMode.CLAMP_TO_GROUND);
 
   var tileGroup = new os.layer.Group();

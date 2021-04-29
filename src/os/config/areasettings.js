@@ -1,8 +1,8 @@
 goog.provide('os.config.AreaSettings');
 goog.provide('os.config.AreaSettingsCtrl');
 
+goog.require('os');
 goog.require('os.array');
-goog.require('os.defines');
 goog.require('os.query.AreaManager');
 goog.require('os.ui.Module');
 goog.require('os.ui.config.SettingPlugin');

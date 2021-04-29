@@ -14,18 +14,13 @@ describe('os.job.JobManager', function() {
 
   beforeEach(function() {
     jobManager = new os.job.JobManager();
-    job1 = jobManager.createJob('/base/test/os/job/job.test.worker.js',
-        jobName + ' 1', jobDetails);
+    job1 = jobManager.createJob('/base/test/os/job/job.test.worker.js', jobName + ' 1', jobDetails);
     expect(jobManager.getJobs().length).toBe(1);
-    job2 = jobManager.createJob('/base/test/os/job/job.test.worker.js',
-        jobName + ' 2', jobDetails);
+    job2 = jobManager.createJob('/base/test/os/job/job.test.worker.js', jobName + ' 2', jobDetails);
     expect(jobManager.getJobs().length).toBe(2);
   });
 
-  var desc = 'should execute jobs in the manager and verify they are ' +
-      'removed on completion';
-  it(desc, function() {
-    var counter = 0;
+  it('should execute jobs in the manager and verify they are removed on completion', function() {
     var executing = false;
     var onChange = function(event) {
       // job will be disposed on completion, so we can only capture the executing transition event directly
@@ -37,8 +32,6 @@ describe('os.job.JobManager', function() {
         default:
           break;
       }
-
-      counter++;
     };
 
     runs(function() {
@@ -58,7 +51,6 @@ describe('os.job.JobManager', function() {
       expect(executing).toBe(true);
       expect(job2.state).toBe(os.job.JobState.COMPLETE);
 
-      counter = 0;
       executing = false;
 
       job1.listen(os.job.JobEventType.CHANGE, onChange, false, job1);

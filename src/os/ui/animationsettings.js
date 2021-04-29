@@ -1,9 +1,10 @@
 goog.provide('os.ui.AnimationSettingsCtrl');
 goog.provide('os.ui.animationSettingsDirective');
 
+goog.require('goog.events.KeyEvent');
 goog.require('goog.events.KeyHandler');
 goog.require('goog.math.Range');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.metrics.Metrics');
 goog.require('os.time');
 goog.require('os.time.TimelineController');
@@ -99,7 +100,7 @@ os.ui.AnimationSettingsCtrl = function($scope, $element) {
    * @private
    */
   this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
-  this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+  this.keyHandler_.listen(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
 
   this.scope.$emit(os.ui.WindowEventType.READY);
 };

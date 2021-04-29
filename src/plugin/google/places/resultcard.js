@@ -3,7 +3,7 @@ goog.provide('plugin.google.places.resultCardDirective');
 
 goog.require('goog.async.Delay');
 goog.require('ol.extent');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui.Module');
 goog.require('os.ui.search.FeatureResultCardCtrl');
 

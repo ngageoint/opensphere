@@ -170,12 +170,12 @@ os.ui.history.HistoryViewCtrl.prototype.setIndex = function(index) {
  * @private
  */
 os.ui.history.HistoryViewCtrl.prototype.commandAdded_ = function(e) {
-  this.timeout_(goog.bind(function() {
+  this.timeout_(function() {
     this['current'] = this.cp_.getCurrent();
 
     var objDiv = document.getElementById('js-history__scroll');
     objDiv.scrollTop = objDiv.scrollHeight;
-  }, this));
+  }.bind(this));
 };
 
 
@@ -188,14 +188,14 @@ os.ui.history.HistoryViewCtrl.prototype.commandAdded_ = function(e) {
  * @private
  */
 os.ui.history.HistoryViewCtrl.prototype.commandExecuting_ = function(e) {
-  this.timeout_(goog.bind(function() {
+  this.timeout_(function() {
     if (this['current'] == this['commandHistory'].length - 1) {
       this['newCommand'] = e.getCommand();
     } else {
       this['processingIndex'] = this['current'] + 1;
     }
     this.scope_.$emit('historyProcessing', true);
-  }, this));
+  }.bind(this));
 };
 
 
@@ -208,10 +208,10 @@ os.ui.history.HistoryViewCtrl.prototype.commandExecuting_ = function(e) {
  * @private
  */
 os.ui.history.HistoryViewCtrl.prototype.commandReverting_ = function(e) {
-  this.timeout_(goog.bind(function() {
+  this.timeout_(function() {
     this['processingIndex'] = this['current'] = this.cp_.getCurrent();
     this.scope_.$emit('historyProcessing', true);
-  }, this));
+  }.bind(this));
 };
 
 
@@ -224,12 +224,12 @@ os.ui.history.HistoryViewCtrl.prototype.commandReverting_ = function(e) {
  * @private
  */
 os.ui.history.HistoryViewCtrl.prototype.commandExecuted_ = function(e) {
-  this.timeout_(goog.bind(function() {
+  this.timeout_(function() {
     this['newCommand'] = null;
     this['processingIndex'] = -1;
     this['current'] = this.cp_.getCurrent();
     this.scope_.$emit('historyProcessing', false);
-  }, this));
+  }.bind(this));
 };
 
 
@@ -242,11 +242,11 @@ os.ui.history.HistoryViewCtrl.prototype.commandExecuted_ = function(e) {
  * @private
  */
 os.ui.history.HistoryViewCtrl.prototype.commandReverted_ = function(e) {
-  this.timeout_(goog.bind(function() {
+  this.timeout_(function() {
     this['processingIndex'] = -1;
     this['current'] = this.cp_.getCurrent();
     this.scope_.$emit('historyProcessing', false);
-  }, this));
+  }.bind(this));
 };
 
 
@@ -257,10 +257,10 @@ os.ui.history.HistoryViewCtrl.prototype.commandReverted_ = function(e) {
  * @private
  */
 os.ui.history.HistoryViewCtrl.prototype.limitChanged_ = function(e) {
-  this.timeout_(goog.bind(function() {
+  this.timeout_(function() {
     var objDiv = document.getElementById('historyScroll');
     if (objDiv) {
       objDiv.scrollTop = this['commandHistory'].length > 0 ? objDiv.scrollHeight : 0;
     }
-  }, this));
+  }.bind(this));
 };

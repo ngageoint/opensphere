@@ -1,6 +1,7 @@
 goog.provide('os.ui.window.ConfirmTextCtrl');
 goog.provide('os.ui.window.confirmTextDirective');
 
+goog.require('os.fn');
 goog.require('os.ui.Module');
 goog.require('os.ui.util.validationMessageDirective');
 goog.require('os.ui.window');
@@ -62,8 +63,8 @@ os.ui.window.ConfirmTextCtrl = function($scope, $element) {
 os.ui.window.launchConfirmText = function(opt_options) {
   var options = /** @type {!osx.window.ConfirmTextOptions} */ (opt_options || {});
   var scopeOptions = {
-    'confirmCallback': options.confirm || goog.nullFunction,
-    'cancelCallback': options.cancel || goog.nullFunction,
+    'confirmCallback': options.confirm || os.fn.noop,
+    'cancelCallback': options.cancel || os.fn.noop,
     'confirmValue': options.defaultValue,
     'yesText': options.yesText || 'OK',
     'yesIcon': options.yesIcon || 'fa fa-check',
@@ -75,7 +76,7 @@ os.ui.window.launchConfirmText = function(opt_options) {
     'noButtonTitle': options.noButtonTitle || '',
     'checkboxText': options.checkboxText || '',
     'checkboxClass': options.checkboxClass || '',
-    'checkboxCallback': options.checkbox || goog.nullFunction,
+    'checkboxCallback': options.checkbox || os.fn.noop,
     'checkboxValue': !!options.checkboxValue,
 
     // confirm text options

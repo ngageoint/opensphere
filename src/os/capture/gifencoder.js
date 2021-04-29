@@ -1,9 +1,9 @@
 goog.provide('os.capture.GifEncoder');
 
+goog.require('os');
 goog.require('os.capture');
 goog.require('os.capture.AbstractVideoEncoder');
 goog.require('os.capture.gif');
-goog.require('os.defines');
 
 
 

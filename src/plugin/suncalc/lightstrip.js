@@ -2,7 +2,7 @@ goog.provide('plugin.suncalc.LightStripCtrl');
 goog.provide('plugin.suncalc.lightStripDirective');
 
 goog.require('goog.async.ConditionalDelay');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('plugin.suncalc.LightStripSettings');

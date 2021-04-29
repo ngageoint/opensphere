@@ -1,0 +1,39 @@
+<div>
+  <div class="text-center" ng-show="testing">
+    <div><i class="fa fa-4x fa-spin fa-smooth fa-spinner"></i></div>
+    <div>Testing...</div>
+  </div>
+  <div class="container-fluid" ng-form="form" ng-show="!testing" ng-submit="ctrl.accept()" novalidate>
+    <div class="form-group" title="The title for the server">
+      <label for="title">Title</label>
+      <input unique-provider-title type="text" class="form-control" name="title" ng-disabled="!edit"
+          ng-model="config.label" ng-required="true" ng-maxlength="1000">
+      <small class="form-text text-danger" ng-if="form.title.$error.maxlength">Title is too long!</small>
+      <small class="form-text text-danger" ng-if="form.title.$error.unique">Title is not unique!</small>
+      <small class="form-text text-muted" ng-if="form.title.$valid || form.title.$error.required">
+        Please enter a title <span ng-if="typeName">for the {{typeName}}</span>
+      </small>
+    </div>
+
+    <div class="form-group" title="The URL for the server">
+      <label for="url" class="pr-2">URL</label>
+      <button class="btn btn-primary" type="button"
+          ng-click="ctrl.launchHelp(typeName)"
+          ng-if="ctrl.helpUi"
+          title="Help for server specific URL formats">
+        <i class="fa fa-fw fa-question-circle"></i>
+      </button>
+      <input type="text" name="url" class="form-control" ng-disabled="!edit" ng-model="config.url" ng-required="true"
+          ng-maxlength="1000">
+      <small class="form-text text-danger" ng-if="form.url.$error.maxlength">URL is too long!</small>
+      <small class="form-text text-muted" ng-if="form.url.$valid || form.url.$error.required">
+        Please enter a URL <span ng-if="urlExample">(e.g. {{urlExample}})</span>
+      </small>
+    </div>
+    <button type="submit" hidden></button>
+    <div class="alert alert-danger" ng-if="error">
+      <h5>Error!</h5>
+      <p ng-bind-html="error" class="m-0"></p>
+    </div>
+  </div>
+</div>

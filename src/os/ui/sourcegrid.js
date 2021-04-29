@@ -547,9 +547,17 @@ os.ui.SourceGridCtrl.prototype.onGridSelectedChange = function(e, args) {
       // only update the source if the user interacted with the grid
       if (this.inInteraction) {
         var result = rows.map(this.mapRowsToItems, this);
-        var equal = goog.array.equals(result, this.source.getSelectedItems(), function(a, b) {
-          return a.id == b.id;
-        });
+        var equal = goog.array.equals(result, this.source.getSelectedItems(),
+            /**
+             * Compare feature id's.
+             * @param {ol.Feature} a First feature.
+             * @param {ol.Feature} b Second feature.
+             * @return {boolean} If the id's are the same.
+             * @suppress {checkTypes} To avoid [] access on a struct.
+             */
+            function(a, b) {
+              return a['id'] == b['id'];
+            });
 
         if (!equal) {
           // only update the selection if it changed

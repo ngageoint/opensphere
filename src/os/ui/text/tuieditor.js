@@ -5,9 +5,10 @@ goog.provide('os.ui.text.tuiEditorDirective');
 goog.require('goog.Promise');
 goog.require('goog.dom.safe');
 goog.require('ol.xml');
+goog.require('os');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
-goog.require('os.defines');
+goog.require('os.fn');
 goog.require('os.ui.Module');
 goog.require('os.ui.text.TuiEditorLang');
 goog.require('os.ui.text.TuiEditorMarkdownIt');
@@ -574,4 +575,4 @@ os.ui.text.TuiEditor.getUnformatedText = function(opt_markdown) {
 /**
  * Add custom event types to eventManager and listen to them
  */
-os.ui.text.TuiEditorCtrl.prototype.addEventTypes = goog.nullFunction;
+os.ui.text.TuiEditorCtrl.prototype.addEventTypes = os.fn.noop;

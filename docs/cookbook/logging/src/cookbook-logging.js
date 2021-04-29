@@ -1,7 +1,7 @@
 goog.provide('plugin.cookbook_logging.CookbookLogging');
 
-goog.require('goog.debug.Logger.Level');
 goog.require('goog.log');
+goog.require('goog.log.Level');
 goog.require('goog.log.Logger');
 goog.require('os.plugin.AbstractPlugin');
 goog.require('os.plugin.PluginManager');
@@ -40,7 +40,7 @@ plugin.cookbook_logging.ID = 'cookbook_logging';
 plugin.cookbook_logging.CookbookLogging.prototype.init = function() {
   goog.log.info(plugin.cookbook_logging.CookbookLogging.LOGGER_, 'Visible at INFO or below');
   goog.log.warning(plugin.cookbook_logging.CookbookLogging.LOGGER_, 'Visible at WARN or below');
-  goog.log.log(plugin.cookbook_logging.CookbookLogging.LOGGER_, goog.debug.Logger.Level.FINEST,
+  goog.log.log(plugin.cookbook_logging.CookbookLogging.LOGGER_, goog.log.Level.FINEST,
       'Visible only at FINEST or ALL');
   goog.log.error(plugin.cookbook_logging.CookbookLogging.LOGGER_, 'ALWAYS VISIBLE!');
 };

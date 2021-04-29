@@ -3,8 +3,10 @@ goog.module.declareLegacyNamespace();
 
 const object = goog.require('goog.object');
 const style = goog.require('os.style');
+const OsColor = goog.require('os.color');
 const OsLayer = goog.require('os.layer');
 const Settings = goog.require('os.config.Settings');
+const StyleField = goog.require('os.style.StyleField');
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
 
@@ -60,7 +62,7 @@ const addDefault = function(presets, opt_layerId, opt_layerFilterKey) {
   if (presets) {
     if (!defaultPreset_) {
       // create a temporary vector layer to produce a default layer config
-      var layer = OsLayer.createFromOptions({
+      const layer = OsLayer.createFromOptions({
         'id': DEFAULT_PRESET_ID,
         'type': os.layer.config.StaticLayerConfig.ID, // HACK: TODO resolve circular dependency
         'animate': true,
@@ -75,18 +77,17 @@ const addDefault = function(presets, opt_layerId, opt_layerFilterKey) {
           default: false,
           published: true
         };
-        defaultPreset_.layerConfig['fillOpacity'] = 0;
 
         goog.dispose(layer);
       }
     }
 
-    var hasDefault = presets.some(function(p) {
+    const hasDefault = presets.some(function(p) {
       return !!p && p.id === DEFAULT_PRESET_ID;
     });
 
     if (!hasDefault && defaultPreset_) {
-      var preset = object.unsafeClone(defaultPreset_);
+      const preset = object.unsafeClone(defaultPreset_);
       preset.default = !presets.some(function(p) {
         return !!p && p.default === true;
       }); // if nothing else is the default, flag "Basic" as default
@@ -105,7 +106,7 @@ const addDefault = function(presets, opt_layerId, opt_layerFilterKey) {
  * @return {!boolean}
  */
 const getSavedPresetClean = function(id) {
-  var lookup = /** @type {!Object<string, boolean>} */
+  const lookup = /** @type {!Object<string, boolean>} */
       (Settings.getInstance().get(SettingKey.SAVED_PRESET_CLEANS, {}));
   return (lookup[id] === false) ? false : true;
 };
@@ -117,7 +118,7 @@ const getSavedPresetClean = function(id) {
  * @return {?string}
  */
 const getSavedPresetId = function(id) {
-  var lookup = /** @type {!Object<string, ?string>} */
+  const lookup = /** @type {!Object<string, ?string>} */
       (Settings.getInstance().get(SettingKey.SAVED_PRESET_IDS, {}));
   return lookup[id];
 };
@@ -129,7 +130,7 @@ const getSavedPresetId = function(id) {
  * @param {boolean} clean Is clean
  */
 const setSavedPresetClean = function(id, clean) {
-  var lookup = /** @type {!Object<string, boolean>} */
+  const lookup = /** @type {!Object<string, boolean>} */
       (Settings.getInstance().get(SettingKey.SAVED_PRESET_CLEANS, {}));
   lookup[id] = clean;
   Settings.getInstance().set(SettingKey.SAVED_PRESET_CLEANS, lookup);
@@ -142,7 +143,7 @@ const setSavedPresetClean = function(id, clean) {
  * @param {?string=} opt_presetId
  */
 const setSavedPresetId = function(id, opt_presetId) {
-  var lookup = /** @type {!Object<string, ?string>} */
+  const lookup = /** @type {!Object<string, ?string>} */
       (Settings.getInstance().get(SettingKey.SAVED_PRESET_IDS, {}));
   lookup[id] = opt_presetId || null;
   Settings.getInstance().set(SettingKey.SAVED_PRESET_IDS, lookup);
@@ -155,13 +156,15 @@ const setSavedPresetId = function(id, opt_presetId) {
  */
 const updateDefault = function(layer, preset) {
   if (layer && preset && preset.layerConfig) {
-    var config = preset.layerConfig;
-    var layerOptions = layer.getLayerOptions();
+    const config = preset.layerConfig;
+    const layerOptions = layer.getLayerOptions();
     if (layerOptions && layerOptions['baseColor']) {
       // update the default color
-      var color = style.toRgbaString(/** @type {string} */ (layerOptions['baseColor']));
-      config['color'] = color;
-      config['fillColor'] = color;
+      const color = OsColor.toRgbArray(/** @type {string} */ (layerOptions['baseColor']));
+      config[StyleField.COLOR] = style.toRgbaString(color);
+
+      color[3] = style.DEFAULT_FILL_ALPHA;
+      config[StyleField.FILL_COLOR] = style.toRgbaString(color);
     }
   }
 };

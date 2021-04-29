@@ -1,6 +1,7 @@
 goog.provide('plugin.file.shp.ui.SHPExportCtrl');
 goog.provide('plugin.file.shp.ui.shpExportDirective');
-goog.require('os.defines');
+
+goog.require('os');
 goog.require('os.ui.Module');
 
 

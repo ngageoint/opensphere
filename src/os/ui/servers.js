@@ -4,17 +4,18 @@ goog.provide('os.ui.serversDirective');
 goog.require('goog.events.EventType');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
+goog.require('os');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
 goog.require('os.config.Settings');
 goog.require('os.data');
 goog.require('os.data.DataManager');
-goog.require('os.defines');
 goog.require('os.im.ImportProcess');
 goog.require('os.metrics');
 goog.require('os.metrics.Metrics');
 goog.require('os.ui');
 goog.require('os.ui.Module');
+goog.require('os.ui.file.AddServer');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportEventType');
 goog.require('os.ui.server.AbstractLoadingServer');
@@ -327,10 +328,7 @@ os.ui.ServersCtrl.prototype.toggleAll = function() {
  * @export
  */
 os.ui.ServersCtrl.prototype.add = function() {
-  os.metrics.Metrics.getInstance().updateMetric(os.metrics.Servers.ADD_SERVER, 1);
-  var importProcess = new os.im.ImportProcess();
-  importProcess.setEvent(new os.ui.im.ImportEvent(os.ui.im.ImportEventType.URL));
-  importProcess.begin();
+  os.ui.file.AddServer.launchAddServerWindow();
 };
 
 

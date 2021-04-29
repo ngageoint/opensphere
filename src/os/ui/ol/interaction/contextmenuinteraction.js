@@ -1,4 +1,5 @@
 goog.provide('os.ui.ol.interaction.ContextMenu');
+goog.provide('os.ui.ol.interaction.ContextMenuOptions');
 
 goog.require('goog.math.Line');
 goog.require('ol.extent');

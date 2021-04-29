@@ -905,15 +905,14 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onLabelColumnChange = function(even
 
   var items = /** @type {Array} */ (this.scope['items']);
   if (items && items.length === 1) {
-    var fn = goog.bind(
-        /**
-         * @param {string} layerId
-         * @param {string} featureId
-         * @return {os.command.ICommand}
-         */
-        function(layerId, featureId) {
-          return new os.command.FeatureLabel(layerId, featureId, this.scope['labels']);
-        }, this);
+    /**
+     * @param {string} layerId
+     * @param {string} featureId
+     * @return {os.command.ICommand}
+     */
+    var fn = function(layerId, featureId) {
+      return new os.command.FeatureLabel(layerId, featureId, this.scope['labels']);
+    }.bind(this);
 
     this.createFeatureCommand(fn);
   }
@@ -926,20 +925,17 @@ plugin.file.kml.KMLNodeLayerUICtrl.prototype.onLabelColumnChange = function(even
 plugin.file.kml.KMLNodeLayerUICtrl.prototype.onShowLabelsChange = function(event, value) {
   event.stopPropagation();
 
-  var items = /** @type {Array} */ (this.scope['items']);
-  if (items && items.length === 1) {
-    var fn =
-        /**
-         * @param {string} layerId
-         * @param {string} featureId
-         * @return {os.command.ICommand}
-         */
-        function(layerId, featureId) {
-          return new os.command.FeatureShowLabel(layerId, featureId, value);
-        };
+  var fn =
+      /**
+       * @param {string} layerId
+       * @param {string} featureId
+       * @return {os.command.ICommand}
+       */
+      function(layerId, featureId) {
+        return new os.command.FeatureShowLabel(layerId, featureId, value);
+      };
 
-    this.createFeatureCommand(fn);
-  }
+  this.createFeatureCommand(fn);
 };
 
 

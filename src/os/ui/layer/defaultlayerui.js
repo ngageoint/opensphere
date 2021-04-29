@@ -3,11 +3,11 @@ goog.provide('os.ui.layer.defaultLayerUIDirective');
 
 goog.require('goog.array');
 goog.require('ol.array');
+goog.require('os');
 goog.require('os.command.LayerAutoRefresh');
 goog.require('os.command.LayerStyle');
 goog.require('os.command.ParallelCommand');
 goog.require('os.config.Settings');
-goog.require('os.defines');
 goog.require('os.layer');
 goog.require('os.ui.ControlType');
 goog.require('os.ui.Module');
@@ -133,7 +133,7 @@ os.ui.layer.DefaultLayerUICtrl = function($scope, $element, $timeout) {
   this.initUI();
   this.setInitialValues_();
 
-  $timeout(goog.bind(function() {
+  $timeout(function() {
     if (this.element) {
       var selector = /** @type {string} */ (os.settings.get('layercontrols', ''));
       if (selector) {
@@ -143,7 +143,7 @@ os.ui.layer.DefaultLayerUICtrl = function($scope, $element, $timeout) {
         }
       }
     }
-  }, this));
+  }.bind(this));
 };
 goog.inherits(os.ui.layer.DefaultLayerUICtrl, os.ui.layer.AbstractLayerUICtrl);
 

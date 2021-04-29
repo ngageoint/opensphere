@@ -8,7 +8,6 @@ goog.require('os.config');
 goog.require('os.config.Settings');
 goog.require('os.config.SettingsInitializerManager');
 goog.require('os.debug.FancierWindow');
-goog.require('os.defines');
 goog.require('os.mixin');
 goog.require('os.net');
 goog.require('os.ui.Map');

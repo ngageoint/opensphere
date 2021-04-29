@@ -4,8 +4,10 @@ goog.require('goog.Uri');
 goog.require('goog.async.Deferred');
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
+goog.require('goog.events.KeyEvent');
 goog.require('goog.events.KeyHandler');
 goog.require('ol.ViewHint');
+goog.require('os');
 goog.require('os.MapContainer');
 goog.require('os.MapEvent');
 goog.require('os.action.EventType');
@@ -31,7 +33,6 @@ goog.require('os.config.UnitSettings');
 goog.require('os.control');
 goog.require('os.data.OSDataManager');
 goog.require('os.data.histo.legend');
-goog.require('os.defines');
 goog.require('os.events');
 goog.require('os.events.EventFactory');
 goog.require('os.events.LayerConfigEvent');
@@ -65,6 +66,7 @@ goog.require('os.layer.config.StaticLayerConfig');
 goog.require('os.load.LoadingManager');
 goog.require('os.map');
 goog.require('os.map.interaction');
+goog.require('os.menu.folder');
 goog.require('os.metrics.AddDataMetrics');
 goog.require('os.metrics.FiltersMetrics');
 goog.require('os.metrics.LayersMetrics');
@@ -236,9 +238,6 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   // register importers
   im.registerImporter('os', os.im.FeatureImporter);
 
-  // secure importer against injection attacks
-  os.im.FeatureImporter.sanitize = /** @type {angular.$sanitize} */ (os.ui.injector.get('$sanitize'));
-
   // set up file storage
   os.file.FileStorage.getInstance();
 
@@ -305,6 +304,7 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   os.ui.state.menu.setup();
   os.ui.menu.buffer.setup();
   os.ui.menu.windows.default.setup();
+  os.menu.folder.setup();
 
   // assign the spatial menu
   os.ui.draw.MENU = os.ui.menu.spatial.MENU;
@@ -596,7 +596,7 @@ os.MainCtrl.prototype.onPluginsLoaded = function(opt_e) {
   os.ui.onboarding.OnboardingManager.getInstance().displayOnboarding(os.ROOT + 'onboarding/intro.json');
 
   // set up key handlers
-  this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+  this.keyHandler_.listen(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
 };
 
 
@@ -762,7 +762,7 @@ os.MainCtrl.prototype.handleKeyEvent_ = function(event) {
         if (ctrlOr) {
           os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Map.SEARCH_KB, 1);
           event.preventDefault();
-          $('.search-box .search-query').focus();
+          $('.search-box .search-query').trigger('focus');
         }
         break;
       case goog.events.KeyCodes.L:

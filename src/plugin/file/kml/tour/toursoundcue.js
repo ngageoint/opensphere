@@ -3,6 +3,7 @@ goog.provide('plugin.file.kml.tour.SoundCue');
 goog.require('goog.Promise');
 goog.require('os.audio.AudioManager');
 goog.require('os.audio.AudioSetting');
+goog.require('os.fn');
 goog.require('plugin.file.kml.tour.Wait');
 
 
@@ -44,7 +45,7 @@ plugin.file.kml.tour.SoundCue.prototype.executeWait = function(opt_resolve, opt_
     this.playAudio_();
   } else {
     // audio not created yet, wait for the delayed start
-    plugin.file.kml.tour.SoundCue.base(this, 'executeWait', opt_resolve, opt_reject); // .then(goog.nullFunction, goog.nullFunction);
+    plugin.file.kml.tour.SoundCue.base(this, 'executeWait', opt_resolve, opt_reject); // .then(os.fn.noop, os.fn.noop);
   }
 };
 

@@ -1,6 +1,7 @@
 goog.provide('os.ui.ol.interaction.DrawPolygon');
 
 goog.require('goog.events.BrowserEvent');
+goog.require('goog.events.KeyEvent');
 goog.require('goog.events.KeyHandler');
 goog.require('ol');
 goog.require('ol.MapBrowserEventType');
@@ -249,7 +250,7 @@ os.ui.ol.interaction.DrawPolygon.prototype.begin = function(mapBrowserEvent) {
   this.coords.length = 0;
   this.backupcoords.length = 0;
   this.undoKeyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument(), true);
-  this.undoKeyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, true, this);
+  this.undoKeyHandler_.listen(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent_, true, this);
 };
 
 

@@ -32,3 +32,12 @@ pluginx.areadata;
  * }}
  */
 pluginx.areadata.AreaMenuItemOptions;
+
+
+/**
+ * @typedef {{
+ *  callback: (!Function),
+ *  track: (ol.Feature|undefined)
+ * }}
+ */
+pluginx.track.TrackOptions;

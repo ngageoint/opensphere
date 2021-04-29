@@ -5,6 +5,7 @@ goog.provide('os.ui.im.fileSupportDirective');
 goog.require('goog.Disposable');
 goog.require('goog.Promise');
 goog.require('goog.dom');
+goog.require('goog.events.KeyEvent');
 goog.require('goog.events.KeyHandler');
 goog.require('os.file.upload');
 goog.require('os.string');
@@ -96,7 +97,7 @@ os.ui.im.FileSupportCtrl = function($scope, $element) {
    * @private
    */
   this.keyHandler_ = new goog.events.KeyHandler(goog.dom.getDocument());
-  this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+  this.keyHandler_.listen(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
 
   /**
    * The application name.

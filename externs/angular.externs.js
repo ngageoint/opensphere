@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Externs for Angular 1.5.
+ * @fileoverview Externs for Angular 1.6.
  *
  * This is a copy of `google-closure-compiler/contrib/externs/angular-1.5.js`
  * with the following changes:
@@ -464,9 +464,18 @@ angular.Component.prototype.transclude;
 angular.Component.prototype.require;
 
 
+/**
+ * @see https://code.angularjs.org/1.6.10/docs/api/auto/service/$injector#-inject-annotation
+ * @extends {Function}
+ * @interface
+ */
+angular.InjectableFunctionInterface;
+
+/** @type {!Array<string>} */
+angular.InjectableFunctionInterface.prototype.$inject;
 
 /**
- * @typedef {(Function|Array<string|Function>)}
+ * @typedef {(angular.InjectableFunctionInterface|Function|Array<string|Function>)}
  */
 angular.Injectable;
 
@@ -559,6 +568,15 @@ angular.JQLite.children = function() {};
  * @return {!angular.JQLite}
  */
 angular.JQLite.clone = function() {};
+
+/**
+ * `cleanData` is an undocumented method that is relied upon for ngUpgrade.
+ * Without this extern, clients cannot enable property_renaming for ngUpgrade
+ * applications that downgrade components.
+ *
+ * @param {?} element
+ */
+angular.JQLite.cleanData = function(element) {};
 
 /**
  * @return {!angular.JQLite}
@@ -1255,10 +1273,10 @@ angular.$compile;
 /** @const */
 angular.compile = {}
 
-                  /**
-                   * @record
-                   */
-                  angular.compile.LinkOptions = function() {};
+/**
+ * @record
+ */
+angular.compile.LinkOptions = function() {};
 
 /** @type {!Function|undefined} */
 angular.compile.LinkOptions.prototype.parentBoundTranscludeFn;
@@ -2071,8 +2089,7 @@ angular.NgModelController.prototype.$options;
 /**
  * @param {!Object} options
  */
-angular.NgModelController.prototype.$overrideModelOptions = function(
-    options) {};
+angular.NgModelController.prototype.$overrideModelOptions = function(options) {};
 
 /**
  * @type {!Array<function(?):*>}
@@ -2239,6 +2256,11 @@ angular.FormController.prototype.$error;
 angular.FormController.prototype.$invalid;
 
 /**
+ * @type {boolean}
+ */
+angular.FormController.prototype.$pending;
+
+/**
  * @type {string}
  */
 angular.FormController.prototype.$name;
@@ -2324,6 +2346,18 @@ angular.$parse_;
  */
 angular.$parse_.assign = function(scope, newValue) {};
 
+/**
+ * Whether the expression's top-level node is a JavaScript literal.
+ * @type {boolean}
+ */
+angular.$parse_.literal;
+
+/**
+ * Whether the expression is made entirely of JavaScript constant literals.
+ * @type {boolean}
+ */
+angular.$parse_.constant;
+
 /******************************************************************************
  * $qProvider
  *****************************************************************************/
@@ -2384,14 +2418,11 @@ angular.$routeProvider.Params.prototype.template;
 /** @type {string|!Object|function(!Object<string,string>=)|undefined} */
 angular.$routeProvider.Params.prototype.templateUrl;
 
-/**
- * @type {undefined|
- * !Object<string,(string|!angular.Injectable|!angular.$q.Promise)>}
- */
+/** @type {undefined|
+ * !Object<string,(string|!angular.Injectable|!angular.$q.Promise)>} */
 angular.$routeProvider.Params.prototype.resolve;
 
-/**
- * @type {string|undefined|function(!Object<string>, string, !Object): string}
+/** @type {string|undefined|function(!Object<string>, string, !Object): string}
  */
 angular.$routeProvider.Params.prototype.redirectTo;
 
@@ -2725,6 +2756,7 @@ angular.$timeout_;
  * @type {function(angular.$q.Promise=):boolean}
  */
 angular.$timeout_.cancel = function(promise) {};
+
 
 /******************************************************************************
  * $transclude Service

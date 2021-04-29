@@ -1,26 +1,8 @@
 goog.provide('os.storage');
 
 goog.require('goog.async.ConditionalDelay');
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.events.EventType');
-
-
-/**
- * @define {string} Shared IDB store name.
- */
-os.SHARED_STORE_NAME = goog.define('os.SHARED_STORE_NAME', 'shared');
-
-
-/**
- * @define {string} Shared IDB name.
- */
-os.SHARED_DB_NAME = goog.define('os.SHARED_DB_NAME', os.NAMESPACE + '.shared');
-
-
-/**
- * @define {number} Shared IDB version.
- */
-os.SHARED_DB_VERSION = goog.define('os.SHARED_DB_VERSION', 2);
 
 
 /**

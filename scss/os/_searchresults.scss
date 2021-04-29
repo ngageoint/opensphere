@@ -6,14 +6,9 @@
   z-index: $u-zindex-base + 1;
 }
 
+// Prevent search results from taking up too much screen space in smaller windows.
 @media (max-width: map-get($grid-breakpoints, lg)) {
   .c-searchresults  {
-    max-width: 75% !important;
-  }
-}
-
-@media (max-width: map-get($grid-breakpoints, md)) {
-  .c-searchresults  {
-    max-width: 95% !important;
+    max-width: 50%;
   }
 }

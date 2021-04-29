@@ -18,6 +18,84 @@ os.implements(ol.source.Image, os.ol.source.ILoadingSource.ID);
 
 
 /**
+ * Set of filters to run against images that are loaded by this source.
+ * @type {Array<os.tile.TileFilterFn>}
+ * @protected
+ */
+ol.source.Image.prototype.imageFilters = null;
+
+
+/**
+ * Adds a tile filter function to the source.
+ * @param {function(Uint8ClampedArray, number, number)} fn
+ */
+ol.source.Image.prototype.addImageFilter = function(fn) {
+  if (!this.imageFilters) {
+    this.imageFilters = [];
+  }
+
+  goog.array.insert(this.imageFilters, fn);
+};
+
+
+/**
+ * Removes a tile filter function from the source.
+ * @param {function(Uint8ClampedArray, number, number)} fn
+ */
+ol.source.Image.prototype.removeImageFilter = function(fn) {
+  if (!this.imageFilters) {
+    this.imageFilters = [];
+  }
+
+  ol.array.remove(this.imageFilters, fn);
+};
+
+
+/**
+ * Gets the set of tile filters.
+ * @return {Array<function(Uint8ClampedArray, number, number)>}
+ */
+ol.source.Image.prototype.getImageFilters = function() {
+  if (!this.imageFilters) {
+    this.imageFilters = [];
+  }
+
+  return this.imageFilters;
+};
+
+
+/**
+ * Get the image element for this source.
+ *
+ * @param {ol.Extent} extent Extent.
+ * @param {number} resolution Resolution.
+ * @param {number} pixelRatio Pixel ratio.
+ * @param {ol.proj.Projection} projection Projection.
+ * @return {ol.ImageBase} Single image.
+ */
+ol.source.Image.prototype.originalGetImage = ol.source.Image.prototype.getImage;
+
+
+/**
+ * Get the image element for this source.
+ *
+ * @param {ol.Extent} extent Extent.
+ * @param {number} resolution Resolution.
+ * @param {number} pixelRatio Pixel ratio.
+ * @param {ol.proj.Projection} projection Projection.
+ * @return {ol.ImageBase} Single image.
+ *
+ * @suppress {accessControls}
+ * @suppress {duplicate}
+ */
+ol.source.Image.prototype.getImage = function(extent, resolution, pixelRatio, projection) {
+  const image = this.originalGetImage(extent, resolution, pixelRatio, projection);
+  image.olSource = this;
+  return image;
+};
+
+
+/**
  * Loading flag for the image layer.
  * @type {boolean}
  * @private

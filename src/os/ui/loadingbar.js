@@ -83,16 +83,16 @@ os.ui.LoadingBarCtrl = function($scope, $element, $timeout) {
    */
   this['message'] = 'Loading...';
 
-  this.unwatchTotal = $scope.$watch('total', goog.bind(function(val) {
+  this.unwatchTotal = $scope.$watch('total', function(val) {
     if (val && goog.string.isNumeric(val)) {
       /** @type {number} */ var num = goog.string.toNumber(val);
       if (num > 0) {
         this.total_ = num;
       }
     }
-  }, this));
+  }.bind(this));
 
-  this.unwatchComplete = $scope.$watch('complete', goog.bind(function(val) {
+  this.unwatchComplete = $scope.$watch('complete', function(val) {
     if (typeof val === 'number') {
       if (val < 0) {
         // for negative values, show an indeterminate progress bar (full bar, no percent complete)
@@ -110,7 +110,7 @@ os.ui.LoadingBarCtrl = function($scope, $element, $timeout) {
         goog.style.setWidth(element, this['complete'] + '%');
       }
     }
-  }, this));
+  }.bind(this));
 
   $scope.$on('$destroy', this.destroy_.bind(this));
 };
@@ -129,9 +129,9 @@ os.ui.LoadingBarCtrl.prototype.showDelay = function(opt_delay) {
    * @type {angular.$q.Promise}
    * @private
    */
-  this.delayPromise_ = this.timeout_(goog.bind(function() {
+  this.delayPromise_ = this.timeout_(function() {
     this['show'] = true;
-  }, this), delay);
+  }.bind(this), delay);
 };
 
 

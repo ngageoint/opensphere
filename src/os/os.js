@@ -1,6 +1,5 @@
 goog.provide('os');
 
-goog.require('goog.array');
 goog.require('goog.events.EventTarget');
 goog.require('goog.userAgent');
 goog.require('goog.userAgent.product');
@@ -10,6 +9,102 @@ goog.require('os.mixin.closure');
 goog.require('os.ol.license');
 
 goog.requireType('os.debug.FancierWindow');
+
+
+/**
+ * @define {string} The root namespace for DB and storage keys
+ */
+os.NAMESPACE = goog.define('os.NAMESPACE', 'opensphere');
+
+
+/**
+ * @define {string} The path to this project
+ */
+os.ROOT = goog.define('os.ROOT', '../opensphere/');
+
+
+/**
+ * @define {string} The path to this project
+ */
+os.APP_ROOT = goog.define('os.APP_ROOT', './');
+
+
+/**
+ * @define {string} The settings file
+ */
+os.SETTINGS = goog.define('os.SETTINGS', '.build/settings-debug.json');
+
+
+/**
+ * @define {string} The DB name for settings storage
+ */
+os.SETTINGS_DB_NAME = goog.define('os.SETTINGS_DB_NAME', os.NAMESPACE + '.settings');
+
+
+/**
+ * @define {string} The database name used to transfer between apps
+ */
+os.SHARED_FILE_DB_NAME = goog.define('os.SHARED_FILE_DB_NAME', 'com.bitsys.db');
+
+
+/**
+ * @define {string} Shared IDB store name.
+ */
+os.SHARED_STORE_NAME = goog.define('os.SHARED_STORE_NAME', 'shared');
+
+
+/**
+ * @define {string} Shared IDB name.
+ */
+os.SHARED_DB_NAME = goog.define('os.SHARED_DB_NAME', os.NAMESPACE + '.shared');
+
+
+/**
+ * @define {number} Shared IDB version.
+ */
+os.SHARED_DB_VERSION = goog.define('os.SHARED_DB_VERSION', 2);
+
+
+/**
+ * @define {string} Area manager's storage save key
+ */
+os.AREA_STORAGE_KEY = goog.define('os.AREA_STORAGE_KEY', 'areas');
+
+
+/**
+ * @define {string} Area manager's storage save key for all current areas, including temps
+ */
+os.ALL_AREA_STORAGE_KEY = goog.define('os.ALL_AREA_STORAGE_KEY', 'areasAll');
+
+
+/**
+ * @define {string} The storage key used for column mappings.
+ */
+os.COLUMN_MAPPINGS_STORAGE_KEY = goog.define('os.COLUMN_MAPPINGS_STORAGE_KEY', 'columnMappings');
+
+
+/**
+ * @define {string} The database name. Override this in the application to use a separate database for storage.
+ */
+os.FILE_DB_NAME = goog.define('os.FILE_DB_NAME', os.NAMESPACE + '.files');
+
+
+/**
+ * @define {number} The database version.
+ */
+os.FILE_DB_VERSION = goog.define('os.FILE_DB_VERSION', 2);
+
+
+/**
+ * @define {string} The file store name
+ */
+os.FILE_STORE_NAME = goog.define('os.FILE_STORE_NAME', 'files');
+
+
+/**
+ * @define {string} The storage key for filters
+ */
+os.FILTER_STORAGE_KEY = goog.define('os.FILTER_STORAGE_KEY', 'filters');
 
 
 /**

@@ -1,6 +1,6 @@
 goog.provide('os.ui.navTopDirective');
 
-goog.require('os.defines');
+goog.require('os');
 goog.require('os.ui.NavBarCtrl');
 goog.require('os.ui.util.punyParentDirective');
 

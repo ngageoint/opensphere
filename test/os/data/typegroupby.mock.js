@@ -1,7 +1,7 @@
 goog.provide('os.data.groupby.MockTypeGroupBy');
+goog.require('goog.array');
 goog.require('os.data.groupby.BaseGroupBy');
 goog.require('os.structs.TriStateTreeNode');
-goog.require('goog.array');
 
 
 
@@ -11,7 +11,7 @@ goog.require('goog.array');
  * @constructor
  */
 os.data.groupby.MockTypeGroupBy = function() {
-  goog.base(this);
+  os.data.groupby.MockTypeGroupBy.base(this, 'constructor');
 };
 goog.inherits(os.data.groupby.MockTypeGroupBy, os.data.groupby.BaseGroupBy);
 

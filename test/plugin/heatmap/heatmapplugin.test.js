@@ -10,6 +10,8 @@ goog.require('plugin.heatmap.menu');
 
 
 describe('plugin.heatmap.HeatmapPlugin', function() {
+  const HeatmapSynchronizer = goog.module.get('plugin.cesium.sync.HeatmapSynchronizer');
+
   var createLayer = function() {
     var options = {
       'id': goog.string.getRandomString(),
@@ -41,12 +43,10 @@ describe('plugin.heatmap.HeatmapPlugin', function() {
     var sm = os.webgl.SynchronizerManager.getInstance();
 
     // now is registered by the WebGLRenderer (e.g. Cesium) plugin; spoof it
-    sm.registerSynchronizer(
-        plugin.heatmap.SynchronizerType.HEATMAP,
-        plugin.cesium.sync.HeatmapSynchronizer);
+    sm.registerSynchronizer(plugin.heatmap.SynchronizerType.HEATMAP, HeatmapSynchronizer);
 
     var synchronizer = sm.getSynchronizer(layer);
-    expect(synchronizer).toBe(plugin.cesium.sync.HeatmapSynchronizer);
+    expect(synchronizer).toBe(HeatmapSynchronizer);
     sm.synchronizers_ = {};
 
     var dm = os.dataManager;

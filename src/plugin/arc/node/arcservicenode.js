@@ -5,10 +5,13 @@ goog.require('goog.log.Logger');
 goog.require('os.data.ConfigDescriptor');
 goog.require('os.data.DataManager');
 goog.require('os.net.Request');
+goog.require('os.ui.ColorControlType');
 goog.require('os.ui.data.DescriptorNode');
 goog.require('os.ui.slick.LoadingNode');
 goog.require('plugin.arc.layer.ArcImageLayerConfig');
 goog.require('plugin.arc.layer.ArcLayerDescriptor');
+
+goog.requireType('plugin.arc.ArcServer');
 
 
 
@@ -201,7 +204,8 @@ plugin.arc.node.ArcServiceNode.prototype.addImageLayer_ = function(json) {
     'extent': [extent['xmin'], extent['ymin'], extent['xmax'], extent['ymax']],
     'extentProjection': wkid === 3857 ? 'EPSG:3857' : 'EPSG:4326',
     'layerType': os.layer.LayerType.TILES,
-    'icons': os.ui.Icons.TILES
+    'icons': os.ui.Icons.TILES,
+    'colorControl': os.ui.ColorControlType.PICKER_RESET
   };
 
   const dm = os.data.DataManager.getInstance();

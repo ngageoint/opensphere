@@ -8,6 +8,7 @@ goog.provide('os.style.StyleType');
 os.style.StyleType = {
   FEATURE: '_style',
   SELECT: '_selectStyle',
+  CUSTOM_SELECT: '_customSelectStyle',
   HIGHLIGHT: '_highlightStyle',
   CUSTOM_HIGHLIGHT: '_customHighlightStyle',
   LABEL: '_labelStyle'

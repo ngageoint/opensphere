@@ -742,7 +742,7 @@ const calculateHueTransform = function(src, target, opt_normalize) {
  * Applies a colorize transform to an array of image data. This changes every non-zero channel in the array to the
  * passed in color.
  *
- * @param {Array<number>} data The image data to colorize
+ * @param {Uint8ClampedArray} data The image data to colorize
  * @param {string|Array<number>} tgtColor The target color either as an rgba string or array
  */
 const colorize = function(data, tgtColor) {
@@ -764,7 +764,7 @@ const colorize = function(data, tgtColor) {
  * Applies a color transform to an array of image data. This transform takes a target color and adjusts the color
  * for saturation color and brightness.
  *
- * @param {Array<number>} data The image data to colorize
+ * @param {Uint8ClampedArray} data The image data to colorize
  * @param {number} brightness The target brightness. The range is -1 to 1.
  * @param {number} contrast The target contrast. The range is 0 to 2.
  * @param {number} saturation The target saturation. The range is 0 to 1.
@@ -791,12 +791,9 @@ const adjustColor = function(data, brightness, contrast, saturation) {
     const g = data[i + 1];
     const b = data[i + 2];
     const a = data[i + 3];
-    data[i] = Math.round((r * m[0] + g * m[5] + b * m[10] + a * m[15] + m[20]));
-    data[i + 1] = Math.round((r * m[1] + g * m[6] + b * m[11] + a * m[16] + m[21]));
-    data[i + 2] = Math.round((r * m[2] + g * m[7] + b * m[12] + a * m[17] + m[22]));
-    data[i] = goog.math.clamp(data[i], 0, 255);
-    data[i + 1] = goog.math.clamp(data[i + 1], 0, 255);
-    data[i + 2] = goog.math.clamp(data[i + 2], 0, 255);
+    data[i] = r * m[0] + g * m[5] + b * m[10] + a * m[15] + m[20];
+    data[i + 1] = r * m[1] + g * m[6] + b * m[11] + a * m[16] + m[21];
+    data[i + 2] = r * m[2] + g * m[7] + b * m[12] + a * m[17] + m[22];
   }
 };
 
@@ -817,7 +814,7 @@ const sharpnessMatrix = [
 /**
  * Applies a sharpness transform to an array of image data.
  *
- * @param {!Array<number>} data The image data.
+ * @param {!Uint8ClampedArray} data The image data.
  * @param {number} width The image width.
  * @param {number} height The image height.
  * @param {number} value The sharpness value.
@@ -889,7 +886,7 @@ const adjustSharpness = function(data, width, height, value) {
  * Applies a color transform to an array of image data. This transform takes a source and target color and blends
  * the alpha using a color transform matrix to produce a more natural version of the target color.
  *
- * @param {Array<number>} data The image data to colorize
+ * @param {Uint8ClampedArray} data The image data to colorize
  * @param {string|Array<number>} srcColor The source color either as an rgba string or array
  * @param {string|Array<number>} tgtColor The target color either as an rgba string or array
  */

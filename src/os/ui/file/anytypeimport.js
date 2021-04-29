@@ -60,10 +60,10 @@ os.ui.file.AnyTypeImportCtrl = function($scope, $element) {
   this.scope_['isZip'] = this.scope_['file'] ? os.file.mime.zip.isZip(this.scope_['file'].getContent()) : false;
 
   this.scope_.$emit(os.ui.WindowEventType.READY);
-  this.scope_.$on('destroy', goog.bind(function() {
+  this.scope_.$on('destroy', function() {
     this.scope_ = null;
     this.element_ = null;
-  }, this));
+  }.bind(this));
 };
 
 

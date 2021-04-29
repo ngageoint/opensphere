@@ -1,8 +1,8 @@
 goog.provide('os.ui.TimelinePanelCtrl');
 goog.provide('os.ui.timelinePanelDirective');
 
+goog.require('os');
 goog.require('os.data.histo.TimelineHistManager');
-goog.require('os.defines');
 goog.require('os.time.TimelineEventType');
 goog.require('os.ui.Module');
 goog.require('os.ui.animationSettingsDirective');

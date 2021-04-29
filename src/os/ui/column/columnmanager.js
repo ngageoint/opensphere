@@ -1,6 +1,7 @@
 goog.provide('os.ui.column.ColumnManagerCtrl');
 goog.provide('os.ui.column.columnManagerDirective');
 
+goog.require('goog.events.KeyEvent');
 goog.require('goog.events.KeyHandler');
 goog.require('goog.string');
 goog.require('ol.array');
@@ -189,9 +190,9 @@ os.ui.column.ColumnManagerCtrl.prototype.destroy_ = function() {
  */
 os.ui.column.ColumnManagerCtrl.prototype.listenForKeys = function(enableListen) {
   if (enableListen) {
-    this.keyHandler_.listen(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+    this.keyHandler_.listen(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
   } else {
-    this.keyHandler_.unlisten(goog.events.KeyHandler.EventType.KEY, this.handleKeyEvent_, false, this);
+    this.keyHandler_.unlisten(goog.events.KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
   }
 };
 
@@ -461,69 +462,4 @@ os.ui.column.ColumnManagerCtrl.prototype.handleKeyEvent_ = function(event) {
       this.next();
     }
   }
-};
-
-
-/**
- * Launches a column manager window with the given columns
- *
- * @param {Array.<os.data.ColumnDefinition>} columns
- * @param {Function} callback
- */
-os.ui.column.launchColumnManager = function(columns, callback) {
-  var scopeOptions = {
-    'columns': columns,
-    'acceptCallback': callback
-  };
-
-  var windowOptions = {
-    'label': 'Column Manager',
-    'icon': 'fa fa-columns',
-    'x': 'center',
-    'y': 'center',
-    'width': '600',
-    'min-width': '500',
-    'max-width': '700',
-    'height': '400',
-    'min-height': '350',
-    'max-height': '1000',
-    'show-close': true,
-    'modal': true
-  };
-
-  var template = '<column-manager columns="columns" accept-callback="acceptCallback" ></column-manager>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
-};
-
-
-/**
- * Launches a column manager window with the given columns
- *
- * @param {Array.<os.data.ColumnDefinition>} columns
- * @param {string} header Dialog header
- * @param {Function} callback
- */
-os.ui.column.launchColumnManagerWithShownCallback = function(columns, header, callback) {
-  var scopeOptions = {
-    'columns': columns,
-    'shownCallback': callback
-  };
-
-  var windowOptions = {
-    'label': header,
-    'icon': 'fa fa-columns',
-    'x': 'center',
-    'y': 'center',
-    'width': '600',
-    'min-width': '500',
-    'max-width': '700',
-    'height': '400',
-    'min-height': '350',
-    'max-height': '1000',
-    'show-close': true,
-    'modal': true
-  };
-
-  var template = '<column-manager columns="columns" shown-callback="shownCallback"></column-manager>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };

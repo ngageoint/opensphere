@@ -3,9 +3,9 @@ goog.provide('os.config.DisplaySettings');
 goog.provide('os.config.DisplaySettingsCtrl');
 
 goog.require('goog.userAgent');
+goog.require('os');
 goog.require('os.MapMode');
 goog.require('os.config');
-goog.require('os.defines');
 goog.require('os.map');
 goog.require('os.map.terrain');
 goog.require('os.ui.Module');

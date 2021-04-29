@@ -24,10 +24,10 @@ goog.require('os.data.event.DataEvent');
 goog.require('os.data.event.DataEventType');
 goog.require('os.data.histo.ColorModel');
 goog.require('os.data.histo.SourceHistogram');
-goog.require('os.defines');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.events.SelectionType');
 goog.require('os.feature.DynamicPropertyChange');
+goog.require('os.fn');
 goog.require('os.geo');
 goog.require('os.geo.jsts');
 goog.require('os.hist.HistogramData');
@@ -662,7 +662,7 @@ os.source.Vector.prototype.reindexRtree_ = function() {
 /**
  * @inheritDoc
  */
-os.source.Vector.prototype.refresh = goog.nullFunction;
+os.source.Vector.prototype.refresh = os.fn.noop;
 
 
 /**
@@ -3399,7 +3399,8 @@ os.source.Vector.prototype.select = function(feature) {
         feature.id_ != null && this.idIndex_[feature.id_] && this.shownRecordMap[feature.id_]) {
       goog.array.binaryInsert(this.selected_, feature, os.feature.idCompare);
       this.selectedById_[id] = true;
-      feature.set(os.style.StyleType.SELECT, os.style.DEFAULT_SELECT_CONFIG);
+      var selectCfg = feature.get(os.style.StyleType.CUSTOM_SELECT) || os.style.DEFAULT_SELECT_CONFIG;
+      feature.set(os.style.StyleType.SELECT, selectCfg);
       return true;
     }
   }
@@ -3720,6 +3721,9 @@ os.source.Vector.prototype.getModifyFunction = function() {
 
     // Update the ellipse, if needed.
     os.feature.createEllipse(originalFeature, true);
+
+    // Notify that the feature/geometry changed, in case previous steps did not do this.
+    originalFeature.changed();
 
     this.notifyDataChange();
   };

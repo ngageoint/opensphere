@@ -4,7 +4,9 @@ goog.provide('os.ui.layerTreeDirective');
 goog.require('os.data.LayerNode');
 goog.require('os.data.ZOrder');
 goog.require('os.layer');
+goog.require('os.layer.FolderManager');
 goog.require('os.layer.LayerGroup');
+goog.require('os.structs.ITreeNode');
 goog.require('os.ui.Module');
 goog.require('os.ui.slick.SlickTreeCtrl');
 goog.require('os.ui.slick.slickTreeDirective');
@@ -17,7 +19,8 @@ goog.require('os.ui.slick.slickTreeDirective');
  */
 os.ui.layerTreeDirective = function() {
   var dir = os.ui.slick.slickTreeDirective();
-  dir['controller'] = os.ui.LayerTreeCtrl;
+  dir.controller = os.ui.LayerTreeCtrl;
+  dir.scope['groupBy'] = '=';
   return dir;
 };
 
@@ -58,7 +61,7 @@ os.ui.LayerTreeCtrl.prototype.canDragRows = function(rows) {
   }
 
   // Only allow dragging past depth 1 if the node supports it
-  var isLayerNode = firstNode instanceof os.data.LayerNode;
+  var isLayerNode = firstNode instanceof os.data.LayerNode || firstNode instanceof os.data.FolderNode;
   if (!isLayerNode && !firstNode.supportsInternalDrag()) {
     return false;
   }
@@ -102,67 +105,83 @@ os.ui.LayerTreeCtrl.prototype.canDragMove = function(rows, insertBefore) {
     return false;
   }
 
-  var firstRow = /** @type {os.ui.slick.SlickTreeNode} */ (this.dataView.getItem(rows[0]));
-  if (!firstRow) {
+  var nodeToMove = /** @type {os.ui.slick.SlickTreeNode} */ (this.dataView.getItem(rows[0]));
+  if (!nodeToMove) {
     return false;
   }
 
-  if (firstRow instanceof os.data.LayerNode) {
+  var hasFolderOrLayer = rows.some((row) => {
+    var node = /** @type {os.ui.slick.SlickTreeNode} */ (this.dataView.getItem(row));
+    return node instanceof os.data.FolderNode || node instanceof os.data.LayerNode;
+  });
+
+  if (hasFolderOrLayer) {
     // Layer Node Drag Rules:
-    // 1. Only same depth can be dragged
-    // 2. Cannot be dragged to new parent
-    // 3. Cannot be dragged to a different Z-Order group
+    // 1. Layers can only remain within their z-order group.
+    // 2. Layers can be reparented to valid folders.
+    // 3. Folders cannot be their own parents.
 
     for (var i = 0, n = rows.length; i < n; i++) {
       // no point in moving before or after itself
-      if (rows[i] == insertBefore || rows[i] == insertBefore - 1) {
+      if (this.moveMode == os.ui.slick.SlickTreeNode.MOVE_MODE.SIBLING &&
+          (rows[i] == insertBefore || rows[i] == insertBefore - 1)) {
         return false;
       }
 
       var item = /** @type {os.ui.slick.SlickTreeNode} */ (this.grid.getDataItem(rows[i]));
-
-      // rule 1: only same depth can be dragged
-      if (item.depth < firstRow.depth) {
-        return false;
-      }
-
       beforeItem = /** @type {os.ui.slick.SlickTreeNode} */ (this.grid.getDataItem(insertBefore));
 
-      // if there isn't a target item or it has a different depth, go back and find the last item in the tree with the
-      // same depth
-      if (!beforeItem || beforeItem.depth !== firstRow.depth) {
-        var j = insertBefore;
-        while (j >= 0 && (!beforeItem || beforeItem.depth !== firstRow.depth)) {
-          j--;
-          beforeItem = /** @type {os.ui.slick.SlickTreeNode} */ (this.grid.getDataItem(j));
+      if (item instanceof os.data.FolderNode) {
+        // check if this action would reparent the folder to itself (circular parentages aren't allowed)
+        var value = false;
+
+        /**
+         * Tests if an item is being moved to a place where it would be its own parent, which is not allowed.
+         * @param {os.structs.ITreeNode} node
+         */
+        var isSelfParent = (node) => {
+          value = item === node;
+          if (!value) {
+            var parent = node.getParent();
+            if (parent) {
+              isSelfParent(parent);
+            }
+          }
+        };
+
+        if (beforeItem) {
+          isSelfParent(beforeItem);
         }
+
+        return !value;
       }
 
-      // rule 2: cannot be dragged outside of parent
-      if (!beforeItem || beforeItem.parentIndex !== item.parentIndex) {
-        return false;
-      }
-
-      // rule 3: cannot be dragged to a different Z-Order group
-      var z = os.data.ZOrder.getInstance();
-      if (z.getZType(item.getId()) !== z.getZType(beforeItem.getId())) {
-        return false;
+      if (this.scope['groupBy']) {
+        // layers cannot be dragged to a different Z-Order group
+        var z = os.data.ZOrder.getInstance();
+        var differentZ = z.getZType(item.getId()) !== z.getZType(beforeItem.getId());
+        if (differentZ) {
+          return false;
+        }
+      } else {
+        // we are only working with folders
+        return true;
       }
     }
   } else {
     // the item must support internal drag and meet the default tree drag criteria
-    if (!firstRow.supportsInternalDrag() || !os.ui.LayerTreeCtrl.base(this, 'canDragMove', rows, insertBefore)) {
+    if (!nodeToMove.supportsInternalDrag() || !os.ui.LayerTreeCtrl.base(this, 'canDragMove', rows, insertBefore)) {
       return false;
     }
 
     beforeItem = /** @type {os.ui.slick.SlickTreeNode} */ (this.grid.getDataItem(insertBefore));
 
     // source/target must share the same root node
-    if (!beforeItem || beforeItem.getRoot() != firstRow.getRoot()) {
+    if (!beforeItem || beforeItem.getRoot() != nodeToMove.getRoot()) {
       return false;
     }
 
-    return firstRow.canDropInternal(beforeItem, this.moveMode);
+    return nodeToMove.canDropInternal(beforeItem, this.moveMode);
   }
 
   return true;
@@ -177,45 +196,77 @@ os.ui.LayerTreeCtrl.prototype.doMove = function(rows, insertBefore) {
     return;
   }
 
-  var firstRow = /** @type {os.ui.slick.SlickTreeNode} */ (this.dataView.getItem(rows[0]));
-  if (!firstRow) {
+  var nodeToMove = /** @type {os.ui.slick.SlickTreeNode} */ (this.dataView.getItem(rows[0]));
+  if (!nodeToMove) {
     return;
   }
 
-  if (firstRow instanceof os.data.LayerNode) {
+  if (nodeToMove instanceof os.data.LayerNode || nodeToMove instanceof os.data.FolderNode) {
+    var fm = os.layer.FolderManager.getInstance();
+    var z = os.data.ZOrder.getInstance();
     var after = false;
-    var item = /** @type {os.data.LayerNode} */ (this.grid.getDataItem(insertBefore));
+    var targetNode = /** @type {(os.data.LayerNode|os.data.FolderNode)} */ (this.grid.getDataItem(insertBefore));
 
-    while (!(item instanceof os.data.LayerNode) || item.depth !== firstRow.depth) {
+    // iterate up the tree to ensure we're dropping onto another layer or a folder
+    while (!targetNode) {
       after = true;
       insertBefore--;
-      item = /** @type {os.data.LayerNode} */ (this.grid.getDataItem(insertBefore));
+      targetNode = /** @type {(os.data.LayerNode|os.data.FolderNode)} */ (this.grid.getDataItem(insertBefore));
     }
 
-    if (item) {
-      var layer = item.getLayer();
-      var ids = [layer.getId()];
-      var z = os.data.ZOrder.getInstance();
+    if (targetNode) {
+      var layer = targetNode instanceof os.data.LayerNode ? targetNode.getLayer() : null;
+      var targetIds = [];
+
+      if (targetNode instanceof os.data.LayerNode) {
+        targetIds = [layer.getId()];
+      } else if (targetNode instanceof os.data.FolderNode) {
+        targetIds = [targetNode.getId()];
+      }
 
       if (layer instanceof os.layer.LayerGroup) {
-        ids = /** @type {os.layer.LayerGroup} */ (layer).getLayers().map(os.layer.mapLayersToIds);
+        // use all of the IDs in the group for the target IDs
+        targetIds = /** @type {os.layer.LayerGroup} */ (layer).getLayers().map(os.layer.mapLayersToIds);
       }
 
       for (var i = 0, n = rows.length; i < n; i++) {
-        item = /** @type {os.data.LayerNode} */ (this.grid.getDataItem(rows[i]));
+        var moveNode = /** @type {(os.data.LayerNode|os.data.FolderNode)} */ (this.grid.getDataItem(rows[i]));
 
-        if (item) {
-          layer = item.getLayer();
-          var moveIds = [layer.getId()];
+        if (moveNode) {
+          layer = moveNode instanceof os.data.LayerNode ? moveNode.getLayer() : null;
+          var moveIds = [];
+
+          if (moveNode instanceof os.data.LayerNode) {
+            moveIds = [layer.getId()];
+          } else if (moveNode instanceof os.data.FolderNode) {
+            moveIds = [moveNode.getId()];
+          }
 
           if (layer instanceof os.layer.LayerGroup) {
+            // move all the layer group's children in the z-order
             moveIds = /** @type {os.layer.LayerGroup} */ (layer).getLayers().map(os.layer.mapLayersToIds);
           }
 
+          if (!after) {
+            // dropping directly on top of a node should put the result after if its moving down the tree
+            after = this.moveMode == os.ui.slick.SlickTreeNode.MOVE_MODE.REPARENT && insertBefore >= rows[i];
+          }
+
           for (var j = 0, m = moveIds.length; j < m; j++) {
-            for (var k = 0, l = ids.length; k < l; k++) {
-              // use !after since the tree is sorted by descending z-index
-              z.move(moveIds[j], ids[k], !after);
+            for (var k = 0, l = targetIds.length; k < l; k++) {
+              if (this.scope['groupBy']) {
+                // use !after since the tree is sorted by descending z-index
+                z.move(moveIds[j], targetIds[k], !after);
+              } else {
+                // This covers the case of dropping a layer into the space above a folder. This case is nasty
+                // because the target ID is the folder in both cases, so we need to know if we're making it a child
+                // to that folder or a sibling to that folder
+                const sibling = this.moveMode != os.ui.slick.SlickTreeNode.MOVE_MODE.REPARENT;
+
+                // update the folder manager
+                fm.move(moveIds[j], targetIds[k], after, sibling);
+                fm.persist();
+              }
             }
           }
         }
@@ -224,7 +275,7 @@ os.ui.LayerTreeCtrl.prototype.doMove = function(rows, insertBefore) {
       z.update();
       z.save();
     }
-  } else if (firstRow.supportsInternalDrag()) {
+  } else if (nodeToMove.supportsInternalDrag()) {
     // use default tree drag behavior
     os.ui.LayerTreeCtrl.base(this, 'doMove', rows, insertBefore);
   }

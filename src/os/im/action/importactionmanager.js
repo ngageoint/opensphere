@@ -4,6 +4,7 @@ goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
 goog.require('goog.log');
 goog.require('ol.array');
+goog.require('os.fn');
 goog.require('os.im.action.FilterActionEntry');
 goog.require('os.im.action.ImportActionCallbackConfig');
 goog.require('os.im.action.ImportActionEventType');
@@ -50,6 +51,13 @@ os.im.action.ImportActionManager = function() {
    * @protected
    */
   this.actionEntries = {};
+
+  /**
+   * The last action entries applied.
+   * @type {!Object<string, !Array<!os.im.action.FilterActionEntry<T>>>}
+   * @protected
+   */
+  this.lastActionEntries = {};
 
   /**
    * Registered import actions.
@@ -367,23 +375,36 @@ os.im.action.ImportActionManager.prototype.processItemsProtected = function(
     opt_unprocess,
     opt_unprocessOnly) {
   if (items && items.length > 0) {
-    var configs = [];
-    var entries = this.actionEntries[entryType];
-    if (entries && entries.length > 0) {
-      for (var i = 0; i < entries.length; i++) {
-        var cfgs = null;
-        if (!opt_unprocessOnly && entries[i].isEnabled()) {
+    const configs = [];
+    const entries = this.actionEntries[entryType];
+    let last = this.lastActionEntries[entryType] || [];
+
+    if ((opt_unprocess || opt_unprocessOnly) && last.length > 0) {
+      let cfgs = null;
+      for (let i = 0; i < last.length; i++) {
+        cfgs = last[i].unprocessItems(items);
+
+        if (cfgs) {
+          configs.push(...cfgs);
+        }
+      }
+      last = [];
+    }
+
+    if (!opt_unprocessOnly && entries && entries.length > 0) {
+      for (let i = 0; i < entries.length; i++) {
+        let cfgs = null;
+        if (entries[i].isEnabled()) {
           cfgs = entries[i].processItems(items);
-        } else if (opt_unprocess || opt_unprocessOnly) {
-          cfgs = entries[i].unprocessItems(items);
+          last.push(entries[i]);
         }
         if (cfgs) {
-          cfgs.forEach((cfg) => {
-            configs.push(cfg);
-          });
+          configs.push(...cfgs);
         }
       }
     }
+
+    this.lastActionEntries[entryType] = last;
     return configs;
   }
 };
@@ -548,7 +569,7 @@ os.im.action.ImportActionManager.prototype.loadDefaults = function(id) {
 /**
  * Initialize the manager when entries have been loaded.
  */
-os.im.action.ImportActionManager.prototype.initialize = goog.nullFunction;
+os.im.action.ImportActionManager.prototype.initialize = os.fn.noop;
 
 
 /**

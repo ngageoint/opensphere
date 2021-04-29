@@ -1,32 +1,48 @@
-goog.provide('plugin.track.TrackPlugin');
+goog.module('plugin.track.TrackPlugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.plugin.AbstractPlugin');
-goog.require('plugin.track');
-goog.require('plugin.track.Metrics');
-goog.require('plugin.track.menu');
+const menu = goog.require('plugin.track.menu');
+const track = goog.require('plugin.track');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const MapContainer = goog.require('os.MapContainer');
+const Metrics = goog.require('plugin.track.Metrics');
+const MetricsManager = goog.require('os.ui.metrics.MetricsManager');
+const Settings = goog.require('os.config.Settings');
+const TrackInteraction = goog.require('plugin.track.TrackInteraction');
 
+const settings = Settings.getInstance();
 
 
 /**
  * Provides the ability to create tracks that can be animated over time.
- *
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
  */
-plugin.track.TrackPlugin = function() {
-  plugin.track.TrackPlugin.base(this, 'constructor');
-  this.id = plugin.track.ID;
-};
-goog.inherits(plugin.track.TrackPlugin, os.plugin.AbstractPlugin);
-goog.addSingletonGetter(plugin.track.TrackPlugin);
+class TrackPlugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = track.ID;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  init() {
+    const predict = (settings.get(track.PREDICT, false) === true);
+
+    menu.layerSetup(predict);
+    menu.spatialSetup(predict);
+
+    MetricsManager.getInstance().addMetricsPlugin(new Metrics());
+
+    if (predict) {
+      MapContainer.getInstance().getMap().getInteractions().push(new TrackInteraction());
+    }
+  }
+}
+
+goog.addSingletonGetter(TrackPlugin);
 
 
-/**
- * @inheritDoc
- */
-plugin.track.TrackPlugin.prototype.init = function() {
-  plugin.track.menu.layerSetup();
-  plugin.track.menu.spatialSetup();
-
-  os.ui.metricsManager.addMetricsPlugin(new plugin.track.Metrics());
-};
+exports = TrackPlugin;

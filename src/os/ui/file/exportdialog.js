@@ -127,9 +127,9 @@ os.ui.file.ExportDialogCtrl = function($scope, $element, $compile) {
 
   // Only listen to this scope change if additional options exist
   if (this.options.additionalOptions) {
-    $scope.$on('addexportoptions.updateitem', goog.bind(function(event, items) {
+    $scope.$on('addexportoptions.updateitem', function(event, items) {
       this.options.items = items || [];
-    }, this));
+    }.bind(this));
   }
 };
 

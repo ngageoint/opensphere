@@ -633,14 +633,13 @@ os.ui.layer.LobOptionsCtrl.prototype.onSizeChange = function(event, value) {
  * @private
  */
 os.ui.layer.LobOptionsCtrl.prototype.onSizeDelay_ = function() {
-  var fn = goog.bind(
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.VectorLayerArrowSize(layer.getId(), this.scope['size']);
-      }, this);
+  /**
+   * @param {os.layer.ILayer} layer
+   * @return {os.command.ICommand}
+   */
+  var fn = function(layer) {
+    return new os.command.VectorLayerArrowSize(layer.getId(), this.scope['size']);
+  }.bind(this);
 
   this.createCommand(fn);
 };
@@ -659,14 +658,13 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthChange = function(event, value) {
   }
   var result = value !== undefined ? value : this.scope['length'];
   this.scope['length'] = result == 0 ? 1 : result;
-  var fn = goog.bind(
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.VectorLayerLOBLength(layer.getId(), this.scope['length']);
-      }, this);
+  /**
+   * @param {os.layer.ILayer} layer
+   * @return {os.command.ICommand}
+   */
+  var fn = function(layer) {
+    return new os.command.VectorLayerLOBLength(layer.getId(), this.scope['length']);
+  }.bind(this);
 
   this.createCommand(fn);
 };
@@ -692,14 +690,13 @@ os.ui.layer.LobOptionsCtrl.prototype.onColumnLengthChange = function(event, valu
  * @private
  */
 os.ui.layer.LobOptionsCtrl.prototype.onColumnLengthDelay_ = function() {
-  var fn = goog.bind(
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.VectorLayerLOBColumnLength(layer.getId(), this.scope['columnLength']);
-      }, this);
+  /**
+   * @param {os.layer.ILayer} layer
+   * @return {os.command.ICommand}
+   */
+  var fn = function(layer) {
+    return new os.command.VectorLayerLOBColumnLength(layer.getId(), this.scope['columnLength']);
+  }.bind(this);
 
   this.createCommand(fn);
 };
@@ -725,14 +722,13 @@ os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorChange = function(event, valu
  * @private
  */
 os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorDelay_ = function() {
-  var fn = goog.bind(
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.VectorLayerBearingError(layer.getId(), this.scope['bearingErrorMultiplier']);
-      }, this);
+  /**
+   * @param {os.layer.ILayer} layer
+   * @return {os.command.ICommand}
+   */
+  var fn = function(layer) {
+    return new os.command.VectorLayerBearingError(layer.getId(), this.scope['bearingErrorMultiplier']);
+  }.bind(this);
 
   this.createCommand(fn);
 };
@@ -758,14 +754,13 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorChange = function(event, value
  * @private
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorDelay_ = function() {
-  var fn = goog.bind(
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.VectorLayerLOBLengthError(layer.getId(), this.scope['lengthErrorMultiplier']);
-      }, this);
+  /**
+   * @param {os.layer.ILayer} layer
+   * @return {os.command.ICommand}
+   */
+  var fn = function(layer) {
+    return new os.command.VectorLayerLOBLengthError(layer.getId(), this.scope['lengthErrorMultiplier']);
+  }.bind(this);
 
   this.createCommand(fn);
 };
@@ -777,14 +772,13 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorDelay_ = function() {
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthColumnChange = function() {
-  var fn = goog.bind(
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.VectorLayerLOBMultiplier(layer.getId(), this['lengthColumn']);
-      }, this);
+  /**
+   * @param {os.layer.ILayer} layer
+   * @return {os.command.ICommand}
+   */
+  var fn = function(layer) {
+    return new os.command.VectorLayerLOBMultiplier(layer.getId(), this['lengthColumn']);
+  }.bind(this);
 
   this.createCommand(fn);
 };
@@ -796,14 +790,13 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthColumnChange = function() {
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorColumnChange = function() {
-  var fn = goog.bind(
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.VectorLayerLOBError(layer.getId(), this['lengthErrorColumn']);
-      }, this);
+  /**
+   * @param {os.layer.ILayer} layer
+   * @return {os.command.ICommand}
+   */
+  var fn = function(layer) {
+    return new os.command.VectorLayerLOBError(layer.getId(), this['lengthErrorColumn']);
+  }.bind(this);
 
   this.createCommand(fn);
 };
@@ -815,14 +808,13 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorColumnChange = function() {
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthTypeChange = function() {
-  var fn = goog.bind(
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.VectorLayerLOBType(layer.getId(), this['lengthType']);
-      }, this);
+  /**
+   * @param {os.layer.ILayer} layer
+   * @return {os.command.ICommand}
+   */
+  var fn = function(layer) {
+    return new os.command.VectorLayerLOBType(layer.getId(), this['lengthType']);
+  }.bind(this);
 
   this.createCommand(fn);
 };
@@ -834,14 +826,13 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthTypeChange = function() {
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onBearingColumnChange = function() {
-  var fn = goog.bind(
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.VectorLayerBearing(layer.getId(), this['bearingColumn']);
-      }, this);
+  /**
+   * @param {os.layer.ILayer} layer
+   * @return {os.command.ICommand}
+   */
+  var fn = function(layer) {
+    return new os.command.VectorLayerBearing(layer.getId(), this['bearingColumn']);
+  }.bind(this);
 
   this.createCommand(fn);
 };
@@ -853,14 +844,13 @@ os.ui.layer.LobOptionsCtrl.prototype.onBearingColumnChange = function() {
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorColumnChange = function() {
-  var fn = goog.bind(
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.VectorLayerBearingErrorColumn(layer.getId(), this['bearingErrorColumn']);
-      }, this);
+  /**
+   * @param {os.layer.ILayer} layer
+   * @return {os.command.ICommand}
+   */
+  var fn = function(layer) {
+    return new os.command.VectorLayerBearingErrorColumn(layer.getId(), this['bearingErrorColumn']);
+  }.bind(this);
 
   this.createCommand(fn);
 };
@@ -872,14 +862,13 @@ os.ui.layer.LobOptionsCtrl.prototype.onBearingErrorColumnChange = function() {
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthUnitChange = function() {
-  var fn = goog.bind(
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.VectorLayerLOBLengthUnits(layer.getId(), this['lengthUnits']);
-      }, this);
+  /**
+   * @param {os.layer.ILayer} layer
+   * @return {os.command.ICommand}
+   */
+  var fn = function(layer) {
+    return new os.command.VectorLayerLOBLengthUnits(layer.getId(), this['lengthUnits']);
+  }.bind(this);
 
   this.createCommand(fn);
 };
@@ -891,14 +880,13 @@ os.ui.layer.LobOptionsCtrl.prototype.onLengthUnitChange = function() {
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onArrowUnitChange = function() {
-  var fn = goog.bind(
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.VectorLayerArrowUnits(layer.getId(), this['arrowUnits']);
-      }, this);
+  /**
+   * @param {os.layer.ILayer} layer
+   * @return {os.command.ICommand}
+   */
+  var fn = function(layer) {
+    return new os.command.VectorLayerArrowUnits(layer.getId(), this['arrowUnits']);
+  }.bind(this);
 
   this.createCommand(fn);
 };
@@ -910,14 +898,13 @@ os.ui.layer.LobOptionsCtrl.prototype.onArrowUnitChange = function() {
  * @export
  */
 os.ui.layer.LobOptionsCtrl.prototype.onLengthErrorUnitChange = function() {
-  var fn = goog.bind(
-      /**
-       * @param {os.layer.ILayer} layer
-       * @return {os.command.ICommand}
-       */
-      function(layer) {
-        return new os.command.VectorLayerLOBLengthErrorUnits(layer.getId(), this['lengthErrorUnits']);
-      }, this);
+  /**
+   * @param {os.layer.ILayer} layer
+   * @return {os.command.ICommand}
+   */
+  var fn = function(layer) {
+    return new os.command.VectorLayerLOBLengthErrorUnits(layer.getId(), this['lengthErrorUnits']);
+  }.bind(this);
 
   this.createCommand(fn);
 };

@@ -22,6 +22,7 @@ goog.require('os.im.mapping.time.DateTimeMapping');
 goog.require('os.im.mapping.time.TimeMapping');
 goog.require('os.mixin');
 goog.require('os.mixin.closure');
+goog.require('os.net');
 goog.require('os.net.ExtDomainHandler');
 goog.require('os.net.RequestHandlerFactory');
 goog.require('os.net.SameDomainHandler');
@@ -38,14 +39,20 @@ angular.element(document.body).append('<div id="map-container"></div');
 
 beforeEach(function() {
   const Settings = goog.module.get('os.config.Settings');
+  const {resetCrossOriginCache, resetDefaultValidators} = goog.module.get('os.net');
 
   const settings = Settings.getInstance();
 
   // the bracket notation gets the compiler to quit complaining about this
   os['config']['appNs'] = 'unittest';
 
+  // register request handlers
   os.net.RequestHandlerFactory.addHandler(os.net.ExtDomainHandler);
   os.net.RequestHandlerFactory.addHandler(os.net.SameDomainHandler);
+
+  // reset net module
+  resetCrossOriginCache();
+  resetDefaultValidators();
 
   angular.mock.module('ngSanitize');
 
