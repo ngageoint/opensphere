@@ -27,6 +27,8 @@ goog.require('os.command.VectorUniqueIdCmd');
 goog.require('os.command.style');
 goog.require('os.data.OSDataManager');
 goog.require('os.fn');
+goog.require('os.im.mapping.EllipseMappingManager');
+goog.require('os.im.mapping.SourceMappingManager');
 goog.require('os.layer.preset');
 goog.require('os.layer.preset.LayerPresetManager');
 goog.require('os.layer.preset.PresetMenuButton');
@@ -147,6 +149,12 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
   this['uniqueId'] = null;
 
   /**
+   * Feature Toggle
+   * @type {boolean}
+   */
+  this['allowEllipseConfig'] = os.settings.get(os.im.mapping.EllipseMappingManager.ALLOW_ELLIPSE_CONFIG, false);
+
+  /**
    * Delay for grouping label size changes.
    * @type {goog.async.Delay}
    */
@@ -176,6 +184,7 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.SHAPE_CHANGE, this.onShapeChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.CENTER_SHAPE_CHANGE, this.onCenterShapeChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.LINE_DASH_CHANGE, this.onLineDashChange.bind(this));
+  $scope.$on(os.ui.layer.VectorStyleControlsEventType.ELLIPSE_COLUMN_CHANGE, this.onEllipseColumnMapping.bind(this));
 
   // New default added to the base constructor
   this.defaults['fillOpacity'] = os.style.DEFAULT_FILL_ALPHA;
@@ -248,6 +257,9 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
     this.scope['lockable'] = this.getLockable();
     this.scope['fillColor'] = this.getFillColor() || this.scope['color'];
     this.scope['fillOpacity'] = this.getFillOpacity();
+    this['hasEllipseCols'] = this.hasEllipseColumns();
+    this['ellipseMappings'] = this.getEllipseMappings();
+    this['layerNodes'] = this.getLayerNodes();
     this['altitudeMode'] = this.getAltitudeMode();
     this['columns'] = this.getColumns();
     this['showRotation'] = this.getShowRotation();
@@ -290,6 +302,51 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
     // update the shape UI
     this.scope.$broadcast(os.ui.UISwitchEventType.UPDATE);
   }
+};
+
+
+/**
+ * Sets the ellipse mappings
+ * @param {*} values
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.setEllipseMappings = function(values) {
+  let mappingOptions;
+  const layerNodes = this.getLayerNodes();
+  layerNodes.forEach((node) => {
+    const layer = node.getLayer();
+    const source = /** @type {os.source.Vector} */ (layer.getSource());
+    const sourceId = source.getId();
+
+    const smm = os.im.mapping.SourceMappingManager.getInstance();
+    const emm = smm.getMappingManager(sourceId, os.im.mapping.EllipseMappingManager.ELLIPSE_MAPPING_KEY);
+
+    emm.setMappingOptions(values);
+  });
+
+  this.ellipseMappings = mappingOptions;
+};
+
+
+/**
+ * Returns the ellipse mappings
+ * @return {*}
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.getEllipseMappings = function() {
+  let mappingOptions;
+  const layerNodes = this.getLayerNodes();
+  layerNodes.forEach((node) => {
+    const layer = node.getLayer();
+    const source = /** @type {os.source.Vector} */ (layer.getSource());
+    const sourceId = source.getId();
+
+    const smm = os.im.mapping.SourceMappingManager.getInstance();
+    const emm = smm.getMappingManager(sourceId, os.im.mapping.EllipseMappingManager.ELLIPSE_MAPPING_KEY);
+
+    // all layer nodes should have the same mapping options, just just find where they're set
+    mappingOptions = emm ? emm.getMappingOptions() : mappingOptions;
+  });
+
+  return this.ellipseMappings || mappingOptions;
 };
 
 
@@ -656,6 +713,38 @@ os.ui.layer.VectorLayerUICtrl.prototype.onLineDashChange = function(event, value
       };
 
   this.createCommand(fn);
+};
+
+
+/**
+ * Handles changes to ellipse column mapping
+ *
+ * @param {angular.Scope.Event} event
+ * @param {os.im.mapping.EllipseMappingManager.MappingOptions} value
+ * @protected
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.onEllipseColumnMapping = function(event, value) {
+  event.stopPropagation();
+  const layerNodes = this.getLayerNodes();
+  layerNodes.forEach((node) => {
+    const layer = node.getLayer();
+    const source = /** @type {os.source.Vector} */ (layer.getSource());
+    const sourceId = source.getId();
+
+    const smm = os.im.mapping.SourceMappingManager.getInstance();
+    let emm = smm.getMappingManager(sourceId, os.im.mapping.EllipseMappingManager.ELLIPSE_MAPPING_KEY);
+
+    if (emm == undefined) {
+      emm = new os.im.mapping.EllipseMappingManager.MappingManager(source);
+      smm.addMappingManager(sourceId, os.im.mapping.EllipseMappingManager.ELLIPSE_MAPPING_KEY, emm);
+    }
+
+    emm.setMappingOptions(value);
+    emm.createMappings(value);
+    emm.executeMappings();
+
+    this.setEllipseMappings(value);
+  });
 };
 
 
@@ -1061,8 +1150,33 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShape = function() {
  * @return {Array<string>} The available shape options
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getShapes = function() {
+  if (this['allowEllipseConfig']) {
+    return goog.object.getKeys(os.style.SHAPES);
+  } else {
+    var items = this.getLayerNodes();
+    var shapes = goog.object.getKeys(os.style.SHAPES);
+
+    if (items && items.length > 0) {
+      for (var i = 0, n = items.length; i < n; i++) {
+        var source = os.osDataManager.getSource(items[i].getId());
+        if (source && source instanceof os.source.Vector) {
+          shapes = goog.array.filter(shapes, source.supportsShape, source);
+        }
+      }
+    }
+    return shapes;
+  }
+};
+
+
+/**
+ * Gets whether the item(s) have ellipse columns
+ *
+ * @return {boolean} The available shape options
+ */
+os.ui.layer.VectorLayerUICtrl.prototype.hasEllipseColumns = function() {
   var items = this.getLayerNodes();
-  var shapes = goog.object.getKeys(os.style.SHAPES);
+  var shapes = this.getShapes();
 
   if (items && items.length > 0) {
     for (var i = 0, n = items.length; i < n; i++) {
@@ -1072,9 +1186,9 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShapes = function() {
       }
     }
   }
-
-  return shapes;
+  return shapes.some((shape) => os.style.ELLIPSE_REGEXP.test(shape));
 };
+
 
 
 /**

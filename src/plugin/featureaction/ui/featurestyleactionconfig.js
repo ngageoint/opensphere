@@ -25,12 +25,12 @@ plugin.im.action.feature.ui.styleConfigDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    template: '<div><vectorstylecontrols color="color" opacity="opacity" size="size" line-dash="lineDash"' +
-        'icon="icon" center-icon="centerIcon" icon-set="ctrl.iconSet" icon-src="ctrl.iconSrc" ' +
-        'shape="shape" shapes="shapes" center-shape="centerShape" center-shapes="centerShapes" ' +
-        'show-color-reset="true" fill-color="fillColor" fill-opacity="fillOpacity"></vectorstylecontrols>' +
-        '<iconstylecontrols ng-show="ctrl.showRotationOption()" columns="columns" show-rotation="showRotation" ' +
-        'rotation-column="rotationColumn"></iconstylecontrols></div>',
+    template: `<div><vectorstylecontrols color="color" opacity="opacity" size="size" line-dash="lineDash"
+        icon="icon" center-icon="centerIcon" icon-set="ctrl.iconSet" icon-src="ctrl.iconSrc"
+        shape="shape" shapes="shapes" center-shape="centerShape" center-shapes="centerShapes"
+        show-color-reset="true" fill-color="fillColor" fill-opacity="fillOpacity"></vectorstylecontrols>
+        <iconstylecontrols ng-show="ctrl.showRotationOption()" columns="columns" show-rotation="showRotation"
+        rotation-column="rotationColumn"></iconstylecontrols></div>`,
     controller: plugin.im.action.feature.ui.StyleConfigCtrl,
     controllerAs: 'ctrl'
   };

@@ -4,6 +4,7 @@ goog.provide('os.ui.layer.vectorStyleControlsDirective');
 goog.require('goog.Disposable');
 goog.require('os.ui.Module');
 goog.require('os.ui.icon.iconPickerDirective');
+goog.require('os.ui.layer.EllipseColumnsUI');
 goog.require('os.ui.sliderDirective');
 
 
@@ -15,7 +16,8 @@ os.ui.layer.VectorStyleControlsEventType = {
   SHAPE_CHANGE: 'vector:shapeChange',
   CENTER_SHAPE_CHANGE: 'vector:centerShapeChange',
   SHOW_ROTATION_CHANGE: 'vector:showRotationChange',
-  ROTATION_COLUMN_CHANGE: 'vector:rotationColumnChange'
+  ROTATION_COLUMN_CHANGE: 'vector:rotationColumnChange',
+  ELLIPSE_COLUMN_CHANGE: 'vector:ellipseColumnsChange'
 };
 
 
@@ -42,6 +44,11 @@ os.ui.layer.vectorStyleControlsDirective = function() {
       'size': '=',
       'shape': '=',
       'shapes': '=',
+      'columns': '=?',
+      'hasEllipseCols': '=?',
+      'allowEllipseConfig': '=?',
+      'ellipseMappings': '=?',
+      'layerNodes': '=?',
       'centerShape': '=?',
       'centerShapes': '=?',
       'lineDash': '=?',
@@ -111,6 +118,22 @@ os.ui.layer.VectorStyleControlsCtrl = function($scope, $element) {
    * @type {os.style.styleLineDashOption}
    */
   this.scope['lineDashOption'] = name ? name : this.scope['lineDashOptions'][1];
+
+  /**
+   * The chosen mappings
+   * @type {Object}
+   */
+  this['ellipseMapping'] = undefined;
+
+  this['allowEllipseConfig'] = this.scope['allowEllipseConfig'] || false;
+
+  /**
+   * Help text for Ellipse configuration
+   * @type {string}
+   */
+  this['configEllipse'] = `This layer does not have columns that support Ellipse styling (Radius, or Semi Minor, Semi 
+    Major, and Orientation). To configure which columns should be mapped be used instead, use the settings cog to
+    add mappings to this layer so that the ellipses can be shown on the map.`;
 
   $scope.$on('$destroy', this.dispose.bind(this));
 };
@@ -217,5 +240,49 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.select2Formatter_ = function(item,
   } else {
     return '';
   }
+};
+
+
+/**
+ * Callback for mapping an ellipse column
+ * @param {*} data
+ * @private
+ */
+os.ui.layer.VectorStyleControlsCtrl.prototype.onEllipseMapping_ = function(data) {
+  if (data && data['type'] >= 0) {
+    this.scope['hasEllipseCols'] = true;
+    this['ellipseMapping'] = data;
+    this.scope.$emit(os.ui.layer.VectorStyleControlsEventType.ELLIPSE_COLUMN_CHANGE, data);
+  }
+};
+
+
+/**
+ * Launches the window to configure ellipse columns
+ *
+ * @export
+ */
+os.ui.layer.VectorStyleControlsCtrl.prototype.launchConfigureWindow = function() {
+  const confirm = this.onEllipseMapping_.bind(this);
+  const scopeOptions = {
+    'columns': this.scope['columns'] || null,
+    'prevConfig': this['ellipseMapping'] || this.scope['ellipseMappings']
+  };
+
+  const options = /** @type {osx.window.ConfirmOptions} */ ({
+    confirm: confirm,
+    prompt: '<ellipsecolumns prev-config="prevConfig" columns="columns"></ellipsecolumns>',
+    windowOptions: {
+      'label': 'Map Ellipse Columns',
+      'x': 'center',
+      'y': 'center',
+      'width': '300',
+      'height': 'auto',
+      'modal': 'true',
+      'show-close': 'true'
+    }
+  });
+
+  os.ui.window.ConfirmUI.launchConfirm(options, scopeOptions);
 };
 
