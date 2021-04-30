@@ -7,6 +7,7 @@ goog.require('os');
 goog.require('os.geo');
 goog.require('os.im.mapping.AltMapping');
 goog.require('os.im.mapping.BearingMapping');
+goog.require('os.im.mapping.EllipseMappingManager');
 goog.require('os.im.mapping.LatMapping');
 goog.require('os.im.mapping.LonMapping');
 goog.require('os.im.mapping.OrientationMapping');
@@ -293,29 +294,20 @@ os.ui.wiz.GeometryStep.prototype.createMappings = function() {
   }
 
   if (this['showEllipse']) {
-    if (this['ellipse']['radius']['column']) {
-      var rm = new os.im.mapping.RadiusMapping();
-      rm.field = this['ellipse']['radius']['column'];
-      rm.setUnits(this['ellipse']['radius']['units']);
-      mappings.push(rm);
-    }
-    if (this['ellipse']['semiMajor']['column']) {
-      var smaj = new os.im.mapping.SemiMajorMapping();
-      smaj.field = this['ellipse']['semiMajor']['column'];
-      smaj.setUnits(this['ellipse']['semiMajor']['units']);
-      mappings.push(smaj);
-    }
-    if (this['ellipse']['semiMinor']['column']) {
-      var smin = new os.im.mapping.SemiMinorMapping();
-      smin.field = this['ellipse']['semiMinor']['column'];
-      smin.setUnits(this['ellipse']['semiMinor']['units']);
-      mappings.push(smin);
-    }
-    if (this['ellipse']['orientation']['column']) {
-      var om = new os.im.mapping.OrientationMapping();
-      om.field = this['ellipse']['orientation']['column'];
-      mappings.push(om);
-    }
+    const obj = /** @type {os.im.mapping.EllipseMappingManager.MappingOptions} */({
+      'radius': this['ellipse']['radius']['column'],
+      'radiusUnits': this['ellipse']['radius']['units'],
+      'semiMajor': this['ellipse']['semiMajor']['column'],
+      'semiMajorUnits': this['ellipse']['semiMajor']['units'],
+      'semiMinor': this['ellipse']['semiMinor']['column'],
+      'semiMinorUnits': this['ellipse']['semiMinor']['units'],
+      'orientation': this['ellipse']['orientation']['column']
+    });
+    const emm = new os.im.mapping.EllipseMappingManager.MappingManager();
+    const tempMappings = emm.createMappings(obj);
+    tempMappings.forEach((mapping) => {
+      mappings.push(mapping);
+    });
   }
 
   return mappings;

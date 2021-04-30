@@ -28,6 +28,13 @@
       <iconpicker ng-show="showIcon && icon && iconSet" ng-model="icon" icon-set="iconSet" icon-src="iconSrc"></iconpicker>
       <iconpicker ng-show="ctrl.hasCenter() && showCenterIcon && centerIcon && iconSet" ng-model="centerIcon" icon-set="iconSet" icon-src="iconSrc"></iconpicker>
     </div>
+    <div class="col-auto my-1" ng-if="shape.includes('Ellipse') && ctrl.allowEllipseConfig">
+      <popover x-title="'No Ellipse Columns'" x-content="ctrl.configEllipse" pos="'bottom'" icon="'fa fa-exclamation-triangle text-warning'" 
+        ng-if="!hasEllipseCols"></popover>
+      <span ng-click="ctrl.launchConfigureWindow()" title="Set the Ellipse columns for this layer">
+        <i class="fa fa-cog c-glyph fa-fw"></i>
+      </span>
+    </div>
   </div>
 
   <div class="form-group row flex-shrink-0" title="Sets the style of the ellipse center" ng-if="centerShapes && centerShapes.length > 0 && ctrl.hasCenter()">
