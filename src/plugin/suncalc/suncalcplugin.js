@@ -1,68 +1,96 @@
-goog.provide('plugin.suncalc.Plugin');
+goog.module('plugin.suncalc.SunCalcPlugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.plugin.AbstractPlugin');
-goog.require('os.ui.menu.map');
-goog.require('plugin.suncalc.LightStripSettings');
-goog.require('plugin.suncalc.lightStripDirective');
-goog.require('plugin.suncalc.sunCalcDirective');
+goog.require('plugin.suncalc.LightStripUI');
 
-
-/**
- *
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
- */
-plugin.suncalc.Plugin = function() {
-  plugin.suncalc.Plugin.base(this, 'constructor');
-  this.id = plugin.suncalc.ID;
-};
-goog.inherits(plugin.suncalc.Plugin, os.plugin.AbstractPlugin);
-goog.addSingletonGetter(plugin.suncalc.Plugin);
+const MapContainer = goog.require('os.MapContainer');
+const DisplaySetting = goog.require('os.config.DisplaySetting');
+const settings = goog.require('os.config.Settings');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const SettingsManager = goog.require('os.ui.config.SettingsManager');
+const MenuItemType = goog.require('os.ui.menu.MenuItemType');
+const mapMenu = goog.require('os.ui.menu.map');
+const osWindow = goog.require('os.ui.window');
+const {ID} = goog.require('plugin.suncalc');
+const LightStripSettings = goog.require('plugin.suncalc.LightStripSettings');
+const {directiveTag: sunCalcEl} = goog.require('plugin.suncalc.SunCalcUI');
 
 
 /**
- * @type {string}
- * @const
  */
-plugin.suncalc.ID = 'suncalc';
-
-
-/**
- * @inheritDoc
- */
-plugin.suncalc.Plugin.prototype.init = function() {
-  var menu = os.ui.menu.map.MENU;
-  if (menu) {
-    var group = menu.getRoot().find(os.ui.menu.map.GroupLabel.COORDINATE);
-
-    if (group) {
-      group.addChild({
-        label: 'Sun/Moon Info',
-        eventType: plugin.suncalc.ID,
-        tooltip: 'See sun/moon event times for this location',
-        icons: ['<i class="fa fa-fw fa-sun-o"></i>']
-      });
-
-      menu.listen(plugin.suncalc.ID, plugin.suncalc.onMenuItem_);
-    }
-
-    group = menu.getRoot().find(os.ui.menu.map.GroupLabel.OPTIONS);
-    if (group) {
-      group.addChild({
-        label: 'Sunlight',
-        eventType: os.config.DisplaySetting.ENABLE_LIGHTING,
-        type: os.ui.menu.MenuItemType.CHECK,
-        tooltip: 'Light the 3D globe with the Sun',
-        handler: plugin.suncalc.onEnableLighting,
-        beforeRender: plugin.suncalc.updateSunlightItem
-      });
-    }
+class SunCalcPlugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = ID;
   }
 
-  // register the new settings 'plugin';
-  var sm = os.ui.config.SettingsManager.getInstance();
-  sm.addSettingPlugin(new plugin.suncalc.LightStripSettings());
-};
+  /**
+   * @inheritDoc
+   */
+  init() {
+    var menu = mapMenu.MENU;
+    if (menu) {
+      var group = menu.getRoot().find(mapMenu.GroupLabel.COORDINATE);
+
+      if (group) {
+        group.addChild({
+          label: 'Sun/Moon Info',
+          eventType: ID,
+          tooltip: 'See sun/moon event times for this location',
+          icons: ['<i class="fa fa-fw fa-sun-o"></i>']
+        });
+
+        menu.listen(ID, onMenuItem);
+      }
+
+      group = menu.getRoot().find(mapMenu.GroupLabel.OPTIONS);
+      if (group) {
+        group.addChild({
+          label: 'Sunlight',
+          eventType: DisplaySetting.ENABLE_LIGHTING,
+          type: MenuItemType.CHECK,
+          tooltip: 'Light the 3D globe with the Sun',
+          handler: onEnableLighting,
+          beforeRender: updateSunlightItem
+        });
+      }
+    }
+
+    // register the new settings 'plugin';
+    var sm = SettingsManager.getInstance();
+    sm.addSettingPlugin(new LightStripSettings());
+  }
+
+  /**
+   * Get the global alert instance.
+   * @return {!SunCalcPlugin}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new SunCalcPlugin();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {SunCalcPlugin} value The instance.
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
+
+
+/**
+ * The global instance.
+ * @type {SunCalcPlugin}
+ */
+let instance = null;
 
 
 /**
@@ -70,9 +98,9 @@ plugin.suncalc.Plugin.prototype.init = function() {
  *
  * @this {os.ui.menu.MenuItem}
  */
-plugin.suncalc.updateSunlightItem = function() {
-  this.visible = os.MapContainer.getInstance().is3DEnabled();
-  this.selected = !!os.settings.get(os.config.DisplaySetting.ENABLE_LIGHTING, false);
+const updateSunlightItem = function() {
+  this.visible = MapContainer.getInstance().is3DEnabled();
+  this.selected = !!settings.getInstance().get(DisplaySetting.ENABLE_LIGHTING, false);
 };
 
 
@@ -82,8 +110,8 @@ plugin.suncalc.updateSunlightItem = function() {
  * @param {os.ui.menu.MenuEvent<ol.Coordinate>} evt The event
  * @this {os.ui.menu.MenuItem}
  */
-plugin.suncalc.onEnableLighting = function(evt) {
-  os.settings.set(os.config.DisplaySetting.ENABLE_LIGHTING, !this.selected);
+const onEnableLighting = function(evt) {
+  settings.getInstance().set(DisplaySetting.ENABLE_LIGHTING, !this.selected);
 };
 
 
@@ -91,10 +119,9 @@ plugin.suncalc.onEnableLighting = function(evt) {
  * Suncalc menu option listener
  *
  * @param {os.ui.menu.MenuEvent<ol.Coordinate>} evt The menu event
- * @private
  */
-plugin.suncalc.onMenuItem_ = function(evt) {
-  plugin.suncalc.launch(evt.getContext());
+const onMenuItem = function(evt) {
+  launchWindow(evt.getContext());
 };
 
 
@@ -103,13 +130,13 @@ plugin.suncalc.onMenuItem_ = function(evt) {
  *
  * @param {ol.Coordinate} coord
  */
-plugin.suncalc.launch = function(coord) {
+const launchWindow = function(coord) {
   var scopeOptions = {
     'coord': coord
   };
 
   var windowOptions = {
-    'id': plugin.suncalc.ID,
+    'id': ID,
     'label': 'Sun and Moon Info',
     'icon': 'fa fa-sun-o',
     'x': 'center',
@@ -123,6 +150,8 @@ plugin.suncalc.launch = function(coord) {
     'show-close': true
   };
 
-  var template = '<suncalc></suncalc>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  var template = `<${sunCalcEl}></${sunCalcEl}>`;
+  osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
+
+exports = SunCalcPlugin;

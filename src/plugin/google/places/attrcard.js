@@ -1,8 +1,7 @@
-goog.provide('plugin.google.places.AttrCardCtrl');
-goog.provide('plugin.google.places.attrCardDirective');
+goog.module('plugin.google.places.AttrCardUI');
 
-goog.require('os');
-goog.require('os.ui.Module');
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -10,39 +9,53 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-plugin.google.places.attrCardDirective = function() {
-  return {
-    replace: true,
-    restrict: 'E',
-    templateUrl: os.ROOT + 'views/plugin/google/places/attrcard.html',
-    controller: plugin.google.places.AttrCardCtrl,
-    controllerAs: 'attrCtrl'
-  };
-};
+const directive = () => ({
+  replace: true,
+  restrict: 'E',
+  templateUrl: ROOT + 'views/plugin/google/places/attrcard.html',
+  controller: Controller,
+  controllerAs: 'attrCtrl'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'googleplacesattrcard';
 
 
 /**
  * Register the directive.
  */
-os.ui.Module.directive('googleplacesattrcard', [plugin.google.places.attrCardDirective]);
+Module.directive('googleplacesattrcard', [directive]);
 
 
 
 /**
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-plugin.google.places.AttrCardCtrl = function($scope, $element) {
-  // just plop the result HTML in
-  var attrs = /** @type {plugin.google.places.AttrResult} */ ($scope['result']).getResult();
+class Controller {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    // just plop the result HTML in
+    var attrs = /** @type {plugin.google.places.AttrResult} */ ($scope['result']).getResult();
 
-  var html = '';
-  for (var i = 0, n = attrs.length; i < n; i++) {
-    html += '<div>' + attrs[i] + '</div>';
+    var html = '';
+    for (var i = 0, n = attrs.length; i < n; i++) {
+      html += '<div>' + attrs[i] + '</div>';
+    }
+
+    $element.html(html);
   }
+}
 
-  $element.html(html);
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
-

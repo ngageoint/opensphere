@@ -1,8 +1,9 @@
-goog.provide('plugin.xyz.XYZLayerConfig');
+goog.module('plugin.xyz.XYZLayerConfig');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.layer.config.AbstractTileLayerConfig');
-goog.require('os.ol.source.XYZ');
-
+const AbstractTileLayerConfig = goog.require('os.layer.config.AbstractTileLayerConfig');
+const osObject = goog.require('os.object');
+const XYZ = goog.require('os.ol.source.XYZ');
 
 
 /**
@@ -31,31 +32,33 @@ goog.require('os.ol.source.XYZ');
  *   "title": "Example",
  *   "description": "This is an example of an Arc XYZ layer"
  * }
- *
- * @extends {os.layer.config.AbstractTileLayerConfig}
- * @constructor
  */
-plugin.xyz.XYZLayerConfig = function() {
-  plugin.xyz.XYZLayerConfig.base(this, 'constructor');
-};
-goog.inherits(plugin.xyz.XYZLayerConfig, os.layer.config.AbstractTileLayerConfig);
-
-
-/**
- * @inheritDoc
- */
-plugin.xyz.XYZLayerConfig.prototype.getSource = function(options) {
-  // assume a tile size, it will always be 512 in opensphere but is not supplied by 2D or 3D
-  if (options && !options['tileSize']) {
-    options['tileSize'] = 512;
+class XYZLayerConfig extends AbstractTileLayerConfig {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
   }
 
-  options = /** @type {Object<string, *>} */ (os.object.unsafeClone(options));
+  /**
+   * @inheritDoc
+   */
+  getSource(options) {
+    // assume a tile size, it will always be 512 in opensphere but is not supplied by 2D or 3D
+    if (options && !options['tileSize']) {
+      options['tileSize'] = 512;
+    }
 
-  options['projection'] = this.projection;
-  options['tileGrid'] = this.tileGrid;
-  options['crossOrigin'] = this.crossOrigin;
-  options['wrapX'] = this.projection.isGlobal();
+    options = /** @type {Object<string, *>} */ (osObject.unsafeClone(options));
 
-  return new os.ol.source.XYZ(/** @type {olx.source.XYZOptions} */ (options));
-};
+    options['projection'] = this.projection;
+    options['tileGrid'] = this.tileGrid;
+    options['crossOrigin'] = this.crossOrigin;
+    options['wrapX'] = this.projection.isGlobal();
+
+    return new XYZ(/** @type {olx.source.XYZOptions} */ (options));
+  }
+}
+
+exports = XYZLayerConfig;
