@@ -1,39 +1,65 @@
-goog.provide('plugin.params.ParamsPlugin');
+goog.module('plugin.params.ParamsPlugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.plugin.AbstractPlugin');
-goog.require('plugin.params');
-goog.require('plugin.params.menu');
-
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const params = goog.require('plugin.params');
+const menu = goog.require('plugin.params.menu');
 
 
 /**
  * Allow changing request parameters for layers in opensphere
- *
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
  */
-plugin.params.ParamsPlugin = function() {
-  plugin.params.ParamsPlugin.base(this, 'constructor');
+class ParamsPlugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
 
-  this.id = plugin.params.ID;
-  this.errorMessage = null;
-};
-goog.inherits(plugin.params.ParamsPlugin, os.plugin.AbstractPlugin);
-goog.addSingletonGetter(plugin.params.ParamsPlugin);
+    this.id = params.ID;
+    this.errorMessage = null;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
+    menu.layerDispose();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  init() {
+    menu.layerSetup();
+  }
+
+  /**
+   * Get the global instance.
+   * @return {!ParamsPlugin}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new ParamsPlugin();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {ParamsPlugin} value
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
 
 /**
- * @inheritDoc
+ * Global instance.
+ * @type {ParamsPlugin|undefined}
  */
-plugin.params.ParamsPlugin.prototype.disposeInternal = function() {
-  plugin.params.ParamsPlugin.base(this, 'disposeInternal');
-  plugin.params.menu.layerDispose();
-};
+let instance;
 
-
-/**
- * @inheritDoc
- */
-plugin.params.ParamsPlugin.prototype.init = function() {
-  plugin.params.menu.layerSetup();
-};
+exports = ParamsPlugin;
