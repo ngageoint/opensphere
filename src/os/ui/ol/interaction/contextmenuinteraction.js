@@ -145,7 +145,8 @@ os.ui.ol.interaction.ContextMenu.prototype.openFeatureContextMenu = function(eve
       geometry: feature.getGeometry(),
       feature: feature,
       layer: opt_layer,
-      map: event.map
+      map: event.map,
+      mapBrowserEvent: event
     };
 
     var pixel = event.pixel || [0, 0];
