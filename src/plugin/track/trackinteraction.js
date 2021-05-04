@@ -7,6 +7,7 @@ const MeasureInteraction = goog.require('os.interaction.Measure');
 const OlStroke = goog.require('ol.style.Stroke');
 const OlStyle = goog.require('ol.style.Style');
 
+const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 const OlLineString = goog.requireType('ol.geom.LineString');
 
 /**
@@ -50,6 +51,7 @@ class TrackInteraction extends MeasureInteraction {
   }
 
   /**
+   * Set up the interaction for the next run
    * @param {pluginx.track.TrackOptions=} opt_trackOptions starting point, callback, etc
    */
   config(opt_trackOptions) {
@@ -97,6 +99,40 @@ class TrackInteraction extends MeasureInteraction {
 
     if (this.config_) {
       this.config_.callback(all);
+    }
+  }
+
+  /**
+   * Either,
+   * 1) Immediately enable and begin TrackInteraction from the original right-click event, OR
+   * 2) Disable and deactivate the TrackInteraction
+   *
+   * @param {boolean} toggle
+   * @param {MapBrowserEvent=} opt_mapBrowserEvent
+   * @param {pluginx.track.TrackOptions=} opt_trackOptions starting point, callback, etc
+   */
+  trigger(toggle, opt_mapBrowserEvent, opt_trackOptions) {
+    if (toggle && opt_trackOptions) {
+      this.config(opt_trackOptions);
+    }
+
+    this.setEnabled(toggle);
+    this.setActive(toggle);
+
+    if (toggle && opt_mapBrowserEvent) {
+      let event;
+
+      // prime the coordinates of the pointerdown event for the DrawInteraction part of TrackInteraction
+      event = opt_mapBrowserEvent;
+      event['type'] = 'pointerdown';
+      event['originalEvent'] = new PointerEvent('pointerdown');
+      this.handleEvent(event);
+
+      // trigger the TrackInteraction begin() with a pointerup event
+      event = opt_mapBrowserEvent;
+      event['type'] = 'pointerup';
+      event['originalEvent'] = new PointerEvent('pointerup');
+      this.handleEvent(event);
     }
   }
 }
