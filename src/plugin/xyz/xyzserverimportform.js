@@ -13,7 +13,7 @@ const {ROOT} = goog.require('os');
  */
 const directive = () => {
   const original = xyzImportDirective();
-  original.templateUrl = ROOT + 'views/forms/singleurlform.html';
+  original.templateUrl = ROOT + 'views/plugin/xyz/xyzsingleurlform.html';
   return original;
 };
 

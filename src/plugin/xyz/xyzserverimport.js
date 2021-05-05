@@ -1,7 +1,9 @@
 goog.module('plugin.xyz.XYZImport');
 goog.module.declareLegacyNamespace();
 
+const {numerateCompare} = goog.require('goog.string');
 const {ROOT} = goog.require('os');
+const {getProjections} = goog.require('os.proj');
 const Module = goog.require('os.ui.Module');
 const SingleUrlProviderImportCtrl = goog.require('os.ui.SingleUrlProviderImportCtrl');
 const XYZServer = goog.require('plugin.xyz.XYZServer');
@@ -19,7 +21,7 @@ const directive = () => {
   return {
     restrict: 'E',
     replace: true,
-    templateUrl: ROOT + 'views/forms/singleurl.html',
+    templateUrl: ROOT + 'views/plugin/xyz/xyzsingleurl.html',
     controller: Controller,
     controllerAs: 'ctrl'
   };
@@ -71,11 +73,21 @@ class Controller extends SingleUrlProviderImportCtrl {
      */
     this['helpUi'] = XYZServerHelpUI.directiveTag;
 
+    // initialize units from settings
+    var projections = getProjections(true);
+    projections.sort(function(a, b) {
+      return numerateCompare(
+          /** @type {string} */ (a['code']),
+          /** @type {string} */ (b['code']));
+    });
+
+    this['projections'] = projections;
+
     var file = /** @type {osFile} */ ($scope['config']['file']);
     $scope['config']['url'] = file ? file.getUrl() : this.getUrl();
     $scope['typeName'] = 'XYZ Server';
     $scope['urlExample'] = 'https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png'; // TBD
-    $scope['config']['type'] = 'xyz';
+    $scope['config']['type'] = 'XYZ';
     $scope['config']['label'] = this.getLabel() || 'XYZ Server';
     $scope['help'] = {}; // TBD: we shouldn't need this, find a more elegant way
     $scope['help']['projection'] = 'This is the content for the projection help popover';
@@ -115,6 +127,24 @@ class Controller extends SingleUrlProviderImportCtrl {
     }
 
     return '';
+  }
+
+  /**
+   * Handle projection change
+   * @export
+   */
+  onProjectionChange() {
+    this.scope_['config']['zoomOffset'] = null;
+    switch (this.scope_['config']['projection'].code) {
+      case 'EPSG:3857':
+        this.scope_['config']['zoomOffset'] = 0;
+        break;
+      case 'EPSG:4326':
+        this.scope_['config']['zoomOffset'] = -1;
+        break;
+      default:
+        break;
+    }
   }
 }
 

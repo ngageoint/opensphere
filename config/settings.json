@@ -182,6 +182,9 @@
       "state": {
         "type": "state"
       },
+      "xyz": {
+        "type": "xyz"
+      },
       "3dtiles": {
         "type": "3dtiles"
       }
