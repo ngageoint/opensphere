@@ -440,3 +440,28 @@ os.file.deserializeFile = function(data) {
 os.file.serializeFile = function(file) {
   return file ? file.persist() : undefined;
 };
+
+
+/**
+ * Base file setting key.
+ * @type {string}
+ */
+os.file.BaseSettingKey = 'os.file';
+
+
+/**
+ * File settings keys.
+ * @enum {string}
+ */
+os.file.FileSetting = {
+  AUTO_SAVE: os.file.BaseSettingKey + '.autoSaveFiles'
+};
+
+
+/**
+ * Default file setting values.
+ * @type {Object<string, *>}
+ */
+os.file.FileSettingDefault = {
+  [os.file.FileSetting.AUTO_SAVE]: false
+};

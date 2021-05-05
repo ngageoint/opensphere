@@ -1,0 +1,15 @@
+<div class="d-flex flex-column flex-fill container-fluid u-overflow-x-auto u-overflow-y-auto">
+  <div class="d-flex flex-row flex-shrink-0">
+    <h4 class="col p-0">Files</h4>
+  </div>
+  <div class="form-group">Use these settings to configure your file preferences.</div>
+
+  <div class="form-group">
+    <div class="form-check" title="Whether to automatically save changes when modifying features in file layers.">
+      <input class="form-check-input" id="autoSaveFiles" type="checkbox" name="autoSaveFiles"
+          ng-model="ctrl.autoSaveFiles"
+          ng-change="ctrl.toggle('autoSaveFiles')">
+      <label class="form-check-label" for="autoSaveFiles">Auto-Save File Layers On Data Change</label>
+    </div>
+  </div>
+</div>

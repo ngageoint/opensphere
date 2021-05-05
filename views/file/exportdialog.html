@@ -13,7 +13,9 @@
       <div class="d-flex flex-fill form-group flex-shrink-0" ng-show="exportdialog.getKeys(exportdialog.persisters).length">
         <label class="col-3 col-form-label text-right">Save To</label>
         <div class="col">
-          <select class="custom-select" ng-model="persister" ng-options="value as key for (key, value) in exportdialog.persisters"></select>
+          <select class="custom-select" ng-model="persister" ng-options="value as key for (key, value) in exportdialog.persisters">
+            <option ng-if="exportdialog.appName" value="">{{exportdialog.appName}}</option>
+          </select>
         </div>
       </div>
 

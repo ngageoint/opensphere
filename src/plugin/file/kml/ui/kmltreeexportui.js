@@ -183,7 +183,16 @@ plugin.file.kml.ui.KMLTreeExportCtrl.prototype.confirm = function() {
   if (root) {
     var items = root.getChildren() || [root];
     items = this['additionalOptions'] ? this.scope['exportData'] : items;
-    os.ui.exportManager.exportItems(items, null, this['title'], this['exporter'], this['persister']);
+
+    var options = /** @type {os.ex.ExportOptions} */ ({
+      items: items,
+      fields: null,
+      title: this['title'],
+      exporter: this['exporter'],
+      persister: this['persister']
+    });
+
+    os.ui.exportManager.exportItems(options);
     this.close_();
   }
 };

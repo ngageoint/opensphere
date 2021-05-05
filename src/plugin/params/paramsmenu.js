@@ -25,7 +25,8 @@ const layerSetup = function() {
       icons: ['<i class="fa fa-fw fa-gears"></i>'],
       beforeRender: visibleIfSupported_,
       handler: handleLayerAction_,
-      metricKey: pluginParams.Metrics.EDIT_PARAMS
+      metricKey: pluginParams.Metrics.EDIT_PARAMS,
+      sort: 10000
     });
   }
 };

@@ -38,6 +38,7 @@ goog.require('os.events.EventFactory');
 goog.require('os.events.LayerConfigEvent');
 goog.require('os.events.LayerConfigEventType');
 goog.require('os.file.FileManager');
+goog.require('os.file.FileSettings');
 goog.require('os.file.FileStorage');
 goog.require('os.file.FileUrlHandler');
 goog.require('os.file.mime.any');
@@ -676,6 +677,7 @@ os.MainCtrl.prototype.initializeSettings_ = function() {
   sm.addSettingPlugin(new os.ui.user.settings.LocationSettings());
   sm.addSettingPlugin(new os.ui.column.mapping.ColumnMappingSettings());
   sm.addSettingPlugin(new os.config.ThemeSettings());
+  sm.addSettingPlugin(new os.file.FileSettings());
 };
 
 

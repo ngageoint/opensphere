@@ -1,6 +1,9 @@
 goog.provide('plugin.file.csv.CSVDescriptor');
+
 goog.require('os.data.FileDescriptor');
 goog.require('os.layer.LayerType');
+goog.require('os.ui.file.csv');
+goog.require('plugin.file.csv.CSVExporter');
 goog.require('plugin.file.csv.CSVParserConfig');
 goog.require('plugin.file.csv.CSVProvider');
 
@@ -121,6 +124,31 @@ plugin.file.csv.CSVDescriptor.prototype.getUseHeader = function() {
  */
 plugin.file.csv.CSVDescriptor.prototype.setUseHeader = function(useHeader) {
   this.parserConfig['useHeader'] = useHeader;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.csv.CSVDescriptor.prototype.getExporter = function() {
+  return new plugin.file.csv.CSVExporter();
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.csv.CSVDescriptor.prototype.onFileChange = function(options) {
+  plugin.file.csv.CSVDescriptor.base(this, 'onFileChange', options);
+
+  // update the parser config to match the default parser config
+  const conf = os.ui.file.csv.DEFAULT_CONFIG;
+  this.parserConfig['color'] = conf['color'];
+  this.parserConfig['commentChar'] = conf['commentChar'];
+  this.parserConfig['dataRow'] = conf['dataRow'];
+  this.parserConfig['delimiter'] = conf['delimiter'];
+  this.parserConfig['headerRow'] = conf['headerRow'];
+  this.parserConfig['useHeader'] = conf['useHeader'];
 };
 
 

@@ -5,6 +5,7 @@ goog.require('os.layer');
 goog.require('os.layer.LayerType');
 goog.require('os.style');
 goog.require('os.ui.ControlType');
+goog.require('plugin.file.kml.KMLExporter');
 goog.require('plugin.file.kml.KMLProvider');
 
 
@@ -44,6 +45,14 @@ plugin.file.kml.KMLDescriptor.prototype.getLayerOptions = function() {
   options[os.layer.LayerOption.SHOW_FORCE_COLOR] = true;
 
   return options;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.kml.KMLDescriptor.prototype.getExporter = function() {
+  return new plugin.file.kml.KMLExporter();
 };
 
 

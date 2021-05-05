@@ -111,8 +111,7 @@ os.data.OSDataManager.prototype.disposeInternal = function() {
  */
 os.data.OSDataManager.prototype.init_ = function() {
   // restore time filter flag from settings
-  this.setTimeFilterEnabled(/** @type {boolean} */ (os.settings.get(
-      os.data.OSDataManagerSetting.FILTER_TIME, true)));
+  this.setTimeFilterEnabled(/** @type {boolean} */ (os.settings.get(os.data.OSDataManagerSetting.FILTER_TIME, true)));
 };
 
 

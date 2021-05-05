@@ -1,6 +1,8 @@
 goog.provide('plugin.file.geojson.GeoJSONDescriptor');
+
 goog.require('os.data.FileDescriptor');
 goog.require('os.layer.LayerType');
+goog.require('plugin.file.geojson.GeoJSONExporter');
 goog.require('plugin.file.geojson.GeoJSONParserConfig');
 goog.require('plugin.file.geojson.GeoJSONProvider');
 
@@ -36,6 +38,14 @@ plugin.file.geojson.GeoJSONDescriptor.prototype.getLayerOptions = function() {
   var options = plugin.file.geojson.GeoJSONDescriptor.base(this, 'getLayerOptions');
   options['type'] = 'GeoJSON';
   return options;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.file.geojson.GeoJSONDescriptor.prototype.getExporter = function() {
+  return new plugin.file.geojson.GeoJSONExporter();
 };
 
 

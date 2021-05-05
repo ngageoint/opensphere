@@ -21,3 +21,18 @@ os.ui.file.csv.configurePapaParse = function() {
     Papa.RemoteChunkSize = 1024 * 1024 * 1; // 1 MB (default 5MB)
   }
 };
+
+
+/**
+ * Default configuration options for the CSV parser.
+ * @type {Object<string, *>}
+ * @const
+ */
+os.ui.file.csv.DEFAULT_CONFIG = {
+  'color': '#ffffff',
+  'commentChar': '#',
+  'dataRow': 2,
+  'delimiter': ',',
+  'headerRow': 1,
+  'useHeader': true
+};
