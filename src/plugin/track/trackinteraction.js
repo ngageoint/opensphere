@@ -3,7 +3,6 @@ goog.module('plugin.track.TrackInteraction');
 const osObject = goog.require('os.object');
 const {LINE_STYLE_OPTIONS} = goog.require('os.style');
 const MeasureInteraction = goog.require('os.interaction.Measure');
-// const OlMapBrowserEvent = goog.require('ol.MapBrowserEvent');
 const OlStroke = goog.require('ol.style.Stroke');
 const OlStyle = goog.require('ol.style.Style');
 
@@ -110,6 +109,7 @@ class TrackInteraction extends MeasureInteraction {
    * @param {boolean} toggle
    * @param {MapBrowserEvent=} opt_mapBrowserEvent
    * @param {pluginx.track.TrackOptions=} opt_trackOptions starting point, callback, etc
+   * @suppress {const}
    */
   trigger(toggle, opt_mapBrowserEvent, opt_trackOptions) {
     if (toggle && opt_trackOptions) {
@@ -124,14 +124,14 @@ class TrackInteraction extends MeasureInteraction {
 
       // prime the coordinates of the pointerdown event for the DrawInteraction part of TrackInteraction
       event = opt_mapBrowserEvent;
-      event['type'] = 'pointerdown';
-      event['originalEvent'] = new PointerEvent('pointerdown');
+      event.type = 'pointerdown';
+      event.originalEvent = new PointerEvent('pointerdown');
       this.handleEvent(event);
 
       // trigger the TrackInteraction begin() with a pointerup event
       event = opt_mapBrowserEvent;
-      event['type'] = 'pointerup';
-      event['originalEvent'] = new PointerEvent('pointerup');
+      event.type = 'pointerup';
+      event.originalEvent = new PointerEvent('pointerup');
       this.handleEvent(event);
     }
   }
