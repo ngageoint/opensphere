@@ -64,8 +64,8 @@ os.query.ui.ModifyAreaCtrl.LOGGER_ = goog.log.getLogger('os.query.ui.ModifyAreaC
 /**
  * @inheritDoc
  */
-os.query.ui.ModifyAreaCtrl.prototype.disposeInternal = function() {
-  os.query.ui.ModifyAreaCtrl.base(this, 'disposeInternal');
+os.query.ui.ModifyAreaCtrl.prototype.$onDestroy = function() {
+  os.query.ui.ModifyAreaCtrl.base(this, '$onDestroy');
 
   if (this.areaPreview) {
     os.MapContainer.getInstance().removeFeature(this.areaPreview);

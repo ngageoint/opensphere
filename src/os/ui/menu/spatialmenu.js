@@ -214,17 +214,10 @@ os.ui.menu.spatial.setup = function() {
           tooltip: 'Zoom the map to the feature(s)',
           icons: ['<i class="fa fa-fw fa-crop"></i>']
         }, {
-          label: 'Modify Area...',
+          label: 'Modify Geometry...',
           eventType: os.action.EventType.MODIFY_AREA,
           tooltip: 'Modify the area',
           icons: ['<i class="fa fa-fw fa-edit"></i>'],
-          beforeRender: os.ui.menu.spatial.visibleIfCanModify
-        }, {
-          label: 'Modify Freeform...',
-          eventType: os.action.EventType.MODIFY_GEOMETRY,
-          tooltip: 'Modify the geometry with a click-and-drag interaction',
-          icons: ['<i class="fa fa-fw fa-hand-pointer-o"></i>'],
-          handler: os.ui.menu.spatial.onMenuEvent,
           beforeRender: os.ui.menu.spatial.visibleIfCanModifyGeometry
         }]
       }, {
@@ -541,29 +534,6 @@ os.ui.menu.spatial.removeItems = function(evt) {
 
 
 /**
- * Shows a menu item if the context can be modified.
- *
- * @param {Object|undefined} context The menu context.
- * @this {os.ui.menu.MenuItem}
- */
-os.ui.menu.spatial.visibleIfCanModify = function(context) {
-  if (!os.ui.areaManager || !os.ui.menu.spatial.hasSingle(context) || !os.ui.menu.spatial.isPolygonal(context)) {
-    this.visible = false;
-    return;
-  }
-
-  var target = 2;
-
-  var features = os.ui.menu.spatial.getFeaturesFromContext(context);
-  if (features.length && !os.ui.areaManager.get(features[0])) {
-    target = 1;
-  }
-
-  this.visible = os.ui.areaManager.getAll().length >= target;
-};
-
-
-/**
  * Shows a menu item if the context is in the area manager.
  *
  * @param {Object|undefined} context The menu context.
@@ -594,6 +564,7 @@ os.ui.menu.spatial.notVisibleIfInAreaManager = function(context) {
 os.ui.menu.spatial.visibleIfCanModifyGeometry = function(context) {
   let supportsModify = false;
   const features = os.ui.menu.spatial.getFeaturesFromContext(context);
+  const am = os.query.AreaManager.getInstance();
 
   if (features.length == 1) {
     const feature = features[0];
@@ -601,13 +572,25 @@ os.ui.menu.spatial.visibleIfCanModifyGeometry = function(context) {
       const source = os.feature.getSource(feature);
       const geometry = /** @type {!ol.geom.Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD) ||
           feature.getGeometry());
+
       if (geometry && os.implements(source, os.source.IModifiableSource.ID)) {
         supportsModify = /** @type {os.source.IModifiableSource} */ (source).supportsModify();
+      } else if (!os.ui.menu.spatial.hasSingle(context) || !os.ui.menu.spatial.isPolygonal(context)) {
+        supportsModify = false;
+      } else {
+        const inAreaManager = am.contains(features[0]);
+        let target = 2;
+
+        if (features.length && !inAreaManager) {
+          target = 1;
+        }
+
+        supportsModify = am.getAll().length >= target || inAreaManager;
       }
     }
   }
 
-  this.visible = supportsModify || os.ui.menu.spatial.inAreaManager(context);
+  this.visible = supportsModify;
 };
 
 
@@ -734,9 +717,14 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
               'ui': 'os-modifyarea'
             };
 
-            if (am.get(feature)) {
+            var source = os.feature.getSource(feature);
+
+            if (source) {
+              // the feature is in a source, so treat it as the feature to modify
+              conf['feature'] = feature;
+            } else if (am.get(feature)) {
               // the feature is in area manager, so we will treat it as the area to modify
-              conf['area'] = feature;
+              conf['feature'] = feature;
             } else {
               // the feature was just drawn, so we will treat it as the targetArea
               conf['targetArea'] = feature;
