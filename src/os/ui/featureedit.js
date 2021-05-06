@@ -689,6 +689,8 @@ os.ui.FeatureEditCtrl.prototype.disposeInternal = function() {
     this.previewFeature = null;
   }
 
+  goog.dispose(this.interaction);
+
   this.scope = null;
   this.element = null;
 };
@@ -1671,6 +1673,63 @@ os.ui.FeatureEditCtrl.prototype.onAxisChange = function() {
   }
 
   this.updatePreview();
+};
+
+
+/**
+ * Enables the modify geometry interaction.
+ *
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.modifyGeometry = function() {
+  if (this.interaction) {
+    os.MapContainer.getInstance().getMap().removeInteraction(this.interaction);
+    this.interaction.setActive(false);
+    goog.dispose(this.interaction);
+  }
+
+  if (this.previewFeature) {
+    const mc = os.MapContainer.getInstance();
+    this.interaction = new os.interaction.Modify(this.previewFeature);
+    this.interaction.setOverlay(/** @type {ol.layer.Vector} */ (mc.getDrawingLayer()));
+
+    mc.getMap().addInteraction(this.interaction);
+    this.interaction.setActive(true);
+    this.interaction.showControls();
+
+    ol.events.listen(this.interaction, os.interaction.ModifyEventType.COMPLETE, this.onInteractionComplete, this);
+    ol.events.listen(this.interaction, os.interaction.ModifyEventType.CANCEL, this.onInteractionCancel, this);
+  }
+};
+
+
+/**
+ * Callback handler for successfully completing a modify of a geometry.
+ * @param {os.events.PayloadEvent} event
+ */
+os.ui.FeatureEditCtrl.prototype.onInteractionComplete = function(event) {
+  const clone = /** @type {!ol.Feature} */ (event.getPayload());
+  this.previewFeature.setGeometry(clone.getGeometry());
+  this.originalGeometry = clone.getGeometry() || null;
+
+  this.updatePreview();
+  this.interaction.removeControls();
+
+  // remove the clone and the interaction from the map
+  os.MapContainer.getInstance().getMap().removeInteraction(this.interaction);
+};
+
+
+/**
+ * Callback handler for canceling a modify.
+ */
+os.ui.FeatureEditCtrl.prototype.onInteractionCancel = function() {
+  if (this.interaction) {
+    os.MapContainer.getInstance().getMap().removeInteraction(this.interaction);
+    this.interaction.removeControls();
+    this.interaction.setActive(false);
+    goog.dispose(this.interaction);
+  }
 };
 
 

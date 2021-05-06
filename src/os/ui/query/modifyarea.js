@@ -164,7 +164,7 @@ os.ui.query.ModifyAreaCtrl = function($scope, $element) {
   // configure the form
   if ($scope['feature']) {
     feature = /** @type {!ol.Feature} */ ($scope['feature']);
-    showTabs = am.contains(feature);
+    showTabs = am.contains(feature) && am.getAll().length >= 2;
     this.interaction = new os.interaction.Modify(feature);
     initialTab = os.ui.query.ModifyType.FREEFORM;
   } else if ($scope['targetArea']) {

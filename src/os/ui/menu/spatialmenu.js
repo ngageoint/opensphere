@@ -733,58 +733,6 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
 
             os.ui.query.launchModifyArea(conf);
             break;
-          case os.action.EventType.MODIFY_GEOMETRY:
-            const mc = os.MapContainer.getInstance();
-
-            const interaction = new os.interaction.Modify(feature);
-            interaction.setOverlay(/** @type {ol.layer.Vector} */ (mc.getDrawingLayer()));
-
-            mc.getMap().addInteraction(interaction);
-            interaction.setActive(true);
-
-            /**
-             * Callback handler for successfully completing a modify of a geometry.
-             * @param {os.events.PayloadEvent} event
-             */
-            const completeListener = (event) => {
-              const clone = /** @type {!ol.Feature} */ (event.getPayload());
-
-              const source = os.feature.getSource(feature);
-              let modifyFunction;
-              if (os.implements(source, os.source.IModifiableSource.ID)) {
-                modifyFunction = /** @type {os.source.IModifiableSource} */ (source).getModifyFunction();
-              }
-
-              if (modifyFunction) {
-                // call the modify function to finalize the update
-                modifyFunction(feature, clone);
-              } else {
-                const geometry = clone.getGeometry();
-                if (feature && geometry) {
-                  // default behavior is to assume that we're modifying an area, so update it in AreaManager
-                  const modifyCmd = new os.ui.query.cmd.AreaModify(feature, geometry);
-                  os.command.CommandProcessor.getInstance().addCommand(modifyCmd);
-                }
-              }
-
-              // remove the clone and the interaction from the map
-              os.MapContainer.getInstance().getMap().removeInteraction(interaction);
-              interaction.dispose();
-            };
-
-            /**
-             * Callback handler for canceling a modify.
-             * @param {os.events.PayloadEvent} event
-             */
-            const cancelListener = (event) => {
-              os.MapContainer.getInstance().getMap().removeInteraction(interaction);
-              interaction.dispose();
-            };
-
-            ol.events.listen(interaction, os.interaction.ModifyEventType.COMPLETE, completeListener);
-            ol.events.listen(interaction, os.interaction.ModifyEventType.CANCEL, cancelListener);
-
-            break;
           case os.action.EventType.MERGE_AREAS:
           case os.action.EventType.EXPORT:
           case os.action.EventType.FEATURE_INFO:
