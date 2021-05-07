@@ -122,6 +122,15 @@ const addNewLayer = function(opt_restoreFromIdOrConfig) {
     }
   }
 
+  // we don't want the node checkbox visible -- that just deletes the merged/copied/joined features permanently
+  let opts = newLayer.getLayerOptions();
+  if (opts) {
+    opts['hideDisable'] = true;
+  } else {
+    opts = {'hideDisable': true};
+  }
+  newLayer.setLayerOptions(opts);
+
   return newLayer;
 };
 
