@@ -2,8 +2,8 @@ goog.declareModuleId('plugin.cesium.primitive');
 
 const Delay = goog.require('goog.async.Delay');
 const {clamp} = goog.require('goog.math');
-const {GeometryInstanceId} = goog.require('plugin.cesium');
 const {unsafeClone} = goog.require('os.object');
+const {GeometryInstanceId} = goog.require('plugin.cesium');
 const {getHeightReference, isPrimitiveClassTypeChanging} = goog.require('plugin.cesium.sync.HeightReference');
 const styleUtils = goog.require('plugin.cesium.sync.style');
 

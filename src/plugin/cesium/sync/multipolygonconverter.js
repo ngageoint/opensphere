@@ -1,7 +1,7 @@
 goog.module('plugin.cesium.sync.MultiPolygonConverter');
 
-const {createAndAddPolygon} = goog.require('plugin.cesium.sync.polygon');
 const PolygonConverter = goog.require('plugin.cesium.sync.PolygonConverter');
+const {createAndAddPolygon} = goog.require('plugin.cesium.sync.polygon');
 
 const Feature = goog.requireType('ol.Feature');
 const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');

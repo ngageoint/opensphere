@@ -1,15 +1,14 @@
 goog.module('plugin.cesium.sync.HeightReference');
 
-
-const {AltitudeMode} = goog.require('os.webgl');
 const RecordField = goog.require('os.data.RecordField');
 const implementz = goog.require('os.implements');
 const ISource = goog.require('os.source.ISource');
+const {AltitudeMode} = goog.require('os.webgl');
 
-const VectorSource = goog.requireType('os.source.Vector');
-const OLVectorLayer = goog.requireType('ol.layer.Vector');
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
+const OLVectorLayer = goog.requireType('ol.layer.Vector');
+const VectorSource = goog.requireType('os.source.Vector');
 
 
 /**

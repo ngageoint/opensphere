@@ -3,9 +3,9 @@ goog.module('plugin.cesium.sync.DynamicPolygonConverter');
 const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
 const {createOrUpdateSegment} = goog.require('plugin.cesium.sync.DynamicLineString');
 
-const Polygon = goog.requireType('ol.geom.Polygon');
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
+const Polygon = goog.requireType('ol.geom.Polygon');
 const Style = goog.requireType('ol.style.Style');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
 

@@ -1,10 +1,10 @@
 goog.module('plugin.cesium.TileGridTilingScheme');
 
+const asserts = goog.require('goog.asserts');
 const ol = goog.require('ol');
+const olProj = goog.require('ol.proj');
 const {toSize} = goog.require('ol.size');
 const geo = goog.require('os.geo');
-const asserts = goog.require('goog.asserts');
-const olProj = goog.require('ol.proj');
 const map = goog.require('os.map');
 const osProj = goog.require('os.proj');
 

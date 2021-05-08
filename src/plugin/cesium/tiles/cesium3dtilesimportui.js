@@ -1,9 +1,9 @@
 goog.module('plugin.cesium.tiles.TilesetImportUI');
 
-const {directiveTag} = goog.require('plugin.cesium.tiles.TilesetImport');
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
 const osWindow = goog.require('os.ui.window');
 const {TYPE} = goog.require('plugin.cesium.tiles');
+const {directiveTag} = goog.require('plugin.cesium.tiles.TilesetImport');
 
 
 /**

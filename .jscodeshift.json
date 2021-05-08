@@ -28,6 +28,7 @@
   "moduleBlacklist": [
     "goog",
     "goog.declareModuleId",
+    "goog.define",
     "goog.module",
     "goog.partial",
     "goog.provide",

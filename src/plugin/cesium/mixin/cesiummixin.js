@@ -9,10 +9,10 @@ import {load as loadRenderLoopMixin} from './renderloopmixin';
 
 const dispatcher = goog.require('os.Dispatcher');
 const MapEvent = goog.require('os.MapEvent');
-const {prune} = goog.require('os.object');
 const {getCrossOrigin} = goog.require('os.net');
 const CrossOrigin = goog.require('os.net.CrossOrigin');
 const Request = goog.require('os.net.Request');
+const {prune} = goog.require('os.object');
 
 
 /**
