@@ -133,9 +133,14 @@ class ArcFeatureType {
   }
 
   /**
-   * @inheritDoc
+   * Persist the feature type.
+   * @param {Object=} opt_to The persist object.
+   * @return {!Object} The persist object.
+   * @override
    */
-  persist(opt_to) {}
+  persist(opt_to) {
+    return opt_to || {};
+  }
 
   /**
    * @inheritDoc
