@@ -50,8 +50,8 @@ os.file.FileManager.prototype.getContentType = function(file, callback) {
 
     if (!type) {
       goog.log.error(os.file.FileManager.LOGGER_,
-          'The content or original File instance must be present on the os.file.File for content type '
-          + 'detection to work');
+          'The content or original File instance must be present on the os.file.File for content type ' +
+          'detection to work');
     }
 
     callback(type);

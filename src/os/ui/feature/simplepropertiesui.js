@@ -112,9 +112,9 @@ const getProperties_ = (() => {
             field = best_[key];
           } else {
             const regexes = (options) ? options['regexes'] : null;
-            const featureFields = (source)
-              ? source.getColumns().map((c) => c['field']) // for source, reuse the column definition
-              : Object.keys(feature.getProperties()); // for non-source, map the individual feature
+            const featureFields = (source) ?
+              source.getColumns().map((c) => c['field']) : // for source, reuse the column definition
+              Object.keys(feature.getProperties()); // for non-source, map the individual feature
             field = best(key, regexes, featureFields);
           }
 
@@ -202,9 +202,9 @@ class Controller {
    */
   updateProperties_() {
     var feature = /** @type {ol.Feature} */ (
-      (this.scope['items'] && this.scope['items'].length)
-        ? this.scope['items'][0]
-        : null);
+      (this.scope['items'] && this.scope['items'].length) ?
+        this.scope['items'][0] :
+        null);
     if (feature) {
       this['properties'] = getProperties_(feature);
     }

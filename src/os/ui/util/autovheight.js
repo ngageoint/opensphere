@@ -88,8 +88,8 @@ os.ui.util.AutoVHeightCtrl = function($scope, $element) {
    * @type {string}
    * @private
    */
-  this.heightProperty_ = (this.scope_['useMaxHeight'] != null && this.scope_['useMaxHeight'])
-    ? 'max-height' : 'height';
+  this.heightProperty_ = (this.scope_['useMaxHeight'] != null && this.scope_['useMaxHeight']) ?
+    'max-height' : 'height';
 
   /**
    * @type {number}

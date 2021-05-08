@@ -218,9 +218,9 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.windowMatches = function(event) {
   var filename = (this.curImporter_.file) ? this.curImporter_.file.getFileName() : '';
   var config = (event && event.targetScope) ? event.targetScope.config : null;
 
-  return (config
-    && config.file
-    && config.file.getFileName() == filename);
+  return (config &&
+    config.file &&
+    config.file.getFileName() == filename);
 };
 
 
@@ -334,10 +334,10 @@ plugin.file.zip.ui.ZIPImportCtrl.prototype.validate_ = function() {
  * @return {number}
  */
 plugin.file.zip.ui.ZIPImportCtrl.prototype.count = function() {
-  return (this['files'])
-    ? this['files'].reduce(
+  return (this['files']) ?
+    this['files'].reduce(
         (count, file) => file.enabled ? count + 1 : count,
         0 // this optional reduce() param initializes the accumulator
-    )
-    : 0;
+    ) :
+    0;
 };

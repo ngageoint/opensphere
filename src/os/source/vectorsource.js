@@ -1207,8 +1207,9 @@ os.source.Vector.prototype.testShapeFields_ = function(value) {
 
   if (this.columns.length > 0) {
     if (os.style.ELLIPSE_REGEXP.test(value)) {
-      if ((!this.hasColumn(os.fields.DEFAULT_SEMI_MAJ_COL_NAME) || !this.hasColumn(os.fields.DEFAULT_SEMI_MIN_COL_NAME))
-          && !this.hasColumn(os.fields.DEFAULT_RADIUS_COL_NAME)) {
+      if ((!this.hasColumn(os.fields.DEFAULT_SEMI_MAJ_COL_NAME) ||
+          !this.hasColumn(os.fields.DEFAULT_SEMI_MIN_COL_NAME)) &&
+          !this.hasColumn(os.fields.DEFAULT_RADIUS_COL_NAME)) {
         var msg = 'The ' + value + ' style assumes that the SEMI_MAJOR & SEMI_MINOR fields or RADIUS/CEP exist. ' +
             'If not, a point will be shown instead.';
         am.sendAlert(msg, os.alert.AlertEventSeverity.WARNING, this.log, 1);

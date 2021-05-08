@@ -167,8 +167,8 @@ os.data.AreaNode.prototype.formatIcons = function() {
     if (os.state.isStateFile(this.getId())) {
       statecopy = 'fa fa-bookmark ';
     }
-    return ' <i class="fa ' + icon + '" title="' + tooltip + '"></i> <i class=" '
-      + statecopy + badgecolor + '" title="This is from a state file"></i>';
+    return ' <i class="fa ' + icon + '" title="' + tooltip + '"></i> <i class=" ' +
+      statecopy + badgecolor + '" title="This is from a state file"></i>';
   }
 
   return os.data.AreaNode.base(this, 'formatIcons');

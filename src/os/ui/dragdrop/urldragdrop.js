@@ -157,8 +157,8 @@ os.ui.UrlDragDrop.prototype.handleDrag_ = function(event) {
         goog.dom.classlist.add(/** @type {Element} */ (browserEvent.currentTarget),
             os.ui.DragDropStyle.DRAG_DROP_CLASS);
         os.dispatcher.dispatchEvent(new goog.events.Event(os.ui.UrlDragDrop.CLEAR, browserEvent.currentTarget));
-      } else if (browserEvent.relatedTarget !== undefined
-          && $(browserEvent.currentTarget).find(/** @type {Element} */ (browserEvent.relatedTarget)).length == 0) {
+      } else if (browserEvent.relatedTarget !== undefined &&
+          $(browserEvent.currentTarget).find(/** @type {Element} */ (browserEvent.relatedTarget)).length == 0) {
         // check to see if the related target is inside the current target, if not then remove the overlay styling
         goog.dom.classlist.remove(/** @type {Element} */ (browserEvent.currentTarget),
             os.ui.DragDropStyle.DRAG_DROP_CLASS);
