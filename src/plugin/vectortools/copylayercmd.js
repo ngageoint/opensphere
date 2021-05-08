@@ -2,12 +2,14 @@ goog.module('plugin.vectortools.CopyLayer');
 goog.module.declareLegacyNamespace();
 
 const MapContainer = goog.require('os.MapContainer');
+const AbstractSource = goog.require('os.command.AbstractSource');
+const State = goog.require('os.command.State');
 const VectorSource = goog.require('os.source.Vector');
 const vectortools = goog.require('plugin.vectortools');
 
-const AbstractSource = goog.require('os.command.AbstractSource');
-const State = goog.require('os.command.State');
 const ICommand = goog.requireType('os.command.ICommand');
+const VectorSource1 = goog.requireType('os.source.Vector');
+const Options = goog.requireType('plugin.vectortools.Options');
 
 
 /**
@@ -19,7 +21,7 @@ class CopyLayer extends AbstractSource {
   /**
    * Constructor.
    * @param {!string} sourceId The data source ID to copy
-   * @param {plugin.vectortools.Options=} opt_options The feature options
+   * @param {Options=} opt_options The feature options
    */
   constructor(sourceId, opt_options) {
     super(sourceId);
@@ -37,13 +39,13 @@ class CopyLayer extends AbstractSource {
 
       var s = this.getSource();
       if (s instanceof VectorSource) {
-        var source = /** @type {os.source.Vector} */ (s);
+        var source = /** @type {VectorSource1} */ (s);
 
         // add the new layer
         var newLayer = vectortools.addNewLayer(source.getId());
 
         // keep track of its ID, use it for revert
-        var newSource = /** @type {os.source.Vector} */ (newLayer.getSource());
+        var newSource = /** @type {VectorSource1} */ (newLayer.getSource());
         this.newLayerId_ = newSource.getId();
 
         // get a cloning function and use it to do the feature copy

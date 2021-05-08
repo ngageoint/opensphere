@@ -6,10 +6,14 @@ const MapContainer = goog.require('os.MapContainer');
 const osArray = goog.require('os.array');
 const AbstractSource = goog.require('os.command.AbstractSource');
 const State = goog.require('os.command.State');
-const ICommand = goog.requireType('os.command.ICommand');
 const RecordField = goog.require('os.data.RecordField');
 const layer = goog.require('os.layer');
 const vectortools = goog.require('plugin.vectortools');
+
+const Feature = goog.requireType('ol.Feature');
+const ICommand = goog.requireType('os.command.ICommand');
+const VectorSource = goog.requireType('os.source.Vector');
+const Options = goog.requireType('plugin.vectortools.Options');
 
 
 /**
@@ -24,7 +28,7 @@ class JoinLayer extends AbstractSource {
    * @param {!Array<string>} indexFields The field to use as the join index on each source
    * @param {string} indexerType The type of indexer this command uses
    * @param {string=} opt_name Optional name to give the merged layer
-   * @param {plugin.vectortools.Options=} opt_options The feature options
+   * @param {Options=} opt_options The feature options
    */
   constructor(sourceIds, indexFields, indexerType, opt_name, opt_options) {
     asserts.assert(sourceIds && indexFields && sourceIds.length === indexFields.length,
@@ -90,7 +94,7 @@ class JoinLayer extends AbstractSource {
       var sources = this.sourceIds_.map(this.mapSources_, this);
       if (sources) {
         var newLayer = vectortools.addNewLayer(sources[0].getId());
-        var newSource = /** @type {os.source.Vector} */ (newLayer.getSource());
+        var newSource = /** @type {VectorSource} */ (newLayer.getSource());
 
         this.newLayerId_ = newSource.getId();
         newLayer.setTitle(this.newLayerName_);
@@ -104,7 +108,7 @@ class JoinLayer extends AbstractSource {
 
         var sets = sources.map(
             /**
-             * @param {os.source.Vector} source The source
+             * @param {VectorSource} source The source
              * @param {number} i The source index
              * @return {osArray.JoinSet}
              */
@@ -214,8 +218,8 @@ class JoinLayer extends AbstractSource {
      * @return {Object} resulting object
      */
     var copy = function(from, to) {
-      var featureFrom = /** @type {ol.Feature} */ (from);
-      var featureTo = /** @type {ol.Feature} */ (to);
+      var featureFrom = /** @type {Feature} */ (from);
+      var featureTo = /** @type {Feature} */ (to);
 
       // non-destructive copy
       var fromValues = featureFrom.values_;
@@ -252,12 +256,12 @@ class JoinLayer extends AbstractSource {
 
   /**
    * @param {string} id The source id
-   * @return {os.source.Vector}
+   * @return {VectorSource}
    * @private
    */
   mapSources_(id) {
     this.sourceId = id;
-    return /** @type {os.source.Vector} */ (this.getSource());
+    return /** @type {VectorSource} */ (this.getSource());
   }
 
   /**
@@ -281,7 +285,7 @@ class JoinLayer extends AbstractSource {
    * @private
    */
   static exactAccessor_(obj, field) {
-    return /** @type {string|number} */ (/** @type {ol.Feature} */ (obj).get(field));
+    return /** @type {string|number} */ (/** @type {Feature} */ (obj).get(field));
   }
 
   /**
@@ -291,7 +295,7 @@ class JoinLayer extends AbstractSource {
    * @private
    */
   static caseInsensitiveAccessor_(obj, field) {
-    var val = /** @type {string|number} */ (/** @type {ol.Feature} */ (obj).get(field));
+    var val = /** @type {string|number} */ (/** @type {Feature} */ (obj).get(field));
     return val ? val.toString().toLowerCase() : val;
   }
 }
