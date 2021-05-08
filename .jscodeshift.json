@@ -51,6 +51,7 @@
     "ol.layer.Vector": "OLVectorLayer",
     "ol.obj": "olObj",
     "ol.proj": "olProj",
+    "ol.render.Feature": "RenderFeature",
     "ol.source.Vector": "OLVectorSource",
     "ol.string": "olString",
 
