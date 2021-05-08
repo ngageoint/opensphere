@@ -12,6 +12,8 @@ const ArcFilterModifier = goog.require('plugin.arc.query.ArcFilterModifier');
 const ArcSpatialFormatter = goog.require('plugin.arc.query.ArcSpatialFormatter');
 const ArcSpatialModifier = goog.require('plugin.arc.query.ArcSpatialModifier');
 
+const ActiveEntries = goog.requireType('os.ui.query.ActiveEntries');
+
 
 /**
  * Query handler for Arc queries. This handler differs from the os.ui/OGC equivalents in that it does
@@ -58,7 +60,7 @@ class ArcQueryHandler extends QueryHandler {
 
     // ignore disabled areas
     entries = entries.filter(this.shownAreas, this);
-    return /** @type {os.ui.query.ActiveEntries} */ ({entries: entries, includes: [], excludes: []});
+    return /** @type {ActiveEntries} */ ({entries: entries, includes: [], excludes: []});
   }
 
   /**

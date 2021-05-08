@@ -7,6 +7,9 @@ const geo = goog.require('os.geo');
 const interpolate = goog.require('os.interpolate');
 const osProj = goog.require('os.proj');
 
+const Circle = goog.requireType('ol.geom.Circle');
+const LineString = goog.requireType('ol.geom.LineString');
+const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
 const ISpatialFormatter = goog.requireType('os.filter.ISpatialFormatter');
 
 
@@ -39,7 +42,7 @@ class ArcSpatialFormatter {
 
       switch (type) {
         case GeometryType.CIRCLE:
-          geometry = /** @type {ol.geom.Circle} */ (geometry);
+          geometry = /** @type {Circle} */ (geometry);
           var polyCircle = new Polygon([geo.interpolateCircle(geometry.getCenter(), geometry.getRadius())]);
           coords = polyCircle.getCoordinates();
           break;
@@ -49,11 +52,11 @@ class ArcSpatialFormatter {
           coords = geometry.getCoordinates();
           break;
         case GeometryType.LINE_STRING:
-          geometry = /** @type {ol.geom.LineString} */ (geometry);
+          geometry = /** @type {LineString} */ (geometry);
           coords = geometry.getCoordinates();
           break;
         case GeometryType.MULTI_POLYGON:
-          geometry = /** @type {ol.geom.MultiPolygon} */ (geometry);
+          geometry = /** @type {MultiPolygon} */ (geometry);
           coords = [];
 
           geometry.getCoordinates().forEach(function(polyCoords) {

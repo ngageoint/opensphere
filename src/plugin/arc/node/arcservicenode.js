@@ -17,6 +17,7 @@ const arc = goog.require('plugin.arc');
 const ArcImageLayerConfig = goog.require('plugin.arc.layer.ArcImageLayerConfig');
 const ArcLayerDescriptor = goog.require('plugin.arc.layer.ArcLayerDescriptor');
 
+const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
 const ArcServer = goog.requireType('plugin.arc.ArcServer');
 
@@ -107,7 +108,7 @@ class ArcServiceNode extends LoadingNode {
   /**
    * Success callback for loading the Arc service data.
    *
-   * @param {goog.events.Event} event
+   * @param {GoogEvent} event
    * @private
    */
   onLoad_(event) {
@@ -220,7 +221,7 @@ class ArcServiceNode extends LoadingNode {
   /**
    * Handler for Arc load errors.
    *
-   * @param {goog.events.Event} event
+   * @param {GoogEvent} event
    * @private
    */
   onError_(event) {

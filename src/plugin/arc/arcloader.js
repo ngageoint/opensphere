@@ -12,7 +12,10 @@ const ArcServer = goog.require('plugin.arc.ArcServer');
 const ArcFolderNode = goog.require('plugin.arc.node.ArcFolderNode');
 const ArcServiceNode = goog.require('plugin.arc.node.ArcServiceNode');
 
+const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
+const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
 const IArcLoader = goog.requireType('plugin.arc.IArcLoader');
 
 
@@ -25,7 +28,7 @@ const IArcLoader = goog.requireType('plugin.arc.IArcLoader');
 class ArcLoader extends EventTarget {
   /**
    * Constructor.
-   * @param {os.ui.slick.SlickTreeNode} node
+   * @param {SlickTreeNode} node
    * @param {string} url
    * @param {ArcServer} server
    */
@@ -33,7 +36,7 @@ class ArcLoader extends EventTarget {
     super();
 
     /**
-     * @type {os.ui.slick.SlickTreeNode}
+     * @type {SlickTreeNode}
      * @private
      */
     this.node_ = node;
@@ -69,13 +72,13 @@ class ArcLoader extends EventTarget {
     this.log = logger;
 
     /**
-     * @type {!Array<!os.ui.slick.SlickTreeNode>}
+     * @type {!Array<!SlickTreeNode>}
      * @private
      */
     this.toLoad_ = [];
 
     /**
-     * @type {!Array<!os.ui.slick.SlickTreeNode>}
+     * @type {!Array<!SlickTreeNode>}
      * @private
      */
     this.futureChildren_ = [];
@@ -169,7 +172,7 @@ class ArcLoader extends EventTarget {
   /**
    * Handler for successful load of the Arc node capabilities.
    *
-   * @param {goog.events.Event} event
+   * @param {GoogEvent} event
    * @protected
    */
   onLoad(event) {
@@ -277,11 +280,11 @@ class ArcLoader extends EventTarget {
   }
 
   /**
-   * @param {goog.events.Event} evt The event
+   * @param {GoogEvent} evt The event
    * @protected
    */
   onChildLoad(evt) {
-    var node = /** @type {os.ui.slick.SlickTreeNode} */ (evt.target);
+    var node = /** @type {SlickTreeNode} */ (evt.target);
     node.unlisten(EventType.SUCCESS, this.onChildLoad, false, this);
     node.unlisten(EventType.ERROR, this.onChildLoad, false, this);
 
@@ -301,7 +304,7 @@ class ArcLoader extends EventTarget {
   }
 
   /**
-   * @param {os.ui.slick.SlickTreeNode} node
+   * @param {SlickTreeNode} node
    * @return {boolean}
    * @protected
    */
@@ -312,7 +315,7 @@ class ArcLoader extends EventTarget {
   /**
    * Listener for Arc load request errors.
    *
-   * @param {goog.events.Event} event
+   * @param {GoogEvent} event
    * @protected
    */
   onError(event) {
@@ -353,9 +356,9 @@ class ArcLoader extends EventTarget {
 
   /**
    * Removes folders that have only 1 child node and promotes the child up the tree by one.
-   * @param {os.structs.ITreeNode} child The child of whose grandchildren to examine.
+   * @param {ITreeNode} child The child of whose grandchildren to examine.
    * @param {number} i The index.
-   * @param {Array<os.structs.ITreeNode>} arr The array.
+   * @param {Array<ITreeNode>} arr The array.
    */
   static collapseFolders(child, i, arr) {
     const grandChildren = child.getChildren();

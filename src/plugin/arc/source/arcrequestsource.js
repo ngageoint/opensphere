@@ -7,6 +7,7 @@ const Request = goog.require('os.net.Request');
 const registerClass = goog.require('os.registerClass');
 const RequestSource = goog.require('os.source.Request');
 
+const GoogEvent = goog.requireType('goog.events.Event');
 const Logger = goog.requireType('goog.log.Logger');
 
 
@@ -124,7 +125,7 @@ class ArcRequestSource extends RequestSource {
   /**
    * Success handler for ID loads.
    *
-   * @param {goog.events.Event} event
+   * @param {GoogEvent} event
    * @private
    */
   onIdLoad_(event) {
@@ -145,7 +146,7 @@ class ArcRequestSource extends RequestSource {
   /**
    * Error handler for ID loads.
    *
-   * @param {goog.events.Event} event
+   * @param {GoogEvent} event
    * @private
    */
   onIdError_(event) {

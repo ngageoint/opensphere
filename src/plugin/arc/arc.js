@@ -7,6 +7,10 @@ const CombinatorCtrl = goog.require('os.ui.query.CombinatorCtrl');
 const ArcFeatureType = goog.require('plugin.arc.ArcFeatureType');
 const ESRIType = goog.require('plugin.arc.ESRIType');
 
+const VectorLayer = goog.requireType('os.layer.Vector');
+const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
+const IFeatureType = goog.requireType('os.ogc.IFeatureType');
+const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
 const ArcServer = goog.requireType('plugin.arc.ArcServer');
 const IArcLoader = goog.requireType('plugin.arc.IArcLoader');
 
@@ -52,7 +56,7 @@ const getColumnType = function(esriType) {
 /**
  * Launch the filter manager
  *
- * @param {!os.layer.Vector} layer The layer
+ * @param {!VectorLayer} layer The layer
  */
 const launchFilterManager = function(layer) {
   CombinatorCtrl.launchForLayer(layer.getId());
@@ -61,13 +65,13 @@ const launchFilterManager = function(layer) {
 /**
  * Get the filterable columns
  *
- * @param {!os.layer.Vector} layer The layer
- * @return {?Array<os.ogc.FeatureTypeColumn>} the columns
+ * @param {!VectorLayer} layer The layer
+ * @return {?Array<FeatureTypeColumn>} the columns
  */
 const getFilterColumns = function(layer) {
   var layerOptions = layer.getLayerOptions();
   if (layerOptions && layerOptions['featureType']) {
-    var featureType = /** @type {os.ogc.IFeatureType} */ (layerOptions['featureType']);
+    var featureType = /** @type {IFeatureType} */ (layerOptions['featureType']);
     if (featureType) {
       return featureType.getColumns();
     }
@@ -107,7 +111,7 @@ let loaderClass_ = null;
 /**
  * Instantiates and returns a new Arc loader. This
  *
- * @param {os.ui.slick.SlickTreeNode} node The root tree node.
+ * @param {SlickTreeNode} node The root tree node.
  * @param {string} url The Arc service URL for the node.
  * @param {ArcServer} server The Arc server instance.
  * @return {IArcLoader}
@@ -154,7 +158,7 @@ const createFeatureType = function(config) {
       var field = fields[i];
       var name = /** @type {string} */ (field['name']);
       var type = getColumnType(/** @type {string} */ (field['type']));
-      var c = /** @type {os.ogc.FeatureTypeColumn} */ ({
+      var c = /** @type {FeatureTypeColumn} */ ({
         'name': name,
         'type': type
       });

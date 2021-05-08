@@ -20,6 +20,7 @@ const ArcTemporalFormatter = goog.require('plugin.arc.query.ArcTemporalFormatter
 const ArcRequestSource = goog.require('plugin.arc.source.ArcRequestSource');
 
 const IMapping = goog.requireType('os.im.mapping.IMapping');
+const VectorLayer = goog.requireType('os.layer.Vector');
 const ArcFeatureType = goog.requireType('plugin.arc.ArcFeatureType');
 
 
@@ -101,7 +102,7 @@ class ArcFeatureLayerConfig extends AbstractDataSourceLayerConfig {
   /**
    * Load the Arc layer metadata to create a feature type.
    *
-   * @param {os.layer.Vector} layer The layer.
+   * @param {VectorLayer} layer The layer.
    * @param {Object} options The layer options.
    * @protected
    */

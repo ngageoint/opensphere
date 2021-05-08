@@ -6,17 +6,7 @@ goog.require('goog.async.Delay');
 goog.require('os.filter.FilterEntry');
 goog.require('os.filter.IFilterFormatter');
 goog.require('os.filter.ISpatialFormatter');
-
-
-/**
- * @typedef {{
- *   entries: !Array<!Object<string, string|boolean>>,
- *   includes: !Array<!Object<string, string|boolean>>,
- *   excludes: !Array<!Object<string, string|boolean>>
- * }}
- */
-os.ui.query.ActiveEntries;
-
+goog.require('os.ui.query.ActiveEntries');
 
 
 /**

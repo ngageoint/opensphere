@@ -23,6 +23,8 @@ const arc = goog.require('plugin.arc');
 const ArcFeatureLayerConfig = goog.require('plugin.arc.layer.ArcFeatureLayerConfig');
 const ArcTileLayerConfig = goog.require('plugin.arc.layer.ArcTileLayerConfig');
 
+const ArcFeatureType = goog.requireType('plugin.arc.ArcFeatureType');
+
 
 /**
  * Descriptor representing an Arc layer.
@@ -74,7 +76,7 @@ class ArcLayerDescriptor extends LayerSyncDescriptor {
     this.extent_ = null;
 
     /**
-     * @type {plugin.arc.ArcFeatureType}
+     * @type {ArcFeatureType}
      * @private
      */
     this.featureType_ = null;
