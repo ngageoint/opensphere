@@ -106,8 +106,7 @@ os.ui.ol.interaction.DrawPolygon.prototype.getGeometry = function() {
   geom.toLonLat();
 
   // normalize coordinates prior to validation, or polygons crossing the date line may be broken
-  var normalizationPoint = os.geo2.computeWindingOrder(geom.getCoordinates()[0]) ? 0 : undefined;
-  os.geo2.normalizeGeometryCoordinates(geom, normalizationPoint, os.proj.EPSG4326);
+  os.geo2.normalizeGeometryCoordinates(geom);
 
   // validate the geometry to ensure it's accepted in server queries
   geom = os.geo.jsts.validate(geom);
@@ -320,7 +319,7 @@ os.ui.ol.interaction.DrawPolygon.prototype.update2D = function() {
   }
 
   var geom = this.createGeometry();
-  os.geo2.normalizeGeometryCoordinates(geom, 0, os.proj.EPSG4326);
+  os.geo2.normalizeGeometryCoordinates(geom);
 
   this.line2D.setGeometry(geom);
   this.line2D.set(os.interpolate.ORIGINAL_GEOM_FIELD, undefined);
