@@ -690,14 +690,34 @@ os.geo.jsts.splitWithinWorldExtent = function(geometry, opt_proj) {
 
       if (difference.getCoordinates().length && intersection.getCoordinates().length) {
         // The difference is outside the projection's extent, so normalize it within the extent.
-        var olDifference = /** @type {ol.geom.Polygon} */ (olp.write(difference));
+        var olDifference = /** @type {ol.geom.Polygon|ol.geom.MultiPolygon} */ (olp.write(difference));
         os.geo2.normalizeGeometryCoordinates(olDifference, undefined, projection);
 
         // The intersection should already be within the projection's extent, and not require normalization.
-        var olIntersection = /** @type {ol.geom.Polygon} */ (olp.write(intersection));
+        var olIntersection = /** @type {ol.geom.Polygon|ol.geom.MultiPolygon} */ (olp.write(intersection));
 
-        var result = new ol.geom.MultiPolygon([]);
-        result.setPolygons([olDifference, olIntersection]);
+        var resultCoords = [];
+
+        // These can be a single Polygon or a MultiPolygon, so handle both cases.
+        var diffCoords = olDifference.getCoordinates();
+        if (diffCoords) {
+          if (olDifference instanceof ol.geom.MultiPolygon) {
+            resultCoords.push(...diffCoords);
+          } else {
+            resultCoords.push(diffCoords);
+          }
+        }
+
+        var intCoords = olIntersection.getCoordinates();
+        if (intCoords) {
+          if (olIntersection instanceof ol.geom.MultiPolygon) {
+            resultCoords.push(...intCoords);
+          } else {
+            resultCoords.push(intCoords);
+          }
+        }
+
+        var result = new ol.geom.MultiPolygon(resultCoords);
 
         // Preserve interpolation method from the original geometry.
         result.set(os.interpolate.METHOD_FIELD, geometry.get(os.interpolate.METHOD_FIELD));
