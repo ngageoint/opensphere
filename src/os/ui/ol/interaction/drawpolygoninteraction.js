@@ -103,16 +103,22 @@ os.ui.ol.interaction.DrawPolygon.prototype.getGeometry = function() {
   var geom = new ol.geom.Polygon([this.coords]);
   var method = os.interpolate.getMethod();
   geom.set(os.interpolate.METHOD_FIELD, method);
-  geom.toLonLat();
 
+  //
   // normalize coordinates prior to validation, or polygons crossing the date line may be broken
-  var normalizationPoint = os.geo2.computeWindingOrder(geom.getCoordinates()[0]) ? 0 : undefined;
-  os.geo2.normalizeGeometryCoordinates(geom, normalizationPoint, os.proj.EPSG4326);
+  //
+  // normalization from the first coordinate is typically preferred, but if the geometry covers more than half of the
+  // world extent, this will not work. in that situation, use the center of the geometry's extent.
+  //
+  var halfWorld = ol.extent.getWidth(os.map.PROJECTION.getExtent()) / 2;
+  var geomExtent = geom.getExtent();
+  var extentWidth = ol.extent.getWidth(geomExtent);
+  var normalizeTo = extentWidth > halfWorld ? ol.extent.getCenter(geomExtent)[0] : undefined;
+  os.geo2.normalizeGeometryCoordinates(geom, normalizeTo);
 
   // validate the geometry to ensure it's accepted in server queries
-  geom = os.geo.jsts.validate(geom);
+  geom = /** @type {ol.geom.Polygon} */ (os.geo.jsts.validate(geom));
 
-  geom.osTransform();
   return geom;
 };
 
@@ -320,7 +326,6 @@ os.ui.ol.interaction.DrawPolygon.prototype.update2D = function() {
   }
 
   var geom = this.createGeometry();
-  os.geo2.normalizeGeometryCoordinates(geom, 0, os.proj.EPSG4326);
 
   this.line2D.setGeometry(geom);
   this.line2D.set(os.interpolate.ORIGINAL_GEOM_FIELD, undefined);
