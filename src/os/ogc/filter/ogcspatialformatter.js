@@ -68,7 +68,10 @@ os.ogc.filter.OGCSpatialFormatter.prototype.format = function(feature) {
         } else {
           // Some OGC services (like GeoServer) do not support polygons that cross the antimeridian, so split the
           // geometry if it crosses. Ensure the geometry has been interpolated so it is split properly.
+          os.interpolate.beginTempInterpolation(os.proj.EPSG4326);
           os.interpolate.interpolateGeom(geometry);
+          os.interpolate.endTempInterpolation();
+
           geometry = os.geo.jsts.splitWithinWorldExtent(geometry, os.proj.EPSG4326);
 
           result = os.ogc.spatial.formatGMLIntersection(geometry, this.column_, name, description, id) || '';
