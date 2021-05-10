@@ -103,15 +103,13 @@ os.ui.ol.interaction.DrawPolygon.prototype.getGeometry = function() {
   var geom = new ol.geom.Polygon([this.coords]);
   var method = os.interpolate.getMethod();
   geom.set(os.interpolate.METHOD_FIELD, method);
-  geom.toLonLat();
 
   // normalize coordinates prior to validation, or polygons crossing the date line may be broken
   os.geo2.normalizeGeometryCoordinates(geom);
 
   // validate the geometry to ensure it's accepted in server queries
-  geom = os.geo.jsts.validate(geom);
+  geom = /** @type {ol.geom.Polygon} */ (os.geo.jsts.validate(geom));
 
-  geom.osTransform();
   return geom;
 };
 
