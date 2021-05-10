@@ -13,6 +13,7 @@ goog.require('os.ui.Module');
 goog.require('os.ui.help.Controls');
 goog.require('os.ui.query.cmd.AreaAdd');
 goog.require('os.ui.query.cmd.AreaModify');
+goog.require('os.ui.util.validationMessageDirective');
 
 
 /**
@@ -87,6 +88,18 @@ os.ui.query.ModifyAreaCtrl = function($scope, $element) {
    * @type {os.interaction.Modify}
    */
   this.interaction = null;
+
+  /**
+   * @type {ol.Feature|undefined}
+   * @protected
+   */
+  this.areaPreview = null;
+
+  /**
+   * @type {ol.Feature|undefined}
+   * @protected
+   */
+  this.targetPreview = null;
 
   /**
    * @type {!Object<string, string>}
@@ -216,6 +229,16 @@ os.ui.query.ModifyAreaCtrl.prototype.$onDestroy = function() {
     goog.dispose(this.interaction);
   }
 
+  if (this.areaPreview) {
+    os.MapContainer.getInstance().removeFeature(this.areaPreview);
+    this.areaPreview = null;
+  }
+
+  if (this.targetPreview) {
+    os.MapContainer.getInstance().removeFeature(this.targetPreview);
+    this.targetPreview = null;
+  }
+
   this.scope = null;
   this.element = null;
 };
@@ -243,7 +266,6 @@ os.ui.query.ModifyAreaCtrl.prototype.setTab = function(tab) {
     } else if (tab == os.ui.query.ModifyType.ADD_REMOVE && this.interaction) {
       mc.getMap().removeInteraction(this.interaction);
       this.interaction.setActive(false);
-      // goog.dispose(this.interaction);
     }
   }
 
@@ -347,6 +369,19 @@ os.ui.query.ModifyAreaCtrl.prototype.validate = function() {
  * @protected
  */
 os.ui.query.ModifyAreaCtrl.prototype.onAreaChange = function(opt_new, opt_old) {
+  if (this.areaPreview) {
+    os.MapContainer.getInstance().removeFeature(this.areaPreview);
+  }
+
+  this.areaPreview = null;
+
+  if (opt_new instanceof ol.Feature && opt_new.getGeometry()) {
+    // clone the feature because we don't want the style, nor do we want to remove the original from the map
+    this.areaPreview = os.ol.feature.clone(opt_new);
+    this.areaPreview.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
+    os.MapContainer.getInstance().addFeature(this.areaPreview);
+  }
+
   // area was provided, but it isn't in the area manager. assume it's a user-drawn area, or from a source.
   this.scope['fixArea'] = this.scope['feature'] && !os.ui.areaManager.contains(this.scope['feature']);
 
@@ -362,6 +397,19 @@ os.ui.query.ModifyAreaCtrl.prototype.onAreaChange = function(opt_new, opt_old) {
  * @protected
  */
 os.ui.query.ModifyAreaCtrl.prototype.onTargetAreaChange = function(opt_new, opt_old) {
+  if (this.targetPreview) {
+    os.MapContainer.getInstance().removeFeature(this.targetPreview);
+  }
+
+  this.targetPreview = null;
+
+  if (opt_new instanceof ol.Feature && opt_new.getGeometry()) {
+    // clone the feature because we don't want the style, nor do we want to remove the original from the map
+    this.targetPreview = os.ol.feature.clone(opt_new);
+    this.targetPreview.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
+    os.MapContainer.getInstance().addFeature(this.targetPreview);
+  }
+
   // target area was provided, but it isn't in the area manager. assume it's a user-drawn area, or from a source.
   this.scope['fixTargetArea'] = this.scope['targetArea'] && !os.ui.areaManager.contains(this.scope['targetArea']);
 
@@ -383,7 +431,15 @@ os.ui.query.ModifyAreaCtrl.prototype.updatePreview = function() {
  * @protected
  */
 os.ui.query.ModifyAreaCtrl.prototype.setPreviewFeature = function(feature) {
+  if (this.preview) {
+    os.MapContainer.getInstance().removeFeature(this.preview);
+  }
+
   this.preview = feature;
+
+  if (this.preview && this.preview.getGeometry()) {
+    os.MapContainer.getInstance().addFeature(this.preview, os.style.PREVIEW_CONFIG);
+  }
 };
 
 
@@ -532,8 +588,7 @@ os.ui.query.ModifyAreaCtrl.prototype.close_ = function() {
  * @typedef {{
  *    area: (ol.Feature|undefined),
  *    op: (string|undefined),
- *    targetArea: (ol.Feature|undefined),
- *    ui: (string|undefined)
+ *    targetArea: (ol.Feature|undefined)
  * }}
  */
 os.ui.query.ModifyAreaConfig;
@@ -588,8 +643,7 @@ os.ui.query.launchModifyArea = function(config) {
       'targetArea': config['targetArea'] || null
     };
 
-    var ui = config['ui'] || 'modifyarea';
-    var template = '<' + ui + ' feature="feature" target-area="targetArea" op="op"></' + ui + '>';
+    var template = '<modifyarea feature="feature" target-area="targetArea" op="op"></modifyarea>';
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 };

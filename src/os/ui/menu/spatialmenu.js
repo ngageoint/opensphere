@@ -15,7 +15,6 @@ goog.require('os.fn');
 goog.require('os.interaction.Modify');
 goog.require('os.query.BaseAreaManager');
 goog.require('os.query.ui.mergeAreasDirective');
-goog.require('os.query.ui.modifyAreaDirective');
 goog.require('os.source.IModifiableSource');
 goog.require('os.ui.ex.AreaExportCtrl');
 goog.require('os.ui.feature.featureInfoDirective');
@@ -26,6 +25,7 @@ goog.require('os.ui.query');
 goog.require('os.ui.query.cmd.AreaAdd');
 goog.require('os.ui.query.cmd.AreaModify');
 goog.require('os.ui.query.cmd.AreaRemove');
+goog.require('os.ui.query.modifyAreaDirective');
 
 
 /**
@@ -713,10 +713,7 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
             cmds.push(new os.ui.query.cmd.AreaRemove(feature));
             break;
           case os.action.EventType.MODIFY_AREA:
-            var conf = {
-              'ui': 'os-modifyarea'
-            };
-
+            var conf = {};
             var source = os.feature.getSource(feature);
 
             if (source) {
