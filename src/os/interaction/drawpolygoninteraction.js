@@ -10,6 +10,7 @@ goog.require('ol.geom.Polygon');
 goog.require('ol.layer.Vector');
 goog.require('ol.source.Vector');
 goog.require('os.I3DSupport');
+goog.require('os.MapContainer');
 goog.require('os.MapEvent');
 goog.require('os.fn');
 goog.require('os.geo');
@@ -72,6 +73,36 @@ os.interaction.DrawPolygon.prototype.cleanup = function() {
   }
 
   this.cleanupWebGL();
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.interaction.DrawPolygon.prototype.addCoord = function(coord, opt_mapBrowserEvent) {
+  //
+  // In 3D, coordinates will always fall within the world extent. When drawing across the antimeridian, we want to
+  // wrap coordinates across the AM so the direction is clear. For example, clicking +175 then -175 should convert the
+  // second coord to +185.
+  //
+  var mapContainer = os.MapContainer.getInstance();
+  if (mapContainer.is3DEnabled()) {
+    var lastCoord = this.coords[this.coords.length - 1];
+    if (coord && lastCoord) {
+      var worldWidth = ol.extent.getWidth(os.map.PROJECTION.getExtent());
+      var halfWorld = worldWidth / 2;
+      var xDiff = coord[0] - lastCoord[0];
+      if (xDiff > halfWorld) {
+        // crossed antimeridian from right to left
+        coord[0] -= worldWidth;
+      } else if (xDiff < -halfWorld) {
+        // crossed antimeridian from left to right
+        coord[0] += worldWidth;
+      }
+    }
+  }
+
+  os.interaction.DrawPolygon.base(this, 'addCoord', coord, opt_mapBrowserEvent);
 };
 
 

@@ -18,7 +18,8 @@ goog.inherits(plugin.ogc.query.OGCSpatialFormatter, os.ogc.filter.OGCSpatialForm
  * @inheritDoc
  */
 plugin.ogc.query.OGCSpatialFormatter.prototype.getGeometry = function(feature) {
-  var geom = /** @type {ol.geom.Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD)) || feature.getGeometry();
+  // Use the interpolated geometry, in case modifications need to be made (like splitting on the antimeridian).
+  var geom = feature.getGeometry();
 
   if (geom) {
     geom = geom.clone().toLonLat();

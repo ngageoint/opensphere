@@ -1,9 +1,11 @@
 goog.provide('os.ogc.filter.OGCSpatialFormatter');
+
 goog.require('ol.geom.GeometryType');
 goog.require('ol.geom.Polygon');
 goog.require('os.filter.ISpatialFormatter');
 goog.require('os.geo');
 goog.require('os.ogc.spatial');
+goog.require('os.proj');
 goog.require('os.xml');
 
 
@@ -62,6 +64,9 @@ os.ogc.filter.OGCSpatialFormatter.prototype.format = function(feature) {
         if (coords.length == 1 && os.geo.isRectangular(coords[0], geometry.getExtent())) {
           result = os.ogc.spatial.formatExtent(geometry.getExtent(), this.column_, name, description, id);
         } else {
+          // Some OGC services (like GeoServer) do not support polygons that cross the antimeridian, so split the
+          // geometry if it crosses.
+          geometry = os.geo.jsts.splitWithinWorldExtent(geometry, os.proj.EPSG4326);
           result = os.ogc.spatial.formatGMLIntersection(geometry, this.column_, name, description, id) || '';
         }
         break;

@@ -20,11 +20,13 @@ goog.require('ol.geom.MultiPoint');
 goog.require('ol.geom.MultiPolygon');
 goog.require('ol.geom.Point');
 goog.require('ol.geom.Polygon');
+goog.require('ol.proj');
 goog.require('ol.proj.Projection');
 goog.require('os.fn');
 goog.require('os.geo');
 goog.require('os.geo2');
 goog.require('os.geom.GeometryField');
+goog.require('os.interpolate');
 goog.require('os.map');
 goog.require('os.mixin.jsts');
 goog.require('os.proj');
@@ -662,6 +664,50 @@ os.geo.jsts.intersect = function(source, target, opt_replace) {
   }
 
   return feature;
+};
+
+
+/**
+ * Splits a geometry within a projection extent, creating a multi-geometry normalized within the extent.
+ * @param {ol.geom.Geometry} geometry The geometry.
+ * @param {ol.ProjectionLike=} opt_proj The geometry projection.
+ * @return {ol.geom.Geometry} The split geometry, or the original if it was already within the extent.
+ */
+os.geo.jsts.splitWithinWorldExtent = function(geometry, opt_proj) {
+  if (geometry) {
+    var olp = os.geo.jsts.OLParser.getInstance();
+    var jstsGeometry = olp.read(geometry);
+
+    var projection = ol.proj.get(opt_proj || os.map.PROJECTION);
+    var projExtent = projection.getExtent();
+    var extentPoly = ol.geom.Polygon.fromExtent(projExtent);
+    var jstsExtentPoly = olp.read(extentPoly);
+
+    if (!jstsExtentPoly.contains(jstsGeometry)) {
+      // Compute the difference (outside the projection extent) and intersection (inside the extent).
+      var difference = jstsGeometry.difference(jstsExtentPoly);
+      var intersection = jstsGeometry.intersection(jstsExtentPoly);
+
+      if (difference.getCoordinates().length && intersection.getCoordinates().length) {
+        // The difference is outside the projection's extent, so normalize it within the extent.
+        var olDifference = /** @type {ol.geom.Polygon} */ (olp.write(difference));
+        os.geo2.normalizeGeometryCoordinates(olDifference, undefined, projection);
+
+        // The intersection should already be within the projection's extent, and not require normalization.
+        var olIntersection = /** @type {ol.geom.Polygon} */ (olp.write(intersection));
+
+        var result = new ol.geom.MultiPolygon([]);
+        result.setPolygons([olDifference, olIntersection]);
+
+        // Preserve interpolation method from the original geometry.
+        result.set(os.interpolate.METHOD_FIELD, geometry.get(os.interpolate.METHOD_FIELD));
+
+        return result;
+      }
+    }
+  }
+
+  return geometry;
 };
 
 

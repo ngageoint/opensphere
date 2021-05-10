@@ -104,8 +104,17 @@ os.ui.ol.interaction.DrawPolygon.prototype.getGeometry = function() {
   var method = os.interpolate.getMethod();
   geom.set(os.interpolate.METHOD_FIELD, method);
 
+  //
   // normalize coordinates prior to validation, or polygons crossing the date line may be broken
-  os.geo2.normalizeGeometryCoordinates(geom);
+  //
+  // normalization from the first coordinate is typically preferred, but if the geometry covers more than half of the
+  // world extent, this will not work. in that situation, use the center of the geometry's extent.
+  //
+  var halfWorld = ol.extent.getWidth(os.map.PROJECTION.getExtent()) / 2;
+  var geomExtent = geom.getExtent();
+  var extentWidth = ol.extent.getWidth(geomExtent);
+  var normalizeTo = extentWidth > halfWorld ? ol.extent.getCenter(geomExtent)[0] : undefined;
+  os.geo2.normalizeGeometryCoordinates(geom, normalizeTo);
 
   // validate the geometry to ensure it's accepted in server queries
   geom = /** @type {ol.geom.Polygon} */ (os.geo.jsts.validate(geom));
@@ -317,7 +326,6 @@ os.ui.ol.interaction.DrawPolygon.prototype.update2D = function() {
   }
 
   var geom = this.createGeometry();
-  os.geo2.normalizeGeometryCoordinates(geom);
 
   this.line2D.setGeometry(geom);
   this.line2D.set(os.interpolate.ORIGINAL_GEOM_FIELD, undefined);
