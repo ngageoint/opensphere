@@ -95,7 +95,7 @@ os.ui.search.FacetNode.prototype.formatValue = function(value) {
  * @inheritDoc
  */
 os.ui.search.FacetNode.prototype.getCheckboxDisabled = function() {
-  return !this.getCount();
+  return !this.getCount() || null;
 };
 
 
