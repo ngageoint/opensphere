@@ -189,15 +189,11 @@ class Modify extends OLModify {
     olEvents.listen(this, olModifyEventType.MODIFYSTART, this.handleStart, this);
     olEvents.listen(this, olModifyEventType.MODIFYEND, this.handleEnd, this);
 
-    const geometry = clone.getGeometry();
-    if (geometry) {
-      olEvents.listen(geometry, OLEventType.CHANGE, this.onGeometryChange, this);
-    }
-
     this.updateInterpolatedGeometry();
 
-    // Add the feature to the map.
-    os.MapContainer.getInstance().addFeature(clone);
+    // the base class constructor calls setActive(true) before we've done our initialization, so redo that here
+    this.setActive(false);
+    this.setActive(true);
   }
 
   /**
@@ -207,15 +203,6 @@ class Modify extends OLModify {
     super.disposeInternal();
 
     this.setActive(false);
-
-    if (this.clone_) {
-      const geometry = this.clone_.getGeometry();
-      if (geometry) {
-        olEvents.unlisten(geometry, OLEventType.CHANGE, this.onGeometryChange, this);
-      }
-
-      os.MapContainer.getInstance().removeFeature(this.clone_);
-    }
 
     if (this.getMap()) {
       this.getMap().removeInteraction(this);
