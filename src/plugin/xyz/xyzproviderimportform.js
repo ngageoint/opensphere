@@ -22,7 +22,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'xyzserverform';
+const directiveTag = 'xyzproviderform';
 
 
 /**

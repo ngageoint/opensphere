@@ -1,4 +1,4 @@
-goog.module('plugin.xyz.XYZServerHelpUI');
+goog.module('plugin.xyz.XYZProviderHelpUI');
 goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
@@ -7,13 +7,13 @@ const {directive: baseDirective} = goog.require('os.ui.window.BaseWindowUI');
 
 
 /**
- * Provides help adding an XYZ server to the application.
+ * Provides help adding an XYZ provider to the application.
  *
  * @return {angular.Directive}
  */
 const directive = () => {
   const directive = baseDirective();
-  directive.templateUrl = ROOT + 'views/plugin/xyz/xyzserverhelp.html';
+  directive.templateUrl = ROOT + 'views/plugin/xyz/xyzproviderhelp.html';
   return directive;
 };
 
@@ -22,7 +22,7 @@ const directive = () => {
  * The element tag for the directive.
  * @type {string}
  */
-const directiveTag = 'xyzserverhelp';
+const directiveTag = 'xyzproviderhelp';
 
 
 /**
