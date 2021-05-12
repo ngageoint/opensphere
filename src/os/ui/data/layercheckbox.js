@@ -1,6 +1,8 @@
 goog.module('os.ui.data.LayerCheckboxUI');
 
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
+const DescriptorNode = goog.require('os.ui.data.DescriptorNode');
+const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
 const Module = goog.require('os.ui.Module');
 const TriState = goog.require('os.structs.TriState');
 const TriStateCheckboxCtrl = goog.require('os.ui.TriStateCheckboxCtrl');
@@ -32,7 +34,6 @@ const directiveTag = 'layercheckbox';
  * Add the directive to the module
  */
 Module.directive(directiveTag, [directive]);
-
 
 
 /**
@@ -68,16 +69,45 @@ class Controller extends TriStateCheckboxCtrl {
         const state = item.getState();
 
         if (state == TriState.OFF) {
-          if (children && children.length > this.minCount) {
+          let count = 0;
+          const countLayerChildren = (child) => {
+            if (child instanceof DescriptorNode) {
+              const descriptor = child.getDescriptor();
+
+              if (descriptor instanceof LayerSyncDescriptor) {
+                const layers = descriptor.getOptions();
+
+                if (Array.isArray(layers)) {
+                  // LayerSyncDescriptor can be a parent to multiple layers, so count all of them
+                  count += layers.length;
+                } else {
+                  count++;
+                }
+              } else {
+                count++;
+              }
+            }
+
+            const grandChildren = child.getChildren();
+            if (grandChildren) {
+              grandChildren.forEach(countLayerChildren);
+            }
+          };
+
+          if (children) {
+            children.forEach(countLayerChildren);
+          }
+
+          if (count > this.minCount) {
             // we're over the minimum, so confirm first
             ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
               confirm: this.toggleInternal.bind(this, TriState.ON),
-              prompt: `You are about to enable ${children.length} layers. Enabling too many layers at once can cause 
+              prompt: `You are about to enable ${count} layers. Enabling too many layers at once can cause 
                   performance issues. Are you sure?`.trim(),
               yesText: 'OK',
               noText: 'Cancel',
               windowOptions: {
-                'label': `Enabling ${children.length} Layers`,
+                'label': `Enabling ${count} Layers`,
                 'icon': 'fa fa-warning',
                 'x': 'center',
                 'y': 'center',
