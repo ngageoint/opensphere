@@ -223,11 +223,7 @@ os.ui.query.ModifyAreaCtrl.LOGGER_ = goog.log.getLogger('os.ui.query.ModifyAreaC
 os.ui.query.ModifyAreaCtrl.prototype.$onDestroy = function() {
   this.setPreviewFeature(undefined);
 
-  if (this.interaction) {
-    os.MapContainer.getInstance().getMap().removeInteraction(this.interaction);
-    this.interaction.setActive(false);
-    goog.dispose(this.interaction);
-  }
+  goog.dispose(this.interaction);
 
   if (this.areaPreview) {
     os.MapContainer.getInstance().removeFeature(this.areaPreview);

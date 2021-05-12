@@ -206,6 +206,8 @@ class Modify extends OLModify {
   disposeInternal() {
     super.disposeInternal();
 
+    this.setActive(false);
+
     if (this.clone_) {
       const geometry = this.clone_.getGeometry();
       if (geometry) {
@@ -213,6 +215,10 @@ class Modify extends OLModify {
       }
 
       os.MapContainer.getInstance().removeFeature(this.clone_);
+    }
+
+    if (this.getMap()) {
+      this.getMap().removeInteraction(this);
     }
 
     goog.dispose(this.keyHandler);

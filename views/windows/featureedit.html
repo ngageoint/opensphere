@@ -51,16 +51,23 @@
         </div>
       </div>
 
-      <div ng-if="!ctrl.pointGeometry" class="d-flex flex-row form-group">
-        <label class="col-2 col-form-label text-right u-required">Altitude</label>
-        <div class="col-4">
-          <select class="custom-select" ng-model="ctrl.altitudeMode" ng-change="ctrl.updatePreview()"
-              ng-options="mode as ctrl.mapAltitudeModeToName(mode) for mode in ctrl.altitudeModes track by mode">
-          </select>
+      <div ng-if="!ctrl.pointGeometry">
+        <div class="d-flex flex-row form-group">
+          <label class="col-2 col-form-label text-right">Altitude</label>
+          <div class="col-4">
+            <select class="custom-select" ng-model="ctrl.altitudeMode" ng-change="ctrl.updatePreview()"
+                ng-options="mode as ctrl.mapAltitudeModeToName(mode) for mode in ctrl.altitudeModes track by mode">
+            </select>
+          </div>
         </div>
-        <button class="btn btn-primary" ng-click="ctrl.modifyGeometry()">
-          <i class="fa fa-fw fa-edit"></i> Edit Geometry
-        </button>
+        <div class="d-flex flex-row form-group">
+          <label class="col-2 col-form-label text-right">Geometry</label>
+          <div class="col-4">
+            <button class="btn btn-primary" ng-click="ctrl.modifyGeometry()">
+              <i class="fa fa-fw fa-edit"></i> Edit Geometry
+            </button>
+          </div>
+        </div>
       </div>
 
       <div class="d-flex flex-row form-group mt-2" ng-if="ctrl.timeEditEnabled">

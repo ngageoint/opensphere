@@ -19,6 +19,7 @@ goog.require('os.action.EventType');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.feature');
 goog.require('os.geo');
+goog.require('os.interaction.Modify');
 goog.require('os.map');
 goog.require('os.math.Units');
 goog.require('os.ol.feature');
@@ -476,6 +477,12 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    * @protected
    */
   this.originalGeometry = null;
+
+  /**
+   * Interaction for freeform modification.
+   * @type {os.interaction.Modify}
+   */
+  this.interaction = null;
 
   var feature = /** @type {ol.Feature|undefined} */ (this.options['feature']);
   if (feature) {
@@ -1683,8 +1690,6 @@ os.ui.FeatureEditCtrl.prototype.onAxisChange = function() {
  */
 os.ui.FeatureEditCtrl.prototype.modifyGeometry = function() {
   if (this.interaction) {
-    os.MapContainer.getInstance().getMap().removeInteraction(this.interaction);
-    this.interaction.setActive(false);
     goog.dispose(this.interaction);
   }
 
@@ -1709,14 +1714,19 @@ os.ui.FeatureEditCtrl.prototype.modifyGeometry = function() {
  */
 os.ui.FeatureEditCtrl.prototype.onInteractionComplete = function(event) {
   const clone = /** @type {!ol.Feature} */ (event.getPayload());
-  this.previewFeature.setGeometry(clone.getGeometry());
-  this.originalGeometry = clone.getGeometry() || null;
+  const geometry = clone.getGeometry();
+
+  if (geometry) {
+    this.originalGeometry = geometry;
+    this.previewFeature.setGeometry(geometry);
+    this.previewFeature.unset(os.interpolate.ORIGINAL_GEOM_FIELD, true);
+    os.interpolate.interpolateFeature(this.previewFeature);
+  }
 
   this.updatePreview();
-  this.interaction.removeControls();
 
-  // remove the clone and the interaction from the map
-  os.MapContainer.getInstance().getMap().removeInteraction(this.interaction);
+  goog.dispose(this.interaction);
+  this.interaction = null;
 };
 
 
@@ -1724,12 +1734,7 @@ os.ui.FeatureEditCtrl.prototype.onInteractionComplete = function(event) {
  * Callback handler for canceling a modify.
  */
 os.ui.FeatureEditCtrl.prototype.onInteractionCancel = function() {
-  if (this.interaction) {
-    os.MapContainer.getInstance().getMap().removeInteraction(this.interaction);
-    this.interaction.removeControls();
-    this.interaction.setActive(false);
-    goog.dispose(this.interaction);
-  }
+  goog.dispose(this.interaction);
 };
 
 
