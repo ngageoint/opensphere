@@ -408,8 +408,8 @@ const visibleIfMarkerInterpolationEnabled = function(context) {
  * @this {OsMenuItem}
  */
 const visibleIfMarkerInterpolationDisabled = function(context) {
-  this.visible = !!context && getTracks(context).length > 0
-      && !isMarkerInterpolationOn(context);
+  this.visible = !!context && getTracks(context).length > 0 &&
+      !isMarkerInterpolationOn(context);
 };
 
 /**
@@ -461,8 +461,8 @@ const visibleIfLineIsShown = function(context) {
  * @this {OsMenuItem}
  */
 const visibleIfLineIsHidden = function(context) {
-  this.visible = !!context && getTracks(context).length > 0
-      && !isLineShown(context);
+  this.visible = !!context && getTracks(context).length > 0 &&
+      !isLineShown(context);
 };
 
 /**

@@ -59,8 +59,8 @@ os.ui.datetime.DateCustomCtrl = function($scope) {
    * The current duration choice.
    * @type {string}
    */
-  this['duration'] = this.scope_['endDate'] || this.scope_['startDate']
-    ? os.time.Duration.CUSTOM : os.time.Duration.DAY;
+  this['duration'] = this.scope_['endDate'] || this.scope_['startDate'] ?
+    os.time.Duration.CUSTOM : os.time.Duration.DAY;
 
   /**
    * The end date. Inclusive, so time will be 23:59:59z.
@@ -76,8 +76,8 @@ os.ui.datetime.DateCustomCtrl = function($scope) {
    * @type {Date}
    */
   this.scope_['startDate'] = this.scope_['startDate'] &&
-    this.scope_['startDate'].getTime() <= this.scope_['endDate'].getTime()
-    ? this.scope_['startDate'] : os.time.floor(this.scope_['endDate'], os.time.Duration.DAY, true);
+    this.scope_['startDate'].getTime() <= this.scope_['endDate'].getTime() ?
+    this.scope_['startDate'] : os.time.floor(this.scope_['endDate'], os.time.Duration.DAY, true);
 
   // set the start time to 00:00:00z.
   this.scope_['startDate'] = this.getStartTime_(this.scope_['startDate']);

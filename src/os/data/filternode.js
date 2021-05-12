@@ -141,10 +141,10 @@ os.data.FilterNode.prototype.formatIcons = function() {
   }
   if (os.state.isStateFile(this.getEntry().getId())) {
     var statecopy = 'fa fa-bookmark';
-    return ' <i class="fa fa-fw fa-filter position-relative ' + clazz + '" title="This filter is '
-      + status + '"></i> <i class=" ' + statecopy + '" title="This is from a state file"></i> ';
+    return ' <i class="fa fa-fw fa-filter position-relative ' + clazz + '" title="This filter is ' +
+      status + '"></i> <i class=" ' + statecopy + '" title="This is from a state file"></i> ';
   } else {
-    return ' <i class="fa fa-fw fa-filter position-relative ' + clazz + '" title="This filter is '
-      + status + '"></i> ';
+    return ' <i class="fa fa-fw fa-filter position-relative ' + clazz + '" title="This filter is ' +
+      status + '"></i> ';
   }
 };

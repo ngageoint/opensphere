@@ -670,8 +670,8 @@ os.layer.Tile.prototype.getIcons = function() {
     color = os.color.toRgbArray(layerColor);
   }
 
-  html += color ? os.ui.icons.createIconSet(this.getId(), this.getSVGIconsInternal(), this.getStateBadge(), color)
-    : this.getIconsInternal();
+  html += color ? os.ui.icons.createIconSet(this.getId(), this.getSVGIconsInternal(), this.getStateBadge(), color) :
+    this.getIconsInternal();
   return html;
 };
 

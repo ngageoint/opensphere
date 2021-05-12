@@ -64,10 +64,10 @@ class Search extends AbstractUrlSearch {
       var distance = osasm.geodesicInverse(extent.slice(0, 2), extent.slice(2, 4)).distance;
 
       if (distance <= threshold) {
-        var boundaryText = '&boundary.rect.min_lat=' + extent[1]
-          + '&boundary.rect.min_lon=' + extent[0]
-          + '&boundary.rect.max_lat=' + extent[3]
-          + '&boundary.rect.max_lon=' + extent[2];
+        var boundaryText = '&boundary.rect.min_lat=' + extent[1] +
+          '&boundary.rect.min_lon=' + extent[0] +
+          '&boundary.rect.max_lat=' + extent[3] +
+          '&boundary.rect.max_lon=' + extent[2];
         url += boundaryText;
       }
     }
