@@ -189,17 +189,11 @@ class Modify extends OLModify {
     olEvents.listen(this, olModifyEventType.MODIFYSTART, this.handleStart, this);
     olEvents.listen(this, olModifyEventType.MODIFYEND, this.handleEnd, this);
 
-    this.showControls();
-
-    const geometry = clone.getGeometry();
-    if (geometry) {
-      olEvents.listen(geometry, OLEventType.CHANGE, this.onGeometryChange, this);
-    }
-
     this.updateInterpolatedGeometry();
 
-    // Add the feature to the map.
-    os.MapContainer.getInstance().addFeature(clone);
+    // the base class constructor calls setActive(true) before we've done our initialization, so redo that here
+    this.setActive(false);
+    this.setActive(true);
   }
 
   /**
@@ -208,13 +202,10 @@ class Modify extends OLModify {
   disposeInternal() {
     super.disposeInternal();
 
-    if (this.clone_) {
-      const geometry = this.clone_.getGeometry();
-      if (geometry) {
-        olEvents.unlisten(geometry, OLEventType.CHANGE, this.onGeometryChange, this);
-      }
+    this.setActive(false);
 
-      os.MapContainer.getInstance().removeFeature(this.clone_);
+    if (this.getMap()) {
+      this.getMap().removeInteraction(this);
     }
 
     goog.dispose(this.keyHandler);
@@ -223,6 +214,34 @@ class Modify extends OLModify {
     olEvents.unlisten(this, ol.interaction.ModifyEventType.MODIFYEND, this.handleEnd, this);
 
     this.removeControls();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setActive(value) {
+    const changed = value !== this.getActive();
+
+    if (changed && this.clone_) {
+      if (!value) {
+        const geometry = this.clone_.getGeometry();
+        if (geometry) {
+          olEvents.unlisten(geometry, OLEventType.CHANGE, this.onGeometryChange, this);
+        }
+
+        os.MapContainer.getInstance().removeFeature(this.clone_);
+      } else {
+        this.updateInterpolatedGeometry();
+        const geometry = this.clone_.getGeometry();
+        if (geometry) {
+          olEvents.listen(geometry, OLEventType.CHANGE, this.onGeometryChange, this);
+        }
+
+        os.MapContainer.getInstance().addFeature(this.clone_);
+      }
+    }
+
+    super.setActive(value);
   }
 
   /**
@@ -282,11 +301,11 @@ class Modify extends OLModify {
       let handled = false;
       switch (event.keyCode) {
         case KeyCodes.ESC:
-          this.onCancel();
+          this.cancel();
           handled = true;
           break;
         case KeyCodes.ENTER:
-          this.onComplete();
+          this.complete();
           handled = true;
           break;
         default:
@@ -301,18 +320,16 @@ class Modify extends OLModify {
 
   /**
    * Cancel the modify operation.
-   * @protected
    */
-  onCancel() {
+  cancel() {
     this.dispatchEvent(new PayloadEvent(ModifyEventType.CANCEL, this.clone_));
     this.setActive(false);
   }
 
   /**
    * Complete the modify operation.
-   * @protected
    */
-  onComplete() {
+  complete() {
     const geometry = this.clone_.getGeometry();
     if (geometry) {
       // Clear the interpolate method from the geometry so the original feature can determine interpolation.

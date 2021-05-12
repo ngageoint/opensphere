@@ -1,11 +1,24 @@
 <div class="d-flex flex-column">
   <div class="modal-body">
-    <form name="areaForm" novalidate>
+    <ul class="nav nav-tabs flex-shrink-0" ng-if="modarea.showTabs">
+      <li class="nav-item">
+        <a class="nav-link" href="#" ng-click="modarea.setTab('freeform')" ng-class="{active: modarea.tab == 'freeform'}">Freeform</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" ng-click="modarea.setTab('addRemoveIntersect')" ng-class="{active: modarea.tab == 'addRemoveIntersect'}">Add/Remove Area</a>
+      </li>
+    </ul>
+
+    <div ng-show="modarea.tab == 'freeform'">
+      <controlblock controls="modarea.controls"></controlblock>
+    </div>
+
+    <form name="areaForm" novalidate ng-show="modarea.tab == 'addRemoveIntersect'">
       <div class="row mt-1" title="{{modarea.help.area1}}">
         <label class="col-form-label col-4 text-right">Area to Modify</label>
         <div class="col form-inline">
           <div class="flex-fill" ng-show="!fixArea">
-            <choosearea area="area" help-title="Area to Modify" help-content="{{modarea.help.area1}}"></choosearea>
+            <choosearea area="feature" help-title="Area to Modify" help-content="{{modarea.help.area1}}"></choosearea>
           </div>
           <span class="flex-fill" ng-show="fixArea">
             From Map
@@ -73,24 +86,23 @@
           <validation-message target="areaForm.title"></validation-message>
         </div>
       </div>
+      <div>
+        <i class="fa fa-info-circle text-info"></i>
+        <em>Selected areas are highlighted in white, and the result in blue.</em>
+      </div>
     </form>
-    <div>
-      <i class="fa fa-info-circle text-info"></i>
-      <em>Selected areas are highlighted in white, and the result in blue.</em>
-    </div>
   </div>
+
   <div class="modal-footer">
     <div ng-if="modarea.error">
       <i class="fa fa-warning text-warning"></i>
       <em>{{modarea.error}}</em>
     </div>
-    <button class="btn btn-primary" ng-click="modarea.confirm()" ng-disabled="modarea.error || areaForm.$invalid || modarea.loading">
-      <i class="fa fa-check"></i>
-      OK
+    <button class="btn btn-primary" ng-click="modarea.confirm()" ng-disabled="(modarea.error || areaForm.$invalid || modarea.loading) && modarea.tab == 'addRemoveIntersect'">
+      <i class="fa fa-check"></i> OK
     </button>
     <button class="btn btn-secondary" ng-click="modarea.cancel()">
-      <i class="fa fa-ban"></i>
-      Cancel
+      <i class="fa fa-ban"></i> Cancel
     </button>
   </div>
 </div>

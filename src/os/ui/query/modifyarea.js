@@ -1,13 +1,19 @@
 goog.provide('os.ui.query.ModifyAreaCtrl');
 goog.provide('os.ui.query.modifyAreaDirective');
 
-goog.require('goog.Disposable');
+goog.require('goog.events.KeyCodes');
 goog.require('goog.log');
+goog.require('ol.Feature');
+goog.require('os.command.CommandProcessor');
 goog.require('os.command.SequenceCommand');
 goog.require('os.geo.jsts');
+goog.require('os.interaction.Modify');
+goog.require('os.query.AreaManager');
 goog.require('os.ui.Module');
+goog.require('os.ui.help.Controls');
 goog.require('os.ui.query.cmd.AreaAdd');
 goog.require('os.ui.query.cmd.AreaModify');
+goog.require('os.ui.util.validationMessageDirective');
 
 
 /**
@@ -20,7 +26,7 @@ os.ui.query.modifyAreaDirective = function() {
     restrict: 'E',
     replace: true,
     scope: {
-      'area': '=',
+      'feature': '=',
       'targetArea': '=?',
       'op': '=?'
     },
@@ -43,7 +49,6 @@ os.ui.Module.directive('modifyarea', [os.ui.query.modifyAreaDirective]);
  *
  * @param {!angular.Scope} $scope
  * @param {!angular.JQLite} $element
- * @extends {goog.Disposable}
  * @constructor
  * @ngInject
  */
@@ -79,6 +84,24 @@ os.ui.query.ModifyAreaCtrl = function($scope, $element) {
   this.error_ = null;
 
   /**
+   * Interaction for freeform modification.
+   * @type {os.interaction.Modify}
+   */
+  this.interaction = null;
+
+  /**
+   * @type {ol.Feature|undefined}
+   * @protected
+   */
+  this.areaPreview = null;
+
+  /**
+   * @type {ol.Feature|undefined}
+   * @protected
+   */
+  this.targetPreview = null;
+
+  /**
    * @type {!Object<string, string>}
    */
   this['help'] = {
@@ -111,16 +134,78 @@ os.ui.query.ModifyAreaCtrl = function($scope, $element) {
    */
   this['title'] = 'New Area';
 
-  // defaults
+  /**
+   * The currently selected tab.
+   * @type {?string}
+   */
+  this['tab'] = null;
+
+  /**
+   * Flag for whether we are operating on an area.
+   * @type {boolean}
+   */
+  this['showTabs'] = true;
+
+  /**
+   * Controls for freeform modification.
+   * @type {Array<Object<string, *>>}
+   */
+  this['controls'] = [
+    {
+      'text': 'Remove Vertex',
+      'keys': [goog.events.KeyCodes.ALT, '+'],
+      'other': [os.ui.help.Controls.MOUSE.LEFT_MOUSE]
+    },
+    {
+      'text': 'Save Changes',
+      'keys': [goog.events.KeyCodes.ENTER]
+    },
+    {
+      'text': 'Cancel',
+      'keys': [goog.events.KeyCodes.ESC]
+    }
+  ];
+
+  // default the op and the tab to freeform
   $scope['op'] = $scope['op'] || os.ui.query.ModifyOp.ADD;
 
-  $scope.$watch('area', this.onAreaChange.bind(this));
+  const am = os.query.AreaManager.getInstance();
+  let showTabs = true;
+  let feature;
+  let initialTab = os.ui.query.ModifyType.FREEFORM;
+
+  // configure the form
+  if ($scope['feature']) {
+    feature = /** @type {!ol.Feature} */ ($scope['feature']);
+    showTabs = am.contains(feature) && am.getAll().length >= 2;
+    this.interaction = new os.interaction.Modify(feature);
+    initialTab = os.ui.query.ModifyType.FREEFORM;
+  } else if ($scope['targetArea']) {
+    feature = /** @type {!ol.Feature} */ ($scope['targetArea']);
+    showTabs = false;
+    this.interaction = null;
+    initialTab = os.ui.query.ModifyType.ADD_REMOVE;
+  }
+
+  this['showTabs'] = showTabs;
+  this.setTab(initialTab);
+
+  $scope.$watch('feature', this.onAreaChange.bind(this));
   $scope.$watch('op', this.updatePreview.bind(this));
   $scope.$watch('targetArea', this.onTargetAreaChange.bind(this));
-  $scope.$on('$destroy', this.dispose.bind(this));
+
   $scope.$emit(os.ui.WindowEventType.READY);
 };
-goog.inherits(os.ui.query.ModifyAreaCtrl, goog.Disposable);
+
+
+/**
+ * Modify type enum.
+ * @enum {string}
+ */
+os.ui.query.ModifyType = {
+  ADD_REMOVE: 'addRemoveIntersect',
+  FREEFORM: 'freeform'
+};
 
 
 /**
@@ -133,14 +218,94 @@ os.ui.query.ModifyAreaCtrl.LOGGER_ = goog.log.getLogger('os.ui.query.ModifyAreaC
 
 
 /**
- * @inheritDoc
+ * Angular destroy hook.
  */
-os.ui.query.ModifyAreaCtrl.prototype.disposeInternal = function() {
-  os.ui.query.ModifyAreaCtrl.base(this, 'disposeInternal');
+os.ui.query.ModifyAreaCtrl.prototype.$onDestroy = function() {
   this.setPreviewFeature(undefined);
+
+  goog.dispose(this.interaction);
+
+  if (this.areaPreview) {
+    os.MapContainer.getInstance().removeFeature(this.areaPreview);
+    this.areaPreview = null;
+  }
+
+  if (this.targetPreview) {
+    os.MapContainer.getInstance().removeFeature(this.targetPreview);
+    this.targetPreview = null;
+  }
 
   this.scope = null;
   this.element = null;
+};
+
+
+/**
+ * Sets the tab.
+ * @param {string} tab The tab to set.
+ * @export
+ */
+os.ui.query.ModifyAreaCtrl.prototype.setTab = function(tab) {
+  if (tab != this['tab']) {
+    this['tab'] = tab;
+
+    const mc = os.MapContainer.getInstance();
+
+    if (tab == os.ui.query.ModifyType.FREEFORM) {
+      this.interaction.setOverlay(/** @type {ol.layer.Vector} */ (mc.getDrawingLayer()));
+
+      mc.getMap().addInteraction(this.interaction);
+      this.interaction.setActive(true);
+
+      ol.events.listen(this.interaction, os.interaction.ModifyEventType.COMPLETE, this.onInteractionComplete, this);
+      ol.events.listen(this.interaction, os.interaction.ModifyEventType.CANCEL, this.onInteractionCancel, this);
+    } else if (tab == os.ui.query.ModifyType.ADD_REMOVE && this.interaction) {
+      mc.getMap().removeInteraction(this.interaction);
+      this.interaction.setActive(false);
+    }
+  }
+
+  this.validate();
+};
+
+
+/**
+ * Callback handler for successfully completing a modify of a geometry.
+ * @param {os.events.PayloadEvent} event
+ */
+os.ui.query.ModifyAreaCtrl.prototype.onInteractionComplete = function(event) {
+  const feature = /** @type {!ol.Feature} */ (this.scope['feature']);
+  const clone = /** @type {!ol.Feature} */ (event.getPayload());
+  const source = os.feature.getSource(feature);
+  let modifyFunction;
+
+  if (os.implements(source, os.source.IModifiableSource.ID)) {
+    modifyFunction = /** @type {os.source.IModifiableSource} */ (source).getModifyFunction();
+  }
+
+  if (modifyFunction) {
+    // call the modify function to finalize the update
+    modifyFunction(feature, clone);
+  } else {
+    const geometry = clone.getGeometry();
+    if (feature && geometry) {
+      // default behavior is to assume that we're modifying an area, so update it in AreaManager
+      const modifyCmd = new os.ui.query.cmd.AreaModify(feature, geometry);
+      os.command.CommandProcessor.getInstance().addCommand(modifyCmd);
+    }
+  }
+
+  // remove the clone and the interaction from the map
+  os.MapContainer.getInstance().getMap().removeInteraction(this.interaction);
+  this.close_();
+};
+
+
+/**
+ * Callback handler for canceling a modify.
+ */
+os.ui.query.ModifyAreaCtrl.prototype.onInteractionCancel = function() {
+  this.close_();
 };
 
 
@@ -152,14 +317,14 @@ os.ui.query.ModifyAreaCtrl.prototype.disposeInternal = function() {
 os.ui.query.ModifyAreaCtrl.prototype.validate = function() {
   this['error'] = null;
 
-  if (this.scope) {
-    if (!this.scope['area']) {
+  if (this.scope && this['tab'] == os.ui.query.ModifyType.ADD_REMOVE) {
+    if (!this.scope['feature']) {
       // source isn't selected
       this['error'] = 'Please choose an area to modify.';
     } else if (!this.scope['targetArea']) {
       // source is selected, target is not
       this['error'] = 'Please choose an area to ' + this.scope['op'] + '.';
-    } else if (this.scope['area'] == this.scope['targetArea']) {
+    } else if (this.scope['feature'] == this.scope['targetArea']) {
       // areas cannot be the same
       this['error'] = 'Please select two different areas.';
     } else if (this.error_) {
@@ -200,8 +365,21 @@ os.ui.query.ModifyAreaCtrl.prototype.validate = function() {
  * @protected
  */
 os.ui.query.ModifyAreaCtrl.prototype.onAreaChange = function(opt_new, opt_old) {
+  if (this.areaPreview) {
+    os.MapContainer.getInstance().removeFeature(this.areaPreview);
+  }
+
+  this.areaPreview = null;
+
+  if (opt_new instanceof ol.Feature && opt_new.getGeometry()) {
+    // clone the feature because we don't want the style, nor do we want to remove the original from the map
+    this.areaPreview = os.ol.feature.clone(opt_new);
+    this.areaPreview.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
+    os.MapContainer.getInstance().addFeature(this.areaPreview);
+  }
+
   // area was provided, but it isn't in the area manager. assume it's a user-drawn area, or from a source.
-  this.scope['fixArea'] = this.scope['area'] && !os.ui.areaManager.contains(this.scope['area']);
+  this.scope['fixArea'] = this.scope['feature'] && !os.ui.areaManager.contains(this.scope['feature']);
 
   this.updatePreview();
 };
@@ -215,6 +393,19 @@ os.ui.query.ModifyAreaCtrl.prototype.onAreaChange = function(opt_new, opt_old) {
  * @protected
  */
 os.ui.query.ModifyAreaCtrl.prototype.onTargetAreaChange = function(opt_new, opt_old) {
+  if (this.targetPreview) {
+    os.MapContainer.getInstance().removeFeature(this.targetPreview);
+  }
+
+  this.targetPreview = null;
+
+  if (opt_new instanceof ol.Feature && opt_new.getGeometry()) {
+    // clone the feature because we don't want the style, nor do we want to remove the original from the map
+    this.targetPreview = os.ol.feature.clone(opt_new);
+    this.targetPreview.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
+    os.MapContainer.getInstance().addFeature(this.targetPreview);
+  }
+
   // target area was provided, but it isn't in the area manager. assume it's a user-drawn area, or from a source.
   this.scope['fixTargetArea'] = this.scope['targetArea'] && !os.ui.areaManager.contains(this.scope['targetArea']);
 
@@ -236,7 +427,15 @@ os.ui.query.ModifyAreaCtrl.prototype.updatePreview = function() {
  * @protected
  */
 os.ui.query.ModifyAreaCtrl.prototype.setPreviewFeature = function(feature) {
+  if (this.preview) {
+    os.MapContainer.getInstance().removeFeature(this.preview);
+  }
+
   this.preview = feature;
+
+  if (this.preview && this.preview.getGeometry()) {
+    os.MapContainer.getInstance().addFeature(this.preview, os.style.PREVIEW_CONFIG);
+  }
 };
 
 
@@ -250,17 +449,17 @@ os.ui.query.ModifyAreaCtrl.prototype.getMergedArea_ = function() {
   this.error_ = null;
 
   var feature;
-  if (this.scope['area'] && this.scope['targetArea']) {
+  if (this.scope['feature'] && this.scope['targetArea']) {
     try {
       switch (this.scope['op']) {
         case os.ui.query.ModifyOp.ADD:
-          feature = os.geo.jsts.addTo(this.scope['area'], this.scope['targetArea']);
+          feature = os.geo.jsts.addTo(this.scope['feature'], this.scope['targetArea']);
           break;
         case os.ui.query.ModifyOp.REMOVE:
-          feature = os.geo.jsts.removeFrom(this.scope['area'], this.scope['targetArea']);
+          feature = os.geo.jsts.removeFrom(this.scope['feature'], this.scope['targetArea']);
           break;
         case os.ui.query.ModifyOp.INTERSECT:
-          feature = os.geo.jsts.intersect(this.scope['area'], this.scope['targetArea']);
+          feature = os.geo.jsts.intersect(this.scope['feature'], this.scope['targetArea']);
           break;
         default:
           goog.log.error(this.log, 'Unsupported operation: ' + this.scope['op']);
@@ -295,25 +494,30 @@ os.ui.query.ModifyAreaCtrl.prototype.cancel = function() {
  * @export
  */
 os.ui.query.ModifyAreaCtrl.prototype.confirm = function() {
-  var feature = this.getMergedArea_();
-  var geometry = feature ? feature.getGeometry() : null;
-  if (feature && geometry) {
-    var cmd;
-    if (this['replace']) {
-      // modify the geometry in the existing area
-      cmd = new os.ui.query.cmd.AreaModify(this.scope['area'], geometry);
-    } else {
-      // add a new area
-      feature.set('title', this['title']);
-      cmd = new os.ui.query.cmd.AreaAdd(feature);
-    }
+  if (this['tab'] == os.ui.query.ModifyType.FREEFORM) {
+    this.interaction.complete();
+  } else if (this['tab'] == os.ui.query.ModifyType.ADD_REMOVE) {
+    var feature = this.getMergedArea_();
+    var geometry = feature ? feature.getGeometry() : null;
 
-    if (cmd) {
-      os.command.CommandProcessor.getInstance().addCommand(cmd);
+    if (feature && geometry) {
+      var cmd;
+      if (this['replace']) {
+        // modify the geometry in the existing area
+        cmd = new os.ui.query.cmd.AreaModify(this.scope['feature'], geometry);
+      } else {
+        // add a new area
+        feature.set('title', this['title']);
+        cmd = new os.ui.query.cmd.AreaAdd(feature);
+      }
+
+      if (cmd) {
+        os.command.CommandProcessor.getInstance().addCommand(cmd);
+      }
+    } else {
+      os.alertManager.sendAlert('Failed modifying area! Please see the log for more details.',
+          os.alert.AlertEventSeverity.ERROR, this.log);
     }
-  } else {
-    os.alertManager.sendAlert('Failed modifying area! Please see the log for more details.',
-        os.alert.AlertEventSeverity.ERROR, this.log);
   }
 
   this.close_();
@@ -380,8 +584,7 @@ os.ui.query.ModifyAreaCtrl.prototype.close_ = function() {
  * @typedef {{
  *    area: (ol.Feature|undefined),
  *    op: (string|undefined),
- *    targetArea: (ol.Feature|undefined),
- *    ui: (string|undefined)
+ *    targetArea: (ol.Feature|undefined)
  * }}
  */
 os.ui.query.ModifyAreaConfig;
@@ -404,6 +607,10 @@ os.ui.query.ModifyOp = {
  */
 os.ui.query.launchModifyArea = function(config) {
   var windowId = 'modifyArea';
+  var container = angular.element(os.ui.windowSelector.CONTAINER);
+  var width = 400;
+  var x = container.width() - width - 50;
+
   if (os.ui.window.exists(windowId)) {
     // update the existing window
     var scope = $('.js-window#' + windowId + ' .modal-body').scope();
@@ -416,24 +623,23 @@ os.ui.query.launchModifyArea = function(config) {
   } else {
     var windowOptions = {
       'id': windowId,
-      'label': 'Modify Area...',
+      'label': 'Modify Geometry...',
       'icon': 'fa fa-edit',
-      'x': 'center',
+      'x': x,
       'y': 'center',
-      'width': 400,
+      'width': width,
       'height': 'auto',
       'show-close': true
     };
 
     // the null defaults prevent the choosearea directive from picking a default value
     var scopeOptions = {
-      'area': config['area'] || null,
+      'feature': config['feature'] || null,
       'op': config['op'],
       'targetArea': config['targetArea'] || null
     };
 
-    var ui = config['ui'] || 'modifyarea';
-    var template = '<' + ui + ' area="area" target-area="targetArea" op="op"></' + ui + '>';
+    var template = '<modifyarea feature="feature" target-area="targetArea" op="op"></modifyarea>';
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 };
