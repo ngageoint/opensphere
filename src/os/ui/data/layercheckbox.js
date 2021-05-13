@@ -8,6 +8,7 @@ const TriState = goog.require('os.structs.TriState');
 const TriStateCheckboxCtrl = goog.require('os.ui.TriStateCheckboxCtrl');
 const triStateCheckboxDirective = goog.require('os.ui.triStateCheckboxDirective');
 
+const ITreeNode = goog.requireType('os.structs.ITreeNode');
 const TriStateTreeNode = goog.requireType('os.structs.TriStateTreeNode');
 
 
@@ -34,6 +35,37 @@ const directiveTag = 'layercheckbox';
  * Add the directive to the module
  */
 Module.directive(directiveTag, [directive]);
+
+
+/**
+ * Reducer function to count the number of layers under a node.
+ * @param {number} count The current count.
+ * @param {ITreeNode} child The child node.
+ * @return {number}
+ */
+const countLayerChildren = (count, child) => {
+  if (child instanceof DescriptorNode) {
+    const descriptor = child.getDescriptor();
+
+    if (descriptor instanceof LayerSyncDescriptor) {
+      const layers = descriptor.getOptions();
+
+      if (layers) {
+        // LayerSyncDescriptor can be a parent to multiple layers, so count all of them
+        count += layers.length;
+      }
+    } else {
+      count++;
+    }
+  }
+
+  const grandChildren = child.getChildren();
+  if (grandChildren) {
+    count += grandChildren.reduce(countLayerChildren, count);
+  }
+
+  return count;
+};
 
 
 /**
@@ -70,32 +102,8 @@ class Controller extends TriStateCheckboxCtrl {
 
         if (state == TriState.OFF) {
           let count = 0;
-          const countLayerChildren = (child) => {
-            if (child instanceof DescriptorNode) {
-              const descriptor = child.getDescriptor();
-
-              if (descriptor instanceof LayerSyncDescriptor) {
-                const layers = descriptor.getOptions();
-
-                if (Array.isArray(layers)) {
-                  // LayerSyncDescriptor can be a parent to multiple layers, so count all of them
-                  count += layers.length;
-                } else {
-                  count++;
-                }
-              } else {
-                count++;
-              }
-            }
-
-            const grandChildren = child.getChildren();
-            if (grandChildren) {
-              grandChildren.forEach(countLayerChildren);
-            }
-          };
-
           if (children) {
-            children.forEach(countLayerChildren);
+            count = children.reduce(countLayerChildren, 0);
           }
 
           if (count > this.minCount) {
