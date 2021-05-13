@@ -1,6 +1,23 @@
 <div id="time-help" class="flex-fill w-100 d-flex flex-column">
   <div class="modal-body container flex-fill">
-    TBD: Fill this out with relevant info
+    Please provide a valid XYZ tile layer URL.
+    <br>
+    <br>
+    An XYZ tile layer URL can have many different formats, such as:
+    <ul>
+      <li>https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png</li>
+      <li>https://osm.gs.mil/tiles/default_pc/{z}/{x}/{y}.png</li>
+      <li>https://osm.gs.mil/tiles/humanitarian/{z}/{x}/{y}.png</li>
+      <li>https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png</li>
+      <li>https://services.arcgisonline.com/ArcGIS/rest/services/<br>World_Street_Map/MapServer/tile/{z}/{y}/{x}</li>
+    </ul>
+    Keep in mind that the positions of {x}, {y}, and {z} can vary between URLs.
+    <br>
+    <br>
+    Although the {x}, {y}, and {z} portions of each URL can be replaced with an integer value, it is not recommended to do so as this will only provide a single tile of the layer.
+    <br>
+    <br>
+    OpenSphere currently supports two projections for XYZ tile layers: EPSG:3857 and EPSG:4326. If an XYZ tile layer does not appear as expected, consider reimporting it with a different projection.
   </div>
   <div class="modal-footer d-flex">
     <button class="btn btn-primary" ng-click="ctrl.close()">

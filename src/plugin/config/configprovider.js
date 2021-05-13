@@ -55,6 +55,7 @@ class Provider extends DescriptorProvider {
     this.setToolTip(/** @type {?string} */ (config['tooltip'] || config['description']));
     this.layers_ = /** @type {Object} */ (config['layers']) || {};
     this.providerKey_ = /** @type {ProviderKey} */ (config['providerKey']) || ProviderKey.USER;
+    this.listInServers = /** @type {boolean} */ (config['listInServers']) || true;
   }
 
   /**

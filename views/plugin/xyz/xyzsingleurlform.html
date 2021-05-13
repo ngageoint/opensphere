@@ -6,10 +6,9 @@
   <div class="container-fluid" ng-form="form" ng-show="!testing" ng-submit="ctrl.accept()" novalidate>
     <div class="form-group" title="The title for the layer">
       <label for="title">Title</label>
-      <input unique-provider-title type="text" class="form-control" name="title" ng-disabled="!edit"
+      <input type="text" class="form-control" name="title" ng-disabled="!edit"
           ng-model="config.label" ng-required="true" ng-maxlength="1000">
       <small class="form-text text-danger" ng-if="form.title.$error.maxlength">Title is too long!</small>
-      <small class="form-text text-danger" ng-if="form.title.$error.unique">Title is not unique!</small>
       <small class="form-text text-muted" ng-if="form.title.$valid || form.title.$error.required">
         Please enter a title <span ng-if="typeName">for the XYZ map layer</span>
       </small>
@@ -51,7 +50,6 @@
       <input type="text" name="minZoom" class="form-control" ng-disabled="!edit" ng-model="config.minZoom" ng-required="true"
           ng-maxlength="1000">
       <small class="form-text text-danger" ng-if="form.url.$error.maxlength">Minimum zoom is too long!</small>
-      <!-- TBD: add default value -->
       <small class="form-text text-muted" ng-if="form.url.$valid || form.url.$error.required">
         Please enter a minimum zoom value
       </small>
@@ -63,7 +61,6 @@
       <input type="text" name="maxZoom" class="form-control" ng-disabled="!edit" ng-model="config.maxZoom" ng-required="true"
           ng-maxlength="1000">
       <small class="form-text text-danger" ng-if="form.url.$error.maxlength">Maximum zoom is too long!</small>
-      <!-- TBD: add default value -->
       <small class="form-text text-muted" ng-if="form.url.$valid || form.url.$error.required">
         Please enter a maximum zoom value
       </small>
@@ -75,7 +72,6 @@
       <input type="text" name="zoomOffset" class="form-control" ng-disabled="!edit" ng-model="config.zoomOffset" ng-required="true"
           ng-maxlength="1000">
       <small class="form-text text-danger" ng-if="form.url.$error.maxlength">Zoom offset is too long!</small>
-      <!-- TBD: add default value -->
       <small class="form-text text-muted" ng-if="form.url.$valid || form.url.$error.required">
         Please enter a zoom offset
       </small>

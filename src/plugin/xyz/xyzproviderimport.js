@@ -82,34 +82,31 @@ class Controller extends SingleUrlProviderImportCtrl {
     $scope['config']['url'] = '';
     $scope['config']['minZoom'] = 1;
     $scope['config']['maxZoom'] = 25;
-    $scope['help'] = {}; // TBD: we shouldn't need this, find a more elegant way
-    $scope['help']['projection'] = 'This is the content for the projection help popover';
-    $scope['help']['minZoom'] = 'This is the content for the minZoom help popover';
-    $scope['help']['maxZoom'] = 'This is the content for the maxZoom help popover';
-    $scope['help']['zoomOffset'] = 'This is the content for the zoomOffset help popover';
+    $scope['help'] = {};
+    $scope['help']['projection'] = 'The map projection for the layer.';
+    $scope['help']['minZoom'] = 'The minimum zoom level supported by the layer.';
+    $scope['help']['maxZoom'] = 'The maximum zoom level supported by the layer.';
+    $scope['help']['zoomOffset'] = 'The difference in zoom scale between the layer and map. Typically EPSG:3857 '
+      + 'layers will have an offset of 0, and EPSG:4326 will have an offset of -1.';
   }
 
   /**
    * @inheritDoc
    */
   accept() {
-    if (!this.scope['form']['$invalid'] && !this.scope['testing']) {
+    if (!this.scope['form']['$invalid']) {
       this.cleanConfig();
 
-      if (!this.dp || this.scope['error'] || (this.dp.getEditable() && this.formDiff())) {
-        this.dp = this.getDataProvider();
-        this.dp.setEditable(true);
-        // TBD: hide the provider in the servers menu
-        // this.dp.listInServers = false;
-        // this.dp.showWhenEmpty = false;
-        this.createXYZDescriptor(this.scope['config']);
-        this.close();
-      } // TBD: add other cases
-      //  else if (this.dp && this.dp.getEditable()) {
-      //   this.saveAndClose();
-      // } else {
-      //   this.close();
-      // }
+      this.dp = this.getDataProvider();
+      this.dp.setEditable(true);
+
+      this.scope['config']['description'] = 'URL: ' + this.scope['config']['url']
+        + '<br>Projection: ' + this.scope['config']['projection']['code']
+        + '<br>Minimum Zoom: ' + this.scope['config']['minZoom']
+        + '<br>Maximum Zoom: ' + this.scope['config']['maxZoom']
+        + '<br>Zoom Offset: ' + this.scope['config']['zoomOffset'];
+      this.createXYZDescriptor(this.scope['config']);
+      this.close();
     }
   }
 
@@ -117,7 +114,7 @@ class Controller extends SingleUrlProviderImportCtrl {
    * @inheritDoc
    */
   getDataProvider() {
-    const dp = ConfigProvider.create('xyz', {'label': 'XYZ Layers'});
+    const dp = ConfigProvider.create('xyz', {'label': 'XYZ Layers', 'listInServers': false});
     return dp;
   }
 
@@ -138,7 +135,6 @@ class Controller extends SingleUrlProviderImportCtrl {
 
     let descriptor = null;
     descriptor = new ConfigDescriptor();
-    descriptor.setType('XYZ Layer');
     descriptor.setBaseConfig(layerConfig);
     osLayer.createFromOptions(layerConfig);
 
