@@ -86,8 +86,8 @@ class Controller extends SingleUrlProviderImportCtrl {
     $scope['help']['projection'] = 'The map projection for the layer.';
     $scope['help']['minZoom'] = 'The minimum zoom level supported by the layer.';
     $scope['help']['maxZoom'] = 'The maximum zoom level supported by the layer.';
-    $scope['help']['zoomOffset'] = 'The difference in zoom scale between the layer and map. Typically EPSG:3857 '
-      + 'layers will have an offset of 0, and EPSG:4326 will have an offset of -1.';
+    $scope['help']['zoomOffset'] = 'The difference in zoom scale between the layer and map. Typically EPSG:3857 ' +
+      'layers will have an offset of 0, and EPSG:4326 will have an offset of -1.';
   }
 
   /**
@@ -100,11 +100,11 @@ class Controller extends SingleUrlProviderImportCtrl {
       this.dp = this.getDataProvider();
       this.dp.setEditable(true);
 
-      this.scope['config']['description'] = 'URL: ' + this.scope['config']['url']
-        + '<br>Projection: ' + this.scope['config']['projection']['code']
-        + '<br>Minimum Zoom: ' + this.scope['config']['minZoom']
-        + '<br>Maximum Zoom: ' + this.scope['config']['maxZoom']
-        + '<br>Zoom Offset: ' + this.scope['config']['zoomOffset'];
+      this.scope['config']['description'] = 'URL: ' + this.scope['config']['url'] +
+        '<br>Projection: ' + this.scope['config']['projection']['code'] +
+        '<br>Minimum Zoom: ' + this.scope['config']['minZoom'] +
+        '<br>Maximum Zoom: ' + this.scope['config']['maxZoom'] +
+        '<br>Zoom Offset: ' + this.scope['config']['zoomOffset'];
       this.createXYZDescriptor(this.scope['config']);
       this.close();
     }
@@ -124,8 +124,8 @@ class Controller extends SingleUrlProviderImportCtrl {
    * @return {IDataDescriptor} The descriptor, or null if one could not be created.
    */
   createXYZDescriptor(layerConfig) {
-    const projectionObject = layerConfig['projectionObject'] ? layerConfig['projectionObject']
-      : layerConfig['projection'];
+    const projectionObject = layerConfig['projectionObject'] ? layerConfig['projectionObject'] :
+      layerConfig['projection'];
     if (projectionObject) {
       const projectionCode = projectionObject['code'];
       layerConfig['projectionObject'] = projectionObject;
