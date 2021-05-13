@@ -8,7 +8,6 @@ goog.require('os.command.CommandProcessor');
 goog.require('os.command.SequenceCommand');
 goog.require('os.geo.jsts');
 goog.require('os.interaction.Modify');
-goog.require('os.query.AreaManager');
 goog.require('os.ui.Module');
 goog.require('os.ui.help.Controls');
 goog.require('os.ui.query.cmd.AreaAdd');
@@ -169,7 +168,7 @@ os.ui.query.ModifyAreaCtrl = function($scope, $element) {
   // default the op and the tab to freeform
   $scope['op'] = $scope['op'] || os.ui.query.ModifyOp.ADD;
 
-  const am = os.query.AreaManager.getInstance();
+  const am = os.ui.areaManager;
   let showTabs = true;
   let feature;
   let initialTab = os.ui.query.ModifyType.FREEFORM;
