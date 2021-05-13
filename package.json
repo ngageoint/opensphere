@@ -290,7 +290,7 @@
     "rimraf": "^2.5.4",
     "run-script-os": "^1.0.7",
     "sass-lint": "^1.12.1",
-    "semantic-release": "^15.13.18",
+    "semantic-release": "^17.2.3",
     "surge": "^0.20.4",
     "webgl-mock": "^0.1.7",
     "webpack": "^4.44.1",
