@@ -131,11 +131,16 @@ describe('plugin.ogc.wfs.WFSLayerConfig', function() {
         'typename': 'test#layer1',
         'outputformat': 'avro/binary'
       },
-      'formats': ['application/json', 'avro/binary', 'gml3', 'GML2']
+      'formats': ['application/json', 'avro/binary', 'gml3', 'GML2'],
+      'contentType': 'text/plain'
     };
 
     wfs.initializeConfig(config);
     const request = wfs.getRequest(config);
     expect(request.getResponseType()).toBe(goog.net.XhrIo.ResponseType.ARRAY_BUFFER);
+
+    const formatter = request.getDataFormatter();
+    expect(formatter).toBeDefined();
+    expect(formatter.getContentType()).toBe('text/plain');
   });
 });
