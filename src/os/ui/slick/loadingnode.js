@@ -52,7 +52,7 @@ os.ui.slick.LoadingNode.prototype.setLoading = function(value) {
  * @inheritDoc
  */
 os.ui.slick.LoadingNode.prototype.getCheckboxDisabled = function() {
-  return this.isLoading();
+  return this.isLoading() || null;
 };
 
 
