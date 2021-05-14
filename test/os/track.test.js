@@ -514,4 +514,52 @@ describe('os.track', function() {
     metadataMap = track.get(osTrack.TrackField.METADATA_MAP);
     expect(object.getCount(metadataMap)).toBe(0);
   });
+
+  it('truncates a track to a fixed duration', function() {
+    var features = generateFeatures(20, os.data.RecordField.TIME, Date.now() - 19500);
+    var track = os.track.createTrack({
+      features: features,
+      includeMetadata: true
+    });
+
+    var geometry = track.getGeometry();
+    expect(geometry.flatCoordinates.length).toBe(20 * geometry.stride);
+
+    var metadataMap = track.get(os.track.TrackField.METADATA_MAP);
+    expect(goog.object.getCount(metadataMap)).toBe(20);
+
+    var lastTimeValue = geometry.flatCoordinates[geometry.flatCoordinates.length - 1];
+
+    // does nothing if the age-out is greater than the duration
+    os.track.truncateByAge(track, 30 * sortIncrement);
+    geometry = track.getGeometry();
+    expect(geometry.flatCoordinates.length).toBe(20 * geometry.stride);
+    expect(geometry.flatCoordinates[geometry.flatCoordinates.length - 1]).toBe(lastTimeValue);
+
+    metadataMap = track.get(os.track.TrackField.METADATA_MAP);
+    expect(goog.object.getCount(metadataMap)).toBe(20);
+
+    verifyMetadata(geometry.flatCoordinates, geometry.stride, metadataMap);
+
+    // truncates to the duration specified
+    os.track.truncateByAge(track, 10 * sortIncrement);
+    geometry = track.getGeometry();
+    expect(geometry.flatCoordinates.length).toBe(10 * geometry.stride);
+    expect(geometry.flatCoordinates[geometry.flatCoordinates.length - 1]).toBe(lastTimeValue);
+
+    metadataMap = track.get(os.track.TrackField.METADATA_MAP);
+    expect(goog.object.getCount(metadataMap)).toBe(10);
+
+    verifyMetadata(geometry.flatCoordinates, geometry.stride, metadataMap);
+
+    // truncates to zero coordinates if a negative value is provided
+    os.track.truncateByAge(track, -1);
+    geometry = track.getGeometry();
+    expect(geometry.flatCoordinates.length).toBe(0);
+
+    metadataMap = track.get(os.track.TrackField.METADATA_MAP);
+    expect(goog.object.getCount(metadataMap)).toBe(0);
+  });
+
+
 });

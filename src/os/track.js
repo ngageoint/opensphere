@@ -482,9 +482,7 @@ os.track.addToTrack = function(options) {
         track.getGeometry());
 
     // merge the split line so coordinates can be added in the correct location
-    geometry.toLonLat();
-    geometry = os.geo.mergeLineGeometry(geometry);
-    geometry.osTransform();
+    os.track.mergeSplitGeometry_(geometry);
 
     var flatCoordinates = geometry.flatCoordinates;
     var stride = geometry.stride;
@@ -549,9 +547,7 @@ os.track.clamp = function(track, start, end) {
       track.getGeometry());
 
   // merge the split line so features can be added in the correct location
-  geometry.toLonLat();
-  geometry = os.geo.mergeLineGeometry(geometry);
-  geometry.osTransform();
+  os.track.mergeSplitGeometry_(geometry);
 
   var stride = geometry.stride;
 
@@ -610,24 +606,70 @@ os.track.truncate = function(track, size) {
 
   if (geometry.getType() === ol.geom.GeometryType.MULTI_LINE_STRING) {
     // merge the split line so coordinates can be truncated to the correct size
-    geometry.toLonLat();
-    geometry = os.geo.mergeLineGeometry(geometry);
-    geometry.osTransform();
+    os.track.mergeSplitGeometry_(geometry);
   }
 
-  var flatCoordinates = geometry.flatCoordinates;
   var stride = geometry.stride;
   var numCoords = size * stride;
+  os.track.prunePointsAt_(track, geometry, numCoords);
+};
 
+/**
+ * Merge a split line geometry.
+ * @param {!os.track.TrackLike} geometry the geometry to merge
+ */
+os.track.mergeSplitGeometry_ = function(geometry) {
+  geometry.toLonLat();
+  geometry = os.geo.mergeLineGeometry(geometry);
+  geometry.osTransform();
+};
+
+/**
+ * Remove old track points from a track. Keeps the most recent points.
+ *
+ * @param {!ol.Feature} track The track.
+ * @param {number} maximumAge The maximum age that a track point can get to before it is considered for removal, in milliseconds.
+ *
+ * @suppress {accessControls} To allow direct access to feature metadata and line coordinates.
+ */
+os.track.truncateByAge = function(track, maximumAge) {
+  // ensure the age-out is >= 0
+  maximumAge = Math.max(0, maximumAge);
+
+  // add point(s) to the original geometry, in case the track was interpolated
+  var geometry = /** @type {!(os.track.TrackLike)} */ (track.values_[os.interpolate.ORIGINAL_GEOM_FIELD] ||
+      track.getGeometry());
+
+  if (geometry.getType() === ol.geom.GeometryType.MULTI_LINE_STRING) {
+    // merge the split line so coordinates can be counted and truncated cleanly
+    os.track.mergeSplitGeometry_(geometry);
+  }
+  var coords = geometry.getCoordinates();
+  var timeNow = Date.now();
+  var pointsToKeep = 0;
+  if (coords) {
+    coords.reverse().forEach(function(c) {
+      var timeForThisCoord = c[c.length - 1];
+      var ageForThisCoord = timeNow - timeForThisCoord;
+      if (ageForThisCoord < maximumAge) {
+        pointsToKeep = pointsToKeep + 1;
+      }
+    });
+  }
+  var numCoords = pointsToKeep * geometry.stride;
+  os.track.prunePointsAt_(track, geometry, numCoords);
+};
+
+os.track.prunePointsAt_ = function(track, geometry, numCoords) {
+  var flatCoordinates = geometry.flatCoordinates;
   if (flatCoordinates.length > numCoords) {
     var removed = flatCoordinates.splice(0, flatCoordinates.length - numCoords);
     os.track.setGeometry(track, geometry);
 
     // remove old metadata fields from the track
-    os.track.pruneMetadata_(track, removed, stride);
+    os.track.pruneMetadata_(track, removed, geometry.stride);
   }
 };
-
 
 /**
  * Prune the metadata map for a track, removing metadata by indexed sort values.
@@ -1077,7 +1119,7 @@ os.track.getLineTime = function(coords) {
 
 
 /**
- * Get the time (in meters) covered by a set of coordinates for a multi-line.
+ * Get the time (in seconds) covered by a set of coordinates for a multi-line.
  *
  * @param {Array<Array<ol.Coordinate>>} coords The multi-line coordinates
  * @return {number} The time
@@ -1431,7 +1473,7 @@ os.track.getTrackPositionAt = function(track, timestamp, index, coordinates, str
  * @param {number} endIndex The index of the most recent known coordinate.
  * @param {!Array<number>} coordinates The flat track coordinate array.
  * @param {number} stride The stride of the coordinate array.
- * @param {Array<number>=} opt_ends The end indicies of each line in a multi-line. Undefined if not a multi-line.
+ * @param {Array<number>=} opt_ends The end indices of each line in a multi-line. Undefined if not a multi-line.
  *
  * @suppress {accessControls} To allow direct access to line string coordinates.
  */
@@ -1651,3 +1693,5 @@ os.track.splitIntoTracks = function(options) {
 
   return result;
 };
+
+
