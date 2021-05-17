@@ -5,7 +5,7 @@ const {getRandomString, numerateCompare} = goog.require('goog.string');
 const ConfigProvider = goog.require('plugin.config.Provider');
 const {ROOT} = goog.require('os');
 const ConfigDescriptor = goog.require('os.data.ConfigDescriptor');
-const osLayer = goog.require('os.layer');
+const {createFromOptions} = goog.require('os.layer');
 const {getProjections} = goog.require('os.proj');
 const Module = goog.require('os.ui.Module');
 const {ID_DELIMITER} = goog.require('os.ui.data.BaseProvider');
@@ -74,11 +74,12 @@ class Controller extends SingleUrlProviderImportCtrl {
     this['projections'] = projections;
 
     $scope['typeName'] = 'XYZ Provider';
-    $scope['urlExample'] = 'https://osm.gs.mil/tiles/default/{z}/{x}/{y}.png';
+    $scope['urlExample'] = 'https://example.com/{z}/{x}/{y}';
     $scope['config']['id'] = 'xyz';
     $scope['config']['label'] = this.getLabel() || '';
     $scope['config']['title'] = this.scope['config']['label'];
     $scope['config']['type'] = 'XYZ';
+    $scope['config']['layerType'] = 'XYZ';
     $scope['config']['url'] = '';
     $scope['config']['minZoom'] = 1;
     $scope['config']['maxZoom'] = 25;
@@ -136,7 +137,7 @@ class Controller extends SingleUrlProviderImportCtrl {
     let descriptor = null;
     descriptor = new ConfigDescriptor();
     descriptor.setBaseConfig(layerConfig);
-    osLayer.createFromOptions(layerConfig);
+    createFromOptions(layerConfig);
 
     this.saveXYZDescriptor(descriptor);
 
@@ -187,13 +188,12 @@ class Controller extends SingleUrlProviderImportCtrl {
   onProjectionChange() {
     this.scope['config']['zoomOffset'] = null;
     switch (this.scope['config']['projection'].code) {
-      case 'EPSG:3857':
-        this.scope['config']['zoomOffset'] = 0;
-        break;
       case 'EPSG:4326':
         this.scope['config']['zoomOffset'] = -1;
         break;
+      case 'EPSG:3857':
       default:
+        this.scope['config']['zoomOffset'] = 0;
         break;
     }
   }

@@ -7,7 +7,7 @@ const {ROOT} = goog.require('os');
 
 
 /**
- * A dialog with information about custom date/time formats, as implemented by Moment.js.
+ * A derivative of the XYZImport directive with the only difference being the templateUrl.
  *
  * @return {angular.Directive}
  */
