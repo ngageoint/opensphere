@@ -4,6 +4,10 @@ const {getValues} = goog.require('goog.object');
 const {ROOT} = goog.require('os');
 const Units = goog.require('os.math.Units');
 const Module = goog.require('os.ui.Module');
+const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
+const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
+const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
+const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 
@@ -16,8 +20,7 @@ const directive = () => ({
   restrict: 'E',
 
   scope: {
-    'columns': '=',
-    'prevConfig': '='
+    'layer': '='
   },
 
   templateUrl: ROOT + 'views/layer/ellipsecolumns.html',
@@ -57,6 +60,20 @@ class Controller {
     this.element = $element;
 
     /**
+     * Source
+     * @type {*}
+     * @private
+     */
+    this.source_ = this.scope_['layer'].getSource();
+
+    /**
+     * Importer
+     * @type {*}
+     * @private
+     */
+    this.importer_ = this.source_.getImporter();
+
+    /**
      * Whether the user selected Circle or Ellipse
      * 0 - Circle || 1 - Ellipse
      * @type {boolean}
@@ -67,7 +84,7 @@ class Controller {
      * Column Options for the source
      * @type {Array<ColumnDefinition>}
      */
-    this['columnOptions'] = this.scope_['columns'];
+    this['columnOptions'] = this.source_ ? this.source_.getColumns() : [];
 
     /**
      * Array of the units available
@@ -79,13 +96,13 @@ class Controller {
      * The name of the circle Column
      * @type {string}
      */
-    this['circleColumn'] = undefined;
+    this['radiusColumn'] = undefined;
 
     /**
      * Units selected for circle
      * @type {string}
      */
-    this['circleUnits'] = undefined;
+    this['radiusUnits'] = undefined;
 
     /**
      * The name of the semi major Column
@@ -138,30 +155,9 @@ class Controller {
         Orientation then it will be overwritten by the data in the selected column.`
     };
 
-    this.scope_.$watchGroup(['ctrl.circleColumn', 'ctrl.circleUnits', 'ctrl.inputType', 'ctrl.semiMajorColumn',
+    this.scope_.$watchGroup(['ctrl.radiusColumn', 'ctrl.radiusUnits', 'ctrl.inputType', 'ctrl.semiMajorColumn',
       'ctrl.semiMajorUnits', 'ctrl.semiMinorColumn', 'ctrl.semiMinorUnits', 'ctrl.inputType', 'ctrl.orientation',
-      'ctrl.overwriteData'],
-    function() {
-      const type = this['inputType'];
-      const overwriteData = this['overwriteData'];
-      const value = {
-        'type': type,
-        'keepOriginal': !overwriteData
-      };
-
-      if (type == 1) {
-        value['semiMajor'] = this['semiMajorColumn'];
-        value['semiMajorUnits'] = this['semiMajorUnits'];
-        value['semiMinor'] = this['semiMinorColumn'];
-        value['semiMinorUnits'] = this['semiMinorUnits'];
-        value['orientation'] = this['orientation'];
-      } else {
-        value['radius'] = type == 0 ? this['circleColumn'] : undefined;
-        value['radiusUnits'] = type == 0 ? this['circleUnits'] : undefined;
-      }
-
-      this.scope_.$parent['confirmValue'] = value;
-    }.bind(this));
+      'ctrl.overwriteData'], this.updateMappings.bind(this));
 
     this.init();
   }
@@ -170,19 +166,74 @@ class Controller {
    * Initialize the form
    */
   init() {
-    const cfg = this.scope_['prevConfig'] || undefined;
-    this['inputType'] = cfg ? cfg['type'] : 0;
+    var Mappings = this.importer_.getMappings();
 
-    if (cfg && cfg['type'] == 0) {
-      this['circleColumn'] = cfg['radius'];
-      this['circleUnits'] = cfg['radiusUnits'];
-    } else if (cfg && cfg['type'] == 1) {
-      this['semiMajorColumn'] = cfg['semiMajor'];
-      this['semiMajorUnits'] = cfg['semiMajorUnits'];
-      this['semiMinorColumn'] = cfg['semiMinor'];
-      this['semiMinorUnits'] = cfg['semiMinorUnits'];
-      this['orientation'] = cfg['orientation'];
+    Mappings.forEach((mapping) => {
+      const id = mapping.getId();
+      const field = mapping.field;
+
+      const column = this.columnOptions.find(({name}) => name === field);
+
+      if (id == RadiusMapping.ID) {
+        this['inputType'] = 0;
+        this['radiusColumn'] = column;
+        this['radiusUnits'] = mapping.units;
+      } else if (id == SemiMajorMapping.ID) {
+        this['inputType'] = 1;
+        this['semiMajorColumn'] = column;
+        this['semiMajorUnits'] = mapping.units;
+      } else if (id == SemiMinorMapping.ID) {
+        this['semiMinorColumn'] = column;
+        this['semiMinorUnits'] = mapping.units;
+      } else if (id == OrientationMapping.ID) {
+        this['orientation'] = column;
+      }
+    });
+  }
+
+
+  /**
+   * Update the Mappings
+   */
+  updateMappings() {
+    const mappings = this.createMappings();
+
+    this.scope_.$parent['confirmValue'] = mappings;
+  }
+
+  /**
+   * Create Mappings for Ellipse Data
+   * @return {Array<RenameMapping>}
+   * @override
+   */
+  createMappings() {
+    const mappings = [];
+
+    if (this['radiusColumn']) {
+      const rm = new RadiusMapping();
+      rm.field = this['radiusColumn'].name;
+      rm.setUnits(this['radiusUnits']);
+      mappings.push(rm);
     }
+    if (this['semiMajorColumn']) {
+      var smaj = new SemiMajorMapping();
+      smaj.field = this['semiMajorColumn'].name;
+      smaj.setUnits(this['semiMajorUnits']);
+      mappings.push(smaj);
+    }
+    if (this['semiMinorColumn']) {
+      var smin = new SemiMinorMapping();
+      smin.field = this['semiMinorColumn'].name;
+      smin.setUnits(this['semiMinorUnits']);
+      mappings.push(smin);
+    }
+    if (this['orientation']) {
+      var om = new OrientationMapping();
+      om.field = this['orientation'].name;
+      mappings.push(om);
+    }
+
+    return mappings;
   }
 }
 

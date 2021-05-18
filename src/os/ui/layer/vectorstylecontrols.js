@@ -254,12 +254,13 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.launchConfigureWindow = function()
   const confirm = this.onEllipseMapping_.bind(this);
   const scopeOptions = {
     'columns': this.scope['columns'] || null,
-    'prevConfig': this['ellipseMapping'] || this.scope['ellipseMappings']
+    'prevConfig': this['ellipseMapping'] || this.scope['ellipseMappings'],
+    'layer': this.scope['layerNodes'][0].getLayer()
   };
 
   const options = /** @type {osx.window.ConfirmOptions} */ ({
     confirm: confirm,
-    prompt: '<ellipsecolumns prev-config="prevConfig" columns="columns"></ellipsecolumns>',
+    prompt: '<ellipsecolumns prev-config="prevConfig" columns="columns" layer="layer"></ellipsecolumns>',
     windowOptions: {
       'label': 'Map Ellipse Columns',
       'x': 'center',

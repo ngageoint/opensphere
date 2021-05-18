@@ -9,8 +9,8 @@
     <div class="mb-1 bg-secondary u-bg-secondary-text border rounded p-1" ng-if="ctrl.inputType == 0">
       <div class="form-inline mb-1">
         <label class="mr-1">Radius/CEP</label>
-        <select class="col custom-select" ng-model="ctrl.circleColumn" ng-options="opt.name for opt in ctrl.columnOptions" ng-required="ctrl.inputType == 0"></select>
-        <select class="custom-select ml-1 col-2" ng-model="ctrl.circleUnits" ng-options="unit for unit in ctrl.unitOptions" ng-required="ctrl.inputType == 0"></select>
+        <select class="col custom-select" ng-model="ctrl.radiusColumn" ng-options="opt.name for opt in ctrl.columnOptions" ng-required="ctrl.inputType == 0"></select>
+        <select class="custom-select ml-1 col-2" ng-model="ctrl.radiusUnits" ng-options="unit for unit in ctrl.unitOptions" ng-required="ctrl.inputType == 0"></select>
       </div>
     </div>
   </div>
