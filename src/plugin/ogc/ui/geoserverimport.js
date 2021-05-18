@@ -55,6 +55,8 @@ plugin.ogc.ui.GeoserverImportCtrl = function($scope, $element) {
   $scope['config']['type'] = 'geoserver';
   $scope['typeName'] = 'GeoServer';
   $scope['urlExample'] = 'http://www.example.com/geoserver/ows';
+
+  this.validateUrl();
 };
 goog.inherits(plugin.ogc.ui.GeoserverImportCtrl, os.ui.SingleUrlProviderImportCtrl);
 
@@ -74,4 +76,18 @@ plugin.ogc.ui.GeoserverImportCtrl.prototype.getDataProvider = function() {
  */
 plugin.ogc.ui.GeoserverImportCtrl.prototype.getUrl = function() {
   return this.dp ? /** @type {plugin.ogc.GeoServer} */ (this.dp).getOriginalWmsUrl() : '';
+};
+
+
+/**
+ * @inheritDoc
+ * @export
+ */
+plugin.ogc.ui.GeoserverImportCtrl.prototype.validateUrl = function() {
+  if (/\/web\/?$/.test(this.scope['config']['url'])) {
+    this.scope['customUrlMessage'] = 'GeoServer URL\'s ending with /web are typically for the admin interface. ' +
+    'Consider replacing /web with /ows to instead point at the OGC API.';
+  } else {
+    this.scope['customUrlMessage'] = undefined;
+  }
 };

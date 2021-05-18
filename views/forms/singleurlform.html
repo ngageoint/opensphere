@@ -24,9 +24,10 @@
         <i class="fa fa-fw fa-question-circle"></i>
       </button>
       <input type="text" name="url" class="form-control" ng-disabled="!edit" ng-model="config.url" ng-required="true"
-          ng-maxlength="1000">
+          ng-maxlength="1000" ng-change="ctrl.validateUrl()">
       <small class="form-text text-danger" ng-if="form.url.$error.maxlength">URL is too long!</small>
-      <small class="form-text text-muted" ng-if="form.url.$valid || form.url.$error.required">
+      <small class="form-text text-warning" ng-if="customUrlMessage && form.url.$valid">{{customUrlMessage}}</small>
+      <small class="form-text text-muted" ng-if="(form.url.$valid || form.url.$error.required) && !customUrlMessage">
         Please enter a URL <span ng-if="urlExample">(e.g. {{urlExample}})</span>
       </small>
     </div>
