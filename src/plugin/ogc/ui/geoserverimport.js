@@ -85,8 +85,8 @@ plugin.ogc.ui.GeoserverImportCtrl.prototype.getUrl = function() {
  */
 plugin.ogc.ui.GeoserverImportCtrl.prototype.validateUrl = function() {
   if (/\/web\/?$/.test(this.scope['config']['url'])) {
-    this.scope['customUrlMessage'] = 'GeoServer URL\'s ending with /web are typically for the admin interface. ' +
-    'Consider replacing /web with /ows to instead point at the OGC API.';
+    this.scope['customUrlMessage'] = 'GeoServer URLs ending with \"/web\" are typically for the administration ' +
+    'interface. Consider replacing \"/web\" with \"/wfs,\" \"/wms,\" or \"/wmts\" for the OGC service APIs.';
   } else {
     this.scope['customUrlMessage'] = undefined;
   }
