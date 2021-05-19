@@ -120,6 +120,13 @@ plugin.ogc.OGCLayerDescriptor = function() {
   this.wfsUrl_ = null;
 
   /**
+   * The WFS Content-Type request header.
+   * @type {string}
+   * @private
+   */
+  this.wfsContentType_ = 'text/xml';
+
+  /**
    * @type {?Array<string>}
    * @private
    */
@@ -568,6 +575,22 @@ plugin.ogc.OGCLayerDescriptor.prototype.getWfsUrl = function() {
  */
 plugin.ogc.OGCLayerDescriptor.prototype.setWfsUrl = function(value) {
   this.wfsUrl_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.ogc.OGCLayerDescriptor.prototype.getWfsContentType = function() {
+  return this.wfsContentType_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+plugin.ogc.OGCLayerDescriptor.prototype.setWfsContentType = function(value) {
+  this.wfsContentType_ = value;
 };
 
 
@@ -1114,6 +1137,7 @@ plugin.ogc.OGCLayerDescriptor.prototype.getWfsOptions = function(opt_options) {
   options[os.ui.ControlType.COLOR] = os.ui.ColorControlType.PICKER_RESET;
 
   options['animate'] = this.hasTimeExtent();
+  options['contentType'] = this.getWfsContentType();
   options['exclusions'] = true;
   options['featureType'] = this.featureType_;
   options['filter'] = true;

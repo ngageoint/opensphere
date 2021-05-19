@@ -58,6 +58,11 @@ plugin.ogc.GeoServer.prototype.configure = function(config) {
 
   this.setWmsTimeFormat(/** @type {string} */ (config['wmsTimeFormat']) || '{start}/{end}');
   this.setWmsDateFormat(/** @type {string} */ (config['wmsDateFormat']) || 'YYYY-MM-DDTHH:mm:ss[Z]');
+
+  var wfsContentType = /** @type {string|undefined} */ (config['wfsContentType']);
+  if (wfsContentType) {
+    this.setWfsContentType(wfsContentType);
+  }
 };
 
 

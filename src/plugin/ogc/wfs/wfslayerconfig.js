@@ -180,7 +180,12 @@ plugin.ogc.wfs.WFSLayerConfig.prototype.getRequest = function(options) {
   request.setValidator(os.ogc.getException);
 
   if (options['postFormat'] !== 'kvp') {
-    request.setDataFormatter(new os.ogc.wfs.WFSFormatter());
+    var formatter = new os.ogc.wfs.WFSFormatter();
+    if (options['contentType']) {
+      formatter.contentType = /** @type {string} */ (options['contentType']);
+    }
+
+    request.setDataFormatter(formatter);
   }
 
   const type = this.getBestType(options);

@@ -20,7 +20,8 @@ describe('plugin.ogc.GeoServer', function() {
     'enabled': true,
     'url': serverUrl,
     'wmsTimeFormat': timeFormat,
-    'wmsDateFormat': dateFormat
+    'wmsDateFormat': dateFormat,
+    'wfsContentType': 'text/plain'
   };
 
   it('should initialize properly from config', function() {
@@ -39,8 +40,12 @@ describe('plugin.ogc.GeoServer', function() {
     expect(server.getWmsTimeFormat()).toBe('{start}/{end}');
     expect(server.getWmsDateFormat()).toBe('YYYY-MM-DDTHH:mm:ss[Z]');
 
+    expect(server.getWfsContentType()).toBe('text/xml');
+
     server.configure(serverConfig2);
     expect(server.getWmsTimeFormat()).toBe(timeFormat);
     expect(server.getWmsDateFormat()).toBe(dateFormat);
+
+    expect(server.getWfsContentType()).toBe('text/plain');
   });
 });

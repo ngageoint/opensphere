@@ -96,6 +96,13 @@ os.ui.ogc.OGCDescriptor = function() {
   this.wfsUrl_ = null;
 
   /**
+   * The WFS Content-Type request header.
+   * @type {string}
+   * @private
+   */
+  this.wfsContentType_ = 'text/xml';
+
+  /**
    * @type {?Array<string>}
    * @private
    */
@@ -434,6 +441,22 @@ os.ui.ogc.OGCDescriptor.prototype.getWfsUrl = function() {
  */
 os.ui.ogc.OGCDescriptor.prototype.setWfsUrl = function(value) {
   this.wfsUrl_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.ogc.OGCDescriptor.prototype.getWfsContentType = function() {
+  return this.wfsContentType_;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.ogc.OGCDescriptor.prototype.setWfsContentType = function(value) {
+  this.wfsContentType_ = value;
 };
 
 

@@ -113,6 +113,13 @@ os.ui.ogc.OGCServer = function() {
   this.wmtsPreferred_ = false;
 
   /**
+   * The WFS Content-Type request header.
+   * @type {string}
+   * @private
+   */
+  this.wfsContentType_ = 'text/xml';
+
+  /**
    * @type {goog.Uri.QueryData}
    * @private
    */
@@ -348,6 +355,22 @@ os.ui.ogc.OGCServer.prototype.isWmtsPreferred = function() {
  */
 os.ui.ogc.OGCServer.prototype.setWmtsPreferred = function(value) {
   this.wmtsPreferred_ = value;
+};
+
+
+/**
+ * @return {string}
+ */
+os.ui.ogc.OGCServer.prototype.getWfsContentType = function() {
+  return this.wfsContentType_;
+};
+
+
+/**
+ * @param {string} value
+ */
+os.ui.ogc.OGCServer.prototype.setWfsContentType = function(value) {
+  this.wfsContentType_ = value;
 };
 
 
@@ -595,6 +618,11 @@ os.ui.ogc.OGCServer.prototype.configure = function(config) {
 
   if (config['parseOperationURLs'] !== undefined) {
     this.parseOperationURLs_ = /** @type {boolean} */ (config['parseOperationURLs']);
+  }
+
+  var wfsContentType = /** @type {string|undefined} */ (config['wfsContentType']);
+  if (wfsContentType) {
+    this.setWfsContentType(wfsContentType);
   }
 
   var wfsUrl = this.getWfsUrl();
@@ -1374,6 +1402,7 @@ os.ui.ogc.OGCServer.prototype.parseWfsCapabilities = function(response, uri) {
       descriptor.setWfsName(name);
       descriptor.setWfsNamespace(nameSpace);
       descriptor.setWfsFormats(this.getWfsFormats());
+      descriptor.setWfsContentType(this.getWfsContentType());
 
       if (!descriptor.isWmsEnabled() && !descriptor.isWmtsEnabled()) {
         node = new os.ui.data.DescriptorNode();
