@@ -291,11 +291,3 @@ os.ui.ProviderImportCtrl.prototype.formDiff = function() {};
  * @protected
  */
 os.ui.ProviderImportCtrl.prototype.getConfig = function() {};
-
-
-/**
- * Handles URL changes
- *
- * @export
- */
-os.ui.ProviderImportCtrl.prototype.validateUrl = function() {};

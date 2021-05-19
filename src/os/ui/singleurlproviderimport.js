@@ -107,3 +107,11 @@ os.ui.SingleUrlProviderImportCtrl.prototype.saveAndClose = function() {
 
   os.ui.SingleUrlProviderImportCtrl.base(this, 'saveAndClose');
 };
+
+
+/**
+ * Handles URL changes
+ *
+ * @export
+ */
+os.ui.SingleUrlProviderImportCtrl.prototype.validateUrl = function() {};
