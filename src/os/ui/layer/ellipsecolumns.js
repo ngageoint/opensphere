@@ -1,4 +1,5 @@
 goog.module('os.ui.layer.EllipseColumnsUI');
+goog.module.declareLegacyNamespace();
 
 const {getValues} = goog.require('goog.object');
 const {ROOT} = goog.require('os');
@@ -10,6 +11,7 @@ const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
 const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const AbstractMapping = goog.requireType('os.im.mapping.AbstractMapping');
 
 
 /**
@@ -196,38 +198,55 @@ class Controller {
    * Update the Mappings
    */
   updateMappings() {
+    const importerMappings = this.importer_.getMappings();
     const mappings = this.createMappings();
 
-    this.scope_.$parent['confirmValue'] = mappings;
+    let result = [...importerMappings];
+
+    if (mappings.length != 0 && importerMappings.length != 0) {
+      mappings.forEach((mapping) => {
+        const im = result.findIndex(({toField}) => toField === mapping.toField);
+        if (im >= 0) {
+          result[im] = mapping;
+        } else {
+          result.push(mapping);
+        }
+      });
+    } else if (importerMappings.length == 0) {
+      result = mappings;
+    }
+
+    this.scope_.$parent['confirmValue'] = result;
   }
 
   /**
    * Create Mappings for Ellipse Data
-   * @return {Array<RenameMapping>}
+   * @return {Array<AbstractMapping>}
    * @override
    */
   createMappings() {
     const mappings = [];
+    const type = this['inputType'];
 
-    if (this['radiusColumn']) {
+    if (type == 0 && this['radiusColumn'] && this['radiusUnits']) {
       const rm = new RadiusMapping();
       rm.field = this['radiusColumn'].name;
       rm.setUnits(this['radiusUnits']);
       mappings.push(rm);
     }
-    if (this['semiMajorColumn']) {
+    if (type == 1 && this['semiMajorColumn'] && this['semiMajorUnits']) {
       var smaj = new SemiMajorMapping();
       smaj.field = this['semiMajorColumn'].name;
       smaj.setUnits(this['semiMajorUnits']);
       mappings.push(smaj);
     }
-    if (this['semiMinorColumn']) {
+    if (type == 1 && this['semiMinorColumn'] && this['semiMinorUnits']) {
       var smin = new SemiMinorMapping();
       smin.field = this['semiMinorColumn'].name;
       smin.setUnits(this['semiMinorUnits']);
       mappings.push(smin);
     }
-    if (this['orientation']) {
+    if (type == 1 && this['orientation']) {
       var om = new OrientationMapping();
       om.field = this['orientation'].name;
       mappings.push(om);
@@ -238,7 +257,60 @@ class Controller {
 }
 
 
+/**
+ * Settings key for if this capability is enabled in configs
+ * @type {string}
+ */
+const ALLOW_ELLIPSE_CONFIG = 'allowEllipseConfiguration';
+
+
+/**
+ * Launches the window to configure ellipse columns
+ * @param {*} layer
+ * @param {function()=} opt_confirmCallback
+ */
+const launchConfigureWindow = function(layer, opt_confirmCallback) {
+  const confirm = opt_confirmCallback || callback_.bind(this, layer);
+  const scopeOptions = {
+    'layer': layer
+  };
+
+  const options = /** @type {osx.window.ConfirmOptions} */ ({
+    confirm: confirm,
+    prompt: '<ellipsecolumns layer="layer"></ellipsecolumns>',
+    windowOptions: {
+      'label': 'Map Ellipse Columns',
+      'x': 'center',
+      'y': 'center',
+      'width': '300',
+      'height': 'auto',
+      'modal': 'true',
+      'show-close': 'true'
+    }
+  });
+
+  os.ui.window.ConfirmUI.launchConfirm(options, scopeOptions);
+};
+
+
+/**
+ * The default callback that sets the mappings and re-imports data
+ * @param {*} layer
+ * @param {Array<AbstractMapping>} value
+ * @private
+ */
+const callback_ = function(layer, value) {
+  const source = layer ? layer.getSource() : undefined;
+  const importer = source ? source.getImporter() : undefined;
+
+  importer.setMappings(value);
+  source.loadRequest();
+};
+
+
 exports = {
   Controller,
-  directive
+  directive,
+  ALLOW_ELLIPSE_CONFIG,
+  launchConfigureWindow
 };

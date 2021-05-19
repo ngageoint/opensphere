@@ -153,7 +153,7 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
    * Feature Toggle
    * @type {boolean}
    */
-  this['allowEllipseConfig'] = os.settings.get(os.im.mapping.EllipseMappingManager.ALLOW_ELLIPSE_CONFIG, false);
+  this['allowEllipseConfig'] = os.settings.get(os.ui.layer.EllipseColumnsUI.ALLOW_ELLIPSE_CONFIG, false);
 
   /**
    * Delay for grouping label size changes.
@@ -259,7 +259,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
     this.scope['fillColor'] = this.getFillColor() || this.scope['color'];
     this.scope['fillOpacity'] = this.getFillOpacity();
     this['hasEllipseCols'] = this.hasEllipseColumns();
-    this['ellipseMappings'] = this.getEllipseMappings();
     this['layerNodes'] = this.getLayerNodes();
     this['altitudeMode'] = this.getAltitudeMode();
     this['columns'] = this.getColumns();
@@ -303,51 +302,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
     // update the shape UI
     this.scope.$broadcast(os.ui.UISwitchEventType.UPDATE);
   }
-};
-
-
-/**
- * Sets the ellipse mappings
- * @param {*} values
- */
-os.ui.layer.VectorLayerUICtrl.prototype.setEllipseMappings = function(values) {
-  let mappingOptions;
-  const layerNodes = this.getLayerNodes();
-  layerNodes.forEach((node) => {
-    const layer = node.getLayer();
-    const source = /** @type {os.source.Vector} */ (layer.getSource());
-    const sourceId = source.getId();
-
-    const smm = os.im.mapping.SourceMappingManager.getInstance();
-    const emm = smm.getMappingManager(sourceId, os.im.mapping.EllipseMappingManager.ELLIPSE_MAPPING_KEY);
-
-    emm.setMappingOptions(values);
-  });
-
-  this.ellipseMappings = mappingOptions;
-};
-
-
-/**
- * Returns the ellipse mappings
- * @return {*}
- */
-os.ui.layer.VectorLayerUICtrl.prototype.getEllipseMappings = function() {
-  let mappingOptions;
-  const layerNodes = this.getLayerNodes();
-  layerNodes.forEach((node) => {
-    const layer = node.getLayer();
-    const source = /** @type {os.source.Vector} */ (layer.getSource());
-    const sourceId = source.getId();
-
-    const smm = os.im.mapping.SourceMappingManager.getInstance();
-    const emm = smm.getMappingManager(sourceId, os.im.mapping.EllipseMappingManager.ELLIPSE_MAPPING_KEY);
-
-    // all layer nodes should have the same mapping options, just just find where they're set
-    mappingOptions = emm ? emm.getMappingOptions() : mappingOptions;
-  });
-
-  return this.ellipseMappings || mappingOptions;
 };
 
 
@@ -721,30 +675,20 @@ os.ui.layer.VectorLayerUICtrl.prototype.onLineDashChange = function(event, value
  * Handles changes to ellipse column mapping
  *
  * @param {angular.Scope.Event} event
- * @param {os.im.mapping.EllipseMappingManager.MappingOptions} value
+ * @param {Array<*>} value
  * @protected
  */
 os.ui.layer.VectorLayerUICtrl.prototype.onEllipseColumnMapping = function(event, value) {
   event.stopPropagation();
   const layerNodes = this.getLayerNodes();
-  layerNodes.forEach((node) => {
-    const layer = node.getLayer();
-    const source = /** @type {os.source.Vector} */ (layer.getSource());
-    const sourceId = source.getId();
 
-    const smm = os.im.mapping.SourceMappingManager.getInstance();
-    let emm = smm.getMappingManager(sourceId, os.im.mapping.EllipseMappingManager.ELLIPSE_MAPPING_KEY);
+  layerNodes.forEach((layerNode) => {
+    const layer = layerNode.getLayer();
+    const source = layer ? layer.getSource() : undefined;
+    const importer = source ? source.getImporter() : undefined;
 
-    if (emm == undefined) {
-      emm = new os.im.mapping.EllipseMappingManager.MappingManager(source);
-      smm.addMappingManager(sourceId, os.im.mapping.EllipseMappingManager.ELLIPSE_MAPPING_KEY, emm);
-    }
-
-    emm.setMappingOptions(value);
-    emm.createMappings(value);
-    emm.executeMappings();
-
-    this.setEllipseMappings(value);
+    importer.setMappings(value);
+    source.loadRequest();
   });
 };
 

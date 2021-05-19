@@ -45,13 +45,6 @@ const ELLIPSE_MAPPING_KEY = 'ellipseMappings';
 
 
 /**
- * Settings keys for if this is enabled
- * @type {string}
- */
-const ALLOW_ELLIPSE_CONFIG = 'allowEllipseConfiguration';
-
-
-/**
  * Class for Ellipse Mapping Manager
  * @unrestricted
  */
@@ -200,6 +193,5 @@ class MappingManager extends AbstractMappingManager {
 exports = {
   MappingOptions,
   MappingManager,
-  ALLOW_ELLIPSE_CONFIG,
   ELLIPSE_MAPPING_KEY
 };

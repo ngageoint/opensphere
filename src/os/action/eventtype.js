@@ -22,6 +22,7 @@ exports = {
   ENABLE_TIME: 'layer:enableTime',
   SHOW_DESCRIPTION: 'showDescription',
   FEATURE_LIST: 'layer:featureList',
+  LAYER_SETTINGS: 'layer:settings',
 
   // map
   COPY: GoogEventType.COPY,

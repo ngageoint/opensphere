@@ -237,7 +237,7 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.select2Formatter_ = function(item,
  * @private
  */
 os.ui.layer.VectorStyleControlsCtrl.prototype.onEllipseMapping_ = function(data) {
-  if (data && data['type'] >= 0) {
+  if (data) {
     this.scope['hasEllipseCols'] = true;
     this['ellipseMapping'] = data;
     this.scope.$emit(os.ui.layer.VectorStyleControlsEventType.ELLIPSE_COLUMN_CHANGE, data);
@@ -252,26 +252,8 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.onEllipseMapping_ = function(data)
  */
 os.ui.layer.VectorStyleControlsCtrl.prototype.launchConfigureWindow = function() {
   const confirm = this.onEllipseMapping_.bind(this);
-  const scopeOptions = {
-    'columns': this.scope['columns'] || null,
-    'prevConfig': this['ellipseMapping'] || this.scope['ellipseMappings'],
-    'layer': this.scope['layerNodes'][0].getLayer()
-  };
+  const layer = this.scope['layerNodes'] ? this.scope['layerNodes'][0].getLayer() : undefined;
 
-  const options = /** @type {osx.window.ConfirmOptions} */ ({
-    confirm: confirm,
-    prompt: '<ellipsecolumns prev-config="prevConfig" columns="columns" layer="layer"></ellipsecolumns>',
-    windowOptions: {
-      'label': 'Map Ellipse Columns',
-      'x': 'center',
-      'y': 'center',
-      'width': '300',
-      'height': 'auto',
-      'modal': 'true',
-      'show-close': 'true'
-    }
-  });
-
-  os.ui.window.ConfirmUI.launchConfirm(options, scopeOptions);
+  os.ui.layer.EllipseColumnsUI.launchConfigureWindow(layer, confirm);
 };
 
