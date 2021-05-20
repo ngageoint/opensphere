@@ -134,8 +134,9 @@ os.ui.LayersCtrl = function($scope, $element) {
   this.scope['tilesBtnIcon'] = os.ROOT + 'images/tiles-base.png';
   this.scope['featuresBtnIcon'] = os.ROOT + 'images/features-base.png';
 
-  this.scope['viewEnabledTooltip'] = 'When enabled, layers will be automatically grouped. When disabled, layers ' +
-      'may be manually grouped into folders by right-clicking in the Layers view.';
+  this.scope['createFolderTooltip'] = 'Create a new folder to manually group layers, when Group By is disabled.';
+  this.scope['viewEnabledTooltip'] = 'Automatically group layers based on the Group By selection. Disable to ' +
+      'manually organize layers in folders.';
 
   this.init();
 
@@ -190,6 +191,28 @@ os.ui.LayersCtrl.prototype.disposeInternal = function() {
  */
 os.ui.LayersCtrl.prototype.close = function() {
   os.ui.window.close(this.element);
+};
+
+
+/**
+ * Create a new folder.
+ *
+ * @export
+ */
+os.ui.LayersCtrl.prototype.createFolder = function() {
+  const createOptions = {
+    id: goog.string.getRandomString(),
+    type: 'folder',
+    name: 'New Folder',
+    children: [],
+    parentId: '',
+    collapsed: false
+  };
+
+  os.layer.folder.createOrEditFolder(createOptions, (name) => {
+    createOptions.name = name;
+    os.layer.FolderManager.getInstance().createFolder(createOptions);
+  });
 };
 
 

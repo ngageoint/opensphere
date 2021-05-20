@@ -1,6 +1,6 @@
 <div class="d-flex flex-column flex-fill">
   <div class="form-row align-items-center flex-shrink-0 mt-1">
-    <div class="col-auto form-check form-check-inline m-0" >
+    <div class="col-auto form-check form-check-inline m-0 pr-0" >
       <label class="d-flex align-items-center form-check-label" title="{{viewEnabledTooltip}}">
         <input class="form-check-input" type="checkbox"
             ng-model="viewEnabled"
@@ -16,10 +16,15 @@
       </select>
     </div>
     <div class="col-auto">
+      <button class="btn btn-sm btn-success" title="{{createFolderTooltip}}"
+          ng-click="layers.createFolder()"
+          ng-disabled="viewEnabled">
+        <i class="fa fa-folder"></i>
+      </button>
       <div class="btn-group add-data-group" ng-right-click="layers.openMenu('.add-data-group')">
         <button class="btn btn-sm btn-success" title="Add data to the map" ng-click="layers.toggle('addData')"
           ng-class="{active: layers.isWindowActive('addData')}">
-          <i class="fa fa-plus fa-fw color-secondary"></i>
+          <i class="fa fa-plus"></i>
         </button>
         <button class="btn btn-sm btn-success dropdown-toggle" ng-click="layers.openMenu('.add-data-group')"></button>
       </div>

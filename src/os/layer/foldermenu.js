@@ -22,7 +22,7 @@ let initialized = false;
 /**
  * Gets the folder items from the context.
  * @param {Context} nodes
- * @return {Array<osx.layer.FolderOptions>}
+ * @return {!Array<!osx.layer.FolderOptions>}
  */
 const getItemsFromContext = (nodes) => {
   const fm = FolderManager.getInstance();

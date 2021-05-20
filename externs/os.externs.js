@@ -258,7 +258,7 @@ osx.layer.PresetSearch;
  *   type: !string,
  *   parentId: !string,
  *   name: (string|undefined),
- *   children: (Array<(osx.layer.FolderOptions)>|undefined),
+ *   children: !Array<!osx.layer.FolderOptions>,
  *   collapsed: (boolean|undefined)
  * }}
  */
