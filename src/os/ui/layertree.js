@@ -21,6 +21,7 @@ os.ui.layerTreeDirective = function() {
   var dir = os.ui.slick.slickTreeDirective();
   dir.controller = os.ui.LayerTreeCtrl;
   dir.scope['groupBy'] = '=';
+  dir.scope['groupByEnabled'] = '=';
   return dir;
 };
 
@@ -156,7 +157,7 @@ os.ui.LayerTreeCtrl.prototype.canDragMove = function(rows, insertBefore) {
         return !value;
       }
 
-      if (this.scope['groupBy']) {
+      if (this.scope['groupBy'] && this.scope['groupByEnabled']) {
         // layers cannot be dragged to a different Z-Order group
         var z = os.data.ZOrder.getInstance();
         var differentZ = z.getZType(item.getId()) !== z.getZType(beforeItem.getId());
@@ -254,7 +255,7 @@ os.ui.LayerTreeCtrl.prototype.doMove = function(rows, insertBefore) {
 
           for (var j = 0, m = moveIds.length; j < m; j++) {
             for (var k = 0, l = targetIds.length; k < l; k++) {
-              if (this.scope['groupBy']) {
+              if (this.scope['groupBy'] && this.scope['groupByEnabled']) {
                 // use !after since the tree is sorted by descending z-index
                 z.move(moveIds[j], targetIds[k], !after);
               } else {

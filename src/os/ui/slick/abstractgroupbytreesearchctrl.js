@@ -5,6 +5,8 @@ goog.require('goog.async.Delay');
 goog.require('os.config.Settings');
 goog.require('os.ui');
 
+goog.requireType('os.data.groupby.INodeGroupBy');
+
 
 
 /**
@@ -46,14 +48,24 @@ os.ui.slick.AbstractGroupByTreeSearchCtrl = function($scope, $element, searchDel
   /**
    * The search term
    * @type {string}
-   * @protected
    */
   this.scope['term'] = '';
 
   /**
+   * The selected group by view
+   * @type {os.data.groupby.INodeGroupBy}
+   */
+  this.scope['view'] = null;
+
+  /**
+   * If the group by is enabled
+   * @type {boolean}
+   */
+  this.scope['viewEnabled'] = true;
+
+  /**
    * The group by views
-   * @type {Array}
-   * @protected
+   * @type {Array<os.data.groupby.INodeGroupBy>}
    */
   this.scope['views'] = [];
 
@@ -78,19 +90,18 @@ os.ui.slick.AbstractGroupByTreeSearchCtrl = function($scope, $element, searchDel
 
   /**
    * @type {os.ui.action.ActionManager}
-   * @protected
    */
   this.scope['contextMenu'] = null;
-
-  $scope.$on('$destroy', this.dispose.bind(this));
-  $scope.$on('search', this.onSearch.bind(this));
-  $scope.$on('collapseChange', this.save.bind(this));
 
   /**
    * @type {string}
    * @protected
    */
   this.prefix = 'groupBy';
+
+  $scope.$on('$destroy', this.dispose.bind(this));
+  $scope.$on('search', this.onSearch.bind(this));
+  $scope.$on('collapseChange', this.save.bind(this));
 };
 goog.inherits(os.ui.slick.AbstractGroupByTreeSearchCtrl, goog.Disposable);
 
@@ -133,8 +144,16 @@ os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.init = function() {
 
   var viewKey = /** @type {string} */ (os.settings.get([this.prefix, this.title, 'groupBy'],
       os.settings.get([this.title, 'groupBy'], this.viewDefault)));
+  var view = this.scope['views'][viewKey] || this.scope['views'][this.viewDefault];
 
-  this.scope['view'] = this.scope['views'][viewKey];
+  this.scope['view'] = view;
+
+  // The "Folder" view was replaced by the toggle checkbox, so if that was selected disable Group By.
+  var defaultViewEnabled = viewKey !== 'Folder';
+  var viewEnabled = /** @type {boolean} */ (os.settings.get([this.prefix, this.title, 'groupByEnabled'],
+      defaultViewEnabled));
+  this.scope['viewEnabled'] = viewEnabled;
+
   this.search();
 };
 
@@ -169,14 +188,19 @@ os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.clearSearch = function() {
 os.ui.slick.AbstractGroupByTreeSearchCtrl.prototype.onSearch = function() {
   var t = this.scope['term'];
 
+  var viewEnabled = !!this.scope['viewEnabled'];
+  var view = viewEnabled ? this.scope['view'] : null;
+
   for (var key in this.scope['views']) {
-    if (this.scope['views'][key] === this.scope['view']) {
+    if (this.scope['views'][key] === view) {
       os.settings.set([this.prefix, this.title, 'groupBy'], key);
       break;
     }
   }
 
+  os.settings.set([this.prefix, this.title, 'groupByEnabled'], viewEnabled);
+
   // do the search
-  this.treeSearch.beginSearch(t, this.scope['view'] == -1 ? null : this.scope['view']);
+  this.treeSearch.beginSearch(t, view == -1 ? null : view);
   os.ui.apply(this.scope);
 };
