@@ -17,12 +17,13 @@ const Feature = goog.requireType('ol.Feature');
  * @param {?Menu} menu a Menu into which to add/remove OGC FeatureLayer buttons
  * @param {!function()} sort a function that gets/increments a numeric index; as appropriate for the menu
  * @param {?function()} getCallback returns a function(feature); deals with timing of angular scope, etc
- * @param {!string} key
+ * @param {!Array<*>} entry
  * @private
  */
-const onAddUpdate_ = function(menu, sort, getCallback, key) {
+const onAddUpdate_ = function(menu, sort, getCallback, entry) {
   if (menu) {
-    var [, service, settings] = exports.getInstance().entry(key) || [];
+    const service = /** @type {!OGCService} */ (entry[1]);
+    const settings = /** @type {!Object} */ (entry[2]);
     if (service && settings) {
       var eventType = service.getQuery().getEventType(); // this keeps the eventtype that was being used in prior implementation
 
@@ -51,12 +52,12 @@ const onAddUpdate_ = function(menu, sort, getCallback, key) {
 
 /**
  * @param {?Menu} menu
- * @param {!string} key
+ * @param {!Array<*>} entry
  * @private
  */
-const onRemove_ = function(menu, key) {
+const onRemove_ = function(menu, entry) {
   if (menu) {
-    var [, service] = exports.getInstance().entry(key) || [];
+    const service = /** @type {!OGCService} */ (entry[1]);
     if (service) {
       var eventType = service.getQuery().getEventType(); // this keeps the eventtype that was being used in prior implementation
       var root = menu.getRoot();

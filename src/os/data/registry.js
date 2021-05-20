@@ -39,6 +39,8 @@ class Registry extends EventTarget {
    * @inheritDoc
    */
   dispose() {
+    this.clear();
+
     this.removeAllListeners(PROPERTYCHANGE);
 
     super.dispose();
@@ -124,14 +126,15 @@ class Registry extends EventTarget {
 
   /**
    * Quick bind to this registry
-   * @param {!function(!string)} onAddChange
-   * @param {!function(!string)} onRemove
+   * @param {!function(!Array<?>)} onAddChange
+   * @param {!function(!Array<?>)} onRemove
+   * @param {function(!Array<Array<?>>)=} opt_onClear
    * @param {?=} opt_this
    */
-  on(onAddChange, onRemove, opt_this) {
+  on(onAddChange, onRemove, opt_onClear, opt_this) {
     // call for all the existing entries...
-    this.keys().forEach((key) => {
-      onAddChange.call(opt_this, key);
+    this.entries().forEach((entry) => {
+      if (entry) onAddChange.call(opt_this, entry);
     });
 
     // then listen for changes to and run listeners as needed
@@ -145,11 +148,15 @@ class Registry extends EventTarget {
           onRemove.call(opt_this, event.newVal_);
           break;
         case RegistryPropertyChange.CLEAR:
-          const keys = event.newVal_;
-          if (keys && keys.length > 0) {
-            keys.forEach((key) => {
-              onRemove.call(opt_this, key);
-            });
+          if (opt_onClear) {
+            opt_onClear.call(opt_this, event.newVal_);
+          } else {
+            const entries = event.newVal_;
+            if (entries && entries.length > 0) {
+              entries.forEach((entry) => {
+                onRemove.call(opt_this, entry);
+              });
+            }
           }
           break;
         default:
@@ -169,10 +176,11 @@ class Registry extends EventTarget {
   register(key, value, ...opt) {
     const had = this.has(key);
     this.map_[key] = [value, opt];
+    const entry = this.entry(key);
     if (!had) {
-      this.dispatchEvent(new PropertyChangeEvent(RegistryPropertyChange.ADD, key));
+      this.dispatchEvent(new PropertyChangeEvent(RegistryPropertyChange.ADD, entry));
     } else {
-      this.dispatchEvent(new PropertyChangeEvent(RegistryPropertyChange.UPDATE, key));
+      this.dispatchEvent(new PropertyChangeEvent(RegistryPropertyChange.UPDATE, entry));
     }
     return had;
   }
@@ -184,8 +192,9 @@ class Registry extends EventTarget {
    */
   remove(key) {
     if (this.has(key)) {
-      this.dispatchEvent(new PropertyChangeEvent(RegistryPropertyChange.REMOVE, key));
+      const entry = this.entry(key);
       delete this.map_[key];
+      this.dispatchEvent(new PropertyChangeEvent(RegistryPropertyChange.REMOVE, entry));
       return true;
     }
     return false;
@@ -195,8 +204,9 @@ class Registry extends EventTarget {
    * Empty out the Registry
    */
   clear() {
-    this.dispatchEvent(new PropertyChangeEvent(RegistryPropertyChange.CLEAR, this.keys()));
+    const entries = this.entries();
     this.map_ = /** @type {!Object<string, T>} */ ({});
+    this.dispatchEvent(new PropertyChangeEvent(RegistryPropertyChange.CLEAR, entries));
   }
 }
 
