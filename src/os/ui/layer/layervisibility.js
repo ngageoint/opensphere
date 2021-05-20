@@ -13,7 +13,7 @@ const LayerNode = goog.requireType('os.data.LayerNode');
  */
 const template = `
   <span ng-click="ctrl.toggle($event)" title="{{ctrl.getTooltip()}}">
-    <i class="fa" ng-class="ctrl.isVisible() ? 'fa-eye' : 'fa-eye-slash'"></i>
+    <i class="fa fa-fw" ng-class="ctrl.isVisible() ? 'fa-eye' : 'fa-eye-slash'"></i>
   </span>`;
 
 
