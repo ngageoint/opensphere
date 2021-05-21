@@ -1,7 +1,7 @@
 goog.declareModuleId('plugin.cesium.mixin.renderloop');
 
-const Dispatcher = goog.require('os.Dispatcher');
 const AutoRenderLoop = goog.require('olcs.AutoRenderLoop');
+const Dispatcher = goog.require('os.Dispatcher');
 const MapEvent = goog.require('os.MapEvent');
 const TimelineController = goog.require('os.time.TimelineController');
 const TimelineEventType = goog.require('os.time.TimelineEventType');

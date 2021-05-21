@@ -1,16 +1,18 @@
 goog.module('plugin.vectortools.MergeLayer');
 goog.module.declareLegacyNamespace();
 
-const os = goog.require('os');
 const MapContainer = goog.require('os.MapContainer');
+const State = goog.require('os.command.State');
+const OSDataManager = goog.require('os.data.OSDataManager');
 const osFeature = goog.require('os.feature');
 const layer = goog.require('os.layer');
+const style = goog.require('os.style');
 const vectortools = goog.require('plugin.vectortools');
 
-const State = goog.require('os.command.State');
-const style = goog.require('os.style');
 const ICommand = goog.requireType('os.command.ICommand');
+const ISource = goog.requireType('os.source.ISource');
 const VectorSource = goog.requireType('os.source.Vector');
+const Options = goog.requireType('plugin.vectortools.Options');
 
 
 /**
@@ -23,7 +25,7 @@ class MergeLayer {
    * Constructor.
    * @param {!Array<string>} sourceIds The data source IDs to merge
    * @param {string=} opt_name Optional name to give the merged layer
-   * @param {plugin.vectortools.Options=} opt_options The options
+   * @param {Options=} opt_options The options
    */
   constructor(sourceIds, opt_name, opt_options) {
     /**
@@ -54,13 +56,13 @@ class MergeLayer {
   }
 
   /**
-   * @return {Array.<os.source.ISource>} The sources
+   * @return {Array.<ISource>} The sources
    */
   getSources() {
     // iterate thru all the sourceIds and get each of the sources
     var sources = Array(this.sourceIds.length);
     for (var i = 0; i < this.sourceIds.length; i++) {
-      sources[i] = os.osDataManager.getSource(this.sourceIds[i]);
+      sources[i] = OSDataManager.getInstance().getSource(this.sourceIds[i]);
     }
     return sources;
   }

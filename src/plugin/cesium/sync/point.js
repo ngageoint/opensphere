@@ -2,19 +2,19 @@ goog.module('plugin.cesium.sync.point');
 
 const {hashCode} = goog.require('goog.string');
 const {getUid} = goog.require('ol');
+const OLIconStyle = goog.require('ol.style.Icon');
+const OLRegularShape = goog.require('ol.style.RegularShape');
 const olcsCore = goog.require('olcs.core');
+const {ZoomScale} = goog.require('os.map');
+const OSIconStyle = goog.require('os.style.Icon');
 const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
 const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
 const {drawShape} = goog.require('plugin.cesium.sync.shape');
-const OLIconStyle = goog.require('ol.style.Icon');
-const {ZoomScale} = goog.require('os.map');
-const OSIconStyle = goog.require('os.style.Icon');
-const OLRegularShape = goog.require('ol.style.RegularShape');
 
 const Feature = goog.requireType('ol.Feature');
 const MultiPoint = goog.requireType('ol.geom.MultiPoint');
-const OLImageStyle = goog.requireType('ol.style.Image');
 const Point = goog.requireType('ol.geom.Point');
+const OLImageStyle = goog.requireType('ol.style.Image');
 const Style = goog.requireType('ol.style.Style');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
 

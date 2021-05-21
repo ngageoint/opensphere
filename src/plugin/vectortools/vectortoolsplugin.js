@@ -2,25 +2,30 @@ goog.module('plugin.vectortools.VectorToolsPlugin');
 goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
-const os = goog.require('os');
 const MapContainer = goog.require('os.MapContainer');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const ParallelCommand = goog.require('os.command.ParallelCommand');
 const LayerNode = goog.require('os.data.LayerNode');
+const OSDataManager = goog.require('os.data.OSDataManager');
 const fn = goog.require('os.fn');
-const ogc = goog.require('os.ogc');
 const LayerType = goog.require('os.layer.LayerType');
 const VectorLayer = goog.require('os.layer.Vector');
+const ogc = goog.require('os.ogc');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');
-const osUiMenuLayer = goog.require('os.ui.menu.layer');
-
+const layerMenu = goog.require('os.ui.menu.layer');
 const vectortools = goog.require('plugin.vectortools');
 const CopyLayer = goog.require('plugin.vectortools.CopyLayer');
 const {launchJoinWindow, launchMergeWindow} = goog.require('plugin.vectortools.ui');
 
+const ICommand = goog.requireType('os.command.ICommand');
+const ISource = goog.requireType('os.source.ISource');
+const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const MenuItem = goog.requireType('os.ui.menu.MenuItem');
+const Options = goog.requireType('plugin.vectortools.Options');
 
 /**
  */
@@ -37,9 +42,9 @@ class VectorToolsPlugin extends AbstractPlugin {
    * @inheritDoc
    */
   init() {
-    var menu = osUiMenuLayer.MENU;
+    var menu = layerMenu.MENU;
     if (menu) {
-      var group = menu.getRoot().find(osUiMenuLayer.GroupLabel.TOOLS);
+      var group = menu.getRoot().find(layerMenu.GroupLabel.TOOLS);
       asserts.assert(group, 'Group should exist! Check spelling?');
 
       var labels = ['All', 'Shown', 'Selected', 'Unselected', 'Hidden'];
@@ -133,8 +138,8 @@ const EventType = {
 /**
  * Shows a menu item if the context contains all vector layers.
  *
- * @param {osUiMenuLayer.Context} context The menu context.
- * @this {os.ui.menu.MenuItem}
+ * @param {layerMenu.Context} context The menu context.
+ * @this {MenuItem}
  */
 const visibleIfIsVector = function(context) {
   this.visible = false;
@@ -142,7 +147,7 @@ const visibleIfIsVector = function(context) {
   if (context && context.length > 0) {
     this.visible = context.every(function(item) {
       if (item instanceof LayerNode) {
-        var layer = /** @type {!os.data.LayerNode} */ (item).getLayer();
+        var layer = /** @type {!LayerNode} */ (item).getLayer();
         return layer instanceof VectorLayer && layer.getId() !== MapContainer.DRAW_ID &&
             layer.getOSType() !== LayerType.IMAGE;
       }
@@ -156,14 +161,14 @@ const visibleIfIsVector = function(context) {
 /**
  * Handle layer menu events.
  *
- * @param {!os.ui.menu.MenuEvent<osUiMenuLayer.Context>} event The menu event.
+ * @param {!MenuEvent<layerMenu.Context>} event The menu event.
  */
 const handleMenuEvent = function(event) {
   var parts = event.type.split(/\s+/);
   var type = parts[0];
 
   if (parts.length > 1) {
-    vectortools.setOption(/** @type {vectortools.Options} */ (parseInt(parts[1], 10)));
+    vectortools.setOption(/** @type {Options} */ (parseInt(parts[1], 10)));
   }
 
   var context = event.getContext();
@@ -220,7 +225,7 @@ const handleMenuEvent = function(event) {
 /**
  * Map a tree node to layer id.
  *
- * @param {os.structs.ITreeNode} node The tree node.
+ * @param {ITreeNode} node The tree node.
  * @return {string|undefined} The layer id.
  */
 const nodeToId = function(node) {
@@ -232,13 +237,13 @@ const nodeToId = function(node) {
 /**
  * Map a tree node to data source.
  *
- * @param {os.structs.ITreeNode} node The tree node.
- * @return {os.source.ISource|undefined} The data source.
+ * @param {ITreeNode} node The tree node.
+ * @return {ISource|undefined} The data source.
  */
 const nodeToSource = function(node) {
   var layer = fn.mapNodeToLayer(node);
   if (layer) {
-    return os.osDataManager.getSource(layer.getId()) || undefined;
+    return OSDataManager.getInstance().getSource(layer.getId()) || undefined;
   }
 
   return undefined;
@@ -248,8 +253,8 @@ const nodeToSource = function(node) {
 /**
  * Map a tree node to Copy Layer command.
  *
- * @param {os.structs.ITreeNode} node The tree node.
- * @return {os.command.ICommand|undefined}
+ * @param {ITreeNode} node The tree node.
+ * @return {ICommand|undefined}
  */
 const nodeToCopyCommand = function(node) {
   var layer = fn.mapNodeToLayer(node);

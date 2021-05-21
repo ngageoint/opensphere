@@ -1,7 +1,6 @@
 goog.module('plugin.vectortile.VectorTileLayerConfig');
 
 const log = goog.require('goog.log');
-
 const {DEFAULT_MAX_ZOOM, DEFAULT_MIN_ZOOM} = goog.require('ol');
 const olColor = goog.require('ol.color');
 const olExtent = goog.require('ol.extent');
@@ -9,24 +8,26 @@ const VectorTileRenderType = goog.require('ol.layer.VectorTileRenderType');
 const {transformExtent} = goog.require('ol.proj');
 const Style = goog.require('ol.style.Style');
 
-const Settings = goog.require('os.config.Settings');
-const DisplaySetting = goog.require('os.config.DisplaySetting');
 const osColor = goog.require('os.color');
+const DisplaySetting = goog.require('os.config.DisplaySetting');
+const Settings = goog.require('os.config.Settings');
 const VectorTileLayer = goog.require('os.layer.VectorTile');
-const osMap = goog.require('os.map');
-const VectorTileSource = goog.require('os.ol.source.VectorTile');
 const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
 const AbstractTileLayerConfig = goog.require('os.layer.config.AbstractTileLayerConfig');
+const osMap = goog.require('os.map');
 const net = goog.require('os.net');
 const CrossOrigin = goog.require('os.net.CrossOrigin');
 const Request = goog.require('os.net.Request');
+const VectorTileSource = goog.require('os.ol.source.VectorTile');
 const {addProxyWrapper, autoProxyCheck} = goog.require('os.ol.source.tileimage');
 const {getBestSupportedProjection, EPSG4326} = goog.require('os.proj');
 const StyleManager = goog.require('os.style.StyleManager');
 const {DEFAULT_FONT} = goog.require('os.style.label');
 const {getVectorTileFormat, VectorTileFormat} = goog.require('plugin.vectortile.format');
 
+const Feature = goog.requireType('ol.Feature');
 const Projection = goog.requireType('ol.proj.Projection');
+const RenderFeature = goog.requireType('ol.render.Feature');
 const OLVectorTileSource = goog.requireType('ol.source.VectorTile');
 
 
@@ -233,9 +234,9 @@ class VectorTileLayerConfig extends AbstractLayerConfig {
             const glStyleFunction = parseMapboxStyle(glStyle, sources, resolutions, getFonts);
 
             /**
-             * @param {ol.Feature|ol.render.Feature} feature
+             * @param {Feature|RenderFeature} feature
              * @param {number} resolution
-             * @return {ol.style.Style|Array<ol.style.Style>}
+             * @return {Style|Array<Style>}
              */
             const styleFunction = (feature, resolution) => {
               let styleConfig = glStyleFunction(feature.getProperties(), feature.getGeometry().getType(), resolution);

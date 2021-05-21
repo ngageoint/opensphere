@@ -3,14 +3,13 @@ goog.module.declareLegacyNamespace();
 
 const EventType = goog.require('goog.events.EventType');
 const googObject = goog.require('goog.object');
-const ui = goog.require('os.ui');
-const ColumnMappingSettings = goog.require('os.ui.column.mapping.ColumnMappingSettings');
-const vectortools = goog.require('plugin.vectortools');
-
 const os = goog.require('os');
 const ColumnMappingManager = goog.require('os.column.ColumnMappingManager');
+const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
+const ColumnMappingSettings = goog.require('os.ui.column.mapping.ColumnMappingSettings');
 const windows = goog.require('os.ui.menu.windows');
+const vectortools = goog.require('plugin.vectortools');
 
 
 /**

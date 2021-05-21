@@ -2,8 +2,8 @@ goog.module('plugin.cesium.TerrainLayer');
 
 goog.require('plugin.basemap.terrainNodeUIDirective');
 
-const dispatcher = goog.require('os.Dispatcher');
 const log = goog.require('goog.log');
+const dispatcher = goog.require('os.Dispatcher');
 const MapEvent = goog.require('os.MapEvent');
 const LayerNode = goog.require('os.data.LayerNode');
 const LayerType = goog.require('os.layer.LayerType');

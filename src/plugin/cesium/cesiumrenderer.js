@@ -1,6 +1,7 @@
 goog.module('plugin.cesium.CesiumRenderer');
 
 const Promise = goog.require('goog.Promise');
+const dispose = goog.require('goog.dispose');
 const classlist = goog.require('goog.dom.classlist');
 const log = goog.require('goog.log');
 const {clamp} = goog.require('goog.math');
@@ -8,20 +9,19 @@ const userAgent = goog.require('goog.userAgent');
 const ViewHint = goog.require('ol.ViewHint');
 const OLCesium = goog.require('olcs.OLCesium');
 
-const MapEvent = goog.require('os.MapEvent');
-const terrain = goog.require('os.map.terrain');
-const MapContainer = goog.require('os.MapContainer');
 const dispatcher = goog.require('os.Dispatcher');
+const MapContainer = goog.require('os.MapContainer');
+const MapEvent = goog.require('os.MapEvent');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const DisplaySetting = goog.require('os.config.DisplaySetting');
 const settings = goog.require('os.config.Settings');
 const osFeature = goog.require('os.feature');
 const SynchronizerType = goog.require('os.layer.SynchronizerType');
 const {WEBGL_CANVAS_CLASS} = goog.require('os.map');
+const terrain = goog.require('os.map.terrain');
 const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');
 const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 const SynchronizerManager = goog.require('os.webgl.SynchronizerManager');
-const HeatmapSynchronizerType = goog.require('plugin.heatmap.SynchronizerType');
 
 const {
   DEFAULT_FOG_DENSITY,
@@ -50,6 +50,7 @@ const ImageSynchronizer = goog.require('plugin.cesium.sync.ImageSynchronizer');
 const RootSynchronizer = goog.require('plugin.cesium.sync.RootSynchronizer');
 const TileSynchronizer = goog.require('plugin.cesium.sync.TileSynchronizer');
 const VectorSynchronizer = goog.require('plugin.cesium.sync.VectorSynchronizer');
+const HeatmapSynchronizerType = goog.require('plugin.heatmap.SynchronizerType');
 
 const OLMap = goog.requireType('ol.Map');
 const AbstractSynchronizer = goog.requireType('olcs.AbstractSynchronizer');
@@ -642,7 +643,7 @@ class CesiumRenderer extends AbstractWebGLRenderer {
     if (this.terrainLayer_) {
       MapContainer.getInstance().removeLayer(this.terrainLayer_);
 
-      goog.dispose(this.terrainLayer_);
+      dispose(this.terrainLayer_);
       this.terrainLayer_ = undefined;
     }
 

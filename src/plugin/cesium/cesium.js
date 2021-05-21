@@ -28,9 +28,9 @@ const ImageryProvider = goog.require('plugin.cesium.ImageryProvider');
 const Deferred = goog.requireType('goog.async.Deferred');
 const Geometry = goog.requireType('ol.geom.Geometry');
 const GeometryCollection = goog.requireType('ol.geom.GeometryCollection');
+const SimpleGeometry = goog.requireType('ol.geom.SimpleGeometry');
 const LayerBase = goog.requireType('ol.layer.Base');
 const Layer = goog.requireType('ol.layer.Layer');
-const SimpleGeometry = goog.requireType('ol.geom.SimpleGeometry');
 const Projection = goog.requireType('ol.proj.Projection');
 
 

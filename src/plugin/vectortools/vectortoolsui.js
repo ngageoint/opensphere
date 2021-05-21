@@ -1,9 +1,10 @@
 goog.declareModuleId('plugin.vectortools.ui');
 
 const osWindow = goog.require('os.ui.window');
+const Icons = goog.require('plugin.vectortools.Icons');
 const {directiveTag: joinEl} = goog.require('plugin.vectortools.JoinUI');
 const {directiveTag: mergeEl} = goog.require('plugin.vectortools.MergeUI');
-const Icons = goog.require('plugin.vectortools.Icons');
+
 
 /**
  * Launches the Join Layer window.

@@ -8,11 +8,11 @@ const SimpleGeometry = goog.require('ol.geom.SimpleGeometry');
 const olcsCore = goog.require('olcs.core');
 const osLabel = goog.require('os.style.label');
 const {GeometryInstanceId} = goog.require('plugin.cesium');
-const {getColor, getLineWidthFromStyle} = goog.require('plugin.cesium.sync.style');
-const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
-const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
 const {isPrimitiveShown} = goog.require('plugin.cesium.primitive');
 const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
+const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
+const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
+const {getColor, getLineWidthFromStyle} = goog.require('plugin.cesium.sync.style');
 
 const MultiPoint = goog.requireType('ol.geom.MultiPoint');
 const Point = goog.requireType('ol.geom.Point');

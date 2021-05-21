@@ -3,16 +3,16 @@ goog.module('plugin.vectortools.MergeUI');
 goog.require('os.ui.util.validationMessageDirective');
 goog.require('plugin.vectortools.MappingCounterUI');
 
-const CommandProcessor = goog.require('os.command.CommandProcessor');
-const ogc = goog.require('os.ogc');
-const ui = goog.require('os.ui');
-const WindowEventType = goog.require('os.ui.WindowEventType');
-
 const olArray = goog.require('ol.array');
 const os = goog.require('os');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const OSDataManager = goog.require('os.data.OSDataManager');
 const SourceManager = goog.require('os.data.SourceManager');
+const ogc = goog.require('os.ogc');
 const PropertyChange = goog.require('os.source.PropertyChange');
+const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
 const osWindow = goog.require('os.ui.window');
 const MergeLayer = goog.require('plugin.vectortools.MergeLayer');
 
@@ -140,7 +140,7 @@ class Controller extends SourceManager {
     this['count'] = 0;
 
     for (var i = 0, ii = this.sourceIds_.length; i < ii; i++) {
-      var source = os.osDataManager.getSource(this.sourceIds_[i]);
+      var source = OSDataManager.getInstance().getSource(this.sourceIds_[i]);
       if (source) {
         this['count'] += source.getFeatures().length;
       }

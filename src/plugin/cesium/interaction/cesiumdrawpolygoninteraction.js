@@ -1,11 +1,11 @@
 goog.module('plugin.cesium.interaction.drawpolygon');
 
+const core = goog.require('olcs.core');
 const dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
-const osInterpolate = goog.require('os.interpolate');
-const core = goog.require('olcs.core');
 const DrawPolygon = goog.require('os.interaction.DrawPolygon');
+const osInterpolate = goog.require('os.interpolate');
 
 const LineString = goog.requireType('ol.geom.LineString');
 const CesiumRenderer = goog.requireType('plugin.cesium.CesiumRenderer');

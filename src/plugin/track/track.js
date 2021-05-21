@@ -16,8 +16,10 @@ const osTrack = goog.require('os.track');
 const kml = goog.require('plugin.file.kml');
 const KMLNodeAdd = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
 
+const Promise = goog.requireType('goog.Promise');
 const OlFeature = goog.requireType('ol.Feature');
 const OlGeometry = goog.requireType('ol.geom.Geometry');
+const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 
 /**
  * Base logger for the track plugin.
@@ -324,7 +326,7 @@ const getMultiLineTime = osTrack.getMultiLineTime;
  *
  * @param {!OlFeature} feature The feature
  * @param {string=} opt_sortField The sort field
- * @return {!goog.Promise}
+ * @return {!Promise}
  *
  * @deprecated Please use `osTrack.getSortField` instead.
  */
@@ -334,7 +336,7 @@ const getSortField = osTrack.getSortField;
  * Prompt the user to choose a track title.
  *
  * @param {string=} opt_default The default value
- * @return {!goog.Promise}
+ * @return {!Promise}
  *
  * @deprecated Please use `osTrack.promptForTitle` instead.
  */
@@ -343,9 +345,9 @@ const promptForTitle = osTrack.promptForTitle;
 /**
  * Prompt the user to choose a track.
  *
- * @param {Array<os.data.ColumnDefinition>} columns The columns
+ * @param {Array<ColumnDefinition>} columns The columns
  * @param {string} prompt The dialog prompt
- * @return {!goog.Promise}
+ * @return {!Promise}
  *
  * @deprecated Please use `osTrack.promptForField` instead.
  */

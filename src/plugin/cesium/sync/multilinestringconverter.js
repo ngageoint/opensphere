@@ -1,7 +1,7 @@
 goog.module('plugin.cesium.sync.MultiLineStringConverter');
 
-const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
 const {updatePrimitive} = goog.require('plugin.cesium.primitive');
+const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
 const {createLineStringPrimitive, isLineWidthChanging, isDashChanging} = goog.require('plugin.cesium.sync.linestring');
 
 const Feature = goog.requireType('ol.Feature');

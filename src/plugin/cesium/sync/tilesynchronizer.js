@@ -2,6 +2,7 @@ goog.module('plugin.cesium.sync.TileSynchronizer');
 
 const asserts = goog.require('goog.asserts');
 const Delay = goog.require('goog.async.Delay');
+const dispose = goog.require('goog.dispose');
 const EventType = goog.require('goog.events.EventType');
 const googObject = goog.require('goog.object');
 const googString = goog.require('goog.string');
@@ -108,7 +109,7 @@ class TileSynchronizer extends CesiumSynchronizer {
    * @inheritDoc
    */
   disposeInternal() {
-    goog.dispose(this.syncDelay_);
+    dispose(this.syncDelay_);
     this.syncDelay_ = null;
 
     var view = MapContainer.getInstance().getMap().getView();

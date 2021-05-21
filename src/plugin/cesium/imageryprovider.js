@@ -3,8 +3,8 @@ goog.module('plugin.cesium.ImageryProvider');
 goog.require('os.mixin.VectorImageTile');
 
 const ol = goog.require('ol');
-const TileState = goog.require('ol.TileState');
 const ImageTile = goog.require('ol.ImageTile');
+const TileState = goog.require('ol.TileState');
 const VectorImageTile = goog.require('ol.VectorImageTile');
 const events = goog.require('ol.events');
 const VectorTile = goog.require('ol.source.VectorTile');

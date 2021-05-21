@@ -28,6 +28,7 @@
   "moduleBlacklist": [
     "goog",
     "goog.declareModuleId",
+    "goog.define",
     "goog.module",
     "goog.partial",
     "goog.provide",
@@ -50,6 +51,7 @@
     "ol.layer.Vector": "OLVectorLayer",
     "ol.obj": "olObj",
     "ol.proj": "olProj",
+    "ol.render.Feature": "RenderFeature",
     "ol.source.Vector": "OLVectorSource",
     "ol.string": "olString",
 

@@ -10,12 +10,14 @@ const RecordField = goog.require('os.data.RecordField');
 const IFilterable = goog.require('os.filter.IFilterable');
 const osImplements = goog.require('os.implements');
 const layer = goog.require('os.layer');
-const StyleType = goog.require('os.style.StyleType');
 const VectorLayer = goog.require('os.layer.Vector');
 const VectorSource = goog.require('os.source.Vector');
-
+const StyleType = goog.require('os.style.StyleType');
 const Options = goog.require('plugin.vectortools.Options');
 
+const Feature = goog.requireType('ol.Feature');
+const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const ILayer = goog.requireType('os.layer.ILayer');
 
 
 /**
@@ -44,7 +46,7 @@ const setOption = (value) => {
 /**
  * @param {VectorSource} source The vector source
  * @param {Options=} opt_which Which features to retrieve
- * @return {Array<!ol.Feature>} the features
+ * @return {Array<!Feature>} the features
  */
 const getFeatures = function(source, opt_which) {
   opt_which = opt_which || option;
@@ -67,12 +69,12 @@ const getFeatures = function(source, opt_which) {
 
 /**
  * @param {string} sourceId
- * @return {function(ol.Feature):ol.Feature} map function used for cloning lists of features
+ * @return {function(Feature):Feature} map function used for cloning lists of features
  */
 const getFeatureCloneFunction = function(sourceId) {
   /**
-   * @param {ol.Feature} feature Original feature
-   * @return {ol.Feature} copied feature
+   * @param {Feature} feature Original feature
+   * @return {Feature} copied feature
    */
   var cloneFunc = function(feature) {
     var newFeature = feature.clone();
@@ -109,7 +111,7 @@ const addNewLayer = function(opt_restoreFromIdOrConfig) {
   if (opt_restoreFromIdOrConfig) {
     if (typeof opt_restoreFromIdOrConfig === 'string') {
       // get the other layer and restore the new one from it
-      var otherLayer = /** @type {os.layer.ILayer} */ (mm.getLayer(opt_restoreFromIdOrConfig));
+      var otherLayer = /** @type {ILayer} */ (mm.getLayer(opt_restoreFromIdOrConfig));
       if (otherLayer) {
         newLayer.restore(otherLayer.persist());
 
@@ -236,7 +238,7 @@ const mapIdToFilterKey_ = function(id) {
   var d = DataManager.getInstance().getDescriptor(id);
 
   if (d && osImplements(d, IFilterable.ID)) {
-    return /** @type {os.filter.IFilterable} */ (d).getFilterKey();
+    return /** @type {IFilterable} */ (d).getFilterKey();
   }
 
   return id;
@@ -246,7 +248,7 @@ const mapIdToFilterKey_ = function(id) {
  * Runs a column mapping on a feature.
  *
  * @param {Object<string, string>} mapping
- * @param {ol.Feature} feature
+ * @param {Feature} feature
  */
 const runColumnMapping = function(mapping, feature) {
   if (mapping) {
@@ -268,7 +270,7 @@ const runColumnMapping = function(mapping, feature) {
  *
  * @param {!Array<!VectorSource>} sources
  * @param {!Object<string, !Object<string, string>>} mappings
- * @return {!Array<!os.data.ColumnDefinition|string>}
+ * @return {!Array<!ColumnDefinition|string>}
  */
 const getCombinedColumns = function(sources, mappings) {
   return sources.reduce(function(columns, source) {
