@@ -1,8 +1,13 @@
-goog.require('plugin.arc.ArcPlugin');
+goog.require('os.layer.LayerType');
+goog.require('os.ui.Icons');
 goog.require('plugin.arc.layer.ArcLayerDescriptor');
 
 
 describe('plugin.arc.layer.ArcLayerDescriptor', function() {
+  const LayerType = goog.module.get('os.layer.LayerType');
+  const Icons = goog.module.get('os.ui.Icons');
+  const ArcLayerDescriptor = goog.module.get('plugin.arc.layer.ArcLayerDescriptor');
+
   var config = {
     'name': 'My Little Arc Layer',
     'description': 'The Power of Arc Layers',
@@ -66,25 +71,25 @@ describe('plugin.arc.layer.ArcLayerDescriptor', function() {
   };
 
   it('should provide its type correctly based on the layer it represents', function() {
-    var d = new plugin.arc.layer.ArcLayerDescriptor();
+    var d = new ArcLayerDescriptor();
 
     d.setTilesEnabled(true);
-    expect(d.getType()).toBe(os.layer.LayerType.TILES);
-    expect(d.getIcons()).toBe(os.ui.Icons.TILES);
+    expect(d.getType()).toBe(LayerType.TILES);
+    expect(d.getIcons()).toBe(Icons.TILES);
 
     d.setTilesEnabled(false);
     d.setFeaturesEnabled(true);
-    expect(d.getType()).toBe(os.layer.LayerType.FEATURES);
-    expect(d.getIcons()).toBe(os.ui.Icons.FEATURES);
+    expect(d.getType()).toBe(LayerType.FEATURES);
+    expect(d.getIcons()).toBe(Icons.FEATURES);
 
     d.setTilesEnabled(true);
     d.setFeaturesEnabled(true);
-    expect(d.getType()).toBe(os.layer.LayerType.GROUPS);
-    expect(d.getIcons()).toBe(os.ui.Icons.TILES + os.ui.Icons.FEATURES);
+    expect(d.getType()).toBe(LayerType.GROUPS);
+    expect(d.getIcons()).toBe(Icons.TILES + Icons.FEATURES);
   });
 
   it('should configure itself', function() {
-    var d = new plugin.arc.layer.ArcLayerDescriptor();
+    var d = new ArcLayerDescriptor();
     var id = 'someLayerId';
     var url = 'https://some.fake.arc.layer/arcgis/rest/services/MyLayer';
 
@@ -114,7 +119,7 @@ describe('plugin.arc.layer.ArcLayerDescriptor', function() {
   });
 
   it('should configure itself', function() {
-    var d = new plugin.arc.layer.ArcLayerDescriptor();
+    var d = new ArcLayerDescriptor();
     var id = 'someLayerId';
     var url = 'https://some.fake.arc.layer/arcgis/rest/services/MyLayer';
 
@@ -135,7 +140,7 @@ describe('plugin.arc.layer.ArcLayerDescriptor', function() {
   });
 
   it('should return the correct tile layer params', function() {
-    var d = new plugin.arc.layer.ArcLayerDescriptor();
+    var d = new ArcLayerDescriptor();
     var id = 'someLayerId';
     var url = 'https://some.fake.arc.layer/arcgis/rest/services/MyLayer';
 
@@ -158,7 +163,7 @@ describe('plugin.arc.layer.ArcLayerDescriptor', function() {
   });
 
   it('should return the correct feature layer params', function() {
-    var d = new plugin.arc.layer.ArcLayerDescriptor();
+    var d = new ArcLayerDescriptor();
     var id = 'someLayerId';
     var url = 'https://some.fake.arc.layer/arcgis/rest/services/MyLayer';
 

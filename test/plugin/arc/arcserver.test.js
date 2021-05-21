@@ -3,8 +3,10 @@ goog.require('plugin.arc.ArcServer');
 
 
 describe('plugin.arc.ArcServer', function() {
+  const ArcServer = goog.module.get('plugin.arc.ArcServer');
+
   it('should configure itself correctly', function() {
-    var server = new plugin.arc.ArcServer();
+    var server = new ArcServer();
     var config = {
       'label': 'Arc Test',
       'type': 'arc',
@@ -16,7 +18,7 @@ describe('plugin.arc.ArcServer', function() {
     expect(server.getUrl()).toBe('https://fake.server.com/arcgis/rest/services');
 
     // configs with slightly off URLs
-    server = new plugin.arc.ArcServer();
+    server = new ArcServer();
     var config2 = {
       'label': 'Arc Test 2',
       'type': 'arc',
@@ -27,7 +29,7 @@ describe('plugin.arc.ArcServer', function() {
     // it should add the /rest/services part
     expect(server.getUrl()).toBe('https://fake.server.com/arcgis/rest/services');
 
-    server = new plugin.arc.ArcServer();
+    server = new ArcServer();
     var config3 = {
       'label': 'Arc Test 3',
       'type': 'arc',

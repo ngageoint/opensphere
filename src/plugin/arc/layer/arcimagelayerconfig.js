@@ -1,7 +1,4 @@
 goog.module('plugin.arc.layer.ArcImageLayerConfig');
-goog.module.declareLegacyNamespace();
-
-goog.require('os.mixin.ImageSource');
 
 const ImageArcGISRest = goog.require('ol.source.ImageArcGISRest');
 const Image = goog.require('os.layer.Image');

@@ -1,3 +1,5 @@
+goog.require('goog.dom.xml');
+goog.require('goog.net.EventType');
 goog.require('goog.net.XhrIo');
 goog.require('plugin.arc.layer.ArcFeatureLayerConfig');
 goog.require('plugin.arc.layer.ArcTileLayerConfig');
@@ -5,12 +7,18 @@ goog.require('plugin.arc.state.v2.arcstate');
 
 
 describe('plugin.arc.state.v2.arcstate', function() {
+  const googDomXml = goog.module.get('goog.dom.xml');
+  const EventType = goog.module.get('goog.net.EventType');
+  const XhrIo = goog.module.get('goog.net.XhrIo');
+  const ArcFeatureLayerConfig = goog.module.get('plugin.arc.layer.ArcFeatureLayerConfig');
+  const ArcTileLayerConfig = goog.module.get('plugin.arc.layer.ArcTileLayerConfig');
+  const arcstate = goog.module.get('plugin.arc.state.v2.arcstate');
   it('should modify loaded arc layers in states', function() {
     var url = '/base/test/plugin/arc/state/v2/loadstate.xml';
-    var xhr = new goog.net.XhrIo();
+    var xhr = new XhrIo();
     var stateString = null;
 
-    xhr.listenOnce(goog.net.EventType.SUCCESS, function() {
+    xhr.listenOnce(EventType.SUCCESS, function() {
       stateString = xhr.getResponse();
     }, false);
 
@@ -23,15 +31,15 @@ describe('plugin.arc.state.v2.arcstate', function() {
     }, 'test state to load');
 
     runs(function() {
-      var xml = goog.dom.xml.loadXml(stateString);
-      plugin.arc.state.v2.arcstate.load(xml.firstChild);
+      var xml = googDomXml.loadXml(stateString);
+      arcstate.load(xml.firstChild);
 
       // it should have an arcfeature type layer
-      var featureLayer = xml.querySelector('layer[type="' + plugin.arc.layer.ArcFeatureLayerConfig.ID + '"]');
+      var featureLayer = xml.querySelector('layer[type="' + ArcFeatureLayerConfig.ID + '"]');
       expect(!!featureLayer).toBe(true);
 
       // it should have an arctile type layer
-      var tileLayer = xml.querySelector('layer[type="' + plugin.arc.layer.ArcTileLayerConfig.ID + '"]');
+      var tileLayer = xml.querySelector('layer[type="' + ArcTileLayerConfig.ID + '"]');
       expect(!!tileLayer).toBe(true);
 
       // it should have a url WITHOUT /export on the end
@@ -42,10 +50,10 @@ describe('plugin.arc.state.v2.arcstate', function() {
 
   it('should modify loaded arc layers in states', function() {
     var url = '/base/test/plugin/arc/state/v2/savestate.xml';
-    var xhr = new goog.net.XhrIo();
+    var xhr = new XhrIo();
     var stateString = null;
 
-    xhr.listenOnce(goog.net.EventType.SUCCESS, function() {
+    xhr.listenOnce(EventType.SUCCESS, function() {
       stateString = xhr.getResponse();
     }, false);
 
@@ -58,8 +66,8 @@ describe('plugin.arc.state.v2.arcstate', function() {
     }, 'test state to load');
 
     runs(function() {
-      var xml = goog.dom.xml.loadXml(stateString);
-      plugin.arc.state.v2.arcstate.save(xml.firstChild);
+      var xml = googDomXml.loadXml(stateString);
+      arcstate.save(xml.firstChild);
 
       // it should have an arc type layer
       var featureLayer = xml.querySelector('layer[type="arc"]');
