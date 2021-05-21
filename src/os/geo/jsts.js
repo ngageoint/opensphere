@@ -1237,6 +1237,8 @@ os.geo.jsts.validate = function(geometry, opt_quiet, opt_undefinedIfInvalid) {
 
         jstsValidPoly = os.geo.jsts.toPolygonGeometry(polygonizer.getPolygons(), jstsPoly.getFactory());
       } else if (jstsPoly instanceof jsts.geom.MultiPolygon) {
+        // this code block is effectively dead when reached from os.feature.validateGeometries but should be kept around
+        // for potential stricter use elsewhere
         var polygonizer = new jsts.operation.polygonize.Polygonizer();
         for (var n = jstsPoly.getNumGeometries(); n-- > 0;) {
           os.geo.jsts.addPolygon(jstsPoly.getGeometryN(n), polygonizer);

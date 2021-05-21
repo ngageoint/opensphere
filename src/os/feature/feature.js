@@ -1373,7 +1373,7 @@ os.feature.validateGeometries = function(feature, opt_quiet) {
     var geometries = geometry.getGeometriesArray();
     for (var i = geometries.length; i > 0; i--) {
       if (geometries[i] instanceof ol.geom.Polygon || geometries[i] instanceof ol.geom.MultiPolygon) {
-        var geom = os.geo.jsts.validate(geometries[i], opt_quiet, true); // repair or remove invalid geometries
+        var geom = os.feature.validatePolygonType_(geometries[i], opt_quiet);
         if (geom !== undefined) {
           geometries[i] = geom;
         } else {
@@ -1383,13 +1383,50 @@ os.feature.validateGeometries = function(feature, opt_quiet) {
       }
     }
   } else if (geometry instanceof ol.geom.Polygon || geometry instanceof ol.geom.MultiPolygon) {
-    var geom = os.geo.jsts.validate(geometry, opt_quiet, true);
+    var geom = os.feature.validatePolygonType_(geometry, opt_quiet);
     if (geom === undefined) {
       count++;
     }
     feature.setGeometry(geom);
   }
   return count;
+};
+
+
+/**
+ * Validation helper for polygon types.
+ *
+ * MultiPolygon geometries have their internal polygons individually validated, and removed if they fail the validation.
+ * Otherwise the structure of the MultiPolygon is not affected.
+ *
+ * @param {ol.geom.Geometry} geometry The polygon-type geometry to validate
+ * @param {boolean=} opt_quiet If alerts should be suppressed
+ * @return {ol.geom.Geometry|undefined} a valid polygon, or undefined if invalid
+ * @private
+ */
+os.feature.validatePolygonType_ = function(geometry, opt_quiet) {
+  if (geometry instanceof ol.geom.MultiPolygon) {
+    const validPolygons = [];
+    for (let i = 0, n = geometry.getEndss().length; i < n; ++i) {
+      const geom = os.geo.jsts.validate(geometry.getPolygon(i), opt_quiet, true);
+      if (geom !== undefined) {
+        validPolygons.push(geom);
+      }
+    }
+
+    if (validPolygons.length) {
+      const newGeo = geometry.clone();
+      newGeo.setCoordinates([], newGeo.getLayout());
+      for (const poly of validPolygons) {
+        newGeo.appendPolygon(poly);
+      }
+      return newGeo;
+    }
+
+    return undefined;
+  }
+
+  return os.geo.jsts.validate(geometry, opt_quiet, true);
 };
 
 
