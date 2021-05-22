@@ -4,16 +4,30 @@ goog.require('ol.style.Fill');
 goog.require('ol.style.Stroke');
 goog.require('ol.style.Style');
 goog.require('os.MapContainer');
+goog.require('os.data.RecordField');
 goog.require('os.mock');
 goog.require('os.style.StyleManager');
 goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
+goog.require('os.ui.file.kml.AbstractKMLExporter');
 goog.require('plugin.file.kml.KMLExporter');
 
 describe('plugin.file.kml.KMLExporter', function() {
+  const Feature = goog.module.get('ol.Feature');
+  const Point = goog.module.get('ol.geom.Point');
+  const Fill = goog.module.get('ol.style.Fill');
+  const Stroke = goog.module.get('ol.style.Stroke');
+  const Style = goog.module.get('ol.style.Style');
+  const MapContainer = goog.module.get('os.MapContainer');
+  const RecordField = goog.module.get('os.data.RecordField');
+  const StyleManager = goog.module.get('os.style.StyleManager');
+  const TimeInstant = goog.module.get('os.time.TimeInstant');
+  const TimeRange = goog.module.get('os.time.TimeRange');
+  const AbstractKMLExporter = goog.module.get('os.ui.file.kml.AbstractKMLExporter');
+  const KMLExporter = goog.module.get('plugin.file.kml.KMLExporter');
   // the layer/source identifier for these tests
   var testId = 'plugin_file_kml_KMLExporter';
-  var delim = os.ui.file.kml.AbstractKMLExporter.LABEL_DELIMITER_;
+  var delim = AbstractKMLExporter.LABEL_DELIMITER_;
 
   var label1 = {
     column: 'label1',
@@ -40,21 +54,21 @@ describe('plugin.file.kml.KMLExporter', function() {
   var l4Expected = null;
 
   it('gets label configs for a group', function() {
-    var exporter = new plugin.file.kml.KMLExporter();
+    var exporter = new KMLExporter();
     var groupLabels;
 
-    var sm = os.style.StyleManager.getInstance();
+    var sm = StyleManager.getInstance();
 
     // no source id set
-    var f = new ol.Feature();
+    var f = new Feature();
     exporter.reset();
     expect(exporter.getGroupLabels(f)).toBeNull();
 
     // pretend the drawing layer has labels to make sure we don't return them
-    var drawCfg = sm.getOrCreateLayerConfig(os.MapContainer.DRAW_ID);
+    var drawCfg = sm.getOrCreateLayerConfig(MapContainer.DRAW_ID);
     drawCfg['labels'] = [label1];
 
-    f.set(os.data.RecordField.SOURCE_ID, os.MapContainer.DRAW_ID, true);
+    f.set(RecordField.SOURCE_ID, MapContainer.DRAW_ID, true);
     exporter.reset();
     expect(exporter.getGroupLabels(f)).toBeNull();
 
@@ -63,7 +77,7 @@ describe('plugin.file.kml.KMLExporter', function() {
 
     // create a layer config for our imaginary source
     var cfg = sm.getOrCreateLayerConfig(testId);
-    f.set(os.data.RecordField.SOURCE_ID, testId, true);
+    f.set(RecordField.SOURCE_ID, testId, true);
 
     // labels array is not defined on the layer config
     exporter.reset();
@@ -108,9 +122,9 @@ describe('plugin.file.kml.KMLExporter', function() {
   });
 
   it('gets a label component for a feature', function() {
-    var exporter = new plugin.file.kml.KMLExporter();
+    var exporter = new KMLExporter();
 
-    var f = new ol.Feature({
+    var f = new Feature({
       label1: 'test1',
       label2: 'test2',
       label3: 'test3'
@@ -130,24 +144,24 @@ describe('plugin.file.kml.KMLExporter', function() {
   });
 
   it('creates a label for a feature', function() {
-    var exporter = new plugin.file.kml.KMLExporter();
+    var exporter = new KMLExporter();
     var defaultColumn = {
       column: 'defaultField',
       showColumn: false
     };
 
-    var sm = os.style.StyleManager.getInstance();
+    var sm = StyleManager.getInstance();
     var cfg = sm.getOrCreateLayerConfig(testId);
 
     var defaultValue = 'defaultValue';
-    var f = new ol.Feature({
+    var f = new Feature({
       labels: [label1, label2, label3, label4],
       label1: 'test1',
       label2: 'test2',
       label3: 'test3',
       defaultField: defaultValue
     });
-    f.set(os.data.RecordField.SOURCE_ID, testId, true);
+    f.set(RecordField.SOURCE_ID, testId, true);
 
     // no labels, no defaults
     exporter.reset();
@@ -199,37 +213,37 @@ describe('plugin.file.kml.KMLExporter', function() {
   });
 
   it('gets time values from a feature', function() {
-    var exporter = new plugin.file.kml.KMLExporter();
-    var f = new ol.Feature();
+    var exporter = new KMLExporter();
+    var f = new Feature();
 
     // null when field is not set
     expect(exporter.getTime(f)).toBeNull();
 
     // null when value is not an ITime object
-    f.set(os.data.RecordField.TIME, 'not an ITime object');
+    f.set(RecordField.TIME, 'not an ITime object');
     expect(exporter.getTime(f)).toBeNull();
 
     // defined when value is an ITime object
-    var instant = new os.time.TimeInstant();
-    f.set(os.data.RecordField.TIME, instant);
+    var instant = new TimeInstant();
+    f.set(RecordField.TIME, instant);
     expect(exporter.getTime(f)).toBe(instant);
 
-    var range = new os.time.TimeRange();
-    f.set(os.data.RecordField.TIME, range);
+    var range = new TimeRange();
+    f.set(RecordField.TIME, range);
     expect(exporter.getTime(f)).toBe(range);
   });
 
   it('generates proper fill booleans in styles', function() {
-    var exporter = new plugin.file.kml.KMLExporter();
-    var f = new ol.Feature(new ol.geom.Point(0, 0));
+    var exporter = new KMLExporter();
+    var f = new Feature(new Point(0, 0));
 
     expect(exporter.getFill(f)).toBe(false);
 
-    var style = new ol.style.Style();
+    var style = new Style();
     f.setStyle(style);
     expect(exporter.getFill(f)).toBe(false);
 
-    var fill = new ol.style.Fill();
+    var fill = new Fill();
     fill.setColor('rgba(255,255,255,0)');
     style.setFill(fill);
     expect(exporter.getFill(f)).toBe(false);
@@ -239,16 +253,16 @@ describe('plugin.file.kml.KMLExporter', function() {
   });
 
   it('generates proper stroke booleans in styles', function() {
-    var exporter = new plugin.file.kml.KMLExporter();
-    var f = new ol.Feature(new ol.geom.Point(0, 0));
+    var exporter = new KMLExporter();
+    var f = new Feature(new Point(0, 0));
 
     expect(exporter.getStroke(f)).toBe(false);
 
-    var style = new ol.style.Style();
+    var style = new Style();
     f.setStyle(style);
     expect(exporter.getStroke(f)).toBe(false);
 
-    var stroke = new ol.style.Stroke();
+    var stroke = new Stroke();
     stroke.setColor('rgba(255,255,255,0)');
     style.setStroke(stroke);
     expect(exporter.getStroke(f)).toBe(false);
@@ -256,5 +270,4 @@ describe('plugin.file.kml.KMLExporter', function() {
     stroke.setColor('rgba(255,255,255,1)');
     expect(exporter.getStroke(f)).toBe(true);
   });
-
 });

@@ -19,7 +19,7 @@ const AnyDateType = goog.require('os.ui.datetime.AnyDateType');
 const featureEditDirective = goog.require('os.ui.featureEditDirective');
 const list = goog.require('os.ui.list');
 const kml = goog.require('plugin.file.kml');
-const {updatePlacemark} = goog.require('plugin.file.kml.ui');
+const kmlUI = goog.require('plugin.file.kml.ui');
 const PlacesManager = goog.require('plugin.places.PlacesManager');
 
 const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
@@ -188,7 +188,7 @@ class Controller extends FeatureEditCtrl {
       feature.setId(getUid(feature));
     }
 
-    updatePlacemark(this.options);
+    kmlUI.updatePlacemark(this.options);
 
     if (this.callback) {
       this.callback(this.options);

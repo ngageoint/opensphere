@@ -5,6 +5,9 @@ const nextTick = goog.require('goog.async.nextTick');
 const EventTarget = goog.require('goog.events.EventTarget');
 const EventType = goog.require('plugin.file.kml.tour.EventType');
 
+const Promise = goog.requireType('goog.Promise');
+const AbstractTourPrimitive = goog.requireType('plugin.file.kml.tour.AbstractTourPrimitive');
+
 
 /**
  * Represents a KML tour, from a `gx:Tour` (KML 2.2) or `Tour` (KML 2.3) element.
@@ -15,7 +18,7 @@ class Tour extends EventTarget {
    * Constructor.
    * @param {string=} opt_name The name of the tour.
    * @param {string=} opt_description The tour description.
-   * @param {Array<!plugin.file.kml.tour.AbstractTourPrimitive>=} opt_playlist The tour playlist.
+   * @param {Array<!AbstractTourPrimitive>=} opt_playlist The tour playlist.
    */
   constructor(opt_name, opt_description, opt_playlist) {
     super();
@@ -46,7 +49,7 @@ class Tour extends EventTarget {
 
     /**
      * The tour playlist.
-     * @type {!Array<!plugin.file.kml.tour.AbstractTourPrimitive>}
+     * @type {!Array<!AbstractTourPrimitive>}
      * @private
      */
     this.playlist_ = opt_playlist || [];
@@ -60,7 +63,7 @@ class Tour extends EventTarget {
 
     /**
      * Promise for the currently executing tour primitive.
-     * @type {goog.Promise|undefined}
+     * @type {Promise|undefined}
      * @private
      */
     this.currentPromise_ = undefined;
@@ -69,7 +72,7 @@ class Tour extends EventTarget {
   /**
    * Get the tour playlist.
    *
-   * @return {!Array<!plugin.file.kml.tour.AbstractTourPrimitive>}
+   * @return {!Array<!AbstractTourPrimitive>}
    */
   getPlaylist() {
     return this.playlist_;
@@ -78,7 +81,7 @@ class Tour extends EventTarget {
   /**
    * Set the tour playlist.
    *
-   * @param {!Array<!plugin.file.kml.tour.AbstractTourPrimitive>} value The tour playlist.
+   * @param {!Array<!AbstractTourPrimitive>} value The tour playlist.
    */
   setPlaylist(value) {
     this.playlist_ = value;
@@ -88,7 +91,7 @@ class Tour extends EventTarget {
   /**
    * Add a tour primitive to the playlist.
    *
-   * @param {!plugin.file.kml.tour.AbstractTourPrimitive} value The tour playlist.
+   * @param {!AbstractTourPrimitive} value The tour playlist.
    */
   addToPlaylist(value) {
     this.playlist_.push(value);

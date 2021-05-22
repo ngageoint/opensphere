@@ -1,7 +1,10 @@
+goog.require('goog.Promise');
 goog.require('plugin.file.kml.tour.Wait');
 
 
 describe('plugin.file.kml.tour.Wait', function() {
+  const Promise = goog.module.get('goog.Promise');
+  const Wait = goog.module.get('plugin.file.kml.tour.Wait');
   // default values for tests
   var duration = 4321;
   var timeoutId = 1234;
@@ -19,7 +22,7 @@ describe('plugin.file.kml.tour.Wait', function() {
   it('initializes properly', function() {
     var durations = [-5000, 0, 5000, 10000];
     durations.forEach(function(duration) {
-      var wait = new plugin.file.kml.tour.Wait(duration);
+      var wait = new Wait(duration);
       expect(wait.duration_).toBe(duration > 0 ? duration : 0);
       expect(wait.remaining_).toBeUndefined();
       expect(wait.timeoutId_).toBeUndefined();
@@ -28,7 +31,7 @@ describe('plugin.file.kml.tour.Wait', function() {
   });
 
   it('gets the correct interval', function() {
-    var wait = new plugin.file.kml.tour.Wait(duration);
+    var wait = new Wait(duration);
     expect(wait.getInterval()).toBe(wait.duration_);
 
     wait.remaining_ = 42;
@@ -42,7 +45,7 @@ describe('plugin.file.kml.tour.Wait', function() {
   });
 
   it('resolves execute promise after the provided duration', function() {
-    var wait = new plugin.file.kml.tour.Wait(duration);
+    var wait = new Wait(duration);
 
     spyOn(window, 'setTimeout').andCallFake(fakeSetTimeout);
     spyOn(window, 'clearTimeout');
@@ -52,7 +55,7 @@ describe('plugin.file.kml.tour.Wait', function() {
 
     var beforeStart = Date.now() - 1;
     var waitPromise = wait.execute();
-    expect(waitPromise instanceof goog.Promise).toBe(true);
+    expect(waitPromise instanceof Promise).toBe(true);
 
     waitsFor(function() {
       return stFn !== undefined && stInterval !== undefined;
@@ -67,7 +70,7 @@ describe('plugin.file.kml.tour.Wait', function() {
       expect(stInterval).toBe(duration);
 
       // promise is in pending state
-      expect(waitPromise.state_).toBe(goog.Promise.State_.PENDING);
+      expect(waitPromise.state_).toBe(Promise.State_.PENDING);
 
       // these shouldn't be called until timeout fires
       expect(wait.onWaitComplete).not.toHaveBeenCalled();
@@ -79,14 +82,14 @@ describe('plugin.file.kml.tour.Wait', function() {
 
     waitsFor(function() {
       // wait for the promise to resolve
-      return waitPromise.state_ !== goog.Promise.State_.PENDING;
+      return waitPromise.state_ !== Promise.State_.PENDING;
     }, 'promise to resolve');
 
     runs(function() {
       // timeout callback should have been onWaitComplete, which should have reset and resolved the promise
       expect(wait.onWaitComplete).toHaveBeenCalled();
       expect(wait.reset).toHaveBeenCalled();
-      expect(waitPromise.state_).toBe(goog.Promise.State_.FULFILLED);
+      expect(waitPromise.state_).toBe(Promise.State_.FULFILLED);
 
       expect(window.clearTimeout).toHaveBeenCalledWith(timeoutId);
     });
@@ -97,7 +100,7 @@ describe('plugin.file.kml.tour.Wait', function() {
     var startTime = Date.now();
     var pauseTime = startTime + duration / 2;
 
-    var wait = new plugin.file.kml.tour.Wait(duration);
+    var wait = new Wait(duration);
 
     spyOn(window, 'setTimeout').andCallFake(fakeSetTimeout);
     spyOn(window, 'clearTimeout');
@@ -136,7 +139,7 @@ describe('plugin.file.kml.tour.Wait', function() {
   });
 
   it('does not create a timeout if no remaining time', function() {
-    var wait = new plugin.file.kml.tour.Wait(duration);
+    var wait = new Wait(duration);
 
     spyOn(window, 'setTimeout');
     spyOn(window, 'clearTimeout');
@@ -159,7 +162,7 @@ describe('plugin.file.kml.tour.Wait', function() {
   });
 
   it('resets during execution', function() {
-    var wait = new plugin.file.kml.tour.Wait(duration);
+    var wait = new Wait(duration);
     var startTime = Date.now();
 
     spyOn(window, 'setTimeout').andCallFake(fakeSetTimeout);
