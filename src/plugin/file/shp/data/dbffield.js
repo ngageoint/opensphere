@@ -1,26 +1,32 @@
-goog.provide('plugin.file.shp.data.DBFField');
-
+goog.module('plugin.file.shp.data.DBFField');
+goog.module.declareLegacyNamespace();
 
 
 /**
- * @param {string} name
- * @param {string} type
- * @param {number} length
- * @constructor
  */
-plugin.file.shp.data.DBFField = function(name, type, length) {
+class DBFField {
   /**
-   * @type {string}
+   * Constructor.
+   * @param {string} name
+   * @param {string} type
+   * @param {number} length
    */
-  this.name = name;
+  constructor(name, type, length) {
+    /**
+     * @type {string}
+     */
+    this.name = name;
 
-  /**
-   * @type {string}
-   */
-  this.type = type;
+    /**
+     * @type {string}
+     */
+    this.type = type;
 
-  /**
-   * @type {number}
-   */
-  this.length = length;
-};
+    /**
+     * @type {number}
+     */
+    this.length = length;
+  }
+}
+
+exports = DBFField;

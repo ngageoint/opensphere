@@ -1,20 +1,24 @@
-goog.provide('plugin.places.PlacesLayer');
+goog.module('plugin.places.PlacesLayer');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.fn');
-goog.require('plugin.file.kml.KMLLayer');
-
+const fn = goog.require('os.fn');
+const KMLLayer = goog.require('plugin.file.kml.KMLLayer');
 
 
 /**
  * KML Layer for organizing Places.
- * @param {olx.layer.VectorOptions} options Vector layer options
- * @extends {plugin.file.kml.KMLLayer}
- * @constructor
  */
-plugin.places.PlacesLayer = function(options) {
-  plugin.places.PlacesLayer.base(this, 'constructor', options);
+class PlacesLayer extends KMLLayer {
+  /**
+   * Constructor.
+   * @param {olx.layer.VectorOptions} options Vector layer options
+   */
+  constructor(options) {
+    super(options);
 
-  // TODO add specialized legend rendering for Places
-  this.renderLegend = os.fn.noop;
-};
-goog.inherits(plugin.places.PlacesLayer, plugin.file.kml.KMLLayer);
+    // TODO add specialized legend rendering for Places
+    this.renderLegend = fn.noop;
+  }
+}
+
+exports = PlacesLayer;

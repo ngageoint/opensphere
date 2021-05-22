@@ -1,26 +1,54 @@
-goog.provide('plugin.file.gpx.GPXProvider');
-goog.require('os.data.FileProvider');
+goog.module('plugin.file.gpx.GPXProvider');
+goog.module.declareLegacyNamespace();
 
+const FileProvider = goog.require('os.data.FileProvider');
 
 
 /**
  * GPX file provider
- *
- * @extends {os.data.FileProvider}
- * @constructor
  */
-plugin.file.gpx.GPXProvider = function() {
-  plugin.file.gpx.GPXProvider.base(this, 'constructor');
-};
-goog.inherits(plugin.file.gpx.GPXProvider, os.data.FileProvider);
-goog.addSingletonGetter(plugin.file.gpx.GPXProvider);
+class GPXProvider extends FileProvider {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
 
+  /**
+   * @inheritDoc
+   */
+  configure(config) {
+    super.configure(config);
+    this.setId('gpx');
+    this.setLabel('GPX Files');
+  }
+
+  /**
+   * Get the global instance.
+   * @return {!GPXProvider}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new GPXProvider();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {GPXProvider} value
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
 
 /**
- * @inheritDoc
+ * Global instance.
+ * @type {GPXProvider|undefined}
  */
-plugin.file.gpx.GPXProvider.prototype.configure = function(config) {
-  plugin.file.gpx.GPXProvider.base(this, 'configure', config);
-  this.setId('gpx');
-  this.setLabel('GPX Files');
-};
+let instance;
+
+exports = GPXProvider;

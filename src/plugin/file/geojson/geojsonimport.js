@@ -1,76 +1,90 @@
-goog.provide('plugin.file.geojson.GeoJSONImportCtrl');
-goog.provide('plugin.file.geojson.geojsonImportDirective');
+goog.module('plugin.file.geojson.GeoJSONImport');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
-goog.require('os.ui.im.FileImportWizard');
-goog.require('os.ui.wiz.wizardDirective');
-goog.require('plugin.file.geojson.GeoJSONDescriptor');
-goog.require('plugin.file.geojson.GeoJSONProvider');
-
+const FileDescriptor = goog.require('os.data.FileDescriptor');
+const Module = goog.require('os.ui.Module');
+const FileImportWizard = goog.require('os.ui.im.FileImportWizard');
+const wizardDirective = goog.require('os.ui.wiz.wizardDirective');
+const GeoJSONDescriptor = goog.require('plugin.file.geojson.GeoJSONDescriptor');
+const GeoJSONProvider = goog.require('plugin.file.geojson.GeoJSONProvider');
 
 
 /**
  * Controller for the GeoJSON import wizard window
  *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$timeout} $timeout
- * @param {!Object.<string, string>} $attrs
- * @extends {os.ui.im.FileImportWizard.<!plugin.file.geojson.GeoJSONParserConfig, !plugin.file.geojson.GeoJSONDescriptor>}
- * @constructor
- * @ngInject
+ * @extends {FileImportWizard.<!plugin.file.geojson.GeoJSONParserConfig, !GeoJSONDescriptor>}
+ * @unrestricted
  */
-plugin.file.geojson.GeoJSONImportCtrl = function($scope, $element, $timeout, $attrs) {
-  plugin.file.geojson.GeoJSONImportCtrl.base(this, 'constructor', $scope, $element, $timeout, $attrs);
-};
-goog.inherits(plugin.file.geojson.GeoJSONImportCtrl, os.ui.im.FileImportWizard);
+class Controller extends FileImportWizard {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$timeout} $timeout
+   * @param {!Object.<string, string>} $attrs
+   * @ngInject
+   */
+  constructor($scope, $element, $timeout, $attrs) {
+    super($scope, $element, $timeout, $attrs);
+  }
 
+  /**
+   * @param {!GeoJSONDescriptor} descriptor
+   * @protected
+   * @override
+   */
+  addDescriptorToProvider(descriptor) {
+    GeoJSONProvider.getInstance().addDescriptor(descriptor);
+  }
 
-/**
- * @param {!plugin.file.geojson.GeoJSONDescriptor} descriptor
- * @protected
- * @override
- */
-plugin.file.geojson.GeoJSONImportCtrl.prototype.addDescriptorToProvider = function(descriptor) {
-  plugin.file.geojson.GeoJSONProvider.getInstance().addDescriptor(descriptor);
-};
+  /**
+   * @param {!plugin.file.geojson.GeoJSONParserConfig} config
+   * @return {!GeoJSONDescriptor}
+   * @protected
+   * @override
+   */
+  createFromConfig(config) {
+    const descriptor = new GeoJSONDescriptor(this.config);
+    FileDescriptor.createFromConfig(descriptor, GeoJSONProvider.getInstance(), this.config);
+    return descriptor;
+  }
 
-
-/**
- * @param {!plugin.file.geojson.GeoJSONParserConfig} config
- * @return {!plugin.file.geojson.GeoJSONDescriptor}
- * @protected
- * @override
- */
-plugin.file.geojson.GeoJSONImportCtrl.prototype.createFromConfig = function(config) {
-  return plugin.file.geojson.GeoJSONDescriptor.createFromConfig(this.config);
-};
-
-
-/**
- * @param {!plugin.file.geojson.GeoJSONDescriptor} descriptor
- * @param {!plugin.file.geojson.GeoJSONParserConfig} config
- * @protected
- * @override
- */
-plugin.file.geojson.GeoJSONImportCtrl.prototype.updateFromConfig = function(descriptor, config) {
-  descriptor.updateFromConfig(config);
-};
-
+  /**
+   * @param {!GeoJSONDescriptor} descriptor
+   * @param {!plugin.file.geojson.GeoJSONParserConfig} config
+   * @protected
+   * @override
+   */
+  updateFromConfig(descriptor, config) {
+    descriptor.updateFromConfig(config);
+  }
+}
 
 /**
  * The GeoJSON import wizard directive.
  *
  * @return {angular.Directive}
  */
-plugin.file.geojson.geojsonImportDirective = function() {
-  var dir = os.ui.wiz.wizardDirective();
-  dir.controller = plugin.file.geojson.GeoJSONImportCtrl;
+const directive = () => {
+  var dir = wizardDirective();
+  dir.controller = Controller;
   return dir;
 };
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'geojsonimport';
 
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('geojsonimport', [plugin.file.geojson.geojsonImportDirective]);
+Module.directive('geojsonimport', [directive]);
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
+};

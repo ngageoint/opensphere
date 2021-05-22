@@ -11,7 +11,8 @@ goog.require('os.ui.menu.layer');
 goog.require('os.ui.uiSwitchDirective');
 goog.require('plugin.file.kml.ui');
 goog.require('plugin.file.kml.ui.KMLNode');
-goog.require('plugin.file.kml.ui.placemarkEditDirective');
+goog.require('plugin.file.kml.ui.KMLTreeExportUI');
+goog.require('plugin.file.kml.ui.PlacemarkEditUI');
 goog.require('plugin.places.ui.QuickAddPlacesCtrl');
 goog.require('plugin.places.ui.placesButtonDirective');
 
@@ -151,7 +152,7 @@ plugin.places.ui.PlacesCtrl.prototype.export = function() {
       fields: []
     });
 
-    plugin.file.kml.ui.launchTreeExport(this.placesRoot_, 'Export Places', options);
+    plugin.file.kml.ui.KMLTreeExportUI.launchTreeExport(this.placesRoot_, 'Export Places', options);
     os.metrics.Metrics.getInstance().updateMetric(os.metrics.Places.EXPORT, 1);
   } else {
     os.alertManager.sendAlert('Nothing to export.', os.alert.AlertEventSeverity.WARNING);

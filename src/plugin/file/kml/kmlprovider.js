@@ -1,26 +1,54 @@
-goog.provide('plugin.file.kml.KMLProvider');
-goog.require('os.data.FileProvider');
+goog.module('plugin.file.kml.KMLProvider');
+goog.module.declareLegacyNamespace();
 
+const FileProvider = goog.require('os.data.FileProvider');
 
 
 /**
  * KML file provider
- *
- * @extends {os.data.FileProvider}
- * @constructor
  */
-plugin.file.kml.KMLProvider = function() {
-  plugin.file.kml.KMLProvider.base(this, 'constructor');
-};
-goog.inherits(plugin.file.kml.KMLProvider, os.data.FileProvider);
-goog.addSingletonGetter(plugin.file.kml.KMLProvider);
+class KMLProvider extends FileProvider {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
 
+  /**
+   * @inheritDoc
+   */
+  configure(config) {
+    super.configure(config);
+    this.setId('kml');
+    this.setLabel('KML Files');
+  }
+
+  /**
+   * Get the global instance.
+   * @return {!KMLProvider}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new KMLProvider();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {KMLProvider} value
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
 
 /**
- * @inheritDoc
+ * Global instance.
+ * @type {KMLProvider|undefined}
  */
-plugin.file.kml.KMLProvider.prototype.configure = function(config) {
-  plugin.file.kml.KMLProvider.base(this, 'configure', config);
-  this.setId('kml');
-  this.setLabel('KML Files');
-};
+let instance;
+
+exports = KMLProvider;

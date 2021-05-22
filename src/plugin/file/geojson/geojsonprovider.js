@@ -1,26 +1,54 @@
-goog.provide('plugin.file.geojson.GeoJSONProvider');
-goog.require('os.data.FileProvider');
+goog.module('plugin.file.geojson.GeoJSONProvider');
+goog.module.declareLegacyNamespace();
 
+const FileProvider = goog.require('os.data.FileProvider');
 
 
 /**
  * GeoJSON file provider
- *
- * @extends {os.data.FileProvider}
- * @constructor
  */
-plugin.file.geojson.GeoJSONProvider = function() {
-  plugin.file.geojson.GeoJSONProvider.base(this, 'constructor');
-};
-goog.inherits(plugin.file.geojson.GeoJSONProvider, os.data.FileProvider);
-goog.addSingletonGetter(plugin.file.geojson.GeoJSONProvider);
+class GeoJSONProvider extends FileProvider {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
 
+  /**
+   * @inheritDoc
+   */
+  configure(config) {
+    super.configure(config);
+    this.setId('geojson');
+    this.setLabel('GeoJSON Files');
+  }
+
+  /**
+   * Get the global instance.
+   * @return {!GeoJSONProvider}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new GeoJSONProvider();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {GeoJSONProvider} value
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
 
 /**
- * @inheritDoc
+ * Global instance.
+ * @type {GeoJSONProvider|undefined}
  */
-plugin.file.geojson.GeoJSONProvider.prototype.configure = function(config) {
-  plugin.file.geojson.GeoJSONProvider.base(this, 'configure', config);
-  this.setId('geojson');
-  this.setLabel('GeoJSON Files');
-};
+let instance;
+
+exports = GeoJSONProvider;

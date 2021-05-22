@@ -1,40 +1,41 @@
-goog.provide('plugin.file.zip.ZIPParserConfig');
+goog.module('plugin.file.zip.ZIPParserConfig');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.parse.FileParserConfig');
-goog.require('os.ui.slick.column');
-goog.require('plugin.file.zip.ZIPParser');
-
+const FileParserConfig = goog.require('os.parse.FileParserConfig');
 
 
 /**
  * Configuration for a ZIP parser.
- *
- * @extends {os.parse.FileParserConfig}
- * @constructor
+ * @unrestricted
  */
-plugin.file.zip.ZIPParserConfig = function() {
-  plugin.file.zip.ZIPParserConfig.base(this, 'constructor');
+class ZIPParserConfig extends FileParserConfig {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * @type {number}
+     */
+    this['status'] = -1;
+
+    /**
+     * The destination where ZIPParser drops the unzipped files
+     * @type {Array.<osx.import.FileWrapper>}
+     */
+    this['files'] = [];
+  }
 
   /**
-   * @type {number}
+   * Helper function to clean up memory if the parser is taking too long, user cancels/abandons the thread, etc
+   * @public
    */
-  this['status'] = -1;
+  cleanup() {
+    this['file'] = null;
+    if (this['files'].length > 0) this['files'] = [];
+    this['status'] = -1; // uninitialized state
+  }
+}
 
-  /**
-   * The destination where ZIPParser drops the unzipped files
-   * @type {Array.<osx.import.FileWrapper>}
-   */
-  this['files'] = [];
-};
-goog.inherits(plugin.file.zip.ZIPParserConfig, os.parse.FileParserConfig);
-
-
-/**
- * Helper function to clean up memory if the parser is taking too long, user cancels/abandons the thread, etc
- * @public
- */
-plugin.file.zip.ZIPParserConfig.prototype.cleanup = function() {
-  this['file'] = null;
-  if (this['files'].length > 0) this['files'] = [];
-  this['status'] = -1; // uninitialized state
-};
+exports = ZIPParserConfig;

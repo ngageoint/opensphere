@@ -1,11 +1,12 @@
-goog.provide('plugin.file.kml.ui.KMLImportCtrl');
-goog.provide('plugin.file.kml.ui.kmlImportDirective');
+goog.module('plugin.file.kml.ui.KMLImport');
+goog.module.declareLegacyNamespace();
 
-goog.require('os');
-goog.require('os.ui.Module');
-goog.require('os.ui.file.ui.AbstractFileImportCtrl');
-goog.require('plugin.file.kml.KMLDescriptor');
-goog.require('plugin.file.kml.KMLProvider');
+const {ROOT} = goog.require('os');
+const FileDescriptor = goog.require('os.data.FileDescriptor');
+const Module = goog.require('os.ui.Module');
+const AbstractFileImportCtrl = goog.require('os.ui.file.ui.AbstractFileImportCtrl');
+const KMLDescriptor = goog.require('plugin.file.kml.KMLDescriptor');
+const KMLProvider = goog.require('plugin.file.kml.KMLProvider');
 
 
 /**
@@ -13,61 +14,74 @@ goog.require('plugin.file.kml.KMLProvider');
  *
  * @return {angular.Directive}
  */
-plugin.file.kml.ui.kmlImportDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    templateUrl: os.ROOT + 'views/file/genericfileimport.html',
-    controller: plugin.file.kml.ui.KMLImportCtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: true,
+  templateUrl: ROOT + 'views/file/genericfileimport.html',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'kmlimport';
 
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('kmlimport', [plugin.file.kml.ui.kmlImportDirective]);
+Module.directive('kmlimport', [directive]);
 
 
 
 /**
  * Controller for the KML import dialog
  *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @extends {os.ui.file.ui.AbstractFileImportCtrl<!os.parse.FileParserConfig,!plugin.file.kml.KMLDescriptor>}
- * @constructor
- * @ngInject
+ * @extends {AbstractFileImportCtrl<!os.parse.FileParserConfig,!KMLDescriptor>}
+ * @unrestricted
  */
-plugin.file.kml.ui.KMLImportCtrl = function($scope, $element) {
-  plugin.file.kml.ui.KMLImportCtrl.base(this, 'constructor', $scope, $element);
-};
-goog.inherits(plugin.file.kml.ui.KMLImportCtrl, os.ui.file.ui.AbstractFileImportCtrl);
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.ui.KMLImportCtrl.prototype.createDescriptor = function() {
-  var descriptor = null;
-  if (this.config['descriptor']) {
-    // existing descriptor, update it
-    descriptor = /** @type {!plugin.file.kml.KMLDescriptor} */ (this.config['descriptor']);
-    descriptor.updateFromConfig(this.config);
-  } else {
-    // this is a new import
-    descriptor = plugin.file.kml.KMLDescriptor.createFromConfig(this.config);
+class Controller extends AbstractFileImportCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
   }
 
-  return descriptor;
-};
+  /**
+   * @inheritDoc
+   */
+  createDescriptor() {
+    var descriptor = null;
+    if (this.config['descriptor']) {
+      // existing descriptor, update it
+      descriptor = /** @type {!KMLDescriptor} */ (this.config['descriptor']);
+      descriptor.updateFromConfig(this.config);
+    } else {
+      // this is a new import
+      descriptor = new KMLDescriptor();
+      FileDescriptor.createFromConfig(descriptor, KMLProvider.getInstance(), this.config);
+    }
 
+    return descriptor;
+  }
 
-/**
- * @inheritDoc
- */
-plugin.file.kml.ui.KMLImportCtrl.prototype.getProvider = function() {
-  return plugin.file.kml.KMLProvider.getInstance();
+  /**
+   * @inheritDoc
+   */
+  getProvider() {
+    return KMLProvider.getInstance();
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

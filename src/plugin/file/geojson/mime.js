@@ -1,41 +1,41 @@
-goog.provide('plugin.file.geojson.mime');
+goog.module('plugin.file.geojson.mime');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Promise');
-goog.require('os.file.mime.json');
+const Promise = goog.require('goog.Promise');
+const GeoJSON = goog.require('ol.format.GeoJSON');
+const mime = goog.require('os.file.mime');
+const json = goog.require('os.file.mime.json');
+
 
 /**
- * @const
  * @type {string}
  */
-plugin.file.geojson.mime.TYPE = 'application/vnd.geo+json';
-
+const TYPE = 'application/vnd.geo+json';
 
 /**
  * @param {ArrayBuffer} buffer
  * @param {os.file.File=} opt_file
  * @param {*=} opt_context
- * @return {!goog.Promise<*|undefined>}
+ * @return {!Promise<*|undefined>}
  */
-plugin.file.geojson.mime.isGeoJSON = function(buffer, opt_file, opt_context) {
+const isGeoJSON = function(buffer, opt_file, opt_context) {
   var retVal;
 
-  if (opt_context && plugin.file.geojson.mime.find_(/** @type {Object|null} */ (opt_context))) {
+  if (opt_context && find_(/** @type {Object|null} */ (opt_context))) {
     retVal = opt_context;
   }
 
-  return goog.Promise.resolve(retVal);
+  return Promise.resolve(retVal);
 };
-
 
 /**
  * @param {Array|Object} obj
  * @return {boolean}
- * @private
  * @suppress {accessControls}
  */
-plugin.file.geojson.mime.find_ = function(obj) {
+const find_ = function(obj) {
   var type = obj['type'];
-  if (type === 'FeatureCollection' || type === 'Feature' || type in ol.format.GeoJSON.GEOMETRY_READERS_) {
+  if (type === 'FeatureCollection' || type === 'Feature' || type in GeoJSON.GEOMETRY_READERS_) {
     return true;
   }
 
@@ -43,7 +43,7 @@ plugin.file.geojson.mime.find_ = function(obj) {
     if (obj.hasOwnProperty(key)) {
       var val = obj[key];
       if (goog.isObject(val) || Array.isArray(val)) {
-        var retVal = plugin.file.geojson.mime.find_(val);
+        var retVal = find_(val);
         if (retVal) {
           return retVal;
         }
@@ -55,4 +55,9 @@ plugin.file.geojson.mime.find_ = function(obj) {
 };
 
 
-os.file.mime.register(plugin.file.geojson.mime.TYPE, plugin.file.geojson.mime.isGeoJSON, 0, os.file.mime.json.TYPE);
+mime.register(TYPE, isGeoJSON, 0, json.TYPE);
+
+exports = {
+  TYPE,
+  isGeoJSON
+};

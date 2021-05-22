@@ -12,6 +12,7 @@ goog.require('os.time.TimeRange');
 goog.require('plugin.file.kml.KMLField');
 goog.require('plugin.file.kml.KMLTreeExporter');
 goog.require('plugin.file.kml.cmd.KMLNodeAdd');
+goog.require('plugin.file.kml.ui');
 
 
 /**

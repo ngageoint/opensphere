@@ -1,130 +1,67 @@
-goog.provide('plugin.file.kml.ui');
+goog.module('plugin.file.kml.ui');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.asserts');
-goog.require('goog.events.Event');
-goog.require('os.action.EventType');
-goog.require('os.command.SequenceCommand');
-goog.require('os.object');
-goog.require('os.style');
-goog.require('plugin.file.kml.KMLField');
-goog.require('plugin.file.kml.cmd.KMLNodeAdd');
-goog.require('plugin.file.kml.cmd.KMLNodeRemove');
-goog.require('plugin.file.kml.kmlNodeLayerUIDirective');
-goog.require('plugin.file.kml.ui.KMLNode');
+const GoogEvent = goog.require('goog.events.Event');
+const googString = goog.require('goog.string');
+const ol = goog.require('ol');
+const dispatcher = goog.require('os.Dispatcher');
+const EventType = goog.require('os.action.EventType');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const SequenceCommand = goog.require('os.command.SequenceCommand');
+const osFeature = goog.require('os.feature');
+const FeatureEditCtrl = goog.require('os.ui.FeatureEditCtrl');
+const osWindow = goog.require('os.ui.window');
+const KMLField = goog.require('plugin.file.kml.KMLField');
+const KMLNodeAdd = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
+const KMLNodeRemove = goog.require('plugin.file.kml.cmd.KMLNodeRemove');
+
+const KMLLayer = goog.requireType('plugin.file.kml.KMLLayer');
+const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
+const KMLSource = goog.requireType('plugin.file.kml.KMLSource');
+const KMLLayerNode = goog.requireType('plugin.file.kml.ui.KMLLayerNode');
 
 
 /**
  * @typedef {{
- *   node: (plugin.file.kml.ui.KMLNode|undefined),
- *   parent: (plugin.file.kml.ui.KMLNode|undefined),
- *   source: (plugin.file.kml.KMLSource|undefined),
+ *   node: (KMLNode|undefined),
+ *   parent: (KMLNode|undefined),
+ *   source: (KMLSource|undefined),
  *   name: string
  * }}
  */
-plugin.file.kml.ui.FolderOptions;
-
+let FolderOptions;
 
 /**
  * @typedef {{
  *   annotation: (boolean|undefined),
  *   feature: (ol.Feature|undefined),
  *   geometry: (ol.geom.Geometry|undefined),
- *   node: (plugin.file.kml.ui.KMLNode|undefined),
- *   parent: (plugin.file.kml.ui.KMLNode|undefined)
+ *   node: (KMLNode|undefined),
+ *   parent: (KMLNode|undefined)
  * }}
  */
-plugin.file.kml.ui.PlacemarkOptions;
-
-
-/**
- * Launch a window to create or edit a KML Folder.
- *
- * @param {!plugin.file.kml.ui.FolderOptions} options The folder options.
- */
-plugin.file.kml.ui.createOrEditFolder = function(options) {
-  var node = options['node'];
-  var label = node ? node.getLabel() : 'New Folder';
-  var winLabel = (node ? 'Edit' : 'Add') + ' Folder';
-
-  var confirmOptions = /** @type {!osx.window.ConfirmTextOptions} */ ({
-    confirm: goog.partial(plugin.file.kml.ui.onFolderName_, options),
-    defaultValue: label,
-    prompt: 'Please choose a label for the folder:',
-
-    windowOptions: /** @type {!osx.window.WindowOptions} */ ({
-      icon: 'fa fa-folder',
-      label: winLabel
-    })
-  });
-  os.ui.window.launchConfirmText(confirmOptions);
-};
-
-
-/**
- * Handle folder choice selection.
- *
- * @param {!plugin.file.kml.ui.FolderOptions} options The folder options.
- * @param {string} name The new name.
- * @private
- */
-plugin.file.kml.ui.onFolderName_ = function(options, name) {
-  options['name'] = name;
-  plugin.file.kml.ui.updateFolder(options);
-};
-
-
-/**
- * Updates a folder from the provided options.
- *
- * @param {!plugin.file.kml.ui.FolderOptions} options The folder options.
- * @return {!plugin.file.kml.ui.KMLNode}
- */
-plugin.file.kml.ui.updateFolder = function(options) {
-  var folder = options['node'];
-
-  if (!folder) {
-    // new folder - create it
-    folder = new plugin.file.kml.ui.KMLNode();
-    folder.collapsed = false;
-    folder.canAddChildren = true;
-    folder.editable = true;
-    folder.internalDrag = true;
-    folder.removable = true;
-  }
-
-  folder.setLabel(options['name'] || 'Unnamed Folder');
-
-  // add the folder to a parent if provided
-  if (options['parent']) {
-    var parent = plugin.file.kml.ui.verifyNodeInTree_(/** @type {!plugin.file.kml.ui.KMLNode} */ (options['parent']));
-    var cmd = new plugin.file.kml.cmd.KMLNodeAdd(folder, parent);
-    os.commandStack.addCommand(cmd);
-  }
-
-  return folder;
-};
-
+let PlacemarkOptions;
 
 /**
  * Launch a window to create or edit a place.
  *
- * @param {!plugin.file.kml.ui.PlacemarkOptions} options The place options.
+ * @param {!PlacemarkOptions} options The place options.
  */
-plugin.file.kml.ui.createOrEditPlace = function(options) {
+const createOrEditPlace = function(options) {
   var windowId = 'placemarkEdit';
-  windowId += options.feature ? ol.getUid(options.feature) : goog.string.getRandomString();
+  windowId += options.feature ? ol.getUid(options.feature) : googString.getRandomString();
 
   var scopeOptions = {
     'options': options
   };
 
-  if (os.ui.window.exists(windowId)) {
-    os.ui.window.bringToFront(windowId);
+  if (osWindow.exists(windowId)) {
+    osWindow.bringToFront(windowId);
   } else {
     var label = options.label || (options.feature ? 'Edit' : 'Add') + ' Place';
     var geom = /** @type {ol.geom.SimpleGeometry} */ (options.geometry) ||
         (options.feature ? options.feature.getGeometry() : null);
-    var x = os.ui.FeatureEditCtrl.calculateXPosition(geom);
+    var x = FeatureEditCtrl.calculateXPosition(geom);
 
     var windowOptions = {
       'id': windowId,
@@ -141,66 +78,130 @@ plugin.file.kml.ui.createOrEditPlace = function(options) {
     };
 
     var template = '<placemarkedit></placemarkedit>';
-    os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+    osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 };
 
+/**
+ * Default function to create a KML placemark node.
+ * @return {KMLNode}
+ */
+let createPlacemarkNode = () => null;
+
+/**
+ * Set the default function used to create a placemark node.
+ * @param {function():KMLNode} fn The function.
+ */
+const setCreatePlacemarkNodeFn = (fn) => {
+  createPlacemarkNode = fn;
+};
 
 /**
  * Updates a placemark from the provided options.
  *
- * @param {!plugin.file.kml.ui.PlacemarkOptions} options The placemark options.
- * @return {!plugin.file.kml.ui.KMLNode}
+ * @param {!PlacemarkOptions} options The placemark options.
+ * @return {KMLNode}
  */
-plugin.file.kml.ui.updatePlacemark = function(options) {
-  var placemark = options['node'];
+const updatePlacemark = function(options) {
+  var placemark = /** @type {KMLNode|undefined} */ (options['node']) || createPlacemarkNode();
 
-  if (!placemark) {
-    // new placemark - create it
-    placemark = new plugin.file.kml.ui.KMLNode();
-    placemark.canAddChildren = false;
-    placemark.editable = true;
-    placemark.internalDrag = true;
-    placemark.removable = true;
-    placemark.layerUI = 'kmlnodelayerui';
-  }
+  if (placemark) {
+    var feature = options['feature'] || null;
+    placemark.setFeature(feature);
 
-  var feature = options['feature'] || null;
-  placemark.setFeature(feature);
-
-  if (feature) {
-    // feature already exists, so update it
-    placemark.setLabel(feature.get(plugin.file.kml.KMLField.NAME) || 'Unnamed Place');
-    os.feature.update(feature);
-    feature.changed();
-    os.dispatcher.dispatchEvent(new goog.events.Event(os.action.EventType.REFRESH));
-  }
-
-  // add the placemark to a parent if provided
-  if (options['parent']) {
-    var parent = plugin.file.kml.ui.verifyNodeInTree_(/** @type {!plugin.file.kml.ui.KMLNode} */ (options['parent']));
-    var currentParent = placemark.getParent();
-    var cmds = [new plugin.file.kml.cmd.KMLNodeAdd(placemark, parent)];
-    if (currentParent) {
-      cmds.push(new plugin.file.kml.cmd.KMLNodeRemove(placemark));
+    if (feature) {
+      // feature already exists, so update it
+      placemark.setLabel(feature.get(KMLField.NAME) || 'Unnamed Place');
+      osFeature.update(feature);
+      feature.changed();
+      dispatcher.getInstance().dispatchEvent(new GoogEvent(EventType.REFRESH));
     }
-    var sequence = new os.command.SequenceCommand();
-    sequence.setCommands(cmds);
-    os.commandStack.addCommand(sequence);
+
+    // add the placemark to a parent if provided
+    if (options['parent']) {
+      var parent = verifyNodeInTree(/** @type {!KMLNode} */ (options['parent']));
+      var currentParent = placemark.getParent();
+      var cmds = [new KMLNodeAdd(placemark, parent)];
+      if (currentParent) {
+        cmds.push(new KMLNodeRemove(placemark));
+      }
+      var sequence = new SequenceCommand();
+      sequence.setCommands(cmds);
+      CommandProcessor.getInstance().addCommand(sequence);
+    }
   }
 
   return placemark;
 };
 
+/**
+ * Default function to create a KML folder node.
+ * @return {KMLNode}
+ */
+let createFolderNode = () => null;
+
+/**
+ * Set the default function used to create a folder node.
+ * @param {function():KMLNode} fn The function.
+ */
+const setCreateFolderNodeFn = (fn) => {
+  createFolderNode = fn;
+};
+
+/**
+ * Launch a window to create or edit a KML Folder.
+ *
+ * @param {!FolderOptions} options The folder options.
+ */
+const createOrEditFolder = function(options) {
+  var node = options['node'];
+  var label = node ? node.getLabel() : 'New Folder';
+  var winLabel = (node ? 'Edit' : 'Add') + ' Folder';
+
+  var confirmOptions = /** @type {!osx.window.ConfirmTextOptions} */ ({
+    confirm: (name) => {
+      options['name'] = name;
+      updateFolder(options);
+    },
+    defaultValue: label,
+    prompt: 'Please choose a label for the folder:',
+
+    windowOptions: /** @type {!osx.window.WindowOptions} */ ({
+      icon: 'fa fa-folder',
+      label: winLabel
+    })
+  });
+  osWindow.launchConfirmText(confirmOptions);
+};
+
+/**
+ * Updates a folder from the provided options.
+ * @param {!FolderOptions} options The folder options.
+ * @return {KMLNode} The folder node.
+ */
+const updateFolder = function(options) {
+  var folder = /** @type {KMLNode|undefined} */ (options['node']) || createFolderNode();
+  if (folder) {
+    folder.setLabel(options['name'] || 'Unnamed Folder');
+
+    // add the folder to a parent if provided
+    if (options['parent']) {
+      var parent = verifyNodeInTree(/** @type {!KMLNode} */ (options['parent']));
+      var cmd = new KMLNodeAdd(folder, parent);
+      CommandProcessor.getInstance().addCommand(cmd);
+    }
+  }
+
+  return folder;
+};
 
 /**
  * Verifies the KML node is still in the tree if it has a KML source defined.
  *
- * @param {!plugin.file.kml.ui.KMLNode} node The node to verify
- * @return {!plugin.file.kml.ui.KMLNode} The same node if it's in the tree, otherwise the root of the tree.
- * @private
+ * @param {!KMLNode} node The node to verify
+ * @return {!KMLNode} The same node if it's in the tree, otherwise the root of the tree.
  */
-plugin.file.kml.ui.verifyNodeInTree_ = function(node) {
+const verifyNodeInTree = function(node) {
   var result = node;
 
   // if the parent has a source defined, make sure the node's root is the same as the source root. if not, the node
@@ -217,15 +218,27 @@ plugin.file.kml.ui.verifyNodeInTree_ = function(node) {
   return result;
 };
 
-
 /**
  * Get the KML root node from a KML layer node. Assumes the layer node may not be displaying the root.
  *
- * @param {!plugin.file.kml.ui.KMLLayerNode} layerNode The layer node
- * @return {plugin.file.kml.ui.KMLNode}
+ * @param {!KMLLayerNode} layerNode The layer node
+ * @return {KMLNode}
  */
-plugin.file.kml.ui.getKMLRoot = function(layerNode) {
-  var layer = /** @type {plugin.file.kml.KMLLayer} */ (layerNode.getLayer());
-  var source = layer ? /** @type {plugin.file.kml.KMLSource} */ (layer.getSource()) : null;
+const getKMLRoot = function(layerNode) {
+  var layer = /** @type {KMLLayer} */ (layerNode.getLayer());
+  var source = layer ? /** @type {KMLSource} */ (layer.getSource()) : null;
   return source ? source.getRootNode() : null;
+};
+
+exports = {
+  createOrEditFolder,
+  createOrEditPlace,
+  getKMLRoot,
+  setCreateFolderNodeFn,
+  setCreatePlacemarkNodeFn,
+  updateFolder,
+  updatePlacemark,
+  verifyNodeInTree,
+  FolderOptions,
+  PlacemarkOptions
 };
