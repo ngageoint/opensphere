@@ -1,8 +1,10 @@
 goog.module('plugin.file.kml.KMLPlugin');
 goog.module.declareLegacyNamespace();
 
-const Settings = goog.require('os.config.Settings');
+// Load to register directive with Angular.
+goog.require('plugin.file.kml.ui.PlacemarkEditUI');
 
+const Settings = goog.require('os.config.Settings');
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
 const fn = goog.require('os.fn');

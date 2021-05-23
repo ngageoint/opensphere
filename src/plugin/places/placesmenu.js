@@ -1,36 +1,56 @@
-goog.provide('plugin.places.menu');
+goog.module('plugin.places.menu');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.geom.Point');
-goog.require('os');
-goog.require('os.command.ParallelCommand');
-goog.require('os.command.SequenceCommand');
-goog.require('os.feature');
-goog.require('os.interaction');
-goog.require('os.metrics.keys');
-goog.require('os.ui.menu.layer');
-goog.require('os.ui.menu.map');
-goog.require('os.ui.menu.spatial');
-goog.require('plugin.file.kml.cmd.KMLNodeAdd');
-goog.require('plugin.file.kml.cmd.KMLNodeRemove');
-goog.require('plugin.file.kml.ui');
-goog.require('plugin.file.kml.ui.KMLTreeExportUI');
-goog.require('plugin.places');
-goog.require('plugin.places.ui.savePlacesDirective');
+const GoogEvent = goog.require('goog.events.Event');
+const Point = goog.require('ol.geom.Point');
+const os = goog.require('os');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const ParallelCommand = goog.require('os.command.ParallelCommand');
+const SequenceCommand = goog.require('os.command.SequenceCommand');
+const DataManager = goog.require('os.data.DataManager');
+const LayerNode = goog.require('os.data.LayerNode');
+const RecordField = goog.require('os.data.RecordField');
+const osFeature = goog.require('os.feature');
+const VectorLayer = goog.require('os.layer.Vector');
+const metrics = goog.require('os.metrics');
+const VectorSource = goog.require('os.source.Vector');
+const ui = goog.require('os.ui');
+const MenuItemType = goog.require('os.ui.menu.MenuItemType');
+const layerMenu = goog.require('os.ui.menu.layer');
+const mapMenu = goog.require('os.ui.menu.map');
+const spatial = goog.require('os.ui.menu.spatial');
+const KMLLayer = goog.require('plugin.file.kml.KMLLayer');
+const KMLNodeAdd = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
+const KMLNodeRemove = goog.require('plugin.file.kml.cmd.KMLNodeRemove');
+const {
+  createOrEditFolder,
+  createOrEditPlace,
+  getKMLRoot,
+  updateFolder,
+  updatePlacemark
+} = goog.require('plugin.file.kml.ui');
+const KMLLayerNode = goog.require('plugin.file.kml.ui.KMLLayerNode');
+const KMLNode = goog.require('plugin.file.kml.ui.KMLNode');
+const KMLTreeExportUI = goog.require('plugin.file.kml.ui.KMLTreeExportUI');
+const places = goog.require('plugin.places');
+const PlacesManager = goog.require('plugin.places.PlacesManager');
+const QuickAddPlacesUI = goog.require('plugin.places.ui.QuickAddPlacesUI');
+const launchSavePlaces = goog.require('plugin.places.ui.launchSavePlaces');
+
+const {FolderOptions, PlacemarkOptions} = goog.requireType('plugin.file.kml.ui');
 
 
 /**
  * Places group label for menus.
  * @type {string}
- * @const
  */
-plugin.places.menu.GROUP_LABEL = plugin.places.TITLE;
-
+const GROUP_LABEL = places.TITLE;
 
 /**
  * Places menu event types.
  * @enum {string}
  */
-plugin.places.menu.EventType = {
+const EventType = {
   SAVE_TO: 'places:saveToPlaces',
   SAVE_TO_ANNOTATION: 'places:saveToAnnotation',
   EXPORT: 'places:export',
@@ -47,118 +67,117 @@ plugin.places.menu.EventType = {
   REMOVE_ALL: 'places:removeAll'
 };
 
-
 /**
  * Add places items to the layer menu.
  */
-plugin.places.menu.layerSetup = function() {
-  var menu = os.ui.menu.layer.MENU;
-  if (menu && !menu.getRoot().find(plugin.places.menu.GROUP_LABEL)) {
+const layerSetup = function() {
+  var menu = layerMenu.MENU;
+  if (menu && !menu.getRoot().find(GROUP_LABEL)) {
     var menuRoot = menu.getRoot();
     menuRoot.addChild({
-      label: plugin.places.menu.GROUP_LABEL,
-      type: os.ui.menu.MenuItemType.GROUP,
-      sort: os.ui.menu.layer.GroupSort.GROUPS++,
+      label: GROUP_LABEL,
+      type: MenuItemType.GROUP,
+      sort: layerMenu.GroupSort.GROUPS++,
       children: [
         {
           label: 'Create Folder...',
-          eventType: plugin.places.menu.EventType.ADD_FOLDER,
+          eventType: EventType.ADD_FOLDER,
           tooltip: 'Creates a new folder and adds it to the tree',
           icons: ['<i class="fa fa-fw fa-folder"></i>'],
-          beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
-          handler: plugin.places.menu.onLayerEvent_,
-          metricKey: os.metrics.Places.ADD_FOLDER,
+          beforeRender: visibleIfLayerNodeSupported_,
+          handler: onLayerEvent_,
+          metricKey: metrics.Places.ADD_FOLDER,
           sort: 100
         },
         {
           label: 'Create Place...',
-          eventType: plugin.places.menu.EventType.ADD_PLACEMARK,
+          eventType: EventType.ADD_PLACEMARK,
           tooltip: 'Creates a new saved place',
           icons: ['<i class="fa fa-fw fa-map-marker"></i>'],
-          beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
-          handler: plugin.places.menu.onLayerEvent_,
-          metricKey: os.metrics.Places.ADD_PLACE,
+          beforeRender: visibleIfLayerNodeSupported_,
+          handler: onLayerEvent_,
+          metricKey: metrics.Places.ADD_PLACE,
           sort: 110
         },
         {
           label: 'Quick Add Places...',
-          eventType: plugin.places.menu.EventType.QUICK_ADD_PLACES,
+          eventType: EventType.QUICK_ADD_PLACES,
           tooltip: 'Quickly add places to the selected folder',
-          icons: ['<i class="fa fa-fw ' + plugin.places.Icon.QUICK_ADD + '"></i>'],
-          beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
-          handler: plugin.places.menu.onLayerEvent_,
-          metricKey: os.metrics.Places.QUICK_ADD_PLACES,
+          icons: ['<i class="fa fa-fw ' + places.Icon.QUICK_ADD + '"></i>'],
+          beforeRender: visibleIfLayerNodeSupported_,
+          handler: onLayerEvent_,
+          metricKey: metrics.Places.QUICK_ADD_PLACES,
           sort: 120
         },
         {
           label: 'Show Features',
-          eventType: plugin.places.menu.EventType.FEATURE_LIST,
+          eventType: EventType.FEATURE_LIST,
           tooltip: 'Displays features in the layer',
           icons: ['<i class="fa fa-fw fa-table"></i>'],
-          beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
-          handler: plugin.places.menu.onLayerEvent_,
-          metricKey: os.metrics.Places.FEATURE_LIST,
+          beforeRender: visibleIfLayerNodeSupported_,
+          handler: onLayerEvent_,
+          metricKey: metrics.Places.FEATURE_LIST,
           sort: 125
         },
         {
           label: 'Edit Folder...',
-          eventType: plugin.places.menu.EventType.EDIT_FOLDER,
+          eventType: EventType.EDIT_FOLDER,
           tooltip: 'Edit the folder label',
           icons: ['<i class="fa fa-fw fa-pencil"></i>'],
-          beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
-          handler: plugin.places.menu.onLayerEvent_,
-          metricKey: os.metrics.Places.EDIT_FOLDER,
+          beforeRender: visibleIfLayerNodeSupported_,
+          handler: onLayerEvent_,
+          metricKey: metrics.Places.EDIT_FOLDER,
           sort: 130
         },
         {
           label: 'Edit Place...',
-          eventType: plugin.places.menu.EventType.EDIT_PLACEMARK,
+          eventType: EventType.EDIT_PLACEMARK,
           tooltip: 'Edit the saved place',
           icons: ['<i class="fa fa-fw fa-pencil"></i>'],
-          beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
-          handler: plugin.places.menu.onLayerEvent_,
-          metricKey: os.metrics.Places.EDIT_PLACEMARK,
+          beforeRender: visibleIfLayerNodeSupported_,
+          handler: onLayerEvent_,
+          metricKey: metrics.Places.EDIT_PLACEMARK,
           sort: 140
         },
         {
           label: 'Export Places...',
-          eventType: plugin.places.menu.EventType.EXPORT,
-          tooltip: 'Exports ' + plugin.places.TITLE + ' from the selected location',
+          eventType: EventType.EXPORT,
+          tooltip: 'Exports ' + places.TITLE + ' from the selected location',
           icons: ['<i class="fa fa-fw fa-download"></i>'],
-          beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
-          handler: plugin.places.menu.onLayerEvent_,
-          metricKey: os.metrics.Places.EXPORT_CONTEXT,
+          beforeRender: visibleIfLayerNodeSupported_,
+          handler: onLayerEvent_,
+          metricKey: metrics.Places.EXPORT_CONTEXT,
           sort: 150
         },
         {
           label: 'Save to Places...',
-          eventType: plugin.places.menu.EventType.SAVE_TO,
-          tooltip: 'Copies selected features to the ' + plugin.places.TITLE +
+          eventType: EventType.SAVE_TO,
+          tooltip: 'Copies selected features to the ' + places.TITLE +
               ' layer, or all features if none selected',
-          icons: ['<i class="fa fa-fw ' + plugin.places.Icon.PLACEMARK + '"></i>'],
-          beforeRender: plugin.places.menu.visibleIfCanSaveLayer,
-          handler: plugin.places.menu.saveLayerToPlaces,
-          metricKey: os.metrics.Places.SAVE_TO,
+          icons: ['<i class="fa fa-fw ' + places.Icon.PLACEMARK + '"></i>'],
+          beforeRender: visibleIfCanSaveLayer,
+          handler: saveLayerToPlaces,
+          metricKey: metrics.Places.SAVE_TO,
           sort: 160
         },
         {
           label: 'Remove',
-          eventType: plugin.places.menu.EventType.REMOVE_PLACE,
+          eventType: EventType.REMOVE_PLACE,
           tooltip: 'Removes the place',
           icons: ['<i class="fa fa-fw fa-times"></i>'],
-          beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
-          handler: plugin.places.menu.onLayerEvent_,
-          metricKey: os.metrics.Places.REMOVE_PLACE,
+          beforeRender: visibleIfLayerNodeSupported_,
+          handler: onLayerEvent_,
+          metricKey: metrics.Places.REMOVE_PLACE,
           sort: 170
         },
         {
           label: 'Remove All',
-          eventType: plugin.places.menu.EventType.REMOVE_ALL,
+          eventType: EventType.REMOVE_ALL,
           tooltip: 'Removes all of the places',
           icons: ['<i class="fa fa-fw fa-times"></i>'],
-          beforeRender: plugin.places.menu.visibleIfLayerNodeSupported_,
-          handler: plugin.places.menu.onLayerEvent_,
-          metricKey: os.metrics.Places.REMOVE_ALL,
+          beforeRender: visibleIfLayerNodeSupported_,
+          handler: onLayerEvent_,
+          metricKey: metrics.Places.REMOVE_ALL,
           sort: 180
         }
       ]
@@ -166,34 +185,31 @@ plugin.places.menu.layerSetup = function() {
   }
 };
 
-
 /**
  * Remove places items from the layer menu.
  */
-plugin.places.menu.layerDispose = function() {
-  var menu = os.ui.menu.layer.MENU;
-  var group = menu ? menu.getRoot().find(os.ui.menu.layer.GroupLabel.TOOLS) : undefined;
+const layerDispose = function() {
+  var menu = layerMenu.MENU;
+  var group = menu ? menu.getRoot().find(layerMenu.GroupLabel.TOOLS) : undefined;
   if (group) {
     // remove the entire places group
-    group.removeChild(plugin.places.menu.GROUP_LABEL);
+    group.removeChild(GROUP_LABEL);
   }
 };
-
 
 /**
  * Show the places menu item if layers in the context support it.
  *
- * @param {os.ui.menu.layer.Context} context The menu context.
- * @private
+ * @param {layerMenu.Context} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
-plugin.places.menu.visibleIfLayerNodeSupported_ = function(context) {
+const visibleIfLayerNodeSupported_ = function(context) {
   this.visible = false;
 
   if (this.eventType && context && context.length == 1) {
     var node = context[0];
-    if (node instanceof plugin.file.kml.ui.KMLNode) {
-      var pm = plugin.places.PlacesManager.getInstance();
+    if (node instanceof KMLNode) {
+      var pm = PlacesManager.getInstance();
       var placesRoot = pm.getPlacesRoot().getRoot();
       var isPlacesNode = placesRoot === node.getRoot();
       if (!isPlacesNode) {
@@ -201,52 +217,52 @@ plugin.places.menu.visibleIfLayerNodeSupported_ = function(context) {
       }
 
       switch (this.eventType) {
-        case plugin.places.menu.EventType.ADD_FOLDER:
-        case plugin.places.menu.EventType.ADD_PLACEMARK:
-        case plugin.places.menu.EventType.QUICK_ADD_PLACES:
+        case EventType.ADD_FOLDER:
+        case EventType.ADD_PLACEMARK:
+        case EventType.QUICK_ADD_PLACES:
           this.visible = node.isFolder() && node.canAddChildren;
           break;
-        case plugin.places.menu.EventType.EDIT_FOLDER:
+        case EventType.EDIT_FOLDER:
           this.visible = node.isFolder() && node.editable;
           break;
-        case plugin.places.menu.EventType.EDIT_PLACEMARK:
+        case EventType.EDIT_PLACEMARK:
           this.visible = !node.isFolder() && node.editable;
           break;
-        case plugin.places.menu.EventType.EXPORT:
+        case EventType.EXPORT:
           this.visible = placesRoot != null && node.getRoot() == placesRoot;
           break;
-        case plugin.places.menu.EventType.FEATURE_LIST:
+        case EventType.FEATURE_LIST:
           this.visible = node.isFolder() || node.hasChildren();
           break;
-        case plugin.places.menu.EventType.REMOVE_PLACE:
+        case EventType.REMOVE_PLACE:
           if (node.isFolder() || node.hasChildren()) {
             this.visible = false;
           } else {
             this.visible = node.removable;
           }
           break;
-        case plugin.places.menu.EventType.REMOVE_ALL:
+        case EventType.REMOVE_ALL:
           this.visible = false;
           break;
         default:
           this.visible = node.isFolder();
           break;
       }
-    } else if (node instanceof plugin.file.kml.ui.KMLLayerNode) {
+    } else if (node instanceof KMLLayerNode) {
       var layer = node.getLayer();
-      var isPlacesLayer = layer != null && layer.getId() == plugin.places.ID;
+      var isPlacesLayer = layer != null && layer.getId() == places.ID;
 
       switch (this.eventType) {
-        case plugin.places.menu.EventType.EXPORT:
+        case EventType.EXPORT:
           this.visible = isPlacesLayer;
           break;
-        case plugin.places.menu.EventType.ADD_FOLDER:
-        case plugin.places.menu.EventType.ADD_PLACEMARK:
-        case plugin.places.menu.EventType.QUICK_ADD_PLACES:
+        case EventType.ADD_FOLDER:
+        case EventType.ADD_PLACEMARK:
+        case EventType.QUICK_ADD_PLACES:
           this.visible = isPlacesLayer && node.isEditable();
           break;
-        case plugin.places.menu.EventType.FEATURE_LIST:
-        case plugin.places.menu.EventType.REMOVE_ALL:
+        case EventType.FEATURE_LIST:
+        case EventType.REMOVE_ALL:
           this.visible = isPlacesLayer && node.hasChildren();
           break;
         default:
@@ -256,8 +272,8 @@ plugin.places.menu.visibleIfLayerNodeSupported_ = function(context) {
   } else if (context && context.length > 1) {
     for (var i = 0; i < context.length; i++) {
       var node = context[i];
-      if (node instanceof plugin.file.kml.ui.KMLNode) {
-        var pm = plugin.places.PlacesManager.getInstance();
+      if (node instanceof KMLNode) {
+        var pm = PlacesManager.getInstance();
         var placesRoot = pm.getPlacesRoot().getRoot();
         var isPlacesNode = placesRoot === node.getRoot();
         if (!isPlacesNode) {
@@ -266,7 +282,7 @@ plugin.places.menu.visibleIfLayerNodeSupported_ = function(context) {
         }
 
         switch (this.eventType) {
-          case plugin.places.menu.EventType.REMOVE_PLACE:
+          case EventType.REMOVE_PLACE:
             this.visible = node.removable;
             break;
           default:
@@ -284,118 +300,115 @@ plugin.places.menu.visibleIfLayerNodeSupported_ = function(context) {
   }
 };
 
-
 /**
  * Set up places items on the map.
  */
-plugin.places.menu.mapSetup = function() {
-  var menu = os.ui.menu.map.MENU;
+const mapSetup = function() {
+  var menu = mapMenu.MENU;
 
-  if (menu && !menu.getRoot().find(plugin.places.menu.GROUP_LABEL)) {
+  if (menu && !menu.getRoot().find(GROUP_LABEL)) {
     var root = menu.getRoot();
     root.addChild({
-      label: plugin.places.menu.GROUP_LABEL,
-      type: os.ui.menu.MenuItemType.GROUP,
+      label: GROUP_LABEL,
+      type: MenuItemType.GROUP,
       sort: 50,
       children: [
         {
           label: 'Create Place...',
-          eventType: plugin.places.menu.EventType.SAVE_TO,
+          eventType: EventType.SAVE_TO,
           tooltip: 'Creates a new saved place from this location',
-          icons: ['<i class="fa fa-fw ' + plugin.places.Icon.PLACEMARK + '"></i>'],
-          beforeRender: os.ui.menu.map.showIfHasCoordinate,
-          handler: plugin.places.menu.saveCoordinateToPlaces,
-          metricKey: os.metrics.Places.ADD_PLACE,
+          icons: ['<i class="fa fa-fw ' + places.Icon.PLACEMARK + '"></i>'],
+          beforeRender: mapMenu.showIfHasCoordinate,
+          handler: saveCoordinateToPlaces,
+          metricKey: metrics.Places.ADD_PLACE,
           sort: 0
         }, {
           label: 'Create Text Box...',
-          eventType: plugin.places.menu.EventType.SAVE_TO_ANNOTATION,
+          eventType: EventType.SAVE_TO_ANNOTATION,
           tooltip: 'Creates a new saved place with a text box at this location',
-          icons: ['<i class="fa fa-fw ' + plugin.places.Icon.ANNOTATION + '"></i>'],
-          beforeRender: os.ui.menu.map.showIfHasCoordinate,
-          handler: plugin.places.menu.createAnnotationFromCoordinate,
-          metricKey: os.metrics.Places.ADD_ANNOTATION,
+          icons: ['<i class="fa fa-fw ' + places.Icon.ANNOTATION + '"></i>'],
+          beforeRender: mapMenu.showIfHasCoordinate,
+          handler: createAnnotationFromCoordinate,
+          metricKey: metrics.Places.ADD_ANNOTATION,
           sort: 1
         },
         {
           label: 'Quick Add Places...',
-          eventType: plugin.places.menu.EventType.QUICK_ADD_PLACES,
+          eventType: EventType.QUICK_ADD_PLACES,
           tooltip: 'Quickly add places to the selected folder',
-          icons: ['<i class="fa fa-fw ' + plugin.places.Icon.QUICK_ADD + '"></i>'],
-          beforeRender: os.ui.menu.map.showIfHasCoordinate,
-          handler: plugin.places.menu.quickAddFromCoordinate,
-          metricKey: os.metrics.Places.QUICK_ADD_PLACES,
+          icons: ['<i class="fa fa-fw ' + places.Icon.QUICK_ADD + '"></i>'],
+          beforeRender: mapMenu.showIfHasCoordinate,
+          handler: quickAddFromCoordinate,
+          metricKey: metrics.Places.QUICK_ADD_PLACES,
           sort: 120
         }
       ]
     });
   }
 };
-
 
 /**
  * Clean up places items on the map.
  */
-plugin.places.menu.mapDispose = function() {
-  var menu = os.ui.menu.map.MENU;
+const mapDispose = function() {
+  var menu = mapMenu.MENU;
   if (menu) {
-    var group = menu.getRoot().find(os.ui.menu.map.GroupLabel.COORDINATE);
+    var group = menu.getRoot().find(mapMenu.GroupLabel.COORDINATE);
     if (group) {
-      group.removeChild(plugin.places.menu.EventType.SAVE_TO);
+      group.removeChild(EventType.SAVE_TO);
     }
   }
 };
 
-
 /**
  * Set up places items in the spatial menu.
  */
-plugin.places.menu.spatialSetup = function() {
-  var menu = os.ui.menu.spatial.MENU;
+const spatialSetup = function() {
+  var menu = spatial.MENU;
 
-  if (menu && !menu.getRoot().find(plugin.places.menu.GROUP_LABEL)) {
+  if (menu && !menu.getRoot().find(GROUP_LABEL)) {
     var root = menu.getRoot();
     root.addChild({
-      label: plugin.places.menu.GROUP_LABEL,
-      type: os.ui.menu.MenuItemType.GROUP,
+      label: GROUP_LABEL,
+      type: MenuItemType.GROUP,
       sort: 50,
       children: [
         {
           label: 'Create Place...',
-          eventType: plugin.places.menu.EventType.SAVE_TO,
+          eventType: EventType.SAVE_TO,
           tooltip: 'Creates a new place from the feature',
-          icons: ['<i class="fa fa-fw ' + plugin.places.Icon.PLACEMARK + '"></i>'],
-          beforeRender: plugin.places.menu.visibleIfCanSaveSpatial,
-          handler: plugin.places.menu.saveSpatialToPlaces,
-          metricKey: os.metrics.Places.ADD_PLACE,
+          icons: ['<i class="fa fa-fw ' + places.Icon.PLACEMARK + '"></i>'],
+          beforeRender: visibleIfCanSaveSpatial,
+          handler: saveSpatialToPlaces,
+          metricKey: metrics.Places.ADD_PLACE,
           sort: 100
         }, {
           label: 'Edit Place',
-          eventType: plugin.places.menu.EventType.EDIT_PLACEMARK,
+          eventType: EventType.EDIT_PLACEMARK,
           tooltip: 'Edit the saved place',
           icons: ['<i class="fa fa-fw fa-pencil"></i>'],
-          beforeRender: plugin.places.menu.visibleIfIsPlace,
-          handler: plugin.places.menu.onSpatialEdit_,
+          beforeRender: visibleIfIsPlace,
+          handler: onSpatialEdit_,
           sort: 110
         },
         {
           label: 'Create Text Box...',
-          eventType: plugin.places.menu.EventType.SAVE_TO_ANNOTATION,
+          eventType: EventType.SAVE_TO_ANNOTATION,
           tooltip: 'Creates a new place with a text box',
-          icons: ['<i class="fa fa-fw ' + plugin.places.Icon.ANNOTATION + '"></i>'],
-          beforeRender: plugin.places.menu.visibleIfCanSaveSpatial,
-          handler: plugin.places.menu.saveSpatialToAnnotation,
-          metricKey: os.metrics.Places.ADD_ANNOTATION,
+          icons: ['<i class="fa fa-fw ' + places.Icon.ANNOTATION + '"></i>'],
+          beforeRender: visibleIfCanSaveSpatial,
+          handler: saveSpatialToAnnotation,
+          metricKey: metrics.Places.ADD_ANNOTATION,
           sort: 120
         },
         {
           label: 'Quick Add Places...',
-          eventType: plugin.places.menu.EventType.QUICK_ADD_PLACES,
+          eventType: EventType.QUICK_ADD_PLACES,
           tooltip: 'Quickly add places to the selected folder',
-          icons: ['<i class="fa fa-fw ' + plugin.places.Icon.QUICK_ADD + '"></i>'],
-          beforeRender: plugin.places.menu.visibleIfCanSaveSpatial,
-          handler: plugin.places.menu.quickAddFromSpatial,
-          metricKey: os.metrics.Places.QUICK_ADD_PLACES,
+          icons: ['<i class="fa fa-fw ' + places.Icon.QUICK_ADD + '"></i>'],
+          beforeRender: visibleIfCanSaveSpatial,
+          handler: quickAddFromSpatial,
+          metricKey: metrics.Places.QUICK_ADD_PLACES,
           sort: 120
         }
       ]
@@ -403,21 +416,19 @@ plugin.places.menu.spatialSetup = function() {
   }
 };
 
-
 /**
  * Clean up places items in the spatial menu.
  */
-plugin.places.menu.spatialDispose = function() {
-  var menu = os.ui.menu.map.MENU;
+const spatialDispose = function() {
+  var menu = mapMenu.MENU;
   if (menu) {
-    var group = menu.getRoot().find(os.ui.menu.spatial.Group.TOOLS);
+    var group = menu.getRoot().find(spatial.Group.TOOLS);
     if (group) {
-      group.removeChild(plugin.places.menu.EventType.SAVE_TO);
-      group.removeChild(plugin.places.menu.EventType.EDIT_PLACEMARK);
+      group.removeChild(EventType.SAVE_TO);
+      group.removeChild(EventType.EDIT_PLACEMARK);
     }
   }
 };
-
 
 /**
  * Test if spatial args contain a place.
@@ -425,19 +436,18 @@ plugin.places.menu.spatialDispose = function() {
  * @param {Object|undefined} context The menu context.
  * @return {boolean}
  */
-plugin.places.menu.spatialIsPlace = function(context) {
-  var features = os.ui.menu.spatial.getFeaturesFromContext(context);
+const spatialIsPlace = function(context) {
+  var features = spatial.getFeaturesFromContext(context);
   if (features.length === 1) {
     var feature = features[0];
-    var sourceId = feature.get(os.data.RecordField.SOURCE_ID);
+    var sourceId = feature.get(RecordField.SOURCE_ID);
 
-    return sourceId === plugin.places.ID;
+    return sourceId === places.ID;
   }
 
   // ignore everything else
   return false;
 };
-
 
 /**
  * Shows a menu item if the context can be saved to places.
@@ -445,11 +455,11 @@ plugin.places.menu.spatialIsPlace = function(context) {
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
-plugin.places.menu.visibleIfCanSaveSpatial = function(context) {
+const visibleIfCanSaveSpatial = function(context) {
   this.visible = false;
 
-  if (!plugin.places.menu.spatialIsPlace(context)) {
-    var geometries = os.ui.menu.spatial.getGeometriesFromContext(context);
+  if (!spatialIsPlace(context)) {
+    var geometries = spatial.getGeometriesFromContext(context);
     if (geometries.length === 1) {
       // single geometry, okay to add
       this.visible = true;
@@ -457,33 +467,30 @@ plugin.places.menu.visibleIfCanSaveSpatial = function(context) {
   }
 };
 
-
 /**
  * Shows a menu item if the context is a saved place.
  *
  * @param {Object|undefined} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
-plugin.places.menu.visibleIfIsPlace = function(context) {
-  this.visible = plugin.places.menu.spatialIsPlace(context);
+const visibleIfIsPlace = function(context) {
+  this.visible = spatialIsPlace(context);
 };
-
 
 /**
  * Handle Edit Place from spatial menu.
  *
  * @param {os.ui.menu.MenuEvent} event The event.
- * @private
  */
-plugin.places.menu.onSpatialEdit_ = function(event) {
-  var features = os.ui.menu.spatial.getFeaturesFromContext(/** @type {Object} */ (event.getContext()));
+const onSpatialEdit_ = function(event) {
+  var features = spatial.getFeaturesFromContext(/** @type {Object} */ (event.getContext()));
   if (features.length === 1) {
     var feature = features[0];
-    var source = /** @type {plugin.file.kml.KMLSource} */ (os.dataManager.getSource(plugin.places.ID));
+    var source = /** @type {plugin.file.kml.KMLSource} */ (DataManager.getInstance().getSource(places.ID));
     if (source) {
       var node = source.getFeatureNode(feature);
       if (node) {
-        plugin.file.kml.ui.createOrEditPlace({
+        createOrEditPlace({
           'feature': feature,
           'node': node
         });
@@ -492,96 +499,94 @@ plugin.places.menu.onSpatialEdit_ = function(event) {
   }
 };
 
-
 /**
  * Handle menu events from the layer menu.
  *
- * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
- * @private
+ * @param {!os.ui.menu.MenuEvent<layerMenu.Context>} event The menu event.
  */
-plugin.places.menu.onLayerEvent_ = function(event) {
+const onLayerEvent_ = function(event) {
   var context = event.getContext();
   if (context && context.length == 1) {
     var node = context[0];
-    if (node instanceof plugin.file.kml.ui.KMLNode) {
+    if (node instanceof KMLNode) {
       var source = node.getSource();
       if (source) {
         switch (event.type) {
-          case plugin.places.menu.EventType.ADD_FOLDER:
-            plugin.file.kml.ui.createOrEditFolder(/** @type {!plugin.file.kml.ui.FolderOptions} */ ({
+          case EventType.ADD_FOLDER:
+            createOrEditFolder(/** @type {!FolderOptions} */ ({
               'parent': node
             }));
             break;
-          case plugin.places.menu.EventType.ADD_PLACEMARK:
-            plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
+          case EventType.ADD_PLACEMARK:
+            createOrEditPlace(/** @type {!PlacemarkOptions} */ ({
               'parent': node
             }));
             break;
-          case plugin.places.menu.EventType.QUICK_ADD_PLACES:
-            plugin.places.ui.QuickAddPlacesCtrl.launch(node);
+          case EventType.QUICK_ADD_PLACES:
+            QuickAddPlacesUI.launch(node);
             break;
-          case plugin.places.menu.EventType.FEATURE_LIST:
-            if (source instanceof os.source.Vector) {
-              os.ui.launchFeatureList(source);
+          case EventType.FEATURE_LIST:
+            if (source instanceof VectorSource) {
+              ui.launchFeatureList(source);
             }
             break;
-          case plugin.places.menu.EventType.EDIT_FOLDER:
-            plugin.file.kml.ui.createOrEditFolder(/** @type {!plugin.file.kml.ui.FolderOptions} */ ({
+          case EventType.EDIT_FOLDER:
+            createOrEditFolder(/** @type {!FolderOptions} */ ({
               'node': node
             }));
             break;
-          case plugin.places.menu.EventType.EDIT_PLACEMARK:
+          case EventType.EDIT_PLACEMARK:
             var feature = node.getFeature();
-            plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
+            createOrEditPlace(/** @type {!PlacemarkOptions} */ ({
               'feature': feature,
               'node': node
             }));
             break;
-          case plugin.places.menu.EventType.EXPORT:
-            plugin.file.kml.ui.KMLTreeExportUI.launchTreeExport(node, 'Export Places');
+          case EventType.EXPORT:
+            KMLTreeExportUI.launchTreeExport(node, 'Export Places');
             break;
-          case plugin.places.menu.EventType.REMOVE_PLACE:
-            var cmd = new plugin.file.kml.cmd.KMLNodeRemove(node);
-            os.commandStack.addCommand(cmd);
+          case EventType.REMOVE_PLACE:
+            var cmd = new KMLNodeRemove(node);
+            CommandProcessor.getInstance().addCommand(cmd);
             break;
           default:
             break;
         }
       }
-    } else if (node instanceof plugin.file.kml.ui.KMLLayerNode) {
-      var rootNode = plugin.file.kml.ui.getKMLRoot(node).getChildren()[0];
+    } else if (node instanceof KMLLayerNode) {
+      var rootNode = getKMLRoot(node).getChildren()[0];
       if (rootNode) {
         switch (event.type) {
-          case plugin.places.menu.EventType.ADD_FOLDER:
-            plugin.file.kml.ui.createOrEditFolder(/** @type {!plugin.file.kml.ui.FolderOptions} */ ({
+          case EventType.ADD_FOLDER:
+            createOrEditFolder(/** @type {!FolderOptions} */ ({
               'parent': rootNode
             }));
             break;
-          case plugin.places.menu.EventType.ADD_PLACEMARK:
-            plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
+          case EventType.ADD_PLACEMARK:
+            createOrEditPlace(/** @type {!PlacemarkOptions} */ ({
               'parent': rootNode
             }));
             break;
-          case plugin.places.menu.EventType.QUICK_ADD_PLACES:
-            plugin.places.ui.QuickAddPlacesCtrl.launch();
+          case EventType.QUICK_ADD_PLACES:
+            QuickAddPlacesUI.launch();
             break;
-          case plugin.places.menu.EventType.EXPORT:
-            plugin.file.kml.ui.KMLTreeExportUI.launchTreeExport(/** @type {!plugin.file.kml.ui.KMLNode} */
+          case EventType.EXPORT:
+            KMLTreeExportUI.launchTreeExport(/** @type {!KMLNode} */
                 (rootNode), 'Export Places');
             break;
-          case plugin.places.menu.EventType.REMOVE_ALL:
-            var children = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (node.getChildren());
+          case EventType.REMOVE_ALL:
+            var children = /** @type {Array<!KMLNode>} */ (node.getChildren());
             var cmds = [];
 
             for (var i = 0; i < children.length; i++) {
-              var rmCmd = new plugin.file.kml.cmd.KMLNodeRemove(children[i]);
+              var rmCmd = new KMLNodeRemove(children[i]);
               cmds.push(rmCmd);
             }
             if (cmds.length) {
-              var cmd = new os.command.ParallelCommand();
+              var cmd = new ParallelCommand();
               cmd.setCommands(cmds);
               cmd.title = 'Remove Place' + (cmds.length > 1 ? 's' : '');
-              os.command.CommandProcessor.getInstance().addCommand(cmd);
+              CommandProcessor.getInstance().addCommand(cmd);
             }
             break;
           default:
@@ -593,12 +598,12 @@ plugin.places.menu.onLayerEvent_ = function(event) {
     var cmds = [];
     for (var i = 0; i < context.length; i++) {
       var node = context[i];
-      if (node instanceof plugin.file.kml.ui.KMLNode) {
+      if (node instanceof KMLNode) {
         var source = node.getSource();
         if (source) {
           switch (event.type) {
-            case plugin.places.menu.EventType.REMOVE_PLACE:
-              var rmCmd = new plugin.file.kml.cmd.KMLNodeRemove(node);
+            case EventType.REMOVE_PLACE:
+              var rmCmd = new KMLNodeRemove(node);
               cmds.push(rmCmd);
               break;
             default:
@@ -609,142 +614,135 @@ plugin.places.menu.onLayerEvent_ = function(event) {
     }
 
     if (cmds.length) {
-      var cmd = new os.command.ParallelCommand();
+      var cmd = new ParallelCommand();
       cmd.setCommands(cmds);
       cmd.title = 'Remove Place' + (cmds.length > 1 ? 's' : '');
-      os.command.CommandProcessor.getInstance().addCommand(cmd);
+      CommandProcessor.getInstance().addCommand(cmd);
     }
   }
 };
 
-
 /**
  * Show a layer menu item if the context can be saved to Places.
  *
- * @param {os.ui.menu.layer.Context} context The menu context.
+ * @param {layerMenu.Context} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
-plugin.places.menu.visibleIfCanSaveLayer = function(context) {
+const visibleIfCanSaveLayer = function(context) {
   this.visible = false;
 
   if (context && context.length == 1) {
     // don't handle places events if the places root node doesn't exist
-    var rootNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
+    var rootNode = PlacesManager.getInstance().getPlacesRoot();
     if (!rootNode) {
       return;
     }
 
-    if (context[0] instanceof plugin.file.kml.ui.KMLLayerNode) {
-      var layerNode = /** @type {!plugin.file.kml.ui.KMLLayerNode} */ (context[0]);
-      var kmlRoot = plugin.places.getPlacesRoot(layerNode);
+    if (context[0] instanceof KMLLayerNode) {
+      var layerNode = /** @type {!KMLLayerNode} */ (context[0]);
+      var kmlRoot = places.getPlacesRoot(layerNode);
       this.visible = kmlRoot != null && kmlRoot != rootNode;
-    } else if (context[0] instanceof os.data.LayerNode) {
+    } else if (context[0] instanceof LayerNode) {
       var layer = /** @type {!os.data.LayerNode} */ (context[0]).getLayer();
-      if (layer.getId() != plugin.places.ID && layer instanceof os.layer.Vector) {
-        if (layer instanceof plugin.file.kml.KMLLayer) {
+      if (layer.getId() != places.ID && layer instanceof VectorLayer) {
+        if (layer instanceof KMLLayer) {
           this.visible = true;
         } else {
           var source = layer.getSource();
-          if (source instanceof os.source.Vector && source.getFeatureCount() > 0) {
+          if (source instanceof VectorSource && source.getFeatureCount() > 0) {
             var features = source.getFilteredFeatures();
             this.visible = features != null && features.length > 0;
           }
         }
       }
-    } else if (context[0] instanceof plugin.file.kml.ui.KMLNode) {
+    } else if (context[0] instanceof KMLNode) {
       var features = context[0].getFeatures();
       this.visible = (context[0].getRoot() != rootNode.getRoot()) && (features.length > 0);
     }
   }
 };
 
-
 /**
  * Save a coordinate to places.
  *
  * @param {os.ui.menu.MenuEvent<ol.Coordinate>} event The menu event.
  */
-plugin.places.menu.saveCoordinateToPlaces = function(event) {
+const saveCoordinateToPlaces = function(event) {
   var context = event.getContext();
-  if (context && event instanceof goog.events.Event && !os.inIframe()) {
+  if (context && event instanceof GoogEvent && !os.inIframe()) {
     // Here's a fun exploitation of the whole window context and instanceof problem.
     // We only want to handle the event if it was created in *this* window context and
     // this context isn't in an iframe.
     event.preventDefault();
     event.stopPropagation();
 
-    var rootNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
-    plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
-      'geometry': new ol.geom.Point(context),
+    var rootNode = PlacesManager.getInstance().getPlacesRoot();
+    createOrEditPlace(/** @type {!PlacemarkOptions} */ ({
+      'geometry': new Point(context),
       'parent': rootNode
     }));
   }
 };
-
 
 /**
  * Save a coordinate to places as an annotation.
  *
  * @param {os.ui.menu.MenuEvent<ol.Coordinate>} event The menu event.
  */
-plugin.places.menu.createAnnotationFromCoordinate = function(event) {
+const createAnnotationFromCoordinate = function(event) {
   var context = event.getContext();
-  if (context && event instanceof goog.events.Event && !os.inIframe()) {
+  if (context && event instanceof GoogEvent && !os.inIframe()) {
     // Here's a fun exploitation of the whole window context and instanceof problem.
     // We only want to handle the event if it was created in *this* window context and
     // this context isn't in an iframe.
     event.preventDefault();
     event.stopPropagation();
 
-    var rootNode = plugin.places.PlacesManager.getInstance().getAnnotationsFolder();
-    plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
+    var rootNode = PlacesManager.getInstance().getAnnotationsFolder();
+    createOrEditPlace(/** @type {!PlacemarkOptions} */ ({
       'annotation': true,
-      'geometry': new ol.geom.Point(context),
+      'geometry': new Point(context),
       'parent': rootNode
     }));
   }
 };
-
 
 /**
  * Launch the quick add dialog with an initial seed point.
  *
  * @param {os.ui.menu.MenuEvent<ol.Coordinate>} event The menu event.
  */
-plugin.places.menu.quickAddFromCoordinate = function(event) {
+const quickAddFromCoordinate = function(event) {
   var context = event.getContext();
-  if (context && event instanceof goog.events.Event && !os.inIframe()) {
+  if (context && event instanceof GoogEvent && !os.inIframe()) {
     event.preventDefault();
     event.stopPropagation();
 
-    plugin.places.ui.QuickAddPlacesCtrl.launch(undefined, new ol.geom.Point(context));
+    QuickAddPlacesUI.launch(undefined, new Point(context));
   }
 };
-
 
 /**
  * Launch the quick add dialog with an initial seed point.
  *
  * @param {os.ui.menu.MenuEvent<Object>} event The menu event.
  */
-plugin.places.menu.quickAddFromSpatial = function(event) {
+const quickAddFromSpatial = function(event) {
   var context = event.getContext();
   if (context) {
     var geom = /** @type {ol.geom.SimpleGeometry} */ (context['geometry']);
-    plugin.places.ui.QuickAddPlacesCtrl.launch(undefined, geom);
+    QuickAddPlacesUI.launch(undefined, geom);
   }
 };
-
 
 /**
  * Save the spatial menu context to an annotation.
  *
  * @param {os.ui.menu.MenuEvent} event The menu event.
  */
-plugin.places.menu.saveSpatialToAnnotation = function(event) {
-  plugin.places.menu.saveSpatialToPlaces(event, true);
+const saveSpatialToAnnotation = function(event) {
+  saveSpatialToPlaces(event, true);
 };
-
 
 /**
  * Save the spatial menu context to places.
@@ -752,17 +750,17 @@ plugin.places.menu.saveSpatialToAnnotation = function(event) {
  * @param {os.ui.menu.MenuEvent} event The menu event.
  * @param {boolean=} opt_annotation Whether the spatial save is an annotation.
  */
-plugin.places.menu.saveSpatialToPlaces = function(event, opt_annotation) {
+const saveSpatialToPlaces = function(event, opt_annotation) {
   var context = event.getContext();
-  if (context && event instanceof goog.events.Event && !os.inIframe()) {
+  if (context && event instanceof GoogEvent && !os.inIframe()) {
     // Here's a fun exploitation of the whole window context and instanceof problem.
     // We only want to handle the event if it was created in *this* window context and
     // this context isn't in an iframe.
     event.preventDefault();
     event.stopPropagation();
 
-    var rootNode = opt_annotation ? plugin.places.PlacesManager.getInstance().getAnnotationsFolder() :
-      plugin.places.PlacesManager.getInstance().getPlacesRoot();
+    var rootNode = opt_annotation ? PlacesManager.getInstance().getAnnotationsFolder() :
+      PlacesManager.getInstance().getPlacesRoot();
     var geometry;
     var name;
     var time;
@@ -770,19 +768,19 @@ plugin.places.menu.saveSpatialToPlaces = function(event, opt_annotation) {
     context = /** @type {Object} */ (context);
 
     // first check if there are features to buffer
-    var features = os.ui.menu.spatial.getFeaturesFromContext(context);
+    var features = spatial.getFeaturesFromContext(context);
     if (features.length === 1) {
-      name = os.feature.getTitle(features[0]);
+      name = osFeature.getTitle(features[0]);
 
       var featureGeom = features[0].getGeometry();
       if (featureGeom) {
         geometry = featureGeom.clone();
       }
 
-      time = features[0].get(os.data.RecordField.TIME);
+      time = features[0].get(RecordField.TIME);
     } else {
       // next look for geometries
-      var geometries = os.ui.menu.spatial.getGeometriesFromContext(context);
+      var geometries = spatial.getGeometriesFromContext(context);
       if (geometries.length === 1) {
         geometry = geometries[0].clone();
       }
@@ -790,7 +788,7 @@ plugin.places.menu.saveSpatialToPlaces = function(event, opt_annotation) {
 
     if (geometry) {
       // if found, save away
-      plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
+      createOrEditPlace(/** @type {!PlacemarkOptions} */ ({
         'annotation': opt_annotation,
         'geometry': geometry,
         'parent': rootNode,
@@ -801,59 +799,57 @@ plugin.places.menu.saveSpatialToPlaces = function(event, opt_annotation) {
   }
 };
 
-
 /**
  * Handle "Save to Places" events from the layer menu.
  *
- * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
+ * @param {!os.ui.menu.MenuEvent<layerMenu.Context>} event The menu event.
  */
-plugin.places.menu.saveLayerToPlaces = function(event) {
+const saveLayerToPlaces = function(event) {
   var context = event.getContext();
-  if (context && event instanceof goog.events.Event && !os.inIframe()) {
+  if (context && event instanceof GoogEvent && !os.inIframe()) {
     // Here's a fun exploitation of the whole window context and instanceof problem.
     // We only want to handle the event if it was created in *this* window context and
     // this context isn't in an iframe.
     event.preventDefault();
     event.stopPropagation();
 
-    var rootNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
+    var rootNode = PlacesManager.getInstance().getPlacesRoot();
     if (context && context.length == 1) {
-      if (context[0] instanceof plugin.file.kml.ui.KMLLayerNode) {
-        var layerNode = /** @type {!plugin.file.kml.ui.KMLLayerNode} */ (context[0]);
-        var kmlRoot = /** @type {Array<plugin.file.kml.ui.KMLNode>} */
-            (plugin.file.kml.ui.getKMLRoot(layerNode).getChildren());
+      if (context[0] instanceof KMLLayerNode) {
+        var layerNode = /** @type {!KMLLayerNode} */ (context[0]);
+        var kmlRoot = /** @type {Array<KMLNode>} */
+            (getKMLRoot(layerNode).getChildren());
         if (kmlRoot && kmlRoot != rootNode) {
-          plugin.places.menu.saveKMLToPlaces_(kmlRoot);
+          saveKMLToPlaces(kmlRoot);
         }
-      } else if (context[0] instanceof os.data.LayerNode) {
+      } else if (context[0] instanceof LayerNode) {
         var layer = /** @type {os.data.LayerNode} */ (context[0]).getLayer();
-        if (layer.getId() != plugin.places.ID) {
-          if (layer instanceof plugin.file.kml.KMLLayer) {
+        if (layer.getId() != places.ID) {
+          if (layer instanceof KMLLayer) {
             var source = /** @type {plugin.file.kml.KMLSource} */ (layer.getSource());
             var kmlRoot = source ? source.getRootNode() : undefined;
             if (kmlRoot) {
-              plugin.places.menu.saveKMLToPlaces_(kmlRoot);
+              saveKMLToPlaces(kmlRoot);
             }
-          } else if (rootNode && layer instanceof os.layer.Vector) {
-            plugin.places.ui.launchSavePlaces(/** @type {os.source.Vector} */ (layer.getSource()));
+          } else if (rootNode && layer instanceof VectorLayer) {
+            launchSavePlaces(/** @type {os.source.Vector} */ (layer.getSource()));
           }
         }
-      } else if (context[0] instanceof plugin.file.kml.ui.KMLNode && context[0].getRoot() != rootNode) {
-        plugin.places.menu.saveKMLToPlaces_(/** @type {!plugin.file.kml.ui.KMLNode} */ (context[0]));
+      } else if (context[0] instanceof KMLNode && context[0].getRoot() != rootNode) {
+        saveKMLToPlaces(/** @type {!KMLNode} */ (context[0]));
       }
     }
   }
 };
 
-
 /**
  * Save a KML tree to places.
  *
- * @param {!Array<plugin.file.kml.ui.KMLNode>|plugin.file.kml.ui.KMLNode} nodes The root KML node to save
+ * @param {!Array<KMLNode>|KMLNode} nodes The root KML node to save
  */
-plugin.places.menu.saveKMLToPlaces_ = function(nodes) {
+const saveKMLToPlaces = function(nodes) {
   // don't allow this if the places root node doesn't exist
-  var rootNode = plugin.places.PlacesManager.getInstance().getPlacesRoot();
+  var rootNode = PlacesManager.getInstance().getPlacesRoot();
   if (!rootNode) {
     return;
   }
@@ -865,37 +861,35 @@ plugin.places.menu.saveKMLToPlaces_ = function(nodes) {
   var cmds = [];
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
-    var clone = plugin.places.menu.copyNode_(node);
+    var clone = copyNode_(node);
     if (clone) {
-      var cmd = new plugin.file.kml.cmd.KMLNodeAdd(clone, rootNode);
+      var cmd = new KMLNodeAdd(clone, rootNode);
       cmd.title = 'Save ' + node.getLabel() + ' to Places';
       cmds.push(cmd);
     }
   }
-  var seq = new os.command.SequenceCommand();
+  var seq = new SequenceCommand();
   seq.setCommands(cmds);
-  os.command.CommandProcessor.getInstance().addCommand(seq);
+  CommandProcessor.getInstance().addCommand(seq);
 };
-
 
 /**
  * Recursively copy a KML node, including attached features.
  *
- * @param {!plugin.file.kml.ui.KMLNode} node The KML node to copy
- * @return {plugin.file.kml.ui.KMLNode}
- * @private
+ * @param {!KMLNode} node The KML node to copy
+ * @return {KMLNode}
  */
-plugin.places.menu.copyNode_ = function(node) {
+const copyNode_ = function(node) {
   var clone = null;
   if (node.isFolder()) {
-    clone = plugin.file.kml.ui.updateFolder({
+    clone = updateFolder({
       'name': node.getLabel() || 'Unnamed Folder'
     });
 
-    var children = /** @type {Array<!plugin.file.kml.ui.KMLNode>} */ (node.getChildren());
+    var children = /** @type {Array<!KMLNode>} */ (node.getChildren());
     if (children) {
       for (var i = 0; i < children.length; i++) {
-        var childClone = plugin.places.menu.copyNode_(children[i]);
+        var childClone = copyNode_(children[i]);
         if (childClone) {
           clone.addChild(childClone);
         }
@@ -904,12 +898,35 @@ plugin.places.menu.copyNode_ = function(node) {
   } else {
     var feature = node.getFeature();
     if (feature) {
-      feature = plugin.places.copyFeature(feature);
-      clone = plugin.file.kml.ui.updatePlacemark({
+      feature = places.copyFeature(feature);
+      clone = updatePlacemark({
         'feature': feature
       });
     }
   }
 
   return clone;
+};
+
+exports = {
+  GROUP_LABEL,
+  EventType,
+  layerSetup,
+  layerDispose,
+  mapSetup,
+  mapDispose,
+  spatialSetup,
+  spatialDispose,
+  spatialIsPlace,
+  visibleIfCanSaveSpatial,
+  visibleIfIsPlace,
+  visibleIfCanSaveLayer,
+  saveCoordinateToPlaces,
+  createAnnotationFromCoordinate,
+  quickAddFromCoordinate,
+  quickAddFromSpatial,
+  saveSpatialToAnnotation,
+  saveSpatialToPlaces,
+  saveLayerToPlaces,
+  saveKMLToPlaces
 };
