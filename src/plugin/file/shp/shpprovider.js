@@ -23,32 +23,8 @@ class SHPProvider extends FileProvider {
     this.setId('shp');
     this.setLabel('SHP Files');
   }
-
-  /**
-   * Get the global instance.
-   * @return {!SHPProvider}
-   */
-  static getInstance() {
-    if (!instance) {
-      instance = new SHPProvider();
-    }
-
-    return instance;
-  }
-
-  /**
-   * Set the global instance.
-   * @param {SHPProvider} value
-   */
-  static setInstance(value) {
-    instance = value;
-  }
 }
+goog.addSingletonGetter(SHPProvider);
 
-/**
- * Global instance.
- * @type {SHPProvider|undefined}
- */
-let instance;
 
 exports = SHPProvider;

@@ -23,32 +23,8 @@ class GeoJSONProvider extends FileProvider {
     this.setId('geojson');
     this.setLabel('GeoJSON Files');
   }
-
-  /**
-   * Get the global instance.
-   * @return {!GeoJSONProvider}
-   */
-  static getInstance() {
-    if (!instance) {
-      instance = new GeoJSONProvider();
-    }
-
-    return instance;
-  }
-
-  /**
-   * Set the global instance.
-   * @param {GeoJSONProvider} value
-   */
-  static setInstance(value) {
-    instance = value;
-  }
 }
+goog.addSingletonGetter(GeoJSONProvider);
 
-/**
- * Global instance.
- * @type {GeoJSONProvider|undefined}
- */
-let instance;
 
 exports = GeoJSONProvider;

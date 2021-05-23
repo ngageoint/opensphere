@@ -23,32 +23,8 @@ class KMLProvider extends FileProvider {
     this.setId('kml');
     this.setLabel('KML Files');
   }
-
-  /**
-   * Get the global instance.
-   * @return {!KMLProvider}
-   */
-  static getInstance() {
-    if (!instance) {
-      instance = new KMLProvider();
-    }
-
-    return instance;
-  }
-
-  /**
-   * Set the global instance.
-   * @param {KMLProvider} value
-   */
-  static setInstance(value) {
-    instance = value;
-  }
 }
+goog.addSingletonGetter(KMLProvider);
 
-/**
- * Global instance.
- * @type {KMLProvider|undefined}
- */
-let instance;
 
 exports = KMLProvider;

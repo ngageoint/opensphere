@@ -23,32 +23,8 @@ class GMLProvider extends FileProvider {
     this.setId('gml');
     this.setLabel('GML Files');
   }
-
-  /**
-   * Get the global instance.
-   * @return {!GMLProvider}
-   */
-  static getInstance() {
-    if (!instance) {
-      instance = new GMLProvider();
-    }
-
-    return instance;
-  }
-
-  /**
-   * Set the global instance.
-   * @param {GMLProvider} value
-   */
-  static setInstance(value) {
-    instance = value;
-  }
 }
+goog.addSingletonGetter(GMLProvider);
 
-/**
- * Global instance.
- * @type {GMLProvider|undefined}
- */
-let instance;
 
 exports = GMLProvider;

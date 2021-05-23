@@ -23,32 +23,8 @@ class CSVProvider extends FileProvider {
     this.setId('csv');
     this.setLabel('CSV Files');
   }
-
-  /**
-   * Get the global instance.
-   * @return {!CSVProvider}
-   */
-  static getInstance() {
-    if (!instance) {
-      instance = new CSVProvider();
-    }
-
-    return instance;
-  }
-
-  /**
-   * Set the global instance.
-   * @param {CSVProvider} value
-   */
-  static setInstance(value) {
-    instance = value;
-  }
 }
+goog.addSingletonGetter(CSVProvider);
 
-/**
- * Global instance.
- * @type {CSVProvider|undefined}
- */
-let instance;
 
 exports = CSVProvider;
