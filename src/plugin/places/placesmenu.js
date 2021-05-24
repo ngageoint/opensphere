@@ -83,7 +83,7 @@ const layerSetup = function() {
           label: 'Create Folder...',
           eventType: EventType.ADD_FOLDER,
           tooltip: 'Creates a new folder and adds it to the tree',
-          icons: ['<i class="fa fa-fw fa-folder"></i>'],
+          icons: ['<i class="fa fa-fw fa-folder-plus"></i>'],
           beforeRender: visibleIfLayerNodeSupported_,
           handler: onLayerEvent_,
           metricKey: metrics.Places.ADD_FOLDER,
