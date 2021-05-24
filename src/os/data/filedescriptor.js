@@ -191,6 +191,14 @@ os.data.FileDescriptor.prototype.setMappings = function(value) {
 
 
 /**
+ * @inheritDoc
+ */
+os.data.FileDescriptor.prototype.update = function() {
+  this.reimport();
+};
+
+
+/**
  * Get the original URL for this file.
  *
  * @return {?string}

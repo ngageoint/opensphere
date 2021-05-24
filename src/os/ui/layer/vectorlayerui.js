@@ -183,7 +183,6 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.SHAPE_CHANGE, this.onShapeChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.CENTER_SHAPE_CHANGE, this.onCenterShapeChange.bind(this));
   $scope.$on(os.ui.layer.VectorStyleControlsEventType.LINE_DASH_CHANGE, this.onLineDashChange.bind(this));
-  $scope.$on(os.ui.layer.VectorStyleControlsEventType.ELLIPSE_COLUMN_CHANGE, this.onEllipseColumnMapping.bind(this));
 
   // New default added to the base constructor
   this.defaults['fillOpacity'] = os.style.DEFAULT_FILL_ALPHA;
@@ -256,7 +255,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
     this.scope['lockable'] = this.getLockable();
     this.scope['fillColor'] = this.getFillColor() || this.scope['color'];
     this.scope['fillOpacity'] = this.getFillOpacity();
-    this['hasEllipseCols'] = this.hasEllipseColumns();
     this['layerNodes'] = this.getLayerNodes();
     this['altitudeMode'] = this.getAltitudeMode();
     this['columns'] = this.getColumns();
@@ -666,28 +664,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.onLineDashChange = function(event, value
       };
 
   this.createCommand(fn);
-};
-
-
-/**
- * Handles changes to ellipse column mapping
- *
- * @param {angular.Scope.Event} event
- * @param {Array<*>} value
- * @protected
- */
-os.ui.layer.VectorLayerUICtrl.prototype.onEllipseColumnMapping = function(event, value) {
-  event.stopPropagation();
-  const layerNodes = this.getLayerNodes();
-
-  layerNodes.forEach((layerNode) => {
-    const layer = layerNode.getLayer();
-    const source = layer ? /** @type {os.source.Request} */(layer.getSource()) : undefined;
-    const importer = source ? source.getImporter() : undefined;
-
-    importer.setMappings(value);
-    source.loadRequest();
-  });
 };
 
 
@@ -1110,28 +1086,6 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShapes = function() {
     return shapes;
   }
 };
-
-
-/**
- * Gets whether the item(s) have ellipse columns
- *
- * @return {boolean} The available shape options
- */
-os.ui.layer.VectorLayerUICtrl.prototype.hasEllipseColumns = function() {
-  var items = this.getLayerNodes();
-  var shapes = this.getShapes();
-
-  if (items && items.length > 0) {
-    for (var i = 0, n = items.length; i < n; i++) {
-      var source = os.osDataManager.getSource(items[i].getId());
-      if (source && source instanceof os.source.Vector) {
-        shapes = goog.array.filter(shapes, source.supportsShape, source);
-      }
-    }
-  }
-  return shapes.some((shape) => os.style.ELLIPSE_REGEXP.test(shape));
-};
-
 
 
 /**

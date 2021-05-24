@@ -107,11 +107,9 @@ os.im.mapping.RadiusMapping.prototype.getLabel = function() {
 
 
 /**
- * @param {Object} item
- * @param {boolean=} opt_keepOriginal
- * @override
+ * @inheritDoc
  */
-os.im.mapping.RadiusMapping.prototype.execute = function(item, opt_keepOriginal = false) {
+os.im.mapping.RadiusMapping.prototype.execute = function(item) {
   if (this.field && this.toField) {
     var current = os.math.parseNumber(os.im.mapping.getItemField(item, this.field));
     if (!isNaN(current)) {
@@ -119,10 +117,10 @@ os.im.mapping.RadiusMapping.prototype.execute = function(item, opt_keepOriginal 
         current = os.math.convertUnits(current, os.fields.DEFAULT_RADIUS_UNIT, this.units);
       }
 
-      os.im.mapping.setItemField(item, this.toField, current, opt_keepOriginal);
+      os.im.mapping.setItemField(item, this.toField, current);
 
       if (this.units && this.unitsField) {
-        os.im.mapping.setItemField(item, this.unitsField, this.units, opt_keepOriginal);
+        os.im.mapping.setItemField(item, this.unitsField, this.units);
       }
     }
   }

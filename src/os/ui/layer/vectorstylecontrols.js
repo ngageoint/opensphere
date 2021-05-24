@@ -33,7 +33,6 @@ os.ui.layer.vectorStyleControlsDirective = function() {
       'shape': '=',
       'shapes': '=',
       'columns': '=?',
-      'hasEllipseCols': '=?',
       'allowEllipseConfig': '=?',
       'ellipseMappings': '=?',
       'layerNodes': '=?',
@@ -186,6 +185,21 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.hasCenter = function() {
 
 
 /**
+ * Checks if the layer has Ellipse Columns
+ *
+ * @return {boolean}
+ * @export
+ */
+os.ui.layer.VectorStyleControlsCtrl.prototype.hasEllipseCols = function() {
+  const layerNodes = this.scope['layerNodes'];
+  const layer = layerNodes ? layerNodes[0].getLayer() : undefined;
+  const source = layer ? layer.getSource() : undefined;
+
+  return source ? source.supportsShape(os.style.ShapeType.ELLIPSE) : false;
+};
+
+
+/**
  * Fire a scope event when the ellipse center shape is changed by the user.
  *
  * @param {string} shape
@@ -232,28 +246,13 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.select2Formatter_ = function(item,
 
 
 /**
- * Callback for mapping an ellipse column
- * @param {*} data
- * @private
- */
-os.ui.layer.VectorStyleControlsCtrl.prototype.onEllipseMapping_ = function(data) {
-  if (data) {
-    this.scope['hasEllipseCols'] = true;
-    this['ellipseMapping'] = data;
-    this.scope.$emit(os.ui.layer.VectorStyleControlsEventType.ELLIPSE_COLUMN_CHANGE, data);
-  }
-};
-
-
-/**
  * Launches the window to configure ellipse columns
  *
  * @export
  */
 os.ui.layer.VectorStyleControlsCtrl.prototype.launchConfigureWindow = function() {
-  const confirm = this.onEllipseMapping_.bind(this);
   const layer = this.scope['layerNodes'] ? this.scope['layerNodes'][0].getLayer() : undefined;
 
-  os.ui.layer.EllipseColumnsUI.launchConfigureWindow(layer, confirm);
+  os.ui.layer.EllipseColumnsUI.launchConfigureWindow(layer);
 };
 

@@ -30,7 +30,7 @@
     </div>
     <div class="col-auto my-1" ng-if="shape.includes('Ellipse') && ctrl.allowEllipseConfig">
       <popover x-title="'No Ellipse Columns'" x-content="ctrl.configEllipse" pos="'bottom'" icon="'fa fa-exclamation-triangle text-warning'" 
-        ng-if="!hasEllipseCols"></popover>
+        ng-show="!ctrl.hasEllipseCols()"></popover>
       <span ng-click="ctrl.launchConfigureWindow()" title="Set the Ellipse columns for this layer">
         <i class="fa fa-cog c-glyph fa-fw"></i>
       </span>

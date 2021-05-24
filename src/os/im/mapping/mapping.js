@@ -102,45 +102,24 @@ os.im.mapping.getItemFields = function(item) {
 
 /**
  * Convenience function to set a mapping field on an item.. Setting the field to undefined will remove it.
+ *
  * @param {Object} item
  * @param {string} field
  * @param {*} value
- * @param {boolean=} opt_keepOriginal whether to keep original value if already set (don't overwrite)
  */
-os.im.mapping.setItemField = function(item, field, value, opt_keepOriginal = false) {
-  if (!opt_keepOriginal || (opt_keepOriginal && !os.im.mapping.hasField(item, field))) {
-    if (os.instanceOf(item, ol.Feature.NAME)) {
-      var feature = /** @type {!ol.Feature} */ (item);
-      if (value === undefined) {
-        feature.unset(field, true);
-      } else {
-        feature.set(field, value, true);
-      }
-    } else if (value !== undefined) {
-      item[field] = value;
-    } else {
-      delete item[field];
-    }
-  }
-};
-
-
-/**
- * Returns whether a item already had a field
- * @param {Object} item
- * @param {string} field
- * @return {boolean}
- */
-os.im.mapping.hasField = function(item, field) {
-  let value;
+os.im.mapping.setItemField = function(item, field, value) {
   if (os.instanceOf(item, ol.Feature.NAME)) {
     var feature = /** @type {!ol.Feature} */ (item);
-    value = feature.get(field);
+    if (value === undefined) {
+      feature.unset(field, true);
+    } else {
+      feature.set(field, value, true);
+    }
+  } else if (value !== undefined) {
+    item[field] = value;
   } else {
-    value = item[field];
+    delete item[field];
   }
-
-  return value !== undefined && value !== null && value !== '';
 };
 
 

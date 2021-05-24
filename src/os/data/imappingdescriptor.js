@@ -27,6 +27,13 @@ class IMappingDescriptor {
    * @param {Array.<os.im.mapping.IMapping>} value
    */
   setMappings(value) {}
+
+
+  /**
+   * Update the Descriptor for reload
+   * @param {*} value
+   */
+  update(value) {}
 }
 
 /**

@@ -87,7 +87,7 @@ os.data.LayerSyncDescriptor.STYLE_KEYS_ = ['opacity', 'contrast', 'brightness', 
  * @const
  * @private
  */
-os.data.LayerSyncDescriptor.CHANGE_KEYS_ = ['minResolution', 'maxResolution', 'mappings'];
+os.data.LayerSyncDescriptor.CHANGE_KEYS_ = ['minResolution', 'maxResolution'];
 
 
 /**

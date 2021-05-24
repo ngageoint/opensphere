@@ -10,12 +10,6 @@ const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
 const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
 const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
 const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
-const {ORIENTATION} = goog.require('os.Fields');
-const {
-  DEFAULT_RADIUS_COL_NAME: RADIUS,
-  DEFAULT_SEMI_MAJ_COL_NAME: SEMI_MAJOR,
-  DEFAULT_SEMI_MIN_COL_NAME: SEMI_MINOR
-} = goog.require('os.fields');
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 const AbstractMapping = goog.requireType('os.im.mapping.AbstractMapping');
@@ -153,9 +147,7 @@ class Controller {
         nmi or m for the resulting column.`,
       'ellipse': `Select a column for Semi Minor, Semi Major, and Orientation that will be used for this layer. This
         mapping will be applied to all new features loaded into or queried form this layer. Also select the units for
-        the column, this will be converted to nmi or m for the resulting column.`,
-      'overwriteData': `If there is already data in the feature's column for Radius, Semi Minor, Semi Major, or
-        Orientation then it will be overwritten by the data in the selected column.`
+        the column, this will be converted to nmi or m for the resulting column.`
     };
 
     this.scope_.$watchGroup(['ctrl.radiusColumn', 'ctrl.radiusUnits', 'ctrl.inputType', 'ctrl.semiMajorColumn',
@@ -308,34 +300,10 @@ const launchConfigureWindow = function(layer, opt_confirmCallback) {
  * @private
  */
 const callback_ = function(layer, value) {
-  os.data.DataManager.getInstance().getDescriptor(layer.getId()).setMappings(value);
-
-  updateColumns_(layer);
-};
-
-
-/**
- * Update the columns so they show up in the analyze tool/feature info
- * @param {*} layer
- * @private
- */
-const updateColumns_ = function(layer) {
-  const source = layer.getSource();
-  const mappings = os.data.DataManager.getInstance().getDescriptor(layer.getId()).getMappings() || [];
-
-  mappings.forEach((mapping) => {
-    const label = mapping.getLabel();
-
-    if (RadiusMapping.REGEX.test(label)) {
-      source.addColumn(RADIUS);
-    } else if (SemiMajorMapping.REGEX.test(label)) {
-      source.addColumn(SEMI_MAJOR);
-    } else if (SemiMinorMapping.REGEX.test(label)) {
-      source.addColumn(SEMI_MINOR);
-    } else if (OrientationMapping.REGEX.test(label)) {
-      source.addColumn(ORIENTATION);
-    }
-  });
+  // Update the Descriptor for reload
+  const desc = os.data.DataManager.getInstance().getDescriptor(layer.getId());
+  desc.setMappings(value);
+  desc.update(layer);
 };
 
 
