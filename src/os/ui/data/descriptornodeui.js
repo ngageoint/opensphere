@@ -16,7 +16,9 @@ os.ui.data.descriptorNodeUIDirective = function() {
   return {
     restrict: 'AE',
     replace: true,
-    templateUrl: os.ROOT + 'views/data/descriptornodeui.html',
+    template: '<span ng-if="nodeUi.show()" class="flex-shrink-0" ng-click="nodeUi.tryRemove()">' +
+      '<i class="fa fa-trash-o fa-fw c-glyph" title="Remove this layer from the application"></i>' +
+    '</span>',
     controller: os.ui.data.DescriptorNodeUICtrl,
     controllerAs: 'nodeUi'
   };
