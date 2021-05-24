@@ -27,8 +27,6 @@ goog.require('os.command.VectorUniqueIdCmd');
 goog.require('os.command.style.ColorChangeType');
 goog.require('os.data.OSDataManager');
 goog.require('os.fn');
-goog.require('os.im.mapping.EllipseMappingManager');
-goog.require('os.im.mapping.SourceMappingManager');
 goog.require('os.layer.preset');
 goog.require('os.layer.preset.LayerPresetManager');
 goog.require('os.layer.preset.PresetMenuButton');
@@ -684,7 +682,7 @@ os.ui.layer.VectorLayerUICtrl.prototype.onEllipseColumnMapping = function(event,
 
   layerNodes.forEach((layerNode) => {
     const layer = layerNode.getLayer();
-    const source = layer ? layer.getSource() : undefined;
+    const source = layer ? /** @type {os.source.Request} */(layer.getSource()) : undefined;
     const importer = source ? source.getImporter() : undefined;
 
     importer.setMappings(value);

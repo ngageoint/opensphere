@@ -13,7 +13,9 @@ const AlertManager = goog.require('os.alert.AlertManager');
 const osColor = goog.require('os.color');
 const Settings = goog.require('os.config.Settings');
 const data = goog.require('os.data');
+const DataManager = goog.require('os.data.DataManager');
 const IAreaTest = goog.require('os.data.IAreaTest');
+const IMappingDescriptor = goog.require('os.data.IMappingDescriptor');
 const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const IFilterable = goog.require('os.filter.IFilterable');
@@ -39,13 +41,16 @@ const CombinatorCtrl = goog.require('os.ui.query.CombinatorCtrl');
 const AbstractLoadingServer = goog.require('os.ui.server.AbstractLoadingServer');
 const deprecated = goog.require('os.ui.util.deprecated');
 
+
 const IFeatureType = goog.requireType('os.ogc.IFeatureType');
+const ILayer = goog.requireType('os.layer.ILayer');
 
 
 /**
  * @implements {IOGCDescriptor}
  * @implements {IFilterable}
  * @implements {IAreaTest}
+ * @implements {IMappingDescriptor}
  */
 class OGCLayerDescriptor extends LayerSyncDescriptor {
   /**
@@ -257,6 +262,45 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
    */
   getSearchType() {
     return 'Layer';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getMappings() {
+    return this['mappings'];
+  }
+
+
+  /**
+   * @inheritDoc
+   */
+  setMappings(value) {
+    this['mappings'] = value;
+    const dm = DataManager.getInstance();
+    dm.updateDescriptor(this, this);
+    dm.persistDescriptors();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  update(layer) {
+    const dm = DataManager.getInstance();
+    dm.updateDescriptor(this, this);
+    dm.persistDescriptors();
+
+    // Delete the layer, then prompt the descriptor to make new layers
+    os.MapContainer.getInstance().removeLayer(/** @type {!ILayer} */ (layer));
+    this.setActiveInternal();
+  }
+
+
+  /**
+   * @inheritDoc
+   */
+  supportsMapping() {
+    return false;
   }
 
   /**
@@ -1072,6 +1116,11 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
     options['usePost'] = this.getUsePost();
     options['formats'] = this.getWfsFormats();
 
+    const mappings = this.getMappings();
+    if (mappings) {
+      options['mappings'] = this.getMappings();
+    }
+
     if (options['provider']) {
       // check to see if the visibility is configured to false, if not visibility should be true
       options['visible'] = Settings.getInstance().get(
@@ -1208,6 +1257,13 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
    */
   persist(opt_obj) {
     opt_obj = super.persist(opt_obj);
+
+    var mappings = this.getMappings();
+    if (mappings) {
+      var mm = os.im.mapping.MappingManager.getInstance();
+      opt_obj['mappings'] = mm.persistMappings(mappings);
+    }
+
     if (this.featureType_) {
       opt_obj = this.featureType_.persist(opt_obj);
     }
@@ -1219,6 +1275,12 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
    */
   restore(from) {
     super.restore(from);
+
+    if (from['mappings']) {
+      var mm = os.im.mapping.MappingManager.getInstance();
+      this.setMappings(mm.restoreMappings(from['mappings']));
+    }
+
     if (this.featureType_) {
       this.featureType_.restore(from);
     } else {
@@ -1288,6 +1350,7 @@ osImplements(OGCLayerDescriptor, IAreaTest.ID);
 osImplements(OGCLayerDescriptor, IFilterable.ID);
 osImplements(OGCLayerDescriptor, IFeatureTypeDescriptor.ID);
 osImplements(OGCLayerDescriptor, IOGCDescriptor.ID);
+osImplements(OGCLayerDescriptor, IMappingDescriptor.ID);
 
 
 /**

@@ -7,7 +7,7 @@ goog.require('os');
 goog.require('os.geo');
 goog.require('os.im.mapping.AltMapping');
 goog.require('os.im.mapping.BearingMapping');
-goog.require('os.im.mapping.EllipseMappingManager');
+// goog.require('os.im.mapping.EllipseMappingManager');
 goog.require('os.im.mapping.LatMapping');
 goog.require('os.im.mapping.LonMapping');
 goog.require('os.im.mapping.OrientationMapping');
@@ -293,19 +293,8 @@ os.ui.wiz.GeometryStep.prototype.createMappings = function() {
     mappings.push(bm);
   }
 
-  if (this['showEllipse']) {
-    const obj = /** @type {os.im.mapping.EllipseMappingManager.MappingOptions} */({
-      'radius': this['ellipse']['radius']['column'],
-      'radiusUnits': this['ellipse']['radius']['units'],
-      'semiMajor': this['ellipse']['semiMajor']['column'],
-      'semiMajorUnits': this['ellipse']['semiMajor']['units'],
-      'semiMinor': this['ellipse']['semiMinor']['column'],
-      'semiMinorUnits': this['ellipse']['semiMinor']['units'],
-      'orientation': this['ellipse']['orientation']['column']
-    });
-    const emm = new os.im.mapping.EllipseMappingManager.MappingManager();
-    const tempMappings = emm.createMappings(obj);
-    tempMappings.forEach((mapping) => {
+  if (this['showEllipse'] && this.scope['confirmValue']) {
+    this.scope['confirmValue'].forEach((mapping) => {
       mappings.push(mapping);
     });
   }

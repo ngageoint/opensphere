@@ -2,13 +2,20 @@ goog.module('os.ui.layer.EllipseColumnsUI');
 goog.module.declareLegacyNamespace();
 
 const {getValues} = goog.require('goog.object');
-const {ROOT} = goog.require('os');
+const {ROOT, instanceOf} = goog.require('os');
+const DataManager = goog.require('os.data.DataManager');
 const Units = goog.require('os.math.Units');
 const Module = goog.require('os.ui.Module');
 const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
 const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
 const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
 const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
+const {ORIENTATION} = goog.require('os.Fields');
+const {
+  DEFAULT_RADIUS_COL_NAME: RADIUS,
+  DEFAULT_SEMI_MAJ_COL_NAME: SEMI_MAJOR,
+  DEFAULT_SEMI_MIN_COL_NAME: SEMI_MINOR
+} = goog.require('os.fields');
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 const AbstractMapping = goog.requireType('os.im.mapping.AbstractMapping');
@@ -66,14 +73,8 @@ class Controller {
      * @type {*}
      * @private
      */
-    this.source_ = this.scope_['layer'].getSource();
-
-    /**
-     * Importer
-     * @type {*}
-     * @private
-     */
-    this.importer_ = this.source_.getImporter();
+    this.source_ =
+      instanceOf(this.scope_['layer'], os.layer.Vector.NAME) ? this.scope_['layer'].getSource() : undefined;
 
     /**
      * Whether the user selected Circle or Ellipse
@@ -86,7 +87,7 @@ class Controller {
      * Column Options for the source
      * @type {Array<ColumnDefinition>}
      */
-    this['columnOptions'] = this.source_ ? this.source_.getColumns() : [];
+    this['columnOptions'] = this.source_ ? this.source_.getColumns() : this.scope_['layer']['columns'];
 
     /**
      * Array of the units available
@@ -168,13 +169,17 @@ class Controller {
    * Initialize the form
    */
   init() {
-    var Mappings = this.importer_.getMappings();
+    const layer = this.scope_['layer'];
+    const layerId = instanceOf(layer, os.layer.Vector.NAME) ? layer.getId() : undefined;
+    const Mappings = layerId ?
+      (DataManager.getInstance().getDescriptor(layerId).getMappings() || []) : layer['mappings'];
+
 
     Mappings.forEach((mapping) => {
       const id = mapping.getId();
       const field = mapping.field;
 
-      const column = this.columnOptions.find(({name}) => name === field);
+      const column = this['columnOptions'].find(({name}) => name === field);
 
       if (id == RadiusMapping.ID) {
         this['inputType'] = 0;
@@ -198,12 +203,16 @@ class Controller {
    * Update the Mappings
    */
   updateMappings() {
-    const importerMappings = this.importer_.getMappings();
+    const layer = this.scope_['layer'];
+    const layerId = instanceOf(layer, os.layer.Vector.NAME) ? layer.getId() : undefined;
+    const descMappings = layerId ?
+      (DataManager.getInstance().getDescriptor(layerId).getMappings() || []) : layer['mappings'];
     const mappings = this.createMappings();
 
-    let result = [...importerMappings];
+    let result = [...descMappings];
 
-    if (mappings.length != 0 && importerMappings.length != 0) {
+    // Only combine the mappings if passed a layer, don't if passed anything else (used by geometrystep)
+    if (layerId && mappings.length != 0 && descMappings.length != 0) {
       mappings.forEach((mapping) => {
         const im = result.findIndex(({toField}) => toField === mapping.toField);
         if (im >= 0) {
@@ -212,17 +221,16 @@ class Controller {
           result.push(mapping);
         }
       });
-    } else if (importerMappings.length == 0) {
+    } else if (descMappings.length == 0) {
       result = mappings;
     }
 
-    this.scope_.$parent['confirmValue'] = result;
+    this.scope_.$parent['confirmValue'] = layerId ? result : mappings;
   }
 
   /**
    * Create Mappings for Ellipse Data
    * @return {Array<AbstractMapping>}
-   * @override
    */
   createMappings() {
     const mappings = [];
@@ -267,7 +275,7 @@ const ALLOW_ELLIPSE_CONFIG = 'allowEllipseConfiguration';
 /**
  * Launches the window to configure ellipse columns
  * @param {*} layer
- * @param {function()=} opt_confirmCallback
+ * @param {function(Array<AbstractMapping>)=} opt_confirmCallback
  */
 const launchConfigureWindow = function(layer, opt_confirmCallback) {
   const confirm = opt_confirmCallback || callback_.bind(this, layer);
@@ -300,11 +308,34 @@ const launchConfigureWindow = function(layer, opt_confirmCallback) {
  * @private
  */
 const callback_ = function(layer, value) {
-  const source = layer ? layer.getSource() : undefined;
-  const importer = source ? source.getImporter() : undefined;
+  os.data.DataManager.getInstance().getDescriptor(layer.getId()).setMappings(value);
 
-  importer.setMappings(value);
-  source.loadRequest();
+  updateColumns_(layer);
+};
+
+
+/**
+ * Update the columns so they show up in the analyze tool/feature info
+ * @param {*} layer
+ * @private
+ */
+const updateColumns_ = function(layer) {
+  const source = layer.getSource();
+  const mappings = os.data.DataManager.getInstance().getDescriptor(layer.getId()).getMappings() || [];
+
+  mappings.forEach((mapping) => {
+    const label = mapping.getLabel();
+
+    if (RadiusMapping.REGEX.test(label)) {
+      source.addColumn(RADIUS);
+    } else if (SemiMajorMapping.REGEX.test(label)) {
+      source.addColumn(SEMI_MAJOR);
+    } else if (SemiMinorMapping.REGEX.test(label)) {
+      source.addColumn(SEMI_MINOR);
+    } else if (OrientationMapping.REGEX.test(label)) {
+      source.addColumn(ORIENTATION);
+    }
+  });
 };
 
 

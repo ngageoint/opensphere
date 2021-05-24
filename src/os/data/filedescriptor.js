@@ -3,6 +3,7 @@ goog.provide('os.data.FileDescriptor');
 goog.require('os.command.LayerAdd');
 goog.require('os.command.LayerRemove');
 goog.require('os.config.Settings');
+goog.require('os.data.IMappingDescriptor');
 goog.require('os.data.IReimport');
 goog.require('os.data.IUrlDescriptor');
 goog.require('os.data.LayerSyncDescriptor');
@@ -29,6 +30,7 @@ goog.require('os.ui.im.ImportEventType');
  * @extends {os.data.LayerSyncDescriptor}
  * @implements {os.data.IUrlDescriptor}
  * @implements {os.data.IReimport}
+ * @implements {os.data.IMappingDescriptor}
  *
  * @constructor
  */
@@ -173,9 +175,7 @@ os.data.FileDescriptor.prototype.getLayerOptions = function() {
 
 
 /**
- * Get the column mappings to apply to imported data.
- *
- * @return {Array.<os.im.mapping.IMapping>}
+ * @inheritDoc
  */
 os.data.FileDescriptor.prototype.getMappings = function() {
   return this.parserConfig['mappings'];
@@ -183,9 +183,7 @@ os.data.FileDescriptor.prototype.getMappings = function() {
 
 
 /**
- * Set the column mappings to apply to imported data.
- *
- * @param {Array.<os.im.mapping.IMapping>} value
+ * @inheritDoc
  */
 os.data.FileDescriptor.prototype.setMappings = function(value) {
   this.parserConfig['mappings'] = value;

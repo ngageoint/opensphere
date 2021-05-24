@@ -229,13 +229,12 @@ os.ui.menu.layer.setup = function() {
         sort: os.ui.menu.layer.GroupSort.LAYER++
       },
       {
-        label: 'Layer Settings...',
+        label: 'Layer Mappings...',
         eventType: os.action.EventType.LAYER_SETTINGS,
         tooltip: 'Add Custom Mappings to the Layer',
         icons: ['<i class="fa fa-cog"></i>'],
         // beforeRender: os.ui.menu.layer.visibleIfSupported,
-        handler: os.ui.menu.layer.onSettings_,
-        metricKey: os.metrics.Layer.LAYER_SETTINGS,
+        handler: os.ui.menu.layer.onMappings_,
         sort: os.ui.menu.layer.GroupSort.LAYER++
       }]
     }, {
@@ -481,9 +480,10 @@ os.ui.menu.layer.onExport_ = function(event) {
  * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  * @private
  */
-os.ui.menu.layer.onSettings_ = function(event) {
+os.ui.menu.layer.onMappings_ = function(event) {
   const context = event.getContext();
-  const layer = context[0] ? context[0].getLayer() : undefined;
+  const layers = os.ui.menu.layer.getLayersFromContext(context);
+  const layer = layers ? layers[0] : undefined;
 
   os.ui.layer.EllipseColumnsUI.launchConfigureWindow(layer);
 };
