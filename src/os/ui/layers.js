@@ -212,6 +212,12 @@ os.ui.LayersCtrl.prototype.createFolder = function() {
   os.layer.folder.createOrEditFolder(createOptions, (name) => {
     createOptions.name = name;
     os.layer.FolderManager.getInstance().createFolder(createOptions);
+
+    // Disable automatic grouping, if enabled.
+    if (this.scope['viewEnabled']) {
+      this.scope['viewEnabled'] = false;
+      os.ui.apply(this.scope);
+    }
   });
 };
 
