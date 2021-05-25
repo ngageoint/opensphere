@@ -1,14 +1,21 @@
-goog.provide('plugin.file.gpx.mime');
+goog.module('plugin.file.gpx.mime');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.file.mime.xml');
+const mime = goog.require('os.file.mime');
+
+const xml = goog.require('os.file.mime.xml');
+
 
 /**
  * @type {string}
- * @const
  */
-plugin.file.gpx.mime.TYPE = 'application/vnd.gpx+xml';
+const TYPE = 'application/vnd.gpx+xml';
 
-os.file.mime.register(
-    plugin.file.gpx.mime.TYPE,
-    os.file.mime.xml.createDetect(/^gpx$/i, /\/gpx\//i),
-    0, os.file.mime.xml.TYPE);
+mime.register(
+    TYPE,
+    xml.createDetect(/^gpx$/i, /\/gpx\//i),
+    0, xml.TYPE);
+
+exports = {
+  TYPE
+};

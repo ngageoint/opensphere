@@ -1,69 +1,66 @@
-goog.provide('plugin.file.gpx.GPXPlugin');
+goog.module('plugin.file.gpx.GPXPlugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.DataManager');
-goog.require('os.data.ProviderEntry');
-goog.require('os.layer.config.LayerConfigManager');
-goog.require('os.plugin.AbstractPlugin');
-goog.require('os.ui.im.ImportManager');
-goog.require('plugin.file.gpx.GPXDescriptor');
-goog.require('plugin.file.gpx.GPXLayerConfig');
-goog.require('plugin.file.gpx.GPXParser');
-goog.require('plugin.file.gpx.GPXProvider');
-goog.require('plugin.file.gpx.mime');
-goog.require('plugin.file.gpx.ui.GPXImportUI');
-
+const DataManager = goog.require('os.data.DataManager');
+const ProviderEntry = goog.require('os.data.ProviderEntry');
+const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const ImportManager = goog.require('os.ui.im.ImportManager');
+const GPXDescriptor = goog.require('plugin.file.gpx.GPXDescriptor');
+const GPXLayerConfig = goog.require('plugin.file.gpx.GPXLayerConfig');
+const GPXParser = goog.require('plugin.file.gpx.GPXParser');
+const GPXProvider = goog.require('plugin.file.gpx.GPXProvider');
+const mime = goog.require('plugin.file.gpx.mime');
+const GPXImportUI = goog.require('plugin.file.gpx.ui.GPXImportUI');
 
 
 /**
  * Provides GPX support
- *
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
  */
-plugin.file.gpx.GPXPlugin = function() {
-  plugin.file.gpx.GPXPlugin.base(this, 'constructor');
-  this.id = plugin.file.gpx.GPXPlugin.ID;
-};
-goog.inherits(plugin.file.gpx.GPXPlugin, os.plugin.AbstractPlugin);
+class GPXPlugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = ID;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  init() {
+    var dm = DataManager.getInstance();
+
+    // register kml provider type
+    dm.registerProviderType(new ProviderEntry(ID, GPXProvider, TYPE, TYPE));
+
+    // register the kml descriptor type
+    dm.registerDescriptorType(this.id, GPXDescriptor);
+
+    // register the kml layer config
+    var lcm = LayerConfigManager.getInstance();
+    lcm.registerLayerConfig(this.id, GPXLayerConfig);
+
+    // register the kml import ui
+    var im = ImportManager.getInstance();
+    im.registerImportDetails(this.id.toUpperCase(), true);
+    im.registerImportUI(mime.TYPE, new GPXImportUI());
+    im.registerParser(this.id, GPXParser);
+  }
+}
 
 
 /**
  * @type {string}
- * @const
  */
-plugin.file.gpx.GPXPlugin.ID = 'gpx';
+const ID = 'gpx';
 
 
 /**
  * @type {string}
- * @const
  */
-plugin.file.gpx.GPXPlugin.TYPE = 'GPX Layers';
+const TYPE = 'GPX Layers';
 
 
-/**
- * @inheritDoc
- */
-plugin.file.gpx.GPXPlugin.prototype.init = function() {
-  var dm = os.dataManager;
-
-  // register kml provider type
-  dm.registerProviderType(new os.data.ProviderEntry(
-      plugin.file.gpx.GPXPlugin.ID,
-      plugin.file.gpx.GPXProvider,
-      plugin.file.gpx.GPXPlugin.TYPE,
-      plugin.file.gpx.GPXPlugin.TYPE));
-
-  // register the kml descriptor type
-  dm.registerDescriptorType(this.id, plugin.file.gpx.GPXDescriptor);
-
-  // register the kml layer config
-  var lcm = os.layer.config.LayerConfigManager.getInstance();
-  lcm.registerLayerConfig(this.id, plugin.file.gpx.GPXLayerConfig);
-
-  // register the kml import ui
-  var im = os.ui.im.ImportManager.getInstance();
-  im.registerImportDetails(this.id.toUpperCase(), true);
-  im.registerImportUI(plugin.file.gpx.mime.TYPE, new plugin.file.gpx.ui.GPXImportUI());
-  im.registerParser(this.id, plugin.file.gpx.GPXParser);
-};
+exports = GPXPlugin;

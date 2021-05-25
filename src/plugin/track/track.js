@@ -456,7 +456,7 @@ let createAndAdd_ = function(options) {
   });
 
   var rootNode = PlacesManager.getInstance().getPlacesRoot();
-  if (rootNode) {
+  if (rootNode && trackNode) {
     var cmd = new KMLNodeAdd(trackNode, rootNode);
     cmd.title = 'Create Track';
     CommandProcessor.getInstance().addCommand(cmd);

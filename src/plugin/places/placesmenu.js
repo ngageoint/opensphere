@@ -12,6 +12,8 @@ goog.require('os.ui.menu.map');
 goog.require('os.ui.menu.spatial');
 goog.require('plugin.file.kml.cmd.KMLNodeAdd');
 goog.require('plugin.file.kml.cmd.KMLNodeRemove');
+goog.require('plugin.file.kml.ui');
+goog.require('plugin.file.kml.ui.KMLTreeExportUI');
 goog.require('plugin.places');
 goog.require('plugin.places.ui.savePlacesDirective');
 
@@ -536,7 +538,7 @@ plugin.places.menu.onLayerEvent_ = function(event) {
             }));
             break;
           case plugin.places.menu.EventType.EXPORT:
-            plugin.file.kml.ui.launchTreeExport(node, 'Export Places');
+            plugin.file.kml.ui.KMLTreeExportUI.launchTreeExport(node, 'Export Places');
             break;
           case plugin.places.menu.EventType.REMOVE_PLACE:
             var cmd = new plugin.file.kml.cmd.KMLNodeRemove(node);
@@ -564,7 +566,7 @@ plugin.places.menu.onLayerEvent_ = function(event) {
             plugin.places.ui.QuickAddPlacesCtrl.launch();
             break;
           case plugin.places.menu.EventType.EXPORT:
-            plugin.file.kml.ui.launchTreeExport(/** @type {!plugin.file.kml.ui.KMLNode} */
+            plugin.file.kml.ui.KMLTreeExportUI.launchTreeExport(/** @type {!plugin.file.kml.ui.KMLNode} */
                 (rootNode), 'Export Places');
             break;
           case plugin.places.menu.EventType.REMOVE_ALL:

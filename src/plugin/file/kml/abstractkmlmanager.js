@@ -1,15 +1,17 @@
 goog.module('plugin.file.kml.AbstractKMLManager');
 
 const Delay = goog.require('goog.async.Delay');
+const dispose = goog.require('goog.dispose');
 const GoogEventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
+const events = goog.require('ol.events');
+const MapContainer = goog.require('os.MapContainer');
 const AlertManager = goog.require('os.alert.AlertManager');
 const ConfigEventType = goog.require('os.config.EventType');
 const OsEventType = goog.require('os.events.EventType');
 const {createFromContent} = goog.require('os.file');
 const FileStorage = goog.require('os.file.FileStorage');
-const MapContainer = goog.require('os.MapContainer');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const KMLLayerConfig = goog.require('plugin.file.kml.KMLLayerConfig');
 
@@ -224,7 +226,7 @@ class AbstractKMLManager extends GoogEventTarget {
       this.setupLayer(this.layer_, options);
 
       this.source_ = /** @type {KMLSource} */ (this.layer_.getSource());
-      ol.events.listen(this.source_, GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
+      events.listen(this.source_, GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
 
       if (!this.source_.isLoading()) {
         this.onSourceLoaded_();
@@ -253,7 +255,7 @@ class AbstractKMLManager extends GoogEventTarget {
    */
   clear() {
     this.removeLayer();
-    goog.dispose(this.layer_);
+    dispose(this.layer_);
     this.layer_ = null;
     this.source_ = null;
     this.root_ = null;

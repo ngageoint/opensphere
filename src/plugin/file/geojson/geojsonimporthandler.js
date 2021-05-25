@@ -1,11 +1,12 @@
 goog.module('plugin.file.geojson.GeoJSONImportHandler');
 
 const DataManager = goog.require('os.data.DataManager');
+const FileDescriptor = goog.require('os.data.FileDescriptor');
+const MappingManager = goog.require('os.im.mapping.MappingManager');
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
 const GeoJSONDescriptor = goog.require('plugin.file.geojson.GeoJSONDescriptor');
 const GeoJSONParserConfig = goog.require('plugin.file.geojson.GeoJSONParserConfig');
 const GeoJSONProvider = goog.require('plugin.file.geojson.GeoJSONProvider');
-const MappingManager = goog.require('os.im.mapping.MappingManager');
 
 
 /**
@@ -57,8 +58,11 @@ class GeoJSONImportHandler extends FileImportUI {
     }
 
     // create the descriptor and add it
-    const descriptor = GeoJSONDescriptor.createFromConfig(config);
-    GeoJSONProvider.getInstance().addDescriptor(descriptor);
+    const provider = GeoJSONProvider.getInstance();
+    const descriptor = new GeoJSONDescriptor(config);
+    FileDescriptor.createFromConfig(descriptor, provider, config);
+
+    provider.addDescriptor(descriptor);
     DataManager.getInstance().addDescriptor(descriptor);
     descriptor.setActive(true);
   }

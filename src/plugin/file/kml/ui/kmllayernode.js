@@ -1,278 +1,276 @@
-goog.provide('plugin.file.kml.ui.KMLLayerNode');
-goog.require('goog.events.EventType');
-goog.require('ol.events');
-goog.require('os.data.LayerNode');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.structs.TriState');
-goog.require('plugin.file.kml.KMLSource');
+goog.module('plugin.file.kml.ui.KMLLayerNode');
+goog.module.declareLegacyNamespace();
 
+const googEvents = goog.require('goog.events');
+const GoogEventType = goog.require('goog.events.EventType');
+const events = goog.require('ol.events');
+const olExtent = goog.require('ol.extent');
+const LayerNode = goog.require('os.data.LayerNode');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const PropertyChange = goog.require('os.source.PropertyChange');
+const KMLSource = goog.require('plugin.file.kml.KMLSource');
+
+const VectorLayer = goog.requireType('os.layer.Vector');
+const KMLLayer = goog.requireType('plugin.file.kml.KMLLayer');
+const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**
  * Tree node for KML layers
- *
- * @param {!os.layer.Vector} layer The KML layer
- * @extends {os.data.LayerNode}
- * @constructor
  */
-plugin.file.kml.ui.KMLLayerNode = function(layer) {
-  plugin.file.kml.ui.KMLLayerNode.base(this, 'constructor');
-
-  // Do not bubble the node visibility state up to the layer, where the checkbox controls the enabled state.
-  this.setBubbleState(false);
-
+class KMLLayerNode extends LayerNode {
   /**
-   * The KML data source
-   * @type {plugin.file.kml.KMLSource}
-   * @private
+   * Constructor.
+   * @param {VectorLayer} layer The KML layer
    */
-  this.source_ = null;
+  constructor(layer) {
+    super();
 
-  /**
-   * Number of loading children.
-   * @type {number}
-   * @private
-   */
-  this.childLoadCount_ = 0;
+    // Do not bubble the node visibility state up to the layer, where the checkbox controls the enabled state.
+    this.setBubbleState(false);
 
-  /**
-   * Root node listen key.
-   * @type {goog.events.ListenableKey|undefined}
-   * @private
-   */
-  this.rootListenKey_ = undefined;
+    /**
+     * The KML data source
+     * @type {KMLSource}
+     * @private
+     */
+    this.source_ = null;
 
-  this.setLayer(layer);
-};
-goog.inherits(plugin.file.kml.ui.KMLLayerNode, os.data.LayerNode);
+    /**
+     * Number of loading children.
+     * @type {number}
+     * @private
+     */
+    this.childLoadCount_ = 0;
 
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.ui.KMLLayerNode.prototype.disposeInternal = function() {
-  var layer = this.getLayer();
-  if (layer instanceof plugin.file.kml.KMLLayer) {
-    layer.collapsed = this.collapsed;
-  }
-
-  if (this.rootListenKey_) {
-    goog.events.unlistenByKey(this.rootListenKey_);
+    /**
+     * Root node listen key.
+     * @type {goog.events.ListenableKey|undefined}
+     * @private
+     */
     this.rootListenKey_ = undefined;
+
+    this.setLayer(layer);
   }
 
-  // update the layer first so it isn't affected by the children changing
-  this.setLayer(null);
-
-  // remove child nodes so the KML tree isn't destroyed
-  this.setChildren(null);
-
-  plugin.file.kml.ui.KMLLayerNode.base(this, 'disposeInternal');
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.ui.KMLLayerNode.prototype.onChildChange = function(e) {
-  plugin.file.kml.ui.KMLLayerNode.base(this, 'onChildChange', e);
-
-  var p = e.getProperty();
-  if (p == 'loading') {
-    if (e.getNewValue()) {
-      this.childLoadCount_++;
-    } else {
-      this.childLoadCount_--;
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    var layer = /** @type {KMLLayer} */ (this.getLayer());
+    if (layer) {
+      layer.collapsed = this.collapsed;
     }
 
-    this.dispatchEvent(new os.events.PropertyChangeEvent('loading'));
-  }
-};
-
-
-/**
- * @inheritDoc
- * @export
- */
-plugin.file.kml.ui.KMLLayerNode.prototype.isLoading = function() {
-  return this.childLoadCount_ > 0 || plugin.file.kml.ui.KMLLayerNode.base(this, 'isLoading');
-};
-
-
-/**
- * If the KML can be edited.
- *
- * @return {boolean}
- */
-plugin.file.kml.ui.KMLLayerNode.prototype.isEditable = function() {
-  var layer = this.getLayer();
-  if (layer instanceof plugin.file.kml.KMLLayer) {
-    return layer.editable;
-  }
-
-  return false;
-};
-
-
-/**
- * Set the KML data source
- *
- * @param {plugin.file.kml.KMLSource} source The source
- * @private
- */
-plugin.file.kml.ui.KMLLayerNode.prototype.setSource_ = function(source) {
-  if (this.source_) {
-    ol.events.unlisten(this.source_, goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
-  }
-
-  this.source_ = source;
-
-  if (source) {
-    ol.events.listen(source, goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
-    this.updateFromSource_();
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.ui.KMLLayerNode.prototype.setLayer = function(value) {
-  plugin.file.kml.ui.KMLLayerNode.base(this, 'setLayer', value);
-
-  var source = null;
-  if (value instanceof plugin.file.kml.KMLLayer) {
-    var layerSource = /** @type {os.layer.Vector} */ (value).getSource();
-    if (layerSource instanceof plugin.file.kml.KMLSource) {
-      source = layerSource;
+    if (this.rootListenKey_) {
+      googEvents.unlistenByKey(this.rootListenKey_);
+      this.rootListenKey_ = undefined;
     }
 
-    this.collapsed = value.collapsed;
+    // update the layer first so it isn't affected by the children changing
+    this.setLayer(null);
+
+    // remove child nodes so the KML tree isn't destroyed
+    this.setChildren(null);
+
+    super.disposeInternal();
   }
 
-  this.setSource_(source);
-};
+  /**
+   * @inheritDoc
+   */
+  onChildChange(e) {
+    super.onChildChange(e);
 
-
-/**
- * Handles changes on the source
- *
- * @param {os.events.PropertyChangeEvent} e The event
- * @private
- */
-plugin.file.kml.ui.KMLLayerNode.prototype.onSourceChange_ = function(e) {
-  if (e instanceof os.events.PropertyChangeEvent) {
     var p = e.getProperty();
-    if (p === os.source.PropertyChange.ENABLED || p === os.source.PropertyChange.LOADING) {
+    if (p == 'loading') {
+      if (e.getNewValue()) {
+        this.childLoadCount_++;
+      } else {
+        this.childLoadCount_--;
+      }
+
+      this.dispatchEvent(new PropertyChangeEvent('loading'));
+    }
+  }
+
+  /**
+   * @inheritDoc
+   * @export
+   */
+  isLoading() {
+    return this.childLoadCount_ > 0 || super.isLoading();
+  }
+
+  /**
+   * If the KML can be edited.
+   *
+   * @return {boolean}
+   */
+  isEditable() {
+    var layer = /** @type {KMLLayer} */ (this.getLayer());
+    if (layer) {
+      return layer.editable != null ? layer.editable : false;
+    }
+
+    return false;
+  }
+
+  /**
+   * Set the KML data source
+   *
+   * @param {KMLSource} source The source
+   * @private
+   */
+  setSource_(source) {
+    if (this.source_) {
+      events.unlisten(this.source_, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+    }
+
+    this.source_ = source;
+
+    if (source) {
+      events.listen(source, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
       this.updateFromSource_();
     }
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  setLayer(value) {
+    super.setLayer(value);
 
-/**
- * Updates the tree from the KML source
- *
- * @private
- */
-plugin.file.kml.ui.KMLLayerNode.prototype.updateFromSource_ = function() {
-  if (this.source_ && !this.source_.isLoading()) {
-    // call getRoot to handle both when the root node is shown/not shown
-    var children = this.getChildren();
-    var currentRoot = children && children.length > 0 ? children[0].getRoot() : null;
+    var layer = /** @type {KMLLayer} */ (value);
+    if (layer) {
+      this.collapsed = layer.collapsed;
 
-    // only update the children if the root node has changed
-    var rootNode = this.source_.getRootNode();
-    if (currentRoot !== rootNode) {
-      // remove existing listener
-      if (this.rootListenKey_) {
-        goog.events.unlistenByKey(this.rootListenKey_);
-        this.rootListenKey_ = undefined;
+      var layerSource = layer.getSource();
+      if (layerSource instanceof KMLSource) {
+        this.setSource_(layerSource);
       }
+    }
+  }
 
-      var showRoot = true;
-      var layer = this.getLayer();
-      if (layer instanceof plugin.file.kml.KMLLayer) {
-        showRoot = layer.showRoot && layer.isEnabled();
+  /**
+   * Handles changes on the source
+   *
+   * @param {PropertyChangeEvent} e The event
+   * @private
+   */
+  onSourceChange_(e) {
+    if (e instanceof PropertyChangeEvent) {
+      var p = e.getProperty();
+      if (p === PropertyChange.ENABLED || p === PropertyChange.LOADING) {
+        this.updateFromSource_();
       }
+    }
+  }
 
-      if (rootNode) {
-        if (showRoot) {
-          // we are showing all of the children of the kml root node
-          this.setChildren(rootNode.getChildren());
-        } else {
-          // we are not showing the children of the kml root node, so we must listen for change events to update the
-          // displayed children
-          this.updateFromRoot_();
-          this.rootListenKey_ = rootNode.listen(goog.events.EventType.PROPERTYCHANGE, this.onRootChange_, false, this);
+  /**
+   * Updates the tree from the KML source
+   *
+   * @private
+   */
+  updateFromSource_() {
+    if (this.source_ && !this.source_.isLoading()) {
+      // call getRoot to handle both when the root node is shown/not shown
+      var children = this.getChildren();
+      var currentRoot = children && children.length > 0 ? children[0].getRoot() : null;
+
+      // only update the children if the root node has changed
+      var rootNode = this.source_.getRootNode();
+      if (currentRoot !== rootNode) {
+        // remove existing listener
+        if (this.rootListenKey_) {
+          googEvents.unlistenByKey(this.rootListenKey_);
+          this.rootListenKey_ = undefined;
         }
+
+        var showRoot = true;
+        var layer = /** @type {KMLLayer} */ (this.getLayer());
+        try {
+          showRoot = layer != null && layer.showRoot && layer.isEnabled();
+        } catch (e) {
+          // Not a KML layer
+        }
+
+        if (rootNode) {
+          if (showRoot) {
+            // we are showing all of the children of the kml root node
+            this.setChildren(rootNode.getChildren());
+          } else {
+            // we are not showing the children of the kml root node, so we must listen for change events to update the
+            // displayed children
+            this.updateFromRoot_();
+            this.rootListenKey_ = rootNode.listen(GoogEventType.PROPERTYCHANGE, this.onRootChange_, false, this);
+          }
+        } else {
+          this.setChildren(null);
+        }
+      }
+    }
+  }
+
+  /**
+   * Handle changes to the KML root node when it isn't being displayed in the tree.
+   *
+   * @param {PropertyChangeEvent} event
+   * @private
+   */
+  onRootChange_(event) {
+    var p = event.getProperty();
+    if (p == 'children') {
+      this.updateFromRoot_();
+    }
+  }
+
+  /**
+   * Updates the tree from the root node.
+   *
+   * @private
+   */
+  updateFromRoot_() {
+    var rootNode = this.source_ ? this.source_.getRootNode() : null;
+
+    var children = null;
+    if (rootNode) {
+      if (rootNode.getLabel() == 'kmlroot') {
+        // a main kml root node exists, go down one more layer to get to the nodes we care about
+        children = rootNode.getChildren()[0].getChildren();
       } else {
-        this.setChildren(null);
+        // there was no parsed kml root node...just proceed
+        children = rootNode.getChildren();
       }
     }
-  }
-};
 
-
-/**
- * Handle changes to the KML root node when it isn't being displayed in the tree.
- *
- * @param {os.events.PropertyChangeEvent} event
- * @private
- */
-plugin.file.kml.ui.KMLLayerNode.prototype.onRootChange_ = function(event) {
-  var p = event.getProperty();
-  if (p == 'children') {
-    this.updateFromRoot_();
-  }
-};
-
-
-/**
- * Updates the tree from the root node.
- *
- * @private
- */
-plugin.file.kml.ui.KMLLayerNode.prototype.updateFromRoot_ = function() {
-  var rootNode = this.source_ ? this.source_.getRootNode() : null;
-
-  var children = null;
-  if (rootNode) {
-    if (rootNode.getLabel() == 'kmlroot') {
-      // a main kml root node exists, go down one more layer to get to the nodes we care about
-      children = rootNode.getChildren()[0].getChildren();
-    } else {
-      // there was no parsed kml root node...just proceed
-      children = rootNode.getChildren();
-    }
+    // do not reparent the children
+    this.setChildren(children, true);
   }
 
-  // do not reparent the children
-  this.setChildren(children, true);
-};
+  /**
+   * @inheritDoc
+   */
+  getExtent() {
+    var extent = null;
 
+    var children = this.getChildren();
+    if (children) {
+      for (var i = 0, n = children.length; i < n; i++) {
+        var cExtent = /** @type {KMLNode} */ (children[i]).getExtent();
 
-/**
- * @inheritDoc
- */
-plugin.file.kml.ui.KMLLayerNode.prototype.getExtent = function() {
-  var extent = null;
-
-  var children = this.getChildren();
-  if (children) {
-    for (var i = 0, n = children.length; i < n; i++) {
-      var cExtent = /** @type {plugin.file.kml.ui.KMLNode} */ (children[i]).getExtent();
-
-      if (cExtent) {
-        if (!extent) {
-          extent = cExtent;
-        } else {
-          ol.extent.extend(extent, cExtent);
+        if (cExtent) {
+          if (!extent) {
+            extent = cExtent;
+          } else {
+            olExtent.extend(extent, cExtent);
+          }
         }
       }
     }
+
+    return extent;
   }
+}
 
-  return extent;
-};
-
+exports = KMLLayerNode;

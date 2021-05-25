@@ -2,41 +2,40 @@
  * @fileoverview KML Tour parser.
  * @suppress {accessControls}
  */
-goog.provide('plugin.file.kml.tour.parseTour');
+goog.module('plugin.file.kml.tour.parseTour');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.format.KML');
-goog.require('ol.format.XSD');
-goog.require('ol.xml');
-goog.require('os.map.FlightMode');
-goog.require('plugin.file.kml.tour.FlyTo');
-goog.require('plugin.file.kml.tour.SoundCue');
-goog.require('plugin.file.kml.tour.Tour');
-goog.require('plugin.file.kml.tour.TourControl');
-goog.require('plugin.file.kml.tour.Wait');
+const KML = goog.require('ol.format.KML');
+const XSD = goog.require('ol.format.XSD');
+const xml = goog.require('ol.xml');
+const FlightMode = goog.require('os.map.FlightMode');
+const FlyTo = goog.require('plugin.file.kml.tour.FlyTo');
+const SoundCue = goog.require('plugin.file.kml.tour.SoundCue');
+const Tour = goog.require('plugin.file.kml.tour.Tour');
+const TourControl = goog.require('plugin.file.kml.tour.TourControl');
+const Wait = goog.require('plugin.file.kml.tour.Wait');
 
 
 /**
  * Parses a KML Tour element into a tour object.
  *
  * @param {Element} el The XML element.
- * @return {plugin.file.kml.tour.Tour|undefined} The tour.
+ * @return {Tour|undefined} The tour.
  */
-plugin.file.kml.tour.parseTour = function(el) {
+const parseTour = (el) => {
   if (!el || el.localName !== 'Tour') {
     return undefined;
   }
 
-  return ol.xml.pushParseAndPop(new plugin.file.kml.tour.Tour(), plugin.file.kml.tour.TOUR_PARSERS_, el, []);
+  return xml.pushParseAndPop(new Tour(), TOUR_PARSERS, el, []);
 };
 
 
 /**
  * Support both KML 2.3 and `gx:` tour elements.
  * @type {Array<string>}
- * @private
- * @const
  */
-plugin.file.kml.tour.NAMESPACE_URIS_ = ol.format.KML.NAMESPACE_URIS_.concat(ol.format.KML.GX_NAMESPACE_URIS_);
+const tourNamespaceUris = KML.NAMESPACE_URIS_.concat(KML.GX_NAMESPACE_URIS_);
 
 
 /**
@@ -44,13 +43,12 @@ plugin.file.kml.tour.NAMESPACE_URIS_ = ol.format.KML.NAMESPACE_URIS_.concat(ol.f
  *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
- * @private
  */
-plugin.file.kml.tour.parsePlaylist_ = function(node, objectStack) {
-  var playlist = ol.xml.pushParseAndPop([], plugin.file.kml.tour.PLAYLIST_PARSERS_, node, objectStack);
+const parsePlaylist = function(node, objectStack) {
+  var playlist = xml.pushParseAndPop([], PLAYLIST_PARSERS, node, objectStack);
   if (playlist) {
     var tour = objectStack[objectStack.length - 1];
-    if (tour instanceof plugin.file.kml.tour.Tour) {
+    if (tour instanceof Tour) {
       tour.setPlaylist(playlist);
     }
   }
@@ -62,12 +60,11 @@ plugin.file.kml.tour.parsePlaylist_ = function(node, objectStack) {
  *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
- * @return {plugin.file.kml.tour.FlyTo|undefined}
- * @private
+ * @return {FlyTo|undefined}
  */
-plugin.file.kml.tour.parseFlyTo_ = function(node, objectStack) {
+const parseFlyTo = function(node, objectStack) {
   var flyTo;
-  var flyToProps = ol.xml.pushParseAndPop({}, plugin.file.kml.tour.FLYTO_PARSERS_, node, objectStack);
+  var flyToProps = xml.pushParseAndPop({}, FLYTO_PARSERS, node, objectStack);
   if (flyToProps) {
     var viewProps = /** @type {Object|undefined} */ (flyToProps['Camera']);
     if (!viewProps) {
@@ -78,7 +75,7 @@ plugin.file.kml.tour.parseFlyTo_ = function(node, objectStack) {
     var duration = /** @type {number} */ (flyToProps['duration'] || 0) * 1000;
 
     // only 'smooth' and 'bounce' are allowed values, default to 'bounce'
-    var flightMode = flyToProps['flyToMode'] === 'smooth' ? os.map.FlightMode.SMOOTH : os.map.FlightMode.BOUNCE;
+    var flightMode = flyToProps['flyToMode'] === 'smooth' ? FlightMode.SMOOTH : FlightMode.BOUNCE;
 
     // if center isn't defined, the flight should still adjust heading, pitch, etc
     var center;
@@ -107,7 +104,7 @@ plugin.file.kml.tour.parseFlyTo_ = function(node, objectStack) {
       positionCamera: !!flyToProps['Camera']
     });
 
-    flyTo = new plugin.file.kml.tour.FlyTo(options);
+    flyTo = new FlyTo(options);
   }
 
   return flyTo;
@@ -120,10 +117,9 @@ plugin.file.kml.tour.parseFlyTo_ = function(node, objectStack) {
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  * @return {Object|undefined}
- * @private
  */
-plugin.file.kml.tour.parseCamera_ = function(node, objectStack) {
-  return ol.xml.pushParseAndPop({}, plugin.file.kml.tour.CAMERA_PARSERS_, node, objectStack);
+const parseCamera = function(node, objectStack) {
+  return xml.pushParseAndPop({}, CAMERA_PARSERS, node, objectStack);
 };
 
 
@@ -133,10 +129,9 @@ plugin.file.kml.tour.parseCamera_ = function(node, objectStack) {
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
  * @return {Object|undefined}
- * @private
  */
-plugin.file.kml.tour.parseLookAt_ = function(node, objectStack) {
-  return ol.xml.pushParseAndPop({}, plugin.file.kml.tour.LOOKAT_PARSERS_, node, objectStack);
+const parseLookAt = function(node, objectStack) {
+  return xml.pushParseAndPop({}, LOOKAT_PARSERS, node, objectStack);
 };
 
 
@@ -145,16 +140,15 @@ plugin.file.kml.tour.parseLookAt_ = function(node, objectStack) {
  *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
- * @return {plugin.file.kml.tour.SoundCue|undefined}
- * @private
+ * @return {SoundCue|undefined}
  */
-plugin.file.kml.tour.parseSoundCue_ = function(node, objectStack) {
+const parseSoundCue = function(node, objectStack) {
   var soundCue;
-  var soundCueOptions = ol.xml.pushParseAndPop({}, plugin.file.kml.tour.SOUNDCUE_PARSERS_, node, objectStack);
+  var soundCueOptions = xml.pushParseAndPop({}, SOUNDCUE_PARSERS, node, objectStack);
   if (soundCueOptions['href']) {
     var href = /** @type {string} */ (soundCueOptions['href']);
     var delayedStart = /** @type {number|undefined} */ (soundCueOptions['delayedStart'] || 0) * 1000;
-    soundCue = new plugin.file.kml.tour.SoundCue(href, delayedStart);
+    soundCue = new SoundCue(href, delayedStart);
   }
   return soundCue;
 };
@@ -165,14 +159,13 @@ plugin.file.kml.tour.parseSoundCue_ = function(node, objectStack) {
  *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
- * @return {plugin.file.kml.tour.TourControl|undefined}
- * @private
+ * @return {TourControl|undefined}
  */
-plugin.file.kml.tour.parseTourControl_ = function(node, objectStack) {
+const parseTourControl = function(node, objectStack) {
   var tourControl;
   var tour = objectStack.length > 1 ? objectStack[objectStack.length - 2] : undefined;
-  if (tour instanceof plugin.file.kml.tour.Tour) {
-    tourControl = new plugin.file.kml.tour.TourControl(tour);
+  if (tour instanceof Tour) {
+    tourControl = new TourControl(tour);
   }
   return tourControl;
 };
@@ -183,118 +176,105 @@ plugin.file.kml.tour.parseTourControl_ = function(node, objectStack) {
  *
  * @param {Node} node Node.
  * @param {Array<*>} objectStack Object stack.
- * @return {plugin.file.kml.tour.Wait|undefined}
- * @private
+ * @return {Wait|undefined}
  */
-plugin.file.kml.tour.parseWait_ = function(node, objectStack) {
-  var waitOptions = ol.xml.pushParseAndPop({}, plugin.file.kml.tour.WAIT_PARSERS_, node, objectStack);
+const parseWait = function(node, objectStack) {
+  var waitOptions = xml.pushParseAndPop({}, WAIT_PARSERS, node, objectStack);
 
   // KML duration is in seconds, so convert to milliseconds
   var duration = (waitOptions.duration || 0) * 1000;
-  return new plugin.file.kml.tour.Wait(duration);
+  return new Wait(duration);
 };
 
 
 /**
  * Parsers for a KML Tour element.
  * @type {Object<string, Object<string, ol.XmlParser>>}
- * @private
- * @const
  */
-plugin.file.kml.tour.TOUR_PARSERS_ = ol.xml.makeStructureNS(
-    plugin.file.kml.tour.NAMESPACE_URIS_, {
-      'Playlist': plugin.file.kml.tour.parsePlaylist_,
-      'description': ol.xml.makeObjectPropertySetter(ol.format.XSD.readString),
-      'name': ol.xml.makeObjectPropertySetter(ol.format.XSD.readString)
+const TOUR_PARSERS = xml.makeStructureNS(
+    tourNamespaceUris, {
+      'Playlist': parsePlaylist,
+      'description': xml.makeObjectPropertySetter(XSD.readString),
+      'name': xml.makeObjectPropertySetter(XSD.readString)
     });
 
 
 /**
  * Parsers for a KML Playlist element.
  * @type {Object<string, Object<string, ol.XmlParser>>}
- * @private
- * @const
  */
-plugin.file.kml.tour.PLAYLIST_PARSERS_ = ol.xml.makeStructureNS(
-    plugin.file.kml.tour.NAMESPACE_URIS_, {
-      'FlyTo': ol.xml.makeArrayPusher(plugin.file.kml.tour.parseFlyTo_),
-      'SoundCue': ol.xml.makeArrayPusher(plugin.file.kml.tour.parseSoundCue_),
-      'TourControl': ol.xml.makeArrayPusher(plugin.file.kml.tour.parseTourControl_),
-      'Wait': ol.xml.makeArrayPusher(plugin.file.kml.tour.parseWait_)
+const PLAYLIST_PARSERS = xml.makeStructureNS(
+    tourNamespaceUris, {
+      'FlyTo': xml.makeArrayPusher(parseFlyTo),
+      'SoundCue': xml.makeArrayPusher(parseSoundCue),
+      'TourControl': xml.makeArrayPusher(parseTourControl),
+      'Wait': xml.makeArrayPusher(parseWait)
     });
 
 
 /**
  * Parsers for a KML FlyTo element.
  * @type {Object<string, Object<string, ol.XmlParser>>}
- * @private
- * @const
  */
-plugin.file.kml.tour.FLYTO_PARSERS_ = ol.xml.makeStructureNS(
-    plugin.file.kml.tour.NAMESPACE_URIS_, {
-      'duration': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
-      'flyToMode': ol.xml.makeObjectPropertySetter(ol.format.XSD.readString),
-      'Camera': ol.xml.makeObjectPropertySetter(plugin.file.kml.tour.parseCamera_),
-      'LookAt': ol.xml.makeObjectPropertySetter(plugin.file.kml.tour.parseLookAt_)
+const FLYTO_PARSERS = xml.makeStructureNS(
+    tourNamespaceUris, {
+      'duration': xml.makeObjectPropertySetter(XSD.readDecimal),
+      'flyToMode': xml.makeObjectPropertySetter(XSD.readString),
+      'Camera': xml.makeObjectPropertySetter(parseCamera),
+      'LookAt': xml.makeObjectPropertySetter(parseLookAt)
     });
 
 
 /**
  * Parsers for a KML Camera element.
  * @type {Object<string, Object<string, ol.XmlParser>>}
- * @private
- * @const
  */
-plugin.file.kml.tour.CAMERA_PARSERS_ = ol.xml.makeStructureNS(
-    ol.format.KML.NAMESPACE_URIS_, {
-      'longitude': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
-      'latitude': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
-      'altitude': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
-      'heading': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
-      'tilt': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
-      'roll': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
-      'altitudeMode': ol.xml.makeObjectPropertySetter(ol.format.XSD.readString)
+const CAMERA_PARSERS = xml.makeStructureNS(
+    KML.NAMESPACE_URIS_, {
+      'longitude': xml.makeObjectPropertySetter(XSD.readDecimal),
+      'latitude': xml.makeObjectPropertySetter(XSD.readDecimal),
+      'altitude': xml.makeObjectPropertySetter(XSD.readDecimal),
+      'heading': xml.makeObjectPropertySetter(XSD.readDecimal),
+      'tilt': xml.makeObjectPropertySetter(XSD.readDecimal),
+      'roll': xml.makeObjectPropertySetter(XSD.readDecimal),
+      'altitudeMode': xml.makeObjectPropertySetter(XSD.readString)
     });
 
 
 /**
  * Parsers for a KML Camera element.
  * @type {Object<string, Object<string, ol.XmlParser>>}
- * @private
- * @const
  */
-plugin.file.kml.tour.LOOKAT_PARSERS_ = ol.xml.makeStructureNS(
-    ol.format.KML.NAMESPACE_URIS_, {
-      'longitude': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
-      'latitude': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
-      'altitude': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
-      'heading': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
-      'tilt': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
-      'range': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal),
-      'altitudeMode': ol.xml.makeObjectPropertySetter(ol.format.XSD.readString)
+const LOOKAT_PARSERS = xml.makeStructureNS(
+    KML.NAMESPACE_URIS_, {
+      'longitude': xml.makeObjectPropertySetter(XSD.readDecimal),
+      'latitude': xml.makeObjectPropertySetter(XSD.readDecimal),
+      'altitude': xml.makeObjectPropertySetter(XSD.readDecimal),
+      'heading': xml.makeObjectPropertySetter(XSD.readDecimal),
+      'tilt': xml.makeObjectPropertySetter(XSD.readDecimal),
+      'range': xml.makeObjectPropertySetter(XSD.readDecimal),
+      'altitudeMode': xml.makeObjectPropertySetter(XSD.readString)
     });
 
 
 /**
  * Parsers for a KML SoundCue element.
  * @type {Object<string, Object<string, ol.XmlParser>>}
- * @private
- * @const
  */
-plugin.file.kml.tour.SOUNDCUE_PARSERS_ = ol.xml.makeStructureNS(
-    plugin.file.kml.tour.NAMESPACE_URIS_, {
-      'href': ol.xml.makeObjectPropertySetter(ol.format.XSD.readString),
-      'delayedStart': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal)
+const SOUNDCUE_PARSERS = xml.makeStructureNS(
+    tourNamespaceUris, {
+      'href': xml.makeObjectPropertySetter(XSD.readString),
+      'delayedStart': xml.makeObjectPropertySetter(XSD.readDecimal)
     });
 
 
 /**
  * Parsers for a KML Wait element.
  * @type {Object<string, Object<string, ol.XmlParser>>}
- * @private
- * @const
  */
-plugin.file.kml.tour.WAIT_PARSERS_ = ol.xml.makeStructureNS(
-    plugin.file.kml.tour.NAMESPACE_URIS_, {
-      'duration': ol.xml.makeObjectPropertySetter(ol.format.XSD.readDecimal)
+const WAIT_PARSERS = xml.makeStructureNS(
+    tourNamespaceUris, {
+      'duration': xml.makeObjectPropertySetter(XSD.readDecimal)
     });
+
+exports = parseTour;

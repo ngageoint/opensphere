@@ -1,11 +1,11 @@
-goog.provide('plugin.file.shp');
+goog.module('plugin.file.shp');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * @enum {number}
- * @const
  */
-plugin.file.shp.TYPE = {
+const TYPE = {
   NULLRECORD: 0,
   POINT: 1,
   POLYLINE: 3,
@@ -21,15 +21,13 @@ plugin.file.shp.TYPE = {
   MULTIPOINTM: 28
 };
 
-
 /**
  * @typedef {{
  *   data: DataView,
  *   numRecords: number
  * }}
  */
-plugin.file.shp.DBFData;
-
+let DBFData;
 
 /**
  * Tests if the supplied content is for a DBF file.
@@ -37,7 +35,7 @@ plugin.file.shp.DBFData;
  * @param {ArrayBuffer} content
  * @return {boolean}
  */
-plugin.file.shp.isDBFFileType = function(content) {
+const isDBFFileType = function(content) {
   if (!content) {
     return false;
   }
@@ -57,18 +55,24 @@ plugin.file.shp.isDBFFileType = function(content) {
   return version == 3 && (date >= 1 && date <= 31) && (month >= 1 && month <= 12);
 };
 
-
 /**
  * Tests if the supplied content is for a SHP file.
  *
  * @param {ArrayBuffer} content
  * @return {boolean}
  */
-plugin.file.shp.isSHPFileType = function(content) {
+const isSHPFileType = function(content) {
   var dv = new DataView(content.slice(0, 4));
   try {
     return dv.getUint32(0) == 9994;
   } catch (e) {
     return false;
   }
+};
+
+exports = {
+  TYPE,
+  isDBFFileType,
+  isSHPFileType,
+  DBFData
 };

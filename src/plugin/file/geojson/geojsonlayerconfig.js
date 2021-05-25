@@ -1,63 +1,70 @@
-goog.provide('plugin.file.geojson.GeoJSONLayerConfig');
-goog.require('os.layer.config.AbstractDataSourceLayerConfig');
-goog.require('os.ui.im.ImportManager');
-goog.require('plugin.file.geojson.GeoJSONParser');
-goog.require('plugin.file.geojson.GeoJSONParserConfig');
+goog.module('plugin.file.geojson.GeoJSONLayerConfig');
+goog.module.declareLegacyNamespace();
 
+const AltMapping = goog.require('os.im.mapping.AltMapping');
+const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
+const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
+const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
+const DateTimeMapping = goog.require('os.im.mapping.time.DateTimeMapping');
+
+const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
+const ImportManager = goog.require('os.ui.im.ImportManager');
+const GeoJSONParserConfig = goog.require('plugin.file.geojson.GeoJSONParserConfig');
 
 
 /**
- * @extends {os.layer.config.AbstractDataSourceLayerConfig}
- * @constructor
  */
-plugin.file.geojson.GeoJSONLayerConfig = function() {
-  plugin.file.geojson.GeoJSONLayerConfig.base(this, 'constructor');
+class GeoJSONLayerConfig extends AbstractDataSourceLayerConfig {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * @type {os.parse.FileParserConfig}
+     * @protected
+     */
+    this.parserConfig = new GeoJSONParserConfig();
+  }
 
   /**
-   * @type {os.parse.FileParserConfig}
-   * @protected
+   * @inheritDoc
    */
-  this.parserConfig = new plugin.file.geojson.GeoJSONParserConfig();
-};
-goog.inherits(plugin.file.geojson.GeoJSONLayerConfig, os.layer.config.AbstractDataSourceLayerConfig);
-
-
-/**
- * @inheritDoc
- */
-plugin.file.geojson.GeoJSONLayerConfig.prototype.initializeConfig = function(options) {
-  plugin.file.geojson.GeoJSONLayerConfig.base(this, 'initializeConfig', options);
-  this.parserConfig = options['parserConfig'] || new plugin.file.geojson.GeoJSONParserConfig();
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.geojson.GeoJSONLayerConfig.prototype.getImporter = function(options) {
-  var importer = plugin.file.geojson.GeoJSONLayerConfig.base(this, 'getImporter', options);
-  if (this.parserConfig['mappings'] == null || this.parserConfig['mappings'].length == 0) {
-    // there was no user interaction, so default the mappings to a set the importer would have used
-    importer.selectAutoMappings([
-      os.im.mapping.AltMapping.ID,
-      os.im.mapping.OrientationMapping.ID,
-      os.im.mapping.SemiMajorMapping.ID,
-      os.im.mapping.SemiMinorMapping.ID,
-      os.im.mapping.time.DateTimeMapping.ID]);
-  } else {
-    // setAutoMappings() ignores manual configs (e.g. custom Datetime format) since it re-autodetects
-    importer.setExecMappings(this.parserConfig['mappings']);
+  initializeConfig(options) {
+    super.initializeConfig(options);
+    this.parserConfig = options['parserConfig'] || new GeoJSONParserConfig();
   }
-  return importer;
-};
 
+  /**
+   * @inheritDoc
+   */
+  getImporter(options) {
+    var importer = super.getImporter(options);
+    if (this.parserConfig['mappings'] == null || this.parserConfig['mappings'].length == 0) {
+      // there was no user interaction, so default the mappings to a set the importer would have used
+      importer.selectAutoMappings([
+        AltMapping.ID,
+        OrientationMapping.ID,
+        SemiMajorMapping.ID,
+        SemiMinorMapping.ID,
+        DateTimeMapping.ID]);
+    } else {
+      // setAutoMappings() ignores manual configs (e.g. custom Datetime format) since it re-autodetects
+      importer.setExecMappings(this.parserConfig['mappings']);
+    }
+    return importer;
+  }
 
-/**
- * @inheritDoc
- */
-plugin.file.geojson.GeoJSONLayerConfig.prototype.getParser = function(options) {
-  var im = os.ui.im.ImportManager.getInstance();
-  var parser = im.getParser('geojson');
-  parser.setSourceId(this.id);
-  return parser;
-};
+  /**
+   * @inheritDoc
+   */
+  getParser(options) {
+    var im = ImportManager.getInstance();
+    var parser = im.getParser('geojson');
+    parser.setSourceId(this.id);
+    return parser;
+  }
+}
+
+exports = GeoJSONLayerConfig;

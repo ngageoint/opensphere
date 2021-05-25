@@ -1,60 +1,63 @@
-goog.provide('plugin.file.gpx.ui.GPXImportUI');
-goog.require('os.parse.FileParserConfig');
-goog.require('os.ui.im.FileImportUI');
-goog.require('os.ui.window');
-goog.require('plugin.file.gpx.ui.gpxImportDirective');
+goog.module('plugin.file.gpx.ui.GPXImportUI');
+goog.module.declareLegacyNamespace();
 
-
-
-/**
- * @extends {os.ui.im.FileImportUI}
- * @constructor
- */
-plugin.file.gpx.ui.GPXImportUI = function() {
-  plugin.file.gpx.ui.GPXImportUI.base(this, 'constructor');
-};
-goog.inherits(plugin.file.gpx.ui.GPXImportUI, os.ui.im.FileImportUI);
+const FileParserConfig = goog.require('os.parse.FileParserConfig');
+const FileImportUI = goog.require('os.ui.im.FileImportUI');
+const osWindow = goog.require('os.ui.window');
+const {directiveTag: gpxImportUi} = goog.require('plugin.file.gpx.ui.GPXImport');
 
 
 /**
- * @inheritDoc
  */
-plugin.file.gpx.ui.GPXImportUI.prototype.getTitle = function() {
-  return 'GPX';
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.gpx.ui.GPXImportUI.prototype.launchUI = function(file, opt_config) {
-  plugin.file.gpx.ui.GPXImportUI.base(this, 'launchUI', file, opt_config);
-
-  var config = new os.parse.FileParserConfig();
-
-  // if an existing config was provided, merge it in
-  if (opt_config) {
-    this.mergeConfig(opt_config, config);
+class GPXImportUI extends FileImportUI {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
   }
 
-  config['file'] = file;
-  config['title'] = file.getFileName();
+  /**
+   * @inheritDoc
+   */
+  getTitle() {
+    return 'GPX';
+  }
 
-  var scopeOptions = {
-    'config': config
-  };
-  var windowOptions = {
-    'label': 'Import GPX',
-    'icon': 'fa fa-file-text',
-    'x': 'center',
-    'y': 'center',
-    'width': 400,
-    'min-width': 400,
-    'max-width': 800,
-    'height': 'auto',
-    'modal': true,
-    'show-close': true
-  };
-  var template = '<gpximport></gpximport>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
-};
+  /**
+   * @inheritDoc
+   */
+  launchUI(file, opt_config) {
+    super.launchUI(file, opt_config);
+
+    var config = new FileParserConfig();
+
+    // if an existing config was provided, merge it in
+    if (opt_config) {
+      this.mergeConfig(opt_config, config);
+    }
+
+    config['file'] = file;
+    config['title'] = file.getFileName();
+
+    var scopeOptions = {
+      'config': config
+    };
+    var windowOptions = {
+      'label': 'Import GPX',
+      'icon': 'fa fa-file-text',
+      'x': 'center',
+      'y': 'center',
+      'width': 400,
+      'min-width': 400,
+      'max-width': 800,
+      'height': 'auto',
+      'modal': true,
+      'show-close': true
+    };
+    var template = `<${gpxImportUi}></${gpxImportUi}>`;
+    osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  }
+}
+
+exports = GPXImportUI;

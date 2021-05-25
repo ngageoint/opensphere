@@ -1,84 +1,87 @@
-goog.provide('plugin.file.kml.KMLLayerConfig');
+goog.module('plugin.file.kml.KMLLayerConfig');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.net.XhrIo.ResponseType');
-goog.require('goog.userAgent');
-goog.require('os.data.DataManager');
-goog.require('os.layer.config.AbstractDataSourceLayerConfig');
-goog.require('os.net');
-goog.require('plugin.file.kml.KMLImporter');
-goog.require('plugin.file.kml.KMLLayer');
-goog.require('plugin.file.kml.KMLParser');
-goog.require('plugin.file.kml.KMLSource');
-
-
-
-/**
- * @extends {os.layer.config.AbstractDataSourceLayerConfig.<plugin.file.kml.ui.KMLNode>}
- * @constructor
- */
-plugin.file.kml.KMLLayerConfig = function() {
-  plugin.file.kml.KMLLayerConfig.base(this, 'constructor');
-};
-goog.inherits(plugin.file.kml.KMLLayerConfig, os.layer.config.AbstractDataSourceLayerConfig);
+const ResponseType = goog.require('goog.net.XhrIo.ResponseType');
+const userAgent = goog.require('goog.userAgent');
+const AltMapping = goog.require('os.im.mapping.AltMapping');
+const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
+const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
+const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
+const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
+const net = goog.require('os.net');
+const KMLImporter = goog.require('plugin.file.kml.KMLImporter');
+const KMLLayer = goog.require('plugin.file.kml.KMLLayer');
+const KMLParser = goog.require('plugin.file.kml.KMLParser');
+const KMLSource = goog.require('plugin.file.kml.KMLSource');
 
 
 /**
- * @inheritDoc
+ * @extends {AbstractDataSourceLayerConfig.<plugin.file.kml.ui.KMLNode>}
  */
-plugin.file.kml.KMLLayerConfig.prototype.getImporter = function(options) {
-  var importer = new plugin.file.kml.KMLImporter(/** @type {plugin.file.kml.KMLParser} */ (this.getParser(options)));
-  importer.setTrustHTML(os.net.isTrustedUri(/** @type {string|undefined} */ (options['url'])));
-
-  // select the mappings we want to perform autodetection
-  importer.selectAutoMappings([
-    os.im.mapping.AltMapping.ID,
-    os.im.mapping.OrientationMapping.ID,
-    os.im.mapping.SemiMajorMapping.ID,
-    os.im.mapping.SemiMinorMapping.ID]);
-
-  return importer;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLLayerConfig.prototype.getLayer = function(source) {
-  return new plugin.file.kml.KMLLayer({
-    source: source
-  });
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLLayerConfig.prototype.getParser = function(options) {
-  return new plugin.file.kml.KMLParser(options);
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLLayerConfig.prototype.getRequest = function(options) {
-  var request = plugin.file.kml.KMLLayerConfig.base(this, 'getRequest', options);
-
-  // requesting a Document in the response was slightly faster in testing, but only works for KML (not KMZ). if we run
-  // into related issues of parsing speed, we should try to determine the content type ahead of time and change this.
-  if (!goog.userAgent.IE || goog.userAgent.isVersionOrHigher(10)) {
-    request.setResponseType(goog.net.XhrIo.ResponseType.ARRAY_BUFFER);
+class KMLLayerConfig extends AbstractDataSourceLayerConfig {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
   }
 
-  return request;
-};
+  /**
+   * @inheritDoc
+   */
+  getImporter(options) {
+    var importer = new KMLImporter(/** @type {KMLParser} */ (this.getParser(options)));
+    importer.setTrustHTML(net.isTrustedUri(/** @type {string|undefined} */ (options['url'])));
 
+    // select the mappings we want to perform autodetection
+    importer.selectAutoMappings([
+      AltMapping.ID,
+      OrientationMapping.ID,
+      SemiMajorMapping.ID,
+      SemiMinorMapping.ID]);
 
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLLayerConfig.prototype.getSource = function(options) {
-  var source = new plugin.file.kml.KMLSource(undefined);
-  source.setFile(options['parserConfig'] ? options['parserConfig']['file'] : null);
-  return source;
-};
+    return importer;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getLayer(source) {
+    return new KMLLayer({
+      source: source
+    });
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getParser(options) {
+    return new KMLParser(options);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getRequest(options) {
+    var request = super.getRequest(options);
+
+    // requesting a Document in the response was slightly faster in testing, but only works for KML (not KMZ). if we run
+    // into related issues of parsing speed, we should try to determine the content type ahead of time and change this.
+    if (!userAgent.IE || userAgent.isVersionOrHigher(10)) {
+      request.setResponseType(ResponseType.ARRAY_BUFFER);
+    }
+
+    return request;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getSource(options) {
+    var source = new KMLSource(undefined);
+    source.setFile(options['parserConfig'] ? options['parserConfig']['file'] : null);
+    return source;
+  }
+}
+
+exports = KMLLayerConfig;

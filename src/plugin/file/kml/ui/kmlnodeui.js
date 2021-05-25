@@ -1,11 +1,19 @@
-goog.provide('plugin.file.kml.ui.KMLNodeUICtrl');
-goog.provide('plugin.file.kml.ui.kmlNodeUIDirective');
+goog.module('plugin.file.kml.ui.KMLNodeUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.events');
-goog.require('os.ui.Module');
-goog.require('os.ui.slick.AbstractNodeUICtrl');
-goog.require('os.ui.window.ConfirmUI');
-goog.require('plugin.file.kml.cmd.KMLNodeRemove');
+const annotation = goog.require('os.annotation');
+
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const events = goog.require('os.events');
+const osObject = goog.require('os.object');
+const Module = goog.require('os.ui.Module');
+const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
+const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
+const KMLNodeRemove = goog.require('plugin.file.kml.cmd.KMLNodeRemove');
+const {createOrEditFolder, createOrEditPlace} = goog.require('plugin.file.kml.ui');
+
+const {FolderOptions, PlacemarkOptions} = goog.requireType('plugin.file.kml.ui');
+const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
 
 
 /**
@@ -13,266 +21,268 @@ goog.require('plugin.file.kml.cmd.KMLNodeRemove');
  *
  * @return {angular.Directive}
  */
-plugin.file.kml.ui.kmlNodeUIDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    template: '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
-        '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addFolder()">' +
-            '<i class="fa fa-folder fa-fw c-glyph" title="Create a new folder"></i></span>' +
-        '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addPlace()">' +
-            '<i class="fa fa-map-marker fa-fw c-glyph" title="Create a new place"></i></span>' +
-        '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addPlace(true)">' +
-          '<i class="fa fa-comment fa-fw c-glyph" title="Create a new place with a text box"></i>' +
-        '</span>' +
-        '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.edit()">' +
-            '<i class="fa fa-pencil fa-fw c-glyph" ' +
-                'title="Edit the {{nodeUi.isFolder() ? \'folder\' : \'place\'}}"></i></span>' +
-        '<span ng-if="!nodeUi.isFolder() && nodeUi.hasAnnotation()" ng-click="nodeUi.removeAnnotation()">' +
-            '<i class="fa fa-comment fa-fw c-glyph" title="Hide text box"></i></span>' +
-        '<span ng-if="!nodeUi.isFolder() && !nodeUi.hasAnnotation()" ng-click="nodeUi.showAnnotation()">' +
-            '<i class="fa fa-comment-o fa-fw c-glyph" title="Show text box"></i></span>' +
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
 
-        '<span ng-if="nodeUi.canRemove()" ng-click="nodeUi.tryRemove()">' +
-        '<i class="fa fa-times fa-fw c-glyph" ' +
-            'title="Remove the {{nodeUi.isFolder() ? \'folder\' : \'place\'}}"></i></span>' +
+  template: '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
+      '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addFolder()">' +
+          '<i class="fa fa-folder fa-fw c-glyph" title="Create a new folder"></i></span>' +
+      '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addPlace()">' +
+          '<i class="fa fa-map-marker fa-fw c-glyph" title="Create a new place"></i></span>' +
+      '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addPlace(true)">' +
+        '<i class="fa fa-comment fa-fw c-glyph" title="Create a new place with a text box"></i>' +
+      '</span>' +
+      '<span ng-if="nodeUi.canEdit()" ng-click="nodeUi.edit()">' +
+          '<i class="fa fa-pencil fa-fw c-glyph" ' +
+              'title="Edit the {{nodeUi.isFolder() ? \'folder\' : \'place\'}}"></i></span>' +
+      '<span ng-if="!nodeUi.isFolder() && nodeUi.hasAnnotation()" ng-click="nodeUi.removeAnnotation()">' +
+          '<i class="fa fa-comment fa-fw c-glyph" title="Hide text box"></i></span>' +
+      '<span ng-if="!nodeUi.isFolder() && !nodeUi.hasAnnotation()" ng-click="nodeUi.showAnnotation()">' +
+          '<i class="fa fa-comment-o fa-fw c-glyph" title="Show text box"></i></span>' +
 
-        '</span>',
-    controller: plugin.file.kml.ui.KMLNodeUICtrl,
-    controllerAs: 'nodeUi'
-  };
-};
+      '<span ng-if="nodeUi.canRemove()" ng-click="nodeUi.tryRemove()">' +
+      '<i class="fa fa-times fa-fw c-glyph" ' +
+          'title="Remove the {{nodeUi.isFolder() ? \'folder\' : \'place\'}}"></i></span>' +
+
+      '</span>',
+
+  controller: Controller,
+  controllerAs: 'nodeUi'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'kmlnodeui';
 
 
 /**
  * Add the directive to the Angular module
  */
-os.ui.Module.directive('kmlnodeui', [plugin.file.kml.ui.kmlNodeUIDirective]);
+Module.directive('kmlnodeui', [directive]);
 
 
 
 /**
  * Controller for KML tree node UI
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @extends {os.ui.slick.AbstractNodeUICtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-plugin.file.kml.ui.KMLNodeUICtrl = function($scope, $element) {
-  plugin.file.kml.ui.KMLNodeUICtrl.base(this, 'constructor', $scope, $element);
-};
-goog.inherits(plugin.file.kml.ui.KMLNodeUICtrl, os.ui.slick.AbstractNodeUICtrl);
-
-
-/**
- * If the node is a folder.
- *
- * @return {boolean}
- * @export
- */
-plugin.file.kml.ui.KMLNodeUICtrl.prototype.isFolder = function() {
-  var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
-  return node != null && node.isFolder();
-};
-
-
-/**
- * Add a new folder.
- *
- * @export
- */
-plugin.file.kml.ui.KMLNodeUICtrl.prototype.addFolder = function() {
-  var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
-  if (node) {
-    plugin.file.kml.ui.createOrEditFolder(/** @type {!plugin.file.kml.ui.FolderOptions} */ ({
-      'parent': node
-    }));
+class Controller extends AbstractNodeUICtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
   }
-};
 
-
-/**
- * Add a new place.
- *
- * @param {boolean=} opt_annotation Whether the place is an annotation.
- * @export
- */
-plugin.file.kml.ui.KMLNodeUICtrl.prototype.addPlace = function(opt_annotation) {
-  var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
-  if (node) {
-    plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.FolderOptions} */ ({
-      'parent': node,
-      'annotation': opt_annotation
-    }));
+  /**
+   * If the node is a folder.
+   *
+   * @return {boolean}
+   * @export
+   */
+  isFolder() {
+    var node = /** @type {KMLNode} */ (this.scope['item']);
+    return node != null && node.isFolder();
   }
-};
 
-
-/**
- * If the node can be edited.
- *
- * @return {boolean}
- * @export
- */
-plugin.file.kml.ui.KMLNodeUICtrl.prototype.canAddChildren = function() {
-  var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
-  return node != null && node.canAddChildren;
-};
-
-
-/**
- * If the node can be edited.
- *
- * @return {boolean}
- * @export
- */
-plugin.file.kml.ui.KMLNodeUICtrl.prototype.canEdit = function() {
-  var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
-  return node != null && node.editable;
-};
-
-
-/**
- * If the node can be removed from the tree.
- *
- * @return {boolean}
- * @export
- */
-plugin.file.kml.ui.KMLNodeUICtrl.prototype.canRemove = function() {
-  var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
-  return node != null && node.removable;
-};
-
-
-/**
- * Prompt the user to remove the node from the tree.
- *
- * @export
- */
-plugin.file.kml.ui.KMLNodeUICtrl.prototype.tryRemove = function() {
-  var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
-  if (node) {
-    if (node.hasChildren()) {
-      var label = node.getLabel();
-      var prompt = 'Are you sure you want to remove <strong>' + label + '</strong> from the tree? This will also ' +
-          'remove all descendants.';
-
-      os.ui.window.ConfirmUI.launchConfirm(/** @type {!osx.window.ConfirmOptions} */ ({
-        confirm: this.removeNodeInternal.bind(this, node),
-        prompt: prompt,
-
-        windowOptions: /** @type {!osx.window.WindowOptions} */ ({
-          icon: 'fa fa-trash-o',
-          label: 'Remove ' + label
-        })
+  /**
+   * Add a new folder.
+   *
+   * @export
+   */
+  addFolder() {
+    var node = /** @type {KMLNode} */ (this.scope['item']);
+    if (node) {
+      createOrEditFolder(/** @type {!FolderOptions} */ ({
+        'parent': node
       }));
-    } else {
-      this.removeNodeInternal(node);
     }
   }
-};
 
-
-/**
- * Removes the node from the tree.
- *
- * @param {!plugin.file.kml.ui.KMLNode} node The node
- * @protected
- */
-plugin.file.kml.ui.KMLNodeUICtrl.prototype.removeNodeInternal = function(node) {
-  var cmd = new plugin.file.kml.cmd.KMLNodeRemove(node);
-  os.commandStack.addCommand(cmd);
-};
-
-
-/**
- * Edits the node title.
- *
- * @export
- */
-plugin.file.kml.ui.KMLNodeUICtrl.prototype.edit = function() {
-  var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
-  if (node) {
-    if (node.isFolder()) {
-      plugin.file.kml.ui.createOrEditFolder(/** @type {!plugin.file.kml.ui.FolderOptions} */ ({
-        'node': node
+  /**
+   * Add a new place.
+   *
+   * @param {boolean=} opt_annotation Whether the place is an annotation.
+   * @export
+   */
+  addPlace(opt_annotation) {
+    var node = /** @type {KMLNode} */ (this.scope['item']);
+    if (node) {
+      createOrEditPlace(/** @type {!FolderOptions} */ ({
+        'parent': node,
+        'annotation': opt_annotation
       }));
-    } else {
+    }
+  }
+
+  /**
+   * If the node can be edited.
+   *
+   * @return {boolean}
+   * @export
+   */
+  canAddChildren() {
+    var node = /** @type {KMLNode} */ (this.scope['item']);
+    return node != null && node.canAddChildren;
+  }
+
+  /**
+   * If the node can be edited.
+   *
+   * @return {boolean}
+   * @export
+   */
+  canEdit() {
+    var node = /** @type {KMLNode} */ (this.scope['item']);
+    return node != null && node.editable;
+  }
+
+  /**
+   * If the node can be removed from the tree.
+   *
+   * @return {boolean}
+   * @export
+   */
+  canRemove() {
+    var node = /** @type {KMLNode} */ (this.scope['item']);
+    return node != null && node.removable;
+  }
+
+  /**
+   * Prompt the user to remove the node from the tree.
+   *
+   * @export
+   */
+  tryRemove() {
+    var node = /** @type {KMLNode} */ (this.scope['item']);
+    if (node) {
+      if (node.hasChildren()) {
+        var label = node.getLabel();
+        var prompt = 'Are you sure you want to remove <strong>' + label + '</strong> from the tree? This will also ' +
+            'remove all descendants.';
+
+        ConfirmUI.launchConfirm(/** @type {!osx.window.ConfirmOptions} */ ({
+          confirm: this.removeNodeInternal.bind(this, node),
+          prompt: prompt,
+
+          windowOptions: /** @type {!osx.window.WindowOptions} */ ({
+            icon: 'fa fa-trash-o',
+            label: 'Remove ' + label
+          })
+        }));
+      } else {
+        this.removeNodeInternal(node);
+      }
+    }
+  }
+
+  /**
+   * Removes the node from the tree.
+   *
+   * @param {!KMLNode} node The node
+   * @protected
+   */
+  removeNodeInternal(node) {
+    var cmd = new KMLNodeRemove(node);
+    CommandProcessor.getInstance().addCommand(cmd);
+  }
+
+  /**
+   * Edits the node title.
+   *
+   * @export
+   */
+  edit() {
+    var node = /** @type {KMLNode} */ (this.scope['item']);
+    if (node) {
+      if (node.isFolder()) {
+        createOrEditFolder(/** @type {!FolderOptions} */ ({
+          'node': node
+        }));
+      } else {
+        var feature = node.getFeature();
+        createOrEditPlace(/** @type {!PlacemarkOptions} */ ({
+          'feature': feature,
+          'node': node
+        }));
+      }
+    }
+  }
+
+  /**
+   * If there is an annotation or not
+   *
+   * @return {boolean}
+   * @export
+   */
+  hasAnnotation() {
+    var node = /** @type {KMLNode} */ (this.scope['item']);
+    if (node) {
       var feature = node.getFeature();
-      plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
-        'feature': feature,
-        'node': node
-      }));
+      if (feature) {
+        var options = /** @type {osx.annotation.Options|undefined} */ (feature.get(annotation.OPTIONS_FIELD));
+        return options != null && options.show;
+      }
     }
+    return false;
   }
-};
 
+  /**
+   * Removes annotation
+   *
+   * @export
+   */
+  removeAnnotation() {
+    var node = /** @type {KMLNode} */ (this.scope['item']);
+    if (node) {
+      var feature = node.getFeature();
+      if (feature) {
+        node.clearAnnotations();
 
-/**
- * If there is an annotation or not
- *
- * @return {boolean}
- * @export
- */
-plugin.file.kml.ui.KMLNodeUICtrl.prototype.hasAnnotation = function() {
-  var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
-  if (node) {
-    var feature = node.getFeature();
-    if (feature) {
-      var options = /** @type {osx.annotation.Options|undefined} */ (feature.get(os.annotation.OPTIONS_FIELD));
-      return options != null && options.show;
-    }
-  }
-  return false;
-};
-
-
-/**
- * Removes annotation
- *
- * @export
- */
-plugin.file.kml.ui.KMLNodeUICtrl.prototype.removeAnnotation = function() {
-  var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
-  if (node) {
-    var feature = node.getFeature();
-    if (feature) {
-      node.clearAnnotations();
-
-      var options = /** @type {osx.annotation.Options|undefined} */ (feature.get(os.annotation.OPTIONS_FIELD));
-      if (options) {
-        options.show = false;
-        node.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
-        node.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
+        var options = /** @type {osx.annotation.Options|undefined} */ (feature.get(annotation.OPTIONS_FIELD));
+        if (options) {
+          options.show = false;
+          node.dispatchEvent(new events.PropertyChangeEvent('icons'));
+          node.dispatchEvent(new events.PropertyChangeEvent(annotation.EventType.CHANGE));
+        }
       }
     }
   }
-};
 
+  /**
+   * Shows annotation
+   *
+   * @export
+   */
+  showAnnotation() {
+    var node = /** @type {KMLNode} */ (this.scope['item']);
+    if (node) {
+      var feature = node.getFeature();
+      if (feature) {
+        var options = /** @type {osx.annotation.Options|undefined} */ (feature.get(annotation.OPTIONS_FIELD));
+        if (!options) {
+          options = osObject.unsafeClone(annotation.DEFAULT_OPTIONS);
+          feature.set(annotation.OPTIONS_FIELD, options);
+        }
 
-/**
- * Shows annotation
- *
- * @export
- */
-plugin.file.kml.ui.KMLNodeUICtrl.prototype.showAnnotation = function() {
-  var node = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['item']);
-  if (node) {
-    var feature = node.getFeature();
-    if (feature) {
-      var options = /** @type {osx.annotation.Options|undefined} */ (feature.get(os.annotation.OPTIONS_FIELD));
-      if (!options) {
-        options = os.object.unsafeClone(os.annotation.DEFAULT_OPTIONS);
-        feature.set(os.annotation.OPTIONS_FIELD, options);
+        options.show = true;
+
+        node.loadAnnotation();
+        node.dispatchEvent(new events.PropertyChangeEvent('icons'));
+        node.dispatchEvent(new events.PropertyChangeEvent(annotation.EventType.CHANGE));
       }
-
-      options.show = true;
-
-      node.loadAnnotation();
-      node.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
-      node.dispatchEvent(new os.events.PropertyChangeEvent(os.annotation.EventType.CHANGE));
     }
   }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

@@ -1,51 +1,61 @@
-goog.provide('plugin.file.shp.ui.SHPFilesStep');
-goog.provide('plugin.file.shp.ui.SHPFilesStepCtrl');
+goog.module('plugin.file.shp.ui.SHPFilesStep');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.log');
-goog.require('os');
-goog.require('os.file.File');
-goog.require('os.ui.Module');
-goog.require('os.ui.file.method.UrlMethod');
-goog.require('os.ui.wiz.step.AbstractWizardStep');
-goog.require('os.ui.wiz.step.WizardStepEvent');
-goog.require('os.ui.wiz.wizardPreviewDirective');
-goog.require('plugin.file.shp');
-goog.require('plugin.file.shp.SHPParserConfig');
+const googEvents = goog.require('goog.events');
+const GoogEventType = goog.require('goog.events.EventType');
+
+const log = goog.require('goog.log');
+const {ROOT} = goog.require('os');
+const EventType = goog.require('os.events.EventType');
+const osFile = goog.require('os.file');
+const FileStorage = goog.require('os.file.FileStorage');
+const MappingManager = goog.require('os.im.mapping.MappingManager');
+const ui = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+const UrlMethod = goog.require('os.ui.file.method.UrlMethod');
+const AbstractWizardStep = goog.require('os.ui.wiz.step.AbstractWizardStep');
+const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
+const shp = goog.require('plugin.file.shp');
+
+const OSFile = goog.requireType('os.file.File');
+const SHPParserConfig = goog.requireType('plugin.file.shp.SHPParserConfig');
 
 
 /**
  * SHP import file selection step
  *
- * @extends {os.ui.wiz.step.AbstractWizardStep.<plugin.file.shp.SHPParserConfig>}
- * @constructor
+ * @extends {AbstractWizardStep<SHPParserConfig>}
  */
-plugin.file.shp.ui.SHPFilesStep = function() {
-  plugin.file.shp.ui.SHPFilesStep.base(this, 'constructor');
-  this.template = '<shpfilesstep></shpfilesstep>';
-  this.title = 'Files';
-};
-goog.inherits(plugin.file.shp.ui.SHPFilesStep, os.ui.wiz.step.AbstractWizardStep);
-
-
-/**
- * @inheritDoc
- */
-plugin.file.shp.ui.SHPFilesStep.prototype.finalize = function(config) {
-  try {
-    config.updatePreview();
-
-    var features = config['preview'];
-    if ((!config['mappings'] || config['mappings'].length <= 0) && features && features.length > 0) {
-      // no mappings have been set yet, so try to auto detect them
-      var mm = os.im.mapping.MappingManager.getInstance();
-      var mappings = mm.autoDetect(features);
-      if (mappings && mappings.length > 0) {
-        config['mappings'] = mappings;
-      }
-    }
-  } catch (e) {
+class SHPFilesStep extends AbstractWizardStep {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.template = `<${filesStepDirectiveTag}></${filesStepDirectiveTag}>`;
+    this.title = 'Files';
   }
-};
+
+  /**
+   * @inheritDoc
+   */
+  finalize(config) {
+    try {
+      config.updatePreview();
+
+      var features = config['preview'];
+      if ((!config['mappings'] || config['mappings'].length <= 0) && features && features.length > 0) {
+        // no mappings have been set yet, so try to auto detect them
+        var mm = MappingManager.getInstance();
+        var mappings = mm.autoDetect(features);
+        if (mappings && mappings.length > 0) {
+          config['mappings'] = mappings;
+        }
+      }
+    } catch (e) {
+    }
+  }
+}
 
 
 /**
@@ -53,363 +63,361 @@ plugin.file.shp.ui.SHPFilesStep.prototype.finalize = function(config) {
  *
  * @return {angular.Directive}
  */
-plugin.file.shp.ui.configStepDirective = function() {
+const filesStepDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    templateUrl: os.ROOT + 'views/plugin/shp/shpfilesstep.html',
-    controller: plugin.file.shp.ui.SHPFilesStepCtrl,
+    templateUrl: ROOT + 'views/plugin/shp/shpfilesstep.html',
+    controller: Controller,
     controllerAs: 'filesStep'
   };
 };
 
 
 /**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const filesStepDirectiveTag = 'shpfilesstep';
+
+
+/**
  * Add the directive to the module
  */
-os.ui.Module.directive('shpfilesstep', [plugin.file.shp.ui.configStepDirective]);
+Module.directive(filesStepDirectiveTag, [filesStepDirective]);
 
 
 
 /**
  * Controller for the SHP import file selection step
- *
- * @param {!angular.Scope} $scope
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-plugin.file.shp.ui.SHPFilesStepCtrl = function($scope) {
+class Controller {
   /**
-   * @type {?angular.Scope}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @ngInject
+   */
+  constructor($scope) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+
+    /**
+     * @type {SHPParserConfig}
+     * @private
+     */
+    this.config_ = /** @type {SHPParserConfig} */ ($scope['config']);
+
+    /**
+     * @type {Element}
+     * @private
+     */
+    this.dbfFileEl_ = document.getElementById('dbfFile');
+    googEvents.listen(this.dbfFileEl_, GoogEventType.CHANGE, this.onFileChange_, false, this);
+
+    /**
+     * @type {Element}
+     * @private
+     */
+    this.shpFileEl_ = document.getElementById('shpFile');
+    googEvents.listen(this.shpFileEl_, GoogEventType.CHANGE, this.onFileChange_, false, this);
+
+    /**
+     * @type {boolean}
+     */
+    this['loading'] = false;
+
+    /**
+     * @type {string}
+     */
+    this['dbfName'] = this.getDisplayName_(this.config_['file2']);
+
+    /**
+     * @type {boolean}
+     */
+    this['dbfValid'] = !!this['dbfName'];
+
+    /**
+     * @type {?string}
+     */
+    this['dbfError'] = null;
+
+    /**
+     * @type {string}
+     */
+    this['shpName'] = this.getDisplayName_(this.config_['file']);
+
+    /**
+     * @type {boolean}
+     */
+    this['shpValid'] = !!this['shpName'];
+
+    /**
+     * @type {?string}
+     */
+    this['shpError'] = null;
+
+    $scope.$on('$destroy', this.destroy_.bind(this));
+
+    this.updateErrorText_('shp');
+    this.updateErrorText_('dbf');
+    this.validate_();
+  }
+
+  /**
    * @private
    */
-  this.scope_ = $scope;
+  destroy_() {
+    googEvents.unlisten(this.dbfFileEl_, GoogEventType.CHANGE, this.onFileChange_, false, this);
+    googEvents.unlisten(this.shpFileEl_, GoogEventType.CHANGE, this.onFileChange_, false, this);
+    this.dbfFileEl_ = null;
+    this.shpFileEl_ = null;
+    this.config_ = null;
+    this.scope_ = null;
+  }
 
   /**
-   * @type {plugin.file.shp.SHPParserConfig}
+   * Checks if both files have been chosen/validated.
+   *
    * @private
    */
-  this.config_ = /** @type {plugin.file.shp.SHPParserConfig} */ ($scope['config']);
+  validate_() {
+    this.scope_.$emit(WizardStepEvent.VALIDATE, this['dbfValid'] && this['shpValid']);
+    ui.apply(this.scope_);
+  }
 
   /**
-   * @type {Element}
+   * Launches a file browser for the specified file type.
+   *
+   * @param {string} type The file type
+   * @export
+   */
+  onBrowse(type) {
+    if (type == 'dbf' && this.dbfFileEl_) {
+      this.dbfFileEl_.click();
+    } else if (type == 'shp' && this.shpFileEl_) {
+      this.shpFileEl_.click();
+    }
+  }
+
+  /**
+   * Handles changes to the hidden file inputs, validating the chosen file.
+   *
+   * @param {goog.events.BrowserEvent} event
    * @private
    */
-  this.dbfFileEl_ = document.getElementById('dbfFile');
-  goog.events.listen(this.dbfFileEl_, goog.events.EventType.CHANGE, this.onFileChange_, false, this);
+  onFileChange_(event) {
+    var inputEl = /** @type {HTMLInputElement} */ (event.target);
+    var type = inputEl == this.dbfFileEl_ ? 'dbf' : 'shp';
+    if (inputEl.files && inputEl.files.length > 0) {
+      this['loading'] = true;
+
+      const file = inputEl.files[0];
+      if (file.path && osFile.FILE_URL_ENABLED) {
+        this[type + 'Name'] = osFile.getFileUrl(file.path);
+        this.loadUrl(type);
+      } else {
+        var reader = osFile.createFromFile(file);
+        reader.addCallbacks(goog.partial(this.handleResult_, type), goog.partial(this.handleError_, type), this);
+      }
+    } else {
+      this.onClear(type);
+    }
+  }
 
   /**
-   * @type {Element}
+   * Handler for successful file read.
+   *
+   * @param {string} type The file type
+   * @param {OSFile} file The file.
    * @private
    */
-  this.shpFileEl_ = document.getElementById('shpFile');
-  goog.events.listen(this.shpFileEl_, goog.events.EventType.CHANGE, this.onFileChange_, false, this);
+  handleResult_(type, file) {
+    this['loading'] = false;
+
+    if (file) {
+      // make sure the file is given a unique name, unless this is a replace
+      if (!this.config_['descriptor']) {
+        FileStorage.getInstance().setUniqueFileName(file);
+      }
+
+      var method = type == 'dbf' ? shp.isDBFFileType : shp.isSHPFileType;
+      var content = file.getContent();
+
+      if (content && content instanceof ArrayBuffer && method(content)) {
+        if (type == 'dbf') {
+          this.config_['file2'] = file;
+        } else {
+          this.config_['file'] = file;
+        }
+
+        this[type + 'Name'] = this.getDisplayName_(file);
+        this[type + 'Valid'] = true;
+      } else {
+        this[type + 'Valid'] = false;
+      }
+    }
+
+    this.updateErrorText_(type);
+    this.validate_();
+  }
 
   /**
-   * @type {boolean}
+   * Updates the error text displayed for the SHP/DBF file based on the UI state.
+   *
+   * @param {string} type The file type
+   * @param {string=} opt_text Custom error text
+   * @private
    */
-  this['loading'] = false;
+  updateErrorText_(type, opt_text) {
+    if (!this[type + 'Valid']) {
+      if (opt_text) {
+        this[type + 'Error'] = opt_text;
+      } else if (this[type + 'Name']) {
+        this[type + 'Error'] = 'Selected file is not ' + this.getTypeString_(type) + '.';
+      } else {
+        this[type + 'Error'] = 'Please choose ' + this.getTypeString_(type) + '.';
+      }
+    } else {
+      this[type + 'Error'] = null;
+    }
+  }
 
   /**
-   * @type {string}
+   * Gets the user-facing name for the provided file. Remote files will return the URL, while local files will return
+   * the file name.
+   *
+   * @param {?OSFile} file The file
+   * @return {string}
+   * @private
    */
-  this['dbfName'] = this.getDisplayName_(this.config_['file2']);
+  getDisplayName_(file) {
+    if (!file) {
+      return '';
+    }
+
+    var url = file.getUrl();
+    if (url && !osFile.isLocal(url)) {
+      return url;
+    }
+
+    return file.getFileName() || '';
+  }
 
   /**
-   * @type {boolean}
+   * Handler for failed file read. Display an error message and close the window.
+   *
+   * @param {string} type The file type
+   * @param {string} errorMsg The error message.
+   * @private
    */
-  this['dbfValid'] = !!this['dbfName'];
+  handleError_(type, errorMsg) {
+    this['loading'] = false;
+
+    var file = type + 'File';
+    if (!errorMsg || typeof errorMsg !== 'string') {
+      var fileName = this.scope_[file] ? this.scope_[file].name : 'unknown';
+      errorMsg = 'Unable to load file "' + fileName + '".';
+    }
+
+    this[type + 'Valid'] = false;
+    this.updateErrorText_(type, errorMsg);
+    this.validate_();
+
+    log.error(logger, errorMsg);
+  }
 
   /**
-   * @type {?string}
+   * Clears the file associated with the specified type.
+   *
+   * @param {string} type The file type
+   * @export
    */
-  this['dbfError'] = null;
+  onClear(type) {
+    if (type == 'dbf') {
+      this.config_['file2'] = null;
+      this.dbfFileEl_.value = null;
+    } else {
+      this.config_['file'] = null;
+      this.shpFileEl_.value = null;
+    }
+
+    this[type + 'Name'] = '';
+    this[type + 'Valid'] = false;
+
+    this.updateErrorText_(type);
+    this.validate_();
+  }
 
   /**
-   * @type {string}
+   * Convenience function for returning 'a DBF file' or 'an SHP file' for error messages. I know, it's best
+   * not to ask.
+   *
+   * @param {string} type
+   * @return {string}
+   * @private
    */
-  this['shpName'] = this.getDisplayName_(this.config_['file']);
+  getTypeString_(type) {
+    return 'a' + (type == 'shp' ? 'n ' : ' ') + type.toUpperCase() + ' file';
+  }
 
   /**
-   * @type {boolean}
+   * Loads the provided URL to see if it's a valid SHP/DBF file.
+   *
+   * @param {string} type The file type
+   * @export
    */
-  this['shpValid'] = !!this['shpName'];
+  loadUrl(type) {
+    var method = new UrlMethod();
+    var url = this[type + 'Name'];
+    method.setUrl(url);
+    method.listen(EventType.COMPLETE, goog.partial(this.onUrlComplete_, type), false, this);
+    method.listen(EventType.CANCEL, goog.partial(this.onUrlError_, type), false, this);
+    method.loadUrl();
+  }
 
   /**
-   * @type {?string}
+   * Handles URL import completion.
+   *
+   * @param {string} type
+   * @param {goog.events.Event} event
+   * @private
    */
-  this['shpError'] = null;
+  onUrlComplete_(type, event) {
+    var method = /** @type {UrlMethod} */ (event.target);
+    method.removeAllListeners();
 
-  $scope.$on('$destroy', this.destroy_.bind(this));
+    var file = method.getFile();
+    if (file) {
+      this.handleResult_(type, file);
+    } else {
+      this.handleError_(type, 'Unable to load URL!');
+    }
+  }
 
-  this.updateErrorText_('shp');
-  this.updateErrorText_('dbf');
-  this.validate_();
-};
+  /**
+   * Handles URL import error.
+   *
+   * @param {string} type
+   * @param {goog.events.Event} event
+   * @private
+   */
+  onUrlError_(type, event) {
+    var method = /** @type {UrlMethod} */ (event.target);
+    method.removeAllListeners();
 
+    this.handleError_(type, 'Unable to load URL!');
+  }
+}
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {log.Logger}
  */
-plugin.file.shp.ui.SHPFilesStepCtrl.LOGGER_ = goog.log.getLogger('plugin.file.shp.ui.SHPFilesStepCtrl');
+const logger = log.getLogger('plugin.file.shp.ui.SHPFilesStep');
 
 
-/**
- * @private
- */
-plugin.file.shp.ui.SHPFilesStepCtrl.prototype.destroy_ = function() {
-  goog.events.unlisten(this.dbfFileEl_, goog.events.EventType.CHANGE, this.onFileChange_, false, this);
-  goog.events.unlisten(this.shpFileEl_, goog.events.EventType.CHANGE, this.onFileChange_, false, this);
-  this.dbfFileEl_ = null;
-  this.shpFileEl_ = null;
-  this.config_ = null;
-  this.scope_ = null;
-};
-
-
-/**
- * Checks if both files have been chosen/validated.
- *
- * @private
- */
-plugin.file.shp.ui.SHPFilesStepCtrl.prototype.validate_ = function() {
-  this.scope_.$emit(os.ui.wiz.step.WizardStepEvent.VALIDATE, this['dbfValid'] && this['shpValid']);
-  os.ui.apply(this.scope_);
-};
-
-
-/**
- * Launches a file browser for the specified file type.
- *
- * @param {string} type The file type
- * @export
- */
-plugin.file.shp.ui.SHPFilesStepCtrl.prototype.onBrowse = function(type) {
-  if (type == 'dbf' && this.dbfFileEl_) {
-    this.dbfFileEl_.click();
-  } else if (type == 'shp' && this.shpFileEl_) {
-    this.shpFileEl_.click();
-  }
-};
-
-
-/**
- * Handles changes to the hidden file inputs, validating the chosen file.
- *
- * @param {goog.events.BrowserEvent} event
- * @private
- */
-plugin.file.shp.ui.SHPFilesStepCtrl.prototype.onFileChange_ = function(event) {
-  var inputEl = /** @type {HTMLInputElement} */ (event.target);
-  var type = inputEl == this.dbfFileEl_ ? 'dbf' : 'shp';
-  if (inputEl.files && inputEl.files.length > 0) {
-    this['loading'] = true;
-
-    const file = inputEl.files[0];
-    if (file.path && os.file.FILE_URL_ENABLED) {
-      this[type + 'Name'] = os.file.getFileUrl(file.path);
-      this.loadUrl(type);
-    } else {
-      var reader = os.file.createFromFile(file);
-      reader.addCallbacks(goog.partial(this.handleResult_, type), goog.partial(this.handleError_, type), this);
-    }
-  } else {
-    this.onClear(type);
-  }
-};
-
-
-/**
- * Handler for successful file read.
- *
- * @param {string} type The file type
- * @param {os.file.File} file The file.
- * @private
- */
-plugin.file.shp.ui.SHPFilesStepCtrl.prototype.handleResult_ = function(type, file) {
-  this['loading'] = false;
-
-  if (file) {
-    // make sure the file is given a unique name, unless this is a replace
-    if (!this.config_['descriptor']) {
-      os.file.FileStorage.getInstance().setUniqueFileName(file);
-    }
-
-    var method = type == 'dbf' ? plugin.file.shp.isDBFFileType : plugin.file.shp.isSHPFileType;
-    var content = file.getContent();
-
-    if (content && content instanceof ArrayBuffer && method(content)) {
-      if (type == 'dbf') {
-        this.config_['file2'] = file;
-      } else {
-        this.config_['file'] = file;
-      }
-
-      this[type + 'Name'] = this.getDisplayName_(file);
-      this[type + 'Valid'] = true;
-    } else {
-      this[type + 'Valid'] = false;
-    }
-  }
-
-  this.updateErrorText_(type);
-  this.validate_();
-};
-
-
-/**
- * Updates the error text displayed for the SHP/DBF file based on the UI state.
- *
- * @param {string} type The file type
- * @param {string=} opt_text Custom error text
- * @private
- */
-plugin.file.shp.ui.SHPFilesStepCtrl.prototype.updateErrorText_ = function(type, opt_text) {
-  if (!this[type + 'Valid']) {
-    if (opt_text) {
-      this[type + 'Error'] = opt_text;
-    } else if (this[type + 'Name']) {
-      this[type + 'Error'] = 'Selected file is not ' + this.getTypeString_(type) + '.';
-    } else {
-      this[type + 'Error'] = 'Please choose ' + this.getTypeString_(type) + '.';
-    }
-  } else {
-    this[type + 'Error'] = null;
-  }
-};
-
-
-/**
- * Gets the user-facing name for the provided file. Remote files will return the URL, while local files will return
- * the file name.
- *
- * @param {?os.file.File} file The file
- * @return {string}
- * @private
- */
-plugin.file.shp.ui.SHPFilesStepCtrl.prototype.getDisplayName_ = function(file) {
-  if (!file) {
-    return '';
-  }
-
-  var url = file.getUrl();
-  if (url && !os.file.isLocal(url)) {
-    return url;
-  }
-
-  return file.getFileName() || '';
-};
-
-
-/**
- * Handler for failed file read. Display an error message and close the window.
- *
- * @param {string} type The file type
- * @param {string} errorMsg The error message.
- * @private
- */
-plugin.file.shp.ui.SHPFilesStepCtrl.prototype.handleError_ = function(type, errorMsg) {
-  this['loading'] = false;
-
-  var file = type + 'File';
-  if (!errorMsg || typeof errorMsg !== 'string') {
-    var fileName = this.scope_[file] ? this.scope_[file].name : 'unknown';
-    errorMsg = 'Unable to load file "' + fileName + '".';
-  }
-
-  this[type + 'Valid'] = false;
-  this.updateErrorText_(type, errorMsg);
-  this.validate_();
-
-  goog.log.error(plugin.file.shp.ui.SHPFilesStepCtrl.LOGGER_, errorMsg);
-};
-
-
-/**
- * Clears the file associated with the specified type.
- *
- * @param {string} type The file type
- * @export
- */
-plugin.file.shp.ui.SHPFilesStepCtrl.prototype.onClear = function(type) {
-  if (type == 'dbf') {
-    this.config_['file2'] = null;
-    this.dbfFileEl_.value = null;
-  } else {
-    this.config_['file'] = null;
-    this.shpFileEl_.value = null;
-  }
-
-  this[type + 'Name'] = '';
-  this[type + 'Valid'] = false;
-
-  this.updateErrorText_(type);
-  this.validate_();
-};
-
-
-/**
- * Convenience function for returning 'a DBF file' or 'an SHP file' for error messages. I know, it's best
- * not to ask.
- *
- * @param {string} type
- * @return {string}
- * @private
- */
-plugin.file.shp.ui.SHPFilesStepCtrl.prototype.getTypeString_ = function(type) {
-  return 'a' + (type == 'shp' ? 'n ' : ' ') + type.toUpperCase() + ' file';
-};
-
-
-/**
- * Loads the provided URL to see if it's a valid SHP/DBF file.
- *
- * @param {string} type The file type
- * @export
- */
-plugin.file.shp.ui.SHPFilesStepCtrl.prototype.loadUrl = function(type) {
-  var method = new os.ui.file.method.UrlMethod();
-  var url = this[type + 'Name'];
-  method.setUrl(url);
-  method.listen(os.events.EventType.COMPLETE, goog.partial(this.onUrlComplete_, type), false, this);
-  method.listen(os.events.EventType.CANCEL, goog.partial(this.onUrlError_, type), false, this);
-  method.loadUrl();
-};
-
-
-/**
- * Handles URL import completion.
- *
- * @param {string} type
- * @param {goog.events.Event} event
- * @private
- */
-plugin.file.shp.ui.SHPFilesStepCtrl.prototype.onUrlComplete_ = function(type, event) {
-  var method = /** @type {os.ui.file.method.UrlMethod} */ (event.target);
-  method.removeAllListeners();
-
-  var file = method.getFile();
-  if (file) {
-    this.handleResult_(type, file);
-  } else {
-    this.handleError_(type, 'Unable to load URL!');
-  }
-};
-
-
-/**
- * Handles URL import error.
- *
- * @param {string} type
- * @param {goog.events.Event} event
- * @private
- */
-plugin.file.shp.ui.SHPFilesStepCtrl.prototype.onUrlError_ = function(type, event) {
-  var method = /** @type {os.ui.file.method.UrlMethod} */ (event.target);
-  method.removeAllListeners();
-
-  this.handleError_(type, 'Unable to load URL!');
-};
+exports = SHPFilesStep;
