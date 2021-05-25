@@ -10,8 +10,15 @@ const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
 const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
 const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
 const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
+const {ORIENTATION} = goog.require('os.Fields');
+const {
+  DEFAULT_RADIUS_COL_NAME: RADIUS,
+  DEFAULT_SEMI_MAJ_COL_NAME: SEMI_MAJOR,
+  DEFAULT_SEMI_MIN_COL_NAME: SEMI_MINOR
+} = goog.require('os.fields');
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 const AbstractMapping = goog.requireType('os.im.mapping.AbstractMapping');
 
 
@@ -307,6 +314,37 @@ const callback_ = function(layer, value) {
   const desc = os.data.DataManager.getInstance().getDescriptor(layer.getId());
   desc.setMappings(value);
   desc.update(layer);
+  updateColumns_(desc, value);
+};
+
+
+/**
+ * Update the columns so they show up in the analyze tool/feature info
+ * @param {IDataDescriptor} desc
+ * @param {Array<AbstractMapping>} mappings
+ * @private
+ */
+const updateColumns_ = function(desc, mappings) {
+  const descColumns = desc.getColumns();
+
+  mappings.forEach((mapping) => {
+    const label = mapping.getLabel();
+    const exists = descColumns.findIndex(({name}) => name === label) > 0;
+
+    if (!exists) {
+      if (RadiusMapping.REGEX.test(label)) {
+        descColumns.push(new os.data.ColumnDefinition(RADIUS));
+      } else if (SemiMajorMapping.REGEX.test(label)) {
+        descColumns.push(new os.data.ColumnDefinition(SEMI_MAJOR));
+      } else if (SemiMinorMapping.REGEX.test(label)) {
+        descColumns.push(new os.data.ColumnDefinition(SEMI_MINOR));
+      } else if (OrientationMapping.REGEX.test(label)) {
+        descColumns.push(new os.data.ColumnDefinition(ORIENTATION));
+      }
+    }
+  });
+
+  desc.setColumns(descColumns);
 };
 
 
