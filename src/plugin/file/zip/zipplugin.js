@@ -17,7 +17,7 @@ class ZIPPlugin extends AbstractPlugin {
    */
   constructor() {
     super();
-    this.id = ID;
+    this.id = ZIPPlugin.ID;
   }
 
   /**
@@ -35,8 +35,9 @@ class ZIPPlugin extends AbstractPlugin {
 
 /**
  * @type {string}
+ * @const
  */
-const ID = 'zip';
+ZIPPlugin.ID = 'zip';
 
 
 exports = ZIPPlugin;

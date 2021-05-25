@@ -25,7 +25,7 @@ class CSVPlugin extends AbstractPlugin {
    */
   constructor() {
     super();
-    this.id = ID;
+    this.id = CSVPlugin.ID;
   }
 
   /**
@@ -35,7 +35,7 @@ class CSVPlugin extends AbstractPlugin {
     var dm = DataManager.getInstance();
 
     // register csv provider type
-    dm.registerProviderType(new ProviderEntry(ID, CSVProvider, TYPE, TYPE));
+    dm.registerProviderType(new ProviderEntry(CSVPlugin.ID, CSVProvider, CSVPlugin.TYPE, CSVPlugin.TYPE));
 
     // register the csv descriptor type
     dm.registerDescriptorType(this.id, CSVDescriptor);
@@ -58,14 +58,16 @@ class CSVPlugin extends AbstractPlugin {
 
 /**
  * @type {string}
+ * @const
  */
-const ID = 'csv';
+CSVPlugin.ID = 'csv';
 
 
 /**
  * @type {string}
+ * @const
  */
-const TYPE = 'CSV Layers';
+CSVPlugin.TYPE = 'CSV Layers';
 
 
 exports = CSVPlugin;

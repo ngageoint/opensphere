@@ -30,7 +30,7 @@ class GeoJSONPlugin extends AbstractPlugin {
    */
   constructor() {
     super();
-    this.id = ID;
+    this.id = GeoJSONPlugin.ID;
   }
 
   /**
@@ -40,7 +40,8 @@ class GeoJSONPlugin extends AbstractPlugin {
     var dm = DataManager.getInstance();
 
     // register geojson provider type
-    dm.registerProviderType(new ProviderEntry(ID, GeoJSONProvider, TYPE, TYPE));
+    dm.registerProviderType(new ProviderEntry(GeoJSONPlugin.ID, GeoJSONProvider, GeoJSONPlugin.TYPE,
+        GeoJSONPlugin.TYPE));
 
     // register the geojson descriptor type
     dm.registerDescriptorType(this.id, GeoJSONDescriptor);
@@ -64,14 +65,16 @@ class GeoJSONPlugin extends AbstractPlugin {
 
 /**
  * @type {string}
+ * @const
  */
-const ID = 'geojson';
+GeoJSONPlugin.ID = 'geojson';
 
 
 /**
  * @type {string}
+ * @const
  */
-const TYPE = 'GeoJSON Layers';
+GeoJSONPlugin.TYPE = 'GeoJSON Layers';
 
 
 exports = GeoJSONPlugin;

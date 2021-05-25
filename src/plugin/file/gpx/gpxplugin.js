@@ -23,7 +23,7 @@ class GPXPlugin extends AbstractPlugin {
    */
   constructor() {
     super();
-    this.id = ID;
+    this.id = GPXPlugin.ID;
   }
 
   /**
@@ -33,7 +33,7 @@ class GPXPlugin extends AbstractPlugin {
     var dm = DataManager.getInstance();
 
     // register kml provider type
-    dm.registerProviderType(new ProviderEntry(ID, GPXProvider, TYPE, TYPE));
+    dm.registerProviderType(new ProviderEntry(GPXPlugin.ID, GPXProvider, GPXPlugin.TYPE, GPXPlugin.TYPE));
 
     // register the kml descriptor type
     dm.registerDescriptorType(this.id, GPXDescriptor);
@@ -53,14 +53,16 @@ class GPXPlugin extends AbstractPlugin {
 
 /**
  * @type {string}
+ * @const
  */
-const ID = 'gpx';
+GPXPlugin.ID = 'gpx';
 
 
 /**
  * @type {string}
+ * @const
  */
-const TYPE = 'GPX Layers';
+GPXPlugin.TYPE = 'GPX Layers';
 
 
 exports = GPXPlugin;
