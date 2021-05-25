@@ -26,7 +26,7 @@ class SHPPlugin extends AbstractPlugin {
    */
   constructor() {
     super();
-    this.id = ID;
+    this.id = SHPPlugin.ID;
   }
 
   /**
@@ -36,7 +36,7 @@ class SHPPlugin extends AbstractPlugin {
     var dm = DataManager.getInstance();
 
     // register shp provider type
-    dm.registerProviderType(new ProviderEntry(ID, SHPProvider, TYPE, TYPE));
+    dm.registerProviderType(new ProviderEntry(SHPPlugin.ID, SHPProvider, SHPPlugin.TYPE, SHPPlugin.TYPE));
 
     // register the shp descriptor type
     dm.registerDescriptorType(this.id, SHPDescriptor);
@@ -60,14 +60,16 @@ class SHPPlugin extends AbstractPlugin {
 
 /**
  * @type {string}
+ * @const
  */
-const ID = 'shp';
+SHPPlugin.ID = 'shp';
 
 
 /**
  * @type {string}
+ * @const
  */
-const TYPE = 'SHP Layers';
+SHPPlugin.TYPE = 'SHP Layers';
 
 
 exports = SHPPlugin;
