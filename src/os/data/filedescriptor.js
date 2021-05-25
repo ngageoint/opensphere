@@ -199,6 +199,14 @@ os.data.FileDescriptor.prototype.update = function() {
 
 
 /**
+ * @inheritDoc
+ */
+os.data.FileDescriptor.prototype.supportsMapping = function() {
+  return !!os.settings.get(os.ui.layer.EllipseColumnsUI.ALLOW_ELLIPSE_CONFIG, false);
+};
+
+
+/**
  * Get the original URL for this file.
  *
  * @return {?string}

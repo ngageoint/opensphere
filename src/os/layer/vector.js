@@ -1103,6 +1103,13 @@ os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
       case os.action.EventType.SAVE_LAYER:
       case os.action.EventType.SAVE_LAYER_AS:
         return isVector && source.getHasModifications();
+      case os.action.EventType.LAYER_SETTINGS:
+        const descriptor = os.dataManager.getDescriptor(this.getId());
+        let supportsMapping = false;
+        if (descriptor != null) {
+          supportsMapping = descriptor.supportsMapping();
+        }
+        return isVector && supportsMapping;
       default:
         // ask the source if it supports the action
         return isVector && source.getSupportsAction(type);

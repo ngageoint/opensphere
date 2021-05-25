@@ -626,6 +626,14 @@ plugin.ogc.OGCLayerDescriptor.prototype.setMappings = function(value) {
 /**
  * @inheritDoc
  */
+plugin.ogc.OGCLayerDescriptor.prototype.supportsMapping = function() {
+  return !!os.settings.get(os.ui.layer.EllipseColumnsUI.ALLOW_ELLIPSE_CONFIG, false);
+};
+
+
+/**
+ * @inheritDoc
+ */
 plugin.ogc.OGCLayerDescriptor.prototype.update = function(layer) {
   const dm = os.data.DataManager.getInstance();
   dm.updateDescriptor(this, this);

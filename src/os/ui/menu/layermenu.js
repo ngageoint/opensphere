@@ -233,7 +233,7 @@ os.ui.menu.layer.setup = function() {
         eventType: os.action.EventType.LAYER_SETTINGS,
         tooltip: 'Add Custom Mappings to the Layer',
         icons: ['<i class="fa fa-cog"></i>'],
-        // beforeRender: os.ui.menu.layer.visibleIfSupported,
+        beforeRender: os.ui.menu.layer.visibleIfSupported,
         handler: os.ui.menu.layer.onMappings_,
         sort: os.ui.menu.layer.GroupSort.LAYER++
       }]

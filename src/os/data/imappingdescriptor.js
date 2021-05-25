@@ -13,6 +13,14 @@ class IMappingDescriptor {
    */
   getProvider() {}
 
+
+  /**
+   * Returns if the layer supports mapping
+   * @return {boolean}
+   */
+  supportsMapping() {}
+
+
   /**
    * Get the column mappings to apply to imported data.
    *

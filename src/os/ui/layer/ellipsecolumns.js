@@ -278,14 +278,17 @@ const launchConfigureWindow = function(layer, opt_confirmCallback) {
   const options = /** @type {osx.window.ConfirmOptions} */ ({
     confirm: confirm,
     prompt: '<ellipsecolumns layer="layer"></ellipsecolumns>',
+    yesText: 'Apply and Reload',
+    yesButtonClass: 'btn-danger',
     windowOptions: {
       'label': 'Map Ellipse Columns',
       'x': 'center',
       'y': 'center',
-      'width': '300',
+      'width': '330',
       'height': 'auto',
       'modal': 'true',
-      'show-close': 'true'
+      'show-close': 'true',
+      'headerClass': 'bg-danger u-bg-danger-text'
     }
   });
 
