@@ -1156,7 +1156,7 @@ os.ui.menu.spatial.onLayerPicker_ = function(event) {
     var windowOptions = {
       'id': 'spatiallayerchooser',
       'label': 'Choose Layers',
-      'icon': 'fa fa-align-justify',
+      'icon': 'fa fa-layer-group',
       'x': 'center',
       'y': 'center',
       'width': '350',

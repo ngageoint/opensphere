@@ -20,7 +20,7 @@ os.ui.layersButtonDirective = function() {
     template: '<button class="btn btn-primary" title="View Layers"' +
       ' ng-click="ctrl.toggle()"' +
       ' ng-class="{active: ctrl.isWindowActive()}">' +
-      '<i class="fa fa-align-justify" ng-class="{\'fa-fw\': puny}"></i> ' +
+      '<i class="fa fa-layer-group" ng-class="{\'fa-fw\': puny}"></i> ' +
       '<span ng-class="{\'d-none\': puny}">Layers</span>' +
       '</button>'
   };
