@@ -35,7 +35,7 @@ describe('os.layer.FolderManager', () => {
 
     createOrEditFolder(folder);
 
-    expect(calledOptions.defaultValue).toBe('New Folder');
+    expect(calledOptions.defaultValue).toBe('My Folder');
     expect(calledOptions.windowOptions.label).toBe('Add Folder');
   });
 });
