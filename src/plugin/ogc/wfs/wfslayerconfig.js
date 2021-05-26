@@ -2,6 +2,10 @@ goog.module('plugin.ogc.wfs.WFSLayerConfig');
 goog.module.declareLegacyNamespace();
 
 const Deferred = goog.require('goog.async.Deferred');
+const log = goog.require('goog.log');
+const EventType = goog.require('goog.net.EventType');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
 const AltMapping = goog.require('os.im.mapping.AltMapping');
 const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
 const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
@@ -18,9 +22,10 @@ const DescribeFeatureLoader = goog.require('os.ogc.wfs.DescribeFeatureLoader');
 const WFSFormatter = goog.require('os.ogc.wfs.WFSFormatter');
 const ImportManager = goog.require('os.ui.im.ImportManager');
 const GeoJSONParser = goog.require('plugin.file.geojson.GeoJSONParser');
-const GMLParser = goog.requireType('plugin.file.gml.GMLParser');
 const {Controller: ChooseTimeColumnController} = goog.require('plugin.ogc.ui.ChooseTimeColumnUI');
 const {directiveTag: ogcLayerNodeUi} = goog.require('plugin.ogc.ui.OGCLayerNodeUI');
+
+const GMLParser = goog.requireType('plugin.file.gml.GMLParser');
 
 
 /**
@@ -125,7 +130,7 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
       var loader = new DescribeFeatureLoader();
       loader.setUrl(this.url);
       loader.setTypename(this.typename);
-      loader.listenOnce(goog.net.EventType.COMPLETE, this.onDescribeComplete_.bind(this, layer, options));
+      loader.listenOnce(EventType.COMPLETE, this.onDescribeComplete_.bind(this, layer, options));
       loader.load();
     }
   }
@@ -144,7 +149,7 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
       this.onFeatureTypeAvailable(layer, options);
     } else {
       var msg = 'Failed loading DescribeFeatureType for ' + this.typename + '. Feature layer will not be loaded.';
-      os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
+      AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.ERROR);
     }
   }
 
@@ -450,7 +455,7 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
 /**
  * @type {goog.log.Logger}
  */
-const logger = goog.log.getLogger('plugin.ogc.wfs.WFSLayerConfig');
+const logger = log.getLogger('plugin.ogc.wfs.WFSLayerConfig');
 
 
 /**

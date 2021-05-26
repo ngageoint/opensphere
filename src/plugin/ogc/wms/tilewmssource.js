@@ -5,6 +5,8 @@ const TileWMS = goog.require('ol.source.TileWMS');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const osImplements = goog.require('os.implements');
 const IStyle = goog.require('os.source.IStyle');
+const PropertyChange = goog.require('os.source.PropertyChange');
+
 const ILoadingSource = goog.requireType('os.ol.source.ILoadingSource');
 
 
@@ -56,7 +58,7 @@ class TileWMSSource extends TileWMS {
       // update params, which will trigger a tile refresh
       this.updateParams(params);
 
-      this.dispatchEvent(new PropertyChangeEvent(os.source.PropertyChange.STYLE));
+      this.dispatchEvent(new PropertyChangeEvent(PropertyChange.STYLE));
     }
   }
 }

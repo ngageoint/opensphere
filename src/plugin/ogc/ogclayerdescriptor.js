@@ -4,8 +4,13 @@ goog.module.declareLegacyNamespace();
 goog.require('os.ui.filter.ui.filterableDescriptorNodeUIDirective');
 
 const QueryData = goog.require('goog.Uri.QueryData');
+const EventType = goog.require('goog.net.EventType');
+const googString = goog.require('goog.string');
+const ol = goog.require('ol');
+const olExtent = goog.require('ol.extent');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
+const osColor = goog.require('os.color');
 const Settings = goog.require('os.config.Settings');
 const data = goog.require('os.data');
 const IAreaTest = goog.require('os.data.IAreaTest');
@@ -14,15 +19,27 @@ const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const IFilterable = goog.require('os.filter.IFilterable');
 const osImplements = goog.require('os.implements');
 const LayerType = goog.require('os.layer.LayerType');
+const ogc = goog.require('os.ogc');
+const osOgcLayerType = goog.require('os.ogc.LayerType');
 const DescribeFeatureLoader = goog.require('os.ogc.wfs.DescribeFeatureLoader');
 const wmts = goog.require('os.ogc.wmts');
+const osProj = goog.require('os.proj');
+const registerClass = goog.require('os.registerClass');
+const TimelineController = goog.require('os.time.TimelineController');
+const ColorControlType = goog.require('os.ui.ColorControlType');
 const ControlType = goog.require('os.ui.ControlType');
 const Icons = goog.require('os.ui.Icons');
 const IconsSVG = goog.require('os.ui.IconsSVG');
+const BaseProvider = goog.require('os.ui.data.BaseProvider');
+const filter = goog.require('os.ui.filter');
 const icons = goog.require('os.ui.icons');
+const IFeatureTypeDescriptor = goog.require('os.ui.ogc.IFeatureTypeDescriptor');
 const IOGCDescriptor = goog.require('os.ui.ogc.IOGCDescriptor');
 const CombinatorCtrl = goog.require('os.ui.query.CombinatorCtrl');
+const AbstractLoadingServer = goog.require('os.ui.server.AbstractLoadingServer');
 const deprecated = goog.require('os.ui.util.deprecated');
+
+const IFeatureType = goog.requireType('os.ogc.IFeatureType');
 
 
 /**
@@ -62,7 +79,7 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
     this.dimensions_ = null;
 
     /**
-     * @type {os.ogc.IFeatureType}
+     * @type {IFeatureType}
      * @private
      */
     this.featureType_ = null;
@@ -232,7 +249,7 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
      */
     this.filterableRegexp = OGCLayerDescriptor.FILTERABLE_RE;
 
-    this.descriptorType = os.ogc.ID;
+    this.descriptorType = ogc.ID;
   }
 
   /**
@@ -264,13 +281,13 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
   getIcons() {
     var iconsSVG = this.getSVGSet();
     var s = '';
-    var color = this.getColor() ? os.color.toRgbArray(this.getColor()) : [255, 255, 255, 1];
+    var color = this.getColor() ? osColor.toRgbArray(this.getColor()) : [255, 255, 255, 1];
 
     if (this.deprecated_) {
       s += Icons.DEPRECATED;
     }
 
-    s += icons.createIconSet(goog.string.getRandomString(), iconsSVG, [], color);
+    s += icons.createIconSet(googString.getRandomString(), iconsSVG, [], color);
 
     return s;
   }
@@ -334,10 +351,10 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
   getAliases() {
     var aliases = [this.getId()];
     if (this.wmsEnabled_ || this.wmtsEnabled_) {
-      aliases.push(this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + 'tiles');
+      aliases.push(this.getId() + BaseProvider.ID_DELIMITER + 'tiles');
     }
     if (this.wfsEnabled_) {
-      aliases.push(this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + 'features');
+      aliases.push(this.getId() + BaseProvider.ID_DELIMITER + 'features');
     }
 
     return aliases;
@@ -750,7 +767,7 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
    * @protected
    */
   replaceWithNextUrl(url) {
-    if (url && this.dataProvider instanceof os.ui.server.AbstractLoadingServer) {
+    if (url && this.dataProvider instanceof AbstractLoadingServer) {
       var providerUrl = this.dataProvider.getUrl();
       var nextUrl = this.dataProvider.getNextUrl();
 
@@ -903,7 +920,7 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
     var maxx = parseFloat(node['maxx']);
     var maxy = parseFloat(node['maxy']);
 
-    if (forcedCrs == os.proj.EPSG4326) {
+    if (forcedCrs == osProj.EPSG4326) {
       this.bbox_ = [minx, miny, maxx, maxy];
     } else {
       this.bbox_ = [miny, minx, maxy, maxx];
@@ -937,7 +954,7 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
    */
   getWmsOptions() {
     var options = {};
-    options['id'] = this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + 'tiles';
+    options['id'] = this.getId() + BaseProvider.ID_DELIMITER + 'tiles';
 
     var params = new QueryData();
     params.set('LAYERS', this.getWmsName());
@@ -949,7 +966,7 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
     }
 
     options['baseColor'] = this.getColor();
-    options[ControlType.COLOR] = os.ui.ColorControlType.PICKER_RESET;
+    options[ControlType.COLOR] = ColorControlType.PICKER_RESET;
 
     options['animate'] = this.hasTimeExtent();
     options['dateFormat'] = this.getWmsDateFormat();
@@ -1001,13 +1018,13 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
    * @protected
    */
   getWmtsLayerOptions() {
-    const id = this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + 'tiles';
+    const id = this.getId() + BaseProvider.ID_DELIMITER + 'tiles';
     const wmtsOptions = this.getWmtsOptions();
     const projections = wmtsOptions.map(wmts.optionsToProjection);
 
     const options = {
       'id': id,
-      'type': os.ogc.LayerType.WMTS,
+      'type': osOgcLayerType.WMTS,
       'provider': this.getProvider(),
       'title': this.getTitle(),
       'extent': this.getBBox(),
@@ -1030,12 +1047,12 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
    */
   getWfsOptions(opt_options) {
     var options = opt_options || {};
-    options['id'] = this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + 'features';
+    options['id'] = this.getId() + BaseProvider.ID_DELIMITER + 'features';
 
     // color will change with user choices, baseColor maintains the original layer color for reset
     options['baseColor'] = this.getColor();
     options['color'] = this.getColor();
-    options[ControlType.COLOR] = os.ui.ColorControlType.PICKER_RESET;
+    options[ControlType.COLOR] = ColorControlType.PICKER_RESET;
 
     options['animate'] = this.hasTimeExtent();
     options['contentType'] = this.getWfsContentType();
@@ -1044,7 +1061,7 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
     options['filter'] = true;
     options['layerType'] = this.getType();
     options['load'] = true;
-    options['params'] = os.ogc.getWfsParams(this);
+    options['params'] = ogc.getWfsParams(this);
     options['provider'] = this.getProvider();
     options['spatial'] = true;
     options['tags'] = this.getTags();
@@ -1071,7 +1088,7 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
     var loader = new DescribeFeatureLoader();
     loader.setUrl(this.getWfsUrl());
     loader.setTypename(this.getWfsName());
-    loader.listenOnce(goog.net.EventType.COMPLETE, this.onDescribeComplete_, false, this);
+    loader.listenOnce(EventType.COMPLETE, this.onDescribeComplete_, false, this);
     loader.load();
   }
 
@@ -1146,7 +1163,7 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
     this.describeCallback = this.launchFilterManager;
 
     if (this.isFeatureTypeReady()) {
-      var id = this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + 'features';
+      var id = this.getId() + BaseProvider.ID_DELIMITER + 'features';
       CombinatorCtrl.launchForLayer(id, this.getTitle() + ' Features');
     }
   }
@@ -1155,7 +1172,7 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
    * @inheritDoc
    */
   getFilterKey() {
-    return this.wfsUrl_ + os.ui.filter.FILTER_KEY_DELIMITER + this.wfsName_;
+    return this.wfsUrl_ + filter.FILTER_KEY_DELIMITER + this.wfsName_;
   }
 
   /**
@@ -1218,7 +1235,7 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
     var key = [];
 
     if (this.hasTimeExtent()) {
-      var tlc = os.time.TimelineController.getInstance();
+      var tlc = TimelineController.getInstance();
       key.push('' + tlc.getStart());
       key.push('' + tlc.getEnd());
     }
@@ -1241,7 +1258,7 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
       var layerBox = this.getBBox();
 
       if (areaBox && layerBox) {
-        result = ol.extent.intersects(areaBox, layerBox);
+        result = olExtent.intersects(areaBox, layerBox);
       }
     } catch (e) {
     }
@@ -1266,10 +1283,10 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
  * @type {string}
  */
 OGCLayerDescriptor.NAME = 'plugin.ogc.OGCLayerDescriptor';
-os.registerClass(OGCLayerDescriptor.NAME, OGCLayerDescriptor);
+registerClass(OGCLayerDescriptor.NAME, OGCLayerDescriptor);
 osImplements(OGCLayerDescriptor, IAreaTest.ID);
 osImplements(OGCLayerDescriptor, IFilterable.ID);
-osImplements(OGCLayerDescriptor, os.ui.ogc.IFeatureTypeDescriptor.ID);
+osImplements(OGCLayerDescriptor, IFeatureTypeDescriptor.ID);
 osImplements(OGCLayerDescriptor, IOGCDescriptor.ID);
 
 

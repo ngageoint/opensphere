@@ -3,6 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const log = goog.require('goog.log');
 const IDataProvider = goog.require('os.data.IDataProvider');
+const osImplements = goog.require('os.implements');
 const OGCServer = goog.require('os.ui.ogc.OGCServer');
 const Logger = goog.requireType('goog.log.Logger');
 
@@ -46,7 +47,7 @@ class GeoServer extends OGCServer {
     }
   }
 }
-os.implements(GeoServer, IDataProvider.ID);
+osImplements(GeoServer, IDataProvider.ID);
 
 /**
  * The GeoServer server type.

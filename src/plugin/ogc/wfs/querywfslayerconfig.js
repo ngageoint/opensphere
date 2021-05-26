@@ -2,6 +2,7 @@ goog.module('plugin.ogc.wfs.QueryWFSLayerConfig');
 goog.module.declareLegacyNamespace();
 
 const ParamModifier = goog.require('os.net.ParamModifier');
+const ModifierConstants = goog.require('os.ogc.filter.ModifierConstants');
 const OGCFilterModifier = goog.require('os.ogc.filter.OGCFilterModifier');
 const queryManager = goog.require('os.query.QueryManager');
 const TemporalHandler = goog.require('os.query.TemporalHandler');
@@ -93,7 +94,7 @@ class QueryWFSLayerConfig extends WFSLayerConfig {
           }
 
           var tqModifier = new ParamModifier('temporal', 'filter',
-              os.ogc.filter.ModifierConstants.TEMPORAL, '');
+              ModifierConstants.TEMPORAL, '');
 
           var tqHandler = new TemporalHandler();
           tqHandler.setFormatter(tqFormatter);

@@ -1,11 +1,14 @@
 goog.module('plugin.ogc.wfs.launchFilterManager');
 goog.module.declareLegacyNamespace();
 
+const CombinatorCtrl = goog.require('os.ui.query.CombinatorCtrl');
+
+
 /**
  * Launch the filter manager
  *
  * @param {!os.layer.Vector} layer The layer
  */
 exports = function(layer) {
-  os.ui.query.CombinatorCtrl.launchForLayer(layer.getId());
+  CombinatorCtrl.launchForLayer(layer.getId());
 };

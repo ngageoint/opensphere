@@ -7,6 +7,9 @@ const Disposable = goog.require('goog.Disposable');
 const os = goog.require('os');
 const DataManager = goog.require('os.data.DataManager');
 const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const osWindow = goog.require('os.ui.window');
+
 const OGCLayerDescriptor = goog.requireType('plugin.ogc.OGCLayerDescriptor');
 
 
@@ -90,9 +93,9 @@ class Controller extends Disposable {
       this['end'] = this.featureType_.getEndDateColumnName();
       this['timeColumns'] = this.descriptor_.getFeatureType().getTimeColumns();
 
-      $scope.$emit(os.ui.WindowEventType.READY);
+      $scope.$emit(WindowEventType.READY);
     } else {
-      os.ui.window.close(this.element_);
+      osWindow.close(this.element_);
     }
   }
 
@@ -125,7 +128,7 @@ class Controller extends Disposable {
    * @export
    */
   close() {
-    os.ui.window.close(this.element_);
+    osWindow.close(this.element_);
     this.dispose();
   }
 
@@ -138,8 +141,8 @@ class Controller extends Disposable {
   static launch(layerId, opt_deferred) {
     var id = 'chooseTimeColumn';
 
-    if (os.ui.window.exists(id)) {
-      os.ui.window.bringToFront(id);
+    if (osWindow.exists(id)) {
+      osWindow.bringToFront(id);
     } else {
       var winOptions = {
         'id': id,
@@ -160,7 +163,7 @@ class Controller extends Disposable {
         'deferred': opt_deferred
       };
 
-      os.ui.window.create(winOptions, '<choose-time-column id="id" deferred="deferred"></choose-time-column>',
+      osWindow.create(winOptions, '<choose-time-column id="id" deferred="deferred"></choose-time-column>',
           undefined, undefined, undefined, scopeOptions);
     }
   }

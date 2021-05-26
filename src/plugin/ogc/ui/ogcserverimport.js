@@ -5,10 +5,13 @@ goog.require('os.ui.singleUrlFormDirective');
 
 const xml = goog.require('goog.dom.xml');
 const os = goog.require('os');
+const ogc = goog.require('os.ogc');
 const Module = goog.require('os.ui.Module');
 const ProviderImportCtrl = goog.require('os.ui.ProviderImportCtrl');
 const OGCServer = goog.require('os.ui.ogc.OGCServer');
 const OgcServerHelpUI = goog.require('plugin.ogc.ui.OgcServerHelpUI');
+
+const OSFile = goog.requireType('os.file.File');
 
 
 /**
@@ -37,7 +40,6 @@ const directiveTag = 'ogcserver';
 Module.directive('ogcserver', [directive]);
 
 
-
 /**
  * Controller for the ogcserver import dialog
  * @unrestricted
@@ -56,7 +58,7 @@ class Controller extends ProviderImportCtrl {
     $scope['typeName'] = 'OGC Server';
 
     $scope['config']['type'] = 'ogc';
-    var file = /** @type {os.file.File} */ ($scope['config']['file']);
+    var file = /** @type {OSFile} */ ($scope['config']['file']);
 
     if (file) {
       var content = file.getContent();
@@ -74,11 +76,11 @@ class Controller extends ProviderImportCtrl {
           if (doc && doc.firstElementChild) {
             const rootNodeName = doc.firstElementChild.nodeName;
 
-            if (os.ogc.GetCapsRootRegexp.WMS.test(rootNodeName) || /wms/i.test(url)) {
+            if (ogc.GetCapsRootRegexp.WMS.test(rootNodeName) || /wms/i.test(url)) {
               $scope['config']['wms'] = url;
-            } else if (os.ogc.GetCapsRootRegexp.WMTS.test(rootNodeName) || /wmts/i.test(url)) {
+            } else if (ogc.GetCapsRootRegexp.WMTS.test(rootNodeName) || /wmts/i.test(url)) {
               $scope['config']['wmts'] = url;
-            } else if (os.ogc.GetCapsRootRegexp.WFS.test(rootNodeName) || /wfs/i.test(url)) {
+            } else if (ogc.GetCapsRootRegexp.WFS.test(rootNodeName) || /wfs/i.test(url)) {
               $scope['config']['wfs'] = url;
             }
           }

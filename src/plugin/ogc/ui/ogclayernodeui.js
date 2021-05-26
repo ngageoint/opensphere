@@ -3,9 +3,11 @@ goog.module.declareLegacyNamespace();
 
 const Deferred = goog.require('goog.async.Deferred');
 const DataManager = goog.require('os.data.DataManager');
+const osImplements = goog.require('os.implements');
 const Module = goog.require('os.ui.Module');
 const DefaultLayerNodeUICtrl = goog.require('os.ui.node.DefaultLayerNodeUICtrl');
 const defaultLayerNodeUIDirective = goog.require('os.ui.node.defaultLayerNodeUIDirective');
+const IFeatureTypeDescriptor = goog.require('os.ui.ogc.IFeatureTypeDescriptor');
 const {Controller: ChooseTimeColumnController} = goog.require('plugin.ogc.ui.ChooseTimeColumnUI');
 
 
@@ -61,7 +63,7 @@ class Controller extends DefaultLayerNodeUICtrl {
 
     var chooseTime = false;
 
-    if (os.implements(this.descriptor_, os.ui.ogc.IFeatureTypeDescriptor.ID)) {
+    if (osImplements(this.descriptor_, IFeatureTypeDescriptor.ID)) {
       var featureType = this.descriptor_.getFeatureType();
       if (featureType) {
         chooseTime = (featureType.getStartDateColumnName() !== null || featureType.getEndDateColumnName() !== null) &&

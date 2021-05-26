@@ -3,6 +3,8 @@ goog.module.declareLegacyNamespace();
 
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
+const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
+const net = goog.require('os.net');
 const osOgc = goog.require('os.ogc');
 const LayerType = goog.require('os.ogc.LayerType');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
@@ -22,6 +24,7 @@ const QueryWFSLayerConfig = goog.require('plugin.ogc.wfs.QueryWFSLayerConfig');
 const WMSLayerConfig = goog.require('plugin.ogc.wms.WMSLayerConfig');
 const WMTSLayerConfig = goog.require('plugin.ogc.wmts.WMTSLayerConfig');
 const WMTSServer = goog.require('plugin.ogc.wmts.WMTSServer');
+
 
 /**
  * Provides WMS/WFS layer support, both separately and as a grouped layer combination.
@@ -58,11 +61,11 @@ class OGCPlugin extends AbstractPlugin {
     dm.registerDescriptorType(osOgc.ID, OGCLayerDescriptor);
 
     // register the layer configurations
-    var lcm = os.layer.config.LayerConfigManager.getInstance();
+    var lcm = LayerConfigManager.getInstance();
     lcm.registerLayerConfig(LayerType.WMS, WMSLayerConfig);
     lcm.registerLayerConfig(LayerType.WFS, QueryWFSLayerConfig);
     lcm.registerLayerConfig(LayerType.WMTS, WMTSLayerConfig);
-    lcm.registerDefaultLayerConfig(LayerType.WFS, plugin.ogc.getDefaultWfsOptions);
+    lcm.registerDefaultLayerConfig(LayerType.WFS, getDefaultWfsOptions);
 
     // register the server forms for adding/editing servers
     var im = ImportManager.getInstance();
@@ -82,17 +85,16 @@ class OGCPlugin extends AbstractPlugin {
       label: 'GeoServer'
     });
 
-    os.net.registerDefaultValidator(osOgc.getException);
+    net.registerDefaultValidator(osOgc.getException);
   }
 }
-
 
 /**
  * Get the default opensphere WFS layer options
  *
  * @return {!Object<string, *>}
  */
-plugin.ogc.getDefaultWfsOptions = function() {
+const getDefaultWfsOptions = function() {
   var options = osOgc.getDefaultWfsOptions();
 
   // opensphere handles this per-request based on the feature limit imposed by 2D/3D mode, so exclude it from the request
@@ -102,4 +104,5 @@ plugin.ogc.getDefaultWfsOptions = function() {
 
   return options;
 };
+
 exports = OGCPlugin;

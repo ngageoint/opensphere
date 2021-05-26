@@ -1,6 +1,7 @@
 goog.module('plugin.ogc.query.FilterIDModifier');
 goog.module.declareLegacyNamespace();
 
+const googString = goog.require('goog.string');
 const ParamModifier = goog.require('os.net.ParamModifier');
 const ModifierConstants = goog.require('os.ogc.filter.ModifierConstants');
 
@@ -28,7 +29,7 @@ class FilterIDModifier extends ParamModifier {
       for (var x = 0; x < columns.length; x++) {
         var propEquals = '<PropertyIsEqualTo><PropertyName>' + columns[x] + '</PropertyName><Literal>{{' + columns[x] +
             '}}</Literal></PropertyIsEqualTo>';
-        filterValue = goog.string.buildString(filterValue, propEquals.replace('{{' + columns[x] + '}}',
+        filterValue = googString.buildString(filterValue, propEquals.replace('{{' + columns[x] + '}}',
             columnValueMap[columns[x]][y]));
       }
       filterValue += '</And>';

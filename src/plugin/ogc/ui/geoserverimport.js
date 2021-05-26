@@ -9,6 +9,8 @@ const SingleUrlProviderImportCtrl = goog.require('os.ui.SingleUrlProviderImportC
 const GeoServer = goog.require('plugin.ogc.GeoServer');
 const GeoServerHelpUI = goog.require('plugin.ogc.ui.GeoServerHelpUI');
 
+const OSFile = goog.requireType('os.file.File');
+
 
 /**
  * The geoserver import directive
@@ -36,7 +38,6 @@ const directiveTag = 'geoserver';
 Module.directive('geoserver', [directive]);
 
 
-
 /**
  * Controller for the geoserver import dialog
  * @unrestricted
@@ -52,7 +53,7 @@ class Controller extends SingleUrlProviderImportCtrl {
     super($scope, $element);
     this['helpUi'] = GeoServerHelpUI.directiveTag;
 
-    var file = /** @type {os.file.File} */ ($scope['config']['file']);
+    var file = /** @type {OSFile} */ ($scope['config']['file']);
     // regex handles URLs of the sort /geoserver(/stuff)/ows(/otherstuff), where it keeps (/stuff) intact, but removes
     // (/otherstuff) at the end of the URL
     $scope['config']['url'] = file ? file.getUrl().replace(/(\/geoserver|\/.*?gs)(\/.*)(web|ows)[#?\/].*$/, '/geoserver$1ows') :

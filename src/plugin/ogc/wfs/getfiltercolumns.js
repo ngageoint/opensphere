@@ -1,6 +1,7 @@
 goog.module('plugin.ogc.wfs.getFilterColumns');
 goog.module.declareLegacyNamespace();
 
+
 /**
  * Get the filterable columns
  *

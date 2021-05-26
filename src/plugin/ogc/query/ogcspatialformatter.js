@@ -1,6 +1,7 @@
 goog.module('plugin.ogc.query.OGCSpatialFormatter');
 goog.module.declareLegacyNamespace();
 
+const interpolate = goog.require('os.interpolate');
 const OSOGCSpatialFormatter = goog.require('os.ogc.filter.OGCSpatialFormatter');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
@@ -22,7 +23,7 @@ class OGCSpatialFormatter extends OSOGCSpatialFormatter {
    * @inheritDoc
    */
   getGeometry(feature) {
-    var geom = /** @type {Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD)) || feature.getGeometry();
+    var geom = /** @type {Geometry} */ (feature.get(interpolate.ORIGINAL_GEOM_FIELD)) || feature.getGeometry();
 
     if (geom) {
       geom = geom.clone().toLonLat();
