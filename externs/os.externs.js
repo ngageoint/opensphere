@@ -424,6 +424,7 @@ osx.window.ConfirmOptions;
  *   windowOptions: (osx.window.WindowOptions|undefined),
  *
  *   prompt: (string|undefined),
+ *   subPrompt: (string|undefined),
  *   defaultValue: (string|undefined),
  *   formLabel: (string|undefined),
  *   limit: (number|undefined),

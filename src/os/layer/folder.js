@@ -41,6 +41,13 @@ const SettingsKey = {
 
 
 /**
+ * Prompt to display when a new folder is being created.
+ * @type {string}
+ */
+const CREATE_PROMPT = 'Create a new folder to manually group layers.';
+
+
+/**
  * Launch the remove folder dialog.
  * @param {osx.layer.FolderOptions} options The folder options.
  * @param {function()} callback Callback to fire when the remove is confirmed.
@@ -72,14 +79,18 @@ const launchRemoveFolder = (options, callback, opt_removeChildren) => {
  * @param {boolean=} opt_isEdit If an existing folder is being edited.
  */
 const createOrEditFolder = (options, callback, opt_isEdit = false) => {
-  const label = options.name || 'New Folder';
-  const winLabel = (opt_isEdit ? 'Edit' : 'Add') + ' Folder';
+  const folderName = options.name || 'New Folder';
+  const actionText = opt_isEdit ? 'Rename' : 'Add';
+  const winLabel = `${actionText} Folder`;
+
+  const prompt = !opt_isEdit ? CREATE_PROMPT : undefined;
 
   const confirmOptions = /** @type {!osx.window.ConfirmTextOptions} */ ({
     confirm: callback,
-    defaultValue: label,
-    prompt: 'Please choose a label for the folder:',
-    yesText: 'Add',
+    defaultValue: folderName,
+    prompt,
+    subPrompt: 'Please choose a name for the folder.',
+    yesText: actionText,
     windowOptions: /** @type {!osx.window.WindowOptions} */ ({
       icon: 'fa fa-folder',
       label: winLabel
@@ -119,6 +130,7 @@ exports = {
   FolderEventType,
   MetricKey,
   SettingsKey,
+  CREATE_PROMPT,
   launchRemoveFolder,
   createOrEditFolder,
   setFolderMenuEnabled,

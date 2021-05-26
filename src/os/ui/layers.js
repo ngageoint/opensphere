@@ -134,7 +134,7 @@ os.ui.LayersCtrl = function($scope, $element) {
   this.scope['tilesBtnIcon'] = os.ROOT + 'images/tiles-base.png';
   this.scope['featuresBtnIcon'] = os.ROOT + 'images/features-base.png';
 
-  this.scope['createFolderTooltip'] = 'Create a new folder to manually group layers, when Group By is disabled.';
+  this.scope['createFolderTooltip'] = os.layer.folder.CREATE_PROMPT;
   this.scope['viewEnabledTooltip'] = 'Automatically group layers based on the Group By selection. Disable to ' +
       'manually organize layers in folders.';
 
