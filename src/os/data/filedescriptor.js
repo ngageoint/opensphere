@@ -79,6 +79,7 @@ os.data.FileDescriptor = function() {
 goog.inherits(os.data.FileDescriptor, os.data.LayerSyncDescriptor);
 os.implements(os.data.FileDescriptor, 'os.data.IReimport');
 os.implements(os.data.FileDescriptor, os.data.IUrlDescriptor.ID);
+os.implements(os.data.FileDescriptor, os.data.IMappingDescriptor.ID);
 
 
 /**
@@ -202,7 +203,7 @@ os.data.FileDescriptor.prototype.update = function() {
  * @inheritDoc
  */
 os.data.FileDescriptor.prototype.supportsMapping = function() {
-  return !!os.settings.get(os.ui.layer.EllipseColumnsUI.ALLOW_ELLIPSE_CONFIG, false);
+  return false;
 };
 
 

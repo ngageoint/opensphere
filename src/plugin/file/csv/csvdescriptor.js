@@ -6,6 +6,7 @@ const LayerType = goog.require('os.layer.LayerType');
 const csv = goog.require('os.ui.file.csv');
 const CSVExporter = goog.require('plugin.file.csv.CSVExporter');
 const CSVParserConfig = goog.require('plugin.file.csv.CSVParserConfig');
+const {ALLOW_ELLIPSE_CONFIG} = goog.require('os.ui.layer.EllipseColumnsUI');
 
 
 /**
@@ -27,6 +28,13 @@ class CSVDescriptor extends FileDescriptor {
    */
   getType() {
     return LayerType.FEATURES;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  supportsMapping() {
+    return !!os.settings.get(ALLOW_ELLIPSE_CONFIG, false);
   }
 
   /**

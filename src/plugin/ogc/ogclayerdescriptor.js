@@ -607,43 +607,12 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
     return this.wfsFormats_;
   }
 
-<<<<<<< HEAD
   /**
    * @inheritDoc
    */
   setWfsFormats(value) {
     this.wfsFormats_ = value;
   }
-=======
-/**
- * @inheritDoc
- */
-plugin.ogc.OGCLayerDescriptor.prototype.setMappings = function(value) {
-  this['mappings'] = value;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.ogc.OGCLayerDescriptor.prototype.supportsMapping = function() {
-  return !!os.settings.get(os.ui.layer.EllipseColumnsUI.ALLOW_ELLIPSE_CONFIG, false);
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.ogc.OGCLayerDescriptor.prototype.update = function(layer) {
-  const dm = os.data.DataManager.getInstance();
-  dm.updateDescriptor(this, this);
-  dm.persistDescriptors();
-
-  // Delete the layer, then prompt the descriptor to make new layers
-  os.MapContainer.getInstance().removeLayer(/** @type {!os.layer.ILayer} */ (layer));
-  this.setActiveInternal();
-};
->>>>>>> feat(layers): mappings remove/readd the layer
 
   /**
    * @inheritDoc
@@ -1232,7 +1201,6 @@ plugin.ogc.OGCLayerDescriptor.prototype.update = function(layer) {
       return 'Network is disconnected. ' + this.getWfsName() + ' is unavailable.';
     }
 
-<<<<<<< HEAD
     return 'Failed loading DescribeFeatureType for ' + this.getWfsName() +
         '. Feature requests have been disabled for this layer.';
   }
@@ -1242,11 +1210,6 @@ plugin.ogc.OGCLayerDescriptor.prototype.update = function(layer) {
    */
   launchFilterManager() {
     this.describeCallback = this.launchFilterManager;
-=======
-  return options;
-};
-
->>>>>>> feat(layers): mappings remove/readd the layer
 
     if (this.isFeatureTypeReady()) {
       var id = this.getId() + BaseProvider.ID_DELIMITER + 'features';
@@ -1261,7 +1224,6 @@ plugin.ogc.OGCLayerDescriptor.prototype.update = function(layer) {
     return this.wfsUrl_ + filter.FILTER_KEY_DELIMITER + this.wfsName_;
   }
 
-<<<<<<< HEAD
   /**
    * @inheritDoc
    */
@@ -1270,114 +1232,6 @@ plugin.ogc.OGCLayerDescriptor.prototype.update = function(layer) {
     if (this.wfsName_) {
       var idx = name.indexOf(':') + 1;
       name = name.substring(idx);
-=======
-  return options;
-};
-
-
-/**
- * Get the options object for the WMTS layer.
- * @return {Object<string, *>}
- * @protected
- */
-plugin.ogc.OGCLayerDescriptor.prototype.getWmtsLayerOptions = function() {
-  const id = this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + 'tiles';
-  const wmtsOptions = this.getWmtsOptions();
-  const projections = wmtsOptions.map(os.ogc.wmts.optionsToProjection);
-
-  const options = {
-    'id': id,
-    'type': os.ogc.LayerType.WMTS,
-    'provider': this.getProvider(),
-    'title': this.getTitle(),
-    'extent': this.getBBox(),
-    'layerType': this.getType(),
-    'animate': this.hasTimeExtent(),
-    'dateFormat': this.getWmtsDateFormat(),
-    'timeFormat': this.getWmtsTimeFormat(),
-    'crossOrigin': wmtsOptions.crossOrigin,
-    'projections': projections,
-    'wmtsOptions': wmtsOptions
-  };
-
-  return options;
-};
-
-
-/**
- * @return {Object<string, *>}
- * @param {Object<string, *>=} opt_options
- * @protected
- */
-plugin.ogc.OGCLayerDescriptor.prototype.getWfsOptions = function(opt_options) {
-  var options = opt_options || {};
-  options['id'] = this.getId() + os.ui.data.BaseProvider.ID_DELIMITER + 'features';
-
-  // color will change with user choices, baseColor maintains the original layer color for reset
-  options['baseColor'] = this.getColor();
-  options['color'] = this.getColor();
-  options[os.ui.ControlType.COLOR] = os.ui.ColorControlType.PICKER_RESET;
-
-  options['animate'] = this.hasTimeExtent();
-  options['contentType'] = this.getWfsContentType();
-  options['exclusions'] = true;
-  options['featureType'] = this.featureType_;
-  options['filter'] = true;
-  options['layerType'] = this.getType();
-  options['load'] = true;
-  options['params'] = os.ogc.getWfsParams(this);
-  options['provider'] = this.getProvider();
-  options['spatial'] = true;
-  options['tags'] = this.getTags();
-  options['temporal'] = this.hasTimeExtent();
-  options['title'] = this.getTitle();
-  options['type'] = 'WFS';
-  options['url'] = this.replaceWithNextUrl(this.getWfsUrl());
-  options['usePost'] = this.getUsePost();
-  options['formats'] = this.getWfsFormats();
-
-  const mappings = this.getMappings();
-  if (mappings) {
-    options['mappings'] = this.getMappings();
-  }
-
-  if (options['provider']) {
-    // check to see if the visibility is configured to false, if not visibility should be true
-    options['visible'] = os.settings.get(
-        [os.data.ProviderKey.ADMIN, this.getProvider().toLowerCase(), 'visible'], true);
-  }
-
-  return options;
-};
-
-
-/**
- * @protected
- */
-plugin.ogc.OGCLayerDescriptor.prototype.loadWFSDescribeFeature = function() {
-  var loader = new os.ogc.wfs.DescribeFeatureLoader();
-  loader.setUrl(this.getWfsUrl());
-  loader.setTypename(this.getWfsName());
-  loader.listenOnce(goog.net.EventType.COMPLETE, this.onDescribeComplete_, false, this);
-  loader.load();
-};
-
-
-/**
- * @param {goog.events.Event} event
- * @private
- */
-plugin.ogc.OGCLayerDescriptor.prototype.onDescribeComplete_ = function(event) {
-  var loader = /** @type {os.ogc.wfs.DescribeFeatureLoader} */ (event.target);
-  var featureType = loader.getFeatureType();
-  if (featureType) {
-    this.featureType_ = featureType;
-    // apply any presisted settings that may have been restored
-    if (this.restoreSettings_) {
-      this.featureType_.restore(this.restoreSettings_);
-      this.restoreSettings_ = null;
-      delete this.restoreSettings_;
->>>>>>> feat(layers): mappings remove/readd the layer
     }
     return name;
   }
