@@ -1,9 +1,9 @@
 goog.module('plugin.ogc.ui.OgcServerImportForm');
 goog.module.declareLegacyNamespace();
 
+const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
 const ogcserverDirective = goog.require('plugin.ogc.ui.ogcserverDirective');
-const {ROOT} = goog.require('os');
 
 
 /**

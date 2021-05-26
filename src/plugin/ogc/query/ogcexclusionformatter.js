@@ -1,28 +1,35 @@
-goog.provide('plugin.ogc.query.OGCExclusionFormatter');
-goog.require('os.ogc.filter.OGCExclusionFormatter');
+goog.module('plugin.ogc.query.OGCExclusionFormatter');
+goog.module.declareLegacyNamespace();
 
+const OSOGCExclusionFormatter = goog.require('os.ogc.filter.OGCExclusionFormatter');
 
-
-/**
- * @param {string=} opt_column
- * @extends {os.ogc.filter.OGCExclusionFormatter}
- * @constructor
- */
-plugin.ogc.query.OGCExclusionFormatter = function(opt_column) {
-  plugin.ogc.query.OGCExclusionFormatter.base(this, 'constructor', opt_column);
-};
-goog.inherits(plugin.ogc.query.OGCExclusionFormatter, os.ogc.filter.OGCExclusionFormatter);
+const Geometry = goog.requireType('ol.geom.Geometry');
 
 
 /**
- * @inheritDoc
+ * OGC exclusion formatter that converts the geometry to EPSG:4326.
  */
-plugin.ogc.query.OGCExclusionFormatter.prototype.getGeometry = function(feature) {
-  var geom = /** @type {ol.geom.Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD)) || feature.getGeometry();
-
-  if (geom) {
-    geom = geom.clone().toLonLat();
+class OGCExclusionFormatter extends OSOGCExclusionFormatter {
+  /**
+   * Constructor.
+   * @param {string=} opt_column
+   */
+  constructor(opt_column) {
+    super(opt_column);
   }
 
-  return geom;
-};
+  /**
+   * @inheritDoc
+   */
+  getGeometry(feature) {
+    var geom = /** @type {Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD)) || feature.getGeometry();
+
+    if (geom) {
+      geom = geom.clone().toLonLat();
+    }
+
+    return geom;
+  }
+}
+
+exports = OGCExclusionFormatter;

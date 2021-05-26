@@ -1,137 +1,111 @@
-goog.provide('plugin.ogc.wfs.QueryWFSLayerConfig');
-goog.provide('plugin.ogc.wfs.getFilterColumns');
-goog.provide('plugin.ogc.wfs.launchFilterManager');
+goog.module('plugin.ogc.wfs.QueryWFSLayerConfig');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.net.ParamModifier');
-goog.require('os.ogc.filter.OGCFilterModifier');
-goog.require('os.query.TemporalHandler');
-goog.require('os.query.TemporalQueryManager');
-goog.require('os.ui.query.BaseCombinatorCtrl');
-goog.require('os.ui.query.CombinatorCtrl');
-goog.require('plugin.ogc.query.FilterIDModifier');
-goog.require('plugin.ogc.query.OGCQueryHandler');
-goog.require('plugin.ogc.query.OGCTemporalFormatter');
-goog.require('plugin.ogc.wfs.WFSLayerConfig');
+const ParamModifier = goog.require('os.net.ParamModifier');
+const OGCFilterModifier = goog.require('os.ogc.filter.OGCFilterModifier');
+const queryManager = goog.require('os.query.QueryManager');
+const TemporalHandler = goog.require('os.query.TemporalHandler');
+const TemporalQueryManager = goog.require('os.query.TemporalQueryManager');
+const FilterIDModifier = goog.require('plugin.ogc.query.FilterIDModifier');
+const OGCQueryHandler = goog.require('plugin.ogc.query.OGCQueryHandler');
+const OGCTemporalFormatter = goog.require('plugin.ogc.query.OGCTemporalFormatter');
+const WFSLayerConfig = goog.require('plugin.ogc.wfs.WFSLayerConfig');
+const getFilterColumns = goog.require('plugin.ogc.wfs.getFilterColumns');
+const launchFilterManager = goog.require('plugin.ogc.wfs.launchFilterManager');
 
+const OGCFilterModifierOptions = goog.requireType('os.ogc.filter.OGCFilterModifierOptions');
 
 
 /**
  * The query version of the WFS layer config, which adds connections to various query managers
  * to automatically requery when combinations of areas, filters, and layers change.
- *
- * @extends {plugin.ogc.wfs.WFSLayerConfig}
- * @constructor
  */
-plugin.ogc.wfs.QueryWFSLayerConfig = function() {
-  plugin.ogc.wfs.QueryWFSLayerConfig.base(this, 'constructor');
-};
-goog.inherits(plugin.ogc.wfs.QueryWFSLayerConfig, plugin.ogc.wfs.WFSLayerConfig);
+class QueryWFSLayerConfig extends WFSLayerConfig {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
 
+  /**
+   * @inheritDoc
+   */
+  addMappings(layer, options) {
+    super.addMappings(layer, options);
 
-/**
- * @inheritDoc
- */
-plugin.ogc.wfs.QueryWFSLayerConfig.prototype.addMappings = function(layer, options) {
-  plugin.ogc.wfs.QueryWFSLayerConfig.base(this, 'addMappings', layer, options);
+    var source = /** @type {os.source.Request} */ (layer.getSource());
+    var useExclusions = options['exclusions'] != null ? options['exclusions'] : false;
+    var useFilter = options['filter'] != null ? options['filter'] : false;
+    var useSpatial = options['spatial'] != null ? options['spatial'] : false;
+    var useTemporal = options['temporal'] != null ? options['temporal'] : !!this.featureType.getStartDateColumnName();
+    var featureIDs = options['featureIDs'] != null ? options['featureIDs'] : null;
+    var relatedLayer = options['relatedLayer'] != null ? options['relatedLayer'] : null;
 
-  var source = /** @type {os.source.Request} */ (layer.getSource());
-  var useExclusions = options['exclusions'] != null ? options['exclusions'] : false;
-  var useFilter = options['filter'] != null ? options['filter'] : false;
-  var useSpatial = options['spatial'] != null ? options['spatial'] : false;
-  var useTemporal = options['temporal'] != null ? options['temporal'] : !!this.featureType.getStartDateColumnName();
-  var featureIDs = options['featureIDs'] != null ? options['featureIDs'] : null;
-  var relatedLayer = options['relatedLayer'] != null ? options['relatedLayer'] : null;
+    // add connections to the query managers
+    var qm = queryManager.getInstance();
+    if (featureIDs || useTemporal || useSpatial || useFilter || useExclusions) {
+      var ogcFilterOptions = /** @type {OGCFilterModifierOptions} */ ({
+        exclusions: useExclusions,
+        filter: useFilter,
+        identifiers: !!featureIDs || !!relatedLayer,
+        spatial: useSpatial,
+        temporal: useTemporal
+      });
 
-  // add connections to the query managers
-  var qm = os.ui.queryManager;
-  if (featureIDs || useTemporal || useSpatial || useFilter || useExclusions) {
-    var ogcFilterOptions = /** @type {os.ogc.filter.OGCFilterModifierOptions} */ ({
-      exclusions: useExclusions,
-      filter: useFilter,
-      identifiers: !!featureIDs || !!relatedLayer,
-      spatial: useSpatial,
-      temporal: useTemporal
-    });
-
-    if (useFilter) {
-      layer.setFilterLauncher(plugin.ogc.wfs.launchFilterManager.bind(undefined, layer));
-      layer.setFilterColumnsFn(plugin.ogc.wfs.getFilterColumns.bind(undefined, layer));
-    }
-
-    var request = source.getRequest();
-
-    if (request) {
-      request.addModifier(new os.ogc.filter.OGCFilterModifier(ogcFilterOptions));
-
-      if (featureIDs) { // reachback via ID
-        var idLayer = {'ID': featureIDs};
-        var idModifier = new plugin.ogc.query.FilterIDModifier(idLayer);
-        request.addModifier(idModifier);
+      if (useFilter) {
+        layer.setFilterLauncher(launchFilterManager.bind(undefined, layer));
+        layer.setFilterColumnsFn(getFilterColumns.bind(undefined, layer));
       }
 
-      if (relatedLayer) {
-        var relateModifier = new plugin.ogc.query.FilterIDModifier(/** @type {Object} */ (relatedLayer));
-        request.addModifier(relateModifier);
-        source.setLockAfterQuery(true);
-      }
+      var request = source.getRequest();
 
-      var geomColumn = this.featureType.getGeometryColumnName();
-      if (geomColumn && (useSpatial || useExclusions || useFilter)) {
-        var handler = new plugin.ogc.query.OGCQueryHandler(geomColumn);
-        handler.setSource(source);
-        qm.registerHandler(handler);
-      }
+      if (request) {
+        request.addModifier(new OGCFilterModifier(ogcFilterOptions));
 
-      if (useTemporal) {
-        var tqFormatter = new plugin.ogc.query.OGCTemporalFormatter();
-        tqFormatter.setStartColumn(this.featureType.getStartDateColumnName());
-        tqFormatter.setEndColumn(this.featureType.getEndDateColumnName());
-
-        // THIN-7523 - hack for the case when our servers can't handle requests that go below a second
-        if (this.url.indexOf('ogc/wfsServer') > -1) {
-          tqFormatter.setRoundTimeEnabled();
+        if (featureIDs) { // reachback via ID
+          var idLayer = {'ID': featureIDs};
+          var idModifier = new FilterIDModifier(idLayer);
+          request.addModifier(idModifier);
         }
 
-        var tqModifier = new os.net.ParamModifier('temporal', 'filter',
-            os.ogc.filter.ModifierConstants.TEMPORAL, '');
+        if (relatedLayer) {
+          var relateModifier = new FilterIDModifier(/** @type {Object} */ (relatedLayer));
+          request.addModifier(relateModifier);
+          source.setLockAfterQuery(true);
+        }
 
-        var tqHandler = new os.query.TemporalHandler();
-        tqHandler.setFormatter(tqFormatter);
-        tqHandler.setModifier(tqModifier);
-        tqHandler.setSource(source);
+        var geomColumn = this.featureType.getGeometryColumnName();
+        if (geomColumn && (useSpatial || useExclusions || useFilter)) {
+          var handler = new OGCQueryHandler(geomColumn);
+          handler.setSource(source);
+          qm.registerHandler(handler);
+        }
 
-        var tqManager = os.query.TemporalQueryManager.getInstance();
-        tqManager.registerHandler(source.getId(), tqHandler);
+        if (useTemporal) {
+          var tqFormatter = new OGCTemporalFormatter();
+          tqFormatter.setStartColumn(this.featureType.getStartDateColumnName());
+          tqFormatter.setEndColumn(this.featureType.getEndDateColumnName());
+
+          // THIN-7523 - hack for the case when our servers can't handle requests that go below a second
+          if (this.url.indexOf('ogc/wfsServer') > -1) {
+            tqFormatter.setRoundTimeEnabled();
+          }
+
+          var tqModifier = new ParamModifier('temporal', 'filter',
+              os.ogc.filter.ModifierConstants.TEMPORAL, '');
+
+          var tqHandler = new TemporalHandler();
+          tqHandler.setFormatter(tqFormatter);
+          tqHandler.setModifier(tqModifier);
+          tqHandler.setSource(source);
+
+          var tqManager = TemporalQueryManager.getInstance();
+          tqManager.registerHandler(source.getId(), tqHandler);
+        }
       }
     }
   }
-};
+}
 
-
-/**
- * Launch the filter manager
- *
- * @param {!os.layer.Vector} layer The layer
- */
-plugin.ogc.wfs.launchFilterManager = function(layer) {
-  os.ui.query.CombinatorCtrl.launchForLayer(layer.getId());
-};
-
-
-/**
- * Get the filterable columns
- *
- * @param {!os.layer.Vector} layer The layer
- * @return {?Array<os.ogc.FeatureTypeColumn>} the columns
- */
-plugin.ogc.wfs.getFilterColumns = function(layer) {
-  var layerOptions = layer.getLayerOptions();
-  if (layerOptions && layerOptions['featureType']) {
-    var featureType = /** @type {os.ogc.IFeatureType} */ (layerOptions['featureType']);
-    if (featureType) {
-      return featureType.getColumns();
-    }
-  }
-
-  return null;
-};
+exports = QueryWFSLayerConfig;
