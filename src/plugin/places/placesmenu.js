@@ -35,7 +35,7 @@ const KMLTreeExportUI = goog.require('plugin.file.kml.ui.KMLTreeExportUI');
 const places = goog.require('plugin.places');
 const PlacesManager = goog.require('plugin.places.PlacesManager');
 const QuickAddPlacesUI = goog.require('plugin.places.ui.QuickAddPlacesUI');
-const launchSavePlaces = goog.require('plugin.places.ui.launchSavePlaces');
+const {launchSavePlaces} = goog.require('plugin.places.ui.launchSavePlaces');
 
 const {FolderOptions, PlacemarkOptions} = goog.requireType('plugin.file.kml.ui');
 

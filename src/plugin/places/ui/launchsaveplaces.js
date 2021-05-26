@@ -3,19 +3,17 @@ goog.module.declareLegacyNamespace();
 
 const osWindow = goog.require('os.ui.window');
 const places = goog.require('plugin.places');
-
-// const {inIframe} = goog.require('os');
 const {directiveTag: savePlacesUi} = goog.require('plugin.places.ui.SavePlacesUI');
 
+const VectorSource = goog.requireType('os.source.Vector');
 
-// TODO: If in an iframe, launch in the main window.
 
 /**
  * Launch a dialog to save places from a source.
  *
- * @param {os.source.Vector} source The source
+ * @param {VectorSource} source The source
  */
-const launchSavePlaces = (source) => {
+let launchSavePlaces_ = (source) => {
   var windowId = 'savePlaces';
   if (osWindow.exists(windowId)) {
     osWindow.bringToFront(windowId);
@@ -42,4 +40,25 @@ const launchSavePlaces = (source) => {
   }
 };
 
-exports = launchSavePlaces;
+/**
+ * Launch a dialog to save places from a source.
+ *
+ * @param {VectorSource} source The source
+ */
+const launchSavePlaces = (source) => {
+  launchSavePlaces_(source);
+};
+
+/**
+ * Replace default launchSavePlaces implementation
+ *
+ * @param {!function(VectorSource)} f The new implementation
+ */
+const setLaunchSavePlaces = function(f) {
+  launchSavePlaces_ = f;
+};
+
+exports = {
+  launchSavePlaces,
+  setLaunchSavePlaces
+};
