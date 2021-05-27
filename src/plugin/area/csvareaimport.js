@@ -1,9 +1,11 @@
 goog.module('plugin.area.CSVAreaImport');
 goog.module.declareLegacyNamespace();
 
+const RecordField = goog.require('os.data.RecordField');
 const EventType = goog.require('os.events.EventType');
 const Importer = goog.require('os.im.Importer');
 const Module = goog.require('os.ui.Module');
+const osWindow = goog.require('os.ui.window');
 const WizardCtrl = goog.require('os.ui.wiz.WizardCtrl');
 const wizardDirective = goog.require('os.ui.wiz.wizardDirective');
 const area = goog.require('plugin.area');
@@ -55,11 +57,11 @@ class Controller extends WizardCtrl {
     importer.dispose();
 
     if (features && features.length > 0) {
-      this.scope['config'][os.data.RecordField.SOURCE_NAME] = this.scope['config']['file'].getFileName();
+      this.scope['config'][RecordField.SOURCE_NAME] = this.scope['config']['file'].getFileName();
       area.processFeatures(features, this.scope['config']);
     }
 
-    os.ui.window.close(this.element);
+    osWindow.close(this.element);
   }
 }
 

@@ -4,7 +4,10 @@ goog.module.declareLegacyNamespace();
 goog.require('os.ui.im.mergeAreaOptionDirective');
 
 const {ROOT} = goog.require('os');
+const EventType = goog.require('os.events.EventType');
 const Importer = goog.require('os.im.Importer');
+const ui = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
 const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
 const AreaImportCtrl = goog.require('plugin.area.AreaImportCtrl');
 const SHPParser = goog.require('plugin.file.shp.SHPParser');
@@ -35,7 +38,7 @@ const directiveTag = 'shparea';
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('shparea', [directive]);
+Module.directive('shparea', [directive]);
 
 
 /**
@@ -59,7 +62,7 @@ class Controller extends AreaImportCtrl {
 
     // If this is the zip file, run the preview
     if (this.config['zipFile']) {
-      this.config.updateZipPreview(os.ui.apply.bind(this, this.scope));
+      this.config.updateZipPreview(ui.apply.bind(this, this.scope));
     }
   }
 
@@ -72,7 +75,7 @@ class Controller extends AreaImportCtrl {
    */
   onFileChange_(event, valid) {
     this.config.updatePreview();
-    os.ui.apply(this.scope);
+    ui.apply(this.scope);
   }
 
   /**
@@ -99,7 +102,7 @@ class Controller extends AreaImportCtrl {
 
     var parser = new SHPParser(this.config);
     var importer = new Importer(parser);
-    importer.listenOnce(os.events.EventType.COMPLETE, this.onImportComplete_, false, this);
+    importer.listenOnce(EventType.COMPLETE, this.onImportComplete_, false, this);
 
     if (this.config['zipFile']) {
       importer.startImport(this.config['zipFile'].getContent());

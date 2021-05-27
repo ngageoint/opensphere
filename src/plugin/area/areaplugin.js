@@ -1,6 +1,7 @@
 goog.module('plugin.area.AreaPlugin');
 goog.module.declareLegacyNamespace();
 
+const os = goog.require('os');
 const csv = goog.require('os.file.mime.csv');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const ImportMethod = goog.require('os.ui.file.method.ImportMethod');

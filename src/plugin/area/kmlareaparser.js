@@ -1,12 +1,19 @@
 goog.module('plugin.area.KMLAreaParser');
 goog.module.declareLegacyNamespace();
 
+const dom = goog.require('goog.dom');
+const googDomXml = goog.require('goog.dom.xml');
+const GoogFileReader = goog.require('goog.fs.FileReader');
+const log = goog.require('goog.log');
 const KML = goog.require('ol.format.KML');
 const xml = goog.require('ol.xml');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
 const text = goog.require('os.file.mime.text');
 const mimeZip = goog.require('os.file.mime.zip');
+const osMap = goog.require('os.map');
 const AsyncZipParser = goog.require('os.parse.AsyncZipParser');
+const osXml = goog.require('os.xml');
+
 const IParser = goog.requireType('os.parse.IParser');
 
 
@@ -65,7 +72,7 @@ class KMLAreaParser extends AsyncZipParser {
     if (xml.isDocument(source)) {
       this.document_ = /** @type {Document} */ (source);
     } else if (typeof source === 'string') {
-      this.document_ = goog.dom.xml.loadXml(source);
+      this.document_ = googDomXml.loadXml(source);
     } else if (source instanceof ArrayBuffer) {
       if (mimeZip.isZip(source)) {
         this.createZipReader(source);
@@ -73,24 +80,24 @@ class KMLAreaParser extends AsyncZipParser {
       } else {
         var s = text.getText(source);
         if (s) {
-          this.document_ = goog.dom.xml.loadXml(s);
+          this.document_ = googDomXml.loadXml(s);
         } else {
-          goog.log.error(this.log_, 'The buffer source does not appear to be text');
+          log.error(this.log_, 'The buffer source does not appear to be text');
           this.onError();
         }
       }
     } else if (source instanceof Blob) {
-      goog.fs.FileReader.readAsArrayBuffer(source).addCallback(this.setSource, this);
+      GoogFileReader.readAsArrayBuffer(source).addCallback(this.setSource, this);
       return;
     }
 
     if (this.document_) {
-      var rootEl = goog.dom.getFirstElementChild(this.document_);
+      var rootEl = dom.getFirstElementChild(this.document_);
       if (rootEl && rootEl.localName.toLowerCase() !== 'kml') {
         // Sometimes people are dumb and create documents without a root <kml> tag.
         // This is technically invalid KML and even invalid XML.  Because Google Earth
         // accepts this crap, add a special case to put the proper root tag.
-        var newRoot = os.xml.createElement('kml', this.document_);
+        var newRoot = osXml.createElement('kml', this.document_);
         newRoot.appendChild(rootEl);
         this.document_.appendChild(newRoot);
         rootEl = newRoot;
@@ -99,11 +106,11 @@ class KMLAreaParser extends AsyncZipParser {
       if (rootEl) {
         this.onReady();
       } else {
-        goog.log.error(this.log_, 'No KML content to parse!');
+        log.error(this.log_, 'No KML content to parse!');
         this.onError();
       }
     } else {
-      goog.log.error(this.log_, 'Content must be a valid KML document!');
+      log.error(this.log_, 'Content must be a valid KML document!');
       this.onError();
     }
   }
@@ -141,7 +148,7 @@ class KMLAreaParser extends AsyncZipParser {
     if (mainEntry) {
       this.processMainEntry_(mainEntry);
     } else {
-      goog.log.error(this.log_, 'No KML found in the ZIP!');
+      log.error(this.log_, 'No KML found in the ZIP!');
       this.onError();
     }
   }
@@ -169,7 +176,7 @@ class KMLAreaParser extends AsyncZipParser {
       reader.onload = this.handleZIPText_.bind(this, filename);
       reader.readAsText(content);
     } else {
-      goog.log.error(this.log_, 'There was a problem unzipping the KMZ!');
+      log.error(this.log_, 'There was a problem unzipping the KMZ!');
       this.onError();
     }
   }
@@ -187,7 +194,7 @@ class KMLAreaParser extends AsyncZipParser {
         this.setSource(content);
       }
     } else {
-      goog.log.error(this.log_, 'There was a problem reading the ZIP content!');
+      log.error(this.log_, 'There was a problem reading the ZIP content!');
       this.onError();
     }
   }
@@ -223,7 +230,7 @@ class KMLAreaParser extends AsyncZipParser {
       var doc = this.document_;
       this.document_ = null;
       features = this.format_.readFeatures(doc, {
-        featureProjection: os.map.PROJECTION
+        featureProjection: osMap.PROJECTION
       });
     }
 
@@ -263,7 +270,7 @@ class KMLAreaParser extends AsyncZipParser {
 /**
  * @type {goog.log.Logger}
  */
-const logger = goog.log.getLogger('plugin.area.KMLAreaParser');
+const logger = log.getLogger('plugin.area.KMLAreaParser');
 
 
 exports = KMLAreaParser;

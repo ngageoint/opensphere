@@ -1,6 +1,7 @@
 goog.module('plugin.area.AreaImportCtrl');
 goog.module.declareLegacyNamespace();
 
+const RecordField = goog.require('os.data.RecordField');
 const AreaImportCtrl = goog.require('os.ui.query.AreaImportCtrl');
 const area = goog.require('plugin.area');
 
@@ -40,7 +41,7 @@ class Controller extends AreaImportCtrl {
    * @protected
    */
   processFeatures(features) {
-    this.config[os.data.RecordField.SOURCE_NAME] = this.getFileName();
+    this.config[RecordField.SOURCE_NAME] = this.getFileName();
     area.processFeatures(features, this.config);
   }
 }

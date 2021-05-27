@@ -4,7 +4,9 @@ goog.module.declareLegacyNamespace();
 goog.require('os.ui.im.mergeAreaOptionDirective');
 
 const {ROOT} = goog.require('os');
+const EventType = goog.require('os.events.EventType');
 const Importer = goog.require('os.im.Importer');
+const Module = goog.require('os.ui.Module');
 const AreaImportCtrl = goog.require('plugin.area.AreaImportCtrl');
 const KMLAreaParser = goog.require('plugin.area.KMLAreaParser');
 
@@ -35,7 +37,7 @@ const directiveTag = 'kmlarea';
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('kmlarea', [directive]);
+Module.directive('kmlarea', [directive]);
 
 
 
@@ -66,7 +68,7 @@ class Controller extends AreaImportCtrl {
 
     var parser = new KMLAreaParser();
     var importer = new Importer(parser);
-    importer.listenOnce(os.events.EventType.COMPLETE, this.onImportComplete_, false, this);
+    importer.listenOnce(EventType.COMPLETE, this.onImportComplete_, false, this);
     importer.startImport(this.config['file'].getContent());
   }
 

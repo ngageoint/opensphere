@@ -1,8 +1,11 @@
 goog.module('plugin.area.KMLAreaImportUI');
 goog.module.declareLegacyNamespace();
 
+const dispose = goog.require('goog.dispose');
+const EventType = goog.require('os.events.EventType');
 const FileParserConfig = goog.require('os.parse.FileParserConfig');
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
+const osWindow = goog.require('os.ui.window');
 const KMLAreaParser = goog.require('plugin.area.KMLAreaParser');
 const {directiveTag: areaImportUi} = goog.require('plugin.area.KMLAreaUI');
 
@@ -45,8 +48,8 @@ class KMLAreaImportUI extends FileImportUI {
 
     var callback = goog.partial(this.onPreviewReady_, config);
     var parser = new KMLAreaParser();
-    parser.listenOnce(os.events.EventType.COMPLETE, callback, false, this);
-    parser.listenOnce(os.events.EventType.ERROR, callback, false, this);
+    parser.listenOnce(EventType.COMPLETE, callback, false, this);
+    parser.listenOnce(EventType.ERROR, callback, false, this);
     parser.setSource(file.getContent());
   }
 
@@ -59,7 +62,7 @@ class KMLAreaImportUI extends FileImportUI {
     var parser = /** @type {KMLAreaParser} */ (event.target);
     var preview = parser.parseNext();
     var columns = parser.getColumns() || [];
-    goog.dispose(parser);
+    dispose(parser);
 
     config['columns'] = columns;
     config['preview'] = preview;
@@ -80,7 +83,7 @@ class KMLAreaImportUI extends FileImportUI {
       'show-close': 'true'
     };
     var template = `<${areaImportUi}></${areaImportUi}>`;
-    os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+    osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 }
 

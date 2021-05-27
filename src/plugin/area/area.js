@@ -3,11 +3,13 @@ goog.module.declareLegacyNamespace();
 
 const Feature = goog.require('ol.Feature');
 const olArray = goog.require('ol.array');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const RecordField = goog.require('os.data.RecordField');
 const fn = goog.require('os.fn');
 const jsts = goog.require('os.geo.jsts');
 const areaManager = goog.require('os.query.AreaManager');
+const query = goog.require('os.ui.query');
 
 
 /**
@@ -21,7 +23,7 @@ const processFeatures = function(features, config) {
   features = areaManager.getInstance().filterFeatures(features);
 
   if (features && features.length > 0) {
-    var mappings = os.ui.query.createMappingsFromConfig(config);
+    var mappings = query.createMappingsFromConfig(config);
     var geometries = features.map(fn.mapFeatureToGeometry).filter(fn.filterFalsey);
 
     if (config['merge'] && geometries.length > 1) {
@@ -31,7 +33,7 @@ const processFeatures = function(features, config) {
         processFeature_(feature, config, mappings);
         areaManager.getInstance().add(feature);
       } else {
-        AlertManager.getInstance().sendAlert('Failed merging areas', os.alert.AlertEventSeverity.ERROR);
+        AlertManager.getInstance().sendAlert('Failed merging areas', AlertEventSeverity.ERROR);
       }
     } else {
       features.forEach(function(feature) {
@@ -43,7 +45,7 @@ const processFeatures = function(features, config) {
       areaManager.getInstance().bulkAdd(features, true);
     }
   } else {
-    AlertManager.getInstance().sendAlert('No Areas Found', os.alert.AlertEventSeverity.WARNING);
+    AlertManager.getInstance().sendAlert('No Areas Found', AlertEventSeverity.WARNING);
   }
 };
 
@@ -56,11 +58,11 @@ const processFeatures = function(features, config) {
  */
 const processFeature_ = function(feature, config, mappings) {
   // apply mappings to the feature
-  os.ui.query.applyMappings(feature, mappings);
+  query.applyMappings(feature, mappings);
 
   // Strip out unnecessary feature values (kml style was breaking the refresh)
   feature.getKeys().forEach(function(value) {
-    var found = olArray.find(os.ui.query.featureKeys, function(key) {
+    var found = olArray.find(query.featureKeys, function(key) {
       return key.toLowerCase() == value.toLowerCase();
     });
     if (!found) {

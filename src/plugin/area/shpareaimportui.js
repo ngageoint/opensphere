@@ -2,9 +2,10 @@ goog.module('plugin.area.SHPAreaImportUI');
 goog.module.declareLegacyNamespace();
 
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
+const osWindow = goog.require('os.ui.window');
 const windowSelector = goog.require('os.ui.windowSelector');
-const SHPParserConfig = goog.require('plugin.file.shp.SHPParserConfig');
 const {directiveTag: areaImportUi} = goog.require('plugin.area.SHPAreaUI');
+const SHPParserConfig = goog.require('plugin.file.shp.SHPParserConfig');
 const mime = goog.require('plugin.file.shp.mime');
 
 
@@ -66,7 +67,7 @@ class SHPAreaImportUI extends FileImportUI {
       'show-close': 'true'
     };
     var template = `<${areaImportUi} resize-with="${windowSelector.WINDOW}"></${areaImportUi}>`;
-    os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+    osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 }
 
