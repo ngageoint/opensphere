@@ -1,7 +1,9 @@
 goog.provide('os.layer.AnimatedTile');
 
 goog.require('goog.async.Delay');
+goog.require('os.IAnimationSupport');
 goog.require('os.events.PropertyChangeEvent');
+goog.require('os.implements');
 goog.require('os.layer.PropertyChange');
 goog.require('os.layer.Tile');
 goog.require('os.query.TemporalFormatter');
@@ -18,6 +20,7 @@ goog.requireType('ol.source.TileWMS');
 
 /**
  * @extends {os.layer.Tile}
+ * @implements {os.IAnimationSupport}
  * @param {olx.layer.TileOptions} options Tile layer options
  * @constructor
  */
@@ -76,6 +79,7 @@ os.layer.AnimatedTile = function(options) {
   this.timeFunction = null;
 };
 goog.inherits(os.layer.AnimatedTile, os.layer.Tile);
+os.implements(os.layer.AnimatedTile, os.IAnimationSupport.ID);
 
 
 /**
@@ -268,9 +272,7 @@ os.layer.AnimatedTile.prototype.setTimeFormat = function(format) {
 
 
 /**
- * If the layer has been enabled for animation.
- *
- * @return {boolean}
+ * @inheritDoc
  */
 os.layer.AnimatedTile.prototype.getAnimationEnabled = function() {
   return this.animationEnabled_;
@@ -278,9 +280,7 @@ os.layer.AnimatedTile.prototype.getAnimationEnabled = function() {
 
 
 /**
- * Marks the source as being in the animating state.
- *
- * @param {boolean} value
+ * @inheritDoc
  */
 os.layer.AnimatedTile.prototype.setAnimationEnabled = function(value) {
   if (this.animationEnabled_ !== value) {
