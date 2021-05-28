@@ -2,13 +2,17 @@ goog.provide('os.ui.TimelinePanelCtrl');
 goog.provide('os.ui.timelinePanelDirective');
 
 goog.require('os');
+goog.require('os.IAnimationSupport');
 goog.require('os.data.histo.TimelineHistManager');
+goog.require('os.implements');
 goog.require('os.time.TimelineEventType');
 goog.require('os.ui.Module');
 goog.require('os.ui.animationSettingsDirective');
 goog.require('os.ui.hist.HistogramEventType');
 goog.require('os.ui.timeSettingsDirective');
 goog.require('os.ui.timeline.AbstractTimelineCtrl');
+
+goog.requireType('ol.layer.Layer');
 
 
 /**
@@ -100,13 +104,9 @@ os.ui.TimelinePanelCtrl.prototype.destroy = function() {
  * @private
  */
 os.ui.TimelinePanelCtrl.prototype.onLayerAdded_ = function(event) {
-  if (event.layer instanceof os.layer.Vector) {
-    var source = event.layer.getSource();
-    if (source instanceof os.source.Vector) {
-      this.setLayerAnimationState_(true, source);
-    }
-  } else if (event.layer instanceof os.layer.AnimatedTile) {
-    this.setLayerAnimationState_(true, event.layer);
+  // The layer should only be a string ID on the remove event.
+  if (typeof event.layer !== 'string') {
+    this.setLayerAnimationState_(event.layer, true);
   }
 };
 
@@ -122,7 +122,7 @@ os.ui.TimelinePanelCtrl.prototype.assumeControl = function() {
   }
 
   // flip all layers to use the animation overlay
-  this.setLayerAnimationState_(true);
+  this.setAllLayerAnimationState_(true);
   os.MapContainer.getInstance().listen(os.events.LayerEventType.ADD, this.onLayerAdded_, false, this);
 
   os.ui.TimelinePanelCtrl.base(this, 'assumeControl');
@@ -139,7 +139,7 @@ os.ui.TimelinePanelCtrl.prototype.releaseControl = function() {
 
   // flip all layers back to normal feature rendering
   os.MapContainer.getInstance().unlisten(os.events.LayerEventType.ADD, this.onLayerAdded_, false, this);
-  this.setLayerAnimationState_(false);
+  this.setAllLayerAnimationState_(false);
 
   // return control back to the date control
   angular.element('.js-date-control').scope()['dateControl'].assumeControl();
@@ -150,26 +150,32 @@ os.ui.TimelinePanelCtrl.prototype.releaseControl = function() {
 
 
 /**
- * Toggles all vector sources into the specified animation state, or a specific source if provided.
- *
- * @param {boolean} value
- * @param {(os.source.Vector|os.layer.AnimatedTile)=} opt_target
+ * Toggles all layers/sources implementing the `IAnimationSupport` interface into the specified animation state.
+ * @param {boolean} value The animation state.
  * @private
  */
-os.ui.TimelinePanelCtrl.prototype.setLayerAnimationState_ = function(value, opt_target) {
-  if (opt_target) {
-    opt_target.setAnimationEnabled(value);
-  } else {
-    var layers = os.MapContainer.getInstance().getLayers();
-    for (var i = 0, n = layers.length; i < n; i++) {
-      var layer = layers[i];
-      if (layer instanceof os.layer.AnimatedTile) {
-        layer.setAnimationEnabled(value);
-      } else if (layer instanceof os.layer.Vector) {
-        var source = layer.getSource();
-        if (source instanceof os.source.Vector) {
-          source.setAnimationEnabled(value);
-        }
+os.ui.TimelinePanelCtrl.prototype.setAllLayerAnimationState_ = function(value) {
+  var layers = os.MapContainer.getInstance().getLayers();
+  for (var i = 0, n = layers.length; i < n; i++) {
+    this.setLayerAnimationState_(layers[i], value);
+  }
+};
+
+
+/**
+ * Toggle the animation state on a layer or its source if either supports the `os.IAnimationSupport` interface.
+ * @param {ol.layer.Layer} layer The layer.
+ * @param {boolean} value The animation state.
+ * @private
+ */
+os.ui.TimelinePanelCtrl.prototype.setLayerAnimationState_ = function(layer, value) {
+  if (layer) {
+    if (os.implements(layer, os.IAnimationSupport.ID)) {
+      /** @type {os.IAnimationSupport} */ (layer).setAnimationEnabled(value);
+    } else {
+      const source = layer.getSource();
+      if (os.implements(source, os.IAnimationSupport.ID)) {
+        /** @type {os.IAnimationSupport} */ (source).setAnimationEnabled(value);
       }
     }
   }

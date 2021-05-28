@@ -1,4 +1,5 @@
 goog.provide('os.data.histo.TimelineHistManager');
+
 goog.require('goog.async.Throttle');
 goog.require('goog.events.EventTarget');
 goog.require('goog.events.EventType');
@@ -10,6 +11,7 @@ goog.require('os.data.event.DataEvent');
 goog.require('os.data.event.DataEventType');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.fn');
+goog.require('os.hist');
 goog.require('os.hist.HistogramData');
 goog.require('os.source.PropertyChange');
 goog.require('os.time.TimeRange');
@@ -160,19 +162,14 @@ os.data.histo.TimelineHistManager.prototype.getHistograms = function(options) {
 
   if (options.interval > 0) {
     var layers = os.MapContainer.getInstance().getLayers();
-    var sources = layers.map(os.fn.mapLayerToSource).filter(os.fn.filterFalsey);
+    histograms = layers.map((layer) => os.hist.mapLayerToHistogram(layer, options))
+        .filter(os.fn.filterFalsey);
 
-    if (!sources.length) {
-      sources = os.osDataManager.getSources();
+    if (!histograms.length) {
+      var sources = os.osDataManager.getSources();
+      histograms = sources.map((source) => os.hist.mapSourceToHistogram(source, options))
+          .filter(os.fn.filterFalsey);
     }
-
-    histograms = sources.map(function(source) {
-      if (os.implements(source, os.hist.IHistogramProvider.ID)) {
-        return /** @type {os.hist.IHistogramProvider} */ (source).getHistogram(options);
-      }
-
-      return null;
-    }).filter(os.fn.filterFalsey);
   }
 
   return histograms;
