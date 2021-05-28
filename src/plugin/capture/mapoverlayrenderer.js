@@ -3,6 +3,8 @@ goog.module.declareLegacyNamespace();
 
 const HtmlRenderer = goog.require('os.ui.capture.HtmlRenderer');
 
+const Overlay = goog.requireType('ol.Overlay');
+
 
 /**
  * Renders a map overlay to a canvas.
@@ -10,7 +12,7 @@ const HtmlRenderer = goog.require('os.ui.capture.HtmlRenderer');
 class MapOverlayRenderer extends HtmlRenderer {
   /**
    * Constructor.
-   * @param {!ol.Overlay} overlay The overlay to render.
+   * @param {!Overlay} overlay The overlay to render.
    */
   constructor(overlay) {
     super({
@@ -20,7 +22,7 @@ class MapOverlayRenderer extends HtmlRenderer {
 
     /**
      * The OpenLayers overlay.
-     * @type {!ol.Overlay}
+     * @type {!Overlay}
      * @private
      */
     this.overlay_ = overlay;

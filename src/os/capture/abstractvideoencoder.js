@@ -5,6 +5,8 @@ const EventTarget = goog.require('goog.events.EventTarget');
 const TrustedResourceUrl = goog.require('goog.html.TrustedResourceUrl');
 const log = goog.require('goog.log');
 const jsloader = goog.require('goog.net.jsloader');
+const CaptureEventType = goog.require('os.capture.CaptureEventType');
+const osString = goog.require('os.string');
 
 const IVideoEncoder = goog.requireType('os.capture.IVideoEncoder');
 
@@ -138,7 +140,7 @@ class AbstractVideoEncoder extends EventTarget {
   process() {
     if (!this.isEncoderLoaded()) {
       if (this.scriptUrl) {
-        var trustedUrl = TrustedResourceUrl.fromConstant(os.string.createConstant(this.scriptUrl));
+        var trustedUrl = TrustedResourceUrl.fromConstant(osString.createConstant(this.scriptUrl));
         jsloader.safeLoad(trustedUrl).addCallbacks(this.processInternal, this.onScriptLoadError, this);
       } else {
         this.handleError(this.title + ' encoder is not available');
@@ -181,7 +183,7 @@ class AbstractVideoEncoder extends EventTarget {
 
     this.errorMsg = 'Encountered an error while exporting video: ' + msg;
 
-    this.dispatchEvent(os.capture.CaptureEventType.ERROR);
+    this.dispatchEvent(CaptureEventType.ERROR);
   }
 
   /**
@@ -210,7 +212,7 @@ class AbstractVideoEncoder extends EventTarget {
    */
   setProgress(value) {
     this.progress = value;
-    this.dispatchEvent(os.capture.CaptureEventType.PROGRESS);
+    this.dispatchEvent(CaptureEventType.PROGRESS);
   }
 
   /**
@@ -221,7 +223,7 @@ class AbstractVideoEncoder extends EventTarget {
    */
   setStatus(value) {
     this.status = value;
-    this.dispatchEvent(os.capture.CaptureEventType.STATUS);
+    this.dispatchEvent(CaptureEventType.STATUS);
   }
 }
 

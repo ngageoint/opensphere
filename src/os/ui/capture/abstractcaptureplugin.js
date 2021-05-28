@@ -2,8 +2,11 @@ goog.module('os.ui.capture.AbstractCapturePlugin');
 goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
+const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');
+const userAgent = goog.require('goog.userAgent');
 const dispatcher = goog.require('os.Dispatcher');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const capture = goog.require('os.capture');
 const TimelineRecorder = goog.require('os.capture.TimelineRecorder');
@@ -112,13 +115,13 @@ class AbstractCapturePlugin extends AbstractPlugin {
     if (!this.checkedSupport_) {
       this.checkedSupport_ = true;
 
-      if (goog.userAgent.IE) {
+      if (userAgent.IE) {
         // WebGL capture does not work at all in IE
         // the save-svg-as-png library does not work in IE
         // GIT creation is slow to unusable in IE
         var msg = 'Screen capture may not work as expected in Internet Explorer due to browser limitations. To use ' +
             'this feature, we recommend switching to Chrome or Firefox.';
-        AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.WARNING,
+        AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.WARNING,
             logger);
       }
     }
@@ -158,7 +161,7 @@ class AbstractCapturePlugin extends AbstractPlugin {
 
     log.error(this.log, errorMsg, error);
     AlertManager.getInstance().sendAlert('Unable to take screenshot. Please see the log for more details.',
-        os.alert.AlertEventSeverity.ERROR);
+        AlertEventSeverity.ERROR);
   }
 
   /**
@@ -262,7 +265,7 @@ const logger = log.getLogger('os.ui.capture.AbstractCapturePlugin');
  * @return {number} The sort order.
  */
 const rendererPrioritySort = function(a, b) {
-  return goog.array.inverseDefaultCompare(a.priority, b.priority);
+  return googArray.inverseDefaultCompare(a.priority, b.priority);
 };
 
 exports = AbstractCapturePlugin;

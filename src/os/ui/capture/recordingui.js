@@ -3,13 +3,17 @@ goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.loadingBarDirective');
 
+const dispose = goog.require('goog.dispose');
 const {ROOT} = goog.require('os');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const capture = goog.require('os.capture');
 const GifEncoder = goog.require('os.capture.GifEncoder');
+const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
 const exportManager = goog.require('os.ui.exportManager');
+const osWindow = goog.require('os.ui.window');
 
 const IRecorder = goog.requireType('os.capture.IRecorder');
 
@@ -135,7 +139,7 @@ class Controller {
     // bring focus to the title input
     this.element_.find('input[name="title"]').focus();
 
-    $scope.$emit(os.ui.WindowEventType.READY);
+    $scope.$emit(WindowEventType.READY);
     $scope.$on('$destroy', this.destroy_.bind(this));
   }
 
@@ -145,7 +149,7 @@ class Controller {
    * @private
    */
   destroy_() {
-    goog.dispose(this.recorder_);
+    dispose(this.recorder_);
     this.recorder_ = null;
 
     this.scope_ = null;
@@ -158,7 +162,7 @@ class Controller {
    * @private
    */
   close_() {
-    os.ui.window.close(this.element_);
+    osWindow.close(this.element_);
     this['recording'] = false;
     this.toggleRecordButton();
   }
@@ -192,7 +196,7 @@ class Controller {
       this['recording'] = true;
       this['recordingCritical'] = true;
       this.toggleRecordButton();
-      os.ui.window.enableModality(RECORDING_ID);
+      osWindow.enableModality(RECORDING_ID);
       this.recorder_.setEncoder(this['encoder']);
       this.recorder_.record();
     } else {
@@ -238,7 +242,7 @@ class Controller {
   onRecordingProgress_(event) {
     if (this.recorder_) {
       this['progress'] = this.recorder_.progress;
-      os.ui.apply(this.scope_);
+      ui.apply(this.scope_);
     }
   }
 
@@ -251,8 +255,8 @@ class Controller {
   onUnblock_(event) {
     if (this.recorder_) {
       this['recordingCritical'] = false;
-      os.ui.window.disableModality(RECORDING_ID);
-      os.ui.apply(this.scope_);
+      osWindow.disableModality(RECORDING_ID);
+      ui.apply(this.scope_);
     }
   }
 
@@ -265,7 +269,7 @@ class Controller {
   onRecordingStatus_(event) {
     if (this.recorder_) {
       this['status'] = this.recorder_.status;
-      os.ui.apply(this.scope_);
+      ui.apply(this.scope_);
     }
   }
 
@@ -323,7 +327,7 @@ class Controller {
  * @param {!IRecorder} recorder The recorder
  */
 const launchRecordingUI = function(recorder) {
-  if (recorder && !os.ui.window.exists(RECORDING_ID)) {
+  if (recorder && !osWindow.exists(RECORDING_ID)) {
     var scopeOptions = {
       'recorder': recorder
     };
@@ -343,7 +347,7 @@ const launchRecordingUI = function(recorder) {
     };
 
     var template = `<${directiveTag} recorder="recorder"></${directiveTag}>`;
-    os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+    osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
 };
 

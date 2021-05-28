@@ -1,6 +1,7 @@
 goog.module('os.ui.capture.TimelineRenderer');
 goog.module.declareLegacyNamespace();
 
+const capture = goog.require('os.capture');
 const SvgRenderer = goog.require('os.ui.capture.SvgRenderer');
 
 
@@ -61,7 +62,7 @@ class TimelineRenderer extends SvgRenderer {
     if (timelineEl) {
       var rect = timelineEl.getBoundingClientRect();
       if (rect) {
-        return rect.height * os.capture.getPixelRatio();
+        return rect.height * capture.getPixelRatio();
       }
     }
 

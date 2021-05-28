@@ -2,14 +2,17 @@ goog.module('os.capture');
 goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
+const dispose = goog.require('goog.dispose');
 const dom = goog.require('goog.dom');
 const log = goog.require('goog.log');
 const webgl = goog.require('ol.webgl');
 const {ROOT} = goog.require('os');
 const MapContainer = goog.require('os.MapContainer');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const ContentType = goog.require('os.capture.ContentType');
 const config = goog.require('os.config');
+const osFile = goog.require('os.file');
 const Job = goog.require('os.job.Job');
 const JobEventType = goog.require('os.job.JobEventType');
 const osMap = goog.require('os.map');
@@ -214,7 +217,7 @@ const saveCanvas = function(canvas, opt_fileName) {
     var support = /** @type {string} */ (config.getSupportContact('your system administrator'));
     support = osString.linkify(support);
     AlertManager.getInstance().sendAlert('Unable to save canvas due to cross-origin content. Please contact <b>' +
-        support + '</b> for support.', os.alert.AlertEventSeverity.ERROR, logger);
+        support + '</b> for support.', AlertEventSeverity.ERROR, logger);
   }
 
   saveDataUrl(dataUrl, opt_fileName);
@@ -240,15 +243,15 @@ const saveDataUrl = function(dataUrl, opt_fileName) {
          * @param {JobEvent} event
          */
         function(event) {
-          goog.dispose(event.target);
+          dispose(event.target);
 
           if (event.data instanceof Uint8Array) {
             var blob = new Blob([event.data], {type: 'image/png'});
             var filename = (opt_fileName || ('Screenshot ' + getTimestamp())) + '.png';
-            os.file.persist.saveFile(filename, blob, ContentType.PNG);
+            osFile.persist.saveFile(filename, blob, ContentType.PNG);
           } else {
             AlertManager.getInstance().sendAlert('Failed saving canvas to PNG',
-                os.alert.AlertEventSeverity.ERROR, logger);
+                AlertEventSeverity.ERROR, logger);
           }
         });
 
@@ -259,10 +262,10 @@ const saveDataUrl = function(dataUrl, opt_fileName) {
          * @param {JobEvent} event
          */
         function(event) {
-          goog.dispose(event.target);
+          dispose(event.target);
 
           var msg = typeof event.data === 'string' ? event.data : 'Screen capture failed due to an unspecified error';
-          AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.ERROR, logger);
+          AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.ERROR, logger);
         });
 
     job.startExecution({

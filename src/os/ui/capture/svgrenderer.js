@@ -2,6 +2,7 @@ goog.module('os.ui.capture.SvgRenderer');
 goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
+const capture = goog.require('os.capture');
 const ElementRenderer = goog.require('os.ui.capture.ElementRenderer');
 
 
@@ -27,7 +28,7 @@ class SvgRenderer extends ElementRenderer {
       var svgElement = this.getRenderElement();
       if (svgElement) {
         svgAsDataUri(svgElement, {
-          'scale': os.capture.getPixelRatio()
+          'scale': capture.getPixelRatio()
         }, this.onSvgUriReady_.bind(this, resolve, reject));
       } else {
         resolve(null);

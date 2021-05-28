@@ -3,8 +3,8 @@ goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const {getCanvasData} = goog.require('os.capture');
-const CaptureEventType = goog.require('os.capture.CaptureEventType');
 const AbstractVideoEncoder = goog.require('os.capture.AbstractVideoEncoder');
+const CaptureEventType = goog.require('os.capture.CaptureEventType');
 const {WORKER_SCRIPT} = goog.require('os.capture.gif');
 const GIFEventType = goog.require('os.capture.gif.EventType');
 

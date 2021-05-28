@@ -2,6 +2,7 @@ goog.module('os.capture.TimelineRecorder');
 goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
+const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const capture = goog.require('os.capture');
 const AbstractRecorder = goog.require('os.capture.AbstractRecorder');
@@ -188,7 +189,7 @@ class TimelineRecorder extends AbstractRecorder {
       this.encoder.listenOnce(CaptureEventType.ERROR, this.onExportError_, false, this);
 
       if (this.vsm) { // stop listening for resize
-        this.vsm.unlisten(goog.events.EventType.RESIZE, this.onViewportResize, false, this);
+        this.vsm.unlisten(GoogEventType.RESIZE, this.onViewportResize, false, this);
       }
       this.dispatchEvent(CaptureEventType.UNBLOCK);
       this.encoder.init(this.tlc_.getFps());

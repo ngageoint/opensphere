@@ -1,9 +1,11 @@
 goog.module('plugin.capture.TimelineRecorder');
 goog.module.declareLegacyNamespace();
 
+const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const osCaptureTimelineRecorder = goog.require('os.capture.TimelineRecorder');
 const DataManager = goog.require('os.data.DataManager');
+const PropertyChange = goog.require('os.data.PropertyChange');
 
 
 /**
@@ -40,7 +42,7 @@ class TimelineRecorder extends osCaptureTimelineRecorder {
     mdm.setTimeFilterEnabled(false);
 
     // listen for external changes to the time filter flag
-    mdm.listen(goog.events.EventType.PROPERTYCHANGE, this.onDataManagerChange_, false, this);
+    mdm.listen(GoogEventType.PROPERTYCHANGE, this.onDataManagerChange_, false, this);
   }
 
   /**
@@ -52,7 +54,7 @@ class TimelineRecorder extends osCaptureTimelineRecorder {
     var mdm = DataManager.getInstance();
 
     // remove the listener
-    mdm.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onDataManagerChange_, false, this);
+    mdm.unlisten(GoogEventType.PROPERTYCHANGE, this.onDataManagerChange_, false, this);
 
     // set the value back to what it was
     if (this.wasTimeFiltered_ != undefined) {
@@ -68,7 +70,7 @@ class TimelineRecorder extends osCaptureTimelineRecorder {
   onDataManagerChange_(event) {
     if (!this.aborted) {
       var p = event.getProperty();
-      if (p === os.data.PropertyChange.TIME_FILTER_ENABLED) {
+      if (p === PropertyChange.TIME_FILTER_ENABLED) {
         // clear the value so cleanup doesn't try changing it
         this.wasTimeFiltered_ = undefined;
 

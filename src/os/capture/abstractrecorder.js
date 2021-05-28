@@ -1,8 +1,10 @@
 goog.module('os.capture.AbstractRecorder');
 goog.module.declareLegacyNamespace();
 
+const dispose = goog.require('goog.dispose');
 const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');
 const EventTarget = goog.require('goog.events.EventTarget');
+const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const CaptureEventType = goog.require('os.capture.CaptureEventType');
 
@@ -93,10 +95,10 @@ class AbstractRecorder extends EventTarget {
   disposeInternal() {
     super.disposeInternal();
 
-    goog.dispose(this.encoder);
+    dispose(this.encoder);
     this.encoder = null;
 
-    goog.dispose(this.vsm);
+    dispose(this.vsm);
     this.vsm = null;
 
     this.cleanup();
@@ -121,7 +123,7 @@ class AbstractRecorder extends EventTarget {
     }
 
     if (this.vsm) {
-      this.vsm.unlisten(goog.events.EventType.RESIZE, this.onViewportResize, false, this);
+      this.vsm.unlisten(GoogEventType.RESIZE, this.onViewportResize, false, this);
     }
   }
 
@@ -131,7 +133,7 @@ class AbstractRecorder extends EventTarget {
   init() {
     // we need to abort if the browser is resized, or the GIF will be pretty much useless
     if (this.vsm) {
-      this.vsm.listenOnce(goog.events.EventType.RESIZE, this.onViewportResize, false, this);
+      this.vsm.listenOnce(GoogEventType.RESIZE, this.onViewportResize, false, this);
     }
   }
 
