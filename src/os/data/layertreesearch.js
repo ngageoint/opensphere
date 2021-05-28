@@ -3,6 +3,7 @@ goog.provide('os.data.LayerTreeSearch');
 goog.require('os.data.FolderNode');
 goog.require('os.data.LayerNode');
 goog.require('os.data.groupby.LayerZOrderGroupBy');
+goog.require('os.layer');
 goog.require('os.layer.FolderManager');
 goog.require('os.layer.ILayer');
 goog.require('os.layer.LayerGroup');
@@ -38,10 +39,7 @@ goog.inherits(os.data.LayerTreeSearch, os.ui.slick.AbstractGroupByTreeSearch);
  */
 os.data.LayerTreeSearch.prototype.getSearchItems = function() {
   // filter out layers that shouldn't be shown by the tree search
-  var layers = os.MapContainer.getInstance().getLayers().filter(function(layer) {
-    layer = /** @type {os.layer.ILayer} */ (layer);
-    return !layer.getHidden();
-  });
+  var layers = os.MapContainer.getInstance().getLayers().filter(os.layer.isShown);
   return layers;
 };
 
@@ -107,7 +105,7 @@ os.data.LayerTreeSearch.prototype.setSort = function(list) {
  */
 os.data.LayerTreeSearch.prototype.fillListFromSearch = function(list) {
   var map = os.MapContainer.getInstance();
-  var layers = map.getLayers();
+  var layers = map.getLayers().filter(os.layer.isShown);
 
   if (layers && layers.length > 0) {
     const layerNodes = [];

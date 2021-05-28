@@ -27,7 +27,7 @@ const directive = () => ({
 
   template: '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
       '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addFolder()">' +
-          '<i class="fa fa-folder fa-fw c-glyph" title="Create a new folder"></i></span>' +
+          '<i class="fa fa-folder-plus fa-fw c-glyph" title="Create a new folder"></i></span>' +
       '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addPlace()">' +
           '<i class="fa fa-map-marker fa-fw c-glyph" title="Create a new place"></i></span>' +
       '<span ng-if="nodeUi.canAddChildren()" ng-click="nodeUi.addPlace(true)">' +

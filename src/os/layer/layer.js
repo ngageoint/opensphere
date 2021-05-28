@@ -5,6 +5,7 @@ goog.require('goog.Timer');
 goog.require('goog.color');
 goog.require('goog.log');
 goog.require('os.color');
+goog.require('os.implements');
 goog.require('os.layer.ILayer');
 goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.source.ISource');
@@ -170,6 +171,21 @@ os.layer.hasLayer = function(title) {
 
     return false;
   });
+};
+
+
+/**
+ * If a layer is shown on the map.
+ * @param {ol.layer.Layer|os.layer.ILayer} layer The layer.
+ * @return {boolean} If the layer is shown.
+ */
+os.layer.isShown = function(layer) {
+  if (os.implements(layer, os.layer.ILayer.ID)) {
+    return !(/** @type {os.layer.ILayer} */ (layer).getHidden());
+  }
+
+  // Not an ILayer, consider the layer shown if it's defined.
+  return layer != null;
 };
 
 

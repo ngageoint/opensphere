@@ -5,6 +5,7 @@ goog.provide('os.ui.screenOverlayDirective');
 goog.require('goog.events.KeyHandler');
 goog.require('os');
 goog.require('os.ui.Module');
+goog.require('os.ui.WindowEventType');
 goog.require('os.ui.window');
 
 
@@ -92,4 +93,5 @@ os.ui.ScreenOverlayCtrl = function($scope) {
   if ($scope['valid'] == null) {
     $scope['valid'] = true;
   }
+  $scope.$emit(os.ui.WindowEventType.READY);
 };

@@ -41,10 +41,17 @@ const SettingsKey = {
 
 
 /**
- * Launches the remove folder dialog
- * @param {osx.layer.FolderOptions} options
- * @param {Function} callback
- * @param {boolean=} opt_removeChildren
+ * Prompt to display when a new folder is being created.
+ * @type {string}
+ */
+const CREATE_PROMPT = 'Create a new folder to manually group layers.';
+
+
+/**
+ * Launch the remove folder dialog.
+ * @param {osx.layer.FolderOptions} options The folder options.
+ * @param {function()} callback Callback to fire when the remove is confirmed.
+ * @param {boolean=} opt_removeChildren If child layers should be removed.
  */
 const launchRemoveFolder = (options, callback, opt_removeChildren) => {
   let prompt = 'Are you sure you want to remove the folder?';
@@ -56,6 +63,7 @@ const launchRemoveFolder = (options, callback, opt_removeChildren) => {
   ConfirmUI.launchConfirm(/** @type {!osx.window.ConfirmOptions} */ ({
     confirm: callback,
     prompt: prompt,
+    yesText: 'Remove',
     windowOptions: /** @type {!osx.window.WindowOptions} */ ({
       icon: 'fa fa-trash-o',
       label: 'Remove ' + options.name
@@ -65,19 +73,24 @@ const launchRemoveFolder = (options, callback, opt_removeChildren) => {
 
 
 /**
- * Create or e edit a folder.
- * @param {osx.layer.FolderOptions} options
- * @param {Function} callback
- * @param {boolean=} opt_isEdit
+ * Create or edit a folder.
+ * @param {osx.layer.FolderOptions} options The folder options.
+ * @param {function(string)} callback Callback when the folder name is confirmed.
+ * @param {boolean=} opt_isEdit If an existing folder is being edited.
  */
 const createOrEditFolder = (options, callback, opt_isEdit = false) => {
-  const label = opt_isEdit ? options.name : 'New Folder';
-  const winLabel = (opt_isEdit ? 'Edit' : 'Add') + ' Folder';
+  const folderName = options.name || 'New Folder';
+  const actionText = opt_isEdit ? 'Rename' : 'Add';
+  const winLabel = `${actionText} Folder`;
+
+  const prompt = !opt_isEdit ? CREATE_PROMPT : undefined;
 
   const confirmOptions = /** @type {!osx.window.ConfirmTextOptions} */ ({
     confirm: callback,
-    defaultValue: label,
-    prompt: 'Please choose a label for the folder:',
+    defaultValue: folderName,
+    prompt,
+    subPrompt: 'Please choose a name for the folder.',
+    yesText: actionText,
     windowOptions: /** @type {!osx.window.WindowOptions} */ ({
       icon: 'fa fa-folder',
       label: winLabel
@@ -117,6 +130,7 @@ exports = {
   FolderEventType,
   MetricKey,
   SettingsKey,
+  CREATE_PROMPT,
   launchRemoveFolder,
   createOrEditFolder,
   setFolderMenuEnabled,

@@ -24,17 +24,14 @@ const KMLNode = goog.requireType('plugin.file.kml.ui.KMLNode');
 const directive = () => ({
   restrict: 'E',
   replace: true,
-
   scope: {
     'selected': '='
   },
-
   controller: Controller,
   controllerAs: 'ctrl',
-
   template: '<div class="btn-group" ng-right-click="ctrl.openMenu()">' +
     '<button class="btn btn-sm btn-success" ng-click="ctrl.addPlace()" title="Add a new place">' +
-    '<i class="fa fa-placemark"></i> Add Place</button>' +
+    '<i class="fa fa-map-marker"></i> Add Place</button>' +
     '<button class="btn btn-sm btn-success dropdown-toggle dropdown-toggle-split" ng-click="ctrl.openMenu()">' +
     '</button>'
 });
