@@ -2,7 +2,7 @@ goog.provide('os.ui.capture.HtmlRenderer');
 
 goog.require('goog.Promise');
 goog.require('os.ui.capture.ElementRenderer');
-
+goog.require('plugin.capture');
 
 
 /**

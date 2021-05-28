@@ -1,67 +1,72 @@
-goog.provide('plugin.capture.AnnotationTailRenderer');
+goog.module('plugin.capture.AnnotationTailRenderer');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.capture.SvgRenderer');
+const SvgRenderer = goog.require('os.ui.capture.SvgRenderer');
+const {getMapCanvas} = goog.require('plugin.capture');
+
+const Overlay = goog.requireType('ol.Overlay');
 
 
 /**
  * Renders the SVG tail for a map annotation to a canvas.
- *
- * @param {!ol.Overlay} overlay The annotation overlay.
- * @extends {os.ui.capture.SvgRenderer}
- * @constructor
  */
-plugin.capture.AnnotationTailRenderer = function(overlay) {
-  plugin.capture.AnnotationTailRenderer.base(this, 'constructor');
-  this.title = 'Annotation Tail';
+class AnnotationTailRenderer extends SvgRenderer {
+  /**
+   * Constructor.
+   * @param {!Overlay} overlay The annotation overlay.
+   */
+  constructor(overlay) {
+    super();
+    this.title = 'Annotation Tail';
+
+    /**
+     * The OpenLayers overlay.
+     * @type {!Overlay}
+     * @private
+     */
+    this.overlay_ = overlay;
+  }
 
   /**
-   * The OpenLayers overlay.
-   * @type {!ol.Overlay}
-   * @private
+   * @inheritDoc
    */
-  this.overlay_ = overlay;
-};
-goog.inherits(plugin.capture.AnnotationTailRenderer, os.ui.capture.SvgRenderer);
-
-
-/**
- * @inheritDoc
- */
-plugin.capture.AnnotationTailRenderer.prototype.getRenderElement = function() {
-  if (this.overlay_) {
-    var overlayEl = this.overlay_.getElement();
-    if (overlayEl) {
-      return overlayEl.querySelector('svg.c-annotation__svg');
+  getRenderElement() {
+    if (this.overlay_) {
+      var overlayEl = this.overlay_.getElement();
+      if (overlayEl) {
+        return overlayEl.querySelector('svg.c-annotation__svg');
+      }
     }
+
+    return null;
   }
 
-  return null;
-};
+  /**
+   * @inheritDoc
+   */
+  getPosition(canvas) {
+    var x = 0;
+    var y = 0;
 
+    // NOTE: For High DPI Displays such as Apple Retina Screens, canvas
+    // pixels do not directly correspond to CSS pixels.
+    var mapCanvas = getMapCanvas();
+    var annotationEl = this.getRenderElement();
 
-/**
- * @inheritDoc
- */
-plugin.capture.AnnotationTailRenderer.prototype.getPosition = function(canvas) {
-  var x = 0;
-  var y = 0;
+    if (mapCanvas && annotationEl) {
+      // Since OpenLayers allows for specifying the pixel ratio on a map (rather than always
+      // using window.devicePixelRatio directly), we will calculate it
+      var mapRect = mapCanvas.getBoundingClientRect();
+      var pixelRatio = mapCanvas.width / mapRect.width;
 
-  // NOTE: For High DPI Displays such as Apple Retina Screens, canvas
-  // pixels do not directly correspond to CSS pixels.
-  var mapCanvas = plugin.capture.getMapCanvas();
-  var annotationEl = this.getRenderElement();
+      var overlayRect = annotationEl.getBoundingClientRect();
+      // determine the overlay's position over the map
+      x = pixelRatio * overlayRect.x;
+      y = pixelRatio * (overlayRect.y - mapRect.y);
+    }
 
-  if (mapCanvas && annotationEl) {
-    // Since OpenLayers allows for specifying the pixel ratio on a map (rather than always
-    // using window.devicePixelRatio directly), we will calculate it
-    var mapRect = mapCanvas.getBoundingClientRect();
-    var pixelRatio = mapCanvas.width / mapRect.width;
-
-    var overlayRect = annotationEl.getBoundingClientRect();
-    // determine the overlay's position over the map
-    x = pixelRatio * overlayRect.x;
-    y = pixelRatio * (overlayRect.y - mapRect.y);
+    return [x, y];
   }
+}
 
-  return [x, y];
-};
+exports = AnnotationTailRenderer;

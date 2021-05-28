@@ -1,47 +1,49 @@
-goog.provide('plugin.capture.LegendRenderer');
+goog.module('plugin.capture.LegendRenderer');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.config.LegendSettings');
-goog.require('os.ui.capture.CanvasRenderer');
-goog.require('plugin.capture.MapRenderer');
-
+const Settings = goog.require('os.config.Settings');
+const CanvasRenderer = goog.require('os.ui.capture.CanvasRenderer');
+const {getMapCanvas} = goog.require('plugin.capture');
 
 
 /**
  * Renders the legend to a canvas.
- *
- * @extends {os.ui.capture.CanvasRenderer}
- * @constructor
  */
-plugin.capture.LegendRenderer = function() {
-  plugin.capture.LegendRenderer.base(this, 'constructor');
-  this.selector = '.js-legend__render-container canvas';
-  this.title = 'Legend';
-};
-goog.inherits(plugin.capture.LegendRenderer, os.ui.capture.CanvasRenderer);
-
-
-/**
- * @inheritDoc
- */
-plugin.capture.LegendRenderer.prototype.getPosition = function(canvas) {
-  var x;
-  var y;
-
-  var mapCanvas = plugin.capture.getMapCanvas();
-  var legendCanvas = this.getRenderElement();
-  if (mapCanvas && legendCanvas) {
-    // determine the legend's position over the map
-    var mapRect = mapCanvas.getBoundingClientRect();
-    var pixelRatio = mapCanvas.width / mapRect.width;
-
-    var legendRect = legendCanvas.getBoundingClientRect();
-    x = legendRect.left * pixelRatio;
-    y = (legendRect.top - mapRect.top) * pixelRatio;
-  } else {
-    // default to the settings values, or 0,0 if not present
-    x = /** @type {number} */ (os.settings.get(os.config.LegendSetting.LEFT, 0));
-    y = /** @type {number} */ (os.settings.get(os.config.LegendSetting.TOP, 0));
+class LegendRenderer extends CanvasRenderer {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.selector = '.js-legend__render-container canvas';
+    this.title = 'Legend';
   }
 
-  return [x, y];
-};
+  /**
+   * @inheritDoc
+   */
+  getPosition(canvas) {
+    var x;
+    var y;
+
+    var mapCanvas = getMapCanvas();
+    var legendCanvas = this.getRenderElement();
+    if (mapCanvas && legendCanvas) {
+      // determine the legend's position over the map
+      var mapRect = mapCanvas.getBoundingClientRect();
+      var pixelRatio = mapCanvas.width / mapRect.width;
+
+      var legendRect = legendCanvas.getBoundingClientRect();
+      x = legendRect.left * pixelRatio;
+      y = (legendRect.top - mapRect.top) * pixelRatio;
+    } else {
+      // default to the settings values, or 0,0 if not present
+      x = /** @type {number} */ (Settings.getInstance().get(os.config.LegendSetting.LEFT, 0));
+      y = /** @type {number} */ (Settings.getInstance().get(os.config.LegendSetting.TOP, 0));
+    }
+
+    return [x, y];
+  }
+}
+
+exports = LegendRenderer;
