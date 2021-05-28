@@ -1,236 +1,231 @@
-goog.provide('os.capture.AbstractRecorder');
+goog.module('os.capture.AbstractRecorder');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.dom.ViewportSizeMonitor');
-goog.require('goog.events.EventTarget');
-goog.require('goog.log');
-goog.require('os.capture.CaptureEventType');
-goog.require('os.capture.IRecorder');
+const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');
+const EventTarget = goog.require('goog.events.EventTarget');
+const log = goog.require('goog.log');
+const CaptureEventType = goog.require('os.capture.CaptureEventType');
 
+const IRecorder = goog.requireType('os.capture.IRecorder');
 
 
 /**
  * Abstract class for creating a recording.
  *
  * @abstract
- * @implements {os.capture.IRecorder}
- * @extends {goog.events.EventTarget}
- * @constructor
+ * @implements {IRecorder}
  */
-os.capture.AbstractRecorder = function() {
-  os.capture.AbstractRecorder.base(this, 'constructor');
-
+class AbstractRecorder extends EventTarget {
   /**
-   * If the recording was aborted.
-   * @type {boolean}
+   * Constructor.
    */
-  this.aborted = false;
+  constructor() {
+    super();
+
+    /**
+     * If the recording was aborted.
+     * @type {boolean}
+     */
+    this.aborted = false;
+
+    /**
+     * Final recording data.
+     * @type {*}
+     */
+    this.data = null;
+
+    /**
+     * Detailed error message if the recording fails.
+     * @type {string}
+     */
+    this.errorMsg = '';
+
+    /**
+     * Progress percentage for the current task.
+     * @type {number}
+     */
+    this.progress = 0;
+
+    /**
+     * Recorder status message.
+     * @type {string}
+     */
+    this.status = '';
+
+    /**
+     * User-facing title of the recorder.
+     * @type {string}
+     */
+    this.title = 'Give me a title please';
+
+    /**
+     * The video encoder.
+     * @type {os.capture.IVideoEncoder}
+     * @protected
+     */
+    this.encoder = null;
+
+    /**
+     * The source video frames.
+     * @type {!Array<!HTMLCanvasElement>}
+     * @protected
+     */
+    this.frames = [];
+
+    /**
+     * The recorder's logger
+     * @type {log.Logger}
+     * @protected
+     */
+    this.log = logger;
+
+    /**
+     * Monitor viewport size to abort recording if it changes.
+     * @type {ViewportSizeMonitor}
+     * @protected
+     */
+    this.vsm = new ViewportSizeMonitor();
+  }
 
   /**
-   * Final recording data.
-   * @type {*}
+   * @inheritDoc
    */
-  this.data = null;
+  disposeInternal() {
+    super.disposeInternal();
+
+    goog.dispose(this.encoder);
+    this.encoder = null;
+
+    goog.dispose(this.vsm);
+    this.vsm = null;
+
+    this.cleanup();
+  }
 
   /**
-   * Detailed error message if the recording fails.
-   * @type {string}
+   * @inheritDoc
    */
-  this.errorMsg = '';
+  cleanup() {
+    // preserve the aborted flag during object disposal
+    if (!this.isDisposed()) {
+      this.aborted = false;
+    }
+
+    this.data = null;
+    this.frames.length = 0;
+    this.progress = 0;
+    this.errorMsg = '';
+
+    if (this.encoder) {
+      this.encoder.cleanup();
+    }
+
+    if (this.vsm) {
+      this.vsm.unlisten(goog.events.EventType.RESIZE, this.onViewportResize, false, this);
+    }
+  }
 
   /**
-   * Progress percentage for the current task.
-   * @type {number}
+   * @inheritDoc
    */
-  this.progress = 0;
+  init() {
+    // we need to abort if the browser is resized, or the GIF will be pretty much useless
+    if (this.vsm) {
+      this.vsm.listenOnce(goog.events.EventType.RESIZE, this.onViewportResize, false, this);
+    }
+  }
 
   /**
-   * Recorder status message.
-   * @type {string}
+   * Abort the recording.
+   * @param {string=} opt_msg Abort message
+   * @override
    */
-  this.status = '';
+  abort(opt_msg) {
+    if (!this.aborted) {
+      this.aborted = true;
+
+      if (this.encoder) {
+        this.encoder.abort();
+      }
+
+      var msg = opt_msg || 'Recording aborted by user.';
+      log.error(this.log, msg);
+    }
+  }
 
   /**
-   * User-facing title of the recorder.
-   * @type {string}
+   * @abstract
+   * @inheritDoc
    */
-  this.title = 'Give me a title please';
+  record() {}
 
   /**
-   * The video encoder.
-   * @type {os.capture.IVideoEncoder}
+   * @inheritDoc
+   */
+  setEncoder(value) {
+    this.encoder = value;
+  }
+
+  /**
+   * Set the error message and dispatch the error event.
+   *
+   * @param {string} msg The error message
+   * @param {Error=} opt_error The caught error
    * @protected
    */
-  this.encoder = null;
+  handleError(msg, opt_error) {
+    if (opt_error) {
+      log.error(this.log, this.errorMsg, opt_error);
+    }
+
+    this.errorMsg = 'Encountered an error while recording: ' + msg;
+    this.abort(this.errorMsg);
+
+    this.dispatchEvent(CaptureEventType.ERROR);
+  }
 
   /**
-   * The source video frames.
-   * @type {!Array<!HTMLCanvasElement>}
+   * Set the progress for the recorder and fire an event.
+   *
+   * @param {number} value The new progress value.
    * @protected
    */
-  this.frames = [];
+  setProgress(value) {
+    this.progress = value;
+    this.dispatchEvent(CaptureEventType.PROGRESS);
+  }
 
   /**
-   * The recorder's logger
-   * @type {goog.log.Logger}
+   * Set the status for the recorder and fire an event.
+   *
+   * @param {string} value The new status value.
    * @protected
    */
-  this.log = os.capture.AbstractRecorder.LOGGER_;
+  setStatus(value) {
+    this.status = value;
+    this.dispatchEvent(CaptureEventType.STATUS);
+  }
 
   /**
-   * Monitor viewport size to abort recording if it changes.
-   * @type {goog.dom.ViewportSizeMonitor}
+   * Handle viewport resize.
+   *
+   * @param {goog.events.Event} event
    * @protected
    */
-  this.vsm = new goog.dom.ViewportSizeMonitor();
-};
-goog.inherits(os.capture.AbstractRecorder, goog.events.EventTarget);
-
+  onViewportResize(event) {
+    if (!this.aborted) {
+      var errorMsg = 'Resizing the browser would result in a distorted recording.';
+      this.abort(errorMsg);
+      this.handleError(errorMsg);
+    }
+  }
+}
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {log.Logger}
  */
-os.capture.AbstractRecorder.LOGGER_ = goog.log.getLogger('os.capture.AbstractRecorder');
+const logger = log.getLogger('os.capture.AbstractRecorder');
 
 
-/**
- * @inheritDoc
- */
-os.capture.AbstractRecorder.prototype.disposeInternal = function() {
-  os.capture.AbstractRecorder.base(this, 'disposeInternal');
-
-  goog.dispose(this.encoder);
-  this.encoder = null;
-
-  goog.dispose(this.vsm);
-  this.vsm = null;
-
-  this.cleanup();
-};
-
-
-/**
- * @inheritDoc
- */
-os.capture.AbstractRecorder.prototype.cleanup = function() {
-  // preserve the aborted flag during object disposal
-  if (!this.isDisposed()) {
-    this.aborted = false;
-  }
-
-  this.data = null;
-  this.frames.length = 0;
-  this.progress = 0;
-  this.errorMsg = '';
-
-  if (this.encoder) {
-    this.encoder.cleanup();
-  }
-
-  if (this.vsm) {
-    this.vsm.unlisten(goog.events.EventType.RESIZE, this.onViewportResize, false, this);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.capture.AbstractRecorder.prototype.init = function() {
-  // we need to abort if the browser is resized, or the GIF will be pretty much useless
-  if (this.vsm) {
-    this.vsm.listenOnce(goog.events.EventType.RESIZE, this.onViewportResize, false, this);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.capture.AbstractRecorder.prototype.abort = function(opt_msg) {
-  if (!this.aborted) {
-    this.aborted = true;
-
-    if (this.encoder) {
-      this.encoder.abort();
-    }
-
-    var msg = opt_msg || 'Recording aborted by user.';
-    goog.log.error(this.log, msg);
-  }
-};
-
-
-/**
- * @abstract
- * @inheritDoc
- */
-os.capture.AbstractRecorder.prototype.record = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.capture.AbstractRecorder.prototype.setEncoder = function(value) {
-  this.encoder = value;
-};
-
-
-/**
- * Set the error message and dispatch the error event.
- *
- * @param {string} msg The error message
- * @param {Error=} opt_error The caught error
- * @protected
- */
-os.capture.AbstractRecorder.prototype.handleError = function(msg, opt_error) {
-  if (opt_error) {
-    goog.log.error(this.log, this.errorMsg, opt_error);
-  }
-
-  this.errorMsg = 'Encountered an error while recording: ' + msg;
-  this.abort(this.errorMsg);
-
-  this.dispatchEvent(os.capture.CaptureEventType.ERROR);
-};
-
-
-/**
- * Set the progress for the recorder and fire an event.
- *
- * @param {number} value The new progress value.
- * @protected
- */
-os.capture.AbstractRecorder.prototype.setProgress = function(value) {
-  this.progress = value;
-  this.dispatchEvent(os.capture.CaptureEventType.PROGRESS);
-};
-
-
-/**
- * Set the status for the recorder and fire an event.
- *
- * @param {string} value The new status value.
- * @protected
- */
-os.capture.AbstractRecorder.prototype.setStatus = function(value) {
-  this.status = value;
-  this.dispatchEvent(os.capture.CaptureEventType.STATUS);
-};
-
-
-/**
- * Handle viewport resize.
- *
- * @param {goog.events.Event} event
- * @protected
- */
-os.capture.AbstractRecorder.prototype.onViewportResize = function(event) {
-  if (!this.aborted) {
-    var errorMsg = 'Resizing the browser would result in a distorted recording.';
-    this.abort(errorMsg);
-    this.handleError(errorMsg);
-  }
-};
+exports = AbstractRecorder;

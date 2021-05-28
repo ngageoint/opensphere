@@ -1,14 +1,24 @@
-goog.provide('os.ui.capture.RecordingUI');
-goog.provide('os.ui.capture.recordingUIDirective');
+goog.module('os.ui.capture.RecordingUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.alert.AlertEventSeverity');
-goog.require('os.alertManager');
-goog.require('os.capture');
-goog.require('os.capture.GifEncoder');
-goog.require('os.file.persist.FilePersistence');
-goog.require('os.ui.Module');
-goog.require('os.ui.exportManager');
 goog.require('os.ui.loadingBarDirective');
+
+const {ROOT} = goog.require('os');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
+const capture = goog.require('os.capture');
+const GifEncoder = goog.require('os.capture.GifEncoder');
+const Module = goog.require('os.ui.Module');
+const exportManager = goog.require('os.ui.exportManager');
+
+const IRecorder = goog.requireType('os.capture.IRecorder');
+
+
+/**
+ * Identifier for the recording UI.
+ * @type {string}
+ */
+const RECORDING_ID = 'recordUi';
 
 
 /**
@@ -16,323 +26,310 @@ goog.require('os.ui.loadingBarDirective');
  *
  * @return {angular.Directive}
  */
-os.ui.capture.recordingUIDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      'recorder': '='
-    },
-    templateUrl: os.ROOT + 'views/capture/recordingui.html',
-    controller: os.ui.capture.RecordingUI,
-    controllerAs: 'recordui'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: {
+    'recorder': '='
+  },
+  templateUrl: ROOT + 'views/capture/recordingui.html',
+  controller: Controller,
+  controllerAs: 'recordui'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'recordingui';
 
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('recordingui', [os.ui.capture.recordingUIDirective]);
-
-
-/**
- * @type {string}
- * @const
- */
-os.ui.capture.RECORDING_ID = 'recordUi';
-
+Module.directive('recordingui', [directive]);
 
 
 /**
  * Controller function for the recordingui directive
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.capture.RecordingUI = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.Scope}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
+
+    /**
+     * @type {capture.IRecorder}
+     * @private
+     */
+    this.recorder_ = /** @type {capture.IRecorder} */ ($scope['recorder']);
+
+    /**
+     * @type {boolean}
+     */
+    this['recording'] = false;
+
+    /**
+     * @type {boolean}
+     */
+    this['recordingCritical'] = false;
+
+    /**
+     * @type {number}
+     */
+    this['progress'] = 0;
+
+    /**
+     * @type {string}
+     */
+    this['status'] = '';
+
+    /**
+     * @type {string}
+     */
+    this['title'] = 'Recording ' + capture.getTimestamp();
+
+    /**
+     * @type {!Array<!capture.IVideoEncoder>}
+     */
+    this['encoders'] = [new GifEncoder()];
+
+    /**
+     * @type {capture.IVideoEncoder}
+     */
+    this['encoder'] = this['encoders'][0];
+
+    /**
+     * @type {os.ex.IPersistenceMethod}
+     */
+    this['persister'] = null;
+
+    /**
+     * @type {!Object<string, !os.ex.IPersistenceMethod>}
+     */
+    this['persisters'] = {};
+    var persisters = exportManager.getPersistenceMethods();
+    if (persisters && persisters.length > 0) {
+      this['persister'] = persisters[0];
+      for (var i = 0, n = persisters.length; i < n; i++) {
+        this['persisters'][persisters[i].getLabel()] = persisters[i];
+      }
+    }
+
+    // bring focus to the title input
+    this.element_.find('input[name="title"]').focus();
+
+    $scope.$emit(os.ui.WindowEventType.READY);
+    $scope.$on('$destroy', this.destroy_.bind(this));
+  }
+
+  /**
+   * Clean up.
+   *
    * @private
    */
-  this.scope_ = $scope;
+  destroy_() {
+    goog.dispose(this.recorder_);
+    this.recorder_ = null;
+
+    this.scope_ = null;
+    this.element_ = null;
+  }
 
   /**
-   * @type {?angular.JQLite}
+   * Close the window.
+   *
    * @private
    */
-  this.element_ = $element;
+  close_() {
+    os.ui.window.close(this.element_);
+    this['recording'] = false;
+    this.toggleRecordButton();
+  }
 
   /**
-   * @type {os.capture.IRecorder}
-   * @private
+   * Cancel the recording and close the window.
+   *
+   * @export
    */
-  this.recorder_ = /** @type {os.capture.IRecorder} */ ($scope['recorder']);
+  cancel() {
+    if (this.recorder_) {
+      this.recorder_.abort();
+    }
+
+    this.close_();
+  }
 
   /**
-   * @type {boolean}
+   * Start the recording.
+   *
+   * @export
    */
-  this['recording'] = false;
+  record() {
+    if (this.recorder_) {
+      this.recorder_.listen(capture.CaptureEventType.PROGRESS, this.onRecordingProgress_, false, this);
+      this.recorder_.listen(capture.CaptureEventType.STATUS, this.onRecordingStatus_, false, this);
+      this.recorder_.listenOnce(capture.CaptureEventType.UNBLOCK, this.onUnblock_, false, this);
+      this.recorder_.listenOnce(capture.CaptureEventType.COMPLETE, this.onRecordingComplete_, false, this);
+      this.recorder_.listenOnce(capture.CaptureEventType.ERROR, this.onRecordingError_, false, this);
 
-  /**
-   * @type {boolean}
-   */
-  this['recordingCritical'] = false;
-
-  /**
-   * @type {number}
-   */
-  this['progress'] = 0;
-
-  /**
-   * @type {string}
-   */
-  this['status'] = '';
-
-  /**
-   * @type {string}
-   */
-  this['title'] = 'Recording ' + os.capture.getTimestamp();
-
-  /**
-   * @type {!Array<!os.capture.IVideoEncoder>}
-   */
-  this['encoders'] = [new os.capture.GifEncoder()];
-
-  /**
-   * @type {os.capture.IVideoEncoder}
-   */
-  this['encoder'] = this['encoders'][0];
-
-  /**
-   * @type {os.ex.IPersistenceMethod}
-   */
-  this['persister'] = null;
-
-  /**
-   * @type {!Object<string, !os.ex.IPersistenceMethod>}
-   */
-  this['persisters'] = {};
-  var persisters = os.ui.exportManager.getPersistenceMethods();
-  if (persisters && persisters.length > 0) {
-    this['persister'] = persisters[0];
-    for (var i = 0, n = persisters.length; i < n; i++) {
-      this['persisters'][persisters[i].getLabel()] = persisters[i];
+      this['recording'] = true;
+      this['recordingCritical'] = true;
+      this.toggleRecordButton();
+      os.ui.window.enableModality(RECORDING_ID);
+      this.recorder_.setEncoder(this['encoder']);
+      this.recorder_.record();
+    } else {
+      AlertManager.getInstance().sendAlert('Unable to create recording: recorder not configured.',
+          AlertEventSeverity.ERROR);
+      this.close_();
     }
   }
 
-  // bring focus to the title input
-  this.element_.find('input[name="title"]').focus();
-
-  $scope.$emit(os.ui.WindowEventType.READY);
-  $scope.$on('$destroy', this.destroy_.bind(this));
-};
-
-
-/**
- * Clean up.
- *
- * @private
- */
-os.ui.capture.RecordingUI.prototype.destroy_ = function() {
-  goog.dispose(this.recorder_);
-  this.recorder_ = null;
-
-  this.scope_ = null;
-  this.element_ = null;
-};
-
-
-/**
- * Close the window.
- *
- * @private
- */
-os.ui.capture.RecordingUI.prototype.close_ = function() {
-  os.ui.window.close(this.element_);
-  this['recording'] = false;
-  this.toggleRecordButton();
-};
-
-
-/**
- * Cancel the recording and close the window.
- *
- * @export
- */
-os.ui.capture.RecordingUI.prototype.cancel = function() {
-  if (this.recorder_) {
-    this.recorder_.abort();
+  /**
+   * Get the title for a video encoder.
+   *
+   * @param {capture.IVideoEncoder} encoder The encoder
+   * @return {string}
+   * @export
+   */
+  getEncoderTitle(encoder) {
+    return encoder && encoder.title || 'Unknown Type';
   }
 
-  this.close_();
-};
+  /**
+   * Get the description for the encoder.
+   *
+   * @param {capture.IVideoEncoder} encoder The encoder
+   * @return {string}
+   * @export
+   */
+  getEncoderDescription(encoder) {
+    var description = encoder && encoder.description || '';
+    if (description) {
+      description = '<i class="fa fa-info-circle text-danger"></i>&nbsp;' + description;
+    }
 
+    return description;
+  }
 
-/**
- * Start the recording.
- *
- * @export
- */
-os.ui.capture.RecordingUI.prototype.record = function() {
-  if (this.recorder_) {
-    this.recorder_.listen(os.capture.CaptureEventType.PROGRESS, this.onRecordingProgress_, false, this);
-    this.recorder_.listen(os.capture.CaptureEventType.STATUS, this.onRecordingStatus_, false, this);
-    this.recorder_.listenOnce(os.capture.CaptureEventType.UNBLOCK, this.onUnblock_, false, this);
-    this.recorder_.listenOnce(os.capture.CaptureEventType.COMPLETE, this.onRecordingComplete_, false, this);
-    this.recorder_.listenOnce(os.capture.CaptureEventType.ERROR, this.onRecordingError_, false, this);
+  /**
+   * Handle recording progress event.
+   *
+   * @param {goog.events.Event} event
+   * @private
+   */
+  onRecordingProgress_(event) {
+    if (this.recorder_) {
+      this['progress'] = this.recorder_.progress;
+      os.ui.apply(this.scope_);
+    }
+  }
 
-    this['recording'] = true;
-    this['recordingCritical'] = true;
-    this.toggleRecordButton();
-    os.ui.window.enableModality(os.ui.capture.RECORDING_ID);
-    this.recorder_.setEncoder(this['encoder']);
-    this.recorder_.record();
-  } else {
-    os.alertManager.sendAlert('Unable to create recording: recorder not configured.',
-        os.alert.AlertEventSeverity.ERROR);
+  /**
+   * Handle recording unblocked event.
+   *
+   * @param {goog.events.Event} event
+   * @private
+   */
+  onUnblock_(event) {
+    if (this.recorder_) {
+      this['recordingCritical'] = false;
+      os.ui.window.disableModality(RECORDING_ID);
+      os.ui.apply(this.scope_);
+    }
+  }
+
+  /**
+   * Handle recording status event.
+   *
+   * @param {goog.events.Event} event
+   * @private
+   */
+  onRecordingStatus_(event) {
+    if (this.recorder_) {
+      this['status'] = this.recorder_.status;
+      os.ui.apply(this.scope_);
+    }
+  }
+
+  /**
+   * Handle recording complete.
+   *
+   * @param {goog.events.Event} event
+   * @private
+   */
+  onRecordingComplete_(event) {
+    if (this['persister'] && this.recorder_ && this.recorder_.data) {
+      var name = this['title'] + '.' + this['encoder'].extension;
+      this['persister'].save(name, this.recorder_.data, capture.ContentType.GIF, this['title']);
+    } else {
+      AlertManager.getInstance().sendAlert('Unable to create recording: recording data missing.',
+          AlertEventSeverity.ERROR);
+    }
+
     this.close_();
   }
-};
 
+  /**
+   * Handle recording error.
+   *
+   * @param {goog.events.Event} event
+   * @private
+   */
+  onRecordingError_(event) {
+    var recorder = /** @type {capture.IRecorder} */ (event.target);
+    if (recorder && recorder.errorMsg) {
+      AlertManager.getInstance().sendAlert('Recording failed. Please see the log for more details.',
+          AlertEventSeverity.ERROR);
+    } else {
+      // hopefully we don't get here... haven't encountered it yet
+      AlertManager.getInstance().sendAlert('Unable to create recording: unspecified reason.',
+          AlertEventSeverity.ERROR);
+    }
 
-/**
- * Get the title for a video encoder.
- *
- * @param {os.capture.IVideoEncoder} encoder The encoder
- * @return {string}
- * @export
- */
-os.ui.capture.RecordingUI.prototype.getEncoderTitle = function(encoder) {
-  return encoder && encoder.title || 'Unknown Type';
-};
-
-
-/**
- * Get the description for the encoder.
- *
- * @param {os.capture.IVideoEncoder} encoder The encoder
- * @return {string}
- * @export
- */
-os.ui.capture.RecordingUI.prototype.getEncoderDescription = function(encoder) {
-  var description = encoder && encoder.description || '';
-  if (description) {
-    description = '<i class="fa fa-info-circle text-danger"></i>&nbsp;' + description;
+    this.close_();
   }
 
-  return description;
-};
+  /**
+   * Toggle record button
+   */
+  toggleRecordButton() {
+    var recordButton = document.getElementById('timeline-record-button');
 
-
-/**
- * Handle recording progress event.
- *
- * @param {goog.events.Event} event
- * @private
- */
-os.ui.capture.RecordingUI.prototype.onRecordingProgress_ = function(event) {
-  if (this.recorder_) {
-    this['progress'] = this.recorder_.progress;
-    os.ui.apply(this.scope_);
+    recordButton.classList.toggle('disabled', !!this['recording']);
   }
-};
-
-
-/**
- * Handle recording unblocked event.
- *
- * @param {goog.events.Event} event
- * @private
- */
-os.ui.capture.RecordingUI.prototype.onUnblock_ = function(event) {
-  if (this.recorder_) {
-    this['recordingCritical'] = false;
-    os.ui.window.disableModality(os.ui.capture.RECORDING_ID);
-    os.ui.apply(this.scope_);
-  }
-};
-
-
-/**
- * Handle recording status event.
- *
- * @param {goog.events.Event} event
- * @private
- */
-os.ui.capture.RecordingUI.prototype.onRecordingStatus_ = function(event) {
-  if (this.recorder_) {
-    this['status'] = this.recorder_.status;
-    os.ui.apply(this.scope_);
-  }
-};
-
-
-/**
- * Handle recording complete.
- *
- * @param {goog.events.Event} event
- * @private
- */
-os.ui.capture.RecordingUI.prototype.onRecordingComplete_ = function(event) {
-  if (this['persister'] && this.recorder_ && this.recorder_.data) {
-    var name = this['title'] + '.' + this['encoder'].extension;
-    this['persister'].save(name, this.recorder_.data, os.capture.ContentType.GIF, this['title']);
-  } else {
-    os.alertManager.sendAlert('Unable to create recording: recording data missing.',
-        os.alert.AlertEventSeverity.ERROR);
-  }
-
-  this.close_();
-};
-
-
-/**
- * Handle recording error.
- *
- * @param {goog.events.Event} event
- * @private
- */
-os.ui.capture.RecordingUI.prototype.onRecordingError_ = function(event) {
-  var recorder = /** @type {os.capture.IRecorder} */ (event.target);
-  if (recorder && recorder.errorMsg) {
-    os.alertManager.sendAlert('Recording failed. Please see the log for more details.',
-        os.alert.AlertEventSeverity.ERROR);
-  } else {
-    // hopefully we don't get here... haven't encountered it yet
-    os.alertManager.sendAlert('Unable to create recording: unspecified reason.',
-        os.alert.AlertEventSeverity.ERROR);
-  }
-
-  this.close_();
-};
-
-
-/**
- * Toggle record button
- */
-os.ui.capture.RecordingUI.prototype.toggleRecordButton = function() {
-  var recordButton = document.getElementById('timeline-record-button');
-
-  recordButton.classList.toggle('disabled', !!this['recording']);
-};
-
+}
 
 /**
  * Launch the recording UI.
  *
- * @param {!os.capture.IRecorder} recorder The recorder
+ * @param {!IRecorder} recorder The recorder
  */
-os.ui.capture.launchRecordingUI = function(recorder) {
-  if (recorder && !os.ui.window.exists(os.ui.capture.RECORDING_ID)) {
+const launchRecordingUI = function(recorder) {
+  if (recorder && !os.ui.window.exists(RECORDING_ID)) {
     var scopeOptions = {
       'recorder': recorder
     };
 
     var windowOptions = {
-      'id': os.ui.capture.RECORDING_ID,
+      'id': RECORDING_ID,
       'label': recorder.title || 'Give me a title please',
       'icon': 'fa fa-circle text-danger',
       'x': 'center',
@@ -345,7 +342,14 @@ os.ui.capture.launchRecordingUI = function(recorder) {
       'show-close': 'true'
     };
 
-    var template = '<recordingui recorder="recorder"></recordingui>';
+    var template = `<${directiveTag} recorder="recorder"></${directiveTag}>`;
     os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
+};
+
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  launchRecordingUI
 };

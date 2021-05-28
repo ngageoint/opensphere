@@ -1,110 +1,57 @@
-goog.provide('os.capture');
-goog.provide('os.capture.CaptureEventType');
-goog.provide('os.capture.ContentType');
-goog.provide('os.capture.gif');
-goog.provide('os.capture.gif.EventType');
+goog.module('os.capture');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Promise');
-goog.require('goog.dom');
-goog.require('goog.log');
-goog.require('ol.webgl');
-goog.require('os');
-goog.require('os.config');
-goog.require('os.file.persist.FilePersistence');
-goog.require('os.job.Job');
-goog.require('os.string');
-goog.require('os.worker');
+const Promise = goog.require('goog.Promise');
+const dom = goog.require('goog.dom');
+const log = goog.require('goog.log');
+const webgl = goog.require('ol.webgl');
+const {ROOT} = goog.require('os');
+const AlertManager = goog.require('os.alert.AlertManager');
+const ContentType = goog.require('os.capture.ContentType');
+const config = goog.require('os.config');
+const Job = goog.require('os.job.Job');
+const JobEventType = goog.require('os.job.JobEventType');
+const osString = goog.require('os.string');
+const worker = goog.require('os.worker');
+
+const JobEvent = goog.requireType('os.job.JobEvent');
 
 
 /**
  * Identifier for capture plugin components.
  * @type {string}
- * @const
  */
-os.capture.ID = 'capture';
-
-
-/**
- * GIF content type
- * @enum {string}
- * @const
- */
-os.capture.ContentType = {
-  GIF: 'image/gif',
-  PNG: 'image/png'
-};
-
-
-/**
- * Recording event types
- * @enum {string}
- */
-os.capture.CaptureEventType = {
-  STATUS: 'capture:status',
-  UNBLOCK: 'capture:unblock',
-  PROGRESS: 'capture:progress',
-  COMPLETE: 'capture:complete',
-  ERROR: 'capture:error'
-};
-
+const ID = 'capture';
 
 /**
  * Function that returns the canvas
- * @typedef {function():!goog.Promise<HTMLCanvasElement>}
+ * @typedef {function():!Promise<HTMLCanvasElement>}
  */
-os.capture.CanvasFn;
-
+let CanvasFn;
 
 /**
  * Function that renders the canvas and returns a promise that is resolved when rendering completes.
- * @typedef {function():!goog.Promise}
+ * @typedef {function():!Promise}
  */
-os.capture.RenderFn;
-
+let RenderFn;
 
 /**
  * GIF content type
  * @type {string}
- * @const
  */
-os.capture.BASE64_MARKER = ';base64,';
-
-
-/**
- * Events fired by the GIF library.
- * @enum {string}
- */
-os.capture.gif.EventType = {
-  ABORT: 'abort',
-  FINISHED: 'finished',
-  PROGRESS: 'progress',
-  START: 'start'
-};
-
-
-/**
- * Path to the worker script used by the GIF library.
- * @type {string}
- * @const
- */
-os.capture.gif.WORKER_SCRIPT = os.ROOT + 'vendor/gif/gif.worker.js';
-
+const BASE64_MARKER = ';base64,';
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {log.Logger}
  */
-os.capture.LOGGER_ = goog.log.getLogger('os.capture');
-
+const logger = log.getLogger('os.capture');
 
 /**
  * 2D canvas for creating ImageData objects.
  * @type {HTMLCanvasElement}
  */
-os.capture.canvas2d = null;
-
+let canvas2d = null;
 
 /**
  * Gets the current image data from a canvas. The canvas must have an initialized rendering context.
@@ -122,9 +69,9 @@ os.capture.canvas2d = null;
  * @param {number=} opt_height Pixel height to retrieve
  * @return {ImageData}
  */
-os.capture.getCanvasData = function(opt_canvas, opt_x, opt_y, opt_width, opt_height) {
+const getCanvasData = function(opt_canvas, opt_x, opt_y, opt_width, opt_height) {
   var canvas = opt_canvas || document.querySelector('canvas');
-  if (canvas instanceof HTMLCanvasElement && !os.capture.isTainted(canvas)) {
+  if (canvas instanceof HTMLCanvasElement && !isTainted(canvas)) {
     var x = opt_x || 0;
     var y = opt_y || 0;
     var width = opt_width != null ? opt_width : canvas.width;
@@ -135,16 +82,15 @@ os.capture.getCanvasData = function(opt_canvas, opt_x, opt_y, opt_width, opt_hei
       return ctx.getImageData(x, y, width, height);
     } else {
       // not a 2d rendering context, try webgl
-      ctx = ol.webgl.getContext(canvas);
+      ctx = webgl.getContext(canvas);
       if (ctx) {
-        return os.capture.getWebGLImageData(ctx, x, y, width, height);
+        return getWebGLImageData(ctx, x, y, width, height);
       }
     }
   }
 
   return null;
 };
-
 
 /**
  * Overlay a source canvas on top of a target canvas.
@@ -154,7 +100,7 @@ os.capture.getCanvasData = function(opt_canvas, opt_x, opt_y, opt_width, opt_hei
  * @param {number} x The starting x position on the target canvas
  * @param {number} y The starting y position on the target canvas
  */
-os.capture.overlayCanvas = function(source, target, x, y) {
+const overlayCanvas = function(source, target, x, y) {
   // don't try to write past the bounds of the target canvas. caller should resize/adjust position if necessary.
   var width = Math.min(source.width, target.width - x);
   var height = Math.min(source.height, target.height - y);
@@ -163,17 +109,17 @@ os.capture.overlayCanvas = function(source, target, x, y) {
     if (height < source.height || width < source.width) {
       // source will not fit in target canvas and will be cropped
       var msg = 'Canvas overlay cropped by [' + (source.width - width) + ', ' + (source.height - height) + '] pixels.';
-      goog.log.warning(os.capture.LOGGER_, msg);
+      log.warning(logger, msg);
     }
 
     // manually apply the width and height in this get call in order to crop the source
-    var srcImageData = os.capture.getCanvasData(source, undefined, undefined, width, height);
+    var srcImageData = getCanvasData(source, undefined, undefined, width, height);
     // This could happen if the canvas was tainted, we should bail and let elementrenderer.drawToCanvas
     //  reject it's promise so that recorder ui doesn't hang
     if (!srcImageData) {
       return;
     }
-    var targetImageData = os.capture.getCanvasData(target, x, y, width, height);
+    var targetImageData = getCanvasData(target, x, y, width, height);
 
     var targetData = targetImageData.data;
     var sourceData = srcImageData.data;
@@ -203,10 +149,9 @@ os.capture.overlayCanvas = function(source, target, x, y) {
   } else {
     // x and/or y outside target canvas
     var msg = 'Unable to overlay canvas: height = ' + height + ', width = ' + width + '.';
-    goog.log.error(os.capture.LOGGER_, msg);
+    log.error(logger, msg);
   }
 };
-
 
 /**
  * Get the WebGL context pixels as an ImageData object.
@@ -220,18 +165,18 @@ os.capture.overlayCanvas = function(source, target, x, y) {
  * @param {number} height The canvas height
  * @return {ImageData}
  */
-os.capture.getWebGLImageData = function(context, x, y, width, height) {
+const getWebGLImageData = function(context, x, y, width, height) {
   var pixels = new Uint8Array(width * height * 4);
   context.readPixels(x, y, width, height, context.RGBA, context.UNSIGNED_BYTE, pixels);
 
-  if (!os.capture.canvas2d) {
+  if (!canvas2d) {
     // create a reusable canvas and initialize the 2D context
-    os.capture.canvas2d = /** @type {!HTMLCanvasElement} */ (goog.dom.createElement(goog.dom.TagName.CANVAS));
-    os.capture.canvas2d.getContext('2d');
+    canvas2d = (dom.createElement(dom.TagName.CANVAS));
+    canvas2d.getContext('2d');
   }
 
   // not all browsers support the ImageData constructor, so we have to use createImageData.
-  var imageData = os.capture.canvas2d.getContext('2d').createImageData(width, height);
+  var imageData = canvas2d.getContext('2d').createImageData(width, height);
 
   // webgl pixel buffer is flipped, so unflip it and write to the imageData buffer
   var data = imageData.data;
@@ -249,7 +194,6 @@ os.capture.getWebGLImageData = function(context, x, y, width, height) {
   return imageData;
 };
 
-
 /**
  * Saves a canvas to a PNG. WebGL renderers *must* be initialized with preserveDrawingBuffer: true, or canvas.toDataURL
  * will not be supported and will likely return a blank image.
@@ -259,65 +203,64 @@ os.capture.getWebGLImageData = function(context, x, y, width, height) {
  * @param {!HTMLCanvasElement} canvas The canvas to save
  * @param {string=} opt_fileName The file name of the screenshot
  */
-os.capture.saveCanvas = function(canvas, opt_fileName) {
+const saveCanvas = function(canvas, opt_fileName) {
   var dataUrl;
   try {
     dataUrl = canvas.toDataURL();
   } catch (e) {
     // TODO (THIN-6294): provide a better explanation/help steps to the user
-    var support = /** @type {string} */ (os.config.getSupportContact('your system administrator'));
-    support = os.string.linkify(support);
-    os.alertManager.sendAlert('Unable to save canvas due to cross-origin content. Please contact <b>' + support +
-        '</b> for support.', os.alert.AlertEventSeverity.ERROR, os.capture.LOGGER_);
+    var support = /** @type {string} */ (config.getSupportContact('your system administrator'));
+    support = osString.linkify(support);
+    AlertManager.getInstance().sendAlert('Unable to save canvas due to cross-origin content. Please contact <b>' +
+        support + '</b> for support.', os.alert.AlertEventSeverity.ERROR, logger);
   }
 
-  os.capture.saveDataUrl(dataUrl, opt_fileName);
+  saveDataUrl(dataUrl, opt_fileName);
 };
-
 
 /**
  * Saves a dataUrl to a PNG
  *
  * This converts the data URL string to a Uint8Array in a Worker. For compiled applications, make sure the worker
- * directory is copied in the build, and os.worker.DIR is redefined to point to that directory.
+ * directory is copied in the build, and worker.DIR is redefined to point to that directory.
  *
  * @param {string} dataUrl png image data url
  * @param {string=} opt_fileName file name
  */
-os.capture.saveDataUrl = function(dataUrl, opt_fileName) {
+const saveDataUrl = function(dataUrl, opt_fileName) {
   if (dataUrl) {
-    var jobUrl = os.ROOT + os.worker.DIR + 'dataurltoarray.js';
-    var job = new os.job.Job(jobUrl, 'Canvas to Blob', 'Converting canvas data URL to a Blob.');
-    job.listenOnce(os.job.JobEventType.COMPLETE,
+    var jobUrl = ROOT + worker.DIR + 'dataurltoarray.js';
+    var job = new Job(jobUrl, 'Canvas to Blob', 'Converting canvas data URL to a Blob.');
+    job.listenOnce(JobEventType.COMPLETE,
         /**
          * Handle job completion
          *
-         * @param {os.job.JobEvent} event
+         * @param {JobEvent} event
          */
         function(event) {
           goog.dispose(event.target);
 
           if (event.data instanceof Uint8Array) {
             var blob = new Blob([event.data], {type: 'image/png'});
-            var filename = (opt_fileName || ('Screenshot ' + os.capture.getTimestamp())) + '.png';
-            os.file.persist.saveFile(filename, blob, os.capture.ContentType.PNG);
+            var filename = (opt_fileName || ('Screenshot ' + getTimestamp())) + '.png';
+            os.file.persist.saveFile(filename, blob, ContentType.PNG);
           } else {
-            os.alertManager.sendAlert('Failed saving canvas to PNG',
-                os.alert.AlertEventSeverity.ERROR, os.capture.LOGGER_);
+            AlertManager.getInstance().sendAlert('Failed saving canvas to PNG',
+                os.alert.AlertEventSeverity.ERROR, logger);
           }
         });
 
-    job.listenOnce(os.job.JobEventType.ERROR,
+    job.listenOnce(JobEventType.ERROR,
         /**
          * Handle job failure
          *
-         * @param {os.job.JobEvent} event
+         * @param {JobEvent} event
          */
         function(event) {
           goog.dispose(event.target);
 
           var msg = typeof event.data === 'string' ? event.data : 'Screen capture failed due to an unspecified error';
-          os.alertManager.sendAlert(msg, os.alert.AlertEventSeverity.ERROR, os.capture.LOGGER_);
+          AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.ERROR, logger);
         });
 
     job.startExecution({
@@ -326,17 +269,15 @@ os.capture.saveDataUrl = function(dataUrl, opt_fileName) {
   }
 };
 
-
 /**
  * Get the first canvas element encountered in the document.
  *
- * @return {!goog.Promise<HTMLCanvasElement>}
+ * @return {!Promise<HTMLCanvasElement>}
  */
-os.capture.getDefaultCanvas = function() {
+const getDefaultCanvas = function() {
   var canvas = document.querySelector('canvas');
-  return goog.Promise.resolve(canvas instanceof HTMLCanvasElement ? canvas : null);
+  return Promise.resolve(canvas instanceof HTMLCanvasElement ? canvas : null);
 };
-
 
 /**
  * Get a timestamp formatted for a file name. Chrome/Firefox will replace colons with either - or _ so they have been
@@ -344,10 +285,9 @@ os.capture.getDefaultCanvas = function() {
  *
  * @return {string}
  */
-os.capture.getTimestamp = function() {
+const getTimestamp = function() {
   return moment().format('YYYY-MM-DD_HHmmss');
 };
-
 
 /**
  * Determines if the 2D canvas context is tainted
@@ -360,7 +300,7 @@ os.capture.getTimestamp = function() {
  * @param {HTMLCanvasElement} canvas
  * @return {boolean}
  */
-os.capture.isTainted = function(canvas) {
+const isTainted = function(canvas) {
   if (canvas) {
     var ctx = canvas.getContext('2d');
     if (ctx instanceof CanvasRenderingContext2D) {
@@ -375,13 +315,44 @@ os.capture.isTainted = function(canvas) {
   return false;
 };
 
-
 /**
- * Get the pixel ratio for the canvas created by capture. Override this function in capture plugins to replace the
- * default behavior.
+ * The current pixel ratio function.
  *
  * @return {number} The pixel ratio for the output canvas.
  */
-os.capture.getPixelRatio = function() {
-  return 1;
+let getPixelRatio_ = () => 1;
+
+/**
+ * Get the pixel ratio for the canvas created by capture. Use setPixelRatioFn to override this function in capture
+ * plugins to replace the default behavior.
+ *
+ * @return {number} The pixel ratio for the output canvas.
+ */
+const getPixelRatio = () => getPixelRatio_();
+
+/**
+ * Set the function used to get the capture pixel ratio.
+ *
+ * @param {function():number} fn The new function.
+ */
+const setPixelRatioFn = function(fn) {
+  getPixelRatio_ = fn;
+};
+
+exports = {
+  ID,
+  BASE64_MARKER,
+  canvas2d,
+  getCanvasData,
+  overlayCanvas,
+  getWebGLImageData,
+  saveCanvas,
+  saveDataUrl,
+  getDefaultCanvas,
+  getTimestamp,
+  isTainted,
+  getPixelRatio,
+  setPixelRatioFn,
+  CanvasFn,
+  RenderFn
 };

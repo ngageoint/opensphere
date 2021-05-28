@@ -4,6 +4,7 @@ goog.module.declareLegacyNamespace();
 const Promise = goog.require('goog.Promise');
 const log = goog.require('goog.log');
 const MapContainer = goog.require('os.MapContainer');
+const {setPixelRatioFn} = goog.require('os.capture');
 const keys = goog.require('os.metrics.keys');
 const AbstractCapturePlugin = goog.require('os.ui.capture.AbstractCapturePlugin');
 const TimelineRenderer = goog.require('os.ui.capture.TimelineRenderer');
@@ -61,7 +62,7 @@ class CapturePlugin extends AbstractCapturePlugin {
     }
 
     // replace the capture pixel ratio function to use the map pixel ratio
-    os.capture.getPixelRatio = getMapPixelRatio;
+    setPixelRatioFn(getMapPixelRatio);
   }
 
   /**
