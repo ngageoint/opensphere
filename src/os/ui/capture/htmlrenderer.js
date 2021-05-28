@@ -2,8 +2,8 @@ goog.module('os.ui.capture.HtmlRenderer');
 goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
+const {getMapCanvas} = goog.require('os.capture');
 const ElementRenderer = goog.require('os.ui.capture.ElementRenderer');
-const {getMapCanvas} = goog.require('plugin.capture');
 
 
 /**

@@ -1,8 +1,8 @@
 goog.module('plugin.capture.AnnotationTailRenderer');
 goog.module.declareLegacyNamespace();
 
+const {getMapCanvas} = goog.require('os.capture');
 const SvgRenderer = goog.require('os.ui.capture.SvgRenderer');
-const {getMapCanvas} = goog.require('plugin.capture');
 
 const Overlay = goog.requireType('ol.Overlay');
 

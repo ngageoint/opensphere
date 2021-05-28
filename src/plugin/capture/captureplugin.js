@@ -4,7 +4,7 @@ goog.module.declareLegacyNamespace();
 const Promise = goog.require('goog.Promise');
 const log = goog.require('goog.log');
 const MapContainer = goog.require('os.MapContainer');
-const {setPixelRatioFn} = goog.require('os.capture');
+const {getMapPixelRatio, setPixelRatioFn} = goog.require('os.capture');
 const keys = goog.require('os.metrics.keys');
 const AbstractCapturePlugin = goog.require('os.ui.capture.AbstractCapturePlugin');
 const TimelineRenderer = goog.require('os.ui.capture.TimelineRenderer');
@@ -15,7 +15,6 @@ const MapOverlayRenderer = goog.require('plugin.capture.MapOverlayRenderer');
 const MapOverviewRenderer = goog.require('plugin.capture.MapOverviewRenderer');
 const MapRenderer = goog.require('plugin.capture.MapRenderer');
 const TimelineRecorder = goog.require('plugin.capture.TimelineRecorder');
-const {getMapPixelRatio} = goog.require('plugin.capture');
 
 const MenuItem = goog.requireType('os.ui.menu.MenuItem');
 

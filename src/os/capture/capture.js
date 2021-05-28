@@ -6,11 +6,13 @@ const dom = goog.require('goog.dom');
 const log = goog.require('goog.log');
 const webgl = goog.require('ol.webgl');
 const {ROOT} = goog.require('os');
+const MapContainer = goog.require('os.MapContainer');
 const AlertManager = goog.require('os.alert.AlertManager');
 const ContentType = goog.require('os.capture.ContentType');
 const config = goog.require('os.config');
 const Job = goog.require('os.job.Job');
 const JobEventType = goog.require('os.job.JobEventType');
+const osMap = goog.require('os.map');
 const osString = goog.require('os.string');
 const worker = goog.require('os.worker');
 
@@ -339,20 +341,52 @@ const setPixelRatioFn = function(fn) {
   getPixelRatio_ = fn;
 };
 
+/**
+ * Get the map canvas element.
+ * @return {HTMLCanvasElement} The map canvas element
+ */
+const getMapCanvas = function() {
+  var mapCanvas;
+  if (MapContainer.getInstance().is3DEnabled()) {
+    mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector(osMap.WEBGL_CANVAS));
+  } else {
+    mapCanvas = /** @type {HTMLCanvasElement} */ (document.querySelector(osMap.OPENLAYERS_CANVAS));
+  }
+
+  return mapCanvas || null;
+};
+
+
+/**
+ * Get the map canvas pixel ratio.
+ * @return {number} The map canvas pixel ratio.
+ */
+const getMapPixelRatio = function() {
+  var mapCanvas = getMapCanvas();
+  if (mapCanvas) {
+    var mapRect = mapCanvas.getBoundingClientRect();
+    return mapCanvas.width / mapRect.width;
+  }
+
+  return 1;
+};
+
 exports = {
-  ID,
   BASE64_MARKER,
+  ID,
+  CanvasFn,
+  RenderFn,
   canvas2d,
   getCanvasData,
-  overlayCanvas,
+  getDefaultCanvas,
+  getMapCanvas,
+  getMapPixelRatio,
+  getPixelRatio,
+  getTimestamp,
   getWebGLImageData,
+  isTainted,
+  overlayCanvas,
   saveCanvas,
   saveDataUrl,
-  getDefaultCanvas,
-  getTimestamp,
-  isTainted,
-  getPixelRatio,
-  setPixelRatioFn,
-  CanvasFn,
-  RenderFn
+  setPixelRatioFn
 };

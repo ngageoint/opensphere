@@ -2,8 +2,8 @@ goog.module('plugin.capture.LegendRenderer');
 goog.module.declareLegacyNamespace();
 
 const Settings = goog.require('os.config.Settings');
+const {getMapCanvas} = goog.require('os.capture');
 const CanvasRenderer = goog.require('os.ui.capture.CanvasRenderer');
-const {getMapCanvas} = goog.require('plugin.capture');
 
 
 /**

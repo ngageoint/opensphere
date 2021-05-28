@@ -2,9 +2,9 @@ goog.module('plugin.capture.MapOverviewRenderer');
 goog.module.declareLegacyNamespace();
 
 const has = goog.require('ol.has');
+const {getMapCanvas} = goog.require('os.capture');
 const Settings = goog.require('os.config.Settings');
 const CanvasRenderer = goog.require('os.ui.capture.CanvasRenderer');
-const {getMapCanvas} = goog.require('plugin.capture');
 
 
 /**
