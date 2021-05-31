@@ -1,140 +1,141 @@
-goog.provide('plugin.descriptor.facet.Area');
+goog.module('plugin.descriptor.facet.Area');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.IAreaTest');
-goog.require('os.search.BaseFacet');
-
+const IAreaTest = goog.require('os.data.IAreaTest');
+const BaseFacet = goog.require('os.search.BaseFacet');
 
 
 /**
- * @constructor
- * @extends {os.search.BaseFacet<!os.data.IDataDescriptor>}
+ * @extends {BaseFacet<!os.data.IDataDescriptor>}
  */
-plugin.descriptor.facet.Area = function() {
-  plugin.descriptor.facet.Area.base(this, 'constructor');
-};
-goog.inherits(plugin.descriptor.facet.Area, os.search.BaseFacet);
+class Area extends BaseFacet {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  transformsValue(category) {
+    return category === 'Area';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  valueToLabel(value) {
+    var area = os.query.AreaManager.getInstance().get(value);
+
+    if (area) {
+      return /** @type {string} */ (area.get('title'));
+    }
+
+    return value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  load(item, facets) {
+    return this.updateCache_(
+        item,
+        os.query.AreaManager.getInstance().getAll(),
+        function(areaId) {
+          BaseFacet.update('Area', areaId, facets);
+        });
+  }
+
+  /**
+   * @inheritDoc
+   */
+  test(item, facets, results) {
+    var areaIds = facets['Area'];
+
+    if (areaIds) {
+      BaseFacet.updateResults('Area', results);
+
+      var areas = os.query.AreaManager.getInstance().getAll();
+      if (areas) {
+        areas = areas.filter(function(area) {
+          return areaIds.indexOf(/** @type {string} */ (area.getId())) > -1;
+        });
+      }
+
+      return this.updateCache_(
+          item,
+          areas,
+          function(areaId) {
+            BaseFacet.updateResults('Area', results, 1);
+          });
+    }
+  }
+
+  /**
+   * This is where the magic happens.
+   *
+   * @param {os.data.IDataDescriptor} descriptor
+   * @param {Array<!ol.Feature>} areas
+   * @param {Function} updateFunc
+   * @return {goog.Promise|undefined}
+   * @private
+   */
+  updateCache_(descriptor, areas, updateFunc) {
+    var promises = [];
+    if (areas) {
+      if (os.implements(descriptor, IAreaTest.ID)) {
+        var cache = Area.cache_;
+        var item = /** @type {IAreaTest} */ (descriptor);
+
+        for (var i = 0, n = areas.length; i < n; i++) {
+          var area = areas[i];
+          if (area.get('shown')) {
+            var key = item.getTestAreaKey(area);
+
+            if (key in cache) {
+              if (cache[key]) {
+                updateFunc(area.getId());
+              }
+            } else {
+              var onResult =
+                  /**
+                   * @param {boolean} value
+                   */
+                  function(value) {
+                    var cache = Area.cache_;
+                    cache[key] = value;
+
+                    if (cache[key]) {
+                      updateFunc(area.getId());
+                    }
+                  };
+
+              var result = item.testArea(area);
+
+              if (result instanceof goog.Promise) {
+                result.then(onResult);
+                promises.push(result);
+              } else {
+                onResult(result);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return promises.length ? goog.Promise.all(promises) : undefined;
+  }
+}
 
 
 /**
  * @type {Object<string, (boolean|null)>}
  * @private
  */
-plugin.descriptor.facet.Area.cache_ = {};
+Area.cache_ = {};
 
 
-/**
- * @inheritDoc
- */
-plugin.descriptor.facet.Area.prototype.transformsValue = function(category) {
-  return category === 'Area';
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.descriptor.facet.Area.prototype.valueToLabel = function(value) {
-  var area = os.query.AreaManager.getInstance().get(value);
-
-  if (area) {
-    return /** @type {string} */ (area.get('title'));
-  }
-
-  return value;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.descriptor.facet.Area.prototype.load = function(item, facets) {
-  return this.updateCache_(
-      item,
-      os.query.AreaManager.getInstance().getAll(),
-      function(areaId) {
-        os.search.BaseFacet.update('Area', areaId, facets);
-      });
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.descriptor.facet.Area.prototype.test = function(item, facets, results) {
-  var areaIds = facets['Area'];
-
-  if (areaIds) {
-    os.search.BaseFacet.updateResults('Area', results);
-
-    var areas = os.query.AreaManager.getInstance().getAll();
-    if (areas) {
-      areas = areas.filter(function(area) {
-        return areaIds.indexOf(/** @type {string} */ (area.getId())) > -1;
-      });
-    }
-
-    return this.updateCache_(
-        item,
-        areas,
-        function(areaId) {
-          os.search.BaseFacet.updateResults('Area', results, 1);
-        });
-  }
-};
-
-
-/**
- * This is where the magic happens.
- *
- * @param {os.data.IDataDescriptor} descriptor
- * @param {Array<!ol.Feature>} areas
- * @param {Function} updateFunc
- * @return {goog.Promise|undefined}
- * @private
- */
-plugin.descriptor.facet.Area.prototype.updateCache_ = function(descriptor, areas, updateFunc) {
-  var promises = [];
-  if (areas) {
-    if (os.implements(descriptor, os.data.IAreaTest.ID)) {
-      var cache = plugin.descriptor.facet.Area.cache_;
-      var item = /** @type {os.data.IAreaTest} */ (descriptor);
-
-      for (var i = 0, n = areas.length; i < n; i++) {
-        var area = areas[i];
-        if (area.get('shown')) {
-          var key = item.getTestAreaKey(area);
-
-          if (key in cache) {
-            if (cache[key]) {
-              updateFunc(area.getId());
-            }
-          } else {
-            var onResult =
-                /**
-                 * @param {boolean} value
-                 */
-                function(value) {
-                  var cache = plugin.descriptor.facet.Area.cache_;
-                  cache[key] = value;
-
-                  if (cache[key]) {
-                    updateFunc(area.getId());
-                  }
-                };
-
-            var result = item.testArea(area);
-
-            if (result instanceof goog.Promise) {
-              result.then(onResult);
-              promises.push(result);
-            } else {
-              onResult(result);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return promises.length ? goog.Promise.all(promises) : undefined;
-};
+exports = Area;

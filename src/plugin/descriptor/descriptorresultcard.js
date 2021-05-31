@@ -1,156 +1,159 @@
-goog.provide('plugin.descriptor.ResultCardCtrl');
-goog.provide('plugin.descriptor.descriptorResultCardDirective');
+goog.module('plugin.descriptor.ResultCardUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os');
-goog.require('os.data.DescriptorEvent');
-goog.require('os.ui.Module');
+const os = goog.require('os');
+const dispatcher = goog.require('os.Dispatcher');
+const DescriptorEvent = goog.require('os.data.DescriptorEvent');
+const Module = goog.require('os.ui.Module');
 
 
 /**
  * @return {angular.Directive}
  */
-plugin.descriptor.descriptorResultCardDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    templateUrl: os.ROOT + 'views/plugin/descriptor/resultcard.html',
-    controller: plugin.descriptor.ResultCardCtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  templateUrl: os.ROOT + 'views/plugin/descriptor/resultcard.html',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'descriptorresultcard';
 
 
 /**
  * Register the beresultcard directive.
  */
-os.ui.Module.directive('descriptorresultcard', [plugin.descriptor.descriptorResultCardDirective]);
+Module.directive('descriptorresultcard', [directive]);
 
 
 
 /**
  * Controller for the beresultcard directive.
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-plugin.descriptor.ResultCardCtrl = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.Scope}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
+
+    this.scope_['short'] = false;
+    this.scope_['showFullDescription'] = false;
+    this.updateIcons();
+
+    /**
+     * @type {number|undefined}
+     */
+    this['featureCount'] = undefined;
+
+    var result = /** @type {plugin.descriptor.DescriptorResult} */ (this.scope_['result']);
+    if (result && result.featureCount != null) {
+      this['featureCount'] = result.featureCount;
+    }
+
+    $scope.$on('$destroy', this.destroy_.bind(this));
+  }
+
+  /**
+   * Clean up the controller.
+   *
    * @private
    */
-  this.scope_ = $scope;
+  destroy_() {
+    this.element_ = null;
+    this.scope_ = null;
+  }
 
   /**
-   * @type {?angular.JQLite}
-   * @private
+   * Updates icons
    */
-  this.element_ = $element;
-
-  this.scope_['short'] = false;
-  this.scope_['showFullDescription'] = false;
-  this.updateIcons();
+  updateIcons() {
+    var icons = this.element_.find('.js-card-title-icons');
+    // clear
+    icons.children().remove();
+    // add
+    icons.prepend(this.getField('icons'));
+  }
 
   /**
-   * @type {number|undefined}
+   * @return {os.data.IDataDescriptor} the descriptor
    */
-  this['featureCount'] = undefined;
-
-  var result = /** @type {plugin.descriptor.DescriptorResult} */ (this.scope_['result']);
-  if (result && result.featureCount != null) {
-    this['featureCount'] = result.featureCount;
+  getDescriptor() {
+    var result = /** @type {plugin.descriptor.DescriptorResult} */ (this.scope_['result']);
+    return result ? result.getResult() : null;
   }
 
-  $scope.$on('$destroy', this.destroy_.bind(this));
-};
+  /**
+   * Get a field from the result.
+   *
+   * @param {string} field
+   * @return {*}
+   * @export
+   */
+  getField(field) {
+    var d = this.getDescriptor();
 
+    if (d) {
+      switch (field.toLowerCase()) {
+        case 'id': return d.getId();
+        case 'active': return d.isActive();
+        case 'icons': return d.getIcons();
+        case 'provider': return d.getProvider();
+        case 'tags': return d.getTags().join(', ');
+        case 'title': return d.getTitle();
+        case 'type': return d.getSearchType();
+        case 'description': return d.getDescription();
+        default: break;
+      }
+    }
 
-/**
- * Length of the snippet to show for long descriptions
- * @type {number}
- * @const
- */
-plugin.descriptor.ResultCardCtrl.SNIPPET_LENGTH = 125;
+    return '';
+  }
 
+  /**
+   * Toggles the descriptor
+   * @param {Event} event The click event.
+   *
+   * @export
+   */
+  toggle(event) {
+    event.preventDefault();
+    event.stopPropagation();
 
-/**
- * Clean up the controller.
- *
- * @private
- */
-plugin.descriptor.ResultCardCtrl.prototype.destroy_ = function() {
-  this.element_ = null;
-  this.scope_ = null;
-};
+    var d = this.getDescriptor();
 
+    if (d) {
+      d.setActive(!d.isActive());
 
-/**
- * Updates icons
- */
-plugin.descriptor.ResultCardCtrl.prototype.updateIcons = function() {
-  var icons = this.element_.find('.js-card-title-icons');
-  // clear
-  icons.children().remove();
-  // add
-  icons.prepend(this.getField('icons'));
-};
-
-
-/**
- * @return {os.data.IDataDescriptor} the descriptor
- */
-plugin.descriptor.ResultCardCtrl.prototype.getDescriptor = function() {
-  var result = /** @type {plugin.descriptor.DescriptorResult} */ (this.scope_['result']);
-  return result ? result.getResult() : null;
-};
-
-
-/**
- * Get a field from the result.
- *
- * @param {string} field
- * @return {*}
- * @export
- */
-plugin.descriptor.ResultCardCtrl.prototype.getField = function(field) {
-  var d = this.getDescriptor();
-
-  if (d) {
-    switch (field.toLowerCase()) {
-      case 'id': return d.getId();
-      case 'active': return d.isActive();
-      case 'icons': return d.getIcons();
-      case 'provider': return d.getProvider();
-      case 'tags': return d.getTags().join(', ');
-      case 'title': return d.getTitle();
-      case 'type': return d.getSearchType();
-      case 'description': return d.getDescription();
-      default: break;
+      if (d.isActive()) {
+        dispatcher.getInstance().dispatchEvent(new DescriptorEvent(os.data.DescriptorEventType.USER_TOGGLED, d));
+      }
     }
   }
-
-  return '';
-};
+}
 
 
-/**
- * Toggles the descriptor
- * @param {Event} event The click event.
- *
- * @export
- */
-plugin.descriptor.ResultCardCtrl.prototype.toggle = function(event) {
-  event.preventDefault();
-  event.stopPropagation();
-
-  var d = this.getDescriptor();
-
-  if (d) {
-    d.setActive(!d.isActive());
-
-    if (d.isActive()) {
-      os.dispatcher.dispatchEvent(new os.data.DescriptorEvent(os.data.DescriptorEventType.USER_TOGGLED, d));
-    }
-  }
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

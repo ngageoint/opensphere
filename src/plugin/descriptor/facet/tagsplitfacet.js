@@ -1,56 +1,60 @@
-goog.provide('plugin.descriptor.facet.TagSplit');
-goog.require('os.search.BaseFacet');
+goog.module('plugin.descriptor.facet.TagSplit');
+goog.module.declareLegacyNamespace();
 
-
-
-/**
- * @constructor
- * @extends {os.search.BaseFacet<!os.data.IDataDescriptor>}
- */
-plugin.descriptor.facet.TagSplit = function() {
-  plugin.descriptor.facet.TagSplit.base(this, 'constructor');
-};
-goog.inherits(plugin.descriptor.facet.TagSplit, os.search.BaseFacet);
+const BaseFacet = goog.require('os.search.BaseFacet');
 
 
 /**
- * @inheritDoc
+ * @extends {BaseFacet<!os.data.IDataDescriptor>}
  */
-plugin.descriptor.facet.TagSplit.prototype.load = function(item, facets) {
-  var tags = item.getTags();
+class TagSplit extends BaseFacet {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
 
-  if (tags) {
-    for (var i = 0, n = tags.length; i < n; i++) {
-      var tag = tags[i];
+  /**
+   * @inheritDoc
+   */
+  load(item, facets) {
+    var tags = item.getTags();
 
-      if (tag) {
-        var split = tag.split(/:/);
+    if (tags) {
+      for (var i = 0, n = tags.length; i < n; i++) {
+        var tag = tags[i];
 
-        if (split && split.length === 2) {
-          os.search.BaseFacet.update(split[0], split[1], facets);
+        if (tag) {
+          var split = tag.split(/:/);
+
+          if (split && split.length === 2) {
+            BaseFacet.update(split[0], split[1], facets);
+          }
         }
       }
     }
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  test(item, facets, results) {
+    var tags = item.getTags();
 
-/**
- * @inheritDoc
- */
-plugin.descriptor.facet.TagSplit.prototype.test = function(item, facets, results) {
-  var tags = item.getTags();
+    for (var cat in facets) {
+      var values = facets[cat];
+      BaseFacet.updateResults(cat, results);
 
-  for (var cat in facets) {
-    var values = facets[cat];
-    os.search.BaseFacet.updateResults(cat, results);
+      for (var i = 0, n = values.length; i < n; i++) {
+        var value = cat + ':' + values[i];
 
-    for (var i = 0, n = values.length; i < n; i++) {
-      var value = cat + ':' + values[i];
-
-      if (tags && tags.indexOf(value) > -1) {
-        os.search.BaseFacet.updateResults(cat, results, 1);
+        if (tags && tags.indexOf(value) > -1) {
+          BaseFacet.updateResults(cat, results, 1);
+        }
       }
     }
   }
-};
+}
+
+exports = TagSplit;
