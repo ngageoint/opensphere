@@ -3,17 +3,16 @@ goog.module.declareLegacyNamespace();
 
 const Promise = goog.require('goog.Promise');
 const Timer = goog.require('goog.Timer');
-const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');
 const userAgent = goog.require('goog.userAgent');
 const MapContainer = goog.require('os.MapContainer');
 const {getMapPixelRatio, setPixelRatioFn} = goog.require('os.capture');
 const keys = goog.require('os.metrics.keys');
-const TimelineController = goog.require('os.time.TimelineController');
 const TimelineEventType = goog.require('os.time.TimelineEventType');
 const AbstractCapturePlugin = goog.require('os.ui.capture.AbstractCapturePlugin');
 const TimelineRenderer = goog.require('os.ui.capture.TimelineRenderer');
 const saveMenu = goog.require('os.ui.menu.save');
+const {WAIT_TIME, onReady, recordSupported} = goog.require('plugin.capture');
 const AnnotationTailRenderer = goog.require('plugin.capture.AnnotationTailRenderer');
 const LegendRenderer = goog.require('plugin.capture.LegendRenderer');
 const MapOverlayRenderer = goog.require('plugin.capture.MapOverlayRenderer');
@@ -54,15 +53,15 @@ class CapturePlugin extends AbstractCapturePlugin {
         sort: 20
       });
 
-      var child = root.addChild({
+      root.addChild({
         label: 'Recording',
         eventType: TimelineEventType.RECORD,
         tooltip: 'Save an animated GIF recording',
         icons: ['<i class="fa fa-fw fa-circle"></i>'],
         metricKey: keys.Map.SCREEN_RECORD,
+        beforeRender: recordingBeforeRender,
         sort: 21
       });
-      child.beforeRender = recordingBeforeRender;
     }
 
     // replace the capture pixel ratio function to use the map pixel ratio
@@ -127,7 +126,7 @@ class CapturePlugin extends AbstractCapturePlugin {
       if (waitForLoad) {
         Timer.callOnce(function() {
           onReady(resolve);
-        }, CapturePlugin.WAIT_TIME);
+        }, WAIT_TIME);
       } else {
         resolve();
       }
@@ -171,8 +170,9 @@ const logger = log.getLogger('plugin.capture.CapturePlugin');
 /**
  * wait time in milliseconds
  * @type {number}
+ * @deprecated Please use plugin.capture.WAIT_TIME instead.
  */
-CapturePlugin.WAIT_TIME = 100;
+CapturePlugin.WAIT_TIME = WAIT_TIME;
 
 
 /**
@@ -181,43 +181,6 @@ CapturePlugin.WAIT_TIME = 100;
  */
 const recordingBeforeRender = function() {
   this.visible = recordSupported();
-};
-
-/**
- * @return {boolean}
- */
-const recordSupported = function() {
-  var tlc = TimelineController.getInstance();
-  // record is supported when the window is not the same as the loop
-  var winRight = tlc.getCurrent();
-  var winLeft = winRight - tlc.getOffset();
-  var loopStart = tlc.getLoopStart();
-  var loopEnd = tlc.getLoopEnd();
-
-  return winLeft != loopStart || winRight != loopEnd;
-};
-
-/**
- * Check if the application is ready to capture the screen.
- *
- * @param {Function} callback The function to call when ready to capture
- */
-const onReady = function(callback) {
-  // Check if we are ready to take picture
-  var ready = googArray.every(MapContainer.getInstance().getLayers(), function(layer) {
-    layer = /** @type {os.layer.ILayer} */ (layer);
-    return !layer.isLoading();
-  });
-
-  if (ready) {
-    // once layers have finished loading, wait another second for histograms, color models, etc to update
-    Timer.callOnce(callback, 1000);
-  } else {
-    // not ready, wait 100ms and try again
-    Timer.callOnce(function() {
-      onReady(callback);
-    }, CapturePlugin.WAIT_TIME);
-  }
 };
 
 exports = CapturePlugin;
