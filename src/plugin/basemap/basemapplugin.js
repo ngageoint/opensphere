@@ -4,8 +4,10 @@ goog.module.declareLegacyNamespace();
 const MapContainer = goog.require('os.MapContainer');
 const DataManager = goog.require('os.data.DataManager');
 const ProviderEntry = goog.require('os.data.ProviderEntry');
+const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const StateManager = goog.require('os.state.StateManager');
+const Versions = goog.require('os.state.Versions');
 const LayersCtrl = goog.require('os.ui.LayersCtrl');
 const basemap = goog.require('plugin.basemap');
 const BaseMapConfig = goog.require('plugin.basemap.BaseMapConfig');
@@ -86,13 +88,12 @@ class BaseMapPlugin extends AbstractPlugin {
     MapContainer.getInstance().addGroup(new Group());
 
     // register the layer config
-    os.layer.config.LayerConfigManager.getInstance().registerLayerConfig(
-        basemap.TYPE, BaseMapConfig);
+    LayerConfigManager.getInstance().registerLayerConfig(basemap.TYPE, BaseMapConfig);
 
     // register the state
     var sm = StateManager.getInstance();
-    sm.addStateImplementation(os.state.Versions.V3, pluginBasemapV3BaseMapState);
-    sm.addStateImplementation(os.state.Versions.V4, BaseMapState);
+    sm.addStateImplementation(Versions.V3, pluginBasemapV3BaseMapState);
+    sm.addStateImplementation(Versions.V4, BaseMapState);
 
     // do not toggle the base maps on and off
     LayersCtrl.SKIP_TOGGLE_FUNCS.push(basemap.isBaseMap);

@@ -1,13 +1,16 @@
 goog.module('plugin.basemap.BaseMapProvider');
 goog.module.declareLegacyNamespace();
 
+const dispose = goog.require('goog.dispose');
 const dispatcher = goog.require('os.Dispatcher');
+const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const BaseDescriptor = goog.require('os.data.BaseDescriptor');
 const DataManager = goog.require('os.data.DataManager');
 const DataProviderEvent = goog.require('os.data.DataProviderEvent');
 const DataProviderEventType = goog.require('os.data.DataProviderEventType');
 const IDataProvider = goog.require('os.data.IDataProvider');
+const osImplements = goog.require('os.implements');
 const osMap = goog.require('os.map');
 const osProjSwitch = goog.require('os.proj.switch');
 const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
@@ -214,7 +217,7 @@ class BaseMapProvider extends DescriptorProvider {
    * @protected
    */
   onSwitchProjectionBins(evt) {
-    var layers = os.MapContainer.getInstance().getLayers();
+    var layers = MapContainer.getInstance().getLayers();
     var bins = evt.layers;
     var numBaseMaps = 0;
     var map = {};
@@ -279,7 +282,7 @@ class BaseMapProvider extends DescriptorProvider {
       // remove the descriptor from the data manager
       DataManager.getInstance().removeDescriptor(descriptor);
       this.removeDescriptor(descriptor);
-      goog.dispose(descriptor);
+      dispose(descriptor);
     }
   }
 
@@ -290,6 +293,6 @@ class BaseMapProvider extends DescriptorProvider {
     return null;
   }
 }
-os.implements(BaseMapProvider, IDataProvider.ID);
+osImplements(BaseMapProvider, IDataProvider.ID);
 
 exports = BaseMapProvider;

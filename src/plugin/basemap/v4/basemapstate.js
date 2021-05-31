@@ -1,8 +1,13 @@
 goog.module('plugin.basemap.v4.BaseMapState');
 goog.module.declareLegacyNamespace();
 
+const googDomXml = goog.require('goog.dom.xml');
+const log = goog.require('goog.log');
+const MapContainer = goog.require('os.MapContainer');
 const net = goog.require('os.net');
 const LayerState = goog.require('os.state.v4.LayerState');
+const BaseProvider = goog.require('os.ui.data.BaseProvider');
+const xml = goog.require('os.xml');
 const basemap = goog.require('plugin.basemap');
 const BaseMap = goog.require('plugin.basemap.layer.BaseMap');
 const BaseMapTag = goog.require('plugin.basemap.v4.BaseMapTag');
@@ -52,7 +57,7 @@ class BaseMapState extends LayerState {
   layerToXML(layer, options, opt_exclusions, opt_layerConfig) {
     var layerEl = super.layerToXML(layer, options, opt_exclusions, opt_layerConfig);
     if (layerEl) {
-      goog.dom.xml.setAttributes(layerEl, {
+      googDomXml.setAttributes(layerEl, {
         'type': layer.getLayerOptions()['baseType'] || 'wms'
       });
     }
@@ -65,12 +70,12 @@ class BaseMapState extends LayerState {
   defaultConfigToXML(key, value, layerEl) {
     switch (key) {
       case 'minResolution':
-        var maxZoom = Math.round(os.MapContainer.getInstance().resolutionToZoom(/** @type {number} */ (value)) - 1);
-        os.xml.appendElement(BaseMapTag.MAX_ZOOM, layerEl, maxZoom);
+        var maxZoom = Math.round(MapContainer.getInstance().resolutionToZoom(/** @type {number} */ (value)) - 1);
+        xml.appendElement(BaseMapTag.MAX_ZOOM, layerEl, maxZoom);
         break;
       case 'maxResolution':
-        var minZoom = Math.round(os.MapContainer.getInstance().resolutionToZoom(/** @type {number} */ (value)) - 1);
-        os.xml.appendElement(BaseMapTag.MIN_ZOOM, layerEl, minZoom);
+        var minZoom = Math.round(MapContainer.getInstance().resolutionToZoom(/** @type {number} */ (value)) - 1);
+        xml.appendElement(BaseMapTag.MIN_ZOOM, layerEl, minZoom);
         break;
       case 'minZoom':
       case 'maxZoom':
@@ -90,7 +95,7 @@ class BaseMapState extends LayerState {
     options['baseType'] = options['type'].toUpperCase();
     options['layerType'] = basemap.LAYER_TYPE;
     options['type'] = basemap.TYPE;
-    options['id'] = options['id'].replace(os.ui.data.BaseProvider.ID_DELIMITER, '-');
+    options['id'] = options['id'].replace(BaseProvider.ID_DELIMITER, '-');
 
     if (typeof options['url'] == 'string') {
       options['crossOrigin'] = net.getCrossOrigin(/** @type {string} */ (options['url']));
@@ -114,7 +119,7 @@ class BaseMapState extends LayerState {
  * Logger
  * @type {goog.log.Logger}
  */
-const logger = goog.log.getLogger('plugin.basemap.v4.BaseMapState');
+const logger = log.getLogger('plugin.basemap.v4.BaseMapState');
 
 
 exports = BaseMapState;
