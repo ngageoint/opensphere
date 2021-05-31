@@ -1,16 +1,17 @@
-goog.provide('plugin.basemap.BaseMapConfig');
+goog.module('plugin.basemap.BaseMapConfig');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.asserts');
-goog.require('goog.object');
-goog.require('os.layer.config.AbstractLayerConfig');
-goog.require('plugin.basemap.layer.BaseMap');
-
+const asserts = goog.require('goog.asserts');
+const googObject = goog.require('goog.object');
+const AbstractLayerConfig = goog.require('os.layer.config.AbstractLayerConfig');
+const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
+const BaseMap = goog.require('plugin.basemap.layer.BaseMap');
 
 
 /**
  * Creates a tiled map layer. Map layers are typically opaque and belong under all data overlays.
  *
- * Note that this configuration forces the <code>layerClass</code> option to be {@link plugin.basemap.layer.BaseMap}.
+ * Note that this configuration forces the <code>layerClass</code> option to be {@link BaseMap}.
  *
  * @example <caption>Example map layer config</caption>
  * "example": {
@@ -31,28 +32,30 @@ goog.require('plugin.basemap.layer.BaseMap');
  *   ... The rest of the properties should configure that specific type
  * }
  *
- * @extends {os.layer.config.AbstractLayerConfig}
  * @see {@link plugin.ogc.wms.WMSLayerConfig} for configuring WMS map layers
  * @see {@link plugin.xyz.XYZLayerConfig} for configuring XYZ map layers (also best for ArcGIS map layers)
- * @constructor
  */
-plugin.basemap.BaseMapConfig = function() {
-  plugin.basemap.BaseMapConfig.base(this, 'constructor');
-};
-goog.inherits(plugin.basemap.BaseMapConfig, os.layer.config.AbstractLayerConfig);
+class BaseMapConfig extends AbstractLayerConfig {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
 
+  /**
+   * @inheritDoc
+   */
+  createLayer(options) {
+    var clonedOptions = googObject.clone(options);
+    clonedOptions['layerClass'] = BaseMap;
 
-/**
- * @inheritDoc
- */
-plugin.basemap.BaseMapConfig.prototype.createLayer = function(options) {
-  var clonedOptions = goog.object.clone(options);
-  clonedOptions['layerClass'] = plugin.basemap.layer.BaseMap;
+    var layerType = /** @type {string} */ (clonedOptions['baseType']);
+    var layerConfig = LayerConfigManager.getInstance().getLayerConfig(layerType);
+    asserts.assert(layerConfig !== undefined);
 
-  var layerType = /** @type {string} */ (clonedOptions['baseType']);
-  var layerConfig = os.layer.config.LayerConfigManager.getInstance().getLayerConfig(layerType);
-  goog.asserts.assert(layerConfig !== undefined);
+    return layerConfig.createLayer(clonedOptions);
+  }
+}
 
-  return layerConfig.createLayer(clonedOptions);
-};
-
+exports = BaseMapConfig;

@@ -1,21 +1,20 @@
-goog.provide('plugin.basemap.BaseMapPlugin');
+goog.module('plugin.basemap.BaseMapPlugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.MapContainer');
-goog.require('os.data.DataManager');
-goog.require('os.data.ProviderEntry');
-goog.require('os.layer.Group');
-goog.require('os.plugin.AbstractPlugin');
-goog.require('os.state.StateManager');
-goog.require('os.ui.LayersCtrl');
-goog.require('plugin.basemap');
-goog.require('plugin.basemap.BaseMapConfig');
-goog.require('plugin.basemap.BaseMapDescriptor');
-goog.require('plugin.basemap.BaseMapProvider');
-goog.require('plugin.basemap.Group');
-goog.require('plugin.basemap.TerrainDescriptor');
-goog.require('plugin.basemap.v3.BaseMapState');
-goog.require('plugin.basemap.v4.BaseMapState');
-
+const MapContainer = goog.require('os.MapContainer');
+const DataManager = goog.require('os.data.DataManager');
+const ProviderEntry = goog.require('os.data.ProviderEntry');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const StateManager = goog.require('os.state.StateManager');
+const LayersCtrl = goog.require('os.ui.LayersCtrl');
+const basemap = goog.require('plugin.basemap');
+const BaseMapConfig = goog.require('plugin.basemap.BaseMapConfig');
+const BaseMapDescriptor = goog.require('plugin.basemap.BaseMapDescriptor');
+const BaseMapProvider = goog.require('plugin.basemap.BaseMapProvider');
+const Group = goog.require('plugin.basemap.Group');
+const TerrainDescriptor = goog.require('plugin.basemap.TerrainDescriptor');
+const pluginBasemapV3BaseMapState = goog.require('plugin.basemap.v3.BaseMapState');
+const BaseMapState = goog.require('plugin.basemap.v4.BaseMapState');
 
 
 /**
@@ -30,7 +29,7 @@ goog.require('plugin.basemap.v4.BaseMapState');
  * To configure the individual maps, see the docs for:
  * <ul>
  * <li>Arc Layers: {@link plugin.xyz.XYZLayerConfig Use XYZ}
- * <li>{@link plugin.basemap.BaseMapConfig General base map config}
+ * <li>{@link BaseMapConfig General base map config}
  * <li>{@link plugin.ogc.wms.WMSLayerConfig WMS layers}
  * <li>{@link plugin.xyz.XYZLayerConfig XYZ layers}
  * </ul>
@@ -53,49 +52,51 @@ goog.require('plugin.basemap.v4.BaseMapState');
  *    }
  *  }
  *
- * @see {@link plugin.basemap.BaseMapConfig} for general base map configuration
+ * @see {@link basemap.BaseMapConfig} for general base map configuration
  * @see {@link plugin.ogc.wms.WMSLayerConfig} for configuring WMS map layers
  * @see {@link plugin.xyz.XYZLayerConfig} for configuring XYZ map layers (also best for ArcGIS map layers)
- *
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
  */
-plugin.basemap.BaseMapPlugin = function() {
-  plugin.basemap.BaseMapPlugin.base(this, 'constructor');
-  this.id = plugin.basemap.ID;
-};
-goog.inherits(plugin.basemap.BaseMapPlugin, os.plugin.AbstractPlugin);
+class BaseMapPlugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = basemap.ID;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  init() {
+    var dm = DataManager.getInstance();
 
-/**
- * @inheritDoc
- */
-plugin.basemap.BaseMapPlugin.prototype.init = function() {
-  var dm = os.dataManager;
+    // register the base map provider type
+    dm.registerProviderType(new ProviderEntry(
+        this.id,
+        BaseMapProvider,
+        basemap.LAYER_TYPE,
+        'Map layers provide background imagery. They often include streets, borders, or other reference information.'));
 
-  // register the base map provider type
-  dm.registerProviderType(new os.data.ProviderEntry(
-      this.id,
-      plugin.basemap.BaseMapProvider,
-      plugin.basemap.LAYER_TYPE,
-      'Map layers provide background imagery. They often include streets, borders, or other reference information.'));
+    // register the base map descriptor types
+    dm.registerDescriptorType(this.id, BaseMapDescriptor);
+    dm.registerDescriptorType(basemap.TERRAIN_ID, TerrainDescriptor);
 
-  // register the base map descriptor types
-  dm.registerDescriptorType(this.id, plugin.basemap.BaseMapDescriptor);
-  dm.registerDescriptorType(plugin.basemap.TERRAIN_ID, plugin.basemap.TerrainDescriptor);
+    // add the base map group
+    MapContainer.getInstance().addGroup(new Group());
 
-  // add the base map group
-  os.MapContainer.getInstance().addGroup(new plugin.basemap.Group());
+    // register the layer config
+    os.layer.config.LayerConfigManager.getInstance().registerLayerConfig(
+        basemap.TYPE, BaseMapConfig);
 
-  // register the layer config
-  os.layer.config.LayerConfigManager.getInstance().registerLayerConfig(
-      plugin.basemap.TYPE, plugin.basemap.BaseMapConfig);
+    // register the state
+    var sm = StateManager.getInstance();
+    sm.addStateImplementation(os.state.Versions.V3, pluginBasemapV3BaseMapState);
+    sm.addStateImplementation(os.state.Versions.V4, BaseMapState);
 
-  // register the state
-  var sm = os.state.StateManager.getInstance();
-  sm.addStateImplementation(os.state.Versions.V3, plugin.basemap.v3.BaseMapState);
-  sm.addStateImplementation(os.state.Versions.V4, plugin.basemap.v4.BaseMapState);
+    // do not toggle the base maps on and off
+    LayersCtrl.SKIP_TOGGLE_FUNCS.push(basemap.isBaseMap);
+  }
+}
 
-  // do not toggle the base maps on and off
-  os.ui.LayersCtrl.SKIP_TOGGLE_FUNCS.push(plugin.basemap.isBaseMap);
-};
+exports = BaseMapPlugin;

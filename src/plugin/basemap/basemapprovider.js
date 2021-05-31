@@ -1,300 +1,295 @@
-goog.provide('plugin.basemap.BaseMapProvider');
+goog.module('plugin.basemap.BaseMapProvider');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.MapEvent');
-goog.require('os.data.BaseDescriptor');
-goog.require('os.data.DataManager');
-goog.require('os.data.DataProviderEvent');
-goog.require('os.data.DataProviderEventType');
-goog.require('os.data.IDataProvider');
-goog.require('os.map');
-goog.require('os.proj.switch');
-goog.require('os.ui.data.DescriptorNode');
-goog.require('os.ui.data.DescriptorProvider');
-goog.require('plugin.basemap');
-goog.require('plugin.basemap.BaseMapDescriptor');
-goog.require('plugin.basemap.TerrainDescriptor');
-goog.require('plugin.basemap.layer.BaseMap');
-
+const dispatcher = goog.require('os.Dispatcher');
+const MapEvent = goog.require('os.MapEvent');
+const BaseDescriptor = goog.require('os.data.BaseDescriptor');
+const DataManager = goog.require('os.data.DataManager');
+const DataProviderEvent = goog.require('os.data.DataProviderEvent');
+const DataProviderEventType = goog.require('os.data.DataProviderEventType');
+const IDataProvider = goog.require('os.data.IDataProvider');
+const osMap = goog.require('os.map');
+const osProjSwitch = goog.require('os.proj.switch');
+const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
+const basemap = goog.require('plugin.basemap');
+const BaseMapDescriptor = goog.require('plugin.basemap.BaseMapDescriptor');
+const TerrainDescriptor = goog.require('plugin.basemap.TerrainDescriptor');
+const BaseMap = goog.require('plugin.basemap.layer.BaseMap');
 
 
 /**
  * The base map provider provides access to pre-configured map layers
  *
- * @implements {os.data.IDataProvider}
- * @extends {os.ui.data.DescriptorProvider}
- * @constructor
- * @see {@link plugin.basemap.BaseMapPlugin} for configuration instructions
+ * @implements {IDataProvider}
+ * @see {@link basemap.BaseMapPlugin} for configuration instructions
  */
-plugin.basemap.BaseMapProvider = function() {
-  plugin.basemap.BaseMapProvider.base(this, 'constructor');
-
-  this.setId(plugin.basemap.ID);
-
+class BaseMapProvider extends DescriptorProvider {
   /**
-   * @type {Object<string, Array<string>>}
-   * @private
+   * Constructor.
    */
-  this.defaultSets_ = null;
+  constructor() {
+    super();
 
-  /**
-   * @type {Array.<string>}
-   * @private
-   */
-  this.defaults_ = null;
+    this.setId(basemap.ID);
 
-  /**
-   * @type {Object<string, Array<!string>>}
-   * @private
-   */
-  this.failSets_ = {};
+    /**
+     * @type {Object<string, Array<string>>}
+     * @private
+     */
+    this.defaultSets_ = null;
 
-  // this provider should not show up in the server manager
-  this.listInServers = false;
+    /**
+     * @type {Array.<string>}
+     * @private
+     */
+    this.defaults_ = null;
 
-  os.proj.switch.SwitchProjection.getInstance().listen(
-      os.proj.switch.BinnedLayersEvent.TYPE, this.onSwitchProjectionBins, false, this);
+    /**
+     * @type {Object<string, Array<!string>>}
+     * @private
+     */
+    this.failSets_ = {};
 
-  os.dispatcher.listen(os.MapEvent.TERRAIN_DISABLED, this.onTerrainDisabled, false, this);
-  os.dispatcher.listen('basemapAddFailover', this.activateFailSet, false, this);
-};
-goog.inherits(plugin.basemap.BaseMapProvider, os.ui.data.DescriptorProvider);
-os.implements(plugin.basemap.BaseMapProvider, os.data.IDataProvider.ID);
+    // this provider should not show up in the server manager
+    this.listInServers = false;
 
+    osProjSwitch.SwitchProjection.getInstance().listen(
+        osProjSwitch.BinnedLayersEvent.TYPE, this.onSwitchProjectionBins, false, this);
 
-/**
- * @inheritDoc
- */
-plugin.basemap.BaseMapProvider.prototype.disposeInternal = function() {
-  plugin.basemap.BaseMapProvider.base(this, 'disposeInternal');
-  os.dispatcher.unlisten(os.MapEvent.TERRAIN_DISABLED, this.onTerrainDisabled, false, this);
-  os.dispatcher.unlisten('basemapAddFailover', this.activateFailSet, false, this);
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.basemap.BaseMapProvider.prototype.configure = function(config) {
-  this.setLabel(plugin.basemap.LAYER_TYPE);
-  this.defaultSets_ = /** @type {Object<string, Array<string>>} */ (config['defaults']);
-
-  if (this.defaultSets_) {
-    this.defaults_ = this.defaultSets_[os.map.PROJECTION.getCode()];
+    dispatcher.getInstance().listen(MapEvent.TERRAIN_DISABLED, this.onTerrainDisabled, false, this);
+    dispatcher.getInstance().listen('basemapAddFailover', this.activateFailSet, false, this);
   }
 
-  var failSets = /** @type {Object<string, Array<!string>>} */ (config['failSet']);
-
-  if (failSets) {
-    this.failSets_ = failSets;
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
+    dispatcher.getInstance().unlisten(MapEvent.TERRAIN_DISABLED, this.onTerrainDisabled, false, this);
+    dispatcher.getInstance().unlisten('basemapAddFailover', this.activateFailSet, false, this);
   }
 
-  this.addBaseMapFromConfig(config);
-};
+  /**
+   * @inheritDoc
+   */
+  configure(config) {
+    this.setLabel(basemap.LAYER_TYPE);
+    this.defaultSets_ = /** @type {Object<string, Array<string>>} */ (config['defaults']);
 
+    if (this.defaultSets_) {
+      this.defaults_ = this.defaultSets_[osMap.PROJECTION.getCode()];
+    }
 
-/**
- * @inheritDoc
- */
-plugin.basemap.BaseMapProvider.prototype.load = function(ping) {
-  this.dispatchEvent(new os.data.DataProviderEvent(os.data.DataProviderEventType.LOADING, this));
+    var failSets = /** @type {Object<string, Array<!string>>} */ (config['failSet']);
 
-  var anyActive = false;
-  if (!this.getChildren()) {
-    var list = this.getDescriptors();
+    if (failSets) {
+      this.failSets_ = failSets;
+    }
 
-    for (var i = 0, n = list.length; i < n; i++) {
-      var descriptor = list[i];
-      this.addDescriptor(descriptor, false, false);
+    this.addBaseMapFromConfig(config);
+  }
 
-      if (descriptor.getDescriptorType() == plugin.basemap.ID && descriptor.isActive()) {
-        anyActive = true;
+  /**
+   * @inheritDoc
+   */
+  load(ping) {
+    this.dispatchEvent(new DataProviderEvent(DataProviderEventType.LOADING, this));
+
+    var anyActive = false;
+    if (!this.getChildren()) {
+      var list = this.getDescriptors();
+
+      for (var i = 0, n = list.length; i < n; i++) {
+        var descriptor = list[i];
+        this.addDescriptor(descriptor, false, false);
+
+        if (descriptor.getDescriptorType() == basemap.ID && descriptor.isActive()) {
+          anyActive = true;
+        }
       }
     }
-  }
 
-  var d;
-  if (!anyActive && os.dataManager && this.defaults_ && this.defaults_.length > 0) {
-    for (i = 0, n = this.defaults_.length; i < n; i++) {
-      d = os.dataManager.getDescriptor(this.getId() + os.data.BaseDescriptor.ID_DELIMITER + this.defaults_[i]);
+    var d;
+    if (!anyActive && DataManager.getInstance() && this.defaults_ && this.defaults_.length > 0) {
+      for (i = 0, n = this.defaults_.length; i < n; i++) {
+        d = DataManager.getInstance().getDescriptor(this.getId() + BaseDescriptor.ID_DELIMITER + this.defaults_[i]);
 
-      if (d) {
-        d.setActive(true);
+        if (d) {
+          d.setActive(true);
+        }
       }
     }
+
+    this.dispatchEvent(new DataProviderEvent(DataProviderEventType.LOADED, this));
   }
 
-  this.dispatchEvent(new os.data.DataProviderEvent(os.data.DataProviderEventType.LOADED, this));
-};
-
-
-/**
- * Activates the fail set for the given projection, if any
- *
- * @protected
- */
-plugin.basemap.BaseMapProvider.prototype.activateFailSet = function() {
-  var list = this.failSets_[os.map.PROJECTION.getCode()];
-
-  if (list) {
-    var dm = os.dataManager;
-    var prefix = this.getId() + os.data.BaseDescriptor.ID_DELIMITER;
-
-    for (var i = 0, n = list.length; i < n; i++) {
-      var d = dm.getDescriptor(prefix + list[i]);
-
-      if (d) {
-        d.setActive(true);
-      }
-    }
-  }
-};
-
-
-/**
- * @param {Object.<string, *>} config The config object
- */
-plugin.basemap.BaseMapProvider.prototype.addBaseMapFromConfig = function(config) {
-  var dm = os.dataManager;
   /**
-   * @type {Array.<string>}
+   * Activates the fail set for the given projection, if any
+   *
+   * @protected
    */
-  var sets = ['maps', 'userMaps'];
-  for (var s = 0, ss = sets.length; s < ss; s++) {
-    var set = config[sets[s]];
+  activateFailSet() {
+    var list = this.failSets_[osMap.PROJECTION.getCode()];
 
-    for (var id in set) {
-      var conf = set[id];
+    if (list) {
+      var dm = DataManager.getInstance();
+      var prefix = this.getId() + BaseDescriptor.ID_DELIMITER;
 
-      if (conf) {
-        var type = conf['type'] ? conf['type'].toLowerCase() : null;
-        if (type == plugin.basemap.TERRAIN_TYPE) {
-          var terrainOptions = /** @type {osx.map.TerrainProviderOptions|undefined} */ (conf['options']);
-          var terrainType = /** @type {string|undefined} */ (conf['baseType']);
-          if (terrainOptions && terrainType) {
-            terrainOptions.id = id;
-            terrainOptions.title = conf['title'] || '';
-            terrainOptions.type = terrainType;
+      for (var i = 0, n = list.length; i < n; i++) {
+        var d = dm.getDescriptor(prefix + list[i]);
 
-            os.map.terrain.addTerrainProvider(terrainOptions);
-          }
-        } else if (type == plugin.basemap.TYPE) {
-          var mapId = this.getId() + os.data.BaseDescriptor.ID_DELIMITER + id;
-          var d = dm.getDescriptor(mapId);
-
-          if (!d) {
-            d = new plugin.basemap.BaseMapDescriptor();
-            d.setId(mapId);
-            d.setProvider(this.getLabel());
-            dm.addDescriptor(d);
-          }
-
-          d.setConfig(conf);
-          d.setCanDelete(s > 0);
-          d.setTitle(conf['title']);
-          d.setDescription(conf['description']);
-          d.setDeleteTime(NaN);
-          d.updateActiveFromTemp();
+        if (d) {
+          d.setActive(true);
         }
       }
     }
   }
 
-  if (os.map.terrain.hasTerrain()) {
-    // if at least one terrain provider has been loaded, add a descriptor to enable/disable terrain
-    var terrainId = this.getTerrainId();
-    var d = dm.getDescriptor(terrainId);
-    if (!d) {
-      d = new plugin.basemap.TerrainDescriptor();
-      d.setId(terrainId);
-      dm.addDescriptor(d);
+  /**
+   * @param {Object.<string, *>} config The config object
+   */
+  addBaseMapFromConfig(config) {
+    var dm = DataManager.getInstance();
+    /**
+     * @type {Array.<string>}
+     */
+    var sets = ['maps', 'userMaps'];
+    for (var s = 0, ss = sets.length; s < ss; s++) {
+      var set = config[sets[s]];
+
+      for (var id in set) {
+        var conf = set[id];
+
+        if (conf) {
+          var type = conf['type'] ? conf['type'].toLowerCase() : null;
+          if (type == basemap.TERRAIN_TYPE) {
+            var terrainOptions = /** @type {osx.map.TerrainProviderOptions|undefined} */ (conf['options']);
+            var terrainType = /** @type {string|undefined} */ (conf['baseType']);
+            if (terrainOptions && terrainType) {
+              terrainOptions.id = id;
+              terrainOptions.title = conf['title'] || '';
+              terrainOptions.type = terrainType;
+
+              osMap.terrain.addTerrainProvider(terrainOptions);
+            }
+          } else if (type == basemap.TYPE) {
+            var mapId = this.getId() + BaseDescriptor.ID_DELIMITER + id;
+            var d = dm.getDescriptor(mapId);
+
+            if (!d) {
+              d = new BaseMapDescriptor();
+              d.setId(mapId);
+              d.setProvider(this.getLabel());
+              dm.addDescriptor(d);
+            }
+
+            d.setConfig(conf);
+            d.setCanDelete(s > 0);
+            d.setTitle(conf['title']);
+            d.setDescription(conf['description']);
+            d.setDeleteTime(NaN);
+            d.updateActiveFromTemp();
+          }
+        }
+      }
+    }
+
+    if (osMap.terrain.hasTerrain()) {
+      // if at least one terrain provider has been loaded, add a descriptor to enable/disable terrain
+      var terrainId = this.getTerrainId();
+      var d = dm.getDescriptor(terrainId);
+      if (!d) {
+        d = new TerrainDescriptor();
+        d.setId(terrainId);
+        dm.addDescriptor(d);
+      }
     }
   }
-};
 
+  /**
+   * See if there are any base maps left after the projection switch. If not, add the default set of base maps
+   * for the new projection.
+   *
+   * @param {osProjSwitch.BinnedLayersEvent} evt
+   * @protected
+   */
+  onSwitchProjectionBins(evt) {
+    var layers = os.MapContainer.getInstance().getLayers();
+    var bins = evt.layers;
+    var numBaseMaps = 0;
+    var map = {};
 
-/**
- * See if there are any base maps left after the projection switch. If not, add the default set of base maps
- * for the new projection.
- *
- * @param {os.proj.switch.BinnedLayersEvent} evt
- * @protected
- */
-plugin.basemap.BaseMapProvider.prototype.onSwitchProjectionBins = function(evt) {
-  var layers = os.MapContainer.getInstance().getLayers();
-  var bins = evt.layers;
-  var numBaseMaps = 0;
-  var map = {};
-
-  for (var i = 0, n = bins.remove.length; i < n; i++) {
-    map[bins.remove[i]['id']] = true;
-  }
-
-  for (i = 0, n = bins.add.length; i < n; i++) {
-    if (bins.add[i]['type'].toLowerCase() === plugin.basemap.TYPE) {
-      numBaseMaps++;
+    for (var i = 0, n = bins.remove.length; i < n; i++) {
+      map[bins.remove[i]['id']] = true;
     }
-  }
 
-  for (i = 0, n = layers.length; i < n; i++) {
-    var ilayer = /** @type {os.layer.ILayer} */ (layers[i]);
-
-    if (!(ilayer.getId() in map) && ilayer instanceof plugin.basemap.layer.BaseMap) {
-      numBaseMaps++;
+    for (i = 0, n = bins.add.length; i < n; i++) {
+      if (bins.add[i]['type'].toLowerCase() === basemap.TYPE) {
+        numBaseMaps++;
+      }
     }
-  }
 
-  if (!numBaseMaps) {
-    var p = /** @type {os.proj.switch.SwitchProjection} */ (evt.target).getNewProjection();
+    for (i = 0, n = layers.length; i < n; i++) {
+      var ilayer = /** @type {os.layer.ILayer} */ (layers[i]);
 
-    if (p) {
-      var defaults = this.defaultSets_[p.getCode()];
-      if (defaults) {
-        var dm = os.dataManager;
+      if (!(ilayer.getId() in map) && ilayer instanceof BaseMap) {
+        numBaseMaps++;
+      }
+    }
 
-        for (i = 0, n = defaults.length; i < n; i++) {
-          var d = dm.getDescriptor(this.getId() + os.data.BaseDescriptor.ID_DELIMITER + defaults[i]);
+    if (!numBaseMaps) {
+      var p = /** @type {osProjSwitch.SwitchProjection} */ (evt.target).getNewProjection();
 
-          if (d) {
-            bins.add.push(d.getLayerOptions());
+      if (p) {
+        var defaults = this.defaultSets_[p.getCode()];
+        if (defaults) {
+          var dm = DataManager.getInstance();
+
+          for (i = 0, n = defaults.length; i < n; i++) {
+            var d = dm.getDescriptor(this.getId() + BaseDescriptor.ID_DELIMITER + defaults[i]);
+
+            if (d) {
+              bins.add.push(d.getLayerOptions());
+            }
           }
         }
       }
     }
   }
-};
 
-
-/**
- * Get the id to use for the terrain descriptor.
- *
- * @return {string}
- * @protected
- */
-plugin.basemap.BaseMapProvider.prototype.getTerrainId = function() {
-  return this.getId() + os.data.BaseDescriptor.ID_DELIMITER + 'terrain';
-};
-
-
-/**
- * Handle terrain disabled event from the map container.
- *
- * @param {goog.events.Event} event The event.
- * @protected
- */
-plugin.basemap.BaseMapProvider.prototype.onTerrainDisabled = function(event) {
-  var descriptor = os.dataManager.getDescriptor(this.getTerrainId());
-  if (descriptor) {
-    // remove the descriptor from the data manager
-    os.dataManager.removeDescriptor(descriptor);
-    this.removeDescriptor(descriptor);
-    goog.dispose(descriptor);
+  /**
+   * Get the id to use for the terrain descriptor.
+   *
+   * @return {string}
+   * @protected
+   */
+  getTerrainId() {
+    return this.getId() + BaseDescriptor.ID_DELIMITER + 'terrain';
   }
-};
 
+  /**
+   * Handle terrain disabled event from the map container.
+   *
+   * @param {goog.events.Event} event The event.
+   * @protected
+   */
+  onTerrainDisabled(event) {
+    var descriptor = DataManager.getInstance().getDescriptor(this.getTerrainId());
+    if (descriptor) {
+      // remove the descriptor from the data manager
+      DataManager.getInstance().removeDescriptor(descriptor);
+      this.removeDescriptor(descriptor);
+      goog.dispose(descriptor);
+    }
+  }
 
-/**
- * @inheritDoc
- */
-plugin.basemap.BaseMapProvider.prototype.getErrorMessage = function() {
-  return null;
-};
+  /**
+   * @inheritDoc
+   */
+  getErrorMessage() {
+    return null;
+  }
+}
+os.implements(BaseMapProvider, IDataProvider.ID);
+
+exports = BaseMapProvider;
