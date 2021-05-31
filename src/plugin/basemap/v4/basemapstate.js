@@ -70,16 +70,26 @@ class BaseMapState extends LayerState {
   defaultConfigToXML(key, value, layerEl) {
     switch (key) {
       case 'minResolution':
-        var maxZoom = Math.round(MapContainer.getInstance().resolutionToZoom(/** @type {number} */ (value)) - 1);
-        xml.appendElement(BaseMapTag.MAX_ZOOM, layerEl, maxZoom);
+        if (!hasMaxZoom(layerEl) && typeof value === 'number') {
+          var maxZoom = Math.round(MapContainer.getInstance().resolutionToZoom(/** @type {number} */ (value)) - 1);
+          xml.appendElement(BaseMapTag.MAX_ZOOM, layerEl, maxZoom);
+        }
         break;
       case 'maxResolution':
-        var minZoom = Math.round(MapContainer.getInstance().resolutionToZoom(/** @type {number} */ (value)) - 1);
-        xml.appendElement(BaseMapTag.MIN_ZOOM, layerEl, minZoom);
+        if (!hasMinZoom(layerEl) && typeof value === 'number') {
+          var minZoom = Math.round(MapContainer.getInstance().resolutionToZoom(/** @type {number} */ (value)) - 1);
+          xml.appendElement(BaseMapTag.MIN_ZOOM, layerEl, minZoom);
+        }
         break;
       case 'minZoom':
+        if (!hasMinZoom(layerEl) && typeof value === 'number') {
+          xml.appendElement(BaseMapTag.MIN_ZOOM, layerEl, value - 1);
+        }
+        break;
       case 'maxZoom':
-        // ignore these - min/max resolution will be converted instead
+        if (!hasMaxZoom(layerEl) && typeof value === 'number') {
+          xml.appendElement(BaseMapTag.MAX_ZOOM, layerEl, value - 1);
+        }
         break;
       default:
         super.defaultConfigToXML(key, value, layerEl);
@@ -113,6 +123,22 @@ class BaseMapState extends LayerState {
     return options;
   }
 }
+
+
+/**
+ * If a max zoom element is present.
+ * @param {!Element} el
+ * @return {boolean}
+ */
+const hasMaxZoom = (el) => !!el.querySelector(BaseMapTag.MAX_ZOOM);
+
+
+/**
+ * If a min zoom element is present.
+ * @param {!Element} el
+ * @return {boolean}
+ */
+const hasMinZoom = (el) => !!el.querySelector(BaseMapTag.MIN_ZOOM);
 
 
 /**
