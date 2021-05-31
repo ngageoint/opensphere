@@ -2,6 +2,7 @@ goog.module('plugin.descriptor.SearchPlugin');
 goog.module.declareLegacyNamespace();
 
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const SearchManager = goog.require('os.search.SearchManager');
 const FacetedSearchCtrl = goog.require('os.ui.search.FacetedSearchCtrl');
 const DescriptorSearch = goog.require('plugin.descriptor.DescriptorSearch');
 
@@ -22,7 +23,7 @@ class SearchPlugin extends AbstractPlugin {
    */
   init() {
     if (!FacetedSearchCtrl.provider) {
-      os.search.SearchManager.getInstance().registerSearch(new DescriptorSearch('Layers'));
+      SearchManager.getInstance().registerSearch(new DescriptorSearch('Layers'));
       FacetedSearchCtrl.provider = new DescriptorSearch('Layers');
     }
   }

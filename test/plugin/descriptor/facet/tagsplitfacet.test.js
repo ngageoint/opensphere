@@ -2,6 +2,8 @@ goog.require('plugin.descriptor.facet.TagSplit');
 
 
 describe('plugin.descriptor.facet.TagSplit', function() {
+  const TagSplit = goog.module.get('plugin.descriptor.facet.TagSplit');
+
   var mockDescriptor = function() {
     this.tags = null;
   };
@@ -12,7 +14,7 @@ describe('plugin.descriptor.facet.TagSplit', function() {
 
   it('should handle empty tags on load', function() {
     var d = new mockDescriptor();
-    var f = new plugin.descriptor.facet.TagSplit();
+    var f = new TagSplit();
 
     var loaded = {};
     f.load(d, loaded);
@@ -27,7 +29,7 @@ describe('plugin.descriptor.facet.TagSplit', function() {
 
   it('should handle empty tags on test', function() {
     var d = new mockDescriptor();
-    var f = new plugin.descriptor.facet.TagSplit();
+    var f = new TagSplit();
     var results = {};
     f.test(d, {}, results);
     var count = 0;
@@ -49,7 +51,7 @@ describe('plugin.descriptor.facet.TagSplit', function() {
     var list = [d, d1, d2];
 
     var loaded = {};
-    var f = new plugin.descriptor.facet.TagSplit();
+    var f = new TagSplit();
 
     for (var i = 0; i < list.length; i++) {
       f.load(list[i], loaded);
@@ -74,7 +76,7 @@ describe('plugin.descriptor.facet.TagSplit', function() {
       yer: ['mom']
     };
 
-    var f = new plugin.descriptor.facet.TagSplit();
+    var f = new TagSplit();
     var results = {};
     f.test(d2, applied, results);
     expect(results['yer']).toBe(1);
@@ -88,5 +90,3 @@ describe('plugin.descriptor.facet.TagSplit', function() {
     expect(results['yer']).toBe(0);
   });
 });
-
-

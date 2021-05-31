@@ -3,9 +3,11 @@ goog.module.declareLegacyNamespace();
 
 const SearchTermFacet = goog.require('os.search.SearchTermFacet');
 
+const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+
 
 /**
- * @extends {SearchTermFacet<!os.data.IDataDescriptor>}
+ * @extends {SearchTermFacet<!IDataDescriptor>}
  */
 class SearchTerm extends SearchTermFacet {
   /**

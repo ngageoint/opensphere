@@ -1,9 +1,10 @@
 goog.module('plugin.descriptor.ResultCardUI');
 goog.module.declareLegacyNamespace();
 
-const os = goog.require('os');
+const {ROOT} = goog.require('os');
 const dispatcher = goog.require('os.Dispatcher');
 const DescriptorEvent = goog.require('os.data.DescriptorEvent');
+const DescriptorEventType = goog.require('os.data.DescriptorEventType');
 const Module = goog.require('os.ui.Module');
 
 
@@ -13,7 +14,7 @@ const Module = goog.require('os.ui.Module');
 const directive = () => ({
   restrict: 'E',
   replace: true,
-  templateUrl: os.ROOT + 'views/plugin/descriptor/resultcard.html',
+  templateUrl: ROOT + 'views/plugin/descriptor/resultcard.html',
   controller: Controller,
   controllerAs: 'ctrl'
 });
@@ -145,7 +146,7 @@ class Controller {
       d.setActive(!d.isActive());
 
       if (d.isActive()) {
-        dispatcher.getInstance().dispatchEvent(new DescriptorEvent(os.data.DescriptorEventType.USER_TOGGLED, d));
+        dispatcher.getInstance().dispatchEvent(new DescriptorEvent(DescriptorEventType.USER_TOGGLED, d));
       }
     }
   }

@@ -3,9 +3,11 @@ goog.module.declareLegacyNamespace();
 
 const BaseFacet = goog.require('os.search.BaseFacet');
 
+const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+
 
 /**
- * @extends {BaseFacet<!os.data.IDataDescriptor>}
+ * @extends {BaseFacet<!IDataDescriptor>}
  */
 class Tag extends BaseFacet {
   /**

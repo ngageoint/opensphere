@@ -5,6 +5,8 @@ const Promise = goog.require('goog.Promise');
 const googArray = goog.require('goog.array');
 const log = goog.require('goog.log');
 const DataManager = goog.require('os.data.DataManager');
+const osImplements = goog.require('os.implements');
+const search = goog.require('os.search');
 const AbstractSearch = goog.require('os.search.AbstractSearch');
 const IFacetedSearch = goog.require('os.search.IFacetedSearch');
 const SearchEvent = goog.require('os.search.SearchEvent');
@@ -153,11 +155,11 @@ class DescriptorSearch extends AbstractSearch {
       var self = this;
       Promise.all(promises).then(function(value) {
         self.dispatchEvent(new SearchEvent(SearchEventType.SUCCESS,
-            self.term, os.search.pageResults(results, opt_start, opt_pageSize), results.length));
+            self.term, search.pageResults(results, opt_start, opt_pageSize), results.length));
       });
     } else {
       this.dispatchEvent(new SearchEvent(SearchEventType.SUCCESS,
-          this.term, os.search.pageResults(results, opt_start, opt_pageSize), results.length));
+          this.term, search.pageResults(results, opt_start, opt_pageSize), results.length));
     }
 
     return true;
@@ -308,7 +310,7 @@ class DescriptorSearch extends AbstractSearch {
     }
   }
 }
-os.implements(DescriptorSearch, IFacetedSearch.ID);
+osImplements(DescriptorSearch, IFacetedSearch.ID);
 
 
 /**

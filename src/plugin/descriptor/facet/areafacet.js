@@ -1,12 +1,18 @@
 goog.module('plugin.descriptor.facet.Area');
 goog.module.declareLegacyNamespace();
 
+const Promise = goog.require('goog.Promise');
+
 const IAreaTest = goog.require('os.data.IAreaTest');
+const osImplements = goog.require('os.implements');
+const AreaManager = goog.require('os.query.AreaManager');
 const BaseFacet = goog.require('os.search.BaseFacet');
+
+const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 
 
 /**
- * @extends {BaseFacet<!os.data.IDataDescriptor>}
+ * @extends {BaseFacet<!IDataDescriptor>}
  */
 class Area extends BaseFacet {
   /**
@@ -27,7 +33,7 @@ class Area extends BaseFacet {
    * @inheritDoc
    */
   valueToLabel(value) {
-    var area = os.query.AreaManager.getInstance().get(value);
+    var area = AreaManager.getInstance().get(value);
 
     if (area) {
       return /** @type {string} */ (area.get('title'));
@@ -42,7 +48,7 @@ class Area extends BaseFacet {
   load(item, facets) {
     return this.updateCache_(
         item,
-        os.query.AreaManager.getInstance().getAll(),
+        AreaManager.getInstance().getAll(),
         function(areaId) {
           BaseFacet.update('Area', areaId, facets);
         });
@@ -57,7 +63,7 @@ class Area extends BaseFacet {
     if (areaIds) {
       BaseFacet.updateResults('Area', results);
 
-      var areas = os.query.AreaManager.getInstance().getAll();
+      var areas = AreaManager.getInstance().getAll();
       if (areas) {
         areas = areas.filter(function(area) {
           return areaIds.indexOf(/** @type {string} */ (area.getId())) > -1;
@@ -76,7 +82,7 @@ class Area extends BaseFacet {
   /**
    * This is where the magic happens.
    *
-   * @param {os.data.IDataDescriptor} descriptor
+   * @param {IDataDescriptor} descriptor
    * @param {Array<!ol.Feature>} areas
    * @param {Function} updateFunc
    * @return {goog.Promise|undefined}
@@ -85,7 +91,7 @@ class Area extends BaseFacet {
   updateCache_(descriptor, areas, updateFunc) {
     var promises = [];
     if (areas) {
-      if (os.implements(descriptor, IAreaTest.ID)) {
+      if (osImplements(descriptor, IAreaTest.ID)) {
         var cache = Area.cache_;
         var item = /** @type {IAreaTest} */ (descriptor);
 
@@ -114,7 +120,7 @@ class Area extends BaseFacet {
 
               var result = item.testArea(area);
 
-              if (result instanceof goog.Promise) {
+              if (result instanceof Promise) {
                 result.then(onResult);
                 promises.push(result);
               } else {
@@ -126,7 +132,7 @@ class Area extends BaseFacet {
       }
     }
 
-    return promises.length ? goog.Promise.all(promises) : undefined;
+    return promises.length ? Promise.all(promises) : undefined;
   }
 }
 
