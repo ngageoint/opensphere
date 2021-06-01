@@ -6,7 +6,6 @@ const State = goog.require('os.command.State');
 const OSDataManager = goog.require('os.data.OSDataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const action = goog.require('os.im.action');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const metrics = goog.require('os.metrics');
 const PropertyChange = goog.require('os.source.PropertyChange');
 
@@ -60,7 +59,7 @@ class VectorLayerPreset extends AbstractVectorStyle {
     var layer = /** @type {os.layer.Vector} */ (this.getLayer());
     if (layer) {
       // save the old enabled feature action id's
-      var iam = ImportActionManager.getInstance();
+      var iam = action.getImportActionManager();
       var entries = iam.getActionEntries(layer.getId());
       entries.reduce(action.reduceEnabled, oldIds);
     }
@@ -91,7 +90,7 @@ class VectorLayerPreset extends AbstractVectorStyle {
    * @protected
    */
   applyFeatureActions(layer) {
-    var iam = ImportActionManager.getInstance();
+    var iam = action.getImportActionManager();
     var type = layer.getId();
 
     var faIds = this.state === State.EXECUTING ? this.preset.featureActions : this.oldFeatureActionIds;

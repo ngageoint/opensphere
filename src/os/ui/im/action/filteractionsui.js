@@ -4,6 +4,7 @@ goog.module.declareLegacyNamespace();
 const googArray = goog.require('goog.array');
 const dispatcher = goog.require('os.Dispatcher');
 const ImportActionEventType = goog.require('os.im.action.ImportActionEventType');
+const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const filter = goog.require('os.im.action.filter');
 const TagGroupBy = goog.require('os.ui.data.groupby.TagGroupBy');
 const ImportEvent = goog.require('os.ui.im.ImportEvent');
@@ -72,7 +73,7 @@ class Controller extends AbstractGroupByTreeSearchCtrl {
     this.treeSearch = new FilterActionTreeSearch('entries', this.scope, this.entryType);
     this.scope['views'] = Controller.VIEWS;
 
-    var iam = os.im.action.ImportActionManager.getInstance();
+    var iam = ImportActionManager.getInstance();
     iam.listen(ImportActionEventType.REFRESH, this.search, false, this);
 
     $scope.$on(ImportActionEventType.COPY_ENTRY, this.onCopyEvent.bind(this));
@@ -88,7 +89,7 @@ class Controller extends AbstractGroupByTreeSearchCtrl {
   disposeInternal() {
     super.disposeInternal();
 
-    var iam = os.im.action.ImportActionManager.getInstance();
+    var iam = ImportActionManager.getInstance();
     iam.unlisten(ImportActionEventType.REFRESH, this.search, false, this);
 
     this.scope = null;
@@ -108,7 +109,7 @@ class Controller extends AbstractGroupByTreeSearchCtrl {
    * @export
    */
   apply() {
-    os.im.action.ImportActionManager.getInstance().apply();
+    ImportActionManager.getInstance().apply();
   }
 
   /**
@@ -136,7 +137,7 @@ class Controller extends AbstractGroupByTreeSearchCtrl {
       // the tag group by sometimes creates multiple nodes for the same entry, so remove duplicate entries here
       googArray.removeDuplicates(entries);
 
-      os.im.action.ImportActionManager.getInstance().setActionEntries(this.entryType, entries);
+      ImportActionManager.getInstance().setActionEntries(this.entryType, entries);
     }
   }
 

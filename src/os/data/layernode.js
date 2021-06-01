@@ -8,6 +8,7 @@ goog.require('os.data.ISearchable');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.filter.BaseFilterManager');
 goog.require('os.filter.IFilterable');
+goog.require('os.im.action.ImportActionEventType');
 goog.require('os.layer.LayerGroup');
 goog.require('os.layer.Tile');
 goog.require('os.layer.Vector');
@@ -355,7 +356,7 @@ os.data.LayerNode.prototype.formatValue = function(value) {
 
       var source = layer.getSource();
       if (source instanceof os.source.Vector && source.getHasModifications()) {
-        s = `<span title="This layer has unsaved changes. Right click to save them." 
+        s = `<span title="This layer has unsaved changes. Right click to save them."
             class="font-weight-bolder">  •  </span>${s}`;
       }
     } else if (layer instanceof os.layer.Tile) {

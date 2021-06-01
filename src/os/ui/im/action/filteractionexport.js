@@ -3,7 +3,9 @@ goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const AlertManager = goog.require('os.alert.AlertManager');
-const filter = goog.require('os.im.action.filter');
+const {testFilterActionEnabled} = goog.require('os.im.action');
+const ImportActionManager = goog.require('os.im.action.ImportActionManager');
+const {exportEntries} = goog.require('os.im.action.filter');
 const Module = goog.require('os.ui.Module');
 const FilterActionExportType = goog.require('os.ui.im.action.FilterActionExportType');
 
@@ -115,7 +117,7 @@ class Controller extends Disposable {
 
     switch (this['exportType']) {
       case FilterActionExportType.ACTIVE:
-        if (!this.scope['entries'].some(os.im.action.testFilterActionEnabled)) {
+        if (!this.scope['entries'].some(testFilterActionEnabled)) {
           this['errorMsg'] = 'No actions are currently active.';
         }
         break;
@@ -190,7 +192,7 @@ const launchFilterActionExport = function(entries, opt_selected, opt_fileName, o
     'exportType': opt_exportType
   };
 
-  var iam = os.im.action.ImportActionManager.getInstance();
+  var iam = ImportActionManager.getInstance();
   var windowOptions = {
     'id': 'filteractionexport',
     'label': 'Export ' + iam.entryTitle + 's',
@@ -216,9 +218,9 @@ const launchFilterActionExport = function(entries, opt_selected, opt_fileName, o
  */
 const exportFilterActionEntries = function(fileName, entries) {
   if (entries.length > 0) {
-    var iam = os.im.action.ImportActionManager.getInstance();
+    var iam = ImportActionManager.getInstance();
     var rootNode = os.xml.createElementNS(iam.xmlGroup, 'http://www.bit-sys.com/state/v4');
-    var entryEls = filter.exportEntries(entries, false);
+    var entryEls = exportEntries(entries, false);
     if (entryEls) {
       for (var i = 0; i < entryEls.length; i++) {
         rootNode.appendChild(entryEls[i]);
