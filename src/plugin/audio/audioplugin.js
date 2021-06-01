@@ -1,29 +1,33 @@
-goog.provide('plugin.audio.AudioPlugin');
+goog.module('plugin.audio.AudioPlugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.plugin.AbstractPlugin');
-goog.require('os.ui.im.AudioImportUI');
-goog.require('os.ui.im.ImportManager');
-goog.require('plugin.audio.mime');
-
-
-
-/**
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
- */
-plugin.audio.AudioPlugin = function() {
-  plugin.audio.AudioPlugin.base(this, 'constructor');
-  this.id = 'audio';
-};
-goog.inherits(plugin.audio.AudioPlugin, os.plugin.AbstractPlugin);
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const AudioImportUI = goog.require('os.ui.im.AudioImportUI');
+const ImportManager = goog.require('os.ui.im.ImportManager');
+const mime = goog.require('plugin.audio.mime');
 
 
 /**
- * @inheritDoc
+ * Plugin to allow importing audio files.
  */
-plugin.audio.AudioPlugin.prototype.init = function() {
-  // register the audio import UI
-  var im = os.ui.im.ImportManager.getInstance();
-  im.registerImportDetails('Audio files for application sounds.');
-  im.registerImportUI(plugin.audio.mime.TYPE, new os.ui.im.AudioImportUI());
-};
+class AudioPlugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = 'audio';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  init() {
+    // register the audio import UI
+    const im = ImportManager.getInstance();
+    im.registerImportDetails('Audio files for application sounds.');
+    im.registerImportUI(mime.TYPE, new AudioImportUI());
+  }
+}
+
+exports = AudioPlugin;

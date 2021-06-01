@@ -1,40 +1,41 @@
-goog.provide('os.ui.im.AudioImportUI');
+goog.module('os.ui.im.AudioImportUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.alert.AlertEventSeverity');
-goog.require('os.alert.AlertManager');
-goog.require('os.audio.AudioManager');
-goog.require('os.file');
-goog.require('os.ui.im.AbstractImportUI');
-
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
+const AudioManager = goog.require('os.audio.AudioManager');
+const osFile = goog.require('os.file');
+const AbstractImportUI = goog.require('os.ui.im.AbstractImportUI');
 
 
 /**
  * Used for importing sounds to the audio manager.
- *
- * @constructor
- * @extends {os.ui.im.AbstractImportUI}
- * @template T
  */
-os.ui.im.AudioImportUI = function() {
-  os.ui.im.AudioImportUI.base(this, 'constructor');
-};
-goog.inherits(os.ui.im.AudioImportUI, os.ui.im.AbstractImportUI);
-
-
-/**
- * @inheritDoc
- */
-os.ui.im.AudioImportUI.prototype.launchUI = function(file, opt_config) {
-  var url = file.getUrl();
-
-  var msg = null;
-  if (url && !os.file.isLocal(url) && (os.file.FILE_URL_ENABLED || !os.file.isFileSystem(url))) {
-    var label = os.audio.AudioManager.getInstance().addSound(url);
-
-    msg = 'Added new sound "' + label + '"';
-    os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.SUCCESS);
-  } else {
-    msg = 'The audio manager does not support local files. Only files from a URL can be played.';
-    os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
+class AudioImportUI extends AbstractImportUI {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
   }
-};
+
+  /**
+   * @inheritDoc
+   */
+  launchUI(file, opt_config) {
+    const url = file.getUrl();
+
+    let msg = null;
+    if (url && !osFile.isLocal(url) && (osFile.FILE_URL_ENABLED || !osFile.isFileSystem(url))) {
+      const label = AudioManager.getInstance().addSound(url);
+
+      msg = 'Added new sound "' + label + '"';
+      AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.SUCCESS);
+    } else {
+      msg = 'The audio manager does not support local files. Only files from a URL can be played.';
+      AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.ERROR);
+    }
+  }
+}
+
+exports = AudioImportUI;

@@ -1,71 +1,75 @@
-goog.provide('plugin.area.GeoJSONAreaImportUI');
+goog.module('plugin.area.GeoJSONAreaImportUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.query.ui.AreaOptionsStep');
-goog.require('os.ui.im.FileImportUI');
-goog.require('os.ui.window');
-goog.require('plugin.area.geojsonAreaImportDirective');
-goog.require('plugin.file.geojson.GeoJSONParserConfig');
-
-
-
-/**
- * @extends {os.ui.im.FileImportUI.<plugin.file.geojson.GeoJSONParserConfig>}
- * @constructor
- */
-plugin.area.GeoJSONAreaImportUI = function() {
-  plugin.area.GeoJSONAreaImportUI.base(this, 'constructor');
-
-  // file contents are only used in memory, not loaded from storage
-  this.requiresStorage = false;
-};
-goog.inherits(plugin.area.GeoJSONAreaImportUI, os.ui.im.FileImportUI);
+const AreaOptionsStep = goog.require('os.query.ui.AreaOptionsStep');
+const FileImportUI = goog.require('os.ui.im.FileImportUI');
+const osWindow = goog.require('os.ui.window');
+const windowSelector = goog.require('os.ui.windowSelector');
+const {directiveTag: areaImportUi} = goog.require('plugin.area.GeoJSONAreaImport');
+const GeoJSONParserConfig = goog.require('plugin.file.geojson.GeoJSONParserConfig');
 
 
 /**
- * @inheritDoc
+ * @extends {FileImportUI<GeoJSONParserConfig>}
  */
-plugin.area.GeoJSONAreaImportUI.prototype.getTitle = function() {
-  return 'Area Import - GeoJSON';
-};
+class GeoJSONAreaImportUI extends FileImportUI {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
 
-
-/**
- * @inheritDoc
- */
-plugin.area.GeoJSONAreaImportUI.prototype.launchUI = function(file, opt_config) {
-  plugin.area.GeoJSONAreaImportUI.base(this, 'launchUI', file, opt_config);
-  var steps = [
-    new os.query.ui.AreaOptionsStep()
-  ];
-
-  var config = new plugin.file.geojson.GeoJSONParserConfig();
-
-  // if a configuration was provided, merge it in
-  if (opt_config) {
-    this.mergeConfig(opt_config, config);
+    // file contents are only used in memory, not loaded from storage
+    this.requiresStorage = false;
   }
 
-  config['file'] = file;
-  config['title'] = file.getFileName();
+  /**
+   * @inheritDoc
+   */
+  getTitle() {
+    return 'Area Import - GeoJSON';
+  }
 
-  var scopeOptions = {
-    'config': config,
-    'steps': steps
-  };
-  var windowOptions = {
-    'label': 'GeoJSON Area Import',
-    'icon': 'fa fa-sign-in',
-    'x': 'center',
-    'y': 'center',
-    'width': '850',
-    'min-width': '500',
-    'max-width': '1200',
-    'height': '650',
-    'min-height': '300',
-    'max-height': '1000',
-    'modal': 'true',
-    'show-close': 'true'
-  };
-  var template = '<geojsonareaimport resize-with="' + os.ui.windowSelector.WINDOW + '"></geojsonareaimport>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
-};
+  /**
+   * @inheritDoc
+   */
+  launchUI(file, opt_config) {
+    super.launchUI(file, opt_config);
+    var steps = [
+      new AreaOptionsStep()
+    ];
+
+    var config = new GeoJSONParserConfig();
+
+    // if a configuration was provided, merge it in
+    if (opt_config) {
+      this.mergeConfig(opt_config, config);
+    }
+
+    config['file'] = file;
+    config['title'] = file.getFileName();
+
+    var scopeOptions = {
+      'config': config,
+      'steps': steps
+    };
+    var windowOptions = {
+      'label': 'GeoJSON Area Import',
+      'icon': 'fa fa-sign-in',
+      'x': 'center',
+      'y': 'center',
+      'width': '850',
+      'min-width': '500',
+      'max-width': '1200',
+      'height': '650',
+      'min-height': '300',
+      'max-height': '1000',
+      'modal': 'true',
+      'show-close': 'true'
+    };
+    var template = `<${areaImportUi} resize-with="${windowSelector.WINDOW}"></${areaImportUi}>`;
+    osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  }
+}
+
+exports = GeoJSONAreaImportUI;

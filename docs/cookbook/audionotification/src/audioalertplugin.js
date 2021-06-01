@@ -1,35 +1,37 @@
-goog.provide('plugin.audioalert.AudioAlertPlugin');
+goog.module('plugin.audioalert.AudioAlertPlugin');
 
-goog.require('os.audio.AudioManager');
-goog.require('os.plugin.AbstractPlugin');
-goog.require('os.plugin.PluginManager');
-
+const AudioManager = goog.require('os.audio.AudioManager');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const PluginManager = goog.require('os.plugin.PluginManager');
 
 /**
  * Cookbook example for playing an audio alert.
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
  */
-plugin.audioalert.AudioAlertPlugin = function() {
-  plugin.audioalert.AudioAlertPlugin.base(this, 'constructor');
-  this.id = plugin.audioalert.ID;
-  this.errorMessage = null;
-};
-goog.inherits(plugin.audioalert.AudioAlertPlugin, os.plugin.AbstractPlugin);
+class AudioAlertPlugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = ID;
+    this.errorMessage = null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  init() {
+    const audioManager = AudioManager.getInstance();
+    audioManager.play('sound1');
+  }
+}
 
 /**
  * @type {string}
- * @const
  */
-plugin.audioalert.ID = 'audioalert';
-
-/**
- * @inheritDoc
- */
-plugin.audioalert.AudioAlertPlugin.prototype.init = function() {
-  var audioManager = os.audio.AudioManager.getInstance();
-  audioManager.play('sound1');
-};
+const ID = 'audioalert';
 
 // add the plugin to the application
-os.plugin.PluginManager.getInstance().addPlugin(new plugin.audioalert.AudioAlertPlugin());
+PluginManager.getInstance().addPlugin(new AudioAlertPlugin());
+
+exports = AudioAlertPlugin;

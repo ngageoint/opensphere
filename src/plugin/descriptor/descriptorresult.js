@@ -1,39 +1,46 @@
-goog.provide('plugin.descriptor.DescriptorResult');
-goog.require('os.search.AbstractSearchResult');
-goog.require('plugin.descriptor.descriptorResultCardDirective');
+goog.module('plugin.descriptor.DescriptorResult');
+goog.module.declareLegacyNamespace();
 
+const AbstractSearchResult = goog.require('os.search.AbstractSearchResult');
+const {directiveTag: cardUi} = goog.require('plugin.descriptor.ResultCardUI');
+
+const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 
 
 /**
- * @param {!os.data.IDataDescriptor} result
- * @param {number} score
- * @param {number=} opt_count The number of features available in the layer.
- * @extends {os.search.AbstractSearchResult<!os.data.IDataDescriptor>}
- * @constructor
+ * Descriptor search result.
+ * @extends {AbstractSearchResult<!IDataDescriptor>}
  */
-plugin.descriptor.DescriptorResult = function(result, score, opt_count) {
-  plugin.descriptor.DescriptorResult.base(this, 'constructor', result, score);
+class DescriptorResult extends AbstractSearchResult {
+  /**
+   * Constructor.
+   * @param {!IDataDescriptor} result The descriptor.
+   * @param {number} score The search score.
+   * @param {number=} opt_count The number of features available in the layer.
+   */
+  constructor(result, score, opt_count) {
+    super(result, score);
+
+    /**
+     * The feature count from elastic.
+     * @type {number|undefined}
+     */
+    this.featureCount = opt_count;
+  }
 
   /**
-   * The feature count from elastic.
-   * @type {number|undefined}
+   * @inheritDoc
    */
-  this.featureCount = opt_count;
-};
-goog.inherits(plugin.descriptor.DescriptorResult, os.search.AbstractSearchResult);
+  getSearchUI() {
+    return `<${cardUi} result="result"></${cardUi}>`;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  performAction() {
+    return false;
+  }
+}
 
-/**
- * @inheritDoc
- */
-plugin.descriptor.DescriptorResult.prototype.getSearchUI = function() {
-  return '<descriptorresultcard result="result"></descriptorresultcard>';
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.descriptor.DescriptorResult.prototype.performAction = function() {
-  return false;
-};
+exports = DescriptorResult;

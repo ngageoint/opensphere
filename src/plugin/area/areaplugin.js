@@ -1,66 +1,68 @@
-goog.provide('plugin.area.AreaPlugin');
+goog.module('plugin.area.AreaPlugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.file.FileManager');
-goog.require('os.file.mime.csv');
-goog.require('os.mixin.object');
-goog.require('os.plugin.AbstractPlugin');
-goog.require('os.ui.file.method.ImportMethod');
-goog.require('os.ui.im.ImportManager');
-goog.require('plugin.area.CSVAreaImportUI');
-goog.require('plugin.area.GeoJSONAreaImportUI');
-goog.require('plugin.area.KMLAreaImportUI');
-goog.require('plugin.area.SHPAreaImportUI');
-goog.require('plugin.file.geojson.mime');
-goog.require('plugin.file.kml.mime');
-goog.require('plugin.file.shp.mime');
-
+const os = goog.require('os');
+const csv = goog.require('os.file.mime.csv');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const ImportMethod = goog.require('os.ui.file.method.ImportMethod');
+const CSVAreaImportUI = goog.require('plugin.area.CSVAreaImportUI');
+const GeoJSONAreaImportUI = goog.require('plugin.area.GeoJSONAreaImportUI');
+const KMLAreaImportUI = goog.require('plugin.area.KMLAreaImportUI');
+const SHPAreaImportUI = goog.require('plugin.area.SHPAreaImportUI');
+const pluginFileGeojsonMime = goog.require('plugin.file.geojson.mime');
+const pluginFileKmlMime = goog.require('plugin.file.kml.mime');
+const mime = goog.require('plugin.file.shp.mime');
 
 
 /**
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
  */
-plugin.area.AreaPlugin = function() {
-  plugin.area.AreaPlugin.base(this, 'constructor');
-  this.id = plugin.area.AreaPlugin.ID;
-  this.errorMessage = null;
-};
-goog.inherits(plugin.area.AreaPlugin, os.plugin.AbstractPlugin);
+class AreaPlugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = AreaPlugin.ID;
+    this.errorMessage = null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  init() {
+    // initialize managers used by the area plugin
+    var aim = os.areaImportManager;
+    var afm = os.areaFileManager;
+
+    // register file import method
+    afm.registerFileMethod(new ImportMethod(false));
+
+    // csv
+    aim.registerImportUI(csv.TYPE, new CSVAreaImportUI());
+    aim.registerImportDetails('CSV', true);
+
+    // geojson
+    aim.registerImportUI(pluginFileGeojsonMime.TYPE, new GeoJSONAreaImportUI());
+    aim.registerImportDetails('GeoJSON', true);
+
+    // kml
+    aim.registerImportUI(pluginFileKmlMime.TYPE, new KMLAreaImportUI());
+    aim.registerImportUI(pluginFileKmlMime.KMZ_TYPE, new KMLAreaImportUI());
+    aim.registerImportDetails('KML/KMZ', true);
+
+    // shp
+    aim.registerImportUI(mime.TYPE, new SHPAreaImportUI());
+    aim.registerImportUI(mime.ZIP_TYPE, new SHPAreaImportUI());
+    aim.registerImportDetails('Shapefile (SHP/DBF or ZIP)', true);
+  }
+}
 
 
 /**
  * @type {string}
  * @const
  */
-plugin.area.AreaPlugin.ID = 'areas';
+AreaPlugin.ID = 'areas';
 
 
-/**
- * @inheritDoc
- */
-plugin.area.AreaPlugin.prototype.init = function() {
-  // initialize managers used by the area plugin
-  var aim = os.areaImportManager;
-  var afm = os.areaFileManager;
-
-  // register file import method
-  afm.registerFileMethod(new os.ui.file.method.ImportMethod(false));
-
-  // csv
-  aim.registerImportUI(os.file.mime.csv.TYPE, new plugin.area.CSVAreaImportUI());
-  aim.registerImportDetails('CSV', true);
-
-  // geojson
-  aim.registerImportUI(plugin.file.geojson.mime.TYPE, new plugin.area.GeoJSONAreaImportUI());
-  aim.registerImportDetails('GeoJSON', true);
-
-  // kml
-  aim.registerImportUI(plugin.file.kml.mime.TYPE, new plugin.area.KMLAreaImportUI());
-  aim.registerImportUI(plugin.file.kml.mime.KMZ_TYPE, new plugin.area.KMLAreaImportUI());
-  aim.registerImportDetails('KML/KMZ', true);
-
-  // shp
-  aim.registerImportUI(plugin.file.shp.mime.TYPE, new plugin.area.SHPAreaImportUI());
-  aim.registerImportUI(plugin.file.shp.mime.ZIP_TYPE, new plugin.area.SHPAreaImportUI());
-  aim.registerImportDetails('Shapefile (SHP/DBF or ZIP)', true);
-};
+exports = AreaPlugin;

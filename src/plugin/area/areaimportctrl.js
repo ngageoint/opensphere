@@ -1,45 +1,49 @@
-goog.provide('plugin.area.AreaImportCtrl');
+goog.module('plugin.area.AreaImportCtrl');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.query.AreaImportCtrl');
-goog.require('plugin.area');
-
+const RecordField = goog.require('os.data.RecordField');
+const AreaImportCtrl = goog.require('os.ui.query.AreaImportCtrl');
+const area = goog.require('plugin.area');
 
 
 /**
  * Abstract controller for importing areas from a file.
  *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$timeout} $timeout The Angular $timeout service.
- * @extends {os.ui.query.AreaImportCtrl}
- * @constructor
- * @ngInject
  * @template T
+ * @unrestricted
  */
-plugin.area.AreaImportCtrl = function($scope, $element, $timeout) {
-  plugin.area.AreaImportCtrl.base(this, 'constructor', $scope, $element, $timeout);
-};
-goog.inherits(plugin.area.AreaImportCtrl, os.ui.query.AreaImportCtrl);
+class Controller extends AreaImportCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$timeout} $timeout The Angular $timeout service.
+   * @ngInject
+   */
+  constructor($scope, $element, $timeout) {
+    super($scope, $element, $timeout);
+  }
 
+  /**
+   * Get the filename for the source file.
+   *
+   * @return {string|undefined}
+   * @protected
+   */
+  getFileName() {
+    return this.config && this.config['title'] || undefined;
+  }
 
-/**
- * Get the filename for the source file.
- *
- * @return {string|undefined}
- * @protected
- */
-plugin.area.AreaImportCtrl.prototype.getFileName = function() {
-  return this.config && this.config['title'] || undefined;
-};
+  /**
+   * Process imported features.
+   *
+   * @param {Array<ol.Feature>} features
+   * @protected
+   */
+  processFeatures(features) {
+    this.config[RecordField.SOURCE_NAME] = this.getFileName();
+    area.processFeatures(features, this.config);
+  }
+}
 
-
-/**
- * Process imported features.
- *
- * @param {Array<ol.Feature>} features
- * @protected
- */
-plugin.area.AreaImportCtrl.prototype.processFeatures = function(features) {
-  this.config[os.data.RecordField.SOURCE_NAME] = this.getFileName();
-  plugin.area.processFeatures(features, this.config);
-};
+exports = Controller;

@@ -4,6 +4,9 @@ goog.require('test.os.config.SettingsUtil');
 
 
 describe('plugin.descriptor.DescriptorSearch', function() {
+  const Settings = goog.module.get('os.config.Settings');
+  const DescriptorSearch = goog.module.get('plugin.descriptor.DescriptorSearch');
+
   var mockDescriptor = function() {
     this.id = 'A';
     this.type = 'Type A';
@@ -36,11 +39,11 @@ describe('plugin.descriptor.DescriptorSearch', function() {
   var list = [d1, d2, d3, d4];
 
   it('should init properly', function() {
-    var settings = new os.config.Settings();
+    var settings = new Settings();
     test.os.config.SettingsUtil.initAndLoad(settings);
 
     runs(function() {
-      ds = new plugin.descriptor.DescriptorSearch('Layers');
+      ds = new DescriptorSearch('Layers');
     });
   });
 

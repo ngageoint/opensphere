@@ -15,6 +15,14 @@ os.file.mime.text.TYPE = 'text/plain';
 
 
 /**
+ * Priority for text detection.
+ * @type {number}
+ * @const
+ */
+os.file.mime.text.PRIORITY = 1000;
+
+
+/**
  * The Byte Order Marker (BOM) sequence.
  * @type {!Array<number>}
  * @const
@@ -121,7 +129,7 @@ os.file.mime.text.detectText = function(buffer, opt_file) {
   return goog.Promise.resolve(os.file.mime.text.getText(buffer, opt_file));
 };
 
-os.file.mime.register(os.file.mime.text.TYPE, os.file.mime.text.detectText, 1000);
+os.file.mime.register(os.file.mime.text.TYPE, os.file.mime.text.detectText, os.file.mime.text.PRIORITY);
 
 
 /**
