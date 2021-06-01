@@ -2,6 +2,7 @@ goog.module('plugin.im.action.feature.LabelAction');
 goog.module.declareLegacyNamespace();
 
 const osColor = goog.require('os.color');
+const FeatureEventType = goog.require('os.data.FeatureEventType');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const osFeature = goog.require('os.feature');
 const AbstractImportAction = goog.require('os.im.action.AbstractImportAction');
@@ -11,6 +12,7 @@ const osStyle = goog.require('os.style');
 const osStyleLabel = goog.require('os.style.label');
 const FeatureEditCtrl = goog.require('os.ui.FeatureEditCtrl');
 const osXml = goog.require('os.xml');
+const pluginImActionFeature = goog.require('plugin.im.action.feature');
 const {directiveTag: configUi, setDefaultConfig} = goog.require('plugin.im.action.feature.ui.LabelConfigUI');
 
 const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
@@ -65,7 +67,7 @@ class LabelAction extends AbstractImportAction {
       if (item && this.isFeatureLabeled(item)) {
         // reset the original feature config
         var originalConfig = /** @type {Array|Object|undefined} */
-            (item.get(plugin.im.action.feature.StyleType.ORIGINAL));
+            (item.get(pluginImActionFeature.StyleType.ORIGINAL));
         item.set(osStyle.StyleType.FEATURE, originalConfig, true);
       }
     }
@@ -125,9 +127,9 @@ class LabelAction extends AbstractImportAction {
           FeatureEditCtrl.persistFeatureLabels(item);
 
           if (originalConfig != null && !originalConfig['temporary'] &&
-            item.get(plugin.im.action.feature.StyleType.ORIGINAL) == null) {
+            item.get(pluginImActionFeature.StyleType.ORIGINAL) == null) {
             // if the original config isn't already set, add a reference back to it
-            item.set(plugin.im.action.feature.StyleType.ORIGINAL, originalConfig, true);
+            item.set(pluginImActionFeature.StyleType.ORIGINAL, originalConfig, true);
           }
         }
 
@@ -135,7 +137,7 @@ class LabelAction extends AbstractImportAction {
         if (customName && customValue) {
           var oldVal = item.get(customName);
           item.set(customName, customValue);
-          item.dispatchFeatureEvent(os.data.FeatureEventType.VALUECHANGE, customValue, oldVal);
+          item.dispatchFeatureEvent(FeatureEventType.VALUECHANGE, customValue, oldVal);
         }
       }
     }

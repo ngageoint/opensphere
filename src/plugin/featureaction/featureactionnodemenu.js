@@ -1,10 +1,15 @@
 goog.module('plugin.im.action.feature.node');
 goog.module.declareLegacyNamespace();
 
+const googDispose = goog.require('goog.dispose');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const ParallelCommand = goog.require('os.command.ParallelCommand');
 const action = goog.require('os.im.action');
 const filterAction = goog.require('os.im.action.filter');
+const structs = goog.require('os.structs');
+const TriState = goog.require('os.structs.TriState');
+const ui = goog.require('os.ui');
+const FilterActionExportType = goog.require('os.ui.im.action.FilterActionExportType');
 const Menu = goog.require('os.ui.menu.Menu');
 const MenuItem = goog.require('os.ui.menu.MenuItem');
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');
@@ -116,7 +121,7 @@ const setup = function() {
  * Disposes feature action node menu
  */
 const dispose = function() {
-  goog.dispose(MENU);
+  googDispose(MENU);
   MENU = undefined;
 };
 
@@ -179,14 +184,14 @@ const visibleIfCanToggleOn_ = function(context) {
 
   var filterActionNodes = getFeatureActionNodes(context);
   if (filterActionNodes.length == 1) {
-    if (filterActionNodes[0].getState() == os.structs.TriState.ON) {
+    if (filterActionNodes[0].getState() == TriState.ON) {
       this.visible = false;
     } else {
       this.visible = true;
     }
   } else if (filterActionNodes.length > 1) {
     for (var i = 0; i < filterActionNodes.length; i++) {
-      if (filterActionNodes[i].getState() == os.structs.TriState.OFF) {
+      if (filterActionNodes[i].getState() == TriState.OFF) {
         this.visible = true;
         break;
       }
@@ -205,14 +210,14 @@ const visibleIfCanToggleOff_ = function(context) {
 
   var filterActionNodes = getFeatureActionNodes(context);
   if (filterActionNodes.length == 1) {
-    if (filterActionNodes[0].getState() == os.structs.TriState.OFF) {
+    if (filterActionNodes[0].getState() == TriState.OFF) {
       this.visible = false;
     } else {
       this.visible = true;
     }
   } else if (filterActionNodes.length > 1) {
     for (var i = 0; i < filterActionNodes.length; i++) {
-      if (filterActionNodes[i].getState() == os.structs.TriState.ON) {
+      if (filterActionNodes[i].getState() == TriState.ON) {
         this.visible = true;
         break;
       }
@@ -230,7 +235,7 @@ const onCopyEvent_ = function(event) {
   var filterActionNodes = getFeatureActionNodes(context);
   if (filterActionNodes.length == 1) {
     var entry = /** @type {FilterActionEntry} */ (filterActionNodes[0].getEntry());
-    var parentIndex = os.structs.getIndexInParent(filterActionNodes[0]);
+    var parentIndex = structs.getIndexInParent(filterActionNodes[0]);
     if (entry) {
       var cmd = filterAction.copyEntryCmd(entry, parentIndex == -1 ? undefined : parentIndex + 1);
       CommandProcessor.getInstance().addCommand(cmd);
@@ -239,7 +244,7 @@ const onCopyEvent_ = function(event) {
     var cpCmds = [];
     for (var i = 0; i < filterActionNodes.length; i++) {
       var entry = /** @type {FilterActionEntry} */ (filterActionNodes[i].getEntry());
-      var parentIndex = os.structs.getIndexInParent(filterActionNodes[i]);
+      var parentIndex = structs.getIndexInParent(filterActionNodes[i]);
       if (entry) {
         var cpCmd = filterAction.copyEntryCmd(entry, parentIndex == -1 ? undefined : parentIndex + 1);
         cpCmds.push(cpCmd);
@@ -249,7 +254,7 @@ const onCopyEvent_ = function(event) {
       var cmd = new ParallelCommand();
       cmd.setCommands(cpCmds);
       cmd.title = 'Copy feature action nodes' + (cpCmds.length > 1 ? 's' : '');
-      os.command.CommandProcessor.getInstance().addCommand(cmd);
+      CommandProcessor.getInstance().addCommand(cmd);
     }
   }
 };
@@ -291,8 +296,8 @@ const onExportEvent_ = function(event) {
       }
     }
     if (entries.length && selected.length) {
-      os.ui.im.action.launchFilterActionExport(entries, selected,
-          exportName, os.ui.im.action.FilterActionExportType.SELECTED);
+      ui.im.action.launchFilterActionExport(entries, selected,
+          exportName, FilterActionExportType.SELECTED);
     }
   }
 };
@@ -344,7 +349,7 @@ const onRemoveSelectedEvent_ = function(event) {
         return 0;
       }));
       cmd.title = 'Remove feature action nodes' + (rmCmds.length > 1 ? 's' : '');
-      os.command.CommandProcessor.getInstance().addCommand(cmd);
+      CommandProcessor.getInstance().addCommand(cmd);
     }
   }
 };
@@ -359,7 +364,7 @@ const onToggleOnEvent_ = function(event) {
   var filterActionNodes = getFeatureActionNodes(context);
   if (filterActionNodes.length >= 1) {
     for (var i = 0; i < filterActionNodes.length; i++) {
-      filterActionNodes[i].setState(os.structs.TriState.ON);
+      filterActionNodes[i].setState(TriState.ON);
     }
   }
 };
@@ -374,7 +379,7 @@ const onToggleOffEvent_ = function(event) {
   var filterActionNodes = getFeatureActionNodes(context);
   if (filterActionNodes.length >= 1) {
     for (var i = 0; i < filterActionNodes.length; i++) {
-      filterActionNodes[i].setState(os.structs.TriState.OFF);
+      filterActionNodes[i].setState(TriState.OFF);
     }
   }
 };

@@ -1,8 +1,8 @@
 goog.module('plugin.im.action.feature.ui.SoundConfigUI');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.popover.popoverDirective');
 goog.require('os.ui.spinnerDirective');
-goog.require('os.ui.uiSwitchDirective');
 
 const {ROOT} = goog.require('os');
 const AudioManager = goog.require('os.audio.AudioManager');

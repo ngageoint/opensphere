@@ -1,9 +1,13 @@
 goog.module('plugin.im.action.feature.menu');
 goog.module.declareLegacyNamespace();
 
+const asserts = goog.require('goog.asserts');
+const MapContainer = goog.require('os.MapContainer');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const {ICON} = goog.require('os.im.action');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
+const LayerType = goog.require('os.layer.LayerType');
 const layerMenu = goog.require('os.ui.menu.layer');
 const featureAction = goog.require('plugin.im.action.feature');
 const launchForLayer = goog.require('plugin.im.action.feature.ui.launchForLayer');
@@ -16,7 +20,7 @@ const layerSetup = function() {
   var menu = layerMenu.MENU;
   if (menu && !menu.getRoot().find(featureAction.EventType.LAUNCH)) {
     var group = menu.getRoot().find(layerMenu.GroupLabel.TOOLS);
-    goog.asserts.assert(group, 'Group should exist! Check spelling?');
+    asserts.assert(group, 'Group should exist! Check spelling?');
 
     group.addChild({
       label: featureAction.TITLE + '...',
@@ -56,8 +60,8 @@ const visibleIfSupported = function(context) {
 
   var am = ImportActionManager.getInstance();
   if (am && am.hasActions() && context && context.length == 1) {
-    var layers = layerMenu.getLayersFromContext(context).filter(os.MapContainer.isVectorLayer);
-    if (layers && layers.length == 1 && layers[0].getOSType() != os.layer.LayerType.REF) {
+    var layers = layerMenu.getLayersFromContext(context).filter(MapContainer.isVectorLayer);
+    if (layers && layers.length == 1 && layers[0].getOSType() != LayerType.REF) {
       var source = /** @type {ol.layer.Layer} */ (layers[0]).getSource();
       this.visible = source != null;
     }
@@ -72,12 +76,12 @@ const visibleIfSupported = function(context) {
  * @private
  */
 const handleLayerAction = function(event) {
-  var layers = layerMenu.getLayersFromContext(event.getContext()).filter(os.MapContainer.isVectorLayer);
-  if (layers && layers.length == 1 && layers[0].getOSType() != os.layer.LayerType.REF) {
+  var layers = layerMenu.getLayersFromContext(event.getContext()).filter(MapContainer.isVectorLayer);
+  if (layers && layers.length == 1 && layers[0].getOSType() != LayerType.REF) {
     launchForLayer(layers[0].getId());
   } else {
     AlertManager.getInstance().sendAlert('Unexpected layer selection. Please select a single layer and try again.',
-        os.alert.AlertEventSeverity.WARNING);
+        AlertEventSeverity.WARNING);
   }
 };
 

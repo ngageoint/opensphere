@@ -5,11 +5,19 @@ goog.require('os.ui.filter.advancedFilterBuilderDirective');
 goog.require('os.ui.filter.basicFilterBuilderDirective');
 goog.require('os.ui.util.validationMessageDirective');
 
-const {ROOT} = goog.require('os');
 const Feature = goog.require('ol.Feature');
+const ImageState = goog.require('ol.ImageState');
 const Point = goog.require('ol.geom.Point');
+const render = goog.require('ol.render');
+const {ROOT} = goog.require('os');
 const dispatcher = goog.require('os.Dispatcher');
+const osObject = goog.require('os.object');
 const canvas = goog.require('os.ol.canvas');
+const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
+const StyleType = goog.require('os.style.StyleType');
+const label = goog.require('os.style.label');
 const Module = goog.require('os.ui.Module');
 const editFiltersDirective = goog.require('os.ui.filter.ui.editFiltersDirective');
 const EditFilterActionCtrl = goog.require('os.ui.im.action.EditFilterActionCtrl');
@@ -109,7 +117,7 @@ class Controller extends EditFilterActionCtrl {
    * @param {SoundAction} soundAction
    */
   buildSoundPreview(soundAction) {
-    var config = /** @type {!Object} */ (os.object.unsafeClone(
+    var config = /** @type {!Object} */ (osObject.unsafeClone(
         soundAction.soundConfig));
 
     // only add this to the applicable action
@@ -143,66 +151,66 @@ class Controller extends EditFilterActionCtrl {
       // clear any previous contents
       styleContext.clearRect(0, 0, this.styleCanvas.clientWidth, this.styleCanvas.clientHeight);
 
-      var styleRender = ol.render.toContext(styleContext, {
+      var styleRender = render.toContext(styleContext, {
         // fix legend scaling on all displays - fixes Retina cropping issue
         pixelRatio: 1
       });
 
-      var config = /** @type {!Object} */ (os.object.unsafeClone(styleAction.styleConfig));
+      var config = /** @type {!Object} */ (osObject.unsafeClone(styleAction.styleConfig));
       if (config != null) {
-        var geomShape = /** @type {string|undefined} */ (config['shape']) || os.style.DEFAULT_SHAPE;
-        var shape = os.style.SHAPES[geomShape];
+        var geomShape = /** @type {string|undefined} */ (config['shape']) || osStyle.DEFAULT_SHAPE;
+        var shape = osStyle.SHAPES[geomShape];
         if (shape && shape['config'] && shape['config']['image']) {
-          os.style.mergeConfig(shape['config'], config);
+          osStyle.mergeConfig(shape['config'], config);
         }
 
-        if (os.style.ELLIPSE_REGEXP.test(config['shape'])) {
+        if (osStyle.ELLIPSE_REGEXP.test(config['shape'])) {
           // set to a fixed stroke width
           config['stroke']['width'] = 3;
-          var includeCenter = os.style.CENTER_LOOKUP[config['shape']];
+          var includeCenter = osStyle.CENTER_LOOKUP[config['shape']];
           geometry = canvas.createEllipseGeometry([50, 16],
               30, includeCenter);
 
           // include the center point if it was selected
           if (includeCenter) {
-            var centerConfig = config['centerShape'] ? os.style.SHAPES[config['centerShape']] :
-              os.style.SHAPES[os.style.DEFAULT_CENTER_SHAPE];
+            var centerConfig = config['centerShape'] ? osStyle.SHAPES[config['centerShape']] :
+              osStyle.SHAPES[osStyle.DEFAULT_CENTER_SHAPE];
             // have to clone this since we are modifying things in it - otherwise, it interferes
             // with the actual action
-            var c = /** @type {!Object} */ (os.object.unsafeClone(centerConfig));
-            if (c['config'] && os.style.isIconConfig(c['config'])) {
+            var c = /** @type {!Object} */ (osObject.unsafeClone(centerConfig));
+            if (c['config'] && osStyle.isIconConfig(c['config'])) {
               // set the icon size to a fixed size to fit in the ellipse
-              os.style.setConfigSize(c['config'], 1);
+              osStyle.setConfigSize(c['config'], 1);
             } else {
-              os.style.setConfigSize(c['config'], 2);
+              osStyle.setConfigSize(c['config'], 2);
             }
-            os.style.mergeConfig(c['config'], config);
+            osStyle.mergeConfig(c['config'], config);
           }
         } else {
           // set the size to a fixed size to fit in the line
-          os.style.setConfigSize(config, 10);
+          osStyle.setConfigSize(config, 10);
           geometry = new Point([50, 16]);
 
-          if (os.style.isIconConfig(config)) {
+          if (osStyle.isIconConfig(config)) {
             config['image']['anchor'] = [0.5, 0.5];
             // set the size to a fixed size to fit in the line
-            os.style.setConfigSize(config, 2);
-            os.style.setConfigColor(config, config['image']['fill']['color']);
+            osStyle.setConfigSize(config, 2);
+            osStyle.setConfigColor(config, config['image']['fill']['color']);
           }
         }
 
         feature.setGeometry(geometry);
 
         // create our actual style to be used for the render call
-        var style = os.style.StyleManager.getInstance().getOrCreateStyle(config);
+        var style = StyleManager.getInstance().getOrCreateStyle(config);
         if (style != null) {
           var imageStyle = style.getImage();
           var imageState = imageStyle.getImageState();
 
-          if (imageState < ol.ImageState.LOADED) {
+          if (imageState < ImageState.LOADED) {
             // icon isn't loaded yet, so load it now
 
-            if (imageState == ol.ImageState.IDLE) {
+            if (imageState == ImageState.IDLE) {
               imageStyle.load();
             }
 
@@ -242,39 +250,39 @@ class Controller extends EditFilterActionCtrl {
       // clear any previous contents
       labelContext.clearRect(0, 0, this.labelCanvas.clientWidth, this.labelCanvas.clientHeight);
 
-      var labelRender = ol.render.toContext(labelContext, {
+      var labelRender = render.toContext(labelContext, {
         // fix legend scaling on all displays - fixes Retina cropping issue
         pixelRatio: 1
       });
-      var lConfig = /** @type {!Object} */ (os.object.unsafeClone(labelAction.labelConfig));
+      var lConfig = /** @type {!Object} */ (osObject.unsafeClone(labelAction.labelConfig));
 
       if (lConfig != null) {
-        var labelColor = os.style.toRgbaString(lConfig['color'] || os.style.DEFAULT_LAYER_COLOR);
+        var labelColor = osStyle.toRgbaString(lConfig['color'] || osStyle.DEFAULT_LAYER_COLOR);
         // var labelSize = parseInt(lConfig['size'], 10) || os.style.label.DEFAULT_SIZE;
-        var labels = /** @type {Array<!os.style.label.LabelConfig>} */ (os.object.unsafeClone(lConfig['labels']));
-        labels = os.style.label.filterValid(labels);
+        var labels = /** @type {Array<!os.style.label.LabelConfig>} */ (osObject.unsafeClone(lConfig['labels']));
+        labels = label.filterValid(labels);
         // update label fields on the feature if there is at least one valid label config defined
         if (labels != null && labels.length > 0) {
           // get the existing feature config or create a new one
-          var featureConfig = /** @type {Object|undefined} */ (feature.get(os.style.StyleType.FEATURE)) || {};
+          var featureConfig = /** @type {Object|undefined} */ (feature.get(StyleType.FEATURE)) || {};
           // apply label config but change the label to be something generic
           labels[0]['column'] = 'COLUMN';
-          featureConfig[os.style.StyleField.LABELS] = labels;
-          featureConfig[os.style.StyleField.LABEL_COLOR] = labelColor;
+          featureConfig[StyleField.LABELS] = labels;
+          featureConfig[StyleField.LABEL_COLOR] = labelColor;
 
           // set the size to a fixed size to fit in the action line
-          featureConfig[os.style.StyleField.LABEL_SIZE] = 14;
+          featureConfig[StyleField.LABEL_SIZE] = 14;
 
           // save the feature config to the feature
-          feature.set(os.style.StyleType.FEATURE, featureConfig, true);
+          feature.set(StyleType.FEATURE, featureConfig, true);
           // show the label on the feature
-          feature.set(os.style.StyleField.SHOW_LABELS, true);
+          feature.set(StyleField.SHOW_LABELS, true);
 
           feature.set(labels[0]['column'], 'VALUE');
           feature.setGeometry(new Point([20, 10]));
 
           // grab the label style
-          os.style.setFeatureStyle(feature);
+          osStyle.setFeatureStyle(feature);
           var styleArr = /** @type {Array<!ol.style.Style>} */ (feature.getStyle());
           if (styleArr != null && styleArr.length > 1) {
             // only showing the first one since we are just previewing the style
@@ -294,7 +302,7 @@ class Controller extends EditFilterActionCtrl {
 const onImageChange = function() {
   this.unlistenImageChange(onImageChange, this);
 
-  if (this.getImageState() < ol.ImageState.ERROR) {
+  if (this.getImageState() < ImageState.ERROR) {
     // if the image loaded, trigger a showPreview
     dispatcher.getInstance().dispatchEvent(EventType.UPDATE);
   }

@@ -5,12 +5,15 @@ const math = goog.require('goog.math');
 const osColor = goog.require('os.color');
 const osFeature = goog.require('os.feature');
 const AbstractImportAction = goog.require('os.im.action.AbstractImportAction');
+const FilterActionEntry = goog.require('os.im.action.FilterActionEntry');
 const osImplements = goog.require('os.implements');
 const legend = goog.require('os.legend');
 const ILegendRenderer = goog.require('os.legend.ILegendRenderer');
 const osObject = goog.require('os.object');
 const osStyle = goog.require('os.style');
+const kml = goog.require('os.ui.file.kml');
 const osXml = goog.require('os.xml');
+const pluginImActionFeature = goog.require('plugin.im.action.feature');
 const {directiveTag: configUi} = goog.require('plugin.im.action.feature.ui.StyleConfigUI');
 
 const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
@@ -77,7 +80,7 @@ class StyleAction extends AbstractImportAction {
 
         // reset the original feature config
         var originalConfig = /** @type {Array|Object|undefined} */
-              (item.get(plugin.im.action.feature.StyleType.ORIGINAL));
+              (item.get(pluginImActionFeature.StyleType.ORIGINAL));
         item.set(osStyle.StyleType.FEATURE, originalConfig, true);
         resetItems.push(item);
       }
@@ -115,9 +118,9 @@ class StyleAction extends AbstractImportAction {
         item.set(StyleAction.FEATURE_ID, this.uid, true);
 
         if (originalConfig != null && !originalConfig['temporary'] &&
-              item.get(plugin.im.action.feature.StyleType.ORIGINAL) == null) {
+              item.get(pluginImActionFeature.StyleType.ORIGINAL) == null) {
           // if the original config isn't already set, add a reference back to it
-          item.set(plugin.im.action.feature.StyleType.ORIGINAL, originalConfig, true);
+          item.set(pluginImActionFeature.StyleType.ORIGINAL, originalConfig, true);
         }
 
         // set the feature shape
@@ -245,7 +248,7 @@ class StyleAction extends AbstractImportAction {
     osXml.appendElement(StyleActionTagName.SHAPE, element, String(shape));
 
     if (shape == osStyle.ShapeType.ICON) {
-      var icon = osStyle.getConfigIcon(this.styleConfig) || os.ui.file.kml.getDefaultIcon();
+      var icon = osStyle.getConfigIcon(this.styleConfig) || kml.getDefaultIcon();
       osXml.appendElement(StyleActionTagName.ICON_SRC, element, icon.path);
     }
 
@@ -253,7 +256,7 @@ class StyleAction extends AbstractImportAction {
     osXml.appendElement(StyleActionTagName.CENTER_SHAPE, element, String(centerShape));
 
     if (centerShape == osStyle.ShapeType.ICON) {
-      var icon = osStyle.getConfigIcon(this.styleConfig) || os.ui.file.kml.getDefaultIcon();
+      var icon = osStyle.getConfigIcon(this.styleConfig) || kml.getDefaultIcon();
       osXml.appendElement(StyleActionTagName.ICON_SRC, element, icon.path);
     }
 
@@ -268,7 +271,7 @@ class StyleAction extends AbstractImportAction {
     }
 
     if (shape == osStyle.ShapeType.ICON || centerShape == osStyle.ShapeType.ICON) {
-      var icon = osStyle.getConfigIcon(this.styleConfig) || os.ui.file.kml.getDefaultIcon();
+      var icon = osStyle.getConfigIcon(this.styleConfig) || kml.getDefaultIcon();
       osXml.appendElement(StyleActionTagName.ICON_OPTIONS, element,
           JSON.stringify(icon.options));
     }
@@ -374,7 +377,7 @@ class StyleAction extends AbstractImportAction {
     var features = /** @type {Array<!ol.Feature>} */ (arguments[1]);
     if (features && features.length > 0 && features.some(this.isFeatureStyled, this)) {
       var entry = arguments[2];
-      if (entry instanceof os.im.action.FilterActionEntry) {
+      if (entry instanceof FilterActionEntry) {
         // clone so we can modify it freely
         var config = /** @type {!Object} */ (osObject.unsafeClone(this.styleConfig));
 

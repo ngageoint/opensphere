@@ -1,8 +1,12 @@
 goog.module('plugin.im.action.feature');
 goog.module.declareLegacyNamespace();
 
+const MapContainer = goog.require('os.MapContainer');
+const DataManager = goog.require('os.data.DataManager');
 const filterAction = goog.require('os.im.action.filter');
+const osImplements = goog.require('os.implements');
 const ILayer = goog.require('os.layer.ILayer');
+const osSource = goog.require('os.source');
 const {launchEditFeatureAction} = goog.require('plugin.im.action.feature.ui');
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
@@ -72,8 +76,8 @@ const getExportName = function(opt_entryType) {
   var name = filterAction.getExportName();
 
   if (opt_entryType) {
-    var layer = os.MapContainer.getInstance().getLayer(opt_entryType);
-    if (os.implements(layer, ILayer.ID)) {
+    var layer = MapContainer.getInstance().getLayer(opt_entryType);
+    if (osImplements(layer, ILayer.ID)) {
       var layerTitle = /** @type {ILayer} */ (layer).getTitle();
       if (layerTitle) {
         name = layerTitle + ' ' + name;
@@ -94,10 +98,10 @@ const getColumns = function(opt_entryType) {
   var columns;
 
   if (opt_entryType) {
-    var dm = os.data.DataManager.getInstance();
+    var dm = DataManager.getInstance();
     var source = dm.getSource(opt_entryType);
     if (source) {
-      columns = os.source.getFilterColumns(source, true, true);
+      columns = osSource.getFilterColumns(source, true, true);
     }
   }
 

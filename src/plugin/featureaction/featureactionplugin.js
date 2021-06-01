@@ -4,7 +4,9 @@ goog.module.declareLegacyNamespace();
 const legend = goog.require('os.legend');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const StateManager = goog.require('os.state.StateManager');
+const Versions = goog.require('os.state.Versions');
 const FilterAction = goog.require('os.state.v4.FilterAction');
+const ImportManager = goog.require('os.ui.im.ImportManager');
 const FilterActionImportUI = goog.require('os.ui.im.action.FilterActionImportUI');
 const mime = goog.require('plugin.featureaction.mime');
 const featureAction = goog.require('plugin.im.action.feature');
@@ -54,7 +56,7 @@ class Plugin extends AbstractPlugin {
     manager.registerAction(new SoundAction());
 
     // register import UI
-    os.ui.im.ImportManager.getInstance().registerImportUI(mime.TYPE,
+    ImportManager.getInstance().registerImportUI(mime.TYPE,
         new FilterActionImportUI());
 
     // add actions
@@ -64,8 +66,8 @@ class Plugin extends AbstractPlugin {
     var sm = StateManager.getInstance();
 
     // TODO: shouldn't need to dual-register after THIN-8551
-    sm.addStateImplementation(os.state.Versions.V3, FilterAction);
-    sm.addStateImplementation(os.state.Versions.V4, FilterAction);
+    sm.addStateImplementation(Versions.V3, FilterAction);
+    sm.addStateImplementation(Versions.V4, FilterAction);
 
     node.setup();
 

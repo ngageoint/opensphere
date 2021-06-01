@@ -5,18 +5,26 @@ goog.require('os.ui.data.addColumnFormDirective');
 goog.require('os.ui.layer.labelControlsDirective');
 goog.require('os.ui.popover.popoverDirective');
 
-const {ROOT} = goog.require('os');
 const Delay = goog.require('goog.async.Delay');
+const dispose = goog.require('goog.dispose');
 const olArray = goog.require('ol.array');
+const {ROOT} = goog.require('os');
 const dispatcher = goog.require('os.Dispatcher');
+const MapContainer = goog.require('os.MapContainer');
 const osColor = goog.require('os.color');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
+const DataManager = goog.require('os.data.DataManager');
 const osImplements = goog.require('os.implements');
 const ILayer = goog.require('os.layer.ILayer');
 const osObject = goog.require('os.object');
 const osStyle = goog.require('os.style');
 const label = goog.require('os.style.label');
+const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
+const AddColumnFormCtrl = goog.require('os.ui.data.AddColumnFormCtrl');
+const EventType = goog.require('os.ui.im.action.EventType');
+const osUiLayer = goog.require('os.ui.layer');
+const column = goog.require('os.ui.slick.column');
 const ActionConfigCtrl = goog.require('plugin.im.action.feature.ui.ActionConfigCtrl');
 
 const LabelAction = goog.requireType('plugin.im.action.feature.LabelAction');
@@ -116,7 +124,7 @@ class Controller extends ActionConfigCtrl {
 
     $scope.$on('labelColor.change', this.onColorChange.bind(this));
     $scope.$on('labelColor.reset', this.onColorReset.bind(this));
-    $scope.$on(os.ui.layer.LabelControlsEventType.COLUMN_CHANGE, this.validate.bind(this));
+    $scope.$on(osUiLayer.LabelControlsEventType.COLUMN_CHANGE, this.validate.bind(this));
     $scope.$watch('size', this.onSizeChange.bind(this));
     $scope.$watch('config.customName', this.onCustomNameChange.bind(this));
 
@@ -129,7 +137,7 @@ class Controller extends ActionConfigCtrl {
   disposeInternal() {
     super.disposeInternal();
 
-    goog.dispose(this.updateCustomColumnDelay);
+    dispose(this.updateCustomColumnDelay);
     this.updateCustomColumnDelay = null;
   }
 
@@ -139,12 +147,12 @@ class Controller extends ActionConfigCtrl {
   initialize() {
     if (this.type) {
       // add duplicate validator for the custom column name
-      var source = os.data.DataManager.getInstance().getSource(this.type);
+      var source = DataManager.getInstance().getSource(this.type);
       if (source) {
         this['validators'].push({
           'id': 'duplicate',
           'model': 'name',
-          'handler': os.ui.data.AddColumnFormCtrl.isDuplicate.bind(this, source)
+          'handler': AddColumnFormCtrl.isDuplicate.bind(this, source)
         });
       }
     }
@@ -156,9 +164,9 @@ class Controller extends ActionConfigCtrl {
       this.scope['color'] = this.initialColor = osColor.toHexString(color);
       this.scope['size'] = this.labelConfig['size'] || label.DEFAULT_SIZE;
 
-      var layer = os.MapContainer.getInstance().getLayer(this.type);
+      var layer = MapContainer.getInstance().getLayer(this.type);
       if (osImplements(layer, ILayer.ID)) {
-        this.scope['columns'] = os.ui.layer.getColumns(/** @type {ILayer} */ (layer));
+        this.scope['columns'] = osUiLayer.getColumns(/** @type {ILayer} */ (layer));
       }
 
       if (!this.scope['columns']) {
@@ -189,7 +197,7 @@ class Controller extends ActionConfigCtrl {
       this.action.labelConfig = this.labelConfig;
 
       // send a message indicating an update occurred
-      dispatcher.getInstance().dispatchEvent(os.ui.im.action.EventType.UPDATE);
+      dispatcher.getInstance().dispatchEvent(EventType.UPDATE);
     }
   }
 
@@ -239,16 +247,16 @@ class Controller extends ActionConfigCtrl {
 
       // if a custom label is configured, make it available for selection in the column picker
       if (this['addCustomLabel'] && this.scope && this.scope['columns']) {
-        var findFn = os.ui.slick.column.findByField.bind(undefined, 'field', name);
+        var findFn = column.findByField.bind(undefined, 'field', name);
         if (!olArray.find(this.scope['columns'], findFn)) {
           this.scope['columns'].push(this.customColumn);
-          this.scope['columns'].sort(os.ui.slick.column.nameCompare);
+          this.scope['columns'].sort(column.nameCompare);
         }
       }
     }
 
     this.validate();
-    os.ui.apply(this.scope);
+    ui.apply(this.scope);
   }
 
   /**

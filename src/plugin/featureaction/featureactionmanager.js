@@ -2,15 +2,22 @@ goog.module('plugin.im.action.feature.Manager');
 goog.module.declareLegacyNamespace();
 
 const Timer = goog.require('goog.Timer');
+const dispose = goog.require('goog.dispose');
+const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const events = goog.require('ol.events');
 const OSDataManager = goog.require('os.data.OSDataManager');
+const RecordField = goog.require('os.data.RecordField');
 const DataEventType = goog.require('os.data.event.DataEventType');
+const osFeature = goog.require('os.feature');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const osImplements = goog.require('os.implements');
 const LayerPresetManager = goog.require('os.layer.preset.LayerPresetManager');
 const IImportSource = goog.require('os.source.IImportSource');
+const PropertyChange = goog.require('os.source.PropertyChange');
 const state = goog.require('os.state');
+const osStyle = goog.require('os.style');
+const label = goog.require('os.style.label');
 const featureAction = goog.require('plugin.im.action.feature');
 const Entry = goog.require('plugin.im.action.feature.Entry');
 const TagName = goog.require('plugin.im.action.feature.TagName');
@@ -57,7 +64,7 @@ class Manager extends ImportActionManager {
   disposeInternal() {
     super.disposeInternal();
 
-    goog.dispose(this.timer_);
+    dispose(this.timer_);
 
     var dm = OSDataManager.getInstance();
     if (dm) {
@@ -143,7 +150,7 @@ class Manager extends ImportActionManager {
       var id = source.getId();
       if (id && !this.sourceListeners_[id]) {
         this.sourceListeners_[id] = events.listen(/** @type {events.EventTarget} */ (source),
-            goog.events.EventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
+            GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
 
         var promise = LayerPresetManager.getInstance().getPresets(id, !state.isStateFile(id));
 
@@ -205,7 +212,7 @@ class Manager extends ImportActionManager {
     var source = /** @type {os.source.ISource} */ (event.target);
     if (source) {
       switch (p) {
-        case os.source.PropertyChange.PREPROCESS_FEATURES:
+        case PropertyChange.PREPROCESS_FEATURES:
           var features = /** @type {Array<!ol.Feature>|undefined} */ (event.getNewValue());
           if (features && features.length > 0) {
             this.processItems(source.getId(), features);
@@ -227,7 +234,7 @@ class Manager extends ImportActionManager {
     var fn = function(entry) {
       if (entry.isEnabled()) {
         var filter = entry.getFilter();
-        if (filter && filter.indexOf(os.data.RecordField.TIME) != -1) {
+        if (filter && filter.indexOf(RecordField.TIME) != -1) {
           this.updateItems(entry.type);
         }
       }
@@ -332,11 +339,11 @@ class Manager extends ImportActionManager {
   static notify_(items, config) {
     if (config) {
       if (config.setFeaturesStyle) {
-        os.style.setFeaturesStyle(items);
+        osStyle.setFeaturesStyle(items);
       }
 
       // notify that the layer needs to be updated
-      var layer = os.feature.getLayer(items[0]);
+      var layer = osFeature.getLayer(items[0]);
       if (layer) {
         var source = /** @type {os.source.Vector} */ (layer.getSource());
         if (source && config.setColor && config.color && config.color.length > 0) {
@@ -350,7 +357,7 @@ class Manager extends ImportActionManager {
           });
         }
         if (config.notifyStyleChange) {
-          os.style.notifyStyleChange(
+          osStyle.notifyStyleChange(
               layer,
               items,
               undefined,
@@ -362,7 +369,7 @@ class Manager extends ImportActionManager {
     }
     // kick off label hit detection
     if (config.labelUpdateShown) {
-      os.style.label.updateShown();
+      label.updateShown();
     }
   }
 }

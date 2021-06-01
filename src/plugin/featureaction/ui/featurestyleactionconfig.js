@@ -4,14 +4,22 @@ goog.module.declareLegacyNamespace();
 goog.require('os.ui.layer.iconStyleControlsDirective');
 goog.require('os.ui.layer.vectorStyleControlsDirective');
 
+const googArray = goog.require('goog.array');
+const googObject = goog.require('goog.object');
+const googString = goog.require('goog.string');
 const dispatcher = goog.require('os.Dispatcher');
+const Fields = goog.require('os.Fields');
 const osColor = goog.require('os.color');
+const DataManager = goog.require('os.data.DataManager');
+const instanceOf = goog.require('os.instanceOf');
 const osObject = goog.require('os.object');
+const VectorSource = goog.require('os.source.Vector');
 const osStyle = goog.require('os.style');
 const Module = goog.require('os.ui.Module');
 const kml = goog.require('os.ui.file.kml');
 const IconPickerEventType = goog.require('os.ui.icon.IconPickerEventType');
 const EventType = goog.require('os.ui.im.action.EventType');
+const layer = goog.require('os.ui.layer');
 const VectorStyleControlsEventType = goog.require('os.ui.layer.VectorStyleControlsEventType');
 const ActionConfigCtrl = goog.require('plugin.im.action.feature.ui.ActionConfigCtrl');
 
@@ -177,19 +185,19 @@ class Controller extends ActionConfigCtrl {
       this.scope['rotationColumn'] = this.styleConfig[osStyle.StyleField.ROTATION_COLUMN] || '';
 
       if (this.type) {
-        var dm = os.data.DataManager.getInstance();
+        var dm = DataManager.getInstance();
         var source = dm.getSource(this.type);
-        if (os.instanceOf(source, os.source.Vector.NAME)) {
+        if (instanceOf(source, VectorSource.NAME)) {
           source = /** @type {!os.source.Vector} */ (source);
 
-          var shapes = goog.object.getKeys(osStyle.SHAPES);
-          this.scope['shapes'] = goog.array.filter(shapes, source.supportsShape, source);
-          this.scope['centerShapes'] = goog.array.filter(shapes, source.isNotEllipseOrLOBOrDefault, source);
-          this.scope['columns'] = os.ui.layer.getColumnsFromSource(source);
+          var shapes = googObject.getKeys(osStyle.SHAPES);
+          this.scope['shapes'] = googArray.filter(shapes, source.supportsShape, source);
+          this.scope['centerShapes'] = googArray.filter(shapes, source.isNotEllipseOrLOBOrDefault, source);
+          this.scope['columns'] = layer.getColumnsFromSource(source);
 
           // autodetect
-          if (goog.string.isEmptyOrWhitespace(this.scope['rotationColumn']) && source.hasColumn(os.Fields.BEARING)) {
-            this.scope['rotationColumn'] = os.Fields.BEARING;
+          if (googString.isEmptyOrWhitespace(this.scope['rotationColumn']) && source.hasColumn(Fields.BEARING)) {
+            this.scope['rotationColumn'] = Fields.BEARING;
             this.onRotationColumnChange_(undefined, this.scope['rotationColumn']);
           }
         }

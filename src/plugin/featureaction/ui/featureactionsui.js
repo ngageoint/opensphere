@@ -3,6 +3,8 @@ goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const DataManager = goog.require('os.data.DataManager');
+const DataEventType = goog.require('os.data.event.DataEventType');
+const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const FilterActionsCtrl = goog.require('os.ui.im.action.FilterActionsCtrl');
 const TreeSearch = goog.require('os.ui.slick.TreeSearch');
@@ -72,7 +74,7 @@ class Controller extends FilterActionsCtrl {
      */
     this['hasDefaultActions'] = undefined;
 
-    DataManager.getInstance().listen(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
+    DataManager.getInstance().listen(DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
   }
 
   /**
@@ -80,7 +82,7 @@ class Controller extends FilterActionsCtrl {
    */
   disposeInternal() {
     super.disposeInternal();
-    DataManager.getInstance().unlisten(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
+    DataManager.getInstance().unlisten(DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
   }
 
   /**
@@ -105,7 +107,7 @@ class Controller extends FilterActionsCtrl {
     super.apply();
 
     if (this.entryType) {
-      var dm = os.data.DataManager.getInstance();
+      var dm = DataManager.getInstance();
       var source = dm.getSource(this.entryType);
       if (source) {
         var manager = FeatureActionManager.getInstance();
@@ -148,7 +150,7 @@ class Controller extends FilterActionsCtrl {
       this['hasDefaultActions'] = this.scope['entries'].some((node) => {
         return node.getId() != TreeSearch.NO_RESULT_ID && node.getEntry().isDefault();
       });
-      os.ui.apply(this.scope);
+      ui.apply(this.scope);
     }
   }
 

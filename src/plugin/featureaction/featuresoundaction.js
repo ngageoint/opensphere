@@ -1,6 +1,8 @@
 goog.module('plugin.im.action.feature.SoundAction');
 goog.module.declareLegacyNamespace();
 
+const AudioManager = goog.require('os.audio.AudioManager');
+
 const AbstractImportAction = goog.require('os.im.action.AbstractImportAction');
 const osObject = goog.require('os.object');
 const osXml = goog.require('os.xml');
@@ -48,7 +50,7 @@ class SoundAction extends AbstractImportAction {
      */
     this.soundConfig = /** @type {!Object} */ (osObject.unsafeClone(SoundAction.DEFAULT_CONFIG));
 
-    this['sounds'] = os.audio.AudioManager.getInstance().getSounds();
+    this['sounds'] = AudioManager.getInstance().getSounds();
 
     /**
      * Set the default sound for the sound action.
@@ -65,7 +67,7 @@ class SoundAction extends AbstractImportAction {
    * @inheritDoc
    */
   execute() {
-    os.audio.AudioManager.getInstance().play(this.soundConfig['sound'], this.soundConfig['playDelay'] * 1000);
+    AudioManager.getInstance().play(this.soundConfig['sound'], this.soundConfig['playDelay'] * 1000);
   }
 
   /**
