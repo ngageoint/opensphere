@@ -1,87 +1,88 @@
-goog.provide('plugin.im.action.feature.ui.ActionConfigCtrl');
+goog.module('plugin.im.action.feature.ui.ActionConfigCtrl');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Disposable');
-goog.require('os.fn');
-goog.require('os.ui.window');
-
+const Disposable = goog.require('goog.Disposable');
+const WindowEventType = goog.require('os.ui.WindowEventType');
 
 
 /**
  * Base controller for configuring a feature action.
  *
- * @param {!angular.Scope} $scope The Angular scope.
- * @param {!angular.JQLite} $element The root DOM element.
- * @extends {goog.Disposable}
- * @constructor
  * @template T
- * @ngInject
+ * @unrestricted
  */
-plugin.im.action.feature.ui.ActionConfigCtrl = function($scope, $element) {
-  plugin.im.action.feature.ui.ActionConfigCtrl.base(this, 'constructor');
-
+class Controller extends Disposable {
   /**
-   * The Angular scope.
-   * @type {?angular.Scope}
-   * @protected
+   * Constructor.
+   * @param {!angular.Scope} $scope The Angular scope.
+   * @param {!angular.JQLite} $element The root DOM element.
+   * @ngInject
    */
-  this.scope = $scope;
+  constructor($scope, $element) {
+    super();
 
-  /**
-   * The root element for the directive.
-   * @type {?angular.JQLite}
-   * @protected
-   */
-  this.element = $element;
+    /**
+     * The Angular scope.
+     * @type {?angular.Scope}
+     * @protected
+     */
+    this.scope = $scope;
 
-  /**
-   * The feature action.
-   * @type {T}
-   * @protected
-   */
-  this.action = /** @type {T|undefined} */ ($scope['action']);
+    /**
+     * The root element for the directive.
+     * @type {?angular.JQLite}
+     * @protected
+     */
+    this.element = $element;
 
-  /**
-   * The feature action.
-   * @type {string}
-   * @protected
-   */
-  this.type = /** @type {string|undefined} */ ($scope['type']) || '';
+    /**
+     * The feature action.
+     * @type {T}
+     * @protected
+     */
+    this.action = /** @type {T|undefined} */ ($scope['action']);
 
-  // set up values on the confirm directive scope
-  $scope.$parent['confirmCallback'] = this.saveAction.bind(this);
-  $scope.$parent['confirmValue'] = this.action;
+    /**
+     * The feature action.
+     * @type {string}
+     * @protected
+     */
+    this.type = /** @type {string|undefined} */ ($scope['type']) || '';
 
-  $scope.$on('$destroy', this.dispose.bind(this));
-};
-goog.inherits(plugin.im.action.feature.ui.ActionConfigCtrl, goog.Disposable);
+    // set up values on the confirm directive scope
+    $scope.$parent['confirmCallback'] = this.saveAction.bind(this);
+    $scope.$parent['confirmValue'] = this.action;
 
-
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.ui.ActionConfigCtrl.prototype.disposeInternal = function() {
-  plugin.im.action.feature.ui.ActionConfigCtrl.base(this, 'disposeInternal');
-
-  this.action = null;
-  this.element = null;
-  this.scope = null;
-};
-
-
-/**
- * Initialize the UI from the action.
- *
- * @protected
- */
-plugin.im.action.feature.ui.ActionConfigCtrl.prototype.initialize = function() {
-  if (this.scope) {
-    this.scope.$emit(os.ui.WindowEventType.READY);
+    $scope.$on('$destroy', this.dispose.bind(this));
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
 
-/**
- * Save changes to the action.
- * @protected
- */
-plugin.im.action.feature.ui.ActionConfigCtrl.prototype.saveAction = os.fn.noop;
+    this.action = null;
+    this.element = null;
+    this.scope = null;
+  }
+
+  /**
+   * Initialize the UI from the action.
+   *
+   * @protected
+   */
+  initialize() {
+    if (this.scope) {
+      this.scope.$emit(WindowEventType.READY);
+    }
+  }
+
+  /**
+   * Save changes to the action.
+   * @protected
+   */
+  saveAction() {}
+}
+
+exports = Controller;

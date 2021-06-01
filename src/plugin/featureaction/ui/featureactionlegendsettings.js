@@ -1,24 +1,32 @@
-goog.provide('plugin.im.action.feature.ui.LegendSettingsCtrl');
-goog.provide('plugin.im.action.feature.ui.legendSettingsDirective');
+goog.module('plugin.im.action.feature.ui.legendSettingsDirective');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
-
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
 
 /**
  * The featureactionlegendsettings directive.
  *
  * @return {angular.Directive}
  */
-plugin.im.action.feature.ui.legendSettingsDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    templateUrl: os.ROOT + 'views/plugin/featureaction/featureactionlegendsettings.html'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  templateUrl: ROOT + 'views/plugin/featureaction/featureactionlegendsettings.html'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'featureactionlegendsettings';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('featureactionlegendsettings', [plugin.im.action.feature.ui.legendSettingsDirective]);
+Module.directive('featureactionlegendsettings', [directive]);
+
+exports = {
+  directive,
+  directiveTag
+};

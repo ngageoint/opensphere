@@ -1,16 +1,20 @@
-goog.provide('plugin.featureaction.mime');
+goog.module('plugin.featureaction.mime');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.file.mime');
-goog.require('os.file.mime.xml');
+const mime = goog.require('os.file.mime');
+const xml = goog.require('os.file.mime.xml');
 
 
 /**
  * @type {string}
- * @const
  */
-plugin.featureaction.mime.TYPE = os.file.mime.xml.TYPE + '; subtype=FEATUREACTIONS';
+const TYPE = xml.TYPE + '; subtype=FEATUREACTIONS';
 
-os.file.mime.register(
-    plugin.featureaction.mime.TYPE,
-    os.file.mime.xml.createDetect(/^featureActions$/, /\/state\//i),
-    0, os.file.mime.xml.TYPE);
+mime.register(
+    TYPE,
+    xml.createDetect(/^featureActions$/, /\/state\//i),
+    0, xml.TYPE);
+
+exports = {
+  TYPE
+};

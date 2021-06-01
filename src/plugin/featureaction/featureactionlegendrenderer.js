@@ -1,37 +1,42 @@
-goog.provide('plugin.im.action.feature.legend');
+goog.module('plugin.im.action.feature.legend');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.implements');
-goog.require('os.legend');
-goog.require('os.legend.ILegendRenderer');
-goog.require('plugin.im.action.feature.StyleAction');
+const osImplements = goog.require('os.implements');
+const legend = goog.require('os.legend');
+const ILegendRenderer = goog.require('os.legend.ILegendRenderer');
+const FeatureActionManager = goog.require('plugin.im.action.feature.Manager');
+
+const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const IImportAction = goog.requireType('os.im.action.IImportAction');
+const VectorLayer = goog.requireType('os.layer.Vector');
+const VectorSource = goog.requireType('os.source.Vector');
 
 
 /**
  * Add feature style actions to the legend.
  *
- * @param {!os.layer.Vector} layer The vector layer.
+ * @param {!VectorLayer} layer The vector layer.
  * @param {!osx.legend.LegendOptions} options The legend options.
  */
-plugin.im.action.feature.addToLegend = function(layer, options) {
+const addToLegend = function(layer, options) {
   if (!options['showFeatureActions']) {
     return;
   }
 
-  var source = /** @type {os.source.Vector} */ (layer.getSource());
-  if (!source || !os.legend.shouldDrawSource(source)) {
+  var source = /** @type {VectorSource} */ (layer.getSource());
+  if (!source || !legend.shouldDrawSource(source)) {
     return;
   }
 
-  var manager = plugin.im.action.feature.Manager.getInstance();
-  var entries = manager.getActionEntries(source.getId()).filter(plugin.im.action.feature.hasLegendAction);
+  var manager = FeatureActionManager.getInstance();
+  var entries = manager.getActionEntries(source.getId()).filter(hasLegendAction);
 
   var features = source.getFilteredFeatures();
   for (var i = 0; i < entries.length; i++) {
     // entry enabled state is not tested because the action(s) could still be applied. each action must determine if
     // they should be in the legend, unless the enabled/disabled state is changed to apply immediately.
     var entry = entries[i];
-    var legendActions = /** @type {!Array<!os.legend.ILegendRenderer>} */ (entry.actions.filter(
-        plugin.im.action.feature.isLegendAction));
+    var legendActions = /** @type {!Array<!ILegendRenderer>} */ (entry.actions.filter(isLegendAction));
     legendActions.forEach(function(action) {
       action.renderLegend(options, features, entry);
     });
@@ -42,20 +47,26 @@ plugin.im.action.feature.addToLegend = function(layer, options) {
 /**
  * Test if an entry contains actions that contribute to the legend.
  *
- * @param {!os.im.action.FilterActionEntry} entry The entry.
+ * @param {!FilterActionEntry} entry The entry.
  * @return {boolean} If the entry has actions that contribute to the legend.
  */
-plugin.im.action.feature.hasLegendAction = function(entry) {
-  return entry.actions.some(plugin.im.action.feature.isLegendAction);
+const hasLegendAction = function(entry) {
+  return entry.actions.some(isLegendAction);
 };
 
 
 /**
  * Test if an import action contributes to the legend.
  *
- * @param {!os.im.action.IImportAction} action The action.
+ * @param {!IImportAction} action The action.
  * @return {boolean} If the action contributes to the legend.
  */
-plugin.im.action.feature.isLegendAction = function(action) {
-  return os.implements(action, os.legend.ILegendRenderer.ID);
+const isLegendAction = function(action) {
+  return osImplements(action, ILegendRenderer.ID);
+};
+
+exports = {
+  addToLegend,
+  hasLegendAction,
+  isLegendAction
 };

@@ -1,89 +1,113 @@
-goog.provide('plugin.im.action.feature.Plugin');
+goog.module('plugin.im.action.feature.Plugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.EventTarget');
-goog.require('os.legend');
-goog.require('os.plugin.AbstractPlugin');
-goog.require('os.state.StateManager');
-goog.require('os.state.v4.FilterAction');
-goog.require('os.ui.im.action.FilterActionImportUI');
-goog.require('plugin.featureaction.mime');
-goog.require('plugin.im.action.feature');
-goog.require('plugin.im.action.feature.LabelAction');
-goog.require('plugin.im.action.feature.Manager');
-goog.require('plugin.im.action.feature.SoundAction');
-goog.require('plugin.im.action.feature.StyleAction');
-goog.require('plugin.im.action.feature.legend');
-goog.require('plugin.im.action.feature.menu');
-goog.require('plugin.im.action.feature.node');
-goog.require('plugin.im.action.feature.ui.featureActionsDirective');
+const legend = goog.require('os.legend');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const StateManager = goog.require('os.state.StateManager');
+const FilterAction = goog.require('os.state.v4.FilterAction');
+const FilterActionImportUI = goog.require('os.ui.im.action.FilterActionImportUI');
+const mime = goog.require('plugin.featureaction.mime');
+const featureAction = goog.require('plugin.im.action.feature');
+const LabelAction = goog.require('plugin.im.action.feature.LabelAction');
+const Manager = goog.require('plugin.im.action.feature.Manager');
+const SoundAction = goog.require('plugin.im.action.feature.SoundAction');
+const StyleAction = goog.require('plugin.im.action.feature.StyleAction');
+const {addToLegend} = goog.require('plugin.im.action.feature.legend');
+const faMenu = goog.require('plugin.im.action.feature.menu');
+const node = goog.require('plugin.im.action.feature.node');
+const {directiveTag: legendSettingsUi} = goog.require('plugin.im.action.feature.ui.legendSettingsDirective');
+
 goog.require('plugin.im.action.feature.ui.labelConfigDirective');
-goog.require('plugin.im.action.feature.ui.legendSettingsDirective');
 goog.require('plugin.im.action.feature.ui.soundConfigDirective');
 goog.require('plugin.im.action.feature.ui.styleConfigDirective');
 
-
-
 /**
  * Plugin to create actions that apply to imported features.
- *
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
  */
-plugin.im.action.feature.Plugin = function() {
-  plugin.im.action.feature.Plugin.base(this, 'constructor');
+class Plugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
 
-  this.id = plugin.im.action.feature.ID;
-  this.errorMessage = null;
-};
-goog.inherits(plugin.im.action.feature.Plugin, os.plugin.AbstractPlugin);
-goog.addSingletonGetter(plugin.im.action.feature.Plugin);
+    this.id = featureAction.ID;
+    this.errorMessage = null;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
 
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.Plugin.prototype.disposeInternal = function() {
-  plugin.im.action.feature.Plugin.base(this, 'disposeInternal');
+    faMenu.layerDispose();
 
-  plugin.im.action.feature.layerDispose();
+    node.dispose();
+  }
 
-  plugin.im.action.feature.node.dispose();
-};
+  /**
+   * @inheritDoc
+   */
+  init() {
+    // initialize the import action manager and register default actions
+    var manager = Manager.getInstance();
+    manager.registerAction(new LabelAction());
+    manager.registerAction(new StyleAction());
+    manager.registerAction(new SoundAction());
 
+    // register import UI
+    os.ui.im.ImportManager.getInstance().registerImportUI(mime.TYPE,
+        new FilterActionImportUI());
 
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.Plugin.prototype.init = function() {
-  // initialize the import action manager and register default actions
-  var manager = plugin.im.action.feature.Manager.getInstance();
-  manager.registerAction(new plugin.im.action.feature.LabelAction());
-  manager.registerAction(new plugin.im.action.feature.StyleAction());
-  manager.registerAction(new plugin.im.action.feature.SoundAction());
+    // add actions
+    faMenu.layerSetup();
 
-  // register import UI
-  os.ui.im.ImportManager.getInstance().registerImportUI(plugin.featureaction.mime.TYPE,
-      new os.ui.im.action.FilterActionImportUI());
+    // register the state
+    var sm = StateManager.getInstance();
 
-  // add actions
-  plugin.im.action.feature.layerSetup();
+    // TODO: shouldn't need to dual-register after THIN-8551
+    sm.addStateImplementation(os.state.Versions.V3, FilterAction);
+    sm.addStateImplementation(os.state.Versions.V4, FilterAction);
 
-  // register the state
-  var sm = os.state.StateManager.getInstance();
+    node.setup();
 
-  // TODO: shouldn't need to dual-register after THIN-8551
-  sm.addStateImplementation(os.state.Versions.V3, os.state.v4.FilterAction);
-  sm.addStateImplementation(os.state.Versions.V4, os.state.v4.FilterAction);
+    // add legend renderer
+    legend.registerLayerPlugin(/** @type {!osx.legend.PluginOptions} */ ({
+      priority: 1000,
+      render: addToLegend,
+      settingsUI: legendSettingsUi,
+      defaultSettings: {
+        'showFeatureActions': true
+      }
+    }));
+  }
 
-  plugin.im.action.feature.node.setup();
-
-  // add legend renderer
-  os.legend.registerLayerPlugin(/** @type {!osx.legend.PluginOptions} */ ({
-    priority: 1000,
-    render: plugin.im.action.feature.addToLegend,
-    settingsUI: 'featureactionlegendsettings',
-    defaultSettings: {
-      'showFeatureActions': true
+  /**
+   * Get the global instance.
+   * @return {!Plugin}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new Plugin();
     }
-  }));
-};
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {Plugin} value
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
+
+/**
+ * Global instance.
+ * @type {Plugin|undefined}
+ */
+let instance;
+
+exports = Plugin;

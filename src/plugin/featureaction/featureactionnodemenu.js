@@ -1,27 +1,33 @@
-goog.provide('plugin.im.action.feature.node');
+goog.module('plugin.im.action.feature.node');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.ParallelCommand');
-goog.require('os.im.action');
-goog.require('os.im.action.FilterActionEntry');
-goog.require('os.im.action.filter');
-goog.require('os.ui.menu.Menu');
-goog.require('os.ui.menu.MenuItem');
-goog.require('os.ui.menu.MenuItemType');
-goog.require('os.ui.state.menu');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const ParallelCommand = goog.require('os.command.ParallelCommand');
+const action = goog.require('os.im.action');
+const filterAction = goog.require('os.im.action.filter');
+const Menu = goog.require('os.ui.menu.Menu');
+const MenuItem = goog.require('os.ui.menu.MenuItem');
+const MenuItemType = goog.require('os.ui.menu.MenuItemType');
+const {
+  Metrics: FeatureActionMetrics,
+  editEntry,
+  getExportName
+} = goog.require('plugin.im.action.feature');
+
+const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
 
 
 /**
  * Application feature action node menu.
- * @type {(os.ui.menu.Menu<undefined>|undefined)}
+ * @type {(Menu<undefined>|undefined)}
  */
-plugin.im.action.feature.node.MENU = undefined;
-
+let MENU = undefined;
 
 /**
  * Feature action node menu event types.
  * @enum {string}
  */
-plugin.im.action.feature.node.EventType = {
+const EventType = {
   COPY: 'featureactionnodes:copy',
   EDIT: 'featureactionnodes:edit',
   EXPORT: 'featureactionnodes:export',
@@ -31,90 +37,87 @@ plugin.im.action.feature.node.EventType = {
   TOGGLE_OFF: 'featureactionnodes:toggleOff'
 };
 
-
 /**
  * Set up the menu.
  */
-plugin.im.action.feature.node.setup = function() {
-  if (!plugin.im.action.feature.node.MENU) {
-    plugin.im.action.feature.node.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
-      type: os.ui.menu.MenuItemType.ROOT,
+const setup = function() {
+  if (!MENU) {
+    MENU = new Menu(new MenuItem({
+      type: MenuItemType.ROOT,
       children: [{
         label: 'Copy',
-        eventType: plugin.im.action.feature.node.EventType.COPY,
+        eventType: EventType.COPY,
         tooltip: 'Copy the action',
         icons: ['<i class="fa fa-copy fa-fw"></i>'],
-        beforeRender: plugin.im.action.feature.node.visibleIfSelected_,
-        handler: plugin.im.action.feature.node.onCopyEvent_,
-        metricKey: os.im.action.Metrics.COPY
+        beforeRender: visibleIfSelected_,
+        handler: onCopyEvent_,
+        metricKey: action.Metrics.COPY
       },
       {
         label: 'Edit',
-        eventType: plugin.im.action.feature.node.EventType.EDIT,
+        eventType: EventType.EDIT,
         tooltip: 'Edit the action',
         icons: ['<i class="fa fa-pencil fa-fw"></i>'],
-        beforeRender: plugin.im.action.feature.node.visibleIfOneSelected_,
-        handler: plugin.im.action.feature.node.onEditEvent_,
-        metricKey: os.im.action.Metrics.EDIT
+        beforeRender: visibleIfOneSelected_,
+        handler: onEditEvent_,
+        metricKey: action.Metrics.EDIT
       },
       {
         label: 'Export Selected',
-        eventType: plugin.im.action.feature.node.EventType.EXPORT,
+        eventType: EventType.EXPORT,
         tooltip: 'Export the action',
         icons: ['<i class="fa fa-fw fa-download"></i>'],
-        beforeRender: plugin.im.action.feature.node.visibleIfSelected_,
-        handler: plugin.im.action.feature.node.onExportEvent_,
-        metricKey: os.im.action.Metrics.EXPORT
+        beforeRender: visibleIfSelected_,
+        handler: onExportEvent_,
+        metricKey: action.Metrics.EXPORT
       },
       {
         label: 'Remove',
-        eventType: plugin.im.action.feature.node.EventType.REMOVE,
+        eventType: EventType.REMOVE,
         tooltip: 'Remove the action',
         icons: ['<i class="fa fa-fw fa-times"></i>'],
-        beforeRender: plugin.im.action.feature.node.visibleIfOneSelected_,
-        handler: plugin.im.action.feature.node.onRemoveEvent_,
-        metricKey: os.im.action.Metrics.REMOVE
+        beforeRender: visibleIfOneSelected_,
+        handler: onRemoveEvent_,
+        metricKey: action.Metrics.REMOVE
       },
       {
         label: 'Remove Selected',
-        eventType: plugin.im.action.feature.node.EventType.REMOVE_SELECTED,
+        eventType: EventType.REMOVE_SELECTED,
         tooltip: 'Removes selected actions',
         icons: ['<i class="fa fa-fw fa-times"></i>'],
-        beforeRender: plugin.im.action.feature.node.visibleIfMultiSelected_,
-        handler: plugin.im.action.feature.node.onRemoveSelectedEvent_,
-        metricKey: plugin.im.action.feature.Metrics.REMOVE_SELECTED
+        beforeRender: visibleIfMultiSelected_,
+        handler: onRemoveSelectedEvent_,
+        metricKey: FeatureActionMetrics.REMOVE_SELECTED
       },
       {
         label: 'Toggle On',
-        eventType: plugin.im.action.feature.node.EventType.TOGGLE_ON,
+        eventType: EventType.TOGGLE_ON,
         tooltip: 'Toggles the actions on',
         icons: ['<i class="fa fa-fw fa-check-square-o"></i>'],
-        beforeRender: plugin.im.action.feature.node.visibleIfCanToggleOn_,
-        handler: plugin.im.action.feature.node.onToggleOnEvent_,
-        metricKey: plugin.im.action.feature.Metrics.TOGGLE_ON
+        beforeRender: visibleIfCanToggleOn_,
+        handler: onToggleOnEvent_,
+        metricKey: FeatureActionMetrics.TOGGLE_ON
       },
       {
         label: 'Toggle Off',
-        eventType: plugin.im.action.feature.node.EventType.TOGGLE_OFF,
+        eventType: EventType.TOGGLE_OFF,
         tooltip: 'Toggles the actions off',
         icons: ['<i class="fa fa-fw fa-square-o"></i>'],
-        beforeRender: plugin.im.action.feature.node.visibleIfCanToggleOff_,
-        handler: plugin.im.action.feature.node.onToggleOffEvent_,
-        metricKey: plugin.im.action.feature.Metrics.TOGGLE_OFF
+        beforeRender: visibleIfCanToggleOff_,
+        handler: onToggleOffEvent_,
+        metricKey: FeatureActionMetrics.TOGGLE_OFF
       }]
     }));
   }
 };
 
-
 /**
  * Disposes feature action node menu
  */
-plugin.im.action.feature.node.dispose = function() {
-  goog.dispose(plugin.im.action.feature.node.MENU);
-  plugin.im.action.feature.node.MENU = undefined;
+const dispose = function() {
+  goog.dispose(MENU);
+  MENU = undefined;
 };
-
 
 /**
  * Gets the filter action nodes out of an array of nodes.
@@ -122,66 +125,58 @@ plugin.im.action.feature.node.dispose = function() {
  * @param {Array<os.structs.ITreeNode>} context The array of nodes.
  * @return {!Array<os.ui.im.action.FilterActionNode>} The array of filter action nodes.
  */
-plugin.im.action.feature.node.getFeatureActionNodes = function(context) {
+const getFeatureActionNodes = function(context) {
   var filterActionNodes = [];
   if (context) {
-    context.forEach(os.im.action.filter.isFilterActionNode.bind(undefined, filterActionNodes));
+    context.forEach(filterAction.isFilterActionNode.bind(undefined, filterActionNodes));
   }
 
   return filterActionNodes;
 };
 
-
 /**
  * Show the feature action node menu item.
  *
  * @param {os.ui.menu.layer.Context} context The menu context.
- * @private
- * @this {os.ui.menu.MenuItem}
+ * @this {MenuItem}
  */
-plugin.im.action.feature.node.visibleIfSelected_ = function(context) {
-  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+const visibleIfSelected_ = function(context) {
+  var filterActionNodes = getFeatureActionNodes(context);
   this.visible = filterActionNodes.length > 0;
 };
-
 
 /**
  * Show the feature action node menu item if a single item is selected.
  *
  * @param {os.ui.menu.layer.Context} context The menu context.
- * @private
- * @this {os.ui.menu.MenuItem}
+ * @this {MenuItem}
  */
-plugin.im.action.feature.node.visibleIfOneSelected_ = function(context) {
-  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+const visibleIfOneSelected_ = function(context) {
+  var filterActionNodes = getFeatureActionNodes(context);
   this.visible = filterActionNodes.length == 1;
 };
-
 
 /**
  * Show the feature action node menu item if multiple items are selected.
  *
  * @param {os.ui.menu.layer.Context} context The menu context.
- * @private
- * @this {os.ui.menu.MenuItem}
+ * @this {MenuItem}
  */
-plugin.im.action.feature.node.visibleIfMultiSelected_ = function(context) {
-  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+const visibleIfMultiSelected_ = function(context) {
+  var filterActionNodes = getFeatureActionNodes(context);
   this.visible = filterActionNodes.length > 1;
 };
-
 
 /**
  * Show the feature action node menu item if can toggle it on.
  *
  * @param {os.ui.menu.layer.Context} context The menu context.
- * @private
- * @this {os.ui.menu.MenuItem}
+ * @this {MenuItem}
  */
-plugin.im.action.feature.node.visibleIfCanToggleOn_ = function(context) {
+const visibleIfCanToggleOn_ = function(context) {
   this.visible = false;
 
-  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  var filterActionNodes = getFeatureActionNodes(context);
   if (filterActionNodes.length == 1) {
     if (filterActionNodes[0].getState() == os.structs.TriState.ON) {
       this.visible = false;
@@ -198,18 +193,16 @@ plugin.im.action.feature.node.visibleIfCanToggleOn_ = function(context) {
   }
 };
 
-
 /**
  * Show the feature action node menu item if can toggle it off.
  *
  * @param {os.ui.menu.layer.Context} context The menu context.
- * @private
- * @this {os.ui.menu.MenuItem}
+ * @this {MenuItem}
  */
-plugin.im.action.feature.node.visibleIfCanToggleOff_ = function(context) {
+const visibleIfCanToggleOff_ = function(context) {
   this.visible = false;
 
-  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  var filterActionNodes = getFeatureActionNodes(context);
   if (filterActionNodes.length == 1) {
     if (filterActionNodes[0].getState() == os.structs.TriState.OFF) {
       this.visible = false;
@@ -226,35 +219,33 @@ plugin.im.action.feature.node.visibleIfCanToggleOff_ = function(context) {
   }
 };
 
-
 /**
  * Handle the Copy menu event from the feature action node menu.
  *
- * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
- * @private
+ * @param {!MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  */
-plugin.im.action.feature.node.onCopyEvent_ = function(event) {
+const onCopyEvent_ = function(event) {
   var context = event.getContext();
-  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  var filterActionNodes = getFeatureActionNodes(context);
   if (filterActionNodes.length == 1) {
-    var entry = /** @type {os.im.action.FilterActionEntry} */ (filterActionNodes[0].getEntry());
+    var entry = /** @type {FilterActionEntry} */ (filterActionNodes[0].getEntry());
     var parentIndex = os.structs.getIndexInParent(filterActionNodes[0]);
     if (entry) {
-      var cmd = os.im.action.filter.copyEntryCmd(entry, parentIndex == -1 ? undefined : parentIndex + 1);
-      os.commandStack.addCommand(cmd);
+      var cmd = filterAction.copyEntryCmd(entry, parentIndex == -1 ? undefined : parentIndex + 1);
+      CommandProcessor.getInstance().addCommand(cmd);
     }
   } else if (filterActionNodes.length > 1) {
     var cpCmds = [];
     for (var i = 0; i < filterActionNodes.length; i++) {
-      var entry = /** @type {os.im.action.FilterActionEntry} */ (filterActionNodes[i].getEntry());
+      var entry = /** @type {FilterActionEntry} */ (filterActionNodes[i].getEntry());
       var parentIndex = os.structs.getIndexInParent(filterActionNodes[i]);
       if (entry) {
-        var cpCmd = os.im.action.filter.copyEntryCmd(entry, parentIndex == -1 ? undefined : parentIndex + 1);
+        var cpCmd = filterAction.copyEntryCmd(entry, parentIndex == -1 ? undefined : parentIndex + 1);
         cpCmds.push(cpCmd);
       }
     }
     if (cpCmds.length) {
-      var cmd = new os.command.ParallelCommand();
+      var cmd = new ParallelCommand();
       cmd.setCommands(cpCmds);
       cmd.title = 'Copy feature action nodes' + (cpCmds.length > 1 ? 's' : '');
       os.command.CommandProcessor.getInstance().addCommand(cmd);
@@ -262,44 +253,40 @@ plugin.im.action.feature.node.onCopyEvent_ = function(event) {
   }
 };
 
-
 /**
  * Handle the Edit menu event from the feature action node menu.
  *
- * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
- * @private
+ * @param {!MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  */
-plugin.im.action.feature.node.onEditEvent_ = function(event) {
+const onEditEvent_ = function(event) {
   var context = event.getContext();
-  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  var filterActionNodes = getFeatureActionNodes(context);
   if (filterActionNodes.length == 1) {
-    var entry = /** @type {os.im.action.FilterActionEntry} */ (filterActionNodes[0].getEntry());
+    var entry = /** @type {FilterActionEntry} */ (filterActionNodes[0].getEntry());
     if (entry) {
-      plugin.im.action.feature.editEntry(entry.getType(), entry);
+      editEntry(entry.getType(), entry);
     }
   }
 };
 
-
 /**
  * Handle the Export menu event from the feature action node menu.
  *
- * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
- * @private
+ * @param {!MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  */
-plugin.im.action.feature.node.onExportEvent_ = function(event) {
+const onExportEvent_ = function(event) {
   var context = event.getContext();
-  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  var filterActionNodes = getFeatureActionNodes(context);
   if (filterActionNodes.length >= 1) {
     var entries = [];
     var selected = [];
     var exportName;
     for (var i = 0; i < filterActionNodes.length; i++) {
-      var entry = /** @type {os.im.action.FilterActionEntry} */ (filterActionNodes[i].getEntry());
+      var entry = /** @type {FilterActionEntry} */ (filterActionNodes[i].getEntry());
       if (entry) {
         entries.push(entry);
         selected.push(entry);
-        exportName = plugin.im.action.feature.getExportName(entry.getType());
+        exportName = getExportName(entry.getType());
       }
     }
     if (entries.length && selected.length) {
@@ -309,46 +296,42 @@ plugin.im.action.feature.node.onExportEvent_ = function(event) {
   }
 };
 
-
 /**
  * Handle the Remove menu event from the feature action node menu.
  *
- * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
- * @private
+ * @param {!MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  */
-plugin.im.action.feature.node.onRemoveEvent_ = function(event) {
+const onRemoveEvent_ = function(event) {
   var context = event.getContext();
-  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  var filterActionNodes = getFeatureActionNodes(context);
   if (filterActionNodes.length == 1) {
-    var entry = /** @type {os.im.action.FilterActionEntry} */ (filterActionNodes[0].getEntry());
+    var entry = /** @type {FilterActionEntry} */ (filterActionNodes[0].getEntry());
     if (entry) {
-      var cmd = os.im.action.filter.removeEntryCmd(entry);
-      os.commandStack.addCommand(cmd);
+      var cmd = filterAction.removeEntryCmd(entry);
+      CommandProcessor.getInstance().addCommand(cmd);
     }
   }
 };
 
-
 /**
  * Handle the Remove Selected menu event from the feature action node menu.
  *
- * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
- * @private
+ * @param {!MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  */
-plugin.im.action.feature.node.onRemoveSelectedEvent_ = function(event) {
+const onRemoveSelectedEvent_ = function(event) {
   var context = event.getContext();
-  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  var filterActionNodes = getFeatureActionNodes(context);
   if (filterActionNodes.length > 1) {
     var rmCmds = [];
     for (var i = 0; i < filterActionNodes.length; i++) {
-      var entry = /** @type {os.im.action.FilterActionEntry} */ (filterActionNodes[i].getEntry());
+      var entry = /** @type {FilterActionEntry} */ (filterActionNodes[i].getEntry());
       if (entry) {
-        var rmCmd = os.im.action.filter.removeEntryCmd(entry);
+        var rmCmd = filterAction.removeEntryCmd(entry);
         rmCmds.push(rmCmd);
       }
     }
     if (rmCmds.length) {
-      var cmd = new os.command.ParallelCommand();
+      var cmd = new ParallelCommand();
       // The remove commands must be ordered by index for reverting
       cmd.setCommands(rmCmds.sort(function(a, b) {
         if (a.index > b.index) {
@@ -365,16 +348,14 @@ plugin.im.action.feature.node.onRemoveSelectedEvent_ = function(event) {
   }
 };
 
-
 /**
  * Handle the Toggle On menu event from the feature action node menu.
  *
- * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
- * @private
+ * @param {!MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  */
-plugin.im.action.feature.node.onToggleOnEvent_ = function(event) {
+const onToggleOnEvent_ = function(event) {
   var context = event.getContext();
-  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  var filterActionNodes = getFeatureActionNodes(context);
   if (filterActionNodes.length >= 1) {
     for (var i = 0; i < filterActionNodes.length; i++) {
       filterActionNodes[i].setState(os.structs.TriState.ON);
@@ -382,19 +363,25 @@ plugin.im.action.feature.node.onToggleOnEvent_ = function(event) {
   }
 };
 
-
 /**
  * Handle the Toggle Off menu event from the feature action node menu.
  *
- * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
- * @private
+ * @param {!MenuEvent<os.ui.menu.layer.Context>} event The menu event.
  */
-plugin.im.action.feature.node.onToggleOffEvent_ = function(event) {
+const onToggleOffEvent_ = function(event) {
   var context = event.getContext();
-  var filterActionNodes = plugin.im.action.feature.node.getFeatureActionNodes(context);
+  var filterActionNodes = getFeatureActionNodes(context);
   if (filterActionNodes.length >= 1) {
     for (var i = 0; i < filterActionNodes.length; i++) {
       filterActionNodes[i].setState(os.structs.TriState.OFF);
     }
   }
+};
+
+exports = {
+  MENU,
+  EventType,
+  setup,
+  dispose,
+  getFeatureActionNodes
 };

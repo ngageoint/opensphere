@@ -68,7 +68,6 @@ os.ui.im.action.FilterActionsCtrl = function($scope, $element) {
    */
   this.treeSearch = new os.ui.im.action.FilterActionTreeSearch('entries', this.scope, this.entryType);
   this.scope['views'] = os.ui.im.action.FilterActionsCtrl.VIEWS;
-  this.init();
 
   var iam = os.im.action.ImportActionManager.getInstance();
   iam.listen(os.im.action.ImportActionEventType.REFRESH, this.search, false, this);
@@ -78,10 +77,6 @@ os.ui.im.action.FilterActionsCtrl = function($scope, $element) {
   $scope.$on(os.im.action.ImportActionEventType.REMOVE_ENTRY, this.onRemoveEvent.bind(this));
 
   $scope.$on(os.ui.slick.SlickGridEvent.ORDER_CHANGE, this.onOrderChange.bind(this));
-
-  $scope.$on('$destroy', this.dispose.bind(this));
-
-  this.search();
 };
 goog.inherits(os.ui.im.action.FilterActionsCtrl, os.ui.slick.AbstractGroupByTreeSearchCtrl);
 
@@ -107,6 +102,14 @@ os.ui.im.action.FilterActionsCtrl.prototype.disposeInternal = function() {
 
   this.scope = null;
   this.element = null;
+};
+
+
+/**
+ * Angular $onInit lifecycle function.
+ */
+os.ui.im.action.FilterActionsCtrl.prototype.$onInit = function() {
+  this.init();
 };
 
 

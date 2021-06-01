@@ -1,27 +1,31 @@
-goog.provide('plugin.im.action.feature.menu');
+goog.module('plugin.im.action.feature.menu');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.im.action');
-goog.require('os.ui.menu.layer');
-goog.require('plugin.im.action.feature');
+const AlertManager = goog.require('os.alert.AlertManager');
+const {ICON} = goog.require('os.im.action');
+const ImportActionManager = goog.require('os.im.action.ImportActionManager');
+const layerMenu = goog.require('os.ui.menu.layer');
+const featureAction = goog.require('plugin.im.action.feature');
+const launchForLayer = goog.require('plugin.im.action.feature.ui.launchForLayer');
 
 
 /**
  * Sets up import actions in the layer menu.
  */
-plugin.im.action.feature.layerSetup = function() {
-  var menu = os.ui.menu.layer.MENU;
-  if (menu && !menu.getRoot().find(plugin.im.action.feature.EventType.LAUNCH)) {
-    var group = menu.getRoot().find(os.ui.menu.layer.GroupLabel.TOOLS);
+const layerSetup = function() {
+  var menu = layerMenu.MENU;
+  if (menu && !menu.getRoot().find(featureAction.EventType.LAUNCH)) {
+    var group = menu.getRoot().find(layerMenu.GroupLabel.TOOLS);
     goog.asserts.assert(group, 'Group should exist! Check spelling?');
 
     group.addChild({
-      label: plugin.im.action.feature.TITLE + '...',
-      eventType: plugin.im.action.feature.EventType.LAUNCH,
+      label: featureAction.TITLE + '...',
+      eventType: featureAction.EventType.LAUNCH,
       tooltip: 'Perform actions on imported data matching a filter',
-      icons: ['<i class="fa fa-fw ' + os.im.action.ICON + '"></i>'],
-      beforeRender: plugin.im.action.feature.visibleIfSupported,
-      handler: plugin.im.action.feature.handleLayerAction_,
-      metricKey: plugin.im.action.feature.Metrics.LAYER_LAUNCH
+      icons: ['<i class="fa fa-fw ' + ICON + '"></i>'],
+      beforeRender: visibleIfSupported,
+      handler: handleLayerAction,
+      metricKey: featureAction.Metrics.LAYER_LAUNCH
     });
   }
 };
@@ -30,12 +34,12 @@ plugin.im.action.feature.layerSetup = function() {
 /**
  * Clean up buffer region listeners in the layers window.
  */
-plugin.im.action.feature.layerDispose = function() {
-  var menu = os.ui.menu.layer.MENU;
-  if (menu && !menu.getRoot().find(plugin.im.action.feature.EventType.LAUNCH)) {
-    var group = menu.getRoot().find(os.ui.menu.layer.GroupLabel.TOOLS);
+const layerDispose = function() {
+  var menu = layerMenu.MENU;
+  if (menu && !menu.getRoot().find(featureAction.EventType.LAUNCH)) {
+    var group = menu.getRoot().find(layerMenu.GroupLabel.TOOLS);
     if (group) {
-      group.removeChild(plugin.im.action.feature.EventType.LAUNCH);
+      group.removeChild(featureAction.EventType.LAUNCH);
     }
   }
 };
@@ -44,15 +48,15 @@ plugin.im.action.feature.layerDispose = function() {
 /**
  * If the action arguments support feature actions.
  *
- * @param {os.ui.menu.layer.Context} context The menu context.
+ * @param {layerMenu.Context} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
-plugin.im.action.feature.visibleIfSupported = function(context) {
+const visibleIfSupported = function(context) {
   this.visible = false;
 
-  var am = os.im.action.ImportActionManager.getInstance();
+  var am = ImportActionManager.getInstance();
   if (am && am.hasActions() && context && context.length == 1) {
-    var layers = os.ui.menu.layer.getLayersFromContext(context).filter(os.MapContainer.isVectorLayer);
+    var layers = layerMenu.getLayersFromContext(context).filter(os.MapContainer.isVectorLayer);
     if (layers && layers.length == 1 && layers[0].getOSType() != os.layer.LayerType.REF) {
       var source = /** @type {ol.layer.Layer} */ (layers[0]).getSource();
       this.visible = source != null;
@@ -64,15 +68,20 @@ plugin.im.action.feature.visibleIfSupported = function(context) {
 /**
  * Handle import action event from the layer menu.
  *
- * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
+ * @param {!os.ui.menu.MenuEvent<layerMenu.Context>} event The menu event.
  * @private
  */
-plugin.im.action.feature.handleLayerAction_ = function(event) {
-  var layers = os.ui.menu.layer.getLayersFromContext(event.getContext()).filter(os.MapContainer.isVectorLayer);
+const handleLayerAction = function(event) {
+  var layers = layerMenu.getLayersFromContext(event.getContext()).filter(os.MapContainer.isVectorLayer);
   if (layers && layers.length == 1 && layers[0].getOSType() != os.layer.LayerType.REF) {
-    plugin.im.action.feature.launchForLayer(layers[0].getId());
+    launchForLayer(layers[0].getId());
   } else {
-    os.alertManager.sendAlert('Unexpected layer selection. Please select a single layer and try again.',
+    AlertManager.getInstance().sendAlert('Unexpected layer selection. Please select a single layer and try again.',
         os.alert.AlertEventSeverity.WARNING);
   }
+};
+
+exports = {
+  layerSetup,
+  layerDispose
 };

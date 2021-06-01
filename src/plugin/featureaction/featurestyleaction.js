@@ -1,23 +1,25 @@
-goog.provide('plugin.im.action.feature.StyleAction');
+goog.module('plugin.im.action.feature.StyleAction');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.math');
-goog.require('os.color');
-goog.require('os.feature');
-goog.require('os.im.action.AbstractImportAction');
-goog.require('os.im.action.ImportActionCallbackConfig');
-goog.require('os.implements');
-goog.require('os.legend');
-goog.require('os.legend.ILegendRenderer');
-goog.require('os.object');
-goog.require('os.style');
-goog.require('os.xml');
+const math = goog.require('goog.math');
+const osColor = goog.require('os.color');
+const osFeature = goog.require('os.feature');
+const AbstractImportAction = goog.require('os.im.action.AbstractImportAction');
+const osImplements = goog.require('os.implements');
+const legend = goog.require('os.legend');
+const ILegendRenderer = goog.require('os.legend.ILegendRenderer');
+const osObject = goog.require('os.object');
+const osStyle = goog.require('os.style');
+const osXml = goog.require('os.xml');
+
+const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
 
 
 /**
  * Tag names used for XML persistence.
  * @enum {string}
  */
-plugin.im.action.feature.StyleActionTagName = {
+const StyleActionTagName = {
   CENTER_SHAPE: 'centerShape',
   COLOR: 'color',
   ICON_SRC: 'iconSrc',
@@ -37,26 +39,377 @@ plugin.im.action.feature.StyleActionTagName = {
 /**
  * Import action that sets the style for a {@link ol.Feature}.
  *
- * @extends {os.im.action.AbstractImportAction<ol.Feature>}
- * @implements {os.legend.ILegendRenderer}
- * @constructor
+ * @extends {AbstractImportAction<ol.Feature>}
+ * @implements {ILegendRenderer}
  */
-plugin.im.action.feature.StyleAction = function() {
-  plugin.im.action.feature.StyleAction.base(this, 'constructor');
+class StyleAction extends AbstractImportAction {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
 
-  this.id = plugin.im.action.feature.StyleAction.ID;
-  this.label = plugin.im.action.feature.StyleAction.LABEL;
-  this.configUI = plugin.im.action.feature.StyleAction.CONFIG_UI;
-  this.xmlType = plugin.im.action.feature.StyleAction.ID;
+    this.id = StyleAction.ID;
+    this.label = StyleAction.LABEL;
+    this.configUI = StyleAction.CONFIG_UI;
+    this.xmlType = StyleAction.ID;
+
+    /**
+     * The feature style config.
+     * @type {!Object}
+     */
+    this.styleConfig = /** @type {!Object} */ (osObject.unsafeClone(osStyle.DEFAULT_VECTOR_CONFIG));
+  }
 
   /**
-   * The feature style config.
-   * @type {!Object}
+   * @inheritDoc
    */
-  this.styleConfig = /** @type {!Object} */ (os.object.unsafeClone(os.style.DEFAULT_VECTOR_CONFIG));
-};
-goog.inherits(plugin.im.action.feature.StyleAction, os.im.action.AbstractImportAction);
-os.implements(plugin.im.action.feature.StyleAction, os.legend.ILegendRenderer.ID);
+  reset(items) {
+    var resetItems = [];
+
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      if (item && this.isFeatureStyled(item)) {
+        item.set(StyleAction.FEATURE_ID, undefined);
+        item.set(osStyle.StyleField.SHAPE, undefined, true);
+        item.set(osStyle.StyleField.CENTER_SHAPE, undefined, true);
+
+        // reset the original feature config
+        var originalConfig = /** @type {Array|Object|undefined} */
+              (item.get(plugin.im.action.feature.StyleType.ORIGINAL));
+        item.set(osStyle.StyleType.FEATURE, originalConfig, true);
+        resetItems.push(item);
+      }
+    }
+
+    return (this.configureNotify_(resetItems, true));
+  }
+
+  /**
+   * @inheritDoc
+   */
+  execute(items) {
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      if (item) {
+        // get the existing feature config or create a new one
+        var originalConfig = /** @type {Array|Object|undefined} */ (item.get(osStyle.StyleType.FEATURE));
+        var featureConfig = osObject.unsafeClone(originalConfig) || {};
+
+        // flag this as a temporary style config
+        featureConfig['temporary'] = true;
+
+        // merge style changes into the feature config and set it on the feature
+        if (Array.isArray(featureConfig)) {
+          for (var j = 0; j < featureConfig.length; j++) {
+            featureConfig[j]['zIndex'] = 10;
+            osStyle.mergeConfig(this.styleConfig, featureConfig[j]);
+          }
+        } else {
+          featureConfig['zIndex'] = 10;
+          osStyle.mergeConfig(this.styleConfig, featureConfig);
+        }
+
+        item.set(osStyle.StyleType.FEATURE, featureConfig, true);
+        item.set(StyleAction.FEATURE_ID, this.uid, true);
+
+        if (originalConfig != null && !originalConfig['temporary'] &&
+              item.get(plugin.im.action.feature.StyleType.ORIGINAL) == null) {
+          // if the original config isn't already set, add a reference back to it
+          item.set(plugin.im.action.feature.StyleType.ORIGINAL, originalConfig, true);
+        }
+
+        // set the feature shape
+        var configShape = this.styleConfig[osStyle.StyleField.SHAPE];
+        if (configShape && configShape != osStyle.DEFAULT_SHAPE) {
+          item.set(osStyle.StyleField.SHAPE, configShape, true);
+        }
+
+        // set the feature center shape
+        var configCenterShape = this.styleConfig[osStyle.StyleField.CENTER_SHAPE];
+        if (configCenterShape && configCenterShape != osStyle.DEFAULT_CENTER_SHAPE) {
+          item.set(osStyle.StyleField.CENTER_SHAPE, configCenterShape, true);
+        } else {
+          item.set(osStyle.StyleField.CENTER_SHAPE, undefined, true);
+        }
+      }
+    }
+
+    return (this.configureNotify_(items));
+  }
+
+  /**
+   * Send out notification(s) to the Layer, Source, and/or ColorModel
+   *
+   * @param {!Array<!ol.Feature>} items the list of features
+   * @param {boolean=} opt_resetcolor true if the color should be reset
+   * @return {ImportActionCallbackConfig}
+   * @private
+   */
+  configureNotify_(items, opt_resetcolor) {
+    var config = /** @type {ImportActionCallbackConfig} */ ({
+      labelUpdateShown: false,
+      notifyStyleChange: false,
+      setColor: false,
+      setFeaturesStyle: true
+    });
+
+    var layer = osFeature.getLayer(items[0]);
+    if (layer) {
+      var source = /** @type {os.source.Vector} */ (layer.getSource());
+      var color = (this.styleConfig['stroke']) ? this.styleConfig['stroke']['color'] : null;
+
+      if (source && color) {
+        config.setColor = true;
+
+        if (!opt_resetcolor) {
+          config.color = [[items, color]];
+        }
+      }
+
+      config.notifyStyleChange = true;
+    }
+    return config;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  persist(opt_to) {
+    opt_to = super.persist(opt_to);
+    opt_to['styleConfig'] = this.styleConfig;
+
+    return opt_to;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  restore(config) {
+    var styleConfig = /** @type {Object|undefined} */ (config['styleConfig']);
+    if (styleConfig) {
+      // clone the config before doing this to avoid changing the config by reference
+      styleConfig = osObject.unsafeClone(styleConfig);
+
+      //  if the style config is lacking a fill, it's an old config prior to fill support. use the base color with the
+      //  default fill opacity.
+      if (styleConfig['fill'] === undefined) {
+        var color = osStyle.getConfigColor(styleConfig);
+        if (color) {
+          color = osColor.toRgbArray(color);
+          color[3] = osStyle.DEFAULT_FILL_ALPHA;
+          osStyle.setFillColor(styleConfig, osStyle.toRgbaString(color));
+        }
+      }
+
+      // create a new object in the same window context as this object
+      this.styleConfig = {};
+      osObject.merge(styleConfig, this.styleConfig);
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  toXml() {
+    var element = super.toXml();
+
+    var color = /** @type {Array<number>} */ (osStyle.getConfigColor(this.styleConfig, true));
+    if (color) {
+      osXml.appendElement(StyleActionTagName.COLOR, element, osColor.toHexString(color));
+      osXml.appendElement(StyleActionTagName.OPACITY, element,
+          String(color.length > 3 ? color[3] : osStyle.DEFAULT_ALPHA));
+    }
+
+    var fillColor = /** @type {Array<number>} */
+        (osStyle.getConfigColor(this.styleConfig, true, osStyle.StyleField.FILL));
+    if (fillColor) {
+      osXml.appendElement(StyleActionTagName.FILL_COLOR, element,
+          osColor.toHexString(fillColor));
+      osXml.appendElement(StyleActionTagName.FILL_OPACITY, element,
+          String(fillColor.length > 3 ? fillColor[3] : osStyle.DEFAULT_FILL_ALPHA));
+    }
+
+    var size = osStyle.getConfigSize(this.styleConfig);
+    if (size != null) {
+      osXml.appendElement(StyleActionTagName.SIZE, element, String(size));
+    }
+
+    var lineDash = osStyle.getConfigLineDash(this.styleConfig);
+    if (lineDash != null) {
+      osXml.appendElement(StyleActionTagName.LINE_DASH, element, JSON.stringify(lineDash));
+    }
+
+    var shape = this.styleConfig[osStyle.StyleField.SHAPE] || osStyle.DEFAULT_SHAPE;
+    osXml.appendElement(StyleActionTagName.SHAPE, element, String(shape));
+
+    if (shape == osStyle.ShapeType.ICON) {
+      var icon = osStyle.getConfigIcon(this.styleConfig) || os.ui.file.kml.getDefaultIcon();
+      osXml.appendElement(StyleActionTagName.ICON_SRC, element, icon.path);
+    }
+
+    var centerShape = this.styleConfig[osStyle.StyleField.CENTER_SHAPE] || osStyle.DEFAULT_CENTER_SHAPE;
+    osXml.appendElement(StyleActionTagName.CENTER_SHAPE, element, String(centerShape));
+
+    if (centerShape == osStyle.ShapeType.ICON) {
+      var icon = osStyle.getConfigIcon(this.styleConfig) || os.ui.file.kml.getDefaultIcon();
+      osXml.appendElement(StyleActionTagName.ICON_SRC, element, icon.path);
+    }
+
+    var showRotation = this.styleConfig[osStyle.StyleField.SHOW_ROTATION];
+    if (showRotation != null) {
+      osXml.appendElement(StyleActionTagName.SHOW_ROTATION, element, String(showRotation));
+    }
+
+    var rotationColumn = this.styleConfig[osStyle.StyleField.ROTATION_COLUMN];
+    if (rotationColumn != null) {
+      osXml.appendElement(StyleActionTagName.ROTATION_COLUMN, element, String(rotationColumn));
+    }
+
+    if (shape == osStyle.ShapeType.ICON || centerShape == osStyle.ShapeType.ICON) {
+      var icon = osStyle.getConfigIcon(this.styleConfig) || os.ui.file.kml.getDefaultIcon();
+      osXml.appendElement(StyleActionTagName.ICON_OPTIONS, element,
+          JSON.stringify(icon.options));
+    }
+
+    return element;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  fromXml(xml) {
+    var styleConfig = /** @type {!Object} */ (osObject.unsafeClone(osStyle.DEFAULT_VECTOR_CONFIG));
+
+    if (xml) {
+      var colorArr;
+      var color = osXml.getChildValue(xml, StyleActionTagName.COLOR);
+      if (osColor.isColorString(color)) {
+        colorArr = osColor.toRgbArray(color);
+        if (colorArr) {
+          var opacityVal = parseFloat(
+              osXml.getChildValue(xml, StyleActionTagName.OPACITY));
+          var opacity = !isNaN(opacityVal) ? math.clamp(opacityVal, 0, 1) : osStyle.DEFAULT_ALPHA;
+          colorArr[3] = opacity;
+          color = osStyle.toRgbaString(colorArr);
+        }
+
+        osStyle.setConfigColor(styleConfig, color);
+      }
+
+      var fillColor = osXml.getChildValue(xml, StyleActionTagName.FILL_COLOR);
+      if (osColor.isColorString(fillColor)) {
+        var fillColorArr = osColor.toRgbArray(fillColor);
+        if (fillColorArr) {
+          var fillOpacityVal = parseFloat(
+              osXml.getChildValue(xml, StyleActionTagName.FILL_OPACITY));
+          var fillOpacity = !isNaN(fillOpacityVal) ? math.clamp(fillOpacityVal, 0, 1) : osStyle.DEFAULT_FILL_ALPHA;
+          fillColorArr[3] = fillOpacity;
+          fillColor = osStyle.toRgbaString(fillColorArr);
+        }
+      } else if (colorArr) {
+        // No fill color in the XML, so use the base color with 0 opacity
+        var fillColorArr = colorArr.slice();
+        fillColorArr[3] = 0;
+        fillColor = osStyle.toRgbaString(fillColorArr);
+      }
+
+      if (osColor.isColorString(fillColor)) {
+        // Only change the fill color without changing the image fill color too
+        osStyle.setFillColor(styleConfig, fillColor);
+      }
+
+      var size = parseFloat(osXml.getChildValue(xml, StyleActionTagName.SIZE));
+      if (!isNaN(size)) {
+        osStyle.setConfigSize(styleConfig, size);
+      }
+
+      var lineData = osXml.getChildValue(xml, StyleActionTagName.LINE_DASH);
+      if (lineData) {
+        var lineDash = JSON.parse(lineData);
+        if (lineDash && Array.isArray(lineDash)) {
+          osStyle.setConfigLineDash(styleConfig, /** @type {Array<number>} */ (lineDash));
+        }
+      }
+
+      var shape = osXml.getChildValue(xml, StyleActionTagName.SHAPE);
+      if (shape) {
+        styleConfig[osStyle.StyleField.SHAPE] = shape;
+
+        var centerShape = osXml.getChildValue(xml, StyleActionTagName.CENTER_SHAPE);
+        if (centerShape) {
+          styleConfig[osStyle.StyleField.CENTER_SHAPE] = centerShape;
+        }
+        if (shape == osStyle.ShapeType.ICON ||
+            (osStyle.CENTER_LOOKUP[shape] && centerShape === osStyle.ShapeType.ICON)) {
+          var iconSrc = osXml.getChildValue(xml, StyleActionTagName.ICON_SRC);
+          var iconOptions = osXml.getChildValue(xml, StyleActionTagName.ICON_OPTIONS) || '{}';
+          iconOptions = typeof JSON.parse(iconOptions) === 'object' ? JSON.parse(iconOptions) : {};
+          osStyle.setConfigIcon(styleConfig, /** @type {!osx.icon.Icon} */ ({
+            path: iconSrc,
+            options: iconOptions
+          }));
+        }
+      }
+
+      var showRotation = osXml.getChildValue(xml, StyleActionTagName.SHOW_ROTATION);
+      if (showRotation != null) {
+        styleConfig[osStyle.StyleField.SHOW_ROTATION] = Boolean(showRotation);
+      }
+
+      var rotationColumn = osXml.getChildValue(xml, StyleActionTagName.ROTATION_COLUMN);
+      if (rotationColumn != null) {
+        styleConfig[osStyle.StyleField.ROTATION_COLUMN] = rotationColumn;
+      }
+    }
+
+    this.styleConfig = styleConfig;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  renderLegend(options, var_args) {
+    var features = /** @type {Array<!ol.Feature>} */ (arguments[1]);
+    if (features && features.length > 0 && features.some(this.isFeatureStyled, this)) {
+      var entry = arguments[2];
+      if (entry instanceof os.im.action.FilterActionEntry) {
+        // clone so we can modify it freely
+        var config = /** @type {!Object} */ (osObject.unsafeClone(this.styleConfig));
+
+        var geomShape = /** @type {string|undefined} */ (config['shape']) || osStyle.DEFAULT_SHAPE;
+        var shape = osStyle.SHAPES[geomShape];
+        if (shape && shape['config'] && shape['config']['image']) {
+          osStyle.mergeConfig(shape['config'], config);
+
+          // scale with font size
+          if (geomShape == osStyle.ShapeType.ICON) {
+            // icons are normalized to 32px, so scale based on that
+            osObject.set(config, ['image', 'scale'], options.fontSize / 32);
+          } else {
+            osObject.set(config, ['image', 'radius'], Math.round(options.fontSize / 3));
+          }
+        }
+
+        var offsetX = options.showVector ? 10 : 0;
+        legend.queueVectorConfig(config, options, entry.getTitle(), offsetX);
+      }
+    }
+  }
+
+  /**
+   * If a feature is styled by the action.
+   *
+   * @param {!ol.Feature} feature The feature.
+   * @return {boolean} If the feature is using this style action.
+   *
+   * @suppress {accessControls} To allow direct access to feature metadata.
+   */
+  isFeatureStyled(feature) {
+    return feature.values_[StyleAction.FEATURE_ID] === this.uid;
+  }
+}
+osImplements(StyleAction, ILegendRenderer.ID);
 
 
 /**
@@ -64,7 +417,7 @@ os.implements(plugin.im.action.feature.StyleAction, os.legend.ILegendRenderer.ID
  * @type {string}
  * @const
  */
-plugin.im.action.feature.StyleAction.ID = 'featureStyleAction';
+StyleAction.ID = 'featureStyleAction';
 
 
 /**
@@ -72,7 +425,7 @@ plugin.im.action.feature.StyleAction.ID = 'featureStyleAction';
  * @type {string}
  * @const
  */
-plugin.im.action.feature.StyleAction.FEATURE_ID = '_featureStyleAction';
+StyleAction.FEATURE_ID = '_featureStyleAction';
 
 
 /**
@@ -80,7 +433,7 @@ plugin.im.action.feature.StyleAction.FEATURE_ID = '_featureStyleAction';
  * @type {string}
  * @const
  */
-plugin.im.action.feature.StyleAction.LABEL = 'Set Style';
+StyleAction.LABEL = 'Set Style';
 
 
 /**
@@ -88,361 +441,7 @@ plugin.im.action.feature.StyleAction.LABEL = 'Set Style';
  * @type {string}
  * @const
  */
-plugin.im.action.feature.StyleAction.CONFIG_UI = 'featureactionstyleconfig';
+StyleAction.CONFIG_UI = 'featureactionstyleconfig';
 
 
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.StyleAction.prototype.reset = function(items) {
-  var resetItems = [];
-
-  for (var i = 0; i < items.length; i++) {
-    var item = items[i];
-    if (item && this.isFeatureStyled(item)) {
-      item.set(plugin.im.action.feature.StyleAction.FEATURE_ID, undefined);
-      item.set(os.style.StyleField.SHAPE, undefined, true);
-      item.set(os.style.StyleField.CENTER_SHAPE, undefined, true);
-
-      // reset the original feature config
-      var originalConfig = /** @type {Array|Object|undefined} */
-            (item.get(plugin.im.action.feature.StyleType.ORIGINAL));
-      item.set(os.style.StyleType.FEATURE, originalConfig, true);
-      resetItems.push(item);
-    }
-  }
-
-  return (this.configureNotify_(resetItems, true));
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.StyleAction.prototype.execute = function(items) {
-  for (var i = 0; i < items.length; i++) {
-    var item = items[i];
-    if (item) {
-      // get the existing feature config or create a new one
-      var originalConfig = /** @type {Array|Object|undefined} */ (item.get(os.style.StyleType.FEATURE));
-      var featureConfig = os.object.unsafeClone(originalConfig) || {};
-
-      // flag this as a temporary style config
-      featureConfig['temporary'] = true;
-
-      // merge style changes into the feature config and set it on the feature
-      if (Array.isArray(featureConfig)) {
-        for (var j = 0; j < featureConfig.length; j++) {
-          featureConfig[j]['zIndex'] = 10;
-          os.style.mergeConfig(this.styleConfig, featureConfig[j]);
-        }
-      } else {
-        featureConfig['zIndex'] = 10;
-        os.style.mergeConfig(this.styleConfig, featureConfig);
-      }
-
-      item.set(os.style.StyleType.FEATURE, featureConfig, true);
-      item.set(plugin.im.action.feature.StyleAction.FEATURE_ID, this.uid, true);
-
-      if (originalConfig != null && !originalConfig['temporary'] &&
-            item.get(plugin.im.action.feature.StyleType.ORIGINAL) == null) {
-        // if the original config isn't already set, add a reference back to it
-        item.set(plugin.im.action.feature.StyleType.ORIGINAL, originalConfig, true);
-      }
-
-      // set the feature shape
-      var configShape = this.styleConfig[os.style.StyleField.SHAPE];
-      if (configShape && configShape != os.style.DEFAULT_SHAPE) {
-        item.set(os.style.StyleField.SHAPE, configShape, true);
-      }
-
-      // set the feature center shape
-      var configCenterShape = this.styleConfig[os.style.StyleField.CENTER_SHAPE];
-      if (configCenterShape && configCenterShape != os.style.DEFAULT_CENTER_SHAPE) {
-        item.set(os.style.StyleField.CENTER_SHAPE, configCenterShape, true);
-      } else {
-        item.set(os.style.StyleField.CENTER_SHAPE, undefined, true);
-      }
-    }
-  }
-
-  return (this.configureNotify_(items));
-};
-
-
-/**
- * Send out notification(s) to the Layer, Source, and/or ColorModel
- *
- * @param {!Array<!ol.Feature>} items the list of features
- * @param {boolean=} opt_resetcolor true if the color should be reset
- * @return {os.im.action.ImportActionCallbackConfig}
- * @private
- */
-plugin.im.action.feature.StyleAction.prototype.configureNotify_ = function(items, opt_resetcolor) {
-  var config = /** @type {os.im.action.ImportActionCallbackConfig} */ ({
-    labelUpdateShown: false,
-    notifyStyleChange: false,
-    setColor: false,
-    setFeaturesStyle: true
-  });
-
-  var layer = os.feature.getLayer(items[0]);
-  if (layer) {
-    var source = /** @type {os.source.Vector} */ (layer.getSource());
-    var color = (this.styleConfig['stroke']) ? this.styleConfig['stroke']['color'] : null;
-
-    if (source && color) {
-      config.setColor = true;
-
-      if (!opt_resetcolor) {
-        config.color = [[items, color]];
-      }
-    }
-
-    config.notifyStyleChange = true;
-  }
-  return config;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.StyleAction.prototype.persist = function(opt_to) {
-  opt_to = plugin.im.action.feature.StyleAction.base(this, 'persist', opt_to);
-  opt_to['styleConfig'] = this.styleConfig;
-
-  return opt_to;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.StyleAction.prototype.restore = function(config) {
-  var styleConfig = /** @type {Object|undefined} */ (config['styleConfig']);
-  if (styleConfig) {
-    // clone the config before doing this to avoid changing the config by reference
-    styleConfig = os.object.unsafeClone(styleConfig);
-
-    //  if the style config is lacking a fill, it's an old config prior to fill support. use the base color with the
-    //  default fill opacity.
-    if (styleConfig['fill'] === undefined) {
-      var color = os.style.getConfigColor(styleConfig);
-      if (color) {
-        color = os.color.toRgbArray(color);
-        color[3] = os.style.DEFAULT_FILL_ALPHA;
-        os.style.setFillColor(styleConfig, os.style.toRgbaString(color));
-      }
-    }
-
-    // create a new object in the same window context as this object
-    this.styleConfig = {};
-    os.object.merge(styleConfig, this.styleConfig);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.StyleAction.prototype.toXml = function() {
-  var element = plugin.im.action.feature.StyleAction.base(this, 'toXml');
-
-  var color = /** @type {Array<number>} */ (os.style.getConfigColor(this.styleConfig, true));
-  if (color) {
-    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.COLOR, element, os.color.toHexString(color));
-    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.OPACITY, element,
-        String(color.length > 3 ? color[3] : os.style.DEFAULT_ALPHA));
-  }
-
-  var fillColor = /** @type {Array<number>} */
-      (os.style.getConfigColor(this.styleConfig, true, os.style.StyleField.FILL));
-  if (fillColor) {
-    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.FILL_COLOR, element,
-        os.color.toHexString(fillColor));
-    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.FILL_OPACITY, element,
-        String(fillColor.length > 3 ? fillColor[3] : os.style.DEFAULT_FILL_ALPHA));
-  }
-
-  var size = os.style.getConfigSize(this.styleConfig);
-  if (size != null) {
-    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.SIZE, element, String(size));
-  }
-
-  var lineDash = os.style.getConfigLineDash(this.styleConfig);
-  if (lineDash != null) {
-    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.LINE_DASH, element, JSON.stringify(lineDash));
-  }
-
-  var shape = this.styleConfig[os.style.StyleField.SHAPE] || os.style.DEFAULT_SHAPE;
-  os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.SHAPE, element, String(shape));
-
-  if (shape == os.style.ShapeType.ICON) {
-    var icon = os.style.getConfigIcon(this.styleConfig) || os.ui.file.kml.getDefaultIcon();
-    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.ICON_SRC, element, icon.path);
-  }
-
-  var centerShape = this.styleConfig[os.style.StyleField.CENTER_SHAPE] || os.style.DEFAULT_CENTER_SHAPE;
-  os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.CENTER_SHAPE, element, String(centerShape));
-
-  if (centerShape == os.style.ShapeType.ICON) {
-    var icon = os.style.getConfigIcon(this.styleConfig) || os.ui.file.kml.getDefaultIcon();
-    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.ICON_SRC, element, icon.path);
-  }
-
-  var showRotation = this.styleConfig[os.style.StyleField.SHOW_ROTATION];
-  if (showRotation != null) {
-    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.SHOW_ROTATION, element, String(showRotation));
-  }
-
-  var rotationColumn = this.styleConfig[os.style.StyleField.ROTATION_COLUMN];
-  if (rotationColumn != null) {
-    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.ROTATION_COLUMN, element, String(rotationColumn));
-  }
-
-  if (shape == os.style.ShapeType.ICON || centerShape == os.style.ShapeType.ICON) {
-    var icon = os.style.getConfigIcon(this.styleConfig) || os.ui.file.kml.getDefaultIcon();
-    os.xml.appendElement(plugin.im.action.feature.StyleActionTagName.ICON_OPTIONS, element,
-        JSON.stringify(icon.options));
-  }
-
-  return element;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.StyleAction.prototype.fromXml = function(xml) {
-  var styleConfig = /** @type {!Object} */ (os.object.unsafeClone(os.style.DEFAULT_VECTOR_CONFIG));
-
-  if (xml) {
-    var colorArr;
-    var color = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.COLOR);
-    if (os.color.isColorString(color)) {
-      colorArr = os.color.toRgbArray(color);
-      if (colorArr) {
-        var opacityVal = parseFloat(
-            os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.OPACITY));
-        var opacity = !isNaN(opacityVal) ? goog.math.clamp(opacityVal, 0, 1) : os.style.DEFAULT_ALPHA;
-        colorArr[3] = opacity;
-        color = os.style.toRgbaString(colorArr);
-      }
-
-      os.style.setConfigColor(styleConfig, color);
-    }
-
-    var fillColor = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.FILL_COLOR);
-    if (os.color.isColorString(fillColor)) {
-      var fillColorArr = os.color.toRgbArray(fillColor);
-      if (fillColorArr) {
-        var fillOpacityVal = parseFloat(
-            os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.FILL_OPACITY));
-        var fillOpacity = !isNaN(fillOpacityVal) ? goog.math.clamp(fillOpacityVal, 0, 1) : os.style.DEFAULT_FILL_ALPHA;
-        fillColorArr[3] = fillOpacity;
-        fillColor = os.style.toRgbaString(fillColorArr);
-      }
-    } else if (colorArr) {
-      // No fill color in the XML, so use the base color with 0 opacity
-      var fillColorArr = colorArr.slice();
-      fillColorArr[3] = 0;
-      fillColor = os.style.toRgbaString(fillColorArr);
-    }
-
-    if (os.color.isColorString(fillColor)) {
-      // Only change the fill color without changing the image fill color too
-      os.style.setFillColor(styleConfig, fillColor);
-    }
-
-    var size = parseFloat(os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.SIZE));
-    if (!isNaN(size)) {
-      os.style.setConfigSize(styleConfig, size);
-    }
-
-    var lineData = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.LINE_DASH);
-    if (lineData) {
-      var lineDash = JSON.parse(lineData);
-      if (lineDash && Array.isArray(lineDash)) {
-        os.style.setConfigLineDash(styleConfig, /** @type {Array<number>} */ (lineDash));
-      }
-    }
-
-    var shape = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.SHAPE);
-    if (shape) {
-      styleConfig[os.style.StyleField.SHAPE] = shape;
-
-      var centerShape = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.CENTER_SHAPE);
-      if (centerShape) {
-        styleConfig[os.style.StyleField.CENTER_SHAPE] = centerShape;
-      }
-      if (shape == os.style.ShapeType.ICON ||
-          (os.style.CENTER_LOOKUP[shape] && centerShape === os.style.ShapeType.ICON)) {
-        var iconSrc = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.ICON_SRC);
-        var iconOptions = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.ICON_OPTIONS) || '{}';
-        iconOptions = typeof JSON.parse(iconOptions) === 'object' ? JSON.parse(iconOptions) : {};
-        os.style.setConfigIcon(styleConfig, /** @type {!osx.icon.Icon} */ ({
-          path: iconSrc,
-          options: iconOptions
-        }));
-      }
-    }
-
-    var showRotation = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.SHOW_ROTATION);
-    if (showRotation != null) {
-      styleConfig[os.style.StyleField.SHOW_ROTATION] = Boolean(showRotation);
-    }
-
-    var rotationColumn = os.xml.getChildValue(xml, plugin.im.action.feature.StyleActionTagName.ROTATION_COLUMN);
-    if (rotationColumn != null) {
-      styleConfig[os.style.StyleField.ROTATION_COLUMN] = rotationColumn;
-    }
-  }
-
-  this.styleConfig = styleConfig;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.StyleAction.prototype.renderLegend = function(options, var_args) {
-  var features = /** @type {Array<!ol.Feature>} */ (arguments[1]);
-  if (features && features.length > 0 && features.some(this.isFeatureStyled, this)) {
-    var entry = arguments[2];
-    if (entry instanceof os.im.action.FilterActionEntry) {
-      // clone so we can modify it freely
-      var config = /** @type {!Object} */ (os.object.unsafeClone(this.styleConfig));
-
-      var geomShape = /** @type {string|undefined} */ (config['shape']) || os.style.DEFAULT_SHAPE;
-      var shape = os.style.SHAPES[geomShape];
-      if (shape && shape['config'] && shape['config']['image']) {
-        os.style.mergeConfig(shape['config'], config);
-
-        // scale with font size
-        if (geomShape == os.style.ShapeType.ICON) {
-          // icons are normalized to 32px, so scale based on that
-          os.object.set(config, ['image', 'scale'], options.fontSize / 32);
-        } else {
-          os.object.set(config, ['image', 'radius'], Math.round(options.fontSize / 3));
-        }
-      }
-
-      var offsetX = options.showVector ? 10 : 0;
-      os.legend.queueVectorConfig(config, options, entry.getTitle(), offsetX);
-    }
-  }
-};
-
-
-/**
- * If a feature is styled by the action.
- *
- * @param {!ol.Feature} feature The feature.
- * @return {boolean} If the feature is using this style action.
- *
- * @suppress {accessControls} To allow direct access to feature metadata.
- */
-plugin.im.action.feature.StyleAction.prototype.isFeatureStyled = function(feature) {
-  return feature.values_[plugin.im.action.feature.StyleAction.FEATURE_ID] === this.uid;
-};
+exports = StyleAction;
