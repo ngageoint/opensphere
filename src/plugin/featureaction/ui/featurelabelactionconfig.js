@@ -17,8 +17,9 @@ const osObject = goog.require('os.object');
 const osStyle = goog.require('os.style');
 const label = goog.require('os.style.label');
 const Module = goog.require('os.ui.Module');
-const LabelAction = goog.require('plugin.im.action.feature.LabelAction');
 const ActionConfigCtrl = goog.require('plugin.im.action.feature.ui.ActionConfigCtrl');
+
+const LabelAction = goog.requireType('plugin.im.action.feature.LabelAction');
 
 
 /**
@@ -36,10 +37,16 @@ const directive = () => ({
 
 
 /**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'featurelabelaction';
+
+
+/**
  * Add the directive to the module.
  */
-Module.directive(LabelAction.CONFIG_UI, [directive]);
-
+Module.directive(directiveTag, [directive]);
 
 
 /**
@@ -104,7 +111,7 @@ class Controller extends ActionConfigCtrl {
     if (this.action && this.action.labelConfig) {
       this.labelConfig = /** @type {!Object} */ (osObject.unsafeClone(this.action.labelConfig));
     } else {
-      this.labelConfig = /** @type {!Object} */ (osObject.unsafeClone(LabelAction.DEFAULT_CONFIG));
+      this.labelConfig = /** @type {!Object} */ (osObject.unsafeClone(defaultConfig));
     }
 
     $scope.$on('labelColor.change', this.onColorChange.bind(this));
@@ -288,7 +295,26 @@ class Controller extends ActionConfigCtrl {
   }
 }
 
+
+/**
+ * The default config for the action.
+ * @type {!Object}
+ */
+let defaultConfig = {};
+
+
+/**
+ * Set the default config for the action.
+ * @param {!Object} config The config.
+ */
+const setDefaultConfig = (config) => {
+  defaultConfig = config;
+};
+
+
 exports = {
   Controller,
-  directive
+  directive,
+  directiveTag,
+  setDefaultConfig
 };

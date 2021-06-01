@@ -4,6 +4,7 @@ goog.module.declareLegacyNamespace();
 const AbstractImportAction = goog.require('os.im.action.AbstractImportAction');
 const osObject = goog.require('os.object');
 const osXml = goog.require('os.xml');
+const {directiveTag: configUi, setDefaultConfig} = goog.require('plugin.im.action.feature.ui.SoundConfigUI');
 
 
 /**
@@ -38,14 +39,13 @@ class SoundAction extends AbstractImportAction {
     this.id = SoundAction.ID;
     this.label = SoundAction.LABEL;
     this.xmlType = SoundAction.ID;
-    this.configUI = SoundAction.CONFIG_UI;
+    this.configUI = configUi;
 
     /**
      * The feature sound config.
      * @type {!Object}
      */
-    this.soundConfig = /** @type {!Object} */ (osObject.unsafeClone(
-        SoundAction.DEFAULT_CONFIG));
+    this.soundConfig = /** @type {!Object} */ (osObject.unsafeClone(SoundAction.DEFAULT_CONFIG));
 
     this['sounds'] = os.audio.AudioManager.getInstance().getSounds();
 
@@ -118,10 +118,8 @@ class SoundAction extends AbstractImportAction {
         SoundAction.DEFAULT_CONFIG));
 
     if (xml) {
-      var sound = osXml.getChildValue(xml,
-          SoundActionTagName.SOUND);
-      var delay = osXml.getChildValue(xml,
-          SoundActionTagName.DELAY);
+      var sound = osXml.getChildValue(xml, SoundActionTagName.SOUND);
+      var delay = osXml.getChildValue(xml, SoundActionTagName.DELAY);
 
       soundConfig['sound'] = String(sound);
       soundConfig['playDelay'] = Number(delay);
@@ -162,14 +160,6 @@ SoundAction.LABEL = 'Set Sound';
 
 
 /**
- * Action edit UI.
- * @type {string}
- * @const
- */
-SoundAction.CONFIG_UI = 'featureactionsoundconfig';
-
-
-/**
  * The default sound configuration.
  * @type {!Object}
  * @const
@@ -178,6 +168,7 @@ SoundAction.DEFAULT_CONFIG = {
   'sound': '',
   'playDelay': 30
 };
+setDefaultConfig(SoundAction.DEFAULT_CONFIG);
 
 
 exports = SoundAction;

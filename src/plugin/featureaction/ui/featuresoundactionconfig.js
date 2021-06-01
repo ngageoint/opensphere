@@ -8,8 +8,9 @@ const {ROOT} = goog.require('os');
 const AudioManager = goog.require('os.audio.AudioManager');
 const osObject = goog.require('os.object');
 const Module = goog.require('os.ui.Module');
-const SoundAction = goog.require('plugin.im.action.feature.SoundAction');
 const ActionConfigCtrl = goog.require('plugin.im.action.feature.ui.ActionConfigCtrl');
+
+const SoundAction = goog.requireType('plugin.im.action.feature.SoundAction');
 
 
 /**
@@ -28,10 +29,16 @@ const directive = () => ({
 
 
 /**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'featureactionsoundconfig';
+
+
+/**
  * Add the directive to the module.
  */
-Module.directive(SoundAction.CONFIG_UI,
-    [directive]);
+Module.directive(directiveTag, [directive]);
 
 
 
@@ -55,11 +62,9 @@ class Controller extends ActionConfigCtrl {
     this['sounds'] = AudioManager.getInstance().getSounds();
 
     if (this.action && this.action.soundConfig) {
-      this.soundConfig = /** @type {!Object} */ (osObject.unsafeClone(
-          this.action.soundConfig));
+      this.soundConfig = /** @type {!Object} */ (osObject.unsafeClone(this.action.soundConfig));
     } else {
-      this.soundConfig = /** @type {!Object} */ (osObject.unsafeClone(
-          SoundAction.DEFAULT_CONFIG));
+      this.soundConfig = /** @type {!Object} */ (osObject.unsafeClone(defaultConfig));
     }
 
     this.initialize();
@@ -111,7 +116,24 @@ class Controller extends ActionConfigCtrl {
   }
 }
 
+/**
+ * The default config for the action.
+ * @type {!Object}
+ */
+let defaultConfig = {};
+
+
+/**
+ * Set the default config for the action.
+ * @param {!Object} config The config.
+ */
+const setDefaultConfig = (config) => {
+  defaultConfig = config;
+};
+
 exports = {
   Controller,
-  directive
+  directive,
+  directiveTag,
+  setDefaultConfig
 };

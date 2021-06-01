@@ -11,6 +11,7 @@ const ILegendRenderer = goog.require('os.legend.ILegendRenderer');
 const osObject = goog.require('os.object');
 const osStyle = goog.require('os.style');
 const osXml = goog.require('os.xml');
+const {directiveTag: configUi} = goog.require('plugin.im.action.feature.ui.StyleConfigUI');
 
 const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
 
@@ -51,7 +52,7 @@ class StyleAction extends AbstractImportAction {
 
     this.id = StyleAction.ID;
     this.label = StyleAction.LABEL;
-    this.configUI = StyleAction.CONFIG_UI;
+    this.configUI = configUi;
     this.xmlType = StyleAction.ID;
 
     /**
@@ -434,14 +435,6 @@ StyleAction.FEATURE_ID = '_featureStyleAction';
  * @const
  */
 StyleAction.LABEL = 'Set Style';
-
-
-/**
- * Action edit UI.
- * @type {string}
- * @const
- */
-StyleAction.CONFIG_UI = 'featureactionstyleconfig';
 
 
 exports = StyleAction;

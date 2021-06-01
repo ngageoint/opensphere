@@ -11,7 +11,7 @@ const osStyle = goog.require('os.style');
 const osStyleLabel = goog.require('os.style.label');
 const FeatureEditCtrl = goog.require('os.ui.FeatureEditCtrl');
 const osXml = goog.require('os.xml');
-const {directiveTag: configUi} = goog.require('plugin.im.action.feature.ui.LabelConfigUI');
+const {directiveTag: configUi, setDefaultConfig} = goog.require('plugin.im.action.feature.ui.LabelConfigUI');
 
 const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
 
@@ -28,7 +28,6 @@ const LabelActionTagName = {
   LABELS: 'labels',
   SIZE: 'size'
 };
-
 
 
 /**
@@ -322,6 +321,7 @@ LabelAction.DEFAULT_CONFIG = {
   'customName': '',
   'customValue': ''
 };
+setDefaultConfig(LabelAction.DEFAULT_CONFIG);
 
 
 exports = LabelAction;

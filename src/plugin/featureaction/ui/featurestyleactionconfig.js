@@ -12,8 +12,10 @@ const Module = goog.require('os.ui.Module');
 const kml = goog.require('os.ui.file.kml');
 const IconPickerEventType = goog.require('os.ui.icon.IconPickerEventType');
 const EventType = goog.require('os.ui.im.action.EventType');
-const StyleAction = goog.require('plugin.im.action.feature.StyleAction');
 const ActionConfigCtrl = goog.require('plugin.im.action.feature.ui.ActionConfigCtrl');
+
+const StyleAction = goog.requireType('plugin.im.action.feature.StyleAction');
+
 
 /**
  * Directive to configure a feature style action.
@@ -37,11 +39,16 @@ const directive = () => ({
 
 
 /**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'featureactionstyleconfig';
+
+
+/**
  * Add the directive to the module.
  */
-Module.directive(StyleAction.CONFIG_UI,
-    [directive]);
-
+Module.directive(directiveTag, [directive]);
 
 
 /**
@@ -551,5 +558,6 @@ class Controller extends ActionConfigCtrl {
 
 exports = {
   Controller,
-  directive
+  directive,
+  directiveTag
 };

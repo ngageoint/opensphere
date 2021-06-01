@@ -17,9 +17,6 @@ const faMenu = goog.require('plugin.im.action.feature.menu');
 const node = goog.require('plugin.im.action.feature.node');
 const {directiveTag: legendSettingsUi} = goog.require('plugin.im.action.feature.ui.legendSettingsDirective');
 
-goog.require('plugin.im.action.feature.ui.labelConfigDirective');
-goog.require('plugin.im.action.feature.ui.soundConfigDirective');
-goog.require('plugin.im.action.feature.ui.styleConfigDirective');
 
 /**
  * Plugin to create actions that apply to imported features.
