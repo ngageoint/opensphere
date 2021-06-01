@@ -20,7 +20,10 @@ const {
 } = goog.require('plugin.im.action.feature');
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const ITreeNode = goog.requireType('os.structs.ITreeNode');
+const FilterActionNode = goog.requireType('os.ui.im.action.FilterActionNode');
 const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const layerMenu = goog.requireType('os.ui.menu.layer');
 
 
 /**
@@ -128,8 +131,8 @@ const dispose = function() {
 /**
  * Gets the filter action nodes out of an array of nodes.
  *
- * @param {Array<os.structs.ITreeNode>} context The array of nodes.
- * @return {!Array<os.ui.im.action.FilterActionNode>} The array of filter action nodes.
+ * @param {Array<ITreeNode>} context The array of nodes.
+ * @return {!Array<FilterActionNode>} The array of filter action nodes.
  */
 const getFeatureActionNodes = function(context) {
   var filterActionNodes = [];
@@ -143,7 +146,7 @@ const getFeatureActionNodes = function(context) {
 /**
  * Show the feature action node menu item.
  *
- * @param {os.ui.menu.layer.Context} context The menu context.
+ * @param {layerMenu.Context} context The menu context.
  * @this {MenuItem}
  */
 const visibleIfSelected_ = function(context) {
@@ -154,7 +157,7 @@ const visibleIfSelected_ = function(context) {
 /**
  * Show the feature action node menu item if a single item is selected.
  *
- * @param {os.ui.menu.layer.Context} context The menu context.
+ * @param {layerMenu.Context} context The menu context.
  * @this {MenuItem}
  */
 const visibleIfOneSelected_ = function(context) {
@@ -165,7 +168,7 @@ const visibleIfOneSelected_ = function(context) {
 /**
  * Show the feature action node menu item if multiple items are selected.
  *
- * @param {os.ui.menu.layer.Context} context The menu context.
+ * @param {layerMenu.Context} context The menu context.
  * @this {MenuItem}
  */
 const visibleIfMultiSelected_ = function(context) {
@@ -176,7 +179,7 @@ const visibleIfMultiSelected_ = function(context) {
 /**
  * Show the feature action node menu item if can toggle it on.
  *
- * @param {os.ui.menu.layer.Context} context The menu context.
+ * @param {layerMenu.Context} context The menu context.
  * @this {MenuItem}
  */
 const visibleIfCanToggleOn_ = function(context) {
@@ -202,7 +205,7 @@ const visibleIfCanToggleOn_ = function(context) {
 /**
  * Show the feature action node menu item if can toggle it off.
  *
- * @param {os.ui.menu.layer.Context} context The menu context.
+ * @param {layerMenu.Context} context The menu context.
  * @this {MenuItem}
  */
 const visibleIfCanToggleOff_ = function(context) {
@@ -228,7 +231,7 @@ const visibleIfCanToggleOff_ = function(context) {
 /**
  * Handle the Copy menu event from the feature action node menu.
  *
- * @param {!MenuEvent<os.ui.menu.layer.Context>} event The menu event.
+ * @param {!MenuEvent<layerMenu.Context>} event The menu event.
  */
 const onCopyEvent_ = function(event) {
   var context = event.getContext();
@@ -262,7 +265,7 @@ const onCopyEvent_ = function(event) {
 /**
  * Handle the Edit menu event from the feature action node menu.
  *
- * @param {!MenuEvent<os.ui.menu.layer.Context>} event The menu event.
+ * @param {!MenuEvent<layerMenu.Context>} event The menu event.
  */
 const onEditEvent_ = function(event) {
   var context = event.getContext();
@@ -278,7 +281,7 @@ const onEditEvent_ = function(event) {
 /**
  * Handle the Export menu event from the feature action node menu.
  *
- * @param {!MenuEvent<os.ui.menu.layer.Context>} event The menu event.
+ * @param {!MenuEvent<layerMenu.Context>} event The menu event.
  */
 const onExportEvent_ = function(event) {
   var context = event.getContext();
@@ -305,7 +308,7 @@ const onExportEvent_ = function(event) {
 /**
  * Handle the Remove menu event from the feature action node menu.
  *
- * @param {!MenuEvent<os.ui.menu.layer.Context>} event The menu event.
+ * @param {!MenuEvent<layerMenu.Context>} event The menu event.
  */
 const onRemoveEvent_ = function(event) {
   var context = event.getContext();
@@ -322,7 +325,7 @@ const onRemoveEvent_ = function(event) {
 /**
  * Handle the Remove Selected menu event from the feature action node menu.
  *
- * @param {!MenuEvent<os.ui.menu.layer.Context>} event The menu event.
+ * @param {!MenuEvent<layerMenu.Context>} event The menu event.
  */
 const onRemoveSelectedEvent_ = function(event) {
   var context = event.getContext();
@@ -357,7 +360,7 @@ const onRemoveSelectedEvent_ = function(event) {
 /**
  * Handle the Toggle On menu event from the feature action node menu.
  *
- * @param {!MenuEvent<os.ui.menu.layer.Context>} event The menu event.
+ * @param {!MenuEvent<layerMenu.Context>} event The menu event.
  */
 const onToggleOnEvent_ = function(event) {
   var context = event.getContext();
@@ -372,7 +375,7 @@ const onToggleOnEvent_ = function(event) {
 /**
  * Handle the Toggle Off menu event from the feature action node menu.
  *
- * @param {!MenuEvent<os.ui.menu.layer.Context>} event The menu event.
+ * @param {!MenuEvent<layerMenu.Context>} event The menu event.
  */
 const onToggleOffEvent_ = function(event) {
   var context = event.getContext();

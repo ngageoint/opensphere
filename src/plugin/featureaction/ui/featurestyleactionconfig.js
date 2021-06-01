@@ -188,7 +188,7 @@ class Controller extends ActionConfigCtrl {
         var dm = DataManager.getInstance();
         var source = dm.getSource(this.type);
         if (instanceOf(source, VectorSource.NAME)) {
-          source = /** @type {!os.source.Vector} */ (source);
+          source = /** @type {!VectorSource} */ (source);
 
           var shapes = googObject.getKeys(osStyle.SHAPES);
           this.scope['shapes'] = googArray.filter(shapes, source.supportsShape, source);

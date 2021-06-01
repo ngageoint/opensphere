@@ -10,10 +10,7 @@ const xml = goog.require('os.file.mime.xml');
  */
 const TYPE = xml.TYPE + '; subtype=FEATUREACTIONS';
 
-mime.register(
-    TYPE,
-    xml.createDetect(/^featureActions$/, /\/state\//i),
-    0, xml.TYPE);
+mime.register(TYPE, xml.createDetect(/^featureActions$/, /\/state\//i), 0, xml.TYPE);
 
 exports = {
   TYPE

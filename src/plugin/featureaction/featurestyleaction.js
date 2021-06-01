@@ -13,7 +13,7 @@ const osObject = goog.require('os.object');
 const osStyle = goog.require('os.style');
 const kml = goog.require('os.ui.file.kml');
 const osXml = goog.require('os.xml');
-const pluginImActionFeature = goog.require('plugin.im.action.feature');
+const featureAction = goog.require('plugin.im.action.feature');
 const {directiveTag: configUi} = goog.require('plugin.im.action.feature.ui.StyleConfigUI');
 
 const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
@@ -79,8 +79,7 @@ class StyleAction extends AbstractImportAction {
         item.set(osStyle.StyleField.CENTER_SHAPE, undefined, true);
 
         // reset the original feature config
-        var originalConfig = /** @type {Array|Object|undefined} */
-              (item.get(pluginImActionFeature.StyleType.ORIGINAL));
+        var originalConfig = /** @type {Array|Object|undefined} */ (item.get(featureAction.StyleType.ORIGINAL));
         item.set(osStyle.StyleType.FEATURE, originalConfig, true);
         resetItems.push(item);
       }
@@ -118,9 +117,9 @@ class StyleAction extends AbstractImportAction {
         item.set(StyleAction.FEATURE_ID, this.uid, true);
 
         if (originalConfig != null && !originalConfig['temporary'] &&
-              item.get(pluginImActionFeature.StyleType.ORIGINAL) == null) {
+              item.get(featureAction.StyleType.ORIGINAL) == null) {
           // if the original config isn't already set, add a reference back to it
-          item.set(pluginImActionFeature.StyleType.ORIGINAL, originalConfig, true);
+          item.set(featureAction.StyleType.ORIGINAL, originalConfig, true);
         }
 
         // set the feature shape

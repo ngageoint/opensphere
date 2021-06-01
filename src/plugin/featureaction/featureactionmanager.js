@@ -22,13 +22,14 @@ const featureAction = goog.require('plugin.im.action.feature');
 const Entry = goog.require('plugin.im.action.feature.Entry');
 const TagName = goog.require('plugin.im.action.feature.TagName');
 
+const Feature = goog.requireType('ol.Feature');
 const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
 
 
 /**
- * Manager for {@link ol.Feature} import actions.
+ * Manager for {@link Feature} import actions.
  *
- * @extends {ImportActionManager<ol.Feature>}
+ * @extends {ImportActionManager<Feature>}
  */
 class Manager extends ImportActionManager {
   /**
@@ -213,7 +214,7 @@ class Manager extends ImportActionManager {
     if (source) {
       switch (p) {
         case PropertyChange.PREPROCESS_FEATURES:
-          var features = /** @type {Array<!ol.Feature>|undefined} */ (event.getNewValue());
+          var features = /** @type {Array<!Feature>|undefined} */ (event.getNewValue());
           if (features && features.length > 0) {
             this.processItems(source.getId(), features);
           }

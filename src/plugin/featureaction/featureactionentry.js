@@ -4,11 +4,13 @@ goog.module.declareLegacyNamespace();
 const osFeature = goog.require('os.feature');
 const FilterActionEntry = goog.require('os.im.action.FilterActionEntry');
 
+const Feature = goog.requireType('ol.Feature');
+
 
 /**
  * Filter entry that performs actions on matched features.
  *
- * @extends {FilterActionEntry<ol.Feature>}
+ * @extends {FilterActionEntry<Feature>}
  */
 class Entry extends FilterActionEntry {
   /**

@@ -23,6 +23,7 @@ const editFiltersDirective = goog.require('os.ui.filter.ui.editFiltersDirective'
 const EditFilterActionCtrl = goog.require('os.ui.im.action.EditFilterActionCtrl');
 const EventType = goog.require('os.ui.im.action.EventType');
 
+const OLStyle = goog.requireType('ol.style.Style');
 const LabelAction = goog.requireType('plugin.im.action.feature.LabelAction');
 const SoundAction = goog.requireType('plugin.im.action.feature.SoundAction');
 const StyleAction = goog.requireType('plugin.im.action.feature.StyleAction');
@@ -283,7 +284,7 @@ class Controller extends EditFilterActionCtrl {
 
           // grab the label style
           osStyle.setFeatureStyle(feature);
-          var styleArr = /** @type {Array<!ol.style.Style>} */ (feature.getStyle());
+          var styleArr = /** @type {Array<!OLStyle>} */ (feature.getStyle());
           if (styleArr != null && styleArr.length > 1) {
             // only showing the first one since we are just previewing the style
             labelRender.drawFeature(feature, styleArr[1]);

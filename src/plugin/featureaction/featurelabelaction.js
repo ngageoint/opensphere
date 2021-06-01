@@ -12,7 +12,7 @@ const osStyle = goog.require('os.style');
 const osStyleLabel = goog.require('os.style.label');
 const FeatureEditCtrl = goog.require('os.ui.FeatureEditCtrl');
 const osXml = goog.require('os.xml');
-const pluginImActionFeature = goog.require('plugin.im.action.feature');
+const featureAction = goog.require('plugin.im.action.feature');
 const {directiveTag: configUi, setDefaultConfig} = goog.require('plugin.im.action.feature.ui.LabelConfigUI');
 
 const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
@@ -66,8 +66,7 @@ class LabelAction extends AbstractImportAction {
       var item = items[i];
       if (item && this.isFeatureLabeled(item)) {
         // reset the original feature config
-        var originalConfig = /** @type {Array|Object|undefined} */
-            (item.get(pluginImActionFeature.StyleType.ORIGINAL));
+        var originalConfig = /** @type {Array|Object|undefined} */ (item.get(featureAction.StyleType.ORIGINAL));
         item.set(osStyle.StyleType.FEATURE, originalConfig, true);
       }
     }
@@ -127,9 +126,9 @@ class LabelAction extends AbstractImportAction {
           FeatureEditCtrl.persistFeatureLabels(item);
 
           if (originalConfig != null && !originalConfig['temporary'] &&
-            item.get(pluginImActionFeature.StyleType.ORIGINAL) == null) {
+            item.get(featureAction.StyleType.ORIGINAL) == null) {
             // if the original config isn't already set, add a reference back to it
-            item.set(pluginImActionFeature.StyleType.ORIGINAL, originalConfig, true);
+            item.set(featureAction.StyleType.ORIGINAL, originalConfig, true);
           }
         }
 

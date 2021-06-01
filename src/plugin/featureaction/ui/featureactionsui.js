@@ -12,6 +12,11 @@ const featureAction = goog.require('plugin.im.action.feature');
 const FeatureActionManager = goog.require('plugin.im.action.feature.Manager');
 const node = goog.require('plugin.im.action.feature.node');
 
+const Feature = goog.requireType('ol.Feature');
+const DataEvent = goog.requireType('os.data.event.DataEvent');
+const Menu = goog.requireType('os.ui.menu.Menu');
+const layerMenu = goog.requireType('os.ui.menu.layer');
+
 
 /**
  * The featureactions directive
@@ -43,7 +48,7 @@ Module.directive('featureactions', [directive]);
 /**
  * Controller function for the featureactions directive.
  *
- * @extends {FilterActionsCtrl<ol.Feature>}
+ * @extends {FilterActionsCtrl<Feature>}
  * @unrestricted
  */
 class Controller extends FilterActionsCtrl {
@@ -58,7 +63,7 @@ class Controller extends FilterActionsCtrl {
 
     /**
      * The context menu for feature action nodes.
-     * @type {os.ui.menu.Menu<os.ui.menu.layer.Context>|undefined}
+     * @type {Menu<layerMenu.Context>|undefined}
      */
     this['contextMenu'] = node.MENU;
 
@@ -88,7 +93,7 @@ class Controller extends FilterActionsCtrl {
   /**
    * Close the feature action window if the source was removed
    *
-   * @param {os.data.event.DataEvent} event
+   * @param {DataEvent} event
    * @private
    */
   onSourceRemoved_(event) {

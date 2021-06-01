@@ -12,6 +12,9 @@ const layerMenu = goog.require('os.ui.menu.layer');
 const featureAction = goog.require('plugin.im.action.feature');
 const launchForLayer = goog.require('plugin.im.action.feature.ui.launchForLayer');
 
+const MenuItem = goog.requireType('os.ui.menu.MenuItem');
+const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+
 
 /**
  * Sets up import actions in the layer menu.
@@ -53,7 +56,7 @@ const layerDispose = function() {
  * If the action arguments support feature actions.
  *
  * @param {layerMenu.Context} context The menu context.
- * @this {os.ui.menu.MenuItem}
+ * @this {MenuItem}
  */
 const visibleIfSupported = function(context) {
   this.visible = false;
@@ -72,7 +75,7 @@ const visibleIfSupported = function(context) {
 /**
  * Handle import action event from the layer menu.
  *
- * @param {!os.ui.menu.MenuEvent<layerMenu.Context>} event The menu event.
+ * @param {!MenuEvent<layerMenu.Context>} event The menu event.
  * @private
  */
 const handleLayerAction = function(event) {
