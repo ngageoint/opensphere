@@ -1232,19 +1232,18 @@ os.geo.jsts.validate = function(geometry, opt_quiet, opt_undefinedIfInvalid) {
         jstsPoly.normalize();
         jstsValidPoly = jstsPoly;
       } else if (jstsPoly instanceof jsts.geom.Polygon) {
-        var polygonizer = new jsts.operation.polygonize.Polygonizer();
-        os.geo.jsts.addPolygon(jstsPoly, polygonizer);
-
-        jstsValidPoly = os.geo.jsts.toPolygonGeometry(polygonizer.getPolygons(), jstsPoly.getFactory());
+        jstsValidPoly = os.geo.jsts.polygonize(jstsPoly);
       } else if (jstsPoly instanceof jsts.geom.MultiPolygon) {
-        // this code block is effectively dead when reached from os.feature.validateGeometries but should be kept around
-        // for potential stricter use elsewhere
         var polygonizer = new jsts.operation.polygonize.Polygonizer();
         for (var n = jstsPoly.getNumGeometries(); n-- > 0;) {
           os.geo.jsts.addPolygon(jstsPoly.getGeometryN(n), polygonizer);
         }
-
         jstsValidPoly = os.geo.jsts.toPolygonGeometry(polygonizer.getPolygons(), jstsPoly.getFactory());
+
+        if (jstsValidPoly === null) {
+          // Retry polygonizer with the union of everything inside the MultiPolygon
+          jstsValidPoly = os.geo.jsts.polygonize(/** @type {jsts.geom.Polygon} */ (jstsPoly.union()));
+        }
       }
 
       if (jstsValidPoly && jstsValidPoly.isValid()) {
@@ -1270,6 +1269,21 @@ os.geo.jsts.validate = function(geometry, opt_quiet, opt_undefinedIfInvalid) {
 
   // default to returning undefined
   return opt_undefinedIfInvalid ? undefined : geometry;
+};
+
+
+/**
+ * Polygonize helper for a single polygon geometry.
+ * Creates a Polygonizer and attempts to generate a valid a polygon from the input.
+ *
+ * @param {jsts.geom.Polygon} polygon to validate
+ * @return {jsts.geom.Polygon|jsts.geom.MultiPolygon} null if there were no polygons, the polygon if there was only one,
+ *                                                     or a MultiPolygon containing all polygons otherwise.
+ */
+os.geo.jsts.polygonize = function(polygon) {
+  var polygonizer = new jsts.operation.polygonize.Polygonizer();
+  os.geo.jsts.addPolygon(polygon, polygonizer);
+  return os.geo.jsts.toPolygonGeometry(polygonizer.getPolygons(), polygon.getFactory());
 };
 
 
