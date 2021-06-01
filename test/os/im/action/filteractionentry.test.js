@@ -1,8 +1,17 @@
+goog.require('goog.functions');
 goog.require('os.im.action.FilterActionEntry');
-goog.require('os.im.action.MockAction');
+goog.require('os.im.action.ImportActionManager');
+goog.require('os.im.action.mock');
+goog.require('os.im.action.mock.MockAction');
 
 
 describe('os.im.action.FilterActionEntry', function() {
+  const functions = goog.module.get('goog.functions');
+  const FilterActionEntry = goog.module.get('os.im.action.FilterActionEntry');
+  const ImportActionManager = goog.module.get('os.im.action.ImportActionManager');
+  const {getMockManager} = goog.module.get('os.im.action.mock');
+  const MockAction = goog.module.get('os.im.action.mock.MockAction');
+
   var filterXml = '<And xmlns="http://www.opengis.net/ogc" namehint="Test Keep Filter Name">' +
       '<PropertyIsLike escape="\\" singleChar="." wildCard="*">' +
       '<PropertyName>PROPERTY</PropertyName>' +
@@ -36,37 +45,37 @@ describe('os.im.action.FilterActionEntry', function() {
   };
 
   it('should initialize correctly', function() {
-    var fe = new os.im.action.FilterActionEntry();
+    var fe = new FilterActionEntry();
 
     expect(typeof fe.getId() === 'string').toBe(true);
     expect(fe.actions.length).toBe(0);
-    expect(fe.filterFn).toBe(goog.functions.FALSE);
+    expect(fe.filterFn).toBe(functions.FALSE);
     expect(fe.isTemporary()).toBe(false);
     expect(fe.getTitle()).toBe('New Filter Action');
   });
 
   it('should create a filter function from the XML filter', function() {
-    var fe = new os.im.action.FilterActionEntry();
-    expect(fe.filterFn).toBe(goog.functions.FALSE);
+    var fe = new FilterActionEntry();
+    expect(fe.filterFn).toBe(functions.FALSE);
     fe.setFilter(filterXml);
 
-    expect(fe.filterFn).not.toBe(goog.functions.FALSE);
+    expect(fe.filterFn).not.toBe(functions.FALSE);
     testFilterFn(fe);
   });
 
   it('should execute actions against objects that match a filter', function() {
-    var fe = new os.im.action.FilterActionEntry();
+    var fe = new FilterActionEntry();
     fe.setFilter(filterXml);
-    fe.actions = [new os.im.action.MockAction()];
+    fe.actions = [new MockAction()];
     testMockAction(fe);
   });
 
   it('should clone/persist/restore properly', function() {
-    spyOn(os.im.action.ImportActionManager, 'getInstance').andCallFake(os.im.action.getMockManager);
+    spyOn(ImportActionManager, 'getInstance').andCallFake(getMockManager);
 
-    var fe = new os.im.action.FilterActionEntry();
+    var fe = new FilterActionEntry();
     fe.setFilter(filterXml);
-    fe.actions = [new os.im.action.MockAction()];
+    fe.actions = [new MockAction()];
 
     var id = fe.getId();
     fe.setTitle('Clone Me');
@@ -91,18 +100,18 @@ describe('os.im.action.FilterActionEntry', function() {
   });
 
   it('should compare properly', function() {
-    spyOn(os.im.action.ImportActionManager, 'getInstance').andCallFake(os.im.action.getMockManager);
+    spyOn(ImportActionManager, 'getInstance').andCallFake(getMockManager);
     var filterXml2 = filterXml + filterXml;
 
-    var fe = new os.im.action.FilterActionEntry();
+    var fe = new FilterActionEntry();
     fe.setTitle('Compare Me');
     fe.setFilter(filterXml);
-    fe.actions = [new os.im.action.MockAction()];
+    fe.actions = [new MockAction()];
 
-    var other = new os.im.action.FilterActionEntry();
+    var other = new FilterActionEntry();
     other.setTitle('Compare Me');
     other.setFilter(filterXml);
-    other.actions = [new os.im.action.MockAction()];
+    other.actions = [new MockAction()];
 
     expect(fe.compare(other)).toBe(0);
 
@@ -110,7 +119,7 @@ describe('os.im.action.FilterActionEntry', function() {
     expect(fe.compare(other)).toBe(-1);
     expect(other.compare(fe)).toBe(1);
 
-    fe.actions.push(new os.im.action.MockAction());
+    fe.actions.push(new MockAction());
     expect(fe.compare(other)).toBe(1);
     expect(other.compare(fe)).toBe(-1);
 
