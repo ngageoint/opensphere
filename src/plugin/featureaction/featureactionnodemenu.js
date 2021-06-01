@@ -8,7 +8,7 @@ const action = goog.require('os.im.action');
 const filterAction = goog.require('os.im.action.filter');
 const structs = goog.require('os.structs');
 const TriState = goog.require('os.structs.TriState');
-const ui = goog.require('os.ui');
+const {launchFilterActionExport} = goog.require('os.ui.im.action.FilterActionExportUI');
 const FilterActionExportType = goog.require('os.ui.im.action.FilterActionExportType');
 const Menu = goog.require('os.ui.menu.Menu');
 const MenuItem = goog.require('os.ui.menu.MenuItem');
@@ -299,8 +299,7 @@ const onExportEvent_ = function(event) {
       }
     }
     if (entries.length && selected.length) {
-      ui.im.action.launchFilterActionExport(entries, selected,
-          exportName, FilterActionExportType.SELECTED);
+      launchFilterActionExport(entries, selected, exportName, FilterActionExportType.SELECTED);
     }
   }
 };

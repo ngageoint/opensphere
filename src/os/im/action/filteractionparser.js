@@ -5,7 +5,6 @@ goog.require('goog.dom.xml');
 goog.require('os.file.mime.text');
 goog.require('os.im.action');
 goog.require('os.im.action.TagName');
-goog.require('os.im.action.filter');
 goog.require('os.parse.IParser');
 goog.require('os.ui.filter');
 

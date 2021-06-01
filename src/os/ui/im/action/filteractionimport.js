@@ -1,16 +1,22 @@
-goog.provide('os.ui.im.action.FilterActionImportCtrl');
-goog.provide('os.ui.im.action.filterActionImportDirective');
+goog.module('os.ui.im.action.FilterActionImport');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.SequenceCommand');
-goog.require('os.filter.im.OSFilterImportCtrl');
-goog.require('os.im.action.FilterActionEntry');
-goog.require('os.im.action.FilterActionParser');
-goog.require('os.im.action.cmd.FilterActionAdd');
-goog.require('os.layer.Drawing');
-goog.require('os.ui.Module');
-goog.require('os.ui.filter');
-goog.require('os.ui.filter.im.filterImportDirective');
-goog.require('os.ui.im.action.FilterActionImporter');
+const mapContainer = goog.require('os.MapContainer');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const SequenceCommand = goog.require('os.command.SequenceCommand');
+const DataManager = goog.require('os.data.DataManager');
+const IFilterable = goog.require('os.filter.IFilterable');
+const OSFilterImportCtrl = goog.require('os.filter.im.OSFilterImportCtrl');
+const FilterActionParser = goog.require('os.im.action.FilterActionParser');
+const ImportActionManager = goog.require('os.im.action.ImportActionManager');
+const FilterActionAdd = goog.require('os.im.action.cmd.FilterActionAdd');
+const DrawingLayer = goog.require('os.layer.Drawing');
+const Module = goog.require('os.ui.Module');
+const filterImportDirective = goog.require('os.ui.filter.im.filterImportDirective');
+const {getEntriesFromMatched} = goog.require('os.ui.im.action');
+const FilterActionImporter = goog.require('os.ui.im.action.FilterActionImporter');
+
+const ILayer = goog.requireType('os.layer.ILayer');
 
 
 /**
@@ -18,148 +24,156 @@ goog.require('os.ui.im.action.FilterActionImporter');
  *
  * @return {angular.Directive}
  */
-os.ui.im.action.filterActionImportDirective = function() {
-  var dir = os.ui.filter.im.filterImportDirective();
-  dir.controller = os.ui.im.action.FilterActionImportCtrl;
+const directive = () => {
+  var dir = filterImportDirective();
+  dir.controller = Controller;
   return dir;
 };
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'filteractionimport';
 
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('filteractionimport', [os.ui.im.action.filterActionImportDirective]);
+Module.directive('filteractionimport', [directive]);
 
 
 
 /**
  * Controller function for the filteractionimport directive.
- *
- * @param {!angular.Scope} $scope The Angular scope.
- * @param {!angular.JQLite} $element The root DOM element.
- * @param {!angular.$sce} $sce Angular SCE service.
- * @extends {os.filter.im.OSFilterImportCtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.im.action.FilterActionImportCtrl = function($scope, $element, $sce) {
-  os.ui.im.action.FilterActionImportCtrl.base(this, 'constructor', $scope, $element, $sce);
-  this.filterTitle = os.im.action.ImportActionManager.getInstance().entryTitle;
-  this['showMatch'] = false;
-};
-goog.inherits(os.ui.im.action.FilterActionImportCtrl, os.filter.im.OSFilterImportCtrl);
-
-
-/**
- * @inheritDoc
- * @export
- */
-os.ui.im.action.FilterActionImportCtrl.prototype.getFilterIcon = function() {
-  return os.im.action.ICON;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.im.action.FilterActionImportCtrl.prototype.getImporter = function() {
-  var layerId = /** @type {string|undefined} */ (this.scope['layerId']);
-  return new os.ui.im.action.FilterActionImporter(this.getParser(), layerId);
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.im.action.FilterActionImportCtrl.prototype.getParser = function() {
-  return new os.im.action.FilterActionParser();
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.im.action.FilterActionImportCtrl.prototype.getFilterables = function() {
-  var descriptors = os.dataManager.getDescriptors();
-  var layers = os.map.mapContainer.getLayers();
-
-  // filter down to only the IFilterable descriptors
-  var filterables = descriptors.filter(function(d) {
-    d = /** @type {os.filter.IFilterable} */ (d);
-    return os.implements(d, os.filter.IFilterable.ID) && d.isFilterable();
-  });
-
-  if (layers) {
-    layers.forEach(function(layer) {
-      // we only want IFilterable layers, BUT... we want even ones that return false from isFilterable()
-      // also, exclude the drawing layer
-      if (os.implements(layer, os.filter.IFilterable.ID) && layer.getId() != os.layer.Drawing.ID) {
-        layer = /** @type {os.filter.IFilterable} */ (layer);
-        filterables.unshift(layer);
-      }
-    });
+class Controller extends OSFilterImportCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope The Angular scope.
+   * @param {!angular.JQLite} $element The root DOM element.
+   * @param {!angular.$sce} $sce Angular SCE service.
+   * @ngInject
+   */
+  constructor($scope, $element, $sce) {
+    super($scope, $element, $sce);
+    this.filterTitle = ImportActionManager.getInstance().entryTitle;
+    this['showMatch'] = false;
   }
 
-  return /** @type {!Array<!os.filter.IFilterable>} */ (filterables);
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.im.action.FilterActionImportCtrl.prototype.onLayerChange = function(layer) {
-  this.columns = [];
-
-  if (os.implements(layer, os.data.IDataDescriptor.ID)) {
-    os.ui.im.action.FilterActionImportCtrl.base(this, 'onLayerChange', layer);
-    return;
+  /**
+   * @inheritDoc
+   * @export
+   */
+  getFilterIcon() {
+    return os.im.action.ICON;
   }
 
-  if (os.implements(layer, os.filter.IFilterable.ID)) {
-    var filterable = /** @type {os.filter.IFilterable} */ (layer);
-
-    this.columns = os.im.action.getColumnsFromFilterable(filterable);
+  /**
+   * @inheritDoc
+   */
+  getImporter() {
+    var layerId = /** @type {string|undefined} */ (this.scope['layerId']);
+    return new FilterActionImporter(this.getParser(), layerId);
   }
 
-  this.testColumns();
-};
+  /**
+   * @inheritDoc
+   */
+  getParser() {
+    return new FilterActionParser();
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getFilterables() {
+    var descriptors = DataManager.getInstance().getDescriptors();
+    var layers = mapContainer.getInstance().getLayers();
 
-/**
- * @inheritDoc
- * @export
- */
-os.ui.im.action.FilterActionImportCtrl.prototype.finish = function() {
-  var iam = os.im.action.ImportActionManager.getInstance();
-  var entries = os.ui.im.action.getEntriesFromMatched(this['matched']);
-
-  var msg;
-  var am = os.alert.AlertManager.getInstance();
-  if (entries.length > 0) {
-    var plural = entries.length == 1 ? '' : 's';
-    var entryTitle = iam.entryTitle + plural;
-
-    var cmd;
-    var cmds = entries.map(function(entry) {
-      return new os.im.action.cmd.FilterActionAdd(entry);
+    // filter down to only the IFilterable descriptors
+    var filterables = descriptors.filter(function(d) {
+      d = /** @type {IFilterable} */ (d);
+      return os.implements(d, IFilterable.ID) && d.isFilterable();
     });
 
-    if (cmds.length > 1) {
-      cmd = new os.command.SequenceCommand();
-      cmd.setCommands(cmds);
-      cmd.title = 'Import ' + entries.length + ' ' + entryTitle;
-    } else {
-      cmd = cmds[0];
+    if (layers) {
+      layers.forEach(function(layer) {
+        // we only want IFilterable layers, BUT... we want even ones that return false from isFilterable()
+        // also, exclude the drawing layer
+        if (os.implements(layer, IFilterable.ID) && /** @type {ILayer} */ (layer).getId() != DrawingLayer.ID) {
+          layer = /** @type {IFilterable} */ (layer);
+          filterables.unshift(layer);
+        }
+      });
     }
 
-    os.commandStack.addCommand(cmd);
-
-    msg = 'Successfully imported <b>' + this['matchedCount'] + '</b> ' + entryTitle + '.';
-    am.sendAlert(msg, os.alert.AlertEventSeverity.SUCCESS);
-  } else {
-    msg = 'No ' + iam.entryTitle + 's were imported!';
-    am.sendAlert(msg, os.alert.AlertEventSeverity.WARNING);
+    return /** @type {!Array<!IFilterable>} */ (filterables);
   }
 
-  os.ui.window.close(this.element);
+  /**
+   * @inheritDoc
+   */
+  onLayerChange(layer) {
+    this.columns = [];
+
+    if (os.implements(layer, os.data.IDataDescriptor.ID)) {
+      super.onLayerChange(layer);
+      return;
+    }
+
+    if (os.implements(layer, IFilterable.ID)) {
+      var filterable = /** @type {IFilterable} */ (layer);
+
+      this.columns = os.im.action.getColumnsFromFilterable(filterable);
+    }
+
+    this.testColumns();
+  }
+
+  /**
+   * @inheritDoc
+   * @export
+   */
+  finish() {
+    var iam = ImportActionManager.getInstance();
+    var entries = getEntriesFromMatched(this['matched']);
+
+    var msg;
+    var am = os.alert.AlertManager.getInstance();
+    if (entries.length > 0) {
+      var plural = entries.length == 1 ? '' : 's';
+      var entryTitle = iam.entryTitle + plural;
+
+      var cmd;
+      var cmds = entries.map(function(entry) {
+        return new FilterActionAdd(entry);
+      });
+
+      if (cmds.length > 1) {
+        cmd = new SequenceCommand();
+        cmd.setCommands(cmds);
+        cmd.title = 'Import ' + entries.length + ' ' + entryTitle;
+      } else {
+        cmd = cmds[0];
+      }
+
+      CommandProcessor.getInstance().addCommand(cmd);
+
+      msg = 'Successfully imported <b>' + this['matchedCount'] + '</b> ' + entryTitle + '.';
+      am.sendAlert(msg, os.alert.AlertEventSeverity.SUCCESS);
+    } else {
+      msg = 'No ' + iam.entryTitle + 's were imported!';
+      am.sendAlert(msg, os.alert.AlertEventSeverity.WARNING);
+    }
+
+    os.ui.window.close(this.element);
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

@@ -1,40 +1,36 @@
-goog.provide('os.im.action.filter');
-goog.provide('os.im.action.filter.ExportTypeHint');
+goog.module('os.im.action.filter');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.array');
-goog.require('os.command.SequenceCommand');
-goog.require('os.im.action');
-goog.require('os.im.action.cmd.FilterActionAdd');
-goog.require('os.im.action.cmd.FilterActionRemove');
-goog.require('os.ui.filter');
-goog.require('os.xml');
+const olArray = goog.require('ol.array');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const SequenceCommand = goog.require('os.command.SequenceCommand');
+const {TagName} = goog.require('os.im.action');
+const ImportActionManager = goog.require('os.im.action.ImportActionManager');
+const FilterActionAdd = goog.require('os.im.action.cmd.FilterActionAdd');
+const FilterActionRemove = goog.require('os.im.action.cmd.FilterActionRemove');
+const ExportTypeHint = goog.require('os.im.action.filter.ExportTypeHint');
+const filterManager = goog.require('os.query.FilterManager');
+const filter = goog.require('os.ui.filter');
+const xml = goog.require('os.xml');
 
-
-/**
- * Type hints used in exported filter actions to identify how the type should be used.
- * @enum {string}
- */
-os.im.action.filter.ExportTypeHint = {
-  FILTERABLE: 'filterable',
-  EXACT: 'exact'
-};
+const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
 
 
 /**
  * Export the provided filter action entries to XML elements.
  *
- * @param {!Array<!os.im.action.FilterActionEntry>} entries The entries to export.
+ * @param {!Array<!FilterActionEntry>} entries The entries to export.
  * @param {boolean=} opt_exactType If true, use the type from the entry. If false, use the filterable key.
  * @return {!Array<!Element>} The entry XML elements.
  */
-os.im.action.filter.exportEntries = function(entries, opt_exactType) {
-  var iam = os.im.action.ImportActionManager.getInstance();
+const exportEntries = function(entries, opt_exactType) {
+  var iam = ImportActionManager.getInstance();
   var result = [];
 
   /**
    * Parses entries out of the passed in entry. Recurses if it has children.
    *
-   * @param {os.im.action.FilterActionEntry} entry The entry.
+   * @param {FilterActionEntry} entry The entry.
    */
   var parseEntries = function(entry) {
     var parsedFilter = entry.getFilterNode();
@@ -43,17 +39,17 @@ os.im.action.filter.exportEntries = function(entries, opt_exactType) {
       var typeHint;
       if (!opt_exactType) {
         // get the filterable key so the action can be applied to any layer matching the key
-        var filterable = os.ui.filter.getFilterableByType(entry.getType());
+        var filterable = filter.getFilterableByType(entry.getType());
         if (filterable) {
           type = filterable.getFilterKey();
-          typeHint = os.im.action.filter.ExportTypeHint.FILTERABLE;
+          typeHint = ExportTypeHint.FILTERABLE;
         }
       }
 
       if (!type) {
         // if no type set yet, use the entry's type which will lock the entry to a specific layer id
         type = entry.getType();
-        typeHint = os.im.action.filter.ExportTypeHint.EXACT;
+        typeHint = ExportTypeHint.EXACT;
       }
 
       var children = entry.getChildren() || [];
@@ -61,7 +57,7 @@ os.im.action.filter.exportEntries = function(entries, opt_exactType) {
         return child.getId();
       });
 
-      var entryEl = os.xml.createElement(iam.xmlEntry, undefined, undefined, {
+      var entryEl = xml.createElement(iam.xmlEntry, undefined, undefined, {
         'id': entry.getId(),
         'active': entry.isEnabled() ? 'true' : 'false',
         'title': entry.getTitle(),
@@ -72,11 +68,11 @@ os.im.action.filter.exportEntries = function(entries, opt_exactType) {
         'children': childIds.join(', ')
       });
 
-      var filterEl = os.xml.appendElement('filter', entryEl);
+      var filterEl = xml.appendElement('filter', entryEl);
 
-      os.xml.clone(parsedFilter, filterEl, 'ogc', 'http://www.opengis.net/ogc');
+      xml.clone(parsedFilter, filterEl, 'ogc', 'http://www.opengis.net/ogc');
 
-      var actionsEl = os.xml.appendElement(os.im.action.TagName.ACTIONS, entryEl);
+      var actionsEl = xml.appendElement(TagName.ACTIONS, entryEl);
       entry.actions.forEach(function(action) {
         actionsEl.appendChild(action.toXml());
       });
@@ -94,19 +90,18 @@ os.im.action.filter.exportEntries = function(entries, opt_exactType) {
   return result;
 };
 
-
 /**
  * Create command to copy an entry.
  *
- * @param {!os.im.action.FilterActionEntry} entry The import action entry.
+ * @param {!FilterActionEntry} entry The import action entry.
  * @param {number=} opt_parentIndex Optional parent index to add the entry to.
  * @return {os.command.ICommand} The copy entry command.
  */
-os.im.action.filter.copyEntryCmd = function(entry, opt_parentIndex) {
+const copyEntryCmd = function(entry, opt_parentIndex) {
   /**
    * Sets up the new titles and IDs on copies recursively.
    *
-   * @param {os.im.action.FilterActionEntry} e The filter action to set up.
+   * @param {FilterActionEntry} e The filter action to set up.
    */
   var setupCopy = function(e) {
     var oldTitle = e.getTitle();
@@ -120,28 +115,26 @@ os.im.action.filter.copyEntryCmd = function(entry, opt_parentIndex) {
   };
 
   // only clone the root, then update any children
-  var copy = /** @type {!os.im.action.FilterActionEntry} */ (entry.clone());
+  var copy = /** @type {!FilterActionEntry} */ (entry.clone());
   setupCopy(copy);
 
   var parentId = entry.getParent() ? entry.getParent().getId() : undefined;
 
-  var iam = os.im.action.ImportActionManager.getInstance();
-  var cmd = new os.im.action.cmd.FilterActionAdd(copy, opt_parentIndex, parentId);
+  var iam = ImportActionManager.getInstance();
+  var cmd = new FilterActionAdd(copy, opt_parentIndex, parentId);
   cmd.title = 'Copy ' + iam.entryTitle + ' "' + entry.getTitle() + '"';
 
   return cmd;
 };
-
 
 /**
  * Get the initial file name to use for export.
  *
  * @return {string} The file name.
  */
-os.im.action.filter.getExportName = function() {
-  return os.im.action.ImportActionManager.getInstance().entryTitle + 's';
+const getExportName = function() {
+  return ImportActionManager.getInstance().entryTitle + 's';
 };
-
 
 /**
  * Get the list of filter columns.
@@ -149,11 +142,11 @@ os.im.action.filter.getExportName = function() {
  * @param {string=} opt_entryType The filter action entry type.
  * @return {!Array} The columns.
  */
-os.im.action.filter.getColumns = function(opt_entryType) {
+const getColumns = function(opt_entryType) {
   var columns;
 
   if (opt_entryType) {
-    var filterable = os.ui.filterManager.getFilterable(opt_entryType);
+    var filterable = filterManager.getInstance().getFilterable(opt_entryType);
     if (filterable) {
       columns = filterable.getFilterColumns();
     }
@@ -162,19 +155,18 @@ os.im.action.filter.getColumns = function(opt_entryType) {
   return columns || [];
 };
 
-
 /**
  * Callback for filter action entry create/edit.
  *
- * @param {os.im.action.FilterActionEntry|undefined} original The orignial filter entry, for edits.
+ * @param {FilterActionEntry|undefined} original The orignial filter entry, for edits.
  * @param {os.im.action.FilterActionEntry} entry The edited filter entry.
  */
-os.im.action.filter.onEditComplete = function(original, entry) {
+const onEditComplete = function(original, entry) {
   // don't do anything if there was no change
   if (entry && (!original || entry.compare(original) !== 0)) {
     var cmds = [];
 
-    var iam = os.im.action.ImportActionManager.getInstance();
+    var iam = ImportActionManager.getInstance();
     var entries = iam.getActionEntries(entry.getType());
 
     var entryTitle = entry.getTitle();
@@ -182,7 +174,7 @@ os.im.action.filter.onEditComplete = function(original, entry) {
     var parentId;
 
     if (original) {
-      insertIndex = ol.array.findIndex(entries, function(entry) {
+      insertIndex = olArray.findIndex(entries, function(entry) {
         return entry == original;
       });
 
@@ -192,34 +184,33 @@ os.im.action.filter.onEditComplete = function(original, entry) {
       }
 
       entryTitle = original.getTitle();
-      cmds.push(new os.im.action.cmd.FilterActionRemove(original, insertIndex, parentId));
+      cmds.push(new FilterActionRemove(original, insertIndex, parentId));
     }
 
-    cmds.push(new os.im.action.cmd.FilterActionAdd(entry, insertIndex, parentId));
+    cmds.push(new FilterActionAdd(entry, insertIndex, parentId));
 
     if (cmds.length > 1) {
-      var cmd = new os.command.SequenceCommand();
+      var cmd = new SequenceCommand();
       cmd.setCommands(cmds);
 
       var appEntryTitle = iam.entryTitle;
       cmd.title = 'Update ' + appEntryTitle + ' "' + entryTitle + '"';
 
-      os.commandStack.addCommand(cmd);
+      CommandProcessor.getInstance().addCommand(cmd);
     } else {
-      os.commandStack.addCommand(cmds[0]);
+      CommandProcessor.getInstance().addCommand(cmds[0]);
     }
   }
 };
 
-
 /**
  * Create command to remove an entry.
  *
- * @param {!os.im.action.FilterActionEntry} entry The import action entry to remove.
+ * @param {!FilterActionEntry} entry The import action entry to remove.
  * @return {os.command.ICommand} The remove entry command.
  */
-os.im.action.filter.removeEntryCmd = function(entry) {
-  var iam = os.im.action.ImportActionManager.getInstance();
+const removeEntryCmd = function(entry) {
+  var iam = ImportActionManager.getInstance();
   var entries = iam.getActionEntries(entry.getType());
   var parent = entry.getParent();
   var parentId = undefined;
@@ -229,7 +220,7 @@ os.im.action.filter.removeEntryCmd = function(entry) {
     entries = parent.getChildren();
   }
 
-  var index = ol.array.findIndex(entries, function(arrEntry) {
+  var index = olArray.findIndex(entries, function(arrEntry) {
     return arrEntry == entry;
   });
 
@@ -237,9 +228,8 @@ os.im.action.filter.removeEntryCmd = function(entry) {
     index = undefined;
   }
 
-  return new os.im.action.cmd.FilterActionRemove(entry, index, parentId);
+  return new FilterActionRemove(entry, index, parentId);
 };
-
 
 /**
  * Recursive mapping function for pulling all of the feature actions out of a tree.
@@ -247,10 +237,20 @@ os.im.action.filter.removeEntryCmd = function(entry) {
  * @param {Array<os.ui.im.action.FilterActionNode>} targetArr The target array.
  * @param {os.structs.ITreeNode} node The current node.
  */
-os.im.action.filter.isFilterActionNode = function(targetArr, node) {
+const isFilterActionNode = function(targetArr, node) {
   if (node instanceof os.ui.im.action.FilterActionNode) {
     goog.array.insert(targetArr, node);
   } else if (node.getChildren()) {
-    node.getChildren().forEach(os.im.action.filter.isFilterActionNode.bind(undefined, targetArr));
+    node.getChildren().forEach(isFilterActionNode.bind(undefined, targetArr));
   }
+};
+
+exports = {
+  exportEntries,
+  copyEntryCmd,
+  getExportName,
+  getColumns,
+  onEditComplete,
+  removeEntryCmd,
+  isFilterActionNode
 };

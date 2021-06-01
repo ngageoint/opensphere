@@ -7,6 +7,7 @@ goog.require('os.filter.default');
 goog.require('os.fn');
 goog.require('os.im.action.FilterActionParser');
 goog.require('os.net.Request');
+goog.require('os.ui.im.action');
 goog.require('os.ui.im.action.FilterActionImporter');
 
 
