@@ -15,6 +15,7 @@ const {
 } = goog.require('plugin.im.action.feature');
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
 
 
 /**

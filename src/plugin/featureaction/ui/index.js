@@ -14,7 +14,7 @@ const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
  * @param {string} type The entry type.
  * @param {Array} columns The filter columns.
  * @param {function(FilterActionEntry<T>)} callback The callback to fire when the entry is ready.
- * @param {action.FilterActionEntry<T>=} opt_entry The entry to edit.
+ * @param {FilterActionEntry<T>=} opt_entry The entry to edit.
  * @param {string=} opt_label Base window label.
  * @template T
  */

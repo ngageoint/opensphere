@@ -5,6 +5,8 @@ const filterAction = goog.require('os.im.action.filter');
 const ILayer = goog.require('os.layer.ILayer');
 const {launchEditFeatureAction} = goog.require('plugin.im.action.feature.ui');
 
+const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+
 
 /**
  * Identifier for import action plugin components.
@@ -106,12 +108,12 @@ const getColumns = function(opt_entryType) {
  * Edit an action entry. If no entry is provided, a new one will be created.
  *
  * @param {string} entryType The filter action entry type.
- * @param {action.FilterActionEntry=} opt_entry The import action entry.
+ * @param {FilterActionEntry=} opt_entry The import action entry.
  */
 const editEntry = function(entryType, opt_entry) {
   var entry;
   if (opt_entry) {
-    entry = /** @type {!action.FilterActionEntry} */ (opt_entry.clone());
+    entry = /** @type {!FilterActionEntry} */ (opt_entry.clone());
     entry.setDefault(opt_entry.isDefault());
   }
 

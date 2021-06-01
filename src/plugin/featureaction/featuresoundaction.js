@@ -28,6 +28,7 @@ const DEFAULT_SOUND = 'Default';
  * Import action that sets the sound for a {@link ol.Feature}.
  *
  * @extends {AbstractImportAction<ol.Feature>}
+ * @unrestricted
  */
 class SoundAction extends AbstractImportAction {
   /**

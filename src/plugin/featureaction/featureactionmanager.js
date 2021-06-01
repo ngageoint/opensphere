@@ -13,6 +13,7 @@ const IImportSource = goog.require('os.source.IImportSource');
 const state = goog.require('os.state');
 const featureAction = goog.require('plugin.im.action.feature');
 const Entry = goog.require('plugin.im.action.feature.Entry');
+const TagName = goog.require('plugin.im.action.feature.TagName');
 
 const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
 
@@ -30,8 +31,8 @@ class Manager extends ImportActionManager {
     super();
     this.entryTitle = featureAction.ENTRY_TITLE;
     this.log = logger;
-    this.xmlGroup = featureAction.TagName.FEATURE_ACTIONS;
-    this.xmlEntry = featureAction.TagName.FEATURE_ACTION;
+    this.xmlGroup = TagName.FEATURE_ACTIONS;
+    this.xmlEntry = TagName.FEATURE_ACTION;
 
     /**
      * Map of source listen keys.
@@ -364,33 +365,8 @@ class Manager extends ImportActionManager {
       os.style.label.updateShown();
     }
   }
-
-  /**
-   * Get the global instance.
-   * @return {!Manager}
-   */
-  static getInstance() {
-    if (!instance) {
-      instance = new Manager();
-    }
-
-    return instance;
-  }
-
-  /**
-   * Set the global instance.
-   * @param {Manager} value
-   */
-  static setInstance(value) {
-    instance = value;
-  }
 }
-
-/**
- * Global instance.
- * @type {Manager|undefined}
- */
-let instance;
+goog.addSingletonGetter(Manager);
 
 
 // replace the base ImportActionManager singleton with this one

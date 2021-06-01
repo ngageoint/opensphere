@@ -301,7 +301,6 @@ const onImageChange = function() {
 };
 
 exports = {
-  launchEditFeatureAction,
   Controller,
   directive,
   directiveTag
