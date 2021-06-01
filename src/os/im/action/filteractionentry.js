@@ -14,6 +14,7 @@ const IImportAction = goog.requireType('os.im.action.IImportAction');
  * Filter entry that performs actions on matched data.
  *
  * @implements {IComparable<FilterActionEntry>}
+ * @unrestricted
  * @template T
  */
 class FilterActionEntry extends FilterEntry {

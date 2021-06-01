@@ -343,7 +343,7 @@ const launchActionConfig = function(action, type) {
 
     var windowOptions = {
       'id': ACTION_CONFIG_ID,
-      'label': action.label,
+      'label': action.getLabel(),
       'icon': 'fa fa-gear',
       'x': 'center',
       'y': 'center',

@@ -19,6 +19,7 @@ const osImActionDefault = goog.require('os.im.action.default');
 const PluginManager = goog.require('os.plugin.PluginManager');
 
 const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
+const ImportActionEvent = goog.requireType('os.im.action.ImportActionEvent');
 const IImportAction = goog.requireType('os.im.action.IImportAction');
 
 
@@ -184,12 +185,13 @@ class ImportActionManager extends EventTarget {
    * @param {!IImportAction} action The import action.
    */
   registerAction(action) {
-    if (action.id) {
-      if (action.id in this.actionRegistry) {
-        log.warning(this.log, 'The import action with id "' + action.id + '" is being overridden!');
+    const actionId = action.getId();
+    if (actionId) {
+      if (actionId in this.actionRegistry) {
+        log.warning(this.log, 'The import action with id "' + actionId + '" is being overridden!');
       }
 
-      this.actionRegistry[action.id] = action;
+      this.actionRegistry[actionId] = action;
     } else {
       log.error(this.log, 'Unable to register import action without an identifier! Action label is "' +
           action.getLabel() + '".');
@@ -580,7 +582,7 @@ class ImportActionManager extends EventTarget {
   /**
    * Handle an add action entry event fired on the global dispatcher.
    *
-   * @param {os.im.action.ImportActionEvent} event The event.
+   * @param {ImportActionEvent} event The event.
    * @private
    */
   onAddActionEntry_(event) {
@@ -643,7 +645,7 @@ class ImportActionManager extends EventTarget {
     const ids = [];
     if (entries) {
       entries.forEach((entry) => {
-        if (entry.enabled && entry.type == type) {
+        if (entry['enabled'] && entry.type == type) {
           ids.push(entry.getId());
         }
         ids.push(...this.getActiveActionEntryIds_(type, entry.getChildren()));
@@ -673,7 +675,7 @@ class ImportActionManager extends EventTarget {
   getRootActiveActionEntries_(type, entry) {
     let isActive = false;
 
-    if (entry && entry.enabled && entry.type == type) {
+    if (entry && entry['enabled'] && entry.type == type) {
       isActive = true;
     } else if (entry) {
       const entries = entry.getChildren();

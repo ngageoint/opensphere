@@ -72,7 +72,6 @@ os.filter.FilterEntry = function() {
 
   /**
    * @type {boolean}
-   * @private
    */
   this['enabled'] = false;
 
