@@ -15,6 +15,7 @@ goog.require('ol.geom.Geometry');
 goog.require('ol.source.Vector');
 goog.require('os');
 goog.require('os.Fields');
+goog.require('os.IAnimationSupport');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
 goog.require('os.data.ColumnDefinition');
@@ -57,6 +58,7 @@ goog.require('os.webgl');
 
 /**
  * @extends {ol.source.Vector}
+ * @implements {os.IAnimationSupport}
  * @implements {os.source.ISource}
  * @implements {os.hist.IHistogramProvider}
  * @implements {os.source.IModifiableSource}
@@ -432,6 +434,7 @@ os.source.Vector = function(opt_options) {
 goog.inherits(os.source.Vector, ol.source.Vector);
 os.implements(os.source.Vector, os.hist.IHistogramProvider.ID);
 os.implements(os.source.Vector, os.source.ISource.ID);
+os.implements(os.source.Vector, os.IAnimationSupport.ID);
 os.implements(os.source.Vector, os.source.IModifiableSource.ID);
 
 
@@ -1425,6 +1428,7 @@ os.source.Vector.prototype.setTitle = function(value) {
  * to the timeline controller and enable the animation overlay for faster feature rendering.
  *
  * @return {boolean}
+ * @override
  */
 os.source.Vector.prototype.getAnimationEnabled = function() {
   return this.animationEnabled_;
@@ -1435,6 +1439,7 @@ os.source.Vector.prototype.getAnimationEnabled = function() {
  * Marks the source as being in the animating state.
  *
  * @param {boolean} value
+ * @override
  */
 os.source.Vector.prototype.setAnimationEnabled = function(value) {
   if (this.animationEnabled_ !== value) {

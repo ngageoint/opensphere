@@ -1,19 +1,26 @@
 <div class="d-flex flex-column flex-fill">
   <div class="form-row align-items-center flex-shrink-0 mt-1">
-    <div class="col-auto col-form-label">
-      Group By
+    <div class="col-auto form-check form-check-inline m-0 pr-0" >
+      <label class="d-flex align-items-center form-check-label" title="{{viewEnabledTooltip}}">
+        <input class="form-check-input" type="checkbox"
+            ng-model="viewEnabled"
+            ng-change="layers.onGroupByChanged()">
+        Group By
+      </label>
     </div>
     <div class="col">
-      <select class="custom-select" ng-model="view" ng-change="layers.onGroupByChanged()" ng-options="key for (key, value) in views"></select>
+      <select class="custom-select" ng-model="view"
+          ng-change="layers.onGroupByChanged()"
+          ng-disabled="!viewEnabled"
+          ng-options="key for (key, value) in views">
+      </select>
     </div>
-    <div class="col-auto">
-      <div class="btn-group add-data-group" ng-right-click="layers.openMenu('.add-data-group')">
-        <button class="btn btn-sm btn-success" title="Add data to the map" ng-click="layers.toggle('addData')"
-          ng-class="{active: layers.isWindowActive('addData')}">
-          <i class="fa fa-plus color-secondary"></i>
-        </button>
-        <button class="btn btn-sm btn-success dropdown-toggle" ng-click="layers.openMenu('.add-data-group')"></button>
-      </div>
+    <div class="col-auto pl-0">
+      <button class="btn btn-sm btn-success" title="{{createFolderTooltip}}"
+          ng-click="layers.createFolder()">
+        <i class="fa fa-folder-plus"></i>
+        Add Folder
+      </button>
     </div>
   </div>
 
@@ -28,7 +35,7 @@
         </div>
       </div>
     </div>
-    <div class="col-auto">
+    <div class="col-auto pl-0">
       <div class="btn-group">
         <button class="btn btn-sm btn-secondary" title="Toggle Tile Layers" ng-click="layers.toggleTileLayers()">
           <img ng-src="{{tilesBtnIcon}}">
@@ -37,11 +44,27 @@
           <img ng-src="{{featuresBtnIcon}}">
         </button>
       </div>
+      <div class="btn-group add-data-group" ng-right-click="layers.openMenu('.add-data-group')">
+        <button class="btn btn-sm btn-success" title="Add data to the map" ng-click="layers.toggle('addData')"
+          ng-class="{active: layers.isWindowActive('addData')}">
+          <i class="fa fa-plus"></i>
+        </button>
+        <button class="btn btn-sm btn-success dropdown-toggle" ng-click="layers.openMenu('.add-data-group')"></button>
+      </div>
     </div>
   </div>
 
   <div class="d-flex flex-row flex-fill mt-1">
-    <layertree class="border" x-data="layerTree" drag-enabled="true" selected="selected" context-menu="contextMenu" checkbox-tooltip="Enable or disable the layer" multi-select="true" disposable="true" group-by="view"></layertree>
+    <layertree class="border" x-data="layerTree"
+        drag-enabled="true"
+        selected="selected"
+        context-menu="contextMenu"
+        checkbox-tooltip="Enable or disable the layer"
+        multi-select="true"
+        disposable="true"
+        group-by="view"
+        group-by-enabled="viewEnabled">
+    </layertree>
   </div>
 
   <uiswitch items="selected" directive-function="layers.getUi" generic="defaultlayerui"></uiswitch>

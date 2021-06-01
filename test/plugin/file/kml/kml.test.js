@@ -1,6 +1,9 @@
 goog.require('goog.dom');
 goog.require('goog.dom.xml');
 goog.require('ol.format.KML');
+goog.require('ol.geom.GeometryLayout');
+goog.require('ol.geom.LineString');
+goog.require('ol.geom.MultiLineString');
 goog.require('ol.xml');
 goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
@@ -8,16 +11,26 @@ goog.require('plugin.file.kml');
 
 
 describe('plugin.file.kml', function() {
+  const dom = goog.module.get('goog.dom');
+  const googDomXml = goog.module.get('goog.dom.xml');
+  const KML = goog.module.get('ol.format.KML');
+  const GeometryLayout = goog.module.get('ol.geom.GeometryLayout');
+  const LineString = goog.module.get('ol.geom.LineString');
+  const MultiLineString = goog.module.get('ol.geom.MultiLineString');
+  const xml = goog.module.get('ol.xml');
+  const TimeInstant = goog.module.get('os.time.TimeInstant');
+  const TimeRange = goog.module.get('os.time.TimeRange');
+  const kml = goog.module.get('plugin.file.kml');
   it('reads a kml:TimeStamp element', function() {
     var when = new Date();
     var timeStampXml = '<TimeStamp><when>' + when.toISOString() + '</when></TimeStamp>';
-    var doc = goog.dom.xml.loadXml(timeStampXml);
-    var tsEl = goog.dom.getFirstElementChild(doc);
+    var doc = googDomXml.loadXml(timeStampXml);
+    var tsEl = dom.getFirstElementChild(doc);
 
-    var time = plugin.file.kml.readTime(tsEl, []);
+    var time = kml.readTime(tsEl, []);
     expect(time).not.toBeNull();
-    expect(time instanceof os.time.TimeInstant).toBe(true);
-    expect(time instanceof os.time.TimeRange).toBe(false);
+    expect(time instanceof TimeInstant).toBe(true);
+    expect(time instanceof TimeRange).toBe(false);
     expect(time.getStart()).toBe(when.getTime());
     expect(time.getEnd()).toBe(when.getTime());
   });
@@ -27,12 +40,12 @@ describe('plugin.file.kml', function() {
     var end = new Date(begin.getTime() + 24 * 60 * 60 * 1000);
     var timeSpanXml = '<TimeSpan><begin>' + begin.toISOString() + '</begin><end>' + end.toISOString() +
         '</end></TimeSpan>';
-    var doc = goog.dom.xml.loadXml(timeSpanXml);
-    var tsEl = goog.dom.getFirstElementChild(doc);
+    var doc = googDomXml.loadXml(timeSpanXml);
+    var tsEl = dom.getFirstElementChild(doc);
 
-    var time = plugin.file.kml.readTime(tsEl, []);
+    var time = kml.readTime(tsEl, []);
     expect(time).not.toBeNull();
-    expect(time instanceof os.time.TimeRange).toBe(true);
+    expect(time instanceof TimeRange).toBe(true);
     expect(time.getStart()).toBe(begin.getTime());
     expect(time.getEnd()).toBe(end.getTime());
   });
@@ -52,11 +65,11 @@ describe('plugin.file.kml', function() {
         '<viewRefreshMode>' + viewRefreshMode + '</viewRefreshMode>' +
         '<viewRefreshTime>' + viewRefreshTime + '</viewRefreshTime>' +
         '</Link>';
-    var doc = goog.dom.xml.loadXml(linkXml);
-    var linkEl = goog.dom.getFirstElementChild(doc);
+    var doc = googDomXml.loadXml(linkXml);
+    var linkEl = dom.getFirstElementChild(doc);
 
     // all but href are our extension to the Openlayers parser
-    var link = ol.xml.pushParseAndPop({}, plugin.file.kml.OL_LINK_PARSERS(), linkEl, []);
+    var link = xml.pushParseAndPop({}, kml.OL_LINK_PARSERS(), linkEl, []);
     expect(link['href']).toBe(href);
     expect(link['refreshMode']).toBe(refreshMode);
     expect(link['refreshInterval']).toBe(refreshInterval);
@@ -81,14 +94,14 @@ describe('plugin.file.kml', function() {
         '<viewRefreshMode>' + viewRefreshMode + '</viewRefreshMode>' +
         '<viewRefreshTime>' + viewRefreshTime + '</viewRefreshTime>' +
         '</Link>';
-    var doc = goog.dom.xml.loadXml(linkXml);
-    var linkEl = goog.dom.getFirstElementChild(doc);
+    var doc = googDomXml.loadXml(linkXml);
+    var linkEl = dom.getFirstElementChild(doc);
 
     linkEl.assetMap = {
       [forwardSlashHref]: 'data://fakeimagedatauri'
     };
 
-    var link = ol.xml.pushParseAndPop({}, plugin.file.kml.OL_LINK_PARSERS(), linkEl, []);
+    var link = xml.pushParseAndPop({}, kml.OL_LINK_PARSERS(), linkEl, []);
     expect(link['href']).toBe(forwardSlashHref);
     expect(link['refreshMode']).toBe(refreshMode);
     expect(link['refreshInterval']).toBe(refreshInterval);
@@ -138,21 +151,21 @@ describe('plugin.file.kml', function() {
      */
     var runTrackTests = function(namespace, xmlns) {
       it('parses ' + namespace + 'Track nodes', function() {
-        var format = new ol.format.KML();
+        var format = new KML();
         var startTime = Date.now();
         var numCoordinates = 20;
         var trackXml = '<Placemark' + (xmlns ? ' ' : '') + xmlns + '><' + namespace + 'Track>' +
             generateCoordText(numCoordinates, namespace, startTime) + '</' + namespace + 'Track></Placemark>';
 
-        var doc = goog.dom.xml.loadXml(trackXml);
-        var trackEl = goog.dom.getFirstElementChild(doc);
+        var doc = googDomXml.loadXml(trackXml);
+        var trackEl = dom.getFirstElementChild(doc);
 
         var feature = format.readPlacemark_(trackEl, []);
         expect(feature).toBeDefined();
 
         var geometry = feature.getGeometry();
-        expect(geometry instanceof ol.geom.LineString).toBe(true);
-        expect(geometry.getLayout()).toBe(ol.geom.GeometryLayout.XYZM);
+        expect(geometry instanceof LineString).toBe(true);
+        expect(geometry.getLayout()).toBe(GeometryLayout.XYZM);
 
         var coordinates = geometry.getCoordinates();
         expect(coordinates.length).toEqual(numCoordinates);
@@ -160,7 +173,7 @@ describe('plugin.file.kml', function() {
       });
 
       it('parses ' + namespace + 'MultiTrack nodes', function() {
-        var format = new ol.format.KML();
+        var format = new KML();
         var startTime = Date.now();
         var numCoordinates = 20;
         var numTracks = 5;
@@ -173,15 +186,15 @@ describe('plugin.file.kml', function() {
 
         trackXml += '</' + namespace + 'MultiTrack></Placemark>';
 
-        var doc = goog.dom.xml.loadXml(trackXml);
-        var trackEl = goog.dom.getFirstElementChild(doc);
+        var doc = googDomXml.loadXml(trackXml);
+        var trackEl = dom.getFirstElementChild(doc);
 
         var feature = format.readPlacemark_(trackEl, []);
         expect(feature).toBeDefined();
 
         var geometry = feature.getGeometry();
-        expect(geometry instanceof ol.geom.MultiLineString).toBe(true);
-        expect(geometry.getLayout()).toBe(ol.geom.GeometryLayout.XYZM);
+        expect(geometry instanceof MultiLineString).toBe(true);
+        expect(geometry.getLayout()).toBe(GeometryLayout.XYZM);
 
         var lines = geometry.getLineStrings();
         expect(lines.length).toBe(numTracks);
@@ -194,21 +207,21 @@ describe('plugin.file.kml', function() {
       });
 
       it('parses ' + namespace + 'MultiTrack properties', function() {
-        var format = new ol.format.KML();
+        var format = new KML();
         var altitudeMode = 'clampToGround';
         var trackXml = '<Placemark' + (xmlns ? ' ' : '') + xmlns + '><' + namespace + 'MultiTrack>' +
             '<' + namespace + 'interpolate>1</' + namespace + 'interpolate>' +
             '<altitudeMode>' + altitudeMode + '</altitudeMode>' +
             '</' + namespace + 'MultiTrack></Placemark>';
 
-        var doc = goog.dom.xml.loadXml(trackXml);
-        var trackEl = goog.dom.getFirstElementChild(doc);
+        var doc = googDomXml.loadXml(trackXml);
+        var trackEl = dom.getFirstElementChild(doc);
 
         var feature = format.readPlacemark_(trackEl, []);
         expect(feature).toBeDefined();
 
         var geometry = feature.getGeometry();
-        expect(geometry instanceof ol.geom.MultiLineString).toBe(true);
+        expect(geometry instanceof MultiLineString).toBe(true);
         expect(geometry.get('interpolate')).toBe(true);
         expect(geometry.get('altitudeMode')).toBe(altitudeMode);
       });

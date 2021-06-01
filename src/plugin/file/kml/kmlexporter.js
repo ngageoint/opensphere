@@ -1,420 +1,400 @@
-goog.provide('plugin.file.kml.KMLExporter');
+goog.module('plugin.file.kml.KMLExporter');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.object');
-goog.require('goog.string');
-goog.require('ol.Feature');
-goog.require('ol.array');
-goog.require('ol.geom.GeometryCollection');
-goog.require('ol.geom.GeometryType');
-goog.require('ol.geom.Point');
-goog.require('ol.xml');
-goog.require('os.data.OSDataManager');
-goog.require('os.data.RecordField');
-goog.require('os.feature');
-goog.require('os.implements');
-goog.require('os.source');
-goog.require('os.style');
-goog.require('os.style.StyleField');
-goog.require('os.time.ITime');
-goog.require('os.ui.file.kml');
-goog.require('os.ui.file.kml.AbstractKMLExporter');
-goog.require('os.xml');
-goog.require('plugin.file.kml');
-goog.require('plugin.file.kml.export');
-goog.require('plugin.file.kml.ui.kmlExportDirective');
+const log = goog.require('goog.log');
 
+const googObject = goog.require('goog.object');
+const googString = goog.require('goog.string');
+const olArray = goog.require('ol.array');
+const GeometryCollection = goog.require('ol.geom.GeometryCollection');
+const GeometryType = goog.require('ol.geom.GeometryType');
+const Point = goog.require('ol.geom.Point');
+const MapContainer = goog.require('os.MapContainer');
+const OSDataManager = goog.require('os.data.OSDataManager');
+const RecordField = goog.require('os.data.RecordField');
+const osFeature = goog.require('os.feature');
+const osImplements = goog.require('os.implements');
+const osSource = goog.require('os.source');
+const osStyle = goog.require('os.style');
+const ITime = goog.require('os.time.ITime');
+const kml = goog.require('os.ui.file.kml');
+const AbstractKMLExporter = goog.require('os.ui.file.kml.AbstractKMLExporter');
+const xml = goog.require('os.xml');
+const pluginFileKmlExport = goog.require('plugin.file.kml.export');
+const {directiveTag: kmlExportUi} = goog.require('plugin.file.kml.ui.KMLExportUI');
+
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
  * KML exporter
  *
- * @extends {os.ui.file.kml.AbstractKMLExporter<ol.Feature>}
- * @constructor
+ * @extends {AbstractKMLExporter<Feature>}
  */
-plugin.file.kml.KMLExporter = function() {
-  plugin.file.kml.KMLExporter.base(this, 'constructor');
-  this.log = plugin.file.kml.KMLExporter.LOGGER_;
-
+class KMLExporter extends AbstractKMLExporter {
   /**
-   * Folders for sources being exported.
-   * @type {!Object<string, !Element>}
-   * @private
+   * Constructor.
    */
-  this.folders_ = {};
+  constructor() {
+    super();
+    this.log = logger;
 
-  /**
-   * Source color cache.
-   * @type {!Object<string, !Array<string>>}
-   * @private
-   */
-  this.sourceFields_ = {};
-};
-goog.inherits(plugin.file.kml.KMLExporter, os.ui.file.kml.AbstractKMLExporter);
+    /**
+     * Folders for sources being exported.
+     * @type {!Object<string, !Element>}
+     * @private
+     */
+    this.folders_ = {};
 
-
-/**
- * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
- */
-plugin.file.kml.KMLExporter.LOGGER_ = goog.log.getLogger('plugin.file.kml.KMLExporter');
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.reset = function() {
-  plugin.file.kml.KMLExporter.base(this, 'reset');
-  this.folders_ = {};
-  this.sourceFields_ = {};
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.supportsMultiple = function() {
-  return true;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getColor = function(item) {
-  var itemColor = os.feature.getColor(item, this.getSource_(item));
-  if (!itemColor || (typeof itemColor != 'string' && !Array.isArray(itemColor))) {
-    itemColor = os.style.DEFAULT_LAYER_COLOR;
+    /**
+     * Source color cache.
+     * @type {!Object<string, !Array<string>>}
+     * @private
+     */
+    this.sourceFields_ = {};
   }
-  return os.style.toAbgrString(itemColor);
-};
 
+  /**
+   * @inheritDoc
+   */
+  reset() {
+    super.reset();
+    this.folders_ = {};
+    this.sourceFields_ = {};
+  }
 
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getFill = function(item) {
-  const style = item.getStyle();
-  const styles = Array.isArray(style) ? style : [style];
-  return styles.some(os.style.hasNonZeroFillOpacity);
-};
+  /**
+   * @inheritDoc
+   */
+  supportsMultiple() {
+    return true;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getColor(item) {
+    var itemColor = osFeature.getColor(item, this.getSource_(item));
+    if (!itemColor || (typeof itemColor != 'string' && !Array.isArray(itemColor))) {
+      itemColor = osStyle.DEFAULT_LAYER_COLOR;
+    }
+    return osStyle.toAbgrString(itemColor);
+  }
 
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getFillColor = function(item) {
-  var itemColor = os.feature.getFillColor(item, this.getSource_(item));
-  return itemColor ? os.style.toAbgrString(itemColor) : null;
-};
+  /**
+   * @inheritDoc
+   */
+  getFill(item) {
+    const style = item.getStyle();
+    const styles = Array.isArray(style) ? style : [style];
+    return styles.some(osStyle.hasNonZeroFillOpacity);
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getFillColor(item) {
+    var itemColor = osFeature.getFillColor(item, this.getSource_(item));
+    return itemColor ? osStyle.toAbgrString(itemColor) : null;
+  }
 
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getStroke = function(item) {
-  const style = item.getStyle();
-  const styles = Array.isArray(style) ? style : [style];
-  return styles.some(os.style.hasNonZeroStrokeOpacity);
-};
+  /**
+   * @inheritDoc
+   */
+  getStroke(item) {
+    const style = item.getStyle();
+    const styles = Array.isArray(style) ? style : [style];
+    return styles.some(osStyle.hasNonZeroStrokeOpacity);
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getStrokeColor(item) {
+    var itemColor = osFeature.getStrokeColor(item, this.getSource_(item));
+    return itemColor ? osStyle.toAbgrString(itemColor) : null;
+  }
 
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getStrokeColor = function(item) {
-  var itemColor = os.feature.getStrokeColor(item, this.getSource_(item));
-  return itemColor ? os.style.toAbgrString(itemColor) : null;
-};
+  /**
+   * @inheritDoc
+   */
+  getStrokeWidth(item) {
+    return osFeature.getStrokeWidth(item);
+  }
 
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getStrokeWidth = function(item) {
-  return os.feature.getStrokeWidth(item);
-};
+  /**
+   * @inheritDoc
+   */
+  getField(item, field) {
+    return osFeature.getField(item, field);
+  }
 
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getField = function(item, field) {
-  return os.feature.getField(item, field);
-};
+  /**
+   * @inheritDoc
+   */
+  getItemLabel(item, labelField) {
+    if (typeof labelField == 'object' && labelField['column']) {
+      var label = this.getField(item, labelField['column']);
+      if (label != null) {
+        // if the column name is displayed in opensphere, add it in the KML as well
+        return (labelField['showColumn'] ? (labelField['column'] + ': ') : '') + String(label);
+      }
 
+      return null;
+    }
 
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getItemLabel = function(item, labelField) {
-  if (typeof labelField == 'object' && labelField['column']) {
-    var label = this.getField(item, labelField['column']);
-    if (label != null) {
-      // if the column name is displayed in opensphere, add it in the KML as well
-      return (labelField['showColumn'] ? (labelField['column'] + ': ') : '') + String(label);
+    return super.getItemLabel(item, labelField);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getIcon(item) {
+    // TODO update this when we support icons. it should return an object with the href/scale of the feature icon,
+    //      defaulting to the base behavior
+    return super.getIcon(item);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getId(item) {
+    return /** @type {string} */ (item.getId());
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getFields(item) {
+    var source = this.getSource_(item);
+    var fields = null;
+    if (source) {
+      var sourceId = source.getId();
+      if (!(sourceId in this.sourceFields_)) {
+        this.sourceFields_[sourceId] = osSource.getExportFields(source) || [];
+      }
+
+      fields = this.sourceFields_[sourceId];
+    }
+
+    return fields || this.fields;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getParent(item) {
+    // initialize the parent to the root kml:Document
+    var parent = this.kmlDoc;
+    if (parent) {
+      // opensphere organizes Placemarks into folders by source
+      var source = this.getSource_(item);
+      if (source) {
+        var sourceId = source.getId();
+        if (!(sourceId in this.folders_)) {
+          // create a new folder for the source
+          var folder = xml.appendElementNS('Folder', this.kmlNS, parent);
+          xml.appendElementNS('name', this.kmlNS, folder, source.getTitle());
+
+          // update the parent
+          parent = this.folders_[sourceId] = folder;
+        } else {
+          // already have a folder for the source
+          parent = this.folders_[sourceId];
+        }
+      }
+    }
+
+    return parent;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getProperties(item) {
+    var properties = item.getProperties();
+    var keys = googObject.getKeys(properties);
+    for (var i = 0, n = keys.length; i < n; i++) {
+      var key = keys[i];
+      if (googString.startsWith(key, '_') || osFeature.isInternalField(key)) {
+        delete properties[key];
+      }
+    }
+
+    return properties;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getStyleType(item) {
+    var type = kml.StyleType.DEFAULT;
+    var geometry = this.getGeometry(item);
+    if (geometry && (geometry.getType() == GeometryType.POINT ||
+        geometry.getType() == GeometryType.GEOMETRY_COLLECTION)) {
+      var source = this.getSource_(item);
+      var shape = source ? source.getGeometryShape() : null;
+      type = shape == osStyle.ShapeType.ICON ? kml.StyleType.ICON : kml.StyleType.POINT;
+    }
+
+    return type;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getTime(item) {
+    var time = item.get(RecordField.TIME);
+    if (osImplements(time, ITime.ID)) {
+      return /** @type {!ITime} */ (time);
     }
 
     return null;
   }
 
-  return plugin.file.kml.KMLExporter.base(this, 'getItemLabel', item, labelField);
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getIcon = function(item) {
-  // TODO update this when we support icons. it should return an object with the href/scale of the feature icon,
-  //      defaulting to the base behavior
-  return plugin.file.kml.KMLExporter.base(this, 'getIcon', item);
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getId = function(item) {
-  return /** @type {string} */ (item.getId());
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getFields = function(item) {
-  var source = this.getSource_(item);
-  var fields = null;
-  if (source) {
-    var sourceId = source.getId();
-    if (!(sourceId in this.sourceFields_)) {
-      this.sourceFields_[sourceId] = os.source.getExportFields(source) || [];
-    }
-
-    fields = this.sourceFields_[sourceId];
-  }
-
-  return fields || this.fields;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getParent = function(item) {
-  // initialize the parent to the root kml:Document
-  var parent = this.kmlDoc;
-  if (parent) {
-    // opensphere organizes Placemarks into folders by source
-    var source = this.getSource_(item);
-    if (source) {
-      var sourceId = source.getId();
-      if (!(sourceId in this.folders_)) {
-        // create a new folder for the source
-        var folder = os.xml.appendElementNS('Folder', this.kmlNS, parent);
-        os.xml.appendElementNS('name', this.kmlNS, folder, source.getTitle());
-
-        // update the parent
-        parent = this.folders_[sourceId] = folder;
-      } else {
-        // already have a folder for the source
-        parent = this.folders_[sourceId];
+  /**
+   * @inheritDoc
+   */
+  getGeometry(item) {
+    var geometry;
+    if (item) {
+      geometry = /** @type {(ol.geom.Geometry|undefined)} */ (item.get(RecordField.GEOM));
+      var geomAltitudeMode;
+      var featAltitudeMode = item.get(RecordField.ALTITUDE_MODE);
+      if (geometry) {
+        geometry = geometry.clone().toLonLat();
+        geomAltitudeMode = geometry.get(RecordField.ALTITUDE_MODE);
       }
-    }
-  }
 
-  return parent;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getProperties = function(item) {
-  var properties = item.getProperties();
-  var keys = goog.object.getKeys(properties);
-  for (var i = 0, n = keys.length; i < n; i++) {
-    var key = keys[i];
-    if (goog.string.startsWith(key, '_') || os.feature.isInternalField(key)) {
-      delete properties[key];
-    }
-  }
-
-  return properties;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getStyleType = function(item) {
-  var type = os.ui.file.kml.StyleType.DEFAULT;
-  var geometry = this.getGeometry(item);
-  if (geometry && (geometry.getType() == ol.geom.GeometryType.POINT ||
-      geometry.getType() == ol.geom.GeometryType.GEOMETRY_COLLECTION)) {
-    var source = this.getSource_(item);
-    var shape = source ? source.getGeometryShape() : null;
-    type = shape == os.style.ShapeType.ICON ? os.ui.file.kml.StyleType.ICON : os.ui.file.kml.StyleType.POINT;
-  }
-
-  return type;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getTime = function(item) {
-  var time = item.get(os.data.RecordField.TIME);
-  if (os.implements(time, os.time.ITime.ID)) {
-    return /** @type {!os.time.ITime} */ (time);
-  }
-
-  return null;
-};
-
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getGeometry = function(item) {
-  var geometry;
-  if (item) {
-    geometry = /** @type {(ol.geom.Geometry|undefined)} */ (item.get(os.data.RecordField.GEOM));
-    var geomAltitudeMode;
-    var featAltitudeMode = item.get(os.data.RecordField.ALTITUDE_MODE);
-    if (geometry) {
-      geometry = geometry.clone().toLonLat();
-      geomAltitudeMode = geometry.get(os.data.RecordField.ALTITUDE_MODE);
-    }
-
-    if (this.exportEllipses) {
-      var ellipse = os.feature.createEllipse(item);
-      if (ellipse && !(ellipse instanceof ol.geom.Point)) {
-        if (this.useCenterPoint && geometry instanceof ol.geom.Point) {
-          geometry = new ol.geom.GeometryCollection([ellipse, geometry]);
-        } else {
-          geometry = ellipse;
-        }
-      }
-    }
-
-    if (geometry) {
-      geometry.set(os.data.RecordField.ALTITUDE_MODE, geomAltitudeMode || featAltitudeMode);
-    }
-  }
-
-  return geometry;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getBalloonOptions = function(item) {
-  return plugin.file.kml.export.getBalloonOptions(item);
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getRotationColumn = function(item) {
-  return plugin.file.kml.export.getRotationColumn(item);
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getLineDash = function(item) {
-  return plugin.file.kml.export.getLineDash(item);
-};
-
-
-/**
- * Get the feature's source.
- *
- * @param {ol.Feature} feature The feature
- * @return {os.source.Vector} The source
- * @private
- */
-plugin.file.kml.KMLExporter.prototype.getSource_ = function(feature) {
-  var source = null;
-  if (feature) {
-    var sourceId = feature.get(os.data.RecordField.SOURCE_ID);
-    if (typeof sourceId === 'string') {
-      source = /** @type {os.source.Vector} */ (os.osDataManager.getSource(sourceId));
-    }
-  }
-
-  return source;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getUI = function() {
-  return '<kmlexport exporter="exporter" simple="simple"></kmlexport>';
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.getGroupLabels = function(item) {
-  if (item) {
-    var sourceId = /** @type {string|undefined} */ (item.get(os.data.RecordField.SOURCE_ID));
-
-    // don't count the drawing layer as a style source
-    if (sourceId && sourceId != os.MapContainer.DRAW_ID) {
-      if (item instanceof os.feature.DynamicFeature || !(sourceId in this.labelMap)) {
-        var cfg = os.style.StyleManager.getInstance().getLayerConfig(sourceId);
-        var itemStyle = item.get(os.style.StyleType.FEATURE);
-        // Check the layer level
-        if (cfg && cfg['labels'] && this.checkLabelsNotNull_(cfg['labels'])) {
-          this.labelMap[sourceId] = cfg['labels'];
-        } else if (itemStyle && Array.isArray(itemStyle)) {
-          // Check the feature level
-          var labels = ol.array.find(itemStyle, os.style.isLabelConfig);
-          if (labels) {
-            this.labelMap[sourceId] = labels['labels'];
+      if (this.exportEllipses) {
+        var ellipse = osFeature.createEllipse(item);
+        if (ellipse && !(ellipse instanceof Point)) {
+          if (this.useCenterPoint && geometry instanceof Point) {
+            geometry = new GeometryCollection([ellipse, geometry]);
+          } else {
+            geometry = ellipse;
           }
-        } else {
-          this.labelMap[sourceId] = null;
         }
       }
 
-      return this.labelMap[sourceId];
+      if (geometry) {
+        geometry.set(RecordField.ALTITUDE_MODE, geomAltitudeMode || featAltitudeMode);
+      }
     }
+
+    return geometry;
   }
 
-  return null;
-};
+  /**
+   * @inheritDoc
+   */
+  getBalloonOptions(item) {
+    return pluginFileKmlExport.getBalloonOptions(item);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getRotationColumn(item) {
+    return pluginFileKmlExport.getRotationColumn(item);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getLineDash(item) {
+    return pluginFileKmlExport.getLineDash(item);
+  }
+
+  /**
+   * Get the feature's source.
+   *
+   * @param {Feature} feature The feature
+   * @return {osSource.Vector} The source
+   * @private
+   */
+  getSource_(feature) {
+    var source = null;
+    if (feature) {
+      var sourceId = feature.get(RecordField.SOURCE_ID);
+      if (typeof sourceId === 'string') {
+        source = /** @type {osSource.Vector} */ (OSDataManager.getInstance().getSource(sourceId));
+      }
+    }
+
+    return source;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getUI() {
+    return `<${kmlExportUi} exporter="exporter" simple="simple"></${kmlExportUi}>`;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getGroupLabels(item) {
+    if (item) {
+      var sourceId = /** @type {string|undefined} */ (item.get(RecordField.SOURCE_ID));
+
+      // don't count the drawing layer as a style source
+      if (sourceId && sourceId != MapContainer.DRAW_ID) {
+        if (item instanceof osFeature.DynamicFeature || !(sourceId in this.labelMap)) {
+          var cfg = osStyle.StyleManager.getInstance().getLayerConfig(sourceId);
+          var itemStyle = item.get(osStyle.StyleType.FEATURE);
+          // Check the layer level
+          if (cfg && cfg['labels'] && this.checkLabelsNotNull_(cfg['labels'])) {
+            this.labelMap[sourceId] = cfg['labels'];
+          } else if (itemStyle && Array.isArray(itemStyle)) {
+            // Check the feature level
+            var labels = olArray.find(itemStyle, osStyle.isLabelConfig);
+            if (labels) {
+              this.labelMap[sourceId] = labels['labels'];
+            }
+          } else {
+            this.labelMap[sourceId] = null;
+          }
+        }
+
+        return this.labelMap[sourceId];
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Check the label field array for any non-null fields.
+   *
+   * @param {Array<*>} labelFields Array of label fields
+   * @return {boolean} True if there are any non-null label fields
+   * @private
+   */
+  checkLabelsNotNull_(labelFields) {
+    if (labelFields) {
+      return labelFields.some(function(labelField) {
+        return (typeof labelField == 'object' && labelField['column']);
+      });
+    }
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  supportsLabelExport() {
+    return true;
+  }
+}
 
 
 /**
- * Check the label field array for any non-null fields.
- *
- * @param {Array<*>} labelFields Array of label fields
- * @return {boolean} True if there are any non-null label fields
- * @private
+ * Logger
+ * @type {goog.log.Logger}
  */
-plugin.file.kml.KMLExporter.prototype.checkLabelsNotNull_ = function(labelFields) {
-  if (labelFields) {
-    return labelFields.some(function(labelField) {
-      return (typeof labelField == 'object' && labelField['column']);
-    });
-  }
-  return false;
-};
+const logger = log.getLogger('plugin.file.kml.KMLExporter');
 
 
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLExporter.prototype.supportsLabelExport = function() {
-  return true;
-};
+exports = KMLExporter;

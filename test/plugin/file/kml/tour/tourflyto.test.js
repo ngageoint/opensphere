@@ -1,9 +1,15 @@
-goog.require('os.map.FlightMode');
+goog.require('goog.Promise');
+goog.require('os.MapContainer');
 goog.require('os.map');
+goog.require('os.map.FlightMode');
 goog.require('plugin.file.kml.tour.FlyTo');
 
 
 describe('plugin.file.kml.tour.FlyTo', function() {
+  const Promise = goog.module.get('goog.Promise');
+  const MapContainer = goog.module.get('os.MapContainer');
+  const FlightMode = goog.module.get('os.map.FlightMode');
+  const FlyTo = goog.module.get('plugin.file.kml.tour.FlyTo');
   // default values for tests
   var duration = 4321;
   var timeoutId = 1234;
@@ -41,14 +47,14 @@ describe('plugin.file.kml.tour.FlyTo', function() {
 
   it('initializes correctly', function() {
     var options = {};
-    var flyTo = new plugin.file.kml.tour.FlyTo(options);
+    var flyTo = new FlyTo(options);
 
     // has a default duration and saves options
-    expect(flyTo.duration_).toBe(plugin.file.kml.tour.FlyTo.DEFAULT_DURATION);
+    expect(flyTo.duration_).toBe(FlyTo.DEFAULT_DURATION);
     expect(flyTo.options_).toBe(options);
 
     options.duration = 1234;
-    flyTo = new plugin.file.kml.tour.FlyTo(options);
+    flyTo = new FlyTo(options);
 
     // uses duration if provided on options
     expect(flyTo.duration_).toBe(1234);
@@ -56,15 +62,15 @@ describe('plugin.file.kml.tour.FlyTo', function() {
   });
 
   it('calls the map container flyTo with correct options', function() {
-    var flyTo = new plugin.file.kml.tour.FlyTo(flyToOptions);
+    var flyTo = new FlyTo(flyToOptions);
 
     spyOn(window, 'setTimeout').andCallFake(fakeSetTimeout);
-    spyOn(os.MapContainer, 'getInstance').andReturn({
+    spyOn(MapContainer, 'getInstance').andReturn({
       flyTo: fakeFlyTo
     });
 
     var flyToPromise = flyTo.execute();
-    expect(flyToPromise instanceof goog.Promise).toBe(true);
+    expect(flyToPromise instanceof Promise).toBe(true);
 
     waitsFor(function() {
       return stFn !== undefined && stInterval !== undefined && fakeFlyToOptions !== undefined;
@@ -75,14 +81,14 @@ describe('plugin.file.kml.tour.FlyTo', function() {
       expect(fakeFlyToOptions.center).toEqual(flyToOptions.center);
       expect(fakeFlyToOptions.altitude).toBe(flyToOptions.altitude);
       expect(fakeFlyToOptions.duration).toBe(duration);
-      expect(fakeFlyToOptions.flightMode).toBe(os.map.FlightMode.BOUNCE);
+      expect(fakeFlyToOptions.flightMode).toBe(FlightMode.BOUNCE);
     });
   });
 
   it('cancels flight on pause and reset if the wait is active', function() {
-    var flyTo = new plugin.file.kml.tour.FlyTo(flyToOptions);
+    var flyTo = new FlyTo(flyToOptions);
 
-    spyOn(os.MapContainer, 'getInstance').andReturn({
+    spyOn(MapContainer, 'getInstance').andReturn({
       cancelFlight: fakeCancelFlight
     });
 

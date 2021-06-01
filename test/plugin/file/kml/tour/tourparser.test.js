@@ -1,12 +1,20 @@
 goog.require('ol.xml');
 goog.require('os.map.FlightMode');
 goog.require('plugin.file.kml.tour.FlyTo');
+goog.require('plugin.file.kml.tour.SoundCue');
 goog.require('plugin.file.kml.tour.Tour');
 goog.require('plugin.file.kml.tour.TourControl');
 goog.require('plugin.file.kml.tour.Wait');
 goog.require('plugin.file.kml.tour.parseTour');
 
 describe('plugin.file.kml.tour.parseTour', function() {
+  const xml = goog.module.get('ol.xml');
+  const FlightMode = goog.module.get('os.map.FlightMode');
+  const FlyTo = goog.module.get('plugin.file.kml.tour.FlyTo');
+  const SoundCue = goog.module.get('plugin.file.kml.tour.SoundCue');
+  const TourControl = goog.module.get('plugin.file.kml.tour.TourControl');
+  const Wait = goog.module.get('plugin.file.kml.tour.Wait');
+  const parseTour = goog.module.get('plugin.file.kml.tour.parseTour');
   // match opening/closing tags for a KML tour element, with a trailing space (has attributes) or GT (no attributes)
   var tourElRegexp = /(<\/?)(Tour|Playlist|FlyTo|SoundCue|TourControl|Wait|delayedStart|duration|flyToMode)([ >])/g;
 
@@ -27,7 +35,7 @@ describe('plugin.file.kml.tour.parseTour', function() {
    * @return {Element} The root Tour element.
    */
   var getTourNode = function(text, namespace) {
-    var node = ol.xml.parse(replaceText(text, namespace));
+    var node = xml.parse(replaceText(text, namespace));
     return node.firstElementChild;
   };
 
@@ -41,7 +49,7 @@ describe('plugin.file.kml.tour.parseTour', function() {
             '  <Playlist></Playlist>' +
             '</Tour>';
 
-        var tour = plugin.file.kml.tour.parseTour(getTourNode(text));
+        var tour = parseTour(getTourNode(text));
         expect(tour).toBeDefined();
         expect(tour.name).toBe('Test Tour');
         expect(tour.description).toBe('Test Tour Description');
@@ -58,11 +66,11 @@ describe('plugin.file.kml.tour.parseTour', function() {
             '  </Playlist>' +
             '</Tour>';
 
-        var tour = plugin.file.kml.tour.parseTour(getTourNode(text));
+        var tour = parseTour(getTourNode(text));
         var flyTo = tour.getPlaylist()[0];
-        expect(flyTo instanceof plugin.file.kml.tour.FlyTo).toBe(true);
-        expect(flyTo.duration_).toBe(plugin.file.kml.tour.FlyTo.DEFAULT_DURATION);
-        expect(flyTo.options_.flightMode).toBe(os.map.FlightMode.BOUNCE);
+        expect(flyTo instanceof FlyTo).toBe(true);
+        expect(flyTo.duration_).toBe(FlyTo.DEFAULT_DURATION);
+        expect(flyTo.options_.flightMode).toBe(FlightMode.BOUNCE);
       });
 
       it('parses a ' + namespace + 'FlyTo element with duration', function() {
@@ -77,9 +85,9 @@ describe('plugin.file.kml.tour.parseTour', function() {
             '  </Playlist>' +
             '</Tour>';
 
-        var tour = plugin.file.kml.tour.parseTour(getTourNode(text));
+        var tour = parseTour(getTourNode(text));
         var flyTo = tour.getPlaylist()[0];
-        expect(flyTo instanceof plugin.file.kml.tour.FlyTo).toBe(true);
+        expect(flyTo instanceof FlyTo).toBe(true);
         expect(flyTo.duration_).toBe(10000);
       });
 
@@ -95,10 +103,10 @@ describe('plugin.file.kml.tour.parseTour', function() {
             '  </Playlist>' +
             '</Tour>';
 
-        var tour = plugin.file.kml.tour.parseTour(getTourNode(text));
+        var tour = parseTour(getTourNode(text));
         var flyTo = tour.getPlaylist()[0];
-        expect(flyTo instanceof plugin.file.kml.tour.FlyTo).toBe(true);
-        expect(flyTo.options_.flightMode).toBe(os.map.FlightMode.SMOOTH);
+        expect(flyTo instanceof FlyTo).toBe(true);
+        expect(flyTo.options_.flightMode).toBe(FlightMode.SMOOTH);
       });
 
       it('parses a ' + namespace + 'FlyTo element with invalid flyToMode', function() {
@@ -113,10 +121,10 @@ describe('plugin.file.kml.tour.parseTour', function() {
             '  </Playlist>' +
             '</Tour>';
 
-        var tour = plugin.file.kml.tour.parseTour(getTourNode(text));
+        var tour = parseTour(getTourNode(text));
         var flyTo = tour.getPlaylist()[0];
-        expect(flyTo instanceof plugin.file.kml.tour.FlyTo).toBe(true);
-        expect(flyTo.options_.flightMode).toBe(os.map.FlightMode.BOUNCE);
+        expect(flyTo instanceof FlyTo).toBe(true);
+        expect(flyTo.options_.flightMode).toBe(FlightMode.BOUNCE);
       });
 
       it('parses a ' + namespace + 'FlyTo element with a Camera definition', function() {
@@ -138,14 +146,14 @@ describe('plugin.file.kml.tour.parseTour', function() {
             '  </Playlist>' +
             '</Tour>';
 
-        var tour = plugin.file.kml.tour.parseTour(getTourNode(text));
+        var tour = parseTour(getTourNode(text));
         expect(tour).toBeDefined();
 
         var playlist = tour.getPlaylist();
         expect(playlist.length).toBe(1);
 
         var flyTo = playlist[0];
-        expect(flyTo instanceof plugin.file.kml.tour.FlyTo).toBe(true);
+        expect(flyTo instanceof FlyTo).toBe(true);
         expect(flyTo.options_.center[0]).toBe(123.45);
         expect(flyTo.options_.center[1]).toBe(-67.89);
         expect(flyTo.options_.altitude).toBe(12345);
@@ -177,14 +185,14 @@ describe('plugin.file.kml.tour.parseTour', function() {
             '  </Playlist>' +
             '</Tour>';
 
-        var tour = plugin.file.kml.tour.parseTour(getTourNode(text));
+        var tour = parseTour(getTourNode(text));
         expect(tour).toBeDefined();
 
         var playlist = tour.getPlaylist();
         expect(playlist.length).toBe(1);
 
         var flyTo = playlist[0];
-        expect(flyTo instanceof plugin.file.kml.tour.FlyTo).toBe(true);
+        expect(flyTo instanceof FlyTo).toBe(true);
         expect(flyTo.options_.center[0]).toBe(123.45);
         expect(flyTo.options_.center[1]).toBe(-67.89);
         expect(flyTo.options_.altitude).toBe(150);
@@ -211,12 +219,12 @@ describe('plugin.file.kml.tour.parseTour', function() {
             '  </Playlist>' +
             '</Tour>';
 
-        var tour = plugin.file.kml.tour.parseTour(getTourNode(text));
+        var tour = parseTour(getTourNode(text));
         expect(tour).toBeDefined();
 
         var playlist = tour.getPlaylist();
         expect(playlist.length).toBe(1);
-        expect(playlist[0] instanceof plugin.file.kml.tour.SoundCue).toBe(true);
+        expect(playlist[0] instanceof SoundCue).toBe(true);
         expect(playlist[0].href_).toBe(href);
         expect(playlist[0].duration_).toBe(delayedStart * 1000);
       });
@@ -231,12 +239,12 @@ describe('plugin.file.kml.tour.parseTour', function() {
             '  </Playlist>' +
             '</Tour>';
 
-        var tour = plugin.file.kml.tour.parseTour(getTourNode(text));
+        var tour = parseTour(getTourNode(text));
         expect(tour).toBeDefined();
 
         var playlist = tour.getPlaylist();
         expect(playlist.length).toBe(1);
-        expect(playlist[0] instanceof plugin.file.kml.tour.TourControl).toBe(true);
+        expect(playlist[0] instanceof TourControl).toBe(true);
         expect(playlist[0].tour_).toBe(tour);
       });
 
@@ -253,12 +261,12 @@ describe('plugin.file.kml.tour.parseTour', function() {
             '  </Playlist>' +
             '</Tour>';
 
-        var tour = plugin.file.kml.tour.parseTour(getTourNode(text));
+        var tour = parseTour(getTourNode(text));
         expect(tour).toBeDefined();
 
         var playlist = tour.getPlaylist();
         expect(playlist.length).toBe(1);
-        expect(playlist[0] instanceof plugin.file.kml.tour.Wait).toBe(true);
+        expect(playlist[0] instanceof Wait).toBe(true);
         expect(playlist[0].duration_).toBe(duration * 1000);
       });
     });

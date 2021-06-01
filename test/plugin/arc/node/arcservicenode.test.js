@@ -1,4 +1,3 @@
-goog.require('os.net.Request');
 goog.require('os.ui.data.DescriptorNode');
 goog.require('plugin.arc.ArcServer');
 goog.require('plugin.arc.layer.ArcLayerDescriptor');
@@ -6,8 +5,13 @@ goog.require('plugin.arc.node.ArcServiceNode');
 
 
 describe('plugin.arc.node.ArcServiceNode', function() {
+  const DescriptorNode = goog.module.get('os.ui.data.DescriptorNode');
+  const ArcServer = goog.module.get('plugin.arc.ArcServer');
+  const ArcLayerDescriptor = goog.module.get('plugin.arc.layer.ArcLayerDescriptor');
+  const ArcServiceNode = goog.module.get('plugin.arc.node.ArcServiceNode');
+
   it('should add layer descriptors as children to itself', function() {
-    var server = new plugin.arc.ArcServer();
+    var server = new ArcServer();
     var config = {
       'label': 'Arc Test',
       'type': 'arc',
@@ -49,16 +53,16 @@ describe('plugin.arc.node.ArcServiceNode', function() {
       'capabilities': 'Map,Query'
     };
 
-    var node = new plugin.arc.node.ArcServiceNode(server);
+    var node = new ArcServiceNode(server);
     node.setUrl(server.getUrl());
     node.addLayer_(layerConfig);
 
     expect(node.getChildren().length).toBe(1);
     var dNode = node.getChildren()[0];
-    expect(dNode instanceof os.ui.data.DescriptorNode).toBe(true);
+    expect(dNode instanceof DescriptorNode).toBe(true);
 
     var d = dNode.getDescriptor();
-    expect(d instanceof plugin.arc.layer.ArcLayerDescriptor).toBe(true);
+    expect(d instanceof ArcLayerDescriptor).toBe(true);
     expect(d.getTitle()).toBe('My Little Arc Layer');
   });
 });

@@ -101,7 +101,8 @@ os.ui.window.launchConfirmText = function(opt_options) {
     'select': !!options.select,
     'limit': options.limit || 200,
     'formLabel': options.formLabel,
-    'prompt': options.prompt
+    'prompt': options.prompt,
+    'subPrompt': options.subPrompt
   };
 
   var windowOverrides = /** @type {!osx.window.WindowOptions} */ (options.windowOptions || {});

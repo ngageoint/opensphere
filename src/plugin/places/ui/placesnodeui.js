@@ -1,25 +1,29 @@
-goog.provide('plugin.places.ui.PlacesNodeUICtrl');
-goog.provide('plugin.places.ui.placesNodeUIDirective');
+goog.module('plugin.places.ui.PlacesNodeUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.EventType');
-goog.require('os.ui.Module');
-goog.require('os.ui.node.DefaultLayerNodeUICtrl');
-goog.require('plugin.places');
+const Module = goog.require('os.ui.Module');
+const DefaultLayerNodeUICtrl = goog.require('os.ui.node.DefaultLayerNodeUICtrl');
+const {createOrEditFolder, createOrEditPlace} = goog.require('plugin.file.kml.ui');
+const {Icon, getPlacesRoot} = goog.require('plugin.places');
+const PlacesManager = goog.require('plugin.places.PlacesManager');
+
+const {FolderOptions, PlacemarkOptions} = goog.requireType('plugin.file.kml.ui');
+const KMLLayerNode = goog.requireType('plugin.file.kml.ui.KMLLayerNode');
 
 
 /**
  * @type {string}
  */
-plugin.places.ui.PlacesNodeUITemplate = `
+const template = `
   <span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">
     <span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addFolder()">
-      <i class="fa ${plugin.places.Icon.FOLDER} fa-fw c-glyph" title="Create a new folder"></i>
+      <i class="fa ${Icon.FOLDER} fa-fw c-glyph" title="Create a new folder"></i>
     </span>
     <span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace()">
-      <i class="fa ${plugin.places.Icon.PLACEMARK} fa-fw c-glyph" title="Create a new place"></i>
+      <i class="fa ${Icon.PLACEMARK} fa-fw c-glyph" title="Create a new place"></i>
     </span>
     <span ng-if="nodeUi.canEdit()" ng-click="nodeUi.addPlace(true)">
-      <i class="fa ${plugin.places.Icon.ANNOTATION} fa-fw c-glyph" title="Create a new place with a text box"></i>
+      <i class="fa ${Icon.ANNOTATION} fa-fw c-glyph" title="Create a new place with a text box"></i>
     </span>
     <span ng-if="nodeUi.isRemovable()" ng-click="nodeUi.remove()">
       <i class="fa fa-times fa-fw c-glyph" title="Remove the place></i>
@@ -33,95 +37,101 @@ plugin.places.ui.PlacesNodeUITemplate = `
  *
  * @return {angular.Directive}
  */
-plugin.places.ui.placesNodeUIDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    template: plugin.places.ui.PlacesNodeUITemplate,
-    controller: plugin.places.ui.PlacesNodeUICtrl,
-    controllerAs: 'nodeUi'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  template: template,
+  controller: Controller,
+  controllerAs: 'nodeUi'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'placesnodeui';
 
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('placesnodeui', [plugin.places.ui.placesNodeUIDirective]);
+Module.directive('placesnodeui', [directive]);
 
 
 
 /**
  * Controller for the Places selected/highlighted node UI
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @extends {os.ui.node.DefaultLayerNodeUICtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-plugin.places.ui.PlacesNodeUICtrl = function($scope, $element) {
-  plugin.places.ui.PlacesNodeUICtrl.base(this, 'constructor', $scope, $element);
-};
-goog.inherits(plugin.places.ui.PlacesNodeUICtrl, os.ui.node.DefaultLayerNodeUICtrl);
+class Controller extends DefaultLayerNodeUICtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
+  }
 
-
-/**
- * Add a new folder.
- *
- * @export
- */
-plugin.places.ui.PlacesNodeUICtrl.prototype.addFolder = function() {
-  var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
-  if (node) {
-    var rootNode = plugin.places.getPlacesRoot(node);
-    if (rootNode) {
-      plugin.file.kml.ui.createOrEditFolder(/** @type {!plugin.file.kml.ui.FolderOptions} */ ({
-        'parent': rootNode
-      }));
+  /**
+   * Add a new folder.
+   *
+   * @export
+   */
+  addFolder() {
+    var node = /** @type {KMLLayerNode} */ (this.scope['item']);
+    if (node) {
+      var rootNode = getPlacesRoot(node);
+      if (rootNode) {
+        createOrEditFolder(/** @type {!FolderOptions} */ ({
+          'parent': rootNode
+        }));
+      }
     }
   }
-};
 
-
-/**
- * Add a new place.
- *
- * @param {boolean=} opt_annotation Whether the place is an annotation.
- * @export
- */
-plugin.places.ui.PlacesNodeUICtrl.prototype.addPlace = function(opt_annotation) {
-  var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
-  if (node) {
-    var rootNode = opt_annotation ?
-      plugin.places.PlacesManager.getInstance().getAnnotationsFolder() : plugin.places.getPlacesRoot(node);
-
-    if (rootNode) {
-      plugin.file.kml.ui.createOrEditPlace(/** @type {!plugin.file.kml.ui.PlacemarkOptions} */ ({
-        'parent': rootNode,
-        'annotation': opt_annotation
-      }));
+  /**
+   * Add a new place.
+   *
+   * @param {boolean=} opt_annotation Whether the place is an annotation.
+   * @export
+   */
+  addPlace(opt_annotation) {
+    var node = /** @type {KMLLayerNode} */ (this.scope['item']);
+    if (node) {
+      var rootNode = opt_annotation ? PlacesManager.getInstance().getAnnotationsFolder() : getPlacesRoot(node);
+      if (rootNode) {
+        createOrEditPlace(/** @type {!PlacemarkOptions} */ ({
+          'parent': rootNode,
+          'annotation': opt_annotation
+        }));
+      }
     }
   }
-};
 
+  /**
+   * If the node can be edited.
+   *
+   * @return {boolean}
+   * @export
+   */
+  canEdit() {
+    var node = /** @type {KMLLayerNode} */ (this.scope['item']);
+    return node ? node.isEditable() : false;
+  }
 
-/**
- * If the node can be edited.
- *
- * @return {boolean}
- * @export
- */
-plugin.places.ui.PlacesNodeUICtrl.prototype.canEdit = function() {
-  var node = /** @type {plugin.file.kml.ui.KMLLayerNode} */ (this.scope['item']);
-  return node ? node.isEditable() : false;
-};
+  /**
+   * @inheritDoc
+   * @export
+   */
+  remove() {
+    PlacesManager.getInstance().removeLayer();
+  }
+}
 
-
-/**
- * @inheritDoc
- * @export
- */
-plugin.places.ui.PlacesNodeUICtrl.prototype.remove = function() {
-  plugin.places.PlacesManager.getInstance().removeLayer();
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

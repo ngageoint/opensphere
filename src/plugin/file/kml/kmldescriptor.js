@@ -1,70 +1,55 @@
-goog.provide('plugin.file.kml.KMLDescriptor');
+goog.module('plugin.file.kml.KMLDescriptor');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.FileDescriptor');
-goog.require('os.layer');
-goog.require('os.layer.LayerType');
-goog.require('os.style');
-goog.require('os.ui.ControlType');
-goog.require('plugin.file.kml.KMLExporter');
-goog.require('plugin.file.kml.KMLProvider');
-
+const FileDescriptor = goog.require('os.data.FileDescriptor');
+const layer = goog.require('os.layer');
+const LayerType = goog.require('os.layer.LayerType');
+const ColorControlType = goog.require('os.ui.ColorControlType');
+const ControlType = goog.require('os.ui.ControlType');
+const KMLExporter = goog.require('plugin.file.kml.KMLExporter');
 
 
 /**
  * KML file descriptor.
- *
- * @extends {os.data.FileDescriptor}
- * @constructor
  */
-plugin.file.kml.KMLDescriptor = function() {
-  plugin.file.kml.KMLDescriptor.base(this, 'constructor');
-  this.descriptorType = 'kml';
-};
-goog.inherits(plugin.file.kml.KMLDescriptor, os.data.FileDescriptor);
+class KMLDescriptor extends FileDescriptor {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.descriptorType = 'kml';
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getType() {
+    return LayerType.FEATURES;
+  }
 
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLDescriptor.prototype.getType = function() {
-  return os.layer.LayerType.FEATURES;
-};
+  /**
+   * @inheritDoc
+   */
+  getLayerOptions() {
+    var options = super.getLayerOptions();
+    options['type'] = 'KML';
 
+    // allow resetting the layer color to the default
+    options[ControlType.COLOR] = ColorControlType.PICKER_RESET;
 
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLDescriptor.prototype.getLayerOptions = function() {
-  var options = plugin.file.kml.KMLDescriptor.base(this, 'getLayerOptions');
-  options['type'] = 'KML';
+    // show the option to replace feature colors with the layer color
+    options[layer.LayerOption.SHOW_FORCE_COLOR] = true;
 
-  // allow resetting the layer color to the default
-  options[os.ui.ControlType.COLOR] = os.ui.ColorControlType.PICKER_RESET;
+    return options;
+  }
 
-  // show the option to replace feature colors with the layer color
-  options[os.layer.LayerOption.SHOW_FORCE_COLOR] = true;
+  /**
+   * @inheritDoc
+   */
+  getExporter() {
+    return new KMLExporter();
+  }
+}
 
-  return options;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLDescriptor.prototype.getExporter = function() {
-  return new plugin.file.kml.KMLExporter();
-};
-
-
-/**
- * Creates a new descriptor from a parser configuration.
- *
- * @param {!os.parse.FileParserConfig} config
- * @return {!plugin.file.kml.KMLDescriptor}
- */
-plugin.file.kml.KMLDescriptor.createFromConfig = function(config) {
-  var provider = plugin.file.kml.KMLProvider.getInstance();
-  var descriptor = new plugin.file.kml.KMLDescriptor();
-  os.data.FileDescriptor.createFromConfig(descriptor, provider, config);
-  return descriptor;
-};
+exports = KMLDescriptor;

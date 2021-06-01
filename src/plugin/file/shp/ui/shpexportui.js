@@ -1,8 +1,8 @@
-goog.provide('plugin.file.shp.ui.SHPExportCtrl');
-goog.provide('plugin.file.shp.ui.shpExportDirective');
+goog.module('plugin.file.shp.ui.SHPExportUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os');
-goog.require('os.ui.Module');
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -10,76 +10,88 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-plugin.file.shp.ui.shpExportDirective = function() {
-  return {
-    restrict: 'E',
-    scope: {
-      'exporter': '='
-    },
-    templateUrl: os.ROOT + 'views/plugin/shp/shpexport.html',
-    controller: plugin.file.shp.ui.SHPExportCtrl,
-    controllerAs: 'shpexport'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  scope: {
+    'exporter': '='
+  },
+  templateUrl: ROOT + 'views/plugin/shp/shpexport.html',
+  controller: Controller,
+  controllerAs: 'shpexport'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'shpexport';
 
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('shpexport', [plugin.file.shp.ui.shpExportDirective]);
+Module.directive('shpexport', [directive]);
 
 
 
 /**
  * Controller function for the shpexport directive
- *
- * @param {!angular.Scope} $scope
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-plugin.file.shp.ui.SHPExportCtrl = function($scope) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @ngInject
    */
-  this.scope_ = $scope;
+  constructor($scope) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
 
-  /**
-   * @type {plugin.file.shp.SHPExporter}
-   * @private
-   */
-  this.exporter_ = /** @type {plugin.file.shp.SHPExporter} */ ($scope['exporter']);
+    /**
+     * @type {plugin.file.shp.SHPExporter}
+     * @private
+     */
+    this.exporter_ = /** @type {plugin.file.shp.SHPExporter} */ ($scope['exporter']);
 
-  /**
-   * @type {boolean}
-   */
-  $scope['exportEllipses'] = this.exporter_.getExportEllipses();
+    /**
+     * @type {boolean}
+     */
+    $scope['exportEllipses'] = this.exporter_.getExportEllipses();
 
-  $scope.$watch('exportEllipses', this.updateExporter_.bind(this));
-  $scope.$on('$destroy', this.destroy_.bind(this));
+    $scope.$watch('exportEllipses', this.updateExporter_.bind(this));
+    $scope.$on('$destroy', this.destroy_.bind(this));
 
-  this.updateExporter_();
-};
-
-
-/**
- * Clean up.
- *
- * @private
- */
-plugin.file.shp.ui.SHPExportCtrl.prototype.destroy_ = function() {
-  this.scope_ = null;
-  this.exporter_ = null;
-};
-
-
-/**
- * Updates the SHP exporter with the current UI configuration.
- *
- * @private
- */
-plugin.file.shp.ui.SHPExportCtrl.prototype.updateExporter_ = function() {
-  if (this.exporter_ && this.scope_) {
-    this.exporter_.setExportEllipses(this.scope_['exportEllipses']);
+    this.updateExporter_();
   }
+
+  /**
+   * Clean up.
+   *
+   * @private
+   */
+  destroy_() {
+    this.scope_ = null;
+    this.exporter_ = null;
+  }
+
+  /**
+   * Updates the SHP exporter with the current UI configuration.
+   *
+   * @private
+   */
+  updateExporter_() {
+    if (this.exporter_ && this.scope_) {
+      this.exporter_.setExportEllipses(this.scope_['exportEllipses']);
+    }
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

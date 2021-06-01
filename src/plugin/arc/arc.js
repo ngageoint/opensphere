@@ -1,49 +1,39 @@
-goog.provide('plugin.arc');
-goog.provide('plugin.arc.ESRIType');
+goog.module('plugin.arc');
 
-goog.require('os.ui.query.CombinatorCtrl');
-goog.require('plugin.arc.ArcFeatureType');
+const xml = goog.require('goog.dom.xml');
+const googString = goog.require('goog.string');
+const text = goog.require('os.file.mime.text');
+const CombinatorCtrl = goog.require('os.ui.query.CombinatorCtrl');
+const ArcFeatureType = goog.require('plugin.arc.ArcFeatureType');
+const ESRIType = goog.require('plugin.arc.ESRIType');
 
-goog.requireType('plugin.arc.ArcServer');
-goog.requireType('plugin.arc.IArcLoader');
-
-
-/**
- * Enum of ESRI types.
- * @enum {string}
- */
-plugin.arc.ESRIType = {
-  BOOLEAN: 'esriFieldTypeBoolean',
-  STRING: 'esriFieldTypeString',
-  DATE: 'esriFieldTypeDate',
-  GEOM: 'esriFieldTypeGeometry'
-};
+const VectorLayer = goog.requireType('os.layer.Vector');
+const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
+const IFeatureType = goog.requireType('os.ogc.IFeatureType');
+const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const ArcServer = goog.requireType('plugin.arc.ArcServer');
+const IArcLoader = goog.requireType('plugin.arc.IArcLoader');
 
 
 /**
- * @const
  * @type {string}
  */
-plugin.arc.MAP_SERVER = 'MapServer';
-
+const MAP_SERVER = 'MapServer';
 
 /**
  * Enum of supported server types.
  * @enum {string}
  */
-plugin.arc.ServerType = {
+const ServerType = {
   MAP_SERVER: 'MapServer',
   IMAGE_SERVER: 'ImageServer',
   FEATURE_SERVER: 'FeatureServer'
 };
 
-
 /**
  * @type {string}
- * @const
  */
-plugin.arc.ID = 'arc';
-
+const ID = 'arc';
 
 /**
  * Returns a more recognizable type from an ESRI Type.
@@ -51,39 +41,37 @@ plugin.arc.ID = 'arc';
  * @param {string} esriType
  * @return {?string}
  */
-plugin.arc.getColumnType = function(esriType) {
-  if (esriType === plugin.arc.ESRIType.BOOLEAN || esriType === plugin.arc.ESRIType.STRING) {
+const getColumnType = function(esriType) {
+  if (esriType === ESRIType.BOOLEAN || esriType === ESRIType.STRING) {
     return 'string';
-  } else if (esriType === plugin.arc.ESRIType.DATE) {
+  } else if (esriType === ESRIType.DATE) {
     return 'datetime';
-  } else if (esriType === plugin.arc.ESRIType.GEOM) {
+  } else if (esriType === ESRIType.GEOM) {
     return 'gml';
   } else {
     return 'decimal';
   }
 };
 
-
 /**
  * Launch the filter manager
  *
- * @param {!os.layer.Vector} layer The layer
+ * @param {!VectorLayer} layer The layer
  */
-plugin.arc.launchFilterManager = function(layer) {
-  os.ui.query.CombinatorCtrl.launchForLayer(layer.getId());
+const launchFilterManager = function(layer) {
+  CombinatorCtrl.launchForLayer(layer.getId());
 };
-
 
 /**
  * Get the filterable columns
  *
- * @param {!os.layer.Vector} layer The layer
- * @return {?Array<os.ogc.FeatureTypeColumn>} the columns
+ * @param {!VectorLayer} layer The layer
+ * @return {?Array<FeatureTypeColumn>} the columns
  */
-plugin.arc.getFilterColumns = function(layer) {
+const getFilterColumns = function(layer) {
   var layerOptions = layer.getLayerOptions();
   if (layerOptions && layerOptions['featureType']) {
-    var featureType = /** @type {os.ogc.IFeatureType} */ (layerOptions['featureType']);
+    var featureType = /** @type {IFeatureType} */ (layerOptions['featureType']);
     if (featureType) {
       return featureType.getColumns();
     }
@@ -92,82 +80,70 @@ plugin.arc.getFilterColumns = function(layer) {
   return null;
 };
 
-
 /**
  * Regular expression to detect an error response. The default ArcGIS error page displays "ArcGIS REST Framework" at
  * the top, and the error/code below.
  * @type {RegExp}
- * @const
  */
-plugin.arc.ERROR_REGEXP = /ArcGIS[\s\S]+Error:[\s\S]+Code:/;
-
+const ERROR_REGEXP = /ArcGIS[\s\S]+Error:[\s\S]+Code:/;
 
 /**
  * @type {RegExp}
- * @const
  */
-plugin.arc.URI_REGEXP = /arcgis/i;
-
+const URI_REGEXP = /arcgis/i;
 
 /**
  * @type {RegExp}
- * @const
  */
-plugin.arc.WMS_URI_REGEXP = /(\/WMSServer|service=WMS)/i;
-
+const WMS_URI_REGEXP = /(\/WMSServer|service=WMS)/i;
 
 /**
  * @type {RegExp}
- * @const
  */
-plugin.arc.CONTENT_REGEXP = /ArcGIS REST Services Directory/i;
-
+const CONTENT_REGEXP = /ArcGIS REST Services Directory/i;
 
 /**
  * The ArcGIS loader class.
- * @type {?function(new: plugin.arc.IArcLoader, ...)}
+ * @type {?function(new: IArcLoader, ...)}
  */
-plugin.arc.loaderClass_ = null;
-
+let loaderClass_ = null;
 
 /**
  * Instantiates and returns a new Arc loader. This
  *
- * @param {os.ui.slick.SlickTreeNode} node The root tree node.
+ * @param {SlickTreeNode} node The root tree node.
  * @param {string} url The Arc service URL for the node.
- * @param {plugin.arc.ArcServer} server The Arc server instance.
- * @return {plugin.arc.IArcLoader}
+ * @param {ArcServer} server The Arc server instance.
+ * @return {IArcLoader}
  */
-plugin.arc.getArcLoader = function(node, url, server) {
-  if (plugin.arc.loaderClass_) {
-    return new plugin.arc.loaderClass_(node, url, server);
+const getArcLoader = function(node, url, server) {
+  if (loaderClass_) {
+    return new loaderClass_(node, url, server);
   }
 
   return null;
 };
 
-
 /**
  * Set the ArcGIS loader class.
- * @param {?function(new: plugin.arc.IArcLoader, ...)} clazz The class.
+ * @param {?function(new: IArcLoader, ...)} clazz The class.
  */
-plugin.arc.setLoaderClass = function(clazz) {
-  plugin.arc.loaderClass_ = clazz;
+const setLoaderClass = function(clazz) {
+  loaderClass_ = clazz;
 };
-
 
 /**
  * Create an Arc feature type from the layer metadata.
  *
  * @param {Object} config The layer metadata.
- * @return {plugin.arc.ArcFeatureType} The feature type.
+ * @return {ArcFeatureType} The feature type.
  */
-plugin.arc.createFeatureType = function(config) {
+const createFeatureType = function(config) {
   var featureType = null;
 
   var fields = config ? /** @type {Array} */ (config['fields']) : null;
   if (fields && Array.isArray(fields) && fields.length > 0) {
-    featureType = new plugin.arc.ArcFeatureType();
+    featureType = new ArcFeatureType();
 
     var startField = null;
     var endField = null;
@@ -181,8 +157,8 @@ plugin.arc.createFeatureType = function(config) {
     for (var i = 0, ii = fields.length; i < ii; i++) {
       var field = fields[i];
       var name = /** @type {string} */ (field['name']);
-      var type = plugin.arc.getColumnType(/** @type {string} */ (field['type']));
-      var c = /** @type {os.ogc.FeatureTypeColumn} */ ({
+      var type = getColumnType(/** @type {string} */ (field['type']));
+      var c = /** @type {FeatureTypeColumn} */ ({
         'name': name,
         'type': type
       });
@@ -198,14 +174,13 @@ plugin.arc.createFeatureType = function(config) {
     }
 
     columns.sort(function(a, b) {
-      return goog.string.numerateCompare(a.name, b.name);
+      return googString.numerateCompare(a.name, b.name);
     });
     featureType.setColumns(columns);
   }
 
   return featureType;
 };
-
 
 /**
  * A validator function for requests which checks for ArcGIS errors
@@ -215,13 +190,13 @@ plugin.arc.createFeatureType = function(config) {
  * @param {Array<number>=} opt_codes Response codes, if available.
  * @return {?string} An error message if one was found, or null if the response is OK
  */
-plugin.arc.getException = function(response, opt_contentType, opt_codes) {
+const getException = function(response, opt_contentType, opt_codes) {
   try {
     // Try to parse the response as HTML and determine if the response is an Arc error page.
     if (response && (!opt_contentType || opt_contentType.indexOf('text/html') != -1)) {
-      const strResponse = typeof response === 'string' ? response : os.file.mime.text.getText(response);
-      if (strResponse && plugin.arc.ERROR_REGEXP.test(strResponse)) {
-        const doc = goog.dom.xml.loadXml(strResponse);
+      const strResponse = typeof response === 'string' ? response : text.getText(response);
+      if (strResponse && ERROR_REGEXP.test(strResponse)) {
+        const doc = xml.loadXml(strResponse);
         const titleEl = doc.querySelector('title');
         if (titleEl) {
           // Arc error pages display a user-friendly error in the page title.
@@ -237,4 +212,22 @@ plugin.arc.getException = function(response, opt_contentType, opt_codes) {
   }
 
   return null;
+};
+
+exports = {
+  MAP_SERVER,
+  ServerType,
+  ID,
+  getColumnType,
+  launchFilterManager,
+  getFilterColumns,
+  ERROR_REGEXP,
+  URI_REGEXP,
+  WMS_URI_REGEXP,
+  CONTENT_REGEXP,
+  loaderClass_,
+  getArcLoader,
+  setLoaderClass,
+  createFeatureType,
+  getException
 };

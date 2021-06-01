@@ -1,80 +1,83 @@
-goog.provide('plugin.arc.node.ArcFolderNode');
+goog.module('plugin.arc.node.ArcFolderNode');
 
-goog.require('os.ui.slick.LoadingNode');
-goog.require('os.ui.slick.SlickTreeNode');
+const dispose = goog.require('goog.dispose');
+const EventType = goog.require('goog.net.EventType');
+const LoadingNode = goog.require('os.ui.slick.LoadingNode');
+const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+const arc = goog.require('plugin.arc');
 
-goog.requireType('plugin.arc.ArcServer');
-goog.requireType('plugin.arc.IArcLoader');
-
+const GoogEvent = goog.requireType('goog.events.Event');
+const ArcServer = goog.requireType('plugin.arc.ArcServer');
+const IArcLoader = goog.requireType('plugin.arc.IArcLoader');
 
 
 /**
  * Loads the capabilities from an Arc server and constructs the tree.
- *
- * @param {plugin.arc.ArcServer} server
- * @extends {os.ui.slick.LoadingNode}
- * @constructor
  */
-plugin.arc.node.ArcFolderNode = function(server) {
-  plugin.arc.node.ArcFolderNode.base(this, 'constructor');
+class ArcFolderNode extends LoadingNode {
+  /**
+   * Constructor.
+   * @param {ArcServer} server
+   */
+  constructor(server) {
+    super();
+
+    /**
+     * @type {ArcServer}
+     * @private
+     */
+    this.server_ = server;
+
+    /**
+     * @type {IArcLoader}
+     * @private
+     */
+    this.loader_ = null;
+  }
 
   /**
-   * @type {plugin.arc.ArcServer}
-   * @private
+   * Loads Arc node capabilities.
+   *
+   * @param {string} url
    */
-  this.server_ = server;
+  load(url) {
+    this.setLoading(true);
+    this.loader_ = arc.getArcLoader(new SlickTreeNode(), url, this.server_);
+    this.loader_.listen(EventType.SUCCESS, this.onLoad, false, this);
+    this.loader_.listen(EventType.ERROR, this.onError, false, this);
+    this.loader_.load();
+  }
 
   /**
-   * @type {plugin.arc.IArcLoader}
-   * @private
+   * Handler for Arc folder load success.
+   *
+   * @param {GoogEvent} event
+   * @protected
    */
-  this.loader_ = null;
-};
-goog.inherits(plugin.arc.node.ArcFolderNode, os.ui.slick.LoadingNode);
+  onLoad(event) {
+    this.setLoading(false);
+    this.loader_.unlisten(EventType.SUCCESS, this.onLoad, false, this);
+    this.loader_.unlisten(EventType.ERROR, this.onError, false, this);
+    this.setChildren(this.loader_.getNode().getChildren());
+    dispose(this.loader_);
+    this.loader_ = null;
+    this.dispatchEvent(EventType.SUCCESS);
+  }
 
+  /**
+   * Handler for Arc folder load errors.
+   *
+   * @param {GoogEvent} event
+   * @protected
+   */
+  onError(event) {
+    this.setLoading(false);
+    this.loader_.unlisten(EventType.SUCCESS, this.onLoad, false, this);
+    this.loader_.unlisten(EventType.ERROR, this.onError, false, this);
+    dispose(this.loader_);
+    this.loader_ = null;
+    this.dispatchEvent(EventType.ERROR);
+  }
+}
 
-/**
- * Loads Arc node capabilities.
- *
- * @param {string} url
- */
-plugin.arc.node.ArcFolderNode.prototype.load = function(url) {
-  this.setLoading(true);
-  this.loader_ = plugin.arc.getArcLoader(new os.ui.slick.SlickTreeNode(), url, this.server_);
-  this.loader_.listen(goog.net.EventType.SUCCESS, this.onLoad, false, this);
-  this.loader_.listen(goog.net.EventType.ERROR, this.onError, false, this);
-  this.loader_.load();
-};
-
-
-/**
- * Handler for Arc folder load success.
- *
- * @param {goog.events.Event} event
- * @protected
- */
-plugin.arc.node.ArcFolderNode.prototype.onLoad = function(event) {
-  this.setLoading(false);
-  this.loader_.unlisten(goog.net.EventType.SUCCESS, this.onLoad, false, this);
-  this.loader_.unlisten(goog.net.EventType.ERROR, this.onError, false, this);
-  this.setChildren(this.loader_.getNode().getChildren());
-  goog.dispose(this.loader_);
-  this.loader_ = null;
-  this.dispatchEvent(goog.net.EventType.SUCCESS);
-};
-
-
-/**
- * Handler for Arc folder load errors.
- *
- * @param {goog.events.Event} event
- * @protected
- */
-plugin.arc.node.ArcFolderNode.prototype.onError = function(event) {
-  this.setLoading(false);
-  this.loader_.unlisten(goog.net.EventType.SUCCESS, this.onLoad, false, this);
-  this.loader_.unlisten(goog.net.EventType.ERROR, this.onError, false, this);
-  goog.dispose(this.loader_);
-  this.loader_ = null;
-  this.dispatchEvent(goog.net.EventType.ERROR);
-};
+exports = ArcFolderNode;

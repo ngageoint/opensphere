@@ -1,38 +1,43 @@
-goog.provide('plugin.file.csv.CSVParserConfig');
-goog.require('ol.Feature');
-goog.require('os.parse.csv.CsvParserConfig');
-goog.require('os.ui.slick.column');
-goog.require('plugin.file.csv.CSVParser');
+goog.module('plugin.file.csv.CSVParserConfig');
+goog.module.declareLegacyNamespace();
 
+const CsvParserConfig = goog.require('os.parse.csv.CsvParserConfig');
+const osUiSlickColumn = goog.require('os.ui.slick.column');
+const CSVParser = goog.require('plugin.file.csv.CSVParser');
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
  * Configuration for a CSV parser.
- *
- * @extends {os.parse.csv.CsvParserConfig.<ol.Feature>}
- * @constructor
+ * @extends {CsvParserConfig<Feature>}
+ * @unrestricted
  */
-plugin.file.csv.CSVParserConfig = function() {
-  plugin.file.csv.CSVParserConfig.base(this, 'constructor');
-};
-goog.inherits(plugin.file.csv.CSVParserConfig, os.parse.csv.CsvParserConfig);
-
-
-/**
- * @inheritDoc
- */
-plugin.file.csv.CSVParserConfig.prototype.updatePreview = function(opt_mappings) {
-  var parser = new plugin.file.csv.CSVParser(this);
-  var features = parser.parsePreview(this['file'].getContent(), opt_mappings);
-
-  this['preview'] = features || [];
-  this['columns'] = parser.getColumns() || [];
-
-  for (var i = 0, n = this['columns'].length; i < n; i++) {
-    var column = this['columns'][i];
-    column['width'] = 0;
-    os.ui.slick.column.autoSizeColumn(column);
+class CSVParserConfig extends CsvParserConfig {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
   }
 
-  parser.dispose();
-};
+  /**
+   * @inheritDoc
+   */
+  updatePreview(opt_mappings) {
+    var parser = new CSVParser(this);
+    var features = parser.parsePreview(this['file'].getContent(), opt_mappings);
+
+    this['preview'] = features || [];
+    this['columns'] = parser.getColumns() || [];
+
+    for (var i = 0, n = this['columns'].length; i < n; i++) {
+      var column = this['columns'][i];
+      column['width'] = 0;
+      osUiSlickColumn.autoSizeColumn(column);
+    }
+
+    parser.dispose();
+  }
+}
+
+exports = CSVParserConfig;

@@ -41,6 +41,7 @@
     "goog.events": "googEvents",
     "goog.events.Event": "GoogEvent",
     "goog.events.EventType": "GoogEventType",
+    "goog.fs.FileReader": "GoogFileReader",
     "goog.string": "googString",
     "goog.object": "googObject",
 
@@ -65,6 +66,7 @@
     "os.feature": "osFeature",
     "os.file": "osFile",
     "os.file.File": "OSFile",
+    "os.file.mime.zip": "mimeZip",
     "os.layer.Vector": "VectorLayer",
     "os.map": "osMap",
     "os.object": "osObject",

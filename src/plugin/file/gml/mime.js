@@ -1,14 +1,21 @@
-goog.provide('plugin.file.gml.mime');
+goog.module('plugin.file.gml.mime');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.file.mime.xml');
+const mime = goog.require('os.file.mime');
+
+const xml = goog.require('os.file.mime.xml');
+
 
 /**
  * @type {string}
- * @const
  */
-plugin.file.gml.mime.TYPE = 'application/gml+xml';
+const TYPE = 'application/gml+xml';
 
-os.file.mime.register(
-    plugin.file.gml.mime.TYPE,
-    os.file.mime.xml.createDetect(/^(gml|featurecollection)$/i, /\/(gml|wfs)/i),
-    0, os.file.mime.xml.TYPE);
+mime.register(
+    TYPE,
+    xml.createDetect(/^(gml|featurecollection)$/i, /\/(gml|wfs)/i),
+    0, xml.TYPE);
+
+exports = {
+  TYPE
+};

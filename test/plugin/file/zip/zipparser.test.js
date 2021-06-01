@@ -1,3 +1,4 @@
+goog.require('goog.events');
 goog.require('ol.geom.Point');
 goog.require('os.events.EventType');
 goog.require('os.file.File');
@@ -13,11 +14,15 @@ goog.require('plugin.file.zip.ZIPParserConfig');
 
 
 describe('plugin.file.zip.ZIPParser', function() {
+  const googEvents = goog.module.get('goog.events');
+  const EventType = goog.module.get('os.events.EventType');
+  const UrlMethod = goog.module.get('os.ui.file.method.UrlMethod');
+  const ZIPParser = goog.module.get('plugin.file.zip.ZIPParser');
   var testUrl = '/base/test/resources/zip/test-csv.zip';
-  var parser = new plugin.file.zip.ZIPParser();
+  var parser = new ZIPParser();
 
   it('parses zip file content', function() {
-    var urlMethod = new os.ui.file.method.UrlMethod();
+    var urlMethod = new UrlMethod();
     urlMethod.setUrl(testUrl);
 
     var methodComplete = false;
@@ -25,7 +30,7 @@ describe('plugin.file.zip.ZIPParser', function() {
       methodComplete = true;
     };
 
-    urlMethod.listenOnce(os.events.EventType.COMPLETE, onComplete);
+    urlMethod.listenOnce(EventType.COMPLETE, onComplete);
     urlMethod.loadFile();
 
     waitsFor(function() {
@@ -37,7 +42,7 @@ describe('plugin.file.zip.ZIPParser', function() {
       parseComplete = true;
     };
 
-    goog.events.listenOnce(parser, os.events.EventType.COMPLETE, onParseComplete);
+    googEvents.listenOnce(parser, EventType.COMPLETE, onParseComplete);
 
     runs(function( ){
       var file = urlMethod.getFile();

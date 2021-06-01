@@ -1,17 +1,31 @@
+goog.require('goog.net.EventType');
 goog.require('ol.geom.Point');
 goog.require('os.events.EventType');
+goog.require('os.feature');
 goog.require('os.im.Importer');
 goog.require('os.mixin');
 goog.require('os.mock');
 goog.require('os.net.Request');
 goog.require('os.structs.TriState');
+goog.require('os.time.TimeInstant');
 goog.require('os.ui.file.method.UrlMethod');
 goog.require('plugin.file.kml.KMLParser');
 goog.require('plugin.file.kml.ui.KMLNode');
 
 describe('plugin.file.kml.KMLParser', function() {
+  const googNetEventType = goog.module.get('goog.net.EventType');
+  const Point = goog.module.get('ol.geom.Point');
+  const EventType = goog.module.get('os.events.EventType');
+  const osFeature = goog.module.get('os.feature');
+  const Importer = goog.module.get('os.im.Importer');
+  const Request = goog.module.get('os.net.Request');
+  const TriState = goog.module.get('os.structs.TriState');
+  const TimeInstant = goog.module.get('os.time.TimeInstant');
+  const UrlMethod = goog.module.get('os.ui.file.method.UrlMethod');
+  const KMLParser = goog.module.get('plugin.file.kml.KMLParser');
+  const KMLNode = goog.module.get('plugin.file.kml.ui.KMLNode');
   var testUrl = '/base/test/plugin/file/kml/kml_test.xml';
-  var parser = new plugin.file.kml.KMLParser();
+  var parser = new KMLParser();
   var kmlSource;
   var rootNode;
   var testFolder;
@@ -23,7 +37,7 @@ describe('plugin.file.kml.KMLParser', function() {
   };
 
   it('initializes the parser', function() {
-    var urlMethod = new os.ui.file.method.UrlMethod();
+    var urlMethod = new UrlMethod();
     urlMethod.setUrl(testUrl);
 
     var methodComplete = false;
@@ -31,7 +45,7 @@ describe('plugin.file.kml.KMLParser', function() {
       methodComplete = true;
     };
 
-    urlMethod.listenOnce(os.events.EventType.COMPLETE, onComplete);
+    urlMethod.listenOnce(EventType.COMPLETE, onComplete);
     urlMethod.loadFile();
 
     waitsFor(function() {
@@ -67,16 +81,16 @@ describe('plugin.file.kml.KMLParser', function() {
     var docRoot2 = rootNode.getChildren()[1];
 
     // check that we read in the first doc node correctly
-    expect(docRoot instanceof plugin.file.kml.ui.KMLNode).toBe(true);
+    expect(docRoot instanceof KMLNode).toBe(true);
     expect(docRoot.collapsed).toBe(false);
     expect(docRoot.getLabel()).toBe('KML Test');
-    expect(docRoot.getState()).toBe(os.structs.TriState.BOTH);
+    expect(docRoot.getState()).toBe(TriState.BOTH);
 
     // check that we read in the second doc node correctly
-    expect(docRoot2 instanceof plugin.file.kml.ui.KMLNode).toBe(true);
+    expect(docRoot2 instanceof KMLNode).toBe(true);
     expect(docRoot2.collapsed).toBe(false);
     expect(docRoot2.getLabel()).toBe('KML Test 2');
-    expect(docRoot2.getState()).toBe(os.structs.TriState.ON);
+    expect(docRoot2.getState()).toBe(TriState.ON);
 
     var rootChildren = docRoot.getChildren();
     expect(rootChildren).not.toBeNull();
@@ -86,7 +100,7 @@ describe('plugin.file.kml.KMLParser', function() {
     testFolder = rootChildren[0];
     expect(testFolder.getLabel()).toBe('Basic Folder');
     expect(testFolder.collapsed).toBe(true);
-    expect(testFolder.getState()).toBe(os.structs.TriState.ON);
+    expect(testFolder.getState()).toBe(TriState.ON);
 
     var children = testFolder.getChildren();
     expect(children).not.toBeNull();
@@ -107,14 +121,14 @@ describe('plugin.file.kml.KMLParser', function() {
     expect(feature.get('testKey2')).toBe('testVal2');
 
     var geom = feature.getGeometry();
-    expect(geom instanceof ol.geom.Point).toBe(true);
+    expect(geom instanceof Point).toBe(true);
 
     var coord = geom.getFirstCoordinate();
     expect(coord[0]).toBe(12.345);
     expect(coord[1]).toBe(67.891);
 
     var time = feature.get('recordTime');
-    expect(time instanceof os.time.TimeInstant).toBe(true);
+    expect(time instanceof TimeInstant).toBe(true);
     expect(time.toISOString()).toBe('2010-02-01T18:03:30Z');
 
     // test folder open/closed
@@ -136,7 +150,7 @@ describe('plugin.file.kml.KMLParser', function() {
     // test node state (visibility)
     var visFolder = rootChildren[2];
     expect(visFolder.getLabel()).toBe('Visibility Test');
-    expect(visFolder.getState()).toBe(os.structs.TriState.BOTH);
+    expect(visFolder.getState()).toBe(TriState.BOTH);
 
     var visChildren = visFolder.getChildren();
     expect(visChildren).not.toBeNull();
@@ -144,15 +158,15 @@ describe('plugin.file.kml.KMLParser', function() {
 
     // mixed visibility children
     expect(visChildren[0].getLabel()).toBe('Default Folder');
-    expect(visChildren[0].getState()).toBe(os.structs.TriState.BOTH);
+    expect(visChildren[0].getState()).toBe(TriState.BOTH);
 
     // all children off
     expect(visChildren[1].getLabel()).toBe('Visible Folder/Hidden Placemark');
-    expect(visChildren[1].getState()).toBe(os.structs.TriState.OFF);
+    expect(visChildren[1].getState()).toBe(TriState.OFF);
 
     // all children on
     expect(visChildren[2].getLabel()).toBe('Hidden Folder/Visible Placemark');
-    expect(visChildren[2].getState()).toBe(os.structs.TriState.ON);
+    expect(visChildren[2].getState()).toBe(TriState.ON);
   });
 
   it('cleans up the parser', function() {
@@ -164,7 +178,7 @@ describe('plugin.file.kml.KMLParser', function() {
 
   it('merges same source into an existing KML tree', function() {
     // mess with the test folder state to make sure the parser doesn't change it
-    testFolder.setState(os.structs.TriState.OFF);
+    testFolder.setState(TriState.OFF);
     testFolder.collapsed = false;
 
     // setting the source will clean up the parser, so do this first
@@ -199,11 +213,11 @@ describe('plugin.file.kml.KMLParser', function() {
 
     // check the folder state we changed
     expect(testFolder.collapsed).toBe(false);
-    expect(testFolder.getState()).toBe(os.structs.TriState.OFF);
+    expect(testFolder.getState()).toBe(TriState.OFF);
   });
 
   var openFileAndRun = function(file, featuresFunc) {
-    var urlMethod = new os.ui.file.method.UrlMethod();
+    var urlMethod = new UrlMethod();
     urlMethod.setUrl(testUrl.replace('kml_test.xml', file));
 
     var methodComplete = false;
@@ -211,7 +225,7 @@ describe('plugin.file.kml.KMLParser', function() {
       methodComplete = true;
     };
 
-    urlMethod.listenOnce(os.events.EventType.COMPLETE, onComplete);
+    urlMethod.listenOnce(EventType.COMPLETE, onComplete);
     urlMethod.loadFile();
 
     waitsFor(function() {
@@ -308,15 +322,15 @@ describe('plugin.file.kml.KMLParser', function() {
   });
 
   it('should work with an importer and handle invalid polygons', function() {
-    var r = new os.net.Request(testUrl);
-    var i = new os.im.Importer(new plugin.file.kml.KMLParser());
+    var r = new Request(testUrl);
+    var i = new Importer(new KMLParser());
     var count = 0;
     var listener = function(e) {
       count++;
     };
 
-    r.listen(goog.net.EventType.SUCCESS, listener);
-    i.listen(os.events.EventType.COMPLETE, listener);
+    r.listen(googNetEventType.SUCCESS, listener);
+    i.listen(EventType.COMPLETE, listener);
 
     runs(function() {
       r.load();
@@ -341,12 +355,12 @@ describe('plugin.file.kml.KMLParser', function() {
 
       // invalid polygon should be set to undefined for a single polygon
       var feature = data[24].getFeature();
-      os.feature.validateGeometries(feature);
+      osFeature.validateGeometries(feature);
       expect(feature.getGeometry()).toBeUndefined();
 
       // invalid polygon in a geometry collection should be removed
       var feature2 = data[25].getFeature();
-      os.feature.validateGeometries(feature2);
+      osFeature.validateGeometries(feature2);
       var geom = feature2.getGeometry();
       expect(geom.getGeometries().length).toBe(1);
     });

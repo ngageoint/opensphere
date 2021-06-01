@@ -1,26 +1,30 @@
-goog.provide('plugin.file.gml.GMLProvider');
-goog.require('os.data.FileProvider');
+goog.module('plugin.file.gml.GMLProvider');
+goog.module.declareLegacyNamespace();
 
+const FileProvider = goog.require('os.data.FileProvider');
 
 
 /**
  * GML file provider
- *
- * @extends {os.data.FileProvider}
- * @constructor
  */
-plugin.file.gml.GMLProvider = function() {
-  plugin.file.gml.GMLProvider.base(this, 'constructor');
-};
-goog.inherits(plugin.file.gml.GMLProvider, os.data.FileProvider);
-goog.addSingletonGetter(plugin.file.gml.GMLProvider);
+class GMLProvider extends FileProvider {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  configure(config) {
+    super.configure(config);
+    this.setId('gml');
+    this.setLabel('GML Files');
+  }
+}
+goog.addSingletonGetter(GMLProvider);
 
 
-/**
- * @inheritDoc
- */
-plugin.file.gml.GMLProvider.prototype.configure = function(config) {
-  plugin.file.gml.GMLProvider.base(this, 'configure', config);
-  this.setId('gml');
-  this.setLabel('GML Files');
-};
+exports = GMLProvider;

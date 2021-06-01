@@ -1,70 +1,71 @@
-goog.provide('plugin.file.gml.GMLPlugin');
+goog.module('plugin.file.gml.GMLPlugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.DataManager');
-goog.require('os.data.ProviderEntry');
-goog.require('os.layer.config.LayerConfigManager');
-goog.require('os.plugin.AbstractPlugin');
-goog.require('os.ui.im.ImportManager');
-goog.require('plugin.file.gml.GMLDescriptor');
-goog.require('plugin.file.gml.GMLImportUI');
-goog.require('plugin.file.gml.GMLLayerConfig');
-goog.require('plugin.file.gml.GMLMixin');
-goog.require('plugin.file.gml.GMLParser');
-goog.require('plugin.file.gml.GMLProvider');
-goog.require('plugin.file.gml.mime');
+const DataManager = goog.require('os.data.DataManager');
+const ProviderEntry = goog.require('os.data.ProviderEntry');
+const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const ImportManager = goog.require('os.ui.im.ImportManager');
+const GMLDescriptor = goog.require('plugin.file.gml.GMLDescriptor');
+const GMLImportUI = goog.require('plugin.file.gml.GMLImportUI');
+const GMLLayerConfig = goog.require('plugin.file.gml.GMLLayerConfig');
+const GMLMixin = goog.require('plugin.file.gml.GMLMixin');
+const GMLParser = goog.require('plugin.file.gml.GMLParser');
+const GMLProvider = goog.require('plugin.file.gml.GMLProvider');
+const mime = goog.require('plugin.file.gml.mime');
 
+
+// Initialize the GML mixin.
+GMLMixin.init();
 
 
 /**
  * Provides GML support
- *
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
  */
-plugin.file.gml.GMLPlugin = function() {
-  plugin.file.gml.GMLPlugin.base(this, 'constructor');
-  this.id = plugin.file.gml.GMLPlugin.ID;
-};
-goog.inherits(plugin.file.gml.GMLPlugin, os.plugin.AbstractPlugin);
+class GMLPlugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = ID;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  init() {
+    const dm = DataManager.getInstance();
+
+    // register gml provider type
+    dm.registerProviderType(new ProviderEntry(ID, GMLProvider, TYPE, TYPE));
+
+    // register the gml descriptor type
+    dm.registerDescriptorType(this.id, GMLDescriptor);
+
+    // register the gml layer config
+    const lcm = LayerConfigManager.getInstance();
+    lcm.registerLayerConfig(this.id, GMLLayerConfig);
+
+    // register the gml import ui
+    const im = ImportManager.getInstance();
+    im.registerImportDetails(this.id.toUpperCase(), true);
+    im.registerImportUI(mime.TYPE, new GMLImportUI());
+    im.registerParser(this.id, GMLParser);
+  }
+}
 
 
 /**
  * @type {string}
- * @const
  */
-plugin.file.gml.GMLPlugin.ID = 'gml';
+const ID = 'gml';
 
 
 /**
  * @type {string}
- * @const
  */
-plugin.file.gml.GMLPlugin.TYPE = 'GML Layers';
+const TYPE = 'GML Layers';
 
 
-/**
- * @inheritDoc
- */
-plugin.file.gml.GMLPlugin.prototype.init = function() {
-  var dm = os.dataManager;
-
-  // register gml provider type
-  dm.registerProviderType(new os.data.ProviderEntry(
-      plugin.file.gml.GMLPlugin.ID,
-      plugin.file.gml.GMLProvider,
-      plugin.file.gml.GMLPlugin.TYPE,
-      plugin.file.gml.GMLPlugin.TYPE));
-
-  // register the gml descriptor type
-  dm.registerDescriptorType(this.id, plugin.file.gml.GMLDescriptor);
-
-  // register the gml layer config
-  var lcm = os.layer.config.LayerConfigManager.getInstance();
-  lcm.registerLayerConfig(this.id, plugin.file.gml.GMLLayerConfig);
-
-  // register the gml import ui
-  var im = os.ui.im.ImportManager.getInstance();
-  im.registerImportDetails(this.id.toUpperCase(), true);
-  im.registerImportUI(plugin.file.gml.mime.TYPE, new plugin.file.gml.GMLImportUI());
-  im.registerParser(this.id, plugin.file.gml.GMLParser);
-};
+exports = GMLPlugin;

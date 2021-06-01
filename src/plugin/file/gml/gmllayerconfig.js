@@ -1,61 +1,68 @@
-goog.provide('plugin.file.gml.GMLLayerConfig');
-goog.require('os.layer.config.AbstractDataSourceLayerConfig');
-goog.require('os.ui.im.ImportManager');
-goog.require('plugin.file.gml.GMLParser');
-goog.require('plugin.file.gml.GMLParserConfig');
+goog.module('plugin.file.gml.GMLLayerConfig');
+goog.module.declareLegacyNamespace();
 
+const AltMapping = goog.require('os.im.mapping.AltMapping');
+const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
+const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
+const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
+const DateTimeMapping = goog.require('os.im.mapping.time.DateTimeMapping');
+
+const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
+const ImportManager = goog.require('os.ui.im.ImportManager');
+const GMLParserConfig = goog.require('plugin.file.gml.GMLParserConfig');
 
 
 /**
- * @extends {os.layer.config.AbstractDataSourceLayerConfig}
- * @constructor
  */
-plugin.file.gml.GMLLayerConfig = function() {
-  plugin.file.gml.GMLLayerConfig.base(this, 'constructor');
+class GMLLayerConfig extends AbstractDataSourceLayerConfig {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * @type {os.parse.FileParserConfig}
+     * @protected
+     */
+    this.parserConfig = new GMLParserConfig();
+  }
 
   /**
-   * @type {os.parse.FileParserConfig}
-   * @protected
+   * @inheritDoc
    */
-  this.parserConfig = new plugin.file.gml.GMLParserConfig();
-};
-goog.inherits(plugin.file.gml.GMLLayerConfig, os.layer.config.AbstractDataSourceLayerConfig);
-
-
-/**
- * @inheritDoc
- */
-plugin.file.gml.GMLLayerConfig.prototype.initializeConfig = function(options) {
-  plugin.file.gml.GMLLayerConfig.base(this, 'initializeConfig', options);
-  this.parserConfig = options['parserConfig'] || new plugin.file.gml.GMLParserConfig();
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.gml.GMLLayerConfig.prototype.getImporter = function(options) {
-  var importer = plugin.file.gml.GMLLayerConfig.base(this, 'getImporter', options);
-  if (this.parserConfig['mappings'] != null && this.parserConfig['mappings'].length) {
-    // setAutoMappings() ignores manual configs (e.g. custom Datetime format) since it re-autodetects
-    importer.setExecMappings(this.parserConfig['mappings']);
-  } else {
-    // there was no user interaction, so default the mappings to a set the importer would have used
-    importer.selectAutoMappings([
-      os.im.mapping.AltMapping.ID,
-      os.im.mapping.OrientationMapping.ID,
-      os.im.mapping.SemiMajorMapping.ID,
-      os.im.mapping.SemiMinorMapping.ID,
-      os.im.mapping.time.DateTimeMapping.ID]);
+  initializeConfig(options) {
+    super.initializeConfig(options);
+    this.parserConfig = options['parserConfig'] || new GMLParserConfig();
   }
-  return importer;
-};
 
+  /**
+   * @inheritDoc
+   */
+  getImporter(options) {
+    var importer = super.getImporter(options);
+    if (this.parserConfig['mappings'] != null && this.parserConfig['mappings'].length) {
+      // setAutoMappings() ignores manual configs (e.g. custom Datetime format) since it re-autodetects
+      importer.setExecMappings(this.parserConfig['mappings']);
+    } else {
+      // there was no user interaction, so default the mappings to a set the importer would have used
+      importer.selectAutoMappings([
+        AltMapping.ID,
+        OrientationMapping.ID,
+        SemiMajorMapping.ID,
+        SemiMinorMapping.ID,
+        DateTimeMapping.ID]);
+    }
+    return importer;
+  }
 
-/**
- * @inheritDoc
- */
-plugin.file.gml.GMLLayerConfig.prototype.getParser = function(options) {
-  var im = os.ui.im.ImportManager.getInstance();
-  return im.getParser('gml');
-};
+  /**
+   * @inheritDoc
+   */
+  getParser(options) {
+    var im = ImportManager.getInstance();
+    return im.getParser('gml');
+  }
+}
+
+exports = GMLLayerConfig;

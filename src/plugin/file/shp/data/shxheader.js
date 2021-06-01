@@ -1,24 +1,30 @@
-goog.provide('plugin.file.shp.data.SHXHeader');
-
+goog.module('plugin.file.shp.data.SHXHeader');
+goog.module.declareLegacyNamespace();
 
 
 /**
- * @constructor
  */
-plugin.file.shp.data.SHXHeader = function() {
+class SHXHeader {
   /**
-   * @type {ArrayBuffer}
+   * Constructor.
    */
-  this.data = null;
+  constructor() {
+    /**
+     * @type {ArrayBuffer}
+     */
+    this.data = null;
 
-  /**
-   * @type {number}
-   */
-  this.position = 0;
+    /**
+     * @type {number}
+     */
+    this.position = 0;
 
-  /**
-   * Since we use an array buffer, we have to know how big it is before writing to it
-   * @type {number}
-   */
-  this.allocation = 0;
-};
+    /**
+     * Since we use an array buffer, we have to know how big it is before writing to it
+     * @type {number}
+     */
+    this.allocation = 0;
+  }
+}
+
+exports = SHXHeader;

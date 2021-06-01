@@ -1,9 +1,11 @@
 goog.provide('os.ui.ScreenOverlayCtrl');
-goog.provide('os.ui.screenOverlayDrective');
+goog.provide('os.ui.launchScreenOverlay');
+goog.provide('os.ui.screenOverlayDirective');
 
 goog.require('goog.events.KeyHandler');
 goog.require('os');
 goog.require('os.ui.Module');
+goog.require('os.ui.WindowEventType');
 goog.require('os.ui.window');
 
 
@@ -12,7 +14,7 @@ goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-os.ui.screenOverlayDrective = function() {
+os.ui.screenOverlayDirective = function() {
   return {
     restrict: 'E',
     transclude: true,
@@ -28,7 +30,7 @@ os.ui.screenOverlayDrective = function() {
 /**
  * Add the directive to the os module
  */
-os.ui.Module.directive('screenoverlay', [os.ui.screenOverlayDrective]);
+os.ui.Module.directive('screenoverlay', [os.ui.screenOverlayDirective]);
 
 
 /**
@@ -91,4 +93,5 @@ os.ui.ScreenOverlayCtrl = function($scope) {
   if ($scope['valid'] == null) {
     $scope['valid'] = true;
   }
+  $scope.$emit(os.ui.WindowEventType.READY);
 };

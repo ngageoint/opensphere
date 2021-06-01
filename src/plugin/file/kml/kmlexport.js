@@ -1,8 +1,9 @@
-goog.provide('plugin.file.kml.export');
+goog.module('plugin.file.kml.export');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.annotation');
-goog.require('os.style');
-goog.require('os.style.StyleField');
+const annotation = goog.require('os.annotation');
+const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
 
 
 /**
@@ -11,23 +12,23 @@ goog.require('os.style.StyleField');
  * @param {ol.Feature} feature The feature.
  * @return {?osx.annotation.KMLBalloon} The balloon options.
  */
-plugin.file.kml.export.getBalloonOptions = function(feature) {
+const getBalloonOptions = function(feature) {
   var balloonOptions = null;
 
   if (feature) {
-    var annotationOptions = /** @type {osx.annotation.Options} */ (feature.get(os.annotation.OPTIONS_FIELD));
+    var annotationOptions = /** @type {osx.annotation.Options} */ (feature.get(annotation.OPTIONS_FIELD));
     if (annotationOptions && annotationOptions.show) {
       var balloonParts = [];
 
       if (annotationOptions.showName) {
-        var name = os.annotation.getNameText(feature);
+        var name = annotation.getNameText(feature);
         if (name) {
           balloonParts.push(name);
         }
       }
 
       if (annotationOptions.showDescription) {
-        var description = os.annotation.getDescriptionText(feature);
+        var description = annotation.getDescriptionText(feature);
         if (description) {
           balloonParts.push(description);
         }
@@ -47,21 +48,20 @@ plugin.file.kml.export.getBalloonOptions = function(feature) {
   return balloonOptions;
 };
 
-
 /**
  * Get the icon rotation column for an OpenLayers feature.
  *
  * @param {ol.Feature} feature The feature.
  * @return {string|undefined} The column.
  */
-plugin.file.kml.export.getRotationColumn = function(feature) {
+const getRotationColumn = function(feature) {
   var rotColumn;
   if (feature) {
-    rotColumn = /** @type {string|undefined} */ (feature.get(os.style.StyleField.ROTATION_COLUMN));
+    rotColumn = /** @type {string|undefined} */ (feature.get(StyleField.ROTATION_COLUMN));
 
-    var layerConfig = os.style.getLayerConfig(feature);
-    if ((!rotColumn && layerConfig) || (layerConfig && layerConfig[os.style.StyleField.REPLACE_STYLE])) {
-      rotColumn = layerConfig[os.style.StyleField.ROTATION_COLUMN];
+    var layerConfig = osStyle.getLayerConfig(feature);
+    if ((!rotColumn && layerConfig) || (layerConfig && layerConfig[StyleField.REPLACE_STYLE])) {
+      rotColumn = layerConfig[StyleField.ROTATION_COLUMN];
     }
   }
 
@@ -75,10 +75,16 @@ plugin.file.kml.export.getRotationColumn = function(feature) {
  * @param {ol.Feature} feature The feature.
  * @return {Array<number>|null|undefined} The line dash.
  */
-plugin.file.kml.export.getLineDash = function(feature) {
+const getLineDash = function(feature) {
   if (feature) {
-    var layerConfig = os.style.getBaseFeatureConfig(feature);
-    return os.style.getConfigLineDash(Array.isArray(layerConfig) ? layerConfig[0] : layerConfig);
+    var layerConfig = osStyle.getBaseFeatureConfig(feature);
+    return osStyle.getConfigLineDash(Array.isArray(layerConfig) ? layerConfig[0] : layerConfig);
   }
   return undefined;
+};
+
+exports = {
+  getBalloonOptions,
+  getRotationColumn,
+  getLineDash
 };

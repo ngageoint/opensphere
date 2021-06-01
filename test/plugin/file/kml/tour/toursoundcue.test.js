@@ -1,6 +1,11 @@
+goog.require('goog.Promise');
+goog.require('os.audio.AudioManager');
 goog.require('plugin.file.kml.tour.SoundCue');
 
 describe('plugin.file.kml.tour.SoundCue', function() {
+  const Promise = goog.module.get('goog.Promise');
+  const AudioManager = goog.module.get('os.audio.AudioManager');
+  const SoundCue = goog.module.get('plugin.file.kml.tour.SoundCue');
   // default values for tests
   var href = 'https://test.com/test.mp3';
   var delayedStart = 4321;
@@ -19,7 +24,7 @@ describe('plugin.file.kml.tour.SoundCue', function() {
   it('initializes properly', function() {
     var delayedStarts = [undefined, -5000, 0, 5000];
     delayedStarts.forEach(function(delayedStart) {
-      var soundCue = new plugin.file.kml.tour.SoundCue(href, delayedStart);
+      var soundCue = new SoundCue(href, delayedStart);
       expect(soundCue.href_).toBe(href);
       expect(soundCue.duration_).toBe(delayedStart > 0 ? delayedStart : 0);
       expect(soundCue.remaining_).toBeUndefined();
@@ -29,7 +34,7 @@ describe('plugin.file.kml.tour.SoundCue', function() {
   });
 
   it('gets the correct interval', function() {
-    var soundCue = new plugin.file.kml.tour.SoundCue(href, delayedStart);
+    var soundCue = new SoundCue(href, delayedStart);
     expect(soundCue.getInterval()).toBe(soundCue.duration_);
 
     soundCue.remaining_ = 42;
@@ -43,7 +48,7 @@ describe('plugin.file.kml.tour.SoundCue', function() {
   });
 
   it('resolves execute promise immediately', function() {
-    var soundCue = new plugin.file.kml.tour.SoundCue(href, delayedStart);
+    var soundCue = new SoundCue(href, delayedStart);
     var fakeAudio = {
       playing: false,
       play: function() {
@@ -64,7 +69,7 @@ describe('plugin.file.kml.tour.SoundCue', function() {
 
     var beforeStart = Date.now() - 1;
     var soundCuePromise = soundCue.execute();
-    expect(soundCuePromise instanceof goog.Promise).toBe(true);
+    expect(soundCuePromise instanceof Promise).toBe(true);
 
     waitsFor(function() {
       return stFn !== undefined && stInterval !== undefined;
@@ -79,7 +84,7 @@ describe('plugin.file.kml.tour.SoundCue', function() {
       expect(stInterval).toBe(delayedStart);
 
       // promise is resolved
-      expect(soundCuePromise.state_).toBe(goog.Promise.State_.FULFILLED);
+      expect(soundCuePromise.state_).toBe(Promise.State_.FULFILLED);
 
       // this shouldn't be called until timeout fires
       expect(soundCue.playAudio_).not.toHaveBeenCalled();
@@ -99,7 +104,7 @@ describe('plugin.file.kml.tour.SoundCue', function() {
       expect(soundCue.timeoutId_).toBeUndefined();
 
       // respects global mute setting
-      var am = os.audio.AudioManager.getInstance();
+      var am = AudioManager.getInstance();
 
       am.setMute(true);
       expect(fakeAudio.muted).toBe(true);

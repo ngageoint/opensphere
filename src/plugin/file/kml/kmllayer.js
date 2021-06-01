@@ -1,100 +1,100 @@
-goog.provide('plugin.file.kml.KMLLayer');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.layer.Vector');
-goog.require('os.structs.ITreeNodeSupplier');
-goog.require('plugin.file.kml.ui.KMLLayerNode');
+goog.module('plugin.file.kml.KMLLayer');
+goog.module.declareLegacyNamespace();
 
-
-
-/**
- * @param {olx.layer.VectorOptions} options Vector layer options
- * @extends {os.layer.Vector}
- * @implements {os.structs.ITreeNodeSupplier}
- * @constructor
- */
-plugin.file.kml.KMLLayer = function(options) {
-  plugin.file.kml.KMLLayer.base(this, 'constructor', options);
-
-  /**
-   * If the tree node should be created in the collapsed state.
-   * @type {boolean}
-   */
-  this.collapsed = false;
-
-  /**
-   * If the KML can be edited.
-   * @type {boolean}
-   */
-  this.editable = false;
-
-  /**
-   * If the KML root node should be displayed, or just its children.
-   * @type {boolean}
-   */
-  this.showRoot = true;
-};
-goog.inherits(plugin.file.kml.KMLLayer, os.layer.Vector);
+const VectorLayer = goog.require('os.layer.Vector');
+const KMLLayerNode = goog.require('plugin.file.kml.ui.KMLLayerNode');
+const ITreeNodeSupplier = goog.requireType('os.structs.ITreeNodeSupplier');
 
 
 /**
- * @inheritDoc
+ * @implements {ITreeNodeSupplier}
  */
-plugin.file.kml.KMLLayer.prototype.disposeInternal = function() {
-  // clear potential KMZ assets stored by the parser
-  var source = /** @type {plugin.file.kml.KMLSource} */ (this.getSource());
-  if (source) {
-    var importer = source.getImporter();
-    if (importer) {
-      var parser = /** @type {plugin.file.kml.KMLParser} */ (importer.getParser());
-      if (parser) {
-        parser.clearAssets();
+class KMLLayer extends VectorLayer {
+  /**
+   * Constructor.
+   * @param {olx.layer.VectorOptions} options Vector layer options
+   */
+  constructor(options) {
+    super(options);
+
+    /**
+     * If the tree node should be created in the collapsed state.
+     * @type {boolean}
+     */
+    this.collapsed = false;
+
+    /**
+     * If the KML can be edited.
+     * @type {boolean}
+     */
+    this.editable = false;
+
+    /**
+     * If the KML root node should be displayed, or just its children.
+     * @type {boolean}
+     */
+    this.showRoot = true;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    // clear potential KMZ assets stored by the parser
+    var source = /** @type {plugin.file.kml.KMLSource} */ (this.getSource());
+    if (source) {
+      var importer = source.getImporter();
+      if (importer) {
+        var parser = /** @type {plugin.file.kml.KMLParser} */ (importer.getParser());
+        if (parser) {
+          parser.clearAssets();
+        }
       }
     }
+
+    super.disposeInternal();
   }
 
-  plugin.file.kml.KMLLayer.base(this, 'disposeInternal');
-};
+  /**
+   * @inheritDoc
+   */
+  getTreeNode() {
+    var node = new KMLLayerNode(this);
+    node.collapsed = this.collapsed;
 
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLLayer.prototype.getTreeNode = function() {
-  var node = new plugin.file.kml.ui.KMLLayerNode(this);
-  node.collapsed = this.collapsed;
-
-  return node;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLLayer.prototype.persist = function(opt_to) {
-  var config = plugin.file.kml.KMLLayer.base(this, 'persist', opt_to);
-
-  config['collapsed'] = this.collapsed;
-  config['editable'] = this.editable;
-  config['showRoot'] = this.showRoot;
-  return config;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLLayer.prototype.restore = function(config) {
-  plugin.file.kml.KMLLayer.base(this, 'restore', config);
-
-  if (config['collapsed'] != null) {
-    this.collapsed = config['collapsed'];
+    return node;
   }
 
-  if (config['editable'] != null) {
-    this.editable = config['editable'];
+  /**
+   * @inheritDoc
+   */
+  persist(opt_to) {
+    var config = super.persist(opt_to);
+
+    config['collapsed'] = this.collapsed;
+    config['editable'] = this.editable;
+    config['showRoot'] = this.showRoot;
+    return config;
   }
 
-  if (config['showRoot'] != null) {
-    this.showRoot = config['showRoot'];
+  /**
+   * @inheritDoc
+   */
+  restore(config) {
+    super.restore(config);
+
+    if (config['collapsed'] != null) {
+      this.collapsed = config['collapsed'];
+    }
+
+    if (config['editable'] != null) {
+      this.editable = config['editable'];
+    }
+
+    if (config['showRoot'] != null) {
+      this.showRoot = config['showRoot'];
+    }
   }
-};
+}
+
+exports = KMLLayer;

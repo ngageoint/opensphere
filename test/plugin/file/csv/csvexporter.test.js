@@ -1,6 +1,8 @@
+goog.require('goog.object');
 goog.require('ol.Feature');
 goog.require('ol.geom.LineString');
 goog.require('ol.geom.Point');
+goog.require('ol.geom.Polygon');
 goog.require('os.Fields');
 goog.require('os.osasm.wait');
 goog.require('os.time.TimeInstant');
@@ -8,15 +10,24 @@ goog.require('os.time.TimeRange');
 goog.require('plugin.file.csv.CSVExporter');
 
 describe('plugin.file.csv.CSVExporter', function() {
-  var ex = new plugin.file.csv.CSVExporter();
+  const googObject = goog.module.get('goog.object');
+  const Feature = goog.module.get('ol.Feature');
+  const LineString = goog.module.get('ol.geom.LineString');
+  const Point = goog.module.get('ol.geom.Point');
+  const Polygon = goog.module.get('ol.geom.Polygon');
+  const Fields = goog.module.get('os.Fields');
+  const TimeInstant = goog.module.get('os.time.TimeInstant');
+  const TimeRange = goog.module.get('os.time.TimeRange');
+  const CSVExporter = goog.module.get('plugin.file.csv.CSVExporter');
+  var ex = new CSVExporter();
   var lineFeature;
   var pointFeature;
   var polygonFeature;
 
   beforeEach(function() {
-    lineFeature = new ol.Feature(new ol.geom.LineString([[12, 34], [56, 78]]));
-    pointFeature = new ol.Feature(new ol.geom.Point([12, 34]));
-    polygonFeature = new ol.Feature(new ol.geom.Polygon([[[1, 2], [3, 4], [5, 6], [7, 8], [1, 2]]]));
+    lineFeature = new Feature(new LineString([[12, 34], [56, 78]]));
+    pointFeature = new Feature(new Point([12, 34]));
+    polygonFeature = new Feature(new Polygon([[[1, 2], [3, 4], [5, 6], [7, 8], [1, 2]]]));
 
     ex.reset();
   });
@@ -32,8 +43,8 @@ describe('plugin.file.csv.CSVExporter', function() {
       numKey: 5
     };
 
-    ex.setFields(goog.object.getKeys(props));
-    var result = ex.processItem(new ol.Feature(props));
+    ex.setFields(googObject.getKeys(props));
+    var result = ex.processItem(new Feature(props));
 
     expect(result.strKey).toBe(props.strKey);
     expect(result.numKey).toBe(props.numKey);
@@ -42,19 +53,19 @@ describe('plugin.file.csv.CSVExporter', function() {
   it('should convert features with a point geometry to JSON', function() {
     var result = ex.processItem(pointFeature);
 
-    expect(result[os.Fields.GEOMETRY].length).not.toBe(0);
+    expect(result[Fields.GEOMETRY].length).not.toBe(0);
   });
 
   it('should convert features with a linestring geometry to JSON', function() {
     var result = ex.processItem(lineFeature);
 
-    expect(result[os.Fields.GEOMETRY].length).not.toBe(0);
+    expect(result[Fields.GEOMETRY].length).not.toBe(0);
   });
 
   it('should convert features with a polygon geometry to JSON', function() {
     var result = ex.processItem(polygonFeature);
 
-    expect(result[os.Fields.GEOMETRY].length).not.toBe(0);
+    expect(result[Fields.GEOMETRY].length).not.toBe(0);
   });
 
   it('should translate fields to JSON', function() {
@@ -69,7 +80,7 @@ describe('plugin.file.csv.CSVExporter', function() {
     };
 
     pointFeature.setProperties(props);
-    ex.setFields(goog.object.getKeys(props));
+    ex.setFields(googObject.getKeys(props));
 
     var result = ex.processItem(pointFeature);
 
@@ -91,29 +102,29 @@ describe('plugin.file.csv.CSVExporter', function() {
 
   it('should export time instants correctly', function() {
     var props = {
-      recordTime: new os.time.TimeInstant(999999)
+      recordTime: new TimeInstant(999999)
     };
 
     pointFeature.setProperties(props);
-    ex.setFields(goog.object.getKeys(props));
+    ex.setFields(googObject.getKeys(props));
 
     var result = ex.processItem(pointFeature);
 
-    expect(result[os.Fields.TIME]).toBe('1970-01-01T00:16:39Z');
+    expect(result[Fields.TIME]).toBe('1970-01-01T00:16:39Z');
   });
 
   it('should export time ranges correctly', function() {
     var props = {
-      recordTime: new os.time.TimeRange(999999, 9999999)
+      recordTime: new TimeRange(999999, 9999999)
     };
 
     pointFeature.setProperties(props);
-    ex.setFields(goog.object.getKeys(props));
+    ex.setFields(googObject.getKeys(props));
 
     var result = ex.processItem(pointFeature);
 
-    expect(result[plugin.file.csv.CSVExporter.FIELDS.START_TIME]).toBe('1970-01-01T00:16:39Z');
-    expect(result[plugin.file.csv.CSVExporter.FIELDS.END_TIME]).toBe('1970-01-01T02:46:39Z');
+    expect(result[CSVExporter.FIELDS.START_TIME]).toBe('1970-01-01T00:16:39Z');
+    expect(result[CSVExporter.FIELDS.END_TIME]).toBe('1970-01-01T02:46:39Z');
   });
 
   it('should export GEOMETRY when alwaysIncludeWkt is true', function() {
@@ -121,7 +132,7 @@ describe('plugin.file.csv.CSVExporter', function() {
 
     var result = ex.processItem(pointFeature);
 
-    expect(result[os.Fields.GEOMETRY].length).not.toBe(0);
+    expect(result[Fields.GEOMETRY].length).not.toBe(0);
   });
 
   it('should not export GEOMETRY when alwaysIncludeWkt is false', function() {
@@ -130,6 +141,6 @@ describe('plugin.file.csv.CSVExporter', function() {
 
     var result = ex.processItem(pointFeature);
 
-    expect(result[os.Fields.GEOMETRY]).toBeUndefined();
+    expect(result[Fields.GEOMETRY]).toBeUndefined();
   });
 });
