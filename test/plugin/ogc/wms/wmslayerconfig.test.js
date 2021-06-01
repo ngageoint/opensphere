@@ -1,9 +1,13 @@
-goog.require('os.net.ProxyHandler');
 goog.require('ol.proj');
+goog.require('os.net.ProxyHandler');
 goog.require('plugin.ogc.wms.WMSLayerConfig');
 
 
 describe('plugin.ogc.wms.WMSLayerConfig', function() {
+  const olProj = goog.module.get('ol.proj');
+  const ProxyHandler = goog.module.get('os.net.ProxyHandler');
+  const WMSLayerConfig = goog.module.get('plugin.ogc.wms.WMSLayerConfig');
+
   it('should proxy URLs properly', function() {
     var options = {
       url: 'http://www.example.com/wms',
@@ -11,7 +15,7 @@ describe('plugin.ogc.wms.WMSLayerConfig', function() {
       title: 'Test'
     };
 
-    var lc = new plugin.ogc.wms.WMSLayerConfig();
+    var lc = new WMSLayerConfig();
     var original = lc.createLayer(options);
 
     options['proxy'] = true;
@@ -22,11 +26,11 @@ describe('plugin.ogc.wms.WMSLayerConfig', function() {
 
     var tileCoord = [0, 0, 0];
     var pixelRatio = 1;
-    var proj = ol.proj.get('EPSG:4326');
+    var proj = olProj.get('EPSG:4326');
 
     var originalUrl = originalFunc(tileCoord, pixelRatio, proj);
     var proxyUrl = proxyFunc(tileCoord, pixelRatio, proj);
 
-    expect(proxyUrl).toBe(os.net.ProxyHandler.getProxyUri(originalUrl));
+    expect(proxyUrl).toBe(ProxyHandler.getProxyUri(originalUrl));
   });
 });

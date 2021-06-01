@@ -1,79 +1,95 @@
-goog.provide('plugin.ogc.ui.OGCLayerNodeUICtrl');
-goog.provide('plugin.ogc.ui.ogcLayerNodeUIDirective');
-goog.require('goog.async.Deferred');
-goog.require('goog.events.EventType');
-goog.require('os.ui.Module');
-goog.require('os.ui.node.DefaultLayerNodeUICtrl');
-goog.require('os.ui.node.defaultLayerNodeUIDirective');
-goog.require('plugin.ogc.ui.chooseTimeColumnDirective');
+goog.module('plugin.ogc.ui.OGCLayerNodeUI');
+goog.module.declareLegacyNamespace();
+
+const Deferred = goog.require('goog.async.Deferred');
+const DataManager = goog.require('os.data.DataManager');
+const osImplements = goog.require('os.implements');
+const Module = goog.require('os.ui.Module');
+const DefaultLayerNodeUICtrl = goog.require('os.ui.node.DefaultLayerNodeUICtrl');
+const defaultLayerNodeUIDirective = goog.require('os.ui.node.defaultLayerNodeUIDirective');
+const IFeatureTypeDescriptor = goog.require('os.ui.ogc.IFeatureTypeDescriptor');
+const {Controller: ChooseTimeColumnController} = goog.require('plugin.ogc.ui.ChooseTimeColumnUI');
 
 
 /**
  * @type {string}
  */
-plugin.ogc.ui.OGCLayerNodeUITemplate = '<span ng-if="chooseTime" ng-click="nodeUi.chooseTime()">' +
+const template = '<span ng-if="chooseTime" ng-click="nodeUi.chooseTime()">' +
     '<i class="fa fa-clock-o fa-fw c-glyph" title="Choose Time Columns"></i></span>';
 
 
 /**
  * @return {angular.Directive}
  */
-plugin.ogc.ui.ogcLayerNodeUIDirective = function() {
-  var dir = os.ui.node.defaultLayerNodeUIDirective();
-  dir.template = dir.template.replace('>', '>' + plugin.ogc.ui.OGCLayerNodeUITemplate);
-  dir.controller = plugin.ogc.ui.OGCLayerNodeUICtrl;
+const directive = () => {
+  var dir = defaultLayerNodeUIDirective();
+  dir.template = dir.template.replace('>', '>' + template);
+  dir.controller = Controller;
   return dir;
 };
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'ogclayernodeui';
 
 
 /**
  * Add the directive tot he module
  */
-os.ui.Module.directive('ogclayernodeui', [plugin.ogc.ui.ogcLayerNodeUIDirective]);
-
+Module.directive('ogclayernodeui', [directive]);
 
 
 /**
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @extends {os.ui.node.DefaultLayerNodeUICtrl}
- * @ngInject
+ * @unrestricted
  */
-plugin.ogc.ui.OGCLayerNodeUICtrl = function($scope, $element) {
-  plugin.ogc.ui.OGCLayerNodeUICtrl.base(this, 'constructor', $scope, $element);
+class Controller extends DefaultLayerNodeUICtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
+
+    /**
+     * The descriptor for this layer
+     * @type {os.data.IDataDescriptor}
+     * @private
+     */
+    this.descriptor_ = DataManager.getInstance().getDescriptor(this.getLayerId());
+
+    var chooseTime = false;
+
+    if (osImplements(this.descriptor_, IFeatureTypeDescriptor.ID)) {
+      var featureType = this.descriptor_.getFeatureType();
+      if (featureType) {
+        chooseTime = (featureType.getStartDateColumnName() !== null || featureType.getEndDateColumnName() !== null) &&
+          featureType.getTimeColumns().length >= 2;
+      }
+    }
+    $scope['chooseTime'] = chooseTime;
+  }
 
   /**
-   * The descriptor for this layer
-   * @type {os.data.IDataDescriptor}
-   * @private
+   * Launch the time column chooser for the layer
+   *
+   * @export
    */
-  this.descriptor_ = os.dataManager.getDescriptor(this.getLayerId());
-
-  var chooseTime = false;
-
-  if (os.implements(this.descriptor_, os.ui.ogc.IFeatureTypeDescriptor.ID)) {
-    var featureType = this.descriptor_.getFeatureType();
-    if (featureType) {
-      chooseTime = (featureType.getStartDateColumnName() !== null || featureType.getEndDateColumnName() !== null) &&
-        featureType.getTimeColumns().length >= 2;
-    }
+  chooseTime() {
+    var deferred = new Deferred();
+    deferred.addCallback(function() {
+      this.descriptor_.setActive(false);
+      this.descriptor_.setActive(true);
+    }, this);
+    ChooseTimeColumnController.launch(this.getLayerId(), deferred);
   }
-  $scope['chooseTime'] = chooseTime;
-};
-goog.inherits(plugin.ogc.ui.OGCLayerNodeUICtrl, os.ui.node.DefaultLayerNodeUICtrl);
+}
 
-
-/**
- * Launch the time column chooser for the layer
- *
- * @export
- */
-plugin.ogc.ui.OGCLayerNodeUICtrl.prototype.chooseTime = function() {
-  var deferred = new goog.async.Deferred();
-  deferred.addCallback(function() {
-    this.descriptor_.setActive(false);
-    this.descriptor_.setActive(true);
-  }, this);
-  plugin.ogc.ui.ChooseTimeColumnCtrl.launch(this.getLayerId(), deferred);
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

@@ -1,32 +1,105 @@
-goog.provide('plugin.ogc.query.OGCTemporalFormatter');
-goog.require('os.query.ITemporalFormatter');
-goog.require('os.time');
+goog.module('plugin.ogc.query.OGCTemporalFormatter');
+goog.module.declareLegacyNamespace();
 
+const time = goog.require('os.time');
+const ITemporalFormatter = goog.requireType('os.query.ITemporalFormatter');
 
 
 /**
- * @implements {os.query.ITemporalFormatter}
- * @constructor
+ * @implements {ITemporalFormatter}
  */
-plugin.ogc.query.OGCTemporalFormatter = function() {
+class OGCTemporalFormatter {
   /**
-   * @type {string}
-   * @private
+   * Constructor.
    */
-  this.startColumn_ = plugin.ogc.query.OGCTemporalFormatter.DEFAULT_COLUMN_;
+  constructor() {
+    /**
+     * @type {string}
+     * @private
+     */
+    this.startColumn_ = OGCTemporalFormatter.DEFAULT_COLUMN_;
+
+    /**
+     * @type {string}
+     * @private
+     */
+    this.endColumn_ = OGCTemporalFormatter.DEFAULT_COLUMN_;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.roundTimeEnabled_ = false;
+  }
 
   /**
-   * @type {string}
-   * @private
+   * Set the start column.
+   *
+   * @param {?string} value
    */
-  this.endColumn_ = plugin.ogc.query.OGCTemporalFormatter.DEFAULT_COLUMN_;
+  setStartColumn(value) {
+    this.startColumn_ = value || OGCTemporalFormatter.DEFAULT_COLUMN_;
+  }
 
   /**
-   * @type {boolean}
-   * @private
+   * Set the end column.
+   *
+   * @param {?string} value
    */
-  this.roundTimeEnabled_ = false;
-};
+  setEndColumn(value) {
+    this.endColumn_ = value || OGCTemporalFormatter.DEFAULT_COLUMN_;
+  }
+
+  /**
+   * Turn on time rounding
+   */
+  setRoundTimeEnabled() {
+    this.roundTimeEnabled_ = true;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  format(controller) {
+    var ranges = controller.getEffectiveLoadRanges();
+    if (ranges.length < 1) { // possible to load a range that doesn't get sliced
+      if (!controller.hasSliceRanges()) {
+        ranges = [controller.getRange()];
+      } else {
+        var d = new Date().getTime() + time.millisecondsInDay; // set in future so no data is queried
+        ranges = [controller.buildRange(d, d + 1000)];
+      }
+    }
+    var filters = '<Or>';
+
+    for (var i = 0; i < ranges.length; i++) {
+      var filter = '<And>';
+      filter += OGCTemporalFormatter.FILTER;
+      var range = ranges[i];
+      var start = time.format(new Date(range.start), undefined, false, true);
+      var end = time.format(new Date(range.end), undefined, false, true);
+
+      // THIN-7523 - hack to avoid requests that go below a second
+      if (this.roundTimeEnabled_) {
+        var startInt = Math.floor(range.start / 1000) * 1000;
+        start = time.format(new Date(startInt), undefined, false, true);
+        var endInt = Math.ceil(range.end / 1000) * 1000;
+        endInt = endInt <= startInt ? startInt + 1000 : endInt;
+        end = time.format(new Date(endInt), undefined, false, true);
+      }
+
+      filter = filter.replace(/{startColumn}/g, this.startColumn_);
+      filter = filter.replace(/{endColumn}/g, this.endColumn_);
+      filter = filter.replace(/{start}/g, start);
+      filter = filter.replace(/{end}/g, end);
+      filter += '</And>';
+      filters += filter;
+    }
+    filters += '</Or>';
+
+    return filters;
+  }
+}
 
 
 /**
@@ -34,79 +107,7 @@ plugin.ogc.query.OGCTemporalFormatter = function() {
  * @const
  * @private
  */
-plugin.ogc.query.OGCTemporalFormatter.DEFAULT_COLUMN_ = 'validTime';
-
-
-/**
- * Set the start column.
- *
- * @param {?string} value
- */
-plugin.ogc.query.OGCTemporalFormatter.prototype.setStartColumn = function(value) {
-  this.startColumn_ = value || plugin.ogc.query.OGCTemporalFormatter.DEFAULT_COLUMN_;
-};
-
-
-/**
- * Set the end column.
- *
- * @param {?string} value
- */
-plugin.ogc.query.OGCTemporalFormatter.prototype.setEndColumn = function(value) {
-  this.endColumn_ = value || plugin.ogc.query.OGCTemporalFormatter.DEFAULT_COLUMN_;
-};
-
-
-/**
- * Turn on time rounding
- */
-plugin.ogc.query.OGCTemporalFormatter.prototype.setRoundTimeEnabled = function() {
-  this.roundTimeEnabled_ = true;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.ogc.query.OGCTemporalFormatter.prototype.format = function(controller) {
-  var ranges = controller.getEffectiveLoadRanges();
-  if (ranges.length < 1) { // possible to load a range that doesn't get sliced
-    if (!controller.hasSliceRanges()) {
-      ranges = [controller.getRange()];
-    } else {
-      var d = new Date().getTime() + os.time.millisecondsInDay; // set in future so no data is queried
-      ranges = [controller.buildRange(d, d + 1000)];
-    }
-  }
-  var filters = '<Or>';
-
-  for (var i = 0; i < ranges.length; i++) {
-    var filter = '<And>';
-    filter += plugin.ogc.query.OGCTemporalFormatter.FILTER;
-    var range = ranges[i];
-    var start = os.time.format(new Date(range.start), undefined, false, true);
-    var end = os.time.format(new Date(range.end), undefined, false, true);
-
-    // THIN-7523 - hack to avoid requests that go below a second
-    if (this.roundTimeEnabled_) {
-      var startInt = Math.floor(range.start / 1000) * 1000;
-      start = os.time.format(new Date(startInt), undefined, false, true);
-      var endInt = Math.ceil(range.end / 1000) * 1000;
-      endInt = endInt <= startInt ? startInt + 1000 : endInt;
-      end = os.time.format(new Date(endInt), undefined, false, true);
-    }
-
-    filter = filter.replace(/{startColumn}/g, this.startColumn_);
-    filter = filter.replace(/{endColumn}/g, this.endColumn_);
-    filter = filter.replace(/{start}/g, start);
-    filter = filter.replace(/{end}/g, end);
-    filter += '</And>';
-    filters += filter;
-  }
-  filters += '</Or>';
-
-  return filters;
-};
+OGCTemporalFormatter.DEFAULT_COLUMN_ = 'validTime';
 
 
 /**
@@ -126,7 +127,7 @@ plugin.ogc.query.OGCTemporalFormatter.prototype.format = function(controller) {
  * @type {string}
  * @const
  */
-plugin.ogc.query.OGCTemporalFormatter.FILTER = '<PropertyIsGreaterThanOrEqualTo>' +
+OGCTemporalFormatter.FILTER = '<PropertyIsGreaterThanOrEqualTo>' +
     '<PropertyName>{endColumn}</PropertyName>' +
     '<Literal>{start}</Literal>' +
     '</PropertyIsGreaterThanOrEqualTo>' +
@@ -135,3 +136,4 @@ plugin.ogc.query.OGCTemporalFormatter.FILTER = '<PropertyIsGreaterThanOrEqualTo>
     '<Literal>{end}</Literal>' +
     '</PropertyIsLessThan>';
 
+exports = OGCTemporalFormatter;
