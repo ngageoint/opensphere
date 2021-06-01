@@ -1,239 +1,243 @@
-goog.provide('os.capture.AbstractVideoEncoder');
+goog.module('os.capture.AbstractVideoEncoder');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.EventTarget');
-goog.require('goog.html.TrustedResourceUrl');
-goog.require('goog.log');
-goog.require('goog.net.jsloader');
-goog.require('goog.string.Const');
-goog.require('os.capture.IVideoEncoder');
-goog.require('os.fn');
+const EventTarget = goog.require('goog.events.EventTarget');
+const TrustedResourceUrl = goog.require('goog.html.TrustedResourceUrl');
+const log = goog.require('goog.log');
+const jsloader = goog.require('goog.net.jsloader');
+const CaptureEventType = goog.require('os.capture.CaptureEventType');
+const osString = goog.require('os.string');
 
+const IVideoEncoder = goog.requireType('os.capture.IVideoEncoder');
 
 
 /**
  * Abstract class for exporting a video.
  *
  * @abstract
- * @extends {goog.events.EventTarget}
- * @implements {os.capture.IVideoEncoder}
- * @constructor
+ * @implements {IVideoEncoder}
  */
-os.capture.AbstractVideoEncoder = function() {
-  os.capture.AbstractVideoEncoder.base(this, 'constructor');
-
+class AbstractVideoEncoder extends EventTarget {
   /**
-   * User-facing description of the video encoder.
-   * @type {string}
+   * Constructor.
    */
-  this.description = '';
+  constructor() {
+    super();
+
+    /**
+     * User-facing description of the video encoder.
+     * @type {string}
+     */
+    this.description = '';
+
+    /**
+     * The file extension for encoded videos.
+     * @type {string}
+     */
+    this.extension = 'unknown';
+
+    /**
+     * Detailed error message if encoding fails.
+     * @type {string}
+     */
+    this.errorMsg = '';
+
+    /**
+     * Final video output.
+     * @type {*}
+     */
+    this.output = null;
+
+    /**
+     * Progress percentage for the current task.
+     * @type {number}
+     */
+    this.progress = 0;
+
+    /**
+     * Encoder status message.
+     * @type {string}
+     */
+    this.status = '';
+
+    /**
+     * User-facing title of the video encoder.
+     * @type {string}
+     */
+    this.title = 'Give me a title!';
+
+    /**
+     * The original canvas frames.
+     * @type {!Array<!HTMLCanvasElement>}
+     * @protected
+     */
+    this.frames = [];
+
+    /**
+     * The video frame rate.
+     * @type {number}
+     */
+    this.frameRate = 0;
+
+    /**
+     * The video quality.
+     * @type {number}
+     */
+    this.quality = AbstractVideoEncoder.DEFAULT_QUALITY;
+
+    /**
+     * The logger for the exporter.
+     * @type {log.Logger}
+     * @protected
+     */
+    this.log = logger;
+
+    /**
+     * The encoder script URL, if it should be lazy loaded.
+     * @type {string|undefined}
+     * @protected
+     */
+    this.scriptUrl = undefined;
+  }
 
   /**
-   * The file extension for encoded videos.
-   * @type {string}
+   * @inheritDoc
    */
-  this.extension = 'unknown';
+  disposeInternal() {
+    super.disposeInternal();
+    this.cleanup();
+  }
 
   /**
-   * Detailed error message if encoding fails.
-   * @type {string}
+   * @inheritDoc
    */
-  this.errorMsg = '';
+  abort() {}
 
   /**
-   * Final video output.
-   * @type {*}
+   * @inheritDoc
    */
-  this.output = null;
+  cleanup() {
+    this.frames.length = 0;
+    this.output = null;
+  }
 
   /**
-   * Progress percentage for the current task.
-   * @type {number}
+   * Initialize the encoder.
+   * @param {number} frameRate The frame rate of the video
+   * @param {number=} opt_quality The video quality, from 0 to 1
+   * @override
    */
-  this.progress = 0;
+  init(frameRate, opt_quality) {
+    this.cleanup();
+
+    this.frameRate = frameRate;
+    this.quality = opt_quality || AbstractVideoEncoder.DEFAULT_QUALITY;
+  }
 
   /**
-   * Encoder status message.
-   * @type {string}
+   * @inheritDoc
    */
-  this.status = '';
+  process() {
+    if (!this.isEncoderLoaded()) {
+      if (this.scriptUrl) {
+        var trustedUrl = TrustedResourceUrl.fromConstant(osString.createConstant(this.scriptUrl));
+        jsloader.safeLoad(trustedUrl).addCallbacks(this.processInternal, this.onScriptLoadError, this);
+      } else {
+        this.handleError(this.title + ' encoder is not available');
+      }
+    } else {
+      this.processInternal();
+    }
+  }
 
   /**
-   * User-facing title of the video encoder.
-   * @type {string}
-   */
-  this.title = 'Give me a title!';
-
-  /**
-   * The original canvas frames.
-   * @type {!Array<!HTMLCanvasElement>}
+   * Process the video frames once the encoder has been loaded.
+   *
+   * @abstract
    * @protected
    */
-  this.frames = [];
+  processInternal() {}
 
   /**
-   * The logger for the exporter.
-   * @type {goog.log.Logger}
+   * If the encoder library has been loaded in the browser.
+   *
+   * @return {boolean}
    * @protected
    */
-  this.log = os.capture.AbstractVideoEncoder.LOGGER_;
+  isEncoderLoaded() {
+    // by default, assume the library is loaded in the index.html
+    return true;
+  }
 
   /**
-   * The encoder script URL, if it should be lazy loaded.
-   * @type {string|undefined}
+   * Set the error message and dispatch the error event.
+   *
+   * @param {string} msg The error message
+   * @param {Error=} opt_error The caught error
    * @protected
    */
-  this.scriptUrl = undefined;
-};
-goog.inherits(os.capture.AbstractVideoEncoder, goog.events.EventTarget);
+  handleError(msg, opt_error) {
+    if (opt_error) {
+      log.error(this.log, this.errorMsg, opt_error);
+    }
 
+    this.errorMsg = 'Encountered an error while exporting video: ' + msg;
+
+    this.dispatchEvent(CaptureEventType.ERROR);
+  }
+
+  /**
+   * Handle failure to load the encoder library.
+   *
+   * @param {jsloader.Error} error The error
+   * @protected
+   */
+  onScriptLoadError(error) {
+    this.scriptUrl = undefined;
+    this.handleError(error ? error.message : 'failed to load the ' + this.title + ' encoder');
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setFrames(frames) {
+    this.frames = frames;
+  }
+
+  /**
+   * Set the progress for the export process and fire an event.
+   *
+   * @param {number} value The new progress value.
+   * @protected
+   */
+  setProgress(value) {
+    this.progress = value;
+    this.dispatchEvent(CaptureEventType.PROGRESS);
+  }
+
+  /**
+   * Set the status for the export process and fire an event.
+   *
+   * @param {string} value The new status value.
+   * @protected
+   */
+  setStatus(value) {
+    this.status = value;
+    this.dispatchEvent(CaptureEventType.STATUS);
+  }
+}
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {log.Logger}
  */
-os.capture.AbstractVideoEncoder.LOGGER_ = goog.log.getLogger('os.capture.AbstractVideoEncoder');
-
+const logger = log.getLogger('os.capture.AbstractVideoEncoder');
 
 /**
  * The default video quality.
  * @type {number}
  * @const
  */
-os.capture.AbstractVideoEncoder.DEFAULT_QUALITY = 1.0;
+AbstractVideoEncoder.DEFAULT_QUALITY = 1.0;
 
-
-/**
- * @inheritDoc
- */
-os.capture.AbstractVideoEncoder.prototype.disposeInternal = function() {
-  os.capture.AbstractVideoEncoder.base(this, 'disposeInternal');
-  this.cleanup();
-};
-
-
-/**
- * @inheritDoc
- */
-os.capture.AbstractVideoEncoder.prototype.abort = os.fn.noop;
-
-
-/**
- * @inheritDoc
- */
-os.capture.AbstractVideoEncoder.prototype.cleanup = function() {
-  this.frames.length = 0;
-  this.output = null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.capture.AbstractVideoEncoder.prototype.init = function(frameRate, opt_quality) {
-  this.cleanup();
-
-  this.frameRate = frameRate;
-  this.quality = opt_quality || os.capture.AbstractVideoEncoder.DEFAULT_QUALITY;
-};
-
-
-/**
- * @inheritDoc
- */
-os.capture.AbstractVideoEncoder.prototype.process = function() {
-  if (!this.isEncoderLoaded()) {
-    if (this.scriptUrl) {
-      var trustedUrl = goog.html.TrustedResourceUrl.fromConstant(os.string.createConstant(this.scriptUrl));
-      goog.net.jsloader.safeLoad(trustedUrl).addCallbacks(this.processInternal, this.onScriptLoadError, this);
-    } else {
-      this.handleError(this.title + ' encoder is not available');
-    }
-  } else {
-    this.processInternal();
-  }
-};
-
-
-/**
- * Process the video frames once the encoder has been loaded.
- *
- * @abstract
- * @protected
- */
-os.capture.AbstractVideoEncoder.prototype.processInternal = function() {};
-
-
-/**
- * If the encoder library has been loaded in the browser.
- *
- * @return {boolean}
- * @protected
- */
-os.capture.AbstractVideoEncoder.prototype.isEncoderLoaded = function() {
-  // by default, assume the library is loaded in the index.html
-  return true;
-};
-
-
-/**
- * Set the error message and dispatch the error event.
- *
- * @param {string} msg The error message
- * @param {Error=} opt_error The caught error
- * @protected
- */
-os.capture.AbstractVideoEncoder.prototype.handleError = function(msg, opt_error) {
-  if (opt_error) {
-    goog.log.error(this.log, this.errorMsg, opt_error);
-  }
-
-  this.errorMsg = 'Encountered an error while exporting video: ' + msg;
-
-  this.dispatchEvent(os.capture.CaptureEventType.ERROR);
-};
-
-
-/**
- * Handle failure to load the encoder library.
- *
- * @param {goog.net.jsloader.Error} error The error
- * @protected
- */
-os.capture.AbstractVideoEncoder.prototype.onScriptLoadError = function(error) {
-  this.scriptUrl = undefined;
-  this.handleError(error ? error.message : 'failed to load the ' + this.title + ' encoder');
-};
-
-
-/**
- * @inheritDoc
- */
-os.capture.AbstractVideoEncoder.prototype.setFrames = function(frames) {
-  this.frames = frames;
-};
-
-
-/**
- * Set the progress for the export process and fire an event.
- *
- * @param {number} value The new progress value.
- * @protected
- */
-os.capture.AbstractVideoEncoder.prototype.setProgress = function(value) {
-  this.progress = value;
-  this.dispatchEvent(os.capture.CaptureEventType.PROGRESS);
-};
-
-
-/**
- * Set the status for the export process and fire an event.
- *
- * @param {string} value The new status value.
- * @protected
- */
-os.capture.AbstractVideoEncoder.prototype.setStatus = function(value) {
-  this.status = value;
-  this.dispatchEvent(os.capture.CaptureEventType.STATUS);
-};
+exports = AbstractVideoEncoder;

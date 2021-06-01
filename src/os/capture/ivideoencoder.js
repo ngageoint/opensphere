@@ -1,95 +1,90 @@
-goog.provide('os.capture.IVideoEncoder');
+goog.module('os.capture.IVideoEncoder');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.Listenable');
-
+const Listenable = goog.requireType('goog.events.Listenable');
 
 
 /**
  * Interface for saving video frames to a file.
  *
  * @interface
- * @extends {goog.events.Listenable}
+ * @extends {Listenable}
  */
-os.capture.IVideoEncoder = function() {};
+class IVideoEncoder {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    /**
+     * User-facing description of the video encoder.
+     * @type {string}
+     */
+    this.description;
 
+    /**
+     * Detailed error message if encoding fails.
+     * @type {string}
+     */
+    this.errorMsg;
 
-/**
- * User-facing description of the video encoder.
- * @type {string}
- */
-os.capture.IVideoEncoder.prototype.description;
+    /**
+     * The file extension for encoded videos.
+     * @type {string}
+     */
+    this.extension;
 
+    /**
+     * Final video output.
+     * @type {*}
+     */
+    this.output;
 
-/**
- * Detailed error message if encoding fails.
- * @type {string}
- */
-os.capture.IVideoEncoder.prototype.errorMsg;
+    /**
+     * Progress percentage for the current task.
+     * @type {number}
+     */
+    this.progress;
 
+    /**
+     * Encoder status message.
+     * @type {string}
+     */
+    this.status;
 
-/**
- * The file extension for encoded videos.
- * @type {string}
- */
-os.capture.IVideoEncoder.prototype.extension;
+    /**
+     * User-facing title of the video encoder.
+     * @type {string}
+     */
+    this.title;
+  }
 
+  /**
+   * Abort the encoding process.
+   */
+  abort() {}
 
-/**
- * Final video output.
- * @type {*}
- */
-os.capture.IVideoEncoder.prototype.output;
+  /**
+   * Clean up any resources that shouldn't reside in memory.
+   */
+  cleanup() {}
 
+  /**
+   * Initialize the encoder.
+   * @param {number} frameRate The frame rate of the video
+   * @param {number=} opt_quality The video quality, from 0 to 1
+   */
+  init(frameRate, opt_quality) {}
 
-/**
- * Progress percentage for the current task.
- * @type {number}
- */
-os.capture.IVideoEncoder.prototype.progress;
+  /**
+   * Process video frames.
+   */
+  process() {}
 
+  /**
+   * Set the source frames to use in the video.
+   * @param {!Array<!HTMLCanvasElement>} frames The video frames
+   */
+  setFrames(frames) {}
+}
 
-/**
- * Encoder status message.
- * @type {string}
- */
-os.capture.IVideoEncoder.prototype.status;
-
-
-/**
- * User-facing title of the video encoder.
- * @type {string}
- */
-os.capture.IVideoEncoder.prototype.title;
-
-
-/**
- * Abort the encoding process.
- */
-os.capture.IVideoEncoder.prototype.abort;
-
-
-/**
- * Clean up any resources that shouldn't reside in memory.
- */
-os.capture.IVideoEncoder.prototype.cleanup;
-
-
-/**
- * Initialize the encoder.
- * @param {number} frameRate The frame rate of the video
- * @param {number=} opt_quality The video quality, from 0 to 1
- */
-os.capture.IVideoEncoder.prototype.init;
-
-
-/**
- * Process video frames.
- */
-os.capture.IVideoEncoder.prototype.process;
-
-
-/**
- * Set the source frames to use in the video.
- * @param {!Array<!HTMLCanvasElement>} frames The video frames
- */
-os.capture.IVideoEncoder.prototype.setFrames;
+exports = IVideoEncoder;
