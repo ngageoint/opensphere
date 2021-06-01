@@ -12,6 +12,7 @@ const Module = goog.require('os.ui.Module');
 const kml = goog.require('os.ui.file.kml');
 const IconPickerEventType = goog.require('os.ui.icon.IconPickerEventType');
 const EventType = goog.require('os.ui.im.action.EventType');
+const VectorStyleControlsEventType = goog.require('os.ui.layer.VectorStyleControlsEventType');
 const ActionConfigCtrl = goog.require('plugin.im.action.feature.ui.ActionConfigCtrl');
 
 const StyleAction = goog.requireType('plugin.im.action.feature.StyleAction');
@@ -104,12 +105,12 @@ class Controller extends ActionConfigCtrl {
     $scope.$on('opacity.slidestop', this.onOpacityChange.bind(this));
     $scope.$on('fillOpacity.slidestop', this.onOpacityChange.bind(this));
     $scope.$on('size.slidestop', this.onSizeChange.bind(this));
-    $scope.$on(os.ui.layer.VectorStyleControlsEventType.LINE_DASH_CHANGE, this.onLineDashChange.bind(this));
+    $scope.$on(VectorStyleControlsEventType.LINE_DASH_CHANGE, this.onLineDashChange.bind(this));
     $scope.$on(IconPickerEventType.CHANGE, this.onIconChange.bind(this));
-    $scope.$on(os.ui.layer.VectorStyleControlsEventType.SHAPE_CHANGE, this.onShapeChange.bind(this));
-    $scope.$on(os.ui.layer.VectorStyleControlsEventType.CENTER_SHAPE_CHANGE, this.onCenterShapeChange.bind(this));
-    $scope.$on(os.ui.layer.VectorStyleControlsEventType.SHOW_ROTATION_CHANGE, this.onShowRotationChange_.bind(this));
-    $scope.$on(os.ui.layer.VectorStyleControlsEventType.ROTATION_COLUMN_CHANGE, this.onRotationColumnChange_.bind(this));
+    $scope.$on(VectorStyleControlsEventType.SHAPE_CHANGE, this.onShapeChange.bind(this));
+    $scope.$on(VectorStyleControlsEventType.CENTER_SHAPE_CHANGE, this.onCenterShapeChange.bind(this));
+    $scope.$on(VectorStyleControlsEventType.SHOW_ROTATION_CHANGE, this.onShowRotationChange_.bind(this));
+    $scope.$on(VectorStyleControlsEventType.ROTATION_COLUMN_CHANGE, this.onRotationColumnChange_.bind(this));
     this.initialize();
   }
 
