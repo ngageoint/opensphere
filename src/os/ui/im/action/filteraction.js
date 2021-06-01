@@ -4,7 +4,7 @@ goog.module.declareLegacyNamespace();
 const olArray = goog.require('ol.array');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const SequenceCommand = goog.require('os.command.SequenceCommand');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
+const {getImportActionManager} = goog.require('os.im.action');
 const TagName = goog.require('os.im.action.TagName');
 const FilterActionAdd = goog.require('os.im.action.cmd.FilterActionAdd');
 const FilterActionRemove = goog.require('os.im.action.cmd.FilterActionRemove');
@@ -24,7 +24,7 @@ const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
  * @return {!Array<!Element>} The entry XML elements.
  */
 const exportEntries = function(entries, opt_exactType) {
-  var iam = ImportActionManager.getInstance();
+  var iam = getImportActionManager();
   var result = [];
 
   /**
@@ -120,7 +120,7 @@ const copyEntryCmd = function(entry, opt_parentIndex) {
 
   var parentId = entry.getParent() ? entry.getParent().getId() : undefined;
 
-  var iam = ImportActionManager.getInstance();
+  var iam = getImportActionManager();
   var cmd = new FilterActionAdd(copy, opt_parentIndex, parentId);
   cmd.title = 'Copy ' + iam.entryTitle + ' "' + entry.getTitle() + '"';
 
@@ -133,7 +133,7 @@ const copyEntryCmd = function(entry, opt_parentIndex) {
  * @return {string} The file name.
  */
 const getExportName = function() {
-  return ImportActionManager.getInstance().entryTitle + 's';
+  return getImportActionManager().entryTitle + 's';
 };
 
 /**
@@ -166,7 +166,7 @@ const onEditComplete = function(original, entry) {
   if (entry && (!original || entry.compare(original) !== 0)) {
     var cmds = [];
 
-    var iam = ImportActionManager.getInstance();
+    var iam = getImportActionManager();
     var entries = iam.getActionEntries(entry.getType());
 
     var entryTitle = entry.getTitle();
@@ -210,7 +210,7 @@ const onEditComplete = function(original, entry) {
  * @return {os.command.ICommand} The remove entry command.
  */
 const removeEntryCmd = function(entry) {
-  var iam = ImportActionManager.getInstance();
+  var iam = getImportActionManager();
   var entries = iam.getActionEntries(entry.getType());
   var parent = entry.getParent();
   var parentId = undefined;

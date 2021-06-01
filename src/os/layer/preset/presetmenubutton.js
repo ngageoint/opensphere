@@ -2,7 +2,7 @@ goog.module('os.layer.preset.PresetMenuButton');
 goog.module.declareLegacyNamespace();
 
 const LayerPresetManager = goog.require('os.layer.preset.LayerPresetManager');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
+const {getImportActionManager} = goog.require('os.im.action');
 const MenuButtonCtrl = goog.require('os.ui.menu.MenuButtonCtrl');
 const Menu = goog.require('os.ui.menu.Menu');
 const MenuItem = goog.require('os.ui.menu.MenuItem');
@@ -173,7 +173,7 @@ class Controller extends MenuButtonCtrl {
       }
     }
 
-    const iam = ImportActionManager.getInstance();
+    const iam = getImportActionManager();
 
     // get the currently active FeatureAction ID's as a list
     const ids = iam.getActiveActionEntryIds(clone.layerId);
@@ -494,14 +494,14 @@ const directive = () => ({
   controllerAs: 'ctrl',
   template: `
 <div class="btn-group o-add-data-button" ng-right-click="ctrl.openMenu()">
-  <button type="button" class="btn btn-primary col-auto" 
+  <button type="button" class="btn btn-primary col-auto"
       ng-click="ctrl.notifyApplyPreset()"
       title="Apply the layer style preset">
     <i class="fa fa-check"></i>
     Apply
   </button>
-  <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" 
-      ng-if="ctrl.isAdmin" 
+  <button class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+      ng-if="ctrl.isAdmin"
       ng-click="ctrl.openMenu()"
       ng-class="{active: menu}"
       ng-disabled="ctrl.thinking">

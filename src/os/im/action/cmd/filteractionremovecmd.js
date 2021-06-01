@@ -2,7 +2,6 @@ goog.module('os.im.action.cmd.FilterActionRemove');
 goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const AbstractFilterAction = goog.require('os.im.action.cmd.AbstractFilterAction');
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
@@ -22,8 +21,7 @@ class FilterActionRemove extends AbstractFilterAction {
     super(entry, opt_index, opt_parentId);
 
     if (entry) {
-      var appEntryTitle = ImportActionManager.getInstance().entryTitle;
-      this.title = 'Remove ' + appEntryTitle + ' "' + entry.getTitle() + '"';
+      this.title = 'Remove ' + this.entryTitle + ' "' + entry.getTitle() + '"';
     }
   }
 

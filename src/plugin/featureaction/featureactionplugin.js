@@ -1,6 +1,7 @@
 goog.module('plugin.im.action.feature.Plugin');
 goog.module.declareLegacyNamespace();
 
+const {setImportActionManager} = goog.require('os.im.action');
 const legend = goog.require('os.legend');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const StateManager = goog.require('os.state.StateManager');
@@ -54,6 +55,8 @@ class Plugin extends AbstractPlugin {
     manager.registerAction(new LabelAction());
     manager.registerAction(new StyleAction());
     manager.registerAction(new SoundAction());
+
+    setImportActionManager(manager);
 
     // register import UI
     ImportManager.getInstance().registerImportUI(mime.TYPE,

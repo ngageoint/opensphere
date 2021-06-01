@@ -2,10 +2,11 @@ goog.module('os.im.action.cmd.AbstractFilterAction');
 goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
+const {getImportActionManager} = goog.require('os.im.action');
 
 const ICommand = goog.requireType('os.command.ICommand');
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const ImportActionManager = goog.requireType('os.im.action.ImportActionManager');
 
 
 /**
@@ -22,6 +23,20 @@ class AbstractFilterAction {
    * @param {string=} opt_parentId The parent node ID.
    */
   constructor(entry, opt_index, opt_parentId) {
+    /**
+     * The import manager instance.
+     * @type {ImportActionManager}
+     * @protected
+     */
+    this.manager = getImportActionManager();
+
+    /**
+     * The filter action entry title.
+     * @type {string}
+     * @protected
+     */
+    this.entryTitle = this.manager ? this.manager.entryTitle : 'Entry';
+
     /**
      * @type {!FilterActionEntry}
      * @protected
@@ -49,7 +64,7 @@ class AbstractFilterAction {
     /**
      * @type {string}
      */
-    this.title = 'Add/Remove ' + ImportActionManager.getInstance().entryTitle;
+    this.title = 'Add/Remove ' + this.entryTitle;
 
     /**
      * @type {?string}
@@ -81,7 +96,12 @@ class AbstractFilterAction {
    * @protected
    */
   canExecute() {
-    var entryTitle = ImportActionManager.getInstance().entryTitle || 'Entry';
+    if (!this.manager) {
+      this.details = 'No import action manager available';
+      return false;
+    }
+
+    var entryTitle = this.manager.entryTitle || 'Entry';
 
     if (this.state !== State.READY) {
       this.details = 'Command not in ready state';
@@ -112,8 +132,8 @@ class AbstractFilterAction {
    * @protected
    */
   add() {
-    if (this.entry) {
-      var iam = ImportActionManager.getInstance();
+    if (this.entry && this.manager) {
+      var iam = this.manager;
       iam.addActionEntry(this.entry, this.index, this.parentId);
       iam.processItems(this.entry.getType());
     }
@@ -125,8 +145,8 @@ class AbstractFilterAction {
    * @protected
    */
   remove() {
-    if (this.entry) {
-      ImportActionManager.getInstance().removeActionEntry(this.entry, this.parentId);
+    if (this.entry && this.manager) {
+      this.manager.removeActionEntry(this.entry, this.parentId);
     }
   }
 }

@@ -5,6 +5,7 @@ const osSource = goog.require('os.source');
 
 const IFilterable = goog.requireType('os.filter.IFilterable');
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
+const ImportActionManager = goog.requireType('os.im.action.ImportActionManager');
 const IImportAction = goog.requireType('os.im.action.IImportAction');
 const FeatureTypeColumn = goog.requireType('os.ogc.FeatureTypeColumn');
 const ISource = goog.requireType('os.source.ISource');
@@ -33,6 +34,25 @@ const Metrics = {
   EXPORT: 'importAction.export',
   IMPORT: 'importAction.import',
   REMOVE: 'importAction.remove'
+};
+
+/**
+ * The global ImportActionManager instance. This is used to deconflict circular dependencies.
+ */
+let importActionManager = null;
+
+/**
+ * Set the global ImportActionManager instance.
+ * @return {ImportActionManager}
+ */
+const getImportActionManager = () => importActionManager;
+
+/**
+ * Set the global ImportActionManager instance.
+ * @param {!ImportActionManager} value The instance.
+ */
+const setImportActionManager = (value) => {
+  importActionManager = value;
 };
 
 /**
@@ -143,6 +163,8 @@ exports = {
   ID,
   ICON,
   Metrics,
+  getImportActionManager,
+  setImportActionManager,
   enableFromMap,
   getColumnsFromFilterable,
   getEnabledMap,

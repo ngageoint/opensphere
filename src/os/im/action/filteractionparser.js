@@ -4,7 +4,7 @@ goog.module.declareLegacyNamespace();
 const dom = goog.require('goog.dom');
 const xml = goog.require('goog.dom.xml');
 const text = goog.require('os.file.mime.text');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
+const {getImportActionManager} = goog.require('os.im.action');
 const TagName = goog.require('os.im.action.TagName');
 
 const FilterActionEntry = goog.requireType('os.im.action.FilterActionEntry');
@@ -78,7 +78,7 @@ class FilterActionParser {
    * @return {!Array<!FilterActionEntry>}
    */
   static parseNodes(nodes) {
-    var iam = ImportActionManager.getInstance();
+    var iam = getImportActionManager();
     var entries = [];
     var parentMap = {};
 
@@ -159,7 +159,7 @@ class FilterActionParser {
    * @return {!Array<!FilterActionEntry>}
    */
   static parseDocument(doc) {
-    var iam = ImportActionManager.getInstance();
+    var iam = getImportActionManager();
     var root = dom.getFirstElementChild(doc);
     var actionNodes = root.querySelectorAll(iam.xmlEntry);
     var entries = FilterActionParser.parseNodes(actionNodes);
