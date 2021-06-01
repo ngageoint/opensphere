@@ -3,7 +3,9 @@ goog.module.declareLegacyNamespace();
 
 const osXml = goog.require('os.xml');
 
-const IImportAction = goog.requireType('os.im.action.IImportAction');
+// The compiler has to process this first or @inheritDoc will not work properly on implementing classes.
+// @see https://github.com/google/closure-compiler/issues/3583
+const IImportAction = goog.require('os.im.action.IImportAction'); // eslint-disable-line opensphere/no-unused-vars
 
 
 /**
@@ -102,7 +104,8 @@ class AbstractImportAction {
    * @inheritDoc
    */
   clone() {
-    var other = new this.constructor();
+    // HACK: The compiler doesn't like using "new" on abstract classes, so cast it as the interface.
+    var other = new /** @type {function(new:IImportAction)} */ (this.constructor)();
     other.restore(this.persist());
     return other;
   }

@@ -1,8 +1,11 @@
 goog.module('os.im.action.IImportAction');
 goog.module.declareLegacyNamespace();
 
-const IPersistable = goog.requireType('os.IPersistable');
-const IXmlPersistable = goog.requireType('os.IXmlPersistable');
+// The compiler has to process these first or @inheritDoc will not work properly on implementing classes.
+// @see https://github.com/google/closure-compiler/issues/3583
+const IPersistable = goog.require('os.IPersistable'); // eslint-disable-line opensphere/no-unused-vars
+const IXmlPersistable = goog.require('os.IXmlPersistable'); // eslint-disable-line opensphere/no-unused-vars
+
 const ImportActionCallbackConfig = goog.requireType('os.im.action.ImportActionCallbackConfig');
 
 
