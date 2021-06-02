@@ -373,24 +373,33 @@ class Manager extends ImportActionManager {
       label.updateShown();
     }
   }
-}
-goog.addSingletonGetter(Manager);
 
+  /**
+   * Get the global instance.
+   * @return {!ImportActionManager}
+   * @override
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new Manager();
+      ImportActionManager.setInstance(instance);
+    }
 
-// replace the base ImportActionManager singleton with this one
-Object.assign(ImportActionManager, {
-  getInstance: function() {
-    return Manager.getInstance();
+    return instance;
   }
-});
 
+  /**
+   * Set the global instance.
+   * @param {ImportActionManager} value The instance.
+   * @override
+   */
+  static setInstance(value) {
+    instance = value;
 
-/**
- * Logger for feature.Manager.
- * @type {log.Logger}
- */
-const logger = log.getLogger('plugin.im.action.feature.Manager');
-
+    // Also replace the global import action manager instance.
+    ImportActionManager.setInstance(value);
+  }
+}
 
 /**
  * @type {number}
@@ -398,5 +407,19 @@ const logger = log.getLogger('plugin.im.action.feature.Manager');
  */
 Manager.MIN_ITEMS_MERGE_NOTIFY_COLOR = 10000;
 
+/**
+ * Logger for feature.Manager.
+ * @type {log.Logger}
+ */
+const logger = log.getLogger('plugin.im.action.feature.Manager');
+
+/**
+ * Global instance.
+ * @type {ImportActionManager|undefined}
+ */
+let instance;
+
+// Initialize the instance immediately to replace the global import manager instance with this one.
+Manager.getInstance();
 
 exports = Manager;

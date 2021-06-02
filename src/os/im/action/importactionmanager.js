@@ -10,7 +10,7 @@ const mapContainer = goog.require('os.MapContainer');
 const AlertManager = goog.require('os.alert.AlertManager');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const Settings = goog.require('os.config.Settings');
-const {getEnabledMap} = goog.require('os.im.action');
+const {getEnabledMap, getImportActionManager, setImportActionManager} = goog.require('os.im.action');
 const FilterActionEntry = goog.require('os.im.action.FilterActionEntry');
 const ImportActionEventType = goog.require('os.im.action.ImportActionEventType');
 const TagName = goog.require('os.im.action.TagName');
@@ -706,8 +706,11 @@ class ImportActionManager extends EventTarget {
    * @return {!ImportActionManager}
    */
   static getInstance() {
+    // Global instance is managed by the os.im.action module to avoid circular dependency issues.
+    let instance = getImportActionManager();
     if (!instance) {
       instance = new ImportActionManager();
+      setImportActionManager(instance);
     }
 
     return instance;
@@ -715,18 +718,12 @@ class ImportActionManager extends EventTarget {
 
   /**
    * Set the global instance.
-   * @param {ImportActionManager} value
+   * @param {ImportActionManager} value The instance.
    */
   static setInstance(value) {
-    instance = value;
+    setImportActionManager(value);
   }
 }
-
-/**
- * Global instance.
- * @type {ImportActionManager|undefined}
- */
-let instance;
 
 /**
  * Logger for os.im.action.ImportActionManager.

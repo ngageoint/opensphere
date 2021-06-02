@@ -49,7 +49,7 @@ const getImportActionManager = () => importActionManager;
 
 /**
  * Set the global ImportActionManager instance.
- * @param {!ImportActionManager} value The instance.
+ * @param {ImportActionManager} value The instance.
  */
 const setImportActionManager = (value) => {
   importActionManager = value;

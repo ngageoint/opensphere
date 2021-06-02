@@ -1,7 +1,6 @@
 goog.module('plugin.im.action.feature.Plugin');
 goog.module.declareLegacyNamespace();
 
-const {setImportActionManager} = goog.require('os.im.action');
 const legend = goog.require('os.legend');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const StateManager = goog.require('os.state.StateManager');
@@ -12,7 +11,7 @@ const FilterActionImportUI = goog.require('os.ui.im.action.FilterActionImportUI'
 const mime = goog.require('plugin.featureaction.mime');
 const featureAction = goog.require('plugin.im.action.feature');
 const LabelAction = goog.require('plugin.im.action.feature.LabelAction');
-const Manager = goog.require('plugin.im.action.feature.Manager');
+const FeatureActionManager = goog.require('plugin.im.action.feature.Manager');
 const SoundAction = goog.require('plugin.im.action.feature.SoundAction');
 const StyleAction = goog.require('plugin.im.action.feature.StyleAction');
 const {addToLegend} = goog.require('plugin.im.action.feature.legend');
@@ -51,16 +50,13 @@ class Plugin extends AbstractPlugin {
    */
   init() {
     // initialize the import action manager and register default actions
-    var manager = Manager.getInstance();
+    var manager = FeatureActionManager.getInstance();
     manager.registerAction(new LabelAction());
     manager.registerAction(new StyleAction());
     manager.registerAction(new SoundAction());
 
-    setImportActionManager(manager);
-
     // register import UI
-    ImportManager.getInstance().registerImportUI(mime.TYPE,
-        new FilterActionImportUI());
+    ImportManager.getInstance().registerImportUI(mime.TYPE, new FilterActionImportUI());
 
     // add actions
     faMenu.layerSetup();
