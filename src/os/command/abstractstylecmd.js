@@ -1,9 +1,16 @@
 goog.module('os.command.AbstractStyle');
 goog.module.declareLegacyNamespace();
 
+const asserts = goog.require('goog.asserts');
+const MapContainer = goog.require('os.MapContainer');
 const State = goog.require('os.command.State');
+const Tile = goog.require('os.layer.Tile');
+const VectorLayer = goog.require('os.layer.Vector');
+const Metrics = goog.require('os.metrics.Metrics');
+const StyleManager = goog.require('os.style.StyleManager');
 
 const ICommand = goog.requireType('os.command.ICommand');
+const ILayer = goog.requireType('os.layer.ILayer');
 
 
 /**
@@ -79,7 +86,7 @@ class AbstractStyle {
       this.setValue(this.value);
 
       if (this.metricKey) {
-        os.metrics.Metrics.getInstance().updateMetric(this.metricKey, 1);
+        Metrics.getInstance().updateMetric(this.metricKey, 1);
       }
 
       this.state = State.SUCCESS;
@@ -167,17 +174,17 @@ class AbstractStyle {
   /**
    * Get the layer configuration.
    *
-   * @param {os.layer.ILayer} layer
+   * @param {ILayer} layer
    * @return {Object}
    * @protected
    */
   getLayerConfig(layer) {
-    if (layer instanceof os.layer.Tile) {
+    if (layer instanceof Tile) {
       return layer.getLayerOptions();
     }
 
-    if (layer instanceof os.layer.Vector) {
-      return os.style.StyleManager.getInstance().getLayerConfig(layer.getId());
+    if (layer instanceof VectorLayer) {
+      return StyleManager.getInstance().getLayerConfig(layer.getId());
     }
 
     return null;
@@ -189,13 +196,13 @@ class AbstractStyle {
    * @param {T} value
    */
   setValue(value) {
-    goog.asserts.assert(value != null, 'style value must be defined');
+    asserts.assert(value != null, 'style value must be defined');
 
     var layer = /** @type {os.layer.Vector} */ (this.getLayer());
-    goog.asserts.assert(layer, 'layer must be defined');
+    asserts.assert(layer, 'layer must be defined');
 
     var config = this.getLayerConfig(layer);
-    goog.asserts.assert(config, 'layer config must be defined');
+    asserts.assert(config, 'layer config must be defined');
 
     this.applyValue(config, value);
     this.finish(config);
@@ -204,10 +211,10 @@ class AbstractStyle {
   /**
    * Gets the layer by ID.
    *
-   * @return {os.layer.ILayer}
+   * @return {ILayer}
    */
   getLayer() {
-    return /** @type {os.layer.ILayer} */ (os.MapContainer.getInstance().getLayer(this.layerId));
+    return /** @type {ILayer} */ (MapContainer.getInstance().getLayer(this.layerId));
   }
 }
 

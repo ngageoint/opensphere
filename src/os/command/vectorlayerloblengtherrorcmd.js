@@ -3,6 +3,9 @@ goog.module.declareLegacyNamespace();
 
 const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
 const metrics = goog.require('os.metrics');
+const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
 
 
 /**
@@ -28,15 +31,15 @@ class VectorLayerLOBLengthError extends AbstractVectorLayerLOB {
    * @inheritDoc
    */
   getOldValue() {
-    var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-    return config ? config[os.style.StyleField.LOB_LENGTH_ERROR] : os.style.DEFAULT_LOB_LENGTH_ERROR;
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+    return config ? config[StyleField.LOB_LENGTH_ERROR] : osStyle.DEFAULT_LOB_LENGTH_ERROR;
   }
 
   /**
    * @inheritDoc
    */
   applyValue(config, value) {
-    config[os.style.StyleField.LOB_LENGTH_ERROR] = value;
+    config[StyleField.LOB_LENGTH_ERROR] = value;
     super.applyValue(config, value);
   }
 }

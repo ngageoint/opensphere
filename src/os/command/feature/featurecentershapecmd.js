@@ -3,6 +3,10 @@ goog.module.declareLegacyNamespace();
 
 const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
 const metrics = goog.require('os.metrics');
+const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
@@ -28,17 +32,17 @@ class FeatureCenterShape extends AbstractFeatureStyle {
    * @inheritDoc
    */
   getOldValue() {
-    var feature = /** @type {ol.Feature} */ (this.getFeature());
-    var shape = feature.get(os.style.StyleField.CENTER_SHAPE);
-    return shape ? shape : os.style.ShapeType.POINT;
+    var feature = /** @type {Feature} */ (this.getFeature());
+    var shape = feature.get(StyleField.CENTER_SHAPE);
+    return shape ? shape : osStyle.ShapeType.POINT;
   }
 
   /**
    * @inheritDoc
    */
   applyValue(configs, value) {
-    var feature = /** @type {ol.Feature} */ (this.getFeature());
-    feature.set(os.style.StyleField.CENTER_SHAPE, value);
+    var feature = /** @type {Feature} */ (this.getFeature());
+    feature.set(StyleField.CENTER_SHAPE, value);
     super.applyValue(configs, value);
   }
 }

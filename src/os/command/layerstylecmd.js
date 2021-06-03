@@ -1,7 +1,12 @@
 goog.module('os.command.LayerStyle');
 goog.module.declareLegacyNamespace();
 
+const asserts = goog.require('goog.asserts');
+const MapContainer = goog.require('os.MapContainer');
 const AbstractStyle = goog.require('os.command.AbstractStyle');
+const osImplements = goog.require('os.implements');
+const ILayer = goog.require('os.layer.ILayer');
+const VectorLayer = goog.require('os.layer.Vector');
 const osStyle = goog.require('os.style');
 
 
@@ -33,8 +38,8 @@ class LayerStyle extends AbstractStyle {
    * @inheritDoc
    */
   getOldValue() {
-    var layer = os.MapContainer.getInstance().getLayer(this.layerId);
-    if (os.implements(layer, os.layer.ILayer.ID)) {
+    var layer = MapContainer.getInstance().getLayer(this.layerId);
+    if (osImplements(layer, ILayer.ID)) {
       return /** @type {os.layer.ILayer} */ (layer).getOpacity();
     }
 
@@ -45,8 +50,8 @@ class LayerStyle extends AbstractStyle {
    * @inheritDoc
    */
   applyValue(config, value) {
-    var layer = os.MapContainer.getInstance().getLayer(this.layerId);
-    if (os.implements(layer, os.layer.ILayer.ID)) {
+    var layer = MapContainer.getInstance().getLayer(this.layerId);
+    if (osImplements(layer, ILayer.ID)) {
       this.callback(/** @type {os.layer.ILayer} */ (layer), value);
     }
   }
@@ -55,8 +60,8 @@ class LayerStyle extends AbstractStyle {
    * @inheritDoc
    */
   finish(config) {
-    var layer = os.MapContainer.getInstance().getLayer(this.layerId);
-    if (layer instanceof os.layer.Vector) {
+    var layer = MapContainer.getInstance().getLayer(this.layerId);
+    if (layer instanceof VectorLayer) {
       // only notify style changes on vector layers as it causes a flicker on tile layers
       osStyle.notifyStyleChange(layer);
     }
@@ -70,10 +75,10 @@ class LayerStyle extends AbstractStyle {
    * @override
    */
   setValue(value) {
-    goog.asserts.assert(value != null, 'style value must be defined');
+    asserts.assert(value != null, 'style value must be defined');
 
-    var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.layerId));
-    goog.asserts.assert(layer, 'layer must be defined');
+    var layer = /** @type {os.layer.Vector} */ (MapContainer.getInstance().getLayer(this.layerId));
+    asserts.assert(layer, 'layer must be defined');
 
     var config = this.getLayerConfig(layer) || {};
 

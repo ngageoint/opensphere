@@ -3,7 +3,10 @@ goog.module.declareLegacyNamespace();
 
 const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
 const metrics = goog.require('os.metrics');
+const StyleField = goog.require('os.style.StyleField');
 const label = goog.require('os.style.label');
+
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
@@ -29,8 +32,8 @@ class FeatureShowLabel extends AbstractFeatureStyle {
    * @inheritDoc
    */
   getOldValue() {
-    var feature = /** @type {ol.Feature} */ (this.getFeature());
-    var showLabels = feature.get(os.style.StyleField.SHOW_LABELS);
+    var feature = /** @type {Feature} */ (this.getFeature());
+    var showLabels = feature.get(StyleField.SHOW_LABELS);
     return showLabels ? showLabels : true;
   }
 
@@ -38,8 +41,8 @@ class FeatureShowLabel extends AbstractFeatureStyle {
    * @inheritDoc
    */
   applyValue(configs, value) {
-    var feature = /** @type {ol.Feature} */ (this.getFeature());
-    feature.set(os.style.StyleField.SHOW_LABELS, value);
+    var feature = /** @type {Feature} */ (this.getFeature());
+    feature.set(StyleField.SHOW_LABELS, value);
     super.applyValue(configs, value);
   }
 

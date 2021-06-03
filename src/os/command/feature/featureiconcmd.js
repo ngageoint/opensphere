@@ -4,7 +4,10 @@ goog.module.declareLegacyNamespace();
 const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const metrics = goog.require('os.metrics');
+const osStyle = goog.require('os.style');
 const kml = goog.require('os.ui.file.kml');
+
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
@@ -28,13 +31,13 @@ class FeatureIcon extends AbstractFeatureStyle {
    * @inheritDoc
    */
   getOldValue() {
-    var feature = /** @type {ol.Feature} */ (this.getFeature());
+    var feature = /** @type {Feature} */ (this.getFeature());
     var configs = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
     if (Array.isArray(configs)) {
       configs = configs.length > 1 ? configs[1] : configs[0];
     }
 
-    return os.style.getConfigIcon(configs) || kml.getDefaultIcon();
+    return osStyle.getConfigIcon(configs) || kml.getDefaultIcon();
   }
 
   /**
@@ -43,7 +46,7 @@ class FeatureIcon extends AbstractFeatureStyle {
   applyValue(configs, value) {
     if (value) {
       var config = configs.length > 1 ? configs[1] : configs[0]; // using 1 is specific to tracks
-      os.style.setConfigIcon(config, value);
+      osStyle.setConfigIcon(config, value);
     }
 
     super.applyValue(configs, value);

@@ -3,6 +3,8 @@ goog.module.declareLegacyNamespace();
 
 const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
 const metrics = goog.require('os.metrics');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
 
 
 /**
@@ -30,15 +32,15 @@ class VectorLayerShowArrow extends AbstractVectorLayerLOB {
    * @inheritDoc
    */
   getOldValue() {
-    var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-    return config != null && config[os.style.StyleField.SHOW_ARROW] || false;
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+    return config != null && config[StyleField.SHOW_ARROW] || false;
   }
 
   /**
    * @inheritDoc
    */
   applyValue(config, value) {
-    config[os.style.StyleField.SHOW_ARROW] = value;
+    config[StyleField.SHOW_ARROW] = value;
     super.applyValue(config, value);
   }
 }

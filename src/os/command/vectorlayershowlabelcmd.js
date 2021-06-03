@@ -1,11 +1,16 @@
 goog.module('os.command.VectorLayerShowLabel');
 goog.module.declareLegacyNamespace();
 
+const asserts = goog.require('goog.asserts');
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
 const OSDataManager = goog.require('os.data.OSDataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const osFeature = goog.require('os.feature');
 const metrics = goog.require('os.metrics');
 const PropertyChange = goog.require('os.source.PropertyChange');
+const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
 const label = goog.require('os.style.label');
 
 
@@ -31,30 +36,30 @@ class VectorLayerShowLabel extends AbstractVectorStyle {
    * @inheritDoc
    */
   getOldValue() {
-    var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-    return config && config[os.style.StyleField.SHOW_LABELS] || false;
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+    return config && config[StyleField.SHOW_LABELS] || false;
   }
 
   /**
    * @inheritDoc
    */
   applyValue(config, value) {
-    config[os.style.StyleField.SHOW_LABELS] = value;
+    config[StyleField.SHOW_LABELS] = value;
 
     if (!value) {
       var source = OSDataManager.getInstance().getSource(this.layerId);
-      goog.asserts.assert(source);
+      asserts.assert(source);
 
       var changed = [];
       source.forEachFeature(function(feature) {
         // hide labels for all features in the source
-        if (os.feature.hideLabel(feature)) {
+        if (osFeature.hideLabel(feature)) {
           changed.push(feature);
         }
       });
 
       if (changed.length > 0) {
-        os.style.setFeaturesStyle(changed);
+        osStyle.setFeaturesStyle(changed);
         source.dispatchEvent(new PropertyChangeEvent(PropertyChange.STYLE, changed));
       }
     }

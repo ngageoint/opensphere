@@ -6,6 +6,8 @@ const OSDataManager = goog.require('os.data.OSDataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const metrics = goog.require('os.metrics');
 const PropertyChange = goog.require('os.source.PropertyChange');
+const osStyle = goog.require('os.style');
+const StyleManager = goog.require('os.style.StyleManager');
 const kml = goog.require('os.ui.file.kml');
 
 
@@ -29,8 +31,8 @@ class VectorLayerIcon extends AbstractVectorStyle {
    * @inheritDoc
    */
   getOldValue() {
-    var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-    return os.style.getConfigIcon(config) || kml.getDefaultIcon();
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+    return osStyle.getConfigIcon(config) || kml.getDefaultIcon();
   }
 
   /**
@@ -38,7 +40,7 @@ class VectorLayerIcon extends AbstractVectorStyle {
    */
   applyValue(config, value) {
     if (value) {
-      os.style.setConfigIcon(config, value);
+      osStyle.setConfigIcon(config, value);
     }
 
     super.applyValue(config, value);

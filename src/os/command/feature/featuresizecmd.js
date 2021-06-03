@@ -3,6 +3,9 @@ goog.module.declareLegacyNamespace();
 
 const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
 const metrics = goog.require('os.metrics');
+const osStyle = goog.require('os.style');
+
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
@@ -26,13 +29,13 @@ class FeatureSize extends AbstractFeatureStyle {
    * @inheritDoc
    */
   getOldValue() {
-    var feature = /** @type {ol.Feature} */ (this.getFeature());
+    var feature = /** @type {Feature} */ (this.getFeature());
     var config = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
     if (Array.isArray(config)) {
       config = config[0];
     }
 
-    return os.style.getConfigSize(config);
+    return osStyle.getConfigSize(config);
   }
 
   /**
@@ -41,7 +44,7 @@ class FeatureSize extends AbstractFeatureStyle {
   applyValue(configs, value) {
     var size = /** @type {number} */ (value);
     for (var i = 0; i < configs.length; i++) {
-      os.style.setConfigSize(configs[i], size);
+      osStyle.setConfigSize(configs[i], size);
     }
 
     super.applyValue(configs, value);

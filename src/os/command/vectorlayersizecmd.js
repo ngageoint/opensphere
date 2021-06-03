@@ -3,6 +3,8 @@ goog.module.declareLegacyNamespace();
 
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
 const metrics = goog.require('os.metrics');
+const osStyle = goog.require('os.style');
+const StyleManager = goog.require('os.style.StyleManager');
 
 
 /**
@@ -25,8 +27,8 @@ class VectorLayerSize extends AbstractVectorStyle {
    * @inheritDoc
    */
   getOldValue() {
-    var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-    return os.style.getConfigSize(config);
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+    return osStyle.getConfigSize(config);
   }
 
   /**
@@ -34,7 +36,7 @@ class VectorLayerSize extends AbstractVectorStyle {
    */
   applyValue(config, value) {
     var size = /** @type {number} */ (value);
-    os.style.setConfigSize(config, size);
+    osStyle.setConfigSize(config, size);
 
     super.applyValue(config, value);
   }

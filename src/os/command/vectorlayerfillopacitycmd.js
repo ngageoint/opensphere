@@ -3,6 +3,9 @@ goog.module.declareLegacyNamespace();
 
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
 const metrics = goog.require('os.metrics');
+const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
 
 
 /**
@@ -21,7 +24,7 @@ class VectorLayerFillOpacity extends AbstractVectorStyle {
     this.metricKey = metrics.Layer.VECTOR_FILL_OPACITY;
 
     if (this.value == null) {
-      this.value = os.style.DEFAULT_FILL_ALPHA;
+      this.value = osStyle.DEFAULT_FILL_ALPHA;
     }
   }
 
@@ -29,23 +32,23 @@ class VectorLayerFillOpacity extends AbstractVectorStyle {
    * @inheritDoc
    */
   getOldValue() {
-    var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-    var color = os.style.getConfigColor(config, true, os.style.StyleField.FILL);
-    return color && color.length === 4 ? color[3] : os.style.DEFAULT_FILL_ALPHA;
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+    var color = osStyle.getConfigColor(config, true, StyleField.FILL);
+    return color && color.length === 4 ? color[3] : osStyle.DEFAULT_FILL_ALPHA;
   }
 
   /**
    * @inheritDoc
    */
   applyValue(config, value) {
-    var color = os.style.getConfigColor(config, true, os.style.StyleField.FILL) ||
-        os.style.getConfigColor(config, true);
+    var color = osStyle.getConfigColor(config, true, StyleField.FILL) ||
+        osStyle.getConfigColor(config, true);
 
     if (color) {
       color[3] = value;
 
-      var colorString = os.style.toRgbaString(color);
-      os.style.setFillColor(config, colorString);
+      var colorString = osStyle.toRgbaString(color);
+      osStyle.setFillColor(config, colorString);
     }
 
     super.applyValue(config, value);

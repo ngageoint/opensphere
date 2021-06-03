@@ -1,6 +1,7 @@
 goog.module('os.command.AbstractCommandSet');
 goog.module.declareLegacyNamespace();
 
+const disposeAll = goog.require('goog.disposeAll');
 const EventTarget = goog.require('goog.events.EventTarget');
 const osArray = goog.require('os.array');
 const State = goog.require('os.command.State');
@@ -59,7 +60,7 @@ class AbstractCommandSet extends EventTarget {
    * @inheritDoc
    */
   disposeInternal() {
-    goog.disposeAll(this.getCommands());
+    disposeAll(this.getCommands());
     super.disposeInternal();
   }
 

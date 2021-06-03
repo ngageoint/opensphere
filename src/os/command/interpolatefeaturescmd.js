@@ -1,7 +1,12 @@
 goog.module('os.command.InterpolateFeatures');
 goog.module.declareLegacyNamespace();
 
+const asserts = goog.require('goog.asserts');
+const OLVectorLayer = goog.require('ol.layer.Vector');
+const MapContainer = goog.require('os.MapContainer');
 const State = goog.require('os.command.State');
+const interpolate = goog.require('os.interpolate');
+const VectorSource = goog.require('os.source.Vector');
 
 const ICommand = goog.requireType('os.command.ICommand');
 
@@ -69,12 +74,12 @@ class InterpolateFeatures {
    * @protected
    */
   interpolate() {
-    var layers = os.MapContainer.getInstance().getLayers();
+    var layers = MapContainer.getInstance().getLayers();
 
     for (var i = 0, n = layers.length; i < n; i++) {
       var layer = layers[i];
 
-      if (layer instanceof ol.layer.Vector) {
+      if (layer instanceof OLVectorLayer) {
         var source = layer.getSource();
 
         if (source) {
@@ -86,11 +91,11 @@ class InterpolateFeatures {
 
           if (features.length) {
             source.clear(true);
-            goog.asserts.assert(features.length > 0);
+            asserts.assert(features.length > 0);
 
-            if (!(source instanceof os.source.Vector)) {
+            if (!(source instanceof VectorSource)) {
               for (var j = 0, m = features.length; j < m; j++) {
-                os.interpolate.interpolateFeature(features[j]);
+                interpolate.interpolateFeature(features[j]);
               }
             }
 

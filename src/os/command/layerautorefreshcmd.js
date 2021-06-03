@@ -2,6 +2,7 @@ goog.module('os.command.LayerAutoRefresh');
 goog.module.declareLegacyNamespace();
 
 const UrlTile = goog.require('ol.source.UrlTile');
+const MapContainer = goog.require('os.MapContainer');
 const State = goog.require('os.command.State');
 const metrics = goog.require('os.metrics');
 const Metrics = goog.require('os.metrics.Metrics');
@@ -58,7 +59,7 @@ class LayerAutoRefresh {
    * @protected
    */
   getSource() {
-    var layer = os.MapContainer.getInstance().getLayer(this.layerId);
+    var layer = MapContainer.getInstance().getLayer(this.layerId);
     if (!layer) {
       this.state = State.ERROR;
       this.details = 'Unable to locate layer with id "' + this.layerId + '".';

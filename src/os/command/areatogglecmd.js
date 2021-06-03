@@ -1,6 +1,7 @@
 goog.module('os.command.AreaToggle');
 goog.module.declareLegacyNamespace();
 
+const State = goog.require('os.command.State');
 const areaManager = goog.require('os.query.AreaManager');
 const AbstractArea = goog.require('os.ui.query.cmd.AbstractArea');
 
@@ -34,12 +35,12 @@ class AreaToggle extends AbstractArea {
    */
   execute() {
     if (this.canExecute()) {
-      this.state = os.command.State.EXECUTING;
+      this.state = State.EXECUTING;
       var am = areaManager.getInstance();
 
       am.toggle(this.area, this.show_);
 
-      this.state = os.command.State.SUCCESS;
+      this.state = State.SUCCESS;
       return true;
     }
 
@@ -50,12 +51,12 @@ class AreaToggle extends AbstractArea {
    * @inheritDoc
    */
   revert() {
-    this.state = os.command.State.REVERTING;
+    this.state = State.REVERTING;
     var am = areaManager.getInstance();
 
     am.toggle(this.area, !this.show_);
 
-    this.state = os.command.State.READY;
+    this.state = State.READY;
     return true;
   }
 }

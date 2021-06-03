@@ -6,6 +6,7 @@ const OSDataManager = goog.require('os.data.OSDataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const metrics = goog.require('os.metrics');
 const PropertyChange = goog.require('os.source.PropertyChange');
+const osStyle = goog.require('os.style');
 const kml = goog.require('os.ui.file.kml');
 
 
@@ -39,7 +40,7 @@ class VectorLayerShape extends AbstractVectorStyle {
       oldVal = source.getGeometryShape();
     }
 
-    return oldVal || os.style.DEFAULT_SHAPE;
+    return oldVal || osStyle.DEFAULT_SHAPE;
   }
 
   /**
@@ -52,8 +53,8 @@ class VectorLayerShape extends AbstractVectorStyle {
       source.setGeometryShape(value);
 
       // if using the icon shape, make sure the config has an icon defined
-      if (value == os.style.ShapeType.ICON && !os.style.getConfigIcon(config)) {
-        os.style.setConfigIcon(config, kml.getDefaultIcon());
+      if (value == osStyle.ShapeType.ICON && !osStyle.getConfigIcon(config)) {
+        osStyle.setConfigIcon(config, kml.getDefaultIcon());
       }
     }
 

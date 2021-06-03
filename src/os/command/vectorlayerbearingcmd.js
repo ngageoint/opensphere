@@ -3,6 +3,8 @@ goog.module.declareLegacyNamespace();
 
 const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
 const metrics = goog.require('os.metrics');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
 
 
 /**
@@ -28,15 +30,15 @@ class VectorLayerBearing extends AbstractVectorLayerLOB {
    * @inheritDoc
    */
   getOldValue() {
-    var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-    return config && config[os.style.StyleField.LOB_BEARING_COLUMN] || '';
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+    return config && config[StyleField.LOB_BEARING_COLUMN] || '';
   }
 
   /**
    * @inheritDoc
    */
   applyValue(config, value) {
-    config[os.style.StyleField.LOB_BEARING_COLUMN] = value;
+    config[StyleField.LOB_BEARING_COLUMN] = value;
 
     super.applyValue(config, value);
   }

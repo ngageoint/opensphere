@@ -1,12 +1,18 @@
 goog.module('os.command.AbstractFeatureStyle');
 goog.module.declareLegacyNamespace();
 
+const asserts = goog.require('goog.asserts');
 const GoogEvent = goog.require('goog.events.Event');
 const dispatcher = goog.require('os.Dispatcher');
+const MapContainer = goog.require('os.MapContainer');
 const EventType = goog.require('os.action.EventType');
 const AbstractStyle = goog.require('os.command.AbstractStyle');
 const State = goog.require('os.command.State');
 const OSDataManager = goog.require('os.data.OSDataManager');
+const osStyle = goog.require('os.style');
+const StyleType = goog.require('os.style.StyleType');
+
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
@@ -49,13 +55,13 @@ class AbstractFeatureStyle extends AbstractStyle {
    * @inheritDoc
    */
   applyValue(configs, value) {
-    var feature = /** @type {ol.Feature} */ (this.getFeature());
+    var feature = /** @type {Feature} */ (this.getFeature());
     var source = OSDataManager.getInstance().getSource(this.layerId);
-    goog.asserts.assert(source, 'source must be defined');
+    asserts.assert(source, 'source must be defined');
 
     // update feature styles. don't use forEachFeature or the rbush will throw an error due to feature changes
     // while iterating
-    os.style.setFeatureStyle(/** @type {!ol.Feature} */ (feature));
+    osStyle.setFeatureStyle(/** @type {!Feature} */ (feature));
     dispatcher.getInstance().dispatchEvent(EventType.SAVE_FEATURE);
     // feature.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
 
@@ -68,21 +74,21 @@ class AbstractFeatureStyle extends AbstractStyle {
    */
   finish(configs) {
     dispatcher.getInstance().dispatchEvent(new GoogEvent(EventType.REFRESH));
-    var feature = /** @type {ol.Feature} */ (this.getFeature());
-    var layer = os.MapContainer.getInstance().getLayer(this.layerId);
-    goog.asserts.assert(layer, 'layer must be defined');
-    os.style.notifyStyleChange(layer, [feature]);
+    var feature = /** @type {Feature} */ (this.getFeature());
+    var layer = MapContainer.getInstance().getLayer(this.layerId);
+    asserts.assert(layer, 'layer must be defined');
+    osStyle.notifyStyleChange(layer, [feature]);
   }
 
   /**
    * Get the layer configuration.
    *
-   * @param {ol.Feature} feature
+   * @param {Feature} feature
    * @return {Array<Object>}
    * @protected
    */
   getFeatureConfigs(feature) {
-    var configs = /** @type {Array<Object>|Object|undefined} */ (feature.get(os.style.StyleType.FEATURE));
+    var configs = /** @type {Array<Object>|Object|undefined} */ (feature.get(StyleType.FEATURE));
 
     if (Array.isArray(configs)) {
       return configs;
@@ -96,11 +102,11 @@ class AbstractFeatureStyle extends AbstractStyle {
    * @inheritDoc
    */
   setValue(value) {
-    goog.asserts.assert(value != null, 'style value must be defined');
+    asserts.assert(value != null, 'style value must be defined');
 
-    var feature = /** @type {ol.Feature} */ (this.getFeature());
+    var feature = /** @type {Feature} */ (this.getFeature());
     var configs = this.getFeatureConfigs(feature);
-    goog.asserts.assert(configs, 'feature config must be defined');
+    asserts.assert(configs, 'feature config must be defined');
 
     this.applyValue(configs, value);
     this.finish(configs);
@@ -109,17 +115,17 @@ class AbstractFeatureStyle extends AbstractStyle {
   /**
    * Gets the feature
    *
-   * @return {ol.Feature}
+   * @return {Feature}
    */
   getFeature() {
     var feature = null;
 
     if (this.layerId != null && this.featureId != null) {
       var source = OSDataManager.getInstance().getSource(this.layerId);
-      goog.asserts.assert(source, 'source must be defined');
+      asserts.assert(source, 'source must be defined');
 
       feature = source.getFeatureById(this.featureId);
-      goog.asserts.assert(feature, 'feature must be defined');
+      asserts.assert(feature, 'feature must be defined');
     }
 
     return feature;

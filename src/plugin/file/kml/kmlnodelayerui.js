@@ -27,7 +27,7 @@ const FeatureShowLabel = goog.require('os.command.FeatureShowLabel');
 const FeatureSize = goog.require('os.command.FeatureSize');
 const ParallelCommand = goog.require('os.command.ParallelCommand');
 const SequenceCommand = goog.require('os.command.SequenceCommand');
-const style = goog.require('os.command.style');
+const ColorChangeType = goog.require('os.command.style.ColorChangeType');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
 const osFeature = goog.require('os.feature');
 const DynamicFeature = goog.require('os.feature.DynamicFeature');
@@ -610,10 +610,10 @@ class Controller extends VectorLayerUICtrl {
             var cmds = [];
 
             cmds.push(new FeatureColor(
-                layerId, featureId, strokeColor, null, style.ColorChangeType.STROKE)
+                layerId, featureId, strokeColor, null, ColorChangeType.STROKE)
             );
             cmds.push(new FeatureColor(
-                layerId, featureId, fillColor, null, style.ColorChangeType.FILL)
+                layerId, featureId, fillColor, null, ColorChangeType.FILL)
             );
 
             var sequence = new SequenceCommand();
@@ -634,7 +634,7 @@ class Controller extends VectorLayerUICtrl {
            */
           function(layerId, featureId) {
             return new FeatureColor(layerId, featureId, colorValue, null,
-                style.ColorChangeType.STROKE);
+                ColorChangeType.STROKE);
           };
 
         this.createFeatureCommand(fn3);
@@ -677,7 +677,7 @@ class Controller extends VectorLayerUICtrl {
        * @return {os.command.ICommand}
        */
       function(layerId, featureId) {
-        return new FeatureColor(layerId, featureId, colorValue, null, style.ColorChangeType.FILL);
+        return new FeatureColor(layerId, featureId, colorValue, null, ColorChangeType.FILL);
       };
 
     this.createFeatureCommand(fn);
@@ -800,7 +800,7 @@ class Controller extends VectorLayerUICtrl {
          * @return {os.command.ICommand}
          */
         function(layerId, featureId) {
-          return new FeatureOpacity(layerId, featureId, value, null, style.ColorChangeType.STROKE);
+          return new FeatureOpacity(layerId, featureId, value, null, ColorChangeType.STROKE);
         };
 
       this.createFeatureCommand(fn);
@@ -825,7 +825,7 @@ class Controller extends VectorLayerUICtrl {
            * @return {os.command.ICommand}
            */
           function(layerId, featureId) {
-            return new FeatureOpacity(layerId, featureId, value, null, style.ColorChangeType.FILL);
+            return new FeatureOpacity(layerId, featureId, value, null, ColorChangeType.FILL);
           };
 
       this.createFeatureCommand(fn);

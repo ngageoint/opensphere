@@ -3,6 +3,9 @@ goog.module.declareLegacyNamespace();
 
 const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
 const metrics = goog.require('os.metrics');
+const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
 
 
 /**
@@ -28,15 +31,15 @@ class VectorLayerArrowSize extends AbstractVectorLayerLOB {
    * @inheritDoc
    */
   getOldValue() {
-    var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-    return config ? config[os.style.StyleField.ARROW_SIZE] : os.style.DEFAULT_ARROW_SIZE;
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+    return config ? config[StyleField.ARROW_SIZE] : osStyle.DEFAULT_ARROW_SIZE;
   }
 
   /**
    * @inheritDoc
    */
   applyValue(config, value) {
-    config[os.style.StyleField.ARROW_SIZE] = value;
+    config[StyleField.ARROW_SIZE] = value;
     super.applyValue(config, value);
   }
 }

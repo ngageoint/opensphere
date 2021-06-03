@@ -1,6 +1,8 @@
 goog.module('os.command.AbstractVectorStyle');
 goog.module.declareLegacyNamespace();
 
+const asserts = goog.require('goog.asserts');
+const MapContainer = goog.require('os.MapContainer');
 const AbstractStyle = goog.require('os.command.AbstractStyle');
 const OSDataManager = goog.require('os.data.OSDataManager');
 const osStyle = goog.require('os.style');
@@ -36,7 +38,7 @@ class AbstractVectorStyle extends AbstractStyle {
    */
   applyValue(config, value) {
     var source = /** @type {os.source.Vector} */ (OSDataManager.getInstance().getSource(this.layerId));
-    goog.asserts.assert(source, 'source must be defined');
+    asserts.assert(source, 'source must be defined');
 
     // update feature styles. don't use forEachFeature or the rbush will throw an error due to feature changes
     // while iterating
@@ -50,8 +52,8 @@ class AbstractVectorStyle extends AbstractStyle {
    * @inheritDoc
    */
   finish(config) {
-    var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.layerId));
-    goog.asserts.assert(layer);
+    var layer = /** @type {os.layer.Vector} */ (MapContainer.getInstance().getLayer(this.layerId));
+    asserts.assert(layer);
     osStyle.notifyStyleChange(layer);
   }
 }

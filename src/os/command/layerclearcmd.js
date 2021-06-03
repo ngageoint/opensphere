@@ -2,10 +2,13 @@ goog.module('os.command.LayerClear');
 goog.module.declareLegacyNamespace();
 
 const MapContainer = goog.require('os.MapContainer');
+const EventType = goog.require('os.command.EventType');
 const LayerRemove = goog.require('os.command.LayerRemove');
 const SequenceCommand = goog.require('os.command.SequenceCommand');
+const State = goog.require('os.command.State');
 const DataManager = goog.require('os.data.DataManager');
 const DeactivateDescriptor = goog.require('os.data.DeactivateDescriptor');
+const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
 
 
 /**
@@ -45,7 +48,7 @@ class LayerClear extends SequenceCommand {
         var layerOptions = layer.getLayerOptions();
         if (layer.isRemovable() && layerOptions && !layerOptions['noClear']) {
           var descriptor = DataManager.getInstance().getDescriptor(layer.getId());
-          if (descriptor instanceof os.data.LayerSyncDescriptor && descriptor.isActive()) {
+          if (descriptor instanceof LayerSyncDescriptor && descriptor.isActive()) {
             // if a unique, active descriptor is found that is synchronized to the layer, add it to the list
             if (descriptors.indexOf(descriptor) == -1) {
               descriptors.push(descriptor);
@@ -81,9 +84,9 @@ class LayerClear extends SequenceCommand {
     }
 
     // no commands - all done
-    this.state = os.command.State.SUCCESS;
+    this.state = State.SUCCESS;
     this.details = null;
-    this.dispatchEvent(os.command.EventType.EXECUTED);
+    this.dispatchEvent(EventType.EXECUTED);
     return true;
   }
 }

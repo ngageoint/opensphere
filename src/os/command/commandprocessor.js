@@ -1,6 +1,8 @@
 goog.module('os.command.CommandProcessor');
 goog.module.declareLegacyNamespace();
 
+const googArray = goog.require('goog.array');
+const dispose = goog.require('goog.dispose');
 const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
@@ -87,7 +89,7 @@ class CommandProcessor extends EventTarget {
    * @return {boolean}
    */
   isProcessing() {
-    return this.current_ != this.target_ || goog.array.some(this.history_, function(cmd) {
+    return this.current_ != this.target_ || googArray.some(this.history_, function(cmd) {
       return cmd.state === State.EXECUTING;
     });
   }
@@ -229,7 +231,7 @@ class CommandProcessor extends EventTarget {
    */
   destroyCommand_(command) {
     try {
-      goog.dispose(command);
+      dispose(command);
     } catch (e) {
       log.error(logger,
           'error disposing command "' + command.title + '": ' + String(e));

@@ -2,6 +2,8 @@ goog.module('os.command.TransformAreas');
 goog.module.declareLegacyNamespace();
 
 const TransformVectors = goog.require('os.command.TransformVectors');
+const interpolate = goog.require('os.interpolate');
+const AreaManager = goog.require('os.query.AreaManager');
 
 
 /**
@@ -20,7 +22,7 @@ class TransformAreas extends TransformVectors {
    * @inheritDoc
    */
   transform(sourceProjection, targetProjection) {
-    var features = os.query.AreaManager.getInstance().getAll();
+    var features = AreaManager.getInstance().getAll();
 
     for (var i = 0, n = features.length; i < n; i++) {
       var feature = features[i];
@@ -33,7 +35,7 @@ class TransformAreas extends TransformVectors {
           geom.transform(sourceProjection, targetProjection);
         }
 
-        var origGeom = /** @type {ol.geom.Geometry} */ (feature.get(os.interpolate.ORIGINAL_GEOM_FIELD));
+        var origGeom = /** @type {ol.geom.Geometry} */ (feature.get(interpolate.ORIGINAL_GEOM_FIELD));
         if (origGeom) {
           origGeom.transform(sourceProjection, targetProjection);
         }

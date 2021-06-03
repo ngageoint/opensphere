@@ -1,6 +1,7 @@
 goog.module('os.command.SequenceCommand');
 goog.module.declareLegacyNamespace();
 
+const Timer = goog.require('goog.Timer');
 const GoogEvent = goog.require('goog.events.Event');
 const AbstractCommandSet = goog.require('os.command.AbstractCommandSet');
 const EventType = goog.require('os.command.EventType');
@@ -164,7 +165,7 @@ class SequenceCommand extends AbstractCommandSet {
       return;
     }
     this.current_++;
-    goog.Timer.callOnce(this.execute_.bind(this));
+    Timer.callOnce(this.execute_.bind(this));
   }
 
   /**
@@ -233,7 +234,7 @@ class SequenceCommand extends AbstractCommandSet {
       return;
     }
     this.current_--;
-    goog.Timer.callOnce(this.revert_.bind(this));
+    Timer.callOnce(this.revert_.bind(this));
   }
 
   /**

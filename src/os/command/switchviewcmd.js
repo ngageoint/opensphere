@@ -1,8 +1,12 @@
 goog.module('os.command.SwitchView');
 goog.module.declareLegacyNamespace();
 
+const {DEFAULT_MAX_ZOOM} = goog.require('ol');
 const View = goog.require('ol.View');
+const olExtent = goog.require('ol.extent');
 const olProj = goog.require('ol.proj');
+const tilegrid = goog.require('ol.tilegrid');
+const MapContainer = goog.require('os.MapContainer');
 const State = goog.require('os.command.State');
 const Settings = goog.require('os.config.Settings');
 const osMap = goog.require('os.map');
@@ -86,7 +90,7 @@ class SwitchView {
   execute() {
     if (this.canExecute()) {
       this.state = State.EXECUTING;
-      os.MapContainer.getInstance().setView(this.getView(this.newProjection));
+      MapContainer.getInstance().setView(this.getView(this.newProjection));
       this.state = State.SUCCESS;
       return true;
     }
@@ -99,7 +103,7 @@ class SwitchView {
    * @return {!View}
    */
   getView(projection) {
-    var currentView = os.MapContainer.getInstance().getMap().getView();
+    var currentView = MapContainer.getInstance().getMap().getView();
     var center = currentView.getCenter();
     if (center) {
       center = olProj.transform(center, currentView.getProjection(), projection);
@@ -111,15 +115,15 @@ class SwitchView {
     }
 
     osMap.PROJECTION = projection;
-    osMap.TILEGRID = ol.tilegrid.createForProjection(
-        osMap.PROJECTION, ol.DEFAULT_MAX_ZOOM, [512, 512]);
+    osMap.TILEGRID = tilegrid.createForProjection(
+        osMap.PROJECTION, DEFAULT_MAX_ZOOM, [512, 512]);
     osMap.MIN_RESOLUTION = osMap.zoomToResolution(osMap.MAX_ZOOM, osMap.PROJECTION);
     osMap.MAX_RESOLUTION = osMap.zoomToResolution(osMap.MIN_ZOOM, osMap.PROJECTION);
 
     Settings.getInstance().set(osMap.PROJECTION_KEY, osMap.PROJECTION.getCode());
 
     // check if the view position is valid
-    if (center && !ol.extent.containsCoordinate(osMap.PROJECTION.getExtent(), center)) {
+    if (center && !olExtent.containsCoordinate(osMap.PROJECTION.getExtent(), center)) {
       center = undefined;
       zoom = undefined;
     }
@@ -138,7 +142,7 @@ class SwitchView {
    */
   revert() {
     this.state = State.REVERTING;
-    os.MapContainer.getInstance().getMap().setView(this.getView(this.oldProjection));
+    MapContainer.getInstance().getMap().setView(this.getView(this.oldProjection));
     this.state = State.READY;
     return true;
   }

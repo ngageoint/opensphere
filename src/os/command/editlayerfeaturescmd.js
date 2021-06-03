@@ -1,6 +1,7 @@
 goog.module('os.command.EditLayerFeatures');
 goog.module.declareLegacyNamespace();
 
+const MapContainer = goog.require('os.MapContainer');
 const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');
 const State = goog.require('os.command.State');
 
@@ -81,7 +82,7 @@ class EditLayerFeatures extends AbstractSyncCommand {
    * @return {boolean}
    */
   add_() {
-    var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.layerId_));
+    var layer = /** @type {os.layer.Vector} */ (MapContainer.getInstance().getLayer(this.layerId_));
     if (layer != null && this.features_) {
       var source = /** @type {os.source.ISource} */ (layer.getSource());
       source.addFeatures(this.features_);
@@ -97,7 +98,7 @@ class EditLayerFeatures extends AbstractSyncCommand {
    * @return {boolean}
    */
   remove_() {
-    var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.layerId_));
+    var layer = /** @type {os.layer.Vector} */ (MapContainer.getInstance().getLayer(this.layerId_));
     if (layer != null) {
       var source = /** @type {os.source.ISource} */ (layer.getSource());
       if (source) {

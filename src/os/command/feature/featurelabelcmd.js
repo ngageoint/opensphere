@@ -1,9 +1,14 @@
 goog.module('os.command.FeatureLabel');
 goog.module.declareLegacyNamespace();
 
+const olArray = goog.require('ol.array');
 const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
 const metrics = goog.require('os.metrics');
+const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
 const label = goog.require('os.style.label');
+
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
@@ -17,7 +22,7 @@ class FeatureLabel extends AbstractFeatureStyle {
    * @param {string} layerId
    * @param {string} featureId
    * @param {Array<label.LabelConfig>} value
-   * @param {Array<os.style.label.LabelConfig>=} opt_oldValue
+   * @param {Array<label.LabelConfig>=} opt_oldValue
    */
   constructor(layerId, featureId, value, opt_oldValue) {
     super(layerId, featureId, value, opt_oldValue);
@@ -34,18 +39,18 @@ class FeatureLabel extends AbstractFeatureStyle {
    * @inheritDoc
    */
   getOldValue() {
-    var feature = /** @type {ol.Feature} */ (this.getFeature());
+    var feature = /** @type {Feature} */ (this.getFeature());
     var config = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
     var labelColumns = [];
     if (config) {
       if (Array.isArray(config)) {
         // locate the label config in the array
-        var labelsConfig = ol.array.find(config, os.style.isLabelConfig);
+        var labelsConfig = olArray.find(config, osStyle.isLabelConfig);
         if (labelsConfig) {
-          labelColumns = labelsConfig[os.style.StyleField.LABELS];
+          labelColumns = labelsConfig[StyleField.LABELS];
         }
-      } else if (config[os.style.StyleField.LABELS]) {
-        labelColumns = config[os.style.StyleField.LABELS];
+      } else if (config[StyleField.LABELS]) {
+        labelColumns = config[StyleField.LABELS];
       }
     }
     return labelColumns;
@@ -56,7 +61,7 @@ class FeatureLabel extends AbstractFeatureStyle {
    */
   applyValue(configs, value) {
     for (var i = 0; i < configs.length; i++) {
-      configs[i][os.style.StyleField.LABELS] = value;
+      configs[i][StyleField.LABELS] = value;
     }
 
     super.applyValue(configs, value);

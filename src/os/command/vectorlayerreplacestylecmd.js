@@ -1,11 +1,14 @@
 goog.module('os.command.VectorLayerReplaceStyle');
 goog.module.declareLegacyNamespace();
 
+const asserts = goog.require('goog.asserts');
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
 const OSDataManager = goog.require('os.data.OSDataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const metrics = goog.require('os.metrics');
 const PropertyChange = goog.require('os.source.PropertyChange');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
 
 
 /**
@@ -27,20 +30,20 @@ class VectorLayerReplaceStyle extends AbstractVectorStyle {
    * @inheritDoc
    */
   getOldValue() {
-    var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-    return config ? !!config[os.style.StyleField.REPLACE_STYLE] : false;
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+    return config ? !!config[StyleField.REPLACE_STYLE] : false;
   }
 
   /**
    * @inheritDoc
    */
   applyValue(config, value) {
-    config[os.style.StyleField.REPLACE_STYLE] = value;
+    config[StyleField.REPLACE_STYLE] = value;
 
     super.applyValue(config, value);
 
     var source = /** @type {os.source.Vector} */ (OSDataManager.getInstance().getSource(this.layerId));
-    goog.asserts.assert(source, 'source must be defined');
+    asserts.assert(source, 'source must be defined');
 
     source.setHighlightedItems(source.getHighlightedItems());
   }

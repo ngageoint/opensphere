@@ -1,8 +1,15 @@
 goog.module('os.command.TransformVectors');
 goog.module.declareLegacyNamespace();
 
+const Geometry = goog.require('ol.geom.Geometry');
+const OLVectorLayer = goog.require('ol.layer.Vector');
+const olProj = goog.require('ol.proj');
+const MapContainer = goog.require('os.MapContainer');
 const State = goog.require('os.command.State');
+const RecordField = goog.require('os.data.RecordField');
+const osFeature = goog.require('os.feature');
 const geo2 = goog.require('os.geo2');
+const interpolate = goog.require('os.interpolate');
 
 const ICommand = goog.requireType('os.command.ICommand');
 
@@ -85,8 +92,8 @@ class TransformVectors {
     if (this.canExecute()) {
       this.state = State.EXECUTING;
 
-      var source = ol.proj.get(this.source);
-      var target = ol.proj.get(this.target);
+      var source = olProj.get(this.source);
+      var target = olProj.get(this.target);
 
       if (source && target) {
         this.transform(source, target);
@@ -105,21 +112,21 @@ class TransformVectors {
    * @protected
    */
   transform(sourceProjection, targetProjection) {
-    var layers = os.MapContainer.getInstance().getLayers();
+    var layers = MapContainer.getInstance().getLayers();
     var tx = TransformVectors.transform_.bind(null, sourceProjection, targetProjection);
 
     // list of geometry caches to also transform which aren't generally considered part of the
     // geometry/style set
     const extraGeoms = [
-      os.interpolate.ORIGINAL_GEOM_FIELD,
-      os.data.RecordField.ELLIPSE,
-      os.data.RecordField.LINE_OF_BEARING,
-      os.data.RecordField.RING];
+      interpolate.ORIGINAL_GEOM_FIELD,
+      RecordField.ELLIPSE,
+      RecordField.LINE_OF_BEARING,
+      RecordField.RING];
 
     for (var i = 0, n = layers.length; i < n; i++) {
       var layer = layers[i];
 
-      if (layer instanceof ol.layer.Vector) {
+      if (layer instanceof OLVectorLayer) {
         var source = layer.getSource();
 
         if (source) {
@@ -133,7 +140,7 @@ class TransformVectors {
             source.clear(true);
 
             for (var j = 0, m = features.length; j < m; j++) {
-              os.feature.forEachGeometry(features[j], tx);
+              osFeature.forEachGeometry(features[j], tx);
 
               for (var k = 0, l = extraGeoms.length; k < l; k++) {
                 tx(/** @type {ol.geom.Geometry|undefined} */ (features[j].get(extraGeoms[k])));
@@ -153,8 +160,8 @@ class TransformVectors {
   revert() {
     this.state = State.REVERTING;
 
-    var source = ol.proj.get(this.source);
-    var target = ol.proj.get(this.target);
+    var source = olProj.get(this.source);
+    var target = olProj.get(this.target);
 
     if (source && target) {
       this.transform(target, source);
@@ -171,7 +178,7 @@ class TransformVectors {
    * @private
    */
   static transform_(sourceProjection, targetProjection, geom) {
-    if (geom && geom instanceof ol.geom.Geometry) {
+    if (geom && geom instanceof Geometry) {
       geom.transform(sourceProjection, targetProjection);
       geo2.normalizeGeometryCoordinates(geom, undefined, targetProjection);
     }

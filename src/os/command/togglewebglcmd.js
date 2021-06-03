@@ -1,9 +1,13 @@
 goog.module('os.command.ToggleWebGL');
 goog.module.declareLegacyNamespace();
 
+const MapContainer = goog.require('os.MapContainer');
+const MapMode = goog.require('os.MapMode');
 const AbstractAsyncCommand = goog.require('os.command.AbstractAsyncCommand');
+const EventType = goog.require('os.command.EventType');
 const State = goog.require('os.command.State');
 const DataManager = goog.require('os.data.DataManager');
+const ogc = goog.require('os.ogc');
 
 
 /**
@@ -48,7 +52,7 @@ class ToggleWebGL extends AbstractAsyncCommand {
     if (!webGLEnabled && !this.silent) {
       // make sure switching to 2D won't destroy the browser
       var totalCount = DataManager.getInstance().getTotalFeatureCount();
-      var maxCount = os.ogc.getMaxFeatures(os.MapMode.VIEW_2D);
+      var maxCount = ogc.getMaxFeatures(MapMode.VIEW_2D);
 
       if (totalCount > maxCount) {
         return false;
@@ -67,11 +71,11 @@ class ToggleWebGL extends AbstractAsyncCommand {
     var webGLEnabled = this.webGLEnabled;
 
     if (this.canSwitch(webGLEnabled)) {
-      os.MapContainer.getInstance().setWebGLEnabled(webGLEnabled, this.silent);
+      MapContainer.getInstance().setWebGLEnabled(webGLEnabled, this.silent);
       return this.finish();
     } else {
-      os.MapContainer.launch2DPerformanceDialog().then(() => {
-        os.MapContainer.getInstance().setWebGLEnabled(webGLEnabled, this.silent);
+      MapContainer.launch2DPerformanceDialog().then(() => {
+        MapContainer.getInstance().setWebGLEnabled(webGLEnabled, this.silent);
         this.finish();
       }, () => {
         this.handleError(this.title + ' cancelled by user.');
@@ -90,15 +94,15 @@ class ToggleWebGL extends AbstractAsyncCommand {
     var webGLEnabled = !this.webGLEnabled;
 
     if (this.canSwitch(webGLEnabled)) {
-      os.MapContainer.getInstance().setWebGLEnabled(webGLEnabled, this.silent);
+      MapContainer.getInstance().setWebGLEnabled(webGLEnabled, this.silent);
       return super.revert();
     } else {
-      os.MapContainer.launch2DPerformanceDialog().then(() => {
-        os.MapContainer.getInstance().setWebGLEnabled(webGLEnabled, this.silent);
+      MapContainer.launch2DPerformanceDialog().then(() => {
+        MapContainer.getInstance().setWebGLEnabled(webGLEnabled, this.silent);
 
         this.state = State.READY;
         this.details = null;
-        this.dispatchEvent(os.command.EventType.REVERTED);
+        this.dispatchEvent(EventType.REVERTED);
       }, () => {
         this.handleError(this.title + ' cancelled by user.');
       });

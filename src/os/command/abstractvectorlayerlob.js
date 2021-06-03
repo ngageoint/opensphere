@@ -3,6 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
 const OSDataManager = goog.require('os.data.OSDataManager');
+const RecordField = goog.require('os.data.RecordField');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const PropertyChange = goog.require('os.source.PropertyChange');
 
@@ -33,10 +34,10 @@ class AbstractVectorLayerLOB extends AbstractVectorStyle {
     if (source) {
       var features = source.getFeatures();
       for (var i = 0, n = features.length; i < n; i++) { // wipe LOB styles
-        features[i].values_[os.data.RecordField.LINE_OF_BEARING] = null;
-        features[i].values_[os.data.RecordField.LINE_OF_BEARING_ERROR_HIGH] = null;
-        features[i].values_[os.data.RecordField.LINE_OF_BEARING_ERROR_LOW] = null;
-        features[i].values_[os.data.RecordField.ELLIPSE] = null;
+        features[i].values_[RecordField.LINE_OF_BEARING] = null;
+        features[i].values_[RecordField.LINE_OF_BEARING_ERROR_HIGH] = null;
+        features[i].values_[RecordField.LINE_OF_BEARING_ERROR_LOW] = null;
+        features[i].values_[RecordField.ELLIPSE] = null;
       }
     }
     super.applyValue(config, value);

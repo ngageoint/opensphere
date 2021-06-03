@@ -2,6 +2,8 @@ goog.module('os.command.AbstractLayerStyle');
 goog.module.declareLegacyNamespace();
 
 const AbstractStyle = goog.require('os.command.AbstractStyle');
+const osImplements = goog.require('os.implements');
+const ILayer = goog.require('os.layer.ILayer');
 
 
 /**
@@ -25,7 +27,7 @@ class AbstractLayerStyle extends AbstractStyle {
    * @inheritDoc
    */
   getLayerConfig(layer) {
-    if (os.implements(layer, os.layer.ILayer.ID)) {
+    if (osImplements(layer, ILayer.ID)) {
       return /** @type {os.layer.ILayer} */ (layer).getLayerOptions();
     }
     return null;

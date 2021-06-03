@@ -6,6 +6,8 @@ const OSDataManager = goog.require('os.data.OSDataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const metrics = goog.require('os.metrics');
 const PropertyChange = goog.require('os.source.PropertyChange');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
 const label = goog.require('os.style.label');
 
 
@@ -35,15 +37,15 @@ class VectorLayerLabel extends AbstractVectorStyle {
    * @inheritDoc
    */
   getOldValue() {
-    var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-    return config && config[os.style.StyleField.LABELS] || [label.cloneConfig()];
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+    return config && config[StyleField.LABELS] || [label.cloneConfig()];
   }
 
   /**
    * @inheritDoc
    */
   applyValue(config, value) {
-    config[os.style.StyleField.LABELS] = value;
+    config[StyleField.LABELS] = value;
 
     super.applyValue(config, value);
   }

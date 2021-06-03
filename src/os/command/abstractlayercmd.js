@@ -2,10 +2,13 @@ goog.module('os.command.AbstractLayer');
 goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
+const googObject = goog.require('goog.object');
 const Layer = goog.require('ol.layer.Layer');
+const MapContainer = goog.require('os.MapContainer');
 const State = goog.require('os.command.State');
 const osLayer = goog.require('os.layer');
 const Metrics = goog.require('os.metrics.Metrics');
+const keys = goog.require('os.metrics.keys');
 
 const ICommand = goog.requireType('os.command.ICommand');
 
@@ -77,7 +80,7 @@ class AbstractLayer extends Disposable {
       return false;
     }
 
-    if (!this.layerOptions || goog.object.isEmpty(this.layerOptions)) {
+    if (!this.layerOptions || googObject.isEmpty(this.layerOptions)) {
       this.state = State.ERROR;
       this.details = 'Layer configuration not provided.';
       return false;
@@ -115,9 +118,9 @@ class AbstractLayer extends Disposable {
     if (layer instanceof Layer) {
       // don't add duplicate layers to the map. this may happen for legit reasons. one example is a single layer from
       // a state file being removed, the whole state file being removed, then undo both removes.
-      if (!os.MapContainer.getInstance().getLayer(layer.getId())) {
-        os.MapContainer.getInstance().addLayer(/** @type {!Layer} */ (layer));
-        Metrics.getInstance().updateMetric(os.metrics.keys.AddData.ADD_LAYER_COMMAND, 1);
+      if (!MapContainer.getInstance().getLayer(layer.getId())) {
+        MapContainer.getInstance().addLayer(/** @type {!Layer} */ (layer));
+        Metrics.getInstance().updateMetric(keys.AddData.ADD_LAYER_COMMAND, 1);
         return true;
       }
 
@@ -144,8 +147,8 @@ class AbstractLayer extends Disposable {
       return false;
     }
 
-    os.MapContainer.getInstance().removeLayer(/** @type {string} */ (options['id']));
-    Metrics.getInstance().updateMetric(os.metrics.keys.AddData.REMOVE_LAYER_COMMAND, 1);
+    MapContainer.getInstance().removeLayer(/** @type {string} */ (options['id']));
+    Metrics.getInstance().updateMetric(keys.AddData.REMOVE_LAYER_COMMAND, 1);
     return true;
   }
 }

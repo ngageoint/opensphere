@@ -2,9 +2,12 @@ goog.module('os.command.VectorLayerPreset');
 goog.module.declareLegacyNamespace();
 
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
+const State = goog.require('os.command.State');
 const OSDataManager = goog.require('os.data.OSDataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const action = goog.require('os.im.action');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
+const metrics = goog.require('os.metrics');
 const PropertyChange = goog.require('os.source.PropertyChange');
 
 
@@ -21,7 +24,7 @@ class VectorLayerPreset extends AbstractVectorStyle {
   constructor(layerId, preset, opt_oldPreset) {
     super(layerId, preset, opt_oldPreset);
     this.title = 'Change layer preset: ' + preset.label;
-    this.metricKey = os.metrics.Layer.PRESET;
+    this.metricKey = metrics.Layer.PRESET;
     this.value = preset.layerConfig;
 
     /**
@@ -59,7 +62,7 @@ class VectorLayerPreset extends AbstractVectorStyle {
       // save the old enabled feature action id's
       var iam = ImportActionManager.getInstance();
       var entries = iam.getActionEntries(layer.getId());
-      entries.reduce(os.im.action.reduceEnabled, oldIds);
+      entries.reduce(action.reduceEnabled, oldIds);
     }
 
     return oldIds;
@@ -91,7 +94,7 @@ class VectorLayerPreset extends AbstractVectorStyle {
     var iam = ImportActionManager.getInstance();
     var type = layer.getId();
 
-    var faIds = this.state === os.command.State.EXECUTING ? this.preset.featureActions : this.oldFeatureActionIds;
+    var faIds = this.state === State.EXECUTING ? this.preset.featureActions : this.oldFeatureActionIds;
     var faIdMap = {};
     if (faIds) {
       faIds.forEach(function(id) {
@@ -101,7 +104,7 @@ class VectorLayerPreset extends AbstractVectorStyle {
 
     var entries = iam.getActionEntries(type);
     entries.forEach(function(e) {
-      os.im.action.enableFromMap(e, faIdMap);
+      action.enableFromMap(e, faIdMap);
     });
 
     iam.processItems(type, undefined, true);

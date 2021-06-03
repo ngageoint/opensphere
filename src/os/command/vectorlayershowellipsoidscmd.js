@@ -6,6 +6,8 @@ const OSDataManager = goog.require('os.data.OSDataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const metrics = goog.require('os.metrics');
 const PropertyChange = goog.require('os.source.PropertyChange');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
 
 
 /**
@@ -31,15 +33,15 @@ class VectorLayerShowEllipsoids extends AbstractVectorStyle {
    * @inheritDoc
    */
   getOldValue() {
-    var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-    return config != null && config[os.style.StyleField.SHOW_ELLIPSOIDS] || false;
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+    return config != null && config[StyleField.SHOW_ELLIPSOIDS] || false;
   }
 
   /**
    * @inheritDoc
    */
   applyValue(config, value) {
-    config[os.style.StyleField.SHOW_ELLIPSOIDS] = value;
+    config[StyleField.SHOW_ELLIPSOIDS] = value;
     super.applyValue(config, value);
   }
 

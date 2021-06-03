@@ -3,6 +3,11 @@ goog.module.declareLegacyNamespace();
 
 const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
 const metrics = goog.require('os.metrics');
+const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const FeatureEditCtrl = goog.require('os.ui.FeatureEditCtrl');
+
+const Feature = goog.requireType('ol.Feature');
 
 
 /**
@@ -28,24 +33,24 @@ class FeatureShape extends AbstractFeatureStyle {
    * @inheritDoc
    */
   getOldValue() {
-    var feature = /** @type {ol.Feature} */ (this.getFeature());
-    var shape = feature.get(os.style.StyleField.SHAPE);
-    return shape ? shape : os.style.ShapeType.POINT;
+    var feature = /** @type {Feature} */ (this.getFeature());
+    var shape = feature.get(StyleField.SHAPE);
+    return shape ? shape : osStyle.ShapeType.POINT;
   }
 
   /**
    * @inheritDoc
    */
   applyValue(configs, value) {
-    var feature = /** @type {ol.Feature} */ (this.getFeature());
-    feature.set(os.style.StyleField.SHAPE, value);
+    var feature = /** @type {Feature} */ (this.getFeature());
+    feature.set(StyleField.SHAPE, value);
 
     var config = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
     if (Array.isArray(config)) {
       config = config[0];
     }
-    if (value == os.style.ShapeType.NONE) {
-      config['geometry'] = os.ui.FeatureEditCtrl.HIDE_GEOMETRY;
+    if (value == osStyle.ShapeType.NONE) {
+      config['geometry'] = FeatureEditCtrl.HIDE_GEOMETRY;
     } else {
       delete config['geometry'];
     }
