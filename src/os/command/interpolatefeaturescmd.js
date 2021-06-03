@@ -1,116 +1,114 @@
-goog.provide('os.command.InterpolateFeatures');
+goog.module('os.command.InterpolateFeatures');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.ICommand');
-goog.require('os.command.State');
+const State = goog.require('os.command.State');
 
+const ICommand = goog.requireType('os.command.ICommand');
 
 
 /**
  * Abstract command for performing selections on a source
  *
- * @implements {os.command.ICommand}
- * @constructor
+ * @implements {ICommand}
  */
-os.command.InterpolateFeatures = function() {
-};
+class InterpolateFeatures {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    /**
+     * @inheritDoc
+     */
+    this.state = State.READY;
 
+    /**
+     * @inheritDoc
+     */
+    this.isAsync = false;
 
-/**
- * @inheritDoc
- */
-os.command.InterpolateFeatures.prototype.state = os.command.State.READY;
+    /**
+     * @inheritDoc
+     */
+    this.title = 'Interpolate all vectors';
 
-
-/**
- * @inheritDoc
- */
-os.command.InterpolateFeatures.prototype.isAsync = false;
-
-
-/**
- * @inheritDoc
- */
-os.command.InterpolateFeatures.prototype.title = 'Interpolate all vectors';
-
-
-/**
- * @inheritDoc
- */
-os.command.InterpolateFeatures.prototype.details = null;
-
-
-/**
- * Checks if the command is ready to execute
- *
- * @return {boolean}
- */
-os.command.InterpolateFeatures.prototype.canExecute = function() {
-  if (this.state !== os.command.State.READY) {
-    this.details = 'Command not in ready state.';
-    return false;
+    /**
+     * @inheritDoc
+     */
+    this.details = null;
   }
 
-  return true;
-};
+  /**
+   * Checks if the command is ready to execute
+   *
+   * @return {boolean}
+   */
+  canExecute() {
+    if (this.state !== State.READY) {
+      this.details = 'Command not in ready state.';
+      return false;
+    }
 
-
-/**
- * @inheritDoc
- */
-os.command.InterpolateFeatures.prototype.execute = function() {
-  if (this.canExecute()) {
-    this.state = os.command.State.EXECUTING;
-    this.interpolate();
-    this.state = os.command.State.SUCCESS;
     return true;
   }
 
-  return false;
-};
+  /**
+   * @inheritDoc
+   */
+  execute() {
+    if (this.canExecute()) {
+      this.state = State.EXECUTING;
+      this.interpolate();
+      this.state = State.SUCCESS;
+      return true;
+    }
 
+    return false;
+  }
 
-/**
- * @protected
- */
-os.command.InterpolateFeatures.prototype.interpolate = function() {
-  var layers = os.MapContainer.getInstance().getLayers();
+  /**
+   * @protected
+   */
+  interpolate() {
+    var layers = os.MapContainer.getInstance().getLayers();
 
-  for (var i = 0, n = layers.length; i < n; i++) {
-    var layer = layers[i];
+    for (var i = 0, n = layers.length; i < n; i++) {
+      var layer = layers[i];
 
-    if (layer instanceof ol.layer.Vector) {
-      var source = layer.getSource();
+      if (layer instanceof ol.layer.Vector) {
+        var source = layer.getSource();
 
-      if (source) {
-        var features = source.getFeatures();
+        if (source) {
+          var features = source.getFeatures();
 
-        // we can't merely change the features in place because os.source.Vector has an override
-        // that removes the listener on feature change (because it is otherwise not used. Instead,
-        // we'll remove, interpolate, and re-add the features.
+          // we can't merely change the features in place because os.source.Vector has an override
+          // that removes the listener on feature change (because it is otherwise not used. Instead,
+          // we'll remove, interpolate, and re-add the features.
 
-        if (features.length) {
-          source.clear(true);
-          goog.asserts.assert(features.length > 0);
+          if (features.length) {
+            source.clear(true);
+            goog.asserts.assert(features.length > 0);
 
-          if (!(source instanceof os.source.Vector)) {
-            for (var j = 0, m = features.length; j < m; j++) {
-              os.interpolate.interpolateFeature(features[j]);
+            if (!(source instanceof os.source.Vector)) {
+              for (var j = 0, m = features.length; j < m; j++) {
+                os.interpolate.interpolateFeature(features[j]);
+              }
             }
-          }
 
-          source.addFeatures(features);
+            source.addFeatures(features);
+          }
         }
       }
     }
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    // this is intentionally empty
+    this.state = State.READY;
+    return true;
+  }
+}
 
-/**
- * @inheritDoc
- */
-os.command.InterpolateFeatures.prototype.revert = function() {
-  // this is intentionally empty
-  this.state = os.command.State.READY;
-  return true;
-};
+exports = InterpolateFeatures;

@@ -1,41 +1,44 @@
-goog.provide('os.command.VectorLayerLOBLengthError');
+goog.module('os.command.VectorLayerLOBLengthError');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractVectorLayerLOB');
-goog.require('os.metrics');
-
+const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
+const metrics = goog.require('os.metrics');
 
 
 /**
  * Changes the lob length
  *
- * @param {string} layerId
- * @param {number} value
- * @param {number=} opt_oldValue
- * @extends {os.command.AbstractVectorLayerLOB<number>}
- * @constructor
+ * @extends {AbstractVectorLayerLOB<number>}
  */
-os.command.VectorLayerLOBLengthError = function(layerId, value, opt_oldValue) {
-  os.command.VectorLayerLOBLengthError.base(this, 'constructor', layerId, value, opt_oldValue);
-  this.title = 'Change Line of Bearing length error column multiplier';
-  this.value = value;
-  this.metricKey = os.metrics.Layer.VECTOR_LOB_LENGTH_ERROR;
-};
-goog.inherits(os.command.VectorLayerLOBLengthError, os.command.AbstractVectorLayerLOB);
+class VectorLayerLOBLengthError extends AbstractVectorLayerLOB {
+  /**
+   * Constructor.
+   * @param {string} layerId
+   * @param {number} value
+   * @param {number=} opt_oldValue
+   */
+  constructor(layerId, value, opt_oldValue) {
+    super(layerId, value, opt_oldValue);
+    this.title = 'Change Line of Bearing length error column multiplier';
+    this.value = value;
+    this.metricKey = metrics.Layer.VECTOR_LOB_LENGTH_ERROR;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
+    return config ? config[os.style.StyleField.LOB_LENGTH_ERROR] : os.style.DEFAULT_LOB_LENGTH_ERROR;
+  }
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerLOBLengthError.prototype.getOldValue = function() {
-  var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-  return config ? config[os.style.StyleField.LOB_LENGTH_ERROR] : os.style.DEFAULT_LOB_LENGTH_ERROR;
-};
+  /**
+   * @inheritDoc
+   */
+  applyValue(config, value) {
+    config[os.style.StyleField.LOB_LENGTH_ERROR] = value;
+    super.applyValue(config, value);
+  }
+}
 
-
-/**
- * @inheritDoc
- */
-os.command.VectorLayerLOBLengthError.prototype.applyValue = function(config, value) {
-  config[os.style.StyleField.LOB_LENGTH_ERROR] = value;
-  os.command.VectorLayerLOBLengthError.base(this, 'applyValue', config, value);
-};
+exports = VectorLayerLOBLengthError;

@@ -1,43 +1,46 @@
-goog.provide('os.command.VectorLayerShowError');
+goog.module('os.command.VectorLayerShowError');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractVectorLayerLOB');
-goog.require('os.metrics');
-
+const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
+const metrics = goog.require('os.metrics');
 
 
 /**
  * Changes if lob errors are shown.
  *
- * @param {string} layerId
- * @param {boolean} value
- * @param {boolean=} opt_oldValue
- * @extends {os.command.AbstractVectorLayerLOB<boolean>}
- * @constructor
+ * @extends {AbstractVectorLayerLOB<boolean>}
  */
-os.command.VectorLayerShowError = function(layerId, value, opt_oldValue) {
-  os.command.VectorLayerShowError.base(this, 'constructor', layerId, value, opt_oldValue);
-  this.metricKey = os.metrics.Layer.VECTOR_SHOW_ERROR;
+class VectorLayerShowError extends AbstractVectorLayerLOB {
+  /**
+   * Constructor.
+   * @param {string} layerId
+   * @param {boolean} value
+   * @param {boolean=} opt_oldValue
+   */
+  constructor(layerId, value, opt_oldValue) {
+    super(layerId, value, opt_oldValue);
+    this.metricKey = metrics.Layer.VECTOR_SHOW_ERROR;
 
-  // make sure the value is a boolean
-  this.value = !!value;
-  this.title = value ? 'Enable Show Error' : 'Disable Show Error';
-};
-goog.inherits(os.command.VectorLayerShowError, os.command.AbstractVectorLayerLOB);
+    // make sure the value is a boolean
+    this.value = !!value;
+    this.title = value ? 'Enable Show Error' : 'Disable Show Error';
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
+    return config != null && config[os.style.StyleField.SHOW_ERROR] || false;
+  }
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerShowError.prototype.getOldValue = function() {
-  var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-  return config != null && config[os.style.StyleField.SHOW_ERROR] || false;
-};
+  /**
+   * @inheritDoc
+   */
+  applyValue(config, value) {
+    config[os.style.StyleField.SHOW_ERROR] = value;
+    super.applyValue(config, value);
+  }
+}
 
-
-/**
- * @inheritDoc
- */
-os.command.VectorLayerShowError.prototype.applyValue = function(config, value) {
-  config[os.style.StyleField.SHOW_ERROR] = value;
-  os.command.VectorLayerShowError.base(this, 'applyValue', config, value);
-};
+exports = VectorLayerShowError;

@@ -1,75 +1,75 @@
-goog.provide('os.command.VectorLayerShowLabel');
+goog.module('os.command.VectorLayerShowLabel');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractVectorStyle');
-goog.require('os.data.OSDataManager');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.metrics');
-goog.require('os.source.PropertyChange');
-goog.require('os.style.label');
-
+const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
+const OSDataManager = goog.require('os.data.OSDataManager');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const metrics = goog.require('os.metrics');
+const PropertyChange = goog.require('os.source.PropertyChange');
+const label = goog.require('os.style.label');
 
 
 /**
  * Changes if labels are always shown for a layer, or on highlight only.
- *
- * @param {string} layerId
- * @param {boolean} value
- * @param {boolean=} opt_oldValue
- * @extends {os.command.AbstractVectorStyle}
- * @constructor
  */
-os.command.VectorLayerShowLabel = function(layerId, value, opt_oldValue) {
-  os.command.VectorLayerShowLabel.base(this, 'constructor', layerId, value, opt_oldValue);
-  this.metricKey = os.metrics.Layer.LABEL_TOGGLE;
-  // make sure the value is a boolean
-  this.value = value || false;
-  this.title = value ? 'Show Labels' : 'Hide Labels';
-};
-goog.inherits(os.command.VectorLayerShowLabel, os.command.AbstractVectorStyle);
-
-
-/**
- * @inheritDoc
- */
-os.command.VectorLayerShowLabel.prototype.getOldValue = function() {
-  var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-  return config && config[os.style.StyleField.SHOW_LABELS] || false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.command.VectorLayerShowLabel.prototype.applyValue = function(config, value) {
-  config[os.style.StyleField.SHOW_LABELS] = value;
-
-  if (!value) {
-    var source = os.osDataManager.getSource(this.layerId);
-    goog.asserts.assert(source);
-
-    var changed = [];
-    source.forEachFeature(function(feature) {
-      // hide labels for all features in the source
-      if (os.feature.hideLabel(feature)) {
-        changed.push(feature);
-      }
-    });
-
-    if (changed.length > 0) {
-      os.style.setFeaturesStyle(changed);
-      source.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.STYLE, changed));
-    }
+class VectorLayerShowLabel extends AbstractVectorStyle {
+  /**
+   * Constructor.
+   * @param {string} layerId
+   * @param {boolean} value
+   * @param {boolean=} opt_oldValue
+   */
+  constructor(layerId, value, opt_oldValue) {
+    super(layerId, value, opt_oldValue);
+    this.metricKey = metrics.Layer.LABEL_TOGGLE;
+    // make sure the value is a boolean
+    this.value = value || false;
+    this.title = value ? 'Show Labels' : 'Hide Labels';
   }
 
-  os.command.VectorLayerShowLabel.base(this, 'applyValue', config, value);
-};
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
+    return config && config[os.style.StyleField.SHOW_LABELS] || false;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  applyValue(config, value) {
+    config[os.style.StyleField.SHOW_LABELS] = value;
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerShowLabel.prototype.finish = function(config) {
-  // label overlap will likely change, so update them
-  os.style.label.updateShown();
-  os.command.VectorLayerShowLabel.base(this, 'finish', config);
-};
+    if (!value) {
+      var source = OSDataManager.getInstance().getSource(this.layerId);
+      goog.asserts.assert(source);
+
+      var changed = [];
+      source.forEachFeature(function(feature) {
+        // hide labels for all features in the source
+        if (os.feature.hideLabel(feature)) {
+          changed.push(feature);
+        }
+      });
+
+      if (changed.length > 0) {
+        os.style.setFeaturesStyle(changed);
+        source.dispatchEvent(new PropertyChangeEvent(PropertyChange.STYLE, changed));
+      }
+    }
+
+    super.applyValue(config, value);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  finish(config) {
+    // label overlap will likely change, so update them
+    label.updateShown();
+    super.finish(config);
+  }
+}
+
+exports = VectorLayerShowLabel;

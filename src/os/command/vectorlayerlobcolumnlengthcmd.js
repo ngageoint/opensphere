@@ -1,41 +1,44 @@
-goog.provide('os.command.VectorLayerLOBColumnLength');
+goog.module('os.command.VectorLayerLOBColumnLength');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractVectorLayerLOB');
-goog.require('os.metrics');
-
+const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
+const metrics = goog.require('os.metrics');
 
 
 /**
  * Changes the lob column length
  *
- * @param {string} layerId
- * @param {number} value
- * @param {number=} opt_oldValue
- * @extends {os.command.AbstractVectorLayerLOB<number>}
- * @constructor
+ * @extends {AbstractVectorLayerLOB<number>}
  */
-os.command.VectorLayerLOBColumnLength = function(layerId, value, opt_oldValue) {
-  os.command.VectorLayerLOBColumnLength.base(this, 'constructor', layerId, value, opt_oldValue);
-  this.title = 'Change Line of Bearing column length';
-  this.value = value;
-  this.metricKey = os.metrics.Layer.VECTOR_LOB_COLUMN_LENGTH;
-};
-goog.inherits(os.command.VectorLayerLOBColumnLength, os.command.AbstractVectorLayerLOB);
+class VectorLayerLOBColumnLength extends AbstractVectorLayerLOB {
+  /**
+   * Constructor.
+   * @param {string} layerId
+   * @param {number} value
+   * @param {number=} opt_oldValue
+   */
+  constructor(layerId, value, opt_oldValue) {
+    super(layerId, value, opt_oldValue);
+    this.title = 'Change Line of Bearing column length';
+    this.value = value;
+    this.metricKey = metrics.Layer.VECTOR_LOB_COLUMN_LENGTH;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
+    return config ? config[os.style.StyleField.LOB_COLUMN_LENGTH] : os.style.DEFAULT_LOB_LENGTH;
+  }
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerLOBColumnLength.prototype.getOldValue = function() {
-  var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-  return config ? config[os.style.StyleField.LOB_COLUMN_LENGTH] : os.style.DEFAULT_LOB_LENGTH;
-};
+  /**
+   * @inheritDoc
+   */
+  applyValue(config, value) {
+    config[os.style.StyleField.LOB_COLUMN_LENGTH] = value;
+    super.applyValue(config, value);
+  }
+}
 
-
-/**
- * @inheritDoc
- */
-os.command.VectorLayerLOBColumnLength.prototype.applyValue = function(config, value) {
-  config[os.style.StyleField.LOB_COLUMN_LENGTH] = value;
-  os.command.VectorLayerLOBColumnLength.base(this, 'applyValue', config, value);
-};
+exports = VectorLayerLOBColumnLength;

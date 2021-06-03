@@ -1,10 +1,12 @@
-goog.provide('os.command.AbstractCommandSet');
-goog.require('goog.disposable.IDisposable');
-goog.require('goog.events.EventTarget');
-goog.require('os.array');
-goog.require('os.command.ICommand');
-goog.require('os.command.State');
+goog.module('os.command.AbstractCommandSet');
+goog.module.declareLegacyNamespace();
 
+const EventTarget = goog.require('goog.events.EventTarget');
+const osArray = goog.require('os.array');
+const State = goog.require('os.command.State');
+
+const IDisposable = goog.requireType('goog.disposable.IDisposable');
+const ICommand = goog.requireType('os.command.ICommand');
 
 
 /**
@@ -12,100 +14,96 @@ goog.require('os.command.State');
  * sets should always have their command set added before adding that set
  * to its parent set (this ensures that isAsync gets set properly).
  *
- * @implements {goog.disposable.IDisposable}
- * @extends {goog.events.EventTarget}
- * @constructor
+ * @implements {IDisposable}
  */
-os.command.AbstractCommandSet = function() {
-  os.command.AbstractCommandSet.base(this, 'constructor');
-};
-goog.inherits(os.command.AbstractCommandSet, goog.events.EventTarget);
+class AbstractCommandSet extends EventTarget {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
 
+    /**
+     * The set of commands
+     * @type {Array<ICommand>}
+     * @private
+     */
+    this.cmds_ = null;
 
-/**
- * @inheritDoc
- */
-os.command.AbstractCommandSet.prototype.disposeInternal = function() {
-  goog.disposeAll(this.getCommands());
-  os.command.AbstractCommandSet.superClass_.disposeInternal.call(this);
-};
+    /**
+     * The title
+     * @type {?string}
+     */
+    this.title = null;
 
+    /**
+     * The current state of the command
+     * @type {!State}
+     */
+    this.state = State.READY;
 
-/**
- * The set of commands
- * @type {Array.<os.command.ICommand>}
- * @private
- */
-os.command.AbstractCommandSet.prototype.cmds_ = null;
-
-
-/**
- * Gets the set of commands
- *
- * @return {Array.<os.command.ICommand>} The set of commands
- */
-os.command.AbstractCommandSet.prototype.getCommands = function() {
-  return this.cmds_;
-};
-
-
-/**
- * Sets the set of commands
- *
- * @param {Array.<os.command.ICommand>} set The set of commands
- */
-os.command.AbstractCommandSet.prototype.setCommands = function(set) {
-  this.cmds_ = set;
-
-  if (set) {
+    /**
+     * Whether or not this is an asyncronous command; true if any sub-command isAsync
+     * @type {boolean}
+     */
     this.isAsync = false;
 
-    // see if any of the commands are asynchronous
-    /** @type {number} */ var i;
-    /** @type {number} */ var n;
-    for (i = 0, n = set.length; i < n; i++) {
-      if (set[i].isAsync) {
-        this.isAsync = true;
+    /**
+     * The details
+     * @type {?string}
+     */
+    this.details = null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    goog.disposeAll(this.getCommands());
+    super.disposeInternal();
+  }
+
+  /**
+   * Gets the set of commands
+   *
+   * @return {Array<ICommand>} The set of commands
+   */
+  getCommands() {
+    return this.cmds_;
+  }
+
+  /**
+   * Sets the set of commands
+   *
+   * @param {Array<ICommand>} set The set of commands
+   */
+  setCommands(set) {
+    this.cmds_ = set;
+
+    if (set) {
+      this.isAsync = false;
+
+      // see if any of the commands are asynchronous
+      /** @type {number} */ var i;
+      /** @type {number} */ var n;
+      for (i = 0, n = set.length; i < n; i++) {
+        if (set[i].isAsync) {
+          this.isAsync = true;
+        }
+      }
+
+      if (!this.title) {
+        /** @type {Array<string>} */ var titles = [];
+        osArray.forEach(set, function(ele, idx, arr) {
+          var command = /** @type {ICommand} */ (ele);
+          if (command.title) {
+            titles.push(command.title);
+          }
+        });
+        this.title = '[ ' + titles.join(', ') + ' ]';
       }
     }
-
-    if (!this.title) {
-      /** @type {Array.<string>} */ var titles = [];
-      os.array.forEach(set, function(ele, idx, arr) {
-        var command = /** @type {os.command.ICommand} */ (ele);
-        if (command.title) {
-          titles.push(command.title);
-        }
-      });
-      this.title = '[ ' + titles.join(', ') + ' ]';
-    }
   }
-};
+}
 
-
-/**
- * The title
- * @type {?string}
- */
-os.command.AbstractCommandSet.prototype.title = null;
-
-
-/**
- * The current state of the command
- * @type {!os.command.State}
- */
-os.command.AbstractCommandSet.prototype.state = os.command.State.READY;
-
-
-/**
- * Whether or not this is an asyncronous command; true if any sub-command isAsync
- * @type {boolean}
- */
-os.command.AbstractCommandSet.prototype.isAsync = false;
-
-
-/**
- * The details
- * @type {?string}
- */
-os.command.AbstractCommandSet.prototype.details = null;
+exports = AbstractCommandSet;

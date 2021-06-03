@@ -1,46 +1,43 @@
-goog.provide('os.command.TileLayerStyle');
+goog.module('os.command.TileLayerStyle');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractLayerStyle');
-goog.require('os.command.ICommand');
-goog.require('os.command.State');
-goog.require('os.ui');
-
+const AbstractLayerStyle = goog.require('os.command.AbstractLayerStyle');
 
 
 /**
  * Changes the style of a tile layer
- *
- * @param {string} layerId
- * @param {?(string|osx.ogc.TileStyle)} style
- * @param {(?(string|osx.ogc.TileStyle))=} opt_oldStyle
- *
- * @extends {os.command.AbstractLayerStyle}
- * @constructor
  */
-os.command.TileLayerStyle = function(layerId, style, opt_oldStyle) {
-  os.command.TileLayerStyle.base(this, 'constructor', layerId, style, opt_oldStyle);
-  this.title = 'Change Layer Style';
-};
-goog.inherits(os.command.TileLayerStyle, os.command.AbstractLayerStyle);
-
-
-/**
- * @inheritDoc
- */
-os.command.TileLayerStyle.prototype.getOldValue = function() {
-  var layer = os.MapContainer.getInstance().getLayer(this.layerId);
-  return layer instanceof os.layer.Tile ? layer.getStyle() : null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.command.TileLayerStyle.prototype.applyValue = function(config, value) {
-  var layer = os.MapContainer.getInstance().getLayer(this.layerId);
-  if (layer instanceof os.layer.Tile) {
-    layer.setStyle(value);
+class TileLayerStyle extends AbstractLayerStyle {
+  /**
+   * Constructor.
+   * @param {string} layerId
+   * @param {?(string|osx.ogc.TileStyle)} style
+   * @param {(?(string|osx.ogc.TileStyle))=} opt_oldStyle
+   */
+  constructor(layerId, style, opt_oldStyle) {
+    super(layerId, style, opt_oldStyle);
+    this.title = 'Change Layer Style';
   }
 
-  os.command.TileLayerStyle.base(this, 'applyValue', config, value);
-};
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var layer = os.MapContainer.getInstance().getLayer(this.layerId);
+    return layer instanceof os.layer.Tile ? layer.getStyle() : null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  applyValue(config, value) {
+    var layer = os.MapContainer.getInstance().getLayer(this.layerId);
+    if (layer instanceof os.layer.Tile) {
+      layer.setStyle(value);
+    }
+
+    super.applyValue(config, value);
+  }
+}
+
+exports = TileLayerStyle;

@@ -1,65 +1,65 @@
-goog.provide('os.command.FeatureIcon');
+goog.module('os.command.FeatureIcon');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractFeatureStyle');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.metrics');
-goog.require('os.ui.file.kml');
-
+const AbstractFeatureStyle = goog.require('os.command.AbstractFeatureStyle');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const metrics = goog.require('os.metrics');
+const kml = goog.require('os.ui.file.kml');
 
 
 /**
  * Configure a feature to display an icon.
- *
- * @param {string} layerId The layer id.
- * @param {string} featureId The feature id.
- * @param {osx.icon.Icon} icon The new icon.
- * @param {osx.icon.Icon=} opt_oldIcon The old icon.
- * @extends {os.command.AbstractFeatureStyle}
- * @constructor
  */
-os.command.FeatureIcon = function(layerId, featureId, icon, opt_oldIcon) {
-  os.command.FeatureIcon.base(this, 'constructor', layerId, featureId, icon, opt_oldIcon);
-  this.title = 'Change Feature Icon';
-  this.metricKey = os.metrics.Layer.FEATURE_ICON;
-};
-goog.inherits(os.command.FeatureIcon, os.command.AbstractFeatureStyle);
-
-
-/**
- * @inheritDoc
- */
-os.command.FeatureIcon.prototype.getOldValue = function() {
-  var feature = /** @type {ol.Feature} */ (this.getFeature());
-  var configs = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
-  if (Array.isArray(configs)) {
-    configs = configs.length > 1 ? configs[1] : configs[0];
+class FeatureIcon extends AbstractFeatureStyle {
+  /**
+   * Constructor.
+   * @param {string} layerId The layer id.
+   * @param {string} featureId The feature id.
+   * @param {osx.icon.Icon} icon The new icon.
+   * @param {osx.icon.Icon=} opt_oldIcon The old icon.
+   */
+  constructor(layerId, featureId, icon, opt_oldIcon) {
+    super(layerId, featureId, icon, opt_oldIcon);
+    this.title = 'Change Feature Icon';
+    this.metricKey = metrics.Layer.FEATURE_ICON;
   }
 
-  return os.style.getConfigIcon(configs) || os.ui.file.kml.getDefaultIcon();
-};
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var feature = /** @type {ol.Feature} */ (this.getFeature());
+    var configs = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
+    if (Array.isArray(configs)) {
+      configs = configs.length > 1 ? configs[1] : configs[0];
+    }
 
-
-/**
- * @inheritDoc
- */
-os.command.FeatureIcon.prototype.applyValue = function(configs, value) {
-  if (value) {
-    var config = configs.length > 1 ? configs[1] : configs[0]; // using 1 is specific to tracks
-    os.style.setConfigIcon(config, value);
+    return os.style.getConfigIcon(configs) || kml.getDefaultIcon();
   }
 
-  os.command.FeatureIcon.base(this, 'applyValue', configs, value);
-};
+  /**
+   * @inheritDoc
+   */
+  applyValue(configs, value) {
+    if (value) {
+      var config = configs.length > 1 ? configs[1] : configs[0]; // using 1 is specific to tracks
+      os.style.setConfigIcon(config, value);
+    }
 
+    super.applyValue(configs, value);
+  }
 
-/**
- * @inheritDoc
- */
-os.command.FeatureIcon.prototype.finish = function(configs) {
-  // dispatch the color change event on the source for the histogram
-  var feature = this.getFeature();
+  /**
+   * @inheritDoc
+   */
+  finish(configs) {
+    // dispatch the color change event on the source for the histogram
+    var feature = this.getFeature();
 
-  feature.dispatchEvent(new os.events.PropertyChangeEvent('colors'));
+    feature.dispatchEvent(new PropertyChangeEvent('colors'));
 
-  os.command.FeatureIcon.base(this, 'finish', configs);
-};
+    super.finish(configs);
+  }
+}
+
+exports = FeatureIcon;

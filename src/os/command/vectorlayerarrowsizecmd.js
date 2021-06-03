@@ -1,41 +1,44 @@
-goog.provide('os.command.VectorLayerArrowSize');
+goog.module('os.command.VectorLayerArrowSize');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractVectorLayerLOB');
-goog.require('os.metrics');
-
+const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
+const metrics = goog.require('os.metrics');
 
 
 /**
  * Changes the arrow size for a lob
  *
- * @param {string} layerId
- * @param {number} value
- * @param {number=} opt_oldValue
- * @extends {os.command.AbstractVectorLayerLOB<number>}
- * @constructor
+ * @extends {AbstractVectorLayerLOB<number>}
  */
-os.command.VectorLayerArrowSize = function(layerId, value, opt_oldValue) {
-  os.command.VectorLayerArrowSize.base(this, 'constructor', layerId, value, opt_oldValue);
-  this.title = 'Change Line of Bearing arrow size';
-  this.value = value;
-  this.metricKey = os.metrics.Layer.VECTOR_ARROW_SIZE;
-};
-goog.inherits(os.command.VectorLayerArrowSize, os.command.AbstractVectorLayerLOB);
+class VectorLayerArrowSize extends AbstractVectorLayerLOB {
+  /**
+   * Constructor.
+   * @param {string} layerId
+   * @param {number} value
+   * @param {number=} opt_oldValue
+   */
+  constructor(layerId, value, opt_oldValue) {
+    super(layerId, value, opt_oldValue);
+    this.title = 'Change Line of Bearing arrow size';
+    this.value = value;
+    this.metricKey = metrics.Layer.VECTOR_ARROW_SIZE;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
+    return config ? config[os.style.StyleField.ARROW_SIZE] : os.style.DEFAULT_ARROW_SIZE;
+  }
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerArrowSize.prototype.getOldValue = function() {
-  var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-  return config ? config[os.style.StyleField.ARROW_SIZE] : os.style.DEFAULT_ARROW_SIZE;
-};
+  /**
+   * @inheritDoc
+   */
+  applyValue(config, value) {
+    config[os.style.StyleField.ARROW_SIZE] = value;
+    super.applyValue(config, value);
+  }
+}
 
-
-/**
- * @inheritDoc
- */
-os.command.VectorLayerArrowSize.prototype.applyValue = function(config, value) {
-  config[os.style.StyleField.ARROW_SIZE] = value;
-  os.command.VectorLayerArrowSize.base(this, 'applyValue', config, value);
-};
+exports = VectorLayerArrowSize;

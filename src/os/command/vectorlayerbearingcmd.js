@@ -1,42 +1,45 @@
-goog.provide('os.command.VectorLayerBearing');
+goog.module('os.command.VectorLayerBearing');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractVectorLayerLOB');
-goog.require('os.metrics');
-
+const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
+const metrics = goog.require('os.metrics');
 
 
 /**
  * Changes the lob bearing column
  *
- * @param {string} layerId
- * @param {string} value
- * @param {string=} opt_oldValue
- * @extends {os.command.AbstractVectorLayerLOB<string>}
- * @constructor
+ * @extends {AbstractVectorLayerLOB<string>}
  */
-os.command.VectorLayerBearing = function(layerId, value, opt_oldValue) {
-  os.command.VectorLayerBearing.base(this, 'constructor', layerId, value, opt_oldValue);
-  this.title = 'Change bearing column';
-  this.value = value || '';
-  this.metricKey = os.metrics.Layer.VECTOR_LOB_BEARING_COLUMN;
-};
-goog.inherits(os.command.VectorLayerBearing, os.command.AbstractVectorLayerLOB);
+class VectorLayerBearing extends AbstractVectorLayerLOB {
+  /**
+   * Constructor.
+   * @param {string} layerId
+   * @param {string} value
+   * @param {string=} opt_oldValue
+   */
+  constructor(layerId, value, opt_oldValue) {
+    super(layerId, value, opt_oldValue);
+    this.title = 'Change bearing column';
+    this.value = value || '';
+    this.metricKey = metrics.Layer.VECTOR_LOB_BEARING_COLUMN;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
+    return config && config[os.style.StyleField.LOB_BEARING_COLUMN] || '';
+  }
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerBearing.prototype.getOldValue = function() {
-  var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-  return config && config[os.style.StyleField.LOB_BEARING_COLUMN] || '';
-};
+  /**
+   * @inheritDoc
+   */
+  applyValue(config, value) {
+    config[os.style.StyleField.LOB_BEARING_COLUMN] = value;
 
+    super.applyValue(config, value);
+  }
+}
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerBearing.prototype.applyValue = function(config, value) {
-  config[os.style.StyleField.LOB_BEARING_COLUMN] = value;
-
-  os.command.VectorLayerBearing.base(this, 'applyValue', config, value);
-};
+exports = VectorLayerBearing;

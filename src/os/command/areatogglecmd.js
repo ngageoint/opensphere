@@ -1,61 +1,63 @@
-goog.provide('os.command.AreaToggle');
+goog.module('os.command.AreaToggle');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.ICommand');
-goog.require('os.ui.query.cmd.AbstractArea');
+const areaManager = goog.require('os.query.AreaManager');
+const AbstractArea = goog.require('os.ui.query.cmd.AbstractArea');
 
+const ICommand = goog.requireType('os.command.ICommand');
 
 
 /**
  * Command for toggling an area
  *
- * @param {!ol.Feature} area
- * @param {boolean} show
- * @implements {os.command.ICommand}
- * @extends {os.ui.query.cmd.AbstractArea}
- * @constructor
+ * @implements {ICommand}
  */
-os.command.AreaToggle = function(area, show) {
-  os.command.AreaToggle.base(this, 'constructor', area);
-
+class AreaToggle extends AbstractArea {
   /**
-   * @type {boolean}
-   * @private
+   * Constructor.
+   * @param {!ol.Feature} area
+   * @param {boolean} show
    */
-  this.show_ = show;
-  this.title = 'Toggle area' + ' ' + (show ? 'on' : 'off');
-};
-goog.inherits(os.command.AreaToggle, os.ui.query.cmd.AbstractArea);
+  constructor(area, show) {
+    super(area);
 
-
-/**
- * @inheritDoc
- */
-os.command.AreaToggle.prototype.execute = function() {
-  if (this.canExecute()) {
-    this.state = os.command.State.EXECUTING;
-    var am = os.ui.areaManager;
-
-    am.toggle(this.area, this.show_);
-
-    this.state = os.command.State.SUCCESS;
-    return true;
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.show_ = show;
+    this.title = 'Toggle area' + ' ' + (show ? 'on' : 'off');
   }
 
-  return false;
-};
+  /**
+   * @inheritDoc
+   */
+  execute() {
+    if (this.canExecute()) {
+      this.state = os.command.State.EXECUTING;
+      var am = areaManager.getInstance();
 
+      am.toggle(this.area, this.show_);
 
-/**
- * @inheritDoc
- */
-os.command.AreaToggle.prototype.revert = function() {
-  this.state = os.command.State.REVERTING;
-  var am = os.ui.areaManager;
+      this.state = os.command.State.SUCCESS;
+      return true;
+    }
 
-  am.toggle(this.area, !this.show_);
+    return false;
+  }
 
-  this.state = os.command.State.READY;
-  return true;
-};
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    this.state = os.command.State.REVERTING;
+    var am = areaManager.getInstance();
 
+    am.toggle(this.area, !this.show_);
 
+    this.state = os.command.State.READY;
+    return true;
+  }
+}
+
+exports = AreaToggle;

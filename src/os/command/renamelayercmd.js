@@ -1,107 +1,109 @@
-goog.provide('os.command.RenameLayer');
+goog.module('os.command.RenameLayer');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.Event');
-goog.require('os.command.AbstractSource');
-goog.require('os.command.ICommand');
-goog.require('os.command.State');
-goog.require('os.events.LayerEventType');
-goog.require('os.implements');
-goog.require('os.layer.ILayer');
-goog.require('os.query.QueryManager');
-goog.require('os.source.ISource');
+const GoogEvent = goog.require('goog.events.Event');
+const State = goog.require('os.command.State');
+const LayerEventType = goog.require('os.events.LayerEventType');
+const osImplements = goog.require('os.implements');
+const ISource = goog.require('os.source.ISource');
 
-
-
-/**
- * @constructor
- * @implements {os.command.ICommand}
- * @param {!os.layer.ILayer} layer
- * @param {string} newName
- * @param {string} oldName
- */
-os.command.RenameLayer = function(layer, newName, oldName) {
-  /**
-   * @type {os.layer.ILayer}
-   * @private
-   */
-  this.layer_ = layer;
-
-  /**
-   * @type {string}
-   * @private
-   */
-  this.newName_ = newName;
-
-  /**
-   * @type {string}
-   * @private
-   */
-  this.oldName_ = oldName;
-
-  /**
-   * @type {string}
-   */
-  this.title = 'Rename layer from ' + this.oldName_ + ' to ' + this.newName_;
-
-  /**
-   * @inheritDoc
-   */
-  this.details = this.title;
-
-  /**
-   * @inheritDoc
-   */
-  this.isAsync = false;
-
-  /**
-   * @type {os.command.State}
-   */
-  this.state = os.command.State.READY;
-};
+const ICommand = goog.requireType('os.command.ICommand');
+const ILayer = goog.requireType('os.layer.ILayer');
 
 
 /**
- * @inheritDoc
+ * @implements {ICommand}
  */
-os.command.RenameLayer.prototype.execute = function() {
-  if (this.state === os.command.State.READY) {
-    this.state = os.command.State.EXECUTING;
-    this.renameLayer_(this.newName_);
-    this.state = os.command.State.SUCCESS;
-    return true;
+class RenameLayer {
+  /**
+   * Constructor.
+   * @param {!ILayer} layer
+   * @param {string} newName
+   * @param {string} oldName
+   */
+  constructor(layer, newName, oldName) {
+    /**
+     * @type {ILayer}
+     * @private
+     */
+    this.layer_ = layer;
+
+    /**
+     * @type {string}
+     * @private
+     */
+    this.newName_ = newName;
+
+    /**
+     * @type {string}
+     * @private
+     */
+    this.oldName_ = oldName;
+
+    /**
+     * @type {string}
+     */
+    this.title = 'Rename layer from ' + this.oldName_ + ' to ' + this.newName_;
+
+    /**
+     * @inheritDoc
+     */
+    this.details = this.title;
+
+    /**
+     * @inheritDoc
+     */
+    this.isAsync = false;
+
+    /**
+     * @type {State}
+     */
+    this.state = State.READY;
   }
-  return false;
-};
 
+  /**
+   * @inheritDoc
+   */
+  execute() {
+    if (this.state === State.READY) {
+      this.state = State.EXECUTING;
+      this.renameLayer_(this.newName_);
+      this.state = State.SUCCESS;
+      return true;
+    }
+    return false;
+  }
 
-/**
- * @inheritDoc
- */
-os.command.RenameLayer.prototype.revert = function() {
-  this.state = os.command.State.REVERTING;
-  this.renameLayer_(this.oldName_);
-  this.state = os.command.State.SUCCESS;
-
-  if (this.layer_) {
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    this.state = State.REVERTING;
     this.renameLayer_(this.oldName_);
-    this.state = os.command.State.READY;
-    return true;
-  }
-  return false;
-};
+    this.state = State.SUCCESS;
 
-
-/**
- * Apply the name change
- *
- * @param {string} name
- * @private
- */
-os.command.RenameLayer.prototype.renameLayer_ = function(name) {
-  this.layer_.setTitle(name);
-  var source = /** @type {ol.layer.Layer} */ (this.layer_).getSource();
-  if (os.implements(source, os.source.ISource.ID)) {
-    /** @type {os.source.ISource} */ (source).setTitle(name);
-    os.MapContainer.getInstance().dispatchEvent(new goog.events.Event(os.events.LayerEventType.RENAME));
+    if (this.layer_) {
+      this.renameLayer_(this.oldName_);
+      this.state = State.READY;
+      return true;
+    }
+    return false;
   }
-};
+
+  /**
+   * Apply the name change
+   *
+   * @param {string} name
+   * @private
+   */
+  renameLayer_(name) {
+    this.layer_.setTitle(name);
+    var source = /** @type {ol.layer.Layer} */ (this.layer_).getSource();
+    if (osImplements(source, ISource.ID)) {
+      /** @type {ISource} */ (source).setTitle(name);
+      os.MapContainer.getInstance().dispatchEvent(new GoogEvent(LayerEventType.RENAME));
+    }
+  }
+}
+
+exports = RenameLayer;

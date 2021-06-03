@@ -1,96 +1,91 @@
-goog.provide('os.command.AbstractAsyncCommand');
-goog.require('goog.Uri');
-goog.require('goog.events.EventTarget');
-goog.require('os.command.EventType');
-goog.require('os.command.ICommand');
-goog.require('os.command.State');
+goog.module('os.command.AbstractAsyncCommand');
+goog.module.declareLegacyNamespace();
 
+const EventTarget = goog.require('goog.events.EventTarget');
+const EventType = goog.require('os.command.EventType');
+const State = goog.require('os.command.State');
+
+const ICommand = goog.requireType('os.command.ICommand');
 
 
 /**
  * Abstract asynchronous command implementation.
  *
  * @abstract
- * @implements {os.command.ICommand}
- * @extends {goog.events.EventTarget}
- * @constructor
+ * @implements {ICommand}
  */
-os.command.AbstractAsyncCommand = function() {
-  os.command.AbstractAsyncCommand.base(this, 'constructor');
+class AbstractAsyncCommand extends EventTarget {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * The details of the command.
+     * @type {?string}
+     */
+    this.details = null;
+
+    /**
+     * Whether or not the command is asynchronous.
+     * @type {boolean}
+     */
+    this.isAsync = true;
+
+    /**
+     * Return the current state of the command.
+     * @type {!State}
+     */
+    this.state = State.READY;
+
+    /**
+     * The title of the command.
+     * @type {?string}
+     */
+    this.title = '';
+  }
 
   /**
-   * The details of the command.
-   * @type {?string}
+   * Mark the command as completed.
+   *
+   * @param {string=} opt_detail Optional detail message
+   * @return {boolean}
+   * @protected
    */
-  this.details = null;
+  finish(opt_detail) {
+    this.detail = opt_detail || null;
+    this.state = State.SUCCESS;
+    this.dispatchEvent(EventType.EXECUTED);
+    return true;
+  }
 
   /**
-   * Whether or not the command is asynchronous.
-   * @type {boolean}
+   * Set the error state.
+   *
+   * @param {string} msg The error message.
+   * @return {boolean}
+   * @protected
    */
-  this.isAsync = true;
+  handleError(msg) {
+    var eventType = this.state == State.REVERTING ? EventType.REVERTED :
+      EventType.EXECUTED;
+
+    this.state = State.ERROR;
+    this.details = msg;
+    this.dispatchEvent(eventType);
+    return false;
+  }
 
   /**
-   * Return the current state of the command.
-   * @type {!os.command.State}
+   * @inheritDoc
    */
-  this.state = os.command.State.READY;
+  revert() {
+    this.state = State.READY;
+    this.details = null;
+    this.dispatchEvent(EventType.REVERTED);
+    return true;
+  }
+}
 
-  /**
-   * The title of the command.
-   * @type {?string}
-   */
-  this.title = '';
-};
-goog.inherits(os.command.AbstractAsyncCommand, goog.events.EventTarget);
-
-
-/**
- * @abstract
- * @inheritDoc
- */
-os.command.AbstractAsyncCommand.prototype.execute = function() {};
-
-
-/**
- * Mark the command as completed.
- *
- * @param {string=} opt_detail Optional detail message
- * @return {boolean}
- * @protected
- */
-os.command.AbstractAsyncCommand.prototype.finish = function(opt_detail) {
-  this.detail = opt_detail || null;
-  this.state = os.command.State.SUCCESS;
-  this.dispatchEvent(os.command.EventType.EXECUTED);
-  return true;
-};
-
-
-/**
- * Set the error state.
- *
- * @param {string} msg The error message.
- * @return {boolean}
- * @protected
- */
-os.command.AbstractAsyncCommand.prototype.handleError = function(msg) {
-  var eventType = this.state == os.command.State.REVERTING ? os.command.EventType.REVERTED :
-    os.command.EventType.EXECUTED;
-
-  this.state = os.command.State.ERROR;
-  this.details = msg;
-  this.dispatchEvent(eventType);
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.command.AbstractAsyncCommand.prototype.revert = function() {
-  this.state = os.command.State.READY;
-  this.details = null;
-  this.dispatchEvent(os.command.EventType.REVERTED);
-  return true;
-};
+exports = AbstractAsyncCommand;
