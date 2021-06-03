@@ -17,6 +17,26 @@ goog.require('os.command.State');
  */
 os.ui.query.cmd.QueryEntries = function(entries, opt_merge, opt_layerHint, opt_immediate) {
   /**
+   * @inheritDoc
+   */
+  this.isAsync = false;
+
+  /**
+   * @inheritDoc
+   */
+  this.title = 'Change query entries';
+
+  /**
+   * @inheritDoc
+   */
+  this.details = null;
+
+  /**
+   * @inheritDoc
+   */
+  this.state = os.command.State.READY;
+
+  /**
    * @type {!Array<!Object<string, string|boolean>>}
    * @protected
    */
@@ -46,30 +66,6 @@ os.ui.query.cmd.QueryEntries = function(entries, opt_merge, opt_layerHint, opt_i
    */
   this.oldEntries = this.getOldEntries();
 };
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.cmd.QueryEntries.prototype.isAsync = false;
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.cmd.QueryEntries.prototype.title = 'Change query entries';
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.cmd.QueryEntries.prototype.details = null;
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.cmd.QueryEntries.prototype.state = os.command.State.READY;
 
 
 /**

@@ -29,15 +29,30 @@ class MergeLayer {
    */
   constructor(sourceIds, opt_name, opt_options) {
     /**
+     * @inheritDoc
+     */
+    this.state = State.READY;
+
+    /**
+     * @inheritDoc
+     */
+    this.isAsync = false;
+
+    /**
+     * @inheritDoc
+     */
+    this.title = 'Merge layers';
+
+    /**
+     * @inheritDoc
+     */
+    this.details = null;
+
+    /**
      * @type {!Array<string>}
      * @protected
      */
     this.sourceIds = sourceIds;
-
-    /**
-     * @type {!State}
-     */
-    this.state = State.READY;
 
     this.title = 'Merge Layers';
     this.options_ = opt_options;
@@ -166,31 +181,5 @@ class MergeLayer {
     return true;
   }
 }
-
-/**
- * The current state of the command
- * @override
- * @type {!State}
- */
-MergeLayer.prototype.state = State.READY;
-
-
-/**
- * @inheritDoc
- */
-MergeLayer.prototype.isAsync = false;
-
-
-/**
- * @inheritDoc
- */
-MergeLayer.prototype.title = 'Merge layers';
-
-
-/**
- * @inheritDoc
- */
-MergeLayer.prototype.details = null;
-
 
 exports = MergeLayer;
