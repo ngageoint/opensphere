@@ -53,7 +53,7 @@ class AbstractSyncCommand extends Disposable {
    * @protected
    */
   finish(opt_detail) {
-    this.detail = opt_detail || null;
+    this.details = opt_detail || null;
     this.state = State.SUCCESS;
     return true;
   }

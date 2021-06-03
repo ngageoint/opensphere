@@ -54,7 +54,7 @@ class AbstractAsyncCommand extends EventTarget {
    * @protected
    */
   finish(opt_detail) {
-    this.detail = opt_detail || null;
+    this.details = opt_detail || null;
     this.state = State.SUCCESS;
     this.dispatchEvent(EventType.EXECUTED);
     return true;
