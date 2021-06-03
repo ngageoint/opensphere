@@ -10,6 +10,7 @@ const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const RecordField = goog.require('os.data.RecordField');
 const LayerConfigEventType = goog.require('os.events.LayerConfigEventType');
 const osFeature = goog.require('os.feature');
+const FilePersistence = goog.require('os.file.persist.FilePersistence');
 const fn = goog.require('os.fn');
 const JobEventType = goog.require('os.job.JobEventType');
 const LayerType = goog.require('os.layer.LayerType');
@@ -212,11 +213,14 @@ const onImageComplete = function(layer, event) {
     exporter.addFile(imageFile);
     exporter.setCompress(true);
 
+    var persister = new FilePersistence();
+
     var options = /** @type {os.ex.ExportOptions} */ ({
       items: [kmlFile],
       fields: [''],
       title: layerTitle + '.kmz',
-      exporter: exporter
+      exporter: exporter,
+      persister: persister
     });
 
     exportManager.exportItems(options);
