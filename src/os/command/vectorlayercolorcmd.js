@@ -22,15 +22,15 @@ class VectorLayerColor extends AbstractVectorStyle {
    * @param {style.ColorChangeType=} opt_changeMode
    */
   constructor(layerId, color, opt_oldColor, opt_changeMode) {
+    super(layerId, color, opt_oldColor);
+
     /**
      * The color change mode. Determines how the config color is set.
      * @type {style.ColorChangeType|undefined}
      * @protected
      */
     this.changeMode = opt_changeMode;
-
-    // intentionally called after changeMode is set so getOldValue has the correct value
-    super(layerId, color, opt_oldColor);
+    this.updateOldValue();
 
     if (this.changeMode === style.ColorChangeType.FILL) {
       this.title = 'Change Layer Fill Color';

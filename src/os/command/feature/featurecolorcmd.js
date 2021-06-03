@@ -21,15 +21,15 @@ class FeatureColor extends AbstractFeatureStyle {
    * @param {style.ColorChangeType=} opt_changeMode
    */
   constructor(layerId, featureId, color, opt_oldColor, opt_changeMode) {
+    super(layerId, featureId, color, opt_oldColor);
+
     /**
      * The color change mode. Determines how the config color is set.
      * @type {style.ColorChangeType}
      * @protected
      */
     this.changeMode = opt_changeMode || style.ColorChangeType.COMBINED;
-
-    // intentionally called after changeMode is set so getOldValue has the correct value
-    super(layerId, featureId, color, opt_oldColor);
+    this.updateOldValue();
 
     switch (this.changeMode) {
       case style.ColorChangeType.FILL:

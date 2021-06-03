@@ -22,13 +22,14 @@ class AbstractFeatureStyle extends AbstractStyle {
    * @param {T=} opt_oldValue
    */
   constructor(layerId, featureId, value, opt_oldValue) {
+    super(layerId, value, opt_oldValue);
+
     /**
      * @type {string}
      * @protected
      */
     this.featureId = featureId;
-
-    super(layerId, value, opt_oldValue);
+    this.updateOldValue();
   }
 
   /**

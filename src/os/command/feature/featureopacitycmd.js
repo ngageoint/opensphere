@@ -24,15 +24,15 @@ class FeatureOpacity extends AbstractFeatureStyle {
   constructor(layerId, featureId, opacity, opt_oldOpacity, opt_changeMode) {
     asserts.assert(opacity != null, 'opacity must be defined');
 
+    super(layerId, featureId, opacity, opt_oldOpacity);
+
     /**
      * The opacity change mode. Determines how the config opacity is set.
      * @type {style.ColorChangeType}
      * @protected
      */
     this.changeMode = opt_changeMode || style.ColorChangeType.COMBINED;
-
-    // intentionally called after changeMode is set so getOldValue has the correct value
-    super(layerId, featureId, opacity, opt_oldOpacity);
+    this.updateOldValue();
 
     switch (this.changeMode) {
       case style.ColorChangeType.FILL:

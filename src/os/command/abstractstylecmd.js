@@ -136,6 +136,17 @@ class AbstractStyle {
   }
 
   /**
+   * Update the old value on the command, if currently unset. Call this during initialization if the command sets class
+   * properties in the constructor that are required by getOldValue.
+   * @protected
+   */
+  updateOldValue() {
+    if (this.oldValue == null) {
+      this.oldValue = this.getOldValue();
+    }
+  }
+
+  /**
    * Applies a value to the style config
    *
    * @param {Object} config The style config
