@@ -64,7 +64,7 @@ os.annotation.MAX_DEFAULT_WIDTH = 350;
  * @type {number}
  * @const
  */
-os.annotation.EDIT_HEIGHT = 270;
+os.annotation.EDIT_HEIGHT = 340;
 
 
 /**
