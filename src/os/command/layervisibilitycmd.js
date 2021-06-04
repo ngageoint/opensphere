@@ -24,11 +24,18 @@ class LayerVisibility extends AbstractSyncCommand {
      * @private
      */
     this.id_ = id;
+
     /**
      * @type {boolean}
      * @private
      */
     this.vis_ = vis;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.wasVis_ = !vis;
   }
 
   /**

@@ -40,7 +40,6 @@ class FlyTo extends AbstractSyncCommand {
 
     var mapContainer = getMapContainer();
     var view = mapContainer.getMap().getView();
-    this.lastCenter_ = view.getCenter();
 
     var prevOptions = /** @type {!osx.map.FlyToOptions} */ ({
       center: view.getCenter()

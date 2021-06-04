@@ -24,11 +24,18 @@ class SetLayerTitle extends AbstractSyncCommand {
      * @private
      */
     this.overlayId_ = overlayId;
+
     /**
      * @type {string}
      * @private
      */
     this.title_ = title;
+
+    /**
+     * @type {string}
+     * @private
+     */
+    this.oldTitle_ = '';
   }
 
   /**
