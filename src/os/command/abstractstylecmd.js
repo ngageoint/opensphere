@@ -2,10 +2,10 @@ goog.module('os.command.AbstractStyle');
 goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
-const MapContainer = goog.require('os.MapContainer');
 const State = goog.require('os.command.State');
 const Tile = goog.require('os.layer.Tile');
 const VectorLayer = goog.require('os.layer.Vector');
+const {getMapContainer} = goog.require('os.map.instance');
 const Metrics = goog.require('os.metrics.Metrics');
 const StyleManager = goog.require('os.style.StyleManager');
 
@@ -214,7 +214,8 @@ class AbstractStyle {
    * @return {ILayer}
    */
   getLayer() {
-    return /** @type {ILayer} */ (MapContainer.getInstance().getLayer(this.layerId));
+    const map = getMapContainer();
+    return map ? /** @type {ILayer} */ (map.getLayer(this.layerId)) : null;
   }
 }
 

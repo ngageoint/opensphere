@@ -4,11 +4,11 @@ goog.module.declareLegacyNamespace();
 const asserts = goog.require('goog.asserts');
 const GoogEvent = goog.require('goog.events.Event');
 const dispatcher = goog.require('os.Dispatcher');
-const MapContainer = goog.require('os.MapContainer');
 const EventType = goog.require('os.action.EventType');
 const AbstractStyle = goog.require('os.command.AbstractStyle');
 const State = goog.require('os.command.State');
 const OSDataManager = goog.require('os.data.OSDataManager');
+const {getMapContainer} = goog.require('os.map.instance');
 const osStyle = goog.require('os.style');
 const StyleType = goog.require('os.style.StyleType');
 
@@ -75,7 +75,7 @@ class AbstractFeatureStyle extends AbstractStyle {
   finish(configs) {
     dispatcher.getInstance().dispatchEvent(new GoogEvent(EventType.REFRESH));
     var feature = /** @type {Feature} */ (this.getFeature());
-    var layer = MapContainer.getInstance().getLayer(this.layerId);
+    var layer = getMapContainer().getLayer(this.layerId);
     asserts.assert(layer, 'layer must be defined');
     osStyle.notifyStyleChange(layer, [feature]);
   }

@@ -2,10 +2,10 @@ goog.module('os.command.RenameLayer');
 goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
-const MapContainer = goog.require('os.MapContainer');
 const State = goog.require('os.command.State');
 const LayerEventType = goog.require('os.events.LayerEventType');
 const osImplements = goog.require('os.implements');
+const {getMapContainer} = goog.require('os.map.instance');
 const ISource = goog.require('os.source.ISource');
 
 const ICommand = goog.requireType('os.command.ICommand');
@@ -102,7 +102,7 @@ class RenameLayer {
     var source = /** @type {ol.layer.Layer} */ (this.layer_).getSource();
     if (osImplements(source, ISource.ID)) {
       /** @type {ISource} */ (source).setTitle(name);
-      MapContainer.getInstance().dispatchEvent(new GoogEvent(LayerEventType.RENAME));
+      getMapContainer().dispatchEvent(new GoogEvent(LayerEventType.RENAME));
     }
   }
 }

@@ -1,12 +1,12 @@
 goog.module('os.command.ToggleWebGL');
 goog.module.declareLegacyNamespace();
 
-const MapContainer = goog.require('os.MapContainer');
 const MapMode = goog.require('os.MapMode');
 const AbstractAsyncCommand = goog.require('os.command.AbstractAsyncCommand');
 const EventType = goog.require('os.command.EventType');
 const State = goog.require('os.command.State');
 const DataManager = goog.require('os.data.DataManager');
+const {getMapContainer} = goog.require('os.map.instance');
 const ogc = goog.require('os.ogc');
 
 
@@ -71,11 +71,11 @@ class ToggleWebGL extends AbstractAsyncCommand {
     var webGLEnabled = this.webGLEnabled;
 
     if (this.canSwitch(webGLEnabled)) {
-      MapContainer.getInstance().setWebGLEnabled(webGLEnabled, this.silent);
+      getMapContainer().setWebGLEnabled(webGLEnabled, this.silent);
       return this.finish();
     } else {
       MapContainer.launch2DPerformanceDialog().then(() => {
-        MapContainer.getInstance().setWebGLEnabled(webGLEnabled, this.silent);
+        getMapContainer().setWebGLEnabled(webGLEnabled, this.silent);
         this.finish();
       }, () => {
         this.handleError(this.title + ' cancelled by user.');
@@ -94,11 +94,11 @@ class ToggleWebGL extends AbstractAsyncCommand {
     var webGLEnabled = !this.webGLEnabled;
 
     if (this.canSwitch(webGLEnabled)) {
-      MapContainer.getInstance().setWebGLEnabled(webGLEnabled, this.silent);
+      getMapContainer().setWebGLEnabled(webGLEnabled, this.silent);
       return super.revert();
     } else {
       MapContainer.launch2DPerformanceDialog().then(() => {
-        MapContainer.getInstance().setWebGLEnabled(webGLEnabled, this.silent);
+        getMapContainer().setWebGLEnabled(webGLEnabled, this.silent);
 
         this.state = State.READY;
         this.details = null;

@@ -1,8 +1,8 @@
 goog.module('os.command.NonQueryClear');
 goog.module.declareLegacyNamespace();
 
-const MapContainer = goog.require('os.MapContainer');
 const State = goog.require('os.command.State');
+const {getMapContainer} = goog.require('os.map.instance');
 const areaManager = goog.require('os.query.AreaManager');
 
 const ICommand = goog.requireType('os.command.ICommand');
@@ -51,7 +51,7 @@ class NonQueryClear {
   execute() {
     this.state = State.EXECUTING;
 
-    var features = MapContainer.getInstance().getFeatures();
+    var features = getMapContainer().getFeatures();
     var featuresToRemove = [];
     var am = areaManager.getInstance();
 
@@ -64,7 +64,7 @@ class NonQueryClear {
       }
     }
 
-    MapContainer.getInstance().removeFeatures(featuresToRemove);
+    getMapContainer().removeFeatures(featuresToRemove);
     this.features_ = featuresToRemove;
 
     this.state = State.SUCCESS;
@@ -76,7 +76,7 @@ class NonQueryClear {
    */
   revert() {
     this.state = State.REVERTING;
-    MapContainer.getInstance().addFeatures(this.features_);
+    getMapContainer().addFeatures(this.features_);
     this.features_.length = 0;
     this.state = State.READY;
     return true;

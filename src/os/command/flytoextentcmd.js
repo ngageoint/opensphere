@@ -2,10 +2,10 @@ goog.module('os.command.FlyToExtent');
 goog.module.declareLegacyNamespace();
 
 const math = goog.require('goog.math');
-const MapContainer = goog.require('os.MapContainer');
 const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');
 const State = goog.require('os.command.State');
 const osMap = goog.require('os.map');
+const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**
@@ -69,7 +69,7 @@ class FlyToExtent extends AbstractSyncCommand {
   execute() {
     this.state = State.EXECUTING;
 
-    var mapContainer = MapContainer.getInstance();
+    var mapContainer = getMapContainer();
 
     // saving current extent
     this.oldExtent_ = mapContainer.getViewExtent().slice();
@@ -89,7 +89,7 @@ class FlyToExtent extends AbstractSyncCommand {
     this.state = State.REVERTING;
 
     if (this.oldExtent_) {
-      MapContainer.getInstance().flyToExtent(this.oldExtent_);
+      getMapContainer().flyToExtent(this.oldExtent_);
     }
 
     return super.revert();

@@ -1,12 +1,12 @@
 goog.module('os.command.VectorLayerColor');
 goog.module.declareLegacyNamespace();
 
-const MapContainer = goog.require('os.MapContainer');
 const osColor = goog.require('os.color');
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
 const ColorChangeType = goog.require('os.command.style.ColorChangeType');
 const OSDataManager = goog.require('os.data.OSDataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const {getMapContainer} = goog.require('os.map.instance');
 const metrics = goog.require('os.metrics');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const VectorSource = goog.require('os.source.Vector');
@@ -47,7 +47,7 @@ class VectorLayerColor extends AbstractVectorStyle {
     }
 
     if (!color) {
-      var layer = /** @type {os.layer.Vector} */ (MapContainer.getInstance().getLayer(this.layerId));
+      var layer = /** @type {os.layer.Vector} */ (getMapContainer().getLayer(this.layerId));
       if (layer) {
         var options = layer.getLayerOptions();
         color = /** @type {string} */ (options && options['baseColor'] || osStyle.DEFAULT_LAYER_COLOR);

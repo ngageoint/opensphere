@@ -20,6 +20,7 @@ goog.require('os.im.mapping.WKTMapping');
 goog.require('os.im.mapping.time.DateMapping');
 goog.require('os.im.mapping.time.DateTimeMapping');
 goog.require('os.im.mapping.time.TimeMapping');
+goog.require('os.map.instance');
 goog.require('os.mixin');
 goog.require('os.mixin.closure');
 goog.require('os.net');
@@ -29,6 +30,7 @@ goog.require('os.net.SameDomainHandler');
 goog.require('os.query.AreaManager');
 goog.require('os.query.FilterManager');
 goog.require('os.query.QueryManager');
+goog.require('os.query.instance');
 goog.require('os.style.StyleManager');
 goog.require('os.ui.config.SettingsManager');
 goog.require('os.ui.ogc.OGCDescriptor');
@@ -94,15 +96,21 @@ beforeEach(function() {
     }
 
     if (!os.areaManager) {
-      os.areaManager = os.ui.areaManager = os.query.AreaManager.getInstance();
+      var areaManager = os.query.AreaManager.getInstance();
+      os.query.instance.setAreaManager(areaManager);
+      os.areaManager = os.ui.areaManager = areaManager;
     }
 
     if (!os.filterManager) {
-      os.filterManager = os.ui.filterManager = os.query.FilterManager.getInstance();
+      var filterManager = os.query.FilterManager.getInstance();
+      os.query.instance.setFilterManager(filterManager);
+      os.filterManager = os.ui.filterManager = filterManager;
     }
 
     if (!os.queryManager) {
-      os.queryManager = os.ui.queryManager = os.query.QueryManager.getInstance();
+      var queryManager = os.query.QueryManager.getInstance();
+      os.query.instance.setQueryManager(queryManager);
+      os.queryManager = os.ui.queryManager = queryManager;
     }
 
     if (!os.styleManager) {
@@ -110,6 +118,8 @@ beforeEach(function() {
     }
 
     var map = os.MapContainer.getInstance();
+    os.map.instance.setMapContainer(map);
+
     if (!map.getMap()) {
       map.init();
     }

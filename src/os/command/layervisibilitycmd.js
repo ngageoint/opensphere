@@ -1,9 +1,9 @@
 goog.module('os.command.LayerVisibility');
 goog.module.declareLegacyNamespace();
 
-const MapContainer = goog.require('os.MapContainer');
 const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');
 const State = goog.require('os.command.State');
+const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**
@@ -60,7 +60,7 @@ class LayerVisibility extends AbstractSyncCommand {
    * @return {boolean}
    */
   set(vis) {
-    var layer = /** @type {os.layer.Vector} */ (MapContainer.getInstance().getLayer(this.id_));
+    var layer = /** @type {os.layer.Vector} */ (getMapContainer().getLayer(this.id_));
     if (layer == null) {
       return this.handleError('No layer found with passed ID.');
     }

@@ -1,8 +1,8 @@
 goog.module('os.command.ClearMapPosition');
 goog.module.declareLegacyNamespace();
 
-const MapContainer = goog.require('os.MapContainer');
 const State = goog.require('os.command.State');
+const {getMapContainer} = goog.require('os.map.instance');
 
 const ICommand = goog.requireType('os.command.ICommand');
 
@@ -49,7 +49,7 @@ class ClearMapPosition {
    */
   execute() {
     this.state = State.EXECUTING;
-    var map = MapContainer.getInstance();
+    var map = getMapContainer();
     this.cameraState_ = map.persistCameraState();
     map.resetView();
     this.state = State.SUCCESS;
@@ -63,7 +63,7 @@ class ClearMapPosition {
     this.state = State.REVERTING;
 
     if (this.cameraState_) {
-      var map = MapContainer.getInstance();
+      var map = getMapContainer();
       map.restoreCameraState(this.cameraState_);
       this.state = State.READY;
       return true;

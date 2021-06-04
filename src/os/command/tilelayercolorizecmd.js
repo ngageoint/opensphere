@@ -1,9 +1,9 @@
 goog.module('os.command.TileLayerColorize');
 goog.module.declareLegacyNamespace();
 
-const MapContainer = goog.require('os.MapContainer');
 const AbstractLayerStyle = goog.require('os.command.AbstractLayerStyle');
 const Tile = goog.require('os.layer.Tile');
+const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**
@@ -26,7 +26,7 @@ class TileLayerColorize extends AbstractLayerStyle {
    * @inheritDoc
    */
   getOldValue() {
-    var layer = MapContainer.getInstance().getLayer(this.layerId);
+    var layer = getMapContainer().getLayer(this.layerId);
     return layer instanceof Tile ? layer.getColorize() : null;
   }
 
@@ -34,7 +34,7 @@ class TileLayerColorize extends AbstractLayerStyle {
    * @inheritDoc
    */
   applyValue(config, value) {
-    var layer = MapContainer.getInstance().getLayer(this.layerId);
+    var layer = getMapContainer().getLayer(this.layerId);
     if (layer instanceof Tile) {
       layer.setColorize(value);
     }

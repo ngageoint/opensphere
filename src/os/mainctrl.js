@@ -66,6 +66,7 @@ goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.layer.config.StaticLayerConfig');
 goog.require('os.load.LoadingManager');
 goog.require('os.map');
+goog.require('os.map.instance');
 goog.require('os.map.interaction');
 goog.require('os.menu.folder');
 goog.require('os.metrics.AddDataMetrics');
@@ -321,19 +322,25 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   map.listenOnce(os.MapEvent.MAP_READY, this.onMapReady_, false, this);
 
   // set the global map container reference
-  os.map.mapContainer = os.MapContainer.getInstance();
+  os.map.instance.setIMapContainer(map);
+  os.map.instance.setMapContainer(map);
+  os.map.mapContainer = map;
 
   // init filter manager
-  os.filterManager = os.query.FilterManager.getInstance();
-  os.ui.filterManager = os.filterManager;
+  var filterManager = os.query.FilterManager.getInstance();
+  os.query.instance.setFilterManager(filterManager);
+  os.filterManager = os.ui.filterManager = filterManager;
 
   // init area manager
-  os.areaManager = os.query.AreaManager.getInstance();
-  os.ui.areaManager = os.areaManager;
+  var areaManager = os.query.AreaManager.getInstance();
+  os.query.instance.setAreaManager(areaManager);
+  os.areaManager = os.ui.areaManager = areaManager;
 
   // init query manager
-  os.queryManager = os.query.QueryManager.getInstance();
-  os.ui.queryManager = os.queryManager;
+  var queryManager = os.query.QueryManager.getInstance();
+  os.query.instance.setQueryManager(queryManager);
+  os.queryManager = os.ui.queryManager = queryManager;
+
   os.ui.menu.areaImport.setup();
 
   // initialize the area/filter import/file managers

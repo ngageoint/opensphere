@@ -4,9 +4,9 @@ goog.module.declareLegacyNamespace();
 const Disposable = goog.require('goog.Disposable');
 const googObject = goog.require('goog.object');
 const Layer = goog.require('ol.layer.Layer');
-const MapContainer = goog.require('os.MapContainer');
 const State = goog.require('os.command.State');
 const osLayer = goog.require('os.layer');
+const {getMapContainer} = goog.require('os.map.instance');
 const Metrics = goog.require('os.metrics.Metrics');
 const keys = goog.require('os.metrics.keys');
 
@@ -114,12 +114,19 @@ class AbstractLayer extends Disposable {
       return false;
     }
 
+    const map = getMapContainer();
+    if (!map) {
+      this.state = State.ERROR;
+      this.details = 'Map container not available.';
+      return false;
+    }
+
     var layer = osLayer.createFromOptions(options);
     if (layer instanceof Layer) {
       // don't add duplicate layers to the map. this may happen for legit reasons. one example is a single layer from
       // a state file being removed, the whole state file being removed, then undo both removes.
-      if (!MapContainer.getInstance().getLayer(layer.getId())) {
-        MapContainer.getInstance().addLayer(/** @type {!Layer} */ (layer));
+      if (!map.getLayer(layer.getId())) {
+        map.addLayer(/** @type {!Layer} */ (layer));
         Metrics.getInstance().updateMetric(keys.AddData.ADD_LAYER_COMMAND, 1);
         return true;
       }
@@ -147,7 +154,14 @@ class AbstractLayer extends Disposable {
       return false;
     }
 
-    MapContainer.getInstance().removeLayer(/** @type {string} */ (options['id']));
+    const map = getMapContainer();
+    if (!map) {
+      this.state = State.ERROR;
+      this.details = 'Map container not available.';
+      return false;
+    }
+
+    map.removeLayer(/** @type {string} */ (options['id']));
     Metrics.getInstance().updateMetric(keys.AddData.REMOVE_LAYER_COMMAND, 1);
     return true;
   }

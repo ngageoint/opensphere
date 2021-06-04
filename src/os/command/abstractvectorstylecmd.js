@@ -2,9 +2,9 @@ goog.module('os.command.AbstractVectorStyle');
 goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
-const MapContainer = goog.require('os.MapContainer');
 const AbstractStyle = goog.require('os.command.AbstractStyle');
 const OSDataManager = goog.require('os.data.OSDataManager');
+const {getMapContainer} = goog.require('os.map.instance');
 const osStyle = goog.require('os.style');
 const StyleManager = goog.require('os.style.StyleManager');
 
@@ -52,7 +52,7 @@ class AbstractVectorStyle extends AbstractStyle {
    * @inheritDoc
    */
   finish(config) {
-    var layer = /** @type {os.layer.Vector} */ (MapContainer.getInstance().getLayer(this.layerId));
+    var layer = /** @type {os.layer.Vector} */ (getMapContainer().getLayer(this.layerId));
     asserts.assert(layer);
     osStyle.notifyStyleChange(layer);
   }

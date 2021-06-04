@@ -1,8 +1,8 @@
 goog.module('os.command.VectorLayerAutoRefresh');
 goog.module.declareLegacyNamespace();
 
-const MapContainer = goog.require('os.MapContainer');
 const State = goog.require('os.command.State');
+const {getMapContainer} = goog.require('os.map.instance');
 const metrics = goog.require('os.metrics');
 const VectorSource = goog.require('os.source.Vector');
 
@@ -56,7 +56,7 @@ class VectorLayerAutoRefresh {
    * @protected
    */
   getSource() {
-    var layer = /** @type {os.layer.Vector} */ (MapContainer.getInstance().getLayer(this.layerId));
+    var layer = /** @type {os.layer.Vector} */ (getMapContainer().getLayer(this.layerId));
     if (!layer) {
       this.state = State.ERROR;
       this.details = 'Unable to locate layer with id "' + this.layerId + '".';

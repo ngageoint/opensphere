@@ -4,12 +4,12 @@ goog.module.declareLegacyNamespace();
 const Geometry = goog.require('ol.geom.Geometry');
 const OLVectorLayer = goog.require('ol.layer.Vector');
 const olProj = goog.require('ol.proj');
-const MapContainer = goog.require('os.MapContainer');
 const State = goog.require('os.command.State');
 const RecordField = goog.require('os.data.RecordField');
 const osFeature = goog.require('os.feature');
 const geo2 = goog.require('os.geo2');
 const interpolate = goog.require('os.interpolate');
+const {getMapContainer} = goog.require('os.map.instance');
 
 const ICommand = goog.requireType('os.command.ICommand');
 
@@ -112,7 +112,7 @@ class TransformVectors {
    * @protected
    */
   transform(sourceProjection, targetProjection) {
-    var layers = MapContainer.getInstance().getLayers();
+    var layers = getMapContainer().getLayers();
     var tx = TransformVectors.transform_.bind(null, sourceProjection, targetProjection);
 
     // list of geometry caches to also transform which aren't generally considered part of the

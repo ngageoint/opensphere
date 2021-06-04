@@ -4,10 +4,10 @@ goog.module.declareLegacyNamespace();
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
 const dispatcher = goog.require('os.Dispatcher');
-const MapContainer = goog.require('os.MapContainer');
 const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');
 const State = goog.require('os.command.State');
 const LayerEventType = goog.require('os.events.LayerEventType');
+const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**
@@ -75,12 +75,12 @@ class FitLayerByID extends AbstractSyncCommand {
     this.cleanup_();
 
     // saving current position
-    var view = MapContainer.getInstance().getMap().getView();
+    var view = getMapContainer().getMap().getView();
     this.savedRes_ = view.getResolution();
     this.savedCenter_ = view.getCenter();
     this.savedRotation_ = view.getRotation();
 
-    var layer = /** @type {os.layer.Vector} */ (MapContainer.getInstance().getLayer(this.layerId_));
+    var layer = /** @type {os.layer.Vector} */ (getMapContainer().getLayer(this.layerId_));
     if (layer) {
       // If layer is still loading we need to wait until it finishes to get the extent
       if (layer.isLoading()) {
@@ -104,7 +104,7 @@ class FitLayerByID extends AbstractSyncCommand {
     this.cleanup_();
 
     // reset view
-    var view = MapContainer.getInstance().getMap().getView();
+    var view = getMapContainer().getMap().getView();
     view.setCenter(this.savedCenter_);
     view.setResolution(this.savedRes_);
     view.setRotation(this.savedRotation_);
@@ -157,7 +157,7 @@ class FitLayerByID extends AbstractSyncCommand {
    */
   fit_(layer) {
     // saving most recent position
-    var view = MapContainer.getInstance().getMap().getView();
+    var view = getMapContainer().getMap().getView();
     this.savedRes_ = view.getResolution();
     this.savedCenter_ = view.getCenter();
     this.savedRotation_ = view.getRotation();

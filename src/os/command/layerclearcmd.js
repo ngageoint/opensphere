@@ -1,7 +1,6 @@
 goog.module('os.command.LayerClear');
 goog.module.declareLegacyNamespace();
 
-const MapContainer = goog.require('os.MapContainer');
 const EventType = goog.require('os.command.EventType');
 const LayerRemove = goog.require('os.command.LayerRemove');
 const SequenceCommand = goog.require('os.command.SequenceCommand');
@@ -9,6 +8,7 @@ const State = goog.require('os.command.State');
 const DataManager = goog.require('os.data.DataManager');
 const DeactivateDescriptor = goog.require('os.data.DeactivateDescriptor');
 const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
+const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**
@@ -41,7 +41,7 @@ class LayerClear extends SequenceCommand {
     var descriptors = [];
     var removeOptions = [];
 
-    var layers = MapContainer.getInstance().getLayers();
+    var layers = getMapContainer().getLayers();
     for (var i = 0, n = layers.length; i < n; i++) {
       var layer = /** @type {os.layer.ILayer} */ (layers[i]);
       try {
@@ -56,7 +56,7 @@ class LayerClear extends SequenceCommand {
           } else if (layerOptions['loadOnce']) {
             // layers flagged as loading once (primarily static layers) may not reload in the correct state, so just
             // remove them from the map
-            MapContainer.getInstance().removeLayer(/** @type {string} */ (layerOptions['id']));
+            getMapContainer().removeLayer(/** @type {string} */ (layerOptions['id']));
           } else {
             // otherwise add the options so a command is created
             removeOptions.push(layerOptions);

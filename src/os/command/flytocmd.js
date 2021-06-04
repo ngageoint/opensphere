@@ -2,9 +2,9 @@ goog.module('os.command.FlyTo');
 goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
-const MapContainer = goog.require('os.MapContainer');
 const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');
 const State = goog.require('os.command.State');
+const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**
@@ -38,7 +38,7 @@ class FlyTo extends AbstractSyncCommand {
   execute() {
     this.state = State.EXECUTING;
 
-    var mapContainer = MapContainer.getInstance();
+    var mapContainer = getMapContainer();
     var view = mapContainer.getMap().getView();
     this.lastCenter_ = view.getCenter();
 
@@ -73,7 +73,7 @@ class FlyTo extends AbstractSyncCommand {
     this.state = State.REVERTING;
 
     if (this.prevOptions_) {
-      var mapContainer = MapContainer.getInstance();
+      var mapContainer = getMapContainer();
       mapContainer.flyTo(this.prevOptions_);
     }
 

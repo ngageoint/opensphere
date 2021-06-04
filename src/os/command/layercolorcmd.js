@@ -1,11 +1,11 @@
 goog.module('os.command.LayerColor');
 goog.module.declareLegacyNamespace();
 
-const MapContainer = goog.require('os.MapContainer');
 const AbstractLayerStyle = goog.require('os.command.AbstractLayerStyle');
 const osImplements = goog.require('os.implements');
 const IColorableLayer = goog.require('os.layer.IColorableLayer');
 const ILayer = goog.require('os.layer.ILayer');
+const {getMapContainer} = goog.require('os.map.instance');
 const osStyle = goog.require('os.style');
 
 
@@ -30,7 +30,7 @@ class LayerColor extends AbstractLayerStyle {
     if (color) {
       this.value = osStyle.toRgbaString(color);
     } else {
-      var layer = MapContainer.getInstance().getLayer(layerId);
+      var layer = getMapContainer().getLayer(layerId);
       if (osImplements(layer, ILayer.ID)) {
         var options = /** @type {os.layer.ILayer} */ (layer).getLayerOptions();
         this.value = /** @type {string} */ (options && options['baseColor'] || osStyle.DEFAULT_LAYER_COLOR);
@@ -42,7 +42,7 @@ class LayerColor extends AbstractLayerStyle {
    * @inheritDoc
    */
   getOldValue() {
-    var layer = MapContainer.getInstance().getLayer(this.layerId);
+    var layer = getMapContainer().getLayer(this.layerId);
     if (osImplements(layer, IColorableLayer.ID)) {
       return (
         /** @type {IColorableLayer} */
@@ -56,7 +56,7 @@ class LayerColor extends AbstractLayerStyle {
    * @inheritDoc
    */
   applyValue(config, value) {
-    var layer = MapContainer.getInstance().getLayer(this.layerId);
+    var layer = getMapContainer().getLayer(this.layerId);
     if (osImplements(layer, IColorableLayer.ID)) {
       /** @type {IColorableLayer} */ (layer).setColor(value);
     }
