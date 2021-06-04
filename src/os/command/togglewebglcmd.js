@@ -8,6 +8,7 @@ const State = goog.require('os.command.State');
 const DataManager = goog.require('os.data.DataManager');
 const {getMapContainer} = goog.require('os.map.instance');
 const ogc = goog.require('os.ogc');
+const launch2DPerformanceDialog = goog.require('os.webgl.launch2DPerformanceDialog');
 
 
 /**
@@ -66,16 +67,23 @@ class ToggleWebGL extends AbstractAsyncCommand {
    * @inheritDoc
    */
   execute() {
+    const map = getMapContainer();
+    if (!map) {
+      this.state = State.ERROR;
+      this.details = 'Map container not available.';
+      return false;
+    }
+
     this.state = State.EXECUTING;
 
     var webGLEnabled = this.webGLEnabled;
 
     if (this.canSwitch(webGLEnabled)) {
-      getMapContainer().setWebGLEnabled(webGLEnabled, this.silent);
+      map.setWebGLEnabled(webGLEnabled, this.silent);
       return this.finish();
     } else {
-      MapContainer.launch2DPerformanceDialog().then(() => {
-        getMapContainer().setWebGLEnabled(webGLEnabled, this.silent);
+      launch2DPerformanceDialog().then(() => {
+        map.setWebGLEnabled(webGLEnabled, this.silent);
         this.finish();
       }, () => {
         this.handleError(this.title + ' cancelled by user.');
@@ -89,16 +97,23 @@ class ToggleWebGL extends AbstractAsyncCommand {
    * @inheritDoc
    */
   revert() {
+    const map = getMapContainer();
+    if (!map) {
+      this.state = State.ERROR;
+      this.details = 'Map container not available.';
+      return false;
+    }
+
     this.state = State.REVERTING;
 
     var webGLEnabled = !this.webGLEnabled;
 
     if (this.canSwitch(webGLEnabled)) {
-      getMapContainer().setWebGLEnabled(webGLEnabled, this.silent);
+      map.setWebGLEnabled(webGLEnabled, this.silent);
       return super.revert();
     } else {
-      MapContainer.launch2DPerformanceDialog().then(() => {
-        getMapContainer().setWebGLEnabled(webGLEnabled, this.silent);
+      launch2DPerformanceDialog().then(() => {
+        map.setWebGLEnabled(webGLEnabled, this.silent);
 
         this.state = State.READY;
         this.details = null;
