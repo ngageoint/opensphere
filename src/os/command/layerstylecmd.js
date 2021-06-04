@@ -4,10 +4,13 @@ goog.module.declareLegacyNamespace();
 const asserts = goog.require('goog.asserts');
 const AbstractStyle = goog.require('os.command.AbstractStyle');
 const osImplements = goog.require('os.implements');
+const instanceOf = goog.require('os.instanceOf');
+const LayerClass = goog.require('os.layer.LayerClass');
 const ILayer = goog.require('os.layer.ILayer');
-const VectorLayer = goog.require('os.layer.Vector');
 const {getMapContainer} = goog.require('os.map.instance');
 const osStyle = goog.require('os.style');
+
+const VectorLayer = goog.requireType('os.layer.Vector');
 
 
 /**
@@ -61,9 +64,9 @@ class LayerStyle extends AbstractStyle {
    */
   finish(config) {
     var layer = getMapContainer().getLayer(this.layerId);
-    if (layer instanceof VectorLayer) {
+    if (instanceOf(layer, LayerClass.VECTOR)) {
       // only notify style changes on vector layers as it causes a flicker on tile layers
-      osStyle.notifyStyleChange(layer);
+      osStyle.notifyStyleChange(/** @type {VectorLayer} */ (layer));
     }
   }
 

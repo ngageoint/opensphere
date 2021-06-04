@@ -2,8 +2,11 @@ goog.module('os.command.TileLayerStyle');
 goog.module.declareLegacyNamespace();
 
 const AbstractLayerStyle = goog.require('os.command.AbstractLayerStyle');
-const Tile = goog.require('os.layer.Tile');
+const instanceOf = goog.require('os.instanceOf');
+const LayerClass = goog.require('os.layer.LayerClass');
 const {getMapContainer} = goog.require('os.map.instance');
+
+const Tile = goog.requireType('os.layer.Tile');
 
 
 /**
@@ -26,7 +29,7 @@ class TileLayerStyle extends AbstractLayerStyle {
    */
   getOldValue() {
     var layer = getMapContainer().getLayer(this.layerId);
-    return layer instanceof Tile ? layer.getStyle() : null;
+    return instanceOf(layer, LayerClass.TILE) ? /** @type {Tile} */ (layer).getStyle() : null;
   }
 
   /**
@@ -34,8 +37,8 @@ class TileLayerStyle extends AbstractLayerStyle {
    */
   applyValue(config, value) {
     var layer = getMapContainer().getLayer(this.layerId);
-    if (layer instanceof Tile) {
-      layer.setStyle(value);
+    if (instanceOf(layer, LayerClass.TILE)) {
+      /** @type {Tile} */ (layer).setStyle(value);
     }
 
     super.applyValue(config, value);

@@ -3,14 +3,16 @@ goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const State = goog.require('os.command.State');
-const Tile = goog.require('os.layer.Tile');
-const VectorLayer = goog.require('os.layer.Vector');
+const instanceOf = goog.require('os.instanceOf');
+const LayerClass = goog.require('os.layer.LayerClass');
 const {getMapContainer} = goog.require('os.map.instance');
 const Metrics = goog.require('os.metrics.Metrics');
 const StyleManager = goog.require('os.style.StyleManager');
 
 const ICommand = goog.requireType('os.command.ICommand');
 const ILayer = goog.requireType('os.layer.ILayer');
+const TileLayer = goog.requireType('os.layer.Tile');
+const VectorLayer = goog.requireType('os.layer.Vector');
 
 
 /**
@@ -179,12 +181,12 @@ class AbstractStyle {
    * @protected
    */
   getLayerConfig(layer) {
-    if (layer instanceof Tile) {
-      return layer.getLayerOptions();
+    if (instanceOf(layer, LayerClass.TILE)) {
+      return /** @type {TileLayer} */ (layer).getLayerOptions();
     }
 
-    if (layer instanceof VectorLayer) {
-      return StyleManager.getInstance().getLayerConfig(layer.getId());
+    if (instanceOf(layer, LayerClass.VECTOR)) {
+      return StyleManager.getInstance().getLayerConfig(/** @type {VectorLayer} */ (layer).getId());
     }
 
     return null;
