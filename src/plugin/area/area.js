@@ -8,7 +8,7 @@ const AlertManager = goog.require('os.alert.AlertManager');
 const RecordField = goog.require('os.data.RecordField');
 const fn = goog.require('os.fn');
 const jsts = goog.require('os.geo.jsts');
-const areaManager = goog.require('os.query.AreaManager');
+const {getAreaManager} = goog.require('os.query.instance');
 const query = goog.require('os.ui.query');
 
 
@@ -19,8 +19,10 @@ const query = goog.require('os.ui.query');
  * @param {Object} config
  */
 const processFeatures = function(features, config) {
+  const areaManager = getAreaManager();
+
   // filter only valid features
-  features = areaManager.getInstance().filterFeatures(features);
+  features = areaManager.filterFeatures(features);
 
   if (features && features.length > 0) {
     var mappings = query.createMappingsFromConfig(config);
@@ -31,18 +33,18 @@ const processFeatures = function(features, config) {
       if (merged) {
         var feature = new Feature(merged);
         processFeature_(feature, config, mappings);
-        areaManager.getInstance().add(feature);
+        areaManager.add(feature);
       } else {
         AlertManager.getInstance().sendAlert('Failed merging areas', AlertEventSeverity.ERROR);
       }
     } else {
       features.forEach(function(feature) {
-        if (feature && !areaManager.getInstance().get(feature)) {
+        if (feature && !areaManager.get(feature)) {
           processFeature_(feature, config, mappings);
         }
       });
 
-      areaManager.getInstance().bulkAdd(features, true);
+      areaManager.bulkAdd(features, true);
     }
   } else {
     AlertManager.getInstance().sendAlert('No Areas Found', AlertEventSeverity.WARNING);
