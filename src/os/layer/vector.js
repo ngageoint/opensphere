@@ -1048,8 +1048,9 @@ os.layer.Vector.prototype.setFilterColumnsFn = function(value) {
  * @see {os.ui.action.IActionTarget}
  */
 os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
-  var source = /** @type {os.source.Vector} */ (this.getSource());
-  var isVector = source instanceof os.source.Vector;
+  const source = /** @type {os.source.Vector} */ (this.getSource());
+  const isVector = source instanceof os.source.Vector;
+  const onlyOneLayer = !!opt_actionArgs && goog.isArrayLike(opt_actionArgs) && opt_actionArgs.length === 1;
 
   if (os.action) {
     switch (type) {
@@ -1060,7 +1061,7 @@ os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
       case os.action.EventType.FEATURE_LIST:
         return isVector;
       case os.action.EventType.RENAME:
-        return !!opt_actionArgs && goog.isArrayLike(opt_actionArgs) && opt_actionArgs.length === 1;
+        return onlyOneLayer;
       case os.action.EventType.BUFFER:
       case os.action.EventType.EXPORT:
       case os.action.EventType.CLEAR_SELECTION:
@@ -1106,7 +1107,8 @@ os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
       case os.action.EventType.LAYER_SETTINGS:
         const descriptor = os.dataManager.getDescriptor(source.getId());
 
-        return isVector && os.implements(descriptor, os.data.IMappingDescriptor.ID) && descriptor.supportsMapping();
+        return isVector && onlyOneLayer &&
+        os.implements(descriptor, os.data.IMappingDescriptor.ID) && descriptor.supportsMapping();
       default:
         // ask the source if it supports the action
         return isVector && source.getSupportsAction(type);

@@ -255,11 +255,15 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
     this.scope['lockable'] = this.getLockable();
     this.scope['fillColor'] = this.getFillColor() || this.scope['color'];
     this.scope['fillOpacity'] = this.getFillOpacity();
-    this['layerNodes'] = this.getLayerNodes();
     this['altitudeMode'] = this.getAltitudeMode();
     this['columns'] = this.getColumns();
     this['showRotation'] = this.getShowRotation();
     this['rotationColumn'] = this.getRotationColumn();
+
+    const layerNodes = this.getLayerNodes();
+    if (layerNodes.length == 1) {
+      this['layer'] = layerNodes[0].getLayer();
+    }
 
     this.loadPresets();
     this.updateReplaceStyle_();

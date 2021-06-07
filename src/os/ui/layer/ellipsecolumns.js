@@ -2,7 +2,8 @@ goog.module('os.ui.layer.EllipseColumnsUI');
 goog.module.declareLegacyNamespace();
 
 const {getValues} = goog.require('goog.object');
-const {ROOT, instanceOf} = goog.require('os');
+const {ROOT, implements: implementationOf} = goog.require('os');
+const ColumnDefinition = goog.require('os.data.ColumnDefinition');
 const DataManager = goog.require('os.data.DataManager');
 const Units = goog.require('os.math.Units');
 const Module = goog.require('os.ui.Module');
@@ -10,6 +11,7 @@ const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
 const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
 const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
 const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
+const ILayer = goog.require('os.layer.ILayer');
 const {ORIENTATION} = goog.require('os.Fields');
 const {
   DEFAULT_RADIUS_COL_NAME: RADIUS,
@@ -17,9 +19,9 @@ const {
   DEFAULT_SEMI_MIN_COL_NAME: SEMI_MINOR
 } = goog.require('os.fields');
 
-const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 const AbstractMapping = goog.requireType('os.im.mapping.AbstractMapping');
+const SourceRequest = goog.requireType('os.source.Request');
 
 
 /**
@@ -70,25 +72,31 @@ class Controller {
     this.element = $element;
 
     /**
+     * Model object representing the None option.
+     * @type {!ColumnDefinition}
+     */
+    this.noneColumn = new ColumnDefinition('-- None --');
+
+    /**
      * Source
-     * @type {*}
+     * @type {?SourceRequest}
      * @private
      */
     this.source_ =
-      instanceOf(this.scope_['layer'], os.layer.Vector.NAME) ? this.scope_['layer'].getSource() : undefined;
+      implementationOf(this.scope_['layer'], ILayer.ID) ? this.scope_['layer'].getSource() : undefined;
 
     /**
      * Whether the user selected Circle or Ellipse
-     * 0 - Circle || 1 - Ellipse
      * @type {boolean}
      */
-    this['inputType'] = 0;
+    this['inputType'] = 'ellipse';
 
     /**
      * Column Options for the source
      * @type {Array<ColumnDefinition>}
      */
-    this['columnOptions'] = this.source_ ? this.source_.getColumns() : this.scope_['layer']['columns'];
+    this['columnOptions'] = this.source_ ? this.source_.getColumns() || [] : this.scope_['layer']['columns'] || [];
+    this['columnOptions'].unshift(this.noneColumn);
 
     /**
      * Array of the units available
@@ -100,49 +108,43 @@ class Controller {
      * The name of the circle Column
      * @type {string}
      */
-    this['radiusColumn'] = undefined;
+    this['radiusColumn'] = this['columnOptions'].find(({name}) => name === RADIUS);
 
     /**
      * Units selected for circle
      * @type {string}
      */
-    this['radiusUnits'] = undefined;
+    this['radiusUnits'] = this['radiusColumn'] ? 'nmi' : undefined;
 
     /**
      * The name of the semi major Column
      * @type {string}
      */
-    this['semiMajorColumn'] = undefined;
+    this['semiMajorColumn'] = this['columnOptions'].find(({name}) => name === SEMI_MAJOR);
 
     /**
      * Units selected for semi major
      * @type {string}
      */
-    this['semiMajorUnits'] = undefined;
+    this['semiMajorUnits'] = this['semiMajorColumn'] ? 'nmi' : undefined;
 
     /**
      * The name of the semi minor Column
      * @type {string}
      */
-    this['semiMinorColumn'] = undefined;
+    this['semiMinorColumn'] = this['columnOptions'].find(({name}) => name === SEMI_MINOR);
 
     /**
      * Units selected for semi minor
      * @type {string}
      */
-    this['semiMinorUnits'] = undefined;
+    this['semiMinorUnits'] = this['semiMinorColumn'] ? 'nmi' : undefined;
 
     /**
      * The name of the orientation Column
      * @type {string}
      */
-    this['orientation'] = undefined;
-
-    /**
-     * Boolean for if we overwrite data or not
-     * @type {boolean}
-     */
-    this['overwriteData'] = false;
+    this['orientation'] = this['columnOptions'].find(({name}) => name === ORIENTATION);
 
     /**
      * Popover Text
@@ -150,16 +152,16 @@ class Controller {
      */
     this['help'] = {
       'circle': `Select a column that will be used as the Radius for this layer. This mapping will be applied to all new
-        features loaded into or queried form this layer. Also select the units for the column, this will be converted to
+        features loaded into or queried from this layer. Also select the units for the column, this will be converted to
         nmi or m for the resulting column.`,
       'ellipse': `Select a column for Semi Minor, Semi Major, and Orientation that will be used for this layer. This
-        mapping will be applied to all new features loaded into or queried form this layer. Also select the units for
+        mapping will be applied to all new features loaded into or queried from this layer. Also select the units for
         the column, this will be converted to nmi or m for the resulting column.`
     };
 
     this.scope_.$watchGroup(['ctrl.radiusColumn', 'ctrl.radiusUnits', 'ctrl.inputType', 'ctrl.semiMajorColumn',
-      'ctrl.semiMajorUnits', 'ctrl.semiMinorColumn', 'ctrl.semiMinorUnits', 'ctrl.inputType', 'ctrl.orientation',
-      'ctrl.overwriteData'], this.updateMappings.bind(this));
+      'ctrl.semiMajorUnits', 'ctrl.semiMinorColumn', 'ctrl.semiMinorUnits', 'ctrl.orientation'],
+    this.updateMappings.bind(this));
 
     this.init();
   }
@@ -169,7 +171,7 @@ class Controller {
    */
   init() {
     const layer = this.scope_['layer'];
-    const layerId = instanceOf(layer, os.layer.Vector.NAME) ? layer.getId() : undefined;
+    const layerId = implementationOf(layer, ILayer.ID) ? layer.getId() : undefined;
     const Mappings = layerId ?
       (DataManager.getInstance().getDescriptor(layerId).getMappings() || []) : layer['mappings'];
 
@@ -181,11 +183,11 @@ class Controller {
       const column = this['columnOptions'].find(({name}) => name === field);
 
       if (id == RadiusMapping.ID) {
-        this['inputType'] = 0;
+        this['inputType'] = 'circle';
         this['radiusColumn'] = column;
         this['radiusUnits'] = mapping.units;
       } else if (id == SemiMajorMapping.ID) {
-        this['inputType'] = 1;
+        this['inputType'] = 'ellipse';
         this['semiMajorColumn'] = column;
         this['semiMajorUnits'] = mapping.units;
       } else if (id == SemiMinorMapping.ID) {
@@ -203,7 +205,7 @@ class Controller {
    */
   updateMappings() {
     const layer = this.scope_['layer'];
-    const layerId = instanceOf(layer, os.layer.Vector.NAME) ? layer.getId() : undefined;
+    const layerId = implementationOf(layer, ILayer.ID) ? layer.getId() : undefined;
     const descMappings = layerId ?
       (DataManager.getInstance().getDescriptor(layerId).getMappings() || []) : layer['mappings'];
     const mappings = this.createMappings();
@@ -235,31 +237,48 @@ class Controller {
     const mappings = [];
     const type = this['inputType'];
 
-    if (type == 0 && this['radiusColumn'] && this['radiusUnits']) {
+    if (type == 'circle' && this.validType(type)) {
       const rm = new RadiusMapping();
       rm.field = this['radiusColumn'].name;
       rm.setUnits(this['radiusUnits']);
       mappings.push(rm);
-    }
-    if (type == 1 && this['semiMajorColumn'] && this['semiMajorUnits']) {
-      var smaj = new SemiMajorMapping();
+    } else if (type == 'ellipse' && this.validType(type)) {
+      const smaj = new SemiMajorMapping();
       smaj.field = this['semiMajorColumn'].name;
       smaj.setUnits(this['semiMajorUnits']);
       mappings.push(smaj);
-    }
-    if (type == 1 && this['semiMinorColumn'] && this['semiMinorUnits']) {
-      var smin = new SemiMinorMapping();
+
+      const smin = new SemiMinorMapping();
       smin.field = this['semiMinorColumn'].name;
       smin.setUnits(this['semiMinorUnits']);
       mappings.push(smin);
-    }
-    if (type == 1 && this['orientation']) {
-      var om = new OrientationMapping();
+
+      const om = new OrientationMapping();
       om.field = this['orientation'].name;
       mappings.push(om);
     }
 
     return mappings;
+  }
+
+  /**
+   * Returns if any of the required columns are non or undefined
+   * @param {string} inputType
+   * @return {boolean}
+   */
+  validType(inputType) {
+    let isValid = false;
+    if (inputType == 'circle') {
+      isValid = this['radiusColumn'] && this['radiusUnits'] &&
+        this['radiusColumn'] != this.noneColumn && this['radiusUnits'] != this.noneColumn;
+    } else if (inputType == 'ellipse') {
+      isValid = this['semiMajorColumn'] && this['semiMajorUnits'] &&
+        this['semiMajorColumn'] != this.noneColumn && this['semiMajorUnits'] != this.noneColumn &&
+        this['semiMinorColumn'] && this['semiMinorUnits'] &&
+        this['semiMinorColumn'] != this.noneColumn && this['semiMinorUnits'] != this.noneColumn &&
+        this['orientation'] && this['orientation'] != this.noneColumn;
+    }
+    return isValid;
   }
 }
 
@@ -273,7 +292,7 @@ const ALLOW_ELLIPSE_CONFIG = 'allowEllipseConfiguration';
 
 /**
  * Launches the window to configure ellipse columns
- * @param {*} layer
+ * @param {ILayer} layer
  * @param {function(Array<AbstractMapping>)=} opt_confirmCallback
  */
 const launchConfigureWindow = function(layer, opt_confirmCallback) {
@@ -286,16 +305,14 @@ const launchConfigureWindow = function(layer, opt_confirmCallback) {
     confirm: confirm,
     prompt: '<ellipsecolumns layer="layer"></ellipsecolumns>',
     yesText: 'Apply and Reload',
-    yesButtonClass: 'btn-danger',
     windowOptions: {
-      'label': 'Map Ellipse Columns',
+      'label': 'Map Ellipse Columns for ' + layer.getTitle(),
       'x': 'center',
       'y': 'center',
       'width': '330',
       'height': 'auto',
       'modal': 'true',
-      'show-close': 'true',
-      'headerClass': 'bg-danger u-bg-danger-text'
+      'show-close': 'true'
     }
   });
 
@@ -305,15 +322,15 @@ const launchConfigureWindow = function(layer, opt_confirmCallback) {
 
 /**
  * The default callback that sets the mappings and re-imports data
- * @param {*} layer
+ * @param {ILayer} layer
  * @param {Array<AbstractMapping>} value
  * @private
  */
 const callback_ = function(layer, value) {
   // Update the Descriptor for reload
-  const desc = os.data.DataManager.getInstance().getDescriptor(layer.getId());
+  const desc = DataManager.getInstance().getDescriptor(layer.getId());
   desc.setMappings(value);
-  desc.update(layer);
+  desc.updateMappings(layer);
   updateColumns_(desc, value);
 };
 
@@ -333,13 +350,13 @@ const updateColumns_ = function(desc, mappings) {
 
     if (!exists) {
       if (RadiusMapping.REGEX.test(label)) {
-        descColumns.push(new os.data.ColumnDefinition(RADIUS));
+        descColumns.push(new ColumnDefinition(RADIUS));
       } else if (SemiMajorMapping.REGEX.test(label)) {
-        descColumns.push(new os.data.ColumnDefinition(SEMI_MAJOR));
+        descColumns.push(new ColumnDefinition(SEMI_MAJOR));
       } else if (SemiMinorMapping.REGEX.test(label)) {
-        descColumns.push(new os.data.ColumnDefinition(SEMI_MINOR));
+        descColumns.push(new ColumnDefinition(SEMI_MINOR));
       } else if (OrientationMapping.REGEX.test(label)) {
-        descColumns.push(new os.data.ColumnDefinition(ORIENTATION));
+        descColumns.push(new ColumnDefinition(ORIENTATION));
       }
     }
   });

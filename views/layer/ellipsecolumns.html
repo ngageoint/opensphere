@@ -1,44 +1,43 @@
 <div>
 
   <div>
-    Applying these mappings will cause the layer to reload and you could lose its current state. <b>This action cannot be undone.</b>
-  </div>
-
-  <div>
     <div class="form-inline mb-1">
-      <input class="form-check-input" type="radio" ng-value="0" ng-model="ctrl.inputType" id="circle">
+      <input class="form-check-input" type="radio" ng-value="'circle'" ng-model="ctrl.inputType" id="circle">
       <label class="form-check-label" for="circle">Circle</label>
       <popover class="float-right ml-1" x-title="'Radius Column Mapping'" x-content="ctrl.help.circle" x-pos="'right'"></popover>
     </div>
-    <div class="mb-1 bg-secondary u-bg-secondary-text border rounded p-1" ng-if="ctrl.inputType == 0">
+    <div class="form-inline mb-1">
+      <input class="form-check-input" type="radio" ng-value="'ellipse'" ng-model="ctrl.inputType" id="ellipse">
+      <label class="form-check-label" for="ellipse">Ellipse</label>
+      <popover class="float-right ml-1" x-title="'Ellipse Column Mapping'" x-content="ctrl.help.ellipse" x-pos="'right'"></popover>
+    </div>
+  </div>
+
+  <div>
+    <div class="mb-1 bg-secondary u-bg-secondary-text border rounded p-1" ng-if="ctrl.inputType == 'circle'">
       <div class="form-inline mb-1">
         <label class="mr-1">Radius/CEP</label>
-        <select class="col custom-select" ng-model="ctrl.radiusColumn" ng-options="opt.name for opt in ctrl.columnOptions" ng-required="ctrl.inputType == 0"></select>
-        <select class="custom-select ml-1 col-2" ng-model="ctrl.radiusUnits" ng-options="unit for unit in ctrl.unitOptions" ng-required="ctrl.inputType == 0"></select>
+        <select class="col custom-select" ng-model="ctrl.radiusColumn" ng-options="opt.name for opt in ctrl.columnOptions" ></select>
+        <select class="custom-select ml-1 col-2" ng-model="ctrl.radiusUnits" ng-options="unit for unit in ctrl.unitOptions" ng-required="ctrl.inputType == 'circle'"></select>
       </div>
     </div>
   </div>
 
   <div>
-    <div class="form-inline mb-1">
-      <input class="form-check-input" type="radio" ng-value="1" ng-model="ctrl.inputType" id="ellipse">
-      <label class="form-check-label" for="ellipse">Ellipse</label>
-      <popover class="float-right ml-1" x-title="'Ellipse Column Mapping'" x-content="ctrl.help.ellipse" x-pos="'right'"></popover>
-    </div>
-    <div class="mb-1 bg-secondary u-bg-secondary-text border rounded p-1" ng-if="ctrl.inputType == 1">
+    <div class="mb-1 bg-secondary u-bg-secondary-text border rounded p-1" ng-if="ctrl.inputType == 'ellipse'">
       <div class="form-inline mb-1">
         <label class="mr-1">Semi Major</label>
-        <select class="col custom-select" ng-model="ctrl.semiMajorColumn" ng-options="opt.name for opt in ctrl.columnOptions" ng-if="ctrl.inputType == 1"></select>
-        <select class="custom-select ml-1 col-2" ng-model="ctrl.semiMajorUnits" ng-options="unit for unit in ctrl.unitOptions" ng-if="ctrl.inputType == 1"></select>
+        <select class="col custom-select" ng-model="ctrl.semiMajorColumn" ng-options="opt.name for opt in ctrl.columnOptions" ng-if="ctrl.inputType == 'ellipse'" ng-required="ctrl.inputType == 'ellipse'"></select>
+        <select class="custom-select ml-1 col-2" ng-model="ctrl.semiMajorUnits" ng-options="unit for unit in ctrl.unitOptions" ng-if="ctrl.inputType == 'ellipse'" ng-required="ctrl.inputType == 'ellipse'"></select>
       </div>
       <div class="form-inline mb-1">
         <label class="mr-1">Semi Minor</label>
-        <select class="col custom-select" ng-model="ctrl.semiMinorColumn" ng-options="opt.name for opt in ctrl.columnOptions" ng-if="ctrl.inputType == 1"></select>
-        <select class="custom-select ml-1 col-2" ng-model="ctrl.semiMinorUnits" ng-options="unit for unit in ctrl.unitOptions" ng-if="ctrl.inputType == 1"></select>
+        <select class="col custom-select" ng-model="ctrl.semiMinorColumn" ng-options="opt.name for opt in ctrl.columnOptions" ng-if="ctrl.inputType == 'ellipse'" ng-required="ctrl.inputType == 'ellipse'"></select>
+        <select class="custom-select ml-1 col-2" ng-model="ctrl.semiMinorUnits" ng-options="unit for unit in ctrl.unitOptions" ng-if="ctrl.inputType == 'ellipse'" ng-required="ctrl.inputType == 'ellipse'"></select>
       </div>
       <div class="form-inline mb-1">
         <label class="mr-1">Orientation</label>
-        <select class="col custom-select" ng-model="ctrl.orientation" ng-options="opt.name for opt in ctrl.columnOptions" ng-if="ctrl.inputType == 1"></select>
+        <select class="col custom-select" ng-model="ctrl.orientation" ng-options="opt.name for opt in ctrl.columnOptions" ng-if="ctrl.inputType == 'ellipse'" ng-required="ctrl.inputType == 'ellipse'"></select>
       </div>
     </div>
   </div>

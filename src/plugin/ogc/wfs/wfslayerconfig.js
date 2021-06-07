@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 goog.module('plugin.ogc.wfs.WFSLayerConfig');
 goog.module.declareLegacyNamespace();
 
@@ -26,36 +25,8 @@ const GeoJSONParser = goog.require('plugin.file.geojson.GeoJSONParser');
 const {Controller: ChooseTimeColumnController} = goog.require('plugin.ogc.ui.ChooseTimeColumnUI');
 const {directiveTag: ogcLayerNodeUi} = goog.require('plugin.ogc.ui.OGCLayerNodeUI');
 
+const IMapping = goog.requireType('os.im.mapping.IMapping');
 const GMLParser = goog.requireType('plugin.file.gml.GMLParser');
-=======
-goog.provide('plugin.ogc.wfs.WFSLayerConfig');
-
-goog.require('goog.async.Deferred');
-goog.require('goog.string');
-goog.require('os.command.VectorLayerPreset');
-goog.require('os.im.mapping.AltMapping');
-goog.require('os.im.mapping.IMapping');
-goog.require('os.im.mapping.OrientationMapping');
-goog.require('os.im.mapping.RadiusMapping');
-goog.require('os.im.mapping.SemiMajorMapping');
-goog.require('os.im.mapping.SemiMinorMapping');
-goog.require('os.im.mapping.TimeFormat');
-goog.require('os.im.mapping.TimeType');
-goog.require('os.im.mapping.time.DateTimeMapping');
-goog.require('os.layer.Vector');
-goog.require('os.layer.config.AbstractDataSourceLayerConfig');
-goog.require('os.layer.preset.LayerPresetManager');
-goog.require('os.ogc');
-goog.require('os.ogc.filter.OGCFilterCleaner');
-goog.require('os.ogc.wfs.DescribeFeatureLoader');
-goog.require('os.ogc.wfs.WFSFormatter');
-goog.require('os.ui.im.ImportManager');
-goog.require('plugin.file.geojson.GeoJSONParser');
-goog.require('plugin.file.gml.GMLParser');
-goog.require('plugin.ogc.ui.chooseTimeColumnDirective');
-goog.require('plugin.ogc.ui.ogcLayerNodeUIDirective');
-
->>>>>>> feat(layers): mappings remove/readd the layer
 
 
 /**
@@ -374,9 +345,12 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
     if (execMappings && execMappings.length > 0) {
       importer.setExecMappings(execMappings);
     }
+
+    if (options['mappings']) {
+      importer.setMappings(/** @type {Array<os.im.mapping.IMapping>} */ (options['mappings']));
+    }
   }
 
-<<<<<<< HEAD
   /**
    * @param {Object<string, *>} options
    * @return {Object} The type config to use.
@@ -394,34 +368,6 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
         if (pref.regex.test(format)) {
           return pref;
         }
-=======
-  if (execMappings && execMappings.length > 0) {
-    importer.setExecMappings(execMappings);
-  }
-
-  if (options['mappings']) {
-    importer.setMappings(/** @type {Array<os.im.mapping.IMapping>} */ (options['mappings']));
-  }
-};
-
-
-/**
- * @param {Object<string, *>} options
- * @return {Object} The type config to use.
- * @protected
- */
-plugin.ogc.wfs.WFSLayerConfig.prototype.getBestType = function(options) {
-  var formats = /** @type {Array<string>|undefined} */ (options['formats']);
-  var format = /** @type {string} */ (this.params.get('outputformat'));
-  var preferred = plugin.ogc.wfs.WFSLayerConfig.TYPE_CONFIGS;
-
-  // see if the given format is one mutually supported by the layer and this plugin
-  if (format && (!formats || formats.includes(format))) {
-    for (var i = 0, n = preferred.length; i < n; i++) {
-      var pref = preferred[i];
-      if (pref.regex.test(format)) {
-        return pref;
->>>>>>> feat(layers): mappings remove/readd the layer
       }
     }
 

@@ -16,6 +16,7 @@ goog.require('os.implements');
 goog.require('os.parse.FileParserConfig');
 goog.require('os.source');
 goog.require('os.source.PropertyChange');
+goog.require('os.source.Request');
 goog.require('os.source.Vector');
 goog.require('os.ui.file.ui.defaultFileNodeUIDirective');
 goog.require('os.ui.im.ImportEvent');
@@ -194,8 +195,12 @@ os.data.FileDescriptor.prototype.setMappings = function(value) {
 /**
  * @inheritDoc
  */
-os.data.FileDescriptor.prototype.update = function() {
-  this.reimport();
+os.data.FileDescriptor.prototype.updateMappings = function(layer) {
+  const source = /** @type {os.source.Request} */ (layer.getSource());
+  const importer = source.getImporter();
+
+  importer.setMappings(this.getMappings());
+  source.refresh();
 };
 
 

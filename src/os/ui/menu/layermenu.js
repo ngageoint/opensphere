@@ -483,7 +483,7 @@ os.ui.menu.layer.onExport_ = function(event) {
 os.ui.menu.layer.onMappings_ = function(event) {
   const context = event.getContext();
   const layers = os.ui.menu.layer.getLayersFromContext(context);
-  const layer = layers ? layers[0] : undefined;
+  const layer = layers ? layers[0] : null;
 
   os.ui.layer.EllipseColumnsUI.launchConfigureWindow(layer);
 };

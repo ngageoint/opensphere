@@ -255,6 +255,11 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
     this.filterableRegexp = OGCLayerDescriptor.FILTERABLE_RE;
 
     this.descriptorType = ogc.ID;
+
+    /**
+     * @type {Array}
+     */
+    this.mappings = [];
   }
 
   /**
@@ -268,7 +273,7 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
    * @inheritDoc
    */
   getMappings() {
-    return this['mappings'];
+    return this.mappings;
   }
 
 
@@ -276,7 +281,7 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
    * @inheritDoc
    */
   setMappings(value) {
-    this['mappings'] = value;
+    this.mappings = value;
     const dm = DataManager.getInstance();
     dm.updateDescriptor(this, this);
     dm.persistDescriptors();
@@ -285,7 +290,7 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
   /**
    * @inheritDoc
    */
-  update(layer) {
+  updateMappings(layer) {
     const dm = DataManager.getInstance();
     dm.updateDescriptor(this, this);
     dm.persistDescriptors();

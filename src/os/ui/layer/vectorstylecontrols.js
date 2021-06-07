@@ -34,8 +34,7 @@ os.ui.layer.vectorStyleControlsDirective = function() {
       'shapes': '=',
       'columns': '=?',
       'allowEllipseConfig': '=?',
-      'ellipseMappings': '=?',
-      'layerNodes': '=?',
+      'layer': '=?',
       'centerShape': '=?',
       'centerShapes': '=?',
       'lineDash': '=?',
@@ -118,9 +117,8 @@ os.ui.layer.VectorStyleControlsCtrl = function($scope, $element) {
    * Help text for Ellipse configuration
    * @type {string}
    */
-  this['configEllipse'] = `This layer does not have columns that support Ellipse styling (Radius, or Semi Minor, Semi 
-    Major, and Orientation). To configure which columns should be mapped be used instead, use the settings cog to
-    add mappings to this layer so that the ellipses can be shown on the map.`;
+  this['configEllipse'] = `The required ellipse columns are not configured on this layer. To display ellipses, click the
+  settings cog and select the required columns.`;
 
   $scope.$on('$destroy', this.dispose.bind(this));
 };
@@ -191,8 +189,7 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.hasCenter = function() {
  * @export
  */
 os.ui.layer.VectorStyleControlsCtrl.prototype.hasEllipseCols = function() {
-  const layerNodes = this.scope['layerNodes'];
-  const layer = layerNodes ? layerNodes[0].getLayer() : undefined;
+  const layer = this.scope['layer'] || undefined;
   const source = layer ? layer.getSource() : undefined;
 
   return source ? source.supportsShape(os.style.ShapeType.ELLIPSE) : false;
@@ -251,8 +248,9 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.select2Formatter_ = function(item,
  * @export
  */
 os.ui.layer.VectorStyleControlsCtrl.prototype.launchConfigureWindow = function() {
-  const layer = this.scope['layerNodes'] ? this.scope['layerNodes'][0].getLayer() : undefined;
-
-  os.ui.layer.EllipseColumnsUI.launchConfigureWindow(layer);
+  const layer = this.scope['layer'] || undefined;
+  if (layer) {
+    os.ui.layer.EllipseColumnsUI.launchConfigureWindow(layer);
+  }
 };
 

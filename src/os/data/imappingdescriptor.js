@@ -1,19 +1,15 @@
 goog.module('os.data.IMappingDescriptor');
 goog.module.declareLegacyNamespace();
 
+const IMapping = goog.requireType('os.im.mapping.IMapping');
+const ILayer = goog.requireType('os.layer.ILayer');
+
 
 /**
- * The base interface for all object data we bring into our applications.
+ * An interface for descriptors that support mappings
  * @interface
  */
 class IMappingDescriptor {
-  /**
-   * Retrieve the ID
-   * @return {?string}
-   */
-  getProvider() {}
-
-
   /**
    * Returns if the layer supports mapping
    * @return {boolean}
@@ -24,7 +20,7 @@ class IMappingDescriptor {
   /**
    * Get the column mappings to apply to imported data.
    *
-   * @return {Array.<os.im.mapping.IMapping>}
+   * @return {Array.<IMapping>}
    */
   getMappings() {}
 
@@ -32,16 +28,16 @@ class IMappingDescriptor {
   /**
    * Set the column mappings to apply to imported data.
    *
-   * @param {Array.<os.im.mapping.IMapping>} value
+   * @param {Array.<IMapping>} value
    */
   setMappings(value) {}
 
 
   /**
-   * Update the Descriptor for reload
-   * @param {*} value
+   * Update the Descriptor mappings for reload
+   * @param {ILayer=} layer
    */
-  update(value) {}
+  updateMappings(layer) {}
 }
 
 /**
