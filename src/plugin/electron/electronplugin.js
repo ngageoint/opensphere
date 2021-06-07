@@ -4,10 +4,13 @@ goog.module.declareLegacyNamespace();
 goog.require('plugin.electron.ElectronMemoryConfigUI');
 
 const Settings = goog.require('os.config.Settings');
+const SettingsInitializerManager = goog.require('os.config.SettingsInitializerManager');
 const Request = goog.require('os.net.Request');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const SettingsManager = goog.require('os.ui.config.SettingsManager');
 const {ID, SettingKey, isElectron} = goog.require('plugin.electron');
 const ElectronConfirmCertUI = goog.require('plugin.electron.ElectronConfirmCertUI');
+const {default: CustomizeSettings} = goog.require('plugin.electron.CustomizeSettings');
 
 
 /**
@@ -69,6 +72,8 @@ class ElectronPlugin extends AbstractPlugin {
        */
       goog.html.SAFE_URL_PATTERN_ = /^(?:(?:https?|mailto|ftp|file):|[^:/?#]*(?:[/?#]|$))/i;
 
+      SettingsManager.getInstance().addSettingPlugin(new CustomizeSettings());
+
       checkForUpdates();
     }
   }
@@ -93,6 +98,12 @@ if (isElectron()) {
 
   // Request an updated cookie list from the main process.
   ElectronOS.updateCookies();
+
+  const baseSettingsFile = ElectronOS.getBaseSettingsFile();
+  if (baseSettingsFile) {
+    const settingsInitializer = SettingsInitializerManager.getInstance().getSettingsInitializer();
+    settingsInitializer.setFileUri(baseSettingsFile);
+  }
 }
 
 

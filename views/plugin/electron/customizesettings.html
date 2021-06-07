@@ -1,0 +1,31 @@
+<div class="d-flex flex-column flex-fill u-overflow-y-auto container-fluid">
+  <h4>Customize Settings</h4>
+  <div class="form-group">
+    Choose which settings files are loaded by the application, and import your own. Settings files will be loaded top-down, so lower files will override files above them. Drag and drop files to change the load order.
+  </div>
+  <div class="form-group">
+    <button type="button" class="btn btn-primary"
+        ng-click="ctrl.import()"
+        title="Import a new settings file to the application">
+      <i class="fas fa-plus"></i>
+      Import File
+    </button>
+    <button type="button" class="btn btn-primary"
+        ng-click="ctrl.restart()"
+        ng-disabled="!ctrl.changed"
+        title="Restart the application">
+      <i class="fas fa-sync"></i>
+      Restart
+    </button>
+    <span class="font-italic" ng-if="ctrl.changed">
+      <i class="fas fa-exclamation-triangle text-warning"></i>
+      Restart the application to update settings.
+    </span>
+  </div>
+  <slicktree class="border flex-fill"
+      x-data="ctrl.fileNodes"
+      drag-enabled="true"
+      multi-select="true"
+      selected="ctrl.selected">
+  </slicktree>
+</div>

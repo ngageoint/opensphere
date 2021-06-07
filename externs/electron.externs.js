@@ -110,3 +110,36 @@ ElectronOS.setMaxMemory = function(value) {};
  * Restarts the entire application.
  */
 ElectronOS.restart = function() {};
+
+/**
+ * Add a user settings file.
+ * @param {string} fileName The file name.
+ * @param {string} content The settings content.
+ * @return {!Promise} A promise that resolves when the settings file has been saved.
+ */
+ElectronOS.addUserSettings = function(fileName, content) {};
+
+/**
+ * Get the base settings file to load in the application.
+ * @return {string}
+ */
+ElectronOS.getBaseSettingsFile = function() {};
+
+/**
+ * Get the settings files available to the application.
+ * @return {!Array<string>} The list of settings files.
+ */
+ElectronOS.getSettingsFiles = function() {};
+
+/**
+ * Update application settings files.
+ * @param {!Array<string>} value The list of settings files.
+ * @return {!Promise} A promise that resolves when settings have been saved.
+ */
+ElectronOS.setSettingsFiles = function(value) {};
+
+/**
+ * Get directory containing user config files and copied app settings.
+ * @return {!string}
+ */
+ElectronOS.getUserSettingsDir = function() {};

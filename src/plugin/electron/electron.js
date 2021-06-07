@@ -9,6 +9,15 @@ const ID = 'electron';
 
 
 /**
+ * Electron event types.
+ * @enum {string}
+ */
+const EventType = {
+  UPDATE_SETTINGS: 'electron:update-settings'
+};
+
+
+/**
  * Electron settings keys.
  * @enum {string}
  */
@@ -29,4 +38,4 @@ const isElectron = () => {
 };
 
 
-exports = {ID, SettingKey, isElectron};
+exports = {ID, EventType, SettingKey, isElectron};

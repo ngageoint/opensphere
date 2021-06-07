@@ -16,6 +16,27 @@ let cookies = '';
 
 
 /**
+ * The copied base settings file that will be loaded by the application.
+ * @type {string}
+ */
+let baseSettingsFile = '';
+
+
+/**
+ * Settings files available to the application.
+ * @type {!Array<string>}
+ */
+let settingsFiles = [];
+
+
+/**
+ * The directory containing user config files and copied app settings.
+ * @type {string}
+ */
+let userSettingsDir = '';
+
+
+/**
  * General event types.
  * @enum {string}
  */
@@ -27,7 +48,13 @@ const EventType = {
   CERT_SELECTED: 'client-certificate-selected',
 
   COOKIE_SET: 'set-cookie',
-  COOKIE_UPDATE: 'update-cookies'
+  COOKIE_UPDATE: 'update-cookies',
+
+  SETTINGS_ADD: 'add-settings',
+  SETTINGS_GET_FILES: 'get-settings-files',
+  SETTINGS_GET_BASE_FILE: 'get-base-settings-file',
+  SETTINGS_GET_USER_DIR: 'get-user-settings-dir',
+  SETTINGS_SET: 'set-settings'
 };
 
 
@@ -117,6 +144,44 @@ const setMaxMemory = (value) => {
 };
 
 /**
+ * Add a user settings file.
+ * @param {string} fileName The file name.
+ * @param {string} content The settings content.
+ * @return {!Promise} A promise that resolves when the settings file has been saved.
+ */
+const addUserSettings = async (fileName, content) => {
+  return ipcRenderer.invoke(EventType.SETTINGS_ADD, fileName, content).then((files) => settingsFiles = files);
+};
+
+/**
+ * Get the path to the base settings file loaded by the application.
+ * @return {string}
+ */
+const getBaseSettingsFile = () => baseSettingsFile;
+
+
+/**
+ * Get the settings files available to the application.
+ * @return {!Array<string>}
+ */
+const getSettingsFiles = () => settingsFiles;
+
+/**
+ * Get directory containing user config files and copied app settings.
+ * @return {!string}
+ */
+const getUserSettingsDir = () => userSettingsDir;
+
+/**
+ * Update application settings files.
+ * @param {!Array<string>} value The list of settings files.
+ * @return {!Promise} A promise that resolves when settings have been saved.
+ */
+const setSettingsFiles = (value) => {
+  return ipcRenderer.invoke(EventType.SETTINGS_SET, value).then(() => settingsFiles = value);
+};
+
+/**
  * Restarts the application.
  */
 const restart = () => {
@@ -130,6 +195,20 @@ ipcRenderer.on(EventType.CERT_SELECT, selectClientCertificate);
 // Handle cookie initialization from the main process.
 ipcRenderer.on(EventType.COOKIE_UPDATE, (event, value) => {
   cookies = value;
+});
+
+
+// Initialize settings values from the main process.
+ipcRenderer.invoke(EventType.SETTINGS_GET_BASE_FILE).then((file) => {
+  baseSettingsFile = file;
+});
+
+ipcRenderer.invoke(EventType.SETTINGS_GET_FILES).then((files) => {
+  settingsFiles = files;
+});
+
+ipcRenderer.invoke(EventType.SETTINGS_GET_USER_DIR).then((files) => {
+  userSettingsDir = files;
 });
 
 
@@ -151,5 +230,10 @@ contextBridge.exposeInMainWorld('ElectronOS', {
   getMaxMemory,
   getSystemMemory,
   setMaxMemory,
+  addUserSettings,
+  getBaseSettingsFile,
+  getSettingsFiles,
+  setSettingsFiles,
+  getUserSettingsDir,
   restart
 });
