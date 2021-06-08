@@ -8,7 +8,9 @@ goog.require('goog.events.EventType');
 goog.require('ol.events');
 goog.require('ol.source.TileEventType');
 goog.require('ol.source.UrlTile');
+goog.require('os.alert.AlertManager');
 goog.require('os.array');
+goog.require('os.auth');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.implements');
 goog.require('os.ol.source.ILoadingSource');
@@ -286,6 +288,14 @@ ol.source.UrlTile.prototype.loadingDelay_ = null;
 
 
 /**
+ * Flag for whether this source has alerted an error due to missing authentication.
+ * @type {boolean}
+ * @private
+ */
+ol.source.UrlTile.prototype.authAlerted_ = false;
+
+
+/**
  * @inheritDoc
  */
 ol.source.UrlTile.prototype.disposeInternal = function() {
@@ -414,6 +424,13 @@ ol.source.UrlTile.prototype.onImageLoadOrError_ = function(evt) {
     this.loadCount_++;
   } else {
     this.errorCount_++;
+
+    if (!this.authAlerted_) {
+      const urls = this.getUrls();
+      urls.forEach((url) => {
+        os.auth.alertAuth(url);
+      });
+    }
   }
 
   this.decrementLoading();
