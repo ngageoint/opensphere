@@ -101,6 +101,7 @@ const alertAuth = (urlOrName) => {
 
 exports = {
   AuthEntry,
+  SettingKey,
   initAuth,
   getAuth,
   alertAuth
