@@ -5,16 +5,17 @@ const {getRandomString, numerateCompare} = goog.require('goog.string');
 const ConfigProvider = goog.require('plugin.config.Provider');
 const {ROOT} = goog.require('os');
 const ConfigDescriptor = goog.require('os.data.ConfigDescriptor');
+const DataManager = goog.require('os.data.DataManager');
 const {createFromOptions} = goog.require('os.layer');
-const {MAX_ZOOM, MIN_ZOOM} = goog.require('os.map');
+const osMap = goog.require('os.map');
 const {getProjections} = goog.require('os.proj');
 const Module = goog.require('os.ui.Module');
 const {ID_DELIMITER} = goog.require('os.ui.data.BaseProvider');
 const SingleUrlProviderImportCtrl = goog.require('os.ui.SingleUrlProviderImportCtrl');
+const {directiveTag: uiDirectiveTag} = goog.require('plugin.xyz.XYZDescriptorNodeUI');
 const XYZProviderHelpUI = goog.require('plugin.xyz.XYZProviderHelpUI');
 
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-
 
 /**
  * The XYZ provider import directive
@@ -64,6 +65,11 @@ class Controller extends SingleUrlProviderImportCtrl {
      */
     this['helpUi'] = XYZProviderHelpUI.directiveTag;
 
+    /**
+     * @type {string}
+     */
+    this.currentId = '';
+
     // initialize units from settings
     var projections = getProjections(true);
     projections.sort(function(a, b) {
@@ -71,25 +77,36 @@ class Controller extends SingleUrlProviderImportCtrl {
           /** @type {string} */ (a['code']),
           /** @type {string} */ (b['code']));
     });
-
     this['projections'] = projections;
+
+    const currentProjection = projections.find((projection) => projection.code == osMap.PROJECTION.getCode());
 
     $scope['typeName'] = 'XYZ Provider';
     $scope['urlExample'] = 'https://example.com/{z}/{x}/{y}';
-    $scope['config']['id'] = 'xyz';
-    $scope['config']['label'] = this.getLabel() || '';
-    $scope['config']['title'] = this.scope['config']['label'];
-    $scope['config']['type'] = 'XYZ';
-    $scope['config']['layerType'] = 'XYZ';
-    $scope['config']['url'] = '';
-    $scope['config']['minZoom'] = MIN_ZOOM;
-    $scope['config']['maxZoom'] = MAX_ZOOM;
     $scope['help'] = {};
     $scope['help']['projection'] = 'The map projection for the layer.';
     $scope['help']['minZoom'] = 'The minimum zoom level supported by the layer.';
     $scope['help']['maxZoom'] = 'The maximum zoom level supported by the layer.';
     $scope['help']['zoomOffset'] = 'The difference in zoom scale between the layer and map. Typically EPSG:3857 ' +
       'layers will have an offset of 0, and EPSG:4326 will have an offset of -1.';
+    $scope['help']['tileSize'] = 'The tile size for the layer (always a positive integer).';
+
+    if (!$scope['config']['id']) {
+      $scope['config']['label'] = this.getLabel() || '';
+      $scope['config']['tileSize'] = 256;
+      $scope['config']['title'] = this.scope['config']['label'];
+      $scope['config']['type'] = 'XYZ';
+      $scope['config']['layerType'] = 'XYZ';
+      $scope['config']['url'] = '';
+      $scope['config']['projectionObject'] = currentProjection;
+      $scope['config']['projection'] = currentProjection.code;
+      $scope['config']['minZoom'] = osMap.MIN_ZOOM;
+      $scope['config']['maxZoom'] = osMap.MAX_ZOOM;
+    } else {
+      this.currentId = $scope['config']['id'];
+    }
+
+    this.populateZoomOffset(currentProjection.code);
   }
 
   /**
@@ -98,16 +115,37 @@ class Controller extends SingleUrlProviderImportCtrl {
   accept() {
     if (!this.scope['form']['$invalid']) {
       this.cleanConfig();
+      this.scope['config']['tileSize'] = Math.max(0, Math.round(this.scope['config']['tileSize']));
+      this.scope['config']['description'] = 'URL: ' + this.scope['config']['url'] +
+      '<br>Projection: ' + this.scope['config']['projection'] +
+      '<br>Minimum Zoom: ' + this.scope['config']['minZoom'] +
+      '<br>Maximum Zoom: ' + this.scope['config']['maxZoom'] +
+      '<br>Zoom Offset: ' + this.scope['config']['zoomOffset'] +
+      '<br>Tile Size: ' + this.scope['config']['tileSize'];
+      if (this.scope['config']['title'] != this.scope['config']['label']) {
+        this.scope['config']['title'] = this.scope['config']['label'];
+      }
+      if (this.scope['config']['url']) {
+        this.scope['config']['urls'] = [this.scope['config']['url']];
+      }
 
       this.dp = this.getDataProvider();
       this.dp.setEditable(true);
 
-      this.scope['config']['description'] = 'URL: ' + this.scope['config']['url'] +
-        '<br>Projection: ' + this.scope['config']['projection']['code'] +
-        '<br>Minimum Zoom: ' + this.scope['config']['minZoom'] +
-        '<br>Maximum Zoom: ' + this.scope['config']['maxZoom'] +
-        '<br>Zoom Offset: ' + this.scope['config']['zoomOffset'];
-      this.createXYZDescriptor(this.scope['config']);
+      const dm = DataManager.getInstance();
+      var descriptor = dm.getDescriptor(this.currentId);
+      if (descriptor) {
+        this.currentId = '';
+        descriptor.setActive(false);
+        this.dp.removeDescriptor(descriptor, true);
+        dm.removeDescriptor(descriptor);
+      } else {
+        descriptor = this.createXYZDescriptor(this.scope['config']);
+      }
+
+      this.saveXYZDescriptor(descriptor);
+      descriptor.setActive(true);
+
       this.close();
     }
   }
@@ -116,7 +154,7 @@ class Controller extends SingleUrlProviderImportCtrl {
    * @inheritDoc
    */
   getDataProvider() {
-    const dp = ConfigProvider.create('xyz', {'label': 'XYZ Layers', 'listInServers': false});
+    const dp = ConfigProvider.create('xyz', {'label': 'XYZ Map Layers', 'type': 'xyz', 'listInServers': false});
     return dp;
   }
 
@@ -126,40 +164,28 @@ class Controller extends SingleUrlProviderImportCtrl {
    * @return {IDataDescriptor} The descriptor, or null if one could not be created.
    */
   createXYZDescriptor(layerConfig) {
-    const projectionObject = layerConfig['projectionObject'] ? layerConfig['projectionObject'] :
-      layerConfig['projection'];
-    if (projectionObject) {
-      const projectionCode = projectionObject['code'];
-      layerConfig['projectionObject'] = projectionObject;
-      layerConfig['projection'] = projectionCode;
-      layerConfig['title'] = layerConfig['label'];
-    }
-
     let descriptor = null;
     descriptor = new ConfigDescriptor();
     descriptor.setBaseConfig(layerConfig);
     createFromOptions(layerConfig);
-
-    this.saveXYZDescriptor(descriptor);
 
     return descriptor;
   }
 
   /**
    * Save an XYZ descriptor to the XYZ provider.
-   * @param {!IDataDescriptor} descriptor The descriptor.
+   * @param {?IDataDescriptor} descriptor The descriptor.
    */
   saveXYZDescriptor(descriptor) {
     if (descriptor) {
-      const layerConfig = descriptor.getBaseConfig();
+      var layerConfig = descriptor.getBaseConfig();
 
       if (this.dp) {
         this.dp.setEditable(true);
+        var id = `${getRandomString()}`;
 
         // Set config descriptor options.
-        const id = `${getRandomString()}`;
-        layerConfig['nodeUi'] = '<descriptornodeui></descriptornodeui>';
-        layerConfig['provider'] = this.dp.getLabel();
+        layerConfig['nodeUi'] = '<' + uiDirectiveTag + '></' + uiDirectiveTag + '>';
         layerConfig['id'] = `xyz${ID_DELIMITER}${id}`;
 
         // Prevent the data manager from automatically expiring the descriptor.
@@ -183,12 +209,13 @@ class Controller extends SingleUrlProviderImportCtrl {
   }
 
   /**
-   * Handle projection change
+   * Populate zoom offset based on current state
+   * @param {string} projection
    * @export
    */
-  onProjectionChange() {
+  populateZoomOffset(projection) {
     this.scope['config']['zoomOffset'] = null;
-    switch (this.scope['config']['projection'].code) {
+    switch (projection) {
       case 'EPSG:4326':
         this.scope['config']['zoomOffset'] = -1;
         break;
@@ -197,6 +224,15 @@ class Controller extends SingleUrlProviderImportCtrl {
         this.scope['config']['zoomOffset'] = 0;
         break;
     }
+  }
+
+  /**
+   * Handle projection change
+   * @export
+   */
+  onProjectionChange() {
+    this.scope['config']['projection'] = this.scope['config']['projectionObject'].code;
+    this.populateZoomOffset(this.scope['config']['projection']);
   }
 }
 

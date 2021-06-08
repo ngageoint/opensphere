@@ -1,4 +1,4 @@
-<div>
+<div class="test-findme">
   <div class="text-center" ng-show="testing">
     <div><i class="fa fa-4x fa-spin fa-smooth fa-spinner"></i></div>
     <div>Testing...</div>
@@ -31,49 +31,53 @@
     </div>
 
     <!-- projection string field -->
-    <div class="form-group" title="The projection for the server" ng-if="ctrl.projections">
-      <label for="url" class="pr-2">Projection</label>
+    <div class="form-group" title="The projection for the layer" ng-if="ctrl.projections">
+      <label class="pr-2">Projection</label>
       <popover x-title="'Projection'" content="help.projection" pos="'right'"></popover>
-      <select class="custom-select" ng-model="config.projection"
+      <select class="custom-select" ng-model="config.projectionObject"
         ng-options="item.code + ' ' + item.title for item in ctrl.projections track by item.code"
-        ng-change="ctrl.onProjectionChange()">
+        ng-change="ctrl.onProjectionChange()" name="projection" ng-required="true">
       </select>
-      <small class="form-text text-danger" ng-if="form.url.$error.maxlength">Projection is too long!</small>
-      <small class="form-text text-muted" ng-if="form.url.$valid || form.url.$error.required">
+      <small class="form-text text-muted" ng-if="form.projection.$valid || form.projection.$error.required">
         Please select a projection
       </small>
     </div>
     <!-- min zoom int field -->
-    <div class="form-group col-4 float-left pl-0" title="The minimum zoom for the server">
-      <label for="url" class="pr-2">Minimum Zoom</label>
+    <div class="form-group col-3 float-left pl-0" title="The minimum zoom for the layer">
+      <label class="pr-2">Min Zoom</label>
       <popover x-title="'Minimum Zoom'" content="help.minZoom" pos="'right'"></popover>
-      <input type="text" name="minZoom" class="form-control" ng-disabled="!edit" ng-model="config.minZoom" ng-required="true"
-          ng-maxlength="1000">
-      <small class="form-text text-danger" ng-if="form.url.$error.maxlength">Minimum zoom is too long!</small>
-      <small class="form-text text-muted" ng-if="form.url.$valid || form.url.$error.required">
-        Please enter a minimum zoom value
+      <input type="number" name="minZoom" class="form-control" ng-disabled="!edit" ng-model="config.minZoom" ng-required="true">
+      <small class="form-text text-muted" ng-if="form.minZoom.$valid || form.minZoom.$error.required">
+        Please enter a min zoom value
       </small>
     </div>
     <!-- max zoom int field -->
-    <div class="form-group col-4 float-left pl-0" title="The maximum zoom for the server">
-      <label for="url" class="pr-2">Maximum Zoom</label>
+    <div class="form-group col-3 float-left pl-0" title="The maximum zoom for the layer">
+      <label class="pr-2">Max Zoom</label>
       <popover x-title="'Maximum Zoom'" content="help.maxZoom" pos="'right'"></popover>
-      <input type="text" name="maxZoom" class="form-control" ng-disabled="!edit" ng-model="config.maxZoom" ng-required="true"
-          ng-maxlength="1000">
-      <small class="form-text text-danger" ng-if="form.url.$error.maxlength">Maximum zoom is too long!</small>
-      <small class="form-text text-muted" ng-if="form.url.$valid || form.url.$error.required">
-        Please enter a maximum zoom value
+      <input type="number" name="maxZoom" class="form-control" ng-disabled="!edit" ng-model="config.maxZoom" ng-required="true">
+      <small class="form-text text-muted" ng-if="form.maxZoom.$valid || form.maxZoom.$error.required">
+        Please enter a max zoom value
       </small>
     </div>
     <!-- zoom offset int field -->
-    <div class="form-group col-4 float-left pl-0" title="The zoom offset for the server">
-      <label for="url" class="pr-2">Zoom Offset</label>
+    <div class="form-group col-3 float-left pl-0" title="The zoom offset for the layer">
+      <label class="pr-2">Zoom Offset</label>
       <popover x-title="'Zoom Offset'" content="help.zoomOffset" pos="'right'"></popover>
-      <input type="text" name="zoomOffset" class="form-control" ng-disabled="!edit" ng-model="config.zoomOffset" ng-required="true"
-          ng-maxlength="1000">
-      <small class="form-text text-danger" ng-if="form.url.$error.maxlength">Zoom offset is too long!</small>
-      <small class="form-text text-muted" ng-if="form.url.$valid || form.url.$error.required">
+      <input type="number" name="zoomOffset" class="form-control" ng-disabled="!edit" ng-model="config.zoomOffset" ng-required="true">
+      <small class="form-text text-muted" ng-if="form.zoomOffset.$valid || form.zoomOffset.$error.required">
         Please enter a zoom offset
+      </small>
+    </div>
+    <!-- tile size int field -->
+    <div class="form-group col-3 float-left pl-0" title="The tile size for the layer">
+      <label class="pr-2">Tile Size</label>
+      <popover x-title="'Tile Size'" content="help.tileSize" pos="'right'"></popover>
+      <input type="number" name="tileSize" class="form-control" ng-disabled="!edit" ng-model="config.tileSize" ng-required="true"
+          ng-min="64" ng-step="1">
+      <small class="form-text text-danger" ng-if="form.tileSize.$error.min">Minimum supported tile size is 64!</small>
+      <small class="form-text text-muted" ng-if="form.tileSize.$valid || form.tileSize.$error.required">
+        Please enter a tile size
       </small>
     </div>
 
