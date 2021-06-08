@@ -1,90 +1,93 @@
-goog.provide('os.command.QueryClear');
-goog.require('os.command.ICommand');
-goog.require('os.command.State');
+goog.module('os.command.QueryClear');
+goog.module.declareLegacyNamespace();
 
+const State = goog.require('os.command.State');
+const AreaManager = goog.require('os.query.AreaManager');
+
+const ICommand = goog.requireType('os.command.ICommand');
 
 
 /**
  * Command for clearing spatial queries on the map.
  *
- * @implements {os.command.ICommand}
- * @constructor
+ * @implements {ICommand}
  */
-os.command.QueryClear = function() {
+class QueryClear {
   /**
-   * @type {!Object<number|string|undefined, boolean>}
-   * @private
+   * Constructor.
    */
-  this.ids_ = {};
+  constructor() {
+    /**
+     * @inheritDoc
+     */
+    this.isAsync = false;
 
-  /**
-   * @type {boolean}
-   * @protected
-   */
-  this.value = true;
-};
+    /**
+     * @inheritDoc
+     */
+    this.title = 'Clear query areas';
 
+    /**
+     * @inheritDoc
+     */
+    this.details = null;
 
-/**
- * @inheritDoc
- */
-os.command.QueryClear.prototype.isAsync = false;
+    /**
+     * @inheritDoc
+     */
+    this.state = State.READY;
 
+    /**
+     * @type {!Object<number|string|undefined, boolean>}
+     * @private
+     */
+    this.ids_ = {};
 
-/**
- * @inheritDoc
- */
-os.command.QueryClear.prototype.title = 'Clear query areas';
-
-
-/**
- * @inheritDoc
- */
-os.command.QueryClear.prototype.details = null;
-
-
-/**
- * @inheritDoc
- */
-os.command.QueryClear.prototype.state = os.command.State.READY;
-
-
-/**
- * @inheritDoc
- */
-os.command.QueryClear.prototype.execute = function() {
-  this.state = os.command.State.EXECUTING;
-  var am = os.query.AreaManager.getInstance();
-  var list = am.getAll();
-
-  for (var i = 0, n = list.length; i < n; i++) {
-    if (list[i].get('shown')) {
-      this.ids_[list[i].getId()] = true;
-      am.toggle(list[i], false);
-    }
+    /**
+     * @type {boolean}
+     * @protected
+     */
+    this.value = true;
   }
 
-  this.state = os.command.State.SUCCESS;
-  return true;
-};
+  /**
+   * @inheritDoc
+   */
+  execute() {
+    this.state = State.EXECUTING;
+    var am = AreaManager.getInstance();
+    var list = am.getAll();
 
-
-/**
- * @inheritDoc
- */
-os.command.QueryClear.prototype.revert = function() {
-  this.state = os.command.State.REVERTING;
-
-  var am = os.query.AreaManager.getInstance();
-  var list = am.getAll();
-
-  for (var i = 0, n = list.length; i < n; i++) {
-    if (list[i].getId() in this.ids_) {
-      am.toggle(list[i], true);
+    for (var i = 0, n = list.length; i < n; i++) {
+      if (list[i].get('shown')) {
+        this.ids_[list[i].getId()] = true;
+        am.toggle(list[i], false);
+      }
     }
+
+    this.state = State.SUCCESS;
+    return true;
   }
 
-  this.ids_ = {};
-  this.state = os.command.State.READY;
-  return true;
-};
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    this.state = State.REVERTING;
+
+    var am = AreaManager.getInstance();
+    var list = am.getAll();
+
+    for (var i = 0, n = list.length; i < n; i++) {
+      if (list[i].getId() in this.ids_) {
+        am.toggle(list[i], true);
+      }
+    }
+
+    this.ids_ = {};
+    this.state = State.READY;
+    return true;
+  }
+}
+
+exports = QueryClear;

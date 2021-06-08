@@ -14,6 +14,7 @@ goog.require('os.implements');
 goog.require('os.layer');
 goog.require('os.layer.ExplicitLayerType');
 goog.require('os.layer.ILayer');
+goog.require('os.layer.LayerClass');
 goog.require('os.layer.LayerType');
 goog.require('os.layer.PropertyChange');
 goog.require('os.legend');
@@ -202,9 +203,10 @@ os.implements(os.layer.Vector, os.legend.ILegendRenderer.ID);
 /**
  * Class name
  * @type {string}
+ * @deprecated Please use os.layer.LayerClass.VECTOR.
  */
-os.layer.Vector.NAME = 'os.layer.Vector';
-os.registerClass(os.layer.Vector.NAME, os.layer.Vector);
+os.layer.Vector.NAME = os.layer.LayerClass.VECTOR;
+os.registerClass(os.layer.LayerClass.VECTOR, os.layer.Vector);
 
 
 /**

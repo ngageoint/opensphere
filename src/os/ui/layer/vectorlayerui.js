@@ -24,7 +24,7 @@ goog.require('os.command.VectorLayerShowLabel');
 goog.require('os.command.VectorLayerShowRotation');
 goog.require('os.command.VectorLayerSize');
 goog.require('os.command.VectorUniqueIdCmd');
-goog.require('os.command.style');
+goog.require('os.command.style.ColorChangeType');
 goog.require('os.data.OSDataManager');
 goog.require('os.fn');
 goog.require('os.layer.preset');

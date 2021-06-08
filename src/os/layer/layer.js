@@ -10,6 +10,8 @@ goog.require('os.layer.ILayer');
 goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.source.ISource');
 
+goog.requireType('ol.layer.Layer');
+
 
 /**
  * Enumeration of available base synchronizer types.

@@ -1,40 +1,51 @@
 goog.require('os.array');
+goog.require('os.command.AsyncMockCommand');
 goog.require('os.command.AsyncMockCommandString');
+goog.require('os.command.EventType');
 goog.require('os.command.MockCommand');
 goog.require('os.command.MockCommandString');
 goog.require('os.command.ParallelCommand');
+goog.require('os.command.State');
 
 describe('os.command.ParallelCommand', function() {
-  var cmd = new os.command.ParallelCommand();
+  const ParallelCommand = goog.module.get('os.command.ParallelCommand');
+  const State = goog.module.get('os.command.State');
+
+  const AsyncMockCommandString = goog.module.get('os.command.AsyncMockCommandString');
+  const MockCommand = goog.module.get('os.command.MockCommand');
+  const MockCommandString = goog.module.get('os.command.MockCommandString');
+
+  var cmd = new ParallelCommand();
 
   it('should execute synchronous commands in parallel', function() {
-    os.command.MockCommand.value = 0;
-    os.command.MockCommandString.str = '';
+    MockCommand.value = 0;
+    MockCommandString.str = '';
     cmd.setCommands([
-      new os.command.MockCommandString(),
-      new os.command.MockCommandString(),
-      new os.command.MockCommandString()]);
+      new MockCommandString(),
+      new MockCommandString(),
+      new MockCommandString()
+    ]);
     expect(cmd.isAsync).toBe(false);
     var success = cmd.execute();
     expect(success).toBe(true);
-    expect(os.command.MockCommandString.str).toBe('abc');
-    expect(cmd.state).toBe(os.command.State.SUCCESS);
+    expect(MockCommandString.str).toBe('abc');
+    expect(cmd.state).toBe(State.SUCCESS);
   });
 
   it('should revert synchronous commands in parallel', function() {
     var success = cmd.revert();
     expect(success).toBe(true);
-    expect(os.command.MockCommandString.str).toBe('');
-    expect(cmd.state).toBe(os.command.State.READY);
+    expect(MockCommandString.str).toBe('');
+    expect(cmd.state).toBe(State.READY);
   });
 
   it('should execute asynchronous commands in parallel', function() {
-    os.command.MockCommand.value = 0;
-    os.command.MockCommandString.str = '';
+    MockCommand.value = 0;
+    MockCommandString.str = '';
     cmd.setCommands([
-      new os.command.AsyncMockCommandString(),
-      new os.command.AsyncMockCommandString(),
-      new os.command.AsyncMockCommandString()]);
+      new AsyncMockCommandString(),
+      new AsyncMockCommandString(),
+      new AsyncMockCommandString()]);
 
     var success;
     runs(function() {
@@ -43,13 +54,13 @@ describe('os.command.ParallelCommand', function() {
     });
 
     waitsFor(function() {
-      return os.command.MockCommand.value === 3;
+      return MockCommand.value === 3;
     }, 'command to finish executing');
 
     runs(function() {
       expect(success).toBe(true);
-      expect(os.command.MockCommandString.str).toMatch(/(abc|acb|bac|bca|cab|cba)/);
-      expect(cmd.state).toBe(os.command.State.SUCCESS);
+      expect(MockCommandString.str).toMatch(/(abc|acb|bac|bca|cab|cba)/);
+      expect(cmd.state).toBe(State.SUCCESS);
     });
   });
 
@@ -60,23 +71,24 @@ describe('os.command.ParallelCommand', function() {
     });
 
     waitsFor(function() {
-      return os.command.MockCommandString.str == '';
+      return MockCommandString.str == '';
     }, 'command to finish reverting');
 
     runs(function() {
       expect(success).toBe(true);
-      expect(os.command.MockCommandString.str).toBe('');
-      expect(cmd.state).toBe(os.command.State.READY);
+      expect(MockCommandString.str).toBe('');
+      expect(cmd.state).toBe(State.READY);
     });
   });
 
   it('should execute mixed commands in parallel', function() {
-    os.command.MockCommand.value = 0;
-    os.command.MockCommandString.str = '';
+    MockCommand.value = 0;
+    MockCommandString.str = '';
     cmd.setCommands([
-      new os.command.MockCommandString(),
-      new os.command.AsyncMockCommandString(),
-      new os.command.MockCommandString()]);
+      new MockCommandString(),
+      new AsyncMockCommandString(),
+      new MockCommandString()
+    ]);
 
     var success;
     runs(function() {
@@ -85,13 +97,13 @@ describe('os.command.ParallelCommand', function() {
     });
 
     waitsFor(function() {
-      return os.command.MockCommand.value === 3;
+      return MockCommand.value === 3;
     }, 'command to finish executing');
 
     runs(function() {
       expect(success).toBe(true);
-      expect(os.command.MockCommandString.str).toMatch(/(abc|acb|bac|bca|cab|cba)/);
-      expect(cmd.state).toBe(os.command.State.SUCCESS);
+      expect(MockCommandString.str).toMatch(/(abc|acb|bac|bca|cab|cba)/);
+      expect(cmd.state).toBe(State.SUCCESS);
     });
   });
 
@@ -102,36 +114,45 @@ describe('os.command.ParallelCommand', function() {
     });
 
     waitsFor(function() {
-      return os.command.MockCommandString.str == '';
+      return MockCommandString.str == '';
     }, 'command to finish reverting');
 
     runs(function() {
       expect(success).toBe(true);
-      expect(os.command.MockCommandString.str).toBe('');
-      expect(cmd.state).toBe(os.command.State.READY);
+      expect(MockCommandString.str).toBe('');
+      expect(cmd.state).toBe(State.READY);
     });
   });
 
   /** @todo fix these when we actually use ParallelCommand */
 
   xit('does not execute again if currently executing', function() {
-    throw 'implement me';
+    throw new Error('implement me');
   });
 
   xit('does not execute again if already executed successfully', function() {
-    throw 'implement me';
+    throw new Error('implement me');
   });
 
   xit('does not execute again if already executed and failed', function() {
-    throw 'implement me';
+    throw new Error('implement me');
   });
 });
 
 describe('os.command.ParallelCommand error handling', function() {
+  const osArray = goog.module.get('os.array');
+  const EventType = goog.module.get('os.command.EventType');
+  const ParallelCommand = goog.module.get('os.command.ParallelCommand');
+  const State = goog.module.get('os.command.State');
+
+  const AsyncMockCommand = goog.module.get('os.command.AsyncMockCommand');
+  const MockCommand = goog.module.get('os.command.MockCommand');
+  const MockCommandString = goog.module.get('os.command.MockCommandString');
+
   var addTitlesTo = function(commands) {
-    os.array.forEach(commands, function(command, index) {
+    osArray.forEach(commands, function(command, index) {
       command.title = jasmine.getEnv().currentSpec.description + ' [' + index + ']';
-    })
+    });
   };
 
   var errorListener = jasmine.createSpy('onSequenceError');
@@ -139,26 +160,26 @@ describe('os.command.ParallelCommand error handling', function() {
 
   beforeEach(function() {
     errorListener.reset();
-    batch = new os.command.ParallelCommand();
-    batch.listen(os.command.EventType.EXECUTED, errorListener);
-    os.command.MockCommand.value = 0;
-    os.command.MockCommandString.str = '';
+    batch = new ParallelCommand();
+    batch.listen(EventType.EXECUTED, errorListener);
+    MockCommand.value = 0;
+    MockCommandString.str = '';
   });
 
   afterEach(function() {
     expect(errorListener.calls.length).toEqual(1);
-    expect(errorListener.mostRecentCall.args[0].type).toBe(os.command.EventType.EXECUTED);
+    expect(errorListener.mostRecentCall.args[0].type).toBe(EventType.EXECUTED);
     expect(errorListener.mostRecentCall.args[0].target).toBe(batch);
-    expect(batch.state).toBe(os.command.State.ERROR);
-    os.command.MockCommand.value = 0;
-    os.command.MockCommandString.str = '';
+    expect(batch.state).toBe(State.ERROR);
+    MockCommand.value = 0;
+    MockCommandString.str = '';
   });
 
   it('stops executing when the first sync sub-command fails', function() {
     var commands = [
-      new os.command.MockCommand(),
-      new os.command.MockCommand(),
-      new os.command.MockCommand()
+      new MockCommand(),
+      new MockCommand(),
+      new MockCommand()
     ];
     addTitlesTo(commands);
     spyOn(commands[0], 'execute').andReturn(false);
@@ -174,9 +195,9 @@ describe('os.command.ParallelCommand error handling', function() {
 
   it('stops executing when an intermediate sync sub-command fails', function() {
     var commands = [
-      new os.command.MockCommand(),
-      new os.command.MockCommand(),
-      new os.command.MockCommand()
+      new MockCommand(),
+      new MockCommand(),
+      new MockCommand()
     ];
     addTitlesTo(commands);
     spyOn(commands[0], 'execute').andCallThrough();
@@ -192,9 +213,9 @@ describe('os.command.ParallelCommand error handling', function() {
 
   it('fails when the last sync sub-command fails', function() {
     var commands = [
-      new os.command.MockCommand(),
-      new os.command.MockCommand(),
-      new os.command.MockCommand()
+      new MockCommand(),
+      new MockCommand(),
+      new MockCommand()
     ];
     addTitlesTo(commands);
     spyOn(commands[0], 'execute').andCallThrough();
@@ -210,9 +231,9 @@ describe('os.command.ParallelCommand error handling', function() {
 
   it('stops executing when the first async sub-command fails', function() {
     var commands = [
-      new os.command.AsyncMockCommand(),
-      new os.command.AsyncMockCommand(),
-      new os.command.AsyncMockCommand()
+      new AsyncMockCommand(),
+      new AsyncMockCommand(),
+      new AsyncMockCommand()
     ];
     spyOn(commands[0], 'execute').andReturn(false);
     spyOn(commands[1], 'execute').andCallThrough();
@@ -225,7 +246,7 @@ describe('os.command.ParallelCommand error handling', function() {
     });
 
     waitsFor(function() {
-      return batch.state !== os.command.State.EXECUTING;
+      return batch.state !== State.EXECUTING;
     }, 'batch to complete');
 
     runs(function() {
@@ -238,9 +259,9 @@ describe('os.command.ParallelCommand error handling', function() {
 
   it('stops executing when an intermediate async sub-command fails', function() {
     var commands = [
-      new os.command.AsyncMockCommand(),
-      new os.command.AsyncMockCommand(),
-      new os.command.AsyncMockCommand()
+      new AsyncMockCommand(),
+      new AsyncMockCommand(),
+      new AsyncMockCommand()
     ];
     addTitlesTo(commands);
     spyOn(commands[0], 'execute').andCallThrough();
@@ -254,7 +275,7 @@ describe('os.command.ParallelCommand error handling', function() {
     });
 
     waitsFor(function() {
-      return batch.state !== os.command.State.EXECUTING && os.command.MockCommand.value == 1;
+      return batch.state !== State.EXECUTING && MockCommand.value == 1;
     }, 'batch to complete');
 
     runs(function() {
@@ -262,14 +283,14 @@ describe('os.command.ParallelCommand error handling', function() {
       expect(commands[0].execute.calls.length).toEqual(1);
       expect(commands[1].execute.calls.length).toEqual(1);
       expect(commands[2].execute).not.toHaveBeenCalled();
-    })
+    });
   });
 
   it('fails when the last async sub-command fails', function() {
     var commands = [
-      new os.command.AsyncMockCommand(),
-      new os.command.AsyncMockCommand(),
-      new os.command.AsyncMockCommand()
+      new AsyncMockCommand(),
+      new AsyncMockCommand(),
+      new AsyncMockCommand()
     ];
     spyOn(commands[0], 'execute').andCallThrough();
     spyOn(commands[1], 'execute').andCallThrough();
@@ -282,7 +303,7 @@ describe('os.command.ParallelCommand error handling', function() {
     });
 
     waitsFor(function() {
-      return batch.state !== os.command.State.EXECUTING && os.command.MockCommand.value == 2;
+      return batch.state !== State.EXECUTING && MockCommand.value == 2;
     }, 'batch to complete');
 
     runs(function() {
@@ -292,5 +313,4 @@ describe('os.command.ParallelCommand error handling', function() {
       expect(commands[2].execute.calls.length).toEqual(1);
     });
   });
-
 });

@@ -1,110 +1,130 @@
-goog.provide('os.command.ToggleWebGL');
+goog.module('os.command.ToggleWebGL');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Promise');
-goog.require('os.command.AbstractAsyncCommand');
-goog.require('os.command.State');
+const MapMode = goog.require('os.MapMode');
+const AbstractAsyncCommand = goog.require('os.command.AbstractAsyncCommand');
+const EventType = goog.require('os.command.EventType');
+const State = goog.require('os.command.State');
+const DataManager = goog.require('os.data.DataManager');
+const {getMapContainer} = goog.require('os.map.instance');
+const ogc = goog.require('os.ogc');
+const launch2DPerformanceDialog = goog.require('os.webgl.launch2DPerformanceDialog');
 
 
 /**
  * Command to switch between 2D/3D map modes.
- *
- * @param {boolean} toggle If WebGL should be enabled.
- * @param {boolean=} opt_silent If errors should be ignored.
- * @extends {os.command.AbstractAsyncCommand}
- * @constructor
  */
-os.command.ToggleWebGL = function(toggle, opt_silent) {
-  os.command.ToggleWebGL.base(this, 'constructor');
-  this.details = null;
-  this.isAsync = true;
-  this.state = os.command.State.READY;
-  this.title = 'Switch to ' + (toggle ? '3D' : '2D') + ' Mode';
+class ToggleWebGL extends AbstractAsyncCommand {
+  /**
+   * Constructor.
+   * @param {boolean} toggle If WebGL should be enabled.
+   * @param {boolean=} opt_silent If errors should be ignored.
+   */
+  constructor(toggle, opt_silent) {
+    super();
+    this.details = null;
+    this.isAsync = true;
+    this.state = State.READY;
+    this.title = 'Switch to ' + (toggle ? '3D' : '2D') + ' Mode';
+
+    /**
+     * If WebGL should be enabled.
+     * @type {boolean}
+     * @protected
+     */
+    this.webGLEnabled = toggle;
+
+    /**
+     * If errors should be ignored.
+     * @type {boolean}
+     * @protected
+     */
+    this.silent = opt_silent != null ? opt_silent : false;
+  }
 
   /**
-   * If WebGL should be enabled.
-   * @type {boolean}
+   * If the application allows switching the map mode.
+   *
+   * @param {boolean} webGLEnabled If WebGL is being used
+   * @return {boolean}
    * @protected
    */
-  this.webGLEnabled = toggle;
+  canSwitch(webGLEnabled) {
+    if (!webGLEnabled && !this.silent) {
+      // make sure switching to 2D won't destroy the browser
+      var totalCount = DataManager.getInstance().getTotalFeatureCount();
+      var maxCount = ogc.getMaxFeatures(MapMode.VIEW_2D);
+
+      if (totalCount > maxCount) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   /**
-   * If errors should be ignored.
-   * @type {boolean}
-   * @protected
+   * @inheritDoc
    */
-  this.silent = opt_silent != null ? opt_silent : false;
-};
-goog.inherits(os.command.ToggleWebGL, os.command.AbstractAsyncCommand);
-
-
-/**
- * If the application allows switching the map mode.
- *
- * @param {boolean} webGLEnabled If WebGL is being used
- * @return {boolean}
- * @protected
- */
-os.command.ToggleWebGL.prototype.canSwitch = function(webGLEnabled) {
-  if (!webGLEnabled && !this.silent) {
-    // make sure switching to 2D won't destroy the browser
-    var totalCount = os.dataManager.getTotalFeatureCount();
-    var maxCount = os.ogc.getMaxFeatures(os.MapMode.VIEW_2D);
-
-    if (totalCount > maxCount) {
+  execute() {
+    const map = getMapContainer();
+    if (!map) {
+      this.state = State.ERROR;
+      this.details = 'Map container not available.';
       return false;
     }
+
+    this.state = State.EXECUTING;
+
+    var webGLEnabled = this.webGLEnabled;
+
+    if (this.canSwitch(webGLEnabled)) {
+      map.setWebGLEnabled(webGLEnabled, this.silent);
+      return this.finish();
+    } else {
+      launch2DPerformanceDialog().then(() => {
+        map.setWebGLEnabled(webGLEnabled, this.silent);
+        this.finish();
+      }, () => {
+        this.handleError(this.title + ' cancelled by user.');
+      });
+    }
+
+    return true;
   }
 
-  return true;
-};
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    const map = getMapContainer();
+    if (!map) {
+      this.state = State.ERROR;
+      this.details = 'Map container not available.';
+      return false;
+    }
 
+    this.state = State.REVERTING;
 
-/**
- * @inheritDoc
- */
-os.command.ToggleWebGL.prototype.execute = function() {
-  this.state = os.command.State.EXECUTING;
+    var webGLEnabled = !this.webGLEnabled;
 
-  var webGLEnabled = this.webGLEnabled;
+    if (this.canSwitch(webGLEnabled)) {
+      map.setWebGLEnabled(webGLEnabled, this.silent);
+      return super.revert();
+    } else {
+      launch2DPerformanceDialog().then(() => {
+        map.setWebGLEnabled(webGLEnabled, this.silent);
 
-  if (this.canSwitch(webGLEnabled)) {
-    os.MapContainer.getInstance().setWebGLEnabled(webGLEnabled, this.silent);
-    return this.finish();
-  } else {
-    os.MapContainer.launch2DPerformanceDialog().then(function() {
-      os.MapContainer.getInstance().setWebGLEnabled(webGLEnabled, this.silent);
-      this.finish();
-    }, function() {
-      this.handleError(this.title + ' cancelled by user.');
-    }, this);
+        this.state = State.READY;
+        this.details = null;
+        this.dispatchEvent(EventType.REVERTED);
+      }, () => {
+        this.handleError(this.title + ' cancelled by user.');
+      });
+    }
+
+    return true;
   }
+}
 
-  return true;
-};
-
-
-/**
- * @inheritDoc
- */
-os.command.ToggleWebGL.prototype.revert = function() {
-  this.state = os.command.State.REVERTING;
-
-  var webGLEnabled = !this.webGLEnabled;
-
-  if (this.canSwitch(webGLEnabled)) {
-    os.MapContainer.getInstance().setWebGLEnabled(webGLEnabled, this.silent);
-    return os.command.ToggleWebGL.base(this, 'revert');
-  } else {
-    os.MapContainer.launch2DPerformanceDialog().then(function() {
-      os.MapContainer.getInstance().setWebGLEnabled(webGLEnabled, this.silent);
-
-      this.state = os.command.State.READY;
-      this.details = null;
-      this.dispatchEvent(os.command.EventType.REVERTED);
-    }, function() {
-      this.handleError(this.title + ' cancelled by user.');
-    }, this);
-  }
-
-  return true;
-};
+exports = ToggleWebGL;

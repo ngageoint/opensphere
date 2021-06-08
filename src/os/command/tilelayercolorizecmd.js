@@ -1,45 +1,49 @@
-goog.provide('os.command.TileLayerColorize');
+goog.module('os.command.TileLayerColorize');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractLayerStyle');
-goog.require('os.command.ICommand');
-goog.require('os.command.State');
+const AbstractLayerStyle = goog.require('os.command.AbstractLayerStyle');
+const instanceOf = goog.require('os.instanceOf');
+const LayerClass = goog.require('os.layer.LayerClass');
+const {getMapContainer} = goog.require('os.map.instance');
 
+const TileLayer = goog.requireType('os.layer.Tile');
 
 
 /**
  * Changes whether a layer is colorized.
- *
- * @param {string} layerId
- * @param {boolean} value
- * @param {boolean=} opt_oldValue
- * @extends {os.command.AbstractLayerStyle}
- * @constructor
  */
-os.command.TileLayerColorize = function(layerId, value, opt_oldValue) {
-  os.command.TileLayerColorize.base(this, 'constructor', layerId, value, opt_oldValue);
-  this.title = 'Colorize Layer';
-  this.value = value;
-};
-goog.inherits(os.command.TileLayerColorize, os.command.AbstractLayerStyle);
-
-
-/**
- * @inheritDoc
- */
-os.command.TileLayerColorize.prototype.getOldValue = function() {
-  var layer = os.MapContainer.getInstance().getLayer(this.layerId);
-  return layer instanceof os.layer.Tile ? layer.getColorize() : null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.command.TileLayerColorize.prototype.applyValue = function(config, value) {
-  var layer = os.MapContainer.getInstance().getLayer(this.layerId);
-  if (layer instanceof os.layer.Tile) {
-    layer.setColorize(value);
+class TileLayerColorize extends AbstractLayerStyle {
+  /**
+   * Constructor.
+   * @param {string} layerId
+   * @param {boolean} value
+   * @param {boolean=} opt_oldValue
+   */
+  constructor(layerId, value, opt_oldValue) {
+    super(layerId, value, opt_oldValue);
+    this.title = 'Colorize Layer';
+    this.value = value;
   }
 
-  os.command.TileLayerColorize.base(this, 'applyValue', config, value);
-};
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var layer = getMapContainer().getLayer(this.layerId);
+    return instanceOf(layer, LayerClass.TILE) ? /** @type {TileLayer} */ (layer).getColorize() : null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  applyValue(config, value) {
+    var layer = getMapContainer().getLayer(this.layerId);
+    if (instanceOf(layer, LayerClass.TILE)) {
+      /** @type {TileLayer} */ (layer).setColorize(value);
+    }
+
+    super.applyValue(config, value);
+  }
+}
+
+exports = TileLayerColorize;

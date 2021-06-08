@@ -1,124 +1,131 @@
-goog.provide('os.command.VectorLayerColor');
+goog.module('os.command.VectorLayerColor');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractVectorStyle');
-goog.require('os.command.style');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.metrics');
-goog.require('os.source.PropertyChange');
-goog.require('os.ui.icons');
-
+const osColor = goog.require('os.color');
+const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
+const ColorChangeType = goog.require('os.command.style.ColorChangeType');
+const OSDataManager = goog.require('os.data.OSDataManager');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const {getMapContainer} = goog.require('os.map.instance');
+const metrics = goog.require('os.metrics');
+const PropertyChange = goog.require('os.source.PropertyChange');
+const VectorSource = goog.require('os.source.Vector');
+const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
+const icons = goog.require('os.ui.icons');
 
 
 /**
  * Changes the color of a layer
- *
- * @extends {os.command.AbstractVectorStyle}
- * @param {string} layerId
- * @param {Array<number>|string} color
- * @param {(Array<number>|string)=} opt_oldColor
- * @param {os.command.style.ColorChangeType=} opt_changeMode
- * @constructor
  */
-os.command.VectorLayerColor = function(layerId, color, opt_oldColor, opt_changeMode) {
+class VectorLayerColor extends AbstractVectorStyle {
   /**
-   * The color change mode. Determines how the config color is set.
-   * @type {os.command.style.ColorChangeType|undefined}
-   * @protected
+   * Constructor.
+   * @param {string} layerId
+   * @param {Array<number>|string} color
+   * @param {(Array<number>|string)=} opt_oldColor
+   * @param {ColorChangeType=} opt_changeMode
    */
-  this.changeMode = opt_changeMode;
+  constructor(layerId, color, opt_oldColor, opt_changeMode) {
+    super(layerId, color, opt_oldColor);
 
-  // intentionally called after changeMode is set so getOldValue has the correct value
-  os.command.VectorLayerColor.base(this, 'constructor', layerId, color, opt_oldColor);
+    /**
+     * The color change mode. Determines how the config color is set.
+     * @type {ColorChangeType|undefined}
+     * @protected
+     */
+    this.changeMode = opt_changeMode;
+    this.updateOldValue();
 
-  if (this.changeMode === os.command.style.ColorChangeType.FILL) {
-    this.title = 'Change Layer Fill Color';
-    this.metricKey = os.metrics.Layer.VECTOR_FILL_COLOR;
-  } else {
-    this.title = 'Change Layer Color';
-    this.metricKey = os.metrics.Layer.VECTOR_COLOR;
-  }
-
-  if (!color) {
-    var layer = /** @type {os.layer.Vector} */ (os.MapContainer.getInstance().getLayer(this.layerId));
-    if (layer) {
-      var options = layer.getLayerOptions();
-      color = /** @type {string} */ (options && options['baseColor'] || os.style.DEFAULT_LAYER_COLOR);
+    if (this.changeMode === ColorChangeType.FILL) {
+      this.title = 'Change Layer Fill Color';
+      this.metricKey = metrics.Layer.VECTOR_FILL_COLOR;
     } else {
-      color = os.style.DEFAULT_LAYER_COLOR;
+      this.title = 'Change Layer Color';
+      this.metricKey = metrics.Layer.VECTOR_COLOR;
     }
-  }
 
-  // when changing the fill, preserve the old alpha value
-  if (this.changeMode === os.command.style.ColorChangeType.FILL) {
-    var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-    if (config) {
-      var currentFill = os.style.getConfigColor(config, true, os.style.StyleField.FILL);
-      var currentFillAlpha = currentFill && currentFill.length === 4 ? currentFill[3] : os.style.DEFAULT_FILL_ALPHA;
-
-      color = os.color.toRgbArray(color);
-      color[3] = currentFillAlpha;
+    if (!color) {
+      var layer = /** @type {os.layer.Vector} */ (getMapContainer().getLayer(this.layerId));
+      if (layer) {
+        var options = layer.getLayerOptions();
+        color = /** @type {string} */ (options && options['baseColor'] || osStyle.DEFAULT_LAYER_COLOR);
+      } else {
+        color = osStyle.DEFAULT_LAYER_COLOR;
+      }
     }
+
+    // when changing the fill, preserve the old alpha value
+    if (this.changeMode === ColorChangeType.FILL) {
+      var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+      if (config) {
+        var currentFill = osStyle.getConfigColor(config, true, StyleField.FILL);
+        var currentFillAlpha = currentFill && currentFill.length === 4 ? currentFill[3] : osStyle.DEFAULT_FILL_ALPHA;
+
+        color = osColor.toRgbArray(color);
+        color[3] = currentFillAlpha;
+      }
+    }
+
+    // make sure the value is a string
+    this.value = osStyle.toRgbaString(color);
   }
 
-  // make sure the value is a string
-  this.value = os.style.toRgbaString(color);
-};
-goog.inherits(os.command.VectorLayerColor, os.command.AbstractVectorStyle);
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
 
+    var ret;
+    if (this.changeMode === ColorChangeType.FILL) {
+      ret = config ? osStyle.getConfigColor(config, false, StyleField.FILL) : osStyle.DEFAULT_FILL_COLOR;
+    } else {
+      ret = config ? osStyle.getConfigColor(config) : osStyle.DEFAULT_LAYER_COLOR;
+    }
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerColor.prototype.getOldValue = function() {
-  var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-
-  var ret;
-  if (this.changeMode === os.command.style.ColorChangeType.FILL) {
-    ret = config ? os.style.getConfigColor(config, false, os.style.StyleField.FILL) : os.style.DEFAULT_FILL_COLOR;
-  } else {
-    ret = config ? os.style.getConfigColor(config) : os.style.DEFAULT_LAYER_COLOR;
+    return ret;
   }
 
-  return ret;
-};
+  /**
+   * @inheritDoc
+   */
+  applyValue(config, value) {
+    if (this.changeMode === ColorChangeType.FILL) {
+      osStyle.setFillColor(config, value);
+    } else {
+      // preserve the original fill color so the opacity isn't changed
+      var fillColor = osStyle.getConfigColor(config, false, StyleField.FILL);
 
+      // update the config color
+      osStyle.setConfigColor(config, value);
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerColor.prototype.applyValue = function(config, value) {
-  if (this.changeMode === os.command.style.ColorChangeType.FILL) {
-    os.style.setFillColor(config, value);
-  } else {
-    // preserve the original fill color so the opacity isn't changed
-    var fillColor = os.style.getConfigColor(config, false, os.style.StyleField.FILL);
+      // restore the fill color
+      osStyle.setFillColor(config, fillColor);
 
-    // update the config color
-    os.style.setConfigColor(config, value);
+      // update the layer icons to reflect the color change
+      icons.adjustIconSet(this.layerId, value);
+    }
 
-    // restore the fill color
-    os.style.setFillColor(config, fillColor);
-
-    // update the layer icons to reflect the color change
-    os.ui.icons.adjustIconSet(this.layerId, value);
+    super.applyValue(config, value);
   }
 
-  os.command.VectorLayerColor.base(this, 'applyValue', config, value);
-};
+  /**
+   * @inheritDoc
+   */
+  finish(config) {
+    // dispatch the color change event on the source for the histogram
+    var source = OSDataManager.getInstance().getSource(this.layerId);
+    source.dispatchEvent(new PropertyChangeEvent(PropertyChange.COLOR, this.value));
 
+    if (source instanceof VectorSource) {
+      // a color change on the layer should clear any color model on the source
+      source.setColorModel(null);
+    }
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerColor.prototype.finish = function(config) {
-  // dispatch the color change event on the source for the histogram
-  var source = os.osDataManager.getSource(this.layerId);
-  source.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.COLOR, this.value));
-
-  if (source instanceof os.source.Vector) {
-    // a color change on the layer should clear any color model on the source
-    source.setColorModel(null);
+    super.finish(config);
   }
+}
 
-  os.command.VectorLayerColor.base(this, 'finish', config);
-};
+exports = VectorLayerColor;

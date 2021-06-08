@@ -1,82 +1,86 @@
-goog.provide('os.command.NonQueryClear');
-goog.require('os.command.ICommand');
-goog.require('os.command.State');
+goog.module('os.command.NonQueryClear');
+goog.module.declareLegacyNamespace();
 
+const State = goog.require('os.command.State');
+const {getMapContainer} = goog.require('os.map.instance');
+const areaManager = goog.require('os.query.AreaManager');
+
+const ICommand = goog.requireType('os.command.ICommand');
 
 
 /**
  * Command for clearing spatial queries on the map.
  *
- * @implements {os.command.ICommand}
- * @constructor
+ * @implements {ICommand}
  */
-os.command.NonQueryClear = function() {
+class NonQueryClear {
   /**
-   * @type {!Array<!ol.Feature>}
-   * @private
+   * Constructor.
    */
-  this.features_ = [];
-};
+  constructor() {
+    /**
+     * @inheritDoc
+     */
+    this.isAsync = false;
 
+    /**
+     * @inheritDoc
+     */
+    this.title = 'Clear Non-query Features';
 
-/**
- * @inheritDoc
- */
-os.command.NonQueryClear.prototype.isAsync = false;
+    /**
+     * @inheritDoc
+     */
+    this.details = null;
 
+    /**
+     * @inheritDoc
+     */
+    this.state = State.READY;
 
-/**
- * @inheritDoc
- */
-os.command.NonQueryClear.prototype.title = 'Clear Non-query Features';
-
-
-/**
- * @inheritDoc
- */
-os.command.NonQueryClear.prototype.details = null;
-
-
-/**
- * @inheritDoc
- */
-os.command.NonQueryClear.prototype.state = os.command.State.READY;
-
-
-/**
- * @inheritDoc
- */
-os.command.NonQueryClear.prototype.execute = function() {
-  this.state = os.command.State.EXECUTING;
-
-  var features = os.MapContainer.getInstance().getFeatures();
-  var featuresToRemove = [];
-  var am = os.ui.areaManager;
-
-  if (features.length > 0) {
-    for (var i = 0; i < features.length; i++) {
-      var feature = features[i];
-      if (!am.get(feature)) {
-        featuresToRemove.push(feature);
-      }
-    }
+    /**
+     * @type {!Array<!ol.Feature>}
+     * @private
+     */
+    this.features_ = [];
   }
 
-  os.MapContainer.getInstance().removeFeatures(featuresToRemove);
-  this.features_ = featuresToRemove;
+  /**
+   * @inheritDoc
+   */
+  execute() {
+    this.state = State.EXECUTING;
 
-  this.state = os.command.State.SUCCESS;
-  return true;
-};
+    var features = getMapContainer().getFeatures();
+    var featuresToRemove = [];
+    var am = areaManager.getInstance();
 
+    if (features.length > 0) {
+      for (var i = 0; i < features.length; i++) {
+        var feature = features[i];
+        if (!am.get(feature)) {
+          featuresToRemove.push(feature);
+        }
+      }
+    }
 
-/**
- * @inheritDoc
- */
-os.command.NonQueryClear.prototype.revert = function() {
-  this.state = os.command.State.REVERTING;
-  os.MapContainer.getInstance().addFeatures(this.features_);
-  this.features_.length = 0;
-  this.state = os.command.State.READY;
-  return true;
-};
+    getMapContainer().removeFeatures(featuresToRemove);
+    this.features_ = featuresToRemove;
+
+    this.state = State.SUCCESS;
+    return true;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    this.state = State.REVERTING;
+    getMapContainer().addFeatures(this.features_);
+    this.features_.length = 0;
+    this.state = State.READY;
+    return true;
+  }
+}
+
+exports = NonQueryClear;

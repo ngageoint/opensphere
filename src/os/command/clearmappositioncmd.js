@@ -1,74 +1,76 @@
-goog.provide('os.command.ClearMapPosition');
-goog.require('os.MapContainer');
-goog.require('os.command.ICommand');
-goog.require('os.command.State');
+goog.module('os.command.ClearMapPosition');
+goog.module.declareLegacyNamespace();
 
+const State = goog.require('os.command.State');
+const {getMapContainer} = goog.require('os.map.instance');
+
+const ICommand = goog.requireType('os.command.ICommand');
 
 
 /**
  * Resets the map's center/zoom to the default values.
  *
- * @implements {os.command.ICommand}
- * @constructor
+ * @implements {ICommand}
  */
-os.command.ClearMapPosition = function() {
+class ClearMapPosition {
   /**
-   * @type {?osx.map.CameraState}
-   * @private
+   * Constructor.
    */
-  this.cameraState_ = null;
-};
+  constructor() {
+    /**
+     * @inheritDoc
+     */
+    this.isAsync = false;
 
+    /**
+     * @inheritDoc
+     */
+    this.title = 'Clear Map Position';
 
-/**
- * @inheritDoc
- */
-os.command.ClearMapPosition.prototype.isAsync = false;
+    /**
+     * @inheritDoc
+     */
+    this.details = null;
 
+    /**
+     * @inheritDoc
+     */
+    this.state = State.READY;
 
-/**
- * @inheritDoc
- */
-os.command.ClearMapPosition.prototype.title = 'Clear Map Position';
+    /**
+     * @type {?osx.map.CameraState}
+     * @private
+     */
+    this.cameraState_ = null;
+  }
 
-
-/**
- * @inheritDoc
- */
-os.command.ClearMapPosition.prototype.details = null;
-
-
-/**
- * @inheritDoc
- */
-os.command.ClearMapPosition.prototype.state = os.command.State.READY;
-
-
-/**
- * @inheritDoc
- */
-os.command.ClearMapPosition.prototype.execute = function() {
-  this.state = os.command.State.EXECUTING;
-  var map = os.MapContainer.getInstance();
-  this.cameraState_ = map.persistCameraState();
-  map.resetView();
-  this.state = os.command.State.SUCCESS;
-  return true;
-};
-
-
-/**
- * @inheritDoc
- */
-os.command.ClearMapPosition.prototype.revert = function() {
-  this.state = os.command.State.REVERTING;
-
-  if (this.cameraState_) {
-    var map = os.MapContainer.getInstance();
-    map.restoreCameraState(this.cameraState_);
-    this.state = os.command.State.READY;
+  /**
+   * @inheritDoc
+   */
+  execute() {
+    this.state = State.EXECUTING;
+    var map = getMapContainer();
+    this.cameraState_ = map.persistCameraState();
+    map.resetView();
+    this.state = State.SUCCESS;
     return true;
   }
 
-  return false;
-};
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    this.state = State.REVERTING;
+
+    if (this.cameraState_) {
+      var map = getMapContainer();
+      map.restoreCameraState(this.cameraState_);
+      this.state = State.READY;
+      return true;
+    }
+
+    return false;
+  }
+}
+
+exports = ClearMapPosition;

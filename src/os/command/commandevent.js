@@ -1,34 +1,37 @@
-goog.provide('os.command.CommandEvent');
-goog.require('goog.events.Event');
-goog.require('os.command.EventType');
+goog.module('os.command.CommandEvent');
+goog.module.declareLegacyNamespace();
 
+const GoogEvent = goog.require('goog.events.Event');
+
+const EventType = goog.requireType('os.command.EventType');
 
 
 /**
- * @extends {goog.events.Event}
- * @constructor
- * @param {os.command.EventType} type the event type
- * @param {os.command.ICommand} command The command
- * @param {Object=} opt_target
  * Reference to the object that is the target of this event
  */
-os.command.CommandEvent = function(type, command, opt_target) {
-  os.command.CommandEvent.base(this, 'constructor', type, opt_target);
-  this.command_ = command;
-};
-goog.inherits(os.command.CommandEvent, goog.events.Event);
+class CommandEvent extends GoogEvent {
+  /**
+   * Constructor.
+   * @param {EventType} type the event type
+   * @param {os.command.ICommand} command The command
+   * @param {Object=} opt_target
+   */
+  constructor(type, command, opt_target) {
+    super(type, opt_target);
 
+    /**
+     * @private
+     * @type {os.command.ICommand}
+     */
+    this.command_ = command;
+  }
 
-/**
- * @private
- * @type {os.command.ICommand}
- */
-os.command.CommandEvent.prototype.command_ = null;
+  /**
+   * @return {os.command.ICommand}
+   */
+  getCommand() {
+    return this.command_;
+  }
+}
 
-
-/**
- * @return {os.command.ICommand}
- */
-os.command.CommandEvent.prototype.getCommand = function() {
-  return this.command_;
-};
+exports = CommandEvent;

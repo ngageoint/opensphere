@@ -22,6 +22,26 @@ os.ui.query.cmd.AbstractArea = function(area) {
   os.ui.query.cmd.AbstractArea.base(this, 'constructor');
 
   /**
+   * @inheritDoc
+   */
+  this.isAsync = false;
+
+  /**
+   * @inheritDoc
+   */
+  this.title = 'Add/Remove Area';
+
+  /**
+   * @inheritDoc
+   */
+  this.details = null;
+
+  /**
+   * @inheritDoc
+   */
+  this.state = os.command.State.READY;
+
+  /**
    * @type {!ol.Feature}
    * @protected
    */
@@ -54,30 +74,6 @@ os.ui.query.cmd.AbstractArea = function(area) {
   this.append = true;
 };
 goog.inherits(os.ui.query.cmd.AbstractArea, goog.Disposable);
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.cmd.AbstractArea.prototype.isAsync = false;
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.cmd.AbstractArea.prototype.title = 'Add/Remove Area';
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.cmd.AbstractArea.prototype.details = null;
-
-
-/**
- * @inheritDoc
- */
-os.ui.query.cmd.AbstractArea.prototype.state = os.command.State.READY;
 
 
 /**

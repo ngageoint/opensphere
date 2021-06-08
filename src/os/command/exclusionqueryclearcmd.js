@@ -1,22 +1,25 @@
-goog.provide('os.command.ExclusionQueryClear');
-goog.require('os.command.QueryClear');
+goog.module('os.command.ExclusionQueryClear');
+goog.module.declareLegacyNamespace();
 
+const QueryClear = goog.require('os.command.QueryClear');
 
 
 /**
  * Command to add a exclusion query to the map.
- *
- * @extends {os.command.QueryClear}
- * @constructor
  */
-os.command.ExclusionQueryClear = function() {
-  os.command.ExclusionQueryClear.base(this, 'constructor');
-  this.value = false;
-};
-goog.inherits(os.command.ExclusionQueryClear, os.command.QueryClear);
+class ExclusionQueryClear extends QueryClear {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.value = false;
 
+    /**
+     * @inheritDoc
+     */
+    this.title = 'Clear exclusion areas';
+  }
+}
 
-/**
- * @inheritDoc
- */
-os.command.ExclusionQueryClear.prototype.title = 'Clear exclusion areas';
+exports = ExclusionQueryClear;

@@ -80,7 +80,6 @@ goog.require('os.ui.help.Controls');
 goog.require('os.ui.help.webGLPerfCaveatDirective');
 goog.require('os.ui.help.webGLSupportDirective');
 goog.require('os.ui.window');
-goog.require('os.ui.window.ConfirmUI');
 goog.require('os.webgl');
 
 
@@ -2082,35 +2081,4 @@ os.MapContainer.replaceExtentNormalized_ = function(match, submatch, offset, str
   extent = ol.proj.transformExtent(extent, os.map.PROJECTION, os.proj.EPSG4326);
   extent = os.extent.normalize(extent, undefined, undefined, os.proj.EPSG4326);
   return os.MapContainer.replaceExtentInternal_(extent, match, submatch, offset, str);
-};
-
-
-/**
- * Launch a dialog warning users of the risks in using 2D with lots of data.
- *
- * @return {!goog.Promise}
- */
-os.MapContainer.launch2DPerformanceDialog = function() {
-  return new goog.Promise(function(resolve, reject) {
-    var text = '<p>Switching to 2D mode with the current data volume may degrade performance considerably or crash ' +
-        'the browser. Click OK to switch to 2D, or Cancel to stay in 3D.</p>' +
-        '<p>If you would like to switch to 2D mode safely, please consider narrowing your time range, applying ' +
-        'filters, shrinking your query areas, or removing some feature layers.</p>';
-
-    os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
-      confirm: resolve,
-      cancel: reject,
-      prompt: text,
-      windowOptions: {
-        'label': 'Feature Limit Exceeded',
-        'icon': 'fa fa-warning',
-        'x': 'center',
-        'y': 'center',
-        'width': '425',
-        'height': 'auto',
-        'modal': 'true',
-        'headerClass': 'bg-warning u-bg-warning-text'
-      }
-    }));
-  });
 };
