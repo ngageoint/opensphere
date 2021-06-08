@@ -120,6 +120,13 @@ ElectronOS.restart = function() {};
 ElectronOS.addUserSettings = function(fileName, content) {};
 
 /**
+ * Remove a user settings file.
+ * @param {string} file The file name.
+ * @return {!Promise} A promise that resolves when the settings file has been removed.
+ */
+ElectronOS.removeUserSettings = function(file) {};
+
+/**
  * Get the base settings file to load in the application.
  * @return {string}
  */

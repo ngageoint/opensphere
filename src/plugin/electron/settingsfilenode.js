@@ -1,8 +1,19 @@
 goog.declareModuleId('plugin.electron.SettingsFileNode');
 
+import {directiveTag as nodeUi} from './settingsfilenodeui';
+
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const TriState = goog.require('os.structs.TriState');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+
+
+/**
+ * Icon to display on the default settings file.
+ * @type {string}
+ */
+const defaultIcon = '<i class="fas fa-shield-alt" title="This is the default application settings file. It can be ' +
+    'disabled, but cannot be removed."></i>';
+
 
 /**
  * Tree node for a settings file.
@@ -21,6 +32,7 @@ export default class SettingsFileNode extends SlickTreeNode {
      */
     this.file = file.replace(/^!/, '');
 
+    this.setNodeUI(`<${nodeUi}></${nodeUi}>`);
     this.setState(file.startsWith('!') ? TriState.OFF : TriState.ON);
 
     // Strip the user settings directory from the node label.
@@ -34,6 +46,27 @@ export default class SettingsFileNode extends SlickTreeNode {
    */
   getFilePath() {
     return this.getState() === TriState.ON ? this.file : `!${this.file}`;
+  }
+
+  /**
+   * If this is the default settings file.
+   * @return {boolean}
+   */
+  isDefault() {
+    return this.getLabel() === 'settings-default.json';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  formatIcons() {
+    let icons = super.formatIcons();
+
+    if (this.isDefault()) {
+      icons += defaultIcon;
+    }
+
+    return icons;
   }
 
   /**
