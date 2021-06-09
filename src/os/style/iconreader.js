@@ -175,8 +175,14 @@ os.style.IconReader.translateIcons = function(config) {
   // replace google maps/earth icon urls with our copies
   var src = /** @type {string|undefined} */ (config['src']);
   if (src) {
-    if (os.ui.file.kml.GMAPS_SEARCH.test(src)) {
-      config['src'] = os.ui.file.kml.replaceGoogleUri(src);
+    const isGmaps = os.ui.file.kml.GMAPS_SEARCH.test(src);
+    const isMirror = src.indexOf(os.ui.file.kml.mirror) != -1;
+    if (isGmaps || isMirror) {
+      if (isGmaps) {
+        config['src'] = os.ui.file.kml.replaceGoogleUri(src);
+      } else {
+        config['src'] = os.ui.file.kml.replaceExportableUri(src);
+      }
 
       // if an anchor was not specified, fix it (because failing at "Pin the tail on the donkey" is embarrassing)
       if (!config['anchor'] && src.indexOf('/pushpin/') > -1) {
