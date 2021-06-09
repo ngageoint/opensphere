@@ -24,7 +24,7 @@ let baseSettingsFile = '';
 
 /**
  * Settings files available to the application.
- * @type {!Array<string>}
+ * @type {!Array<!ElectronOS.SettingsFile>}
  */
 let settingsFiles = [];
 
@@ -146,17 +146,17 @@ const setMaxMemory = (value) => {
 
 /**
  * Add a user settings file.
- * @param {string} fileName The file name.
+ * @param {!ElectronOS.SettingsFile} file The file.
  * @param {string} content The settings content.
  * @return {!Promise} A promise that resolves when the settings file has been saved.
  */
-const addUserSettings = async (fileName, content) => {
-  return ipcRenderer.invoke(EventType.SETTINGS_ADD, fileName, content).then((files) => settingsFiles = files);
+const addUserSettings = async (file, content) => {
+  return ipcRenderer.invoke(EventType.SETTINGS_ADD, file, content).then((files) => settingsFiles = files);
 };
 
 /**
  * Remove a user settings file.
- * @param {string} file The file name.
+ * @param {!ElectronOS.SettingsFile} file The file.
  * @return {!Promise} A promise that resolves when the settings file has been removed.
  */
 const removeUserSettings = async (file) => {

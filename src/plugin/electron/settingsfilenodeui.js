@@ -79,7 +79,7 @@ export class Controller extends AbstractNodeUICtrl {
     const prompt = `Are you sure you want to remove <strong>${this.node.getLabel()}</strong> from the application?`;
     launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
       confirm: () => {
-        ElectronOS.removeUserSettings(this.node.getFilePath()).then(() => {
+        ElectronOS.removeUserSettings(this.node.getFile()).then(() => {
           Dispatcher.getInstance().dispatchEvent(EventType.UPDATE_SETTINGS);
         });
       },

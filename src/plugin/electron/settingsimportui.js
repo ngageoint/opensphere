@@ -25,7 +25,14 @@ export default class SettingsImportUI extends FileImportUI {
     const content = /** @type {string} */ (file.getContent());
     const fileName = file.getFileName();
     if (content && fileName) {
-      ElectronOS.addUserSettings(fileName, content).then(() => {
+      const file = /** @type {ElectronOS.SettingsFile} */ ({
+        default: false,
+        enabled: true,
+        label: fileName,
+        path: fileName
+      });
+
+      ElectronOS.addUserSettings(file, content).then(() => {
         Dispatcher.getInstance().dispatchEvent(EventType.UPDATE_SETTINGS);
       });
     }

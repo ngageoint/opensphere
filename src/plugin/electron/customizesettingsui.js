@@ -5,7 +5,6 @@ goog.require('os.ui.slick.slickTreeDirective');
 import SettingsFileNode from './settingsfilenode';
 import settingsImportManager from './settingsimportmanager';
 
-const {equals: arrayEquals} = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
@@ -49,6 +48,24 @@ Module.directive('customizesettings', [directive]);
 
 
 /**
+ * The original settings file list when this module was loaded.
+ * @type {!Array<!ElectronOS.SettingsFile>}
+ */
+const origFiles = ElectronOS.getSettingsFiles();
+
+
+/**
+ * Test if files have changed since the application was loaded.
+ * @param {!Array<!ElectronOS.SettingsFile>} current The current files.
+ * @return {boolean}
+ */
+const filesChanged = (current) => {
+  return origFiles.length !== current.length ||
+      origFiles.some((f, idx) => f.path !== current[idx].path || f.enabled !== current[idx].enabled);
+};
+
+
+/**
  * Controller for the customizesettings directive.
  * @unrestricted
  */
@@ -75,13 +92,6 @@ export class Controller {
     this.element = $element;
 
     /**
-     * The original settings file list.
-     * @type {!Array<string>}
-     * @protected
-     */
-    this.origFiles = ElectronOS.getSettingsFiles();
-
-    /**
      * Delay to debounce save attempts.
      * @type {!Delay}
      * @protected
@@ -92,7 +102,7 @@ export class Controller {
      * If changes have been made.
      * @type {boolean}
      */
-    this['changed'] = false;
+    this['changed'] = filesChanged(ElectronOS.getSettingsFiles());
 
     /**
      * Tree nodes for the settings files.
@@ -146,9 +156,9 @@ export class Controller {
    * @protected
    */
   save() {
-    const files = this['fileNodes'].map((node) => node.getFilePath());
+    const files = this['fileNodes'].map((node) => node.getFile());
 
-    this['changed'] = !arrayEquals(this.origFiles, files);
+    this['changed'] = filesChanged(files);
     osUi.apply(this.scope);
 
     return ElectronOS.setSettingsFiles(files);
@@ -189,6 +199,6 @@ export class Controller {
       });
     });
 
-    this.saveDelay.start();
+    osUi.apply(this.scope);
   }
 }

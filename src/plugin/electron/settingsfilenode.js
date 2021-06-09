@@ -21,31 +21,31 @@ const defaultIcon = '<i class="fas fa-shield-alt" title="This is the default app
 export default class SettingsFileNode extends SlickTreeNode {
   /**
    * Constructor.
-   * @param {string} file The settings file.
+   * @param {!ElectronOS.SettingsFile} file The settings file.
    */
   constructor(file) {
     super();
 
+    // Prevent drag/drop on the node.
+    this.childrenAllowed = false;
+
     /**
      * The file.
-     * @type {string}
+     * @type {!ElectronOS.SettingsFile}
      */
-    this.file = file.replace(/^!/, '');
+    this.file = file;
 
+    this.setLabel(file.label);
     this.setNodeUI(`<${nodeUi}></${nodeUi}>`);
-    this.setState(file.startsWith('!') ? TriState.OFF : TriState.ON);
-
-    // Strip the user settings directory from the node label.
-    const userSettingsDir = ElectronOS.getUserSettingsDir();
-    this.setLabel(this.file.replace(userSettingsDir, '').replace(/^[\/]+/, ''));
+    this.setState(file.enabled ? TriState.ON : TriState.OFF);
   }
 
   /**
    * Get the file path to save to settings.
-   * @return {string}
+   * @return {!ElectronOS.SettingsFile}
    */
-  getFilePath() {
-    return this.getState() === TriState.ON ? this.file : `!${this.file}`;
+  getFile() {
+    return this.file;
   }
 
   /**
@@ -53,7 +53,7 @@ export default class SettingsFileNode extends SlickTreeNode {
    * @return {boolean}
    */
   isDefault() {
-    return this.getLabel() === 'settings-default.json';
+    return !!this.file && this.file.default;
   }
 
   /**
@@ -74,7 +74,7 @@ export default class SettingsFileNode extends SlickTreeNode {
    */
   formatLabel(value) {
     let labelClass = 'text-truncate flex-fill';
-    if (this.getState() !== TriState.ON) {
+    if (!this.file.enabled) {
       // if the file is disabled, adjust the style to indicate the change
       labelClass += ' text-muted';
     }
@@ -86,7 +86,12 @@ export default class SettingsFileNode extends SlickTreeNode {
    * @inheritDoc
    */
   setState(value) {
+    if (this.file) {
+      this.file.enabled = value === TriState.ON;
+    }
+
     super.setState(value);
+
     this.dispatchEvent(new PropertyChangeEvent('label'));
   }
 }
