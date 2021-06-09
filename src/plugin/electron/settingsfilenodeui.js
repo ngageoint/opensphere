@@ -129,7 +129,7 @@ export class Controller extends AbstractNodeUICtrl {
       windowOptions: {
         icon: 'far fa-trash-alt',
         label: 'Remove Settings File',
-        width: 450
+        width: 350
       }
     }));
   }

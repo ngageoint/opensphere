@@ -122,6 +122,13 @@ ElectronOS.restart = function() {};
 ElectronOS.SettingsFile;
 
 /**
+ * Get the settings file config by file name.
+ * @param {string} fileName The file name.
+ * @return {ElectronOS.SettingsFile|undefined} The file, or undefined if not found.
+ */
+ElectronOS.getSettingsFile = function(fileName) {};
+
+/**
  * Add a user settings file.
  * @param {!ElectronOS.SettingsFile} file The file.
  * @param {string} content The settings content.

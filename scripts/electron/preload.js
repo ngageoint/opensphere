@@ -1,4 +1,6 @@
 const {contextBridge, ipcRenderer} = require('electron');
+const path = require('path');
+
 const {getMaximumMemory, getSystemMemory, setMaximumMemory} = require('../memconfig.js');
 
 /**
@@ -146,6 +148,16 @@ const setMaxMemory = (value) => {
 };
 
 /**
+ * Get the settings file config by file name.
+ * @param {string} fileName The file name.
+ * @return {ElectronOS.SettingsFile|undefined} The file, or undefined if not found.
+ */
+const getSettingsFile = (fileName) => {
+  const filePath = path.join(userSettingsDir, fileName);
+  return settingsFiles.find((file) => file.path === filePath);
+};
+
+/**
  * Add a user settings file.
  * @param {!ElectronOS.SettingsFile} file The file.
  * @param {string} content The settings content.
@@ -250,6 +262,7 @@ contextBridge.exposeInMainWorld('ElectronOS', {
   getMaxMemory,
   getSystemMemory,
   setMaxMemory,
+  getSettingsFile,
   addUserSettings,
   removeUserSettings,
   updateUserSettings,
