@@ -1,6 +1,7 @@
 goog.provide('os.data.AreaTreeSearch');
+
 goog.require('os.data.AreaNode');
-goog.require('os.query.AreaManager');
+goog.require('os.query.instance');
 goog.require('os.ui.slick.AbstractGroupByTreeSearch');
 
 
@@ -24,7 +25,7 @@ goog.inherits(os.data.AreaTreeSearch, os.ui.slick.AbstractGroupByTreeSearch);
  * @inheritDoc
  */
 os.data.AreaTreeSearch.prototype.getSearchItems = function() {
-  return os.ui.areaManager.getAll();
+  return os.query.instance.getAreaManager().getAll();
 };
 
 
@@ -44,7 +45,7 @@ os.data.AreaTreeSearch.prototype.setupNode = function(item) {
  * @override
  */
 os.data.AreaTreeSearch.prototype.fillListFromSearch = function(list) {
-  var areas = os.ui.areaManager.getAll();
+  var areas = os.query.instance.getAreaManager().getAll();
   if (areas && areas.length > 0) {
     for (var i = 0, n = areas.length; i < n; i++) {
       list.push(new os.data.AreaNode(areas[i]));

@@ -3,7 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
 const {getMapContainer} = goog.require('os.map.instance');
-const areaManager = goog.require('os.query.AreaManager');
+const {getAreaManager} = goog.require('os.query.instance');
 
 const ICommand = goog.requireType('os.command.ICommand');
 
@@ -53,7 +53,7 @@ class NonQueryClear {
 
     var features = getMapContainer().getFeatures();
     var featuresToRemove = [];
-    var am = areaManager.getInstance();
+    var am = getAreaManager();
 
     if (features.length > 0) {
       for (var i = 0; i < features.length; i++) {

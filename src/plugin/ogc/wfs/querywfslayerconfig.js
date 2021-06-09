@@ -4,9 +4,9 @@ goog.module.declareLegacyNamespace();
 const ParamModifier = goog.require('os.net.ParamModifier');
 const ModifierConstants = goog.require('os.ogc.filter.ModifierConstants');
 const OGCFilterModifier = goog.require('os.ogc.filter.OGCFilterModifier');
-const queryManager = goog.require('os.query.QueryManager');
 const TemporalHandler = goog.require('os.query.TemporalHandler');
 const TemporalQueryManager = goog.require('os.query.TemporalQueryManager');
+const {getQueryManager} = goog.require('os.query.instance');
 const FilterIDModifier = goog.require('plugin.ogc.query.FilterIDModifier');
 const OGCQueryHandler = goog.require('plugin.ogc.query.OGCQueryHandler');
 const OGCTemporalFormatter = goog.require('plugin.ogc.query.OGCTemporalFormatter');
@@ -44,7 +44,7 @@ class QueryWFSLayerConfig extends WFSLayerConfig {
     var relatedLayer = options['relatedLayer'] != null ? options['relatedLayer'] : null;
 
     // add connections to the query managers
-    var qm = queryManager.getInstance();
+    var qm = getQueryManager();
     if (featureIDs || useTemporal || useSpatial || useFilter || useExclusions) {
       var ogcFilterOptions = /** @type {OGCFilterModifierOptions} */ ({
         exclusions: useExclusions,

@@ -5,7 +5,7 @@ const Promise = goog.require('goog.Promise');
 
 const IAreaTest = goog.require('os.data.IAreaTest');
 const osImplements = goog.require('os.implements');
-const AreaManager = goog.require('os.query.AreaManager');
+const {getAreaManager} = goog.require('os.query.instance');
 const BaseFacet = goog.require('os.search.BaseFacet');
 
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
@@ -33,7 +33,7 @@ class Area extends BaseFacet {
    * @inheritDoc
    */
   valueToLabel(value) {
-    var area = AreaManager.getInstance().get(value);
+    var area = getAreaManager().get(value);
 
     if (area) {
       return /** @type {string} */ (area.get('title'));
@@ -48,7 +48,7 @@ class Area extends BaseFacet {
   load(item, facets) {
     return this.updateCache_(
         item,
-        AreaManager.getInstance().getAll(),
+        getAreaManager().getAll(),
         function(areaId) {
           BaseFacet.update('Area', areaId, facets);
         });
@@ -63,7 +63,7 @@ class Area extends BaseFacet {
     if (areaIds) {
       BaseFacet.updateResults('Area', results);
 
-      var areas = AreaManager.getInstance().getAll();
+      var areas = getAreaManager().getAll();
       if (areas) {
         areas = areas.filter(function(area) {
           return areaIds.indexOf(/** @type {string} */ (area.getId())) > -1;

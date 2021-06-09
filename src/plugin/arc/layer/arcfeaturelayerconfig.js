@@ -1,6 +1,5 @@
 goog.module('plugin.arc.layer.ArcFeatureLayerConfig');
 
-const queryManager = goog.require('os.query.QueryManager');
 const log = goog.require('goog.log');
 const FeatureImporter = goog.require('os.im.FeatureImporter');
 const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
@@ -12,6 +11,7 @@ const ParamModifier = goog.require('os.net.ParamModifier');
 const Request = goog.require('os.net.Request');
 const TemporalHandler = goog.require('os.query.TemporalHandler');
 const TemporalQueryManager = goog.require('os.query.TemporalQueryManager');
+const {getQueryManager} = goog.require('os.query.instance');
 const ArcJSONParser = goog.require('plugin.arc.ArcJSONParser');
 const arc = goog.require('plugin.arc');
 const ArcFilterModifier = goog.require('plugin.arc.query.ArcFilterModifier');
@@ -76,7 +76,7 @@ class ArcFeatureLayerConfig extends AbstractDataSourceLayerConfig {
 
       var handler = new ArcQueryHandler();
       handler.setSource(source);
-      queryManager.getInstance().registerHandler(handler);
+      getQueryManager().registerHandler(handler);
 
       if (useTemporal) {
         var tqModifier = new ParamModifier('time', 'time', '{time}', '');

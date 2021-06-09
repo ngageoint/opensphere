@@ -20,6 +20,7 @@ goog.require('os.layer.PropertyChange');
 goog.require('os.legend');
 goog.require('os.legend.ILegendRenderer');
 goog.require('os.net');
+goog.require('os.query.instance');
 goog.require('os.registerClass');
 goog.require('os.source');
 goog.require('os.source.ISource');
@@ -432,7 +433,7 @@ os.layer.Vector.prototype.getFASet = function() {
     icons.push(os.ui.Icons.STATE);
   }
 
-  if (os.query.QueryManager.getInstance().hasEnabledEntries(this.getId())) {
+  if (os.query.instance.getQueryManager().hasEnabledEntries(this.getId())) {
     icons.push(os.ui.Icons.FILTER);
   }
 
@@ -488,7 +489,7 @@ os.layer.Vector.prototype.getIconSet = function() {
       icons.push(os.ui.Icons.STATE);
     }
 
-    if (os.query.QueryManager.getInstance().hasEnabledEntries(this.getId())) {
+    if (os.query.instance.getQueryManager().hasEnabledEntries(this.getId())) {
       icons.push(os.ui.Icons.FILTER);
     }
   }

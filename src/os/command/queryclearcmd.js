@@ -2,7 +2,7 @@ goog.module('os.command.QueryClear');
 goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
-const AreaManager = goog.require('os.query.AreaManager');
+const {getAreaManager} = goog.require('os.query.instance');
 
 const ICommand = goog.requireType('os.command.ICommand');
 
@@ -55,7 +55,7 @@ class QueryClear {
    */
   execute() {
     this.state = State.EXECUTING;
-    var am = AreaManager.getInstance();
+    var am = getAreaManager();
     var list = am.getAll();
 
     for (var i = 0, n = list.length; i < n; i++) {
@@ -75,7 +75,7 @@ class QueryClear {
   revert() {
     this.state = State.REVERTING;
 
-    var am = AreaManager.getInstance();
+    var am = getAreaManager();
     var list = am.getAll();
 
     for (var i = 0, n = list.length; i < n; i++) {
