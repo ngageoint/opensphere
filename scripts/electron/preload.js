@@ -194,7 +194,7 @@ const getBaseSettingsFile = () => baseSettingsFile;
 
 /**
  * Get the settings files available to the application.
- * @return {!Array<string>}
+ * @return {!Array<!ElectronOS.SettingsFile>}
  */
 const getSettingsFiles = () => settingsFiles;
 
@@ -206,7 +206,7 @@ const getUserSettingsDir = () => userSettingsDir;
 
 /**
  * Update application settings files.
- * @param {!Array<string>} value The list of settings files.
+ * @param {!Array<!ElectronOS.SettingsFile>} value The list of settings files.
  * @return {!Promise} A promise that resolves when settings have been saved.
  */
 const setSettingsFiles = (value) => {

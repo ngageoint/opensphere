@@ -15,7 +15,7 @@ export default class CustomizeSettings extends SettingPlugin {
     super();
 
     this.setLabel('Customize Settings');
-    this.setDescription('Manage which settings files are loaded by the application');
+    this.setDescription('Manage settings files loaded by the application');
     this.setTags(['settings']);
     this.setIcon('fas fa-cogs');
     this.setUI(settingsUi);

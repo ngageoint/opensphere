@@ -7,10 +7,9 @@ const Settings = goog.require('os.config.Settings');
 const SettingsInitializerManager = goog.require('os.config.SettingsInitializerManager');
 const Request = goog.require('os.net.Request');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
-const SettingsManager = goog.require('os.ui.config.SettingsManager');
 const {ID, SettingKey, isElectron} = goog.require('plugin.electron');
+const {initSupportMenu} = goog.require('plugin.electron.menu');
 const ElectronConfirmCertUI = goog.require('plugin.electron.ElectronConfirmCertUI');
-const {default: CustomizeSettings} = goog.require('plugin.electron.CustomizeSettings');
 
 
 /**
@@ -63,7 +62,10 @@ class ElectronPlugin extends AbstractPlugin {
    */
   init() {
     if (isElectron()) {
+      // Register handler for Electron client certificate requests.
       ElectronOS.registerCertificateHandler(onCertificateRequest);
+
+      // Add memory configuration to Map > Display settings.
       os.ui.list.add('pluginMemoryConfig', '<electronmemoryconfig></electronmemoryconfig>');
 
       /**
@@ -72,8 +74,10 @@ class ElectronPlugin extends AbstractPlugin {
        */
       goog.html.SAFE_URL_PATTERN_ = /^(?:(?:https?|mailto|ftp|file):|[^:/?#]*(?:[/?#]|$))/i;
 
-      SettingsManager.getInstance().addSettingPlugin(new CustomizeSettings());
+      // Initialize menus.
+      initSupportMenu();
 
+      // Check for application updates.
       checkForUpdates();
     }
   }
@@ -99,6 +103,7 @@ if (isElectron()) {
   // Request an updated cookie list from the main process.
   ElectronOS.updateCookies();
 
+  // Load Electron's settings file (see appsettings.js in opensphere-electron).
   const baseSettingsFile = ElectronOS.getBaseSettingsFile();
   if (baseSettingsFile) {
     const settingsInitializer = SettingsInitializerManager.getInstance().getSettingsInitializer();

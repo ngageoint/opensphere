@@ -17,7 +17,7 @@ const ImportEvent = goog.require('os.ui.im.ImportEvent');
 const ImportEventType = goog.require('os.ui.im.ImportEventType');
 const ImportProcess = goog.require('os.ui.im.ImportProcess');
 
-const {EventType} = goog.require('plugin.electron');
+const {EventType, isElectron} = goog.require('plugin.electron');
 
 
 /**
@@ -27,7 +27,10 @@ const {EventType} = goog.require('plugin.electron');
 export const directive = () => ({
   restrict: 'E',
   replace: true,
-  scope: true,
+  scope: {
+    'changed': '='
+  },
+  bindToController: true,
   templateUrl: ROOT + 'views/plugin/electron/customizesettings.html',
   controller: Controller,
   controllerAs: 'ctrl'
@@ -51,7 +54,7 @@ Module.directive('customizesettings', [directive]);
  * The original settings file list when this module was loaded.
  * @type {!Array<!ElectronOS.SettingsFile>}
  */
-const origFiles = ElectronOS.getSettingsFiles();
+const origFiles = isElectron() ? ElectronOS.getSettingsFiles() : [];
 
 
 /**
@@ -97,12 +100,6 @@ export class Controller {
      * @protected
      */
     this.saveDelay = new Delay(this.save, 100, this);
-
-    /**
-     * If changes have been made.
-     * @type {boolean}
-     */
-    this['changed'] = false;
 
     /**
      * Tree nodes for the settings files.
