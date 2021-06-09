@@ -102,7 +102,7 @@ export class Controller {
      * If changes have been made.
      * @type {boolean}
      */
-    this['changed'] = filesChanged(ElectronOS.getSettingsFiles());
+    this['changed'] = false;
 
     /**
      * Tree nodes for the settings files.
@@ -189,7 +189,8 @@ export class Controller {
       dispose(node);
     });
 
-    this['fileNodes'] = ElectronOS.getSettingsFiles().map((file) => new SettingsFileNode(file));
+    const files = ElectronOS.getSettingsFiles();
+    this['fileNodes'] = files.map((file) => new SettingsFileNode(file));
 
     this['fileNodes'].forEach((node) => {
       node.listen(GoogEventType.PROPERTYCHANGE, (event) => {
@@ -199,6 +200,7 @@ export class Controller {
       });
     });
 
+    this['changed'] = filesChanged(files);
     osUi.apply(this.scope);
   }
 }

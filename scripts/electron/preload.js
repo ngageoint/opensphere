@@ -55,7 +55,8 @@ const EventType = {
   SETTINGS_GET_BASE_FILE: 'get-base-settings-file',
   SETTINGS_GET_USER_DIR: 'get-user-settings-dir',
   SETTINGS_REMOVE: 'remove-settings',
-  SETTINGS_SET: 'set-settings'
+  SETTINGS_SET: 'set-settings',
+  SETTINGS_UPDATE: 'update-settings'
 };
 
 
@@ -164,6 +165,15 @@ const removeUserSettings = async (file) => {
 };
 
 /**
+ * Update a user settings file.
+ * @param {!ElectronOS.SettingsFile} file The file.
+ * @return {!Promise} A promise that resolves when the settings file has been updated.
+ */
+const updateUserSettings = async (file) => {
+  return ipcRenderer.invoke(EventType.SETTINGS_UPDATE, file).then((files) => settingsFiles = files);
+};
+
+/**
  * Get the path to the base settings file loaded by the application.
  * @return {string}
  */
@@ -242,6 +252,7 @@ contextBridge.exposeInMainWorld('ElectronOS', {
   setMaxMemory,
   addUserSettings,
   removeUserSettings,
+  updateUserSettings,
   getBaseSettingsFile,
   getSettingsFiles,
   setSettingsFiles,

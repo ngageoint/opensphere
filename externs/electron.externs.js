@@ -137,6 +137,13 @@ ElectronOS.addUserSettings = function(file, content) {};
 ElectronOS.removeUserSettings = function(file) {};
 
 /**
+ * Update a user settings file.
+ * @param {!ElectronOS.SettingsFile} file The file.
+ * @return {!Promise} A promise that resolves when the settings file has been updated.
+ */
+ElectronOS.updateUserSettings = function(file) {};
+
+/**
  * Get the base settings file to load in the application.
  * @return {string}
  */

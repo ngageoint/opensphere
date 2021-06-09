@@ -3,6 +3,7 @@ goog.declareModuleId('plugin.electron.SettingsFileNodeUI');
 const Dispatcher = goog.require('os.Dispatcher');
 const Module = goog.require('os.ui.Module');
 const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
+const {launchConfirmText} = goog.require('os.ui.window.ConfirmTextUI');
 const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
 const {EventType} = goog.require('plugin.electron');
 
@@ -18,6 +19,9 @@ export const directive = () => ({
   replace: true,
   template: `
 <span class="flex-shrink-0 px-2" ng-if="ctrl.show()">
+  <span ng-click="ctrl.edit()" ng-if="ctrl.canEdit()">
+    <i class="fas fa-pencil-alt fa-fw c-glyph" title="Edit the settings file label"></i>
+  </span>
   <span ng-click="ctrl.remove()" ng-if="ctrl.canRemove()">
     <i class="far fa-trash-alt fa-fw c-glyph" title="Remove the settings file from the application"></i>
   </span>
@@ -63,12 +67,47 @@ export class Controller extends AbstractNodeUICtrl {
   }
 
   /**
+   * If the file can be edited.
+   * @return {boolean}
+   * @export
+   */
+  canEdit() {
+    return !!this.node && !this.node.isDefault();
+  }
+
+  /**
    * If the file can be removed.
    * @return {boolean}
    * @export
    */
   canRemove() {
     return !!this.node && !this.node.isDefault();
+  }
+
+  /**
+   * Edit the settings file.
+   * @export
+   */
+  edit() {
+    const file = this.node.getFile();
+    launchConfirmText({
+      confirm: (label) => {
+        if (label !== file.label) {
+          file.label = label;
+
+          ElectronOS.updateUserSettings(file).then(() => {
+            Dispatcher.getInstance().dispatchEvent(EventType.UPDATE_SETTINGS);
+          });
+        }
+      },
+      defaultValue: file.label,
+      prompt: 'Please choose a new label for the settings file:',
+      select: true,
+      windowOptions: /** @type {!osx.window.WindowOptions} */ ({
+        icon: 'fas fa-cogs',
+        label: 'Choose Label'
+      })
+    });
   }
 
   /**
