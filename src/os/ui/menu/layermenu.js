@@ -19,6 +19,7 @@ goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
 goog.require('os.ui.menu.common');
 goog.require('os.ui.window');
+goog.require('os.ui.window.ConfirmTextUI');
 goog.require('os.ui.window.ConfirmUI');
 
 
@@ -423,7 +424,7 @@ os.ui.menu.layer.onSaveAs_ = function(event) {
         })
       });
 
-      os.ui.window.launchConfirmText(confirmOptions);
+      os.ui.window.ConfirmTextUI.launchConfirmText(confirmOptions);
     }
   }
 };

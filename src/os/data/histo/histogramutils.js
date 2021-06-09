@@ -8,7 +8,6 @@ goog.require('os.filter.IFilterable');
 goog.require('os.implements');
 goog.require('os.ui.IHistogramUI');
 goog.require('os.ui.filter.FilterEvent');
-goog.require('os.ui.window.confirmTextDirective');
 
 
 /**

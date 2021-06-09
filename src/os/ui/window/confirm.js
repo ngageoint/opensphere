@@ -28,9 +28,16 @@ const directive = () => ({
 
 
 /**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'confirm';
+
+
+/**
  * Add the directive to the os module
  */
-Module.directive('confirm', [directive]);
+Module.directive(directiveTag, [directive]);
 
 
 /**
@@ -226,5 +233,6 @@ class Controller {
 exports = {
   Controller,
   directive,
+  directiveTag,
   launchConfirm
 };
