@@ -21,6 +21,7 @@ class AbstractLayerStyle extends AbstractStyle {
    */
   constructor(layerId, value, opt_oldValue) {
     super(layerId, value, opt_oldValue);
+    this.updateOldValue();
   }
 
   /**

@@ -35,6 +35,8 @@ class LayerStyle extends AbstractStyle {
      * @protected
      */
     this.callback = callback;
+
+    this.updateOldValue();
   }
 
   /**

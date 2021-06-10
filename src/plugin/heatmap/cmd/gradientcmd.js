@@ -16,6 +16,7 @@ class Gradient extends AbstractStyle {
   constructor(layerId, value, opt_oldValue) {
     super(layerId, value, opt_oldValue);
     this.title = 'Change heatmap gradient';
+    this.updateOldValue();
   }
 
   /**

@@ -33,6 +33,10 @@ class FeatureLabelSize extends AbstractFeatureStyle {
    */
   getOldValue() {
     var feature = /** @type {Feature} */ (this.getFeature());
+    if (feature == null) {
+      return null;
+    }
+
     var labelSize = feature.get(StyleField.LABEL_SIZE);
     return labelSize ? labelSize : label.DEFAULT_SIZE;
   }

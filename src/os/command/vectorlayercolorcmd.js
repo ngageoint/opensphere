@@ -91,6 +91,16 @@ class VectorLayerColor extends AbstractVectorStyle {
   /**
    * @inheritDoc
    */
+  updateOldValue() {
+    // Only update old value if we have a changeMode -- prevents AbstractVectorStyle from setting oldValue too early
+    if (this.changeMode != null) {
+      super.updateOldValue();
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
   applyValue(config, value) {
     if (this.changeMode === ColorChangeType.FILL) {
       osStyle.setFillColor(config, value);

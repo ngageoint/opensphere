@@ -37,6 +37,10 @@ class FeatureLabelColor extends AbstractFeatureStyle {
    */
   getOldValue() {
     var feature = /** @type {Feature} */ (this.getFeature());
+    if (feature == null) {
+      return null;
+    }
+
     var labelColor = feature.get(StyleField.LABEL_COLOR);
     return labelColor ? labelColor : osStyle.DEFAULT_LAYER_COLOR;
   }

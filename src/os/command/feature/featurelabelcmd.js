@@ -40,6 +40,10 @@ class FeatureLabel extends AbstractFeatureStyle {
    */
   getOldValue() {
     var feature = /** @type {Feature} */ (this.getFeature());
+    if (feature == null) {
+      return null;
+    }
+
     var config = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
     var labelColumns = [];
     if (config) {

@@ -32,6 +32,10 @@ class FeatureIcon extends AbstractFeatureStyle {
    */
   getOldValue() {
     var feature = /** @type {Feature} */ (this.getFeature());
+    if (feature == null) {
+      return null;
+    }
+
     var configs = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
     if (Array.isArray(configs)) {
       configs = configs.length > 1 ? configs[1] : configs[0];

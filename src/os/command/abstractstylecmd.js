@@ -64,7 +64,7 @@ class AbstractStyle {
      * @type {T}
      * @protected
      */
-    this.oldValue = opt_oldValue != null ? opt_oldValue : this.getOldValue();
+    this.oldValue = opt_oldValue;
 
     /**
      * @type {T}
