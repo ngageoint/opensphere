@@ -36,7 +36,9 @@ class VectorLayerColor extends AbstractVectorStyle {
      * @protected
      */
     this.changeMode = opt_changeMode;
-    this.updateOldValue();
+
+    // AbstractVectorStyle may set the old value too early (if we have opt_changeMode come in)
+    this.oldValue = opt_oldColor || this.getOldValue();
 
     if (this.changeMode === ColorChangeType.FILL) {
       this.title = 'Change Layer Fill Color';
@@ -86,16 +88,6 @@ class VectorLayerColor extends AbstractVectorStyle {
     }
 
     return ret;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  updateOldValue() {
-    // Only update old value if we have a changeMode -- prevents AbstractVectorStyle from setting oldValue too early
-    if (this.changeMode != null) {
-      super.updateOldValue();
-    }
   }
 
   /**
