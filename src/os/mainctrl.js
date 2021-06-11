@@ -11,6 +11,7 @@ goog.require('os');
 goog.require('os.MapContainer');
 goog.require('os.MapEvent');
 goog.require('os.action.EventType');
+goog.require('os.auth');
 goog.require('os.bearing.BearingSettings');
 goog.require('os.buffer');
 goog.require('os.column.ColumnMappingManager');
@@ -434,6 +435,9 @@ os.MainCtrl.prototype.initialize = function() {
 
   // initialize the nav bars
   os.ui.navbaroptions.init();
+
+  // initialize any authentication settings
+  os.auth.initAuth();
 
   this.addControlsToHelp_();
   os.ui.help.metricsOption.addToNav();

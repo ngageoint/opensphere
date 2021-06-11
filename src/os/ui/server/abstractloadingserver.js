@@ -1,6 +1,7 @@
 goog.provide('os.ui.server.AbstractLoadingServer');
 
 goog.require('ol.array');
+goog.require('os.auth');
 goog.require('os.data.DataProviderEvent');
 goog.require('os.data.DataProviderEventType');
 goog.require('os.data.ILoadingProvider');
@@ -124,10 +125,12 @@ os.ui.server.AbstractLoadingServer.prototype.finish = function() {
  */
 os.ui.server.AbstractLoadingServer.prototype.formatIcons = function() {
   var icons = os.ui.server.AbstractLoadingServer.base(this, 'formatIcons');
+
   if (this.getError()) {
     var message = 'Server failed to load. See the log/alerts window for details.';
-    icons += '<i class="fa fa-warning text-warning" title="' + message + '"></i>';
+    icons += `<i class="fas fa-exclamation-triangle text-warning" title="${message}"></i>`;
   }
+
 
   return icons;
 };
@@ -325,4 +328,12 @@ os.ui.server.AbstractLoadingServer.prototype.onChildChange = function(e) {
     // the server will fire an event when it finishes loading to update the tree.
     os.ui.server.AbstractLoadingServer.base(this, 'onChildChange', e);
   }
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.server.AbstractLoadingServer.prototype.getAuth = function() {
+  return os.auth.getAuth(this.getUrl());
 };
