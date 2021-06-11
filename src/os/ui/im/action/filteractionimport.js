@@ -1,7 +1,6 @@
 goog.module('os.ui.im.action.FilterActionImport');
 goog.module.declareLegacyNamespace();
 
-const mapContainer = goog.require('os.MapContainer');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const SequenceCommand = goog.require('os.command.SequenceCommand');
 const DataManager = goog.require('os.data.DataManager');
@@ -11,6 +10,7 @@ const FilterActionParser = goog.require('os.im.action.FilterActionParser');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const FilterActionAdd = goog.require('os.im.action.cmd.FilterActionAdd');
 const DrawingLayer = goog.require('os.layer.Drawing');
+const {getMapContainer} = goog.require('os.map.instance');
 const Module = goog.require('os.ui.Module');
 const filterImportDirective = goog.require('os.ui.filter.im.filterImportDirective');
 const {getEntriesFromMatched} = goog.require('os.ui.im.action');
@@ -90,7 +90,7 @@ class Controller extends OSFilterImportCtrl {
    */
   getFilterables() {
     var descriptors = DataManager.getInstance().getDescriptors();
-    var layers = mapContainer.getInstance().getLayers();
+    var layers = getMapContainer().getLayers();
 
     // filter down to only the IFilterable descriptors
     var filterables = descriptors.filter(function(d) {
