@@ -128,7 +128,7 @@ os.ui.server.AbstractLoadingServer.prototype.formatIcons = function() {
 
   if (this.getError()) {
     var message = 'Server failed to load. See the log/alerts window for details.';
-    icons += `<i class="fa fa-warning text-warning" title="${message}"></i>`;
+    icons += `<i class="fas fa-exclamation-triangle text-warning" title="${message}"></i>`;
   }
 
 

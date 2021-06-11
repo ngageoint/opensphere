@@ -240,7 +240,7 @@ os.ui.data.BaseProvider.prototype.formatIcons = function() {
 
   const auth = this.getAuth();
   if (auth) {
-    icons = `<i class="fa fa-sign-in" title="${auth.tooltip}"></i>`;
+    icons = `<i class="fas fa-sign-in-alt" title="${auth.tooltip}"></i>`;
 
     if (auth.link) {
       // if a link is available, make the icon clickable

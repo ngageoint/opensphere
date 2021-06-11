@@ -288,14 +288,6 @@ ol.source.UrlTile.prototype.loadingDelay_ = null;
 
 
 /**
- * Flag for whether this source has alerted an error due to missing authentication.
- * @type {boolean}
- * @private
- */
-ol.source.UrlTile.prototype.authAlerted_ = false;
-
-
-/**
  * @inheritDoc
  */
 ol.source.UrlTile.prototype.disposeInternal = function() {
@@ -425,12 +417,11 @@ ol.source.UrlTile.prototype.onImageLoadOrError_ = function(evt) {
   } else {
     this.errorCount_++;
 
-    if (!this.authAlerted_) {
-      const urls = this.getUrls();
-      urls.forEach((url) => {
-        os.auth.alertAuth(url);
-      });
-    }
+    // request failed, check if it's potentially due to a missing authentication with the server
+    const urls = this.getUrls();
+    urls.forEach((url) => {
+      os.auth.alertAuth(url);
+    });
   }
 
   this.decrementLoading();
