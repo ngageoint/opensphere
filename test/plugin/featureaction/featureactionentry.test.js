@@ -1,9 +1,19 @@
+goog.require('goog.functions');
 goog.require('ol.Feature');
+goog.require('os.im.action.ImportActionManager');
 goog.require('plugin.im.action.feature.Entry');
-goog.require('plugin.im.action.feature.MockAction');
+goog.require('plugin.im.action.feature.mock');
+goog.require('plugin.im.action.feature.mock.MockAction');
 
 
 describe('plugin.im.action.feature.Entry', function() {
+  const functions = goog.module.get('goog.functions');
+  const Feature = goog.module.get('ol.Feature');
+  const ImportActionManager = goog.module.get('os.im.action.ImportActionManager');
+  const Entry = goog.module.get('plugin.im.action.feature.Entry');
+  const {getMockManager} = goog.module.get('plugin.im.action.feature.mock');
+  const MockAction = goog.module.get('plugin.im.action.feature.mock.MockAction');
+
   var filterXml = '<And xmlns="http://www.opengis.net/ogc" namehint="Test Keep Filter Name">' +
       '<PropertyIsLike escape="\\" singleChar="." wildCard="*">' +
       '<PropertyName>PROPERTY</PropertyName>' +
@@ -12,7 +22,7 @@ describe('plugin.im.action.feature.Entry', function() {
       '</And>';
 
   var testFilterFn = function(entry) {
-    var feature = new ol.Feature();
+    var feature = new Feature();
     expect(entry.filterFn(feature)).toBe(false);
 
     feature.set('PROPERTY', 'AAAbbb');
@@ -23,11 +33,11 @@ describe('plugin.im.action.feature.Entry', function() {
   };
 
   var testMockAction = function(entry) {
-    var feature1 = new ol.Feature({
+    var feature1 = new Feature({
       PROPERTY: 'AAAbbb'
     });
 
-    var feature2 = new ol.Feature({
+    var feature2 = new Feature({
       PROPERTY: 'bbbAAA'
     });
 
@@ -37,37 +47,37 @@ describe('plugin.im.action.feature.Entry', function() {
   };
 
   it('should initialize correctly', function() {
-    var fe = new plugin.im.action.feature.Entry();
+    var fe = new Entry();
 
     expect(typeof fe.getId() === 'string').toBe(true);
     expect(fe.actions.length).toBe(0);
-    expect(fe.filterFn).toBe(goog.functions.FALSE);
+    expect(fe.filterFn).toBe(functions.FALSE);
     expect(fe.isTemporary()).toBe(false);
     expect(fe.getTitle()).toBe('New Feature Action');
   });
 
   it('should create a filter function from the XML filter', function() {
-    var fe = new plugin.im.action.feature.Entry();
-    expect(fe.filterFn).toBe(goog.functions.FALSE);
+    var fe = new Entry();
+    expect(fe.filterFn).toBe(functions.FALSE);
     fe.setFilter(filterXml);
 
-    expect(fe.filterFn).not.toBe(goog.functions.FALSE);
+    expect(fe.filterFn).not.toBe(functions.FALSE);
     testFilterFn(fe);
   });
 
   it('should execute actions against objects that match a filter', function() {
-    var fe = new plugin.im.action.feature.Entry();
+    var fe = new Entry();
     fe.setFilter(filterXml);
-    fe.actions = [new plugin.im.action.feature.MockAction()];
+    fe.actions = [new MockAction()];
     testMockAction(fe);
   });
 
   it('should clone/persist/restore properly', function() {
-    spyOn(os.im.action.ImportActionManager, 'getInstance').andCallFake(plugin.im.action.feature.getMockManager);
+    spyOn(ImportActionManager, 'getInstance').andCallFake(getMockManager);
 
-    var fe = new plugin.im.action.feature.Entry();
+    var fe = new Entry();
     fe.setFilter(filterXml);
-    fe.actions = [new plugin.im.action.feature.MockAction()];
+    fe.actions = [new MockAction()];
 
     var id = fe.getId();
     fe.setTitle('Clone Me');

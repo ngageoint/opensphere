@@ -6,8 +6,8 @@ const Dispatcher = goog.require('os.Dispatcher');
 const Disposable = goog.require('goog.Disposable');
 const GoogEventType = goog.require('goog.events.EventType');
 const IFilterable = goog.require('os.filter.IFilterable');
+const {getImportActionManager} = goog.require('os.im.action');
 const ILayer = goog.require('os.layer.ILayer');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const LayerEventType = goog.require('os.events.LayerEventType');
 const OsLayerPreset = goog.require('os.layer.preset');
 const OsStyle = goog.require('os.style');
@@ -204,9 +204,11 @@ class LayerPresetManager extends Disposable {
    */
   isLayerStyleDirty(layerId, layer, check, event) {
     let dirty = false;
+
+    const iam = getImportActionManager();
     const meta = /** @type {!LayerPresetsMetaData} */ (this.presets_.entry(layerId)[2]);
 
-    if (meta && meta.selected) {
+    if (iam && meta && meta.selected) {
       // check the layer configs
       const config1 = /** @type {!Object} */ (meta.selected.layerConfig);
       const config2 = /** @type {ILayer} */ (layer).persist();
@@ -229,7 +231,7 @@ class LayerPresetManager extends Disposable {
       // check the active Feature Actions if not dirty yet
       if (!dirty) {
         const ids1 = meta.selected.featureActions || [];
-        const ids2 = ImportActionManager.getInstance().getActiveActionEntryIds(layerId);
+        const ids2 = iam.getActiveActionEntryIds(layerId);
         dirty = (ids1.join('') != ids2.join(''));
       }
     }

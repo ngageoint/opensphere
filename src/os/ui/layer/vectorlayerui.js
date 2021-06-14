@@ -36,6 +36,7 @@ goog.require('os.ui.file.kml');
 goog.require('os.ui.icon.IconPickerEventType');
 goog.require('os.ui.layer');
 goog.require('os.ui.layer.DefaultLayerUICtrl');
+goog.require('os.ui.layer.VectorStyleControlsEventType');
 goog.require('os.ui.layer.ellipseOptionsDirective');
 goog.require('os.ui.layer.iconStyleControlsDirective');
 goog.require('os.ui.layer.labelControlsDirective');

@@ -1,27 +1,30 @@
-goog.provide('os.ui.im.action.FilterActionImportUI');
+goog.module('os.ui.im.action.FilterActionImportUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.im.FilterImportUI');
-goog.require('os.ui.im.action.filterActionImportDirective');
-
-
+const ImportActionManager = goog.require('os.im.action.ImportActionManager');
+const FilterImportUI = goog.require('os.ui.filter.im.FilterImportUI');
+const {directiveTag: importUi} = goog.require('os.ui.im.action.FilterActionImport');
 
 /**
  * Filter action import UI.
- *
- * @extends {os.ui.filter.im.FilterImportUI}
- * @constructor
  */
-os.ui.im.action.FilterActionImportUI = function() {
-  os.ui.im.action.FilterActionImportUI.base(this, 'constructor');
-  var iam = os.im.action.ImportActionManager.getInstance();
-  this.label = 'Import ' + iam.entryTitle + 's';
-};
-goog.inherits(os.ui.im.action.FilterActionImportUI, os.ui.filter.im.FilterImportUI);
+class FilterActionImportUI extends FilterImportUI {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
 
+    const iam = ImportActionManager.getInstance();
+    this.label = 'Import ' + iam.entryTitle + 's';
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.im.action.FilterActionImportUI.prototype.getTemplate = function() {
-  return '<filteractionimport filter-data="filterData" layer-id="layerId"></filteractionimport>';
-};
+  /**
+   * @inheritDoc
+   */
+  getTemplate() {
+    return `<${importUi} filter-data="filterData" layer-id="layerId"></${importUi}>`;
+  }
+}
+
+exports = FilterActionImportUI;

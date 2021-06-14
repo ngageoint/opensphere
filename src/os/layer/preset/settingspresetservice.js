@@ -3,7 +3,7 @@ goog.module('os.layer.preset.SettingsPresetService');
 const Settings = goog.require('os.config.Settings');
 const AbstractPresetService = goog.require('os.layer.preset.AbstractPresetService');
 const {PresetServiceAction, SettingKey} = goog.require('os.layer.preset');
-const ImportActionManager = goog.require('os.im.action.ImportActionManager');
+const {getImportActionManager} = goog.require('os.im.action');
 
 
 /**
@@ -26,7 +26,7 @@ class SettingsPresetService extends AbstractPresetService {
           search['layerFilterKey'] && search['layerFilterKey'].length) {
         const layerId = search['layerId'][0];
         const layerFilterKey = search['layerFilterKey'][0];
-        const fa = ImportActionManager.getInstance().loadDefaults(layerId);
+        const fa = getImportActionManager().loadDefaults(layerId);
         const finish = function() {
           const configs = /** @type {!Object<Array<osx.layer.Preset>>} */
             (Settings.getInstance().get(SettingKey.PRESETS, {}));
