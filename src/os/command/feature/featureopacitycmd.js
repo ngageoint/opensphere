@@ -64,6 +64,10 @@ class FeatureOpacity extends AbstractFeatureStyle {
   getOldValue() {
     var ret;
     var feature = /** @type {Feature} */ (this.getFeature());
+    if (feature == null) {
+      return null;
+    }
+
     var config = /** @type {Array<Object>|Object|undefined} */ (this.getFeatureConfigs(feature));
     if (Array.isArray(config)) {
       config = config[0];

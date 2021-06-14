@@ -33,6 +33,10 @@ class FeatureShowLabel extends AbstractFeatureStyle {
    */
   getOldValue() {
     var feature = /** @type {Feature} */ (this.getFeature());
+    if (feature == null) {
+      return null;
+    }
+
     var showLabels = feature.get(StyleField.SHOW_LABELS);
     return showLabels ? showLabels : true;
   }

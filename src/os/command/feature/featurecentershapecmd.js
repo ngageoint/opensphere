@@ -33,6 +33,10 @@ class FeatureCenterShape extends AbstractFeatureStyle {
    */
   getOldValue() {
     var feature = /** @type {Feature} */ (this.getFeature());
+    if (feature == null) {
+      return null;
+    }
+
     var shape = feature.get(StyleField.CENTER_SHAPE);
     return shape ? shape : osStyle.ShapeType.POINT;
   }
