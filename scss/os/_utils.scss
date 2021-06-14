@@ -324,14 +324,16 @@ $user-select-options: all, auto, text, none;
 
         // Remove padding for columns
         .col {
-          @extend %full-columns;
+          flex-basis: 100%;
+          max-width: 100%;
         }
 
         @each $breakpoint in map-keys($grid-breakpoints) {
           $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
           @for $i from 1 through $grid-columns {
             .col#{$infix}-#{$i} {
-              @extend %full-columns;
+              flex-basis: 100%;
+              max-width: 100%;
             }
           }
 
@@ -339,7 +341,7 @@ $user-select-options: all, auto, text, none;
           @for $i from 0 through ($grid-columns - 1) {
             @if not ($infix == '' and $i == 0) { // Avoid emitting useless .offset-0
               .offset#{$infix}-#{$i} {
-                @extend %no-margin-left;
+                margin-left: 0;
               }
             }
           }

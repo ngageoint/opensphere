@@ -140,7 +140,7 @@
         text-decoration: none;
 
         // This gets the same styles defined for dropdown-item:focus. Used for when themes specify after the fact
-        @extend .dropdown-item:focus;
+        @extend .dropdown-item, :focus;
       }
     }
   }
