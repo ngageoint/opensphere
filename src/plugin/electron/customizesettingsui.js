@@ -4,6 +4,7 @@ goog.require('os.ui.slick.slickTreeDirective');
 
 import SettingsFileNode from './settingsfilenode';
 import settingsImportManager from './settingsimportmanager';
+import SettingsImportUI from './settingsimportui';
 
 const Delay = goog.require('goog.async.Delay');
 const dispose = goog.require('goog.dispose');
@@ -11,6 +12,8 @@ const GoogEventType = goog.require('goog.events.EventType');
 
 const {ROOT} = goog.require('os');
 const Dispatcher = goog.require('os.Dispatcher');
+const AlertManager = goog.require('os.alert.AlertManager');
+const {createFromFile} = goog.require('os.file');
 const osUi = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const ImportEvent = goog.require('os.ui.im.ImportEvent');
@@ -145,6 +148,30 @@ export class Controller {
     const importProcess = new ImportProcess(settingsImportManager);
     importProcess.setEvent(new ImportEvent(ImportEventType.FILE));
     importProcess.begin();
+  }
+
+  /**
+   * Handle file drop event.
+   * @param {DragEvent} event The event.
+   * @export
+   */
+  onDrop(event) {
+    if (event.dataTransfer && event.dataTransfer.files) {
+      createFromFile(/** @type {!File} */ (event.dataTransfer.files[0])).addCallbacks((file) => {
+        file.loadContent().addCallbacks(() => {
+          const ui = new SettingsImportUI();
+          ui.launchUI(file);
+        }, this.onDropFailed, this);
+      }, this.onDropFailed, this);
+    }
+  }
+
+  /**
+   * Handle file drop failed.
+   * @protected
+   */
+  onDropFailed() {
+    AlertManager.getInstance().sendAlert('Dropped file is not a valid settings file.');
   }
 
   /**

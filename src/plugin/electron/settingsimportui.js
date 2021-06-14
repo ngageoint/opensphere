@@ -1,6 +1,9 @@
 goog.declareModuleId('plugin.electron.SettingsImportUI');
 
+import * as jsonMime from '../../os/file/mime/jsonsettings';
+
 const Dispatcher = goog.require('os.Dispatcher');
+const AlertManager = goog.require('os.alert.AlertManager');
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
 const {launchConfirmText} = goog.require('os.ui.window.ConfirmTextUI');
 const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
@@ -32,7 +35,8 @@ const confirmLabel = (fileName, content, opt_label) => {
     select: true,
     windowOptions: /** @type {!osx.window.WindowOptions} */ ({
       icon: 'fas fa-cogs',
-      label: 'Choose Label'
+      label: 'Choose Label',
+      showClose: true
     })
   });
 };
@@ -64,7 +68,8 @@ const confirmReplace = (fileName, content, existing) => {
     noButtonClass: 'btn-secondary',
     windowOptions: /** @type {!osx.window.WindowOptions} */ ({
       icon: 'fas fa-cogs',
-      label: 'Settings File Already Exists'
+      label: 'Settings File Already Exists',
+      showClose: true
     })
   });
 };
@@ -106,18 +111,35 @@ export default class SettingsImportUI extends FileImportUI {
     file.convertContentToString();
 
     const content = /** @type {string} */ (file.getContent());
-    const fileName = file.getFileName();
 
-    // Internal settings files are prefixed with a '.', so remove those from the filename if present to avoid conflicts.
-    fileName.replace(/^\.+/, '');
+    try {
+      const parsed = JSON.parse(content);
+      if (parsed && jsonMime.detect(null, file, parsed)) {
+        // Internal settings files are prefixed with a '.', so remove those from the filename if present to avoid conflicts.
+        const fileName = file.getFileName();
+        fileName.replace(/^\.+/, '');
 
-    if (content && fileName) {
-      const existing = ElectronOS.getSettingsFile(fileName);
-      if (existing) {
-        confirmReplace(fileName, content, existing);
+        if (content && fileName) {
+          const existing = ElectronOS.getSettingsFile(fileName);
+          if (existing) {
+            confirmReplace(fileName, content, existing);
+          } else {
+            confirmLabel(fileName, content);
+          }
+        }
       } else {
-        confirmLabel(fileName, content);
+        this.alertInvalid();
       }
+    } catch (e) {
+      this.alertInvalid();
     }
+  }
+
+  /**
+   * Notify the user that the settings file was not valid.
+   * @protected
+   */
+  alertInvalid() {
+    AlertManager.getInstance().sendAlert('Imported file is not a valid settings file.');
   }
 }
