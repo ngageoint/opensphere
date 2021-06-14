@@ -103,11 +103,17 @@ if (isElectron()) {
   // Request an updated cookie list from the main process.
   ElectronOS.updateCookies();
 
+  //
   // Load Electron's settings file (see appsettings.js in opensphere-electron).
-  const baseSettingsFile = ElectronOS.getBaseSettingsFile();
-  if (baseSettingsFile) {
-    const settingsInitializer = SettingsInitializerManager.getInstance().getSettingsInitializer();
-    settingsInitializer.setFileUri(baseSettingsFile);
+  //
+  // This is currently only supported in the main window.
+  //
+  if (ElectronOS.supportsUserSettings()) {
+    const baseSettingsFile = ElectronOS.getBaseSettingsFile();
+    if (baseSettingsFile) {
+      const settingsInitializer = SettingsInitializerManager.getInstance().getSettingsInitializer();
+      settingsInitializer.setFileUri(baseSettingsFile);
+    }
   }
 }
 

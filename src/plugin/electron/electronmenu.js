@@ -18,16 +18,18 @@ export const EventType = {
  * Initialize Support menu items.
  */
 export const initSupportMenu = () => {
-  const root = helpMenu.getRoot();
+  if (ElectronOS.supportsUserSettings()) {
+    const root = helpMenu.getRoot();
 
-  if (root && !root.find(EventType.CUSTOMIZE_SETTINGS)) {
-    root.addChild({
-      eventType: EventType.CUSTOMIZE_SETTINGS,
-      label: 'Customize Settings',
-      tooltip: 'Manage settings files loaded by the application',
-      icons: ['<i class="fas fa-fw fa-cogs"></i>'],
-      handler: launchCustomizeSettings,
-      sort: 999 // Immediately before Reset Settings
-    });
+    if (root && !root.find(EventType.CUSTOMIZE_SETTINGS)) {
+      root.addChild({
+        eventType: EventType.CUSTOMIZE_SETTINGS,
+        label: 'Customize Settings',
+        tooltip: 'Manage settings files loaded by the application',
+        icons: ['<i class="fas fa-fw fa-cogs"></i>'],
+        handler: launchCustomizeSettings,
+        sort: 999 // Immediately before Reset Settings
+      });
+    }
   }
 };

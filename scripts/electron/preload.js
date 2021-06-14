@@ -39,10 +39,18 @@ let userSettingsDir = '';
 
 
 /**
+ * If user settings are supported.
+ * @type {boolean}
+ */
+let userSettingsSupported = false;
+
+
+/**
  * General event types.
  * @enum {string}
  */
 const EventType = {
+  IS_MAIN: 'is-main-window',
   UPDATE_CHECK: 'check-for-updates',
 
   CERT_HANDLER_REGISTERED: 'client-certificate-handler-registered',
@@ -58,8 +66,22 @@ const EventType = {
   SETTINGS_GET_USER_DIR: 'get-user-settings-dir',
   SETTINGS_REMOVE: 'remove-settings',
   SETTINGS_SET: 'set-settings',
+  SETTINGS_SUPPORTED: 'user-settings-supported',
   SETTINGS_UPDATE: 'update-settings'
 };
+
+
+/**
+ * If this is the main window.
+ * @type {boolean}
+ */
+let isMain = false;
+
+/**
+ * If this is the main window.
+ * @return {boolean}
+ */
+const isMainWindow = () => isMain;
 
 
 /**
@@ -200,9 +222,15 @@ const getSettingsFiles = () => settingsFiles;
 
 /**
  * Get directory containing user config files and copied app settings.
- * @return {!string}
+ * @return {string}
  */
 const getUserSettingsDir = () => userSettingsDir;
+
+/**
+ * If user settings management is supported.
+ * @return {boolean}
+ */
+const supportsUserSettings = () => isMain && userSettingsSupported;
 
 /**
  * Update application settings files.
@@ -220,6 +248,11 @@ const restart = () => {
   ipcRenderer.send('restart');
 };
 
+
+// Initialize the main window flag.
+ipcRenderer.invoke(EventType.IS_MAIN).then((value) => isMain = value);
+
+
 // Handle certificate select event from the main process.
 ipcRenderer.on(EventType.CERT_SELECT, selectClientCertificate);
 
@@ -231,16 +264,22 @@ ipcRenderer.on(EventType.COOKIE_UPDATE, (event, value) => {
 
 
 // Initialize settings values from the main process.
-ipcRenderer.invoke(EventType.SETTINGS_GET_BASE_FILE).then((file) => {
-  baseSettingsFile = file;
-});
+ipcRenderer.invoke(EventType.SETTINGS_SUPPORTED).then((value) => {
+  userSettingsSupported = value;
 
-ipcRenderer.invoke(EventType.SETTINGS_GET_FILES).then((files) => {
-  settingsFiles = files;
-});
+  if (value) {
+    ipcRenderer.invoke(EventType.SETTINGS_GET_BASE_FILE).then((file) => {
+      baseSettingsFile = file;
+    });
 
-ipcRenderer.invoke(EventType.SETTINGS_GET_USER_DIR).then((files) => {
-  userSettingsDir = files;
+    ipcRenderer.invoke(EventType.SETTINGS_GET_FILES).then((files) => {
+      settingsFiles = files;
+    });
+
+    ipcRenderer.invoke(EventType.SETTINGS_GET_USER_DIR).then((files) => {
+      userSettingsDir = files;
+    });
+  }
 });
 
 
@@ -254,6 +293,7 @@ ipcRenderer.invoke(EventType.SETTINGS_GET_USER_DIR).then((files) => {
 // https://www.electronjs.org/docs/tutorial/security#3-enable-context-isolation-for-remote-content
 //
 contextBridge.exposeInMainWorld('ElectronOS', {
+  isMainWindow,
   checkForUpdates,
   getCookies,
   setCookie,
@@ -270,5 +310,6 @@ contextBridge.exposeInMainWorld('ElectronOS', {
   getSettingsFiles,
   setSettingsFiles,
   getUserSettingsDir,
+  supportsUserSettings,
   restart
 });

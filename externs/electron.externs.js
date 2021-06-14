@@ -63,6 +63,13 @@ ElectronOS.checkForUpdates = function() {};
 
 
 /**
+ * If the application is the main Electron window.
+ * @return {boolean}
+ */
+ElectronOS.isMainWindow = function() {};
+
+
+/**
  * Register a certificate request handler with Electron.
  * @param {Electron.CertificateRequestFn|undefined} handler The handler.
  */
@@ -174,3 +181,9 @@ ElectronOS.setSettingsFiles = function(value) {};
  * @return {!string}
  */
 ElectronOS.getUserSettingsDir = function() {};
+
+/**
+ * If user settings management is supported.
+ * @return {boolean}
+ */
+ElectronOS.supportsUserSettings = function() {};
