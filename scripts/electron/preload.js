@@ -183,36 +183,30 @@ const getSettingsFile = (fileName) => {
  * Add a user settings file.
  * @param {!ElectronOS.SettingsFile} file The file.
  * @param {string} content The settings content.
- * @return {!Promise} A promise that resolves when the settings file has been saved.
+ * @return {!Promise<!Array<!ElectronOS.SettingsFile>>} A promise that resolves to the updated settings.
  */
-const addUserSettings = async (file, content) => {
-  return ipcRenderer.invoke(EventType.SETTINGS_ADD, file, content).then((files) => settingsFiles = files);
-};
+const addUserSettings = async (file, content) =>
+  settingsFiles = await ipcRenderer.invoke(EventType.SETTINGS_ADD, file, content);
 
 /**
  * Remove a user settings file.
  * @param {!ElectronOS.SettingsFile} file The file.
- * @return {!Promise} A promise that resolves when the settings file has been removed.
+ * @return {!Promise<!Array<!ElectronOS.SettingsFile>>} A promise that resolves to the updated settings.
  */
-const removeUserSettings = async (file) => {
-  return ipcRenderer.invoke(EventType.SETTINGS_REMOVE, file).then((files) => settingsFiles = files);
-};
+const removeUserSettings = async (file) => settingsFiles = await ipcRenderer.invoke(EventType.SETTINGS_REMOVE, file);
 
 /**
  * Update a user settings file.
  * @param {!ElectronOS.SettingsFile} file The file.
- * @return {!Promise} A promise that resolves when the settings file has been updated.
+ * @return {!Promise<!Array<!ElectronOS.SettingsFile>>} A promise that resolves to the updated settings.
  */
-const updateUserSettings = async (file) => {
-  return ipcRenderer.invoke(EventType.SETTINGS_UPDATE, file).then((files) => settingsFiles = files);
-};
+const updateUserSettings = async (file) => settingsFiles = await ipcRenderer.invoke(EventType.SETTINGS_UPDATE, file);
 
 /**
  * Get the path to the base settings file loaded by the application.
  * @return {string}
  */
 const getBaseSettingsFile = () => baseSettingsFile;
-
 
 /**
  * Get the settings files available to the application.
@@ -227,7 +221,8 @@ const getSettingsFiles = () => settingsFiles;
 const getUserSettingsDir = () => userSettingsDir;
 
 /**
- * If user settings management is supported.
+ * If user settings management is supported. User settings are currently only supported in the main window, given files
+ * would need to be separately managed in other windows.
  * @return {boolean}
  */
 const supportsUserSettings = () => isMain && userSettingsSupported;
@@ -235,11 +230,9 @@ const supportsUserSettings = () => isMain && userSettingsSupported;
 /**
  * Update application settings files.
  * @param {!Array<!ElectronOS.SettingsFile>} value The list of settings files.
- * @return {!Promise} A promise that resolves when settings have been saved.
+ * @return {!Promise<!Array<!ElectronOS.SettingsFile>>} A promise that resolves to the saved settings.
  */
-const setSettingsFiles = (value) => {
-  return ipcRenderer.invoke(EventType.SETTINGS_SET, value).then(() => settingsFiles = value);
-};
+const setSettingsFiles = async (value) => settingsFiles = await ipcRenderer.invoke(EventType.SETTINGS_SET, value);
 
 /**
  * Restarts the application.
@@ -248,40 +241,28 @@ const restart = () => {
   ipcRenderer.send('restart');
 };
 
-
-// Initialize the main window flag.
-ipcRenderer.invoke(EventType.IS_MAIN).then((value) => isMain = value);
-
-
 // Handle certificate select event from the main process.
 ipcRenderer.on(EventType.CERT_SELECT, selectClientCertificate);
-
 
 // Handle cookie initialization from the main process.
 ipcRenderer.on(EventType.COOKIE_UPDATE, (event, value) => {
   cookies = value;
 });
 
+// Initialize values from the main process.
+(async () => {
+  // Initialize the main window flag.
+  isMain = await ipcRenderer.invoke(EventType.IS_MAIN);
 
-// Initialize settings values from the main process.
-ipcRenderer.invoke(EventType.SETTINGS_SUPPORTED).then((value) => {
-  userSettingsSupported = value;
+  // Initialize user settings values.
+  userSettingsSupported = await ipcRenderer.invoke(EventType.SETTINGS_SUPPORTED);
 
-  if (value) {
-    ipcRenderer.invoke(EventType.SETTINGS_GET_BASE_FILE).then((file) => {
-      baseSettingsFile = file;
-    });
-
-    ipcRenderer.invoke(EventType.SETTINGS_GET_FILES).then((files) => {
-      settingsFiles = files;
-    });
-
-    ipcRenderer.invoke(EventType.SETTINGS_GET_USER_DIR).then((files) => {
-      userSettingsDir = files;
-    });
+  if (userSettingsSupported) {
+    baseSettingsFile = await ipcRenderer.invoke(EventType.SETTINGS_GET_BASE_FILE);
+    settingsFiles = await ipcRenderer.invoke(EventType.SETTINGS_GET_FILES);
+    userSettingsDir = await ipcRenderer.invoke(EventType.SETTINGS_GET_USER_DIR);
   }
-});
-
+})();
 
 //
 // Expose a minimal Electron interface for use in OpenSphere.
