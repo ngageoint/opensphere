@@ -1,64 +1,62 @@
-goog.provide('os.unit.YardUnits');
-goog.require('os.unit.BaseUnit');
-goog.require('os.unit.Multiplier');
+goog.module('os.unit.YardUnits');
+goog.module.declareLegacyNamespace();
 
+const BaseUnit = goog.require('os.unit.BaseUnit');
+const Multiplier = goog.require('os.unit.Multiplier');
 
 
 /**
  * Responsible for receiving, logging and reporting alerts
- *
- * @extends {os.unit.BaseUnit}
- * @constructor
  */
-os.unit.YardUnits = function() {
-  os.unit.YardUnits.base(this, 'constructor');
-};
-goog.inherits(os.unit.YardUnits, os.unit.BaseUnit);
+class YardUnits extends BaseUnit {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getTitle() {
+    return 'Yards Only';
+  }
 
-/**
- * @inheritDoc
- */
-os.unit.YardUnits.prototype.getTitle = function() {
-  return 'Yards Only';
-};
+  /**
+   * @inheritDoc
+   */
+  getUnitType() {
+    return 'distance';
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getSystem() {
+    return 'yard';
+  }
 
-/**
- * @inheritDoc
- */
-os.unit.YardUnits.prototype.getUnitType = function() {
-  return 'distance';
-};
+  /**
+   * @inheritDoc
+   */
+  getDefaultMultiplier() {
+    return this.getMultiplier('yd');
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getConversionFactor() {
+    return (1.09361);
+  }
 
-/**
- * @inheritDoc
- */
-os.unit.YardUnits.prototype.getSystem = function() {
-  return 'yard';
-};
+  /**
+   * @inheritDoc
+   */
+  initMultipliers() {
+    this.multipliers.push(new Multiplier('yd', 1, true, 'yards'));
+  }
+}
 
-
-/**
- * @inheritDoc
- */
-os.unit.YardUnits.prototype.getDefaultMultiplier = function() {
-  return this.getMultiplier('yd');
-};
-
-
-/**
- * @inheritDoc
- */
-os.unit.YardUnits.prototype.getConversionFactor = function() {
-  return (1.09361);
-};
-
-
-/**
- * @inheritDoc
- */
-os.unit.YardUnits.prototype.initMultipliers = function() {
-  this.multipliers.push(new os.unit.Multiplier('yd', 1, true, 'yards'));
-};
+exports = YardUnits;

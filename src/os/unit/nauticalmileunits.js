@@ -1,64 +1,62 @@
-goog.provide('os.unit.NauticalMileUnits');
-goog.require('os.unit.BaseUnit');
-goog.require('os.unit.Multiplier');
+goog.module('os.unit.NauticalMileUnits');
+goog.module.declareLegacyNamespace();
 
+const BaseUnit = goog.require('os.unit.BaseUnit');
+const Multiplier = goog.require('os.unit.Multiplier');
 
 
 /**
  * Responsible for receiving, logging and reporting alerts
- *
- * @extends {os.unit.BaseUnit}
- * @constructor
  */
-os.unit.NauticalMileUnits = function() {
-  os.unit.NauticalMileUnits.base(this, 'constructor');
-};
-goog.inherits(os.unit.NauticalMileUnits, os.unit.BaseUnit);
+class NauticalMileUnits extends BaseUnit {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getTitle() {
+    return 'Nautical Miles Only';
+  }
 
-/**
- * @inheritDoc
- */
-os.unit.NauticalMileUnits.prototype.getTitle = function() {
-  return 'Nautical Miles Only';
-};
+  /**
+   * @inheritDoc
+   */
+  getUnitType() {
+    return 'distance';
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getSystem() {
+    return 'nauticalmile';
+  }
 
-/**
- * @inheritDoc
- */
-os.unit.NauticalMileUnits.prototype.getUnitType = function() {
-  return 'distance';
-};
+  /**
+   * @inheritDoc
+   */
+  getDefaultMultiplier() {
+    return this.getMultiplier('nmi');
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getConversionFactor() {
+    return (1 / 1852.0);
+  }
 
-/**
- * @inheritDoc
- */
-os.unit.NauticalMileUnits.prototype.getSystem = function() {
-  return 'nauticalmile';
-};
+  /**
+   * @inheritDoc
+   */
+  initMultipliers() {
+    this.multipliers.push(new Multiplier('nmi', 1, true, 'nautical miles'));
+  }
+}
 
-
-/**
- * @inheritDoc
- */
-os.unit.NauticalMileUnits.prototype.getDefaultMultiplier = function() {
-  return this.getMultiplier('nmi');
-};
-
-
-/**
- * @inheritDoc
- */
-os.unit.NauticalMileUnits.prototype.getConversionFactor = function() {
-  return (1 / 1852.0);
-};
-
-
-/**
- * @inheritDoc
- */
-os.unit.NauticalMileUnits.prototype.initMultipliers = function() {
-  this.multipliers.push(new os.unit.Multiplier('nmi', 1, true, 'nautical miles'));
-};
+exports = NauticalMileUnits;

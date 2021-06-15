@@ -1,22 +1,23 @@
-goog.provide('os.xt.events');
-goog.provide('os.xt.events.MasterChangedEvent');
-goog.require('goog.events.Event');
-goog.require('goog.events.EventTarget');
+goog.module('os.xt.events');
+goog.module('os.xt.events.MasterChangedEvent');
+goog.module.declareLegacyNamespace();
 
+const EventTarget = goog.require('goog.events.EventTarget');
+
+
+goog.require('goog.events.Event');
 
 /**
  * Dispatches global events for XT
- * @type {!goog.events.EventTarget}
- * @const
+ * @type {!EventTarget}
  */
-os.xt.events.DISPATCHER = new goog.events.EventTarget();
-
+const DISPATCHER = new EventTarget();
 
 /**
  * Event types for XT
  * @enum {string}
  */
-os.xt.events.EventType = {
+const EventType = {
   MASTER_APPOINTED: 'os.xt.events.masterAppointed'
 };
 
@@ -28,6 +29,11 @@ os.xt.events.EventType = {
  * @param {!string} group
  * @return {!string}
  */
-os.xt.events.EventType.forGroup = function(type, group) {
+EventType.forGroup = function(type, group) {
   return [type, group].join('.');
+};
+
+exports = {
+  DISPATCHER,
+  EventType
 };

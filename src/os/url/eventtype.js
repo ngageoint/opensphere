@@ -1,9 +1,10 @@
-goog.provide('os.url.EventType');
+goog.module('os.url.EventType');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * @enum {string}
  */
-os.url.EventType = {
+exports = {
   URL_IMPORTED: 'urlImported'
 };

@@ -1,31 +1,26 @@
-goog.provide('os.url');
+goog.module('os.url');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * Regular expression for mailto links.
  * @type {RegExp}
- * @const
  */
-os.url.MAILTO_REGEXP = /^mailto:/;
-
+const MAILTO_REGEXP = /^mailto:/;
 
 /**
  * Regular expression for validating URLs.  Copied from Angular.js.  This one is good for testing things you expect to
  * be a single URL (as opposed to multiple).
  * @type {RegExp}
  */
-os.url.URL_REGEXP = /^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/;
-// old version of the RegExp
-// os.url.URL_REGEXP = /^((ftp|https?):\/\/|(mailto:)?[A-Za-z0-9._%+-]+@)\S*[^\s\.\;\,\{\}\<\>]$/;
-
+const URL_REGEXP = /^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/;
 
 /**
  * Regular expression for validating URLs.  This one is specifically being used by os.string.linkify.  It's
  * probably not a good idea to use this unless you know what you're doing.
  * @type {RegExp}
  */
-os.url.URL_REGEXP_LINKY = /((ftp|https?):\/\/|(mailto:)?[A-Za-z0-9._%+-]+@)[^\s'"]*[^\s.;,{}<>'"]/;
-
+const URL_REGEXP_LINKY = /((ftp|https?):\/\/|(mailto:)?[A-Za-z0-9._%+-]+@)[^\s'"]*[^\s.;,{}<>'"]/;
 
 /**
  * Convert a {@link goog.Uri.QueryData} to an object.
@@ -34,7 +29,7 @@ os.url.URL_REGEXP_LINKY = /((ftp|https?):\/\/|(mailto:)?[A-Za-z0-9._%+-]+@)[^\s'
  * @param {Object=} opt_obj The target object.
  * @return {!Object} An object.
  */
-os.url.queryDataToObject = function(qd, opt_obj) {
+const queryDataToObject = function(qd, opt_obj) {
   var params = opt_obj || {};
 
   if (qd) {
@@ -49,4 +44,11 @@ os.url.queryDataToObject = function(qd, opt_obj) {
   }
 
   return params;
+};
+
+exports = {
+  MAILTO_REGEXP,
+  URL_REGEXP,
+  URL_REGEXP_LINKY,
+  queryDataToObject
 };
