@@ -347,7 +347,7 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
     }
 
     if (options['mappings']) {
-      importer.setMappings(/** @type {Array<os.im.mapping.IMapping>} */ (options['mappings']));
+      importer.setMappings(/** @type {Array<IMapping>} */ (options['mappings']));
     }
   }
 

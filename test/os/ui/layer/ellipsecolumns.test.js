@@ -1,7 +1,7 @@
 goog.require('os.im.mapping.RadiusMapping');
 goog.require('os.ui.layer.EllipseColumnsUI');
 
-ddescribe('os.ui.layer.EllipseColumnsUI', function() {
+describe('os.ui.layer.EllipseColumnsUI', function() {
   const EllipseColumnsUI = goog.module.get('os.ui.layer.EllipseColumnsUI');
   var scope;
   var element;

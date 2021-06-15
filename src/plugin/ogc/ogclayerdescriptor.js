@@ -13,9 +13,7 @@ const AlertManager = goog.require('os.alert.AlertManager');
 const osColor = goog.require('os.color');
 const Settings = goog.require('os.config.Settings');
 const data = goog.require('os.data');
-const DataManager = goog.require('os.data.DataManager');
 const IAreaTest = goog.require('os.data.IAreaTest');
-const IMappingDescriptor = goog.require('os.data.IMappingDescriptor');
 const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const IFilterable = goog.require('os.filter.IFilterable');
@@ -42,15 +40,14 @@ const AbstractLoadingServer = goog.require('os.ui.server.AbstractLoadingServer')
 const deprecated = goog.require('os.ui.util.deprecated');
 
 
+const IMapping = goog.requireType('os.im.mapping.IMapping');
 const IFeatureType = goog.requireType('os.ogc.IFeatureType');
-const ILayer = goog.requireType('os.layer.ILayer');
 
 
 /**
  * @implements {IOGCDescriptor}
  * @implements {IFilterable}
  * @implements {IAreaTest}
- * @implements {IMappingDescriptor}
  */
 class OGCLayerDescriptor extends LayerSyncDescriptor {
   /**
@@ -255,11 +252,14 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
     this.filterableRegexp = OGCLayerDescriptor.FILTERABLE_RE;
 
     this.descriptorType = ogc.ID;
+  }
 
-    /**
-     * @type {Array}
-     */
-    this.mappings = [];
+  /**
+   * @inheritDoc
+   */
+  updateMappings(layer) {
+    super.updateMappings(layer);
+    this.setActiveInternal();
   }
 
   /**
@@ -267,45 +267,6 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
    */
   getSearchType() {
     return 'Layer';
-  }
-
-  /**
-   * @inheritDoc
-   */
-  getMappings() {
-    return this.mappings;
-  }
-
-
-  /**
-   * @inheritDoc
-   */
-  setMappings(value) {
-    this.mappings = value;
-    const dm = DataManager.getInstance();
-    dm.updateDescriptor(this, this);
-    dm.persistDescriptors();
-  }
-
-  /**
-   * @inheritDoc
-   */
-  updateMappings(layer) {
-    const dm = DataManager.getInstance();
-    dm.updateDescriptor(this, this);
-    dm.persistDescriptors();
-
-    // Delete the layer, then prompt the descriptor to make new layers
-    os.MapContainer.getInstance().removeLayer(/** @type {!ILayer} */ (layer));
-    this.setActiveInternal();
-  }
-
-
-  /**
-   * @inheritDoc
-   */
-  supportsMapping() {
-    return false;
   }
 
   /**
@@ -1355,7 +1316,6 @@ osImplements(OGCLayerDescriptor, IAreaTest.ID);
 osImplements(OGCLayerDescriptor, IFilterable.ID);
 osImplements(OGCLayerDescriptor, IFeatureTypeDescriptor.ID);
 osImplements(OGCLayerDescriptor, IOGCDescriptor.ID);
-osImplements(OGCLayerDescriptor, IMappingDescriptor.ID);
 
 
 /**

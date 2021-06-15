@@ -5,6 +5,7 @@ const {getValues} = goog.require('goog.object');
 const {ROOT, implements: implementationOf} = goog.require('os');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
 const DataManager = goog.require('os.data.DataManager');
+const IMappingDescriptor = goog.require('os.data.IMappingDescriptor');
 const Units = goog.require('os.math.Units');
 const Module = goog.require('os.ui.Module');
 const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
@@ -89,7 +90,7 @@ class Controller {
      * Whether the user selected Circle or Ellipse
      * @type {boolean}
      */
-    this['inputType'] = 'ellipse';
+    this['inputType'] = EllipseInputType.ELLIPSE;
 
     /**
      * Column Options for the source
@@ -172,8 +173,8 @@ class Controller {
   init() {
     const layer = this.scope_['layer'];
     const layerId = implementationOf(layer, ILayer.ID) ? layer.getId() : undefined;
-    const Mappings = layerId ?
-      (DataManager.getInstance().getDescriptor(layerId).getMappings() || []) : layer['mappings'];
+    const desc = layerId ? DataManager.getInstance().getDescriptor(layerId) : undefined;
+    const Mappings = implementationOf(desc, IMappingDescriptor.ID) ? (desc.getMappings() || []) : layer['mappings'];
 
 
     Mappings.forEach((mapping) => {
@@ -183,11 +184,11 @@ class Controller {
       const column = this['columnOptions'].find(({name}) => name === field);
 
       if (id == RadiusMapping.ID) {
-        this['inputType'] = 'circle';
+        this['inputType'] = EllipseInputType.CIRCLE;
         this['radiusColumn'] = column;
         this['radiusUnits'] = mapping.units;
       } else if (id == SemiMajorMapping.ID) {
-        this['inputType'] = 'ellipse';
+        this['inputType'] = EllipseInputType.ELLIPSE;
         this['semiMajorColumn'] = column;
         this['semiMajorUnits'] = mapping.units;
       } else if (id == SemiMinorMapping.ID) {
@@ -206,11 +207,23 @@ class Controller {
   updateMappings() {
     const layer = this.scope_['layer'];
     const layerId = implementationOf(layer, ILayer.ID) ? layer.getId() : undefined;
-    const descMappings = layerId ?
-      (DataManager.getInstance().getDescriptor(layerId).getMappings() || []) : layer['mappings'];
+    const descriptor = layerId ? DataManager.getInstance().getDescriptor(layerId) : undefined;
+    const descMappings = implementationOf(descriptor, IMappingDescriptor.ID) ?
+      (descriptor.getMappings() || []) : layer['mappings'];
     const mappings = this.createMappings();
 
-    let result = [...descMappings];
+    let result = [];
+
+    // Pull out the other ellipse mappings from the descriptor mappings, but only if the user has generated valid mappings
+    if (descMappings.length > 0 && mappings.length > 0) {
+      descMappings.forEach((mapping) => {
+        const id = mapping.getId();
+        if (id != RadiusMapping.ID && id != SemiMajorMapping.ID &&
+            id != SemiMajorMapping.ID && id != OrientationMapping.ID) {
+          result.push(mapping);
+        }
+      });
+    }
 
     // Only combine the mappings if passed a layer, don't if passed anything else (used by geometrystep)
     if (layerId && mappings.length != 0 && descMappings.length != 0) {
@@ -237,12 +250,12 @@ class Controller {
     const mappings = [];
     const type = this['inputType'];
 
-    if (type == 'circle' && this.validType(type)) {
+    if (type == EllipseInputType.CIRCLE && this.validType(type)) {
       const rm = new RadiusMapping();
       rm.field = this['radiusColumn'].name;
       rm.setUnits(this['radiusUnits']);
       mappings.push(rm);
-    } else if (type == 'ellipse' && this.validType(type)) {
+    } else if (type == EllipseInputType.ELLIPSE && this.validType(type)) {
       const smaj = new SemiMajorMapping();
       smaj.field = this['semiMajorColumn'].name;
       smaj.setUnits(this['semiMajorUnits']);
@@ -268,10 +281,10 @@ class Controller {
    */
   validType(inputType) {
     let isValid = false;
-    if (inputType == 'circle') {
+    if (inputType == EllipseInputType.CIRCLE) {
       isValid = this['radiusColumn'] && this['radiusUnits'] &&
         this['radiusColumn'] != this.noneColumn && this['radiusUnits'] != this.noneColumn;
-    } else if (inputType == 'ellipse') {
+    } else if (inputType == EllipseInputType.ELLIPSE) {
       isValid = this['semiMajorColumn'] && this['semiMajorUnits'] &&
         this['semiMajorColumn'] != this.noneColumn && this['semiMajorUnits'] != this.noneColumn &&
         this['semiMinorColumn'] && this['semiMinorUnits'] &&
@@ -288,6 +301,16 @@ class Controller {
  * @type {string}
  */
 const ALLOW_ELLIPSE_CONFIG = 'allowEllipseConfiguration';
+
+
+/**
+ * Types of Mappings available
+ * @enum {string}
+ */
+const EllipseInputType = {
+  CIRCLE: 'circle',
+  ELLIPSE: 'ellipse'
+};
 
 
 /**

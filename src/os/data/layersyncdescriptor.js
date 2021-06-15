@@ -9,12 +9,16 @@ goog.require('os.IPersistable');
 goog.require('os.command.LayerAdd');
 goog.require('os.command.LayerRemove');
 goog.require('os.data.BaseDescriptor');
+goog.require('os.data.DataManager');
+goog.require('os.data.IMappingDescriptor');
 goog.require('os.events.LayerEvent');
 goog.require('os.events.LayerEventType');
 goog.require('os.events.PropertyChangeEvent');
+goog.require('os.im.mapping.IMapping');
 goog.require('os.layer.ILayer');
 goog.require('os.layer.PropertyChange');
 goog.require('os.net.Online');
+goog.require('os.ui.layer.EllipseColumnsUI');
 goog.require('os.ui.node.defaultLayerNodeUIDirective');
 
 
@@ -26,6 +30,7 @@ goog.require('os.ui.node.defaultLayerNodeUIDirective');
  *
  * @abstract
  * @extends {os.data.BaseDescriptor}
+ * @implements {os.data.IMappingDescriptor}
  * @constructor
  */
 os.data.LayerSyncDescriptor = function() {
@@ -56,12 +61,18 @@ os.data.LayerSyncDescriptor = function() {
    */
   this.online = os.net.Online.getInstance();
 
+  /**
+   * @type {Array<os.im.mapping.IMapping>}
+   */
+  this.mappings = [];
+
   this.setNodeUI('<defaultlayernodeui></defaultlayernodeui>');
 
   os.dispatcher.listen(os.events.LayerEventType.ADD, this.onLayerAdded, false, this);
   os.dispatcher.listen(os.events.LayerEventType.REMOVE, this.onLayerRemoved, false, this);
 };
 goog.inherits(os.data.LayerSyncDescriptor, os.data.BaseDescriptor);
+os.implements(os.data.LayerSyncDescriptor, os.data.IMappingDescriptor.ID);
 
 
 /**
@@ -106,6 +117,45 @@ os.data.LayerSyncDescriptor.prototype.disposeInternal = function() {
   os.dispatcher.unlisten(os.events.LayerEventType.ADD, this.onLayerAdded, false, this);
   os.dispatcher.unlisten(os.events.LayerEventType.REMOVE, this.onLayerRemoved, false, this);
   this.removeLayers_();
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.data.LayerSyncDescriptor.prototype.getMappings = function() {
+  return this.mappings;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.data.LayerSyncDescriptor.prototype.setMappings = function(value) {
+  this.mappings = value;
+  const dm = os.data.DataManager.getInstance();
+  dm.updateDescriptor(this, this);
+  dm.persistDescriptors();
+};
+
+/**
+ * @inheritDoc
+ */
+os.data.LayerSyncDescriptor.prototype.updateMappings = function(layer) {
+  const dm = os.data.DataManager.getInstance();
+  dm.updateDescriptor(this, this);
+  dm.persistDescriptors();
+
+  // Delete the layer, then prompt the descriptor to make new layers
+  os.MapContainer.getInstance().removeLayer(/** @type {!os.layer.ILayer} */ (layer));
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.data.LayerSyncDescriptor.prototype.supportsMapping = function() {
+  return false;
 };
 
 

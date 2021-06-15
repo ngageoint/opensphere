@@ -2,6 +2,8 @@ goog.provide('os.ui.layer.VectorStyleControlsCtrl');
 goog.provide('os.ui.layer.vectorStyleControlsDirective');
 
 goog.require('goog.Disposable');
+goog.require('os.data.DataManager');
+goog.require('os.data.IMappingDescriptor');
 goog.require('os.ui.Module');
 goog.require('os.ui.icon.iconPickerDirective');
 goog.require('os.ui.layer.EllipseColumnsUI');
@@ -111,7 +113,8 @@ os.ui.layer.VectorStyleControlsCtrl = function($scope, $element) {
    */
   this['ellipseMapping'] = undefined;
 
-  this['allowEllipseConfig'] = this.scope['allowEllipseConfig'] || false;
+  const supportsMapping = this.allowEllipseConfig();
+  this['allowEllipseConfig'] = (this.scope['allowEllipseConfig'] && supportsMapping) || false;
 
   /**
    * Help text for Ellipse configuration
@@ -153,6 +156,18 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.$postLink = function() {
 os.ui.layer.VectorStyleControlsCtrl.prototype.disposeInternal = function() {
   this.scope = null;
   this.element = null;
+};
+
+
+/**
+ * Fire a scope event when the shape is changed by the user.
+ *
+ * @return {boolean}
+ */
+os.ui.layer.VectorStyleControlsCtrl.prototype.allowEllipseConfig = function() {
+  const layer = this.scope['layer'];
+  const desc = layer ? os.data.DataManager.getInstance().getDescriptor(layer.getId()) : undefined;
+  return os.implements(desc, os.data.IMappingDescriptor.ID) && desc.supportsMapping();
 };
 
 
