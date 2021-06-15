@@ -2,11 +2,17 @@ goog.module('os.time.TimelineController');
 goog.module.declareLegacyNamespace();
 
 const Timer = goog.require('goog.Timer');
+const googArray = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
 const EventTarget = goog.require('goog.events.EventTarget');
+const iter = goog.require('goog.iter');
 const Range = goog.require('goog.math.Range');
 const RangeSet = goog.require('goog.math.RangeSet');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
 const Settings = goog.require('os.config.Settings');
+const osTime = goog.require('os.time');
+const Duration = goog.require('os.time.Duration');
 const TimeRange = goog.require('os.time.TimeRange');
 const TimelineControllerEvent = goog.require('os.time.TimelineControllerEvent');
 const TimelineEventType = goog.require('os.time.TimelineEventType');
@@ -48,7 +54,7 @@ class TimelineController extends EventTarget {
      * @type {string}
      * @private
      */
-    this.duration_ = os.time.Duration.DAY;
+    this.duration_ = Duration.DAY;
 
     /**
      * @type {boolean}
@@ -186,10 +192,10 @@ class TimelineController extends EventTarget {
    * @todo This is temporary until we have user options to set the default time on startup.
    */
   initialize_() {
-    var duration = os.time.Duration.DAY;
-    var start = os.time.toUTCDate(new Date());
-    start = os.time.floor(start, duration);
-    var end = os.time.offset(start, duration, 1);
+    var duration = Duration.DAY;
+    var start = osTime.toUTCDate(new Date());
+    start = osTime.floor(start, duration);
+    var end = osTime.offset(start, duration, 1);
 
     this.setIncludeEnd(true);
     this.setSuppressShowEvents(true);
@@ -431,10 +437,10 @@ class TimelineController extends EventTarget {
   getSmallestAnimateRangeLength() {
     var rangeSet = this.animateRanges_.isEmpty() ? this.getEffectiveLoadRangeSet() : this.animateRanges_;
     var values = [];
-    goog.iter.forEach(rangeSet.__iterator__(false), function(value) {
+    iter.forEach(rangeSet.__iterator__(false), function(value) {
       values.push(value.getLength());
     });
-    goog.array.sort(values);
+    googArray.sort(values);
     return values[0];
   }
 
@@ -463,8 +469,8 @@ class TimelineController extends EventTarget {
    * @param {number} value
    */
   setRangeStart(value) {
-    var startTime = os.time.floor(new Date(value), this.getDuration()).getTime();
-    var endTime = os.time.offset(new Date(startTime), this.getDuration(), 1).getTime();
+    var startTime = osTime.floor(new Date(value), this.getDuration()).getTime();
+    var endTime = osTime.offset(new Date(startTime), this.getDuration(), 1).getTime();
     this.setSuppressShowEvents(true);
     this.setRange(this.buildRange(startTime, endTime));
     this.setSuppressShowEvents(false);
@@ -746,7 +752,7 @@ class TimelineController extends EventTarget {
    */
   reconcileRange_(rangeSet) {
     var altered = false;
-    var rangesInSet = goog.iter.toArray(rangeSet);
+    var rangesInSet = iter.toArray(rangeSet);
     var range;
     for (var i = 0; i < rangesInSet.length; i = i + 1) {
       range = rangesInSet[i];
@@ -901,7 +907,7 @@ class TimelineController extends EventTarget {
     var i;
     var r;
     try {
-      var ranges = goog.iter.toArray(rangeSet);
+      var ranges = iter.toArray(rangeSet);
       if (dir < 0) {
         for (i = ranges.length - 1; i >= 0; i = i - 1) {
           r = ranges[i];
@@ -1052,7 +1058,7 @@ class TimelineController extends EventTarget {
       if (cleanedRange.start > cleanedRange.end) { // selected across a day, split into 2 ranges
         var range2 = new Range(0, cleanedRange.end);
         this.sliceRanges_.add(range2);
-        cleanedRange = new Range(cleanedRange.start, os.time.millisecondsInDay);
+        cleanedRange = new Range(cleanedRange.start, osTime.millisecondsInDay);
       }
 
       this.sliceRanges_.add(cleanedRange.clone());
@@ -1078,19 +1084,19 @@ class TimelineController extends EventTarget {
    * @return {goog.math.Range} timerange
    */
   cleanSliceRange(timerange) {
-    if (timerange.end - timerange.start >= os.time.millisecondsInDay) {
+    if (timerange.end - timerange.start >= osTime.millisecondsInDay) {
       var msg = 'Slice size must be less than a day, setting to largest allowable';
-      os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.INFO);
-      return new Range(0, os.time.millisecondsInDay);
+      AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.INFO);
+      return new Range(0, osTime.millisecondsInDay);
     } else {
       var tr = new Range(0, 1); // make a safe copy
       tr.start = timerange.start;
       tr.end = timerange.end;
-      if (timerange.start > os.time.millisecondsInDay) { // only care about hours, mins, seconds, milliseconds
-        tr.start = timerange.start % os.time.millisecondsInDay;
+      if (timerange.start > osTime.millisecondsInDay) { // only care about hours, mins, seconds, milliseconds
+        tr.start = timerange.start % osTime.millisecondsInDay;
       }
-      if (timerange.end > os.time.millisecondsInDay) { // only care about hours, mins, seconds, milliseconds
-        tr.end = timerange.end % os.time.millisecondsInDay;
+      if (timerange.end > osTime.millisecondsInDay) { // only care about hours, mins, seconds, milliseconds
+        tr.end = timerange.end % osTime.millisecondsInDay;
       }
       return tr;
     }
@@ -1107,8 +1113,8 @@ class TimelineController extends EventTarget {
     var newRange = this.cleanSliceRange(newTimerange);
     var oldRange = this.cleanSliceRange(oldTimerange);
     if (newRange.start != oldRange.start || newRange.end != oldRange.end) {
-      if (oldRange.end >= os.time.millisecondsInDay - 1000) { // timeline snaps the prior second, delete range properly
-        oldRange.end = os.time.millisecondsInDay;
+      if (oldRange.end >= osTime.millisecondsInDay - 1000) { // timeline snaps the prior second, delete range properly
+        oldRange.end = osTime.millisecondsInDay;
       }
       this.sliceRanges_.remove(oldRange);
       this.addSliceRange(newRange);
@@ -1124,8 +1130,8 @@ class TimelineController extends EventTarget {
   removeSliceRange(timerange) {
     var range = this.cleanSliceRange(timerange);
     var tr = this.sliceRanges_.clone();
-    if (range.end >= os.time.millisecondsInDay - 1000) { // timeline snaps the prior second, delete range properly
-      range.end = os.time.millisecondsInDay;
+    if (range.end >= osTime.millisecondsInDay - 1000) { // timeline snaps the prior second, delete range properly
+      range.end = osTime.millisecondsInDay;
     }
     this.sliceRanges_.remove(range);
 
@@ -1169,7 +1175,7 @@ class TimelineController extends EventTarget {
    * @return {!Array<Range>}
    */
   getSliceRanges() {
-    return goog.iter.toArray(this.sliceRanges_);
+    return iter.toArray(this.sliceRanges_);
   }
 
   /**
@@ -1194,7 +1200,7 @@ class TimelineController extends EventTarget {
    * @return {!Array<Range>}
    */
   getEffectiveSliceRanges() {
-    return goog.iter.toArray(this.hasSliceRanges() ? this.getEffectiveLoadRangeSet() : []);
+    return iter.toArray(this.hasSliceRanges() ? this.getEffectiveLoadRangeSet() : []);
   }
 
   /**
@@ -1210,14 +1216,14 @@ class TimelineController extends EventTarget {
         var slices = this.getSliceRanges();
         var loadRanges = this.getLoadRanges(); // return loaded range if no slices
         for (var i = 0; i < loadRanges.length; i++) { // for range in loadRanges
-          var length = Math.ceil((loadRanges[i].end - loadRanges[i].start) / os.time.millisecondsInDay); // #days in range
-          if (loadRanges[i].end % os.time.millisecondsInDay < loadRanges[i].start % os.time.millisecondsInDay + 1) {
+          var length = Math.ceil((loadRanges[i].end - loadRanges[i].start) / osTime.millisecondsInDay); // #days in range
+          if (loadRanges[i].end % osTime.millisecondsInDay < loadRanges[i].start % osTime.millisecondsInDay + 1) {
             length++; // extra partial day
           }
-          var firstDay = loadRanges[i].start - loadRanges[i].start % os.time.millisecondsInDay; // first day of the range
+          var firstDay = loadRanges[i].start - loadRanges[i].start % osTime.millisecondsInDay; // first day of the range
           for (var j = 0; j < length; j++) { // take a slice out of each day
-            var day = firstDay + j * os.time.millisecondsInDay; // start time of current day in range
-            var dayRange = this.buildRange(day, day + os.time.millisecondsInDay - 1000); // range extending the full day
+            var day = firstDay + j * osTime.millisecondsInDay; // start time of current day in range
+            var dayRange = this.buildRange(day, day + osTime.millisecondsInDay - 1000); // range extending the full day
             var finalRange = Range.intersection(dayRange, loadRanges[i]); // clip  to match first / last day
             for (var k = 0; k < slices.length; k++) { // for slice in slices
               var daySlice = this.buildRange(day + slices[k].start, day + slices[k].end); // add slice to day
@@ -1242,7 +1248,7 @@ class TimelineController extends EventTarget {
    * @export Prevent the compiler from moving the function off the prototype.
    */
   getEffectiveLoadRanges() {
-    return goog.iter.toArray(this.getEffectiveLoadRangeSet());
+    return iter.toArray(this.getEffectiveLoadRangeSet());
   }
 
   /**
@@ -1276,7 +1282,7 @@ class TimelineController extends EventTarget {
       this.calcRangeCache_.clear();
       this.dispatchEvent(TimelineEventType.SLICE_RANGE_CHANGED);
       this.dispatchEvent(TimelineEventType.RANGE_CHANGED);
-      var numPrev = goog.iter.toArray(tr).length;
+      var numPrev = iter.toArray(tr).length;
       var numNow = this.getLoadRanges().length;
       if (numPrev === 1 && numNow > 1 || numNow === 1) { // consider when ranges are combined!
         this.dispatchEvent(TimelineEventType.REFRESH_LOAD);
@@ -1307,7 +1313,7 @@ class TimelineController extends EventTarget {
    * @return {?goog.math.Range}
    */
   hasRange(rangeSet, timerange) {
-    return goog.iter.nextOrValue(goog.iter.filter(rangeSet, function(range) {
+    return iter.nextOrValue(iter.filter(rangeSet, function(range) {
       return (range.start === timerange.start || range.end === timerange.end);
     }), null);
   }
@@ -1320,7 +1326,7 @@ class TimelineController extends EventTarget {
    * @return {?goog.math.Range}
    */
   hasExactRange(rangeSet, timerange) {
-    return goog.iter.nextOrValue(goog.iter.filter(rangeSet, function(range) {
+    return iter.nextOrValue(iter.filter(rangeSet, function(range) {
       return (range.start === timerange.start && range.end === timerange.end);
     }), null);
   }
@@ -1338,7 +1344,7 @@ class TimelineController extends EventTarget {
         this.calcRangeCache_.clear();
         this.dispatchEvent(TimelineEventType.SLICE_RANGE_CHANGED);
         this.dispatchEvent(TimelineEventType.RANGE_CHANGED);
-        var numPrev = goog.iter.toArray(tr).length;
+        var numPrev = iter.toArray(tr).length;
         var numNow = this.getLoadRanges().length;
         if (numPrev > 1 && numNow === 1) {
           this.dispatchEvent(TimelineEventType.REFRESH_LOAD);
@@ -1350,7 +1356,7 @@ class TimelineController extends EventTarget {
       this.loadRanges_.remove(timerange); // add it back to the UI
       this.loadRanges_.add(timerange.clone());
       var msg = 'At least one load range must always be present';
-      os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.INFO);
+      AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.INFO);
       this.calcRangeCache_.clear();
       this.dispatchEvent(TimelineEventType.SLICE_RANGE_CHANGED);
       this.dispatchEvent(TimelineEventType.RANGE_CHANGED);
@@ -1367,7 +1373,7 @@ class TimelineController extends EventTarget {
   setLoadRanges(ranges) {
     if (ranges && ranges instanceof RangeSet) {
       var numPrev = this.getLoadRanges().length;
-      var numNow = goog.iter.toArray(ranges).length;
+      var numNow = iter.toArray(ranges).length;
       if ((numPrev === 1 && numNow != 1) || (numPrev > 1 && numNow === 1)) {
         this.dispatchEvent(TimelineEventType.REFRESH_LOAD);
       }
@@ -1386,7 +1392,7 @@ class TimelineController extends EventTarget {
    * @return {!Array<Range>}
    */
   getLoadRanges() {
-    return goog.iter.toArray(this.loadRanges_);
+    return iter.toArray(this.loadRanges_);
   }
 
   /**
@@ -1476,7 +1482,7 @@ class TimelineController extends EventTarget {
    * @return {!Array<Range>}
    */
   getAnimationRanges() {
-    return goog.iter.toArray(this.animateRanges_);
+    return iter.toArray(this.animateRanges_);
   }
 
   /**
@@ -1499,7 +1505,7 @@ class TimelineController extends EventTarget {
    * @return {!Array<Range>}
    */
   getHoldRanges() {
-    return goog.iter.toArray(this.holdRanges_);
+    return iter.toArray(this.holdRanges_);
   }
 
   /**

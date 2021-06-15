@@ -6,13 +6,15 @@
 goog.module('os.time');
 goog.module.declareLegacyNamespace();
 
-// Load to add the VariableReplacer.
+// Load to add the VariableReplacer
 goog.require('os.time.TimeRangePresets');
 
+const googArray = goog.require('goog.array');
 const asserts = goog.require('goog.asserts');
 const UtcDateTime = goog.require('goog.date.UtcDateTime');
 const DateTimeFormat = goog.require('goog.i18n.DateTimeFormat');
 const Settings = goog.require('os.config.Settings');
+const VariableReplacer = goog.require('os.net.VariableReplacer');
 const Duration = goog.require('os.time.Duration');
 const TimeRange = goog.require('os.time.TimeRange');
 
@@ -730,7 +732,7 @@ const applyOffset = function(offset) {
  * @return {number}
  */
 const dateCompare = function(a, b) {
-  return goog.array.defaultCompare(b.toISOString(), a.toISOString());
+  return googArray.defaultCompare(b.toISOString(), a.toISOString());
 };
 
 /**
@@ -790,7 +792,7 @@ const DEFAULT_TIME_FORMAT = DATETIME_FORMATS[6].replace('Z', '[Z]');
  * @return {string} The replacement
  */
 const replaceNow_ = function(match, p1, offset, str) {
-  var parts = os.net.VariableReplacer.getParts(p1);
+  var parts = VariableReplacer.getParts(p1);
   var value = parts[0] || 0;
 
   var num = parseFloat(value);
@@ -803,7 +805,7 @@ const replaceNow_ = function(match, p1, offset, str) {
   return momentFormat(date, parts[1] || DEFAULT_TIME_FORMAT, true);
 };
 
-os.net.VariableReplacer.add('now', replaceNow_);
+VariableReplacer.add('now', replaceNow_);
 
 
 /**

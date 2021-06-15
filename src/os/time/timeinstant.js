@@ -3,6 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const osImplements = goog.require('os.implements');
 const registerClass = goog.require('os.registerClass');
+const time = goog.require('os.time');
 const ITime = goog.require('os.time.ITime');
 
 const DateLike = goog.requireType('goog.date.DateLike');
@@ -111,7 +112,7 @@ class TimeInstant {
    * @inheritDoc
    */
   toISOString(opt_separator) {
-    return isNaN(this.start) ? 'Unbounded' : os.time.toOffsetString(this.start);
+    return isNaN(this.start) ? 'Unbounded' : time.toOffsetString(this.start);
   }
 
   /**

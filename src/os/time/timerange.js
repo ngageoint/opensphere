@@ -3,6 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const UtcDateTime = goog.require('goog.date.UtcDateTime');
 const registerClass = goog.require('os.registerClass');
+const time = goog.require('os.time');
 const TimeInstant = goog.require('os.time.TimeInstant');
 
 const DateLike = goog.requireType('goog.date.DateLike');
@@ -122,7 +123,7 @@ class TimeRange extends TimeInstant {
     if (isNaN(s) || s === TimeInstant.MIN_TIME) {
       return 'Unbounded';
     } else {
-      return os.time.toOffsetString(s, d);
+      return time.toOffsetString(s, d);
     }
   }
 
@@ -139,7 +140,7 @@ class TimeRange extends TimeInstant {
     if (isNaN(e) || e === TimeInstant.MAX_TIME) {
       return 'Unbounded';
     } else {
-      return os.time.toOffsetString(e, d);
+      return time.toOffsetString(e, d);
     }
   }
 }

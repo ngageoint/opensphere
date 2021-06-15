@@ -2,6 +2,7 @@ goog.module('os.time.TimeRangePresets');
 goog.module.declareLegacyNamespace();
 
 const VariableReplacer = goog.require('os.net.VariableReplacer');
+const time = goog.require('os.time');
 const TimeRange = goog.require('os.time.TimeRange');
 const TimelineController = goog.require('os.time.TimelineController');
 
@@ -43,60 +44,60 @@ const getDateFromRange = function(range) {
       tr = TimelineController.getInstance().getCurrentTimeRange();
       break;
     case RANGES.TODAY:
-      begin = os.time.floor(now, 'day');
-      end = os.time.ceil(now, 'day');
+      begin = time.floor(now, 'day');
+      end = time.ceil(now, 'day');
       break;
     case RANGES.YESTERDAY:
-      begin = os.time.floor(now, 'day');
-      end = os.time.ceil(now, 'day');
+      begin = time.floor(now, 'day');
+      end = time.ceil(now, 'day');
       begin.setUTCDate(begin.getUTCDate() - 1);
       end.setUTCDate(end.getUTCDate() - 1);
       break;
     case RANGES.LAST24:
       end = now;
-      begin = os.time.offset(end, 'hours', -24);
+      begin = time.offset(end, 'hours', -24);
       break;
     case RANGES.LAST48:
       end = now;
-      begin = os.time.offset(end, 'hours', -48);
+      begin = time.offset(end, 'hours', -48);
       break;
     case RANGES.LAST72:
       end = now;
-      begin = os.time.offset(end, 'hours', -72);
+      begin = time.offset(end, 'hours', -72);
       break;
     case RANGES.LAST168:
       end = now;
-      begin = os.time.offset(end, 'hours', -168);
+      begin = time.offset(end, 'hours', -168);
       break;
     case RANGES.THISWEEK:
-      begin = os.time.floor(now, 'week');
-      end = os.time.ceil(now, 'week');
+      begin = time.floor(now, 'week');
+      end = time.ceil(now, 'week');
       break;
     case RANGES.LASTWEEK:
-      begin = os.time.floor(now, 'week');
-      end = os.time.ceil(now, 'week');
+      begin = time.floor(now, 'week');
+      end = time.ceil(now, 'week');
       begin.setUTCDate(begin.getUTCDate() - 7);
       end.setUTCDate(end.getUTCDate() - 7);
       break;
     case RANGES.THISMONTH:
-      begin = os.time.floor(now, 'month');
-      end = os.time.ceil(now, 'month');
+      begin = time.floor(now, 'month');
+      end = time.ceil(now, 'month');
       break;
     case RANGES.LAST30:
-      end = os.time.ceil(now, 'day');
-      begin = os.time.offset(end, 'day', -30);
+      end = time.ceil(now, 'day');
+      begin = time.offset(end, 'day', -30);
       break;
     case RANGES.LAST60:
-      end = os.time.ceil(now, 'day');
-      begin = os.time.offset(end, 'day', -60);
+      end = time.ceil(now, 'day');
+      begin = time.offset(end, 'day', -60);
       break;
     case RANGES.LAST90:
-      end = os.time.ceil(now, 'day');
-      begin = os.time.offset(end, 'day', -90);
+      end = time.ceil(now, 'day');
+      begin = time.offset(end, 'day', -90);
       break;
     case RANGES.THISYEAR:
-      begin = os.time.floor(now, 'year');
-      end = os.time.ceil(now, 'year');
+      begin = time.floor(now, 'year');
+      end = time.ceil(now, 'year');
       break;
     default:
       break;
@@ -118,7 +119,7 @@ const replaceTime = function(match, p1, offset, str) {
   var parts = VariableReplacer.getParts(p1);
   var range = getDateFromRange(parts[1]);
   var date = new Date(parts[0] == 'start' ? range.getStart() : range.getEnd());
-  return os.time.momentFormat(date, parts[2] || os.time.DEFAULT_TIME_FORMAT, true);
+  return time.momentFormat(date, parts[2] || time.DEFAULT_TIME_FORMAT, true);
 };
 
 VariableReplacer.add('time', replaceTime);

@@ -1,7 +1,10 @@
 goog.module('os.time.xf.TimeModel');
 goog.module.declareLegacyNamespace();
 
+const googArray = goog.require('goog.array');
+const functions = goog.require('goog.functions');
 const log = goog.require('goog.log');
+const googObject = goog.require('goog.object');
 const olArray = goog.require('ol.array');
 const DataModel = goog.require('os.data.xf.DataModel');
 const PropertyChange = goog.require('os.data.xf.PropertyChange');
@@ -10,6 +13,7 @@ const osImplements = goog.require('os.implements');
 const ITime = goog.require('os.time.ITime');
 const TimeInstant = goog.require('os.time.TimeInstant');
 const TimeRange = goog.require('os.time.TimeRange');
+const TimelineController = goog.require('os.time.TimelineController');
 
 const Logger = goog.requireType('goog.log.Logger');
 const {GetTimeFn} = goog.requireType('os.time.xf');
@@ -95,7 +99,7 @@ class TimeModel extends DataModel {
      * @type {?crossfilter.Dimension}
      * @protected
      */
-    this.defaultDimension = this.timelessXf.dimension(goog.functions.TRUE);
+    this.defaultDimension = this.timelessXf.dimension(functions.TRUE);
 
     /**
      * The time range of data loaded in Crossfilter.
@@ -138,7 +142,7 @@ class TimeModel extends DataModel {
       this.xf.add(timeArray);
       this.timelessXf.add(noTimeArray);
 
-      if (this.getHoldTimeFn && os.time.TimelineController.getInstance().hasHoldRanges()) {
+      if (this.getHoldTimeFn && TimelineController.getInstance().hasHoldRanges()) {
         this.holdsXf.add(noTimeArray);
       }
 
@@ -316,8 +320,8 @@ class TimeModel extends DataModel {
         delete this.timelessDimensions[id];
       }
 
-      if (!opt_skipDefault && goog.object.isEmpty(this.timelessDimensions) && !this.defaultDimension) {
-        this.defaultDimension = this.timelessXf.dimension(goog.functions.TRUE);
+      if (!opt_skipDefault && googObject.isEmpty(this.timelessDimensions) && !this.defaultDimension) {
+        this.defaultDimension = this.timelessXf.dimension(functions.TRUE);
       }
 
       // call the parent last so the above executes before the event is fired.
@@ -420,7 +424,7 @@ class TimeModel extends DataModel {
         if (this.defaultDimension) {
           results = results.concat(this.defaultDimension.top(Infinity));
         } else {
-          var dim = goog.object.getAnyValue(this.timelessDimensions);
+          var dim = googObject.getAnyValue(this.timelessDimensions);
           results = results.concat(dim.top(Infinity));
         }
       }
@@ -435,7 +439,7 @@ class TimeModel extends DataModel {
       }
 
       if (this.filterFunction) {
-        results = goog.array.filter(results, this.filterFunction, this);
+        results = googArray.filter(results, this.filterFunction, this);
       }
 
       this.lastRange = range;
@@ -496,14 +500,14 @@ class TimeModel extends DataModel {
     var val = super.getResults(opt_value, opt_dim, opt_bottom);
     if (!(Array.isArray(val) && val.length) && !this.isDisposed()) {
       var dim = opt_dim && this.hasDimension(opt_dim) ?
-        this.timelessDimensions[opt_dim] : goog.object.getAnyValue(this.timelessDimensions);
+        this.timelessDimensions[opt_dim] : googObject.getAnyValue(this.timelessDimensions);
       opt_value = opt_value || Infinity;
 
       if (dim) {
         var results = /** @type {!Array<S>} */ (opt_bottom ? dim.bottom(opt_value) : dim.top(opt_value));
 
         if (this.filterFunction) {
-          results = goog.array.filter(results, this.filterFunction, this);
+          results = googArray.filter(results, this.filterFunction, this);
         }
 
         return results;
