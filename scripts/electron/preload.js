@@ -18,6 +18,13 @@ let cookies = '';
 
 
 /**
+ * If this is the main window.
+ * @type {boolean}
+ */
+let isMain = false;
+
+
+/**
  * The copied base settings file that will be loaded by the application.
  * @type {string}
  */
@@ -72,10 +79,11 @@ const EventType = {
 
 
 /**
- * If this is the main window.
- * @type {boolean}
+ * Regular expression to detect a remote (http or https) URL.
+ * @type {RegExp}
  */
-let isMain = false;
+const URI_REGEXP = /^(?:http|https):\/\//;
+
 
 /**
  * If this is the main window.
@@ -170,19 +178,19 @@ const setMaxMemory = (value) => {
 };
 
 /**
- * Get the settings file config by file name.
- * @param {string} fileName The file name.
+ * Get the settings file config by file name/URL.
+ * @param {string} fileOrPath The file name or URL.
  * @return {ElectronOS.SettingsFile|undefined} The file, or undefined if not found.
  */
-const getSettingsFile = (fileName) => {
-  const filePath = path.join(userSettingsDir, fileName);
+const getSettingsFile = (fileOrPath) => {
+  const filePath = URI_REGEXP.test(fileOrPath) ? fileOrPath : path.join(userSettingsDir, fileOrPath);
   return settingsFiles.find((file) => file.path === filePath);
 };
 
 /**
  * Add a user settings file.
  * @param {!ElectronOS.SettingsFile} file The file.
- * @param {string} content The settings content.
+ * @param {?string} content The settings content.
  * @return {!Promise<!Array<!ElectronOS.SettingsFile>>} A promise that resolves to the updated settings.
  */
 const addUserSettings = async (file, content) =>

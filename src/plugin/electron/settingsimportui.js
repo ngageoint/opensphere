@@ -4,33 +4,36 @@ import * as jsonMime from '../../os/file/mime/jsonsettings';
 
 const Dispatcher = goog.require('os.Dispatcher');
 const AlertManager = goog.require('os.alert.AlertManager');
+const {FileScheme} = goog.require('os.file');
 const FileImportUI = goog.require('os.ui.im.FileImportUI');
 const {launchConfirmText} = goog.require('os.ui.window.ConfirmTextUI');
 const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
 const {EventType} = goog.require('plugin.electron');
 
+const OSFile = goog.requireType('os.file.File');
+
 
 /**
  * Confirm the label for a settings file.
- * @param {string} fileName The file name.
- * @param {string} content The content.
- * @param {string=} opt_label The default label.
+ * @param {string} filePath The file path.
+ * @param {?string} content The content.
+ * @param {string=} opt_label The default label. If not provided, the file path will be used.
  */
-const confirmLabel = (fileName, content, opt_label) => {
+const confirmLabel = (filePath, content, opt_label) => {
   launchConfirmText({
     confirm: (label) => {
       const file = /** @type {ElectronOS.SettingsFile} */ ({
         default: false,
         enabled: true,
         label,
-        path: fileName
+        path: filePath
       });
 
       ElectronOS.addUserSettings(file, content).then(() => {
         Dispatcher.getInstance().dispatchEvent(EventType.UPDATE_SETTINGS);
       });
     },
-    defaultValue: opt_label || fileName,
+    defaultValue: opt_label || filePath,
     prompt: 'Please choose a label for the settings file:',
     select: true,
     windowOptions: /** @type {!osx.window.WindowOptions} */ ({
@@ -43,16 +46,17 @@ const confirmLabel = (fileName, content, opt_label) => {
 
 
 /**
- * Confirm if an existing settings file should be replaced, or a new file saved.
+ * Confirm if an existing local settings file should be replaced, or a new file saved.
  * @param {string} fileName The file name.
- * @param {string} content The content.
+ * @param {?string} content The content.
  * @param {!ElectronOS.SettingsFile} existing The existing file config.
  */
-const confirmReplace = (fileName, content, existing) => {
-  const prompt = `A settings file named <strong>${fileName}</strong> already exists. Would you like to replace the ` +
-      'existing file, or save as a new file?';
+const confirmReplaceLocal = (fileName, content, existing) => {
+  const prompt = `The imported settings file already exists with the label "${existing.label}". Would you like to ` +
+      'replace the existing file, or save as a new file?';
   launchConfirm({
     confirm: () => {
+      // Replace the existing settings file.
       confirmLabel(fileName, content, existing.label);
     },
     cancel: () => {
@@ -66,6 +70,33 @@ const confirmReplace = (fileName, content, existing) => {
     noText: 'Save as New',
     noIcon: 'far fa-save',
     noButtonClass: 'btn-secondary',
+    windowOptions: /** @type {!osx.window.WindowOptions} */ ({
+      icon: 'fas fa-cogs',
+      label: 'Settings File Already Exists',
+      showClose: true
+    })
+  });
+};
+
+
+/**
+ * Confirm if an existing remote settings file should be replaced.
+ * @param {string} url The file URL.
+ * @param {string} fileName The file name.
+ * @param {!ElectronOS.SettingsFile} existing The existing file config.
+ */
+const confirmReplaceUrl = (url, fileName, existing) => {
+  const prompt = `The imported settings file already exists with the label "${existing.label}". Would you like to ` +
+      'replace the existing file?';
+  launchConfirm({
+    confirm: () => {
+      // Replace the existing settings file.
+      confirmLabel(url, null, existing.label);
+    },
+    prompt,
+    yesText: 'Replace',
+    yesIcon: 'fas fa-exchange-alt',
+    yesButtonClass: 'btn-danger',
     windowOptions: /** @type {!osx.window.WindowOptions} */ ({
       icon: 'fas fa-cogs',
       label: 'Settings File Already Exists',
@@ -111,27 +142,63 @@ export default class SettingsImportUI extends FileImportUI {
     file.convertContentToString();
 
     const content = /** @type {string} */ (file.getContent());
+    const url = file.getUrl();
 
-    try {
-      const parsed = JSON.parse(content);
-      if (parsed && jsonMime.detect(null, file, parsed)) {
-        // Internal settings files are prefixed with a '.', so remove those from the filename if present to avoid conflicts.
-        const fileName = file.getFileName();
-        fileName.replace(/^\.+/, '');
+    // Internal settings files are prefixed with a '.', so remove those from the filename if present to avoid conflicts.
+    const fileName = file.getFileName().replace(/^\.+/, '');
 
-        if (content && fileName) {
-          const existing = ElectronOS.getSettingsFile(fileName);
-          if (existing) {
-            confirmReplace(fileName, content, existing);
+    if (content && url) {
+      try {
+        const parsed = JSON.parse(content);
+        if (parsed && jsonMime.detect(null, file, parsed)) {
+          if (url.startsWith(`${FileScheme.FILE}://`)) {
+            this.importFile(fileName, content);
           } else {
-            confirmLabel(fileName, content);
+            this.importUrl(url, fileName);
           }
+        } else {
+          this.alertInvalid();
         }
-      } else {
+      } catch (e) {
         this.alertInvalid();
       }
-    } catch (e) {
+    } else {
       this.alertInvalid();
+    }
+  }
+
+
+  /**
+   * Import a local settings file.
+   * @param {string} fileName The file name.
+   * @param {string} content The file content.
+   * @protected
+   */
+  importFile(fileName, content) {
+    if (content && fileName) {
+      const existing = ElectronOS.getSettingsFile(fileName);
+      if (existing) {
+        confirmReplaceLocal(fileName, content, existing);
+      } else {
+        confirmLabel(fileName, content);
+      }
+    }
+  }
+
+  /**
+   * Import a remote settings file.
+   * @param {string} url The URL.
+   * @param {string} fileName The file name.
+   * @protected
+   */
+  importUrl(url, fileName) {
+    if (url) {
+      const existing = ElectronOS.getSettingsFile(url);
+      if (existing) {
+        confirmReplaceUrl(url, fileName, existing);
+      } else {
+        confirmLabel(url, null, fileName);
+      }
     }
   }
 

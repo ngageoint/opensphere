@@ -5,6 +5,7 @@ goog.require('plugin.electron.ElectronMemoryConfigUI');
 
 const Settings = goog.require('os.config.Settings');
 const SettingsInitializerManager = goog.require('os.config.SettingsInitializerManager');
+const ExtDomainHandler = goog.require('os.net.ExtDomainHandler');
 const Request = goog.require('os.net.Request');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const {ID, SettingKey, isElectron} = goog.require('plugin.electron');
@@ -109,6 +110,9 @@ if (isElectron()) {
   // This is currently only supported in the main window.
   //
   if (ElectronOS.supportsUserSettings()) {
+    // Enable mixed content so http/https settings files may be loaded.
+    ExtDomainHandler.MIXED_CONTENT_ENABLED = true;
+
     const baseSettingsFile = ElectronOS.getBaseSettingsFile();
     if (baseSettingsFile) {
       const settingsInitializer = SettingsInitializerManager.getInstance().getSettingsInitializer();

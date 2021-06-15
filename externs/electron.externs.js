@@ -138,7 +138,7 @@ ElectronOS.getSettingsFile = function(fileName) {};
 /**
  * Add a user settings file.
  * @param {!ElectronOS.SettingsFile} file The file.
- * @param {string} content The settings content.
+ * @param {?string} content The settings content.
  * @return {!Promise} A promise that resolves when the settings file has been saved.
  */
 ElectronOS.addUserSettings = function(file, content) {};
