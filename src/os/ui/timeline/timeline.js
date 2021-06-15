@@ -19,7 +19,6 @@ goog.require('os.metrics.keys');
 goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 goog.require('os.time.TimelineController');
-goog.require('os.time.TimelineEventType');
 goog.require('os.time.timeline');
 goog.require('os.ui');
 goog.require('os.ui.Module');

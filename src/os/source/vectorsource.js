@@ -50,6 +50,7 @@ goog.require('os.style.StyleManager');
 goog.require('os.style.label');
 goog.require('os.time.TimeRange');
 goog.require('os.time.TimelineController');
+goog.require('os.time.TimelineEventType');
 goog.require('os.time.xf.TimeModel');
 goog.require('os.ui.slick.column');
 goog.require('os.webgl');

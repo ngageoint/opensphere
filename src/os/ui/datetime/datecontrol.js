@@ -8,6 +8,7 @@ goog.require('os.time.Duration');
 goog.require('os.time.TimeRange');
 goog.require('os.time.TimelineController');
 goog.require('os.time.TimelineControllerEvent');
+goog.require('os.time.TimelineEventType');
 goog.require('os.ui.Module');
 goog.require('os.ui.datetime.wheelDateDirective');
 

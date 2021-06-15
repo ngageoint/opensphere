@@ -9,7 +9,6 @@ goog.require('os.im.IImporter');
 goog.require('os.source.Request');
 goog.require('os.thread.EventType');
 goog.require('os.time.TimelineController');
-goog.require('os.time.TimelineEventType');
 
 
 

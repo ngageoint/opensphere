@@ -9,6 +9,7 @@ goog.require('os');
 goog.require('os.metrics.Metrics');
 goog.require('os.time');
 goog.require('os.time.TimelineController');
+goog.require('os.time.TimelineEventType');
 goog.require('os.ui.Module');
 goog.require('os.ui.datetime.dateTimeDirective');
 goog.require('os.ui.popover.popoverDirective');

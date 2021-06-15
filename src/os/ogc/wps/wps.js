@@ -1,12 +1,6 @@
 goog.provide('os.ogc.wps');
 goog.provide('os.ogc.wps.WPSParams');
 
-goog.require('os.net.VariableReplacer');
-goog.require('os.time');
-goog.require('os.time.TimeRange');
-goog.require('os.time.TimeRangePresets');
-goog.require('os.time.TimelineController');
-
 
 /**
  * WPS parameter names
