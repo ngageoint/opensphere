@@ -6,9 +6,6 @@
 goog.module('os.time');
 goog.module.declareLegacyNamespace();
 
-// Load to add the VariableReplacer
-goog.require('os.time.TimeRangePresets');
-
 const googArray = goog.require('goog.array');
 const asserts = goog.require('goog.asserts');
 const UtcDateTime = goog.require('goog.date.UtcDateTime');
@@ -16,7 +13,6 @@ const DateTimeFormat = goog.require('goog.i18n.DateTimeFormat');
 const Settings = goog.require('os.config.Settings');
 const VariableReplacer = goog.require('os.net.VariableReplacer');
 const Duration = goog.require('os.time.Duration');
-const TimeRange = goog.require('os.time.TimeRange');
 
 
 /**
@@ -256,10 +252,6 @@ const TIME_REGEXES = {
   'end': (/(down|stop|end).*(time|toi)/i)
 };
 
-/**
- * @type {!TimeRange}
- */
-const UNBOUNDED = new TimeRange(-Infinity, Infinity);
 
 /**
  * Time offset from UTC in ms
@@ -791,7 +783,7 @@ const DEFAULT_TIME_FORMAT = DATETIME_FORMATS[6].replace('Z', '[Z]');
  * @param {string} str The total string
  * @return {string} The replacement
  */
-const replaceNow_ = function(match, p1, offset, str) {
+const replaceNow = function(match, p1, offset, str) {
   var parts = VariableReplacer.getParts(p1);
   var value = parts[0] || 0;
 
@@ -804,8 +796,6 @@ const replaceNow_ = function(match, p1, offset, str) {
   var date = new Date(Date.now() + duration.asMilliseconds());
   return momentFormat(date, parts[1] || DEFAULT_TIME_FORMAT, true);
 };
-
-VariableReplacer.add('now', replaceNow_);
 
 
 /**
@@ -860,7 +850,6 @@ exports = {
   TIME_FORMATS,
   CUSTOM_TIME_FORMATS,
   TIME_REGEXES,
-  UNBOUNDED,
   timeOffset,
   timeOffsetLabel,
   millisecondsInDay,
@@ -887,6 +876,7 @@ exports = {
   dateCompare,
   humanize,
   DEFAULT_TIME_FORMAT,
+  replaceNow,
   step,
   combineDateTime,
   RELATIVE_DURATION_REGEXP,

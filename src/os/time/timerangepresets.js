@@ -122,10 +122,8 @@ const replaceTime = function(match, p1, offset, str) {
   return time.momentFormat(date, parts[2] || time.DEFAULT_TIME_FORMAT, true);
 };
 
-VariableReplacer.add('time', replaceTime);
-
-
 exports = {
   RANGES,
-  getDateFromRange
+  getDateFromRange,
+  replaceTime
 };

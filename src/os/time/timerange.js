@@ -155,4 +155,10 @@ TimeRange.NAME = 'os.time.TimeRange';
 registerClass(TimeRange.NAME, TimeRange);
 
 
+/**
+ * @type {!TimeRange}
+ */
+TimeRange.UNBOUNDED = new TimeRange(-Infinity, Infinity);
+
+
 exports = TimeRange;
