@@ -4,6 +4,7 @@ goog.module.declareLegacyNamespace();
 const Throttle = goog.require('goog.async.Throttle');
 const BrowserEvent = goog.require('goog.events.BrowserEvent');
 const GoogEvent = goog.require('goog.events.Event');
+const {TRUE} = goog.require('goog.functions');
 const math = goog.require('goog.math');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const TimeRange = goog.require('os.time.TimeRange');
@@ -130,9 +131,9 @@ class Brush extends BaseItem {
     this.canDelete = false;
 
     /**
-     * @return {boolean}
+     * @type {function():boolean}
      */
-    this.drawFlagCheck = goog.functions.TRUE;
+    this.drawFlagCheck = TRUE;
 
     /**
      * @type {boolean}
@@ -160,6 +161,20 @@ class Brush extends BaseItem {
      * @protected
      */
     this.tlc = TimelineController.getInstance();
+
+    /**
+     * The previous extent.
+     * @type {Array<number>}
+     * @protected
+     */
+    this.previousExtent = null;
+
+    /**
+     * The last used extent.
+     * @type {Array<number>}
+     * @private
+     */
+    this.oldExtent_ = null;
   }
 
   /**
@@ -223,9 +238,7 @@ class Brush extends BaseItem {
   }
 
   /**
-   * @param {Array.<number>} extent
-   * @param {boolean=} opt_silent Whether or not to fire the brush change event
-   * @param {boolean=} opt_snap Whether or not the given extent should be snapped. Defaults to false.
+   * @inheritDoc
    */
   setExtent(extent, opt_silent, opt_snap) {
     opt_snap = opt_snap !== undefined ? opt_snap : false;

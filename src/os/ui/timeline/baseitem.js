@@ -2,8 +2,7 @@ goog.module('os.ui.timeline.BaseItem');
 goog.module.declareLegacyNamespace();
 
 const EventTarget = goog.require('goog.events.EventTarget');
-
-const ITimelineItem = goog.requireType('os.ui.timeline.ITimelineItem');
+const ITimelineItem = goog.require('os.ui.timeline.ITimelineItem'); // eslint-disable-line
 
 
 /**
@@ -90,9 +89,7 @@ class BaseItem extends EventTarget {
   }
 
   /**
-   * Gets the tool tip
-   *
-   * @return {?string} The tool tip
+   * @inheritDoc
    */
   getToolTip() {
     return this.tooltip_;
@@ -136,22 +133,9 @@ class BaseItem extends EventTarget {
   }
 
   /**
-   * @abstract
    * @inheritDoc
    */
-  getExtent() {}
-
-  /**
-   * @abstract
-   * @inheritDoc
-   */
-  getAvg() {}
-
-  /**
-   * @abstract
-   * @inheritDoc
-   */
-  render() {}
+  setExtent(extent, opt_silent, opt_snap) {}
 
   /**
    * @inheritDoc
@@ -163,8 +147,7 @@ class BaseItem extends EventTarget {
   /**
    * @inheritDoc
    */
-  initSVG(container, height) {
-  }
+  initSVG(container, height) {}
 }
 
 exports = BaseItem;

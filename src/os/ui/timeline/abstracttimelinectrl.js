@@ -30,7 +30,9 @@ const SelectBrush = goog.require('os.ui.timeline.SelectBrush');
 const TileAxis = goog.require('os.ui.timeline.TileAxis');
 
 const HistogramData = goog.requireType('os.hist.HistogramData');
+const TimelineControllerEvent = goog.requireType('os.time.TimelineControllerEvent');
 const IHistogramManager = goog.requireType('os.ui.hist.IHistogramManager');
+const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
 const ITimelineItem = goog.requireType('os.ui.timeline.ITimelineItem');
 const {Controller: TimelineCtrl} = goog.requireType('os.ui.timeline.TimelineUI');
 const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptions');
@@ -54,7 +56,7 @@ class Controller {
      * @protected
      */
     this.scope = $scope;
-    this.scope['collapsed'] = Controller.collapsed;
+    this.scope['collapsed'] = collapsed;
 
     /**
      * @type {?angular.JQLite}
@@ -76,7 +78,7 @@ class Controller {
     this.histManager = null;
 
     /**
-     * @type {!Array.<string>}
+     * @type {!Array<string>}
      * @private
      */
     this.histClasses_ = goog.object.getKeys(hist.CHART_TYPES);
@@ -118,7 +120,7 @@ class Controller {
     this.moveWindowOnHistUpdate = false;
 
     /**
-     * @type {Array.<Function>}
+     * @type {Array<Function>}
      * @private
      */
     this.destroyers_ = [];
@@ -147,7 +149,7 @@ class Controller {
     this['histClass'] = null;
 
     /**
-     * @type {?Array.<!HistogramData>}
+     * @type {?Array<!HistogramData>}
      */
     this['histData'] = null;
 
@@ -176,8 +178,7 @@ class Controller {
     this.windowBrush = new Brush();
     this.windowBrush.setClamp(false);
     this.windowBrush.setToolTip('The currently-displayed time window');
-    this.windowBrush.drawFlagCheck = Controller.drawFlagCheck;
-    this.windowBrush.drawLock = true;
+    this.windowBrush.drawFlagCheck = drawFlagCheck;
 
     /**
      * @type {SelectBrush}
@@ -200,28 +201,27 @@ class Controller {
     var currentTimeMarker = new CurrentTimeMarker();
 
     /**
-     * @type {?Array.<!ITimelineItem>}
+     * @type {?Array<!ITimelineItem>}
      */
     this['items'] = [tileAxis, currentTimeMarker, this.windowBrush, this.selectBrush];
 
-
     /**
-     * @type {?Array.<!ITimelineItem>}
+     * @type {?Array<!Brush>}
      */
     this['sliceBrushes'] = [];
 
     /**
-     * @type {?Array.<!ITimelineItem>}
+     * @type {?Array<!Brush>}
      */
     this['loadBrushes'] = [];
 
     /**
-     * @type {?Array.<!ITimelineItem>}
+     * @type {?Array<!Brush>}
      */
     this['animationBrushes'] = [];
 
     /**
-     * @type {?Array.<!ITimelineItem>}
+     * @type {?Array<!Brush>}
      */
     this['holdBrushes'] = [];
 
@@ -320,7 +320,7 @@ class Controller {
    * Handle timeline window change
    *
    * @param {angular.Scope.Event | null} event
-   * @param {Array.<number>} range
+   * @param {Array<number>} range
    * @protected
    */
   onWindow(event, range) {
@@ -354,7 +354,7 @@ class Controller {
    * Handle timeline load range change
    *
    * @param {angular.Scope.Event | null} event
-   * @param {Array.<number>} range
+   * @param {Array<number>} range
    * @protected
    */
   onLoad(event, range) {
@@ -369,7 +369,7 @@ class Controller {
    * Handle timeline load range change
    *
    * @param {angular.Scope.Event | null} event
-   * @param {Array.<number>} range
+   * @param {Array<number>} range
    * @protected
    */
   onLoop(event, range) {
@@ -393,7 +393,7 @@ class Controller {
   onScaleEvent(event, scaleOptions) {
     this.lastScaleOptions = scaleOptions;
 
-    var formats = Controller.LABEL_FORMATS;
+    var formats = labelFormats;
     var i = formats.length;
     var format = '';
     var diff = scaleOptions['end'] - scaleOptions['start'];
@@ -431,7 +431,7 @@ class Controller {
    */
   onFpsChange_(opt_new, opt_old) {
     if (opt_new != null && opt_new !== opt_old) {
-      var value = Controller.FPS_VALUES_[opt_new];
+      var value = fpsValues[opt_new];
       this['fps'] = value;
       this.setTimelineFps(value);
 
@@ -450,7 +450,7 @@ class Controller {
       if (this['fps'] != fps) {
         // find the first slider value that doesn't exceed the controller value. stop iteration at the last value and use
         // it if the value is larger than allowed.
-        var values = Controller.FPS_VALUES_;
+        var values = fpsValues;
         var x = 0;
         for (; x < values.length - 1; x++) {
           if (values[x] >= fps) {
@@ -487,8 +487,8 @@ class Controller {
    * @param {boolean} value
    */
   setCollapsed(value) {
-    Controller.collapsed = value;
-    this.scope['collapsed'] = Controller.collapsed;
+    collapsed = value;
+    this.scope['collapsed'] = collapsed;
     this.adjust();
   }
 
@@ -508,7 +508,7 @@ class Controller {
    */
   updateHistograms_() {
     if (this.lastScaleOptions) { // draw scale even when histograms not presented
-      var histograms = Controller.collapsed ?
+      var histograms = collapsed ?
         [] : this.histManager.getHistograms(this.lastScaleOptions);
       this['histData'] = histograms;
       if (this.moveWindowOnHistUpdate) {
@@ -699,7 +699,7 @@ class Controller {
    * @return {?ITimelineItem} The item or null if it could not be found
    */
   getItem(id) {
-    var list = /** @type {!Array.<ITimelineItem>} */ (this['items']);
+    var list = /** @type {!Array<ITimelineItem>} */ (this['items']);
 
     for (var i = 0, n = list.length; i < n; i++) {
       if (list[i].getId() == id) {
@@ -997,7 +997,7 @@ class Controller {
     brush.setClass('slice');
     brush.setToolTip('The slice range');
     brush.canDelete = true;
-    brush.drawFlagCheck = Controller.drawFlagCheck;
+    brush.drawFlagCheck = drawFlagCheck;
     brush.setExtent([range.start, range.end]);
     brush.listen('deleted', this.sliceBrushDeleted_.bind(this));
     brush.listen(goog.events.EventType.PROPERTYCHANGE, this.sliceBrushPropertyChanged_.bind(this));
@@ -1023,7 +1023,7 @@ class Controller {
     brush.setSilentDrag(true);
     brush.setEventType(BrushEventType.BRUSH_END);
     brush.canDelete = this.tlc.getLoadRanges().length > 1;
-    brush.drawFlagCheck = Controller.drawFlagCheck;
+    brush.drawFlagCheck = drawFlagCheck;
     brush.setExtent([range.start, range.end]);
     brush.listen('deleted', this.loadBrushDeleted_.bind(this));
     brush.listen(goog.events.EventType.PROPERTYCHANGE, this.loadBrushPropertyChanged_.bind(this));
@@ -1043,7 +1043,7 @@ class Controller {
     brush.setEventType(BrushEventType.BRUSH_END);
     brush.setToolTip('The playback loop');
     brush.canDelete = true;
-    brush.drawFlagCheck = Controller.drawFlagCheck;
+    brush.drawFlagCheck = drawFlagCheck;
     brush.setExtent([range.start, range.end]);
     brush.listen('deleted', this.animateBrushDeleted_.bind(this));
     brush.listen(goog.events.EventType.PROPERTYCHANGE, this.animateBrushPropertyChanged_.bind(this));
@@ -1064,7 +1064,7 @@ class Controller {
     brush.setClass('hold');
     brush.setToolTip('The hold range');
     brush.canDelete = true;
-    brush.drawFlagCheck = Controller.drawFlagCheck;
+    brush.drawFlagCheck = drawFlagCheck;
     brush.setExtent([range.start, range.end]);
     brush.listen('deleted', this.holdBrushDeleted_.bind(this));
     brush.listen(goog.events.EventType.PROPERTYCHANGE, this.holdBrushPropertyChanged_.bind(this));
@@ -1130,10 +1130,10 @@ class Controller {
   /**
    * Consoldated method for handling timeline brush changes.
    *
-   * @param {Array.<!ITimelineItem>} brushCollection
-   * @param {Array.<!Range>} ranges
+   * @param {Array<!Brush>} brushCollection
+   * @param {Array<!Range>} ranges
    * @param {function(goog.math.Range): Brush} getBrushFunction
-   * @return {Array.<!os.ui.timeline.ITimelineItem>} new collection of brushes
+   * @return {Array<!Brush>} new collection of brushes
    * @private
    */
   processTimelineRangeChanged_(brushCollection, ranges, getBrushFunction) {
@@ -1184,7 +1184,7 @@ class Controller {
   /**
    * Quietly deletes all of the brushes and reloads them
    *
-   * @param {?Array.<!ITimelineItem>} brushes
+   * @param {?Array<!Brush>} brushes
    * @param {function(goog.events.Event)} brushChangedCallback
    * @private
    */
@@ -1361,7 +1361,7 @@ class Controller {
     var group = root.find(type);
     goog.asserts.assert(!!group, 'Timeline menu group "' + type + '" should exist!');
 
-    var ranges = Controller.Ranges;
+    var ranges = Ranges;
     var sort = 0;
     for (var key in ranges) {
       var value = ranges[key];
@@ -1398,43 +1398,43 @@ class Controller {
     var histData = /** @type {?Array<!HistogramData>} */ (this['histData']);
 
     switch (rangeText) {
-      case Controller.Ranges.TODAY:
+      case Ranges.TODAY:
         begin = osTime.floor(new Date(), 'day');
         end = osTime.ceil(new Date(), 'day');
         break;
-      case Controller.Ranges.YESTERDAY:
+      case Ranges.YESTERDAY:
         begin = osTime.floor(new Date(), 'day');
         end = osTime.ceil(new Date(), 'day');
         begin.setUTCDate(begin.getUTCDate() - 1);
         end.setUTCDate(end.getUTCDate() - 1);
         break;
-      case Controller.Ranges.THISWEEK:
+      case Ranges.THISWEEK:
         begin = osTime.floor(new Date(), 'week');
         end = osTime.ceil(new Date(), 'week');
         break;
-      case Controller.Ranges.LASTWEEK:
+      case Ranges.LASTWEEK:
         begin = osTime.floor(new Date(), 'week');
         end = osTime.ceil(new Date(), 'week');
         begin.setUTCDate(begin.getUTCDate() - 7);
         end.setUTCDate(end.getUTCDate() - 7);
         break;
-      case Controller.Ranges.THISMONTH:
+      case Ranges.THISMONTH:
         begin = osTime.floor(new Date(), 'month');
         end = osTime.ceil(new Date(), 'month');
         break;
-      case Controller.Ranges.LAST30:
+      case Ranges.LAST30:
         end = osTime.ceil(new Date(), 'day');
         begin = osTime.offset(end, 'day', -30);
         break;
-      case Controller.Ranges.LAST60:
+      case Ranges.LAST60:
         end = osTime.ceil(new Date(), 'day');
         begin = osTime.offset(end, 'day', -60);
         break;
-      case Controller.Ranges.LAST90:
+      case Ranges.LAST90:
         end = osTime.ceil(new Date(), 'day');
         begin = osTime.offset(end, 'day', -90);
         break;
-      case Controller.Ranges.THISYEAR:
+      case Ranges.THISYEAR:
         begin = osTime.floor(new Date(), 'year');
         end = osTime.ceil(new Date(), 'year');
         break;
@@ -1623,7 +1623,7 @@ class Controller {
    * @export
    */
   toggleCollapse() {
-    this.setCollapsed(!Controller.collapsed);
+    this.setCollapsed(!collapsed);
   }
 
   /**
@@ -1634,7 +1634,7 @@ class Controller {
     var timelineContainerEl = this.element.find('.js-timeline-panel');
     var timelineEl = timelineContainerEl.find('.js-timeline');
 
-    if (Controller.collapsed) {
+    if (collapsed) {
       timelineContainerEl.removeClass('c-timeline-panel__expanded');
       timelineContainerEl.addClass('c-timeline-panel__collapsed');
       timelineEl.removeClass('c-timeline__expanded');
@@ -1668,13 +1668,6 @@ class Controller {
   }
 
   /**
-   * @return {boolean} Whether or not to draw "flags" on brushes
-   */
-  static drawFlagCheck() {
-    return !Controller.collapsed;
-  }
-
-  /**
    * @param {TimeRange} range
    * @return {boolean} Whether the range is safe to use for pan/zoom
    */
@@ -1689,23 +1682,27 @@ class Controller {
 
 /**
  * @type {Array<number>}
- * @const
- * @private
  */
-Controller.FPS_VALUES_ = [0.5, 1, 2, 4, 6, 8, 18, 24, 30];
+const fpsValues = [0.5, 1, 2, 4, 6, 8, 18, 24, 30];
 
 
 /**
  * @type {boolean}
  */
-Controller.collapsed = false;
+let collapsed = false;
+
+
+/**
+ * Whether or not to draw "flags" on brushes.
+ * @return {boolean}
+ */
+const drawFlagCheck = () => !collapsed;
 
 
 /**
  * @type {Array<{diff: number, format: string}>}
- * @const
  */
-Controller.LABEL_FORMATS = [{
+const labelFormats = [{
   diff: 0,
   format: '.SSS'
 }, {
@@ -1723,7 +1720,7 @@ Controller.LABEL_FORMATS = [{
 /**
  * @enum {string}
  */
-Controller.Ranges = {
+const Ranges = {
   TODAY: 'Today',
   YESTERDAY: 'Yesterday',
   THISWEEK: 'This Week',

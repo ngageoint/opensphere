@@ -4,6 +4,8 @@ goog.module.declareLegacyNamespace();
 const GoogEventType = goog.require('goog.events.EventType');
 const dispatcher = goog.require('os.Dispatcher');
 const Brush = goog.require('os.ui.timeline.Brush');
+const BrushEventType = goog.require('os.ui.timeline.BrushEventType');
+
 const ActionManager = goog.requireType('os.ui.action.ActionManager');
 
 
@@ -17,7 +19,7 @@ class SelectBrush extends Brush {
   constructor() {
     super();
     this.setId('select');
-    this.setEventType(Brush.EventType.BRUSH_END);
+    this.setEventType(BrushEventType.BRUSH_END);
 
     /**
      * @type {?string}
@@ -146,7 +148,7 @@ class SelectBrush extends Brush {
   updateBrush(opt_silent) {
     super.updateBrush(opt_silent);
 
-    if (d3.event && d3.event.type == Brush.EventType.BRUSH_END) {
+    if (d3.event && d3.event.type == BrushEventType.BRUSH_END) {
       var ex = this.getExtent();
 
       if ((this.am_ || this.menu_) && this.menuContainer_ && ex && !this.inEvent_) {
