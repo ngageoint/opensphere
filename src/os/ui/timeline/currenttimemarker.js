@@ -2,8 +2,12 @@ goog.module('os.ui.timeline.CurrentTimeMarker');
 goog.module.declareLegacyNamespace();
 
 const Delay = goog.require('goog.async.Delay');
+const dispose = goog.require('goog.dispose');
+const GoogEventType = goog.require('goog.events.EventType');
 const TimeInstant = goog.require('os.time.TimeInstant');
+const timelineUi = goog.require('os.ui.timeline');
 const BaseItem = goog.require('os.ui.timeline.BaseItem');
+
 const ITimelineItem = goog.requireType('os.ui.timeline.ITimelineItem');
 
 
@@ -38,7 +42,7 @@ class CurrentTimeMarker extends BaseItem {
   disposeInternal() {
     super.disposeInternal();
 
-    goog.dispose(this.updateDelay_);
+    dispose(this.updateDelay_);
     this.updateDelay_ = null;
   }
 
@@ -49,9 +53,9 @@ class CurrentTimeMarker extends BaseItem {
     var background = /** @type {d3.Selection} */ (d3.select('.js-svg-timeline__background-group'));
     this.backgroundElement_ = background.append('rect').attr('height', '100%').attr('width', '100%').
         attr('class', 'c-svg-timeline__background-future js-svg-timeline__background-future').
-        on(goog.events.EventType.MOUSEDOWN, this.styleDragStart_.bind(this)).
-        on(goog.events.EventType.MOUSEUP, this.styleDragEnd_.bind(this)).
-        on(goog.events.EventType.MOUSEOUT, this.styleDragEnd_.bind(this));
+        on(GoogEventType.MOUSEDOWN, this.styleDragStart_.bind(this)).
+        on(GoogEventType.MOUSEUP, this.styleDragEnd_.bind(this)).
+        on(GoogEventType.MOUSEOUT, this.styleDragEnd_.bind(this));
     var currentTime = /** @type {d3.Selection} */ (container.append('g')).style('cursor', 'pointer');
     currentTime.attr('id', 'js-svg-timeline__time-background').append('title').text('Click to hide/show current time');
     currentTime.append('rect').attr('class', 'js-svg-timeline__bg-time').attr('height', '16');
@@ -163,7 +167,7 @@ class CurrentTimeMarker extends BaseItem {
    * @inheritDoc
    */
   getExtent() {
-    return os.ui.timeline.normalizeExtent(this.xScale.domain());
+    return timelineUi.normalizeExtent(this.xScale.domain());
   }
 
   /**

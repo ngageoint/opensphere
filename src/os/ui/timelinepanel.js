@@ -6,12 +6,20 @@ goog.require('os.ui.animationSettingsDirective');
 const {ROOT} = goog.require('os');
 const dispatcher = goog.require('os.Dispatcher');
 const IAnimationSupport = goog.require('os.IAnimationSupport');
+const MapContainer = goog.require('os.MapContainer');
+const MapEvent = goog.require('os.MapEvent');
 const TimelineHistManager = goog.require('os.data.histo.TimelineHistManager');
+const LayerEventType = goog.require('os.events.LayerEventType');
 const osImplements = goog.require('os.implements');
+const Metrics = goog.require('os.metrics.Metrics');
+const keys = goog.require('os.metrics.keys');
+const TimelineController = goog.require('os.time.TimelineController');
 const TimelineEventType = goog.require('os.time.TimelineEventType');
+const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 const {directiveTag: timeSettingsUi} = goog.require('os.ui.TimeSettingsUI');
 const HistogramEventType = goog.require('os.ui.hist.HistogramEventType');
+const menu = goog.require('os.ui.menu');
 const AbstractTimelineCtrl = goog.require('os.ui.timeline.AbstractTimelineCtrl');
 const osWindow = goog.require('os.ui.window');
 
@@ -61,7 +69,7 @@ class Controller extends AbstractTimelineCtrl {
     super($scope, $element, $timeout);
 
     try {
-      var $animate = /** @type {angular.$animate} */ (os.ui.injector.get('$animate'));
+      var $animate = /** @type {angular.$animate} */ (ui.injector.get('$animate'));
       $animate.enabled($element, false);
     } catch (e) {
       // animate service not available, we don't really care
@@ -70,7 +78,7 @@ class Controller extends AbstractTimelineCtrl {
     /**
      * @type {boolean}
      */
-    this['locked'] = os.time.TimelineController.getInstance().getLock();
+    this['locked'] = TimelineController.getInstance().getLock();
 
     this.tlc.listen(TimelineEventType.LOCK_TOGGLE, this.setLock, false, this);
 
@@ -81,8 +89,8 @@ class Controller extends AbstractTimelineCtrl {
     this.histManager.listen(HistogramEventType.CHANGE, this.onHistogramChange, false, this);
 
 
-    if (os.ui.menu && os.ui.menu.TIMELINE) {
-      this.selectBrush.setMenu(os.ui.menu.TIMELINE);
+    if (menu && menu.TIMELINE) {
+      this.selectBrush.setMenu(menu.TIMELINE);
     }
   }
 
@@ -121,11 +129,11 @@ class Controller extends AbstractTimelineCtrl {
 
     // flip all layers to use the animation overlay
     this.setAllLayerAnimationState_(true);
-    os.MapContainer.getInstance().listen(os.events.LayerEventType.ADD, this.onLayerAdded_, false, this);
+    MapContainer.getInstance().listen(LayerEventType.ADD, this.onLayerAdded_, false, this);
 
     super.assumeControl();
 
-    dispatcher.getInstance().dispatchEvent(os.MapEvent.GL_REPAINT);
+    dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
   }
 
   /**
@@ -135,14 +143,14 @@ class Controller extends AbstractTimelineCtrl {
     super.releaseControl();
 
     // flip all layers back to normal feature rendering
-    os.MapContainer.getInstance().unlisten(os.events.LayerEventType.ADD, this.onLayerAdded_, false, this);
+    MapContainer.getInstance().unlisten(LayerEventType.ADD, this.onLayerAdded_, false, this);
     this.setAllLayerAnimationState_(false);
 
     // return control back to the date control
     angular.element('.js-date-control').scope()['dateControl'].assumeControl();
     angular.element('.js-date-panel').scope()['ctrl'].applySliceIfActive();
 
-    dispatcher.getInstance().dispatchEvent(os.MapEvent.GL_REPAINT);
+    dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
   }
 
   /**
@@ -151,7 +159,7 @@ class Controller extends AbstractTimelineCtrl {
    * @private
    */
   setAllLayerAnimationState_(value) {
-    var layers = os.MapContainer.getInstance().getLayers();
+    var layers = MapContainer.getInstance().getLayers();
     for (var i = 0, n = layers.length; i < n; i++) {
       this.setLayerAnimationState_(layers[i], value);
     }
@@ -245,8 +253,8 @@ class Controller extends AbstractTimelineCtrl {
   adjust() {
     super.adjust();
 
-    os.MapContainer.getInstance().updateSize();
-    dispatcher.getInstance().dispatchEvent(os.MapEvent.GL_REPAINT);
+    MapContainer.getInstance().updateSize();
+    dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
   }
 
   /**
@@ -265,7 +273,7 @@ class Controller extends AbstractTimelineCtrl {
       angular.element('.js-svg-timeline_lock').addClass('d-none');
       angular.element('.js-svg-timeline_unlock').removeClass('d-none');
     }
-    os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.LOCK, 1);
+    Metrics.getInstance().updateMetric(keys.Timeline.LOCK, 1);
   }
 
   /**
@@ -273,7 +281,7 @@ class Controller extends AbstractTimelineCtrl {
    */
   setLock() {
     this['locked'] = this.tlc.getLock();
-    os.ui.apply(this.scope);
+    ui.apply(this.scope);
   }
 }
 

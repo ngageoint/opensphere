@@ -3,12 +3,19 @@ goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.sliderDirective');
 
+const googArray = goog.require('goog.array');
+const asserts = goog.require('goog.asserts');
 const Delay = goog.require('goog.async.Delay');
+const dispose = goog.require('goog.dispose');
+const GoogEventType = goog.require('goog.events.EventType');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
 const Range = goog.require('goog.math.Range');
+const googObject = goog.require('goog.object');
+const googString = goog.require('goog.string');
 const dispatcher = goog.require('os.Dispatcher');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const Settings = goog.require('os.config.Settings');
 const metrics = goog.require('os.metrics');
@@ -18,11 +25,15 @@ const TimeRange = goog.require('os.time.TimeRange');
 const TimelineController = goog.require('os.time.TimelineController');
 const TimelineEventType = goog.require('os.time.TimelineEventType');
 const osTimeline = goog.require('os.time.timeline');
+const ui = goog.require('os.ui');
+const GlobalMenuEventType = goog.require('os.ui.GlobalMenuEventType');
 const UIEvent = goog.require('os.ui.events.UIEvent');
+const UIEventType = goog.require('os.ui.events.UIEventType');
 const hist = goog.require('os.ui.hist');
 const Menu = goog.require('os.ui.menu.Menu');
 const MenuItem = goog.require('os.ui.menu.MenuItem');
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');
+const timelineUi = goog.require('os.ui.timeline');
 const Brush = goog.require('os.ui.timeline.Brush');
 const BrushEventType = goog.require('os.ui.timeline.BrushEventType');
 const CurrentTimeMarker = goog.require('os.ui.timeline.CurrentTimeMarker');
@@ -34,8 +45,8 @@ const TimelineControllerEvent = goog.requireType('os.time.TimelineControllerEven
 const IHistogramManager = goog.requireType('os.ui.hist.IHistogramManager');
 const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
 const ITimelineItem = goog.requireType('os.ui.timeline.ITimelineItem');
-const {Controller: TimelineCtrl} = goog.requireType('os.ui.timeline.TimelineUI');
 const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptions');
+const {Controller: TimelineCtrl} = goog.requireType('os.ui.timeline.TimelineUI');
 
 
 /**
@@ -81,7 +92,7 @@ class Controller {
      * @type {!Array<string>}
      * @private
      */
-    this.histClasses_ = goog.object.getKeys(hist.CHART_TYPES);
+    this.histClasses_ = googObject.getKeys(hist.CHART_TYPES);
 
     /**
      * @type {?TimelineController}
@@ -168,7 +179,7 @@ class Controller {
         (Settings.getInstance().get(['ui', 'timelineSettings', 'chartType'], 'line'));
     var histClassIdx = this.histClasses_.indexOf(histClass);
     if (histClassIdx > -1) {
-      goog.array.rotate(this.histClasses_, histClassIdx);
+      googArray.rotate(this.histClasses_, histClassIdx);
       this['histClass'] = hist.CHART_TYPES[this.histClasses_[0]];
     }
 
@@ -186,9 +197,9 @@ class Controller {
     this.selectBrush = new SelectBrush();
     this.selectBrush.setId('select');
     this.selectBrush.setMenuContainer('#map-container');
-    this.selectBrush.listen(goog.events.EventType.CHANGE, this.onSelectChange, false, this);
-    this.selectBrush.listen(goog.events.EventType.EXIT, this.onSelectChange, false, this);
-    this.selectBrush.listen(goog.events.EventType.DRAGSTART, this.onSelectChange, false, this);
+    this.selectBrush.listen(GoogEventType.CHANGE, this.onSelectChange, false, this);
+    this.selectBrush.listen(GoogEventType.EXIT, this.onSelectChange, false, this);
+    this.selectBrush.listen(GoogEventType.DRAGSTART, this.onSelectChange, false, this);
 
     /**
      * @type {TileAxis}
@@ -294,17 +305,17 @@ class Controller {
     }
 
     var selectBrush = /** @type {SelectBrush} */ (this.getItem('select'));
-    selectBrush.unlisten(goog.events.EventType.CHANGE, this.onSelectChange, false, this);
-    selectBrush.unlisten(goog.events.EventType.EXIT, this.onSelectChange, false, this);
-    selectBrush.unlisten(goog.events.EventType.DRAGSTART, this.onSelectChange, false, this);
+    selectBrush.unlisten(GoogEventType.CHANGE, this.onSelectChange, false, this);
+    selectBrush.unlisten(GoogEventType.EXIT, this.onSelectChange, false, this);
+    selectBrush.unlisten(GoogEventType.DRAGSTART, this.onSelectChange, false, this);
 
     var items = /** @type {!Array<ITimelineItem>} */ (this['items']);
     for (i = 0, n = items.length; i < n; i++) {
       items[i].dispose();
     }
 
-    goog.dispose(this.loadMenu);
-    goog.dispose(this.zoomMenu);
+    dispose(this.loadMenu);
+    dispose(this.zoomMenu);
     this.loadMenu = undefined;
     this.zoomMenu = undefined;
 
@@ -341,7 +352,7 @@ class Controller {
       if (this.tlc.getLock() && this.tlc.getAnimationRange().start != range[0]) {
         this.tlc.updateLock(false);
         AlertManager.getInstance().sendAlert('Moving the currently displayed window turns off the timeline lock. ' +
-          'Relock at the new location if desired.', os.alert.AlertEventSeverity.INFO);
+          'Relock at the new location if desired.', AlertEventSeverity.INFO);
         this.tlc.setSkip(diff / 2);
       }
 
@@ -514,7 +525,7 @@ class Controller {
       if (this.moveWindowOnHistUpdate) {
         this.moveWindowToData();
       }
-      os.ui.apply(this.scope);
+      ui.apply(this.scope);
     }
   }
 
@@ -633,7 +644,7 @@ class Controller {
       this.updateHistograms_();
     }
 
-    os.ui.apply(this.scope);
+    ui.apply(this.scope);
   }
 
   /**
@@ -818,7 +829,7 @@ class Controller {
    * @export
    */
   toggleChartType() {
-    goog.array.rotate(this.histClasses_, 1);
+    googArray.rotate(this.histClasses_, 1);
 
     var chartType = this.histClasses_[0];
     this['histClass'] = hist.CHART_TYPES[chartType];
@@ -837,7 +848,7 @@ class Controller {
     if (menu) {
       // clear the previous data actions
       var dataGroup = menu.getRoot().find('Data');
-      goog.asserts.assert(!!dataGroup, 'Group "Data" should exist!');
+      asserts.assert(!!dataGroup, 'Group "Data" should exist!');
       dataGroup.children.length = menu === this.zoomMenu ? 1 : 0;
 
       // add data actions
@@ -867,7 +878,7 @@ class Controller {
 
       this.scope['menu'] = selector;
 
-      dispatcher.getInstance().listenOnce(os.ui.GlobalMenuEventType.MENU_CLOSE, this.onMenuClose, false, this);
+      dispatcher.getInstance().listenOnce(GlobalMenuEventType.MENU_CLOSE, this.onMenuClose, false, this);
 
       menu.open(undefined, {
         my: 'left bottom',
@@ -902,8 +913,8 @@ class Controller {
    * @protected
    */
   onSelectChange(e) {
-    this.scope['selecting'] = e.type == goog.events.EventType.DRAGSTART;
-    os.ui.apply(this.scope);
+    this.scope['selecting'] = e.type == GoogEventType.DRAGSTART;
+    ui.apply(this.scope);
   }
 
   /**
@@ -991,7 +1002,7 @@ class Controller {
    */
   getSliceBrush(range) {
     var brush = new Brush();
-    brush.setId('slice-' + goog.string.createUniqueString());
+    brush.setId('slice-' + googString.createUniqueString());
     brush.setSilentDrag(true);
     brush.setEventType(BrushEventType.BRUSH_END);
     brush.setClass('slice');
@@ -1000,7 +1011,7 @@ class Controller {
     brush.drawFlagCheck = drawFlagCheck;
     brush.setExtent([range.start, range.end]);
     brush.listen('deleted', this.sliceBrushDeleted_.bind(this));
-    brush.listen(goog.events.EventType.PROPERTYCHANGE, this.sliceBrushPropertyChanged_.bind(this));
+    brush.listen(GoogEventType.PROPERTYCHANGE, this.sliceBrushPropertyChanged_.bind(this));
     return brush;
   }
 
@@ -1013,10 +1024,10 @@ class Controller {
   getLoadBrush(range) {
     var brush = new Brush();
     if (this.tlc.hasSliceRanges()) {
-      brush.setId('considered-' + goog.string.createUniqueString());
+      brush.setId('considered-' + googString.createUniqueString());
       brush.setClass('considered');
     } else {
-      brush.setId('load-' + goog.string.createUniqueString());
+      brush.setId('load-' + googString.createUniqueString());
       brush.setClass('load');
     }
     brush.setToolTip('The load range');
@@ -1026,7 +1037,7 @@ class Controller {
     brush.drawFlagCheck = drawFlagCheck;
     brush.setExtent([range.start, range.end]);
     brush.listen('deleted', this.loadBrushDeleted_.bind(this));
-    brush.listen(goog.events.EventType.PROPERTYCHANGE, this.loadBrushPropertyChanged_.bind(this));
+    brush.listen(GoogEventType.PROPERTYCHANGE, this.loadBrushPropertyChanged_.bind(this));
     return brush;
   }
 
@@ -1038,7 +1049,7 @@ class Controller {
    */
   getAnimateBrush(range) {
     var brush = new Brush();
-    brush.setId('loop-' + goog.string.createUniqueString());
+    brush.setId('loop-' + googString.createUniqueString());
     brush.setSilentDrag(true);
     brush.setEventType(BrushEventType.BRUSH_END);
     brush.setToolTip('The playback loop');
@@ -1046,7 +1057,7 @@ class Controller {
     brush.drawFlagCheck = drawFlagCheck;
     brush.setExtent([range.start, range.end]);
     brush.listen('deleted', this.animateBrushDeleted_.bind(this));
-    brush.listen(goog.events.EventType.PROPERTYCHANGE, this.animateBrushPropertyChanged_.bind(this));
+    brush.listen(GoogEventType.PROPERTYCHANGE, this.animateBrushPropertyChanged_.bind(this));
     return brush;
   }
 
@@ -1058,7 +1069,7 @@ class Controller {
    */
   getHoldBrush(range) {
     var brush = new Brush();
-    brush.setId('loop-' + goog.string.createUniqueString());
+    brush.setId('loop-' + googString.createUniqueString());
     brush.setSilentDrag(true);
     brush.setEventType(BrushEventType.BRUSH_END);
     brush.setClass('hold');
@@ -1067,7 +1078,7 @@ class Controller {
     brush.drawFlagCheck = drawFlagCheck;
     brush.setExtent([range.start, range.end]);
     brush.listen('deleted', this.holdBrushDeleted_.bind(this));
-    brush.listen(goog.events.EventType.PROPERTYCHANGE, this.holdBrushPropertyChanged_.bind(this));
+    brush.listen(GoogEventType.PROPERTYCHANGE, this.holdBrushPropertyChanged_.bind(this));
     return brush;
   }
 
@@ -1359,7 +1370,7 @@ class Controller {
   initMenu(menu, prefix, type, tip) {
     var root = menu.getRoot();
     var group = root.find(type);
-    goog.asserts.assert(!!group, 'Timeline menu group "' + type + '" should exist!');
+    asserts.assert(!!group, 'Timeline menu group "' + type + '" should exist!');
 
     var ranges = Ranges;
     var sort = 0;
@@ -1465,7 +1476,7 @@ class Controller {
         if (rangeText.indexOf('item.') === 0) {
           var range = rangeText === 'item.load' ? this.tlc.getRange() : this.tlc.getCurrentRange();
           if (range) {
-            var extent = os.ui.timeline.normalizeExtent([range.start, range.end]);
+            var extent = timelineUi.normalizeExtent([range.start, range.end]);
             begin = new Date(extent[0]);
             end = new Date(extent[1]);
             doOffset = false;
@@ -1613,7 +1624,7 @@ class Controller {
   close() {
     this.tlc.clearAnimateRanges();
     this.tlc.clearHoldRanges();
-    var event = new UIEvent(os.ui.events.UIEventType.TOGGLE_UI, 'timeline');
+    var event = new UIEvent(UIEventType.TOGGLE_UI, 'timeline');
     dispatcher.getInstance().dispatchEvent(event);
   }
 
@@ -1646,7 +1657,7 @@ class Controller {
       timelineEl.addClass('c-timeline__expanded');
     }
 
-    os.ui.injector.get('$timeout')(function() {
+    ui.injector.get('$timeout')(function() {
       // the inner timeline SVG doesn't resize correctly without this slight delay for some reason
       ctrl.initSvg();
       this.refreshAllBrushes();

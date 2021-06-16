@@ -1,17 +1,22 @@
 goog.module('os.ui.timeline.Brush');
 goog.module.declareLegacyNamespace();
 
+const googArray = goog.require('goog.array');
 const Throttle = goog.require('goog.async.Throttle');
+const googEvents = goog.require('goog.events');
 const BrowserEvent = goog.require('goog.events.BrowserEvent');
 const GoogEvent = goog.require('goog.events.Event');
+const GoogEventType = goog.require('goog.events.EventType');
 const {TRUE} = goog.require('goog.functions');
 const math = goog.require('goog.math');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const TimeRange = goog.require('os.time.TimeRange');
 const TimelineController = goog.require('os.time.TimelineController');
+const timeline = goog.require('os.ui.timeline');
 const BaseItem = goog.require('os.ui.timeline.BaseItem');
-const DragPanEvent = goog.require('os.ui.timeline.DragPanEvent');
 const BrushEventType = goog.require('os.ui.timeline.BrushEventType');
+const DragPanEvent = goog.require('os.ui.timeline.DragPanEvent');
+const DragPanEventType = goog.require('os.ui.timeline.DragPanEventType');
 
 const IDragPanItem = goog.requireType('os.ui.timeline.IDragPanItem');
 const ITimelineItem = goog.requireType('os.ui.timeline.ITimelineItem');
@@ -234,7 +239,7 @@ class Brush extends BaseItem {
    * @inheritDoc
    */
   getExtent() {
-    return os.ui.timeline.normalizeExtent(this.brush_.extent() || this.initExtent_);
+    return timeline.normalizeExtent(this.brush_.extent() || this.initExtent_);
   }
 
   /**
@@ -353,9 +358,9 @@ class Brush extends BaseItem {
     var group = /** @type {d3.Selection} */ (container.append('g'));
     this.node = group;
     group.attr('class', this.brushClass_ + ' brush-' + this.getId()).
-        on(goog.events.EventType.MOUSEENTER, this.onMouseEnter_.bind(this)).
-        on(goog.events.EventType.MOUSELEAVE, this.onMouseLeave_.bind(this)).
-        on(goog.events.EventType.MOUSEDOWN, this.onMouseDown_.bind(this));
+        on(GoogEventType.MOUSEENTER, this.onMouseEnter_.bind(this)).
+        on(GoogEventType.MOUSELEAVE, this.onMouseLeave_.bind(this)).
+        on(GoogEventType.MOUSEDOWN, this.onMouseDown_.bind(this));
 
 
     group.selectAll('rect').attr('height', height + 'px');
@@ -506,7 +511,7 @@ class Brush extends BaseItem {
    */
   fireChangeEvent_() {
     var newExtent = this.snap_(this.getExtent());
-    if (!goog.array.equals(newExtent, this.oldExtent_)) {
+    if (!googArray.equals(newExtent, this.oldExtent_)) {
       this.dispatchEvent(new PropertyChangeEvent('extent', newExtent, this.oldExtent_));
       this.oldExtent_ = newExtent;
     }
@@ -559,8 +564,8 @@ class Brush extends BaseItem {
       this.stillValue = this.getExtent()[target == 'resize e' ? 0 : 1];
     }
 
-    goog.events.listen(window, goog.events.EventType.MOUSEUP, this.onMouseUp_, false, this);
-    goog.events.listen(window, goog.events.EventType.MOUSEMOVE, this.onDrag_, false, this);
+    googEvents.listen(window, GoogEventType.MOUSEUP, this.onMouseUp_, false, this);
+    googEvents.listen(window, GoogEventType.MOUSEMOVE, this.onDrag_, false, this);
     this.checkDragPan_(new BrowserEvent(d3.event));
     this.updateLabels();
     this.oldExtent_ = this.getExtent();
@@ -575,8 +580,8 @@ class Brush extends BaseItem {
     this.mouseDown = false;
     this.stopDragPan_();
     this.resizing = false;
-    goog.events.unlisten(window, goog.events.EventType.MOUSEUP, this.onMouseUp_, false, this);
-    goog.events.unlisten(window, goog.events.EventType.MOUSEMOVE, this.onDrag_, false, this);
+    googEvents.unlisten(window, GoogEventType.MOUSEUP, this.onMouseUp_, false, this);
+    googEvents.unlisten(window, GoogEventType.MOUSEMOVE, this.onDrag_, false, this);
     this.updateLabels();
   }
 
@@ -637,7 +642,7 @@ class Brush extends BaseItem {
 
     if (left || right) {
       if (!this.dragPan) {
-        this.dispatchEvent(new DragPanEvent(os.ui.timeline.DragPanEventType.START, left));
+        this.dispatchEvent(new DragPanEvent(DragPanEventType.START, left));
         this.dragPan = true;
       }
     } else if (this.dragPan) {
@@ -651,7 +656,7 @@ class Brush extends BaseItem {
    * @private
    */
   stopDragPan_() {
-    this.dispatchEvent(os.ui.timeline.DragPanEventType.STOP);
+    this.dispatchEvent(DragPanEventType.STOP);
     this.dragPan = false;
     isDragging = false;
   }
@@ -832,9 +837,9 @@ class Brush extends BaseItem {
       this.brush_.on(BrushEventType.BRUSH_START + '.stoppan', null);
       this.brush_.on(BrushEventType.BRUSH_END + '.cleanup', null);
       if (this.node) {
-        this.node.on(goog.events.EventType.MOUSEENTER, null).
-            on(goog.events.EventType.MOUSELEAVE, null).
-            on(goog.events.EventType.MOUSEDOWN, null);
+        this.node.on(GoogEventType.MOUSEENTER, null).
+            on(GoogEventType.MOUSELEAVE, null).
+            on(GoogEventType.MOUSEDOWN, null);
 
         this.node.remove();
       }

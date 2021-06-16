@@ -5,16 +5,21 @@ goog.require('os.ui.datetime.dateTimeDirective');
 goog.require('os.ui.popover.popoverDirective');
 goog.require('os.ui.time.timeDirective');
 
+const dispose = goog.require('goog.dispose');
+const dom = goog.require('goog.dom');
+const KeyCodes = goog.require('goog.events.KeyCodes');
 const KeyEvent = goog.require('goog.events.KeyEvent');
 const KeyHandler = goog.require('goog.events.KeyHandler');
 const RangeSet = goog.require('goog.math.RangeSet');
 const {ROOT} = goog.require('os');
 const Metrics = goog.require('os.metrics.Metrics');
+const keys = goog.require('os.metrics.keys');
 const time = goog.require('os.time');
 const TimelineController = goog.require('os.time.TimelineController');
 const TimelineEventType = goog.require('os.time.TimelineEventType');
 const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
+const osWindow = goog.require('os.ui.window');
 
 const Range = goog.requireType('goog.math.Range');
 const TimelineUI = goog.requireType('os.ui.timeline.TimelineUI');
@@ -87,7 +92,7 @@ class Controller {
      * @type {!KeyHandler}
      * @private
      */
-    this.keyHandler_ = new KeyHandler(goog.dom.getDocument());
+    this.keyHandler_ = new KeyHandler(dom.getDocument());
     this.keyHandler_.listen(KeyEvent.EventType.KEY, this.handleKeyEvent_, false, this);
 
     this.scope.$emit(WindowEventType.READY);
@@ -99,7 +104,7 @@ class Controller {
    * @protected
    */
   onDestroy() {
-    goog.dispose(this.keyHandler_);
+    dispose(this.keyHandler_);
     this.element = null;
     this.scope = null;
   }
@@ -159,7 +164,7 @@ class Controller {
       tlc.setLoadRanges(loadSet);
       tlc.dispatchEvent(TimelineEventType.REFRESH_LOAD);
 
-      Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.TIME_RANGE, 1);
+      Metrics.getInstance().updateMetric(keys.Timeline.TIME_RANGE, 1);
     }
 
     // move the view
@@ -174,7 +179,7 @@ class Controller {
    * @export
    */
   cancel() {
-    os.ui.window.close(this.element);
+    osWindow.close(this.element);
   }
 
   /**
@@ -184,9 +189,9 @@ class Controller {
    * @private
    */
   handleKeyEvent_(event) {
-    if (event.keyCode == goog.events.KeyCodes.ESC) {
+    if (event.keyCode == KeyCodes.ESC) {
       this.cancel();
-    } else if (event.keyCode == goog.events.KeyCodes.ENTER) {
+    } else if (event.keyCode == KeyCodes.ENTER) {
       this.accept();
     }
   }

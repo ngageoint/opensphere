@@ -3,6 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
 const GoogEventType = goog.require('goog.events.EventType');
+const olExtent = goog.require('ol.extent');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const timelineUi = goog.require('os.ui.timeline');
 const BaseItem = goog.require('os.ui.timeline.BaseItem');
@@ -160,8 +161,8 @@ class OffArrows extends BaseItem {
    */
   getExtent() {
     return this.items_.reduce(function(extent, item) {
-      return ol.extent.extend(extent, item.getExtent());
-    }, ol.extent.createEmpty());
+      return olExtent.extend(extent, item.getExtent());
+    }, olExtent.createEmpty());
   }
 
   /**

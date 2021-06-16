@@ -3,10 +3,13 @@ goog.module.declareLegacyNamespace();
 
 const GoogEventType = goog.require('goog.events.EventType');
 const dispatcher = goog.require('os.Dispatcher');
+const ui = goog.require('os.ui');
+const GlobalMenuEventType = goog.require('os.ui.GlobalMenuEventType');
 const Brush = goog.require('os.ui.timeline.Brush');
 const BrushEventType = goog.require('os.ui.timeline.BrushEventType');
 
 const ActionManager = goog.requireType('os.ui.action.ActionManager');
+const Menu = goog.requireType('os.ui.menu.Menu');
 
 
 /**
@@ -34,7 +37,7 @@ class SelectBrush extends Brush {
     this.am_ = null;
 
     /**
-     * @type {?os.ui.menu.Menu<Array<number>>}
+     * @type {?Menu<Array<number>>}
      * @private
      */
     this.menu_ = null;
@@ -59,7 +62,7 @@ class SelectBrush extends Brush {
   }
 
   /**
-   * @param {os.ui.menu.Menu<Array<number>>} menu The menu
+   * @param {Menu<Array<number>>} menu The menu
    */
   setMenu(menu) {
     this.menu_ = menu;
@@ -180,10 +183,10 @@ class SelectBrush extends Brush {
           });
         } else if (this.am_) {
           this.am_.withActionArgs(ex);
-          os.ui.openMenu(this.am_, pos, this.position_ ? undefined : target);
+          ui.openMenu(this.am_, pos, this.position_ ? undefined : target);
         }
 
-        dispatcher.getInstance().listen(os.ui.GlobalMenuEventType.MENU_CLOSE, this.onMenuEnd_, false, this);
+        dispatcher.getInstance().listen(GlobalMenuEventType.MENU_CLOSE, this.onMenuEnd_, false, this);
 
         this.position_ = null;
         this.inEvent_ = false;

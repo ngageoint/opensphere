@@ -4,14 +4,18 @@ goog.module.declareLegacyNamespace();
 const Timer = goog.require('goog.Timer');
 const googArray = goog.require('goog.array');
 const Throttle = goog.require('goog.async.Throttle');
+const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 const MouseWheelHandler = goog.require('goog.events.MouseWheelHandler');
+const log = goog.require('goog.log');
 const math = goog.require('goog.math');
 const dispatcher = goog.require('os.Dispatcher');
 const Settings = goog.require('os.config.Settings');
 const events = goog.require('os.events');
 const Metrics = goog.require('os.metrics.Metrics');
 const keys = goog.require('os.metrics.keys');
+const osTime = goog.require('os.time');
+const Duration = goog.require('os.time.Duration');
 const TimeInstant = goog.require('os.time.TimeInstant');
 const TimeRange = goog.require('os.time.TimeRange');
 const TimelineController = goog.require('os.time.TimelineController');
@@ -197,7 +201,7 @@ class Controller {
      * @type {number}
      * @private
      */
-    this.start_ = os.time.floor(new Date(), 'day').getTime();
+    this.start_ = osTime.floor(new Date(), 'day').getTime();
 
     /**
      * The end date of the timeline. Defaults to the start of tomorrow in UTC.
@@ -293,7 +297,7 @@ class Controller {
 
     $scope.$on('$destroy', this.destroy_.bind(this));
 
-    Settings.getInstance().listen(os.time.OFFSET_KEY, this.onOffsetChange_, false, this);
+    Settings.getInstance().listen(osTime.OFFSET_KEY, this.onOffsetChange_, false, this);
     this.initTime_();
 
     // watch for start/end changes before initializing
@@ -332,7 +336,7 @@ class Controller {
         try {
           brushCollection[i].deleteBrush(true);
         } catch (err) {
-          goog.log.error(logger, 'destroyBrushCollection_', err);
+          log.error(logger, 'destroyBrushCollection_', err);
         }
       }
     }
@@ -363,11 +367,11 @@ class Controller {
       this.items_[i].unlisten(DragPanEventType.STOP, this.onDragPanStop_, false, this);
     }
 
-    goog.dispose(this.offArrows_);
-    goog.dispose(this.wheelHandler_);
-    goog.dispose(this.dragPanTimer_);
-    goog.dispose(this.throttle_);
-    goog.dispose(this.histChart_);
+    dispose(this.offArrows_);
+    dispose(this.wheelHandler_);
+    dispose(this.dragPanTimer_);
+    dispose(this.throttle_);
+    dispose(this.histChart_);
 
     this.scope_ = null;
     this.element_ = null;
@@ -393,7 +397,7 @@ class Controller {
       this.baseElement_ = null;
     }
 
-    Settings.getInstance().unlisten(os.time.OFFSET_KEY, this.onOffsetChange_, false, this);
+    Settings.getInstance().unlisten(osTime.OFFSET_KEY, this.onOffsetChange_, false, this);
   }
 
   /**
@@ -508,10 +512,10 @@ class Controller {
    * @private
    */
   setTime_() {
-    var duration = os.time.Duration.DAY;
-    var d = os.time.toUTCDate(new Date());
-    this.start = os.time.floor(d, duration).getTime();
-    this.end_ = os.time.offset(d, duration, 1).getTime();
+    var duration = Duration.DAY;
+    var d = osTime.toUTCDate(new Date());
+    this.start = osTime.floor(d, duration).getTime();
+    this.end_ = osTime.offset(d, duration, 1).getTime();
 
     var tlc = TimelineController.getInstance();
     tlc.setDuration(duration);
@@ -531,7 +535,7 @@ class Controller {
 
     // We want 10ish labels for the most part
     var tickSize = Controller.getSnap((dates[1] - dates[0]) / numLabels);
-    var offset = os.time.getTimeOffset();
+    var offset = osTime.getTimeOffset();
     var begin = dates[0] + offset;
     var first = begin + tickSize - (begin % tickSize);
     var ticks = [];
@@ -561,10 +565,10 @@ class Controller {
 
       if (monthChunk) {
         d.setUTCMonth(d.getUTCMonth() - (d.getUTCMonth() % monthChunk));
-        d = os.time.floor(d, 'month');
+        d = osTime.floor(d, 'month');
       } else {
         d.setUTCFullYear(d.getUTCFullYear());
-        d = os.time.floor(d, 'year');
+        d = osTime.floor(d, 'year');
       }
 
       for (i = 0; last === null || last <= dates[1]; i++) {
@@ -1151,7 +1155,7 @@ class Controller {
    * @private
    */
   roundExtent_(time) {
-    var offset = os.time.getTimeOffset();
+    var offset = osTime.getTimeOffset();
     return this.snapInterval_ > 0 ?
       Math.round((time + offset) / this.snapInterval_) * this.snapInterval_ - offset : time;
   }
@@ -1443,7 +1447,7 @@ class Controller {
  * Logger
  * @type {goog.log.Logger}
  */
-const logger = goog.log.getLogger('os.ui.timeline.TimelineUI');
+const logger = log.getLogger('os.ui.timeline.TimelineUI');
 
 /**
  * @type {?Function}
@@ -1455,7 +1459,7 @@ let multiFormat_ = null;
  * @return {!string}
  */
 const format_ = function(d) {
-  var o = os.time.getTimeOffset() ? new Date(d.getTime() + os.time.getTimeOffset()) : d;
+  var o = osTime.getTimeOffset() ? new Date(d.getTime() + osTime.getTimeOffset()) : d;
   return multiFormat_(o);
 };
 

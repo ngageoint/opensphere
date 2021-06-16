@@ -1,7 +1,11 @@
 goog.module('os.ui.timeline.TileAxis');
 goog.module.declareLegacyNamespace();
 
+const time = goog.require('os.time');
+const TimelineController = goog.require('os.time.TimelineController');
+const timeline = goog.require('os.ui.timeline');
 const BaseItem = goog.require('os.ui.timeline.BaseItem');
+
 const ITimelineItem = goog.requireType('os.ui.timeline.ITimelineItem');
 
 
@@ -28,22 +32,22 @@ class TileAxis extends BaseItem {
    * @protected
    */
   getTicks() {
-    var times = os.ui.timeline.normalizeExtent(this.xScale.domain());
+    var times = timeline.normalizeExtent(this.xScale.domain());
     var dates = [new Date(times[0]), new Date(times[1])];
 
     var xFn = /** @type {d3.ScaleFn} */ (this.xScale);
     var pixelScale = 1 / (xFn(1) - xFn(0));
     var px20time = Number(pixelScale.toPrecision(2)) * 20;
 
-    var tlc = os.time.TimelineController.getInstance();
+    var tlc = TimelineController.getInstance();
     var duration = tlc.getDuration();
 
-    var begin = os.time.floor(dates[0], duration);
+    var begin = time.floor(dates[0], duration);
     var last = null;
     var ticks = [];
 
     for (var i = 0; last === null || last <= dates[1]; i++) {
-      var d = os.time.offset(begin, duration, i);
+      var d = time.offset(begin, duration, i);
 
       // stop showing ticks if they get closer than 20px
       if (last !== null && d.getTime() - last < px20time) {
@@ -94,7 +98,7 @@ class TileAxis extends BaseItem {
    * @inheritDoc
    */
   getExtent() {
-    return os.ui.timeline.normalizeExtent(this.xScale.domain());
+    return timeline.normalizeExtent(this.xScale.domain());
   }
 
   /**
