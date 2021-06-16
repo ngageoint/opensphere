@@ -1,95 +1,85 @@
-goog.provide('os.ui.timeline.ITimelineItem');
-goog.require('goog.disposable.IDisposable');
-goog.require('goog.events.Listenable');
+goog.module('os.ui.timeline.ITimelineItem');
+goog.module.declareLegacyNamespace();
 
+const IDisposable = goog.requireType('goog.disposable.IDisposable');
+const Listenable = goog.requireType('goog.events.Listenable');
 
 
 /**
  * @interface
- * @extends {goog.events.Listenable}
- * @extends {goog.disposable.IDisposable}
+ * @extends {Listenable}
+ * @extends {IDisposable}
  */
-os.ui.timeline.ITimelineItem = function() {};
+class ITimelineItem {
+  /**
+   * @return {string}
+   */
+  getId() {}
 
+  /**
+   * @param {string} id The ID
+   */
+  setId(id) {}
 
-/**
- * @return {string}
- */
-os.ui.timeline.ITimelineItem.prototype.getId;
+  /**
+   * @return {boolean}
+   */
+  isInteractive() {}
 
+  /**
+   * @param {boolean} value
+   */
+  setInteractive(value) {}
 
-/**
- * @param {string} id The ID
- */
-os.ui.timeline.ITimelineItem.prototype.setId;
+  /**
+   * @return {?d3.Scale}
+   */
+  getXScale() {}
 
+  /**
+   * @param {?d3.Scale} scale
+   */
+  setXScale(scale) {}
 
-/**
- * @return {boolean}
- */
-os.ui.timeline.ITimelineItem.prototype.isInteractive;
+  /**
+   * @return {Array<os.ui.action.Action>}
+   */
+  getActions() {}
 
+  /**
+   * @param {Array<os.ui.action.Action>} actions
+   */
+  setActions(actions) {}
 
-/**
- * @param {boolean} value
- */
-os.ui.timeline.ITimelineItem.prototype.setInteractive;
+  /**
+   * @param {?function(number):number} snapFunc The rounding function
+   */
+  setSnap(snapFunc) {}
 
+  /**
+   * Gets the time extent of the item
+   * @return {Array<number>}
+   */
+  getExtent() {}
 
-/**
- * @return {?d3.Scale}
- */
-os.ui.timeline.ITimelineItem.prototype.getXScale;
+  /**
+   * Gets the average time for this item
+   * @return {number}
+   */
+  getAvg() {}
 
+  /**
+   * Initialize the SVG for the item
+   * @param {d3.Selection} container
+   * @param {number} height
+   */
+  initSVG(container, height) {}
 
-/**
- * @param {?d3.Scale} scale
- */
-os.ui.timeline.ITimelineItem.prototype.setXScale;
+  /**
+   * Renders the item
+   * @param {number=} opt_height
+   */
+  render(opt_height) {}
+}
 
-
-/**
- * @return {Array<os.ui.action.Action>}
- */
-os.ui.timeline.ITimelineItem.prototype.getActions;
-
-
-/**
- * @param {Array<os.ui.action.Action>} actions
- */
-os.ui.timeline.ITimelineItem.prototype.setActions;
-
-
-/**
- * @param {?function(number):number} snapFunc The rounding function
- */
-os.ui.timeline.ITimelineItem.prototype.setSnap;
-
-
-/**
- * Gets the time extent of the item
- * @return {Array.<number>}
- */
-os.ui.timeline.ITimelineItem.prototype.getExtent;
-
-
-/**
- * Gets the average time for this item
- * @return {number}
- */
-os.ui.timeline.ITimelineItem.prototype.getAvg;
-
-
-/**
- * Initialize the SVG for the item
- * @param {d3.Selection} container
- * @param {number} height
- */
-os.ui.timeline.ITimelineItem.prototype.initSVG;
-
-
-/**
- * Renders the item
- * @param {number=} opt_height
- */
-os.ui.timeline.ITimelineItem.prototype.render;
+exports = ITimelineItem;

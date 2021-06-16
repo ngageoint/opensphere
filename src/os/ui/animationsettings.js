@@ -11,6 +11,7 @@ goog.require('os.time.TimelineController');
 goog.require('os.ui.Module');
 goog.require('os.ui.datetime.dateTimeDirective');
 goog.require('os.ui.popover.popoverDirective');
+goog.require('os.ui.timeline.TimelineUI');
 
 
 /**
@@ -231,7 +232,7 @@ os.ui.AnimationSettingsCtrl.prototype.autoConfigure = function() {
     } else if (diff >= 5 * os.time.timeline.DAY - 30 * os.time.timeline.MIN) {
       this.setTileAnimation(os.time.timeline.DAY, os.time.Duration.DAY);
     } else {
-      var offset = os.ui.timeline.TimelineCtrl.getSnap(diff / 24);
+      var offset = os.ui.timeline.TimelineUI.Controller.getSnap(diff / 24);
       var viewsize = tlc.getRange().getLength();
       if (offset < viewsize / 24) {
         offset = Math.min(diff / 2, viewsize / 24);
@@ -366,7 +367,8 @@ os.ui.AnimationSettingsCtrl.prototype.accept = function() {
   tlc.setCurrent(tlc.getLoopStart() + tlc.getOffset());
 
   // move the view
-  /** @type {os.ui.timeline.TimelineCtrl} */ (this.scope['timeline']).zoomToExtent([tlc.getStart(), tlc.getEnd()]);
+  const controller = /** @type {os.ui.timeline.TimelineUI.Controller} */ (this.scope['timeline']);
+  controller.zoomToExtent([tlc.getStart(), tlc.getEnd()]);
   this.cancel();
 };
 

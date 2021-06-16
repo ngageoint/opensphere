@@ -1,6 +1,8 @@
 goog.provide('os.ui.hist.IHistogramManager');
+
 goog.require('goog.events.Listenable');
 
+goog.requireType('os.ui.timeline.TimelineScaleOptions');
 
 
 /**

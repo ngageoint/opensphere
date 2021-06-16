@@ -1,30 +1,39 @@
-goog.provide('os.ui.time.timeDirective');
+goog.module('os.ui.time.timeDirective');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
-
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
 
 /**
  * The time directive
  *
  * @return {angular.Directive}
  */
-os.ui.time.timeDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      'hours': '=',
-      'mins': '=',
-      'secs': '=',
-      'isRequired': '=?'
-    },
-    templateUrl: os.ROOT + 'views/time/time.html',
-    controllerAs: 'time'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: {
+    'hours': '=',
+    'mins': '=',
+    'secs': '=',
+    'isRequired': '=?'
+  },
+  templateUrl: ROOT + 'views/time/time.html',
+  controllerAs: 'time'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'time';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('time', [os.ui.time.timeDirective]);
+Module.directive('time', [directive]);
+
+exports = {
+  directive,
+  directiveTag
+};

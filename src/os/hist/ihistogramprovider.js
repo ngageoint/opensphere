@@ -1,5 +1,7 @@
 goog.provide('os.hist.IHistogramProvider');
 
+goog.requireType('os.ui.timeline.TimelineScaleOptions');
+
 
 /**
  * @interface

@@ -1,18 +1,28 @@
-goog.provide('os.ui.timeline.TimelineScaleEvent');
+goog.module('os.ui.timeline.TimelineScaleEvent');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.Event');
+const GoogEvent = goog.require('goog.events.Event');
+
+const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptions');
 
 
 /**
- * @constructor
- * @param {os.ui.timeline.TimelineScaleOptions} options
- * @extends {goog.events.Event}
  */
-os.ui.timeline.TimelineScaleEvent = function(options) {
-  this.options = options;
-  os.ui.timeline.TimelineScaleEvent.base(this, 'constructor', os.ui.timeline.TimelineScaleEvent.TYPE);
-};
-goog.inherits(os.ui.timeline.TimelineScaleEvent, goog.events.Event);
+class TimelineScaleEvent extends GoogEvent {
+  /**
+   * Constructor.
+   * @param {TimelineScaleOptions} options
+   */
+  constructor(options) {
+    super(TimelineScaleEvent.TYPE);
+
+    /**
+     * @type {TimelineScaleOptions}
+     */
+    this.options = options;
+  }
+}
 
 
-os.ui.timeline.TimelineScaleEvent.TYPE = 'timeline.Scale';
+TimelineScaleEvent.TYPE = 'timeline.Scale';
+exports = TimelineScaleEvent;

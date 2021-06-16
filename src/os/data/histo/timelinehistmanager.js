@@ -17,7 +17,6 @@ goog.require('os.source.PropertyChange');
 goog.require('os.time.TimeRange');
 goog.require('os.ui.hist.HistogramEventType');
 goog.require('os.ui.hist.IHistogramManager');
-goog.require('os.ui.timeline.TimelineScaleOptions');
 
 
 

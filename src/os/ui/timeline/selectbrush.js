@@ -1,228 +1,221 @@
-goog.provide('os.ui.timeline.SelectBrush');
-goog.require('goog.events.Event');
-goog.require('goog.events.EventType');
-goog.require('os.ui.GlobalMenuCtrl');
-goog.require('os.ui.action.ActionManager');
-goog.require('os.ui.timeline.Brush');
+goog.module('os.ui.timeline.SelectBrush');
+goog.module.declareLegacyNamespace();
 
+const GoogEventType = goog.require('goog.events.EventType');
+const dispatcher = goog.require('os.Dispatcher');
+const Brush = goog.require('os.ui.timeline.Brush');
+const ActionManager = goog.requireType('os.ui.action.ActionManager');
 
 
 /**
  * Implements shift+click to draw a brush selection
- *
- * @constructor
- * @extends {os.ui.timeline.Brush}
  */
-os.ui.timeline.SelectBrush = function() {
-  os.ui.timeline.SelectBrush.base(this, 'constructor');
-  this.setId('select');
-  this.setEventType(os.ui.timeline.Brush.EventType.BRUSH_END);
-
+class SelectBrush extends Brush {
   /**
-   * @type {?string}
-   * @private
+   * Constructor.
    */
-  this.menuContainer_ = null;
+  constructor() {
+    super();
+    this.setId('select');
+    this.setEventType(Brush.EventType.BRUSH_END);
 
-  /**
-   * @type {?os.ui.action.ActionManager}
-   * @private
-   */
-  this.am_ = null;
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.menuContainer_ = null;
 
-  /**
-   * @type {?os.ui.menu.Menu<Array<number>>}
-   * @private
-   */
-  this.menu_ = null;
+    /**
+     * @type {?ActionManager}
+     * @private
+     */
+    this.am_ = null;
 
-  /**
-   * @type {function(Event):(boolean|undefined)}
-   * @private
-   */
-  this.moveHandler_ = this.onMouseMove_.bind(this);
+    /**
+     * @type {?os.ui.menu.Menu<Array<number>>}
+     * @private
+     */
+    this.menu_ = null;
 
-  /**
-   * @type {?Array.<number>}
-   * @private
-   */
-  this.position_ = null;
+    /**
+     * @type {function(Event):(boolean|undefined)}
+     * @private
+     */
+    this.moveHandler_ = this.onMouseMove_.bind(this);
 
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.inEvent_ = false;
-};
-goog.inherits(os.ui.timeline.SelectBrush, os.ui.timeline.Brush);
+    /**
+     * @type {?Array.<number>}
+     * @private
+     */
+    this.position_ = null;
 
-
-/**
- * @param {os.ui.menu.Menu<Array<number>>} menu The menu
- */
-os.ui.timeline.SelectBrush.prototype.setMenu = function(menu) {
-  this.menu_ = menu;
-};
-
-
-/**
- * @param {os.ui.action.ActionManager} manager The action manager
- */
-os.ui.timeline.SelectBrush.prototype.setActionManager = function(manager) {
-  this.am_ = manager;
-};
-
-
-/**
- * @param {string} container Menu container
- */
-os.ui.timeline.SelectBrush.prototype.setMenuContainer = function(container) {
-  this.menuContainer_ = container;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.timeline.SelectBrush.prototype.initSVG = function(container, height) {
-  d3.select('.c-svg-timeline').
-      on(goog.events.EventType.MOUSEDOWN + '.' + this.getId(), this.onDraw_.bind(this), true);
-  os.ui.timeline.SelectBrush.superClass_.initSVG.call(this, container, height);
-};
-
-
-/**
- * Begins drawing the selection
- *
- * @return {boolean|undefined}
- * @private
- */
-os.ui.timeline.SelectBrush.prototype.onDraw_ = function() {
-  var evt = /** @type {MouseEvent} */ (d3.event);
-
-  if (evt.shiftKey && !this.inEvent_) {
-    this.inEvent_ = true;
-    this.dispatchEvent(goog.events.EventType.DRAGSTART);
-    // start brush
-    try {
-      // modern browsers
-      var event = new MouseEvent(evt.type, /** @type {MouseEventInit} */ (evt));
-    } catch (e) {
-      // IE
-      event = document.createEvent('MouseEvents');
-      event.initMouseEvent(evt.type, true, true, evt.view, evt.detail, evt.screenX, evt.screenY, evt.clientX,
-          evt.clientY, evt.ctrlKey, evt.altKey, evt.shiftKey, evt.metaKey, evt.button, evt.relatedTarget);
-    }
-
-    d3.select('.brush-' + this.getId()).select('.background').node().dispatchEvent(event);
-
-    // track mouse position
-    window.addEventListener(goog.events.EventType.MOUSEMOVE, this.moveHandler_, true);
-
-    // kill the original
-    d3.event.preventDefault();
-    d3.event.stopPropagation();
+    /**
+     * @type {boolean}
+     * @private
+     */
     this.inEvent_ = false;
-    return false;
   }
-};
 
+  /**
+   * @param {os.ui.menu.Menu<Array<number>>} menu The menu
+   */
+  setMenu(menu) {
+    this.menu_ = menu;
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.timeline.SelectBrush.prototype.onBrushStart = function() {
-  os.ui.timeline.SelectBrush.base(this, 'onBrushStart');
-  this.resizing = true;
-  this.stillValue = this.xScale.invert(d3.mouse(d3.select('.x-axis').node())[0]).getTime();
-};
+  /**
+   * @param {ActionManager} manager The action manager
+   */
+  setActionManager(manager) {
+    this.am_ = manager;
+  }
 
+  /**
+   * @param {string} container Menu container
+   */
+  setMenuContainer(container) {
+    this.menuContainer_ = container;
+  }
 
-/**
- * @param {Event} event
- * @private
- */
-os.ui.timeline.SelectBrush.prototype.onMouseMove_ = function(event) {
-  var evt = /** @type {MouseEvent} */ (event);
-  this.position_ = [evt.pageX, evt.pageY];
-};
+  /**
+   * @inheritDoc
+   */
+  initSVG(container, height) {
+    d3.select('.c-svg-timeline').
+        on(GoogEventType.MOUSEDOWN + '.' + this.getId(), this.onDraw_.bind(this), true);
+    super.initSVG(container, height);
+  }
 
+  /**
+   * Begins drawing the selection
+   *
+   * @return {boolean|undefined}
+   * @private
+   */
+  onDraw_() {
+    var evt = /** @type {MouseEvent} */ (d3.event);
 
-/**
- * @inheritDoc
- */
-os.ui.timeline.SelectBrush.prototype.updateBrush = function(opt_silent) {
-  os.ui.timeline.SelectBrush.superClass_.updateBrush.call(this, opt_silent);
-
-  if (d3.event && d3.event.type == os.ui.timeline.Brush.EventType.BRUSH_END) {
-    var ex = this.getExtent();
-
-    if ((this.am_ || this.menu_) && this.menuContainer_ && ex && !this.inEvent_) {
+    if (evt.shiftKey && !this.inEvent_) {
       this.inEvent_ = true;
-
-      window.removeEventListener(goog.events.EventType.MOUSEMOVE, this.moveHandler_, true);
-
-      var fn = /** @type {d3.ScaleFn} */ (this.xScale);
-
-      var pos = {
-        x: this.position_ ? this.position_[0] : fn(ex[1]),
-        y: this.position_ ? this.position_[1] : 75
-      };
-
-      var target = '.c-svg-timeline';
-
-      var targetEl = document.querySelector(target);
-      if (targetEl) {
-        // offset the brush position by the timeline's left edge
-        var rect = targetEl.getBoundingClientRect();
-        pos.x -= rect.x;
+      this.dispatchEvent(GoogEventType.DRAGSTART);
+      // start brush
+      try {
+        // modern browsers
+        var event = new MouseEvent(evt.type, /** @type {MouseEventInit} */ (evt));
+      } catch (e) {
+        // IE
+        event = document.createEvent('MouseEvents');
+        event.initMouseEvent(evt.type, true, true, evt.view, evt.detail, evt.screenX, evt.screenY, evt.clientX,
+            evt.clientY, evt.ctrlKey, evt.altKey, evt.shiftKey, evt.metaKey, evt.button, evt.relatedTarget);
       }
 
-      if (this.menu_) {
-        this.menu_.open(ex, {
-          my: 'left top',
-          at: 'left+' + pos.x + ' top+' + pos.y,
-          of: target
-        });
-      } else if (this.am_) {
-        this.am_.withActionArgs(ex);
-        os.ui.openMenu(this.am_, pos, this.position_ ? undefined : target);
-      }
+      d3.select('.brush-' + this.getId()).select('.background').node().dispatchEvent(event);
 
-      os.dispatcher.listen(os.ui.GlobalMenuEventType.MENU_CLOSE, this.onMenuEnd_, false, this);
+      // track mouse position
+      window.addEventListener(GoogEventType.MOUSEMOVE, this.moveHandler_, true);
 
-      this.position_ = null;
+      // kill the original
+      d3.event.preventDefault();
+      d3.event.stopPropagation();
       this.inEvent_ = false;
-
-      d3.select('.brush-' + this.getId()).select('.background').style('display', 'none');
-    } else {
-      // dispatch the event to keep things moving
-      this.dispatchEvent(goog.events.EventType.CHANGE);
+      return false;
     }
   }
-};
 
-
-/**
- * Handles menu close
- *
- * @private
- */
-os.ui.timeline.SelectBrush.prototype.onMenuEnd_ = function() {
-  this.inEvent_ = true;
-  this.setExtent(null);
-  this.dispatchEvent(goog.events.EventType.EXIT);
-  this.inEvent_ = false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.timeline.SelectBrush.prototype.updateLabels = function() {
-  if (this.mouseDown) {
-    os.ui.timeline.SelectBrush.base(this, 'updateLabels');
-  } else {
-    d3.select('.brush-' + this.getId()).selectAll('text').style('display', 'none');
+  /**
+   * @inheritDoc
+   */
+  onBrushStart() {
+    super.onBrushStart();
+    this.resizing = true;
+    this.stillValue = this.xScale.invert(d3.mouse(d3.select('.x-axis').node())[0]).getTime();
   }
-};
+
+  /**
+   * @param {Event} event
+   * @private
+   */
+  onMouseMove_(event) {
+    var evt = /** @type {MouseEvent} */ (event);
+    this.position_ = [evt.pageX, evt.pageY];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  updateBrush(opt_silent) {
+    super.updateBrush(opt_silent);
+
+    if (d3.event && d3.event.type == Brush.EventType.BRUSH_END) {
+      var ex = this.getExtent();
+
+      if ((this.am_ || this.menu_) && this.menuContainer_ && ex && !this.inEvent_) {
+        this.inEvent_ = true;
+
+        window.removeEventListener(GoogEventType.MOUSEMOVE, this.moveHandler_, true);
+
+        var fn = /** @type {d3.ScaleFn} */ (this.xScale);
+
+        var pos = {
+          x: this.position_ ? this.position_[0] : fn(ex[1]),
+          y: this.position_ ? this.position_[1] : 75
+        };
+
+        var target = '.c-svg-timeline';
+
+        var targetEl = document.querySelector(target);
+        if (targetEl) {
+          // offset the brush position by the timeline's left edge
+          var rect = targetEl.getBoundingClientRect();
+          pos.x -= rect.x;
+        }
+
+        if (this.menu_) {
+          this.menu_.open(ex, {
+            my: 'left top',
+            at: 'left+' + pos.x + ' top+' + pos.y,
+            of: target
+          });
+        } else if (this.am_) {
+          this.am_.withActionArgs(ex);
+          os.ui.openMenu(this.am_, pos, this.position_ ? undefined : target);
+        }
+
+        dispatcher.getInstance().listen(os.ui.GlobalMenuEventType.MENU_CLOSE, this.onMenuEnd_, false, this);
+
+        this.position_ = null;
+        this.inEvent_ = false;
+
+        d3.select('.brush-' + this.getId()).select('.background').style('display', 'none');
+      } else {
+        // dispatch the event to keep things moving
+        this.dispatchEvent(GoogEventType.CHANGE);
+      }
+    }
+  }
+
+  /**
+   * Handles menu close
+   *
+   * @private
+   */
+  onMenuEnd_() {
+    this.inEvent_ = true;
+    this.setExtent(null);
+    this.dispatchEvent(GoogEventType.EXIT);
+    this.inEvent_ = false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  updateLabels() {
+    if (this.mouseDown) {
+      super.updateLabels();
+    } else {
+      d3.select('.brush-' + this.getId()).selectAll('text').style('display', 'none');
+    }
+  }
+}
+
+exports = SelectBrush;

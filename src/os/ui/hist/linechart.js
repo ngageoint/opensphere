@@ -1,9 +1,11 @@
 goog.provide('os.ui.hist.LineChart');
+
 goog.require('goog.Disposable');
 goog.require('os.color');
 goog.require('os.hist');
 goog.require('os.ui.hist.IHistogramChart');
 
+goog.requireType('os.ui.timeline.TimelineScaleOptions');
 
 
 /**

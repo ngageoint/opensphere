@@ -1,8 +1,10 @@
 goog.provide('os.ui.hist.StackedBarChart');
+
 goog.require('goog.Disposable');
 goog.require('os.hist');
 goog.require('os.ui.hist.IHistogramChart');
 
+goog.requireType('os.ui.timeline.TimelineScaleOptions');
 
 
 /**

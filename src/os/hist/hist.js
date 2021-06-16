@@ -7,6 +7,8 @@ goog.require('os.hist.HistogramData');
 goog.require('os.hist.IHistogramProvider');
 goog.require('os.implements');
 
+goog.requireType('os.ui.timeline.TimelineScaleOptions');
+
 
 /**
  * Gets the maximum combined bin count in an array of histograms.
