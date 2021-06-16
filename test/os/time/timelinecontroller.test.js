@@ -1,10 +1,24 @@
+goog.require('goog.Timer');
+goog.require('goog.math.Range');
+goog.require('os.config.Settings');
 goog.require('os.mock');
+goog.require('os.time');
+goog.require('os.time.Duration');
 goog.require('os.time.TimelineController');
 goog.require('os.time.TimelineControllerEvent');
 goog.require('os.time.TimelineEventType');
 
 
 describe('os.time.TimelineController', function() {
+  const Timer = goog.module.get('goog.Timer');
+  const Range = goog.module.get('goog.math.Range');
+  const Settings = goog.module.get('os.config.Settings');
+  const time = goog.module.get('os.time');
+  const Duration = goog.module.get('os.time.Duration');
+  const TimelineController = goog.module.get('os.time.TimelineController');
+  const TimelineControllerEvent = goog.module.get('os.time.TimelineControllerEvent');
+  const TimelineEventType = goog.module.get('os.time.TimelineEventType');
+
   var controller;
   var defaultStart;
   var defaultEnd;
@@ -18,7 +32,7 @@ describe('os.time.TimelineController', function() {
       arg = callObj.args[0];
       if (callObj.args[0] == eventType) {
         result++;
-      } else if (arg instanceof os.time.TimelineControllerEvent) {
+      } else if (arg instanceof TimelineControllerEvent) {
         if (arg.type === eventType) {
           result++;
         }
@@ -29,7 +43,7 @@ describe('os.time.TimelineController', function() {
 
   var clock = lolex.createClock();
   beforeEach(function() {
-    goog.Timer.defaultTimerObject = clock;
+    Timer.defaultTimerObject = clock;
     clock.reset();
     spyOn(goog, 'now').andReturn(clock.now);
 
@@ -46,65 +60,65 @@ describe('os.time.TimelineController', function() {
   afterEach(function() {
     controller.stop();
     clock.reset();
-    goog.Timer.defaultTimerObject = window;
+    Timer.defaultTimerObject = window;
   });
 
   it('should initialize the timeline controller', function() {
-    controller = new os.time.TimelineController();
+    controller = new TimelineController();
     defaultStart = controller.getStart();
     defaultEnd = controller.getEnd();
     defaultDuration = controller.getDuration();
   });
 
   it('should initialize with the current UTC date, floored by day', function() {
-    var duration = os.time.Duration.DAY;
+    var duration = Duration.DAY;
     var start = new Date(controller.getStart());
     var end = new Date(controller.getEnd());
-    var testStartDate = os.time.floor(os.time.toUTCDate(new Date()), duration);
+    var testStartDate = time.floor(time.toUTCDate(new Date()), duration);
 
     expect(controller.getDuration()).toBe(duration);
-    expect(os.time.format(start, duration))
-        .toBe(os.time.format(testStartDate, duration));
+    expect(time.format(start, duration))
+        .toBe(time.format(testStartDate, duration));
 
     testStartDate.setDate(testStartDate.getDate() + 1);
-    expect(os.time.format(end, duration))
-        .toBe(os.time.format(testStartDate, duration));
+    expect(time.format(end, duration))
+        .toBe(time.format(testStartDate, duration));
   });
 
   it('Setting the duration should fire os.time.TimelineEventType.DURATION_CHANGE', function() {
-    controller.setDuration(os.time.Duration.WEEK);
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.DURATION_CHANGE);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.DURATION_CHANGE)).toEqual(1);
+    controller.setDuration(Duration.WEEK);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.DURATION_CHANGE);
+    expect(getDispatchEventCallCount(TimelineEventType.DURATION_CHANGE)).toEqual(1);
   });
 
   it('Setting the fps should fire os.time.TimelineEventType.FPS_CHANGE', function() {
     controller.setFps(5);
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.FPS_CHANGE);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.FPS_CHANGE)).toEqual(1);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.FPS_CHANGE);
+    expect(getDispatchEventCallCount(TimelineEventType.FPS_CHANGE)).toEqual(1);
   });
 
   it('Setting the range should fire os.time.TimelineEventType.RANGE_CHANGED', function() {
     controller.setRange(controller.buildRange(new Date().getTime(), new Date().getTime() + 1));
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.RANGE_CHANGED)).toEqual(1);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.RANGE_CHANGED)).toEqual(1);
   });
 
   it('Calling play should fire os.time.TimelineEventType.PLAY', function() {
     controller.play();
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.PLAY);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.PLAY)).toEqual(1);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.PLAY);
+    expect(getDispatchEventCallCount(TimelineEventType.PLAY)).toEqual(1);
   });
 
   it('Calling play should fire os.time.TimelineEventType.STOP', function() {
     // Controller is stoped prior to each test, so calling stop again
     // should have no effect
     controller.stop();
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.STOP)).toEqual(0);
+    expect(getDispatchEventCallCount(TimelineEventType.STOP)).toEqual(0);
     // Start/Stop the controller.
     controller.play();
     controller.stop();
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.STOP);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.STOP)).toEqual(1);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.STOP);
+    expect(getDispatchEventCallCount(TimelineEventType.STOP)).toEqual(1);
   });
 
   it('Playing timeline should fire os.time.TimelineEventType.SHOW event for each frame', function() {
@@ -112,14 +126,14 @@ describe('os.time.TimelineController', function() {
     var fps = 10;
 
     // eat this function since it starts a timer that we want to ignore
-    spyOn(os.settings, 'set');
+    spyOn(Settings.getInstance(), 'set');
 
     expect(Object.keys(clock.timers).length).toBe(0);
     controller.setFps(fps);
     controller.play();
     expect(Object.keys(clock.timers).length).toBe(1);
     clock.tick(runtime);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.SHOW)).toBeGreaterThan((fps * runtime / 1000) - 2);
+    expect(getDispatchEventCallCount(TimelineEventType.SHOW)).toBeGreaterThan((fps * runtime / 1000) - 2);
   });
 
   it('Playing with higher fps should fire more os.time.TimelineEventType.SHOW event for each frame', function() {
@@ -127,14 +141,14 @@ describe('os.time.TimelineController', function() {
     var fps = 20;
 
     // eat this function since it starts a timer that we want to ignore
-    spyOn(os.settings, 'set');
+    spyOn(Settings.getInstance(), 'set');
 
     expect(Object.keys(clock.timers).length).toBe(0);
     controller.setFps(fps);
     controller.play();
     expect(Object.keys(clock.timers).length).toBe(1);
     clock.tick(runtime);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.SHOW)).toBeGreaterThan((fps * runtime / 1000) - 2);
+    expect(getDispatchEventCallCount(TimelineEventType.SHOW)).toBeGreaterThan((fps * runtime / 1000) - 2);
   });
 
   it('setting ranges must be a range set', function() {
@@ -168,44 +182,44 @@ describe('os.time.TimelineController', function() {
   it('adding range should fire range changed event', function() {
     var fullRange = controller.getRange();
     controller.addAnimateRange(fullRange);
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.ANIMATE_RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.ANIMATE_RANGE_CHANGED)).toEqual(1);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.ANIMATE_RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.ANIMATE_RANGE_CHANGED)).toEqual(1);
     expect(controller.getAnimationRanges().length).toBe(1);
     // If I add the same range a second time, I do not expect another change event.
     controller.addAnimateRange(fullRange);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.ANIMATE_RANGE_CHANGED)).toEqual(1);
+    expect(getDispatchEventCallCount(TimelineEventType.ANIMATE_RANGE_CHANGED)).toEqual(1);
     expect(controller.getAnimationRanges().length).toBe(1);
     // If I remove the range, expect a change event.
     controller.removeAnimateRange(fullRange);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.ANIMATE_RANGE_CHANGED)).toEqual(2);
+    expect(getDispatchEventCallCount(TimelineEventType.ANIMATE_RANGE_CHANGED)).toEqual(2);
     expect(controller.getAnimationRanges().length).toBe(0);
 
     controller.clearHoldRanges();
     controller.addHoldRange(fullRange);
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.HOLD_RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.HOLD_RANGE_CHANGED)).toEqual(1);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.HOLD_RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.HOLD_RANGE_CHANGED)).toEqual(1);
     expect(controller.getHoldRanges().length).toBe(1);
     // If I add the same range a second time, I do not expect another change event.
     controller.addHoldRange(fullRange);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.HOLD_RANGE_CHANGED)).toEqual(1);
+    expect(getDispatchEventCallCount(TimelineEventType.HOLD_RANGE_CHANGED)).toEqual(1);
     expect(controller.getHoldRanges().length).toBe(1);
     // If I remove the range, expect a change event.
     controller.removeHoldRange(fullRange);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.HOLD_RANGE_CHANGED)).toEqual(2);
+    expect(getDispatchEventCallCount(TimelineEventType.HOLD_RANGE_CHANGED)).toEqual(2);
     expect(controller.getHoldRanges().length).toBe(0);
 
     controller.clearLoadRanges();
     controller.addLoadRange(fullRange);
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.RANGE_CHANGED)).toEqual(1);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.RANGE_CHANGED)).toEqual(1);
     expect(controller.getLoadRanges().length).toBe(1);
     // If I add the same range a second time, I do not expect another change event.
     controller.addLoadRange(fullRange);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.RANGE_CHANGED)).toEqual(1);
+    expect(getDispatchEventCallCount(TimelineEventType.RANGE_CHANGED)).toEqual(1);
     expect(controller.getLoadRanges().length).toBe(1);
     // If I remove the range, expect a change event.
     controller.removeLoadRange(fullRange);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.RANGE_CHANGED)).toEqual(2);
+    expect(getDispatchEventCallCount(TimelineEventType.RANGE_CHANGED)).toEqual(2);
     expect(controller.getLoadRanges().length).toBe(1); // should always be 1 load range
   });
 
@@ -214,8 +228,8 @@ describe('os.time.TimelineController', function() {
     // compute two, non overlapping ranges from the full range.
     // [[Range1.][.Range2]]
     var rangeLength = fullRange.end - fullRange.start;
-    var range1 = new goog.math.Range(fullRange.start, ((rangeLength * 0.5) + fullRange.start) - 1);
-    var range2 = new goog.math.Range(((rangeLength * 0.5) + fullRange.start) + 1, fullRange.end);
+    var range1 = new Range(fullRange.start, ((rangeLength * 0.5) + fullRange.start) - 1);
+    var range2 = new Range(((rangeLength * 0.5) + fullRange.start) + 1, fullRange.end);
 
     controller.addAnimateRange(range1);
     controller.addAnimateRange(range2);
@@ -224,10 +238,10 @@ describe('os.time.TimelineController', function() {
     var target = controller.getAnimationRanges();
     expect(target.length).toBe(2);
     // the two ranges should be equal to the orginal ranges
-    expect(goog.math.Range.equals(target[0], range1)).toBe(true);
-    expect(goog.math.Range.equals(target[1], range2)).toBe(true);
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.ANIMATE_RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.ANIMATE_RANGE_CHANGED)).toEqual(2);
+    expect(Range.equals(target[0], range1)).toBe(true);
+    expect(Range.equals(target[1], range2)).toBe(true);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.ANIMATE_RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.ANIMATE_RANGE_CHANGED)).toEqual(2);
 
     controller.clearHoldRanges();
     controller.addHoldRange(range1);
@@ -237,10 +251,10 @@ describe('os.time.TimelineController', function() {
     target = controller.getHoldRanges();
     expect(target.length).toBe(2);
     // the two ranges should be equal to the orginal ranges
-    expect(goog.math.Range.equals(target[0], range1)).toBe(true);
-    expect(goog.math.Range.equals(target[1], range2)).toBe(true);
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.HOLD_RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.HOLD_RANGE_CHANGED)).toEqual(2);
+    expect(Range.equals(target[0], range1)).toBe(true);
+    expect(Range.equals(target[1], range2)).toBe(true);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.HOLD_RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.HOLD_RANGE_CHANGED)).toEqual(2);
 
     controller.clearLoadRanges();
     controller.addLoadRange(range1);
@@ -250,17 +264,17 @@ describe('os.time.TimelineController', function() {
     target = controller.getLoadRanges();
     expect(target.length).toBe(2);
     // the two ranges should be equal to the orginal ranges
-    expect(goog.math.Range.equals(target[0], range1)).toBe(true);
-    expect(goog.math.Range.equals(target[1], range2)).toBe(true);
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.RANGE_CHANGED)).toEqual(2);
+    expect(Range.equals(target[0], range1)).toBe(true);
+    expect(Range.equals(target[1], range2)).toBe(true);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.RANGE_CHANGED)).toEqual(2);
   });
 
   it('adding overlapping ranges should should result in one range', function() {
     var fullRange = controller.getRange();
     var rangeLength = fullRange.end - fullRange.start;
-    var range1 = new goog.math.Range(fullRange.start, ((rangeLength * 0.5) + fullRange.start) + 1);
-    var range2 = new goog.math.Range(((rangeLength * 0.5) + fullRange.start) - 1, fullRange.end);
+    var range1 = new Range(fullRange.start, ((rangeLength * 0.5) + fullRange.start) + 1);
+    var range2 = new Range(((rangeLength * 0.5) + fullRange.start) - 1, fullRange.end);
     controller.addAnimateRange(range1);
     controller.addAnimateRange(range2);
 
@@ -268,9 +282,9 @@ describe('os.time.TimelineController', function() {
     var target = controller.getAnimationRanges();
     expect(target.length).toBe(1);
     // the two ranges should be equal to the orginal ranges
-    expect(goog.math.Range.equals(target[0], fullRange)).toBe(true);
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.ANIMATE_RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.ANIMATE_RANGE_CHANGED)).toEqual(2);
+    expect(Range.equals(target[0], fullRange)).toBe(true);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.ANIMATE_RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.ANIMATE_RANGE_CHANGED)).toEqual(2);
 
     controller.clearHoldRanges();
     controller.addHoldRange(range1);
@@ -280,9 +294,9 @@ describe('os.time.TimelineController', function() {
     target = controller.getHoldRanges();
     expect(target.length).toBe(1);
     // the two ranges should be equal to the orginal ranges
-    expect(goog.math.Range.equals(target[0], fullRange)).toBe(true);
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.HOLD_RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.HOLD_RANGE_CHANGED)).toEqual(3);
+    expect(Range.equals(target[0], fullRange)).toBe(true);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.HOLD_RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.HOLD_RANGE_CHANGED)).toEqual(3);
 
     controller.clearLoadRanges();
     controller.addLoadRange(range1);
@@ -292,16 +306,16 @@ describe('os.time.TimelineController', function() {
     target = controller.getLoadRanges();
     expect(target.length).toBe(1);
     // the two ranges should be equal to the orginal ranges
-    expect(goog.math.Range.equals(target[0], fullRange)).toBe(true);
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.RANGE_CHANGED)).toEqual(2);
+    expect(Range.equals(target[0], fullRange)).toBe(true);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.RANGE_CHANGED)).toEqual(2);
   });
 
   it('removing a range from a full animation range should result in two ranges', function() {
     var fullRange = controller.getRange();
     var rangeLength = fullRange.end - fullRange.start;
     var range30 = rangeLength * 0.3;
-    var range1 = new goog.math.Range(fullRange.start + range30, fullRange.end - range30);
+    var range1 = new Range(fullRange.start + range30, fullRange.end - range30);
 
     controller.addAnimateRange(fullRange);
     // This should effectivly bisect the range, leaving a range on the left and right of the removed range.
@@ -310,13 +324,13 @@ describe('os.time.TimelineController', function() {
     // we should have two ranges
     var target = controller.getAnimationRanges();
     expect(target.length).toBe(2);
-    var testRange = new goog.math.Range(fullRange.start, fullRange.start + range30);
-    expect(goog.math.Range.equals(target[0], testRange)).toBe(true);
-    testRange = new goog.math.Range(fullRange.end - range30, fullRange.end);
-    expect(goog.math.Range.equals(target[1], testRange)).toBe(true);
+    var testRange = new Range(fullRange.start, fullRange.start + range30);
+    expect(Range.equals(target[0], testRange)).toBe(true);
+    testRange = new Range(fullRange.end - range30, fullRange.end);
+    expect(Range.equals(target[1], testRange)).toBe(true);
 
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.ANIMATE_RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.ANIMATE_RANGE_CHANGED)).toEqual(2);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.ANIMATE_RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.ANIMATE_RANGE_CHANGED)).toEqual(2);
 
     controller.clearHoldRanges();
     controller.addHoldRange(fullRange);
@@ -326,13 +340,13 @@ describe('os.time.TimelineController', function() {
     // we should have two ranges
     target = controller.getHoldRanges();
     expect(target.length).toBe(2);
-    testRange = new goog.math.Range(fullRange.start, fullRange.start + range30);
-    expect(goog.math.Range.equals(target[0], testRange)).toBe(true);
-    testRange = new goog.math.Range(fullRange.end - range30, fullRange.end);
-    expect(goog.math.Range.equals(target[1], testRange)).toBe(true);
+    testRange = new Range(fullRange.start, fullRange.start + range30);
+    expect(Range.equals(target[0], testRange)).toBe(true);
+    testRange = new Range(fullRange.end - range30, fullRange.end);
+    expect(Range.equals(target[1], testRange)).toBe(true);
 
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.HOLD_RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.HOLD_RANGE_CHANGED)).toEqual(3);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.HOLD_RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.HOLD_RANGE_CHANGED)).toEqual(3);
 
     controller.clearLoadRanges();
     controller.addLoadRange(fullRange);
@@ -342,22 +356,22 @@ describe('os.time.TimelineController', function() {
     // we should have two ranges
     target = controller.getLoadRanges();
     expect(target.length).toBe(2);
-    testRange = new goog.math.Range(fullRange.start, fullRange.start + range30);
-    expect(goog.math.Range.equals(target[0], testRange)).toBe(true);
-    testRange = new goog.math.Range(fullRange.end - range30, fullRange.end);
-    expect(goog.math.Range.equals(target[1], testRange)).toBe(true);
+    testRange = new Range(fullRange.start, fullRange.start + range30);
+    expect(Range.equals(target[0], testRange)).toBe(true);
+    testRange = new Range(fullRange.end - range30, fullRange.end);
+    expect(Range.equals(target[1], testRange)).toBe(true);
 
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.RANGE_CHANGED)).toEqual(2);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.RANGE_CHANGED)).toEqual(2);
   });
 
   it('making an exisiting range larger should result in the same number of ranges', function() {
     var fullRange = controller.getRange();
     var rangeLength = fullRange.end - fullRange.start;
     var range30 = rangeLength * 0.3;
-    var range1 = new goog.math.Range(fullRange.start, fullRange.start + range30);
-    var range2 = new goog.math.Range(fullRange.end - range30, fullRange.end);
-    var range3 = new goog.math.Range(fullRange.start, fullRange.start + range30 + 100);
+    var range1 = new Range(fullRange.start, fullRange.start + range30);
+    var range2 = new Range(fullRange.end - range30, fullRange.end);
+    var range3 = new Range(fullRange.start, fullRange.start + range30 + 100);
     // Setting up test case with two disjointed ranges.
     controller.addAnimateRange(range1);
     controller.addAnimateRange(range2);
@@ -367,11 +381,11 @@ describe('os.time.TimelineController', function() {
     var target = controller.getAnimationRanges();
     expect(target.length).toBe(2);
 
-    expect(goog.math.Range.equals(target[0], range3)).toBe(true);
-    expect(goog.math.Range.equals(target[1], range2)).toBe(true);
+    expect(Range.equals(target[0], range3)).toBe(true);
+    expect(Range.equals(target[1], range2)).toBe(true);
 
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.ANIMATE_RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.ANIMATE_RANGE_CHANGED)).toEqual(3);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.ANIMATE_RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.ANIMATE_RANGE_CHANGED)).toEqual(3);
 
     controller.clearHoldRanges();
     controller.addHoldRange(range1);
@@ -382,11 +396,11 @@ describe('os.time.TimelineController', function() {
     var target = controller.getHoldRanges();
     expect(target.length).toBe(2);
 
-    expect(goog.math.Range.equals(target[0], range3)).toBe(true);
-    expect(goog.math.Range.equals(target[1], range2)).toBe(true);
+    expect(Range.equals(target[0], range3)).toBe(true);
+    expect(Range.equals(target[1], range2)).toBe(true);
 
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.HOLD_RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.HOLD_RANGE_CHANGED)).toEqual(4);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.HOLD_RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.HOLD_RANGE_CHANGED)).toEqual(4);
 
     controller.clearLoadRanges();
     controller.addLoadRange(range1);
@@ -397,20 +411,20 @@ describe('os.time.TimelineController', function() {
     var target = controller.getLoadRanges();
     expect(target.length).toBe(2);
 
-    expect(goog.math.Range.equals(target[0], range3)).toBe(true);
-    expect(goog.math.Range.equals(target[1], range2)).toBe(true);
+    expect(Range.equals(target[0], range3)).toBe(true);
+    expect(Range.equals(target[1], range2)).toBe(true);
 
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.RANGE_CHANGED)).toEqual(3);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.RANGE_CHANGED)).toEqual(3);
   });
 
   it('making an exisiting range smaller should result in the same number of ranges', function() {
     var fullRange = controller.getRange();
     var rangeLength = fullRange.end - fullRange.start;
     var range30 = rangeLength * 0.3;
-    var range1 = new goog.math.Range(fullRange.start, fullRange.start + range30);
-    var range2 = new goog.math.Range(fullRange.end - range30, fullRange.end);
-    var range3 = new goog.math.Range(range1.start, range1.end - 200);
+    var range1 = new Range(fullRange.start, fullRange.start + range30);
+    var range2 = new Range(fullRange.end - range30, fullRange.end);
+    var range3 = new Range(range1.start, range1.end - 200);
     // Setting up test case with two disjointed ranges.
     controller.addAnimateRange(range1);
     controller.addAnimateRange(range2);
@@ -419,12 +433,12 @@ describe('os.time.TimelineController', function() {
     var target = controller.getAnimationRanges();
     expect(target.length).toBe(2);
 
-    expect(goog.math.Range.equals(target[0], range1)).toBe(false);
-    expect(goog.math.Range.equals(target[0], range3)).toBe(true);
-    expect(goog.math.Range.equals(target[1], range2)).toBe(true);
+    expect(Range.equals(target[0], range1)).toBe(false);
+    expect(Range.equals(target[0], range3)).toBe(true);
+    expect(Range.equals(target[1], range2)).toBe(true);
 
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.ANIMATE_RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.ANIMATE_RANGE_CHANGED)).toEqual(3);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.ANIMATE_RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.ANIMATE_RANGE_CHANGED)).toEqual(3);
 
     // Setting up test case with two disjointed ranges.
     controller.clearHoldRanges();
@@ -435,12 +449,12 @@ describe('os.time.TimelineController', function() {
     target = controller.getHoldRanges();
     expect(target.length).toBe(2);
 
-    expect(goog.math.Range.equals(target[0], range1)).toBe(false);
-    expect(goog.math.Range.equals(target[0], range3)).toBe(true);
-    expect(goog.math.Range.equals(target[1], range2)).toBe(true);
+    expect(Range.equals(target[0], range1)).toBe(false);
+    expect(Range.equals(target[0], range3)).toBe(true);
+    expect(Range.equals(target[1], range2)).toBe(true);
 
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.HOLD_RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.HOLD_RANGE_CHANGED)).toEqual(4);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.HOLD_RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.HOLD_RANGE_CHANGED)).toEqual(4);
 
     // Setting up test case with two disjointed ranges.
     controller.clearLoadRanges();
@@ -451,22 +465,22 @@ describe('os.time.TimelineController', function() {
     target = controller.getLoadRanges();
     expect(target.length).toBe(2);
 
-    expect(goog.math.Range.equals(target[0], range1)).toBe(false);
-    expect(goog.math.Range.equals(target[0], range3)).toBe(true);
-    expect(goog.math.Range.equals(target[1], range2)).toBe(true);
+    expect(Range.equals(target[0], range1)).toBe(false);
+    expect(Range.equals(target[0], range3)).toBe(true);
+    expect(Range.equals(target[1], range2)).toBe(true);
 
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.RANGE_CHANGED)).toEqual(3);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.RANGE_CHANGED)).toEqual(3);
   });
 
   it('updating an exisiting range that overlaps should result in those ranges getting combined', function() {
     var fullRange = controller.getRange();
     var rangeLength = fullRange.end - fullRange.start;
     var range30 = rangeLength * 0.3;
-    var range1 = new goog.math.Range(fullRange.start, fullRange.start + range30);
-    var range2 = new goog.math.Range(fullRange.end - range30, fullRange.end);
-    var range3 = new goog.math.Range(range1.end, range2.start + 200);
-    var expectedRange = new goog.math.Range(fullRange.start + range30, fullRange.end);
+    var range1 = new Range(fullRange.start, fullRange.start + range30);
+    var range2 = new Range(fullRange.end - range30, fullRange.end);
+    var range3 = new Range(range1.end, range2.start + 200);
+    var expectedRange = new Range(fullRange.start + range30, fullRange.end);
     // Setting up test case with two disjointed ranges.
     controller.addAnimateRange(range1);
     controller.addAnimateRange(range2);
@@ -481,10 +495,10 @@ describe('os.time.TimelineController', function() {
     expect(target.length).toBe(1);
 
     // the resulting range in this case is the full range.
-    expect(goog.math.Range.equals(target[0], expectedRange)).toBe(true);
+    expect(Range.equals(target[0], expectedRange)).toBe(true);
 
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.ANIMATE_RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.ANIMATE_RANGE_CHANGED)).toEqual(3);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.ANIMATE_RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.ANIMATE_RANGE_CHANGED)).toEqual(3);
 
     controller.clearHoldRanges();
     controller.addHoldRange(range1);
@@ -500,10 +514,10 @@ describe('os.time.TimelineController', function() {
     expect(target.length).toBe(1);
 
     // the resulting range in this case is the full range.
-    expect(goog.math.Range.equals(target[0], expectedRange)).toBe(true);
+    expect(Range.equals(target[0], expectedRange)).toBe(true);
 
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.HOLD_RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.HOLD_RANGE_CHANGED)).toEqual(4);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.HOLD_RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.HOLD_RANGE_CHANGED)).toEqual(4);
 
     controller.clearLoadRanges();
     controller.addLoadRange(range1);
@@ -519,10 +533,10 @@ describe('os.time.TimelineController', function() {
     expect(target.length).toBe(1);
 
     // the resulting range in this case is the full range.
-    expect(goog.math.Range.equals(target[0], expectedRange)).toBe(true);
+    expect(Range.equals(target[0], expectedRange)).toBe(true);
 
-    expect(controller.dispatchEvent).toHaveBeenCalledWith(os.time.TimelineEventType.RANGE_CHANGED);
-    expect(getDispatchEventCallCount(os.time.TimelineEventType.RANGE_CHANGED)).toEqual(3);
+    expect(controller.dispatchEvent).toHaveBeenCalledWith(TimelineEventType.RANGE_CHANGED);
+    expect(getDispatchEventCallCount(TimelineEventType.RANGE_CHANGED)).toEqual(3);
   });
 
   it('mutiple ranges then adding overlapping range should result in overlapping ranges getting combined', function() {
@@ -532,11 +546,11 @@ describe('os.time.TimelineController', function() {
     controller.setRange(controller.buildRange(start, end));
     controller.setDuration(10);
 
-    var range1 = new goog.math.Range(start + 10, start + 1000);
-    var range2 = new goog.math.Range(start + 5000, start + 10000);
-    var range3 = new goog.math.Range(start + 12000, start + 21000);
-    var expectOverlapRange = new goog.math.Range(range2.start, range3.end);
-    var overlappingRange = new goog.math.Range(range2.end - 500, range3.start + 100);
+    var range1 = new Range(start + 10, start + 1000);
+    var range2 = new Range(start + 5000, start + 10000);
+    var range3 = new Range(start + 12000, start + 21000);
+    var expectOverlapRange = new Range(range2.start, range3.end);
+    var overlappingRange = new Range(range2.end - 500, range3.start + 100);
 
     controller.addAnimateRange(range1);
     controller.addAnimateRange(range2);
@@ -552,9 +566,9 @@ describe('os.time.TimelineController', function() {
     // We should now have 2 ranges
     target = controller.getAnimationRanges();
     expect(target.length).toBe(2);
-    expect(goog.math.Range.equals(target[0], range1)).toBe(true);
+    expect(Range.equals(target[0], range1)).toBe(true);
     // Second range should now be the combination of 2 and 3.
-    expect(goog.math.Range.equals(target[1], expectOverlapRange)).toBe(true);
+    expect(Range.equals(target[1], expectOverlapRange)).toBe(true);
     // Start and end should also remain the samge
     expect(start).toBe(controller.getStart());
     expect(end).toBe(controller.getEnd());
@@ -574,9 +588,9 @@ describe('os.time.TimelineController', function() {
     // We should now have 2 ranges
     target = controller.getHoldRanges();
     expect(target.length).toBe(2);
-    expect(goog.math.Range.equals(target[0], range1)).toBe(true);
+    expect(Range.equals(target[0], range1)).toBe(true);
     // Second range should now be the combination of 2 and 3.
-    expect(goog.math.Range.equals(target[1], expectOverlapRange)).toBe(true);
+    expect(Range.equals(target[1], expectOverlapRange)).toBe(true);
     // Start and end should also remain the samge
     expect(start).toBe(controller.getStart());
     expect(end).toBe(controller.getEnd());
@@ -596,9 +610,9 @@ describe('os.time.TimelineController', function() {
     // We should now have 2 ranges
     target = controller.getLoadRanges();
     expect(target.length).toBe(2);
-    expect(goog.math.Range.equals(target[0], range1)).toBe(true);
+    expect(Range.equals(target[0], range1)).toBe(true);
     // Second range should now be the combination of 2 and 3.
-    expect(goog.math.Range.equals(target[1], expectOverlapRange)).toBe(true);
+    expect(Range.equals(target[1], expectOverlapRange)).toBe(true);
     // Start and end should not remain the samge
     expect(start).not.toBe(controller.getStart());
     expect(end).not.toBe(controller.getEnd());
@@ -611,11 +625,11 @@ describe('os.time.TimelineController', function() {
     controller.setRange(controller.buildRange(start, end));
     controller.setDuration(10);
 
-    var range1 = new goog.math.Range(start + 10, start + 1000);
-    var range2 = new goog.math.Range(start + 5000, start + 10000);
-    var range3 = new goog.math.Range(start + 12000, start + 21000);
-    var range4 = new goog.math.Range(range2.start, range3.start + 100);
-    var expectOverlapRange = new goog.math.Range(range2.start, range3.end);
+    var range1 = new Range(start + 10, start + 1000);
+    var range2 = new Range(start + 5000, start + 10000);
+    var range3 = new Range(start + 12000, start + 21000);
+    var range4 = new Range(range2.start, range3.start + 100);
+    var expectOverlapRange = new Range(range2.start, range3.end);
 
     controller.addAnimateRange(range1);
     controller.addAnimateRange(range2);
@@ -630,9 +644,9 @@ describe('os.time.TimelineController', function() {
     // We should now have 2 ranges
     target = controller.getAnimationRanges();
     expect(target.length).toBe(2);
-    expect(goog.math.Range.equals(target[0], range1)).toBe(true);
+    expect(Range.equals(target[0], range1)).toBe(true);
     // second range should now tbe the combined ragne of 2 and 3.
-    expect(goog.math.Range.equals(target[1], expectOverlapRange)).toBe(true);
+    expect(Range.equals(target[1], expectOverlapRange)).toBe(true);
     // Start / end should also remain the samge
     expect(start).toBe(controller.getStart());
     expect(end).toBe(controller.getEnd());
@@ -651,9 +665,9 @@ describe('os.time.TimelineController', function() {
     // We should now have 2 ranges
     target = controller.getHoldRanges();
     expect(target.length).toBe(2);
-    expect(goog.math.Range.equals(target[0], range1)).toBe(true);
+    expect(Range.equals(target[0], range1)).toBe(true);
     // second range should now tbe the combined ragne of 2 and 3.
-    expect(goog.math.Range.equals(target[1], expectOverlapRange)).toBe(true);
+    expect(Range.equals(target[1], expectOverlapRange)).toBe(true);
     // Start / end should also remain the samge
     expect(start).toBe(controller.getStart());
     expect(end).toBe(controller.getEnd());
@@ -672,9 +686,9 @@ describe('os.time.TimelineController', function() {
     // We should now have 2 ranges
     target = controller.getLoadRanges();
     expect(target.length).toBe(2);
-    expect(goog.math.Range.equals(target[0], range1)).toBe(true);
+    expect(Range.equals(target[0], range1)).toBe(true);
     // second range should now tbe the combined ragne of 2 and 3.
-    expect(goog.math.Range.equals(target[1], expectOverlapRange)).toBe(true);
+    expect(Range.equals(target[1], expectOverlapRange)).toBe(true);
     // Start / end should not remain the samge
     expect(start).not.toBe(controller.getStart());
     expect(end).not.toBe(controller.getEnd());
@@ -685,7 +699,7 @@ describe('os.time.TimelineController', function() {
     controller.setRange(controller.buildRange(end.getTime() - 86400000, end.getTime()));
     controller.setDuration(10);
 
-    var range = new goog.math.Range(0, 1);
+    var range = new Range(0, 1);
     range.start = 82800000;
     range.end = 5400000;
 
@@ -696,7 +710,7 @@ describe('os.time.TimelineController', function() {
     var target = controller.getSliceRanges();
     expect(target.length).toBe(2);
 
-    var range2 = new goog.math.Range();
+    var range2 = new Range();
     range2.start = 82900000;
     range2.end = 5500000;
 
@@ -720,11 +734,11 @@ describe('os.time.TimelineController', function() {
     controller.setRange(controller.buildRange(end.getTime() - 86400000, end.getTime()));
     controller.setDuration(10);
 
-    var range = new goog.math.Range(0, 1);
+    var range = new Range(0, 1);
     range.start = 5400000;
     range.end = 86400000;
 
-    var modrange = new goog.math.Range(0, 1);
+    var modrange = new Range(0, 1);
     modrange.start = 5400000;
     modrange.end = 86399000;
     // test update
@@ -735,7 +749,7 @@ describe('os.time.TimelineController', function() {
     var target = controller.getSliceRanges();
     expect(target.length).toBe(1);
 
-    var range2 = new goog.math.Range();
+    var range2 = new Range();
     range2.start = 0;
     range2.end = 5400000;
 
@@ -778,9 +792,9 @@ describe('os.time.TimelineController', function() {
     controller.setRange(controller.buildRange(start, end));
     controller.setDuration(10);
 
-    var range1 = new goog.math.Range(start + 10, start + 1000);
-    var range2 = new goog.math.Range(start + 5000, start + 10000);
-    var range3 = new goog.math.Range(start + 12000, start + 21000);
+    var range1 = new Range(start + 10, start + 1000);
+    var range2 = new Range(start + 5000, start + 10000);
+    var range3 = new Range(start + 12000, start + 21000);
 
     controller.addAnimateRange(range1);
     controller.addAnimateRange(range2);
@@ -807,9 +821,9 @@ describe('os.time.TimelineController', function() {
     controller.setRange(controller.buildRange(start, end));
     controller.setDuration(10);
 
-    var range1 = new goog.math.Range(start + 10, start + 1000);
-    var range2 = new goog.math.Range(start + 5000, start + 10000);
-    var range3 = new goog.math.Range(start + 12000, start + 21000);
+    var range1 = new Range(start + 10, start + 1000);
+    var range2 = new Range(start + 5000, start + 10000);
+    var range3 = new Range(start + 12000, start + 21000);
 
     controller.addAnimateRange(range1);
     controller.addAnimateRange(range2);
@@ -845,9 +859,9 @@ describe('os.time.TimelineController', function() {
     var end = 100000000;
 
     spyOn(controller, 'clearLoadRanges').andCallThrough();
-    controller.setRange(new goog.math.Range(start, end)); // calls clearLoadRanges once
-    controller.setRange(new goog.math.Range(start, end)); // does not call clearLoadRanges
-    controller.setRange(new goog.math.Range(start, end + 1000)); // calls clearLoadRanges second time
+    controller.setRange(new Range(start, end)); // calls clearLoadRanges once
+    controller.setRange(new Range(start, end)); // does not call clearLoadRanges
+    controller.setRange(new Range(start, end + 1000)); // calls clearLoadRanges second time
     expect(controller.clearLoadRanges.callCount).toEqual(2);
   });
 
@@ -868,9 +882,9 @@ describe('os.time.TimelineController', function() {
   });
 
   it('find nearest animate forward', function() {
-    var range1 = new goog.math.Range(0, 1000);
-    var range2 = new goog.math.Range(2000, 3000);
-    var range3 = new goog.math.Range(4000, 5000);
+    var range1 = new Range(0, 1000);
+    var range2 = new Range(2000, 3000);
+    var range3 = new Range(4000, 5000);
     controller.setRange(controller.buildRange(0, 5000));
     controller.setDuration(100);
     controller.clearAnimateRanges();
@@ -896,9 +910,9 @@ describe('os.time.TimelineController', function() {
   });
 
   it('find nearest load forward with no animation present', function() {
-    var range1 = new goog.math.Range(0, 1000);
-    var range2 = new goog.math.Range(2000, 3000);
-    var range3 = new goog.math.Range(4000, 5000);
+    var range1 = new Range(0, 1000);
+    var range2 = new Range(2000, 3000);
+    var range3 = new Range(4000, 5000);
     controller.clearLoadRanges();
     controller.addLoadRange(range1);
     controller.addLoadRange(range2);
@@ -923,9 +937,9 @@ describe('os.time.TimelineController', function() {
   });
 
   it('find nearest animation backward', function() {
-    var range1 = new goog.math.Range(0, 1000);
-    var range2 = new goog.math.Range(2000, 3000);
-    var range3 = new goog.math.Range(4000, 5000);
+    var range1 = new Range(0, 1000);
+    var range2 = new Range(2000, 3000);
+    var range3 = new Range(4000, 5000);
     controller.setRange(controller.buildRange(0, 5000));
     controller.setDuration(100);
     controller.clearAnimateRanges();
@@ -951,9 +965,9 @@ describe('os.time.TimelineController', function() {
   });
 
   it('find nearest load backward with no animation present', function() {
-    var range1 = new goog.math.Range(0, 1000);
-    var range2 = new goog.math.Range(2000, 3000);
-    var range3 = new goog.math.Range(4000, 5000);
+    var range1 = new Range(0, 1000);
+    var range2 = new Range(2000, 3000);
+    var range3 = new Range(4000, 5000);
     controller.clearLoadRanges();
     controller.addLoadRange(range1);
     controller.addLoadRange(range2);
