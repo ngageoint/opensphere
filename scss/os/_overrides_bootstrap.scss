@@ -49,7 +49,10 @@ $form-control-disabled-border: $gray-600 !default;
 .dropdown-item {
   cursor: pointer;
 
-  i.fa {
+  i.fa,
+  i.fab,
+  i.far,
+  i.fas {
     margin-right: ($spacer * .25);
   }
 }

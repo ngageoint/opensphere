@@ -508,14 +508,14 @@ os.ui.search.SearchBoxCtrl.prototype.getSearchIcon = function(search) {
        */
       const state = ss.isSubSearchEnabled();
       if (state === os.structs.TriState.ON) {
-        return 'fa-check-square-o';
+        return 'fas fa-check-square';
       } else if (state === os.structs.TriState.BOTH) {
-        return 'fa-minus-square-o';
+        return 'fas fa-minus-square';
       } else {
-        return 'fa-square-o';
+        return 'far fa-square';
       }
     } else {
-      return search.isEnabled() ? 'fa-check-square-o' : 'fa-square-o';
+      return search.isEnabled() ? 'fas fa-check-square' : 'far fa-square';
     }
   } else if (search.isEnabled()) {
     return 'fa-angle-double-right';

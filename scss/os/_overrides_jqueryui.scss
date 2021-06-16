@@ -123,7 +123,9 @@
     // This gets the same styles defined for dropdown-item. Used for when themes specify after the fact
     @extend .dropdown-item;
 
-    i.fa {
+    i.fa,
+    i.far,
+    i.fas {
       margin-right: ($spacer * .25);
     }
 
