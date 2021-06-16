@@ -492,7 +492,7 @@ class Controller {
     if (this.element_ && this.xScale_ && this.baseElement_) {
       var width = this.element_.innerWidth();
       var height = this.getHeight_();
-      var handleHeight = timelineUi.HANDLE_HEIGHT;
+      var handleHeight = timelineUi.getHandleHeight();
 
       this.xScale_.range([0, width]);
       this.zoom_.x(this.xScale_);
@@ -625,9 +625,9 @@ class Controller {
 
     var width = this.element_.innerWidth();
     var height = this.getHeight_();
-    var axisHeight = timelineUi.AXIS_HEIGHT;
-    var axisWidth = timelineUi.AXIS_WIDTH;
-    var handleHeight = timelineUi.HANDLE_HEIGHT;
+    var axisHeight = timelineUi.getAxisHeight();
+    var axisWidth = timelineUi.getAxisWidth();
+    var handleHeight = timelineUi.getHandleHeight();
 
     // initialize scale and axis properties
     if (!this.xScale_) {
@@ -874,8 +874,8 @@ class Controller {
    * @private
    */
   getAxisBgPoints_(height, width) {
-    var axisHeight = height - timelineUi.AXIS_HEIGHT;
-    var axisWidth = timelineUi.AXIS_WIDTH;
+    var axisHeight = height - timelineUi.getAxisHeight();
+    var axisWidth = timelineUi.getAxisWidth();
 
     var points = '0,1 ' + // start
         axisWidth + ',1 ' + // right to y-axis edge
@@ -1112,7 +1112,7 @@ class Controller {
    * @private
    */
   updateItems_() {
-    var height = this.getHeight_() - timelineUi.AXIS_HEIGHT - timelineUi.HANDLE_HEIGHT;
+    var height = this.getHeight_() - timelineUi.getAxisHeight() - timelineUi.getHandleHeight();
 
     for (var i = 0, n = this.items_.length; i < n; i++) {
       this.items_[i].render(height);
@@ -1397,8 +1397,8 @@ class Controller {
   brushCollectionChanged_(brushes) {
     if (brushes) {
       var height = this.getHeight_();
-      var axisHeight = timelineUi.AXIS_HEIGHT;
-      var handleHeight = timelineUi.HANDLE_HEIGHT;
+      var axisHeight = timelineUi.getAxisHeight();
+      var handleHeight = timelineUi.getHandleHeight();
       var element = /** @type {d3.Selection} */ (this.skipHoldElement_);
       for (var i = 0; i < brushes.length; i = i + 1) {
         if (!brushes[i].init) {

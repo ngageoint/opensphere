@@ -74,7 +74,7 @@ class OffArrows extends BaseItem {
    * @inheritDoc
    */
   initSVG(container, height) {
-    height = -timelineUi.HANDLE_HEIGHT;
+    height = -timelineUi.getHandleHeight();
 
     // init left group
     var left = /** @type {d3.Selection} */ (container.append('g'));
@@ -92,7 +92,7 @@ class OffArrows extends BaseItem {
    * @inheritDoc
    */
   render(opt_height) {
-    var height = -timelineUi.HANDLE_HEIGHT;
+    var height = -timelineUi.getHandleHeight();
 
     if (this.init) {
       var left = d3.select('.off-left');

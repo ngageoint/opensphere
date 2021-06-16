@@ -2,21 +2,64 @@ goog.module('os.ui.timeline');
 goog.module.declareLegacyNamespace();
 
 /**
+ * The timeline axis height.
  * @type {number}
  */
-const AXIS_HEIGHT = 30;
-
+let axisHeight = 30;
 
 /**
+ * The timeline axis width.
  * @type {number}
  */
-const AXIS_WIDTH = 30;
-
+let axisWidth = 30;
 
 /**
+ * The timeline handle height.
  * @type {number}
  */
-const HANDLE_HEIGHT = 15;
+let handleHeight = 15;
+
+/**
+ * Get the timeline axis height.
+ * @return {number} The height.
+ */
+const getAxisHeight = () => axisHeight;
+
+/**
+ * Set the timeline axis height.
+ * @param {number} value The height.
+ */
+const setAxisHeight = (value) => {
+  axisHeight = value;
+};
+
+/**
+ * Get the timeline axis width.
+ * @return {number} The width.
+ */
+const getAxisWidth = () => axisWidth;
+
+/**
+ * Set the timeline axis width.
+ * @param {number} value The width.
+ */
+const setAxisWidth = (value) => {
+  axisWidth = value;
+};
+
+/**
+ * Get the timeline handle height.
+ * @return {number} The height.
+ */
+const getHandleHeight = () => handleHeight;
+
+/**
+ * Set the timeline handle height.
+ * @param {number} value The height.
+ */
+const setHandleHeight = (value) => {
+  handleHeight = value;
+};
 
 /**
  * The scales used for snapping to "nice" values
@@ -156,9 +199,12 @@ const DragPan = {
 
 
 exports = {
-  AXIS_HEIGHT,
-  AXIS_WIDTH,
-  HANDLE_HEIGHT,
+  getAxisHeight,
+  setAxisHeight,
+  getAxisWidth,
+  setAxisWidth,
+  getHandleHeight,
+  setHandleHeight,
   SNAP_SCALE,
   normalizeExtent,
   formatMillis,
