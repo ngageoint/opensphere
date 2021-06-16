@@ -259,10 +259,10 @@ os.histo.DateBinMethod.prototype.getValue = function(item) {
   if (timestamp !== os.histo.DateBinMethod.MAGIC) {
     // avoid moment here if at all possible because moment.utc() is much slower than using native Date functions. it's
     // less impactful in getBinLabel because that is only called once per bin
-    var d = new Date(/** @type {Object|number|string|null|undefined} */ (timestamp + os.time.timeOffset));
+    var d = new Date(/** @type {Object|number|string|null|undefined} */ (timestamp + os.time.getTimeOffset()));
     var d2 = null;
     if (timedown && this.arrayKeys) {
-      d2 = new Date(/** @type {Object|number|string|null|undefined} */ (timedown + os.time.timeOffset));
+      d2 = new Date(/** @type {Object|number|string|null|undefined} */ (timedown + os.time.getTimeOffset()));
     }
 
     switch (this.binType_) {

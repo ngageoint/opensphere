@@ -145,7 +145,7 @@ os.ui.timeline.multiFormat_ = null;
  * @private
  */
 os.ui.timeline.format_ = function(d) {
-  var o = os.time.timeOffset ? new Date(d.getTime() + os.time.timeOffset) : d;
+  var o = os.time.getTimeOffset() ? new Date(d.getTime() + os.time.getTimeOffset()) : d;
   return os.ui.timeline.multiFormat_(o);
 };
 
@@ -759,7 +759,7 @@ os.ui.timeline.TimelineCtrl.prototype.getTicks = function() {
 
   // We want 10ish labels for the most part
   var tickSize = os.ui.timeline.TimelineCtrl.getSnap((dates[1] - dates[0]) / numLabels);
-  var offset = os.time.timeOffset;
+  var offset = os.time.getTimeOffset();
   var begin = dates[0] + offset;
   var first = begin + tickSize - (begin % tickSize);
   var ticks = [];
@@ -1401,7 +1401,7 @@ os.ui.timeline.TimelineCtrl.prototype.updateItems_ = function() {
  * @private
  */
 os.ui.timeline.TimelineCtrl.prototype.roundExtent_ = function(time) {
-  var offset = os.time.timeOffset;
+  var offset = os.time.getTimeOffset();
   return this.snapInterval_ > 0 ? Math.round((time + offset) / this.snapInterval_) * this.snapInterval_ - offset : time;
 };
 

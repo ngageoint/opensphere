@@ -447,13 +447,13 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onScaleEvent = function(event, sca
     }
   }
 
-  var s = new Date(scaleOptions['start'] + os.time.timeOffset);
-  var e = new Date(scaleOptions['end'] + os.time.timeOffset);
+  var s = new Date(scaleOptions['start'] + os.time.getTimeOffset());
+  var e = new Date(scaleOptions['end'] + os.time.getTimeOffset());
 
   format += ' ';
 
-  this.scope['start'] = os.time.momentFormat(s, format, true) + os.time.timeOffsetLabel;
-  this.scope['end'] = os.time.momentFormat(e, format, true) + os.time.timeOffsetLabel;
+  this.scope['start'] = os.time.momentFormat(s, format, true) + os.time.getTimeOffsetLabel();
+  this.scope['end'] = os.time.momentFormat(e, format, true) + os.time.getTimeOffsetLabel();
 
   this.updateHistograms_();
 
@@ -1621,8 +1621,8 @@ os.ui.timeline.AbstractTimelineCtrl.prototype.onMenuEvent = function(event) {
 
   if (begin !== undefined && end !== undefined) {
     if (doOffset) {
-      begin.setTime(begin.getTime() - os.time.timeOffset);
-      end.setTime(end.getTime() - os.time.timeOffset);
+      begin.setTime(begin.getTime() - os.time.getTimeOffset());
+      end.setTime(end.getTime() - os.time.getTimeOffset());
     }
 
     var item = timeline.getItem('window');

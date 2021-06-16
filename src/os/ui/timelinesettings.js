@@ -103,7 +103,7 @@ os.ui.TimeSettingsCtrl.prototype.onDestroy = function() {
 os.ui.TimeSettingsCtrl.prototype.populate = function() {
   var tlc = os.time.TimelineController.getInstance();
 
-  this.scope['offset'] = 'UTC' + (os.time.timeOffsetLabel == 'Z' ? '+0000' : os.time.timeOffsetLabel);
+  this.scope['offset'] = 'UTC' + (os.time.getTimeOffsetLabel() == 'Z' ? '+0000' : os.time.getTimeOffsetLabel());
   this.scope['loadRanges'] = this.fromRangesToDates(tlc.getLoadRanges());
   this.scope['sliceRanges'] = this.fromSlicesToHMS(tlc.getSliceRanges());
 };
@@ -253,8 +253,8 @@ os.ui.TimeSettingsCtrl.prototype.fromRangesToDates = function(ranges) {
   var dates = /** @type {Array<Object>}  */ ([]);
   for (var i = 0; i < ranges.length; i++) {
     dates.push({
-      'start': (new Date(ranges[i].start + os.time.timeOffset)).toISOString(),
-      'end': (new Date(ranges[i].end + os.time.timeOffset)).toISOString()
+      'start': (new Date(ranges[i].start + os.time.getTimeOffset())).toISOString(),
+      'end': (new Date(ranges[i].end + os.time.getTimeOffset())).toISOString()
     });
   }
   return dates;
@@ -297,7 +297,7 @@ os.ui.TimeSettingsCtrl.prototype.fromSlicesToHMS = function(ranges) {
  * @protected
  */
 os.ui.TimeSettingsCtrl.prototype.timeFromField = function(field) {
-  return (typeof field === 'string' ? os.time.parse(field, null, true) : field).getTime() - os.time.timeOffset;
+  return (typeof field === 'string' ? os.time.parse(field, null, true) : field).getTime() - os.time.getTimeOffset();
 };
 
 

@@ -157,8 +157,8 @@ os.ui.AnimationSettingsCtrl.UNITS = [{
 os.ui.AnimationSettingsCtrl.prototype.populate = function() {
   var tlc = os.time.TimelineController.getInstance();
 
-  this.loadStart = new Date(tlc.getStart() + os.time.timeOffset);
-  this.loadEnd = new Date(tlc.getEnd() + os.time.timeOffset);
+  this.loadStart = new Date(tlc.getStart() + os.time.getTimeOffset());
+  this.loadEnd = new Date(tlc.getEnd() + os.time.getTimeOffset());
   this.scope['autoConfig'] = tlc.getAutoConfigure();
 
   // if no animation ranges are defined, the loop is equal to the loaded range
@@ -168,8 +168,8 @@ os.ui.AnimationSettingsCtrl.prototype.populate = function() {
     this.scope['loopStart'] = this.loopStart = this.loadStart;
     this.scope['loopEnd'] = this.loopEnd = this.loadEnd;
   } else {
-    this.scope['loopStart'] = this.loopStart = new Date(tlc.getLoopStart() + os.time.timeOffset);
-    this.scope['loopEnd'] = this.loopEnd = new Date(tlc.getLoopEnd() + os.time.timeOffset);
+    this.scope['loopStart'] = this.loopStart = new Date(tlc.getLoopStart() + os.time.getTimeOffset());
+    this.scope['loopEnd'] = this.loopEnd = new Date(tlc.getLoopEnd() + os.time.getTimeOffset());
   }
 
   // if the lock is used, use the original range for the window, not the current offset
@@ -344,8 +344,8 @@ os.ui.AnimationSettingsCtrl.prototype.accept = function() {
 
   // if a manual range was provided, set it now
   if (!this.scope['autoLoop']) {
-    var loopStart = this.loopStart.getTime() - os.time.timeOffset;
-    var loopEnd = this.loopEnd.getTime() - os.time.timeOffset;
+    var loopStart = this.loopStart.getTime() - os.time.getTimeOffset();
+    var loopEnd = this.loopEnd.getTime() - os.time.getTimeOffset();
     if (loopStart != loopEnd) {
       // only add the range if the start/end aren't equal
       var range = new goog.math.Range(loopStart, loopEnd);

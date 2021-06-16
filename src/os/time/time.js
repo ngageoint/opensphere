@@ -260,10 +260,22 @@ const TIME_REGEXES = {
 let timeOffset = 0;
 
 /**
+ * Get the time offset from UTC in ms.
+ * @return {number}
+ */
+const getTimeOffset = () => timeOffset;
+
+/**
  * Time offset label (e.g. "-0500")
- * @type {!string}
+ * @type {string}
  */
 let timeOffsetLabel = 'Z';
+
+/**
+ * Get the time offset label (e.g. "-0500").
+ * @return {string}
+ */
+const getTimeOffsetLabel = () => timeOffsetLabel;
 
 /**
  * milliseconds in day
@@ -681,7 +693,6 @@ const disposeOffset = function() {
 
 /**
  * Updates offset from settings
- *
  */
 const updateOffset_ = function() {
   timeOffset = /** @type {number} */ (Settings.getInstance().get(['time', 'offset'], 0));
@@ -850,8 +861,8 @@ exports = {
   TIME_FORMATS,
   CUSTOM_TIME_FORMATS,
   TIME_REGEXES,
-  timeOffset,
-  timeOffsetLabel,
+  getTimeOffset,
+  getTimeOffsetLabel,
   millisecondsInDay,
   ceil,
   floor,
