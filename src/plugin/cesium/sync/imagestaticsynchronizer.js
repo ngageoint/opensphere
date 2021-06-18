@@ -162,7 +162,7 @@ class ImageStaticSynchronizer extends CesiumSynchronizer {
   /**
    * Create a Cesium material from an image
    *
-   * @param {HTMLCanvasElement|HTMLVideoElement|Image} image
+   * @param {HTMLCanvasElement|HTMLVideoElement|Image|string} image
    * @return {Cesium.Material}
    */
   createImageMaterial(image) {

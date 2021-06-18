@@ -954,7 +954,7 @@ class KMLNode extends SlickTreeNode {
       if (item.editable && item.feature_) {
         return item.layerUI || 'defaultlayerui';
       } else if (item.image_) {
-        return item.image_.layerUi_;
+        return item.image_.getLayerUI();
       }
     }
 

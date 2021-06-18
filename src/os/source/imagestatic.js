@@ -11,6 +11,7 @@ goog.require('os.ol.image');
  * @extends {ol.source.ImageStatic}
  * @param {olx.source.ImageStaticOptions} options
  * @param {number} rotation
+ * @suppress {accessControls}
  */
 os.source.ImageStatic = function(options, rotation) {
   os.source.ImageStatic.base(this, 'constructor', options);
