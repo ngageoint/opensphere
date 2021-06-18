@@ -7,11 +7,11 @@ const GoogEventType = goog.require('goog.events.EventType');
 const Collection = goog.require('ol.Collection');
 const OLMap = goog.require('ol.Map');
 const View = goog.require('ol.View');
-const {createEmpty, isEmpty} = goog.require('ol.extent');
+const {getCenter: getExtentCenter} = goog.require('ol.extent');
 
 const {ROOT} = goog.require('os');
-const {filterFalsey, reduceExtentFromLayers} = goog.require('os.fn');
 const osMap = goog.require('os.map');
+const {getIMapContainer} = goog.require('os.map.instance');
 const Module = goog.require('os.ui.Module');
 const {resize, removeResize} = goog.require('os.ui');
 const {
@@ -192,17 +192,11 @@ class Controller {
    * Angular $onInit lifecycle call.
    */
   $onInit() {
+    this.view = this.createView();
+
     // Create two OpenLayers maps that share a view and are stacked on top of one another.
     const leftEl = this.element.find(Selector.MAP_LEFT)[0];
     const rightEl = this.element.find(Selector.MAP_RIGHT)[0];
-
-    this.view = new View({
-      center: [0, 0],
-      zoom: 3,
-      projection: osMap.PROJECTION,
-      minZoom: osMap.MIN_ZOOM,
-      maxZoom: osMap.MAX_ZOOM
-    });
 
     this.leftMap = new OLMap({
       controls: [],
@@ -228,9 +222,6 @@ class Controller {
     const compareOptions = /** @type {LayerCompareOptions} */ (this.scope);
     this.setCollectionLayers(this.leftLayers, compareOptions.left);
     this.setCollectionLayers(this.rightLayers, compareOptions.right);
-
-    // Fit the view to the available layers.
-    this.fit();
   }
 
   /**
@@ -242,20 +233,26 @@ class Controller {
   }
 
   /**
-   * Fit layers to the window.
-   * @param {Array<!Layer>=} opt_layers The layer(s) to fit. Defaults to all layers.
-   * @export
+   * Create an OpenLayers view initialized from the main map's view.
+   * @return {!View} The view.
+   * @protected
    */
-  fit(opt_layers) {
-    const layers = opt_layers || this.leftLayers.getArray().concat(this.rightLayers.getArray());
-    if (layers && this.view) {
-      let extent = layers.filter(filterFalsey).reduce(reduceExtentFromLayers, createEmpty());
-      if (isEmpty(extent)) {
-        extent = osMap.PROJECTION.getExtent();
-      }
+  createView() {
+    const mapContainer = getIMapContainer();
+    const mainMap = mapContainer ? mapContainer.getMap() : null;
+    const mainView = mainMap ? mainMap.getView() : mainMap;
 
-      this.view.fit(extent);
-    }
+    const projection = osMap.PROJECTION;
+    const center = mainView ? mainView.getCenter() : getExtentCenter(projection.getExtent());
+    const zoom = mainView ? mainView.getZoom() : osMap.DEFAULT_ZOOM;
+
+    return new View({
+      center,
+      zoom,
+      projection,
+      minZoom: osMap.MIN_ZOOM,
+      maxZoom: osMap.MAX_ZOOM
+    });
   }
 
   /**
