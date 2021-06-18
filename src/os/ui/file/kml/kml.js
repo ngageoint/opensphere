@@ -352,6 +352,17 @@ os.ui.file.kml.replaceGoogleUri = function(src) {
 
 
 /**
+ * Replace our mirrored source URL with with the application image path.
+ * It doesn't really make sense to treat it as an external URL, does it?
+ * @param {string|null|undefined} src The image source URL.
+ * @return {!string} The icon src.
+ */
+os.ui.file.kml.replaceExportableUri = function(src) {
+  return src.replace(os.ui.file.kml.mirror, os.ui.file.kml.ICON_PATH);
+};
+
+
+/**
  * Replace the Google icon URL with the non-relative image URL.
  *
  * @param {string|null|undefined} src The image source URL.

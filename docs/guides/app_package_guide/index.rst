@@ -58,7 +58,7 @@ The ``directories`` property tells the resolver where certain resources for the 
 
 For the example app, we're providing:
 
-* ``scss``: Tells the ``scss`` plugin where to find files to include in the ``node-sass`` build.
+* ``scss``: Tells the ``scss`` plugin where to find files to include in the ``sass`` build.
 * ``views``: Tells the ``copy-views`` plugin where to find HTML templates to copy for the distribution.
 
 Scripts
@@ -71,7 +71,7 @@ Dev Dependencies
 
 The ``devDependencies`` section in the example app uses the same build tooling as OpenSphere, but you're welcome to change how your application is linted, tested, etc. The only dev dependencies required to build your code with OpenSphere's are ``opensphere-build-resolver`` and ``google-closure-compiler``.
 
-While it's possible to package up your distribution using something like `Webpack <https://webpack.js.org/>`_, the example uses opensphere-build-index_ for simplicity and to stay in parity with OpenSphere. It also uses ``eslint`` for linting, and ``node-sass`` to compile SCSS, but again these are optional. For generating a debug build (the `index.html` in the root project directory), opensphere-build-closure-helper_ is also required.
+While it's possible to package up your distribution using something like `Webpack <https://webpack.js.org/>`_, the example uses opensphere-build-index_ for simplicity and to stay in parity with OpenSphere. It also uses ``eslint`` for linting, and ``sass`` to compile SCSS, but again these are optional. For generating a debug build (the `index.html` in the root project directory), opensphere-build-closure-helper_ is also required.
 
 The remaining dev dependencies are for project management tasks like git hooks and npm scripts.
 

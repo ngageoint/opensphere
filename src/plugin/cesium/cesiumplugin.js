@@ -1,7 +1,6 @@
 goog.module('plugin.cesium.Plugin');
 goog.module.declareLegacyNamespace();
 
-const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const MapContainer = goog.require('os.MapContainer');
 const settings = goog.require('os.config.Settings');
 const DataManager = goog.require('os.data.DataManager');
@@ -9,6 +8,7 @@ const ProviderEntry = goog.require('os.data.ProviderEntry');
 const osImplements = goog.require('os.implements');
 const Group = goog.require('os.layer.Group');
 const ILayer = goog.require('os.layer.ILayer');
+const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const ImportManager = goog.require('os.ui.im.ImportManager');
 const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');

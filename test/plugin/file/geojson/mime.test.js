@@ -1,24 +1,27 @@
 goog.require('os.file.File');
+goog.require('os.file.mime');
 goog.require('os.file.mime.mock');
 goog.require('plugin.file.geojson.mime');
 
 describe('os.file.mime.json', function() {
+  const osFileMime = goog.module.get('os.file.mime');
+  const mime = goog.module.get('plugin.file.geojson.mime');
   it('should not detect files that are not json files', function() {
-    os.file.mime.mock.testFiles([
+    osFileMime.mock.testFiles([
       '/base/test/plugin/file/kml/kml_test.xml',
       '/base/test/resources/bin/rand.bin',
       '/base/test/resources/json/partial_object.json'],
-        os.file.mime.mock.testNo(plugin.file.geojson.mime.TYPE));
+        osFileMime.mock.testNo(mime.TYPE));
   });
 
   it('should detect files that are json files', function() {
-    os.file.mime.mock.testFiles([
+    osFileMime.mock.testFiles([
       '/base/test/plugin/file/geojson/10k.json'],
-        os.file.mime.mock.testYes(plugin.file.geojson.mime.TYPE));
+        osFileMime.mock.testYes(mime.TYPE));
   });
 
   it('should register itself with mime detection', function() {
-    var chain = os.file.mime.getTypeChain(plugin.file.geojson.mime.TYPE).join(', ');
+    var chain = osFileMime.getTypeChain(mime.TYPE).join(', ');
     expect(chain).toBe('application/octet-stream, text/plain, application/json, application/vnd.geo+json');
   });
 });

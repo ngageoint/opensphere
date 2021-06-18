@@ -3,6 +3,7 @@ goog.provide('os.ui.layer.iconStyleControlsDirective');
 
 goog.require('goog.Disposable');
 goog.require('os.ui.Module');
+goog.require('os.ui.layer.VectorStyleControlsEventType');
 
 
 /**

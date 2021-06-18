@@ -1,53 +1,58 @@
-goog.provide('os.command.VectorLayerFillOpacity');
+goog.module('os.command.VectorLayerFillOpacity');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.asserts');
-goog.require('os.command.AbstractVectorStyle');
-goog.require('os.metrics');
+const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
+const metrics = goog.require('os.metrics');
+const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
 
 
 /**
  * Changes the fill opacity of a vector layer.
- * @param {string} layerId The layer id.
- * @param {number} opacity The new fill opacity value.
- * @param {number|null=} opt_oldOpacity The old fill opacity value.
- * @extends {os.command.AbstractVectorStyle}
- * @constructor
  */
-os.command.VectorLayerFillOpacity = function(layerId, opacity, opt_oldOpacity) {
-  os.command.VectorLayerFillOpacity.base(this, 'constructor', layerId, opacity, opt_oldOpacity);
-  this.title = 'Change Layer Fill Opacity';
-  this.metricKey = os.metrics.Layer.VECTOR_FILL_OPACITY;
+class VectorLayerFillOpacity extends AbstractVectorStyle {
+  /**
+   * Constructor.
+   * @param {string} layerId The layer id.
+   * @param {number} opacity The new fill opacity value.
+   * @param {number|null=} opt_oldOpacity The old fill opacity value.
+   */
+  constructor(layerId, opacity, opt_oldOpacity) {
+    super(layerId, opacity, opt_oldOpacity);
+    this.title = 'Change Layer Fill Opacity';
+    this.metricKey = metrics.Layer.VECTOR_FILL_OPACITY;
 
-  if (this.value == null) {
-    this.value = os.style.DEFAULT_FILL_ALPHA;
-  }
-};
-goog.inherits(os.command.VectorLayerFillOpacity, os.command.AbstractVectorStyle);
-
-
-/**
- * @inheritDoc
- */
-os.command.VectorLayerFillOpacity.prototype.getOldValue = function() {
-  var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-  var color = os.style.getConfigColor(config, true, os.style.StyleField.FILL);
-  return color && color.length === 4 ? color[3] : os.style.DEFAULT_FILL_ALPHA;
-};
-
-
-/**
- * @inheritDoc
- */
-os.command.VectorLayerFillOpacity.prototype.applyValue = function(config, value) {
-  var color = os.style.getConfigColor(config, true, os.style.StyleField.FILL) ||
-      os.style.getConfigColor(config, true);
-
-  if (color) {
-    color[3] = value;
-
-    var colorString = os.style.toRgbaString(color);
-    os.style.setFillColor(config, colorString);
+    if (this.value == null) {
+      this.value = osStyle.DEFAULT_FILL_ALPHA;
+    }
   }
 
-  os.command.VectorLayerFillOpacity.base(this, 'applyValue', config, value);
-};
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+    var color = osStyle.getConfigColor(config, true, StyleField.FILL);
+    return color && color.length === 4 ? color[3] : osStyle.DEFAULT_FILL_ALPHA;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  applyValue(config, value) {
+    var color = osStyle.getConfigColor(config, true, StyleField.FILL) ||
+        osStyle.getConfigColor(config, true);
+
+    if (color) {
+      color[3] = value;
+
+      var colorString = osStyle.toRgbaString(color);
+      osStyle.setFillColor(config, colorString);
+    }
+
+    super.applyValue(config, value);
+  }
+}
+
+exports = VectorLayerFillOpacity;

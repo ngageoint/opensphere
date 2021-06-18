@@ -4,11 +4,11 @@ const asserts = goog.require('goog.asserts');
 const olcsCore = goog.require('olcs.core');
 const geo = goog.require('os.geo');
 const {GeometryInstanceId} = goog.require('plugin.cesium');
-const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
-const {getColor, getLineWidthFromStyle} = goog.require('plugin.cesium.sync.style');
-const {getDashPattern} = goog.require('plugin.cesium.sync.linestring');
-const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
 const {createColoredPrimitive, createGeometryInstance} = goog.require('plugin.cesium.primitive');
+const {getHeightReference} = goog.require('plugin.cesium.sync.HeightReference');
+const getTransformFunction = goog.require('plugin.cesium.sync.getTransformFunction');
+const {getDashPattern} = goog.require('plugin.cesium.sync.linestring');
+const {getColor, getLineWidthFromStyle} = goog.require('plugin.cesium.sync.style');
 
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');

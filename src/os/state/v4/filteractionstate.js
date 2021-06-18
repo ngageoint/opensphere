@@ -4,11 +4,13 @@ goog.require('goog.dom.xml');
 goog.require('goog.log');
 goog.require('goog.log.Logger');
 goog.require('os.data.OSDataManager');
-goog.require('os.im.action.FilterActionEntry');
+goog.require('os.im.action');
 goog.require('os.im.action.filter');
 goog.require('os.state.AbstractState');
 goog.require('os.state.XMLState');
 goog.require('os.xml');
+
+goog.requireType('os.im.action.FilterActionEntry');
 
 
 

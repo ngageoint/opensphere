@@ -34,7 +34,6 @@ goog.require('os.ui.menu.windows');
 goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
 goog.require('os.ui.uiSwitchDirective');
 goog.require('os.ui.windowSelector');
-goog.require('plugin.places.ui.placesDirective');
 
 
 /**
@@ -135,9 +134,13 @@ os.ui.LayersCtrl = function($scope, $element) {
   this.scope['tilesBtnIcon'] = os.ROOT + 'images/tiles-base.png';
   this.scope['featuresBtnIcon'] = os.ROOT + 'images/features-base.png';
 
+  this.scope['createFolderTooltip'] = os.layer.folder.CREATE_PROMPT;
+  this.scope['viewEnabledTooltip'] = 'Automatically group layers based on the Group By selection. Disable to ' +
+      'manually organize layers in folders.';
+
   this.init();
 
-  os.layer.folder.setFolderMenuEnabled(!this.scope['view']);
+  os.layer.folder.setFolderMenuEnabled(!this.scope['viewEnabled']);
 };
 goog.inherits(os.ui.LayersCtrl, os.ui.slick.AbstractGroupByTreeSearchCtrl);
 
@@ -154,7 +157,6 @@ os.ui.LayersCtrl.SKIP_TOGGLE_FUNCS = [];
  * @type {!Object<string, os.data.groupby.INodeGroupBy>}
  */
 os.ui.LayersCtrl.VIEWS = {
-  'Folder': null,
   'Recently Updated': new os.data.groupby.DateGroupBy(true),
   'Source': new os.data.groupby.LayerProviderGroupBy(),
   'Tag': new os.ui.data.groupby.TagGroupBy(true),
@@ -193,13 +195,41 @@ os.ui.LayersCtrl.prototype.close = function() {
 
 
 /**
+ * Create a new folder.
+ *
+ * @export
+ */
+os.ui.LayersCtrl.prototype.createFolder = function() {
+  const createOptions = {
+    id: goog.string.getRandomString(),
+    type: 'folder',
+    name: 'New Folder',
+    children: [],
+    parentId: '',
+    collapsed: false
+  };
+
+  os.layer.folder.createOrEditFolder(createOptions, (name) => {
+    createOptions.name = name;
+    os.layer.FolderManager.getInstance().createFolder(createOptions);
+
+    // Disable automatic grouping, if enabled.
+    if (this.scope['viewEnabled']) {
+      this.scope['viewEnabled'] = false;
+      os.ui.apply(this.scope);
+    }
+  });
+};
+
+
+/**
  * Change event handler for the groupBy control
  *
  * @export
  */
 os.ui.LayersCtrl.prototype.onGroupByChanged = function() {
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.AddData.GROUP_BY, 1);
-  os.layer.folder.setFolderMenuEnabled(!this.scope['view']);
+  os.layer.folder.setFolderMenuEnabled(!this.scope['viewEnabled']);
   this.search();
 };
 

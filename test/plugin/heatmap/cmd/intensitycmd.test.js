@@ -1,31 +1,40 @@
+goog.require('os.layer.LayerType');
+goog.require('os.source.Vector');
+goog.require('plugin.heatmap');
 goog.require('plugin.heatmap.HeatmapLayerConfig');
 goog.require('plugin.heatmap.cmd.Intensity');
 
 
 describe('plugin.heatmap.cmd.Intensity', function() {
+  const LayerType = goog.module.get('os.layer.LayerType');
+  const VectorSource = goog.module.get('os.source.Vector');
+  const heatmap = goog.module.get('plugin.heatmap');
+  const HeatmapLayerConfig = goog.module.get('plugin.heatmap.HeatmapLayerConfig');
+  const Intensity = goog.module.get('plugin.heatmap.cmd.Intensity');
+
   var createLayer = function() {
     var options = {
       'id': 'heatmapLayer',
-      'source': new os.source.Vector(),
+      'source': new VectorSource(),
       'title': 'My Heatmap',
       'animate': false,
-      'layerType': os.layer.LayerType.FEATURES,
+      'layerType': LayerType.FEATURES,
       'explicitType': '',
-      'type': plugin.heatmap.HeatmapLayerConfig.ID,
+      'type': heatmap.ID,
       'loadOnce': true
     };
 
-    var layerConfig = new plugin.heatmap.HeatmapLayerConfig();
+    var layerConfig = new HeatmapLayerConfig();
     return layerConfig.createLayer(options);
   };
 
   it('should execute by setting the new intensity value and revert by setting the old', function() {
     var layer = createLayer();
 
-    spyOn(plugin.heatmap.cmd.Intensity.prototype, 'getLayer').andCallFake(function() {
+    spyOn(Intensity.prototype, 'getLayer').andCallFake(function() {
       return layer;
     });
-    var cmd = new plugin.heatmap.cmd.Intensity('heatmapLayer', 3);
+    var cmd = new Intensity('heatmapLayer', 3);
 
     cmd.execute();
     expect(layer.getIntensity()).toBe(3);

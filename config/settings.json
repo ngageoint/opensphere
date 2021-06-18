@@ -63,7 +63,7 @@
         },
         "maps": {
           "streetmap": {
-            "title": "Street Map",
+            "title": "Street Map (Web Mercator)",
             "type": "BaseMap",
             "baseType": "XYZ",
             "provider": "ArcGIS Online",
@@ -85,7 +85,7 @@
             ]
           },
           "streetmap-4326": {
-            "title": "Street Map",
+            "title": "Street Map (Geographic)",
             "type": "BaseMap",
             "baseType": "XYZ",
             "provider": "ArcGIS Online",
@@ -108,7 +108,7 @@
             ]
           },
           "worldimagery": {
-            "title": "World Imagery",
+            "title": "World Imagery (Web Mercator)",
             "type": "BaseMap",
             "baseType": "XYZ",
             "provider": "ArcGIS Online",
@@ -133,7 +133,7 @@
             ]
           },
           "worldimagery-4326": {
-            "title": "World Imagery",
+            "title": "World Imagery (Geographic)",
             "type": "BaseMap",
             "baseType": "XYZ",
             "provider": "ArcGIS Online",

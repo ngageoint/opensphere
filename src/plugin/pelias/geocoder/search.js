@@ -1,152 +1,145 @@
-goog.provide('plugin.pelias.geocoder.Search');
+goog.module('plugin.pelias.geocoder.Search');
 
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('ol.Feature');
-goog.require('ol.format.GeoJSON');
-goog.require('ol.geom.Point');
-goog.require('os.alert.AlertEventSeverity');
-goog.require('os.alert.AlertManager');
-goog.require('os.config.Settings');
-goog.require('os.extent');
-goog.require('os.geo');
-goog.require('os.search.AbstractUrlSearch');
-goog.require('plugin.pelias.geocoder.AttrResult');
-goog.require('plugin.pelias.geocoder.Result');
+const log = goog.require('goog.log');
+const GeoJSON = goog.require('ol.format.GeoJSON');
+const olProj = goog.require('ol.proj');
+const MapContainer = goog.require('os.MapContainer');
+const Settings = goog.require('os.config.Settings');
+const osExtent = goog.require('os.extent');
+const osMap = goog.require('os.map');
+const osProj = goog.require('os.proj');
+const AbstractUrlSearch = goog.require('os.search.AbstractUrlSearch');
+const {ID} = goog.require('plugin.pelias.geocoder');
+const Result = goog.require('plugin.pelias.geocoder.Result');
 
-
-
-/**
- * Searches via the Pelias Geocoder API
- *
- * @param {string} name
- * @extends {os.search.AbstractUrlSearch}
- * @constructor
- */
-plugin.pelias.geocoder.Search = function(name) {
-  plugin.pelias.geocoder.Search.base(this, 'constructor', plugin.pelias.geocoder.Plugin.ID, name);
-  this.type = plugin.pelias.geocoder.Plugin.ID;
-
-  /**
-   * @type {ol.format.GeoJSON}
-   * @protected
-   */
-  this.format = new ol.format.GeoJSON();
-
-  /**
-   * The logger
-   * @type {goog.log.Logger}
-   * @private
-   */
-  this.log_ = plugin.pelias.geocoder.Search.LOGGER_;
-};
-goog.inherits(plugin.pelias.geocoder.Search, os.search.AbstractUrlSearch);
+const Logger = goog.requireType('goog.log.Logger');
+const Request = goog.requireType('os.net.Request');
 
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {Logger}
  */
-plugin.pelias.geocoder.Search.LOGGER_ = goog.log.getLogger('plugin.pelias.geocoder.Search');
+const logger = log.getLogger('plugin.pelias.geocoder.Search');
 
 
 /**
- * @inheritDoc
+ * Searches via the Pelias Geocoder API
  */
-plugin.pelias.geocoder.Search.prototype.getSearchUrl = function(term, opt_start, opt_pageSize) {
-  var url = /** @type {?string} */ (os.settings.get(['plugin', 'pelias', 'geocoder', 'url']));
+class Search extends AbstractUrlSearch {
+  /**
+   * Constructor.
+   * @param {string} name
+   */
+  constructor(name) {
+    super(ID, name);
+    this.type = ID;
 
-  var boundary = /** @type {boolean} */ (os.settings.get(['plugin', 'pelias', 'geocoder', 'extentParams']));
-
-  if (boundary) {
-    // if the view is small enough, we'll apply a bounding rectangle to the search
-    // defaults to 200km
-    var threshold =
-    /** @type {number} */ (os.settings.get(['plugin', 'pelias', 'geocoder', 'extentThreshold'], 200000));
-    var extent = os.MapContainer.getInstance().getMap().getExtent();
-
-    // translate to lon/lat
-    extent = ol.proj.transformExtent(extent, os.map.PROJECTION, os.proj.EPSG4326);
-    extent = os.extent.normalize(extent, undefined, undefined, os.proj.EPSG4326, extent);
-    var distance = osasm.geodesicInverse(extent.slice(0, 2), extent.slice(2, 4)).distance;
-
-    if (distance <= threshold) {
-      var boundaryText = '&boundary.rect.min_lat=' + extent[1]
-        + '&boundary.rect.min_lon=' + extent[0]
-        + '&boundary.rect.max_lat=' + extent[3]
-        + '&boundary.rect.max_lon=' + extent[2];
-      url += boundaryText;
-    }
+    /**
+     * @type {GeoJSON}
+     * @protected
+     */
+    this.format = new GeoJSON();
   }
 
-  // Add the focus.point modifiers to the URL if enabled and we are zoomed in to at least zoom level 4.
-  var focuspoint = /** @type {boolean} */ (os.settings.get(['plugin', 'pelias', 'geocoder', 'focusPoint']));
-  if (focuspoint) {
-    var threshold = /** @type {number} */ (os.settings.get(['plugin', 'pelias', 'geocoder', 'focusPointMinZoom'], 4.0));
-    var currentZoom = os.MapContainer.getInstance().getMap().getView().getZoom();
-    if (currentZoom >= threshold) {
-      var centre = os.MapContainer.getInstance().getMap().getView().getCenter();
-      if (centre) {
-        var centreLonLat = ol.proj.toLonLat(centre, os.map.PROJECTION);
-        var focusPointText = '&focus.point.lat=' + centreLonLat[1] + '&focus.point.lon=' + centreLonLat[0];
-        url += focusPointText;
+  /**
+   * @inheritDoc
+   */
+  getSearchUrl(term, opt_start, opt_pageSize) {
+    var settings = Settings.getInstance();
+    var url = /** @type {?string} */ (settings.get(['plugin', 'pelias', 'geocoder', 'url']));
+
+    var boundary = /** @type {boolean} */ (settings.get(['plugin', 'pelias', 'geocoder', 'extentParams']));
+
+    if (boundary) {
+      // if the view is small enough, we'll apply a bounding rectangle to the search
+      // defaults to 200km
+      var threshold =
+      /** @type {number} */ (settings.get(['plugin', 'pelias', 'geocoder', 'extentThreshold'], 200000));
+      var extent = MapContainer.getInstance().getMap().getExtent();
+
+      // translate to lon/lat
+      extent = olProj.transformExtent(extent, osMap.PROJECTION, osProj.EPSG4326);
+      extent = osExtent.normalize(extent, undefined, undefined, osProj.EPSG4326, extent);
+      var distance = osasm.geodesicInverse(extent.slice(0, 2), extent.slice(2, 4)).distance;
+
+      if (distance <= threshold) {
+        var boundaryText = '&boundary.rect.min_lat=' + extent[1] +
+          '&boundary.rect.min_lon=' + extent[0] +
+          '&boundary.rect.max_lat=' + extent[3] +
+          '&boundary.rect.max_lon=' + extent[2];
+        url += boundaryText;
       }
     }
-  }
-  return url;
-};
 
-
-/**
- * @param {goog.events.Event} evt
- * @suppress {accessControls}
- * @override
- */
-plugin.pelias.geocoder.Search.prototype.onSearchSuccess = function(evt) {
-  var request = /** @type {os.net.Request} */ (evt.target);
-
-  try {
-    var resp = /** @type {Object} */ (JSON.parse(/** @type {string} */ (request.getResponse())));
-  } catch (e) {
-    goog.log.error(this.log_, 'The result JSON was malformed', e);
-  }
-
-  if (resp) {
-    var features = resp['features'];
-    var options = {
-      featureProjection: os.map.PROJECTION
-    };
-
-    if (features) {
-      for (var i = 0, n = features.length; i < n; i++) {
-        try {
-          var extent = features[i]['bbox'];
-          var feature = this.format.readFeature(features[i], options);
-
-          if (extent) {
-            feature.set('extent', extent, true);
-          }
-
-          // attempt to make a single field with the address if it exists
-          var props = feature.values_;
-          if (props['housenumber'] && props['street'] && props['postalcode']) {
-            props['address'] = [
-              props['housenumber'] + ' ' + props['street'],
-              props['locality'],
-              (props['region_a'] || props['region']),
-              props['postalcode']].join(', ');
-          }
-
-          this.results.push(new plugin.pelias.geocoder.Result(feature));
-        } catch (e) {
-          goog.log.error(this.log_, 'There was an error parsing a result', e);
+    // Add the focus.point modifiers to the URL if enabled and we are zoomed in to at least zoom level 4.
+    var focuspoint = /** @type {boolean} */ (settings.get(['plugin', 'pelias', 'geocoder', 'focusPoint']));
+    if (focuspoint) {
+      var threshold = /** @type {number} */ (settings.get(['plugin', 'pelias', 'geocoder', 'focusPointMinZoom'], 4.0));
+      var currentZoom = MapContainer.getInstance().getMap().getView().getZoom();
+      if (currentZoom >= threshold) {
+        var centre = MapContainer.getInstance().getMap().getView().getCenter();
+        if (centre) {
+          var centreLonLat = olProj.toLonLat(centre, osMap.PROJECTION);
+          var focusPointText = '&focus.point.lat=' + centreLonLat[1] + '&focus.point.lon=' + centreLonLat[0];
+          url += focusPointText;
         }
       }
     }
+    return url;
   }
 
-  // superclass takes care of cleaning up request listeners and firing the result event
-  plugin.pelias.geocoder.Search.base(this, 'onSearchSuccess', evt);
-};
+  /**
+   * @param {goog.events.Event} evt
+   * @suppress {accessControls}
+   * @override
+   */
+  onSearchSuccess(evt) {
+    var request = /** @type {Request} */ (evt.target);
+
+    try {
+      var resp = /** @type {Object} */ (JSON.parse(/** @type {string} */ (request.getResponse())));
+    } catch (e) {
+      log.error(logger, 'The result JSON was malformed', e);
+    }
+
+    if (resp) {
+      var features = resp['features'];
+      var options = {
+        featureProjection: osMap.PROJECTION
+      };
+
+      if (features) {
+        for (var i = 0, n = features.length; i < n; i++) {
+          try {
+            var extent = features[i]['bbox'];
+            var feature = this.format.readFeature(features[i], options);
+
+            if (extent) {
+              feature.set('extent', extent, true);
+            }
+
+            // attempt to make a single field with the address if it exists
+            var props = feature.values_;
+            if (props['housenumber'] && props['street'] && props['postalcode']) {
+              props['address'] = [
+                props['housenumber'] + ' ' + props['street'],
+                props['locality'],
+                (props['region_a'] || props['region']),
+                props['postalcode']].join(', ');
+            }
+
+            this.results.push(new Result(feature));
+          } catch (e) {
+            log.error(logger, 'There was an error parsing a result', e);
+          }
+        }
+      }
+    }
+
+    // superclass takes care of cleaning up request listeners and firing the result event
+    super.onSearchSuccess(evt);
+  }
+}
+
+exports = Search;

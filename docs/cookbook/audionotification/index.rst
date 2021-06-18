@@ -15,7 +15,7 @@ Use the OpenSphere AudioManager. This is a singleton, and the `play()` function 
 .. literalinclude:: src/audioalertplugin.js
   :caption: AudioManager usage
   :linenos:
-  :lines: 30-31
+  :lines: 24-25
   :language: javascript
 
 There are three ways to provide the sound files - config settings, programmatically, or by user upload.
@@ -31,8 +31,11 @@ A programmatic approach is shown below:
 
 .. code-block:: javascript
 
-  var audioManager = os.audio.AudioManager.getInstance();
-  audioManager.addSound(os.ROOT + 'sounds/cowbell.wav', 'label');
+  const {ROOT} = goog.require('os');
+  const AudioManager = goog.require('os.audio.AudioManager');
+
+  const audioManager = AudioManager.getInstance();
+  audioManager.addSound(ROOT + 'sounds/cowbell.wav', 'label');
   audioManager.play('label');
 
 User upload uses the normal Import Data dialog. Note that it only works in a standard browser environment if the target is a HTTP or HTTPS URL (different rules apply in a "wrapped" environment like [Electron](https://electronjs.org/)).
@@ -41,14 +44,14 @@ User upload uses the normal Import Data dialog. Note that it only works in a sta
 Discussion
 ----------
 
-The level of audio support, including the file formats and associated codecs that are supported, depends on browser capabilities. 
+The level of audio support, including the file formats and associated codecs that are supported, depends on browser capabilities.
 
 In addition to the API shown earlier, AudioManager also supports muting the notifications. If your plugin makes use of audio notifications, we strongly suggest supporting global muting, as well as selective enable / disable of alerts.
 
 .. code-block:: javascript
 
   audioManager.setMute(true);
-  var mute = audioManager.getMute(); // true - muted
+  const mute = audioManager.getMute(); // true - muted
   audioManager.setMute(false); // now unmuted
 
 
@@ -57,5 +60,5 @@ Full code
 
 .. literalinclude:: src/audioalertplugin.js
   :caption: Audio Notification Cookbook example - Full code
-  :linenos: 
+  :linenos:
   :language: javascript

@@ -1,28 +1,26 @@
-goog.provide('plugin.osm.nom');
-goog.provide('plugin.osm.nom.SettingKey');
+goog.module('plugin.osm.nom');
+
+const style = goog.require('os.style');
+const kml = goog.require('os.ui.file.kml');
 
 
 /**
  * Plugin identifier.
  * @type {string}
- * @const
  */
-plugin.osm.nom.ID = 'nominatim';
-
+const ID = 'nominatim';
 
 /**
  * User-facing name for the search provider.
  * @type {string}
- * @const
  */
-plugin.osm.nom.SEARCH_NAME = 'Places (OpenStreetMap)';
-
+const SEARCH_NAME = 'Places (OpenStreetMap)';
 
 /**
  * Fields on OSM Nominatim response data.
  * @enum {string}
  */
-plugin.osm.nom.ResultField = {
+const ResultField = {
   BBOX: 'boundingbox',
   CATEGORY: 'category',
   DISPLAY_NAME: 'display_name',
@@ -35,69 +33,59 @@ plugin.osm.nom.ResultField = {
   TYPE: 'type'
 };
 
-
 /**
  * Fields on OSM Nominatim `extradata` objects.
  * @enum {string}
  */
-plugin.osm.nom.ExtraDataField = {
+const ExtraDataField = {
   PLACE: 'place',
   POPULATION: 'population'
 };
 
-
 /**
  * Field used to label search results.
  * @type {string}
- * @const
  */
-plugin.osm.nom.LABEL_FIELD = plugin.osm.nom.ResultField.DISPLAY_NAME;
-
+const LABEL_FIELD = ResultField.DISPLAY_NAME;
 
 /**
  * Base search result score.
  * @type {number}
- * @const
  */
-plugin.osm.nom.BASE_SCORE = 100;
-
+const BASE_SCORE = 100;
 
 /**
  * Multiplier to apply to search result importance based on OSM type.
  * @enum {number}
  */
-plugin.osm.nom.OSMTypeMultiplier = {
+const OSMTypeMultiplier = {
   'relation': 1.2,
   'way': 1.1
 };
 
-
 /**
  * The base settings key for the plugin.
  * @type {string}
- * @const
  */
-plugin.osm.nom.BASE_SETTING_KEY = 'plugin.osm.nom';
+const BASE_SETTING_KEY = 'plugin.osm.nom';
 
 /**
  * Settings keys for the plugin.
  * @enum {string}
  */
-plugin.osm.nom.SettingKey = {
-  URL: plugin.osm.nom.BASE_SETTING_KEY + '.url'
+const SettingKey = {
+  URL: BASE_SETTING_KEY + '.url'
 };
-
 
 /**
  * Style config for search results.
  * @type {!Object}
- * @const
  */
-plugin.osm.nom.VECTOR_CONFIG = {
+const VECTOR_CONFIG = {
   // show a white label with the place name
   'labelColor': 'rgba(255,255,255,1)',
   'labels': [{
-    'column': plugin.osm.nom.LABEL_FIELD,
+    'column': LABEL_FIELD,
     'showColumn': false
   }],
 
@@ -105,13 +93,13 @@ plugin.osm.nom.VECTOR_CONFIG = {
   'image': {
     'type': 'icon',
     'scale': 0.75,
-    'src': os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.WHT_BLANK,
+    'src': kml.GOOGLE_EARTH_URL + kml.GoogleEarthIcons.WHT_BLANK,
     'color': 'rgba(0,255,255,1)'
   },
 
   // this will only be applied to line and polygon types
   'stroke': {
-    'width': os.style.DEFAULT_STROKE_WIDTH,
+    'width': style.DEFAULT_STROKE_WIDTH,
     'color': 'rgba(0,0,255,1)'
   },
   'fill': {
@@ -119,22 +107,21 @@ plugin.osm.nom.VECTOR_CONFIG = {
   }
 };
 
-
 /**
  * Get the search score for an OSM Nominatim result.
  *
  * @param {ol.Feature} feature The feature result.
  * @return {number} The search score.
  */
-plugin.osm.nom.getSearchScore = function(feature) {
-  var score = plugin.osm.nom.BASE_SCORE;
+const getSearchScore = function(feature) {
+  var score = BASE_SCORE;
 
   if (feature) {
-    var importance = /** @type {number|undefined} */ (feature.get(plugin.osm.nom.ResultField.IMPORTANCE));
+    var importance = /** @type {number|undefined} */ (feature.get(ResultField.IMPORTANCE));
     if (importance) {
-      var osmType = /** @type {string|undefined} */ (feature.get(plugin.osm.nom.ResultField.OSM_TYPE));
-      if (osmType && osmType in plugin.osm.nom.OSMTypeMultiplier) {
-        importance = importance * plugin.osm.nom.OSMTypeMultiplier[osmType];
+      var osmType = /** @type {string|undefined} */ (feature.get(ResultField.OSM_TYPE));
+      if (osmType && osmType in OSMTypeMultiplier) {
+        importance = importance * OSMTypeMultiplier[osmType];
       }
 
       score = score + importance;
@@ -144,4 +131,18 @@ plugin.osm.nom.getSearchScore = function(feature) {
   }
 
   return score;
+};
+
+exports = {
+  BASE_SCORE,
+  BASE_SETTING_KEY,
+  ID,
+  LABEL_FIELD,
+  SEARCH_NAME,
+  VECTOR_CONFIG,
+  ExtraDataField,
+  OSMTypeMultiplier,
+  ResultField,
+  SettingKey,
+  getSearchScore
 };

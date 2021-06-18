@@ -1,82 +1,83 @@
-goog.provide('os.command.FlyTo');
+goog.module('os.command.FlyTo');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.asserts');
-goog.require('os.command.AbstractSyncCommand');
-goog.require('os.command.State');
-
+const asserts = goog.require('goog.asserts');
+const AbstractSyncCommand = goog.require('os.command.AbstractSyncCommand');
+const State = goog.require('os.command.State');
+const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**
  * Command to fly the map.
- *
- * @param {osx.map.FlyToOptions=} opt_options The fly to options
- * @extends {os.command.AbstractSyncCommand}
- * @constructor
  */
-os.command.FlyTo = function(opt_options) {
-  os.command.FlyTo.base(this, 'constructor');
-  this.title = 'Fly To';
+class FlyTo extends AbstractSyncCommand {
+  /**
+   * Constructor.
+   * @param {osx.map.FlyToOptions=} opt_options The fly to options
+   */
+  constructor(opt_options) {
+    super();
+    this.title = 'Fly To';
+
+    /**
+     * @type {!osx.map.FlyToOptions}
+     * @private
+     */
+    this.options_ = opt_options || {};
+
+    /**
+     * @type {!osx.map.FlyToOptions}
+     * @private
+     */
+    this.prevOptions_ = {};
+  }
 
   /**
-   * @type {!osx.map.FlyToOptions}
-   * @private
+   * @inheritDoc
    */
-  this.options_ = opt_options || {};
+  execute() {
+    this.state = State.EXECUTING;
 
-  /**
-   * @type {!osx.map.FlyToOptions}
-   * @private
-   */
-  this.prevOptions_ = {};
-};
-goog.inherits(os.command.FlyTo, os.command.AbstractSyncCommand);
+    var mapContainer = getMapContainer();
+    var view = mapContainer.getMap().getView();
 
+    var prevOptions = /** @type {!osx.map.FlyToOptions} */ ({
+      center: view.getCenter()
+    });
 
-/**
- * @inheritDoc
- */
-os.command.FlyTo.prototype.execute = function() {
-  this.state = os.command.State.EXECUTING;
+    if (mapContainer.is3DEnabled()) {
+      var camera = mapContainer.getWebGLCamera();
+      if (camera) {
+        prevOptions.altitude = camera.getAltitude();
+      }
+    } else {
+      var resolution = view.getResolution();
+      asserts.assert(resolution != null, 'resolution should be defined');
 
-  var mapContainer = os.MapContainer.getInstance();
-  var view = mapContainer.getMap().getView();
-  this.lastCenter_ = view.getCenter();
-
-  var prevOptions = /** @type {!osx.map.FlyToOptions} */ ({
-    center: view.getCenter()
-  });
-
-  if (mapContainer.is3DEnabled()) {
-    var camera = mapContainer.getWebGLCamera();
-    if (camera) {
-      prevOptions.altitude = camera.getAltitude();
+      prevOptions.zoom = mapContainer.resolutionToZoom(resolution);
     }
-  } else {
-    var resolution = view.getResolution();
-    goog.asserts.assert(resolution != null, 'resolution should be defined');
 
-    prevOptions.zoom = mapContainer.resolutionToZoom(resolution);
+    this.prevOptions_ = prevOptions;
+
+    // fly to the location
+    mapContainer.flyTo(this.options_);
+
+    return this.finish();
   }
 
-  this.prevOptions_ = prevOptions;
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    this.state = State.REVERTING;
 
-  // fly to the location
-  mapContainer.flyTo(this.options_);
+    if (this.prevOptions_) {
+      var mapContainer = getMapContainer();
+      mapContainer.flyTo(this.prevOptions_);
+    }
 
-  return this.finish();
-};
-
-
-/**
- * @inheritDoc
- */
-os.command.FlyTo.prototype.revert = function() {
-  this.state = os.command.State.REVERTING;
-
-  if (this.prevOptions_) {
-    var mapContainer = os.MapContainer.getInstance();
-    mapContainer.flyTo(this.prevOptions_);
+    return super.revert();
   }
+}
 
-  return os.command.FlyTo.base(this, 'revert');
-};
+exports = FlyTo;

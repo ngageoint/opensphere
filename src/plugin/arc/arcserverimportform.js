@@ -1,9 +1,8 @@
 goog.module('plugin.arc.ArcImportForm');
-goog.module.declareLegacyNamespace();
 
-const Module = goog.require('os.ui.Module');
-const arcserverDirective = goog.require('plugin.arc.arcImportDirective');
 const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const {directive: arcServerDirective} = goog.require('plugin.arc.ArcImportUI');
 
 
 /**
@@ -12,7 +11,7 @@ const {ROOT} = goog.require('os');
  * @return {angular.Directive}
  */
 const directive = () => {
-  const original = arcserverDirective();
+  const original = arcServerDirective();
   original.templateUrl = ROOT + 'views/forms/singleurlform.html';
   return original;
 };

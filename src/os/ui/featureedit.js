@@ -19,6 +19,7 @@ goog.require('os.action.EventType');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.feature');
 goog.require('os.geo');
+goog.require('os.interaction.Modify');
 goog.require('os.map');
 goog.require('os.math.Units');
 goog.require('os.ol.feature');
@@ -477,6 +478,12 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    */
   this.originalGeometry = null;
 
+  /**
+   * Interaction for freeform modification.
+   * @type {os.interaction.Modify}
+   */
+  this.interaction = null;
+
   var feature = /** @type {ol.Feature|undefined} */ (this.options['feature']);
   if (feature) {
     // grab available columns off the feature source if available, and don't show internal columns
@@ -688,6 +695,8 @@ os.ui.FeatureEditCtrl.prototype.disposeInternal = function() {
 
     this.previewFeature = null;
   }
+
+  goog.dispose(this.interaction);
 
   this.scope = null;
   this.element = null;
@@ -1671,6 +1680,61 @@ os.ui.FeatureEditCtrl.prototype.onAxisChange = function() {
   }
 
   this.updatePreview();
+};
+
+
+/**
+ * Enables the modify geometry interaction.
+ *
+ * @export
+ */
+os.ui.FeatureEditCtrl.prototype.modifyGeometry = function() {
+  if (this.interaction) {
+    goog.dispose(this.interaction);
+  }
+
+  if (this.previewFeature) {
+    const mc = os.MapContainer.getInstance();
+    this.interaction = new os.interaction.Modify(this.previewFeature);
+    this.interaction.setOverlay(/** @type {ol.layer.Vector} */ (mc.getDrawingLayer()));
+
+    mc.getMap().addInteraction(this.interaction);
+    this.interaction.setActive(true);
+    this.interaction.showControls();
+
+    ol.events.listen(this.interaction, os.interaction.ModifyEventType.COMPLETE, this.onInteractionComplete, this);
+    ol.events.listen(this.interaction, os.interaction.ModifyEventType.CANCEL, this.onInteractionCancel, this);
+  }
+};
+
+
+/**
+ * Callback handler for successfully completing a modify of a geometry.
+ * @param {os.events.PayloadEvent} event
+ */
+os.ui.FeatureEditCtrl.prototype.onInteractionComplete = function(event) {
+  const clone = /** @type {!ol.Feature} */ (event.getPayload());
+  const geometry = clone.getGeometry();
+
+  if (geometry) {
+    this.originalGeometry = geometry;
+    this.previewFeature.setGeometry(geometry);
+    this.previewFeature.unset(os.interpolate.ORIGINAL_GEOM_FIELD, true);
+    os.interpolate.interpolateFeature(this.previewFeature);
+  }
+
+  this.updatePreview();
+
+  goog.dispose(this.interaction);
+  this.interaction = null;
+};
+
+
+/**
+ * Callback handler for canceling a modify.
+ */
+os.ui.FeatureEditCtrl.prototype.onInteractionCancel = function() {
+  goog.dispose(this.interaction);
 };
 
 

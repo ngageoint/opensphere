@@ -35,7 +35,7 @@ os.ui.menu.windows.default.setup = function() {
 
   var layers = os.ui.menu.windows.addWindow('layers', {
     'key': 'layers',
-    'icon': 'fa fa-align-justify',
+    'icon': 'fa fa-layer-group',
     'label': 'Layers',
     'description': 'View and manipulate layers on the map',
     'x': '0',

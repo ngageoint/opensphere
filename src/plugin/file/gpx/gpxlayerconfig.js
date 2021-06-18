@@ -1,64 +1,65 @@
-goog.provide('plugin.file.gpx.GPXLayerConfig');
-goog.require('goog.net.XhrIo.ResponseType');
-goog.require('goog.userAgent');
-goog.require('os.layer.config.AbstractDataSourceLayerConfig');
-goog.require('os.source.Request');
-goog.require('plugin.file.gpx.GPXParser');
+goog.module('plugin.file.gpx.GPXLayerConfig');
+goog.module.declareLegacyNamespace();
 
-
-
-/**
- * @extends {os.layer.config.AbstractDataSourceLayerConfig}
- * @constructor
- */
-plugin.file.gpx.GPXLayerConfig = function() {
-  plugin.file.gpx.GPXLayerConfig.base(this, 'constructor');
-};
-goog.inherits(plugin.file.gpx.GPXLayerConfig, os.layer.config.AbstractDataSourceLayerConfig);
+const ResponseType = goog.require('goog.net.XhrIo.ResponseType');
+const userAgent = goog.require('goog.userAgent');
+const AbstractDataSourceLayerConfig = goog.require('os.layer.config.AbstractDataSourceLayerConfig');
+const RequestSource = goog.require('os.source.Request');
+const GPXParser = goog.require('plugin.file.gpx.GPXParser');
 
 
 /**
- * @inheritDoc
  */
-plugin.file.gpx.GPXLayerConfig.prototype.getParser = function(options) {
-  return new plugin.file.gpx.GPXParser(options);
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.gpx.GPXLayerConfig.prototype.getRequest = function(options) {
-  var request = plugin.file.gpx.GPXLayerConfig.base(this, 'getRequest', options);
-
-  // instruct the handler to return a Document in the response, so the parsing is done in the request handler (where
-  // supported) instead of the importer. this was slightly faster in testing. IE9 doesn't support this.
-  if (!goog.userAgent.IE || goog.userAgent.isVersionOrHigher(10)) {
-    request.setResponseType(goog.net.XhrIo.ResponseType.DOCUMENT);
+class GPXLayerConfig extends AbstractDataSourceLayerConfig {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
   }
 
-  return request;
-};
+  /**
+   * @inheritDoc
+   */
+  getParser(options) {
+    return new GPXParser(options);
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getRequest(options) {
+    var request = super.getRequest(options);
 
-/**
- * @inheritDoc
- */
-plugin.file.gpx.GPXLayerConfig.prototype.getImporter = function(options) {
-  var importer = plugin.file.gpx.GPXLayerConfig.base(this, 'getImporter', options);
-  // enable autodetection using the default set of mappings (i.e. all of them)
-  importer.setAutoDetect(true);
-  return importer;
-};
+    // instruct the handler to return a Document in the response, so the parsing is done in the request handler (where
+    // supported) instead of the importer. this was slightly faster in testing. IE9 doesn't support this.
+    if (!userAgent.IE || userAgent.isVersionOrHigher(10)) {
+      request.setResponseType(ResponseType.DOCUMENT);
+    }
 
+    return request;
+  }
 
-/**
- * Up the default column autodetect limit for GPX source.
- *
- * @inheritDoc
- */
-plugin.file.gpx.GPXLayerConfig.prototype.getSource = function(options) {
-  var source = new os.source.Request();
-  source.setColumnAutoDetectLimit(100);
-  return source;
-};
+  /**
+   * @inheritDoc
+   */
+  getImporter(options) {
+    var importer = super.getImporter(options);
+    // enable autodetection using the default set of mappings (i.e. all of them)
+    importer.setAutoDetect(true);
+    return importer;
+  }
+
+  /**
+   * Up the default column autodetect limit for GPX source.
+   *
+   * @inheritDoc
+   */
+  getSource(options) {
+    var source = new RequestSource();
+    source.setColumnAutoDetectLimit(100);
+    return source;
+  }
+}
+
+exports = GPXLayerConfig;

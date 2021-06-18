@@ -1,88 +1,86 @@
-goog.provide('os.capture.IRecorder');
-goog.require('goog.disposable.IDisposable');
-goog.require('goog.events.Listenable');
+goog.module('os.capture.IRecorder');
+goog.module.declareLegacyNamespace();
 
+const IDisposable = goog.requireType('goog.disposable.IDisposable');
+const Listenable = goog.requireType('goog.events.Listenable');
+const IVideoEncoder = goog.requireType('os.capture.IVideoEncoder');
 
 
 /**
  * Interface for a class that produces a recording.
  *
- * @extends {goog.disposable.IDisposable}
- * @extends {goog.events.Listenable}
+ * @extends {IDisposable}
+ * @extends {Listenable}
  * @interface
  */
-os.capture.IRecorder = function() {};
+class IRecorder {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    /**
+     * If the recording was aborted.
+     * @type {boolean}
+     */
+    this.aborted;
 
+    /**
+     * Final recording data.
+     * @type {*}
+     */
+    this.data;
 
-/**
- * If the recording was aborted.
- * @type {boolean}
- */
-os.capture.IRecorder.prototype.aborted;
+    /**
+     * Detailed error message if the recording fails.
+     * @type {string}
+     */
+    this.errorMsg;
 
+    /**
+     * Progress percentage for the current task.
+     * @type {number}
+     */
+    this.progress;
 
-/**
- * Final recording data.
- * @type {*}
- */
-os.capture.IRecorder.prototype.data;
+    /**
+     * Recorder status message.
+     * @type {string}
+     */
+    this.status;
 
+    /**
+     * User-facing title of the recorder.
+     * @type {string}
+     */
+    this.title;
+  }
 
-/**
- * Detailed error message if the recording fails.
- * @type {string}
- */
-os.capture.IRecorder.prototype.errorMsg;
+  /**
+   * Clean up any resources that shouldn't reside in memory.
+   */
+  cleanup() {}
 
+  /**
+   * Abort the recording.
+   * @param {string=} opt_msg Abort message
+   */
+  abort(opt_msg) {}
 
-/**
- * Progress percentage for the current task.
- * @type {number}
- */
-os.capture.IRecorder.prototype.progress;
+  /**
+   * Initialize the recorder.
+   */
+  init() {}
 
+  /**
+   * Create a recording.
+   */
+  record() {}
 
-/**
- * Recorder status message.
- * @type {string}
- */
-os.capture.IRecorder.prototype.status;
+  /**
+   * Set the encoder used to save recordings.
+   * @param {!IVideoEncoder} value The encoder to use to save the recording.
+   */
+  setEncoder(value) {}
+}
 
-
-/**
- * User-facing title of the recorder.
- * @type {string}
- */
-os.capture.IRecorder.prototype.title;
-
-
-/**
- * Clean up any resources that shouldn't reside in memory.
- */
-os.capture.IRecorder.prototype.cleanup;
-
-
-/**
- * Abort the recording.
- * @param {string=} opt_msg Abort message
- */
-os.capture.IRecorder.prototype.abort;
-
-
-/**
- * Initialize the recorder.
- */
-os.capture.IRecorder.prototype.init;
-
-
-/**
- * Create a recording.
- */
-os.capture.IRecorder.prototype.record;
-
-
-/**
- * Set the encoder used to save recordings.
- * @param {!os.capture.IVideoEncoder} value The encoder to use to save the recording.
- */
-os.capture.IRecorder.prototype.setEncoder;
+exports = IRecorder;

@@ -10,6 +10,13 @@ describe('os.ui.file.ExportManager', function() {
   var items = ['gonna', 'be', 'output'];
   var fields = ['1', '2', '3'];
   var title = 'ExportManagerTest';
+  var options = {
+    items: null,
+    fields: fields,
+    title: title,
+    exporter: null,
+    persister: null
+  };
 
   beforeEach(function() {
     eMethod.reset();
@@ -21,20 +28,24 @@ describe('os.ui.file.ExportManager', function() {
   it('should log an error when no items are provided', function() {
     expect(goog.log.error.calls.length).toBe(0);
 
-    em.exportItems(null, fields, title);
+    em.exportItems(options);
     expect(goog.log.error.calls.length).toBe(1);
 
-    em.exportItems([], fields, title);
+    options.items = [];
+    em.exportItems(options);
     expect(goog.log.error.calls.length).toBe(2);
   });
 
   it('should log an error when exporting before methods are available', function() {
     expect(goog.log.error.calls.length).toBe(0);
 
-    em.exportItems(items, fields, title);
+    options.items = items;
+    em.exportItems(options);
     expect(goog.log.error.calls.length).toBe(1);
 
-    em.exportItems(items, fields, title, eMethod, pMethod);
+    options.exporter = eMethod;
+    options.persister = pMethod;
+    em.exportItems(options);
     expect(goog.log.error.calls.length).toBe(1);
   });
 
@@ -99,7 +110,9 @@ describe('os.ui.file.ExportManager', function() {
     spyOn(pMethod, 'save').andCallThrough();
 
     expect(eMethod.output).toBeNull();
-    em.exportItems(items, fields, title, eMethod, pMethod);
+    options.exporter = eMethod;
+    options.persister = pMethod;
+    em.exportItems(options);
 
     expect(eMethod.process).toHaveBeenCalled();
 
@@ -111,14 +124,22 @@ describe('os.ui.file.ExportManager', function() {
 
   it('should launch an export dialog when methods are not provided', function() {
     spyOn(em, 'launchExportDialog_');
+    spyOn(em, 'doExport_');
 
-    em.exportItems(items, fields, title);
+    options.exporter = null;
+    options.persister = null;
+    em.exportItems(options);
     expect(em.launchExportDialog_.calls.length).toBe(1);
 
-    em.exportItems(items, fields, title, eMethod);
-    expect(em.launchExportDialog_.calls.length).toBe(2);
+    // when an exporter is provided but no persister, save the file directly to storage
+    options.exporter = eMethod;
+    options.persister = null;
+    em.exportItems(options);
+    expect(em.doExport_.calls.length).toBe(1);
 
-    em.exportItems(items, fields, title, undefined, pMethod);
-    expect(em.launchExportDialog_.calls.length).toBe(3);
+    options.exporter = null;
+    options.persister = pMethod;
+    em.exportItems(options);
+    expect(em.launchExportDialog_.calls.length).toBe(2);
   });
 });

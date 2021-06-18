@@ -22,8 +22,8 @@ ol.Image.prototype.olSource = null;
  * @suppress {accessControls}
  */
 olImage.prototype.getImage = function() {
-  if (this.image_ && this.image_.width && this.image_.height && this.olSource
-    && this.getState() == ImageState.LOADED) {
+  if (this.image_ && this.image_.width && this.image_.height && this.olSource &&
+    this.getState() == ImageState.LOADED) {
     // make sure getImageFilters exists on the source
     var filterFns = this.olSource.getImageFilters ? this.olSource.getImageFilters() : [];
     if (filterFns.length > 0) {

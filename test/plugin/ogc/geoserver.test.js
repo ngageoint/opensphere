@@ -4,6 +4,8 @@ goog.require('plugin.ogc.GeoServer');
 
 
 describe('plugin.ogc.GeoServer', function() {
+  const GeoServer = goog.module.get('plugin.ogc.GeoServer');
+
   var serverLabel = 'test-server';
   var serverUrl = 'http://im.a.test.server/wahoo/';
   var dateFormat = 'im-a-date';
@@ -20,11 +22,12 @@ describe('plugin.ogc.GeoServer', function() {
     'enabled': true,
     'url': serverUrl,
     'wmsTimeFormat': timeFormat,
-    'wmsDateFormat': dateFormat
+    'wmsDateFormat': dateFormat,
+    'wfsContentType': 'text/plain'
   };
 
   it('should initialize properly from config', function() {
-    var server = new plugin.ogc.GeoServer();
+    var server = new GeoServer();
     server.configure(serverConfig1);
 
     expect(server.getLabel()).toBe(serverLabel);
@@ -39,8 +42,12 @@ describe('plugin.ogc.GeoServer', function() {
     expect(server.getWmsTimeFormat()).toBe('{start}/{end}');
     expect(server.getWmsDateFormat()).toBe('YYYY-MM-DDTHH:mm:ss[Z]');
 
+    expect(server.getWfsContentType()).toBe('text/xml');
+
     server.configure(serverConfig2);
     expect(server.getWmsTimeFormat()).toBe(timeFormat);
     expect(server.getWmsDateFormat()).toBe(dateFormat);
+
+    expect(server.getWfsContentType()).toBe('text/plain');
   });
 });

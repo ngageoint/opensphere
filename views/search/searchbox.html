@@ -33,15 +33,14 @@
             </span>
             <a class="dropdown-item text-truncate" href="" ng-repeat="search in searchBox.getSearchOptionsGroup(groupName)"
                 ng-click="searchBox.toggleSearch(search)">
-                <i class="ml-3 fa" ng-class="searchBox.getSearchIcon(search)"></i>
+                <i class="ml-3" ng-class="searchBox.getSearchIcon(search)"></i>
               {{searchBox.getSearchName(search)}}
             </a>
           </div>
           <span class="d-flex dropdown-item text-truncate align-items-center" ng-repeat="search in searchBox.searchOptionsNoGroup"
               ng-click="searchBox.toggleSearch(search)"
               ng-class="{'font-weight-bold': !searchBox.allowMultiple && searchBox.isSearchEnabled(search)}">
-            <i class="fa" ng-if="searchBox.allowMultiple || searchBox.isSearchEnabled(search)"
-                ng-class="searchBox.getSearchIcon(search)"></i>
+            <i ng-if="searchBox.allowMultiple || searchBox.isSearchEnabled(search)" ng-class="searchBox.getSearchIcon(search)"></i>
             {{searchBox.getSearchName(search)}}
             <span class="flex-shrink-0 ml-auto">
               <i ng-if="searchBox.supportsTemporal(search)" class="fa fa-clock-o" title="Supports searching within the current application time"></i>

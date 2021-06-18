@@ -1,17 +1,16 @@
-goog.provide('plugin.ogc.ui.ChooseTimeColumnCtrl');
-goog.provide('plugin.ogc.ui.chooseTimeColumnDirective');
+goog.module('plugin.ogc.ui.ChooseTimeColumnUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Disposable');
-goog.require('goog.array');
-goog.require('goog.async.Delay');
-goog.require('goog.events');
-goog.require('os');
-goog.require('os.action.EventType');
-goog.require('os.data.DataManager');
-goog.require('os.layer');
-goog.require('os.ui.Module');
 goog.require('os.ui.util.validationMessageDirective');
-goog.require('plugin.ogc.OGCLayerDescriptor');
+
+const Disposable = goog.require('goog.Disposable');
+const os = goog.require('os');
+const DataManager = goog.require('os.data.DataManager');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const osWindow = goog.require('os.ui.window');
+
+const OGCLayerDescriptor = goog.requireType('plugin.ogc.OGCLayerDescriptor');
 
 
 /**
@@ -19,149 +18,159 @@ goog.require('plugin.ogc.OGCLayerDescriptor');
  *
  * @return {angular.Directive}
  */
-plugin.ogc.ui.chooseTimeColumnDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    scope: {
-      'id': '=',
-      'deferred': '='
-    },
-    templateUrl: os.ROOT + 'views/plugin/ogc/ui/choosetimecolumn.html',
-    controller: plugin.ogc.ui.ChooseTimeColumnCtrl,
-    controllerAs: 'chooseTime'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+
+  scope: {
+    'id': '=',
+    'deferred': '='
+  },
+
+  templateUrl: os.ROOT + 'views/plugin/ogc/ui/choosetimecolumn.html',
+  controller: Controller,
+  controllerAs: 'chooseTime'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'choose-time-column';
 
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('chooseTimeColumn', [plugin.ogc.ui.chooseTimeColumnDirective]);
+Module.directive('chooseTimeColumn', [directive]);
 
 
 
 /**
  * Allow the user to choose time columns and save it to the descriptor
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @extends {goog.Disposable}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-plugin.ogc.ui.ChooseTimeColumnCtrl = function($scope, $element) {
-  plugin.ogc.ui.ChooseTimeColumnCtrl.base(this, 'constructor');
-
+class Controller extends Disposable {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
    */
-  this.scope_ = $scope;
+  constructor($scope, $element) {
+    super();
 
-  /**
-   * @type {?angular.JQLite}
-   * @private
-   */
-  this.element_ = $element;
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
 
-  /**
-   * @type {plugin.ogc.OGCLayerDescriptor}
-   * @private
-   */
-  this.descriptor_ = /** @type {plugin.ogc.OGCLayerDescriptor} */ (
-    os.dataManager.getDescriptor(this.scope_['id']));
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
 
-  /**
-   * @type {os.ogc.IFeatureType}
-   * @private
-   */
-  this.featureType_ = null;
+    /**
+     * @type {OGCLayerDescriptor}
+     * @private
+     */
+    this.descriptor_ = /** @type {OGCLayerDescriptor} */ (
+      DataManager.getInstance().getDescriptor(this.scope_['id']));
 
-  if (this.descriptor_) {
-    this.featureType_ = this.descriptor_.getFeatureType();
+    /**
+     * @type {os.ogc.IFeatureType}
+     * @private
+     */
+    this.featureType_ = null;
 
-    this.scope_['title'] = this.descriptor_.getTitle();
-    this['start'] = this.featureType_.getStartDateColumnName();
-    this['end'] = this.featureType_.getEndDateColumnName();
-    this['timeColumns'] = this.descriptor_.getFeatureType().getTimeColumns();
+    if (this.descriptor_) {
+      this.featureType_ = this.descriptor_.getFeatureType();
 
-    $scope.$emit(os.ui.WindowEventType.READY);
-  } else {
-    os.ui.window.close(this.element_);
+      this.scope_['title'] = this.descriptor_.getTitle();
+      this['start'] = this.featureType_.getStartDateColumnName();
+      this['end'] = this.featureType_.getEndDateColumnName();
+      this['timeColumns'] = this.descriptor_.getFeatureType().getTimeColumns();
+
+      $scope.$emit(WindowEventType.READY);
+    } else {
+      osWindow.close(this.element_);
+    }
   }
-};
-goog.inherits(plugin.ogc.ui.ChooseTimeColumnCtrl, goog.Disposable);
 
-
-/**
- * @inheritDoc
- */
-plugin.ogc.ui.ChooseTimeColumnCtrl.prototype.disposeInternal = function() {
-  plugin.ogc.ui.ChooseTimeColumnCtrl.base(this, 'disposeInternal');
-  this.scope_ = null;
-};
-
-
-/**
- * Save the time columns to the descriptor
- *
- * @export
- */
-plugin.ogc.ui.ChooseTimeColumnCtrl.prototype.save = function() {
-  this.featureType_.setStartDateColumnName(this['start']);
-  this.featureType_.setEndDateColumnName(this['end']);
-
-  if (this.scope_['deferred']) {
-    this.scope_['deferred'].callback();
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
+    this.scope_ = null;
   }
-  this.close();
-};
 
+  /**
+   * Save the time columns to the descriptor
+   *
+   * @export
+   */
+  save() {
+    this.featureType_.setStartDateColumnName(this['start']);
+    this.featureType_.setEndDateColumnName(this['end']);
 
-/**
- * Close the window
- *
- * @export
- */
-plugin.ogc.ui.ChooseTimeColumnCtrl.prototype.close = function() {
-  os.ui.window.close(this.element_);
-  this.dispose();
-};
-
-
-/**
- * Launch the choose time column directive
- *
- * @param {string} layerId
- * @param {goog.async.Deferred=} opt_deferred - call the deferred on save/cancel if provided
- */
-plugin.ogc.ui.ChooseTimeColumnCtrl.launch = function(layerId, opt_deferred) {
-  var id = 'chooseTimeColumn';
-
-  if (os.ui.window.exists(id)) {
-    os.ui.window.bringToFront(id);
-  } else {
-    var winOptions = {
-      'id': id,
-      'label': 'Choose Time Columns',
-      'icon': 'fa fa-clock-o',
-      'x': 'center',
-      'y': 'center',
-      'width': '425',
-      'min-width': '400',
-      'max-width': '800',
-      'height': 'auto',
-      'min-height': '200',
-      'max-height': '900',
-      'modal': 'true'
-    };
-    var scopeOptions = {
-      'id': layerId,
-      'deferred': opt_deferred
-    };
-
-    os.ui.window.create(winOptions, '<choose-time-column id="id" deferred="deferred"></choose-time-column>',
-        undefined, undefined, undefined, scopeOptions);
+    if (this.scope_['deferred']) {
+      this.scope_['deferred'].callback();
+    }
+    this.close();
   }
+
+  /**
+   * Close the window
+   *
+   * @export
+   */
+  close() {
+    osWindow.close(this.element_);
+    this.dispose();
+  }
+
+  /**
+   * Launch the choose time column directive
+   *
+   * @param {string} layerId
+   * @param {goog.async.Deferred=} opt_deferred - call the deferred on save/cancel if provided
+   */
+  static launch(layerId, opt_deferred) {
+    var id = 'chooseTimeColumn';
+
+    if (osWindow.exists(id)) {
+      osWindow.bringToFront(id);
+    } else {
+      var winOptions = {
+        'id': id,
+        'label': 'Choose Time Columns',
+        'icon': 'fa fa-clock-o',
+        'x': 'center',
+        'y': 'center',
+        'width': '425',
+        'min-width': '400',
+        'max-width': '800',
+        'height': 'auto',
+        'min-height': '200',
+        'max-height': '900',
+        'modal': 'true'
+      };
+      var scopeOptions = {
+        'id': layerId,
+        'deferred': opt_deferred
+      };
+
+      osWindow.create(winOptions, '<choose-time-column id="id" deferred="deferred"></choose-time-column>',
+          undefined, undefined, undefined, scopeOptions);
+    }
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

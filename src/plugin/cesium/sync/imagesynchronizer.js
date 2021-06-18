@@ -4,8 +4,8 @@ const googEventsEventType = goog.require('goog.events.EventType');
 const ImageState = goog.require('ol.ImageState');
 const OLObject = goog.require('ol.Object');
 const events = goog.require('ol.events');
-const olExtent = goog.require('ol.extent');
 const EventType = goog.require('ol.events.EventType');
+const olExtent = goog.require('ol.extent');
 const olProj = goog.require('ol.proj');
 
 const dispatcher = goog.require('os.Dispatcher');

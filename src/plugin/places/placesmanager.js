@@ -1,18 +1,17 @@
 goog.module('plugin.places.PlacesManager');
 goog.module.declareLegacyNamespace();
 
-goog.require('plugin.file.kml.ui');
-goog.require('plugin.places.ui.placesNodeUIDirective');
-
+const os = goog.require('os');
+const dispatcher = goog.require('os.Dispatcher');
+const MapContainer = goog.require('os.MapContainer');
 const ActionEventType = goog.require('os.action.EventType');
 const config = goog.require('os.config');
+const Settings = goog.require('os.config.Settings');
 const ZOrder = goog.require('os.data.ZOrder');
-const dispatcher = goog.require('os.Dispatcher');
 const OsEventType = goog.require('os.events.EventType');
 const {getLocalUrl} = goog.require('os.file');
 const {noop} = goog.require('os.fn');
 const LayerType = goog.require('os.layer.LayerType');
-const MapContainer = goog.require('os.MapContainer');
 const {merge} = goog.require('os.object');
 const {incrementResetTasks, decrementResetTasks} = goog.require('os.storage');
 const {DEFAULT_LAYER_COLOR} = goog.require('os.style');
@@ -173,7 +172,7 @@ class PlacesManager extends AbstractKMLManager {
   getOptions() {
     const options = this.options;
     // see if any layer options were persisted to settings
-    const saved = /** @type {?Object} */ (os.settings.get(LAYER_OPTIONS));
+    const saved = /** @type {?Object} */ (Settings.getInstance().get(LAYER_OPTIONS));
     if (saved) {
       merge(saved, options, true);
     }
@@ -211,7 +210,7 @@ class PlacesManager extends AbstractKMLManager {
 
     const layer = this.getLayer();
     if (layer) {
-      os.settings.set(LAYER_OPTIONS, layer.persist());
+      Settings.getInstance().set(LAYER_OPTIONS, layer.persist());
     }
   }
 

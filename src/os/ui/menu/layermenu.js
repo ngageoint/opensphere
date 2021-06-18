@@ -4,7 +4,11 @@ goog.require('goog.Timer');
 goog.require('ol.array');
 goog.require('ol.extent');
 goog.require('os.action.EventType');
+goog.require('os.alert.AlertEventSeverity');
+goog.require('os.alert.AlertManager');
 goog.require('os.command.FlyToExtent');
+goog.require('os.data.DataManager');
+goog.require('os.data.FileDescriptor');
 goog.require('os.fn');
 goog.require('os.layer.ILayer');
 goog.require('os.metrics.keys');
@@ -67,6 +71,24 @@ os.ui.menu.layer.setup = function() {
       type: os.ui.menu.MenuItemType.GROUP,
       sort: os.ui.menu.layer.GroupSort.GROUPS++,
       children: [{
+        label: 'Save',
+        eventType: os.action.EventType.SAVE_LAYER,
+        tooltip: 'Saves the changes to the layer',
+        icons: ['<i class="fa fa-fw fa-save"></i>'],
+        beforeRender: os.ui.menu.layer.visibleIfSupported,
+        handler: os.ui.menu.layer.onSave_,
+        metricKey: os.metrics.Layer.SAVE,
+        sort: -10010 // we want this to appear at the top when its available
+      }, {
+        label: 'Save As...',
+        eventType: os.action.EventType.SAVE_LAYER_AS,
+        tooltip: 'Saves the changes to the layer to a new layer',
+        icons: ['<i class="fa fa-fw fa-save"></i>'],
+        beforeRender: os.ui.menu.layer.visibleIfSupported,
+        handler: os.ui.menu.layer.onSaveAs_,
+        metricKey: os.metrics.Layer.SAVE_AS,
+        sort: -10000 // we want this to appear right below save
+      }, {
         label: 'Go To',
         eventType: os.action.EventType.GOTO,
         tooltip: 'Repositions the map to show the layer',
@@ -289,7 +311,7 @@ os.ui.menu.layer.onDescription_ = function(event) {
   var layers = os.ui.menu.layer.getLayersFromContext(event.getContext());
   var msg = '';
   for (var i = 0; i < layers.length; i++) {
-    var descrip = os.dataManager.getDescriptor(layers[i].getId());
+    var descrip = os.data.DataManager.getInstance().getDescriptor(layers[i].getId());
     if (descrip) {
       msg += descrip.getHtmlDescription();
       if (i < layers.length - 1) {
@@ -324,6 +346,106 @@ os.ui.menu.layer.onDescription_ = function(event) {
   });
 
   os.ui.window.ConfirmUI.launchConfirm(confirmOptions);
+};
+
+
+/**
+ * Handle the "Save" menu event.
+ *
+ * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
+ * @private
+ */
+os.ui.menu.layer.onSave_ = function(event) {
+  var context = event.getContext();
+  if (context) {
+    const sources = os.ui.menu.common.getSourcesFromContext(context);
+
+    if (sources && sources.length == 1) {
+      let exporter = os.ui.file.ExportManager.getInstance().getExportMethods()[1];
+      const source = sources[0];
+      const layerName = source.getTitle(true);
+      const descriptor = os.data.DataManager.getInstance().getDescriptor(source.getId());
+
+      if (descriptor instanceof os.data.FileDescriptor) {
+        exporter = descriptor.getExporter();
+      }
+
+      const options = /** @type {os.ex.ExportOptions} */ ({
+        items: source.getFeatures(),
+        sources: [source],
+        fields: os.source.getExportFields(source, false, exporter.supportsTime()),
+        title: layerName,
+        keepTitle: true,
+        createDescriptor: !(descriptor instanceof os.data.FileDescriptor),
+        exporter
+      });
+
+      os.ui.file.ExportManager.getInstance().exportItems(options);
+      source.setHasModifications(false);
+
+      const msg = `${layerName} changes saved successfully.`;
+      os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.SUCCESS);
+    }
+  }
+};
+
+
+/**
+ * Handle the "Save As" menu event.
+ *
+ * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
+ * @private
+ */
+os.ui.menu.layer.onSaveAs_ = function(event) {
+  var context = event.getContext();
+  if (context) {
+    const sources = os.ui.menu.common.getSourcesFromContext(context);
+    if (sources && sources.length == 1) {
+      const source = sources[0];
+      const layerName = source.getTitle(true);
+      const exporter = os.ui.file.ExportManager.getInstance().getExportMethods()[1];
+
+      const options = /** @type {os.ex.ExportOptions} */ ({
+        items: source.getFeatures(),
+        sources: [source],
+        fields: os.source.getExportFields(source, false, exporter.supportsTime()),
+        title: layerName,
+        exporter
+      });
+
+      const confirmOptions = /** @type {!osx.window.ConfirmTextOptions} */ ({
+        confirm: os.ui.menu.layer.confirmSaveAs_.bind(undefined, options),
+        defaultValue: layerName,
+        prompt: 'Please choose a name for the new layer:',
+        windowOptions: /** @type {!osx.window.WindowOptions} */ ({
+          icon: 'fa fa-save-o',
+          label: `Save ${layerName} As`
+        })
+      });
+
+      os.ui.window.launchConfirmText(confirmOptions);
+    }
+  }
+};
+
+
+/**
+ * Handles confirming the save as dialog.
+ * @param {os.ex.ExportOptions} options The folder options.
+ * @param {string} title The chosen folder title.
+ */
+os.ui.menu.layer.confirmSaveAs_ = function(options, title) {
+  options.title = title;
+  options.keepTitle = true;
+  options.createDescriptor = true;
+
+  os.ui.file.ExportManager.getInstance().exportItems(options);
+
+  const source = options.sources[0];
+  source.setHasModifications(false);
+
+  const msg = `${title} changes saved successfully.`;
+  os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.SUCCESS);
 };
 
 

@@ -1,12 +1,14 @@
-goog.provide('plugin.file.kml.ui.KMLTreeExportCtrl');
-goog.provide('plugin.file.kml.ui.kmlTreeExportDirective');
+goog.module('plugin.file.kml.ui.KMLTreeExportUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.asserts');
-goog.require('os');
-goog.require('os.ui.Module');
-goog.require('os.ui.window');
-goog.require('plugin.file.kml.KMLTreeExporter');
-goog.require('plugin.file.kml.ui.kmlExportDirective');
+const asserts = goog.require('goog.asserts');
+const {ROOT} = goog.require('os');
+const config = goog.require('os.config');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const exportManager = goog.require('os.ui.exportManager');
+const osWindow = goog.require('os.ui.window');
+const KMLTreeExporter = goog.require('plugin.file.kml.KMLTreeExporter');
 
 
 /**
@@ -14,24 +16,28 @@ goog.require('plugin.file.kml.ui.kmlExportDirective');
  *
  * @return {angular.Directive}
  */
-plugin.file.kml.ui.kmlTreeExportDirective = function() {
-  return {
-    restrict: 'E',
-    scope: {
-      'rootNode': '=',
-      'options': '='
-    },
-    templateUrl: os.ROOT + 'views/plugin/kml/kmltreeexport.html',
-    controller: plugin.file.kml.ui.KMLTreeExportCtrl,
-    controllerAs: 'treeExport'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  scope: {
+    'rootNode': '=',
+    'options': '='
+  },
+  templateUrl: ROOT + 'views/plugin/kml/kmltreeexport.html',
+  controller: Controller,
+  controllerAs: 'treeExport'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'kmltreeexport';
 
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('kmltreeexport', [plugin.file.kml.ui.kmlTreeExportDirective]);
+Module.directive('kmltreeexport', [directive]);
 
 
 /**
@@ -40,7 +46,7 @@ os.ui.Module.directive('kmltreeexport', [plugin.file.kml.ui.kmlTreeExportDirecti
  * @param {string=} opt_winLabel The window label
  * @param {os.ex.ExportOptions=} opt_addOptions
  */
-plugin.file.kml.ui.launchTreeExport = function(rootNode, opt_winLabel, opt_addOptions) {
+const launchTreeExport = function(rootNode, opt_winLabel, opt_addOptions) {
   var scopeOptions = {
     'rootNode': rootNode,
     'options': opt_addOptions
@@ -58,8 +64,8 @@ plugin.file.kml.ui.launchTreeExport = function(rootNode, opt_winLabel, opt_addOp
     'show-close': true
   };
 
-  var template = '<kmltreeexport root-node="rootNode" options="options"></kmltreeexport>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  var template = `<${directiveTag} root-node="rootNode" options="options"></${directiveTag}>`;
+  osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 };
 
 
@@ -67,147 +73,163 @@ plugin.file.kml.ui.launchTreeExport = function(rootNode, opt_winLabel, opt_addOp
 /**
  * Controller function for the kmltreeexport directive
  *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
  * @template T
+ * @unrestricted
  */
-plugin.file.kml.ui.KMLTreeExportCtrl = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.Scope}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.Scope}
+     * @protected
+     */
+    this.scope = $scope;
+
+    /**
+     * @type {?angular.JQLite}
+     * @protected
+     */
+    this.element = $element;
+
+    var root = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['rootNode']);
+
+    /**
+     * @type {string}
+     */
+    this['title'] = root && root.getLabel() || (config.getAppName() + ' KML Tree').trim();
+
+    /**
+     * @type {!KMLTreeExporter}
+     */
+    this['exporter'] = new KMLTreeExporter();
+
+    /**
+     * @type {!Object<string, os.ex.IPersistenceMethod>}
+     */
+    this['persisters'] = {};
+
+    /**
+     * @type {os.ex.IPersistenceMethod}
+     */
+    this['persister'] = null;
+
+    const options = this.scope['options'];
+
+    /**
+     * @type {boolean}
+     */
+    this['additionalOptions'] = (options && options.additionalOptions) || false;
+
+    /**
+     * The data to be exported
+     * @type {boolean}
+     */
+    this.scope['exportData'] = this.scope['rootNode'].getChildren();
+
+    var persisters = exportManager.getPersistenceMethods();
+    if (persisters && persisters.length > 0) {
+      this['persister'] = persisters[0];
+
+      for (var i = 0, n = persisters.length; i < n; i++) {
+        this['persisters'][persisters[i].getLabel()] = persisters[i];
+      }
+    }
+
+    $scope.$on('$destroy', this.destroy.bind(this));
+
+    // Don't listen for this if we don't have additional options
+    if (this['additionalOptions']) {
+      $scope.$on('addexportoptions.updateitem', function(event, items) {
+        this.scope['exportData'] = items || [];
+      }.bind(this));
+    }
+
+    // fire auto height event
+    setTimeout(function() {
+      $scope.$emit(WindowEventType.READY);
+    }, 0);
+  }
+
+  /**
+   * Clean up.
+   *
    * @protected
    */
-  this.scope = $scope;
+  destroy() {
+    this.scope = null;
+    this.element = null;
+  }
 
   /**
-   * @type {?angular.JQLite}
-   * @protected
+   * Fire the cancel callback and close the window.
+   *
+   * @export
    */
-  this.element = $element;
-
-  var root = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['rootNode']);
+  cancel() {
+    this.close_();
+  }
 
   /**
-   * @type {string}
+   * Fire the confirmation callback and close the window.
+   *
+   * @export
    */
-  this['title'] = root && root.getLabel() || (os.config.getAppName() + ' KML Tree').trim();
+  confirm() {
+    asserts.assert(this.scope != null, 'scope is not defined');
+    asserts.assert(this.scope['rootNode'] != null, 'KML root is not defined');
+    asserts.assert(this['exporter'] != null, 'exporter is not defined');
+    asserts.assert(this['persister'] != null, 'persister is not defined');
+    asserts.assert(!!this['title'], 'export title is empty/null');
 
-  /**
-   * @type {!plugin.file.kml.KMLTreeExporter}
-   */
-  this['exporter'] = new plugin.file.kml.KMLTreeExporter();
+    var root = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['rootNode']);
+    if (root) {
+      var items = root.getChildren() || [root];
+      items = this['additionalOptions'] ? this.scope['exportData'] : items;
 
-  /**
-   * @type {!Object<string, os.ex.IPersistenceMethod>}
-   */
-  this['persisters'] = {};
+      var options = /** @type {os.ex.ExportOptions} */ ({
+        items: items,
+        fields: null,
+        title: this['title'],
+        exporter: this['exporter'],
+        persister: this['persister']
+      });
 
-  /**
-   * @type {os.ex.IPersistenceMethod}
-   */
-  this['persister'] = null;
-
-  const options = this.scope['options'];
-
-  /**
-   * @type {boolean}
-   */
-  this['additionalOptions'] = (options && options.additionalOptions) || false;
-
-  /**
-   * The data to be exported
-   * @type {boolean}
-   */
-  this.scope['exportData'] = this.scope['rootNode'].getChildren();
-
-  var persisters = os.ui.exportManager.getPersistenceMethods();
-  if (persisters && persisters.length > 0) {
-    this['persister'] = persisters[0];
-
-    for (var i = 0, n = persisters.length; i < n; i++) {
-      this['persisters'][persisters[i].getLabel()] = persisters[i];
+      exportManager.exportItems(options);
+      this.close_();
     }
   }
 
-  $scope.$on('$destroy', this.destroy.bind(this));
-
-  // Don't listen for this if we don't have additional options
-  if (this['additionalOptions']) {
-    $scope.$on('addexportoptions.updateitem', function(event, items) {
-      this.scope['exportData'] = items || [];
-    }.bind(this));
+  /**
+   * Close the window.
+   *
+   * @private
+   */
+  close_() {
+    osWindow.close(this.element);
   }
 
-  // fire auto height event
-  setTimeout(function() {
-    $scope.$emit(os.ui.WindowEventType.READY);
-  }, 0);
-};
-
-
-/**
- * Clean up.
- *
- * @protected
- */
-plugin.file.kml.ui.KMLTreeExportCtrl.prototype.destroy = function() {
-  this.scope = null;
-  this.element = null;
-};
-
-
-/**
- * Fire the cancel callback and close the window.
- *
- * @export
- */
-plugin.file.kml.ui.KMLTreeExportCtrl.prototype.cancel = function() {
-  this.close_();
-};
-
-
-/**
- * Fire the confirmation callback and close the window.
- *
- * @export
- */
-plugin.file.kml.ui.KMLTreeExportCtrl.prototype.confirm = function() {
-  goog.asserts.assert(this.scope != null, 'scope is not defined');
-  goog.asserts.assert(this.scope['rootNode'] != null, 'KML root is not defined');
-  goog.asserts.assert(this['exporter'] != null, 'exporter is not defined');
-  goog.asserts.assert(this['persister'] != null, 'persister is not defined');
-  goog.asserts.assert(!!this['title'], 'export title is empty/null');
-
-  var root = /** @type {plugin.file.kml.ui.KMLNode} */ (this.scope['rootNode']);
-  if (root) {
-    var items = root.getChildren() || [root];
-    items = this['additionalOptions'] ? this.scope['exportData'] : items;
-    os.ui.exportManager.exportItems(items, null, this['title'], this['exporter'], this['persister']);
-    this.close_();
+  /**
+   * Disables the OK button.
+   * @return {boolean}
+   * @export
+   */
+  disable() {
+    if (this['additionalOptions'] && this.scope['exportData']) {
+      return this.scope['exportData'].length <= 0;
+    } else {
+      return false;
+    }
   }
-};
+}
 
-
-/**
- * Close the window.
- *
- * @private
- */
-plugin.file.kml.ui.KMLTreeExportCtrl.prototype.close_ = function() {
-  os.ui.window.close(this.element);
-};
-
-
-/**
- * Disables the OK button.
- * @return {boolean}
- * @export
- */
-plugin.file.kml.ui.KMLTreeExportCtrl.prototype.disable = function() {
-  if (this['additionalOptions'] && this.scope['exportData']) {
-    return this.scope['exportData'].length <= 0;
-  } else {
-    return false;
-  }
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  launchTreeExport
 };

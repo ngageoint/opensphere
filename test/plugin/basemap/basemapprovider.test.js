@@ -1,9 +1,16 @@
 goog.require('goog.events.EventTarget');
+goog.require('os.data.DataManager');
 goog.require('os.map.terrain');
 goog.require('os.mock');
+goog.require('plugin.basemap');
 goog.require('plugin.basemap.BaseMapProvider');
 
 describe('plugin.basemap.BaseMapProvider', function() {
+  const DataManager = goog.module.get('os.data.DataManager');
+  const terrain = goog.module.get('os.map.terrain');
+  const basemap = goog.module.get('plugin.basemap');
+  const BaseMapProvider = goog.module.get('plugin.basemap.BaseMapProvider');
+
   var expectedTerrainType = 'testTerrain';
   var expectedTerrainOptions = {
     url: 'http://terrain.com/'
@@ -27,7 +34,7 @@ describe('plugin.basemap.BaseMapProvider', function() {
         title: 'Ignore Me'
       },
       four: {
-        type: plugin.basemap.TERRAIN_TYPE,
+        type: basemap.TERRAIN_TYPE,
         baseType: expectedTerrainType,
         options: expectedTerrainOptions
       }
@@ -40,13 +47,13 @@ describe('plugin.basemap.BaseMapProvider', function() {
     }
   };
 
-  var p = new plugin.basemap.BaseMapProvider();
+  var p = new BaseMapProvider();
 
   it('should configure from both maps and userMaps', function() {
     p.configure(config);
 
     // it should've added four descriptors to the data manager, since unrecognized types should be ignored
-    var dm = os.dataManager;
+    var dm = DataManager.getInstance();
 
     // base maps are identified from config
     expect(dm.getDescriptor('basemap#one')).toBeTruthy();
@@ -64,7 +71,7 @@ describe('plugin.basemap.BaseMapProvider', function() {
     expect(p.defaults_).toContain('two');
 
     // terrain is configured on the map
-    var providers = os.map.terrain.getTerrainProviders();
+    var providers = terrain.getTerrainProviders();
     expect(providers.length).toBe(1);
 
     var terrainOptions = providers[0];
@@ -74,7 +81,7 @@ describe('plugin.basemap.BaseMapProvider', function() {
   });
 
   it('should load descriptors', function() {
-    var dm = os.dataManager;
+    var dm = DataManager.getInstance();
 
     expect(p.getDescriptors().length).toBe(4);
     expect(p.getChildren()).toBeFalsy();
@@ -88,7 +95,7 @@ describe('plugin.basemap.BaseMapProvider', function() {
   });
 
   it('can remove descriptors', function() {
-    var descriptor = os.dataManager.getDescriptor(p.getTerrainId());
+    var descriptor = DataManager.getInstance().getDescriptor(p.getTerrainId());
     expect(descriptor).toBeTruthy();
 
     p.removeDescriptor(descriptor);

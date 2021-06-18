@@ -258,7 +258,7 @@ osx.layer.PresetSearch;
  *   type: !string,
  *   parentId: !string,
  *   name: (string|undefined),
- *   children: (Array<(osx.layer.FolderOptions)>|undefined),
+ *   children: !Array<!osx.layer.FolderOptions>,
  *   collapsed: (boolean|undefined)
  * }}
  */
@@ -424,6 +424,7 @@ osx.window.ConfirmOptions;
  *   windowOptions: (osx.window.WindowOptions|undefined),
  *
  *   prompt: (string|undefined),
+ *   subPrompt: (string|undefined),
  *   defaultValue: (string|undefined),
  *   formLabel: (string|undefined),
  *   limit: (number|undefined),

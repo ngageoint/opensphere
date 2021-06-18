@@ -1,57 +1,60 @@
-goog.provide('os.command.AbstractVectorLayerLOB');
+goog.module('os.command.AbstractVectorLayerLOB');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractVectorStyle');
-goog.require('os.data.OSDataManager');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.source.PropertyChange');
-
+const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
+const OSDataManager = goog.require('os.data.OSDataManager');
+const RecordField = goog.require('os.data.RecordField');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const PropertyChange = goog.require('os.source.PropertyChange');
 
 
 /**
  * Commands for vector line of bearing style changes should extend this class
  *
- * @param {string} layerId
- * @param {T} value
- * @param {T=} opt_oldValue
  *
- * @extends {os.command.AbstractVectorStyle}
- * @constructor
  * @template T
  */
-os.command.AbstractVectorLayerLOB = function(layerId, value, opt_oldValue) {
-  os.command.AbstractVectorLayerLOB.base(this, 'constructor', layerId, value, opt_oldValue);
-};
-goog.inherits(os.command.AbstractVectorLayerLOB, os.command.AbstractVectorStyle);
+class AbstractVectorLayerLOB extends AbstractVectorStyle {
+  /**
+   * Constructor.
+   * @param {string} layerId
+   * @param {T} value
+   * @param {T=} opt_oldValue
+   */
+  constructor(layerId, value, opt_oldValue) {
+    super(layerId, value, opt_oldValue);
+  }
 
-
-/**
- * @inheritDoc
- * @suppress {accessControls}
- */
-os.command.AbstractVectorLayerLOB.prototype.applyValue = function(config, value) {
-  var source = os.osDataManager.getSource(this.layerId);
-  if (source) {
-    var features = source.getFeatures();
-    for (var i = 0, n = features.length; i < n; i++) { // wipe LOB styles
-      features[i].values_[os.data.RecordField.LINE_OF_BEARING] = null;
-      features[i].values_[os.data.RecordField.LINE_OF_BEARING_ERROR_HIGH] = null;
-      features[i].values_[os.data.RecordField.LINE_OF_BEARING_ERROR_LOW] = null;
-      features[i].values_[os.data.RecordField.ELLIPSE] = null;
+  /**
+   * @inheritDoc
+   * @suppress {accessControls}
+   */
+  applyValue(config, value) {
+    var source = OSDataManager.getInstance().getSource(this.layerId);
+    if (source) {
+      var features = source.getFeatures();
+      for (var i = 0, n = features.length; i < n; i++) { // wipe LOB styles
+        features[i].values_[RecordField.LINE_OF_BEARING] = null;
+        features[i].values_[RecordField.LINE_OF_BEARING_ERROR_HIGH] = null;
+        features[i].values_[RecordField.LINE_OF_BEARING_ERROR_LOW] = null;
+        features[i].values_[RecordField.ELLIPSE] = null;
+      }
     }
-  }
-  os.command.AbstractVectorLayerLOB.base(this, 'applyValue', config, value);
-};
-
-
-/**
- * @inheritDoc
- */
-os.command.AbstractVectorLayerLOB.prototype.finish = function(config) {
-  var source = os.osDataManager.getSource(this.layerId);
-  if (source) {
-    var shape = source.getGeometryShape();
-    source.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.GEOMETRY_SHAPE, shape));
+    super.applyValue(config, value);
   }
 
-  os.command.AbstractVectorLayerLOB.base(this, 'finish', config);
-};
+  /**
+   * @inheritDoc
+   */
+  finish(config) {
+    var source = OSDataManager.getInstance().getSource(this.layerId);
+    if (source) {
+      var shape = source.getGeometryShape();
+      source.dispatchEvent(new PropertyChangeEvent(PropertyChange.GEOMETRY_SHAPE, shape));
+    }
+
+    super.finish(config);
+  }
+}
+
+exports = AbstractVectorLayerLOB;

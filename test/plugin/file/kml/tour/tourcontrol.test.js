@@ -2,9 +2,11 @@ goog.require('plugin.file.kml.tour.Tour');
 goog.require('plugin.file.kml.tour.TourControl');
 
 describe('plugin.file.kml.tour.TourControl', function() {
+  const Tour = goog.module.get('plugin.file.kml.tour.Tour');
+  const TourControl = goog.module.get('plugin.file.kml.tour.TourControl');
   it('pauses the tour once', function() {
-    var tour = new plugin.file.kml.tour.Tour();
-    var control = new plugin.file.kml.tour.TourControl(tour);
+    var tour = new Tour();
+    var control = new TourControl(tour);
     tour.addToPlaylist(control);
 
     spyOn(tour, 'pause').andCallThrough();

@@ -4,9 +4,13 @@ goog.module.declareLegacyNamespace();
 const browser = goog.require('goog.labs.userAgent.browser');
 const log = goog.require('goog.log');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const alertManager = goog.require('os.alert.AlertManager');
+const settings = goog.require('os.config.Settings');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const Metrics = goog.require('os.metrics.Metrics');
 const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
+
+
 const LOGGER_ = log.getLogger('PersistPlugin');
 
 const PERSISTENCE_SUCCEEDED = 'storage.persistence.succeeded';
@@ -33,7 +37,7 @@ class PersistPlugin extends AbstractPlugin {
   init() {
     const msgs = [];
     const metrics = Metrics.getInstance();
-    const helpUrl = os.settings.get('plugin.storage.persistenceHelp', 'https://web.dev/persistent-storage/');
+    const helpUrl = settings.getInstance().get('plugin.storage.persistenceHelp', 'https://web.dev/persistent-storage/');
 
     if (navigator.storage && navigator.storage.persist) {
       navigator.storage.persisted().then((result) => {
@@ -49,7 +53,7 @@ class PersistPlugin extends AbstractPlugin {
 
               if (userDecision) {
                 msgs.push(`By declining persistent storage, your application settings may be automatically
-                  reset when under storage pressure (the conditions for that event vary by browser). Get more info 
+                  reset when under storage pressure (the conditions for that event vary by browser). Get more info
                   <a href="${helpUrl}" rel="noopener" target="_blank">here</a>`);
                 this.log(msgs);
                 metrics.updateMetric(PERSISTENCE_DECLINED, 1);
@@ -83,7 +87,7 @@ class PersistPlugin extends AbstractPlugin {
                   }
                 }
               } else {
-                msgs.push(`Browser automatically declined persistence. Get more info 
+                msgs.push(`Browser automatically declined persistence. Get more info
                   <a href="${helpUrl}" rel="noopener" target="_blank">here</a>`);
                 this.log(msgs);
                 metrics.updateMetric(PERSISTENCE_DECLINED, 1);
@@ -106,7 +110,7 @@ class PersistPlugin extends AbstractPlugin {
             will be automatically declined. `;
       }
 
-      msg += `Your application settings may be automatically reset when under storage pressure. Get more info 
+      msg += `Your application settings may be automatically reset when under storage pressure. Get more info
         <a href="${helpUrl}" rel="noopener" target="_blank">here</a>`;
       msgs.push(msg);
 
@@ -122,7 +126,7 @@ class PersistPlugin extends AbstractPlugin {
    */
   logOne(msg) {
     log.warning(LOGGER_, msg);
-    os.alertManager.sendAlert(msg, AlertEventSeverity.WARNING);
+    alertManager.getInstance().sendAlert(msg, AlertEventSeverity.WARNING);
   }
 
   /**

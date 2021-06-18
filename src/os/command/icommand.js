@@ -1,5 +1,7 @@
-goog.provide('os.command.ICommand');
+goog.module('os.command.ICommand');
+goog.module.declareLegacyNamespace();
 
+const State = goog.requireType('os.command.State');
 
 
 /**
@@ -7,49 +9,50 @@ goog.provide('os.command.ICommand');
  *
  * @interface
  */
-os.command.ICommand = function() {};
+class ICommand {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    /**
+     * Return the current state of the command.
+     * @type {!State}
+     */
+    this.state;
 
+    /**
+     * Whether or not the command is asynchronous. If this is true,
+     * then the command should also implement {@link goog.events.Listenable}.
+     * This is generally accomplished by inheriting from
+     * {@link goog.events.EventTarget}.
+     * @type {boolean}
+     */
+    this.isAsync;
 
-/**
- * Executes the command.
- * @return {boolean} <code>true</code> if successful, <code>false</code> otherwise
- */
-os.command.ICommand.prototype.execute;
+    /**
+     * The title of the command.
+     * @type {?string}
+     */
+    this.title;
 
+    /**
+     * The details of the command.
+     * @type {?string}
+     */
+    this.details;
+  }
 
-/**
- * Revert the command and reset the complete and successful flags.
- * @return {boolean} <code>true</code> if successful, <code>false</code> otherwise
- */
-os.command.ICommand.prototype.revert;
+  /**
+   * Executes the command.
+   * @return {boolean} true if successful, false otherwise
+   */
+  execute() {}
 
+  /**
+   * Revert the command and reset the complete and successful flags.
+   * @return {boolean} true if successful, false otherwise
+   */
+  revert() {}
+}
 
-/**
- * Return the current state of the command.
- * @type {!os.command.State}
- */
-os.command.ICommand.prototype.state;
-
-
-/**
- * Whether or not the command is asynchronous. If this is <code>true</code>,
- * then the command should also implement {@link goog.events.Listenable}.
- * This is generally accomplished by inheriting from
- * {@link goog.events.EventTarget}.
- * @type {boolean}
- */
-os.command.ICommand.prototype.isAsync;
-
-
-/**
- * The title of the command.
- * @type {?string}
- */
-os.command.ICommand.prototype.title;
-
-
-/**
- * The details of the command.
- * @type {?string}
- */
-os.command.ICommand.prototype.details;
+exports = ICommand;

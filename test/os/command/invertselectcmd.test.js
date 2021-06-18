@@ -1,20 +1,31 @@
-goog.require('os.command.State');
 goog.require('goog.events.EventType');
-goog.require('os.command.InvertSelect');
-goog.require('os.data.DataManager');
-goog.require('os.mock');
-goog.require('os.source.PropertyChange');
-goog.require('os.source.Vector');
 goog.require('ol.Feature');
 goog.require('ol.events');
 goog.require('ol.geom.Point');
+goog.require('os.command.InvertSelect');
+goog.require('os.command.State');
+goog.require('os.data.DataManager');
+goog.require('os.data.OSDataManager');
+goog.require('os.mock');
+goog.require('os.source.PropertyChange');
+goog.require('os.source.Vector');
 
 
 describe('os.command.InvertSelect', function() {
+  const GoogEventType = goog.module.get('goog.events.EventType');
+  const Feature = goog.module.get('ol.Feature');
+  const events = goog.module.get('ol.events');
+  const Point = goog.module.get('ol.geom.Point');
+  const InvertSelect = goog.module.get('os.command.InvertSelect');
+  const State = goog.module.get('os.command.State');
+  const OSDataManager = goog.module.get('os.data.OSDataManager');
+  const PropertyChange = goog.module.get('os.source.PropertyChange');
+  const VectorSource = goog.module.get('os.source.Vector');
+
   it('should fail when the source is not provided', function() {
-    var cmd = new os.command.InvertSelect(null);
+    var cmd = new InvertSelect(null);
     expect(cmd.execute()).toBe(false);
-    expect(cmd.state).toBe(os.command.State.ERROR);
+    expect(cmd.state).toBe(State.ERROR);
   });
 
   it('should select all the features on the source', function() {
@@ -22,18 +33,18 @@ describe('os.command.InvertSelect', function() {
     // before continuing with tests
     var featuresAdded = false;
     var onChange = function(e) {
-      if (e.getProperty() == os.source.PropertyChange.FEATURES) {
+      if (e.getProperty() == PropertyChange.FEATURES) {
         featuresAdded = true;
       }
     };
 
-    var src = new os.source.Vector();
+    var src = new VectorSource();
     src.setId('testy');
-    ol.events.listen(src, goog.events.EventType.PROPERTYCHANGE, onChange);
+    events.listen(src, GoogEventType.PROPERTYCHANGE, onChange);
     for (var i = 0; i < 3; i++) {
-      var f = new ol.Feature();
+      var f = new Feature();
       f.setId('' + i);
-      f.setGeometry(new ol.geom.Point([0, 0]));
+      f.setGeometry(new Point([0, 0]));
       src.addFeature(f);
     }
 
@@ -42,20 +53,20 @@ describe('os.command.InvertSelect', function() {
     }, 'features to be added to crossfilter');
 
     runs(function() {
-      ol.events.unlisten(src, goog.events.EventType.PROPERTYCHANGE, onChange);
+      events.unlisten(src, GoogEventType.PROPERTYCHANGE, onChange);
       src.addToSelected(f);
-      os.osDataManager.addSource(src);
+      OSDataManager.getInstance().addSource(src);
 
-      var cmd = new os.command.InvertSelect(src.getId());
+      var cmd = new InvertSelect(src.getId());
       expect(cmd.execute()).toBe(true);
-      expect(cmd.state).toBe(os.command.State.SUCCESS);
+      expect(cmd.state).toBe(State.SUCCESS);
       expect(src.getSelectedItems().length).toBe(2);
 
       expect(cmd.revert()).toBe(true);
-      expect(cmd.state).toBe(os.command.State.READY);
+      expect(cmd.state).toBe(State.READY);
       expect(src.getSelectedItems().length).toBe(1);
 
-      os.osDataManager.removeSource(src);
+      OSDataManager.getInstance().removeSource(src);
     });
   });
 });

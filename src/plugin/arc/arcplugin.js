@@ -1,69 +1,77 @@
-goog.provide('plugin.arc.ArcPlugin');
+goog.module('plugin.arc.ArcPlugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.ProviderEntry');
-goog.require('os.plugin.AbstractPlugin');
-goog.require('os.state.StateManager');
-goog.require('os.ui.ProviderImportUI');
-goog.require('plugin.arc');
-goog.require('plugin.arc.ArcImportForm');
-goog.require('plugin.arc.ArcLoader');
-goog.require('plugin.arc.ArcServer');
-goog.require('plugin.arc.ArcServerHelpUI');
-goog.require('plugin.arc.arcImportDirective');
-goog.require('plugin.arc.layer.ArcFeatureLayerConfig');
-goog.require('plugin.arc.layer.ArcImageLayerConfig');
-goog.require('plugin.arc.layer.ArcLayerDescriptor');
-goog.require('plugin.arc.layer.ArcTileLayerConfig');
-goog.require('plugin.arc.mime');
-goog.require('plugin.arc.state.v2.arcstate');
-
+const DataManager = goog.require('os.data.DataManager');
+const ProviderEntry = goog.require('os.data.ProviderEntry');
+const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
+const net = goog.require('os.net');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const StateManager = goog.require('os.state.StateManager');
+const ImportManager = goog.require('os.ui.im.ImportManager');
+const ProviderImportUI = goog.require('os.ui.ProviderImportUI');
+const arc = goog.require('plugin.arc');
+const ArcImportForm = goog.require('plugin.arc.ArcImportForm');
+const {directiveTag: arcImportEl} = goog.require('plugin.arc.ArcImportUI');
+const ArcLoader = goog.require('plugin.arc.ArcLoader');
+const ArcServer = goog.require('plugin.arc.ArcServer');
+const ArcServerHelpUI = goog.require('plugin.arc.ArcServerHelpUI');
+const ArcFeatureLayerConfig = goog.require('plugin.arc.layer.ArcFeatureLayerConfig');
+const ArcImageLayerConfig = goog.require('plugin.arc.layer.ArcImageLayerConfig');
+const ArcLayerDescriptor = goog.require('plugin.arc.layer.ArcLayerDescriptor');
+const {registerMimeTypes} = goog.require('plugin.arc.mime');
+const ArcTileLayerConfig = goog.require('plugin.arc.layer.ArcTileLayerConfig');
+const arcstate = goog.require('plugin.arc.state.v2.arcstate');
 
 
 /**
  * Plugin for arc server support in opensphere.
- *
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
  */
-plugin.arc.ArcPlugin = function() {
-  plugin.arc.ArcPlugin.base(this, 'constructor');
-  this.id = plugin.arc.ID;
-};
-goog.inherits(plugin.arc.ArcPlugin, os.plugin.AbstractPlugin);
+class ArcPlugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = arc.ID;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  init() {
+    registerMimeTypes();
 
-/**
- * @inheritDoc
- */
-plugin.arc.ArcPlugin.prototype.init = function() {
-  var dm = os.dataManager;
-  var arcEntry = new os.data.ProviderEntry(this.id, plugin.arc.ArcServer, 'Arc Server',
-      'Arc servers provide feature and tile data.');
+    var dm = DataManager.getInstance();
+    var arcEntry = new ProviderEntry(this.id, ArcServer, 'Arc Server',
+        'Arc servers provide feature and tile data.');
 
-  dm.registerProviderType(arcEntry);
-  dm.registerDescriptorType(this.id, plugin.arc.layer.ArcLayerDescriptor);
+    dm.registerProviderType(arcEntry);
+    dm.registerDescriptorType(this.id, ArcLayerDescriptor);
 
-  var lcm = os.layer.config.LayerConfigManager.getInstance();
-  lcm.registerLayerConfig(plugin.arc.layer.ArcFeatureLayerConfig.ID, plugin.arc.layer.ArcFeatureLayerConfig);
-  lcm.registerLayerConfig(plugin.arc.layer.ArcTileLayerConfig.ID, plugin.arc.layer.ArcTileLayerConfig);
-  lcm.registerLayerConfig(plugin.arc.layer.ArcImageLayerConfig.ID, plugin.arc.layer.ArcImageLayerConfig);
+    var lcm = LayerConfigManager.getInstance();
+    lcm.registerLayerConfig(ArcFeatureLayerConfig.ID, ArcFeatureLayerConfig);
+    lcm.registerLayerConfig(ArcTileLayerConfig.ID, ArcTileLayerConfig);
+    lcm.registerLayerConfig(ArcImageLayerConfig.ID, ArcImageLayerConfig);
 
-  var im = os.ui.im.ImportManager.getInstance();
-  im.registerImportUI(this.id, new os.ui.ProviderImportUI('<arcserver></arcserver>'));
-  im.registerServerType(this.id, {
-    type: 'arc',
-    helpUi: plugin.arc.ArcServerHelpUI.directiveTag,
-    formUi: plugin.arc.ArcImportForm.directiveTag,
-    label: 'ArcGIS Server'
-  });
+    var im = ImportManager.getInstance();
+    im.registerImportUI(this.id, new ProviderImportUI(`<${arcImportEl}></${arcImportEl}>`));
+    im.registerServerType(this.id, {
+      type: 'arc',
+      helpUi: ArcServerHelpUI.directiveTag,
+      formUi: ArcImportForm.directiveTag,
+      label: 'ArcGIS Server'
+    });
 
-  var sm = os.state.StateManager.getInstance();
-  sm.addLoadFunction(plugin.arc.state.v2.arcstate.load);
-  sm.addSaveFunction(plugin.arc.state.v2.arcstate.save);
+    var sm = StateManager.getInstance();
+    sm.addLoadFunction(arcstate.load);
+    sm.addSaveFunction(arcstate.save);
 
-  // Register a default validator to detect Arc server exceptions.
-  os.net.registerDefaultValidator(plugin.arc.getException);
+    // Register a default validator to detect Arc server exceptions.
+    net.registerDefaultValidator(arc.getException);
 
-  // Set the base class for loading an Arc server.
-  plugin.arc.setLoaderClass(plugin.arc.ArcLoader);
-};
+    // Set the base class for loading an Arc server.
+    arc.setLoaderClass(ArcLoader);
+  }
+}
+
+exports = ArcPlugin;

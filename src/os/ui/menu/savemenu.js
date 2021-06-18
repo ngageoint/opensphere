@@ -9,8 +9,16 @@ goog.require('os.ui.state.menu');
 /**
  * Application save menu.
  * @type {(os.ui.menu.Menu<undefined>|undefined)}
+ * @deprecated use os.ui.menu.save.MENU instead
  */
 os.ui.menu.SAVE = undefined;
+
+
+/**
+ * Application save menu.
+ * @type {(os.ui.menu.Menu<undefined>|undefined)}
+ */
+os.ui.menu.save.MENU = undefined;
 
 
 /**
@@ -18,7 +26,7 @@ os.ui.menu.SAVE = undefined;
  */
 os.ui.menu.save.setup = function() {
   if (!os.ui.menu.SAVE) {
-    os.ui.menu.SAVE = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
+    os.ui.menu.SAVE = os.ui.menu.save.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
       type: os.ui.menu.MenuItemType.ROOT,
       children: [{
         label: 'State',
@@ -39,7 +47,8 @@ os.ui.menu.save.setup = function() {
  * Disposes layer actions
  */
 os.ui.menu.save.dispose = function() {
-  goog.dispose(os.ui.menu.SAVE);
+  goog.dispose(os.ui.menu.save.MENU);
+  os.ui.menu.save.MENU = undefined;
   os.ui.menu.SAVE = undefined;
 };
 

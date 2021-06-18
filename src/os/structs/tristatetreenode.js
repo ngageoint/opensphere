@@ -52,10 +52,10 @@ os.structs.TriStateTreeNode = function() {
 
   /**
    * Whether or not the checkbox should be disabled;
-   * @type {boolean}
+   * @type {?boolean}
    * @private
    */
-  this.disabled_ = false;
+  this.disabled_ = null;
 };
 goog.inherits(os.structs.TriStateTreeNode, os.structs.TreeNode);
 
@@ -230,7 +230,7 @@ os.structs.TriStateTreeNode.prototype.updateChild = function(child, state) {
 /**
  * Gets whether the checkbox should be disabled for this treenode.
  *
- * @return {boolean}
+ * @return {?boolean}
  */
 os.structs.TriStateTreeNode.prototype.getCheckboxDisabled = function() {
   return this.disabled_;
@@ -240,7 +240,7 @@ os.structs.TriStateTreeNode.prototype.getCheckboxDisabled = function() {
 /**
  * Sets whether the checkbox should be disabled for this treenode.
  *
- * @param {boolean} disabled
+ * @param {?boolean} disabled
  */
 os.structs.TriStateTreeNode.prototype.setCheckboxDisabled = function(disabled) {
   this.disabled_ = disabled;

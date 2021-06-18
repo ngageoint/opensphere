@@ -1,11 +1,11 @@
-goog.provide('os.ui.im.action.FilterActionNodeUICtrl');
-goog.provide('os.ui.im.action.filterActionNodeUIDirective');
+goog.module('os.ui.im.action.FilterActionNodeUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.im.action.ImportActionEventType');
-goog.require('os.metrics.Metrics');
-goog.require('os.ui.Module');
-goog.require('os.ui.filter.ui.FilterNodeUICtrl');
-goog.require('os.ui.filter.ui.filterNodeUIDirective');
+const ImportActionEventType = goog.require('os.im.action.ImportActionEventType');
+const Metrics = goog.require('os.metrics.Metrics');
+const Module = goog.require('os.ui.Module');
+const FilterNodeUICtrl = goog.require('os.ui.filter.ui.FilterNodeUICtrl');
+const filterNodeUIDirective = goog.require('os.ui.filter.ui.filterNodeUIDirective');
 
 
 /**
@@ -13,9 +13,9 @@ goog.require('os.ui.filter.ui.filterNodeUIDirective');
  *
  * @return {angular.Directive}
  */
-os.ui.im.action.filterActionNodeUIDirective = function() {
-  var directive = os.ui.filter.ui.filterNodeUIDirective();
-  directive.controller = os.ui.im.action.FilterActionNodeUICtrl;
+const directive = () => {
+  var directive = filterNodeUIDirective();
+  directive.controller = Controller;
   directive.template = '<span ng-if="nodeUi.show()" class="d-flex flex-shrink-0">' +
       '<span ng-click="nodeUi.copy()">' +
       '<i class="fa fa-copy fa-fw c-glyph" title="Copy the action"></i></span>' +
@@ -27,72 +27,83 @@ os.ui.im.action.filterActionNodeUIDirective = function() {
   return directive;
 };
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'filteractionnodeui';
+
 
 /**
  * Add the directive to the Angular module.
  */
-os.ui.Module.directive('filteractionnodeui', [os.ui.im.action.filterActionNodeUIDirective]);
+Module.directive('filteractionnodeui', [directive]);
 
 
 
 /**
  * Controller for selected/highlighted node UI.
- *
- * @param {!angular.Scope} $scope The Angular scope.
- * @param {!angular.JQLite} $element The root DOM element.
- * @extends {os.ui.filter.ui.FilterNodeUICtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.im.action.FilterActionNodeUICtrl = function($scope, $element) {
-  os.ui.im.action.FilterActionNodeUICtrl.base(this, 'constructor', $scope, $element);
-};
-goog.inherits(os.ui.im.action.FilterActionNodeUICtrl, os.ui.filter.ui.FilterNodeUICtrl);
-
-
-/**
- * Copy the filter action.
- *
- * @override
- * @export
- */
-os.ui.im.action.FilterActionNodeUICtrl.prototype.copy = function() {
-  var node = /** @type {os.ui.im.action.FilterActionNode} */ (this.scope['item']);
-  var entry = node.getEntry();
-
-  if (entry) {
-    var parentIndex = os.structs.getIndexInParent(node);
-    this.scope.$emit(os.im.action.ImportActionEventType.COPY_ENTRY, entry, parentIndex);
-    os.metrics.Metrics.getInstance().updateMetric(os.im.action.Metrics.COPY, 1);
+class Controller extends FilterNodeUICtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope The Angular scope.
+   * @param {!angular.JQLite} $element The root DOM element.
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
   }
-};
 
+  /**
+   * Copy the filter action.
+   *
+   * @override
+   * @export
+   */
+  copy() {
+    var node = /** @type {os.ui.im.action.FilterActionNode} */ (this.scope['item']);
+    var entry = node.getEntry();
 
-/**
- * Edit the filter action.
- *
- * @override
- * @export
- */
-os.ui.im.action.FilterActionNodeUICtrl.prototype.edit = function() {
-  var entry = /** @type {os.ui.im.action.FilterActionNode} */ (this.scope['item']).getEntry();
-  if (entry) {
-    this.scope.$emit(os.im.action.ImportActionEventType.EDIT_ENTRY, entry);
-    os.metrics.Metrics.getInstance().updateMetric(os.im.action.Metrics.EDIT, 1);
+    if (entry) {
+      var parentIndex = os.structs.getIndexInParent(node);
+      this.scope.$emit(ImportActionEventType.COPY_ENTRY, entry, parentIndex);
+      Metrics.getInstance().updateMetric(os.im.action.Metrics.COPY, 1);
+    }
   }
-};
 
-
-/**
- * Remove the filter action.
- *
- * @override
- * @export
- */
-os.ui.im.action.FilterActionNodeUICtrl.prototype.remove = function() {
-  var entry = /** @type {os.ui.im.action.FilterActionNode} */ (this.scope['item']).getEntry();
-  if (entry && !entry.isDefault()) {
-    this.scope.$emit(os.im.action.ImportActionEventType.REMOVE_ENTRY, entry);
-    os.metrics.Metrics.getInstance().updateMetric(os.im.action.Metrics.REMOVE, 1);
+  /**
+   * Edit the filter action.
+   *
+   * @override
+   * @export
+   */
+  edit() {
+    var entry = /** @type {os.ui.im.action.FilterActionNode} */ (this.scope['item']).getEntry();
+    if (entry) {
+      this.scope.$emit(ImportActionEventType.EDIT_ENTRY, entry);
+      Metrics.getInstance().updateMetric(os.im.action.Metrics.EDIT, 1);
+    }
   }
+
+  /**
+   * Remove the filter action.
+   *
+   * @override
+   * @export
+   */
+  remove() {
+    var entry = /** @type {os.ui.im.action.FilterActionNode} */ (this.scope['item']).getEntry();
+    if (entry && !entry.isDefault()) {
+      this.scope.$emit(ImportActionEventType.REMOVE_ENTRY, entry);
+      Metrics.getInstance().updateMetric(os.im.action.Metrics.REMOVE, 1);
+    }
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

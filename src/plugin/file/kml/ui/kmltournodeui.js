@@ -1,9 +1,11 @@
-goog.provide('plugin.file.kml.ui.KMLTourNodeUICtrl');
-goog.provide('plugin.file.kml.ui.kmlTourNodeUIDirective');
+goog.module('plugin.file.kml.ui.KMLTourNodeUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
-goog.require('os.ui.slick.AbstractNodeUICtrl');
-goog.require('plugin.file.kml.tour.EventType');
+const ui = goog.require('os.ui');
+
+const Module = goog.require('os.ui.Module');
+const AbstractNodeUICtrl = goog.require('os.ui.slick.AbstractNodeUICtrl');
+const EventType = goog.require('plugin.file.kml.tour.EventType');
 
 
 /**
@@ -11,148 +13,154 @@ goog.require('plugin.file.kml.tour.EventType');
  *
  * @return {angular.Directive}
  */
-plugin.file.kml.ui.kmlTourNodeUIDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    template: '<span class="slick-node-ui" ng-if="ctrl.show()">' +
-        '<span ng-if="!ctrl.isPlaying()" ng-click="ctrl.play()" title="Play the tour">' +
-            '<i class="fa fa-fw fa-play c-glyph"></i></span>' +
-        '<span ng-if="ctrl.isPlaying()" ng-click="ctrl.pause()" title="Pause the tour">' +
-            '<i class="fa fa-fw fa-pause c-glyph"></i></span>' +
-        '<span ng-click="ctrl.reset()" title="Reset the tour">' +
-            '<i class="fa fa-fw fa-undo c-glyph"></i></span>' +
-        '</span>',
-    controller: plugin.file.kml.ui.KMLTourNodeUICtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+
+  template: '<span class="slick-node-ui" ng-if="ctrl.show()">' +
+      '<span ng-if="!ctrl.isPlaying()" ng-click="ctrl.play()" title="Play the tour">' +
+          '<i class="fa fa-fw fa-play c-glyph"></i></span>' +
+      '<span ng-if="ctrl.isPlaying()" ng-click="ctrl.pause()" title="Pause the tour">' +
+          '<i class="fa fa-fw fa-pause c-glyph"></i></span>' +
+      '<span ng-click="ctrl.reset()" title="Reset the tour">' +
+          '<i class="fa fa-fw fa-undo c-glyph"></i></span>' +
+      '</span>',
+
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'kmltournodeui';
 
 
 /**
  * Add the directive to the Angular module
  */
-os.ui.Module.directive('kmltournodeui', [plugin.file.kml.ui.kmlTourNodeUIDirective]);
+Module.directive('kmltournodeui', [directive]);
 
 
 
 /**
  * Controller for KML tour node UI.
- *
- * @param {!angular.Scope} $scope The Angular scope.
- * @param {!angular.JQLite} $element The root DOM element.
- * @extends {os.ui.slick.AbstractNodeUICtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-plugin.file.kml.ui.KMLTourNodeUICtrl = function($scope, $element) {
-  plugin.file.kml.ui.KMLTourNodeUICtrl.base(this, 'constructor', $scope, $element);
+class Controller extends AbstractNodeUICtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope The Angular scope.
+   * @param {!angular.JQLite} $element The root DOM element.
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
+
+    /**
+     * The KML tour.
+     * @type {plugin.file.kml.tour.Tour|undefined}
+     * @private
+     */
+    this.tour_ = this.getTour();
+
+    if (this.tour_) {
+      this.tour_.listen(EventType.PLAYING, this.onTourEvent, false, this);
+    }
+  }
 
   /**
-   * The KML tour.
-   * @type {plugin.file.kml.tour.Tour|undefined}
-   * @private
+   * @inheritDoc
    */
-  this.tour_ = this.getTour();
+  destroy() {
+    super.destroy();
 
-  if (this.tour_) {
-    this.tour_.listen(plugin.file.kml.tour.EventType.PLAYING, this.onTourEvent, false, this);
-  }
-};
-goog.inherits(plugin.file.kml.ui.KMLTourNodeUICtrl, os.ui.slick.AbstractNodeUICtrl);
-
-
-/**
- * @inheritDoc
- */
-plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.destroy = function() {
-  plugin.file.kml.ui.KMLTourNodeUICtrl.base(this, 'destroy');
-
-  if (this.tour_) {
-    this.tour_.unlisten(plugin.file.kml.tour.EventType.PLAYING, this.onTourEvent, false, this);
-    this.tour_ = undefined;
-  }
-};
-
-
-/**
- * Get the KML tour object.
- *
- * @return {plugin.file.kml.tour.Tour|undefined}
- * @protected
- */
-plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.getTour = function() {
-  var node = /** @type {plugin.file.kml.ui.KMLTourNode} */ (this.scope['item']);
-  if (node) {
-    return node.getTour();
+    if (this.tour_) {
+      this.tour_.unlisten(EventType.PLAYING, this.onTourEvent, false, this);
+      this.tour_ = undefined;
+    }
   }
 
-  return undefined;
-};
+  /**
+   * Get the KML tour object.
+   *
+   * @return {plugin.file.kml.tour.Tour|undefined}
+   * @protected
+   */
+  getTour() {
+    var node = /** @type {plugin.file.kml.ui.KMLTourNode} */ (this.scope['item']);
+    if (node) {
+      return node.getTour();
+    }
 
-
-/**
- * Handle events from the KML tour.
- *
- * @param {!goog.events.Event} event The event.
- * @protected
- */
-plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.onTourEvent = function(event) {
-  os.ui.apply(this.scope);
-};
-
-
-/**
- * If the tour is playing.
- *
- * @return {boolean}
- * @export
- */
-plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.isPlaying = function() {
-  return this.tour_ != null && this.tour_['playing'];
-};
-
-
-/**
- * @inheritDoc
- * @export
- */
-plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.show = function() {
-  return plugin.file.kml.ui.KMLTourNodeUICtrl.base(this, 'show') || this.isPlaying();
-};
-
-
-/**
- * Play the tour.
- *
- * @export
- */
-plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.play = function() {
-  if (this.tour_) {
-    this.tour_.play();
+    return undefined;
   }
-};
 
-
-/**
- * Pause the tour.
- *
- * @export
- */
-plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.pause = function() {
-  if (this.tour_) {
-    this.tour_.pause();
+  /**
+   * Handle events from the KML tour.
+   *
+   * @param {!goog.events.Event} event The event.
+   * @protected
+   */
+  onTourEvent(event) {
+    ui.apply(this.scope);
   }
-};
 
-
-/**
- * Reset the tour.
- *
- * @export
- */
-plugin.file.kml.ui.KMLTourNodeUICtrl.prototype.reset = function() {
-  if (this.tour_) {
-    this.tour_.reset();
+  /**
+   * If the tour is playing.
+   *
+   * @return {boolean}
+   * @export
+   */
+  isPlaying() {
+    return this.tour_ != null && this.tour_['playing'];
   }
+
+  /**
+   * @inheritDoc
+   * @export
+   */
+  show() {
+    return super.show() || this.isPlaying();
+  }
+
+  /**
+   * Play the tour.
+   *
+   * @export
+   */
+  play() {
+    if (this.tour_) {
+      this.tour_.play();
+    }
+  }
+
+  /**
+   * Pause the tour.
+   *
+   * @export
+   */
+  pause() {
+    if (this.tour_) {
+      this.tour_.pause();
+    }
+  }
+
+  /**
+   * Reset the tour.
+   *
+   * @export
+   */
+  reset() {
+    if (this.tour_) {
+      this.tour_.reset();
+    }
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

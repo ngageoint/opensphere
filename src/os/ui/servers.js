@@ -123,6 +123,7 @@ os.ui.ServersCtrl.prototype.updateData_ = function() {
 
       if (item.includeInServers()) {
         var type = os.dataManager.getProviderTypeByClass(item.constructor);
+        var auth = item.getAuth();
         data.push({
           'id': id,
           'enabled': item.getEnabled(),
@@ -131,7 +132,9 @@ os.ui.ServersCtrl.prototype.updateData_ = function() {
           'error': item.getError(),
           'label': item.getLabel(),
           'item': item,
-          'hasView': !!im.getImportUI(type)
+          'hasView': !!im.getImportUI(type),
+          'authLink': auth && auth.link,
+          'authTooltip': auth && auth.tooltip
         });
 
         if (item instanceof os.ui.server.AbstractLoadingServer) {

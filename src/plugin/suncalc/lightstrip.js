@@ -1,13 +1,15 @@
-goog.provide('plugin.suncalc.LightStripCtrl');
-goog.provide('plugin.suncalc.lightStripDirective');
+goog.module('plugin.suncalc.LightStripUI');
 
-goog.require('goog.async.ConditionalDelay');
-goog.require('os');
-goog.require('os.ui');
-goog.require('os.ui.Module');
-goog.require('plugin.suncalc.LightStripSettings');
-goog.require('plugin.suncalc.LightStripSettingsCtrl');
-goog.require('plugin.suncalc.SunCalcCtrl');
+const dispose = goog.require('goog.dispose');
+const olProj = goog.require('ol.proj');
+const settings = goog.require('os.config.Settings');
+const dispatcher = goog.require('os.Dispatcher');
+const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
+const MapContainer = goog.require('os.MapContainer');
+const osMap = goog.require('os.map');
+const ui = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+const {SettingKey} = goog.require('plugin.suncalc');
 
 
 /**
@@ -15,241 +17,252 @@ goog.require('plugin.suncalc.SunCalcCtrl');
  *
  * @return {angular.Directive}
  */
-plugin.suncalc.lightStripDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    template: '<canvas class="position-absolute" height="2" width=""></canvas>',
-    controller: plugin.suncalc.LightStripCtrl,
-    controllAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  template: '<canvas class="position-absolute" height="2" width=""></canvas>',
+  controller: Controller,
+  controllAs: 'ctrl'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'lightstrip';
 
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('lightstrip', [plugin.suncalc.lightStripDirective]);
+Module.directive(directiveTag, [directive]);
 
 
 /**
  * Controller function for the LightStrip directive
- *
- * @param {!angular.Scope} $scope The scope
- * @param {!angular.JQLite} $element The element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-plugin.suncalc.LightStripCtrl = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.JQLite}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope The scope
+   * @param {!angular.JQLite} $element The element
+   * @ngInject
    */
-  this.element_ = $element;
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
 
-  /**
-   * @type {?ol.View}
-   * @private
-   */
-  this.view_ = null;
-
-  /**
-   * @type {?os.ui.timeline.TimelineScaleOptions}
-   * @private
-   */
-  this.options_ = null;
-
-  /**
-   * Resize handler.
-   * @type {?function()}
-   * @private
-   */
-  this.resizeFn_ = this.update_.bind(this);
-  os.ui.resize(this.element_.parent(), this.resizeFn_);
-
-  /**
-   * Events list
-   * @type {!Array<!{label: string, color: string}>}
-   * @private
-   */
-  this.events_ = [];
-
-  /**
-   * Delay to ensure the lightstrip is initialized on creation.
-   * @type {goog.async.ConditionalDelay}
-   * @private
-   */
-  this.updateDelay_ = new goog.async.ConditionalDelay(this.update_, this);
-
-  os.dispatcher.listen(os.ui.timeline.TimelineScaleEvent.TYPE, this.update_, false, this);
-  $scope.$on('$destroy', this.destroy_.bind(this));
-
-  /**
-   * Determine the dusk calculation method from settings
-   * @private
-   */
-  this.setDuskEventCalculation_();
-  os.settings.listen(plugin.suncalc.SettingKey.DUSK_MODE, this.onDuskModeChange_, false, this);
-
-  this.updateDelay_.start(100, 5000);
-};
-
-
-/**
- * Clean up
- *
- * @private
- */
-plugin.suncalc.LightStripCtrl.prototype.destroy_ = function() {
-  goog.dispose(this.updateDelay_);
-  this.updateDelay_ = null;
-
-  if (this.element_ && this.resizeFn_) {
-    os.ui.removeResize(this.element_.parent(), this.resizeFn_);
-    this.resizeFn_ = null;
-  }
-
-  if (this.view_) {
-    this.view_.un('change:center', this.update_, this);
+    /**
+     * @type {?ol.View}
+     * @private
+     */
     this.view_ = null;
+
+    /**
+     * @type {?ui.timeline.TimelineScaleOptions}
+     * @private
+     */
+    this.options_ = null;
+
+    /**
+     * Resize handler.
+     * @type {?function()}
+     * @private
+     */
+    this.resizeFn_ = this.update_.bind(this);
+    ui.resize(this.element_.parent(), this.resizeFn_);
+
+    /**
+     * Events list
+     * @type {!Array<!{label: string, color: string}>}
+     * @private
+     */
+    this.events_ = [];
+
+    /**
+     * Delay to ensure the lightstrip is initialized on creation.
+     * @type {ConditionalDelay}
+     * @private
+     */
+    this.updateDelay_ = new ConditionalDelay(this.update_, this);
+
+    dispatcher.getInstance().listen(ui.timeline.TimelineScaleEvent.TYPE, this.update_, false, this);
+    $scope.$on('$destroy', this.destroy_.bind(this));
+
+    /**
+     * Determine the dusk calculation method from settings
+     * @private
+     */
+    this.setDuskEventCalculation_();
+    settings.getInstance().listen(SettingKey.DUSK_MODE, this.onDuskModeChange_, false, this);
+
+    this.updateDelay_.start(100, 5000);
   }
 
-  os.dispatcher.unlisten(os.ui.timeline.TimelineScaleEvent.TYPE, this.update_, false, this);
+  /**
+   * Clean up
+   *
+   * @private
+   */
+  destroy_() {
+    dispose(this.updateDelay_);
+    this.updateDelay_ = null;
 
-  os.settings.unlisten(plugin.suncalc.SettingKey.DUSK_MODE, this.onDuskModeChange_, false, this);
+    if (this.element_ && this.resizeFn_) {
+      ui.removeResize(this.element_.parent(), this.resizeFn_);
+      this.resizeFn_ = null;
+    }
 
-  this.element_ = null;
-};
+    if (this.view_) {
+      this.view_.un('change:center', this.update_, this);
+      this.view_ = null;
+    }
 
+    dispatcher.getInstance().unlisten(ui.timeline.TimelineScaleEvent.TYPE, this.update_, false, this);
 
-/**
- * Handle changes to the dusk calculation setting.
- *
- * @private
- */
-plugin.suncalc.LightStripCtrl.prototype.onDuskModeChange_ = function() {
-  this.setDuskEventCalculation_();
-  this.update_();
-};
+    settings.getInstance().unlisten(SettingKey.DUSK_MODE, this.onDuskModeChange_, false, this);
 
-/**
- * Update the length of events within the light script
- *
- * @private
- */
-plugin.suncalc.LightStripCtrl.prototype.setDuskEventCalculation_ = function() {
-  var dawnLabel;
-  var duskLabel;
-
-  switch (os.settings.get(plugin.suncalc.SettingKey.DUSK_MODE)) {
-    case 'nautical':
-      dawnLabel = 'nauticalDawn';
-      duskLabel = 'nauticalDusk';
-      break;
-    case 'civilian':
-      dawnLabel = 'dawn';
-      duskLabel = 'dusk';
-      break;
-    case 'astronomical':
-    default:
-      dawnLabel = 'nightEnd';
-      duskLabel = 'night';
-      break;
+    this.element_ = null;
   }
 
-  this.events_ = [{
-    label: dawnLabel,
-    color: 'navy'
-  }, {
-    label: 'sunrise',
-    color: 'lightskyblue'
-  }, {
-    label: 'sunset',
-    color: 'gold'
-  }, {
-    label: duskLabel,
-    color: 'lightskyblue'
-  }];
-};
-
-
-/**
- * Update the light strip.
- *
- * @param {goog.events.Event=} opt_evt The event
- * @return {boolean} If the update succeeded.
- * @private
- */
-plugin.suncalc.LightStripCtrl.prototype.update_ = function(opt_evt) {
-  if (!this.element_) {
-    // can't update without an element - controller was likely disposed.
-    return true;
+  /**
+   * Handle changes to the dusk calculation setting.
+   *
+   * @private
+   */
+  onDuskModeChange_() {
+    this.setDuskEventCalculation_();
+    this.update_();
   }
 
-  if (opt_evt instanceof os.ui.timeline.TimelineScaleEvent) {
-    this.options_ = opt_evt.options;
+  /**
+   * Update the length of events within the light script
+   *
+   * @private
+   */
+  setDuskEventCalculation_() {
+    var dawnLabel;
+    var duskLabel;
+
+    switch (settings.getInstance().get(SettingKey.DUSK_MODE)) {
+      case 'nautical':
+        dawnLabel = 'nauticalDawn';
+        duskLabel = 'nauticalDusk';
+        break;
+      case 'civilian':
+        dawnLabel = 'dawn';
+        duskLabel = 'dusk';
+        break;
+      case 'astronomical':
+      default:
+        dawnLabel = 'nightEnd';
+        duskLabel = 'night';
+        break;
+    }
+
+    this.events_ = [{
+      label: dawnLabel,
+      color: 'navy'
+    }, {
+      label: 'sunrise',
+      color: 'lightskyblue'
+    }, {
+      label: 'sunset',
+      color: 'gold'
+    }, {
+      label: duskLabel,
+      color: 'lightskyblue'
+    }];
   }
 
-  if (!this.options_) {
-    return false;
-  }
+  /**
+   * Update the light strip.
+   *
+   * @param {goog.events.Event=} opt_evt The event
+   * @return {boolean} If the update succeeded.
+   * @private
+   */
+  update_(opt_evt) {
+    if (!this.element_) {
+      // can't update without an element - controller was likely disposed.
+      return true;
+    }
 
-  var map = os.MapContainer.getInstance().getMap();
-  if (!map) {
-    return false;
-  }
+    if (opt_evt instanceof ui.timeline.TimelineScaleEvent) {
+      this.options_ = opt_evt.options;
+    }
 
-  if (!this.view_) {
-    this.view_ = map.getView();
-
-    if (!this.view_) {
+    if (!this.options_) {
       return false;
     }
 
-    this.view_.on('change:center', this.update_, this);
-  }
-
-  var coord = this.view_.getCenter();
-  if (!coord) {
-    return false;
-  }
-
-  this.element_.attr('width', this.element_.parent().width());
-  var ctx = this.element_[0].getContext('2d');
-  var width = this.element_.width();
-  var height = this.element_.height();
-
-  if (this.options_.interval > 4 * 60 * 60 * 1000) {
-    // the view is going to be too small to matter
-    ctx.clearRect(0, 0, width, height);
-    return false;
-  }
-
-  coord = ol.proj.toLonLat(coord, os.map.PROJECTION);
-  var start = this.options_.start;
-  var end = this.options_.end;
-  var diff = end - start;
-  var tLast = start;
-
-  for (var t = start; tLast < end; t += 24 * 60 * 60 * 1000) {
-    var sun = SunCalc.getTimes(new Date(t), coord[1], coord[0]);
-
-    for (var i = 0, n = this.events_.length; i < n; i++) {
-      var p = sun[this.events_[i].label].getTime();
-
-      if (p > tLast) {
-        // draw from tLast to p in the desired color
-        var l = width * (tLast - start) / diff;
-        var r = Math.min(width * (p - start) / diff, width);
-        ctx.fillStyle = this.events_[i].color;
-        ctx.fillRect(l, 0, r - l, height);
-        tLast = p;
-      }
+    var map = MapContainer.getInstance().getMap();
+    if (!map) {
+      return false;
     }
 
-    ctx.fillStyle = this.events_[0].color;
-    ctx.fillRect(r, 0, width - r, height);
-  }
+    if (!this.view_) {
+      this.view_ = map.getView();
 
-  return true;
+      if (!this.view_) {
+        return false;
+      }
+
+      this.view_.on('change:center', this.update_, this);
+    }
+
+    var coord = this.view_.getCenter();
+    if (!coord) {
+      return false;
+    }
+
+    this.element_.attr('width', this.element_.parent().width());
+    var ctx = this.element_[0].getContext('2d');
+    var width = this.element_.width();
+    var height = this.element_.height();
+
+    if (this.options_.interval > 4 * 60 * 60 * 1000) {
+      // the view is going to be too small to matter
+      ctx.clearRect(0, 0, width, height);
+      return false;
+    }
+
+    coord = olProj.toLonLat(coord, osMap.PROJECTION);
+    var start = this.options_.start;
+    var end = this.options_.end;
+    var diff = end - start;
+    var tLast = start;
+
+    for (var t = start; tLast < end; t += 24 * 60 * 60 * 1000) {
+      var sun = SunCalc.getTimes(new Date(t), coord[1], coord[0]);
+
+      for (var i = 0, n = this.events_.length; i < n; i++) {
+        var p = sun[this.events_[i].label].getTime();
+
+        if (p > tLast) {
+          // draw from tLast to p in the desired color
+          var l = width * (tLast - start) / diff;
+          var r = Math.min(width * (p - start) / diff, width);
+          ctx.fillStyle = this.events_[i].color;
+          ctx.fillRect(l, 0, r - l, height);
+          tLast = p;
+        }
+      }
+
+      ctx.fillStyle = this.events_[0].color;
+      ctx.fillRect(r, 0, width - r, height);
+    }
+
+    return true;
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

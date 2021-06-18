@@ -1,85 +1,87 @@
-goog.provide('plugin.vectortools');
-goog.provide('plugin.vectortools.Icons');
-goog.provide('plugin.vectortools.Options');
-goog.require('goog.string');
-goog.require('os.MapContainer');
-goog.require('os.column.ColumnMappingManager');
-goog.require('os.data.DataManager');
-goog.require('os.layer.Vector');
-goog.require('os.source.Vector');
-goog.require('plugin.vectortools.joinDirective');
-goog.require('plugin.vectortools.mergeDirective');
+goog.module('plugin.vectortools');
+goog.module.declareLegacyNamespace();
+
+const googArray = goog.require('goog.array');
+const googString = goog.require('goog.string');
+const MapContainer = goog.require('os.MapContainer');
+const ColumnMappingManager = goog.require('os.column.ColumnMappingManager');
+const DataManager = goog.require('os.data.DataManager');
+const RecordField = goog.require('os.data.RecordField');
+const IFilterable = goog.require('os.filter.IFilterable');
+const osImplements = goog.require('os.implements');
+const layer = goog.require('os.layer');
+const VectorLayer = goog.require('os.layer.Vector');
+const VectorSource = goog.require('os.source.Vector');
+const StyleType = goog.require('os.style.StyleType');
+const Options = goog.require('plugin.vectortools.Options');
+
+const Feature = goog.requireType('ol.Feature');
+const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
+const ILayer = goog.requireType('os.layer.ILayer');
 
 
 /**
- * Icons for the vectortools actions.
- * @enum {string}
+ * The currently selected option.
+ * @type {Options}
  */
-plugin.vectortools.Icons = {
-  COPY_ICON: 'fa-copy',
-  MERGE_ICON: 'fa-compress',
-  JOIN_ICON: 'fa-object-group'
+let option = Options.SHOWN;
+
+
+/**
+ * Get the currently selected option.
+ * @return {Options}
+ */
+const getOption = () => option;
+
+
+/**
+ * Set the currently selected option.
+ * @param {Options} value The option.
+ */
+const setOption = (value) => {
+  option = value;
 };
 
 
 /**
- * @enum {number}
+ * @param {VectorSource} source The vector source
+ * @param {Options=} opt_which Which features to retrieve
+ * @return {Array<!Feature>} the features
  */
-plugin.vectortools.Options = {
-  ALL: 0,
-  SHOWN: 1,
-  SELECTED: 2,
-  UNSELECTED: 3,
-  HIDDEN: 4
-};
-
-
-/**
- * @type {plugin.vectortools.Options}
- */
-plugin.vectortools.option = plugin.vectortools.Options.SHOWN;
-
-
-/**
- * @param {os.source.Vector} source The vector source
- * @param {plugin.vectortools.Options=} opt_which Which features to retrieve
- * @return {Array<!ol.Feature>} the features
- */
-plugin.vectortools.getFeatures = function(source, opt_which) {
-  opt_which = opt_which || plugin.vectortools.option;
+const getFeatures = function(source, opt_which) {
+  opt_which = opt_which || option;
 
   switch (opt_which) {
-    case plugin.vectortools.Options.ALL:
+    case Options.ALL:
       return source.getFeatures();
-    case plugin.vectortools.Options.SHOWN:
+    case Options.SHOWN:
       return source.getFilteredFeatures();
-    case plugin.vectortools.Options.SELECTED:
+    case Options.SELECTED:
       return source.getSelectedItems();
-    case plugin.vectortools.Options.UNSELECTED:
+    case Options.UNSELECTED:
       return source.getUnselectedItems();
-    case plugin.vectortools.Options.HIDDEN:
+    case Options.HIDDEN:
       return source.getHiddenItems();
     default:
       return [];
   }
 };
 
-
 /**
  * @param {string} sourceId
- * @return {function(ol.Feature):ol.Feature} map function used for cloning lists of features
+ * @return {function(Feature):Feature} map function used for cloning lists of features
  */
-plugin.vectortools.getFeatureCloneFunction = function(sourceId) {
+const getFeatureCloneFunction = function(sourceId) {
   /**
-   * @param {ol.Feature} feature Original feature
-   * @return {ol.Feature} copied feature
+   * @param {Feature} feature Original feature
+   * @return {Feature} copied feature
    */
   var cloneFunc = function(feature) {
     var newFeature = feature.clone();
     newFeature.suppressEvents();
-    newFeature.set(os.data.RecordField.SOURCE_ID, sourceId, false);
-    newFeature.unset(os.style.StyleType.SELECT, false);
-    newFeature.unset(os.style.StyleType.HIGHLIGHT, false);
+    newFeature.set(RecordField.SOURCE_ID, sourceId, false);
+    newFeature.unset(StyleType.SELECT, false);
+    newFeature.unset(StyleType.HIGHLIGHT, false);
     newFeature.enableEvents();
     return newFeature;
   };
@@ -87,20 +89,19 @@ plugin.vectortools.getFeatureCloneFunction = function(sourceId) {
   return cloneFunc;
 };
 
-
 /**
  * Creates a new layer and returns it.
  *
  * @param {(string|Object)=} opt_restoreFromIdOrConfig An optional layerId or config to restore from
- * @return {os.layer.Vector}
+ * @return {VectorLayer}
  */
-plugin.vectortools.addNewLayer = function(opt_restoreFromIdOrConfig) {
-  var mm = os.MapContainer.getInstance();
-  var id = goog.string.getRandomString();
-  var newSource = new os.source.Vector();
+const addNewLayer = function(opt_restoreFromIdOrConfig) {
+  var mm = MapContainer.getInstance();
+  var id = googString.getRandomString();
+  var newSource = new VectorSource();
   newSource.setId(id);
 
-  var newLayer = new os.layer.Vector({
+  var newLayer = new VectorLayer({
     source: newSource
   });
   newLayer.setId(id);
@@ -110,11 +111,11 @@ plugin.vectortools.addNewLayer = function(opt_restoreFromIdOrConfig) {
   if (opt_restoreFromIdOrConfig) {
     if (typeof opt_restoreFromIdOrConfig === 'string') {
       // get the other layer and restore the new one from it
-      var otherLayer = /** @type {os.layer.ILayer} */ (mm.getLayer(opt_restoreFromIdOrConfig));
+      var otherLayer = /** @type {ILayer} */ (mm.getLayer(opt_restoreFromIdOrConfig));
       if (otherLayer) {
         newLayer.restore(otherLayer.persist());
 
-        var title = os.layer.getUniqueTitle(otherLayer.getTitle());
+        var title = layer.getUniqueTitle(otherLayer.getTitle());
         newLayer.setTitle(title);
         newSource.setTitle(title);
       }
@@ -123,9 +124,17 @@ plugin.vectortools.addNewLayer = function(opt_restoreFromIdOrConfig) {
     }
   }
 
+  // we don't want the node checkbox visible -- that just deletes the merged/copied/joined features permanently
+  let opts = newLayer.getLayerOptions();
+  if (opts) {
+    opts['hideDisable'] = true;
+  } else {
+    opts = {'hideDisable': true};
+  }
+  newLayer.setLayerOptions(opts);
+
   return newLayer;
 };
-
 
 /**
  * Gets a map of applicable column mappings to a set of sourceIds.
@@ -133,9 +142,9 @@ plugin.vectortools.addNewLayer = function(opt_restoreFromIdOrConfig) {
  * @param {!Array<string>} sourceIds The list of source ids
  * @return {!Object<string, !Object<string, string>>} map of sourceIds to columns that should change
  */
-plugin.vectortools.getColumnMappings = function(sourceIds) {
-  var filterKeys = sourceIds.map(plugin.vectortools.mapIdToFilterKey_);
-  var mappings = os.column.ColumnMappingManager.getInstance().getAll();
+const getColumnMappings = function(sourceIds) {
+  var filterKeys = sourceIds.map(mapIdToFilterKey_);
+  var mappings = ColumnMappingManager.getInstance().getAll();
 
   /**
    * Filter mappings to only those which apply to at least two of the sources
@@ -168,7 +177,7 @@ plugin.vectortools.getColumnMappings = function(sourceIds) {
   var sortColumns = function(a, b) {
     var ai = filterKeys.indexOf(a['layer']);
     var bi = filterKeys.indexOf(b['layer']);
-    return goog.array.defaultCompare(ai, bi);
+    return googArray.defaultCompare(ai, bi);
   };
 
   /**
@@ -221,30 +230,27 @@ plugin.vectortools.getColumnMappings = function(sourceIds) {
   }, {});
 };
 
-
 /**
  * @param {string} id The source id
  * @return {?string} The filter key
- * @private
  */
-plugin.vectortools.mapIdToFilterKey_ = function(id) {
-  var d = os.dataManager.getDescriptor(id);
+const mapIdToFilterKey_ = function(id) {
+  var d = DataManager.getInstance().getDescriptor(id);
 
-  if (d && os.implements(d, os.filter.IFilterable.ID)) {
-    return /** @type {os.filter.IFilterable} */ (d).getFilterKey();
+  if (d && osImplements(d, IFilterable.ID)) {
+    return /** @type {IFilterable} */ (d).getFilterKey();
   }
 
   return id;
 };
 
-
 /**
  * Runs a column mapping on a feature.
  *
  * @param {Object<string, string>} mapping
- * @param {ol.Feature} feature
+ * @param {Feature} feature
  */
-plugin.vectortools.runColumnMapping = function(mapping, feature) {
+const runColumnMapping = function(mapping, feature) {
   if (mapping) {
     for (var key in mapping) {
       var newKey = mapping[key];
@@ -258,16 +264,15 @@ plugin.vectortools.runColumnMapping = function(mapping, feature) {
   }
 };
 
-
 /**
  * Returns the combined columns between several sources. Accounts for column mappings and columns that just
  * happen to be identical.
  *
- * @param {!Array<!os.source.Vector>} sources
+ * @param {!Array<!VectorSource>} sources
  * @param {!Object<string, !Object<string, string>>} mappings
- * @return {!Array<!os.data.ColumnDefinition|string>}
+ * @return {!Array<!ColumnDefinition|string>}
  */
-plugin.vectortools.getCombinedColumns = function(sources, mappings) {
+const getCombinedColumns = function(sources, mappings) {
   return sources.reduce(function(columns, source) {
     var filter = function(column) {
       if (typeof column === 'string') {
@@ -302,44 +307,13 @@ plugin.vectortools.getCombinedColumns = function(sources, mappings) {
   });
 };
 
-
-/**
- * Launches the Merge Layer window.
- *
- * @param {Array<string>} sourceIds The source/layer IDs to merge
- */
-plugin.vectortools.launchMergeWindow = function(sourceIds) {
-  var title = 'Merge ' + sourceIds.length + ' Layers';
-  os.ui.window.create({
-    'label': title,
-    'icon': 'fa ' + plugin.vectortools.Icons.MERGE_ICON,
-    'x': 'center',
-    'y': 'center',
-    'width': '400',
-    'height': 'auto',
-    'show-close': true
-  }, '<merge></merge>', undefined, undefined, undefined, {
-    'sourceIds': sourceIds
-  });
-};
-
-
-/**
- * Launches the Join Layer window.
- *
- * @param {Array<string>} sourceIds The source/layer IDs to join
- */
-plugin.vectortools.launchJoinWindow = function(sourceIds) {
-  var title = 'Join ' + sourceIds.length + ' Layers';
-  os.ui.window.create({
-    'label': title,
-    'icon': 'fa ' + plugin.vectortools.Icons.JOIN_ICON,
-    'x': 'center',
-    'y': 'center',
-    'width': '500',
-    'height': 'auto',
-    'show-close': true
-  }, '<join></join>', undefined, undefined, undefined, {
-    'sourceIds': sourceIds
-  });
+exports = {
+  getOption,
+  setOption,
+  getFeatures,
+  getFeatureCloneFunction,
+  addNewLayer,
+  getColumnMappings,
+  runColumnMapping,
+  getCombinedColumns
 };

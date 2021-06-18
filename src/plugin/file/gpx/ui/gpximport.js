@@ -1,11 +1,12 @@
-goog.provide('plugin.file.gpx.ui.GPXImportCtrl');
-goog.provide('plugin.file.gpx.ui.gpxImportDirective');
+goog.module('plugin.file.gpx.ui.GPXImport');
+goog.module.declareLegacyNamespace();
 
-goog.require('os');
-goog.require('os.ui.Module');
-goog.require('os.ui.file.ui.AbstractFileImportCtrl');
-goog.require('plugin.file.gpx.GPXDescriptor');
-goog.require('plugin.file.gpx.GPXProvider');
+const {ROOT} = goog.require('os');
+const FileDescriptor = goog.require('os.data.FileDescriptor');
+const Module = goog.require('os.ui.Module');
+const AbstractFileImportCtrl = goog.require('os.ui.file.ui.AbstractFileImportCtrl');
+const GPXDescriptor = goog.require('plugin.file.gpx.GPXDescriptor');
+const GPXProvider = goog.require('plugin.file.gpx.GPXProvider');
 
 
 /**
@@ -13,62 +14,75 @@ goog.require('plugin.file.gpx.GPXProvider');
  *
  * @return {angular.Directive}
  */
-plugin.file.gpx.ui.gpxImportDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    templateUrl: os.ROOT + 'views/file/genericfileimport.html',
-    controller: plugin.file.gpx.ui.GPXImportCtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: true,
+  templateUrl: ROOT + 'views/file/genericfileimport.html',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'gpximport';
 
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('gpximport', [plugin.file.gpx.ui.gpxImportDirective]);
+Module.directive('gpximport', [directive]);
 
 
 
 /**
  * Controller for the GPX import dialog.
  *
- * @param {!angular.Scope} $scope The Angular scope.
- * @param {!angular.JQLite} $element The root DOM element.
- * @extends {os.ui.file.ui.AbstractFileImportCtrl<!os.parse.FileParserConfig, !plugin.file.gpx.GPXDescriptor>}
- * @constructor
- * @ngInject
+ * @extends {AbstractFileImportCtrl<!os.parse.FileParserConfig, !GPXDescriptor>}
+ * @unrestricted
  */
-plugin.file.gpx.ui.GPXImportCtrl = function($scope, $element) {
-  plugin.file.gpx.ui.GPXImportCtrl.base(this, 'constructor', $scope, $element);
-};
-goog.inherits(plugin.file.gpx.ui.GPXImportCtrl, os.ui.file.ui.AbstractFileImportCtrl);
-
-
-/**
- * @inheritDoc
- */
-plugin.file.gpx.ui.GPXImportCtrl.prototype.createDescriptor = function() {
-  var descriptor = null;
-  if (this.config['descriptor']) {
-    // existing descriptor. deactivate the descriptor, then update it
-    descriptor = this.config['descriptor'];
-    descriptor.setActive(false);
-    descriptor.updateFromConfig(this.config);
-  } else {
-    // this is a new import
-    descriptor = plugin.file.gpx.GPXDescriptor.createFromConfig(this.config);
+class Controller extends AbstractFileImportCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope The Angular scope.
+   * @param {!angular.JQLite} $element The root DOM element.
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
   }
 
-  return descriptor;
-};
+  /**
+   * @inheritDoc
+   */
+  createDescriptor() {
+    var descriptor = null;
+    if (this.config['descriptor']) {
+      // existing descriptor. deactivate the descriptor, then update it
+      descriptor = this.config['descriptor'];
+      descriptor.setActive(false);
+      descriptor.updateFromConfig(this.config);
+    } else {
+      // this is a new import
+      descriptor = new GPXDescriptor();
+      FileDescriptor.createFromConfig(descriptor, GPXProvider.getInstance(), this.config);
+    }
 
+    return descriptor;
+  }
 
-/**
- * @inheritDoc
- */
-plugin.file.gpx.ui.GPXImportCtrl.prototype.getProvider = function() {
-  return plugin.file.gpx.GPXProvider.getInstance();
+  /**
+   * @inheritDoc
+   */
+  getProvider() {
+    return GPXProvider.getInstance();
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

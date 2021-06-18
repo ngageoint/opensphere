@@ -20,8 +20,8 @@ const {
   SettingsKey,
   rectangleToExtent
 } = goog.require('plugin.cesium');
-const {ICON, TYPE} = goog.require('plugin.cesium.tiles');
 const PrimitiveLayer = goog.require('plugin.cesium.PrimitiveLayer');
+const {ICON, TYPE} = goog.require('plugin.cesium.tiles');
 const {directiveTag: layerUITag} = goog.require('plugin.cesium.tiles.Cesium3DTileLayerUI');
 
 const Logger = goog.requireType('goog.log.Logger');

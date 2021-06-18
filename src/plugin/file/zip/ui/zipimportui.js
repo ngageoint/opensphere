@@ -1,64 +1,69 @@
-goog.provide('plugin.file.zip.ui.ZIPImportUI');
+goog.module('plugin.file.zip.ui.ZIPImportUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.im.FileImportUI');
-goog.require('os.ui.window');
-goog.require('plugin.file.zip.ZIPParserConfig');
-goog.require('plugin.file.zip.ui.zipImportDirective');
-
-
-/**
- * @extends {os.ui.im.FileImportUI.<plugin.file.zip.ZIPParserConfig>}
- * @constructor
- */
-plugin.file.zip.ui.ZIPImportUI = function() {
-  plugin.file.zip.ui.ZIPImportUI.base(this, 'constructor');
-
-  // file contents are only used in memory, not loaded from storage
-  this.requiresStorage = false;
-};
-goog.inherits(plugin.file.zip.ui.ZIPImportUI, os.ui.im.FileImportUI);
+const FileImportUI = goog.require('os.ui.im.FileImportUI');
+const osWindow = goog.require('os.ui.window');
+const windowSelector = goog.require('os.ui.windowSelector');
+const ZIPParserConfig = goog.require('plugin.file.zip.ZIPParserConfig');
+const {directiveTag: zipImportUi} = goog.require('plugin.file.zip.ui.ZIPImport');
 
 
 /**
- * @inheritDoc
+ * @extends {FileImportUI.<ZIPParserConfig>}
  */
-plugin.file.zip.ui.ZIPImportUI.prototype.getTitle = function() {
-  return 'ZIP';
-};
+class ZIPImportUI extends FileImportUI {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
 
-
-/**
- * @inheritDoc
- */
-plugin.file.zip.ui.ZIPImportUI.prototype.launchUI = function(file, opt_config) {
-  plugin.file.zip.ui.ZIPImportUI.base(this, 'launchUI', file, opt_config);
-
-  var config = new plugin.file.zip.ZIPParserConfig();
-
-  // if a configuration was provided, merge it in
-  if (opt_config) {
-    this.mergeConfig(opt_config, config);
+    // file contents are only used in memory, not loaded from storage
+    this.requiresStorage = false;
   }
 
-  config['file'] = file; // set the file
+  /**
+   * @inheritDoc
+   */
+  getTitle() {
+    return 'ZIP';
+  }
 
-  var scopeOptions = {
-    'config': config
-  };
-  var windowOptions = {
-    'label': 'ZIP Import',
-    'icon': 'fa fa-sign-in',
-    'x': 'center',
-    'y': 'center',
-    'width': '650',
-    'min-width': '500',
-    'max-width': '1200',
-    'height': '360',
-    'min-height': '300',
-    'max-height': '1000',
-    'modal': 'true',
-    'show-close': 'true'
-  };
-  var template = '<zipimport resize-with="' + os.ui.windowSelector.WINDOW + '"></zipimport>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
-};
+  /**
+   * @inheritDoc
+   */
+  launchUI(file, opt_config) {
+    super.launchUI(file, opt_config);
+
+    var config = new ZIPParserConfig();
+
+    // if a configuration was provided, merge it in
+    if (opt_config) {
+      this.mergeConfig(opt_config, config);
+    }
+
+    config['file'] = file; // set the file
+
+    var scopeOptions = {
+      'config': config
+    };
+    var windowOptions = {
+      'label': 'ZIP Import',
+      'icon': 'fa fa-sign-in',
+      'x': 'center',
+      'y': 'center',
+      'width': '650',
+      'min-width': '500',
+      'max-width': '1200',
+      'height': '360',
+      'min-height': '300',
+      'max-height': '1000',
+      'modal': 'true',
+      'show-close': 'true'
+    };
+    var template = `<${zipImportUi} resize-with="${windowSelector.WINDOW}"></${zipImportUi}>`;
+    osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  }
+}
+
+exports = ZIPImportUI;

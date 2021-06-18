@@ -1,23 +1,24 @@
-goog.provide('plugin.file.kml.mime');
+goog.module('plugin.file.kml.mime');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Promise');
-goog.require('os.file.mime.xml');
-goog.require('os.file.mime.zip');
+const Promise = goog.require('goog.Promise');
+const mime = goog.require('os.file.mime');
+const xml = goog.require('os.file.mime.xml');
+const mimeZip = goog.require('os.file.mime.zip');
+
 
 /**
- * @const
  * @type {string}
  */
-plugin.file.kml.mime.TYPE = 'application/vnd.google-earth.kml+xml';
-
+const TYPE = 'application/vnd.google-earth.kml+xml';
 
 /**
  * @param {ArrayBuffer} buffer
  * @param {os.file.File=} opt_file
  * @param {*=} opt_context
- * @return {!goog.Promise<*|undefined>}
+ * @return {!Promise<*|undefined>}
  */
-plugin.file.kml.detect = function(buffer, opt_file, opt_context) {
+const detect = function(buffer, opt_file, opt_context) {
   var retVal;
   if (opt_context && (
     (/^(document|folder|kml)$/i.test(opt_context.rootTag)) ||
@@ -25,22 +26,17 @@ plugin.file.kml.detect = function(buffer, opt_file, opt_context) {
     retVal = opt_context;
   }
 
-  return goog.Promise.resolve(retVal);
+  return Promise.resolve(retVal);
 };
 
 
-os.file.mime.register(
-    plugin.file.kml.mime.TYPE,
-    plugin.file.kml.detect,
-    0, os.file.mime.xml.TYPE);
+mime.register(TYPE, detect, 0, xml.TYPE);
 
 
 /**
- * @const
  * @type {string}
  */
-plugin.file.kml.mime.KMZ_TYPE = 'application/vnd.google-earth.kmz';
-
+const KMZ_TYPE = 'application/vnd.google-earth.kmz';
 
 /**
  * Determine if this file is a KMZ file.  Currently, the logic is:
@@ -50,16 +46,16 @@ plugin.file.kml.mime.KMZ_TYPE = 'application/vnd.google-earth.kmz';
  * @param {ArrayBuffer} buffer
  * @param {os.file.File=} opt_file
  * @param {*=} opt_context
- * @return {!goog.Promise<*|undefined>}
+ * @return {!Promise<*|undefined>}
  */
-plugin.file.kml.detectKmz = function(buffer, opt_file, opt_context) {
+const detectKmz = function(buffer, opt_file, opt_context) {
   var retVal;
   var kmzRegex = /\.kmz$/i;
   var kmlRegex = /\.kml$/i;
 
   if (opt_file && (
     kmzRegex.test(opt_file.getFileName()) ||
-    plugin.file.kml.mime.TYPE == opt_file.getContentType()
+    TYPE == opt_file.getContentType()
   )) {
     if (opt_context && Array.isArray(opt_context)) {
       var entries = /** @type {!Array<!zip.Entry>} */ (opt_context);
@@ -72,11 +68,13 @@ plugin.file.kml.detectKmz = function(buffer, opt_file, opt_context) {
     }
   }
 
-  return /** @type {!goog.Promise<*|undefined>} */ (goog.Promise.resolve(retVal));
+  return /** @type {!Promise<*|undefined>} */ (Promise.resolve(retVal));
 };
 
 
-os.file.mime.register(
-    plugin.file.kml.mime.KMZ_TYPE,
-    plugin.file.kml.detectKmz,
-    0, os.file.mime.zip.TYPE);
+mime.register(KMZ_TYPE, detectKmz, 0, mimeZip.TYPE);
+
+exports = {
+  TYPE,
+  KMZ_TYPE
+};

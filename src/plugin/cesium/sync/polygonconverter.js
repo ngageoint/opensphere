@@ -1,8 +1,8 @@
 goog.module('plugin.cesium.sync.PolygonConverter');
 
 const {GeometryInstanceId} = goog.require('plugin.cesium');
-const {createAndAddPolygon} = goog.require('plugin.cesium.sync.polygon');
 const LineStringConverter = goog.require('plugin.cesium.sync.LineStringConverter');
+const {createAndAddPolygon} = goog.require('plugin.cesium.sync.polygon');
 const {getColor} = goog.require('plugin.cesium.sync.style');
 
 const Feature = goog.requireType('ol.Feature');

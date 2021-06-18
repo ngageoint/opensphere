@@ -1,13 +1,12 @@
 goog.module('plugin.cesium.TerrainLayer');
 
-goog.require('plugin.basemap.terrainNodeUIDirective');
-
-const dispatcher = goog.require('os.Dispatcher');
 const log = goog.require('goog.log');
+const dispatcher = goog.require('os.Dispatcher');
 const MapEvent = goog.require('os.MapEvent');
 const LayerNode = goog.require('os.data.LayerNode');
 const LayerType = goog.require('os.layer.LayerType');
 const Icons = goog.require('os.ui.Icons');
+const {directiveTag: terrainNodeUi} = goog.require('plugin.basemap.TerrainNodeUI');
 const {CESIUM_ONLY_LAYER} = goog.require('plugin.cesium');
 const Layer = goog.require('plugin.cesium.Layer');
 
@@ -37,7 +36,7 @@ class TerrainLayer extends Layer {
     this.setOSType(CESIUM_ONLY_LAYER);
     this.setIcons(Icons.TERRAIN);
     this.setExplicitType(LayerType.TERRAIN);
-    this.setNodeUI('<terrainnodeui></terrainnodeui>');
+    this.setNodeUI(`<${terrainNodeUi}></${terrainNodeUi}>`);
     this.log = logger;
 
     /**

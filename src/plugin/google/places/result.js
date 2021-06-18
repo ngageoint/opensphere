@@ -1,25 +1,27 @@
-goog.provide('plugin.google.places.Result');
+goog.module('plugin.google.places.Result');
 
-goog.require('os.ui.search.place.CoordinateResult');
-goog.require('plugin.google.places.resultCardDirective');
-
-
-
-/**
- * @param {ol.Feature} result
- * @extends {os.ui.search.place.CoordinateResult}
- * @constructor
- */
-plugin.google.places.Result = function(result) {
-  plugin.google.places.Result.base(this, 'constructor', result, 'name');
-  this.score = 95;
-};
-goog.inherits(plugin.google.places.Result, os.ui.search.place.CoordinateResult);
+const CoordinateResult = goog.require('os.ui.search.place.CoordinateResult');
+const {directiveTag: resultCardEl} = goog.require('plugin.google.places.ResultCardUI');
 
 
 /**
- * @inheritDoc
  */
-plugin.google.places.Result.prototype.getSearchUI = function() {
-  return '<googleplacesresultcard result="result"></googleplacesresultcard>';
-};
+class Result extends CoordinateResult {
+  /**
+   * Constructor.
+   * @param {ol.Feature} result
+   */
+  constructor(result) {
+    super(result, 'name');
+    this.score = 95;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getSearchUI() {
+    return `<${resultCardEl} result="result"></${resultCardEl}>`;
+  }
+}
+
+exports = Result;

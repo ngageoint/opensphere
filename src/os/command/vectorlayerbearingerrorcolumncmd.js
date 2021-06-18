@@ -1,42 +1,47 @@
-goog.provide('os.command.VectorLayerBearingErrorColumn');
+goog.module('os.command.VectorLayerBearingErrorColumn');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractVectorLayerLOB');
-goog.require('os.metrics');
-
+const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
+const metrics = goog.require('os.metrics');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
 
 
 /**
  * Changes the lob bearing error column
  *
- * @param {string} layerId
- * @param {string} value
- * @param {string=} opt_oldValue
- * @extends {os.command.AbstractVectorLayerLOB<string>}
- * @constructor
+ * @extends {AbstractVectorLayerLOB<string>}
  */
-os.command.VectorLayerBearingErrorColumn = function(layerId, value, opt_oldValue) {
-  os.command.VectorLayerBearingErrorColumn.base(this, 'constructor', layerId, value, opt_oldValue);
-  this.title = 'Change bearing error column';
-  this.value = value || '';
-  this.metricKey = os.metrics.Layer.VECTOR_LOB_BEARING_ERROR_COLUMN;
-};
-goog.inherits(os.command.VectorLayerBearingErrorColumn, os.command.AbstractVectorLayerLOB);
+class VectorLayerBearingErrorColumn extends AbstractVectorLayerLOB {
+  /**
+   * Constructor.
+   * @param {string} layerId
+   * @param {string} value
+   * @param {string=} opt_oldValue
+   */
+  constructor(layerId, value, opt_oldValue) {
+    super(layerId, value, opt_oldValue);
+    this.title = 'Change bearing error column';
+    this.value = value || '';
+    this.metricKey = metrics.Layer.VECTOR_LOB_BEARING_ERROR_COLUMN;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+    return config && config[StyleField.LOB_BEARING_ERROR_COLUMN] || '';
+  }
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerBearingErrorColumn.prototype.getOldValue = function() {
-  var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-  return config && config[os.style.StyleField.LOB_BEARING_ERROR_COLUMN] || '';
-};
+  /**
+   * @inheritDoc
+   */
+  applyValue(config, value) {
+    config[StyleField.LOB_BEARING_ERROR_COLUMN] = value;
 
+    super.applyValue(config, value);
+  }
+}
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerBearingErrorColumn.prototype.applyValue = function(config, value) {
-  config[os.style.StyleField.LOB_BEARING_ERROR_COLUMN] = value;
-
-  os.command.VectorLayerBearingErrorColumn.base(this, 'applyValue', config, value);
-};
+exports = VectorLayerBearingErrorColumn;

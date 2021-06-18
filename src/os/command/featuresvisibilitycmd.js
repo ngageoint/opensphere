@@ -1,103 +1,105 @@
-goog.provide('os.command.FeaturesVisibility');
+goog.module('os.command.FeaturesVisibility');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.Feature');
-goog.require('os.command.AbstractSource');
-goog.require('os.command.ICommand');
-goog.require('os.command.State');
+const AbstractSource = goog.require('os.command.AbstractSource');
+const State = goog.require('os.command.State');
 
-
-
-/**
- * @constructor
- * @implements {os.command.ICommand}
- * @extends {os.command.AbstractSource}
- * @param {!string} sourceId
- * @param {Array.<ol.Feature>} features
- * @param {boolean} visibility
- */
-os.command.FeaturesVisibility = function(sourceId, features, visibility) {
-  os.command.FeaturesVisibility.base(this, 'constructor', sourceId);
-
-  /**
-   * @type {Array.<ol.Feature>}
-   * @protected
-   */
-  this.features = features;
-
-  var source = this.getSource();
-  if (source && this.features) {
-    this.title = (visibility ? 'Show ' : 'Hide ') + features.length + ' feature' + (features.length === 1 ? '' : 's') +
-        ' on "' + source.getTitle() + '"';
-  }
-
-  /**
-   * @type {boolean}
-   * @protected
-   */
-  this.visible = visibility;
-};
-goog.inherits(os.command.FeaturesVisibility, os.command.AbstractSource);
+const Feature = goog.requireType('ol.Feature');
+const ICommand = goog.requireType('os.command.ICommand');
 
 
 /**
- * @inheritDoc
+ * @implements {ICommand}
  */
-os.command.FeaturesVisibility.prototype.execute = function() {
-  if (this.canExecute()) {
-    this.state = os.command.State.EXECUTING;
+class FeaturesVisibility extends AbstractSource {
+  /**
+   * Constructor.
+   * @param {!string} sourceId
+   * @param {Array<Feature>} features
+   * @param {boolean} visibility
+   */
+  constructor(sourceId, features, visibility) {
+    super(sourceId);
+
+    /**
+     * @type {Array<Feature>}
+     * @protected
+     */
+    this.features = features;
 
     var source = this.getSource();
     if (source && this.features) {
-      if (this.visible) {
+      this.title = (visibility ? 'Show ' : 'Hide ') + features.length + ' feature' +
+          (features.length === 1 ? '' : 's') + ' on "' + source.getTitle() + '"';
+    }
+
+    /**
+     * @type {boolean}
+     * @protected
+     */
+    this.visible = visibility;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  execute() {
+    if (this.canExecute()) {
+      this.state = State.EXECUTING;
+
+      var source = this.getSource();
+      if (source && this.features) {
+        if (this.visible) {
+          source.showFeatures(this.features);
+        } else {
+          source.hideFeatures(this.features);
+        }
+
+        this.state = State.SUCCESS;
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    this.state = State.REVERTING;
+
+    var source = this.getSource();
+    if (source && this.features) {
+      if (!this.visible) {
         source.showFeatures(this.features);
       } else {
         source.hideFeatures(this.features);
       }
 
-      this.state = os.command.State.SUCCESS;
+      this.state = State.READY;
       return true;
     }
+
+    return false;
   }
 
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.command.FeaturesVisibility.prototype.revert = function() {
-  this.state = os.command.State.REVERTING;
-
-  var source = this.getSource();
-  if (source && this.features) {
-    if (!this.visible) {
-      source.showFeatures(this.features);
-    } else {
-      source.hideFeatures(this.features);
+  /**
+   * @inheritDoc
+   */
+  canExecute() {
+    if (!super.canExecute()) {
+      return false;
     }
 
-    this.state = os.command.State.READY;
+    if (!this.features) {
+      this.state = State.ERROR;
+      this.details = 'Features not provided';
+      return false;
+    }
+
     return true;
   }
+}
 
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.command.FeaturesVisibility.prototype.canExecute = function() {
-  if (!os.command.FeaturesVisibility.superClass_.canExecute.call(this)) {
-    return false;
-  }
-
-  if (!this.features) {
-    this.state = os.command.State.ERROR;
-    this.details = 'Features not provided';
-    return false;
-  }
-
-  return true;
-};
+exports = FeaturesVisibility;

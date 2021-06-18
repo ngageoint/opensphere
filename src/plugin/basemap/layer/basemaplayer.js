@@ -1,50 +1,54 @@
-goog.provide('plugin.basemap.layer.BaseMap');
+goog.module('plugin.basemap.layer.BaseMap');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.fn');
-goog.require('os.layer.Tile');
-goog.require('plugin.basemap.ui.baseMapLayerUIDirective');
-
-
-
-/**
- * @extends {os.layer.Tile}
- * @param {olx.layer.TileOptions} options Tile layer options
- * @constructor
- */
-plugin.basemap.layer.BaseMap = function(options) {
-  plugin.basemap.layer.BaseMap.base(this, 'constructor', options);
-
-  // omit base maps from the legend by default
-  this.renderLegend = os.fn.noop;
-};
-goog.inherits(plugin.basemap.layer.BaseMap, os.layer.Tile);
-
-
-/**
- * @inheritDoc
- */
-plugin.basemap.layer.BaseMap.prototype.getLayerUI = function() {
-  return 'basemaplayerui';
-};
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
+const fn = goog.require('os.fn');
+const Tile = goog.require('os.layer.Tile');
+const {directiveTag: basemapLayerUi} = goog.require('plugin.basemap.ui.BaseMapLayerUI');
 
 
 /**
  * @type {boolean}
- * @private
  */
-plugin.basemap.layer.BaseMap.warningShown_ = false;
+let warningShown = false;
 
 
 /**
- * @inheritDoc
  */
-plugin.basemap.layer.BaseMap.prototype.setLoading = function(value) {
-  plugin.basemap.layer.BaseMap.base(this, 'setLoading', value);
+class BaseMap extends Tile {
+  /**
+   * Constructor.
+   * @param {olx.layer.TileOptions} options Tile layer options
+   */
+  constructor(options) {
+    super(options);
 
-  if (this.getError() && !plugin.basemap.layer.BaseMap.warningShown_) {
-    os.alertManager.sendAlert('One or more Map Layers are having issues reaching the remote server. Please try ' +
-        'adding another Map Layer or [click here to add a working one|basemapAddFailover].',
-    os.alert.AlertEventSeverity.WARNING);
-    plugin.basemap.layer.BaseMap.warningShown_ = true;
+    // omit base maps from the legend by default
+    this.renderLegend = fn.noop;
   }
-};
+
+  /**
+   * @inheritDoc
+   */
+  getLayerUI() {
+    return basemapLayerUi;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setLoading(value) {
+    super.setLoading(value);
+
+    if (this.getError() && !warningShown) {
+      AlertManager.getInstance().sendAlert(
+          'One or more Map Layers are having issues reaching the remote server. Please try adding another Map Layer ' +
+          'or [click here to add a working one|basemapAddFailover].',
+          AlertEventSeverity.WARNING);
+      warningShown = true;
+    }
+  }
+}
+
+exports = BaseMap;

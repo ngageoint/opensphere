@@ -408,8 +408,8 @@ const visibleIfMarkerInterpolationEnabled = function(context) {
  * @this {OsMenuItem}
  */
 const visibleIfMarkerInterpolationDisabled = function(context) {
-  this.visible = !!context && getTracks(context).length > 0
-      && !isMarkerInterpolationOn(context);
+  this.visible = !!context && getTracks(context).length > 0 &&
+      !isMarkerInterpolationOn(context);
 };
 
 /**
@@ -461,8 +461,8 @@ const visibleIfLineIsShown = function(context) {
  * @this {OsMenuItem}
  */
 const visibleIfLineIsHidden = function(context) {
-  this.visible = !!context && getTracks(context).length > 0
-      && !isLineShown(context);
+  this.visible = !!context && getTracks(context).length > 0 &&
+      !isLineShown(context);
 };
 
 /**
@@ -770,18 +770,16 @@ const handlePredictGeodesic = function(event) {
  * @protected
  */
 const handlePredict_ = function(event) {
-  // TODO set the drawing mode based on event.type
   const context = event.getContext();
-  if (context) {
-    // TODO if a feature, create a track
+  if (context && context.mapBrowserEvent) {
     const tm = TrackManager.getInstance();
-    let tracks = getTracks(/** */ (context));
+    let tracks = getTracks(context);
 
     if (tracks && tracks.length == 0) {
       tracks = [context.feature]; // single feature
     }
 
-    tm.promptForTrackPrediction(tracks);
+    tm.promptForTrackPrediction(tracks, context.mapBrowserEvent);
   }
 };
 

@@ -1,206 +1,224 @@
-goog.provide('os.command.AbstractStyle');
+goog.module('os.command.AbstractStyle');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.ICommand');
-goog.require('os.command.State');
-goog.require('os.layer.PropertyChange');
+const asserts = goog.require('goog.asserts');
+const State = goog.require('os.command.State');
+const instanceOf = goog.require('os.instanceOf');
+const LayerClass = goog.require('os.layer.LayerClass');
+const {getMapContainer} = goog.require('os.map.instance');
+const Metrics = goog.require('os.metrics.Metrics');
+const StyleManager = goog.require('os.style.StyleManager');
 
+const ICommand = goog.requireType('os.command.ICommand');
+const ILayer = goog.requireType('os.layer.ILayer');
+const TileLayer = goog.requireType('os.layer.Tile');
+const VectorLayer = goog.requireType('os.layer.Vector');
 
 
 /**
  * Commands for style changes should extend this class
  *
  * @abstract
- * @implements {os.command.ICommand}
- * @param {string} layerId
- * @param {T} value
- * @param {T=} opt_oldValue
- * @constructor
+ * @implements {ICommand}
  * @template T
  */
-os.command.AbstractStyle = function(layerId, value, opt_oldValue) {
+class AbstractStyle {
   /**
-   * The details of the command.
-   * @type {?string}
+   * Constructor.
+   * @param {string} layerId
+   * @param {T} value
+   * @param {T=} opt_oldValue
    */
-  this.details = null;
+  constructor(layerId, value, opt_oldValue) {
+    /**
+     * The details of the command.
+     * @type {?string}
+     */
+    this.details = null;
+
+    /**
+     * Whether or not the command is asynchronous.
+     * @type {boolean}
+     */
+    this.isAsync = false;
+
+    /**
+     * Return the current state of the command.
+     * @type {!State}
+     */
+    this.state = State.READY;
+
+    /**
+     * The title of the command.
+     * @type {?string}
+     */
+    this.title = 'Change Style';
+
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.layerId = layerId;
+
+    /**
+     * @type {T}
+     * @protected
+     */
+    this.oldValue = opt_oldValue;
+
+    /**
+     * @type {T}
+     * @protected
+     */
+    this.value = value;
+
+    /**
+     * @type {?string}
+     * @protected
+     */
+    this.metricKey = null;
+  }
 
   /**
-   * Whether or not the command is asynchronous.
-   * @type {boolean}
+   * @inheritDoc
    */
-  this.isAsync = false;
+  execute() {
+    if (this.canExecute()) {
+      this.state = State.EXECUTING;
+      this.setValue(this.value);
 
-  /**
-   * Return the current state of the command.
-   * @type {!os.command.State}
-   */
-  this.state = os.command.State.READY;
+      if (this.metricKey) {
+        Metrics.getInstance().updateMetric(this.metricKey, 1);
+      }
 
-  /**
-   * The title of the command.
-   * @type {?string}
-   */
-  this.title = 'Change Style';
-
-  /**
-   * @type {string}
-   * @protected
-   */
-  this.layerId = layerId;
-
-  /**
-   * @type {T}
-   * @protected
-   */
-  this.oldValue = opt_oldValue != null ? opt_oldValue : this.getOldValue();
-
-  /**
-   * @type {T}
-   * @protected
-   */
-  this.value = value;
-
-  /**
-   * @type {?string}
-   * @protected
-   */
-  this.metricKey = null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.command.AbstractStyle.prototype.execute = function() {
-  if (this.canExecute()) {
-    this.state = os.command.State.EXECUTING;
-    this.setValue(this.value);
-
-    if (this.metricKey) {
-      os.metrics.Metrics.getInstance().updateMetric(this.metricKey, 1);
+      this.state = State.SUCCESS;
+      return true;
     }
 
-    this.state = os.command.State.SUCCESS;
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    this.state = State.REVERTING;
+    this.setValue(this.oldValue);
+    this.state = State.READY;
     return true;
   }
 
-  return false;
-};
+  /**
+   * Checks if the command is ready to execute.
+   *
+   * @return {boolean}
+   */
+  canExecute() {
+    if (this.state !== State.READY) {
+      this.details = 'Command not in ready state.';
+      return false;
+    }
 
+    if (!this.layerId) {
+      this.state = State.ERROR;
+      this.details = 'Layer ID not provided.';
+      return false;
+    }
 
-/**
- * @inheritDoc
- */
-os.command.AbstractStyle.prototype.revert = function() {
-  this.state = os.command.State.REVERTING;
-  this.setValue(this.oldValue);
-  this.state = os.command.State.READY;
-  return true;
-};
+    if (this.value === undefined) {
+      this.state = State.ERROR;
+      this.details = 'Value not provided';
+      return false;
+    }
 
-
-/**
- * Checks if the command is ready to execute.
- *
- * @return {boolean}
- */
-os.command.AbstractStyle.prototype.canExecute = function() {
-  if (this.state !== os.command.State.READY) {
-    this.details = 'Command not in ready state.';
-    return false;
+    return true;
   }
 
-  if (!this.layerId) {
-    this.state = os.command.State.ERROR;
-    this.details = 'Layer ID not provided.';
-    return false;
+  /**
+   * Gets the old value
+   *
+   * @return {T} the old value
+   * @protected
+   */
+  getOldValue() {
+    return null;
   }
 
-  if (this.value === undefined) {
-    this.state = os.command.State.ERROR;
-    this.details = 'Value not provided';
-    return false;
+  /**
+   * Update the old value on the command, if currently unset. Call this during initialization if the command sets class
+   * properties in the constructor that are required by getOldValue.
+   * @protected
+   */
+  updateOldValue() {
+    if (this.oldValue == null) {
+      this.oldValue = this.getOldValue();
+    }
   }
 
-  return true;
-};
+  /**
+   * Applies a value to the style config
+   *
+   * @param {Object} config The style config
+   * @param {T} value The value to apply
+   */
+  applyValue(config, value) {}
 
-
-/**
- * Gets the old value
- *
- * @abstract
- * @return {T} the old value
- * @protected
- */
-os.command.AbstractStyle.prototype.getOldValue = function() {};
-
-
-/**
- * Applies a value to the style config
- *
- * @abstract
- * @param {Object} config The style config
- * @param {T} value The value to apply
- */
-os.command.AbstractStyle.prototype.applyValue = function(config, value) {};
-
-
-/**
- * Fire events, cleanup, etc.
- *
- * @param {Object} config
- * @protected
- */
-os.command.AbstractStyle.prototype.finish = function(config) {
-  // intended for overriding classes - default to doing nothing
-};
-
-
-/**
- * Get the layer configuration.
- *
- * @param {os.layer.ILayer} layer
- * @return {Object}
- * @protected
- */
-os.command.AbstractStyle.prototype.getLayerConfig = function(layer) {
-  if (layer instanceof os.layer.Tile) {
-    return layer.getLayerOptions();
+  /**
+   * Fire events, cleanup, etc.
+   *
+   * @param {Object} config
+   * @protected
+   */
+  finish(config) {
+    // intended for overriding classes - default to doing nothing
   }
 
-  if (layer instanceof os.layer.Vector) {
-    return os.style.StyleManager.getInstance().getLayerConfig(layer.getId());
+  /**
+   * Get the layer configuration.
+   *
+   * @param {ILayer} layer
+   * @return {Object}
+   * @protected
+   */
+  getLayerConfig(layer) {
+    if (instanceOf(layer, LayerClass.TILE)) {
+      return /** @type {TileLayer} */ (layer).getLayerOptions();
+    }
+
+    if (instanceOf(layer, LayerClass.VECTOR)) {
+      return StyleManager.getInstance().getLayerConfig(/** @type {VectorLayer} */ (layer).getId());
+    }
+
+    return null;
   }
 
-  return null;
-};
+  /**
+   * Sets the value
+   *
+   * @param {T} value
+   */
+  setValue(value) {
+    asserts.assert(value != null, 'style value must be defined');
 
+    var layer = /** @type {os.layer.Vector} */ (this.getLayer());
+    asserts.assert(layer, 'layer must be defined');
 
-/**
- * Sets the value
- *
- * @param {T} value
- */
-os.command.AbstractStyle.prototype.setValue = function(value) {
-  goog.asserts.assert(value != null, 'style value must be defined');
+    var config = this.getLayerConfig(layer);
+    asserts.assert(config, 'layer config must be defined');
 
-  var layer = /** @type {os.layer.Vector} */ (this.getLayer());
-  goog.asserts.assert(layer, 'layer must be defined');
+    this.applyValue(config, value);
+    this.finish(config);
+  }
 
-  var config = this.getLayerConfig(layer);
-  goog.asserts.assert(config, 'layer config must be defined');
+  /**
+   * Gets the layer by ID.
+   *
+   * @return {ILayer}
+   */
+  getLayer() {
+    const map = getMapContainer();
+    return map ? /** @type {ILayer} */ (map.getLayer(this.layerId)) : null;
+  }
+}
 
-  this.applyValue(config, value);
-  this.finish(config);
-};
-
-
-/**
- * Gets the layer by ID.
- *
- * @return {os.layer.ILayer}
- */
-os.command.AbstractStyle.prototype.getLayer = function() {
-  return /** @type {os.layer.ILayer} */ (os.MapContainer.getInstance().getLayer(this.layerId));
-};
+exports = AbstractStyle;

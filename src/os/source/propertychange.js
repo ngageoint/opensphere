@@ -16,16 +16,17 @@ os.source.PropertyChange = {
   DATA: 'data',
   ENABLED: 'enabled',
   FEATURES: 'features',
-  PREPROCESS_FEATURES: 'preprocessFeatures',
   FEATURE_VISIBILITY: 'featureVisibility',
-  GEOMETRY_SHAPE: 'geometryShape',
   GEOMETRY_CENTER_SHAPE: 'geometryCenterShape',
+  GEOMETRY_SHAPE: 'geometryShape',
+  HAS_MODIFICATIONS: 'hasModifications',
   HIGHLIGHTED_ITEMS: 'highlightedItems',
   ID: 'id',
   LABEL: 'label',
   LOADING: 'loading',
   LOADING_COUNT: 'loadingCount',
   LOCK: 'lock',
+  PREPROCESS_FEATURES: 'preprocessFeatures',
   REFRESH_INTERVAL: 'refreshInterval',
   REPLACE_STYLE: 'replaceStyle',
   STYLE: 'style',
@@ -33,6 +34,6 @@ os.source.PropertyChange = {
   TIME_FILTER: 'timeFilter',
   TIME_MODEL: 'timeModel',
   TITLE: 'title',
-  VISIBLE: 'visible',
-  UNIQUE_ID: 'uniqueId'
+  UNIQUE_ID: 'uniqueId',
+  VISIBLE: 'visible'
 };

@@ -1,15 +1,15 @@
 goog.module('plugin.cesium.sync.EllipseConverter');
 
-const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
-const DynamicLineStringConverter = goog.require('plugin.cesium.sync.DynamicLineStringConverter');
-const ILayer = goog.require('os.layer.ILayer');
 const LineString = goog.require('ol.geom.LineString');
+const implementz = goog.require('os.implements');
+const ILayer = goog.require('os.layer.ILayer');
 const StyleField = goog.require('os.style.StyleField');
 const StyleManager = goog.require('os.style.StyleManager');
-const {runConverter} = goog.require('plugin.cesium.sync.runConverter');
-const implementz = goog.require('os.implements');
+const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
+const DynamicLineStringConverter = goog.require('plugin.cesium.sync.DynamicLineStringConverter');
 const EllipsoidConverter = goog.require('plugin.cesium.sync.EllipsoidConverter');
 const PolygonConverter = goog.require('plugin.cesium.sync.PolygonConverter');
+const {runConverter} = goog.require('plugin.cesium.sync.runConverter');
 
 const Feature = goog.requireType('ol.Feature');
 const Style = goog.requireType('ol.style.Style');

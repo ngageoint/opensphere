@@ -15,6 +15,7 @@ goog.require('ol.geom.Geometry');
 goog.require('ol.source.Vector');
 goog.require('os');
 goog.require('os.Fields');
+goog.require('os.IAnimationSupport');
 goog.require('os.alert.AlertEventSeverity');
 goog.require('os.alert.AlertManager');
 goog.require('os.data.ColumnDefinition');
@@ -57,6 +58,7 @@ goog.require('os.webgl');
 
 /**
  * @extends {ol.source.Vector}
+ * @implements {os.IAnimationSupport}
  * @implements {os.source.ISource}
  * @implements {os.hist.IHistogramProvider}
  * @implements {os.source.IModifiableSource}
@@ -403,11 +405,18 @@ os.source.Vector = function(opt_options) {
   this.detectColumnTypes_ = false;
 
   /**
-   * Flag for what this source supports modify
+   * Flag for whether this source supports modify.
    * @type {boolean}
    * @protected
    */
   this.canModify = true;
+
+  /**
+   * Flag for whether this source has pending modifications.
+   * @type {boolean}
+   * @protected
+   */
+  this.hasModifications = false;
 
   if (!options['disableAreaSelection']) {
     os.dispatcher.listen(os.action.EventType.SELECT, this.onFeatureAction_, false, this);
@@ -425,6 +434,7 @@ os.source.Vector = function(opt_options) {
 goog.inherits(os.source.Vector, ol.source.Vector);
 os.implements(os.source.Vector, os.hist.IHistogramProvider.ID);
 os.implements(os.source.Vector, os.source.ISource.ID);
+os.implements(os.source.Vector, os.IAnimationSupport.ID);
 os.implements(os.source.Vector, os.source.IModifiableSource.ID);
 
 
@@ -1200,8 +1210,9 @@ os.source.Vector.prototype.testShapeFields_ = function(value) {
 
   if (this.columns.length > 0) {
     if (os.style.ELLIPSE_REGEXP.test(value)) {
-      if ((!this.hasColumn(os.fields.DEFAULT_SEMI_MAJ_COL_NAME) || !this.hasColumn(os.fields.DEFAULT_SEMI_MIN_COL_NAME))
-          && !this.hasColumn(os.fields.DEFAULT_RADIUS_COL_NAME)) {
+      if ((!this.hasColumn(os.fields.DEFAULT_SEMI_MAJ_COL_NAME) ||
+          !this.hasColumn(os.fields.DEFAULT_SEMI_MIN_COL_NAME)) &&
+          !this.hasColumn(os.fields.DEFAULT_RADIUS_COL_NAME)) {
         var msg = 'The ' + value + ' style assumes that the SEMI_MAJOR & SEMI_MINOR fields or RADIUS/CEP exist. ' +
             'If not, a point will be shown instead.';
         am.sendAlert(msg, os.alert.AlertEventSeverity.WARNING, this.log, 1);
@@ -1417,6 +1428,7 @@ os.source.Vector.prototype.setTitle = function(value) {
  * to the timeline controller and enable the animation overlay for faster feature rendering.
  *
  * @return {boolean}
+ * @override
  */
 os.source.Vector.prototype.getAnimationEnabled = function() {
   return this.animationEnabled_;
@@ -1427,6 +1439,7 @@ os.source.Vector.prototype.getAnimationEnabled = function() {
  * Marks the source as being in the animating state.
  *
  * @param {boolean} value
+ * @override
  */
 os.source.Vector.prototype.setAnimationEnabled = function(value) {
   if (this.animationEnabled_ !== value) {
@@ -3725,8 +3738,31 @@ os.source.Vector.prototype.getModifyFunction = function() {
     // Notify that the feature/geometry changed, in case previous steps did not do this.
     originalFeature.changed();
 
+    this.setHasModifications(true);
     this.notifyDataChange();
   };
+};
+
+
+/**
+ * Gets whether the source has pending changes.
+ * @return {boolean}
+ */
+os.source.Vector.prototype.getHasModifications = function() {
+  return this.hasModifications;
+};
+
+
+/**
+ * Gets whether the source has pending changes.
+ * @param {boolean} value
+ */
+os.source.Vector.prototype.setHasModifications = function(value) {
+  if (value != this.hasModifications) {
+    const old = this.hasModifications;
+    this.hasModifications = value;
+    this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.HAS_MODIFICATIONS, value, old));
+  }
 };
 
 

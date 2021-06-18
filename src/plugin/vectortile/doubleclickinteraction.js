@@ -14,6 +14,7 @@ const I3DSupport = goog.require('os.I3DSupport');
 const MapContainer = goog.require('os.MapContainer');
 const osImplements = goog.require('os.implements');
 const VectorTile = goog.require('os.layer.VectorTile');
+const launchMultiFeatureInfo = goog.require('os.ui.feature.launchMultiFeatureInfo');
 
 const Feature = goog.requireType('ol.Feature');
 const MapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
@@ -122,7 +123,7 @@ const handleEvent = (mapBrowserEvent) => {
     }
 
     if (features.length > 0) {
-      os.ui.feature.launchMultiFeatureInfo(features.slice());
+      launchMultiFeatureInfo(features.slice());
     }
   }
 

@@ -1,91 +1,79 @@
-goog.provide('os.command.AbstractSource');
-goog.require('os.command.ICommand');
-goog.require('os.command.State');
-goog.require('os.source.ISource');
+goog.module('os.command.AbstractSource');
+goog.module.declareLegacyNamespace();
 
+const State = goog.require('os.command.State');
+const OSDataManager = goog.require('os.data.OSDataManager');
+
+const ICommand = goog.requireType('os.command.ICommand');
+const ISource = goog.requireType('os.source.ISource');
 
 
 /**
  * Abstract command for interaction with sources
  *
  * @abstract
- * @constructor
- * @implements {os.command.ICommand}
- * @param {!string} sourceId
+ * @implements {ICommand}
  */
-os.command.AbstractSource = function(sourceId) {
+class AbstractSource {
   /**
-   * @type {!string}
-   * @protected
+   * Constructor.
+   * @param {!string} sourceId
    */
-  this.sourceId = sourceId;
+  constructor(sourceId) {
+    /**
+     * @inheritDoc
+     */
+    this.isAsync = false;
 
-  /**
-   * @type {!os.command.State}
-   */
-  this.state = os.command.State.READY;
-};
+    /**
+     * @inheritDoc
+     */
+    this.title = 'Source';
 
+    /**
+     * @inheritDoc
+     */
+    this.details = null;
 
-/**
- * @return {?os.source.ISource} The source
- */
-os.command.AbstractSource.prototype.getSource = function() {
-  return os.data.OSDataManager.getInstance().getSource(this.sourceId);
-};
+    /**
+     * @type {!string}
+     * @protected
+     */
+    this.sourceId = sourceId;
 
-
-/**
- * @inheritDoc
- */
-os.command.AbstractSource.prototype.isAsync = false;
-
-
-/**
- * @abstract
- * @inheritDoc
- */
-os.command.AbstractSource.prototype.execute = function() {};
-
-
-/**
- * @abstract
- * @inheritDoc
- */
-os.command.AbstractSource.prototype.revert = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.command.AbstractSource.prototype.title = 'Source';
-
-
-/**
- * @inheritDoc
- */
-os.command.AbstractSource.prototype.details = null;
-
-
-/**
- * Checks if the command is ready to execute.
- *
- * @return {boolean}
- */
-os.command.AbstractSource.prototype.canExecute = function() {
-  if (this.state !== os.command.State.READY) {
-    this.details = 'Command not in ready state.';
-    return false;
+    /**
+     * @type {!State}
+     */
+    this.state = State.READY;
   }
 
-  var source = this.getSource();
-  if (!source) {
-    this.state = os.command.State.ERROR;
-    this.details = 'Data source "' + this.sourceId + '" does not exist';
-    return false;
+  /**
+   * @return {?ISource} The source
+   */
+  getSource() {
+    return OSDataManager.getInstance().getSource(this.sourceId);
   }
 
-  return true;
-};
+  /**
+   * Checks if the command is ready to execute.
+   *
+   * @return {boolean}
+   */
+  canExecute() {
+    if (this.state !== State.READY) {
+      this.details = 'Command not in ready state.';
+      return false;
+    }
 
+    var source = this.getSource();
+    if (!source) {
+      this.state = State.ERROR;
+      this.details = 'Data source "' + this.sourceId + '" does not exist';
+      return false;
+    }
 
+    return true;
+  }
+}
+
+exports = AbstractSource;

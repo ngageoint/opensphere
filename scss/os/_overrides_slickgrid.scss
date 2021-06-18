@@ -118,11 +118,9 @@
 }
 
 .slick-sort-indicator {
+  @include font-awesome();
   background: none;
   float: left;
-  font-family: FontAwesome;
-  font-style: normal;
-  font-weight: normal;
   height: inherit;
   margin: 0 2px 0 0;
 

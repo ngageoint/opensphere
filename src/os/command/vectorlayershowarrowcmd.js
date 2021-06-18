@@ -1,43 +1,48 @@
-goog.provide('os.command.VectorLayerShowArrow');
+goog.module('os.command.VectorLayerShowArrow');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractVectorLayerLOB');
-goog.require('os.metrics');
-
+const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
+const metrics = goog.require('os.metrics');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
 
 
 /**
  * Changes if lob arrows are shown.
  *
- * @param {string} layerId
- * @param {boolean} value
- * @param {boolean=} opt_oldValue
- * @extends {os.command.AbstractVectorLayerLOB<boolean>}
- * @constructor
+ * @extends {AbstractVectorLayerLOB<boolean>}
  */
-os.command.VectorLayerShowArrow = function(layerId, value, opt_oldValue) {
-  os.command.VectorLayerShowArrow.base(this, 'constructor', layerId, value, opt_oldValue);
-  this.metricKey = os.metrics.Layer.VECTOR_SHOW_ARROW;
+class VectorLayerShowArrow extends AbstractVectorLayerLOB {
+  /**
+   * Constructor.
+   * @param {string} layerId
+   * @param {boolean} value
+   * @param {boolean=} opt_oldValue
+   */
+  constructor(layerId, value, opt_oldValue) {
+    super(layerId, value, opt_oldValue);
+    this.metricKey = metrics.Layer.VECTOR_SHOW_ARROW;
 
-  // make sure the value is a boolean
-  this.value = !!value;
-  this.title = value ? 'Enable Arrow' : 'Disable Arrow';
-};
-goog.inherits(os.command.VectorLayerShowArrow, os.command.AbstractVectorLayerLOB);
+    // make sure the value is a boolean
+    this.value = !!value;
+    this.title = value ? 'Enable Arrow' : 'Disable Arrow';
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+    return config != null && config[StyleField.SHOW_ARROW] || false;
+  }
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerShowArrow.prototype.getOldValue = function() {
-  var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-  return config != null && config[os.style.StyleField.SHOW_ARROW] || false;
-};
+  /**
+   * @inheritDoc
+   */
+  applyValue(config, value) {
+    config[StyleField.SHOW_ARROW] = value;
+    super.applyValue(config, value);
+  }
+}
 
-
-/**
- * @inheritDoc
- */
-os.command.VectorLayerShowArrow.prototype.applyValue = function(config, value) {
-  config[os.style.StyleField.SHOW_ARROW] = value;
-  os.command.VectorLayerShowArrow.base(this, 'applyValue', config, value);
-};
+exports = VectorLayerShowArrow;

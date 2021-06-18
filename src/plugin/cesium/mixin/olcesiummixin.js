@@ -6,6 +6,7 @@ const I3DSupport = goog.require('os.I3DSupport');
 const osImplements = goog.require('os.implements');
 
 const Interaction = goog.requireType('ol.interaction.Interaction');
+const Camera = goog.requireType('plugin.cesium.Camera');
 
 
 /**
@@ -116,13 +117,13 @@ export const load = () => {
       }
 
       // enable the cesium camera and update it from OpenLayers view
-      /** @type {plugin.cesium.Camera} */ (this.camera_).setEnabled(true);
+      /** @type {Camera} */ (this.camera_).setEnabled(true);
       this.camera_.readFromView();
       this.render_();
     } else {
       // update the OpenLayers view from the cesium camera, then disable the camera
       this.camera_.updateView();
-      /** @type {plugin.cesium.Camera} */ (this.camera_).setEnabled(false);
+      /** @type {Camera} */ (this.camera_).setEnabled(false);
 
       if (this.isOverMap_) {
         interactions = this.map_.getInteractions();

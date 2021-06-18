@@ -2,6 +2,7 @@ goog.module('plugin.cesium.sync.HeatmapSynchronizer');
 
 const asserts = goog.require('goog.asserts');
 const Delay = goog.require('goog.async.Delay');
+const dispose = goog.require('goog.dispose');
 const EventType = goog.require('goog.events.EventType');
 const olEvents = goog.require('ol.events');
 const {scaleFromCenter} = goog.require('ol.extent');
@@ -13,23 +14,25 @@ const PropertyChange = goog.require('os.layer.PropertyChange');
 const events = goog.require('os.ol.events');
 const cesium = goog.require('plugin.cesium');
 const CesiumSynchronizer = goog.require('plugin.cesium.sync.CesiumSynchronizer');
-const HeatmapPropertyType = goog.require('plugin.heatmap.HeatmapPropertyType');
+const {EXTENT_SCALE_FACTOR} = goog.require('plugin.heatmap');
 const HeatmapField = goog.require('plugin.heatmap.HeatmapField');
+const HeatmapPropertyType = goog.require('plugin.heatmap.HeatmapPropertyType');
 
 const GoogEvent = goog.requireType('goog.events.Event');
 const OLObject = goog.requireType('ol.Object');
 const PluggableMap = goog.requireType('ol.PluggableMap');
 const MapCanvasRenderer = goog.requireType('ol.renderer.canvas.Map');
+const Heatmap = goog.requireType('plugin.heatmap.Heatmap');
 
 /**
  * Synchronizes a single OpenLayers image layer to Cesium.
  *
- * @extends {CesiumSynchronizer<plugin.heatmap.Heatmap>}
+ * @extends {CesiumSynchronizer<Heatmap>}
  */
 class HeatmapSynchronizer extends CesiumSynchronizer {
   /**
    * Constructor.
-   * @param {!plugin.heatmap.Heatmap} layer The OpenLayers heatmap layer.
+   * @param {!Heatmap} layer The OpenLayers heatmap layer.
    * @param {!PluggableMap} map The OpenLayers map.
    * @param {!Cesium.Scene} scene The Cesium scene.
    */
@@ -76,7 +79,7 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
    * @inheritDoc
    */
   disposeInternal() {
-    goog.dispose(this.syncDelay_);
+    dispose(this.syncDelay_);
     this.syncDelay_ = null;
 
     olEvents.unlisten(this.layer, EventType.PROPERTYCHANGE, this.onLayerPropertyChange_, this);
@@ -126,7 +129,7 @@ class HeatmapSynchronizer extends CesiumSynchronizer {
     if (img) {
       // scale back the extent so the image is positioned in the correct location
       var extent = this.layer.getExtent().slice();
-      scaleFromCenter(extent, 1 / plugin.heatmap.EXTENT_SCALE_FACTOR);
+      scaleFromCenter(extent, 1 / EXTENT_SCALE_FACTOR);
 
       this.activeLayer_ = this.cesiumLayers_.addImageryProvider(new Cesium.SingleTileImageryProvider({
         url: img,

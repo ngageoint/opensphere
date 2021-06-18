@@ -3,6 +3,7 @@ goog.provide('os.ui.ex.ExportDirective');
 
 goog.require('goog.array');
 goog.require('ol.array');
+goog.require('os.config');
 goog.require('os.data.event.DataEvent');
 goog.require('os.data.event.DataEventType');
 goog.require('os.events.SelectionType');
@@ -51,6 +52,9 @@ os.ui.ex.ExportCtrl = function($scope, $element, $compile) {
 
   // call things features in !
   $scope['itemText'] = 'feature';
+
+  // Set the appname to support exporting into the tool.
+  this['appName'] = os.config.getAppName();
 
   /**
    * If multiple sources are allowed by the export method.

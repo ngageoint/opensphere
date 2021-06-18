@@ -3,6 +3,17 @@ goog.require('goog.Uri.QueryData');
 goog.require('os.ogc.wfs.WFSFormatter');
 
 describe('os.ogc.wfs.WFSFormatter', function() {
+  it('gets the content type', function() {
+    var formatter = new os.ogc.wfs.WFSFormatter();
+    expect(formatter.getContentType()).toBe('text/xml');
+
+    formatter.contentType = 'text/plain';
+    expect(formatter.getContentType()).toBe('text/plain');
+
+    formatter.contentType = '';
+    expect(formatter.getContentType()).toBe('text/xml');
+  });
+
   it('strips WFS parameters from query data', function() {
     var parameters = {
       'NOT_WFS1': 'value',

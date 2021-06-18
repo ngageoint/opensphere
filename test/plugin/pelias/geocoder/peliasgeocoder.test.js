@@ -1,61 +1,72 @@
+goog.require('ol.Feature');
+goog.require('ol.proj');
+goog.require('os');
+goog.require('os.MapContainer');
 goog.require('os.mock');
 goog.require('os.search.SearchEventType');
 goog.require('plugin.pelias.geocoder.Plugin');
+goog.require('plugin.pelias.geocoder.Result');
 goog.require('plugin.pelias.geocoder.Search');
 
 describe('plugin.pelias.geocoder.Search', function() {
+  const Feature = goog.module.get('ol.Feature');
+  const olProj = goog.module.get('ol.proj');
+  const os = goog.module.get('os');
+  const MapContainer = goog.module.get('os.MapContainer');
+  const SearchEventType = goog.module.get('os.search.SearchEventType');
+  const Result = goog.module.get('plugin.pelias.geocoder.Result');
+  const Search = goog.module.get('plugin.pelias.geocoder.Search');
   var url = '/pelias.geocoder?text={s}';
   var boundary = '&boundary=true';
 
   it('should get a blank search url by default', function() {
-    var search = new plugin.pelias.geocoder.Search();
+    var search = new Search();
     expect(search.getSearchUrl()).toBeFalsy();
   });
 
   it('should get a defined search url', function() {
-    var search = new plugin.pelias.geocoder.Search();
+    var search = new Search();
     os.settings.set('plugin.pelias.geocoder.url', url);
     expect(search.getSearchUrl()).toBe(url);
   });
 
   it('should not add boundary parameters if boundary not defined', function() {
-    var search = new plugin.pelias.geocoder.Search();
-    spyOn(os.MapContainer.getInstance().getMap(), 'getExtent').andReturn(
-      [0, 0, 1, 1] // diagonal ~110km
-    );
+    var search = new Search();
+    // diagonal ~110km
+    spyOn(MapContainer.getInstance().getMap(), 'getExtent').andReturn([0, 0, 1, 1]);
 
     expect(search.getSearchUrl()).toBe(url);
   });
 
   it('should not add boundary if the view diagonal is not within the threshold', function() {
-    var search = new plugin.pelias.geocoder.Search();
+    var search = new Search();
     os.settings.set('plugin.pelias.geocoder.extentParams', boundary);
     expect(search.getSearchUrl()).toBe(url);
   });
 
   it('should add boundary if the view diagonal is within the threshold', function() {
-    var search = new plugin.pelias.geocoder.Search();
-    spyOn(os.MapContainer.getInstance().getMap(), 'getExtent').andReturn(
-      [0, 0, 1, 1] // diagonal ~110km
-    );
+    var search = new Search();
+    // diagonal ~110km
+    spyOn(MapContainer.getInstance().getMap(), 'getExtent').andReturn([0, 0, 1, 1]);
 
-    expect(search.getSearchUrl()).toBe(url + '&boundary.rect.min_lat=0&boundary.rect.min_lon=0&boundary.rect.max_lat=1&boundary.rect.max_lon=1');
+    expect(search.getSearchUrl())
+        .toBe(url + '&boundary.rect.min_lat=0&boundary.rect.min_lon=0&boundary.rect.max_lat=1&boundary.rect.max_lon=1');
   });
 
   it('should add focus point if so configured', function() {
-    var search = new plugin.pelias.geocoder.Search();
+    var search = new Search();
     os.settings.set('plugin.pelias.geocoder.focusPoint', true);
-    spyOn(ol.proj, 'toLonLat').andReturn([150.1, -35.2]);
-    spyOn(os.MapContainer.getInstance().getMap().getView(), 'getZoom').andReturn(10.0);
+    spyOn(olProj, 'toLonLat').andReturn([150.1, -35.2]);
+    spyOn(MapContainer.getInstance().getMap().getView(), 'getZoom').andReturn(10.0);
 
     expect(search.getSearchUrl()).toBe(url + '&focus.point.lat=-35.2&focus.point.lon=150.1');
   });
 
   it('should should not add focus point at low zoom levels', function() {
-    var search = new plugin.pelias.geocoder.Search();
+    var search = new Search();
     os.settings.set('plugin.pelias.geocoder.focusPoint', true);
-    spyOn(ol.proj, 'toLonLat').andReturn([150.1, -35.2]);
-    spyOn(os.MapContainer.getInstance().getMap().getView(), 'getZoom').andReturn(3.0);
+    spyOn(olProj, 'toLonLat').andReturn([150.1, -35.2]);
+    spyOn(MapContainer.getInstance().getMap().getView(), 'getZoom').andReturn(3.0);
 
     expect(search.getSearchUrl()).toBe(url);
   });
@@ -67,7 +78,7 @@ describe('plugin.pelias.geocoder.Search', function() {
       count++;
     };
 
-    search.listenOnce(os.search.SearchEventType.SUCCESS, listener);
+    search.listenOnce(SearchEventType.SUCCESS, listener);
 
     waitsFor(function() {
       return count;
@@ -78,7 +89,7 @@ describe('plugin.pelias.geocoder.Search', function() {
   };
 
   it('should handle malformed JSON in results', function() {
-    var search = new plugin.pelias.geocoder.Search();
+    var search = new Search();
     loadAndRun(
         search,
         '/base/test/plugin/pelias/geocoder/malformed.json',
@@ -89,7 +100,7 @@ describe('plugin.pelias.geocoder.Search', function() {
   });
 
   it('should handle valid JSON without features', function() {
-    var search = new plugin.pelias.geocoder.Search();
+    var search = new Search();
     loadAndRun(
         search,
         '/base/test/plugin/pelias/geocoder/nofeatures.json',
@@ -100,7 +111,7 @@ describe('plugin.pelias.geocoder.Search', function() {
   });
 
   it('should handle JSON with invalid features', function() {
-    var search = new plugin.pelias.geocoder.Search();
+    var search = new Search();
     loadAndRun(
         search,
         '/base/test/plugin/pelias/geocoder/badfeatures.json',
@@ -109,14 +120,14 @@ describe('plugin.pelias.geocoder.Search', function() {
           expect(search.results.length).toBe(1);
 
           search.results.forEach(function(item) {
-            expect(item instanceof plugin.pelias.geocoder.Result).toBeTruthy();
-            expect(item.getResult() instanceof ol.Feature).toBeTruthy();
+            expect(item instanceof Result).toBeTruthy();
+            expect(item.getResult() instanceof Feature).toBeTruthy();
           });
         });
   });
 
   it('should parse results', function() {
-    var search = new plugin.pelias.geocoder.Search();
+    var search = new Search();
     loadAndRun(
         search,
         '/base/test/plugin/pelias/geocoder/pelias-result.json',
@@ -125,8 +136,8 @@ describe('plugin.pelias.geocoder.Search', function() {
           expect(search.results.length).toBe(10);
 
           search.results.forEach(function(item) {
-            expect(item instanceof plugin.pelias.geocoder.Result).toBeTruthy();
-            expect(item.getResult() instanceof ol.Feature).toBeTruthy();
+            expect(item instanceof Result).toBeTruthy();
+            expect(item.getResult() instanceof Feature).toBeTruthy();
           });
 
           expect(search.results.filter(function(item) {
@@ -136,7 +147,7 @@ describe('plugin.pelias.geocoder.Search', function() {
   });
 
   it('should parse results with addresses', function() {
-    var search = new plugin.pelias.geocoder.Search();
+    var search = new Search();
     loadAndRun(
         search,
         '/base/test/plugin/pelias/geocoder/pelias-result2.json',
@@ -145,8 +156,8 @@ describe('plugin.pelias.geocoder.Search', function() {
           expect(search.results.length).toBe(10);
 
           search.results.forEach(function(item) {
-            expect(item instanceof plugin.pelias.geocoder.Result).toBeTruthy();
-            expect(item.getResult() instanceof ol.Feature).toBeTruthy();
+            expect(item instanceof Result).toBeTruthy();
+            expect(item.getResult() instanceof Feature).toBeTruthy();
           });
 
           expect(search.results[0].getResult().get('address')).toBe('4004 West 38th Avenue, Denver, CO, 80212');

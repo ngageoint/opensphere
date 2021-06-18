@@ -1,222 +1,222 @@
-goog.provide('plugin.file.geojson.GeoJSONParser');
+goog.module('plugin.file.geojson.GeoJSONParser');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Disposable');
-goog.require('goog.disposable.IDisposable');
-goog.require('ol.format.GeoJSON');
-goog.require('os.data.ColumnDefinition');
-goog.require('os.file.mime.text');
-goog.require('os.fn');
-goog.require('os.map');
-goog.require('os.parse.IParser');
-
+const Disposable = goog.require('goog.Disposable');
+const googObject = goog.require('goog.object');
+const ol = goog.require('ol');
+const GeoJSON = goog.require('ol.format.GeoJSON');
+const ColumnDefinition = goog.require('os.data.ColumnDefinition');
+const osFeature = goog.require('os.feature');
+const text = goog.require('os.file.mime.text');
+const fn = goog.require('os.fn');
+const osMap = goog.require('os.map');
+const IParser = goog.requireType('os.parse.IParser');
 
 
 /**
  * Parses a GeoJSON source
  *
- * @extends {goog.Disposable}
- * @implements {os.parse.IParser<ol.Feature>}
- * @constructor
+ * @implements {IParser<ol.Feature>}
  */
-plugin.file.geojson.GeoJSONParser = function() {
+class GeoJSONParser extends Disposable {
   /**
-   * @type {!ol.format.GeoJSON}
-   * @private
+   * Constructor.
    */
-  this.format_ = new ol.format.GeoJSON();
+  constructor() {
+    super();
 
-  /**
-   * @type {?Array<GeoJSONObject>}
-   */
-  this.features = null;
+    /**
+     * @type {!GeoJSON}
+     * @private
+     */
+    this.format_ = new GeoJSON();
 
-  /**
-   * @type {Object<string, !os.data.ColumnDefinition>}
-   * @private
-   */
-  this.columns_ = {};
+    /**
+     * @type {?Array<GeoJSONObject>}
+     */
+    this.features = null;
 
-  /**
-   * The index of the next feature to os.parse.
-   * @type {number}
-   * @protected
-   */
-  this.nextIndex = 0;
+    /**
+     * @type {Object<string, !ColumnDefinition>}
+     * @private
+     */
+    this.columns_ = {};
 
-  /**
-   * The ID of the data source this is parsing for.
-   * @type {?string}
-   * @protected
-   */
-  this.sourceId = null;
-};
-goog.inherits(plugin.file.geojson.GeoJSONParser, goog.Disposable);
+    /**
+     * The index of the next feature to os.parse.
+     * @type {number}
+     * @protected
+     */
+    this.nextIndex = 0;
 
-
-/**
- * @inheritDoc
- */
-plugin.file.geojson.GeoJSONParser.prototype.disposeInternal = function() {
-  plugin.file.geojson.GeoJSONParser.base(this, 'disposeInternal');
-  this.cleanup();
-};
-
-
-/**
- * Get the source ID.
- *
- * @return {?string}
- */
-plugin.file.geojson.GeoJSONParser.prototype.getSourceId = function() {
-  return this.sourceId;
-};
-
-
-/**
- * Set the source ID.
- *
- * @param {?string} value
- */
-plugin.file.geojson.GeoJSONParser.prototype.setSourceId = function(value) {
-  this.sourceId = value;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.file.geojson.GeoJSONParser.prototype.setSource = function(source) {
-  this.features = null;
-  this.nextIndex = 0;
-
-  var src;
-  if (source instanceof ArrayBuffer) {
-    source = os.file.mime.text.getText(source) || null;
+    /**
+     * The ID of the data source this is parsing for.
+     * @type {?string}
+     * @protected
+     */
+    this.sourceId = null;
   }
 
-  if (Array.isArray(source) && source.length == 1 && (typeof source[0] === 'string' || goog.isObject(source[0]))) {
-    // source likely came from a chaining importer
-    src = source[0];
-  } else if (goog.isObject(source)) {
-    src = source;
-  } else if (source && typeof source === 'string') {
-    // THIN-6240: if the server returns invalid JSON with literal whitespace characters inside tokens, the parser will
-    // fail. as a workaround, replace tabs with spaces and strip carriage returns and new lines.
-    src = /** @type {Object} */ (JSON.parse(source.replace(/\t/g, ' ').replace(/\r\n/g, '')));
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
+    this.cleanup();
   }
 
-  if (src) {
-    if (Array.isArray(src)) {
-      // this isn't quite valid GeoJSON, but... no harm no foul?
-      this.features = src;
-    } else {
-      var o = /** @type {GeoJSONObject} */ (src);
+  /**
+   * Get the source ID.
+   *
+   * @return {?string}
+   */
+  getSourceId() {
+    return this.sourceId;
+  }
 
-      if (o.type == 'FeatureCollection') {
-        var c = /** @type {GeoJSONFeatureCollection} */ (o);
-        this.features = c.features;
-      } else if (o.type) {
-        this.features = [o];
+  /**
+   * Set the source ID.
+   *
+   * @param {?string} value
+   */
+  setSourceId(value) {
+    this.sourceId = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setSource(source) {
+    this.features = null;
+    this.nextIndex = 0;
+
+    var src;
+    if (source instanceof ArrayBuffer) {
+      source = text.getText(source) || null;
+    }
+
+    if (Array.isArray(source) && source.length == 1 && (typeof source[0] === 'string' || goog.isObject(source[0]))) {
+      // source likely came from a chaining importer
+      src = source[0];
+    } else if (goog.isObject(source)) {
+      src = source;
+    } else if (source && typeof source === 'string') {
+      // THIN-6240: if the server returns invalid JSON with literal whitespace characters inside tokens, the parser will
+      // fail. as a workaround, replace tabs with spaces and strip carriage returns and new lines.
+      src = /** @type {Object} */ (JSON.parse(source.replace(/\t/g, ' ').replace(/\r\n/g, '')));
+    }
+
+    if (src) {
+      if (Array.isArray(src)) {
+        // this isn't quite valid GeoJSON, but... no harm no foul?
+        this.features = src;
+      } else {
+        var o = /** @type {GeoJSONObject} */ (src);
+
+        if (o.type == 'FeatureCollection') {
+          var c = /** @type {GeoJSONFeatureCollection} */ (o);
+          this.features = c.features;
+        } else if (o.type) {
+          this.features = [o];
+        }
       }
     }
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  cleanup() {
+    this.features = null;
+    this.nextIndex = 0;
+  }
 
-/**
- * @inheritDoc
- */
-plugin.file.geojson.GeoJSONParser.prototype.cleanup = function() {
-  this.features = null;
-  this.nextIndex = 0;
-};
+  /**
+   * @inheritDoc
+   */
+  hasNext() {
+    return this.features != null && this.features.length > this.nextIndex;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  parseNext() {
+    // unshift is very slow in browsers other than Chrome, so leave the array intact while parsing
+    var nextFeature = this.features[this.nextIndex++];
+    if (nextFeature) {
+      var features = this.format_.readFeatures(nextFeature, {
+        // We don't set the data projection because that can technically be specified in the GeoJSON. The
+        // GeoJSON format has a default projection of EPSG:4326 if one is not specified
+        featureProjection: osMap.PROJECTION
+      });
 
-/**
- * @inheritDoc
- */
-plugin.file.geojson.GeoJSONParser.prototype.hasNext = function() {
-  return this.features != null && this.features.length > this.nextIndex;
-};
+      features.forEach(this.process, this);
 
+      return features;
+    }
 
-/**
- * @inheritDoc
- */
-plugin.file.geojson.GeoJSONParser.prototype.parseNext = function() {
-  // unshift is very slow in browsers other than Chrome, so leave the array intact while parsing
-  var nextFeature = this.features[this.nextIndex++];
-  if (nextFeature) {
-    var features = this.format_.readFeatures(nextFeature, {
-      // We don't set the data projection because that can technically be specified in the GeoJSON. The
-      // GeoJSON format has a default projection of EPSG:4326 if one is not specified
-      featureProjection: os.map.PROJECTION
-    });
+    return null;
+  }
 
-    features.forEach(this.process, this);
+  /**
+   * Parse a limited set of results from the source
+   *
+   * @param {Object|null|string} source
+   * @param {Array<os.im.mapping.IMapping>=} opt_mappings The set of mappings to apply to parsed features
+   * @return {!Array<!ol.Feature>}
+   */
+  parsePreview(source, opt_mappings) {
+    this.setSource(source);
+    var count = 25;
+    var features = [];
+    this.columns_ = {};
+
+    while (this.hasNext() && count--) {
+      var featureSet = this.parseNext();
+
+      if (Array.isArray(featureSet)) {
+        for (var i = 0, n = featureSet.length; i < n; i++) {
+          var feature = featureSet[i];
+          feature.setId(String(ol.getUid(feature)));
+          features.push(feature);
+        }
+      }
+
+      var keys = feature.getKeys();
+      for (i = 0, n = keys.length; i < n; i++) {
+        var field = keys[i];
+
+        if (field && !osFeature.isInternalField(field) && !(field in this.columns_)) {
+          var col = new ColumnDefinition(field);
+          col['selectable'] = true;
+          col['sortable'] = true;
+
+          this.columns_[field] = col;
+        }
+      }
+    }
 
     return features;
   }
 
-  return null;
-};
+  /**
+   * @return {Array<ColumnDefinition>}
+   */
+  getColumns() {
+    if (this.columns_) {
+      return googObject.getValues(this.columns_);
+    }
+    return [];
+  }
+}
 
 
 /**
  * Method for doing additional processing on features parsed by the GeoJSON format.
  * @param {ol.Feature} feature
  */
-plugin.file.geojson.GeoJSONParser.prototype.process = os.fn.noop;
+GeoJSONParser.prototype.process = fn.noop;
 
 
-/**
- * Parse a limited set of results from the source
- *
- * @param {Object|null|string} source
- * @param {Array<os.im.mapping.IMapping>=} opt_mappings The set of mappings to apply to parsed features
- * @return {!Array<!ol.Feature>}
- */
-plugin.file.geojson.GeoJSONParser.prototype.parsePreview = function(source, opt_mappings) {
-  this.setSource(source);
-  var count = 25;
-  var features = [];
-  this.columns_ = {};
-
-  while (this.hasNext() && count--) {
-    var featureSet = this.parseNext();
-
-    if (Array.isArray(featureSet)) {
-      for (var i = 0, n = featureSet.length; i < n; i++) {
-        var feature = featureSet[i];
-        feature.setId(String(ol.getUid(feature)));
-        features.push(feature);
-      }
-    }
-
-    var keys = feature.getKeys();
-    for (i = 0, n = keys.length; i < n; i++) {
-      var field = keys[i];
-
-      if (field && !os.feature.isInternalField(field) && !(field in this.columns_)) {
-        var col = new os.data.ColumnDefinition(field);
-        col['selectable'] = true;
-        col['sortable'] = true;
-
-        this.columns_[field] = col;
-      }
-    }
-  }
-
-  return features;
-};
-
-
-/**
- * @return {Array<os.data.ColumnDefinition>}
- */
-plugin.file.geojson.GeoJSONParser.prototype.getColumns = function() {
-  if (this.columns_) {
-    return goog.object.getValues(this.columns_);
-  }
-  return [];
-};
+exports = GeoJSONParser;

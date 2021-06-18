@@ -11,6 +11,7 @@ goog.require('os');
 goog.require('os.MapContainer');
 goog.require('os.MapEvent');
 goog.require('os.action.EventType');
+goog.require('os.auth');
 goog.require('os.bearing.BearingSettings');
 goog.require('os.buffer');
 goog.require('os.column.ColumnMappingManager');
@@ -38,6 +39,7 @@ goog.require('os.events.EventFactory');
 goog.require('os.events.LayerConfigEvent');
 goog.require('os.events.LayerConfigEventType');
 goog.require('os.file.FileManager');
+goog.require('os.file.FileSettings');
 goog.require('os.file.FileStorage');
 goog.require('os.file.FileUrlHandler');
 goog.require('os.file.mime.any');
@@ -65,6 +67,7 @@ goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.layer.config.StaticLayerConfig');
 goog.require('os.load.LoadingManager');
 goog.require('os.map');
+goog.require('os.map.instance');
 goog.require('os.map.interaction');
 goog.require('os.menu.folder');
 goog.require('os.metrics.AddDataMetrics');
@@ -168,7 +171,7 @@ goog.require('plugin.pelias.geocoder.Plugin');
 goog.require('plugin.places.PlacesPlugin');
 goog.require('plugin.position.PositionPlugin');
 goog.require('plugin.storage.PersistPlugin');
-goog.require('plugin.suncalc.Plugin');
+goog.require('plugin.suncalc.SunCalcPlugin');
 goog.require('plugin.track.TrackPlugin');
 goog.require('plugin.vectortile.VectorTilePlugin');
 goog.require('plugin.vectortools.VectorToolsPlugin');
@@ -320,19 +323,25 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   map.listenOnce(os.MapEvent.MAP_READY, this.onMapReady_, false, this);
 
   // set the global map container reference
-  os.map.mapContainer = os.MapContainer.getInstance();
+  os.map.instance.setIMapContainer(map);
+  os.map.instance.setMapContainer(map);
+  os.map.mapContainer = map;
 
   // init filter manager
-  os.filterManager = os.query.FilterManager.getInstance();
-  os.ui.filterManager = os.filterManager;
+  var filterManager = os.query.FilterManager.getInstance();
+  os.query.instance.setFilterManager(filterManager);
+  os.filterManager = os.ui.filterManager = filterManager;
 
   // init area manager
-  os.areaManager = os.query.AreaManager.getInstance();
-  os.ui.areaManager = os.areaManager;
+  var areaManager = os.query.AreaManager.getInstance();
+  os.query.instance.setAreaManager(areaManager);
+  os.areaManager = os.ui.areaManager = areaManager;
 
   // init query manager
-  os.queryManager = os.query.QueryManager.getInstance();
-  os.ui.queryManager = os.queryManager;
+  var queryManager = os.query.QueryManager.getInstance();
+  os.query.instance.setQueryManager(queryManager);
+  os.queryManager = os.ui.queryManager = queryManager;
+
   os.ui.menu.areaImport.setup();
 
   // initialize the area/filter import/file managers
@@ -426,6 +435,9 @@ os.MainCtrl.prototype.initialize = function() {
 
   // initialize the nav bars
   os.ui.navbaroptions.init();
+
+  // initialize any authentication settings
+  os.auth.initAuth();
 
   this.addControlsToHelp_();
   os.ui.help.metricsOption.addToNav();
@@ -545,7 +557,7 @@ os.MainCtrl.prototype.addPlugins = function() {
   os.ui.pluginManager.addPlugin(plugin.vectortools.VectorToolsPlugin.getInstance());
   os.ui.pluginManager.addPlugin(plugin.heatmap.HeatmapPlugin.getInstance());
   os.ui.pluginManager.addPlugin(plugin.params.ParamsPlugin.getInstance());
-  os.ui.pluginManager.addPlugin(plugin.suncalc.Plugin.getInstance());
+  os.ui.pluginManager.addPlugin(plugin.suncalc.SunCalcPlugin.getInstance());
   os.ui.pluginManager.addPlugin(plugin.track.TrackPlugin.getInstance());
   os.ui.pluginManager.addPlugin(plugin.openpage.Plugin.getInstance());
   os.ui.pluginManager.addPlugin(new plugin.storage.PersistPlugin());
@@ -676,6 +688,7 @@ os.MainCtrl.prototype.initializeSettings_ = function() {
   sm.addSettingPlugin(new os.ui.user.settings.LocationSettings());
   sm.addSettingPlugin(new os.ui.column.mapping.ColumnMappingSettings());
   sm.addSettingPlugin(new os.config.ThemeSettings());
+  sm.addSettingPlugin(new os.file.FileSettings());
 };
 
 

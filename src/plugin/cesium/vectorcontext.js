@@ -1,17 +1,18 @@
 goog.module('plugin.cesium.VectorContext');
 
 const Throttle = goog.require('goog.async.Throttle');
-const arrayUtils = goog.require('ol.array');
-const {getUid} = goog.require('ol');
+const dispose = goog.require('goog.dispose');
 const log = goog.require('goog.log');
+const {getUid} = goog.require('ol');
+const arrayUtils = goog.require('ol.array');
 const objectUtils = goog.require('os.object');
 const {isGroundPrimitive, isPrimitiveShown, setPrimitiveShown} = goog.require('plugin.cesium.primitive');
 
+const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const Feature = goog.requireType('ol.Feature');
 const Geometry = goog.requireType('ol.geom.Geometry');
 const OLVectorLayer = goog.requireType('ol.layer.Vector');
 const Projection = goog.requireType('ol.proj.Projection');
-const IDisposable = goog.requireType('goog.disposable.IDisposable');
 
 
 /**
@@ -155,7 +156,7 @@ class VectorContext {
    */
   dispose() {
     if (!this.isDisposed()) {
-      goog.dispose(this.billboardCleanupThrottle);
+      dispose(this.billboardCleanupThrottle);
 
       try {
         this.billboards.destroyPrimitives = true;

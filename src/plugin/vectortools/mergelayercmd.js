@@ -1,194 +1,185 @@
-goog.provide('plugin.vectortools.MergeLayer');
+goog.module('plugin.vectortools.MergeLayer');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.array');
-goog.require('os.column.ColumnMappingManager');
-goog.require('os.command.AbstractSource');
-goog.require('os.command.ICommand');
-goog.require('os.command.State');
-goog.require('os.data.CollectionManager');
-goog.require('os.data.OSDataManager');
-goog.require('os.events.LayerConfigEvent');
-goog.require('os.layer.Vector');
-goog.require('os.source.Vector');
-goog.require('os.style');
-goog.require('os.style.StyleManager');
+const MapContainer = goog.require('os.MapContainer');
+const State = goog.require('os.command.State');
+const OSDataManager = goog.require('os.data.OSDataManager');
+const osFeature = goog.require('os.feature');
+const layer = goog.require('os.layer');
+const style = goog.require('os.style');
+const vectortools = goog.require('plugin.vectortools');
 
+const ICommand = goog.requireType('os.command.ICommand');
+const ISource = goog.requireType('os.source.ISource');
+const VectorSource = goog.requireType('os.source.Vector');
+const Options = goog.requireType('plugin.vectortools.Options');
 
 
 /**
  * Command for merging vector layers
  *
- * @constructor
- * @implements {os.command.ICommand}
- * @param {!Array<string>} sourceIds The data source IDs to merge
- * @param {string=} opt_name Optional name to give the merged layer
- * @param {plugin.vectortools.Options=} opt_options The options
+ * @implements {ICommand}
  */
-plugin.vectortools.MergeLayer = function(sourceIds, opt_name, opt_options) {
+class MergeLayer {
   /**
-   * @type {!Array<string>}
-   * @protected
+   * Constructor.
+   * @param {!Array<string>} sourceIds The data source IDs to merge
+   * @param {string=} opt_name Optional name to give the merged layer
+   * @param {Options=} opt_options The options
    */
-  this.sourceIds = sourceIds;
+  constructor(sourceIds, opt_name, opt_options) {
+    /**
+     * @inheritDoc
+     */
+    this.state = State.READY;
 
-  /**
-   * @type {!os.command.State}
-   */
-  this.state = os.command.State.READY;
+    /**
+     * @inheritDoc
+     */
+    this.isAsync = false;
 
-  this.title = 'Merge Layers';
-  this.options_ = opt_options;
+    /**
+     * @inheritDoc
+     */
+    this.title = 'Merge layers';
 
-  /**
-   * @type {string}
-   * @private
-   */
-  this.newLayerId_ = '';
+    /**
+     * @inheritDoc
+     */
+    this.details = null;
 
-  /**
-   * @type {string}
-   * @private
-   */
-  this.newLayerName_ = os.layer.getUniqueTitle(opt_name || 'Merged Layer');
-};
+    /**
+     * @type {!Array<string>}
+     * @protected
+     */
+    this.sourceIds = sourceIds;
 
+    this.title = 'Merge Layers';
+    this.options_ = opt_options;
 
-/**
- * The current state of the command
- * @override
- * @type {!os.command.State}
- */
-plugin.vectortools.MergeLayer.prototype.state = os.command.State.READY;
+    /**
+     * @type {string}
+     * @private
+     */
+    this.newLayerId_ = '';
 
-
-/**
- * @inheritDoc
- */
-plugin.vectortools.MergeLayer.prototype.isAsync = false;
-
-
-/**
- * @inheritDoc
- */
-plugin.vectortools.MergeLayer.prototype.title = 'Merge layers';
-
-
-/**
- * @inheritDoc
- */
-plugin.vectortools.MergeLayer.prototype.details = null;
-
-
-/**
- * @return {Array.<os.source.ISource>} The sources
- */
-plugin.vectortools.MergeLayer.prototype.getSources = function() {
-  // iterate thru all the sourceIds and get each of the sources
-  var sources = Array(this.sourceIds.length);
-  for (var i = 0; i < this.sourceIds.length; i++) {
-    sources[i] = os.osDataManager.getSource(this.sourceIds[i]);
-  }
-  return sources;
-};
-
-
-/**
- * Checks if the command is ready to execute.
- *
- * @return {boolean}
- */
-plugin.vectortools.MergeLayer.prototype.canExecute = function() {
-  if (this.state !== os.command.State.READY) {
-    this.details = 'Command not in ready state.';
-    return false;
+    /**
+     * @type {string}
+     * @private
+     */
+    this.newLayerName_ = layer.getUniqueTitle(opt_name || 'Merged Layer');
   }
 
-  var sources = this.getSources();
-  if (!sources) {
-    this.state = os.command.State.ERROR;
-    return false;
+  /**
+   * @return {Array.<ISource>} The sources
+   */
+  getSources() {
+    // iterate thru all the sourceIds and get each of the sources
+    var sources = Array(this.sourceIds.length);
+    for (var i = 0; i < this.sourceIds.length; i++) {
+      sources[i] = OSDataManager.getInstance().getSource(this.sourceIds[i]);
+    }
+    return sources;
   }
 
-  return true;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.vectortools.MergeLayer.prototype.execute = function() {
-  if (this.canExecute()) {
-    this.state = os.command.State.EXECUTING;
+  /**
+   * Checks if the command is ready to execute.
+   *
+   * @return {boolean}
+   */
+  canExecute() {
+    if (this.state !== State.READY) {
+      this.details = 'Command not in ready state.';
+      return false;
+    }
 
     var sources = this.getSources();
-    if (sources && sources.length > 0) {
-      // create a new source
-      var mergedLayer = plugin.vectortools.addNewLayer({'timeEnabled': true});
-      var mergedSource = /** @type {os.source.Vector} */ (mergedLayer.getSource());
+    if (!sources) {
+      this.state = State.ERROR;
+      return false;
+    }
 
-      this.newLayerId_ = mergedSource.getId();
+    return true;
+  }
 
-      mergedLayer.setTitle(this.newLayerName_);
-      mergedSource.setTitle(this.newLayerName_);
+  /**
+   * @inheritDoc
+   */
+  execute() {
+    if (this.canExecute()) {
+      this.state = State.EXECUTING;
 
-      // for merged layers we want to allow layer level styling
-      var options = mergedLayer.getLayerOptions();
-      if (!options) {
-        options = {};
-      }
-      options[os.layer.LayerOption.SHOW_FORCE_COLOR] = true;
-      mergedLayer.setLayerOptions(options);
+      var sources = this.getSources();
+      if (sources && sources.length > 0) {
+        // create a new source
+        var mergedLayer = vectortools.addNewLayer({'timeEnabled': true});
+        var mergedSource = /** @type {VectorSource} */ (mergedLayer.getSource());
 
-      var columnMappings = plugin.vectortools.getColumnMappings(this.sourceIds);
-      mergedSource.setColumns(plugin.vectortools.getCombinedColumns(sources, columnMappings));
+        this.newLayerId_ = mergedSource.getId();
 
-      var mergedLayerFeatures = [];
-      var contribSrcColName = 'CONTRIBUTING_SOURCE';
+        mergedLayer.setTitle(this.newLayerName_);
+        mergedSource.setTitle(this.newLayerName_);
 
-      for (var i = 0; i < sources.length; i++) {
-        var source = /** @type {os.source.Vector} */ (sources[i]);
-        if (source) {
-          var features = plugin.vectortools.getFeatures(source, this.options_);
-          var layerConfig = null;
-          var mapping = columnMappings[source.getId()];
+        // for merged layers we want to allow layer level styling
+        var options = mergedLayer.getLayerOptions();
+        if (!options) {
+          options = {};
+        }
+        options[layer.LayerOption.SHOW_FORCE_COLOR] = true;
+        mergedLayer.setLayerOptions(options);
 
-          for (var j = 0; j < features.length; j++) {
-            var feature = features[j];
-            if (feature) {
-              if (!layerConfig) {
-                layerConfig = os.style.getLayerConfig(feature, source);
+        var columnMappings = vectortools.getColumnMappings(this.sourceIds);
+        mergedSource.setColumns(vectortools.getCombinedColumns(sources, columnMappings));
+
+        var mergedLayerFeatures = [];
+        var contribSrcColName = 'CONTRIBUTING_SOURCE';
+
+        for (var i = 0; i < sources.length; i++) {
+          var source = /** @type {VectorSource} */ (sources[i]);
+          if (source) {
+            var features = vectortools.getFeatures(source, this.options_);
+            var layerConfig = null;
+            var mapping = columnMappings[source.getId()];
+
+            for (var j = 0; j < features.length; j++) {
+              var feature = features[j];
+              if (feature) {
+                if (!layerConfig) {
+                  layerConfig = style.getLayerConfig(feature, source);
+                }
+                var copiedFeature = osFeature.copyFeature(feature, layerConfig);
+                if (mapping) {
+                  vectortools.runColumnMapping(mapping, copiedFeature);
+                }
+                if (!copiedFeature.get(contribSrcColName)) {
+                  copiedFeature.set(contribSrcColName, source.getTitle(true), true); // THIN-8644 contributing source
+                }
+
+                mergedLayerFeatures.push(copiedFeature);
               }
-              var copiedFeature = os.feature.copyFeature(feature, layerConfig);
-              if (mapping) {
-                plugin.vectortools.runColumnMapping(mapping, copiedFeature);
-              }
-              if (!copiedFeature.get(contribSrcColName)) {
-                copiedFeature.set(contribSrcColName, source.getTitle(true), true); // THIN-8644 contributing source
-              }
-
-              mergedLayerFeatures.push(copiedFeature);
             }
           }
         }
-      }
 
-      mergedSource.addColumn(contribSrcColName);
-      mergedSource.addFeatures(mergedLayerFeatures);
-      this.state = os.command.State.SUCCESS;
-      return true;
+        mergedSource.addColumn(contribSrcColName);
+        mergedSource.addFeatures(mergedLayerFeatures);
+        this.state = State.SUCCESS;
+        return true;
+      }
     }
+
+    return false;
   }
 
-  return false;
-};
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    this.state = State.REVERTING;
+    MapContainer.getInstance().removeLayer(this.newLayerId_);
+    this.state = State.READY;
+    return true;
+  }
+}
 
-
-/**
- * @inheritDoc
- */
-plugin.vectortools.MergeLayer.prototype.revert = function() {
-  this.state = os.command.State.REVERTING;
-  os.MapContainer.getInstance().removeLayer(this.newLayerId_);
-  this.state = os.command.State.READY;
-  return true;
-};
+exports = MergeLayer;

@@ -1,81 +1,86 @@
-goog.provide('plugin.params.menu');
+goog.module('plugin.params.menu');
 
-goog.require('os.implements');
-goog.require('os.ol.source.IUrlSource');
-goog.require('os.ui.menu.layer');
-goog.require('plugin.params');
-goog.require('plugin.params.editRequestParamsDirective');
+const asserts = goog.require('goog.asserts');
+const Layer = goog.require('ol.layer.Layer');
+const AlertManager = goog.require('os.alert.AlertManager');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const layerMenu = goog.require('os.ui.menu.layer');
+const pluginParams = goog.require('plugin.params');
+const {launchParamsEdit} = goog.require('plugin.params.EditRequestParamsUI');
 
 
 /**
  * Set up params menu items in the layer menu.
  */
-plugin.params.menu.layerSetup = function() {
-  var menu = os.ui.menu.layer.MENU;
-  if (menu && !menu.getRoot().find(plugin.params.EventType.EDIT_PARAMS)) {
-    var group = menu.getRoot().find(os.ui.menu.layer.GroupLabel.LAYER);
-    goog.asserts.assert(group, 'Group should exist! Check spelling?');
+const layerSetup = function() {
+  var menu = layerMenu.MENU;
+  if (menu && !menu.getRoot().find(pluginParams.EventType.EDIT_PARAMS)) {
+    var group = menu.getRoot().find(layerMenu.GroupLabel.LAYER);
+    asserts.assert(group, 'Group should exist! Check spelling?');
 
     group.addChild({
       label: 'Edit Parameters...',
-      eventType: plugin.params.EventType.EDIT_PARAMS,
+      eventType: pluginParams.EventType.EDIT_PARAMS,
       tooltip: 'Edit request parameters for the layer',
       icons: ['<i class="fa fa-fw fa-gears"></i>'],
-      beforeRender: plugin.params.menu.visibleIfSupported_,
-      handler: plugin.params.menu.handleLayerAction_,
-      metricKey: plugin.params.Metrics.EDIT_PARAMS
+      beforeRender: visibleIfSupported_,
+      handler: handleLayerAction_,
+      metricKey: pluginParams.Metrics.EDIT_PARAMS,
+      sort: 10000
     });
   }
 };
 
-
 /**
  * Clean up params menu items in the layer menu.
  */
-plugin.params.menu.layerDispose = function() {
-  var menu = os.ui.menu.layer.MENU;
-  if (menu && !menu.getRoot().find(plugin.params.EventType.EDIT_PARAMS)) {
-    var group = menu.getRoot().find(os.ui.menu.layer.GroupLabel.LAYER);
+const layerDispose = function() {
+  var menu = layerMenu.MENU;
+  if (menu && !menu.getRoot().find(pluginParams.EventType.EDIT_PARAMS)) {
+    var group = menu.getRoot().find(layerMenu.GroupLabel.LAYER);
     if (group) {
-      group.removeChild(plugin.params.EventType.EDIT_PARAMS);
+      group.removeChild(pluginParams.EventType.EDIT_PARAMS);
     }
   }
 };
-
 
 /**
  * Test if an event context supports editing layer request parameters.
  *
- * @param {os.ui.menu.layer.Context} context The menu context.
+ * @param {layerMenu.Context} context The menu context.
  * @this {os.ui.menu.MenuItem}
  */
-plugin.params.menu.visibleIfSupported_ = function(context) {
+const visibleIfSupported_ = function(context) {
   this.visible = false;
 
   // only allow editing parameters for one layer at a time
   if (context && context.length === 1) {
-    var layers = os.ui.menu.layer.getLayersFromContext(context);
-    if (layers && layers.length === 1 && layers[0] instanceof ol.layer.Layer) {
-      this.visible = plugin.params.supportsParamOverrides(/** @type {!ol.layer.Layer} */ (layers[0]));
+    var layers = layerMenu.getLayersFromContext(context);
+    if (layers && layers.length === 1 && layers[0] instanceof Layer) {
+      this.visible = pluginParams.supportsParamOverrides(/** @type {!ol.layer.Layer} */ (layers[0]));
     }
   }
 };
 
-
 /**
  * Handle params event from the layer menu.
  *
- * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
- * @private
+ * @param {!os.ui.menu.MenuEvent<layerMenu.Context>} event The menu event.
  */
-plugin.params.menu.handleLayerAction_ = function(event) {
-  var layers = os.ui.menu.layer.getLayersFromContext(event.getContext());
-  if (layers && layers.length === 1 && layers[0] instanceof ol.layer.Layer) {
+const handleLayerAction_ = function(event) {
+  var layers = layerMenu.getLayersFromContext(event.getContext());
+  if (layers && layers.length === 1 && layers[0] instanceof Layer) {
     var layer = /** @type {!ol.layer.Layer} */ (layers[0]);
-    var params = plugin.params.getParamsFromLayer(layer);
-    plugin.params.launchParamsEdit(layer, params);
+    var params = pluginParams.getParamsFromLayer(layer);
+    launchParamsEdit(layer, params);
   } else {
-    os.alertManager.sendAlert('Unexpected layer selection. Please select a single layer and try again.',
-        os.alert.AlertEventSeverity.WARNING);
+    AlertManager.getInstance().sendAlert('Unexpected layer selection. Please select a single layer and try again.',
+        AlertEventSeverity.WARNING);
   }
+};
+
+exports = {
+  layerSetup,
+  layerDispose,
+  visibleIfSupported_
 };

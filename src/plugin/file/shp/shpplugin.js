@@ -1,75 +1,75 @@
-goog.provide('plugin.file.shp.SHPPlugin');
+goog.module('plugin.file.shp.SHPPlugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.DataManager');
-goog.require('os.data.ProviderEntry');
-goog.require('os.layer.config.LayerConfigManager');
-goog.require('os.plugin.AbstractPlugin');
-goog.require('os.ui.im.ImportManager');
-goog.require('plugin.file.shp.SHPDescriptor');
-goog.require('plugin.file.shp.SHPExporter');
-goog.require('plugin.file.shp.SHPLayerConfig');
-goog.require('plugin.file.shp.SHPParser');
-goog.require('plugin.file.shp.SHPProvider');
-goog.require('plugin.file.shp.mime');
-goog.require('plugin.file.shp.ui.SHPImportUI');
-goog.require('plugin.file.shp.ui.ZipSHPImportUI');
-
+const DataManager = goog.require('os.data.DataManager');
+const ProviderEntry = goog.require('os.data.ProviderEntry');
+const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const exportManager = goog.require('os.ui.exportManager');
+const ImportManager = goog.require('os.ui.im.ImportManager');
+const SHPDescriptor = goog.require('plugin.file.shp.SHPDescriptor');
+const SHPExporter = goog.require('plugin.file.shp.SHPExporter');
+const SHPLayerConfig = goog.require('plugin.file.shp.SHPLayerConfig');
+const SHPParser = goog.require('plugin.file.shp.SHPParser');
+const SHPProvider = goog.require('plugin.file.shp.SHPProvider');
+const mime = goog.require('plugin.file.shp.mime');
+const SHPImportUI = goog.require('plugin.file.shp.ui.SHPImportUI');
+const ZipSHPImportUI = goog.require('plugin.file.shp.ui.ZipSHPImportUI');
 
 
 /**
  * Provides SHP support
- *
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
  */
-plugin.file.shp.SHPPlugin = function() {
-  plugin.file.shp.SHPPlugin.base(this, 'constructor');
-  this.id = plugin.file.shp.SHPPlugin.ID;
-};
-goog.inherits(plugin.file.shp.SHPPlugin, os.plugin.AbstractPlugin);
+class SHPPlugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = SHPPlugin.ID;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  init() {
+    var dm = DataManager.getInstance();
+
+    // register shp provider type
+    dm.registerProviderType(new ProviderEntry(SHPPlugin.ID, SHPProvider, SHPPlugin.TYPE, SHPPlugin.TYPE));
+
+    // register the shp descriptor type
+    dm.registerDescriptorType(this.id, SHPDescriptor);
+
+    // register the shp layer config
+    var lcm = LayerConfigManager.getInstance();
+    lcm.registerLayerConfig(this.id, SHPLayerConfig);
+
+    // register the shp import ui
+    var im = ImportManager.getInstance();
+    im.registerImportDetails('Shapefile (SHP/DBF or ZIP)', true);
+    im.registerImportUI(mime.TYPE, new SHPImportUI());
+    im.registerImportUI(mime.ZIP_TYPE, new ZipSHPImportUI());
+    im.registerParser(this.id, SHPParser);
+
+    // register the shp exporter
+    exportManager.registerExportMethod(new SHPExporter());
+  }
+}
 
 
 /**
  * @type {string}
  * @const
  */
-plugin.file.shp.SHPPlugin.ID = 'shp';
+SHPPlugin.ID = 'shp';
 
 
 /**
  * @type {string}
  * @const
  */
-plugin.file.shp.SHPPlugin.TYPE = 'SHP Layers';
+SHPPlugin.TYPE = 'SHP Layers';
 
 
-/**
- * @inheritDoc
- */
-plugin.file.shp.SHPPlugin.prototype.init = function() {
-  var dm = os.dataManager;
-
-  // register shp provider type
-  dm.registerProviderType(new os.data.ProviderEntry(
-      plugin.file.shp.SHPPlugin.ID,
-      plugin.file.shp.SHPProvider,
-      plugin.file.shp.SHPPlugin.TYPE,
-      plugin.file.shp.SHPPlugin.TYPE));
-
-  // register the shp descriptor type
-  dm.registerDescriptorType(this.id, plugin.file.shp.SHPDescriptor);
-
-  // register the shp layer config
-  var lcm = os.layer.config.LayerConfigManager.getInstance();
-  lcm.registerLayerConfig(this.id, plugin.file.shp.SHPLayerConfig);
-
-  // register the shp import ui
-  var im = os.ui.im.ImportManager.getInstance();
-  im.registerImportDetails('Shapefile (SHP/DBF or ZIP)', true);
-  im.registerImportUI(plugin.file.shp.mime.TYPE, new plugin.file.shp.ui.SHPImportUI());
-  im.registerImportUI(plugin.file.shp.mime.ZIP_TYPE, new plugin.file.shp.ui.ZipSHPImportUI());
-  im.registerParser(this.id, plugin.file.shp.SHPParser);
-
-  // register the shp exporter
-  os.ui.exportManager.registerExportMethod(new plugin.file.shp.SHPExporter());
-};
+exports = SHPPlugin;

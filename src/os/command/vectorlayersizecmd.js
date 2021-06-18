@@ -1,42 +1,45 @@
-goog.provide('os.command.VectorLayerSize');
+goog.module('os.command.VectorLayerSize');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractVectorStyle');
-goog.require('os.command.ICommand');
-goog.require('os.metrics');
+const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
+const metrics = goog.require('os.metrics');
+const osStyle = goog.require('os.style');
+const StyleManager = goog.require('os.style.StyleManager');
 
 
 /**
  * Changes the size of a layer
- *
- * @extends {os.command.AbstractVectorStyle}
- * @param {string} layerId
- * @param {number} size
- * @param {number=} opt_oldSize
- * @constructor
  */
-os.command.VectorLayerSize = function(layerId, size, opt_oldSize) {
-  os.command.VectorLayerSize.base(this, 'constructor', layerId, size, opt_oldSize);
-  this.title = 'Change Size';
-  this.metricKey = os.metrics.Layer.VECTOR_SIZE;
-};
-goog.inherits(os.command.VectorLayerSize, os.command.AbstractVectorStyle);
+class VectorLayerSize extends AbstractVectorStyle {
+  /**
+   * Constructor.
+   * @param {string} layerId
+   * @param {number} size
+   * @param {number=} opt_oldSize
+   */
+  constructor(layerId, size, opt_oldSize) {
+    super(layerId, size, opt_oldSize);
+    this.title = 'Change Size';
+    this.metricKey = metrics.Layer.VECTOR_SIZE;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+    return osStyle.getConfigSize(config);
+  }
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerSize.prototype.getOldValue = function() {
-  var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-  return os.style.getConfigSize(config);
-};
+  /**
+   * @inheritDoc
+   */
+  applyValue(config, value) {
+    var size = /** @type {number} */ (value);
+    osStyle.setConfigSize(config, size);
 
+    super.applyValue(config, value);
+  }
+}
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerSize.prototype.applyValue = function(config, value) {
-  var size = /** @type {number} */ (value);
-  os.style.setConfigSize(config, size);
-
-  os.command.VectorLayerSize.base(this, 'applyValue', config, value);
-};
+exports = VectorLayerSize;

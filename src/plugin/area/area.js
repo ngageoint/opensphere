@@ -1,65 +1,70 @@
-goog.provide('plugin.area');
+goog.module('plugin.area');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.Feature');
-goog.require('ol.array');
-goog.require('os.data.RecordField');
-goog.require('os.fn');
-goog.require('os.geo.jsts');
+const Feature = goog.require('ol.Feature');
+const olArray = goog.require('ol.array');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
+const RecordField = goog.require('os.data.RecordField');
+const fn = goog.require('os.fn');
+const jsts = goog.require('os.geo.jsts');
+const {getAreaManager} = goog.require('os.query.instance');
+const query = goog.require('os.ui.query');
 
 
 /**
  * Process imported features.
  *
- * @param {Array<ol.Feature>} features
+ * @param {Array<Feature>} features
  * @param {Object} config
  */
-plugin.area.processFeatures = function(features, config) {
+const processFeatures = function(features, config) {
+  const areaManager = getAreaManager();
+
   // filter only valid features
-  features = os.ui.areaManager.filterFeatures(features);
+  features = areaManager.filterFeatures(features);
 
   if (features && features.length > 0) {
-    var mappings = os.ui.query.createMappingsFromConfig(config);
-    var geometries = features.map(os.fn.mapFeatureToGeometry).filter(os.fn.filterFalsey);
+    var mappings = query.createMappingsFromConfig(config);
+    var geometries = features.map(fn.mapFeatureToGeometry).filter(fn.filterFalsey);
 
     if (config['merge'] && geometries.length > 1) {
-      var merged = os.geo.jsts.merge(geometries);
+      var merged = jsts.merge(geometries);
       if (merged) {
-        var feature = new ol.Feature(merged);
-        plugin.area.processFeature_(feature, config, mappings);
-        os.ui.areaManager.add(feature);
+        var feature = new Feature(merged);
+        processFeature_(feature, config, mappings);
+        areaManager.add(feature);
       } else {
-        os.alertManager.sendAlert('Failed merging areas', os.alert.AlertEventSeverity.ERROR);
+        AlertManager.getInstance().sendAlert('Failed merging areas', AlertEventSeverity.ERROR);
       }
     } else {
       features.forEach(function(feature) {
-        if (feature && !os.ui.areaManager.get(feature)) {
-          plugin.area.processFeature_(feature, config, mappings);
+        if (feature && !areaManager.get(feature)) {
+          processFeature_(feature, config, mappings);
         }
       });
 
-      os.ui.areaManager.bulkAdd(features, true);
+      areaManager.bulkAdd(features, true);
     }
   } else {
-    os.alertManager.sendAlert('No Areas Found', os.alert.AlertEventSeverity.WARNING);
+    AlertManager.getInstance().sendAlert('No Areas Found', AlertEventSeverity.WARNING);
   }
 };
-
 
 /**
  * Process an imported feature.
  *
- * @param {!ol.Feature} feature
+ * @param {!Feature} feature
  * @param {Object} config
  * @param {!Array<!os.im.mapping.IMapping>} mappings
- * @private
  */
-plugin.area.processFeature_ = function(feature, config, mappings) {
+const processFeature_ = function(feature, config, mappings) {
   // apply mappings to the feature
-  os.ui.query.applyMappings(feature, mappings);
+  query.applyMappings(feature, mappings);
 
   // Strip out unnecessary feature values (kml style was breaking the refresh)
   feature.getKeys().forEach(function(value) {
-    var found = ol.array.find(os.ui.query.featureKeys, function(key) {
+    var found = olArray.find(query.featureKeys, function(key) {
       return key.toLowerCase() == value.toLowerCase();
     });
     if (!found) {
@@ -70,5 +75,9 @@ plugin.area.processFeature_ = function(feature, config, mappings) {
     }
   });
 
-  feature.set(os.data.RecordField.SOURCE_NAME, config[os.data.RecordField.SOURCE_NAME], true);
+  feature.set(RecordField.SOURCE_NAME, config[RecordField.SOURCE_NAME], true);
+};
+
+exports = {
+  processFeatures
 };

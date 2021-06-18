@@ -1,8 +1,4 @@
-goog.require('goog.dom');
-goog.require('goog.dom.xml');
-goog.require('goog.string');
-goog.require('os.layer.LayerType');
-goog.require('os.layer.Vector');
+goog.require('os');
 goog.require('os.ogc.wfs.FeatureType');
 goog.require('os.state.StateManager');
 goog.require('os.state.XMLStateManager');
@@ -16,6 +12,13 @@ goog.require('plugin.file.kml.KMLField');
 
 
 describe('OMAR.v4.ArcLayerState', function() {
+  const os = goog.module.get('os');
+  const StateManager = goog.module.get('os.state.StateManager');
+  const LayerState = goog.module.get('os.state.v4.LayerState');
+  const xml = goog.module.get('os.xml');
+  const ArcFeatureLayerConfig = goog.module.get('plugin.arc.layer.ArcFeatureLayerConfig');
+  const ArcLayerDescriptor = goog.module.get('plugin.arc.layer.ArcLayerDescriptor');
+
   var discriptorConfig = {
     'advancedQueryCapabilities': {
       'supportsDistinct': true,
@@ -365,8 +368,8 @@ describe('OMAR.v4.ArcLayerState', function() {
   };
 
   beforeEach(function() {
-    os.stateManager = os.state.StateManager.getInstance();
-    stateManager = os.state.StateManager.getInstance();
+    os.stateManager = StateManager.getInstance();
+    stateManager = StateManager.getInstance();
     stateManager.setVersion('v4');
   });
 
@@ -398,7 +401,7 @@ describe('OMAR.v4.ArcLayerState', function() {
 
     // Runs the tests.
     runs(function() {
-      var descriptor = new plugin.arc.layer.ArcLayerDescriptor();
+      var descriptor = new ArcLayerDescriptor();
       descriptor.configureDescriptor(discriptorConfig,
           '1678611117#https://services.arcgisonline.com/ArcGIS/rest/services/GEONAMES|0',
           'https://services.arcgisonline.com/ArcGIS/rest/services/GEONAMES/MapServer');
@@ -408,12 +411,11 @@ describe('OMAR.v4.ArcLayerState', function() {
         $.extend(options, descriptorOptions[i]);
       }
       $.extend(options, defaultOptions);
-      var config = new plugin.arc.layer.ArcFeatureLayerConfig();
+      var config = new ArcFeatureLayerConfig();
       var layer = config.createLayer(options);
-      // var layer = new os.layer.Vector();
       layer.setLayerOptions(options);
 
-      var layerState = new os.state.v4.LayerState();
+      var layerState = new LayerState();
       var xmlRootDocument = stateManager.createStateObject(function() {}, 'test state', 'desc', defaultOptions.tags);
       var stateOptions = stateManager.createStateOptions(function() {}, 'test state', 'desc', defaultOptions.tags);
       stateOptions.doc = xmlRootDocument;
@@ -421,7 +423,7 @@ describe('OMAR.v4.ArcLayerState', function() {
       xmlRootDocument.firstElementChild.appendChild(rootObj);
       var result = layerState.layerToXML(layer, stateOptions);
       rootObj.appendChild(result);
-      var seralizedDoc = os.xml.serialize(stateOptions.doc);
+      var seralizedDoc = xml.serialize(stateOptions.doc);
       var xmlLintResult = xmllint.validateXML({
         xml: seralizedDoc,
         schema: resultSchemas

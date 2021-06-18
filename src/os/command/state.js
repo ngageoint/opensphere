@@ -1,11 +1,11 @@
-goog.provide('os.command.State');
-
+goog.module('os.command.State');
+goog.module.declareLegacyNamespace();
 
 /**
  * The states of commands
  * @enum {string}
  */
-os.command.State = {
+exports = {
   READY: 'ready',
   EXECUTING: 'executing',
   SUCCESS: 'success',

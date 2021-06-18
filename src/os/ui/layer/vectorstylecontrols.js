@@ -4,19 +4,8 @@ goog.provide('os.ui.layer.vectorStyleControlsDirective');
 goog.require('goog.Disposable');
 goog.require('os.ui.Module');
 goog.require('os.ui.icon.iconPickerDirective');
+goog.require('os.ui.layer.VectorStyleControlsEventType');
 goog.require('os.ui.sliderDirective');
-
-
-/**
- * @enum {string}
- */
-os.ui.layer.VectorStyleControlsEventType = {
-  LINE_DASH_CHANGE: 'vector:lineDashChange',
-  SHAPE_CHANGE: 'vector:shapeChange',
-  CENTER_SHAPE_CHANGE: 'vector:centerShapeChange',
-  SHOW_ROTATION_CHANGE: 'vector:showRotationChange',
-  ROTATION_COLUMN_CHANGE: 'vector:rotationColumnChange'
-};
 
 
 /**

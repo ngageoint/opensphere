@@ -1,42 +1,48 @@
-goog.provide('os.command.VectorLayerLOBLengthUnits');
+goog.module('os.command.VectorLayerLOBLengthUnits');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.command.AbstractVectorLayerLOB');
-goog.require('os.metrics');
-
+const AbstractVectorLayerLOB = goog.require('os.command.AbstractVectorLayerLOB');
+const metrics = goog.require('os.metrics');
+const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
 
 
 /**
  * Changes the lob length units
  *
- * @param {string} layerId
- * @param {string} value
- * @param {string=} opt_oldValue
- * @extends {os.command.AbstractVectorLayerLOB<string>}
- * @constructor
+ * @extends {AbstractVectorLayerLOB<string>}
  */
-os.command.VectorLayerLOBLengthUnits = function(layerId, value, opt_oldValue) {
-  os.command.VectorLayerLOBLengthUnits.base(this, 'constructor', layerId, value, opt_oldValue);
-  this.title = 'Change length units';
-  this.value = value || os.style.DEFAULT_UNITS;
-  this.metricKey = os.metrics.Layer.VECTOR_LOB_LENGTH_UNITS;
-};
-goog.inherits(os.command.VectorLayerLOBLengthUnits, os.command.AbstractVectorLayerLOB);
+class VectorLayerLOBLengthUnits extends AbstractVectorLayerLOB {
+  /**
+   * Constructor.
+   * @param {string} layerId
+   * @param {string} value
+   * @param {string=} opt_oldValue
+   */
+  constructor(layerId, value, opt_oldValue) {
+    super(layerId, value, opt_oldValue);
+    this.title = 'Change length units';
+    this.value = value || osStyle.DEFAULT_UNITS;
+    this.metricKey = metrics.Layer.VECTOR_LOB_LENGTH_UNITS;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getOldValue() {
+    var config = StyleManager.getInstance().getLayerConfig(this.layerId);
+    return config && config[StyleField.LOB_LENGTH_UNITS] || osStyle.DEFAULT_UNITS;
+  }
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerLOBLengthUnits.prototype.getOldValue = function() {
-  var config = os.style.StyleManager.getInstance().getLayerConfig(this.layerId);
-  return config && config[os.style.StyleField.LOB_LENGTH_UNITS] || os.style.DEFAULT_UNITS;
-};
+  /**
+   * @inheritDoc
+   */
+  applyValue(config, value) {
+    config[StyleField.LOB_LENGTH_UNITS] = value;
 
+    super.applyValue(config, value);
+  }
+}
 
-/**
- * @inheritDoc
- */
-os.command.VectorLayerLOBLengthUnits.prototype.applyValue = function(config, value) {
-  config[os.style.StyleField.LOB_LENGTH_UNITS] = value;
-
-  os.command.VectorLayerLOBLengthUnits.base(this, 'applyValue', config, value);
-};
+exports = VectorLayerLOBLengthUnits;

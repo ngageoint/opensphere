@@ -8,7 +8,9 @@ goog.require('goog.events.EventType');
 goog.require('ol.events');
 goog.require('ol.source.TileEventType');
 goog.require('ol.source.UrlTile');
+goog.require('os.alert.AlertManager');
 goog.require('os.array');
+goog.require('os.auth');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.implements');
 goog.require('os.ol.source.ILoadingSource');
@@ -414,6 +416,12 @@ ol.source.UrlTile.prototype.onImageLoadOrError_ = function(evt) {
     this.loadCount_++;
   } else {
     this.errorCount_++;
+
+    // request failed, check if it's potentially due to a missing authentication with the server
+    const urls = this.getUrls();
+    urls.forEach((url) => {
+      os.auth.alertAuth(url);
+    });
   }
 
   this.decrementLoading();

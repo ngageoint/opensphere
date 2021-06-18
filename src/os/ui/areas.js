@@ -7,6 +7,7 @@ goog.require('os.data.AreaNode');
 goog.require('os.data.AreaTreeSearch');
 goog.require('os.data.groupby.SourceGroupBy');
 goog.require('os.query.AreaManager');
+goog.require('os.structs.TreeNode');
 goog.require('os.ui.Module');
 goog.require('os.ui.data.groupby.TagGroupBy');
 goog.require('os.ui.ex.AreaExportCtrl');
@@ -153,9 +154,8 @@ os.ui.AreasCtrl.prototype.exportDisabled = function() {
  * @export
  */
 os.ui.AreasCtrl.prototype.export = function() {
-  var activeAreas = this.activeAreas();
-
-  os.ui.AreasCtrl.exportAreas(this.scope['areas'], this.scope['selected'], activeAreas);
+  var allAreas = this.allAreas();
+  os.ui.AreasCtrl.exportAreas(allAreas, this.selectedAreas(), this.activeAreas(allAreas));
 };
 
 
@@ -205,19 +205,41 @@ os.ui.AreasCtrl.formatAreas = function(areas) {
 
 
 /**
+ * Get every area in the window. Now with leaf nodes.
+ * @return {Array<os.data.AreaNode>} Array of every area
+ */
+os.ui.AreasCtrl.prototype.allAreas = function() {
+  var allAreas = goog.array.flatten(this.scope['areas'].map(os.structs.getLeafNodes));
+  return /** @type {Array<os.data.AreaNode>} */ (allAreas);
+};
+
+
+/**
+ * Get every selected area, including leaves from selected folder groups.
+ * @return {Array<os.data.AreaNode>} Array of every selected area
+ */
+os.ui.AreasCtrl.prototype.selectedAreas = function() {
+  var selected = goog.array.flatten(this.scope['selected'].map(os.structs.getLeafNodes));
+  goog.array.removeDuplicates(selected);
+
+  return /** @type {Array<os.data.AreaNode>} */ (selected);
+};
+
+
+/**
+ * Get all of the active areas from a given subset.
+ * @param {Array<os.data.AreaNode>} allAreas Array of all area nodes.
  * @return {Array<os.data.AreaNode>} Array of active areas
  */
-os.ui.AreasCtrl.prototype.activeAreas = function() {
-  var allAreas = this.scope['areas'];
-  var activeAreas = [];
-
-  allAreas.forEach((area) => {
-    if (area.getArea().get('shown')) {
-      activeAreas.push(/** @type {!os.data.AreaNode} */ (new os.data.AreaNode(area.getArea())));
+os.ui.AreasCtrl.prototype.activeAreas = function(allAreas) {
+  var activeAreas = allAreas.map((node) => {
+    var area = node.getArea();
+    if (area.get('shown')) {
+      return /** @type {!os.data.AreaNode} */ (new os.data.AreaNode(area));
     }
-  });
+  }).filter(os.fn.filterFalsey);
 
-  return activeAreas;
+  return /** @type {Array<os.data.AreaNode>} */ (activeAreas);
 };
 
 

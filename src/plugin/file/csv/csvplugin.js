@@ -1,73 +1,73 @@
-goog.provide('plugin.file.csv.CSVPlugin');
+goog.module('plugin.file.csv.CSVPlugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.DataManager');
-goog.require('os.data.ProviderEntry');
-goog.require('os.file.mime.csv');
-goog.require('os.layer.config.LayerConfigManager');
-goog.require('os.plugin.AbstractPlugin');
-goog.require('os.ui.im.ImportManager');
-goog.require('plugin.file.csv.CSVDescriptor');
-goog.require('plugin.file.csv.CSVExporter');
-goog.require('plugin.file.csv.CSVLayerConfig');
-goog.require('plugin.file.csv.CSVParser');
-goog.require('plugin.file.csv.CSVProvider');
-goog.require('plugin.file.csv.ui.CSVImportUI');
-
+const DataManager = goog.require('os.data.DataManager');
+const ProviderEntry = goog.require('os.data.ProviderEntry');
+const csv = goog.require('os.file.mime.csv');
+const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const exportManager = goog.require('os.ui.exportManager');
+const ImportManager = goog.require('os.ui.im.ImportManager');
+const CSVDescriptor = goog.require('plugin.file.csv.CSVDescriptor');
+const CSVExporter = goog.require('plugin.file.csv.CSVExporter');
+const CSVLayerConfig = goog.require('plugin.file.csv.CSVLayerConfig');
+const CSVParser = goog.require('plugin.file.csv.CSVParser');
+const CSVProvider = goog.require('plugin.file.csv.CSVProvider');
+const CSVImportUI = goog.require('plugin.file.csv.ui.CSVImportUI');
 
 
 /**
  * Provides CSV support
- *
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
  */
-plugin.file.csv.CSVPlugin = function() {
-  plugin.file.csv.CSVPlugin.base(this, 'constructor');
-  this.id = plugin.file.csv.CSVPlugin.ID;
-};
-goog.inherits(plugin.file.csv.CSVPlugin, os.plugin.AbstractPlugin);
+class CSVPlugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = CSVPlugin.ID;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  init() {
+    var dm = DataManager.getInstance();
+
+    // register csv provider type
+    dm.registerProviderType(new ProviderEntry(CSVPlugin.ID, CSVProvider, CSVPlugin.TYPE, CSVPlugin.TYPE));
+
+    // register the csv descriptor type
+    dm.registerDescriptorType(this.id, CSVDescriptor);
+
+    // register the csv layer config
+    var lcm = LayerConfigManager.getInstance();
+    lcm.registerLayerConfig('CSV', CSVLayerConfig);
+
+    // register the csv import ui
+    var im = ImportManager.getInstance();
+    im.registerImportDetails('CSV', true);
+    im.registerImportUI(csv.TYPE, new CSVImportUI());
+    im.registerParser(this.id, CSVParser);
+
+    // register the csv exporter
+    exportManager.registerExportMethod(new CSVExporter());
+  }
+}
 
 
 /**
  * @type {string}
  * @const
  */
-plugin.file.csv.CSVPlugin.ID = 'csv';
+CSVPlugin.ID = 'csv';
 
 
 /**
  * @type {string}
  * @const
  */
-plugin.file.csv.CSVPlugin.TYPE = 'CSV Layers';
+CSVPlugin.TYPE = 'CSV Layers';
 
 
-/**
- * @inheritDoc
- */
-plugin.file.csv.CSVPlugin.prototype.init = function() {
-  var dm = os.dataManager;
-
-  // register csv provider type
-  dm.registerProviderType(new os.data.ProviderEntry(
-      plugin.file.csv.CSVPlugin.ID,
-      plugin.file.csv.CSVProvider,
-      plugin.file.csv.CSVPlugin.TYPE,
-      plugin.file.csv.CSVPlugin.TYPE));
-
-  // register the csv descriptor type
-  dm.registerDescriptorType(this.id, plugin.file.csv.CSVDescriptor);
-
-  // register the csv layer config
-  var lcm = os.layer.config.LayerConfigManager.getInstance();
-  lcm.registerLayerConfig('CSV', plugin.file.csv.CSVLayerConfig);
-
-  // register the csv import ui
-  var im = os.ui.im.ImportManager.getInstance();
-  im.registerImportDetails('CSV', true);
-  im.registerImportUI(os.file.mime.csv.TYPE, new plugin.file.csv.ui.CSVImportUI());
-  im.registerParser(this.id, plugin.file.csv.CSVParser);
-
-  // register the csv exporter
-  os.ui.exportManager.registerExportMethod(new plugin.file.csv.CSVExporter());
-};
+exports = CSVPlugin;

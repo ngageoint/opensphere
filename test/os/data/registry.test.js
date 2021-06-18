@@ -1,8 +1,11 @@
 goog.require('os.data.Registry');
 
+goog.require('os.data.RegistryPropertyChange');
 
 describe('os.data.Registry', function() {
   const Registry = goog.module.get('os.data.Registry');
+  const RegistryPropertyChange = goog.module.get('os.data.RegistryPropertyChange');
+  const {PROPERTYCHANGE} = goog.module.get('goog.events.EventType');
 
   var item1 = {
     id: '1',
@@ -72,5 +75,83 @@ describe('os.data.Registry', function() {
       expect(config).toBe(c);
       expect(last).toBe(l);
     }
+  });
+
+  it('should notify listeners of changes', function() {
+    const this_ = this;
+    let count = 0;
+    let countAdd = 0;
+    let countRemove = 0;
+    let countUpdate = 0;
+    let countClear = 0;
+
+    const onAdd = function(entry) {
+      if (entry[0] == item1.id || entry[0] == item2.id) {
+        countAdd++;
+      }
+    };
+    const onUpdate = function(entry) {
+      if (entry[0] == item1.id) {
+        countUpdate++;
+      }
+    };
+    const onRemove = function(entry) {
+      if (entry[0] == item2.id) {
+        countRemove++;
+      }
+    };
+    const onClear = function(entries) {
+      if (entries.length == 2) {
+        countClear++;
+      }
+    };
+    const onPropertyChange = function(event) {
+      count++;
+      switch (event.getProperty()) {
+        case RegistryPropertyChange.ADD:
+          onAdd.call(this_, event.newVal_);
+          break;
+        case RegistryPropertyChange.UPDATE:
+          onUpdate.call(this_, event.newVal_);
+          break;
+        case RegistryPropertyChange.REMOVE:
+          onRemove.call(this_, event.newVal_);
+          break;
+        case RegistryPropertyChange.CLEAR:
+          onClear.call(this_, event.newVal_);
+          break;
+        default:
+          break;
+      }
+    };
+
+    const registry = new Registry();
+
+    // set up the listeners
+    registry.listen(PROPERTYCHANGE, onPropertyChange);
+
+    // add 2
+    init(registry);
+
+    // update 1
+    registry.register(item1.id, item1, config1, 'Updated Parameter');
+    expect(registry.entry(item1.id)[3]).toBe('Updated Parameter');
+
+    // remove 1...
+    expect(registry.entry(item2.id)[3]).toBe('Penultimate Parameter');
+    registry.remove(item2.id);
+
+    // ... and add 1 back
+    registry.register(item2.id, item2, config2, 'Re-registered');
+    expect(registry.entry(item2.id)[3]).toBe('Re-registered');
+
+    // clear
+    registry.clear();
+
+    expect(count).toBe(6);
+    expect(countAdd).toBe(3);
+    expect(countUpdate).toBe(1);
+    expect(countRemove).toBe(1);
+    expect(countClear).toBe(1);
   });
 });

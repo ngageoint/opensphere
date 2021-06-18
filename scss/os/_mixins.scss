@@ -51,8 +51,12 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
+  // Fall back on the Font Awesome 4 font-family for backward compatibility.
+  font-family: 'Font Awesome 5 Free', 'FontAwesome';
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 900;
+  line-height: 1;
   text-rendering: auto;
 }
 

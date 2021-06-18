@@ -2,7 +2,10 @@
  * Histogram utility functions.
  */
 goog.provide('os.hist');
+
 goog.require('os.hist.HistogramData');
+goog.require('os.hist.IHistogramProvider');
+goog.require('os.implements');
 
 
 /**
@@ -91,4 +94,46 @@ os.hist.getBinCounts = function(histograms, opt_combine, opt_skipCompare) {
   }
 
   return sortedCounts;
+};
+
+
+/**
+ * If an object is a histogram provider.
+ * @param {Object} obj The object.
+ * @return {boolean}
+ */
+os.hist.isHistogramProvider = (obj) => os.implements(obj, os.hist.IHistogramProvider.ID);
+
+
+/**
+ * Convenience function to map a layer or its source to a histogram.
+ * @param {ol.layer.Layer} layer The layer.
+ * @param {os.ui.timeline.TimelineScaleOptions} options The histogram options.
+ * @return {?os.hist.IHistogramData} The histogram, or null if unavailable. May be found on the layer or source.
+ */
+os.hist.mapLayerToHistogram = (layer, options) => {
+  if (layer) {
+    if (os.hist.isHistogramProvider(layer)) {
+      return /** @type {os.hist.IHistogramProvider} */ (layer).getHistogram(options);
+    } else {
+      return os.hist.mapSourceToHistogram(layer.getSource(), options);
+    }
+  }
+
+  return null;
+};
+
+
+/**
+ * Convenience function to map a source to a histogram.
+ * @param {ol.source.Source} source The source.
+ * @param {os.ui.timeline.TimelineScaleOptions} options The histogram options.
+ * @return {?os.hist.IHistogramData} The histogram, or null if unavailable.
+ */
+os.hist.mapSourceToHistogram = (source, options) => {
+  if (os.hist.isHistogramProvider(source)) {
+    return /** @type {os.hist.IHistogramProvider} */ (source).getHistogram(options);
+  }
+
+  return null;
 };

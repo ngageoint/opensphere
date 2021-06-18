@@ -1,47 +1,49 @@
-goog.provide('plugin.basemap');
-goog.require('os.layer.Tile');
+goog.module('plugin.basemap');
+goog.module.declareLegacyNamespace();
+
+const Tile = goog.require('os.layer.Tile');
+
+const Layer = goog.requireType('ol.layer.Layer');
 
 
 /**
  * @type {string}
- * @const
  */
-plugin.basemap.ID = 'basemap';
-
+const ID = 'basemap';
 
 /**
  * @type {string}
- * @const
  */
-plugin.basemap.TERRAIN_ID = 'terrain';
-
+const TERRAIN_ID = 'terrain';
 
 /**
  * @type {string}
- * @const
  */
-plugin.basemap.LAYER_TYPE = 'Map Layers';
-
+const LAYER_TYPE = 'Map Layers';
 
 /**
  * @type {string}
- * @const
  */
-plugin.basemap.TYPE = 'basemap';
-
+const TYPE = 'basemap';
 
 /**
  * @type {string}
- * @const
  */
-plugin.basemap.TERRAIN_TYPE = 'terrain';
-
+const TERRAIN_TYPE = 'terrain';
 
 /**
- * @param {!ol.layer.Layer} layer
+ * @param {!Layer} layer
  * @return {boolean} Whether or not the layer belongs in the base map group
  */
-plugin.basemap.isBaseMap = function(layer) {
-  return layer instanceof os.layer.Tile &&
-  /** @type {os.layer.Tile} */ (layer).getOSType() == plugin.basemap.LAYER_TYPE;
+const isBaseMap = function(layer) {
+  return layer instanceof Tile && /** @type {Tile} */ (layer).getOSType() == LAYER_TYPE;
+};
+
+exports = {
+  ID,
+  TERRAIN_ID,
+  LAYER_TYPE,
+  TYPE,
+  TERRAIN_TYPE,
+  isBaseMap
 };

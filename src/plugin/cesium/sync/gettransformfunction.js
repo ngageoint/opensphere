@@ -1,9 +1,9 @@
 goog.module('plugin.cesium.sync.getTransformFunction');
 
 const olProj = goog.require('ol.proj');
-const Projection = goog.requireType('ol.proj.Projection');
 const osMap = goog.require('os.map');
 const osProj = goog.require('os.proj');
+const Projection = goog.requireType('ol.proj.Projection');
 
 
 /**
@@ -60,4 +60,3 @@ exports = () => {
 
   return olTransform ? transformFunction : null;
 };
-

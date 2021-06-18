@@ -14,11 +14,13 @@ goog.require('os.implements');
 goog.require('os.layer');
 goog.require('os.layer.ExplicitLayerType');
 goog.require('os.layer.ILayer');
+goog.require('os.layer.LayerClass');
 goog.require('os.layer.LayerType');
 goog.require('os.layer.PropertyChange');
 goog.require('os.legend');
 goog.require('os.legend.ILegendRenderer');
 goog.require('os.net');
+goog.require('os.query.instance');
 goog.require('os.registerClass');
 goog.require('os.source');
 goog.require('os.source.ISource');
@@ -202,9 +204,10 @@ os.implements(os.layer.Vector, os.legend.ILegendRenderer.ID);
 /**
  * Class name
  * @type {string}
+ * @deprecated Please use os.layer.LayerClass.VECTOR.
  */
-os.layer.Vector.NAME = 'os.layer.Vector';
-os.registerClass(os.layer.Vector.NAME, os.layer.Vector);
+os.layer.Vector.NAME = os.layer.LayerClass.VECTOR;
+os.registerClass(os.layer.LayerClass.VECTOR, os.layer.Vector);
 
 
 /**
@@ -326,9 +329,10 @@ os.layer.Vector.prototype.onSourceChange = function(event) {
           event.getOldValue());
       this.dispatchEvent(e);
       break;
+    case os.source.PropertyChange.HAS_MODIFICATIONS:
     case os.source.PropertyChange.COLUMNS:
     case os.source.PropertyChange.COLUMN_ADDED:
-      this.dispatchEvent(new os.events.PropertyChangeEvent(p));
+      this.dispatchEvent(new os.events.PropertyChangeEvent(p, event.getNewValue(), event.getOldValue()));
       break;
     case os.source.PropertyChange.ALTITUDE:
       // forward as a layer event
@@ -429,7 +433,7 @@ os.layer.Vector.prototype.getFASet = function() {
     icons.push(os.ui.Icons.STATE);
   }
 
-  if (os.query.QueryManager.getInstance().hasEnabledEntries(this.getId())) {
+  if (os.query.instance.getQueryManager().hasEnabledEntries(this.getId())) {
     icons.push(os.ui.Icons.FILTER);
   }
 
@@ -485,7 +489,7 @@ os.layer.Vector.prototype.getIconSet = function() {
       icons.push(os.ui.Icons.STATE);
     }
 
-    if (os.query.QueryManager.getInstance().hasEnabledEntries(this.getId())) {
+    if (os.query.instance.getQueryManager().hasEnabledEntries(this.getId())) {
       icons.push(os.ui.Icons.FILTER);
     }
   }
@@ -1096,6 +1100,9 @@ os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
         return isVector && source.isLockable() && source.isLocked();
       case os.action.EventType.RESET_COLOR:
         return isVector && source.hasColors();
+      case os.action.EventType.SAVE_LAYER:
+      case os.action.EventType.SAVE_LAYER_AS:
+        return isVector && source.getHasModifications();
       default:
         // ask the source if it supports the action
         return isVector && source.getSupportsAction(type);

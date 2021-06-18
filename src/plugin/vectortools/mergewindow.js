@@ -1,180 +1,190 @@
-goog.provide('plugin.vectortools.MergeCtrl');
-goog.provide('plugin.vectortools.mergeDirective');
+goog.module('plugin.vectortools.MergeUI');
 
-goog.require('ol.array');
-goog.require('os');
-goog.require('os.data.OSDataManager');
-goog.require('os.data.SourceManager');
-goog.require('os.source.PropertyChange');
-goog.require('os.ui.Module');
 goog.require('os.ui.util.validationMessageDirective');
-goog.require('os.ui.window');
-goog.require('plugin.vectortools.MergeLayer');
-goog.require('plugin.vectortools.mappingCounterDirective');
+goog.require('plugin.vectortools.MappingCounterUI');
+
+const olArray = goog.require('ol.array');
+const os = goog.require('os');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const OSDataManager = goog.require('os.data.OSDataManager');
+const SourceManager = goog.require('os.data.SourceManager');
+const ogc = goog.require('os.ogc');
+const PropertyChange = goog.require('os.source.PropertyChange');
+const ui = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const osWindow = goog.require('os.ui.window');
+const MergeLayer = goog.require('plugin.vectortools.MergeLayer');
 
 
 /**
  * @return {angular.Directive}
  */
-plugin.vectortools.mergeDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    templateUrl: os.ROOT + 'views/plugin/vectortools/merge.html',
-    controller: plugin.vectortools.MergeCtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: true,
+  templateUrl: os.ROOT + 'views/plugin/vectortools/merge.html',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'merge';
 
 
 // add the directive to the module
-os.ui.Module.directive('merge', [plugin.vectortools.mergeDirective]);
+Module.directive(directiveTag, [directive]);
 
 
 
 /**
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @extends {os.data.SourceManager}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-plugin.vectortools.MergeCtrl = function($scope, $element) {
-  plugin.vectortools.MergeCtrl.base(this, 'constructor');
-
+class Controller extends SourceManager {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
    */
-  this.scope_ = $scope;
+  constructor($scope, $element) {
+    super();
 
-  /**
-   * @type {?angular.JQLite}
-   * @private
-   */
-  this.element_ = $element;
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
 
-  /**
-   * @type {!Array<string>}
-   * @private
-   */
-  this.sourceIds_ = $scope['sourceIds'];
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
 
-  /**
-   * @type {string}
-   */
-  this['name'] = 'New Layer';
+    /**
+     * @type {!Array<string>}
+     * @private
+     */
+    this.sourceIds_ = $scope['sourceIds'];
 
-  /**
-   * @type {string}
-   */
-  this['featureCountText'] = '';
+    /**
+     * @type {string}
+     */
+    this['name'] = 'New Layer';
 
-  this.init();
+    /**
+     * @type {string}
+     */
+    this['featureCountText'] = '';
 
-  $scope.$on('$destroy', this.disposeInternal.bind(this));
-  $scope.$emit(os.ui.WindowEventType.READY);
-};
-goog.inherits(plugin.vectortools.MergeCtrl, os.data.SourceManager);
+    this.init();
 
-
-/**
- * @inheritDoc
- */
-plugin.vectortools.MergeCtrl.prototype.disposeInternal = function() {
-  plugin.vectortools.MergeCtrl.base(this, 'disposeInternal');
-
-  this.scope_ = null;
-  this.element_ = null;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.vectortools.MergeCtrl.prototype.init = function() {
-  plugin.vectortools.MergeCtrl.base(this, 'init');
-  /** @type {angular.$timeout} */ (os.ui.injector.get('$timeout'))(this.onUpdateDelay.bind(this));
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.vectortools.MergeCtrl.prototype.removeSource = function(source) {
-  plugin.vectortools.MergeCtrl.base(this, 'removeSource', source);
-
-  ol.array.remove(this.sourceIds_, source.getId());
-  this.onUpdateDelay();
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.vectortools.MergeCtrl.prototype.onSourcePropertyChange = function(event) {
-  var p;
-  try {
-    p = event.getProperty();
-  } catch (e) {
-    return;
+    $scope.$on('$destroy', this.disposeInternal.bind(this));
+    $scope.$emit(WindowEventType.READY);
   }
 
-  if (p === os.source.PropertyChange.FEATURES) {
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
+
+    this.scope_ = null;
+    this.element_ = null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  init() {
+    super.init();
+    /** @type {angular.$timeout} */ (ui.injector.get('$timeout'))(this.onUpdateDelay.bind(this));
+  }
+
+  /**
+   * @inheritDoc
+   */
+  removeSource(source) {
+    super.removeSource(source);
+
+    olArray.remove(this.sourceIds_, source.getId());
     this.onUpdateDelay();
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  onSourcePropertyChange(event) {
+    var p;
+    try {
+      p = event.getProperty();
+    } catch (e) {
+      return;
+    }
 
-/**
- * @inheritDoc
- */
-plugin.vectortools.MergeCtrl.prototype.onUpdateDelay = function() {
-  this.scope_['mergeForm'].$setValidity('featureCount', true);
-  this['count'] = 0;
-
-  for (var i = 0, ii = this.sourceIds_.length; i < ii; i++) {
-    var source = os.osDataManager.getSource(this.sourceIds_[i]);
-    if (source) {
-      this['count'] += source.getFeatures().length;
+    if (p === PropertyChange.FEATURES) {
+      this.onUpdateDelay();
     }
   }
 
-  if (this['count'] === 0) {
-    this.scope_['mergeForm'].$setValidity('featureCount', false);
-    this['popoverText'] = 'Nothing to merge.';
-    this['popoverTitle'] = 'No Features';
-    this['featureCountText'] = 'Nothing to merge.';
-  } else if (2 * this['count'] > os.ogc.getMaxFeatures()) {
-    this.scope_['mergeForm'].$setValidity('featureCount', false);
-    this['popoverText'] = 'Too many features!';
-    this['popoverTitle'] = 'Too Many Features';
-    this['featureCountText'] = 'This merge would result in too many features for {APP} to handle. Reduce the number ' +
-        'of features you are merging and try again.';
+  /**
+   * @inheritDoc
+   */
+  onUpdateDelay() {
+    this.scope_['mergeForm'].$setValidity('featureCount', true);
+    this['count'] = 0;
+
+    for (var i = 0, ii = this.sourceIds_.length; i < ii; i++) {
+      var source = OSDataManager.getInstance().getSource(this.sourceIds_[i]);
+      if (source) {
+        this['count'] += source.getFeatures().length;
+      }
+    }
+
+    if (this['count'] === 0) {
+      this.scope_['mergeForm'].$setValidity('featureCount', false);
+      this['popoverText'] = 'Nothing to merge.';
+      this['popoverTitle'] = 'No Features';
+      this['featureCountText'] = 'Nothing to merge.';
+    } else if (2 * this['count'] > ogc.getMaxFeatures()) {
+      this.scope_['mergeForm'].$setValidity('featureCount', false);
+      this['popoverText'] = 'Too many features!';
+      this['popoverTitle'] = 'Too Many Features';
+      this['featureCountText'] = 'This merge would result in too many features for {APP} to handle. Reduce the ' +
+          'number of features you are merging and try again.';
+    }
+
+    ui.apply(this.scope_);
   }
 
-  os.ui.apply(this.scope_);
-};
+  /**
+   * Close dialog
+   *
+   * @export
+   */
+  close() {
+    osWindow.close(this.element_);
+  }
 
+  /**
+   * Adds the command to perform the merge.
+   *
+   * @export
+   */
+  accept() {
+    var merge = new MergeLayer(this.sourceIds_, this['name']);
+    CommandProcessor.getInstance().addCommand(merge);
+    this.close();
+  }
+}
 
-/**
- * Close dialog
- *
- * @export
- */
-plugin.vectortools.MergeCtrl.prototype.close = function() {
-  os.ui.window.close(this.element_);
-};
-
-
-/**
- * Adds the command to perform the merge.
- *
- * @export
- */
-plugin.vectortools.MergeCtrl.prototype.accept = function() {
-  var merge = new plugin.vectortools.MergeLayer(this.sourceIds_, this['name']);
-  os.command.CommandProcessor.getInstance().addCommand(merge);
-  this.close();
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

@@ -1,9 +1,9 @@
 goog.module('plugin.cesium.sync.RootSynchronizer');
 
+const asserts = goog.require('goog.asserts');
 const dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
-const asserts = goog.require('goog.asserts');
 const Image = goog.require('os.layer.Image');
 const Tile = goog.require('os.layer.Tile');
 const Vector = goog.require('os.layer.Vector');
@@ -12,8 +12,8 @@ const AbstractRootSynchronizer = goog.require('os.webgl.AbstractRootSynchronizer
 
 const PluggableMap = goog.requireType('ol.PluggableMap');
 const OLLayer = goog.requireType('ol.layer.Layer');
-const ILayer = goog.requireType('os.layer.ILayer');
 const Group = goog.requireType('os.layer.Group');
+const ILayer = goog.requireType('os.layer.ILayer');
 const AbstractWebGLSynchronizer = goog.requireType('os.webgl.AbstractWebGLSynchronizer');
 
 

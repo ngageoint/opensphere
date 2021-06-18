@@ -1,8 +1,7 @@
 goog.module('plugin.cesium.Layer');
 
-const GoogEventType = goog.require('goog.events.EventType');
-
 const Delay = goog.require('goog.async.Delay');
+const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const googString = goog.require('goog.string');
 const OLLayer = goog.require('ol.layer.Layer');
@@ -25,6 +24,7 @@ const {adjustIconSet, createIconSet} = goog.require('os.ui.icons');
 
 const LayerType = goog.requireType('ol.LayerType');
 const IActionTarget = goog.requireType('os.ui.action.IActionTarget');
+const CesiumRenderer = goog.requireType('plugin.cesium.CesiumRenderer');
 
 
 /**
@@ -713,7 +713,7 @@ class Layer extends OLLayer {
     if (MapContainer.getInstance()) {
       var renderer = MapContainer.getInstance().getWebGLRenderer();
       if (renderer) {
-        return /** @type {plugin.cesium.CesiumRenderer} */ (renderer).getCesiumScene();
+        return /** @type {CesiumRenderer} */ (renderer).getCesiumScene();
       }
     }
 

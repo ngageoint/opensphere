@@ -88,7 +88,7 @@ os.ui.ex.AreaExportCtrl.start = function(areas, opt_selected, opt_active) {
       allData: areas,
       selectedData: opt_selected,
       activeData: opt_active,
-      additionalOptions: true,
+      additionalOptions: opt_selected || opt_active,
       exporter: null,
       fields: [],
       items: areas,

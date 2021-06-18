@@ -4,6 +4,7 @@ goog.module.declareLegacyNamespace();
 const QueryData = goog.require('goog.Uri.QueryData');
 const log = goog.require('goog.log');
 const IDataProvider = goog.require('os.data.IDataProvider');
+const osImplements = goog.require('os.implements');
 const OGCServer = goog.require('os.ui.ogc.OGCServer');
 
 const Logger = goog.requireType('goog.log.Logger');
@@ -61,6 +62,6 @@ class WMTSServer extends OGCServer {
     return 'wmts';
   }
 }
-os.implements(WMTSServer, IDataProvider.ID);
+osImplements(WMTSServer, IDataProvider.ID);
 
 exports = WMTSServer;

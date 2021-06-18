@@ -28,6 +28,7 @@
   "moduleBlacklist": [
     "goog",
     "goog.declareModuleId",
+    "goog.define",
     "goog.module",
     "goog.partial",
     "goog.provide",
@@ -40,6 +41,7 @@
     "goog.events": "googEvents",
     "goog.events.Event": "GoogEvent",
     "goog.events.EventType": "GoogEventType",
+    "goog.fs.FileReader": "GoogFileReader",
     "goog.string": "googString",
     "goog.object": "googObject",
 
@@ -50,6 +52,7 @@
     "ol.layer.Vector": "OLVectorLayer",
     "ol.obj": "olObj",
     "ol.proj": "olProj",
+    "ol.render.Feature": "RenderFeature",
     "ol.source.Vector": "OLVectorSource",
     "ol.string": "olString",
 
@@ -63,6 +66,7 @@
     "os.feature": "osFeature",
     "os.file": "osFile",
     "os.file.File": "OSFile",
+    "os.file.mime.zip": "mimeZip",
     "os.layer.Vector": "VectorLayer",
     "os.map": "osMap",
     "os.object": "osObject",

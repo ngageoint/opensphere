@@ -1,11 +1,17 @@
 goog.require('goog.net.EventType');
 goog.require('ol.format.GeoJSON');
+goog.require('os.events.EventType');
 goog.require('os.im.Importer');
 goog.require('os.mock');
 goog.require('os.net.Request');
 goog.require('plugin.file.geojson.GeoJSONParser');
 
 describe('plugin.file.geojson.GeoJSONParser', function() {
+  const googNetEventType = goog.module.get('goog.net.EventType');
+  const EventType = goog.module.get('os.events.EventType');
+  const Importer = goog.module.get('os.im.Importer');
+  const Request = goog.module.get('os.net.Request');
+  const GeoJSONParser = goog.module.get('plugin.file.geojson.GeoJSONParser');
   var gj1 = {
     'type': 'FeatureCollection',
     'features': [{
@@ -39,7 +45,7 @@ describe('plugin.file.geojson.GeoJSONParser', function() {
   };
 
   it('should handle object sources', function() {
-    var p = new plugin.file.geojson.GeoJSONParser();
+    var p = new GeoJSONParser();
     p.setSource(gj1);
 
     expect(p.features_).not.toBe(null);
@@ -47,7 +53,7 @@ describe('plugin.file.geojson.GeoJSONParser', function() {
   });
 
   it('should handle string sources', function() {
-    var p = new plugin.file.geojson.GeoJSONParser();
+    var p = new GeoJSONParser();
     p.setSource('{"type": "Feature","geometry": {"type": "Point", "coordinates": [102.0, 0.5]}, "properties": ' +
         '{"prop0": "value0"}}');
 
@@ -56,7 +62,7 @@ describe('plugin.file.geojson.GeoJSONParser', function() {
   });
 
   it('should parse an object', function() {
-    var p = new plugin.file.geojson.GeoJSONParser();
+    var p = new GeoJSONParser();
     p.setSource(gj1);
 
     var step = p.parseNext();
@@ -77,15 +83,15 @@ describe('plugin.file.geojson.GeoJSONParser', function() {
   });
 
   it('should work with an importer to parse large requests', function() {
-    var r = new os.net.Request('/base/test/plugin/file/geojson/10k.json');
-    var i = new os.im.Importer(new plugin.file.geojson.GeoJSONParser());
+    var r = new Request('/base/test/plugin/file/geojson/10k.json');
+    var i = new Importer(new GeoJSONParser());
     var count = 0;
     var listener = function(e) {
       count++;
     };
 
-    r.listen(goog.net.EventType.SUCCESS, listener);
-    i.listen(os.events.EventType.COMPLETE, listener);
+    r.listen(googNetEventType.SUCCESS, listener);
+    i.listen(EventType.COMPLETE, listener);
 
     runs(function() {
       r.load();

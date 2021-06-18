@@ -1,8 +1,8 @@
 goog.module('plugin.cesium.sync.DynamicLineString');
 
 const {GeometryInstanceId} = goog.require('plugin.cesium');
-const {getColor, getLineWidthFromStyle} = goog.require('plugin.cesium.sync.style');
 const {getDashPattern, getLineStringPositions} = goog.require('plugin.cesium.sync.linestring');
+const {getColor, getLineWidthFromStyle} = goog.require('plugin.cesium.sync.style');
 
 const Feature = goog.requireType('ol.Feature');
 const LineString = goog.requireType('ol.geom.LineString');

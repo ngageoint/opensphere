@@ -1,64 +1,66 @@
-goog.provide('os.command.InvertSelect');
-goog.require('goog.array');
-goog.require('os.command.AbstractSource');
-goog.require('os.command.ICommand');
-goog.require('os.command.State');
+goog.module('os.command.InvertSelect');
+goog.module.declareLegacyNamespace();
 
+const AbstractSource = goog.require('os.command.AbstractSource');
+const State = goog.require('os.command.State');
+
+const ICommand = goog.requireType('os.command.ICommand');
 
 
 /**
  * Inverts the selection on a source
  *
- * @implements {os.command.ICommand}
- * @extends {os.command.AbstractSource}
- * @param {!string} sourceId
- * @constructor
+ * @implements {ICommand}
  */
-os.command.InvertSelect = function(sourceId) {
-  os.command.InvertSelect.base(this, 'constructor', sourceId);
+class InvertSelect extends AbstractSource {
+  /**
+   * Constructor.
+   * @param {!string} sourceId
+   */
+  constructor(sourceId) {
+    super(sourceId);
 
-  var source = this.getSource();
-  if (source) {
-    this.title = 'Invert selection on "' + source.getTitle() + '"';
+    var source = this.getSource();
+    if (source) {
+      this.title = 'Invert selection on "' + source.getTitle() + '"';
+    }
   }
-};
-goog.inherits(os.command.InvertSelect, os.command.AbstractSource);
 
+  /**
+   * @inheritDoc
+   */
+  execute() {
+    if (this.canExecute()) {
+      this.state = State.EXECUTING;
+      this.invert_();
+      this.state = State.SUCCESS;
+      return true;
+    }
 
-/**
- * @inheritDoc
- */
-os.command.InvertSelect.prototype.execute = function() {
-  if (this.canExecute()) {
-    this.state = os.command.State.EXECUTING;
+    return false;
+  }
+
+  /**
+   * Inverts the selection on the source
+   *
+   * @private
+   */
+  invert_() {
+    var source = this.getSource();
+    if (source) {
+      source.setSelectedItems(source.getUnselectedItems());
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    this.state = State.REVERTING;
     this.invert_();
-    this.state = os.command.State.SUCCESS;
+    this.state = State.READY;
     return true;
   }
+}
 
-  return false;
-};
-
-
-/**
- * Inverts the selection on the source
- *
- * @private
- */
-os.command.InvertSelect.prototype.invert_ = function() {
-  var source = this.getSource();
-  if (source) {
-    source.setSelectedItems(source.getUnselectedItems());
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.command.InvertSelect.prototype.revert = function() {
-  this.state = os.command.State.REVERTING;
-  this.invert_();
-  this.state = os.command.State.READY;
-  return true;
-};
+exports = InvertSelect;

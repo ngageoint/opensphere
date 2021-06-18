@@ -5,9 +5,9 @@ const {GeometryInstanceId} = goog.require('plugin.cesium');
 const {createColoredPrimitive} = goog.require('plugin.cesium.primitive');
 const {getColor} = goog.require('plugin.cesium.sync.style');
 
-const Ellipse = goog.requireType('os.geom.Ellipse');
 const Feature = goog.requireType('ol.Feature');
 const Style = goog.requireType('ol.style.Style');
+const Ellipse = goog.requireType('os.geom.Ellipse');
 const VectorContext = goog.requireType('plugin.cesium.VectorContext');
 
 

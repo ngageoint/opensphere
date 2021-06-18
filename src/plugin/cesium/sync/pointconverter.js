@@ -1,7 +1,7 @@
 goog.module('plugin.cesium.sync.PointConverter');
 
-const {createBillboard, updateBillboard, updateStyleAfterLoad} = goog.require('plugin.cesium.sync.point');
 const BaseConverter = goog.require('plugin.cesium.sync.BaseConverter');
+const {createBillboard, updateBillboard, updateStyleAfterLoad} = goog.require('plugin.cesium.sync.point');
 
 const Point = goog.requireType('ol.geom.Point');
 

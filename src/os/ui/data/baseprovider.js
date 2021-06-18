@@ -1,5 +1,6 @@
 goog.provide('os.ui.data.BaseProvider');
 
+goog.require('os.auth');
 goog.require('os.data.IDataProvider');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.ui.slick.SlickTreeNode');
@@ -157,6 +158,18 @@ os.ui.data.BaseProvider.prototype.getShowWhenEmpty = function() {
  * @inheritDoc
  */
 os.ui.data.BaseProvider.prototype.getInfo = function() {
+  const auth = this.getAuth();
+
+  if (auth) {
+    let message = auth.message;
+    if (auth.link) {
+      // if a link is available, add a link to open the auth page
+      message += `<br><br><a href="${auth.link}" target="_blank">Click here to go to the login page</a>`;
+    }
+
+    return message;
+  }
+
   return '';
 };
 
@@ -206,4 +219,34 @@ os.ui.data.BaseProvider.prototype.getUniqueId = function() {
   }
 
   return id;
+};
+
+
+/**
+ * Gets the authentication info for the server (if any).
+ *
+ * @return {?os.auth.AuthEntry}
+ */
+os.ui.data.BaseProvider.prototype.getAuth = function() {
+  return os.auth.getAuth(this.getLabel());
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.ui.data.BaseProvider.prototype.formatIcons = function() {
+  let icons = '';
+
+  const auth = this.getAuth();
+  if (auth) {
+    icons = `<i class="fas fa-sign-in-alt" title="${auth.tooltip}"></i>`;
+
+    if (auth.link) {
+      // if a link is available, make the icon clickable
+      icons = `<a class="c-glyph" href="${auth.link}" target="_blank">${icons}</a>`;
+    }
+  }
+
+  return icons;
 };

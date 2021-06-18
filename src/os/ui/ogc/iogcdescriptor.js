@@ -91,6 +91,20 @@ os.ui.ogc.IOGCDescriptor.prototype.setWfsUrl;
 
 
 /**
+ * Get the content type used for WFS requests.
+ * @return {string} The content type.
+ */
+os.ui.ogc.IOGCDescriptor.prototype.getWfsContentType;
+
+
+/**
+ * Set the content type used for WFS requests.
+ * @param {string} value The content type.
+ */
+os.ui.ogc.IOGCDescriptor.prototype.setWfsContentType;
+
+
+/**
  * Get the list of WFS output formats
  * @return {?Array<string>} formats
  */

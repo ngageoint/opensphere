@@ -1,36 +1,47 @@
+goog.require('os.color');
+goog.require('os.layer.LayerType');
+goog.require('os.source.Vector');
+goog.require('plugin.heatmap');
 goog.require('plugin.heatmap.HeatmapLayerConfig');
 goog.require('plugin.heatmap.cmd.Gradient');
 
 
 describe('plugin.heatmap.cmd.Gradient', function() {
+  const osColor = goog.module.get('os.color');
+  const LayerType = goog.module.get('os.layer.LayerType');
+  const VectorSource = goog.module.get('os.source.Vector');
+  const heatmap = goog.module.get('plugin.heatmap');
+  const HeatmapLayerConfig = goog.module.get('plugin.heatmap.HeatmapLayerConfig');
+  const Gradient = goog.module.get('plugin.heatmap.cmd.Gradient');
+
   var createLayer = function() {
     var options = {
       'id': 'heatmapLayer',
-      'source': new os.source.Vector(),
+      'source': new VectorSource(),
       'title': 'My Heatmap',
       'animate': false,
-      'layerType': os.layer.LayerType.FEATURES,
+      'layerType': LayerType.FEATURES,
       'explicitType': '',
-      'type': plugin.heatmap.HeatmapLayerConfig.ID,
+      'type': heatmap.ID,
       'loadOnce': true
     };
 
-    var layerConfig = new plugin.heatmap.HeatmapLayerConfig();
+    var layerConfig = new HeatmapLayerConfig();
     return layerConfig.createLayer(options);
   };
 
   it('should execute by setting the new gradient value and revert by setting the old', function() {
     var layer = createLayer();
 
-    spyOn(plugin.heatmap.cmd.Gradient.prototype, 'getLayer').andCallFake(function() {
+    spyOn(Gradient.prototype, 'getLayer').andCallFake(function() {
       return layer;
     });
-    var cmd = new plugin.heatmap.cmd.Gradient('heatmapLayer', os.color.RAINBOW_HEATMAP_GRADIENT_HEX);
+    var cmd = new Gradient('heatmapLayer', osColor.RAINBOW_HEATMAP_GRADIENT_HEX);
 
     cmd.execute();
-    expect(layer.getGradient()).toEqual(os.color.RAINBOW_HEATMAP_GRADIENT_HEX);
+    expect(layer.getGradient()).toEqual(osColor.RAINBOW_HEATMAP_GRADIENT_HEX);
 
     cmd.revert();
-    expect(layer.getGradient()).toBe(os.color.THERMAL_HEATMAP_GRADIENT_HEX);
+    expect(layer.getGradient()).toBe(osColor.THERMAL_HEATMAP_GRADIENT_HEX);
   });
 });

@@ -1,12 +1,21 @@
-goog.provide('plugin.im.action.feature.ui.FeatureActionsCtrl');
-goog.provide('plugin.im.action.feature.ui.featureActionsDirective');
+goog.module('plugin.im.action.feature.ui.FeatureActionsUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.source');
-goog.require('os.ui.Module');
-goog.require('os.ui.im.action.FilterActionsCtrl');
-goog.require('os.ui.slick.TreeSearch');
-goog.require('plugin.im.action.feature');
-goog.require('plugin.im.action.feature.node');
+const {ROOT} = goog.require('os');
+const DataManager = goog.require('os.data.DataManager');
+const DataEventType = goog.require('os.data.event.DataEventType');
+const ui = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+const FilterActionsCtrl = goog.require('os.ui.im.action.FilterActionsCtrl');
+const TreeSearch = goog.require('os.ui.slick.TreeSearch');
+const featureAction = goog.require('plugin.im.action.feature');
+const FeatureActionManager = goog.require('plugin.im.action.feature.Manager');
+const node = goog.require('plugin.im.action.feature.node');
+
+const Feature = goog.requireType('ol.Feature');
+const DataEvent = goog.requireType('os.data.event.DataEvent');
+const Menu = goog.requireType('os.ui.menu.Menu');
+const layerMenu = goog.requireType('os.ui.menu.layer');
 
 
 /**
@@ -14,148 +23,154 @@ goog.require('plugin.im.action.feature.node');
  *
  * @return {angular.Directive}
  */
-plugin.im.action.feature.ui.featureActionsDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    templateUrl: os.ROOT + 'views/im/action/importactions.html',
-    controller: plugin.im.action.feature.ui.FeatureActionsCtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  templateUrl: ROOT + 'views/im/action/importactions.html',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'featureactions';
 
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('featureactions', [plugin.im.action.feature.ui.featureActionsDirective]);
+Module.directive('featureactions', [directive]);
 
 
 
 /**
  * Controller function for the featureactions directive.
  *
- * @param {!angular.Scope} $scope The Angular scope.
- * @param {!angular.JQLite} $element The root DOM element.
- * @extends {os.ui.im.action.FilterActionsCtrl<ol.Feature>}
- * @constructor
- * @ngInject
+ * @extends {FilterActionsCtrl<Feature>}
+ * @unrestricted
  */
-plugin.im.action.feature.ui.FeatureActionsCtrl = function($scope, $element) {
+class Controller extends FilterActionsCtrl {
   /**
-   * The context menu for feature action nodes.
-   * @type {os.ui.menu.Menu<os.ui.menu.layer.Context>|undefined}
+   * Constructor.
+   * @param {!angular.Scope} $scope The Angular scope.
+   * @param {!angular.JQLite} $element The root DOM element.
+   * @ngInject
    */
-  this['contextMenu'] = plugin.im.action.feature.node.MENU;
+  constructor($scope, $element) {
+    super($scope, $element);
+
+    /**
+     * The context menu for feature action nodes.
+     * @type {Menu<layerMenu.Context>|undefined}
+     */
+    this['contextMenu'] = node.MENU;
+
+    /**
+     * Flag for whether to show default feature actions.
+     * @type {boolean}
+     */
+    this['showDefaultActions'] = true;
+
+    /**
+     * Flag for whether to show default feature actions.
+     * @type {boolean|undefined}
+     */
+    this['hasDefaultActions'] = undefined;
+
+    DataManager.getInstance().listen(DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
+  }
 
   /**
-   * Flag for whether to show default feature actions.
-   * @type {boolean}
+   * @inheritDoc
    */
-  this['showDefaultActions'] = true;
+  disposeInternal() {
+    super.disposeInternal();
+    DataManager.getInstance().unlisten(DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
+  }
 
   /**
-   * Flag for whether to show default feature actions.
-   * @type {boolean|undefined}
+   * Close the feature action window if the source was removed
+   *
+   * @param {DataEvent} event
+   * @private
    */
-  this['hasDefaultActions'] = undefined;
-
-  plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'constructor', $scope, $element);
-  os.dataManager.listen(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
-};
-goog.inherits(plugin.im.action.feature.ui.FeatureActionsCtrl, os.ui.im.action.FilterActionsCtrl);
-
-
-/**
- * Close the feature action window if the source was removed
- *
- * @param {os.data.event.DataEvent} event
- * @private
- */
-plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.onSourceRemoved_ = function(event) {
-  if (event && event.source) {
-    if (this.entryType && this.entryType == event.source.getId()) {
-      this.close();
+  onSourceRemoved_(event) {
+    if (event && event.source) {
+      if (this.entryType && this.entryType == event.source.getId()) {
+        this.close();
+      }
     }
   }
-};
 
+  /**
+   * @inheritDoc
+   * @export
+   */
+  apply() {
+    super.apply();
 
-/**
- * @inheritDoc
- * @export
- */
-plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.close = function() {
-  plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'close');
-  os.dataManager.unlisten(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
-};
-
-
-/**
- * @inheritDoc
- * @export
- */
-plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.apply = function() {
-  plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'apply');
-
-  if (this.entryType) {
-    var dm = os.data.DataManager.getInstance();
-    var source = dm.getSource(this.entryType);
-    if (source) {
-      var manager = plugin.im.action.feature.Manager.getInstance();
-      manager.processItems(source.getId(), source.getFeatures(), true);
+    if (this.entryType) {
+      var dm = DataManager.getInstance();
+      var source = dm.getSource(this.entryType);
+      if (source) {
+        var manager = FeatureActionManager.getInstance();
+        manager.processItems(source.getId(), source.getFeatures(), true);
+      }
     }
   }
-};
 
-
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.getColumns = function() {
-  return plugin.im.action.feature.getColumns(this.entryType);
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.getExportName = function() {
-  return plugin.im.action.feature.getExportName(this.entryType);
-};
-
-
-/**
- * @inheritDoc
- * @export
- */
-plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.editEntry = function(opt_entry) {
-  if (this.entryType) {
-    plugin.im.action.feature.editEntry(this.entryType, opt_entry);
+  /**
+   * @inheritDoc
+   */
+  getColumns() {
+    return featureAction.getColumns(this.entryType);
   }
-};
 
-
-/**
- * @inheritDoc
- */
-plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.onSearch = function() {
-  plugin.im.action.feature.ui.FeatureActionsCtrl.base(this, 'onSearch');
-
-  if (this['hasDefaultActions'] === undefined && this.scope['entries'] && this.scope['entries'].length > 0) {
-    this['hasDefaultActions'] = this.scope['entries'].some((node) => {
-      return node.getId() != os.ui.slick.TreeSearch.NO_RESULT_ID && node.getEntry().isDefault();
-    });
-    os.ui.apply(this.scope);
+  /**
+   * @inheritDoc
+   */
+  getExportName() {
+    return featureAction.getExportName(this.entryType);
   }
-};
 
+  /**
+   * @inheritDoc
+   * @export
+   */
+  editEntry(opt_entry) {
+    if (this.entryType) {
+      featureAction.editEntry(this.entryType, opt_entry);
+    }
+  }
 
-/**
- * Toggles showing default feature actions.
- * @export
- */
-plugin.im.action.feature.ui.FeatureActionsCtrl.prototype.toggleDefaultActions = function() {
-  this.treeSearch.setShowDefaultActions(this['showDefaultActions']);
-  this.onSearch();
+  /**
+   * @inheritDoc
+   */
+  onSearch() {
+    super.onSearch();
+
+    if (this['hasDefaultActions'] === undefined && this.scope['entries'] && this.scope['entries'].length > 0) {
+      this['hasDefaultActions'] = this.scope['entries'].some((node) => {
+        return node.getId() != TreeSearch.NO_RESULT_ID && node.getEntry().isDefault();
+      });
+      ui.apply(this.scope);
+    }
+  }
+
+  /**
+   * Toggles showing default feature actions.
+   * @export
+   */
+  toggleDefaultActions() {
+    this.treeSearch.setShowDefaultActions(this['showDefaultActions']);
+    this.onSearch();
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

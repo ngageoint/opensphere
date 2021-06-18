@@ -89,11 +89,13 @@ describe('os.ui.ogc.OGCServer', function() {
       expect(server.getWfsFormats()).toContain('application/json');
       expect(server.getWfsFormats()).toContain('gml3');
       expect(server.getWfsFormats()).toContain('json');
+      expect(server.getWfsContentType()).toBe('text/xml');
 
       for (var i = 1; i <= 2; i++) {
         var d = os.dataManager.getDescriptor('testogc#OSDS:Layer_' + i);
         expect(d).toBeTruthy();
         expect(d.isWfsEnabled()).toBe(true);
+        expect(d.getWfsContentType()).toBe('text/xml');
       }
     });
   });

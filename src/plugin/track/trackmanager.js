@@ -38,6 +38,7 @@ const TrackInteraction = goog.require('plugin.track.TrackInteraction');
 
 const Logger = goog.requireType('goog.log.Logger');
 const OlFeature = goog.requireType('ol.Feature');
+const OlMapBrowserEvent = goog.requireType('ol.MapBrowserEvent');
 const OsInterpolateConfig = goog.requireType('os.interpolate.Config');
 
 
@@ -346,20 +347,21 @@ class TrackManager extends EventTarget {
    * Kick off TrackInteraction. Follow mouse until user clicks or types Esc
    *
    * @param {Array<!OlFeature>} tracks
+   * @param {OlMapBrowserEvent} event
    */
-  promptForTrackPrediction(tracks) {
+  promptForTrackPrediction(tracks, event) {
     const interaction = this.getTrackInteraction_();
     if (interaction) {
       const toggle = !interaction.getActive();
+      let config;
       if (toggle) {
         const track = tracks[tracks.length - 1];
-        interaction.config(/** @type {pluginx.track.TrackOptions} */ ({
+        config = /** @type {pluginx.track.TrackOptions} */ ({
           callback: this.interactionCallback_.bind(this, interaction, track),
           track: track
-        }));
+        });
       }
-      interaction.setEnabled(toggle);
-      interaction.setActive(toggle);
+      interaction.trigger(toggle, event, config);
     }
   }
 
@@ -372,8 +374,7 @@ class TrackManager extends EventTarget {
    * @private
    */
   interactionCallback_(interaction, track, coords) {
-    interaction.setEnabled(false);
-    interaction.setActive(false);
+    interaction.trigger(false);
 
     if (track && coords.length > 0) {
       const name = /** @type {string|undefined} */ (track.get(Fields.NAME) || track.get(Fields.NAME.toLowerCase()));

@@ -1,6 +1,10 @@
+goog.require('os.data.DataManager');
+goog.require('os.data.DataProviderEventType');
 goog.require('plugin.ogc.wmts.WMTSServer');
 
 describe('plugin.ogc.wmts.WMTSServer', () => {
+  const DataManager = goog.module.get('os.data.DataManager');
+  const DataProviderEventType = goog.module.get('os.data.DataProviderEventType');
   const WMTSServer = goog.module.get('plugin.ogc.wmts.WMTSServer');
 
   const loadAndRun = function(server, config, func) {
@@ -11,7 +15,7 @@ describe('plugin.ogc.wmts.WMTSServer', () => {
       count++;
     };
 
-    server.listenOnce(os.data.DataProviderEventType.LOADED, listener);
+    server.listenOnce(DataProviderEventType.LOADED, listener);
 
     runs(function() {
       server.configure(config);
@@ -33,7 +37,7 @@ describe('plugin.ogc.wmts.WMTSServer', () => {
       expect(server.getId()).toBe('testogc');
       expect(server.getLabel()).toBe('Test WMTS');
 
-      var d = os.dataManager.getDescriptor('testogc#test-3857-1');
+      var d = DataManager.getInstance().getDescriptor('testogc#test-3857-1');
       expect(d).toBeTruthy();
 
       var wmtsOptions = d.getWmtsOptions();
@@ -43,7 +47,7 @@ describe('plugin.ogc.wmts.WMTSServer', () => {
       expect(wmtsOptions[0]['urls'][0]).toBe('https://wmts.example.com/ows?');
       expect(wmtsOptions[0]['projection'].getCode()).toBe('EPSG:3857');
 
-      var d = os.dataManager.getDescriptor('testogc#test-4326-1');
+      var d = DataManager.getInstance().getDescriptor('testogc#test-4326-1');
       expect(d).toBeTruthy();
 
       wmtsOptions = d.getWmtsOptions();

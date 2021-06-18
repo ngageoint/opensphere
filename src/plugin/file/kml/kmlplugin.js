@@ -1,100 +1,109 @@
-goog.provide('plugin.file.kml.KMLPlugin');
+goog.module('plugin.file.kml.KMLPlugin');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.DataManager');
-goog.require('os.data.ProviderEntry');
-goog.require('os.fn');
-goog.require('os.layer.config.LayerConfigManager');
-goog.require('os.net.Request');
-goog.require('os.plugin.AbstractPlugin');
-goog.require('os.ui.im.ImportManager');
-goog.require('plugin.file.kml.KMLDescriptor');
-goog.require('plugin.file.kml.KMLExporter');
-goog.require('plugin.file.kml.KMLFeatureParser');
-goog.require('plugin.file.kml.KMLLayerConfig');
-goog.require('plugin.file.kml.KMLParser');
-goog.require('plugin.file.kml.KMLProvider');
-goog.require('plugin.file.kml.menu');
-goog.require('plugin.file.kml.mime');
-goog.require('plugin.file.kml.ui.KMLImportUI');
-goog.require('plugin.file.kml.ui.placemarkEditDirective');
+// Load to register directive with Angular.
+goog.require('plugin.file.kml.ui.PlacemarkEditUI');
+
+const Settings = goog.require('os.config.Settings');
+const DataManager = goog.require('os.data.DataManager');
+const ProviderEntry = goog.require('os.data.ProviderEntry');
+const fn = goog.require('os.fn');
+const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
+const Request = goog.require('os.net.Request');
+const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
+const exportManager = goog.require('os.ui.exportManager');
+const kml = goog.require('os.ui.file.kml');
+const ImportManager = goog.require('os.ui.im.ImportManager');
+const KMLDescriptor = goog.require('plugin.file.kml.KMLDescriptor');
+const KMLExporter = goog.require('plugin.file.kml.KMLExporter');
+const KMLFeatureParser = goog.require('plugin.file.kml.KMLFeatureParser');
+const KMLLayerConfig = goog.require('plugin.file.kml.KMLLayerConfig');
+const KMLParser = goog.require('plugin.file.kml.KMLParser');
+const KMLProvider = goog.require('plugin.file.kml.KMLProvider');
+const menu = goog.require('plugin.file.kml.menu');
+const mime = goog.require('plugin.file.kml.mime');
+const KMLImportUI = goog.require('plugin.file.kml.ui.KMLImportUI');
 
 
 /**
  * Provides KML support
- *
- * @extends {os.plugin.AbstractPlugin}
- * @constructor
  */
-plugin.file.kml.KMLPlugin = function() {
-  plugin.file.kml.KMLPlugin.base(this, 'constructor');
-  this.id = plugin.file.kml.KMLPlugin.ID;
-};
-goog.inherits(plugin.file.kml.KMLPlugin, os.plugin.AbstractPlugin);
+class KMLPlugin extends AbstractPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.id = KMLPlugin.ID;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  init() {
+    var dm = DataManager.getInstance();
+
+    // register kml provider type
+    dm.registerProviderType(new ProviderEntry(
+        KMLPlugin.ID,
+        KMLProvider,
+        KMLPlugin.TYPE,
+        KMLPlugin.TYPE));
+
+    // register the kml descriptor type
+    dm.registerDescriptorType(this.id, KMLDescriptor);
+
+    // register the kml layer config
+    var lcm = LayerConfigManager.getInstance();
+    lcm.registerLayerConfig(this.id, KMLLayerConfig);
+
+    // register the kml import ui
+    var im = ImportManager.getInstance();
+    im.registerImportDetails('KML/KMZ', true);
+    im.registerImportUI(mime.TYPE, new KMLImportUI());
+    im.registerImportUI(mime.KMZ_TYPE, new KMLImportUI());
+    im.registerParser(this.id, KMLParser);
+    im.registerParser('kmlfeature', KMLFeatureParser);
+
+    // register the kml exporter
+    exportManager.registerExportMethod(new KMLExporter());
+
+    // set up actions
+    menu.treeSetup();
+
+    // try to load the first google earth icon; if it fails, set the mirror and flag
+    return new Request(kml.GOOGLE_EARTH_ICON_SET[0].path).getPromise()
+        .then(fn.noop, () => {
+          const settings = Settings.getInstance();
+          const mirror = /** @type {string|null} */ (settings.get(KMLPlugin.ICON_MIRROR));
+          if (mirror) {
+            kml.mirror = mirror;
+          }
+          kml.isGoogleMapsAccessible = false;
+        });
+  }
+}
 
 
 /**
  * @type {string}
  * @const
  */
-plugin.file.kml.KMLPlugin.ID = 'kml';
+KMLPlugin.ID = 'kml';
 
 
 /**
  * @type {string}
  * @const
  */
-plugin.file.kml.KMLPlugin.TYPE = 'KML Layers';
+KMLPlugin.TYPE = 'KML Layers';
 
 
 /**
  * @type {string}
  * @const
  */
-plugin.file.kml.KMLPlugin.ICON_MIRROR = 'plugin.file.kml.icon.mirror';
+KMLPlugin.ICON_MIRROR = 'plugin.file.kml.icon.mirror';
 
 
-/**
- * @inheritDoc
- */
-plugin.file.kml.KMLPlugin.prototype.init = function() {
-  var dm = os.dataManager;
-
-  // register kml provider type
-  dm.registerProviderType(new os.data.ProviderEntry(
-      plugin.file.kml.KMLPlugin.ID,
-      plugin.file.kml.KMLProvider,
-      plugin.file.kml.KMLPlugin.TYPE,
-      plugin.file.kml.KMLPlugin.TYPE));
-
-  // register the kml descriptor type
-  dm.registerDescriptorType(this.id, plugin.file.kml.KMLDescriptor);
-
-  // register the kml layer config
-  var lcm = os.layer.config.LayerConfigManager.getInstance();
-  lcm.registerLayerConfig(this.id, plugin.file.kml.KMLLayerConfig);
-
-  // register the kml import ui
-  var im = os.ui.im.ImportManager.getInstance();
-  im.registerImportDetails('KML/KMZ', true);
-  im.registerImportUI(plugin.file.kml.mime.TYPE, new plugin.file.kml.ui.KMLImportUI());
-  im.registerImportUI(plugin.file.kml.mime.KMZ_TYPE, new plugin.file.kml.ui.KMLImportUI());
-  im.registerParser(this.id, plugin.file.kml.KMLParser);
-  im.registerParser('kmlfeature', plugin.file.kml.KMLFeatureParser);
-
-  // register the kml exporter
-  os.ui.exportManager.registerExportMethod(new plugin.file.kml.KMLExporter());
-
-  // set up actions
-  plugin.file.kml.menu.treeSetup();
-
-  // try to load the first google earth icon; if it fails, set the mirror and flag
-  return new os.net.Request(os.ui.file.kml.GOOGLE_EARTH_ICON_SET[0].path).getPromise()
-      .then(os.fn.noop, () => {
-        const settings = os.config.Settings.getInstance();
-        const mirror = /** @type {string|null} */ (settings.get(plugin.file.kml.KMLPlugin.ICON_MIRROR));
-        if (mirror) {
-          os.ui.file.kml.mirror = mirror;
-        }
-        os.ui.file.kml.isGoogleMapsAccessible = false;
-      });
-};
+exports = KMLPlugin;

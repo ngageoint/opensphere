@@ -1,71 +1,75 @@
-goog.provide('plugin.area.CSVAreaImportUI');
+goog.module('plugin.area.CSVAreaImportUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.query.ui.AreaOptionsStep');
-goog.require('os.ui.file.ui.csv.ConfigStep');
-goog.require('os.ui.im.FileImportUI');
-goog.require('os.ui.window');
-goog.require('os.ui.wiz.GeometryStep');
-goog.require('plugin.area.csvAreaImportDirective');
-goog.require('plugin.file.csv.CSVParserConfig');
-
-
-
-/**
- * @extends {os.ui.im.FileImportUI.<plugin.file.csv.CSVParserConfig>}
- * @constructor
- */
-plugin.area.CSVAreaImportUI = function() {
-  plugin.area.CSVAreaImportUI.base(this, 'constructor');
-
-  // file contents are only used in memory, not loaded from storage
-  this.requiresStorage = false;
-};
-goog.inherits(plugin.area.CSVAreaImportUI, os.ui.im.FileImportUI);
+const AreaOptionsStep = goog.require('os.query.ui.AreaOptionsStep');
+const ConfigStep = goog.require('os.ui.file.ui.csv.ConfigStep');
+const FileImportUI = goog.require('os.ui.im.FileImportUI');
+const osWindow = goog.require('os.ui.window');
+const windowSelector = goog.require('os.ui.windowSelector');
+const GeometryStep = goog.require('os.ui.wiz.GeometryStep');
+const {directiveTag: areaImportUi} = goog.require('plugin.area.CSVAreaImport');
+const CSVParserConfig = goog.require('plugin.file.csv.CSVParserConfig');
 
 
 /**
- * @inheritDoc
+ * @extends {FileImportUI<CSVParserConfig>}
  */
-plugin.area.CSVAreaImportUI.prototype.getTitle = function() {
-  return 'Area Import - CSV';
-};
+class CSVAreaImportUI extends FileImportUI {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
 
+    // file contents are only used in memory, not loaded from storage
+    this.requiresStorage = false;
+  }
 
-/**
- * @inheritDoc
- */
-plugin.area.CSVAreaImportUI.prototype.launchUI = function(file, opt_config) {
-  plugin.area.CSVAreaImportUI.base(this, 'launchUI', file, opt_config);
+  /**
+   * @inheritDoc
+   */
+  getTitle() {
+    return 'Area Import - CSV';
+  }
 
-  var steps = [
-    new os.ui.file.ui.csv.ConfigStep(),
-    new os.ui.wiz.GeometryStep(),
-    new os.query.ui.AreaOptionsStep()
-  ];
+  /**
+   * @inheritDoc
+   */
+  launchUI(file, opt_config) {
+    super.launchUI(file, opt_config);
 
-  var config = new plugin.file.csv.CSVParserConfig();
-  config['file'] = file;
-  config['title'] = file.getFileName();
-  config.updateLinePreview();
+    var steps = [
+      new ConfigStep(),
+      new GeometryStep(),
+      new AreaOptionsStep()
+    ];
 
-  var scopeOptions = {
-    'config': config,
-    'steps': steps
-  };
-  var windowOptions = {
-    'label': 'CSV Area Import',
-    'icon': 'fa fa-sign-in',
-    'x': 'center',
-    'y': 'center',
-    'width': '850',
-    'min-width': '500',
-    'max-width': '1200',
-    'height': '650',
-    'min-height': '300',
-    'max-height': '1000',
-    'modal': 'true',
-    'show-close': 'true'
-  };
-  var template = '<csvareaimport resize-with="' + os.ui.windowSelector.WINDOW + '"></csvareaimport>';
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
-};
+    var config = new CSVParserConfig();
+    config['file'] = file;
+    config['title'] = file.getFileName();
+    config.updateLinePreview();
+
+    var scopeOptions = {
+      'config': config,
+      'steps': steps
+    };
+    var windowOptions = {
+      'label': 'CSV Area Import',
+      'icon': 'fa fa-sign-in',
+      'x': 'center',
+      'y': 'center',
+      'width': '850',
+      'min-width': '500',
+      'max-width': '1200',
+      'height': '650',
+      'min-height': '300',
+      'max-height': '1000',
+      'modal': 'true',
+      'show-close': 'true'
+    };
+    var template = `<${areaImportUi} resize-with="${windowSelector.WINDOW}"></${areaImportUi}>`;
+    osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  }
+}
+
+exports = CSVAreaImportUI;

@@ -1,15 +1,26 @@
+goog.require('goog.object');
+goog.require('ol.Feature');
+goog.require('ol.geom.LineString');
+goog.require('ol.geom.Point');
+goog.require('ol.geom.Polygon');
 goog.require('plugin.file.shp.SHPExporter');
 
 describe('plugin.file.shp.SHPExporter', function() {
-  var ex = new plugin.file.shp.SHPExporter();
+  const googObject = goog.module.get('goog.object');
+  const Feature = goog.module.get('ol.Feature');
+  const LineString = goog.module.get('ol.geom.LineString');
+  const Point = goog.module.get('ol.geom.Point');
+  const Polygon = goog.module.get('ol.geom.Polygon');
+  const SHPExporter = goog.module.get('plugin.file.shp.SHPExporter');
+  var ex = new SHPExporter();
   var lineFeature;
   var pointFeature;
   var polygonFeature;
 
   beforeEach(function() {
-    lineFeature = new ol.Feature(new ol.geom.LineString([[12, 34], [56, 78]]));
-    pointFeature = new ol.Feature(new ol.geom.Point([12, 34]));
-    polygonFeature = new ol.Feature(new ol.geom.Polygon([[[1, 2], [3, 4], [5, 6], [7, 8], [1, 2]]]));
+    lineFeature = new Feature(new LineString([[12, 34], [56, 78]]));
+    pointFeature = new Feature(new Point([12, 34]));
+    polygonFeature = new Feature(new Polygon([[[1, 2], [3, 4], [5, 6], [7, 8], [1, 2]]]));
 
     ex.reset();
   });
@@ -25,8 +36,8 @@ describe('plugin.file.shp.SHPExporter', function() {
       numKey: 5
     };
 
-    ex.setFields(goog.object.getKeys(props));
-    var result = ex.processItem(new ol.Feature(props));
+    ex.setFields(googObject.getKeys(props));
+    var result = ex.processItem(new Feature(props));
 
     expect(result).toBe(false);
   });
@@ -55,7 +66,7 @@ describe('plugin.file.shp.SHPExporter', function() {
         }
         if (file.getFileName().endsWith("prj")) {
             prjFound = true;
-            expect(file.getContent()).toBe(plugin.file.shp.SHPExporter.PRJ_WGS84);
+            expect(file.getContent()).toBe(SHPExporter.PRJ_WGS84);
         }
         if (file.getFileName().endsWith("cpg")) {
             cpgFound = true;
@@ -86,7 +97,7 @@ describe('plugin.file.shp.SHPExporter', function() {
   });
 
   it('should process features with multi-byte attributes', function() {
-    var feature = new ol.Feature(new ol.geom.Point([12, 34]));
+    var feature = new Feature(new Point([12, 34]));
     feature.set('name', '東京都');
     ex.setItems([feature]);
     ex.process();

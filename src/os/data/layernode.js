@@ -8,6 +8,7 @@ goog.require('os.data.ISearchable');
 goog.require('os.events.PropertyChangeEvent');
 goog.require('os.filter.BaseFilterManager');
 goog.require('os.filter.IFilterable');
+goog.require('os.im.action.ImportActionEventType');
 goog.require('os.layer.LayerGroup');
 goog.require('os.layer.Tile');
 goog.require('os.layer.Vector');
@@ -290,6 +291,7 @@ os.data.LayerNode.prototype.onPropertyChange = function(e) {
         // update the label (styled differently when disabled/hidden)
         this.dispatchEvent(new os.events.PropertyChangeEvent('label'));
         break;
+      case os.source.PropertyChange.HAS_MODIFICATIONS:
       case os.layer.PropertyChange.TITLE:
         // change the label
         this.setLabel(this.layer_.getTitle());
@@ -351,6 +353,12 @@ os.data.LayerNode.prototype.formatValue = function(value) {
 
     if (layer instanceof os.layer.Vector) {
       s += ' <featurecount></featurecount>';
+
+      var source = layer.getSource();
+      if (source instanceof os.source.Vector && source.getHasModifications()) {
+        s = `<span title="This layer has unsaved changes. Right click to save them."
+            class="font-weight-bolder">  •  </span>${s}`;
+      }
     } else if (layer instanceof os.layer.Tile) {
       s += ' <tileloading></tileloading>';
     }

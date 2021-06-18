@@ -1,5 +1,4 @@
 goog.module('plugin.arc.IArcLoader');
-goog.module.declareLegacyNamespace();
 
 const IDisposable = goog.requireType('goog.disposable.IDisposable');
 const EventTarget = goog.requireType('goog.events.EventTarget');

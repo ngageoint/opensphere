@@ -2,13 +2,20 @@ goog.provide('os.data.FileDescriptor');
 
 goog.require('os.command.LayerAdd');
 goog.require('os.command.LayerRemove');
+goog.require('os.config.Settings');
 goog.require('os.data.IReimport');
 goog.require('os.data.IUrlDescriptor');
 goog.require('os.data.LayerSyncDescriptor');
+goog.require('os.ex.IExportMethod');
+goog.require('os.file');
+goog.require('os.file.File');
 goog.require('os.file.FileStorage');
 goog.require('os.im.ImportProcess');
 goog.require('os.implements');
 goog.require('os.parse.FileParserConfig');
+goog.require('os.source');
+goog.require('os.source.PropertyChange');
+goog.require('os.source.Vector');
 goog.require('os.ui.file.ui.defaultFileNodeUIDirective');
 goog.require('os.ui.im.ImportEvent');
 goog.require('os.ui.im.ImportEventType');
@@ -64,11 +71,20 @@ os.data.FileDescriptor = function() {
    */
   this.date_ = null;
 
+  this.log = os.data.FileDescriptor.LOGGER_;
   this.descriptorType = 'file';
 };
 goog.inherits(os.data.FileDescriptor, os.data.LayerSyncDescriptor);
 os.implements(os.data.FileDescriptor, 'os.data.IReimport');
 os.implements(os.data.FileDescriptor, os.data.IUrlDescriptor.ID);
+
+
+/**
+ * @type {goog.log.Logger}
+ * @private
+ * @const
+ */
+os.data.FileDescriptor.LOGGER_ = goog.log.getLogger('os.data.FileDescriptor');
 
 
 /**
@@ -323,6 +339,86 @@ os.data.FileDescriptor.prototype.reimport = function() {
   process.setConfig(this.getParserConfig());
   process.setSkipDuplicates(true);
   process.begin();
+};
+
+
+/**
+ * Get the exporter method associated with this file type.
+ * @return {?os.ex.IExportMethod}
+ */
+os.data.FileDescriptor.prototype.getExporter = function() {
+  return null;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.data.FileDescriptor.prototype.onLayerChange = function(e) {
+  os.data.FileDescriptor.base(this, 'onLayerChange', e);
+
+  if (e instanceof os.events.PropertyChangeEvent) {
+    const layer = /** @type {os.layer.Vector} */ (e.target);
+    const p = e.getProperty() || '';
+    const newVal = e.getNewValue();
+
+    if (p == os.source.PropertyChange.HAS_MODIFICATIONS && newVal) {
+      if (layer instanceof os.layer.Vector) {
+        const source = /** @type {os.source.Vector} */ (layer.getSource());
+        const settings = os.config.Settings.getInstance();
+        const key = os.file.FileSetting.AUTO_SAVE;
+
+        if (settings.get(key, os.file.FileSettingDefault[key]) && source instanceof os.source.Vector) {
+          const options = /** @type {os.ex.ExportOptions} */ ({
+            sources: [source],
+            items: source.getFeatures(),
+            fields: null
+          });
+
+          this.updateFile(options);
+        }
+      }
+    }
+  }
+};
+
+
+/**
+ * Updates to the underlying layer data. Updates the file in storage.
+ * @param {os.ex.ExportOptions} options
+ */
+os.data.FileDescriptor.prototype.updateFile = function(options) {
+  const source = /** @type {os.source.Vector} */ (options.sources[0]);
+  const exporter = this.getExporter();
+
+  if (exporter) {
+    const name = this.getTitle() || 'New File';
+    options.exporter = exporter;
+    options.fields = os.source.getExportFields(source, false, exporter.supportsTime());
+    options.title = name;
+    options.keepTitle = true;
+
+    // export via export manager, this will not prompt the user
+    // possible TODO: have this function return a promise that resolves/rejects if the export succeeds/fails
+    os.ui.file.ExportManager.getInstance().exportItems(options);
+
+    this.onFileChange(options);
+  }
+};
+
+
+/**
+ * Handles changes to the underlying layer data. Updates the file in storage.
+ * @param {os.ex.ExportOptions} options
+ */
+os.data.FileDescriptor.prototype.onFileChange = function(options) {
+  // update this descriptor's URL to point to the file, set the source back to having no modifications
+  const name = this.getTitle() || 'New File';
+  const url = os.file.getLocalUrl(name);
+  this.setUrl(url);
+
+  const source = /** @type {os.source.Vector} */ (options.sources[0]);
+  source.setHasModifications(false);
 };
 
 

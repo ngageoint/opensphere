@@ -1,10 +1,11 @@
-goog.provide('plugin.file.kml.KMLSourceEvent');
+goog.module('plugin.file.kml.KMLSourceEvent');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * KML source event types
  * @enum {string}
  */
-plugin.file.kml.KMLSourceEvent = {
+exports = {
   REFRESH: 'kmlSource:refresh'
 };

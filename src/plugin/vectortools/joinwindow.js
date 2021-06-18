@@ -1,270 +1,279 @@
-goog.provide('plugin.vectortools.JoinCtrl');
-goog.provide('plugin.vectortools.joinDirective');
+goog.module('plugin.vectortools.JoinUI');
 
-goog.require('ol.array');
-goog.require('os');
-goog.require('os.data.OSDataManager');
-goog.require('os.data.SourceManager');
-goog.require('os.ui.Module');
 goog.require('os.ui.util.validationMessageDirective');
-goog.require('os.ui.window');
-goog.require('plugin.vectortools.JoinLayer');
-goog.require('plugin.vectortools.mappingCounterDirective');
+goog.require('plugin.vectortools.MappingCounterUI');
+
+const googString = goog.require('goog.string');
+const olArray = goog.require('ol.array');
+const os = goog.require('os');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const OSDataManager = goog.require('os.data.OSDataManager');
+const SourceManager = goog.require('os.data.SourceManager');
+const ogc = goog.require('os.ogc');
+const PropertyChange = goog.require('os.source.PropertyChange');
+const ui = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const osWindow = goog.require('os.ui.window');
+const JoinLayer = goog.require('plugin.vectortools.JoinLayer');
 
 
 /**
  * @return {angular.Directive}
  */
-plugin.vectortools.joinDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    templateUrl: os.ROOT + 'views/plugin/vectortools/join.html',
-    controller: plugin.vectortools.JoinCtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: true,
+  templateUrl: os.ROOT + 'views/plugin/vectortools/join.html',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'join';
 
 
 // add the directive to the module
-os.ui.Module.directive('join', [plugin.vectortools.joinDirective]);
+Module.directive(directiveTag, [directive]);
 
 
 
 /**
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @extends {os.data.SourceManager}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-plugin.vectortools.JoinCtrl = function($scope, $element) {
-  plugin.vectortools.JoinCtrl.base(this, 'constructor');
-
+class Controller extends SourceManager {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
    */
-  this.scope_ = $scope;
+  constructor($scope, $element) {
+    super();
 
-  /**
-   * @type {?angular.JQLite}
-   * @private
-   */
-  this.element_ = $element;
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
 
-  /**
-   * @type {!Array<string>}
-   * @private
-   */
-  this.sourceIds_ = $scope['sourceIds'];
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
 
-  /**
-   * @type {string}
-   */
-  this['name'] = 'Joined Layer';
+    /**
+     * @type {!Array<string>}
+     * @private
+     */
+    this.sourceIds_ = $scope['sourceIds'];
 
-  /**
-   * @type {string}
-   */
-  this['joinMethod'] = 'unique';
+    /**
+     * @type {string}
+     */
+    this['name'] = 'Joined Layer';
 
-  /**
-   * @type {string}
-   */
-  this['chooseLayerHelp'] = 'Joining layers compares values in the chosen columns for each layer against the ' +
-      'Primary Layer and combines features whose values match. If the values match, the feature from the other ' +
-      'layer will be merged into the matching features in the Primary Layer.';
+    /**
+     * @type {string}
+     */
+    this['joinMethod'] = 'unique';
 
-  /**
-   * @type {string}
-   */
-  this['joinMethodHelp'] = 'The Join Method determines how we compare values between columns.' +
-      '<ul><li> Exact Match: Joins two features when the value is exactly the same on both.</li>' +
-      '<li> Contains: Joins two features when one value contains the other.</li>' +
-      '<li> Match (Case-Insensitive): Same as "Exact Match" but case-insensitive</li>' +
-      '<li> Contains (Case-Insensitive): Same as "Contains" but case-insensitive</li>';
+    /**
+     * @type {string}
+     */
+    this['chooseLayerHelp'] = 'Joining layers compares values in the chosen columns for each layer against the ' +
+        'Primary Layer and combines features whose values match. If the values match, the feature from the other ' +
+        'layer will be merged into the matching features in the Primary Layer.';
 
-  /**
-   * @type {Array<Object>}
-   */
-  this['joinSources'] = this.sourceIds_
-      .map(plugin.vectortools.JoinCtrl.mapSources)
-      .sort(plugin.vectortools.JoinCtrl.sortSources_);
+    /**
+     * @type {string}
+     */
+    this['joinMethodHelp'] = 'The Join Method determines how we compare values between columns.' +
+        '<ul><li> Exact Match: Joins two features when the value is exactly the same on both.</li>' +
+        '<li> Contains: Joins two features when one value contains the other.</li>' +
+        '<li> Match (Case-Insensitive): Same as "Exact Match" but case-insensitive</li>' +
+        '<li> Contains (Case-Insensitive): Same as "Contains" but case-insensitive</li>';
 
-  /**
-   * @type {?string}
-   */
-  this['primarySource'] = this['joinSources'][0]['id'];
+    /**
+     * @type {Array<Object>}
+     */
+    this['joinSources'] = this.sourceIds_
+        .map(Controller.mapSources)
+        .sort(Controller.sortSources_);
 
-  this.init();
-  $scope.$on('$destroy', this.disposeInternal.bind(this));
-  $scope.$emit(os.ui.WindowEventType.READY);
-};
-goog.inherits(plugin.vectortools.JoinCtrl, os.data.SourceManager);
+    /**
+     * @type {?string}
+     */
+    this['primarySource'] = this['joinSources'][0]['id'];
 
-
-/**
- * @inheritDoc
- */
-plugin.vectortools.JoinCtrl.prototype.disposeInternal = function() {
-  plugin.vectortools.JoinCtrl.base(this, 'disposeInternal');
-
-  this.scope_ = null;
-  this.element_ = null;
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.vectortools.JoinCtrl.prototype.init = function() {
-  plugin.vectortools.JoinCtrl.base(this, 'init');
-  /** @type {angular.$timeout} */ (os.ui.injector.get('$timeout'))(this.onUpdateDelay.bind(this));
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.vectortools.JoinCtrl.prototype.removeSource = function(source) {
-  plugin.vectortools.JoinCtrl.base(this, 'removeSource', source);
-  ol.array.remove(this.sourceIds_, source.getId());
-  this.onUpdateDelay();
-};
-
-
-/**
- * @inheritDoc
- */
-plugin.vectortools.JoinCtrl.prototype.onSourcePropertyChange = function(event) {
-  var p;
-  try {
-    p = event.getProperty();
-  } catch (e) {
-    return;
+    this.init();
+    $scope.$on('$destroy', this.disposeInternal.bind(this));
+    $scope.$emit(WindowEventType.READY);
   }
 
-  if (p === os.source.PropertyChange.FEATURES) {
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
+
+    this.scope_ = null;
+    this.element_ = null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  init() {
+    super.init();
+    /** @type {angular.$timeout} */ (ui.injector.get('$timeout'))(this.onUpdateDelay.bind(this));
+  }
+
+  /**
+   * @inheritDoc
+   */
+  removeSource(source) {
+    super.removeSource(source);
+    olArray.remove(this.sourceIds_, source.getId());
     this.onUpdateDelay();
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  onSourcePropertyChange(event) {
+    var p;
+    try {
+      p = event.getProperty();
+    } catch (e) {
+      return;
+    }
 
-/**
- * @inheritDoc
- */
-plugin.vectortools.JoinCtrl.prototype.onUpdateDelay = function() {
-  if (!this.scope_) {
-    return;
-  }
-
-  this.scope_['joinForm'].$setValidity('featureCount', true);
-  this['count'] = 0;
-
-  for (var i = 0, ii = this.sourceIds_.length; i < ii; i++) {
-    var source = os.osDataManager.getSource(this.sourceIds_[i]);
-    if (source) {
-      this['count'] += source.getFeatures().length;
+    if (p === PropertyChange.FEATURES) {
+      this.onUpdateDelay();
     }
   }
 
-  if (this['count'] === 0) {
-    this.scope_['joinForm'].$setValidity('featureCount', false);
-    this['popoverText'] = 'Nothing to join.';
-    this['popoverTitle'] = 'No Features';
-    this['featureCountText'] = 'Nothing to join.';
-  } else if (2 * this['count'] > os.ogc.getMaxFeatures()) {
-    this.scope_['joinForm'].$setValidity('featureCount', false);
-    this['popoverText'] = 'Too many features!';
-    this['popoverTitle'] = 'Too Many Features';
-    this['featureCountText'] = 'This join would result in too many features for {APP} to handle. Reduce the number ' +
-        'of features you are joining and try again.';
+  /**
+   * @inheritDoc
+   */
+  onUpdateDelay() {
+    if (!this.scope_) {
+      return;
+    }
+
+    this.scope_['joinForm'].$setValidity('featureCount', true);
+    this['count'] = 0;
+
+    for (var i = 0, ii = this.sourceIds_.length; i < ii; i++) {
+      var source = OSDataManager.getInstance().getSource(this.sourceIds_[i]);
+      if (source) {
+        this['count'] += source.getFeatures().length;
+      }
+    }
+
+    if (this['count'] === 0) {
+      this.scope_['joinForm'].$setValidity('featureCount', false);
+      this['popoverText'] = 'Nothing to join.';
+      this['popoverTitle'] = 'No Features';
+      this['featureCountText'] = 'Nothing to join.';
+    } else if (2 * this['count'] > ogc.getMaxFeatures()) {
+      this.scope_['joinForm'].$setValidity('featureCount', false);
+      this['popoverText'] = 'Too many features!';
+      this['popoverTitle'] = 'Too Many Features';
+      this['featureCountText'] = 'This join would result in too many features for {APP} to handle. Reduce the number ' +
+          'of features you are joining and try again.';
+    }
+
+    ui.apply(this.scope_);
   }
 
-  os.ui.apply(this.scope_);
-};
+  /**
+   * Close the window.
+   *
+   * @export
+   */
+  close() {
+    osWindow.close(this.element_);
+  }
 
+  /**
+   * Builds and executes the command to perform the join then closes the window.
+   *
+   * @export
+   */
+  accept() {
+    var sources = this['joinSources'].map(function(item) {
+      return item['id'];
+    });
 
-/**
- * Close the window.
- *
- * @export
- */
-plugin.vectortools.JoinCtrl.prototype.close = function() {
-  os.ui.window.close(this.element_);
-};
+    var columns = this['joinSources'].map(function(item) {
+      return item['joinColumn']['field'];
+    });
 
+    // put the primary source at index 0
+    var primary = /** @type {string} */ (this['primarySource']);
+    var i = sources.indexOf(primary);
 
-/**
- * Builds and executes the command to perform the join then closes the window.
- *
- * @export
- */
-plugin.vectortools.JoinCtrl.prototype.accept = function() {
-  var sources = this['joinSources'].map(function(item) {
-    return item['id'];
-  });
+    var tmp = sources.splice(i, 1);
+    sources = tmp.concat(sources);
 
-  var columns = this['joinSources'].map(function(item) {
-    return item['joinColumn']['field'];
-  });
+    tmp = columns.splice(i, 1);
+    columns = tmp.concat(columns);
 
-  // put the primary source at index 0
-  var primary = /** @type {string} */ (this['primarySource']);
-  var i = sources.indexOf(primary);
+    var cmd = new JoinLayer(
+        /** @type {!Array<string>} */ (sources),
+        /** @type {!Array<string>} */ (columns),
+        this['joinMethod'],
+        this['name']);
 
-  var tmp = sources.splice(i, 1);
-  sources = tmp.concat(sources);
+    CommandProcessor.getInstance().addCommand(cmd);
+    this.close();
+  }
 
-  tmp = columns.splice(i, 1);
-  columns = tmp.concat(columns);
+  /**
+   * @param {string} id
+   * @return {Object}
+   * @protected
+   */
+  static mapSources(id) {
+    var source = OSDataManager.getInstance().getSource(id);
 
-  var cmd = new plugin.vectortools.JoinLayer(
-      /** @type {!Array<string>} */ (sources),
-      /** @type {!Array<string>} */ (columns),
-      this['joinMethod'],
-      this['name']);
+    return {
+      'id': source.getId(),
+      'title': source.getTitle(),
+      'cols': source.getColumns().sort(Controller.sortByName_)
+    };
+  }
 
-  os.command.CommandProcessor.getInstance().addCommand(cmd);
-  this.close();
-};
+  /**
+   * @param {os.data.ColumnDefinition} a
+   * @param {os.data.ColumnDefinition} b
+   * @return {number}
+   * @private
+   */
+  static sortByName_(a, b) {
+    return googString.numerateCompare(a['name'], b['name']);
+  }
 
+  /**
+   * @param {Object} a
+   * @param {Object} b
+   * @return {number}
+   * @private
+   */
+  static sortSources_(a, b) {
+    return googString.numerateCompare(a['title'], b['title']);
+  }
+}
 
-/**
- * @param {string} id
- * @return {Object}
- * @protected
- */
-plugin.vectortools.JoinCtrl.mapSources = function(id) {
-  var source = os.osDataManager.getSource(id);
-
-  return {
-    'id': source.getId(),
-    'title': source.getTitle(),
-    'cols': source.getColumns().sort(plugin.vectortools.JoinCtrl.sortByName_)
-  };
-};
-
-
-/**
- * @param {os.data.ColumnDefinition} a
- * @param {os.data.ColumnDefinition} b
- * @return {number}
- * @private
- */
-plugin.vectortools.JoinCtrl.sortByName_ = function(a, b) {
-  return goog.string.numerateCompare(a['name'], b['name']);
-};
-
-
-/**
- * @param {Object} a
- * @param {Object} b
- * @return {number}
- * @private
- */
-plugin.vectortools.JoinCtrl.sortSources_ = function(a, b) {
-  return goog.string.numerateCompare(a['title'], b['title']);
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
