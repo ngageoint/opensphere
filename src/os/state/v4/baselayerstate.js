@@ -818,6 +818,11 @@ os.state.v4.BaseLayerState.prototype.analyzeOptions = function(options, id) {
     layerOptions['id'] = os.state.AbstractState.createId(id, /** @type {string} */ (layerOptions['id']));
     layerOptions['exportEnabled'] = true;
 
+    if (layerOptions['groupId']) {
+      // update the group ID if it's present to be unique to this state
+      layerOptions['groupId'] = os.state.AbstractState.createId(id, /** @type {string} */ (layerOptions['groupId']));
+    }
+
     var descriptor = os.dataManager.getDescriptor(id.substring(0, id.length - 1));
     if (descriptor) {
       layerOptions['provider'] = descriptor.getTitle();

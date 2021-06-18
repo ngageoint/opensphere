@@ -4,7 +4,6 @@ goog.module.declareLegacyNamespace();
 const googDomXml = goog.require('goog.dom.xml');
 const log = goog.require('goog.log');
 const MapContainer = goog.require('os.MapContainer');
-const net = goog.require('os.net');
 const LayerState = goog.require('os.state.v4.LayerState');
 const BaseProvider = goog.require('os.ui.data.BaseProvider');
 const xml = goog.require('os.xml');
@@ -106,10 +105,6 @@ class BaseMapState extends LayerState {
     options['layerType'] = basemap.LAYER_TYPE;
     options['type'] = basemap.TYPE;
     options['id'] = options['id'].replace(BaseProvider.ID_DELIMITER, '-');
-
-    if (typeof options['url'] == 'string') {
-      options['crossOrigin'] = net.getCrossOrigin(/** @type {string} */ (options['url']));
-    }
 
     // zoom is 1 higher in opensphere than in legacy apps
     if (typeof options['minZoom'] === 'number') {
