@@ -14,6 +14,7 @@ const ImageStatic = goog.require('ol.source.ImageStatic');
 const annotation = goog.require('os.annotation');
 const FeatureAnnotation = goog.require('os.annotation.FeatureAnnotation');
 const osColor = goog.require('os.color');
+const LayerNode = goog.require('os.data.LayerNode');
 const IExtent = goog.require('os.data.IExtent');
 const ISearchable = goog.require('os.data.ISearchable');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
@@ -21,6 +22,8 @@ const osFeature = goog.require('os.feature');
 const fn = goog.require('os.fn');
 const osImplements = goog.require('os.implements');
 const TriState = goog.require('os.structs.TriState');
+const ColorControlType = goog.require('os.ui.ColorControlType');
+const ControlType = goog.require('os.ui.ControlType');
 const ILayerUIProvider = goog.require('os.ui.ILayerUIProvider');
 const launchMultiFeatureInfo = goog.require('os.ui.feature.launchMultiFeatureInfo');
 const launchScreenOverlay = goog.require('os.ui.launchScreenOverlay');
@@ -203,6 +206,9 @@ class KMLNode extends SlickTreeNode {
      * @type {?string}
      */
     this.layerUI = null;
+
+    // TBD
+    this.layerNode = null;
   }
 
   /**
@@ -400,6 +406,16 @@ class KMLNode extends SlickTreeNode {
    */
   setImage(image) {
     this.image_ = image;
+    if (this.image_) {
+      // Give the image style control options.
+      var options = {};
+      options[ControlType.COLOR] = ColorControlType.PICKER_RESET;
+      this.image_.setLayerOptions(options);
+
+      // Create a LayerNode that will handle the image style changes
+      this.layerNode = new LayerNode();
+      this.layerNode.setLayer(this.image_);
+    }
   }
 
   /**
@@ -934,8 +950,12 @@ class KMLNode extends SlickTreeNode {
    * @inheritDoc
    */
   getLayerUI(item) {
-    if (item && item instanceof KMLNode && item.editable && item.feature_) {
-      return item.layerUI || 'defaultlayerui';
+    if (item && item instanceof KMLNode) {
+      if (item.editable && item.feature_) {
+        return item.layerUI || 'defaultlayerui';
+      } else if (item.image_) {
+        return item.image_.layerUi_;
+      }
     }
 
     return null;

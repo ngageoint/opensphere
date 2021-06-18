@@ -26,6 +26,9 @@ os.source.ImageStatic = function(options, rotation) {
    * @protected
    */
   this.rotation = rotation;
+
+  // Set the source of the image so it can handle style changes properly
+  this.image_.olSource = this;
 };
 goog.inherits(os.source.ImageStatic, ol.source.ImageStatic);
 

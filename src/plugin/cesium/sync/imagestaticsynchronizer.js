@@ -57,6 +57,13 @@ class ImageStaticSynchronizer extends CesiumSynchronizer {
      */
     this.primitive;
 
+    /**
+     * Event keys that correspond to modifiable styles
+     * @type {Array<string>}
+     * @protected
+     */
+    this.styleChangeKeys = ['opacity', 'brightness', 'contrast', 'saturation', 'sharpness'];
+
     olEvents.listen(this.layer, GoogEventType.PROPERTYCHANGE, this.onLayerPropertyChange, this);
   }
 
@@ -120,9 +127,7 @@ class ImageStaticSynchronizer extends CesiumSynchronizer {
           id: this.layer.getId()
         }),
         appearance: new Cesium.MaterialAppearance({
-          material: Cesium.Material.fromType('Image', {
-            image: url
-          })
+          material: this.createImageMaterial(url)
         }),
         show: this.layer.getVisible()
       });
@@ -155,14 +160,31 @@ class ImageStaticSynchronizer extends CesiumSynchronizer {
   }
 
   /**
+   * Create a Cesium material from an image
+   *
+   * @param {HTMLCanvasElement|HTMLVideoElement|Image} image
+   * @return {Cesium.Material}
+   */
+  createImageMaterial(image) {
+    return Cesium.Material.fromType('Image', {
+      image: image,
+      color: new Cesium.Color(1, 1, 1, this.layer.getOpacity())
+    });
+  }
+
+  /**
    * Handle visibility
    *
    * @param {PropertyChangeEvent} event
    * @protected
    */
   onLayerPropertyChange(event) {
-    if (this.primitive && event instanceof OLObject.Event && event.key == LayerPropertyChange.VISIBLE) {
-      this.primitive.show = this.layer.getVisible();
+    if (this.primitive && event instanceof OLObject.Event) {
+      if (event.key == LayerPropertyChange.VISIBLE) {
+        this.primitive.show = this.layer.getVisible();
+      } else if (this.styleChangeKeys.includes(event.key)) {
+        this.primitive.appearance.material = this.createImageMaterial(this.image.getImage());
+      }
       dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }
