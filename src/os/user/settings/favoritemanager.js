@@ -1,7 +1,12 @@
 goog.module('os.user.settings.FavoriteManager');
 goog.module.declareLegacyNamespace();
 
+const googArray = goog.require('goog.array');
+
 const EventTarget = goog.require('goog.events.EventTarget');
+const googString = goog.require('goog.string');
+const os = goog.require('os');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const osArray = goog.require('os.array');
 const Settings = goog.require('os.config.Settings');
@@ -126,11 +131,11 @@ class FavoriteManager extends EventTarget {
         var folder = folders[i];
         var foundFolders = FavoriteManager.getFavoriteFoldersInternal_(folder, key);
         if (foundFolders) {
-          goog.array.extend(favFolders, foundFolders);
+          googArray.extend(favFolders, foundFolders);
         }
       }
     }
-    goog.array.removeDuplicates(favFolders);
+    googArray.removeDuplicates(favFolders);
     return favFolders;
   }
 
@@ -171,7 +176,7 @@ class FavoriteManager extends EventTarget {
    */
   getFavTypes(favs, types) {
     var result = FavoriteManager.getTypeInternal_(favs, types);
-    goog.array.removeDuplicates(result, undefined, function(fav) {
+    googArray.removeDuplicates(result, undefined, function(fav) {
       return fav['key'];
     });
     return result;
@@ -185,7 +190,7 @@ class FavoriteManager extends EventTarget {
    */
   getFolders(opt_ignore) {
     var folders = FavoriteManager.getFoldersInternal_(this.getFavorites(), opt_ignore);
-    goog.array.removeDuplicates(folders);
+    googArray.removeDuplicates(folders);
     return folders;
   }
 
@@ -223,25 +228,25 @@ class FavoriteManager extends EventTarget {
 
     // Are we putting this favorite into a folder?
     if (opt_folders && opt_folders.length > 0) {
-      goog.array.removeDuplicates(opt_folders);
+      googArray.removeDuplicates(opt_folders);
       for (var i = 0; i < opt_folders.length; i++) {
         favs = FavoriteManager.saveFolderInternal_(favs, fav, opt_folders[i]);
       }
     } else {
       // store at the root
-      goog.array.insertAt(favs, fav);
+      googArray.insertAt(favs, fav);
     }
 
     this.saveToSettings(favs);
 
     // Dont send the alert if this is an edit
     if (opt_alert && originalLength != favs.length) {
-      var alertText = '<strong>' + goog.string.truncate(value || '.', 50) + '</strong>';
+      var alertText = '<strong>' + googString.truncate(value || '.', 50) + '</strong>';
       if (url.URL_REGEXP.test(key)) {
         alertText = '<a href="' + key + '" target="_blank">' + alertText + '</a>';
       }
 
-      AlertManager.getInstance().sendAlert('Saved Favorite: ' + alertText, os.alert.AlertEventSeverity.SUCCESS);
+      AlertManager.getInstance().sendAlert('Saved Favorite: ' + alertText, AlertEventSeverity.SUCCESS);
     }
   }
 
@@ -260,7 +265,7 @@ class FavoriteManager extends EventTarget {
     if (opt_types) {
       fullList = this.getFavTypes(list, opt_types);
     } else if (list) {
-      fullList = goog.array.clone(list);
+      fullList = googArray.clone(list);
     } else {
       fullList = [];
     }
@@ -434,7 +439,7 @@ class FavoriteManager extends EventTarget {
         } else if (fav['type'] == FavoriteType.FOLDER) {
           var foundFolders = FavoriteManager.getFavoriteFoldersInternal_(fav, key);
           if (foundFolders) {
-            goog.array.extend(favFolders, foundFolders);
+            googArray.extend(favFolders, foundFolders);
           }
         }
       }
@@ -455,7 +460,7 @@ class FavoriteManager extends EventTarget {
     for (var i = 0; i < favs.length; i++) {
       var fav = favs[i];
       if (fav['key'] == key) {
-        goog.array.removeAt(favs, i);
+        googArray.removeAt(favs, i);
       } else if (fav['type'] == FavoriteType.FOLDER) {
         var children = FavoriteManager.removeFavoriteInternal_(fav['children'], key);
         if (children.length != fav['children'].length) {
@@ -480,7 +485,7 @@ class FavoriteManager extends EventTarget {
     for (var i = 0; i < favs.length; i++) {
       var fav = favs[i];
       if (fav['key'] == folder) {
-        goog.array.removeIf(fav['children'], function(child) {
+        googArray.removeIf(fav['children'], function(child) {
           return child['key'] == key;
         });
       } else if (fav['type'] == FavoriteType.FOLDER) {
@@ -505,14 +510,14 @@ class FavoriteManager extends EventTarget {
   static getTypeInternal_(favs, types) {
     var result = [];
 
-    var bucketFavs = goog.array.bucket(favs, function(fav) {
+    var bucketFavs = googArray.bucket(favs, function(fav) {
       return fav['type'];
     });
 
     osArray.forEach(types, function(type) {
       var favType = bucketFavs[type];
       if (favType) {
-        goog.array.extend(result, favType);
+        googArray.extend(result, favType);
       }
     });
 
@@ -520,7 +525,7 @@ class FavoriteManager extends EventTarget {
     var folders = bucketFavs[FavoriteType.FOLDER];
     if (folders) {
       osArray.forEach(folders, function(folder) {
-        goog.array.extend(result, FavoriteManager.getTypeInternal_(folder['children'], types));
+        googArray.extend(result, FavoriteManager.getTypeInternal_(folder['children'], types));
       });
     }
 
@@ -535,7 +540,7 @@ class FavoriteManager extends EventTarget {
    */
   static getFoldersInternal_(favs, opt_ignore) {
     var result = [];
-    var bucketFavs = goog.array.bucket(favs, function(fav) {
+    var bucketFavs = googArray.bucket(favs, function(fav) {
       return fav['type'];
     });
 
@@ -543,14 +548,14 @@ class FavoriteManager extends EventTarget {
     if (folders) {
       // Remove the ignored folder if it exists
       if (opt_ignore) {
-        goog.array.removeIf(folders, function(folder) {
+        googArray.removeIf(folders, function(folder) {
           return folder['key'] == opt_ignore;
         });
       }
 
-      goog.array.extend(result, folders);
+      googArray.extend(result, folders);
       osArray.forEach(folders, function(folder) {
-        goog.array.extend(result, FavoriteManager.getFoldersInternal_(folder['children'], opt_ignore));
+        googArray.extend(result, FavoriteManager.getFoldersInternal_(folder['children'], opt_ignore));
       });
     }
 
@@ -571,7 +576,7 @@ class FavoriteManager extends EventTarget {
       var fav = favs[i];
       // If we found the folder we want to store the favorite.
       if (fav['key'] == folder) {
-        goog.array.insertAt(fav['children'], favorite);
+        googArray.insertAt(fav['children'], favorite);
         break;
       } else if (fav['type'] == FavoriteType.FOLDER) {
         var children = FavoriteManager.saveFolderInternal_(fav['children'], favorite, folder);

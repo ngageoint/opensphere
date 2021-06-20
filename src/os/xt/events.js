@@ -1,11 +1,8 @@
 goog.module('os.xt.events');
-goog.module('os.xt.events.MasterChangedEvent');
 goog.module.declareLegacyNamespace();
 
 const EventTarget = goog.require('goog.events.EventTarget');
 
-
-goog.require('goog.events.Event');
 
 /**
  * Dispatches global events for XT

@@ -1,6 +1,8 @@
 goog.module('os.xt.PeerInfo');
 goog.module.declareLegacyNamespace();
 
+const {getLastPing} = goog.require('os.xt');
+
 
 /**
  * A small structure that represents info about other peers
@@ -57,7 +59,7 @@ class PeerInfo {
     if (!group || !id) {
       return null;
     }
-    var ping = Peer.getLastPing_(group, id, storage);
+    var ping = getLastPing(group, id, storage);
     if (!ping) {
       // peer's not ready
       return null;

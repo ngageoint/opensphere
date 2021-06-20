@@ -481,6 +481,7 @@ class Camera extends OLCSCamera {
 
   /**
    * @inheritDoc
+   * @param {number=} opt_value The angle, in radians, to rotate by.
    */
   rotateLeft(opt_value) {
     if (this.cam_) {
@@ -490,6 +491,7 @@ class Camera extends OLCSCamera {
 
   /**
    * @inheritDoc
+   * @param {number=} opt_value The angle, in radians, to rotate by.
    */
   rotateRight(opt_value) {
     if (this.cam_) {
@@ -499,6 +501,7 @@ class Camera extends OLCSCamera {
 
   /**
    * @inheritDoc
+   * @param {number=} opt_value The angle, in radians, to rotate by.
    */
   rotateUp(opt_value) {
     if (this.cam_) {
@@ -508,6 +511,7 @@ class Camera extends OLCSCamera {
 
   /**
    * @inheritDoc
+   * @param {number=} opt_value The angle, in radians, to rotate by.
    */
   rotateDown(opt_value) {
     if (this.cam_) {
@@ -517,6 +521,7 @@ class Camera extends OLCSCamera {
 
   /**
    * @inheritDoc
+   * @param {number=} opt_value The angle, in radians.
    */
   twistLeft(opt_value) {
     if (this.cam_) {
@@ -526,6 +531,7 @@ class Camera extends OLCSCamera {
 
   /**
    * @inheritDoc
+   * @param {number=} opt_value The angle, in radians.
    */
   twistRight(opt_value) {
     if (this.cam_) {

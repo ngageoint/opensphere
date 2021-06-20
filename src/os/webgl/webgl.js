@@ -33,7 +33,7 @@ const isSupported = function() {
 /**
  * Checks if WebGL will be rendered with degraded performance
  *
- * @return {boolean|null}
+ * @return {?boolean}
  */
 const hasPerformanceCaveat = function() {
   try {

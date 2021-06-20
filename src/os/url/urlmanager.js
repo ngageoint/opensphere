@@ -3,10 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const EventTarget = goog.require('goog.events.EventTarget');
 const UrlEvent = goog.require('os.url.UrlEvent');
-goog.require('goog.array');
 
-
-goog.require('os.url');
 
 /**
  * The URL manager is responsible for handling parameters passed to the application by
@@ -19,11 +16,33 @@ class UrlManager extends EventTarget {
    */
   constructor() {
     super();
+
     /**
      * @type {Object.<string, Array>}
      * @private
      */
     this.handlers_ = {};
+
+    /**
+     * The registered file handler function.
+     * @type {?Function}
+     * @private
+     */
+    this.fileHandler_ = null;
+
+    /**
+     * The registered text handler function.
+     * @type {?Function}
+     * @private
+     */
+    this.textHandler_ = null;
+
+    /**
+     * The registered URL handler function.
+     * @type {?Function}
+     * @private
+     */
+    this.urlHandler_ = null;
   }
 
   /**
@@ -116,7 +135,7 @@ class UrlManager extends EventTarget {
    * This function should be called when files are dropped into the page. It calls the registered file handler
    * if there is one.
    *
-   * @param {Array.<File>} files The files to handle
+   * @param {Array<File>} files The files to handle
    */
   handleFiles(files) {
     if (this.fileHandler_) {

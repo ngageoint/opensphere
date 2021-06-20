@@ -1,12 +1,17 @@
 goog.module('os.unit.UnitManager');
 goog.module.declareLegacyNamespace();
 
+const googArray = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
+const log = goog.require('goog.log');
+const os = goog.require('os');
 const Settings = goog.require('os.config.Settings');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const UNITS = goog.require('os.unit.UNITS');
 const UnitChange = goog.require('os.unit.UnitChange');
 const UnitFactory = goog.require('os.unit.UnitFactory');
+
+const IMultiplier = goog.requireType('os.unit.IMultiplier');
 const IUnit = goog.requireType('os.unit.IUnit');
 
 
@@ -50,7 +55,7 @@ class UnitManager extends EventTarget {
      * @private
      */
     this.systems_ = this.unitFactory_.getSystems();
-    goog.array.sort(this.systems_);
+    googArray.sort(this.systems_);
 
     Settings.getInstance().listen(UNITS, this.onUnitsChange_, false, this);
   }
@@ -183,12 +188,44 @@ class UnitManager extends EventTarget {
 
     // determine the best fit multiplier for selected the unit
     var selectedUnit = this.unitFactory_.getUnit(this.selectedSystem_, unitType);
-    var bestFitMult = selectedUnit.getBestFitMultiplier(baseValue);
+    var bestFitMult = this.getBestFitMultiplier(selectedUnit, baseValue);
 
     // convert the value to the established multiplier
     var convertedValue = this.convert(unitType, baseValue, baseMultiplKey, this.baseSystem_, bestFitMult.getName(),
         this.selectedSystem_);
     return selectedUnit.format(convertedValue, bestFitMult, opt_fixed ? opt_fixed : -1);
+  }
+
+  /**
+   * Calculate the best mutliplier of this unit to use for the given value.  The <code>value</code> is expected
+   * to be specified in the application's base unit's default multiplier ('meter')
+   * @param {IUnit} unit The unit to calculate a best fit on.
+   * @param {number} value The value for which to calculate a best fit multiplier
+   * @return {IMultiplier}
+   */
+  getBestFitMultiplier(unit, value) {
+    var um = this;
+    var bestMult;
+    var baseMult = um.getBaseUnits(unit.getUnitType());
+
+    if (value == 0.0) {
+      return baseMult.getDefaultMultiplier();
+    }
+
+    var size = unit.bestFitCandidates.length;
+    if (baseMult) {
+      var baseMultKey = baseMult.getDefaultMultiplier().getName();
+      for (var i = 0; i < size; i++) {
+        var testValue = Math.abs(um.convert(unit.getUnitType(), value, baseMultKey, um.getBaseSystem(),
+            unit.bestFitCandidates[i].getName(), unit.getSystem()));
+        if (testValue >= unit.bestFitCandidates[i].getThreshold()) {
+          bestMult = unit.bestFitCandidates[i];
+          break;
+        }
+      }
+    }
+
+    return (bestMult != null) ? bestMult : size > 0 ? unit.bestFitCandidates[size - 1] : null; // fallback to smallest
   }
 
   /**
@@ -201,7 +238,7 @@ class UnitManager extends EventTarget {
     if (typeof event.newVal === 'string') {
       this.setSelectedSystem(event.newVal);
     } else {
-      goog.log.warning(UnitManager.LOGGER_, 'Unrecognized units change value: ' + event.newVal);
+      log.warning(UnitManager.LOGGER_, 'Unrecognized units change value: ' + event.newVal);
     }
   }
 }
@@ -215,7 +252,7 @@ goog.addSingletonGetter(UnitManager);
  * @private
  * @const
  */
-UnitManager.LOGGER_ = goog.log.getLogger('os.unit.UnitManager');
+UnitManager.LOGGER_ = log.getLogger('os.unit.UnitManager');
 
 
 exports = UnitManager;

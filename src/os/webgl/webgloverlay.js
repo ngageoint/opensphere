@@ -1,8 +1,15 @@
 goog.module('os.webgl.WebGLOverlay');
 goog.module.declareLegacyNamespace();
 
+const GoogEventType = goog.require('goog.events.EventType');
+
 const Overlay = goog.require('ol.Overlay');
 const olProj = goog.require('ol.proj');
+
+
+const MapChange = goog.require('os.MapChange');
+const MapContainer = goog.require('os.MapContainer');
+const osMap = goog.require('os.map');
 
 
 /**
@@ -23,11 +30,11 @@ class WebGLOverlay extends Overlay {
      */
     this.unPostRender_ = undefined;
 
-    var mapContainer = os.MapContainer.getInstance();
+    var mapContainer = MapContainer.getInstance();
     if (mapContainer.is3DEnabled()) {
       this.onWebGLActive();
     } else {
-      mapContainer.listen(goog.events.EventType.PROPERTYCHANGE, this.onMapChange, false, this);
+      mapContainer.listen(GoogEventType.PROPERTYCHANGE, this.onMapChange, false, this);
     }
   }
 
@@ -37,7 +44,7 @@ class WebGLOverlay extends Overlay {
   disposeInternal() {
     super.disposeInternal();
 
-    os.MapContainer.getInstance().unlisten(goog.events.EventType.PROPERTYCHANGE, this.onMapChange, false, this);
+    MapContainer.getInstance().unlisten(GoogEventType.PROPERTYCHANGE, this.onMapChange, false, this);
 
     if (this.unPostRender_) {
       this.unPostRender_();
@@ -49,7 +56,7 @@ class WebGLOverlay extends Overlay {
    */
   getPosition() {
     // if the WebGL renderer is being initialized, positioning the overlay will fail.
-    var mapContainer = os.MapContainer.getInstance();
+    var mapContainer = MapContainer.getInstance();
     if (mapContainer.isInitializingWebGL()) {
       return null;
     }
@@ -86,8 +93,8 @@ class WebGLOverlay extends Overlay {
    * @protected
    */
   onMapChange(event) {
-    if (event.getProperty() === os.MapChange.VIEW3D && event.getNewValue()) {
-      os.MapContainer.getInstance().unlisten(goog.events.EventType.PROPERTYCHANGE, this.onMapChange, false, this);
+    if (event.getProperty() === MapChange.VIEW3D && event.getNewValue()) {
+      MapContainer.getInstance().unlisten(GoogEventType.PROPERTYCHANGE, this.onMapChange, false, this);
       this.onWebGLActive();
     }
   }
@@ -98,7 +105,7 @@ class WebGLOverlay extends Overlay {
    * @protected
    */
   onWebGLActive() {
-    var webGLRenderer = os.MapContainer.getInstance().getWebGLRenderer();
+    var webGLRenderer = MapContainer.getInstance().getWebGLRenderer();
     if (webGLRenderer) {
       // update the overlay on each WebGL post render event so it moves smoothly with the globe
       this.unPostRender_ = webGLRenderer.onPostRender(this.render.bind(this));
@@ -110,7 +117,7 @@ class WebGLOverlay extends Overlay {
    */
   updatePixelPosition() {
     // do not update the overlay while WebGL is being initialized, or it will be positioned incorrectly.
-    var mapContainer = os.MapContainer.getInstance();
+    var mapContainer = MapContainer.getInstance();
     if (mapContainer.isInitializingWebGL()) {
       return;
     }
@@ -123,7 +130,7 @@ class WebGLOverlay extends Overlay {
         // map isn't ready, so hide the overlay
         this.setVisible(false);
       } else {
-        var coord = olProj.toLonLat(position, os.map.PROJECTION);
+        var coord = olProj.toLonLat(position, osMap.PROJECTION);
         var pixel = webGLRenderer.getPixelFromCoordinate(coord, true);
         if (!pixel) {
           // coordinate is not visible, so hide the overlay

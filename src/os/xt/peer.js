@@ -1,5 +1,4 @@
 goog.module('os.xt.Peer');
-goog.module('os.xt.PeerInfo');
 goog.module.declareLegacyNamespace();
 
 const Timer = goog.require('goog.Timer');
@@ -14,13 +13,23 @@ const googString = goog.require('goog.string');
 const olArray = goog.require('ol.array');
 const AlertManager = goog.require('os.alert.AlertManager');
 const events = goog.require('os.xt.events');
+const PeerInfo = goog.require('os.xt.PeerInfo');
+const {
+  isMaster,
+  getMasterKey,
+  getPingKey,
+  getLastPing,
+  cleanupPeer,
+  prepareSendData
+} = goog.require('os.xt');
+
 const Logger = goog.requireType('goog.log.Logger');
 const IMessageHandler = goog.requireType('os.xt.IMessageHandler');
 
 
 /**
  * A peer for local storage communication. Peers are intended to be singletons so there will only be one peer per
- * application. Use the {@code os.xt.Peer.getInstance} function to get a reference to the singleton.
+ * application. Use the {@code Peer.getInstance} function to get a reference to the singleton.
  *
  * @example <caption>Implement a message handler</caption>
  *  com.app.Handler = function() {
@@ -36,7 +45,7 @@ const IMessageHandler = goog.requireType('os.xt.IMessageHandler');
  *  };
  *
  * @example <caption>In your main application, connect a peer</caption>
- *  this.peer = os.xt.Peer.getInstance();
+ *  this.peer = Peer.getInstance();
  *  this.peer.setTitle('Test Page');
  *  this.peer.addHandler(new com.app.Handler());
  *  this.peer.init();
@@ -124,7 +133,6 @@ class Peer {
      */
     this.pingTimer_ = null;
 
-
     /**
      * The time of this peer's last ping
      * @type {number}
@@ -141,7 +149,7 @@ class Peer {
 
     /**
      * An array of records that track clients waiting for peers to become available in this peer's group
-     * @type {Array<os.xt.Peer.WaitRecord_>}
+     * @type {Array<Peer.WaitRecord_>}
      * @private
      */
     this.waitList_ = [];
@@ -337,7 +345,7 @@ class Peer {
     var set = [];
 
     for (var i = 0, n = this.handlers_.length; i < n; i++) {
-      var types = this.handlers_[i].getTypes ? this.handlers_[i].getTypes() : this.handlers_[i]['getTypes']();
+      var types = this.handlers_[i].getTypes();
 
       for (var j = 0, m = types.length; j < m; j++) {
         googArray.insert(set, types[j]);
@@ -426,7 +434,7 @@ class Peer {
     try {
       // do this in a try/catch in case localStorage is full so that we can let the user know
       var event = /** @type {Event} */ ({'key': ['xt', this.group_, opt_to, this.id_, Date.now()].join('.'),
-        'newValue': Peer.prepareSendData(type, data)});
+        'newValue': prepareSendData(type, data)});
       this.storage_.setItem(event['key'], event['newValue']);
       if (this.id_ == opt_to) {
         // handle the event locally, we are intentionally sending to ourself but the event is ignored in onStorage_
@@ -463,7 +471,7 @@ class Peer {
    * @private
    */
   getPingKey_(opt_peerId) {
-    return Peer.getPingKey_(this.group_, opt_peerId || this.id_);
+    return getPingKey(this.group_, opt_peerId || this.id_);
   }
 
   /**
@@ -476,7 +484,7 @@ class Peer {
     if (id === this.id_) {
       return this.pingTimer_ ? this.lastPing_ : null;
     }
-    return Peer.getLastPing_(this.group_, id, this.storage_);
+    return getLastPing(this.group_, id, this.storage_);
   }
 
   /**
@@ -484,7 +492,7 @@ class Peer {
    * @private
    */
   getMasterKey_() {
-    return Peer.getMasterKey_(this.group_);
+    return getMasterKey(this.group_);
   }
 
   /**
@@ -529,7 +537,7 @@ class Peer {
       if (!(master && this.isPeerAlive_(master))) {
         if (master) {
           // he's dead Jim!
-          Peer.cleanupPeer_(this.group_, master, this.storage_);
+          cleanupPeer(this.group_, master, this.storage_);
         }
         this.establishMaster_();
       }
@@ -547,7 +555,7 @@ class Peer {
     for (var i = 0, n = peers.length; i < n; i++) {
       if (!this.isPeerAlive_(peers[i])) {
         // he's dead, Jim!
-        Peer.cleanupPeer_(this.group_, peers[i], this.storage_);
+        cleanupPeer(this.group_, peers[i], this.storage_);
       }
     }
   }
@@ -614,7 +622,7 @@ class Peer {
    * @return {boolean} true if this Peer is master, false otherwise
    */
   isMaster() {
-    return Peer.isMaster(this.getId(), this.getGroup(), this.storage_);
+    return isMaster(this.getId(), this.getGroup(), this.storage_);
   }
 
   /**
@@ -699,7 +707,7 @@ class Peer {
    * @param {string} id The peer ID
    * @param {number} i The index
    * @param {Array} arr The array
-   * @return {os.xt.PeerInfo} The peer info
+   * @return {PeerInfo} The peer info
    * @private
    */
   mapIdToInfo_(id, i, arr) {
@@ -710,7 +718,7 @@ class Peer {
    * This is the exact same thing as getPeers(), but returns full peer info objects.
    *
    * @param {string=} opt_type The optional message type.
-   * @return {Array<os.xt.PeerInfo>} The peer info list
+   * @return {Array<PeerInfo>} The peer info list
    */
   getPeerInfo(opt_type) {
     return this.getPeers(opt_type).map(this.mapIdToInfo_, this);
@@ -757,7 +765,7 @@ class Peer {
    * @private
    */
   cleanup_(opt_e) {
-    Peer.cleanupPeer_(this.group_, this.id_, this.storage_);
+    cleanupPeer(this.group_, this.id_, this.storage_);
     if (this.pingTimer_) {
       this.pingTimer_.stop();
       this.pingTimer_.unlisten(Timer.TICK, this.onPing_, false, this);
@@ -792,17 +800,13 @@ class Peer {
     var msg = JSON.parse(value);
 
     for (var i = 0, n = this.handlers_.length; i < n; i++) {
-      var types = this.handlers_[i].getTypes ? this.handlers_[i].getTypes() : this.handlers_[i]['getTypes']();
+      var types = this.handlers_[i].getTypes();
 
       if (types.indexOf(msg.type) > -1) {
         log.fine(Peer.LOGGER_, 'Found handler for message with type ' + msg.type);
 
         try {
-          if (this.handlers_[i].process) {
-            this.handlers_[i].process(msg.data, msg.type, sender, msg.time);
-          } else {
-            this.handlers_[i]['process'](msg.data, msg.type, sender, msg.time);
-          }
+          this.handlers_[i].process(msg.data, msg.type, sender, msg.time);
           return true;
         } catch (e) {
           log.error(Peer.LOGGER_, 'Error while handling message!', e);
@@ -852,89 +856,6 @@ class Peer {
       this.waitListDelay_.start(nextExpiration - now);
     }
   }
-
-  /**
-   * Check whether the given peer is master.
-   *
-   * @param {!string} peerId the peer ID of interest
-   * @param {!string} group optional group, if peer is not a Peer instance
-   * @param {!Storage} storage the storage to examine
-   * @return {boolean} True if this peer is the master, false otherwise
-   */
-  static isMaster(peerId, group, storage) {
-    return storage.getItem(Peer.getMasterKey_(group)) === peerId;
-  }
-
-  /**
-   * @param {string=} opt_group the peer group of interest; defaults to 'default'
-   * @return {!string} the local storage key of the master peer ID for the given group
-   * @private
-   */
-  static getMasterKey_(opt_group) {
-    var group = opt_group || 'default';
-    return 'xt.' + group + '.master';
-  }
-
-  /**
-   * @param {!string} group the peer group
-   * @param {!string} peerId the peer ID
-   * @return {!string} the storage key for the ping value of the given group and peer ID
-   * @private
-   */
-  static getPingKey_(group, peerId) {
-    return 'xt.' + group + '.' + peerId + '.ping';
-  }
-
-  /**
-   * @param {!string} group the peer group
-   * @param {!string} peerId the peer ID
-   * @param {!Storage} storage the peer communication storage
-   * @return {?number} the millisecond timestamp of the last ping for the given peer, or null if there is no ping value
-   * @private
-   */
-  static getLastPing_(group, peerId, storage) {
-    var pingItem = storage.getItem(Peer.getPingKey_(group, peerId));
-    if (!pingItem) {
-      return null;
-    }
-    return parseInt(pingItem, 10);
-  }
-
-  /**
-   * Cleans up a given group/peer by removing all that peer's information and messages.  If the given peer is master,
-   * this method resets the master state as well.
-   *
-   * @param {!string} group The group
-   * @param {!string} id The peer ID
-   * @param {!Storage} storage
-   * @private
-   */
-  static cleanupPeer_(group, id, storage) {
-    /** @type {string} */ var needle = ['xt', group, id].join('.');
-    /** @type {number} */ var keyCount = storage.length;
-    for (var cursor = keyCount - 1; cursor >= 0; cursor--) {
-      /** @type {?string} */
-      var key = storage.key(cursor);
-      if (key.indexOf(needle) === 0) {
-        storage.removeItem(key);
-      }
-    }
-
-    if (storage.getItem('xt.' + group + '.master') === id) {
-      storage.removeItem('xt.' + group + '.master');
-    }
-  }
-
-  /**
-   * Create send data
-   *
-   * @param {string} type
-   * @param {*} data
-   * @return {!string}
-   */
-  static prepareSendData(type, data) {
-    return JSON.stringify({'type': type, 'data': data, 'time': Date.now()});
-  }
 }
 
 goog.addSingletonGetter(Peer);
@@ -976,76 +897,4 @@ Peer.LOGGER_ = log.getLogger('os.xt.Peer');
  */
 Peer.notThese_ = ['ping', 'title', 'details', 'types'];
 
-
-/**
- * A small structure that represents info about other peers
- */
-class PeerInfo {
-  /**
-   * Constructor.
-   * @param {string} group The group to which the peer belongs
-   * @param {string} id The ID
-   * @param {string=} opt_title The title
-   * @param {string=} opt_details The details
-   * @param {Array<string>=} opt_types The types
-   */
-  constructor(group, id, opt_title, opt_details, opt_types) {
-    /**
-     * The group to which this peer belongs
-     */
-    this.group = group || 'default';
-
-    /**
-     * The ID of the peer
-     * @type {string}
-     */
-    this.id = id || '';
-
-    /**
-     * The title of the peer
-     * @type {string}
-     */
-    this.title = opt_title || '';
-
-    /**
-     * The details of the peer
-     * @type {string}
-     */
-    this.details = opt_details || '';
-
-    /**
-     * The types of messages that the peer supports
-     * @type {Array<string>}
-     */
-    this.types = opt_types || [];
-  }
-
-  /**
-   * Loads the specified peer info from local storage
-   *
-   * @param {!string} group the peer group
-   * @param {!string} id the peer ID
-   * @param {!Storage} storage
-   * @return {os.xt.PeerInfo} the loaded peer info
-   */
-  static load(group, id, storage) {
-    if (!group || !id) {
-      return null;
-    }
-    var ping = Peer.getLastPing_(group, id, storage);
-    if (!ping) {
-      // peer's not ready
-      return null;
-    }
-    var prefix = 'xt.' + group + '.' + id + '.';
-    var types = /** @type {Array<string>} */ (JSON.parse(storage.getItem(prefix + 'types') || '[]'));
-    var title = storage.getItem(prefix + 'title') || '';
-    var details = storage.getItem(prefix + 'details') || '';
-    return new PeerInfo(group, id, title, details, types);
-  }
-}
-
-exports = {
-  Peer,
-  PeerInfo
-};
+exports = Peer;

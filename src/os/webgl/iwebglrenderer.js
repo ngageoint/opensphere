@@ -102,21 +102,18 @@ class IWebGLRenderer {
    * Layers included in the detection can be configured through the `layerFilter` option in `opt_options`.
    *
    * @param {ol.Pixel} pixel Pixel.
-   * @param {function(this: S, (ol.Feature|ol.render.Feature),
-   *     ol.layer.Layer): T} callback Feature callback. The callback will be
-   *     called with two arguments. The first argument is one
-   *     {@link ol.Feature feature} or
+   * @param {function(this: S, (ol.Feature|ol.render.Feature), ol.layer.Layer): T} callback Feature callback.
+   *     The callback will be called with two arguments. The first argument is one {@link ol.Feature feature} or
    *     {@link ol.render.Feature render feature} at the pixel, the second is
    *     the {@link ol.layer.Layer layer} of the feature and will be null for
-   *     unmanaged layers. To stop detection, callback functions can return a
-   *     truthy value.
+   *     unmanaged layers. To stop detection, callback functions can return a truthy value.
    * @param {olx.AtPixelOptions=} opt_options Optional options.
    * @return {T|undefined} Callback result, i.e. the return value of last
    * callback execution, or the first truthy callback return value.
    *
    * @template S,T
    */
-  forEachFeatureAtPixel(pixel, opt_options) {}
+  forEachFeatureAtPixel(pixel, callback, opt_options) {}
 
   /**
    * Indicates if this renderer can show video within tile overlays.
@@ -160,6 +157,24 @@ class IWebGLRenderer {
    * @param {Array<ol.Feature>} features
    */
   setMaxFeatureCount(features) {}
+
+  /**
+   * Get the active terrain provider.
+   * @return {osx.map.TerrainProviderOptions|undefined}
+   */
+  getActiveTerrainProvider() {}
+
+  /**
+   * Set the active terrain provider.
+   * @param {osx.map.TerrainProviderOptions|string} provider The new provider.
+   */
+  setActiveTerrainProvider(provider) {}
+
+  /**
+   * Get the terrain providers supported by this renderer.
+   * @return {!Array<!osx.map.TerrainProviderOptions>}
+   */
+  getSupportedTerrainProviders() {}
 }
 
 exports = IWebGLRenderer;

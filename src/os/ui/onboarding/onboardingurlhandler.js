@@ -1,38 +1,41 @@
-goog.provide('os.ui.onboarding.OnboardingUrlHandler');
-goog.require('os.config.Settings');
-goog.require('os.ui.im.ImportEvent');
-goog.require('os.url.AbstractUrlHandler');
+goog.module('os.ui.onboarding.OnboardingUrlHandler');
+goog.module.declareLegacyNamespace();
 
+const Settings = goog.require('os.config.Settings');
+const AbstractUrlHandler = goog.require('os.url.AbstractUrlHandler');
 
 
 /**
  * Handles URL parameters for onboarding.
- *
- * @param {string=} opt_omarId The ID of the OMAR server this handler handles.
- * @extends {os.url.AbstractUrlHandler}
- * @constructor
  */
-os.ui.onboarding.OnboardingUrlHandler = function(opt_omarId) {
-  os.ui.onboarding.OnboardingUrlHandler.base(this, 'constructor');
-  this.keys = [os.ui.onboarding.OnboardingUrlHandler.KEY];
-};
-goog.inherits(os.ui.onboarding.OnboardingUrlHandler, os.url.AbstractUrlHandler);
+class OnboardingUrlHandler extends AbstractUrlHandler {
+  /**
+   * Constructor.
+   * @param {string=} opt_omarId The ID of the OMAR server this handler handles.
+   */
+  constructor(opt_omarId) {
+    super();
+    this.keys = [OnboardingUrlHandler.KEY];
+  }
+
+  /**
+   * Handles the 'tips' key to either force onboarding on or off.
+   *
+   * @inheritDoc
+   */
+  handleInternal(key, value) {
+    if (key === OnboardingUrlHandler.KEY) {
+      Settings.getInstance().set('onboarding.showOnboarding', value === 'true');
+    }
+  }
+}
 
 
 /**
  * @type {string}
  * @const
  */
-os.ui.onboarding.OnboardingUrlHandler.KEY = 'tips';
+OnboardingUrlHandler.KEY = 'tips';
 
 
-/**
- * Handles the 'tips' key to either force onboarding on or off.
- *
- * @inheritDoc
- */
-os.ui.onboarding.OnboardingUrlHandler.prototype.handleInternal = function(key, value) {
-  if (key === os.ui.onboarding.OnboardingUrlHandler.KEY) {
-    os.settings.set('onboarding.showOnboarding', value === 'true');
-  }
-};
+exports = OnboardingUrlHandler;

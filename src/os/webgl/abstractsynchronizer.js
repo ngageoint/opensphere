@@ -5,6 +5,9 @@ const Disposable = goog.require('goog.Disposable');
 const fn = goog.require('os.fn');
 
 
+const TimelineController = goog.require('os.time.TimelineController');
+
+
 /**
  * Abstract class to synchronize an OpenLayers layer to a WebGL renderer.
  *
@@ -53,7 +56,7 @@ class AbstractWebGLSynchronizer extends Disposable {
      * @type {os.time.TimelineController}
      * @protected
      */
-    this.tlc = os.time.TimelineController.getInstance();
+    this.tlc = TimelineController.getInstance();
   }
 
   /**

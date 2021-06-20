@@ -4,15 +4,16 @@ goog.module.declareLegacyNamespace();
 const Disposable = goog.require('goog.Disposable');
 const asserts = goog.require('goog.asserts');
 const Delay = goog.require('goog.async.Delay');
+const dispose = goog.require('goog.dispose');
 const events = goog.require('ol.events');
+const Layer = goog.require('ol.layer.Layer');
 const dispatcher = goog.require('os.Dispatcher');
+const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
 const ZOrderEventType = goog.require('os.data.ZOrderEventType');
+const LayerEventType = goog.require('os.events.LayerEventType');
 const Group = goog.require('os.layer.Group');
 const SynchronizerManager = goog.require('os.webgl.SynchronizerManager');
-goog.require('os.layer.Image');
-goog.require('os.layer.Tile');
-
 
 goog.requireType('os.webgl.AbstractWebGLSynchronizer');
 
@@ -80,7 +81,7 @@ class AbstractRootSynchronizer extends Disposable {
     this.listenKeys_.forEach(events.unlistenByKey);
     this.listenKeys_.length = 0;
 
-    goog.dispose(this.updateZDelay_);
+    dispose(this.updateZDelay_);
     this.updateZDelay_ = undefined;
 
     this.map = undefined;
@@ -99,8 +100,8 @@ class AbstractRootSynchronizer extends Disposable {
       var group = groups[i];
       if (group instanceof Group) {
         this.listenKeys_.push(events.listen(group, ZOrderEventType.UPDATE, this.onGroupZOrder_, this));
-        this.listenKeys_.push(events.listen(group, os.events.LayerEventType.ADD, this.onLayerAdd_, this));
-        this.listenKeys_.push(events.listen(group, os.events.LayerEventType.REMOVE, this.onLayerRemove_, this));
+        this.listenKeys_.push(events.listen(group, LayerEventType.ADD, this.onLayerAdd_, this));
+        this.listenKeys_.push(events.listen(group, LayerEventType.REMOVE, this.onLayerRemove_, this));
 
         this.synchronizeGroup_(group);
       }
@@ -141,7 +142,7 @@ class AbstractRootSynchronizer extends Disposable {
     var layers = group.getLayers().getArray();
     for (var i = 0, n = layers.length; i < n; i++) {
       var layer = layers[i];
-      if (layer instanceof ol.layer.Layer) {
+      if (layer instanceof Layer) {
         this.synchronizeLayer_(layer);
       }
     }
@@ -240,9 +241,9 @@ class AbstractRootSynchronizer extends Disposable {
   onLayerAdd_(event) {
     if (event && event.layer) {
       var layer = /** @type {os.layer.ILayer} */ (typeof event.layer === 'string' ?
-        os.MapContainer.getInstance().getLayer(event.layer) : event.layer);
+        MapContainer.getInstance().getLayer(event.layer) : event.layer);
 
-      if (layer instanceof ol.layer.Layer) {
+      if (layer instanceof Layer) {
         this.synchronizeLayer_(layer);
 
         if (this.updateZDelay_) {
@@ -261,7 +262,7 @@ class AbstractRootSynchronizer extends Disposable {
   onLayerRemove_(event) {
     if (event && event.layer) {
       var layer = /** @type {os.layer.ILayer} */ (typeof event.layer === 'string' ?
-        os.MapContainer.getInstance().getLayer(event.layer) : event.layer);
+        MapContainer.getInstance().getLayer(event.layer) : event.layer);
 
       if (layer) {
         var id = layer.getId();

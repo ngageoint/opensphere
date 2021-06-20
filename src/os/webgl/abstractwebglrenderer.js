@@ -3,16 +3,19 @@ goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const Promise = goog.require('goog.Promise');
+const log = goog.require('goog.log');
 const dispatcher = goog.require('os.Dispatcher');
 const MapEvent = goog.require('os.MapEvent');
+const osColor = goog.require('os.color');
 const DisplaySetting = goog.require('os.config.DisplaySetting');
 const Settings = goog.require('os.config.Settings');
 const fn = goog.require('os.fn');
 const terrain = goog.require('os.map.terrain');
+const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 const IWebGLRenderer = goog.requireType('os.webgl.IWebGLRenderer');
 
-
-goog.requireType('os.webgl.AbstractRootSynchronizer');
+const AbstractRootSynchronizer = goog.requireType('os.webgl.AbstractRootSynchronizer');
+const IWebGLCamera = goog.requireType('os.webgl.IWebGLCamera');
 
 
 /**
@@ -79,7 +82,7 @@ class AbstractWebGLRenderer extends Disposable {
 
     /**
      * The root WebGL Synchronizer.
-     * @type {os.webgl.AbstractRootSynchronizer|undefined}
+     * @type {AbstractRootSynchronizer|undefined}
      * @protected
      */
     this.rootSynchronizer = undefined;
@@ -221,25 +224,42 @@ class AbstractWebGLRenderer extends Disposable {
 
   /**
    * @abstract
-   * @inheritDoc
+   * @override
+   * @param {ol.Pixel} pixel The pixel.
+   * @return {ol.Coordinate} The coordinate, or null if no coordinate at the given pixel.
    */
   getCoordinateFromPixel(pixel) {}
 
   /**
    * @abstract
-   * @inheritDoc
+   * @override
+   * @param {ol.Coordinate} coord The coordinate.
+   * @param {boolean=} opt_inView If the coordinate must be in the camera view and not occluded by the globe.
+   * @return {ol.Pixel} The pixel, or null if no pixel at the given coordinate.
    */
-  getPixelFromCoordinate(coord) {}
+  getPixelFromCoordinate(coord, opt_inView) {}
 
   /**
    * @abstract
-   * @inheritDoc
+   * @override
+   * @param {ol.Pixel} pixel Pixel.
+   * @param {function(this: S, (ol.Feature|ol.render.Feature), ol.layer.Layer): T} callback Feature callback.
+   *     The callback will be called with two arguments. The first argument is one {@link ol.Feature feature} or
+   *     {@link ol.render.Feature render feature} at the pixel, the second is
+   *     the {@link ol.layer.Layer layer} of the feature and will be null for
+   *     unmanaged layers. To stop detection, callback functions can return a truthy value.
+   * @param {olx.AtPixelOptions=} opt_options Optional options.
+   * @return {T|undefined} Callback result, i.e. the return value of last
+   * callback execution, or the first truthy callback return value.
+   *
+   * @template S,T
    */
-  forEachFeatureAtPixel(pixel, callback) {}
+  forEachFeatureAtPixel(pixel, callback, opt_options) {}
 
   /**
    * @abstract
-   * @inheritDoc
+   * @override
+   * @param {boolean} value If user movement should be enabled.
    */
   toggleMovement(value) {}
 
@@ -263,7 +283,8 @@ class AbstractWebGLRenderer extends Disposable {
 
   /**
    * @abstract
-   * @inheritDoc
+   * @override
+   * @return {IWebGLCamera|undefined}
    */
   getCamera() {}
 
@@ -277,7 +298,7 @@ class AbstractWebGLRenderer extends Disposable {
     switch (event.type) {
       case DisplaySetting.BG_COLOR:
         var color = /** @type {string} */ (event.newVal);
-        if (os.color.isColorString(color)) {
+        if (osColor.isColorString(color)) {
           this.setBGColor(color);
         }
         break;
@@ -358,8 +379,7 @@ class AbstractWebGLRenderer extends Disposable {
   }
 
   /**
-   * Get the active terrain provider.
-   * @return {osx.map.TerrainProviderOptions|undefined}
+   * @inheritDoc
    */
   getActiveTerrainProvider() {
     if (!this.activeTerrain) {
@@ -382,8 +402,7 @@ class AbstractWebGLRenderer extends Disposable {
   }
 
   /**
-   * Set the active terrain provider.
-   * @param {osx.map.TerrainProviderOptions|string} provider The new provider.
+   * @inheritDoc
    */
   setActiveTerrainProvider(provider) {
     const providers = this.getSupportedTerrainProviders();
@@ -402,8 +421,7 @@ class AbstractWebGLRenderer extends Disposable {
   }
 
   /**
-   * Get the terrain providers supported by this renderer.
-   * @return {!Array<!osx.map.TerrainProviderOptions>}
+   * @inheritDoc
    */
   getSupportedTerrainProviders() {
     return terrain.getTerrainProviders()
@@ -447,7 +465,7 @@ class AbstractWebGLRenderer extends Disposable {
    */
   getAltitudeModes() {
     return [
-      os.webgl.AltitudeMode.ABSOLUTE
+      AltitudeMode.ABSOLUTE
     ];
   }
 
@@ -468,9 +486,7 @@ class AbstractWebGLRenderer extends Disposable {
    * @inheritDoc
    */
   getMaxFeatureCount() {
-    return (
-      /** @type {number} */ Settings.getInstance().get(this.maxFeaturesKey, 150000)
-    );
+    return /** @type {number} */ (Settings.getInstance().get(this.maxFeaturesKey, 150000));
   }
 
   /**
@@ -488,7 +504,7 @@ class AbstractWebGLRenderer extends Disposable {
  * @private
  * @const
  */
-AbstractWebGLRenderer.LOGGER_ = goog.log.getLogger('os.webgl.AbstractWebGLRenderer');
+AbstractWebGLRenderer.LOGGER_ = log.getLogger('os.webgl.AbstractWebGLRenderer');
 
 
 /**

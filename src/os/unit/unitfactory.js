@@ -1,6 +1,8 @@
 goog.module('os.unit.UnitFactory');
 goog.module.declareLegacyNamespace();
 
+const os = goog.require('os');
+
 const EnglishDistanceUnits = goog.require('os.unit.EnglishDistanceUnits');
 const FeetUnits = goog.require('os.unit.FeetUnits');
 const MetricUnits = goog.require('os.unit.MetricUnits');
@@ -8,6 +10,8 @@ const MileUnits = goog.require('os.unit.MileUnits');
 const NauticalMileUnits = goog.require('os.unit.NauticalMileUnits');
 const NauticalUnits = goog.require('os.unit.NauticalUnits');
 const YardUnits = goog.require('os.unit.YardUnits');
+
+const IUnit = goog.requireType('os.unit.IUnit');
 
 
 /**
@@ -49,7 +53,7 @@ class UnitFactory {
    */
   constructor() {
     /**
-     * @type {Object}
+     * @type {!Object<?string, Object<?string, IUnit>>}
      * @private
      */
     this.systems_ = {};
@@ -99,10 +103,10 @@ class UnitFactory {
    *
    * @param {?string} system
    * @param {?string} type
-   * @return {?os.unit.IUnit}
+   * @return {?IUnit}
    */
   getUnit(system, type) {
-    var sys = /** @type {os.unit.IUnit} */ (this.systems_[system]);
+    var sys = /** @type {Object<?string, IUnit>} */ (this.systems_[system]);
     return sys ? sys[type] : null;
   }
 
@@ -112,13 +116,13 @@ class UnitFactory {
    * @return {Array}
    */
   getSystems() {
-    return Object.keys(this.systems_ ? this.systems_ : {});
+    return Object.keys(this.systems_);
   }
 
   /**
    * Retrieve all of the fully defined systems in the application ('english', 'metric', 'nautical', etc)
    *
-   * @return {Object}
+   * @return {!Object<?string, Object<?string, IUnit>>}
    */
   getFullSystems() {
     return this.systems_;

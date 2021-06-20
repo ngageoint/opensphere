@@ -1,6 +1,8 @@
 goog.module('os.unit.BaseUnit');
 goog.module.declareLegacyNamespace();
 
+const googArray = goog.require('goog.array');
+
 const IMultiplier = goog.requireType('os.unit.IMultiplier');
 const IUnit = goog.requireType('os.unit.IUnit');
 
@@ -27,7 +29,6 @@ class BaseUnit {
 
     /**
      * @type {Array<IMultiplier>}
-     * @protected
      */
     this.bestFitCandidates = [];
 
@@ -108,31 +109,6 @@ class BaseUnit {
   }
 
   /**
-   * @inheritDoc
-   */
-  getBestFitMultiplier(value) {
-    var um = os.unit.UnitManager.getInstance();
-    var bestMult;
-    var baseMult = um.getBaseUnits(this.getUnitType());
-    if (value == 0.0) {
-      return baseMult.getDefaultMultiplier();
-    }
-    var size = this.bestFitCandidates.length;
-    if (baseMult) {
-      var baseMultKey = baseMult.getDefaultMultiplier().getName();
-      for (var i = 0; i < size; i++) {
-        var testValue = Math.abs(um.convert(this.getUnitType(), value, baseMultKey, um.getBaseSystem(),
-            this.bestFitCandidates[i].getName(), this.getSystem()));
-        if (testValue >= this.bestFitCandidates[i].getThreshold()) {
-          bestMult = this.bestFitCandidates[i];
-          break;
-        }
-      }
-    }
-    return (bestMult != null) ? bestMult : size > 0 ? this.bestFitCandidates[size - 1] : null; // fallback to smallest
-  }
-
-  /**
    * @param {IMultiplier} element
    * @param {number} index
    * @param {Array} arr
@@ -162,7 +138,7 @@ class BaseUnit {
    */
   initBestFitCandidates() {
     this.bestFitCandidates = this.multipliers.filter(this.getIsBestFitCandidate);
-    goog.array.sort(this.bestFitCandidates, function(multA, multB) { // sort from largest to smallest
+    googArray.sort(this.bestFitCandidates, function(multA, multB) { // sort from largest to smallest
       return multA.getMultiplier() < multB.getMultiplier() ? 1 : -1;
     });
   }

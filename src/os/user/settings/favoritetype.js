@@ -1,6 +1,7 @@
 goog.module('os.user.settings.FavoriteType');
 goog.module.declareLegacyNamespace();
 
+
 /**
  * @enum {string}
  */

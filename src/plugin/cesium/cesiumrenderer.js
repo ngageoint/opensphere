@@ -8,7 +8,6 @@ const {clamp} = goog.require('goog.math');
 const userAgent = goog.require('goog.userAgent');
 const ViewHint = goog.require('ol.ViewHint');
 const OLCesium = goog.require('olcs.OLCesium');
-
 const dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
@@ -22,7 +21,6 @@ const terrain = goog.require('os.map.terrain');
 const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');
 const AltitudeMode = goog.require('os.webgl.AltitudeMode');
 const SynchronizerManager = goog.require('os.webgl.SynchronizerManager');
-
 const {
   DEFAULT_FOG_DENSITY,
   ID,
@@ -415,7 +413,7 @@ class CesiumRenderer extends AbstractWebGLRenderer {
       }
     }
 
-    return null;
+    return undefined;
   }
 
   /**

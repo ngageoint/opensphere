@@ -4,8 +4,6 @@ goog.module.declareLegacyNamespace();
 const Disposable = goog.require('goog.Disposable');
 
 
-goog.require('goog.Uri');
-
 /**
  * Abstract class for URL parameter handling. These classes are designed to handle URLs of the form:
  *

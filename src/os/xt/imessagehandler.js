@@ -6,7 +6,6 @@ goog.module.declareLegacyNamespace();
  * The message handler interface
  *
  * @interface
- * @export
  */
 class IMessageHandler {
   /**

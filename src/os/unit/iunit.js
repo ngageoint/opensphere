@@ -11,6 +11,17 @@ const IMultiplier = goog.requireType('os.unit.IMultiplier');
  */
 class IUnit {
   /**
+   * Constructor.
+   */
+  constructor() {
+    /**
+     * Array of best fit multiplier candidates.
+     * @type {Array<IMultiplier>}
+     */
+    this.bestFitCandidates;
+  }
+
+  /**
    * The human-readable name of this unit
    * @return {?string}
    */
@@ -62,14 +73,6 @@ class IUnit {
    * @return {IMultiplier}
    */
   getMultiplier(name) {}
-
-  /**
-   * Calculate the best mutliplier of this unit to use for the given value.  The <code>value</code> is expected
-   * to be specified in the application's base unit's default multiplier ('meter')
-   * @param {number} value - the value for which to calculate a best fit multiplier
-   * @return {IMultiplier}
-   */
-  getBestFitMultiplier(value) {}
 
   /**
    * Format a suitable label for the given multiplier

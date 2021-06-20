@@ -9,6 +9,7 @@ const Tile = goog.require('os.layer.Tile');
 const Vector = goog.require('os.layer.Vector');
 const VectorTile = goog.require('os.layer.VectorTile');
 const AbstractRootSynchronizer = goog.require('os.webgl.AbstractRootSynchronizer');
+const TileSynchronizer = goog.require('plugin.cesium.sync.TileSynchronizer');
 
 const PluggableMap = goog.requireType('ol.PluggableMap');
 const OLLayer = goog.requireType('ol.layer.Layer');
@@ -119,7 +120,7 @@ class RootSynchronizer extends AbstractRootSynchronizer {
               layer instanceof VectorTile) {
             var layerId = /** @type {ILayer} */ (layer).getId();
             var synchronizer = this.synchronizers[layerId];
-            if (synchronizer) {
+            if (synchronizer instanceof TileSynchronizer) {
               startIndex = synchronizer.getLastIndex() + 1;
               break;
             }

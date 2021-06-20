@@ -1,6 +1,7 @@
 goog.module('os.webgl.AltitudeMode');
 goog.module.declareLegacyNamespace();
 
+
 /**
  * Represents altitude value relative to terrain.
  * @enum {string}

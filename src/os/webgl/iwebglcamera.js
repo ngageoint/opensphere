@@ -138,18 +138,6 @@ class IWebGLCamera {
    * @param {number=} opt_value The angle, in radians.
    */
   twistRight(opt_value) {}
-
-  /**
-   * Persist the camera state.
-   * @override
-   */
-  persist() {}
-
-  /**
-   * Restore the camera state.
-   * @override
-   */
-  restore() {}
 }
 
 exports = IWebGLCamera;

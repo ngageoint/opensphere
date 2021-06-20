@@ -1,11 +1,9 @@
 goog.module('os.webgl.SynchronizerManager');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.layer.SynchronizerType');
-
+const log = goog.require('goog.log');
 
 goog.requireType('os.webgl.AbstractWebGLSynchronizer');
-
 
 
 /**
@@ -36,7 +34,7 @@ class SynchronizerManager {
       this.synchronizers_[type] = synchronizer;
     } else {
       // log it as an error and don't override the existing synchronizer
-      goog.log.error(SynchronizerManager.LOGGER_, 'A synchronizer of that type is already registered!');
+      log.error(SynchronizerManager.LOGGER_, 'A synchronizer of that type is already registered!');
     }
   }
 
@@ -60,7 +58,7 @@ goog.addSingletonGetter(SynchronizerManager);
  * @const
  * @private
  */
-SynchronizerManager.LOGGER_ = goog.log.getLogger('os.webgl.SynchronizerManager');
+SynchronizerManager.LOGGER_ = log.getLogger('os.webgl.SynchronizerManager');
 
 
 exports = SynchronizerManager;
