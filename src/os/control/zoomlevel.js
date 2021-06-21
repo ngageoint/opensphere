@@ -4,7 +4,9 @@ goog.module.declareLegacyNamespace();
 const dom = goog.require('goog.dom');
 const TagName = goog.require('goog.dom.TagName');
 const safe = goog.require('goog.dom.safe');
+const GoogEventType = goog.require('goog.events.EventType');
 const SafeHtml = goog.require('goog.html.SafeHtml');
+const style = goog.require('goog.style');
 const Control = goog.require('ol.control.Control');
 const css = goog.require('ol.css');
 const osMap = goog.require('os.map');
@@ -91,7 +93,7 @@ class ZoomLevel extends Control {
     this.setAltitudeUnits(units);
 
     // listen for unit manager changes
-    um.listen(goog.events.EventType.PROPERTYCHANGE, this.onUnitsChange, false, this);
+    um.listen(GoogEventType.PROPERTYCHANGE, this.onUnitsChange, false, this);
   }
 
   /**
@@ -99,7 +101,7 @@ class ZoomLevel extends Control {
    */
   disposeInternal() {
     super.disposeInternal();
-    UnitManager.getInstance().unlisten(goog.events.EventType.PROPERTYCHANGE, this.onUnitsChange, false, this);
+    UnitManager.getInstance().unlisten(GoogEventType.PROPERTYCHANGE, this.onUnitsChange, false, this);
   }
 
   /**
@@ -152,7 +154,7 @@ class ZoomLevel extends Control {
    * @protected
    */
   hideAltitude() {
-    goog.style.setElementShown(this.altElement_, false);
+    style.setElementShown(this.altElement_, false);
     this.lastAltitudeVal_ = undefined;
   }
 
@@ -162,7 +164,7 @@ class ZoomLevel extends Control {
    * @protected
    */
   hideZoom() {
-    goog.style.setElementShown(this.zoomElement_, false);
+    style.setElementShown(this.zoomElement_, false);
     this.lastZoomVal_ = undefined;
   }
 
@@ -224,7 +226,7 @@ class ZoomLevel extends Control {
       if (this.altElement_) {
         safe.setInnerHtml(this.altElement_, SafeHtml.htmlEscape(
             'Altitude: ' + um.formatToBestFit('distance', altitude, 'm', um.getBaseSystem(), 3)));
-        goog.style.setElementShown(this.altElement_, true);
+        style.setElementShown(this.altElement_, true);
       }
     }
   }
@@ -273,7 +275,7 @@ class ZoomLevel extends Control {
       } else {
         safe.setInnerHtml(/** @type {!Element} */ (this.zoomElement_),
             SafeHtml.htmlEscape('Zoom: ' + zoom.toFixed(1)));
-        goog.style.setElementShown(this.zoomElement_, true);
+        style.setElementShown(this.zoomElement_, true);
       }
     }
   }

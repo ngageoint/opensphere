@@ -2,14 +2,15 @@ goog.module('os.control.MapMode');
 goog.module.declareLegacyNamespace();
 
 const dom = goog.require('goog.dom');
+const GoogEventType = goog.require('goog.events.EventType');
 const Control = goog.require('ol.control.Control');
 const css = goog.require('ol.css');
 const events = goog.require('ol.events');
 const EventType = goog.require('ol.events.EventType');
 const dispatcher = goog.require('os.Dispatcher');
+const MapChange = goog.require('os.MapChange');
+const osActionEventType = goog.require('os.action.EventType');
 const mapInstance = goog.require('os.map.instance');
-
-const ol = goog.requireType('ol');
 
 
 /**
@@ -73,14 +74,14 @@ class MapMode extends Control {
     events.listen(this.button, EventType.CLICK, MapMode.prototype.handleClick_, this);
 
     this.updateContent_();
-    mapInstance.getMapContainer().listen(goog.events.EventType.PROPERTYCHANGE, this.onMapChange_, false, this);
+    mapInstance.getMapContainer().listen(GoogEventType.PROPERTYCHANGE, this.onMapChange_, false, this);
   }
 
   /**
    * @inheritDoc
    */
   disposeInternal() {
-    mapInstance.getMapContainer().unlisten(goog.events.EventType.PROPERTYCHANGE, this.onMapChange_, false, this);
+    mapInstance.getMapContainer().unlisten(GoogEventType.PROPERTYCHANGE, this.onMapChange_, false, this);
 
     if (this.button) {
       events.unlisten(this.button, EventType.CLICK, MapMode.prototype.handleClick_, this);
@@ -99,7 +100,7 @@ class MapMode extends Control {
    */
   handleClick_(event) {
     event.preventDefault();
-    dispatcher.getInstance().dispatchEvent(os.action.EventType.TOGGLE_VIEW);
+    dispatcher.getInstance().dispatchEvent(osActionEventType.TOGGLE_VIEW);
   }
 
   /**
@@ -110,7 +111,7 @@ class MapMode extends Control {
    */
   onMapChange_(event) {
     var p = event.getProperty();
-    if (p === os.MapChange.INIT3D || p === os.MapChange.VIEW3D) {
+    if (p === MapChange.INIT3D || p === MapChange.VIEW3D) {
       this.updateContent_();
     }
   }

@@ -1,7 +1,9 @@
 goog.module('os.control.Attribution');
 goog.module.declareLegacyNamespace();
 
+const dom = goog.require('goog.dom');
 const SafeHtml = goog.require('goog.html.SafeHtml');
+const olArray = goog.require('ol.array');
 const OLAttribution = goog.require('ol.control.Attribution');
 
 
@@ -87,12 +89,12 @@ class Attribution extends OLAttribution {
     }
 
     var attributions = this.getSourceAttributions_(frameState);
-    if (ol.array.equals(attributions, this.renderedAttributions_)) {
+    if (olArray.equals(attributions, this.renderedAttributions_)) {
       return;
     }
 
     // remove everything
-    goog.dom.removeChildren(this.ulElement_);
+    dom.removeChildren(this.ulElement_);
 
     // add the label
     var label;
@@ -102,12 +104,12 @@ class Attribution extends OLAttribution {
       label = SafeHtml.create('li', undefined, 'Source:');
     }
 
-    goog.dom.appendChild(this.ulElement_, goog.dom.safeHtmlToNode(label));
+    dom.appendChild(this.ulElement_, dom.safeHtmlToNode(label));
 
     // append the attributions
     for (var i = 0, ii = attributions.length; i < ii; ++i) {
       label = SafeHtml.create('li', undefined, attributions[i]);
-      goog.dom.appendChild(this.ulElement_, goog.dom.safeHtmlToNode(label));
+      dom.appendChild(this.ulElement_, dom.safeHtmlToNode(label));
     }
 
     var visible = attributions.length > 0;

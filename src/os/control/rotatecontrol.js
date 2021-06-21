@@ -1,7 +1,9 @@
 goog.module('os.control.Rotate');
 goog.module.declareLegacyNamespace();
 
+const classlist = goog.require('goog.dom.classlist');
 const OLRotate = goog.require('ol.control.Rotate');
+const css = goog.require('ol.css');
 const mapInstance = goog.require('os.map.instance');
 
 
@@ -66,8 +68,8 @@ const render = function(mapEvent) {
   if (rotation != this.rotation_) {
     var transform = 'rotate(' + rotation + 'rad)';
     if (this.autoHide_) {
-      goog.dom.classlist.enable(
-          this.element, ol.css.CLASS_HIDDEN, rotation === 0);
+      classlist.enable(
+          this.element, css.CLASS_HIDDEN, rotation === 0);
     }
     this.label_.style.msTransform = transform;
     this.label_.style.webkitTransform = transform;

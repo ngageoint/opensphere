@@ -10,6 +10,7 @@ const ScaleLine = goog.require('os.control.ScaleLine');
 const Zoom = goog.require('os.control.Zoom');
 const ZoomLevel = goog.require('os.control.ZoomLevel');
 const MousePosition = goog.require('os.ol.control.MousePosition');
+const osProj = goog.require('os.proj');
 
 
 /**
@@ -29,7 +30,7 @@ const getControls = function() {
   var mousePositionEle = document.getElementById('mouse-position');
   if (mousePositionEle) {
     var mousePositionControl = new MousePosition({
-      projection: os.proj.EPSG4326,
+      projection: osProj.EPSG4326,
       className: 'ol-mouse-position',
       target: mousePositionEle,
       undefinedHTML: '&nbsp;',

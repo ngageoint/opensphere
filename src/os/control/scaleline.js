@@ -2,12 +2,17 @@ goog.module('os.control.ScaleLine');
 goog.module.declareLegacyNamespace();
 
 const safe = goog.require('goog.dom.safe');
+const GoogEventType = goog.require('goog.events.EventType');
 const SafeHtml = goog.require('goog.html.SafeHtml');
+const asserts = goog.require('ol.asserts');
 const OLScaleLine = goog.require('ol.control.ScaleLine');
 const ScaleLineUnits = goog.require('ol.control.ScaleLineUnits');
 const olProj = goog.require('ol.proj');
 const osMap = goog.require('os.map');
 const {UnitSystem} = goog.require('os.unit');
+const UnitManager = goog.require('os.unit.UnitManager');
+
+const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**
@@ -21,23 +26,23 @@ class ScaleLine extends OLScaleLine {
     super(opt_options);
 
     // initialize from unit manager
-    var um = os.unit.UnitManager.getInstance();
+    var um = UnitManager.getInstance();
     this.setUnits(/** @type {ScaleLineUnits<string>} */ (um.getSelectedSystem()));
 
     // listen for unit manager changes
-    um.listen(goog.events.EventType.PROPERTYCHANGE, this.onUnitsChange, false, this);
+    um.listen(GoogEventType.PROPERTYCHANGE, this.onUnitsChange, false, this);
   }
 
   /**
    * @inheritDoc
    */
   disposeInternal() {
-    os.unit.UnitManager.getInstance().unlisten(goog.events.EventType.PROPERTYCHANGE, this.onUnitsChange, false, this);
+    UnitManager.getInstance().unlisten(GoogEventType.PROPERTYCHANGE, this.onUnitsChange, false, this);
     super.disposeInternal();
   }
 
   /**
-   * @param {os.events.PropertyChangeEvent} event
+   * @param {PropertyChangeEvent} event
    * @protected
    */
   onUnitsChange(event) {
@@ -158,7 +163,7 @@ class ScaleLine extends OLScaleLine {
       suffix = 'ft';
       pointResolution /= 0.30480061;
     } else {
-      ol.asserts.assert(false, 33); // Invalid units
+      asserts.assert(false, 33); // Invalid units
     }
 
     var i = 3 * Math.floor(Math.log(this.minWidth_ * pointResolution) / Math.log(10));
