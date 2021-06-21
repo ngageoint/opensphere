@@ -1,13 +1,14 @@
-goog.provide('os.array');
+goog.module('os.array');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.array');
-goog.require('goog.math');
+const googArray = goog.require('goog.array');
+const math = goog.require('goog.math');
 
 
 /**
  * Inserts a value into a sorted array. The array is not modified if the value is already present.
  *
- * This modifies {@link goog.array.binaryInsert} to return the insertion index instead of a boolean.
+ * This modifies {@link googArray.binaryInsert} to return the insertion index instead of a boolean.
  *
  * @param {IArrayLike<VALUE>} array The array to modify.
  * @param {VALUE} value The object to insert.
@@ -18,24 +19,23 @@ goog.require('goog.math');
  * @return {number} The insertion index, or -1 if the value was already in the array.
  * @template VALUE
  */
-os.array.binaryInsert = function(array, value, opt_compareFn) {
-  var index = goog.array.binarySearch(array, value, opt_compareFn);
+const binaryInsert = function(array, value, opt_compareFn) {
+  var index = googArray.binarySearch(array, value, opt_compareFn);
   if (index < 0) {
     index = -index - 1;
-    goog.array.insertAt(array, value, index);
+    googArray.insertAt(array, value, index);
     return index;
   }
 
   return -1;
 };
 
-
 /**
  * Clear an array.
  *
  * @param {IArrayLike<?>} arr The array or array-like object.
  */
-os.array.clear = function(arr) {
+const clear = function(arr) {
   if (Array.isArray(arr)) {
     arr.length = 0;
   } else if (arr && arr.length != null) {
@@ -44,7 +44,6 @@ os.array.clear = function(arr) {
     }
   }
 };
-
 
 /**
  * Calls a function for each element in an array.
@@ -55,12 +54,11 @@ os.array.clear = function(arr) {
  * @param {S=} opt_obj The object to be used as the value of 'this' within f.
  * @template T,S
  */
-os.array.forEach = function(arr, f, opt_obj) {
+const forEach = function(arr, f, opt_obj) {
   if (arr && arr.length != null) {
     Array.prototype.forEach.call(arr, f, opt_obj);
   }
 };
-
 
 /**
  * Sort items by the specified field in ascending order. Inject the field using bind or goog.partial.
@@ -71,10 +69,9 @@ os.array.forEach = function(arr, f, opt_obj) {
  * @return {number}
  * @template VALUE
  */
-os.array.sortByField = function(field, a, b) {
-  return goog.array.defaultCompare(a[field], b[field]);
+const sortByField = function(field, a, b) {
+  return googArray.defaultCompare(a[field], b[field]);
 };
-
 
 /**
  * Sort items by the specified field in descending order. Inject the field using bind or goog.partial.
@@ -85,10 +82,9 @@ os.array.sortByField = function(field, a, b) {
  * @return {number}
  * @template VALUE
  */
-os.array.sortByFieldDesc = function(field, a, b) {
-  return goog.array.defaultCompare(b[field], a[field]);
+const sortByFieldDesc = function(field, a, b) {
+  return googArray.defaultCompare(b[field], a[field]);
 };
-
 
 /**
  * Calls a function for each element in an array. Skips holes in the array, does nothing if the array is null/undefined.
@@ -100,8 +96,7 @@ os.array.sortByFieldDesc = function(field, a, b) {
  * @template T,S
  * @deprecated Please use {@link os.array.forEach} instead.
  */
-os.array.forEachSafe = os.array.forEach;
-
+const forEachSafe = forEach;
 
 /**
  * Copies array elements from a source array to a destination array.
@@ -112,12 +107,11 @@ os.array.forEachSafe = os.array.forEach;
  * @param {number} destPos Destination start index
  * @param {number} length Number of elements to copy
  */
-os.array.arrayCopy = function(src, srcPos, dest, destPos, length) {
+const arrayCopy = function(src, srcPos, dest, destPos, length) {
   for (var i = srcPos; i < srcPos + length; i += 1) {
     dest[destPos++] = src[i];
   }
 };
-
 
 /**
  * Copies array elements from a source array to a destination array.
@@ -126,7 +120,7 @@ os.array.arrayCopy = function(src, srcPos, dest, destPos, length) {
  * @param {Array} arr2 first array to check interesection
  * @return {Array} an array with only the items present that are in both arrays
  */
-os.array.intersection = function(arr1, arr2) {
+const intersection = function(arr1, arr2) {
   var t;
   // Optimization so that indexOf loops over smaller array
   if (arr1.length > arr2.length) {
@@ -139,9 +133,8 @@ os.array.intersection = function(arr1, arr2) {
   });
 };
 
-
 /**
- * Based on the goog.array.removeDuplicates method. This function discovers all the duplicate entries in an array
+ * Based on the googArray.removeDuplicates method. This function discovers all the duplicate entries in an array
  * and returns them.
  *
  * @param {Array<T>} arr The array to search for duplicates
@@ -149,7 +142,7 @@ os.array.intersection = function(arr1, arr2) {
  * @return {Array<T>}
  * @template T
  */
-os.array.findDuplicates = function(arr, opt_hashFn) {
+const findDuplicates = function(arr, opt_hashFn) {
   var returnArray = [];
   var defaultHashFn = function(item) {
     return goog.isObject(current) ? 'o' + goog.getUid(current) :
@@ -174,9 +167,8 @@ os.array.findDuplicates = function(arr, opt_hashFn) {
   return returnArray;
 };
 
-
 /**
- * Based on the goog.array.removeDuplicates method but will also work when the items you are comparing are arrays,
+ * Based on the googArray.removeDuplicates method but will also work when the items you are comparing are arrays,
  * which is really common in our code. Also returns true if duplicate was found, for convenience
  *
  * @param {Array<T>} arr The array to search for duplicates
@@ -185,9 +177,9 @@ os.array.findDuplicates = function(arr, opt_hashFn) {
  * @return {boolean} returns true if a duplicate was found
  * @template T
  */
-os.array.removeDuplicates = function(arr, opt_rv, opt_hashFn) {
+const removeDuplicates = function(arr, opt_rv, opt_hashFn) {
   var returnArray = opt_rv || arr;
-  // this default function is different from the goog.array one
+  // this default function is different from the googArray one
   // it checks if an object is also an array before just checking the uid, if it is an array then allow comparison of
   // the stringified array
   var defaultHashFn = function(item) {
@@ -218,7 +210,6 @@ os.array.removeDuplicates = function(arr, opt_rv, opt_hashFn) {
   return duplicateFound;
 };
 
-
 /**
  * @typedef {{
  *  data: Array,
@@ -226,8 +217,7 @@ os.array.removeDuplicates = function(arr, opt_rv, opt_hashFn) {
  *  indexer: function(Object, boolean):(string|number)
  * }}
  */
-os.array.JoinSet;
-
+let JoinSet;
 
 /**
  * @typedef {{
@@ -235,52 +225,49 @@ os.array.JoinSet;
  *  key: ?(string|number)
  * }}
  */
-os.array.JoinSubset;
-
+let JoinSubset;
 
 /**
  * @typedef {Object<string|number, Array<Object>>}
  */
-os.array.JoinIndex;
-
+let JoinIndex;
 
 /**
- * Sorts {@link os.array.JoinSet}'s by their crossProduct.
+ * Sorts {@link JoinSet}'s by their crossProduct.
  *
- * @param {os.array.JoinSet} a
- * @param {os.array.JoinSet} b
+ * @param {JoinSet} a
+ * @param {JoinSet} b
  * @return {number}
  */
-os.array.crossProductSort = function(a, b) {
-  return -1 * goog.array.defaultCompare(a.crossProduct, b.crossProduct);
+const crossProductSort = function(a, b) {
+  return -1 * googArray.defaultCompare(a.crossProduct, b.crossProduct);
 };
 
-
 /**
- * @param {Array<os.array.JoinSet>} sets An array of sets. Only one set with a <code>crossProduct</code>
+ * @param {Array<JoinSet>} sets An array of sets. Only one set with a <code>crossProduct</code>
  *  of <code>true</code> is supported.
  * @param {function(Object, Object):Object} copyFunction copy(from, to) implementation for the data in sets
  * @throws {Error} If two sets with <code>crossProduct = true</code> are given
  * @return {Array}
  */
-os.array.join = function(sets, copyFunction) {
+const join = function(sets, copyFunction) {
   var joined = [];
-  sets = sets.sort(os.array.crossProductSort);
+  sets = sets.sort(crossProductSort);
 
   var index = sets.reduce(
       /**
-       * @param {os.array.JoinIndex} index The index to populate
-       * @param {os.array.JoinSet} set The current join set
+       * @param {JoinIndex} index The index to populate
+       * @param {JoinSet} set The current join set
        * @param {number} i The current index
-       * @return {os.array.JoinIndex} The index
+       * @return {JoinIndex} The index
        * @private
        */
       function(index, set, i) {
         return set.data.reduce(
             /**
-             * @param {os.array.JoinIndex} index The index to populate
+             * @param {JoinIndex} index The index to populate
              * @param {Object} item The data item
-             * @return {os.array.JoinIndex} The index
+             * @return {JoinIndex} The index
              */
             function(index, item) {
               var indexValue = set.indexer(item, set.crossProduct);
@@ -316,13 +303,12 @@ os.array.join = function(sets, copyFunction) {
   return joined;
 };
 
-
 /**
  * Searches a flattened 2-dimensional array for the specified target using the binary search algorithm. The array is
  * assumed to contain equal-length groups of values, and the target is searched using a group length (stride) and offset
  * within each group.
  *
- * If no opt_compareFn is specified, elements are compared using `goog.array.defaultCompare`, which compares the
+ * If no opt_compareFn is specified, elements are compared using `googArray.defaultCompare`, which compares the
  * elements using the built in < and > operators. This will produce the expected behavior for homogeneous arrays of
  * String(s) and Number(s).
  *
@@ -346,11 +332,11 @@ os.array.join = function(sets, copyFunction) {
  *                  >= 0 iff target is found, and the return value will be the first index of the found <b>group</b>.
  * @template TARGET, VALUE
  */
-os.array.binaryStrideSearch = function(arr, target, stride, offset, opt_compareFn) {
-  var compareFn = opt_compareFn || goog.array.defaultCompare;
+const binaryStrideSearch = function(arr, target, stride, offset, opt_compareFn) {
+  var compareFn = opt_compareFn || googArray.defaultCompare;
 
   // ensure the offset is within the group bounds
-  offset = goog.math.clamp(offset, 0, stride - 1);
+  offset = math.clamp(offset, 0, stride - 1);
 
   var left = 0; // inclusive
   var right = arr.length; // exclusive
@@ -376,4 +362,23 @@ os.array.binaryStrideSearch = function(arr, target, stride, offset, opt_compareF
   // left is the index if found, or the insertion point otherwise.
   // ~left is a shorthand for -left - 1.
   return found ? left : ~left;
+};
+
+exports = {
+  binaryInsert,
+  clear,
+  forEach,
+  sortByField,
+  sortByFieldDesc,
+  forEachSafe,
+  arrayCopy,
+  intersection,
+  findDuplicates,
+  removeDuplicates,
+  crossProductSort,
+  join,
+  binaryStrideSearch,
+  JoinSet,
+  JoinSubset,
+  JoinIndex
 };
