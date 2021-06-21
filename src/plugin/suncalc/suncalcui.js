@@ -239,7 +239,7 @@ class Controller {
    */
   formatTime(t) {
     if (typeof t === 'number') {
-      return moment(t + time.timeOffset).utc().format(time.TIME_FORMATS[7]);
+      return moment(t + time.getTimeOffset()).utc().format(time.TIME_FORMATS[7]);
     }
 
     return t;
@@ -252,8 +252,8 @@ class Controller {
    */
   formatDate(t) {
     if (t !== undefined) {
-      return moment(t + time.timeOffset).utc().format(time.DATETIME_FORMATS[20]) +
-          (time.timeOffset !== 0 ? ' UTC' : '') + time.timeOffsetLabel;
+      return moment(t + time.getTimeOffset()).utc().format(time.DATETIME_FORMATS[20]) +
+          (time.getTimeOffset() !== 0 ? ' UTC' : '') + time.getTimeOffsetLabel();
     }
 
     return '';

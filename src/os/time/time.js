@@ -3,43 +3,23 @@
  *
  * These time utilities depend critically on the presence of at least version 2.8.3 of moment.js
  */
-goog.provide('os.time');
-goog.provide('os.time.Duration');
+goog.module('os.time');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.asserts');
-goog.require('goog.date.DateTime');
-goog.require('goog.date.UtcDateTime');
-goog.require('goog.events.EventType');
-goog.require('goog.i18n.DateTimeFormat');
-goog.require('os.config.Settings');
-goog.require('os.time.TimeRange');
-goog.require('os.time.TimeRangePresets');
-
-
-/**
- * @enum {string}
- */
-os.time.Duration = {
-  HOURS: 'hours',
-  DAY: 'day',
-  WEEK: 'week',
-  MONTH: 'month',
-  YEAR: 'year',
-  LAST24HOURS: 'last 24 hours',
-  LAST48HOURS: 'last 48 hours',
-  LAST7DAYS: 'last 7 days',
-  LAST14DAYS: 'last 14 days',
-  LAST30DAYS: 'last 30 days',
-  CUSTOM: 'custom'
-};
+const googArray = goog.require('goog.array');
+const asserts = goog.require('goog.asserts');
+const UtcDateTime = goog.require('goog.date.UtcDateTime');
+const DateTimeFormat = goog.require('goog.i18n.DateTimeFormat');
+const Settings = goog.require('os.config.Settings');
+const VariableReplacer = goog.require('os.net.VariableReplacer');
+const Duration = goog.require('os.time.Duration');
 
 
 /**
  * Preconfigured date formats.
  * @type {!Array<string>}
- * @const
  */
-os.time.DATE_FORMATS = [
+const DATE_FORMATS = [
   'YYYY-MM-DD',
   'YYYY/MM/DD',
   'YYYYMMDD',
@@ -53,23 +33,20 @@ os.time.DATE_FORMATS = [
   'DDMMYYYY'
 ];
 
-
 /**
  * @type {!Object<string, RegExp>}
  */
-os.time.DATE_REGEXES = {
+const DATE_REGEXES = {
   'instant': (/((up|start|begin).*)?(day|date|doi)/i),
   'start': (/((up|start|begin).*)?(day|date|doi)/i),
   'end': (/(down|stop|end).*(day|date|doi)/i)
 };
 
-
 /**
  * Preconfigured date/time formats.
  * @type {!Array<string>}
- * @const
  */
-os.time.DATETIME_FORMATS = [
+const DATETIME_FORMATS = [
   'YYYY-MM-DDTHH:mm:ss.SSSZ',
   'YYYY-MM-DDTHH:mm:ss.SSSZZ',
   'YYYY-MM-DDTHH:mm:ss.SSS',
@@ -138,13 +115,11 @@ os.time.DATETIME_FORMATS = [
   'MM/DD/YY HH:mm'
 ];
 
-
 /**
  * Additional formats to try in moment, though these won't be provided as drop-down options.
  * @type {!Array<string>}
- * @const
  */
-os.time.CUSTOM_DATETIME_FORMATS = [
+const CUSTOM_DATETIME_FORMATS = [
   'YYYY-MM-DDTHH:mm:ss.SSS Z',
   'YYYY-MM-DDTHH:mm:ss.SSSS Z',
   'YYYY-MM-DDTHH:mm:ss.SS Z',
@@ -196,23 +171,20 @@ os.time.CUSTOM_DATETIME_FORMATS = [
   'YYYYMMDD HHmmss'
 ];
 
-
 /**
  * @type {!Object<string, RegExp>}
  */
-os.time.DATETIME_REGEXES = {
+const DATETIME_REGEXES = {
   'instant': (/((up|start|begin).*)?(date|time)/i),
   'start': (/((up|start|begin).*)?(date|time)/i),
   'end': (/(down|stop|end).*(date|time)/i)
 };
 
-
 /**
  * Preconfigured time formats.
  * @type {!Array<string>}
- * @const
  */
-os.time.TIME_FORMATS = [
+const TIME_FORMATS = [
   'HH:mm:ssZ',
   'HH:mm:ss',
   'HH:mm:ss.SSSZ',
@@ -235,13 +207,11 @@ os.time.TIME_FORMATS = [
   'K*m*s a z'
 ];
 
-
 /**
  * Additional formats to try in moment, though these won't be provided as drop-down options.
  * @type {!Array<string>}
- * @const
  */
-os.time.CUSTOM_TIME_FORMATS = [
+const CUSTOM_TIME_FORMATS = [
   'HH:mm:ss.SSS',
   'HH:mm:ss.SSSS',
   'HH:mm:ss.SS',
@@ -273,11 +243,10 @@ os.time.CUSTOM_TIME_FORMATS = [
   'HHmm Z'
 ];
 
-
 /**
  * @type {!Object<string, RegExp>}
  */
-os.time.TIME_REGEXES = {
+const TIME_REGEXES = {
   'instant': (/((up|start|begin).*)?(time|toi)/i),
   'start': (/((up|start|begin).*)?(time|toi)/i),
   'end': (/(down|stop|end).*(time|toi)/i)
@@ -285,33 +254,34 @@ os.time.TIME_REGEXES = {
 
 
 /**
- * @type {!os.time.TimeRange}
- * @const
- */
-os.time.UNBOUNDED = new os.time.TimeRange(-Infinity, Infinity);
-
-
-/**
  * Time offset from UTC in ms
  * @type {number}
  */
-os.time.timeOffset = 0;
+let timeOffset = 0;
 
+/**
+ * Get the time offset from UTC in ms.
+ * @return {number}
+ */
+const getTimeOffset = () => timeOffset;
 
 /**
  * Time offset label (e.g. "-0500")
- * @type {!string}
+ * @type {string}
  */
-os.time.timeOffsetLabel = 'Z';
+let timeOffsetLabel = 'Z';
 
+/**
+ * Get the time offset label (e.g. "-0500").
+ * @return {string}
+ */
+const getTimeOffsetLabel = () => timeOffsetLabel;
 
 /**
  * milliseconds in day
  * @type {number}
- * @const
  */
-os.time.millisecondsInDay = 86400000;
-
+const millisecondsInDay = 86400000;
 
 /**
  * Rounds a date up to the specified duration. Using duration 'year' will always return Jan. 1 of
@@ -324,10 +294,9 @@ os.time.millisecondsInDay = 86400000;
  * @param {boolean=} opt_local If the passed date should be rounded using the local timezone (UTC is the default)
  * @return {Date} The rounded date
  */
-os.time.ceil = function(date, duration, opt_local) {
-  return opt_local ? os.time.roundLocal(date, duration, false) : os.time.round(date, duration, false);
+const ceil = function(date, duration, opt_local) {
+  return opt_local ? roundLocal(date, duration, false) : round(date, duration, false);
 };
-
 
 /**
  * Floors a date to the specified duration. Using duration 'year' will always return Jan. 1 in
@@ -340,10 +309,9 @@ os.time.ceil = function(date, duration, opt_local) {
  * @param {boolean=} opt_local If the passed date should be rounded using the local timezone (UTC is the default)
  * @return {Date} The floored date
  */
-os.time.floor = function(date, duration, opt_local) {
-  return opt_local ? os.time.roundLocal(date, duration) : os.time.round(date, duration);
+const floor = function(date, duration, opt_local) {
+  return opt_local ? roundLocal(date, duration) : round(date, duration);
 };
-
 
 /**
  * Formats a string for display based on the duration given.
@@ -355,7 +323,7 @@ os.time.floor = function(date, duration, opt_local) {
  * @param {?boolean=} opt_serverFormat Whether or not to use the delimeters for WMS/WFS time parameters
  * @return {string} The formatted date string
  */
-os.time.format = function(date, opt_duration, opt_limitToDays, opt_serverFormat) {
+const format = function(date, opt_duration, opt_limitToDays, opt_serverFormat) {
   var duration = (opt_duration || '').toLowerCase();
   var str = date.toISOString();
 
@@ -381,43 +349,40 @@ os.time.format = function(date, opt_duration, opt_limitToDays, opt_serverFormat)
   return str;
 };
 
-
 /**
  * Formats a date to a string using a specified pattern.
  *
  * @param {Date} date The date (in local time).
- * @param {string} pattern The date format (see goog.i18n.DateTimeFormat).
+ * @param {string} pattern The date format (see DateTimeFormat).
  * @param {boolean=} opt_utc If true, return the date in the UTC timezone.
  * @return {string} A formatted date.
  */
-os.time.formatDate = function(date, pattern, opt_utc) {
+const formatDate = function(date, pattern, opt_utc) {
   if (pattern == 'timestamp') {
     return date.getTime().toString();
   }
 
   if (opt_utc) {
-    date = os.time.toUTCDate(date);
+    date = toUTCDate(date);
   }
 
-  var formatter = new goog.i18n.DateTimeFormat(pattern);
+  var formatter = new DateTimeFormat(pattern);
   return formatter.format(date);
 };
-
 
 /**
  * Formats a date to a string using a specified pattern.
  *
  * @param {Date} date The date (in local time).
- * @param {string=} opt_pattern The date format (see goog.i18n.DateTimeFormat).
+ * @param {string=} opt_pattern The date format (see DateTimeFormat).
  * @param {boolean=} opt_utc If true, return the date in the UTC timezone.
  * @return {string} A formatted date.
  */
-os.time.momentFormat = function(date, opt_pattern, opt_utc) {
+const momentFormat = function(date, opt_pattern, opt_utc) {
   var m = moment(date.toISOString());
 
   return opt_utc ? m.utc().format(opt_pattern) : m.format(opt_pattern);
 };
-
 
 /**
  * Offsets a date based on the current duration.
@@ -428,35 +393,34 @@ os.time.momentFormat = function(date, opt_pattern, opt_utc) {
  * @param {boolean=} opt_local Whether the incoming and outgoing dates are local or UTC
  * @return {Date} The new date
  */
-os.time.offset = function(date, duration, offset, opt_local) {
-  var newDate = opt_local ? os.time.toUTCDate(date) : new Date(date.getTime());
+const offset = function(date, duration, offset, opt_local) {
+  var newDate = opt_local ? toUTCDate(date) : new Date(date.getTime());
 
   switch (duration) {
-    case os.time.Duration.CUSTOM:
+    case Duration.CUSTOM:
       newDate.setUTCDate(newDate.getUTCDate() + offset);
       break;
-    case os.time.Duration.HOURS:
+    case Duration.HOURS:
       newDate.setUTCHours(newDate.getUTCHours() + offset);
       break;
-    case os.time.Duration.DAY:
+    case Duration.DAY:
       newDate.setUTCDate(newDate.getUTCDate() + offset);
       break;
-    case os.time.Duration.WEEK:
+    case Duration.WEEK:
       newDate.setUTCDate(newDate.getUTCDate() + (offset * 7));
       break;
-    case os.time.Duration.MONTH:
+    case Duration.MONTH:
       newDate.setUTCMonth(newDate.getUTCMonth() + offset);
       break;
-    case os.time.Duration.YEAR:
+    case Duration.YEAR:
       newDate.setUTCFullYear(newDate.getUTCFullYear() + offset);
       break;
     default:
       break;
   }
 
-  return opt_local ? os.time.toLocalDate(newDate) : newDate;
+  return opt_local ? toLocalDate(newDate) : newDate;
 };
-
 
 /**
  * Tries detecting the date/time format for the provided value.
@@ -467,14 +431,13 @@ os.time.offset = function(date, duration, offset, opt_local) {
  * @param {boolean=} opt_strict If the format should be strictly enforced. Defaults to true.
  * @return {?string} The detected format, or null if none detected.
  */
-os.time.detectFormat = function(value, formats, opt_utc, opt_strict) {
-  var m = os.time.parseMoment(value, formats, opt_utc, opt_strict);
+const detectFormat = function(value, formats, opt_utc, opt_strict) {
+  var m = parseMoment(value, formats, opt_utc, opt_strict);
   if (m.isValid()) {
-    return os.time.userizeFormat_(m._f);
+    return userizeFormat_(m._f);
   }
   return null;
 };
-
 
 /**
  * Parses a date/time value with the provided format.
@@ -485,14 +448,13 @@ os.time.detectFormat = function(value, formats, opt_utc, opt_strict) {
  * @param {boolean=} opt_strict If the format should be strictly enforced. Defaults to true.
  * @return {?Date} The ISO formatted date, or null if parsing failed.
  */
-os.time.parse = function(value, format, opt_utc, opt_strict) {
-  var m = os.time.parseMoment(value, format, opt_utc, opt_strict);
+const parse = function(value, format, opt_utc, opt_strict) {
+  var m = parseMoment(value, format, opt_utc, opt_strict);
   if (m.isValid()) {
     return m.toDate();
   }
   return null;
 };
-
 
 /**
  * Parses a date/time value with the provided format into a moment object.
@@ -503,23 +465,22 @@ os.time.parse = function(value, format, opt_utc, opt_strict) {
  * @param {boolean=} opt_strict If the format should be strictly enforced. Defaults to true.
  * @return {!moment} The parsed moment object.
  */
-os.time.parseMoment = function(value, formats, opt_utc, opt_strict) {
+const parseMoment = function(value, formats, opt_utc, opt_strict) {
   var strict = opt_strict !== undefined ? opt_strict : true;
 
   var momentFormats = [];
   if (Array.isArray(formats)) {
     for (var i = 0, n = formats.length; i < n; i++) {
-      momentFormats.push(os.time.normalizeFormat_(formats[i]));
+      momentFormats.push(normalizeFormat_(formats[i]));
     }
   } else if (formats) {
-    momentFormats.push(os.time.normalizeFormat_(formats));
+    momentFormats.push(normalizeFormat_(formats));
   } else {
-    momentFormats = os.time.DATETIME_FORMATS;
+    momentFormats = DATETIME_FORMATS;
   }
 
   return opt_utc ? moment.utc(value.trim(), momentFormats, strict) : moment(value.trim(), momentFormats, strict);
 };
-
 
 /**
  * Parses an ISO-8601 duration string or a number time into a moment.duration. ISO-8601 durations look like:
@@ -529,10 +490,9 @@ os.time.parseMoment = function(value, formats, opt_utc, opt_strict) {
  * @param {string=} opt_units The optional units string for number durations.
  * @return {!moment.duration} The parsed moment object.
  */
-os.time.parseDuration = function(value, opt_units) {
+const parseDuration = function(value, opt_units) {
   return moment.duration(value, opt_units);
 };
-
 
 /**
  * Normalizes the format for moment. MM, DD, etc will not match a single digit month/day, but single chars will match
@@ -540,23 +500,20 @@ os.time.parseDuration = function(value, opt_units) {
  *
  * @param {string} format The format string to normalize.
  * @return {string} Normalized format.
- * @private
  */
-os.time.normalizeFormat_ = function(format) {
+const normalizeFormat_ = function(format) {
   return format.replace(/(M+|D+|H+|m+|s+)/g, function(match) {
     return match.length == 2 ? match[0] : match;
   });
 };
-
 
 /**
  * Normalizes the format for display to users, replacing single 'M' and 'D' instances with 'MM' and 'DD'.
  *
  * @param {string} format The format string to normalize.
  * @return {string} Normalized format.
- * @private
  */
-os.time.userizeFormat_ = function(format) {
+const userizeFormat_ = function(format) {
   return format.replace(/(M+|D+|H+|m+|s+)/g, function(match) {
     return match.length == 1 ? (match + match) : match;
   });
@@ -571,7 +528,7 @@ os.time.userizeFormat_ = function(format) {
  * @param {boolean=} opt_roundDown Whether to round up or round down
  * @return {Date} The rounded date
  */
-os.time.round = function(date, duration, opt_roundDown) {
+const round = function(date, duration, opt_roundDown) {
   var testDate = new Date(date.getTime());
   var roundDown = opt_roundDown === undefined || opt_roundDown;
 
@@ -639,7 +596,6 @@ os.time.round = function(date, duration, opt_roundDown) {
   return testDate;
 };
 
-
 /**
  * Rounds a date to the specified duration, rounding to the local time zone. Rounds down by default.
  * Example, rounding down from 2008-06-15 to month is 2008-06-01
@@ -649,10 +605,9 @@ os.time.round = function(date, duration, opt_roundDown) {
  * @param {boolean=} opt_roundDown Whether to round up or round down
  * @return {Date} The rounded date
  */
-os.time.roundLocal = function(date, duration, opt_roundDown) {
-  return os.time.toLocalDate(os.time.round(os.time.toUTCDate(date), duration, opt_roundDown));
+const roundLocal = function(date, duration, opt_roundDown) {
+  return toLocalDate(round(toUTCDate(date), duration, opt_roundDown));
 };
-
 
 /**
  * Takes a date that was made in GMT and converts it to the same time in local time.
@@ -660,10 +615,9 @@ os.time.roundLocal = function(date, duration, opt_roundDown) {
  * @param {Date} date
  * @return {Date}
  */
-os.time.toLocalDate = function(date) {
+const toLocalDate = function(date) {
   return new Date(date.getTime() + date.getTimezoneOffset() * 60000);
 };
-
 
 /**
  * Takes a date that was made in local time and returns a date with the same time in GMT.
@@ -671,10 +625,9 @@ os.time.toLocalDate = function(date) {
  * @param {Date} date
  * @return {Date}
  */
-os.time.toUTCDate = function(date) {
+const toUTCDate = function(date) {
   return new Date(date.getTime() - date.getTimezoneOffset() * 60000);
 };
-
 
 /**
  * Takes a date or a time string and trims thousands of a decimal place.
@@ -682,7 +635,7 @@ os.time.toUTCDate = function(date) {
  * @param {(Date|string)} date
  * @return {string}
  */
-os.time.trim = function(date) {
+const trim = function(date) {
   var result = '';
   if (date instanceof Date) {
     result = date.toISOString();
@@ -693,22 +646,21 @@ os.time.trim = function(date) {
   return result.replace(/\.[0-9]{3}Z/, 'Z');
 };
 
-
 /**
  * Applies the time offset
  *
  * @param {number} time The time in ms
- * @param {goog.date.UtcDateTime=} opt_date
+ * @param {UtcDateTime=} opt_date
  * @param {boolean=} opt_forceUtc force UTC timezone
  * @return {!string}
  */
-os.time.toOffsetString = function(time, opt_date, opt_forceUtc) {
+const toOffsetString = function(time, opt_date, opt_forceUtc) {
   if (!opt_date) {
-    opt_date = new goog.date.UtcDateTime();
+    opt_date = new UtcDateTime();
   }
 
-  var offset = opt_forceUtc ? 0 : os.time.timeOffset;
-  var label = os.time.timeOffsetLabel;
+  var offset = opt_forceUtc ? 0 : timeOffset;
+  var label = timeOffsetLabel;
 
   if (offset) {
     opt_date.setTime(time + offset);
@@ -719,57 +671,47 @@ os.time.toOffsetString = function(time, opt_date, opt_forceUtc) {
   return opt_date.toUTCIsoString(true, true);
 };
 
-
 /**
  * @type {string}
- * @const
  */
-os.time.OFFSET_KEY = 'time.offset';
-
+const OFFSET_KEY = 'time.offset';
 
 /**
  * Initializes the time offset. Caller is responsible for cleaning up the listener with {@link os.time.disposeOffset}.
  */
-os.time.initOffset = function() {
-  os.time.updateOffset_();
-  os.settings.listen(os.time.OFFSET_KEY, os.time.onOffsetChange_);
+const initOffset = function() {
+  updateOffset_();
+  Settings.getInstance().listen(OFFSET_KEY, onOffsetChange_);
 };
-
 
 /**
  * Remove the time offset listener.
  */
-os.time.disposeOffset = function() {
-  os.settings.unlisten(os.time.OFFSET_KEY, os.time.onOffsetChange_);
+const disposeOffset = function() {
+  Settings.getInstance().unlisten(OFFSET_KEY, onOffsetChange_);
 };
-
 
 /**
  * Updates offset from settings
- *
- * @private
  */
-os.time.updateOffset_ = function() {
-  os.time.timeOffset = /** @type {number} */ (os.settings.get(['time', 'offset'], 0));
-  os.time.timeOffsetLabel = /** @type {string} */ (os.settings.get(['time', 'offsetLabel'], 'Z'));
+const updateOffset_ = function() {
+  timeOffset = /** @type {number} */ (Settings.getInstance().get(['time', 'offset'], 0));
+  timeOffsetLabel = /** @type {string} */ (Settings.getInstance().get(['time', 'offsetLabel'], 'Z'));
 };
-
 
 /**
  * @param {os.events.PropertyChangeEvent} e
- * @private
  */
-os.time.onOffsetChange_ = function(e) {
-  os.time.updateOffset_();
+const onOffsetChange_ = function(e) {
+  updateOffset_();
 };
-
 
 /**
  * @param {!string} offset
  */
-os.time.applyOffset = function(offset) {
+const applyOffset = function(offset) {
   offset = offset.replace(/(utc|[:])/gi, '');
-  goog.asserts.assert(/^[+-]\d{4}$/i.test(offset));
+  asserts.assert(/^[+-]\d{4}$/i.test(offset));
   var sign = offset.substring(0, 1) == '-' ? -1 : 1;
   var h = parseInt(offset.substring(1, 3), 10);
   var m = parseInt(offset.substring(3, 5), 10);
@@ -781,10 +723,9 @@ os.time.applyOffset = function(offset) {
 
   // do the label first since the change to the offset is the one that will
   // fire listeners
-  os.settings.set(['time', 'offsetLabel'], offset);
-  os.settings.set(['time', 'offset'], ms);
+  Settings.getInstance().set(['time', 'offsetLabel'], offset);
+  Settings.getInstance().set(['time', 'offset'], ms);
 };
-
 
 /**
  * Compare function for two separate Date objects.
@@ -793,10 +734,9 @@ os.time.applyOffset = function(offset) {
  * @param {Date} b
  * @return {number}
  */
-os.time.dateCompare = function(a, b) {
-  return goog.array.defaultCompare(b.toISOString(), a.toISOString());
+const dateCompare = function(a, b) {
+  return googArray.defaultCompare(b.toISOString(), a.toISOString());
 };
-
 
 /**
  * Moment.js duration humanize() rounds.  1 day, 3 hours becomes "1 day" and
@@ -808,7 +748,7 @@ os.time.dateCompare = function(a, b) {
  * @param {string=} opt_zeroDurationValue String to output when duration is 0
  * @return {string}
  */
-os.time.humanize = function(duration, opt_zeroDurationValue) {
+const humanize = function(duration, opt_zeroDurationValue) {
   var invalidMsg = 'Invalid duration';
   try {
     var result = '';
@@ -842,13 +782,10 @@ os.time.humanize = function(duration, opt_zeroDurationValue) {
   }
 };
 
-
 /**
  * @type {string}
- * @const
  */
-os.time.DEFAULT_TIME_FORMAT = os.time.DATETIME_FORMATS[6].replace('Z', '[Z]');
-
+const DEFAULT_TIME_FORMAT = DATETIME_FORMATS[6].replace('Z', '[Z]');
 
 /**
  * @param {string} match The matched substring
@@ -856,10 +793,9 @@ os.time.DEFAULT_TIME_FORMAT = os.time.DATETIME_FORMATS[6].replace('Z', '[Z]');
  * @param {number} offset The offset of the matched substring within the total string
  * @param {string} str The total string
  * @return {string} The replacement
- * @private
  */
-os.time.replaceNow_ = function(match, p1, offset, str) {
-  var parts = os.net.VariableReplacer.getParts(p1);
+const replaceNow = function(match, p1, offset, str) {
+  var parts = VariableReplacer.getParts(p1);
   var value = parts[0] || 0;
 
   var num = parseFloat(value);
@@ -867,11 +803,10 @@ os.time.replaceNow_ = function(match, p1, offset, str) {
     value = num;
   }
 
-  var duration = os.time.parseDuration(value);
+  var duration = parseDuration(value);
   var date = new Date(Date.now() + duration.asMilliseconds());
-  return os.time.momentFormat(date, parts[1] || os.time.DEFAULT_TIME_FORMAT, true);
+  return momentFormat(date, parts[1] || DEFAULT_TIME_FORMAT, true);
 };
-os.net.VariableReplacer.add('now', os.time.replaceNow_);
 
 
 /**
@@ -879,15 +814,14 @@ os.net.VariableReplacer.add('now', os.time.replaceNow_);
  *
  * @param {Date} date The date to offset
  * @param {string} duration The duration of the offset
- * @param {number} offset Multiplier for the duration
+ * @param {number} offsetVal Multiplier for the duration
  * @param {boolean=} opt_local Whether the incoming and outgoing dates are local or UTC
  * @return {number} The new date
  */
-os.time.step = function(date, duration, offset, opt_local) {
-  var next = os.time.offset(date, duration, offset, opt_local);
+const step = function(date, duration, offsetVal, opt_local) {
+  var next = offset(date, duration, offsetVal, opt_local);
   return (next.getTime() - date.getTime());
 };
-
 
 /**
  * Combines the days and time for seperate mapped fields. Defaults to ISO 8601 format.
@@ -897,18 +831,16 @@ os.time.step = function(date, duration, offset, opt_local) {
  * @param {string=} opt_timeFormat The format for time
  * @return {moment}
  */
-os.time.combineDateTime = function(days, time, opt_daysFormat = 'YYYY-MM-DD', opt_timeFormat = 'HH:mm:ss') {
-  var combinedTime = os.time.parseMoment(`${days} ${time}`, `${opt_daysFormat} ${opt_timeFormat}`, true);
+const combineDateTime = function(days, time, opt_daysFormat = 'YYYY-MM-DD', opt_timeFormat = 'HH:mm:ss') {
+  var combinedTime = parseMoment(`${days} ${time}`, `${opt_daysFormat} ${opt_timeFormat}`, true);
   return combinedTime;
 };
-
 
 /**
  * Regular expression to test for a relative duration string.
  * @type {RegExp}
  */
-os.time.RELATIVE_DURATION_REGEXP = /^last /i;
-
+const RELATIVE_DURATION_REGEXP = /^last /i;
 
 /**
  * Determines whether a duration is relative or not
@@ -916,6 +848,48 @@ os.time.RELATIVE_DURATION_REGEXP = /^last /i;
  * @param {string} duration The duration that will be analyzed
  * @return {boolean} Whether the duration is relative or not
  */
-os.time.isRelativeDuration = function(duration) {
-  return os.time.RELATIVE_DURATION_REGEXP.test(duration);
+const isRelativeDuration = function(duration) {
+  return RELATIVE_DURATION_REGEXP.test(duration);
+};
+
+exports = {
+  DATE_FORMATS,
+  DATE_REGEXES,
+  DATETIME_FORMATS,
+  CUSTOM_DATETIME_FORMATS,
+  DATETIME_REGEXES,
+  TIME_FORMATS,
+  CUSTOM_TIME_FORMATS,
+  TIME_REGEXES,
+  getTimeOffset,
+  getTimeOffsetLabel,
+  millisecondsInDay,
+  ceil,
+  floor,
+  format,
+  formatDate,
+  momentFormat,
+  offset,
+  detectFormat,
+  parse,
+  parseMoment,
+  parseDuration,
+  round,
+  roundLocal,
+  toLocalDate,
+  toUTCDate,
+  trim,
+  toOffsetString,
+  OFFSET_KEY,
+  initOffset,
+  disposeOffset,
+  applyOffset,
+  dateCompare,
+  humanize,
+  DEFAULT_TIME_FORMAT,
+  replaceNow,
+  step,
+  combineDateTime,
+  RELATIVE_DURATION_REGEXP,
+  isRelativeDuration
 };

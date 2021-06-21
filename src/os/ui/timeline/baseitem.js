@@ -1,179 +1,153 @@
-goog.provide('os.ui.timeline.BaseItem');
-goog.require('goog.events.EventTarget');
-goog.require('os.ui.timeline.ITimelineItem');
+goog.module('os.ui.timeline.BaseItem');
+goog.module.declareLegacyNamespace();
 
+const EventTarget = goog.require('goog.events.EventTarget');
+const ITimelineItem = goog.require('os.ui.timeline.ITimelineItem'); // eslint-disable-line
 
 
 /**
  * Base timeline item
  *
  * @abstract
- * @constructor
- * @extends {goog.events.EventTarget}
- * @implements {os.ui.timeline.ITimelineItem}
+ * @implements {ITimelineItem}
  */
-os.ui.timeline.BaseItem = function() {
-  os.ui.timeline.BaseItem.base(this, 'constructor');
+class BaseItem extends EventTarget {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * @type {string}
+     * @private
+     */
+    this.id_ = '';
+
+    /**
+     * @type {?d3.Scale}
+     * @protected
+     */
+    this.xScale = null;
+
+    /**
+     * @type {?function(number):number}
+     * @protected
+     */
+    this.snapFn = null;
+
+    /**
+     * @type {boolean}
+     */
+    this.init = false;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.tooltip_ = null;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.interactive_ = true;
+
+    /**
+     * @type {Array<os.ui.action.Action>}
+     * @private
+     */
+    this.actions_ = null;
+  }
 
   /**
-   * @type {string}
-   * @private
+   * @inheritDoc
    */
-  this.id_ = '';
+  getId() {
+    return this.id_;
+  }
 
   /**
-   * @type {?d3.Scale}
-   * @protected
+   * @inheritDoc
    */
-  this.xScale = null;
+  setId(id) {
+    this.id_ = id;
+  }
 
   /**
-   * @type {?function(number):number}
-   * @protected
+   * @inheritDoc
    */
-  this.snapFn = null;
+  isInteractive() {
+    return this.interactive_;
+  }
 
   /**
-   * @type {boolean}
+   * @inheritDoc
    */
-  this.init = false;
+  setInteractive(value) {
+    this.interactive_ = value;
+  }
 
   /**
-   * @type {?string}
-   * @private
+   * @inheritDoc
    */
-  this.tooltip_ = null;
+  getToolTip() {
+    return this.tooltip_;
+  }
 
   /**
-   * @type {boolean}
-   * @private
+   * Set the tool tip
+   *
+   * @param {?string} tip
    */
-  this.interactive_ = true;
+  setToolTip(tip) {
+    this.tooltip_ = tip;
+  }
 
   /**
-   * @type {Array<os.ui.action.Action>}
-   * @private
+   * @inheritDoc
    */
-  this.actions_ = null;
-};
-goog.inherits(os.ui.timeline.BaseItem, goog.events.EventTarget);
+  getXScale() {
+    return this.xScale;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  setXScale(scale) {
+    this.xScale = scale;
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.timeline.BaseItem.prototype.getId = function() {
-  return this.id_;
-};
+  /**
+   * @inheritDoc
+   */
+  getActions() {
+    return this.actions_;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  setActions(value) {
+    this.actions_ = value;
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.timeline.BaseItem.prototype.setId = function(id) {
-  this.id_ = id;
-};
+  /**
+   * @inheritDoc
+   */
+  setExtent(extent, opt_silent, opt_snap) {}
 
+  /**
+   * @inheritDoc
+   */
+  setSnap(snap) {
+    this.snapFn = snap;
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.timeline.BaseItem.prototype.isInteractive = function() {
-  return this.interactive_;
-};
+  /**
+   * @inheritDoc
+   */
+  initSVG(container, height) {}
+}
 
-
-/**
- * @inheritDoc
- */
-os.ui.timeline.BaseItem.prototype.setInteractive = function(value) {
-  this.interactive_ = value;
-};
-
-
-/**
- * Gets the tool tip
- *
- * @return {?string} The tool tip
- */
-os.ui.timeline.BaseItem.prototype.getToolTip = function() {
-  return this.tooltip_;
-};
-
-
-/**
- * Set the tool tip
- *
- * @param {?string} tip
- */
-os.ui.timeline.BaseItem.prototype.setToolTip = function(tip) {
-  this.tooltip_ = tip;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.timeline.BaseItem.prototype.getXScale = function() {
-  return this.xScale;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.timeline.BaseItem.prototype.setXScale = function(scale) {
-  this.xScale = scale;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.timeline.BaseItem.prototype.getActions = function() {
-  return this.actions_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.timeline.BaseItem.prototype.setActions = function(value) {
-  this.actions_ = value;
-};
-
-
-/**
- * @abstract
- * @inheritDoc
- */
-os.ui.timeline.BaseItem.prototype.getExtent = function() {};
-
-
-/**
- * @abstract
- * @inheritDoc
- */
-os.ui.timeline.BaseItem.prototype.getAvg = function() {};
-
-
-/**
- * @abstract
- * @inheritDoc
- */
-os.ui.timeline.BaseItem.prototype.render = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.ui.timeline.BaseItem.prototype.setSnap = function(snap) {
-  this.snapFn = snap;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.timeline.BaseItem.prototype.initSVG = function(container, height) {
-};
+exports = BaseItem;

@@ -117,7 +117,7 @@ os.ui.DatePanelCtrl.prototype.expand = function() {
  * @export
  */
 os.ui.DatePanelCtrl.prototype.getOffset = function() {
-  return 'UTC' + (os.time.timeOffsetLabel == 'Z' ? '+0000' : os.time.timeOffsetLabel);
+  return 'UTC' + (os.time.getTimeOffsetLabel() == 'Z' ? '+0000' : os.time.getTimeOffsetLabel());
 };
 
 

@@ -20,6 +20,7 @@ goog.require('os.net.CertNazi');
 goog.require('os.net.ProxyHandler');
 goog.require('os.net.RequestHandlerFactory');
 goog.require('os.plugin.PluginManager');
+goog.require('os.time.replacers');
 goog.require('os.ui');
 goog.require('os.ui.alert.alertPopupDirective');
 goog.require('os.ui.consentDirective');
@@ -258,6 +259,9 @@ os.ui.AbstractMainCtrl.prototype.initialize = function() {
 
   // set up trusted URI's
   os.net.loadTrustedUris();
+
+  // initialize variable replacers for time values in URI's
+  os.time.replacers.init();
 
   os.ui.Consent.launch();
 

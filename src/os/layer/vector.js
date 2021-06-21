@@ -36,7 +36,7 @@ goog.require('os.ui.icons');
 goog.require('os.ui.layer.vectorLayerUIDirective');
 goog.require('os.ui.node.defaultLayerNodeUIDirective');
 goog.require('os.ui.renamelayer');
-goog.require('os.ui.timeline.TimelineCtrl');
+goog.require('os.ui.timeline.TimelineUI');
 goog.require('os.ui.window');
 
 
@@ -878,7 +878,7 @@ os.layer.Vector.prototype.callAction = function(type) {
             }
           }
         }
-        os.ui.timeline.TimelineCtrl.setView();
+        os.ui.timeline.TimelineUI.Controller.setView();
         break;
       case os.action.EventType.REFRESH:
         if (source instanceof os.source.Vector && source.isRefreshEnabled()) {

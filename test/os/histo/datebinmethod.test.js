@@ -252,12 +252,11 @@ describe('os.histo.DateBinMethod', function() {
 
   it('shold bin by month of year across a range', function() {
     method.setDateBinType(os.histo.DateBinType.MONTH_OF_YEAR);
-    var d1 = '2014-01-11T12:34:56Z';
-    var d2 = '2014-02-11T12:34:56Z';
+    var d1 = new Date('2014-01-11T12:34:56Z').getTime();
+    var d2 = new Date('2014-02-11T12:34:56Z').getTime();
 
     valueSpy.getStart.andReturn(d1);
     valueSpy.getEnd.andReturn(d2);
-    os.time.timeOffset = '';
     spyOn(method, 'valueFunction').andReturn(valueSpy);
     method.arrayKeys = true;
 

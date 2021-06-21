@@ -5,6 +5,8 @@ goog.require('os.time.period');
  * Tests for os.time.period utility functions.
  */
 describe('os.time.period', function() {
+  const period = goog.module.get('os.time.period');
+
   // the calculation that moment uses to convert months to days
   var monthsToDays = function(months) {
     return Math.round(months * (146097 / 4800));
@@ -55,7 +57,7 @@ describe('os.time.period', function() {
     ];
 
     for (var i = 0, n = tests.length; i < n; i++) {
-      expect(os.time.period.toMillis(tests[i].input)).toBe(tests[i].output);
+      expect(period.toMillis(tests[i].input)).toBe(tests[i].output);
     }
   });
 
@@ -81,7 +83,7 @@ describe('os.time.period', function() {
     ];
 
     for (var i = 0, n = tests.length; i < n; i++) {
-      expect(os.time.period.toTimePeriod(tests[i].output)).toBe(tests[i].input);
+      expect(period.toTimePeriod(tests[i].output)).toBe(tests[i].input);
     }
   });
 });

@@ -9,7 +9,6 @@ goog.require('os.implements');
 goog.require('os.source.IImportSource');
 goog.require('os.source.Vector');
 goog.require('os.time.TimelineController');
-goog.require('os.time.TimelineEventType');
 
 
 

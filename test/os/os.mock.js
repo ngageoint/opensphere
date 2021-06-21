@@ -32,6 +32,7 @@ goog.require('os.query.FilterManager');
 goog.require('os.query.QueryManager');
 goog.require('os.query.instance');
 goog.require('os.style.StyleManager');
+goog.require('os.time.replacers');
 goog.require('os.ui.config.SettingsManager');
 goog.require('os.ui.ogc.OGCDescriptor');
 goog.require('test.os.config.SettingsUtil');
@@ -127,6 +128,8 @@ beforeEach(function() {
     if (!os.settingsManager) {
       os.settingsManager = os.ui.config.SettingsManager.getInstance();
     }
+
+    os.time.replacers.init();
   });
 });
 

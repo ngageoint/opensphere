@@ -9,6 +9,7 @@ goog.require('os.layer.Tile');
 goog.require('os.query.TemporalFormatter');
 goog.require('os.time');
 goog.require('os.time.TimelineController');
+goog.require('os.time.TimelineEventType');
 goog.require('os.ui.Icons');
 goog.require('os.ui.IconsSVG');
 goog.require('os.ui.ScreenOverlayCtrl');

@@ -9,6 +9,8 @@ goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
 goog.require('os.ui.menu.layer');
 
+goog.requireType('os.ui.timeline.TimelineUI');
+
 /**
  * @type {os.ui.menu.Menu<Array<number>>}
  */
@@ -283,7 +285,8 @@ os.ui.menu.timeline.onTimeSlice = function(event) {
  * @param {os.ui.menu.MenuEvent<Array<number>>} event The menu event
  */
 os.ui.menu.timeline.onTimeZoom = function(event) {
-  var ctl = /** @type {os.ui.timeline.TimelineCtrl} */ (angular.element('.js-timeline').children().scope()['timeline']);
+  var ctl = /** @type {os.ui.timeline.TimelineUI.Controller} */ (
+    angular.element('.js-timeline').children().scope()['timeline']);
   ctl.zoomToItem('select');
   os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.Timeline.RANGE_ZOOM, 1);
 };
@@ -344,7 +347,8 @@ os.ui.menu.timeline.onAddSkipAnimate = function(event) {
  * @param {os.ui.menu.MenuEvent<Array<number>>} event The menu event
  */
 os.ui.menu.timeline.onActiveWindow = function(event) {
-  var ctl = /** @type {os.ui.timeline.TimelineCtrl} */ (angular.element('.js-timeline').children().scope()['timeline']);
+  var ctl = /** @type {os.ui.timeline.TimelineUI.Controller} */ (
+    angular.element('.js-timeline').children().scope()['timeline']);
   var window = ctl.getItem('window');
   var extent = event.getContext();
   goog.asserts.assert(extent);

@@ -38,6 +38,7 @@
   "moduleVarNames": {
     "goog.array": "googArray",
     "goog.color": "googColor",
+    "goog.date.Date": "GoogDate",
     "goog.events": "googEvents",
     "goog.events.Event": "GoogEvent",
     "goog.events.EventType": "GoogEventType",

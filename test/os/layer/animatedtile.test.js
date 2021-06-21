@@ -1,6 +1,7 @@
 goog.require('ol.source.TileWMS');
 goog.require('os.layer.AnimatedTile');
 goog.require('os.time.TimelineController');
+goog.require('os.time.TimelineEventType');
 
 
 describe('os.layer.AnimatedTile', function() {
