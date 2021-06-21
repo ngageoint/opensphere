@@ -1,52 +1,52 @@
-goog.provide('os.control.Rotate');
+goog.module('os.control.Rotate');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.control.Rotate');
-
+const OLRotate = goog.require('ol.control.Rotate');
+const mapInstance = goog.require('os.map.instance');
 
 
 /**
  * Overrides the OpenLayers rotate control to allow resetting rotation in WebGL.
- *
- * @param {olx.control.RotateOptions=} opt_options Rotate options.
- * @extends {ol.control.Rotate}
- * @constructor
  */
-os.control.Rotate = function(opt_options) {
-  var options = opt_options || {};
-  options.autoHide = false;
-  options.render = os.control.Rotate.render;
+class Rotate extends OLRotate {
+  /**
+   * Constructor.
+   * @param {olx.control.RotateOptions=} opt_options Rotate options.
+   */
+  constructor(opt_options) {
+    var options = opt_options || {};
+    options.autoHide = false;
+    options.render = render;
 
-  os.control.Rotate.base(this, 'constructor', options);
-};
-goog.inherits(os.control.Rotate, ol.control.Rotate);
-
-
-/**
- * @inheritDoc
- * @suppress {accessControls}
- */
-os.control.Rotate.prototype.resetNorth_ = function() {
-  var mapContainer = os.MapContainer.getInstance();
-  if (mapContainer.is3DEnabled()) {
-    mapContainer.resetRotation();
-  } else {
-    os.control.Rotate.superClass_.resetNorth_.call(this);
+    super(options);
   }
-};
 
+  /**
+   * @inheritDoc
+   * @suppress {accessControls}
+   */
+  resetNorth_() {
+    var mapContainer = mapInstance.getMapContainer();
+    if (mapContainer.is3DEnabled()) {
+      mapContainer.resetRotation();
+    } else {
+      super.resetNorth_();
+    }
+  }
+}
 
 /**
  * Update the rotate control element.
  *
  * @param {ol.MapEvent} mapEvent Map event.
- * @this ol.control.Rotate
+ * @this OLRotate
  *
  * @suppress {accessControls}
  */
-os.control.Rotate.render = function(mapEvent) {
+const render = function(mapEvent) {
   var rotation;
 
-  var mapContainer = os.MapContainer.getInstance();
+  var mapContainer = mapInstance.getMapContainer();
   if (mapContainer.is3DEnabled()) {
     var camera = mapContainer.getWebGLCamera();
     if (!camera) {
@@ -76,3 +76,5 @@ os.control.Rotate.render = function(mapEvent) {
 
   this.rotation_ = rotation;
 };
+
+exports = Rotate;

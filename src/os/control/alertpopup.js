@@ -1,24 +1,30 @@
-goog.provide('os.control.AlertPopup');
-goog.require('ol.control.Control');
+goog.module('os.control.AlertPopup');
+goog.module.declareLegacyNamespace();
+
 goog.require('os.ui.alert.alertPopupDirective');
 
+const Control = goog.require('ol.control.Control');
+const osUi = goog.require('os.ui');
 
 
 /**
  * Make the alert popups a map control so we can position it properly within
  * the map bounds
- *
- * @extends {ol.control.Control}
- * @constructor
  */
-os.control.AlertPopup = function() {
-  // compile angular element
-  var compile = /** @type {!angular.$compile} */ (os.ui.injector.get('$compile'));
-  var scope = /** @type {!angular.Scope} */ (os.ui.injector.get('$rootScope')).$new();
-  var el = compile('<alert-popup></alert-popup>')(scope)[0];
+class AlertPopup extends Control {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    // compile angular element
+    var compile = /** @type {!angular.$compile} */ (osUi.injector.get('$compile'));
+    var scope = /** @type {!angular.Scope} */ (osUi.injector.get('$rootScope')).$new();
+    var el = compile('<alert-popup></alert-popup>')(scope)[0];
 
-  os.control.AlertPopup.base(this, 'constructor', {
-    element: el
-  });
-};
-goog.inherits(os.control.AlertPopup, ol.control.Control);
+    super({
+      element: el
+    });
+  }
+}
+
+exports = AlertPopup;
