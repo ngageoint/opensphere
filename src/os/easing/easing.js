@@ -1,12 +1,11 @@
-goog.provide('os.easing');
-
+goog.module('os.easing');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * @typedef {function(number, number, number, number)}
  */
-os.easing.EasingFunction;
-
+let EasingFunction;
 
 /**
  * Linear easing function
@@ -17,11 +16,10 @@ os.easing.EasingFunction;
  * @param {number} d The duration or total number of steps
  * @return {number}
  */
-os.easing.easeLinear = function(t, b, c, d) {
+const easeLinear = function(t, b, c, d) {
   t /= d;
   return c * t + b;
 };
-
 
 /**
  * Quintic easing function
@@ -32,12 +30,11 @@ os.easing.easeLinear = function(t, b, c, d) {
  * @param {number} d The duration or total number of steps
  * @return {number}
  */
-os.easing.easeQuintic = function(t, b, c, d) {
+const easeQuintic = function(t, b, c, d) {
   t /= d;
   t--;
   return c * (t * t * t * t * t + 1) + b;
 };
-
 
 /**
  * Quartic easing function
@@ -48,7 +45,7 @@ os.easing.easeQuintic = function(t, b, c, d) {
  * @param {number} d The duration or total number of steps
  * @return {number}
  */
-os.easing.easeQuartic = function(t, b, c, d) {
+const easeQuartic = function(t, b, c, d) {
   t = t / (d / 2);
   if (t < 1) {
     return c * t * t * t * t / 2 + b;
@@ -57,7 +54,6 @@ os.easing.easeQuartic = function(t, b, c, d) {
   return -c * (t * t * t * t - 2) / 2 + b;
 };
 
-
 /**
  * Quartic easing function
  *
@@ -67,7 +63,7 @@ os.easing.easeQuartic = function(t, b, c, d) {
  * @param {number} d The duration or total number of steps
  * @return {number}
  */
-os.easing.easeCubic = function(t, b, c, d) {
+const easeCubic = function(t, b, c, d) {
   t = t / (d / 2);
   if (t < 1) {
     return c * t * t / 2 + b;
@@ -75,7 +71,6 @@ os.easing.easeCubic = function(t, b, c, d) {
   t -= 2;
   return -c * (t * t - 2) / 2 + b;
 };
-
 
 /**
  * Exponential easing function
@@ -86,7 +81,7 @@ os.easing.easeCubic = function(t, b, c, d) {
  * @param {number} d The duration or total number of steps
  * @return {number}
  */
-os.easing.easeExpo = function(t, b, c, d) {
+const easeExpo = function(t, b, c, d) {
   t = t / (d / 2);
   if (t < 1) {
     return c * Math.pow(2, 10 * (t - 1)) / 2 + b;
@@ -94,7 +89,6 @@ os.easing.easeExpo = function(t, b, c, d) {
   t--;
   return c * (-Math.pow(2, -10 * t) + 2) / 2 + b;
 };
-
 
 /**
  * Circular easing function (this is CircleIn, not CircleOut)
@@ -105,11 +99,10 @@ os.easing.easeExpo = function(t, b, c, d) {
  * @param {number} d The duration or total number of steps
  * @return {number}
  */
-os.easing.easeCircular = function(t, b, c, d) {
+const easeCircular = function(t, b, c, d) {
   t /= d;
   return -c * (Math.sqrt(1 - t * t) - 1) + b;
 };
-
 
 /**
  * Sinusoidal easing function
@@ -120,6 +113,17 @@ os.easing.easeCircular = function(t, b, c, d) {
  * @param {number} d The duration or total number of steps
  * @return {number}
  */
-os.easing.easeSinusoidal = function(t, b, c, d) {
+const easeSinusoidal = function(t, b, c, d) {
   return (b + c) * (1 - Math.cos(Math.PI * t / d)) / 2;
+};
+
+exports = {
+  easeLinear,
+  easeQuintic,
+  easeQuartic,
+  easeCubic,
+  easeExpo,
+  easeCircular,
+  easeSinusoidal,
+  EasingFunction
 };
