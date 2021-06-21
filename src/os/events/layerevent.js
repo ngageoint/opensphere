@@ -1,52 +1,41 @@
-goog.provide('os.events.LayerEvent');
-goog.provide('os.events.LayerEventType');
-goog.require('goog.events.Event');
+goog.module('os.events.LayerEvent');
+goog.module.declareLegacyNamespace();
+
+const GoogEvent = goog.require('goog.events.Event');
+
+const OLEventTarget = goog.requireType('ol.events.EventTarget');
 
 
 /**
- * @enum {string}
  */
-os.events.LayerEventType = {
-  ADD: 'addLayer',
-  CHANGE: 'layer:change',
-  REMOVE: 'removeLayer',
-  RENAME: 'renameLayer',
-  MOVE: 'moveLayer',
-  SYNC: 'syncLayer',
-  IDENTIFY: 'identifyLayer',
-  COLOR_CHANGE: 'layerColorChange',
-  BASELAYER_CHANGE: 'baseLayerChange'
-};
-
-
-
-/**
- * @param {string} type
- * @param {ol.layer.Layer|string} layer
- * @param {number=} opt_index
- * @extends {goog.events.Event}
- * @constructor
- */
-os.events.LayerEvent = function(type, layer, opt_index) {
-  os.events.LayerEvent.base(this, 'constructor', type);
-
+class LayerEvent extends GoogEvent {
   /**
-   * @type {ol.layer.Layer|string}
+   * Constructor.
+   * @param {string} type
+   * @param {ol.layer.Layer|string} layer
+   * @param {number=} opt_index
    */
-  this.layer = layer;
+  constructor(type, layer, opt_index) {
+    super(type);
 
-  /**
-   * @type {number}
-   */
-  this.index = opt_index != null ? opt_index : -1;
-};
-goog.inherits(os.events.LayerEvent, goog.events.Event);
+    /**
+     * @type {ol.layer.Layer|string}
+     */
+    this.layer = layer;
 
+    /**
+     * @type {number}
+     */
+    this.index = opt_index != null ? opt_index : -1;
+  }
+}
 
 /**
  * Override the type so these events can be used with {@link ol.events.EventTarget.prototype.dispatchEvent}.
  *
- * @type {EventTarget|ol.events.EventTarget|undefined}
+ * @type {EventTarget|OLEventTarget|undefined}
  * @suppress {duplicate}
  */
-os.events.LayerEvent.prototype.target;
+LayerEvent.prototype.target;
+
+exports = LayerEvent;

@@ -1,6 +1,12 @@
-goog.provide('os.events');
+goog.module('os.events');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.EventType');
+const googArray = goog.require('goog.array');
+const GoogEventType = goog.require('goog.events.EventType');
+const googObject = goog.require('goog.object');
+const SelectionType = goog.require('os.events.SelectionType');
+
+const EventLike = goog.requireType('goog.events.EventLike');
 
 
 /**
@@ -11,41 +17,39 @@ goog.require('goog.events.EventType');
  *
  * @param {(Document|Element)=} opt_el
  */
-os.events.preventBrowserContextMenu = function(opt_el) {
+const preventBrowserContextMenu = function(opt_el) {
   opt_el = opt_el || document;
 
-  opt_el.addEventListener(goog.events.EventType.MOUSEDOWN, os.events.wrapExempt_(os.events.killRightButton));
-  opt_el.addEventListener(goog.events.EventType.MOUSEUP, os.events.wrapExempt_(os.events.killRightButton));
-  opt_el.addEventListener(goog.events.EventType.CONTEXTMENU, os.events.wrapExempt_(os.events.killEvent));
+  opt_el.addEventListener(GoogEventType.MOUSEDOWN, wrapExempt(killRightButton));
+  opt_el.addEventListener(GoogEventType.MOUSEUP, wrapExempt(killRightButton));
+  opt_el.addEventListener(GoogEventType.CONTEXTMENU, wrapExempt(killEvent));
 };
 
-
 /**
- * @param {function(goog.events.EventLike):(boolean|undefined)} listener
- * @return {function(goog.events.EventLike):(boolean|undefined)}
- * @private
+ * @param {function(EventLike):(boolean|undefined)} listener
+ * @return {function(EventLike):(boolean|undefined)}
  */
-os.events.wrapExempt_ = function(listener) {
+const wrapExempt = function(listener) {
   return (
     /**
-     * @param {goog.events.EventLike} evt The event
+     * @param {EventLike} evt The event
      * @return {boolean|undefined}
      */
     function(evt) {
-      if (!os.events.isExempt(evt.target, evt.type)) {
+      if (!isExempt(evt.target, evt.type)) {
         return listener(evt);
       }
-    });
+    }
+  );
 };
-
 
 /**
  * @param {Document|Element} el The element to check
  * @param {string} type The event type
  * @return {boolean} Whether or not the element is exempt from right-click prevention
  */
-os.events.isExempt = function(el, type) {
-  var list = os.events.exemptionFunctions_;
+const isExempt = function(el, type) {
+  var list = exemptionFunctions;
   for (var i = 0, n = list.length; i < n; i++) {
     if (list[i](el, type)) {
       return true;
@@ -55,48 +59,53 @@ os.events.isExempt = function(el, type) {
   return false;
 };
 
-
 /**
  * @type {Array<function((Document|Element), string):boolean>}
- * @private
  */
-os.events.exemptionFunctions_ = [];
-
+const exemptionFunctions = [];
 
 /**
  * Adds an exemption to right-click prevention
  *
  * @param {function((Document|Element), string):boolean} checker The exemption check function
  */
-os.events.addExemption = function(checker) {
-  goog.array.insert(os.events.exemptionFunctions_, checker);
+const addExemption = function(checker) {
+  googArray.insert(exemptionFunctions, checker);
 };
-
 
 /**
  * Stops the event dead in its tracks.
  *
- * @param {goog.events.EventLike} evt
+ * @param {EventLike} evt
  */
-os.events.killEvent = function(evt) {
+const killEvent = function(evt) {
   evt.preventDefault();
   evt.stopPropagation();
 };
 
-
 /**
  * Stops right click events
  *
- * @param {goog.events.EventLike} evt
+ * @param {EventLike} evt
  */
-os.events.killRightButton = function(evt) {
+const killRightButton = function(evt) {
   if (evt.button === 2) {
-    os.events.killEvent(evt);
+    killEvent(evt);
   }
 };
 
+/**
+ * Test if an event type is a selection type.
+ *
+ * @param {?string} type The event type
+ * @return {boolean}
+ */
+const isSelectionType = function(type) {
+  return !!type && googObject.containsValue(SelectionType, type);
+};
+
 // Do not kill off right-click events in input elements
-os.events.addExemption(
+addExemption(
     /**
      * @param {(Document|Element)} el The element
      * @param {string} type The event type
@@ -105,3 +114,12 @@ os.events.addExemption(
     function(el, type) {
       return el instanceof HTMLInputElement;
     });
+
+exports = {
+  preventBrowserContextMenu,
+  isExempt,
+  addExemption,
+  killEvent,
+  killRightButton,
+  isSelectionType
+};
