@@ -11,6 +11,8 @@ goog.require('ol.array');
 goog.require('os.config.Settings');
 goog.require('os.ui.config.SettingPlugin');
 
+goog.requireType('os.events.SettingChangeEvent');
+
 
 /**
  * @extends {os.ui.config.SettingPlugin}
@@ -160,7 +162,7 @@ os.config.ThemeSettingsCtrl.prototype.destroy_ = function() {
 /**
  * Handle units change via settings.
  *
- * @param {os.events.PropertyChangeEvent} event
+ * @param {os.events.SettingChangeEvent} event
  * @private
  */
 os.config.ThemeSettingsCtrl.prototype.onSettingsChange_ = function(event) {
@@ -174,7 +176,7 @@ os.config.ThemeSettingsCtrl.prototype.onSettingsChange_ = function(event) {
 /**
  * Handle units change via settings.
  *
- * @param {os.events.PropertyChangeEvent} event
+ * @param {os.events.SettingChangeEvent} event
  * @private
  */
 os.config.ThemeSettingsCtrl.prototype.onAccessibilitySettingsChange_ = function(event) {
