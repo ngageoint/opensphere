@@ -1,7 +1,6 @@
 goog.module('plugin.xyz.XYZDescriptorNodeUI');
 goog.module.declareLegacyNamespace();
 
-const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
 const DescriptorNodeUICtrl = goog.require('os.ui.data.DescriptorNodeUICtrl');
 const uiWindow = goog.require('os.ui.window');
@@ -16,7 +15,15 @@ const directive = () => {
   return {
     restrict: 'AE',
     replace: true,
-    templateUrl: ROOT + 'views/plugin/xyz/xyzdescriptornodeui.html',
+    template:
+    '<div>' +
+      '<span ng-if="nodeUi.show()" class="flex-shrink-0" ng-click="nodeUi.edit()">' +
+        '<i class="fa fa-pencil-alt fa-fw c-glyph" title="Edit this layer"></i>' +
+      '</span>' +
+      '<span ng-if="nodeUi.show()" class="flex-shrink-0" ng-click="nodeUi.tryRemove()">' +
+        '<i class="fa fa-trash-o fa-fw c-glyph" title="Remove this layer from the application"></i>' +
+      '</span>' +
+    '</div>',
     controller: Controller,
     controllerAs: 'nodeUi'
   };
