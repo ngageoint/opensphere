@@ -21,6 +21,12 @@ const Request = goog.require('os.net.Request');
 let geoMagFn = null;
 
 /**
+ * If the geomag library has loaded.
+ * @return {boolean}
+ */
+const isGeomagLoaded = () => !!geoMagFn;
+
+/**
  * Loads the geomagnetic model.
  */
 const loadGeomag = function() {
@@ -118,6 +124,7 @@ const getFormattedBearing = function(bearing, opt_precision, opt_bearingType) {
 };
 
 exports = {
+  isGeomagLoaded,
   loadGeomag,
   onGeomag,
   geomag,
