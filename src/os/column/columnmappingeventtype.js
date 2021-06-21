@@ -1,11 +1,10 @@
-goog.provide('os.column');
-goog.provide('os.column.ColumnMappingEventType');
-
+goog.module('os.column.ColumnMappingEventType');
+goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}
  */
-os.column.ColumnMappingEventType = {
+exports = {
   MAPPINGS_CHANGE: 'mappingsChange',
   COLUMN_ADDED: 'columnAdded',
   COLUMN_REMOVED: 'columnRemoved'
