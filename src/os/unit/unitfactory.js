@@ -1,8 +1,6 @@
 goog.module('os.unit.UnitFactory');
 goog.module.declareLegacyNamespace();
 
-const os = goog.require('os');
-
 const EnglishDistanceUnits = goog.require('os.unit.EnglishDistanceUnits');
 const FeetUnits = goog.require('os.unit.FeetUnits');
 const MetricUnits = goog.require('os.unit.MetricUnits');

@@ -15,10 +15,11 @@ const osMap = goog.require('os.map');
 const FlightMode = goog.require('os.map.FlightMode');
 const math = goog.require('os.math');
 const osProj = goog.require('os.proj');
+const IWebGLCamera = goog.require('os.webgl.IWebGLCamera'); // eslint-disable-line opensphere/no-unused-vars
 
 const OLMap = goog.requireType('ol.Map');
 const View = goog.requireType('ol.View');
-const IWebGLCamera = goog.requireType('os.webgl.IWebGLCamera');
+
 
 
 /**
@@ -481,7 +482,6 @@ class Camera extends OLCSCamera {
 
   /**
    * @inheritDoc
-   * @param {number=} opt_value The angle, in radians, to rotate by.
    */
   rotateLeft(opt_value) {
     if (this.cam_) {
@@ -491,7 +491,6 @@ class Camera extends OLCSCamera {
 
   /**
    * @inheritDoc
-   * @param {number=} opt_value The angle, in radians, to rotate by.
    */
   rotateRight(opt_value) {
     if (this.cam_) {
@@ -501,7 +500,6 @@ class Camera extends OLCSCamera {
 
   /**
    * @inheritDoc
-   * @param {number=} opt_value The angle, in radians, to rotate by.
    */
   rotateUp(opt_value) {
     if (this.cam_) {
@@ -511,7 +509,6 @@ class Camera extends OLCSCamera {
 
   /**
    * @inheritDoc
-   * @param {number=} opt_value The angle, in radians, to rotate by.
    */
   rotateDown(opt_value) {
     if (this.cam_) {
@@ -521,7 +518,6 @@ class Camera extends OLCSCamera {
 
   /**
    * @inheritDoc
-   * @param {number=} opt_value The angle, in radians.
    */
   twistLeft(opt_value) {
     if (this.cam_) {
@@ -531,7 +527,6 @@ class Camera extends OLCSCamera {
 
   /**
    * @inheritDoc
-   * @param {number=} opt_value The angle, in radians.
    */
   twistRight(opt_value) {
     if (this.cam_) {

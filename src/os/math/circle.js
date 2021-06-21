@@ -110,8 +110,4 @@ class Circle extends Coordinate {
   }
 }
 
-
-if (goog.DEBUG) {}
-
-
 exports = Circle;

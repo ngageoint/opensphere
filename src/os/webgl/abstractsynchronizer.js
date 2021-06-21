@@ -2,10 +2,10 @@ goog.module('os.webgl.AbstractWebGLSynchronizer');
 goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
-const fn = goog.require('os.fn');
-
-
 const TimelineController = goog.require('os.time.TimelineController');
+
+const PluggableMap = goog.requireType('ol.PluggableMap');
+const View = goog.requireType('ol.View');
 
 
 /**
@@ -18,7 +18,7 @@ class AbstractWebGLSynchronizer extends Disposable {
   /**
    * Constructor.
    * @param {!T} layer The OpenLayers layer.
-   * @param {!ol.PluggableMap} map The OpenLayers map.
+   * @param {!PluggableMap} map The OpenLayers map.
    */
   constructor(layer, map) {
     super();
@@ -39,21 +39,21 @@ class AbstractWebGLSynchronizer extends Disposable {
 
     /**
      * The OpenLayers map.
-     * @type {!ol.PluggableMap}
+     * @type {!PluggableMap}
      * @protected
      */
     this.map = map;
 
     /**
      * The OpenLayers view.
-     * @type {ol.View}
+     * @type {View}
      * @protected
      */
     this.view = map.getView();
 
     /**
      * The timeline controller instance.
-     * @type {os.time.TimelineController}
+     * @type {TimelineController}
      * @protected
      */
     this.tlc = TimelineController.getInstance();
@@ -92,12 +92,12 @@ class AbstractWebGLSynchronizer extends Disposable {
   reposition(start, end) {
     return ++start;
   }
+
+  /**
+   * Called after the WebGL camera finishes changing. Useful for synchronizers that need to perform actions once the
+   * camera move is done and the render is finished.
+   */
+  updateFromCamera() {}
 }
 
-
-/**
- * Called after the WebGL camera finishes changing. Useful for synchronizers that need to perform actions once the
- * camera move is done and the render is finished.
- */
-AbstractWebGLSynchronizer.prototype.updateFromCamera = fn.noop;
 exports = AbstractWebGLSynchronizer;

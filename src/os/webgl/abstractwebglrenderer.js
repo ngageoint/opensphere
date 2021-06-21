@@ -9,13 +9,16 @@ const MapEvent = goog.require('os.MapEvent');
 const osColor = goog.require('os.color');
 const DisplaySetting = goog.require('os.config.DisplaySetting');
 const Settings = goog.require('os.config.Settings');
-const fn = goog.require('os.fn');
 const terrain = goog.require('os.map.terrain');
 const AltitudeMode = goog.require('os.webgl.AltitudeMode');
-const IWebGLRenderer = goog.requireType('os.webgl.IWebGLRenderer');
 
 const AbstractRootSynchronizer = goog.requireType('os.webgl.AbstractRootSynchronizer');
 const IWebGLCamera = goog.requireType('os.webgl.IWebGLCamera');
+const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
+
+// The compiler has to process this first or @inheritDoc will not work properly on implementing classes.
+// @see https://github.com/google/closure-compiler/issues/3583
+const IWebGLRenderer = goog.require('os.webgl.IWebGLRenderer'); // eslint-disable-line opensphere/no-unused-vars
 
 
 /**
@@ -224,42 +227,25 @@ class AbstractWebGLRenderer extends Disposable {
 
   /**
    * @abstract
-   * @override
-   * @param {ol.Pixel} pixel The pixel.
-   * @return {ol.Coordinate} The coordinate, or null if no coordinate at the given pixel.
+   * @inheritDoc
    */
   getCoordinateFromPixel(pixel) {}
 
   /**
    * @abstract
-   * @override
-   * @param {ol.Coordinate} coord The coordinate.
-   * @param {boolean=} opt_inView If the coordinate must be in the camera view and not occluded by the globe.
-   * @return {ol.Pixel} The pixel, or null if no pixel at the given coordinate.
+   * @inheritDoc
    */
   getPixelFromCoordinate(coord, opt_inView) {}
 
   /**
    * @abstract
-   * @override
-   * @param {ol.Pixel} pixel Pixel.
-   * @param {function(this: S, (ol.Feature|ol.render.Feature), ol.layer.Layer): T} callback Feature callback.
-   *     The callback will be called with two arguments. The first argument is one {@link ol.Feature feature} or
-   *     {@link ol.render.Feature render feature} at the pixel, the second is
-   *     the {@link ol.layer.Layer layer} of the feature and will be null for
-   *     unmanaged layers. To stop detection, callback functions can return a truthy value.
-   * @param {olx.AtPixelOptions=} opt_options Optional options.
-   * @return {T|undefined} Callback result, i.e. the return value of last
-   * callback execution, or the first truthy callback return value.
-   *
-   * @template S,T
+   * @inheritDoc
    */
   forEachFeatureAtPixel(pixel, callback, opt_options) {}
 
   /**
    * @abstract
-   * @override
-   * @param {boolean} value If user movement should be enabled.
+   * @inheritDoc
    */
   toggleMovement(value) {}
 
@@ -283,15 +269,14 @@ class AbstractWebGLRenderer extends Disposable {
 
   /**
    * @abstract
-   * @override
-   * @return {IWebGLCamera|undefined}
+   * @inheritDoc
    */
   getCamera() {}
 
   /**
    * Handle settings changes that affect the renderer.
    *
-   * @param {!os.events.SettingChangeEvent} event The event.
+   * @param {!SettingChangeEvent} event The event.
    * @protected
    */
   onSettingChange(event) {
@@ -472,6 +457,11 @@ class AbstractWebGLRenderer extends Disposable {
   /**
    * @inheritDoc
    */
+  renderSync() {}
+
+  /**
+   * @inheritDoc
+   */
   onPostRender(callback) {
     return undefined;
   }
@@ -513,12 +503,5 @@ AbstractWebGLRenderer.LOGGER_ = log.getLogger('os.webgl.AbstractWebGLRenderer');
  * @const
  */
 AbstractWebGLRenderer.ACTIVE_SETTINGS_KEY = 'activeWebGLRenderer';
-
-
-/**
- * @inheritDoc
- */
-AbstractWebGLRenderer.prototype.renderSync = fn.noop;
-
 
 exports = AbstractWebGLRenderer;

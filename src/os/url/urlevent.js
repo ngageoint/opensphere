@@ -16,6 +16,11 @@ class UrlEvent extends GoogEvent {
    */
   constructor(params, opt_target) {
     super(EventType.URL_IMPORTED, opt_target);
+
+    /**
+     * @private
+     * @type {Object}
+     */
     this.params_ = params;
   }
 
@@ -26,13 +31,5 @@ class UrlEvent extends GoogEvent {
     return this.params_;
   }
 }
-
-
-/**
- * @private
- * @type {Object}
- */
-UrlEvent.prototype.params_ = null;
-
 
 exports = UrlEvent;

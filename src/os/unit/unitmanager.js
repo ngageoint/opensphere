@@ -4,7 +4,6 @@ goog.module.declareLegacyNamespace();
 const googArray = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
-const os = goog.require('os');
 const Settings = goog.require('os.config.Settings');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const UNITS = goog.require('os.unit.UNITS');
@@ -13,6 +12,7 @@ const UnitFactory = goog.require('os.unit.UnitFactory');
 
 const IMultiplier = goog.requireType('os.unit.IMultiplier');
 const IUnit = goog.requireType('os.unit.IUnit');
+const SettingChangeEvent = goog.requireType('os.events.SettingChangeEvent');
 
 
 /**
@@ -231,7 +231,7 @@ class UnitManager extends EventTarget {
   /**
    * Handle units setting change.
    *
-   * @param {os.events.SettingChangeEvent} event
+   * @param {SettingChangeEvent} event
    * @private
    */
   onUnitsChange_(event) {
