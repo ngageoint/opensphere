@@ -166,7 +166,7 @@ const allowLivePreview = function(config) {
  * @param {boolean=} opt_preview If the features should only be returned for preview
  * @return {Array<!Feature>} The new areas
  */
-const createFromConfig = function(config, opt_preview) {
+let createFromConfig_ = function(config, opt_preview) {
   if (isConfigValid(config)) {
     var distance = math.convertUnits(config['distance'], Units.METERS, config['units']);
     var areas = [];
@@ -266,6 +266,26 @@ const createFromConfig = function(config, opt_preview) {
 };
 
 /**
+ * Creates buffer regions from a buffer config and adds them to the area manager.
+ *
+ * @param {BufferConfig} config The buffer config
+ * @param {boolean=} opt_preview If the features should only be returned for preview
+ * @return {Array<!Feature>} The new areas
+ */
+const createFromConfig = function(config, opt_preview) {
+  return createFromConfig_(config, opt_preview);
+};
+
+/**
+ * Replace default createFromConfig implementation.
+ *
+ * @param {!function(BufferConfig, boolean=):Array<!Feature>} f The new implementation
+ */
+const setCreateFromConfig = function(f) {
+  createFromConfig_ = f;
+};
+
+/**
  * Launch a dialog to create buffer regions around features.
  *
  * @param {Object} options
@@ -306,6 +326,7 @@ exports = {
   isConfigValid,
   allowLivePreview,
   createFromConfig,
+  setCreateFromConfig,
   launchDialog,
   BufferConfig
 };
