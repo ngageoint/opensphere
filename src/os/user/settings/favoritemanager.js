@@ -317,8 +317,8 @@ class FavoriteManager extends EventTarget {
    * Open the favorites manager
    */
   openManager() {
-    if (os.favoriteManager.manager) {
-      os.favoriteManager.manager();
+    if (this.manager) {
+      this.manager();
     }
   }
 
@@ -603,7 +603,7 @@ class FavoriteManager extends EventTarget {
     if (nodes) {
       for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
-        var fav = osObject.unsafeClone(os.favoriteManager.getFavorite(node.getId()));
+        var fav = osObject.unsafeClone(FavoriteManager.getInstance().getFavorite(node.getId()));
         var nodeChildren = node.getChildren();
         if (nodeChildren && nodeChildren.length > 0) {
           var children = FavoriteManager.convertInternal_(node.getChildren());
@@ -617,7 +617,6 @@ class FavoriteManager extends EventTarget {
     return result;
   }
 }
-
 goog.addSingletonGetter(FavoriteManager);
 
 
@@ -630,7 +629,9 @@ FavoriteManager.KEY = 'favorite';
 
 /**
  * Global reference to the favorite manager singleton.
- * @type {!os.user.settings.FavoriteManager}
+ * @type {!FavoriteManager}
+ * @deprecated Please use FavoriteManager.getInstance() instead of the global to access the favorite manager.
  */
 os.favoriteManager = FavoriteManager.getInstance();
+
 exports = FavoriteManager;

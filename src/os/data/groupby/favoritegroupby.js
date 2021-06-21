@@ -29,7 +29,7 @@ os.data.groupby.FavoriteGroupBy.prototype.getGroupIds = function(node) {
     var nodeId = /** @type {string} */ (node.getId());
     if (nodeId) {
       var desc = os.dataManager.getDescriptor(node.getId());
-      if (desc && os.favoriteManager.getFavorite(desc.getId())) {
+      if (desc && os.user.settings.FavoriteManager.getInstance().getFavorite(desc.getId())) {
         ids.push('Favorites');
       } else {
         ids.push('Other');
