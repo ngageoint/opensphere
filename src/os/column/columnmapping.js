@@ -1,10 +1,12 @@
 goog.module('os.column.ColumnMapping');
 goog.module.declareLegacyNamespace();
 
+const asserts = goog.require('goog.asserts');
 const dom = goog.require('goog.dom');
 const googDomXml = goog.require('goog.dom.xml');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
+const googString = goog.require('goog.string');
 const olArray = goog.require('ol.array');
 const ColumnMappingEvent = goog.require('os.column.ColumnMappingEvent');
 const ColumnMappingEventType = goog.require('os.column.ColumnMappingEventType');
@@ -41,7 +43,7 @@ class ColumnMapping extends EventTarget {
      * @type {!string}
      * @private
      */
-    this.id_ = goog.string.getRandomString();
+    this.id_ = googString.getRandomString();
 
     /**
      * @type {?string}
@@ -80,7 +82,7 @@ class ColumnMapping extends EventTarget {
    * @inheritDoc
    */
   setId(value) {
-    this.id_ = value || goog.string.getRandomString();
+    this.id_ = value || googString.getRandomString();
   }
 
   /**
@@ -185,9 +187,9 @@ class ColumnMapping extends EventTarget {
           var type = mappingEl.getAttribute(ColumnMappingAttr.TYPE);
           var name = mappingEl.getAttribute(ColumnMappingAttr.NAME);
 
-          goog.asserts.assertString(type);
+          asserts.assertString(type);
           this.setValueType(type);
-          goog.asserts.assertString(name);
+          asserts.assertString(name);
           this.setName(name);
 
           var description = /** @type {string} */ (mappingEl.getAttribute(ColumnMappingAttr.DESCRIPTION));

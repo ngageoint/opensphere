@@ -1,7 +1,9 @@
 goog.module('os.column.ColumnMappingManager');
 goog.module.declareLegacyNamespace();
 
+const Deferred = goog.require('goog.async.Deferred');
 const Delay = goog.require('goog.async.Delay');
+const log = goog.require('goog.log');
 const {COLUMN_MAPPINGS_STORAGE_KEY} = goog.require('os');
 const ColumnMapping = goog.require('os.column.ColumnMapping');
 const ColumnMappingEventType = goog.require('os.column.ColumnMappingEventType');
@@ -58,7 +60,7 @@ class ColumnMappingManager extends CollectionManager {
    * @return {!goog.async.Deferred}
    */
   save() {
-    goog.log.info(this.log, 'Saving column associations.');
+    log.info(this.log, 'Saving column associations.');
     var mappings = this.getAll();
     var toSave = [];
     for (var i = 0, ii = mappings.length; i < ii; i++) {
@@ -66,7 +68,7 @@ class ColumnMappingManager extends CollectionManager {
     }
 
     Settings.getInstance().set(COLUMN_MAPPINGS_STORAGE_KEY, toSave);
-    return goog.async.Deferred.succeed();
+    return Deferred.succeed();
   }
 
   /**
@@ -75,9 +77,9 @@ class ColumnMappingManager extends CollectionManager {
    * @return {!goog.async.Deferred<Array<IColumnMapping>>}
    */
   load() {
-    goog.log.info(this.log, 'Loading column associations...');
+    log.info(this.log, 'Loading column associations...');
     var mappings = Settings.getInstance().get(COLUMN_MAPPINGS_STORAGE_KEY);
-    return goog.async.Deferred.succeed(mappings).addCallback(this.onMappingsLoaded_, this);
+    return Deferred.succeed(mappings).addCallback(this.onMappingsLoaded_, this);
   }
 
   /**
@@ -90,7 +92,7 @@ class ColumnMappingManager extends CollectionManager {
   onMappingsLoaded_(data) {
     var mappings = this.parseMappings_(data);
     this.bulkAdd(mappings);
-    goog.log.info(this.log, 'Loaded ' + mappings.length + ' associations(s) from storage.');
+    log.info(this.log, 'Loaded ' + mappings.length + ' associations(s) from storage.');
 
     return mappings;
   }
@@ -328,7 +330,7 @@ let instance;
  * Logger
  * @type {goog.log.Logger}
  */
-const logger = goog.log.getLogger('os.column.ColumnMappingManager');
+const logger = log.getLogger('os.column.ColumnMappingManager');
 
 
 exports = ColumnMappingManager;

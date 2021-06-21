@@ -1,9 +1,16 @@
+goog.require('goog.object');
 goog.require('os.column.ColumnMapping');
+goog.require('os.column.ColumnMappingEventType');
 goog.require('os.column.ColumnMappingManager');
 goog.require('os.mock');
 
 
 describe('os.column.ColumnMappingManager', function() {
+  const googObject = goog.module.get('goog.object');
+  const ColumnMapping = goog.module.get('os.column.ColumnMapping');
+  const ColumnMappingEventType = goog.module.get('os.column.ColumnMappingEventType');
+  const ColumnMappingManager = goog.module.get('os.column.ColumnMappingManager');
+
   var cmm;
   var mappingString = '<columnMapping name="My Mapping" type="decimal" description="some description">' +
       '<column layer="https://fake.server.bits/ogc/wfsServer!!fake:layer1">layer1_column1</column>' +
@@ -15,11 +22,11 @@ describe('os.column.ColumnMappingManager', function() {
     'id': id
   };
 
-  var mapping = new os.column.ColumnMapping();
+  var mapping = new ColumnMapping();
   mapping.restore(config);
 
   beforeEach(function() {
-    cmm = os.column.ColumnMappingManager.getInstance();
+    cmm = ColumnMappingManager.getInstance();
     cmm.clear();
     cmm.save();
   });
@@ -27,23 +34,23 @@ describe('os.column.ColumnMappingManager', function() {
   it('should hash columns with a "#" in the middle', function() {
     var layerName = 'https://fake.server.bits/ogc/wfsServer!!fake:layer69';
     var columnName = 'layer69_column416';
-    var hash = os.column.ColumnMappingManager.hashLayerColumn(layerName, columnName);
+    var hash = ColumnMappingManager.hashLayerColumn(layerName, columnName);
     expect(hash).toBe(layerName + '#' + columnName);
   });
 
   it('should add mappings and keep track of them by hash', function() {
     var column1 = mapping.getColumns()[0];
     var column2 = mapping.getColumns()[1];
-    var hash1 = os.column.ColumnMappingManager.hashColumn(column1);
-    var hash2 = os.column.ColumnMappingManager.hashColumn(column2);
+    var hash1 = ColumnMappingManager.hashColumn(column1);
+    var hash2 = ColumnMappingManager.hashColumn(column2);
 
     expect(cmm.items_.length).toBe(0);
-    expect(goog.object.getCount(cmm.layerColumnMap_)).toBe(0);
+    expect(googObject.getCount(cmm.layerColumnMap_)).toBe(0);
 
     cmm.add(mapping);
 
     expect(cmm.items_.length).toBe(1);
-    expect(goog.object.getCount(cmm.layerColumnMap_)).toBe(2);
+    expect(googObject.getCount(cmm.layerColumnMap_)).toBe(2);
     expect(cmm.layerColumnMap_[hash1]).toBe(id);
     expect(cmm.layerColumnMap_[hash2]).toBe(id);
   });
@@ -51,29 +58,29 @@ describe('os.column.ColumnMappingManager', function() {
   it('should add an owned column when a managed mapping does', function() {
     cmm.add(mapping);
     expect(cmm.items_.length).toBe(1);
-    expect(goog.object.getCount(cmm.layerColumnMap_)).toBe(2);
+    expect(googObject.getCount(cmm.layerColumnMap_)).toBe(2);
 
     var layerName = 'https://fake.server.bits/ogc/wfsServer!!fake:layer99';
     var columnName = 'layer99_column50';
-    var hash = os.column.ColumnMappingManager.hashLayerColumn(layerName, columnName);
+    var hash = ColumnMappingManager.hashLayerColumn(layerName, columnName);
     expect(cmm.layerColumnMap_[hash]).toBe(undefined);
 
     mapping.addColumn(layerName, columnName);
     expect(cmm.layerColumnMap_[hash]).toBe(id);
-    expect(goog.object.getCount(cmm.layerColumnMap_)).toBe(3);
+    expect(googObject.getCount(cmm.layerColumnMap_)).toBe(3);
   });
 
   it('should remove an owned column when a managed mapping does', function() {
     var column1 = mapping.getColumns()[0];
-    var hash1 = os.column.ColumnMappingManager.hashColumn(column1);
+    var hash1 = ColumnMappingManager.hashColumn(column1);
 
     cmm.add(mapping);
     expect(cmm.items_.length).toBe(1);
-    expect(goog.object.getCount(cmm.layerColumnMap_)).toBe(3);
+    expect(googObject.getCount(cmm.layerColumnMap_)).toBe(3);
     expect(cmm.layerColumnMap_[hash1]).toBe(id);
 
     mapping.removeColumn(column1);
-    expect(goog.object.getCount(cmm.layerColumnMap_)).toBe(2);
+    expect(googObject.getCount(cmm.layerColumnMap_)).toBe(2);
     expect(cmm.layerColumnMap_[hash1]).toBe(undefined);
   });
 
@@ -83,7 +90,7 @@ describe('os.column.ColumnMappingManager', function() {
       fired = true;
     };
 
-    cmm.listenOnce(os.column.ColumnMappingEventType.MAPPINGS_CHANGE, listener);
+    cmm.listenOnce(ColumnMappingEventType.MAPPINGS_CHANGE, listener);
     cmm.onChange();
 
     waitsFor(function() {
@@ -112,9 +119,9 @@ describe('os.column.ColumnMappingManager', function() {
     'id': id2
   };
 
-  var mapping1 = new os.column.ColumnMapping();
+  var mapping1 = new ColumnMapping();
   mapping1.restore(config1);
-  var mapping2 = new os.column.ColumnMapping();
+  var mapping2 = new ColumnMapping();
   mapping2.restore(config2);
 
   it('should be able to bulk add column mappings', function() {
@@ -127,7 +134,7 @@ describe('os.column.ColumnMappingManager', function() {
     expect(cmm.getAll().length).toBe(2);
 
     var column1 = mapping1.getColumns()[0];
-    var hash1 = os.column.ColumnMappingManager.hashColumn(column1);
+    var hash1 = ColumnMappingManager.hashColumn(column1);
     var ownerMapping = cmm.getOwnerMapping(hash1);
     expect(ownerMapping).toBe(mapping1);
 
