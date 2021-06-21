@@ -1,7 +1,11 @@
+goog.require('goog.array');
 goog.require('os.array');
 
 
 describe('os.array', function() {
+  const googArray = goog.module.get('goog.array');
+  const osArray = goog.module.get('os.array');
+
   it('should return indexes for a binary insert', function() {
     var list = [2, 4, 6, 8];
     var values = [
@@ -12,13 +16,13 @@ describe('os.array', function() {
       {value: 9, index: 7}];
 
     values.forEach(function(item) {
-      expect(os.array.binaryInsert(list, item.value)).toBe(item.index);
+      expect(osArray.binaryInsert(list, item.value)).toBe(item.index);
     });
   });
 
   it('should clear arrays and array-like objects', function() {
     var array = [1, 2, 3];
-    os.array.clear(array);
+    osArray.clear(array);
     expect(array.length).toBe(0);
 
     var obj = {
@@ -28,7 +32,7 @@ describe('os.array', function() {
       length: 3
     };
 
-    os.array.clear(obj);
+    osArray.clear(obj);
     expect(obj['0']).toBeUndefined();
 
     var keys = 0;
@@ -50,7 +54,7 @@ describe('os.array', function() {
     };
 
     var calls = 0;
-    os.array.forEach(array, function(el, idx, arr) {
+    osArray.forEach(array, function(el, idx, arr) {
       expect(el).toBe(array[idx]);
       expect(arr).toBe(array);
       calls++;
@@ -58,7 +62,7 @@ describe('os.array', function() {
     expect(calls).toBe(array.length);
 
     calls = 0;
-    os.array.forEach(obj, function(el, idx, arr) {
+    osArray.forEach(obj, function(el, idx, arr) {
       expect(el).toBe(obj[idx]);
       expect(arr).toBe(obj);
       calls++;
@@ -70,7 +74,7 @@ describe('os.array', function() {
     var things = [undefined, null];
 
     things.forEach(function(arg) {
-      expect(os.array.forEachSafe.bind(null, arg)).not.toThrow();
+      expect(osArray.forEachSafe.bind(null, arg)).not.toThrow();
     });
   });
 
@@ -78,7 +82,7 @@ describe('os.array', function() {
     var list = [1, 1, 2, 3, 5, 8];
 
     var sum = 0;
-    os.array.forEachSafe(list, function(num) {
+    osArray.forEachSafe(list, function(num) {
       sum += num;
     });
 
@@ -97,7 +101,7 @@ describe('os.array', function() {
     var srcStart = 2;
     var destStart = 8;
     var length = 3;
-    os.array.arrayCopy(src, srcStart, dest, destStart, length);
+    osArray.arrayCopy(src, srcStart, dest, destStart, length);
 
     for (var i = 0, n = dest.length; i < n; i++) {
       if (i < destStart || i >= destStart + length) {
@@ -112,7 +116,7 @@ describe('os.array', function() {
     var thing = {thing: true};
     var list = [0, 0, false, '', null, undefined, 1, true, 2, 2, 2, 3, 4, '4',
       'yay', 'yay', null, null, undefined, undefined, thing, {thing: true}, thing];
-    var dupes = os.array.findDuplicates(list);
+    var dupes = osArray.findDuplicates(list);
 
     expect(dupes.length).toBe(9);
     expect(dupes[0]).toBe(0);
@@ -138,17 +142,17 @@ describe('os.array', function() {
     };
 
     var arr = [a, b];
-    var sorted = arr.sort(goog.partial(os.array.sortByField, 'num'));
-    expect(goog.array.equals(sorted, [a, b])).toBeTruthy();
+    var sorted = arr.sort(goog.partial(osArray.sortByField, 'num'));
+    expect(googArray.equals(sorted, [a, b])).toBeTruthy();
 
-    sorted = arr.sort(goog.partial(os.array.sortByFieldDesc, 'num'));
-    expect(goog.array.equals(sorted, [b, a])).toBeTruthy();
+    sorted = arr.sort(goog.partial(osArray.sortByFieldDesc, 'num'));
+    expect(googArray.equals(sorted, [b, a])).toBeTruthy();
 
-    sorted = arr.sort(goog.partial(os.array.sortByField, 'str'));
-    expect(goog.array.equals(sorted, [a, b])).toBeTruthy();
+    sorted = arr.sort(goog.partial(osArray.sortByField, 'str'));
+    expect(googArray.equals(sorted, [a, b])).toBeTruthy();
 
-    sorted = arr.sort(goog.partial(os.array.sortByFieldDesc, 'str'));
-    expect(goog.array.equals(sorted, [b, a])).toBeTruthy();
+    sorted = arr.sort(goog.partial(osArray.sortByFieldDesc, 'str'));
+    expect(googArray.equals(sorted, [b, a])).toBeTruthy();
   });
 
   describe('os.array.join', function() {
@@ -169,7 +173,7 @@ describe('os.array', function() {
       return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
     };
 
-    var joinFuncs = [os.array.join];
+    var joinFuncs = [osArray.join];
 
     it('should join 2 sets', function() {
       for (var j = 0, jj = joinFuncs.length; j < jj; j++) {
@@ -534,7 +538,7 @@ describe('os.array', function() {
         crossProduct: true
       }];
 
-      expect(os.array.join.bind(null, sets, copyFunc)).toThrow();
+      expect(osArray.join.bind(null, sets, copyFunc)).toThrow();
     });
 
     it('should binary search arrays with a stride', function() {
@@ -545,50 +549,50 @@ describe('os.array', function() {
       // offset 0 values
 
       // values at the front of the array
-      expect(os.array.binaryStrideSearch(arr, -10, stride, 0)).toBe(~0);
+      expect(osArray.binaryStrideSearch(arr, -10, stride, 0)).toBe(~0);
 
       // values at the end of the array
-      expect(os.array.binaryStrideSearch(arr, 20, stride, 0)).toBe(~arr.length);
+      expect(osArray.binaryStrideSearch(arr, 20, stride, 0)).toBe(~arr.length);
 
       // values in the middle of the array
-      expect(os.array.binaryStrideSearch(arr, 3, stride, 0)).toBe(~2);
-      expect(os.array.binaryStrideSearch(arr, 5, stride, 0)).toBe(~4);
-      expect(os.array.binaryStrideSearch(arr, 7, stride, 0)).toBe(~6);
+      expect(osArray.binaryStrideSearch(arr, 3, stride, 0)).toBe(~2);
+      expect(osArray.binaryStrideSearch(arr, 5, stride, 0)).toBe(~4);
+      expect(osArray.binaryStrideSearch(arr, 7, stride, 0)).toBe(~6);
 
       // values in the array on the offset
-      expect(os.array.binaryStrideSearch(arr, 2, stride, 0)).toBe(0);
-      expect(os.array.binaryStrideSearch(arr, 4, stride, 0)).toBe(2);
-      expect(os.array.binaryStrideSearch(arr, 6, stride, 0)).toBe(4);
-      expect(os.array.binaryStrideSearch(arr, 8, stride, 0)).toBe(6);
+      expect(osArray.binaryStrideSearch(arr, 2, stride, 0)).toBe(0);
+      expect(osArray.binaryStrideSearch(arr, 4, stride, 0)).toBe(2);
+      expect(osArray.binaryStrideSearch(arr, 6, stride, 0)).toBe(4);
+      expect(osArray.binaryStrideSearch(arr, 8, stride, 0)).toBe(6);
 
       // values in the array not on the offset
-      expect(os.array.binaryStrideSearch(arr, 200, stride, 0)).toBe(~arr.length);
-      expect(os.array.binaryStrideSearch(arr, 400, stride, 0)).toBe(~arr.length);
-      expect(os.array.binaryStrideSearch(arr, 600, stride, 0)).toBe(~arr.length);
+      expect(osArray.binaryStrideSearch(arr, 200, stride, 0)).toBe(~arr.length);
+      expect(osArray.binaryStrideSearch(arr, 400, stride, 0)).toBe(~arr.length);
+      expect(osArray.binaryStrideSearch(arr, 600, stride, 0)).toBe(~arr.length);
 
       // offset 1 values
 
       // values at the front of the array
-      expect(os.array.binaryStrideSearch(arr, 0, stride, 1)).toBe(~0);
+      expect(osArray.binaryStrideSearch(arr, 0, stride, 1)).toBe(~0);
 
       // values at the end of the array
-      expect(os.array.binaryStrideSearch(arr, 1000, stride, 0)).toBe(~arr.length);
+      expect(osArray.binaryStrideSearch(arr, 1000, stride, 0)).toBe(~arr.length);
 
       // values in the middle of the array
-      expect(os.array.binaryStrideSearch(arr, 300, stride, 1)).toBe(~2);
-      expect(os.array.binaryStrideSearch(arr, 500, stride, 1)).toBe(~4);
-      expect(os.array.binaryStrideSearch(arr, 700, stride, 1)).toBe(~6);
+      expect(osArray.binaryStrideSearch(arr, 300, stride, 1)).toBe(~2);
+      expect(osArray.binaryStrideSearch(arr, 500, stride, 1)).toBe(~4);
+      expect(osArray.binaryStrideSearch(arr, 700, stride, 1)).toBe(~6);
 
       // values in the array on the offset
-      expect(os.array.binaryStrideSearch(arr, 200, stride, 1)).toBe(0);
-      expect(os.array.binaryStrideSearch(arr, 400, stride, 1)).toBe(2);
-      expect(os.array.binaryStrideSearch(arr, 600, stride, 1)).toBe(4);
-      expect(os.array.binaryStrideSearch(arr, 800, stride, 1)).toBe(6);
+      expect(osArray.binaryStrideSearch(arr, 200, stride, 1)).toBe(0);
+      expect(osArray.binaryStrideSearch(arr, 400, stride, 1)).toBe(2);
+      expect(osArray.binaryStrideSearch(arr, 600, stride, 1)).toBe(4);
+      expect(osArray.binaryStrideSearch(arr, 800, stride, 1)).toBe(6);
 
       // values in the array not on the offset
-      expect(os.array.binaryStrideSearch(arr, 2, stride, 1)).toBe(~0);
-      expect(os.array.binaryStrideSearch(arr, 4, stride, 1)).toBe(~0);
-      expect(os.array.binaryStrideSearch(arr, 6, stride, 1)).toBe(~0);
+      expect(osArray.binaryStrideSearch(arr, 2, stride, 1)).toBe(~0);
+      expect(osArray.binaryStrideSearch(arr, 4, stride, 1)).toBe(~0);
+      expect(osArray.binaryStrideSearch(arr, 6, stride, 1)).toBe(~0);
 
       // odd sized array
       arr.push(10);
@@ -597,54 +601,54 @@ describe('os.array', function() {
       // offset 0 values
 
       // values at the front of the array
-      expect(os.array.binaryStrideSearch(arr, -10, stride, 0)).toBe(~0);
+      expect(osArray.binaryStrideSearch(arr, -10, stride, 0)).toBe(~0);
 
       // values at the end of the array
-      expect(os.array.binaryStrideSearch(arr, 20, stride, 0)).toBe(~arr.length);
+      expect(osArray.binaryStrideSearch(arr, 20, stride, 0)).toBe(~arr.length);
 
       // values in the middle of the array
-      expect(os.array.binaryStrideSearch(arr, 3, stride, 0)).toBe(~2);
-      expect(os.array.binaryStrideSearch(arr, 5, stride, 0)).toBe(~4);
-      expect(os.array.binaryStrideSearch(arr, 7, stride, 0)).toBe(~6);
-      expect(os.array.binaryStrideSearch(arr, 9, stride, 0)).toBe(~8);
+      expect(osArray.binaryStrideSearch(arr, 3, stride, 0)).toBe(~2);
+      expect(osArray.binaryStrideSearch(arr, 5, stride, 0)).toBe(~4);
+      expect(osArray.binaryStrideSearch(arr, 7, stride, 0)).toBe(~6);
+      expect(osArray.binaryStrideSearch(arr, 9, stride, 0)).toBe(~8);
 
       // values in the array on the offset
-      expect(os.array.binaryStrideSearch(arr, 2, stride, 0)).toBe(0);
-      expect(os.array.binaryStrideSearch(arr, 4, stride, 0)).toBe(2);
-      expect(os.array.binaryStrideSearch(arr, 6, stride, 0)).toBe(4);
-      expect(os.array.binaryStrideSearch(arr, 8, stride, 0)).toBe(6);
-      expect(os.array.binaryStrideSearch(arr, 10, stride, 0)).toBe(8);
+      expect(osArray.binaryStrideSearch(arr, 2, stride, 0)).toBe(0);
+      expect(osArray.binaryStrideSearch(arr, 4, stride, 0)).toBe(2);
+      expect(osArray.binaryStrideSearch(arr, 6, stride, 0)).toBe(4);
+      expect(osArray.binaryStrideSearch(arr, 8, stride, 0)).toBe(6);
+      expect(osArray.binaryStrideSearch(arr, 10, stride, 0)).toBe(8);
 
       // values in the array not on the offset
-      expect(os.array.binaryStrideSearch(arr, 200, stride, 0)).toBe(~arr.length);
-      expect(os.array.binaryStrideSearch(arr, 400, stride, 0)).toBe(~arr.length);
-      expect(os.array.binaryStrideSearch(arr, 600, stride, 0)).toBe(~arr.length);
+      expect(osArray.binaryStrideSearch(arr, 200, stride, 0)).toBe(~arr.length);
+      expect(osArray.binaryStrideSearch(arr, 400, stride, 0)).toBe(~arr.length);
+      expect(osArray.binaryStrideSearch(arr, 600, stride, 0)).toBe(~arr.length);
 
       // offset 1 values
 
       // values at the front of the array
-      expect(os.array.binaryStrideSearch(arr, 0, stride, 1)).toBe(~0);
+      expect(osArray.binaryStrideSearch(arr, 0, stride, 1)).toBe(~0);
 
       // values at the end of the array
-      expect(os.array.binaryStrideSearch(arr, 1001, stride, 0)).toBe(~arr.length);
+      expect(osArray.binaryStrideSearch(arr, 1001, stride, 0)).toBe(~arr.length);
 
       // values in the middle of the array
-      expect(os.array.binaryStrideSearch(arr, 300, stride, 1)).toBe(~2);
-      expect(os.array.binaryStrideSearch(arr, 500, stride, 1)).toBe(~4);
-      expect(os.array.binaryStrideSearch(arr, 700, stride, 1)).toBe(~6);
-      expect(os.array.binaryStrideSearch(arr, 900, stride, 1)).toBe(~8);
+      expect(osArray.binaryStrideSearch(arr, 300, stride, 1)).toBe(~2);
+      expect(osArray.binaryStrideSearch(arr, 500, stride, 1)).toBe(~4);
+      expect(osArray.binaryStrideSearch(arr, 700, stride, 1)).toBe(~6);
+      expect(osArray.binaryStrideSearch(arr, 900, stride, 1)).toBe(~8);
 
       // values in the array on the offset
-      expect(os.array.binaryStrideSearch(arr, 200, stride, 1)).toBe(0);
-      expect(os.array.binaryStrideSearch(arr, 400, stride, 1)).toBe(2);
-      expect(os.array.binaryStrideSearch(arr, 600, stride, 1)).toBe(4);
-      expect(os.array.binaryStrideSearch(arr, 800, stride, 1)).toBe(6);
-      expect(os.array.binaryStrideSearch(arr, 1000, stride, 1)).toBe(8);
+      expect(osArray.binaryStrideSearch(arr, 200, stride, 1)).toBe(0);
+      expect(osArray.binaryStrideSearch(arr, 400, stride, 1)).toBe(2);
+      expect(osArray.binaryStrideSearch(arr, 600, stride, 1)).toBe(4);
+      expect(osArray.binaryStrideSearch(arr, 800, stride, 1)).toBe(6);
+      expect(osArray.binaryStrideSearch(arr, 1000, stride, 1)).toBe(8);
 
       // values in the array not on the offset
-      expect(os.array.binaryStrideSearch(arr, 2, stride, 1)).toBe(~0);
-      expect(os.array.binaryStrideSearch(arr, 4, stride, 1)).toBe(~0);
-      expect(os.array.binaryStrideSearch(arr, 6, stride, 1)).toBe(~0);
+      expect(osArray.binaryStrideSearch(arr, 2, stride, 1)).toBe(~0);
+      expect(osArray.binaryStrideSearch(arr, 4, stride, 1)).toBe(~0);
+      expect(osArray.binaryStrideSearch(arr, 6, stride, 1)).toBe(~0);
     });
 
     it('should throw an error if multiple data sets have crossProduct=true', function() {
@@ -662,7 +666,7 @@ describe('os.array', function() {
         crossProduct: true
       }];
 
-      expect(os.array.join.bind(null, sets, copyFunc)).toThrow();
+      expect(osArray.join.bind(null, sets, copyFunc)).toThrow();
     });
   });
 });
