@@ -207,7 +207,9 @@ class KMLNode extends SlickTreeNode {
      */
     this.layerUI = null;
 
-    // TBD
+    /**
+     * @type {?LayerNode}
+     */
     this.layerNode = null;
   }
 
