@@ -18,10 +18,10 @@ const directive = () => {
     template:
     '<div>' +
       '<span ng-if="nodeUi.show()" class="flex-shrink-0" ng-click="nodeUi.edit()">' +
-        '<i class="fa fa-pencil-alt fa-fw c-glyph" title="Edit this layer"></i>' +
+        '<i class="fas fa-pencil-alt fa-fw c-glyph" title="Edit this layer"></i>' +
       '</span>' +
       '<span ng-if="nodeUi.show()" class="flex-shrink-0" ng-click="nodeUi.tryRemove()">' +
-        '<i class="fa fa-trash-o fa-fw c-glyph" title="Remove this layer from the application"></i>' +
+        '<i class="far fa-trash-alt fa-fw c-glyph" title="Remove this layer from the application"></i>' +
       '</span>' +
     '</div>',
     controller: Controller,
@@ -76,7 +76,7 @@ class Controller extends DescriptorNodeUICtrl {
 
     var windowOptions = {
       'label': 'Edit ' + config.title,
-      'icon': 'fa fa-database',
+      'icon': 'fas fa-database',
       'x': 'center',
       'y': 'center',
       'width': '500',

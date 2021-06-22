@@ -1,6 +1,6 @@
 <div class="test-findme">
   <div class="text-center" ng-show="testing">
-    <div><i class="fa fa-4x fa-spin fa-smooth fa-spinner"></i></div>
+    <div><i class="fas fa-4x fa-spin fa-smooth fa-spinner"></i></div>
     <div>Testing...</div>
   </div>
   <div class="container-fluid" ng-form="form" ng-show="!testing" ng-submit="ctrl.accept()" novalidate>
@@ -20,7 +20,7 @@
           ng-click="ctrl.launchHelp(typeName)"
           ng-if="ctrl.helpUi"
           title="Help for server specific URL formats">
-        <i class="fa fa-fw fa-question-circle"></i>
+        <i class="fas fa-fw fa-question-circle"></i>
       </button>
       <input type="text" name="url" class="form-control" ng-disabled="!edit" ng-model="config.url" ng-required="true"
           ng-maxlength="1000">
