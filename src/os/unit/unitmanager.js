@@ -6,7 +6,7 @@ const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const Settings = goog.require('os.config.Settings');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
-const UNITS = goog.require('os.unit.UNITS');
+const {UNITS, UnitSystem} = goog.require('os.unit');
 const UnitChange = goog.require('os.unit.UnitChange');
 const UnitFactory = goog.require('os.unit.UnitFactory');
 
@@ -36,7 +36,7 @@ class UnitManager extends EventTarget {
      * @type {string}
      * @private
      */
-    this.baseSystem_ = os.unit.unitSystem.METRIC;
+    this.baseSystem_ = UnitSystem.METRIC;
 
     /**
      * @type {string}

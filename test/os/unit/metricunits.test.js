@@ -1,17 +1,19 @@
+goog.require('os.unit');
 goog.require('os.unit.MetricUnits');
 goog.require('os.unit.Multiplier');
 
 describe('os.unit.MetricUnits', function() {
   const Multiplier = goog.module.get('os.unit.Multiplier');
   const MetricUnits = goog.module.get('os.unit.MetricUnits');
+  const {UNIT_TYPE_DISTANCE, UnitSystem} = goog.module.get('os.unit');
 
   it('should function correctly', inject(function($rootScope) {
     var mult = new Multiplier('m', 1, true, 'meters');
     var eUnit = new MetricUnits();
 
     expect(eUnit.getTitle()).toBe('Metric');
-    expect(eUnit.getUnitType()).toBe(os.unit.UNIT_TYPE_DISTANCE);
-    expect(eUnit.getSystem()).toBe(os.unit.unitSystem.METRIC);
+    expect(eUnit.getUnitType()).toBe(UNIT_TYPE_DISTANCE);
+    expect(eUnit.getSystem()).toBe(UnitSystem.METRIC);
     expect(eUnit.getDefaultMultiplier()).toEqual(mult);
     expect(eUnit.getConversionFactor()).toBe(1);
     expect(eUnit.getSuffix()).toBe('');

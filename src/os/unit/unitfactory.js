@@ -1,6 +1,7 @@
 goog.module('os.unit.UnitFactory');
 goog.module.declareLegacyNamespace();
 
+const {UNIT_TYPE_DISTANCE, UnitSystem} = goog.require('os.unit');
 const EnglishDistanceUnits = goog.require('os.unit.EnglishDistanceUnits');
 const FeetUnits = goog.require('os.unit.FeetUnits');
 const MetricUnits = goog.require('os.unit.MetricUnits');
@@ -10,29 +11,6 @@ const NauticalUnits = goog.require('os.unit.NauticalUnits');
 const YardUnits = goog.require('os.unit.YardUnits');
 
 const IUnit = goog.requireType('os.unit.IUnit');
-
-
-/**
- * Descriptor metrics tracked
- * @enum {string}
- */
-os.unit.unitSystem = {
-  METRIC: 'metric',
-  ENGLISH: 'imperial',
-  NAUTICAL: 'nautical',
-  NAUTICALMILE: 'nauticalmile',
-  MILE: 'mile',
-  YARD: 'yard',
-  FEET: 'feet'
-};
-
-
-/**
- * @type {string}
- * @const
- */
-os.unit.UNIT_TYPE_DISTANCE = 'distance';
-
 
 
 /**
@@ -67,32 +45,32 @@ class UnitFactory {
    */
   initialize_() {
     var englishMultipliers = {};
-    englishMultipliers[os.unit.UNIT_TYPE_DISTANCE] = new EnglishDistanceUnits();
-    this.systems_[os.unit.unitSystem.ENGLISH] = englishMultipliers;
+    englishMultipliers[UNIT_TYPE_DISTANCE] = new EnglishDistanceUnits();
+    this.systems_[UnitSystem.ENGLISH] = englishMultipliers;
 
     var metricMultipliers = {};
-    metricMultipliers[os.unit.UNIT_TYPE_DISTANCE] = new MetricUnits();
-    this.systems_[os.unit.unitSystem.METRIC] = metricMultipliers;
+    metricMultipliers[UNIT_TYPE_DISTANCE] = new MetricUnits();
+    this.systems_[UnitSystem.METRIC] = metricMultipliers;
 
     var nauticalMultipliers = {};
-    nauticalMultipliers[os.unit.UNIT_TYPE_DISTANCE] = new NauticalUnits();
-    this.systems_[os.unit.unitSystem.NAUTICAL] = nauticalMultipliers;
+    nauticalMultipliers[UNIT_TYPE_DISTANCE] = new NauticalUnits();
+    this.systems_[UnitSystem.NAUTICAL] = nauticalMultipliers;
 
     var nauticalMileMultipliers = {};
-    nauticalMileMultipliers[os.unit.UNIT_TYPE_DISTANCE] = new NauticalMileUnits();
-    this.systems_[os.unit.unitSystem.NAUTICALMILE] = nauticalMileMultipliers;
+    nauticalMileMultipliers[UNIT_TYPE_DISTANCE] = new NauticalMileUnits();
+    this.systems_[UnitSystem.NAUTICALMILE] = nauticalMileMultipliers;
 
     var mileMultipliers = {};
-    mileMultipliers[os.unit.UNIT_TYPE_DISTANCE] = new MileUnits();
-    this.systems_[os.unit.unitSystem.MILE] = mileMultipliers;
+    mileMultipliers[UNIT_TYPE_DISTANCE] = new MileUnits();
+    this.systems_[UnitSystem.MILE] = mileMultipliers;
 
     var yardMultipliers = {};
-    yardMultipliers[os.unit.UNIT_TYPE_DISTANCE] = new YardUnits();
-    this.systems_[os.unit.unitSystem.YARD] = yardMultipliers;
+    yardMultipliers[UNIT_TYPE_DISTANCE] = new YardUnits();
+    this.systems_[UnitSystem.YARD] = yardMultipliers;
 
     var feetMultipliers = {};
-    feetMultipliers[os.unit.UNIT_TYPE_DISTANCE] = new FeetUnits();
-    this.systems_[os.unit.unitSystem.FEET] = feetMultipliers;
+    feetMultipliers[UNIT_TYPE_DISTANCE] = new FeetUnits();
+    this.systems_[UnitSystem.FEET] = feetMultipliers;
   }
 
   /**
