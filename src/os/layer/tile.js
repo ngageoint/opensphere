@@ -725,6 +725,7 @@ os.layer.Tile.prototype.isEnabled = function() {
 os.layer.Tile.prototype.setEnabled = function(value) {
   // Layer does not have separate enabled/visible states, so this is a pass-through.
   this.setLayerVisible(value);
+  this.dispatchEvent(new os.events.PropertyChangeEvent(os.layer.PropertyChange.ENABLED, value, !value));
 };
 
 

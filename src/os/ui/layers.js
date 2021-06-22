@@ -321,7 +321,7 @@ os.ui.LayersCtrl.prototype.toggleTileLayers = function() {
 
       if (type && type != ol.LayerType.VECTOR) {
         // toggle tiles
-        layers[i].setLayerVisible(this.showTiles());
+        layers[i].setEnabled(this.showTiles());
       }
     }
   }
