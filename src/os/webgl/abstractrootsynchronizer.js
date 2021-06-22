@@ -8,8 +8,8 @@ const dispose = goog.require('goog.dispose');
 const events = goog.require('ol.events');
 const Layer = goog.require('ol.layer.Layer');
 const dispatcher = goog.require('os.Dispatcher');
-const MapContainer = goog.require('os.MapContainer');
 const MapEvent = goog.require('os.MapEvent');
+const {getMapContainer} = goog.require('os.map.instance');
 const ZOrderEventType = goog.require('os.data.ZOrderEventType');
 const LayerEventType = goog.require('os.events.LayerEventType');
 const Group = goog.require('os.layer.Group');
@@ -241,7 +241,7 @@ class AbstractRootSynchronizer extends Disposable {
   onLayerAdd_(event) {
     if (event && event.layer) {
       var layer = /** @type {os.layer.ILayer} */ (typeof event.layer === 'string' ?
-        MapContainer.getInstance().getLayer(event.layer) : event.layer);
+          getMapContainer().getLayer(event.layer) : event.layer);
 
       if (layer instanceof Layer) {
         this.synchronizeLayer_(layer);
@@ -262,7 +262,7 @@ class AbstractRootSynchronizer extends Disposable {
   onLayerRemove_(event) {
     if (event && event.layer) {
       var layer = /** @type {os.layer.ILayer} */ (typeof event.layer === 'string' ?
-        MapContainer.getInstance().getLayer(event.layer) : event.layer);
+          getMapContainer().getLayer(event.layer) : event.layer);
 
       if (layer) {
         var id = layer.getId();
