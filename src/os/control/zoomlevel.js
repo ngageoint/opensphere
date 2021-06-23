@@ -10,7 +10,7 @@ const style = goog.require('goog.style');
 const Control = goog.require('ol.control.Control');
 const css = goog.require('ol.css');
 const osMap = goog.require('os.map');
-const mapInstance = goog.require('os.map.instance');
+const {getMapContainer} = goog.require('os.map.instance');
 const UnitManager = goog.require('os.unit.UnitManager');
 const ScaleLineUnits = goog.requireType('ol.control.ScaleLineUnits');
 
@@ -187,7 +187,7 @@ class ZoomLevel extends Control {
     // this value should *only* be set if the displayed text needs to change
     var altitude;
 
-    var map = mapInstance.getMapContainer();
+    var map = getMapContainer();
     if (map.is3DEnabled()) {
       var camera = map.getWebGLCamera();
       if (!camera) {
@@ -246,7 +246,7 @@ class ZoomLevel extends Control {
     // this value should *only* be set if the displayed text needs to change
     var resolution;
 
-    var map = mapInstance.getMapContainer();
+    var map = getMapContainer();
     if (map.is3DEnabled()) {
       var camera = map.getWebGLCamera();
       if (!camera) {

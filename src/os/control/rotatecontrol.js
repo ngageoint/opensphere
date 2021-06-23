@@ -4,7 +4,7 @@ goog.module.declareLegacyNamespace();
 const classlist = goog.require('goog.dom.classlist');
 const OLRotate = goog.require('ol.control.Rotate');
 const css = goog.require('ol.css');
-const mapInstance = goog.require('os.map.instance');
+const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**
@@ -28,7 +28,7 @@ class Rotate extends OLRotate {
    * @suppress {accessControls}
    */
   resetNorth_() {
-    var mapContainer = mapInstance.getMapContainer();
+    var mapContainer = getMapContainer();
     if (mapContainer.is3DEnabled()) {
       mapContainer.resetRotation();
     } else {
@@ -48,7 +48,7 @@ class Rotate extends OLRotate {
 const render = function(mapEvent) {
   var rotation;
 
-  var mapContainer = mapInstance.getMapContainer();
+  var mapContainer = getMapContainer();
   if (mapContainer.is3DEnabled()) {
     var camera = mapContainer.getWebGLCamera();
     if (!camera) {

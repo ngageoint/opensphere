@@ -10,7 +10,7 @@ const EventType = goog.require('ol.events.EventType');
 const dispatcher = goog.require('os.Dispatcher');
 const MapChange = goog.require('os.MapChange');
 const osActionEventType = goog.require('os.action.EventType');
-const mapInstance = goog.require('os.map.instance');
+const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**
@@ -74,14 +74,14 @@ class MapMode extends Control {
     events.listen(this.button, EventType.CLICK, MapMode.prototype.handleClick_, this);
 
     this.updateContent_();
-    mapInstance.getMapContainer().listen(GoogEventType.PROPERTYCHANGE, this.onMapChange_, false, this);
+    getMapContainer().listen(GoogEventType.PROPERTYCHANGE, this.onMapChange_, false, this);
   }
 
   /**
    * @inheritDoc
    */
   disposeInternal() {
-    mapInstance.getMapContainer().unlisten(GoogEventType.PROPERTYCHANGE, this.onMapChange_, false, this);
+    getMapContainer().unlisten(GoogEventType.PROPERTYCHANGE, this.onMapChange_, false, this);
 
     if (this.button) {
       events.unlisten(this.button, EventType.CLICK, MapMode.prototype.handleClick_, this);
@@ -123,7 +123,7 @@ class MapMode extends Control {
    */
   updateContent_() {
     if (this.button && this.content && this.loadingEl) {
-      var map = mapInstance.getMapContainer();
+      var map = getMapContainer();
       if (map.isInitializingWebGL()) {
         dom.setTextContent(this.content, '');
         this.content.appendChild(this.loadingEl);

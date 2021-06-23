@@ -3,7 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const OLZoom = goog.require('ol.control.Zoom');
 const interaction = goog.require('os.interaction');
-const mapInstance = goog.require('os.map.instance');
+const {getMapContainer} = goog.require('os.map.instance');
 
 
 /**
@@ -23,7 +23,7 @@ class Zoom extends OLZoom {
    * @suppress {accessControls}
    */
   zoomByDelta_(delta) {
-    var mapContainer = mapInstance.getMapContainer();
+    var mapContainer = getMapContainer();
     if (mapContainer.is3DEnabled()) {
       var camera = mapContainer.getWebGLCamera();
       if (camera) {
