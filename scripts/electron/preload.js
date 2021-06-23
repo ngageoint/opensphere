@@ -1,6 +1,8 @@
 const {contextBridge, ipcRenderer} = require('electron');
 const path = require('path');
 
+const CookieEventType = require('../cookieeventtype.js');
+const SettingsEventType = require('../settingseventtype.js');
 const {getMaximumMemory, getSystemMemory, setMaximumMemory} = require('../memconfig.js');
 
 /**
@@ -62,19 +64,7 @@ const EventType = {
 
   CERT_HANDLER_REGISTERED: 'client-certificate-handler-registered',
   CERT_SELECT: 'select-client-certificate',
-  CERT_SELECTED: 'client-certificate-selected',
-
-  COOKIE_SET: 'set-cookie',
-  COOKIE_UPDATE: 'update-cookies',
-
-  SETTINGS_ADD: 'add-settings',
-  SETTINGS_GET_FILES: 'get-settings-files',
-  SETTINGS_GET_BASE_FILE: 'get-base-settings-file',
-  SETTINGS_GET_USER_DIR: 'get-user-settings-dir',
-  SETTINGS_REMOVE: 'remove-settings',
-  SETTINGS_SET: 'set-settings',
-  SETTINGS_SUPPORTED: 'user-settings-supported',
-  SETTINGS_UPDATE: 'update-settings'
+  CERT_SELECTED: 'client-certificate-selected'
 };
 
 
@@ -150,7 +140,7 @@ const getCookies = () => {
  * @param {string} value The cookie value.
  */
 const setCookie = (value) => {
-  ipcRenderer.send(EventType.COOKIE_SET, value);
+  ipcRenderer.send(CookieEventType.SET, value);
 };
 
 
@@ -158,7 +148,7 @@ const setCookie = (value) => {
  * Request cookie update from the main process.
  */
 const updateCookies = () => {
-  ipcRenderer.send(EventType.COOKIE_UPDATE);
+  ipcRenderer.send(CookieEventType.UPDATE);
 };
 
 /**
@@ -194,21 +184,21 @@ const getSettingsFile = (fileOrPath) => {
  * @return {!Promise<!Array<!ElectronOS.SettingsFile>>} A promise that resolves to the updated settings.
  */
 const addUserSettings = async (file, content) =>
-  settingsFiles = await ipcRenderer.invoke(EventType.SETTINGS_ADD, file, content);
+  settingsFiles = await ipcRenderer.invoke(SettingsEventType.ADD, file, content);
 
 /**
  * Remove a user settings file.
  * @param {!ElectronOS.SettingsFile} file The file.
  * @return {!Promise<!Array<!ElectronOS.SettingsFile>>} A promise that resolves to the updated settings.
  */
-const removeUserSettings = async (file) => settingsFiles = await ipcRenderer.invoke(EventType.SETTINGS_REMOVE, file);
+const removeUserSettings = async (file) => settingsFiles = await ipcRenderer.invoke(SettingsEventType.REMOVE, file);
 
 /**
  * Update a user settings file.
  * @param {!ElectronOS.SettingsFile} file The file.
  * @return {!Promise<!Array<!ElectronOS.SettingsFile>>} A promise that resolves to the updated settings.
  */
-const updateUserSettings = async (file) => settingsFiles = await ipcRenderer.invoke(EventType.SETTINGS_UPDATE, file);
+const updateUserSettings = async (file) => settingsFiles = await ipcRenderer.invoke(SettingsEventType.UPDATE, file);
 
 /**
  * Get the path to the base settings file loaded by the application.
@@ -240,7 +230,7 @@ const supportsUserSettings = () => isMain && userSettingsSupported;
  * @param {!Array<!ElectronOS.SettingsFile>} value The list of settings files.
  * @return {!Promise<!Array<!ElectronOS.SettingsFile>>} A promise that resolves to the saved settings.
  */
-const setSettingsFiles = async (value) => settingsFiles = await ipcRenderer.invoke(EventType.SETTINGS_SET, value);
+const setSettingsFiles = async (value) => settingsFiles = await ipcRenderer.invoke(SettingsEventType.SET, value);
 
 /**
  * Restarts the application.
@@ -253,7 +243,7 @@ const restart = () => {
 ipcRenderer.on(EventType.CERT_SELECT, selectClientCertificate);
 
 // Handle cookie initialization from the main process.
-ipcRenderer.on(EventType.COOKIE_UPDATE, (event, value) => {
+ipcRenderer.on(CookieEventType.UPDATE, (event, value) => {
   cookies = value;
 });
 
@@ -263,12 +253,12 @@ ipcRenderer.on(EventType.COOKIE_UPDATE, (event, value) => {
   isMain = await ipcRenderer.invoke(EventType.IS_MAIN);
 
   // Initialize user settings values.
-  userSettingsSupported = await ipcRenderer.invoke(EventType.SETTINGS_SUPPORTED);
+  userSettingsSupported = await ipcRenderer.invoke(SettingsEventType.SUPPORTED);
 
   if (userSettingsSupported) {
-    baseSettingsFile = await ipcRenderer.invoke(EventType.SETTINGS_GET_BASE_FILE);
-    settingsFiles = await ipcRenderer.invoke(EventType.SETTINGS_GET_FILES);
-    userSettingsDir = await ipcRenderer.invoke(EventType.SETTINGS_GET_USER_DIR);
+    baseSettingsFile = await ipcRenderer.invoke(SettingsEventType.GET_BASE_FILE);
+    settingsFiles = await ipcRenderer.invoke(SettingsEventType.GET_FILES);
+    userSettingsDir = await ipcRenderer.invoke(SettingsEventType.GET_USER_DIR);
   }
 })();
 
