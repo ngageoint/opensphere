@@ -32,7 +32,7 @@ export const directiveTag = 'customizesettingswindow';
 /**
  * Add the directive to the module.
  */
-Module.directive('customizesettingswindow', [directive]);
+Module.directive(directiveTag, [directive]);
 
 
 /**

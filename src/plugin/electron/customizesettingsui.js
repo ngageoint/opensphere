@@ -50,7 +50,7 @@ export const directiveTag = 'customizesettings';
 /**
  * Add the directive to the module.
  */
-Module.directive('customizesettings', [directive]);
+Module.directive(directiveTag, [directive]);
 
 
 /**
