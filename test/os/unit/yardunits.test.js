@@ -1,13 +1,18 @@
+goog.require('os.unit');
 goog.require('os.unit.Multiplier');
 goog.require('os.unit.YardUnits');
 
 describe('os.unit.YardUnits', function() {
+  const Multiplier = goog.module.get('os.unit.Multiplier');
+  const YardUnits = goog.module.get('os.unit.YardUnits');
+  const {UNIT_TYPE_DISTANCE, UnitSystem} = goog.module.get('os.unit');
+
   it('should function correctly', inject(function($rootScope) {
-    var mult = new os.unit.Multiplier('yd', 1, true, 'yards');
-    var eUnit = new os.unit.YardUnits();
+    var mult = new Multiplier('yd', 1, true, 'yards');
+    var eUnit = new YardUnits();
     expect(eUnit.getTitle()).toBe('Yards Only');
-    expect(eUnit.getUnitType()).toBe(os.unit.UNIT_TYPE_DISTANCE);
-    expect(eUnit.getSystem()).toBe(os.unit.unitSystem.YARD);
+    expect(eUnit.getUnitType()).toBe(UNIT_TYPE_DISTANCE);
+    expect(eUnit.getSystem()).toBe(UnitSystem.YARD);
     expect(eUnit.getDefaultMultiplier()).toEqual(mult);
     expect(eUnit.getConversionFactor()).toBe(1.09361);
     expect(eUnit.getSuffix()).toBe('');

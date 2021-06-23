@@ -1,67 +1,65 @@
-goog.provide('os.unit.EnglishDistanceUnits');
-goog.require('os.unit.BaseUnit');
-goog.require('os.unit.Multiplier');
+goog.module('os.unit.EnglishDistanceUnits');
+goog.module.declareLegacyNamespace();
 
+const BaseUnit = goog.require('os.unit.BaseUnit');
+const Multiplier = goog.require('os.unit.Multiplier');
 
 
 /**
  * Responsible for receiving, logging and reporting alerts
- *
- * @extends {os.unit.BaseUnit}
- * @constructor
  */
-os.unit.EnglishDistanceUnits = function() {
-  os.unit.EnglishDistanceUnits.base(this, 'constructor');
-};
-goog.inherits(os.unit.EnglishDistanceUnits, os.unit.BaseUnit);
+class EnglishDistanceUnits extends BaseUnit {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getTitle() {
+    return 'Imperial';
+  }
 
-/**
- * @inheritDoc
- */
-os.unit.EnglishDistanceUnits.prototype.getTitle = function() {
-  return 'Imperial';
-};
+  /**
+   * @inheritDoc
+   */
+  getUnitType() {
+    return 'distance';
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getSystem() {
+    return 'imperial';
+  }
 
-/**
- * @inheritDoc
- */
-os.unit.EnglishDistanceUnits.prototype.getUnitType = function() {
-  return 'distance';
-};
+  /**
+   * @inheritDoc
+   */
+  getDefaultMultiplier() {
+    return this.getMultiplier('mi');
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getConversionFactor() {
+    return (1 / 1609.344);
+  }
 
-/**
- * @inheritDoc
- */
-os.unit.EnglishDistanceUnits.prototype.getSystem = function() {
-  return 'imperial';
-};
+  /**
+   * @inheritDoc
+   */
+  initMultipliers() {
+    this.multipliers.push(new Multiplier('in', (1 / 63360.0), false, 'inches'));
+    this.multipliers.push(new Multiplier('ft', (1 / 5280.0), true, 'feet'));
+    this.multipliers.push(new Multiplier('yd', (1 / 1760.0), true, 'yards'));
+    this.multipliers.push(new Multiplier('mi', 1, true, 'miles', .1));
+  }
+}
 
-
-/**
- * @inheritDoc
- */
-os.unit.EnglishDistanceUnits.prototype.getDefaultMultiplier = function() {
-  return this.getMultiplier('mi');
-};
-
-
-/**
- * @inheritDoc
- */
-os.unit.EnglishDistanceUnits.prototype.getConversionFactor = function() {
-  return (1 / 1609.344);
-};
-
-
-/**
- * @inheritDoc
- */
-os.unit.EnglishDistanceUnits.prototype.initMultipliers = function() {
-  this.multipliers.push(new os.unit.Multiplier('in', (1 / 63360.0), false, 'inches'));
-  this.multipliers.push(new os.unit.Multiplier('ft', (1 / 5280.0), true, 'feet'));
-  this.multipliers.push(new os.unit.Multiplier('yd', (1 / 1760.0), true, 'yards'));
-  this.multipliers.push(new os.unit.Multiplier('mi', 1, true, 'miles', .1));
-};
+exports = EnglishDistanceUnits;

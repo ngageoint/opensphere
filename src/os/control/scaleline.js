@@ -130,7 +130,7 @@ os.control.ScaleLine.prototype.updateElement_ = function() {
       suffix = 'mi';
       pointResolution /= 1609.344;
     }
-  } else if (units == ol.control.ScaleLineUnits.NAUTICAL || units == os.unit.unitSystem.NAUTICALMILE) {
+  } else if (units == ol.control.ScaleLineUnits.NAUTICAL || units == os.unit.UnitSystem.NAUTICALMILE) {
     pointResolution /= 1852;
     suffix = 'nmi';
   } else if (units == ol.control.ScaleLineUnits.METRIC) {
@@ -154,13 +154,13 @@ os.control.ScaleLine.prototype.updateElement_ = function() {
       suffix = 'mi';
       pointResolution /= 1609.3472;
     }
-  } else if (units == os.unit.unitSystem.MILE) { // allow for other unit systems
+  } else if (units == os.unit.UnitSystem.MILE) { // allow for other unit systems
     suffix = 'mi';
     pointResolution /= 1609.3472;
-  } else if (units == os.unit.unitSystem.YARD) {
+  } else if (units == os.unit.UnitSystem.YARD) {
     suffix = 'yd';
     pointResolution *= 1.09361;
-  } else if (units == os.unit.unitSystem.FEET) {
+  } else if (units == os.unit.UnitSystem.FEET) {
     suffix = 'ft';
     pointResolution /= 0.30480061;
   } else {

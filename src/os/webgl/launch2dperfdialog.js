@@ -4,6 +4,7 @@ goog.module.declareLegacyNamespace();
 const Promise = goog.require('goog.Promise');
 const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
 
+
 /**
  * Launch a dialog warning users of the risks in using 2D with lots of data.
  *

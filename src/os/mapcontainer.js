@@ -332,8 +332,8 @@ os.MapContainer.prototype.setWebGLRenderer = function(value) {
   }
 
   this.webGLRenderer_ = value;
-  if (value && value.id) {
-    os.settings.set(os.webgl.AbstractWebGLRenderer.ACTIVE_SETTINGS_KEY, value.id);
+  if (value && value.getId()) {
+    os.settings.set(os.webgl.AbstractWebGLRenderer.ACTIVE_SETTINGS_KEY, value.getId());
   }
 
   if (this.webGLRenderer_) {

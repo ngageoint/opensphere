@@ -157,8 +157,8 @@ os.search.AbstractSearchManager.prototype.getSort = function() {
 os.search.AbstractSearchManager.prototype.getFavorites = function(opt_max) {
   var favorites = [];
   if (this.filterFavorites_) {
-    favorites = this.filterFavorites_(os.favoriteManager.filter(os.favoriteManager.getFavorites(),
-        [os.user.settings.FavoriteType.SEARCH], opt_max));
+    const fm = os.user.settings.FavoriteManager.getInstance();
+    favorites = this.filterFavorites_(fm.filter(fm.getFavorites(), [os.user.settings.FavoriteType.SEARCH], opt_max));
   }
 
   return favorites;

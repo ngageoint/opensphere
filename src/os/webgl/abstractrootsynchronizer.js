@@ -1,282 +1,250 @@
-goog.provide('os.webgl.AbstractRootSynchronizer');
+goog.module('os.webgl.AbstractRootSynchronizer');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Disposable');
-goog.require('goog.asserts');
-goog.require('goog.async.Delay');
-goog.require('ol.events');
-goog.require('os.MapEvent');
-goog.require('os.data.ZOrderEventType');
-goog.require('os.layer.Group');
-goog.require('os.layer.Image');
-goog.require('os.layer.Tile');
-goog.require('os.webgl.SynchronizerManager');
+const Disposable = goog.require('goog.Disposable');
+const asserts = goog.require('goog.asserts');
+const Delay = goog.require('goog.async.Delay');
+const dispose = goog.require('goog.dispose');
+const events = goog.require('ol.events');
+const Layer = goog.require('ol.layer.Layer');
+const dispatcher = goog.require('os.Dispatcher');
+const MapEvent = goog.require('os.MapEvent');
+const {getMapContainer} = goog.require('os.map.instance');
+const ZOrderEventType = goog.require('os.data.ZOrderEventType');
+const LayerEventType = goog.require('os.events.LayerEventType');
+const Group = goog.require('os.layer.Group');
+const SynchronizerManager = goog.require('os.webgl.SynchronizerManager');
 
 goog.requireType('os.webgl.AbstractWebGLSynchronizer');
 
 
 /**
  * An abstract root synchronizer for a WebGL renderer.
- *
- * @param {!ol.PluggableMap} map The OpenLayers map.
- * @extends {goog.Disposable}
- * @constructor
  */
-os.webgl.AbstractRootSynchronizer = function(map) {
-  os.webgl.AbstractRootSynchronizer.base(this, 'constructor');
-
+class AbstractRootSynchronizer extends Disposable {
   /**
-   * The OpenLayers map.
-   * @type {ol.PluggableMap|undefined}
-   * @protected
+   * Constructor.
+   * @param {!ol.PluggableMap} map The OpenLayers map.
    */
-  this.map = map;
+  constructor(map) {
+    super();
 
-  /**
-   * If the synchronizer is active.
-   * @type {boolean}
-   * @private
-   */
-  this.active_ = false;
+    /**
+     * The OpenLayers map.
+     * @type {ol.PluggableMap|undefined}
+     * @protected
+     */
+    this.map = map;
 
-  /**
-   * If the synchronizer is initialized.
-   * @type {boolean}
-   * @private
-   */
-  this.initialized_ = false;
+    /**
+     * If the synchronizer is active.
+     * @type {boolean}
+     * @private
+     */
+    this.active_ = false;
 
-  /**
-   * OpenLayers layer listen keys.
-   * @type {!Array<ol.EventsKey>}
-   * @private
-   */
-  this.listenKeys_ = [];
+    /**
+     * If the synchronizer is initialized.
+     * @type {boolean}
+     * @private
+     */
+    this.initialized_ = false;
 
-  /**
-   * Map of layer id to WebGL synchronizer.
-   * @type {!Object<string, !os.webgl.AbstractWebGLSynchronizer>}
-   * @protected
-   */
-  this.synchronizers = {};
+    /**
+     * OpenLayers layer listen keys.
+     * @type {!Array<ol.EventsKey>}
+     * @private
+     */
+    this.listenKeys_ = [];
 
-  /**
-   * Delay to debounce z order updates.
-   * @type {goog.async.Delay|undefined}
-   * @private
-   */
-  this.updateZDelay_ = new goog.async.Delay(this.updateZOrder_, 250, this);
-};
-goog.inherits(os.webgl.AbstractRootSynchronizer, goog.Disposable);
+    /**
+     * Map of layer id to WebGL synchronizer.
+     * @type {!Object<string, !os.webgl.AbstractWebGLSynchronizer>}
+     * @protected
+     */
+    this.synchronizers = {};
 
-
-/**
- * @inheritDoc
- */
-os.webgl.AbstractRootSynchronizer.prototype.disposeInternal = function() {
-  os.webgl.AbstractRootSynchronizer.base(this, 'disposeInternal');
-
-  this.listenKeys_.forEach(ol.events.unlistenByKey);
-  this.listenKeys_.length = 0;
-
-  goog.dispose(this.updateZDelay_);
-  this.updateZDelay_ = undefined;
-
-  this.map = undefined;
-};
-
-
-/**
- * Synchronizes all layers on the map.
- */
-os.webgl.AbstractRootSynchronizer.prototype.synchronize = function() {
-  if (this.initialized_) {
-    return;
+    /**
+     * Delay to debounce z order updates.
+     * @type {Delay|undefined}
+     * @private
+     */
+    this.updateZDelay_ = new Delay(this.updateZOrder_, 250, this);
   }
 
-  var groups = this.map.getLayers().getArray();
-  for (var i = 0, n = groups.length; i < n; i++) {
-    var group = groups[i];
-    if (group instanceof os.layer.Group) {
-      this.listenKeys_.push(ol.events.listen(group, os.data.ZOrderEventType.UPDATE, this.onGroupZOrder_, this));
-      this.listenKeys_.push(ol.events.listen(group, os.events.LayerEventType.ADD, this.onLayerAdd_, this));
-      this.listenKeys_.push(ol.events.listen(group, os.events.LayerEventType.REMOVE, this.onLayerRemove_, this));
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
 
-      this.synchronizeGroup_(group);
+    this.listenKeys_.forEach(events.unlistenByKey);
+    this.listenKeys_.length = 0;
+
+    dispose(this.updateZDelay_);
+    this.updateZDelay_ = undefined;
+
+    this.map = undefined;
+  }
+
+  /**
+   * Synchronizes all layers on the map.
+   */
+  synchronize() {
+    if (this.initialized_) {
+      return;
     }
-  }
 
-  this.initialized_ = true;
-};
+    var groups = this.map.getLayers().getArray();
+    for (var i = 0, n = groups.length; i < n; i++) {
+      var group = groups[i];
+      if (group instanceof Group) {
+        this.listenKeys_.push(events.listen(group, ZOrderEventType.UPDATE, this.onGroupZOrder_, this));
+        this.listenKeys_.push(events.listen(group, LayerEventType.ADD, this.onLayerAdd_, this));
+        this.listenKeys_.push(events.listen(group, LayerEventType.REMOVE, this.onLayerRemove_, this));
 
-
-/**
- * Reset synchronizers to make sure the state is in sync with 2D.
- */
-os.webgl.AbstractRootSynchronizer.prototype.reset = function() {
-  for (var key in this.synchronizers) {
-    this.synchronizers[key].reset();
-  }
-};
-
-
-/**
- * Set if the synchronizer should be actively used.
- *
- * @param {boolean} value
- */
-os.webgl.AbstractRootSynchronizer.prototype.setActive = function(value) {
-  this.active_ = value;
-
-  for (var key in this.synchronizers) {
-    this.synchronizers[key].setActive(value);
-  }
-};
-
-
-/**
- * Synchronizes a single layer on the map to WebGL.
- *
- * @param {!os.layer.Group} group
- * @private
- */
-os.webgl.AbstractRootSynchronizer.prototype.synchronizeGroup_ = function(group) {
-  var layers = group.getLayers().getArray();
-  for (var i = 0, n = layers.length; i < n; i++) {
-    var layer = layers[i];
-    if (layer instanceof ol.layer.Layer) {
-      this.synchronizeLayer_(layer);
-    }
-  }
-};
-
-
-/**
- * Synchronizes a single layer on the map to WebGL.
- *
- * @param {!ol.layer.Layer} layer
- * @private
- */
-os.webgl.AbstractRootSynchronizer.prototype.synchronizeLayer_ = function(layer) {
-  goog.asserts.assert(!!this.map);
-  goog.asserts.assert(!!layer);
-
-  var osLayer = /** @type {os.layer.ILayer} */ (layer);
-  var layerId = osLayer.getId();
-  if (layerId) {
-    var synchronizer = this.synchronizers[layerId];
-
-    if (!synchronizer) {
-      var sm = os.webgl.SynchronizerManager.getInstance();
-      var constructor = sm.getSynchronizer(osLayer);
-      if (constructor) {
-        synchronizer = this.createSynchronizer(constructor, layer);
+        this.synchronizeGroup_(group);
       }
     }
 
-    if (synchronizer) {
-      this.synchronizers[layerId] = synchronizer;
-      synchronizer.setActive(this.active_);
-      synchronizer.synchronize();
-      os.dispatcher.dispatchEvent(os.MapEvent.GL_REPAINT);
+    this.initialized_ = true;
+  }
+
+  /**
+   * Reset synchronizers to make sure the state is in sync with 2D.
+   */
+  reset() {
+    for (var key in this.synchronizers) {
+      this.synchronizers[key].reset();
     }
   }
-};
 
+  /**
+   * Set if the synchronizer should be actively used.
+   *
+   * @param {boolean} value
+   */
+  setActive(value) {
+    this.active_ = value;
 
-/**
- * Create an instance of a synchronizer.
- *
- * @param {function(new:os.webgl.AbstractWebGLSynchronizer, ...?)} constructor The synchronizer constructor.
- * @param {!ol.layer.Layer} layer The layer to synchronize.
- * @return {!os.webgl.AbstractWebGLSynchronizer} The synchronizer instance.
- */
-os.webgl.AbstractRootSynchronizer.prototype.createSynchronizer = function(constructor, layer) {
-  goog.asserts.assert(!!this.map);
-
-  return /** @type {!os.webgl.AbstractWebGLSynchronizer} */ (new
-  /** @type {function(new: Object, ol.layer.Layer, ol.PluggableMap)} */ (constructor)(layer, this.map));
-};
-
-
-/**
- * Handle changes to a group's z-order.
- *
- * @param {goog.events.Event} event
- * @private
- */
-os.webgl.AbstractRootSynchronizer.prototype.onGroupZOrder_ = function(event) {
-  var group = event.target;
-  if (group instanceof os.layer.Group) {
-    this.updateGroupZ(group);
+    for (var key in this.synchronizers) {
+      this.synchronizers[key].setActive(value);
+    }
   }
-};
 
+  /**
+   * Synchronizes a single layer on the map to WebGL.
+   *
+   * @param {!Group} group
+   * @private
+   */
+  synchronizeGroup_(group) {
+    var layers = group.getLayers().getArray();
+    for (var i = 0, n = layers.length; i < n; i++) {
+      var layer = layers[i];
+      if (layer instanceof Layer) {
+        this.synchronizeLayer_(layer);
+      }
+    }
+  }
 
-/**
- * Update the z-order of all groups.
- *
- * @private
- */
-os.webgl.AbstractRootSynchronizer.prototype.updateZOrder_ = function() {
-  var groups = this.map.getLayers().getArray();
-  for (var i = 0, n = groups.length; i < n; i++) {
-    var group = groups[i];
-    if (group instanceof os.layer.Group) {
+  /**
+   * Synchronizes a single layer on the map to WebGL.
+   *
+   * @param {!ol.layer.Layer} layer
+   * @private
+   */
+  synchronizeLayer_(layer) {
+    asserts.assert(!!this.map);
+    asserts.assert(!!layer);
+
+    var osLayer = /** @type {os.layer.ILayer} */ (layer);
+    var layerId = osLayer.getId();
+    if (layerId) {
+      var synchronizer = this.synchronizers[layerId];
+
+      if (!synchronizer) {
+        var sm = SynchronizerManager.getInstance();
+        var constructor = sm.getSynchronizer(osLayer);
+        if (constructor) {
+          synchronizer = this.createSynchronizer(constructor, layer);
+        }
+      }
+
+      if (synchronizer) {
+        this.synchronizers[layerId] = synchronizer;
+        synchronizer.setActive(this.active_);
+        synchronizer.synchronize();
+        dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
+      }
+    }
+  }
+
+  /**
+   * Create an instance of a synchronizer.
+   *
+   * @param {function(new:os.webgl.AbstractWebGLSynchronizer, ...?)} constructor The synchronizer constructor.
+   * @param {!ol.layer.Layer} layer The layer to synchronize.
+   * @return {!os.webgl.AbstractWebGLSynchronizer} The synchronizer instance.
+   */
+  createSynchronizer(constructor, layer) {
+    asserts.assert(!!this.map);
+
+    return /** @type {!os.webgl.AbstractWebGLSynchronizer} */ (new
+    /** @type {function(new: Object, ol.layer.Layer, ol.PluggableMap)} */ (constructor)(layer, this.map));
+  }
+
+  /**
+   * Handle changes to a group's z-order.
+   *
+   * @param {goog.events.Event} event
+   * @private
+   */
+  onGroupZOrder_(event) {
+    var group = event.target;
+    if (group instanceof Group) {
       this.updateGroupZ(group);
     }
   }
-};
 
-
-/**
- * Update the z-order of a group.
- *
- * @param {!os.layer.Group} group The group to update.
- * @protected
- */
-os.webgl.AbstractRootSynchronizer.prototype.updateGroupZ = function(group) {
-  // implement in extending classes to support layer z-indexing
-};
-
-
-/**
- * Handles a layer being added to a group, synchronizing the group to ensure proper z-index.
- *
- * @param {os.events.LayerEvent} event
- * @private
- */
-os.webgl.AbstractRootSynchronizer.prototype.onLayerAdd_ = function(event) {
-  if (event && event.layer) {
-    var layer = /** @type {os.layer.ILayer} */ (typeof event.layer === 'string' ?
-      os.MapContainer.getInstance().getLayer(event.layer) : event.layer);
-
-    if (layer instanceof ol.layer.Layer) {
-      this.synchronizeLayer_(layer);
-
-      if (this.updateZDelay_) {
-        this.updateZDelay_.start();
+  /**
+   * Update the z-order of all groups.
+   *
+   * @private
+   */
+  updateZOrder_() {
+    var groups = this.map.getLayers().getArray();
+    for (var i = 0, n = groups.length; i < n; i++) {
+      var group = groups[i];
+      if (group instanceof Group) {
+        this.updateGroupZ(group);
       }
     }
   }
-};
 
+  /**
+   * Update the z-order of a group.
+   *
+   * @param {!Group} group The group to update.
+   * @protected
+   */
+  updateGroupZ(group) {
+    // implement in extending classes to support layer z-indexing
+  }
 
-/**
- * Handles a layer being removed from a group, destroying its WebGL counterpart.
- *
- * @param {os.events.LayerEvent} event
- * @private
- */
-os.webgl.AbstractRootSynchronizer.prototype.onLayerRemove_ = function(event) {
-  if (event && event.layer) {
-    var layer = /** @type {os.layer.ILayer} */ (typeof event.layer === 'string' ?
-      os.MapContainer.getInstance().getLayer(event.layer) : event.layer);
+  /**
+   * Handles a layer being added to a group, synchronizing the group to ensure proper z-index.
+   *
+   * @param {os.events.LayerEvent} event
+   * @private
+   */
+  onLayerAdd_(event) {
+    if (event && event.layer) {
+      var layer = /** @type {os.layer.ILayer} */ (typeof event.layer === 'string' ?
+          getMapContainer().getLayer(event.layer) : event.layer);
 
-    if (layer) {
-      var id = layer.getId();
-      if (this.synchronizers[id]) {
-        this.synchronizers[id].dispose();
-        delete this.synchronizers[id];
+      if (layer instanceof Layer) {
+        this.synchronizeLayer_(layer);
 
         if (this.updateZDelay_) {
           this.updateZDelay_.start();
@@ -284,15 +252,41 @@ os.webgl.AbstractRootSynchronizer.prototype.onLayerRemove_ = function(event) {
       }
     }
   }
-};
 
+  /**
+   * Handles a layer being removed from a group, destroying its WebGL counterpart.
+   *
+   * @param {os.events.LayerEvent} event
+   * @private
+   */
+  onLayerRemove_(event) {
+    if (event && event.layer) {
+      var layer = /** @type {os.layer.ILayer} */ (typeof event.layer === 'string' ?
+          getMapContainer().getLayer(event.layer) : event.layer);
 
-/**
- * Update any synchronizers that must change based on camera movement.
- */
-os.webgl.AbstractRootSynchronizer.prototype.updateFromCamera = function() {
-  for (var key in this.synchronizers) {
-    var synchronizer = this.synchronizers[key];
-    synchronizer.updateFromCamera();
+      if (layer) {
+        var id = layer.getId();
+        if (this.synchronizers[id]) {
+          this.synchronizers[id].dispose();
+          delete this.synchronizers[id];
+
+          if (this.updateZDelay_) {
+            this.updateZDelay_.start();
+          }
+        }
+      }
+    }
   }
-};
+
+  /**
+   * Update any synchronizers that must change based on camera movement.
+   */
+  updateFromCamera() {
+    for (var key in this.synchronizers) {
+      var synchronizer = this.synchronizers[key];
+      synchronizer.updateFromCamera();
+    }
+  }
+}
+
+exports = AbstractRootSynchronizer;

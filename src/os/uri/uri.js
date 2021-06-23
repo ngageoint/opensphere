@@ -1,6 +1,8 @@
-goog.provide('os.uri');
-goog.require('goog.Uri');
-goog.require('goog.Uri.QueryData');
+goog.module('os.uri');
+goog.module.declareLegacyNamespace();
+
+const Uri = goog.require('goog.Uri');
+const QueryData = goog.requireType('goog.Uri.QueryData');
 
 
 /**
@@ -9,43 +11,41 @@ goog.require('goog.Uri.QueryData');
  * @param {!string} uri
  * @return {string}
  */
-os.uri.addBase = function(uri) {
+const addBase = function(uri) {
   if (window && window.location) {
     if (!window.location.origin) {
       window.location.origin = window.location.protocol + '//' + window.location.hostname + (window.location.port ?
         ':' + window.location.port : '');
     }
-    var paramUri = new goog.Uri(uri);
-    var resultUri = paramUri.hasDomain() ? paramUri : goog.Uri.resolve(window.location.origin, paramUri);
+    var paramUri = new Uri(uri);
+    var resultUri = paramUri.hasDomain() ? paramUri : Uri.resolve(window.location.origin, paramUri);
     return resultUri.toString();
   } else {
     return uri;
   }
 };
 
-
 /**
  * Get the browser's current URI with the provided query params.
  *
- * @param {goog.Uri.QueryData} queryData The query params
+ * @param {QueryData} queryData The query params
  * @return {string}
  */
-os.uri.getParamUri = function(queryData) {
-  return new goog.Uri(window.location.toString()).setQueryData(queryData).toString();
+const getParamUri = function(queryData) {
+  return new Uri(window.location.toString()).setQueryData(queryData).toString();
 };
 
-
 /**
- * Merges {@link goog.Uri.QueryData} objects in a case insensitive manner.
+ * Merges {@link QueryData} objects in a case insensitive manner.
  *
- * goog.Uri.QueryData has a setIgnoreCase function, but if set to true it will lowercase all existing keys. This
+ * Uri.QueryData has a setIgnoreCase function, but if set to true it will lowercase all existing keys. This
  * preserves original case and only comparisons are insensitive.
  *
  * @param {goog.Uri.QueryData} from The source params
  * @param {goog.Uri.QueryData} to The target params
  * @param {boolean=} opt_overwrite If params should be replaced
  */
-os.uri.mergeParams = function(from, to, opt_overwrite) {
+const mergeParams = function(from, to, opt_overwrite) {
   var fromKeys = from.getKeys();
   var toKeys = to.getKeys();
   for (var i = 0, n = fromKeys.length; i < n; i++) {
@@ -65,4 +65,10 @@ os.uri.mergeParams = function(from, to, opt_overwrite) {
       to.set(found, from.get(fromKeys[i]));
     }
   }
+};
+
+exports = {
+  addBase,
+  getParamUri,
+  mergeParams
 };

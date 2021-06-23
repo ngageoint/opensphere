@@ -1,64 +1,62 @@
-goog.provide('os.unit.MileUnits');
-goog.require('os.unit.BaseUnit');
-goog.require('os.unit.Multiplier');
+goog.module('os.unit.MileUnits');
+goog.module.declareLegacyNamespace();
 
+const BaseUnit = goog.require('os.unit.BaseUnit');
+const Multiplier = goog.require('os.unit.Multiplier');
 
 
 /**
  * Responsible for receiving, logging and reporting alerts
- *
- * @extends {os.unit.BaseUnit}
- * @constructor
  */
-os.unit.MileUnits = function() {
-  os.unit.MileUnits.base(this, 'constructor');
-};
-goog.inherits(os.unit.MileUnits, os.unit.BaseUnit);
+class MileUnits extends BaseUnit {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getTitle() {
+    return 'Miles Only';
+  }
 
-/**
- * @inheritDoc
- */
-os.unit.MileUnits.prototype.getTitle = function() {
-  return 'Miles Only';
-};
+  /**
+   * @inheritDoc
+   */
+  getUnitType() {
+    return 'distance';
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getSystem() {
+    return 'mile';
+  }
 
-/**
- * @inheritDoc
- */
-os.unit.MileUnits.prototype.getUnitType = function() {
-  return 'distance';
-};
+  /**
+   * @inheritDoc
+   */
+  getDefaultMultiplier() {
+    return this.getMultiplier('mi');
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getConversionFactor() {
+    return (1 / 1609.344);
+  }
 
-/**
- * @inheritDoc
- */
-os.unit.MileUnits.prototype.getSystem = function() {
-  return 'mile';
-};
+  /**
+   * @inheritDoc
+   */
+  initMultipliers() {
+    this.multipliers.push(new Multiplier('mi', 1, true, 'miles', .1));
+  }
+}
 
-
-/**
- * @inheritDoc
- */
-os.unit.MileUnits.prototype.getDefaultMultiplier = function() {
-  return this.getMultiplier('mi');
-};
-
-
-/**
- * @inheritDoc
- */
-os.unit.MileUnits.prototype.getConversionFactor = function() {
-  return (1 / 1609.344);
-};
-
-
-/**
- * @inheritDoc
- */
-os.unit.MileUnits.prototype.initMultipliers = function() {
-  this.multipliers.push(new os.unit.Multiplier('mi', 1, true, 'miles', .1));
-};
+exports = MileUnits;

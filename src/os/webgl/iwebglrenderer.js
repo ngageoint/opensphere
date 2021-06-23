@@ -1,182 +1,180 @@
-goog.provide('os.webgl.IWebGLRenderer');
+goog.module('os.webgl.IWebGLRenderer');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.disposable.IDisposable');
-goog.require('os.webgl.IWebGLCamera');
+const IDisposable = goog.requireType('goog.disposable.IDisposable');
+const IWebGLCamera = goog.requireType('os.webgl.IWebGLCamera');
 
 
 /**
  * Interface for a WebGL map/globe renderer.
  *
- * @extends {goog.disposable.IDisposable}
+ * @extends {IDisposable}
  * @interface
  */
-os.webgl.IWebGLRenderer = function() {};
+class IWebGLRenderer {
+  /**
+   * The text id for the renderer
+   * @return {string}
+   */
+  getId() {}
 
+  /**
+   * A user facing label for the renderer
+   * @return {string}
+   */
+  getLabel() {}
 
-/**
- * The text id for the renderer
- * @return {string}
- */
-os.webgl.IWebGLRenderer.prototype.getId;
+  /**
+   * A user facing description for the renderer
+   * @return {string}
+   */
+  getDescription() {}
 
+  /**
+   * If the renderer is initialized.
+   * @return {boolean}
+   */
+  isInitialized() {}
 
-/**
- * A user facing label for the renderer
- * @return {string}
- */
-os.webgl.IWebGLRenderer.prototype.getLabel;
+  /**
+   * Initialize the renderer.
+   * @return {!goog.Thenable}
+   */
+  initialize() {}
 
+  /**
+   * Synchronously render a frame in the WebGL context.
+   */
+  renderSync() {}
 
-/**
- * A user facing description for the renderer
- * @return {string}
- */
-os.webgl.IWebGLRenderer.prototype.getDescription;
+  /**
+   * Reset the WebGL synchronizer.
+   */
+  resetSync() {}
 
+  /**
+   * If the renderer is enabled.
+   * @return {boolean}
+   */
+  getEnabled() {}
 
-/**
- * If the renderer is initialized.
- * @return {boolean}
- */
-os.webgl.IWebGLRenderer.prototype.isInitialized;
+  /**
+   * Set if the renderer is enabled.
+   * @param {boolean} value If the renderer should be enabled.
+   */
+  setEnabled(value) {}
 
+  /**
+   * Get the WebGL camera.
+   * @return {IWebGLCamera|undefined}
+   */
+  getCamera() {}
 
-/**
- * Initialize the renderer.
- * @return {!goog.Thenable}
- */
-os.webgl.IWebGLRenderer.prototype.initialize;
+  /**
+   * Get the Openlayers map.
+   * @return {ol.PluggableMap|undefined}
+   */
+  getMap() {}
 
+  /**
+   * Set the Openlayers map.
+   * @param {ol.PluggableMap|undefined} value The Openlayers map.
+   */
+  setMap(value) {}
 
-/**
- * Synchronously render a frame in the WebGL context.
- */
-os.webgl.IWebGLRenderer.prototype.renderSync;
+  /**
+   * Get the coordinate for a given pixel.
+   * @param {ol.Pixel} pixel The pixel.
+   * @return {ol.Coordinate} The coordinate, or null if no coordinate at the given pixel.
+   */
+  getCoordinateFromPixel(pixel) {}
 
+  /**
+   * Get the pixel for a given coordinate.
+   * @param {ol.Coordinate} coordinate The coordinate.
+   * @param {boolean=} opt_inView If the coordinate must be in the camera view and not occluded by the globe.
+   * @return {ol.Pixel} The pixel, or null if no pixel at the given coordinate.
+   */
+  getPixelFromCoordinate(coordinate, opt_inView) {}
 
-/**
- * Reset the WebGL synchronizer.
- */
-os.webgl.IWebGLRenderer.prototype.resetSync;
+  /**
+   * Detect features that intersect a pixel on the viewport, and execute a callback with each intersecting feature.
+   * Layers included in the detection can be configured through the `layerFilter` option in `opt_options`.
+   *
+   * @param {ol.Pixel} pixel Pixel.
+   * @param {function(this: S, (ol.Feature|ol.render.Feature), ol.layer.Layer): T} callback Feature callback.
+   *     The callback will be called with two arguments. The first argument is one {@link ol.Feature feature} or
+   *     {@link ol.render.Feature render feature} at the pixel, the second is
+   *     the {@link ol.layer.Layer layer} of the feature and will be null for
+   *     unmanaged layers. To stop detection, callback functions can return a truthy value.
+   * @param {olx.AtPixelOptions=} opt_options Optional options.
+   * @return {T|undefined} Callback result, i.e. the return value of last
+   * callback execution, or the first truthy callback return value.
+   *
+   * @template S,T
+   */
+  forEachFeatureAtPixel(pixel, callback, opt_options) {}
 
+  /**
+   * Indicates if this renderer can show video within tile overlays.
+   * @return {boolean} True if the renderer can show video in tile overlays, false if it cannot.
+   */
+  supportsVideoOverlay() {}
 
-/**
- * If the renderer is enabled.
- * @return {boolean}
- */
-os.webgl.IWebGLRenderer.prototype.getEnabled;
+  /**
+   * Toggles user movement of the globe.
+   * @param {boolean} value If user movement should be enabled.
+   */
+  toggleMovement(value) {}
 
+  /**
+   * Get the altitude modes the WebGL renderer supports.
+   * @return {Array<os.webgl.AltitudeMode>} The supported modes
+   */
+  getAltitudeModes() {}
 
-/**
- * Set if the renderer is enabled.
- * @param {boolean} value If the renderer should be enabled.
- */
-os.webgl.IWebGLRenderer.prototype.setEnabled;
+  /**
+   * Register a callback to fire after each frame is rendered.
+   * @param {function()} callback The callback.
+   * @return {function()|undefined} A deregistration function, or undefined if unsupported by the renderer.
+   */
+  onPostRender(callback) {}
 
+  /**
+   * Adds a command to fly to the features
+   * @param {Array<ol.Feature>} features
+   */
+  flyToFeatures(features) {}
 
-/**
- * Get the WebGL camera.
- * @return {os.webgl.IWebGLCamera|undefined}
- */
-os.webgl.IWebGLRenderer.prototype.getCamera;
+  /**
+   * Get the max feature count for this renderer.
+   * @return {number}
+   */
+  getMaxFeatureCount() {}
 
+  /**
+   * Set the max feature count for this renderer.
+   * @param {Array<ol.Feature>} features
+   */
+  setMaxFeatureCount(features) {}
 
-/**
- * Get the Openlayers map.
- * @return {ol.PluggableMap|undefined}
- */
-os.webgl.IWebGLRenderer.prototype.getMap;
+  /**
+   * Get the active terrain provider.
+   * @return {osx.map.TerrainProviderOptions|undefined}
+   */
+  getActiveTerrainProvider() {}
 
+  /**
+   * Set the active terrain provider.
+   * @param {osx.map.TerrainProviderOptions|string} provider The new provider.
+   */
+  setActiveTerrainProvider(provider) {}
 
-/**
- * Set the Openlayers map.
- * @param {ol.PluggableMap|undefined} value The Openlayers map.
- */
-os.webgl.IWebGLRenderer.prototype.setMap;
+  /**
+   * Get the terrain providers supported by this renderer.
+   * @return {!Array<!osx.map.TerrainProviderOptions>}
+   */
+  getSupportedTerrainProviders() {}
+}
 
-
-/**
- * Get the coordinate for a given pixel.
- * @param {ol.Pixel} pixel The pixel.
- * @return {ol.Coordinate} The coordinate, or null if no coordinate at the given pixel.
- */
-os.webgl.IWebGLRenderer.prototype.getCoordinateFromPixel;
-
-
-/**
- * Get the pixel for a given coordinate.
- * @param {ol.Coordinate} coordinate The coordinate.
- * @param {boolean=} opt_inView If the coordinate must be in the camera view and not occluded by the globe.
- * @return {ol.Pixel} The pixel, or null if no pixel at the given coordinate.
- */
-os.webgl.IWebGLRenderer.prototype.getPixelFromCoordinate;
-
-
-/**
- * Detect features that intersect a pixel on the viewport, and execute a callback with each intersecting feature.
- * Layers included in the detection can be configured through the `layerFilter` option in `opt_options`.
- *
- * @param {ol.Pixel} pixel Pixel.
- * @param {function(this: S, (ol.Feature|ol.render.Feature),
- *     ol.layer.Layer): T} callback Feature callback. The callback will be
- *     called with two arguments. The first argument is one
- *     {@link ol.Feature feature} or
- *     {@link ol.render.Feature render feature} at the pixel, the second is
- *     the {@link ol.layer.Layer layer} of the feature and will be null for
- *     unmanaged layers. To stop detection, callback functions can return a
- *     truthy value.
- * @param {olx.AtPixelOptions=} opt_options Optional options.
- * @return {T|undefined} Callback result, i.e. the return value of last
- * callback execution, or the first truthy callback return value.
- *
- * @template S,T
- */
-os.webgl.IWebGLRenderer.prototype.forEachFeatureAtPixel;
-
-/**
- * Indicates if this renderer can show video within tile overlays.
- * @return {boolean} True if the renderer can show video in tile overlays, false if it cannot.
- */
-os.webgl.IWebGLRenderer.prototype.supportsVideoOverlay;
-
-/**
- * Toggles user movement of the globe.
- * @param {boolean} value If user movement should be enabled.
- */
-os.webgl.IWebGLRenderer.prototype.toggleMovement;
-
-
-/**
- * Get the altitude modes the WebGL renderer supports.
- * @return {Array<os.webgl.AltitudeMode>} The supported modes
- */
-os.webgl.IWebGLRenderer.prototype.getAltitudeModes;
-
-
-/**
- * Register a callback to fire after each frame is rendered.
- * @param {function()} callback The callback.
- * @return {function()|undefined} A deregistration function, or undefined if unsupported by the renderer.
- */
-os.webgl.IWebGLRenderer.prototype.onPostRender;
-
-
-/**
- * Adds a command to fly to the features
- * @param {Array<ol.Feature>} features
- */
-os.webgl.IWebGLRenderer.prototype.flyToFeatures;
-
-
-/**
- * Get the max feature count for this renderer.
- * @return {number}
- */
-os.webgl.IWebGLRenderer.prototype.getMaxFeatureCount;
-
-
-/**
- * Set the max feature count for this renderer.
- * @param {Array<ol.Feature>} features
- */
-os.webgl.IWebGLRenderer.prototype.setMaxFeatureCount;
+exports = IWebGLRenderer;

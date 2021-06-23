@@ -1,10 +1,11 @@
-goog.module('os.url.EventType');
+goog.module('os.math.AngleUnits');
 goog.module.declareLegacyNamespace();
 
 
 /**
+ * Supported unit types.
  * @enum {string}
  */
 exports = {
-  URL_IMPORTED: 'urlImported'
+  DEGREES: 'degrees'
 };

@@ -1,28 +1,27 @@
-goog.provide('os.xt.IMessageHandler');
-
+goog.module('os.xt.IMessageHandler');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * The message handler interface
  *
  * @interface
- * @export
  */
-os.xt.IMessageHandler = function() {};
+class IMessageHandler {
+  /**
+   * Gets the type (or types) of messages that this handler handles
+   * @return {Array.<string>}
+   */
+  getTypes() {}
 
+  /**
+   * Processes a message
+   * @param {*} data The message payload
+   * @param {string} type The message type
+   * @param {string} sender The sender ID
+   * @param {number} time The time the message was sent
+   */
+  process(data, type, sender, time) {}
+}
 
-/**
- * Gets the type (or types) of messages that this handler handles
- * @return {Array.<string>}
- */
-os.xt.IMessageHandler.prototype.getTypes;
-
-
-/**
- * Processes a message
- * @param {*} data The message payload
- * @param {string} type The message type
- * @param {string} sender The sender ID
- * @param {number} time The time the message was sent
- */
-os.xt.IMessageHandler.prototype.process;
+exports = IMessageHandler;
