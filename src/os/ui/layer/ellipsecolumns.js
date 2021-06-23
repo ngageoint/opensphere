@@ -73,12 +73,6 @@ class Controller {
     this.element = $element;
 
     /**
-     * Model object representing the None option.
-     * @type {!ColumnDefinition}
-     */
-    this.noneColumn = new ColumnDefinition('-- None --');
-
-    /**
      * Source
      * @type {?SourceRequest}
      * @private
@@ -97,7 +91,6 @@ class Controller {
      * @type {Array<ColumnDefinition>}
      */
     this['columnOptions'] = this.source_ ? this.source_.getColumns() || [] : this.scope_['layer']['columns'] || [];
-    this['columnOptions'].unshift(this.noneColumn);
 
     /**
      * Array of the units available
@@ -219,7 +212,7 @@ class Controller {
       descMappings.forEach((mapping) => {
         const id = mapping.getId();
         if (id != RadiusMapping.ID && id != SemiMajorMapping.ID &&
-            id != SemiMajorMapping.ID && id != OrientationMapping.ID) {
+            id != SemiMinorMapping.ID && id != OrientationMapping.ID) {
           result.push(mapping);
         }
       });
@@ -282,14 +275,11 @@ class Controller {
   validType(inputType) {
     let isValid = false;
     if (inputType == EllipseInputType.CIRCLE) {
-      isValid = this['radiusColumn'] && this['radiusUnits'] &&
-        this['radiusColumn'] != this.noneColumn && this['radiusUnits'] != this.noneColumn;
+      isValid = this['radiusColumn'] && this['radiusUnits'];
     } else if (inputType == EllipseInputType.ELLIPSE) {
       isValid = this['semiMajorColumn'] && this['semiMajorUnits'] &&
-        this['semiMajorColumn'] != this.noneColumn && this['semiMajorUnits'] != this.noneColumn &&
         this['semiMinorColumn'] && this['semiMinorUnits'] &&
-        this['semiMinorColumn'] != this.noneColumn && this['semiMinorUnits'] != this.noneColumn &&
-        this['orientation'] && this['orientation'] != this.noneColumn;
+        this['orientation'];
     }
     return isValid;
   }
