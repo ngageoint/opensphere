@@ -1,5 +1,6 @@
 const {contextBridge, ipcRenderer} = require('electron');
 const path = require('path');
+const url = require('url');
 
 const CookieEventType = require('../cookieeventtype.js');
 const SettingsEventType = require('../settingseventtype.js');
@@ -201,10 +202,16 @@ const removeUserSettings = async (file) => settingsFiles = await ipcRenderer.inv
 const updateUserSettings = async (file) => settingsFiles = await ipcRenderer.invoke(SettingsEventType.UPDATE, file);
 
 /**
- * Get the path to the base settings file loaded by the application.
+ * Get the local path to the base settings file loaded by the application.
  * @return {string}
  */
 const getBaseSettingsFile = () => baseSettingsFile;
+
+/**
+ * Get the file:// URL to the base settings file loaded by the application.
+ * @return {string}
+ */
+const getBaseSettingsFileUrl = () => url.pathToFileURL(baseSettingsFile).toString();
 
 /**
  * Get the settings files available to the application.
@@ -286,6 +293,7 @@ contextBridge.exposeInMainWorld('ElectronOS', {
   removeUserSettings,
   updateUserSettings,
   getBaseSettingsFile,
+  getBaseSettingsFileUrl,
   getSettingsFiles,
   setSettingsFiles,
   getUserSettingsDir,

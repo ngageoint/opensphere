@@ -113,7 +113,7 @@ if (isElectron()) {
     // Enable mixed content so http/https settings files may be loaded.
     ExtDomainHandler.MIXED_CONTENT_ENABLED = true;
 
-    const baseSettingsFile = ElectronOS.getBaseSettingsFile();
+    const baseSettingsFile = ElectronOS.getBaseSettingsFileUrl();
     if (baseSettingsFile) {
       const settingsInitializer = SettingsInitializerManager.getInstance().getSettingsInitializer();
       settingsInitializer.setFileUri(baseSettingsFile);

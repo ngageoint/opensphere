@@ -158,10 +158,16 @@ ElectronOS.removeUserSettings = function(file) {};
 ElectronOS.updateUserSettings = function(file) {};
 
 /**
- * Get the base settings file to load in the application.
+ * Get the local path to the base settings file loaded by the application.
  * @return {string}
  */
 ElectronOS.getBaseSettingsFile = function() {};
+
+/**
+ * Get the file:// URL to the base settings file loaded by the application.
+ * @return {string}
+ */
+ElectronOS.getBaseSettingsFileUrl = function() {};
 
 /**
  * Get the settings files available to the application.
