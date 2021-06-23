@@ -15,6 +15,7 @@ const SemiMinorMapping = goog.require('os.im.mapping.SemiMinorMapping');
 const ILayer = goog.require('os.layer.ILayer');
 const {ORIENTATION} = goog.require('os.Fields');
 const {
+  isDerived: isDerived,
   DEFAULT_RADIUS_COL_NAME: RADIUS,
   DEFAULT_SEMI_MAJ_COL_NAME: SEMI_MAJOR,
   DEFAULT_SEMI_MIN_COL_NAME: SEMI_MINOR
@@ -91,6 +92,9 @@ class Controller {
      * @type {Array<ColumnDefinition>}
      */
     this['columnOptions'] = this.source_ ? this.source_.getColumns() || [] : this.scope_['layer']['columns'] || [];
+
+    // Filter out derived columns
+    this['columnOptions'] = this['columnOptions'].filter((col) => !isDerived(col));
 
     /**
      * Array of the units available
@@ -363,13 +367,21 @@ const updateColumns_ = function(desc, mappings) {
 
     if (!exists) {
       if (RadiusMapping.REGEX.test(label)) {
-        descColumns.push(new ColumnDefinition(RADIUS));
+        const col = new ColumnDefinition(RADIUS);
+        col['derivedFrom'] = mapping.field;
+        descColumns.push(col);
       } else if (SemiMajorMapping.REGEX.test(label)) {
-        descColumns.push(new ColumnDefinition(SEMI_MAJOR));
+        const col = new ColumnDefinition(SEMI_MAJOR);
+        col['derivedFrom'] = mapping.field;
+        descColumns.push(col);
       } else if (SemiMinorMapping.REGEX.test(label)) {
-        descColumns.push(new ColumnDefinition(SEMI_MINOR));
+        const col = new ColumnDefinition(SEMI_MINOR);
+        col['derivedFrom'] = mapping.field;
+        descColumns.push(col);
       } else if (OrientationMapping.REGEX.test(label)) {
-        descColumns.push(new ColumnDefinition(ORIENTATION));
+        const col = new ColumnDefinition(ORIENTATION);
+        col['derivedFrom'] = mapping.field;
+        descColumns.push(col);
       }
     }
   });

@@ -130,6 +130,7 @@ os.fields.hideSpecialColumns = function(colDef) {
   }
 };
 
+os.fields.isDerived = (column) => !!column['derivedFrom'];
 
 /**
  * mark a column as derived
