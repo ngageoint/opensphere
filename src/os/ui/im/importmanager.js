@@ -27,6 +27,14 @@ os.ui.im.ImporterConfig;
  */
 os.ui.im.ImportManager = function() {
   /**
+   * The default import UI.
+   * @type {os.ui.im.IImportUI}
+   * @private
+   */
+  this.defaultImportUI_ = null;
+
+  /**
+   * Registered import UI's by type.
    * @type {Object<string, os.ui.im.IImportUI>}
    * @private
    */
@@ -82,6 +90,24 @@ os.ui.im.ImportManager.LOGGER_ = goog.log.getLogger('os.ui.im.ImportManager');
  * @const
  */
 os.ui.im.ImportManager.DEFAULT_IMPORTER = 'default';
+
+
+/**
+ * Get the default import UI.
+ * @return {os.ui.im.IImportUI} The UI.
+ */
+os.ui.im.ImportManager.prototype.getDefaultImportUI = function() {
+  return this.defaultImportUI_;
+};
+
+
+/**
+ * Set the default import UI.
+ * @param {os.ui.im.IImportUI} value The UI.
+ */
+os.ui.im.ImportManager.prototype.setDefaultImportUI = function(value) {
+  this.defaultImportUI_ = value;
+};
 
 
 /**

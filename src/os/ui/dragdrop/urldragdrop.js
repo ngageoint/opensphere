@@ -33,7 +33,8 @@ os.ui.urlDragDropDirective = function() {
       'ddElement': '@',
       'ddText': '@?',
       'enabled': '=?',
-      'allowInternal': '<?'
+      'allowInternal': '<?',
+      'allowModal': '<?'
     }
   };
 };
@@ -151,8 +152,7 @@ os.ui.UrlDragDrop.prototype.handleDrag_ = function(event) {
     browserEvent.preventDefault();
     browserEvent.stopPropagation();
 
-    if (this.isValidTarget_(event) && !document.querySelector(os.ui.windowSelector.MODAL_BG) &&
-        browserEvent && browserEvent.currentTarget) {
+    if (this.isValidTarget_(event) && this.isDropAllowed_(event) && browserEvent && browserEvent.currentTarget) {
       if (browserEvent.type == 'dragover') {
         goog.dom.classlist.add(/** @type {Element} */ (browserEvent.currentTarget),
             os.ui.DragDropStyle.DRAG_DROP_CLASS);
@@ -165,6 +165,17 @@ os.ui.UrlDragDrop.prototype.handleDrag_ = function(event) {
       }
     }
   }
+};
+
+
+/**
+ * If drag/drop is allowed.
+ * @param {goog.events.BrowserEvent} event The event
+ * @return {boolean}
+ * @private
+ */
+os.ui.UrlDragDrop.prototype.isDropAllowed_ = function(event) {
+  return !document.querySelector(os.ui.windowSelector.MODAL_BG) || this.scope_['allowModal'];
 };
 
 
@@ -209,7 +220,7 @@ os.ui.UrlDragDrop.prototype.handleDrop_ = function(event) {
     browserEvent.preventDefault();
     browserEvent.stopPropagation();
 
-    if (this.isValidTarget_(event) && !document.querySelector(os.ui.windowSelector.MODAL_BG)) {
+    if (this.isValidTarget_(event) && this.isDropAllowed_(event)) {
       if (this.scope_['ddDrop'] != null) {
         this.scope_['ddDrop'](browserEvent);
       } else if (browserEvent.dataTransfer.files && browserEvent.dataTransfer.files.length > 0) {

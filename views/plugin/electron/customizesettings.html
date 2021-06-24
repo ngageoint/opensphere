@@ -1,0 +1,25 @@
+<div class="d-flex flex-column flex-fill container-fluid" >
+  <div class="d-flex flex-column flex-fill"
+      url-drag-drop
+      dd-drop="ctrl.onDrop"
+      dd-text="Import settings"
+      allow-modal="true">
+    <div class="form-group">
+      Choose which settings files are loaded by the application, and import your own. Settings files will be loaded top-down, so lower files will override files above them. Drag and drop files to change the load order.
+    </div>
+    <div class="form-group">
+      <button type="button" class="btn btn-primary"
+          ng-click="ctrl.import()"
+          title="Import a new settings file to the application">
+        <i class="fas fa-plus"></i>
+        Import File
+      </button>
+    </div>
+    <slicktree class="border flex-fill"
+        x-data="ctrl.fileNodes"
+        drag-enabled="true"
+        multi-select="true"
+        selected="ctrl.selected">
+    </slicktree>
+  </div>
+</div>

@@ -1,8 +1,7 @@
 goog.module('os.layer.folder');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.window.confirmTextDirective');
-
+const ConfirmTextUI = goog.require('os.ui.window.ConfirmTextUI');
 const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 
@@ -97,7 +96,7 @@ const createOrEditFolder = (options, callback, opt_isEdit = false) => {
     })
   });
 
-  os.ui.window.launchConfirmText(confirmOptions);
+  ConfirmTextUI.launchConfirmText(confirmOptions);
 };
 
 

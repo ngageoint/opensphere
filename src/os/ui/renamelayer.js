@@ -1,8 +1,9 @@
 goog.provide('os.ui.renamelayer');
+
 goog.require('os.command.CommandProcessor');
 goog.require('os.command.RenameLayer');
 goog.require('os.layer.ILayer');
-goog.require('os.ui.window.confirmTextDirective');
+goog.require('os.ui.window.ConfirmTextUI');
 
 
 /**
@@ -12,7 +13,7 @@ goog.require('os.ui.window.confirmTextDirective');
  */
 os.ui.renamelayer.launchRenameDialog = function(layer) {
   if (layer) {
-    os.ui.window.launchConfirmText({
+    os.ui.window.ConfirmTextUI.launchConfirmText({
       confirm: goog.partial(os.ui.renamelayer.addRenameLayer, layer),
       defaultValue: layer.getTitle(),
       prompt: 'Please choose a layer name:',

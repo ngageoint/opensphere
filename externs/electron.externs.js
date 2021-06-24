@@ -63,6 +63,13 @@ ElectronOS.checkForUpdates = function() {};
 
 
 /**
+ * If the application is the main Electron window.
+ * @return {boolean}
+ */
+ElectronOS.isMainWindow = function() {};
+
+
+/**
  * Register a certificate request handler with Electron.
  * @param {Electron.CertificateRequestFn|undefined} handler The handler.
  */
@@ -110,3 +117,79 @@ ElectronOS.setMaxMemory = function(value) {};
  * Restarts the entire application.
  */
 ElectronOS.restart = function() {};
+
+/**
+ * @typedef {{
+ *   default: boolean,
+ *   enabled: boolean,
+ *   label: string,
+ *   path: string
+ * }}
+ */
+ElectronOS.SettingsFile;
+
+/**
+ * Get the settings file config by file name.
+ * @param {string} fileName The file name.
+ * @return {ElectronOS.SettingsFile|undefined} The file, or undefined if not found.
+ */
+ElectronOS.getSettingsFile = function(fileName) {};
+
+/**
+ * Add a user settings file.
+ * @param {!ElectronOS.SettingsFile} file The file.
+ * @param {?string} content The settings content.
+ * @return {!Promise} A promise that resolves when the settings file has been saved.
+ */
+ElectronOS.addUserSettings = function(file, content) {};
+
+/**
+ * Remove a user settings file.
+ * @param {!ElectronOS.SettingsFile} file The file.
+ * @return {!Promise} A promise that resolves when the settings file has been removed.
+ */
+ElectronOS.removeUserSettings = function(file) {};
+
+/**
+ * Update a user settings file.
+ * @param {!ElectronOS.SettingsFile} file The file.
+ * @return {!Promise} A promise that resolves when the settings file has been updated.
+ */
+ElectronOS.updateUserSettings = function(file) {};
+
+/**
+ * Get the local path to the base settings file loaded by the application.
+ * @return {string}
+ */
+ElectronOS.getBaseSettingsFile = function() {};
+
+/**
+ * Get the file:// URL to the base settings file loaded by the application.
+ * @return {string}
+ */
+ElectronOS.getBaseSettingsFileUrl = function() {};
+
+/**
+ * Get the settings files available to the application.
+ * @return {!Array<!ElectronOS.SettingsFile>} The list of settings files.
+ */
+ElectronOS.getSettingsFiles = function() {};
+
+/**
+ * Update application settings files.
+ * @param {!Array<!ElectronOS.SettingsFile>} value The list of settings files.
+ * @return {!Promise} A promise that resolves when settings have been saved.
+ */
+ElectronOS.setSettingsFiles = function(value) {};
+
+/**
+ * Get directory containing user config files and copied app settings.
+ * @return {!string}
+ */
+ElectronOS.getUserSettingsDir = function() {};
+
+/**
+ * If user settings management is supported.
+ * @return {boolean}
+ */
+ElectronOS.supportsUserSettings = function() {};

@@ -1,4 +1,9 @@
 const {contextBridge, ipcRenderer} = require('electron');
+const path = require('path');
+const url = require('url');
+
+const CookieEventType = require('../cookieeventtype.js');
+const SettingsEventType = require('../settingseventtype.js');
 const {getMaximumMemory, getSystemMemory, setMaximumMemory} = require('../memconfig.js');
 
 /**
@@ -16,19 +21,66 @@ let cookies = '';
 
 
 /**
+ * If this is the main window.
+ * @type {boolean}
+ */
+let isMain = false;
+
+
+/**
+ * The copied base settings file that will be loaded by the application.
+ * @type {string}
+ */
+let baseSettingsFile = '';
+
+
+/**
+ * Settings files available to the application.
+ * @type {!Array<!ElectronOS.SettingsFile>}
+ */
+let settingsFiles = [];
+
+
+/**
+ * The directory containing user config files and copied app settings.
+ * @type {string}
+ */
+let userSettingsDir = '';
+
+
+/**
+ * If user settings are supported.
+ * @type {boolean}
+ */
+let userSettingsSupported = false;
+
+
+/**
  * General event types.
  * @enum {string}
  */
 const EventType = {
+  IS_MAIN: 'is-main-window',
   UPDATE_CHECK: 'check-for-updates',
 
   CERT_HANDLER_REGISTERED: 'client-certificate-handler-registered',
   CERT_SELECT: 'select-client-certificate',
-  CERT_SELECTED: 'client-certificate-selected',
-
-  COOKIE_SET: 'set-cookie',
-  COOKIE_UPDATE: 'update-cookies'
+  CERT_SELECTED: 'client-certificate-selected'
 };
+
+
+/**
+ * Regular expression to detect a remote (http or https) URL.
+ * @type {RegExp}
+ */
+const URI_REGEXP = /^(?:http|https):\/\//;
+
+
+/**
+ * If this is the main window.
+ * @return {boolean}
+ */
+const isMainWindow = () => isMain;
 
 
 /**
@@ -89,7 +141,7 @@ const getCookies = () => {
  * @param {string} value The cookie value.
  */
 const setCookie = (value) => {
-  ipcRenderer.send(EventType.COOKIE_SET, value);
+  ipcRenderer.send(CookieEventType.SET, value);
 };
 
 
@@ -97,7 +149,7 @@ const setCookie = (value) => {
  * Request cookie update from the main process.
  */
 const updateCookies = () => {
-  ipcRenderer.send(EventType.COOKIE_UPDATE);
+  ipcRenderer.send(CookieEventType.UPDATE);
 };
 
 /**
@@ -117,6 +169,77 @@ const setMaxMemory = (value) => {
 };
 
 /**
+ * Get the settings file config by file name/URL.
+ * @param {string} fileOrPath The file name or URL.
+ * @return {ElectronOS.SettingsFile|undefined} The file, or undefined if not found.
+ */
+const getSettingsFile = (fileOrPath) => {
+  const filePath = URI_REGEXP.test(fileOrPath) ? fileOrPath : path.join(userSettingsDir, fileOrPath);
+  return settingsFiles.find((file) => file.path === filePath);
+};
+
+/**
+ * Add a user settings file.
+ * @param {!ElectronOS.SettingsFile} file The file.
+ * @param {?string} content The settings content.
+ * @return {!Promise<!Array<!ElectronOS.SettingsFile>>} A promise that resolves to the updated settings.
+ */
+const addUserSettings = async (file, content) =>
+  settingsFiles = await ipcRenderer.invoke(SettingsEventType.ADD, file, content);
+
+/**
+ * Remove a user settings file.
+ * @param {!ElectronOS.SettingsFile} file The file.
+ * @return {!Promise<!Array<!ElectronOS.SettingsFile>>} A promise that resolves to the updated settings.
+ */
+const removeUserSettings = async (file) => settingsFiles = await ipcRenderer.invoke(SettingsEventType.REMOVE, file);
+
+/**
+ * Update a user settings file.
+ * @param {!ElectronOS.SettingsFile} file The file.
+ * @return {!Promise<!Array<!ElectronOS.SettingsFile>>} A promise that resolves to the updated settings.
+ */
+const updateUserSettings = async (file) => settingsFiles = await ipcRenderer.invoke(SettingsEventType.UPDATE, file);
+
+/**
+ * Get the local path to the base settings file loaded by the application.
+ * @return {string}
+ */
+const getBaseSettingsFile = () => baseSettingsFile;
+
+/**
+ * Get the file:// URL to the base settings file loaded by the application.
+ * @return {string}
+ */
+const getBaseSettingsFileUrl = () => url.pathToFileURL(baseSettingsFile).toString();
+
+/**
+ * Get the settings files available to the application.
+ * @return {!Array<!ElectronOS.SettingsFile>}
+ */
+const getSettingsFiles = () => settingsFiles;
+
+/**
+ * Get directory containing user config files and copied app settings.
+ * @return {string}
+ */
+const getUserSettingsDir = () => userSettingsDir;
+
+/**
+ * If user settings management is supported. User settings are currently only supported in the main window, given files
+ * would need to be separately managed in other windows.
+ * @return {boolean}
+ */
+const supportsUserSettings = () => isMain && userSettingsSupported;
+
+/**
+ * Update application settings files.
+ * @param {!Array<!ElectronOS.SettingsFile>} value The list of settings files.
+ * @return {!Promise<!Array<!ElectronOS.SettingsFile>>} A promise that resolves to the saved settings.
+ */
+const setSettingsFiles = async (value) => settingsFiles = await ipcRenderer.invoke(SettingsEventType.SET, value);
+
+/**
  * Restarts the application.
  */
 const restart = () => {
@@ -126,12 +249,25 @@ const restart = () => {
 // Handle certificate select event from the main process.
 ipcRenderer.on(EventType.CERT_SELECT, selectClientCertificate);
 
-
 // Handle cookie initialization from the main process.
-ipcRenderer.on(EventType.COOKIE_UPDATE, (event, value) => {
+ipcRenderer.on(CookieEventType.UPDATE, (event, value) => {
   cookies = value;
 });
 
+// Initialize values from the main process.
+(async () => {
+  // Initialize the main window flag.
+  isMain = await ipcRenderer.invoke(EventType.IS_MAIN);
+
+  // Initialize user settings values.
+  userSettingsSupported = await ipcRenderer.invoke(SettingsEventType.SUPPORTED);
+
+  if (userSettingsSupported) {
+    baseSettingsFile = await ipcRenderer.invoke(SettingsEventType.GET_BASE_FILE);
+    settingsFiles = await ipcRenderer.invoke(SettingsEventType.GET_FILES);
+    userSettingsDir = await ipcRenderer.invoke(SettingsEventType.GET_USER_DIR);
+  }
+})();
 
 //
 // Expose a minimal Electron interface for use in OpenSphere.
@@ -143,6 +279,7 @@ ipcRenderer.on(EventType.COOKIE_UPDATE, (event, value) => {
 // https://www.electronjs.org/docs/tutorial/security#3-enable-context-isolation-for-remote-content
 //
 contextBridge.exposeInMainWorld('ElectronOS', {
+  isMainWindow,
   checkForUpdates,
   getCookies,
   setCookie,
@@ -151,5 +288,15 @@ contextBridge.exposeInMainWorld('ElectronOS', {
   getMaxMemory,
   getSystemMemory,
   setMaxMemory,
+  getSettingsFile,
+  addUserSettings,
+  removeUserSettings,
+  updateUserSettings,
+  getBaseSettingsFile,
+  getBaseSettingsFileUrl,
+  getSettingsFiles,
+  setSettingsFiles,
+  getUserSettingsDir,
+  supportsUserSettings,
   restart
 });

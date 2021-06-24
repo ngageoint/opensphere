@@ -282,9 +282,14 @@ os.ui.im.ImportProcess.prototype.importFile = function(opt_config) {
         this.invalidFiletype();
       }
     } else {
-      goog.log.error(this.log, 'No import UI was registered for type "' + type + '" - falling back to generic import.');
-      var anyType = new os.ui.file.AnyTypeImportUI();
-      anyType.launchUI(this.file);
+      const defaultUi = this.im_.getDefaultImportUI();
+      if (defaultUi) {
+        defaultUi.launchUI(this.file);
+      } else {
+        goog.log.error(this.log, `No import UI was registered for type "${type}". Falling back to generic import.`);
+        var anyType = new os.ui.file.AnyTypeImportUI();
+        anyType.launchUI(this.file);
+      }
     }
   } else {
     this.abortImport('Unable to import file!');

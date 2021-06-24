@@ -27,8 +27,8 @@ goog.require('os.style');
 goog.require('os.time.TimeRange');
 goog.require('os.ui.file.kml');
 goog.require('os.ui.window');
+goog.require('os.ui.window.ConfirmTextUI');
 goog.require('os.ui.window.confirmColumnDirective');
-goog.require('os.ui.window.confirmTextDirective');
 
 
 /**
@@ -1149,7 +1149,7 @@ os.track.getSortField = function(feature, opt_sortField) {
  */
 os.track.promptForTitle = function(opt_default) {
   return new goog.Promise(function(resolve, reject) {
-    os.ui.window.launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
+    os.ui.window.ConfirmTextUI.launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
       confirm: resolve,
       cancel: reject,
       defaultValue: opt_default,
@@ -1179,7 +1179,7 @@ os.track.promptForTitleAndMetadata = function(opt_default = '', opt_includeMetad
   };
 
   return new goog.Promise(function(resolve, reject) {
-    os.ui.window.launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
+    os.ui.window.ConfirmTextUI.launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
       confirm: (title) => {
         resolve({title, includeMetadata});
       },

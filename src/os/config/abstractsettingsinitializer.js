@@ -71,3 +71,11 @@ os.config.AbstractSettingsInitializer.prototype.onInitialized = function() {
  * @protected
  */
 os.config.AbstractSettingsInitializer.prototype.onSettingsLoaded = function() {};
+
+/**
+ * Set the URI for file-based settings.
+ * @param {string} value The URI.
+ */
+os.config.AbstractSettingsInitializer.prototype.setFileUri = function(value) {
+  this.fileUri = value;
+};

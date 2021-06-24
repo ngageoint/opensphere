@@ -82,13 +82,19 @@ os.config.storage.SettingsFile.prototype.onGetSuccess_ = function(deferred, even
   // strip out comments
   response = response.replace(/\/\*[\s\S]*\*\//mg, '');
 
-  var settings = /** @type {!Object} */ (JSON.parse(response));
+  var settings;
 
-  // namespace user settings
-  settings[os.config.ConfigType.PREFERENCE] =
-      os.config.namespace.addNamespaces(settings[os.config.ConfigType.PREFERENCE] || {});
+  try {
+    settings = /** @type {!Object} */ (JSON.parse(response));
 
-  deferred.callback(settings);
+    // namespace user settings
+    settings[os.config.ConfigType.PREFERENCE] =
+        os.config.namespace.addNamespaces(settings[os.config.ConfigType.PREFERENCE] || {});
+
+    deferred.callback(settings);
+  } catch (e) {
+    this.onGetFail_(deferred, `Failed parsing settings file: ${this.uri_}`);
+  }
 };
 
 
