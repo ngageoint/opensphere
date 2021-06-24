@@ -133,21 +133,17 @@ os.data.LayerSyncDescriptor.prototype.getMappings = function() {
  */
 os.data.LayerSyncDescriptor.prototype.setMappings = function(value) {
   this.mappings = value;
-  const dm = os.data.DataManager.getInstance();
-  dm.updateDescriptor(this, this);
-  dm.persistDescriptors();
 };
 
 /**
  * @inheritDoc
  */
 os.data.LayerSyncDescriptor.prototype.updateMappings = function(layer) {
-  const dm = os.data.DataManager.getInstance();
-  dm.updateDescriptor(this, this);
-  dm.persistDescriptors();
+  this.saveDescriptor();
 
   // Delete the layer, then prompt the descriptor to make new layers
   os.MapContainer.getInstance().removeLayer(/** @type {!os.layer.ILayer} */ (layer));
+  this.setActiveInternal();
 };
 
 

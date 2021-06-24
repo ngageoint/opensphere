@@ -257,14 +257,6 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
   /**
    * @inheritDoc
    */
-  updateMappings(layer) {
-    super.updateMappings(layer);
-    this.setActiveInternal();
-  }
-
-  /**
-   * @inheritDoc
-   */
   getSearchType() {
     return 'Layer';
   }

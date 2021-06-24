@@ -199,6 +199,7 @@ os.data.FileDescriptor.prototype.updateMappings = function(layer) {
   const source = /** @type {os.source.Request} */ (layer.getSource());
   const importer = source.getImporter();
 
+  this.saveDescriptor();
   importer.setMappings(this.getMappings());
   source.refresh();
 };
