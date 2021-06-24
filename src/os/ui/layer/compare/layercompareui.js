@@ -20,7 +20,7 @@ const {
   bringToFront,
   close: closeWindow,
   create: createWindow,
-  exists: windowExists
+  getById: getWindowById
 } = goog.require('os.ui.window');
 
 const EventKey = goog.requireType('goog.events.Key');
@@ -232,8 +232,8 @@ class Controller {
 
     // Set the layers on each map.
     const compareOptions = /** @type {LayerCompareOptions} */ (this.scope);
-    this.setCollectionLayers(this.leftLayers, compareOptions.left);
-    this.setCollectionLayers(this.rightLayers, compareOptions.right);
+    this.setLeftLayers(compareOptions.left);
+    this.setRightLayers(compareOptions.right);
   }
 
   /**
@@ -273,6 +273,7 @@ class Controller {
    * Set the layers in a collection.
    * @param {Collection<Layer>} collection The collection.
    * @param {Array<Layer>|undefined} layers The layers.
+   * @protected
    */
   setCollectionLayers(collection, layers) {
     collection.clear();
@@ -282,6 +283,24 @@ class Controller {
         collection.push(layer);
       });
     }
+  }
+
+  /**
+   * Set the layers on the left map.
+   * @param {Array<Layer>|undefined} layers The layers.
+   */
+  setLeftLayers(layers) {
+    const collection = this.leftOnTop ? this.leftLayers : this.rightLayers;
+    this.setCollectionLayers(collection, layers);
+  }
+
+  /**
+   * Set the layers on the right map.
+   * @param {Array<Layer>|undefined} layers The layers.
+   */
+  setRightLayers(layers) {
+    const collection = this.leftOnTop ? this.rightLayers : this.leftLayers;
+    this.setCollectionLayers(collection, layers);
   }
 
   /**
@@ -399,9 +418,16 @@ const windowId = 'compare-layers';
  * @param {!LayerCompareOptions} options The layer compare options.
  */
 const launchLayerCompare = (options) => {
-  if (windowExists(windowId)) {
+  const existing = getWindowById(windowId);
+  if (existing) {
+    const scope = existing.find(Selector.CONTAINER).scope();
+    if (scope && scope['ctrl']) {
+      const ctrl = /** @type {Controller} */ (scope['ctrl']);
+      ctrl.setLeftLayers(options.left);
+      ctrl.setRightLayers(options.right);
+    }
+
     bringToFront(windowId);
-    // TODO: update the existing window
   } else {
     const windowOptions = {
       'id': windowId,
