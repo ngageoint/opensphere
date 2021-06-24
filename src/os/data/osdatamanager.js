@@ -277,10 +277,4 @@ const OSDataManagerSetting = {
   FILTER_TIME: OSDataManager.BASE_KEY + '.filterTime'
 };
 
-
-/**
- * @type {os.data.OSDataManager}
- */
-os.osDataManager = null;
-
 exports = OSDataManager;

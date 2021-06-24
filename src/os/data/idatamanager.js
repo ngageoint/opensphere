@@ -153,10 +153,4 @@ class IDataManager {
   getDescriptorKey() {}
 }
 
-/**
- * Global data manager reference. Set this in each application with the app-specific manager reference.
- * @type {IDataManager}
- */
-os.dataManager = null;
-
 exports = IDataManager;
