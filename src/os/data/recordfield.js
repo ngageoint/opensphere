@@ -1,12 +1,14 @@
-goog.provide('os.data.RecordField');
-goog.require('goog.object');
+goog.module('os.data.RecordField');
+goog.module.declareLegacyNamespace();
+
+const googObject = goog.require('goog.object');
 
 
 /**
  * Fields set on ol.Feature objects since we can't extend the class as a Record.
  * @enum {string}
  */
-os.data.RecordField = {
+const RecordField = {
   ALPHA: 'alpha',
   ALTITUDE_MODE: 'altitudeMode',
   COLOR: 'color',
@@ -31,10 +33,9 @@ os.data.RecordField = {
 
 /**
  * @type {RegExp}
- * @const
  */
-os.data.RecordField.REGEXP = (function() {
-  var values = goog.object.getValues(os.data.RecordField);
+RecordField.REGEXP = (function() {
+  var values = googObject.getValues(RecordField);
   for (var i = 0, n = values.length; i < n; i++) {
     values[i] = '(' + values[i] + ')';
   }
@@ -42,3 +43,5 @@ os.data.RecordField.REGEXP = (function() {
   // anything that starts with an underscore, or matches one of the record fields
   return new RegExp('^(_.*|' + values.join('|') + ')$');
 })();
+
+exports = RecordField;

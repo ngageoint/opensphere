@@ -1,67 +1,70 @@
-goog.provide('os.data.groupby.LayerTypeGroupBy');
-goog.require('goog.array');
-goog.require('goog.string');
-goog.require('os.MapContainer');
-goog.require('os.data.LayerNode');
-goog.require('os.data.groupby.BaseGroupBy');
-goog.require('os.layer.LayerType');
-goog.require('os.ui.slick.SlickTreeNode');
+goog.module('os.data.groupby.LayerTypeGroupBy');
+goog.module.declareLegacyNamespace();
 
+const googArray = goog.require('goog.array');
+const googString = goog.require('goog.string');
+const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
+const LayerType = goog.require('os.layer.LayerType');
+const {getMapContainer} = goog.require('os.map.instance');
+const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+
+const LayerNode = goog.requireType('os.data.LayerNode');
 
 
 /**
  * Groups layers by provider
- *
- * @extends {os.data.groupby.BaseGroupBy}
- * @constructor
  */
-os.data.groupby.LayerTypeGroupBy = function() {
-  os.data.groupby.LayerTypeGroupBy.base(this, 'constructor');
-};
-goog.inherits(os.data.groupby.LayerTypeGroupBy, os.data.groupby.BaseGroupBy);
-
-
-/**
- * @inheritDoc
- */
-os.data.groupby.LayerTypeGroupBy.prototype.getGroupIds = function(node) {
+class LayerTypeGroupBy extends BaseGroupBy {
   /**
-   * @type {Array.<!string>}
+   * Constructor.
    */
-  var ids = [];
-
-  try {
-    var layer = /** @type {os.data.LayerNode} */ (node).getLayer();
-    var layers = os.MapContainer.getInstance().getMap().getLayers().getArray();
-    var p = layer.getOSType() || '00Unknown Type';
-
-    for (var i = 0, n = layers.length; i < n; i++) {
-      if (layers[i] instanceof os.layer.Group) {
-        var group = /** @type {os.layer.Group} */ (layers[i]);
-
-        if (group.getLayers().getArray().indexOf(/** @type {ol.layer.Base} */ (layer)) > -1 ||
-            (p == os.layer.LayerType.GROUPS && group.getOSType() == os.layer.LayerType.FEATURES)) {
-          var id = goog.string.padNumber(99 - i, 2) + p;
-        }
-      }
-    }
-
-    goog.array.insert(ids, id || p);
-  } catch (e) {
+  constructor() {
+    super();
   }
 
-  return ids;
-};
+  /**
+   * @inheritDoc
+   */
+  getGroupIds(node) {
+    /**
+     * @type {Array.<!string>}
+     */
+    var ids = [];
 
+    try {
+      var layer = /** @type {LayerNode} */ (node).getLayer();
+      var layers = getMapContainer().getMap().getLayers().getArray();
+      var p = layer.getOSType() || '00Unknown Type';
 
-/**
- * @inheritDoc
- */
-os.data.groupby.LayerTypeGroupBy.prototype.createGroup = function(node, id) {
-  var group = new os.ui.slick.SlickTreeNode();
-  group.setId(id);
-  group.setLabel(id.substring(2));
-  group.setCheckboxVisible(false);
-  group.collapsed = false;
-  return group;
-};
+      for (var i = 0, n = layers.length; i < n; i++) {
+        if (layers[i] instanceof os.layer.Group) {
+          var group = /** @type {os.layer.Group} */ (layers[i]);
+
+          if (group.getLayers().getArray().indexOf(/** @type {ol.layer.Base} */ (layer)) > -1 ||
+              (p == LayerType.GROUPS && group.getOSType() == LayerType.FEATURES)) {
+            var id = googString.padNumber(99 - i, 2) + p;
+          }
+        }
+      }
+
+      googArray.insert(ids, id || p);
+    } catch (e) {
+    }
+
+    return ids;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  createGroup(node, id) {
+    var group = new SlickTreeNode();
+    group.setId(id);
+    group.setLabel(id.substring(2));
+    group.setCheckboxVisible(false);
+    group.collapsed = false;
+    return group;
+  }
+}
+
+exports = LayerTypeGroupBy;

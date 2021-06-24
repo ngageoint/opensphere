@@ -1,182 +1,162 @@
-goog.provide('os.data.IDataManager');
+goog.module('os.data.IDataManager');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.Listenable');
-goog.require('os.config.Settings');
-goog.require('os.data.IDataDescriptor');
-goog.require('os.data.IDataProvider');
-goog.require('os.data.ProviderEntry');
-
-
-/**
- * Global data manager reference. Set this in each application with the app-specific manager reference.
- * @type {os.data.IDataManager}
- */
-os.dataManager = null;
-
+const Listenable = goog.requireType('goog.events.Listenable');
+const Settings = goog.requireType('os.config.Settings');
+const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
+const IDataProvider = goog.requireType('os.data.IDataProvider');
+const ProviderEntry = goog.requireType('os.data.ProviderEntry');
 
 
 /**
  * The data manager provides methods for tracking and registering providers and descriptors.
  *
- * @extends {goog.events.Listenable}
+ * @extends {Listenable}
  * @interface
  */
-os.data.IDataManager = function() {};
+class IDataManager {
+  /**
+   * Registers a provider type
+   * @param {!ProviderEntry} entry The provider type entry
+   */
+  registerProviderType(entry) {}
 
+  /**
+   * @param {?string} type
+   * @return {?ProviderEntry} The entry or null if not found
+   */
+  getProviderEntry(type) {}
 
-/**
- * Registers a provider type
- * @param {!os.data.ProviderEntry} entry The provider type entry
- */
-os.data.IDataManager.prototype.registerProviderType;
+  /**
+   * Gets a provider type by class
+   * @param {Function} clazz The class
+   * @return {?string} The type or null if it could not be found
+   */
+  getProviderTypeByClass(clazz) {}
 
+  /**
+   * Registers a descriptor type
+   * @param {!string} type The type
+   * @param {!function()} clazz The class
+   * @param {boolean=} opt_override Use this to force an override of a descriptor type
+   */
+  registerDescriptorType(type, clazz, opt_override) {}
 
-/**
- * @param {?string} type
- * @return {?os.data.ProviderEntry} The entry or null if not found
- */
-os.data.IDataManager.prototype.getProviderEntry;
+  /**
+   * Creates a new data provider for the given type
+   * @param {!string} type The type
+   * @return {?IDataProvider} The data provider
+   */
+  createProvider(type) {}
 
+  /**
+   * Creates a new data descriptor from the given type
+   * @param {!string} type The type
+   * @return {?IDataDescriptor} The data descriptor
+   */
+  createDescriptor(type) {}
 
-/**
- * Gets a provider type by class
- * @param {Function} clazz The class
- * @return {?string} The type or null if it could not be found
- */
-os.data.IDataManager.prototype.getProviderTypeByClass;
+  /**
+   * Updates a data descriptor by replacing it.
+   * The update was created because some providers on a REMOVE event would execute a delete on the server.
+   * @param {!IDataDescriptor} oldDescriptor The old descriptor
+   * @param {!os.data.IDataDescriptor} newDescriptor The new descriptor
+   */
+  updateDescriptor(oldDescriptor, newDescriptor) {}
 
+  /**
+   * Adds a data descriptor
+   * @param {!IDataDescriptor} descriptor The descriptor
+   */
+  addDescriptor(descriptor) {}
 
-/**
- * Registers a descriptor type
- * @param {!string} type The type
- * @param {!function()} clazz The class
- * @param {boolean=} opt_override Use this to force an override of a descriptor type
- */
-os.data.IDataManager.prototype.registerDescriptorType;
+  /**
+   * Removes a data descriptor
+   * @param {!IDataDescriptor} descriptor The descriptor
+   */
+  removeDescriptor(descriptor) {}
 
+  /**
+   * Gets a data descriptor
+   * @param {string} id The descriptor ID to get
+   * @return {?IDataDescriptor} The descriptor or <code>null</code> if none was found
+   */
+  getDescriptor(id) {}
 
-/**
- * Creates a new data provider for the given type
- * @param {!string} type The type
- * @return {?os.data.IDataProvider} The data provider
- */
-os.data.IDataManager.prototype.createProvider;
+  /**
+   * Gets all data descriptors whose IDs start with the opt_prefix, or all data descriptors if undefined.
+   * @param {string=} opt_prefix
+   * @return {!Array<!IDataDescriptor>} The descriptors which matched
+   */
+  getDescriptors(opt_prefix) {}
 
+  /**
+   * Gets the data provider root node
+   * @return {!os.structs.ITreeNode} The root node
+   */
+  getProviderRoot() {}
 
-/**
- * Creates a new data descriptor from the given type
- * @param {!string} type The type
- * @return {?os.data.IDataDescriptor} The data descriptor
- */
-os.data.IDataManager.prototype.createDescriptor;
+  /**
+   * Updates the data manager and providers from settings
+   * @param {Settings} settings the settings
+   */
+  updateFromSettings(settings) {}
 
+  /**
+   * Adds a data provider
+   * @param {!IDataProvider} dp The provider
+   */
+  addProvider(dp) {}
 
-/**
- * Updates a data descriptor by replacing it.
- * The update was created because some providers on a REMOVE event would execute a delete on the server.
- * @param {!os.data.IDataDescriptor} oldDescriptor The old descriptor
- * @param {!os.data.IDataDescriptor} newDescriptor The new descriptor
- */
-os.data.IDataManager.prototype.updateDescriptor;
+  /**
+   * Removes a data provider
+   * @param {!string} id
+   */
+  removeProvider(id) {}
 
+  /**
+   * Removes a data provider
+   * @param {!string} id
+   * @param {boolean} enabled
+   */
+  setProviderEnabled(id, enabled) {}
 
-/**
- * Adds a data descriptor
- * @param {!os.data.IDataDescriptor} descriptor The descriptor
- */
-os.data.IDataManager.prototype.addDescriptor;
+  /**
+   * Get a provider by id
+   * @param {string} id The provider id
+   * @param {?string=} opt_url The provider url
+   * @return {?IDataProvider}
+   */
+  getProvider(id, opt_url) {}
 
+  /**
+   * Get a provider by label
+   * @param {string} label The provider label
+   * @return {?IDataProvider}
+   */
+  getProviderByLabel(label) {}
 
-/**
- * Removes a data descriptor
- * @param {!os.data.IDataDescriptor} descriptor The descriptor
- */
-os.data.IDataManager.prototype.removeDescriptor;
+  /**
+   * Persist the descriptors
+   */
+  persistDescriptors() {}
 
+  /**
+   * Restore the descriptors
+   */
+  restoreDescriptors() {}
 
-/**
- * Gets a data descriptor
- * @param {string} id The descriptor ID to get
- * @return {?os.data.IDataDescriptor} The descriptor or <code>null</code> if none was found
- */
-os.data.IDataManager.prototype.getDescriptor;
-
-
-/**
- * Gets all data descriptors whose IDs start with the opt_prefix, or all data descriptors if undefined.
- * @param {string=} opt_prefix
- * @return {!Array<!os.data.IDataDescriptor>} The descriptors which matched
- */
-os.data.IDataManager.prototype.getDescriptors;
-
-
-/**
- * Gets the data provider root node
- * @return {!os.structs.ITreeNode} The root node
- */
-os.data.IDataManager.prototype.getProviderRoot;
-
-
-/**
- * Updates the data manager and providers from settings
- * @param {os.config.Settings} settings the settings
- */
-os.data.IDataManager.prototype.updateFromSettings;
-
-
-/**
- * Adds a data provider
- * @param {!os.data.IDataProvider} dp The provider
- */
-os.data.IDataManager.prototype.addProvider;
-
-
-/**
- * Removes a data provider
- * @param {!string} id
- */
-os.data.IDataManager.prototype.removeProvider;
-
-
-/**
- * Removes a data provider
- * @param {!string} id
- * @param {boolean} enabled
- */
-os.data.IDataManager.prototype.setProviderEnabled;
-
-
-/**
- * Get a provider by id
- * @param {string} id The provider id
- * @param {?string=} opt_url The provider url
- * @return {?os.data.IDataProvider}
- */
-os.data.IDataManager.prototype.getProvider;
-
-
-/**
- * Get a provider by label
- * @param {string} label The provider label
- * @return {?os.data.IDataProvider}
- */
-os.data.IDataManager.prototype.getProviderByLabel;
-
+  /**
+   * Gets the localStorage descriptor key for the datamanager to persist descriptors to.
+   * @return {!string}
+   */
+  getDescriptorKey() {}
+}
 
 /**
- * Persist the descriptors
+ * Global data manager reference. Set this in each application with the app-specific manager reference.
+ * @type {IDataManager}
  */
-os.data.IDataManager.prototype.persistDescriptors;
+os.dataManager = null;
 
-
-/**
- * Restore the descriptors
- */
-os.data.IDataManager.prototype.restoreDescriptors;
-
-
-/**
- * Gets the localStorage descriptor key for the datamanager to persist descriptors to.
- * @return {!string}
- */
-os.data.IDataManager.prototype.getDescriptorKey;
+exports = IDataManager;

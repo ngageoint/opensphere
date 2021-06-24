@@ -9,11 +9,14 @@ goog.require('os.data.MockProvider');
 goog.require('os.data.OSDataManager');
 goog.require('os.data.ProviderEntry');
 goog.require('os.layer.Tile');
+goog.require('os.map.instance');
 goog.require('os.mock');
 goog.require('test.os.config.SettingsUtil');
 
 
 describe('os.data.OSDataManager', function() {
+  const {getMapContainer} = goog.module.get('os.map.instance');
+
   it('should register provider types', function() {
     var dm = os.dataManager;
     var entry = new os.data.ProviderEntry('mock', os.data.MockProvider, 'Mock Provider', 'This is a test', '');
@@ -136,7 +139,7 @@ describe('os.data.OSDataManager', function() {
     source.setId(layerId);
 
     try {
-      os.MapContainer.getInstance().addLayer(layer);
+      getMapContainer().addLayer(layer);
     } catch (e) {
       // catch the unimplemented method error
     }
@@ -144,7 +147,7 @@ describe('os.data.OSDataManager', function() {
     expect(dm.getSource(layerId)).not.toBeNull();
 
     try {
-      os.MapContainer.getInstance().removeLayer(layer);
+      getMapContainer().removeLayer(layer);
     } catch (e) {
       // catch the unimplemented method error
     }

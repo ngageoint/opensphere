@@ -1,11 +1,23 @@
-goog.provide('os.data.IUrlDescriptor');
-
+goog.module('os.data.IUrlDescriptor');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * @interface
  */
-os.data.IUrlDescriptor = function() {};
+class IUrlDescriptor {
+  /**
+   * Get the URL for the descriptor.
+   * @return {?string}
+   */
+  getUrl() {}
+
+  /**
+   * Set the URL for the descriptor.
+   * @param {?string} value
+   */
+  setUrl(value) {}
+}
 
 
 /**
@@ -13,18 +25,7 @@ os.data.IUrlDescriptor = function() {};
  * @type {string}
  * @const
  */
-os.data.IUrlDescriptor.ID = 'os.data.IUrlDescriptor';
+IUrlDescriptor.ID = 'os.data.IUrlDescriptor';
 
 
-/**
- * Get the URL for the descriptor.
- * @return {?string}
- */
-os.data.IUrlDescriptor.prototype.getUrl;
-
-
-/**
- * Set the URL for the descriptor.
- * @param {?string} value
- */
-os.data.IUrlDescriptor.prototype.setUrl;
+exports = IUrlDescriptor;

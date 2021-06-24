@@ -3,12 +3,15 @@ goog.require('os.data.ZOrder');
 goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.layer.config.MockTileLayerConfig');
 goog.require('os.layer.config.MockVectorLayerConfig');
+goog.require('os.map.instance');
 goog.require('os.mock');
 
 
 describe('os.data.ZOrder', function() {
+  const {getMapContainer} = goog.module.get('os.map.instance');
+
   var z = null;
-  var map = os.MapContainer.getInstance();
+  var map = getMapContainer();
 
   it('setup', function() {
     os.layerConfigManager = os.layer.config.LayerConfigManager.getInstance();

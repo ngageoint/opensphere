@@ -1,229 +1,218 @@
-goog.provide('os.data.AbstractDescriptor');
+goog.module('os.data.AbstractDescriptor');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.array');
-goog.require('goog.asserts');
-goog.require('goog.events.Event');
-goog.require('goog.events.EventTarget');
-goog.require('goog.events.EventType');
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('os.command.EventType');
-goog.require('os.command.ICommand');
-goog.require('os.command.State');
-goog.require('os.data.DescriptorEventType');
-goog.require('os.data.IDataDescriptor');
-goog.require('os.events.EventType');
-goog.require('os.metrics.Metrics');
-goog.require('os.metrics.keys');
+const GoogEvent = goog.require('goog.events.Event');
+const EventTarget = goog.require('goog.events.EventTarget');
+const log = goog.require('goog.log');
+const EventType = goog.require('os.command.EventType');
+const State = goog.require('os.command.State');
+const DataManager = goog.require('os.data.DataManager');
+const DescriptorEventType = goog.require('os.data.DescriptorEventType');
+const Metrics = goog.require('os.metrics.Metrics');
+const keys = goog.require('os.metrics.keys');
 
+const Logger = goog.requireType('goog.log.Logger');
+const ICommand = goog.requireType('os.command.ICommand');
+const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 
 
 /**
  * Abstract command for activating/deactivating descriptors.
  *
  * @abstract
- * @param {!os.data.IDataDescriptor} descriptor The descriptor
- * @implements {os.command.ICommand}
- * @extends {goog.events.EventTarget}
- * @constructor
+ * @implements {ICommand}
  */
-os.data.AbstractDescriptor = function(descriptor) {
-  os.data.AbstractDescriptor.base(this, 'constructor');
-
+class AbstractDescriptor extends EventTarget {
   /**
-   * Whether or not the command is asynchronous.
-   * @type {boolean}
+   * Constructor.
+   * @param {!IDataDescriptor} descriptor The descriptor
    */
-  this.isAsync = true;
+  constructor(descriptor) {
+    super();
+
+    /**
+     * Whether or not the command is asynchronous.
+     * @type {boolean}
+     */
+    this.isAsync = true;
+
+    /**
+     * The title of the command.
+     * @type {?string}
+     */
+    this.title = 'Activate/Deactivate Descriptor';
+
+    /**
+     * The details of the command.
+     * @type {?string}
+     */
+    this.details = null;
+
+    /**
+     * Return the current state of the command.
+     * @type {!State}
+     */
+    this.state = State.READY;
+
+    /**
+     * The descriptor ID
+     * @type {string}
+     * @protected
+     */
+    this.id = descriptor.getId();
+
+    /**
+     * @type {Logger}
+     * @protected
+     */
+    this.log = logger;
+  }
 
   /**
-   * The title of the command.
-   * @type {?string}
+   * @abstract
+   * @inheritDoc
    */
-  this.title = 'Activate/Deactivate Descriptor';
+  execute() {}
 
   /**
-   * The details of the command.
-   * @type {?string}
+   * @abstract
+   * @inheritDoc
    */
-  this.details = null;
+  revert() {}
 
   /**
-   * Return the current state of the command.
-   * @type {!os.command.State}
+   * @inheritDoc
    */
-  this.state = os.command.State.READY;
+  disposeInternal() {
+    super.disposeInternal();
+    this.removeListeners();
+  }
 
   /**
-   * The descriptor ID
-   * @type {string}
+   * Get the descriptor by id.
+   *
+   * @return {IDataDescriptor}
+   */
+  getDescriptor() {
+    return this.id ? DataManager.getInstance().getDescriptor(this.id) : null;
+  }
+
+  /**
+   * Checks if the command is ready to execute.
+   *
+   * @return {boolean}
+   */
+  canExecute() {
+    if (this.state !== State.READY) {
+      this.details = 'Command not in ready state.';
+      return false;
+    }
+
+    if (!this.getDescriptor()) {
+      this.state = State.ERROR;
+      this.details = 'Descriptor not registered in DataManager!';
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Activates the descriptor.
+   *
+   * @return {boolean} If the operation was successful
    * @protected
    */
-  this.id = descriptor.getId();
+  activateDescriptor() {
+    try {
+      var descriptor = this.getDescriptor();
+      if (descriptor && !descriptor.isActive()) {
+        descriptor.listenOnce(DescriptorEventType.ACTIVATED, this.onActivated, false, this);
+        descriptor.listenOnce(DescriptorEventType.DEACTIVATED, this.onActivationError, false, this);
+        descriptor.setActive(true);
+        Metrics.getInstance().updateMetric(keys.AddData.ADD_LAYER_COMMAND, 1);
+      } else {
+        this.onActivated();
+      }
+    } catch (e) {
+      log.error(this.log, 'Unable to activate descriptor: ' + e.message, e);
+      this.removeListeners();
+      this.state = State.ERROR;
+
+      return false;
+    }
+
+    return true;
+  }
 
   /**
-   * @type {goog.log.Logger}
+   * Deactivates the descriptor.
+   *
+   * @return {boolean} If the operation was successful
    * @protected
    */
-  this.log = os.data.AbstractDescriptor.LOGGER_;
-};
-goog.inherits(os.data.AbstractDescriptor, goog.events.EventTarget);
+  deactivateDescriptor() {
+    var descriptor = this.getDescriptor();
+    if (descriptor && descriptor.isActive()) {
+      descriptor.listenOnce(DescriptorEventType.DEACTIVATED, this.onDeactivated, false, this);
+      descriptor.setActive(false);
+      Metrics.getInstance().updateMetric(keys.AddData.REMOVE_LAYER_COMMAND, 1);
+    } else {
+      this.onDeactivated();
+    }
 
+    return true;
+  }
+
+  /**
+   * Callback for the descriptor's activation event.
+   *
+   * @abstract
+   * @param {GoogEvent=} opt_event
+   * @protected
+   */
+  onActivated(opt_event) {}
+
+  /**
+   * Callback for the descriptor's deactivation event.
+   *
+   * @abstract
+   * @param {GoogEvent=} opt_event
+   * @protected
+   */
+  onDeactivated(opt_event) {}
+
+  /**
+   * Removes the listeners created by this command
+   *
+   * @protected
+   */
+  removeListeners() {
+    var descriptor = this.getDescriptor();
+    if (descriptor) {
+      descriptor.unlisten(DescriptorEventType.ACTIVATED, this.onActivated, false, this);
+      descriptor.unlisten(DescriptorEventType.DEACTIVATED, this.onDeactivated, false, this);
+      descriptor.unlisten(DescriptorEventType.DEACTIVATED, this.onActivationError, false, this);
+    }
+  }
+
+  /**
+   * Handles errors in activating the descriptor.
+   *
+   * @protected
+   */
+  onActivationError() {
+    this.removeListeners();
+    this.state = State.ERROR;
+    this.dispatchEvent(new GoogEvent(EventType.EXECUTED));
+  }
+}
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {Logger}
  */
-os.data.AbstractDescriptor.LOGGER_ = goog.log.getLogger('os.data.AbstractDescriptor');
+const logger = log.getLogger('os.data.AbstractDescriptor');
 
 
-/**
- * @abstract
- * @inheritDoc
- */
-os.data.AbstractDescriptor.prototype.execute = function() {};
-
-
-/**
- * @abstract
- * @inheritDoc
- */
-os.data.AbstractDescriptor.prototype.revert = function() {};
-
-
-/**
- * @inheritDoc
- */
-os.data.AbstractDescriptor.prototype.disposeInternal = function() {
-  os.data.AbstractDescriptor.base(this, 'disposeInternal');
-  this.removeListeners();
-};
-
-
-/**
- * Get the descriptor by id.
- *
- * @return {os.data.IDataDescriptor}
- */
-os.data.AbstractDescriptor.prototype.getDescriptor = function() {
-  return this.id ? os.dataManager.getDescriptor(this.id) : null;
-};
-
-
-/**
- * Checks if the command is ready to execute.
- *
- * @return {boolean}
- */
-os.data.AbstractDescriptor.prototype.canExecute = function() {
-  if (this.state !== os.command.State.READY) {
-    this.details = 'Command not in ready state.';
-    return false;
-  }
-
-  if (!this.getDescriptor()) {
-    this.state = os.command.State.ERROR;
-    this.details = 'Descriptor not registered in DataManager!';
-    return false;
-  }
-
-  return true;
-};
-
-
-/**
- * Activates the descriptor.
- *
- * @return {boolean} If the operation was successful
- * @protected
- */
-os.data.AbstractDescriptor.prototype.activateDescriptor = function() {
-  try {
-    var descriptor = this.getDescriptor();
-    if (descriptor && !descriptor.isActive()) {
-      descriptor.listenOnce(os.data.DescriptorEventType.ACTIVATED, this.onActivated, false, this);
-      descriptor.listenOnce(os.data.DescriptorEventType.DEACTIVATED, this.onActivationError, false, this);
-      descriptor.setActive(true);
-      os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.AddData.ADD_LAYER_COMMAND, 1);
-    } else {
-      this.onActivated();
-    }
-  } catch (e) {
-    goog.log.error(this.log, 'Unable to activate descriptor: ' + e.message, e);
-    this.removeListeners();
-    this.state = os.command.State.ERROR;
-
-    return false;
-  }
-
-  return true;
-};
-
-
-/**
- * Deactivates the descriptor.
- *
- * @return {boolean} If the operation was successful
- * @protected
- */
-os.data.AbstractDescriptor.prototype.deactivateDescriptor = function() {
-  var descriptor = this.getDescriptor();
-  if (descriptor && descriptor.isActive()) {
-    descriptor.listenOnce(os.data.DescriptorEventType.DEACTIVATED, this.onDeactivated, false, this);
-    descriptor.setActive(false);
-    os.metrics.Metrics.getInstance().updateMetric(os.metrics.keys.AddData.REMOVE_LAYER_COMMAND, 1);
-  } else {
-    this.onDeactivated();
-  }
-
-  return true;
-};
-
-
-/**
- * Callback for the descriptor's activation event.
- *
- * @abstract
- * @param {goog.events.Event=} opt_event
- * @protected
- */
-os.data.AbstractDescriptor.prototype.onActivated = function(opt_event) {};
-
-
-/**
- * Callback for the descriptor's deactivation event.
- *
- * @abstract
- * @param {goog.events.Event=} opt_event
- * @protected
- */
-os.data.AbstractDescriptor.prototype.onDeactivated = function(opt_event) {};
-
-
-/**
- * Removes the listeners created by this command
- *
- * @protected
- */
-os.data.AbstractDescriptor.prototype.removeListeners = function() {
-  var descriptor = this.getDescriptor();
-  if (descriptor) {
-    descriptor.unlisten(os.data.DescriptorEventType.ACTIVATED, this.onActivated, false, this);
-    descriptor.unlisten(os.data.DescriptorEventType.DEACTIVATED, this.onDeactivated, false, this);
-    descriptor.unlisten(os.data.DescriptorEventType.DEACTIVATED, this.onActivationError, false, this);
-  }
-};
-
-
-/**
- * Handles errors in activating the descriptor.
- *
- * @protected
- */
-os.data.AbstractDescriptor.prototype.onActivationError = function() {
-  this.removeListeners();
-  this.state = os.command.State.ERROR;
-  this.dispatchEvent(new goog.events.Event(os.command.EventType.EXECUTED));
-};
+exports = AbstractDescriptor;

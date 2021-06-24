@@ -1,26 +1,28 @@
-goog.provide('os.data.LayerSyncDescriptor');
+goog.module('os.data.LayerSyncDescriptor');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.EventType');
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('ol.array');
-goog.require('ol.events');
-goog.require('os.IPersistable');
-goog.require('os.command.LayerAdd');
-goog.require('os.command.LayerRemove');
-goog.require('os.data.BaseDescriptor');
-goog.require('os.data.DataManager');
-goog.require('os.data.IMappingDescriptor');
-goog.require('os.events.LayerEvent');
-goog.require('os.events.LayerEventType');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.im.mapping.IMapping');
-goog.require('os.layer.ILayer');
-goog.require('os.layer.PropertyChange');
-goog.require('os.net.Online');
 goog.require('os.ui.layer.EllipseColumnsUI');
 goog.require('os.ui.node.defaultLayerNodeUIDirective');
 
+const GoogEventType = goog.require('goog.events.EventType');
+const log = goog.require('goog.log');
+const olArray = goog.require('ol.array');
+const events = goog.require('ol.events');
+const dispatcher = goog.require('os.Dispatcher');
+const BaseDescriptor = goog.require('os.data.BaseDescriptor');
+const DataManager = goog.require('os.data.DataManager');
+const IMappingDescriptor = goog.require('os.data.IMappingDescriptor');
+const LayerEventType = goog.require('os.events.LayerEventType');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const osImplements = goog.require('os.implements');
+const PropertyChange = goog.require('os.layer.PropertyChange');
+const {getMapContainer} = goog.require('os.map.instance');
+const Online = goog.require('os.net.Online');
+
+const Logger = goog.requireType('goog.log.Logger');
+const LayerEvent = goog.requireType('os.events.LayerEvent');
+const ILayer = goog.requireType('os.layer.ILayer');
+const IMapping = goog.requireType('os.im.mapping.IMapping');
 
 
 /**
@@ -28,500 +30,472 @@ goog.require('os.ui.node.defaultLayerNodeUIDirective');
  * getLayerOptions function, which should produce the options object(s) to be used in creating the layers synchronized
  * to this descriptor.
  *
+ * @implements {IMappingDescriptor}
  * @abstract
- * @extends {os.data.BaseDescriptor}
- * @implements {os.data.IMappingDescriptor}
- * @constructor
  */
-os.data.LayerSyncDescriptor = function() {
-  os.data.LayerSyncDescriptor.base(this, 'constructor');
-  this.log = os.data.LayerSyncDescriptor.LOGGER_;
+class LayerSyncDescriptor extends BaseDescriptor {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.log = logger;
+
+    /**
+     * @type {!Array<!ILayer>}
+     * @protected
+     */
+    this.layers = [];
+
+    /**
+     * @type {!Array<string>}
+     * @protected
+     */
+    this.layerIds = [];
+
+    /**
+     * @type {!Object<string, *>}
+     * @protected
+     */
+    this.layerConfig = {};
+
+    /**
+     * @type {Online}
+     * @protected
+     */
+    this.online = Online.getInstance();
+
+    /**
+     * @type {Array<IMapping>}
+     */
+    this.mappings = [];
+
+    this.setNodeUI('<defaultlayernodeui></defaultlayernodeui>');
+
+    dispatcher.getInstance().listen(LayerEventType.ADD, this.onLayerAdded, false, this);
+    dispatcher.getInstance().listen(LayerEventType.REMOVE, this.onLayerRemoved, false, this);
+  }
 
   /**
-   * @type {!Array<!os.layer.ILayer>}
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
+    dispatcher.getInstance().unlisten(LayerEventType.ADD, this.onLayerAdded, false, this);
+    dispatcher.getInstance().unlisten(LayerEventType.REMOVE, this.onLayerRemoved, false, this);
+    this.removeLayers_();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getMappings() {
+    return this.mappings;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setMappings(value) {
+    this.mappings = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  updateMappings(layer) {
+    this.saveDescriptor();
+
+    // Delete the layer, then prompt the descriptor to make new layers
+    getMapContainer().removeLayer(/** @type {!ILayer} */ (layer));
+    this.setActiveInternal();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  supportsMapping() {
+    return false;
+  }
+
+  /**
+   * Get the layers currently being synchronized by this descriptor.
+   *
+   * @return {!Array<!ILayer>} layers
+   */
+  getLayers() {
+    return this.layers;
+  }
+
+  /**
+   * @param {Array<Object<string, *>>=} opt_options
+   */
+  populateLayerIds(opt_options) {
+    this.layerIds = (opt_options || this.getOptions()).map(mapLayerIds);
+  }
+
+  /**
+   * Get the options object(s) for each layer synchronized to this descriptor. Each options object will have the saved
+   * layer config applied to it, then will be passed to {@link os.layer.createFromOptions} to create the layer prior to
+   * adding it to the map.
+   *
+   * @abstract
+   * @return {(Array<!Object<string, *>>|Object<string, *>)} An options object that can be used to create a layer, or an
+   *                                                         array of options objects.
+   *
    * @protected
    */
-  this.layers = [];
+  getLayerOptions() {}
 
   /**
-   * @type {!Array<string>}
+   * @return {?Array<!Object<string, *>>} An options object that can be used to create a layer
+   */
+  getOptions() {
+    var options = this.getLayerOptions();
+    if (options) {
+      if (!Array.isArray(options)) {
+        options['defaults'] = this.extractConfigDefaults(options);
+        options = [options];
+      }
+      return options.map(this.applyLayerConfig, this);
+    }
+
+    return options;
+  }
+
+  /**
+   * @param {!Object<string, *>} options
+   * @return {!Object<string, *>}
+   */
+  extractConfigDefaults(options) {
+    return {
+      'opacity': options['opacity'],
+      'brightness': options['brightness'],
+      'contrast': options['contrast'],
+      'saturation': options['saturation']
+    };
+  }
+
+  /**
+   * If the layer is being synchronized by this descriptor.
+   *
+   * @param {!ILayer} layer The layer
+   * @return {boolean}
+   */
+  containsLayer(layer) {
+    return this.layers.indexOf(layer) > -1;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setActiveInternal() {
+    if (this.isActive()) {
+      this.createLayers_();
+    } else {
+      this.removeLayers_();
+    }
+
+    // update the descriptor loading state
+    this.onLoadingChange();
+
+    return true;
+  }
+
+  /**
+   * @param {!ILayer} layer
    * @protected
    */
-  this.layerIds = [];
+  addLayer(layer) {
+    if (this.layers.indexOf(layer) === -1) {
+      // listen for changes to the layer
+      events.listen(/** @type {events.EventTarget} */ (layer), GoogEventType.PROPERTYCHANGE,
+          this.onLayerChange, this);
+
+      // add the layer to the map and the layer list
+      this.layers.push(layer);
+      this.setActive(true);
+    }
+  }
 
   /**
-   * @type {!Object<string, *>}
+   * @param {!ILayer} layer
    * @protected
    */
-  this.layerConfig = {};
+  removeLayer(layer) {
+    if (this.layers.indexOf(layer) > -1) {
+      // merge things on the layer that might have changed with the current layer options
+      var config = this.persistLayerConfig();
+      var keys = goog.object.getKeys(config);
+      keys.forEach(function(key) {
+        os.object.merge(/** @type {!Object} */(this.layerConfig[key]), /** @type {!Object} */(config[key]), true);
+      }, this);
+
+      events.unlisten(/** @type {events.EventTarget} */ (layer), GoogEventType.PROPERTYCHANGE,
+          this.onLayerChange, this);
+
+      olArray.remove(this.layers, layer);
+    }
+
+    if (!this.layers.length) {
+      this.setActive(false);
+    }
+  }
 
   /**
-   * @type {os.net.Online}
+   * @param {!LayerEvent} evt
    * @protected
    */
-  this.online = os.net.Online.getInstance();
+  onLayerAdded(evt) {
+    if (typeof evt.layer !== 'string') {
+      var layer = /** @type {ILayer} */ (evt.layer);
+
+      if (!this.layerIds.length) {
+        this.populateLayerIds();
+      }
+
+      if (this.layerIds.indexOf(layer.getId()) > -1) {
+        this.addLayer(layer);
+      }
+    }
+  }
 
   /**
-   * @type {Array<os.im.mapping.IMapping>}
+   * @param {!LayerEvent} evt
+   * @protected
    */
-  this.mappings = [];
+  onLayerRemoved(evt) {
+    if (typeof evt.layer !== 'string') {
+      var layer = /** @type {ILayer} */ (evt.layer);
 
-  this.setNodeUI('<defaultlayernodeui></defaultlayernodeui>');
+      if (!this.layerIds.length) {
+        this.populateLayerIds();
+      }
 
-  os.dispatcher.listen(os.events.LayerEventType.ADD, this.onLayerAdded, false, this);
-  os.dispatcher.listen(os.events.LayerEventType.REMOVE, this.onLayerRemoved, false, this);
-};
-goog.inherits(os.data.LayerSyncDescriptor, os.data.BaseDescriptor);
-os.implements(os.data.LayerSyncDescriptor, os.data.IMappingDescriptor.ID);
+      if (this.layerIds.indexOf(layer.getId()) > -1 && this.layers.indexOf(layer) > -1) {
+        this.removeLayer(layer);
+      }
+    }
+  }
 
+  /**
+   * Create layers to be synchronized by this descriptor and add them to the map.
+   *
+   * @private
+   */
+  createLayers_() {
+    var options = this.getOptions();
+    this.populateLayerIds(options);
+
+    if (options) {
+      for (var i = 0; i < options.length; i++) {
+        var layerOptions = options[i];
+
+        // create the layer if it doesn't already exist on the map
+        var layerId = /** @type {string|undefined} */ (layerOptions['id']) || '';
+        if (layerId) {
+          var layer = getMapContainer().getLayer(layerId);
+          if (!layer) {
+            layer = os.layer.createFromOptions(layerOptions);
+
+            if (layer) {
+              getMapContainer().addLayer(layer);
+            }
+          } else {
+            this.addLayer(/** @type {!ILayer} */ (layer));
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Remove layers synchronized by this descriptor.
+   *
+   * @private
+   */
+  removeLayers_() {
+    // save the config prior to removing layers
+    this.layerConfig = this.persistLayerConfig();
+
+    for (var i = this.layers.length - 1; i >= 0; i--) {
+      var layer = this.layers[i];
+      if (layer) {
+        // remove it from the map
+        getMapContainer().removeLayer(layer);
+      }
+    }
+
+    this.setLoading(false);
+  }
+
+  /**
+   * Merge the layer configuration into the options used to create a layer.
+   *
+   * @param {!Object<string, *>} options
+   * @return {!Object<string, *>} The merged options
+   * @protected
+   */
+  applyLayerConfig(options) {
+    var opts = {};
+    os.object.merge(options, opts, true);
+
+    if (this.layerConfig) {
+      var id = /** @type {string} */ (options['id']);
+      if (id && id in this.layerConfig) {
+        os.object.merge(/** @type {!Object} */ (this.layerConfig[id]), opts, true);
+      }
+    }
+
+    return opts;
+  }
+
+  /**
+   * Handles layer property change
+   *
+   * @param {(PropertyChangeEvent|ol.Object.Event)} e
+   * @protected
+   */
+  onLayerChange(e) {
+    // OL3 also fires 'propertychange' events, so separate handling of each
+    if (e instanceof PropertyChangeEvent) {
+      // handle our own change event
+      var p = e.getProperty() || '';
+      if (p == 'loading') {
+        this.onLoadingChange(e);
+      } else if (styleChangeEvents.indexOf(p) > -1) {
+        // only handle these events if they aren't for a specific set of features, to avoid unnecessary processing
+        var features = e.getNewValue();
+        if (!features || !features.length) {
+          this.onStyleChange();
+        }
+      } else {
+        this.saveDescriptor();
+      }
+    } else if (e instanceof ol.Object.Event) {
+      // handle the OL3 change event
+      if (styleKeys.indexOf(e.key) > -1) {
+        this.onStyleChange();
+      } else if (changeKeys.indexOf(e.key) > -1) {
+        this.saveDescriptor();
+      }
+    }
+  }
+
+  /**
+   * Handle changes to the loading state on a synchronized layer.
+   *
+   * @param {PropertyChangeEvent=} opt_event
+   * @protected
+   */
+  onLoadingChange(opt_event) {
+    var layers = this.getLayers();
+    if (layers) {
+      for (var i = 0, n = layers.length; i < n; i++) {
+        if (layers[i].isLoading()) {
+          this.setLoading(true);
+          return;
+        }
+      }
+    }
+
+    this.setLoading(false);
+  }
+
+  /**
+   * Handles layer style change.
+   *
+   * @protected
+   */
+  onStyleChange() {
+    // update the layer config when styles change
+    this.saveDescriptor();
+  }
+
+  /**
+   * Save the descriptor to storage.
+   *
+   * @protected
+   */
+  saveDescriptor() {
+    this.layerConfig = this.persistLayerConfig();
+    DataManager.getInstance().persistDescriptors();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  persist(opt_obj) {
+    if (!opt_obj) {
+      opt_obj = {};
+    }
+
+    opt_obj['layer'] = this.persistLayerConfig();
+    return super.persist(opt_obj);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  restore(conf) {
+    this.layerConfig = conf['layer'] || {};
+    super.restore(conf);
+  }
+
+  /**
+   * Persist each synchronized layer to an object keyed by layer id.
+   *
+   * @return {!Object<string, *>} config
+   */
+  persistLayerConfig() {
+    var config = {};
+
+    var layers = this.getLayers();
+    for (var i = 0, n = layers.length; i < n; i++) {
+      config[layers[i].getId()] = layers[i].persist();
+    }
+
+    return config;
+  }
+}
+osImplements(LayerSyncDescriptor, IMappingDescriptor.ID);
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
+ * @type {Logger}
  */
-os.data.LayerSyncDescriptor.LOGGER_ = goog.log.getLogger('os.data.LayerSyncDescriptor');
+const logger = log.getLogger('os.data.LayerSyncDescriptor');
 
+/**
+ * Map layer options to the layer ID.
+ * @param {Object<string, *>} options
+ * @return {string}
+ */
+const mapLayerIds = (options) => /** @type {string} */ (options['id'] || '');
 
 /**
  * Style change keys that descriptor needs to handle.
  * @type {Array<string>}
- * @const
- * @private
  */
-os.data.LayerSyncDescriptor.STYLE_KEYS_ = ['opacity', 'contrast', 'brightness', 'saturation', 'sharpness'];
+const styleKeys = ['opacity', 'contrast', 'brightness', 'saturation', 'sharpness'];
 
 
 /**
  * Keys that cause the descriptor to save.
  * @type {Array<string>}
- * @const
- * @private
  */
-os.data.LayerSyncDescriptor.CHANGE_KEYS_ = ['minResolution', 'maxResolution'];
-
-
-/**
- * @param {Object<string, *>} options
- * @return {string}
- */
-os.data.LayerSyncDescriptor.mapLayerIds_ = function(options) {
-  return /** @type {string} */ (options['id'] || '');
-};
-
-/**
- * @inheritDoc
- */
-os.data.LayerSyncDescriptor.prototype.disposeInternal = function() {
-  os.data.LayerSyncDescriptor.base(this, 'disposeInternal');
-  os.dispatcher.unlisten(os.events.LayerEventType.ADD, this.onLayerAdded, false, this);
-  os.dispatcher.unlisten(os.events.LayerEventType.REMOVE, this.onLayerRemoved, false, this);
-  this.removeLayers_();
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.LayerSyncDescriptor.prototype.getMappings = function() {
-  return this.mappings;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.LayerSyncDescriptor.prototype.setMappings = function(value) {
-  this.mappings = value;
-};
-
-/**
- * @inheritDoc
- */
-os.data.LayerSyncDescriptor.prototype.updateMappings = function(layer) {
-  this.saveDescriptor();
-
-  // Delete the layer, then prompt the descriptor to make new layers
-  os.MapContainer.getInstance().removeLayer(/** @type {!os.layer.ILayer} */ (layer));
-  this.setActiveInternal();
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.LayerSyncDescriptor.prototype.supportsMapping = function() {
-  return false;
-};
-
-
-/**
- * Get the layers currently being synchronized by this descriptor.
- *
- * @return {!Array<!os.layer.ILayer>} layers
- */
-os.data.LayerSyncDescriptor.prototype.getLayers = function() {
-  return this.layers;
-};
-
-
-/**
- * @param {Array<Object<string, *>>=} opt_options
- */
-os.data.LayerSyncDescriptor.prototype.populateLayerIds = function(opt_options) {
-  this.layerIds = (opt_options || this.getOptions()).map(os.data.LayerSyncDescriptor.mapLayerIds_);
-};
-
-
-/**
- * Get the options object(s) for each layer synchronized to this descriptor. Each options object will have the saved
- * layer config applied to it, then will be passed to {@link os.layer.createFromOptions} to create the layer prior to
- * adding it to the map.
- *
- * @abstract
- * @return {(Array<!Object<string, *>>|Object<string, *>)} An options object that can be used to create a layer, or an
- *                                                         array of options objects.
- *
- * @protected
- */
-os.data.LayerSyncDescriptor.prototype.getLayerOptions = function() {};
-
-
-/**
- * @return {?Array<!Object<string, *>>} An options object that can be used to create a layer
- */
-os.data.LayerSyncDescriptor.prototype.getOptions = function() {
-  var options = this.getLayerOptions();
-  if (options) {
-    if (!Array.isArray(options)) {
-      options['defaults'] = this.extractConfigDefaults(options);
-      options = [options];
-    }
-    return options.map(this.applyLayerConfig, this);
-  }
-
-  return options;
-};
-
-
-/**
- * @param {!Object<string, *>} options
- * @return {!Object<string, *>}
- */
-os.data.LayerSyncDescriptor.prototype.extractConfigDefaults = function(options) {
-  return {
-    'opacity': options['opacity'],
-    'brightness': options['brightness'],
-    'contrast': options['contrast'],
-    'saturation': options['saturation']
-  };
-};
-
-
-/**
- * If the layer is being synchronized by this descriptor.
- *
- * @param {!os.layer.ILayer} layer The layer
- * @return {boolean}
- */
-os.data.LayerSyncDescriptor.prototype.containsLayer = function(layer) {
-  return this.layers.indexOf(layer) > -1;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.LayerSyncDescriptor.prototype.setActiveInternal = function() {
-  if (this.isActive()) {
-    this.createLayers_();
-  } else {
-    this.removeLayers_();
-  }
-
-  // update the descriptor loading state
-  this.onLoadingChange();
-
-  return true;
-};
-
-
-/**
- * @param {!os.layer.ILayer} layer
- * @protected
- */
-os.data.LayerSyncDescriptor.prototype.addLayer = function(layer) {
-  if (this.layers.indexOf(layer) === -1) {
-    // listen for changes to the layer
-    ol.events.listen(/** @type {ol.events.EventTarget} */ (layer), goog.events.EventType.PROPERTYCHANGE,
-        this.onLayerChange, this);
-
-    // add the layer to the map and the layer list
-    this.layers.push(layer);
-    this.setActive(true);
-  }
-};
-
-
-/**
- * @param {!os.layer.ILayer} layer
- * @protected
- */
-os.data.LayerSyncDescriptor.prototype.removeLayer = function(layer) {
-  if (this.layers.indexOf(layer) > -1) {
-    // merge things on the layer that might have changed with the current layer options
-    var config = this.persistLayerConfig();
-    var keys = goog.object.getKeys(config);
-    keys.forEach(function(key) {
-      os.object.merge(/** @type {!Object} */(this.layerConfig[key]), /** @type {!Object} */(config[key]), true);
-    }, this);
-
-    ol.events.unlisten(/** @type {ol.events.EventTarget} */ (layer), goog.events.EventType.PROPERTYCHANGE,
-        this.onLayerChange, this);
-
-    ol.array.remove(this.layers, layer);
-  }
-
-  if (!this.layers.length) {
-    this.setActive(false);
-  }
-};
-
-
-/**
- * @param {!os.events.LayerEvent} evt
- * @protected
- */
-os.data.LayerSyncDescriptor.prototype.onLayerAdded = function(evt) {
-  if (typeof evt.layer !== 'string') {
-    var layer = /** @type {os.layer.ILayer} */ (evt.layer);
-
-    if (!this.layerIds.length) {
-      this.populateLayerIds();
-    }
-
-    if (this.layerIds.indexOf(layer.getId()) > -1) {
-      this.addLayer(layer);
-    }
-  }
-};
-
-
-/**
- * @param {!os.events.LayerEvent} evt
- * @protected
- */
-os.data.LayerSyncDescriptor.prototype.onLayerRemoved = function(evt) {
-  if (typeof evt.layer !== 'string') {
-    var layer = /** @type {os.layer.ILayer} */ (evt.layer);
-
-    if (!this.layerIds.length) {
-      this.populateLayerIds();
-    }
-
-    if (this.layerIds.indexOf(layer.getId()) > -1 && this.layers.indexOf(layer) > -1) {
-      this.removeLayer(layer);
-    }
-  }
-};
-
-
-/**
- * Create layers to be synchronized by this descriptor and add them to the map.
- *
- * @private
- */
-os.data.LayerSyncDescriptor.prototype.createLayers_ = function() {
-  var options = this.getOptions();
-  this.populateLayerIds(options);
-
-  if (options) {
-    for (var i = 0; i < options.length; i++) {
-      var layerOptions = options[i];
-
-      // create the layer if it doesn't already exist on the map
-      var layerId = /** @type {string|undefined} */ (layerOptions['id']) || '';
-      if (layerId) {
-        var layer = os.MapContainer.getInstance().getLayer(layerId);
-        if (!layer) {
-          layer = os.layer.createFromOptions(layerOptions);
-
-          if (layer) {
-            os.MapContainer.getInstance().addLayer(layer);
-          }
-        } else {
-          this.addLayer(/** @type {!os.layer.ILayer} */ (layer));
-        }
-      }
-    }
-  }
-};
-
-
-/**
- * Remove layers synchronized by this descriptor.
- *
- * @private
- */
-os.data.LayerSyncDescriptor.prototype.removeLayers_ = function() {
-  // save the config prior to removing layers
-  this.layerConfig = this.persistLayerConfig();
-
-  for (var i = this.layers.length - 1; i >= 0; i--) {
-    var layer = this.layers[i];
-    if (layer) {
-      // remove it from the map
-      os.MapContainer.getInstance().removeLayer(layer);
-    }
-  }
-
-  this.setLoading(false);
-};
-
-
-/**
- * Merge the layer configuration into the options used to create a layer.
- *
- * @param {!Object<string, *>} options
- * @return {!Object<string, *>} The merged options
- * @protected
- */
-os.data.LayerSyncDescriptor.prototype.applyLayerConfig = function(options) {
-  var opts = {};
-  os.object.merge(options, opts, true);
-
-  if (this.layerConfig) {
-    var id = /** @type {string} */ (options['id']);
-    if (id && id in this.layerConfig) {
-      os.object.merge(/** @type {!Object} */ (this.layerConfig[id]), opts, true);
-    }
-  }
-
-  return opts;
-};
+const changeKeys = ['minResolution', 'maxResolution'];
 
 
 /**
  * @type {!Array<!string>}
- * @const
  */
-os.data.LayerSyncDescriptor.STYLE_CHANGE_EVENTS = [
-  os.layer.PropertyChange.STYLE,
-  os.layer.PropertyChange.REFRESH_INTERVAL,
-  os.layer.PropertyChange.TIME_ENABLED,
-  'visible'];
+const styleChangeEvents = [
+  PropertyChange.STYLE,
+  PropertyChange.REFRESH_INTERVAL,
+  PropertyChange.TIME_ENABLED,
+  PropertyChange.VISIBLE
+];
 
 
-/**
- * Handles layer property change
- *
- * @param {(os.events.PropertyChangeEvent|ol.Object.Event)} e
- * @protected
- */
-os.data.LayerSyncDescriptor.prototype.onLayerChange = function(e) {
-  // OL3 also fires 'propertychange' events, so separate handling of each
-  if (e instanceof os.events.PropertyChangeEvent) {
-    // handle our own change event
-    var p = e.getProperty() || '';
-    if (p == 'loading') {
-      this.onLoadingChange(e);
-    } else if (os.data.LayerSyncDescriptor.STYLE_CHANGE_EVENTS.indexOf(p) > -1) {
-      // only handle these events if they aren't for a specific set of features, to avoid unnecessary processing
-      var features = e.getNewValue();
-      if (!features || !features.length) {
-        this.onStyleChange();
-      }
-    } else {
-      this.saveDescriptor();
-    }
-  } else if (e instanceof ol.Object.Event) {
-    // handle the OL3 change event
-    if (os.data.LayerSyncDescriptor.STYLE_KEYS_.indexOf(e.key) > -1) {
-      this.onStyleChange();
-    } else if (os.data.LayerSyncDescriptor.CHANGE_KEYS_.indexOf(e.key) > -1) {
-      this.saveDescriptor();
-    }
-  }
-};
-
-
-/**
- * Handle changes to the loading state on a synchronized layer.
- *
- * @param {os.events.PropertyChangeEvent=} opt_event
- * @protected
- */
-os.data.LayerSyncDescriptor.prototype.onLoadingChange = function(opt_event) {
-  var layers = this.getLayers();
-  if (layers) {
-    for (var i = 0, n = layers.length; i < n; i++) {
-      if (layers[i].isLoading()) {
-        this.setLoading(true);
-        return;
-      }
-    }
-  }
-
-  this.setLoading(false);
-};
-
-
-/**
- * Handles layer style change.
- *
- * @protected
- */
-os.data.LayerSyncDescriptor.prototype.onStyleChange = function() {
-  // update the layer config when styles change
-  this.saveDescriptor();
-};
-
-
-/**
- * Save the descriptor to storage.
- *
- * @protected
- */
-os.data.LayerSyncDescriptor.prototype.saveDescriptor = function() {
-  this.layerConfig = this.persistLayerConfig();
-  os.dataManager.persistDescriptors();
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.LayerSyncDescriptor.prototype.persist = function(opt_obj) {
-  if (!opt_obj) {
-    opt_obj = {};
-  }
-
-  opt_obj['layer'] = this.persistLayerConfig();
-  return os.data.LayerSyncDescriptor.base(this, 'persist', opt_obj);
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.LayerSyncDescriptor.prototype.restore = function(conf) {
-  this.layerConfig = conf['layer'] || {};
-  os.data.LayerSyncDescriptor.base(this, 'restore', conf);
-};
-
-
-/**
- * Persist each synchronized layer to an object keyed by layer id.
- *
- * @return {!Object<string, *>} config
- */
-os.data.LayerSyncDescriptor.prototype.persistLayerConfig = function() {
-  var config = {};
-
-  var layers = this.getLayers();
-  for (var i = 0, n = layers.length; i < n; i++) {
-    config[layers[i].getId()] = layers[i].persist();
-  }
-
-  return config;
-};
+exports = LayerSyncDescriptor;

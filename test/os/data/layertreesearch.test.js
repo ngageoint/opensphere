@@ -1,11 +1,13 @@
-goog.require('os.MapContainer');
 goog.require('os.data.LayerTreeSearch');
 goog.require('os.layer.Tile');
 goog.require('os.layer.Vector');
+goog.require('os.map.instance');
 goog.require('os.mock');
 
 
 describe('os.data.LayerTreeSearch', function() {
+  const {getMapContainer} = goog.module.get('os.map.instance');
+
   beforeEach(function() {
     // add a tile layer
     var layer = new os.layer.Tile({
@@ -17,7 +19,7 @@ describe('os.data.LayerTreeSearch', function() {
     layer.setId('test#layer1');
     layer.setTitle('Alpha');
 
-    os.MapContainer.getInstance().addLayer(layer);
+    getMapContainer().addLayer(layer);
 
     // add a vector layer
     layer = new os.layer.Vector({
@@ -27,7 +29,7 @@ describe('os.data.LayerTreeSearch', function() {
     layer.setId('test#layer2');
     layer.setTitle('Beta');
 
-    os.MapContainer.getInstance().addLayer(layer);
+    getMapContainer().addLayer(layer);
 
     // add a second tile layer
     layer = new os.layer.Tile({
@@ -39,13 +41,13 @@ describe('os.data.LayerTreeSearch', function() {
     layer.setId('test#layer3');
     layer.setTitle('Gamma');
 
-    os.MapContainer.getInstance().addLayer(layer);
+    getMapContainer().addLayer(layer);
   });
 
   afterEach(function() {
-    os.MapContainer.getInstance().removeLayer('test#layer1');
-    os.MapContainer.getInstance().removeLayer('test#layer2');
-    os.MapContainer.getInstance().removeLayer('test#layer3');
+    getMapContainer().removeLayer('test#layer1');
+    getMapContainer().removeLayer('test#layer2');
+    getMapContainer().removeLayer('test#layer3');
   });
 
   it('should search map layers', function() {

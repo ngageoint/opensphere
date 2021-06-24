@@ -23,6 +23,7 @@ goog.require('os.data.DataManager');
 goog.require('os.data.RecordField');
 goog.require('os.data.event.DataEvent');
 goog.require('os.data.event.DataEventType');
+goog.require('os.data.histo');
 goog.require('os.data.histo.ColorModel');
 goog.require('os.data.histo.SourceHistogram');
 goog.require('os.events.PropertyChangeEvent');

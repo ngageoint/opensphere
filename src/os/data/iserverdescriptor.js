@@ -1,5 +1,5 @@
-goog.provide('os.data.IServerDescriptor');
-
+goog.module('os.data.IServerDescriptor');
+goog.module.declareLegacyNamespace();
 
 
 /**
@@ -7,10 +7,11 @@ goog.provide('os.data.IServerDescriptor');
  *
  * @interface
  */
-os.data.IServerDescriptor = function() {};
+class IServerDescriptor {
+  /**
+   * Mark the descriptor as updated.
+   */
+  updatedFromServer() {}
+}
 
-
-/**
- * Mark the descriptor as updated.
- */
-os.data.IServerDescriptor.prototype.updatedFromServer;
+exports = IServerDescriptor;

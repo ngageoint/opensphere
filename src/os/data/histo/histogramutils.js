@@ -1,19 +1,23 @@
-goog.provide('os.data.histo');
+goog.module('os.data.histo');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.dom');
-goog.require('ol.array');
-goog.require('os.alert.Alert');
-goog.require('os.filter.FilterEntry');
-goog.require('os.filter.IFilterable');
-goog.require('os.implements');
-goog.require('os.ui.IHistogramUI');
-goog.require('os.ui.filter.FilterEvent');
+const dom = goog.require('goog.dom');
+const olArray = goog.require('ol.array');
+const AlertManager = goog.require('os.alert.AlertManager');
+const FilterEntry = goog.require('os.filter.FilterEntry');
 
+const IHistogramUI = goog.requireType('os.ui.IHistogramUI');
+
+
+/**
+ * @typedef {function(number):!Array<string>}
+ */
+let GradientFn;
 
 /**
  * @enum {string}
  */
-os.data.histo.HistoEventType = {
+const HistoEventType = {
   // UI events
   REMOVE_CASCADE: 'histo:removeCascade',
   TOGGLE_CASCADE: 'histo:toggleCascade',
@@ -23,27 +27,25 @@ os.data.histo.HistoEventType = {
   CASCADE_CHANGE: 'histo:cascadeChange'
 };
 
-
 /**
  * The label used for manual overrides to feature colors
  * @type {string}
  */
-os.data.histo.OVERRIDE_LABEL = 'Manual';
-
+const OVERRIDE_LABEL = 'Manual';
 
 /**
  * Create a filter from an array of histogram controllers.
  *
- * @param {!Array<!os.ui.IHistogramUI>} controllers The histogram controllers
+ * @param {!Array<!IHistogramUI>} controllers The histogram controllers
  * @param {!Array<!os.data.ColumnDefinition>} columns The filter columns.
  * @param {boolean=} opt_allowAll If all bins should be used in absence of a cascade/selection.
- * @return {os.filter.FilterEntry}
+ * @return {FilterEntry}
  */
-os.data.histo.createFilter = function(controllers, columns, opt_allowAll) {
+const createFilter = function(controllers, columns, opt_allowAll) {
   var entry = null;
   var filter = [];
 
-  var validControllers = os.data.histo.filterValidControllers(controllers, columns, opt_allowAll);
+  var validControllers = filterValidControllers(controllers, columns, opt_allowAll);
   for (var i = 0; i < validControllers.length; i++) {
     var histoFilter = validControllers[i].createXmlFilter(opt_allowAll);
     if (histoFilter) {
@@ -59,15 +61,15 @@ os.data.histo.createFilter = function(controllers, columns, opt_allowAll) {
       filterStr = '<And>' + filterStr + '</And>';
     } else {
       // single filter, so verify it has a condition
-      var doc = goog.dom.xml.loadXml(filterStr);
-      var filterRoot = goog.dom.getFirstElementChild(doc);
+      var doc = dom.xml.loadXml(filterStr);
+      var filterRoot = dom.getFirstElementChild(doc);
       if (!os.ui.filter.isCondition(filterRoot)) {
         // no condition, default to Or
         filterStr = '<Or>' + filterStr + '</Or>';
       }
     }
 
-    entry = new os.filter.FilterEntry();
+    entry = new FilterEntry();
     entry.setEnabled(true);
     entry.setFilter(filterStr);
   }
@@ -75,16 +77,15 @@ os.data.histo.createFilter = function(controllers, columns, opt_allowAll) {
   return entry;
 };
 
-
 /**
  * Create a filter from an array of histogram controllers.
  *
- * @param {!Array<!os.ui.IHistogramUI>} controllers The histogram controllers
+ * @param {!Array<!IHistogramUI>} controllers The histogram controllers
  * @param {!Array<!os.data.ColumnDefinition>} columns The filter columns.
  * @param {boolean=} opt_allowAll If all bins should be used in absence of a cascade/selection.
  * @return {!Array<!os.ui.IHistogramUI>}
  */
-os.data.histo.filterValidControllers = function(controllers, columns, opt_allowAll) {
+const filterValidControllers = function(controllers, columns, opt_allowAll) {
   var valid = [];
   var errorMsg;
   var errorLevel;
@@ -96,7 +97,7 @@ os.data.histo.filterValidControllers = function(controllers, columns, opt_allowA
     var columnName = column && column['name'] || null;
     var columnField = column && column['field'] || null;
 
-    var matchedSourceColumn = ol.array.find(columns, function(c) {
+    var matchedSourceColumn = olArray.find(columns, function(c) {
       return c['field'] == columnField || c['name'] == columnName;
     });
 
@@ -137,8 +138,16 @@ os.data.histo.filterValidControllers = function(controllers, columns, opt_allowA
   }
 
   if (errorMsg) {
-    os.alertManager.sendAlert(errorMsg, errorLevel);
+    AlertManager.getInstance().sendAlert(errorMsg, errorLevel);
   }
 
   return valid;
+};
+
+exports = {
+  GradientFn,
+  HistoEventType,
+  OVERRIDE_LABEL,
+  createFilter,
+  filterValidControllers
 };

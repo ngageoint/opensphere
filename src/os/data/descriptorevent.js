@@ -1,41 +1,31 @@
-goog.provide('os.data.DescriptorEvent');
-goog.provide('os.data.DescriptorEventType');
+goog.module('os.data.DescriptorEvent');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.Event');
-
-
-/**
- * @enum {string}
- */
-os.data.DescriptorEventType = {
-  ADD_DESCRIPTOR: 'addDescriptor',
-  REMOVE_DESCRIPTOR: 'removeDescriptor',
-  UPDATE_DESCRIPTOR: 'updateDescriptor',
-  USER_TOGGLED: 'userToggledDescriptor',
-  ACTIVATED: 'descriptorActivated',
-  DEACTIVATED: 'descriptorDeactivated'
-};
-
+const GoogEvent = goog.require('goog.events.Event');
 
 
 /**
- * @param {string} type
- * @param {os.data.IDataDescriptor=} opt_descriptor
- * @param {os.data.IDataDescriptor=} opt_descriptor2
- * @extends {goog.events.Event}
- * @constructor
  */
-os.data.DescriptorEvent = function(type, opt_descriptor, opt_descriptor2) {
-  os.data.DescriptorEvent.base(this, 'constructor', type);
-
+class DescriptorEvent extends GoogEvent {
   /**
-   * @type {?os.data.IDataDescriptor}
+   * Constructor.
+   * @param {string} type
+   * @param {os.data.IDataDescriptor=} opt_descriptor
+   * @param {os.data.IDataDescriptor=} opt_descriptor2
    */
-  this.descriptor = opt_descriptor || null;
+  constructor(type, opt_descriptor, opt_descriptor2) {
+    super(type);
 
-  /**
-   * @type {?os.data.IDataDescriptor}
-   */
-  this.descriptor2 = opt_descriptor2 || null;
-};
-goog.inherits(os.data.DescriptorEvent, goog.events.Event);
+    /**
+     * @type {?os.data.IDataDescriptor}
+     */
+    this.descriptor = opt_descriptor || null;
+
+    /**
+     * @type {?os.data.IDataDescriptor}
+     */
+    this.descriptor2 = opt_descriptor2 || null;
+  }
+}
+
+exports = DescriptorEvent;

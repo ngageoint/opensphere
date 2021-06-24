@@ -1,20 +1,22 @@
-goog.provide('os.data.IExtent');
-
+goog.module('os.data.IExtent');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * @interface
  */
-os.data.IExtent = function() {};
+class IExtent {
+  /**
+   * @return {?ol.Extent} The extent or null
+   */
+  getExtent() {}
+}
 
 /**
  * @const
  * @type {string}
  */
-os.data.IExtent.ID = 'os.data.IExtent';
+IExtent.ID = 'os.data.IExtent';
 
 
-/**
- * @return {?ol.Extent} The extent or null
- */
-os.data.IExtent.prototype.getExtent;
+exports = IExtent;

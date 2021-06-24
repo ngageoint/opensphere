@@ -1,9 +1,9 @@
-goog.provide('os.data.histo.legend');
+goog.module('os.data.histo.legend');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.histo.ColorMethod');
-goog.require('os.histo.NumericBinMethod');
-goog.require('os.legend');
-goog.require('os.ui.Module');
+const NumericBinMethod = goog.require('os.histo.NumericBinMethod');
+const legend = goog.require('os.legend');
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -12,10 +12,10 @@ goog.require('os.ui.Module');
  * @param {!os.layer.Vector} layer The vector layer.
  * @param {!osx.legend.LegendOptions} options The legend options.
  */
-os.data.histo.legend.addVectorColorModel = function(layer, options) {
+const addVectorColorModel = function(layer, options) {
   var source = /** @type {os.source.Vector} */ (layer.getSource());
-  if (source && os.legend.shouldDrawSource(source)) {
-    var config = os.legend.getSourceConfig(source, options);
+  if (source && legend.shouldDrawSource(source)) {
+    var config = legend.getSourceConfig(source, options);
     var model = source.getColorModel();
     if (model && (options['showAuto'] || options['showManual'])) {
       var binMethod = model.getBinMethod();
@@ -58,12 +58,12 @@ os.data.histo.legend.addVectorColorModel = function(layer, options) {
           }
 
           var offsetX = options.showVector ? 10 : 0;
-          os.legend.queueVectorConfig(config, options, binMethod.getField(), offsetX, true);
+          legend.queueVectorConfig(config, options, binMethod.getField(), offsetX, true);
         }
 
         if (keys.length > 0) {
           // TODO: should we use goog.string.caseInsensitiveCompare for the default case?
-          var sortFn = binMethod instanceof os.histo.NumericBinMethod ? os.legend.numericCompare :
+          var sortFn = binMethod instanceof NumericBinMethod ? legend.numericCompare :
             goog.array.defaultCompare;
           keys.sort(sortFn);
 
@@ -86,7 +86,7 @@ os.data.histo.legend.addVectorColorModel = function(layer, options) {
               offsetX += 10;
             }
 
-            os.legend.queueVectorConfig(config, options, (colorField + key), offsetX);
+            legend.queueVectorConfig(config, options, (colorField + key), offsetX);
           }
         }
       }
@@ -94,13 +94,12 @@ os.data.histo.legend.addVectorColorModel = function(layer, options) {
   }
 };
 
-
 /**
  * The colormodellegendsettings directive.
  *
  * @return {angular.Directive}
  */
-os.data.histo.legend.legendSettingsDirective = function() {
+const legendSettingsDirective = function() {
   return {
     restrict: 'E',
     replace: true,
@@ -112,15 +111,15 @@ os.data.histo.legend.legendSettingsDirective = function() {
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('colormodellegendsettings', [os.data.histo.legend.legendSettingsDirective]);
+Module.directive('colormodellegendsettings', [legendSettingsDirective]);
 
 
 /**
  * Register a legend plugin to render the color model.
  */
-os.data.histo.legend.registerLegendPlugin = function() {
-  os.legend.registerLayerPlugin(/** @type {!osx.legend.PluginOptions} */ ({
-    render: os.data.histo.legend.addVectorColorModel,
+const registerLegendPlugin = function() {
+  legend.registerLayerPlugin(/** @type {!osx.legend.PluginOptions} */ ({
+    render: addVectorColorModel,
     priority: -100,
     settingsUI: 'colormodellegendsettings',
     defaultSettings: {
@@ -129,4 +128,10 @@ os.data.histo.legend.registerLegendPlugin = function() {
       'showColumn': true
     }
   }));
+};
+
+exports = {
+  addVectorColorModel,
+  legendSettingsDirective,
+  registerLegendPlugin
 };

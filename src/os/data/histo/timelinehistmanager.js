@@ -1,175 +1,197 @@
-goog.provide('os.data.histo.TimelineHistManager');
+goog.module('os.data.histo.TimelineHistManager');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.async.Throttle');
-goog.require('goog.events.EventTarget');
-goog.require('goog.events.EventType');
-goog.require('ol.events');
-goog.require('os.color');
-goog.require('os.data.DataManager');
-goog.require('os.data.OSDataManager');
-goog.require('os.data.event.DataEvent');
-goog.require('os.data.event.DataEventType');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.fn');
-goog.require('os.hist');
-goog.require('os.hist.HistogramData');
-goog.require('os.source.PropertyChange');
-goog.require('os.time.TimeRange');
-goog.require('os.ui.hist.HistogramEventType');
-goog.require('os.ui.hist.IHistogramManager');
+const Throttle = goog.require('goog.async.Throttle');
+const EventTarget = goog.require('goog.events.EventTarget');
+const GoogEventType = goog.require('goog.events.EventType');
+const events = goog.require('ol.events');
+const dispatcher = goog.require('os.Dispatcher');
+const DataManager = goog.require('os.data.DataManager');
+const OSDataManager = goog.require('os.data.OSDataManager');
+const DataEventType = goog.require('os.data.event.DataEventType');
+const fn = goog.require('os.fn');
+const hist = goog.require('os.hist');
+const {getMapContainer} = goog.require('os.map.instance');
+const PropertyChange = goog.require('os.source.PropertyChange');
+const HistogramEventType = goog.require('os.ui.hist.HistogramEventType');
 
+const DataEvent = goog.requireType('os.data.event.DataEvent');
+const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const IHistogramManager = goog.requireType('os.ui.hist.IHistogramManager');
 
 
 /**
  * Watches all sources in the data manager for changes that affect the timeline. Fires events on changes to alert the
  * timeline to update itself.
  *
- * @implements {os.ui.hist.IHistogramManager}
- * @extends {goog.events.EventTarget}
- * @constructor
+ * @implements {IHistogramManager}
  */
-os.data.histo.TimelineHistManager = function() {
-  os.data.histo.TimelineHistManager.base(this, 'constructor');
+class TimelineHistManager extends EventTarget {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * Change event throttle to rate limit timeline updates
+     * @type {Throttle}
+     * @private
+     */
+    this.changeThrottle_ = new Throttle(this.onChangeThrottle_, 100, this);
+
+    var sources = OSDataManager.getInstance().getSources();
+    for (var i = 0, n = sources.length; i < n; i++) {
+      var source = /** @type {events.EventTarget} */ (sources[i]);
+      events.listen(source, GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
+    }
+
+    DataManager.getInstance().listen(DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
+    DataManager.getInstance().listen(DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
+
+    dispatcher.getInstance().listen(os.events.LayerEventType.ADD, this.fireChangeEvent_, false, this);
+    dispatcher.getInstance().listen(os.events.LayerEventType.REMOVE, this.fireChangeEvent_, false, this);
+  }
 
   /**
-   * Change event throttle to rate limit timeline updates
-   * @type {goog.async.Throttle}
+   * @inheritDoc
+   */
+  disposeInternal() {
+    this.changeThrottle_.dispose();
+    this.changeThrottle_ = null;
+
+    dispatcher.getInstance().unlisten(os.events.LayerEventType.ADD, this.fireChangeEvent_, false, this);
+    dispatcher.getInstance().unlisten(os.events.LayerEventType.REMOVE, this.fireChangeEvent_, false, this);
+
+    DataManager.getInstance().unlisten(DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
+    DataManager.getInstance().unlisten(DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
+
+    var sources = OSDataManager.getInstance().getSources();
+    for (var i = 0, n = sources.length; i < n; i++) {
+      var source = /** @type {events.EventTarget} */ (sources[i]);
+      events.unlisten(source, GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
+    }
+
+    os.dataManager = null;
+  }
+
+  /**
+   * Initiates the change event throttle to rate limit the events.
+   *
    * @private
    */
-  this.changeThrottle_ = new goog.async.Throttle(this.onChangeThrottle_, 100, this);
-
-  var sources = os.osDataManager.getSources();
-  for (var i = 0, n = sources.length; i < n; i++) {
-    var source = /** @type {ol.events.EventTarget} */ (sources[i]);
-    ol.events.listen(source, goog.events.EventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
+  fireChangeEvent_() {
+    this.changeThrottle_.fire();
   }
 
-  os.dataManager.listen(os.data.event.DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
-  os.dataManager.listen(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
-
-  os.dispatcher.listen(os.events.LayerEventType.ADD, this.fireChangeEvent_, false, this);
-  os.dispatcher.listen(os.events.LayerEventType.REMOVE, this.fireChangeEvent_, false, this);
-};
-goog.inherits(os.data.histo.TimelineHistManager, goog.events.EventTarget);
-goog.addSingletonGetter(os.data.histo.TimelineHistManager);
-
-
-/**
- * @inheritDoc
- */
-os.data.histo.TimelineHistManager.prototype.disposeInternal = function() {
-  this.changeThrottle_.dispose();
-  this.changeThrottle_ = null;
-
-  os.dispatcher.unlisten(os.events.LayerEventType.ADD, this.fireChangeEvent_, false, this);
-  os.dispatcher.unlisten(os.events.LayerEventType.REMOVE, this.fireChangeEvent_, false, this);
-
-  os.dataManager.unlisten(os.data.event.DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
-  os.dataManager.unlisten(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
-
-  var sources = os.osDataManager.getSources();
-  for (var i = 0, n = sources.length; i < n; i++) {
-    var source = /** @type {ol.events.EventTarget} */ (sources[i]);
-    ol.events.unlisten(source, goog.events.EventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
+  /**
+   * Fires a histogram change event.
+   *
+   * @private
+   */
+  onChangeThrottle_() {
+    this.dispatchEvent(HistogramEventType.CHANGE);
   }
 
-  os.dataManager = null;
-};
-
-
-/**
- * Initiates the change event throttle to rate limit the events.
- *
- * @private
- */
-os.data.histo.TimelineHistManager.prototype.fireChangeEvent_ = function() {
-  this.changeThrottle_.fire();
-};
-
-
-/**
- * Fires a histogram change event.
- *
- * @private
- */
-os.data.histo.TimelineHistManager.prototype.onChangeThrottle_ = function() {
-  this.dispatchEvent(os.ui.hist.HistogramEventType.CHANGE);
-};
-
-
-/**
- * @param {os.data.event.DataEvent} event
- * @private
- */
-os.data.histo.TimelineHistManager.prototype.onSourceAdded_ = function(event) {
-  if (event.source) {
-    ol.events.listen(/** @type {ol.events.EventTarget} */ (event.source), goog.events.EventType.PROPERTYCHANGE,
-        this.onSourcePropertyChange_, this);
-    this.fireChangeEvent_();
-  }
-};
-
-
-/**
- * @param {os.data.event.DataEvent} event
- * @private
- */
-os.data.histo.TimelineHistManager.prototype.onSourceRemoved_ = function(event) {
-  if (event.source) {
-    ol.events.unlisten(/** @type {ol.events.EventTarget} */ (event.source), goog.events.EventType.PROPERTYCHANGE,
-        this.onSourcePropertyChange_, this);
-    this.fireChangeEvent_();
-  }
-};
-
-
-/**
- * Handles source property change events. Fires a histogram change event when the property affects the histogram.
- *
- * @param {os.events.PropertyChangeEvent} event
- * @private
- */
-os.data.histo.TimelineHistManager.prototype.onSourcePropertyChange_ = function(event) {
-  var prop = event.getProperty();
-  switch (prop) {
-    case os.source.PropertyChange.FEATURE_VISIBILITY:
-      var newVal = event.getNewValue();
-      if (!newVal) {
-        // visible features changed due to a timeline change, not a data visibility change
-        break;
-      }
-      // fall through
-    case os.source.PropertyChange.COLOR:
-    case os.source.PropertyChange.FEATURES:
-    case os.source.PropertyChange.TIME_ENABLED:
-    case os.source.PropertyChange.TIME_MODEL:
-    case os.source.PropertyChange.TITLE:
-    case os.source.PropertyChange.VISIBLE:
+  /**
+   * @param {DataEvent} event
+   * @private
+   */
+  onSourceAdded_(event) {
+    if (event.source) {
+      events.listen(/** @type {events.EventTarget} */ (event.source), GoogEventType.PROPERTYCHANGE,
+          this.onSourcePropertyChange_, this);
       this.fireChangeEvent_();
-      break;
-    default:
-      break;
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.histo.TimelineHistManager.prototype.getHistograms = function(options) {
-  var histograms = [];
-
-  if (options.interval > 0) {
-    var layers = os.MapContainer.getInstance().getLayers();
-    histograms = layers.map((layer) => os.hist.mapLayerToHistogram(layer, options))
-        .filter(os.fn.filterFalsey);
-
-    if (!histograms.length) {
-      var sources = os.osDataManager.getSources();
-      histograms = sources.map((source) => os.hist.mapSourceToHistogram(source, options))
-          .filter(os.fn.filterFalsey);
     }
   }
 
-  return histograms;
-};
+  /**
+   * @param {DataEvent} event
+   * @private
+   */
+  onSourceRemoved_(event) {
+    if (event.source) {
+      events.unlisten(/** @type {events.EventTarget} */ (event.source), GoogEventType.PROPERTYCHANGE,
+          this.onSourcePropertyChange_, this);
+      this.fireChangeEvent_();
+    }
+  }
+
+  /**
+   * Handles source property change events. Fires a histogram change event when the property affects the histogram.
+   *
+   * @param {PropertyChangeEvent} event
+   * @private
+   */
+  onSourcePropertyChange_(event) {
+    var prop = event.getProperty();
+    switch (prop) {
+      case PropertyChange.FEATURE_VISIBILITY:
+        var newVal = event.getNewValue();
+        if (!newVal) {
+          // visible features changed due to a timeline change, not a data visibility change
+          break;
+        }
+        // fall through
+      case PropertyChange.COLOR:
+      case PropertyChange.FEATURES:
+      case PropertyChange.TIME_ENABLED:
+      case PropertyChange.TIME_MODEL:
+      case PropertyChange.TITLE:
+      case PropertyChange.VISIBLE:
+        this.fireChangeEvent_();
+        break;
+      default:
+        break;
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getHistograms(options) {
+    var histograms = [];
+
+    if (options.interval > 0) {
+      var layers = getMapContainer().getLayers();
+      histograms = layers.map((layer) => hist.mapLayerToHistogram(layer, options))
+          .filter(fn.filterFalsey);
+
+      if (!histograms.length) {
+        var sources = OSDataManager.getInstance().getSources();
+        histograms = sources.map((source) => hist.mapSourceToHistogram(source, options))
+            .filter(fn.filterFalsey);
+      }
+    }
+
+    return histograms;
+  }
+
+  /**
+   * Get the global instance.
+   * @return {!TimelineHistManager}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new TimelineHistManager();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {TimelineHistManager} value
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
+
+/**
+ * Global instance.
+ * @type {TimelineHistManager|undefined}
+ */
+let instance;
+
+exports = TimelineHistManager;
