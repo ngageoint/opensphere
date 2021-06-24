@@ -7,6 +7,8 @@ const GoogEventType = goog.require('goog.events.EventType');
 const Collection = goog.require('ol.Collection');
 const OLMap = goog.require('ol.Map');
 const View = goog.require('ol.View');
+const RotateControl = goog.require('ol.control.Rotate');
+const ZoomControl = goog.require('ol.control.Zoom');
 const {getCenter: getExtentCenter} = goog.require('ol.extent');
 
 const {ROOT} = goog.require('os');
@@ -205,8 +207,18 @@ class Controller {
       view: this.view
     });
 
+    const controls = new Collection([
+      new RotateControl({
+        autoHide: false,
+        className: 'c-layer-compare-control ol-rotate'
+      }),
+      new ZoomControl({
+        className: 'c-layer-compare-control ol-zoom'
+      })
+    ]);
+
     this.rightMap = new OLMap({
-      controls: [],
+      controls,
       layers: this.rightLayers,
       target: rightEl,
       view: this.view
@@ -244,14 +256,16 @@ class Controller {
 
     const projection = osMap.PROJECTION;
     const center = mainView ? mainView.getCenter() : getExtentCenter(projection.getExtent());
+    const rotation = mainView ? mainView.getRotation() : 0;
     const zoom = mainView ? mainView.getZoom() : osMap.DEFAULT_ZOOM;
 
     return new View({
       center,
-      zoom,
-      projection,
       minZoom: osMap.MIN_ZOOM,
-      maxZoom: osMap.MAX_ZOOM
+      maxZoom: osMap.MAX_ZOOM,
+      projection,
+      rotation,
+      zoom
     });
   }
 

@@ -1,8 +1,13 @@
 $layer-compare-slider-radius: 1rem;
+$layer-compare-z-index-base: 1;
 
 .c-layer-compare-container {
   overflow: hidden;
   position: relative;
+}
+
+.c-layer-compare-control {
+  z-index: $layer-compare-z-index-base + 2;
 }
 
 .c-layer-compare-item {
@@ -23,7 +28,7 @@ $layer-compare-slider-radius: 1rem;
   height: 100%;
   left: 50%;
   position: absolute;
-  z-index: 9;
+  z-index: $layer-compare-z-index-base + 1;
 }
 
 .c-layer-compare-handle {
@@ -48,5 +53,5 @@ $layer-compare-slider-radius: 1rem;
 }
 
 .c-layer-compare-top {
-  z-index: 1;
+  z-index: $layer-compare-z-index-base;
 }
