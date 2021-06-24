@@ -1,107 +1,104 @@
-goog.provide('os.column.ColumnModel');
-goog.provide('os.column.IColumnMapping');
-goog.require('goog.events.Listenable');
-goog.require('os.IPersistable');
+goog.module('os.column.IColumnMapping');
+goog.module.declareLegacyNamespace();
+
+const Listenable = goog.requireType('goog.events.Listenable');
+const IPersistable = goog.requireType('os.IPersistable');
+
 
 /**
  * Base interface representing a column mapping.
  *
- * @extends {os.IPersistable}
- * @extends {goog.events.Listenable}
+ * @extends {IPersistable}
+ * @extends {Listenable}
  * @interface
  */
-os.column.IColumnMapping = function() {};
+class IColumnMapping {
+  /**
+   * Get the ID
+   * @return {!string}
+   */
+  getId() {}
 
+  /**
+   * Set the ID
+   * @param {!string} value
+   */
+  setId(value) {}
 
-/**
- * Get the ID
- * @return {!string}
- */
-os.column.IColumnMapping.prototype.getId;
+  /**
+   * Get the value type
+   * @return {?string}
+   */
+  getValueType() {}
 
+  /**
+   * Set the value type
+   * @param {string} value
+   */
+  setValueType(value) {}
 
-/**
- * Set the ID
- * @param {!string} value
- */
-os.column.IColumnMapping.prototype.setId;
+  /**
+   * Get the name
+   * @return {?string}
+   */
+  getName() {}
 
+  /**
+   * Set the name
+   * @param {string} value
+   */
+  setName(value) {}
 
-/**
- * Get the value type
- * @return {?string}
- */
-os.column.IColumnMapping.prototype.getValueType;
+  /**
+   * Get the description
+   * @return {?string}
+   */
+  getDescription() {}
 
+  /**
+   * Set the description
+   * @param {string} value
+   */
+  setDescription(value) {}
 
-/**
- * Set the value type
- * @param {string} value
- */
-os.column.IColumnMapping.prototype.setValueType;
+  /**
+   * Adds a column by its layerKey and column field.
+   * @param {string} layerKey The layer key
+   * @param {string} column The column field string
+   * @param {string=} opt_units The optional units to use
+   */
+  addColumn(layerKey, column, opt_units) {}
 
+  /**
+   * Removes a column model.
+   * @param {osx.column.ColumnModel} columnModel
+   */
+  removeColumn(columnModel) {}
 
-/**
- * Get the name
- * @return {?string}
- */
-os.column.IColumnMapping.prototype.getName;
+  /**
+   * Gets the columns from the mapping.
+   * @return {Array<osx.column.ColumnModel>}
+   */
+  getColumns() {}
 
+  /**
+   * Gets a particular column model for a given layer key.
+   * @param {string} layerKey
+   * @return {?osx.column.ColumnModel}
+   */
+  getColumn(layerKey) {}
 
-/**
- * Set the name
- * @param {string} value
- */
-os.column.IColumnMapping.prototype.setName;
+  /**
+   * Clones the column mapping.
+   * @return {IColumnMapping}
+   */
+  clone() {}
 
+  /**
+   * Writes raw XML mapping data
+   * @return {string}
+   */
+  writeMapping() {}
+}
 
-/**
- * Get the description
- * @return {?string}
- */
-os.column.IColumnMapping.prototype.getDescription;
-
-
-/**
- * Set the description
- * @param {string} value
- */
-os.column.IColumnMapping.prototype.setDescription;
-
-
-/**
- * Adds a column by its layerKey and column field.
- * @param {string} layerKey The layer key
- * @param {string} column The column field string
- * @param {string=} opt_units The optional units to use
- */
-os.column.IColumnMapping.prototype.addColumn;
-
-
-/**
- * Removes a column model.
- * @param {osx.column.ColumnModel} columnModel
- */
-os.column.IColumnMapping.prototype.removeColumn;
-
-
-/**
- * Gets the columns from the mapping.
- * @return {Array<osx.column.ColumnModel>}
- */
-os.column.IColumnMapping.prototype.getColumns;
-
-
-/**
- * Gets a particular column model for a given layer key.
- * @param {string} layerKey
- * @return {?osx.column.ColumnModel}
- */
-os.column.IColumnMapping.prototype.getColumn;
-
-
-/**
- * Clones the column mapping.
- * @return {os.column.IColumnMapping}
- */
-os.column.IColumnMapping.prototype.clone;
+exports = IColumnMapping;

@@ -5,6 +5,7 @@ const Debouncer = goog.require('goog.async.Debouncer');
 const Dispatcher = goog.require('os.Dispatcher');
 const Disposable = goog.require('goog.Disposable');
 const GoogEventType = goog.require('goog.events.EventType');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const IFilterable = goog.require('os.filter.IFilterable');
 const {getImportActionManager} = goog.require('os.im.action');
 const ILayer = goog.require('os.layer.ILayer');
@@ -26,7 +27,6 @@ const IPresetService = goog.requireType('os.layer.preset.IPresetService');
 const LayerEvent = goog.requireType('os.events.LayerEvent');
 const {EventsKey: OlEventsKey} = goog.requireType('ol');
 const OlLayer = goog.requireType('ol.layer.Layer');
-const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
 
 
 /**
@@ -177,7 +177,7 @@ class LayerPresetManager extends Disposable {
    */
   onLayerStyleChanged_(layerId, layer, check, event) {
     // check that the style does/doesn't match the Preset. If not, set the clean over to false and stop listening
-    if (layer && event['getProperty'] && event.getProperty() == 'style') {
+    if (layer && event instanceof PropertyChangeEvent && event.getProperty() == 'style') {
       if (this.isLayerStyleDirty(layerId, layer, check, event)) {
         const meta = /** @type {!LayerPresetsMetaData} */ (this.presets_.entry(layerId)[2]);
 

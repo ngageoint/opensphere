@@ -85,7 +85,7 @@ class AlertManager extends goog.events.EventTarget {
 
   /**
    * Get the global alert manager instance.
-   * @return {AlertManager}
+   * @return {!AlertManager}
    */
   static getInstance() {
     if (!instance) {
@@ -97,7 +97,7 @@ class AlertManager extends goog.events.EventTarget {
 
   /**
    * Set the global alert manager instance.
-   * @param {!AlertManager} value The AlertManager instance to set.
+   * @param {AlertManager} value The AlertManager instance to set.
    */
   static setInstance(value) {
     instance = value;

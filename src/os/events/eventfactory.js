@@ -1,4 +1,5 @@
-goog.provide('os.events.EventFactory');
+goog.module('os.events.EventFactory');
+goog.module.declareLegacyNamespace();
 
 
 /**
@@ -7,7 +8,7 @@ goog.provide('os.events.EventFactory');
  * @param {!string} type The type of event to create
  * @return {!Event}
  */
-os.events.EventFactory.createEvent = function(type) {
+const createEvent = function(type) {
   var event;
   try {
     // modern browsers
@@ -18,4 +19,8 @@ os.events.EventFactory.createEvent = function(type) {
     event.initEvent(type, true, true);
   }
   return event;
+};
+
+exports = {
+  createEvent
 };

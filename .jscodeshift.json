@@ -64,6 +64,7 @@
     "os.dataManager": "DataManager",
     "os.osDataManager": "OSDataManager",
     "os.extent": "osExtent",
+    "os.geo.jsts": "osJsts",
     "os.feature": "osFeature",
     "os.file": "osFile",
     "os.file.File": "OSFile",

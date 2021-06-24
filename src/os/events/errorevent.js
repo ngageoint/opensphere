@@ -1,32 +1,36 @@
-goog.provide('os.events.ErrorEvent');
-goog.require('goog.events.Event');
+goog.module('os.events.ErrorEvent');
+goog.module.declareLegacyNamespace();
 
+const GoogEvent = goog.require('goog.events.Event');
+const EventType = goog.require('os.events.EventType');
 
 
 /**
  * Event object which contains error message
- *
- * @constructor
- * @extends {goog.events.Event}
- * @param {?string} message
- * @param {string=} opt_type
- * @param {Object=} opt_target
  */
-os.events.ErrorEvent = function(message, opt_type, opt_target) {
-  os.events.ErrorEvent.base(this, 'constructor', opt_type || os.events.EventType.ERROR, opt_target);
+class ErrorEvent extends GoogEvent {
+  /**
+   * Constructor.
+   * @param {?string} message
+   * @param {string=} opt_type
+   * @param {Object=} opt_target
+   */
+  constructor(message, opt_type, opt_target) {
+    super(opt_type || EventType.ERROR, opt_target);
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.message_ = message;
+  }
 
   /**
-   * @type {?string}
-   * @private
+   * @return {?string}
    */
-  this.message_ = message;
-};
-goog.inherits(os.events.ErrorEvent, goog.events.Event);
+  getMessage() {
+    return this.message_;
+  }
+}
 
-
-/**
- * @return {?string}
- */
-os.events.ErrorEvent.prototype.getMessage = function() {
-  return this.message_;
-};
+exports = ErrorEvent;

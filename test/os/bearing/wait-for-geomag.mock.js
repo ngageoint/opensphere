@@ -5,16 +5,20 @@ goog.require('os.bearing');
 goog.require('os.net.Request');
 
 beforeEach(function() {
-  if (!os.bearing.geomag_) {
+  const NetEventType = goog.module.get('goog.net.EventType');
+  const bearing = goog.module.get('os.bearing');
+  const Request = goog.module.get('os.net.Request');
+
+  if (!bearing.isGeomagLoaded()) {
     runs(function() {
-      var request = new os.net.Request('/base/vendor/geomag/WMM.txt');
-      request.listenOnce(goog.net.EventType.SUCCESS, os.bearing.onGeomag);
-      request.listenOnce(goog.net.EventType.ERROR, os.bearing.onGeomag);
+      const request = new Request('/base/vendor/geomag/WMM.txt');
+      request.listenOnce(NetEventType.SUCCESS, bearing.onGeomag);
+      request.listenOnce(NetEventType.ERROR, bearing.onGeomag);
       request.load();
     });
 
     waitsFor(function() {
-      return !!os.bearing.geomag_;
+      return bearing.isGeomagLoaded();
     }, 'geomag to load');
   }
 });

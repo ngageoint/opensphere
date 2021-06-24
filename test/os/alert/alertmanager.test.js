@@ -1,5 +1,7 @@
 goog.require('goog.events.EventTarget');
 goog.require('goog.log');
+goog.require('goog.log.Level');
+goog.require('goog.log.LogBuffer');
 goog.require('goog.log.LogRecord');
 goog.require('os.alert.AlertEvent');
 goog.require('os.alert.AlertEventSeverity');
@@ -7,10 +9,18 @@ goog.require('os.alert.AlertManager');
 goog.require('os.structs.EventType');
 
 describe('os.alert.AlertManager', function() {
-  const loggerName = 'os.alert.AlertManagerTest';
-  const logger = goog.log.getLogger(loggerName);
+  const log = goog.module.get('goog.log');
+  const Level = goog.module.get('goog.log.Level');
+  const LogBuffer = goog.module.get('goog.log.LogBuffer');
+  const LogRecord = goog.module.get('goog.log.LogRecord');
+  const AlertEventSeverity = goog.module.get('os.alert.AlertEventSeverity');
+  const AlertManager = goog.module.get('os.alert.AlertManager');
+  const EventType = goog.module.get('os.structs.EventType');
 
-  const alertManager = new os.alert.AlertManager();
+  const loggerName = 'os.alert.AlertManagerTest';
+  const logger = log.getLogger(loggerName);
+
+  const alertManager = new AlertManager();
 
   it('should handle alerts and and add them to its buffer', function() {
     const alert1 = 'test alert';
@@ -30,7 +40,7 @@ describe('os.alert.AlertManager', function() {
   });
 
   it('should be able to reset the number of new alerts and elements in the buffer', function() {
-    const am = new os.alert.AlertManager();
+    const am = new AlertManager();
     const alert1 = 'test alert';
     am.sendAlert(alert1).then(() => {
       expect(am.getAlerts().getCount()).toBe(1);
@@ -40,10 +50,10 @@ describe('os.alert.AlertManager', function() {
   });
 
   it('should dispatch alert messages', function() {
-    const am = new os.alert.AlertManager();
+    const am = new AlertManager();
     const alert3 = 'alert3';
     let msg = '';
-    am.listenOnce(os.structs.EventType.ALERT, function(e) {
+    am.listenOnce(EventType.ALERT, function(e) {
       msg = e.getMessage();
       expect(msg).toBe(alert3);
     }, false, this);
@@ -51,17 +61,17 @@ describe('os.alert.AlertManager', function() {
   });
 
   it('should attach severities and times to alerts', function() {
-    const am = new os.alert.AlertManager();
+    const am = new AlertManager();
     const alert4 = 'test alert 4';
 
-    am.sendAlert(alert4, os.alert.AlertEventSeverity.WARNING).then(() => {
+    am.sendAlert(alert4, AlertEventSeverity.WARNING).then(() => {
       expect(am.getAlerts().getLast().getTime()).not.toBe(null);
-      expect(am.getAlerts().getLast().getSeverity()).toBe(os.alert.AlertEventSeverity.WARNING);
+      expect(am.getAlerts().getLast().getSeverity()).toBe(AlertEventSeverity.WARNING);
     });
   });
 
   it('should process missed alerts', function() {
-    const am = new os.alert.AlertManager();
+    const am = new AlertManager();
     const clientId = 'testalertclient';
 
     const callback = {
@@ -113,18 +123,18 @@ describe('os.alert.AlertManager', function() {
     const logRecords = [];
     let alertsSent = false;
 
-    const logBuffer = goog.log.LogBuffer.getInstance();
+    const logBuffer = LogBuffer.getInstance();
     spyOn(logBuffer, 'addRecord').andCallFake((level, msg, name) => {
-      logRecords.push(new goog.log.LogRecord(level, msg, name));
+      logRecords.push(new LogRecord(level, msg, name));
     });
 
-    const am = new os.alert.AlertManager();
+    const am = new AlertManager();
 
     runs(() => {
       const promises = [];
 
-      for (const key in os.alert.AlertEventSeverity) {
-        promises.push(am.sendAlert('alert', os.alert.AlertEventSeverity[key], logger));
+      for (const key in AlertEventSeverity) {
+        promises.push(am.sendAlert('alert', AlertEventSeverity[key], logger));
       }
 
       Promise.all(promises).then(() => {
@@ -137,26 +147,26 @@ describe('os.alert.AlertManager', function() {
     runs(() => {
       // 4 unique alerts
       expect(logRecords.length).toBe(4);
-      expect(logRecords.filter((r) => r.getLevel().name === goog.log.Level.INFO.name).length).toBe(2);
-      expect(logRecords.filter((r) => r.getLevel().name === goog.log.Level.WARNING.name).length).toBe(1);
-      expect(logRecords.filter((r) => r.getLevel().name === goog.log.Level.SEVERE.name).length).toBe(1);
+      expect(logRecords.filter((r) => r.getLevel().name === Level.INFO.name).length).toBe(2);
+      expect(logRecords.filter((r) => r.getLevel().name === Level.WARNING.name).length).toBe(1);
+      expect(logRecords.filter((r) => r.getLevel().name === Level.SEVERE.name).length).toBe(1);
 
       logRecords.length = 0;
       alertsSent = false;
 
-      const am = new os.alert.AlertManager();
+      const am = new AlertManager();
       const promises = [];
 
-      for (const key in os.alert.AlertEventSeverity) {
-        if (os.alert.AlertEventSeverity[key] === os.alert.AlertEventSeverity.WARNING) {
-          promises.push(am.sendAlert(`${key} alert`, os.alert.AlertEventSeverity[key], logger));
-          promises.push(am.sendAlert(`${key} alert`, os.alert.AlertEventSeverity[key], logger));
-        } else if (os.alert.AlertEventSeverity[key] === os.alert.AlertEventSeverity.ERROR) {
-          promises.push(am.sendAlert(`${key} alert`, os.alert.AlertEventSeverity[key], logger));
+      for (const key in AlertEventSeverity) {
+        if (AlertEventSeverity[key] === AlertEventSeverity.WARNING) {
+          promises.push(am.sendAlert(`${key} alert`, AlertEventSeverity[key], logger));
+          promises.push(am.sendAlert(`${key} alert`, AlertEventSeverity[key], logger));
+        } else if (AlertEventSeverity[key] === AlertEventSeverity.ERROR) {
+          promises.push(am.sendAlert(`${key} alert`, AlertEventSeverity[key], logger));
         } else {
-          promises.push(am.sendAlert(`${key} alert`, os.alert.AlertEventSeverity[key], logger));
-          promises.push(am.sendAlert(`${key} alert`, os.alert.AlertEventSeverity[key], logger));
-          promises.push(am.sendAlert(`${key} alert`, os.alert.AlertEventSeverity[key], logger));
+          promises.push(am.sendAlert(`${key} alert`, AlertEventSeverity[key], logger));
+          promises.push(am.sendAlert(`${key} alert`, AlertEventSeverity[key], logger));
+          promises.push(am.sendAlert(`${key} alert`, AlertEventSeverity[key], logger));
         }
       }
 
@@ -168,20 +178,20 @@ describe('os.alert.AlertManager', function() {
     waitsFor(() => alertsSent, 'alerts to be sent');
 
     runs(() => {
-      expect(logRecords.filter((r) => r.getLevel().name === goog.log.Level.INFO.name).length).toBe(2);
-      expect(logRecords.filter((r) => r.getLevel().name === goog.log.Level.INFO.name &&
+      expect(logRecords.filter((r) => r.getLevel().name === Level.INFO.name).length).toBe(2);
+      expect(logRecords.filter((r) => r.getLevel().name === Level.INFO.name &&
           r.getMessage().indexOf(' (6)')).length).toBeGreaterThan(-1);
-      expect(logRecords.filter((r) => r.getLevel().name === goog.log.Level.WARNING.name).length).toBe(1);
-      expect(logRecords.filter((r) => r.getLevel().name === goog.log.Level.WARNING.name &&
+      expect(logRecords.filter((r) => r.getLevel().name === Level.WARNING.name).length).toBe(1);
+      expect(logRecords.filter((r) => r.getLevel().name === Level.WARNING.name &&
           r.getMessage().indexOf(' (2)')).length).toBeGreaterThan(-1);
-      expect(logRecords.filter((r) => r.getLevel().name === goog.log.Level.SEVERE.name).length).toBe(1);
-      expect(logRecords.filter((r) => r.getLevel().name === goog.log.Level.SEVERE.name &&
+      expect(logRecords.filter((r) => r.getLevel().name === Level.SEVERE.name).length).toBe(1);
+      expect(logRecords.filter((r) => r.getLevel().name === Level.SEVERE.name &&
           r.getMessage().match(/\s+\(\d+\)$/)).length).toBe(0);
     });
   });
 
   it('should throttle duplicate alerts', function() {
-    const am = new os.alert.AlertManager();
+    const am = new AlertManager();
     // Throttle duplicate alerts.
     const alert4 = 'alert 4';
     const promises = [];
@@ -195,7 +205,7 @@ describe('os.alert.AlertManager', function() {
   });
 
   it('should not throttle different alerts', function() {
-    const am = new os.alert.AlertManager();
+    const am = new AlertManager();
     // Different alerts. No throttle.
     const alert5 = 'alert 5';
     const alert6 = 'alert 6';
@@ -212,7 +222,7 @@ describe('os.alert.AlertManager', function() {
   });
 
   it('should send a duplicate alert after the throttle interval', function() {
-    const am = new os.alert.AlertManager();
+    const am = new AlertManager();
     // Alert can be sent after throttle interval.
     const alert7 = 'alert 7';
     am.sendAlert(alert7).then(() => {
@@ -230,7 +240,7 @@ describe('os.alert.AlertManager', function() {
   });
 
   it('should allow unthrottled alerts', function() {
-    const am = new os.alert.AlertManager();
+    const am = new AlertManager();
     const alert8 = 'alert 8';
 
     am.sendAlert(alert8, undefined, undefined, undefined, undefined, 0);

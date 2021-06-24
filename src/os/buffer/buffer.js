@@ -1,11 +1,26 @@
-goog.provide('os.buffer');
+goog.module('os.buffer');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.Feature');
-goog.require('os.command.ParallelCommand');
-goog.require('os.geo.jsts');
 goog.require('os.ui.buffer.bufferDialogDirective');
-goog.require('os.ui.query');
-goog.require('os.ui.query.cmd.AreaAdd');
+
+const userAgent = goog.require('goog.userAgent');
+const Feature = goog.require('ol.Feature');
+const GeometryType = goog.require('ol.geom.GeometryType');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const ParallelCommand = goog.require('os.command.ParallelCommand');
+const Settings = goog.require('os.config.Settings');
+const RecordField = goog.require('os.data.RecordField');
+const osFeature = goog.require('os.feature');
+const osJsts = goog.require('os.geo.jsts');
+const math = goog.require('os.math');
+const Units = goog.require('os.math.Units');
+const osStyle = goog.require('os.style');
+const AreaAdd = goog.require('os.ui.query.cmd.AreaAdd');
+const osWindow = goog.require('os.ui.window');
+
+const Geometry = goog.requireType('ol.geom.Geometry');
+const GeometryCollection = goog.requireType('ol.geom.GeometryCollection');
+const SimpleGeometry = goog.requireType('ol.geom.SimpleGeometry');
 
 
 /**
@@ -17,136 +32,120 @@ goog.require('os.ui.query.cmd.AreaAdd');
  *   title: string,
  *   description: string,
  *   tags: string,
- *   geometry: (ol.geom.Geometry|undefined),
- *   features: !Array<!ol.Feature>
+ *   geometry: (Geometry|undefined),
+ *   features: !Array<!Feature>
  * }}
  */
-os.buffer.BufferConfig;
-
+let BufferConfig;
 
 /**
  * Icon used for the buffer region feature.
  * @type {string}
- * @const
  */
-os.buffer.ICON = 'fa-dot-circle-o';
-
+const ICON = 'fa-dot-circle-o';
 
 /**
  * The base settings key to use for buffer region configuration.
  * @type {string}
- * @const
  */
-os.buffer.BASE_KEY = 'bufferRegion.';
-
+const BASE_KEY = 'bufferRegion.';
 
 /**
  * @enum {string}
  */
-os.buffer.BufferSetting = {
-  DISTANCE: os.buffer.BASE_KEY + 'distance',
-  UNITS: os.buffer.BASE_KEY + 'units'
+const BufferSetting = {
+  DISTANCE: BASE_KEY + 'distance',
+  UNITS: BASE_KEY + 'units'
 };
-
 
 /**
  * Style config for buffer previews.
  * @type {Object}
- * @const
  */
-os.buffer.PREVIEW_STYLE = {
+const PREVIEW_STYLE = {
   'fill': {
     'color': 'rgba(0,255,255,.15)'
   },
   'stroke': {
-    'width': os.style.DEFAULT_FEATURE_SIZE,
+    'width': osStyle.DEFAULT_FEATURE_SIZE,
     'color': 'rgba(0,255,255,1)'
   }
 };
 
-
 /**
  * Default title for buffer areas.
  * @type {string}
- * @const
  */
-os.buffer.DEFAULT_TITLE = 'Buffer Region';
-
+const DEFAULT_TITLE = 'Buffer Region';
 
 /**
  * Limitation on the number of features that can be buffered in live preview mode.
  * @type {number}
- * @const
  */
-os.buffer.FEATURE_LIMIT = goog.userAgent.WEBKIT ? 500 : 100;
-
+const FEATURE_LIMIT = userAgent.WEBKIT ? 500 : 100;
 
 /**
  * Limitation on the number of source verticies that can be buffered in live preview mode.
  * @type {number}
- * @const
  */
-os.buffer.VERTEX_LIMIT = goog.userAgent.WEBKIT ? 5000 : 2000;
-
+const VERTEX_LIMIT = userAgent.WEBKIT ? 5000 : 2000;
 
 /**
  * Create a default configuration object for a buffer region.
  *
- * @return {!os.buffer.BufferConfig}
+ * @return {!BufferConfig}
  */
-os.buffer.getBaseConfig = function() {
+const getBaseConfig = function() {
+  const settings = Settings.getInstance();
   return {
-    'distance': /** @type {number} */ (os.settings.get(os.buffer.BufferSetting.DISTANCE, 5)),
-    'units': /** @type {string} */ (os.settings.get(os.buffer.BufferSetting.UNITS,
-        os.math.Units.KILOMETERS)),
+    'distance': /** @type {number} */ (settings.get(BufferSetting.DISTANCE, 5)),
+    'units': /** @type {string} */ (settings.get(BufferSetting.UNITS, Units.KILOMETERS)),
     'outside': true,
     'inside': false,
-    'title': os.buffer.DEFAULT_TITLE,
+    'title': DEFAULT_TITLE,
     'description': '',
     'tags': '',
     'features': []
   };
 };
 
-
 /**
  * Save a buffer region configuration to settings.
  *
- * @param {!os.buffer.BufferConfig} config
+ * @param {!BufferConfig} config
  */
-os.buffer.saveConfig = function(config) {
-  os.settings.set(os.buffer.BufferSetting.DISTANCE, config['distance']);
-  os.settings.set(os.buffer.BufferSetting.UNITS, config['units']);
+const saveConfig = function(config) {
+  const settings = Settings.getInstance();
+  settings.set(BufferSetting.DISTANCE, config['distance']);
+  settings.set(BufferSetting.UNITS, config['units']);
 };
-
 
 /**
  * Creates buffer regions from a buffer config and adds them to the area manager.
  *
- * @param {os.buffer.BufferConfig} config The buffer config
+ * @param {BufferConfig} config The buffer config
  * @return {boolean}
  */
-os.buffer.isConfigValid = function(config) {
+const isConfigValid = function(config) {
   return config['features'] && config['features'].length > 0 && config['distance'] != null;
 };
-
 
 /**
  * If live preview mode should be allowed in the buffer form.
  *
- * @param {os.buffer.BufferConfig} config The buffer config
+ * @param {BufferConfig} config The buffer config
  * @return {boolean}
  */
-os.buffer.allowLivePreview = function(config) {
+const allowLivePreview = function(config) {
   if (config['features']) {
-    if (config['features'].length > os.buffer.FEATURE_LIMIT) {
+    if (config['features'].length > FEATURE_LIMIT) {
       return false;
     }
 
     var vertexCount = 0;
-    for (var i = 0; i < config['features'].length && vertexCount < os.buffer.VERTEX_LIMIT; i++) {
+    for (var i = 0; i < config['features'].length && vertexCount < VERTEX_LIMIT; i++) {
       var feature = config['features'][i];
-      var geometry = /** @type {ol.geom.SimpleGeometry} */ (feature.getGeometry());
+      var geometry = /** @type {SimpleGeometry} */ (feature.getGeometry());
       if (geometry) {
         var stride = geometry.getStride();
         var coordinates = geometry.getFlatCoordinates();
@@ -154,30 +153,29 @@ os.buffer.allowLivePreview = function(config) {
       }
     }
 
-    return vertexCount < os.buffer.VERTEX_LIMIT;
+    return vertexCount < VERTEX_LIMIT;
   }
 
   return true;
 };
 
-
 /**
  * Creates buffer regions from a buffer config and adds them to the area manager.
  *
- * @param {os.buffer.BufferConfig} config The buffer config
+ * @param {BufferConfig} config The buffer config
  * @param {boolean=} opt_preview If the features should only be returned for preview
- * @return {Array<!ol.Feature>} The new areas
+ * @return {Array<!Feature>} The new areas
  */
-os.buffer.createFromConfig = function(config, opt_preview) {
-  if (os.buffer.isConfigValid(config)) {
-    var distance = os.math.convertUnits(config['distance'], os.math.Units.METERS, config['units']);
+let createFromConfig_ = function(config, opt_preview) {
+  if (isConfigValid(config)) {
+    var distance = math.convertUnits(config['distance'], Units.METERS, config['units']);
     var areas = [];
 
     for (var i = 0; i < config['features'].length; i++) {
       var feature = config['features'][i];
 
       // try to set the title from the config
-      var featureTitle = os.buffer.DEFAULT_TITLE;
+      var featureTitle = DEFAULT_TITLE;
       if (config['titleColumn']) {
         // try the property value first
         featureTitle = feature.get(config['titleColumn']['field']);
@@ -198,8 +196,8 @@ os.buffer.createFromConfig = function(config, opt_preview) {
 
       var featGeom = feature.getGeometry();
       if (featGeom) {
-        var geoms = (featGeom.getType() == ol.geom.GeometryType.GEOMETRY_COLLECTION) ?
-        /** @type {!ol.geom.GeometryCollection} */ (featGeom).getGeometriesArray() : [featGeom];
+        var geoms = (featGeom.getType() == GeometryType.GEOMETRY_COLLECTION) ?
+        /** @type {!GeometryCollection} */ (featGeom).getGeometriesArray() : [featGeom];
 
         for (var j = 0, n = geoms.length; j < n; j++) {
           var absDistance = Math.abs(distance);
@@ -208,36 +206,36 @@ os.buffer.createFromConfig = function(config, opt_preview) {
           var inner;
 
           if (config['outside'] && config['inside']) {
-            outer = os.geo.jsts.buffer(geoms[j], absDistance);
-            inner = os.geo.jsts.buffer(geoms[j], -absDistance);
+            outer = osJsts.buffer(geoms[j], absDistance);
+            inner = osJsts.buffer(geoms[j], -absDistance);
 
             // if either buffer operation fails, do not create a buffer!
             if (outer && inner) {
               // remove the inner buffer from the outer to create an area surrounding the original geometry
-              var result = os.geo.jsts.removeFrom(new ol.Feature(outer), new ol.Feature(inner));
+              var result = osJsts.removeFrom(new Feature(outer), new Feature(inner));
               if (result) {
                 buffer = result.getGeometry();
               }
             }
           } else if (config['outside']) {
-            buffer = os.geo.jsts.buffer(geoms[j], absDistance);
+            buffer = osJsts.buffer(geoms[j], absDistance);
           } else if (config['inside']) {
-            buffer = os.geo.jsts.buffer(geoms[j], -absDistance);
+            buffer = osJsts.buffer(geoms[j], -absDistance);
           }
 
           if (buffer) {
-            var area = new ol.Feature(buffer);
+            var area = new Feature(buffer);
             area.setId(i);
             area.set('title', '' + featureTitle);
             area.set('description', config['descColumn'] ? feature.get(config['descColumn']['field']) :
               config['description']);
             area.set('tags', config['tagsColumn'] ? feature.get(config['tagsColumn']['field']) :
               config['tags']);
-            area.set(os.data.RecordField.DRAWING_LAYER_NODE, false);
+            area.set(RecordField.DRAWING_LAYER_NODE, false);
 
-            var source = os.feature.getSource(feature);
+            var source = osFeature.getSource(feature);
             if (source) {
-              area.set(os.data.RecordField.SOURCE_NAME, source.getTitle(), true);
+              area.set(RecordField.SOURCE_NAME, source.getTitle(), true);
             }
 
             areas.push(area);
@@ -250,14 +248,14 @@ os.buffer.createFromConfig = function(config, opt_preview) {
       if (!opt_preview) {
         var cmds = [];
         for (var i = 0; i < areas.length; i++) {
-          var area = new os.ui.query.cmd.AreaAdd(areas[i]);
+          var area = new AreaAdd(areas[i]);
           cmds.push(area);
         }
 
-        var cmd = new os.command.ParallelCommand();
+        var cmd = new ParallelCommand();
         cmd.setCommands(cmds);
         cmd.title = 'Add buffer region' + (cmds.length > 1 ? 's' : '');
-        os.command.CommandProcessor.getInstance().addCommand(cmd);
+        CommandProcessor.getInstance().addCommand(cmd);
       }
 
       return areas;
@@ -267,21 +265,40 @@ os.buffer.createFromConfig = function(config, opt_preview) {
   return null;
 };
 
+/**
+ * Creates buffer regions from a buffer config and adds them to the area manager.
+ *
+ * @param {BufferConfig} config The buffer config
+ * @param {boolean=} opt_preview If the features should only be returned for preview
+ * @return {Array<!Feature>} The new areas
+ */
+const createFromConfig = function(config, opt_preview) {
+  return createFromConfig_(config, opt_preview);
+};
+
+/**
+ * Replace default createFromConfig implementation.
+ *
+ * @param {!function(BufferConfig, boolean=):Array<!Feature>} f The new implementation
+ */
+const setCreateFromConfig = function(f) {
+  createFromConfig_ = f;
+};
 
 /**
  * Launch a dialog to create buffer regions around features.
  *
  * @param {Object} options
  */
-os.buffer.launchDialog = function(options) {
+const launchDialog = function(options) {
   var windowId = 'Buffer';
-  if (os.ui.window.exists(windowId)) {
-    os.ui.window.bringToFront(windowId);
+  if (osWindow.exists(windowId)) {
+    osWindow.bringToFront(windowId);
   } else {
     var windowOptions = {
       'id': windowId,
       'label': 'Create Buffer Region' + (options['features'] ? '' : 's'),
-      'icon': 'fa ' + os.buffer.ICON,
+      'icon': 'fa ' + ICON,
       'x': 'center',
       'y': 'center',
       'width': '425',
@@ -292,6 +309,24 @@ os.buffer.launchDialog = function(options) {
     };
 
     var template = '<bufferdialog></bufferdialog>';
-    os.ui.window.create(windowOptions, template, undefined, undefined, undefined, options);
+    osWindow.create(windowOptions, template, undefined, undefined, undefined, options);
   }
+};
+
+exports = {
+  ICON,
+  BASE_KEY,
+  BufferSetting,
+  PREVIEW_STYLE,
+  DEFAULT_TITLE,
+  FEATURE_LIMIT,
+  VERTEX_LIMIT,
+  getBaseConfig,
+  saveConfig,
+  isConfigValid,
+  allowLivePreview,
+  createFromConfig,
+  setCreateFromConfig,
+  launchDialog,
+  BufferConfig
 };
