@@ -9,6 +9,7 @@ const IPersistable = goog.requireType('os.IPersistable');
  * All the properties that can define a column definition for SlickGrid
  *
  * @implements {IPersistable}
+ * @unrestricted
  */
 class ColumnDefinition {
   /**

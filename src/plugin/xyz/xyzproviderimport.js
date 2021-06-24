@@ -151,7 +151,8 @@ class Controller extends SingleUrlProviderImportCtrl {
   }
 
   /**
-   * @inheritDoc
+   * @override
+   * @return {ConfigProvider}
    */
   getDataProvider() {
     const dp = ConfigProvider.create('xyz', {'label': 'XYZ Map Layers', 'type': 'xyz', 'listInServers': false});
@@ -178,20 +179,22 @@ class Controller extends SingleUrlProviderImportCtrl {
    */
   saveXYZDescriptor(descriptor) {
     if (descriptor) {
-      var layerConfig = descriptor.getBaseConfig();
+      const layerConfig = descriptor.getBaseConfig();
 
       if (this.dp) {
-        this.dp.setEditable(true);
-        var id = `${getRandomString()}`;
+        const configProvider = /** @type {ConfigProvider} */ (this.dp);
+        configProvider.setEditable(true);
+
+        const id = `${getRandomString()}`;
 
         // Set config descriptor options.
-        layerConfig['nodeUi'] = '<' + uiDirectiveTag + '></' + uiDirectiveTag + '>';
+        layerConfig['nodeUi'] = `<${uiDirectiveTag}></${uiDirectiveTag}>`;
         layerConfig['id'] = `xyz${ID_DELIMITER}${id}`;
 
         // Prevent the data manager from automatically expiring the descriptor.
         descriptor.setLocal(true);
 
-        this.dp.addLayerGroup(id, layerConfig);
+        configProvider.addLayerGroup(id, layerConfig);
       }
     }
   }
@@ -201,7 +204,8 @@ class Controller extends SingleUrlProviderImportCtrl {
    */
   getLabel() {
     if (this.dp) {
-      var label = /** @type {ConfigProvider} */ (this.dp).getLabel();
+      const configProvider = /** @type {ConfigProvider} */ (this.dp);
+      const label = configProvider.getLabel();
       return label || '';
     }
 

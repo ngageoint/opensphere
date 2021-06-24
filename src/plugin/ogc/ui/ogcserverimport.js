@@ -161,13 +161,14 @@ class Controller extends ProviderImportCtrl {
    * @inheritDoc
    */
   saveAndClose() {
-    /** @type {os.structs.TreeNode} */ (this.dp).setLabel(this.scope['config']['label']);
-    this.dp.setWmtsUrl(this.scope['config']['wmts']);
-    this.dp.setWmsUrl(this.scope['config']['wms']);
-    this.dp.setWfsUrl(this.scope['config']['wfs']);
-    this.dp.setOriginalWmtsUrl(this.scope['config']['wmts']);
-    this.dp.setOriginalWmsUrl(this.scope['config']['wms']);
-    this.dp.setOriginalWfsUrl(this.scope['config']['wfs']);
+    const ogcServer = /** @type {OGCServer} */ (this.dp);
+    ogcServer.setLabel(this.scope['config']['label']);
+    ogcServer.setWmtsUrl(this.scope['config']['wmts']);
+    ogcServer.setWmsUrl(this.scope['config']['wms']);
+    ogcServer.setWfsUrl(this.scope['config']['wfs']);
+    ogcServer.setOriginalWmtsUrl(this.scope['config']['wmts']);
+    ogcServer.setOriginalWmsUrl(this.scope['config']['wms']);
+    ogcServer.setOriginalWfsUrl(this.scope['config']['wfs']);
     super.saveAndClose();
   }
 }

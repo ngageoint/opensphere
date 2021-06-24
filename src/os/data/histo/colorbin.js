@@ -9,6 +9,7 @@ const Bin = goog.require('os.histo.Bin');
  *
  * @extends {Bin<T>}
  * @template S,T
+ * @unrestricted
  */
 class ColorBin extends Bin {
   /**
