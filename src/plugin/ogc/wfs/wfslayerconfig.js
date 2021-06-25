@@ -25,6 +25,7 @@ const GeoJSONParser = goog.require('plugin.file.geojson.GeoJSONParser');
 const {Controller: ChooseTimeColumnController} = goog.require('plugin.ogc.ui.ChooseTimeColumnUI');
 const {directiveTag: ogcLayerNodeUi} = goog.require('plugin.ogc.ui.OGCLayerNodeUI');
 
+const IMapping = goog.requireType('os.im.mapping.IMapping');
 const GMLParser = goog.requireType('plugin.file.gml.GMLParser');
 
 
@@ -343,6 +344,10 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
 
     if (execMappings && execMappings.length > 0) {
       importer.setExecMappings(execMappings);
+    }
+
+    if (options['mappings']) {
+      importer.setMappings(/** @type {Array<IMapping>} */ (options['mappings']));
     }
   }
 

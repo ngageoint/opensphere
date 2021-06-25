@@ -39,6 +39,8 @@ const CombinatorCtrl = goog.require('os.ui.query.CombinatorCtrl');
 const AbstractLoadingServer = goog.require('os.ui.server.AbstractLoadingServer');
 const deprecated = goog.require('os.ui.util.deprecated');
 
+
+const IMapping = goog.requireType('os.im.mapping.IMapping');
 const IFeatureType = goog.requireType('os.ogc.IFeatureType');
 
 
@@ -1072,6 +1074,11 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
     options['usePost'] = this.getUsePost();
     options['formats'] = this.getWfsFormats();
 
+    const mappings = this.getMappings();
+    if (mappings) {
+      options['mappings'] = this.getMappings();
+    }
+
     if (options['provider']) {
       // check to see if the visibility is configured to false, if not visibility should be true
       options['visible'] = Settings.getInstance().get(
@@ -1208,6 +1215,13 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
    */
   persist(opt_obj) {
     opt_obj = super.persist(opt_obj);
+
+    var mappings = this.getMappings();
+    if (mappings) {
+      var mm = os.im.mapping.MappingManager.getInstance();
+      opt_obj['mappings'] = mm.persistMappings(mappings);
+    }
+
     if (this.featureType_) {
       opt_obj = this.featureType_.persist(opt_obj);
     }
@@ -1219,6 +1233,12 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
    */
   restore(from) {
     super.restore(from);
+
+    if (from['mappings']) {
+      var mm = os.im.mapping.MappingManager.getInstance();
+      this.setMappings(mm.restoreMappings(from['mappings']));
+    }
+
     if (this.featureType_) {
       this.featureType_.restore(from);
     } else {

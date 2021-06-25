@@ -3,6 +3,7 @@ goog.provide('os.data.FileDescriptor');
 goog.require('os.command.LayerAdd');
 goog.require('os.command.LayerRemove');
 goog.require('os.config.Settings');
+goog.require('os.data.IMappingDescriptor');
 goog.require('os.data.IReimport');
 goog.require('os.data.IUrlDescriptor');
 goog.require('os.data.LayerSyncDescriptor');
@@ -15,6 +16,7 @@ goog.require('os.implements');
 goog.require('os.parse.FileParserConfig');
 goog.require('os.source');
 goog.require('os.source.PropertyChange');
+goog.require('os.source.Request');
 goog.require('os.source.Vector');
 goog.require('os.ui.file.ui.defaultFileNodeUIDirective');
 goog.require('os.ui.im.ImportEvent');
@@ -29,6 +31,7 @@ goog.require('os.ui.im.ImportEventType');
  * @extends {os.data.LayerSyncDescriptor}
  * @implements {os.data.IUrlDescriptor}
  * @implements {os.data.IReimport}
+ * @implements {os.data.IMappingDescriptor}
  *
  * @constructor
  */
@@ -77,6 +80,7 @@ os.data.FileDescriptor = function() {
 goog.inherits(os.data.FileDescriptor, os.data.LayerSyncDescriptor);
 os.implements(os.data.FileDescriptor, 'os.data.IReimport');
 os.implements(os.data.FileDescriptor, os.data.IUrlDescriptor.ID);
+os.implements(os.data.FileDescriptor, os.data.IMappingDescriptor.ID);
 
 
 /**
@@ -173,9 +177,7 @@ os.data.FileDescriptor.prototype.getLayerOptions = function() {
 
 
 /**
- * Get the column mappings to apply to imported data.
- *
- * @return {Array.<os.im.mapping.IMapping>}
+ * @inheritDoc
  */
 os.data.FileDescriptor.prototype.getMappings = function() {
   return this.parserConfig['mappings'];
@@ -183,12 +185,31 @@ os.data.FileDescriptor.prototype.getMappings = function() {
 
 
 /**
- * Set the column mappings to apply to imported data.
- *
- * @param {Array.<os.im.mapping.IMapping>} value
+ * @inheritDoc
  */
 os.data.FileDescriptor.prototype.setMappings = function(value) {
   this.parserConfig['mappings'] = value;
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.data.FileDescriptor.prototype.updateMappings = function(layer) {
+  const source = /** @type {os.source.Request} */ (layer.getSource());
+  const importer = source.getImporter();
+
+  this.saveDescriptor();
+  importer.setMappings(this.getMappings());
+  source.refresh();
+};
+
+
+/**
+ * @inheritDoc
+ */
+os.data.FileDescriptor.prototype.supportsMapping = function() {
+  return false;
 };
 
 

@@ -292,30 +292,10 @@ os.ui.wiz.GeometryStep.prototype.createMappings = function() {
     mappings.push(bm);
   }
 
-  if (this['showEllipse']) {
-    if (this['ellipse']['radius']['column']) {
-      var rm = new os.im.mapping.RadiusMapping();
-      rm.field = this['ellipse']['radius']['column'];
-      rm.setUnits(this['ellipse']['radius']['units']);
-      mappings.push(rm);
-    }
-    if (this['ellipse']['semiMajor']['column']) {
-      var smaj = new os.im.mapping.SemiMajorMapping();
-      smaj.field = this['ellipse']['semiMajor']['column'];
-      smaj.setUnits(this['ellipse']['semiMajor']['units']);
-      mappings.push(smaj);
-    }
-    if (this['ellipse']['semiMinor']['column']) {
-      var smin = new os.im.mapping.SemiMinorMapping();
-      smin.field = this['ellipse']['semiMinor']['column'];
-      smin.setUnits(this['ellipse']['semiMinor']['units']);
-      mappings.push(smin);
-    }
-    if (this['ellipse']['orientation']['column']) {
-      var om = new os.im.mapping.OrientationMapping();
-      om.field = this['ellipse']['orientation']['column'];
-      mappings.push(om);
-    }
+  if (this['showEllipse'] && (this.scope && this.scope['confirmValue'])) {
+    this.scope['confirmValue'].forEach((mapping) => {
+      mappings.push(mapping);
+    });
   }
 
   return mappings;

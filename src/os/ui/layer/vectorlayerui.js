@@ -148,6 +148,12 @@ os.ui.layer.VectorLayerUICtrl = function($scope, $element, $timeout) {
   this['uniqueId'] = null;
 
   /**
+   * Feature Toggle
+   * @type {boolean}
+   */
+  this['allowEllipseConfig'] = os.settings.get(os.ui.layer.EllipseColumnsUI.ALLOW_ELLIPSE_CONFIG, false);
+
+  /**
    * Delay for grouping label size changes.
    * @type {goog.async.Delay}
    */
@@ -253,6 +259,11 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
     this['columns'] = this.getColumns();
     this['showRotation'] = this.getShowRotation();
     this['rotationColumn'] = this.getRotationColumn();
+
+    const layerNodes = this.getLayerNodes();
+    if (layerNodes.length == 1) {
+      this['layer'] = layerNodes[0].getLayer();
+    }
 
     this.loadPresets();
     this.updateReplaceStyle_();
@@ -1062,19 +1073,22 @@ os.ui.layer.VectorLayerUICtrl.prototype.getShape = function() {
  * @return {Array<string>} The available shape options
  */
 os.ui.layer.VectorLayerUICtrl.prototype.getShapes = function() {
-  var items = this.getLayerNodes();
-  var shapes = goog.object.getKeys(os.style.SHAPES);
+  if (this['allowEllipseConfig']) {
+    return goog.object.getKeys(os.style.SHAPES);
+  } else {
+    var items = this.getLayerNodes();
+    var shapes = goog.object.getKeys(os.style.SHAPES);
 
-  if (items && items.length > 0) {
-    for (var i = 0, n = items.length; i < n; i++) {
-      var source = os.osDataManager.getSource(items[i].getId());
-      if (source && source instanceof os.source.Vector) {
-        shapes = goog.array.filter(shapes, source.supportsShape, source);
+    if (items && items.length > 0) {
+      for (var i = 0, n = items.length; i < n; i++) {
+        var source = os.osDataManager.getSource(items[i].getId());
+        if (source && source instanceof os.source.Vector) {
+          shapes = goog.array.filter(shapes, source.supportsShape, source);
+        }
       }
     }
+    return shapes;
   }
-
-  return shapes;
 };
 
 
