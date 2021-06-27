@@ -13,6 +13,10 @@
         <context-onboarding context="{{helpContext}}"></context-onboarding>
       </div>
 
+      <div ng-if="windowTooltip" class="d-inline-flex align-self-center">
+        <popover x-title="label" x-content="windowTooltip" x-pos="'bottom'"></popover>
+      </div>
+
       <div ng-show="headerBtns.length" class="d-inline-block flex-shrink-0">
         <button type="button" ng-repeat="headerBtnCfg in headerBtns"
           class="close"

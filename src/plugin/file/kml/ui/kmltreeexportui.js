@@ -45,8 +45,9 @@ Module.directive('kmltreeexport', [directive]);
  * @param {!plugin.file.kml.ui.KMLNode} rootNode The root node to export.
  * @param {string=} opt_winLabel The window label
  * @param {os.ex.ExportOptions=} opt_addOptions
+ * @param {string=} opt_windowTooltip The tooltip for the window, if any.
  */
-const launchTreeExport = function(rootNode, opt_winLabel, opt_addOptions) {
+const launchTreeExport = function(rootNode, opt_winLabel, opt_addOptions, opt_windowTooltip) {
   var scopeOptions = {
     'rootNode': rootNode,
     'options': opt_addOptions
@@ -63,6 +64,9 @@ const launchTreeExport = function(rootNode, opt_winLabel, opt_addOptions) {
     'height': 'auto',
     'show-close': true
   };
+  if (opt_windowTooltip) {
+    windowOptions['window-tooltip'] = opt_windowTooltip;
+  }
 
   var template = `<${directiveTag} root-node="rootNode" options="options"></${directiveTag}>`;
   osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);

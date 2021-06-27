@@ -274,7 +274,10 @@ const launchExportUI = function() {
       fields: ExportFields
     });
 
-    KMLTreeExportUI.launchTreeExport(placesRoot, 'Export Places', options);
+    var tooltip = 'Places-specific features, such as Range Rings, may not be importable to other applications and' +
+        ' will be rendered as points.';
+
+    KMLTreeExportUI.launchTreeExport(placesRoot, 'Export Places', options, tooltip);
     Metrics.getInstance().updateMetric(metrics.Places.EXPORT, 1);
   } else {
     AlertManager.getInstance().sendAlert('Nothing to export.', AlertEventSeverity.WARNING);

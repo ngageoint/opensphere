@@ -807,6 +807,7 @@ os.ui.windowDirective = function() {
     scope: {
       'id': '@',
       'helpContext': '@',
+      'windowTooltip': '@',
       'minWidth': '@',
       'maxWidth': '@',
       'minHeight': '@',
