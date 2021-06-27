@@ -21,6 +21,7 @@ const SlickGridEvent = goog.require('os.ui.slick.SlickGridEvent');
 const {createOrEditFolder} = goog.require('plugin.file.kml.ui');
 const KMLTreeExportUI = goog.require('plugin.file.kml.ui.KMLTreeExportUI');
 
+const {ExportFields} = goog.require('plugin.places');
 const PlacesManager = goog.require('plugin.places.PlacesManager');
 
 const ExportOptions = goog.requireType('os.ex.ExportOptions');
@@ -152,49 +153,7 @@ class Controller extends Disposable {
    * @export
    */
   export() {
-    if (this.placesRoot_) {
-      var activePlaces = this.getActivePlaces(this.placesRoot_);
-
-      var options = /** @type {ExportOptions} */ ({
-        allData: this.placesRoot_.getChildren(),
-        selectedData: this['selected'],
-        activeData: activePlaces,
-        additionalOptions: true,
-        items: this.placesRoot_.getChildren(),
-        fields: []
-      });
-
-      KMLTreeExportUI.launchTreeExport(this.placesRoot_, 'Export Places', options);
-      Metrics.getInstance().updateMetric(metrics.Places.EXPORT, 1);
-    } else {
-      AlertManager.getInstance().sendAlert('Nothing to export.', AlertEventSeverity.WARNING);
-    }
-  }
-
-  /**
-   * Get active nodes from root
-   * @param {!KMLNode} root
-   * @return {Array<KMLNode>}
-   */
-  getActivePlaces(root) {
-    var places = root.getChildren() || [];
-    var activePlaces = [];
-
-    for (var i = 0; i < places.length; i++) {
-      var place = places[i];
-
-      if (place.canAddChildren) {
-        var active = this.getActivePlaces(places[i]);
-        var clone = place.clone();
-
-        clone.setChildren(active);
-        activePlaces.push(clone);
-      } else if (place.getState() == 'on') {
-        activePlaces.push(place);
-      }
-    }
-
-    return activePlaces;
+    launchExportUI();
   }
 
   /**
@@ -270,8 +229,62 @@ class Controller extends Disposable {
   }
 }
 
+
+/**
+ * Get active nodes from root
+ * @param {!KMLNode} root
+ * @return {Array<KMLNode>}
+ */
+const getActivePlaces = function(root) {
+  var places = root.getChildren() || [];
+  var activePlaces = [];
+
+  for (var i = 0; i < places.length; i++) {
+    var place = places[i];
+
+    if (place.canAddChildren) {
+      var active = this.getActivePlaces(places[i]);
+      var clone = place.clone();
+
+      clone.setChildren(active);
+      activePlaces.push(clone);
+    } else if (place.getState() == 'on') {
+      activePlaces.push(place);
+    }
+  }
+
+  return activePlaces;
+};
+
+
+/**
+ * Export places to a KMZ.
+ */
+const launchExportUI = function() {
+  const placesRoot = PlacesManager.getInstance().getPlacesRoot();
+  if (placesRoot) {
+    var activePlaces = getActivePlaces(placesRoot);
+
+    var options = /** @type {ExportOptions} */ ({
+      allData: placesRoot.getChildren(),
+      selectedData: this['selected'],
+      activeData: activePlaces,
+      additionalOptions: true,
+      items: placesRoot.getChildren(),
+      fields: ExportFields
+    });
+
+    KMLTreeExportUI.launchTreeExport(placesRoot, 'Export Places', options);
+    Metrics.getInstance().updateMetric(metrics.Places.EXPORT, 1);
+  } else {
+    AlertManager.getInstance().sendAlert('Nothing to export.', AlertEventSeverity.WARNING);
+  }
+};
+
+
 exports = {
   Controller,
   directive,
-  directiveTag
+  directiveTag,
+  launchExportUI
 };

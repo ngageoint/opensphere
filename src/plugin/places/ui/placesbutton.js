@@ -9,8 +9,8 @@ const MenuItem = goog.require('os.ui.menu.MenuItem');
 const MenuItemType = goog.require('os.ui.menu.MenuItemType');
 const {createOrEditPlace} = goog.require('plugin.file.kml.ui');
 const places = goog.require('plugin.places');
+const EventType = goog.require('plugin.places.EventType');
 const PlacesManager = goog.require('plugin.places.PlacesManager');
-const menu = goog.require('plugin.places.menu');
 const QuickAddPlacesUI = goog.require('plugin.places.ui.QuickAddPlacesUI');
 
 const {PlacemarkOptions} = goog.requireType('plugin.file.kml.ui');
@@ -67,7 +67,7 @@ class Controller extends MenuButtonCtrl {
       type: MenuItemType.ROOT,
       children: [{
         label: 'Create Text Box...',
-        eventType: menu.EventType.SAVE_TO_ANNOTATION,
+        eventType: EventType.SAVE_TO_ANNOTATION,
         tooltip: 'Creates a new saved place with a text box at this location',
         icons: ['<i class="fa fa-fw ' + places.Icon.ANNOTATION + '"></i>'],
         handler: this.addPlace.bind(this, true),
@@ -76,7 +76,7 @@ class Controller extends MenuButtonCtrl {
       },
       {
         label: 'Quick Add Places...',
-        eventType: menu.EventType.QUICK_ADD_PLACES,
+        eventType: EventType.QUICK_ADD_PLACES,
         tooltip: 'Quickly add places to the selected folder',
         icons: ['<i class="fa fa-fw ' + places.Icon.QUICK_ADD + '"></i>'],
         handler: this.quickAddPlaces.bind(this),

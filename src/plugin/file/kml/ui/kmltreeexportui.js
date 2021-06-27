@@ -104,11 +104,6 @@ class Controller {
     this['title'] = root && root.getLabel() || (config.getAppName() + ' KML Tree').trim();
 
     /**
-     * @type {!KMLTreeExporter}
-     */
-    this['exporter'] = new KMLTreeExporter();
-
-    /**
      * @type {!Object<string, os.ex.IPersistenceMethod>}
      */
     this['persisters'] = {};
@@ -119,6 +114,16 @@ class Controller {
     this['persister'] = null;
 
     const options = this.scope['options'];
+
+    /**
+     * @type {!KMLTreeExporter}
+     */
+    this['exporter'] = new KMLTreeExporter();
+
+    /**
+     * @type {Array.<string>}
+     */
+    this['exportFields'] = options && options.fields || null;
 
     /**
      * @type {boolean}
@@ -193,7 +198,7 @@ class Controller {
 
       var options = /** @type {os.ex.ExportOptions} */ ({
         items: items,
-        fields: null,
+        fields: this['exportFields'],
         title: this['title'],
         exporter: this['exporter'],
         persister: this['persister']
