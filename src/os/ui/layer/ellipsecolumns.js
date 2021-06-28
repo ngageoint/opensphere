@@ -106,7 +106,7 @@ class Controller {
      * The name of the circle Column
      * @type {string}
      */
-    this['radiusColumn'] = this['columnOptions'].find(({name}) => name === RADIUS);
+    this['radiusColumn'] = this['columnOptions'].find((col) => col['name'] === RADIUS);
 
     /**
      * Units selected for circle
@@ -118,7 +118,7 @@ class Controller {
      * The name of the semi major Column
      * @type {string}
      */
-    this['semiMajorColumn'] = this['columnOptions'].find(({name}) => name === SEMI_MAJOR);
+    this['semiMajorColumn'] = this['columnOptions'].find((col) => col['name'] === SEMI_MAJOR);
 
     /**
      * Units selected for semi major
@@ -130,7 +130,7 @@ class Controller {
      * The name of the semi minor Column
      * @type {string}
      */
-    this['semiMinorColumn'] = this['columnOptions'].find(({name}) => name === SEMI_MINOR);
+    this['semiMinorColumn'] = this['columnOptions'].find((col) => col['name'] === SEMI_MINOR);
 
     /**
      * Units selected for semi minor
@@ -142,7 +142,7 @@ class Controller {
      * The name of the orientation Column
      * @type {string}
      */
-    this['orientation'] = this['columnOptions'].find(({name}) => name === ORIENTATION);
+    this['orientation'] = this['columnOptions'].find((col) => col['name'] === ORIENTATION);
 
     /**
      * Popover Text
@@ -178,7 +178,7 @@ class Controller {
       const id = mapping.getId();
       const field = mapping.field;
 
-      const column = this['columnOptions'].find(({name}) => name === field);
+      const column = this['columnOptions'].find((col) => col['name'] === field);
 
       if (id == RadiusMapping.ID) {
         this['inputType'] = EllipseInputType.CIRCLE;
@@ -225,7 +225,7 @@ class Controller {
     // Only combine the mappings if passed a layer, don't if passed anything else (used by geometrystep)
     if (layerId && mappings.length != 0 && descMappings.length != 0) {
       mappings.forEach((mapping) => {
-        const im = result.findIndex(({toField}) => toField === mapping.toField);
+        const im = result.findIndex((res) => res['toField'] === mapping.toField);
         if (im >= 0) {
           result[im] = mapping;
         } else {
