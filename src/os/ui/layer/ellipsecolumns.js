@@ -363,7 +363,7 @@ const updateColumns_ = function(desc, mappings) {
 
   mappings.forEach((mapping) => {
     const label = mapping.getLabel();
-    const exists = descColumns.findIndex(({name}) => name === label) > 0;
+    const exists = descColumns.findIndex((col) => col['name'] === label) > 0;
 
     if (!exists) {
       if (RadiusMapping.REGEX.test(label)) {
