@@ -123,7 +123,7 @@ os.ui.ServersCtrl.prototype.updateData_ = function() {
 
       if (item.includeInServers()) {
         var type = os.dataManager.getProviderTypeByClass(item.constructor);
-        var auth = item.getAuth();
+        var auth = item instanceof os.ui.data.BaseProvider ? item.getAuth() : null;
         data.push({
           'id': id,
           'enabled': item.getEnabled(),
@@ -313,7 +313,7 @@ os.ui.ServersCtrl.prototype.checkForActiveDescriptors_ = function(provider, opt_
  * @export
  */
 os.ui.ServersCtrl.prototype.toggleAll = function() {
-  var list = /** @type {Array.<os.data.IDataProvider>} */ (this.scope_['data']);
+  var list = /** @type {Array<Object>} */ (this.scope_['data']);
 
   if (list) {
     for (var i = 0, n = list.length; i < n; i++) {

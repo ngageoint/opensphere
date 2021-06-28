@@ -23,6 +23,7 @@ const {
 
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 const AbstractMapping = goog.requireType('os.im.mapping.AbstractMapping');
+const IMapping = goog.requireType('os.im.mapping.IMapping');
 const SourceRequest = goog.requireType('os.source.Request');
 
 
@@ -171,8 +172,9 @@ class Controller {
     const layer = this.scope_['layer'];
     const layerId = implementationOf(layer, ILayer.ID) ? layer.getId() : undefined;
     const desc = layerId ? DataManager.getInstance().getDescriptor(layerId) : undefined;
-    const Mappings = implementationOf(desc, IMappingDescriptor.ID) ? (desc.getMappings() || []) : layer['mappings'];
-
+    const Mappings = implementationOf(desc, IMappingDescriptor.ID) ?
+      (/** @type {IMappingDescriptor} */ (desc).getMappings() || []) :
+      /** @type {Array<IMapping>} */ (layer['mappings']);
 
     Mappings.forEach((mapping) => {
       const id = mapping.getId();
@@ -206,7 +208,8 @@ class Controller {
     const layerId = implementationOf(layer, ILayer.ID) ? layer.getId() : undefined;
     const descriptor = layerId ? DataManager.getInstance().getDescriptor(layerId) : undefined;
     const descMappings = implementationOf(descriptor, IMappingDescriptor.ID) ?
-      (descriptor.getMappings() || []) : layer['mappings'];
+      (/** @type {IMappingDescriptor} */ (descriptor).getMappings() || []) :
+      /** @type {Array<IMapping>} */ (layer['mappings']);
     const mappings = this.createMappings();
 
     let result = [];
@@ -346,9 +349,12 @@ const launchConfigureWindow = function(layer, opt_confirmCallback) {
 const callback_ = function(layer, value) {
   // Update the Descriptor for reload
   const desc = DataManager.getInstance().getDescriptor(layer.getId());
-  desc.setMappings(value);
-  desc.updateMappings(layer);
-  updateColumns_(desc, value);
+  if (implementationOf(desc, IMappingDescriptor.ID)) {
+    const mappingDescriptor = /** @type {IMappingDescriptor} */ (desc);
+    mappingDescriptor.setMappings(value);
+    mappingDescriptor.updateMappings(layer);
+    updateColumns_(desc, value);
+  }
 };
 
 

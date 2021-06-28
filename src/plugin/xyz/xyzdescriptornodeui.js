@@ -98,7 +98,7 @@ class Controller extends DescriptorNodeUICtrl {
    * @return {ConfigDescriptor}
    */
   getDescriptor() {
-    return super.getDescriptor();
+    return /** @type {ConfigDescriptor} */ (super.getDescriptor());
   }
 }
 

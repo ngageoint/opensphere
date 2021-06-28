@@ -3,6 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const Listenable = goog.requireType('goog.events.Listenable');
 const IPersistable = goog.requireType('os.IPersistable');
+const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
 
 
 /**
@@ -28,7 +29,7 @@ class IDataDescriptor {
    * provide multiple layers. The alias list should always include the descriptor's ID and
    * the IDs of any layers that it provides should those layer IDs differ from the descriptor's
    * ID
-   * @return {!Array.<!string>}
+   * @return {!Array<!string>}
    */
   getAliases() {}
 
@@ -116,9 +117,15 @@ class IDataDescriptor {
 
   /**
    * Gets the column definitions of the descriptor
-   * @return {?Array.<os.data.ColumnDefinition>} The columns
+   * @return {?Array<ColumnDefinition>} The columns
    */
   getColumns() {}
+
+  /**
+   * Sets the column definitions of the descriptor
+   * @param {?Array<ColumnDefinition>} value The column definitions
+   */
+  setColumns(value) {}
 
   /**
    * Gets the description of the descriptor
@@ -202,13 +209,13 @@ class IDataDescriptor {
 
   /**
    * Gets the tags associated with this descriptor
-   * @return {?Array.<!string>} The tags
+   * @return {?Array<!string>} The tags
    */
   getTags() {}
 
   /**
    * Sets the tags associated with this descriptor
-   * @param {?Array.<!string>} tags
+   * @param {?Array<!string>} tags
    */
   setTags(tags) {}
 

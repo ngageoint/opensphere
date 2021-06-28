@@ -39,9 +39,9 @@ const CombinatorCtrl = goog.require('os.ui.query.CombinatorCtrl');
 const AbstractLoadingServer = goog.require('os.ui.server.AbstractLoadingServer');
 const deprecated = goog.require('os.ui.util.deprecated');
 
-
 const IMapping = goog.requireType('os.im.mapping.IMapping');
 const IFeatureType = goog.requireType('os.ogc.IFeatureType');
+const OGCServer = goog.requireType('os.ui.ogc.OGCServer');
 
 
 /**
@@ -993,8 +993,10 @@ class OGCLayerDescriptor extends LayerSyncDescriptor {
     var urls = [wmsUrl];
 
     if (this.dataProvider) {
-      var url = this.dataProvider.getUrl();
-      var alternateUrls = this.dataProvider.getAlternateUrls();
+      const ogcServer = /** @type {OGCServer} */ (this.dataProvider);
+
+      var url = ogcServer.getUrl();
+      var alternateUrls = ogcServer.getAlternateUrls();
 
       if (url && alternateUrls) {
         for (var i = 0; i < alternateUrls.length; i++) {

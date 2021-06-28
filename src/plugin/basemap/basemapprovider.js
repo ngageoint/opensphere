@@ -177,7 +177,7 @@ class BaseMapProvider extends DescriptorProvider {
             }
           } else if (type == basemap.TYPE) {
             var mapId = this.getId() + BaseDescriptor.ID_DELIMITER + id;
-            var d = dm.getDescriptor(mapId);
+            var d = /** @type {BaseMapDescriptor} */ (dm.getDescriptor(mapId));
 
             if (!d) {
               d = new BaseMapDescriptor();
@@ -249,7 +249,8 @@ class BaseMapProvider extends DescriptorProvider {
           var dm = DataManager.getInstance();
 
           for (i = 0, n = defaults.length; i < n; i++) {
-            var d = dm.getDescriptor(this.getId() + BaseDescriptor.ID_DELIMITER + defaults[i]);
+            var id = this.getId() + BaseDescriptor.ID_DELIMITER + defaults[i];
+            var d = /** @type {BaseMapDescriptor} */ (dm.getDescriptor(id));
 
             if (d) {
               bins.add.push(d.getLayerOptions());

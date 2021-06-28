@@ -2,6 +2,7 @@ goog.provide('os.ui.column.mapping.ColumnMappingFormCtrl');
 goog.provide('os.ui.column.mapping.columnMappingFormDirective');
 
 goog.require('ol.array');
+goog.require('os.filter.IFilterable');
 goog.require('os.ui.Module');
 goog.require('os.ui.column.mapping.ColumnModelNode');
 goog.require('os.ui.column.mapping.columnModelTreeDirective');
@@ -133,8 +134,9 @@ os.ui.column.mapping.ColumnMappingFormCtrl.prototype.init_ = function() {
     var desc = descList[i];
 
     var dp = desc.getDataProvider();
-    if (dp && dp.getEnabled() && os.implements(desc, os.ui.ogc.IFeatureTypeDescriptor.ID)) {
-      descMap[desc.getFilterKey()] = desc;
+    if (dp && dp.getEnabled() && os.implements(desc, os.filter.IFilterable.ID)) {
+      const filterable = /** @type {os.filter.IFilterable} */ (desc);
+      descMap[filterable.getFilterKey()] = desc;
       this.cachedDescriptorList_.push(desc);
     }
   }

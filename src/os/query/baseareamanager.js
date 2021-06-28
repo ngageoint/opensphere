@@ -46,6 +46,12 @@ os.query.BaseAreaManager = function() {
   this.log = os.query.BaseAreaManager.LOGGER_;
 
   /**
+   * @type {os.map.IMapContainer}
+   * @private
+   */
+  this.map_ = null;
+
+  /**
    * @type {boolean}
    * @private
    */

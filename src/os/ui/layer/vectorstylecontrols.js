@@ -167,7 +167,11 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.disposeInternal = function() {
 os.ui.layer.VectorStyleControlsCtrl.prototype.allowEllipseConfig = function() {
   const layer = this.scope['layer'];
   const desc = layer ? os.data.DataManager.getInstance().getDescriptor(layer.getId()) : undefined;
-  return os.implements(desc, os.data.IMappingDescriptor.ID) && desc.supportsMapping();
+  if (os.implements(desc, os.data.IMappingDescriptor.ID)) {
+    return /** @type {os.data.IMappingDescriptor} */ (desc).supportsMapping();
+  }
+
+  return false;
 };
 
 

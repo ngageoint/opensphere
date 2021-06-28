@@ -107,7 +107,7 @@ os.ui.filter.ui.FilterableDescriptorNodeUICtrl.prototype.updateFilters_ = functi
  * @export
  */
 os.ui.filter.ui.FilterableDescriptorNodeUICtrl.prototype.filter = function() {
-  var d = this.node_.getDescriptor();
+  var d = /** @type {os.filter.IFilterable} */ (this.node_.getDescriptor());
   if (d) {
     d.launchFilterManager();
   }

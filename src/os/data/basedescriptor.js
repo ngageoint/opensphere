@@ -314,9 +314,7 @@ class BaseDescriptor extends EventTarget {
   }
 
   /**
-   * Sets the column definitions of the descriptor
-   *
-   * @param {?Array<ColumnDefinition>} value The column definitions
+   * @inheritDoc
    */
   setColumns(value) {
     this.columns_ = value;

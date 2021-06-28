@@ -89,11 +89,12 @@ class Controller extends ProviderImportCtrl {
         }
       }
     } else if (this.dp) {
-      $scope['config']['label'] = this.dp.getLabel();
+      const ogcServer = /** @type {OGCServer} */ (this.dp);
+      $scope['config']['label'] = ogcServer.getLabel();
 
-      $scope['config']['wms'] = this.dp.getWmsUrl();
-      $scope['config']['wmts'] = this.dp.getWmtsUrl();
-      $scope['config']['wfs'] = this.dp.getWfsUrl();
+      $scope['config']['wms'] = ogcServer.getWmsUrl();
+      $scope['config']['wmts'] = ogcServer.getWmtsUrl();
+      $scope['config']['wfs'] = ogcServer.getWfsUrl();
     }
 
     // focus the form
