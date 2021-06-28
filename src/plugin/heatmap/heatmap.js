@@ -12,7 +12,7 @@ const dispatcher = goog.require('os.Dispatcher');
 const MapContainer = goog.require('os.MapContainer');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
-const OSDataManager = goog.require('os.data.OSDataManager');
+const DataManager = goog.require('os.data.DataManager');
 const RecordField = goog.require('os.data.RecordField');
 const LayerConfigEvent = goog.require('os.events.LayerConfigEvent');
 const LayerConfigEventType = goog.require('os.events.LayerConfigEventType');
@@ -95,7 +95,7 @@ const cloneFeature = function(feature) {
  * @return {Array<!Feature>|undefined} The features.
  */
 const getSourceFeatures = function(sourceId) {
-  var source = sourceId ? OSDataManager.getInstance().getSource(sourceId) : undefined;
+  var source = sourceId ? DataManager.getInstance().getSource(sourceId) : undefined;
   return source ? source.getFeatures().map(function(feature, idx, arr) {
     if (feature) {
       var clone = cloneFeature(feature);

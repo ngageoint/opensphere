@@ -9,7 +9,7 @@ goog.require('os.mixin.closure');
 goog.require('os.ol.license');
 
 goog.requireType('os.data.IDataManager');
-goog.requireType('os.data.OSDataManager');
+goog.requireType('os.data.DataManager');
 goog.requireType('os.debug.FancierWindow');
 
 
@@ -111,13 +111,13 @@ os.FILTER_STORAGE_KEY = goog.define('os.FILTER_STORAGE_KEY', 'filters');
 
 /**
  * Global data manager reference. Set this in each application with the app-specific manager reference.
- * @type {os.data.IDataManager}
+ * @type {os.data.DataManager}
  */
 os.dataManager = null;
 
 
 /**
- * @type {os.data.OSDataManager}
+ * @type {os.data.DataManager}
  */
 os.osDataManager = null;
 

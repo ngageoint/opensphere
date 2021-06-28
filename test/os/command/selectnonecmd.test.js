@@ -3,7 +3,7 @@ goog.require('ol.geom.Point');
 goog.require('os.command.SelectNone');
 goog.require('os.command.State');
 goog.require('os.data.DataManager');
-goog.require('os.data.OSDataManager');
+goog.require('os.data.DataManager');
 goog.require('os.source.Vector');
 
 describe('os.command.SelectNone', function() {
@@ -11,7 +11,7 @@ describe('os.command.SelectNone', function() {
   const Point = goog.module.get('ol.geom.Point');
   const SelectNone = goog.module.get('os.command.SelectNone');
   const State = goog.module.get('os.command.State');
-  const OSDataManager = goog.module.get('os.data.OSDataManager');
+  const DataManager = goog.module.get('os.data.DataManager');
   const VectorSource = goog.module.get('os.source.Vector');
 
   it('should fail when the source is not provided', function() {
@@ -24,7 +24,7 @@ describe('os.command.SelectNone', function() {
     var src = new VectorSource();
     src.setId('testy');
 
-    OSDataManager.getInstance().addSource(src);
+    DataManager.getInstance().addSource(src);
     for (var i = 0; i < 3; i++) {
       var f = new Feature();
       f.setId('' + i);
@@ -43,6 +43,6 @@ describe('os.command.SelectNone', function() {
     expect(cmd.revert()).toBe(true);
     expect(cmd.state).toBe(State.READY);
     expect(src.getSelectedItems().length).toBe(3);
-    OSDataManager.getInstance().removeSource(src);
+    DataManager.getInstance().removeSource(src);
   });
 });

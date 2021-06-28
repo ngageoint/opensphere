@@ -3,7 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const MapContainer = goog.require('os.MapContainer');
 const State = goog.require('os.command.State');
-const OSDataManager = goog.require('os.data.OSDataManager');
+const DataManager = goog.require('os.data.DataManager');
 const osFeature = goog.require('os.feature');
 const layer = goog.require('os.layer');
 const style = goog.require('os.style');
@@ -77,7 +77,7 @@ class MergeLayer {
     // iterate thru all the sourceIds and get each of the sources
     var sources = Array(this.sourceIds.length);
     for (var i = 0; i < this.sourceIds.length; i++) {
-      sources[i] = OSDataManager.getInstance().getSource(this.sourceIds[i]);
+      sources[i] = DataManager.getInstance().getSource(this.sourceIds[i]);
     }
     return sources;
   }

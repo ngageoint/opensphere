@@ -2,7 +2,7 @@ goog.module('os.command.VectorLayerShowEllipsoids');
 goog.module.declareLegacyNamespace();
 
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const OSDataManager = goog.require('os.data.OSDataManager');
+const DataManager = goog.require('os.data.DataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const metrics = goog.require('os.metrics');
 const PropertyChange = goog.require('os.source.PropertyChange');
@@ -49,7 +49,7 @@ class VectorLayerShowEllipsoids extends AbstractVectorStyle {
    * @inheritDoc
    */
   finish(config) {
-    var source = OSDataManager.getInstance().getSource(this.layerId);
+    var source = DataManager.getInstance().getSource(this.layerId);
     if (source) {
       var shape = source.getGeometryShape();
       source.dispatchEvent(new PropertyChangeEvent(PropertyChange.GEOMETRY_SHAPE, shape));

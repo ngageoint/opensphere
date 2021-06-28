@@ -11,14 +11,27 @@ const DataProviderEvent = goog.require('os.data.DataProviderEvent');
 const DescriptorEvent = goog.require('os.data.DescriptorEvent');
 const DescriptorEventType = goog.require('os.data.DescriptorEventType');
 const IUrlDescriptor = goog.require('os.data.IUrlDescriptor');
+const PropertyChange = goog.require('os.data.PropertyChange');
+const DataEvent = goog.require('os.data.event.DataEvent');
+const DataEventType = goog.require('os.data.event.DataEventType');
+const LayerEventType = goog.require('os.events.LayerEventType');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const instanceOf = goog.require('os.instanceOf');
+const LayerClass = goog.require('os.layer.LayerClass');
+const {getMapContainer} = goog.require('os.map.instance');
+const SourceClass = goog.require('os.source.SourceClass');
 const AbstractLoadingServer = goog.require('os.ui.server.AbstractLoadingServer');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
+const IDataManager = goog.require('os.data.IDataManager'); // eslint-disable-line
+
 const Logger = goog.requireType('goog.log.Logger');
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
-const IDataManager = goog.requireType('os.data.IDataManager');
 const IDataProvider = goog.requireType('os.data.IDataProvider');
 const ProviderEntry = goog.requireType('os.data.ProviderEntry');
+const LayerEvent = goog.requireType('os.events.LayerEvent');
+const VectorLayer = goog.requireType('os.layer.Vector');
+const VectorSource = goog.requireType('os.source.Vector');
 
 
 /**
@@ -29,8 +42,10 @@ const ProviderEntry = goog.requireType('os.data.ProviderEntry');
 class DataManager extends EventTarget {
   /**
    * Constructor.
+   * @param {boolean=} opt_init If the data manager should be initialized. This is intended to allow extending classes
+   *                            to defer initialization.
    */
-  constructor() {
+  constructor(opt_init = true) {
     super();
 
     /**
@@ -71,7 +86,54 @@ class DataManager extends EventTarget {
      */
     this.persistDelay_ = new Delay(this.persistDescriptors_, 50, this);
 
+    /**
+     * @type {!Object<string, !VectorSource>}
+     * @private
+     */
+    this.sources_ = {};
+
+    /**
+     * If displayed data should be filtered by the timeline.
+     * @type {boolean}
+     * @private
+     */
+    this.timeFilterEnabled_ = true;
+
+    const map = getMapContainer();
+    if (map) {
+      map.listen(LayerEventType.ADD, this.onLayerAdded_, false, this);
+      map.listen(LayerEventType.REMOVE, this.onLayerRemoved_, false, this);
+    }
+
+    if (opt_init) {
+      this.initialize();
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
+
+    const map = getMapContainer();
+    if (map) {
+      map.unlisten(LayerEventType.ADD, this.onLayerAdded_, false, this);
+      map.unlisten(LayerEventType.REMOVE, this.onLayerRemoved_, false, this);
+    }
+  }
+
+  /**
+   * Initialize the data manager.
+   *
+   * @protected
+   */
+  initialize() {
     this.migrateDescriptors_();
+
+    // restore time filter flag from settings
+    const filterTime = /** @type {boolean} */ (Settings.getInstance().get(DataManagerSetting.FILTER_TIME, true));
+    this.setTimeFilterEnabled(filterTime);
   }
 
   /**
@@ -538,7 +600,144 @@ class DataManager extends EventTarget {
    * @inheritDoc
    */
   getDescriptorKey() {
-    return DataManager.DESCRIPTOR_KEY_;
+    return DataManager.DESCRIPTOR_KEY;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getSource(id) {
+    return this.sources_[id] || null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getSources() {
+    var src = [];
+    for (var key in this.sources_) {
+      src.push(this.sources_[key]);
+    }
+
+    return src;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getTotalFeatureCount() {
+    var count = 0;
+    var sources = this.getSources();
+    for (var i = 0, n = sources.length; i < n; i++) {
+      var fc = sources[i].getFeatureCount();
+
+      if (Number.isInteger(fc)) {
+        count += fc;
+      } else {
+        log.error(logger, 'getFeatureCount() for ' + sources[i].getId() +
+            ' was not an integer! ' + fc);
+      }
+    }
+
+    return count;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  addSource(source) {
+    if (!(source.getId() in this.sources_)) {
+      this.sources_[source.getId()] = source;
+      source.setTimeFilterEnabled(this.timeFilterEnabled_);
+      this.dispatchEvent(new DataEvent(DataEventType.SOURCE_ADDED, source));
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  removeSource(source) {
+    if (source.getId() in this.sources_) {
+      delete this.sources_[source.getId()];
+      this.dispatchEvent(new DataEvent(DataEventType.SOURCE_REMOVED, source));
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getTimeFilterEnabled() {
+    return this.timeFilterEnabled_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setTimeFilterEnabled(value) {
+    if (this.timeFilterEnabled_ != value) {
+      this.timeFilterEnabled_ = value;
+
+      for (var key in this.sources_) {
+        this.sources_[key].setTimeFilterEnabled(value);
+      }
+
+      Settings.getInstance().set(DataManagerSetting.FILTER_TIME, value);
+      this.dispatchEvent(new PropertyChangeEvent(PropertyChange.TIME_FILTER_ENABLED, value));
+    }
+  }
+
+  /**
+   * @param {LayerEvent} event
+   * @private
+   */
+  onLayerAdded_(event) {
+    if (instanceOf(event.layer, LayerClass.VECTOR)) {
+      var layer = /** @type {VectorLayer} */ (event.layer);
+      if (instanceOf(layer.getSource(), SourceClass.VECTOR)) {
+        var source = /** @type {VectorSource} */ (layer.getSource());
+        this.addSource(source);
+      }
+    }
+  }
+
+  /**
+   * @param {LayerEvent} event
+   * @private
+   */
+  onLayerRemoved_(event) {
+    if (instanceOf(event.layer, LayerClass.VECTOR)) {
+      var layer = /** @type {VectorLayer} */ (event.layer);
+      if (instanceOf(layer.getSource(), SourceClass.VECTOR)) {
+        var source = /** @type {VectorSource} */ (layer.getSource());
+        this.removeSource(source);
+      }
+    }
+  }
+
+  /**
+   * Set the application time from a descriptor.
+   *
+   * @param {string} id The descriptor id
+   * @return {boolean} If the time was changed
+   */
+  setTimeFromDescriptor(id) {
+    var descriptor = this.getDescriptor(id);
+    if (descriptor) {
+      var maxDate = descriptor.getMaxDate();
+      if (maxDate > 0 && maxDate < os.time.TimeInstant.MAX_TIME) {
+        // try to clamp this to reasonable values, avoiding unbounded end dates
+        os.time.TimelineController.getInstance().setRangeStart(maxDate);
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /**
@@ -555,7 +754,7 @@ class DataManager extends EventTarget {
 
   /**
    * Set the global instance.
-   * @param {DataManager} value
+   * @param {DataManager} value The instance.
    */
   static setInstance(value) {
     instance = value;
@@ -571,18 +770,31 @@ let instance;
 /**
  * The logger.
  * @type {Logger}
- * @const
- * @private
  */
 const logger = log.getLogger('os.data.DataManager');
 
 
 /**
  * @type {string}
- * @const
- * @private
  */
-DataManager.DESCRIPTOR_KEY_ = os.NAMESPACE + '.descriptors';
+DataManager.DESCRIPTOR_KEY = os.NAMESPACE + '.descriptors';
+
+
+/**
+ * Base key for settings.
+ * @type {string}
+ * @const
+ */
+DataManager.BASE_KEY = 'dataManager';
+
+
+/**
+ * OpenSphere data manager settings.
+ * @enum {string}
+ */
+const DataManagerSetting = {
+  FILTER_TIME: DataManager.BASE_KEY + '.filterTime'
+};
 
 
 exports = DataManager;

@@ -2,7 +2,7 @@ goog.module('os.command.AbstractVectorLayerLOB');
 goog.module.declareLegacyNamespace();
 
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const OSDataManager = goog.require('os.data.OSDataManager');
+const DataManager = goog.require('os.data.DataManager');
 const RecordField = goog.require('os.data.RecordField');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const PropertyChange = goog.require('os.source.PropertyChange');
@@ -30,7 +30,7 @@ class AbstractVectorLayerLOB extends AbstractVectorStyle {
    * @suppress {accessControls}
    */
   applyValue(config, value) {
-    var source = OSDataManager.getInstance().getSource(this.layerId);
+    var source = DataManager.getInstance().getSource(this.layerId);
     if (source) {
       var features = source.getFeatures();
       for (var i = 0, n = features.length; i < n; i++) { // wipe LOB styles
@@ -47,7 +47,7 @@ class AbstractVectorLayerLOB extends AbstractVectorStyle {
    * @inheritDoc
    */
   finish(config) {
-    var source = OSDataManager.getInstance().getSource(this.layerId);
+    var source = DataManager.getInstance().getSource(this.layerId);
     if (source) {
       var shape = source.getGeometryShape();
       source.dispatchEvent(new PropertyChangeEvent(PropertyChange.GEOMETRY_SHAPE, shape));

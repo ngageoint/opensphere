@@ -7,7 +7,6 @@ const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
 const dispatcher = goog.require('os.Dispatcher');
 const DataManager = goog.require('os.data.DataManager');
-const OSDataManager = goog.require('os.data.OSDataManager');
 const DataEventType = goog.require('os.data.event.DataEventType');
 const fn = goog.require('os.fn');
 const hist = goog.require('os.hist');
@@ -40,7 +39,7 @@ class TimelineHistManager extends EventTarget {
      */
     this.changeThrottle_ = new Throttle(this.onChangeThrottle_, 100, this);
 
-    var sources = OSDataManager.getInstance().getSources();
+    var sources = DataManager.getInstance().getSources();
     for (var i = 0, n = sources.length; i < n; i++) {
       var source = /** @type {events.EventTarget} */ (sources[i]);
       events.listen(source, GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
@@ -66,7 +65,7 @@ class TimelineHistManager extends EventTarget {
     DataManager.getInstance().unlisten(DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
     DataManager.getInstance().unlisten(DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
 
-    var sources = OSDataManager.getInstance().getSources();
+    var sources = DataManager.getInstance().getSources();
     for (var i = 0, n = sources.length; i < n; i++) {
       var source = /** @type {events.EventTarget} */ (sources[i]);
       events.unlisten(source, GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange_, this);
@@ -158,7 +157,7 @@ class TimelineHistManager extends EventTarget {
           .filter(fn.filterFalsey);
 
       if (!histograms.length) {
-        var sources = OSDataManager.getInstance().getSources();
+        var sources = DataManager.getInstance().getSources();
         histograms = sources.map((source) => hist.mapSourceToHistogram(source, options))
             .filter(fn.filterFalsey);
       }

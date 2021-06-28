@@ -45,6 +45,7 @@ goog.require('os.source');
 goog.require('os.source.IModifiableSource');
 goog.require('os.source.ISource');
 goog.require('os.source.PropertyChange');
+goog.require('os.source.SourceClass');
 goog.require('os.source.column');
 goog.require('os.string');
 goog.require('os.style.StyleManager');
@@ -445,8 +446,8 @@ os.implements(os.source.Vector, os.source.IModifiableSource.ID);
  * @type {string}
  * @const
  */
-os.source.Vector.NAME = 'os.source.Vector';
-os.registerClass(os.source.Vector.NAME, os.source.Vector);
+os.source.Vector.NAME = os.source.SourceClass.VECTOR;
+os.registerClass(os.source.SourceClass.VECTOR, os.source.Vector);
 
 
 /**

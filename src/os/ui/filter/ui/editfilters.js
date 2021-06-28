@@ -354,7 +354,7 @@ os.ui.filter.ui.EditFiltersCtrl.prototype.finish = function() {
   var filter = this['root'].writeFilter(this['title'], this['description']);
   this.entry.setFilter(filter);
 
-  var dm = os.data.OSDataManager.getInstance();
+  var dm = os.data.DataManager.getInstance();
   if (dm) {
     if (dm.getDescriptor(this.entry.getType()) == null) {
       this.entry.setTemporary(true);

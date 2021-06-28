@@ -6,7 +6,7 @@ goog.require('os.data');
 goog.require('os.data.BaseDescriptor');
 goog.require('os.data.LayerSyncDescriptor');
 goog.require('os.data.MockProvider');
-goog.require('os.data.OSDataManager');
+goog.require('os.data.DataManager');
 goog.require('os.data.ProviderEntry');
 goog.require('os.layer.Tile');
 goog.require('os.map.instance');
@@ -14,7 +14,7 @@ goog.require('os.mock');
 goog.require('test.os.config.SettingsUtil');
 
 
-describe('os.data.OSDataManager', function() {
+describe('os.data.DataManager', function() {
   const {getMapContainer} = goog.module.get('os.map.instance');
 
   it('should register provider types', function() {

@@ -32,7 +32,7 @@ goog.require('os.config.ServerSettings');
 goog.require('os.config.ThemeSettings');
 goog.require('os.config.UnitSettings');
 goog.require('os.control');
-goog.require('os.data.OSDataManager');
+goog.require('os.data.DataManager');
 goog.require('os.data.histo.legend');
 goog.require('os.events');
 goog.require('os.events.EventFactory');
@@ -258,7 +258,7 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
       os.layer.config.StaticLayerConfig);
 
   // configure data manager
-  os.dataManager = os.osDataManager = os.data.OSDataManager.getInstance();
+  os.dataManager = os.osDataManager = os.data.DataManager.getInstance();
 
   // configure exports
   os.ui.exportManager.registerPersistenceMethod(new os.file.persist.FilePersistence());

@@ -6,7 +6,7 @@ goog.require('os.MapContainer');
 goog.require('os.config');
 goog.require('os.config.Settings');
 goog.require('os.config.storage.SettingsObjectStorage');
-goog.require('os.data.OSDataManager');
+goog.require('os.data.DataManager');
 goog.require('os.im.mapping.AltMapping');
 goog.require('os.im.mapping.BearingMapping');
 goog.require('os.im.mapping.LatMapping');
@@ -92,7 +92,7 @@ beforeEach(function() {
     }
 
     if (!os.dataManager || !os.osDataManager) {
-      os.dataManager = os.osDataManager = os.data.OSDataManager.getInstance();
+      os.dataManager = os.osDataManager = os.data.DataManager.getInstance();
       os.dataManager.registerDescriptorType(os.ogc.ID, os.ui.ogc.OGCDescriptor);
     }
 

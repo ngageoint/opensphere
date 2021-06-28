@@ -8,7 +8,7 @@ const AlertManager = goog.require('os.alert.AlertManager');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const ParallelCommand = goog.require('os.command.ParallelCommand');
 const LayerNode = goog.require('os.data.LayerNode');
-const OSDataManager = goog.require('os.data.OSDataManager');
+const DataManager = goog.require('os.data.DataManager');
 const fn = goog.require('os.fn');
 const LayerType = goog.require('os.layer.LayerType');
 const VectorLayer = goog.require('os.layer.Vector');
@@ -243,7 +243,7 @@ const nodeToId = function(node) {
 const nodeToSource = function(node) {
   var layer = fn.mapNodeToLayer(node);
   if (layer) {
-    return OSDataManager.getInstance().getSource(layer.getId()) || undefined;
+    return DataManager.getInstance().getSource(layer.getId()) || undefined;
   }
 
   return undefined;

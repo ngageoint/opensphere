@@ -133,7 +133,7 @@ os.ui.ex.ExportOptionsCtrl.prototype.disposeInternal = function() {
   dm.unlisten(os.data.event.DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
   dm.unlisten(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
 
-  var sources = os.data.OSDataManager.getInstance().getSources();
+  var sources = os.data.DataManager.getInstance().getSources();
   for (var i = 0, n = sources.length; i < n; i++) {
     ol.events.unlisten(sources[i], goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
   }
@@ -176,7 +176,7 @@ os.ui.ex.ExportOptionsCtrl.prototype.includeSource = function(source) {
  */
 os.ui.ex.ExportOptionsCtrl.prototype.initSources_ = function() {
   var enabledSources = this.scope['initSources']() || [];
-  var sources = os.data.OSDataManager.getInstance().getSources();
+  var sources = os.data.DataManager.getInstance().getSources();
   for (var i = 0, n = sources.length; i < n; i++) {
     var source = sources[i];
     if (this.includeSource(source)) {

@@ -6,6 +6,7 @@ const Settings = goog.requireType('os.config.Settings');
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 const IDataProvider = goog.requireType('os.data.IDataProvider');
 const ProviderEntry = goog.requireType('os.data.ProviderEntry');
+const VectorSource = goog.requireType('os.source.Vector');
 
 
 /**
@@ -151,6 +152,51 @@ class IDataManager {
    * @return {!string}
    */
   getDescriptorKey() {}
+
+  /**
+   * Gets a source by id.
+   * @param {string} id
+   * @return {VectorSource}
+   */
+  getSource(id) {}
+
+  /**
+   * Gets the sources.
+   * @return {!Array<!VectorSource>}
+   */
+  getSources() {}
+
+  /**
+   * Gets the total count of all the features currently loaded.
+   * @return {number}
+   */
+  getTotalFeatureCount() {}
+
+  /**
+   * Adds a source to the data manager if it doesn't already exist.
+   * @param {VectorSource} source The source to add
+   * @return {boolean} If the source was added
+   */
+  addSource(source) {}
+
+  /**
+   * Removes a source from the data manager if it exists.
+   * @param {VectorSource} source The source to remove
+   * @return {boolean} If the source was added
+   */
+  removeSource(source) {}
+
+  /**
+   * If time filters should be enabled on sources.
+   * @return {boolean}
+   */
+  getTimeFilterEnabled() {}
+
+  /**
+   * Updates time filter usage on sources.
+   * @param {boolean} value
+   */
+  setTimeFilterEnabled(value) {}
 }
 
 exports = IDataManager;

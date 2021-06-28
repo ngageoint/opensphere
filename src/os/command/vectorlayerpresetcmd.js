@@ -3,7 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
 const State = goog.require('os.command.State');
-const OSDataManager = goog.require('os.data.OSDataManager');
+const DataManager = goog.require('os.data.DataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const action = goog.require('os.im.action');
 const metrics = goog.require('os.metrics');
@@ -115,7 +115,7 @@ class VectorLayerPreset extends AbstractVectorStyle {
    */
   finish(config) {
     // dispatch the color change event on the source for the histogram
-    var source = OSDataManager.getInstance().getSource(this.layerId);
+    var source = DataManager.getInstance().getSource(this.layerId);
     source.dispatchEvent(new PropertyChangeEvent(PropertyChange.COLOR, this.value));
     super.finish(config);
   }
