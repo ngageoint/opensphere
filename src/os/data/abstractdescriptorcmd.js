@@ -11,8 +11,9 @@ const DescriptorEventType = goog.require('os.data.DescriptorEventType');
 const Metrics = goog.require('os.metrics.Metrics');
 const keys = goog.require('os.metrics.keys');
 
+const ICommand = goog.require('os.command.ICommand'); // eslint-disable-line
+
 const Logger = goog.requireType('goog.log.Logger');
-const ICommand = goog.requireType('os.command.ICommand');
 const IDataDescriptor = goog.requireType('os.data.IDataDescriptor');
 
 
