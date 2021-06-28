@@ -142,8 +142,6 @@ class LayerSyncDescriptor extends BaseDescriptor {
    * @abstract
    * @return {(Array<!Object<string, *>>|Object<string, *>)} An options object that can be used to create a layer, or an
    *                                                         array of options objects.
-   *
-   * @protected
    */
   getLayerOptions() {}
 
