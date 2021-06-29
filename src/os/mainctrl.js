@@ -253,6 +253,18 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   mm.setApplicationNode('OpenSphere', 'This window displays many of the features available in OpenSphere, and if ' +
       'you have used them.');
 
+  // create map instance and listen for it to be initialized
+  var map = os.MapContainer.getInstance();
+  map.setInteractionFunction(os.map.interaction.getInteractions);
+  map.setControlFunction(os.control.getControls);
+
+  map.listenOnce(os.MapEvent.MAP_READY, this.onMapReady_, false, this);
+
+  // set the global map container reference
+  os.map.instance.setIMapContainer(map);
+  os.map.instance.setMapContainer(map);
+  os.map.mapContainer = map;
+
   // configure default layer configs
   os.layer.config.LayerConfigManager.getInstance().registerLayerConfig(os.layer.config.StaticLayerConfig.ID,
       os.layer.config.StaticLayerConfig);
@@ -316,18 +328,6 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
 
   // register base legend plugins
   os.data.histo.legend.registerLegendPlugin();
-
-  // create map instance and listen for it to be initialized
-  var map = os.MapContainer.getInstance();
-  map.setInteractionFunction(os.map.interaction.getInteractions);
-  map.setControlFunction(os.control.getControls);
-
-  map.listenOnce(os.MapEvent.MAP_READY, this.onMapReady_, false, this);
-
-  // set the global map container reference
-  os.map.instance.setIMapContainer(map);
-  os.map.instance.setMapContainer(map);
-  os.map.mapContainer = map;
 
   // init filter manager
   var filterManager = os.query.FilterManager.getInstance();
