@@ -26,6 +26,7 @@ goog.require('os.ui.server.AbstractLoadingServer');
 goog.require('os.ui.slick.SlickTreeNode');
 goog.require('os.ui.util.deprecated');
 
+goog.requireType('os.data.IDataDescriptor');
 goog.requireType('os.ui.ogc.wms.IWMSLayerParser');
 
 
@@ -1779,7 +1780,7 @@ os.ui.ogc.OGCServer.prototype.markAllDescriptors = function(opt_node) {
 /**
  * Finds and removes the descriptor.
  *
- * @param {os.ui.ogc.IOGCDescriptor} descriptor
+ * @param {os.data.IDataDescriptor} descriptor
  */
 os.ui.ogc.OGCServer.prototype.removeDescriptor = function(descriptor) {
   var children = this.getChildren();
@@ -1804,7 +1805,7 @@ os.ui.ogc.OGCServer.prototype.removeDescriptor = function(descriptor) {
 
 
 /**
- * @param {os.ui.ogc.IOGCDescriptor} descriptor
+ * @param {os.data.IDataDescriptor} descriptor
  * @param {?Array<!os.structs.ITreeNode>} children
  * @return {?os.structs.ITreeNode}
  * @private
