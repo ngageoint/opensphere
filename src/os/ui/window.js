@@ -16,9 +16,12 @@ goog.require('goog.log');
 goog.require('ol.array');
 goog.require('os.array');
 goog.require('os.ui');
+goog.require('os.ui.DockedWindowUI');
 goog.require('os.ui.Module');
+goog.require('os.ui.SavedWindowUI');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.onboarding.contextOnboardingDirective');
+
 
 
 /**
