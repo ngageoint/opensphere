@@ -186,7 +186,7 @@ os.ui.menu.map.showLegend = function() {
  * @private
  */
 os.ui.menu.map.clearSelection_ = function() {
-  var sources = os.osDataManager.getSources();
+  var sources = os.dataManager.getSources();
   for (var i = 0, ii = sources.length; i < ii; i++) {
     var s = sources[i];
     if (s instanceof os.source.Vector) {

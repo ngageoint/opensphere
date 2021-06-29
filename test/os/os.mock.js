@@ -95,8 +95,8 @@ beforeEach(function() {
     var map = os.MapContainer.getInstance();
     os.map.instance.setMapContainer(map);
 
-    if (!os.dataManager || !os.osDataManager) {
-      os.dataManager = os.osDataManager = os.data.DataManager.getInstance();
+    if (!os.dataManager || !os.dataManager) {
+      os.dataManager = os.dataManager = os.data.DataManager.getInstance();
       os.dataManager.registerDescriptorType(os.ogc.ID, os.ui.ogc.OGCDescriptor);
     }
 

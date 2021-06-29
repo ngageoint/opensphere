@@ -270,7 +270,7 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
       os.layer.config.StaticLayerConfig);
 
   // configure data manager
-  os.dataManager = os.osDataManager = os.data.DataManager.getInstance();
+  os.dataManager = os.data.DataManager.getInstance();
 
   // configure exports
   os.ui.exportManager.registerPersistenceMethod(new os.file.persist.FilePersistence());

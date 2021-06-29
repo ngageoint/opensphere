@@ -932,7 +932,7 @@ os.feature.getSource = function(feature, opt_layer) {
     var sourceId = os.feature.getLayerId(feature);
     if (sourceId) {
       // have the source id - check if it's in the data manager
-      source = os.osDataManager.getSource(sourceId);
+      source = os.dataManager.getSource(sourceId);
     }
   }
 
@@ -1173,7 +1173,7 @@ os.feature.update = function(feature, opt_source) {
  * @param {Array<ol.Feature>} features
  */
 os.feature.removeFeatures = function(sourceId, features) {
-  var source = os.osDataManager.getSource(sourceId);
+  var source = os.dataManager.getSource(sourceId);
   if (source && features) {
     source.removeFeatures(features);
   }

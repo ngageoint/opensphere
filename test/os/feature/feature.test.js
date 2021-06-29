@@ -434,7 +434,7 @@ describe('os.feature', function() {
       }
 
       src.addFeatures(initFeatures);
-      os.osDataManager.addSource(src);
+      os.dataManager.addSource(src);
     });
 
     it('should not fail when source id does not exist', function() {
@@ -469,7 +469,7 @@ describe('os.feature', function() {
     });
 
     it('should remove the source from DataManager', function() {
-      os.osDataManager.removeSource(src);
+      os.dataManager.removeSource(src);
     });
 
     it('should get a title from a feature', function() {

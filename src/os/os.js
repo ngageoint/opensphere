@@ -117,12 +117,6 @@ os.dataManager = null;
 
 
 /**
- * @type {os.data.DataManager}
- */
-os.osDataManager = null;
-
-
-/**
  * TODO after running the ES6 conversion on a lot of the files, bring this deprecated to life; it'd add
  * over a thousand warnings right now.
  *
