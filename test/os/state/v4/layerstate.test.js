@@ -42,8 +42,8 @@ describe('os.state.v4.LayerState', function() {
   };
 
   beforeEach(function() {
-    os.stateManager = os.state.StateManager.getInstance();
-    stateManager = os.state.StateManager.getInstance();
+    stateManager = os.stateManager = os.state.StateManager.getInstance();
+    os.state.instance.setStateManager(stateManager);
     stateManager.setVersion(os.state.Versions.V4);
   });
 

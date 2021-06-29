@@ -3,7 +3,9 @@ goog.require('os');
 goog.require('os.layer.Vector');
 goog.require('os.ogc.wfs.FeatureType');
 goog.require('os.state.StateManager');
+goog.require('os.state.Versions');
 goog.require('os.state.XMLStateOptions');
+goog.require('os.state.instance');
 goog.require('os.state.v4.LayerState');
 goog.require('os.test.xsd');
 goog.require('os.xml');
@@ -17,6 +19,8 @@ describe('OGC.v4.ArcLayerState', function() {
   const os = goog.module.get('os');
   const FeatureType = goog.module.get('os.ogc.wfs.FeatureType');
   const StateManager = goog.module.get('os.state.StateManager');
+  const StateVersions = goog.module.get('os.state.Versions');
+  const {setStateManager} = goog.module.get('os.state.instance');
   const LayerState = goog.module.get('os.state.v4.LayerState');
   const xml = goog.module.get('os.xml');
   const OGCLayerDescriptor = goog.module.get('plugin.ogc.OGCLayerDescriptor');
@@ -51,9 +55,9 @@ describe('OGC.v4.ArcLayerState', function() {
   };
 
   beforeEach(function() {
-    os.stateManager = StateManager.getInstance();
     stateManager = StateManager.getInstance();
-    stateManager.setVersion('v4');
+    setStateManager(stateManager);
+    stateManager.setVersion(StateVersions.V4);
   });
 
   it('should exist', function() {

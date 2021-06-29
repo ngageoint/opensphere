@@ -1,5 +1,8 @@
+goog.require('goog.object');
 goog.require('os.MapContainer');
 goog.require('os.data.ZOrder');
+goog.require('os.data.ZOrderEventType');
+goog.require('os.layer');
 goog.require('os.layer.config.LayerConfigManager');
 goog.require('os.layer.config.MockTileLayerConfig');
 goog.require('os.layer.config.MockVectorLayerConfig');
@@ -8,19 +11,27 @@ goog.require('os.mock');
 
 
 describe('os.data.ZOrder', function() {
+  const googObject = goog.module.get('goog.object');
+  const ZOrder = goog.module.get('os.data.ZOrder');
+  const ZOrderEventType = goog.module.get('os.data.ZOrderEventType');
+  const LayerConfigManager = goog.module.get('os.layer.config.LayerConfigManager');
+  const MockTileLayerConfig = goog.module.get('os.layer.config.MockTileLayerConfig');
+  const MockVectorLayerConfig = goog.module.get('os.layer.config.MockVectorLayerConfig');
   const {getMapContainer} = goog.module.get('os.map.instance');
 
   var z = null;
-  var map = getMapContainer();
+  var map;
+
+  beforeEach(() => {
+    map = getMapContainer();
+  });
 
   it('setup', function() {
-    os.layerConfigManager = os.layer.config.LayerConfigManager.getInstance();
-    os.layerConfigManager.registerLayerConfig(os.layer.config.MockTileLayerConfig.TYPE,
-        os.layer.config.MockTileLayerConfig);
-    os.layerConfigManager.registerLayerConfig(os.layer.config.MockVectorLayerConfig.TYPE,
-        os.layer.config.MockVectorLayerConfig);
+    os.layerConfigManager = LayerConfigManager.getInstance();
+    LayerConfigManager.getInstance().registerLayerConfig(MockTileLayerConfig.TYPE, MockTileLayerConfig);
+    LayerConfigManager.getInstance().registerLayerConfig(MockVectorLayerConfig.TYPE, MockVectorLayerConfig);
 
-    z = os.data.ZOrder.getInstance();
+    z = ZOrder.getInstance();
     z.clear();
 
     // clear the map
@@ -36,7 +47,7 @@ describe('os.data.ZOrder', function() {
   it('should init to an empty object', function() {
     z.init_();
 
-    expect(goog.object.getCount(z.groups_)).toBe(0);
+    expect(googObject.getCount(z.groups_)).toBe(0);
   });
 
   it('should merge in map layers from an empty map', function() {
@@ -51,12 +62,12 @@ describe('os.data.ZOrder', function() {
   });
 
   it('should merge in map layers from a non-empty map', function() {
-    var tlc = os.layerConfigManager.getLayerConfig(os.layer.config.MockTileLayerConfig.TYPE);
+    var tlc = LayerConfigManager.getInstance().getLayerConfig(MockTileLayerConfig.TYPE);
     map.addLayer(tlc.createLayer({id: 'tileLayer1'}));
     map.addLayer(tlc.createLayer({id: 'tileLayer2'}));
     map.addLayer(tlc.createLayer({id: 'tileLayer3'}));
 
-    var vlc = os.layerConfigManager.getLayerConfig(os.layer.config.MockVectorLayerConfig.TYPE);
+    var vlc = LayerConfigManager.getInstance().getLayerConfig(MockVectorLayerConfig.TYPE);
     map.addLayer(vlc.createLayer({id: 'vectorLayer1'}));
     map.addLayer(vlc.createLayer({id: 'vectorLayer2'}));
 
@@ -132,7 +143,7 @@ describe('os.data.ZOrder', function() {
     groups.forEach(function(group) {
       var type = group.getOSType();
       if (type === 'Tile Layers' || type === 'Feature Layers') {
-        expect(group.dispatchEvent).toHaveBeenCalledWith(os.data.ZOrderEventType.UPDATE);
+        expect(group.dispatchEvent).toHaveBeenCalledWith(ZOrderEventType.UPDATE);
       } else {
         expect(group.dispatchEvent).not.toHaveBeenCalled();
       }

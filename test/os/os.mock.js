@@ -91,6 +91,10 @@ beforeEach(function() {
       settings.set('maxFeatures.3d', 150000);
     }
 
+    // This needs to be initialized before the data manager.
+    var map = os.MapContainer.getInstance();
+    os.map.instance.setMapContainer(map);
+
     if (!os.dataManager || !os.osDataManager) {
       os.dataManager = os.osDataManager = os.data.DataManager.getInstance();
       os.dataManager.registerDescriptorType(os.ogc.ID, os.ui.ogc.OGCDescriptor);
@@ -117,9 +121,6 @@ beforeEach(function() {
     if (!os.styleManager) {
       os.styleManager = os.style.StyleManager.getInstance();
     }
-
-    var map = os.MapContainer.getInstance();
-    os.map.instance.setMapContainer(map);
 
     if (!map.getMap()) {
       map.init();

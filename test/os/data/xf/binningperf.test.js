@@ -1,8 +1,11 @@
+goog.require('goog.string');
 goog.require('ol.Feature');
 goog.require('ol.geom.Point');
 goog.require('os.data.histo.ColorBin');
 goog.require('os.data.xf.DataModel');
+goog.require('os.feature');
 goog.require('os.histo.DateBinMethod');
+goog.require('os.histo.DateBinType');
 goog.require('os.histo.NumericBinMethod');
 goog.require('os.histo.UniqueBinMethod');
 goog.require('os.time.TimeRange');
@@ -54,7 +57,7 @@ var setupBinMethod = function(field, type, opt_sec) {
     case 'Date':
       method = new os.histo.DateBinMethod();
       var subType = opt_sec ? os.histo.DateBinType.HOUR : os.histo.DateBinType.MINUTE;
-      method.setDateBinType(/** @type {os.histo.DateBinType} */ (subType));
+      method.setDateBinType(/** @type {DateBinType} */ (subType));
       method.setField(field);
       break;
     case 'Numeric':
@@ -74,8 +77,8 @@ var setupBinMethod = function(field, type, opt_sec) {
 
 /**
  * This runs when an item is added to a group
- * @param {!os.data.histo.ColorBin} bin
- * @param {!ol.Feature} item
+ * @param {!ColorBin} bin
+ * @param {!olFeature} item
  * @return {!os.data.histo.ColorBin}
  * @protected
  *
@@ -90,8 +93,8 @@ var reduceAdd = function(bin, item) {
 
 /**
  * This runs when an item is removed from a group
- * @param {!os.data.histo.ColorBin} bin
- * @param {!ol.Feature} item
+ * @param {!ColorBin} bin
+ * @param {!olFeature} item
  * @return {!os.data.histo.ColorBin}
  * @protected
  *
@@ -106,7 +109,7 @@ var reduceRemove = function(bin, item) {
 
 /**
  * Creates a new bin for a group
- * @return {!os.data.histo.ColorBin}
+ * @return {!ColorBin}
  * @protected
  */
 var reduceInit = function() {
@@ -116,12 +119,12 @@ var reduceInit = function() {
 
 /**
  * Creates a new bin for a group
- * @param {!os.histo.Result<!ol.Feature>} item
- * @return {!os.data.histo.ColorBin}
+ * @param {!os.histo.Result<!olFeature>} item
+ * @return {!ColorBin}
  * @protected
  */
 var binMap = function(item) {
-  var bin = /** @type {!os.data.histo.ColorBin} */ (item.value);
+  var bin = /** @type {!ColorBin} */ (item.value);
   var items = bin.getItems();
 
   if (!items || !items.length) {
@@ -166,7 +169,7 @@ var runMultiDimKeyConcat = function(features, field1, type1, field2, type2) {
   var s = window.performance.now();
   model.addDimension(id, combinedAccessor.bind(this));
   var results = model.groupData(id, combinedKeyMethod, reduceAdd, reduceRemove, reduceInit);
-  results = /** @type {!Array<!os.data.histo.ColorBin>} */ (results.map(binMap).filter(function(item) {
+  results = /** @type {!Array<!ColorBin>} */ (results.map(binMap).filter(function(item) {
     return item != undefined;
   }));
   var e = window.performance.now();
@@ -212,7 +215,7 @@ var runMultiDimFilter = function(features, field1, type1, field2, type2) {
           reduceAdd, reduceRemove, reduceInit));
     }
   }
-  results = /** @type {!Array<!os.data.histo.ColorBin>} */ (final.map(binMap).filter(function(item) {
+  results = /** @type {!Array<!ColorBin>} */ (final.map(binMap).filter(function(item) {
     return item != undefined;
   }));
   var e = window.performance.now();
@@ -223,6 +226,9 @@ var runMultiDimFilter = function(features, field1, type1, field2, type2) {
 
 
 xdescribe('os.data.xf.binningperf', function() {
+  const Feature = goog.module.get('ol.Feature');
+  const TimeRange = goog.module.get('os.time.TimeRange');
+
   it('should test the performance for multidimensional binning', function() {
     var stringBank = initRandomStrings(50);
     var featureNum = 150000;
@@ -243,10 +249,10 @@ xdescribe('os.data.xf.binningperf', function() {
 
     // init features
     for (var i = 0; i < featureNum; i++) {
-      features[i] = new ol.Feature();
+      features[i] = new Feature();
       var start = getRandomInRange(yest, now);
       var end = getRandomInRange(start, now);
-      var time = new os.time.TimeRange(start, end);
+      var time = new TimeRange(start, end);
       features[i].set(latField, -90 + Math.random() * 180);
       features[i].set(lonField, -180 + Math.random() * 360);
       features[i].set(altField, maxAlt * Math.random());

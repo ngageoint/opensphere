@@ -4,14 +4,18 @@ goog.require('os.ui.data.DescriptorNode');
 
 
 describe('os.data.groupby.TypeGroupBy', function() {
+  const BaseDescriptor = goog.module.get('os.data.BaseDescriptor');
+  const TypeGroupBy = goog.module.get('os.data.groupby.TypeGroupBy');
+  const DescriptorNode = goog.module.get('os.ui.data.DescriptorNode');
+
   it('should retrieve ids by type', function() {
-    var d = new os.data.BaseDescriptor();
+    var d = new BaseDescriptor();
     d.setType('Test Type');
 
-    var node = new os.ui.data.DescriptorNode();
+    var node = new DescriptorNode();
     node.setDescriptor(d);
 
-    var by = new os.data.groupby.TypeGroupBy();
+    var by = new TypeGroupBy();
     var ids = by.getGroupIds(node);
 
     expect(ids).not.toBe(null);
@@ -20,19 +24,19 @@ describe('os.data.groupby.TypeGroupBy', function() {
   });
 
   it('should handle nodes without a type', function() {
-    var d = new os.data.BaseDescriptor();
+    var d = new BaseDescriptor();
 
-    var node = new os.ui.data.DescriptorNode();
+    var node = new DescriptorNode();
     node.setDescriptor(d);
 
-    var by = new os.data.groupby.TypeGroupBy();
+    var by = new TypeGroupBy();
     var ids = by.getGroupIds(node);
 
     expect(ids).toContain('No Type');
   });
 
   it('should handle things that are not nodes', function() {
-    var by = new os.data.groupby.TypeGroupBy();
+    var by = new TypeGroupBy();
     var node = {};
     var ids = by.getGroupIds(node);
 
@@ -58,7 +62,7 @@ describe('os.data.groupby.TypeGroupBy', function() {
   });
 
   it('should create groups properly', function() {
-    var by = new os.data.groupby.TypeGroupBy();
+    var by = new TypeGroupBy();
     var group = by.createGroup(null, 'Test Type');
 
     expect(group.getId()).toBe('Test Type');
