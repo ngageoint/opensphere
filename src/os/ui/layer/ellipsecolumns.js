@@ -8,6 +8,7 @@ const DataManager = goog.require('os.data.DataManager');
 const IMappingDescriptor = goog.require('os.data.IMappingDescriptor');
 const Units = goog.require('os.math.Units');
 const Module = goog.require('os.ui.Module');
+const {close: closeWindow} = goog.require('os.ui.window');
 const OrientationMapping = goog.require('os.im.mapping.OrientationMapping');
 const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
 const SemiMajorMapping = goog.require('os.im.mapping.SemiMajorMapping');
@@ -202,6 +203,7 @@ class Controller {
 
   /**
    * Update the Mappings
+   * @return {Array<AbstractMapping>}
    */
   updateMappings() {
     const layer = this.scope_['layer'];
@@ -214,15 +216,8 @@ class Controller {
 
     let result = [];
 
-    // Pull out the other ellipse mappings from the descriptor mappings, but only if the user has generated valid mappings
     if (descMappings.length > 0 && mappings.length > 0) {
-      descMappings.forEach((mapping) => {
-        const id = mapping.getId();
-        if (id != RadiusMapping.ID && id != SemiMajorMapping.ID &&
-            id != SemiMinorMapping.ID && id != OrientationMapping.ID) {
-          result.push(mapping);
-        }
-      });
+      result = result.concat(this.removeEllipseMappings_(descMappings));
     }
 
     // Only combine the mappings if passed a layer, don't if passed anything else (used by geometrystep)
@@ -240,6 +235,7 @@ class Controller {
     }
 
     this.scope_.$parent['confirmValue'] = layerId ? result : mappings;
+    return layerId ? result : mappings;
   }
 
   /**
@@ -289,6 +285,45 @@ class Controller {
         this['orientation'];
     }
     return isValid;
+  }
+
+  /**
+   * Remove the Mappings
+   * @export
+   */
+  removeMappings() {
+    let mappings = this.updateMappings();
+    mappings = this.removeEllipseMappings_(mappings);
+    callback_(this.scope_['layer'], mappings);
+    closeWindow(this.element);
+  }
+
+  /**
+   * Allow the remove button only in the module (not csv import)
+   * @return {boolean}
+   * @export
+   */
+  allowRemove() {
+    return this.source_ != undefined;
+  }
+
+  /**
+   * Remove Ellipse mappings from the Descriptor Mappings
+   * @param {Array<AbstractMapping>} mappings
+   * @return {Array<AbstractMapping>}
+   * @private
+   */
+  removeEllipseMappings_(mappings) {
+    const result = [];
+    mappings.forEach((mapping) => {
+      const id = mapping.getId();
+      if (id != RadiusMapping.ID && id != SemiMajorMapping.ID &&
+            id != SemiMinorMapping.ID && id != OrientationMapping.ID) {
+        result.push(mapping);
+      }
+    });
+
+    return result;
   }
 }
 
