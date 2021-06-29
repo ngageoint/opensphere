@@ -82,7 +82,6 @@ class AbstractStateDescriptor extends BaseDescriptor {
    * Activates the state.
    *
    * @param {os.file.File=} opt_file The state file to load
-   * @protected
    */
   activateState(opt_file) {
     try {
@@ -206,8 +205,6 @@ class AbstractStateDescriptor extends BaseDescriptor {
 
   /**
    * Deactivates the state.
-   *
-   * @protected
    */
   deactivateState() {
     getStateManager().removeState(this.getId() + '-');
