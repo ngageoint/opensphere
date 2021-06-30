@@ -18,7 +18,6 @@ const LayerEventType = goog.require('os.events.LayerEventType');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const instanceOf = goog.require('os.instanceOf');
 const LayerClass = goog.require('os.layer.LayerClass');
-const {getMapContainer} = goog.require('os.map.instance');
 const SourceClass = goog.require('os.source.SourceClass');
 const AbstractLoadingServer = goog.require('os.ui.server.AbstractLoadingServer');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
@@ -31,6 +30,7 @@ const IDataProvider = goog.requireType('os.data.IDataProvider');
 const ProviderEntry = goog.requireType('os.data.ProviderEntry');
 const LayerEvent = goog.requireType('os.events.LayerEvent');
 const VectorLayer = goog.requireType('os.layer.Vector');
+const IMapContainer = goog.requireType('os.map.IMapContainer');
 const VectorSource = goog.requireType('os.source.Vector');
 
 
@@ -99,11 +99,12 @@ class DataManager extends EventTarget {
      */
     this.timeFilterEnabled_ = true;
 
-    const map = getMapContainer();
-    if (map) {
-      map.listen(LayerEventType.ADD, this.onLayerAdded_, false, this);
-      map.listen(LayerEventType.REMOVE, this.onLayerRemoved_, false, this);
-    }
+    /**
+     * The map container instance.
+     * @type {IMapContainer}
+     * @private
+     */
+    this.map_ = null;
 
     if (opt_init) {
       this.initialize();
@@ -115,11 +116,25 @@ class DataManager extends EventTarget {
    */
   disposeInternal() {
     super.disposeInternal();
+    this.setMapContainer(null);
+  }
 
-    const map = getMapContainer();
-    if (map) {
-      map.unlisten(LayerEventType.ADD, this.onLayerAdded_, false, this);
-      map.unlisten(LayerEventType.REMOVE, this.onLayerRemoved_, false, this);
+  /**
+   * Set the map container instance for the manager.
+   * @param {IMapContainer} map The map container.
+   */
+  setMapContainer(map) {
+    if (this.map_) {
+      this.map_.unlisten(LayerEventType.ADD, this.onLayerAdded_, false, this);
+      this.map_.unlisten(LayerEventType.REMOVE, this.onLayerRemoved_, false, this);
+    }
+
+    this.sources_ = {};
+    this.map_ = map;
+
+    if (this.map_) {
+      this.map_.listen(LayerEventType.ADD, this.onLayerAdded_, false, this);
+      this.map_.listen(LayerEventType.REMOVE, this.onLayerRemoved_, false, this);
     }
   }
 

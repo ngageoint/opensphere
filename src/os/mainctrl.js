@@ -271,6 +271,7 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
 
   // configure data manager
   os.dataManager = os.data.DataManager.getInstance();
+  os.dataManager.setMapContainer(map);
 
   // configure exports
   os.ui.exportManager.registerPersistenceMethod(new os.file.persist.FilePersistence());
