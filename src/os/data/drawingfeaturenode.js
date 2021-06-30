@@ -1,6 +1,7 @@
 goog.module('os.data.DrawingFeatureNode');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.mixin.object');
 goog.require('os.ui.node.drawingFeatureNodeUIDirective');
 
 const IMenuSupplier = goog.require('os.ui.menu.IMenuSupplier');

@@ -1,6 +1,8 @@
 goog.module('os.query.AreaManager');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.mixin.object');
+
 const GeoJSON = goog.require('ol.format.GeoJSON');
 const OLVectorSource = goog.require('ol.source.Vector');
 const VectorEventType = goog.require('ol.source.VectorEventType');
