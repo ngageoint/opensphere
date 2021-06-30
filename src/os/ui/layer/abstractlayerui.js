@@ -159,11 +159,6 @@ os.ui.layer.AbstractLayerUICtrl.prototype.getLayerNodes = function() {
   var nodes = [];
 
   var items = this.scope['items'] || [];
-  for (var i = 0; i < items.length; i++) {
-    if (items[i].layerNode) {
-      items[i] = items[i].layerNode;
-    }
-  }
   items = /** @type {!Array<!os.data.LayerNode>} */ (items.filter(os.ui.layer.isLayerNode));
 
   for (var i = 0; i < items.length; i++) {

@@ -22,8 +22,6 @@ const osFeature = goog.require('os.feature');
 const fn = goog.require('os.fn');
 const osImplements = goog.require('os.implements');
 const TriState = goog.require('os.structs.TriState');
-const ColorControlType = goog.require('os.ui.ColorControlType');
-const ControlType = goog.require('os.ui.ControlType');
 const ILayerUIProvider = goog.require('os.ui.ILayerUIProvider');
 const launchMultiFeatureInfo = goog.require('os.ui.feature.launchMultiFeatureInfo');
 const launchScreenOverlay = goog.require('os.ui.launchScreenOverlay');
@@ -407,13 +405,11 @@ class KMLNode extends SlickTreeNode {
    * @param {os.layer.Image} image The feature
    */
   setImage(image) {
+    goog.dispose(this.layerNode);
+    this.layerNode = null;
+
     this.image_ = image;
     if (this.image_) {
-      // Give the image style control options.
-      var options = {};
-      options[ControlType.COLOR] = ColorControlType.PICKER_RESET;
-      this.image_.setLayerOptions(options);
-
       // Create a LayerNode that will handle the image style changes
       this.layerNode = new LayerNode();
       this.layerNode.setLayer(this.image_);

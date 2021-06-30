@@ -37,7 +37,7 @@ Module.directive(directiveTag, [directive]);
 
 
 /**
- * Controller for the addserver directive.
+ * Controller for the image layer UI directive.
  * @unrestricted
  */
 class Controller extends DefaultLayerUICtrl {

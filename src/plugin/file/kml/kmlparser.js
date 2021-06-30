@@ -46,12 +46,15 @@ const StyleField = goog.require('os.style.StyleField');
 const StyleType = goog.require('os.style.StyleType');
 const track = goog.require('os.track');
 const ui = goog.require('os.ui');
+const ColorControlType = goog.require('os.ui.ColorControlType');
+const ControlType = goog.require('os.ui.ControlType');
 const osUiFileKml = goog.require('os.ui.file.kml');
 const xml = goog.require('os.xml');
 const kml = goog.require('plugin.file.kml');
 const KMLField = goog.require('plugin.file.kml.KMLField');
 const model = goog.require('plugin.file.kml.model');
 const parseTour = goog.require('plugin.file.kml.tour.parseTour');
+const KMLImageLayerUI = goog.require('plugin.file.kml.ui.KMLImageLayerUI');
 const KMLNetworkLinkNode = goog.require('plugin.file.kml.ui.KMLNetworkLinkNode');
 const KMLNode = goog.require('plugin.file.kml.ui.KMLNode');
 const KMLTourNode = goog.require('plugin.file.kml.ui.KMLTourNode');
@@ -1247,6 +1250,8 @@ class KMLParser extends AsyncZipParser {
           }, -(obj['rotation'] || 0))
         });
         image.setId(/** @type {string} */ (feature.getId()));
+        image.setLayerUI(KMLImageLayerUI.directiveTag);
+        image.setLayerOptions({[ControlType.COLOR]: ColorControlType.PICKER_RESET});
 
         var node = new KMLNode();
         node.setFeature(feature);
