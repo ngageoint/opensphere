@@ -208,10 +208,7 @@ class Controller {
   updateMappings() {
     const layer = this.scope_['layer'];
     const layerId = implementationOf(layer, ILayer.ID) ? layer.getId() : undefined;
-    const descriptor = layerId ? DataManager.getInstance().getDescriptor(layerId) : undefined;
-    const descMappings = implementationOf(descriptor, IMappingDescriptor.ID) ?
-      (/** @type {IMappingDescriptor} */ (descriptor).getMappings() || []) :
-      /** @type {Array<IMapping>} */ (layer['mappings']);
+    const descMappings = this.getDescMappings();
     const mappings = this.createMappings();
 
     let result = [];
@@ -292,8 +289,9 @@ class Controller {
    * @export
    */
   removeMappings() {
-    let mappings = this.updateMappings();
-    mappings = this.removeEllipseMappings_(mappings);
+    const descMappings = this.getDescMappings();
+    const mappings = this.removeEllipseMappings_(descMappings);
+
     callback_(this.scope_['layer'], mappings);
     closeWindow(this.element);
   }
@@ -324,6 +322,21 @@ class Controller {
     });
 
     return result;
+  }
+
+  /**
+   * Returns the mappings from the layer or layer Descriptor
+   * @return {Array<AbstractMapping>}
+   */
+  getDescMappings() {
+    const layer = this.scope_['layer'];
+    const layerId = implementationOf(layer, ILayer.ID) ? layer.getId() : undefined;
+    const descriptor = layerId ? DataManager.getInstance().getDescriptor(layerId) : undefined;
+    const descMappings = implementationOf(descriptor, IMappingDescriptor.ID) ?
+      (/** @type {IMappingDescriptor} */ (descriptor).getMappings() || []) :
+      /** @type {Array<IMapping>} */ (layer['mappings']);
+
+    return descMappings;
   }
 }
 
