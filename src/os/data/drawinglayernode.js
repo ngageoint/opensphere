@@ -2,13 +2,19 @@ goog.module('os.data.DrawingLayerNode');
 goog.module.declareLegacyNamespace();
 
 const Delay = goog.require('goog.async.Delay');
+const GoogEventType = goog.require('goog.events.EventType');
 const googString = goog.require('goog.string');
+const events = goog.require('ol.events');
+const VectorEventType = goog.require('ol.source.VectorEventType');
 const AreaNode = goog.require('os.data.AreaNode');
 const DrawingFeatureNode = goog.require('os.data.DrawingFeatureNode');
 const LayerNode = goog.require('os.data.LayerNode');
+const RecordField = goog.require('os.data.RecordField');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const fn = goog.require('os.fn');
 const {getAreaManager} = goog.require('os.query.instance');
+const TriState = goog.require('os.structs.TriState');
+const osUiQueryAreaNode = goog.require('os.ui.query.AreaNode');
 
 
 /**
@@ -43,7 +49,7 @@ class DrawingLayerNode extends LayerNode {
     var children = this.getChildren();
 
     if (!children || children.length === 0) {
-      return os.structs.TriState.ON;
+      return TriState.ON;
     }
 
     return super.getState();
@@ -60,19 +66,19 @@ class DrawingLayerNode extends LayerNode {
     if (value !== currLayer && currLayer) {
       source = /** @type {os.layer.Vector} */ (currLayer).getSource();
 
-      ol.events.unlisten(
+      events.unlisten(
           /** @type {ol.events.EventTarget} */ (source),
-          ol.source.VectorEventType.ADDFEATURE,
+          VectorEventType.ADDFEATURE,
           this.onFeatureAdded,
           this);
 
-      ol.events.unlisten(
+      events.unlisten(
           /** @type {ol.events.EventTarget} */ (source),
-          ol.source.VectorEventType.REMOVEFEATURE,
+          VectorEventType.REMOVEFEATURE,
           this.onFeatureRemoved,
           this);
 
-      am.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onAreasChanged_, false, this);
+      am.unlisten(GoogEventType.PROPERTYCHANGE, this.onAreasChanged_, false, this);
       this.setChildren(null);
     }
 
@@ -81,19 +87,19 @@ class DrawingLayerNode extends LayerNode {
     if (value !== currLayer && value) {
       source = /** @type {os.layer.Vector} */ (value).getSource();
 
-      ol.events.listen(
+      events.listen(
           /** @type {ol.events.EventTarget} */ (source),
-          ol.source.VectorEventType.ADDFEATURE,
+          VectorEventType.ADDFEATURE,
           this.onFeatureAdded,
           this);
 
-      ol.events.listen(
+      events.listen(
           /** @type {ol.events.EventTarget} */ (source),
-          ol.source.VectorEventType.REMOVEFEATURE,
+          VectorEventType.REMOVEFEATURE,
           this.onFeatureRemoved,
           this);
 
-      am.listen(goog.events.EventType.PROPERTYCHANGE, this.onAreasChanged_, false, this);
+      am.listen(GoogEventType.PROPERTYCHANGE, this.onAreasChanged_, false, this);
 
       var areas = am.getAll().map(DrawingLayerNode.createNode_);
       var others = /** @type {!Array<!ol.Feature>} */ (source.getFeatures()).
@@ -141,7 +147,7 @@ class DrawingLayerNode extends LayerNode {
     if (feature && !DrawingLayerNode.isHidden(feature)) {
       var changed = false;
       var node = this.getChildByFeature(feature);
-      if (node instanceof os.ui.query.AreaNode) {
+      if (node instanceof osUiQueryAreaNode) {
         // update the node
         node.setArea(feature);
         changed = true;
@@ -260,7 +266,7 @@ class DrawingLayerNode extends LayerNode {
    * @return {boolean} Whether or not a feature is hidden
    */
   static isHidden(feature) {
-    var node = feature.get(os.data.RecordField.DRAWING_LAYER_NODE);
+    var node = feature.get(RecordField.DRAWING_LAYER_NODE);
     node = node === undefined ? true : node;
     return !node;
   }

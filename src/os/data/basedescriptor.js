@@ -1,14 +1,17 @@
 goog.module('os.data.BaseDescriptor');
 goog.module.declareLegacyNamespace();
 
+const googArray = goog.require('goog.array');
 const nextTick = goog.require('goog.async.nextTick');
 const UtcDateTime = goog.require('goog.date.UtcDateTime');
 const EventTarget = goog.require('goog.events.EventTarget');
+const log = goog.require('goog.log');
 const {caseInsensitiveCompare, endsWith} = goog.require('goog.string');
 const dispatcher = goog.require('os.Dispatcher');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
 const DataManager = goog.require('os.data.DataManager');
 const DescriptorEvent = goog.require('os.data.DescriptorEvent');
+const DescriptorEventType = goog.require('os.data.DescriptorEventType');
 const IDataDescriptor = goog.require('os.data.IDataDescriptor');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const osImplements = goog.require('os.implements');
@@ -440,7 +443,7 @@ class BaseDescriptor extends EventTarget {
           this.onDescriptorReady();
         }
       } catch (e) {
-        goog.log.error(this.log, 'Error setting descriptor activation state', e);
+        log.error(this.log, 'Error setting descriptor activation state', e);
         this.active_ = false;
         this.onDescriptorReady();
       }
@@ -478,7 +481,7 @@ class BaseDescriptor extends EventTarget {
 
     this.recordActivationMetric();
 
-    var eventType = this.isActive() ? os.data.DescriptorEventType.ACTIVATED : os.data.DescriptorEventType.DEACTIVATED;
+    var eventType = this.isActive() ? DescriptorEventType.ACTIVATED : DescriptorEventType.DEACTIVATED;
     this.dispatchEvent(eventType);
     dispatcher.getInstance().dispatchEvent(new DescriptorEvent(eventType, this));
   }
@@ -726,7 +729,7 @@ class BaseDescriptor extends EventTarget {
     } else if (!isNaN(a.getLastActive()) && isNaN(b.getLastActive())) {
       return -1;
     } else {
-      return goog.array.defaultCompare(a.getLastActive(), b.getLastActive());
+      return googArray.defaultCompare(a.getLastActive(), b.getLastActive());
     }
   }
 
@@ -756,7 +759,7 @@ BaseDescriptor.ID_DELIMITER = '#';
  * Logger for os.data.BaseDescriptor
  * @type {goog.log.Logger}
  */
-const logger = goog.log.getLogger('os.data.BaseDescriptor');
+const logger = log.getLogger('os.data.BaseDescriptor');
 
 
 exports = BaseDescriptor;

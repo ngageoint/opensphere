@@ -1,14 +1,21 @@
 goog.module('os.data.histo.SourceHistogram');
 goog.module.declareLegacyNamespace();
 
+const googArray = goog.require('goog.array');
+
 const Delay = goog.require('goog.async.Delay');
 const EventTarget = goog.require('goog.events.EventTarget');
+const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const events = goog.require('ol.events');
 const dispatcher = goog.require('os.Dispatcher');
 const FeatureEventType = goog.require('os.data.FeatureEventType');
 const histo = goog.require('os.data.histo');
 const ColorBin = goog.require('os.data.histo.ColorBin');
+const DataModel = goog.require('os.data.xf.DataModel');
+const osFeature = goog.require('os.feature');
+const osHisto = goog.require('os.histo');
+const DateRangeBinType = goog.require('os.histo.DateRangeBinType');
 const PropertyChange = goog.require('os.source.PropertyChange');
 
 const GoogEvent = goog.requireType('goog.events.Event');
@@ -257,7 +264,7 @@ class SourceHistogram extends EventTarget {
     this.featureBins_ = {};
 
     this.updateResults();
-    this.dispatchEvent(goog.events.EventType.CHANGE);
+    this.dispatchEvent(GoogEventType.CHANGE);
   }
 
   /**
@@ -336,12 +343,12 @@ class SourceHistogram extends EventTarget {
   setParent(value) {
     if (this.parent_) {
       // remove parent listeners
-      this.parent_.unlisten(goog.events.EventType.CHANGE, this.update, false, this);
+      this.parent_.unlisten(GoogEventType.CHANGE, this.update, false, this);
       this.parent_.unlisten(histo.HistoEventType.CASCADE_CHANGE, this.update, false, this);
       this.parent_.decrementRefCount();
     } else {
       // no parent - remove source listeners
-      events.unlisten(this.source, goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
+      events.unlisten(this.source, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
     }
 
     this.parent_ = value;
@@ -349,12 +356,12 @@ class SourceHistogram extends EventTarget {
     if (!this.isDisposed()) {
       if (this.parent_) {
         // update when the parent histogram changes
-        this.parent_.listen(goog.events.EventType.CHANGE, this.update, false, this);
+        this.parent_.listen(GoogEventType.CHANGE, this.update, false, this);
         this.parent_.listen(histo.HistoEventType.CASCADE_CHANGE, this.update, false, this);
         this.parent_.incrementRefCount();
       } else {
         // no parent - update when the source changes
-        events.listen(this.source, goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
+        events.listen(this.source, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
       }
     }
   }
@@ -381,11 +388,11 @@ class SourceHistogram extends EventTarget {
    */
   setBinMethod(method) {
     // clone to the local context to prevent leaks
-    this.binMethod = os.histo.cloneMethod(method);
+    this.binMethod = osHisto.cloneMethod(method);
 
     if (this.binMethod) {
       if (this.binMethod.getValueFunction() == null) {
-        this.binMethod.setValueFunction(os.feature.getField);
+        this.binMethod.setValueFunction(osFeature.getField);
       }
       this.binRanges_ = this.binMethod.getArrayKeys() || false;
     }
@@ -404,11 +411,11 @@ class SourceHistogram extends EventTarget {
    */
   setSecondaryBinMethod(method) {
     // clone to the local context to prevent leaks
-    this.secondaryBinMethod = os.histo.cloneMethod(method);
+    this.secondaryBinMethod = osHisto.cloneMethod(method);
 
     if (this.secondaryBinMethod) {
       if (this.secondaryBinMethod.getValueFunction() == null) {
-        this.secondaryBinMethod.setValueFunction(os.feature.getField);
+        this.secondaryBinMethod.setValueFunction(osFeature.getField);
       }
 
       /**
@@ -418,7 +425,7 @@ class SourceHistogram extends EventTarget {
        * @return {string}
        */
       this.combinedAccessor = function(item) {
-        return this.binMethod.getBinKey(this.binMethod.getValue(item)).toString() + os.data.xf.DataModel.SEPARATOR +
+        return this.binMethod.getBinKey(this.binMethod.getValue(item)).toString() + DataModel.SEPARATOR +
           this.secondaryBinMethod.getBinKey(this.secondaryBinMethod.getValue(item)).toString();
       };
 
@@ -459,7 +466,7 @@ class SourceHistogram extends EventTarget {
         var valueFn = this.binMethod.getValue.bind(this.binMethod);
         // add dimension that will handle an array of keys
         var isArray = this.binMethod.getBinType() == 'Date' ?
-          os.histo.DateRangeBinType[this.binMethod.getDateBinType()] : false;
+          DateRangeBinType[this.binMethod.getDateBinType()] : false;
         isArray = this.binRanges_ ? isArray : false;
         this.timeModel_.addDimension(this.id_, valueFn, isArray);
 
@@ -593,7 +600,7 @@ class SourceHistogram extends EventTarget {
       }));
 
       if (this.sortFn) {
-        goog.array.sort(results, this.sortFn);
+        googArray.sort(results, this.sortFn);
       }
     }
 
@@ -618,7 +625,7 @@ class SourceHistogram extends EventTarget {
     bin.setKey(item.key);
 
     if (this.secondaryBinMethod) {
-      bin.setLabel(this.binMethod.getLabelForKey(item.key, false, true) + os.data.xf.DataModel.SEPARATOR +
+      bin.setLabel(this.binMethod.getLabelForKey(item.key, false, true) + DataModel.SEPARATOR +
         this.secondaryBinMethod.getLabelForKey(item.key, true, true));
     } else {
       bin.setLabel(this.binMethod.getLabelForKey(item.key));
@@ -745,7 +752,7 @@ class SourceHistogram extends EventTarget {
   reduceInit() {
     var bin = new ColorBin(this.source.getColor());
     bin.setColorFunction(function(item) {
-      return /** @type {string|undefined} */ (os.feature.getColor(/** @type {!ol.Feature} */ (item)));
+      return /** @type {string|undefined} */ (osFeature.getColor(/** @type {!ol.Feature} */ (item)));
     });
     return bin;
   }
@@ -775,13 +782,13 @@ class SourceHistogram extends EventTarget {
   setBinRanges(value) {
     this.binRanges_ = value;
     if (this.binMethod && this.binMethod.getBinType() == 'Date' &&
-        os.histo.DateRangeBinType[this.binMethod.getDateBinType()]) {
+        DateRangeBinType[this.binMethod.getDateBinType()]) {
       this.binMethod.setArrayKeys(value);
     }
 
     this.reindexFlag_ = true;
     this.update(100);
-    this.dispatchEvent(goog.events.EventType.CHANGE);
+    this.dispatchEvent(GoogEventType.CHANGE);
   }
 
   /**

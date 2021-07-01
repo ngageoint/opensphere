@@ -7,6 +7,7 @@ const LayerSyncDescriptor = goog.require('os.data.LayerSyncDescriptor');
 const ImportProcess = goog.require('os.im.ImportProcess');
 const osImplements = goog.require('os.implements');
 const LayerType = goog.require('os.layer.LayerType');
+const osString = goog.require('os.string');
 const Icons = goog.require('os.ui.Icons');
 const ImportEvent = goog.require('os.ui.im.ImportEvent');
 const ImportEventType = goog.require('os.ui.im.ImportEventType');
@@ -180,9 +181,9 @@ class ConfigDescriptor extends LayerSyncDescriptor {
           icons = reduceConfigIcons('', this.baseConfig);
         }
 
-        icons = os.string.removeDuplicates(icons, Icons.TILES);
-        icons = os.string.removeDuplicates(icons, Icons.FEATURES);
-        icons = os.string.removeDuplicates(icons, Icons.TIME);
+        icons = osString.removeDuplicates(icons, Icons.TILES);
+        icons = osString.removeDuplicates(icons, Icons.FEATURES);
+        icons = osString.removeDuplicates(icons, Icons.TIME);
       }
 
       this.icons = icons || super.getIcons() || '';

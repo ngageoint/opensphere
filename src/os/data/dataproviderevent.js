@@ -3,6 +3,8 @@ goog.module.declareLegacyNamespace();
 
 const GoogEvent = goog.require('goog.events.Event');
 
+const IDataProvider = goog.requireType('os.data.IDataProvider');
+
 
 /**
  */
@@ -10,7 +12,7 @@ class DataProviderEvent extends GoogEvent {
   /**
    * Constructor.
    * @param {string} type
-   * @param {os.data.IDataProvider=} opt_dataProvider
+   * @param {IDataProvider=} opt_dataProvider
    * @param {string=} opt_providerType
    * @param {string=} opt_message
    */
@@ -18,7 +20,7 @@ class DataProviderEvent extends GoogEvent {
     super(type);
 
     /**
-     * @type {?os.data.IDataProvider}
+     * @type {?IDataProvider}
      */
     this.dataProvider = opt_dataProvider || null;
 

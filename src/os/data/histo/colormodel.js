@@ -1,12 +1,17 @@
 goog.module('os.data.histo.ColorModel');
 goog.module.declareLegacyNamespace();
 
+const googArray = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
+const GoogEventType = goog.require('goog.events.EventType');
+const googObject = goog.require('goog.object');
 const osColor = goog.require('os.color');
 const FeatureEventType = goog.require('os.data.FeatureEventType');
+const RecordField = goog.require('os.data.RecordField');
 const osDataHisto = goog.require('os.data.histo');
 const ColorMethod = goog.require('os.data.histo.ColorMethod');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const osFeature = goog.require('os.feature');
 const histo = goog.require('os.histo');
 const PropertyChange = goog.require('os.source.PropertyChange');
 const osStyle = goog.require('os.style');
@@ -112,7 +117,7 @@ class ColorModel extends EventTarget {
     if (this.histogram_) {
       // clean up listeners and decrement the reference count. if the count reaches zero, the histogram will dispose
       // itself so do not call dispose here!
-      this.histogram_.unlisten(goog.events.EventType.CHANGE, this.applyColorMethod, false, this);
+      this.histogram_.unlisten(GoogEventType.CHANGE, this.applyColorMethod, false, this);
       this.histogram_.unlisten(osDataHisto.HistoEventType.BIN_CHANGE, this.onBinChange_, false, this);
       this.histogram_.decrementRefCount();
     }
@@ -120,7 +125,7 @@ class ColorModel extends EventTarget {
     this.histogram_ = histogram;
 
     if (this.histogram_) {
-      this.histogram_.listen(goog.events.EventType.CHANGE, this.applyColorMethod, false, this);
+      this.histogram_.listen(GoogEventType.CHANGE, this.applyColorMethod, false, this);
       this.histogram_.listen(osDataHisto.HistoEventType.BIN_CHANGE, this.onBinChange_, false, this);
       this.histogram_.incrementRefCount();
     }
@@ -234,7 +239,7 @@ class ColorModel extends EventTarget {
    * @return {boolean}
    */
   hasManualColors() {
-    return !goog.object.isEmpty(this.manualBinColors_);
+    return !googObject.isEmpty(this.manualBinColors_);
   }
 
   /**
@@ -323,7 +328,7 @@ class ColorModel extends EventTarget {
     var bins = this.getResults();
     if (this.hasManualColors()) {
       // exclude any manually-colored bins from the autocolor
-      bins = goog.array.filter(bins, function(bin) {
+      bins = googArray.filter(bins, function(bin) {
         return !this.manualBinColors_[bin.getLabel()];
       }, this);
     }
@@ -438,12 +443,12 @@ class ColorModel extends EventTarget {
   colorFeatures_(features, opt_color) {
     if (features && features.length > 0) {
       for (var j = 0, o = features.length; j < o; j++) {
-        var oldColor = /** @type {string|undefined} */ (os.feature.getColor(features[j], null, null));
+        var oldColor = /** @type {string|undefined} */ (osFeature.getColor(features[j], null, null));
         if (oldColor != opt_color) {
           // set the color override on the feature and dispatch the event so UI's (bins) can update
-          features[j].values_[os.data.RecordField.COLOR] = opt_color;
+          features[j].values_[RecordField.COLOR] = opt_color;
 
-          var newColor = /** @type {string|undefined} */ (os.feature.getColor(features[j], null, null)) || undefined;
+          var newColor = /** @type {string|undefined} */ (osFeature.getColor(features[j], null, null)) || undefined;
           features[j].dispatchFeatureEvent(FeatureEventType.COLOR, newColor, oldColor);
         }
 
@@ -506,7 +511,7 @@ class ColorModel extends EventTarget {
     if (this.histogram_ && config['binMethod']) {
       var binMethod = histo.restoreMethod(config['binMethod']);
       if (binMethod) {
-        binMethod.setValueFunction(os.feature.getField);
+        binMethod.setValueFunction(osFeature.getField);
 
         this.histogram_.setBinMethod(binMethod);
       }
@@ -515,7 +520,7 @@ class ColorModel extends EventTarget {
     var colorMethod = config['colorMethod'];
 
     if (config['manualColors']) {
-      this.setManualBinColors(/** @type {!Object<string, string>} */ (goog.object.clone(config['manualColors'])));
+      this.setManualBinColors(/** @type {!Object<string, string>} */ (googObject.clone(config['manualColors'])));
 
       // since manual overrides maintain the original color method, (manualColors && NONE) actually means Manual
       if (colorMethod == ColorMethod.NONE) colorMethod = ColorMethod.MANUAL;

@@ -4,6 +4,14 @@ goog.module.declareLegacyNamespace();
 goog.require('os.mixin.object');
 goog.require('os.ui.node.drawingFeatureNodeUIDirective');
 
+const Circle = goog.require('ol.style.Circle');
+const RegularShape = goog.require('ol.style.RegularShape');
+const osFeature = goog.require('os.feature');
+const osImplements = goog.require('os.implements');
+const TriState = goog.require('os.structs.TriState');
+const osStyle = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const StyleType = goog.require('os.style.StyleType');
 const IMenuSupplier = goog.require('os.ui.menu.IMenuSupplier');
 const spatial = goog.require('os.ui.menu.spatial');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
@@ -52,29 +60,29 @@ class DrawingFeatureNode extends SlickTreeNode {
     super.setState(state);
 
     if (this.feature_) {
-      var layer = os.feature.getLayer(this.feature_);
+      var layer = osFeature.getLayer(this.feature_);
       var source = /** @type {ol.source.Vector} */ (layer.getSource());
 
-      if (this.getState() === os.structs.TriState.OFF) {
-        this.feature_.values_[os.style.StyleField.OPACITY] = 0;
+      if (this.getState() === TriState.OFF) {
+        this.feature_.values_[StyleField.OPACITY] = 0;
 
         if (this.hasFeatureConfig_) {
           // remove the highlight config or it will replace the opacity on the merged config
-          this.feature_.unset(os.style.StyleType.HIGHLIGHT, true);
+          this.feature_.unset(StyleType.HIGHLIGHT, true);
         }
 
-        os.style.setFeatureStyle(this.feature_);
+        osStyle.setFeatureStyle(this.feature_);
       } else {
-        this.feature_.values_[os.style.StyleField.OPACITY] = undefined;
+        this.feature_.values_[StyleField.OPACITY] = undefined;
         if (this.hasFeatureConfig_) {
-          os.style.setFeatureStyle(this.feature_);
+          osStyle.setFeatureStyle(this.feature_);
         } else {
           this.feature_.setStyle(/** @type {Array<ol.style.Style>} */ (
             this.feature_.get(DrawingFeatureNode.ORIGINAL_STYLE)));
         }
       }
 
-      os.feature.update(this.feature_, source);
+      osFeature.update(this.feature_, source);
     }
   }
 
@@ -97,7 +105,7 @@ class DrawingFeatureNode extends SlickTreeNode {
 
       // if the feature has a style config, the style can be manipulated more easily and we don't need to save off the
       // Openlayers style.
-      var featureConfig = feature.get(os.style.StyleType.FEATURE);
+      var featureConfig = feature.get(StyleType.FEATURE);
       if (!featureConfig) {
         var key = DrawingFeatureNode.ORIGINAL_STYLE;
 
@@ -120,13 +128,13 @@ class DrawingFeatureNode extends SlickTreeNode {
   updateFromFeature() {
     var feature = this.feature_;
     if (feature) {
-      this.hasFeatureConfig_ = !!feature.get(os.style.StyleType.FEATURE);
+      this.hasFeatureConfig_ = !!feature.get(StyleType.FEATURE);
 
       this.setLabel(/** @type {!string} */ (
         feature.get('title') || feature.get('label') || feature.get('name') || String(feature.getId())));
 
-      var opacity = /** @type {number|undefined} */ (feature.get(os.style.StyleField.OPACITY));
-      this.setState(opacity === 0 ? os.structs.TriState.OFF : os.structs.TriState.ON);
+      var opacity = /** @type {number|undefined} */ (feature.get(StyleField.OPACITY));
+      this.setState(opacity === 0 ? TriState.OFF : TriState.ON);
     }
   }
 
@@ -150,11 +158,11 @@ class DrawingFeatureNode extends SlickTreeNode {
       return;
     }
 
-    if (this.getState() !== os.structs.TriState.OFF) {
+    if (this.getState() !== TriState.OFF) {
       if (this.hasFeatureConfig_) {
         // add a highlight config and refresh the style
-        this.feature_.set(os.style.StyleType.HIGHLIGHT, os.style.DEFAULT_HIGHLIGHT_CONFIG, true);
-        os.style.setFeatureStyle(this.feature_);
+        this.feature_.set(StyleType.HIGHLIGHT, osStyle.DEFAULT_HIGHLIGHT_CONFIG, true);
+        osStyle.setFeatureStyle(this.feature_);
       } else {
         // modify the Openlayers style to highlight the feature
         var originalStyle = /** @type {Array<ol.style.Style>} */ (
@@ -163,9 +171,9 @@ class DrawingFeatureNode extends SlickTreeNode {
         this.feature_.setStyle(style);
       }
 
-      var layer = os.feature.getLayer(this.feature_);
+      var layer = osFeature.getLayer(this.feature_);
       if (layer) {
-        os.style.notifyStyleChange(layer, [this.feature_]);
+        osStyle.notifyStyleChange(layer, [this.feature_]);
       }
     }
   }
@@ -178,20 +186,20 @@ class DrawingFeatureNode extends SlickTreeNode {
       return;
     }
 
-    if (this.getState() !== os.structs.TriState.OFF) {
+    if (this.getState() !== TriState.OFF) {
       if (this.hasFeatureConfig_) {
         // clear the highlight config and update the style
-        this.feature_.unset(os.style.StyleType.HIGHLIGHT, true);
-        os.style.setFeatureStyle(this.feature_);
+        this.feature_.unset(StyleType.HIGHLIGHT, true);
+        osStyle.setFeatureStyle(this.feature_);
       } else {
         // replace the style with the original
         this.feature_.setStyle(/** @type {Array<ol.style.Style>} */ (
           this.feature_.get(DrawingFeatureNode.ORIGINAL_STYLE)));
       }
 
-      var layer = os.feature.getLayer(this.feature_);
+      var layer = osFeature.getLayer(this.feature_);
       if (layer) {
-        os.style.notifyStyleChange(layer, [this.feature_]);
+        osStyle.notifyStyleChange(layer, [this.feature_]);
       }
     }
   }
@@ -214,7 +222,7 @@ class DrawingFeatureNode extends SlickTreeNode {
       var fill;
       var image = s.getImage();
 
-      if (image instanceof ol.style.Circle || image instanceof ol.style.RegularShape) {
+      if (image instanceof Circle || image instanceof RegularShape) {
         var fillable = /** @type {ol.style.Circle|ol.style.RegularShape} */ (image);
         fill = fillable.getFill();
 
@@ -245,7 +253,7 @@ class DrawingFeatureNode extends SlickTreeNode {
   }
 }
 
-os.implements(DrawingFeatureNode, IMenuSupplier.ID);
+osImplements(DrawingFeatureNode, IMenuSupplier.ID);
 
 
 /**

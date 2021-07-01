@@ -11,13 +11,19 @@ goog.require('os.ui.triStateCheckboxDirective');
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
 const DataManager = goog.require('os.data.DataManager');
+const LayerEventType = goog.require('os.events.LayerEventType');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const ImportActionEventType = goog.require('os.im.action.ImportActionEventType');
+const ImportActionManager = goog.require('os.im.action.ImportActionManager');
+const osImplements = goog.require('os.implements');
 const LayerGroup = goog.require('os.layer.LayerGroup');
+const LayerPropertyChange = goog.require('os.layer.PropertyChange');
 const Tile = goog.require('os.layer.Tile');
 const VectorLayer = goog.require('os.layer.Vector');
 const {getMapContainer} = goog.require('os.map.instance');
 const {getQueryManager} = goog.require('os.query.instance');
+const PropertyChange = goog.require('os.source.PropertyChange');
+const VectorSource = goog.require('os.source.Vector');
 const TriState = goog.require('os.structs.TriState');
 const ILayerUIProvider = goog.require('os.ui.ILayerUIProvider');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
@@ -46,7 +52,7 @@ class LayerNode extends SlickTreeNode {
     this.layer_ = null;
 
     getQueryManager().listen(GoogEventType.PROPERTYCHANGE, this.onNodeChanged_, false, this);
-    os.im.action.ImportActionManager
+    ImportActionManager
         .getInstance().listen(ImportActionEventType.REFRESH, this.onNodeChanged_, false, this);
   }
 
@@ -57,7 +63,7 @@ class LayerNode extends SlickTreeNode {
     super.disposeInternal();
 
     getQueryManager().unlisten(GoogEventType.PROPERTYCHANGE, this.onNodeChanged_, false, this);
-    os.im.action.ImportActionManager
+    ImportActionManager
         .getInstance().unlisten(ImportActionEventType.REFRESH, this.onNodeChanged_, false, this);
 
     this.onMouseLeave();
@@ -266,34 +272,34 @@ class LayerNode extends SlickTreeNode {
     if (e instanceof PropertyChangeEvent) {
       var p = e.getProperty();
       switch (p) {
-        case os.layer.PropertyChange.LOADING:
+        case LayerPropertyChange.LOADING:
           this.dispatchEvent(new PropertyChangeEvent('loading', e.getOldValue(), e.getNewValue()));
           break;
-        case os.layer.PropertyChange.ENABLED:
+        case LayerPropertyChange.ENABLED:
           // force the checkbox to update
           this.setState(e.getNewValue() ? TriState.ON : TriState.OFF);
           // update the label (styled differently when disabled/hidden)
           this.dispatchEvent(new PropertyChangeEvent('label'));
           break;
-        case os.layer.PropertyChange.VISIBLE:
+        case LayerPropertyChange.VISIBLE:
           // update the label (styled differently when disabled/hidden)
           this.dispatchEvent(new PropertyChangeEvent('label'));
           break;
-        case os.source.PropertyChange.HAS_MODIFICATIONS:
-        case os.layer.PropertyChange.TITLE:
+        case PropertyChange.HAS_MODIFICATIONS:
+        case LayerPropertyChange.TITLE:
           // change the label
           this.setLabel(this.layer_.getTitle());
           this.dispatchEvent(new PropertyChangeEvent('label'));
           break;
-        case os.layer.PropertyChange.GROUP_ID:
-          getMapContainer().dispatchEvent(os.events.LayerEventType.CHANGE);
+        case LayerPropertyChange.GROUP_ID:
+          getMapContainer().dispatchEvent(LayerEventType.CHANGE);
           break;
-        case os.layer.PropertyChange.COLOR_MODEL:
-        case os.layer.PropertyChange.ERROR:
-        case os.layer.PropertyChange.ICONS:
-        case os.layer.PropertyChange.LOCK:
-        case os.layer.PropertyChange.STYLE:
-        case os.layer.PropertyChange.TIME_ENABLED:
+        case LayerPropertyChange.COLOR_MODEL:
+        case LayerPropertyChange.ERROR:
+        case LayerPropertyChange.ICONS:
+        case LayerPropertyChange.LOCK:
+        case LayerPropertyChange.STYLE:
+        case LayerPropertyChange.TIME_ENABLED:
           // updates icons on the node
           this.dispatchEvent(new PropertyChangeEvent('icons'));
           break;
@@ -340,7 +346,7 @@ class LayerNode extends SlickTreeNode {
         s += ' <featurecount></featurecount>';
 
         var source = layer.getSource();
-        if (source instanceof os.source.Vector && source.getHasModifications()) {
+        if (source instanceof VectorSource && source.getHasModifications()) {
           s = `<span title="This layer has unsaved changes. Right click to save them."
               class="font-weight-bolder">  •  </span>${s}`;
         }
@@ -375,7 +381,7 @@ class LayerNode extends SlickTreeNode {
   }
 }
 
-os.implements(LayerNode, ILayerUIProvider.ID);
+osImplements(LayerNode, ILayerUIProvider.ID);
 
 
 exports = LayerNode;

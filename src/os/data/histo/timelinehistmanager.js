@@ -8,6 +8,7 @@ const events = goog.require('ol.events');
 const dispatcher = goog.require('os.Dispatcher');
 const DataManager = goog.require('os.data.DataManager');
 const DataEventType = goog.require('os.data.event.DataEventType');
+const LayerEventType = goog.require('os.events.LayerEventType');
 const fn = goog.require('os.fn');
 const hist = goog.require('os.hist');
 const {getMapContainer} = goog.require('os.map.instance');
@@ -48,8 +49,8 @@ class TimelineHistManager extends EventTarget {
     DataManager.getInstance().listen(DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
     DataManager.getInstance().listen(DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
 
-    dispatcher.getInstance().listen(os.events.LayerEventType.ADD, this.fireChangeEvent_, false, this);
-    dispatcher.getInstance().listen(os.events.LayerEventType.REMOVE, this.fireChangeEvent_, false, this);
+    dispatcher.getInstance().listen(LayerEventType.ADD, this.fireChangeEvent_, false, this);
+    dispatcher.getInstance().listen(LayerEventType.REMOVE, this.fireChangeEvent_, false, this);
   }
 
   /**
@@ -59,8 +60,8 @@ class TimelineHistManager extends EventTarget {
     this.changeThrottle_.dispose();
     this.changeThrottle_ = null;
 
-    dispatcher.getInstance().unlisten(os.events.LayerEventType.ADD, this.fireChangeEvent_, false, this);
-    dispatcher.getInstance().unlisten(os.events.LayerEventType.REMOVE, this.fireChangeEvent_, false, this);
+    dispatcher.getInstance().unlisten(LayerEventType.ADD, this.fireChangeEvent_, false, this);
+    dispatcher.getInstance().unlisten(LayerEventType.REMOVE, this.fireChangeEvent_, false, this);
 
     DataManager.getInstance().unlisten(DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
     DataManager.getInstance().unlisten(DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);

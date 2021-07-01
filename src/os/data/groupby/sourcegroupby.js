@@ -3,9 +3,9 @@ goog.module.declareLegacyNamespace();
 
 const RecordField = goog.require('os.data.RecordField');
 const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
+const FilterNode = goog.require('os.ui.filter.ui.FilterNode');
 const {featureKeys} = goog.require('os.ui.query');
 const AreaNode = goog.require('os.ui.query.AreaNode');
-const FilterNode = goog.require('os.ui.filter.ui.FilterNode');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
 

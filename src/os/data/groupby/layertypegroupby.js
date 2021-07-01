@@ -4,6 +4,7 @@ goog.module.declareLegacyNamespace();
 const googArray = goog.require('goog.array');
 const googString = goog.require('goog.string');
 const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
+const Group = goog.require('os.layer.Group');
 const LayerType = goog.require('os.layer.LayerType');
 const {getMapContainer} = goog.require('os.map.instance');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
@@ -37,7 +38,7 @@ class LayerTypeGroupBy extends BaseGroupBy {
       var p = layer.getOSType() || '00Unknown Type';
 
       for (var i = 0, n = layers.length; i < n; i++) {
-        if (layers[i] instanceof os.layer.Group) {
+        if (layers[i] instanceof Group) {
           var group = /** @type {os.layer.Group} */ (layers[i]);
 
           if (group.getLayers().getArray().indexOf(/** @type {ol.layer.Base} */ (layer)) > -1 ||

@@ -1,10 +1,15 @@
 goog.module('os.data.DataManager');
 goog.module.declareLegacyNamespace();
 
+const googArray = goog.require('goog.array');
 const Delay = goog.require('goog.async.Delay');
 const EventTarget = goog.require('goog.events.EventTarget');
+const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
+const {NAMESPACE} = goog.require('os');
 const dispatcher = goog.require('os.Dispatcher');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
 const Settings = goog.require('os.config.Settings');
 const data = goog.require('os.data');
 const DataProviderEvent = goog.require('os.data.DataProviderEvent');
@@ -16,9 +21,14 @@ const DataEvent = goog.require('os.data.event.DataEvent');
 const DataEventType = goog.require('os.data.event.DataEventType');
 const LayerEventType = goog.require('os.events.LayerEventType');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const osFile = goog.require('os.file');
+const FileStorage = goog.require('os.file.FileStorage');
+const osImplements = goog.require('os.implements');
 const instanceOf = goog.require('os.instanceOf');
 const LayerClass = goog.require('os.layer.LayerClass');
 const SourceClass = goog.require('os.source.SourceClass');
+const TimeInstant = goog.require('os.time.TimeInstant');
+const TimelineController = goog.require('os.time.TimelineController');
 const AbstractLoadingServer = goog.require('os.ui.server.AbstractLoadingServer');
 const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
@@ -411,12 +421,12 @@ class DataManager extends EventTarget {
   addProvider(dp) {
     if (this.getProvider(dp.getId())) {
       var msg = 'A provider with the ID "' + dp.getId() + '" already exists! Modify that one rather than replacing it.';
-      os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
+      AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.ERROR);
       return;
     }
 
     this.providerRoot_.addChild(dp);
-    dp.listen(goog.events.EventType.PROPERTYCHANGE, this.onProviderChange, false, this);
+    dp.listen(GoogEventType.PROPERTYCHANGE, this.onProviderChange, false, this);
 
     this.dispatchEvent(new DataProviderEvent(data.DataProviderEventType.ADD_PROVIDER, dp));
   }
@@ -427,7 +437,7 @@ class DataManager extends EventTarget {
   removeProvider(id) {
     var provider = this.getProvider(id);
     if (provider) {
-      provider.unlisten(goog.events.EventType.PROPERTYCHANGE, this.onProviderChange, false, this);
+      provider.unlisten(GoogEventType.PROPERTYCHANGE, this.onProviderChange, false, this);
       this.providerRoot_.removeChild(provider);
 
       this.dispatchEvent(new DataProviderEvent(data.DataProviderEventType.REMOVE_PROVIDER, provider));
@@ -526,7 +536,7 @@ class DataManager extends EventTarget {
   hasError() {
     var providers = /** @type {Array<IDataProvider>} */ (this.providerRoot_.getChildren());
     if (providers) {
-      return goog.array.some(providers, function(p) {
+      return googArray.some(providers, function(p) {
         return p.getEnabled() && p.getError();
       });
     }
@@ -564,9 +574,9 @@ class DataManager extends EventTarget {
           aliasesSeen[aliases[i]] = true;
         }
 
-        if (os.implements(d, IUrlDescriptor.ID)) {
+        if (osImplements(d, IUrlDescriptor.ID)) {
           var url = /** @type {IUrlDescriptor} */ (d).getUrl();
-          if (!url || (os.file.isLocal(url) && !os.file.FileStorage.getInstance().isPersistent())) {
+          if (!url || (osFile.isLocal(url) && !FileStorage.getInstance().isPersistent())) {
             // skip the descriptor if the URL is missing, or if it's a local URL and we can't persist the file
             continue;
           }
@@ -745,9 +755,9 @@ class DataManager extends EventTarget {
     var descriptor = this.getDescriptor(id);
     if (descriptor) {
       var maxDate = descriptor.getMaxDate();
-      if (maxDate > 0 && maxDate < os.time.TimeInstant.MAX_TIME) {
+      if (maxDate > 0 && maxDate < TimeInstant.MAX_TIME) {
         // try to clamp this to reasonable values, avoiding unbounded end dates
-        os.time.TimelineController.getInstance().setRangeStart(maxDate);
+        TimelineController.getInstance().setRangeStart(maxDate);
         return true;
       }
     }
@@ -792,7 +802,7 @@ const logger = log.getLogger('os.data.DataManager');
 /**
  * @type {string}
  */
-DataManager.DESCRIPTOR_KEY = os.NAMESPACE + '.descriptors';
+DataManager.DESCRIPTOR_KEY = NAMESPACE + '.descriptors';
 
 
 /**

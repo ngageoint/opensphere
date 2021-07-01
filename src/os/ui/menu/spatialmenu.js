@@ -8,7 +8,6 @@ goog.require('os.action.EventType');
 goog.require('os.array');
 goog.require('os.command.AreaToggle');
 goog.require('os.command.SequenceCommand');
-goog.require('os.data.AreaNode');
 goog.require('os.events.PayloadEvent');
 goog.require('os.feature');
 goog.require('os.fn');
@@ -22,6 +21,7 @@ goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
 goog.require('os.ui.query');
+goog.require('os.ui.query.AreaNode');
 goog.require('os.ui.query.cmd.AreaAdd');
 goog.require('os.ui.query.cmd.AreaModify');
 goog.require('os.ui.query.cmd.AreaRemove');
@@ -51,8 +51,8 @@ os.ui.menu.SpatialMenu.prototype.open = function(context, position, opt_target) 
 
     context = context.map(function(item) {
       var feature = null;
-      if (item instanceof os.data.AreaNode) {
-        feature = /** @type {os.data.AreaNode} */ (item).getArea();
+      if (item instanceof os.ui.query.AreaNode) {
+        feature = /** @type {os.ui.query.AreaNode} */ (item).getArea();
       } else if (item instanceof os.data.DrawingFeatureNode) {
         feature = /** @type {os.data.DrawingFeatureNode} */ (item).getFeature();
       }

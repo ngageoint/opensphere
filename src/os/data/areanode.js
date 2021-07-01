@@ -6,13 +6,16 @@ goog.require('os.ui.node.areaNodeUIDirective');
 const GoogEventType = goog.require('goog.events.EventType');
 const events = goog.require('ol.events');
 const AreaToggle = goog.require('os.command.AreaToggle');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const osImplements = goog.require('os.implements');
 const query = goog.require('os.query');
 const {getAreaManager, getQueryManager} = goog.require('os.query.instance');
+const {isStateFile} = goog.require('os.state');
 const TriState = goog.require('os.structs.TriState');
 const IMenuSupplier = goog.require('os.ui.menu.IMenuSupplier');
-const osUiQueryAreaNode = goog.require('os.ui.query.AreaNode');
+const spatial = goog.require('os.ui.menu.spatial');
+const QueryAreaNode = goog.require('os.ui.query.AreaNode');
 
 const ISearchable = goog.requireType('os.data.ISearchable');
 
@@ -23,7 +26,7 @@ const ISearchable = goog.requireType('os.data.ISearchable');
  * @implements {ISearchable}
  * @implements {IMenuSupplier}
  */
-class AreaNode extends osUiQueryAreaNode {
+class AreaNode extends QueryAreaNode {
   /**
    * Constructor.
    * @param {!ol.Feature=} opt_area
@@ -48,7 +51,7 @@ class AreaNode extends osUiQueryAreaNode {
    * @inheritDoc
    */
   getMenu() {
-    return os.ui.menu.spatial.MENU;
+    return spatial.MENU;
   }
 
   /**
@@ -102,7 +105,7 @@ class AreaNode extends osUiQueryAreaNode {
         // we only need to fire a command if the feature differs
         if (show !== shown) {
           var cmd = new AreaToggle(this.area, show);
-          os.command.CommandProcessor.getInstance().addCommand(cmd);
+          CommandProcessor.getInstance().addCommand(cmd);
         }
       }
     }
@@ -158,7 +161,7 @@ class AreaNode extends osUiQueryAreaNode {
     }
 
     if (icon) {
-      if (os.state.isStateFile(this.getId())) {
+      if (isStateFile(this.getId())) {
         statecopy = 'fa fa-bookmark ';
       }
       return ' <i class="fa ' + icon + '" title="' + tooltip + '"></i> <i class=" ' +

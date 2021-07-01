@@ -2,6 +2,7 @@ goog.module('os.data.groupby.TagListGroupBy');
 goog.module.declareLegacyNamespace();
 
 const googArray = goog.require('goog.array');
+const log = goog.require('goog.log');
 const Settings = goog.require('os.config.Settings');
 const TagGroupBy = goog.require('os.ui.data.groupby.TagGroupBy');
 
@@ -71,7 +72,7 @@ class TagListGroupBy extends TagGroupBy {
         }
       }
       if (invalid) {
-        goog.log.fine(this.log, 'Invalid tag set for ' + node.getLabel() + ': \n' + JSON.stringify(tags));
+        log.fine(this.log, 'Invalid tag set for ' + node.getLabel() + ': \n' + JSON.stringify(tags));
       }
     }
 

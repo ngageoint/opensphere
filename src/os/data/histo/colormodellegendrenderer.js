@@ -1,19 +1,25 @@
 goog.module('os.data.histo.legend');
 goog.module.declareLegacyNamespace();
 
+const googArray = goog.require('goog.array');
+const googObject = goog.require('goog.object');
+const {ROOT} = goog.require('os');
 const NumericBinMethod = goog.require('os.histo.NumericBinMethod');
 const legend = goog.require('os.legend');
 const Module = goog.require('os.ui.Module');
+
+const VectorLayer = goog.requireType('os.layer.Vector');
+const VectorSource = goog.requireType('os.source.Vector');
 
 
 /**
  * Add a vector layer's color model to the legend.
  *
- * @param {!os.layer.Vector} layer The vector layer.
+ * @param {!VectorLayer} layer The vector layer.
  * @param {!osx.legend.LegendOptions} options The legend options.
  */
 const addVectorColorModel = function(layer, options) {
-  var source = /** @type {os.source.Vector} */ (layer.getSource());
+  var source = /** @type {VectorSource} */ (layer.getSource());
   if (source && legend.shouldDrawSource(source)) {
     var config = legend.getSourceConfig(source, options);
     var model = source.getColorModel();
@@ -42,7 +48,7 @@ const addVectorColorModel = function(layer, options) {
           }
         }
 
-        var keys = goog.object.getKeys(colors);
+        var keys = googObject.getKeys(colors);
 
         // only show column header if requested and if there is data
         if (!options['showColumn'] && keys.length > 0) {
@@ -64,7 +70,7 @@ const addVectorColorModel = function(layer, options) {
         if (keys.length > 0) {
           // TODO: should we use goog.string.caseInsensitiveCompare for the default case?
           var sortFn = binMethod instanceof NumericBinMethod ? legend.numericCompare :
-            goog.array.defaultCompare;
+            googArray.defaultCompare;
           keys.sort(sortFn);
 
           for (var i = 0; i < keys.length; i++) {
@@ -103,7 +109,7 @@ const legendSettingsDirective = function() {
   return {
     restrict: 'E',
     replace: true,
-    templateUrl: os.ROOT + 'views/data/histo/colormodellegendsettings.html'
+    templateUrl: ROOT + 'views/data/histo/colormodellegendsettings.html'
   };
 };
 

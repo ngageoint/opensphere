@@ -1,6 +1,7 @@
 goog.module('os.data.histo.ColorBin');
 goog.module.declareLegacyNamespace();
 
+const osColor = goog.require('os.color');
 const Bin = goog.require('os.histo.Bin');
 
 
@@ -24,7 +25,7 @@ class ColorBin extends Bin {
      * @type {string}
      * @private
      */
-    this.baseColor_ = os.color.toHexString(baseColor);
+    this.baseColor_ = osColor.toHexString(baseColor);
 
     /**
      * Number of items in the bin with a given color.
@@ -125,7 +126,7 @@ class ColorBin extends Bin {
    */
   decrementColor(color) {
     // disregard opacity - only interested in tracking the color
-    color = color ? os.color.toHexString(color) : this.baseColor_;
+    color = color ? osColor.toHexString(color) : this.baseColor_;
 
     if (color && color in this.colorCounts_) {
       this.colorCounts_[color]--;
@@ -143,7 +144,7 @@ class ColorBin extends Bin {
    */
   incrementColor(color) {
     // disregard opacity - only interested in tracking the color
-    color = color ? os.color.toHexString(color) : this.baseColor_;
+    color = color ? osColor.toHexString(color) : this.baseColor_;
 
     if (color) {
       if (color in this.colorCounts_) {

@@ -3,6 +3,8 @@ goog.module.declareLegacyNamespace();
 
 const Disposable = goog.require('goog.Disposable');
 const Delay = goog.require('goog.async.Delay');
+const dispose = goog.require('goog.dispose');
+const GoogEventType = goog.require('goog.events.EventType');
 const olArray = goog.require('ol.array');
 const events = goog.require('ol.events');
 const DataManager = goog.require('os.data.DataManager');
@@ -76,7 +78,7 @@ class SourceManager extends Disposable {
       events.unlistenByKey(this.sourceListeners_[key]);
     }
 
-    goog.dispose(this.updateDelay);
+    dispose(this.updateDelay);
     this.sourceListeners_ = {};
     this.sources.length = 0;
   }
@@ -132,7 +134,7 @@ class SourceManager extends Disposable {
 
     var id = source.getId();
     this.sourceListeners_[id] = events.listen(/** @type {events.EventTarget} */ (source),
-        goog.events.EventType.PROPERTYCHANGE, this.onSourcePropertyChange, this);
+        GoogEventType.PROPERTYCHANGE, this.onSourcePropertyChange, this);
   }
 
   /**

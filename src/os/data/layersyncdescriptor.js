@@ -6,6 +6,8 @@ goog.require('os.ui.node.defaultLayerNodeUIDirective');
 
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
+const googObject = goog.require('goog.object');
+const OLObject = goog.require('ol.Object');
 const olArray = goog.require('ol.array');
 const events = goog.require('ol.events');
 const dispatcher = goog.require('os.Dispatcher');
@@ -15,9 +17,11 @@ const IMappingDescriptor = goog.require('os.data.IMappingDescriptor');
 const LayerEventType = goog.require('os.events.LayerEventType');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const osImplements = goog.require('os.implements');
+const {createFromOptions} = goog.require('os.layer');
 const PropertyChange = goog.require('os.layer.PropertyChange');
 const {getMapContainer} = goog.require('os.map.instance');
 const Online = goog.require('os.net.Online');
+const {merge} = goog.require('os.object');
 
 const Logger = goog.requireType('goog.log.Logger');
 const LayerEvent = goog.requireType('os.events.LayerEvent');
@@ -224,9 +228,9 @@ class LayerSyncDescriptor extends BaseDescriptor {
     if (this.layers.indexOf(layer) > -1) {
       // merge things on the layer that might have changed with the current layer options
       var config = this.persistLayerConfig();
-      var keys = goog.object.getKeys(config);
+      var keys = googObject.getKeys(config);
       keys.forEach(function(key) {
-        os.object.merge(/** @type {!Object} */(this.layerConfig[key]), /** @type {!Object} */(config[key]), true);
+        merge(/** @type {!Object} */(this.layerConfig[key]), /** @type {!Object} */(config[key]), true);
       }, this);
 
       events.unlisten(/** @type {events.EventTarget} */ (layer), GoogEventType.PROPERTYCHANGE,
@@ -294,7 +298,7 @@ class LayerSyncDescriptor extends BaseDescriptor {
         if (layerId) {
           var layer = getMapContainer().getLayer(layerId);
           if (!layer) {
-            layer = os.layer.createFromOptions(layerOptions);
+            layer = createFromOptions(layerOptions);
 
             if (layer) {
               getMapContainer().addLayer(layer);
@@ -336,12 +340,12 @@ class LayerSyncDescriptor extends BaseDescriptor {
    */
   applyLayerConfig(options) {
     var opts = {};
-    os.object.merge(options, opts, true);
+    merge(options, opts, true);
 
     if (this.layerConfig) {
       var id = /** @type {string} */ (options['id']);
       if (id && id in this.layerConfig) {
-        os.object.merge(/** @type {!Object} */ (this.layerConfig[id]), opts, true);
+        merge(/** @type {!Object} */ (this.layerConfig[id]), opts, true);
       }
     }
 
@@ -370,7 +374,7 @@ class LayerSyncDescriptor extends BaseDescriptor {
       } else {
         this.saveDescriptor();
       }
-    } else if (e instanceof ol.Object.Event) {
+    } else if (e instanceof OLObject.Event) {
       // handle the OL3 change event
       if (styleKeys.indexOf(e.key) > -1) {
         this.onStyleChange();

@@ -1,6 +1,7 @@
 goog.module('os.data.xf.DataModel');
 goog.module.declareLegacyNamespace();
 
+const googArray = goog.require('goog.array');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
 const googObject = goog.require('goog.object');
@@ -394,7 +395,7 @@ class DataModel extends EventTarget {
         var results = /** @type {!Array<S>} */ (opt_bottom ? dim.bottom(opt_value) : dim.top(opt_value));
 
         if (this.filterFunction) {
-          results = goog.array.filter(results, this.filterFunction, this);
+          results = googArray.filter(results, this.filterFunction, this);
         }
 
         return results;

@@ -1,9 +1,12 @@
 goog.module('os.data.LayerTreeSearch');
 goog.module.declareLegacyNamespace();
 
+const googArray = goog.require('goog.array');
+const IGroupable = goog.require('os.IGroupable');
 const FolderNode = goog.require('os.data.FolderNode');
 const LayerNode = goog.require('os.data.LayerNode');
 const LayerZOrderGroupBy = goog.require('os.data.groupby.LayerZOrderGroupBy');
+const osImplements = goog.require('os.implements');
 const osLayer = goog.require('os.layer');
 const FolderManager = goog.require('os.layer.FolderManager');
 const LayerGroup = goog.require('os.layer.LayerGroup');
@@ -136,7 +139,7 @@ class LayerTreeSearch extends AbstractGroupByTreeSearch {
     if (results && results.length > 0) {
       // if there are no user-created folders, fall back to grouping them automatically
       var idBuckets = /** @type {!Object<string, !Array<!os.structs.ITreeNode>>} */
-          (goog.array.bucket(results, this.getNodeGroup.bind(this)));
+          (googArray.bucket(results, this.getNodeGroup.bind(this)));
       results.length = 0;
 
       for (var id in idBuckets) {
@@ -150,7 +153,7 @@ class LayerTreeSearch extends AbstractGroupByTreeSearch {
           for (var i = 0, n = bucket.length; i < n; i++) {
             var node = /** @type {LayerNode} */ (bucket[i]);
             var layer = node.getLayer();
-            var t = os.implements(layer, os.IGroupable.ID) ?
+            var t = osImplements(layer, IGroupable.ID) ?
               /** @type {os.IGroupable} */ (layer).getGroupLabel() : layer.getTitle();
 
             if (t.length < min) {
@@ -283,7 +286,7 @@ class LayerTreeSearch extends AbstractGroupByTreeSearch {
     if (node instanceof LayerNode) {
       var layer = node.getLayer();
 
-      if (os.implements(layer, os.IGroupable.ID)) {
+      if (osImplements(layer, IGroupable.ID)) {
         groupId = /** @type {os.IGroupable} */ (layer).getGroupId();
       }
 

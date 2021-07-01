@@ -5,12 +5,15 @@ goog.require('os.ui.filter.ui.filterNodeUIDirective');
 goog.require('os.ui.node.areaNodeUIDirective');
 
 const GoogEventType = goog.require('goog.events.EventType');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
 const FilterEnable = goog.require('os.command.FilterEnable');
 const SequenceCommand = goog.require('os.command.SequenceCommand');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const {getMapContainer} = goog.require('os.map.instance');
 const {getQueryManager} = goog.require('os.query.instance');
+const {isStateFile} = goog.require('os.state');
 const TriState = goog.require('os.structs.TriState');
+const {toFilterString} = goog.require('os.ui.filter');
 const UIFilterNode = goog.require('os.ui.filter.ui.FilterNode');
 const QueryEntries = goog.require('os.ui.query.cmd.QueryEntries');
 
@@ -60,7 +63,7 @@ class FilterNode extends UIFilterNode {
         this.setId(this.entry.getId());
         this.setLabel(this.entry.getTitle());
         this.setState(this.entry.isEnabled() ? TriState.ON : TriState.OFF);
-        this.setToolTip(os.ui.filter.toFilterString(this.entry.getFilterNode(), 1000));
+        this.setToolTip(toFilterString(this.entry.getFilterNode(), 1000));
         this.nodeUI = '<filternodeui></filternodeui>';
       }
 
@@ -115,7 +118,7 @@ class FilterNode extends UIFilterNode {
             var cmd = new SequenceCommand();
             cmd.setCommands(cmds);
             cmd.title = enable ? 'Enable' : 'Disable' + ' Filter';
-            os.command.CommandProcessor.getInstance().addCommand(cmd);
+            CommandProcessor.getInstance().addCommand(cmd);
           }
         }
       }
@@ -135,7 +138,7 @@ class FilterNode extends UIFilterNode {
       clazz = 'u-fa-badge-check';
       status = 'active';
     }
-    if (os.state.isStateFile(this.getEntry().getId())) {
+    if (isStateFile(this.getEntry().getId())) {
       var statecopy = 'fa fa-bookmark';
       return ' <i class="fa fa-fw fa-filter position-relative ' + clazz + '" title="This filter is ' +
         status + '"></i> <i class=" ' + statecopy + '" title="This is from a state file"></i> ';

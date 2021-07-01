@@ -3,8 +3,10 @@ goog.module.declareLegacyNamespace();
 
 const dom = goog.require('goog.dom');
 const olArray = goog.require('ol.array');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const FilterEntry = goog.require('os.filter.FilterEntry');
+const {isCondition} = goog.require('os.ui.filter');
 
 const IHistogramUI = goog.requireType('os.ui.IHistogramUI');
 
@@ -63,7 +65,7 @@ const createFilter = function(controllers, columns, opt_allowAll) {
       // single filter, so verify it has a condition
       var doc = dom.xml.loadXml(filterStr);
       var filterRoot = dom.getFirstElementChild(doc);
-      if (!os.ui.filter.isCondition(filterRoot)) {
+      if (!isCondition(filterRoot)) {
         // no condition, default to Or
         filterStr = '<Or>' + filterStr + '</Or>';
       }
@@ -109,13 +111,13 @@ const filterValidControllers = function(controllers, columns, opt_allowAll) {
       errorMsg = 'Unable to create a filter using column "' + columnName + '". The application derives some values ' +
           'for internal processing though the columns are not defined on the data source.  Filters cannot be created ' +
           'using internal columns.';
-      errorLevel = os.alert.AlertEventSeverity.WARNING;
+      errorLevel = AlertEventSeverity.WARNING;
       break;
     } else if (ctrl.isDateMethod()) {
       // don't allow date filters
       errorMsg = 'Unable to create a filter using column "' + columnName + '". Filters cannot be created using the ' +
           'Date type. Time filtering is managed by the application time controls.';
-      errorLevel = os.alert.AlertEventSeverity.WARNING;
+      errorLevel = AlertEventSeverity.WARNING;
       break;
     }
 
@@ -134,7 +136,7 @@ const filterValidControllers = function(controllers, columns, opt_allowAll) {
       errorMsg += 'selected rows in the Count By.';
     }
     errorMsg += ' Unrecognized/invalid values will be omitted from filters.';
-    errorLevel = os.alert.AlertEventSeverity.ERROR;
+    errorLevel = AlertEventSeverity.ERROR;
   }
 
   if (errorMsg) {
