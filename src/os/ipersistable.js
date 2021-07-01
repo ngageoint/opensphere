@@ -1,6 +1,5 @@
-goog.provide('os.IPersistable');
-
-
+goog.module('os.IPersistable');
+goog.module.declareLegacyNamespace();
 
 /**
  * An interface for persistable/restorable objects
@@ -8,19 +7,19 @@ goog.provide('os.IPersistable');
  * @interface
  * @template T
  */
-os.IPersistable = function() {};
+class IPersistable {
+  /**
+   * Persists this object
+   * @param {T=} opt_to An optional object to persist to. By default a new object is created.
+   * @return {!T}
+   */
+  persist(opt_to) {}
 
+  /**
+   * Restores the object
+   * @param {!T} config The object from which to restore
+   */
+  restore(config) {}
+}
 
-/**
- * Persists this object
- * @param {T=} opt_to An optional object to persist to. By default a new object is created.
- * @return {!T}
- */
-os.IPersistable.prototype.persist;
-
-
-/**
- * Restores the object
- * @param {!T} config The object from which to restore
- */
-os.IPersistable.prototype.restore;
+exports = IPersistable;

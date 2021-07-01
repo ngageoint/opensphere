@@ -1,6 +1,5 @@
-goog.provide('os.IComparable');
-
-
+goog.module('os.IComparable');
+goog.module.declareLegacyNamespace();
 
 /**
  * Interface for objects that can be compared.
@@ -8,12 +7,13 @@ goog.provide('os.IComparable');
  * @interface
  * @template T
  */
-os.IComparable = function() {};
+class IComparable {
+  /**
+   * Compares this object to another object.
+   * @param {T} other The other object
+   * @return {number} The comparison value
+   */
+  compare(other) {}
+}
 
-
-/**
- * Compares this object to another object.
- * @param {T} other The other object
- * @return {number} The comparison value
- */
-os.IComparable.prototype.compare;
+exports = IComparable;

@@ -1,22 +1,21 @@
-goog.provide('os.I3DSupport');
-
-
+goog.module('os.I3DSupport');
+goog.module.declareLegacyNamespace();
 
 /**
  * @interface
  */
-os.I3DSupport = function() {};
-
+class I3DSupport {
+  /**
+   * Whether or not 3D is supported
+   * @return {boolean}
+   */
+  is3DSupported() {}
+}
 
 /**
  * @const
  * @type {string}
  */
-os.I3DSupport.ID = 'os.I3DSupport';
+I3DSupport.ID = 'os.I3DSupport';
 
-
-/**
- * Whether or not 3D is supported
- * @return {boolean}
- */
-os.I3DSupport.prototype.is3DSupported;
+exports = I3DSupport;
