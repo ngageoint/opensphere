@@ -127,7 +127,9 @@ class ImageStaticSynchronizer extends CesiumSynchronizer {
           id: this.layer.getId()
         }),
         appearance: new Cesium.MaterialAppearance({
-          material: this.createImageMaterial(url)
+          material: Cesium.Material.fromType('Image', {
+            image: url
+          })
         }),
         show: this.layer.getVisible()
       });
@@ -160,19 +162,6 @@ class ImageStaticSynchronizer extends CesiumSynchronizer {
   }
 
   /**
-   * Create a Cesium material from an image
-   *
-   * @param {HTMLCanvasElement|HTMLVideoElement|Image|string} image
-   * @return {Cesium.Material}
-   */
-  createImageMaterial(image) {
-    return Cesium.Material.fromType('Image', {
-      image: image,
-      color: new Cesium.Color(1, 1, 1, this.layer.getOpacity())
-    });
-  }
-
-  /**
    * Handle visibility
    *
    * @param {PropertyChangeEvent} event
@@ -183,7 +172,11 @@ class ImageStaticSynchronizer extends CesiumSynchronizer {
       if (event.key == LayerPropertyChange.VISIBLE) {
         this.primitive.show = this.layer.getVisible();
       } else if (this.styleChangeKeys.includes(event.key)) {
-        this.primitive.appearance.material = this.createImageMaterial(this.image.getImage());
+        if (event.key == 'opacity') {
+          this.primitive.appearance.material.uniforms.color.alpha = this.layer.getOpacity();
+        } else {
+          this.primitive.appearance.material.uniforms.image = this.image.getImage();
+        }
       }
       dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }

@@ -64,11 +64,14 @@ class Controller extends ImageLayerUI.Controller {
     var nodes = [];
 
     var items = this.scope['items'] || [];
+
+    // replace each item with its corresponding layer node if it has one
     for (var i = 0; i < items.length; i++) {
       if (items[i].layerNode) {
         items[i] = items[i].layerNode;
       }
     }
+
     items = /** @type {!Array<!LayerNode>} */ (items.filter(isLayerNode));
 
     for (var i = 0; i < items.length; i++) {
