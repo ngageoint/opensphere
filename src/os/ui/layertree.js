@@ -9,6 +9,7 @@ goog.require('os.layer.LayerGroup');
 goog.require('os.structs.ITreeNode');
 goog.require('os.ui.Module');
 goog.require('os.ui.slick.SlickTreeCtrl');
+goog.require('os.ui.slick.SlickTreeNode');
 goog.require('os.ui.slick.slickTreeDirective');
 
 
@@ -122,10 +123,31 @@ os.ui.LayerTreeCtrl.prototype.canDragMove = function(rows, insertBefore) {
     // 2. Layers can be reparented to valid folders.
     // 3. Folders cannot be their own parents.
 
+    // start by updating the moveMode, this is normally done in the parent class AFTER this function is called,
+    // but we need to do it first
+    var targetNode = /** @type {os.ui.slick.SlickTreeNode} */ (this.dataView.getItem(insertBefore));
+
+    // iterate up the tree to ensure we're dropping onto another layer or a folder
+    while (!targetNode) {
+      insertBefore--;
+
+      var candidateNode = /** @type {(os.data.LayerNode|os.data.FolderNode)} */ (this.grid.getDataItem(insertBefore));
+      if (candidateNode) {
+        targetNode = !candidateNode.supportsInternalDrag() ? candidateNode : null;
+      }
+    }
+
+    if (targetNode && targetNode.getParentIndex() != nodeToMove.getParentIndex()) {
+      if (targetNode.getParentIndex() == -1) {
+        this.moveMode = os.ui.slick.SlickTreeNode.MOVE_MODE.REPARENT_TO_ROOT;
+      } else {
+        this.moveMode = os.ui.slick.SlickTreeNode.MOVE_MODE.REPARENT_LOOKUP_PARENT;
+      }
+    }
+
     for (var i = 0, n = rows.length; i < n; i++) {
-      // no point in moving before or after itself
-      if (this.moveMode == os.ui.slick.SlickTreeNode.MOVE_MODE.SIBLING &&
-          (rows[i] == insertBefore || rows[i] == insertBefore - 1)) {
+      // don't allow moving a node directly after itself if it's not a reparent move
+      if (this.moveMode == os.ui.slick.SlickTreeNode.MOVE_MODE.SIBLING && rows[i] == insertBefore) {
         return false;
       }
 
@@ -166,7 +188,7 @@ os.ui.LayerTreeCtrl.prototype.canDragMove = function(rows, insertBefore) {
         }
       } else {
         // we are only working with folders
-        return true;
+        return !!targetNode && !targetNode.supportsInternalDrag();
       }
     }
   } else {
@@ -212,7 +234,11 @@ os.ui.LayerTreeCtrl.prototype.doMove = function(rows, insertBefore) {
     while (!targetNode) {
       after = true;
       insertBefore--;
-      targetNode = /** @type {(os.data.LayerNode|os.data.FolderNode)} */ (this.grid.getDataItem(insertBefore));
+
+      var candidateNode = /** @type {(os.data.LayerNode|os.data.FolderNode)} */ (this.grid.getDataItem(insertBefore));
+      if (candidateNode) {
+        targetNode = !candidateNode.supportsInternalDrag() ? candidateNode : null;
+      }
     }
 
     if (targetNode) {
