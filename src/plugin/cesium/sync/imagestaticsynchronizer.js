@@ -57,6 +57,13 @@ class ImageStaticSynchronizer extends CesiumSynchronizer {
      */
     this.primitive;
 
+    /**
+     * Event keys that correspond to modifiable styles
+     * @type {Array<string>}
+     * @protected
+     */
+    this.styleChangeKeys = ['opacity', 'brightness', 'contrast', 'saturation', 'sharpness'];
+
     olEvents.listen(this.layer, GoogEventType.PROPERTYCHANGE, this.onLayerPropertyChange, this);
   }
 
@@ -161,8 +168,16 @@ class ImageStaticSynchronizer extends CesiumSynchronizer {
    * @protected
    */
   onLayerPropertyChange(event) {
-    if (this.primitive && event instanceof OLObject.Event && event.key == LayerPropertyChange.VISIBLE) {
-      this.primitive.show = this.layer.getVisible();
+    if (this.primitive && event instanceof OLObject.Event) {
+      if (event.key == LayerPropertyChange.VISIBLE) {
+        this.primitive.show = this.layer.getVisible();
+      } else if (this.styleChangeKeys.includes(event.key)) {
+        if (event.key == 'opacity') {
+          this.primitive.appearance.material.uniforms.color.alpha = this.layer.getOpacity();
+        } else {
+          this.primitive.appearance.material.uniforms.image = this.image.getImage();
+        }
+      }
       dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
     }
   }

@@ -11,6 +11,7 @@ goog.require('os.ol.image');
  * @extends {ol.source.ImageStatic}
  * @param {olx.source.ImageStaticOptions} options
  * @param {number} rotation
+ * @suppress {accessControls}
  */
 os.source.ImageStatic = function(options, rotation) {
   os.source.ImageStatic.base(this, 'constructor', options);
@@ -26,6 +27,9 @@ os.source.ImageStatic = function(options, rotation) {
    * @protected
    */
   this.rotation = rotation;
+
+  // Set the source of the image so it can handle style changes properly
+  this.image_.olSource = this;
 };
 goog.inherits(os.source.ImageStatic, ol.source.ImageStatic);
 
