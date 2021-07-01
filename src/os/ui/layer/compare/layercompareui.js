@@ -12,8 +12,10 @@ const ZoomControl = goog.require('ol.control.Zoom');
 const {getCenter: getExtentCenter} = goog.require('ol.extent');
 
 const {ROOT} = goog.require('os');
+const osImplements = goog.require('os.implements');
+const ILayer = goog.require('os.layer.ILayer');
 const osMap = goog.require('os.map');
-const {getIMapContainer} = goog.require('os.map.instance');
+const {getMapContainer} = goog.require('os.map.instance');
 const Module = goog.require('os.ui.Module');
 const {resize, removeResize} = goog.require('os.ui');
 const {
@@ -46,6 +48,22 @@ const Selector = {
  * }}
  */
 let LayerCompareOptions;
+
+
+/**
+ * Get active basemap layers from the main map.
+ * @return {!Array<!Layer>}
+ */
+const getBasemaps = () => getMapContainer().getLayers().filter(isBasemap);
+
+
+/**
+ * If a layer is a basemap layer.
+ * @param {!Layer} layer The layer.
+ * @return {boolean} If the layer is a basemap.
+ */
+const isBasemap = (layer) => osImplements(layer, ILayer.ID) &&
+/** @type {ILayer} */ (layer).getOSType() === 'Map Layers';
 
 
 /**
@@ -230,8 +248,18 @@ class Controller {
     // Make the left map container 50% width for an initial split view.
     this.element.find(Selector.MAP_LEFT).width('50%');
 
-    // Set the layers on each map.
     const compareOptions = /** @type {LayerCompareOptions} */ (this.scope);
+
+    // Add basemaps to the layer sets if they aren't already present.
+    const basemaps = getBasemaps();
+    if (!compareOptions.left.some(isBasemap)) {
+      compareOptions.left = compareOptions.left.concat(basemaps);
+    }
+    if (!compareOptions.right.some(isBasemap)) {
+      compareOptions.right = compareOptions.right.concat(basemaps);
+    }
+
+    // Set the layers on each map.
     this.setLeftLayers(compareOptions.left);
     this.setRightLayers(compareOptions.right);
   }
@@ -250,7 +278,7 @@ class Controller {
    * @protected
    */
   createView() {
-    const mapContainer = getIMapContainer();
+    const mapContainer = getMapContainer();
     const mainMap = mapContainer ? mapContainer.getMap() : null;
     const mainView = mainMap ? mainMap.getView() : mainMap;
 
