@@ -115,8 +115,6 @@ os.ui.LayersCtrl = function($scope, $element) {
     this.menus_['.add-data-group'] = os.ui.menu.import.MENU;
   }
 
-  this.selectedActionsOpen_ = false;
-
   var map = os.MapContainer.getInstance();
   map.listen(os.events.LayerEventType.ADD, this.search, false, this);
   map.listen(os.events.LayerEventType.REMOVE, this.search, false, this);
@@ -284,34 +282,6 @@ os.ui.LayersCtrl.prototype.openMenu = function(selector) {
         my: 'left top+3',
         at: 'left bottom',
         of: target
-      });
-    }
-  }
-};
-
-
-/**
- * Open the Selected Actions menu.
- * @param {angular.Scope.Event} event The ng-click event.
- * @export
- */
-os.ui.LayersCtrl.prototype.openSelectedActionsMenu = function(event) {
-  if (this.scope) {
-    if (this.selectedActionsOpen_) {
-      this.selectedActionsOpen_ = false;
-      event.target.blur();
-      os.ui.menu.layer.MENU.close();
-    } else {
-      this.selectedActionsOpen_ = true;
-      os.dispatcher.listenOnce(os.ui.GlobalMenuEventType.MENU_CLOSE, () => {
-        this.selectedActionsOpen_ = false;
-      });
-
-      const context = this.scope['selected'] || [];
-      os.ui.menu.layer.MENU.open(context, {
-        my: 'left top+3',
-        at: 'left bottom',
-        of: event.target
       });
     }
   }
