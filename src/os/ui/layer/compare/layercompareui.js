@@ -26,6 +26,7 @@ const {
 } = goog.require('os.ui.window');
 
 const EventKey = goog.requireType('goog.events.Key');
+const Control = goog.requireType('ol.control.Control');
 const Layer = goog.requireType('ol.layer.Layer');
 
 
@@ -59,11 +60,26 @@ const getBasemaps = () => getMapContainer().getLayers().filter(isBasemap);
 
 /**
  * If a layer is a basemap layer.
- * @param {!Layer} layer The layer.
+ * @param {Layer} layer The layer.
  * @return {boolean} If the layer is a basemap.
  */
 const isBasemap = (layer) => osImplements(layer, ILayer.ID) &&
 /** @type {ILayer} */ (layer).getOSType() === 'Map Layers';
+
+
+/**
+ * Create the controls to display on the map.
+ * @return {!Array<!Control>}
+ */
+const createControls = () => [
+  new RotateControl({
+    autoHide: false,
+    className: 'c-layer-compare-control ol-rotate'
+  }),
+  new ZoomControl({
+    className: 'c-layer-compare-control ol-zoom'
+  })
+];
 
 
 /**
@@ -225,15 +241,7 @@ class Controller {
       view: this.view
     });
 
-    const controls = new Collection([
-      new RotateControl({
-        autoHide: false,
-        className: 'c-layer-compare-control ol-rotate'
-      }),
-      new ZoomControl({
-        className: 'c-layer-compare-control ol-zoom'
-      })
-    ]);
+    const controls = new Collection(createControls());
 
     this.rightMap = new OLMap({
       controls,
@@ -340,12 +348,20 @@ class Controller {
 
     // Swap the order via CSS. This uses z-order to control which map is displayed on top, and the width of the top
     // map is adjusted by the slider (making it appear to be on the left).
+    //
+    // Map controls are also swapped to ensure they display on the right of the compare window.
     if (this.leftOnTop) {
       this.element.find(Selector.MAP_LEFT).addClass('c-layer-compare-top');
       this.element.find(Selector.MAP_RIGHT).removeClass('c-layer-compare-top').width('auto');
+
+      this.leftMap.getControls().clear();
+      this.rightMap.getControls().extend(createControls());
     } else {
       this.element.find(Selector.MAP_LEFT).removeClass('c-layer-compare-top').width('auto');
       this.element.find(Selector.MAP_RIGHT).addClass('c-layer-compare-top');
+
+      this.rightMap.getControls().clear();
+      this.leftMap.getControls().extend(createControls());
     }
 
     this.updateMapContainerWidth();
