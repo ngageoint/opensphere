@@ -240,6 +240,18 @@ os.im.Importer.prototype.setExecMappings = function(mapList) {
 
 
 /**
+ * Set mappings configured by the user
+ *
+ * @param {Array<os.im.mapping.IMapping>} mapList
+ */
+os.im.Importer.prototype.setUserMappings = function(mapList) {
+  if (mapList && mapList.length > 0) {
+    mapList.forEach((mapping) => this.addMapping_(mapping));
+  }
+};
+
+
+/**
  * @inheritDoc
  */
 os.im.Importer.prototype.startImport = function(source) {
@@ -571,9 +583,14 @@ os.im.Importer.prototype.addMapping_ = function(mapping) {
     this.mappings = [mapping];
   } else {
     var endIndex = this.mappings.length - 1;
+    const mapIndex = this.mappings.findIndex((temp) => temp.toField == mapping.toField);
+
     if (os.implements(this.mappings[endIndex], os.im.mapping.AltMappingId)) {
       // if alt mapping is already at the end, leave it there
       this.mappings.splice(endIndex, 0, mapping);
+    } else if (mapIndex >= 0) {
+      // if the mapping already exists, replace it
+      this.mappings.splice(mapIndex, 1, mapping);
     } else {
       this.mappings.push(mapping);
     }

@@ -333,11 +333,15 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
       new SemiMinorMapping()
     ];
 
+    const hasEllipse = options['mappings'].some((temp) => this.isEllipticalMapping(temp));
+
     for (var i = 0, ii = autodetects.length; i < ii; i++) {
       var mapping = autodetects[i];
       var detected = mapping.autoDetect([columnObj]);
 
-      if (detected) {
+      const isEllipse = detected ? this.isEllipticalMapping(detected) : false;
+
+      if (detected && (!isEllipse && !hasEllipse)) {
         execMappings.push(detected);
       }
     }
@@ -347,8 +351,20 @@ class WFSLayerConfig extends AbstractDataSourceLayerConfig {
     }
 
     if (options['mappings']) {
-      importer.setMappings(/** @type {Array<IMapping>} */ (options['mappings']));
+      importer.setUserMappings(/** @type {Array<IMapping>} */ (options['mappings']));
     }
+  }
+
+
+  /**
+   * Returns if a mapping is elliptical
+   * @param {IMapping} mapping
+   * @return {boolean}
+   */
+  isEllipticalMapping(mapping) {
+    const field = mapping.toField;
+    return RadiusMapping.REGEX.test(field) ||
+      SemiMajorMapping.REGEX.test(field) || SemiMinorMapping.REGEX.test(field) || OrientationMapping.REGEX.test(field);
   }
 
   /**
