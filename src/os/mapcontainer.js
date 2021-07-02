@@ -9,6 +9,8 @@ const {binarySelect, defaultCompare} = goog.require('goog.array');
 const {assert} = goog.require('goog.asserts');
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
 const Delay = goog.require('goog.async.Delay');
+const nextTick = goog.require('goog.async.nextTick');
+const googDispose = goog.require('goog.dispose');
 const ViewportSizeMonitor = goog.require('goog.dom.ViewportSizeMonitor');
 const {install: installPolyfill} = goog.require('goog.dom.animationFrame.polyfill');
 const googEvents = goog.require('goog.events');
@@ -16,7 +18,9 @@ const EventTarget = goog.require('goog.events.EventTarget');
 const GoogEventType = goog.require('goog.events.EventType');
 const KeyCodes = goog.require('goog.events.KeyCodes');
 const log = goog.require('goog.log');
+const {clamp, toDegrees, toRadians} = goog.require('goog.math');
 
+const ol = goog.require('ol');
 const Collection = goog.require('ol.Collection');
 const Feature = goog.require('ol.Feature');
 const MapEventType = goog.require('ol.MapEventType');
@@ -24,6 +28,11 @@ const ObjectEventType = goog.require('ol.ObjectEventType');
 const View = goog.require('ol.View');
 const {linear: linearEasing} = goog.require('ol.easing');
 const olEvents = goog.require('ol.events');
+const olExtent = goog.require('ol.extent');
+const has = goog.require('ol.has');
+const LayerGroup = goog.require('ol.layer.Group');
+const ImageLayer = goog.require('ol.layer.Image');
+const Layer = goog.require('ol.layer.Layer');
 const Tile = goog.require('ol.layer.Tile');
 const OLVectorLayer = goog.require('ol.layer.Vector');
 const VectorTile = goog.require('ol.layer.VectorTile');
@@ -32,12 +41,15 @@ const Type = goog.require('ol.renderer.Type');
 const OLVectorSource = goog.require('ol.source.Vector');
 const {createForProjection} = goog.require('ol.tilegrid');
 
+const {ROOT} = goog.require('os');
+const CameraMode = goog.require('os.CameraMode');
 const dispatcher = goog.require('os.Dispatcher');
 const OSMap = goog.require('os.Map');
 const MapChange = goog.require('os.MapChange');
 const MapEvent = goog.require('os.MapEvent');
 const MapMode = goog.require('os.MapMode');
 const EventType = goog.require('os.action.EventType');
+const {isColorString} = goog.require('os.color');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
 const FlyToExtent = goog.require('os.command.FlyToExtent');
 const LayerRemove = goog.require('os.command.LayerRemove');
@@ -47,6 +59,7 @@ const DisplaySetting = goog.require('os.config.DisplaySetting');
 const Settings = goog.require('os.config.Settings');
 const DataManager = goog.require('os.data.DataManager');
 const DeactivateDescriptor = goog.require('os.data.DeactivateDescriptor');
+const RecordField = goog.require('os.data.RecordField');
 const ZOrder = goog.require('os.data.ZOrder');
 const {killEvent} = goog.require('os.events');
 const OSEventType = goog.require('os.events.EventType');
@@ -54,27 +67,36 @@ const LayerEvent = goog.require('os.events.LayerEvent');
 const LayerEventType = goog.require('os.events.LayerEventType');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const {normalize: normalizeExtent, normalizeToCenter} = goog.require('os.extent');
+const osFeature = goog.require('os.feature');
 const {filterFalsey, noop, reduceExtentFromGeometries} = goog.require('os.fn');
+const {normalizeLongitude} = goog.require('os.geo2');
 const instanceOf = goog.require('os.instanceOf');
 const {setConfig: setInterpolateConfig, interpolateFeature} = goog.require('os.interpolate');
 const AnimatedTile = goog.require('os.layer.AnimatedTile');
 const Drawing = goog.require('os.layer.Drawing');
 const Group = goog.require('os.layer.Group');
 const LayerType = goog.require('os.layer.LayerType');
+const SynchronizerType = goog.require('os.layer.SynchronizerType');
 const VectorLayer = goog.require('os.layer.Vector');
 const osMap = goog.require('os.map');
 const FlightMode = goog.require('os.map.FlightMode');
 const metrics = goog.require('os.metrics');
 const Metrics = goog.require('os.metrics.Metrics');
+const VariableReplacer = goog.require('os.net.VariableReplacer');
 const {unsafeClone} = goog.require('os.object');
 const {clone: cloneFeature} = goog.require('os.ol.feature');
 const {EPSG3857, EPSG4326, loadProjections} = goog.require('os.proj');
 const projSwitch = goog.require('os.proj.switch');
 const queryUtils = goog.require('os.query.utils');
+const {randomString} = goog.require('os.string');
 const osStyle = goog.require('os.style');
 const StyleType = goog.require('os.style.StyleType');
 const label = goog.require('os.style.label');
+const ui = goog.require('os.ui');
+const ActionEventType = goog.require('os.ui.action.EventType');
+const {launchWebGLPerfCaveatDialog, launchWebGLSupportDialog} = goog.require('os.ui.help');
 const Controls = goog.require('os.ui.help.Controls');
+const OnboardingManager = goog.require('os.ui.onboarding.OnboardingManager');
 const {isSupported: isWebglSupported, hasPerformanceCaveat} = goog.require('os.webgl');
 const AbstractWebGLRenderer = goog.require('os.webgl.AbstractWebGLRenderer');
 const AltitudeMode = goog.require('os.webgl.AltitudeMode');
@@ -185,7 +207,7 @@ class MapContainer extends EventTarget {
      */
     this.overrideFailIfMajorPerformanceCaveat_ = false;
 
-    dispatcher.getInstance().listen(os.ui.action.EventType.ZOOM, this.onZoom_, false, this);
+    dispatcher.getInstance().listen(ActionEventType.ZOOM, this.onZoom_, false, this);
 
     dispatcher.getInstance().listen(EventType.RESET_VIEW, this.resetView, false, this);
     dispatcher.getInstance().listen(EventType.RESET_ROTATION, this.resetRotation, false, this);
@@ -203,13 +225,13 @@ class MapContainer extends EventTarget {
    * @inheritDoc
    */
   disposeInternal() {
-    goog.dispose(this.vsm_);
+    googDispose(this.vsm_);
     this.vsm_ = null;
 
-    goog.dispose(this.viewChangeDelay_);
+    googDispose(this.viewChangeDelay_);
     this.viewChangeDelay_ = null;
 
-    goog.dispose(this.restoreCameraDelay_);
+    googDispose(this.restoreCameraDelay_);
     this.restoreCameraDelay_ = null;
 
     if (this.map_) {
@@ -222,7 +244,7 @@ class MapContainer extends EventTarget {
       this.map_ = null;
     }
 
-    dispatcher.getInstance().unlisten(os.ui.action.EventType.ZOOM, this.onZoom_, false, this);
+    dispatcher.getInstance().unlisten(ActionEventType.ZOOM, this.onZoom_, false, this);
 
     dispatcher.getInstance().unlisten(EventType.RESET_VIEW, this.resetView, false, this);
     dispatcher.getInstance().unlisten(EventType.RESET_ROTATION, this.resetRotation, false, this);
@@ -263,7 +285,7 @@ class MapContainer extends EventTarget {
    */
   addWebGLRenderer(renderer) {
     if (renderer) {
-      this.webGLRenderers_[renderer.getId() || os.string.randomString()] = renderer;
+      this.webGLRenderers_[renderer.getId() || randomString()] = renderer;
     }
   }
 
@@ -315,7 +337,7 @@ class MapContainer extends EventTarget {
     switch (event.type) {
       case DisplaySetting.BG_COLOR:
         var color = /** @type {string} */ (event.newVal);
-        if (os.color.isColorString(color)) {
+        if (isColorString(color)) {
           this.setBGColor(color);
         }
         break;
@@ -330,7 +352,7 @@ class MapContainer extends EventTarget {
    * @return {ol.Extent}
    */
   getViewExtent() {
-    return this.map_ ? this.map_.getExtent() : ol.extent.createEmpty();
+    return this.map_ ? this.map_.getExtent() : olExtent.createEmpty();
   }
 
   /**
@@ -352,7 +374,7 @@ class MapContainer extends EventTarget {
    */
   handleViewChange_() {
     var cameraMode = /** @type {string|undefined} */ (Settings.getInstance().get(DisplaySetting.CAMERA_MODE));
-    if (cameraMode == os.CameraMode.LAST) {
+    if (cameraMode == CameraMode.LAST) {
       try {
         var cameraState = this.persistCameraState();
         Settings.getInstance().set(DisplaySetting.CAMERA_STATE, cameraState);
@@ -410,7 +432,7 @@ class MapContainer extends EventTarget {
       // wait for the map to finish rendering with 0 size, then update the size to the correct value
       olEvents.listenOnce(this.map_, MapEventType.POSTRENDER, () => {
         var map = this.map_;
-        os.ui.waitForAngular(function() {
+        ui.waitForAngular(function() {
           map.updateSize();
           dispatcher.getInstance().dispatchEvent(MapEvent.GL_REPAINT);
         });
@@ -488,7 +510,7 @@ class MapContainer extends EventTarget {
           // favor altitude over zoom in 3D mode
           if (options.altitude === undefined && options.zoom !== undefined) {
             options.altitude = camera.calcDistanceForResolution(this.zoomToResolution(options.zoom),
-                ol.math.toRadians(center[1]));
+                toRadians(center[1]));
             delete options.zoom;
           }
 
@@ -496,7 +518,7 @@ class MapContainer extends EventTarget {
         }
       } else {
         // translate 3D heading to OpenLayers rotation if defined and non-zero
-        var rotation = options.heading ? ol.math.toRadians(-options.heading) : 0;
+        var rotation = options.heading ? toRadians(-options.heading) : 0;
 
         var animateOptions = /** @type {!olx.AnimationOptions} */ ({
           center,
@@ -506,15 +528,15 @@ class MapContainer extends EventTarget {
 
         if (options.zoom !== undefined) {
           // prioritize zoom in 2D mode
-          animateOptions.zoom = goog.math.clamp(options.zoom, osMap.MIN_ZOOM, osMap.MAX_ZOOM);
+          animateOptions.zoom = clamp(options.zoom, osMap.MIN_ZOOM, osMap.MAX_ZOOM);
         } else if (!options.positionCamera && options.range !== undefined) {
           // telling the camera where to look, so a range will generally be specified
           var resolution = osMap.resolutionForDistance(this.getMap(), options.range, 0);
-          animateOptions.resolution = goog.math.clamp(resolution, osMap.MIN_RESOLUTION, osMap.MAX_RESOLUTION);
+          animateOptions.resolution = clamp(resolution, osMap.MIN_RESOLUTION, osMap.MAX_RESOLUTION);
         } else if (options.altitude !== undefined) {
           // try altitude last, because it will generally be 0 if positioning the camera
           var resolution = osMap.resolutionForDistance(this.getMap(), options.altitude, 0);
-          animateOptions.resolution = goog.math.clamp(resolution, osMap.MIN_RESOLUTION, osMap.MAX_RESOLUTION);
+          animateOptions.resolution = clamp(resolution, osMap.MIN_RESOLUTION, osMap.MAX_RESOLUTION);
         }
 
         // 'bounce' uses default easing, 'smooth' uses linear.
@@ -551,13 +573,13 @@ class MapContainer extends EventTarget {
         extent = extent.slice();
 
         if (opt_buffer && opt_buffer > 0) {
-          ol.extent.scaleFromCenter(extent, opt_buffer);
+          olExtent.scaleFromCenter(extent, opt_buffer);
         } else {
           // THIN-6449: prevent flying to excessive zoom levels if a buffer wasn't provided. if one was provided,
           // assume the caller knows what they are doing.
           var buffer = MapContainer.FLY_ZOOM_BUFFER_;
-          if (ol.extent.getWidth(extent) < buffer && ol.extent.getHeight(extent) < buffer) {
-            extent = ol.extent.buffer(extent, buffer);
+          if (olExtent.getWidth(extent) < buffer && olExtent.getHeight(extent) < buffer) {
+            extent = olExtent.buffer(extent, buffer);
           }
         }
 
@@ -575,7 +597,7 @@ class MapContainer extends EventTarget {
           var camera = this.getWebGLCamera();
           var size = map.getSize();
           if (camera && size) {
-            var center = ol.extent.getCenter(extent);
+            var center = olExtent.getCenter(extent);
             var resolution = view.getResolutionForExtent(extent, size);
 
             if (opt_maxZoom != null) {
@@ -618,13 +640,13 @@ class MapContainer extends EventTarget {
           features[0] = queryUtils.WORLD_ZOOM_FEATURE;
         }
 
-        os.feature.flyTo(/** @type {Array<Feature>} */ (features));
+        osFeature.flyTo(/** @type {Array<Feature>} */ (features));
       } else {
         var extent = /** @type {!Array<?{geometry: ol.geom.Geometry}>} */ (context).reduce(
             reduceExtentFromGeometries,
-            ol.extent.createEmpty());
+            olExtent.createEmpty());
 
-        if (!ol.extent.isEmpty(extent)) {
+        if (!olExtent.isEmpty(extent)) {
           CommandProcessor.getInstance().addCommand(new FlyToExtent(extent, undefined, -1));
         }
       }
@@ -754,7 +776,7 @@ class MapContainer extends EventTarget {
     var moveGrp = 'Map Movement Controls';
     var zoomGrp = 'Map Zoom Controls';
     var controls = Controls.getInstance();
-    var platformModifier = ol.has.MAC ? KeyCodes.META : KeyCodes.CTRL;
+    var platformModifier = has.MAC ? KeyCodes.META : KeyCodes.CTRL;
 
     // Map
     controls.addControl(genMapGrp, 1, 'Draw Geometry',
@@ -817,7 +839,7 @@ class MapContainer extends EventTarget {
 
     // register a check function to detect projection differences before layer commands go
     // on the stack
-    os.command.CommandProcessor.getInstance().registerCheckFunction(projSwitch.checkCommand);
+    CommandProcessor.getInstance().registerCheckFunction(projSwitch.checkCommand);
 
     // set up interpolation
     setInterpolateConfig(/** @type {Object<string, *>} */ (Settings.getInstance().get('interpolation')));
@@ -838,9 +860,9 @@ class MapContainer extends EventTarget {
     this.drawingLayer_.setDoubleClickHandler(null);
     this.drawingLayer_.setLayerUI('');
     this.drawingLayer_.setSticky(true);
-    this.drawingLayer_.setSynchronizerType(os.layer.SynchronizerType.DRAW);
+    this.drawingLayer_.setSynchronizerType(SynchronizerType.DRAW);
     this.drawingLayer_.renderLegend = noop;
-    this.drawingLayer_.set(os.data.RecordField.ALTITUDE_MODE, AltitudeMode.CLAMP_TO_GROUND);
+    this.drawingLayer_.set(RecordField.ALTITUDE_MODE, AltitudeMode.CLAMP_TO_GROUND);
 
     var tileGroup = new Group();
     tileGroup.setPriority(-2);
@@ -920,7 +942,7 @@ class MapContainer extends EventTarget {
     this.vsm_.listen(GoogEventType.RESIZE, this.updateSize, false, this);
 
     // let the stack clear before updating the map size to fit the window
-    goog.async.nextTick(this.updateSize, this);
+    nextTick(this.updateSize, this);
 
     var vp = this.getMap().getViewport();
     googEvents.listen(vp, GoogEventType.CONTEXTMENU, killEvent, true);
@@ -937,17 +959,17 @@ class MapContainer extends EventTarget {
     this.addHelpControls_();
 
     // Replace {pos:lat} or {pos:lon} variables with the current view center
-    os.net.VariableReplacer.add('pos', MapContainer.replacePos_);
+    VariableReplacer.add('pos', MapContainer.replacePos_);
 
     // Replace variables like {extent:north}
 
     // this one always keeps left less than right, but can use longitudes outside of [-180, 180]
     // when crossing the date line
-    os.net.VariableReplacer.add('extent', MapContainer.replaceExtent_);
+    VariableReplacer.add('extent', MapContainer.replaceExtent_);
 
     // this one always keeps normalized longitudes, but the left can be greater than the right
     // when crossing the date line
-    os.net.VariableReplacer.add('extent2', MapContainer.replaceExtentNormalized_);
+    VariableReplacer.add('extent2', MapContainer.replaceExtentNormalized_);
   }
 
   /**
@@ -1041,7 +1063,7 @@ class MapContainer extends EventTarget {
         var preventOverride =
           /** @type {boolean} */ (Settings.getInstance().get('webgl.performanceCaveat.preventOverride', false));
 
-        os.ui.help.launchWebGLPerfCaveatDialog('3D Globe Performance Issue',
+        launchWebGLPerfCaveatDialog('3D Globe Performance Issue',
             preventOverride ? undefined : this.overrideFailIfPerformanceCaveat.bind(this));
       }
     }
@@ -1049,7 +1071,7 @@ class MapContainer extends EventTarget {
     var code = osMap.PROJECTION.getCode();
     if (!useWebGL || code === EPSG4326 || code === EPSG3857) {
       var cmd = new ToggleWebGL(useWebGL);
-      os.command.CommandProcessor.getInstance().addCommand(cmd);
+      CommandProcessor.getInstance().addCommand(cmd);
     }
   }
 
@@ -1092,7 +1114,7 @@ class MapContainer extends EventTarget {
     var center = view.getCenter() || osMap.DEFAULT_CENTER;
     if (osMap.PROJECTION != EPSG4326) {
       center = olProj.toLonLat(center, osMap.PROJECTION);
-      center[0] = os.geo2.normalizeLongitude(center[0], undefined, undefined, EPSG4326);
+      center[0] = normalizeLongitude(center[0], undefined, undefined, EPSG4326);
     }
 
     var resolution = view.getResolution();
@@ -1100,7 +1122,7 @@ class MapContainer extends EventTarget {
     var sizeObj = this.getMap().getSize();
     var altitude = osMap.distanceForResolution([sizeObj[0], sizeObj[1]], resolution);
     var zoom = this.resolutionToZoom(resolution, 1);
-    var rotation = goog.math.toDegrees(view.getRotation() || 0);
+    var rotation = toDegrees(view.getRotation() || 0);
 
     return /** @type {!osx.map.CameraState} */ ({
       center: center,
@@ -1119,7 +1141,7 @@ class MapContainer extends EventTarget {
    */
   restoreCameraState(cameraState) {
     if (this.restoreCameraDelay_) {
-      goog.dispose(this.restoreCameraDelay_);
+      googDispose(this.restoreCameraDelay_);
     }
 
     this.restoreCameraDelay_ = new ConditionalDelay(this.restoreCameraStateInternal_.bind(this, cameraState));
@@ -1151,7 +1173,7 @@ class MapContainer extends EventTarget {
       if (zoom == null) {
         // check if the view extent is available, or {@link osMap.resolutionForDistance} will fail
         var viewExtent = this.getViewExtent();
-        if (ol.extent.equals(viewExtent, osMap.ZERO_EXTENT)) {
+        if (olExtent.equals(viewExtent, osMap.ZERO_EXTENT)) {
           return false;
         }
 
@@ -1168,7 +1190,7 @@ class MapContainer extends EventTarget {
       // camera state is saved in EPSG:4326
       var center = olProj.fromLonLat(cameraState.center, osMap.PROJECTION);
       view.setCenter(center);
-      view.setRotation(goog.math.toRadians(-cameraState.heading));
+      view.setRotation(toRadians(-cameraState.heading));
       view.setZoom(zoom);
     } catch (e) {
       log.error(logger, 'Error restoring camera state:', e);
@@ -1276,14 +1298,14 @@ class MapContainer extends EventTarget {
         }
 
         // Use the default fly to features behavior.
-        os.feature.flyToOverride = undefined;
+        osFeature.flyToOverride = undefined;
       } else {
         // reset all synchronizers to a clean state. this needs to be called after WebGL is enabled/rendering to ensure
         // synchronized objects are reset in the correct state.
         this.webGLRenderer_.resetSync();
 
         // Use the WebGL renderer when flying to feature for a more accurate 3D view.
-        os.feature.flyToOverride = this.webGLRenderer_.flyToFeatures.bind(this.webGLRenderer_);
+        osFeature.flyToOverride = this.webGLRenderer_.flyToFeatures.bind(this.webGLRenderer_);
       }
 
       this.dispatchEvent(OSEventType.MAP_MODE);
@@ -1292,7 +1314,7 @@ class MapContainer extends EventTarget {
     if (this.is3DEnabled() != enabled && !this.failPerformanceCaveat() && !this.isInitializingWebGL() && !opt_silent) {
       // if we tried enabling WebGL and it isn't supported or enabling failed, disable support and display an error
       this.is3DSupported_ = false;
-      os.ui.help.launchWebGLSupportDialog('3D Globe Not Supported');
+      launchWebGLSupportDialog('3D Globe Not Supported');
 
       Metrics.getInstance().updateMetric(metrics.keys.Map.WEBGL_FAILED, 1);
     }
@@ -1389,7 +1411,7 @@ class MapContainer extends EventTarget {
    * @export Prevent the compiler from moving the function off the prototype.
    */
   addLayer(layer) {
-    if (this.map_ && layer instanceof ol.layer.Layer) {
+    if (this.map_ && layer instanceof Layer) {
       if (!projSwitch.checkLayer(layer)) {
         return;
       }
@@ -1412,9 +1434,9 @@ class MapContainer extends EventTarget {
             this.recordLayerMetric_(layer, true);
 
             if (layer instanceof AnimatedTile) {
-              var om = os.ui.onboarding.OnboardingManager.getInstance();
+              var om = OnboardingManager.getInstance();
               if (om && group.getOSType() != LayerType.REF) {
-                om.displayOnboarding(os.ROOT + 'onboarding/loaddata.json');
+                om.displayOnboarding(ROOT + 'onboarding/loaddata.json');
               }
             }
 
@@ -1488,7 +1510,7 @@ class MapContainer extends EventTarget {
     var dispose = opt_dispose != null ? opt_dispose : true;
     var l = typeof layer === 'string' ? this.getLayer(layer) : layer;
 
-    if (l instanceof ol.layer.Layer) {
+    if (l instanceof Layer) {
       var canRemove = true;
 
       try {
@@ -1560,7 +1582,7 @@ class MapContainer extends EventTarget {
             remove.execute();
           } else {
             // add the command to the stack
-            os.command.CommandProcessor.getInstance().addCommand(remove);
+            CommandProcessor.getInstance().addCommand(remove);
           }
         } else {
           // no command - try to remove the layer anyway
@@ -1579,7 +1601,7 @@ class MapContainer extends EventTarget {
       Metrics.getInstance().updateMetric(metrics.keys.Map.ADD_FEATURE, 1);
       if (!(feature instanceof Feature)) {
         // created in another context
-        feature = cloneFeature(feature, [os.data.RecordField.DRAWING_LAYER_NODE]);
+        feature = cloneFeature(feature, [RecordField.DRAWING_LAYER_NODE]);
       }
 
       if (typeof opt_style === 'object') {
@@ -1597,7 +1619,7 @@ class MapContainer extends EventTarget {
         }
 
         // set the layer id so we can look up the layer
-        feature.set(os.data.RecordField.SOURCE_ID, /** @type {ILayer} */ (drawLayer).getId());
+        feature.set(RecordField.SOURCE_ID, /** @type {ILayer} */ (drawLayer).getId());
 
         var drawSource = drawLayer.getSource();
 
@@ -1715,7 +1737,7 @@ class MapContainer extends EventTarget {
       var l = this.map_.getLayers().getArray();
 
       for (var i = 0, n = l.length; i < n; i++) {
-        if (instanceOf(l[i], ol.layer.Group.NAME)) {
+        if (instanceOf(l[i], LayerGroup.NAME)) {
           layers = layers.concat(/** @type {ol.layer.Group} */ (l[i]).getLayers().getArray());
         } else {
           layers.push(/** @type {ol.layer.Layer} */ (l[i]));
@@ -1878,7 +1900,7 @@ class MapContainer extends EventTarget {
    * @return {boolean}
    */
   static isImageLayer(layer) {
-    return layer instanceof ol.layer.Image ||
+    return layer instanceof ImageLayer ||
         (layer instanceof VectorLayer && layer.getOSType() === LayerType.IMAGE);
   }
 

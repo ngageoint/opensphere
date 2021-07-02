@@ -39,17 +39,6 @@ os.MapMode = {
 
 
 /**
- * Modes for setting the camera position when the application is launched.
- * @enum {string}
- */
-os.CameraMode = {
-  DEFAULT: 'default',
-  FIXED: 'fixed',
-  LAST: 'last'
-};
-
-
-/**
  * Selector for the OpenLayers map canvas.
  * @type {string}
  * @const
