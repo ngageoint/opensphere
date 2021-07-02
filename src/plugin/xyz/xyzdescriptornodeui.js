@@ -66,7 +66,7 @@ class Controller extends DescriptorNodeUICtrl {
    */
   edit() {
     const editUi = '<xyzprovider></xyzprovider>';
-    const descriptor = this.getDescriptor();
+    const descriptor = /** @type {ConfigDescriptor} */ (this.getDescriptor());
 
     var config = descriptor.getBaseConfig();
     config['label'] = config['title'] = descriptor.getTitle();
@@ -91,14 +91,6 @@ class Controller extends DescriptorNodeUICtrl {
       'show-close': 'true'
     };
     uiWindow.create(windowOptions, editUi, undefined, undefined, undefined, scopeOptions);
-  }
-
-  /**
-   * @override
-   * @return {ConfigDescriptor}
-   */
-  getDescriptor() {
-    return /** @type {ConfigDescriptor} */ (super.getDescriptor());
   }
 }
 
