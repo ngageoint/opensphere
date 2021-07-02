@@ -1,224 +1,149 @@
-goog.provide('os.track');
-goog.provide('os.track.AddOptions');
-goog.provide('os.track.CreateOptions');
-goog.provide('os.track.SplitOptions');
-goog.provide('os.track.TrackFeatureLike');
-goog.provide('os.track.TrackField');
-goog.provide('os.track.TrackLike');
+goog.module('os.track');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Promise');
-goog.require('ol.Feature');
-goog.require('ol.geom.LineString');
-goog.require('ol.geom.MultiLineString');
-goog.require('ol.geom.Point');
-goog.require('os.Fields');
-goog.require('os.alert.AlertEventSeverity');
-goog.require('os.config');
-goog.require('os.data.RecordField');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.feature');
-goog.require('os.feature.DynamicFeature');
-goog.require('os.feature.DynamicPropertyChange');
-goog.require('os.fn');
-goog.require('os.interpolate');
-goog.require('os.object');
-goog.require('os.ogc.filter.OGCFilterOverride');
-goog.require('os.style');
-goog.require('os.time.TimeRange');
-goog.require('os.ui.file.kml');
-goog.require('os.ui.window');
-goog.require('os.ui.window.ConfirmTextUI');
 goog.require('os.ui.window.confirmColumnDirective');
+
+const Promise = goog.require('goog.Promise');
+const googArray = goog.require('goog.array');
+const dispose = goog.require('goog.dispose');
+const log = goog.require('goog.log');
+const math = goog.require('goog.math');
+const googString = goog.require('goog.string');
+const Feature = goog.require('ol.Feature');
+const GeometryCollection = goog.require('ol.geom.GeometryCollection');
+const GeometryLayout = goog.require('ol.geom.GeometryLayout');
+const GeometryType = goog.require('ol.geom.GeometryType');
+const LineString = goog.require('ol.geom.LineString');
+const MultiLineString = goog.require('ol.geom.MultiLineString');
+const MultiPoint = goog.require('ol.geom.MultiPoint');
+const Point = goog.require('ol.geom.Point');
+const olObj = goog.require('ol.obj');
+
+const Fields = goog.require('os.Fields');
+const osArray = goog.require('os.array');
+const RecordField = goog.require('os.data.RecordField');
+const EventType = goog.require('os.events.EventType');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const osFeature = goog.require('os.feature');
+const DynamicFeature = goog.require('os.feature.DynamicFeature');
+const DynamicPropertyChange = goog.require('os.feature.DynamicPropertyChange');
+const fn = goog.require('os.fn');
+const geo = goog.require('os.geo');
+const GeometryField = goog.require('os.geom.GeometryField');
+const interpolate = goog.require('os.interpolate');
+const osObject = goog.require('os.object');
+const osStyle = goog.require('os.style');
+const TimeRange = goog.require('os.time.TimeRange');
+const TimelineController = goog.require('os.time.TimelineController');
+const TrackField = goog.require('os.track.TrackField');
+const FeatureEditCtrl = goog.require('os.ui.FeatureEditCtrl');
+const kml = goog.require('os.ui.file.kml');
+const column = goog.require('os.ui.slick.column');
+const osWindow = goog.require('os.ui.window');
+const ConfirmTextUI = goog.require('os.ui.window.ConfirmTextUI');
+const UnitManager = goog.require('os.unit.UnitManager');
+
+const AddOptions = goog.requireType('os.track.AddOptions');
+const CreateOptions = goog.requireType('os.track.CreateOptions');
+const SplitOptions = goog.requireType('os.track.SplitOptions');
+const TrackFeatureLike = goog.requireType('os.track.TrackFeatureLike');
+const TrackLike = goog.requireType('os.track.TrackLike');
 
 
 /**
  * Logger.
  * @type {goog.log.Logger}
- * @private
- * @const
  */
-os.track.LOGGER_ = goog.log.getLogger('os.track');
-
+const logger = log.getLogger('os.track');
 
 /**
  * Identifier for track components.
  * @type {string}
- * @const
  */
-os.track.ID = 'track';
-
+const ID = 'track';
 
 /**
  * The FontAwesome track icon.
  * @type {string}
- * @const
  */
-os.track.ICON = 'fa-share-alt';
-
+const ICON = 'fa-share-alt';
 
 /**
  * Text to display when elapsed distance/duration is zero.
  * @type {number}
  */
-os.track.ELAPSED_ZERO = 0;
-
+const ELAPSED_ZERO = 0;
 
 /**
  * Text to display when total distance/duration is zero.
  * @type {string}
  */
-os.track.TOTAL_ZERO = 'Unknown';
-
-
-/**
- * A type representing a track geometry. Tracks will use a `ol.geom.MultiLineString` if they cross the date line (to
- * render correctly in Openlayers), or if they represent a multi-track.
- * @typedef {ol.geom.LineString|ol.geom.MultiLineString}
- */
-os.track.TrackLike;
-
-
-/**
- * A type representing a track feature. Tracks will use `os.feature.DynamicFeature` if they have a time component and
- * can be animated, `ol.Feature` otherwise.
- * @typedef {os.feature.DynamicFeature|ol.Feature}
- */
-os.track.TrackFeatureLike;
-
-
-/**
- * @typedef {{
- *   coordinates: (Array<!ol.Coordinate>|undefined),
- *   features: (Array<!ol.Feature>|undefined),
- *   track: !ol.Feature,
- *   includeMetadata: (boolean|undefined)
- * }}
- */
-os.track.AddOptions;
-
-
-/**
- * @typedef {{
- *   coordinates: (Array<!ol.Coordinate>|undefined),
- *   features: (Array<!ol.Feature>|undefined),
- *   geometry: (os.track.TrackLike|undefined),
- *   id: (string|undefined),
- *   color: (string|undefined),
- *   name: (string|undefined),
- *   sortField: (string|undefined),
- *   label: (string|null|undefined),
- *   includeMetadata: (boolean|undefined),
- *   useLayerStyle: (boolean|undefined)
- * }}
- */
-os.track.CreateOptions;
-
-
-/**
- * @typedef {{
- *   features: Array<ol.Feature>,
- *   field: (string|undefined),
- *   bucketFn: ((function(ol.Feature):?)|undefined),
- *   getTrackFn: ((function((string|number)):ol.Feature)|undefined),
- *   result: (Array<ol.Feature>|undefined)
- * }}
- */
-os.track.SplitOptions;
-
-
-
-/**
- * Feature metadata fields used by tracks
- * @enum {string}
- */
-os.track.TrackField = {
-  ELAPSED_AVERAGE_SPEED: 'ELAPSED_AVERAGE_SPEED',
-  ELAPSED_DISTANCE: 'ELAPSED_DISTANCE',
-  ELAPSED_DURATION: 'ELAPSED_DURATION',
-  TOTAL_DISTANCE: 'TOTAL_DISTANCE',
-  TOTAL_DURATION: 'TOTAL_DURATION',
-  CURRENT_POSITION: '_currentPosition',
-  CURRENT_LINE: '_currentLine',
-  QUERY_OPTIONS: '_trackQueryOptions',
-  ORIG_SOURCE_ID: '_trackOrigSourceId',
-  SORT_FIELD: '_sortField',
-  INTERPOLATE_MARKER: '_interpolateMarker',
-  METADATA_MAP: '_trackMetadataMap'
-};
-
+const TOTAL_ZERO = 'Unknown';
 
 /**
  * Style config for the track.
  * @type {!Object<string, *>}
- * @const
  */
-os.track.TRACK_CONFIG = {
+const TRACK_CONFIG = {
   'stroke': {
-    'width': os.style.DEFAULT_STROKE_WIDTH
+    'width': osStyle.DEFAULT_STROKE_WIDTH
   },
   'zIndex': 0
 };
 
-
 /**
  * Style config for the track current position marker.
  * @type {!Object<string, *>}
- * @const
  */
-os.track.CURRENT_CONFIG = {
-  'geometry': os.track.TrackField.CURRENT_POSITION,
+const CURRENT_CONFIG = {
+  'geometry': TrackField.CURRENT_POSITION,
   'image': {
     'type': 'icon',
     'scale': 1,
-    'src': os.ui.file.kml.DEFAULT_ICON_PATH
+    'src': kml.DEFAULT_ICON_PATH
   }
 };
-
 
 /**
  * Style used for hiding geometries such as the line and marker
  */
-os.track.HIDE_GEOMETRY = '__hidden__';
-
+const HIDE_GEOMETRY = '__hidden__';
 
 /**
  * Test if a feature is a track.
  *
- * @param {ol.Feature} feature The feature.
+ * @param {Feature} feature The feature.
  * @return {boolean} If the feature is a track.
  */
-os.track.isTrackFeature = function(feature) {
-  return !!feature && feature.get(os.data.RecordField.FEATURE_TYPE) === os.track.ID;
+const isTrackFeature = function(feature) {
+  return !!feature && feature.get(RecordField.FEATURE_TYPE) === ID;
 };
-
 
 /**
  * Gets a field value from a feature.
  *
  * @param {string} field
- * @param {ol.Feature} feature
+ * @param {Feature} feature
  * @return {*} The value
  */
-os.track.getFeatureValue = function(field, feature) {
+const getFeatureValue = function(field, feature) {
   return feature ? feature.get(field) : undefined;
 };
-
 
 /**
  * Get the start time for a feature.
  *
- * @param {ol.Feature} feature
+ * @param {Feature} feature
  * @return {number|undefined} The value
  */
-os.track.getStartTime = function(feature) {
-  var time = feature ? /** @type {os.time.ITime|undefined} */ (feature.get(os.data.RecordField.TIME)) : undefined;
+const getStartTime = function(feature) {
+  var time = feature ? /** @type {os.time.ITime|undefined} */ (feature.get(RecordField.TIME)) : undefined;
   if (time) {
     return time.getStart();
   }
 
   return undefined;
 };
-
 
 /**
  * Sort track coordinates by their sort field.
@@ -227,28 +152,27 @@ os.track.getStartTime = function(feature) {
  * @param {!ol.Coordinate} b The second coordinate to be compared.
  * @return {number} The sort value.
  */
-os.track.sortCoordinatesByValue = function(a, b) {
+const sortCoordinatesByValue = function(a, b) {
   var aValue = a[a.length - 1];
   var bValue = b[b.length - 1];
   return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
 };
 
-
 /**
  * Get a list of coordinates to include in a track from a set of features. The features must have a common field with
  * values that can be naturally sorted. Any features lacking a point geometry or a value in the sort field will be
- * ignored. If sorted by `os.data.RecordField.TIME`, the track may be animated over time.
+ * ignored. If sorted by `RecordField.TIME`, the track may be animated over time.
  *
- * @param {!Array<!ol.Feature>} features The features.
+ * @param {!Array<!Feature>} features The features.
  * @param {string} sortField The track sort field.
  * @param {Object=} opt_metadataMap Optional map to store feature metadata by sort key.
  * @return {!Array<!ol.Coordinate>|undefined} The coordinates, or undefined if no coordinates were found.
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.track.getTrackCoordinates = function(features, sortField, opt_metadataMap) {
-  var getValueFn = sortField == os.data.RecordField.TIME ? os.track.getStartTime :
-    os.track.getFeatureValue.bind(null, sortField);
+const getTrackCoordinates = function(features, sortField, opt_metadataMap) {
+  var getValueFn = sortField == RecordField.TIME ? getStartTime :
+    getFeatureValue.bind(null, sortField);
 
   var coordinates = features.map(function(feature) {
     var pointCoord;
@@ -259,13 +183,13 @@ os.track.getTrackCoordinates = function(features, sortField, opt_metadataMap) {
     }
 
     var geometry = feature.getGeometry();
-    if (geometry instanceof ol.geom.Point) {
+    if (geometry instanceof Point) {
       pointCoord = geometry.getFirstCoordinate();
-    } else if (geometry instanceof ol.geom.GeometryCollection) {
+    } else if (geometry instanceof GeometryCollection) {
       var geometries = geometry.getGeometriesArray();
       for (var i = 0; i < geometries.length; i++) {
         var next = geometries[i];
-        if (next instanceof ol.geom.Point) {
+        if (next instanceof Point) {
           if (pointCoord) {
             // if multiple points are found, discard the point. we can't be certain which to include in the track and
             // cannot use multiple points at a single sort value.
@@ -276,7 +200,7 @@ os.track.getTrackCoordinates = function(features, sortField, opt_metadataMap) {
           }
         }
       }
-    } else if (geometry instanceof ol.geom.MultiPoint) {
+    } else if (geometry instanceof MultiPoint) {
       var stride = geometry.getStride();
       var flatCoordinates = geometry.getFlatCoordinates();
       if (flatCoordinates.length === stride) {
@@ -299,7 +223,7 @@ os.track.getTrackCoordinates = function(features, sortField, opt_metadataMap) {
         opt_metadataMap[value] = {};
 
         for (var key in feature.values_) {
-          if (!os.feature.isInternalField(key)) {
+          if (!osFeature.isInternalField(key)) {
             opt_metadataMap[value][key] = feature.values_[key];
           }
         }
@@ -307,23 +231,22 @@ os.track.getTrackCoordinates = function(features, sortField, opt_metadataMap) {
     }
 
     return pointCoord;
-  }).filter(os.fn.filterFalsey);
+  }).filter(fn.filterFalsey);
 
   // sort the resulting coordinates by the sort value
-  coordinates.sort(os.track.sortCoordinatesByValue);
+  coordinates.sort(sortCoordinatesByValue);
 
   return coordinates;
 };
 
-
 /**
  * Creates a track from the provided options.
  *
- * @param {!os.track.CreateOptions} options The track creation options.
- * @return {os.track.TrackFeatureLike|undefined} The track feature.
+ * @param {!CreateOptions} options The track creation options.
+ * @return {TrackFeatureLike|undefined} The track feature.
  */
-os.track.createTrack = function(options) {
-  var sortField = options.sortField || os.data.RecordField.TIME;
+const createTrack = function(options) {
+  var sortField = options.sortField || RecordField.TIME;
   var trackColor = options.color;
   var coordinates = options.coordinates;
   var features = options.features;
@@ -332,16 +255,16 @@ os.track.createTrack = function(options) {
 
   if (!geometry) {
     if (coordinates) {
-      coordinates.sort(os.track.sortCoordinatesByValue);
+      coordinates.sort(sortCoordinatesByValue);
     } else if (features && features.length) {
-      coordinates = os.track.getTrackCoordinates(features, sortField, metadataMap);
+      coordinates = getTrackCoordinates(features, sortField, metadataMap);
 
       // if the color wasn't provided via options, determine the color from the features/source
       if (!trackColor && features.length) {
-        trackColor = /** @type {string|undefined} */ (features[0].get(os.data.RecordField.COLOR));
+        trackColor = /** @type {string|undefined} */ (features[0].get(RecordField.COLOR));
 
         if (!trackColor) {
-          var source = os.feature.getSource(features[0]);
+          var source = osFeature.getSource(features[0]);
           if (source) {
             trackColor = source ? source.getColor() : undefined;
           }
@@ -350,7 +273,7 @@ os.track.createTrack = function(options) {
     }
 
     if (coordinates && coordinates.length) {
-      geometry = new ol.geom.LineString(coordinates, ol.geom.GeometryLayout.XYZM);
+      geometry = new LineString(coordinates, GeometryLayout.XYZM);
     }
   }
 
@@ -358,132 +281,131 @@ os.track.createTrack = function(options) {
     return undefined;
   }
 
-  if (geometry instanceof ol.geom.LineString) {
+  if (geometry instanceof LineString) {
     geometry.toLonLat();
-    geometry = os.geo.splitOnDateLine(geometry);
+    geometry = geo.splitOnDateLine(geometry);
     geometry.osTransform();
   }
 
   // prevent any further normalization of the geometry
-  geometry.set(os.geom.GeometryField.NORMALIZED, true);
-  geometry.set(os.interpolate.METHOD_FIELD, os.interpolate.Method.NONE);
+  geometry.set(GeometryField.NORMALIZED, true);
+  geometry.set(interpolate.METHOD_FIELD, interpolate.Method.NONE);
 
   // create the track feature
   var track;
-  if (sortField === os.data.RecordField.TIME) {
-    track = new os.feature.DynamicFeature(geometry,
-        os.track.initDynamic,
-        os.track.disposeDynamic,
-        os.track.updateDynamic);
+  if (sortField === RecordField.TIME) {
+    track = new DynamicFeature(geometry,
+        initDynamic,
+        disposeDynamic,
+        updateDynamic);
   } else {
-    track = new ol.Feature(geometry);
+    track = new Feature(geometry);
   }
 
-  var trackId = options.id || (os.track.ID + '-' + goog.string.getRandomString());
+  var trackId = options.id || (ID + '-' + googString.getRandomString());
   track.setId(trackId);
-  track.set(os.Fields.ID, trackId);
-  track.set(os.data.RecordField.FEATURE_TYPE, os.track.ID);
+  track.set(Fields.ID, trackId);
+  track.set(RecordField.FEATURE_TYPE, ID);
 
   if (metadataMap) {
-    track.set(os.track.TrackField.METADATA_MAP, metadataMap);
+    track.set(TrackField.METADATA_MAP, metadataMap);
   }
 
   // add a geometry to display the current track position
-  os.track.updateCurrentPosition(track);
+  updateCurrentPosition(track);
 
   // set the track name, defaulting to the id if one isn't provided
-  track.set(os.Fields.LOWERCASE_NAME, options.name || trackId);
+  track.set(Fields.LOWERCASE_NAME, options.name || trackId);
 
   // save the field used to sort coordinates in the track
-  track.set(os.track.TrackField.SORT_FIELD, sortField);
+  track.set(TrackField.SORT_FIELD, sortField);
 
-  var distance = os.track.updateDistance(track, true);
-  var duration = os.track.updateDuration(track);
-  os.track.updateAverageSpeed(track, distance, duration);
-  os.track.updateTime(track);
+  var distance = updateDistance(track, true);
+  var duration = updateDuration(track);
+  updateAverageSpeed(track, distance, duration);
+  updateTime(track);
 
   // set the style config for the track
-  var trackStyle = /** @type {!Object<string, *>} */ (os.object.unsafeClone(os.track.TRACK_CONFIG));
-  var currentStyle = /** @type {!Object<string, *>} */ (os.object.unsafeClone(os.track.CURRENT_CONFIG));
+  var trackStyle = /** @type {!Object<string, *>} */ (osObject.unsafeClone(TRACK_CONFIG));
+  var currentStyle = /** @type {!Object<string, *>} */ (osObject.unsafeClone(CURRENT_CONFIG));
   if (options.useLayerStyle) {
     delete trackStyle['stroke'];
     delete currentStyle['image'];
   } else {
-    trackColor = trackColor || os.style.DEFAULT_LAYER_COLOR;
-    os.style.setConfigColor(trackStyle, trackColor, [os.style.StyleField.STROKE]);
-    os.style.setConfigColor(currentStyle, trackColor, [os.style.StyleField.IMAGE]);
+    trackColor = trackColor || osStyle.DEFAULT_LAYER_COLOR;
+    osStyle.setConfigColor(trackStyle, trackColor, [osStyle.StyleField.STROKE]);
+    osStyle.setConfigColor(currentStyle, trackColor, [osStyle.StyleField.IMAGE]);
   }
-  track.set(os.style.StyleType.FEATURE, [trackStyle, currentStyle]);
+  track.set(osStyle.StyleType.FEATURE, [trackStyle, currentStyle]);
 
   if (options.label !== null) {
     // configure default label for the track
-    os.feature.showLabel(track);
+    osFeature.showLabel(track);
     var labelStyle = {
-      'column': options.label || os.Fields.LOWERCASE_NAME,
+      'column': options.label || Fields.LOWERCASE_NAME,
       'showColumn': false
     };
-    currentStyle[os.style.StyleField.LABELS] = [labelStyle];
+    currentStyle[osStyle.StyleField.LABELS] = [labelStyle];
   }
 
   // display the current position as an icon
-  track.set(os.style.StyleField.SHAPE, os.style.ShapeType.ICON);
+  track.set(osStyle.StyleField.SHAPE, osStyle.ShapeType.ICON);
 
   // update styles on the track
-  os.style.setFeatureStyle(track);
+  osStyle.setFeatureStyle(track);
 
   return track;
 };
 
-
 /**
  * Adds coordinates or features to an existing track.
- * @param {!os.track.AddOptions} options The options.
- * @return {!Array<!(ol.Coordinate|ol.Feature)>} The added coordinates or features, depending on the options.
+ * @param {!AddOptions} options The options.
+ * @return {!Array<!(ol.Coordinate|Feature)>} The added coordinates or features, depending on the options.
  * @suppress {accessControls} To allow direct access to line coordinates.
  */
-os.track.addToTrack = function(options) {
+const addToTrack = function(options) {
   var added = [];
   var metadataMap = options.features && options.includeMetadata ? {} : undefined;
 
   var track = options.track;
   if (!track) {
-    goog.log.error(os.track.LOGGER_, 'Unable to add to track: track not provided.');
+    log.error(logger, 'Unable to add to track: track not provided.');
     return added;
   }
 
-  var sortField = /** @type {string|undefined} */ (track.get(os.track.TrackField.SORT_FIELD));
+  var sortField = /** @type {string|undefined} */ (track.get(TrackField.SORT_FIELD));
   if (!sortField) {
-    goog.log.error(os.track.LOGGER_, 'Unable to add coordinates to track: track is missing sorting data.');
+    log.error(logger, 'Unable to add coordinates to track: track is missing sorting data.');
     return added;
   }
 
   var features = options.features;
   var coordinates = options.coordinates;
   if (!coordinates && !features) {
-    goog.log.error(os.track.LOGGER_, 'Unable to add to track: coordinates/features not provided.');
+    log.error(logger, 'Unable to add to track: coordinates/features not provided.');
     return added;
   }
 
   if (!coordinates && features) {
-    coordinates = os.track.getTrackCoordinates(features, sortField, metadataMap);
+    coordinates = getTrackCoordinates(features, sortField, metadataMap);
 
     var skippedFeatures = features.length - coordinates.length;
     if (skippedFeatures) {
-      goog.log.info(os.track.LOGGER_, 'Skipped ' + skippedFeatures + ' features due to unknown coordinate.');
+      log.info(logger, 'Skipped ' + skippedFeatures + ' features due to unknown coordinate.');
     }
   } else if (coordinates) {
-    coordinates.sort(os.track.sortCoordinatesByValue);
+    coordinates.sort(sortCoordinatesByValue);
   }
 
   var skippedCoords = 0;
   if (coordinates.length) {
     // add point(s) to the original geometry, in case the track was interpolated
-    var geometry = /** @type {!os.track.TrackLike} */ (track.get(os.interpolate.ORIGINAL_GEOM_FIELD) ||
+    var geometry = /** @type {!TrackLike} */ (track.get(interpolate.ORIGINAL_GEOM_FIELD) ||
         track.getGeometry());
 
     // merge the split line so coordinates can be added in the correct location
     geometry.toLonLat();
-    geometry = os.geo.mergeLineGeometry(geometry);
+    geometry = geo.mergeLineGeometry(geometry);
     geometry.osTransform();
 
     var flatCoordinates = geometry.flatCoordinates;
@@ -500,10 +422,10 @@ os.track.addToTrack = function(options) {
       // figure out where the value fits in the array. if the value value already exists, just skip the feature to
       // avoid duplicate values.
       var value = /** @type {number|undefined} */ (coordinate[coordinate.length - 1]);
-      var insertIndex = os.array.binaryStrideSearch(flatCoordinates, value, stride, stride - 1);
+      var insertIndex = osArray.binaryStrideSearch(flatCoordinates, value, stride, stride - 1);
       if (insertIndex < 0) {
         // insert coordinates in the corresponding location
-        goog.array.insertArrayAt(flatCoordinates, coordinate, ~insertIndex);
+        googArray.insertArrayAt(flatCoordinates, coordinate, ~insertIndex);
         added.push(features ? features[i] : coordinate);
       } else {
         skippedCoords++;
@@ -513,50 +435,49 @@ os.track.addToTrack = function(options) {
 
   // update the geometry on the track if coordinates were added
   if (skippedCoords < coordinates.length) {
-    os.track.setGeometry(track, /** @type {!os.track.TrackLike} */ (geometry));
+    setGeometry(track, /** @type {!TrackLike} */ (geometry));
 
     if (metadataMap) {
-      var existing = /** @type {Object|undefined} */ (track.get(os.track.TrackField.METADATA_MAP));
+      var existing = /** @type {Object|undefined} */ (track.get(TrackField.METADATA_MAP));
       if (!existing) {
         existing = {};
-        track.set(os.track.TrackField.METADATA_MAP, existing);
+        track.set(TrackField.METADATA_MAP, existing);
       }
-      ol.obj.assign(existing, metadataMap);
+      olObj.assign(existing, metadataMap);
     }
   }
 
   if (skippedCoords) {
-    goog.log.info(os.track.LOGGER_, 'Skipped ' + skippedCoords +
+    log.info(logger, 'Skipped ' + skippedCoords +
         ' coordinates due to missing/duplicate sort value.');
   }
 
   return added;
 };
 
-
 /**
  * Clamp track points within the provided sort range.
  *
- * @param {!ol.Feature} track The track.
+ * @param {!Feature} track The track.
  * @param {string|number} start The start value.
  * @param {string|number} end The end value.
  *
  * @suppress {accessControls} To allow direct access to feature metadata and line coordinates.
  */
-os.track.clamp = function(track, start, end) {
+const clamp = function(track, start, end) {
   // add point(s) to the original geometry, in case the track was interpolated
-  var geometry = /** @type {!(os.track.TrackLike)} */ (track.values_[os.interpolate.ORIGINAL_GEOM_FIELD] ||
+  var geometry = /** @type {!(TrackLike)} */ (track.values_[interpolate.ORIGINAL_GEOM_FIELD] ||
       track.getGeometry());
 
   // merge the split line so features can be added in the correct location
   geometry.toLonLat();
-  geometry = os.geo.mergeLineGeometry(geometry);
+  geometry = geo.mergeLineGeometry(geometry);
   geometry.osTransform();
 
   var stride = geometry.stride;
 
-  var startIndex = os.array.binaryStrideSearch(geometry.flatCoordinates, start, stride, stride - 1);
-  var endIndex = os.array.binaryStrideSearch(geometry.flatCoordinates, end, stride, stride - 1);
+  var startIndex = osArray.binaryStrideSearch(geometry.flatCoordinates, start, stride, stride - 1);
+  var endIndex = osArray.binaryStrideSearch(geometry.flatCoordinates, end, stride, stride - 1);
 
   if (startIndex < 0) {
     startIndex = ~startIndex;
@@ -575,43 +496,42 @@ os.track.clamp = function(track, start, end) {
       var newCoords = geometry.flatCoordinates.splice(startIndex, endIndex - startIndex);
 
       // remove metadata for remaining coordinates
-      os.track.pruneMetadata_(track, geometry.flatCoordinates, stride);
+      pruneMetadata_(track, geometry.flatCoordinates, stride);
 
       // set flat coordinates to the clamped list
       geometry.flatCoordinates = newCoords;
     } else {
       geometry.flatCoordinates.length = 0;
-      track.values_[os.track.TrackField.METADATA_MAP] = {};
+      track.values_[TrackField.METADATA_MAP] = {};
     }
 
     // update the geometry on the track
     if (geometry.flatCoordinates.length !== prevLength) {
-      os.track.setGeometry(track, geometry);
+      setGeometry(track, geometry);
     }
   }
 };
 
-
 /**
  * Truncate a track to a maximum number of points. Keeps the most recent points.
  *
- * @param {!ol.Feature} track The track.
+ * @param {!Feature} track The track.
  * @param {number} size The size.
  *
  * @suppress {accessControls} To allow direct access to feature metadata and line coordinates.
  */
-os.track.truncate = function(track, size) {
+const truncate = function(track, size) {
   // ensure size is >= 0
   size = Math.max(0, size);
 
   // add point(s) to the original geometry, in case the track was interpolated
-  var geometry = /** @type {!(os.track.TrackLike)} */ (track.values_[os.interpolate.ORIGINAL_GEOM_FIELD] ||
+  var geometry = /** @type {!(TrackLike)} */ (track.values_[interpolate.ORIGINAL_GEOM_FIELD] ||
       track.getGeometry());
 
-  if (geometry.getType() === ol.geom.GeometryType.MULTI_LINE_STRING) {
+  if (geometry.getType() === GeometryType.MULTI_LINE_STRING) {
     // merge the split line so coordinates can be truncated to the correct size
     geometry.toLonLat();
-    geometry = os.geo.mergeLineGeometry(geometry);
+    geometry = geo.mergeLineGeometry(geometry);
     geometry.osTransform();
   }
 
@@ -621,28 +541,26 @@ os.track.truncate = function(track, size) {
 
   if (flatCoordinates.length > numCoords) {
     var removed = flatCoordinates.splice(0, flatCoordinates.length - numCoords);
-    os.track.setGeometry(track, geometry);
+    setGeometry(track, geometry);
 
     // remove old metadata fields from the track
-    os.track.pruneMetadata_(track, removed, stride);
+    pruneMetadata_(track, removed, stride);
   }
 };
 
-
 /**
  * Prune the metadata map for a track, removing metadata by indexed sort values.
- * @param {!ol.Feature} track The track.
+ * @param {!Feature} track The track.
  * @param {!Array} values The values to remove.
  * @param {number=} opt_stride If provided, the `values` array stride. Use if providing a list of flat coordinates that
  *                             contain sort values as the last coordinate value.
- * @private
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.track.pruneMetadata_ = function(track, values, opt_stride) {
+const pruneMetadata_ = function(track, values, opt_stride) {
   var stride = Math.max(0, opt_stride || 1);
 
-  var metadataMap = /** @type {Object|undefined} */ (track.values_[os.track.TrackField.METADATA_MAP]);
+  var metadataMap = /** @type {Object|undefined} */ (track.values_[TrackField.METADATA_MAP]);
   if (metadataMap) {
     for (var i = 0; i < values.length; i += stride) {
       var next = values[i + stride - 1];
@@ -651,252 +569,242 @@ os.track.pruneMetadata_ = function(track, values, opt_stride) {
       }
     }
 
-    track.values_[os.track.TrackField.METADATA_MAP] = os.object.prune(metadataMap);
+    track.values_[TrackField.METADATA_MAP] = osObject.prune(metadataMap);
   }
 };
-
 
 /**
  * Dispose of the current position/line geometries and remove them from the feature.
  *
- * @param {!ol.Feature} track The track
+ * @param {!Feature} track The track
  */
-os.track.disposeAnimationGeometries = function(track) {
-  var currentPosition = track.get(os.track.TrackField.CURRENT_POSITION);
-  track.set(os.track.TrackField.CURRENT_POSITION, undefined);
-  goog.dispose(currentPosition);
+const disposeAnimationGeometries = function(track) {
+  var currentPosition = track.get(TrackField.CURRENT_POSITION);
+  track.set(TrackField.CURRENT_POSITION, undefined);
+  dispose(currentPosition);
 
-  var currentLine = track.get(os.track.TrackField.CURRENT_LINE);
-  if (os.track.getShowLine(track)) {
-    track.set(os.track.TrackField.CURRENT_LINE, undefined);
+  var currentLine = track.get(TrackField.CURRENT_LINE);
+  if (getShowLine(track)) {
+    track.set(TrackField.CURRENT_LINE, undefined);
   }
-  goog.dispose(currentLine);
+  dispose(currentLine);
 };
-
 
 /**
  * Shows or hides the track line
  *
- * @param {!ol.Feature} track The track
+ * @param {!Feature} track The track
  * @param {boolean} show
  * @param {boolean=} opt_update
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.track.setShowLine = function(track, show, opt_update) {
-  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.values_[os.style.StyleType.FEATURE]);
+const setShowLine = function(track, show, opt_update) {
+  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.values_[osStyle.StyleType.FEATURE]);
   if (trackStyles.length > 1) {
     var lineConfig = trackStyles[0];
-    var dynamic = track instanceof os.feature.DynamicFeature && track.isDynamicEnabled;
-    var lineGeometry = show ? (dynamic ? os.track.TrackField.CURRENT_LINE : undefined) : os.track.HIDE_GEOMETRY;
+    var dynamic = track instanceof DynamicFeature && track.isDynamicEnabled;
+    var lineGeometry = show ? (dynamic ? TrackField.CURRENT_LINE : undefined) : HIDE_GEOMETRY;
     if (lineConfig['geometry'] !== lineGeometry) {
       lineConfig['geometry'] = lineGeometry;
 
       // set the style config for the track
-      os.style.setFeatureStyle(track);
+      osStyle.setFeatureStyle(track);
       track.changed();
     }
   }
 };
 
-
 /**
  * Shows or hides the track line
  *
- * @param {!ol.Feature} track The track
+ * @param {!Feature} track The track
  * @return {boolean}
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.track.getShowLine = function(track) {
-  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.values_[os.style.StyleType.FEATURE]);
-  return trackStyles.length > 0 && trackStyles[0]['geometry'] != os.track.HIDE_GEOMETRY;
+const getShowLine = function(track) {
+  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.values_[osStyle.StyleType.FEATURE]);
+  return trackStyles.length > 0 && trackStyles[0]['geometry'] != HIDE_GEOMETRY;
 };
-
 
 /**
  * Shows or hides the track marker
  *
- * @param {!ol.Feature} track The track
+ * @param {!Feature} track The track
  * @param {boolean} show
  * @param {boolean=} opt_update
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.track.setShowMarker = function(track, show, opt_update) {
-  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.values_[os.style.StyleType.FEATURE]);
+const setShowMarker = function(track, show, opt_update) {
+  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.values_[osStyle.StyleType.FEATURE]);
   if (trackStyles.length > 1) { // recreate marker style
-    var currentGeometry = show ? os.track.TrackField.CURRENT_POSITION : os.track.HIDE_GEOMETRY;
+    var currentGeometry = show ? TrackField.CURRENT_POSITION : HIDE_GEOMETRY;
     var currentConfig = trackStyles[1];
     if (currentConfig['geometry'] !== currentGeometry ||
-        track.values_[os.style.StyleField.LABEL_GEOMETRY] !== currentGeometry) {
+        track.values_[osStyle.StyleField.LABEL_GEOMETRY] !== currentGeometry) {
       currentConfig['geometry'] = currentGeometry;
-      track.values_[os.style.StyleField.LABEL_GEOMETRY] = currentGeometry;
+      track.values_[osStyle.StyleField.LABEL_GEOMETRY] = currentGeometry;
 
       // set the style config for the track
       if (opt_update) {
-        os.style.setFeatureStyle(track);
+        osStyle.setFeatureStyle(track);
         track.changed();
       }
     }
   }
 };
 
-
 /**
  * Turn interpolation of track marker on or off
  *
- * @param {!ol.Feature} track The track
+ * @param {!Feature} track The track
  * @param {boolean} doInterpolation
  */
-os.track.setInterpolateMarker = function(track, doInterpolation) {
-  track.set(os.track.TrackField.INTERPOLATE_MARKER, doInterpolation);
-  var range = os.time.TimelineController.getInstance().getCurrentRange();
-  os.track.updateDynamic(track, range.start, range.end);
+const setInterpolateMarker = function(track, doInterpolation) {
+  track.set(TrackField.INTERPOLATE_MARKER, doInterpolation);
+  var range = TimelineController.getInstance().getCurrentRange();
+  updateDynamic(track, range.start, range.end);
 };
-
 
 /**
  * Get if interpolation of track marker is on or off
  *
- * @param {!ol.Feature} track The track
+ * @param {!Feature} track The track
  * @return {boolean}
  */
-os.track.getInterpolateMarker = function(track) {
-  return track.get(os.track.TrackField.INTERPOLATE_MARKER) !== false;
+const getInterpolateMarker = function(track) {
+  return track.get(TrackField.INTERPOLATE_MARKER) !== false;
 };
-
 
 /**
  * Update the geometry for a track.
  *
- * @param {!ol.Feature} track The track
+ * @param {!Feature} track The track
  * @param {!ol.geom.Geometry} geometry The track geometry.
  */
-os.track.setGeometry = function(track, geometry) {
+const setGeometry = function(track, geometry) {
   // split across the date line again
   geometry.toLonLat();
-  geometry = os.geo.splitOnDateLine(geometry);
+  geometry = geo.splitOnDateLine(geometry);
   geometry.osTransform();
 
   // prevent further normalization of the geometry
-  geometry.set(os.geom.GeometryField.NORMALIZED, true);
+  geometry.set(GeometryField.NORMALIZED, true);
 
   // recreate animation geometries
-  os.track.disposeAnimationGeometries(track);
+  disposeAnimationGeometries(track);
 
   // update the original geometry and interpolate the track again
-  track.set(os.interpolate.ORIGINAL_GEOM_FIELD, geometry);
-  os.interpolate.interpolateFeature(track);
+  track.set(interpolate.ORIGINAL_GEOM_FIELD, geometry);
+  interpolate.interpolateFeature(track);
 
   // update metadata fields on the track
-  var distance = os.track.updateDistance(track, true);
-  var duration = os.track.updateDuration(track);
-  os.track.updateAverageSpeed(track, distance, duration);
-  os.track.updateTime(track);
-  os.track.updateCurrentPosition(track);
+  var distance = updateDistance(track, true);
+  var duration = updateDuration(track);
+  updateAverageSpeed(track, distance, duration);
+  updateTime(track);
+  updateCurrentPosition(track);
 
   // notify listeners that the track geometry has changed
-  track.dispatchEvent(new os.events.PropertyChangeEvent(os.feature.DynamicPropertyChange.GEOMETRY));
+  track.dispatchEvent(new PropertyChangeEvent(DynamicPropertyChange.GEOMETRY));
 };
-
 
 /**
  * Update the current position displayed on a track.
  *
- * @param {!ol.Feature} track The track
+ * @param {!Feature} track The track
  *
  * @suppress {accessControls} To allow direct access to line coordinates.
  */
-os.track.updateCurrentPosition = function(track) {
-  var geometry = track.get(os.track.TrackField.CURRENT_LINE) || track.getGeometry();
+const updateCurrentPosition = function(track) {
+  var geometry = track.get(TrackField.CURRENT_LINE) || track.getGeometry();
   if (geometry) {
     var flatCoordinates = geometry.flatCoordinates;
     var stride = geometry.stride;
     var newPosition = flatCoordinates.slice(flatCoordinates.length - stride);
 
     // update the current position to the last coordinate in the track
-    var currentPosition = /** @type {ol.geom.Point|undefined} */ (track.get(os.track.TrackField.CURRENT_POSITION));
+    var currentPosition = /** @type {Point|undefined} */ (track.get(TrackField.CURRENT_POSITION));
     if (!currentPosition) {
       // doesn't exist, so create a new one and set it as the label geometry
-      currentPosition = new ol.geom.Point(newPosition);
-      track.set(os.track.TrackField.CURRENT_POSITION, currentPosition);
-      track.set(os.style.StyleField.LABEL_GEOMETRY, os.track.TrackField.CURRENT_POSITION);
+      currentPosition = new Point(newPosition);
+      track.set(TrackField.CURRENT_POSITION, currentPosition);
+      track.set(osStyle.StyleField.LABEL_GEOMETRY, TrackField.CURRENT_POSITION);
     } else {
       // update the existing position
       currentPosition.setFlatCoordinates(geometry.getLayout(), newPosition);
     }
 
     // update coordinate fields to display in the list/feature info
-    os.feature.populateCoordFields(track, true, currentPosition);
+    osFeature.populateCoordFields(track, true, currentPosition);
 
     // update the extra metadata for the current position
-    os.track.updateMetadata(track, flatCoordinates, stride);
+    updateMetadata(track, flatCoordinates, stride);
 
     // update the style in case coordinate fields are used as labels
-    os.style.setFeatureStyle(track);
+    osStyle.setFeatureStyle(track);
   }
 };
-
 
 /**
  * Update the distance column(s) on a track.
  *
- * @param {!ol.Feature} track The track to update.
+ * @param {!Feature} track The track to update.
  * @param {boolean=} opt_updateTotal If the total distance should be updated.
  * @return {number} applied distance
  */
-os.track.updateDistance = function(track, opt_updateTotal) {
-  var um = os.unit.UnitManager.getInstance();
+const updateDistance = function(track, opt_updateTotal) {
+  var um = UnitManager.getInstance();
   var distance = 0;
   if (opt_updateTotal) {
     // set the human-readable total distance on the track
     var geometry = track.getGeometry();
-    var dist = os.track.getGeometryDistance(geometry);
+    var dist = getGeometryDistance(geometry);
     if (dist > 0) {
       distance = Math.round(dist * 100) / 100;
-      track.set(os.track.TrackField.TOTAL_DISTANCE,
+      track.set(TrackField.TOTAL_DISTANCE,
           um.formatToBestFit('distance', distance, 'm', um.getBaseSystem(), 3));
     } else {
-      track.set(os.track.TrackField.TOTAL_DISTANCE, os.track.ELAPSED_ZERO);
+      track.set(TrackField.TOTAL_DISTANCE, ELAPSED_ZERO);
     }
   }
 
-  var current = /** @type {ol.geom.Geometry|undefined} */ (track.get(os.track.TrackField.CURRENT_LINE));
+  var current = /** @type {ol.geom.Geometry|undefined} */ (track.get(TrackField.CURRENT_LINE));
   if (current) {
     // set the human-readable elapsed distance on the track
-    var dist = os.track.getGeometryDistance(current);
+    var dist = getGeometryDistance(current);
     if (dist > 0) {
       distance = Math.round(dist * 100) / 100;
-      track.set(os.track.TrackField.ELAPSED_DISTANCE,
+      track.set(TrackField.ELAPSED_DISTANCE,
           um.formatToBestFit('distance', distance, 'm', um.getBaseSystem(), 3));
     } else {
-      track.set(os.track.TrackField.ELAPSED_DISTANCE, os.track.ELAPSED_ZERO);
+      track.set(TrackField.ELAPSED_DISTANCE, ELAPSED_ZERO);
     }
   } else {
     // set to the total distance
     var geometry = track.getGeometry();
-    var dist = os.track.getGeometryDistance(geometry);
+    var dist = getGeometryDistance(geometry);
     if (dist > 0) {
       distance = Math.round(dist * 100) / 100;
     }
-    track.set(os.track.TrackField.ELAPSED_DISTANCE, track.get(os.track.TrackField.TOTAL_DISTANCE));
+    track.set(TrackField.ELAPSED_DISTANCE, track.get(TrackField.TOTAL_DISTANCE));
   }
   return distance;
 };
 
-
 /**
  * Update the duration column on a track.
  *
- * @param {!ol.Feature} track The track to update
+ * @param {!Feature} track The track to update
  * @return {number} the elapsed duration
  */
-os.track.updateDuration = function(track) {
-  var trackGeometry = /** @type {ol.geom.LineString} */ (track.getGeometry());
-  var sortField = track.get(os.track.TrackField.SORT_FIELD);
+const updateDuration = function(track) {
+  var trackGeometry = /** @type {LineString} */ (track.getGeometry());
+  var sortField = track.get(TrackField.SORT_FIELD);
   var duration = 0;
-  if (trackGeometry && sortField == os.data.RecordField.TIME) {
+  if (trackGeometry && sortField == RecordField.TIME) {
     var coordinates = trackGeometry.getFlatCoordinates();
     var stride = trackGeometry.getStride();
     var startTime = coordinates[stride - 1];
@@ -904,74 +812,72 @@ os.track.updateDuration = function(track) {
 
     // set the human-readable duration on the track
     var totalDuration = endTime - startTime;
-    track.set(os.track.TrackField.TOTAL_DURATION,
-        totalDuration > 0 ? moment.duration(totalDuration).humanize() : os.track.TOTAL_ZERO);
+    track.set(TrackField.TOTAL_DURATION,
+        totalDuration > 0 ? moment.duration(totalDuration).humanize() : TOTAL_ZERO);
 
-    var current = /** @type {ol.geom.Geometry|undefined} */ (track.get(os.track.TrackField.CURRENT_LINE));
+    var current = /** @type {ol.geom.Geometry|undefined} */ (track.get(TrackField.CURRENT_LINE));
     if (current) {
       // partial track is being displayed, so compute the elapsed duration
-      var currentRange = os.track.getGeometryTime(current);
+      var currentRange = getGeometryTime(current);
       duration = Math.min(totalDuration, currentRange);
-      track.set(os.track.TrackField.ELAPSED_DURATION,
-          duration > 0 ? moment.duration(duration).humanize() : os.track.ELAPSED_ZERO);
+      track.set(TrackField.ELAPSED_DURATION,
+          duration > 0 ? moment.duration(duration).humanize() : ELAPSED_ZERO);
     } else {
       // full track is being displayed, so use the total duration
       duration = totalDuration;
-      track.set(os.track.TrackField.ELAPSED_DURATION, track.get(os.track.TrackField.TOTAL_DURATION));
+      track.set(TrackField.ELAPSED_DURATION, track.get(TrackField.TOTAL_DURATION));
     }
   } else {
     // the track does not have time values - can't resolve duration
-    track.set(os.track.TrackField.ELAPSED_DURATION, os.track.TOTAL_ZERO);
-    track.set(os.track.TrackField.TOTAL_DURATION, os.track.TOTAL_ZERO);
+    track.set(TrackField.ELAPSED_DURATION, TOTAL_ZERO);
+    track.set(TrackField.TOTAL_DURATION, TOTAL_ZERO);
   }
   return duration;
 };
 
-
 /**
  * Update the average speed on a track
  *
- * @param {!ol.Feature} track The track to update
+ * @param {!Feature} track The track to update
  * @param {number} distance
  * @param {number} duration
  */
-os.track.updateAverageSpeed = function(track, distance, duration) {
-  var distanceString = os.track.ELAPSED_ZERO;
+const updateAverageSpeed = function(track, distance, duration) {
+  var distanceString = ELAPSED_ZERO;
   if (distance > 0) {
     var dist = distance / (duration / 3600);
     distanceString = dist.toFixed(3) + ' km/h';
   }
-  track.set(os.track.TrackField.ELAPSED_AVERAGE_SPEED, distanceString);
+  track.set(TrackField.ELAPSED_AVERAGE_SPEED, distanceString);
 };
-
 
 /**
  * Update the time range on a track.
  *
- * @param {!ol.Feature} track The track to update
+ * @param {!Feature} track The track to update
  */
-os.track.updateTime = function(track) {
-  var sortField = track.get(os.track.TrackField.SORT_FIELD);
-  if (sortField == os.data.RecordField.TIME) {
-    var oldTime = /** @type {os.time.ITime|undefined} */ (track.get(os.data.RecordField.TIME));
+const updateTime = function(track) {
+  var sortField = track.get(TrackField.SORT_FIELD);
+  if (sortField == RecordField.TIME) {
+    var oldTime = /** @type {os.time.ITime|undefined} */ (track.get(RecordField.TIME));
     var trackTime;
 
-    var trackGeometry = /** @type {ol.geom.LineString} */ (track.getGeometry());
+    var trackGeometry = /** @type {LineString} */ (track.getGeometry());
     if (trackGeometry) {
       var coordinates = trackGeometry.getFlatCoordinates();
       var stride = trackGeometry.getStride();
       var startTime = coordinates[stride - 1];
       var endTime = coordinates[coordinates.length - 1];
-      trackTime = new os.time.TimeRange(startTime, endTime);
+      trackTime = new TimeRange(startTime, endTime);
     }
 
-    track.set(os.data.RecordField.TIME, trackTime);
+    track.set(RecordField.TIME, trackTime);
 
     // update the source time model if:
     //  - times are not directly equal (both undefined) AND
     //  - either time is undefined, or the time range changed
     if (oldTime != trackTime && (!trackTime || !oldTime || !trackTime.equals(oldTime))) {
-      var source = os.feature.getSource(track);
+      var source = osFeature.getSource(track);
       if (source) {
         source.reindexTimeModel();
       }
@@ -979,29 +885,27 @@ os.track.updateTime = function(track) {
   }
 };
 
-
 /**
  * Get the distance for a line geometry.
  *
  * @param {ol.geom.Geometry|undefined} geometry The geometry.
  * @return {number} The distance.
  */
-os.track.getGeometryDistance = function(geometry) {
+const getGeometryDistance = function(geometry) {
   var distance = 0;
 
-  if (geometry instanceof ol.geom.LineString) {
+  if (geometry instanceof LineString) {
     geometry.toLonLat();
-    distance = os.track.getLineDistance(geometry.getCoordinates());
+    distance = getLineDistance(geometry.getCoordinates());
     geometry.osTransform();
-  } else if (geometry instanceof ol.geom.MultiLineString) {
+  } else if (geometry instanceof MultiLineString) {
     geometry.toLonLat();
-    distance = os.track.getMultiLineDistance(geometry.getCoordinates());
+    distance = getMultiLineDistance(geometry.getCoordinates());
     geometry.osTransform();
   }
 
   return distance;
 };
-
 
 /**
  * Get the distance (in meters) covered by a set of coordinates.
@@ -1009,7 +913,7 @@ os.track.getGeometryDistance = function(geometry) {
  * @param {Array<ol.Coordinate>} coords The line coordinates
  * @return {number} The distance in meters
  */
-os.track.getLineDistance = function(coords) {
+const getLineDistance = function(coords) {
   var distance = 0;
   if (coords && coords.length > 1) {
     for (var i = 1; i < coords.length; i++) {
@@ -1020,24 +924,22 @@ os.track.getLineDistance = function(coords) {
   return distance;
 };
 
-
 /**
  * Get the distance (in meters) covered by a set of coordinates for a multi-line.
  *
  * @param {Array<Array<ol.Coordinate>>} coords The multi-line coordinates
  * @return {number} The distance in meters
  */
-os.track.getMultiLineDistance = function(coords) {
+const getMultiLineDistance = function(coords) {
   var distance = 0;
   if (coords) {
     coords.forEach(function(c) {
-      distance += os.track.getLineDistance(c);
+      distance += getLineDistance(c);
     });
   }
 
   return distance;
 };
-
 
 /**
  * Get the time for a line geometry.
@@ -1045,18 +947,17 @@ os.track.getMultiLineDistance = function(coords) {
  * @param {ol.geom.Geometry|undefined} geometry The geometry.
  * @return {number} The time
  */
-os.track.getGeometryTime = function(geometry) {
+const getGeometryTime = function(geometry) {
   var time = 0;
 
-  if (geometry instanceof ol.geom.LineString) {
-    time = os.track.getLineTime(geometry.getCoordinates());
-  } else if (geometry instanceof ol.geom.MultiLineString) {
-    time = os.track.getMultiLineTime(geometry.getCoordinates());
+  if (geometry instanceof LineString) {
+    time = getLineTime(geometry.getCoordinates());
+  } else if (geometry instanceof MultiLineString) {
+    time = getMultiLineTime(geometry.getCoordinates());
   }
 
   return time;
 };
-
 
 /**
  * Get the time (in seconds) covered by a set of coordinates.
@@ -1064,7 +965,7 @@ os.track.getGeometryTime = function(geometry) {
  * @param {Array<ol.Coordinate>} coords The line coordinates
  * @return {number} The time
  */
-os.track.getLineTime = function(coords) {
+const getLineTime = function(coords) {
   var time = 0;
   if (coords && coords.length > 1) {
     var first = coords[0];
@@ -1075,47 +976,45 @@ os.track.getLineTime = function(coords) {
   return time;
 };
 
-
 /**
  * Get the time (in meters) covered by a set of coordinates for a multi-line.
  *
  * @param {Array<Array<ol.Coordinate>>} coords The multi-line coordinates
  * @return {number} The time
  */
-os.track.getMultiLineTime = function(coords) {
+const getMultiLineTime = function(coords) {
   var time = 0;
   if (coords) {
     coords.forEach(function(c) {
-      time += os.track.getLineTime(c);
+      time += getLineTime(c);
     });
   }
 
   return time;
 };
 
-
 /**
  * Test a feature to check if it has a value in the sort field.
  *
- * @param {!ol.Feature} feature The feature
+ * @param {!Feature} feature The feature
  * @param {string=} opt_sortField The sort field
- * @return {!goog.Promise}
+ * @return {!Promise}
  */
-os.track.getSortField = function(feature, opt_sortField) {
-  return new goog.Promise(function(resolve, reject) {
-    var sortField = opt_sortField || os.data.RecordField.TIME;
-    var getValueFn = sortField == os.data.RecordField.TIME ? os.track.getStartTime :
-      os.track.getFeatureValue.bind(null, sortField);
+const getSortField = function(feature, opt_sortField) {
+  return new Promise(function(resolve, reject) {
+    var sortField = opt_sortField || RecordField.TIME;
+    var getValueFn = sortField == RecordField.TIME ? getStartTime :
+      getFeatureValue.bind(null, sortField);
 
     var value = getValueFn(feature);
     if (value == null || value == '') {
-      var source = os.feature.getSource(feature);
+      var source = osFeature.getSource(feature);
       if (source) {
         var columns = source.getColumns();
-        columns.sort(os.ui.slick.column.sortByField.bind(null, 'name'));
+        columns.sort(column.sortByField.bind(null, 'name'));
 
         var prompt;
-        if (sortField == os.data.RecordField.TIME) {
+        if (sortField == RecordField.TIME) {
           prompt = 'Track features do not have a time component. Please choose a column that can be used to sort ' +
               'points in the track.';
         } else {
@@ -1123,14 +1022,14 @@ os.track.getSortField = function(feature, opt_sortField) {
               'Please choose a new column to sort points in the track:';
         }
 
-        os.track.promptForField(columns, prompt).then(function(newColumn) {
-          os.track.getSortField(feature, newColumn['field']).then(function(sortField) {
+        promptForField(columns, prompt).then(function(newColumn) {
+          getSortField(feature, newColumn['field']).then(function(sortField) {
             resolve(sortField);
           }, function(err) {
-            reject(os.events.EventType.CANCEL);
+            reject(EventType.CANCEL);
           });
         }, function() {
-          reject(os.events.EventType.CANCEL);
+          reject(EventType.CANCEL);
         });
       }
     } else {
@@ -1140,16 +1039,15 @@ os.track.getSortField = function(feature, opt_sortField) {
   });
 };
 
-
 /**
  * Prompt the user to choose a track title.
  *
  * @param {string=} opt_default The default value
- * @return {!goog.Promise}
+ * @return {!Promise}
  */
-os.track.promptForTitle = function(opt_default) {
-  return new goog.Promise(function(resolve, reject) {
-    os.ui.window.ConfirmTextUI.launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
+const promptForTitle = function(opt_default) {
+  return new Promise(function(resolve, reject) {
+    ConfirmTextUI.launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
       confirm: resolve,
       cancel: reject,
       defaultValue: opt_default,
@@ -1157,29 +1055,28 @@ os.track.promptForTitle = function(opt_default) {
       prompt: 'Please provide a name for the track:',
       windowOptions: /** @type {!osx.window.WindowOptions} */ ({
         label: 'Track Name',
-        icon: 'fa ' + os.track.ICON,
+        icon: 'fa ' + ICON,
         modal: true
       })
     }));
   });
 };
 
-
 /**
  * Prompt the user to choose a track title, and if original metadata should be included.
  *
  * @param {string=} opt_default The default title. Defaults to an empty string.
  * @param {boolean=} opt_includeMetadata If metadata should be included. Defaults to false.
- * @return {!goog.Promise}
+ * @return {!Promise}
  */
-os.track.promptForTitleAndMetadata = function(opt_default = '', opt_includeMetadata = false) {
+const promptForTitleAndMetadata = function(opt_default = '', opt_includeMetadata = false) {
   let includeMetadata = opt_includeMetadata;
   const setIncludeMetadata = (value) => {
     includeMetadata = value;
   };
 
-  return new goog.Promise(function(resolve, reject) {
-    os.ui.window.ConfirmTextUI.launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
+  return new Promise(function(resolve, reject) {
+    ConfirmTextUI.launchConfirmText(/** @type {!osx.window.ConfirmTextOptions} */ ({
       confirm: (title) => {
         resolve({title, includeMetadata});
       },
@@ -1192,24 +1089,23 @@ os.track.promptForTitleAndMetadata = function(opt_default = '', opt_includeMetad
       prompt: 'Please provide a name for the track:',
       windowOptions: /** @type {!osx.window.WindowOptions} */ ({
         label: 'Track Name',
-        icon: 'fa ' + os.track.ICON,
+        icon: 'fa ' + ICON,
         modal: true
       })
     }));
   });
 };
 
-
 /**
  * Prompt the user to choose a track.
  *
  * @param {Array<os.data.ColumnDefinition>} columns The columns
  * @param {string} prompt The dialog prompt
- * @return {!goog.Promise}
+ * @return {!Promise}
  */
-os.track.promptForField = function(columns, prompt) {
-  return new goog.Promise(function(resolve, reject) {
-    os.ui.window.launchConfirmColumn(/** @type {!osx.window.ConfirmColumnOptions} */ ({
+const promptForField = function(columns, prompt) {
+  return new Promise(function(resolve, reject) {
+    osWindow.launchConfirmColumn(/** @type {!osx.window.ConfirmColumnOptions} */ ({
       confirm: resolve,
       cancel: reject,
       columns: columns,
@@ -1224,108 +1120,104 @@ os.track.promptForField = function(columns, prompt) {
   });
 };
 
-
 /**
  * Switch the track to its animating state.
  *
- * @param {!ol.Feature} track The track feature.
+ * @param {!Feature} track The track feature.
  */
-os.track.initDynamic = function(track) {
+const initDynamic = function(track) {
   // switch the displayed track geometry to show the "current" line
-  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
+  var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(osStyle.StyleType.FEATURE));
   var trackStyle = trackStyles ? trackStyles[0] : null;
   if (trackStyle) {
-    if (os.track.getShowLine(track)) {
-      trackStyle['geometry'] = os.track.TrackField.CURRENT_LINE;
+    if (getShowLine(track)) {
+      trackStyle['geometry'] = TrackField.CURRENT_LINE;
     }
 
-    os.ui.FeatureEditCtrl.restoreFeatureLabels(track);
-    os.style.setFeatureStyle(track);
+    FeatureEditCtrl.restoreFeatureLabels(track);
+    osStyle.setFeatureStyle(track);
   }
 };
-
 
 /**
  * Switch the track to its non-animating state.
  *
- * @param {!ol.Feature} track The track feature.
+ * @param {!Feature} track The track feature.
  * @param {boolean=} opt_disposing If the feature is being disposed.
  */
-os.track.disposeDynamic = function(track, opt_disposing) {
+const disposeDynamic = function(track, opt_disposing) {
   // dispose of the current track geometry and remove it from the feature
-  os.track.disposeAnimationGeometries(track);
+  disposeAnimationGeometries(track);
 
   if (!opt_disposing) {
     // switch the style back to rendering the original track
-    var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
+    var trackStyles = /** @type {Array<Object<string, *>>} */ (track.get(osStyle.StyleType.FEATURE));
     var trackStyle = trackStyles ? trackStyles[0] : null;
     if (trackStyle) {
-      os.track.setShowMarker(track, true);
-      if (os.track.getShowLine(track)) {
+      setShowMarker(track, true);
+      if (getShowLine(track)) {
         delete trackStyle['geometry'];
       }
-      os.style.setFeatureStyle(track);
+      osStyle.setFeatureStyle(track);
     }
 
     // reset coordinate fields and update time/distance to the full track
-    var distance = os.track.updateDistance(track);
-    var duration = os.track.updateDuration(track);
-    os.track.updateAverageSpeed(track, distance, duration);
-    os.track.updateCurrentPosition(track);
+    var distance = updateDistance(track);
+    var duration = updateDuration(track);
+    updateAverageSpeed(track, distance, duration);
+    updateCurrentPosition(track);
   }
 };
-
 
 /**
  * Update a track feature to represent the track at a provided timestamp.
  *
- * @param {!ol.Feature} track The track.
+ * @param {!Feature} track The track.
  * @param {number} startTime The start timestamp.
  * @param {number} endTime The end timestamp.
  */
-os.track.updateDynamic = function(track, startTime, endTime) {
-  var sortField = track.get(os.track.TrackField.SORT_FIELD);
-  if (sortField !== os.data.RecordField.TIME) {
+const updateDynamic = function(track, startTime, endTime) {
+  var sortField = track.get(TrackField.SORT_FIELD);
+  if (sortField !== RecordField.TIME) {
     // isn't sorted by time - can't create a current track
     return;
   }
 
   var trackGeometry = track.getGeometry();
-  if (!(trackGeometry instanceof ol.geom.LineString || trackGeometry instanceof ol.geom.MultiLineString)) {
+  if (!(trackGeometry instanceof LineString || trackGeometry instanceof MultiLineString)) {
     // shouldn't happen, but this will fail if the track isn't a line
     return;
   }
 
   var flatCoordinates = trackGeometry.getFlatCoordinates();
   var stride = trackGeometry.getStride();
-  var ends = trackGeometry instanceof ol.geom.MultiLineString ? trackGeometry.getEnds() : undefined;
+  var ends = trackGeometry instanceof MultiLineString ? trackGeometry.getEnds() : undefined;
   var geomLayout = trackGeometry.getLayout();
-  if (!flatCoordinates || (geomLayout !== ol.geom.GeometryLayout.XYM && geomLayout !== ol.geom.GeometryLayout.XYZM)) {
+  if (!flatCoordinates || (geomLayout !== GeometryLayout.XYM && geomLayout !== GeometryLayout.XYZM)) {
     // something is wrong with this line - abort!!
     return;
   }
 
-  var startIndex = os.track.getTimeIndex(flatCoordinates, startTime, stride);
-  var endIndex = os.track.getTimeIndex(flatCoordinates, endTime, stride);
-  os.track.updateCurrentLine(track, startTime, startIndex, endTime, endIndex, flatCoordinates, stride, ends);
+  var startIndex = getTimeIndex(flatCoordinates, startTime, stride);
+  var endIndex = getTimeIndex(flatCoordinates, endTime, stride);
+  updateCurrentLine(track, startTime, startIndex, endTime, endIndex, flatCoordinates, stride, ends);
 
-  var distance = os.track.updateDistance(track);
-  var duration = os.track.updateDuration(track);
-  os.track.updateAverageSpeed(track, distance, duration);
+  var distance = updateDistance(track);
+  var duration = updateDuration(track);
+  updateAverageSpeed(track, distance, duration);
   track.changed();
 };
 
-
 /**
  * Update track metadata from original features.
- * @param {!ol.Feature} track The track.
+ * @param {!Feature} track The track.
  * @param {!Array<number>} coordinates The flat coordinate array.
  * @param {number} stride The coordinate array stride.
  *
  * @suppress {accessControls} For direct access to track metadata.
  */
-os.track.updateMetadata = function(track, coordinates, stride) {
-  var metadataMap = track.get(os.track.TrackField.METADATA_MAP);
+const updateMetadata = function(track, coordinates, stride) {
+  var metadataMap = track.get(TrackField.METADATA_MAP);
   if (metadataMap) {
     // use metadata for the last sort value (end of the track)
     var valueIndex = coordinates.length - 1;
@@ -1343,7 +1235,6 @@ os.track.updateMetadata = function(track, coordinates, stride) {
   }
 };
 
-
 /**
  * Get the closest index in the timestamp array for a time value.
  *
@@ -1352,9 +1243,9 @@ os.track.updateMetadata = function(track, coordinates, stride) {
  * @param {number} stride The coordinate array stride.
  * @return {number}
  */
-os.track.getTimeIndex = function(coordinates, value, stride) {
+const getTimeIndex = function(coordinates, value, stride) {
   // find the closest timestamp to the current timeline position
-  var index = os.array.binaryStrideSearch(coordinates, value, stride, stride - 1);
+  var index = osArray.binaryStrideSearch(coordinates, value, stride, stride - 1);
   if (index < 0) {
     // if current isn't in the array, goog.array.binarySearch will return (-(insertion point) - 1)
     index = -index - 1;
@@ -1363,19 +1254,18 @@ os.track.getTimeIndex = function(coordinates, value, stride) {
   return index;
 };
 
-
 /**
  * Get the position of a track at a given time. If the time falls between known points on the track, the position will
  * be linearly interpolated between the known points.
  *
- * @param {!ol.Feature} track The track.
+ * @param {!Feature} track The track.
  * @param {number} timestamp The timestamp.
  * @param {number} index The index of the most recent known coordinate.
  * @param {!Array<number>} coordinates The flat track coordinate array.
  * @param {number} stride The stride of the coordinate array.
  * @return {ol.Coordinate|undefined}
  */
-os.track.getTrackPositionAt = function(track, timestamp, index, coordinates, stride) {
+const getTrackPositionAt = function(track, timestamp, index, coordinates, stride) {
   var position;
 
   if (index === 0) {
@@ -1393,10 +1283,10 @@ os.track.getTrackPositionAt = function(track, timestamp, index, coordinates, str
     // get the start index of each coordinate to avoid slicing the array (and resulting GC)
     var prevIndex = index - stride;
     var nextIndex = index;
-    if (os.track.getInterpolateMarker(track)) {
+    if (getInterpolateMarker(track)) {
       position = [
-        goog.math.lerp(coordinates[prevIndex], coordinates[nextIndex], scale),
-        goog.math.lerp(coordinates[prevIndex + 1], coordinates[nextIndex + 1], scale)
+        math.lerp(coordinates[prevIndex], coordinates[nextIndex], scale),
+        math.lerp(coordinates[prevIndex + 1], coordinates[nextIndex + 1], scale)
       ];
     } else {
       position = [
@@ -1407,8 +1297,8 @@ os.track.getTrackPositionAt = function(track, timestamp, index, coordinates, str
 
     // interpolate altitude if present
     if (stride === 4) {
-      if (os.track.getInterpolateMarker(track)) {
-        position.push(goog.math.lerp(coordinates[prevIndex + 2], coordinates[nextIndex + 2], scale));
+      if (getInterpolateMarker(track)) {
+        position.push(math.lerp(coordinates[prevIndex + 2], coordinates[nextIndex + 2], scale));
       } else {
         position.push(coordinates[prevIndex + 2]);
       }
@@ -1420,11 +1310,10 @@ os.track.getTrackPositionAt = function(track, timestamp, index, coordinates, str
   return position;
 };
 
-
 /**
  * Update the track's line geometry to display its position up to the provided timestamp.
  *
- * @param {!ol.Feature} track The track.
+ * @param {!Feature} track The track.
  * @param {number} startTime The start timestamp.
  * @param {number} startIndex The start index of the starting coordinate.
  * @param {number} endTime The end timestamp.
@@ -1435,15 +1324,15 @@ os.track.getTrackPositionAt = function(track, timestamp, index, coordinates, str
  *
  * @suppress {accessControls} To allow direct access to line string coordinates.
  */
-os.track.updateCurrentLine = function(track, startTime, startIndex, endTime, endIndex, coordinates, stride,
+const updateCurrentLine = function(track, startTime, startIndex, endTime, endIndex, coordinates, stride,
     opt_ends) {
-  var currentLine = /** @type {os.track.TrackLike|undefined} */ (track.get(os.track.TrackField.CURRENT_LINE));
-  var layout = stride === 4 ? ol.geom.GeometryLayout.XYZM : ol.geom.GeometryLayout.XYM;
+  var currentLine = /** @type {TrackLike|undefined} */ (track.get(TrackField.CURRENT_LINE));
+  var layout = stride === 4 ? GeometryLayout.XYZM : GeometryLayout.XYM;
   if (!currentLine) {
     // create the line geometry if it doesn't exist yet. must use an empty coordinate array instead of null, or the
     // layout will be set to XY
-    currentLine = opt_ends ? new ol.geom.MultiLineString([], layout) : new ol.geom.LineString([], layout);
-    track.set(os.track.TrackField.CURRENT_LINE, currentLine);
+    currentLine = opt_ends ? new MultiLineString([], layout) : new LineString([], layout);
+    track.set(TrackField.CURRENT_LINE, currentLine);
   }
 
   // test if the current line appears to have the correct coordinates already. if so, do not modify it.
@@ -1453,8 +1342,8 @@ os.track.updateCurrentLine = function(track, startTime, startIndex, endTime, end
           flatCoordinates[flatCoordinates.length - stride] === coordinates[endIndex - stride]))) {
     // show the marker on the last point if it's after the timeline range start
     var show = !!flatCoordinates.length &&
-        flatCoordinates[flatCoordinates.length - 1] >= os.time.TimelineController.getInstance().getCurrentRange().start;
-    os.track.setShowMarker(track, show, true);
+        flatCoordinates[flatCoordinates.length - 1] >= TimelineController.getInstance().getCurrentRange().start;
+    setShowMarker(track, show, true);
     return;
   }
 
@@ -1493,7 +1382,7 @@ os.track.updateCurrentLine = function(track, startTime, startIndex, endTime, end
     // if the line starts at a multi-line end, the start time is between tracks in a multi track.
     //
     if (startIndex > 0 && !startIndexIsEnd) {
-      var interpolatedStart = os.track.getTrackPositionAt(track, startTime, startIndex, coordinates, stride);
+      var interpolatedStart = getTrackPositionAt(track, startTime, startIndex, coordinates, stride);
       if (interpolatedStart && interpolatedStart.length === stride) {
         var i = interpolatedStart.length;
         while (i--) {
@@ -1516,7 +1405,7 @@ os.track.updateCurrentLine = function(track, startTime, startIndex, endTime, end
     // if the line ends at a multi-line end, the end time is between tracks in a multi track.
     //
     if (endIndex < coordinates.length && !endIndexIsEnd) {
-      var end = os.track.getTrackPositionAt(track, endTime, endIndex, coordinates, stride);
+      var end = getTrackPositionAt(track, endTime, endIndex, coordinates, stride);
       if (end && end.length === stride) {
         for (var i = 0; i < end.length; i++) {
           flatCoordinates.push(end[i]);
@@ -1530,36 +1419,35 @@ os.track.updateCurrentLine = function(track, startTime, startIndex, endTime, end
     }
 
     if (endIndex == 0 || startIndex === coordinates.length) {
-      os.track.setShowMarker(track, false);
+      setShowMarker(track, false);
     } else {
-      os.track.setShowMarker(track, true);
+      setShowMarker(track, true);
     }
   }
 
   // update the current line geometry
-  if (currentLine instanceof ol.geom.LineString) {
+  if (currentLine instanceof LineString) {
     currentLine.setFlatCoordinates(layout, flatCoordinates);
   } else if (currentEnds) {
     currentLine.setFlatCoordinates(layout, flatCoordinates, currentEnds);
   }
 
   // update the current position marker
-  os.track.updateCurrentPosition(track);
+  updateCurrentPosition(track);
 };
-
 
 /**
  * Update the z-index for a list of tracks. Ensures the current position icon for all tracks will be displayed on top
  * of the line string for every other track passed to the function.
  *
- * @param {!Array<!ol.Feature>} tracks The track features.
+ * @param {!Array<!Feature>} tracks The track features.
  */
-os.track.updateTrackZIndex = function(tracks) {
+const updateTrackZIndex = function(tracks) {
   // save the top z-index so current position icons can be displayed above tracks
   var topTrackZIndex = tracks.length + 1;
   for (var i = 0; i < tracks.length; i++) {
     var track = tracks[i];
-    var trackStyles = /** @type {!Array<!Object<string, *>>} */ (track.get(os.style.StyleType.FEATURE));
+    var trackStyles = /** @type {!Array<!Object<string, *>>} */ (track.get(osStyle.StyleType.FEATURE));
     if (!Array.isArray(trackStyles)) {
       trackStyles = [trackStyles];
     }
@@ -1569,55 +1457,53 @@ os.track.updateTrackZIndex = function(tracks) {
       style['zIndex'] = tracks.length - i;
 
       // display current position icon above track lines
-      if (style['geometry'] == os.track.TrackField.CURRENT_POSITION) {
+      if (style['geometry'] == TrackField.CURRENT_POSITION) {
         style['zIndex'] += topTrackZIndex;
       }
     }
 
     // update styles on the track and
-    os.style.setFeatureStyle(track);
+    osStyle.setFeatureStyle(track);
     track.changed();
   }
 };
 
-
 /**
  * Bucket features by a field.
  * @param {string} field The field.
- * @param {ol.Feature} feature The feature.
+ * @param {Feature} feature The feature.
  * @return {?} The field value.
  *
  * @suppress {accessControls} To allow direct access to feature metadata.
  */
-os.track.bucketByField = function(field, feature) {
+const bucketByField = function(field, feature) {
   if (feature) {
     // if the feature does not have a value for the field, add it to the ignore bucket so it can be included in the
     // result. this avoids dropping features that aren't added to a track.
-    return feature.values_[field] != null ? feature.values_[field] : os.object.IGNORE_VAL;
+    return feature.values_[field] != null ? feature.values_[field] : osObject.IGNORE_VAL;
   }
 
   // no feature, don't add to a bucket
   return undefined;
 };
 
-
 /**
  * Split features into tracks.
- * @param {os.track.SplitOptions} options The options.
- * @return {!Array<!ol.Feature>} The resulting tracks. Also contains any features not used to create tracks.
+ * @param {SplitOptions} options The options.
+ * @return {!Array<!Feature>} The resulting tracks. Also contains any features not used to create tracks.
  */
-os.track.splitIntoTracks = function(options) {
+const splitIntoTracks = function(options) {
   var features = options.features;
   var result = options.result || [];
-  var bucketFn = options.bucketFn || (options.field ? os.track.bucketByField.bind(undefined, options.field) : null);
-  var getTrackFn = options.getTrackFn || os.fn.noop;
+  var bucketFn = options.bucketFn || (options.field ? bucketByField.bind(undefined, options.field) : null);
+  var getTrackFn = options.getTrackFn || fn.noop;
 
   if (features && bucketFn) {
-    var buckets = goog.array.bucket(features, bucketFn);
+    var buckets = googArray.bucket(features, bucketFn);
 
     for (var id in buckets) {
       var bucketFeatures = buckets[id];
-      if (id === os.object.IGNORE_VAL) {
+      if (id === osObject.IGNORE_VAL) {
         // features did not have a value for the provided field, so return them to the result array
         for (var i = 0; i < bucketFeatures.length; i++) {
           result.push(bucketFeatures[i]);
@@ -1626,13 +1512,13 @@ os.track.splitIntoTracks = function(options) {
         var trackId = id + '-track';
         var track = getTrackFn(trackId);
         if (track) {
-          os.track.addToTrack({
+          addToTrack({
             features: bucketFeatures,
             track: track,
             includeMetadata: true
           });
         } else {
-          track = os.track.createTrack({
+          track = createTrack({
             id: trackId,
             name: id,
             features: bucketFeatures,
@@ -1650,4 +1536,55 @@ os.track.splitIntoTracks = function(options) {
   }
 
   return result;
+};
+
+exports = {
+  ID,
+  ICON,
+  ELAPSED_ZERO,
+  TOTAL_ZERO,
+  TRACK_CONFIG,
+  CURRENT_CONFIG,
+  HIDE_GEOMETRY,
+  isTrackFeature,
+  getFeatureValue,
+  getStartTime,
+  sortCoordinatesByValue,
+  getTrackCoordinates,
+  createTrack,
+  addToTrack,
+  clamp,
+  truncate,
+  disposeAnimationGeometries,
+  setShowLine,
+  getShowLine,
+  setShowMarker,
+  setInterpolateMarker,
+  getInterpolateMarker,
+  setGeometry,
+  updateCurrentPosition,
+  updateDistance,
+  updateDuration,
+  updateAverageSpeed,
+  updateTime,
+  getGeometryDistance,
+  getLineDistance,
+  getMultiLineDistance,
+  getGeometryTime,
+  getLineTime,
+  getMultiLineTime,
+  getSortField,
+  promptForTitle,
+  promptForTitleAndMetadata,
+  promptForField,
+  initDynamic,
+  disposeDynamic,
+  updateDynamic,
+  updateMetadata,
+  getTimeIndex,
+  getTrackPositionAt,
+  updateCurrentLine,
+  updateTrackZIndex,
+  bucketByField,
+  splitIntoTracks
 };
