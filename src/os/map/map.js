@@ -1,5 +1,3 @@
-goog.provide('os.MapChange');
-goog.provide('os.MapMode');
 goog.provide('os.map');
 
 goog.require('goog.asserts');
@@ -15,27 +13,6 @@ goog.require('os.proj');
  * @type {os.map.IMapContainer|undefined}
  */
 os.map.mapContainer = undefined;
-
-
-/**
- * @enum {string}
- */
-os.MapChange = {
-  VIEW3D: 'map:change:view3d',
-  INIT3D: 'map:change:init3d',
-  THROTTLE: 'map:change:throttle'
-};
-
-
-/**
- * Available map modes.
- * @enum {string}
- */
-os.MapMode = {
-  AUTO: 'auto',
-  VIEW_2D: '2d',
-  VIEW_3D: '3d'
-};
 
 
 /**

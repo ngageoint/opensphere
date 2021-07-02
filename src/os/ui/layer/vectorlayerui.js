@@ -30,6 +30,7 @@ goog.require('os.fn');
 goog.require('os.layer.preset');
 goog.require('os.layer.preset.LayerPresetManager');
 goog.require('os.layer.preset.PresetMenuButton');
+goog.require('os.map.instance');
 goog.require('os.style');
 goog.require('os.ui.Module');
 goog.require('os.ui.file.kml');
@@ -293,10 +294,11 @@ os.ui.layer.VectorLayerUICtrl.prototype.initUI = function() {
       this.scope['labelSize'] = this.getLabelSize() || os.style.label.DEFAULT_SIZE;
     }
 
-    var webGLRenderer = os.map.mapContainer.getWebGLRenderer();
+    var mapContainer = os.map.instance.getMapContainer();
+    var webGLRenderer = mapContainer.getWebGLRenderer();
     if (webGLRenderer) {
       this['altitudeModes'] = webGLRenderer.getAltitudeModes();
-      this['showAltitudeModes'] = this['altitudeModes'].length > 0 && os.map.mapContainer.is3DEnabled();
+      this['showAltitudeModes'] = this['altitudeModes'].length > 0 && mapContainer.is3DEnabled();
     }
 
     // update the shape UI
