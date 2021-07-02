@@ -245,7 +245,7 @@ const getTrackCoordinates = function(features, sortField, opt_metadataMap) {
  * @param {!CreateOptions} options The track creation options.
  * @return {TrackFeatureLike|undefined} The track feature.
  */
-const createTrack = function(options) {
+let createTrack_ = function(options) {
   var sortField = options.sortField || RecordField.TIME;
   var trackColor = options.color;
   var coordinates = options.coordinates;
@@ -358,12 +358,31 @@ const createTrack = function(options) {
 };
 
 /**
+ * Creates a track from the provided options.
+ *
+ * @param {!CreateOptions} options The track creation options.
+ * @return {TrackFeatureLike|undefined} The track feature.
+ */
+const createTrack = function(options) {
+  return createTrack_(options);
+};
+
+/**
+ * Replace default createTrack implementation
+ *
+ * @param {!function(!CreateOptions):(TrackFeatureLike|undefined)} f The new implementation
+ */
+const setCreateTrack = function(f) {
+  createTrack_ = f;
+};
+
+/**
  * Adds coordinates or features to an existing track.
  * @param {!AddOptions} options The options.
  * @return {!Array<!(ol.Coordinate|Feature)>} The added coordinates or features, depending on the options.
  * @suppress {accessControls} To allow direct access to line coordinates.
  */
-const addToTrack = function(options) {
+let addToTrack_ = function(options) {
   var added = [];
   var metadataMap = options.features && options.includeMetadata ? {} : undefined;
 
@@ -453,6 +472,24 @@ const addToTrack = function(options) {
   }
 
   return added;
+};
+
+/**
+ * Adds coordinates or features to an existing track.
+ * @param {!AddOptions} options The options.
+ * @return {!Array<!(ol.Coordinate|Feature)>} The added coordinates or features, depending on the options.
+ */
+const addToTrack = function(options) {
+  return addToTrack_(options);
+};
+
+/**
+ * Replace default addToTrack implementation
+ *
+ * @param {!function(!AddOptions):!Array<!(ol.Coordinate|Feature)>} f The new implementation
+ */
+const setAddToTrack = function(f) {
+  addToTrack_ = f;
 };
 
 /**
@@ -1552,7 +1589,9 @@ exports = {
   sortCoordinatesByValue,
   getTrackCoordinates,
   createTrack,
+  setCreateTrack,
   addToTrack,
+  setAddToTrack,
   clamp,
   truncate,
   disposeAnimationGeometries,
