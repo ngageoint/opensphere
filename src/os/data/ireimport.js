@@ -1,20 +1,20 @@
-goog.provide('os.data.IReimport');
-
+goog.module('os.data.IReimport');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * @interface
  */
-os.data.IReimport = function() {};
+class IReimport {
+  /**
+   * @return {boolean}
+   */
+  canReimport() {}
 
+  /**
+   * Reimports this item
+   */
+  reimport() {}
+}
 
-/**
- * @return {boolean}
- */
-os.data.IReimport.prototype.canReimport;
-
-
-/**
- * Reimports this item
- */
-os.data.IReimport.prototype.reimport;
+exports = IReimport;

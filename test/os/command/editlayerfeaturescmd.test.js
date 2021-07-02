@@ -13,19 +13,19 @@ describe('os.command.addFeature', function() {
   const EditLayerFeatures = goog.module.get('os.command.EditLayerFeatures');
   const LayerAdd = goog.module.get('os.command.LayerAdd');
   const State = goog.module.get('os.command.State');
-  const layer = goog.module.get('os.layer');
   const LayerConfigManager = goog.module.get('os.layer.config.LayerConfigManager');
+  const MockTileLayerConfig = goog.module.get('os.layer.config.MockTileLayerConfig');
+
   var testLayerId = 'test-layer';
   var testOptions = {
     'id': testLayerId,
-    'type': layer.config.MockTileLayerConfig.TYPE
+    'type': MockTileLayerConfig.TYPE
   };
 
   var addCommand;
   it('should be able to add a layer', function() {
     os.layerConfigManager = LayerConfigManager.getInstance();
-    LayerConfigManager.getInstance().registerLayerConfig(layer.config.MockTileLayerConfig.TYPE,
-        layer.config.MockTileLayerConfig);
+    LayerConfigManager.getInstance().registerLayerConfig(MockTileLayerConfig.TYPE, MockTileLayerConfig);
     addCommand = new LayerAdd(testOptions);
     addCommand.execute();
     expect(MapContainer.getInstance().getLayer(testLayerId)).not.toBe(null);

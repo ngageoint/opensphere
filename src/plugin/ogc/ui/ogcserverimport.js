@@ -89,11 +89,12 @@ class Controller extends ProviderImportCtrl {
         }
       }
     } else if (this.dp) {
-      $scope['config']['label'] = this.dp.getLabel();
+      const ogcServer = /** @type {OGCServer} */ (this.dp);
+      $scope['config']['label'] = ogcServer.getLabel();
 
-      $scope['config']['wms'] = this.dp.getWmsUrl();
-      $scope['config']['wmts'] = this.dp.getWmtsUrl();
-      $scope['config']['wfs'] = this.dp.getWfsUrl();
+      $scope['config']['wms'] = ogcServer.getWmsUrl();
+      $scope['config']['wmts'] = ogcServer.getWmtsUrl();
+      $scope['config']['wfs'] = ogcServer.getWfsUrl();
     }
 
     // focus the form
@@ -161,13 +162,14 @@ class Controller extends ProviderImportCtrl {
    * @inheritDoc
    */
   saveAndClose() {
-    /** @type {os.structs.TreeNode} */ (this.dp).setLabel(this.scope['config']['label']);
-    this.dp.setWmtsUrl(this.scope['config']['wmts']);
-    this.dp.setWmsUrl(this.scope['config']['wms']);
-    this.dp.setWfsUrl(this.scope['config']['wfs']);
-    this.dp.setOriginalWmtsUrl(this.scope['config']['wmts']);
-    this.dp.setOriginalWmsUrl(this.scope['config']['wms']);
-    this.dp.setOriginalWfsUrl(this.scope['config']['wfs']);
+    const ogcServer = /** @type {OGCServer} */ (this.dp);
+    ogcServer.setLabel(this.scope['config']['label']);
+    ogcServer.setWmtsUrl(this.scope['config']['wmts']);
+    ogcServer.setWmsUrl(this.scope['config']['wms']);
+    ogcServer.setWfsUrl(this.scope['config']['wfs']);
+    ogcServer.setOriginalWmtsUrl(this.scope['config']['wmts']);
+    ogcServer.setOriginalWmsUrl(this.scope['config']['wms']);
+    ogcServer.setOriginalWfsUrl(this.scope['config']['wfs']);
     super.saveAndClose();
   }
 }

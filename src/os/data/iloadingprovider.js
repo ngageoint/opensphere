@@ -1,34 +1,35 @@
-goog.provide('os.data.ILoadingProvider');
+goog.module('os.data.ILoadingProvider');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.IDataProvider');
-
+const IDataProvider = goog.requireType('os.data.IDataProvider');
 
 
 /**
  * Data provider with a loading state.
  *
  * @interface
- * @extends {os.data.IDataProvider}
+ * @extends {IDataProvider}
  */
-os.data.ILoadingProvider = function() {};
+class ILoadingProvider {
+  /**
+   * If the provider is currently in a loading state.
+   * @return {boolean}
+   */
+  isLoading() {}
+
+  /**
+   * Set if the provider is in a loading state.
+   * @param {boolean} value
+   */
+  setLoading(value) {}
+}
 
 
 /**
  * ID for {@see os.implements}
  * @const {string}
  */
-os.data.ILoadingProvider.ID = 'os.data.ILoadingProvider';
+ILoadingProvider.ID = 'os.data.ILoadingProvider';
 
 
-/**
- * If the provider is currently in a loading state.
- * @return {boolean}
- */
-os.data.ILoadingProvider.prototype.isLoading;
-
-
-/**
- * Set if the provider is in a loading state.
- * @param {boolean} value
- */
-os.data.ILoadingProvider.prototype.setLoading;
+exports = ILoadingProvider;

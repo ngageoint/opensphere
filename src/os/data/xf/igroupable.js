@@ -1,67 +1,62 @@
-goog.provide('os.data.xf.IGroupable');
+goog.module('os.data.xf.IGroupable');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.Listenable');
-
+const Listenable = goog.requireType('goog.events.Listenable');
 
 
 /**
  * Interface representing a XF groupable object.
  *
- * @extends {goog.events.Listenable}
+ * @extends {Listenable}
  * @template T
  * @interface
  */
-os.data.xf.IGroupable = function() {};
+class IGroupable {
+  /**
+   * Get the name.
+   * @return {?string}
+   */
+  getName() {}
 
+  /**
+   * Set the name.
+   * @param {?string} value
+   */
+  setName(value) {}
 
-/**
- * Get the name.
- * @return {?string}
- */
-os.data.xf.IGroupable.prototype.getName;
+  /**
+   * Gets the bin method.
+   * @return {os.histo.IBinMethod}
+   */
+  getBinMethod() {}
 
+  /**
+   * Sets the bin method.
+   * @param {os.histo.IBinMethod} value The count object
+   */
+  setBinMethod(value) {}
 
-/**
- * Set the name.
- * @param {?string} value
- */
-os.data.xf.IGroupable.prototype.setName;
+  /**
+   * This runs when an item is added to a group
+   * @param {os.histo.Bin<T>} bin
+   * @param {T} item
+   * @return {os.histo.Bin<T>}
+   */
+  reduceAdd(bin, item) {}
 
+  /**
+   * This runs when an item is removed from a group
+   * @param {os.histo.Bin<T>} bin
+   * @param {T} item
+   * @return {os.histo.Bin.<T>}
+   */
+  reduceRemove(bin, item) {}
 
-/**
- * Gets the bin method.
- * @return {os.histo.IBinMethod}
- */
-os.data.xf.IGroupable.prototype.getBinMethod;
+  /**
+   * Creates a new bin for a group
+   * @return {os.histo.Bin<T>}
+   */
+  reduceInit() {}
+}
 
-
-/**
- * Sets the bin method.
- * @param {os.histo.IBinMethod} value The count object
- */
-os.data.xf.IGroupable.prototype.setBinMethod;
-
-
-/**
- * This runs when an item is added to a group
- * @param {os.histo.Bin<T>} bin
- * @param {T} item
- * @return {os.histo.Bin<T>}
- */
-os.data.xf.IGroupable.prototype.reduceAdd;
-
-
-/**
- * This runs when an item is removed from a group
- * @param {os.histo.Bin<T>} bin
- * @param {T} item
- * @return {os.histo.Bin.<T>}
- */
-os.data.xf.IGroupable.prototype.reduceRemove;
-
-
-/**
- * Creates a new bin for a group
- * @return {os.histo.Bin<T>}
- */
-os.data.xf.IGroupable.prototype.reduceInit;
+exports = IGroupable;

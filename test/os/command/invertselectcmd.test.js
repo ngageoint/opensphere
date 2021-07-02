@@ -5,7 +5,7 @@ goog.require('ol.geom.Point');
 goog.require('os.command.InvertSelect');
 goog.require('os.command.State');
 goog.require('os.data.DataManager');
-goog.require('os.data.OSDataManager');
+goog.require('os.data.DataManager');
 goog.require('os.mock');
 goog.require('os.source.PropertyChange');
 goog.require('os.source.Vector');
@@ -18,7 +18,7 @@ describe('os.command.InvertSelect', function() {
   const Point = goog.module.get('ol.geom.Point');
   const InvertSelect = goog.module.get('os.command.InvertSelect');
   const State = goog.module.get('os.command.State');
-  const OSDataManager = goog.module.get('os.data.OSDataManager');
+  const DataManager = goog.module.get('os.data.DataManager');
   const PropertyChange = goog.module.get('os.source.PropertyChange');
   const VectorSource = goog.module.get('os.source.Vector');
 
@@ -55,7 +55,7 @@ describe('os.command.InvertSelect', function() {
     runs(function() {
       events.unlisten(src, GoogEventType.PROPERTYCHANGE, onChange);
       src.addToSelected(f);
-      OSDataManager.getInstance().addSource(src);
+      DataManager.getInstance().addSource(src);
 
       var cmd = new InvertSelect(src.getId());
       expect(cmd.execute()).toBe(true);
@@ -66,7 +66,7 @@ describe('os.command.InvertSelect', function() {
       expect(cmd.state).toBe(State.READY);
       expect(src.getSelectedItems().length).toBe(1);
 
-      OSDataManager.getInstance().removeSource(src);
+      DataManager.getInstance().removeSource(src);
     });
   });
 });

@@ -6,7 +6,7 @@ goog.require('os.MapContainer');
 goog.require('os.config');
 goog.require('os.config.Settings');
 goog.require('os.config.storage.SettingsObjectStorage');
-goog.require('os.data.OSDataManager');
+goog.require('os.data.DataManager');
 goog.require('os.im.mapping.AltMapping');
 goog.require('os.im.mapping.BearingMapping');
 goog.require('os.im.mapping.LatMapping');
@@ -91,8 +91,13 @@ beforeEach(function() {
       settings.set('maxFeatures.3d', 150000);
     }
 
-    if (!os.dataManager || !os.osDataManager) {
-      os.dataManager = os.osDataManager = os.data.OSDataManager.getInstance();
+    // This needs to be initialized before the data manager.
+    var map = os.MapContainer.getInstance();
+    os.map.instance.setMapContainer(map);
+
+    if (!os.dataManager || !os.dataManager) {
+      os.dataManager = os.data.DataManager.getInstance();
+      os.dataManager.setMapContainer(map);
       os.dataManager.registerDescriptorType(os.ogc.ID, os.ui.ogc.OGCDescriptor);
     }
 
@@ -117,9 +122,6 @@ beforeEach(function() {
     if (!os.styleManager) {
       os.styleManager = os.style.StyleManager.getInstance();
     }
-
-    var map = os.MapContainer.getInstance();
-    os.map.instance.setMapContainer(map);
 
     if (!map.getMap()) {
       map.init();

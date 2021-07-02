@@ -4,8 +4,10 @@ goog.require('goog.string');
 goog.require('os.layer.LayerType');
 goog.require('os.ogc.wfs.FeatureType');
 goog.require('os.state.StateManager');
+goog.require('os.state.Versions');
 goog.require('os.state.XMLStateManager');
 goog.require('os.state.XMLStateOptions');
+goog.require('os.state.instance');
 goog.require('os.test.xsd');
 goog.require('os.xml');
 goog.require('plugin.basemap');
@@ -17,6 +19,8 @@ goog.require('plugin.ogc.wms.WMSLayerConfig');
 
 describe('plugin.basemap.v4.BaseMapState', function() {
   const StateManager = goog.module.get('os.state.StateManager');
+  const StateVersions = goog.module.get('os.state.Versions');
+  const {setStateManager} = goog.module.get('os.state.instance');
   const xml = goog.module.get('os.xml');
   const basemap = goog.module.get('plugin.basemap');
   const BaseMapState = goog.module.get('plugin.basemap.v4.BaseMapState');
@@ -53,7 +57,8 @@ describe('plugin.basemap.v4.BaseMapState', function() {
 
   beforeEach(function() {
     stateManager = StateManager.getInstance();
-    stateManager.setVersion('v4');
+    setStateManager(stateManager);
+    stateManager.setVersion(StateVersions.V4);
   });
 
   it('should exist', function() {

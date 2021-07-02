@@ -3,11 +3,12 @@ goog.provide('os.config.LegendSettingsCtrl');
 
 goog.require('goog.Disposable');
 goog.require('os');
+goog.require('os.config.LegendSetting');
 goog.require('os.legend');
+goog.require('os.ui.LegendUI');
 goog.require('os.ui.Module');
 goog.require('os.ui.config.SettingPlugin');
 goog.require('os.ui.events.UIEvent');
-goog.require('os.ui.legendDirective');
 
 
 
@@ -24,7 +25,7 @@ os.config.LegendSettings = function() {
   this.setCategories(['Map']);
   this.setDescription('Display a data legend when capturing a screenshot or animated GIF');
   this.setIcon('fa ' + os.legend.ICON);
-  this.setUI('legendsettings');
+  this.setUI(os.ui.LegendUI.directiveTag);
 };
 goog.inherits(os.config.LegendSettings, os.ui.config.SettingPlugin);
 
@@ -34,28 +35,6 @@ goog.inherits(os.config.LegendSettings, os.ui.config.SettingPlugin);
  */
 os.config.LegendSettings.prototype.getId = function() {
   return os.legend.ID;
-};
-
-
-/**
- * Legend settings keys.
- * @enum {string}
- */
-os.config.LegendSetting = {
-  // draw options
-  BG_COLOR: os.legend.DRAW_OPTIONS_KEY + '.bgColor',
-  BOLD: os.legend.DRAW_OPTIONS_KEY + '.bold',
-  FONT_SIZE: os.legend.DRAW_OPTIONS_KEY + '.fontSize',
-  SHOW_VECTOR: os.legend.DRAW_OPTIONS_KEY + '.showVector',
-  SHOW_VECTOR_TYPE: os.legend.DRAW_OPTIONS_KEY + '.showVectorType',
-  SHOW_COUNT: os.legend.DRAW_OPTIONS_KEY + '.showCount',
-  SHOW_TILE: os.legend.DRAW_OPTIONS_KEY + '.showTile',
-  SHOW_BACKGROUND: os.legend.DRAW_OPTIONS_KEY + '.showBackground',
-  OPACITY: os.legend.DRAW_OPTIONS_KEY + '.opacity',
-
-  // position settings
-  TOP: os.legend.POSITION_KEY + '.top',
-  LEFT: os.legend.POSITION_KEY + '.left'
 };
 
 

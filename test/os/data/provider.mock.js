@@ -1,12 +1,13 @@
 goog.module('os.data.MockProvider');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.data.BaseProvider');
+const BaseProvider = goog.require('os.ui.data.BaseProvider');
+
 
 /**
  * Mock provider for tests.
  */
-class MockProvider extends os.ui.data.BaseProvider {
+class MockProvider extends BaseProvider {
   /**
    * Constructor.
    */

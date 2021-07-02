@@ -7,7 +7,7 @@ const googString = goog.require('goog.string');
 const olArray = goog.require('ol.array');
 const os = goog.require('os');
 const CommandProcessor = goog.require('os.command.CommandProcessor');
-const OSDataManager = goog.require('os.data.OSDataManager');
+const DataManager = goog.require('os.data.DataManager');
 const SourceManager = goog.require('os.data.SourceManager');
 const ogc = goog.require('os.ogc');
 const PropertyChange = goog.require('os.source.PropertyChange');
@@ -171,7 +171,7 @@ class Controller extends SourceManager {
     this['count'] = 0;
 
     for (var i = 0, ii = this.sourceIds_.length; i < ii; i++) {
-      var source = OSDataManager.getInstance().getSource(this.sourceIds_[i]);
+      var source = DataManager.getInstance().getSource(this.sourceIds_[i]);
       if (source) {
         this['count'] += source.getFeatures().length;
       }
@@ -242,7 +242,7 @@ class Controller extends SourceManager {
    * @protected
    */
   static mapSources(id) {
-    var source = OSDataManager.getInstance().getSource(id);
+    var source = DataManager.getInstance().getSource(id);
 
     return {
       'id': source.getId(),

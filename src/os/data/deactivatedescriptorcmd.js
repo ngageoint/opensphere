@@ -1,76 +1,73 @@
-goog.provide('os.data.DeactivateDescriptor');
+goog.module('os.data.DeactivateDescriptor');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.Event');
-goog.require('goog.log');
-goog.require('os.command.EventType');
-goog.require('os.command.State');
-goog.require('os.data.AbstractDescriptor');
-
+const GoogEvent = goog.require('goog.events.Event');
+const log = goog.require('goog.log');
+const EventType = goog.require('os.command.EventType');
+const State = goog.require('os.command.State');
+const AbstractDescriptor = goog.require('os.data.AbstractDescriptor');
 
 
 /**
  * Command to deactivate a descriptor.
- *
- * @param {!os.data.IDataDescriptor} descriptor The descriptor
- * @extends {os.data.AbstractDescriptor}
- * @constructor
  */
-os.data.DeactivateDescriptor = function(descriptor) {
-  os.data.DeactivateDescriptor.base(this, 'constructor', descriptor);
-  this.log = os.data.DeactivateDescriptor.LOGGER_;
+class DeactivateDescriptor extends AbstractDescriptor {
+  /**
+   * Constructor.
+   * @param {!os.data.IDataDescriptor} descriptor The descriptor
+   */
+  constructor(descriptor) {
+    super(descriptor);
+    this.log = logger;
 
-  var type = descriptor.getType();
-  this.title = 'Remove ' + (type ? type + ' ' : '') + '"' + descriptor.getTitle() + '"';
-};
-goog.inherits(os.data.DeactivateDescriptor, os.data.AbstractDescriptor);
+    var type = descriptor.getType();
+    this.title = 'Remove ' + (type ? type + ' ' : '') + '"' + descriptor.getTitle() + '"';
+  }
 
+  /**
+   * @inheritDoc
+   */
+  execute() {
+    if (this.canExecute()) {
+      this.state = State.EXECUTING;
+      return this.deactivateDescriptor();
+    }
+
+    return false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  revert() {
+    this.state = State.REVERTING;
+    return this.activateDescriptor();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  onActivated(opt_event) {
+    this.removeListeners();
+    this.state = State.READY;
+    this.dispatchEvent(new GoogEvent(EventType.REVERTED));
+  }
+
+  /**
+   * @inheritDoc
+   */
+  onDeactivated(opt_event) {
+    this.removeListeners();
+    this.state = State.SUCCESS;
+    this.dispatchEvent(new GoogEvent(EventType.EXECUTED));
+  }
+}
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {log.Logger}
  */
-os.data.DeactivateDescriptor.LOGGER_ = goog.log.getLogger('os.data.DeactivateDescriptor');
+const logger = log.getLogger('os.data.DeactivateDescriptor');
 
 
-/**
- * @inheritDoc
- */
-os.data.DeactivateDescriptor.prototype.execute = function() {
-  if (this.canExecute()) {
-    this.state = os.command.State.EXECUTING;
-    return this.deactivateDescriptor();
-  }
-
-  return false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.DeactivateDescriptor.prototype.revert = function() {
-  this.state = os.command.State.REVERTING;
-  return this.activateDescriptor();
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.DeactivateDescriptor.prototype.onActivated = function(opt_event) {
-  this.removeListeners();
-  this.state = os.command.State.READY;
-  this.dispatchEvent(new goog.events.Event(os.command.EventType.REVERTED));
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.DeactivateDescriptor.prototype.onDeactivated = function(opt_event) {
-  this.removeListeners();
-  this.state = os.command.State.SUCCESS;
-  this.dispatchEvent(new goog.events.Event(os.command.EventType.EXECUTED));
-};
+exports = DeactivateDescriptor;

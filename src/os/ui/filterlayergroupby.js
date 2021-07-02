@@ -1,60 +1,65 @@
-goog.provide('os.ui.FilterLayerGroupBy');
+goog.module('os.ui.FilterLayerGroupBy');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.filter.BaseFilterManager');
-goog.require('os.ui.filter.ui.FilterGroupBy');
+const {prettyPrintType} = goog.require('os.filter.BaseFilterManager');
+const {getFilterManager} = goog.require('os.query.instance');
+const FilterGroupBy = goog.require('os.ui.filter.ui.FilterGroupBy');
 
+const FilterNode = goog.requireType('os.ui.filter.ui.FilterNode');
 
 
 /**
  * Groups nodes by type
- *
- * @param {boolean=} opt_type
- * @extends {os.ui.filter.ui.FilterGroupBy}
- * @constructor
  */
-os.ui.FilterLayerGroupBy = function(opt_type) {
-  os.ui.FilterLayerGroupBy.base(this, 'constructor');
-
+class FilterLayerGroupBy extends FilterGroupBy {
   /**
-   * @type {boolean | undefined}
-   * @private
+   * Constructor.
+   * @param {boolean=} opt_type
    */
-  this.useType_ = opt_type;
-};
-goog.inherits(os.ui.FilterLayerGroupBy, os.ui.filter.ui.FilterGroupBy);
+  constructor(opt_type) {
+    super();
 
-
-/**
- * @inheritDoc
- */
-os.ui.FilterLayerGroupBy.prototype.getGroupIds = function(node) {
-  /**
-   * @type {Array.<!string>}
-   */
-  var ids = [];
-
-  /**
-   * @type {?string}
-   */
-  var type = /** @type {os.ui.filter.ui.FilterNode} */ (node).getEntry().type;
-  var val = 'Unknown';
-
-  if (type) {
-    var filterable = os.ui.filterManager.getFilterable(type);
-    if (filterable instanceof os.layer.Vector) {
-      val = filterable.getTitle();
-      if (this.useType_) {
-        val += ' ' + filterable.getExplicitType();
-      }
-      var provider = filterable.getProvider();
-      if (provider) {
-        val += ' (' + provider + ')';
-      }
-    } else {
-      val = os.filter.BaseFilterManager.prettyPrintType(type, this.useType_) + ' (not loaded)';
-    }
+    /**
+     * @type {boolean|undefined}
+     * @private
+     */
+    this.useType_ = opt_type;
   }
 
-  goog.array.insert(ids, val);
-  return ids;
-};
+  /**
+   * @inheritDoc
+   */
+  getGroupIds(node) {
+    /**
+     * @type {Array<string>}
+     */
+    var ids = [];
+
+    /**
+     * @type {?string}
+     */
+    var type = /** @type {FilterNode} */ (node).getEntry().type;
+    var val = 'Unknown';
+
+    if (type) {
+      var filterable = getFilterManager().getFilterable(type);
+      if (filterable instanceof os.layer.Vector) {
+        val = filterable.getTitle();
+        if (this.useType_) {
+          val += ' ' + filterable.getExplicitType();
+        }
+        var provider = filterable.getProvider();
+        if (provider) {
+          val += ' (' + provider + ')';
+        }
+      } else {
+        val = prettyPrintType(type, this.useType_) + ' (not loaded)';
+      }
+    }
+
+    goog.array.insert(ids, val);
+    return ids;
+  }
+}
+
+exports = FilterLayerGroupBy;

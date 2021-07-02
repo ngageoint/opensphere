@@ -3,7 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const OSDataManager = goog.require('os.data.OSDataManager');
+const DataManager = goog.require('os.data.DataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const metrics = goog.require('os.metrics');
 const PropertyChange = goog.require('os.source.PropertyChange');
@@ -42,7 +42,7 @@ class VectorLayerReplaceStyle extends AbstractVectorStyle {
 
     super.applyValue(config, value);
 
-    var source = /** @type {os.source.Vector} */ (OSDataManager.getInstance().getSource(this.layerId));
+    var source = /** @type {os.source.Vector} */ (DataManager.getInstance().getSource(this.layerId));
     asserts.assert(source, 'source must be defined');
 
     source.setHighlightedItems(source.getHighlightedItems());
@@ -53,7 +53,7 @@ class VectorLayerReplaceStyle extends AbstractVectorStyle {
    */
   finish(config) {
     // dispatch the replace style change event on the source for the histogram
-    var source = OSDataManager.getInstance().getSource(this.layerId);
+    var source = DataManager.getInstance().getSource(this.layerId);
     source.dispatchEvent(new PropertyChangeEvent(PropertyChange.REPLACE_STYLE, this.value));
     super.finish(config);
   }

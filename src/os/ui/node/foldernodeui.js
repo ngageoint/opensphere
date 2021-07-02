@@ -30,9 +30,16 @@ const directive = () => ({
 
 
 /**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'foldernodeui';
+
+
+/**
  * Add the directive to the Angular module
  */
-Module.directive('foldernodeui', [directive]);
+Module.directive(directiveTag, [directive]);
 
 
 /**
@@ -131,5 +138,6 @@ class Controller extends AbstractNodeUICtrl {
 
 exports = {
   Controller,
-  directive
+  directive,
+  directiveTag
 };

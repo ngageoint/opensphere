@@ -1,11 +1,16 @@
 goog.require('os.data.ConfigDescriptor');
 goog.require('os.layer.LayerType');
+goog.require('os.ui.Icons');
 
 describe('os.data.ConfigDescriptor', function() {
+  const ConfigDescriptor = goog.module.get('os.data.ConfigDescriptor');
+  const LayerType = goog.module.get('os.layer.LayerType');
+  const Icons = goog.module.get('os.ui.Icons');
+
   var tileConfig = {
     'id': 'config#descriptor#tiles',
     'type': 'WMS',
-    'layerType': os.layer.LayerType.TILES,
+    'layerType': LayerType.TILES,
     'crossOrigin': 'none',
     'description': 'This is a test of a tile layer',
     'descriptorType': 'testType',
@@ -26,7 +31,7 @@ describe('os.data.ConfigDescriptor', function() {
   var featureConfig = {
     'id': 'config#descriptor#features',
     'type': 'GeoJSON',
-    'layerType': os.layer.LayerType.FEATURES,
+    'layerType': LayerType.FEATURES,
     'crossOrigin': 'anonymous',
     'description': 'This is a test of a GeoJSON layer.',
     'provider': 'Some Service\'s GeoJSON stuff',
@@ -44,69 +49,69 @@ describe('os.data.ConfigDescriptor', function() {
 
   [bareConfig, tileConfig].forEach(function(config) {
     it('should get id from config', function() {
-      var d = new os.data.ConfigDescriptor();
+      var d = new ConfigDescriptor();
       d.setBaseConfig(config);
       expect(d.getId()).toEqual(config.id);
     });
 
     it('should get own id if set', function() {
       var id = 'test#descriptor#id';
-      var d = new os.data.ConfigDescriptor();
+      var d = new ConfigDescriptor();
       d.setBaseConfig(config);
       d.setId(id);
       expect(d.getId()).toEqual(id);
     });
 
     it('should get title from config', function() {
-      var d = new os.data.ConfigDescriptor();
+      var d = new ConfigDescriptor();
       d.setBaseConfig(config);
       expect(d.getTitle()).toEqual(config.title);
     });
 
     it('should get type from config', function() {
-      var d = new os.data.ConfigDescriptor();
+      var d = new ConfigDescriptor();
       d.setBaseConfig(config);
       expect(d.getType()).toEqual(config.layerType);
     });
 
     it('should get provider from config', function() {
-      var d = new os.data.ConfigDescriptor();
+      var d = new ConfigDescriptor();
       d.setBaseConfig(config);
       expect(d.getProvider()).toEqual(config.provider);
     });
 
     it('should get description from config', function() {
-      var d = new os.data.ConfigDescriptor();
+      var d = new ConfigDescriptor();
       d.setBaseConfig(config);
       expect(d.getDescription()).toEqual(config.description);
     });
 
     it('should get tags from config', function() {
-      var d = new os.data.ConfigDescriptor();
+      var d = new ConfigDescriptor();
       d.setBaseConfig(config);
       expect(d.getTags()).toEqual(config.tags);
     });
 
     it('should get descriptor type from config', function() {
-      var d = new os.data.ConfigDescriptor();
+      var d = new ConfigDescriptor();
       d.setBaseConfig(config);
       expect(d.getDescriptorType()).toBe(config.descriptorType || 'config');
     });
 
     it('should get icons from config', function() {
-      var d = new os.data.ConfigDescriptor();
+      var d = new ConfigDescriptor();
       d.setBaseConfig(config);
       expect(d.getIcons()).toBe(config.icons || '');
     });
 
     it('should get search type from config', function() {
-      var d = new os.data.ConfigDescriptor();
+      var d = new ConfigDescriptor();
       d.setBaseConfig(config);
       expect(d.getSearchType() || '').toBe((config.layerType || '').toLowerCase().replace(/s$/, ''));
     });
 
     it('should match URLs', function() {
-      var d = new os.data.ConfigDescriptor();
+      var d = new ConfigDescriptor();
       d.setBaseConfig(config);
       expect(d.matchesURL('https://nope.com')).toBe(false);
       expect(d.matchesURL(config.url)).toBe(true);
@@ -114,17 +119,17 @@ describe('os.data.ConfigDescriptor', function() {
     });
 
     it('should persist properly', function() {
-      var d = new os.data.ConfigDescriptor();
+      var d = new ConfigDescriptor();
       d.setBaseConfig(config);
       var obj = d.persist();
       expect(obj.base).toEqual(config);
     });
 
     it('should restore properly', function() {
-      var d = new os.data.ConfigDescriptor();
+      var d = new ConfigDescriptor();
       d.setBaseConfig(config);
       var obj = d.persist();
-      d = new os.data.ConfigDescriptor();
+      d = new ConfigDescriptor();
       d.restore(obj);
       expect(d.getBaseConfig()).toEqual(config);
     });
@@ -132,49 +137,49 @@ describe('os.data.ConfigDescriptor', function() {
 
   // Multi Layer Tests
   it('should get id from multiple configs', function() {
-    var d = new os.data.ConfigDescriptor();
+    var d = new ConfigDescriptor();
     d.setBaseConfig([tileConfig, featureConfig]);
     expect(d.getId()).toBe('config#descriptor#');
   });
 
   it('should get title from multiple configs', function() {
-    var d = new os.data.ConfigDescriptor();
+    var d = new ConfigDescriptor();
     d.setBaseConfig([tileConfig, featureConfig]);
     expect(d.getTitle()).toBe(tileConfig.title);
   });
 
   it('should get type from multiple configs', function() {
-    var d = new os.data.ConfigDescriptor();
+    var d = new ConfigDescriptor();
     d.setBaseConfig([tileConfig, featureConfig]);
-    expect(d.getType()).toBe(os.layer.LayerType.GROUPS);
+    expect(d.getType()).toBe(LayerType.GROUPS);
   });
 
   it('should get provider from multiple configs', function() {
-    var d = new os.data.ConfigDescriptor();
+    var d = new ConfigDescriptor();
     d.setBaseConfig([tileConfig, featureConfig]);
     expect(d.getProvider()).toBe(tileConfig.provider);
   });
 
   it('should get description from multiple configs', function() {
-    var d = new os.data.ConfigDescriptor();
+    var d = new ConfigDescriptor();
     d.setBaseConfig([tileConfig, featureConfig]);
     expect(d.getDescription()).toBe(tileConfig.description + '\n\n' + featureConfig.description);
   });
 
   it('should get tags from multiple configs', function() {
-    var d = new os.data.ConfigDescriptor();
+    var d = new ConfigDescriptor();
     d.setBaseConfig([tileConfig, featureConfig]);
     expect(d.getTags()).toEqual(['test', 'tile', 'feature']);
   });
 
   it('should get descriptor type from multiple configs', function() {
-    var d = new os.data.ConfigDescriptor();
+    var d = new ConfigDescriptor();
     d.setBaseConfig([tileConfig, featureConfig]);
     expect(d.getDescriptorType()).toBe(tileConfig.descriptorType);
   });
 
   it('should get icons from multiple configs', function() {
-    var d = new os.data.ConfigDescriptor();
+    var d = new ConfigDescriptor();
     d.setBaseConfig([tileConfig, featureConfig]);
     expect(d.getIcons()).toBe(tileConfig.icons + featureConfig.icons);
   });
@@ -185,27 +190,27 @@ describe('os.data.ConfigDescriptor', function() {
     var config2 = Object.assign({}, featureConfig);
     delete config2['icons'];
 
-    var d = new os.data.ConfigDescriptor();
+    var d = new ConfigDescriptor();
     d.setBaseConfig([config1]);
-    expect(d.getIcons()).toBe(os.ui.Icons.TILES);
+    expect(d.getIcons()).toBe(Icons.TILES);
 
     d.setBaseConfig([config1, config2]);
-    expect(d.getIcons()).toBe(os.ui.Icons.TILES + os.ui.Icons.FEATURES);
+    expect(d.getIcons()).toBe(Icons.TILES + Icons.FEATURES);
 
     config1['animate'] = true;
     config2['animate'] = true;
     d.setBaseConfig([config1, config2]);
-    expect(d.getIcons()).toBe(os.ui.Icons.TILES + os.ui.Icons.FEATURES + os.ui.Icons.TIME);
+    expect(d.getIcons()).toBe(Icons.TILES + Icons.FEATURES + Icons.TIME);
   });
 
   it('should get search type from multiple configs', function() {
-    var d = new os.data.ConfigDescriptor();
+    var d = new ConfigDescriptor();
     d.setBaseConfig([tileConfig, featureConfig]);
-    expect(d.getSearchType()).toBe(os.layer.LayerType.GROUPS.toLowerCase().replace(/s$/, ''));
+    expect(d.getSearchType()).toBe(LayerType.GROUPS.toLowerCase().replace(/s$/, ''));
   });
 
   it('should match URLs in multiple configs', function() {
-    var d = new os.data.ConfigDescriptor();
+    var d = new ConfigDescriptor();
     d.setBaseConfig([tileConfig, featureConfig]);
     expect(d.matchesURL('https://nope.com')).toBe(false);
     expect(d.matchesURL(tileConfig.url)).toBe(true);
@@ -214,17 +219,17 @@ describe('os.data.ConfigDescriptor', function() {
   });
 
   it('should persist multiple configs properly', function() {
-    var d = new os.data.ConfigDescriptor();
+    var d = new ConfigDescriptor();
     d.setBaseConfig([tileConfig, featureConfig]);
     var obj = d.persist();
     expect(obj.base).toEqual([tileConfig, featureConfig]);
   });
 
   it('should restore from configs properly', function() {
-    var d = new os.data.ConfigDescriptor();
+    var d = new ConfigDescriptor();
     d.setBaseConfig([tileConfig, featureConfig]);
     var obj = d.persist();
-    d = new os.data.ConfigDescriptor();
+    d = new ConfigDescriptor();
     d.restore(obj);
     expect(d.getBaseConfig()).toEqual([tileConfig, featureConfig]);
   });

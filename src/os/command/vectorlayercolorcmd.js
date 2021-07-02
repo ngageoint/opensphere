@@ -4,7 +4,7 @@ goog.module.declareLegacyNamespace();
 const osColor = goog.require('os.color');
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
 const ColorChangeType = goog.require('os.command.style.ColorChangeType');
-const OSDataManager = goog.require('os.data.OSDataManager');
+const DataManager = goog.require('os.data.DataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const {getMapContainer} = goog.require('os.map.instance');
 const metrics = goog.require('os.metrics');
@@ -118,7 +118,7 @@ class VectorLayerColor extends AbstractVectorStyle {
    */
   finish(config) {
     // dispatch the color change event on the source for the histogram
-    var source = OSDataManager.getInstance().getSource(this.layerId);
+    var source = DataManager.getInstance().getSource(this.layerId);
     source.dispatchEvent(new PropertyChangeEvent(PropertyChange.COLOR, this.value));
 
     if (source instanceof VectorSource) {

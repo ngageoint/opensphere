@@ -4,12 +4,16 @@ goog.require('os.ui.data.DescriptorNode');
 
 
 describe('os.data.groupby.RecentGroupBy', function() {
-  var d = new os.data.BaseDescriptor();
+  const BaseDescriptor = goog.module.get('os.data.BaseDescriptor');
+  const RecentGroupBy = goog.module.get('os.data.groupby.RecentGroupBy');
+  const DescriptorNode = goog.module.get('os.ui.data.DescriptorNode');
 
-  var node = new os.ui.data.DescriptorNode();
+  var d = new BaseDescriptor();
+
+  var node = new DescriptorNode();
   node.setDescriptor(d);
 
-  var by = new os.data.groupby.RecentGroupBy();
+  var by = new RecentGroupBy();
   by.testDate_ = new Date(2014, 6, 2);
   var t = by.testDate_.getTime();
   by.init();

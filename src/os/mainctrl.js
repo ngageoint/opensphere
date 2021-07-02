@@ -32,7 +32,7 @@ goog.require('os.config.ServerSettings');
 goog.require('os.config.ThemeSettings');
 goog.require('os.config.UnitSettings');
 goog.require('os.control');
-goog.require('os.data.OSDataManager');
+goog.require('os.data.DataManager');
 goog.require('os.data.histo.legend');
 goog.require('os.events');
 goog.require('os.events.EventFactory');
@@ -253,18 +253,33 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   mm.setApplicationNode('OpenSphere', 'This window displays many of the features available in OpenSphere, and if ' +
       'you have used them.');
 
+  // create map instance and listen for it to be initialized
+  var map = os.MapContainer.getInstance();
+  map.setInteractionFunction(os.map.interaction.getInteractions);
+  map.setControlFunction(os.control.getControls);
+
+  map.listenOnce(os.MapEvent.MAP_READY, this.onMapReady_, false, this);
+
+  // set the global map container reference
+  os.map.instance.setIMapContainer(map);
+  os.map.instance.setMapContainer(map);
+  os.map.mapContainer = map;
+
   // configure default layer configs
   os.layer.config.LayerConfigManager.getInstance().registerLayerConfig(os.layer.config.StaticLayerConfig.ID,
       os.layer.config.StaticLayerConfig);
 
   // configure data manager
-  os.dataManager = os.osDataManager = os.data.OSDataManager.getInstance();
+  os.dataManager = os.data.DataManager.getInstance();
+  os.dataManager.setMapContainer(map);
 
   // configure exports
   os.ui.exportManager.registerPersistenceMethod(new os.file.persist.FilePersistence());
 
   // set state manager global reference
-  os.stateManager = os.state.StateManager.getInstance();
+  var stateManager = os.state.StateManager.getInstance();
+  os.state.instance.setStateManager(stateManager);
+  os.stateManager = stateManager;
 
   // set up clear control
   os.ui.clearManager.addEntry(new os.ui.clear.ClearEntry('exclusionAreas', 'Exclusion Areas',
@@ -314,18 +329,6 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
 
   // register base legend plugins
   os.data.histo.legend.registerLegendPlugin();
-
-  // create map instance and listen for it to be initialized
-  var map = os.MapContainer.getInstance();
-  map.setInteractionFunction(os.map.interaction.getInteractions);
-  map.setControlFunction(os.control.getControls);
-
-  map.listenOnce(os.MapEvent.MAP_READY, this.onMapReady_, false, this);
-
-  // set the global map container reference
-  os.map.instance.setIMapContainer(map);
-  os.map.instance.setMapContainer(map);
-  os.map.mapContainer = map;
 
   // init filter manager
   var filterManager = os.query.FilterManager.getInstance();

@@ -1108,7 +1108,8 @@ os.layer.Vector.prototype.supportsAction = function(type, opt_actionArgs) {
         const descriptor = os.dataManager.getDescriptor(source.getId());
 
         return isVector && onlyOneLayer &&
-        os.implements(descriptor, os.data.IMappingDescriptor.ID) && descriptor.supportsMapping();
+        os.implements(descriptor, os.data.IMappingDescriptor.ID) &&
+        /** @type {os.data.IMappingDescriptor} */ (descriptor).supportsMapping();
       default:
         // ask the source if it supports the action
         return isVector && source.getSupportsAction(type);

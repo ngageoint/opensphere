@@ -5,6 +5,8 @@ const Module = goog.require('os.ui.Module');
 const DescriptorNodeUICtrl = goog.require('os.ui.data.DescriptorNodeUICtrl');
 const uiWindow = goog.require('os.ui.window');
 
+const ConfigDescriptor = goog.requireType('os.data.ConfigDescriptor');
+
 
 /**
  * Generic node UI for XYZ descriptors.
@@ -64,7 +66,7 @@ class Controller extends DescriptorNodeUICtrl {
    */
   edit() {
     const editUi = '<xyzprovider></xyzprovider>';
-    const descriptor = this.getDescriptor();
+    const descriptor = /** @type {ConfigDescriptor} */ (this.getDescriptor());
 
     var config = descriptor.getBaseConfig();
     config['label'] = config['title'] = descriptor.getTitle();

@@ -3,7 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const asserts = goog.require('goog.asserts');
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const OSDataManager = goog.require('os.data.OSDataManager');
+const DataManager = goog.require('os.data.DataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const osFeature = goog.require('os.feature');
 const metrics = goog.require('os.metrics');
@@ -47,7 +47,7 @@ class VectorLayerShowLabel extends AbstractVectorStyle {
     config[StyleField.SHOW_LABELS] = value;
 
     if (!value) {
-      var source = OSDataManager.getInstance().getSource(this.layerId);
+      var source = DataManager.getInstance().getSource(this.layerId);
       asserts.assert(source);
 
       var changed = [];

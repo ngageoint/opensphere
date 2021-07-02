@@ -5,13 +5,23 @@ goog.require('os.mock');
 
 
 describe('os.data.DataManager', function() {
-  var dm = new os.data.DataManager();
+  const Settings = goog.module.get('os.config.Settings');
+  const BaseDescriptor = goog.module.get('os.data.BaseDescriptor');
+  const DataManager = goog.module.get('os.data.DataManager');
+
+  var dm;
+
+  beforeEach(() => {
+    if (!dm) {
+      dm = new DataManager();
+    }
+  });
 
   it('should add descriptors', function() {
-    os.settings.init('nooverrides', 'nolocalstorage');
+    Settings.getInstance().init('nooverrides', 'nolocalstorage');
 
     for (var i = 0; i < 3; i++) {
-      var d = new os.data.BaseDescriptor();
+      var d = new BaseDescriptor();
       d.setId('' + i);
       d.setTitle('D' + i);
       d.setProvider('Test');
@@ -24,14 +34,14 @@ describe('os.data.DataManager', function() {
   it('should only persist recently active descriptors', function() {
     dm.getDescriptor('1').setActive(true);
     dm.persistDescriptors_();
-    var arr = os.settings.get(dm.getDescriptorKey());
+    var arr = Settings.getInstance().get(dm.getDescriptorKey());
     expect(arr.length).toBe(1);
   });
 
   it('should restore descriptors', function() {
     // pretend we restarted by just creating a new one
-    dm = new os.data.DataManager();
-    dm.registerDescriptorType('base', os.data.BaseDescriptor);
+    dm = new DataManager();
+    dm.registerDescriptorType('base', BaseDescriptor);
     dm.restoreDescriptors();
 
     expect(dm.getDescriptors().length).toBe(1);

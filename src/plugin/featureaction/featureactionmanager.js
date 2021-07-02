@@ -6,7 +6,7 @@ const dispose = goog.require('goog.dispose');
 const GoogEventType = goog.require('goog.events.EventType');
 const log = goog.require('goog.log');
 const events = goog.require('ol.events');
-const OSDataManager = goog.require('os.data.OSDataManager');
+const DataManager = goog.require('os.data.DataManager');
 const RecordField = goog.require('os.data.RecordField');
 const DataEventType = goog.require('os.data.event.DataEventType');
 const osFeature = goog.require('os.feature');
@@ -67,7 +67,7 @@ class Manager extends ImportActionManager {
 
     dispose(this.timer_);
 
-    var dm = OSDataManager.getInstance();
+    var dm = DataManager.getInstance();
     if (dm) {
       dm.unlisten(DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
       dm.unlisten(DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
@@ -91,7 +91,7 @@ class Manager extends ImportActionManager {
    * @inheritDoc
    */
   getEntryItems(type) {
-    var source = OSDataManager.getInstance().getSource(type);
+    var source = DataManager.getInstance().getSource(type);
     return source ? source.getFeatures() : null;
   }
 
@@ -99,7 +99,7 @@ class Manager extends ImportActionManager {
    * @inheritDoc
    */
   initialize() {
-    var dm = OSDataManager.getInstance();
+    var dm = DataManager.getInstance();
     dm.listen(DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
     dm.listen(DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
 

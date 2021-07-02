@@ -1,40 +1,45 @@
-goog.provide('os.data.ProviderEntry');
+goog.module('os.data.ProviderEntry');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.IDataProvider');
-
+const IDataProvider = goog.requireType('os.data.IDataProvider');
 
 
 /**
  * An entry for the provider registry in the data manager
- *
- * @param {!string} type The type
- * @param {!function()} clazz The class
- * @param {!string} title The title
- * @param {?string} desc The description
- * @constructor
  */
-os.data.ProviderEntry = function(type, clazz, title, desc) {
+class ProviderEntry {
   /**
-   * The provider type
-   * @type {!string}
+   * Constructor.
+   * @param {!string} type The type
+   * @param {!function()} clazz The class
+   * @param {!string} title The title
+   * @param {?string} desc The description
    */
-  this.type = type.toLowerCase();
+  constructor(type, clazz, title, desc) {
+    /**
+     * The provider type
+     * @type {!string}
+     */
+    this.type = type.toLowerCase();
 
-  /**
-   * The class
-   * @type {!function(new:os.data.IDataProvider)}
-   */
-  this.clazz = clazz;
+    /**
+     * The class
+     * @type {!function(new:IDataProvider)}
+     */
+    this.clazz = clazz;
 
-  /**
-   * The title
-   * @type {!string}
-   */
-  this.title = title;
+    /**
+     * The title
+     * @type {!string}
+     */
+    this.title = title;
 
-  /**
-   * The description
-   * @type {?string}
-   */
-  this.desc = desc;
-};
+    /**
+     * The description
+     * @type {?string}
+     */
+    this.desc = desc;
+  }
+}
+
+exports = ProviderEntry;

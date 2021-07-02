@@ -1,37 +1,22 @@
-goog.provide('os.data.histo.ColorMethod');
-goog.provide('os.data.histo.ColorModel');
+goog.module('os.data.histo.ColorModel');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.EventTarget');
-goog.require('os.IPersistable');
-goog.require('os.color');
-goog.require('os.data.FeatureEvent');
-goog.require('os.data.FeatureEventType');
-goog.require('os.data.histo');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.histo');
-goog.require('os.histo.bin');
-goog.require('os.source.PropertyChange');
-goog.require('os.style');
-goog.require('os.style.StyleType');
+const googArray = goog.require('goog.array');
+const EventTarget = goog.require('goog.events.EventTarget');
+const GoogEventType = goog.require('goog.events.EventType');
+const googObject = goog.require('goog.object');
+const osColor = goog.require('os.color');
+const FeatureEventType = goog.require('os.data.FeatureEventType');
+const RecordField = goog.require('os.data.RecordField');
+const osDataHisto = goog.require('os.data.histo');
+const ColorMethod = goog.require('os.data.histo.ColorMethod');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const osFeature = goog.require('os.feature');
+const histo = goog.require('os.histo');
+const PropertyChange = goog.require('os.source.PropertyChange');
+const osStyle = goog.require('os.style');
 
-
-/**
- * Bin color methods.
- * @enum {number}
- */
-os.data.histo.ColorMethod = {
-  RESET: -1,
-  NONE: 0,
-  MANUAL: 1,
-  AUTO_COLOR: 2,
-  AUTO_COLOR_BY_COUNT: 3
-};
-
-
-/**
- * @typedef {function(number):!Array<string>}
- */
-os.data.histo.GradientFn;
+const IPersistable = goog.requireType('os.IPersistable');
 
 
 /**
@@ -39,12 +24,8 @@ os.data.histo.GradientFn;
  *
  * @param {number} size The number of colors to return in the gradient
  * @return {!Array<string>} The color gradient
- * @private
  */
-os.data.histo.defaultGradientFn_ = function(size) {
-  return os.color.getHslGradient(size, 30, 330, true);
-};
-
+const defaultGradientFn = (size) => osColor.getHslGradient(size, 30, 330, true);
 
 
 /**
@@ -53,519 +34,500 @@ os.data.histo.defaultGradientFn_ = function(size) {
  * Do not instantiate this directly! Please use {@link os.source.Vector#createColorModel} to make sure the model is
  * created in the same window context as the source.
  *
- * @param {os.data.histo.GradientFn=} opt_gradientFn The gradient function to use when auto coloring
- * @extends {goog.events.EventTarget}
- * @implements {os.IPersistable}
- * @constructor
+ * @implements {IPersistable}
  */
-os.data.histo.ColorModel = function(opt_gradientFn) {
-  os.data.histo.ColorModel.base(this, 'constructor');
-
+class ColorModel extends EventTarget {
   /**
-   * The histogram driving the color model.
-   * @type {os.data.histo.SourceHistogram}
-   * @private
+   * Constructor.
+   * @param {osDataHisto.GradientFn=} opt_gradientFn The gradient function to use when auto coloring
    */
-  this.histogram_ = null;
+  constructor(opt_gradientFn) {
+    super();
 
-  /**
-   * Bin color method
-   * @type {os.data.histo.ColorMethod}
-   * @private
-   */
-  this.colorMethod_ = os.data.histo.ColorMethod.NONE;
+    /**
+     * The histogram driving the color model.
+     * @type {osDataHisto.SourceHistogram}
+     * @private
+     */
+    this.histogram_ = null;
 
-  /**
-   * Map of bin labels to the applied color.
-   * @type {Object<string, string>}
-   * @private
-   */
-  this.binColors_ = {};
+    /**
+     * Bin color method
+     * @type {ColorMethod}
+     * @private
+     */
+    this.colorMethod_ = ColorMethod.NONE;
 
-  /**
-   * Map of manually colored bins to applied colors.
-   * @type {Object<string, string>}
-   * @private
-   */
-  this.manualBinColors_ = {};
+    /**
+     * Map of bin labels to the applied color.
+     * @type {Object<string, string>}
+     * @private
+     */
+    this.binColors_ = {};
 
-  /**
-   * Features that have been colored by the model.
-   * @type {!Object<string, ol.Feature>}
-   * @private
-   */
-  this.coloredFeatures_ = {};
-
-  /**
-   * The gradient function to use in auto coloring
-   * @type {!os.data.histo.GradientFn}
-   * @private
-   */
-  this.gradientFn_ = opt_gradientFn || os.data.histo.defaultGradientFn_;
-};
-goog.inherits(os.data.histo.ColorModel, goog.events.EventTarget);
-
-
-/**
- * @inheritDoc
- */
-os.data.histo.ColorModel.prototype.disposeInternal = function() {
-  // reset colors first so the change event is handled
-  this.setColorMethod(os.data.histo.ColorMethod.RESET);
-
-  os.data.histo.ColorModel.base(this, 'disposeInternal');
-
-  this.setHistogram(null);
-};
-
-
-/**
- * Get the histogram driving the color model.
- *
- * @return {os.data.histo.SourceHistogram}
- */
-os.data.histo.ColorModel.prototype.getHistogram = function() {
-  return this.histogram_;
-};
-
-
-/**
- * Get the histogram driving the color model.
- *
- * @param {os.data.histo.SourceHistogram} histogram
- */
-os.data.histo.ColorModel.prototype.setHistogram = function(histogram) {
-  if (this.histogram_) {
-    // clean up listeners and decrement the reference count. if the count reaches zero, the histogram will dispose
-    // itself so do not call dispose here!
-    this.histogram_.unlisten(goog.events.EventType.CHANGE, this.applyColorMethod, false, this);
-    this.histogram_.unlisten(os.data.histo.HistoEventType.BIN_CHANGE, this.onBinChange_, false, this);
-    this.histogram_.decrementRefCount();
-  }
-
-  this.histogram_ = histogram;
-
-  if (this.histogram_) {
-    this.histogram_.listen(goog.events.EventType.CHANGE, this.applyColorMethod, false, this);
-    this.histogram_.listen(os.data.histo.HistoEventType.BIN_CHANGE, this.onBinChange_, false, this);
-    this.histogram_.incrementRefCount();
-  }
-};
-
-
-/**
- * Handle a bin change on the histogram.
- *
- * @param {goog.events.Event} event
- * @private
- */
-os.data.histo.ColorModel.prototype.onBinChange_ = function(event) {
-  // clear saved colors if the bin method changes, because the bin labels will change
-  this.binColors_ = {};
-};
-
-
-/**
- * Get the results
- *
- * @return {!Array<!os.data.histo.ColorBin>}
- * @protected
- */
-os.data.histo.ColorModel.prototype.getResults = function() {
-  return this.histogram_ ? this.histogram_.getResults() : [];
-};
-
-
-/**
- * Get the bin/color pairs currently applied by this color model.
- *
- * @return {Object<string, string>}
- * @suppress {accessControls} To allow direct access to bin data.
- */
-os.data.histo.ColorModel.prototype.getAllBinColors = function() {
-  // start with bins and overrides from this histogram on top of that
-  const colors = Object.assign({}, this.binColors_, this.manualBinColors_);
-  const lookup = {};
-
-  for (const value of Object.values(colors)) {
-    lookup[os.color.toHexString(value)] = true;
-  }
-
-  // get any missing the colors out of the folds from external histograms
-  return this.getResults().reduce(function(all, bin) {
-    if (bin.colorCounts_) {
-      for (var k in bin.colorCounts_) {
-        if (!lookup[k]) {
-          var label = [os.data.histo.OVERRIDE_LABEL, k].join(' ');
-          all[label] = os.style.toRgbaString(k);
-          lookup[k] = true;
-        }
-      }
-    }
-    return all;
-  }, colors);
-};
-
-
-/**
- * Get the bin/color pairs currently applied by this color model.
- *
- * @return {Object<string, string>}
- */
-os.data.histo.ColorModel.prototype.getBinColors = function() {
-  return this.binColors_;
-};
-
-
-/**
- * Return the current manual color object
- *
- * @return {Object<string, string>}
- */
-os.data.histo.ColorModel.prototype.getManualBinColors = function() {
-  return this.manualBinColors_;
-};
-
-
-/**
- * Apply the old bin color scheme when swapping between sources
- *
- * @param {Object<string, string>} colors
- */
-os.data.histo.ColorModel.prototype.setManualBinColors = function(colors) {
-  // Closure UID's were previously added to this map, causing `hasManualColors` to incorrectly return true. this will
-  // clean them up during the restore call.
-  goog.removeUid(colors);
-
-  this.manualBinColors_ = colors;
-
-  // this.applyColorMethod(); // already called by setColorMethod(), so don't double-up the re-draws for all the charts
-};
-
-
-/**
- * Get the histogram bin method.
- *
- * @return {os.histo.IBinMethod<ol.Feature>}
- */
-os.data.histo.ColorModel.prototype.getBinMethod = function() {
-  return this.histogram_ ? this.histogram_.getBinMethod() : null;
-};
-
-
-/**
- * Get the data color method.
- *
- * @return {os.data.histo.ColorMethod}
- */
-os.data.histo.ColorModel.prototype.getColorMethod = function() {
-  return this.colorMethod_;
-};
-
-
-/**
- * Returns whether there are manual colors applied to the model.
- *
- * @return {boolean}
- */
-os.data.histo.ColorModel.prototype.hasManualColors = function() {
-  return !goog.object.isEmpty(this.manualBinColors_);
-};
-
-
-/**
- * Set the data color method. This will fire an event telling other histograms using the same source to stop coloring
- * features, since this histogram is taking control. Even reset events should do this to prevent other histograms from
- * coloring after a reset.
- *
- * The MANUAL color method does not get set to the member variable. Rather, it applies the parameters that come along
- * with it and those bins are tracked by the manualBinColors_ map.
- *
- * @param {os.data.histo.ColorMethod} value
- * @param {Array<!os.data.histo.ColorBin>=} opt_bins The bins to color, for manual color
- * @param {string=} opt_color The manual color
- *
- * @export Prevent the compiler from moving the function off the prototype.
- */
-os.data.histo.ColorModel.prototype.setColorMethod = function(value, opt_bins, opt_color) {
-  if (value !== os.data.histo.ColorMethod.MANUAL) {
-    // clear out the manual bins if it's being set to not manual
+    /**
+     * Map of manually colored bins to applied colors.
+     * @type {Object<string, string>}
+     * @private
+     */
     this.manualBinColors_ = {};
+
+    /**
+     * Features that have been colored by the model.
+     * @type {!Object<string, ol.Feature>}
+     * @private
+     */
+    this.coloredFeatures_ = {};
+
+    /**
+     * The gradient function to use in auto coloring
+     * @type {!osDataHisto.GradientFn}
+     * @private
+     */
+    this.gradientFn_ = opt_gradientFn || defaultGradientFn;
   }
 
-  if (value != this.colorMethod_) {
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    // reset colors first so the change event is handled
+    this.setColorMethod(ColorMethod.RESET);
+
+    super.disposeInternal();
+
+    this.setHistogram(null);
+  }
+
+  /**
+   * Get the histogram driving the color model.
+   *
+   * @return {osDataHisto.SourceHistogram}
+   */
+  getHistogram() {
+    return this.histogram_;
+  }
+
+  /**
+   * Get the histogram driving the color model.
+   *
+   * @param {osDataHisto.SourceHistogram} histogram
+   */
+  setHistogram(histogram) {
+    if (this.histogram_) {
+      // clean up listeners and decrement the reference count. if the count reaches zero, the histogram will dispose
+      // itself so do not call dispose here!
+      this.histogram_.unlisten(GoogEventType.CHANGE, this.applyColorMethod, false, this);
+      this.histogram_.unlisten(osDataHisto.HistoEventType.BIN_CHANGE, this.onBinChange_, false, this);
+      this.histogram_.decrementRefCount();
+    }
+
+    this.histogram_ = histogram;
+
+    if (this.histogram_) {
+      this.histogram_.listen(GoogEventType.CHANGE, this.applyColorMethod, false, this);
+      this.histogram_.listen(osDataHisto.HistoEventType.BIN_CHANGE, this.onBinChange_, false, this);
+      this.histogram_.incrementRefCount();
+    }
+  }
+
+  /**
+   * Handle a bin change on the histogram.
+   *
+   * @param {goog.events.Event} event
+   * @private
+   */
+  onBinChange_(event) {
+    // clear saved colors if the bin method changes, because the bin labels will change
     this.binColors_ = {};
   }
 
-  // update the manual color map
-  if (value == os.data.histo.ColorMethod.MANUAL && Array.isArray(opt_bins) && opt_color) {
-    for (var i = 0, n = opt_bins.length; i < n; i++) {
-      var label = opt_bins[i].getLabel();
-      this.binColors_[label] = opt_color;
+  /**
+   * Get the results
+   *
+   * @return {!Array<!osDataHisto.ColorBin>}
+   * @protected
+   */
+  getResults() {
+    return this.histogram_ ? this.histogram_.getResults() : [];
+  }
+
+  /**
+   * Get the bin/color pairs currently applied by this color model.
+   *
+   * @return {Object<string, string>}
+   * @suppress {accessControls} To allow direct access to bin data.
+   */
+  getAllBinColors() {
+    // start with bins and overrides from this histogram on top of that
+    const colors = Object.assign({}, this.binColors_, this.manualBinColors_);
+    const lookup = {};
+
+    for (const value of Object.values(colors)) {
+      lookup[osColor.toHexString(value)] = true;
+    }
+
+    // get any missing the colors out of the folds from external histograms
+    return this.getResults().reduce(function(all, bin) {
+      if (bin.colorCounts_) {
+        for (var k in bin.colorCounts_) {
+          if (!lookup[k]) {
+            var label = [osDataHisto.OVERRIDE_LABEL, k].join(' ');
+            all[label] = osStyle.toRgbaString(k);
+            lookup[k] = true;
+          }
+        }
+      }
+      return all;
+    }, colors);
+  }
+
+  /**
+   * Get the bin/color pairs currently applied by this color model.
+   *
+   * @return {Object<string, string>}
+   */
+  getBinColors() {
+    return this.binColors_;
+  }
+
+  /**
+   * Return the current manual color object
+   *
+   * @return {Object<string, string>}
+   */
+  getManualBinColors() {
+    return this.manualBinColors_;
+  }
+
+  /**
+   * Apply the old bin color scheme when swapping between sources
+   *
+   * @param {Object<string, string>} colors
+   */
+  setManualBinColors(colors) {
+    // Closure UID's were previously added to this map, causing `hasManualColors` to incorrectly return true. this will
+    // clean them up during the restore call.
+    goog.removeUid(colors);
+
+    this.manualBinColors_ = colors;
+
+    // this.applyColorMethod(); // already called by setColorMethod(), so don't double-up the re-draws for all the charts
+  }
+
+  /**
+   * Get the histogram bin method.
+   *
+   * @return {histo.IBinMethod<ol.Feature>}
+   */
+  getBinMethod() {
+    return this.histogram_ ? this.histogram_.getBinMethod() : null;
+  }
+
+  /**
+   * Get the data color method.
+   *
+   * @return {ColorMethod}
+   */
+  getColorMethod() {
+    return this.colorMethod_;
+  }
+
+  /**
+   * Returns whether there are manual colors applied to the model.
+   *
+   * @return {boolean}
+   */
+  hasManualColors() {
+    return !googObject.isEmpty(this.manualBinColors_);
+  }
+
+  /**
+   * Set the data color method. This will fire an event telling other histograms using the same source to stop coloring
+   * features, since this histogram is taking control. Even reset events should do this to prevent other histograms from
+   * coloring after a reset.
+   *
+   * The MANUAL color method does not get set to the member variable. Rather, it applies the parameters that come along
+   * with it and those bins are tracked by the manualBinColors_ map.
+   *
+   * @param {ColorMethod} value
+   * @param {Array<!osDataHisto.ColorBin>=} opt_bins The bins to color, for manual color
+   * @param {string=} opt_color The manual color
+   *
+   * @export Prevent the compiler from moving the function off the prototype.
+   */
+  setColorMethod(value, opt_bins, opt_color) {
+    if (value !== ColorMethod.MANUAL) {
+      // clear out the manual bins if it's being set to not manual
+      this.manualBinColors_ = {};
+    }
+
+    if (value != this.colorMethod_) {
+      this.binColors_ = {};
+    }
+
+    // update the manual color map
+    if (value == ColorMethod.MANUAL && Array.isArray(opt_bins) && opt_color) {
+      for (var i = 0, n = opt_bins.length; i < n; i++) {
+        var label = opt_bins[i].getLabel();
+        this.binColors_[label] = opt_color;
+        this.manualBinColors_[label] = opt_color;
+      }
+    }
+
+    // keep the underlying method when simply adjusting a few colors manually
+    this.colorMethod_ = value === ColorMethod.MANUAL ? this.colorMethod_ : value;
+    this.applyColorMethod();
+  }
+
+  /**
+   * Applies the current color method.
+   *
+   * @protected
+   */
+  applyColorMethod() {
+    var oldColors = this.coloredFeatures_;
+    this.coloredFeatures_ = {};
+
+    switch (this.colorMethod_) {
+      case ColorMethod.RESET:
+        // change the method to NONE for future calls, then reset the colors
+        this.colorMethod_ = ColorMethod.NONE;
+        this.resetColor_();
+        break;
+      case ColorMethod.AUTO_COLOR:
+        this.autoColor_();
+        this.cleanupOldColors_(oldColors);
+        break;
+      case ColorMethod.AUTO_COLOR_BY_COUNT:
+        this.autoColorByCount_();
+        this.cleanupOldColors_(oldColors);
+        break;
+      case ColorMethod.NONE:
+      default:
+        break;
+    }
+
+    if (this.hasManualColors()) {
+      // apply any manual colors
+      this.manualColor_();
+    }
+
+    this.dispatchEvent(new PropertyChangeEvent(PropertyChange.STYLE));
+  }
+
+  /**
+   * Auto colors all features in the histogram.
+   *
+   * @private
+   */
+  autoColor_() {
+    // reset the color map, autocolors will be populated below
+    this.binColors_ = {};
+
+    var bins = this.getResults();
+    if (this.hasManualColors()) {
+      // exclude any manually-colored bins from the autocolor
+      bins = googArray.filter(bins, function(bin) {
+        return !this.manualBinColors_[bin.getLabel()];
+      }, this);
+    }
+
+    if (bins && bins.length > 0) {
+      var binColors = this.gradientFn_(bins.length);
+      for (var i = 0, n = bins.length; i < n; i++) {
+        var newColor = osStyle.toRgbaString(binColors[i]);
+        this.binColors_[bins[i].getLabel()] = newColor;
+        this.colorFeatures_(bins[i].getItems(), newColor);
+      }
+    }
+  }
+
+  /**
+   * Auto colors all features in the histogram by bin count.
+   *
+   * @private
+   */
+  autoColorByCount_() {
+    // reset the color map. they'll be filled in with current values below
+    this.binColors_ = {};
+
+    var bins = this.getResults();
+    if (bins && bins.length > 0) {
+      var maxCount = 0;
+      for (var i = 0, n = bins.length; i < n; i++) {
+        maxCount = Math.max(maxCount, bins[i].getCount());
+      }
+
+      var binColors = osColor.getHslGradient(101, 30, 330);
+      for (var i = 0, n = bins.length; i < n; i++) {
+        var binCount = bins[i].getCount();
+        var newColor = osStyle.toRgbaString(binColors[Math.floor(binCount / maxCount * 100)]);
+        this.binColors_[bins[i].getLabel()] = newColor;
+        this.colorFeatures_(bins[i].getItems(), newColor);
+      }
+    }
+  }
+
+  /**
+   * Manually colors all bins with a custom color defined. Does not reset the color map as these colors should be
+   * applied after the autocolorings are done.
+   *
+   * @private
+   */
+  manualColor_() {
+    var bins = this.getResults();
+    for (var i = 0, n = bins.length; i < n; i++) {
+      // only update bins with a custom color defined.
+      var key = bins[i].getLabel();
+      if (key in this.manualBinColors_) {
+        // set features in this bin to the manual color
+        var manualColor = this.manualBinColors_[key];
+        this.binColors_[bins[i].getLabel()] = manualColor;
+        this.colorFeatures_(bins[i].getItems(), manualColor);
+      }
+    }
+  }
+
+  /**
+   * Clears bin colors and resets feature colors to the layer default.
+   *
+   * @private
+   */
+  resetColor_() {
+    if (this.histogram_) {
+      var source = this.histogram_.getSource();
+      if (source) {
+        // all features should be given the default color
+        this.colorFeatures_(source.getFeatures(), undefined);
+      }
+      // if the histrogram is binning time ranges then force it to refresh on reset color
+      var isRanges;
+      try {
+        isRanges = this.histogram_.getBinRanges();
+      } catch (error) {
+        isRanges = false;
+      }
+      if (isRanges) {
+        this.histogram_.setBinRanges(true);
+      }
+    }
+  }
+
+  /**
+   * Reset the color for features that were previously colored, but are no longer.
+   *
+   * @param {!Object<string, ol.Feature>} oldColors Map of previously colored features
+   * @private
+   */
+  cleanupOldColors_(oldColors) {
+    var toReset = [];
+    for (var key in oldColors) {
+      if (!(key in this.coloredFeatures_)) {
+        toReset.push(oldColors[key]);
+      }
+    }
+
+    this.colorFeatures_(toReset, undefined);
+  }
+
+  /**
+   * Sets the color on a set of features.
+   *
+   * @param {Array<ol.Feature>} features The features to update
+   * @param {string=} opt_color The new feature color
+   * @private
+   *
+   * @suppress {accessControls|checkTypes} To allow direct access to feature metadata.
+   */
+  colorFeatures_(features, opt_color) {
+    if (features && features.length > 0) {
+      for (var j = 0, o = features.length; j < o; j++) {
+        var oldColor = /** @type {string|undefined} */ (osFeature.getColor(features[j], null, null));
+        if (oldColor != opt_color) {
+          // set the color override on the feature and dispatch the event so UI's (bins) can update
+          features[j].values_[RecordField.COLOR] = opt_color;
+
+          var newColor = /** @type {string|undefined} */ (osFeature.getColor(features[j], null, null)) || undefined;
+          features[j].dispatchFeatureEvent(FeatureEventType.COLOR, newColor, oldColor);
+        }
+
+        if (opt_color) {
+          // track which features are being colored so we can reset the color on features that are no longer in a bin for
+          // the attached histogram
+          this.coloredFeatures_[features[j]['id']] = features[j];
+        }
+      }
+
+      // update the style configs on the modified features
+      osStyle.setFeaturesStyle(features);
+    }
+  }
+
+  /**
+   * Sets the color on a set of features.
+   *
+   * @param {Array<ol.Feature>} features The features to update
+   * @param {string=} opt_color The new feature color
+   *
+   */
+  colorFeatures(features, opt_color) {
+    if (opt_color) {
+      // add a manual entry for this color
+      var label = [osDataHisto.OVERRIDE_LABEL, osColor.toHexString(opt_color)].join(' ');
       this.manualBinColors_[label] = opt_color;
     }
+    this.colorFeatures_(features, opt_color);
   }
 
-  // keep the underlying method when simply adjusting a few colors manually
-  this.colorMethod_ = value === os.data.histo.ColorMethod.MANUAL ? this.colorMethod_ : value;
-  this.applyColorMethod();
-};
+  /**
+   * @inheritDoc
+   */
+  persist(opt_to) {
+    var obj = opt_to || {};
 
+    obj['colorMethod'] = this.colorMethod_;
+    obj['manualColors'] = {};
 
-/**
- * Applies the current color method.
- *
- * @protected
- */
-os.data.histo.ColorModel.prototype.applyColorMethod = function() {
-  var oldColors = this.coloredFeatures_;
-  this.coloredFeatures_ = {};
-
-  switch (this.colorMethod_) {
-    case os.data.histo.ColorMethod.RESET:
-      // change the method to NONE for future calls, then reset the colors
-      this.colorMethod_ = os.data.histo.ColorMethod.NONE;
-      this.resetColor_();
-      break;
-    case os.data.histo.ColorMethod.AUTO_COLOR:
-      this.autoColor_();
-      this.cleanupOldColors_(oldColors);
-      break;
-    case os.data.histo.ColorMethod.AUTO_COLOR_BY_COUNT:
-      this.autoColorByCount_();
-      this.cleanupOldColors_(oldColors);
-      break;
-    case os.data.histo.ColorMethod.NONE:
-    default:
-      break;
-  }
-
-  if (this.hasManualColors()) {
-    // apply any manual colors
-    this.manualColor_();
-  }
-
-  this.dispatchEvent(new os.events.PropertyChangeEvent(os.source.PropertyChange.STYLE));
-};
-
-
-/**
- * Auto colors all features in the histogram.
- *
- * @private
- */
-os.data.histo.ColorModel.prototype.autoColor_ = function() {
-  // reset the color map, autocolors will be populated below
-  this.binColors_ = {};
-
-  var bins = this.getResults();
-  if (this.hasManualColors()) {
-    // exclude any manually-colored bins from the autocolor
-    bins = goog.array.filter(bins, function(bin) {
-      return !this.manualBinColors_[bin.getLabel()];
-    }, this);
-  }
-
-  if (bins && bins.length > 0) {
-    var binColors = this.gradientFn_(bins.length);
-    for (var i = 0, n = bins.length; i < n; i++) {
-      var newColor = os.style.toRgbaString(binColors[i]);
-      this.binColors_[bins[i].getLabel()] = newColor;
-      this.colorFeatures_(bins[i].getItems(), newColor);
-    }
-  }
-};
-
-
-/**
- * Auto colors all features in the histogram by bin count.
- *
- * @private
- */
-os.data.histo.ColorModel.prototype.autoColorByCount_ = function() {
-  // reset the color map. they'll be filled in with current values below
-  this.binColors_ = {};
-
-  var bins = this.getResults();
-  if (bins && bins.length > 0) {
-    var maxCount = 0;
-    for (var i = 0, n = bins.length; i < n; i++) {
-      maxCount = Math.max(maxCount, bins[i].getCount());
+    // only grab manual bin colors, because features will be different next load/search
+    for (const [label, color] of Object.entries(/** @type {!Object<?, string>} */ (this.manualBinColors_))) {
+      if (label.indexOf(osDataHisto.OVERRIDE_LABEL) == -1) obj['manualColors'][label] = color;
     }
 
-    var binColors = os.color.getHslGradient(101, 30, 330);
-    for (var i = 0, n = bins.length; i < n; i++) {
-      var binCount = bins[i].getCount();
-      var newColor = os.style.toRgbaString(binColors[Math.floor(binCount / maxCount * 100)]);
-      this.binColors_[bins[i].getLabel()] = newColor;
-      this.colorFeatures_(bins[i].getItems(), newColor);
-    }
-  }
-};
-
-
-/**
- * Manually colors all bins with a custom color defined. Does not reset the color map as these colors should be
- * applied after the autocolorings are done.
- *
- * @private
- */
-os.data.histo.ColorModel.prototype.manualColor_ = function() {
-  var bins = this.getResults();
-  for (var i = 0, n = bins.length; i < n; i++) {
-    // only update bins with a custom color defined.
-    var key = bins[i].getLabel();
-    if (key in this.manualBinColors_) {
-      // set features in this bin to the manual color
-      var manualColor = this.manualBinColors_[key];
-      this.binColors_[bins[i].getLabel()] = manualColor;
-      this.colorFeatures_(bins[i].getItems(), manualColor);
-    }
-  }
-};
-
-
-/**
- * Clears bin colors and resets feature colors to the layer default.
- *
- * @private
- */
-os.data.histo.ColorModel.prototype.resetColor_ = function() {
-  if (this.histogram_) {
-    var source = this.histogram_.getSource();
-    if (source) {
-      // all features should be given the default color
-      this.colorFeatures_(source.getFeatures(), undefined);
-    }
-    // if the histrogram is binning time ranges then force it to refresh on reset color
-    var isRanges;
-    try {
-      isRanges = this.histogram_.getBinRanges();
-    } catch (error) {
-      isRanges = false;
-    }
-    if (isRanges) {
-      this.histogram_.setBinRanges(true);
-    }
-  }
-};
-
-
-/**
- * Reset the color for features that were previously colored, but are no longer.
- *
- * @param {!Object<string, ol.Feature>} oldColors Map of previously colored features
- * @private
- */
-os.data.histo.ColorModel.prototype.cleanupOldColors_ = function(oldColors) {
-  var toReset = [];
-  for (var key in oldColors) {
-    if (!(key in this.coloredFeatures_)) {
-      toReset.push(oldColors[key]);
-    }
-  }
-
-  this.colorFeatures_(toReset, undefined);
-};
-
-
-/**
- * Sets the color on a set of features.
- *
- * @param {Array<ol.Feature>} features The features to update
- * @param {string=} opt_color The new feature color
- * @private
- *
- * @suppress {accessControls|checkTypes} To allow direct access to feature metadata.
- */
-os.data.histo.ColorModel.prototype.colorFeatures_ = function(features, opt_color) {
-  if (features && features.length > 0) {
-    for (var j = 0, o = features.length; j < o; j++) {
-      var oldColor = /** @type {string|undefined} */ (os.feature.getColor(features[j], null, null));
-      if (oldColor != opt_color) {
-        // set the color override on the feature and dispatch the event so UI's (bins) can update
-        features[j].values_[os.data.RecordField.COLOR] = opt_color;
-
-        var newColor = /** @type {string|undefined} */ (os.feature.getColor(features[j], null, null)) || undefined;
-        features[j].dispatchFeatureEvent(os.data.FeatureEventType.COLOR, newColor, oldColor);
-      }
-
-      if (opt_color) {
-        // track which features are being colored so we can reset the color on features that are no longer in a bin for
-        // the attached histogram
-        this.coloredFeatures_[features[j]['id']] = features[j];
+    if (this.histogram_) {
+      var binMethod = this.histogram_.getBinMethod();
+      if (binMethod) {
+        obj['binMethod'] = binMethod.persist();
       }
     }
 
-    // update the style configs on the modified features
-    os.style.setFeaturesStyle(features);
-  }
-};
-
-
-/**
- * Sets the color on a set of features.
- *
- * @param {Array<ol.Feature>} features The features to update
- * @param {string=} opt_color The new feature color
- *
- */
-os.data.histo.ColorModel.prototype.colorFeatures = function(features, opt_color) {
-  if (opt_color) {
-    // add a manual entry for this color
-    var label = [os.data.histo.OVERRIDE_LABEL, os.color.toHexString(opt_color)].join(' ');
-    this.manualBinColors_[label] = opt_color;
-  }
-  this.colorFeatures_(features, opt_color);
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.histo.ColorModel.prototype.persist = function(opt_to) {
-  var obj = opt_to || {};
-
-  obj['colorMethod'] = this.colorMethod_;
-  obj['manualColors'] = {};
-
-  // only grab manual bin colors, because features will be different next load/search
-  for (const [label, color] of Object.entries(/** @type {!Object<?, string>} */ (this.manualBinColors_))) {
-    if (label.indexOf(os.data.histo.OVERRIDE_LABEL) == -1) obj['manualColors'][label] = color;
+    return obj;
   }
 
-  if (this.histogram_) {
-    var binMethod = this.histogram_.getBinMethod();
-    if (binMethod) {
-      obj['binMethod'] = binMethod.persist();
+  /**
+   * @inheritDoc
+   */
+  restore(config) {
+    if (this.histogram_ && config['binMethod']) {
+      var binMethod = histo.restoreMethod(config['binMethod']);
+      if (binMethod) {
+        binMethod.setValueFunction(osFeature.getField);
+
+        this.histogram_.setBinMethod(binMethod);
+      }
     }
-  }
 
-  return obj;
-};
+    var colorMethod = config['colorMethod'];
 
+    if (config['manualColors']) {
+      this.setManualBinColors(/** @type {!Object<string, string>} */ (googObject.clone(config['manualColors'])));
 
-/**
- * @inheritDoc
- */
-os.data.histo.ColorModel.prototype.restore = function(config) {
-  if (this.histogram_ && config['binMethod']) {
-    var binMethod = os.histo.restoreMethod(config['binMethod']);
-    if (binMethod) {
-      binMethod.setValueFunction(os.feature.getField);
-
-      this.histogram_.setBinMethod(binMethod);
+      // since manual overrides maintain the original color method, (manualColors && NONE) actually means Manual
+      if (colorMethod == ColorMethod.NONE) colorMethod = ColorMethod.MANUAL;
     }
+
+    this.setColorMethod(colorMethod);
   }
+}
 
-  var colorMethod = config['colorMethod'];
-
-  if (config['manualColors']) {
-    this.setManualBinColors(/** @type {!Object<string, string>} */ (goog.object.clone(config['manualColors'])));
-
-    // since manual overrides maintain the original color method, (manualColors && NONE) actually means Manual
-    if (colorMethod == os.data.histo.ColorMethod.NONE) colorMethod = os.data.histo.ColorMethod.MANUAL;
-  }
-
-  this.setColorMethod(colorMethod);
-};
+exports = ColorModel;

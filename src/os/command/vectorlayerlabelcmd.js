@@ -2,7 +2,7 @@ goog.module('os.command.VectorLayerLabel');
 goog.module.declareLegacyNamespace();
 
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const OSDataManager = goog.require('os.data.OSDataManager');
+const DataManager = goog.require('os.data.DataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const metrics = goog.require('os.metrics');
 const PropertyChange = goog.require('os.source.PropertyChange');
@@ -55,7 +55,7 @@ class VectorLayerLabel extends AbstractVectorStyle {
    */
   finish(config) {
     // dispatch the label change event on the source for the export data window
-    var source = OSDataManager.getInstance().getSource(this.layerId);
+    var source = DataManager.getInstance().getSource(this.layerId);
     source.dispatchEvent(new PropertyChangeEvent(PropertyChange.LABEL, this.value));
 
     // label overlap will likely change, so update them

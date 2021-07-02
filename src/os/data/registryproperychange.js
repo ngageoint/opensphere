@@ -1,6 +1,5 @@
 goog.module('os.data.RegistryPropertyChange');
 
-
 /**
  * @enum {string}
  */
@@ -10,6 +9,5 @@ const PropertyChange = {
   REMOVE: 'registry:remove',
   UPDATE: 'registry:update'
 };
-
 
 exports = PropertyChange;

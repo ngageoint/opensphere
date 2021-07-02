@@ -1,45 +1,122 @@
-goog.provide('os.data.groupby.DateGroupBy');
+goog.module('os.data.groupby.DateGroupBy');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.array');
-goog.require('goog.string');
-goog.require('os.data.DataManager');
-goog.require('os.data.groupby.BaseGroupBy');
-goog.require('os.ui.data.DescriptorNode');
-goog.require('os.ui.slick.SlickTreeNode');
-
+const googArray = goog.require('goog.array');
+const googString = goog.require('goog.string');
+const DataManager = goog.require('os.data.DataManager');
+const BaseGroupBy = goog.require('os.data.groupby.BaseGroupBy');
+const DescriptorNode = goog.require('os.ui.data.DescriptorNode');
+const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
 
 
 /**
  * Groups nodes by their max date
- *
- * @extends {os.data.groupby.BaseGroupBy}
- * @param {boolean=} opt_open Whether or not to keep the category open by default
- * @constructor
  */
-os.data.groupby.DateGroupBy = function(opt_open) {
-  os.data.groupby.DateGroupBy.base(this, 'constructor');
+class DateGroupBy extends BaseGroupBy {
+  /**
+   * Constructor.
+   * @param {boolean=} opt_open Whether or not to keep the category open by default
+   */
+  constructor(opt_open) {
+    super();
+
+    /**
+     * @type {number}
+     * @private
+     */
+    this.now_ = NaN;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.open_ = opt_open || false;
+  }
 
   /**
-   * @type {number}
-   * @private
+   * @inheritDoc
    */
-  this.now_ = NaN;
+  init() {
+    super.init();
+    this.now_ = Date.now();
+  }
 
   /**
-   * @type {boolean}
-   * @private
+   * @inheritDoc
    */
-  this.open_ = opt_open || false;
-};
-goog.inherits(os.data.groupby.DateGroupBy, os.data.groupby.BaseGroupBy);
+  getGroupIds(node) {
+    /** @type {Array.<string>} */
+    var ids = [];
+
+    var max = Number.NEGATIVE_INFINITY;
+
+    /** @type {os.data.IDataDescriptor} */
+    var d = null;
+
+    if (node instanceof DescriptorNode) {
+      d = /** @type {DescriptorNode} */ (node).getDescriptor();
+    } else {
+      var dm = DataManager.getInstance();
+      d = dm.getDescriptor(node.getId());
+    }
+
+    if (d) {
+      max = d.getMaxDate();
+    }
+
+    if (!isNaN(max) && max > Number.NEGATIVE_INFINITY) {
+      if (max > this.now_) {
+        googArray.insert(ids, 'xxReports future activity');
+        return ids;
+      }
+
+      var p = periods;
+      for (var i = 0, n = p.length; i < n; i++) {
+        if ((this.now_ - p[i].offset) <= max) {
+          googArray.insert(ids, googString.padNumber(i, 2) + p[i].label);
+          return ids;
+        }
+      }
+
+      googArray.insert(ids, 'yyNo recent activity');
+      return ids;
+    }
+
+    googArray.insert(ids, 'zzCould not determine activity');
+    return ids;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  createGroup(node, id) {
+    var group = new SlickTreeNode();
+    group.setId(id);
+    group.setLabel(id.substring(2));
+    group.setCheckboxVisible(false);
+
+    if (id.indexOf('Last') > -1) {
+      group.setToolTip('Contains all results that report activity over the ' + group.getLabel().toLowerCase() + '.');
+    } else if (id.indexOf('zz') > -1) {
+      group.setToolTip('Contains all results for which the activity could not be determined.');
+    } else if (id.indexOf('yy') > -1) {
+      group.setToolTip('Contains all results that do not have any recent activity.');
+    } else if (id.indexOf('xx') > -1) {
+      group.setToolTip('Contains all results that report future activity and thus cannot be accurately binned in' +
+          'the other groups');
+    }
+
+    group.collapsed = !this.open_;
+
+    return group;
+  }
+}
 
 
 /**
  * @type {!Array.<{label: string, offset: number}>}
- * @const
- * @private
  */
-os.data.groupby.DateGroupBy.PERIODS_ = [{
+const periods = [{
   label: 'Last Minute',
   offset: 60 * 1000
 }, {
@@ -84,82 +161,4 @@ os.data.groupby.DateGroupBy.PERIODS_ = [{
 }];
 
 
-/**
- * @inheritDoc
- */
-os.data.groupby.DateGroupBy.prototype.init = function() {
-  os.data.groupby.DateGroupBy.superClass_.init.call(this);
-  this.now_ = Date.now();
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.groupby.DateGroupBy.prototype.getGroupIds = function(node) {
-  /** @type {Array.<string>} */
-  var ids = [];
-
-  var max = Number.NEGATIVE_INFINITY;
-
-  /** @type {os.data.IDataDescriptor} */
-  var d = null;
-
-  if (node instanceof os.ui.data.DescriptorNode) {
-    d = /** @type {os.ui.data.DescriptorNode} */ (node).getDescriptor();
-  } else {
-    var dm = os.dataManager;
-    d = dm.getDescriptor(node.getId());
-  }
-
-  if (d) {
-    max = d.getMaxDate();
-  }
-
-  if (!isNaN(max) && max > Number.NEGATIVE_INFINITY) {
-    if (max > this.now_) {
-      goog.array.insert(ids, 'xxReports future activity');
-      return ids;
-    }
-
-    var p = os.data.groupby.DateGroupBy.PERIODS_;
-    for (var i = 0, n = p.length; i < n; i++) {
-      if ((this.now_ - p[i].offset) <= max) {
-        goog.array.insert(ids, goog.string.padNumber(i, 2) + p[i].label);
-        return ids;
-      }
-    }
-
-    goog.array.insert(ids, 'yyNo recent activity');
-    return ids;
-  }
-
-  goog.array.insert(ids, 'zzCould not determine activity');
-  return ids;
-};
-
-
-/**
- * @inheritDoc
- */
-os.data.groupby.DateGroupBy.prototype.createGroup = function(node, id) {
-  var group = new os.ui.slick.SlickTreeNode();
-  group.setId(id);
-  group.setLabel(id.substring(2));
-  group.setCheckboxVisible(false);
-
-  if (id.indexOf('Last') > -1) {
-    group.setToolTip('Contains all results that report activity over the ' + group.getLabel().toLowerCase() + '.');
-  } else if (id.indexOf('zz') > -1) {
-    group.setToolTip('Contains all results for which the activity could not be determined.');
-  } else if (id.indexOf('yy') > -1) {
-    group.setToolTip('Contains all results that do not have any recent activity.');
-  } else if (id.indexOf('xx') > -1) {
-    group.setToolTip('Contains all results that report future activity and thus cannot be accurately binned in' +
-        'the other groups');
-  }
-
-  group.collapsed = !this.open_;
-
-  return group;
-};
+exports = DateGroupBy;

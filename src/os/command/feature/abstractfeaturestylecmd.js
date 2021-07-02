@@ -7,7 +7,7 @@ const dispatcher = goog.require('os.Dispatcher');
 const EventType = goog.require('os.action.EventType');
 const AbstractStyle = goog.require('os.command.AbstractStyle');
 const State = goog.require('os.command.State');
-const OSDataManager = goog.require('os.data.OSDataManager');
+const DataManager = goog.require('os.data.DataManager');
 const {getMapContainer} = goog.require('os.map.instance');
 const osStyle = goog.require('os.style');
 const StyleType = goog.require('os.style.StyleType');
@@ -56,7 +56,7 @@ class AbstractFeatureStyle extends AbstractStyle {
    */
   applyValue(configs, value) {
     var feature = /** @type {Feature} */ (this.getFeature());
-    var source = OSDataManager.getInstance().getSource(this.layerId);
+    var source = DataManager.getInstance().getSource(this.layerId);
     asserts.assert(source, 'source must be defined');
 
     // update feature styles. don't use forEachFeature or the rbush will throw an error due to feature changes
@@ -121,7 +121,7 @@ class AbstractFeatureStyle extends AbstractStyle {
     var feature = null;
 
     if (this.layerId != null && this.featureId != null) {
-      var source = OSDataManager.getInstance().getSource(this.layerId);
+      var source = DataManager.getInstance().getSource(this.layerId);
       asserts.assert(source, 'source must be defined');
 
       feature = source.getFeatureById(this.featureId);

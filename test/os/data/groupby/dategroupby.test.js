@@ -4,11 +4,15 @@ goog.require('os.ui.data.DescriptorNode');
 
 
 describe('os.data.groupby.DateGroupBy', function() {
-  var by = new os.data.groupby.DateGroupBy();
+  const BaseDescriptor = goog.module.get('os.data.BaseDescriptor');
+  const DateGroupBy = goog.module.get('os.data.groupby.DateGroupBy');
+  const DescriptorNode = goog.module.get('os.ui.data.DescriptorNode');
+
+  var by = new DateGroupBy();
 
   it('should retrieve ids by date', function() {
-    var d = new os.data.BaseDescriptor();
-    var node = new os.ui.data.DescriptorNode();
+    var d = new BaseDescriptor();
+    var node = new DescriptorNode();
     node.setDescriptor(d);
 
     // if you set it *right at* 5 minutes then you run the risk of occasionally
@@ -23,8 +27,8 @@ describe('os.data.groupby.DateGroupBy', function() {
   });
 
   it('should handle nodes without a date', function() {
-    var d = new os.data.BaseDescriptor();
-    var node = new os.ui.data.DescriptorNode();
+    var d = new BaseDescriptor();
+    var node = new DescriptorNode();
     node.setDescriptor(d);
 
     by.init();
@@ -36,8 +40,8 @@ describe('os.data.groupby.DateGroupBy', function() {
   });
 
   it('should handle nodes with a date in the future', function() {
-    var d = new os.data.BaseDescriptor();
-    var node = new os.ui.data.DescriptorNode();
+    var d = new BaseDescriptor();
+    var node = new DescriptorNode();
     node.setDescriptor(d);
 
     d.setMaxDate(Date.now() + 5 * 60 * 1000);
@@ -50,8 +54,8 @@ describe('os.data.groupby.DateGroupBy', function() {
   });
 
   it('should handle nodes with a date too old to be recent', function() {
-    var d = new os.data.BaseDescriptor();
-    var node = new os.ui.data.DescriptorNode();
+    var d = new BaseDescriptor();
+    var node = new DescriptorNode();
     node.setDescriptor(d);
 
     d.setMaxDate(Date.now() - 61 * 24 * 60 * 60 * 1000);

@@ -4,7 +4,7 @@ goog.require('ol.events');
 goog.require('ol.geom.Point');
 goog.require('os.command.SelectAll');
 goog.require('os.command.State');
-goog.require('os.data.OSDataManager');
+goog.require('os.data.DataManager');
 goog.require('os.mock');
 goog.require('os.source.PropertyChange');
 goog.require('os.source.Vector');
@@ -16,7 +16,7 @@ describe('os.command.SelectAll', function() {
   const Point = goog.module.get('ol.geom.Point');
   const SelectAll = goog.module.get('os.command.SelectAll');
   const State = goog.module.get('os.command.State');
-  const OSDataManager = goog.module.get('os.data.OSDataManager');
+  const DataManager = goog.module.get('os.data.DataManager');
   const PropertyChange = goog.module.get('os.source.PropertyChange');
   const VectorSource = goog.module.get('os.source.Vector');
 
@@ -51,7 +51,7 @@ describe('os.command.SelectAll', function() {
     }, 'features to be added to crossfilter');
 
     runs(function() {
-      OSDataManager.getInstance().addSource(src);
+      DataManager.getInstance().addSource(src);
       events.unlisten(src, GoogEventType.PROPERTYCHANGE, onChange);
 
       var cmd = new SelectAll(src.getId());
@@ -62,7 +62,7 @@ describe('os.command.SelectAll', function() {
       expect(cmd.revert()).toBe(true);
       expect(cmd.state).toBe(State.READY);
       expect(src.getSelectedItems().length).toBe(0);
-      OSDataManager.getInstance().removeSource(src);
+      DataManager.getInstance().removeSource(src);
     });
   });
 });

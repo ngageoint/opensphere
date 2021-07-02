@@ -10,7 +10,7 @@ const GeometryCollection = goog.require('ol.geom.GeometryCollection');
 const GeometryType = goog.require('ol.geom.GeometryType');
 const Point = goog.require('ol.geom.Point');
 const MapContainer = goog.require('os.MapContainer');
-const OSDataManager = goog.require('os.data.OSDataManager');
+const DataManager = goog.require('os.data.DataManager');
 const RecordField = goog.require('os.data.RecordField');
 const osFeature = goog.require('os.feature');
 const osImplements = goog.require('os.implements');
@@ -318,7 +318,7 @@ class KMLExporter extends AbstractKMLExporter {
     if (feature) {
       var sourceId = feature.get(RecordField.SOURCE_ID);
       if (typeof sourceId === 'string') {
-        source = /** @type {osSource.Vector} */ (OSDataManager.getInstance().getSource(sourceId));
+        source = /** @type {osSource.Vector} */ (DataManager.getInstance().getSource(sourceId));
       }
     }
 

@@ -41,7 +41,7 @@ let mapContainer = null;
  * @return {!MapContainer}
  */
 const getMapContainer = () => {
-  assert(mapContainer != null, 'MapContainer instance is not defined! Use getMapContainer to set the instance.');
+  assert(mapContainer != null, 'MapContainer instance is not defined! Use setMapContainer to set the instance.');
   return mapContainer;
 };
 

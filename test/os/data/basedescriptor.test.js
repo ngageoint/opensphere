@@ -4,8 +4,10 @@ goog.require('os.mock');
 
 
 describe('os.data.BaseDescriptor', function() {
+  const BaseDescriptor = goog.module.get('os.data.BaseDescriptor');
+
   it('should generate HTML', function() {
-    var d = new os.data.BaseDescriptor();
+    var d = new BaseDescriptor();
     d.setId('x1');
     d.setTitle('D1');
     d.setType('Vectorz');
@@ -16,7 +18,7 @@ describe('os.data.BaseDescriptor', function() {
   });
 
   it('should generate HTML without a provider', function() {
-    var d = new os.data.BaseDescriptor();
+    var d = new BaseDescriptor();
     d.setId('x1');
     d.setTitle('D1');
     d.setType('Vectorz');
@@ -26,7 +28,7 @@ describe('os.data.BaseDescriptor', function() {
   });
 
   it('should generate HTML without a type', function() {
-    var d = new os.data.BaseDescriptor();
+    var d = new BaseDescriptor();
     d.setId('x1');
     d.setTitle('D1');
     d.setProvider('Test');
@@ -36,7 +38,7 @@ describe('os.data.BaseDescriptor', function() {
   });
 
   it('should generate HTML with a single tag', function() {
-    var d = new os.data.BaseDescriptor();
+    var d = new BaseDescriptor();
     d.setId('x1');
     d.setTitle('D1');
     d.setType('Vectorz');
@@ -48,7 +50,7 @@ describe('os.data.BaseDescriptor', function() {
   });
 
   it('should generate HTML with several tags', function() {
-    var d = new os.data.BaseDescriptor();
+    var d = new BaseDescriptor();
     d.setId('x1');
     d.setTitle('D1');
     d.setType('Vectorz');
@@ -61,7 +63,7 @@ describe('os.data.BaseDescriptor', function() {
   });
 
   it('should generate HTML with a description', function() {
-    var d = new os.data.BaseDescriptor();
+    var d = new BaseDescriptor();
     d.setId('x1');
     d.setTitle('D1');
     d.setType('Vectorz');
@@ -75,7 +77,7 @@ describe('os.data.BaseDescriptor', function() {
   });
 
   it('should generate HTML with singularly attractive type', function() {
-    var d = new os.data.BaseDescriptor();
+    var d = new BaseDescriptor();
     d.setId('x1');
     d.setTitle('D1');
     d.setType('Vectors');
@@ -85,7 +87,7 @@ describe('os.data.BaseDescriptor', function() {
   });
 
   it('should generate HTML with valid dates', function() {
-    var d = new os.data.BaseDescriptor();
+    var d = new BaseDescriptor();
     d.setId('x1');
     d.setTitle('D1');
     d.setType('Vectorz');
@@ -103,7 +105,7 @@ describe('os.data.BaseDescriptor', function() {
   });
 
   it('should generate HTML without time if only minDate is provided', function() {
-    var d = new os.data.BaseDescriptor();
+    var d = new BaseDescriptor();
     d.setId('x1');
     d.setTitle('D1');
     d.setType('Vectorz');
@@ -119,7 +121,7 @@ describe('os.data.BaseDescriptor', function() {
   });
 
   it('should generate HTML without time if only maxDate is provided', function() {
-    var d = new os.data.BaseDescriptor();
+    var d = new BaseDescriptor();
     d.setId('x1');
     d.setTitle('D1');
     d.setType('Vectorz');

@@ -1,11 +1,15 @@
-goog.provide('os.data');
-
+goog.module('os.data');
+goog.module.declareLegacyNamespace();
 
 /**
  * Settings keys for data providers.
  * @enum {string}
  */
-os.data.ProviderKey = {
+const ProviderKey = {
   ADMIN: 'providers',
   USER: 'userProviders'
+};
+
+exports = {
+  ProviderKey
 };

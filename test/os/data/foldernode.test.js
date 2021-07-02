@@ -5,6 +5,7 @@ goog.require('os.ui.slick.SlickTreeNode');
 describe('os.data.FolderNode', () => {
   const FolderNode = goog.module.get('os.data.FolderNode');
   const SlickTreeNode = goog.module.get('os.ui.slick.SlickTreeNode');
+
   const folder = {
     id: 'folder0',
     name: 'My Folder',

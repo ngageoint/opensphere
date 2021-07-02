@@ -64,7 +64,7 @@ class Controller extends DefaultLayerNodeUICtrl {
     var chooseTime = false;
 
     if (osImplements(this.descriptor_, IFeatureTypeDescriptor.ID)) {
-      var featureType = this.descriptor_.getFeatureType();
+      var featureType = /** @type  {IFeatureTypeDescriptor} */ (this.descriptor_).getFeatureType();
       if (featureType) {
         chooseTime = (featureType.getStartDateColumnName() !== null || featureType.getEndDateColumnName() !== null) &&
           featureType.getTimeColumns().length >= 2;

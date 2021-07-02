@@ -10,7 +10,7 @@ const {createFromOptions} = goog.require('os.layer');
 const osMap = goog.require('os.map');
 const {getProjections} = goog.require('os.proj');
 const Module = goog.require('os.ui.Module');
-const {ID_DELIMITER} = goog.require('os.ui.data.BaseProvider');
+const BaseProvider = goog.require('os.ui.data.BaseProvider');
 const SingleUrlProviderImportCtrl = goog.require('os.ui.SingleUrlProviderImportCtrl');
 const {directiveTag: uiDirectiveTag} = goog.require('plugin.xyz.XYZDescriptorNodeUI');
 const XYZProviderHelpUI = goog.require('plugin.xyz.XYZProviderHelpUI');
@@ -133,7 +133,7 @@ class Controller extends SingleUrlProviderImportCtrl {
       this.dp.setEditable(true);
 
       const dm = DataManager.getInstance();
-      var descriptor = dm.getDescriptor(this.currentId);
+      var descriptor = /** @type {ConfigDescriptor} */ (dm.getDescriptor(this.currentId));
       if (descriptor) {
         this.currentId = '';
         descriptor.setActive(false);
@@ -151,7 +151,8 @@ class Controller extends SingleUrlProviderImportCtrl {
   }
 
   /**
-   * @inheritDoc
+   * @override
+   * @return {ConfigProvider}
    */
   getDataProvider() {
     const dp = ConfigProvider.create('xyz', {'label': 'XYZ Map Layers', 'type': 'xyz', 'listInServers': false});
@@ -161,7 +162,7 @@ class Controller extends SingleUrlProviderImportCtrl {
   /**
    * Create an XYZ descriptor from a layer config.
    * @param {!Object} layerConfig The layer config.
-   * @return {IDataDescriptor} The descriptor, or null if one could not be created.
+   * @return {!ConfigDescriptor} The descriptor, or null if one could not be created.
    */
   createXYZDescriptor(layerConfig) {
     let descriptor = null;
@@ -174,24 +175,26 @@ class Controller extends SingleUrlProviderImportCtrl {
 
   /**
    * Save an XYZ descriptor to the XYZ provider.
-   * @param {?IDataDescriptor} descriptor The descriptor.
+   * @param {ConfigDescriptor} descriptor The descriptor.
    */
   saveXYZDescriptor(descriptor) {
     if (descriptor) {
-      var layerConfig = descriptor.getBaseConfig();
+      const layerConfig = descriptor.getBaseConfig();
 
       if (this.dp) {
-        this.dp.setEditable(true);
-        var id = `${getRandomString()}`;
+        const configProvider = /** @type {ConfigProvider} */ (this.dp);
+        configProvider.setEditable(true);
+
+        const id = `${getRandomString()}`;
 
         // Set config descriptor options.
-        layerConfig['nodeUi'] = '<' + uiDirectiveTag + '></' + uiDirectiveTag + '>';
-        layerConfig['id'] = `xyz${ID_DELIMITER}${id}`;
+        layerConfig['nodeUi'] = `<${uiDirectiveTag}></${uiDirectiveTag}>`;
+        layerConfig['id'] = `xyz${BaseProvider.ID_DELIMITER}${id}`;
 
         // Prevent the data manager from automatically expiring the descriptor.
         descriptor.setLocal(true);
 
-        this.dp.addLayerGroup(id, layerConfig);
+        configProvider.addLayerGroup(id, layerConfig);
       }
     }
   }
@@ -201,7 +204,8 @@ class Controller extends SingleUrlProviderImportCtrl {
    */
   getLabel() {
     if (this.dp) {
-      var label = /** @type {ConfigProvider} */ (this.dp).getLabel();
+      const configProvider = /** @type {ConfigProvider} */ (this.dp);
+      const label = configProvider.getLabel();
       return label || '';
     }
 

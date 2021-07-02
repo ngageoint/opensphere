@@ -2,7 +2,7 @@ goog.module('os.command.AbstractSource');
 goog.module.declareLegacyNamespace();
 
 const State = goog.require('os.command.State');
-const OSDataManager = goog.require('os.data.OSDataManager');
+const DataManager = goog.require('os.data.DataManager');
 
 const ICommand = goog.requireType('os.command.ICommand');
 const ISource = goog.requireType('os.source.ISource');
@@ -51,7 +51,7 @@ class AbstractSource {
    * @return {?ISource} The source
    */
   getSource() {
-    return OSDataManager.getInstance().getSource(this.sourceId);
+    return DataManager.getInstance().getSource(this.sourceId);
   }
 
   /**

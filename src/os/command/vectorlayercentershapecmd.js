@@ -2,7 +2,7 @@ goog.module('os.command.VectorLayerCenterShape');
 goog.module.declareLegacyNamespace();
 
 const AbstractVectorStyle = goog.require('os.command.AbstractVectorStyle');
-const OSDataManager = goog.require('os.data.OSDataManager');
+const DataManager = goog.require('os.data.DataManager');
 const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const metrics = goog.require('os.metrics');
 const PropertyChange = goog.require('os.source.PropertyChange');
@@ -35,7 +35,7 @@ class VectorLayerCenterShape extends AbstractVectorStyle {
    */
   getOldValue() {
     var oldVal;
-    var source = OSDataManager.getInstance().getSource(this.layerId);
+    var source = DataManager.getInstance().getSource(this.layerId);
     if (source) {
       oldVal = source.getCenterGeometryShape();
     }
@@ -48,7 +48,7 @@ class VectorLayerCenterShape extends AbstractVectorStyle {
    */
   applyValue(config, value) {
     // if the new shape value isn't defined, config will be set to the default value
-    var source = OSDataManager.getInstance().getSource(this.layerId);
+    var source = DataManager.getInstance().getSource(this.layerId);
     if (source && value) {
       source.setCenterGeometryShape(value);
 
@@ -65,7 +65,7 @@ class VectorLayerCenterShape extends AbstractVectorStyle {
    * @inheritDoc
    */
   finish(config) {
-    var source = OSDataManager.getInstance().getSource(this.layerId);
+    var source = DataManager.getInstance().getSource(this.layerId);
     source.dispatchEvent(new PropertyChangeEvent(PropertyChange.GEOMETRY_CENTER_SHAPE, this.value,
         this.oldValue));
 
