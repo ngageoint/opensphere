@@ -1,6 +1,9 @@
 goog.provide('os.ui.ol.interaction.FocusInteraction');
-goog.require('ol.interaction.Interaction');
 
+goog.require('ol.interaction.Interaction');
+goog.require('os.query.instance');
+
+goog.requireType('os.ui.ol.OLMap');
 
 
 /**
@@ -26,11 +29,13 @@ goog.inherits(os.ui.ol.interaction.FocusInteraction, ol.interaction.Interaction)
  * @return {boolean} `false` to stop event propagation
  */
 os.ui.ol.interaction.FocusInteraction.handleEvent = function(mapBrowserEvent) {
+  const map = /** @type {os.ui.ol.OLMap} */ (os.query.instance.getAreaManager().getMap());
+
   if (mapBrowserEvent.pointerEvent &&
       mapBrowserEvent.pointerEvent.buttons) {
-    os.ui.areaManager.getMap().setFocused(true);
+    map.setFocused(true);
   }
 
   // Always stop events unless the map has been focused
-  return os.ui.areaManager.getMap().getFocused();
+  return map.getFocused();
 };
