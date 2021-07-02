@@ -86,6 +86,7 @@ const VariableReplacer = goog.require('os.net.VariableReplacer');
 const {unsafeClone} = goog.require('os.object');
 const {clone: cloneFeature} = goog.require('os.ol.feature');
 const {EPSG3857, EPSG4326, loadProjections} = goog.require('os.proj');
+const {setEnableRasterReprojection} = goog.require('os.proj.reprojection');
 const projSwitch = goog.require('os.proj.switch');
 const queryUtils = goog.require('os.query.utils');
 const {randomString} = goog.require('os.string');
@@ -897,8 +898,9 @@ class MapContainer extends EventTarget {
         osMap.PROJECTION, ol.DEFAULT_MAX_ZOOM, [512, 512]);
     osMap.MIN_RESOLUTION = osMap.zoomToResolution(osMap.MAX_ZOOM, osMap.PROJECTION);
     osMap.MAX_RESOLUTION = osMap.zoomToResolution(osMap.MIN_ZOOM, osMap.PROJECTION);
-    projSwitch.ENABLE_RASTER_REPROJECTION =
-    /** @type {boolean} */ (Settings.getInstance().get('enableReprojection', true));
+
+    const enableReprojection = /** @type {boolean} */ (Settings.getInstance().get('enableReprojection', true));
+    setEnableRasterReprojection(enableReprojection);
 
     // try restoring values from settings, otherwise fall back on defaults
     var mapCenter = osMap.DEFAULT_CENTER;

@@ -5,7 +5,6 @@ goog.require('ol.math');
 goog.require('ol.tilegrid');
 goog.require('os.map.IMapContainer');
 goog.require('os.ol');
-goog.require('os.proj');
 
 
 /**
@@ -83,7 +82,7 @@ os.map.MAX_AUTO_ZOOM = 18;
  * Projection used for the map and all of its layers.
  * @type {ol.proj.Projection}
  */
-os.map.PROJECTION = ol.proj.get(os.proj.EPSG4326);
+os.map.PROJECTION = ol.proj.get('EPSG:4326');
 
 
 /**
