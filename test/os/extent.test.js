@@ -5,16 +5,22 @@ goog.require('os.extent');
 goog.require('os.proj');
 
 describe('os.extent', function() {
+  const Point = goog.module.get('ol.geom.Point');
+  const Polygon = goog.module.get('ol.geom.Polygon');
+  const olProj = goog.module.get('ol.proj');
+  const osExtent = goog.module.get('os.extent');
+  const osProj = goog.module.get('os.proj');
+
   var expandExtent = function(extent) {
     return [extent[0], 0, extent[1], 0];
   };
 
   var projections = [{
-    code: os.proj.EPSG4326,
+    code: osProj.EPSG4326,
     precision: 12,
     epsilon: 1E-12
   }, {
-    code: os.proj.EPSG3857,
+    code: osProj.EPSG3857,
     precision: 6,
     epsilon: 1E-6
   }];
@@ -22,7 +28,7 @@ describe('os.extent', function() {
 
   it('should normalize extents', function() {
     projections.forEach(function(config) {
-      var proj = ol.proj.get(config.code);
+      var proj = olProj.get(config.code);
       var projExtent = proj.getExtent();
       var left = projExtent[0];
       var right = projExtent[2];
@@ -58,7 +64,7 @@ describe('os.extent', function() {
 
           var ex = expandExtent(test.expected);
 
-          var result = os.extent.normalize(e, min, max, proj);
+          var result = osExtent.normalize(e, min, max, proj);
 
           for (var j = 0; j < 4; j++) {
             expect(result[j]).toBeCloseTo(ex[j], config.precision);
@@ -83,7 +89,7 @@ describe('os.extent', function() {
 
   it('should normalize extents with alternate min/max values', function() {
     projections.forEach(function(config) {
-      var proj = ol.proj.get(config.code);
+      var proj = olProj.get(config.code);
       var projExtent = proj.getExtent();
       var left = projExtent[0];
       var right = projExtent[2];
@@ -123,7 +129,7 @@ describe('os.extent', function() {
 
           var ex = expandExtent(test.expected);
 
-          var result = os.extent.normalize(e, min, max, proj);
+          var result = osExtent.normalize(e, min, max, proj);
 
           for (var j = 0; j < 4; j++) {
             expect(result[j]).toBeCloseTo(ex[j], config.precision);
@@ -151,7 +157,7 @@ describe('os.extent', function() {
     var result = [];
     var extent = [-180, -90, 180, 90];
 
-    os.extent.normalize(extent, undefined, undefined, ol.proj.get(os.proj.EPSG4326), result);
+    osExtent.normalize(extent, undefined, undefined, olProj.get(osProj.EPSG4326), result);
 
     expect(result[1]).toBe(extent[1]);
     expect(result[3]).toBe(extent[3]);
@@ -160,7 +166,7 @@ describe('os.extent', function() {
 
   it('should determine whether or not extents cross the antimeridian', function() {
     projections.forEach(function(config) {
-      var proj = ol.proj.get(config.code);
+      var proj = olProj.get(config.code);
       var projExtent = proj.getExtent();
       var left = projExtent[0];
       var right = projExtent[2];
@@ -213,7 +219,7 @@ describe('os.extent', function() {
           e[0] += width * i;
           e[2] += width * i;
           0;
-          var normalized = os.extent.normalize(e, undefined, undefined, proj);
+          var normalized = osExtent.normalize(e, undefined, undefined, proj);
           // var result = os.extent.crossesAntimeridian(normalized, proj);
           // if (result !== test.expected) {
           //   console.log('test', testIndex, 'at world', i, 'was', result, 'expected', test.expected);
@@ -225,52 +231,52 @@ describe('os.extent', function() {
           //   debugger;
           //   os.extent.crossesAntimeridian(normalized, proj);
           // }
-          expect(os.extent.crossesAntimeridian(normalized, proj)).toBe(test.expected);
+          expect(osExtent.crossesAntimeridian(normalized, proj)).toBe(test.expected);
         });
       }
     });
   });
 
   it('should get the functional extent of a geometry', function() {
-    expect(os.extent.getFunctionalExtent(null)).toBe(null);
+    expect(osExtent.getFunctionalExtent(null)).toBe(null);
 
-    const point = new ol.geom.Point([0, 0]);
-    expect(os.extent.getFunctionalExtent(point, os.proj.EPSG4326)).toBe(point.getExtent());
+    const point = new Point([0, 0]);
+    expect(osExtent.getFunctionalExtent(point, osProj.EPSG4326)).toBe(point.getExtent());
 
-    const poly = ol.geom.Polygon.fromExtent([-5, -5, 5, 5]);
-    expect(os.extent.getFunctionalExtent(poly, os.proj.EPSG4326)).toBe(poly.getExtent());
+    const poly = Polygon.fromExtent([-5, -5, 5, 5]);
+    expect(osExtent.getFunctionalExtent(poly, osProj.EPSG4326)).toBe(poly.getExtent());
 
-    const polyCrossingAntimeridian = ol.geom.Polygon.fromExtent([-179, -5, 179, 5]);
-    expect(os.extent.getFunctionalExtent(polyCrossingAntimeridian, os.proj.EPSG4326)).toBe(
+    const polyCrossingAntimeridian = Polygon.fromExtent([-179, -5, 179, 5]);
+    expect(osExtent.getFunctionalExtent(polyCrossingAntimeridian, osProj.EPSG4326)).toBe(
         polyCrossingAntimeridian.getAntiExtent());
   });
 
   it('should get the functional extent of an extent', function() {
     let extent = [0, 0, 0, 0];
-    expect(os.extent.getFunctionalExtent(extent)).toBe(extent);
+    expect(osExtent.getFunctionalExtent(extent)).toBe(extent);
     extent = [30, 15, 50, 45];
-    expect(os.extent.getFunctionalExtent(extent)).toBe(extent);
+    expect(osExtent.getFunctionalExtent(extent)).toBe(extent);
     extent = [-179, -5, 179, 5];
-    expect(os.extent.getFunctionalExtent(extent)).toEqual([179, -5, 181, 5]);
+    expect(osExtent.getFunctionalExtent(extent)).toEqual([179, -5, 181, 5]);
   });
 
   it('should get the thinnest extent', function() {
     const thin = [0, 0, 0, 0];
     const fat = [-5, 0, 5, 0];
-    expect(os.extent.getThinnestExtent(thin, fat)).toBe(thin);
-    expect(os.extent.getThinnestExtent(fat, thin)).toBe(thin);
+    expect(osExtent.getThinnestExtent(thin, fat)).toBe(thin);
+    expect(osExtent.getThinnestExtent(fat, thin)).toBe(thin);
 
     const thin2 = thin.slice();
-    expect(os.extent.getThinnestExtent(thin, thin2)).toBe(thin);
-    expect(os.extent.getThinnestExtent(thin2, thin)).toBe(thin2);
+    expect(osExtent.getThinnestExtent(thin, thin2)).toBe(thin);
+    expect(osExtent.getThinnestExtent(thin2, thin)).toBe(thin2);
 
     const fat2 = fat.slice();
-    expect(os.extent.getThinnestExtent(fat, fat2)).toBe(fat);
-    expect(os.extent.getThinnestExtent(fat2, fat)).toBe(fat2);
+    expect(osExtent.getThinnestExtent(fat, fat2)).toBe(fat);
+    expect(osExtent.getThinnestExtent(fat2, fat)).toBe(fat2);
   });
 
   it('should get the inverse extent', function() {
-    expect(os.extent.getInverse([-5, -2, 5, 2], os.proj.EPSG4326)).toEqual([5, -2, 355, 2]);
-    expect(os.extent.getInverse([-179, -2, 179, 2], os.proj.EPSG4326)).toEqual([179, -2, 181, 2]);
+    expect(osExtent.getInverse([-5, -2, 5, 2], osProj.EPSG4326)).toEqual([5, -2, 355, 2]);
+    expect(osExtent.getInverse([-179, -2, 179, 2], osProj.EPSG4326)).toEqual([179, -2, 181, 2]);
   });
 });

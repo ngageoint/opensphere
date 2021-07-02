@@ -24,6 +24,7 @@ describe('os.track', function() {
   const TimeInstant = goog.module.get('os.time.TimeInstant');
   const TimeRange = goog.module.get('os.time.TimeRange');
   const osTrack = goog.module.get('os.track');
+
   var metadataField = 'testField';
   var sortIncrement = 1000;
 
@@ -57,7 +58,7 @@ describe('os.track', function() {
    * @param {number} count The number of features.
    * @param {string} sortField The sort field.
    * @param {number} sortStart The start sort value.
-   * @return {!Array<!ol.Feature>}
+   * @return {!Array<!Feature>}
    */
   var generateFeatures = function(count, sortField, sortStart) {
     var coordinates = generateCoordinates(count, sortField, sortStart);
