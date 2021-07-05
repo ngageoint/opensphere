@@ -3,7 +3,7 @@ goog.provide('os.ui.util.ResetSettings');
 goog.require('os.config.Settings');
 goog.require('os.storage');
 goog.require('os.ui.EventType');
-goog.require('os.ui.action.Action');
+goog.require('os.ui.menu.MenuItemOptions');
 goog.require('os.ui.window');
 goog.require('os.ui.window.ConfirmUI');
 

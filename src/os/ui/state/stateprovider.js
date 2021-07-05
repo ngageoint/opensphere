@@ -1,9 +1,6 @@
 goog.provide('os.ui.state.StateProvider');
 
 goog.require('os.config');
-goog.require('os.data.BaseDescriptor');
-goog.require('os.ui.action.Action');
-goog.require('os.ui.action.MenuOptions');
 goog.require('os.ui.data.DescriptorProvider');
 goog.require('os.ui.state.AbstractStateDescriptor');
 
