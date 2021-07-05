@@ -91,9 +91,7 @@ class UrlColumnAction extends AbstractColumnAction {
   }
 
   /**
-   *
-   * @param {?*} value
-   * @return {*}
+   * @inheritDoc
    */
   getAction(value) {
     return this.processValue_(value);

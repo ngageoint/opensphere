@@ -68,6 +68,14 @@ class AbstractColumnAction {
   }
 
   /**
+   * Get the processed action value.
+   * @param {?*} value The input value.
+   * @return {*} The processed value.
+   * @abstract
+   */
+  getAction(value) {}
+
+  /**
    * Set the action to be performed
    * Can come from a config, or be passed in.
    *

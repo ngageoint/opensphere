@@ -90,7 +90,7 @@ class ColumnActionManager extends EventTarget {
    * Get the global instance.
    * @return {!ColumnActionManager}
    */
-  getInstance() {
+  static getInstance() {
     if (!instance) {
       instance = new ColumnActionManager();
     }
@@ -102,7 +102,7 @@ class ColumnActionManager extends EventTarget {
    * Set the global instance.
    * @param {ColumnActionManager} value The instance.
    */
-  setInstance(value) {
+  static setInstance(value) {
     instance = value;
   }
 }
