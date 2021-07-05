@@ -8,6 +8,7 @@ goog.require('os.im.mapping.AltMappingId');
 goog.require('os.im.mapping.MappingRegistry');
 goog.require('os.im.mapping.RenameMapping');
 goog.require('os.math');
+goog.require('os.math.UnitLabels');
 goog.require('os.math.Units');
 
 
