@@ -1,6 +1,7 @@
 goog.module('os.ui.alert.alertLinkFilter');
 goog.module.declareLegacyNamespace();
 
+const ui = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 
 
@@ -15,7 +16,7 @@ const Module = goog.require('os.ui.Module');
 const alertLinkFilter = function($sce) {
   return function(text) {
     if (typeof text == 'string') {
-      text = /** @type {angular.$sanitize} */ (os.ui.injector.get('$sanitize'))(text);
+      text = /** @type {angular.$sanitize} */ (ui.injector.get('$sanitize'))(text);
       text = text.replace(/\[([^|]+)\|([^\]]+)\]/g,
           '<button onclick="$(this).scope().$emit(\'dispatch\',\'$2\')" class="btn btn-link border-0 p-0" ' +
           'type="button">$1</button>'

@@ -6,12 +6,16 @@ goog.require('os.ui.alert.alertLinkFilter');
 const Delay = goog.require('goog.async.Delay');
 const GoogEvent = goog.require('goog.events.Event');
 const EventTarget = goog.require('goog.events.EventTarget');
-const olArray = goog.require('ol.array');
+const {getRandomString} = goog.require('goog.string');
+const {ROOT} = goog.require('os');
 const dispatcher = goog.require('os.Dispatcher');
 const AlertEvent = goog.require('os.alert.AlertEvent');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertEventTypes = goog.require('os.alert.AlertEventTypes');
 const AlertManager = goog.require('os.alert.AlertManager');
+const EventType = goog.require('os.alert.EventType');
 const Settings = goog.require('os.config.Settings');
+const {apply} = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 
 
@@ -24,7 +28,7 @@ const directive = () => ({
   replace: true,
   restrict: 'AE',
   scope: true,
-  templateUrl: os.ROOT + 'views/alert/alertpopup.html',
+  templateUrl: ROOT + 'views/alert/alertpopup.html',
   controller: Controller,
   controllerAs: 'alertPopupCtrl'
 });
@@ -93,8 +97,8 @@ class Controller {
 
     this.alertClientId_ = 'alertpopups';
     AlertManager.getInstance().processMissedAlerts(this.alertClientId_, this.handleAlertEvent_, this);
-    AlertManager.getInstance().listen(os.alert.EventType.ALERT, this.handleAlertEvent_, false, this);
-    AlertManager.getInstance().listen(os.alert.EventType.CLEAR_ALERTS, this.clearAlerts, false, this);
+    AlertManager.getInstance().listen(EventType.ALERT, this.handleAlertEvent_, false, this);
+    AlertManager.getInstance().listen(EventType.CLEAR_ALERTS, this.clearAlerts, false, this);
     $scope.$on('dispatch', Controller.dispatch_);
     $scope.$on('$destroy', this.destroy_.bind(this));
   }
@@ -105,8 +109,8 @@ class Controller {
    * @private
    */
   destroy_() {
-    AlertManager.getInstance().unlisten(os.alert.EventType.ALERT, this.handleAlertEvent_, false, this);
-    AlertManager.getInstance().unlisten(os.alert.EventType.CLEAR_ALERTS, this.clearAlerts, false, this);
+    AlertManager.getInstance().unlisten(EventType.ALERT, this.handleAlertEvent_, false, this);
+    AlertManager.getInstance().unlisten(EventType.CLEAR_ALERTS, this.clearAlerts, false, this);
 
     if (this.dupeDelay_) {
       this.dupeDelay_.dispose();
@@ -194,27 +198,23 @@ class Controller {
    */
   displayAlert_(event) {
     if (this.popupsEnabled_()) {
-      var id = goog.string.getRandomString();
+      var id = getRandomString();
 
       // the function which will actually close the alert
       var dismiss = function(event) {
-        if (this.scope_) {
+        if (this.scope_ && this['alertPopups']) {
           // If the event target is the alert, only close that alert.
           var msg = event.target['msg'];
           var idx = '';
           if (msg) {
-            idx = olArray.findIndex(this['alertPopups'], function(popupObj) {
-              return popupObj['msg'] == msg;
-            });
+            idx = this['alertPopups'].findIndex((popupObj) => popupObj['msg'] == msg);
           } else {
-            idx = olArray.findIndex(this['alertPopups'], function(popupObj) {
-              return popupObj['id'] == id;
-            });
+            idx = this['alertPopups'].findIndex((popupObj) => popupObj['id'] == id);
           }
 
           if (idx != -1) {
             this['alertPopups'].splice(idx, 1);
-            os.ui.apply(this.scope_);
+            apply(this.scope_);
           }
         }
       };
@@ -228,13 +228,13 @@ class Controller {
           if (scope['hovered']) {
             setTimeout(handler, 1000);
           } else {
-            dismissDispatcher.dispatchEvent(os.alert.AlertEventTypes.DISMISS_ALERT);
+            dismissDispatcher.dispatchEvent(AlertEventTypes.DISMISS_ALERT);
           }
         };
 
         setTimeout(handler, Controller.ALERT_TIMER);
       }
-      dismissDispatcher.listenOnce(os.alert.AlertEventTypes.DISMISS_ALERT, dismiss, false, this);
+      dismissDispatcher.listenOnce(AlertEventTypes.DISMISS_ALERT, dismiss, false, this);
 
       var message = event.getMessage();
       var popup = {
@@ -246,7 +246,7 @@ class Controller {
       };
 
       this['alertPopups'].push(popup);
-      os.ui.apply(this.scope_);
+      apply(this.scope_);
     }
   }
 
@@ -263,10 +263,8 @@ class Controller {
         }
       }
 
-      this['alertPopups'] = goog.array.filter(this['alertPopups'], function(alertPopup) {
-        return !alertPopup['canClose'];
-      });
-      os.ui.apply(this.scope_);
+      this['alertPopups'] = this['alertPopups'].filter((alertPopup) => !alertPopup['canClose']);
+      apply(this.scope_);
     }
   }
 
@@ -282,8 +280,8 @@ class Controller {
       this['alertPopups'].splice($index, 1);
       clearTimeout(popup['timeout']);
     }
-    dispatcher.getInstance().dispatchEvent(new GoogEvent(os.alert.AlertEventTypes.DISMISS_ALERT, popup));
-    os.ui.apply(this.scope_);
+    dispatcher.getInstance().dispatchEvent(new GoogEvent(AlertEventTypes.DISMISS_ALERT, popup));
+    apply(this.scope_);
   }
 
   /**

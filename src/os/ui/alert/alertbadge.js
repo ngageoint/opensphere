@@ -1,7 +1,11 @@
 goog.module('os.ui.alert.AlertBadgeUI');
 goog.module.declareLegacyNamespace();
 
+const {ROOT} = goog.require('os');
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
+const EventType = goog.require('os.alert.EventType');
+const {apply} = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
 
 const AlertEvent = goog.requireType('os.alert.AlertEvent');
@@ -15,12 +19,10 @@ const AlertEvent = goog.requireType('os.alert.AlertEvent');
 const directive = () => ({
   restrict: 'E',
   replace: true,
-
   scope: {
     'reset': '='
   },
-
-  templateUrl: os.ROOT + 'views/badge.html',
+  templateUrl: ROOT + 'views/badge.html',
   controller: Controller,
   controllerAs: 'badge'
 });
@@ -63,13 +65,13 @@ class Controller {
     this['highestAlert'] = AlertEventSeverity.INFO;
 
     /**
-     * @type {?os.alert.AlertManager}
+     * @type {?AlertManager}
      * @private
      */
-    this.am_ = os.alert.AlertManager.getInstance();
+    this.am_ = AlertManager.getInstance();
     this.alertClientId_ = 'alertbadge';
     this.am_.processMissedAlerts(this.alertClientId_, this.handleAlert_, this);
-    this.am_.listen(os.alert.EventType.ALERT, this.handleAlert_, false, this);
+    this.am_.listen(EventType.ALERT, this.handleAlert_, false, this);
 
     $scope.$watch('reset', this.reset.bind(this));
     $scope.$on('$destroy', this.destroy.bind(this));
@@ -81,7 +83,7 @@ class Controller {
    * @protected
    */
   destroy() {
-    this.am_.unlisten(os.alert.EventType.ALERT, this.handleAlert_, false, this);
+    this.am_.unlisten(EventType.ALERT, this.handleAlert_, false, this);
     this.am_ = null;
     this.scope = null;
   }
@@ -122,10 +124,9 @@ class Controller {
       }
     }
 
-    os.ui.apply(this.scope);
+    apply(this.scope);
   }
 }
-
 
 /**
  * @enum {string}
@@ -134,7 +135,6 @@ Controller.CLASSES = {
   'Error': 'badge-danger',
   'Warning': 'badge-warning'
 };
-
 
 exports = {
   Controller,
