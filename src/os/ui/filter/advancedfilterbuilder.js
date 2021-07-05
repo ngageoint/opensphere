@@ -12,6 +12,7 @@ goog.require('os.ui.Module');
 goog.require('os.ui.filter.Expression');
 goog.require('os.ui.filter.ui.ExpressionNode');
 goog.require('os.ui.filter.ui.GroupNode');
+goog.require('os.ui.slick.SlickGridEvent');
 goog.require('os.ui.window.ConfirmUI');
 
 
