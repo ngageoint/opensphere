@@ -1,106 +1,104 @@
-goog.provide('os.ui.columnactions.AbstractColumnAction');
-goog.require('goog.structs.Map');
-
+goog.module('os.ui.columnactions.AbstractColumnAction');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * @abstract
- * @constructor
  */
-os.ui.columnactions.AbstractColumnAction = function() {
+class AbstractColumnAction {
   /**
-   * Column action description
-   * @type {string}
-   * @protected
+   * Constructor.
    */
-  this.description = '';
+  constructor() {
+    /**
+     * Column action description
+     * @type {string}
+     * @protected
+     */
+    this.description = '';
 
+
+    /**
+     * @type {Object.<string, (string|RegExp)>}
+     * @protected
+     */
+    this.regexps = {};
+  }
 
   /**
-   * @type {Object.<string, (string|RegExp)>}
-   * @protected
+   * Set the description
+   *
+   * @param {string} description
    */
-  this.regexps = {};
-};
+  setDescription(description) {
+    this.description = description;
+  }
 
+  /**
+   * Get the description
+   *
+   * @return {string} the string text of the description
+   */
+  getDescription() {
+    return this.description;
+  }
 
-/**
- * Set the description
- *
- * @param {string} description
- */
-os.ui.columnactions.AbstractColumnAction.prototype.setDescription = function(description) {
-  this.description = description;
-};
+  /**
+   * Get a represntation of the action for display.
+   *
+   * @abstract
+   * @param {*} value the value to be manipulated for display.
+   * @return {*}
+   */
+  toDisplay(value) {}
 
-
-/**
- * Get the description
- *
- * @return {string} the string text of the description
- */
-os.ui.columnactions.AbstractColumnAction.prototype.getDescription = function() {
-  return this.description;
-};
-
-
-/**
- * Get a represntation of the action for display.
- *
- * @abstract
- * @param {*} value the value to be manipulated for display.
- * @return {*}
- */
-os.ui.columnactions.AbstractColumnAction.prototype.toDisplay = function(value) {};
-
-
-/**
- * Set the regexps necessary to run this action
- *
- * @param {Object.<string, string>} regexps
- */
-os.ui.columnactions.AbstractColumnAction.prototype.setRegExps = function(regexps) {
-  for (var key in regexps) {
-    if (key != 'replace') {
-      this.regexps[key] = new RegExp(regexps[key], 'i');
-    } else {
-      this.regexps[key] = regexps[key];
+  /**
+   * Set the regexps necessary to run this action
+   *
+   * @param {Object.<string, string>} regexps
+   */
+  setRegExps(regexps) {
+    for (var key in regexps) {
+      if (key != 'replace') {
+        this.regexps[key] = new RegExp(regexps[key], 'i');
+      } else {
+        this.regexps[key] = regexps[key];
+      }
     }
   }
-};
 
+  /**
+   * Set the action to be performed
+   * Can come from a config, or be passed in.
+   *
+   * @abstract
+   * @param {*} action
+   */
+  setAction(action) {}
 
-/**
- * Set the action to be performed
- * Can come from a config, or be passed in.
- *
- * @abstract
- * @param {*} action
- */
-os.ui.columnactions.AbstractColumnAction.prototype.setAction = function(action) {};
+  /**
+   * Run the action
+   *
+   * @abstract
+   * @param {*} value
+   */
+  execute(value) {}
 
+  /**
+   * Whether or not this column action applies to the given criteria. The only required regex
+   * is <code>columnRegex</code>. If <code>sourceIdRegex</code> or <code>sourceUrlRegex</code>
+   * exist and the <code>sourceId</code> or <code>sourceUrl</code> parameter is supplied, then
+   * they are given higher priority than the column match and will fail first.
+   *
+   * @abstract
+   * @param {Object.<string, *>} context  The items to be matched.  They are meaningful to the concrete column
+   *                                          action class.
+   * @param {os.ui.columnactions.IColumnActionModel} a technology agnostic model that describes the table column.
+   * @param {*} value The value for the column
+   * @return {boolean} True if the column action applies, false otherwise.
+   *
+   */
+  matches(context, a, value) {}
+}
 
-/**
- * Run the action
- *
- * @abstract
- * @param {*} value
- */
-os.ui.columnactions.AbstractColumnAction.prototype.execute = function(value) {};
-
-
-/**
- * Whether or not this column action applies to the given criteria. The only required regex
- * is <code>columnRegex</code>. If <code>sourceIdRegex</code> or <code>sourceUrlRegex</code>
- * exist and the <code>sourceId</code> or <code>sourceUrl</code> parameter is supplied, then
- * they are given higher priority than the column match and will fail first.
- *
- * @abstract
- * @param {Object.<string, *>} context  The items to be matched.  They are meaningful to the concrete column
- *                                          action class.
- * @param {os.ui.columnactions.IColumnActionModel} a technology agnostic model that describes the table column.
- * @param {*} value The value for the column
- * @return {boolean} True if the column action applies, false otherwise.
- *
- */
-os.ui.columnactions.AbstractColumnAction.prototype.matches = function(context, a, value) {};
+exports = AbstractColumnAction;

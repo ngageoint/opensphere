@@ -4,6 +4,7 @@ goog.require('goog.string');
 goog.require('os.array');
 goog.require('os.ui');
 goog.require('os.ui.columnactions.ColumnActionEvent');
+goog.require('os.ui.columnactions.ColumnActionFormatterFn');
 goog.require('os.ui.columnactions.ColumnActionManager');
 goog.require('os.ui.formatter');
 goog.require('os.ui.slick.SlickColumnActionModel');

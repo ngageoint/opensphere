@@ -1,6 +1,5 @@
-goog.provide('os.ui.columnactions.IColumnActionModel');
-
-
+goog.module('os.ui.columnactions.IColumnActionModel');
+goog.module.declareLegacyNamespace();
 
 /**
  * The interface that should be implemented by all column types that want to use a column action.
@@ -8,18 +7,18 @@ goog.provide('os.ui.columnactions.IColumnActionModel');
  *
  * @interface
  */
-os.ui.columnactions.IColumnActionModel = function() {};
+class IColumnActionModel {
+  /**
+   * Get the column title
+   * @return {string}
+   */
+  getTitle() {}
 
+  /**
+   * Get the name of the dataField supporting the column.
+   * @return {string}
+   */
+  getDataField() {}
+}
 
-/**
- * Get the column title
- * @return {string}
- */
-os.ui.columnactions.IColumnActionModel.prototype.getTitle;
-
-
-/**
- * Get the name of the dataField supporting the column.
- * @return {string}
- */
-os.ui.columnactions.IColumnActionModel.prototype.getDataField;
+exports = IColumnActionModel;
