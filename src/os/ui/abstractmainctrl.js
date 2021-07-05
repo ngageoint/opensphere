@@ -22,7 +22,7 @@ goog.require('os.net.RequestHandlerFactory');
 goog.require('os.plugin.PluginManager');
 goog.require('os.time.replacers');
 goog.require('os.ui');
-goog.require('os.ui.alert.alertPopupDirective');
+goog.require('os.ui.alert.AlertPopupUI');
 goog.require('os.ui.consentDirective');
 goog.require('os.ui.globalMenuDirective');
 goog.require('os.ui.help.EventType');

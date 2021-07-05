@@ -3,7 +3,7 @@ goog.provide('os.ui.navbaroptions.searchbox');
 
 goog.require('os.ui.ScaleLine');
 goog.require('os.ui.addDataButtonDirective');
-goog.require('os.ui.alert.alertButtonDirective');
+goog.require('os.ui.alert.AlertButtonUI');
 goog.require('os.ui.clear.clearButtonDirective');
 goog.require('os.ui.datePanelDirective');
 goog.require('os.ui.draw.drawControlsDirective');
