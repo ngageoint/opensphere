@@ -1,22 +1,23 @@
 goog.require('os.data.ConfigDescriptor');
-goog.require('os.ui.column.mapping.ColumnMappingFormCtrl');
-goog.require('os.ui.column.mapping.columnMappingFormDirective');
+goog.require('os.ui.column.mapping.ColumnMappingFormUI');
 goog.require('plugin.ogc.GeoServer');
 goog.require('plugin.ogc.OGCLayerDescriptor');
 goog.require('plugin.ogc.wmts.WMTSServer');
 
 
-describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
+describe('os.ui.column.mapping.ColumnMappingFormUI', function() {
+  const {Controller} = goog.module.get('os.ui.column.mapping.ColumnMappingFormUI');
+
   var $scope;
   var cmForm;
   var element;
 
   var mapping = new os.column.ColumnMapping();
 
-  var ogclayerMock = new plugin.ogc.OGCLayerDescriptor;
-  var providerMock = new plugin.ogc.GeoServer;
-  var ogclayerMock2 = new plugin.ogc.OGCLayerDescriptor;
-  var providerMock2 = new plugin.ogc.GeoServer;
+  var ogclayerMock = new plugin.ogc.OGCLayerDescriptor();
+  var providerMock = new plugin.ogc.GeoServer();
+  var ogclayerMock2 = new plugin.ogc.OGCLayerDescriptor();
+  var providerMock2 = new plugin.ogc.GeoServer();
   var descriptorList = [];
 
 
@@ -52,7 +53,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
   });
 
   it('should initialize correctly', function() {
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
     expect(formCtrl['element_']).toBe(element);
     expect(formCtrl['scope_']).toBe($scope);
     expect(formCtrl['timeout_']).toBe(timeout);
@@ -70,7 +71,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
     descriptorList.push(ogclayerMock);
     descriptorList.push(ogclayerMock2);
 
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     expect(formCtrl['cachedDescriptorList_'].length).toBe(2);
   });
@@ -80,7 +81,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
     descriptorList.push(ogclayerMock);
     descriptorList.push(ogclayerMock2);
 
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     expect(formCtrl['tree'].length).toBe(2);
     formCtrl.add();
@@ -92,7 +93,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
     descriptorList.push(ogclayerMock);
     descriptorList.push(ogclayerMock2);
 
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     expect(formCtrl['cachedDescriptorList_'].length).toBe(2);
   });
@@ -103,7 +104,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
     descriptorList.push(ogclayerMock2);
 
     $scope['columnMapping'] = mapping;
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     formCtrl.validate();
 
@@ -118,19 +119,19 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
     spyOn(os.column.ColumnMappingManager.getInstance(), 'getOwnerMapping').andReturn(column);
     column.addColumn('bob', 'test2');
 
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     formCtrl.validate();
 
-    expect(formCtrl['otherCMText']).toBe('One of your columns (<b></b>) is currently'
-    + ' in use on the <b>null</b> column association.');
+    expect(formCtrl['otherCMText']).toBe('One of your columns (<b></b>) is currently ' +
+      'in use on the <b>null</b> column association.');
     expect(cmForm.$valid).toBe(false);
   });
 
   it('should return the all descriptors in the descriptor list', function() {
     descriptorList.push(ogclayerMock);
     descriptorList.push(ogclayerMock);
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     var actuallist = formCtrl.getLayersFunction();
     expect(actuallist.length).toBe(2);
@@ -146,14 +147,14 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
     spyOn(invalidDescriptor, 'getDataProvider').andReturn(wmtsServer);
     descriptorList.push(invalidDescriptor);
 
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     var actuallist = formCtrl.getLayersFunction();
     expect(actuallist.length).toBe(2);
   });
 
   it('should confirm an edit of column mappings', function() {
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     spyOn(formCtrl, 'cancel');
     formCtrl.confirm();
@@ -161,7 +162,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
   });
 
   it('should call window close', function() {
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     spyOn(os.ui.window, 'close');
 
@@ -174,7 +175,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
     var columnModelNode = new os.ui.column.mapping.ColumnModelNode;
     var column = new os.column.ColumnMapping;
     columnModelNode.setColumnModel(column);
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     spyOn(formCtrl, 'validateLayers_');
     formCtrl.add();
@@ -191,7 +192,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
 
     $scope['columnMapping'] = mapping;
 
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     formCtrl.validateLayers_();
 
@@ -217,7 +218,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
 
     $scope['columnMapping'] = mapping;
 
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     formCtrl.validateLayers_();
 
