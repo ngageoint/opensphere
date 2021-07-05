@@ -3,7 +3,7 @@ goog.provide('os.ui.wiz.OptionsStepCtrl');
 
 goog.require('os');
 goog.require('os.ui.Module');
-goog.require('os.ui.color.colorPickerDirective');
+goog.require('os.ui.color.ColorPickerUI');
 goog.require('os.ui.icon.iconPickerDirective');
 goog.require('os.ui.layer.vectorStyleControlsDirective');
 goog.require('os.ui.util.validationMessageDirective');

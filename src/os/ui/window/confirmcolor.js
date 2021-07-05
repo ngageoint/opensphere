@@ -2,7 +2,7 @@ goog.provide('os.ui.window.ConfirmColorCtrl');
 goog.provide('os.ui.window.confirmColorDirective');
 
 goog.require('os.ui.Module');
-goog.require('os.ui.color.colorPickerDirective');
+goog.require('os.ui.color.ColorPickerUI');
 goog.require('os.ui.window');
 goog.require('os.ui.window.ConfirmUI');
 
