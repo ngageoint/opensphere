@@ -14,13 +14,13 @@ const {Controller: ColorPaletteCtrl, directiveTag: colorPaletteUi} = goog.requir
 /**
  * @type {string}
  */
-const colorPickerSelector = 'js-color-picker';
+const selector = 'js-color-picker';
 
 /**
  * @type {string}
  */
 const template = '<button type="button" class="btn btn-sm bg-transparent border rounded ' +
-    'flex-shrink-0 c-colorpicker ' + colorPickerSelector +
+    'flex-shrink-0 c-colorpicker ' + selector +
     '" ng-click="colorPicker.togglePopup()" ng-disabled=disabled>' +
       '<i class="fa" ng-class="color && \'fa-square\' || \'fa-ban\'" ng-style="{\'color\': color}"></i>' +
     '</button>';
@@ -265,5 +265,6 @@ class Controller {
 exports = {
   Controller,
   directive,
-  directiveTag
+  directiveTag,
+  selector
 };
