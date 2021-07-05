@@ -1,8 +1,11 @@
-goog.provide('os.ui.clear.ClearCtrl');
-goog.provide('os.ui.clear.clearDirective');
+goog.module('os.ui.clear.ClearUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
-goog.require('os.ui.window');
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const ClearManager = goog.require('os.ui.clear.ClearManager');
+const {close} = goog.require('os.ui.window');
 
 
 /**
@@ -10,109 +13,122 @@ goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-os.ui.clear.clearDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    scope: true,
-    templateUrl: os.ROOT + 'views/window/clear.html',
-    controller: os.ui.clear.ClearCtrl,
-    controllerAs: 'clear'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  scope: true,
+  templateUrl: ROOT + 'views/window/clear.html',
+  controller: Controller,
+  controllerAs: 'clear'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'clear';
 
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('clear', [os.ui.clear.clearDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for the Clear Window
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$timeout} $timeout
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.clear.ClearCtrl = function($scope, $element, $timeout) {
+class Controller {
   /**
-   * @type {?angular.JQLite}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    /**
+     * The Angular scope.
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
+
+    /**
+     * The clear entries to display
+     * @type {!Array<!osx.ChecklistItem>}
+     */
+    this['entries'] = Object.values(ClearManager.getInstance().getEntries());
+
+    // fired when the user closes the window with the 'x' button
+    $scope.$on(WindowEventType.CANCEL, this.cancelInternal_.bind(this));
+  }
+
+  /**
+   * Angular $onDestroy lifecycle function.
+   */
+  $onDestroy() {
+    this.element_ = null;
+    this.scope_ = null;
+  }
+
+  /**
+   * Angular $onInit lifecycle function.
+   */
+  $onInit() {
+    this.scope_.$emit(WindowEventType.READY);
+  }
+
+  /**
+   * Close the window
+   *
    * @private
    */
-  this.element_ = $element;
+  close_() {
+    if (this.element_) {
+      close(this.element_);
+    }
+  }
 
   /**
-   * The clear entries to display
-   * @type {!Array<!osx.ChecklistItem>}
+   * Handle user hitting the window 'x' button
+   *
+   * @private
    */
-  this['entries'] = goog.object.getValues(os.ui.clearManager.getEntries());
-
-  // fired when the user closes the window with the 'x' button
-  $scope.$on(os.ui.WindowEventType.CANCEL, this.cancelInternal_.bind(this));
-
-  $scope.$on('$destroy', this.onDestroy_.bind(this));
-  $timeout(function() {
-    $scope.$emit(os.ui.WindowEventType.READY);
-  });
-};
-
-
-/**
- * Clean up references/listeners.
- *
- * @private
- */
-os.ui.clear.ClearCtrl.prototype.onDestroy_ = function() {
-  this.element_ = null;
-};
-
-
-/**
- * Close the window
- *
- * @private
- */
-os.ui.clear.ClearCtrl.prototype.close_ = function() {
-  if (this.element_) {
-    os.ui.window.close(this.element_);
+  cancelInternal_() {
+    // reset clear entries from settings
+    ClearManager.getInstance().reset();
   }
-};
 
+  /**
+   * Handle user clicking the Cancel button
+   *
+   * @export
+   */
+  cancel() {
+    // reset and close the window
+    this.cancelInternal_();
+    this.close_();
+  }
 
-/**
- * Handle user hitting the window 'x' button
- *
- * @private
- */
-os.ui.clear.ClearCtrl.prototype.cancelInternal_ = function() {
-  // reset clear entries from settings
-  os.ui.clearManager.reset();
-};
+  /**
+   * Handle user clicking the OK button
+   *
+   * @export
+   */
+  accept() {
+    // clear selected entries and close the window
+    ClearManager.getInstance().clear();
+    this.close_();
+  }
+}
 
-
-/**
- * Handle user clicking the Cancel button
- *
- * @export
- */
-os.ui.clear.ClearCtrl.prototype.cancel = function() {
-  // reset and close the window
-  this.cancelInternal_();
-  this.close_();
-};
-
-
-/**
- * Handle user clicking the OK button
- *
- * @export
- */
-os.ui.clear.ClearCtrl.prototype.accept = function() {
-  // clear selected entries and close the window
-  os.ui.clearManager.clear();
-  this.close_();
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

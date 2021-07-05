@@ -87,7 +87,7 @@ os.ui.state.StateImportCtrl = function($scope, $element, $timeout) {
   /**
    * @type {boolean}
    */
-  this['showClear'] = goog.object.getCount(os.ui.clearManager.getEntries()) > 0;
+  this['showClear'] = goog.object.getCount(os.ui.clear.ClearManager.getInstance().getEntries()) > 0;
 
   /**
    * @type {boolean}
@@ -127,7 +127,7 @@ os.ui.state.StateImportCtrl.prototype.accept = function() {
   if (this['showClear']) {
     os.settings.set('state.clear', this['clear']);
     if (this['clear']) {
-      os.ui.clearManager.clear(true, ['mapPosition']);
+      os.ui.clear.ClearManager.getInstance().clear(true, ['mapPosition']);
     }
   }
 

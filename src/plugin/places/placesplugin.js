@@ -10,7 +10,7 @@ const os = goog.require('os');
 const LayerConfigManager = goog.require('os.layer.config.LayerConfigManager');
 const AbstractPlugin = goog.require('os.plugin.AbstractPlugin');
 const ClearEntry = goog.require('os.ui.clear.ClearEntry');
-const clearManager = goog.require('os.ui.clearManager');
+const ClearManager = goog.require('os.ui.clear.ClearManager');
 const ImportMethod = goog.require('os.ui.file.method.ImportMethod');
 const mime = goog.require('plugin.file.kml.mime');
 const places = goog.require('plugin.places');
@@ -84,7 +84,7 @@ class PlacesPlugin extends AbstractPlugin {
         PlacesLayerConfig.ID, PlacesLayerConfig);
 
     // clear option
-    clearManager.addEntry(new ClearEntry('places', 'Places', PlacesHide,
+    ClearManager.getInstance().addEntry(new ClearEntry('places', 'Places', PlacesHide,
         'Clear all Places'));
   }
 
