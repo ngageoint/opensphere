@@ -1,10 +1,11 @@
-goog.provide('os.ui.action.EventType');
+goog.module('os.ui.action.EventType');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * @enum {string}
  */
-os.ui.action.EventType = {
+exports = {
   ENABLED_ACTIONS_CHANGED: 'enabledActionsChanged',
   ZOOM: 'zoom'
 };

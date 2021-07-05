@@ -1,49 +1,54 @@
-goog.provide('os.ui.action.MenuItemList');
-goog.require('os.ui.action.IMenuItem');
-goog.require('os.ui.action.MenuItem');
+goog.module('os.ui.action.MenuItemList');
+goog.module.declareLegacyNamespace();
 
+const MenuItem = goog.require('os.ui.action.MenuItem');
+
+const IMenuItem = goog.requireType('os.ui.action.IMenuItem');
+const MenuOptions = goog.requireType('os.ui.action.MenuOptions');
 
 
 /**
  * Represents a menu item which is an entry point to a menu items as a sub-menu.
  *
- * @implements {os.ui.action.IMenuItem}
- * @extends {os.ui.action.MenuItem}
- * @param {!string} name
- * @param {?os.ui.action.MenuOptions=} opt_menuOptions Optional menu options
+ * @implements {IMenuItem}
  * @deprecated Please use {@link os.ui.menu.Menu} and {@link os.ui.menu.MenuItem} instead
- * @constructor
  */
-os.ui.action.MenuItemList = function(name, opt_menuOptions) {
-  // call super constructor
-  os.ui.action.MenuItemList.base(this, 'constructor', name, null, opt_menuOptions);
+class MenuItemList extends MenuItem {
+  /**
+   * Constructor.
+   * @param {!string} name
+   * @param {?MenuOptions=} opt_menuOptions Optional menu options
+   */
+  constructor(name, opt_menuOptions) {
+    // call super constructor
+    super(name, null, opt_menuOptions);
+
+    /**
+     * The list of menu items (i.e. the sub-menu) contained by this menu item.
+     * @type {!Array<MenuItem>}
+     * @private
+     */
+    this.menuItems_ = [];
+  }
 
   /**
-   * The list of menu items (i.e. the sub-menu) contained by this menu item.
-   * @type {!Array.<os.ui.action.MenuItem>}
-   * @private
+   * Add an item to the list (sub-menu)
+   *
+   * @param {!MenuItem} menuItem
    */
-  this.menuItems_ = [];
-};
-goog.inherits(os.ui.action.MenuItemList, os.ui.action.MenuItem);
+  addItem(menuItem) {
+    this.menuItems_.push(menuItem);
+  }
 
+  /**
+   * Retrieve the list of menu items (sub-menu)
+   *
+   * @return {!Array<MenuItem>}
+   * @export
+   */
+  getItems() {
+    return this.menuItems_;
+  }
+}
 
-/**
- * Add an item to the list (sub-menu)
- *
- * @param {!os.ui.action.MenuItem} menuItem
- */
-os.ui.action.MenuItemList.prototype.addItem = function(menuItem) {
-  this.menuItems_.push(menuItem);
-};
-
-
-/**
- * Retrieve the list of menu items (sub-menu)
- *
- * @return {!Array.<os.ui.action.MenuItem>}
- * @export
- */
-os.ui.action.MenuItemList.prototype.getItems = function() {
-  return this.menuItems_;
-};
+exports = MenuItemList;

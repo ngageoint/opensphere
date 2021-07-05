@@ -1,25 +1,25 @@
-goog.provide('os.ui.action.IActionTarget');
-
+goog.module('os.ui.action.IActionTarget');
+goog.module.declareLegacyNamespace();
 
 
 /**
  * @interface
  */
-os.ui.action.IActionTarget = function() {};
+class IActionTarget {
+  /**
+   * Calls the function associated with the provided action.
+   * @param {string} type
+   */
+  callAction(type) {}
 
+  /**
+   * If the class supports the given action type.
+   * @param {string} type The action type.
+   * @param {*=} opt_actionArgs Data passed along with the action event, provides context to this action of what else
+   *   is involved in a multiselect
+   * @return {boolean}
+   */
+  supportsAction(type, opt_actionArgs) {}
+}
 
-/**
- * Calls the function associated with the provided action.
- * @param {string} type
- */
-os.ui.action.IActionTarget.prototype.callAction;
-
-
-/**
- * If the class supports the given action type.
- * @param {string} type The action type.
- * @param {*=} opt_actionArgs Data passed along with the action event, provides context to this action of what else
- *   is involved in a multiselect
- * @return {boolean}
- */
-os.ui.action.IActionTarget.prototype.supportsAction;
+exports = IActionTarget;
