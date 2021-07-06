@@ -1,139 +1,136 @@
-goog.provide('os.config.storage.SettingsObjectStorage');
-goog.require('goog.async.Deferred');
-goog.require('goog.object');
-goog.require('os.array');
-goog.require('os.config.storage.ISettingsReadableStorage');
-goog.require('os.config.storage.ISettingsStorage');
-goog.require('os.config.storage.ISettingsWritableStorage');
-goog.require('os.config.storage.SettingsWritableStorageType');
+goog.module('os.config.storage.SettingsObjectStorage');
+goog.module.declareLegacyNamespace();
 
+const Deferred = goog.require('goog.async.Deferred');
+const googObject = goog.require('goog.object');
+const ConfigType = goog.require('os.config.ConfigType');
+const ISettingsReadableStorage = goog.require('os.config.storage.ISettingsReadableStorage');
+const ISettingsStorage = goog.require('os.config.storage.ISettingsStorage');
+const ISettingsWritableStorage = goog.require('os.config.storage.ISettingsWritableStorage');
+const SettingsWritableStorageType = goog.require('os.config.storage.SettingsWritableStorageType');
 
 
 /**
  * A storage for settings which reads/writes to an in-memory JSON object.  This is not used in production,
  * but is useful for transient settings for things like unit tests.
  *
- * @implements {os.config.storage.ISettingsStorage<*>}
- * @implements {os.config.storage.ISettingsReadableStorage<*>}
- * @implements {os.config.storage.ISettingsWritableStorage<*>}
- * @constructor
- * @param {!Array.<!string>} namespaces
- * @param {Object.<string, *>=} opt_initialSettings
+ * @implements {ISettingsStorage<*>}
+ * @implements {ISettingsReadableStorage<*>}
+ * @implements {ISettingsWritableStorage<*>}
  */
-os.config.storage.SettingsObjectStorage = function(namespaces, opt_initialSettings) {
+class SettingsObjectStorage {
   /**
-   * @type {!Array.<!string>}
-   * @protected
+   * Constructor.
+   * @param {!Array<!string>} namespaces
+   * @param {Object<string, *>=} opt_initialSettings
    */
-  this.namespaces = namespaces;
+  constructor(namespaces, opt_initialSettings) {
+    /**
+     * @inheritDoc
+     */
+    this.canAccess = true;
 
-  /**
-   * The settings storage object
-   * @type {!Object.<string, *>}
-   */
-  this.store = {};
+    /**
+     * @inheritDoc
+     */
+    this.name = 'object';
 
-  if (opt_initialSettings) {
-    this.setSettings_(opt_initialSettings);
-  }
-};
-os.implements(os.config.storage.SettingsObjectStorage, os.config.storage.ISettingsStorage.ID);
-os.implements(os.config.storage.SettingsObjectStorage, os.config.storage.ISettingsReadableStorage.ID);
-os.implements(os.config.storage.SettingsObjectStorage, os.config.storage.ISettingsWritableStorage.ID);
+    /**
+     * @inheritDoc
+     */
+    this.writeType = SettingsWritableStorageType.LOCAL;
 
+    /**
+     * @inheritDoc
+     */
+    this.needsCleared = false;
 
-/**
- * @inheritDoc
- */
-os.config.storage.SettingsObjectStorage.prototype.canAccess = true;
+    /**
+     * @inheritDoc
+     */
+    this.canInsertDeltas = false;
 
+    /**
+     * @type {!Array<!string>}
+     * @protected
+     */
+    this.namespaces = namespaces;
 
-/**
- * @inheritDoc
- */
-os.config.storage.SettingsObjectStorage.prototype.name = 'object';
+    /**
+     * The settings storage object
+     * @type {!Object<string, *>}
+     */
+    this.store = {};
 
-
-/**
- * @inheritDoc
- */
-os.config.storage.SettingsObjectStorage.prototype.writeType = os.config.storage.SettingsWritableStorageType.LOCAL;
-
-
-/**
- * @inheritDoc
- */
-os.config.storage.SettingsObjectStorage.prototype.needsCleared = false;
-
-
-/**
- * @inheritDoc
- */
-os.config.storage.SettingsObjectStorage.prototype.canInsertDeltas = false;
-
-
-/**
- * @inheritDoc
- */
-os.config.storage.SettingsObjectStorage.prototype.init = function() {
-  try {
-    for (var i = 0, ii = this.namespaces.length; i < ii; i++) {
-      var ns = this.namespaces[i];
-      this.store[ns] = this.store[ns] || {};
+    if (opt_initialSettings) {
+      this.setSettings_(opt_initialSettings);
     }
-    return goog.async.Deferred.succeed();
-  } catch (e) {
-    return goog.async.Deferred.fail('Failed to init settings: ' + e.message);
   }
-};
 
-
-/**
- * @inheritDoc
- */
-os.config.storage.SettingsObjectStorage.prototype.getSettings = function() {
-  var prefs = {};
-  prefs[os.config.ConfigType.PREFERENCE] = goog.object.unsafeClone(this.store);
-  return goog.async.Deferred.succeed(prefs);
-};
-
-
-/**
- * @inheritDoc
- */
-os.config.storage.SettingsObjectStorage.prototype.setSettings = function(map, opt_delete) {
-  try {
-    this.setSettings_(map);
-    return goog.async.Deferred.succeed();
-  } catch (e) {
-    return goog.async.Deferred.fail('Failed to save settings: ' + e.message);
+  /**
+   * @inheritDoc
+   */
+  init() {
+    try {
+      for (var i = 0, ii = this.namespaces.length; i < ii; i++) {
+        var ns = this.namespaces[i];
+        this.store[ns] = this.store[ns] || {};
+      }
+      return Deferred.succeed();
+    } catch (e) {
+      return Deferred.fail('Failed to init settings: ' + e.message);
+    }
   }
-};
 
-
-/**
- * Apply the keys/values of the given map to settings
- *
- * @param {Object.<string, *>} map
- * @private
- */
-os.config.storage.SettingsObjectStorage.prototype.setSettings_ = function(map) {
-  os.array.forEach(this.namespaces, function(namespace) {
-    var prefs = map[namespace] || {};
-    this.store[namespace] = prefs;
-  }, this);
-};
-
-
-/**
- * @inheritDoc
- */
-os.config.storage.SettingsObjectStorage.prototype.deleteSettings = function(ns) {
-  try {
-    delete this.store[ns];
-    return goog.async.Deferred.succeed();
-  } catch (e) {
-    return goog.async.Deferred.fail('Failed to delete settings:' + e.message);
+  /**
+   * @inheritDoc
+   */
+  getSettings() {
+    var prefs = {};
+    prefs[ConfigType.PREFERENCE] = googObject.unsafeClone(this.store);
+    return Deferred.succeed(prefs);
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  setSettings(map, opt_delete) {
+    try {
+      this.setSettings_(map);
+      return Deferred.succeed();
+    } catch (e) {
+      return Deferred.fail('Failed to save settings: ' + e.message);
+    }
+  }
+
+  /**
+   * Apply the keys/values of the given map to settings
+   *
+   * @param {Object<string, *>} map
+   * @private
+   */
+  setSettings_(map) {
+    this.namespaces.forEach(function(namespace) {
+      var prefs = map[namespace] || {};
+      this.store[namespace] = prefs;
+    }, this);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  deleteSettings(ns) {
+    try {
+      delete this.store[ns];
+      return Deferred.succeed();
+    } catch (e) {
+      return Deferred.fail('Failed to delete settings:' + e.message);
+    }
+  }
+}
+os.implements(SettingsObjectStorage, ISettingsStorage.ID);
+os.implements(SettingsObjectStorage, ISettingsReadableStorage.ID);
+os.implements(SettingsObjectStorage, ISettingsWritableStorage.ID);
+
+
+exports = SettingsObjectStorage;
