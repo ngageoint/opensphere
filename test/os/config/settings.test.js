@@ -1,4 +1,6 @@
 goog.require('goog.async.Deferred');
+goog.require('os.config');
+goog.require('os.config.EventType');
 goog.require('os.config.Settings');
 goog.require('os.config.storage.SettingsFile');
 goog.require('os.config.storage.SettingsLocalStorage');
@@ -10,16 +12,28 @@ goog.require('test.os.config.SettingsUtil');
 
 
 describe('os.config.Settings', function() {
+  const Deferred = goog.module.get('goog.async.Deferred');
+  const osConfig = goog.module.get('os.config');
+  const EventType = goog.module.get('os.config.EventType');
+  const Settings = goog.module.get('os.config.Settings');
+  const SettingsFile = goog.module.get('os.config.storage.SettingsFile');
+  const SettingsLocalStorage = goog.module.get('os.config.storage.SettingsLocalStorage');
+  const SettingsObjectStorage = goog.module.get('os.config.storage.SettingsObjectStorage');
+  const SettingsWritableStorageType = goog.module.get('os.config.storage.SettingsWritableStorageType');
+  const RequestHandlerFactory = goog.module.get('os.net.RequestHandlerFactory');
+  const SameDomainHandler = goog.module.get('os.net.SameDomainHandler');
+  const SettingsUtil = goog.module.get('test.os.config.SettingsUtil');
+
   window.localStorage.clear();
-  os.net.RequestHandlerFactory.addHandler(os.net.SameDomainHandler);
+  RequestHandlerFactory.addHandler(SameDomainHandler);
 
   beforeEach(function() {
     window.localStorage.clear();
   });
 
   it('should not return a config until initialized', function() {
-    var settings = new os.config.Settings();
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    var settings = new Settings();
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       expect(settings.get()).toBeUndefined();
@@ -27,12 +41,11 @@ describe('os.config.Settings', function() {
   });
 
   it('should load settings without overrides', function() {
-    var settings = new os.config.Settings();
+    var settings = new Settings();
     var registry = settings.getStorageRegistry();
-    registry.addStorage(new os.config.storage.SettingsFile(
-        '/base/test/os/config/files/settings_noOverrides.json'));
+    registry.addStorage(new SettingsFile('/base/test/os/config/files/settings_noOverrides.json'));
 
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       expect(settings.get(['a', 'adminField'])).toBe('a');
@@ -43,12 +56,11 @@ describe('os.config.Settings', function() {
   });
 
   it('should load settings with overrides', function() {
-    var settings = new os.config.Settings();
+    var settings = new Settings();
     var registry = settings.getStorageRegistry();
-    registry.addStorage(new os.config.storage.SettingsFile(
-        '/base/test/os/config/files/settings_twoOverrides.json'));
+    registry.addStorage(new SettingsFile('/base/test/os/config/files/settings_twoOverrides.json'));
 
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       expect(settings.get(['a', 'adminField'])).toBe('B');
@@ -64,11 +76,10 @@ describe('os.config.Settings', function() {
   });
 
   it('should load settings with overrides', function() {
-    var settings = new os.config.Settings();
+    var settings = new Settings();
     var registry = settings.getStorageRegistry();
-    registry.addStorage(new os.config.storage.SettingsFile(
-        '/base/test/os/config/files/settings_overrides.json'));
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    registry.addStorage(new SettingsFile('/base/test/os/config/files/settings_overrides.json'));
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       expect(settings.get(['a', 'adminField'])).toBe('B');
@@ -93,14 +104,12 @@ describe('os.config.Settings', function() {
     };
     window.localStorage.setItem('unittest::settings', JSON.stringify(lsJson));
 
-    var settings = new os.config.Settings();
+    var settings = new Settings();
     var registry = settings.getStorageRegistry();
 
-    registry.addStorage(new os.config.storage.SettingsFile(
-        '/base/test/os/config/files/settings_overrides.json'));
-    registry.addStorage(new os.config.storage.SettingsLocalStorage(
-        'unittest', [os.config.coreNs, os.config.appNs]));
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    registry.addStorage(new SettingsFile('/base/test/os/config/files/settings_overrides.json'));
+    registry.addStorage(new SettingsLocalStorage('unittest', [osConfig.coreNs, osConfig.appNs]));
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       expect(settings.get(['a', 'adminField'])).toBe('B');
@@ -124,17 +133,14 @@ describe('os.config.Settings', function() {
     var lsJson = {'favorite': ['seeded'], 'other': 'otherVal'};
     window.localStorage.setItem('unittest::settings', JSON.stringify(lsJson));
 
-    var settings = new os.config.Settings();
+    var settings = new Settings();
     var registry = settings.getStorageRegistry();
 
-    registry.addStorage(
-        new os.config.storage.SettingsLocalStorage(
-            'unittest', [os.config.coreNs, os.config.appNs]));
-    registry.addStorage(
-        new os.config.storage.SettingsObjectStorage(
-            [os.config.coreNs, os.config.appNs], {'core': {'favorite': ['stored']}}));
+    registry.addStorage(new SettingsLocalStorage('unittest', [osConfig.coreNs, osConfig.appNs]));
+    registry.addStorage(new SettingsObjectStorage([osConfig.coreNs, osConfig.appNs],
+        {'core': {'favorite': ['stored']}}));
 
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       var favorites = settings.get('favorite');
@@ -147,16 +153,16 @@ describe('os.config.Settings', function() {
   });
 
   it('should not persist changes to admin keys', function() {
-    var settings = new os.config.Settings();
+    var settings = new Settings();
     var registry = settings.getStorageRegistry();
-    var fileStorage = new os.config.storage.SettingsFile('/base/test/os/config/files/settings_noOverrides.json');
+    var fileStorage = new SettingsFile('/base/test/os/config/files/settings_noOverrides.json');
     registry.addStorage(fileStorage);
-    var objectStorage = new os.config.storage.SettingsObjectStorage([os.config.appNs]);
+    var objectStorage = new SettingsObjectStorage([osConfig.appNs]);
     registry.addStorage(objectStorage);
 
     var delayedSave = false;
 
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       spyOn(objectStorage, 'setSettings').andCallThrough();
@@ -183,11 +189,10 @@ describe('os.config.Settings', function() {
   });
 
   it('should send an event when value changes', function() {
-    var settings = new os.config.Settings();
+    var settings = new Settings();
     var registry = settings.getStorageRegistry();
-    registry.addStorage(new os.config.storage.SettingsFile(
-        '/base/test/os/config/files/settings_noOverrides.json'));
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    registry.addStorage(new SettingsFile('/base/test/os/config/files/settings_noOverrides.json'));
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       var changeEvent;
@@ -209,7 +214,7 @@ describe('os.config.Settings', function() {
   });
 
   it('should send an event on update', function() {
-    var settings = new os.config.Settings();
+    var settings = new Settings();
     settings.init('whocares', 'test.os.config.with');
 
     var count = 0;
@@ -217,7 +222,7 @@ describe('os.config.Settings', function() {
       count++;
     };
 
-    settings.listenOnce(os.config.EventType.UPDATED, listener);
+    settings.listenOnce(EventType.UPDATED, listener);
 
     runs(function() {
       settings.update();
@@ -234,10 +239,10 @@ describe('os.config.Settings', function() {
 
   describe('delete keys', function() {
     it('should include keys to delete when value is mutated', function() {
-      var settings = new os.config.Settings();
-      var objectStorage = new os.config.storage.SettingsObjectStorage([os.config.appNs]);
+      var settings = new Settings();
+      var objectStorage = new SettingsObjectStorage([osConfig.appNs]);
       settings.getStorageRegistry().addStorage(objectStorage);
-      test.os.config.SettingsUtil.initAndLoad(settings);
+      SettingsUtil.initAndLoad(settings);
 
       var delayedSave = false;
 
@@ -271,10 +276,10 @@ describe('os.config.Settings', function() {
     });
 
     it('should delete keys of an object', function() {
-      var settings = new os.config.Settings();
-      var objectStorage = new os.config.storage.SettingsObjectStorage([os.config.appNs]);
+      var settings = new Settings();
+      var objectStorage = new SettingsObjectStorage([osConfig.appNs]);
       settings.getStorageRegistry().addStorage(objectStorage);
-      test.os.config.SettingsUtil.initAndLoad(settings);
+      SettingsUtil.initAndLoad(settings);
 
       var delayedSave = false;
       var eventFired = false;
@@ -315,10 +320,10 @@ describe('os.config.Settings', function() {
     });
 
     it('should delete keys of an array', function() {
-      var settings = new os.config.Settings();
-      var objectStorage = new os.config.storage.SettingsObjectStorage([os.config.appNs]);
+      var settings = new Settings();
+      var objectStorage = new SettingsObjectStorage([osConfig.appNs]);
       settings.getStorageRegistry().addStorage(objectStorage);
-      test.os.config.SettingsUtil.initAndLoad(settings);
+      SettingsUtil.initAndLoad(settings);
 
       var delayedSave = false;
       var eventFired = false;
@@ -367,13 +372,11 @@ describe('os.config.Settings', function() {
     };
     window.localStorage.setItem('unittest::settings', JSON.stringify(lsJson));
 
-    var settings = new os.config.Settings();
+    var settings = new Settings();
     var registry = settings.getStorageRegistry();
-    registry.addStorage(new os.config.storage.SettingsFile(
-        '/base/test/os/config/files/settings_twoOverrides.json'));
-    registry.addStorage(new os.config.storage.SettingsLocalStorage(
-        'unittest', [os.config.coreNs, os.config.appNs]));
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    registry.addStorage(new SettingsFile('/base/test/os/config/files/settings_twoOverrides.json'));
+    registry.addStorage(new SettingsLocalStorage('unittest', [osConfig.coreNs, osConfig.appNs]));
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       expect(settings.get(['a', 'adminField'])).toBe('B');
@@ -394,8 +397,8 @@ describe('os.config.Settings', function() {
   });
 
   it('should continue with settings disabled if no storages are registered', function() {
-    var settings = new os.config.Settings();
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    var settings = new Settings();
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       expect(settings.isInitialized()).toBe(true);
@@ -405,10 +408,10 @@ describe('os.config.Settings', function() {
   });
 
   it('should continue with settings disabled if no writable storages are registered', function() {
-    var settings = new os.config.Settings();
-    settings.getStorageRegistry().addStorage(new os.config.storage.SettingsFile(
+    var settings = new Settings();
+    settings.getStorageRegistry().addStorage(new SettingsFile(
         '/base/test/os/config/files/settings_noOverrides.json'));
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       expect(settings.isInitialized()).toBe(true);
@@ -418,23 +421,22 @@ describe('os.config.Settings', function() {
   });
 
   it('should disable persistence of no storage of given type is registered', function() {
-    var settings = new os.config.Settings();
+    var settings = new Settings();
 
     // register a file and a local object store
-    settings.getStorageRegistry().addStorage(new os.config.storage.SettingsFile(
-        '/base/test/os/config/files/settings_noOverrides.json'));
-    settings.getStorageRegistry().addStorage(new os.config.storage.SettingsObjectStorage([os.config.appNs]));
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    settings.getStorageRegistry().addStorage(new SettingsFile('/base/test/os/config/files/settings_noOverrides.json'));
+    settings.getStorageRegistry().addStorage(new SettingsObjectStorage([osConfig.appNs]));
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       // defaults to local
       expect(settings.getPersistenceEnabled()).toBe(true);
       // change it to remote
-      settings.setWriteStorageType(os.config.storage.SettingsWritableStorageType.REMOTE);
+      settings.setWriteStorageType(SettingsWritableStorageType.REMOTE);
       // can't find it, should disable
       expect(settings.getPersistenceEnabled()).toBe(false);
       // change it back
-      settings.setWriteStorageType(os.config.storage.SettingsWritableStorageType.LOCAL);
+      settings.setWriteStorageType(SettingsWritableStorageType.LOCAL);
       // should be back on
       expect(settings.getPersistenceEnabled()).toBe(true);
     });
@@ -442,21 +444,21 @@ describe('os.config.Settings', function() {
 
   it('should disable persistence when the all local storages fail to init, and local is the preferred storage type',
       function() {
-        var settings = new os.config.Settings();
+        var settings = new Settings();
 
-        var ls = new os.config.storage.SettingsObjectStorage([os.config.appNs]);
+        var ls = new SettingsObjectStorage([osConfig.appNs]);
         ls.init = function() {
-          return goog.async.Deferred.fail('failed to init');
+          return Deferred.fail('failed to init');
         };
-        var ls2 = new os.config.storage.SettingsObjectStorage([os.config.appNs]);
+        var ls2 = new SettingsObjectStorage([osConfig.appNs]);
         ls2.init = function() {
-          return goog.async.Deferred.fail('failed to init');
+          return Deferred.fail('failed to init');
         };
 
         settings.getStorageRegistry().addStorage(ls);
         settings.getStorageRegistry().addStorage(ls2);
 
-        test.os.config.SettingsUtil.initAndLoad(settings);
+        SettingsUtil.initAndLoad(settings);
 
         runs(function() {
           expect(settings.getPersistenceEnabled()).toBe(false);
@@ -465,18 +467,18 @@ describe('os.config.Settings', function() {
 
   it('should disable persistence when all remote storages fail to init, and remote is the preferred storage type',
       function() {
-        var settings = new os.config.Settings();
+        var settings = new Settings();
 
-        var ls = new os.config.storage.SettingsObjectStorage([os.config.appNs]);
+        var ls = new SettingsObjectStorage([osConfig.appNs]);
         settings.getStorageRegistry().addStorage(ls);
 
-        test.os.config.SettingsUtil.initAndLoad(settings);
+        SettingsUtil.initAndLoad(settings);
 
         runs(function() {
           // defaults to local
           expect(settings.getPersistenceEnabled()).toBe(true);
           // switch to remote
-          settings.setWriteStorageType(os.config.storage.SettingsWritableStorageType.REMOTE);
+          settings.setWriteStorageType(SettingsWritableStorageType.REMOTE);
           // should disable
           expect(settings.getPersistenceEnabled()).toBe(false);
         });
@@ -484,21 +486,21 @@ describe('os.config.Settings', function() {
 
   it('should disable persistence when all local storages fail to load, and local is the preferred storage type',
       function() {
-        var settings = new os.config.Settings();
+        var settings = new Settings();
 
-        var ls = new os.config.storage.SettingsObjectStorage([os.config.appNs]);
+        var ls = new SettingsObjectStorage([osConfig.appNs]);
         ls.init = function() {
-          return goog.async.Deferred.fail('failed to init');
+          return Deferred.fail('failed to init');
         };
-        var ls2 = new os.config.storage.SettingsObjectStorage([os.config.appNs]);
+        var ls2 = new SettingsObjectStorage([osConfig.appNs]);
         ls2.init = function() {
-          return goog.async.Deferred.fail('failed to init');
+          return Deferred.fail('failed to init');
         };
 
         settings.getStorageRegistry().addStorage(ls);
         settings.getStorageRegistry().addStorage(ls2);
 
-        test.os.config.SettingsUtil.initAndLoad(settings);
+        SettingsUtil.initAndLoad(settings);
 
         runs(function() {
           expect(settings.getPersistenceEnabled()).toBe(false);
@@ -507,13 +509,13 @@ describe('os.config.Settings', function() {
 
   it('should disable persistence when all remote storages fail to load, and remote is the preferred storage type',
       function() {
-        var settings = new os.config.Settings();
+        var settings = new Settings();
 
-        var ls = new os.config.storage.SettingsObjectStorage([os.config.coreNs, os.config.appNs],
+        var ls = new SettingsObjectStorage([osConfig.coreNs, osConfig.appNs],
             {'core': {'storage': {'writeType': 'remote'}}});
 
         settings.getStorageRegistry().addStorage(ls);
-        test.os.config.SettingsUtil.initAndLoad(settings);
+        SettingsUtil.initAndLoad(settings);
 
         runs(function() {
           expect(settings.getPersistenceEnabled()).toBe(false);
@@ -522,18 +524,18 @@ describe('os.config.Settings', function() {
 
   it('should failover to an available local storage if another fails to init, and local is the preferred storage type',
       function() {
-        var settings = new os.config.Settings();
+        var settings = new Settings();
 
-        var ls = new os.config.storage.SettingsObjectStorage([os.config.appNs]);
+        var ls = new SettingsObjectStorage([osConfig.appNs]);
         ls.init = function() {
-          return goog.async.Deferred.fail('failed to init');
+          return Deferred.fail('failed to init');
         };
-        var ls2 = new os.config.storage.SettingsObjectStorage([os.config.appNs]);
+        var ls2 = new SettingsObjectStorage([osConfig.appNs]);
 
         settings.getStorageRegistry().addStorage(ls);
         settings.getStorageRegistry().addStorage(ls2);
 
-        test.os.config.SettingsUtil.initAndLoad(settings);
+        SettingsUtil.initAndLoad(settings);
 
         runs(function() {
           expect(settings.getStorageRegistry().getWriteStorageType()).toBe('local');
@@ -542,12 +544,12 @@ describe('os.config.Settings', function() {
       });
 
   it('should not save when persistence is not enabled', function() {
-    var ls = new os.config.storage.SettingsObjectStorage([os.config.appNs]);
+    var ls = new SettingsObjectStorage([osConfig.appNs]);
 
-    var settings = new os.config.Settings();
+    var settings = new Settings();
     settings.getStorageRegistry().addStorage(ls);
 
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       spyOn(ls, 'setSettings');
@@ -558,11 +560,10 @@ describe('os.config.Settings', function() {
   });
 
   it('should default to local when preferred storage type is not specified and no backup is present', function() {
-    var settings = new os.config.Settings();
-    settings.getStorageRegistry().addStorage(
-        new os.config.storage.SettingsObjectStorage([os.config.coreNs, os.config.appNs]));
+    var settings = new Settings();
+    settings.getStorageRegistry().addStorage(new SettingsObjectStorage([osConfig.coreNs, osConfig.appNs]));
 
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       expect(settings.getPersistenceEnabled()).toBe(true);
@@ -573,11 +574,10 @@ describe('os.config.Settings', function() {
   xit('should default to the backup key when storage type is not specified', function() {
     window.localStorage.setItem('com.bitsys.os.config.storage.writeType', 'remote');
 
-    var settings = new os.config.Settings();
-    settings.getStorageRegistry().addStorage(
-        new os.config.storage.SettingsObjectStorage([os.config.coreNs, os.config.appNs]));
+    var settings = new Settings();
+    settings.getStorageRegistry().addStorage(new SettingsObjectStorage([osConfig.coreNs, osConfig.appNs]));
 
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       expect(settings.getPersistenceEnabled()).toBe(false);
@@ -586,14 +586,14 @@ describe('os.config.Settings', function() {
   });
 
   it('should use preferred storage type when specified', function() {
-    var settings = new os.config.Settings();
-    var ls = new os.config.storage.SettingsObjectStorage([os.config.coreNs, os.config.appNs],
+    var settings = new Settings();
+    var ls = new SettingsObjectStorage([osConfig.coreNs, osConfig.appNs],
         {'core': {'storage': {'writeType': 'remote'}}});
     ls.writeType = 'remote';
 
     settings.getStorageRegistry().addStorage(ls);
 
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       expect(settings.getPersistenceEnabled()).toBe(true);
@@ -603,11 +603,11 @@ describe('os.config.Settings', function() {
 
   it('should dispatch internal notification events on reloading', function() {
     var event = null;
-    var settings = new os.config.Settings();
+    var settings = new Settings();
     var registry = settings.getStorageRegistry();
-    registry.addStorage(new os.config.storage.SettingsFile('/base/test/os/config/files/settings_noOverrides.json'));
+    registry.addStorage(new SettingsFile('/base/test/os/config/files/settings_noOverrides.json'));
 
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       settings.toNotifyInternal_.push({
@@ -634,13 +634,13 @@ describe('os.config.Settings', function() {
   });
 
   it('should process storage.writeType messages', function() {
-    var settings = new os.config.Settings();
-    var ls = new os.config.storage.SettingsObjectStorage([os.config.coreNs, os.config.appNs],
+    var settings = new Settings();
+    var ls = new SettingsObjectStorage([osConfig.coreNs, osConfig.appNs],
         {'core': {'storage': {'writeType': 'remote'}}});
 
     settings.getStorageRegistry().addStorage(ls);
 
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       spyOn(settings, 'setWriteStorageType').andCallThrough();
@@ -669,12 +669,12 @@ describe('os.config.Settings', function() {
         }
       }
     };
-    var settings = new os.config.Settings();
-    var objectStorage = new os.config.storage.SettingsObjectStorage([os.config.coreNs, os.config.appNs], obj);
+    var settings = new Settings();
+    var objectStorage = new SettingsObjectStorage([osConfig.coreNs, osConfig.appNs], obj);
 
     settings.getStorageRegistry().addStorage(objectStorage);
 
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       var data = {
@@ -692,12 +692,12 @@ describe('os.config.Settings', function() {
   });
 
   it('should dispatch external messages after saving', function() {
-    var settings = new os.config.Settings();
-    var objectStorage = new os.config.storage.SettingsObjectStorage([os.config.appNs]);
+    var settings = new Settings();
+    var objectStorage = new SettingsObjectStorage([osConfig.appNs]);
 
     settings.getStorageRegistry().addStorage(objectStorage);
 
-    test.os.config.SettingsUtil.initAndLoad(settings);
+    SettingsUtil.initAndLoad(settings);
 
     runs(function() {
       spyOn(settings, 'onSaveSuccess_').andCallThrough();

@@ -1,11 +1,13 @@
-goog.provide('test.os.config.SettingsUtil');
+goog.module('test.os.config.SettingsUtil');
+goog.module.declareLegacyNamespace();
 
+const Settings = goog.requireType('os.config.Settings');
 
 /**
  * Test utility for init and load of settings
- * @param {!os.config.Settings} s
+ * @param {!Settings} s
  */
-test.os.config.SettingsUtil.initAndLoad = function(s) {
+const initAndLoad = function(s) {
   runs(function() {
     s.init();
   });
@@ -21,4 +23,8 @@ test.os.config.SettingsUtil.initAndLoad = function(s) {
   waitsFor(function() {
     return s.isLoaded();
   }, 'settings to load');
+};
+
+exports = {
+  initAndLoad
 };
