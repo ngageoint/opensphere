@@ -1,7 +1,10 @@
-goog.provide('os.ui.config.SettingsContainerCtrl');
-goog.provide('os.ui.config.SettingsContainerDirective');
-goog.require('os.ui.config.AbstractSettingsCtrl');
-goog.require('os.ui.config.settingsWindowDirective');
+goog.module('os.ui.config.SettingsContainerUI');
+goog.module.declareLegacyNamespace();
+
+const Module = goog.require('os.ui.Module');
+const AbstractSettingsCtrl = goog.require('os.ui.config.AbstractSettingsCtrl');
+const SettingsManager = goog.require('os.ui.config.SettingsManager');
+const {directive: settingsWindowDirective} = goog.require('os.ui.config.SettingsWindowUI');
 
 
 /**
@@ -9,9 +12,9 @@ goog.require('os.ui.config.settingsWindowDirective');
  *
  * @return {angular.Directive}
  */
-os.ui.config.settingsContainerDirective = function() {
-  var dir = os.ui.config.settingsWindowDirective();
-  dir.controller = os.ui.config.SettingsContainerCtrl;
+const directive = function() {
+  const dir = settingsWindowDirective();
+  dir.controller = Controller;
   return dir;
 };
 
@@ -19,63 +22,65 @@ os.ui.config.settingsContainerDirective = function() {
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('settingscontainer', [os.ui.config.settingsContainerDirective]);
-
+Module.directive('settingscontainer', [directive]);
 
 
 /**
  * Controller for the save export window
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.$timeout} $timeout
- * @param {!angular.$routeParams} $routeParams
- * @param {!angular.$location} $location
- * @extends {os.ui.config.AbstractSettingsCtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.config.SettingsContainerCtrl = function($scope, $timeout, $routeParams, $location) {
-  os.ui.config.SettingsContainerCtrl.base(this, 'constructor', $scope, $timeout);
+class Controller extends AbstractSettingsCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.$timeout} $timeout
+   * @param {!angular.$routeParams} $routeParams
+   * @param {!angular.$location} $location
+   * @ngInject
+   */
+  constructor($scope, $timeout, $routeParams, $location) {
+    super($scope, $timeout);
+
+    /**
+     * @type {?angular.$location}
+     * @private
+     */
+    this.location_ = $location;
+
+    if ($routeParams['setting']) {
+      const sm = SettingsManager.getInstance();
+      const children = sm.getChildren();
+
+      children.some(function(setting) {
+        if ($routeParams['setting'].toLowerCase() == setting.getLabel().toLowerCase()) {
+          this.scope['selected'] = setting;
+          return true;
+        }
+        return false;
+      }, this);
+    }
+  }
 
   /**
-   * @type {?angular.$location}
-   * @private
+   * @inheritDoc
    */
-  this.location_ = $location;
+  destroy() {
+    super.destroy();
 
-  if ($routeParams['setting']) {
-    var sm = os.ui.config.SettingsManager.getInstance();
-
-    goog.array.some(sm.getChildren(), function(setting) {
-      if ($routeParams['setting'].toLowerCase() == setting.getLabel().toLowerCase()) {
-        this.scope['selected'] = setting;
-        return true;
-      }
-      return false;
-    }, this);
+    this.location_ = null;
   }
-};
-goog.inherits(os.ui.config.SettingsContainerCtrl, os.ui.config.AbstractSettingsCtrl);
 
-
-/**
- * @inheritDoc
- */
-os.ui.config.SettingsContainerCtrl.prototype.destroy = function() {
-  os.ui.config.SettingsContainerCtrl.base(this, 'destroy');
-
-  this.location_ = null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.config.SettingsContainerCtrl.prototype.onSelected = function(newVal, oldVal) {
-  if (newVal && newVal.getId) {
-    var sm = os.ui.config.SettingsManager.getInstance();
-    sm.setSelected(newVal);
-    this.location_.search('setting', newVal.getLabel());
-    this.location_.replace();
+  /**
+   * @inheritDoc
+   */
+  onSelected(newVal, oldVal) {
+    if (newVal && newVal.getId) {
+      const sm = SettingsManager.getInstance();
+      sm.setSelected(newVal);
+      this.location_.search('setting', newVal.getLabel());
+      this.location_.replace();
+    }
   }
-};
+}
+
+exports = Controller;

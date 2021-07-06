@@ -212,9 +212,9 @@ os.ui.help.HelpCtrl.prototype.initialize = function() {
   this.menu.listen(os.ui.help.EventType.VIEW_LOG, this.onHelpAction_, false, this);
 
 
-  root.addChild(os.ui.util.resetSettingsOptions);
+  root.addChild(os.ui.util.ResetSettings.resetSettingsOptions);
   this.menu.listen(os.ui.EventType.DISPLAY_CLEAR_LOCALSTORAGE, function() {
-    os.ui.util.resetSettings();
+    os.ui.util.ResetSettings.resetSettings();
   });
 };
 

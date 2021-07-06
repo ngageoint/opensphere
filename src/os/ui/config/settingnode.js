@@ -1,110 +1,107 @@
-goog.provide('os.ui.config.SettingNode');
-goog.require('goog.events.EventType');
-goog.require('os.data.ISearchable');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.structs.TriState');
-goog.require('os.ui.config.settingDefaultTreeUIDirective');
-goog.require('os.ui.slick.SlickTreeNode');
+goog.module('os.ui.config.SettingNode');
+goog.module.declareLegacyNamespace();
 
+const TriState = goog.require('os.structs.TriState');
+const SlickTreeNode = goog.require('os.ui.slick.SlickTreeNode');
+
+const ISearchable = goog.requireType('os.data.ISearchable');
+const SettingPlugin = goog.requireType('os.ui.config.SettingPlugin');
 
 
 /**
  * Tree nodes for layers
  *
- * @extends {os.ui.slick.SlickTreeNode}
- * @implements {os.data.ISearchable}
- * @constructor
+ * @implements {ISearchable}
  */
-os.ui.config.SettingNode = function() {
-  os.ui.config.SettingNode.base(this, 'constructor');
+class SettingNode extends SlickTreeNode {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * @type {?SettingPlugin}
+     * @private
+     */
+    this.settingPlugin_ = null;
+  }
 
   /**
-   * @type {?os.ui.config.SettingPlugin}
-   * @private
+   * @inheritDoc
    */
-  this.settingPlugin_ = null;
-};
-goog.inherits(os.ui.config.SettingNode, os.ui.slick.SlickTreeNode);
-
-
-/**
- * @inheritDoc
- */
-os.ui.config.SettingNode.prototype.disposeInternal = function() {
-  os.ui.config.SettingNode.base(this, 'disposeInternal');
-  this.settingPlugin_ = null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.config.SettingNode.prototype.getSearchText = function() {
-  var t = '';
-
-  if (this.settingPlugin_) {
-    t += this.settingPlugin_.getLabel();
-    t += this.getTags() ? (' ' + this.getTags().join(' ')) : '';
-    t += ' ' + this.settingPlugin_.getCategories().join(' ');
+  disposeInternal() {
+    super.disposeInternal();
+    this.settingPlugin_ = null;
   }
 
-  return t;
-};
+  /**
+   * @inheritDoc
+   */
+  getSearchText() {
+    var t = '';
 
+    if (this.settingPlugin_) {
+      t += this.settingPlugin_.getLabel();
+      t += this.getTags() ? (' ' + this.getTags().join(' ')) : '';
+      t += ' ' + this.settingPlugin_.getCategories().join(' ');
+    }
 
-/**
- * @inheritDoc
- */
-os.ui.config.SettingNode.prototype.getTags = function() {
-  return this.settingPlugin_ && this.settingPlugin_.getTags() || null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.config.SettingNode.prototype.getCheckboxVisible = function() {
-  return false;
-};
-
-
-/**
- * @return {?os.ui.config.SettingPlugin}
- */
-os.ui.config.SettingNode.prototype.getModel = function() {
-  return this.settingPlugin_;
-};
-
-
-/**
- * @param {?os.ui.config.SettingPlugin} value
- */
-os.ui.config.SettingNode.prototype.setModel = function(value) {
-  this.settingPlugin_ = value;
-
-  if (this.settingPlugin_) {
-    this.setId(this.settingPlugin_.getId());
-    this.setLabel(this.settingPlugin_.getLabel());
-    this.setState(os.structs.TriState.ON);
-    this.setCheckboxVisible(false);
-    this.setToolTip(this.settingPlugin_.getDescription());
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.config.SettingNode.prototype.formatIcons = function() {
-  var s = null;
-
-  if (this.settingPlugin_) {
-    s = this.settingPlugin_.getIcon();
+    return t;
   }
 
-  if (!s) {
-    return os.ui.config.SettingNode.superClass_.formatIcons.call(this);
+  /**
+   * @inheritDoc
+   */
+  getTags() {
+    return this.settingPlugin_ && this.settingPlugin_.getTags() || null;
   }
 
-  return s;
-};
+  /**
+   * @inheritDoc
+   */
+  getCheckboxVisible() {
+    return false;
+  }
+
+  /**
+   * @return {?SettingPlugin}
+   */
+  getModel() {
+    return this.settingPlugin_;
+  }
+
+  /**
+   * @param {?SettingPlugin} value
+   */
+  setModel(value) {
+    this.settingPlugin_ = value;
+
+    if (this.settingPlugin_) {
+      this.setId(this.settingPlugin_.getId());
+      this.setLabel(this.settingPlugin_.getLabel());
+      this.setState(TriState.ON);
+      this.setCheckboxVisible(false);
+      this.setToolTip(this.settingPlugin_.getDescription());
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  formatIcons() {
+    var s = null;
+
+    if (this.settingPlugin_) {
+      s = this.settingPlugin_.getIcon();
+    }
+
+    if (!s) {
+      return super.formatIcons();
+    }
+
+    return s;
+  }
+}
+
+exports = SettingNode;

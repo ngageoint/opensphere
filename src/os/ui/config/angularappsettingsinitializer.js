@@ -2,8 +2,8 @@ goog.module('os.ui.config.AngularAppSettingsInitializer');
 goog.module.declareLegacyNamespace();
 
 const AbstractSettingsInitializer = goog.require('os.config.AbstractSettingsInitializer');
-const {getSettings} = goog.require('os.config.instance');
 const ThemeSettings = goog.require('os.config.ThemeSettings');
+const {getSettings} = goog.require('os.config.instance');
 const {Keys} = goog.require('os.config.theme');
 const BaseServerModifier = goog.require('os.net.BaseServerModifier');
 const URLModifier = goog.require('os.net.URLModifier');

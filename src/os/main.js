@@ -15,7 +15,7 @@ goog.require('os.ui.Map');
 goog.require('os.ui.Module');
 goog.require('os.ui.addDataDirective');
 goog.require('os.ui.clear.ClearUI');
-goog.require('os.ui.config.settingsWindowDirective');
+goog.require('os.ui.config.SettingsWindowUI');
 goog.require('os.ui.consentDirective');
 goog.require('os.ui.globalMenuDirective');
 goog.require('os.ui.historyDirective');
