@@ -15,6 +15,7 @@ goog.require('os.metrics.keys');
 goog.require('os.ui.ex.ExportDirective');
 goog.require('os.ui.featureListDirective');
 goog.require('os.ui.layer.EllipseColumnsUI');
+goog.require('os.ui.layer.compare.LayerCompareUI');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
@@ -91,6 +92,12 @@ os.ui.menu.layer.setup = function() {
         handler: os.ui.menu.layer.onSaveAs_,
         metricKey: os.metrics.Layer.SAVE_AS,
         sort: -10000 // we want this to appear right below save
+      }, {
+        label: 'Compare Layers',
+        tooltip: 'Compare two layers side-by-side',
+        icons: ['<i class="fas fa-fw fa-layer-group"></i>'],
+        beforeRender: os.ui.menu.layer.visibleIfCanCompare,
+        handler: os.ui.menu.layer.handleCompareLayers
       }, {
         label: 'Go To',
         eventType: os.action.EventType.GOTO,
@@ -599,4 +606,30 @@ os.ui.menu.layer.onIdentify_ = function(event) {
 
   identifyTimer.listen(goog.Timer.TICK, toggleOpacity);
   identifyTimer.start();
+};
+
+
+/**
+ * Enables the option when two layers are selected.
+ * @param {os.ui.menu.layer.Context} context The menu context.
+ * @this {os.ui.menu.MenuItem}
+ */
+os.ui.menu.layer.visibleIfCanCompare = function(context) {
+  const layers = os.ui.menu.layer.getLayersFromContext(context);
+  this.visible = !!layers && layers.length === 2;
+};
+
+
+/**
+ * Extract the feature from an event and launch the external link.
+ * @param {!os.ui.menu.MenuEvent<os.ui.menu.layer.Context>} event The menu event.
+ */
+os.ui.menu.layer.handleCompareLayers = function(event) {
+  var layers = os.ui.menu.layer.getLayersFromContext(event.getContext());
+  if (layers && layers.length === 2) {
+    os.ui.layer.compare.LayerCompareUI.launchLayerCompare({
+      left: [layers[0]],
+      right: [layers[1]]
+    });
+  }
 };

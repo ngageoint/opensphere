@@ -279,7 +279,7 @@ os.ui.LayersCtrl.prototype.openMenu = function(selector) {
     var target = this.element.find(selector);
     if (target && target.length > 0) {
       menu.open(undefined, {
-        my: 'left top',
+        my: 'left top+3',
         at: 'left bottom',
         of: target
       });
@@ -321,7 +321,7 @@ os.ui.LayersCtrl.prototype.toggleTileLayers = function() {
 
       if (type && type != ol.LayerType.VECTOR) {
         // toggle tiles
-        layers[i].setLayerVisible(this.showTiles());
+        layers[i].setEnabled(this.showTiles());
       }
     }
   }

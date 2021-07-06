@@ -1,6 +1,7 @@
 goog.provide('os.ui.menu.windows.default');
 
 goog.require('os.config.ServerSettings');
+goog.require('os.config.Settings');
 goog.require('os.metrics.keys');
 goog.require('os.ui.events.UIEvent');
 goog.require('os.ui.events.UIEventType');
@@ -10,9 +11,20 @@ goog.require('os.ui.windowSelector');
 
 
 /**
+ * Settings keys for default windows.
+ * @enum {string}
+ */
+os.ui.menu.windows.default.SettingsKey = {
+  LAYERS_DEFAULTS: 'os.layers.defaults'
+};
+
+
+/**
  * Add default windows to the Windows menu.
  */
 os.ui.menu.windows.default.setup = function() {
+  const settings = os.config.Settings.getInstance();
+
   os.ui.menu.windows.setup();
 
   // add windows
@@ -33,25 +45,30 @@ os.ui.menu.windows.default.setup = function() {
     'html': 'adddata'
   }, true);
 
-  var layers = os.ui.menu.windows.addWindow('layers', {
+  const layersDefaults = /** @type {osx.window.WindowOptions} */ (
+    settings.get(os.ui.menu.windows.default.SettingsKey.LAYERS_DEFAULTS, {}));
+
+  const layersWindowOptions = Object.assign({
     'key': 'layers',
-    'icon': 'fa fa-layer-group',
+    'icon': 'fas fa-layer-group',
     'label': 'Layers',
     'description': 'View and manipulate layers on the map',
-    'x': '0',
-    'y': '96',
-    'width': '350',
-    'height': '550',
-    'min-width': '300',
-    'max-width': '1000',
-    'min-height': '250',
-    'max-height': '2000',
-    'show-close': 'true',
+    'x': 12,
+    'y': 96,
+    'width': 400,
+    'height': 550,
+    'min-width': 300,
+    'max-width': 1000,
+    'min-height': 350,
+    'max-height': 2000,
+    'show-close': true,
     'help-context': 'layers',
     'shortcut': 'alt+l',
     'html': '<layerswin tab="layers"></layerswin>',
     'metricKey': os.metrics.keys.Map.SHOW_LAYER_WINDOW
-  }, true);
+  }, layersDefaults);
+
+  var layers = os.ui.menu.windows.addWindow('layers', layersWindowOptions, true);
 
   // layers is open by default
   if (layers) {

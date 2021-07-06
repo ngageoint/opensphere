@@ -1,0 +1,57 @@
+$layer-compare-slider-radius: 1rem;
+$layer-compare-z-index-base: 1;
+
+.c-layer-compare-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.c-layer-compare-control {
+  z-index: $layer-compare-z-index-base + 2;
+}
+
+.c-layer-compare-item {
+  background-color: $modal-content-bg;
+  height: auto;
+  overflow: hidden;
+  position: absolute;
+  width: auto;
+
+  > img {
+    display: block;
+    vertical-align: middle;
+  }
+}
+
+.c-layer-compare-slider {
+  border: $border-width solid $border-color;
+  height: 100%;
+  left: 50%;
+  position: absolute;
+  z-index: $layer-compare-z-index-base + 1;
+}
+
+.c-layer-compare-handle {
+  align-items: center;
+  background-color: $black;
+  border-radius: 50%;
+  cursor: ew-resize;
+  display: flex;
+  font-size: 1.25rem;
+  height: $layer-compare-slider-radius * 2;
+  justify-content: space-between;
+  left: -($layer-compare-slider-radius);
+  opacity: .5;
+  padding: 0 .1rem;
+  position: absolute;
+  top: calc(50% - #{$layer-compare-slider-radius});
+  width: $layer-compare-slider-radius * 2;
+
+  &:hover {
+    opacity: .75;
+  }
+}
+
+.c-layer-compare-top {
+  z-index: $layer-compare-z-index-base;
+}
