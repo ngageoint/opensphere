@@ -10,6 +10,7 @@ goog.require('os.config.SettingsInitializerManager');
 goog.require('os.debug.FancierWindow');
 goog.require('os.mixin');
 goog.require('os.net');
+goog.require('os.ui.LegendUI');
 goog.require('os.ui.Map');
 goog.require('os.ui.Module');
 goog.require('os.ui.addDataDirective');

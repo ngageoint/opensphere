@@ -1,49 +1,20 @@
-goog.provide('os.config');
-goog.provide('os.config.ConfigType');
-goog.provide('os.config.EventType');
+goog.module('os.config');
+goog.module.declareLegacyNamespace();
 
-goog.require('os');
+const {NAMESPACE} = goog.require('os');
+const {getSettings} = goog.require('os.config.instance');
 
 
 /**
  * @define {string} Namespace used by settings to indicate which application is making updates.
  * Will be assigned by each app.
  */
-os.config.appNs = goog.define('os.config.appNs', os.NAMESPACE);
-
+const appNs = goog.define('os.config.appNs', NAMESPACE);
 
 /**
  * @define {string} Namespace for common settings - those to be rememberred across all applications
  */
-os.config.coreNs = goog.define('os.config.coreNs', 'core');
-
-
-/**
- * Event types for settings
- * @enum {string}
- */
-os.config.EventType = {
-  INITIALIZED: 'initialized',
-  LOADED: 'loaded',
-  WILL_CLEAR: 'willClear',
-  WILL_SAVE: 'willSave',
-  CLEARED: 'cleared',
-  SAVED: 'saved',
-  UPDATED: 'updated',
-  RELOADED: 'reloaded'
-};
-
-
-/**
- * Configuration types for settings
- * @enum {string}
- */
-os.config.ConfigType = {
-  CONFIG: 'admin',
-  PREFERENCE: 'user',
-  OVERRIDES: 'overrides'
-};
-
+const coreNs = goog.define('os.config.coreNs', 'core');
 
 /**
  * Get the application name from settings.
@@ -51,11 +22,9 @@ os.config.ConfigType = {
  * @param {string=} opt_default The default value
  * @return {(string|undefined)}
  */
-os.config.getAppName = function(opt_default) {
-  return /** @type {(string|undefined)} */ (os.settings.get('about.application',
-      opt_default));
+const getAppName = function(opt_default) {
+  return /** @type {(string|undefined)} */ (getSettings().get('about.application', opt_default));
 };
-
 
 /**
  * Get the application version from settings.
@@ -63,11 +32,9 @@ os.config.getAppName = function(opt_default) {
  * @param {string=} opt_default The default value
  * @return {(string|undefined)}
  */
-os.config.getAppVersion = function(opt_default) {
-  return /** @type {(string|undefined)} */ (os.settings.get('about.version',
-      opt_default));
+const getAppVersion = function(opt_default) {
+  return /** @type {(string|undefined)} */ (getSettings().get('about.version', opt_default));
 };
-
 
 /**
  * Get the designated support contact for application issues.
@@ -75,7 +42,14 @@ os.config.getAppVersion = function(opt_default) {
  * @param {string=} opt_default The default value
  * @return {(string|undefined)}
  */
-os.config.getSupportContact = function(opt_default) {
-  return /** @type {(string|undefined)} */ (os.settings.get('supportContact',
-      opt_default));
+const getSupportContact = function(opt_default) {
+  return /** @type {(string|undefined)} */ (getSettings().get('supportContact', opt_default));
+};
+
+exports = {
+  appNs,
+  coreNs,
+  getAppName,
+  getAppVersion,
+  getSupportContact
 };
