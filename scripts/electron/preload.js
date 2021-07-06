@@ -4,7 +4,7 @@ const url = require('url');
 
 const CookieEventType = require('../cookieeventtype.js');
 const SettingsEventType = require('../settingseventtype.js');
-const {getMaximumMemory, getSystemMemory, setMaximumMemory} = require('../memconfig.js');
+const {getMaximumMemory, getSystemMemory, setMaximumMemory, setMemoryFlags} = require('../memconfig.js');
 
 /**
  * Registered certificate handler.
@@ -165,7 +165,7 @@ const getMaxMemory = () => {
  * @param {number} value The max memory value.
  */
 const setMaxMemory = (value) => {
-  setMaximumMemory(value);
+  setMaximumMemory(String(value));
 };
 
 /**
@@ -245,6 +245,9 @@ const setSettingsFiles = async (value) => settingsFiles = await ipcRenderer.invo
 const restart = () => {
   ipcRenderer.send('restart');
 };
+
+// Set memory flags on the renderer process.
+setMemoryFlags();
 
 // Handle certificate select event from the main process.
 ipcRenderer.on(EventType.CERT_SELECT, selectClientCertificate);
