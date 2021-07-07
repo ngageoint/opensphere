@@ -1,11 +1,14 @@
+goog.require('goog.db');
 goog.require('goog.object');
-goog.require('os.storage');
 goog.require('os.storage.IDBStorage');
 goog.require('os.storage.mock');
-goog.require('os.storage.mock.AsyncStorage');
-
 
 describe('os.storage.IDBStorage', function() {
+  const {deleteDatabase} = goog.module.get('goog.db');
+  const IDBStorage = goog.module.get('os.storage.IDBStorage');
+
+  const mock = goog.module.get('os.storage.mock');
+
   var dbName = 'os.test.db';
   var storeName = 'idbTestStore';
   var version = 1;
@@ -13,14 +16,14 @@ describe('os.storage.IDBStorage', function() {
 
   var openDb = function() {
     runs(function() {
-      idb = new os.storage.IDBStorage(storeName, dbName, version);
+      idb = new IDBStorage(storeName, dbName, version);
       expect(idb.isError()).toBe(true);
 
-      idb.init().addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+      idb.init().addCallbacks(mock.incrementCb, mock.incrementEb);
     });
 
     waitsFor(function() {
-      return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+      return mock.getCallbackCount() > 0 || mock.getErrbackCount() > 0;
     }, 'initialization to complete');
 
     runs(function() {
@@ -62,20 +65,19 @@ describe('os.storage.IDBStorage', function() {
 
   it('should initialize the test suite', function() {
     runs(function() {
-      goog.db.deleteDatabase(dbName, os.storage.mock.incrementEb)
-          .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+      deleteDatabase(dbName, mock.incrementEb).addCallbacks(mock.incrementCb, mock.incrementEb);
     });
 
     waitsFor(function() {
-      return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+      return mock.getCallbackCount() > 0 || mock.getErrbackCount() > 0;
     }, 'database to be deleted, or error');
 
     runs(function() {
-      expect(os.storage.mock.cbCount).toBe(1);
-      expect(os.storage.mock.ebCount).toBe(0);
+      expect(mock.getCallbackCount()).toBe(1);
+      expect(mock.getErrbackCount()).toBe(0);
 
-      os.storage.mock.cbCount = 0;
-      os.storage.mock.ebCount = 0;
+      mock.setCallbackCount(0);
+      mock.setErrbackCount(0);
     });
   });
 
@@ -95,85 +97,85 @@ describe('os.storage.IDBStorage', function() {
   it('should detect if IndexedDB is supported and return an error if not', function() {
     runs(function() {
       Modernizr.indexeddb = false;
-      idb.set('testKey', 'testValue').addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+      idb.set('testKey', 'testValue').addCallbacks(mock.incrementCb, mock.incrementEb);
     });
 
     waitsFor(function() {
-      return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+      return mock.getCallbackCount() > 0 || mock.getErrbackCount() > 0;
     }, 'error to be reported');
 
     runs(function() {
-      expect(os.storage.mock.cbCount).toBe(0);
-      expect(os.storage.mock.ebCount).toBe(1);
-      expect(os.storage.mock.lastError).toBe(os.storage.IDBStorage.NOT_SUPPORTED);
+      expect(mock.getCallbackCount()).toBe(0);
+      expect(mock.getErrbackCount()).toBe(1);
+      expect(mock.getLastError()).toBe(IDBStorage.NOT_SUPPORTED);
 
-      os.storage.mock.cbCount = 0;
-      os.storage.mock.ebCount = 0;
-      os.storage.mock.lastError = null;
+      mock.setCallbackCount(0);
+      mock.setErrbackCount(0);
+      mock.setLastError(null);
 
-      idb.get('testKey').addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+      idb.get('testKey').addCallbacks(mock.incrementCb, mock.incrementEb);
     });
 
     waitsFor(function() {
-      return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+      return mock.getCallbackCount() > 0 || mock.getErrbackCount() > 0;
     }, 'error to be reported');
 
     runs(function() {
-      expect(os.storage.mock.cbCount).toBe(0);
-      expect(os.storage.mock.ebCount).toBe(1);
-      expect(os.storage.mock.lastError).toBe(os.storage.IDBStorage.NOT_SUPPORTED);
+      expect(mock.getCallbackCount()).toBe(0);
+      expect(mock.getErrbackCount()).toBe(1);
+      expect(mock.getLastError()).toBe(IDBStorage.NOT_SUPPORTED);
 
-      os.storage.mock.cbCount = 0;
-      os.storage.mock.ebCount = 0;
-      os.storage.mock.lastError = null;
+      mock.setCallbackCount(0);
+      mock.setErrbackCount(0);
+      mock.setLastError(null);
 
-      idb.getAll().addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+      idb.getAll().addCallbacks(mock.incrementCb, mock.incrementEb);
     });
 
     waitsFor(function() {
-      return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+      return mock.getCallbackCount() > 0 || mock.getErrbackCount() > 0;
     }, 'error to be reported');
 
     runs(function() {
-      expect(os.storage.mock.cbCount).toBe(0);
-      expect(os.storage.mock.ebCount).toBe(1);
-      expect(os.storage.mock.lastError).toBe(os.storage.IDBStorage.NOT_SUPPORTED);
+      expect(mock.getCallbackCount()).toBe(0);
+      expect(mock.getErrbackCount()).toBe(1);
+      expect(mock.getLastError()).toBe(IDBStorage.NOT_SUPPORTED);
 
-      os.storage.mock.cbCount = 0;
-      os.storage.mock.ebCount = 0;
-      os.storage.mock.lastError = null;
+      mock.setCallbackCount(0);
+      mock.setErrbackCount(0);
+      mock.setLastError(null);
 
-      idb.remove('testKey').addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+      idb.remove('testKey').addCallbacks(mock.incrementCb, mock.incrementEb);
     });
 
     waitsFor(function() {
-      return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+      return mock.getCallbackCount() > 0 || mock.getErrbackCount() > 0;
     }, 'error to be reported');
 
     runs(function() {
-      expect(os.storage.mock.cbCount).toBe(0);
-      expect(os.storage.mock.ebCount).toBe(1);
-      expect(os.storage.mock.lastError).toBe(os.storage.IDBStorage.NOT_SUPPORTED);
+      expect(mock.getCallbackCount()).toBe(0);
+      expect(mock.getErrbackCount()).toBe(1);
+      expect(mock.getLastError()).toBe(IDBStorage.NOT_SUPPORTED);
 
-      os.storage.mock.cbCount = 0;
-      os.storage.mock.ebCount = 0;
-      os.storage.mock.lastError = null;
+      mock.setCallbackCount(0);
+      mock.setErrbackCount(0);
+      mock.setLastError(null);
 
-      idb.clear().addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+      idb.clear().addCallbacks(mock.incrementCb, mock.incrementEb);
     });
 
     waitsFor(function() {
-      return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+      return mock.getCallbackCount() > 0 || mock.getErrbackCount() > 0;
     }, 'error to be reported');
 
     runs(function() {
-      expect(os.storage.mock.cbCount).toBe(0);
-      expect(os.storage.mock.ebCount).toBe(1);
-      expect(os.storage.mock.lastError).toBe(os.storage.IDBStorage.NOT_SUPPORTED);
+      expect(mock.getCallbackCount()).toBe(0);
+      expect(mock.getErrbackCount()).toBe(1);
+      expect(mock.getLastError()).toBe(IDBStorage.NOT_SUPPORTED);
 
-      os.storage.mock.cbCount = 0;
-      os.storage.mock.ebCount = 0;
-      os.storage.mock.lastError = null;
+      mock.setCallbackCount(0);
+      mock.setErrbackCount(0);
+      mock.setLastError(null);
 
       Modernizr.indexeddb = true;
     });
@@ -181,16 +183,16 @@ describe('os.storage.IDBStorage', function() {
 
   it('should pass async storage tests', function() {
     // run interface tests for set/get
-    os.storage.runAsyncSetTests(idb);
-    os.storage.runAsyncGetTests(idb);
-    os.storage.runAsyncGetAllTests(idb);
+    mock.runAsyncSetTests(idb);
+    mock.runAsyncGetTests(idb);
+    mock.runAsyncGetAllTests(idb);
 
     // run interface tests for replace/remove
-    os.storage.runAsyncReplaceTests(idb);
-    os.storage.runAsyncRemoveTests(idb);
-    os.storage.runAsyncClearTests(idb);
+    mock.runAsyncReplaceTests(idb);
+    mock.runAsyncRemoveTests(idb);
+    mock.runAsyncClearTests(idb);
 
     // run interface tests for dispose
-    os.storage.runAsyncDisposeTests(idb);
+    mock.runAsyncDisposeTests(idb);
   });
 });
