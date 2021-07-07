@@ -1,107 +1,106 @@
 /**
  * @fileoverview Mechanism for storing and retrieving data using a local object cache.
  */
+goog.module('os.storage.ObjectMechanism');
+goog.module.declareLegacyNamespace();
 
-goog.provide('os.storage.ObjectMechanism');
-
-goog.require('goog.iter.Iterator');
-goog.require('goog.object');
-goog.require('goog.storage.mechanism.IterableMechanism');
-goog.require('os.implements');
-goog.require('os.storage.IMechanism');
-
+const Iterator = goog.require('goog.iter.Iterator');
+const StopIteration = goog.require('goog.iter.StopIteration');
+const googObject = goog.require('goog.object');
+const IterableMechanism = goog.require('goog.storage.mechanism.IterableMechanism');
+const osImplements = goog.require('os.implements');
+const IMechanism = goog.require('os.storage.IMechanism');
 
 
 /**
  * Basic interface for all asynchronous storage mechanisms.
  *
- * @extends {goog.storage.mechanism.IterableMechanism}
- * @implements {os.storage.IMechanism<T>}
- * @constructor
+ * @implements {IMechanism<T>}
  * @template T
  */
-os.storage.ObjectMechanism = function() {
-  os.storage.ObjectMechanism.base(this, 'constructor');
+class ObjectMechanism extends IterableMechanism {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * The storage cache.
+     * @type {!Object<string, T>}
+     * @private
+     */
+    this.storage_ = {};
+  }
 
   /**
-   * The storage cache.
-   * @type {!Object<string, T>}
-   * @private
+   * @inheritDoc
    */
-  this.storage_ = {};
-};
-goog.inherits(os.storage.ObjectMechanism, goog.storage.mechanism.IterableMechanism);
-os.implements(os.storage.ObjectMechanism, os.storage.IMechanism.ID);
-
-
-/**
- * @inheritDoc
- */
-os.storage.ObjectMechanism.prototype.set = function(key, value) {
-  this.storage_[key] = value;
-};
-
-
-/**
- * @return {T}
- * @override
- */
-os.storage.ObjectMechanism.prototype.get = function(key) {
-  return this.storage_[key];
-};
-
-
-/**
- * @inheritDoc
- */
-os.storage.ObjectMechanism.prototype.getAll = function() {
-  return goog.object.getValues(this.storage_);
-};
-
-
-/**
- * @inheritDoc
- */
-os.storage.ObjectMechanism.prototype.remove = function(key) {
-  delete this.storage_[key];
-};
-
-
-/**
- * @inheritDoc
- */
-os.storage.ObjectMechanism.prototype.getCount = function() {
-  return goog.object.getCount(this.storage_);
-};
-
-
-/**
- * @inheritDoc
- */
-os.storage.ObjectMechanism.prototype.clear = function() {
-  goog.object.clear(this.storage_);
-};
-
-
-/**
- * @inheritDoc
- */
-os.storage.ObjectMechanism.prototype.__iterator__ = function(opt_keys) {
-  var i = 0;
-  var array = opt_keys ? goog.object.getKeys(this.storage_) : goog.object.getValues(this.storage_);
-  var newIter = new goog.iter.Iterator();
+  set(key, value) {
+    this.storage_[key] = value;
+  }
 
   /**
-   * Next implementation for iterator
-   *
-   * @return {*}
+   * @return {T}
+   * @override
    */
-  newIter.next = function() {
-    if (i >= array.length) {
-      throw goog.iter.StopIteration;
-    }
+  get(key) {
+    return this.storage_[key];
+  }
 
-    return array[i++];
-  };
-  return newIter;
-};
+  /**
+   * @inheritDoc
+   */
+  getAll() {
+    return googObject.getValues(this.storage_);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  remove(key) {
+    delete this.storage_[key];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getCount() {
+    return googObject.getCount(this.storage_);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  clear() {
+    googObject.clear(this.storage_);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  __iterator__(opt_keys) {
+    var i = 0;
+    var array = opt_keys ? googObject.getKeys(this.storage_) : googObject.getValues(this.storage_);
+    var newIter = new Iterator();
+
+    /**
+     * Next implementation for iterator
+     *
+     * @return {*}
+     */
+    newIter.next = function() {
+      if (i >= array.length) {
+        throw StopIteration;
+      }
+
+      return array[i++];
+    };
+    return newIter;
+  }
+}
+
+osImplements(ObjectMechanism, IMechanism.ID);
+
+
+exports = ObjectMechanism;
