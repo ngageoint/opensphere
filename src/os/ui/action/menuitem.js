@@ -1,62 +1,66 @@
-goog.provide('os.ui.action.MenuItem');
-goog.require('os.ui.action.IMenuItem');
-goog.require('os.ui.action.MenuOptions');
+goog.module('os.ui.action.MenuItem');
+goog.module.declareLegacyNamespace();
 
+const MenuOptions = goog.require('os.ui.action.MenuOptions');
+const IMenuItem = goog.requireType('os.ui.action.IMenuItem');
 
 
 /**
  * Represents a menu item
  *
- * @implements {os.ui.action.IMenuItem}
- * @constructor
- * @param {!string} name
- * @param {?string} description
- * @param {?os.ui.action.MenuOptions=} opt_menuOptions Options for displaying this item in a menu
+ * @implements {IMenuItem}
  * @deprecated Please use {@link os.ui.menu.Menu} and {@link os.ui.menu.MenuItem} instead
  */
-os.ui.action.MenuItem = function(name, description, opt_menuOptions) {
+class MenuItem {
   /**
-   * @type {!string}
-   * @private
+   * Constructor.
+   * @param {!string} name
+   * @param {?string} description
+   * @param {?MenuOptions=} opt_menuOptions Options for displaying this item in a menu
    */
-  this.name_ = name;
+  constructor(name, description, opt_menuOptions) {
+    /**
+     * @type {!string}
+     * @private
+     */
+    this.name_ = name;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.description_ = description;
+
+
+    /**
+     * @type {!MenuOptions}
+     * @private
+     */
+    this.menuOptions_ = opt_menuOptions || new MenuOptions(null, null, Number.MAX_VALUE);
+  }
 
   /**
-   * @type {?string}
-   * @private
+   * @inheritDoc
+   * @export
    */
-  this.description_ = description;
-
+  getName() {
+    return this.name_;
+  }
 
   /**
-   * @type {!os.ui.action.MenuOptions}
-   * @private
+   * @inheritDoc
+   * @export
    */
-  this.menuOptions_ = opt_menuOptions || new os.ui.action.MenuOptions(null, null, Number.MAX_VALUE);
-};
+  getDescription() {
+    return this.description_;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getMenuOptions() {
+    return this.menuOptions_;
+  }
+}
 
-/**
- * @inheritDoc
- * @export
- */
-os.ui.action.MenuItem.prototype.getName = function() {
-  return this.name_;
-};
-
-
-/**
- * @inheritDoc
- * @export
- */
-os.ui.action.MenuItem.prototype.getDescription = function() {
-  return this.description_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.action.MenuItem.prototype.getMenuOptions = function() {
-  return this.menuOptions_;
-};
+exports = MenuItem;

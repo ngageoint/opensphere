@@ -1,9 +1,9 @@
-goog.provide('os.ui.alert.AlertButtonCtrl');
-goog.provide('os.ui.alert.alertButtonDirective');
+goog.module('os.ui.alert.AlertButtonUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.MenuButtonCtrl');
-goog.require('os.ui.Module');
-goog.require('os.ui.alert.alertBadgeDirective');
+const MenuButtonCtrl = goog.require('os.ui.MenuButtonCtrl');
+const Module = goog.require('os.ui.Module');
+const {directiveTag: alertBadgeUi} = goog.require('os.ui.alert.AlertBadgeUI');
 
 
 /**
@@ -11,39 +11,49 @@ goog.require('os.ui.alert.alertBadgeDirective');
  *
  * @return {angular.Directive}
  */
-os.ui.alert.alertButtonDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    controller: os.ui.alert.AlertButtonCtrl,
-    controllerAs: 'ctrl',
-    template: '<button class="btn btn-secondary" ng-click="ctrl.toggle()" title="Alerts"' +
-      ' ng-class="{\'active\': ctrl.isWindowActive()}">' +
-      '<i class="fa fa-fw fa-bell"></i> <alertbadge reset="ctrl.isWindowActive()"></alertbadge>' +
-      '</button>'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: true,
+  controller: Controller,
+  controllerAs: 'ctrl',
+  template:
+`<button class="btn btn-secondary" ng-click="ctrl.toggle()" title="Alerts"
+    ng-class="{'active': ctrl.isWindowActive()}">
+  <i class="fa fa-fw fa-bell"></i> <${alertBadgeUi} reset="ctrl.isWindowActive()"></${alertBadgeUi}>
+</button>`
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'alert-button';
 
 /**
  * add the directive to the module
  */
-os.ui.Module.directive('alertButton', [os.ui.alert.alertButtonDirective]);
-
-
+Module.directive('alertButton', [directive]);
 
 /**
  * Controller function for the nav-top directive
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element The element
- * @extends {os.ui.MenuButtonCtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.alert.AlertButtonCtrl = function($scope, $element) {
-  os.ui.alert.AlertButtonCtrl.base(this, 'constructor', $scope, $element);
-  this.flag = 'alerts';
+class Controller extends MenuButtonCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element The element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
+    this.flag = 'alerts';
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
-goog.inherits(os.ui.alert.AlertButtonCtrl, os.ui.MenuButtonCtrl);

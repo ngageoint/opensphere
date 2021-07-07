@@ -1,6 +1,8 @@
-goog.provide('os.ui.alert.alertLinkFilter');
+goog.module('os.ui.alert.alertLinkFilter');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
+const ui = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -11,10 +13,10 @@ goog.require('os.ui.Module');
  * @return {!angular.Filter} The filter function
  * @ngInject
  */
-os.ui.alert.alertLinkFilter = function($sce) {
+const alertLinkFilter = function($sce) {
   return function(text) {
     if (typeof text == 'string') {
-      text = /** @type {angular.$sanitize} */ (os.ui.injector.get('$sanitize'))(text);
+      text = /** @type {angular.$sanitize} */ (ui.injector.get('$sanitize'))(text);
       text = text.replace(/\[([^|]+)\|([^\]]+)\]/g,
           '<button onclick="$(this).scope().$emit(\'dispatch\',\'$2\')" class="btn btn-link border-0 p-0" ' +
           'type="button">$1</button>'
@@ -27,4 +29,6 @@ os.ui.alert.alertLinkFilter = function($sce) {
   };
 };
 
-os.ui.Module.filter('alertlink', ['$sce', os.ui.alert.alertLinkFilter]);
+Module.filter('alertlink', ['$sce', alertLinkFilter]);
+
+exports = alertLinkFilter;

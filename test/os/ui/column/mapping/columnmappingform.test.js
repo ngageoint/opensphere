@@ -1,22 +1,36 @@
+goog.require('os.column.ColumnMapping');
+goog.require('os.column.ColumnMappingManager');
 goog.require('os.data.ConfigDescriptor');
-goog.require('os.ui.column.mapping.ColumnMappingFormCtrl');
-goog.require('os.ui.column.mapping.columnMappingFormDirective');
+goog.require('os.data.DataManager');
+goog.require('os.ui.column.mapping.ColumnMappingFormUI');
+goog.require('os.ui.column.mapping.ColumnModelNode');
+goog.require('os.ui.window');
 goog.require('plugin.ogc.GeoServer');
 goog.require('plugin.ogc.OGCLayerDescriptor');
 goog.require('plugin.ogc.wmts.WMTSServer');
 
+describe('os.ui.column.mapping.ColumnMappingFormUI', function() {
+  const ColumnMapping = goog.module.get('os.column.ColumnMapping');
+  const ColumnMappingManager = goog.module.get('os.column.ColumnMappingManager');
+  const ConfigDescriptor = goog.module.get('os.data.ConfigDescriptor');
+  const DataManager = goog.module.get('os.data.DataManager');
+  const ColumnModelNode = goog.module.get('os.ui.column.mapping.ColumnModelNode');
+  const osWindow = goog.module.get('os.ui.window');
+  const GeoServer = goog.module.get('plugin.ogc.GeoServer');
+  const OGCLayerDescriptor = goog.module.get('plugin.ogc.OGCLayerDescriptor');
+  const WMTSServer = goog.module.get('plugin.ogc.wmts.WMTSServer');
+  const {Controller} = goog.module.get('os.ui.column.mapping.ColumnMappingFormUI');
 
-describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
   var $scope;
   var cmForm;
   var element;
 
-  var mapping = new os.column.ColumnMapping();
+  var mapping = new ColumnMapping();
 
-  var ogclayerMock = new plugin.ogc.OGCLayerDescriptor;
-  var providerMock = new plugin.ogc.GeoServer;
-  var ogclayerMock2 = new plugin.ogc.OGCLayerDescriptor;
-  var providerMock2 = new plugin.ogc.GeoServer;
+  var ogclayerMock = new OGCLayerDescriptor();
+  var providerMock = new GeoServer();
+  var ogclayerMock2 = new OGCLayerDescriptor();
+  var providerMock2 = new GeoServer();
   var descriptorList = [];
 
 
@@ -28,7 +42,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
   beforeEach(function() {
     spyOn(providerMock, 'getEnabled').andReturn(true);
     spyOn(ogclayerMock, 'getDataProvider').andReturn(providerMock);
-    spyOn(os.dataManager, 'getDescriptors').andReturn(descriptorList);
+    spyOn(DataManager.getInstance(), 'getDescriptors').andReturn(descriptorList);
     spyOn(providerMock2, 'getEnabled').andReturn(false);
     spyOn(ogclayerMock2, 'getDataProvider').andReturn(providerMock2);
     inject(function($compile, $rootScope) {
@@ -52,7 +66,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
   });
 
   it('should initialize correctly', function() {
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
     expect(formCtrl['element_']).toBe(element);
     expect(formCtrl['scope_']).toBe($scope);
     expect(formCtrl['timeout_']).toBe(timeout);
@@ -70,7 +84,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
     descriptorList.push(ogclayerMock);
     descriptorList.push(ogclayerMock2);
 
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     expect(formCtrl['cachedDescriptorList_'].length).toBe(2);
   });
@@ -80,7 +94,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
     descriptorList.push(ogclayerMock);
     descriptorList.push(ogclayerMock2);
 
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     expect(formCtrl['tree'].length).toBe(2);
     formCtrl.add();
@@ -92,7 +106,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
     descriptorList.push(ogclayerMock);
     descriptorList.push(ogclayerMock2);
 
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     expect(formCtrl['cachedDescriptorList_'].length).toBe(2);
   });
@@ -103,7 +117,7 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
     descriptorList.push(ogclayerMock2);
 
     $scope['columnMapping'] = mapping;
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     formCtrl.validate();
 
@@ -112,25 +126,25 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
   });
 
   it('should validate if more than one colomn exists', function() {
-    var column = new os.column.ColumnMapping;
+    var column = new ColumnMapping;
 
     column.addColumn('bob', 'test2');
-    spyOn(os.column.ColumnMappingManager.getInstance(), 'getOwnerMapping').andReturn(column);
+    spyOn(ColumnMappingManager.getInstance(), 'getOwnerMapping').andReturn(column);
     column.addColumn('bob', 'test2');
 
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     formCtrl.validate();
 
-    expect(formCtrl['otherCMText']).toBe('One of your columns (<b></b>) is currently'
-    + ' in use on the <b>null</b> column association.');
+    expect(formCtrl['otherCMText']).toBe('One of your columns (<b></b>) is currently ' +
+      'in use on the <b>null</b> column association.');
     expect(cmForm.$valid).toBe(false);
   });
 
   it('should return the all descriptors in the descriptor list', function() {
     descriptorList.push(ogclayerMock);
     descriptorList.push(ogclayerMock);
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     var actuallist = formCtrl.getLayersFunction();
     expect(actuallist.length).toBe(2);
@@ -140,20 +154,20 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
     descriptorList.push(ogclayerMock);
     descriptorList.push(ogclayerMock);
 
-    var invalidDescriptor = new os.data.ConfigDescriptor;
-    var wmtsServer = new plugin.ogc.wmts.WMTSServer;
+    var invalidDescriptor = new ConfigDescriptor;
+    var wmtsServer = new WMTSServer;
     spyOn(wmtsServer, 'getEnabled').andReturn(true);
     spyOn(invalidDescriptor, 'getDataProvider').andReturn(wmtsServer);
     descriptorList.push(invalidDescriptor);
 
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     var actuallist = formCtrl.getLayersFunction();
     expect(actuallist.length).toBe(2);
   });
 
   it('should confirm an edit of column mappings', function() {
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     spyOn(formCtrl, 'cancel');
     formCtrl.confirm();
@@ -161,20 +175,20 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
   });
 
   it('should call window close', function() {
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
-    spyOn(os.ui.window, 'close');
+    spyOn(osWindow, 'close');
 
     formCtrl.cancel();
 
-    expect(os.ui.window.close).toHaveBeenCalled();
+    expect(osWindow.close).toHaveBeenCalled();
   });
 
   it('should remove a column from the tree', function() {
-    var columnModelNode = new os.ui.column.mapping.ColumnModelNode;
-    var column = new os.column.ColumnMapping;
+    var columnModelNode = new ColumnModelNode;
+    var column = new ColumnMapping;
     columnModelNode.setColumnModel(column);
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     spyOn(formCtrl, 'validateLayers_');
     formCtrl.add();
@@ -185,13 +199,13 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
   });
 
   it('should find no duplicates layer', function() {
-    var mapping = new os.column.ColumnMapping();
+    var mapping = new ColumnMapping();
     mapping.addColumn('Bob', 'Dole');
     mapping.addColumn('Dole', 'Bolan');
 
     $scope['columnMapping'] = mapping;
 
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
+    var formCtrl = new Controller($scope, element, timeout);
 
     formCtrl.validateLayers_();
 
@@ -199,13 +213,17 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
   });
 
   it('should find a duplicated layer', function() {
-    var mapping = new os.column.ColumnMapping();
-    var columnModelNode = new os.ui.column.mapping.ColumnModelNode;
-    var ogclayer = new plugin.ogc.OGCLayerDescriptor;
+    var mapping = new ColumnMapping();
+    var columnModelNode = new ColumnModelNode;
+    var ogclayer = new OGCLayerDescriptor;
     mapping.addColumn('Bob', 'Dole');
     mapping.addColumn('Bob', 'Bolan');
 
-    spyOn(ol.array, 'find').andCallFake(function() {
+    $scope['columnMapping'] = mapping;
+
+    var formCtrl = new Controller($scope, element, timeout);
+
+    spyOn(formCtrl.tree, 'find').andCallFake(function() {
       return columnModelNode;
     });
     spyOn(columnModelNode, 'getInitialLayer').andCallFake(function() {
@@ -214,10 +232,6 @@ describe('os.ui.column.mapping.ColumnMappingFormCtrl', function() {
     spyOn(ogclayer, 'getTitle').andCallFake(function() {
       return 'test';
     });
-
-    $scope['columnMapping'] = mapping;
-
-    var formCtrl = new os.ui.column.mapping.ColumnMappingFormCtrl($scope, element, timeout);
 
     formCtrl.validateLayers_();
 

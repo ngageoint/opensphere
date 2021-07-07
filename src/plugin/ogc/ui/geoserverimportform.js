@@ -3,7 +3,7 @@ goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
-const geoserverDirective = goog.require('plugin.ogc.ui.geoserverDirective');
+const {directive: geoserverDirective} = goog.require('plugin.ogc.ui.GeoserverImportUI');
 
 
 /**

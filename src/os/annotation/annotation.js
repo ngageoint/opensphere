@@ -7,7 +7,7 @@ goog.require('os.annotation.TailStyle');
 goog.require('os.feature');
 goog.require('os.ui');
 goog.require('os.ui.FeatureEditCtrl');
-goog.require('os.ui.color.colorPickerDirective');
+goog.require('os.ui.color.ColorPickerUI');
 
 
 /**

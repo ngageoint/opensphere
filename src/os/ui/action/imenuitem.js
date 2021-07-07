@@ -1,6 +1,7 @@
-goog.provide('os.ui.action.IMenuItem');
+goog.module('os.ui.action.IMenuItem');
+goog.module.declareLegacyNamespace();
 
-
+const MenuOptions = goog.requireType('os.ui.action.MenuOptions');
 
 /**
  * Represents an entry in a menu.
@@ -8,25 +9,24 @@ goog.provide('os.ui.action.IMenuItem');
  * @interface
  * @deprecated Please use {@link os.ui.menu.Menu} and {@link os.ui.menu.MenuItem} instead
  */
-os.ui.action.IMenuItem = function() {};
+class IMenuItem {
+  /**
+   * Get the display name for the menu item
+   * @return {string}
+   */
+  getName() {}
 
+  /**
+   * Get the description for the menu item, useful for tool tips
+   * @return {?string}
+   */
+  getDescription() {}
 
-/**
- * Get the display name for the menu item
- * @type {function(): string}
- */
-os.ui.action.IMenuItem.prototype.getName;
+  /**
+   * Get the menu options which tells the client how to display this menu item
+   * @return {!MenuOptions}
+   */
+  getMenuOptions() {}
+}
 
-
-/**
- * Get the description for the menu item, useful for tool tips
- * @type {function(): ?string}
- */
-os.ui.action.IMenuItem.prototype.getDescription;
-
-
-/**
- * Get the menu options which tells the client how to display this menu item
- * @type {function(): !os.ui.action.MenuOptions}
- */
-os.ui.action.IMenuItem.prototype.getMenuOptions;
+exports = IMenuItem;

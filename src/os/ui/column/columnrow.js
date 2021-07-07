@@ -1,6 +1,8 @@
-goog.provide('os.ui.column.ColumnRowCtrl');
-goog.provide('os.ui.column.columnRowDirective');
-goog.require('os.ui.Module');
+goog.module('os.ui.column.columnRowDirective');
+goog.module.declareLegacyNamespace();
+
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -8,19 +10,28 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-os.ui.column.columnRowDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      'item': '='
-    },
-    templateUrl: os.ROOT + 'views/column/columnrow.html'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: {
+    'item': '='
+  },
+  templateUrl: ROOT + 'views/column/columnrow.html'
+});
+
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'columnrow';
 
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('columnrow', [os.ui.column.columnRowDirective]);
+Module.directive(directiveTag, [directive]);
+
+exports = {
+  directive,
+  directiveTag
+};

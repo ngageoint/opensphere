@@ -94,7 +94,7 @@ goog.require('os.ui.TimelinePanelUI');
 goog.require('os.ui.alertsDirective');
 goog.require('os.ui.areasDirective');
 goog.require('os.ui.clear.ClearEntry');
-goog.require('os.ui.clearManager');
+goog.require('os.ui.clear.ClearManager');
 goog.require('os.ui.column.mapping.ColumnMappingSettings');
 goog.require('os.ui.columnactions.ColumnActionEvent');
 goog.require('os.ui.columnactions.ColumnActionManager');
@@ -282,19 +282,20 @@ os.MainCtrl = function($scope, $element, $compile, $timeout, $injector) {
   os.stateManager = stateManager;
 
   // set up clear control
-  os.ui.clearManager.addEntry(new os.ui.clear.ClearEntry('exclusionAreas', 'Exclusion Areas',
+  const clearManager = os.ui.clear.ClearManager.getInstance();
+  clearManager.addEntry(new os.ui.clear.ClearEntry('exclusionAreas', 'Exclusion Areas',
       os.command.ExclusionQueryClear, 'Clear all exclusion query areas'));
-  os.ui.clearManager.addEntry(new os.ui.clear.ClearEntry('queryEntries', 'Layer/Area/Filter query combinations',
+  clearManager.addEntry(new os.ui.clear.ClearEntry('queryEntries', 'Layer/Area/Filter query combinations',
       os.ui.query.cmd.QueryEntriesClear, 'Clears all layer/area/filter query combinations'));
-  os.ui.clearManager.addEntry(new os.ui.clear.ClearEntry('layers', 'Layers', os.command.LayerClear,
+  clearManager.addEntry(new os.ui.clear.ClearEntry('layers', 'Layers', os.command.LayerClear,
       'Clear all layers except the defaults'));
-  os.ui.clearManager.addEntry(new os.ui.clear.ClearEntry('mapPosition', 'Map Position', os.command.ClearMapPosition,
+  clearManager.addEntry(new os.ui.clear.ClearEntry('mapPosition', 'Map Position', os.command.ClearMapPosition,
       'Reset map position to the default'));
-  os.ui.clearManager.addEntry(new os.ui.clear.ClearEntry('nonQueryFeatures', 'Non-query Features',
+  clearManager.addEntry(new os.ui.clear.ClearEntry('nonQueryFeatures', 'Non-query Features',
       os.command.NonQueryClear, 'Clears features in the Drawing Layer except for query features'));
-  os.ui.clearManager.addEntry(new os.ui.clear.ClearEntry('queryAreas', 'Query Areas', os.command.QueryClear,
+  clearManager.addEntry(new os.ui.clear.ClearEntry('queryAreas', 'Query Areas', os.command.QueryClear,
       'Clear all spatial query areas'));
-  os.ui.clearManager.addEntry(new os.ui.clear.ClearEntry('states', 'States', os.ui.state.cmd.StateClear,
+  clearManager.addEntry(new os.ui.clear.ClearEntry('states', 'States', os.ui.state.cmd.StateClear,
       'Deactivate all states'));
 
   // set up search

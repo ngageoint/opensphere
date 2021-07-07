@@ -12,6 +12,7 @@ const ImportEventType = goog.require('os.ui.im.ImportEventType');
 const FilterActionNode = goog.require('os.ui.im.action.FilterActionNode');
 const FilterActionTreeSearch = goog.require('os.ui.im.action.FilterActionTreeSearch');
 const AbstractGroupByTreeSearchCtrl = goog.require('os.ui.slick.AbstractGroupByTreeSearchCtrl');
+const SlickGridEvent = goog.require('os.ui.slick.SlickGridEvent');
 const osWindow = goog.require('os.ui.window');
 const {launchFilterActionExport} = goog.require('os.ui.im.action.FilterActionExportUI');
 
@@ -80,7 +81,7 @@ class Controller extends AbstractGroupByTreeSearchCtrl {
     $scope.$on(ImportActionEventType.EDIT_ENTRY, this.onEditEvent.bind(this));
     $scope.$on(ImportActionEventType.REMOVE_ENTRY, this.onRemoveEvent.bind(this));
 
-    $scope.$on(os.ui.slick.SlickGridEvent.ORDER_CHANGE, this.onOrderChange.bind(this));
+    $scope.$on(SlickGridEvent.ORDER_CHANGE, this.onOrderChange.bind(this));
   }
 
   /**

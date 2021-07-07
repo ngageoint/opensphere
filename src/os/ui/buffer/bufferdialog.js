@@ -1,11 +1,16 @@
-goog.provide('os.ui.buffer.BufferDialogCtrl');
-goog.provide('os.ui.buffer.bufferDialogDirective');
+goog.module('os.ui.buffer.BufferDialogUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.Feature');
-goog.require('ol.proj.EPSG3857');
-goog.require('os');
-goog.require('os.ui.Module');
-goog.require('os.ui.buffer.bufferFormDirective');
+goog.require('os.ui.buffer.BufferFormUI');
+
+const {ROOT} = goog.require('os');
+const {ICON, createFromConfig, getBaseConfig} = goog.require('os.buffer');
+const {getSource} = goog.require('os.feature');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const osWindow = goog.require('os.ui.window');
+
+const {BufferConfig} = goog.requireType('os.buffer');
 
 
 /**
@@ -13,140 +18,175 @@ goog.require('os.ui.buffer.bufferFormDirective');
  *
  * @return {angular.Directive}
  */
-os.ui.buffer.bufferDialogDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    templateUrl: os.ROOT + 'views/buffer/bufferdialog.html',
-    controller: os.ui.buffer.BufferDialogCtrl,
-    controllerAs: 'buffer'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  templateUrl: ROOT + 'views/buffer/bufferdialog.html',
+  controller: Controller,
+  controllerAs: 'buffer'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'bufferdialog';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('bufferdialog', [os.ui.buffer.bufferDialogDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller function for the bufferdialog directive
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.buffer.BufferDialogCtrl = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.JQLite}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
+
+    /**
+     * @type {BufferConfig}
+     * @protected
+     */
+    this.config = $scope['config'] = getBaseConfig();
+
+    /**
+     * Warning message to display in the UI.
+     * @type {string}
+     */
+    this['warningMessage'] = '';
+
+    if ($scope['features'] && $scope['features'].length > 0) {
+      // features were provided so hide the source picker
+      this.config['features'] = $scope['features'];
+      this['showSourcePicker'] = false;
+
+      // if the features have a source and it's the same for all features, set the source so columns will be displayed
+      var source = getSource(this.config['features'][0]);
+      if (source) {
+        for (var i = 0; i < this.config['features'].length; i++) {
+          if (getSource(this.config['features'][0]) != source) {
+            source = null;
+            break;
+          }
+        }
+
+        $scope['sources'] = source ? [source] : undefined;
+      }
+    } else {
+      // features weren't provided, allow the user to choose from loaded sources
+      this['showSourcePicker'] = true;
+    }
+
+    // title override was provided
+    if ($scope['title']) {
+      this.config['title'] = $scope['title'];
+    }
+
+    $scope.$on('$destroy', this.destroy_.bind(this));
+    $scope.$emit(WindowEventType.READY);
+  }
+
+  /**
+   * Clean up.
+   *
    * @private
    */
-  this.element_ = $element;
+  destroy_() {
+    this.element_ = null;
+  }
 
   /**
-   * @type {os.buffer.BufferConfig}
-   * @protected
+   * Close the window.
+   *
+   * @export
    */
-  this.config = $scope['config'] = os.buffer.getBaseConfig();
+  cancel() {
+    osWindow.close(this.element_);
+  }
 
   /**
-   * Warning message to display in the UI.
-   * @type {string}
+   * Create buffer regions and close the window.
+   *
+   * @export
    */
-  this['warningMessage'] = '';
+  confirm() {
+    createFromConfig(this.config);
+    this.cancel();
+  }
 
-  if ($scope['features'] && $scope['features'].length > 0) {
-    // features were provided so hide the source picker
-    this.config['features'] = $scope['features'];
-    this['showSourcePicker'] = false;
-
-    // if the features have a source and it's the same for all features, set the source so columns will be displayed
-    var source = os.feature.getSource(this.config['features'][0]);
-    if (source) {
-      for (var i = 0; i < this.config['features'].length; i++) {
-        if (os.feature.getSource(this.config['features'][0]) != source) {
-          source = null;
-          break;
-        }
-      }
-
-      $scope['sources'] = source ? [source] : undefined;
+  /**
+   * Get the status text to display at the bottom of the dialog.
+   *
+   * @return {string}
+   * @export
+   */
+  getStatus() {
+    if (!this['showSourcePicker']) {
+      return '';
     }
+
+    if (!this.isDataReady()) {
+      return 'No features chosen.';
+    }
+
+    var count = this.config['features'].length;
+    return count + ' feature' + (count > 1 ? 's' : '') + ' chosen.';
+  }
+
+  /**
+   * If the status display is valid.
+   *
+   * @return {string}
+   * @export
+   */
+  isDataReady() {
+    return !this['showSourcePicker'] || (this.config && this.config['features'] && this.config['features'].length > 0);
+  }
+}
+
+/**
+ * Launch a dialog to create buffer regions around features.
+ *
+ * @param {Object} options
+ */
+const launchBufferDialog = function(options) {
+  var windowId = 'Buffer';
+  if (osWindow.exists(windowId)) {
+    osWindow.bringToFront(windowId);
   } else {
-    // features weren't provided, allow the user to choose from loaded sources
-    this['showSourcePicker'] = true;
+    var windowOptions = {
+      'id': windowId,
+      'label': 'Create Buffer Region' + (options['features'] ? '' : 's'),
+      'icon': 'fa ' + ICON,
+      'x': 'center',
+      'y': 'center',
+      'width': '425',
+      'min-width': '300',
+      'max-width': '800',
+      'height': 'auto',
+      'show-close': 'true'
+    };
+
+    var template = `<${directiveTag}></${directiveTag}>`;
+    osWindow.create(windowOptions, template, undefined, undefined, undefined, options);
   }
-
-  // title override was provided
-  if ($scope['title']) {
-    this.config['title'] = $scope['title'];
-  }
-
-  $scope.$on('$destroy', this.destroy_.bind(this));
-  $scope.$emit(os.ui.WindowEventType.READY);
 };
 
-
-/**
- * Clean up.
- *
- * @private
- */
-os.ui.buffer.BufferDialogCtrl.prototype.destroy_ = function() {
-  this.element_ = null;
-};
-
-
-/**
- * Close the window.
- *
- * @export
- */
-os.ui.buffer.BufferDialogCtrl.prototype.cancel = function() {
-  os.ui.window.close(this.element_);
-};
-
-
-/**
- * Create buffer regions and close the window.
- *
- * @export
- */
-os.ui.buffer.BufferDialogCtrl.prototype.confirm = function() {
-  os.buffer.createFromConfig(this.config);
-  this.cancel();
-};
-
-
-/**
- * Get the status text to display at the bottom of the dialog.
- *
- * @return {string}
- * @export
- */
-os.ui.buffer.BufferDialogCtrl.prototype.getStatus = function() {
-  if (!this['showSourcePicker']) {
-    return '';
-  }
-
-  if (!this.isDataReady()) {
-    return 'No features chosen.';
-  }
-
-  var count = this.config['features'].length;
-  return count + ' feature' + (count > 1 ? 's' : '') + ' chosen.';
-};
-
-
-/**
- * If the status display is valid.
- *
- * @return {string}
- * @export
- */
-os.ui.buffer.BufferDialogCtrl.prototype.isDataReady = function() {
-  return !this['showSourcePicker'] || (this.config && this.config['features'] && this.config['features'].length > 0);
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  launchBufferDialog
 };

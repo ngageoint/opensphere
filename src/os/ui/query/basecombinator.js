@@ -14,8 +14,6 @@ goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
 goog.require('os.query.BaseQueryManager');
 goog.require('os.ui.Module');
-goog.require('os.ui.action.Action');
-goog.require('os.ui.action.ActionManager');
 goog.require('os.ui.filter.FilterEventType');
 goog.require('os.ui.filter.ui.copyFilterDirective');
 goog.require('os.ui.filter.ui.editFiltersDirective');

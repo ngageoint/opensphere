@@ -1,131 +1,149 @@
-goog.provide('os.ui.clear.ClearManager');
-goog.provide('os.ui.clearManager');
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('ol.array');
-goog.require('os.command.SequenceCommand');
-goog.require('os.ui.clear.ClearEntry');
+goog.module('os.ui.clear.ClearManager');
+goog.module.declareLegacyNamespace();
 
+const log = goog.require('goog.log');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const SequenceCommand = goog.require('os.command.SequenceCommand');
+const Settings = goog.require('os.config.Settings');
+
+const Logger = goog.requireType('goog.log.Logger');
+const ClearEntry = goog.requireType('os.ui.clear.ClearEntry');
 
 
 /**
  * Manages clearing/resetting parts of the application.
- *
- * @constructor
  */
-os.ui.clear.ClearManager = function() {
+class ClearManager {
   /**
-   * @type {goog.log.Logger}
-   * @private
+   * Constructor.
    */
-  this.log_ = os.ui.clear.ClearManager.LOGGER_;
+  constructor() {
+    /**
+     * @type {Logger}
+     * @private
+     */
+    this.log_ = logger;
+
+    /**
+     * @type {!Object<string, !ClearEntry>}
+     * @private
+     */
+    this.entries_ = {};
+  }
 
   /**
-   * @type {!Object<string, !os.ui.clear.ClearEntry>}
+   * @return {!Object<string, !ClearEntry>}
+   */
+  getEntries() {
+    return this.entries_;
+  }
+
+  /**
+   * Add a clear type. These are saved as checklist items so they're easily displayed using the checklist directive.
+   *
+   * @param {!ClearEntry} entry The clear command class
+   */
+  addEntry(entry) {
+    if (!(entry.id in this.entries_)) {
+      var enabled = /** @type {boolean} */ (Settings.getInstance().get(['ui', 'clear', entry.id], false));
+      entry.enabled = enabled;
+
+      this.entries_[entry.id] = entry;
+    } else {
+      log.error(this.log_, 'Clear type already exists: ' + entry.label);
+    }
+  }
+
+  /**
+   * Execute the enabled clear entries.
+   *
+   * @param {boolean=} opt_all Optionally clear all regardless of their enabled state.
+   * @param {Array<string>=} opt_skip clear entry ids to skip
+   */
+  clear(opt_all, opt_skip) {
+    var commands = [];
+    var types = [];
+    for (var key in this.entries_) {
+      var entry = this.entries_[key];
+      if (opt_skip && opt_skip.length && opt_skip.includes(key)) {
+        continue;
+      }
+      if (entry.enabled || opt_all) {
+        commands.push(entry.createCommand());
+        types.push(entry.label);
+      }
+    }
+
+    if (commands.length > 0) {
+      var cmd = null;
+      if (commands.length > 1) {
+        cmd = new SequenceCommand();
+        cmd.setCommands(commands);
+        cmd.title = 'Clear ' + types.join(', ');
+      } else {
+        cmd = commands[0];
+      }
+
+      CommandProcessor.getInstance().addCommand(cmd);
+    }
+
+    this.saveConfig_();
+  }
+
+  /**
+   * Reset clear entry states from settings.
+   */
+  reset() {
+    for (var key in this.entries_) {
+      var entry = this.entries_[key];
+      entry.enabled = /** @type {boolean} */ (Settings.getInstance().get(['ui', 'clear', entry.id], false));
+    }
+  }
+
+  /**
+   * Save clear entry enabled states to settings.
+   *
    * @private
    */
-  this.entries_ = {};
-};
-goog.addSingletonGetter(os.ui.clear.ClearManager);
+  saveConfig_() {
+    for (var key in this.entries_) {
+      var entry = this.entries_[key];
+      Settings.getInstance().set(['ui', 'clear', entry.id], entry.enabled);
+    }
+  }
 
+  /**
+   * Get the global instance.
+   * @return {!ClearManager}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new ClearManager();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {ClearManager} value The instance.
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
+
+/**
+ * The global instance.
+ * @type {ClearManager}
+ */
+let instance;
 
 /**
  * The logger.
- * @type {goog.log.Logger}
- * @const
- * @private
+ * @type {Logger}
  */
-os.ui.clear.ClearManager.LOGGER_ = goog.log.getLogger('os.ui.clear.ClearManager');
+const logger = log.getLogger('os.ui.clear.ClearManager');
 
 
-/**
- * @return {!Object<string, !os.ui.clear.ClearEntry>}
- */
-os.ui.clear.ClearManager.prototype.getEntries = function() {
-  return this.entries_;
-};
-
-
-/**
- * Add a clear type. These are saved as checklist items so they're easily displayed using the checklist directive.
- *
- * @param {!os.ui.clear.ClearEntry} entry The clear command class
- */
-os.ui.clear.ClearManager.prototype.addEntry = function(entry) {
-  if (!(entry.id in this.entries_)) {
-    var enabled = /** @type {boolean} */ (os.settings.get(['ui', 'clear', entry.id], false));
-    entry.enabled = enabled;
-
-    this.entries_[entry.id] = entry;
-  } else {
-    goog.log.error(this.log_, 'Clear type already exists: ' + entry.label);
-  }
-};
-
-
-/**
- * Execute the enabled clear entries.
- *
- * @param {boolean=} opt_all Optionally clear all regardless of their enabled state.
- * @param {Array<string>=} opt_skip clear entry ids to skip
- */
-os.ui.clear.ClearManager.prototype.clear = function(opt_all, opt_skip) {
-  var commands = [];
-  var types = [];
-  for (var key in this.entries_) {
-    var entry = this.entries_[key];
-    if (opt_skip && opt_skip.length && ol.array.includes(opt_skip, key)) {
-      continue;
-    }
-    if (entry.enabled || opt_all) {
-      commands.push(entry.createCommand());
-      types.push(entry.label);
-    }
-  }
-
-  if (commands.length > 0) {
-    var cmd = null;
-    if (commands.length > 1) {
-      cmd = new os.command.SequenceCommand();
-      cmd.setCommands(commands);
-      cmd.title = 'Clear ' + types.join(', ');
-    } else {
-      cmd = commands[0];
-    }
-
-    os.command.CommandProcessor.getInstance().addCommand(cmd);
-  }
-
-  this.saveConfig_();
-};
-
-
-/**
- * Reset clear entry states from settings.
- */
-os.ui.clear.ClearManager.prototype.reset = function() {
-  for (var key in this.entries_) {
-    var entry = this.entries_[key];
-    entry.enabled = /** @type {boolean} */ (os.settings.get(['ui', 'clear', entry.id], false));
-  }
-};
-
-
-/**
- * Save clear entry enabled states to settings.
- *
- * @private
- */
-os.ui.clear.ClearManager.prototype.saveConfig_ = function() {
-  for (var key in this.entries_) {
-    var entry = this.entries_[key];
-    os.settings.set(['ui', 'clear', entry.id], entry.enabled);
-  }
-};
-
-
-/**
- * Global reference to the clear manager instance.
- * @type {os.ui.clear.ClearManager}
- */
-os.ui.clearManager = os.ui.clear.ClearManager.getInstance();
+exports = ClearManager;

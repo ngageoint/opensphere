@@ -1,8 +1,6 @@
 goog.module('os.buffer');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.buffer.bufferDialogDirective');
-
 const userAgent = goog.require('goog.userAgent');
 const Feature = goog.require('ol.Feature');
 const GeometryType = goog.require('ol.geom.GeometryType');
@@ -16,7 +14,6 @@ const math = goog.require('os.math');
 const Units = goog.require('os.math.Units');
 const osStyle = goog.require('os.style');
 const AreaAdd = goog.require('os.ui.query.cmd.AreaAdd');
-const osWindow = goog.require('os.ui.window');
 
 const Geometry = goog.requireType('ol.geom.Geometry');
 const GeometryCollection = goog.requireType('ol.geom.GeometryCollection');
@@ -285,34 +282,6 @@ const setCreateFromConfig = function(f) {
   createFromConfig_ = f;
 };
 
-/**
- * Launch a dialog to create buffer regions around features.
- *
- * @param {Object} options
- */
-const launchDialog = function(options) {
-  var windowId = 'Buffer';
-  if (osWindow.exists(windowId)) {
-    osWindow.bringToFront(windowId);
-  } else {
-    var windowOptions = {
-      'id': windowId,
-      'label': 'Create Buffer Region' + (options['features'] ? '' : 's'),
-      'icon': 'fa ' + ICON,
-      'x': 'center',
-      'y': 'center',
-      'width': '425',
-      'min-width': '300',
-      'max-width': '800',
-      'height': 'auto',
-      'show-close': 'true'
-    };
-
-    var template = '<bufferdialog></bufferdialog>';
-    osWindow.create(windowOptions, template, undefined, undefined, undefined, options);
-  }
-};
-
 exports = {
   ICON,
   BASE_KEY,
@@ -327,6 +296,5 @@ exports = {
   allowLivePreview,
   createFromConfig,
   setCreateFromConfig,
-  launchDialog,
   BufferConfig
 };
