@@ -4,6 +4,7 @@ goog.provide('os.config.DisplaySettingsCtrl');
 
 goog.require('goog.userAgent');
 goog.require('os');
+goog.require('os.CameraMode');
 goog.require('os.MapMode');
 goog.require('os.config');
 goog.require('os.map');

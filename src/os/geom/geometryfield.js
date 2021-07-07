@@ -1,11 +1,11 @@
-goog.provide('os.geom.GeometryField');
-
+goog.module('os.geom.GeometryField');
+goog.module.declareLegacyNamespace();
 
 /**
  * Fields used on `ol.geom.Geometry` objects.
  * @enum {string}
  */
-os.geom.GeometryField = {
+exports = {
   NORMALIZED: '_normalized',
   PROJECTION: '_projection'
 };

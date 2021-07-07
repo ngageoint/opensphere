@@ -8,6 +8,7 @@ goog.require('os');
 goog.require('os.map');
 goog.require('os.proj');
 goog.require('os.proj.switch');
+goog.require('os.proj.switch.SwitchProjection');
 goog.require('os.ui.config.SettingPlugin');
 
 

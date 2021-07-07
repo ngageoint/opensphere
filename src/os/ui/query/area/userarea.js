@@ -17,6 +17,7 @@ goog.require('os.extent');
 goog.require('os.geo.jsts');
 goog.require('os.interpolate');
 goog.require('os.map');
+goog.require('os.map.instance');
 goog.require('os.style');
 goog.require('os.ui.Module');
 goog.require('os.ui.action.ActionEvent');
@@ -460,16 +461,17 @@ os.ui.query.area.UserAreaCtrl.prototype.getAreaTypeTooltip = function(type) {
  * @protected
  */
 os.ui.query.area.UserAreaCtrl.prototype.setArea = function(area) {
-  if (this['area'] && os.map.mapContainer) {
+  var mapContainer = os.map.instance.getMapContainer();
+
+  if (this['area']) {
     // remove the existing preview
-    os.map.mapContainer.removeFeature(this['area']);
+    mapContainer.removeFeature(this['area']);
   }
 
   this['area'] = area;
 
-  if (area && os.map.mapContainer) {
+  if (area) {
     // display and fly to a preview of the area
-    var mapContainer = os.map.mapContainer;
     var geometry = area.getGeometry();
 
     if (geometry) {

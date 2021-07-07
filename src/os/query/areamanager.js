@@ -14,6 +14,8 @@ const geo2 = goog.require('os.geo2');
 const DrawingLayer = goog.require('os.layer.Drawing');
 const osMap = goog.require('os.map');
 const {getMapContainer} = goog.require('os.map.instance');
+const CommandListEvent = goog.require('os.proj.switch.CommandListEvent');
+const SwitchProjection = goog.require('os.proj.switch.SwitchProjection');
 const query = goog.require('os.query');
 const BaseAreaManager = goog.require('os.query.BaseAreaManager');
 const {getQueryManager} = goog.require('os.query.instance');
@@ -47,8 +49,8 @@ class AreaManager extends BaseAreaManager {
     Settings.getInstance().listen(AreaManager.KEYS.EX_WIDTH, this.updateExWidth_, false, this);
 
     // when switching projections, we want to transform the areas we're keeping
-    os.proj.switch.SwitchProjection.getInstance().listen(
-        os.proj.switch.CommandListEvent.TYPE, this.onSwitchProjection, false, this);
+    SwitchProjection.getInstance().listen(
+        CommandListEvent.TYPE, this.onSwitchProjection, false, this);
   }
 
   /**
@@ -290,11 +292,11 @@ class AreaManager extends BaseAreaManager {
   /**
    * When SwitchProjection sets up its list of commands, add one to transform our areas.
    *
-   * @param {os.proj.switch.CommandListEvent} evt
+   * @param {CommandListEvent} evt
    * @protected
    */
   onSwitchProjection(evt) {
-    var sp = os.proj.switch.SwitchProjection.getInstance();
+    var sp = SwitchProjection.getInstance();
     var oldProjection = sp.getOldProjection();
     var newProjection = sp.getNewProjection();
 

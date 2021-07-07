@@ -1,41 +1,43 @@
-goog.provide('os.map.interaction');
+goog.module('os.map.interaction');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.asserts');
-goog.require('ol.Collection');
-goog.require('ol.interaction');
-goog.require('ol.interaction.DragPan');
-goog.require('ol.interaction.Interaction');
-goog.require('os.interaction.ContextMenu');
-goog.require('os.interaction.DoubleClick');
-goog.require('os.interaction.DoubleClickZoom');
-goog.require('os.interaction.DragBox');
-goog.require('os.interaction.DragCircle');
-goog.require('os.interaction.DragZoom');
-goog.require('os.interaction.DrawLine');
-goog.require('os.interaction.DrawPolygon');
-goog.require('os.interaction.Hover');
-goog.require('os.interaction.KeyboardPan');
-goog.require('os.interaction.KeyboardTiltRotate');
-goog.require('os.interaction.KeyboardZoom');
-goog.require('os.interaction.Measure');
-goog.require('os.interaction.MouseRotate');
-goog.require('os.interaction.MouseZoom');
-goog.require('os.interaction.PinchZoom');
-goog.require('os.interaction.Reset');
-goog.require('os.interaction.Select');
-goog.require('os.ui.menu.map');
-goog.require('os.ui.menu.spatial');
-goog.require('os.ui.ol.interaction.MouseWheelZoom');
+const asserts = goog.require('goog.asserts');
+const Collection = goog.require('ol.Collection');
+const DragPan = goog.require('ol.interaction.DragPan');
+const ContextMenu = goog.require('os.interaction.ContextMenu');
+const DoubleClick = goog.require('os.interaction.DoubleClick');
+const DoubleClickZoom = goog.require('os.interaction.DoubleClickZoom');
+const DragBox = goog.require('os.interaction.DragBox');
+const DragCircle = goog.require('os.interaction.DragCircle');
+const DragZoom = goog.require('os.interaction.DragZoom');
+const DrawLine = goog.require('os.interaction.DrawLine');
+const DrawPolygon = goog.require('os.interaction.DrawPolygon');
+const Hover = goog.require('os.interaction.Hover');
+const KeyboardPan = goog.require('os.interaction.KeyboardPan');
+const KeyboardTiltRotate = goog.require('os.interaction.KeyboardTiltRotate');
+const KeyboardZoom = goog.require('os.interaction.KeyboardZoom');
+const Measure = goog.require('os.interaction.Measure');
+const MouseRotate = goog.require('os.interaction.MouseRotate');
+const MouseZoom = goog.require('os.interaction.MouseZoom');
+const PinchZoom = goog.require('os.interaction.PinchZoom');
+const Reset = goog.require('os.interaction.Reset');
+const Select = goog.require('os.interaction.Select');
+const mapMenu = goog.require('os.ui.menu.map');
+const spatial = goog.require('os.ui.menu.spatial');
+const MouseWheelZoom = goog.require('os.ui.ol.interaction.MouseWheelZoom');
+
+const interaction = goog.requireType('ol.interaction');
+const ContextMenuOptions = goog.requireType('os.ui.ol.interaction.ContextMenuOptions');
 
 
 /**
  * Get interactions that should be registered with the map.
  *
- * @return {ol.Collection}
+ * @return {Collection}
  */
-os.map.interaction.getInteractions = function() {
+const getInteractions = function() {
   // interaction to use ctrl+drag for zooming
-  var ctrlZoom = new os.interaction.DragZoom();
+  var ctrlZoom = new DragZoom();
 
   // interaction to disable alt+shift+drag to rotate the map and shift+drag to zoom from the defaults
   var options = {
@@ -43,64 +45,64 @@ os.map.interaction.getInteractions = function() {
   };
 
   // Mouse Wheel zoom AND left+right click and drag zoom
-  var mwZoom = new os.ui.ol.interaction.MouseWheelZoom(options);
-  var mZoom = new os.interaction.MouseZoom(options);
-  var dcZoom = new os.interaction.DoubleClickZoom();
+  var mwZoom = new MouseWheelZoom(options);
+  var mZoom = new MouseZoom(options);
+  var dcZoom = new DoubleClickZoom();
 
   // Mouse rotate
-  var mRotate = new os.interaction.MouseRotate(options);
+  var mRotate = new MouseRotate(options);
 
   // Screen pinch-zoom
-  var pinchZoom = new os.interaction.PinchZoom();
+  var pinchZoom = new PinchZoom();
 
-  var keyTiltRotate = new os.interaction.KeyboardTiltRotate(options);
+  var keyTiltRotate = new KeyboardTiltRotate(options);
 
   // interaction to handle selecting vector features
-  var select = new os.interaction.Select(options);
+  var select = new Select(options);
 
-  var dragPan = new ol.interaction.DragPan({
+  var dragPan = new DragPan({
     kinetic: undefined,
     delta: 0.2
   });
 
   // interaction to handle highlighting vector features
-  var hover = new os.interaction.Hover(options);
+  var hover = new Hover(options);
 
   // interaction for drawing rectangular areas
-  var drawBox = new os.interaction.DragBox();
+  var drawBox = new DragBox();
 
   // interaction for drawing circular areas
-  var drawCircle = new os.interaction.DragCircle();
+  var drawCircle = new DragCircle();
 
   // interaction for drawing polygon areas
-  var drawPolygon = new os.interaction.DrawPolygon();
+  var drawPolygon = new DrawPolygon();
 
   // interaction for drawing lines
-  var drawLine = new os.interaction.DrawLine();
+  var drawLine = new DrawLine();
 
   // interaction for double clicking features
-  var doubleClick = new os.interaction.DoubleClick();
+  var doubleClick = new DoubleClick();
 
   // interaction for measure tool
-  var measure = new os.interaction.Measure();
+  var measure = new Measure();
 
-  var kbPan = new os.interaction.KeyboardPan();
+  var kbPan = new KeyboardPan();
 
-  var kbZoom = new os.interaction.KeyboardZoom(options);
+  var kbZoom = new KeyboardZoom(options);
 
-  var reset = new os.interaction.Reset();
+  var reset = new Reset();
 
-  goog.asserts.assert(os.ui.menu.map.MENU != null, 'map manager has not been initialized');
-  goog.asserts.assert(os.ui.menu.spatial.MENU != null, 'spatial manager has not been initialized');
+  asserts.assert(mapMenu.MENU != null, 'map manager has not been initialized');
+  asserts.assert(spatial.MENU != null, 'spatial manager has not been initialized');
 
-  var contextOptions = /** @type {os.ui.ol.interaction.ContextMenuOptions} */ ({
-    featureMenu: os.ui.menu.spatial.MENU,
-    mapMenu: os.ui.menu.map.MENU
+  var contextOptions = /** @type {ContextMenuOptions} */ ({
+    featureMenu: spatial.MENU,
+    mapMenu: mapMenu.MENU
   });
-  var contextMenu = new os.interaction.ContextMenu(contextOptions);
+  var contextMenu = new ContextMenu(contextOptions);
 
   // Run order is backwards, so 0 index is run last
-  var interactions = new ol.Collection([
+  var interactions = new Collection([
     hover,
     keyTiltRotate,
     kbPan,
@@ -126,4 +128,8 @@ os.map.interaction.getInteractions = function() {
   ]);
 
   return interactions;
+};
+
+exports = {
+  getInteractions
 };

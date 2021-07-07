@@ -3,6 +3,7 @@ goog.provide('os.filter.im.osFilterImportDirective');
 
 goog.require('os.filter.im.OSFilterImporter');
 goog.require('os.implements');
+goog.require('os.map.instance');
 goog.require('os.ui.Module');
 goog.require('os.ui.filter.im.FilterImportCtrl');
 
@@ -57,7 +58,7 @@ os.filter.im.OSFilterImportCtrl.prototype.getImporter = function() {
  */
 os.filter.im.OSFilterImportCtrl.prototype.getFilterables = function() {
   var filterables = os.filter.im.OSFilterImportCtrl.base(this, 'getFilterables');
-  var layers = os.map.mapContainer.getLayers();
+  var layers = os.map.instance.getMapContainer().getLayers();
 
   if (layers) {
     layers.forEach(function(layer) {

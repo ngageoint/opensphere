@@ -1,73 +1,64 @@
-goog.provide('os.proj');
+goog.module('os.proj');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.asserts');
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('ol.proj');
-goog.require('os.config.Settings');
+const asserts = goog.require('goog.asserts');
+const log = goog.require('goog.log');
+const olProj = goog.require('ol.proj');
+const Settings = goog.require('os.config.Settings');
+const osMap = goog.require('os.map');
 
-
-/**
- * @const
- * @type {string}
- */
-os.proj.EPSG4326 = 'EPSG:4326';
-
-
-/**
- * @const
- * @type {string}
- */
-os.proj.EPSG3857 = 'EPSG:3857';
-
-
-/**
- * @const
- * @type {string}
- */
-os.proj.EPSG3031 = 'EPSG:3031';
-
-
-/**
- * @const
- * @type {string}
- */
-os.proj.EPSG3413 = 'EPSG:3413';
-
-
-/**
- * @const
- * @type {string}
- */
-os.proj.CRS84 = 'CRS:84';
+const Logger = goog.requireType('goog.log.Logger');
+const Projection = goog.requireType('ol.proj.Projection');
 
 
 /**
  * @type {string}
  */
-os.proj.GOOGLE = 'EPSG:900913';
+const EPSG4326 = 'EPSG:4326';
 
+/**
+ * @type {string}
+ */
+const EPSG3857 = 'EPSG:3857';
+
+/**
+ * @type {string}
+ */
+const EPSG3031 = 'EPSG:3031';
+
+/**
+ * @type {string}
+ */
+const EPSG3413 = 'EPSG:3413';
+
+/**
+ * @type {string}
+ */
+const CRS84 = 'CRS:84';
+
+/**
+ * @type {string}
+ */
+const GOOGLE = 'EPSG:900913';
 
 /**
  * The logger.
- * @const
- * @type {goog.log.Logger}
- * @private
+ * @type {Logger}
  */
-os.proj.LOGGER_ = goog.log.getLogger('os.proj');
-
+const logger = log.getLogger('os.proj');
 
 /**
  * @param {boolean=} opt_all
  * @return {Array<Object<string, *>>}
  */
-os.proj.getProjections = function(opt_all) {
-  var projections = /** @type {Array<Object<string, *>>} */ (os.settings.get('projections', []));
+const getProjections = function(opt_all) {
+  var settings = Settings.getInstance();
+  var projections = /** @type {Array<Object<string, *>>} */ (settings.get('projections', []));
   projections = projections.concat(/** @type {Array<Object<string, *>>} */ (
-    os.settings.get('userProjections', [])));
+    settings.get('userProjections', [])));
 
   if (opt_all) {
-    var toAdd = [ol.proj.get(os.proj.EPSG3857), ol.proj.get(os.proj.EPSG4326)];
+    var toAdd = [olProj.get(EPSG3857), olProj.get(EPSG4326)];
 
     for (var i = 0, n = toAdd.length; i < n; i++) {
       var projection = toAdd[i];
@@ -85,12 +76,11 @@ os.proj.getProjections = function(opt_all) {
   return projections;
 };
 
-
 /**
  * Loads projections from settings
  */
-os.proj.loadProjections = function() {
-  var projections = os.proj.getProjections();
+const loadProjections = function() {
+  var projections = getProjections();
 
   for (var i = 0, n = projections.length; i < n; i++) {
     var code = /** @type {!string} */ (projections[i]['code']);
@@ -98,7 +88,7 @@ os.proj.loadProjections = function() {
 
     if (code && def) {
       proj4.defs(code, def);
-      var proj = ol.proj.get(code);
+      var proj = olProj.get(code);
 
       if (proj) {
         proj.setGlobal(!!projections[i]['isGlobal']);
@@ -113,39 +103,38 @@ os.proj.loadProjections = function() {
           proj.setWorldExtent(extent);
         }
 
-        ol.proj.addEquivalentTransforms(
-            ol.proj.EPSG4326.PROJECTIONS,
+        olProj.addEquivalentTransforms(
+            olProj.EPSG4326.PROJECTIONS,
             [proj],
-            ol.proj.getTransform(os.proj.EPSG4326, code),
-            ol.proj.getTransform(code, os.proj.EPSG4326));
+            olProj.getTransform(EPSG4326, code),
+            olProj.getTransform(code, EPSG4326));
 
-        ol.proj.addEquivalentTransforms(
-            ol.proj.EPSG3857.PROJECTIONS,
+        olProj.addEquivalentTransforms(
+            olProj.EPSG3857.PROJECTIONS,
             [proj],
-            ol.proj.getTransform(os.proj.EPSG3857, code),
-            ol.proj.getTransform(code, os.proj.EPSG3857));
+            olProj.getTransform(EPSG3857, code),
+            olProj.getTransform(code, EPSG3857));
 
         // check that the proper transforms exist
-        goog.asserts.assert(ol.proj.getTransform(os.proj.EPSG4326, code));
-        goog.asserts.assert(ol.proj.getTransform(os.proj.EPSG3857, code));
-        goog.asserts.assert(ol.proj.getTransform(os.proj.CRS84, code));
+        asserts.assert(olProj.getTransform(EPSG4326, code));
+        asserts.assert(olProj.getTransform(EPSG3857, code));
+        asserts.assert(olProj.getTransform(CRS84, code));
       }
     }
   }
 };
 
-
 /**
  * @param {Object<string, *>} options The layer options
- * @return {?ol.proj.Projection} The best supported projection by both the layer and the application or
+ * @return {?Projection} The best supported projection by both the layer and the application or
  *    null if none could be found. If projection(s) are not explicitly provided in the layer options, the
  *    current application projection will be returned.
  */
-os.proj.getBestSupportedProjection = function(options) {
-  var appProj = os.map.PROJECTION;
+const getBestSupportedProjection = function(options) {
+  var appProj = osMap.PROJECTION;
   var desiredProjection = /** @type {string|undefined} */ (options['projection']);
   var supportedProjections = /** @type {Array<!string>} */ (options['projections'] || []);
-  var preferredProjections = [os.proj.EPSG4326, os.proj.CRS84, os.proj.EPSG3857, os.proj.GOOGLE];
+  var preferredProjections = [EPSG4326, CRS84, EPSG3857, GOOGLE];
 
   if (desiredProjection) {
     preferredProjections.unshift(desiredProjection);
@@ -172,14 +161,14 @@ os.proj.getBestSupportedProjection = function(options) {
   });
 
   for (var i = 0, n = supportedProjections.length; i < n; i++) {
-    var p = ol.proj.get(supportedProjections[i]);
+    var p = olProj.get(supportedProjections[i]);
 
     if (p) {
-      return ol.proj.equivalent(p, appProj) ? appProj : p;
+      return olProj.equivalent(p, appProj) ? appProj : p;
     }
   }
 
-  goog.log.warning(os.proj.LOGGER_, 'A supported projection could not be found for layer ' + options['id'] +
+  log.warning(logger, 'A supported projection could not be found for layer ' + options['id'] +
       '. projections=' + supportedProjections.toString());
   return null;
 };
@@ -188,19 +177,32 @@ os.proj.getBestSupportedProjection = function(options) {
  * Given a projection, returns the equivalent projection with the shortest code.
  *
  * @param {ol.ProjectionLike} proj
- * @return {ol.proj.Projection}
+ * @return {Projection}
  * @suppress {accessControls}
  */
-os.proj.getBestEquivalent = function(proj) {
-  var projection = ol.proj.get(proj);
-  var projMap = ol.proj.projections.cache_;
+const getBestEquivalent = function(proj) {
+  var projection = olProj.get(proj);
+  var projMap = olProj.projections.cache_;
   var shortest = '';
   for (var key in projMap) {
-    if (key !== 'CRS:84' && ol.proj.equivalent(projMap[key], projection) &&
+    if (key !== 'CRS:84' && olProj.equivalent(projMap[key], projection) &&
         (!shortest || key.length < shortest.length)) {
       shortest = key;
     }
   }
 
-  return ol.proj.get(shortest);
+  return olProj.get(shortest);
+};
+
+exports = {
+  EPSG4326,
+  EPSG3857,
+  EPSG3031,
+  EPSG3413,
+  CRS84,
+  GOOGLE,
+  getProjections,
+  loadProjections,
+  getBestSupportedProjection,
+  getBestEquivalent
 };

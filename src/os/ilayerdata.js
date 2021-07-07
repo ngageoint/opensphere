@@ -1,23 +1,23 @@
-goog.provide('os.ILayerData');
-goog.require('ol.layer.Layer');
+goog.module('os.ILayerData');
+goog.module.declareLegacyNamespace();
 
-
+const Layer = goog.requireType('ol.layer.Layer');
 
 /**
  * @interface
  */
-os.ILayerData = function() {};
+class ILayerData {
+  /**
+   * The map layer tied to the command.
+   * @type {Layer}
+   */
+  layer() {}
 
+  /**
+   * The configuration for the map layer.
+   * @type {Object}
+   */
+  layerOptions() {}
+}
 
-/**
- * The map layer tied to the command.
- * @type {ol.layer.Layer}
- */
-os.ILayerData.prototype.layer;
-
-
-/**
- * The configuration for the map layer.
- * @type {Object}
- */
-os.ILayerData.prototype.layerOptions;
+exports = ILayerData;

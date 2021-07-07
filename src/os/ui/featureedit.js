@@ -14,13 +14,13 @@ goog.require('ol.array');
 goog.require('ol.events');
 goog.require('ol.geom.GeometryCollection');
 goog.require('ol.geom.Point');
-goog.require('os.MapContainer');
 goog.require('os.action.EventType');
 goog.require('os.data.ColumnDefinition');
 goog.require('os.feature');
 goog.require('os.geo');
 goog.require('os.interaction.Modify');
 goog.require('os.map');
+goog.require('os.map.instance');
 goog.require('os.math.Units');
 goog.require('os.ol.feature');
 goog.require('os.style');
@@ -374,12 +374,9 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
    */
   this['altitudeModes'] = ol.obj.getValues(os.webgl.AltitudeMode);
 
-
-  if (os.map.mapContainer) {
-    var webGLRenderer = os.map.mapContainer.getWebGLRenderer();
-    if (webGLRenderer) {
-      this['altitudeModes'] = webGLRenderer.getAltitudeModes();
-    }
+  var webGLRenderer = os.map.instance.getMapContainer().getWebGLRenderer();
+  if (webGLRenderer) {
+    this['altitudeModes'] = webGLRenderer.getAltitudeModes();
   }
 
   var defaultAltMode = os.webgl.AltitudeMode.CLAMP_TO_GROUND;
@@ -690,7 +687,7 @@ os.ui.FeatureEditCtrl.prototype.disposeInternal = function() {
 
   if (this.previewFeature) {
     if (this.previewFeature.getId() == this.tempFeatureId) {
-      os.MapContainer.getInstance().removeFeature(this.previewFeature);
+      os.map.instance.getMapContainer().removeFeature(this.previewFeature);
     }
 
     this.previewFeature = null;
@@ -887,7 +884,7 @@ os.ui.FeatureEditCtrl.prototype.onMapEnabled_ = function(event, isEnabled) {
     if (isEnabled) {
       // listen for a mouse click on the map
       if (!this.mapListenKey) {
-        var map = os.MapContainer.getInstance().getMap();
+        var map = os.map.instance.getMapContainer().getMap();
         this.mapListenKey = ol.events.listen(map, ol.MapBrowserEventType.SINGLECLICK, this.onMapClick_, this);
       }
 
@@ -946,7 +943,7 @@ os.ui.FeatureEditCtrl.prototype.updatePreview = function() {
   if (this.previewFeature) {
     this.saveToFeature(this.previewFeature);
 
-    var osMap = os.MapContainer.getInstance();
+    var osMap = os.map.instance.getMapContainer();
     if (this.previewFeature.getId() === this.tempFeatureId && !osMap.containsFeature(this.previewFeature)) {
       osMap.addFeature(this.previewFeature);
     }
@@ -1694,7 +1691,7 @@ os.ui.FeatureEditCtrl.prototype.modifyGeometry = function() {
   }
 
   if (this.previewFeature) {
-    const mc = os.MapContainer.getInstance();
+    const mc = os.map.instance.getMapContainer();
     this.interaction = new os.interaction.Modify(this.previewFeature);
     this.interaction.setOverlay(/** @type {ol.layer.Vector} */ (mc.getDrawingLayer()));
 
@@ -1787,7 +1784,7 @@ os.ui.FeatureEditCtrl.calculateXPosition = function(geom) {
   if (geom) {
     var extent = os.extent.getFunctionalExtent(geom);
     var center = ol.extent.getCenter(extent);
-    var pixel = os.MapContainer.getInstance().getMap().getPixelFromCoordinate(center);
+    var pixel = os.map.instance.getMapContainer().getMap().getPixelFromCoordinate(center);
     var width = container.width();
     return pixel[0] > width / 2 ? 50 : container.width() - 650;
   }

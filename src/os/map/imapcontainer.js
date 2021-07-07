@@ -1,72 +1,71 @@
-goog.provide('os.map.IMapContainer');
+goog.module('os.map.IMapContainer');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.events.Listenable');
-
+const Listenable = goog.requireType('goog.events.Listenable');
+const Collection = goog.requireType('ol.Collection');
+const Feature = goog.requireType('ol.Feature');
+const PluggableMap = goog.requireType('ol.PluggableMap');
+const Layer = goog.requireType('ol.layer.Layer');
 
 
 /**
  * Interface representing a wrapper class for an Openlayers map.
  *
- * @extends {goog.events.Listenable}
+ * @extends {Listenable}
  * @interface
  */
-os.map.IMapContainer = function() {};
+class IMapContainer {
+  /**
+   * Checks whether the drawing layer contains a feature.
+   * @param {Feature|number|string|undefined} feature
+   * @return {boolean} True if the feature is on the map, false otherwise
+   */
+  containsFeature(feature) {}
 
+  /**
+   * Adds a feature to the drawing layer.
+   * @param {!(Feature)} feature The feature or coordinate to add
+   * @param {Object=} opt_style Optional feature style
+   * @return {(Feature|undefined)} The feature's id, or undefined if the feature wasn't added
+   */
+  addFeature(feature, opt_style) {}
 
-/**
- * Checks whether the drawing layer contains a feature.
- * @param {ol.Feature|number|string|undefined} feature
- * @return {boolean} True if the feature is on the map, false otherwise
- */
-os.map.IMapContainer.prototype.containsFeature;
+  /**
+   * Adds an array of features to the drawing layer.
+   * @param {!Array<!Feature>} features The features to add
+   * @param {Object=} opt_style Optional feature style
+   * @return {!Array<!Feature>}
+   */
+  addFeatures(features, opt_style) {}
 
+  /**
+   * Removes a feature from the drawing layer
+   * @param {Feature|number|string|undefined} feature The feature or feature id
+   * @param {boolean=} opt_dispose If the feature should be disposed
+   */
+  removeFeature(feature, opt_dispose) {}
 
-/**
- * Adds a feature to the drawing layer.
- * @param {!(ol.Feature)} feature The feature or coordinate to add
- * @param {Object=} opt_style Optional feature style
- * @return {(ol.Feature|undefined)} The feature's id, or undefined if the feature wasn't added
- */
-os.map.IMapContainer.prototype.addFeature;
+  /**
+   * Removes an array of features from the drawing layer.
+   * @param {!Array<!Feature>} features The features to remove
+   * @param {boolean=} opt_dispose If the feature should be disposed
+   */
+  removeFeatures(features, opt_dispose) {}
 
+  /**
+   * Gets a layer by ID, layer, or feature.
+   * @param {!(string|Layer|Feature)} layerOrFeature
+   * @param {Collection=} opt_search
+   * @param {boolean=} opt_remove This is for INTERNAL use only.
+   * @return {Layer} The layer or null if no layer was found
+   */
+  getLayer(layerOrFeature, opt_search, opt_remove) {}
 
-/**
- * Adds an array of features to the drawing layer.
- * @param {!Array<!ol.Feature>} features The features to add
- * @param {Object=} opt_style Optional feature style
- * @return {!Array<!ol.Feature>}
- */
-os.map.IMapContainer.prototype.addFeatures;
+  /**
+   * Get the Openlayers map reference.
+   * @return {PluggableMap}
+   */
+  getMap() {}
+}
 
-
-/**
- * Removes a feature from the drawing layer
- * @param {ol.Feature|number|string|undefined} feature The feature or feature id
- * @param {boolean=} opt_dispose If the feature should be disposed
- */
-os.map.IMapContainer.prototype.removeFeature;
-
-
-/**
- * Removes an array of features from the drawing layer.
- * @param {!Array<!ol.Feature>} features The features to remove
- * @param {boolean=} opt_dispose If the feature should be disposed
- */
-os.map.IMapContainer.prototype.removeFeatures;
-
-
-/**
- * Gets a layer by ID, layer, or feature.
- * @param {!(string|ol.layer.Layer|ol.Feature)} layerOrFeature
- * @param {ol.Collection=} opt_search
- * @param {boolean=} opt_remove This is for INTERNAL use only.
- * @return {ol.layer.Layer} The layer or null if no layer was found
- */
-os.map.IMapContainer.prototype.getLayer;
-
-
-/**
- * Get the Openlayers map reference.
- * @return {ol.PluggableMap}
- */
-os.map.IMapContainer.prototype.getMap;
+exports = IMapContainer;

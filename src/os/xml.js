@@ -1,36 +1,31 @@
-goog.provide('os.xml');
+goog.module('os.xml');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.dom');
-goog.require('goog.dom.NodeType');
-goog.require('goog.dom.xml');
-goog.require('goog.string');
-goog.require('ol.xml');
-goog.require('os.time');
+const googArray = goog.require('goog.array');
+const dom = goog.require('goog.dom');
+const NodeType = goog.require('goog.dom.NodeType');
+const googDomXml = goog.require('goog.dom.xml');
+const googString = goog.require('goog.string');
+const olXml = goog.require('ol.xml');
 
 
 /**
  * Default document used when creating new elements.
  * @type {Document}
- * @const
  */
-os.xml.DOCUMENT = goog.dom.xml.createDocument();
-
+const DOCUMENT = googDomXml.createDocument();
 
 /**
  * KML namespace URI
  * @type {string}
- * @const
  */
-os.xml.KMLNS = 'http://www.opengis.net/kml/2.2';
-
+const KMLNS = 'http://www.opengis.net/kml/2.2';
 
 /**
  * KML namespace URI
  * @type {string}
- * @const
  */
-os.xml.XMLNS = 'http://www.w3.org/2000/xmlns/';
-
+const XMLNS = 'http://www.w3.org/2000/xmlns/';
 
 /**
  * Escape invalid xml chars
@@ -38,7 +33,7 @@ os.xml.XMLNS = 'http://www.w3.org/2000/xmlns/';
  * @param {string} text
  * @return {string} The escaped string
  */
-os.xml.escape = function(text) {
+const escape = function(text) {
   if (typeof text === 'string') {
     text = text.replace(/\&/g, '&amp;');
     text = text.replace(/</g, '&lt;');
@@ -50,14 +45,13 @@ os.xml.escape = function(text) {
   return text;
 };
 
-
 /**
  * Unescape invalid xml chars
  *
  * @param {string} text
  * @return {string} The escaped string
  */
-os.xml.unescape = function(text) {
+const unescape = function(text) {
   if (typeof text === 'string') {
     text = text.replace(/\&amp;/g, '&');
     text = text.replace(/&lt;/g, '<');
@@ -69,7 +63,6 @@ os.xml.unescape = function(text) {
   return text;
 };
 
-
 /**
  * Creates and appends an element to the provided parent. The parent's ownerDocument will be used to create the element.
  * Optionally add text content to the element.
@@ -80,12 +73,11 @@ os.xml.unescape = function(text) {
  * @param {Object.<string, string>=} opt_attr Attributes to add to the element
  * @return {!Element} The element
  */
-os.xml.appendElement = function(tag, parent, opt_content, opt_attr) {
-  var el = os.xml.createElement(tag, parent.ownerDocument, opt_content, opt_attr);
+const appendElement = function(tag, parent, opt_content, opt_attr) {
+  var el = createElement(tag, parent.ownerDocument, opt_content, opt_attr);
   parent.appendChild(el);
   return el;
 };
-
 
 /**
  * Creates and appends a namespaced element to the provided parent. The parent's ownerDocument will be used to create
@@ -98,12 +90,11 @@ os.xml.appendElement = function(tag, parent, opt_content, opt_attr) {
  * @param {Object.<string, string>=} opt_attr Attributes to add to the element
  * @return {!Element} The element
  */
-os.xml.appendElementNS = function(tag, nsUri, parent, opt_content, opt_attr) {
-  var el = os.xml.createElementNS(tag, nsUri, parent.ownerDocument, opt_content, opt_attr);
+const appendElementNS = function(tag, nsUri, parent, opt_content, opt_attr) {
+  var el = createElementNS(tag, nsUri, parent.ownerDocument, opt_content, opt_attr);
   parent.appendChild(el);
   return el;
 };
-
 
 /**
  * Create an element from the provided document. Optionally add text content to the element.
@@ -114,12 +105,12 @@ os.xml.appendElementNS = function(tag, nsUri, parent, opt_content, opt_attr) {
  * @param {Object.<string, string>=} opt_attr Attributes to add to the element
  * @return {!Element} The element
  */
-os.xml.createElement = function(tag, opt_doc, opt_content, opt_attr) {
-  var doc = opt_doc || os.xml.DOCUMENT;
+const createElement = function(tag, opt_doc, opt_content, opt_attr) {
+  var doc = opt_doc || DOCUMENT;
   var el = doc.createElement(tag);
 
   if (opt_attr != null) {
-    goog.dom.xml.setAttributes(el, opt_attr);
+    googDomXml.setAttributes(el, opt_attr);
   }
 
   if (opt_content != null) {
@@ -128,7 +119,6 @@ os.xml.createElement = function(tag, opt_doc, opt_content, opt_attr) {
 
   return el;
 };
-
 
 /**
  * Create a namespaced element from the provided document. Optionally add text content to the element.
@@ -140,12 +130,12 @@ os.xml.createElement = function(tag, opt_doc, opt_content, opt_attr) {
  * @param {Object.<string, string>=} opt_attr Attributes to add to the element
  * @return {!Element} The element
  */
-os.xml.createElementNS = function(tag, nsUri, opt_doc, opt_content, opt_attr) {
-  var doc = opt_doc || os.xml.DOCUMENT;
+const createElementNS = function(tag, nsUri, opt_doc, opt_content, opt_attr) {
+  var doc = opt_doc || DOCUMENT;
   var el = doc.createElementNS(nsUri, tag);
 
   if (opt_attr != null) {
-    goog.dom.xml.setAttributes(el, opt_attr);
+    googDomXml.setAttributes(el, opt_attr);
   }
 
   if (opt_content != null) {
@@ -155,7 +145,6 @@ os.xml.createElementNS = function(tag, nsUri, opt_doc, opt_content, opt_attr) {
   return el;
 };
 
-
 /**
  * Gets all child elements with a given tag name.
  *
@@ -163,13 +152,12 @@ os.xml.createElementNS = function(tag, nsUri, opt_doc, opt_content, opt_attr) {
  * @param {string} tag The tag name to match
  * @return {!Array} The matched children
  */
-os.xml.getChildrenByTagName = function(element, tag) {
-  var children = goog.dom.getChildren(element);
-  return goog.array.filter(children, function(node) {
+const getChildrenByTagName = function(element, tag) {
+  var children = dom.getChildren(element);
+  return googArray.filter(children, function(node) {
     return node.localName == tag;
   });
 };
-
 
 /**
  * Reads a date/time from a node's content.
@@ -177,15 +165,14 @@ os.xml.getChildrenByTagName = function(element, tag) {
  * @param {Node} node Node.
  * @return {Date} The parsed Date object, or null if the value could not be parsed.
  */
-os.xml.readDateTime = function(node) {
+const readDateTime = function(node) {
   // this should handle any ISO strings and is by far the fastest way to parse dates. if we run into time fields that
   // aren't being parsed correctly, be VERY careful with changes to this function and compare the difference in the
   // browser's CPU profiler. use a large (5MB+) KML with time fields as a test case.
-  var text = ol.xml.getAllTextContent(node, true).trim();
+  var text = olXml.getAllTextContent(node, true).trim();
   var date = new Date(text || undefined);
   return !isNaN(date.getTime()) ? date : null;
 };
-
 
 /**
  * Clones an element and all descendants under a new node, adding a namespace to the new nodes. The namespaceURI on
@@ -197,14 +184,14 @@ os.xml.readDateTime = function(node) {
  * @param {string=} opt_nsUri The namespace uri
  * @return {Element} The element
  */
-os.xml.clone = function(node, parent, opt_ns, opt_nsUri) {
-  if (node.nodeType === goog.dom.NodeType.TEXT) {
+const clone = function(node, parent, opt_ns, opt_nsUri) {
+  if (node.nodeType === NodeType.TEXT) {
     var text = parent.ownerDocument.createTextNode(node.textContent);
     parent.appendChild(text);
-  } else if (node.nodeType === goog.dom.NodeType.CDATA_SECTION) {
+  } else if (node.nodeType === NodeType.CDATA_SECTION) {
     var cdata = parent.ownerDocument.createCDATASection(node.textContent);
     parent.appendChild(cdata);
-  } else if (node.nodeType === goog.dom.NodeType.ELEMENT) {
+  } else if (node.nodeType === NodeType.ELEMENT) {
     var el = /** @type {Element} */ (node);
 
     var attrMap;
@@ -221,12 +208,12 @@ os.xml.clone = function(node, parent, opt_ns, opt_nsUri) {
     }
 
     var newEl = opt_ns && opt_nsUri ?
-      os.xml.appendElementNS(opt_ns + ':' + el.localName, opt_nsUri, parent, undefined, attrMap) :
-      os.xml.appendElement(el.localName, parent, undefined, attrMap);
+      appendElementNS(opt_ns + ':' + el.localName, opt_nsUri, parent, undefined, attrMap) :
+      appendElement(el.localName, parent, undefined, attrMap);
     var children = el.childNodes;
     if (children && children.length > 0) {
       for (var i = 0, n = children.length; i < n; i++) {
-        os.xml.clone(children[i], newEl, opt_ns, opt_nsUri);
+        clone(children[i], newEl, opt_ns, opt_nsUri);
       }
     }
 
@@ -236,18 +223,16 @@ os.xml.clone = function(node, parent, opt_ns, opt_nsUri) {
   return null;
 };
 
-
 /**
  * Serializes an XML document or subtree to string.
  *
  * @param {!(Document|Element)} xml The document or the root node of the subtree.
  * @return {string} The serialized document.
  */
-os.xml.serialize = function(xml) {
+const serialize = function(xml) {
   // the XMLSerializer in FF adds empty xmlns attributes that cause problems with some XML parsers
-  return goog.dom.xml.serialize(xml).replace(/ xmlns=""/g, '');
+  return googDomXml.serialize(xml).replace(/ xmlns=""/g, '');
 };
-
 
 /**
  * Retunrs the element.textContent if it's not null and not empty, otherwise defaultValue.
@@ -256,13 +241,12 @@ os.xml.serialize = function(xml) {
  * @param {*} defaultValue
  * @return {*}
  */
-os.xml.getElementValueOrDefault = function(element, defaultValue) {
-  if (element && !goog.string.isEmptyOrWhitespace(goog.string.makeSafe(element.textContent))) {
+const getElementValueOrDefault = function(element, defaultValue) {
+  if (element && !googString.isEmptyOrWhitespace(googString.makeSafe(element.textContent))) {
     return element.textContent;
   }
   return defaultValue;
 };
-
 
 /**
  * Get the `textContent` value for the first child matching a selector.
@@ -271,11 +255,11 @@ os.xml.getElementValueOrDefault = function(element, defaultValue) {
  * @param {string} selector The child selector.
  * @return {?string} The value.
  */
-os.xml.getChildValue = function(element, selector) {
+const getChildValue = function(element, selector) {
   var child = element.querySelector(selector);
   if (child) {
-    var value = goog.string.makeSafe(child.textContent);
-    if (!goog.string.isEmptyOrWhitespace(value)) {
+    var value = googString.makeSafe(child.textContent);
+    if (!googString.isEmptyOrWhitespace(value)) {
       return value;
     }
   }
@@ -283,13 +267,11 @@ os.xml.getChildValue = function(element, selector) {
   return null;
 };
 
-
 /**
  * Regex to globally find and replace all elements that look like xsi:*="*"
  * @type {RegExp}
  */
-os.xml.XSI_REGEX = /xsi:.*?=".*?"/gm;
-
+const XSI_REGEX = /xsi:.*?=".*?"/gm;
 
 /**
  * Wrapper for parsing XML documents for strings. This is needed for Firefox's overly anal interpretation of the
@@ -299,7 +281,27 @@ os.xml.XSI_REGEX = /xsi:.*?=".*?"/gm;
  * @param {string} xml The text.
  * @return {Document} XML document from the text.
  */
-os.xml.loadXml = function(xml) {
-  xml = xml.replace(os.xml.XSI_REGEX, '');
-  return goog.dom.xml.loadXml(xml);
+const loadXml = function(xml) {
+  xml = xml.replace(XSI_REGEX, '');
+  return googDomXml.loadXml(xml);
+};
+
+exports = {
+  DOCUMENT,
+  KMLNS,
+  XMLNS,
+  escape,
+  unescape,
+  appendElement,
+  appendElementNS,
+  createElement,
+  createElementNS,
+  getChildrenByTagName,
+  readDateTime,
+  clone,
+  serialize,
+  getElementValueOrDefault,
+  getChildValue,
+  XSI_REGEX,
+  loadXml
 };
