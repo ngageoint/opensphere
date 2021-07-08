@@ -3,8 +3,10 @@ goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.util.validationMessageDirective');
 
+const {ROOT} = goog.require('os');
 const fn = goog.require('os.fn');
 const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
 const osWindow = goog.require('os.ui.window');
 const {directiveTag: confirmUi} = goog.require('os.ui.window.ConfirmUI');
 
@@ -16,7 +18,7 @@ const {directiveTag: confirmUi} = goog.require('os.ui.window.ConfirmUI');
  */
 const directive = () => ({
   restrict: 'E',
-  templateUrl: os.ROOT + 'views/window/confirmtext.html',
+  templateUrl: ROOT + 'views/window/confirmtext.html',
   controller: Controller,
   controllerAs: 'confirmtext'
 });
@@ -62,7 +64,7 @@ class Controller {
       }
     });
 
-    $scope.$emit(os.ui.WindowEventType.READY);
+    $scope.$emit(WindowEventType.READY);
   }
 
   /**
