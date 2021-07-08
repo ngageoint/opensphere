@@ -1,8 +1,9 @@
-goog.provide('os.ui.window.TimeHelpCtrl');
-goog.provide('os.ui.window.timeHelpDirective');
+goog.module('os.ui.window.TimeHelpUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
-goog.require('os.ui.window');
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const {close, create} = goog.require('os.ui.window');
 
 
 /**
@@ -10,29 +11,70 @@ goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-os.ui.window.timeHelpDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    templateUrl: os.ROOT + 'views/window/timehelp.html',
-    controller: os.ui.window.TimeHelpCtrl,
-    controllerAs: 'th'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  templateUrl: ROOT + 'views/window/timehelp.html',
+  controller: Controller,
+  controllerAs: 'th'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'timehelp';
 
 /**
  * Add the directive to the os module
  */
-os.ui.Module.directive('timehelp', [os.ui.window.timeHelpDirective]);
+Module.directive(directiveTag, [directive]);
 
+/**
+ * Controller for date/time format help.
+ * @unrestricted
+ */
+class Controller {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
+    $scope.$on('$destroy', this.destroy_.bind(this));
+  }
+
+  /**
+   * Clean up references.
+   *
+   * @private
+   */
+  destroy_() {
+    this.element_ = null;
+  }
+
+  /**
+   * Close the window
+   *
+   * @export
+   */
+  close() {
+    close(this.element_);
+  }
+}
 
 /**
  * Launches the date/time formatting help dialog if one isn't displayed already.
  */
-os.ui.window.launchTimeHelp = function() {
+const launchTimeHelp = function() {
   if (!document.getElementById('time-help')) {
-    os.ui.window.create({
+    create({
       'label': 'Custom Date/Time Formats',
       'icon': 'fa fa-clock-o',
       'x': '-10',
@@ -45,45 +87,13 @@ os.ui.window.launchTimeHelp = function() {
       'max-height': '600',
       'show-close': true,
       'modal': true
-    }, '<timehelp></timehelp>');
+    }, `<${directiveTag}></${directiveTag}>`);
   }
 };
 
-
-
-/**
- * Controller for date/time format help.
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
- */
-os.ui.window.TimeHelpCtrl = function($scope, $element) {
-  /**
-   * @type {?angular.JQLite}
-   * @private
-   */
-  this.element_ = $element;
-  $scope.$on('$destroy', this.destroy_.bind(this));
-};
-
-
-/**
- * Clean up references.
- *
- * @private
- */
-os.ui.window.TimeHelpCtrl.prototype.destroy_ = function() {
-  this.element_ = null;
-};
-
-
-/**
- * Close the window
- *
- * @export
- */
-os.ui.window.TimeHelpCtrl.prototype.close = function() {
-  os.ui.window.close(this.element_);
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  launchTimeHelp
 };

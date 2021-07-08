@@ -1,8 +1,6 @@
 goog.module('os.track');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.window.confirmColumnDirective');
-
 const Promise = goog.require('goog.Promise');
 const googArray = goog.require('goog.array');
 const dispose = goog.require('goog.dispose');
@@ -39,7 +37,7 @@ const TrackField = goog.require('os.track.TrackField');
 const FeatureEditCtrl = goog.require('os.ui.FeatureEditCtrl');
 const kml = goog.require('os.ui.file.kml');
 const column = goog.require('os.ui.slick.column');
-const osWindow = goog.require('os.ui.window');
+const ConfirmColumnUI = goog.require('os.ui.window.ConfirmColumnUI');
 const ConfirmTextUI = goog.require('os.ui.window.ConfirmTextUI');
 const UnitManager = goog.require('os.unit.UnitManager');
 
@@ -1142,7 +1140,7 @@ const promptForTitleAndMetadata = function(opt_default = '', opt_includeMetadata
  */
 const promptForField = function(columns, prompt) {
   return new Promise(function(resolve, reject) {
-    osWindow.launchConfirmColumn(/** @type {!osx.window.ConfirmColumnOptions} */ ({
+    ConfirmColumnUI.launchConfirmColumn(/** @type {!osx.window.ConfirmColumnOptions} */ ({
       confirm: resolve,
       cancel: reject,
       columns: columns,

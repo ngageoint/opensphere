@@ -1,7 +1,6 @@
 goog.module('os.ui.wiz.GeometryStepUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.window.geoHelpDirective');
 goog.require('os.ui.wiz.WizardPreviewUI');
 
 const {ROOT} = goog.require('os');
@@ -10,6 +9,7 @@ const LonMapping = goog.require('os.im.mapping.LonMapping');
 const PositionMapping = goog.require('os.im.mapping.PositionMapping');
 const WKTMapping = goog.require('os.im.mapping.WKTMapping');
 const Module = goog.require('os.ui.Module');
+const GeoHelpUI = goog.require('os.ui.window.GeoHelpUI');
 const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
 
 const ColumnDefinition = goog.requireType('os.data.ColumnDefinition');
@@ -260,7 +260,7 @@ class Controller {
    * @export
    */
   launchHelp() {
-    os.ui.window.launchGeoHelp();
+    GeoHelpUI.launchGeoHelp();
   }
 }
 

@@ -1,12 +1,12 @@
 goog.module('os.ui.wiz.step.TimeStepUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.window.timeHelpDirective');
 goog.require('os.ui.wiz.WizardPreviewUI');
 goog.require('os.ui.wiz.step.TimeInstantUI');
 
 const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
+const TimeHelpUI = goog.require('os.ui.window.TimeHelpUI');
 const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
 
 
@@ -113,7 +113,7 @@ class Controller {
    * @export
    */
   launchHelp() {
-    os.ui.window.launchTimeHelp();
+    TimeHelpUI.launchTimeHelp();
   }
 }
 
