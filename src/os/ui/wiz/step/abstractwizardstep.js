@@ -1,21 +1,11 @@
-goog.provide('os.ui.wiz.step.AbstractWizardStep');
-goog.provide('os.ui.wiz.step.AbstractWizardStepCtrl');
-goog.provide('os.ui.wiz.step.WizardStepEvent');
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('os.ui.wiz.step.IWizardStep');
+goog.module('os.ui.wiz.step.AbstractWizardStep');
+goog.module.declareLegacyNamespace();
 
+const log = goog.require('goog.log');
+const IWizardStep = goog.require('os.ui.wiz.step.IWizardStep'); // eslint-disable-line
+const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
 
-/**
- * Events that can be fired by the wizard step controller.
- * @enum {string}
- */
-os.ui.wiz.step.WizardStepEvent = {
-  FINALIZE: 'finalize',
-  VALIDATE: 'validate',
-  SAVE: 'save'
-};
-
+const Logger = goog.requireType('goog.log.Logger');
 
 
 /**
@@ -25,267 +15,191 @@ os.ui.wiz.step.WizardStepEvent = {
  * etc). Event-based changes to validity also apply the wizard scope immediately. Step directives are responsible
  * for firing these events when necessary.
  *
- * @param {angular.$compile=} opt_compile Angular compile function
- * @implements {os.ui.wiz.step.IWizardStep<T>}
- * @constructor
+ * @implements {IWizardStep<T>}
  * @template T
  */
-os.ui.wiz.step.AbstractWizardStep = function(opt_compile) {
+class AbstractWizardStep {
   /**
-   * @type {?angular.Scope}
-   * @protected
+   * Constructor.
+   * @param {angular.$compile=} opt_compile Angular compile function
    */
-  this.scope = null;
+  constructor(opt_compile) {
+    /**
+     * @type {?angular.Scope}
+     * @protected
+     */
+    this.scope = null;
+
+    /**
+     * @type {?angular.JQLite}
+     * @protected
+     */
+    this.element = null;
+
+    /**
+     * @type {?angular.$compile}
+     * @private
+     */
+    this.compile_ = opt_compile || null;
+
+    /**
+     * @type {boolean}
+     * @protected
+     */
+    this.valid = true;
+
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.template = '<span>Placeholder template.</span>';
+
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.title = 'Placeholder Title';
+
+    /**
+     * @type {boolean}
+     * @protected
+     */
+    this.initialized = false;
+
+    /**
+     * @type {boolean}
+     * @protected
+     */
+    this.deactivated = false;
+
+    /**
+     * @inheritDoc
+     */
+    this.priority = 0;
+
+    /**
+     * @type {Logger}
+     * @protected
+     */
+    this.log = logger;
+  }
 
   /**
-   * @type {?angular.JQLite}
-   * @protected
-   */
-  this.element = null;
-
-  /**
-   * @type {?angular.$compile}
+   * Handles validity changes on the step scope.
+   *
+   * @param {angular.Scope.Event} event
+   * @param {boolean=} opt_valid
    * @private
    */
-  this.compile_ = opt_compile || null;
-
-  /**
-   * @type {boolean}
-   * @protected
-   */
-  this.valid = true;
-
-  /**
-   * @type {string}
-   * @protected
-   */
-  this.template = '<span>Placeholder template.</span>';
-
-  /**
-   * @type {string}
-   * @protected
-   */
-  this.title = 'Placeholder Title';
-
-  /**
-   * @type {boolean}
-   * @protected
-   */
-  this.initialized = false;
-
-  /**
-   * @type {boolean}
-   * @protected
-   */
-  this.deactivated = false;
+  onStepValidityChange_(event, opt_valid) {
+    if (opt_valid !== undefined) {
+      this.valid = opt_valid;
+    }
+  }
 
   /**
    * @inheritDoc
    */
-  this.priority = 0;
+  activate(config, opt_scope, opt_parent) {
+    this.initialize(config);
+
+    if (opt_scope && opt_parent) {
+      this.scope = opt_scope;
+      this.scope['step'] = this;
+      this.scope.$on(WizardStepEvent.VALIDATE, this.onStepValidityChange_.bind(this));
+
+      var compile = this.compile_ || opt_parent.injector().get('$compile');
+      var template = this.getTemplate();
+      if (compile && template) {
+        opt_parent.html(template);
+        this.element = compile(opt_parent.contents())(opt_scope);
+      }
+    }
+
+    this.deactivated = false;
+  }
 
   /**
-   * @type {goog.log.Logger}
-   * @protected
+   * @inheritDoc
    */
-  this.log = os.ui.wiz.step.AbstractWizardStep.LOGGER_;
-};
+  deactivate(config) {
+    if (config != undefined) {
+      this.finalize(config);
+    }
 
+    if (this.scope) {
+      delete this.scope['step'];
+      this.scope.$destroy();
+      this.scope = null;
+    }
+
+    if (this.element) {
+      this.element.remove();
+      this.element = null;
+    }
+
+    this.deactivated = true;
+  }
+
+  /**
+   * Initializes the wizard step from the provided configuration.
+   *
+   * @param {T} config The wizard configuration.
+   */
+  initialize(config) {
+    this.initialized = true;
+  }
+
+  /**
+   * Perform actions against the wizard configuration before the next step.
+   *
+   * @param {T} config The wizard configuration.
+   */
+  finalize(config) {
+    // intended for overriding classes
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getTemplate() {
+    return this.template;
+  }
+
+  /**
+   * @inheritDoc
+   * @export
+   */
+  getTitle() {
+    return this.title;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  isCompiled() {
+    return this.scope != null;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  isDeactivated() {
+    return this.deactivated;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  isValid(config) {
+    return this.valid;
+  }
+}
 
 /**
  * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {Logger}
  */
-os.ui.wiz.step.AbstractWizardStep.LOGGER_ = goog.log.getLogger('os.ui.wiz.step.AbstractWizardStep');
+const logger = log.getLogger('os.ui.wiz.step.AbstractWizardStep');
 
-
-/**
- * Handles validity changes on the step scope.
- *
- * @param {angular.Scope.Event} event
- * @param {boolean=} opt_valid
- * @private
- */
-os.ui.wiz.step.AbstractWizardStep.prototype.onStepValidityChange_ = function(event, opt_valid) {
-  if (opt_valid !== undefined) {
-    this.valid = opt_valid;
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.wiz.step.AbstractWizardStep.prototype.activate = function(config, opt_scope, opt_parent) {
-  this.initialize(config);
-
-  if (opt_scope && opt_parent) {
-    this.scope = opt_scope;
-    this.scope['step'] = this;
-    this.scope.$on(os.ui.wiz.step.WizardStepEvent.VALIDATE, this.onStepValidityChange_.bind(this));
-
-    var compile = this.compile_ || opt_parent.injector().get('$compile');
-    var template = this.getTemplate();
-    if (compile && template) {
-      opt_parent.html(template);
-      this.element = compile(opt_parent.contents())(opt_scope);
-    }
-  }
-
-  this.deactivated = false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.wiz.step.AbstractWizardStep.prototype.deactivate = function(config) {
-  if (config != undefined) {
-    this.finalize(config);
-  }
-
-  if (this.scope) {
-    delete this.scope['step'];
-    this.scope.$destroy();
-    this.scope = null;
-  }
-
-  if (this.element) {
-    this.element.remove();
-    this.element = null;
-  }
-
-  this.deactivated = true;
-};
-
-
-/**
- * Initializes the wizard step from the provided configuration.
- *
- * @param {T} config The wizard configuration.
- */
-os.ui.wiz.step.AbstractWizardStep.prototype.initialize = function(config) {
-  this.initialized = true;
-};
-
-
-/**
- * Perform actions against the wizard configuration before the next step.
- *
- * @param {T} config The wizard configuration.
- */
-os.ui.wiz.step.AbstractWizardStep.prototype.finalize = function(config) {
-  // intended for overriding classes
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.wiz.step.AbstractWizardStep.prototype.getTemplate = function() {
-  return this.template;
-};
-
-
-/**
- * @inheritDoc
- * @export
- */
-os.ui.wiz.step.AbstractWizardStep.prototype.getTitle = function() {
-  return this.title;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.wiz.step.AbstractWizardStep.prototype.isCompiled = function() {
-  return this.scope != null;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.wiz.step.AbstractWizardStep.prototype.isDeactivated = function() {
-  return this.deactivated;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.wiz.step.AbstractWizardStep.prototype.isValid = function(config) {
-  return this.valid;
-};
-
-
-
-/**
- * Abstract wizard step controller.
- *
- * @param {!angular.Scope} $scope
- * @constructor
- * @ngInject
- * @template T,S
- */
-os.ui.wiz.step.AbstractWizardStepCtrl = function($scope) {
-  /**
-   * @type {?angular.Scope}
-   * @protected
-   */
-  this.scope = $scope;
-
-  /**
-   * The wizard configuration.
-   * @type {T}
-   * @protected
-   */
-  this.config = $scope['config'];
-  goog.asserts.assert(!!this.config, 'Wizard configuration not defined on scope');
-
-  /**
-   * The wizard step.
-   * @type {S}
-   * @protected
-   */
-  this.step = $scope['step'];
-  goog.asserts.assert(!!this.step, 'Wizard step not defined on scope');
-
-  $scope.$on('$destroy', this.destroy.bind(this));
-};
-
-
-/**
- * Clean up everything!
- *
- * @protected
- */
-os.ui.wiz.step.AbstractWizardStepCtrl.prototype.destroy = function() {
-  this.scope = null;
-  this.config = null;
-  this.step = null;
-};
-
-
-/**
- * Fire a step validity change/update event. If a validity is provided, the step's valid flag will be updated.
- *
- * @protected
- */
-os.ui.wiz.step.AbstractWizardStepCtrl.prototype.fireValidity = function() {
-  this.scope.$emit(os.ui.wiz.step.WizardStepEvent.VALIDATE, this.isValid());
-};
-
-
-/**
- * Test if the step is valid.
- *
- * @return {boolean}
- * @protected
- */
-os.ui.wiz.step.AbstractWizardStepCtrl.prototype.isValid = function() {
-  return true;
-};
+exports = AbstractWizardStep;

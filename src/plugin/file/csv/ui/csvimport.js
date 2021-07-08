@@ -4,7 +4,7 @@ goog.module.declareLegacyNamespace();
 const FileDescriptor = goog.require('os.data.FileDescriptor');
 const Module = goog.require('os.ui.Module');
 const FileImportWizard = goog.require('os.ui.im.FileImportWizard');
-const wizardDirective = goog.require('os.ui.wiz.wizardDirective');
+const {directive: wizardDirective} = goog.require('os.ui.wiz.WizardUI');
 const CSVDescriptor = goog.require('plugin.file.csv.CSVDescriptor');
 const CSVProvider = goog.require('plugin.file.csv.CSVProvider');
 const CSVParserConfig = goog.requireType('plugin.file.csv.CSVParserConfig');

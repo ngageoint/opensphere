@@ -1,149 +1,150 @@
-goog.provide('os.ui.im.FileImportWizard');
-goog.require('os.data.DataManager');
-goog.require('os.file.FileStorage');
-goog.require('os.ui.Module');
-goog.require('os.ui.wiz.WizardCtrl');
-goog.require('os.ui.wiz.wizardDirective');
+goog.module('os.ui.im.FileImportWizard');
+goog.module.declareLegacyNamespace();
 
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
+const DataManager = goog.require('os.data.DataManager');
+const {isLocal} = goog.require('os.file');
+const FileStorage = goog.require('os.file.FileStorage');
+const {Controller: WizardController} = goog.require('os.ui.wiz.WizardUI');
+
+const DBError = goog.requireType('goog.db.Error');
 
 
 /**
  * Generic controller for a file import wizard window
  *
  * @abstract
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$timeout} $timeout
- * @param {!Object.<string, string>} $attrs
- * @extends {os.ui.wiz.WizardCtrl.<T>}
- * @constructor
- * @ngInject
+ * @extends {WizardController<T>}
  * @template T,S
+ * @unrestricted
  */
-os.ui.im.FileImportWizard = function($scope, $element, $timeout, $attrs) {
-  os.ui.im.FileImportWizard.base(this, 'constructor', $scope, $element, $timeout, $attrs);
+class Controller extends WizardController {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$timeout} $timeout
+   * @param {!Object.<string, string>} $attrs
+   * @ngInject
+   */
+  constructor($scope, $element, $timeout, $attrs) {
+    super($scope, $element, $timeout, $attrs);
+
+    /**
+     * @type {FileStorage}
+     * @protected
+     */
+    this.fs = FileStorage.getInstance();
+  }
 
   /**
-   * @type {os.file.FileStorage}
+   * @inheritDoc
+   */
+  cancelInternal() {
+    this.cleanConfig();
+    super.cancelInternal();
+  }
+
+  /**
+   * Clean up the parser configuration, removing any references it doesn't need.
+   *
    * @protected
    */
-  this.fs = os.file.FileStorage.getInstance();
-};
-goog.inherits(os.ui.im.FileImportWizard, os.ui.wiz.WizardCtrl);
-
-
-/**
- * @inheritDoc
- */
-os.ui.im.FileImportWizard.prototype.cancelInternal = function() {
-  this.cleanConfig();
-  os.ui.im.FileImportWizard.base(this, 'cancelInternal');
-};
-
-
-/**
- * Clean up the parser configuration, removing any references it doesn't need.
- *
- * @protected
- */
-os.ui.im.FileImportWizard.prototype.cleanConfig = function() {
-  if (this.config) {
-    this.config['file'] = null;
-    this.config['descriptor'] = null;
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.im.FileImportWizard.prototype.finish = function() {
-  var descriptor = null;
-  if (this.config['descriptor']) {
-    // existing descriptor. deactivate the descriptor, then update it
-    descriptor = this.config['descriptor'];
-    descriptor.setActive(false);
-    this.updateFromConfig(descriptor, this.config);
-  } else {
-    // this is a new import
-    descriptor = this.createFromConfig(this.config);
+  cleanConfig() {
+    if (this.config) {
+      this.config['file'] = null;
+      this.config['descriptor'] = null;
+    }
   }
 
-  this.storeAndFinish(descriptor);
-  os.ui.im.FileImportWizard.base(this, 'finish');
-};
+  /**
+   * @inheritDoc
+   */
+  finish() {
+    var descriptor = null;
+    if (this.config['descriptor']) {
+      // existing descriptor. deactivate the descriptor, then update it
+      descriptor = this.config['descriptor'];
+      descriptor.setActive(false);
+      this.updateFromConfig(descriptor, this.config);
+    } else {
+      // this is a new import
+      descriptor = this.createFromConfig(this.config);
+    }
 
-
-/**
- * Identify files that need to be stored and finish the import.
- *
- * @param {!S} descriptor
- * @protected
- */
-os.ui.im.FileImportWizard.prototype.storeAndFinish = function(descriptor) {
-  var url = this.config['file'].getUrl();
-  if (url && os.file.isLocal(url)) {
-    // local file, so store it before finishing the import
-    // store with replace enabled in case the file already exists
-    this.fs.storeFile(this.config['file'], true)
-        .addCallbacks(goog.partial(this.finishImport, descriptor), this.onPersistError, this);
-  } else {
-    // remote file, so just finish the import
-    this.finishImport(descriptor);
+    this.storeAndFinish(descriptor);
+    super.finish();
   }
-};
 
+  /**
+   * Identify files that need to be stored and finish the import.
+   *
+   * @param {!S} descriptor
+   * @protected
+   */
+  storeAndFinish(descriptor) {
+    var url = this.config['file'].getUrl();
+    if (url && isLocal(url)) {
+      // local file, so store it before finishing the import
+      // store with replace enabled in case the file already exists
+      this.fs.storeFile(this.config['file'], true)
+          .addCallbacks(goog.partial(this.finishImport, descriptor), this.onPersistError, this);
+    } else {
+      // remote file, so just finish the import
+      this.finishImport(descriptor);
+    }
+  }
 
-/**
- * Import complete, so add the descriptor to the data manager and provider.
- *
- * @param {!S} descriptor
- * @protected
- */
-os.ui.im.FileImportWizard.prototype.finishImport = function(descriptor) {
-  // add the descriptor to the data manager first
-  os.dataManager.addDescriptor(descriptor);
+  /**
+   * Import complete, so add the descriptor to the data manager and provider.
+   *
+   * @param {!S} descriptor
+   * @protected
+   */
+  finishImport(descriptor) {
+    // add the descriptor to the data manager first
+    DataManager.getInstance().addDescriptor(descriptor);
 
-  // followed by the provider
-  this.addDescriptorToProvider(descriptor);
+    // followed by the provider
+    this.addDescriptorToProvider(descriptor);
 
-  this.cleanConfig();
-};
+    this.cleanConfig();
+  }
 
+  /**
+   * @param {DBError} error
+   * @protected
+   */
+  onPersistError(error) {
+    var msg = 'Failed storing local file! Unable to finish import.';
+    AlertManager.getInstance().sendAlert(msg, AlertEventSeverity.ERROR);
 
-/**
- * @param {goog.db.Error} error
- * @protected
- */
-os.ui.im.FileImportWizard.prototype.onPersistError = function(error) {
-  var msg = 'Failed storing local file! Unable to finish import.';
-  os.alert.AlertManager.getInstance().sendAlert(msg, os.alert.AlertEventSeverity.ERROR);
+    this.cleanConfig();
+  }
 
-  this.cleanConfig();
-};
+  /**
+   * @abstract
+   * @param {!S} descriptor
+   * @protected
+   */
+  addDescriptorToProvider(descriptor) {}
 
+  /**
+   * @abstract
+   * @param {!T} config
+   * @return {!S}
+   * @protected
+   */
+  createFromConfig(config) {}
 
-/**
- * @abstract
- * @param {!S} descriptor
- * @protected
- */
-os.ui.im.FileImportWizard.prototype.addDescriptorToProvider = function(descriptor) {};
+  /**
+   * @abstract
+   * @param {!S} descriptor
+   * @param {!T} config
+   * @protected
+   */
+  updateFromConfig(descriptor, config) {}
+}
 
-
-/**
- * @abstract
- * @param {!T} config
- * @return {!S}
- * @protected
- */
-os.ui.im.FileImportWizard.prototype.createFromConfig = function(config) {};
-
-
-/**
- * @abstract
- * @param {!S} descriptor
- * @param {!T} config
- * @protected
- */
-os.ui.im.FileImportWizard.prototype.updateFromConfig = function(descriptor, config) {};
+exports = Controller;
