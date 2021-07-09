@@ -3,14 +3,18 @@ goog.require('os.ui.text.TuiEditorCtrl');
 goog.require('os.ui.text.tuiEditorDirective');
 
 describe('os.ui.text.tuiEditorDirective', () => {
+  const tuiEditorDirective = goog.module.get('os.ui.text.tuiEditorDirective');
+
   it('should copy blank text', () => {
-    const result = os.ui.text.tuiEditorDirective();
+    const result = tuiEditorDirective();
 
     expect(result.scope.isRequired).toEqual('=');
   });
 });
 
 describe('os.ui.text.TuiEditorCtrl', () => {
+  const TuiEditorCtrl = goog.module.get('os.ui.text.TuiEditorCtrl');
+
   let $scope;
   let element;
   let $timeout;
@@ -26,13 +30,13 @@ describe('os.ui.text.TuiEditorCtrl', () => {
   });
 
   it('should instantiate correctly', () => {
-    ctrl = new os.ui.text.TuiEditorCtrl($scope, element, $timeout);
+    ctrl = new TuiEditorCtrl($scope, element, $timeout);
 
     expect(ctrl.initialText_).toEqual('');
   });
 
   it('should handle destruction well', () => {
-    ctrl = new os.ui.text.TuiEditorCtrl($scope, element, $timeout);
+    ctrl = new TuiEditorCtrl($scope, element, $timeout);
 
     const ele = jasmine.createSpyObj('element', ['off']);
     ctrl.element = ele;
