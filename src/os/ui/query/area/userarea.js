@@ -459,7 +459,7 @@ os.ui.query.area.UserAreaCtrl.prototype.getAreaTypeTooltip = function(type) {
  * @protected
  */
 os.ui.query.area.UserAreaCtrl.prototype.setArea = function(area) {
-  var mapContainer = os.map.instance.getMapContainer();
+  var mapContainer = os.map.instance.getIMapContainer();
 
   if (this['area']) {
     // remove the existing preview
