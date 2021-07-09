@@ -1,360 +1,358 @@
-goog.provide('os.ui.search.FeatureResultCardCtrl');
+goog.module('os.ui.search.FeatureResultCardCtrl');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Disposable');
-goog.require('goog.array');
-goog.require('goog.log');
-goog.require('ol.extent');
-goog.require('os.Fields');
-goog.require('os.fn');
-goog.require('os.layer.Vector');
-goog.require('os.source.Vector');
+const Disposable = goog.require('goog.Disposable');
+const GoogEventType = goog.require('goog.events.EventType');
+const log = goog.require('goog.log');
+const {listen, unlisten} = goog.require('ol.events');
+const Fields = goog.require('os.Fields');
+const MapContainer = goog.require('os.MapContainer');
+const EventType = goog.require('os.action.EventType');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const SelectionType = goog.require('os.events.SelectionType');
+const VectorLayer = goog.require('os.layer.Vector');
+const PropertyChange = goog.require('os.source.PropertyChange');
+const VectorSource = goog.require('os.source.Vector');
+const {DEFAULT_HIGHLIGHT_CONFIG, DEFAULT_VECTOR_CONFIG, notifyStyleChange, setFeatureStyle} = goog.require('os.style');
+const StyleField = goog.require('os.style.StyleField');
+const StyleManager = goog.require('os.style.StyleManager');
+const StyleType = goog.require('os.style.StyleType');
 
+const Feature = goog.requireType('ol.Feature');
+const AbstractSearchResult = goog.requireType('os.search.AbstractSearchResult');
 
 
 /**
- * @param {!angular.Scope} $scope The Angular scope.
- * @param {!angular.JQLite} $element The root DOM element.
- * @extends {goog.Disposable}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.search.FeatureResultCardCtrl = function($scope, $element) {
-  os.ui.search.FeatureResultCardCtrl.base(this, 'constructor');
-
+class Controller extends Disposable {
   /**
-   * The Angular scope.
-   * @type {?angular.Scope}
-   * @protected
+   * Constructor.
+   * @param {!angular.Scope} $scope The Angular scope.
+   * @param {!angular.JQLite} $element The root DOM element.
+   * @ngInject
    */
-  this.scope = $scope;
+  constructor($scope, $element) {
+    super();
 
-  /**
-   * The root DOM element.
-   * @type {?angular.JQLite}
-   * @protected
-   */
-  this.element = $element;
+    /**
+     * The Angular scope.
+     * @type {?angular.Scope}
+     * @protected
+     */
+    this.scope = $scope;
 
-  /**
-   * The logger.
-   * @type {goog.log.Logger}
-   * @protected
-   */
-  this.log = os.ui.search.FeatureResultCardCtrl.LOGGER_;
+    /**
+     * The root DOM element.
+     * @type {?angular.JQLite}
+     * @protected
+     */
+    this.element = $element;
 
-  /**
-   * The search result.
-   * @type {os.search.AbstractSearchResult<!ol.Feature>}
-   * @protected
-   */
-  this.result = /** @type {os.search.AbstractSearchResult<!ol.Feature>} */ (this.scope['result']);
+    /**
+     * The logger.
+     * @type {log.Logger}
+     * @protected
+     */
+    this.log = logger;
 
-  /**
-   * The feature representing the search result.
-   * @type {ol.Feature}
-   * @protected
-   */
-  this.feature = this.result.getResult();
+    /**
+     * The search result.
+     * @type {AbstractSearchResult<!Feature>}
+     * @protected
+     */
+    this.result = /** @type {AbstractSearchResult<!Feature>} */ (this.scope['result']);
 
-  /**
-   * The style config to use when highlighting the search result.
-   * @type {!Object}
-   * @protected
-   */
-  this.highlightConfig = os.style.DEFAULT_HIGHLIGHT_CONFIG;
+    /**
+     * The feature representing the search result.
+     * @type {Feature}
+     * @protected
+     */
+    this.feature = this.result.getResult();
 
-  /**
-   * The search layer.
-   * @type {os.layer.Vector}
-   * @protected
-   */
-  this.layer;
+    /**
+     * The style config to use when highlighting the search result.
+     * @type {!Object}
+     * @protected
+     */
+    this.highlightConfig = DEFAULT_HIGHLIGHT_CONFIG;
 
-  var l = os.MapContainer.getInstance().getLayer(os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_ID);
-  if (l instanceof os.layer.Vector) {
-    this.layer = l;
+    /**
+     * The search layer.
+     * @type {VectorLayer}
+     * @protected
+     */
+    this.layer;
+
+    var l = MapContainer.getInstance().getLayer(Controller.SEARCH_LAYER_ID);
+    if (l instanceof VectorLayer) {
+      this.layer = l;
+    }
+
+    if (!this.layer) {
+      this.layer = this.addSearchLayer();
+    }
+
+    this.addFeatureToLayer();
+
+    listen(this.layer.getSource(), GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+    $scope.$on('$destroy', this.dispose.bind(this));
   }
 
-  if (!this.layer) {
-    this.layer = this.addSearchLayer();
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
+
+    var mm = MapContainer.getInstance();
+
+    unlisten(this.layer.getSource(), GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+
+    this.removeFeatureFromLayer();
+    this.feature = null;
+
+    var source = this.layer.getSource();
+    if (!source.getFeatures().length) {
+      this.layer.setRemovable(true);
+      mm.removeLayer(this.layer);
+    }
+
+    this.element = null;
+    this.scope = null;
   }
 
-  this.addFeatureToLayer();
+  /**
+   * Add the feature to the search results layer.
+   * @protected
+   */
+  addFeatureToLayer() {
+    if (this.layer && this.feature) {
+      var source = this.layer.getSource();
+      var featureId = this.feature.getId();
+      if (featureId != null && !source.getFeatureById(featureId)) {
+        source.addFeature(this.feature);
+      }
+    }
+  }
 
-  ol.events.listen(this.layer.getSource(), goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
-  $scope.$on('$destroy', this.dispose.bind(this));
-};
-goog.inherits(os.ui.search.FeatureResultCardCtrl, goog.Disposable);
+  /**
+   * Remove the feature to the search results layer.
+   * @protected
+   */
+  removeFeatureFromLayer() {
+    this.removeFeatureHighlight();
 
+    if (this.layer && this.feature) {
+      var source = this.layer.getSource();
+      var featureId = this.feature.getId();
+      if (featureId != null && source.getFeatureById(featureId)) {
+        source.removeFeature(this.feature);
+      }
+    }
+  }
+
+  /**
+   * Add feature highlight styling.
+   * @protected
+   */
+  addFeatureHighlight() {
+    if (this.feature && this.layer) {
+      this.feature.set(StyleType.HIGHLIGHT, this.highlightConfig);
+      setFeatureStyle(this.feature);
+      notifyStyleChange(this.layer, [this.feature]);
+    }
+  }
+
+  /**
+   * Remove feature highlight styling.
+   * @protected
+   */
+  removeFeatureHighlight() {
+    if (this.feature && this.layer) {
+      this.feature.set(StyleType.HIGHLIGHT, undefined);
+      setFeatureStyle(this.feature);
+      notifyStyleChange(this.layer, [this.feature]);
+    }
+  }
+
+  /**
+   * Set the card's highlighted state.
+   * @param {boolean} value If the card is highlighted.
+   * @protected
+   */
+  setCardHighlighted(value) {
+    if (value) {
+      this.element.addClass('u-card-highlight');
+    } else {
+      this.element.removeClass('u-card-highlight');
+    }
+  }
+
+  /**
+   * Set the card's selected state.
+   * @param {boolean} value If the card is selected.
+   * @protected
+   */
+  setCardSelected(value) {
+    if (value) {
+      this.element.addClass('u-card-selected');
+    } else {
+      this.element.removeClass('u-card-selected');
+    }
+  }
+
+  /**
+   * Setup the search layer
+   *
+   * @return {VectorLayer}
+   * @protected
+   */
+  addSearchLayer() {
+    var src = new VectorSource();
+    src.setTitle('Search Results');
+    src.setId(Controller.SEARCH_LAYER_ID);
+    src.setSupportsAction(EventType.BUFFER, false);
+    src.setSupportsAction(EventType.EXPORT, false);
+    var searchLayer = new VectorLayer({
+      source: src
+    });
+
+    searchLayer.setTitle('Search Results');
+    searchLayer.setId(Controller.SEARCH_LAYER_ID);
+    searchLayer.setStyle(StyleManager.getInstance().getOrCreateStyle(DEFAULT_VECTOR_CONFIG));
+    searchLayer.setExplicitType('');
+    searchLayer.setRemovable(false);
+    searchLayer.setNodeUI('');
+    searchLayer.setLayerUI('');
+    searchLayer.setSticky(true);
+    searchLayer.renderLegend = () => {};
+
+    var layerConfig = StyleManager.getInstance().getOrCreateLayerConfig(
+        Controller.SEARCH_LAYER_ID);
+    layerConfig[StyleField.SHOW_LABELS] = true;
+    Object.assign(layerConfig, Controller.SEARCH_LAYER_LABELS);
+
+    var mm = MapContainer.getInstance();
+    mm.addLayer(searchLayer);
+
+    return searchLayer;
+  }
+
+  /**
+   * Handles property changes on the source
+   *
+   * @param {PropertyChangeEvent} event
+   * @param {VectorSource} item
+   * @private
+   */
+  onSourceChange_(event, item) {
+    if (event instanceof PropertyChangeEvent) {
+      const p = event.getProperty();
+
+      const newValue = event.getNewValue();
+      const newContainsFeature = Array.isArray(newValue) && newValue.indexOf(this.feature) > -1;
+
+      if (p === SelectionType.ADDED) {
+        // If the feature was added to the selection, select the card.
+        if (newContainsFeature) {
+          this.setCardSelected(true);
+        }
+      } else if (p === SelectionType.REMOVED) {
+        // If the feature was removed from the selection, deselect the card.
+        if (newContainsFeature) {
+          this.setCardSelected(false);
+        }
+      } else if (p === SelectionType.CHANGED) {
+        // When the selection changes, select the card if the feature is in the new array, otherwise deselect.
+        this.setCardSelected(newContainsFeature);
+      } else if (p === PropertyChange.HIGHLIGHTED_ITEMS) {
+        // When the highlight changes, highlight the card if the feature is in the new array, otherwise remove highlight.
+        this.setCardHighlighted(newContainsFeature);
+      }
+    }
+  }
+
+  /**
+   * Get a field from the result.
+   *
+   * @param {string} field
+   * @return {string}
+   * @export
+   */
+  getField(field) {
+    return /** @type {string} */ (this.feature.get(field));
+  }
+
+  /**
+   * Fly to the location on the map.
+   *
+   * @export
+   */
+  goTo() {
+    this.result.performAction();
+  }
+
+  /**
+   * Highlights the feature on mouse over
+   *
+   * @export
+   */
+  over() {
+    var source = this.layer.getSource();
+    var featureId = this.feature.getId();
+    if (featureId != null && source.getFeatureById(featureId)) {
+      this.addFeatureHighlight();
+    }
+  }
+
+  /**
+   * Removes the highlight on mouse out
+   *
+   * @export
+   */
+  out() {
+    var source = this.layer.getSource();
+    var featureId = this.feature.getId();
+    if (featureId != null && source.getFeatureById(featureId)) {
+      this.removeFeatureHighlight();
+    }
+  }
+
+  /**
+   * If the result has a coordinate.
+   * @return {boolean}
+   * @export
+   */
+  hasCoordinate() {
+    return !!this.feature && !!this.feature.getGeometry();
+  }
+}
 
 /**
  * The ID for the search layer.
  * @type {string}
  * @const
  */
-os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_ID = 'search';
-
+Controller.SEARCH_LAYER_ID = 'search';
 
 /**
  * Default label style config for the search layer.
  * @type {!Object}
  * @const
  */
-os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_LABELS = {
+Controller.SEARCH_LAYER_LABELS = {
   'labelColor': 'rgba(255,255,255,1)',
   'labels': [{
-    'column': os.Fields.LOWERCASE_NAME,
+    'column': Fields.LOWERCASE_NAME,
     'showColumn': false
   }]
 };
 
 /**
  * Logger for os.ui.search.FeatureResultCardCtrl
- * @type {goog.log.Logger}
- * @private
- * @const
+ * @type {log.Logger}
  */
-os.ui.search.FeatureResultCardCtrl.LOGGER_ = goog.log.getLogger('os.ui.search.FeatureResultCardCtrl');
+const logger = log.getLogger('os.ui.search.FeatureResultCardCtrl');
 
-
-/**
- * @inheritDoc
- */
-os.ui.search.FeatureResultCardCtrl.prototype.disposeInternal = function() {
-  os.ui.search.FeatureResultCardCtrl.base(this, 'disposeInternal');
-
-  var mm = os.MapContainer.getInstance();
-
-  ol.events.unlisten(this.layer.getSource(), goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
-
-  this.removeFeatureFromLayer();
-  this.feature = null;
-
-  var source = this.layer.getSource();
-  if (!source.getFeatures().length) {
-    this.layer.setRemovable(true);
-    mm.removeLayer(this.layer);
-  }
-
-  this.element = null;
-  this.scope = null;
-};
-
-
-/**
- * Add the feature to the search results layer.
- * @protected
- */
-os.ui.search.FeatureResultCardCtrl.prototype.addFeatureToLayer = function() {
-  if (this.layer && this.feature) {
-    var source = this.layer.getSource();
-    var featureId = this.feature.getId();
-    if (featureId != null && !source.getFeatureById(featureId)) {
-      source.addFeature(this.feature);
-    }
-  }
-};
-
-
-/**
- * Remove the feature to the search results layer.
- * @protected
- */
-os.ui.search.FeatureResultCardCtrl.prototype.removeFeatureFromLayer = function() {
-  this.removeFeatureHighlight();
-
-  if (this.layer && this.feature) {
-    var source = this.layer.getSource();
-    var featureId = this.feature.getId();
-    if (featureId != null && source.getFeatureById(featureId)) {
-      source.removeFeature(this.feature);
-    }
-  }
-};
-
-
-/**
- * Add feature highlight styling.
- * @protected
- */
-os.ui.search.FeatureResultCardCtrl.prototype.addFeatureHighlight = function() {
-  if (this.feature && this.layer) {
-    this.feature.set(os.style.StyleType.HIGHLIGHT, this.highlightConfig);
-    os.style.setFeatureStyle(this.feature);
-    os.style.notifyStyleChange(this.layer, [this.feature]);
-  }
-};
-
-
-/**
- * Remove feature highlight styling.
- * @protected
- */
-os.ui.search.FeatureResultCardCtrl.prototype.removeFeatureHighlight = function() {
-  if (this.feature && this.layer) {
-    this.feature.set(os.style.StyleType.HIGHLIGHT, undefined);
-    os.style.setFeatureStyle(this.feature);
-    os.style.notifyStyleChange(this.layer, [this.feature]);
-  }
-};
-
-
-/**
- * Set the card's highlighted state.
- * @param {boolean} value If the card is highlighted.
- * @protected
- */
-os.ui.search.FeatureResultCardCtrl.prototype.setCardHighlighted = function(value) {
-  if (value) {
-    this.element.addClass('u-card-highlight');
-  } else {
-    this.element.removeClass('u-card-highlight');
-  }
-};
-
-
-/**
- * Set the card's selected state.
- * @param {boolean} value If the card is selected.
- * @protected
- */
-os.ui.search.FeatureResultCardCtrl.prototype.setCardSelected = function(value) {
-  if (value) {
-    this.element.addClass('u-card-selected');
-  } else {
-    this.element.removeClass('u-card-selected');
-  }
-};
-
-
-/**
- * Setup the search layer
- *
- * @return {os.layer.Vector}
- * @protected
- */
-os.ui.search.FeatureResultCardCtrl.prototype.addSearchLayer = function() {
-  var src = new os.source.Vector();
-  src.setTitle('Search Results');
-  src.setId(os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_ID);
-  src.setSupportsAction(os.action.EventType.BUFFER, false);
-  src.setSupportsAction(os.action.EventType.EXPORT, false);
-  var searchLayer = new os.layer.Vector({
-    source: src
-  });
-
-  searchLayer.setTitle('Search Results');
-  searchLayer.setId(os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_ID);
-  searchLayer.setStyle(os.style.StyleManager.getInstance().getOrCreateStyle(os.style.DEFAULT_VECTOR_CONFIG));
-  searchLayer.setExplicitType('');
-  searchLayer.setRemovable(false);
-  searchLayer.setNodeUI('');
-  searchLayer.setLayerUI('');
-  searchLayer.setSticky(true);
-  searchLayer.renderLegend = os.fn.noop;
-
-  var layerConfig = os.style.StyleManager.getInstance().getOrCreateLayerConfig(
-      os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_ID);
-  layerConfig[os.style.StyleField.SHOW_LABELS] = true;
-  ol.obj.assign(layerConfig, os.ui.search.FeatureResultCardCtrl.SEARCH_LAYER_LABELS);
-
-  var mm = os.MapContainer.getInstance();
-  mm.addLayer(searchLayer);
-
-  return searchLayer;
-};
-
-
-/**
- * Handles property changes on the source
- *
- * @param {os.events.PropertyChangeEvent} event
- * @param {os.source.Vector} item
- * @private
- */
-os.ui.search.FeatureResultCardCtrl.prototype.onSourceChange_ = function(event, item) {
-  if (event instanceof os.events.PropertyChangeEvent) {
-    const p = event.getProperty();
-
-    const newValue = event.getNewValue();
-    const newContainsFeature = Array.isArray(newValue) && newValue.indexOf(this.feature) > -1;
-
-    if (p === os.events.SelectionType.ADDED) {
-      // If the feature was added to the selection, select the card.
-      if (newContainsFeature) {
-        this.setCardSelected(true);
-      }
-    } else if (p === os.events.SelectionType.REMOVED) {
-      // If the feature was removed from the selection, deselect the card.
-      if (newContainsFeature) {
-        this.setCardSelected(false);
-      }
-    } else if (p === os.events.SelectionType.CHANGED) {
-      // When the selection changes, select the card if the feature is in the new array, otherwise deselect.
-      this.setCardSelected(newContainsFeature);
-    } else if (p === os.source.PropertyChange.HIGHLIGHTED_ITEMS) {
-      // When the highlight changes, highlight the card if the feature is in the new array, otherwise remove highlight.
-      this.setCardHighlighted(newContainsFeature);
-    }
-  }
-};
-
-
-/**
- * Get a field from the result.
- *
- * @param {string} field
- * @return {string}
- * @export
- */
-os.ui.search.FeatureResultCardCtrl.prototype.getField = function(field) {
-  return /** @type {string} */ (this.feature.get(field));
-};
-
-
-/**
- * Fly to the location on the map.
- *
- * @export
- */
-os.ui.search.FeatureResultCardCtrl.prototype.goTo = function() {
-  this.result.performAction();
-};
-
-
-/**
- * Highlights the feature on mouse over
- *
- * @export
- */
-os.ui.search.FeatureResultCardCtrl.prototype.over = function() {
-  var source = this.layer.getSource();
-  var featureId = this.feature.getId();
-  if (featureId != null && source.getFeatureById(featureId)) {
-    this.addFeatureHighlight();
-  }
-};
-
-
-/**
- * Removes the highlight on mouse out
- *
- * @export
- */
-os.ui.search.FeatureResultCardCtrl.prototype.out = function() {
-  var source = this.layer.getSource();
-  var featureId = this.feature.getId();
-  if (featureId != null && source.getFeatureById(featureId)) {
-    this.removeFeatureHighlight();
-  }
-};
-
-
-/**
- * If the result has a coordinate.
- * @return {boolean}
- * @export
- */
-os.ui.search.FeatureResultCardCtrl.prototype.hasCoordinate = function() {
-  return !!this.feature && !!this.feature.getGeometry();
-};
+exports = Controller;
