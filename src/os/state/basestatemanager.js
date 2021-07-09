@@ -12,8 +12,8 @@ goog.require('os.file.FileStorage');
 goog.require('os.metrics.Metrics');
 goog.require('os.metrics.keys');
 goog.require('os.ui.state');
+goog.require('os.ui.state.StateExportUI');
 goog.require('os.ui.state.StateImportUI');
-goog.require('os.ui.state.stateExportDirective');
 goog.require('os.ui.window');
 
 

@@ -4,11 +4,13 @@ goog.module.declareLegacyNamespace();
 goog.require('os.ui.file.ui.defaultFileNodeUIDirective');
 
 const {assertString} = goog.require('goog.asserts');
-const json = goog.require('goog.json');
-const olArray = goog.require('ol.array');
+const {loadXml} = goog.require('goog.dom.xml');
+const {isValid} = goog.require('goog.json');
+const log = goog.require('goog.log');
 const BaseDescriptor = goog.require('os.data.BaseDescriptor');
 const IUrlDescriptor = goog.require('os.data.IUrlDescriptor');
 const OSEventType = goog.require('os.events.EventType');
+const {isLocal} = goog.require('os.file');
 const FileStorage = goog.require('os.file.FileStorage');
 const osImplements = goog.require('os.implements');
 const StateParserConfig = goog.require('os.parse.StateParserConfig');
@@ -16,6 +18,10 @@ const StateType = goog.require('os.state.StateType');
 const {getStateManager} = goog.require('os.state.instance');
 const UrlMethod = goog.require('os.ui.file.method.UrlMethod');
 const IStateDescriptor = goog.require('os.ui.state.IStateDescriptor');
+
+const GoogEvent = goog.requireType('goog.events.Event');
+const Logger = goog.requireType('goog.log.Logger');
+const OSFile = goog.requireType('os.file.File');
 
 
 /**
@@ -46,7 +52,7 @@ class AbstractStateDescriptor extends BaseDescriptor {
 
     /**
      * The items to load from the state file
-     * @type {Array.<string>}
+     * @type {Array<string>}
      * @private
      */
     this.loadItems_ = null;
@@ -81,7 +87,7 @@ class AbstractStateDescriptor extends BaseDescriptor {
   /**
    * Activates the state.
    *
-   * @param {os.file.File=} opt_file The state file to load
+   * @param {OSFile=} opt_file The state file to load
    */
   activateState(opt_file) {
     try {
@@ -90,7 +96,7 @@ class AbstractStateDescriptor extends BaseDescriptor {
         if (url) {
           this.setLoading(true);
 
-          if (os.file.isLocal(url)) {
+          if (isLocal(url)) {
             var fs = FileStorage.getInstance();
             fs.getFile(url).addCallbacks(this.onFileReady_, this.onFileError_, this);
           } else {
@@ -112,14 +118,14 @@ class AbstractStateDescriptor extends BaseDescriptor {
         assertString(content, 'State file content must be a string!');
 
         // decide whether it's a JSON file or an XML
-        var doc = json.isValid(content) ? JSON.parse(content) : goog.dom.xml.loadXml(content);
+        var doc = isValid(content) ? JSON.parse(content) : loadXml(content);
 
         var list = getStateManager().analyze(doc);
         var loadItems = this.getLoadItems();
         if (loadItems) {
           for (var i = 0, n = list.length; i < n; i++) {
             var state = list[i];
-            state.setEnabled(olArray.includes(loadItems, state.toString()));
+            state.setEnabled(loadItems.includes(state.toString()));
           }
         }
 
@@ -133,7 +139,7 @@ class AbstractStateDescriptor extends BaseDescriptor {
   /**
    * Handler for file storage file load success.
    *
-   * @param {?os.file.File} file
+   * @param {?OSFile} file
    * @private
    */
   onFileReady_(file) {
@@ -164,7 +170,7 @@ class AbstractStateDescriptor extends BaseDescriptor {
   /**
    * Handler for URL load success.
    *
-   * @param {goog.events.Event} event
+   * @param {GoogEvent} event
    */
   onUrlComplete(event) {
     var method = /** @type {UrlMethod} */ (event.target);
@@ -182,7 +188,7 @@ class AbstractStateDescriptor extends BaseDescriptor {
   /**
    * Handler for URL load error.
    *
-   * @param {goog.events.Event} event
+   * @param {GoogEvent} event
    * @private
    */
   onUrlError_(event) {
@@ -198,7 +204,7 @@ class AbstractStateDescriptor extends BaseDescriptor {
    * @protected
    */
   logError(msg, opt_e) {
-    goog.log.error(this.log, msg, opt_e);
+    log.error(this.log, msg, opt_e);
     this.setLoading(false);
     this.setActive(false);
   }
@@ -312,7 +318,7 @@ class AbstractStateDescriptor extends BaseDescriptor {
   clearData() {
     // permanently remove associated file contents from the application/storage
     var url = this.getUrl();
-    if (url && os.file.isLocal(url)) {
+    if (url && isLocal(url)) {
       var fs = FileStorage.getInstance();
       fs.deleteFile(url);
     }
@@ -357,7 +363,6 @@ class AbstractStateDescriptor extends BaseDescriptor {
 osImplements(AbstractStateDescriptor, IUrlDescriptor.ID);
 osImplements(AbstractStateDescriptor, IStateDescriptor.ID);
 
-
 /**
  * Identifier used for state descriptors.
  * @type {string}
@@ -365,12 +370,10 @@ osImplements(AbstractStateDescriptor, IStateDescriptor.ID);
  */
 AbstractStateDescriptor.ID = 'state';
 
-
 /**
  * Logger for os.ui.state.AbstractStateDescriptor
- * @type {goog.log.Logger}
+ * @type {Logger}
  */
-const logger = goog.log.getLogger('os.ui.state.AbstractStateDescriptor');
-
+const logger = log.getLogger('os.ui.state.AbstractStateDescriptor');
 
 exports = AbstractStateDescriptor;

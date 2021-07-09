@@ -1,137 +1,142 @@
-goog.provide('os.ui.state.AbstractStateFormCtrl');
-goog.require('os.ui.state.stateTitleDirective');
-goog.require('os.ui.window');
+goog.module('os.ui.state.AbstractStateFormCtrl');
+goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.state.stateTitleDirective');
+
+const {close} = goog.require('os.ui.window');
+
+const IPersistenceMethod = goog.requireType('os.ex.IPersistenceMethod');
+const IState = goog.requireType('os.state.IState');
 
 
 /**
  * Abstract controller for state forms.
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.state.AbstractStateFormCtrl = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.Scope}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.Scope}
+     * @protected
+     */
+    this.scope = $scope;
+
+    /**
+     * @type {?angular.JQLite}
+     * @protected
+     */
+    this.element = $element;
+
+    /**
+     * ng-model to toggle all states on/off
+     * @type {boolean}
+     */
+    this['all'] = false;
+
+    /**
+     * @type {IPersistenceMethod}
+     */
+    this['persister'] = null;
+
+    /**
+     * @type {Object<string, IPersistenceMethod>}
+     */
+    this['persisters'] = {};
+
+    /**
+     * ng-model for the 'Choose which parts to import/save' checkbox
+     * @type {boolean}
+     */
+    this['showOptions'] = false;
+
+    /**
+     * states to show in the chooser
+     * @type {Array<IState>}
+     */
+    this['states'] = [];
+
+    /**
+     * if this is a form to save state - determines language used in the form
+     * @type {boolean}
+     */
+    this['isSaving'] = false;
+
+    $scope.$on('$destroy', this.onDestroy.bind(this));
+  }
+
+  /**
+   * Clean up references/listeners.
+   *
    * @protected
    */
-  this.scope = $scope;
+  onDestroy() {
+    this.scope = null;
+    this.element = null;
+  }
 
   /**
-   * @type {?angular.JQLite}
-   * @protected
+   * Save the state
+   *
+   * @export
    */
-  this.element = $element;
+  accept() {
+    this.close();
+  }
 
   /**
-   * ng-model to toggle all states on/off
-   * @type {boolean}
+   * Close the window
+   *
+   * @export
    */
-  this['all'] = false;
+  close() {
+    close(this.element);
+  }
 
   /**
-   * @type {os.ex.IPersistenceMethod}
+   * Toggle all options
+   *
+   * @export
    */
-  this['persister'] = null;
-
-  /**
-   * @type {Object.<string, os.ex.IPersistenceMethod>}
-   */
-  this['persisters'] = {};
-
-  /**
-   * ng-model for the 'Choose which parts to import/save' checkbox
-   * @type {boolean}
-   */
-  this['showOptions'] = false;
-
-  /**
-   * states to show in the chooser
-   * @type {Array.<os.state.IState>}
-   */
-  this['states'] = [];
-
-  /**
-   * if this is a form to save state - determines language used in the form
-   * @type {boolean}
-   */
-  this['isSaving'] = false;
-
-  $scope.$on('$destroy', this.onDestroy.bind(this));
-};
-
-
-/**
- * Clean up references/listeners.
- *
- * @protected
- */
-os.ui.state.AbstractStateFormCtrl.prototype.onDestroy = function() {
-  this.scope = null;
-  this.element = null;
-};
-
-
-/**
- * Save the state
- *
- * @export
- */
-os.ui.state.AbstractStateFormCtrl.prototype.accept = function() {
-  this.close();
-};
-
-
-/**
- * Close the window
- *
- * @export
- */
-os.ui.state.AbstractStateFormCtrl.prototype.close = function() {
-  os.ui.window.close(this.element);
-};
-
-
-/**
- * Toggle all options
- *
- * @export
- */
-os.ui.state.AbstractStateFormCtrl.prototype.toggleAll = function() {
-  for (var i = 0, n = this['states'].length; i < n; i++) {
-    if (this['states'][i].getSupported()) {
-      this['states'][i].setEnabled(this['all']);
+  toggleAll() {
+    for (var i = 0, n = this['states'].length; i < n; i++) {
+      if (this['states'][i].getSupported()) {
+        this['states'][i].setEnabled(this['all']);
+      }
     }
   }
-};
 
+  /**
+   * Get the state's description.
+   *
+   * @param {IState} state The state
+   * @return {string} The description
+   * @export
+   */
+  getDescription(state) {
+    var description = state.getDescription();
+    if (!this['isSaving']) {
+      description = description.replace('Saves', 'Sets');
+    }
 
-/**
- * Get the state's description.
- *
- * @param {os.state.IState} state The state
- * @return {string} The description
- * @export
- */
-os.ui.state.AbstractStateFormCtrl.prototype.getDescription = function(state) {
-  var description = state.getDescription();
-  if (!this['isSaving']) {
-    description = description.replace('Saves', 'Sets');
+    return description;
   }
 
-  return description;
-};
+  /**
+   * Get the state's title.
+   *
+   * @param {IState} state The state
+   * @return {string} The title
+   * @export
+   */
+  getTitle(state) {
+    return state.getTitle();
+  }
+}
 
-
-/**
- * Get the state's title.
- *
- * @param {os.state.IState} state The state
- * @return {string} The title
- * @export
- */
-os.ui.state.AbstractStateFormCtrl.prototype.getTitle = function(state) {
-  return state.getTitle();
-};
+exports = Controller;
