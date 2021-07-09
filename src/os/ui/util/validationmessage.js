@@ -1,5 +1,9 @@
-goog.provide('os.ui.util.ValidationMessageCtrl');
-goog.provide('os.ui.util.validationMessageDirective');
+goog.module('os.ui.util.ValidationMessageUI');
+goog.module.declareLegacyNamespace();
+
+const {isEmpty} = goog.require('goog.object');
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -8,50 +12,61 @@ goog.provide('os.ui.util.validationMessageDirective');
  *
  * @return {angular.Directive}
  */
-os.ui.util.validationMessageDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      'target': '=',
-      'context': '@?'
-    },
-    templateUrl: os.ROOT + 'views/util/validationmessage.html',
-    controller: os.ui.util.ValidationMessageCtrl,
-    controllerAs: 'ctrl'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: {
+    'target': '=',
+    'context': '@?'
+  },
+  templateUrl: ROOT + 'views/util/validationmessage.html',
+  controller: Controller,
+  controllerAs: 'ctrl'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'validation-message';
 
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('validationMessage', [os.ui.util.validationMessageDirective]);
-
+Module.directive('validationMessage', [directive]);
 
 /**
  * Controller for the validation message
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.util.ValidationMessageCtrl = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
    */
-  this.scope_ = $scope;
-};
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+  }
 
+  /**
+   * Waits for Angular to finish doing things then resizes the map.
+   *
+   * @return {boolean}
+   * @export
+   */
+  hasError() {
+    return this.scope_['target'] && !isEmpty(this.scope_['target'].$error) && this.scope_['target'].$dirty;
+  }
+}
 
-/**
- * Waits for Angular to finish doing things then resizes the map.
- *
- * @return {boolean}
- * @export
- */
-os.ui.util.ValidationMessageCtrl.prototype.hasError = function() {
-  return this.scope_['target'] && !goog.object.isEmpty(this.scope_['target'].$error) && this.scope_['target'].$dirty;
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

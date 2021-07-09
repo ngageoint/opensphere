@@ -1,22 +1,14 @@
-goog.provide('os.ui.util.filters.ellipsisFilter');
+goog.module('os.ui.util.filters.ellipsisFilter');
+goog.module.declareLegacyNamespace();
 
-
-/**
- * Take decimal degress
- *
- * @return {angular.Filter}
- */
-os.ui.util.filters.ellipsisFilter = function() {
-  return /** @type {angular.Filter} */ (os.ui.util.filters.ellipsisFilter.Filter);
-};
-
+const Module = goog.require('os.ui.Module');
 
 /**
  * @param {?string} text
  * @param {number=} opt_maxLength
  * @return {string}
  */
-os.ui.util.filters.ellipsisFilter.Filter = function(text, opt_maxLength) {
+const filterFn = function(text, opt_maxLength) {
   var maxLength = opt_maxLength != null && opt_maxLength > 0 ? opt_maxLength : 100;
   var ret = text;
   if (ret.length > maxLength) {
@@ -25,8 +17,15 @@ os.ui.util.filters.ellipsisFilter.Filter = function(text, opt_maxLength) {
   return ret;
 };
 
+/**
+ * Take decimal degress
+ * @return {angular.Filter}
+ */
+const ellipsisFilter = () => /** @type {angular.Filter} */ (filterFn);
 
 /**
  * Add the filter to the os.ui module
  */
-os.ui.Module.filter('ellipsis', [os.ui.util.filters.ellipsisFilter]);
+Module.filter('ellipsis', [ellipsisFilter]);
+
+exports = ellipsisFilter;
