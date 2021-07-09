@@ -1,6 +1,6 @@
 goog.module('plugin.vectortools.MergeUI');
 
-goog.require('os.ui.util.validationMessageDirective');
+goog.require('os.ui.util.ValidationMessageUI');
 goog.require('plugin.vectortools.MappingCounterUI');
 
 const olArray = goog.require('ol.array');

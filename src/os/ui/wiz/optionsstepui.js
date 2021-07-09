@@ -3,7 +3,7 @@ goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.color.ColorPickerUI');
 goog.require('os.ui.icon.iconPickerDirective');
-goog.require('os.ui.util.validationMessageDirective');
+goog.require('os.ui.util.ValidationMessageUI');
 
 const {ROOT} = goog.require('os');
 const {getLocalUrl} = goog.require('os.file');

@@ -1,7 +1,7 @@
 goog.module('os.ui.window.ConfirmTextUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.util.validationMessageDirective');
+goog.require('os.ui.util.ValidationMessageUI');
 
 const {ROOT} = goog.require('os');
 const fn = goog.require('os.fn');

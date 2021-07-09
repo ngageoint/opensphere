@@ -14,7 +14,7 @@ goog.require('os.net.LocalFileHandler');
 goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.popover.popoverDirective');
-goog.require('os.ui.util.validationMessageDirective');
+goog.require('os.ui.util.ValidationMessageUI');
 goog.require('os.ui.window');
 
 

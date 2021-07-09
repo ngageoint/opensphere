@@ -1,6 +1,6 @@
 goog.module('plugin.vectortools.JoinUI');
 
-goog.require('os.ui.util.validationMessageDirective');
+goog.require('os.ui.util.ValidationMessageUI');
 goog.require('plugin.vectortools.MappingCounterUI');
 
 const googString = goog.require('goog.string');

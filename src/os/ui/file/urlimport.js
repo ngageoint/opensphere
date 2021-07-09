@@ -2,7 +2,7 @@ goog.provide('os.ui.file.UrlImportCtrl');
 goog.provide('os.ui.file.urlImportDirective');
 
 goog.require('os.ui.Module');
-goog.require('os.ui.util.validationMessageDirective');
+goog.require('os.ui.util.ValidationMessageUI');
 
 
 /**
