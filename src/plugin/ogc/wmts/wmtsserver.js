@@ -57,6 +57,7 @@ class WMTSServer extends OGCServer {
   /**
    * The server type.
    * @type {string}
+   * @override
    */
   static get TYPE() {
     return 'wmts';

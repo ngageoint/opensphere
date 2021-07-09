@@ -1,339 +1,326 @@
-goog.provide('os.ui.server.AbstractLoadingServer');
+goog.module('os.ui.server.AbstractLoadingServer');
+goog.module.declareLegacyNamespace();
 
-goog.require('ol.array');
-goog.require('os.auth');
-goog.require('os.data.DataProviderEvent');
-goog.require('os.data.DataProviderEventType');
-goog.require('os.data.ILoadingProvider');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.ui.data.BaseProvider');
-
-
+const {remove} = goog.require('ol.array');
+const {getAuth} = goog.require('os.auth');
+const DataProviderEvent = goog.require('os.data.DataProviderEvent');
+const DataProviderEventType = goog.require('os.data.DataProviderEventType');
+const IDataProvider = goog.require('os.data.IDataProvider');
+const ILoadingProvider = goog.require('os.data.ILoadingProvider');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const osImplements = goog.require('os.implements');
+const TriState = goog.require('os.structs.TriState');
+const BaseProvider = goog.require('os.ui.data.BaseProvider');
 
 /**
  * A base implementation of a server that loads stuff.
  *
- * @implements {os.data.ILoadingProvider}
- * @extends {os.ui.data.BaseProvider}
- * @constructor
+ * @implements {ILoadingProvider}
  */
-os.ui.server.AbstractLoadingServer = function() {
-  os.ui.server.AbstractLoadingServer.base(this, 'constructor');
+class AbstractLoadingServer extends BaseProvider {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * The full server URL.
+     * @type {string}
+     * @protected
+     */
+    this.url = '';
+
+    /**
+     * Alternate URLs that may be used in place of the base URL.
+     * @type {Array<string>}
+     * @private
+     */
+    this.alternateUrls_ = null;
+
+    /**
+     * Index of the next URL to pick when rotating.
+     * @type {number}
+     * @private
+     */
+    this.nextUrl_ = 0;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.error_ = false;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.errorMsg_ = null;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.inhibitPopups_ = false;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.ping_ = false;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.isLoading_ = false;
+  }
 
   /**
-   * The full server URL.
-   * @type {string}
+   * Initialize the server.
+   */
+  init() {
+    this.setState(TriState.OFF);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  configure(config) {
+    super.configure(config);
+    this.setUrl(/** @type {string} */ (config['url']));
+    this.init();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  load(opt_ping) {
+    this.dispatchEvent(new DataProviderEvent(DataProviderEventType.LOADING, this));
+    this.setLoading(true);
+    this.setPing(opt_ping || false);
+    this.setError(false);
+  }
+
+  /**
+   * If the server has finished loading.
+   *
+   * @return {boolean}
+   */
+  isLoaded() {
+    return true;
+  }
+
+  /**
+   * Called when loading is complete.
+   *
    * @protected
    */
-  this.url = '';
-
-  /**
-   * Alternate URLs that may be used in place of the base URL.
-   * @type {Array<string>}
-   * @private
-   */
-  this.alternateUrls_ = null;
-
-  /**
-   * Index of the next URL to pick when rotating.
-   * @type {number}
-   * @private
-   */
-  this.nextUrl_ = 0;
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.error_ = false;
-
-  /**
-   * @type {?string}
-   * @private
-   */
-  this.errorMsg_ = null;
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.inhibitPopups_ = false;
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.ping_ = false;
-};
-goog.inherits(os.ui.server.AbstractLoadingServer, os.ui.data.BaseProvider);
-os.implements(os.ui.server.AbstractLoadingServer, os.data.ILoadingProvider.ID);
-os.implements(os.ui.server.AbstractLoadingServer, os.data.IDataProvider.ID);
-
-
-/**
- * Initialize the server.
- */
-os.ui.server.AbstractLoadingServer.prototype.init = function() {
-  this.setState(os.structs.TriState.OFF);
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.server.AbstractLoadingServer.prototype.configure = function(config) {
-  os.ui.server.AbstractLoadingServer.base(this, 'configure', config);
-  this.setUrl(/** @type {string} */ (config['url']));
-  this.init();
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.server.AbstractLoadingServer.prototype.load = function(opt_ping) {
-  this.dispatchEvent(new os.data.DataProviderEvent(os.data.DataProviderEventType.LOADING, this));
-  this.setLoading(true);
-  this.setPing(opt_ping || false);
-  this.setError(false);
-};
-
-
-/**
- * If the server has finished loading.
- *
- * @return {boolean}
- */
-os.ui.server.AbstractLoadingServer.prototype.isLoaded = function() {
-  return true;
-};
-
-
-/**
- * Called when loading is complete.
- *
- * @protected
- */
-os.ui.server.AbstractLoadingServer.prototype.finish = function() {
-  this.setLoading(false);
-  this.dispatchEvent(new os.data.DataProviderEvent(os.data.DataProviderEventType.LOADED, this));
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.server.AbstractLoadingServer.prototype.formatIcons = function() {
-  var icons = os.ui.server.AbstractLoadingServer.base(this, 'formatIcons');
-
-  if (this.getError()) {
-    var message = 'Server failed to load. See the log/alerts window for details.';
-    icons += `<i class="fas fa-exclamation-triangle text-warning" title="${message}"></i>`;
+  finish() {
+    this.setLoading(false);
+    this.dispatchEvent(new DataProviderEvent(DataProviderEventType.LOADED, this));
   }
 
+  /**
+   * @inheritDoc
+   */
+  formatIcons() {
+    var icons = super.formatIcons();
 
-  return icons;
-};
-
-
-/**
- * Get the server URL.
- *
- * @return {string}
- */
-os.ui.server.AbstractLoadingServer.prototype.getUrl = function() {
-  return this.url;
-};
+    if (this.getError()) {
+      var message = 'Server failed to load. See the log/alerts window for details.';
+      icons += `<i class="fas fa-exclamation-triangle text-warning" title="${message}"></i>`;
+    }
 
 
-/**
- * Set the server URL.
- *
- * @param {string} value
- */
-os.ui.server.AbstractLoadingServer.prototype.setUrl = function(value) {
-  this.url = value;
-};
-
-
-/**
- * Get alternate URLs that may be used to load balance server requests.
- *
- * @return {Array<string>}
- */
-os.ui.server.AbstractLoadingServer.prototype.getAlternateUrls = function() {
-  return this.alternateUrls_;
-};
-
-
-/**
- * Set alternate URLs that may be used to load balance server requests.
- *
- * @param {Array<string>} value
- */
-os.ui.server.AbstractLoadingServer.prototype.setAlternateUrls = function(value) {
-  this.alternateUrls_ = value ? value.slice() : null;
-};
-
-
-/**
- * Add an alternate URL to the server.
- *
- * @param {string} value
- */
-os.ui.server.AbstractLoadingServer.prototype.addAlternateUrl = function(value) {
-  if (!this.alternateUrls_) {
-    this.alternateUrls_ = [value];
-  } else if (this.alternateUrls_.indexOf(value) == -1) {
-    this.alternateUrls_.push(value);
+    return icons;
   }
-};
 
+  /**
+   * Get the server URL.
+   *
+   * @return {string}
+   */
+  getUrl() {
+    return this.url;
+  }
 
-/**
- * Remove an alternate URL from the server.
- *
- * @param {string} value
- */
-os.ui.server.AbstractLoadingServer.prototype.removeAlternateUrl = function(value) {
-  if (this.alternateUrls_) {
-    ol.array.remove(this.alternateUrls_, value);
+  /**
+   * Set the server URL.
+   *
+   * @param {string} value
+   */
+  setUrl(value) {
+    this.url = value;
+  }
 
-    if (this.alternateUrls_.length == 0) {
-      this.alternateUrls_ = null;
+  /**
+   * Get alternate URLs that may be used to load balance server requests.
+   *
+   * @return {Array<string>}
+   */
+  getAlternateUrls() {
+    return this.alternateUrls_;
+  }
+
+  /**
+   * Set alternate URLs that may be used to load balance server requests.
+   *
+   * @param {Array<string>} value
+   */
+  setAlternateUrls(value) {
+    this.alternateUrls_ = value ? value.slice() : null;
+  }
+
+  /**
+   * Add an alternate URL to the server.
+   *
+   * @param {string} value
+   */
+  addAlternateUrl(value) {
+    if (!this.alternateUrls_) {
+      this.alternateUrls_ = [value];
+    } else if (this.alternateUrls_.indexOf(value) == -1) {
+      this.alternateUrls_.push(value);
     }
   }
-};
 
+  /**
+   * Remove an alternate URL from the server.
+   *
+   * @param {string} value
+   */
+  removeAlternateUrl(value) {
+    if (this.alternateUrls_) {
+      remove(this.alternateUrls_, value);
 
-/**
- * Gets a rotating URL for the server using the base URL and alternate URLs.
- *
- * @return {string}
- */
-os.ui.server.AbstractLoadingServer.prototype.getNextUrl = function() {
-  var urls = [this.url];
-  if (this.alternateUrls_) {
-    urls = urls.concat(this.alternateUrls_);
+      if (this.alternateUrls_.length == 0) {
+        this.alternateUrls_ = null;
+      }
+    }
   }
 
-  if (this.nextUrl_ >= urls.length) {
-    this.nextUrl_ = 0;
+  /**
+   * Gets a rotating URL for the server using the base URL and alternate URLs.
+   *
+   * @return {string}
+   */
+  getNextUrl() {
+    var urls = [this.url];
+    if (this.alternateUrls_) {
+      urls = urls.concat(this.alternateUrls_);
+    }
+
+    if (this.nextUrl_ >= urls.length) {
+      this.nextUrl_ = 0;
+    }
+
+    return urls[this.nextUrl_++] || '';
   }
 
-  return urls[this.nextUrl_++] || '';
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.server.AbstractLoadingServer.prototype.getError = function() {
-  return this.error_;
-};
-
-
-/**
- * @param {boolean} value
- */
-os.ui.server.AbstractLoadingServer.prototype.setError = function(value) {
-  this.error_ = value;
-
-  if (!this.error_) {
-    this.setErrorMessage(null);
+  /**
+   * @inheritDoc
+   */
+  getError() {
+    return this.error_;
   }
 
-  this.dispatchEvent(new os.events.PropertyChangeEvent('icons'));
-};
+  /**
+   * @param {boolean} value
+   */
+  setError(value) {
+    this.error_ = value;
 
+    if (!this.error_) {
+      this.setErrorMessage(null);
+    }
 
-/**
- * @inheritDoc
- */
-os.ui.server.AbstractLoadingServer.prototype.getErrorMessage = function() {
-  return this.errorMsg_;
-};
-
-
-/**
- * @param {?string} message
- */
-os.ui.server.AbstractLoadingServer.prototype.setErrorMessage = function(message) {
-  this.errorMsg_ = message;
-
-  if (this.errorMsg_) {
-    this.setError(true);
+    this.dispatchEvent(new PropertyChangeEvent('icons'));
   }
-};
 
-
-/**
- * @return {boolean}
- */
-os.ui.server.AbstractLoadingServer.prototype.getInhibitPopups = function() {
-  return this.inhibitPopups_;
-};
-
-
-/**
- * @param {boolean} value
- */
-os.ui.server.AbstractLoadingServer.prototype.setInhibitPopups = function(value) {
-  this.inhibitPopups_ = value;
-};
-
-
-/**
- * @return {boolean}
- */
-os.ui.server.AbstractLoadingServer.prototype.getPing = function() {
-  return this.ping_;
-};
-
-
-/**
- * @param {boolean} value
- */
-os.ui.server.AbstractLoadingServer.prototype.setPing = function(value) {
-  this.ping_ = value;
-};
-
-
-/**
- * @inheritDoc
- * @export
- */
-os.ui.server.AbstractLoadingServer.prototype.isLoading = function() {
-  return this.isLoading_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.server.AbstractLoadingServer.prototype.setLoading = function(value) {
-  if (this.isLoading_ != value) {
-    this.isLoading_ = value;
-    this.dispatchEvent(new os.events.PropertyChangeEvent('loading', value, !value));
+  /**
+   * @inheritDoc
+   */
+  getErrorMessage() {
+    return this.errorMsg_;
   }
-};
 
+  /**
+   * @param {?string} message
+   */
+  setErrorMessage(message) {
+    this.errorMsg_ = message;
 
-/**
- * @inheritDoc
- */
-os.ui.server.AbstractLoadingServer.prototype.onChildChange = function(e) {
-  if (!this.isLoading()) {
-    // don't handle child change events while loading, because there will be a lot of them and it may hang the browser.
-    // the server will fire an event when it finishes loading to update the tree.
-    os.ui.server.AbstractLoadingServer.base(this, 'onChildChange', e);
+    if (this.errorMsg_) {
+      this.setError(true);
+    }
   }
-};
 
+  /**
+   * @return {boolean}
+   */
+  getInhibitPopups() {
+    return this.inhibitPopups_;
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.server.AbstractLoadingServer.prototype.getAuth = function() {
-  return os.auth.getAuth(this.getUrl());
-};
+  /**
+   * @param {boolean} value
+   */
+  setInhibitPopups(value) {
+    this.inhibitPopups_ = value;
+  }
+
+  /**
+   * @return {boolean}
+   */
+  getPing() {
+    return this.ping_;
+  }
+
+  /**
+   * @param {boolean} value
+   */
+  setPing(value) {
+    this.ping_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   * @export
+   */
+  isLoading() {
+    return this.isLoading_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setLoading(value) {
+    if (this.isLoading_ != value) {
+      this.isLoading_ = value;
+      this.dispatchEvent(new PropertyChangeEvent('loading', value, !value));
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  onChildChange(e) {
+    if (!this.isLoading()) {
+      // don't handle child change events while loading, because there will be a lot of them and it may hang the browser.
+      // the server will fire an event when it finishes loading to update the tree.
+      super.onChildChange(e);
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getAuth() {
+    return getAuth(this.getUrl());
+  }
+}
+osImplements(AbstractLoadingServer, ILoadingProvider.ID);
+osImplements(AbstractLoadingServer, IDataProvider.ID);
+
+exports = AbstractLoadingServer;
