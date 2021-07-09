@@ -551,11 +551,7 @@ class MapContainer extends EventTarget {
   }
 
   /**
-   * Fits the view to an extent.
-   *
-   * @param {ol.Extent} extent The extent to fit
-   * @param {number=} opt_buffer Scale factor for the extent to provide a buffer around the displayed area
-   * @param {number=} opt_maxZoom The maximum zoom level for the updated view
+   * @inheritDoc
    */
   flyToExtent(extent, opt_buffer, opt_maxZoom) {
     if (extent && extent.indexOf(Infinity) != -1 || extent.indexOf(-Infinity) != -1) {
