@@ -1,16 +1,15 @@
-goog.provide('os.ui.text.TuiEditorMarkdownIt');
-
+goog.module('os.ui.text.TuiEditorMarkdownIt');
+goog.module.declareLegacyNamespace();
 
 /**
  * @type {Markdownit}
  */
-os.ui.text.TuiEditorMarkdownIt = markdownit({
+const TuiEditorMarkdownIt = markdownit({
   'html': true,
   'breaks': true,
   'quotes': '“”‘’',
   'langPrefix': 'lang-'
 });
-
 
 /**
  *
@@ -112,5 +111,7 @@ os.ui.text.TuiEditorMarkdownIt = markdownit({
     }
   };
 
-  os.ui.text.TuiEditorMarkdownIt.core.ruler.after('inline', 'tui-task-list', tasklistrule);
+  TuiEditorMarkdownIt.core.ruler.after('inline', 'tui-task-list', tasklistrule);
 })();
+
+exports = TuiEditorMarkdownIt;
