@@ -1,62 +1,113 @@
 /**
  * @fileoverview Base tests for any classes extending os.storage.AsyncStorage.
  */
-goog.provide('os.storage.mock');
-goog.provide('os.storage.mock.AsyncStorage');
+goog.module('os.storage.mock');
+goog.module.declareLegacyNamespace();
 
-/**
- * Timeout to use in waitsFor calls.
- * @type {number}
- * @const
- */
-os.storage.mock.WAIT_TIMEOUT = 5000;
+const {getCount} = goog.require('goog.object');
 
 /**
  * The last callback value.
  * @type {*}
  */
-os.storage.mock.lastValue = undefined;
+let lastValue = undefined;
+
+/**
+ * Get the last value.
+ * @return {number}
+ */
+const getLastValue = () => lastValue;
+
+/**
+ * Set the last value.
+ * @param {string|undefined} value The value.
+ */
+const setLastValue = (value) => {
+  lastValue = value;
+};
 
 /**
  * The last error encountered by a storage test.
  * @type {string|undefined}
  */
-os.storage.mock.lastError = undefined;
+let lastError = undefined;
+
+/**
+ * Get the last error.
+ * @return {number}
+ */
+const getLastError = () => lastError;
+
+/**
+ * Set the last error.
+ * @param {string|undefined} value The value.
+ */
+const setLastError = (value) => {
+  lastError = value;
+};
 
 /**
  * The number of callbacks fired.
  * @type {number}
  */
-os.storage.mock.cbCount = 0;
+let cbCount = 0;
+
+/**
+ * Get the callback count.
+ * @return {number}
+ */
+const getCallbackCount = () => cbCount;
+
+/**
+ * Set the callback count.
+ * @param {number} value The value.
+ */
+const setCallbackCount = (value) => {
+  cbCount = value;
+};
 
 /**
  * The number of errbacks fired.
  * @type {number}
  */
-os.storage.mock.ebCount = 0;
+let ebCount = 0;
+
+/**
+ * Get the errback count.
+ * @return {number}
+ */
+const getErrbackCount = () => ebCount;
+
+/**
+ * Set the errback count.
+ * @param {number} value The value.
+ */
+const setErrbackCount = (value) => {
+  ebCount = value;
+};
 
 /**
  * Mock deferred callback handler.
  * @param {*} val The value
  */
-os.storage.mock.incrementCb = function(val) {
-  os.storage.mock.cbCount++;
-  os.storage.mock.lastValue = val;
+const incrementCb = function(val) {
+  cbCount++;
+  lastValue = val;
 };
 
 /**
  * Mock deferred errback handler.
  * @param {string|undefined} e The error
  */
-os.storage.mock.incrementEb = function(e) {
-  os.storage.mock.ebCount++;
-  os.storage.mock.lastError = e;
+const incrementEb = function(e) {
+  ebCount++;
+  lastError = e;
 };
 
 /**
  * @type {Object}
  */
-os.storage.asyncValueMap = {
+const asyncValueMap = {
   'stringKey': 'storage string test value',
   'numKey': 42,
   'boolKey': true,
@@ -67,402 +118,378 @@ os.storage.asyncValueMap = {
   }
 };
 
-
 beforeEach(function() {
-  os.storage.mock.cbCount = 0;
-  os.storage.mock.ebCount = 0;
-  os.storage.mock.lastError = undefined;
-  os.storage.mock.lastValue = undefined;
+  cbCount = 0;
+  ebCount = 0;
+  lastError = undefined;
+  lastValue = undefined;
 });
-
 
 /**
  * Base set tests for all asynchronous storage classes.
  * @param {os.storage.AsyncStorage} storage The asynchronous storage object
  */
-os.storage.runAsyncSetTests = function(storage) {
+const runAsyncSetTests = function(storage) {
   describe('set', function() {
     it('should set values in storage', function() {
       runs(function() {
-        storage.set('stringKey', os.storage.asyncValueMap['stringKey'])
-            .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.set('stringKey', asyncValueMap['stringKey']).addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+        return cbCount > 0 || ebCount > 0;
       }, 'string to be stored');
 
       runs(function() {
-        expect(os.storage.mock.cbCount).toBe(1);
-        expect(os.storage.mock.ebCount).toBe(0);
+        expect(cbCount).toBe(1);
+        expect(ebCount).toBe(0);
 
-        os.storage.mock.cbCount = 0;
-        os.storage.mock.ebCount = 0;
+        cbCount = 0;
+        ebCount = 0;
 
-        storage.set('numKey', os.storage.asyncValueMap['numKey'])
-            .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.set('numKey', asyncValueMap['numKey']).addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+        return cbCount > 0 || ebCount > 0;
       }, 'number to be stored');
 
       runs(function() {
-        expect(os.storage.mock.cbCount).toBe(1);
-        expect(os.storage.mock.ebCount).toBe(0);
+        expect(cbCount).toBe(1);
+        expect(ebCount).toBe(0);
 
-        os.storage.mock.cbCount = 0;
-        os.storage.mock.ebCount = 0;
+        cbCount = 0;
+        ebCount = 0;
 
-        storage.set('boolKey', os.storage.asyncValueMap['boolKey'])
-            .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.set('boolKey', asyncValueMap['boolKey']).addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+        return cbCount > 0 || ebCount > 0;
       }, 'boolean to be stored');
 
       runs(function() {
-        expect(os.storage.mock.cbCount).toBe(1);
-        expect(os.storage.mock.ebCount).toBe(0);
+        expect(cbCount).toBe(1);
+        expect(ebCount).toBe(0);
 
-        os.storage.mock.cbCount = 0;
-        os.storage.mock.ebCount = 0;
+        cbCount = 0;
+        ebCount = 0;
 
-        storage.set('objectKey', os.storage.asyncValueMap['objectKey'])
-            .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.set('objectKey', asyncValueMap['objectKey']).addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+        return cbCount > 0 || ebCount > 0;
       }, 'object to be stored');
 
       runs(function() {
-        expect(os.storage.mock.cbCount).toBe(1);
-        expect(os.storage.mock.ebCount).toBe(0);
+        expect(cbCount).toBe(1);
+        expect(ebCount).toBe(0);
       });
     });
   });
 };
-
 
 /**
  * Base get tests for all asynchronous storage classes.
  * @param {os.storage.AsyncStorage} storage The asynchronous storage object
  */
-os.storage.runAsyncGetTests = function(storage) {
+const runAsyncGetTests = function(storage) {
   describe('get', function() {
     it('should get values from storage', function() {
       runs(function() {
-        storage.get('stringKey').addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.get('stringKey').addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.lastValue != null;
+        return lastValue != null;
       }, 'string to be retrieved');
 
       runs(function() {
-        expect(os.storage.mock.lastValue).toBe(os.storage.asyncValueMap['stringKey']);
+        expect(lastValue).toBe(asyncValueMap['stringKey']);
 
-        expect(os.storage.mock.cbCount).toBe(1);
-        expect(os.storage.mock.ebCount).toBe(0);
-        os.storage.mock.cbCount = os.storage.mock.ebCount = 0;
-        os.storage.mock.lastValue = undefined;
+        expect(cbCount).toBe(1);
+        expect(ebCount).toBe(0);
+        cbCount = ebCount = 0;
+        lastValue = undefined;
 
-        storage.get('numKey')
-            .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.get('numKey').addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.lastValue != null;
+        return lastValue != null;
       }, 'number to be retrieved');
 
       runs(function() {
-        expect(os.storage.mock.lastValue).toBe(os.storage.asyncValueMap['numKey']);
+        expect(lastValue).toBe(asyncValueMap['numKey']);
 
-        expect(os.storage.mock.cbCount).toBe(1);
-        expect(os.storage.mock.ebCount).toBe(0);
-        os.storage.mock.cbCount = os.storage.mock.ebCount = 0;
-        os.storage.mock.lastValue = undefined;
+        expect(cbCount).toBe(1);
+        expect(ebCount).toBe(0);
+        cbCount = ebCount = 0;
+        lastValue = undefined;
 
-        storage.get('boolKey')
-            .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.get('boolKey').addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.lastValue != null;
+        return lastValue != null;
       }, 'boolean to be retrieved');
 
       runs(function() {
-        expect(os.storage.mock.lastValue).toBe(os.storage.asyncValueMap['boolKey']);
+        expect(lastValue).toBe(asyncValueMap['boolKey']);
 
-        expect(os.storage.mock.cbCount).toBe(1);
-        expect(os.storage.mock.ebCount).toBe(0);
-        os.storage.mock.cbCount = os.storage.mock.ebCount = 0;
-        os.storage.mock.lastValue = undefined;
+        expect(cbCount).toBe(1);
+        expect(ebCount).toBe(0);
+        cbCount = ebCount = 0;
+        lastValue = undefined;
 
-        storage.get('objectKey')
-            .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.get('objectKey').addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.lastValue != null;
+        return lastValue != null;
       }, 'object to be retrieved');
 
       runs(function() {
-        for (var key in os.storage.asyncValueMap['objectKey']) {
-          expect(os.storage.mock.lastValue[key]).toBe(os.storage.asyncValueMap['objectKey'][key]);
+        for (var key in asyncValueMap['objectKey']) {
+          expect(lastValue[key]).toBe(asyncValueMap['objectKey'][key]);
         }
 
-        expect(os.storage.mock.cbCount).toBe(1);
-        expect(os.storage.mock.ebCount).toBe(0);
-        os.storage.mock.cbCount = os.storage.mock.ebCount = 0;
-        os.storage.mock.lastValue = undefined;
+        expect(cbCount).toBe(1);
+        expect(ebCount).toBe(0);
+        cbCount = ebCount = 0;
+        lastValue = undefined;
 
-        storage.get('notAKey')
-            .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.get('notAKey').addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+        return cbCount > 0 || ebCount > 0;
       }, 'absent key to be retrieved');
 
       runs(function() {
-        expect(os.storage.mock.lastValue).toBeUndefined();
+        expect(lastValue).toBeUndefined();
       });
     });
   });
 };
-
 
 /**
  * Base get tests for all asynchronous storage classes.
  * @param {os.storage.AsyncStorage} storage The asynchronous storage object
  * @param {boolean=} opt_supportsInterface If {@link os.storage.IMechanism} is supported.
  */
-os.storage.runAsyncGetAllTests = function(storage, opt_supportsInterface) {
+const runAsyncGetAllTests = function(storage, opt_supportsInterface) {
   var supportsInterface = opt_supportsInterface != null ? opt_supportsInterface : true;
   if (supportsInterface) {
     describe('get all', function() {
       it('should get all values from the storage', function() {
         runs(function() {
-          storage.getAll().addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+          storage.getAll().addCallbacks(incrementCb, incrementEb);
         });
 
         waitsFor(function() {
-          return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+          return cbCount > 0 || ebCount > 0;
         }, 'values to be retrieved');
 
         runs(function() {
-          expect(os.storage.mock.ebCount).toBe(0);
-          expect(os.storage.mock.lastValue).not.toBeNull();
-          expect(os.storage.mock.lastValue.length).toBe(goog.object.getCount(os.storage.asyncValueMap));
+          expect(ebCount).toBe(0);
+          expect(lastValue).not.toBeNull();
+          expect(lastValue.length).toBe(getCount(asyncValueMap));
         });
       });
     });
   }
 };
 
-
 /**
  * Base replace tests for all asynchronous storage classes.
  * @param {os.storage.AsyncStorage} storage The asynchronous storage object
  */
-os.storage.runAsyncReplaceTests = function(storage) {
+const runAsyncReplaceTests = function(storage) {
   describe('replace', function() {
     it('should only replace values when specified', function() {
       runs(function() {
-        storage.set('numKey', 9000).addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.set('numKey', 9000).addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+        return cbCount > 0 || ebCount > 0;
       }, 'set to complete');
 
       runs(function() {
-        expect(os.storage.mock.cbCount).toBe(1);
-        expect(os.storage.mock.ebCount).toBe(0);
-        os.storage.mock.cbCount = os.storage.mock.ebCount = 0;
+        expect(cbCount).toBe(1);
+        expect(ebCount).toBe(0);
+        cbCount = ebCount = 0;
 
-        storage.get('numKey')
-            .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.get('numKey').addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+        return cbCount > 0 || ebCount > 0;
       }, 'get to complete');
 
       runs(function() {
         // value shouldn't change
-        expect(os.storage.mock.lastValue).toBe(os.storage.asyncValueMap['numKey']);
+        expect(lastValue).toBe(asyncValueMap['numKey']);
 
-        expect(os.storage.mock.cbCount).toBe(1);
-        expect(os.storage.mock.ebCount).toBe(0);
-        os.storage.mock.cbCount = os.storage.mock.ebCount = 0;
-        os.storage.mock.lastValue = undefined;
+        expect(cbCount).toBe(1);
+        expect(ebCount).toBe(0);
+        cbCount = ebCount = 0;
+        lastValue = undefined;
 
-        storage.set('numKey', 9000, false)
-            .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.set('numKey', 9000, false).addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+        return cbCount > 0 || ebCount > 0;
       }, 'set to complete');
 
       runs(function() {
-        expect(os.storage.mock.cbCount).toBe(1);
-        expect(os.storage.mock.ebCount).toBe(0);
-        os.storage.mock.cbCount = os.storage.mock.ebCount = 0;
+        expect(cbCount).toBe(1);
+        expect(ebCount).toBe(0);
+        cbCount = ebCount = 0;
 
-        storage.get('numKey')
-            .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.get('numKey').addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+        return cbCount > 0 || ebCount > 0;
       }, 'get to complete');
 
       runs(function() {
         // value shouldn't change
-        expect(os.storage.mock.lastValue).toBe(os.storage.asyncValueMap['numKey']);
+        expect(lastValue).toBe(asyncValueMap['numKey']);
 
-        expect(os.storage.mock.cbCount).toBe(1);
-        expect(os.storage.mock.ebCount).toBe(0);
-        os.storage.mock.cbCount = os.storage.mock.ebCount = 0;
-        os.storage.mock.lastValue = undefined;
+        expect(cbCount).toBe(1);
+        expect(ebCount).toBe(0);
+        cbCount = ebCount = 0;
+        lastValue = undefined;
 
-        storage.set('numKey', 9000, true)
-            .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.set('numKey', 9000, true).addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+        return cbCount > 0 || ebCount > 0;
       }, 'set to complete');
 
       runs(function() {
-        expect(os.storage.mock.cbCount).toBe(1);
-        expect(os.storage.mock.ebCount).toBe(0);
-        os.storage.mock.cbCount = os.storage.mock.ebCount = 0;
+        expect(cbCount).toBe(1);
+        expect(ebCount).toBe(0);
+        cbCount = ebCount = 0;
 
-        storage.get('numKey')
-            .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.get('numKey').addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+        return cbCount > 0 || ebCount > 0;
       }, 'get to complete');
 
       runs(function() {
         // value should change
-        expect(os.storage.mock.lastValue).toBe(9000);
+        expect(lastValue).toBe(9000);
       });
     });
   });
 };
-
 
 /**
  * Base remove tests for all asynchronous storage classes.
  * @param {os.storage.AsyncStorage} storage The asynchronous storage object
  */
-os.storage.runAsyncRemoveTests = function(storage) {
+const runAsyncRemoveTests = function(storage) {
   describe('remove', function() {
     it('should remove keys from the database', function() {
       runs(function() {
-        storage.remove('stringKey').addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
-        storage.remove('numKey').addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.remove('stringKey').addCallbacks(incrementCb, incrementEb);
+        storage.remove('numKey').addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.cbCount > 1 || os.storage.mock.ebCount > 0;
+        return cbCount > 1 || ebCount > 0;
       }, 'remove calls to complete');
 
       runs(function() {
-        expect(os.storage.mock.cbCount).toBe(2);
-        expect(os.storage.mock.ebCount).toBe(0);
-        os.storage.mock.cbCount = os.storage.mock.ebCount = 0;
+        expect(cbCount).toBe(2);
+        expect(ebCount).toBe(0);
+        cbCount = ebCount = 0;
 
-        storage.get('stringKey')
-            .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.get('stringKey').addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+        return cbCount > 0 || ebCount > 0;
       }, 'get to complete');
 
       runs(function() {
-        expect(os.storage.mock.lastValue).toBeUndefined();
+        expect(lastValue).toBeUndefined();
 
-        expect(os.storage.mock.cbCount).toBe(1);
-        expect(os.storage.mock.ebCount).toBe(0);
-        os.storage.mock.cbCount = os.storage.mock.ebCount = 0;
-        os.storage.mock.lastValue = undefined;
+        expect(cbCount).toBe(1);
+        expect(ebCount).toBe(0);
+        cbCount = ebCount = 0;
+        lastValue = undefined;
 
-        storage.get('numKey')
-            .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.get('numKey').addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+        return cbCount > 0 || ebCount > 0;
       }, 'get to complete');
 
       runs(function() {
-        expect(os.storage.mock.lastValue).toBeUndefined();
+        expect(lastValue).toBeUndefined();
 
-        expect(os.storage.mock.cbCount).toBe(1);
-        expect(os.storage.mock.ebCount).toBe(0);
-        os.storage.mock.cbCount = os.storage.mock.ebCount = 0;
-        os.storage.mock.lastValue = undefined;
+        expect(cbCount).toBe(1);
+        expect(ebCount).toBe(0);
+        cbCount = ebCount = 0;
+        lastValue = undefined;
       });
     });
   });
 };
-
 
 /**
  * Base clear tests for all asynchronous storage classes.
  * @param {os.storage.AsyncStorage} storage The asynchronous storage object
  */
-os.storage.runAsyncClearTests = function(storage) {
+const runAsyncClearTests = function(storage) {
   describe('clear', function() {
     it('should clear storage', function() {
       runs(function() {
-        storage.clear().addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.clear().addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+        return cbCount > 0 || ebCount > 0;
       }, 'clear to complete');
 
       runs(function() {
-        expect(os.storage.mock.cbCount).toBe(1);
-        expect(os.storage.mock.ebCount).toBe(0);
-        os.storage.mock.cbCount = os.storage.mock.ebCount = 0;
+        expect(cbCount).toBe(1);
+        expect(ebCount).toBe(0);
+        cbCount = ebCount = 0;
 
-        storage.getAll()
-            .addCallbacks(os.storage.mock.incrementCb, os.storage.mock.incrementEb);
+        storage.getAll().addCallbacks(incrementCb, incrementEb);
       });
 
       waitsFor(function() {
-        return os.storage.mock.cbCount > 0 || os.storage.mock.ebCount > 0;
+        return cbCount > 0 || ebCount > 0;
       }, 'getAll to complete');
 
       runs(function() {
-        expect(os.storage.mock.cbCount).toBe(1);
-        expect(os.storage.mock.ebCount).toBe(0);
-        expect(os.storage.mock.lastValue).not.toBeNull();
-        expect(os.storage.mock.lastValue.length).toBe(0);
+        expect(cbCount).toBe(1);
+        expect(ebCount).toBe(0);
+        expect(lastValue).not.toBeNull();
+        expect(lastValue.length).toBe(0);
       });
     });
   });
 };
 
-
 /**
  * Base dispose tests for all asynchronous storage classes.
  * @param {os.storage.AsyncStorage} storage The asynchronous storage object
  */
-os.storage.runAsyncDisposeTests = function(storage) {
+const runAsyncDisposeTests = function(storage) {
   describe('dispose', function() {
     it('should dispose the database', function() {
       runs(function() {
@@ -474,4 +501,25 @@ os.storage.runAsyncDisposeTests = function(storage) {
       });
     });
   });
+};
+
+exports = {
+  getLastValue,
+  setLastValue,
+  getLastError,
+  setLastError,
+  getCallbackCount,
+  setCallbackCount,
+  getErrbackCount,
+  setErrbackCount,
+  incrementCb,
+  incrementEb,
+  asyncValueMap,
+  runAsyncSetTests,
+  runAsyncGetTests,
+  runAsyncGetAllTests,
+  runAsyncReplaceTests,
+  runAsyncRemoveTests,
+  runAsyncClearTests,
+  runAsyncDisposeTests
 };

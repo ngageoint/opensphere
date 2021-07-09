@@ -1,35 +1,67 @@
-goog.provide('os.config.SettingsInitializerManager');
-goog.require('os.config.SettingsInitializer');
+goog.module('os.config.SettingsInitializerManager');
+goog.module.declareLegacyNamespace();
 
+const SettingsInitializer = goog.require('os.config.SettingsInitializer');
+
+const AngularAppSettingsInitializer = goog.requireType('os.ui.config.AngularAppSettingsInitializer');
 
 
 /**
  * Initialize settings for OpenSphere.
- * @constructor
  */
-os.config.SettingsInitializerManager = function() {
+class SettingsInitializerManager {
   /**
-   * The default settings initializer
-   * @type {os.ui.config.AngularAppSettingsInitializer}
+   * Constructor.
    */
-  this.currentInitializer_ = new os.config.SettingsInitializer();
-};
-goog.addSingletonGetter(os.config.SettingsInitializerManager);
+  constructor() {
+    /**
+     * The default settings initializer
+     * @type {AngularAppSettingsInitializer}
+     */
+    this.currentInitializer_ = new SettingsInitializer();
+  }
 
+  /**
+   * Set a new current settings initializer
+   * @param {AngularAppSettingsInitializer} initializer
+   */
+  setSettingsInitializer(initializer) {
+    this.currentInitializer_ = initializer;
+  }
+
+  /**
+   * Get the current settings initializer
+   * @return {AngularAppSettingsInitializer}
+   */
+  getSettingsInitializer() {
+    return this.currentInitializer_;
+  }
+
+  /**
+   * Get the global instance.
+   * @return {!SettingsInitializerManager}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new SettingsInitializerManager();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {SettingsInitializerManager} value
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
 
 /**
- * Set a new current settings initializer
- * @param {os.ui.config.AngularAppSettingsInitializer} initializer
+ * Global instance.
+ * @type {SettingsInitializerManager|undefined}
  */
-os.config.SettingsInitializerManager.prototype.setSettingsInitializer = function(initializer) {
-  this.currentInitializer_ = initializer;
-};
+let instance;
 
-
-/**
- * Get the current settings initializer
- * @return {os.ui.config.AngularAppSettingsInitializer}
- */
-os.config.SettingsInitializerManager.prototype.getSettingsInitializer = function() {
-  return this.currentInitializer_;
-};
+exports = SettingsInitializerManager;

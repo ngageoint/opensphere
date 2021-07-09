@@ -1,34 +1,37 @@
-goog.provide('os.storage.HTML5LocalStorage');
+goog.module('os.storage.HTML5LocalStorage');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.iter');
-goog.require('goog.storage.mechanism.HTML5LocalStorage');
-goog.require('os.implements');
-goog.require('os.storage.IMechanism');
-
+const iter = goog.require('goog.iter');
+const googStorageMechanismHtml5LocalStorage = goog.require('goog.storage.mechanism.HTML5LocalStorage');
+const osImplements = goog.require('os.implements');
+const IMechanism = goog.require('os.storage.IMechanism');
 
 
 /**
- * Provides a storage mechanism that uses HTML5 local storage. Adds {@link os.storage.IMechanism} implementations
+ * Provides a storage mechanism that uses HTML5 local storage. Adds {@link IMechanism} implementations
  * from the Closure class.
  *
- * @extends {goog.storage.mechanism.HTML5LocalStorage}
- * @implements {os.storage.IMechanism}
- * @constructor
+ * @implements {IMechanism}
  */
-os.storage.HTML5LocalStorage = function() {
-  os.storage.HTML5LocalStorage.base(this, 'constructor');
-};
-goog.inherits(os.storage.HTML5LocalStorage, goog.storage.mechanism.HTML5LocalStorage);
-os.implements(os.storage.HTML5LocalStorage, os.storage.IMechanism.ID);
+class HTML5LocalStorage extends googStorageMechanismHtml5LocalStorage {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getAll() {
+    var values = [];
+    iter.forEach(this.__iterator__(false), function(value) {
+      values.push(value);
+    });
+    return values;
+  }
+}
+osImplements(HTML5LocalStorage, IMechanism.ID);
 
-/**
- * @inheritDoc
- */
-os.storage.HTML5LocalStorage.prototype.getAll = function() {
-  var values = [];
-  goog.iter.forEach(this.__iterator__(false), function(value) {
-    values.push(value);
-  });
-  return values;
-};
+exports = HTML5LocalStorage;

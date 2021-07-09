@@ -146,7 +146,7 @@ const setValue = function(obj, keys, value) {
  * @param {*|undefined} obj
  * @param {string=} opt_prefix The delimited prefix to append the keys to
  * @param {string=} opt_delim
- * @return {Object<string, *>}
+ * @return {!Object<string, *>}
  */
 const reduce = function(obj, opt_prefix, opt_delim) {
   var prefix = opt_prefix != null ? opt_prefix : '';

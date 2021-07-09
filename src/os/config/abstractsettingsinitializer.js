@@ -1,7 +1,9 @@
-goog.provide('os.config.AbstractSettingsInitializer');
-goog.require('goog.Uri');
-goog.require('os.config.Settings');
+goog.module('os.config.AbstractSettingsInitializer');
+goog.module.declareLegacyNamespace();
 
+const EventType = goog.require('os.config.EventType');
+
+const {getSettings} = goog.require('os.config.instance');
 
 
 /**
@@ -9,73 +11,78 @@ goog.require('os.config.Settings');
  * extension of this to implement its specific needs.
  *
  * @abstract
- * @constructor
  */
-os.config.AbstractSettingsInitializer = function() {
+class AbstractSettingsInitializer {
   /**
-   * @type {?string}
+   * Constructor.
+   */
+  constructor() {
+    /**
+     * @type {?string}
+     * @protected
+     */
+    this.fileUri = null;
+
+    /**
+     * @type {?string}
+     * @protected
+     */
+    this.overridesUri = null;
+
+    /**
+     * @protected
+     * @type {!Array.<string>}
+     */
+    this.namespace = [];
+  }
+
+  /**
+   * Kick off initialization of settings and bootstrap the application.
+   */
+  init() {
+    // IndexedDb is an async call
+    Modernizr.on('indexeddb', (result) => {
+      this.registerStorages();
+
+      const settings = getSettings();
+      settings.listenOnce(EventType.INITIALIZED, this.onInitialized, false, this);
+      settings.init();
+    });
+  }
+
+  /**
+   * Register settings storages
+   *
+   * @abstract
+   */
+  registerStorages() {}
+
+  /**
+   * Handle settings finished initialization
+   *
    * @protected
    */
-  this.fileUri = null;
+  onInitialized() {
+    const settings = getSettings();
+    settings.listenOnce(EventType.LOADED, this.onSettingsLoaded, false, this);
+    settings.load();
+  }
 
   /**
-   * @type {?string}
+   * Handle settings finished loading
+   *
+   * @abstract
    * @protected
    */
-  this.overridesUri = null;
+  onSettingsLoaded() {}
 
   /**
-   * @protected
-   * @type {!Array.<string>}
+   * Set the URI for file-based settings.
+   * @param {string} value The URI.
    */
-  this.namespace = [];
-};
+  setFileUri(value) {
+    this.fileUri = value;
+  }
+}
 
-
-/**
- * Kick off initialization of settings and bootstrap the application.
- */
-os.config.AbstractSettingsInitializer.prototype.init = function() {
-  // IndexedDb is an async call
-  Modernizr.on('indexeddb', (result) => {
-    this.registerStorages();
-    os.settings.listenOnce(os.config.EventType.INITIALIZED, this.onInitialized, false, this);
-    os.settings.init();
-  });
-};
-
-
-/**
- * Register settings storages
- *
- * @abstract
- */
-os.config.AbstractSettingsInitializer.prototype.registerStorages = function() {};
-
-
-/**
- * Handle settings finished initialization
- *
- * @protected
- */
-os.config.AbstractSettingsInitializer.prototype.onInitialized = function() {
-  os.settings.listenOnce(os.config.EventType.LOADED, this.onSettingsLoaded, false, this);
-  os.settings.load();
-};
-
-
-/**
- * Handle settings finished loading
- *
- * @abstract
- * @protected
- */
-os.config.AbstractSettingsInitializer.prototype.onSettingsLoaded = function() {};
-
-/**
- * Set the URI for file-based settings.
- * @param {string} value The URI.
- */
-os.config.AbstractSettingsInitializer.prototype.setFileUri = function(value) {
-  this.fileUri = value;
-};
+exports = AbstractSettingsInitializer;

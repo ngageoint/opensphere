@@ -1,43 +1,45 @@
-goog.provide('os.config.SettingsInitializer');
+goog.module('os.config.SettingsInitializer');
+goog.module.declareLegacyNamespace();
 
-goog.require('os');
-goog.require('os.config');
-goog.require('os.config.Settings');
-goog.require('os.config.storage.SettingsFile');
-goog.require('os.config.storage.SettingsIDBStorage');
-goog.require('os.config.storage.SettingsLocalStorage');
-goog.require('os.ui.config.AngularAppSettingsInitializer');
-
+const {SETTINGS} = goog.require('os');
+const osConfig = goog.require('os.config');
+const {getSettings} = goog.require('os.config.instance');
+const SettingsFile = goog.require('os.config.storage.SettingsFile');
+const SettingsIDBStorage = goog.require('os.config.storage.SettingsIDBStorage');
+const SettingsLocalStorage = goog.require('os.config.storage.SettingsLocalStorage');
+const AngularAppSettingsInitializer = goog.require('os.ui.config.AngularAppSettingsInitializer');
 
 
 /**
  * Initialize settings for OpenSphere.
- *
- * @extends {os.ui.config.AngularAppSettingsInitializer}
- * @constructor
  */
-os.config.SettingsInitializer = function() {
-  os.config.SettingsInitializer.base(this, 'constructor');
+class SettingsInitializer extends AngularAppSettingsInitializer {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
 
-  this.ngAppSelector = '#ng-app';
-  this.ngAppModule = 'os';
-  this.namespace = [os.config.coreNs, os.config.appNs];
-  this.fileUri = this.fileUri || os.SETTINGS;
-};
-goog.inherits(os.config.SettingsInitializer, os.ui.config.AngularAppSettingsInitializer);
-
-
-/**
- * @inheritDoc
- */
-os.config.SettingsInitializer.prototype.registerStorages = function() {
-  var settingsRegistry = os.settings.getStorageRegistry();
-
-  // register all available storages from which to load settings
-  settingsRegistry.addStorage(new os.config.storage.SettingsFile(/** @type {!string} */ (this.fileUri)));
-  if (this.overridesUri) {
-    settingsRegistry.addStorage(new os.config.storage.SettingsFile(this.overridesUri));
+    this.ngAppSelector = '#ng-app';
+    this.ngAppModule = 'os';
+    this.namespace = [osConfig.coreNs, osConfig.appNs];
+    this.fileUri = this.fileUri || SETTINGS;
   }
-  settingsRegistry.addStorage(new os.config.storage.SettingsLocalStorage('opensphere', this.namespace));
-  settingsRegistry.addStorage(new os.config.storage.SettingsIDBStorage(this.namespace));
-};
+
+  /**
+   * @inheritDoc
+   */
+  registerStorages() {
+    var settingsRegistry = getSettings().getStorageRegistry();
+
+    // register all available storages from which to load settings
+    settingsRegistry.addStorage(new SettingsFile(/** @type {!string} */ (this.fileUri)));
+    if (this.overridesUri) {
+      settingsRegistry.addStorage(new SettingsFile(this.overridesUri));
+    }
+    settingsRegistry.addStorage(new SettingsLocalStorage('opensphere', this.namespace));
+    settingsRegistry.addStorage(new SettingsIDBStorage(this.namespace));
+  }
+}
+
+exports = SettingsInitializer;

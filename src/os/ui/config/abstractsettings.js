@@ -1,132 +1,126 @@
-goog.provide('os.ui.config.AbstractSettingsCtrl');
-goog.require('os.config.Settings');
-goog.require('os.structs.ITreeNode');
-goog.require('os.ui.Module');
-goog.require('os.ui.config.SettingDefaultUICtrl');
-goog.require('os.ui.config.SettingNode');
-goog.require('os.ui.config.SettingPlugin');
-goog.require('os.ui.config.SettingsManager');
-goog.require('os.ui.config.SettingsManagerEventType');
-goog.require('os.ui.slick.SlickTreeNode');
-goog.require('os.ui.slick.TreeSearch');
-goog.require('os.ui.slick.slickTreeDirective');
-goog.require('os.ui.uiSwitchDirective');
-goog.require('os.ui.util.ResetSettings');
+goog.module('os.ui.config.AbstractSettingsCtrl');
+goog.module.declareLegacyNamespace();
 
+const SettingNode = goog.require('os.ui.config.SettingNode');
+const SettingsManager = goog.require('os.ui.config.SettingsManager');
+const SettingsManagerEventType = goog.require('os.ui.config.SettingsManagerEventType');
+const SlickTreeNode = goog.requireType('os.ui.slick.SlickTreeNode');
+const {resetSettings} = goog.require('os.ui.util.ResetSettings');
 
 
 /**
  * Controller for the save export window
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.$timeout} $timeout
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.config.AbstractSettingsCtrl = function($scope, $timeout) {
+class Controller {
   /**
-   * @type {os.ui.config.SettingsManager}
-   * @protected
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.$timeout} $timeout
+   * @ngInject
    */
-  this.settingsManager = os.ui.config.SettingsManager.getInstance();
+  constructor($scope, $timeout) {
+    /**
+     * @type {SettingsManager}
+     * @protected
+     */
+    this.settingsManager = SettingsManager.getInstance();
+
+    /**
+     * @type {?angular.Scope}
+     * @protected
+     */
+    this.scope = $scope;
+
+    /**
+     * @type {?angular.$timeout}
+     * @private
+     */
+    this.timeout_ = $timeout;
+
+    /**
+     * @type {Array.<SlickTreeNode>}
+     */
+    this.scope['settingsNodes'] = null;
+
+    /**
+     * @type {SettingNode}
+     */
+    this.scope['selected'] = null;
+
+    this.scope.$watch('selected', this.onSelected.bind(this));
+    this.scope.$on('$destroy', this.destroy.bind(this));
+
+    this.settingsManager.listen(SettingsManagerEventType.SETTING_ADDED, this.refresh_, false, this);
+    this.settingsManager.listen(SettingsManagerEventType.SELECTED_CHANGE, this.refresh_, false, this);
+    this.refresh_();
+  }
 
   /**
-   * @type {?angular.Scope}
-   * @protected
+   * Cleanup
    */
-  this.scope = $scope;
+  destroy() {
+    this.scope['settingsNodes'] = null;
+    this.scope = null;
+    this.timeout_ = null;
+
+    this.settingsManager.unlisten(SettingsManagerEventType.SETTING_ADDED, this.refresh_, false, this);
+    this.settingsManager.unlisten(SettingsManagerEventType.SELECTED_CHANGE, this.refresh_, false, this);
+    this.settingsManager = null;
+  }
 
   /**
-   * @type {?angular.$timeout}
+   * @param {SettingNode} newVal
+   * @param {os.ui.config.SettingNode} oldVal
+   * @protected
+   */
+  onSelected(newVal, oldVal) {
+    if (newVal && newVal.getId) {
+      this.settingsManager.setSelected(newVal);
+    }
+  }
+
+  /**
+   * @param {*} item
+   * @return {?string}
+   * @export
+   */
+  getUi(item) {
+    if (item && item instanceof SettingNode) {
+      var node = /** @type {SettingNode} */ (item);
+      var model = node.getModel();
+
+      return model.getUI() || 'defaultsettingui';
+    }
+
+    return null;
+  }
+
+  /**
+   * Close the window
+   *
+   * @export
+   */
+  reset() {
+    resetSettings();
+  }
+
+  /**
    * @private
    */
-  this.timeout_ = $timeout;
+  refresh_() {
+    this.scope['settingsNodes'] = this.settingsManager.getChildren();
 
-  /**
-   * @type {Array.<os.ui.slick.SlickTreeNode>}
-   */
-  this.scope['settingsNodes'] = null;
-
-  /**
-   * @type {os.ui.config.SettingNode}
-   */
-  this.scope['selected'] = null;
-
-  this.scope.$watch('selected', this.onSelected.bind(this));
-  this.scope.$on('$destroy', this.destroy.bind(this));
-
-  this.settingsManager.listen(os.ui.config.SettingsManagerEventType.SETTING_ADDED, this.refresh_, false, this);
-  this.settingsManager.listen(os.ui.config.SettingsManagerEventType.SELECTED_CHANGE, this.refresh_, false, this);
-  this.refresh_();
-};
-
-
-/**
- * Cleanup
- */
-os.ui.config.AbstractSettingsCtrl.prototype.destroy = function() {
-  this.scope['settingsNodes'] = null;
-  this.scope = null;
-  this.timeout_ = null;
-
-  this.settingsManager.unlisten(os.ui.config.SettingsManagerEventType.SETTING_ADDED, this.refresh_, false, this);
-  this.settingsManager.unlisten(os.ui.config.SettingsManagerEventType.SELECTED_CHANGE, this.refresh_, false, this);
-  this.settingsManager = null;
-};
-
-
-/**
- * @param {os.ui.config.SettingNode} newVal
- * @param {os.ui.config.SettingNode} oldVal
- * @protected
- */
-os.ui.config.AbstractSettingsCtrl.prototype.onSelected = function(newVal, oldVal) {
-  if (newVal && newVal.getId) {
-    this.settingsManager.setSelected(newVal);
-  }
-};
-
-
-/**
- * @param {*} item
- * @return {?string}
- * @export
- */
-os.ui.config.AbstractSettingsCtrl.prototype.getUi = function(item) {
-  if (item && item instanceof os.ui.config.SettingNode) {
-    var node = /** @type {os.ui.config.SettingNode} */ (item);
-    var model = node.getModel();
-
-    return model.getUI() || 'defaultsettingui';
-  }
-
-  return null;
-};
-
-
-/**
- * Close the window
- *
- * @export
- */
-os.ui.config.AbstractSettingsCtrl.prototype.reset = function() {
-  os.ui.util.resetSettings();
-};
-
-
-/**
- * @private
- */
-os.ui.config.AbstractSettingsCtrl.prototype.refresh_ = function() {
-  this.scope['settingsNodes'] = this.settingsManager.getChildren();
-
-  this.timeout_(function() {
-    if (this.scope && this.settingsManager) {
-      this.scope['selected'] = this.settingsManager.getSelected();
-      if (!this.scope['selected']) {
-        // nothing selected - select the first setting
-        this.scope['selected'] = this.settingsManager.initSelection();
+    this.timeout_(function() {
+      if (this.scope && this.settingsManager) {
+        this.scope['selected'] = this.settingsManager.getSelected();
+        if (!this.scope['selected']) {
+          // nothing selected - select the first setting
+          this.scope['selected'] = this.settingsManager.initSelection();
+        }
       }
-    }
-  }.bind(this));
-};
+    }.bind(this));
+  }
+}
+
+exports = Controller;

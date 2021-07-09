@@ -1,21 +1,23 @@
-goog.provide('os.ui.util.ResetSettings');
+goog.module('os.ui.util.ResetSettings');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.config.Settings');
-goog.require('os.storage');
-goog.require('os.ui.EventType');
-goog.require('os.ui.menu.MenuItemOptions');
-goog.require('os.ui.window');
-goog.require('os.ui.window.ConfirmUI');
+const osConfig = goog.require('os.config');
+const {getSettings} = goog.require('os.config.instance');
+const {clearStorage} = goog.require('os.storage');
+const EventType = goog.require('os.ui.EventType');
+const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
+
+const MenuItemOptions = goog.requireType('os.ui.menu.MenuItemOptions');
 
 
 /**
  * Launches the clear local storage window
- *
  * @param {string=} opt_parent Optional parent selector.
  */
-os.ui.util.resetSettings = function(opt_parent) {
-  if (os.config.Settings.getInstance().getPeerInfo(os.config.appNs).length) {
-    os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+const resetSettings = function(opt_parent) {
+  const settings = getSettings();
+  if (settings.getPeerInfo(osConfig.appNs).length) {
+    ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
       'prompt': 'In order to Reset Settings, ' +
       'you may not have the same application opened multiple times.  Please close all but one, and retry.',
       'yesText': 'Ok',
@@ -48,11 +50,11 @@ os.ui.util.resetSettings = function(opt_parent) {
 
     var text = 'This action will clear all locally saved application settings and <b>reload the current page.</b> ';
     text += 'The current state of your application will be lost, so be sure you\'re at a good stopping point.<br>';
-    text += '<br>Last reset: ' + os.config.Settings.getInstance().getLastReset();
+    text += '<br>Last reset: ' + settings.getLastReset();
     text += '<br><br><b>Are you sure you want to clear your settings and reload?</b>';
 
-    os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
-      confirm: os.storage.clearStorage,
+    ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+      confirm: clearStorage,
       prompt: text,
       yesText: 'Clear and Reload',
       yesButtonClass: 'btn-danger',
@@ -64,12 +66,33 @@ os.ui.util.resetSettings = function(opt_parent) {
 
 /**
  * Action for clearing local storage. Should be added to help action managers.
- * @type {!os.ui.menu.MenuItemOptions}
+ * @type {!MenuItemOptions}
  */
-os.ui.util.resetSettingsOptions = {
-  eventType: os.ui.EventType.DISPLAY_CLEAR_LOCALSTORAGE,
+const resetSettingsOptions = {
+  eventType: EventType.DISPLAY_CLEAR_LOCALSTORAGE,
   label: 'Reset Settings',
   tooltip: 'Clears your browser\'s local storage',
   icons: ['<i class="fa fa-fw fa-refresh"></i>'],
   sort: 1000
+};
+
+
+/**
+ * Launches the clear local storage window
+ * @param {string=} opt_parent Optional parent selector.
+ * @deprecated Please use os.ui.util.ResetSettings.resetSettings instead.
+ */
+os.ui.util.resetSettings = resetSettings;
+
+
+/**
+ * Action for clearing local storage. Should be added to help action managers.
+ * @type {!MenuItemOptions}
+ * @deprecated Please use os.ui.util.ResetSettings.resetSettingsOptions instead.
+ */
+os.ui.util.resetSettingsOptions = resetSettingsOptions;
+
+exports = {
+  resetSettings,
+  resetSettingsOptions
 };

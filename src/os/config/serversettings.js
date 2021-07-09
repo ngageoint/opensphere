@@ -1,35 +1,41 @@
-goog.provide('os.config.ServerSettings');
-goog.require('os.ui.config.SettingPlugin');
+goog.module('os.config.ServerSettings');
+goog.module.declareLegacyNamespace();
+
 goog.require('os.ui.serversDirective');
 
+const SettingPlugin = goog.require('os.ui.config.SettingPlugin');
 
 
 /**
- * @extends {os.ui.config.SettingPlugin}
- * @constructor
  */
-os.config.ServerSettings = function() {
-  os.config.ServerSettings.base(this, 'constructor');
+class ServerSettings extends SettingPlugin {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
 
-  this.setLabel('Data Servers');
-  this.setDescription('Add and configure data servers');
-  this.setTags(['servers', 'data', 'provider']);
-  this.setIcon('fa fa-database');
-  this.setUI('servers');
-};
-goog.inherits(os.config.ServerSettings, os.ui.config.SettingPlugin);
+    this.setLabel('Data Servers');
+    this.setDescription('Add and configure data servers');
+    this.setTags(['servers', 'data', 'provider']);
+    this.setIcon('fa fa-database');
+    this.setUI('servers');
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getId() {
+    return ServerSettings.ID;
+  }
+}
 
 
 /**
  * @type {string}
  * @const
  */
-os.config.ServerSettings.ID = 'servers';
+ServerSettings.ID = 'servers';
 
 
-/**
- * @inheritDoc
- */
-os.config.ServerSettings.prototype.getId = function() {
-  return os.config.ServerSettings.ID;
-};
+exports = ServerSettings;

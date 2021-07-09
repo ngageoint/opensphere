@@ -1,7 +1,7 @@
 goog.module('os.config.LegendSetting');
 goog.module.declareLegacyNamespace();
 
-const legend = goog.require('os.legend');
+const {DRAW_OPTIONS_KEY, POSITION_KEY} = goog.require('os.legend');
 
 /**
  * Legend settings keys.
@@ -9,19 +9,19 @@ const legend = goog.require('os.legend');
  */
 const LegendSetting = {
   // draw options
-  BG_COLOR: legend.DRAW_OPTIONS_KEY + '.bgColor',
-  BOLD: legend.DRAW_OPTIONS_KEY + '.bold',
-  FONT_SIZE: legend.DRAW_OPTIONS_KEY + '.fontSize',
-  SHOW_VECTOR: legend.DRAW_OPTIONS_KEY + '.showVector',
-  SHOW_VECTOR_TYPE: legend.DRAW_OPTIONS_KEY + '.showVectorType',
-  SHOW_COUNT: legend.DRAW_OPTIONS_KEY + '.showCount',
-  SHOW_TILE: legend.DRAW_OPTIONS_KEY + '.showTile',
-  SHOW_BACKGROUND: legend.DRAW_OPTIONS_KEY + '.showBackground',
-  OPACITY: legend.DRAW_OPTIONS_KEY + '.opacity',
+  BG_COLOR: DRAW_OPTIONS_KEY + '.bgColor',
+  BOLD: DRAW_OPTIONS_KEY + '.bold',
+  FONT_SIZE: DRAW_OPTIONS_KEY + '.fontSize',
+  SHOW_VECTOR: DRAW_OPTIONS_KEY + '.showVector',
+  SHOW_VECTOR_TYPE: DRAW_OPTIONS_KEY + '.showVectorType',
+  SHOW_COUNT: DRAW_OPTIONS_KEY + '.showCount',
+  SHOW_TILE: DRAW_OPTIONS_KEY + '.showTile',
+  SHOW_BACKGROUND: DRAW_OPTIONS_KEY + '.showBackground',
+  OPACITY: DRAW_OPTIONS_KEY + '.opacity',
 
   // position settings
-  TOP: legend.POSITION_KEY + '.top',
-  LEFT: legend.POSITION_KEY + '.left'
+  TOP: POSITION_KEY + '.top',
+  LEFT: POSITION_KEY + '.left'
 };
 
 exports = LegendSetting;

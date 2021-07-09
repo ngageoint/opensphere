@@ -1,6 +1,7 @@
-goog.provide('os.config.storage.ISettingsStorage');
-goog.require('goog.async.Deferred');
+goog.module('os.config.storage.ISettingsStorage');
+goog.module.declareLegacyNamespace();
 
+const Deferred = goog.requireType('goog.async.Deferred');
 
 
 /**
@@ -8,33 +9,38 @@ goog.require('goog.async.Deferred');
  *
  * @interface
  */
-os.config.storage.ISettingsStorage = function() {};
+class ISettingsStorage {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    /**
+     * Determines if this storage is in a good state to be accessible.  If an error occurs, this will be set to false
+     * and should no longer be considered for transactions.
+     * @type {boolean}
+     */
+    this.canAccess;
+
+    /**
+     * An easy name for this storage
+     * @type {string}
+     */
+    this.name;
+  }
+
+  /**
+   * Initialize the storage
+   * @return {!Deferred}
+   */
+  init() {}
+}
 
 
 /**
  * ID for the interface
  * @const {string}
  */
-os.config.storage.ISettingsStorage.ID = 'os.config.storage.ISettingsStorage';
+ISettingsStorage.ID = 'os.config.storage.ISettingsStorage';
 
 
-/**
- * Initialize the storage
- * @return {!goog.async.Deferred}
- */
-os.config.storage.ISettingsStorage.prototype.init;
-
-
-/**
- * Determines if this storage is in a good state to be accessible.  If an error occurs, this will be set to false
- * and should no longer be considered for transactions.
- * @type {boolean}
- */
-os.config.storage.ISettingsStorage.prototype.canAccess;
-
-
-/**
- * An easy name for this storage
- * @type {string}
- */
-os.config.storage.ISettingsStorage.prototype.name;
+exports = ISettingsStorage;

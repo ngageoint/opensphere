@@ -1,5 +1,5 @@
-goog.provide('os.storage.IMechanism');
-
+goog.module('os.storage.IMechanism');
+goog.module.declareLegacyNamespace();
 
 
 /**
@@ -8,64 +8,61 @@ goog.provide('os.storage.IMechanism');
  * @interface
  * @template T
  */
-os.storage.IMechanism = function() {};
+class IMechanism {
+  /**
+   * Get the value stored under a key.
+   *
+   * @param {string} key The key to get.
+   * @return {?string} The corresponding value, null if not found.
+   */
+  get(key) {}
+
+  /**
+   * Get all items in storage.
+   * @return {!Array<T>}
+   */
+  getAll() {}
+
+  /**
+   * Get the number of stored key-value pairs.
+   *
+   * Could be overridden in a subclass, as the default implementation is not very
+   * efficient - it iterates over all keys.
+   *
+   * @return {number} Number of stored elements.
+   */
+  getCount() {}
+
+  /**
+   * Remove all key-value pairs.
+   *
+   * Could be overridden in a subclass, as the default implementation is not very
+   * efficient - it iterates over all keys.
+   */
+  clear() {}
+
+  /**
+   * Set a value for a key.
+   *
+   * @param {string} key The key to set.
+   * @param {string} value The string to save.
+   */
+  set(key, value) {}
+
+  /**
+   * Remove a key and its value.
+   *
+   * @param {string} key The key to remove.
+   */
+  remove(key) {}
+}
 
 
 /**
  * Interface id for use with os.implements.
  * @type {string}
  */
-os.storage.IMechanism.ID = 'os.storage.IMechanism';
+IMechanism.ID = 'os.storage.IMechanism';
 
 
-/**
- * Get the value stored under a key.
- *
- * @param {string} key The key to get.
- * @return {?string} The corresponding value, null if not found.
- */
-os.storage.IMechanism.prototype.get;
-
-
-/**
- * Get all items in storage.
- * @return {!Array<T>}
- */
-os.storage.IMechanism.prototype.getAll;
-
-
-/**
- * Get the number of stored key-value pairs.
- *
- * Could be overridden in a subclass, as the default implementation is not very
- * efficient - it iterates over all keys.
- *
- * @return {number} Number of stored elements.
- */
-os.storage.IMechanism.prototype.getCount;
-
-
-/**
- * Remove all key-value pairs.
- *
- * Could be overridden in a subclass, as the default implementation is not very
- * efficient - it iterates over all keys.
- */
-os.storage.IMechanism.prototype.clear;
-
-
-/**
- * Set a value for a key.
- *
- * @param {string} key The key to set.
- * @param {string} value The string to save.
- */
-os.storage.IMechanism.prototype.set;
-
-
-/**
- * Remove a key and its value.
- *
- * @param {string} key The key to remove.
- */
-os.storage.IMechanism.prototype.remove;
+exports = IMechanism;
