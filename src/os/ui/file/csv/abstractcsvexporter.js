@@ -1,107 +1,103 @@
-goog.provide('os.ui.file.csv.AbstractCSVExporter');
-goog.require('goog.log');
-goog.require('os.ex.AbstractExporter');
+goog.module('os.ui.file.csv.AbstractCSVExporter');
+goog.module.declareLegacyNamespace();
 
+const log = goog.require('goog.log');
+const AbstractExporter = goog.require('os.ex.AbstractExporter');
 
 
 /**
  * A CSV exporter driven by PapaParse.
  *
  * @abstract
- * @extends {os.ex.AbstractExporter.<T>}
- * @constructor
+ * @extends {AbstractExporter<T>}
  * @template T
  */
-os.ui.file.csv.AbstractCSVExporter = function() {
-  os.ui.file.csv.AbstractCSVExporter.base(this, 'constructor');
-  this.log = os.ui.file.csv.AbstractCSVExporter.LOGGER_;
+class AbstractCSVExporter extends AbstractExporter {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.log = logger;
+
+    /**
+     * Data to pass to PapaParse's unparse function
+     * @type {Array<Object<string, string>>}
+     * @protected
+     */
+    this.papaItems = [];
+  }
 
   /**
-   * Data to pass to PapaParse's unparse function
-   * @type {Array.<Object.<string, string>>}
-   * @protected
+   * @inheritDoc
    */
-  this.papaItems = [];
-};
-goog.inherits(os.ui.file.csv.AbstractCSVExporter, os.ex.AbstractExporter);
+  reset() {
+    super.reset();
+    this.papaItems.length = 0;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getExtension() {
+    return 'csv';
+  }
 
-/**
- * Logger
- * @type {goog.log.Logger}
- * @private
- * @const
- */
-os.ui.file.csv.AbstractCSVExporter.LOGGER_ = goog.log.getLogger('os.ui.file.csv.AbstractCSVExporter');
+  /**
+   * @inheritDoc
+   */
+  getLabel() {
+    return 'CSV';
+  }
 
+  /**
+   * @inheritDoc
+   */
+  getMimeType() {
+    return 'text/csv';
+  }
 
-/**
- * @inheritDoc
- */
-os.ui.file.csv.AbstractCSVExporter.prototype.reset = function() {
-  os.ui.file.csv.AbstractCSVExporter.base(this, 'reset');
-  this.papaItems.length = 0;
-};
+  /**
+   * @inheritDoc
+   */
+  process() {
+    for (var i = 0, n = this.items.length; i < n; i++) {
+      var papaItem = this.processItem(this.items[i]);
+      if (papaItem) {
+        this.papaItems.push(papaItem);
+      }
+    }
 
-
-/**
- * @inheritDoc
- */
-os.ui.file.csv.AbstractCSVExporter.prototype.getExtension = function() {
-  return 'csv';
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.file.csv.AbstractCSVExporter.prototype.getLabel = function() {
-  return 'CSV';
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.file.csv.AbstractCSVExporter.prototype.getMimeType = function() {
-  return 'text/csv';
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.file.csv.AbstractCSVExporter.prototype.process = function() {
-  for (var i = 0, n = this.items.length; i < n; i++) {
-    var papaItem = this.processItem(this.items[i]);
-    if (papaItem) {
-      this.papaItems.push(papaItem);
+    if (this.papaItems.length > 0) {
+      // prepend the UTF byte order mark so that excel will properly parse it
+      this.output = '\ufeff';
+      this.output += Papa.unparse(this.papaItems, {
+        newline: '\n'
+      });
     }
   }
 
-  if (this.papaItems.length > 0) {
-    // prepend the UTF byte order mark so that excel will properly parse it
-    this.output = '\ufeff';
-    this.output += Papa.unparse(this.papaItems, {
-      newline: '\n'
-    });
-  }
-};
+  /**
+   * Process a single item, returning a JSON object for PapaParse.
+   *
+   * @abstract
+   * @param {T} item The item
+   * @return {Object<string, string>} The Papa item
+   * @protected
+   * @template T
+   */
+  processItem(item) {}
 
-
-/**
- * Process a single item, returning a JSON object for PapaParse.
- *
- * @abstract
- * @param {T} item The item
- * @return {Object.<string, string>} The Papa item
- * @protected
- * @template T
- */
-os.ui.file.csv.AbstractCSVExporter.prototype.processItem = function(item) {};
-
+  /**
+   * @inheritDoc
+   */
+  cancel() {}
+}
 
 /**
- * @inheritDoc
+ * Logger
+ * @type {log.Logger}
  */
-os.ui.file.csv.AbstractCSVExporter.prototype.cancel = function() {};
+const logger = log.getLogger('os.ui.file.csv.AbstractCSVExporter');
+
+exports = AbstractCSVExporter;
