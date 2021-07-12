@@ -1,23 +1,32 @@
-goog.provide('os.annotation.annotationOptionsDirective');
+goog.module('os.annotation.annotationOptionsDirective');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
-
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
 
 /**
  * An annotation to attach to the map.
  *
  * @return {angular.Directive}
  */
-os.annotation.annotationOptionsDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    templateUrl: os.ROOT + 'views/annotation/annotationoptions.html'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  templateUrl: ROOT + 'views/annotation/annotationoptions.html'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'annotationoptions';
 
 /**
  * Add the directive to the module
  */
-os.ui.Module.directive('annotationoptions', [os.annotation.annotationOptionsDirective]);
+Module.directive(directiveTag, [directive]);
+
+exports = {
+  directive,
+  directiveTag
+};
