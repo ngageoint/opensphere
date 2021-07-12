@@ -1,8 +1,6 @@
 goog.module('os.ui.state.AbstractStateDescriptor');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.file.ui.defaultFileNodeUIDirective');
-
 const {assertString} = goog.require('goog.asserts');
 const {loadXml} = goog.require('goog.dom.xml');
 const {isValid} = goog.require('goog.json');
@@ -17,6 +15,7 @@ const StateParserConfig = goog.require('os.parse.StateParserConfig');
 const StateType = goog.require('os.state.StateType');
 const {getStateManager} = goog.require('os.state.instance');
 const UrlMethod = goog.require('os.ui.file.method.UrlMethod');
+const {directiveTag: nodeUi} = goog.require('os.ui.file.ui.DefaultFileNodeUI');
 const IStateDescriptor = goog.require('os.ui.state.IStateDescriptor');
 
 const GoogEvent = goog.requireType('goog.events.Event');
@@ -227,7 +226,7 @@ class AbstractStateDescriptor extends BaseDescriptor {
    * @inheritDoc
    */
   getNodeUI() {
-    return '<defaultfilenodeui></defaultfilenodeui>';
+    return `<${nodeUi}></${nodeUi}>`;
   }
 
   /**

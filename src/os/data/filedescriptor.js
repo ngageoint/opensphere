@@ -1,8 +1,6 @@
 goog.module('os.data.FileDescriptor');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.file.ui.defaultFileNodeUIDirective');
-
 const log = goog.require('goog.log');
 const Settings = goog.require('os.config.Settings');
 const IMappingDescriptor = goog.require('os.data.IMappingDescriptor');
@@ -22,6 +20,7 @@ const VectorSource = goog.require('os.source.Vector');
 const osStyle = goog.require('os.style');
 const Icons = goog.require('os.ui.Icons');
 const ExportManager = goog.require('os.ui.file.ExportManager');
+const {directiveTag: nodeUi} = goog.require('os.ui.file.ui.DefaultFileNodeUI');
 const ImportEvent = goog.require('os.ui.im.ImportEvent');
 const ImportEventType = goog.require('os.ui.im.ImportEventType');
 
@@ -135,7 +134,7 @@ class FileDescriptor extends LayerSyncDescriptor {
    * @inheritDoc
    */
   getNodeUI() {
-    return '<defaultfilenodeui></defaultfilenodeui>';
+    return `<${nodeUi}></${nodeUi}>`;
   }
 
   /**
