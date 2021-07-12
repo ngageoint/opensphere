@@ -12,7 +12,7 @@ goog.require('os.data.FileDescriptor');
 goog.require('os.fn');
 goog.require('os.layer.ILayer');
 goog.require('os.metrics.keys');
-goog.require('os.ui.ex.ExportDirective');
+goog.require('os.ui.ex.ExportUI');
 goog.require('os.ui.featureListDirective');
 goog.require('os.ui.layer.EllipseColumnsUI');
 goog.require('os.ui.layer.compare.LayerCompareUI');
@@ -477,7 +477,7 @@ os.ui.menu.layer.confirmSaveAs_ = function(options, title) {
 os.ui.menu.layer.onExport_ = function(event) {
   var context = event.getContext();
   if (context) {
-    os.ui.ex.startExport(os.ui.menu.common.getSourcesFromContext(context));
+    os.ui.ex.ExportUI.startExport(os.ui.menu.common.getSourcesFromContext(context));
   }
 };
 

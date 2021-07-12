@@ -4,6 +4,7 @@ goog.require('os.command.FeaturesVisibility');
 goog.require('os.feature');
 goog.require('os.fn');
 goog.require('os.instanceOf');
+goog.require('os.ui.ex.ExportUI');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');
@@ -208,7 +209,7 @@ os.ui.menu.list.onExport = function(event) {
   var context = event.getContext();
   if (os.instanceOf(context, os.source.Vector.NAME)) {
     var source = /** @type {!os.source.Vector} */ (context);
-    os.ui.ex.startExport([source]);
+    os.ui.ex.ExportUI.startExport([source]);
   }
 };
 

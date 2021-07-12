@@ -1,5 +1,6 @@
 goog.module('os.ui.AddExportOptionsUI');
 
+const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');
 
 const ExportOptions = goog.requireType('os.ex.ExportOptions');
@@ -16,7 +17,7 @@ const directive = () => ({
     'options': '=',
     'showcount': '='
   },
-  templateUrl: os.ROOT + 'views/file/addexportoptions.html',
+  templateUrl: ROOT + 'views/file/addexportoptions.html',
   controller: Controller,
   controllerAs: 'ctrl'
 });

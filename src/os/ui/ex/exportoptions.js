@@ -1,22 +1,27 @@
-goog.provide('os.ui.ex.ExportOptionsCtrl');
-goog.provide('os.ui.ex.ExportOptionsEvent');
-goog.provide('os.ui.ex.exportOptionsDirective');
+goog.module('os.ui.ex.ExportOptionsUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Disposable');
-goog.require('ol.array');
-goog.require('os');
-goog.require('os.events.SelectionType');
-goog.require('os.source.PropertyChange');
-goog.require('os.ui.Module');
 goog.require('os.ui.checklistDirective');
 
+const Disposable = goog.require('goog.Disposable');
+const GoogEventType = goog.require('goog.events.EventType');
+const {htmlEscape} = goog.require('goog.string');
+const olEvents = goog.require('ol.events');
+const {ROOT} = goog.require('os');
+const DataManager = goog.require('os.data.DataManager');
+const DataEventType = goog.require('os.data.event.DataEventType');
+const SelectionType = goog.require('os.events.SelectionType');
+const PropertyChange = goog.require('os.source.PropertyChange');
+const StyleManager = goog.require('os.style.StyleManager');
+const StyleType = goog.require('os.style.StyleType');
+const {apply} = goog.require('os.ui');
+const ChecklistEvent = goog.require('os.ui.ChecklistEvent');
+const Module = goog.require('os.ui.Module');
+const ExportOptionsEvent = goog.require('os.ui.ex.ExportOptionsEvent');
 
-/**
- * @enum {string}
- */
-os.ui.ex.ExportOptionsEvent = {
-  CHANGE: 'exportoptions:change'
-};
+const EventTarget = goog.requireType('ol.events.EventTarget');
+const PropertyChangeEvent = goog.requireType('os.events.PropertyChangeEvent');
+const ISource = goog.requireType('os.source.ISource');
 
 
 /**
@@ -24,394 +29,384 @@ os.ui.ex.ExportOptionsEvent = {
  *
  * @return {angular.Directive}
  */
-os.ui.ex.exportOptionsDirective = function() {
-  return {
-    restrict: 'E',
-    scope: {
-      'allowMultiple': '=',
-      'showLabels': '=',
-      'initSources': '&',
-      'showCount': '@'
-    },
-    templateUrl: os.ROOT + 'views/ex/exportoptions.html',
-    controller: os.ui.ex.ExportOptionsCtrl,
-    controllerAs: 'exportoptions'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  scope: {
+    'allowMultiple': '=',
+    'showLabels': '=',
+    'initSources': '&',
+    'showCount': '@'
+  },
+  templateUrl: ROOT + 'views/ex/exportoptions.html',
+  controller: Controller,
+  controllerAs: 'exportoptions'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'exportoptions';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('exportoptions', [os.ui.ex.exportOptionsDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller function for the exportoptions directive
- *
- * @param {!angular.Scope} $scope
- * @extends {goog.Disposable}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.ex.ExportOptionsCtrl = function($scope) {
-  os.ui.ex.ExportOptionsCtrl.base(this, 'constructor');
-
+class Controller extends Disposable {
   /**
-   * @type {?angular.Scope}
-   * @protected
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @ngInject
    */
-  this.scope = $scope;
-  $scope['showCount'] = $scope['showCount'] === 'true';
+  constructor($scope) {
+    super();
 
-  /**
-   * @type {number}
-   */
-  this['count'] = 0;
+    /**
+     * @type {?angular.Scope}
+     * @protected
+     */
+    this.scope = $scope;
+    $scope['showCount'] = $scope['showCount'] === 'true';
 
-  /**
-   * @type {!Array<!osx.ChecklistItem>}
-   */
-  this['sourceItems'] = [];
+    /**
+     * @type {number}
+     */
+    this['count'] = 0;
 
-  /**
-   * @type {boolean}
-   */
-  this['useSelected'] = true;
+    /**
+     * @type {!Array<!osx.ChecklistItem>}
+     */
+    this['sourceItems'] = [];
 
-  this.initSources_();
-  var dm = os.dataManager;
-  dm.listen(os.data.event.DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
-  dm.listen(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
+    /**
+     * @type {boolean}
+     */
+    this['useSelected'] = true;
 
-  this.scope.$on(os.ui.ChecklistEvent.CHANGE + ':sourcelist', this.onSourceListChanged_.bind(this));
-  this.scope.$watch('showLabels', this.updateItems.bind(this));
+    this.initSources_();
+    var dm = DataManager.getInstance();
+    dm.listen(DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
+    dm.listen(DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
 
-  $scope.$on('$destroy', this.dispose.bind(this));
-};
-goog.inherits(os.ui.ex.ExportOptionsCtrl, goog.Disposable);
+    this.scope.$on(ChecklistEvent.CHANGE + ':sourcelist', this.onSourceListChanged_.bind(this));
+    this.scope.$watch('showLabels', this.updateItems.bind(this));
 
-
-/**
- * Source events that should trigger an item update.
- * @type {Array<string>}
- * @const
- * @private
- */
-os.ui.ex.ExportOptionsCtrl.SOURCE_EVENTS_ = [
-  os.source.PropertyChange.ENABLED,
-  os.source.PropertyChange.FEATURES,
-  os.source.PropertyChange.FEATURE_VISIBILITY,
-  os.source.PropertyChange.VISIBLE,
-  os.source.PropertyChange.TIME_FILTER
-];
-
-
-/**
- * Selection events that should trigger an item update.
- * @type {Array<string>}
- * @const
- * @private
- */
-os.ui.ex.ExportOptionsCtrl.SELECT_EVENTS_ = [
-  os.events.SelectionType.ADDED,
-  os.events.SelectionType.CHANGED,
-  os.events.SelectionType.REMOVED
-];
-
-
-/**
- * @inheritDoc
- */
-os.ui.ex.ExportOptionsCtrl.prototype.disposeInternal = function() {
-  os.ui.ex.ExportOptionsCtrl.base(this, 'disposeInternal');
-
-  this.scope = null;
-
-  var dm = os.dataManager;
-  dm.unlisten(os.data.event.DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
-  dm.unlisten(os.data.event.DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
-
-  var sources = os.data.DataManager.getInstance().getSources();
-  for (var i = 0, n = sources.length; i < n; i++) {
-    ol.events.unlisten(sources[i], goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
+    $scope.$on('$destroy', this.dispose.bind(this));
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  disposeInternal() {
+    super.disposeInternal();
 
-/**
- * Create a checklist item from a source.
- *
- * @param {!os.source.ISource} source The source
- * @param {boolean=} opt_enabled If the item should be enabled
- * @return {!osx.ChecklistItem}
- * @private
- */
-os.ui.ex.ExportOptionsCtrl.prototype.createChecklistItem_ = function(source, opt_enabled) {
-  return {
-    enabled: opt_enabled !== undefined ? opt_enabled : false,
-    label: source.getTitle(),
-    item: source
-  };
-};
+    this.scope = null;
 
+    var dm = DataManager.getInstance();
+    dm.unlisten(DataEventType.SOURCE_ADDED, this.onSourceAdded_, false, this);
+    dm.unlisten(DataEventType.SOURCE_REMOVED, this.onSourceRemoved_, false, this);
 
-/**
- * If the provided source should be displayed in the list.
- *
- * @param {!os.source.ISource} source
- * @return {boolean}
- * @protected
- */
-os.ui.ex.ExportOptionsCtrl.prototype.includeSource = function(source) {
-  return true;
-};
-
-
-/**
- * Initialize the data sources available for export. Applications should extend this to provide their data sources.
- *
- * @private
- */
-os.ui.ex.ExportOptionsCtrl.prototype.initSources_ = function() {
-  var enabledSources = this.scope['initSources']() || [];
-  var sources = os.data.DataManager.getInstance().getSources();
-  for (var i = 0, n = sources.length; i < n; i++) {
-    var source = sources[i];
-    if (this.includeSource(source)) {
-      if (source.isEnabled() && source.getVisible()) {
-        var enabled = enabledSources == 'all' || ol.array.includes(enabledSources, source);
-        this['sourceItems'].push(this.createChecklistItem_(source, enabled));
-      }
-
-      ol.events.listen(source, goog.events.EventType.PROPERTYCHANGE, this.onSourceChange_, this);
+    var sources = DataManager.getInstance().getSources();
+    for (var i = 0, n = sources.length; i < n; i++) {
+      olEvents.unlisten(sources[i], GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
     }
   }
 
-  this.updateItems();
-};
+  /**
+   * Create a checklist item from a source.
+   *
+   * @param {!ISource} source The source
+   * @param {boolean=} opt_enabled If the item should be enabled
+   * @return {!osx.ChecklistItem}
+   * @private
+   */
+  createChecklistItem_(source, opt_enabled) {
+    return {
+      enabled: opt_enabled !== undefined ? opt_enabled : false,
+      label: source.getTitle(),
+      item: source
+    };
+  }
 
+  /**
+   * If the provided source should be displayed in the list.
+   *
+   * @param {!ISource} source
+   * @return {boolean}
+   * @protected
+   */
+  includeSource(source) {
+    return true;
+  }
 
-/**
- * Handle checklist change event.
- *
- * @param {angular.Scope.Event} event
- * @private
- */
-os.ui.ex.ExportOptionsCtrl.prototype.onSourceListChanged_ = function(event) {
-  event.stopPropagation();
-  this.updateItems();
-};
+  /**
+   * Initialize the data sources available for export. Applications should extend this to provide their data sources.
+   *
+   * @private
+   */
+  initSources_() {
+    var enabledSources = this.scope['initSources']() || [];
+    var sources = DataManager.getInstance().getSources();
+    for (var i = 0, n = sources.length; i < n; i++) {
+      var source = sources[i];
+      if (this.includeSource(source)) {
+        if (source.isEnabled() && source.getVisible()) {
+          var enabled = enabledSources == 'all' || enabledSources.includes(source);
+          this['sourceItems'].push(this.createChecklistItem_(source, enabled));
+        }
 
+        olEvents.listen(source, GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+      }
+    }
 
-/**
- * Handle source change event.
- *
- * @param {os.events.PropertyChangeEvent} event The event
- * @private
- */
-os.ui.ex.ExportOptionsCtrl.prototype.onSourceChange_ = function(event) {
-  var source = /** @type {os.source.ISource} */ (event.currentTarget || event.target);
-  if (source) {
-    var item = this.getSourceItem_(source);
-    var p = event.getProperty();
+    this.updateItems();
+  }
 
-    if (p === os.source.PropertyChange.ENABLED || p === os.source.PropertyChange.VISIBLE) {
-      if (!source.isEnabled() || !source.getVisible()) {
-        // source isn't visible, so remove it from the list
-        this.getSourceItem_(source, true);
-      } else if (!item) {
+  /**
+   * Handle checklist change event.
+   *
+   * @param {angular.Scope.Event} event
+   * @private
+   */
+  onSourceListChanged_(event) {
+    event.stopPropagation();
+    this.updateItems();
+  }
+
+  /**
+   * Handle source change event.
+   *
+   * @param {PropertyChangeEvent} event The event
+   * @private
+   */
+  onSourceChange_(event) {
+    var source = /** @type {ISource} */ (event.currentTarget || event.target);
+    if (source) {
+      var item = this.getSourceItem_(source);
+      var p = event.getProperty();
+
+      if (p === PropertyChange.ENABLED || p === PropertyChange.VISIBLE) {
+        if (!source.isEnabled() || !source.getVisible()) {
+          // source isn't visible, so remove it from the list
+          this.getSourceItem_(source, true);
+        } else if (!item) {
+          // if a source is made visible while this list is displayed, assume the user wanted to enable it. only do this
+          // when multiple sources are allowed!
+          var enabled = this.scope['allowMultiple'];
+          this['sourceItems'].push(this.createChecklistItem_(source, enabled));
+          this.updateItems();
+        }
+      } else if (p === PropertyChange.LABEL) {
+        this.updateItems();
+      } else if (item && item.enabled && p) {
+        if (sourceEvents.includes(p)) {
+          this.updateItems();
+        } else if (this['useSelected'] && selectEvents.includes(p)) {
+          this.updateItems();
+        }
+      }
+    }
+  }
+
+  /**
+   * Handle a source being added to the data manager.
+   *
+   * @param {os.data.event.DataEvent} event The event
+   * @private
+   */
+  onSourceAdded_(event) {
+    var source = event.source;
+    if (source && this.includeSource(source)) {
+      olEvents.listen(/** @type {EventTarget} */ (source), GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+
+      var item = this.getSourceItem_(source);
+      if (!item && source.getVisible()) {
         // if a source is made visible while this list is displayed, assume the user wanted to enable it. only do this
         // when multiple sources are allowed!
         var enabled = this.scope['allowMultiple'];
         this['sourceItems'].push(this.createChecklistItem_(source, enabled));
-        this.updateItems();
-      }
-    } else if (p === os.source.PropertyChange.LABEL) {
-      this.updateItems();
-    } else if (item && item.enabled) {
-      if (ol.array.includes(os.ui.ex.ExportOptionsCtrl.SOURCE_EVENTS_, p)) {
-        this.updateItems();
-      } else if (this['useSelected'] && ol.array.includes(os.ui.ex.ExportOptionsCtrl.SELECT_EVENTS_, p)) {
-        this.updateItems();
+        apply(this.scope);
       }
     }
   }
-};
 
-
-/**
- * Handle a source being added to the data manager.
- *
- * @param {os.data.event.DataEvent} event The event
- * @private
- */
-os.ui.ex.ExportOptionsCtrl.prototype.onSourceAdded_ = function(event) {
-  var source = event.source;
-  if (source && this.includeSource(source)) {
-    ol.events.listen(/** @type {ol.events.EventTarget} */ (source), goog.events.EventType.PROPERTYCHANGE,
-        this.onSourceChange_, this);
-
-    var item = this.getSourceItem_(source);
-    if (!item && source.getVisible()) {
-      // if a source is made visible while this list is displayed, assume the user wanted to enable it. only do this
-      // when multiple sources are allowed!
-      var enabled = this.scope['allowMultiple'];
-      this['sourceItems'].push(this.createChecklistItem_(source, enabled));
-      os.ui.apply(this.scope);
+  /**
+   * Handle a source being removed from the data manager.
+   *
+   * @param {os.data.event.DataEvent} event The event
+   * @private
+   */
+  onSourceRemoved_(event) {
+    var source = event.source;
+    if (source) {
+      olEvents.unlisten(/** @type {EventTarget} */ (source), GoogEventType.PROPERTYCHANGE, this.onSourceChange_, this);
+      this.getSourceItem_(source, true);
     }
   }
-};
 
+  /**
+   * Get the checklist item for a source.
+   *
+   * @param {ISource} source The source
+   * @param {boolean=} opt_remove If the item should be removed
+   * @return {osx.ChecklistItem|undefined}
+   * @private
+   */
+  getSourceItem_(source, opt_remove) {
+    var item;
+    if (source) {
+      for (var i = 0, n = this['sourceItems'].length; i < n; i++) {
+        if (this['sourceItems'][i].item === source) {
+          item = this['sourceItems'][i];
 
-/**
- * Handle a source being removed from the data manager.
- *
- * @param {os.data.event.DataEvent} event The event
- * @private
- */
-os.ui.ex.ExportOptionsCtrl.prototype.onSourceRemoved_ = function(event) {
-  var source = event.source;
-  if (source) {
-    ol.events.unlisten(/** @type {ol.events.EventTarget} */ (source), goog.events.EventType.PROPERTYCHANGE,
-        this.onSourceChange_, this);
-    this.getSourceItem_(source, true);
-  }
-};
+          if (opt_remove) {
+            this['sourceItems'].splice(i, 1);
 
-
-/**
- * Get the checklist item for a source.
- *
- * @param {os.source.ISource} source The source
- * @param {boolean=} opt_remove If the item should be removed
- * @return {osx.ChecklistItem|undefined}
- * @private
- */
-os.ui.ex.ExportOptionsCtrl.prototype.getSourceItem_ = function(source, opt_remove) {
-  var item;
-  if (source) {
-    for (var i = 0, n = this['sourceItems'].length; i < n; i++) {
-      if (this['sourceItems'][i].item === source) {
-        item = this['sourceItems'][i];
-
-        if (opt_remove) {
-          this['sourceItems'].splice(i, 1);
-
-          if (item.enabled) {
-            this.updateItems();
-          } else {
-            os.ui.apply(this.scope);
+            if (item.enabled) {
+              this.updateItems();
+            } else {
+              apply(this.scope);
+            }
           }
+          break;
         }
-        break;
       }
     }
+
+    return item;
   }
 
-  return item;
-};
+  /**
+   * Update the items being exported. Applications should extend this to handle how export items are determined.
+   *
+   * @export
+   */
+  updateItems() {
+    this['count'] = 0;
 
+    if (this.scope) {
+      var items = [];
+      var sources = [];
+      for (var i = 0; i < this['sourceItems'].length; i++) {
+        var exportSource = this['sourceItems'][i];
+        exportSource.detailText = '';
 
-/**
- * Update the items being exported. Applications should extend this to handle how export items are determined.
- *
- * @export
- */
-os.ui.ex.ExportOptionsCtrl.prototype.updateItems = function() {
-  this['count'] = 0;
+        if (exportSource.enabled) {
+          // export selected items if there are any, otherwise export all visible features
+          var source = /** @type {ISource} */ (exportSource.item);
+          sources.push(source);
 
-  if (this.scope) {
-    var items = [];
-    var sources = [];
-    for (var i = 0; i < this['sourceItems'].length; i++) {
-      var exportSource = this['sourceItems'][i];
-      exportSource.detailText = '';
+          var sourceItems;
+          var features = source.getFilteredFeatures();
+          var totalCount = features.length;
+          if (this['useSelected']) {
+            var selected = source.getSelectedItems();
+            var selectedCount = selected.length;
+            sourceItems = selectedCount > 0 ? selected.slice() : features;
 
-      if (exportSource.enabled) {
-        // export selected items if there are any, otherwise export all visible features
-        var source = /** @type {os.source.ISource} */ (exportSource.item);
-        sources.push(source);
-
-        var sourceItems;
-        var features = source.getFilteredFeatures();
-        var totalCount = features.length;
-        if (this['useSelected']) {
-          var selected = source.getSelectedItems();
-          var selectedCount = selected.length;
-          sourceItems = selectedCount > 0 ? selected.slice() : features;
-
-          exportSource.detailText = '(' + String(sourceItems.length);
-          if (selectedCount > 0 && selectedCount != totalCount) {
-            exportSource.detailText += ' of ' + totalCount + ' features)';
+            exportSource.detailText = '(' + String(sourceItems.length);
+            if (selectedCount > 0 && selectedCount != totalCount) {
+              exportSource.detailText += ' of ' + totalCount + ' features)';
+            } else {
+              exportSource.detailText += ' ' + this.getPluralText_(totalCount) + ')';
+            }
           } else {
-            exportSource.detailText += ' ' + this.getPluralText_(totalCount) + ')';
+            sourceItems = features;
+            exportSource.detailText = '(' + String(totalCount) + ' ' + this.getPluralText_(totalCount) + ')';
           }
-        } else {
-          sourceItems = features;
-          exportSource.detailText = '(' + String(totalCount) + ' ' + this.getPluralText_(totalCount) + ')';
-        }
 
-        if (this.scope['showLabels']) {
-          var labelFields = [];
+          if (this.scope['showLabels']) {
+            var labelFields = [];
 
-          var id = exportSource.item.getId();
-          var cfg = os.style.StyleManager.getInstance().getLayerConfig(id);
-          if (cfg.labels && sourceItems.length > 0 && !this.isFeatureLevelConfig_(sourceItems)) {
-            for (var n = 0; n < cfg.labels.length; n++) {
-              if (cfg.labels[n]['column']) {
-                labelFields.push(cfg.labels[n]['column']);
+            var id = exportSource.item.getId();
+            var cfg = StyleManager.getInstance().getLayerConfig(id);
+            if (cfg.labels && sourceItems.length > 0 && !this.isFeatureLevelConfig_(sourceItems)) {
+              for (var n = 0; n < cfg.labels.length; n++) {
+                if (cfg.labels[n]['column']) {
+                  labelFields.push(cfg.labels[n]['column']);
+                }
               }
-            }
 
-            if (labelFields.length == 0) {
-              labelFields.push('None');
+              if (labelFields.length == 0) {
+                labelFields.push('None');
+              }
+              // escape HTML chars to make sure they don't break the DOM
+              var labelText = htmlEscape(labelFields.join('/'));
+              var labelTip = htmlEscape('Columns that will be used for labels in the exported file: ' +
+                   labelFields.join(', '));
+              exportSource.detailText += '<div class="nowrap" title="' + labelTip + '">' +
+                    'Label' + (labelFields.length > 1 ? 's' : '') + ': ' + labelText +
+                    '</div>';
             }
-            // escape HTML chars to make sure they don't break the DOM
-            var labelText = goog.string.htmlEscape(labelFields.join('/'));
-            var labelTip = goog.string.htmlEscape('Columns that will be used for labels in the exported file: ' +
-                 labelFields.join(', '));
-            exportSource.detailText += '<div class="nowrap" title="' + labelTip + '">' +
-                  'Label' + (labelFields.length > 1 ? 's' : '') + ': ' + labelText +
-                  '</div>';
+          }
+          if (sourceItems && sourceItems.length > 0) {
+            items = items.concat(sourceItems);
           }
         }
-        if (sourceItems && sourceItems.length > 0) {
-          items = items.concat(sourceItems);
-        }
       }
+
+      this['count'] = items.length;
+
+      this.scope.$emit(ExportOptionsEvent.CHANGE, items, sources);
+      apply(this.scope);
     }
-
-    this['count'] = items.length;
-
-    this.scope.$emit(os.ui.ex.ExportOptionsEvent.CHANGE, items, sources);
-    os.ui.apply(this.scope);
   }
-};
+
+  /**
+   * Check the array to see if any items have a feature level style.
+   *
+   * @param {Array<*>} items Array of items to check
+   * @return {boolean} True if any of the items in the array have a feature level style
+   * @private
+   */
+  isFeatureLevelConfig_(items) {
+    if (items) {
+      return items.some(function(item) {
+        return !!item.get(StyleType.FEATURE);
+      });
+    }
+    return false;
+  }
+
+  /**
+   * @param {number} count
+   * @return {string}
+   * @private
+   */
+  getPluralText_(count) {
+    return count != 1 ? 'features' : 'feature';
+  }
+}
 
 /**
- * Check the array to see if any items have a feature level style.
- *
- * @param {Array<*>} items Array of items to check
- * @return {boolean} True if any of the items in the array have a feature level style
- * @private
+ * Source events that should trigger an item update.
+ * @type {Array<string>}
  */
-os.ui.ex.ExportOptionsCtrl.prototype.isFeatureLevelConfig_ = function(items) {
-  if (items) {
-    return items.some(function(item) {
-      return !!item.get(os.style.StyleType.FEATURE);
-    });
-  }
-  return false;
-};
-
+const sourceEvents = [
+  PropertyChange.ENABLED,
+  PropertyChange.FEATURES,
+  PropertyChange.FEATURE_VISIBILITY,
+  PropertyChange.VISIBLE,
+  PropertyChange.TIME_FILTER
+];
 
 /**
- * @param {number} count
- * @return {string}
- * @private
+ * Selection events that should trigger an item update.
+ * @type {Array<string>}
  */
-os.ui.ex.ExportOptionsCtrl.prototype.getPluralText_ = function(count) {
-  return count != 1 ? 'features' : 'feature';
+const selectEvents = [
+  SelectionType.ADDED,
+  SelectionType.CHANGED,
+  SelectionType.REMOVED
+];
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

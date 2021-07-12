@@ -15,7 +15,7 @@ goog.require('os.interaction.Modify');
 goog.require('os.query.BaseAreaManager');
 goog.require('os.query.ui.mergeAreasDirective');
 goog.require('os.source.IModifiableSource');
-goog.require('os.ui.ex.AreaExportCtrl');
+goog.require('os.ui.ex.AreaExportUI');
 goog.require('os.ui.feature.featureInfoDirective');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
@@ -770,7 +770,7 @@ os.ui.menu.spatial.onMenuEvent = function(event, opt_layerIds) {
       // I don't really have any idea why this one type doesn't operate with the menu properly without these
       event.preventDefault();
       event.stopPropagation();
-      os.ui.ex.AreaExportCtrl.start(/** @type {Array<ol.Feature>} */ (features));
+      os.ui.ex.AreaExportUI.Controller.start(/** @type {Array<ol.Feature>} */ (features));
     } else if (event.type === os.action.EventType.LOAD || event.type === os.action.EventType.EXCLUDE) {
       var areas = am.getAll();
 

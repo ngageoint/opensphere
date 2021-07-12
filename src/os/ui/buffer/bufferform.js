@@ -18,7 +18,7 @@ const Units = goog.require('os.math.Units');
 const {EPSG4326} = goog.require('os.proj');
 const Module = goog.require('os.ui.Module');
 const WindowEventType = goog.require('os.ui.WindowEventType');
-const ExportOptionsCtrl = goog.require('os.ui.ex.ExportOptionsCtrl');
+const {Controller: ExportOptionsCtrl} = goog.require('os.ui.ex.ExportOptionsUI');
 const ExportOptionsEvent = goog.require('os.ui.ex.ExportOptionsEvent');
 const {nameCompare} = goog.require('os.ui.slick.column');
 

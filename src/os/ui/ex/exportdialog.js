@@ -1,167 +1,165 @@
-goog.provide('os.ui.ex.ExportCtrl');
-goog.provide('os.ui.ex.ExportDirective');
+goog.module('os.ui.ex.ExportUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.array');
-goog.require('ol.array');
-goog.require('os.config');
-goog.require('os.data.event.DataEvent');
-goog.require('os.data.event.DataEventType');
-goog.require('os.events.SelectionType');
-goog.require('os.feature');
-goog.require('os.source');
-goog.require('os.source.PropertyChange');
-goog.require('os.ui');
-goog.require('os.ui.Module');
-goog.require('os.ui.ex.exportOptionsDirective');
-goog.require('os.ui.file.ExportDialogCtrl');
-goog.require('os.ui.file.exportDialogDirective');
-goog.require('os.ui.window');
+const {getAppName} = goog.require('os.config');
+const {getExportFields} = goog.require('os.source');
+const Module = goog.require('os.ui.Module');
+const ExportOptionsEvent = goog.require('os.ui.ex.ExportOptionsEvent');
+const {directiveTag: exportOptionsUi} = goog.require('os.ui.ex.ExportOptionsUI');
+const ExportDialogCtrl = goog.require('os.ui.file.ExportDialogCtrl');
+const exportDialogDirective = goog.require('os.ui.file.exportDialogDirective');
+const osWindow = goog.require('os.ui.window');
 
+const Feature = goog.requireType('ol.Feature');
+const VectorSource = goog.requireType('os.source.Vector');
 
 /**
  * The export directive
  *
  * @return {angular.Directive}
  */
-os.ui.ex.ExportDirective = function() {
-  var directive = os.ui.file.exportDialogDirective();
-  directive.controller = os.ui.ex.ExportCtrl;
+const directive = () => {
+  var directive = exportDialogDirective();
+  directive.controller = Controller;
   return directive;
 };
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'export';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('export', [os.ui.ex.ExportDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller function for the export directive
  *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$compile} $compile
- * @extends {os.ui.file.ExportDialogCtrl<!os.source.Vector>}
- * @constructor
- * @ngInject
+ * @extends {ExportDialogCtrl<!VectorSource>}
+ * @unrestricted
  */
-os.ui.ex.ExportCtrl = function($scope, $element, $compile) {
-  os.ui.ex.ExportCtrl.base(this, 'constructor', $scope, $element, $compile);
-
-  // call things features in !
-  $scope['itemText'] = 'feature';
-
-  // Set the appname to support exporting into the tool.
-  this['appName'] = os.config.getAppName();
-
+class Controller extends ExportDialogCtrl {
   /**
-   * If multiple sources are allowed by the export method.
-   * @type {boolean}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$compile} $compile
+   * @ngInject
    */
-  $scope['allowMultiple'] = false;
+  constructor($scope, $element, $compile) {
+    super($scope, $element, $compile);
 
-  /**
-   * If time is allowed by the export method.
-   * @type {boolean}
-   */
-  $scope['allowTime'] = false;
+    // call things features in !
+    $scope['itemText'] = 'feature';
 
-  /**
-   * If label export is supported by the export method.
-   * @type {boolean}
-   */
-  $scope['showLabels'] = false;
+    // Set the appname to support exporting into the tool.
+    this['appName'] = getAppName();
 
-  // initially chosen sources
-  var sources = $scope['initSources'] = this.options.sources;
+    /**
+     * If multiple sources are allowed by the export method.
+     * @type {boolean}
+     */
+    $scope['allowMultiple'] = false;
 
-  // if passed multiple sources, try to default to an exporter that supports it
-  var scopeEx = /** @type {os.ex.IExportMethod} */ (this.scope['exporter']);
-  if (sources && sources.length > 1 && (!scopeEx || !scopeEx.supportsMultiple())) {
-    for (var key in this['exporters']) {
-      var exporter = /** @type {os.ex.IExportMethod} */ (this['exporters'][key]);
-      if (exporter.supportsMultiple()) {
-        this.scope['exporter'] = exporter;
+    /**
+     * If time is allowed by the export method.
+     * @type {boolean}
+     */
+    $scope['allowTime'] = false;
+
+    /**
+     * If label export is supported by the export method.
+     * @type {boolean}
+     */
+    $scope['showLabels'] = false;
+
+    // initially chosen sources
+    var sources = $scope['initSources'] = this.options.sources;
+
+    // if passed multiple sources, try to default to an exporter that supports it
+    var scopeEx = /** @type {os.ex.IExportMethod} */ (this.scope['exporter']);
+    if (sources && sources.length > 1 && (!scopeEx || !scopeEx.supportsMultiple())) {
+      for (var key in this['exporters']) {
+        var exporter = /** @type {os.ex.IExportMethod} */ (this['exporters'][key]);
+        if (exporter.supportsMultiple()) {
+          this.scope['exporter'] = exporter;
+        }
       }
+    }
+
+    $scope.$on(ExportOptionsEvent.CHANGE, this.onExportOptionsChange_.bind(this));
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getCustomOptions() {
+    return '<h5 class="text-center">Sources to Export</h5>' +
+        `<${exportOptionsUi} init-sources="initSources" allow-multiple="allowMultiple" show-labels="showLabels"` +
+        ` allow-time="allowTime"></${exportOptionsUi}>`;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  onExporterChange(opt_new, opt_old) {
+    super.onExporterChange(opt_new, opt_old);
+
+    if (opt_new) {
+      this.scope['allowMultiple'] = opt_new.supportsMultiple();
+      this.scope['showLabels'] = opt_new.supportsLabelExport();
+      this.scope['allowTime'] = opt_new.supportsTime();
     }
   }
 
-  $scope.$on(os.ui.ex.ExportOptionsEvent.CHANGE, this.onExportOptionsChange_.bind(this));
-};
-goog.inherits(os.ui.ex.ExportCtrl, os.ui.file.ExportDialogCtrl);
+  /**
+   * Handle changes to the export options.
+   *
+   * @param {angular.Scope.Event} event The change event
+   * @param {Array<!Feature>} items The features to export
+   * @param {Array<!VectorSource>} sources The sources to export
+   * @private
+   */
+  onExportOptionsChange_(event, items, sources) {
+    event.stopPropagation();
 
+    this.options.items.length = 0;
+    this.options.fields.length = 0;
 
-/**
- * @inheritDoc
- */
-os.ui.ex.ExportCtrl.prototype.getCustomOptions = function() {
-  return '<h5 class="text-center">Sources to Export</h5>' +
-      '<exportoptions init-sources="initSources" allow-multiple="allowMultiple" show-labels="showLabels"' +
-      ' allow-time="allowTime"></exportoptions>';
-};
+    // update the export items
+    if (items && items.length > 0) {
+      this.options.items = this.options.items.concat(items);
+    }
 
-
-/**
- * @inheritDoc
- */
-os.ui.ex.ExportCtrl.prototype.onExporterChange = function(opt_new, opt_old) {
-  os.ui.ex.ExportCtrl.base(this, 'onExporterChange', opt_new, opt_old);
-
-  if (opt_new) {
-    this.scope['allowMultiple'] = opt_new.supportsMultiple();
-    this.scope['showLabels'] = opt_new.supportsLabelExport();
-    this.scope['allowTime'] = opt_new.supportsTime();
-  }
-};
-
-
-/**
- * Handle changes to the export options.
- *
- * @param {angular.Scope.Event} event The change event
- * @param {Array<!ol.Feature>} items The features to export
- * @param {Array<!os.source.Vector>} sources The sources to export
- * @private
- */
-os.ui.ex.ExportCtrl.prototype.onExportOptionsChange_ = function(event, items, sources) {
-  event.stopPropagation();
-
-  this.options.items.length = 0;
-  this.options.fields.length = 0;
-
-  // update the export items
-  if (items && items.length > 0) {
-    this.options.items = this.options.items.concat(items);
-  }
-
-  // update the export columns
-  if (sources) {
-    for (var i = 0; i < sources.length; i++) {
-      var sourceFields = os.source.getExportFields(sources[i], false, this.scope['allowTime']);
-      if (sourceFields) {
-        for (var j = 0; j < sourceFields.length; j++) {
-          if (!ol.array.includes(this.options.fields, sourceFields[j])) {
-            this.options.fields.push(sourceFields[j]);
+    // update the export columns
+    if (sources) {
+      for (var i = 0; i < sources.length; i++) {
+        var sourceFields = getExportFields(sources[i], false, this.scope['allowTime']);
+        if (sourceFields) {
+          for (var j = 0; j < sourceFields.length; j++) {
+            if (!this.options.fields.includes(sourceFields[j])) {
+              this.options.fields.push(sourceFields[j]);
+            }
           }
         }
       }
     }
   }
-};
-
+}
 
 /**
  * Starts the export process for the provided sources.
  *
- * @param {Array<!os.source.Vector>=} opt_sources The sources.
+ * @param {Array<!VectorSource>=} opt_sources The sources.
  */
-os.ui.ex.startExport = function(opt_sources) {
+const startExport = function(opt_sources) {
   var sources = opt_sources || [];
   var windowId = 'export';
-  if (os.ui.window.exists(windowId)) {
-    os.ui.window.bringToFront(windowId);
+  if (osWindow.exists(windowId)) {
+    osWindow.bringToFront(windowId);
   } else {
     var title = sources.length == 1 ? sources[0].getTitle() : null;
     var scopeOptions = {
@@ -190,7 +188,14 @@ os.ui.ex.startExport = function(opt_sources) {
       'show-close': 'true'
     };
 
-    var template = '<export></export>';
-    os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+    var template = `<${directiveTag}></${directiveTag}>`;
+    osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
   }
+};
+
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  startExport
 };
