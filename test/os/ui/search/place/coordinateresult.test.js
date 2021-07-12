@@ -1,4 +1,5 @@
 goog.require('ol.Feature');
+goog.require('os.implements');
 goog.require('os.search.ISortableResult');
 goog.require('os.search.SortType');
 goog.require('os.time.TimeInstant');
@@ -6,58 +7,66 @@ goog.require('os.time.TimeRange');
 goog.require('os.ui.search.place.CoordinateResult');
 
 describe('os.ui.search.place.CoordinateResult', function() {
+  const Feature = goog.module.get('ol.Feature');
+  const osImplements = goog.module.get('os.implements');
+  const ISortableResult = goog.module.get('os.search.ISortableResult');
+  const SortType = goog.module.get('os.search.SortType');
+  const TimeInstant = goog.module.get('os.time.TimeInstant');
+  const TimeRange = goog.module.get('os.time.TimeRange');
+  const CoordinateResult = goog.module.get('os.ui.search.place.CoordinateResult');
+
   var createResult = function(opt_options) {
     var options = opt_options || {};
     var featureOptions = options.featureOptions || {};
-    var feature = new ol.Feature(featureOptions);
+    var feature = new Feature(featureOptions);
 
     var label = options.label != null ? options.label : undefined;
     var score = options.score != null ? options.score : 0;
-    return new os.ui.search.place.CoordinateResult(feature, label, score);
+    return new CoordinateResult(feature, label, score);
   };
 
   describe('os.search.ISortableResult', function() {
     it('implements the sortable result interface', function() {
       var result = createResult();
-      expect(os.implements(result, os.search.ISortableResult.ID)).toBe(true);
+      expect(osImplements(result, ISortableResult.ID)).toBe(true);
     });
 
     it('gets sort values for the title', function() {
-      expect(createResult().getSortValue(os.search.SortType.TITLE)).toBeNull();
+      expect(createResult().getSortValue(SortType.TITLE)).toBeNull();
       expect(createResult({
         featureOptions: {
           name: 'testTitle'
         }
-      }).getSortValue(os.search.SortType.TITLE)).toBe('testTitle');
+      }).getSortValue(SortType.TITLE)).toBe('testTitle');
       expect(createResult({
         featureOptions: {
           title: 'testTitle'
         }
-      }).getSortValue(os.search.SortType.TITLE)).toBe('testTitle');
+      }).getSortValue(SortType.TITLE)).toBe('testTitle');
     });
 
     it('gets sort values for the date', function() {
-      expect(createResult().getSortValue(os.search.SortType.DATE)).toBeNull();
+      expect(createResult().getSortValue(SortType.DATE)).toBeNull();
       expect(createResult({
         featureOptions: {
           recordTime: Date.now()
         }
-      }).getSortValue(os.search.SortType.DATE)).toBeNull();
+      }).getSortValue(SortType.DATE)).toBeNull();
 
       var start = Date.now();
       var end = start + 1000;
 
       expect(createResult({
         featureOptions: {
-          recordTime: new os.time.TimeInstant(start)
+          recordTime: new TimeInstant(start)
         }
-      }).getSortValue(os.search.SortType.DATE)).toBe(String(start));
+      }).getSortValue(SortType.DATE)).toBe(String(start));
 
       expect(createResult({
         featureOptions: {
-          recordTime: new os.time.TimeRange(start, end)
+          recordTime: new TimeRange(start, end)
         }
-      }).getSortValue(os.search.SortType.DATE)).toBe(String(start));
+      }).getSortValue(SortType.DATE)).toBe(String(start));
     });
   });
 });
