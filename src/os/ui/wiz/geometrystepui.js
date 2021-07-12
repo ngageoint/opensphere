@@ -8,7 +8,10 @@ const LatMapping = goog.require('os.im.mapping.LatMapping');
 const LonMapping = goog.require('os.im.mapping.LonMapping');
 const PositionMapping = goog.require('os.im.mapping.PositionMapping');
 const WKTMapping = goog.require('os.im.mapping.WKTMapping');
+const Units = goog.require('os.math.Units');
 const Module = goog.require('os.ui.Module');
+const AbstractCsvParser = goog.require('os.ui.file.csv.AbstractCsvParser');
+const {numerateNameCompare} = goog.require('os.ui.slick.column');
 const GeoHelpUI = goog.require('os.ui.window.GeoHelpUI');
 const WizardStepEvent = goog.require('os.ui.wiz.step.WizardStepEvent');
 
@@ -75,7 +78,7 @@ class Controller {
      * @type {Array<ColumnDefinition>}
      */
     this['columns'] = $scope['config']['columns'] || [];
-    this['columns'].sort(os.ui.slick.column.numerateNameCompare);
+    this['columns'].sort(numerateNameCompare);
 
     /**
      * @type {Array<string>}
@@ -90,20 +93,20 @@ class Controller {
     /**
      * @type {Object<string, IMapping>}
      */
-    this['posTypes'] = goog.object.clone(PositionMapping.TYPES);
+    this['posTypes'] = Object.assign({}, PositionMapping.TYPES);
     this['posTypes']['WKT'] = new WKTMapping();
 
     /**
      * @type {Array<string>}
      */
-    this['units'] = goog.object.getValues(os.math.Units);
+    this['units'] = Object.values(Units);
 
     /**
      * @type {Array<string>}
      */
     this['altUnits'] = ['autodetect'];
-    for (var unit in os.math.Units) {
-      this['altUnits'].push(os.math.Units[unit]);
+    for (var unit in Units) {
+      this['altUnits'].push(Units[unit]);
     }
 
     $scope.$watch('ellipseForm.$valid', this.validate.bind(this));
@@ -158,7 +161,7 @@ class Controller {
             var fmt = !geomStep['useGeoSingleAutoFormat'] ? geomStep['geoSingleFormat'] : undefined;
             var compareLatLon = /** @type {GeoMapTestRes} */ (this.testMappingAndEmpty_(pm, posColumn, fmt));
             if (compareLatLon['test'] === 0) {
-              this['warnings'].push('Caution: No data found in first ' + os.ui.file.csv.AbstractCsvParser.PREVIEW_SIZE +
+              this['warnings'].push('Caution: No data found in first ' + AbstractCsvParser.PREVIEW_SIZE +
                   ' rows from column "' + posColumn + '"!');
             } else if (compareLatLon['test'] < 0) {
               this['errors'].push('Unable to parse geometry from column "' + posColumn + '"!');
@@ -179,7 +182,7 @@ class Controller {
             var fmtLat = !geomStep['useGeoSeparateAutoFormat'] ? geomStep['geoSeparateFormat'] : undefined;
             var compareLat = /** @type {GeoMapTestRes} */ (this.testMappingAndEmpty_(latm, latm.field, fmtLat));
             if (compareLat['test'] === 0) {
-              this['warnings'].push('Caution: No data found in first ' + os.ui.file.csv.AbstractCsvParser.PREVIEW_SIZE +
+              this['warnings'].push('Caution: No data found in first ' + AbstractCsvParser.PREVIEW_SIZE +
                   ' rows from latitude column "' + latm.field + '"!');
             } else if (compareLat['test'] < 0) {
               this['errors'].push('Unable to parse latitude from column "' + latm.field + '"!');
@@ -193,7 +196,7 @@ class Controller {
             var fmtLon = !geomStep['useGeoSeparateAutoFormat'] ? geomStep['geoSeparateFormat'] : undefined;
             var compareLon = /** @type {GeoMapTestRes} */ (this.testMappingAndEmpty_(lonm, lonm.field, fmtLon));
             if (compareLon['test'] === 0) {
-              this['warnings'].push('Caution: No data found in first ' + os.ui.file.csv.AbstractCsvParser.PREVIEW_SIZE +
+              this['warnings'].push('Caution: No data found in first ' + AbstractCsvParser.PREVIEW_SIZE +
                   ' rows from longitude column "' + lonm.field + '"!');
               this['result'] = null;
             } else if (compareLon['test'] < 0) {

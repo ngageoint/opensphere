@@ -1,6 +1,7 @@
 goog.module('os.ui.wiz.WizardUI');
 goog.module.declareLegacyNamespace();
 
+const {clamp} = goog.require('goog.math');
 const {ROOT} = goog.require('os');
 const {apply} = goog.require('os.ui');
 const Module = goog.require('os.ui.Module');
@@ -342,7 +343,7 @@ class Controller {
    * @export
    */
   setStepIndex(index) {
-    index = goog.math.clamp(index, 0, this['steps'].length - 1);
+    index = clamp(index, 0, this['steps'].length - 1);
 
     while (this['activeIndex'] != index) {
       var old = this['activeIndex'];

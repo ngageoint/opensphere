@@ -1,6 +1,7 @@
 goog.module('os.ui.wiz.GeometryStep');
 goog.module.declareLegacyNamespace();
 
+const {DEFAULT_ALT_UNIT} = goog.require('os.fields');
 const AltMapping = goog.require('os.im.mapping.AltMapping');
 const BearingMapping = goog.require('os.im.mapping.BearingMapping');
 const LatMapping = goog.require('os.im.mapping.LatMapping');
@@ -291,7 +292,7 @@ class GeometryStep extends AbstractWizardStep {
   updateAltMapping(mapping) {
     mapping.field = this['altitude']['column'];
     // set this back to the default in case it was overridden previously
-    mapping.setUnits(os.fields.DEFAULT_ALT_UNIT);
+    mapping.setUnits(DEFAULT_ALT_UNIT);
     mapping.unitsOverride = false;
     // override the autodetection of the units
     if ((this['altitude']['units']) && (this['altitude']['units'] != 'autodetect')) {

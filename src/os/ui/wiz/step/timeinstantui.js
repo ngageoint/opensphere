@@ -2,6 +2,7 @@ goog.module('os.ui.wiz.step.TimeInstantUI');
 goog.module.declareLegacyNamespace();
 
 const {ROOT} = goog.require('os');
+const {getItemField} = goog.require('os.im.mapping');
 const osTime = goog.require('os.time');
 const Module = goog.require('os.ui.Module');
 
@@ -191,7 +192,7 @@ class Controller {
 
     for (var i = 0, n = this.config_['preview'].length; i < n && !result; i++) {
       var item = this.config_['preview'][i];
-      result = goog.string.trim(String(os.im.mapping.getItemField(item, field) || ''));
+      result = String(getItemField(item, field) || '').trim();
     }
 
     return result;
@@ -240,7 +241,7 @@ class Controller {
     if (this.config_['preview'] && this.config_['preview'].length > 0) {
       if (this.model_['dateColumn']) {
         var f = null;
-        var date = String(os.im.mapping.getItemField(this.config_['preview'][0], this.model_['dateColumn']) || '');
+        var date = String(getItemField(this.config_['preview'][0], this.model_['dateColumn']) || '');
         if (date) {
           var formats = this.model_['dateType'] == 'combined' ? this['dtFormats'] : this['dFormats'];
           f = osTime.detectFormat(date, formats, true);
@@ -267,7 +268,7 @@ class Controller {
     if (this.config_['preview'] && this.config_['preview'].length > 0) {
       if (this.model_['timeColumn']) {
         var f = null;
-        var time = String(os.im.mapping.getItemField(this.config_['preview'][0], this.model_['timeColumn']) || '');
+        var time = String(getItemField(this.config_['preview'][0], this.model_['timeColumn']) || '');
         if (time) {
           f = osTime.detectFormat(time, this['tFormats'], true);
         }
