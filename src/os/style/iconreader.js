@@ -176,7 +176,7 @@ os.style.IconReader.translateIcons = function(config) {
   var src = /** @type {string|undefined} */ (config['src']);
   if (src) {
     const isGmaps = os.ui.file.kml.GMAPS_SEARCH.test(src);
-    const isMirror = src.indexOf(os.ui.file.kml.mirror) != -1;
+    const isMirror = src.indexOf(os.ui.file.kml.getMirror()) != -1;
     if (isGmaps || isMirror) {
       if (isGmaps) {
         config['src'] = os.ui.file.kml.replaceGoogleUri(src);

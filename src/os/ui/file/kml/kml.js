@@ -303,13 +303,41 @@ const getDefaultIcon = function() {
 /**
  * @type {boolean}
  */
-const isGoogleMapsAccessible = true;
+let googleMapsAccessible = true;
 
 /**
- * Full URL to the kml icons that can be exported in reports, etc. Override by setting "plugin.file.kml.icon.mirror"
+ * If the Google Maps API is accessible.
+ * @return {boolean}
+ */
+const isGoogleMapsAccessible = () => googleMapsAccessible;
+
+/**
+ * Set if the Google Maps API is accessible.
+ * @param {boolean} value The value.
+ */
+const setGoogleMapsAccessible = (value) => {
+  googleMapsAccessible = value;
+};
+
+/**
+ * The KML icon mirror.
  * @type {string}
  */
-const mirror = window.location.origin + window.location.pathname + 'images/icons/kml/';
+let mirror = window.location.origin + window.location.pathname + 'images/icons/kml/';
+
+/**
+ * Get the KML icon mirror.
+ * @return {string}
+ */
+const getMirror = () => mirror;
+
+/**
+ * Set the KML icon mirror.
+ * @param {string} value The mirror URL.
+ */
+const setMirror = (value) => {
+  mirror = value;
+};
 
 /**
  * Replace the Google icon URI with the application image path.
@@ -322,7 +350,7 @@ const replaceGoogleUri = function(src) {
     const icon = GOOGLE_EARTH_ICON_SET.find((icon) => secureSource === icon.path);
     if (icon) {
       return icon.path.replace(GMAPS_SEARCH, ICON_PATH);
-    } else if (!isGoogleMapsAccessible) {
+    } else if (!isGoogleMapsAccessible()) {
       return DEFAULT_ICON_PATH;
     }
   }
@@ -354,7 +382,7 @@ const exportableIconUri = (function() {
   const lookup = {};
 
   return (src) => {
-    if (!isGoogleMapsAccessible && // fastest test
+    if (!isGoogleMapsAccessible() && // fastest test
         !lookup[src] &&
         GMAPS_SEARCH.test(src)) { // slowest test
       let converted = null;
@@ -1089,7 +1117,9 @@ exports = {
   GMAPS_SEARCH,
   getDefaultIcon,
   isGoogleMapsAccessible,
-  mirror,
+  setGoogleMapsAccessible,
+  getMirror,
+  setMirror,
   replaceGoogleUri,
   replaceExportableUri,
   exportableIconUri,
