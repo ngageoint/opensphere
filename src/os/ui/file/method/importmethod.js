@@ -1,10 +1,9 @@
 goog.module('os.ui.file.method.ImportMethod');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.file.importDialogDirective');
-
 const log = goog.require('goog.log');
 const EventType = goog.require('os.events.EventType');
+const {directiveTag: importUi} = goog.require('os.ui.file.ImportDialogUI');
 const UrlMethod = goog.require('os.ui.file.method.UrlMethod');
 const ImportManager = goog.require('os.ui.im.ImportManager');
 const osWindow = goog.require('os.ui.window');
@@ -92,7 +91,7 @@ class ImportMethod extends UrlMethod {
         'show-close': 'true'
       };
 
-      var template = '<importdialog manager="manager" method="method"></importdialog>';
+      var template = `<${importUi} manager="manager" method="method"></${importUi}>`;
       osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
     } else if (url) {
       this.loadUrl();

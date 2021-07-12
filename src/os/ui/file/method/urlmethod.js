@@ -1,8 +1,6 @@
 goog.module('os.ui.file.method.UrlMethod');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.file.urlImportDirective');
-
 const dispose = goog.require('goog.dispose');
 const EventTarget = goog.require('goog.events.EventTarget');
 const log = goog.require('goog.log');
@@ -18,6 +16,7 @@ const IFileMethod = goog.require('os.file.IFileMethod'); // eslint-disable-line
 const Request = goog.require('os.net.Request');
 const RequestEvent = goog.require('os.net.RequestEvent');
 const RequestEventType = goog.require('os.net.RequestEventType');
+const {directiveTag: importUi} = goog.require('os.ui.file.UrlImportUI');
 const osWindow = goog.require('os.ui.window');
 
 const Logger = goog.requireType('goog.log.Logger');
@@ -151,7 +150,7 @@ class UrlMethod extends EventTarget {
         'modal': true,
         'show-close': true
       };
-      var template = '<urlimport></urlimport>';
+      var template = `<${importUi}></${importUi}>`;
       osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
     } else {
       this.loadUrl();

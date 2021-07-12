@@ -1,11 +1,10 @@
 goog.module('os.ui.file.method.FileMethod');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.file.fileImportDirective');
-
 const EventTarget = goog.require('goog.events.EventTarget');
 const EventType = goog.require('os.events.EventType');
 const IFileMethod = goog.require('os.file.IFileMethod'); // eslint-disable-line
+const {directiveTag: fileImportUi} = goog.require('os.ui.file.FileImportUI');
 const osWindow = goog.require('os.ui.window');
 const windowSelector = goog.require('os.ui.windowSelector');
 
@@ -123,7 +122,7 @@ class FileMethod extends EventTarget {
         'modal': 'true',
         'show-close': 'true'
       };
-      var template = '<fileimport></fileimport>';
+      var template = `<${fileImportUi}></${fileImportUi}>`;
       osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
 
       // wait for the window to open before clicking the file input. for whatever reason this doesn't work inside

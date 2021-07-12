@@ -6,8 +6,7 @@ const {getExportFields} = goog.require('os.source');
 const Module = goog.require('os.ui.Module');
 const ExportOptionsEvent = goog.require('os.ui.ex.ExportOptionsEvent');
 const {directiveTag: exportOptionsUi} = goog.require('os.ui.ex.ExportOptionsUI');
-const ExportDialogCtrl = goog.require('os.ui.file.ExportDialogCtrl');
-const exportDialogDirective = goog.require('os.ui.file.exportDialogDirective');
+const {Controller: ExportDialogCtrl, directive: exportDialogDirective} = goog.require('os.ui.file.ExportDialogUI');
 const osWindow = goog.require('os.ui.window');
 
 const Feature = goog.requireType('ol.Feature');
