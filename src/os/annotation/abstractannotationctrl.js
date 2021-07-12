@@ -1,7 +1,6 @@
 goog.module('os.annotation.AbstractAnnotationCtrl');
 goog.module.declareLegacyNamespace();
 
-const Disposable = goog.require('goog.Disposable');
 const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
 const dispose = goog.require('goog.dispose');
 const dispatcher = goog.require('os.Dispatcher');
@@ -24,7 +23,7 @@ const selectors = {
  * @abstract
  * @unrestricted
  */
-class Controller extends Disposable {
+class Controller {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope The Angular scope.
@@ -33,8 +32,6 @@ class Controller extends Disposable {
    * @ngInject
    */
   constructor($scope, $element, $timeout) {
-    super();
-
     /**
      * The Angular scope.
      * @type {?angular.Scope}
@@ -98,13 +95,9 @@ class Controller extends Disposable {
 
     /**
      * The annotation options.
-     * @type {!osx.annotation.Options}
+     * @type {osx.annotation.Options}
      */
-    this['options'] = this.getOptions();
-
-    // if background color isnt set, set it to current default themes
-    this['options'].bodyBG = this['options'].bodyBG || undefined;
-    this['options'].headerBG = this['options'].headerBG || undefined;
+    this['options'] = null;
 
     /**
      * Whether the annotation is being edited inline.
@@ -120,17 +113,15 @@ class Controller extends Disposable {
 
     dispatcher.getInstance().listen(EventType.LAUNCH_EDIT, this.cancelEdit, false, this);
 
-    this.initialize();
     $timeout(this.initDragResize.bind(this));
-
-    $scope.$on('$destroy', this.dispose.bind(this));
   }
 
   /**
-   * @inheritDoc
+   * Angular $onDestroy lifecycle function.
    */
-  disposeInternal() {
-    super.disposeInternal();
+  $onDestroy() {
+    dispatcher.getInstance().unlisten(EventType.LAUNCH_EDIT, this.cancelEdit, false, this);
+
     this.element.parent().draggable('destroy');
     this.element.resizable('destroy');
 
@@ -139,21 +130,12 @@ class Controller extends Disposable {
   }
 
   /**
-   * Get the annotation options.
-   *
-   * @abstract
-   * @return {osx.annotation.Options} The options.
-   * @protected
+   * Angular $onInit lifecycle function.
    */
-  getOptions() {}
+  $onInit() {
+    this.initOptions();
 
-  /**
-   * Initialize the annotation.
-   *
-   * @protected
-   */
-  initialize() {
-    if (this.element) {
+    if (this.element && this['options']) {
       this.element.width(this['options'].size[0]);
       this.element.height(this['options'].size[1]);
 
@@ -166,6 +148,29 @@ class Controller extends Disposable {
       };
       updateDelay.onSuccess = updateDelay.onFailure = cleanup;
       updateDelay.start(50, 10000);
+    }
+  }
+
+  /**
+   * Get the annotation options.
+   *
+   * @abstract
+   * @return {osx.annotation.Options} The options.
+   * @protected
+   */
+  getOptions() {}
+
+  /**
+   * Initialize the annotation options.
+   * @protected
+   */
+  initOptions() {
+    this['options'] = this.getOptions();
+
+    if (this['options']) {
+      // if background color isnt set, set it to current default themes
+      this['options'].bodyBG = this['options'].bodyBG || undefined;
+      this['options'].headerBG = this['options'].headerBG || undefined;
     }
   }
 
@@ -312,24 +317,26 @@ class Controller extends Disposable {
    * @export
    */
   cancelEdit() {
-    if (this['editingDescription'] || this['editingName']) {
-      // reset the values to the old ones
-      this.element.height(this.currentHeight_);
-      this.element.width(this.currentWidth_);
-      this['options'].size = [this.currentWidth_, this.currentHeight_];
+    if (this.element) {
+      if (this['editingDescription'] || this['editingName']) {
+        // reset the values to the old ones
+        this.element.height(this.currentHeight_);
+        this.element.width(this.currentWidth_);
+        this['options'].size = [this.currentWidth_, this.currentHeight_];
 
-      this['name'] = this.currentName_;
-      this['description'] = this.currentDescription_;
+        this['name'] = this.currentName_;
+        this['description'] = this.currentDescription_;
 
-      this.updateTail();
+        this.updateTail();
 
-      if (this['editingDescription']) {
-        this.element.parent().draggable('option', 'handle', selectors.ALL);
+        if (this['editingDescription']) {
+          this.element.parent().draggable('option', 'handle', selectors.ALL);
+        }
       }
-    }
 
-    this['editingName'] = false;
-    this['editingDescription'] = false;
+      this['editingName'] = false;
+      this['editingDescription'] = false;
+    }
   }
 
   /**

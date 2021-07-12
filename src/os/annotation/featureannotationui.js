@@ -3,8 +3,6 @@ goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.text.tuiEditorDirective');
 
-const ConditionalDelay = goog.require('goog.async.ConditionalDelay');
-const dispose = goog.require('goog.dispose');
 const olEvents = goog.require('ol.events');
 const EventType = goog.require('ol.events.EventType');
 const annotation = goog.require('os.annotation');
@@ -132,6 +130,8 @@ class Controller extends AbstractAnnotationCtrl {
    * @ngInject
    */
   constructor($scope, $element, $timeout) {
+    super($scope, $element, $timeout);
+
     /**
      * The OpenLayers feature.
      * @type {ol.Feature}
@@ -160,8 +160,6 @@ class Controller extends AbstractAnnotationCtrl {
      */
     this.userChanged_ = false;
 
-    super($scope, $element, $timeout);
-
     olEvents.listen(this.feature, EventType.CHANGE, this.onFeatureChange_, this);
     olEvents.listen(this.overlay, 'change:visible', this.onOverlayVisibleChange_, this);
   }
@@ -169,8 +167,8 @@ class Controller extends AbstractAnnotationCtrl {
   /**
    * @inheritDoc
    */
-  disposeInternal() {
-    super.disposeInternal();
+  $onDestroy() {
+    super.$onDestroy();
 
     olEvents.unlisten(this.feature, EventType.CHANGE, this.onFeatureChange_, this);
     olEvents.unlisten(this.overlay, 'change:visible', this.onOverlayVisibleChange_, this);
@@ -182,31 +180,16 @@ class Controller extends AbstractAnnotationCtrl {
   /**
    * @inheritDoc
    */
-  initialize() {
-    if (this.element && this.feature && this.overlay) {
-      this.element.width(this['options'].size[0]);
-      this.element.height(this['options'].size[1]);
-
-      this.setTailType(TailType.ABSOLUTE);
-      this.onFeatureChange_();
-
-      // use a conditional delay for the initial tail update in case the map isn't initialized
-      var updateDelay = new ConditionalDelay(this.updateTail, this);
-      var cleanup = function() {
-        dispose(updateDelay);
-      };
-      updateDelay.onSuccess = updateDelay.onFailure = cleanup;
-      updateDelay.start(50, 10000);
-    }
+  $onInit() {
+    super.$onInit();
+    this.onFeatureChange_();
   }
 
   /**
    * @inheritDoc
    */
   getOptions() {
-    return (
-      /** @type {!osx.annotation.Options} */ this.feature.get(annotation.OPTIONS_FIELD)
-    );
+    return /** @type {!osx.annotation.Options} */ (this.feature.get(annotation.OPTIONS_FIELD));
   }
 
   /**
@@ -339,9 +322,7 @@ class Controller extends AbstractAnnotationCtrl {
    * @inheritDoc
    */
   updateTail() {
-    return this.tailType === TailType.ABSOLUTE ?
-      this.updateTailAbsolute() :
-      this.updateTailFixed();
+    return this.tailType === TailType.ABSOLUTE ? this.updateTailAbsolute() : this.updateTailFixed();
   }
 
   /**

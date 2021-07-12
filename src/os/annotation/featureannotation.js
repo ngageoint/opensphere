@@ -25,6 +25,8 @@ class FeatureAnnotation extends AbstractAnnotation {
    * @param {!Feature} feature The OpenLayers feature.
    */
   constructor(feature) {
+    super();
+
     /**
      * The overlay.
      * @type {WebGLOverlay}
@@ -39,10 +41,9 @@ class FeatureAnnotation extends AbstractAnnotation {
      */
     this.feature = feature;
 
-    // call the base constructor after we've set up the feature
-    super();
-
     listen(this.feature, EventType.CHANGE, this.handleFeatureChange, this);
+
+    this.createUI();
   }
 
   /**
@@ -58,9 +59,7 @@ class FeatureAnnotation extends AbstractAnnotation {
    * @inheritDoc
    */
   getOptions() {
-    return (
-      /** @type {osx.annotation.Options|undefined} */ this.feature.get(OPTIONS_FIELD)
-    );
+    return /** @type {osx.annotation.Options|undefined} */ (this.feature.get(OPTIONS_FIELD));
   }
 
   /**
@@ -90,23 +89,23 @@ class FeatureAnnotation extends AbstractAnnotation {
    * @inheritDoc
    */
   createUI() {
-    var options = this.getOptions();
+    this.options = this.getOptions();
 
-    if (this.overlay || !options) {
+    if (this.overlay || !this.options) {
       // don't create the overlay if it already exists or options are missing
       return;
     }
 
-    if (!options.position) {
+    if (!this.options.position) {
       var geometry = this.feature.getGeometry();
       var coordinate = geometry instanceof SimpleGeometry ? geometry.getFirstCoordinate() : undefined;
-      options.position = coordinate;
+      this.options.position = coordinate;
     }
 
     // don't initialize with a position value as this seems to cause the overlay to jiggle on show/hide
     this.overlay = new WebGLOverlay({
       id: getUid(this.feature),
-      offset: options.offset,
+      offset: this.options.offset,
       positioning: OverlayPositioning.CENTER_CENTER
     });
 

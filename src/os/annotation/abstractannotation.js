@@ -37,7 +37,7 @@ class AbstractAnnotation extends Disposable {
      * The annotation options.
      * @type {osx.annotation.Options|undefined}
      */
-    this.options = this.getOptions();
+    this.options = undefined;
 
     /**
      * If the annotation is visible.
@@ -45,8 +45,6 @@ class AbstractAnnotation extends Disposable {
      * @protected
      */
     this.visible = true;
-
-    this.createUI();
   }
 
   /**
