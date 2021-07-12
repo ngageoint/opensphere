@@ -1,7 +1,7 @@
-goog.provide('os.ui.file.kml');
+goog.module('os.ui.file.kml');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.config.Settings');
-
+const {ROOT} = goog.require('os');
 
 /**
  * Refresh modes for KML links and icons.
@@ -16,12 +16,11 @@ goog.require('os.config.Settings');
  *
  * @enum {string}
  */
-os.ui.file.kml.RefreshMode = {
+const RefreshMode = {
   CHANGE: 'onChange',
   EXPIRE: 'onExpire',
   INTERVAL: 'onInterval'
 };
-
 
 /**
  * View refresh modes for KML links.
@@ -35,34 +34,31 @@ os.ui.file.kml.RefreshMode = {
  *
  * @enum {string}
  */
-os.ui.file.kml.ViewRefreshMode = {
+const ViewRefreshMode = {
   NEVER: 'never',
   REGION: 'onRegion',
   REQUEST: 'onRequest',
   STOP: 'onStop'
 };
 
-
 /**
  * @enum {string}
  */
-os.ui.file.kml.ElementType = {
+const ElementType = {
   FOLDER: 'Folder',
   PLACEMARK: 'Placemark',
   NETWORK_LINK: 'NetworkLink'
 };
 
-
 /**
  * Style type enumeration for KML.
  * @enum {string}
  */
-os.ui.file.kml.StyleType = {
+const StyleType = {
   DEFAULT: 'default',
   ICON: 'icon',
   POINT: 'point'
 };
-
 
 /**
  * @typedef {{
@@ -70,30 +66,25 @@ os.ui.file.kml.StyleType = {
  *   scale: (number|undefined)
  * }}
  */
-os.ui.file.kml.Icon;
-
+let Icon;
 
 /**
  * Google Earth icon URL prefix.
  * @type {string}
- * @const
  */
-os.ui.file.kml.GOOGLE_EARTH_URL = 'https://maps.google.com/mapfiles/kml/';
-
+const GOOGLE_EARTH_URL = 'https://maps.google.com/mapfiles/kml/';
 
 /**
  * Path to KML icons.
  * @type {string}
- * @const
  */
-os.ui.file.kml.ICON_PATH = os.ROOT + 'images/icons/kml/';
-
+const ICON_PATH = ROOT + 'images/icons/kml/';
 
 /**
  * Google Earth icons.
  * @enum {string}
  */
-os.ui.file.kml.GoogleEarthIcons = {
+const GoogleEarthIcons = {
   NUM_01: 'paddle/1.png',
   NUM_02: 'paddle/2.png',
   NUM_03: 'paddle/3.png',
@@ -263,93 +254,81 @@ os.ui.file.kml.GoogleEarthIcons = {
   YEN: 'shapes/yen.png'
 };
 
-
 /**
  * The default icon path (white circle).
  * @type {string}
  */
-os.ui.file.kml.DEFAULT_ICON_PATH =
-    os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PLACEMARK_CIRCLE;
+const DEFAULT_ICON_PATH = GOOGLE_EARTH_URL + GoogleEarthIcons.PLACEMARK_CIRCLE;
 
 /**
  * The default icon title (white circle).
  * @type {string}
  */
-os.ui.file.kml.DEFAULT_ICON_TITLE = 'PLACEMARK_CIRCLE';
-
+const DEFAULT_ICON_TITLE = 'PLACEMARK_CIRCLE';
 
 /**
  * The default icon options (white circle).
  * @type {Object|undefined}
  */
-os.ui.file.kml.DEFAULT_ICON_OPTIONS = undefined;
-
+const DEFAULT_ICON_OPTIONS = undefined;
 
 /**
  * The default icon to use for KML placemarks.
- * @type {os.ui.file.kml.Icon}
- * @const
+ * @type {Icon}
  */
-os.ui.file.kml.DEFAULT_ICON = {
-  href: os.ui.file.kml.DEFAULT_ICON_PATH,
-  options: os.ui.file.kml.DEFAULT_ICON_OPTIONS,
+const DEFAULT_ICON = {
+  href: DEFAULT_ICON_PATH,
+  options: DEFAULT_ICON_OPTIONS,
   scale: 1
 };
 
-
 /**
  * @type {RegExp}
- * @const
  */
-os.ui.file.kml.GMAPS_SEARCH = /^(https?:)?\/\/maps\.google\.com\/mapfiles\/kml\//i;
-
+const GMAPS_SEARCH = /^(https?:)?\/\/maps\.google\.com\/mapfiles\/kml\//i;
 
 /**
  * Get the default icon object.
  *
  * @return {!osx.icon.Icon} The default icon.
  */
-os.ui.file.kml.getDefaultIcon = function() {
+const getDefaultIcon = function() {
   return /** @type {!osx.icon.Icon} */ ({
-    title: os.ui.file.kml.DEFAULT_ICON_TITLE,
-    path: os.ui.file.kml.DEFAULT_ICON_PATH,
-    options: os.ui.file.kml.DEFAULT_ICON_OPTIONS
+    title: DEFAULT_ICON_TITLE,
+    path: DEFAULT_ICON_PATH,
+    options: DEFAULT_ICON_OPTIONS
   });
 };
-
 
 /**
  * @type {boolean}
  */
-os.ui.file.kml.isGoogleMapsAccessible = true;
-
+const isGoogleMapsAccessible = true;
 
 /**
  * Full URL to the kml icons that can be exported in reports, etc. Override by setting "plugin.file.kml.icon.mirror"
  * @type {string}
  */
-os.ui.file.kml.mirror = window.location.origin + window.location.pathname + 'images/icons/kml/';
-
+const mirror = window.location.origin + window.location.pathname + 'images/icons/kml/';
 
 /**
  * Replace the Google icon URI with the application image path.
  * @param {string|null|undefined} src The image source URL.
  * @return {!string} The icon src.
  */
-os.ui.file.kml.replaceGoogleUri = function(src) {
-  if (os.ui.file.kml.GMAPS_SEARCH.test(src)) {
+const replaceGoogleUri = function(src) {
+  if (GMAPS_SEARCH.test(src)) {
     const secureSource = 'https:' + src.replace(/^[a-z]*:\/\//, '//');
-    const icon = os.ui.file.kml.GOOGLE_EARTH_ICON_SET.find((icon) => secureSource === icon.path);
+    const icon = GOOGLE_EARTH_ICON_SET.find((icon) => secureSource === icon.path);
     if (icon) {
-      return icon.path.replace(os.ui.file.kml.GMAPS_SEARCH, os.ui.file.kml.ICON_PATH);
-    } else if (!os.ui.file.kml.isGoogleMapsAccessible) {
-      return os.ui.file.kml.DEFAULT_ICON_PATH;
+      return icon.path.replace(GMAPS_SEARCH, ICON_PATH);
+    } else if (!isGoogleMapsAccessible) {
+      return DEFAULT_ICON_PATH;
     }
   }
 
   return src || '';
 };
-
 
 /**
  * Replace our mirrored source URL with with the application image path.
@@ -357,10 +336,9 @@ os.ui.file.kml.replaceGoogleUri = function(src) {
  * @param {string|null|undefined} src The image source URL.
  * @return {!string} The icon src.
  */
-os.ui.file.kml.replaceExportableUri = function(src) {
-  return src.replace(os.ui.file.kml.mirror, os.ui.file.kml.ICON_PATH);
+const replaceExportableUri = function(src) {
+  return src.replace(mirror, ICON_PATH);
 };
-
 
 /**
  * Replace the Google icon URL with the non-relative image URL.
@@ -368,7 +346,7 @@ os.ui.file.kml.replaceExportableUri = function(src) {
  * @param {string|null|undefined} src The image source URL.
  * @return {!string} The icon src.
  */
-os.ui.file.kml.exportableIconUri = (function() {
+const exportableIconUri = (function() {
   /**
    * Helper object to speed up src to exportable translations
    * @type {Object<string, string>}
@@ -376,18 +354,18 @@ os.ui.file.kml.exportableIconUri = (function() {
   const lookup = {};
 
   return (src) => {
-    if (!os.ui.file.kml.isGoogleMapsAccessible && // fastest test
+    if (!isGoogleMapsAccessible && // fastest test
         !lookup[src] &&
-        os.ui.file.kml.GMAPS_SEARCH.test(src)) { // slowest test
+        GMAPS_SEARCH.test(src)) { // slowest test
       let converted = null;
 
       const secureSource = 'https:' + src.replace(/^[a-z]*:\/\//, '//');
-      const icon = os.ui.file.kml.GOOGLE_EARTH_ICON_SET.find((icon) => secureSource === icon.path);
+      const icon = GOOGLE_EARTH_ICON_SET.find((icon) => secureSource === icon.path);
 
       if (icon) {
-        converted = icon.path.replace(os.ui.file.kml.GMAPS_SEARCH, os.ui.file.kml.mirror);
+        converted = icon.path.replace(GMAPS_SEARCH, mirror);
       } else {
-        converted = os.ui.file.kml.DEFAULT_ICON_PATH.replace(os.ui.file.kml.GMAPS_SEARCH, os.ui.file.kml.mirror);
+        converted = DEFAULT_ICON_PATH.replace(GMAPS_SEARCH, mirror);
       }
 
       lookup[src] = converted; // save to prevent re-work
@@ -396,704 +374,725 @@ os.ui.file.kml.exportableIconUri = (function() {
   };
 })();
 
-
 /**
  * The Google Earth icon set, ordered to match Google Earth.
  * @type {!Array<!osx.icon.Icon>}
- * @const
  */
-os.ui.file.kml.GOOGLE_EARTH_ICON_SET = [
+const GOOGLE_EARTH_ICON_SET = [
   // push pins
   {
     title: 'Yellow Push Pin',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.YLW_PUSHPIN
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.YLW_PUSHPIN
   },
   {
     title: 'Blue Push Pin',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.BLUE_PUSHPIN
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.BLUE_PUSHPIN
   },
   {
     title: 'Green Push Pin',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.GRN_PUSHPIN
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.GRN_PUSHPIN
   },
   {
     title: 'Light Blue Push Pin',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.LTBLU_PUSHPIN
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.LTBLU_PUSHPIN
   },
   {
     title: 'Pink Push Pin',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PINK_PUSHPIN
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.PINK_PUSHPIN
   },
   {
     title: 'Purple Push Pin',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PURPLE_PUSHPIN
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.PURPLE_PUSHPIN
   },
   {
     title: 'Red Push Pin',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.RED_PUSHPIN
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.RED_PUSHPIN
   },
   {
     title: 'White Push Pin',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.WHT_PUSHPIN
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.WHT_PUSHPIN
   },
 
   // alphabet
   {
     title: 'Letter A',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.A
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.A
   },
   {
     title: 'Letter B',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.B
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.B
   },
   {
     title: 'Letter C',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.C
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.C
   },
   {
     title: 'Letter D',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.D
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.D
   },
   {
     title: 'Letter E',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.E
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.E
   },
   {
     title: 'Letter F',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.F
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.F
   },
   {
     title: 'Letter G',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.G
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.G
   },
   {
     title: 'Letter H',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.H
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.H
   },
   {
     title: 'Letter I',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.I
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.I
   },
   {
     title: 'Letter J',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.J
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.J
   },
   {
     title: 'Letter K',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.K
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.K
   },
   {
     title: 'Letter L',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.L
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.L
   },
   {
     title: 'Letter M',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.M
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.M
   },
   {
     title: 'Letter N',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.N
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.N
   },
   {
     title: 'Letter O',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.O
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.O
   },
   {
     title: 'Letter P',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.P
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.P
   },
   {
     title: 'Letter Q',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.Q
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.Q
   },
   {
     title: 'Letter R',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.R
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.R
   },
   {
     title: 'Letter S',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.S
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.S
   },
   {
     title: 'Letter T',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.T
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.T
   },
   {
     title: 'Letter U',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.U
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.U
   },
   {
     title: 'Letter V',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.V
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.V
   },
   {
     title: 'Letter W',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.W
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.W
   },
   {
     title: 'Letter X',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.X
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.X
   },
   {
     title: 'Letter Y',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.Y
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.Y
   },
   {
     title: 'Letter Z',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.Z
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.Z
   },
 
   // numbers
   {
     title: 'Number 1',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.NUM_01
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.NUM_01
   },
   {
     title: 'Number 2',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.NUM_02
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.NUM_02
   },
   {
     title: 'Number 3',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.NUM_03
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.NUM_03
   },
   {
     title: 'Number 4',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.NUM_04
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.NUM_04
   },
   {
     title: 'Number 5',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.NUM_05
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.NUM_05
   },
   {
     title: 'Number 6',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.NUM_06
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.NUM_06
   },
   {
     title: 'Number 7',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.NUM_07
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.NUM_07
   },
   {
     title: 'Number 8',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.NUM_08
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.NUM_08
   },
   {
     title: 'Number 9',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.NUM_09
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.NUM_09
   },
   {
     title: 'Number 10',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.NUM_10
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.NUM_10
   },
 
   // colored paddles
   {
     title: 'Blue Blank',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.BLU_BLANK
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.BLU_BLANK
   },
   {
     title: 'Blue Diamond',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.BLU_DIAMOND
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.BLU_DIAMOND
   },
   {
     title: 'Blue Circle',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.BLU_CIRCLE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.BLU_CIRCLE
   },
   {
     title: 'Blue Square',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.BLU_SQUARE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.BLU_SQUARE
   },
   {
     title: 'Blue Stars',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.BLU_STARS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.BLU_STARS
   },
   {
     title: 'Green Blank',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.GRN_BLANK
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.GRN_BLANK
   },
   {
     title: 'Green Diamond',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.GRN_DIAMOND
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.GRN_DIAMOND
   },
   {
     title: 'Green Circle',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.GRN_CIRCLE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.GRN_CIRCLE
   },
   {
     title: 'Green Square',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.GRN_SQUARE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.GRN_SQUARE
   },
   {
     title: 'Green Stars',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.GRN_STARS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.GRN_STARS
   },
   {
     title: 'Light Blue Blank',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.LTBLU_BLANK
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.LTBLU_BLANK
   },
   {
     title: 'Light Blue Diamond',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.LTBLU_DIAMOND
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.LTBLU_DIAMOND
   },
   {
     title: 'Light Blue Circle',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.LTBLU_CIRCLE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.LTBLU_CIRCLE
   },
   {
     title: 'Light Blue Square',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.LTBLU_SQUARE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.LTBLU_SQUARE
   },
   {
     title: 'Light Blue Stars',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.LTBLU_STARS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.LTBLU_STARS
   },
   {
     title: 'Pink Blank',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PINK_BLANK
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.PINK_BLANK
   },
   {
     title: 'Pink Diamond',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PINK_DIAMOND
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.PINK_DIAMOND
   },
   {
     title: 'Pink Circle',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PINK_CIRCLE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.PINK_CIRCLE
   },
   {
     title: 'Pink Square',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PINK_SQUARE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.PINK_SQUARE
   },
   {
     title: 'Pink Stars',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PINK_STARS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.PINK_STARS
   },
   {
     title: 'Yellow Diamond',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.YLW_DIAMOND
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.YLW_DIAMOND
   },
   {
     title: 'Yellow Circle',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.YLW_CIRCLE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.YLW_CIRCLE
   },
   {
     title: 'Yellow Square',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.YLW_SQUARE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.YLW_SQUARE
   },
   {
     title: 'Yellow Stars',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.YLW_STARS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.YLW_STARS
   },
   {
     title: 'White Blank',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.WHT_BLANK
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.WHT_BLANK
   },
   {
     title: 'White Diamond',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.WHT_DIAMOND
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.WHT_DIAMOND
   },
   {
     title: 'White Circle',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.WHT_CIRCLE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.WHT_CIRCLE
   },
   {
     title: 'White Square',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.WHT_SQUARE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.WHT_SQUARE
   },
   {
     title: 'White Stars',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.WHT_STARS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.WHT_STARS
   },
   {
     title: 'Red Diamond',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.RED_DIAMOND
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.RED_DIAMOND
   },
   {
     title: 'Red Circle',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.RED_CIRCLE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.RED_CIRCLE
   },
   {
     title: 'Red Square',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.RED_SQUARE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.RED_SQUARE
   },
   {
     title: 'Red Stars',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.RED_STARS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.RED_STARS
   },
   {
     title: 'Purple Diamond',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PURPLE_DIAMOND
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.PURPLE_DIAMOND
   },
   {
     title: 'Purple Circle',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PURPLE_CIRCLE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.PURPLE_CIRCLE
   },
   {
     title: 'Purple Square',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PURPLE_SQUARE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.PURPLE_SQUARE
   },
   {
     title: 'Purple Stars',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PURPLE_STARS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.PURPLE_STARS
   },
 
   // white icons
   {
     title: 'Arrow Reverse',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.ARROW_REVERSE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.ARROW_REVERSE
   },
   {
     title: 'Arrow',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.ARROW
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.ARROW
   },
   {
     title: 'Donut',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.DONUT
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.DONUT
   },
   {
     title: 'Forbidden',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.FORBIDDEN
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.FORBIDDEN
   },
   {
     title: 'Info I',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.INFO_I
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.INFO_I
   },
   {
     title: 'Polygon',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.POLYGON
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.POLYGON
   },
   {
     title: 'Diamond',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.OPEN_DIAMOND
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.OPEN_DIAMOND
   },
   {
     title: 'Square',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.SQUARE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.SQUARE
   },
   {
     title: 'Star',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.STAR
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.STAR
   },
   {
     title: 'Target',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.TARGET
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.TARGET
   },
   {
     title: 'Triangle',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.TRIANGLE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.TRIANGLE
   },
   {
     title: 'Crosshairs',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.CROSSHAIRS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.CROSSHAIRS
   },
   {
     title: 'Square',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PLACEMARK_SQUARE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.PLACEMARK_SQUARE
   },
   {
     title: 'Circle',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PLACEMARK_CIRCLE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.PLACEMARK_CIRCLE
   },
   {
     title: 'Shaded Dot',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.SHADED_DOT
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.SHADED_DOT
   },
   {
     title: 'Airports White',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.AIRPORTS_WHITE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.AIRPORTS_WHITE
   },
 
   // light blue icons
   {
     title: 'Dining',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.DINING
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.DINING
   },
   {
     title: 'Coffee',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.COFFEE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.COFFEE
   },
   {
     title: 'Bars',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.BARS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.BARS
   },
   {
     title: 'Snack Bar',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.SNACK_BAR
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.SNACK_BAR
   },
   {
     title: 'Man',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.MAN
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.MAN
   },
   {
     title: 'Woman',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.WOMAN
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.WOMAN
   },
   {
     title: 'Wheel Chair Accessible',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.WHEEL_CHAIR_ACCESSIBLE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.WHEEL_CHAIR_ACCESSIBLE
   },
 
   // dark blue icons
   {
     title: 'Parking Lot',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PARKING_LOT
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.PARKING_LOT
   },
   {
     title: 'Cabs',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.CABS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.CABS
   },
   {
     title: 'Bus',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.BUS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.BUS
   },
   {
     title: 'Truck',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.TRUCK
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.TRUCK
   },
   {
     title: 'Rail',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.RAIL
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.RAIL
   },
   {
     title: 'Airports',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.AIRPORTS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.AIRPORTS
   },
   {
     title: 'Ferry',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.FERRY
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.FERRY
   },
   {
     title: 'Heliport',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.HELIPORT
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.HELIPORT
   },
   {
     title: 'Subway',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.SUBWAY
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.SUBWAY
   },
   {
     title: 'Tram',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.TRAM
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.TRAM
   },
 
   // blue icons
   {
     title: 'Info',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.INFO
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.INFO
   },
   {
     title: 'Circle',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.INFO_CIRCLE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.INFO_CIRCLE
   },
   {
     title: 'Flag',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.FLAG
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.FLAG
   },
   {
     title: 'Rainy',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.RAINY
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.RAINY
   },
   {
     title: 'Water',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.WATER
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.WATER
   },
   {
     title: 'Snowflake Simple',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.SNOWFLAKE_SIMPLE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.SNOWFLAKE_SIMPLE
   },
   {
     title: 'Marina',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.MARINA
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.MARINA
   },
   {
     title: 'Fishing',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.FISHING
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.FISHING
   },
   {
     title: 'Sailing',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.SAILING
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.SAILING
   },
   {
     title: 'Swimming',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.SWIMMING
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.SWIMMING
   },
   {
     title: 'Ski',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.SKI
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.SKI
   },
 
   // green icons
   {
     title: 'Parks',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PARKS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.PARKS
   },
   {
     title: 'Campfire',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.CAMPFIRE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.CAMPFIRE
   },
   {
     title: 'Picnic',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PICNIC
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.PICNIC
   },
   {
     title: 'Campground',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.CAMPGROUND
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.CAMPGROUND
   },
   {
     title: 'Ranger Station',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.RANGER_STATION
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.RANGER_STATION
   },
   {
     title: 'Toilets',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.TOILETS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.TOILETS
   },
   {
     title: 'Poi',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.POI
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.POI
   },
   {
     title: 'Hiker',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.HIKER
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.HIKER
   },
   {
     title: 'Cycling',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.CYCLING
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.CYCLING
   },
   {
     title: 'Motorcycling',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.MOTORCYCLING
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.MOTORCYCLING
   },
   {
     title: 'Horseback Riding',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.HORSEBACKRIDING
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.HORSEBACKRIDING
   },
   {
     title: 'Play',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PLAY
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.PLAY
   },
   {
     title: 'Golf',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.GOLF
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.GOLF
   },
   {
     title: 'Trail',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.TRAIL
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.TRAIL
   },
 
   // yellow icons
   {
     title: 'Shopping',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.SHOPPING
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.SHOPPING
   },
   {
     title: 'Movies',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.MOVIES
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.MOVIES
   },
   {
     title: 'Convenience',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.CONVENIENCE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.CONVENIENCE
   },
   {
     title: 'Grocery',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.GROCERY
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.GROCERY
   },
   {
     title: 'Arts',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.ARTS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.ARTS
   },
   {
     title: 'Home Garden Business',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.HOMEGARDENBUSINESS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.HOMEGARDENBUSINESS
   },
   {
     title: 'Electronics',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.ELECTRONICS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.ELECTRONICS
   },
   {
     title: 'Mechanic',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.MECHANIC
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.MECHANIC
   },
   {
     title: 'Gas Stations',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.GAS_STATIONS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.GAS_STATIONS
   },
   {
     title: 'Real Estate',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.REALESTATE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.REALESTATE
   },
   {
     title: 'Salon',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.SALON
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.SALON
   },
   {
     title: 'Dollar',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.DOLLAR
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.DOLLAR
   },
   {
     title: 'Euro',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.EURO
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.EURO
   },
   {
     title: 'Yen',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.YEN
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.YEN
   },
 
   // red icons
   {
     title: 'Firedept',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.FIREDEPT
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.FIREDEPT
   },
   {
     title: 'Hospitals',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.HOSPITALS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.HOSPITALS
   },
   {
     title: 'Lodging',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.LODGING
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.LODGING
   },
   {
     title: 'Phone',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PHONE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.PHONE
   },
   {
     title: 'Caution',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.CAUTION
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.CAUTION
   },
   {
     title: 'Earthquake',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.EARTHQUAKE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.EARTHQUAKE
   },
   {
     title: 'Falling Rocks',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.FALLING_ROCKS
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.FALLING_ROCKS
   },
 
   // orange icons
   {
     title: 'Post Office',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.POST_OFFICE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.POST_OFFICE
   },
   {
     title: 'Police',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.POLICE
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.POLICE
   },
   {
     title: 'Sunny',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.SUNNY
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.SUNNY
   },
   {
     title: 'Partly Cloudy',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.PARTLY_CLOUDY
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.PARTLY_CLOUDY
   },
   {
     title: 'Volcano',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.VOLCANO
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.VOLCANO
   },
 
   // purple icons
   {
     title: 'Camera',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.CAMERA
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.CAMERA
   },
   {
     title: 'Webcam',
-    path: os.ui.file.kml.GOOGLE_EARTH_URL + os.ui.file.kml.GoogleEarthIcons.WEBCAM
+    path: GOOGLE_EARTH_URL + GoogleEarthIcons.WEBCAM
   }
 ];
+
+exports = {
+  RefreshMode,
+  ViewRefreshMode,
+  ElementType,
+  StyleType,
+  GOOGLE_EARTH_URL,
+  ICON_PATH,
+  GoogleEarthIcons,
+  DEFAULT_ICON_PATH,
+  DEFAULT_ICON_TITLE,
+  DEFAULT_ICON_OPTIONS,
+  DEFAULT_ICON,
+  GMAPS_SEARCH,
+  getDefaultIcon,
+  isGoogleMapsAccessible,
+  mirror,
+  replaceGoogleUri,
+  replaceExportableUri,
+  exportableIconUri,
+  GOOGLE_EARTH_ICON_SET,
+  Icon
+};
