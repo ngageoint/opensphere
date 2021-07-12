@@ -1,8 +1,8 @@
 goog.provide('os.ui.feature.FeatureInfoTabManager');
 
+goog.require('os.ui.feature.tab.DescriptionTabUI');
+goog.require('os.ui.feature.tab.PropertiesTabUI');
 goog.require('os.ui.feature.tab.descriptionEnableFunction');
-goog.require('os.ui.feature.tab.descriptionTabDirective');
-goog.require('os.ui.feature.tab.propertiesTabDirective');
 goog.require('os.ui.tab.FeatureTab');
 
 
@@ -27,7 +27,7 @@ goog.addSingletonGetter(os.ui.feature.FeatureInfoTabManager);
  * @type {os.ui.tab.FeatureTab}
  */
 os.ui.feature.FeatureInfoTabManager.PROPERTIES_TAB =
-    new os.ui.tab.FeatureTab('props', 'Properties', 'fa-th', 'propertiestab');
+    new os.ui.tab.FeatureTab('props', 'Properties', 'fa-th', os.ui.feature.tab.PropertiesTabUI.directiveTag);
 
 
 /**
@@ -35,7 +35,7 @@ os.ui.feature.FeatureInfoTabManager.PROPERTIES_TAB =
  * @type {os.ui.tab.FeatureTab}
  */
 os.ui.feature.FeatureInfoTabManager.DESCRIPTION_TAB = new
-os.ui.tab.FeatureTab('desc', 'Description', 'fa-newspaper-o', 'descriptiontab',
+os.ui.tab.FeatureTab('desc', 'Description', 'fa-newspaper-o', os.ui.feature.tab.DescriptionTabUI.directiveTag,
     null, os.ui.feature.tab.descriptionEnableFunction);
 
 
