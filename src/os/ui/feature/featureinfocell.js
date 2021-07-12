@@ -8,6 +8,7 @@ goog.require('os.ui');
 goog.require('os.ui.Module');
 goog.require('os.ui.columnactions.ColumnActionManager');
 goog.require('os.ui.columnactions.SimpleColumnActionModel');
+goog.require('os.ui.feature.FeatureInfoEvent');
 goog.require('os.ui.formatter');
 goog.require('os.ui.location.SimpleLocationDirective');
 goog.require('os.ui.propertyInfoDirective');
@@ -145,7 +146,7 @@ os.ui.feature.FeatureInfoCellCtrl.prototype.init_ = function() {
  * @export
  */
 os.ui.feature.FeatureInfoCellCtrl.prototype.showDescription = function() {
-  this.scope_.$emit(os.ui.feature.FeatureInfoCtrl.SHOW_DESCRIPTION);
+  this.scope_.$emit(os.ui.feature.FeatureInfoEvent.SHOW_DESCRIPTION);
 };
 
 

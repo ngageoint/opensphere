@@ -9,6 +9,7 @@ goog.require('os.layer');
 goog.require('os.map');
 goog.require('os.plugin.PluginManager');
 goog.require('os.ui.Module');
+goog.require('os.ui.feature.FeatureInfoEvent');
 goog.require('os.ui.feature.FeatureInfoTabManager');
 goog.require('os.ui.feature.SimplePropertiesUI');
 goog.require('os.ui.location.SimpleLocationDirective');
@@ -96,26 +97,10 @@ os.ui.feature.FeatureInfoCtrl = function($scope, $element) {
   os.unit.UnitManager.getInstance().listen(goog.events.EventType.PROPERTYCHANGE, this.updateGeometry, false, this);
   os.dispatcher.listen(os.data.FeatureEventType.VALUECHANGE, this.onValueChange, false, this);
   $scope.$watch('items', this.onFeatureChange.bind(this));
-  $scope.$on(os.ui.feature.FeatureInfoCtrl.SHOW_DESCRIPTION, this.showDescription.bind(this));
+  $scope.$on(os.ui.feature.FeatureInfoEvent.SHOW_DESCRIPTION, this.showDescription.bind(this));
   $scope.$on('$destroy', this.dispose.bind(this));
 };
 goog.inherits(os.ui.feature.FeatureInfoCtrl, goog.Disposable);
-
-
-/**
- * Angular event type for switching this view to the description tab.
- * @type {string}
- * @const
- */
-os.ui.feature.FeatureInfoCtrl.SHOW_DESCRIPTION = 'os.ui.feature.FeatureInfoCtrl.showDescription';
-
-
-/**
- * Angular event type for updating all tabs.
- * @type {string}
- * @const
- */
-os.ui.feature.FeatureInfoCtrl.UPDATE_TABS = 'os.ui.feature.FeatureInfoCtrl.updateTabs';
 
 
 /**
@@ -315,7 +300,7 @@ os.ui.feature.FeatureInfoCtrl.prototype.updateTabs_ = function() {
     this.setInitialActiveTab_();
   }
 
-  this.scope.$broadcast(os.ui.feature.FeatureInfoCtrl.UPDATE_TABS, loadedFeature);
+  this.scope.$broadcast(os.ui.feature.FeatureInfoEvent.UPDATE_TABS, loadedFeature);
 };
 
 

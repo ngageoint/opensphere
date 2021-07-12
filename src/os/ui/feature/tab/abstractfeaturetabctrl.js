@@ -4,7 +4,7 @@ goog.module.declareLegacyNamespace();
 const Feature = goog.require('ol.Feature');
 const RenderFeature = goog.require('ol.render.Feature');
 const {apply} = goog.require('os.ui');
-const FeatureInfoCtrl = goog.require('os.ui.feature.FeatureInfoCtrl');
+const FeatureInfoEvent = goog.require('os.ui.feature.FeatureInfoEvent');
 
 /**
  * Abstract controller for feature tabs.
@@ -37,7 +37,7 @@ class AbstractFeatureTabCtrl {
       }.bind(this), 0);
     }
 
-    this.scope.$on(FeatureInfoCtrl.UPDATE_TABS, this.updateTab.bind(this));
+    this.scope.$on(FeatureInfoEvent.UPDATE_TABS, this.updateTab.bind(this));
     this.scope.$on('$destroy', this.destroy.bind(this));
   }
 
