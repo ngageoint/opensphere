@@ -1,8 +1,16 @@
-goog.provide('os.ui.file.UrlImportCtrl');
-goog.provide('os.ui.file.urlImportDirective');
+goog.module('os.ui.file.UrlImportUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
 goog.require('os.ui.util.ValidationMessageUI');
+
+const {ROOT} = goog.require('os');
+const EventType = goog.require('os.events.EventType');
+const {apply} = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const osWindow = goog.require('os.ui.window');
+
+const UrlMethod = goog.requireType('os.ui.file.method.UrlMethod');
 
 
 /**
@@ -10,166 +18,171 @@ goog.require('os.ui.util.ValidationMessageUI');
  *
  * @return {angular.Directive}
  */
-os.ui.file.urlImportDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    templateUrl: os.ROOT + 'views/file/urlimport.html',
-    controller: os.ui.file.UrlImportCtrl,
-    controllerAs: 'urlImport'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: true,
+  templateUrl: ROOT + 'views/file/urlimport.html',
+  controller: Controller,
+  controllerAs: 'urlImport'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'urlimport';
 
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('urlimport', [os.ui.file.urlImportDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for the URL import dialog
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.file.UrlImportCtrl = function($scope, $element) {
+class Controller {
   /**
-   * @type {?angular.Scope}
-   * @private
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
    */
-  this.scope_ = $scope;
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
 
-  /**
-   * @type {?angular.JQLite}
-   * @private
-   */
-  this.element_ = $element;
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
 
-  /**
-   * @type {boolean}
-   * @private
-   */
-  this.methodLoaded_ = false;
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.methodLoaded_ = false;
 
-  /**
-   * @type {boolean}
-   */
-  this['loading'] = false;
+    /**
+     * @type {boolean}
+     */
+    this['loading'] = false;
 
-  /**
-   * @type {string}
-   */
-  this['url'] = '';
+    /**
+     * @type {string}
+     */
+    this['url'] = '';
 
-  // bring focus to the url input
-  this.element_.find('input[name="url"]').focus();
+    // bring focus to the url input
+    this.element_.find('input[name="url"]').focus();
 
-  $scope.$emit(os.ui.WindowEventType.READY);
-  $scope.$on('$destroy', this.onDestroy_.bind(this));
-};
-
-
-/**
- * Clean up references/listeners.
- *
- * @private
- */
-os.ui.file.UrlImportCtrl.prototype.onDestroy_ = function() {
-  if (!this.methodLoaded_) {
-    this.cancelMethod_();
+    $scope.$emit(WindowEventType.READY);
+    $scope.$on('$destroy', this.onDestroy_.bind(this));
   }
 
-  this.scope_ = null;
-  this.element_ = null;
-};
+  /**
+   * Clean up references/listeners.
+   *
+   * @private
+   */
+  onDestroy_() {
+    if (!this.methodLoaded_) {
+      this.cancelMethod_();
+    }
 
+    this.scope_ = null;
+    this.element_ = null;
+  }
 
-/**
- * Create import command and close the window
- *
- * @export
- */
-os.ui.file.UrlImportCtrl.prototype.accept = function() {
-  if (!this.scope_['urlForm']['$invalid'] && this.scope_['method']) {
-    this['loading'] = true;
+  /**
+   * Create import command and close the window
+   *
+   * @export
+   */
+  accept() {
+    if (!this.scope_['urlForm']['$invalid'] && this.scope_['method']) {
+      this['loading'] = true;
 
-    var method = /** @type {os.ui.file.method.UrlMethod} */ (this.scope_['method']);
-    method.setUrl(this['url']);
-    method.listenOnce(os.events.EventType.COMPLETE, this.onLoadComplete_, false, this);
-    method.listenOnce(os.events.EventType.CANCEL, this.onLoadComplete_, false, this);
-    method.listenOnce(os.events.EventType.ERROR, this.onLoadError_, false, this);
-    method.loadFile();
-  } else {
-    // TODO: display an error? this shouldn't be possible
+      var method = /** @type {UrlMethod} */ (this.scope_['method']);
+      method.setUrl(this['url']);
+      method.listenOnce(EventType.COMPLETE, this.onLoadComplete_, false, this);
+      method.listenOnce(EventType.CANCEL, this.onLoadComplete_, false, this);
+      method.listenOnce(EventType.ERROR, this.onLoadError_, false, this);
+      method.loadFile();
+    } else {
+      // TODO: display an error? this shouldn't be possible
+      this.close();
+    }
+  }
+
+  /**
+   * Close the window.
+   *
+   * @export
+   */
+  close() {
+    if (this.element_) {
+      osWindow.close(this.element_);
+    }
+  }
+
+  /**
+   * Fires a cancel event on the method so listeners can respond appropriately.
+   *
+   * @private
+   */
+  cancelMethod_() {
+    var method = /** @type {UrlMethod} */ (this.scope_['method']);
+    if (method) {
+      method.unlisten(EventType.COMPLETE, this.onLoadComplete_, false, this);
+      method.unlisten(EventType.CANCEL, this.onLoadComplete_, false, this);
+      method.unlisten(EventType.ERROR, this.onLoadError_, false, this);
+
+      method.dispatchEvent(EventType.CANCEL);
+    }
+  }
+
+  /**
+   * Handle URL method load complete.
+   *
+   * @param {goog.events.Event} event The event
+   * @private
+   */
+  onLoadComplete_(event) {
+    var method = /** @type {UrlMethod} */ (event.target);
+    method.unlisten(EventType.COMPLETE, this.onLoadComplete_, false, this);
+    method.unlisten(EventType.CANCEL, this.onLoadComplete_, false, this);
+    method.unlisten(EventType.ERROR, this.onLoadError_, false, this);
+
+    this.methodLoaded_ = true;
+    this['loading'] = false;
     this.close();
   }
-};
 
+  /**
+   * Handle URL method load error. This should not close the form so the user can correct the error.
+   *
+   * @param {goog.events.Event} event The event
+   * @private
+   */
+  onLoadError_(event) {
+    var method = /** @type {UrlMethod} */ (event.target);
+    method.unlisten(EventType.COMPLETE, this.onLoadComplete_, false, this);
+    method.unlisten(EventType.CANCEL, this.onLoadComplete_, false, this);
+    method.unlisten(EventType.ERROR, this.onLoadError_, false, this);
 
-/**
- * Close the window.
- *
- * @export
- */
-os.ui.file.UrlImportCtrl.prototype.close = function() {
-  if (this.element_) {
-    os.ui.window.close(this.element_);
+    this['loading'] = false;
+    apply(this.scope_);
   }
-};
+}
 
-
-/**
- * Fires a cancel event on the method so listeners can respond appropriately.
- *
- * @private
- */
-os.ui.file.UrlImportCtrl.prototype.cancelMethod_ = function() {
-  var method = /** @type {os.ui.file.method.UrlMethod} */ (this.scope_['method']);
-  if (method) {
-    method.unlisten(os.events.EventType.COMPLETE, this.onLoadComplete_, false, this);
-    method.unlisten(os.events.EventType.CANCEL, this.onLoadComplete_, false, this);
-    method.unlisten(os.events.EventType.ERROR, this.onLoadError_, false, this);
-
-    method.dispatchEvent(os.events.EventType.CANCEL);
-  }
-};
-
-
-/**
- * Handle URL method load complete.
- *
- * @param {goog.events.Event} event The event
- * @private
- */
-os.ui.file.UrlImportCtrl.prototype.onLoadComplete_ = function(event) {
-  var method = /** @type {os.ui.file.method.UrlMethod} */ (event.target);
-  method.unlisten(os.events.EventType.COMPLETE, this.onLoadComplete_, false, this);
-  method.unlisten(os.events.EventType.CANCEL, this.onLoadComplete_, false, this);
-  method.unlisten(os.events.EventType.ERROR, this.onLoadError_, false, this);
-
-  this.methodLoaded_ = true;
-  this['loading'] = false;
-  this.close();
-};
-
-
-/**
- * Handle URL method load error. This should not close the form so the user can correct the error.
- *
- * @param {goog.events.Event} event The event
- * @private
- */
-os.ui.file.UrlImportCtrl.prototype.onLoadError_ = function(event) {
-  var method = /** @type {os.ui.file.method.UrlMethod} */ (event.target);
-  method.unlisten(os.events.EventType.COMPLETE, this.onLoadComplete_, false, this);
-  method.unlisten(os.events.EventType.CANCEL, this.onLoadComplete_, false, this);
-  method.unlisten(os.events.EventType.ERROR, this.onLoadError_, false, this);
-
-  this['loading'] = false;
-  os.ui.apply(this.scope_);
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
