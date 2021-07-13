@@ -1296,14 +1296,14 @@ class MapContainer extends EventTarget {
         }
 
         // Use the default fly to features behavior.
-        osFeature.flyToOverride = undefined;
+        osFeature.setFlyToOverride(undefined);
       } else {
         // reset all synchronizers to a clean state. this needs to be called after WebGL is enabled/rendering to ensure
         // synchronized objects are reset in the correct state.
         this.webGLRenderer_.resetSync();
 
         // Use the WebGL renderer when flying to feature for a more accurate 3D view.
-        osFeature.flyToOverride = this.webGLRenderer_.flyToFeatures.bind(this.webGLRenderer_);
+        osFeature.setFlyToOverride(this.webGLRenderer_.flyToFeatures.bind(this.webGLRenderer_));
       }
 
       this.dispatchEvent(OSEventType.MAP_MODE);
