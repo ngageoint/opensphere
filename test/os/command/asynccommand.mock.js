@@ -12,14 +12,16 @@ const State = goog.require('os.command.State');
 class AsyncMockCommand extends EventTarget {
   /**
    * Constructor.
+   * @param {boolean=} opt_manual If onExecute/onRevert will be manually called.
    */
-  constructor() {
+  constructor(opt_manual = false) {
     super();
 
     this.isAsync = true;
     this.title = 'Test Async Command';
     this.details = 'Async Incremented value by 1';
     this.state = State.READY;
+    this.manual = opt_manual;
   }
 
   /**
@@ -35,9 +37,12 @@ class AsyncMockCommand extends EventTarget {
   execute() {
     this.state = State.EXECUTING;
 
-    setTimeout(() => {
-      this.onExecute();
-    }, 1000);
+    if (!this.manual) {
+      // Defer execute until after this function returns.
+      setTimeout(() => {
+        this.onExecute();
+      });
+    }
 
     return true;
   }
@@ -57,9 +62,12 @@ class AsyncMockCommand extends EventTarget {
   revert() {
     this.state = State.REVERTING;
 
-    setTimeout(() => {
-      this.onRevert();
-    }, 1000);
+    if (!this.manual) {
+      // Defer revert until after this function returns.
+      setTimeout(() => {
+        this.onRevert();
+      });
+    }
 
     return true;
   }

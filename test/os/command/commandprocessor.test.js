@@ -440,7 +440,7 @@ describe('os.command.CommandProcessor', function() {
     MockCommand.value = 0;
     MockCommandString.str = '';
 
-    var hanger = new AsyncMockCommand();
+    var hanger = new AsyncMockCommand(true);
     spyOn(hanger, 'execute').andCallThrough();
     spyOn(hanger, 'revert').andCallThrough();
     spyOn(hanger, 'onRevert').andCallThrough();
@@ -463,6 +463,8 @@ describe('os.command.CommandProcessor', function() {
 
       expect(hanger.revert).not.toHaveBeenCalled();
       expect(MockCommand.value).toBe(2);
+
+      hanger.onExecute();
     });
 
     waitsFor(function() {
@@ -473,6 +475,8 @@ describe('os.command.CommandProcessor', function() {
       expect(cp.getCurrent()).toBe(2);
       expect(hanger.revert.calls.length).toBe(1);
       expect(MockCommand.value).toBe(3);
+
+      hanger.onRevert();
     });
 
     waitsFor(function() {
