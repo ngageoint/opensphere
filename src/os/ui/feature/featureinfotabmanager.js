@@ -1,71 +1,94 @@
-goog.provide('os.ui.feature.FeatureInfoTabManager');
+goog.module('os.ui.feature.FeatureInfoTabManager');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.feature.tab.DescriptionTabUI');
-goog.require('os.ui.feature.tab.PropertiesTabUI');
-goog.require('os.ui.feature.tab.descriptionEnableFunction');
-goog.require('os.ui.tab.FeatureTab');
-
-
+const DescriptionTabUI = goog.require('os.ui.feature.tab.DescriptionTabUI');
+const PropertiesTabUI = goog.require('os.ui.feature.tab.PropertiesTabUI');
+const descriptionEnableFunction = goog.require('os.ui.feature.tab.descriptionEnableFunction');
+const FeatureTab = goog.require('os.ui.tab.FeatureTab');
 
 /**
  * Tab manager for the feature info
- *
- * @constructor
+ * @unrestricted
  */
-os.ui.feature.FeatureInfoTabManager = function() {
+class FeatureInfoTabManager {
   /**
-   * Array of tabs to show.
-   * @type {Array.<os.ui.tab.FeatureTab>}
+   * Constructor.
    */
-  this['registeredTabs'] = os.ui.feature.FeatureInfoTabManager.TABS;
-};
-goog.addSingletonGetter(os.ui.feature.FeatureInfoTabManager);
+  constructor() {
+    /**
+     * Array of tabs to show.
+     * @type {Array<FeatureTab>}
+     */
+    this['registeredTabs'] = FeatureInfoTabManager.TABS;
+  }
 
+  /**
+   * Retrieve a copy of the registered tabs
+   *
+   * @return {Array<FeatureTab>} clone of the registered tabs
+   */
+  getTabs() {
+    return this['registeredTabs'];
+  }
+
+  /**
+   * Register a tab with the tab manager
+   *
+   * @param {FeatureTab} tab The tab to register
+   */
+  registerTab(tab) {
+    if (tab) {
+      this['registeredTabs'].push(tab);
+    }
+  }
+
+  /**
+   * Get the global instance.
+   * @return {!FeatureInfoTabManager}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new FeatureInfoTabManager();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {FeatureInfoTabManager} value
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
+
+/**
+ * Global instance.
+ * @type {FeatureInfoTabManager|undefined}
+ */
+let instance;
 
 /**
  * The default properties tab.
- * @type {os.ui.tab.FeatureTab}
+ * @type {FeatureTab}
  */
-os.ui.feature.FeatureInfoTabManager.PROPERTIES_TAB =
-    new os.ui.tab.FeatureTab('props', 'Properties', 'fa-th', os.ui.feature.tab.PropertiesTabUI.directiveTag);
-
+FeatureInfoTabManager.PROPERTIES_TAB = new FeatureTab('props', 'Properties', 'fa-th', PropertiesTabUI.directiveTag);
 
 /**
  * The description tab.
- * @type {os.ui.tab.FeatureTab}
+ * @type {FeatureTab}
  */
-os.ui.feature.FeatureInfoTabManager.DESCRIPTION_TAB = new
-os.ui.tab.FeatureTab('desc', 'Description', 'fa-newspaper-o', os.ui.feature.tab.DescriptionTabUI.directiveTag,
-    null, os.ui.feature.tab.descriptionEnableFunction);
-
+FeatureInfoTabManager.DESCRIPTION_TAB = new FeatureTab('desc', 'Description', 'fa-newspaper-o',
+    DescriptionTabUI.directiveTag, null, descriptionEnableFunction);
 
 /**
  * Array of tabs to show on this mashup.
- * @type {Array.<os.ui.tab.FeatureTab>}
+ * @type {Array<FeatureTab>}
  */
-os.ui.feature.FeatureInfoTabManager.TABS = [
-  os.ui.feature.FeatureInfoTabManager.PROPERTIES_TAB,
-  os.ui.feature.FeatureInfoTabManager.DESCRIPTION_TAB
+FeatureInfoTabManager.TABS = [
+  FeatureInfoTabManager.PROPERTIES_TAB,
+  FeatureInfoTabManager.DESCRIPTION_TAB
 ];
 
-
-/**
- * Retrieve a copy of the registered tabs
- *
- * @return {Array.<os.ui.tab.FeatureTab>} clone of the registered tabs
- */
-os.ui.feature.FeatureInfoTabManager.prototype.getTabs = function() {
-  return this['registeredTabs'];
-};
-
-
-/**
- * Register a tab with the tab manager
- *
- * @param {os.ui.tab.FeatureTab} tab The tab to register
- */
-os.ui.feature.FeatureInfoTabManager.prototype.registerTab = function(tab) {
-  if (tab) {
-    this['registeredTabs'].push(tab);
-  }
-};
+exports = FeatureInfoTabManager;

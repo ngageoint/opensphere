@@ -16,7 +16,7 @@ goog.require('os.query.BaseAreaManager');
 goog.require('os.query.ui.mergeAreasDirective');
 goog.require('os.source.IModifiableSource');
 goog.require('os.ui.ex.AreaExportUI');
-goog.require('os.ui.feature.featureInfoDirective');
+goog.require('os.ui.feature.launchMultiFeatureInfo');
 goog.require('os.ui.menu.Menu');
 goog.require('os.ui.menu.MenuItem');
 goog.require('os.ui.menu.MenuItemType');

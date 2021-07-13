@@ -1,10 +1,9 @@
 goog.module('os.ui.feature.SimplePropertiesUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.feature.featureInfoCellDirective');
-
 const OsFeature = goog.require('os.feature');
 const OsModule = goog.require('os.ui.Module');
+const {directiveTag: cellUi} = goog.require('os.ui.feature.FeatureInfoCellUI');
 const OsSettings = goog.require('os.config.Settings');
 
 const Feature = goog.requireType('ol.Feature');
@@ -226,7 +225,7 @@ const directive = () => ({
   template: `
 <div>
   <span ng-repeat="property in propCtrl.properties">
-    <span>{{property.field}}</span>: <featureinfocell property="property"></featureinfocell><br />
+    <span>{{property.field}}</span>: <${cellUi} property="property"></${cellUi}><br />
   </span>
 </div>
 `

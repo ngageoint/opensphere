@@ -1,7 +1,6 @@
 goog.module('plugin.vectortile.DoubleClick');
 
 goog.require('os.mixin.renderfeature');
-goog.require('os.ui.feature.multiFeatureInfoDirective');
 
 const {getUid} = goog.require('ol');
 const OLMap = goog.require('ol.Map');

@@ -1,7 +1,7 @@
 goog.module('os.ui.feature.tab.PropertiesTabUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.feature.featureInfoCellDirective');
+goog.require('os.ui.feature.FeatureInfoCellUI');
 
 const GoogEventType = goog.require('goog.events.EventType');
 const {numerateCompare} = goog.require('goog.string');

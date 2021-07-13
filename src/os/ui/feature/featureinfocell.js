@@ -1,18 +1,20 @@
-goog.provide('os.ui.feature.FeatureInfoCellCtrl');
-goog.provide('os.ui.feature.featureInfoCellDirective');
+goog.module('os.ui.feature.FeatureInfoCellUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.object');
-goog.require('goog.string');
-goog.require('os');
-goog.require('os.ui');
-goog.require('os.ui.Module');
-goog.require('os.ui.columnactions.ColumnActionManager');
-goog.require('os.ui.columnactions.SimpleColumnActionModel');
-goog.require('os.ui.feature.FeatureInfoEvent');
-goog.require('os.ui.formatter');
 goog.require('os.ui.location.SimpleLocationDirective');
 goog.require('os.ui.propertyInfoDirective');
-goog.require('os.ui.text');
+
+const {ROOT} = goog.require('os');
+const Fields = goog.require('os.Fields');
+const fields = goog.require('os.fields');
+const ui = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+const ColumnActionManager = goog.require('os.ui.columnactions.ColumnActionManager');
+const SimpleColumnActionModel = goog.require('os.ui.columnactions.SimpleColumnActionModel');
+const launchColumnActionPrompt = goog.require('os.ui.columnactions.launchColumnActionPrompt');
+const FeatureInfoEvent = goog.require('os.ui.feature.FeatureInfoEvent');
+const {urlNewTabFormatter} = goog.require('os.ui.formatter');
+const {copy: copyText} = goog.require('os.ui.text');
 
 
 /**
@@ -20,166 +22,171 @@ goog.require('os.ui.text');
  *
  * @return {angular.Directive}
  */
-os.ui.feature.featureInfoCellDirective = function() {
-  return {
-    restrict: 'E',
-    scope: {
-      'property': '='
-    },
-    replace: true,
-    templateUrl: os.ROOT + 'views/feature/featureinfocell.html',
-    controller: os.ui.feature.FeatureInfoCellCtrl,
-    controllerAs: 'cell'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  scope: {
+    'property': '='
+  },
+  replace: true,
+  templateUrl: ROOT + 'views/feature/featureinfocell.html',
+  controller: Controller,
+  controllerAs: 'cell'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'featureinfocell';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('featureinfocell', [os.ui.feature.featureInfoCellDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller function for the featureinfo directive
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$sce} $sce
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.feature.FeatureInfoCellCtrl = function($scope, $element, $sce) {
+class Controller {
   /**
-   * @type {?angular.Scope}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$sce} $sce
+   * @ngInject
+   */
+  constructor($scope, $element, $sce) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
+
+    /**
+     * @type {?angular.$sce}
+     * @private
+     */
+    this.sce_ = $sce;
+
+    /**
+     * Value to show in the copy window
+     * @type {string}
+     * @private
+     */
+    this.copyValue_ = '';
+    this.init_();
+    $scope.$on('$destroy', this.destroy_.bind(this));
+  }
+
+  /**
+   * Clean up.
+   *
    * @private
    */
-  this.scope_ = $scope;
+  destroy_() {
+    this.scope_ = null;
+    this.element_ = null;
+    this.sce_ = null;
+  }
 
   /**
-   * @type {?angular.JQLite}
+   * Setup the cell by the type
+   *
    * @private
    */
-  this.element_ = $element;
+  init_() {
+    var property = this.scope_['property'];
+    var value = property['value'];
 
-  /**
-   * @type {?angular.$sce}
-   * @private
-   */
-  this.sce_ = $sce;
+    this.element_.parent().dblclick(this.onDblClick_.bind(this));
+    this.copyValue_ = value;
+    this.scope_['type'] = '';
 
-  /**
-   * Value to show in the copy window
-   * @type {string}
-   * @private
-   */
-  this.copyValue_ = '';
-  this.init_();
-  $scope.$on('$destroy', this.destroy_.bind(this));
-};
+    if (value) {
+      this.scope_['ca'] = new SimpleColumnActionModel(property['field']);
+      this.scope_['actions'] =
+          ColumnActionManager.getInstance().getActions(null, this.scope_['ca'], value);
 
+      if (property['field'] == Fields.PROPERTIES && typeof value === 'object') {
+        // add the View Properties link
+        try {
+          this.copyValue_ = JSON.stringify(value);
+        } catch (e) {
+          // not serializable, womp womp
+          this.copyValue_ = '';
+        }
 
-/**
- * Clean up.
- *
- * @private
- */
-os.ui.feature.FeatureInfoCellCtrl.prototype.destroy_ = function() {
-  this.scope_ = null;
-  this.element_ = null;
-  this.sce_ = null;
-};
-
-
-/**
- * Setup the cell by the type
- *
- * @private
- */
-os.ui.feature.FeatureInfoCellCtrl.prototype.init_ = function() {
-  var property = this.scope_['property'];
-  var value = property['value'];
-
-  this.element_.parent().dblclick(this.onDblClick_.bind(this));
-  this.copyValue_ = value;
-  this.scope_['type'] = '';
-
-  if (value) {
-    this.scope_['ca'] = new os.ui.columnactions.SimpleColumnActionModel(property['field']);
-    this.scope_['actions'] =
-        os.ui.columnactions.ColumnActionManager.getInstance().getActions(null, this.scope_['ca'], value);
-
-    if (property['field'] == os.Fields.PROPERTIES && typeof value === 'object') {
-      // add the View Properties link
-      try {
-        this.copyValue_ = JSON.stringify(value);
-      } catch (e) {
-        // not serializable, womp womp
-        this.copyValue_ = '';
+        this.scope_['type'] = 'prop';
+      } else if (this.scope_['actions'].length > 0) {
+        // we have column actions, use those
+        this.scope_['type'] = 'ca';
+        if (this.scope_['actions'].length == 1) {
+          this.scope_['action'] = this.scope_['actions'][0].getAction(value);
+          this.scope_['description'] = this.scope_['actions'][0].getDescription();
+        }
+      } else if (fields.DESC_REGEXP.test(property['field'])) {
+        // we have a description, tell it to use that formatter
+        this.scope_['type'] = 'desc';
+      } else {
+        // default case, just show it
+        // We want Angular to trust the HTML we generate. We do NOT trust the value, and it is sanitized
+        // elsewhere.
+        property['value'] = this.sce_.trustAsHtml('<span>' + urlNewTabFormatter(value) + '</span>');
       }
-
-      this.scope_['type'] = 'prop';
-    } else if (this.scope_['actions'].length > 0) {
-      // we have column actions, use those
-      this.scope_['type'] = 'ca';
-      if (this.scope_['actions'].length == 1) {
-        this.scope_['action'] = this.scope_['actions'][0].getAction(value);
-        this.scope_['description'] = this.scope_['actions'][0].getDescription();
-      }
-    } else if (os.fields.DESC_REGEXP.test(property['field'])) {
-      // we have a description, tell it to use that formatter
-      this.scope_['type'] = 'desc';
-    } else {
-      // default case, just show it
-      // We want Angular to trust the HTML we generate. We do NOT trust the value, and it is sanitized
-      // elsewhere.
-      property['value'] = this.sce_.trustAsHtml('<span>' + os.ui.formatter.urlNewTabFormatter(value) + '</span>');
     }
   }
-};
 
-
-/**
- * Show the description tab
- *
- * @export
- */
-os.ui.feature.FeatureInfoCellCtrl.prototype.showDescription = function() {
-  this.scope_.$emit(os.ui.feature.FeatureInfoEvent.SHOW_DESCRIPTION);
-};
-
-
-/**
- * View properties
- *
- * @export
- */
-os.ui.feature.FeatureInfoCellCtrl.prototype.viewProperties = function() {
-  var feature = /** @type {!ol.Feature} */ (this.scope_['property']['feature']);
-  var properties = /** @type {!Object} */ (feature.get(os.Fields.PROPERTIES));
-  var id = /** @type {!string} */ (feature.get(os.Fields.ID));
-  if (properties instanceof Object && typeof id === 'string') {
-    os.ui.launchPropertyInfo(id, properties);
+  /**
+   * Show the description tab
+   *
+   * @export
+   */
+  showDescription() {
+    this.scope_.$emit(FeatureInfoEvent.SHOW_DESCRIPTION);
   }
-};
 
+  /**
+   * View properties
+   *
+   * @export
+   */
+  viewProperties() {
+    var feature = /** @type {!ol.Feature} */ (this.scope_['property']['feature']);
+    var properties = /** @type {!Object} */ (feature.get(Fields.PROPERTIES));
+    var id = /** @type {!string} */ (feature.get(Fields.ID));
+    if (properties instanceof Object && typeof id === 'string') {
+      ui.launchPropertyInfo(id, properties);
+    }
+  }
 
-/**
- * Pick column action
- *
- * @export
- */
-os.ui.feature.FeatureInfoCellCtrl.prototype.pickColumnAction = function() {
-  os.ui.columnactions.launchColumnActionPrompt(this.scope_['actions'],
-      this.scope_['property']['value'],
-      this.scope_['ca']);
-};
+  /**
+   * Pick column action
+   *
+   * @export
+   */
+  pickColumnAction() {
+    launchColumnActionPrompt(this.scope_['actions'],
+        this.scope_['property']['value'],
+        this.scope_['ca']);
+  }
 
+  /**
+   * @private
+   */
+  onDblClick_() {
+    copyText(this.copyValue_);
+  }
+}
 
-/**
- * @private
- */
-os.ui.feature.FeatureInfoCellCtrl.prototype.onDblClick_ = function() {
-  os.ui.text.copy(this.copyValue_);
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };
