@@ -1,91 +1,86 @@
-goog.provide('os.ui.file.MockExportMethod');
-goog.require('os.ex.AbstractExporter');
+goog.module('os.ui.file.MockExportMethod');
+goog.module.declareLegacyNamespace();
 
-
+const AbstractExporter = goog.require('os.ex.AbstractExporter');
 
 /**
  * Mock export method for unit testing.
- * @extends {os.ex.AbstractExporter}
- * @constructor
  */
-os.ui.file.MockExportMethod = function() {
-  os.ui.file.MockExportMethod.base(this, 'constructor');
-  this.cancelled = false;
-  this.processed = false;
-};
-goog.inherits(os.ui.file.MockExportMethod, os.ex.AbstractExporter);
+class MockExportMethod extends AbstractExporter {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.cancelled = false;
+    this.processed = false;
+  }
 
+  /**
+   * The file extension for this export type.
+   * @return {string}
+   */
+  getExtension() {
+    return MockExportMethod.EXT;
+  }
+
+  /**
+   * The human readable label/title to display for this export type (e.g. 'CSV').
+   * @return {string}
+   */
+  getLabel() {
+    return MockExportMethod.LABEL;
+  }
+
+  /**
+   * The human readable label/title to display for this export type (e.g. 'CSV').
+   * @return {string}
+   */
+  getMimeType() {
+    return MockExportMethod.MIMETYPE;
+  }
+
+  /**
+   * Begins the export process.
+   */
+  process() {
+    this.processed = true;
+    this.output = this.items.join(' ');
+  }
+
+  /**
+   * Cancel the export process.
+   */
+  cancel() {
+    this.cancelled = true;
+  }
+
+  /**
+   * Resets the exporter to its default state.
+   */
+  reset() {
+    super.reset();
+    this.cancelled = false;
+    this.processed = false;
+  }
+}
 
 /**
  * @type {string}
  * @const
  */
-os.ui.file.MockExportMethod.EXT = 'mex';
-
-
-/**
- * @type {string}
- * @const
- */
-os.ui.file.MockExportMethod.LABEL = 'Mock Exporter';
-
+MockExportMethod.EXT = 'mex';
 
 /**
  * @type {string}
  * @const
  */
-os.ui.file.MockExportMethod.MIMETYPE = 'text/mock';
-
-
-/**
- * The file extension for this export type.
- * @return {string}
- */
-os.ui.file.MockExportMethod.prototype.getExtension = function() {
-  return os.ui.file.MockExportMethod.EXT;
-};
-
+MockExportMethod.LABEL = 'Mock Exporter';
 
 /**
- * The human readable label/title to display for this export type (e.g. 'CSV').
- * @return {string}
+ * @type {string}
+ * @const
  */
-os.ui.file.MockExportMethod.prototype.getLabel = function() {
-  return os.ui.file.MockExportMethod.LABEL;
-};
+MockExportMethod.MIMETYPE = 'text/mock';
 
-
-/**
- * The human readable label/title to display for this export type (e.g. 'CSV').
- * @return {string}
- */
-os.ui.file.MockExportMethod.prototype.getMimeType = function() {
-  return os.ui.file.MockExportMethod.MIMETYPE;
-};
-
-
-/**
- * Begins the export process.
- */
-os.ui.file.MockExportMethod.prototype.process = function() {
-  this.processed = true;
-  this.output = this.items.join(' ');
-};
-
-
-/**
- * Cancel the export process.
- */
-os.ui.file.MockExportMethod.prototype.cancel = function() {
-  this.cancelled = true;
-};
-
-
-/**
- * Resets the exporter to its default state.
- */
-os.ui.file.MockExportMethod.prototype.reset = function() {
-  os.ui.file.MockExportMethod.base(this, 'reset');
-  this.cancelled = false;
-  this.processed = false;
-};
+exports = MockExportMethod;

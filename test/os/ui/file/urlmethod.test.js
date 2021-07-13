@@ -1,16 +1,27 @@
+goog.require('os.alert.AlertManager');
 goog.require('os.events.EventType');
 goog.require('os.file.File');
 goog.require('os.net.Request');
 goog.require('os.net.RequestHandlerFactory');
 goog.require('os.net.SameDomainHandler');
 goog.require('os.ui.file.method.UrlMethod');
+goog.require('os.ui.window');
 
 describe('os.ui.file.method.UrlMethod', function() {
-  os.net.RequestHandlerFactory.addHandler(os.net.SameDomainHandler);
+  const AlertManager = goog.module.get('os.alert.AlertManager');
+  const EventType = goog.module.get('os.events.EventType');
+  const OSFile = goog.module.get('os.file.File');
+  const Request = goog.module.get('os.net.Request');
+  const RequestHandlerFactory = goog.module.get('os.net.RequestHandlerFactory');
+  const SameDomainHandler = goog.module.get('os.net.SameDomainHandler');
+  const UrlMethod = goog.module.get('os.ui.file.method.UrlMethod');
+  const osWindow = goog.module.get('os.ui.window');
+
+  RequestHandlerFactory.addHandler(SameDomainHandler);
   var testUrl = '/base/test/resources/foo.txt';
 
   it('gets the url', function() {
-    var method = new os.ui.file.method.UrlMethod();
+    var method = new UrlMethod();
     expect(method.getUrl()).toBeNull();
 
     method.setUrl(testUrl);
@@ -18,12 +29,12 @@ describe('os.ui.file.method.UrlMethod', function() {
   });
 
   it('is always supported', function() {
-    var method = new os.ui.file.method.UrlMethod();
+    var method = new UrlMethod();
     expect(method.isSupported()).toBe(true);
   });
 
   it('should load a file from a url', function() {
-    var method = new os.ui.file.method.UrlMethod();
+    var method = new UrlMethod();
     method.setUrl(testUrl);
 
     var methodComplete = false;
@@ -31,7 +42,7 @@ describe('os.ui.file.method.UrlMethod', function() {
       methodComplete = true;
     };
 
-    method.listenOnce(os.events.EventType.COMPLETE, onComplete);
+    method.listenOnce(EventType.COMPLETE, onComplete);
     method.loadFile();
 
     waitsFor(function() {
@@ -52,17 +63,17 @@ describe('os.ui.file.method.UrlMethod', function() {
   });
 
   it('should prompt for a url if not available', function() {
-    var method = new os.ui.file.method.UrlMethod();
-    spyOn(os.ui.window, 'create');
+    var method = new UrlMethod();
+    spyOn(osWindow, 'create');
 
     method.loadFile();
 
-    expect(os.ui.window.create).toHaveBeenCalled();
-    expect(os.ui.window.create.mostRecentCall.args[1]).toEqual('<urlimport></urlimport>');
+    expect(osWindow.create).toHaveBeenCalled();
+    expect(osWindow.create.mostRecentCall.args[1]).toEqual('<urlimport></urlimport>');
   });
 
   it('should dispatch a cancel event if url is not defined', function() {
-    var method = new os.ui.file.method.UrlMethod();
+    var method = new UrlMethod();
 
     spyOn(method, 'dispatchEvent');
 
@@ -74,15 +85,15 @@ describe('os.ui.file.method.UrlMethod', function() {
 
     runs(function() {
       expect(method.dispatchEvent.calls.length).toBe(1);
-      expect(method.dispatchEvent).toHaveBeenCalledWith(os.events.EventType.CANCEL);
+      expect(method.dispatchEvent).toHaveBeenCalledWith(EventType.CANCEL);
     });
   });
 
   it('should dispatch an error when the url load fails', function() {
-    var method = new os.ui.file.method.UrlMethod();
+    var method = new UrlMethod();
     method.setUrl('/this/is/bogus');
 
-    spyOn(os.alertManager, 'sendAlert');
+    spyOn(AlertManager.getInstance(), 'sendAlert');
     spyOn(method, 'dispatchEvent');
 
     method.loadFile();
@@ -92,24 +103,24 @@ describe('os.ui.file.method.UrlMethod', function() {
     }, 'event to be dispatched');
 
     runs(function() {
-      expect(os.alertManager.sendAlert).toHaveBeenCalled();
+      expect(AlertManager.getInstance().sendAlert).toHaveBeenCalled();
       expect(method.dispatchEvent.calls.length).toBe(1);
-      expect(method.dispatchEvent).toHaveBeenCalledWith(os.events.EventType.ERROR);
+      expect(method.dispatchEvent).toHaveBeenCalledWith(EventType.ERROR);
     });
   });
 
   it('supports clone', function() {
-    var method = new os.ui.file.method.UrlMethod();
+    var method = new UrlMethod();
     var method2 = method.clone();
 
     expect(method2).not.toBe(method);
-    expect(method2 instanceof os.ui.file.method.UrlMethod).toBe(true);
+    expect(method2 instanceof UrlMethod).toBe(true);
   });
 
   it('should dispose of a url method', function() {
-    var method = new os.ui.file.method.UrlMethod();
-    method.setFile(new os.file.File());
-    method.request_ = new os.net.Request();
+    var method = new UrlMethod();
+    method.setFile(new OSFile());
+    method.request_ = new Request();
 
     method.dispose();
 
