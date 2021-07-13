@@ -1,5 +1,8 @@
-goog.provide('os.ex.ExportOptions');
+goog.module('os.ex.ExportOptions');
+goog.module.declareLegacyNamespace();
 
+const IExportMethod = goog.requireType('os.ex.IExportMethod');
+const IPersistenceMethod = goog.requireType('os.ex.IPersistenceMethod');
 
 /**
  * @typedef {{
@@ -7,14 +10,16 @@ goog.provide('os.ex.ExportOptions');
  *   selectedData: (Array|undefined),
  *   activeData: (Array|undefined),
  *   additionalOptions: (boolean),
- *   exporter: (os.ex.IExportMethod|undefined),
+ *   exporter: (IExportMethod|undefined),
  *   fields: Array.<string>,
  *   items: Array.<*>,
- *   persister: (os.ex.IPersistenceMethod|undefined),
+ *   persister: (IPersistenceMethod|undefined),
  *   sources: (Array.<*>|undefined),
  *   title: (string|undefined),
  *   keepTitle: (boolean|undefined),
  *   createDescriptor: (boolean|undefined)
  * }}
  */
-os.ex.ExportOptions;
+let ExportOptions;
+
+exports = ExportOptions;
