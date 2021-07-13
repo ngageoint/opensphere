@@ -1,13 +1,16 @@
-goog.provide('os.ui.draw.DrawControlsCtrl');
-goog.provide('os.ui.draw.drawControlsDirective');
+goog.module('os.ui.draw.DrawControlsUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.log');
-goog.require('goog.log.Logger');
-goog.require('os');
-goog.require('os.MapEvent');
-goog.require('os.ui.Module');
-goog.require('os.ui.draw');
-goog.require('os.ui.draw.BaseDrawControlsCtrl');
+const googEvents = goog.require('goog.events');
+const log = goog.require('goog.log');
+const {ROOT} = goog.require('os');
+const {getIMapContainer} = goog.require('os.map.instance');
+const MapEvent = goog.require('os.MapEvent');
+const Module = goog.require('os.ui.Module');
+const {getMenu} = goog.require('os.ui.draw');
+const {Controller: BaseDrawControlsCtrl} = goog.require('os.ui.draw.BaseDrawControlsUI');
+
+const Logger = goog.requireType('goog.log.Logger');
 
 
 /**
@@ -15,103 +18,104 @@ goog.require('os.ui.draw.BaseDrawControlsCtrl');
  *
  * @return {angular.Directive}
  */
-os.ui.draw.drawControlsDirective = function() {
-  return {
-    restrict: 'AE',
-    replace: true,
-    scope: {
-      'menu': '=?',
-      'olMap': '=?'
-    },
-    templateUrl: os.ROOT + 'views/draw/drawcontrols.html',
-    controller: os.ui.draw.DrawControlsCtrl,
-    controllerAs: 'drawControls'
-  };
-};
+const directive = () => ({
+  restrict: 'AE',
+  replace: true,
+  scope: {
+    'menu': '=?',
+    'olMap': '=?'
+  },
+  templateUrl: ROOT + 'views/draw/drawcontrols.html',
+  controller: Controller,
+  controllerAs: 'drawControls'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'os-draw-controls';
 
 /**
  * Add the directive to the module.
  */
-os.ui.Module.directive('osDrawControls', [os.ui.draw.drawControlsDirective]);
-
-
+Module.directive('osDrawControls', [directive]);
 
 /**
  * Controller for the draw-controls directive.
- *
- * @constructor
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @extends {os.ui.draw.BaseDrawControlsCtrl}
- * @ngInject
+ * @unrestricted
  */
-os.ui.draw.DrawControlsCtrl = function($scope, $element) {
-  os.ui.draw.DrawControlsCtrl.base(this, 'constructor', $scope, $element);
+class Controller extends BaseDrawControlsCtrl {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    super($scope, $element);
 
-  // Base draw controller doesn't support lines as a default.
-  this['supportsLines'] = true;
+    // Base draw controller doesn't support lines as a default.
+    this['supportsLines'] = true;
 
-  this.log = os.ui.draw.DrawControlsCtrl.LOGGER_;
-};
-goog.inherits(os.ui.draw.DrawControlsCtrl, os.ui.draw.BaseDrawControlsCtrl);
+    this.log = logger;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  $onDestroy() {
+    super.$onDestroy();
+    googEvents.unlisten(getIMapContainer(), MapEvent.MAP_READY, this.onMapReady, false, this);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getMap() {
+    var map = super.getMap();
+    return map || getIMapContainer().getMap();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getMenu() {
+    var menu = super.getMenu();
+    return menu || getMenu();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setFeature(f) {
+    if (this.feature) {
+      getIMapContainer().removeFeature(this.feature.getId(), true);
+    }
+
+    this.feature = f;
+
+    if (this.feature) {
+      getIMapContainer().addFeature(this.feature);
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  listenForMapReady() {
+    googEvents.listenOnce(getIMapContainer(), MapEvent.MAP_READY, this.onMapReady, false, this);
+  }
+}
 
 /**
  * The logger.
- * @const
- * @type {goog.log.Logger}
- * @private
+ * @type {Logger}
  */
-os.ui.draw.DrawControlsCtrl.LOGGER_ = goog.log.getLogger('os.ui.draw.DrawControlsCtrl');
+const logger = log.getLogger('os.ui.draw.DrawControlsUI');
 
-
-/**
- * @inheritDoc
- */
-os.ui.draw.DrawControlsCtrl.prototype.$onDestroy = function() {
-  os.ui.draw.DrawControlsCtrl.base(this, '$onDestroy');
-  goog.events.unlisten(os.MapContainer.getInstance(), os.MapEvent.MAP_READY, this.onMapReady, false, this);
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.draw.DrawControlsCtrl.prototype.getMap = function() {
-  var map = os.ui.draw.DrawControlsCtrl.base(this, 'getMap');
-  return map || os.MapContainer.getInstance().getMap();
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.draw.DrawControlsCtrl.prototype.getMenu = function() {
-  var menu = os.ui.draw.DrawControlsCtrl.base(this, 'getMenu');
-  return menu || os.ui.draw.MENU;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.draw.DrawControlsCtrl.prototype.setFeature = function(f) {
-  if (this.feature) {
-    os.MapContainer.getInstance().removeFeature(this.feature.getId(), true);
-  }
-
-  this.feature = f;
-
-  if (this.feature) {
-    os.MapContainer.getInstance().addFeature(this.feature);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.draw.DrawControlsCtrl.prototype.listenForMapReady = function() {
-  goog.events.listenOnce(os.MapContainer.getInstance(), os.MapEvent.MAP_READY, this.onMapReady, false, this);
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

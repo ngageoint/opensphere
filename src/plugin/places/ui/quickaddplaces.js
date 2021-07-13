@@ -1,7 +1,7 @@
 goog.module('plugin.places.ui.QuickAddPlacesUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.draw.drawPickerDirective');
+goog.require('os.ui.draw.DrawPickerUI');
 
 const Disposable = goog.require('goog.Disposable');
 const {ROOT} = goog.require('os');
