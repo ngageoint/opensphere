@@ -153,7 +153,22 @@ class Controller extends Disposable {
    * @export
    */
   export() {
-    launchExportUI();
+    if (this.placesRoot_) {
+      var activePlaces = getActivePlaces(this.placesRoot_);
+
+      launchExportUI(this.placesRoot_, /** @type {ExportOptions} */ ({
+        allData: this.placesRoot_.getChildren(),
+        selectedData: this['selected'],
+        activeData: activePlaces,
+        additionalOptions: true,
+        items: this.placesRoot_.getChildren(),
+        fields: ExportFields
+      }));
+
+      Metrics.getInstance().updateMetric(metrics.Places.EXPORT, 1);
+    } else {
+      AlertManager.getInstance().sendAlert('Nothing to export.', AlertEventSeverity.WARNING);
+    }
   }
 
   /**
@@ -243,7 +258,7 @@ const getActivePlaces = function(root) {
     var place = places[i];
 
     if (place.canAddChildren) {
-      var active = this.getActivePlaces(places[i]);
+      var active = getActivePlaces(places[i]);
       var clone = place.clone();
 
       clone.setChildren(active);
@@ -259,29 +274,19 @@ const getActivePlaces = function(root) {
 
 /**
  * Export places to a KMZ.
+ * @param {!KMLNode} rootNode
+ * @param {ExportOptions=} opt_options
  */
-const launchExportUI = function() {
-  const placesRoot = PlacesManager.getInstance().getPlacesRoot();
-  if (placesRoot) {
-    var activePlaces = getActivePlaces(placesRoot);
-
-    var options = /** @type {ExportOptions} */ ({
-      allData: placesRoot.getChildren(),
-      selectedData: this['selected'],
-      activeData: activePlaces,
-      additionalOptions: true,
-      items: placesRoot.getChildren(),
+const launchExportUI = function(rootNode, opt_options) {
+  if (!opt_options) {
+    opt_options = /** @type {ExportOptions} */ ({
       fields: ExportFields
     });
-
-    var tooltip = 'Places-specific features, such as Range Rings, may not be importable to other applications. ' +
-        'To export them as polygons, use the standard \'Export...\' menu option.';
-
-    KMLTreeExportUI.launchTreeExport(placesRoot, 'Export Places', options, tooltip);
-    Metrics.getInstance().updateMetric(metrics.Places.EXPORT, 1);
-  } else {
-    AlertManager.getInstance().sendAlert('Nothing to export.', AlertEventSeverity.WARNING);
   }
+
+  var tooltip = 'Places-specific features, such as Range Rings, may not be importable to other applications. ' +
+      'To export them as polygons, use the standard \'Export...\' menu option.';
+  KMLTreeExportUI.launchTreeExport(rootNode, 'Export Places', opt_options, tooltip);
 };
 
 

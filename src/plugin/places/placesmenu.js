@@ -31,7 +31,6 @@ const {
 } = goog.require('plugin.file.kml.ui');
 const KMLLayerNode = goog.require('plugin.file.kml.ui.KMLLayerNode');
 const KMLNode = goog.require('plugin.file.kml.ui.KMLNode');
-const KMLTreeExportUI = goog.require('plugin.file.kml.ui.KMLTreeExportUI');
 const places = goog.require('plugin.places');
 const EventType = goog.require('plugin.places.EventType');
 const PlacesManager = goog.require('plugin.places.PlacesManager');
@@ -524,7 +523,7 @@ const onLayerEvent_ = function(event) {
             }));
             break;
           case EventType.EXPORT:
-            KMLTreeExportUI.launchTreeExport(node, 'Export Places');
+            PlacesUI.launchExportUI(/** @type {!KMLNode} */ (node));
             break;
           case EventType.REMOVE_PLACE:
             var cmd = new KMLNodeRemove(node);
@@ -552,7 +551,7 @@ const onLayerEvent_ = function(event) {
             QuickAddPlacesUI.launch();
             break;
           case EventType.EXPORT:
-            PlacesUI.launchExportUI();
+            PlacesUI.launchExportUI(/** @type {!KMLNode} */ (rootNode));
             break;
           case EventType.REMOVE_ALL:
             var children = /** @type {Array<!KMLNode>} */ (node.getChildren());
