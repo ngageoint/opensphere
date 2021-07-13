@@ -67,6 +67,13 @@ os.im.Importer = function(parser) {
   this.mappings = null;
 
   /**
+   * Holds count of how many mappings failed in each mapping
+   * @type {!Object<string, number>}
+   * @protected
+   */
+  this.failedMappings = {};
+
+  /**
    * the list of mappings for use with autodetection
    * @type {Object}
    */
@@ -258,6 +265,7 @@ os.im.Importer.prototype.startImport = function(source) {
   try {
     // notify the application that parsing is about to begin
     os.dispatcher.dispatchEvent(os.im.ImporterEvent.START);
+    this.failedMappings = {};
 
     if (this.parser instanceof os.parse.AsyncParser) {
       this.parser.listenOnce(os.events.EventType.COMPLETE, this.onParserReady, false, this);
@@ -337,10 +345,61 @@ os.im.Importer.prototype.onParsingComplete = function(opt_event) {
   // dispatch the complete event before cleaning up the parser in case listeners need to reference it
   this.dispatchEvent(new goog.events.Event(os.events.EventType.COMPLETE));
 
+  const failed = Object.keys(this.failedMappings);
+  if (failed.length > 0) {
+    this.onFailedMappings(failed);
+  }
+
   // now clean up the parser
   if (this.parser) {
     this.parser.cleanup();
   }
+};
+
+
+/**
+ * Alert User about failed mappings
+ * @param {Array<string>} failed
+ * @protected
+ */
+os.im.Importer.prototype.onFailedMappings = function(failed) {
+  const total = this.parser.features.length;
+  // keep track of if all mappings failed
+  let error = false;
+
+  // Get the layer name
+  const dm = os.data.DataManager.getInstance();
+  const sourceId = this.parser.getSourceId();
+  const title = dm.getSource(sourceId).getTitle();
+  let failMessage = `<div><b>Issues with mappings for ${title}</b></div>`;
+
+  // Go through all failed mappings on this importer
+  for (let keyIndex = 0; keyIndex < failed.length; keyIndex++) {
+    const key = failed[keyIndex];
+    const numFailed = this.failedMappings[key];
+
+    error = (numFailed == total || error);
+
+    if (numFailed) {
+      const message = this.generateFailMessage(numFailed, total, key);
+      failMessage += message;
+    }
+  }
+
+  // Generate an alert
+  const errorType = error ? os.alert.AlertEventSeverity.ERROR : os.alert.AlertEventSeverity.WARNING;
+  os.alert.AlertManager.getInstance().sendAlert(failMessage, errorType, os.im.Importer.LOGGER_);
+};
+
+/**
+ * Generate Failed Mapping Message
+ * @param {number} numFailed
+ * @param {number} total
+ * @param {string} mappingName
+ * @return {string} The string to send the user on failure
+ */
+os.im.Importer.prototype.generateFailMessage = function(numFailed, total, mappingName) {
+  return `<div>${numFailed} out of ${total} features failed to map ${mappingName}<div>`;
 };
 
 
@@ -531,6 +590,11 @@ os.im.Importer.prototype.executeMapping = function(item) {
       } catch (e) {
         goog.log.error(os.im.Importer.LOGGER_,
             'Error applying mapping "' + m.field + ' > ' + m.getLabel() + '"! ', e);
+      }
+
+      const toField = m.toField || undefined;
+      if (toField && item.get(toField) == undefined) {
+        this.failedMappings[toField] = this.failedMappings[toField] + 1 || 1;
       }
     }
   }
