@@ -1,9 +1,10 @@
-goog.require('os.ui.datetime.StartEndDateCtrl');
+goog.require('os.ui.datetime.StartEndDateUI');
 
+describe('os.ui.datetime.StartEndDateUI', function() {
+  const {Controller: StartEndDateCtrl} = goog.module.get('os.ui.datetime.StartEndDateUI');
 
-describe('os.ui.datetime.StartEndDateCtrl', function() {
   it('should compare two dates', inject(function($rootScope) {
-    var ctrl = new os.ui.datetime.StartEndDateCtrl($rootScope.$new());
+    var ctrl = new StartEndDateCtrl($rootScope.$new());
     expect(ctrl.equals(null, null)).toBe(true);
     expect(ctrl.equals(null, undefined)).toBe(true);
     expect(ctrl.equals(null, '')).toBe(true);
