@@ -1,7 +1,7 @@
 goog.module('os.ui.TimeSettingsUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.datetime.dateTimeDirective');
+goog.require('os.ui.datetime.DateTimeUI');
 goog.require('os.ui.popover.popoverDirective');
 goog.require('os.ui.time.timeDirective');
 

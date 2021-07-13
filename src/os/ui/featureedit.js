@@ -28,9 +28,9 @@ goog.require('os.style.label');
 goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 goog.require('os.ui.Module');
-goog.require('os.ui.datetime.AnyDateCtrl');
 goog.require('os.ui.datetime.AnyDateHelp');
 goog.require('os.ui.datetime.AnyDateType');
+goog.require('os.ui.datetime.AnyDateUI');
 goog.require('os.ui.file.kml');
 goog.require('os.ui.geo.PositionEventType');
 goog.require('os.ui.geo.positionDirective');
@@ -557,7 +557,7 @@ os.ui.FeatureEditCtrl = function($scope, $element, $timeout) {
   $scope.$on(os.ui.layer.LabelControlsEventType.COLUMN_CHANGE, this.onColumnChange.bind(this));
   $scope.$on('ring.update', this.onRingsChange.bind(this));
 
-  $scope.$on(os.ui.datetime.AnyDateCtrl.CHANGE, function(event, instant, start, end) {
+  $scope.$on(os.ui.datetime.AnyDateUI.Controller.CHANGE, function(event, instant, start, end) {
     event.stopPropagation();
 
     if (start || end) {
