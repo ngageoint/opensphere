@@ -10207,10 +10207,10 @@ opensphere-build-index@^4.0.0:
     bluebird "^3.4.6"
     yargs "^6.3.0"
 
-opensphere-build-resolver@^8.1.0:
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/opensphere-build-resolver/-/opensphere-build-resolver-8.1.0.tgz#06a3dffe482f7f6496cb99312fbe8af3da5a2227"
-  integrity sha512-IHOUj6ix63Kwv6I8QUjCZ8Q+i9lctHV8YNtmtyf2bTR3bXt6jSFod8RYFZEnNoQm5thmQ0XX99y7Q98LJHX2ww==
+opensphere-build-resolver@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/opensphere-build-resolver/-/opensphere-build-resolver-9.0.0.tgz#c725325d279c34959338f55cb72e5b0826d2d82a"
+  integrity sha512-QrszH6gqVkyFI98XkdZIvOpbDYLJeUe73guegKdh1iLWIo2/bO74WwPsdNXf+bL348l+1P3lDjdZ5k0M1VEwjA==
   dependencies:
     bluebird "^3.7.2"
     clone "^2.1.2"
