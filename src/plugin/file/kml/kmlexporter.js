@@ -277,6 +277,13 @@ class KMLExporter extends AbstractKMLExporter {
         }
       }
 
+      if (this.exportRangeRings) {
+        var rings = osFeature.createRings(item, false);
+        if (rings && !(rings instanceof Point)) {
+          geometry = rings;
+        }
+      }
+
       if (geometry) {
         geometry.set(RecordField.ALTITUDE_MODE, geomAltitudeMode || featAltitudeMode);
       }

@@ -274,8 +274,8 @@ const launchExportUI = function() {
       fields: ExportFields
     });
 
-    var tooltip = 'Places-specific features, such as Range Rings, may not be importable to other applications and' +
-        ' will be rendered as points.';
+    var tooltip = 'Places-specific features, such as Range Rings, may not be importable to other applications. ' +
+        'To export them as polygons, use the standard \'Export...\' menu option.';
 
     KMLTreeExportUI.launchTreeExport(placesRoot, 'Export Places', options, tooltip);
     Metrics.getInstance().updateMetric(metrics.Places.EXPORT, 1);

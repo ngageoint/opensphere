@@ -163,6 +163,13 @@ os.ui.file.kml.AbstractKMLExporter = function() {
   this.exportEllipses = false;
 
   /**
+   * If range rings should be exported (when available).
+   * @type {boolean}
+   * @protected
+   */
+  this.exportRangeRings = false;
+
+  /**
    * If the ellipse center point should be included.
    * @type {boolean}
    * @protected
@@ -384,6 +391,26 @@ os.ui.file.kml.AbstractKMLExporter.prototype.getExportEllipses = function() {
  */
 os.ui.file.kml.AbstractKMLExporter.prototype.setExportEllipses = function(value) {
   this.exportEllipses = value;
+};
+
+
+/**
+ * Get if range rings should be exported.
+ *
+ * @return {boolean}
+ */
+os.ui.file.kml.AbstractKMLExporter.prototype.getExportRangeRings = function() {
+  return this.exportRangeRings;
+};
+
+
+/**
+ * Set if range rings should be exported.
+ *
+ * @param {boolean} value
+ */
+os.ui.file.kml.AbstractKMLExporter.prototype.setExportRangeRings = function(value) {
+  this.exportRangeRings = value;
 };
 
 
