@@ -1,23 +1,25 @@
 goog.require('ol.Feature');
 goog.require('ol.geom.Point');
 goog.require('os.feature.DynamicFeature');
-goog.require('os.fn');
-
 
 describe('os.feature.DynamicFeature', function() {
+  const Feature = goog.module.get('ol.Feature');
+  const Point = goog.module.get('ol.geom.Point');
+  const DynamicFeature = goog.module.get('os.feature.DynamicFeature');
+
   it('initializes properly', function() {
-    var df = new os.feature.DynamicFeature();
-    expect(df instanceof ol.Feature).toBe(true);
-    expect(df.initFn).toBe(os.fn.noop);
-    expect(df.disposeFn).toBe(os.fn.noop);
-    expect(df.updateFn).toBe(os.fn.noop);
+    var df = new DynamicFeature();
+    expect(df instanceof Feature).toBe(true);
+    expect(df.initFn).toBeDefined();
+    expect(df.disposeFn).toBeDefined();
+    expect(df.updateFn).toBeDefined();
 
     var initFn = function() {};
     var disposeFn = function() {};
     var updateFn = function() {};
-    var point = new ol.geom.Point([5, 10]);
+    var point = new Point([5, 10]);
 
-    df = new os.feature.DynamicFeature(point, initFn, disposeFn, updateFn);
+    df = new DynamicFeature(point, initFn, disposeFn, updateFn);
     expect(df.getGeometry()).toBe(point);
     expect(df.initFn).toBe(initFn);
     expect(df.disposeFn).toBe(disposeFn);
@@ -29,7 +31,7 @@ describe('os.feature.DynamicFeature', function() {
       key2: 'value2'
     };
 
-    df = new os.feature.DynamicFeature(props, initFn, disposeFn, updateFn);
+    df = new DynamicFeature(props, initFn, disposeFn, updateFn);
     expect(df.getGeometry()).toBe(point);
     expect(df.get('key1')).toBe('value1');
     expect(df.get('key2')).toBe('value2');
@@ -52,7 +54,7 @@ describe('os.feature.DynamicFeature', function() {
     var now = Date.now();
     var before = now - 10000;
 
-    var df = new os.feature.DynamicFeature(undefined, testFns.init, testFns.dispose, testFns.update);
+    var df = new DynamicFeature(undefined, testFns.init, testFns.dispose, testFns.update);
     df.initDynamic();
     df.disposeDynamic(true);
     df.updateDynamic(before, now);
@@ -67,16 +69,16 @@ describe('os.feature.DynamicFeature', function() {
     var disposeFn = function() {};
     var updateFn = function() {};
 
-    var point = new ol.geom.Point([5, 10]);
+    var point = new Point([5, 10]);
     var props = {
       geometry: point,
       key1: 'value1',
       key2: 'value2'
     };
 
-    var df = new os.feature.DynamicFeature(props, initFn, disposeFn, updateFn);
+    var df = new DynamicFeature(props, initFn, disposeFn, updateFn);
     var clone = df.clone();
-    expect(clone instanceof os.feature.DynamicFeature).toBe(true);
+    expect(clone instanceof DynamicFeature).toBe(true);
     expect(clone.getGeometry()).not.toBe(point);
     expect(clone.getGeometry().getCoordinates()).toEqual(point.getCoordinates());
     expect(clone.get('key1')).toBe('value1');

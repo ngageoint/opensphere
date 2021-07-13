@@ -849,7 +849,7 @@ const getTitle = function(feature) {
  * `values_` will be renamed by the Closure compiler.
  * @type {string}
  */
-const VALUES_FIELD_ = reflect.objectProperty('values_', new Feature());
+const VALUES_FIELD = reflect.objectProperty('values_', new Feature());
 
 /**
  * Create a filter function expression to get a value from a feature.
@@ -861,7 +861,7 @@ const VALUES_FIELD_ = reflect.objectProperty('values_', new Feature());
 const filterFnGetter = function(itemVar, field) {
   // create the string: itemVar.values_["column_name"]
   // make the field safe for use as an object property name, to prevent injection attacks
-  return itemVar + '.' + VALUES_FIELD_ + '[' + quoteString(field) + ']';
+  return itemVar + '.' + VALUES_FIELD + '[' + quoteString(field) + ']';
 };
 
 /**
@@ -1485,6 +1485,7 @@ exports = {
   LOBOptions,
   SortFn,
   TITLE_REGEX,
+  VALUES_FIELD,
   autoMap,
   cleanRingGeoms,
   copyFeature,
