@@ -67,7 +67,7 @@ os.im.Importer = function(parser) {
   this.mappings = null;
 
   /**
-   * Holds count of how many mappings failed in each mapping that uses the toField attribute
+   * Holds count of how many mappings failed in each ellipse mapping
    * @type {!Object<string, number>}
    * @protected
    */
@@ -369,9 +369,14 @@ os.im.Importer.prototype.onFailedMappings = function(failed) {
   let error = false;
 
   // Get the layer name
-  const dm = os.data.DataManager.getInstance();
-  const sourceId = this.parser.getSourceId();
-  const title = dm.getSource(sourceId).getTitle();
+  let title = 'this layer.';
+  if (this.parser.config) {
+    title = this.parser.config.title;
+  } else {
+    const dm = os.data.DataManager.getInstance();
+    const sourceId = this.parser.getSourceId();
+    title = dm.getSource(sourceId).getTitle();
+  }
   let failMessage = `<div><b>Issues with mappings for ${title}</b></div>`;
 
   // Go through all failed mappings on this importer
@@ -393,12 +398,15 @@ os.im.Importer.prototype.onFailedMappings = function(failed) {
     }
   }
 
-  // Generate an alert
-  failMessage += error ?
+  // Generate an alert but only if some failed
+  const someFailed = Object.values(this.mappingFailCount).some((m) => m > 0);
+  if (someFailed) {
+    failMessage += error ?
     `<div>All Ellipse Data failed to map for this layer.
-     Please check to ensure your data is formatted correctly.<div>` : '';
-  const errorType = error ? os.alert.AlertEventSeverity.ERROR : os.alert.AlertEventSeverity.WARNING;
-  os.alert.AlertManager.getInstance().sendAlert(failMessage, errorType);
+    Please check to ensure your data is formatted correctly.<div>` : '';
+    const errorType = error ? os.alert.AlertEventSeverity.ERROR : os.alert.AlertEventSeverity.WARNING;
+    os.alert.AlertManager.getInstance().sendAlert(failMessage, errorType);
+  }
 };
 
 /**
@@ -603,16 +611,29 @@ os.im.Importer.prototype.executeMapping = function(item) {
       }
 
       const toField = m.toField || undefined;
-      if (toField) {
+      if (toField && os.im.Importer.isEllipseMapping(m)) {
         if (this.mappingFailCount[toField] == undefined) {
           this.mappingFailCount[toField] = 0;
         }
-        if (item.get(toField) == undefined) {
+        const value = item.get(toField);
+        if (value == undefined || value == '') {
           this.mappingFailCount[toField] = this.mappingFailCount[toField] + 1;
         }
       }
     }
   }
+};
+
+
+/**
+ * Returns if the mapping is for ellipses
+ * @param {os.im.mapping.IMapping} mapping
+ * @return {boolean}
+ */
+os.im.Importer.isEllipseMapping = function(mapping) {
+  const id = mapping.getId();
+  return id == os.im.mapping.RadiusMapping.ID || id == os.im.mapping.OrientationMapping.ID ||
+    id == os.im.mapping.SemiMajorMapping.ID || id == os.im.mapping.SemiMinorMapping.ID;
 };
 
 
