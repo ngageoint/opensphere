@@ -67,11 +67,11 @@ os.im.Importer = function(parser) {
   this.mappings = null;
 
   /**
-   * Holds count of how many mappings failed in each mapping
+   * Holds count of how many mappings failed in each mapping that uses the toField attribute
    * @type {!Object<string, number>}
    * @protected
    */
-  this.failedMappings = {};
+  this.mappingFailCount = {};
 
   /**
    * the list of mappings for use with autodetection
@@ -265,7 +265,7 @@ os.im.Importer.prototype.startImport = function(source) {
   try {
     // notify the application that parsing is about to begin
     os.dispatcher.dispatchEvent(os.im.ImporterEvent.START);
-    this.failedMappings = {};
+    this.mappingFailCount = {};
 
     if (this.parser instanceof os.parse.AsyncParser) {
       this.parser.listenOnce(os.events.EventType.COMPLETE, this.onParserReady, false, this);
@@ -345,7 +345,7 @@ os.im.Importer.prototype.onParsingComplete = function(opt_event) {
   // dispatch the complete event before cleaning up the parser in case listeners need to reference it
   this.dispatchEvent(new goog.events.Event(os.events.EventType.COMPLETE));
 
-  const failed = Object.keys(this.failedMappings);
+  const failed = Object.keys(this.mappingFailCount) || [];
   if (failed.length > 0) {
     this.onFailedMappings(failed);
   }
@@ -363,7 +363,8 @@ os.im.Importer.prototype.onParsingComplete = function(opt_event) {
  * @protected
  */
 os.im.Importer.prototype.onFailedMappings = function(failed) {
-  const total = this.parser.features.length;
+  const features = this.parser.features || [];
+  const total = features.length;
   // keep track of if all mappings failed
   let error = false;
 
@@ -376,19 +377,28 @@ os.im.Importer.prototype.onFailedMappings = function(failed) {
   // Go through all failed mappings on this importer
   for (let keyIndex = 0; keyIndex < failed.length; keyIndex++) {
     const key = failed[keyIndex];
-    const numFailed = this.failedMappings[key];
+    const numFailed = this.mappingFailCount[key];
 
     error = (numFailed == total || error);
 
-    if (numFailed) {
+    if (numFailed !== 0) {
       const message = this.generateFailMessage(numFailed, total, key);
       failMessage += message;
+      // Send failures to the logger
+      goog.log.error(os.im.Importer.LOGGER_,
+          `${key}: Failed to map ${numFailed} out of ${total} features for ${title}.`);
+    } else if (numFailed === 0) {
+      goog.log.info(os.im.Importer.LOGGER_,
+          `${key}: Successfully mapped all ${total} features for ${title}. There were ${numFailed} failures.`);
     }
   }
 
   // Generate an alert
+  failMessage += error ?
+    `<div>All Ellipse Data failed to map for this layer.
+     Please check to ensure your data is formatted correctly.<div>` : '';
   const errorType = error ? os.alert.AlertEventSeverity.ERROR : os.alert.AlertEventSeverity.WARNING;
-  os.alert.AlertManager.getInstance().sendAlert(failMessage, errorType, os.im.Importer.LOGGER_);
+  os.alert.AlertManager.getInstance().sendAlert(failMessage, errorType);
 };
 
 /**
@@ -399,7 +409,7 @@ os.im.Importer.prototype.onFailedMappings = function(failed) {
  * @return {string} The string to send the user on failure
  */
 os.im.Importer.prototype.generateFailMessage = function(numFailed, total, mappingName) {
-  return `<div>${numFailed} out of ${total} features failed to map ${mappingName}<div>`;
+  return `<div> ${mappingName}: ${numFailed} out of ${total} features failed to map this column.<div>`;
 };
 
 
@@ -593,8 +603,13 @@ os.im.Importer.prototype.executeMapping = function(item) {
       }
 
       const toField = m.toField || undefined;
-      if (toField && item.get(toField) == undefined) {
-        this.failedMappings[toField] = this.failedMappings[toField] + 1 || 1;
+      if (toField) {
+        if (this.mappingFailCount[toField] == undefined) {
+          this.mappingFailCount[toField] = 0;
+        }
+        if (item.get(toField) == undefined) {
+          this.mappingFailCount[toField] = this.mappingFailCount[toField] + 1;
+        }
       }
     }
   }
