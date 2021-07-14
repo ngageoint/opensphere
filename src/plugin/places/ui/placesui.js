@@ -20,8 +20,6 @@ const layerMenu = goog.require('os.ui.menu.layer');
 const SlickGridEvent = goog.require('os.ui.slick.SlickGridEvent');
 const {createOrEditFolder} = goog.require('plugin.file.kml.ui');
 const KMLTreeExportUI = goog.require('plugin.file.kml.ui.KMLTreeExportUI');
-
-const {ExportFields} = goog.require('plugin.places');
 const PlacesManager = goog.require('plugin.places.PlacesManager');
 
 const ExportOptions = goog.requireType('os.ex.ExportOptions');
@@ -150,6 +148,7 @@ class Controller extends Disposable {
   /**
    * Export places to a KMZ.
    *
+   * @todo import ExportFields from places & add "fields: ExportFields" to export internal fields
    * @export
    */
   export() {
@@ -161,8 +160,7 @@ class Controller extends Disposable {
         selectedData: this['selected'],
         activeData: activePlaces,
         additionalOptions: true,
-        items: this.placesRoot_.getChildren(),
-        fields: ExportFields
+        items: this.placesRoot_.getChildren()
       }));
 
       Metrics.getInstance().updateMetric(metrics.Places.EXPORT, 1);
@@ -278,14 +276,8 @@ const getActivePlaces = function(root) {
  * @param {ExportOptions=} opt_options
  */
 const launchExportUI = function(rootNode, opt_options) {
-  if (!opt_options) {
-    opt_options = /** @type {ExportOptions} */ ({
-      fields: ExportFields
-    });
-  }
-
-  var tooltip = 'Places-specific features, such as Range Rings, may not be importable to other applications. ' +
-      'To export them as polygons, use the standard \'Export...\' menu option.';
+  var tooltip = 'Places-specific feature styles (e.g. Range Rings) will not be exported, and will render as points. ' +
+      'The standard Layer export window can support this action.';
   KMLTreeExportUI.launchTreeExport(rootNode, 'Export Places', opt_options, tooltip);
 };
 
