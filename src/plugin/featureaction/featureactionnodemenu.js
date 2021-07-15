@@ -387,7 +387,9 @@ const onToggleOffEvent_ = function(event) {
 };
 
 exports = {
-  MENU,
+  get MENU() {
+    return MENU;
+  },
   EventType,
   setup,
   dispose,
