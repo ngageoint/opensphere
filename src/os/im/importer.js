@@ -74,6 +74,12 @@ os.im.Importer = function(parser) {
   this.mappingFailCount = {};
 
   /**
+   * Total number of items processed
+   * @type {number}
+   */
+  this.totalCount = 0;
+
+  /**
    * the list of mappings for use with autodetection
    * @type {Object}
    */
@@ -266,6 +272,7 @@ os.im.Importer.prototype.startImport = function(source) {
     // notify the application that parsing is about to begin
     os.dispatcher.dispatchEvent(os.im.ImporterEvent.START);
     this.mappingFailCount = {};
+    this.totalCount = 0;
 
     if (this.parser instanceof os.parse.AsyncParser) {
       this.parser.listenOnce(os.events.EventType.COMPLETE, this.onParserReady, false, this);
@@ -363,9 +370,8 @@ os.im.Importer.prototype.onParsingComplete = function(opt_event) {
  * @protected
  */
 os.im.Importer.prototype.onFailedMappings = function(failed) {
-  const features = this.parser.features || [];
-  const total = features.length;
-  // keep track of if all mappings failed
+  const total = this.totalCount;
+  // keep track of if all features failed to map in a single mapping
   let error = false;
 
   // Get the layer name
@@ -401,9 +407,8 @@ os.im.Importer.prototype.onFailedMappings = function(failed) {
   // Generate an alert but only if some failed
   const someFailed = Object.values(this.mappingFailCount).some((m) => m > 0);
   if (someFailed) {
-    failMessage += error ?
-    `<div>All Ellipse Data failed to map for this layer.
-    Please check to ensure your data is formatted correctly.<div>` : '';
+    failMessage += `<div>${error ? 'All' : 'Some'} Ellipse Data failed to map for this layer. 
+      Please check to ensure your data is formatted correctly.<div>`;
     const errorType = error ? os.alert.AlertEventSeverity.ERROR : os.alert.AlertEventSeverity.WARNING;
     os.alert.AlertManager.getInstance().sendAlert(failMessage, errorType);
   }
@@ -483,6 +488,7 @@ os.im.Importer.prototype.addItem = function(item) {
 os.im.Importer.prototype.addItemInternal = function(item) {
   this.performMappings(item);
   this.data_.push(item);
+  this.totalCount++;
 };
 
 
@@ -644,6 +650,7 @@ os.im.Importer.prototype.reset = function() {
   this.stop();
   this.parser.cleanup();
   this.data_ = [];
+  this.totalCount = 0;
 };
 
 
