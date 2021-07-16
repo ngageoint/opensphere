@@ -26,3 +26,4 @@ jobs:
         user_name: 'Release to Master Merge Action'
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
