@@ -34,7 +34,6 @@
         }
       ]
     },
-    "allowEllipseConfiguration": true,
     "metrics": {
       "enabled": true
     },
