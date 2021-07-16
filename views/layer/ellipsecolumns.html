@@ -19,8 +19,8 @@
     <div class="mb-1 bg-secondary u-bg-secondary-text border rounded p-1" ng-if="ctrl.inputType == 'circle'">
       <div class="form-inline mb-1">
         <label class="mr-1">Radius/CEP</label>
-        <select class="col custom-select" ng-model="ctrl.radiusColumn"
-          ng-options="opt.name for opt in ctrl.columnOptions"></select>
+        <select class="custom-select col" ng-model="ctrl.radiusColumn"
+          column-suggestion suggested="ctrl.radiusSuggestions" options="ctrl.columnOptions"></select>
         <select class="custom-select ml-1 col-2" ng-model="ctrl.radiusUnits"
           ng-options="unit for unit in ctrl.unitOptions" ng-required="ctrl.inputType == 'circle'"></select>
       </div>
@@ -32,8 +32,8 @@
       <div class="form-inline mb-1">
         <label class="mr-1">Semi Major</label>
         <select class="col custom-select" ng-model="ctrl.semiMajorColumn"
-          ng-options="opt.name for opt in ctrl.columnOptions" ng-if="ctrl.inputType == 'ellipse'"
-          ng-required="ctrl.inputType == 'ellipse'"></select>
+          column-suggestion suggested="ctrl.ellipseSuggestions" options="ctrl.columnOptions"
+          ng-if="ctrl.inputType == 'ellipse'" ng-required="ctrl.inputType == 'ellipse'"></select>
         <select class="custom-select ml-1 col-2" ng-model="ctrl.semiMajorUnits"
           ng-options="unit for unit in ctrl.unitOptions" ng-if="ctrl.inputType == 'ellipse'"
           ng-required="ctrl.inputType == 'ellipse'"></select>
@@ -41,8 +41,8 @@
       <div class="form-inline mb-1">
         <label class="mr-1">Semi Minor</label>
         <select class="col custom-select" ng-model="ctrl.semiMinorColumn"
-          ng-options="opt.name for opt in ctrl.columnOptions" ng-if="ctrl.inputType == 'ellipse'"
-          ng-required="ctrl.inputType == 'ellipse'"></select>
+          column-suggestion suggested="ctrl.ellipseSuggestions" options="ctrl.columnOptions"
+          ng-if="ctrl.inputType == 'ellipse'" ng-required="ctrl.inputType == 'ellipse'"></select>
         <select class="custom-select ml-1 col-2" ng-model="ctrl.semiMinorUnits"
           ng-options="unit for unit in ctrl.unitOptions" ng-if="ctrl.inputType == 'ellipse'"
           ng-required="ctrl.inputType == 'ellipse'"></select>
@@ -50,8 +50,8 @@
       <div class="form-inline mb-1">
         <label class="mr-1">Orientation</label>
         <select class="col custom-select" ng-model="ctrl.orientation"
-          ng-options="opt.name for opt in ctrl.columnOptions" ng-if="ctrl.inputType == 'ellipse'"
-          ng-required="ctrl.inputType == 'ellipse'"></select>
+          column-suggestion suggested="ctrl.orientationSuggestions" options="ctrl.columnOptions"
+          ng-if="ctrl.inputType == 'ellipse'" ng-required="ctrl.inputType == 'ellipse'"></select>
       </div>
     </div>
   </div>

@@ -113,9 +113,6 @@ os.ui.layer.VectorStyleControlsCtrl = function($scope, $element) {
    */
   this['ellipseMapping'] = undefined;
 
-  const supportsMapping = this.allowEllipseConfig();
-  this['allowEllipseConfig'] = (this.scope['allowEllipseConfig'] && supportsMapping) || false;
-
   /**
    * Help text for Ellipse configuration
    * @type {string}
@@ -163,6 +160,7 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.disposeInternal = function() {
  * Fire a scope event when the shape is changed by the user.
  *
  * @return {boolean}
+ * @export
  */
 os.ui.layer.VectorStyleControlsCtrl.prototype.allowEllipseConfig = function() {
   const layer = this.scope['layer'];

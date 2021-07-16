@@ -1,6 +1,8 @@
 goog.module('os.ui.layer.EllipseColumnsUI');
 goog.module.declareLegacyNamespace();
 
+goog.require('os.ui.layer.ColumnSuggestionSelect');
+
 const {getValues} = goog.require('goog.object');
 const {ROOT, implements: implementationOf} = goog.require('os');
 const ColumnDefinition = goog.require('os.data.ColumnDefinition');
@@ -52,6 +54,14 @@ Module.directive('ellipsecolumns', [directive]);
 
 
 /**
+ * Settings key for radius column regex, outside of the normal RadiusMapping config.
+ * @type {string}
+ * @const
+ */
+const ELLIPSE_RADIUS_REGEX = 'os.mapping.ellipse.radiusRegex';
+
+
+/**
  * Controller for the Ellipse Column Form.
  * @unrestricted
  */
@@ -89,14 +99,14 @@ class Controller {
      */
     this['inputType'] = EllipseInputType.ELLIPSE;
 
+    const columns = (this.source_ ? this.source_.getColumns() || [] : this.scope_['layer']['columns'] || [])
+        .filter((col) => !isDerived(col)).map((col) => col['name']);
+
     /**
      * Column Options for the source
-     * @type {Array<ColumnDefinition>}
+     * @type {Array<string>}
      */
-    this['columnOptions'] = this.source_ ? this.source_.getColumns() || [] : this.scope_['layer']['columns'] || [];
-
-    // Filter out derived columns
-    this['columnOptions'] = this['columnOptions'].filter((col) => !isDerived(col));
+    this['columnOptions'] = columns.sort((a, b) => a.localeCompare(b));
 
     /**
      * Array of the units available
@@ -108,7 +118,17 @@ class Controller {
      * The name of the circle Column
      * @type {string}
      */
-    this['radiusColumn'] = this['columnOptions'].find((col) => col['name'] === RADIUS);
+    this['radiusColumn'] = columns.find((col) => col === RADIUS);
+
+    // get suggestions regex from settings, or use RadiusMapping
+    const radiusRegex = new RegExp(
+        /** @type {!(string|RegExp)} */ (os.settings.get(ELLIPSE_RADIUS_REGEX, RadiusMapping.REGEX)), 'i');
+
+    /**
+     * Suggested columns for radius
+     * @type {Array<string>}
+     */
+    this['radiusSuggestions'] = columns.filter((col) => radiusRegex.test(col));
 
     /**
      * Units selected for circle
@@ -120,7 +140,7 @@ class Controller {
      * The name of the semi major Column
      * @type {string}
      */
-    this['semiMajorColumn'] = this['columnOptions'].find((col) => col['name'] === SEMI_MAJOR);
+    this['semiMajorColumn'] = columns.find((col) => col === SEMI_MAJOR);
 
     /**
      * Units selected for semi major
@@ -132,7 +152,7 @@ class Controller {
      * The name of the semi minor Column
      * @type {string}
      */
-    this['semiMinorColumn'] = this['columnOptions'].find((col) => col['name'] === SEMI_MINOR);
+    this['semiMinorColumn'] = columns.find((col) => col === SEMI_MINOR);
 
     /**
      * Units selected for semi minor
@@ -141,10 +161,22 @@ class Controller {
     this['semiMinorUnits'] = this['semiMinorColumn'] ? 'nmi' : undefined;
 
     /**
+     * Suggested columns for semi major / minor
+     * @type {Array<string>}
+     */
+    this['ellipseSuggestions'] = columns.filter((col) => /s(e(m(i)?)?)?[\W_]*(maj|min)(o(r)?)?/i.test(col));
+
+    /**
      * The name of the orientation Column
      * @type {string}
      */
-    this['orientation'] = this['columnOptions'].find((col) => col['name'] === ORIENTATION);
+    this['orientation'] = columns.find((col) => col === ORIENTATION);
+
+    /**
+     * Suggested columns for orientation
+     * @type {Array<string>}
+     */
+    this['orientationSuggestions'] = columns.filter((col) => OrientationMapping.REGEX.test(col));
 
     /**
      * Popover Text
@@ -181,7 +213,7 @@ class Controller {
       const id = mapping.getId();
       const field = mapping.field;
 
-      const column = this['columnOptions'].find((col) => col['name'] === field);
+      const column = this['columnOptions'].find((col) => col === field);
 
       if (id == RadiusMapping.ID) {
         this['inputType'] = EllipseInputType.CIRCLE;
@@ -245,22 +277,22 @@ class Controller {
 
     if (type == EllipseInputType.CIRCLE && this.validType(type)) {
       const rm = new RadiusMapping();
-      rm.field = this['radiusColumn'].name;
+      rm.field = this['radiusColumn'];
       rm.setUnits(this['radiusUnits']);
       mappings.push(rm);
     } else if (type == EllipseInputType.ELLIPSE && this.validType(type)) {
       const smaj = new SemiMajorMapping();
-      smaj.field = this['semiMajorColumn'].name;
+      smaj.field = this['semiMajorColumn'];
       smaj.setUnits(this['semiMajorUnits']);
       mappings.push(smaj);
 
       const smin = new SemiMinorMapping();
-      smin.field = this['semiMinorColumn'].name;
+      smin.field = this['semiMinorColumn'];
       smin.setUnits(this['semiMinorUnits']);
       mappings.push(smin);
 
       const om = new OrientationMapping();
-      om.field = this['orientation'].name;
+      om.field = this['orientation'];
       mappings.push(om);
     }
 
@@ -345,7 +377,7 @@ class Controller {
  * Settings key for if this capability is enabled in configs
  * @type {string}
  */
-const ALLOW_ELLIPSE_CONFIG = 'allowEllipseConfiguration';
+const ALLOW_ELLIPSE_CONFIG = 'os.mapping.ellipse.allowConfiguration';
 
 
 /**
