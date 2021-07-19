@@ -5,8 +5,9 @@ goog.require('goog.debug.FancyWindow');
 goog.require('goog.html.SafeStyleSheet');
 goog.require('goog.string.Const');
 goog.require('os.alert.AlertManager');
-goog.require('os.file.persist.FilePersistence');
 goog.require('os.ui');
+
+const {saveFile} = goog.require('os.file.persist');
 
 
 /**
@@ -125,7 +126,7 @@ class FancierWindow extends goog.debug.FancyWindow {
 
     const outFileName = this.identifier + 'LoggingOutput_' + moment(Date.now()).utc().format('YYYYMMDD_Hmmss') +
         'Z.html';
-    if (os.file.persist.saveFile(outFileName, goog.html.SafeHtml.unwrap(logOutput), 'text/html')) {
+    if (saveFile(outFileName, goog.html.SafeHtml.unwrap(logOutput), 'text/html')) {
       os.alert.AlertManager.getInstance().sendAlert('Created ' + outFileName, os.alert.AlertEventSeverity.SUCCESS);
     } else {
       os.alert.AlertManager.getInstance().sendAlert('Could not create ' + outFileName,
