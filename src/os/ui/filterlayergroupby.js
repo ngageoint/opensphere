@@ -1,7 +1,7 @@
 goog.module('os.ui.FilterLayerGroupBy');
 goog.module.declareLegacyNamespace();
 
-const {prettyPrintType} = goog.require('os.filter.BaseFilterManager');
+const BaseFilterManager = goog.require('os.filter.BaseFilterManager');
 const {getFilterManager} = goog.require('os.query.instance');
 const FilterGroupBy = goog.require('os.ui.filter.ui.FilterGroupBy');
 
@@ -53,7 +53,7 @@ class FilterLayerGroupBy extends FilterGroupBy {
           val += ' (' + provider + ')';
         }
       } else {
-        val = prettyPrintType(type, this.useType_) + ' (not loaded)';
+        val = BaseFilterManager.prettyPrintType(type, this.useType_) + ' (not loaded)';
       }
     }
 
