@@ -12,12 +12,12 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
       with:
         persist-credentials: false
 
     - name: Merge Release to Master
-      uses: robotology/gh-action-nightly-merge@v1.3.1
+      uses: robotology/gh-action-nightly-merge@v1.3.2
       with:
         stable_branch: 'release'
         development_branch: 'master'
