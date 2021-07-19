@@ -1,14 +1,15 @@
-goog.provide('os.file.mime.mock');
+goog.module('os.file.mime.mock');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.net.XhrIo');
-goog.require('os.file.File');
-goog.require('os.net.Request');
-goog.require;
+const XhrIo = goog.require('goog.net.XhrIo');
+const OSFile = goog.require('os.file.File');
+const {detect} = goog.require('os.file.mime');
+const Request = goog.require('os.net.Request');
 
-os.file.mime.mock.testFiles = function(files, testFunc, len) {
+const testFiles = function(files, testFunc, len) {
   files.forEach(function(url) {
-    var req = new os.net.Request(url);
-    req.setResponseType(goog.net.XhrIo.ResponseType.ARRAY_BUFFER);
+    var req = new Request(url);
+    req.setResponseType(XhrIo.ResponseType.ARRAY_BUFFER);
     var buffer = null;
 
     runs(function() {
@@ -22,7 +23,7 @@ os.file.mime.mock.testFiles = function(files, testFunc, len) {
     }, url + ' to load');
 
     runs(function() {
-      var file = new os.file.File();
+      var file = new OSFile();
       file.setFileName(url);
       file.setUrl(url);
 
@@ -38,12 +39,11 @@ os.file.mime.mock.testFiles = function(files, testFunc, len) {
   });
 };
 
-
-os.file.mime.mock.testNo = function(type) {
+const testNo = function(type) {
   return function(buffer, file) {
     var result = Number.POSITIVE_INFINITY;
     runs(function() {
-      os.file.mime.detect(buffer, file).then(function(val) {
+      detect(buffer, file).then(function(val) {
         result = val;
       });
     });
@@ -58,12 +58,11 @@ os.file.mime.mock.testNo = function(type) {
   };
 };
 
-
-os.file.mime.mock.testYes = function(type) {
+const testYes = function(type) {
   return function(buffer, file) {
     var result = null;
     runs(function() {
-      os.file.mime.detect(buffer, file).then(function(val) {
+      detect(buffer, file).then(function(val) {
         result = val;
       });
     });
@@ -80,4 +79,10 @@ os.file.mime.mock.testYes = function(type) {
       expect(result).toBe(type);
     });
   };
+};
+
+exports = {
+  testFiles,
+  testNo,
+  testYes
 };

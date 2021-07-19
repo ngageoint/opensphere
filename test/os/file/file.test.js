@@ -1,15 +1,21 @@
+goog.require('goog.userAgent');
+goog.require('os.file');
 goog.require('os.file.File');
 
 
 describe('os.file.File', function() {
-  var fsFile = new os.file.File();
+  const userAgent = goog.module.get('goog.userAgent');
+  const osFile = goog.module.get('os.file');
+  const OSFile = goog.module.get('os.file.File');
+
+  var fsFile = new OSFile();
   fsFile.setFileName('testFile.xml');
   fsFile.setUrl('file:///path/to/some/testFile.xml');
   fsFile.setContent('test content');
   fsFile.setContentType('test+content+and+stuff');
   fsFile.setType('test');
 
-  var localFile = new os.file.File();
+  var localFile = new OSFile();
   localFile.setFileName('testFile.xml');
   localFile.setUrl('local://testfileurl');
   localFile.setContent('test content');
@@ -18,33 +24,33 @@ describe('os.file.File', function() {
 
   it('gets file:// URLs from a path', function() {
     var path = '/path/to/some/file.xml';
-    expect(os.file.getFileUrl(path)).toBe('file://' + path);
+    expect(osFile.getFileUrl(path)).toBe('file://' + path);
 
-    var isWin = goog.userAgent.WINDOWS;
-    goog.userAgent.WINDOWS = true;
+    var isWin = userAgent.WINDOWS;
+    userAgent.WINDOWS = true;
 
     var winPath = 'C:\\Program Files\\My File.xml';
-    expect(os.file.getFileUrl(winPath)).toBe('file:///C:/Program Files/My File.xml');
+    expect(osFile.getFileUrl(winPath)).toBe('file:///C:/Program Files/My File.xml');
 
-    goog.userAgent.WINDOWS = isWin;
+    userAgent.WINDOWS = isWin;
   });
 
   it('tests for file:// URLs', function() {
-    expect(os.file.isFileSystem(fsFile)).toBe(true);
-    expect(os.file.isFileSystem('file:///test')).toBe(true);
+    expect(osFile.isFileSystem(fsFile)).toBe(true);
+    expect(osFile.isFileSystem('file:///test')).toBe(true);
 
-    expect(os.file.isFileSystem(localFile)).toBe(false);
-    expect(os.file.isFileSystem('local://test')).toBe(false);
-    expect(os.file.isFileSystem('not file:///test')).toBe(false);
+    expect(osFile.isFileSystem(localFile)).toBe(false);
+    expect(osFile.isFileSystem('local://test')).toBe(false);
+    expect(osFile.isFileSystem('not file:///test')).toBe(false);
   });
 
   it('tests for local:// URLs', function() {
-    expect(os.file.isLocal(localFile)).toBe(true);
-    expect(os.file.isLocal('local://test')).toBe(true);
+    expect(osFile.isLocal(localFile)).toBe(true);
+    expect(osFile.isLocal('local://test')).toBe(true);
 
-    expect(os.file.isLocal(fsFile)).toBe(false);
-    expect(os.file.isLocal('file:///test')).toBe(false);
-    expect(os.file.isLocal('not local://test')).toBe(false);
+    expect(osFile.isLocal(fsFile)).toBe(false);
+    expect(osFile.isLocal('file:///test')).toBe(false);
+    expect(osFile.isLocal('not local://test')).toBe(false);
   });
 
   it('should persist and restore properly', function() {
@@ -55,7 +61,7 @@ describe('os.file.File', function() {
     expect(p.contentType).toBe(localFile.getContentType());
     expect(p.type).toBe(localFile.getType());
 
-    var r = new os.file.File();
+    var r = new OSFile();
     r.restore(p);
 
     expect(r.getFileName()).toBe(localFile.getFileName());

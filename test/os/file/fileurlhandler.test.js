@@ -1,15 +1,25 @@
+goog.require('os.Dispatcher');
+goog.require('os.data.DataManager');
 goog.require('os.data.FileDescriptor');
 goog.require('os.file.FileUrlHandler');
 goog.require('os.mock');
 goog.require('os.ui.im.ImportEvent');
+goog.require('os.ui.im.ImportEventType');
 
 
 describe('os.file.FileUrlHandler', function() {
+  const Dispatcher = goog.module.get('os.Dispatcher');
+  const DataManager = goog.module.get('os.data.DataManager');
+  const FileDescriptor = goog.module.get('os.data.FileDescriptor');
+  const FileUrlHandler = goog.module.get('os.file.FileUrlHandler');
+  const ImportEvent = goog.module.get('os.ui.im.ImportEvent');
+  const ImportEventType = goog.module.get('os.ui.im.ImportEventType');
+
   var handler;
   var url = 'https://file.com/file.csv';
 
   beforeEach(function() {
-    handler = new os.file.FileUrlHandler();
+    handler = new FileUrlHandler();
   });
 
   it('should handle only file keys', function() {
@@ -22,26 +32,26 @@ describe('os.file.FileUrlHandler', function() {
     var fn = function(event) {
       received = event;
     };
-    os.dispatcher.listenOnce(os.ui.im.ImportEventType.URL, fn);
+    Dispatcher.getInstance().listenOnce(ImportEventType.URL, fn);
 
     handler.handle('file', url);
 
     expect(received).not.toBe(undefined);
-    expect(received instanceof os.ui.im.ImportEvent);
+    expect(received instanceof ImportEvent);
     expect(received.url).toBe(url);
   });
 
   it('should unhandle keys by removing the corresponding descriptor', function() {
-    var d = new os.data.FileDescriptor();
+    var d = new FileDescriptor();
     d.setId('muhId');
     d.setUrl(url);
 
-    os.dataManager.addDescriptor(d);
-    expect(os.dataManager.getDescriptor('muhId')).not.toBe(null);
+    DataManager.getInstance().addDescriptor(d);
+    expect(DataManager.getInstance().getDescriptor('muhId')).not.toBe(null);
 
     handler.handle('file', url);
     handler.handle('file', '');
 
-    expect(os.dataManager.getDescriptor('muhId')).toBe(null);
+    expect(DataManager.getInstance().getDescriptor('muhId')).toBe(null);
   });
 });

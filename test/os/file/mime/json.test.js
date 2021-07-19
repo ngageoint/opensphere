@@ -1,18 +1,26 @@
 goog.require('os.file.File');
+goog.require('os.file.mime');
 goog.require('os.file.mime.json');
 goog.require('os.file.mime.mock');
+goog.require('os.file.mime.text');
 
 describe('os.file.mime.json', function() {
+  const mime = goog.module.get('os.file.mime');
+  const json = goog.module.get('os.file.mime.json');
+  const text = goog.module.get('os.file.mime.text');
+
+  const mockMime = goog.module.get('os.file.mime.mock');
+
   it('should not detect files that are not json files', function() {
-    os.file.mime.mock.testFiles([
+    mockMime.testFiles([
       '/base/test/plugin/file/kml/kml_test.xml',
       '/base/test/resources/bin/rand.bin',
       '/base/test/resources/json/ERROR_invalid_field.json',
       '/base/test/resources/json/ERROR_invalid_field2.json',
       '/base/test/resources/json/ERROR_invalid_value.json',
       '/base/test/resources/json/ERROR_invalid_value2.json',
-      '/base/test/resources/json/ERROR_trailing_comma.json'],
-        os.file.mime.mock.testNo(os.file.mime.json.TYPE));
+      '/base/test/resources/json/ERROR_trailing_comma.json'
+    ], mockMime.testNo(json.TYPE));
   });
 
   it('should detect files that are json files', function() {
@@ -34,13 +42,13 @@ describe('os.file.mime.json', function() {
       '/base/test/resources/json/partial_null.json': {'field': undefined}
     };
 
-    os.file.mime.mock.testFiles(Object.keys(expected),
+    mockMime.testFiles(Object.keys(expected),
         function(buffer, filename) {
           var eVal = expected[filename];
-          var context = os.file.mime.text.getText(buffer);
+          var context = text.getText(buffer);
           var result = null;
           runs(function() {
-            os.file.mime.json.isJSON(buffer, undefined, context).then(function(val) {
+            json.isJSON(buffer, undefined, context).then(function(val) {
               result = val;
             });
           });
@@ -63,7 +71,7 @@ describe('os.file.mime.json', function() {
   });
 
   it('should register itself with mime detection', function() {
-    var chain = os.file.mime.getTypeChain(os.file.mime.json.TYPE).join(', ');
+    var chain = mime.getTypeChain(json.TYPE).join(', ');
     expect(chain).toBe('application/octet-stream, text/plain, application/json');
   });
 });
