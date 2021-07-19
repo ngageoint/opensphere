@@ -26,7 +26,7 @@ class AudioImportUI extends AbstractImportUI {
     const url = file.getUrl();
 
     let msg = null;
-    if (url && !osFile.isLocal(url) && (osFile.FILE_URL_ENABLED || !osFile.isFileSystem(url))) {
+    if (url && !osFile.isLocal(url) && (osFile.isFileUrlEnabled() || !osFile.isFileSystem(url))) {
       const label = AudioManager.getInstance().addSound(url);
 
       msg = 'Added new sound "' + label + '"';

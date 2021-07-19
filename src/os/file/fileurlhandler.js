@@ -66,15 +66,38 @@ class FileUrlHandler extends AbstractUrlHandler {
       }
     }
   }
-}
-goog.addSingletonGetter(FileUrlHandler);
 
+  /**
+   * Get the global instance.
+   * @return {!FileUrlHandler}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new FileUrlHandler();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {FileUrlHandler} value
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
+
+/**
+ * Global instance.
+ * @type {FileUrlHandler|undefined}
+ */
+let instance;
 
 /**
  * @type {string}
  * @const
  */
 FileUrlHandler.KEY = 'file';
-
 
 exports = FileUrlHandler;
