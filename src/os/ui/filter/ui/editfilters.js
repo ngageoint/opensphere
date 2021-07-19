@@ -9,7 +9,7 @@ goog.require('os.ui.filter');
 goog.require('os.ui.filter.advancedFilterBuilderDirective');
 goog.require('os.ui.filter.basicFilterBuilderDirective');
 goog.require('os.ui.filter.ui.GroupNode');
-goog.require('os.ui.util.validationMessageDirective');
+goog.require('os.ui.util.ValidationMessageUI');
 goog.require('os.ui.window');
 goog.require('os.ui.window.ConfirmUI');
 

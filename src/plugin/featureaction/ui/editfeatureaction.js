@@ -3,7 +3,7 @@ goog.module.declareLegacyNamespace();
 
 goog.require('os.ui.filter.advancedFilterBuilderDirective');
 goog.require('os.ui.filter.basicFilterBuilderDirective');
-goog.require('os.ui.util.validationMessageDirective');
+goog.require('os.ui.util.ValidationMessageUI');
 
 const Feature = goog.require('ol.Feature');
 const ImageState = goog.require('ol.ImageState');

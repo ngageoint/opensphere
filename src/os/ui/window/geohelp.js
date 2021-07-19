@@ -1,8 +1,9 @@
-goog.provide('os.ui.window.GeoHelpCtrl');
-goog.provide('os.ui.window.geoHelpDirective');
+goog.module('os.ui.window.GeoHelpUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
-goog.require('os.ui.window');
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const osWindow = goog.require('os.ui.window');
 
 
 /**
@@ -10,29 +11,70 @@ goog.require('os.ui.window');
  *
  * @return {angular.Directive}
  */
-os.ui.window.geoHelpDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    templateUrl: os.ROOT + 'views/window/geohelp.html',
-    controller: os.ui.window.GeoHelpCtrl,
-    controllerAs: 'th'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  templateUrl: ROOT + 'views/window/geohelp.html',
+  controller: Controller,
+  controllerAs: 'th'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'geohelp';
 
 /**
  * Add the directive to the core module
  */
-os.ui.Module.directive('geohelp', [os.ui.window.geoHelpDirective]);
+Module.directive(directiveTag, [directive]);
 
+/**
+ * Controller for date/time format help.
+ * @unrestricted
+ */
+class Controller {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @ngInject
+   */
+  constructor($scope, $element) {
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
+    $scope.$on('$destroy', this.destroy_.bind(this));
+  }
+
+  /**
+   * Clean up references.
+   *
+   * @private
+   */
+  destroy_() {
+    this.element_ = null;
+  }
+
+  /**
+   * Close the window
+   *
+   * @export
+   */
+  close() {
+    osWindow.close(this.element_);
+  }
+}
 
 /**
  * Launches the date/time formatting help dialog if one isn't displayed already.
  */
-os.ui.window.launchGeoHelp = function() {
+const launchGeoHelp = function() {
   if (!document.getElementById('geo-help')) {
-    os.ui.window.create({
+    osWindow.create({
       'label': 'Location Formats',
       'icon': 'fa fa-map-marker',
       'x': '-10',
@@ -45,45 +87,19 @@ os.ui.window.launchGeoHelp = function() {
       'max-height': '600',
       'show-close': true,
       'modal': true
-    }, '<geohelp></geohelp>');
+    }, `<${directiveTag}></${directiveTag}>`);
   }
 };
 
-
-
 /**
- * Controller for date/time format help.
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @constructor
- * @ngInject
+ * @type {function()}
+ * @deprecated Please use os.ui.window.GeoHelpUI.launchGeoHelp.
  */
-os.ui.window.GeoHelpCtrl = function($scope, $element) {
-  /**
-   * @type {?angular.JQLite}
-   * @private
-   */
-  this.element_ = $element;
-  $scope.$on('$destroy', this.destroy_.bind(this));
-};
+osWindow.launchGeoHelp = launchGeoHelp;
 
-
-/**
- * Clean up references.
- *
- * @private
- */
-os.ui.window.GeoHelpCtrl.prototype.destroy_ = function() {
-  this.element_ = null;
-};
-
-
-/**
- * Close the window
- *
- * @export
- */
-os.ui.window.GeoHelpCtrl.prototype.close = function() {
-  os.ui.window.close(this.element_);
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  launchGeoHelp
 };

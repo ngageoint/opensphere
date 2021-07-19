@@ -1,9 +1,9 @@
-goog.provide('os.ui.util.deprecated');
+goog.module('os.ui.util.deprecated');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.async.Delay');
-goog.require('os.config.Settings');
-goog.require('os.ui.window');
-goog.require('os.ui.window.ConfirmUI');
+const Delay = goog.require('goog.async.Delay');
+const Settings = goog.require('os.config.Settings');
+const ConfirmUI = goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -12,11 +12,10 @@ goog.require('os.ui.window.ConfirmUI');
  * @param {?string} name
  * @return {boolean}
  */
-os.ui.util.deprecated.isLayerDeprecated = function(name) {
-  var deprecatedLayers = /** @type {Object} */ (os.settings.get(['deprecatedLayers'], {}));
+const isLayerDeprecated = function(name) {
+  var deprecatedLayers = /** @type {Object} */ (Settings.getInstance().get(['deprecatedLayers'], {}));
   return !!name && name in deprecatedLayers;
 };
-
 
 /**
  * Adds a layer name to the queue of deprecated layer names that will be shown in the popup. This is done
@@ -25,45 +24,36 @@ os.ui.util.deprecated.isLayerDeprecated = function(name) {
  *
  * @param {?string} name
  */
-os.ui.util.deprecated.showDeprecatedWarning = function(name) {
-  if (name) {
-    if (!os.ui.util.deprecated.deprecatedLayers_) {
-      os.ui.util.deprecated.deprecatedLayers_ = [];
-    }
-
-    // don't insert duplicates (layer groups tend to cause this problem)
-    if (os.ui.util.deprecated.deprecatedLayers_.indexOf(name) === -1) {
-      os.ui.util.deprecated.deprecatedLayers_.push(name);
-      os.ui.util.deprecated.windowDelay_.start();
-    }
+const showDeprecatedWarning = function(name) {
+  // don't insert duplicates (layer groups tend to cause this problem)
+  if (name && notifyQueue.indexOf(name) === -1) {
+    notifyQueue.push(name);
+    windowDelay.start();
   }
 };
 
-
 /**
  * Shows a modal dialog explaining that a set of layers is deprecated and should not be used going forward.
- *
- * @private
  */
-os.ui.util.deprecated.launchDeprecatedLayersWindow_ = function() {
-  var layers = os.ui.util.deprecated.deprecatedLayers_;
-
-  if (layers && layers.length > 0) {
-    var deprecatedLayers = /** @type {Object} */ (os.settings.get(['deprecatedLayers'], {}));
+const launchDeprecatedLayersWindow = function() {
+  if (notifyQueue && notifyQueue.length > 0) {
+    var deprecatedLayers = /** @type {Object} */ (Settings.getInstance().get(['deprecatedLayers'], {}));
 
     var layersMarkup = '<ul>';
-    for (var i = 0, n = layers.length; i < n; i++) {
-      var layer = layers[i];
+    for (var i = 0, n = notifyQueue.length; i < n; i++) {
+      var layer = notifyQueue[i];
       var msg = deprecatedLayers[layer] ? deprecatedLayers[layer]['message'] : 'The layer "' + layer + '" is legacy ' +
           'and may soon cease to function or be removed.';
       layersMarkup += '<li>' + msg + '</li>';
     }
     layersMarkup += '</ul>';
 
+    notifyQueue.length = 0;
+
     var text = '<b>Heads up!</b><p>The following legacy layers were just loaded into the application: </p>' +
         layersMarkup;
 
-    os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+    ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
       prompt: text,
       yesText: 'Got It',
       noIcon: '',
@@ -79,23 +69,22 @@ os.ui.util.deprecated.launchDeprecatedLayersWindow_ = function() {
         'modal': 'true'
       }
     }));
-
-    os.ui.util.deprecated.deprecatedLayers_ = null;
   }
 };
 
-
 /**
  * Array of deprecated layer names that will be fed into the window popup.
- * @type {?Array<string>}
- * @private
+ * @type {!Array<string>}
  */
-os.ui.util.deprecated.deprecatedLayers_ = null;
-
+const notifyQueue = [];
 
 /**
  * Delay for pooling together multiple calls to the deprecated layer warning.
- * @type {goog.async.Delay}
- * @private
+ * @type {Delay}
  */
-os.ui.util.deprecated.windowDelay_ = new goog.async.Delay(os.ui.util.deprecated.launchDeprecatedLayersWindow_, 500);
+const windowDelay = new Delay(launchDeprecatedLayersWindow, 500);
+
+exports = {
+  isLayerDeprecated,
+  showDeprecatedWarning
+};

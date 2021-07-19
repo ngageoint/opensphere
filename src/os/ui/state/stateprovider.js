@@ -1,65 +1,90 @@
-goog.provide('os.ui.state.StateProvider');
+goog.module('os.ui.state.StateProvider');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.config');
-goog.require('os.ui.data.DescriptorProvider');
-goog.require('os.ui.state.AbstractStateDescriptor');
-
-
+const {getAppName} = goog.require('os.config');
+const DescriptorProvider = goog.require('os.ui.data.DescriptorProvider');
+const AbstractStateDescriptor = goog.require('os.ui.state.AbstractStateDescriptor');
 
 /**
  * State file provider
  *
- * @extends {os.ui.data.DescriptorProvider<!os.ui.state.AbstractStateDescriptor>}
- * @constructor
+ * @extends {DescriptorProvider<!AbstractStateDescriptor>}
  */
-os.ui.state.StateProvider = function() {
-  os.ui.state.StateProvider.base(this, 'constructor');
-};
-goog.inherits(os.ui.state.StateProvider, os.ui.data.DescriptorProvider);
-goog.addSingletonGetter(os.ui.state.StateProvider);
-
-
-/**
- * @inheritDoc
- */
-os.ui.state.StateProvider.prototype.configure = function(config) {
-  this.setId(os.ui.state.AbstractStateDescriptor.ID);
-  this.setLabel('State Files');
-
-  os.ui.state.StateProvider.base(this, 'configure', config);
-
-  // this provider should not show up in the server manager
-  this.listInServers = false;
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.state.StateProvider.prototype.load = function(opt_ping) {
-  os.ui.state.StateProvider.base(this, 'load', opt_ping);
-
-  // After loading activate the states.
-  var descriptors = this.getDescriptors();
-  for (var i = 0, n = descriptors.length; i < n; i++) {
-    var descriptor = descriptors[i];
-    descriptor.updateActiveFromTemp();
+class StateProvider extends DescriptorProvider {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
   }
-};
 
+  /**
+   * @inheritDoc
+   */
+  configure(config) {
+    this.setId(AbstractStateDescriptor.ID);
+    this.setLabel('State Files');
+
+    super.configure(config);
+
+    // this provider should not show up in the server manager
+    this.listInServers = false;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  load(opt_ping) {
+    super.load(opt_ping);
+
+    // After loading activate the states.
+    var descriptors = this.getDescriptors();
+    for (var i = 0, n = descriptors.length; i < n; i++) {
+      var descriptor = descriptors[i];
+      descriptor.updateActiveFromTemp();
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getToolTip() {
+    var appName = getAppName('the application');
+    return 'Contains all state files that have been imported into ' + appName;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getErrorMessage() {
+    return null;
+  }
+
+  /**
+   * Get the global instance.
+   * @return {!StateProvider}
+   */
+  static getInstance() {
+    if (!instance) {
+      instance = new StateProvider();
+    }
+
+    return instance;
+  }
+
+  /**
+   * Set the global instance.
+   * @param {StateProvider} value
+   */
+  static setInstance(value) {
+    instance = value;
+  }
+}
 
 /**
- * @inheritDoc
+ * Global instance.
+ * @type {StateProvider|undefined}
  */
-os.ui.state.StateProvider.prototype.getToolTip = function() {
-  var appName = os.config.getAppName('the application');
-  return 'Contains all state files that have been imported into ' + appName;
-};
+let instance;
 
-
-/**
- * @inheritDoc
- */
-os.ui.state.StateProvider.prototype.getErrorMessage = function() {
-  return null;
-};
+exports = StateProvider;

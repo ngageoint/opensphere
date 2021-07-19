@@ -4,7 +4,7 @@ goog.provide('os.ui.filter.ui.filterExportDirective');
 goog.require('os.array');
 goog.require('os.ui.Module');
 goog.require('os.ui.checklistDirective');
-goog.require('os.ui.util.validationMessageDirective');
+goog.require('os.ui.util.ValidationMessageUI');
 
 
 /**

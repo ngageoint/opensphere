@@ -39,7 +39,7 @@ goog.require('os.ui.layer.labelControlsDirective');
 goog.require('os.ui.layer.vectorStyleControlsDirective');
 goog.require('os.ui.list');
 goog.require('os.ui.text.tuiEditorDirective');
-goog.require('os.ui.util.validationMessageDirective');
+goog.require('os.ui.util.ValidationMessageUI');
 goog.require('os.ui.window');
 goog.require('os.webgl.AltitudeMode');
 

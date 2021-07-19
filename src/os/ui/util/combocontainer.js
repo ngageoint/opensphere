@@ -1,6 +1,9 @@
-goog.provide('os.ui.util.comboContainerDirective');
-goog.require('goog.object');
-goog.require('os.ui.Module');
+goog.module('os.ui.util.comboContainerDirective');
+goog.module.declareLegacyNamespace();
+
+const {getViewportSize} = goog.require('goog.dom');
+const {apply} = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -15,16 +18,18 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-os.ui.util.comboContainerDirective = function() {
-  return {
-    restrict: 'C',
-    link: os.ui.util.comboContainerLink
-  };
-};
+const directive = () => ({
+  restrict: 'C',
+  link: linkFn
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'combo-container';
 
-os.ui.Module.directive('comboContainer', os.ui.util.comboContainerDirective);
-
+Module.directive('comboContainer', directive);
 
 /**
  * Link function for combo-container directive
@@ -33,7 +38,7 @@ os.ui.Module.directive('comboContainer', os.ui.util.comboContainerDirective);
  * @param {!angular.JQLite} $element
  * @param {Object} $attrs
  */
-os.ui.util.comboContainerLink = function($scope, $element, $attrs) {
+const linkFn = function($scope, $element, $attrs) {
   var comboEl = $element.find('.js-combo-drop');
   var updateComboPosition;
   var uniqueId = 'combo-container-' + Date.now();
@@ -53,7 +58,7 @@ os.ui.util.comboContainerLink = function($scope, $element, $attrs) {
         ($scope['showChoice'] && comboContainerParent.length > 0 &&
         comboContainerParent.attr('data-combo-id') !== uniqueId)) {
       $scope['showChoice'] = false;
-      os.ui.apply($scope);
+      apply($scope);
     }
   };
   $(document).on('mousedown', hideDropdown);
@@ -82,7 +87,7 @@ os.ui.util.comboContainerLink = function($scope, $element, $attrs) {
       }
 
       if ($attrs['resizable']) {
-        var maxWidth = goog.dom.getViewportSize(window).width - $element.offset().left - 50;
+        var maxWidth = getViewportSize(window).width - $element.offset().left - 50;
 
         var resizeConfig = {
           'minWidth': width,
@@ -117,4 +122,9 @@ os.ui.util.comboContainerLink = function($scope, $element, $attrs) {
     }
     comboEl.remove();
   });
+};
+
+exports = {
+  directive,
+  directiveTag
 };

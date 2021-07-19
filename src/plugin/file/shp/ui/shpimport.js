@@ -5,7 +5,7 @@ const osFile = goog.require('os.file');
 
 const Module = goog.require('os.ui.Module');
 const FileImportWizard = goog.require('os.ui.im.FileImportWizard');
-const wizardDirective = goog.require('os.ui.wiz.wizardDirective');
+const {directive: wizardDirective} = goog.require('os.ui.wiz.WizardUI');
 const SHPDescriptor = goog.require('plugin.file.shp.SHPDescriptor');
 const SHPProvider = goog.require('plugin.file.shp.SHPProvider');
 const SHPParserConfig = goog.requireType('plugin.file.shp.SHPParserConfig');

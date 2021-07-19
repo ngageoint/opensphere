@@ -1,14 +1,17 @@
-goog.provide('os.ui.search.SearchResultsCtrl');
-goog.provide('os.ui.search.searchResultsDirective');
+goog.module('os.ui.search.SearchResultsUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os');
-goog.require('os.search.SearchEvent');
-goog.require('os.search.SearchEventType');
-goog.require('os.ui');
-goog.require('os.ui.Module');
-goog.require('os.ui.dragDropDirective');
-goog.require('os.ui.search.resultCardDirective');
-goog.require('os.ui.util.autoVHeightDirective');
+goog.require('os.ui.search.ResultCardUI');
+goog.require('os.ui.util.AutoHeightUI');
+
+const {ROOT} = goog.require('os');
+const SearchEventType = goog.require('os.search.SearchEventType');
+const SearchManager = goog.require('os.search.SearchManager');
+const {apply} = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
+const SearchEvent = goog.requireType('os.search.SearchEvent');
+
+const ISearchResult = goog.requireType('os.search.ISearchResult');
 
 
 /**
@@ -16,144 +19,148 @@ goog.require('os.ui.util.autoVHeightDirective');
  *
  * @return {angular.Directive}
  */
-os.ui.search.searchResultsDirective = function() {
-  return {
-    restrict: 'E',
-    scope: {
-      'parent': '@'
-    },
-    replace: true,
-    transclude: true,
-    templateUrl: os.ROOT + 'views/search/searchresults.html',
-    controller: os.ui.search.SearchResultsCtrl,
-    controllerAs: 'searchResults'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  scope: {
+    'parent': '@'
+  },
+  replace: true,
+  transclude: true,
+  templateUrl: ROOT + 'views/search/searchresults.html',
+  controller: Controller,
+  controllerAs: 'searchResults'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'searchresults';
 
 /**
  * Register the searchresults directive.
  */
-os.ui.Module.directive('searchresults', [os.ui.search.searchResultsDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller function for the searchresults directive.
- *
- * @param {!angular.Scope} $scope
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.search.SearchResultsCtrl = function($scope) {
+class Controller {
   /**
-   * @type {?angular.Scope}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @ngInject
+   */
+  constructor($scope) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
+
+    /**
+     * @type {boolean}
+     */
+    this['show'] = false;
+
+    /**
+     * @type {Array<ISearchResult>}
+     */
+    this['results'] = [];
+
+    /**
+     * @type {boolean}
+     */
+    this['loading'] = false;
+
+    var sm = SearchManager.getInstance();
+    sm.listen(SearchEventType.START, this.handleSearchStart_, false, this);
+    sm.listen(SearchEventType.SUCCESS, this.handleSearchSuccess_, false, this);
+    sm.listen(SearchEventType.PROGRESS, this.handleSearchSuccess_, false, this);
+    sm.listen(SearchEventType.AUTOCOMPLETED, this.handleAutocomplete_, false, this);
+
+    $scope.$on('$destroy', this.destroy_.bind(this));
+    this.updateResults();
+  }
+
+  /**
    * @private
    */
-  this.scope_ = $scope;
+  destroy_() {
+    var sm = SearchManager.getInstance();
+    sm.unlisten(SearchEventType.START, this.handleSearchStart_, false, this);
+    sm.unlisten(SearchEventType.SUCCESS, this.handleSearchSuccess_, false, this);
+    sm.unlisten(SearchEventType.PROGRESS, this.handleSearchSuccess_, false, this);
+    sm.unlisten(SearchEventType.AUTOCOMPLETED, this.handleAutocomplete_, false, this);
+
+    this.scope_ = null;
+  }
 
   /**
-   * @type {boolean}
+   * Clears the search results.
+   *
+   * @private
    */
-  this['show'] = false;
+  clear_() {
+    this['results'].length = 0;
+    this['show'] = false;
+
+    apply(this.scope_);
+  }
 
   /**
-   * @type {Array.<os.search.ISearchResult>}
+   * @param {SearchEvent} event
+   * @private
    */
-  this['results'] = [];
+  handleSearchStart_(event) {
+    this['loading'] = true;
+  }
 
   /**
-   * @type {boolean}
+   * @param {SearchEvent} event
+   * @private
    */
-  this['loading'] = false;
+  handleSearchSuccess_(event) {
+    this['loading'] = event.type !== SearchEventType.SUCCESS;
+    this.updateResults();
 
-  var sm = os.search.SearchManager.getInstance();
-  sm.listen(os.search.SearchEventType.START, this.handleSearchStart_, false, this);
-  sm.listen(os.search.SearchEventType.SUCCESS, this.handleSearchSuccess_, false, this);
-  sm.listen(os.search.SearchEventType.PROGRESS, this.handleSearchSuccess_, false, this);
-  sm.listen(os.search.SearchEventType.AUTOCOMPLETED, this.handleAutocomplete_, false, this);
+    apply(this.scope_);
+  }
 
-  $scope.$on('$destroy', this.destroy_.bind(this));
-  this.updateResults();
-};
+  /**
+   * Gets the results from the search manager
+   *
+   * @protected
+   */
+  updateResults() {
+    var sm = SearchManager.getInstance();
+    var results = (sm.getResults() || []).slice(0, 20);
 
+    this['results'] = results;
+    this['show'] = this['results'].length > 0;
+  }
 
-/**
- * @private
- */
-os.ui.search.SearchResultsCtrl.prototype.destroy_ = function() {
-  var sm = os.search.SearchManager.getInstance();
-  sm.unlisten(os.search.SearchEventType.START, this.handleSearchStart_, false, this);
-  sm.unlisten(os.search.SearchEventType.SUCCESS, this.handleSearchSuccess_, false, this);
-  sm.unlisten(os.search.SearchEventType.PROGRESS, this.handleSearchSuccess_, false, this);
-  sm.unlisten(os.search.SearchEventType.AUTOCOMPLETED, this.handleAutocomplete_, false, this);
+  /**
+   * @param {SearchEvent} event
+   * @private
+   */
+  handleAutocomplete_(event) {
+    this.clear_();
+  }
 
-  this.scope_ = null;
-};
+  /**
+   * @param {ISearchResult} result
+   * @return {number|string}
+   * @export
+   */
+  track(result) {
+    return result.getId();
+  }
+}
 
-
-/**
- * Clears the search results.
- *
- * @private
- */
-os.ui.search.SearchResultsCtrl.prototype.clear_ = function() {
-  this['results'].length = 0;
-  this['show'] = false;
-
-  os.ui.apply(this.scope_);
-};
-
-
-/**
- * @param {os.search.SearchEvent} event
- * @private
- */
-os.ui.search.SearchResultsCtrl.prototype.handleSearchStart_ = function(event) {
-  this['loading'] = true;
-};
-
-
-/**
- * @param {os.search.SearchEvent} event
- * @private
- */
-os.ui.search.SearchResultsCtrl.prototype.handleSearchSuccess_ = function(event) {
-  this['loading'] = event.type !== os.search.SearchEventType.SUCCESS;
-  this.updateResults();
-
-  os.ui.apply(this.scope_);
-};
-
-
-/**
- * Gets the results from the search manager
- *
- * @protected
- */
-os.ui.search.SearchResultsCtrl.prototype.updateResults = function() {
-  var sm = os.search.SearchManager.getInstance();
-  var results = (sm.getResults() || []).slice(0, 20);
-
-  this['results'] = results;
-  this['show'] = this['results'].length > 0;
-};
-
-
-/**
- * @param {os.search.SearchEvent} event
- * @private
- */
-os.ui.search.SearchResultsCtrl.prototype.handleAutocomplete_ = function(event) {
-  this.clear_();
-};
-
-
-/**
- * @param {os.search.ISearchResult} result
- * @return {number|string}
- * @export
- */
-os.ui.search.SearchResultsCtrl.prototype.track = function(result) {
-  return result.getId();
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

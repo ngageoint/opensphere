@@ -1,11 +1,15 @@
-goog.provide('os.ui.state.StateExportCtrl');
-goog.provide('os.ui.state.stateExportDirective');
+goog.module('os.ui.state.StateExportUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.config');
-goog.require('os.config.Settings');
-goog.require('os.ui.Module');
-goog.require('os.ui.state');
-goog.require('os.ui.state.AbstractStateFormCtrl');
+const {ROOT} = goog.require('os');
+const config = goog.require('os.config');
+const {getStateManager} = goog.require('os.state.instance');
+const Module = goog.require('os.ui.Module');
+const WindowEventType = goog.require('os.ui.WindowEventType');
+const ExportManager = goog.require('os.ui.file.ExportManager');
+const AbstractStateFormCtrl = goog.require('os.ui.state.AbstractStateFormCtrl');
+
+const IState = goog.requireType('os.state.IState');
 
 
 /**
@@ -13,103 +17,111 @@ goog.require('os.ui.state.AbstractStateFormCtrl');
  *
  * @return {angular.Directive}
  */
-os.ui.state.stateExportDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    templateUrl: os.ROOT + 'views/window/stateimportexport.html',
-    controller: os.ui.state.StateExportCtrl,
-    controllerAs: 'stateForm'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: true,
+  templateUrl: ROOT + 'views/window/stateimportexport.html',
+  controller: Controller,
+  controllerAs: 'stateForm'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'stateexport';
 
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('stateexport', [os.ui.state.stateExportDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for the save export window
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$timeout} $timeout
- * @extends {os.ui.state.AbstractStateFormCtrl}
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.state.StateExportCtrl = function($scope, $element, $timeout) {
-  os.ui.state.StateExportCtrl.base(this, 'constructor', $scope, $element);
-
+class Controller extends AbstractStateFormCtrl {
   /**
-   * @type {string|undefined}
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$timeout} $timeout
+   * @ngInject
    */
-  this['appName'] = os.config.getAppName();
+  constructor($scope, $element, $timeout) {
+    super($scope, $element);
 
-  /**
-   * @type {?string}
-   */
-  this['persister'] = null;
+    /**
+     * @type {string|undefined}
+     */
+    this['appName'] = config.getAppName();
 
-  var persisters = os.ui.file.ExportManager.getInstance().getPersistenceMethods();
-  if (persisters && persisters.length > 0) {
-    for (var i = 0, n = persisters.length; i < n; i++) {
-      this['persisters'][persisters[i].getLabel()] = persisters[i];
-    }
-  }
+    /**
+     * @type {?string}
+     */
+    this['persister'] = null;
 
-  var defaultMethod = /** @type {string|undefined} */ ($scope['method']) || 'File';
-  if (defaultMethod && defaultMethod in this['persisters']) {
-    this['persister'] = this['persisters'][defaultMethod];
-  }
-
-  /**
-   * @type {Array.<os.state.IState>}
-   */
-  this['states'] = os.stateManager.getAvailable();
-
-  /**
-   * @type {boolean}
-   */
-  this['all'] = goog.array.every(this['states'], function(state) {
-    return state.getSupported() ? state.getEnabled() : true;
-  }, this);
-
-  /**
-   * @type {boolean}
-   */
-  this['isSaving'] = true;
-  $timeout(() => $scope.$emit(os.ui.WindowEventType.READY));
-};
-goog.inherits(os.ui.state.StateExportCtrl, os.ui.state.AbstractStateFormCtrl);
-
-
-/**
- * @inheritDoc
- * @export
- */
-os.ui.state.StateExportCtrl.prototype.accept = function() {
-  var method = this['persister'] || null;
-  var title = /** @type {string} */ (this.scope['title']);
-  var description = /** @type {string|undefined} */ (this.scope['description']);
-  var tags = /** @type {string|undefined} */ (this.scope['tags']);
-  var states;
-
-  if (this['states'] && this['states'].length > 0) {
-    states = [];
-
-    for (var i = 0, n = this['states'].length; i < n; i++) {
-      var state = this['states'][i];
-      if (state.getEnabled()) {
-        states.push(state);
+    var persisters = ExportManager.getInstance().getPersistenceMethods();
+    if (persisters && persisters.length > 0) {
+      for (var i = 0, n = persisters.length; i < n; i++) {
+        this['persisters'][persisters[i].getLabel()] = persisters[i];
       }
     }
-  }
-  os.stateManager.saveStates(method, title, description, tags, states);
 
-  os.ui.state.StateExportCtrl.base(this, 'accept');
+    var defaultMethod = /** @type {string|undefined} */ ($scope['method']) || 'File';
+    if (defaultMethod && defaultMethod in this['persisters']) {
+      this['persister'] = this['persisters'][defaultMethod];
+    }
+
+    /**
+     * @type {Array<IState>}
+     */
+    this['states'] = getStateManager().getAvailable();
+
+    /**
+     * @type {boolean}
+     */
+    this['all'] = this['states'].every(function(state) {
+      return state.getSupported() ? state.getEnabled() : true;
+    }, this);
+
+    /**
+     * @type {boolean}
+     */
+    this['isSaving'] = true;
+    $timeout(() => $scope.$emit(WindowEventType.READY));
+  }
+
+  /**
+   * @inheritDoc
+   * @export
+   */
+  accept() {
+    var method = this['persister'] || null;
+    var title = /** @type {string} */ (this.scope['title']);
+    var description = /** @type {string|undefined} */ (this.scope['description']);
+    var tags = /** @type {string|undefined} */ (this.scope['tags']);
+    var states;
+
+    if (this['states'] && this['states'].length > 0) {
+      states = [];
+
+      for (var i = 0, n = this['states'].length; i < n; i++) {
+        var state = this['states'][i];
+        if (state.getEnabled()) {
+          states.push(state);
+        }
+      }
+    }
+    getStateManager().saveStates(method, title, description, tags, states);
+
+    super.accept();
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

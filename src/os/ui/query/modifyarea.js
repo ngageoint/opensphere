@@ -12,7 +12,7 @@ goog.require('os.ui.Module');
 goog.require('os.ui.help.Controls');
 goog.require('os.ui.query.cmd.AreaAdd');
 goog.require('os.ui.query.cmd.AreaModify');
-goog.require('os.ui.util.validationMessageDirective');
+goog.require('os.ui.util.ValidationMessageUI');
 
 
 /**

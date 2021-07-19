@@ -1,6 +1,8 @@
 goog.require('os.ui.text.TuiEditorLang');
 
 describe('os.ui.text.TuiEditorLang', () => {
+  const TuiEditorLang = goog.module.get('os.ui.text.TuiEditorLang');
+
   it('should set up with optional keys', () => {
     const language = 'en-US';
     const languageOverrides = {
@@ -10,7 +12,7 @@ describe('os.ui.text.TuiEditorLang', () => {
 
     spyOn(toastui.Editor, 'setLanguage');
 
-    os.ui.text.TuiEditorLang.setup();
+    TuiEditorLang.setup();
 
     expect(toastui.Editor.setLanguage).toHaveBeenCalledWith(language, languageOverrides);
   });

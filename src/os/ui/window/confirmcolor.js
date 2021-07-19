@@ -1,10 +1,12 @@
-goog.provide('os.ui.window.ConfirmColorCtrl');
-goog.provide('os.ui.window.confirmColorDirective');
+goog.module('os.ui.window.ConfirmColorUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
 goog.require('os.ui.color.ColorPickerUI');
-goog.require('os.ui.window');
-goog.require('os.ui.window.ConfirmUI');
+
+const {ROOT} = goog.require('os');
+const Module = goog.require('os.ui.Module');
+const osWindow = goog.require('os.ui.window');
+const {launchConfirm} = goog.require('os.ui.window.ConfirmUI');
 
 
 /**
@@ -12,37 +14,42 @@ goog.require('os.ui.window.ConfirmUI');
  *
  * @return {angular.Directive}
  */
-os.ui.window.confirmColorDirective = function() {
-  return {
-    restrict: 'E',
-    templateUrl: os.ROOT + 'views/window/confirmcolor.html',
-    controller: os.ui.window.ConfirmColorCtrl,
-    controllerAs: 'confirmcolor'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  templateUrl: ROOT + 'views/window/confirmcolor.html',
+  controller: Controller,
+  controllerAs: 'confirmcolor'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'confirmcolor';
 
 /**
  * Add the directive to the os.ui module
  */
-os.ui.Module.directive('confirmcolor', [os.ui.window.confirmColorDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for the color confirmation window.
- *
- * @param {!angular.Scope} $scope
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.window.ConfirmColorCtrl = function($scope) {
-  $scope.$watch('confirmValue', function(newVal, oldVal) {
-    if (newVal != oldVal) {
-      $scope.$parent['confirmValue'] = newVal;
-    }
-  });
-};
+class Controller {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @ngInject
+   */
+  constructor($scope) {
+    $scope.$watch('confirmValue', function(newVal, oldVal) {
+      if (newVal != oldVal) {
+        $scope.$parent['confirmValue'] = newVal;
+      }
+    });
+  }
+}
 
 /**
  * Launch a dialog prompting the user to pick a color.
@@ -50,7 +57,7 @@ os.ui.window.ConfirmColorCtrl = function($scope) {
  * @param {Function} confirm
  * @param {string=} opt_default The default color to use
  */
-os.ui.window.launchConfirmColor = function(confirm, opt_default) {
+const launchConfirmColor = function(confirm, opt_default) {
   var windowOptions = {
     'label': 'Choose Color',
     'icon': 'fa fa-tint',
@@ -62,10 +69,23 @@ os.ui.window.launchConfirmColor = function(confirm, opt_default) {
     'show-close': 'false'
   };
 
-  os.ui.window.ConfirmUI.launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
+  launchConfirm(/** @type {osx.window.ConfirmOptions} */ ({
     confirm: confirm,
     confirmValue: opt_default || '#ffffff',
-    prompt: '<confirmcolor></confirmcolor>',
+    prompt: `<${directiveTag}></${directiveTag}>`,
     windowOptions: windowOptions
   }));
+};
+
+/**
+ * @type {function(Function, string=)}
+ * @deprecated Please use os.ui.window.ConfirmColorUI.launchConfirmColor.
+ */
+osWindow.launchConfirmColor = launchConfirmColor;
+
+exports = {
+  Controller,
+  directive,
+  directiveTag,
+  launchConfirmColor
 };

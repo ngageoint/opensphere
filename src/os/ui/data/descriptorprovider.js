@@ -1,141 +1,144 @@
-goog.provide('os.ui.data.DescriptorProvider');
+goog.module('os.ui.data.DescriptorProvider');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.data.ActivateDescriptor');
-goog.require('os.data.DataProviderEvent');
-goog.require('os.data.DataProviderEventType');
-goog.require('os.ui.data.BaseProvider');
-goog.require('os.ui.data.DescriptorNode');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const ActivateDescriptor = goog.require('os.data.ActivateDescriptor');
+const DataManager = goog.require('os.data.DataManager');
+const DataProviderEvent = goog.require('os.data.DataProviderEvent');
+const DataProviderEventType = goog.require('os.data.DataProviderEventType');
+const TriState = goog.require('os.structs.TriState');
+const BaseProvider = goog.require('os.ui.data.BaseProvider');
+const DescriptorNode = goog.require('os.ui.data.DescriptorNode');
 
+const Promise = goog.requireType('goog.Promise');
 
 
 /**
  * Generic descriptor-based provider
  *
  * @abstract
- * @extends {os.ui.data.BaseProvider}
- * @constructor
  * @template T
  */
-os.ui.data.DescriptorProvider = function() {
-  os.ui.data.DescriptorProvider.base(this, 'constructor');
-};
-goog.inherits(os.ui.data.DescriptorProvider, os.ui.data.BaseProvider);
-
-
-/**
- * Adds a descriptor to the provider.
- *
- * @param {T} descriptor
- * @param {boolean=} opt_enable If the descriptor should be activated.
- * @param {boolean=} opt_dedup Whether to check if the descriptor already exists.
- * @template T
- */
-os.ui.data.DescriptorProvider.prototype.addDescriptor = function(descriptor, opt_enable, opt_dedup) {
-  var dedup = opt_dedup != null ? opt_dedup : true;
-  var node = dedup ? this.findNode(descriptor) : null;
-  if (!node) {
-    node = new os.ui.data.DescriptorNode();
-    node.setDescriptor(descriptor);
-    this.addChild(node);
+class DescriptorProvider extends BaseProvider {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
   }
 
-  var enable = opt_enable != null ? opt_enable : true;
-  if (enable) {
-    // refresh the descriptor. don't create a command if the descriptor was previously active since the final state
-    // isn't changing.
-    var wasActive = descriptor.isActive();
-    descriptor.setActive(false);
-
-    var cmd = new os.data.ActivateDescriptor(descriptor);
-    if (wasActive) {
-      cmd.execute();
-    } else {
-      os.commandStack.addCommand(cmd);
+  /**
+   * Adds a descriptor to the provider.
+   *
+   * @param {T} descriptor
+   * @param {boolean=} opt_enable If the descriptor should be activated.
+   * @param {boolean=} opt_dedup Whether to check if the descriptor already exists.
+   * @template T
+   */
+  addDescriptor(descriptor, opt_enable, opt_dedup) {
+    var dedup = opt_dedup != null ? opt_dedup : true;
+    var node = dedup ? this.findNode(descriptor) : null;
+    if (!node) {
+      node = new DescriptorNode();
+      node.setDescriptor(descriptor);
+      this.addChild(node);
     }
-  }
-};
 
+    var enable = opt_enable != null ? opt_enable : true;
+    if (enable) {
+      // refresh the descriptor. don't create a command if the descriptor was previously active since the final state
+      // isn't changing.
+      var wasActive = descriptor.isActive();
+      descriptor.setActive(false);
 
-/**
- * Remove the descriptor from the provider.
- *
- * @param {T} descriptor The descriptor
- * @param {boolean=} opt_clear If data should be cleared on the descriptor
- * @template T
- * @return {goog.Promise|undefined} This function can return a promise if it is asynchronous.
- */
-os.ui.data.DescriptorProvider.prototype.removeDescriptor = function(descriptor, opt_clear) {
-  var node = this.findNode(descriptor);
-  if (node) {
-    this.removeChild(node);
-  }
-
-  descriptor.setActive(false);
-
-  if (opt_clear) {
-    descriptor.clearData();
-  }
-
-  return undefined;
-};
-
-
-/**
- * Get the descriptors registered to this provider.
- *
- * @return {!Array.<T>} The descriptors
- */
-os.ui.data.DescriptorProvider.prototype.getDescriptors = function() {
-  var dm = os.dataManager;
-  return dm.getDescriptors(this.getId() + os.ui.data.BaseProvider.ID_DELIMITER);
-};
-
-
-/**
- * @param {T} descriptor
- * @return {?os.ui.data.DescriptorNode}
- * @template T
- */
-os.ui.data.DescriptorProvider.prototype.findNode = function(descriptor) {
-  var node = null;
-  var children = this.getChildren();
-  if (children && children.length > 0) {
-    var i = children.length;
-    while (i--) {
-      var child = /** @type {os.ui.data.DescriptorNode} */ (children[i]);
-      if (child.getDescriptor() == descriptor || child.getDescriptor().getId() == descriptor.getId()) {
-        node = child;
-        break;
+      var cmd = new ActivateDescriptor(descriptor);
+      if (wasActive) {
+        cmd.execute();
+      } else {
+        CommandProcessor.getInstance().addCommand(cmd);
       }
     }
   }
 
-  return node;
-};
+  /**
+   * Remove the descriptor from the provider.
+   *
+   * @param {T} descriptor The descriptor
+   * @param {boolean=} opt_clear If data should be cleared on the descriptor
+   * @template T
+   * @return {Promise|undefined} This function can return a promise if it is asynchronous.
+   */
+  removeDescriptor(descriptor, opt_clear) {
+    var node = this.findNode(descriptor);
+    if (node) {
+      this.removeChild(node);
+    }
 
+    descriptor.setActive(false);
 
-/**
- * @inheritDoc
- */
-os.ui.data.DescriptorProvider.prototype.configure = function(config) {
-  os.ui.data.DescriptorProvider.base(this, 'configure', config);
-  this.setState(os.structs.TriState.OFF);
-  this.setEditable(false);
-  this.setEnabled(true);
-};
+    if (opt_clear) {
+      descriptor.clearData();
+    }
 
-
-/**
- * @inheritDoc
- */
-os.ui.data.DescriptorProvider.prototype.load = function(opt_ping) {
-  this.setChildren(null);
-
-  var descriptors = this.getDescriptors();
-  for (var i = 0, n = descriptors.length; i < n; i++) {
-    var descriptor = descriptors[i];
-    this.addDescriptor(descriptor, false, false);
+    return undefined;
   }
 
-  this.dispatchEvent(new os.data.DataProviderEvent(os.data.DataProviderEventType.LOADED, this));
-};
+  /**
+   * Get the descriptors registered to this provider.
+   *
+   * @return {!Array.<T>} The descriptors
+   */
+  getDescriptors() {
+    var dm = DataManager.getInstance();
+    return dm.getDescriptors(this.getId() + BaseProvider.ID_DELIMITER);
+  }
+
+  /**
+   * @param {T} descriptor
+   * @return {?DescriptorNode}
+   * @template T
+   */
+  findNode(descriptor) {
+    var node = null;
+    var children = this.getChildren();
+    if (children && children.length > 0) {
+      var i = children.length;
+      while (i--) {
+        var child = /** @type {DescriptorNode} */ (children[i]);
+        if (child.getDescriptor() == descriptor || child.getDescriptor().getId() == descriptor.getId()) {
+          node = child;
+          break;
+        }
+      }
+    }
+
+    return node;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  configure(config) {
+    super.configure(config);
+    this.setState(TriState.OFF);
+    this.setEditable(false);
+    this.setEnabled(true);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  load(opt_ping) {
+    this.setChildren(null);
+
+    var descriptors = this.getDescriptors();
+    for (var i = 0, n = descriptors.length; i < n; i++) {
+      var descriptor = descriptors[i];
+      this.addDescriptor(descriptor, false, false);
+    }
+
+    this.dispatchEvent(new DataProviderEvent(DataProviderEventType.LOADED, this));
+  }
+}
+
+exports = DescriptorProvider;

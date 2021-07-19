@@ -19,7 +19,7 @@ goog.require('os.ui.navBottomDirective');
 goog.require('os.ui.navTopDirective');
 goog.require('os.ui.osNavTopDirective');
 goog.require('os.ui.saveButtonDirective');
-goog.require('os.ui.search.searchBoxDirective');
+goog.require('os.ui.search.SearchBoxUI');
 goog.require('os.ui.serversButtonDirective');
 goog.require('os.ui.settingsButtonDirective');
 goog.require('os.ui.stateButtonDirective');

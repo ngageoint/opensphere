@@ -1,7 +1,9 @@
-goog.provide('os.ui.search.ResultCardCtrl');
-goog.provide('os.ui.search.resultCardDirective');
+goog.module('os.ui.search.ResultCardUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.Module');
+const Module = goog.require('os.ui.Module');
+
+const ISearchResult = goog.requireType('os.search.ISearchResult');
 
 
 /**
@@ -9,55 +11,65 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-os.ui.search.resultCardDirective = function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: true,
-    template: '<div></div>',
-    controller: os.ui.search.ResultCardCtrl,
-    controllerAs: 'resultCard'
-  };
-};
+const directive = () => ({
+  restrict: 'E',
+  replace: true,
+  scope: true,
+  template: '<div></div>',
+  controller: Controller,
+  controllerAs: 'resultCard'
+});
 
+/**
+ * The element tag for the directive.
+ * @type {string}
+ */
+const directiveTag = 'resultcard';
 
 /**
  * Register the resultcard directive.
  */
-os.ui.Module.directive('resultcard', [os.ui.search.resultCardDirective]);
-
-
+Module.directive(directiveTag, [directive]);
 
 /**
  * Controller for the resultcard directive.
- *
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$compile} $compile
- * @constructor
- * @ngInject
+ * @unrestricted
  */
-os.ui.search.ResultCardCtrl = function($scope, $element, $compile) {
-  if ('result' in $scope) {
-    // grab the card UI off the result, compile it, and add it to the DOM
-    var result = /** @type {os.search.ISearchResult} */ ($scope['result']);
-    var ui = result.getSearchUI();
-    if (goog.string.startsWith(ui, '<')) {
-      $element.append($compile(ui)($scope));
-    } else {
-      $element.append(ui);
+class Controller {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$compile} $compile
+   * @ngInject
+   */
+  constructor($scope, $element, $compile) {
+    if ('result' in $scope) {
+      // grab the card UI off the result, compile it, and add it to the DOM
+      var result = /** @type {ISearchResult} */ ($scope['result']);
+      var ui = result.getSearchUI();
+      if (ui && ui.startsWith('<')) {
+        $element.append($compile(ui)($scope));
+      } else {
+        $element.append(ui);
+      }
     }
+
+    $scope.$on('$destroy', this.destroy_.bind(this));
   }
 
-  $scope.$on('$destroy', this.destroy_.bind(this));
-};
+  /**
+   * Clean up the controller.
+   *
+   * @private
+   */
+  destroy_() {
+    // nothing to do yet
+  }
+}
 
-
-/**
- * Clean up the controller.
- *
- * @private
- */
-os.ui.search.ResultCardCtrl.prototype.destroy_ = function() {
-  // nothing to do yet
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

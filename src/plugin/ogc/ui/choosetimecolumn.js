@@ -1,7 +1,7 @@
 goog.module('plugin.ogc.ui.ChooseTimeColumnUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.util.validationMessageDirective');
+goog.require('os.ui.util.ValidationMessageUI');
 
 const Disposable = goog.require('goog.Disposable');
 const os = goog.require('os');

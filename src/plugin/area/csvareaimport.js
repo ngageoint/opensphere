@@ -6,8 +6,7 @@ const EventType = goog.require('os.events.EventType');
 const Importer = goog.require('os.im.Importer');
 const Module = goog.require('os.ui.Module');
 const osWindow = goog.require('os.ui.window');
-const WizardCtrl = goog.require('os.ui.wiz.WizardCtrl');
-const wizardDirective = goog.require('os.ui.wiz.wizardDirective');
+const {directive: wizardDirective, Controller: WizardController} = goog.require('os.ui.wiz.WizardUI');
 const area = goog.require('plugin.area');
 const CSVParser = goog.require('plugin.file.csv.CSVParser');
 
@@ -15,11 +14,11 @@ const CSVParser = goog.require('plugin.file.csv.CSVParser');
 /**
  * Controller for the CSV import wizard window
  *
- * @extends {WizardCtrl<T>}
+ * @extends {WizardController<T>}
  * @template T,S
  * @unrestricted
  */
-class Controller extends WizardCtrl {
+class Controller extends WizardController {
   /**
    * Constructor.
    * @param {!angular.Scope} $scope

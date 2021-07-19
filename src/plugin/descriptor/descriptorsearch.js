@@ -72,9 +72,6 @@ class DescriptorSearch extends AbstractSearch {
    */
   initFacets_() {
     this.facets_ = [
-      // The current method of bbox testing is not accurate enough, and 3D's method is too slow.
-      // To properly enable this, see the corresponding comment in browsedata.js:~52 and ~69
-      // new plugin.descriptor.facet.Area(),
       new TagSplit(),
       new Source(),
       new Type(),

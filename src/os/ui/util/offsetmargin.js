@@ -1,10 +1,11 @@
-goog.provide('os.ui.util.OffsetMarginCtrl');
-goog.provide('os.ui.util.offsetMarginDirective');
+goog.module('os.ui.util.OffsetMarginUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Throttle');
-goog.require('os.config.ThemeSettingsChangeEvent');
-goog.require('os.ui');
-goog.require('os.ui.Module');
+const Throttle = goog.require('goog.Throttle');
+const dispatcher = goog.require('os.Dispatcher');
+const ThemeSettingsChangeEvent = goog.require('os.config.ThemeSettingsChangeEvent');
+const {removeResize, resize} = goog.require('os.ui');
+const Module = goog.require('os.ui.Module');
 
 
 /**
@@ -12,145 +13,153 @@ goog.require('os.ui.Module');
  *
  * @return {angular.Directive}
  */
-os.ui.util.offsetMarginDirective = function() {
-  return {
-    restrict: 'A',
-    scope: {
-      'offsetTopEl': '@',
-      'offsetBotEl': '@'
-    },
-    controller: os.ui.util.OffsetMarginCtrl
-  };
-};
-
+const directive = () => ({
+  restrict: 'A',
+  scope: {
+    'offsetTopEl': '@',
+    'offsetBotEl': '@'
+  },
+  controller: Controller
+});
 
 /**
- * Add the directive to the os.ui module
+ * The element tag for the directive.
+ * @type {string}
  */
-os.ui.Module.directive('offsetMargin', [os.ui.util.offsetMarginDirective]);
-
-
+const directiveTag = 'offset-margin';
 
 /**
- * @param {!angular.Scope} $scope
- * @param {!angular.JQLite} $element
- * @param {!angular.$timeout} $timeout
- * @constructor
- * @ngInject
+ * Add the directive to the ui module
  */
-os.ui.util.OffsetMarginCtrl = function($scope, $element, $timeout) {
-  /**
-   * @type {?angular.Scope}
-   * @private
-   */
-  this.scope_ = $scope;
-
-  /**
-   * @type {?angular.JQLite}
-   * @private
-   */
-  this.element_ = $element;
-
-  /**
-   * @type {?angular.$timeout}
-   * @private
-   */
-  this.timeout_ = $timeout;
-
-  /**
-   * @type {?angular.JQLite}
-   * @private
-   */
-  this.bufferTopElement_ = null;
-
-  /**
-   * @type {?angular.JQLite}
-   * @private
-   */
-  this.bufferBotElement_ = null;
-
-  /**
-   * @type {goog.Throttle}
-   * @private
-   */
-  this.throttle_ = new goog.Throttle(this.onThrottleResize_, 200, this);
-
-  /**
-   * Debounce resize events over a brief period.
-   * @type {Function}
-   * @private
-   */
-  this.resizeFn_ = this.onResize_.bind(this);
-
-  os.dispatcher.listen(os.config.ThemeSettingsChangeEvent, this.onResize_, false, this);
-  $timeout(this.setWatchEl_.bind(this));
-  $scope.$on('$destroy', this.onDestroy_.bind(this));
-};
-
+Module.directive('offsetMargin', [directive]);
 
 /**
- * Clean up listeners/references.
- *
- * @private
+ * @unrestricted
  */
-os.ui.util.OffsetMarginCtrl.prototype.onDestroy_ = function() {
-  os.dispatcher.unlisten(os.config.ThemeSettingsChangeEvent, this.onResize_, false, this);
-  if (this.throttle_) {
-    this.throttle_.dispose();
-    this.throttle_ = null;
-  }
+class Controller {
+  /**
+   * Constructor.
+   * @param {!angular.Scope} $scope
+   * @param {!angular.JQLite} $element
+   * @param {!angular.$timeout} $timeout
+   * @ngInject
+   */
+  constructor($scope, $element, $timeout) {
+    /**
+     * @type {?angular.Scope}
+     * @private
+     */
+    this.scope_ = $scope;
 
-  if (this.bufferTopElement_) {
-    os.ui.removeResize(this.bufferTopElement_, this.resizeFn_);
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
+    this.element_ = $element;
+
+    /**
+     * @type {?angular.$timeout}
+     * @private
+     */
+    this.timeout_ = $timeout;
+
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
     this.bufferTopElement_ = null;
-  }
 
-  if (this.bufferBotElement_) {
-    os.ui.removeResize(this.bufferBotElement_, this.resizeFn_);
+    /**
+     * @type {?angular.JQLite}
+     * @private
+     */
     this.bufferBotElement_ = null;
+
+    /**
+     * @type {Throttle}
+     * @private
+     */
+    this.throttle_ = new Throttle(this.onThrottleResize_, 200, this);
+
+    /**
+     * Debounce resize events over a brief period.
+     * @type {Function}
+     * @private
+     */
+    this.resizeFn_ = this.onResize_.bind(this);
+
+    dispatcher.getInstance().listen(ThemeSettingsChangeEvent, this.onResize_, false, this);
+    $timeout(this.setWatchEl_.bind(this));
+    $scope.$on('$destroy', this.onDestroy_.bind(this));
   }
 
-  this.resizeFn_ = null;
-  this.timeout_ = null;
-  this.element_ = null;
-  this.scope_ = null;
-};
+  /**
+   * Clean up listeners/references.
+   *
+   * @private
+   */
+  onDestroy_() {
+    dispatcher.getInstance().unlisten(ThemeSettingsChangeEvent, this.onResize_, false, this);
+    if (this.throttle_) {
+      this.throttle_.dispose();
+      this.throttle_ = null;
+    }
 
+    if (this.bufferTopElement_) {
+      removeResize(this.bufferTopElement_, this.resizeFn_);
+      this.bufferTopElement_ = null;
+    }
 
-/**
- * @private
- */
-os.ui.util.OffsetMarginCtrl.prototype.setWatchEl_ = function() {
-  this.bufferTopElement_ = /** @type {?angular.JQLite} */ ($(this.scope_['offsetTopEl']));
-  this.bufferBotElement_ = /** @type {?angular.JQLite} */ ($(this.scope_['offsetBotEl']));
+    if (this.bufferBotElement_) {
+      removeResize(this.bufferBotElement_, this.resizeFn_);
+      this.bufferBotElement_ = null;
+    }
 
-  if (this.bufferTopElement_[0] && this.bufferBotElement_[0]) {
-    os.ui.resize(this.bufferTopElement_, this.resizeFn_);
-    os.ui.resize(this.bufferBotElement_, this.resizeFn_);
-    this.onThrottleResize_();
-  } else {
-    this.bufferTopElement_ = null;
-    this.bufferBotElement_ = null;
-    // Attempt to get the element again (rare)
-    this.timeout_(this.setWatchEl_.bind(this));
+    this.resizeFn_ = null;
+    this.timeout_ = null;
+    this.element_ = null;
+    this.scope_ = null;
   }
-};
 
+  /**
+   * @private
+   */
+  setWatchEl_() {
+    this.bufferTopElement_ = /** @type {?angular.JQLite} */ ($(this.scope_['offsetTopEl']));
+    this.bufferBotElement_ = /** @type {?angular.JQLite} */ ($(this.scope_['offsetBotEl']));
 
-/**
- * @private
- */
-os.ui.util.OffsetMarginCtrl.prototype.onResize_ = function() {
-  this.throttle_.fire();
-};
-
-
-/**
- * @private
- */
-os.ui.util.OffsetMarginCtrl.prototype.onThrottleResize_ = function() {
-  if (this.element_ && this.bufferTopElement_ && this.bufferBotElement_) {
-    this.element_.css('margin-top', this.bufferTopElement_.outerHeight() + 'px');
-    this.element_.css('margin-bottom', this.bufferBotElement_.outerHeight() + 'px');
+    if (this.bufferTopElement_[0] && this.bufferBotElement_[0]) {
+      resize(this.bufferTopElement_, this.resizeFn_);
+      resize(this.bufferBotElement_, this.resizeFn_);
+      this.onThrottleResize_();
+    } else {
+      this.bufferTopElement_ = null;
+      this.bufferBotElement_ = null;
+      // Attempt to get the element again (rare)
+      this.timeout_(this.setWatchEl_.bind(this));
+    }
   }
+
+  /**
+   * @private
+   */
+  onResize_() {
+    this.throttle_.fire();
+  }
+
+  /**
+   * @private
+   */
+  onThrottleResize_() {
+    if (this.element_ && this.bufferTopElement_ && this.bufferBotElement_) {
+      this.element_.css('margin-top', this.bufferTopElement_.outerHeight() + 'px');
+      this.element_.css('margin-bottom', this.bufferBotElement_.outerHeight() + 'px');
+    }
+  }
+}
+
+exports = {
+  Controller,
+  directive,
+  directiveTag
 };

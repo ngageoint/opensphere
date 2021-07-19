@@ -46,15 +46,17 @@ class GeoServer extends OGCServer {
       this.setWfsContentType(wfsContentType);
     }
   }
+
+  /**
+   * The server type.
+   * @type {string}
+   * @override
+   */
+  static get TYPE() {
+    return 'geoserver';
+  }
 }
 osImplements(GeoServer, IDataProvider.ID);
-
-/**
- * The GeoServer server type.
- * @type {string}
- * @const
- */
-GeoServer.TYPE = 'geoserver';
 
 /**
  * The logger.

@@ -1,178 +1,178 @@
-goog.provide('os.ui.state.menu');
-goog.provide('os.ui.state.menu.EventType');
-goog.provide('os.ui.state.menu.manager');
+goog.module('os.ui.state.menu');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.async.Throttle');
-goog.require('os.metrics.Metrics');
-goog.require('os.metrics.keys');
-goog.require('os.ui.events.UIEvent');
-goog.require('os.ui.events.UIEventType');
-goog.require('os.ui.im.ImportEventType');
-goog.require('os.ui.menu.Menu');
-goog.require('os.ui.menu.MenuItem');
-goog.require('os.ui.menu.MenuItemType');
-goog.require('os.ui.state.IStateDescriptor');
-goog.require('os.ui.state.cmd.StateClear');
+const {removeAllIf} = goog.require('goog.array');
+const Throttle = goog.require('goog.async.Throttle');
+const googDispose = goog.require('goog.dispose');
+const dispatcher = goog.require('os.Dispatcher');
+const CommandProcessor = goog.require('os.command.CommandProcessor');
+const BaseDescriptor = goog.require('os.data.BaseDescriptor');
+const DataManager = goog.require('os.data.DataManager');
+const DescriptorEventType = goog.require('os.data.DescriptorEventType');
+const osImplements = goog.require('os.implements');
+const {Map: MapMetrics} = goog.require('os.metrics.keys');
+const {getStateManager} = goog.require('os.state.instance');
+const DescriptorNode = goog.require('os.ui.data.DescriptorNode');
+const UIEvent = goog.require('os.ui.events.UIEvent');
+const UIEventParams = goog.require('os.ui.events.UIEventParams');
+const UIEventType = goog.require('os.ui.events.UIEventType');
+const ImportEventType = goog.require('os.ui.im.ImportEventType');
+const Menu = goog.require('os.ui.menu.Menu');
+const MenuItem = goog.require('os.ui.menu.MenuItem');
+const MenuItemType = goog.require('os.ui.menu.MenuItemType');
+const IStateDescriptor = goog.require('os.ui.state.IStateDescriptor');
+const StateClear = goog.require('os.ui.state.cmd.StateClear');
+
+const DescriptorEvent = goog.requireType('os.data.DescriptorEvent');
+const MenuEvent = goog.requireType('os.ui.menu.MenuEvent');
+const MenuItemOptions = goog.requireType('os.ui.menu.MenuItemOptions');
 
 
 /**
  * The state menu.
- * @type {os.ui.menu.Menu|undefined}
+ * @type {Menu|undefined}
  */
-os.ui.state.MENU = undefined;
-
+let MENU = undefined;
 
 /**
  * Throttle how often the state menu is updated.
- * @type {goog.async.Throttle|undefined}
+ * @type {Throttle|undefined}
  */
-os.ui.state.menu.refreshThrottle = undefined;
-
+let refreshThrottle = undefined;
 
 /**
  * The maximum number of items to display in each state menu group.
  * @type {number}
- * @const
  */
-os.ui.state.menu.DISPLAY_LIMIT = 7;
-
+const DISPLAY_LIMIT = 7;
 
 /**
  * Prefix for all state menu event types.
  * @type {string}
- * @const
  */
-os.ui.state.menu.PREFIX = 'state:';
-
+const PREFIX = 'state:';
 
 /**
  * State menu event types.
  * @enum {string}
  */
-os.ui.state.menu.EventType = {
-  SAVE_STATE: os.ui.state.menu.PREFIX + 'save',
-  CLEAR_STATES: os.ui.state.menu.PREFIX + 'clear'
+const EventType = {
+  SAVE_STATE: PREFIX + 'save',
+  CLEAR_STATES: PREFIX + 'clear'
 };
-
 
 /**
  * Set up state menu.
  */
-os.ui.state.menu.setup = function() {
-  if (!os.ui.state.MENU) {
-    os.ui.state.MENU = new os.ui.menu.Menu(new os.ui.menu.MenuItem({
-      type: os.ui.menu.MenuItemType.ROOT,
+const setup = function() {
+  if (!MENU) {
+    MENU = new Menu(new MenuItem({
+      type: MenuItemType.ROOT,
       children: [{
         label: 'Import State',
-        eventType: os.ui.im.ImportEventType.FILE,
+        eventType: ImportEventType.FILE,
         tooltip: 'Import a state from a local file or a URL',
         icons: ['<i class="fa fa-fw fa-cloud-download"></i>'],
-        metricKey: os.metrics.keys.Map.IMPORT_STATE,
+        metricKey: MapMetrics.IMPORT_STATE,
         sort: 100
       },
       {
         label: 'Save State',
-        eventType: os.ui.state.menu.EventType.SAVE_STATE,
+        eventType: EventType.SAVE_STATE,
         tooltip: 'Save the application state',
         icons: ['<i class="fa fa-fw fa-floppy-o"></i>'],
-        handler: os.ui.state.menu.onStateMenuEvent_,
-        metricKey: os.metrics.keys.Map.SAVE_STATE,
+        handler: onStateMenuEvent,
+        metricKey: MapMetrics.SAVE_STATE,
         sort: 101
       },
       {
         label: 'Disable States',
-        eventType: os.ui.state.menu.EventType.CLEAR_STATES,
+        eventType: EventType.CLEAR_STATES,
         tooltip: 'Disable all active application states',
         icons: ['<i class="fa fa-fw fa-times"></i>'],
-        handler: os.ui.state.menu.onStateMenuEvent_,
-        metricKey: os.metrics.keys.Map.CLEAR_STATE,
+        handler: onStateMenuEvent,
+        metricKey: MapMetrics.CLEAR_STATE,
         sort: 102
       }]
     }));
 
-    os.dataManager.listen(os.data.DescriptorEventType.ADD_DESCRIPTOR, os.ui.state.menu.onDescriptorChange_);
-    os.dataManager.listen(os.data.DescriptorEventType.REMOVE_DESCRIPTOR, os.ui.state.menu.onDescriptorChange_);
-    os.dataManager.listen(os.data.DescriptorEventType.UPDATE_DESCRIPTOR, os.ui.state.menu.onDescriptorChange_);
+    DataManager.getInstance().listen(DescriptorEventType.ADD_DESCRIPTOR, onDescriptorChange);
+    DataManager.getInstance().listen(DescriptorEventType.REMOVE_DESCRIPTOR, onDescriptorChange);
+    DataManager.getInstance().listen(DescriptorEventType.UPDATE_DESCRIPTOR, onDescriptorChange);
 
-    os.dispatcher.listen(os.data.DescriptorEventType.ACTIVATED, os.ui.state.menu.onDescriptorChange_);
-    os.dispatcher.listen(os.data.DescriptorEventType.DEACTIVATED, os.ui.state.menu.onDescriptorChange_);
+    dispatcher.getInstance().listen(DescriptorEventType.ACTIVATED, onDescriptorChange);
+    dispatcher.getInstance().listen(DescriptorEventType.DEACTIVATED, onDescriptorChange);
 
-    os.ui.state.menu.refreshThrottle = new goog.async.Throttle(os.ui.state.menu.refreshMenu, 50);
+    refreshThrottle = new Throttle(refreshMenu, 50);
   }
 };
-
 
 /**
  * Dispose the state menu.
  */
-os.ui.state.menu.dispose = function() {
-  goog.dispose(os.ui.state.MENU);
-  os.ui.state.MENU = undefined;
+const dispose = function() {
+  googDispose(MENU);
+  MENU = undefined;
 
-  goog.dispose(os.ui.state.menu.refreshThrottle);
-  os.ui.state.menu.refreshThrottle = undefined;
+  googDispose(refreshThrottle);
+  refreshThrottle = undefined;
 };
-
 
 /**
  * Refresh menu items when a state descriptor changes.
  *
- * @param {os.data.DescriptorEvent} event Looking for IStateDescriptor events
- * @private
+ * @param {DescriptorEvent} event Looking for IStateDescriptor events
  */
-os.ui.state.menu.onDescriptorChange_ = function(event) {
-  if (os.ui.state.menu.refreshThrottle && event && os.implements(event.descriptor, os.ui.state.IStateDescriptor.ID)) {
-    os.ui.state.menu.refreshThrottle.fire();
+const onDescriptorChange = function(event) {
+  if (refreshThrottle && event && osImplements(event.descriptor, IStateDescriptor.ID)) {
+    refreshThrottle.fire();
   }
 };
-
 
 /**
  * Handle state menu event.
  *
- * @param {os.ui.menu.MenuEvent<undefined>} event The menu event.
- * @private
+ * @param {MenuEvent<undefined>} event The menu event.
  */
-os.ui.state.menu.onStateMenuEvent_ = function(event) {
+const onStateMenuEvent = function(event) {
   switch (event.type) {
-    case os.ui.state.menu.EventType.SAVE_STATE:
-      os.stateManager.startExport();
+    case EventType.SAVE_STATE:
+      getStateManager().startExport();
       break;
-    case os.ui.state.menu.EventType.CLEAR_STATES:
-      var cmd = new os.ui.state.cmd.StateClear();
-      os.command.CommandProcessor.getInstance().addCommand(cmd);
+    case EventType.CLEAR_STATES:
+      var cmd = new StateClear();
+      CommandProcessor.getInstance().addCommand(cmd);
       break;
     default:
       break;
   }
 };
 
-
 /**
  * Update the states displayed in the menu.
  */
-os.ui.state.menu.refreshMenu = function() {
-  if (!os.ui.state.MENU) {
+const refreshMenu = function() {
+  if (!MENU) {
     return;
   }
 
   // Remove all groups from the menu
-  var menuRoot = os.ui.state.MENU.getRoot();
+  var menuRoot = MENU.getRoot();
   if (menuRoot.children) {
-    goog.array.removeAllIf(menuRoot.children, function(item) {
-      return item.type === os.ui.menu.MenuItemType.GROUP;
+    removeAllIf(menuRoot.children, function(item) {
+      return item.type === MenuItemType.GROUP;
     });
   }
 
   // dataManager.getDescriptors will get everything
-  var descriptors = os.dataManager.getDescriptors();
+  var descriptors = DataManager.getInstance().getDescriptors();
 
   // Organize the descriptors by group.
   var menuGroups = {};
   for (var i = 0; i < descriptors.length; i++) {
     var descriptor = descriptors[i];
-    if (os.implements(descriptor, os.ui.state.IStateDescriptor.ID)) {
-      var stateDescriptor = /** @type {os.ui.state.IStateDescriptor} */ (descriptor);
+    if (osImplements(descriptor, IStateDescriptor.ID)) {
+      var stateDescriptor = /** @type {IStateDescriptor} */ (descriptor);
       if (!menuGroups[stateDescriptor.getMenuGroup()]) {
         menuGroups[stateDescriptor.getMenuGroup()] = [];
       }
@@ -185,20 +185,20 @@ os.ui.state.menu.refreshMenu = function() {
     var splitKey = menuGroupKey.split(':');
     var group = menuRoot.addChild({
       label: String(splitKey[1]),
-      type: os.ui.menu.MenuItemType.GROUP,
+      type: MenuItemType.GROUP,
       sort: Number(splitKey[0]) || 0
     });
 
     // Sort the group items by time so we act on the latest
     var groupDescriptors = menuGroups[menuGroupKey];
-    groupDescriptors.sort(os.data.BaseDescriptor.lastActiveReverse);
+    groupDescriptors.sort(BaseDescriptor.lastActiveReverse);
 
     // Store the latest active
     var tmpDescriptors = [];
     for (var i = 0; i < groupDescriptors.length; i++) {
-      if (tmpDescriptors.length >= os.ui.state.menu.DISPLAY_LIMIT) {
+      if (tmpDescriptors.length >= DISPLAY_LIMIT) {
         // If the display limit is reached, add a "View More" item and stop iterating
-        var viewMoreOptions = os.ui.state.menu.getViewMoreOptions_(tmpDescriptors[0]);
+        var viewMoreOptions = getViewMoreOptions_(tmpDescriptors[0]);
         if (viewMoreOptions) {
           group.addChild(viewMoreOptions);
         }
@@ -212,11 +212,11 @@ os.ui.state.menu.refreshMenu = function() {
     }
 
     // Sort the latest by title for the better user experience
-    tmpDescriptors.sort(os.data.BaseDescriptor.titleCompare);
+    tmpDescriptors.sort(BaseDescriptor.titleCompare);
 
     // Create the menu items for the descriptors
     for (var i = 0; i < tmpDescriptors.length; i++) {
-      var options = os.ui.state.menu.getStateOptions_(tmpDescriptors[i], i);
+      var options = getStateOptions_(tmpDescriptors[i], i);
       if (options) {
         group.addChild(options);
       }
@@ -224,16 +224,14 @@ os.ui.state.menu.refreshMenu = function() {
   }
 };
 
-
 /**
  * Create menu item options to toggle a state descriptor.
  *
- * @param {os.ui.state.IStateDescriptor} descriptor A state descriptor.
+ * @param {IStateDescriptor} descriptor A state descriptor.
  * @param {number} index The menu item index.
- * @return {os.ui.menu.MenuItemOptions|undefined} Options to create the menu item.
- * @private
+ * @return {MenuItemOptions|undefined} Options to create the menu item.
  */
-os.ui.state.menu.getStateOptions_ = function(descriptor, index) {
+const getStateOptions_ = function(descriptor, index) {
   var label = descriptor.getTitle();
   if (label) {
     var enabled = descriptor.isActive();
@@ -242,10 +240,10 @@ os.ui.state.menu.getStateOptions_ = function(descriptor, index) {
 
     return {
       label: label,
-      eventType: os.ui.state.menu.PREFIX + descriptor.getId(),
+      eventType: PREFIX + descriptor.getId(),
       tooltip: tooltip,
       icons: ['<i class="fa fa-fw ' + icon + '"></i>'],
-      handler: os.ui.state.menu.toggleState.bind(undefined, descriptor),
+      handler: toggleState.bind(undefined, descriptor),
       sort: index
     };
   }
@@ -253,26 +251,23 @@ os.ui.state.menu.getStateOptions_ = function(descriptor, index) {
   return undefined;
 };
 
-
 /**
  * Handle state menu click.
  *
- * @param {!os.ui.state.IStateDescriptor} descriptor The clicked descriptor
- * @param {os.ui.menu.MenuEvent} event The menu event.
+ * @param {!IStateDescriptor} descriptor The clicked descriptor
+ * @param {MenuEvent} event The menu event.
  */
-os.ui.state.menu.toggleState = function(descriptor, event) {
+const toggleState = function(descriptor, event) {
   descriptor.setActive(!descriptor.isActive());
 };
-
 
 /**
  * Create menu item options for a "View More" item.
  *
  * @param {!os.data.BaseDescriptor} descriptor A descriptor to provide input on the how the menu item should be built.
- * @return {os.ui.menu.MenuItemOptions|undefined} Options to create the menu item.
- * @private
+ * @return {MenuItemOptions|undefined} Options to create the menu item.
  */
-os.ui.state.menu.getViewMoreOptions_ = function(descriptor) {
+const getViewMoreOptions_ = function(descriptor) {
   var typeName = descriptor.getType();
   var descriptorType = descriptor.getDescriptorType();
   if (typeName && descriptorType) {
@@ -281,7 +276,7 @@ os.ui.state.menu.getViewMoreOptions_ = function(descriptor) {
       eventType: 'VIEW_MORE_' + descriptorType,
       tooltip: 'Launch the Add Data window to add more',
       icons: ['<i class="fa fa-fw fa-plus"></i>'],
-      handler: os.ui.state.menu.viewMoreEventEmitter.bind(undefined, typeName, descriptorType),
+      handler: viewMoreEventEmitter.bind(undefined, typeName, descriptorType),
       sort: Infinity
     };
   }
@@ -289,24 +284,22 @@ os.ui.state.menu.getViewMoreOptions_ = function(descriptor) {
   return undefined;
 };
 
-
 /**
  * Sends the event to launch the 'Add Data' window.
  *
  * @param {string} typeName The descriptor type name.
  * @param {string} descriptorType The descriptor type.
  */
-os.ui.state.menu.viewMoreEventEmitter = function(typeName, descriptorType) {
-  var filterFn = os.ui.state.menu.stateFilter.bind(undefined, typeName, descriptorType);
+const viewMoreEventEmitter = function(typeName, descriptorType) {
+  var filterFn = stateFilter.bind(undefined, typeName, descriptorType);
 
   var params = {};
-  params[os.ui.events.UIEventParams.FILTER_FUNC] = filterFn;
-  params[os.ui.events.UIEventParams.FILTER_NAME] = typeName;
+  params[UIEventParams.FILTER_FUNC] = filterFn;
+  params[UIEventParams.FILTER_NAME] = typeName;
 
-  var event = new os.ui.events.UIEvent(os.ui.events.UIEventType.TOGGLE_UI, 'addData', undefined, params);
-  os.dispatcher.dispatchEvent(event);
+  var event = new UIEvent(UIEventType.TOGGLE_UI, 'addData', undefined, params);
+  dispatcher.getInstance().dispatchEvent(event);
 };
-
 
 /**
  * Filter state descriptors.
@@ -316,13 +309,27 @@ os.ui.state.menu.viewMoreEventEmitter = function(typeName, descriptorType) {
  * @param {os.structs.ITreeNode} node The tree node.
  * @return {boolean} If the node should be displayed.
  */
-os.ui.state.menu.stateFilter = function(typeName, descriptorType, node) {
-  if (node instanceof os.ui.data.DescriptorNode) {
+const stateFilter = function(typeName, descriptorType, node) {
+  if (node instanceof DescriptorNode) {
     var descriptor = node.getDescriptor();
-    if (os.implements(descriptor, os.ui.state.IStateDescriptor.ID)) {
+    if (osImplements(descriptor, IStateDescriptor.ID)) {
       return descriptor.getType() === typeName && descriptor.getDescriptorType() === descriptorType;
     }
   }
 
   return false;
+};
+
+exports = {
+  MENU,
+  refreshThrottle,
+  DISPLAY_LIMIT,
+  PREFIX,
+  EventType,
+  setup,
+  dispose,
+  refreshMenu,
+  toggleState,
+  viewMoreEventEmitter,
+  stateFilter
 };
