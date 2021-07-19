@@ -20,7 +20,6 @@ const layerMenu = goog.require('os.ui.menu.layer');
 const SlickGridEvent = goog.require('os.ui.slick.SlickGridEvent');
 const {createOrEditFolder} = goog.require('plugin.file.kml.ui');
 const KMLTreeExportUI = goog.require('plugin.file.kml.ui.KMLTreeExportUI');
-
 const PlacesManager = goog.require('plugin.places.PlacesManager');
 
 const ExportOptions = goog.requireType('os.ex.ExportOptions');
@@ -149,52 +148,25 @@ class Controller extends Disposable {
   /**
    * Export places to a KMZ.
    *
+   * @todo import ExportFields from places & add "fields: ExportFields" to export internal fields
    * @export
    */
   export() {
     if (this.placesRoot_) {
-      var activePlaces = this.getActivePlaces(this.placesRoot_);
+      var activePlaces = getActivePlaces(this.placesRoot_);
 
-      var options = /** @type {ExportOptions} */ ({
+      launchExportUI(this.placesRoot_, /** @type {ExportOptions} */ ({
         allData: this.placesRoot_.getChildren(),
         selectedData: this['selected'],
         activeData: activePlaces,
         additionalOptions: true,
-        items: this.placesRoot_.getChildren(),
-        fields: []
-      });
+        items: this.placesRoot_.getChildren()
+      }));
 
-      KMLTreeExportUI.launchTreeExport(this.placesRoot_, 'Export Places', options);
       Metrics.getInstance().updateMetric(metrics.Places.EXPORT, 1);
     } else {
       AlertManager.getInstance().sendAlert('Nothing to export.', AlertEventSeverity.WARNING);
     }
-  }
-
-  /**
-   * Get active nodes from root
-   * @param {!KMLNode} root
-   * @return {Array<KMLNode>}
-   */
-  getActivePlaces(root) {
-    var places = root.getChildren() || [];
-    var activePlaces = [];
-
-    for (var i = 0; i < places.length; i++) {
-      var place = places[i];
-
-      if (place.canAddChildren) {
-        var active = this.getActivePlaces(places[i]);
-        var clone = place.clone();
-
-        clone.setChildren(active);
-        activePlaces.push(clone);
-      } else if (place.getState() == 'on') {
-        activePlaces.push(place);
-      }
-    }
-
-    return activePlaces;
   }
 
   /**
@@ -270,8 +242,49 @@ class Controller extends Disposable {
   }
 }
 
+
+/**
+ * Get active nodes from root
+ * @param {!KMLNode} root
+ * @return {Array<KMLNode>}
+ */
+const getActivePlaces = function(root) {
+  var places = root.getChildren() || [];
+  var activePlaces = [];
+
+  for (var i = 0; i < places.length; i++) {
+    var place = places[i];
+
+    if (place.canAddChildren) {
+      var active = getActivePlaces(places[i]);
+      var clone = place.clone();
+
+      clone.setChildren(active);
+      activePlaces.push(clone);
+    } else if (place.getState() == 'on') {
+      activePlaces.push(place);
+    }
+  }
+
+  return activePlaces;
+};
+
+
+/**
+ * Export places to a KMZ.
+ * @param {!KMLNode} rootNode
+ * @param {ExportOptions=} opt_options
+ */
+const launchExportUI = function(rootNode, opt_options) {
+  var tooltip = 'Places-specific feature styles (e.g. Range Rings) will not be exported, and will render as points. ' +
+      'The standard Layer export window can support this action.';
+  KMLTreeExportUI.launchTreeExport(rootNode, 'Export Places', opt_options, tooltip);
+};
+
+
 exports = {
   Controller,
   directive,
-  directiveTag
+  directiveTag,
+  launchExportUI
 };

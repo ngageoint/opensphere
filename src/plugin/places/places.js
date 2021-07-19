@@ -1,6 +1,7 @@
 goog.module('plugin.places');
 goog.module.declareLegacyNamespace();
 
+const {removeDuplicates} = goog.require('goog.array');
 const {getUid} = goog.require('ol');
 const Feature = goog.require('ol.Feature');
 const Geometry = goog.require('ol.geom.Geometry');
@@ -116,6 +117,15 @@ const SourceFields = [
 ];
 
 /**
+ * Fields that should be copied when cloning KML nodes.
+ * This should include all of the KML source fields, and the internal Places fields.
+ *
+ * @type {!Array<string>}
+ */
+const CopyableFields = ExportFields.concat(kml.SOURCE_FIELDS);
+removeDuplicates(CopyableFields);
+
+/**
  * @typedef {{
  *   name: (string|undefined),
  *   parent: (KMLNode|undefined)
@@ -191,7 +201,7 @@ const isLayerPresent = function() {
  * @return {!ol.Feature}
  */
 const copyFeature = function(feature, opt_layerConfig) {
-  var clone = osOlFeature.clone(feature, kml.SOURCE_FIELDS);
+  var clone = osOlFeature.clone(feature, CopyableFields);
   clone.setId(getUid(clone));
 
   // copy the feature's current style to a new config and set it on the cloned feature
