@@ -171,8 +171,15 @@ os.ui.ProviderImportCtrl.prototype.onTestFinished = function(event) {
 
       // Scroll to the bottom to show any error messages
       this.scope.$applyAsync(() => {
-        const container = this.element.closest('.modal-body');
-        container.animate({'scrollTop': container[0].scrollHeight}, 500);
+        // Depending on how this form is embedded, the modal body may be a child or parent.
+        let container = this.element.find('.modal-body');
+        if (!container.length) {
+          container = this.element.closest('.modal-body');
+        }
+
+        if (container.length) {
+          container.animate({'scrollTop': container[0].scrollHeight}, 500);
+        }
       });
     }
   }
