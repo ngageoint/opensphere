@@ -647,6 +647,8 @@ os.ui.file.kml.AbstractKMLExporter.prototype.processPlacemark = function(element
   this.addGeometryNode(item, element);
 
   var fields = this.getFields(item);
+  fields.push(os.data.RecordField.RING_OPTIONS);
+
   if (fields && fields.length > 0) {
     var descEl;
     for (var i = 0, n = fields.length; i < n; i++) {
