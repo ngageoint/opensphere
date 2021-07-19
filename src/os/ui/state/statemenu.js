@@ -32,7 +32,13 @@ const MenuItemOptions = goog.requireType('os.ui.menu.MenuItemOptions');
  * The state menu.
  * @type {Menu|undefined}
  */
-let MENU = undefined;
+let menu = undefined;
+
+/**
+ * Get the menu instance.
+ * @return {Menu|undefined} The menu.
+ */
+const getMenu = () => menu;
 
 /**
  * Throttle how often the state menu is updated.
@@ -65,8 +71,8 @@ const EventType = {
  * Set up state menu.
  */
 const setup = function() {
-  if (!MENU) {
-    MENU = new Menu(new MenuItem({
+  if (!menu) {
+    menu = new Menu(new MenuItem({
       type: MenuItemType.ROOT,
       children: [{
         label: 'Import State',
@@ -111,8 +117,8 @@ const setup = function() {
  * Dispose the state menu.
  */
 const dispose = function() {
-  googDispose(MENU);
-  MENU = undefined;
+  googDispose(menu);
+  menu = undefined;
 
   googDispose(refreshThrottle);
   refreshThrottle = undefined;
@@ -152,12 +158,12 @@ const onStateMenuEvent = function(event) {
  * Update the states displayed in the menu.
  */
 const refreshMenu = function() {
-  if (!MENU) {
+  if (!menu) {
     return;
   }
 
   // Remove all groups from the menu
-  var menuRoot = MENU.getRoot();
+  var menuRoot = menu.getRoot();
   if (menuRoot.children) {
     removeAllIf(menuRoot.children, function(item) {
       return item.type === MenuItemType.GROUP;
@@ -321,7 +327,7 @@ const stateFilter = function(typeName, descriptorType, node) {
 };
 
 exports = {
-  MENU,
+  getMenu,
   refreshThrottle,
   DISPLAY_LIMIT,
   PREFIX,
