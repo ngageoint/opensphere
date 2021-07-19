@@ -510,14 +510,14 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
 os.feature.createRings = function(feature, opt_replace) {
   var ringGeom;
 
-  if (!opt_replace) {
-    ringGeom = /** @type {ol.geom.GeometryCollection} */ (feature.values_[os.data.RecordField.RING]);
-    if (ringGeom instanceof ol.geom.GeometryCollection) {
-      return ringGeom;
-    }
-  }
-
   if (feature) {
+    if (!opt_replace) {
+      ringGeom = /** @type {ol.geom.GeometryCollection} */ (feature.values_[os.data.RecordField.RING]);
+      if (ringGeom instanceof ol.geom.GeometryCollection) {
+        return ringGeom;
+      }
+    }
+
     os.feature.cleanRingGeoms(feature);
 
     var options = /** @type {osx.feature.RingOptions} */ (feature.get(os.data.RecordField.RING_OPTIONS));
