@@ -1,3 +1,4 @@
+goog.require('os.data.histo.ColorBin');
 goog.require('os.histo.Bin');
 goog.require('os.histo.FilterComponent');
 goog.require('os.histo.NumericBinMethod');
@@ -7,7 +8,15 @@ goog.require('os.time.TimeRange');
 
 
 describe('os.histo.NumericBinMethod', function() {
-  var method = new os.histo.NumericBinMethod();
+  const ColorBin = goog.module.get('os.data.histo.ColorBin');
+  const Bin = goog.module.get('os.histo.Bin');
+  const FilterComponent = goog.module.get('os.histo.FilterComponent');
+  const NumericBinMethod = goog.module.get('os.histo.NumericBinMethod');
+  const osHistoBin = goog.module.get('os.histo.bin');
+  const TimeInstant = goog.module.get('os.time.TimeInstant');
+  const TimeRange = goog.module.get('os.time.TimeRange');
+
+  var method = new NumericBinMethod();
   method.setField('field');
 
   it('should get the correct numeric keys with default offset', function() {
@@ -59,35 +68,35 @@ describe('os.histo.NumericBinMethod', function() {
   });
 
   it('should return the magic number for non-numeric inputs', function() {
-    var method = new os.histo.NumericBinMethod();
+    var method = new NumericBinMethod();
     method.valueFunction = function(val) {
       return val;
     };
 
     // value is empty
-    expect(method.getValue(undefined)).toBe(os.histo.bin.MAGIC_EMPTY);
-    expect(method.getValue(null)).toBe(os.histo.bin.MAGIC_EMPTY);
-    expect(method.getValue('')).toBe(os.histo.bin.MAGIC_EMPTY);
+    expect(method.getValue(undefined)).toBe(osHistoBin.MAGIC_EMPTY);
+    expect(method.getValue(null)).toBe(osHistoBin.MAGIC_EMPTY);
+    expect(method.getValue('')).toBe(osHistoBin.MAGIC_EMPTY);
 
     // value is not a number
-    expect(method.getValue(NaN)).toBe(os.histo.bin.MAGIC_NAN);
+    expect(method.getValue(NaN)).toBe(osHistoBin.MAGIC_NAN);
 
-    expect(method.getValue(true)).toBe(os.histo.bin.MAGIC_NAN);
-    expect(method.getValue(false)).toBe(os.histo.bin.MAGIC_NAN);
+    expect(method.getValue(true)).toBe(osHistoBin.MAGIC_NAN);
+    expect(method.getValue(false)).toBe(osHistoBin.MAGIC_NAN);
 
-    expect(method.getValue('not a number')).toBe(os.histo.bin.MAGIC_NAN);
-    expect(method.getValue('1 1')).toBe(os.histo.bin.MAGIC_NAN);
-    expect(method.getValue('0x0g')).toBe(os.histo.bin.MAGIC_NAN);
-    expect(method.getValue('4/2')).toBe(os.histo.bin.MAGIC_NAN);
-    expect(method.getValue('#2a')).toBe(os.histo.bin.MAGIC_NAN);
+    expect(method.getValue('not a number')).toBe(osHistoBin.MAGIC_NAN);
+    expect(method.getValue('1 1')).toBe(osHistoBin.MAGIC_NAN);
+    expect(method.getValue('0x0g')).toBe(osHistoBin.MAGIC_NAN);
+    expect(method.getValue('4/2')).toBe(osHistoBin.MAGIC_NAN);
+    expect(method.getValue('#2a')).toBe(osHistoBin.MAGIC_NAN);
 
-    expect(method.getValue([])).toBe(os.histo.bin.MAGIC_NAN);
-    expect(method.getValue({})).toBe(os.histo.bin.MAGIC_NAN);
-    expect(method.getValue(function() {})).toBe(os.histo.bin.MAGIC_NAN);
+    expect(method.getValue([])).toBe(osHistoBin.MAGIC_NAN);
+    expect(method.getValue({})).toBe(osHistoBin.MAGIC_NAN);
+    expect(method.getValue(function() {})).toBe(osHistoBin.MAGIC_NAN);
   });
 
   it('should return a number for numeric inputs', function() {
-    var method = new os.histo.NumericBinMethod();
+    var method = new NumericBinMethod();
     method.valueFunction = function(val) {
       return val;
     };
@@ -97,10 +106,10 @@ describe('os.histo.NumericBinMethod', function() {
     var date = new Date();
     expect(method.getValue(date)).toBe(date.getTime());
 
-    var instant = new os.time.TimeInstant(date.getTime());
+    var instant = new TimeInstant(date.getTime());
     expect(method.getValue(instant)).toBe(date.getTime());
 
-    var range = new os.time.TimeRange(date.getTime(), date.getTime() + 1000);
+    var range = new TimeRange(date.getTime(), date.getTime() + 1000);
     expect(method.getValue(range)).toBe(date.getTime());
 
     expect(method.getValue('42')).toBe(42);
@@ -116,7 +125,7 @@ describe('os.histo.NumericBinMethod', function() {
     var label = method.getBinLabel(value);
 
     expect(key).toBe(value);
-    expect(key).toBe(os.histo.bin.MAGIC_EMPTY);
+    expect(key).toBe(osHistoBin.MAGIC_EMPTY);
     expect(label).toBe('No field');
 
     value = method.getValue({field: null});
@@ -124,7 +133,7 @@ describe('os.histo.NumericBinMethod', function() {
     label = method.getBinLabel(value);
 
     expect(key).toBe(value);
-    expect(key).toBe(os.histo.bin.MAGIC_EMPTY);
+    expect(key).toBe(osHistoBin.MAGIC_EMPTY);
     expect(label).toBe('No field');
   });
 
@@ -135,8 +144,8 @@ describe('os.histo.NumericBinMethod', function() {
     var label = method.getBinLabel(item);
 
     expect(key).toBe(value);
-    expect(key).toBe(os.histo.bin.MAGIC_NAN);
-    expect(label).toBe(os.histo.NumericBinMethod.NAN_LABEL);
+    expect(key).toBe(osHistoBin.MAGIC_NAN);
+    expect(label).toBe(NumericBinMethod.NAN_LABEL);
 
     item = {field: {}};
     value = method.getValue(item);
@@ -144,8 +153,8 @@ describe('os.histo.NumericBinMethod', function() {
     label = method.getBinLabel(item);
 
     expect(key).toBe(value);
-    expect(key).toBe(os.histo.bin.MAGIC_NAN);
-    expect(label).toBe(os.histo.NumericBinMethod.NAN_LABEL);
+    expect(key).toBe(osHistoBin.MAGIC_NAN);
+    expect(label).toBe(NumericBinMethod.NAN_LABEL);
   });
 
   it('should filter dimensions correctly', function() {
@@ -186,30 +195,30 @@ describe('os.histo.NumericBinMethod', function() {
     var orHeader = '<Or>';
     var orFooter = '</Or>';
 
-    var gtHeader = '<And hint="between">' + os.histo.FilterComponent.GT_HEAD + 'field' +
-        os.histo.FilterComponent.GT_MID;
-    var gtFooter = os.histo.FilterComponent.GT_TAIL;
+    var gtHeader = '<And hint="between">' + FilterComponent.GT_HEAD + 'field' +
+        FilterComponent.GT_MID;
+    var gtFooter = FilterComponent.GT_TAIL;
 
-    var ltHeader = os.histo.FilterComponent.LT_HEAD + 'field' + os.histo.FilterComponent.LT_MID;
-    var ltFooter = os.histo.FilterComponent.LT_TAIL + '</And>';
+    var ltHeader = FilterComponent.LT_HEAD + 'field' + FilterComponent.LT_MID;
+    var ltFooter = FilterComponent.LT_TAIL + '</And>';
 
-    var emptyFilter = os.histo.FilterComponent.IS_EMPTY_HEAD + 'field' + os.histo.FilterComponent.IS_EMPTY_TAIL;
+    var emptyFilter = FilterComponent.IS_EMPTY_HEAD + 'field' + FilterComponent.IS_EMPTY_TAIL;
 
     // no bins to export
     expect(method.exportAsFilter([])).toBe('');
 
     // "not a number" bin isn't exported
-    var nanBin = new os.histo.Bin();
-    nanBin.setKey(os.histo.bin.MAGIC_NAN);
+    var nanBin = new Bin();
+    nanBin.setKey(osHistoBin.MAGIC_NAN);
     expect(method.exportAsFilter([nanBin])).toBe('');
 
     // empty filter created correctly. single filter does not wrap in an Or block.
-    var emptyBin = new os.histo.Bin();
-    emptyBin.setKey(os.histo.bin.MAGIC_EMPTY);
+    var emptyBin = new Bin();
+    emptyBin.setKey(osHistoBin.MAGIC_EMPTY);
     expect(method.exportAsFilter([emptyBin])).toBe(emptyFilter);
 
     // bin with a value is exported. single filter does not wrap in an Or block.
-    var valueBin = new os.histo.Bin();
+    var valueBin = new Bin();
     var theValue = 42;
     valueBin.setKey(theValue);
 
@@ -241,7 +250,7 @@ describe('os.histo.NumericBinMethod', function() {
   });
 
   it('should restore correctly', function() {
-    var method = new os.histo.NumericBinMethod();
+    var method = new NumericBinMethod();
 
     // doesn't change width/offset if they aren't set on the restore object
     var oldWidth = method.getWidth();
@@ -296,7 +305,7 @@ describe('os.histo.NumericBinMethod', function() {
   });
 
   it('should provide bins statistics', function() {
-    var method = new os.histo.NumericBinMethod();
+    var method = new NumericBinMethod();
     method.setField('field');
     method.setWidth(5);
 
@@ -305,7 +314,7 @@ describe('os.histo.NumericBinMethod', function() {
     var bins = [];
     var bin;
 
-    bin = new os.data.histo.ColorBin('#000');
+    bin = new ColorBin('#000');
     bin['key'] = min;
     bin['label'] = method.getLabelForKey(min);
     bin['id'] = bin['label'];
@@ -315,7 +324,7 @@ describe('os.histo.NumericBinMethod', function() {
     bin['highlight'] = false;
     bins.push(bin);
 
-    bin = new os.data.histo.ColorBin('#000');
+    bin = new ColorBin('#000');
     bin['key'] = max;
     bin['label'] = method.getLabelForKey(max);
     bin['id'] = bin['label'];
