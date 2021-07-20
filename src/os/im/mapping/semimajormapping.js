@@ -1,49 +1,57 @@
-goog.provide('os.im.mapping.SemiMajorMapping');
-goog.require('os.im.mapping.MappingRegistry');
-goog.require('os.im.mapping.RadiusMapping');
+goog.module('os.im.mapping.SemiMajorMapping');
+goog.module.declareLegacyNamespace();
 
+const Fields = goog.require('os.Fields');
+const fields = goog.require('os.fields');
+const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
+const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
 
 
 /**
  * Ellipse semi-major mapping.
- *
- * @extends {os.im.mapping.RadiusMapping}
- * @constructor
  */
-os.im.mapping.SemiMajorMapping = function() {
-  os.im.mapping.SemiMajorMapping.base(this, 'constructor');
-  this.toField = os.fields.DEFAULT_SEMI_MAJ_COL_NAME;
-  this.unitsField = os.Fields.SEMI_MAJOR_UNITS;
-  this.unitsRegex = os.im.mapping.SemiMajorMapping.UNITS_REGEX;
-  this.regex = os.im.mapping.SemiMajorMapping.REGEX;
-  this.xmlType = os.im.mapping.SemiMajorMapping.ID;
-};
-goog.inherits(os.im.mapping.SemiMajorMapping, os.im.mapping.RadiusMapping);
+class SemiMajorMapping extends RadiusMapping {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.toField = fields.DEFAULT_SEMI_MAJ_COL_NAME;
+    this.unitsField = Fields.SEMI_MAJOR_UNITS;
+    this.unitsRegex = SemiMajorMapping.UNITS_REGEX;
+    this.regex = SemiMajorMapping.REGEX;
+    this.xmlType = SemiMajorMapping.ID;
+  }
+
+  /**
+   * Regular expression to detect the semi-major field.
+   * @type {RegExp}
+   * @override
+   */
+  static get REGEX() {
+    return /s(e(m(i)?)?)?[\W_]*maj(o(r)?)?/i;
+  }
+
+  /**
+   * Regular expression to detect the semi-major units field.
+   * @type {RegExp}
+   * @override
+   */
+  static get UNITS_REGEX() {
+    return /s(e(m(i)?)?)?[\W_]*maj(o(r)?)?_units/i;
+  }
+}
 
 
 /**
  * @type {string}
- * @const
+ * @override
  */
-os.im.mapping.SemiMajorMapping.ID = 'SemiMajor';
+SemiMajorMapping.ID = 'SemiMajor';
 
 
 // Register the mapping.
-os.im.mapping.MappingRegistry.getInstance().registerMapping(
-    os.im.mapping.SemiMajorMapping.ID, os.im.mapping.SemiMajorMapping);
+MappingRegistry.getInstance().registerMapping(SemiMajorMapping.ID, SemiMajorMapping);
 
 
-/**
- * Regular expression to detect the semi-major field.
- * @type {RegExp}
- * @const
- */
-os.im.mapping.SemiMajorMapping.REGEX = /s(e(m(i)?)?)?[\W_]*maj(o(r)?)?/i;
-
-
-/**
- * Regular expression to detect the semi-major units field.
- * @type {RegExp}
- * @const
- */
-os.im.mapping.SemiMajorMapping.UNITS_REGEX = /s(e(m(i)?)?)?[\W_]*maj(o(r)?)?_units/i;
+exports = SemiMajorMapping;

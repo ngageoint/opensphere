@@ -1,41 +1,47 @@
-goog.provide('os.im.mapping.OrientationMapping');
-goog.require('os.im.mapping.MappingRegistry');
-goog.require('os.im.mapping.RadiusMapping');
+goog.module('os.im.mapping.OrientationMapping');
+goog.module.declareLegacyNamespace();
 
+const Fields = goog.require('os.Fields');
+const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
+const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
 
 
 /**
  * Ellipse orientation mapping.
- *
- * @extends {os.im.mapping.RadiusMapping}
- * @constructor
  */
-os.im.mapping.OrientationMapping = function() {
-  os.im.mapping.OrientationMapping.base(this, 'constructor');
-  this.toField = os.Fields.ORIENTATION;
-  this.regex = os.im.mapping.OrientationMapping.REGEX;
-  this.units = null;
-  this.unitsField = null;
-  this.unitsRegex = null;
-  this.xmlType = os.im.mapping.OrientationMapping.ID;
-};
-goog.inherits(os.im.mapping.OrientationMapping, os.im.mapping.RadiusMapping);
+class OrientationMapping extends RadiusMapping {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.toField = Fields.ORIENTATION;
+    this.regex = OrientationMapping.REGEX;
+    this.units = null;
+    this.unitsField = null;
+    this.unitsRegex = null;
+    this.xmlType = OrientationMapping.ID;
+  }
+
+  /**
+   * @type {RegExp}
+   * @override
+   */
+  static get REGEX() {
+    return /(tilt|strike|orient(a(t(i(o(n)?)?)?)?)?)/i;
+  }
+}
 
 
 /**
  * @type {string}
- * @const
+ * @override
  */
-os.im.mapping.OrientationMapping.ID = 'Orientation';
+OrientationMapping.ID = 'Orientation';
 
 
 // Register the mapping.
-os.im.mapping.MappingRegistry.getInstance().registerMapping(
-    os.im.mapping.OrientationMapping.ID, os.im.mapping.OrientationMapping);
+MappingRegistry.getInstance().registerMapping(OrientationMapping.ID, OrientationMapping);
 
 
-/**
- * @type {RegExp}
- * @const
- */
-os.im.mapping.OrientationMapping.REGEX = /(tilt|strike|orient(a(t(i(o(n)?)?)?)?)?)/i;
+exports = OrientationMapping;

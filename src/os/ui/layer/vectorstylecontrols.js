@@ -113,9 +113,6 @@ os.ui.layer.VectorStyleControlsCtrl = function($scope, $element) {
    */
   this['ellipseMapping'] = undefined;
 
-  const supportsMapping = this.allowEllipseConfig();
-  this['allowEllipseConfig'] = (this.scope['allowEllipseConfig'] && supportsMapping) || false;
-
   /**
    * Help text for Ellipse configuration
    * @type {string}
@@ -160,15 +157,19 @@ os.ui.layer.VectorStyleControlsCtrl.prototype.disposeInternal = function() {
 
 
 /**
- * Fire a scope event when the shape is changed by the user.
+ * Determine if ellipse configuration is allowed for the layer.
+ * Depends on 'allowEllipseConfig' being true on scope.
  *
  * @return {boolean}
+ * @export
  */
 os.ui.layer.VectorStyleControlsCtrl.prototype.allowEllipseConfig = function() {
-  const layer = this.scope['layer'];
-  const desc = layer ? os.data.DataManager.getInstance().getDescriptor(layer.getId()) : undefined;
-  if (os.implements(desc, os.data.IMappingDescriptor.ID)) {
-    return /** @type {os.data.IMappingDescriptor} */ (desc).supportsMapping();
+  if (this.scope['allowEllipseConfig']) {
+    const layer = this.scope['layer'];
+    const desc = layer ? os.data.DataManager.getInstance().getDescriptor(layer.getId()) : undefined;
+    if (os.implements(desc, os.data.IMappingDescriptor.ID)) {
+      return /** @type {os.data.IMappingDescriptor} */ (desc).supportsMapping();
+    }
   }
 
   return false;

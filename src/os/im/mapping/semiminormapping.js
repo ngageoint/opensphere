@@ -1,49 +1,57 @@
-goog.provide('os.im.mapping.SemiMinorMapping');
-goog.require('os.im.mapping.MappingRegistry');
-goog.require('os.im.mapping.RadiusMapping');
+goog.module('os.im.mapping.SemiMinorMapping');
+goog.module.declareLegacyNamespace();
 
+const Fields = goog.require('os.Fields');
+const fields = goog.require('os.fields');
+const MappingRegistry = goog.require('os.im.mapping.MappingRegistry');
+const RadiusMapping = goog.require('os.im.mapping.RadiusMapping');
 
 
 /**
  * Ellipse semi-minor mapping.
- *
- * @extends {os.im.mapping.RadiusMapping}
- * @constructor
  */
-os.im.mapping.SemiMinorMapping = function() {
-  os.im.mapping.SemiMinorMapping.base(this, 'constructor');
-  this.toField = os.fields.DEFAULT_SEMI_MIN_COL_NAME;
-  this.unitsField = os.Fields.SEMI_MINOR_UNITS;
-  this.unitsRegex = os.im.mapping.SemiMinorMapping.UNITS_REGEX;
-  this.regex = os.im.mapping.SemiMinorMapping.REGEX;
-  this.xmlType = os.im.mapping.SemiMinorMapping.ID;
-};
-goog.inherits(os.im.mapping.SemiMinorMapping, os.im.mapping.RadiusMapping);
+class SemiMinorMapping extends RadiusMapping {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.toField = fields.DEFAULT_SEMI_MIN_COL_NAME;
+    this.unitsField = Fields.SEMI_MINOR_UNITS;
+    this.unitsRegex = SemiMinorMapping.UNITS_REGEX;
+    this.regex = SemiMinorMapping.REGEX;
+    this.xmlType = SemiMinorMapping.ID;
+  }
+
+  /**
+   * Regular expression to detect the semi-minor field.
+   * @type {RegExp}
+   * @override
+   */
+  static get REGEX() {
+    return /s(e(m(i)?)?)?[\W_]*min(o(r)?)?/i;
+  }
+
+  /**
+   * Regular expression to detect the semi-minor units field.
+   * @type {RegExp}
+   * @override
+   */
+  static get UNITS_REGEX() {
+    return /s(e(m(i)?)?)?[\W_]*min(o(r)?)?_units/i;
+  }
+}
 
 
 /**
  * @type {string}
- * @const
+ * @override
  */
-os.im.mapping.SemiMinorMapping.ID = 'SemiMinor';
+SemiMinorMapping.ID = 'SemiMinor';
 
 
 // Register the mapping.
-os.im.mapping.MappingRegistry.getInstance().registerMapping(
-    os.im.mapping.SemiMinorMapping.ID, os.im.mapping.SemiMinorMapping);
+MappingRegistry.getInstance().registerMapping(SemiMinorMapping.ID, SemiMinorMapping);
 
 
-/**
- * Regular expression to detect the semi-minor field.
- * @type {RegExp}
- * @const
- */
-os.im.mapping.SemiMinorMapping.REGEX = /s(e(m(i)?)?)?[\W_]*min(o(r)?)?/i;
-
-
-/**
- * Regular expression to detect the semi-minor units field.
- * @type {RegExp}
- * @const
- */
-os.im.mapping.SemiMinorMapping.UNITS_REGEX = /s(e(m(i)?)?)?[\W_]*min(o(r)?)?_units/i;
+exports = SemiMinorMapping;

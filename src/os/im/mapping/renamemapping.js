@@ -33,7 +33,6 @@ goog.inherits(os.im.mapping.RenameMapping, os.im.mapping.AbstractMapping);
 
 /**
  * @type {string}
- * @const
  */
 os.im.mapping.RenameMapping.ID = 'Rename';
 
