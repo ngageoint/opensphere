@@ -24,6 +24,7 @@ const kml = goog.require('plugin.file.kml');
 const KMLField = goog.require('plugin.file.kml.KMLField');
 const KMLTreeExporter = goog.require('plugin.file.kml.KMLTreeExporter');
 const KMLNodeAdd = goog.require('plugin.file.kml.cmd.KMLNodeAdd');
+const {METHOD_FIELD} = goog.require('os.interpolate');
 const {getKMLRoot, updateFolder, updatePlacemark} = goog.require('plugin.file.kml.ui');
 
 const KMLLayerNode = goog.requireType('plugin.file.kml.ui.KMLLayerNode');
@@ -89,7 +90,8 @@ const ExportFields = [
   Fields.SEMI_MINOR_UNITS,
   Fields.ORIENTATION,
   Fields.BEARING,
-  RecordField.RING_OPTIONS
+  RecordField.RING_OPTIONS,
+  METHOD_FIELD
 ];
 
 /**

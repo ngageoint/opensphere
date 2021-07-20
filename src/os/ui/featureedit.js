@@ -1451,6 +1451,11 @@ os.ui.FeatureEditCtrl.prototype.saveGeometry_ = function(feature) {
   } else if (this.originalGeometry && (!geom || geom === this.originalGeometry)) {
     geom = this.originalGeometry.clone();
     feature.setGeometry(geom);
+
+    const method = /** @type {os.interpolate.Method} */ (geom.get(os.interpolate.METHOD_FIELD));
+    os.interpolate.beginTempInterpolation(undefined, method);
+    os.interpolate.interpolateFeature(feature);
+    os.interpolate.endTempInterpolation();
   }
 
   this.updateAltMode(feature);
