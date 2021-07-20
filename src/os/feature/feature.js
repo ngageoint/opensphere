@@ -510,19 +510,28 @@ os.feature.createLineOfBearing = function(feature, opt_replace, opt_lobOpts) {
 os.feature.createRings = function(feature, opt_replace) {
   var ringGeom;
 
-  if (!opt_replace) {
-    ringGeom = /** @type {ol.geom.GeometryCollection} */ (feature.values_[os.data.RecordField.RING]);
-    if (ringGeom instanceof ol.geom.GeometryCollection) {
-      return ringGeom;
-    }
-  }
-
   if (feature) {
+    if (!opt_replace) {
+      ringGeom = /** @type {ol.geom.GeometryCollection} */ (feature.values_[os.data.RecordField.RING]);
+      if (ringGeom instanceof ol.geom.GeometryCollection) {
+        return ringGeom;
+      }
+    }
+
     os.feature.cleanRingGeoms(feature);
 
     var options = /** @type {osx.feature.RingOptions} */ (feature.get(os.data.RecordField.RING_OPTIONS));
     var geometry = feature.getGeometry();
-    var center = geometry ? ol.proj.toLonLat(ol.extent.getCenter(geometry.getExtent()), os.map.PROJECTION) : null;
+    var center = null;
+
+    if (geometry && geometry instanceof ol.geom.Point) {
+      center = ol.proj.toLonLat(ol.extent.getCenter(geometry.getExtent()), os.map.PROJECTION);
+    } else if (geometry) {
+      // We can import range rings as a polygon, still with ring options; the center from getCenter may not be correct
+      var lon = Number(feature.get(os.Fields.LON));
+      var lat = Number(feature.get(os.Fields.LAT));
+      center = [lon, lat];
+    }
 
     if (options && options.enabled && options.rings && center) {
       // calculate the geomag object and get the current interpolation function to use
