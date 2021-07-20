@@ -11,6 +11,7 @@ const DataManager = goog.require('os.data.DataManager');
 const LayerNode = goog.require('os.data.LayerNode');
 const RecordField = goog.require('os.data.RecordField');
 const osFeature = goog.require('os.feature');
+const {ORIGINAL_GEOM_FIELD} = goog.require('os.interpolate');
 const VectorLayer = goog.require('os.layer.Vector');
 const metrics = goog.require('os.metrics');
 const VectorSource = goog.require('os.source.Vector');
@@ -772,7 +773,7 @@ const saveSpatialToPlaces = function(event, opt_annotation) {
     if (features.length === 1) {
       name = osFeature.getTitle(features[0]);
 
-      var featureGeom = features[0].getGeometry();
+      var featureGeom = features[0].get(ORIGINAL_GEOM_FIELD) || features[0].getGeometry();
       if (featureGeom) {
         geometry = featureGeom.clone();
       }

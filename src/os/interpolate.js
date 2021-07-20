@@ -34,6 +34,7 @@ const SettingsKey = {
 let TransformSet;
 
 /**
+ * Local interpolate config.
  * @type {!Config}
  */
 const interpolateConfig = {
@@ -68,8 +69,7 @@ let overrideMethod = null;
  * @return {boolean} Whether or not all the values needed for interpolation are present
  */
 const getEnabled = function() {
-  var config = interpolateConfig;
-  return !!(interpolateEnabled && config.distance > 1000);
+  return !!(interpolateEnabled && interpolateConfig.distance > 1000);
 };
 
 /**
@@ -94,7 +94,6 @@ const getConfig = function() {
  */
 const setConfig = function(config) {
   if (config) {
-    var interpolateConfig = interpolateConfig;
     interpolateConfig.method = /** @type {Method} */ (config['method']) || interpolateConfig.method;
     interpolateConfig.distance = /** @type {number} */ (config['distance']) || interpolateConfig.thresholdPercent;
   }
