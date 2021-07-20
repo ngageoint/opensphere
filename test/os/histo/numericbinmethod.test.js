@@ -1,6 +1,7 @@
 goog.require('os.histo.Bin');
 goog.require('os.histo.FilterComponent');
 goog.require('os.histo.NumericBinMethod');
+goog.require('os.histo.bin');
 goog.require('os.time.TimeInstant');
 goog.require('os.time.TimeRange');
 
@@ -64,25 +65,25 @@ describe('os.histo.NumericBinMethod', function() {
     };
 
     // value is empty
-    expect(method.getValue(undefined)).toBe(os.histo.NumericBinMethod.MAGIC_EMPTY);
-    expect(method.getValue(null)).toBe(os.histo.NumericBinMethod.MAGIC_EMPTY);
-    expect(method.getValue('')).toBe(os.histo.NumericBinMethod.MAGIC_EMPTY);
+    expect(method.getValue(undefined)).toBe(os.histo.bin.MAGIC_EMPTY);
+    expect(method.getValue(null)).toBe(os.histo.bin.MAGIC_EMPTY);
+    expect(method.getValue('')).toBe(os.histo.bin.MAGIC_EMPTY);
 
     // value is not a number
-    expect(method.getValue(NaN)).toBe(os.histo.NumericBinMethod.MAGIC_NAN);
+    expect(method.getValue(NaN)).toBe(os.histo.bin.MAGIC_NAN);
 
-    expect(method.getValue(true)).toBe(os.histo.NumericBinMethod.MAGIC_NAN);
-    expect(method.getValue(false)).toBe(os.histo.NumericBinMethod.MAGIC_NAN);
+    expect(method.getValue(true)).toBe(os.histo.bin.MAGIC_NAN);
+    expect(method.getValue(false)).toBe(os.histo.bin.MAGIC_NAN);
 
-    expect(method.getValue('not a number')).toBe(os.histo.NumericBinMethod.MAGIC_NAN);
-    expect(method.getValue('1 1')).toBe(os.histo.NumericBinMethod.MAGIC_NAN);
-    expect(method.getValue('0x0g')).toBe(os.histo.NumericBinMethod.MAGIC_NAN);
-    expect(method.getValue('4/2')).toBe(os.histo.NumericBinMethod.MAGIC_NAN);
-    expect(method.getValue('#2a')).toBe(os.histo.NumericBinMethod.MAGIC_NAN);
+    expect(method.getValue('not a number')).toBe(os.histo.bin.MAGIC_NAN);
+    expect(method.getValue('1 1')).toBe(os.histo.bin.MAGIC_NAN);
+    expect(method.getValue('0x0g')).toBe(os.histo.bin.MAGIC_NAN);
+    expect(method.getValue('4/2')).toBe(os.histo.bin.MAGIC_NAN);
+    expect(method.getValue('#2a')).toBe(os.histo.bin.MAGIC_NAN);
 
-    expect(method.getValue([])).toBe(os.histo.NumericBinMethod.MAGIC_NAN);
-    expect(method.getValue({})).toBe(os.histo.NumericBinMethod.MAGIC_NAN);
-    expect(method.getValue(function() {})).toBe(os.histo.NumericBinMethod.MAGIC_NAN);
+    expect(method.getValue([])).toBe(os.histo.bin.MAGIC_NAN);
+    expect(method.getValue({})).toBe(os.histo.bin.MAGIC_NAN);
+    expect(method.getValue(function() {})).toBe(os.histo.bin.MAGIC_NAN);
   });
 
   it('should return a number for numeric inputs', function() {
@@ -115,7 +116,7 @@ describe('os.histo.NumericBinMethod', function() {
     var label = method.getBinLabel(value);
 
     expect(key).toBe(value);
-    expect(key).toBe(os.histo.NumericBinMethod.MAGIC_EMPTY);
+    expect(key).toBe(os.histo.bin.MAGIC_EMPTY);
     expect(label).toBe('No field');
 
     value = method.getValue({field: null});
@@ -123,7 +124,7 @@ describe('os.histo.NumericBinMethod', function() {
     label = method.getBinLabel(value);
 
     expect(key).toBe(value);
-    expect(key).toBe(os.histo.NumericBinMethod.MAGIC_EMPTY);
+    expect(key).toBe(os.histo.bin.MAGIC_EMPTY);
     expect(label).toBe('No field');
   });
 
@@ -134,7 +135,7 @@ describe('os.histo.NumericBinMethod', function() {
     var label = method.getBinLabel(item);
 
     expect(key).toBe(value);
-    expect(key).toBe(os.histo.NumericBinMethod.MAGIC_NAN);
+    expect(key).toBe(os.histo.bin.MAGIC_NAN);
     expect(label).toBe(os.histo.NumericBinMethod.NAN_LABEL);
 
     item = {field: {}};
@@ -143,7 +144,7 @@ describe('os.histo.NumericBinMethod', function() {
     label = method.getBinLabel(item);
 
     expect(key).toBe(value);
-    expect(key).toBe(os.histo.NumericBinMethod.MAGIC_NAN);
+    expect(key).toBe(os.histo.bin.MAGIC_NAN);
     expect(label).toBe(os.histo.NumericBinMethod.NAN_LABEL);
   });
 
@@ -199,12 +200,12 @@ describe('os.histo.NumericBinMethod', function() {
 
     // "not a number" bin isn't exported
     var nanBin = new os.histo.Bin();
-    nanBin.setKey(os.histo.NumericBinMethod.MAGIC_NAN);
+    nanBin.setKey(os.histo.bin.MAGIC_NAN);
     expect(method.exportAsFilter([nanBin])).toBe('');
 
     // empty filter created correctly. single filter does not wrap in an Or block.
     var emptyBin = new os.histo.Bin();
-    emptyBin.setKey(os.histo.NumericBinMethod.MAGIC_EMPTY);
+    emptyBin.setKey(os.histo.bin.MAGIC_EMPTY);
     expect(method.exportAsFilter([emptyBin])).toBe(emptyFilter);
 
     // bin with a value is exported. single filter does not wrap in an Or block.

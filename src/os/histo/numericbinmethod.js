@@ -1,65 +1,426 @@
-goog.provide('os.histo.NumericBinMethod');
+goog.module('os.histo.NumericBinMethod');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.iter');
-goog.require('goog.math.Range');
-goog.require('goog.math.RangeSet');
-goog.require('goog.string');
-goog.require('os.histo.FilterComponent');
-goog.require('os.histo.UniqueBinMethod');
-goog.require('os.time.TimeInstant');
-
+const iter = goog.require('goog.iter');
+const Range = goog.require('goog.math.Range');
+const RangeSet = goog.require('goog.math.RangeSet');
+const {toNumber} = goog.require('goog.string');
+const DataModel = goog.require('os.data.xf.DataModel');
+const FilterComponent = goog.require('os.histo.FilterComponent');
+const UniqueBinMethod = goog.require('os.histo.UniqueBinMethod');
+const {MAGIC_EMPTY, MAGIC_NAN, sortByKey, sortByKeyDesc} = goog.require('os.histo.bin');
+const TimeInstant = goog.require('os.time.TimeInstant');
 
 
 /**
- * @constructor
- * @extends {os.histo.UniqueBinMethod<T,number>}
+ * @extends {UniqueBinMethod<T,number>}
  * @template T
  */
-os.histo.NumericBinMethod = function() {
-  os.histo.NumericBinMethod.base(this, 'constructor');
-  this.type = os.histo.NumericBinMethod.TYPE;
+class NumericBinMethod extends UniqueBinMethod {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+    this.type = NumericBinMethod.TYPE;
+
+    /**
+     * @type {number}
+     * @protected
+     */
+    this.width = 10;
+
+    /**
+     * @type {number}
+     * @protected
+     */
+    this.offset = 0;
+
+    /**
+     * @type {number}
+     * @protected
+     */
+    this.precision = 0;
+
+    /**
+     * The minimum value, everything below this value will be grouped to the same bin
+     * @type {number}
+     * @protected
+     */
+    this.min = -MAGIC_EMPTY;
+
+    /**
+     * The maximum value, everything above this value will be grouped to the same bin
+     * @type {number}
+     * @protected
+     */
+    this.max = MAGIC_EMPTY;
+  }
 
   /**
-   * @type {number}
-   * @protected
+   * @inheritDoc
    */
-  this.width = 10;
+  getValue(item) {
+    var value = this.valueFunction ? this.valueFunction(item, this.field) : item[this.field];
+    var num = NaN;
+
+    var type = typeof value;
+    if (value == null) {
+      num = MAGIC_EMPTY;
+    } else if (type == 'number') {
+      num = value;
+    } else if (value instanceof Date) {
+      num = /** @type {Date} */ (value).getTime();
+    } else if (value instanceof TimeInstant) {
+      num = /** @type {TimeInstant} */ (value).getStart();
+    } else if (type == 'string') {
+      value = value.trim();
+      // treat empty strings as an empty value, not NaN
+      num = value ? toNumber(value) : MAGIC_EMPTY;
+    }
+
+    // this should *always* return a number or crossfilter will have issues
+    return !isNaN(num) ? num : MAGIC_NAN;
+  }
 
   /**
-   * @type {number}
-   * @protected
+   * @return {number} The min
    */
-  this.offset = 0;
+  getMin() {
+    return this.min;
+  }
 
   /**
-   * @type {number}
-   * @protected
+   * @param {number} min
    */
-  this.precision = 0;
+  setMin(min) {
+    this.min = min;
+  }
 
   /**
-   * The minimum value, everything below this value will be grouped to the same bin
-   * @type {number}
-   * @protected
+   * @return {number} The max
    */
-  this.min = -os.histo.NumericBinMethod.MAGIC_EMPTY;
+  getMax() {
+    return this.max;
+  }
 
   /**
-   * The maximum value, everything above this value will be grouped to the same bin
-   * @type {number}
-   * @protected
+   * @param {number} max
    */
-  this.max = os.histo.NumericBinMethod.MAGIC_EMPTY;
-};
-goog.inherits(os.histo.NumericBinMethod, os.histo.UniqueBinMethod);
+  setMax(max) {
+    this.max = max;
+  }
 
+  /**
+   * @return {number} The width
+   */
+  getWidth() {
+    return this.width;
+  }
+
+  /**
+   * @param {number} width
+   */
+  setWidth(width) {
+    this.width = width;
+    this.precision = Math.max(
+        NumericBinMethod.getPrecision(this.width),
+        NumericBinMethod.getPrecision(this.offset));
+  }
+
+  /**
+   * @return {number} The offset
+   */
+  getOffset() {
+    return this.offset;
+  }
+
+  /**
+   * @param {number} offset
+   */
+  setOffset(offset) {
+    this.offset = offset;
+    this.precision = Math.max(
+        NumericBinMethod.getPrecision(this.width),
+        NumericBinMethod.getPrecision(this.offset));
+  }
+
+  /**
+   * @return {number} precision
+   */
+  getPrecision() {
+    return this.precision;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getBinKey(value) {
+    if (typeof value == 'string') {
+      value = value.trim();
+      // treat empty strings as an empty value, not NaN
+      value = value ? toNumber(value) : MAGIC_EMPTY;
+    }
+
+    if (value === MAGIC_EMPTY || value === MAGIC_NAN) {
+      return value;
+    } else if (value === this.getFloor(MAGIC_EMPTY)) {
+      return MAGIC_EMPTY;
+    } else if (value === this.getFloor(MAGIC_NAN)) {
+      return MAGIC_NAN;
+    } else if (/** @type {number} */ (value) <= this.getFloor(this.min)) {
+      return this.min;
+    } else if (/** @type {number} */ (value) >= this.getFloor(this.max)) {
+      return this.max;
+    } else if (typeof value === 'number') {
+      // not our magic number, so go ahead and floor it based on the method settings
+      return this.getFloor(value);
+    }
+
+    // otherwise return the magic "not a number" value to keep crossfilter happy
+    return MAGIC_NAN;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getBinLabel(item) {
+    var key = this.getBinKey(this.getValue(item));
+    return this.getLabelForKey(key);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getLabelForKey(key, opt_secondary, opt_smallLabel) {
+    if (typeof key === 'string' && key.indexOf(DataModel.SEPARATOR) >= 0) {
+      // this key is in a bin that represents the intersection of two values; split them apart with the separator
+      key = !opt_secondary ? Number(key.split(DataModel.SEPARATOR)[0]) :
+        Number(key.split(DataModel.SEPARATOR)[1]);
+    }
+
+    var width = this.width;
+    var precision = this.precision;
+
+    if (key === MAGIC_EMPTY) {
+      // value is empty
+      return 'No ' + this.field;
+    } else if (key === MAGIC_NAN || typeof key != 'number') {
+      // value cannot be coerced to a number
+      return NumericBinMethod.NAN_LABEL;
+    } else {
+      // the key should be a number, so if it's not a magic value return the bin range
+      return !opt_smallLabel ? key.toFixed(precision) + NumericBinMethod.LABEL_RANGE_SEP +
+      (key + width).toFixed(precision) : key.toFixed(precision);
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  filterDimension(dimension, item) {
+    var value = this.getValue(item);
+    var start = this.getBinKey(value);
+    var width = this.width;
+    dimension.filterRange([start, start + width]);
+  }
+
+  /**
+   * Gets the floored value of a number
+   *
+   * @param {number} value
+   * @return {number}
+   */
+  getFloor(value) {
+    var width = this.width;
+    var offset = this.offset;
+    return Math.floor((value - offset) / width) * width + offset;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  persist(opt_to) {
+    opt_to = super.persist(opt_to) || {};
+
+    opt_to['width'] = this.width;
+    opt_to['offset'] = this.offset;
+    opt_to['min'] = this.min;
+    opt_to['max'] = this.max;
+
+    return opt_to;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  restore(config) {
+    super.restore(config);
+
+    var width = /** @type {string|number|undefined} */ (config['width']);
+    if (width != null && !isNaN(width)) {
+      this.setWidth(Number(width));
+    }
+
+    var offset = /** @type {string|number|undefined} */ (config['offset']);
+    if (offset != null && !isNaN(offset)) {
+      this.setOffset(Number(offset));
+    }
+
+    var min = /** @type {string|number|undefined} */ (config['min']);
+    if (min != null && !isNaN(min)) {
+      this.setMin(Number(min));
+    }
+
+    var max = /** @type {string|number|undefined} */ (config['max']);
+    if (max != null && !isNaN(max)) {
+      this.setMax(Number(max));
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getSortLabelFnAsc() {
+    return sortByKey;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getSortLabelFnDesc() {
+    return sortByKeyDesc;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  createFilter(values) {
+    return NumericBinMethod.numericContains.bind(this, values);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  exportAsFilter(bins) {
+    var ranges = new RangeSet();
+    var filter = [];
+
+    for (var i = 0; i < bins.length; i++) {
+      var bin = bins[i];
+      if (bin) {
+        var key = /** @type {number} */ (bin.getKey());
+        if (key === MAGIC_EMPTY) {
+          // "no value" should be included, NaN should not
+          filter.push(FilterComponent.IS_EMPTY_HEAD + this.field + FilterComponent.IS_EMPTY_TAIL);
+        } else if (key !== MAGIC_NAN) {
+          // merge overlapping ranges to reduce the filter size
+          ranges.add(new Range(key, key + this.width));
+        }
+      }
+    }
+
+    if (filter.length > 0 || !ranges.isEmpty()) {
+      // add the merged ranges
+      iter.forEach(ranges, function(range) {
+        filter.push(this.getFilterForRange_(range));
+      }, this);
+    }
+
+    // if multiple filters were added, wrap in an Or block
+    if (filter.length > 1) {
+      filter.unshift('<Or>');
+      filter.push('</Or>');
+    }
+
+    return filter.join('');
+  }
+
+  /**
+   * @param {Range} range
+   * @return {string}
+   * @private
+   */
+  getFilterForRange_(range) {
+    var filter = ['<And hint="between">'];
+
+    // add the lower bound
+    filter.push(FilterComponent.GT_HEAD);
+    filter.push(this.field);
+    filter.push(FilterComponent.GT_MID);
+    filter.push(range.start);
+    filter.push(FilterComponent.GT_TAIL);
+
+    // add the upper bound
+    filter.push(FilterComponent.LT_HEAD);
+    filter.push(this.field);
+    filter.push(FilterComponent.LT_MID);
+    filter.push(range.end);
+    filter.push(FilterComponent.LT_TAIL);
+
+    filter.push('</And>');
+    return filter.join('');
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getStatsForBin(bins) {
+    var result = super.getStatsForBin(bins);
+    if (result != null) {
+      result.step = this.getWidth() || 1; // don't allow divide by 0 errors
+      result.binCountAll = ((result.range[1] - result.range[0]) / result.step) + 1;
+    }
+    return result;
+  }
+
+  /**
+   * Gets the precision of a number
+   *
+   * @param {number} num
+   * @return {number} precision
+   */
+  static getPrecision(num) {
+    var s = num.toFixed(14);
+    var i = s.indexOf('.');
+
+    if (i > -1) {
+      s = s.substring(i + 1);
+
+      // replace trailing zeros
+      s = s.replace(/0+$/, '');
+      return s.length;
+    }
+
+    return 0;
+  }
+
+  /**
+   * Test if a value is between or equal to the bin method's range for a set of minimum values.
+   *
+   * @param {!Array<number>} values The values to check
+   * @param {number} value The value to test
+   * @return {boolean}
+   *
+   * @this NumericBinMethod
+   */
+  static numericContains(values, value) {
+    for (var i = 0; i < values.length; i++) {
+      // check if the value is
+      if (value >= values[i] && value <= values[i] + this.width) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+}
 
 /**
  * @type {string}
- * @const
+ * @override
  */
-os.histo.NumericBinMethod.TYPE = 'Numeric';
-
+NumericBinMethod.TYPE = 'Numeric';
 
 /**
  * "Unique" value used when a requested value is null or undefined. Crossfilter fails when values cannot be
@@ -69,9 +430,9 @@ os.histo.NumericBinMethod.TYPE = 'Numeric';
  *
  * @type {number}
  * @const
+ * @deprecated Please use os.histo.bin.MAGIC_EMPTY instead.
  */
-os.histo.NumericBinMethod.MAGIC_EMPTY = 999999999999999998;
-
+NumericBinMethod.MAGIC_EMPTY = MAGIC_EMPTY;
 
 /**
  * "Unique" value used when a requested value cannot be coerced to a number. Crossfilter fails when values cannot be
@@ -79,9 +440,9 @@ os.histo.NumericBinMethod.MAGIC_EMPTY = 999999999999999998;
  *
  * @type {number}
  * @const
+ * @deprecated Please use os.histo.bin.MAGIC_NAN instead.
  */
-os.histo.NumericBinMethod.MAGIC_NAN = 9999999998;
-
+NumericBinMethod.MAGIC_NAN = MAGIC_NAN;
 
 /**
  * Label displayed when the value cannot be coerced to a number.
@@ -89,8 +450,7 @@ os.histo.NumericBinMethod.MAGIC_NAN = 9999999998;
  * @type {string}
  * @const
  */
-os.histo.NumericBinMethod.NAN_LABEL = 'Not a Number';
-
+NumericBinMethod.NAN_LABEL = 'Not a Number';
 
 /**
  * String the separates in range based labels
@@ -98,387 +458,6 @@ os.histo.NumericBinMethod.NAN_LABEL = 'Not a Number';
  * @type {string}
  * @const
  */
-os.histo.NumericBinMethod.LABEL_RANGE_SEP = ' to ';
+NumericBinMethod.LABEL_RANGE_SEP = ' to ';
 
-
-/**
- * @inheritDoc
- */
-os.histo.NumericBinMethod.prototype.getValue = function(item) {
-  var value = this.valueFunction ? this.valueFunction(item, this.field) : item[this.field];
-  var num = NaN;
-
-  var type = typeof value;
-  if (value == null) {
-    num = os.histo.NumericBinMethod.MAGIC_EMPTY;
-  } else if (type == 'number') {
-    num = value;
-  } else if (value instanceof Date) {
-    num = /** @type {Date} */ (value).getTime();
-  } else if (value instanceof os.time.TimeInstant) {
-    num = /** @type {os.time.TimeInstant} */ (value).getStart();
-  } else if (type == 'string') {
-    value = value.trim();
-    // treat empty strings as an empty value, not NaN
-    num = value ? goog.string.toNumber(value) : os.histo.NumericBinMethod.MAGIC_EMPTY;
-  }
-
-  // this should *always* return a number or crossfilter will have issues
-  return !isNaN(num) ? num : os.histo.NumericBinMethod.MAGIC_NAN;
-};
-
-
-/**
- * @return {number} The min
- */
-os.histo.NumericBinMethod.prototype.getMin = function() {
-  return this.min;
-};
-
-
-/**
- * @param {number} min
- */
-os.histo.NumericBinMethod.prototype.setMin = function(min) {
-  this.min = min;
-};
-
-
-/**
- * @return {number} The max
- */
-os.histo.NumericBinMethod.prototype.getMax = function() {
-  return this.max;
-};
-
-
-/**
- * @param {number} max
- */
-os.histo.NumericBinMethod.prototype.setMax = function(max) {
-  this.max = max;
-};
-
-
-/**
- * @return {number} The width
- */
-os.histo.NumericBinMethod.prototype.getWidth = function() {
-  return this.width;
-};
-
-
-/**
- * @param {number} width
- */
-os.histo.NumericBinMethod.prototype.setWidth = function(width) {
-  this.width = width;
-  this.precision = Math.max(
-      os.histo.NumericBinMethod.getPrecision(this.width),
-      os.histo.NumericBinMethod.getPrecision(this.offset));
-};
-
-
-/**
- * @return {number} The offset
- */
-os.histo.NumericBinMethod.prototype.getOffset = function() {
-  return this.offset;
-};
-
-
-/**
- * @param {number} offset
- */
-os.histo.NumericBinMethod.prototype.setOffset = function(offset) {
-  this.offset = offset;
-  this.precision = Math.max(
-      os.histo.NumericBinMethod.getPrecision(this.width),
-      os.histo.NumericBinMethod.getPrecision(this.offset));
-};
-
-
-/**
- * @return {number} precision
- */
-os.histo.NumericBinMethod.prototype.getPrecision = function() {
-  return this.precision;
-};
-
-
-/**
- * @inheritDoc
- */
-os.histo.NumericBinMethod.prototype.getBinKey = function(value) {
-  if (typeof value == 'string') {
-    value = value.trim();
-    // treat empty strings as an empty value, not NaN
-    value = value ? goog.string.toNumber(value) : os.histo.NumericBinMethod.MAGIC_EMPTY;
-  }
-
-  if (value === os.histo.NumericBinMethod.MAGIC_EMPTY || value === os.histo.NumericBinMethod.MAGIC_NAN) {
-    return value;
-  } else if (value === this.getFloor(os.histo.NumericBinMethod.MAGIC_EMPTY)) {
-    return os.histo.NumericBinMethod.MAGIC_EMPTY;
-  } else if (value === this.getFloor(os.histo.NumericBinMethod.MAGIC_NAN)) {
-    return os.histo.NumericBinMethod.MAGIC_NAN;
-  } else if (/** @type {number} */ (value) <= this.getFloor(this.min)) {
-    return this.min;
-  } else if (/** @type {number} */ (value) >= this.getFloor(this.max)) {
-    return this.max;
-  } else if (typeof value === 'number') {
-    // not our magic number, so go ahead and floor it based on the method settings
-    return this.getFloor(value);
-  }
-
-  // otherwise return the magic "not a number" value to keep crossfilter happy
-  return os.histo.NumericBinMethod.MAGIC_NAN;
-};
-
-
-/**
- * @inheritDoc
- */
-os.histo.NumericBinMethod.prototype.getBinLabel = function(item) {
-  var key = this.getBinKey(this.getValue(item));
-  return this.getLabelForKey(key);
-};
-
-
-/**
- * @inheritDoc
- */
-os.histo.NumericBinMethod.prototype.getLabelForKey = function(key, opt_secondary, opt_smallLabel) {
-  if (typeof key === 'string' && key.indexOf(os.data.xf.DataModel.SEPARATOR) >= 0) {
-    // this key is in a bin that represents the intersection of two values; split them apart with the separator
-    key = !opt_secondary ? Number(key.split(os.data.xf.DataModel.SEPARATOR)[0]) :
-      Number(key.split(os.data.xf.DataModel.SEPARATOR)[1]);
-  }
-
-  var width = this.width;
-  var precision = this.precision;
-
-  if (key === os.histo.NumericBinMethod.MAGIC_EMPTY) {
-    // value is empty
-    return 'No ' + this.field;
-  } else if (key === os.histo.NumericBinMethod.MAGIC_NAN || typeof key != 'number') {
-    // value cannot be coerced to a number
-    return os.histo.NumericBinMethod.NAN_LABEL;
-  } else {
-    // the key should be a number, so if it's not a magic value return the bin range
-    return !opt_smallLabel ? key.toFixed(precision) + os.histo.NumericBinMethod.LABEL_RANGE_SEP +
-    (key + width).toFixed(precision) : key.toFixed(precision);
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.histo.NumericBinMethod.prototype.filterDimension = function(dimension, item) {
-  var value = this.getValue(item);
-  var start = this.getBinKey(value);
-  var width = this.width;
-  dimension.filterRange([start, start + width]);
-};
-
-
-/**
- * Gets the floored value of a number
- *
- * @param {number} value
- * @return {number}
- */
-os.histo.NumericBinMethod.prototype.getFloor = function(value) {
-  var width = this.width;
-  var offset = this.offset;
-  return Math.floor((value - offset) / width) * width + offset;
-};
-
-
-/**
- * Gets the precision of a number
- *
- * @param {number} num
- * @return {number} precision
- */
-os.histo.NumericBinMethod.getPrecision = function(num) {
-  var s = num.toFixed(14);
-  var i = s.indexOf('.');
-
-  if (i > -1) {
-    s = s.substring(i + 1);
-
-    // replace trailing zeros
-    s = s.replace(/0+$/, '');
-    return s.length;
-  }
-
-  return 0;
-};
-
-
-/**
- * @inheritDoc
- */
-os.histo.NumericBinMethod.prototype.persist = function(opt_to) {
-  opt_to = os.histo.NumericBinMethod.base(this, 'persist', opt_to) || {};
-
-  opt_to['width'] = this.width;
-  opt_to['offset'] = this.offset;
-  opt_to['min'] = this.min;
-  opt_to['max'] = this.max;
-
-  return opt_to;
-};
-
-
-/**
- * @inheritDoc
- */
-os.histo.NumericBinMethod.prototype.restore = function(config) {
-  os.histo.NumericBinMethod.base(this, 'restore', config);
-
-  var width = /** @type {string|number|undefined} */ (config['width']);
-  if (width != null && !isNaN(width)) {
-    this.setWidth(Number(width));
-  }
-
-  var offset = /** @type {string|number|undefined} */ (config['offset']);
-  if (offset != null && !isNaN(offset)) {
-    this.setOffset(Number(offset));
-  }
-
-  var min = /** @type {string|number|undefined} */ (config['min']);
-  if (min != null && !isNaN(min)) {
-    this.setMin(Number(min));
-  }
-
-  var max = /** @type {string|number|undefined} */ (config['max']);
-  if (max != null && !isNaN(max)) {
-    this.setMax(Number(max));
-  }
-};
-
-
-/**
- * @inheritDoc
- */
-os.histo.NumericBinMethod.prototype.getSortLabelFnAsc = function() {
-  return os.histo.bin.sortByKey;
-};
-
-
-/**
- * @inheritDoc
- */
-os.histo.NumericBinMethod.prototype.getSortLabelFnDesc = function() {
-  return os.histo.bin.sortByKeyDesc;
-};
-
-
-/**
- * @inheritDoc
- */
-os.histo.NumericBinMethod.prototype.createFilter = function(values) {
-  return os.histo.NumericBinMethod.contains.bind(this, values);
-};
-
-
-/**
- * @inheritDoc
- */
-os.histo.NumericBinMethod.prototype.exportAsFilter = function(bins) {
-  var ranges = new goog.math.RangeSet();
-  var filter = [];
-
-  for (var i = 0; i < bins.length; i++) {
-    var bin = bins[i];
-    if (bin) {
-      var key = /** @type {number} */ (bin.getKey());
-      if (key === os.histo.NumericBinMethod.MAGIC_EMPTY) {
-        // "no value" should be included, NaN should not
-        filter.push(os.histo.FilterComponent.IS_EMPTY_HEAD + this.field + os.histo.FilterComponent.IS_EMPTY_TAIL);
-      } else if (key !== os.histo.NumericBinMethod.MAGIC_NAN) {
-        // merge overlapping ranges to reduce the filter size
-        ranges.add(new goog.math.Range(key, key + this.width));
-      }
-    }
-  }
-
-  if (filter.length > 0 || !ranges.isEmpty()) {
-    // add the merged ranges
-    goog.iter.forEach(ranges, function(range) {
-      filter.push(this.getFilterForRange_(range));
-    }, this);
-  }
-
-  // if multiple filters were added, wrap in an Or block
-  if (filter.length > 1) {
-    filter.unshift('<Or>');
-    filter.push('</Or>');
-  }
-
-  return filter.join('');
-};
-
-
-/**
- * @param {goog.math.Range} range
- * @return {string}
- * @private
- */
-os.histo.NumericBinMethod.prototype.getFilterForRange_ = function(range) {
-  var filter = ['<And hint="between">'];
-
-  // add the lower bound
-  filter.push(os.histo.FilterComponent.GT_HEAD);
-  filter.push(this.field);
-  filter.push(os.histo.FilterComponent.GT_MID);
-  filter.push(range.start);
-  filter.push(os.histo.FilterComponent.GT_TAIL);
-
-  // add the upper bound
-  filter.push(os.histo.FilterComponent.LT_HEAD);
-  filter.push(this.field);
-  filter.push(os.histo.FilterComponent.LT_MID);
-  filter.push(range.end);
-  filter.push(os.histo.FilterComponent.LT_TAIL);
-
-  filter.push('</And>');
-  return filter.join('');
-};
-
-
-/**
- * @inheritDoc
- */
-os.histo.NumericBinMethod.prototype.getStatsForBin = function(bins) {
-  var result = os.histo.NumericBinMethod.base(this, 'getStatsForBin', bins);
-  if (result != null) {
-    result.step = this.getWidth() || 1; // don't allow divide by 0 errors
-    result.binCountAll = ((result.range[1] - result.range[0]) / result.step) + 1;
-  }
-  return result;
-};
-
-
-/**
- * Test if a value is between or equal to the bin method's range for a set of minimum values.
- *
- * @param {!Array<number>} values The values to check
- * @param {number} value The value to test
- * @return {boolean}
- *
- * @this os.histo.NumericBinMethod
- */
-os.histo.NumericBinMethod.contains = function(values, value) {
-  for (var i = 0; i < values.length; i++) {
-    // check if the value is
-    if (value >= values[i] && value <= values[i] + this.width) {
-      return true;
-    }
-  }
-
-  return false;
-};
+exports = NumericBinMethod;
