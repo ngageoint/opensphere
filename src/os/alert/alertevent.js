@@ -1,12 +1,13 @@
 goog.module('os.alert.AlertEvent');
 goog.module.declareLegacyNamespace();
 
-goog.require('goog.date.DateTime');
-goog.require('goog.events.Event');
-goog.require('goog.events.EventTarget');
-
-const AlertEventSeverity = goog.requireType('os.alert.AlertEventSeverity');
+const DateTime = goog.require('goog.date.DateTime');
+const GoogEvent = goog.require('goog.events.Event');
 const EventType = goog.require('os.alert.EventType');
+
+const EventTarget = goog.requireType('goog.events.EventTarget');
+const AlertEventSeverity = goog.requireType('os.alert.AlertEventSeverity');
+
 
 /**
  * @type {number}
@@ -22,12 +23,12 @@ let id_ = 0;
 /**
  * @unrestricted
  */
-class AlertEvent extends goog.events.Event {
+class AlertEvent extends GoogEvent {
   /**
    * @param {string} message The alert message
    * @param {AlertEventSeverity} severity The alert severity
    * @param {number=} opt_limit Maximum number of identical messages to display at once
-   * @param {goog.events.EventTarget=} opt_dismissDispatcher
+   * @param {EventTarget=} opt_dismissDispatcher
    * @param {number=} opt_count Count of duplicate alert messages
    */
   constructor(message, severity, opt_limit, opt_dismissDispatcher, opt_count) {
@@ -40,10 +41,10 @@ class AlertEvent extends goog.events.Event {
     this.message_ = message;
 
     /**
-     * @type {goog.date.DateTime}
+     * @type {DateTime}
      * @private
      */
-    this.time_ = new goog.date.DateTime();
+    this.time_ = new DateTime();
 
     /**
      * @type {number}
@@ -52,7 +53,7 @@ class AlertEvent extends goog.events.Event {
     this.limit_ = opt_limit || DEFAULT_LIMIT;
 
     /**
-     * @type {goog.events.EventTarget}
+     * @type {EventTarget}
      * @private
      */
     this.dismissDispatcher_ = opt_dismissDispatcher || null;
@@ -87,7 +88,7 @@ class AlertEvent extends goog.events.Event {
   }
 
   /**
-   * @return {goog.date.DateTime}
+   * @return {DateTime}
    */
   getTime() {
     return this.time_;
@@ -101,7 +102,7 @@ class AlertEvent extends goog.events.Event {
   }
 
   /**
-   * @return {goog.events.EventTarget}
+   * @return {EventTarget}
    */
   getDismissDispatcher() {
     return this.dismissDispatcher_;
