@@ -26,7 +26,6 @@ class AnyTypeImportUI extends AbstractImportUI {
     var visibleImporters = [];
     importers.forEach(function(importor) {
       if (importor.getTitle()) {
-        importor['title'] = importor.getTitle();
         visibleImporters.push(importor);
       }
     });
