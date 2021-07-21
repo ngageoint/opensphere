@@ -1,35 +1,38 @@
-goog.provide('os.file.mime.jsonstate');
+goog.module('os.file.mime.jsonstate');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Promise');
-goog.require('os.file.mime');
-goog.require('os.file.mime.json');
+const Promise = goog.require('goog.Promise');
+const mime = goog.require('os.file.mime');
+const json = goog.require('os.file.mime.json');
+const Tag = goog.require('os.state.Tag');
+
+const OSFile = goog.requireType('os.file.File');
 
 
 /**
  * @type {string}
- * @const
  */
-os.file.mime.jsonstate.TYPE = 'application/vnd.state+json';
-
+const TYPE = 'application/vnd.state+json';
 
 /**
  * @param {ArrayBuffer} buffer
- * @param {os.file.File} file
+ * @param {OSFile} file
  * @param {*=} opt_context
- * @return {!goog.Promise<*|undefined>}
+ * @return {!Promise<*|undefined>}
  */
-os.file.mime.jsonstate.detect = function(buffer, file, opt_context) {
+const detect = function(buffer, file, opt_context) {
   var retVal;
 
-  if (opt_context && goog.isObject(opt_context) && Array.isArray(opt_context[os.state.Tag.STATE])) {
+  if (opt_context && goog.isObject(opt_context) && Array.isArray(opt_context[Tag.STATE])) {
     retVal = opt_context;
   }
 
-  return goog.Promise.resolve(retVal);
+  return Promise.resolve(retVal);
 };
 
+mime.register(TYPE, detect, 0, json.TYPE);
 
-os.file.mime.register(
-    os.file.mime.jsonstate.TYPE,
-    os.file.mime.jsonstate.detect,
-    0, os.file.mime.json.TYPE);
+exports = {
+  TYPE,
+  detect
+};

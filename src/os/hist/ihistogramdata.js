@@ -1,24 +1,47 @@
-goog.provide('os.hist.IHistogramData');
-
-
+goog.module('os.hist.IHistogramData');
+goog.module.declareLegacyNamespace();
 
 /**
  * Interface that should be implemented by all histogram data classes.
  *
  * @interface
  */
-os.hist.IHistogramData = function() {};
+class IHistogramData {
+  /**
+   * Get the color of the histogram.
+   * @return {string}
+   */
+  getColor() {}
 
+  /**
+   * Set the color of the histogram.
+   * @param {string} value
+   */
+  setColor(value) {}
 
-/**
- * Gets the count object for the data
- * @return {!Object}
- */
-os.hist.IHistogramData.prototype.getCounts;
+  /**
+   * Gets the count object for the data.
+   * @return {!Object}
+   */
+  getCounts() {}
 
+  /**
+   * Sets the count object for the data.
+   * @param {!Object} value The count object
+   */
+  setCounts(value) {}
 
-/**
- * Sets the count object for the data
- * @param {!Object} value The count object
- */
-os.hist.IHistogramData.prototype.setCounts;
+  /**
+   * Get the options used to generate the histogram.
+   * @return {Object|undefined}
+   */
+  getOptions() {}
+
+  /**
+   * Set the options used to generate the histogram.
+   * @param {Object|undefined} value
+   */
+  setOptions(value) {}
+}
+
+exports = IHistogramData;

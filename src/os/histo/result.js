@@ -1,10 +1,14 @@
-goog.provide('os.histo.Result');
+goog.module('os.histo.Result');
+goog.module.declareLegacyNamespace();
 
+const Bin = goog.requireType('os.histo.Bin');
 
 /**
  * @typedef {{
  *  key: (string|number),
- *  value: !os.histo.Bin
+ *  value: !Bin
  * }}
  */
-os.histo.Result;
+let Result;
+
+exports = Result;

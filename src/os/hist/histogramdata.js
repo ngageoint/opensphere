@@ -1,39 +1,41 @@
-goog.provide('os.hist.HistogramData');
-goog.require('os.hist.AbstractHistogramData');
-goog.require('os.hist.IHistogramData');
+goog.module('os.hist.HistogramData');
+goog.module.declareLegacyNamespace();
 
-
+const AbstractHistogramData = goog.require('os.hist.AbstractHistogramData');
+const IHistogramData = goog.requireType('os.hist.IHistogramData');
 
 /**
  * Data representing a histogram for a single source.
  *
- * @extends {os.hist.AbstractHistogramData}
- * @implements {os.hist.IHistogramData}
- * @constructor
+ * @implements {IHistogramData}
  */
-os.hist.HistogramData = function() {
-  os.hist.HistogramData.base(this, 'constructor');
+class HistogramData extends AbstractHistogramData {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * @type {!Object.<string, number>}
+     * @private
+     */
+    this.counts_ = {};
+  }
 
   /**
-   * @type {!Object.<string, number>}
-   * @private
+   * @inheritDoc
    */
-  this.counts_ = {};
-};
-goog.inherits(os.hist.HistogramData, os.hist.AbstractHistogramData);
+  getCounts() {
+    return this.counts_;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  setCounts(value) {
+    this.counts_ = value;
+  }
+}
 
-/**
- * @inheritDoc
- */
-os.hist.HistogramData.prototype.getCounts = function() {
-  return this.counts_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.hist.HistogramData.prototype.setCounts = function(value) {
-  this.counts_ = value;
-};
+exports = HistogramData;

@@ -1,14 +1,17 @@
-goog.provide('os.file.mime.filter');
+goog.module('os.file.mime.filter');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.file.mime.xml');
+const mime = goog.require('os.file.mime');
+const xml = goog.require('os.file.mime.xml');
+
 
 /**
- * @const
  * @type {string}
  */
-os.file.mime.filter.TYPE = os.file.mime.xml.TYPE + '; subtype=FILTER';
+const TYPE = xml.TYPE + '; subtype=FILTER';
 
-os.file.mime.register(
-    os.file.mime.filter.TYPE,
-    os.file.mime.xml.createDetect(/^filters$/i, /\/state\//i),
-    0, os.file.mime.xml.TYPE);
+mime.register(TYPE, xml.createDetect(/^filters$/i, /\/state\//i), 0, xml.TYPE);
+
+exports = {
+  TYPE
+};

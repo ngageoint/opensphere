@@ -1,5 +1,7 @@
-goog.provide('os.filter.IFilterFormatter');
+goog.module('os.filter.IFilterFormatter');
+goog.module.declareLegacyNamespace();
 
+const FilterEntry = goog.requireType('os.filter.FilterEntry');
 
 
 /**
@@ -7,29 +9,28 @@ goog.provide('os.filter.IFilterFormatter');
  *
  * @interface
  */
-os.filter.IFilterFormatter = function() {};
+class IFilterFormatter {
+  /**
+   * Formats a filter
+   * @param {!FilterEntry} filter
+   * @return {!string}
+   */
+  format(filter) {}
 
+  /**
+   * Wraps a set of filters in a group
+   * @param {!string} filter
+   * @param {boolean} group True for AND, false for OR
+   * @return {!string}
+   */
+  wrap(filter, group) {}
 
-/**
- * Formats a filter
- * @param {!os.filter.FilterEntry} filter
- * @return {!string}
- */
-os.filter.IFilterFormatter.prototype.format;
+  /**
+   * Wraps a set of filters/boxes in an AND
+   * @param {!string} filter
+   * @return {!string}
+   */
+  wrapAll(filter) {}
+}
 
-
-/**
- * Wraps a set of filters in a group
- * @param {!string} filter
- * @param {boolean} group True for AND, false for OR
- * @return {!string}
- */
-os.filter.IFilterFormatter.prototype.wrap;
-
-
-/**
- * Wraps a set of filters/boxes in an AND
- * @param {!string} filter
- * @return {!string}
- */
-os.filter.IFilterFormatter.prototype.wrapAll;
+exports = IFilterFormatter;

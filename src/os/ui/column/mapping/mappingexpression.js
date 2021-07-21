@@ -146,7 +146,7 @@ class Controller {
   /**
    * Sets the layer and gets the columns for it.
    *
-   * @param {IFilterable} layer
+   * @param {IOGCDescriptor} layer
    * @private
    */
   setLayer_(layer) {

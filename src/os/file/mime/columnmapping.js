@@ -1,14 +1,16 @@
-goog.provide('os.file.mime.columnmapping');
+goog.module('os.file.mime.columnmapping');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.file.mime.xml');
+const mime = goog.require('os.file.mime');
+const xml = goog.require('os.file.mime.xml');
 
 /**
- * @const
  * @type {string}
  */
-os.file.mime.columnmapping.TYPE = os.file.mime.xml.TYPE + '; subtype=COLUMNMAPPING';
+const TYPE = xml.TYPE + '; subtype=COLUMNMAPPING';
 
-os.file.mime.register(
-    os.file.mime.columnmapping.TYPE,
-    os.file.mime.xml.createDetect(/^columnmappings$/i, null),
-    0, os.file.mime.xml.TYPE);
+mime.register(TYPE, xml.createDetect(/^columnmappings$/i, null), 0, xml.TYPE);
+
+exports = {
+  TYPE
+};

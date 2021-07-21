@@ -9,7 +9,7 @@ const TagName = goog.require('os.im.action.TagName');
 const FilterActionAdd = goog.require('os.im.action.cmd.FilterActionAdd');
 const FilterActionRemove = goog.require('os.im.action.cmd.FilterActionRemove');
 const ExportTypeHint = goog.require('os.im.action.filter.ExportTypeHint');
-const filterManager = goog.require('os.query.FilterManager');
+const {getFilterManager} = goog.require('os.query.instance');
 const filter = goog.require('os.ui.filter');
 const xml = goog.require('os.xml');
 
@@ -146,7 +146,7 @@ const getColumns = function(opt_entryType) {
   var columns;
 
   if (opt_entryType) {
-    var filterable = filterManager.getInstance().getFilterable(opt_entryType);
+    var filterable = getFilterManager().getFilterable(opt_entryType);
     if (filterable) {
       columns = filterable.getFilterColumns();
     }

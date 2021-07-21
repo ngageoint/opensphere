@@ -1,84 +1,48 @@
-goog.provide('os.file.persist.FilePersistence');
+goog.module('os.file.persist.FilePersistence');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.arraybuf');
-goog.require('os.ex.IPersistenceMethod');
-
+const IPersistenceMethod = goog.require('os.ex.IPersistenceMethod'); // eslint-disable-line
+const {saveFile} = goog.require('os.file.persist');
 
 
 /**
  * Persistence method to save local files.
  *
- * @implements {os.ex.IPersistenceMethod}
- * @constructor
+ * @implements {IPersistenceMethod}
  */
-os.file.persist.FilePersistence = function() {};
+class FilePersistence {
+  /**
+   * Constructor.
+   */
+  constructor() {}
 
+  /**
+   * @inheritDoc
+   */
+  getLabel() {
+    return 'File';
+  }
 
-/**
- * @inheritDoc
- */
-os.file.persist.FilePersistence.prototype.getLabel = function() {
-  return 'File';
-};
-
-
-/**
- * @inheritDoc
- */
-os.file.persist.FilePersistence.prototype.isSupported = function() {
-  return true;
-};
-
-
-/**
- * @inheritDoc
- */
-os.file.persist.FilePersistence.prototype.requiresUserAction = function() {
-  return true;
-};
-
-
-/**
- * @inheritDoc
- */
-os.file.persist.FilePersistence.prototype.save = function(fileName, content, opt_mimeType,
-    opt_title, opt_description, opt_tags) {
-  return os.file.persist.saveFile(fileName, content, opt_mimeType);
-};
-
-
-/**
- * Static function to save a file, so it can be used without the persistence
- *
- * @param {string} fileName The file name
- * @param {Object|null|string} content The content to save
- * @param {string=} opt_mimeType The mime type of the content
- * @return {boolean} Whether or not the save action was successfull
- */
-os.file.persist.saveFile = function(fileName, content, opt_mimeType) {
-  var type = opt_mimeType || 'text/plain;charset=utf-8';
-
-  if (typeof (saveAs) != 'undefined') {
-    var list = [];
-
-    if (typeof content === 'string' && content.startsWith('\ufeff')) {
-      // Set up us the BOM.
-      // \uFEFF is the magic number for "insert byte order mark here". This is the BOM for UTF-8. Yes,
-      // \uFEFF is the BOM for UTF-16 and byte order doesn't mean anything in UTF-8. This matches how
-      // node.js writes out.
-      list.push(new Uint8Array(os.arraybuf.BYTE_ORDER_MARKER));
-      content = content.replace('\ufeff', '');
-    }
-
-    list.push(content);
-    var blob = new Blob(list, {'type': type});
-    saveAs(blob, fileName);
-    return true;
-  } else if (typeof (saveTextAs) != 'undefined' && typeof content === 'string') {
-    // IE9 only supports saving text, thus has a different method
-    saveTextAs(content, fileName);
+  /**
+   * @inheritDoc
+   */
+  isSupported() {
     return true;
   }
 
-  return false;
-};
+  /**
+   * @inheritDoc
+   */
+  requiresUserAction() {
+    return true;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  save(fileName, content, opt_mimeType, opt_title, opt_description, opt_tags) {
+    return saveFile(fileName, content, opt_mimeType);
+  }
+}
+
+exports = FilePersistence;

@@ -1,9 +1,15 @@
+goog.require('os.data.histo.ColorBin');
 goog.require('os.histo.Bin');
 goog.require('os.histo.FilterComponent');
 goog.require('os.histo.UniqueBinMethod');
 
 describe('os.histo.UniqueBinMethod', function() {
-  var method = new os.histo.UniqueBinMethod();
+  const ColorBin = goog.module.get('os.data.histo.ColorBin');
+  const Bin = goog.module.get('os.histo.Bin');
+  const FilterComponent = goog.module.get('os.histo.FilterComponent');
+  const UniqueBinMethod = goog.module.get('os.histo.UniqueBinMethod');
+
+  var method = new UniqueBinMethod();
   method.setField('field');
 
   it('should get the correct string key', function() {
@@ -64,29 +70,29 @@ describe('os.histo.UniqueBinMethod', function() {
   it('should export to filter correctly', function() {
     var orHeader = '<Or>';
     var orFooter = '</Or>';
-    var emptyFilter = os.histo.FilterComponent.IS_EMPTY_HEAD + 'field' + os.histo.FilterComponent.IS_EMPTY_TAIL;
+    var emptyFilter = FilterComponent.IS_EMPTY_HEAD + 'field' + FilterComponent.IS_EMPTY_TAIL;
 
     // no bins to export
     expect(method.exportAsFilter([])).toBe('');
 
     // invalid bin isn't exported
-    var invalidBin = new os.histo.Bin();
-    invalidBin.setKey(os.histo.UniqueBinMethod.INVALID_VALUE);
+    var invalidBin = new Bin();
+    invalidBin.setKey(UniqueBinMethod.INVALID_VALUE);
     expect(method.exportAsFilter([invalidBin])).toBe('');
 
     // empty filter created correctly. single filter does not wrap in an Or block.
-    var emptyBin = new os.histo.Bin();
+    var emptyBin = new Bin();
     emptyBin.setKey('No field');
     expect(method.exportAsFilter([emptyBin])).toBe(emptyFilter);
 
     // bin with a value is exported. single filter does not wrap in an Or block.
-    var valueBin = new os.histo.Bin();
+    var valueBin = new Bin();
     var theValue = 'TEST VALUE';
     valueBin.setKey(theValue);
     valueBin.setLabel(theValue);
 
-    var equalFilter = os.histo.FilterComponent.IS_EQUAL_HEAD + 'field' + os.histo.FilterComponent.IS_EQUAL_MID +
-        theValue + os.histo.FilterComponent.IS_EQUAL_TAIL;
+    var equalFilter = FilterComponent.IS_EQUAL_HEAD + 'field' + FilterComponent.IS_EQUAL_MID +
+        theValue + FilterComponent.IS_EQUAL_TAIL;
     expect(method.exportAsFilter([valueBin])).toBe(equalFilter);
 
     // exports multiple bins, wrapped in an Or block
@@ -114,7 +120,7 @@ describe('os.histo.UniqueBinMethod', function() {
   });
 
   it('should restore correctly', function() {
-    var method = new os.histo.UniqueBinMethod();
+    var method = new UniqueBinMethod();
     method.setField('field');
 
     // if the field isn't set, don't change it
@@ -151,7 +157,7 @@ describe('os.histo.UniqueBinMethod', function() {
   });
 
   it('should provide bins statistics', function() {
-    var method = new os.histo.UniqueBinMethod();
+    var method = new UniqueBinMethod();
     method.setField('field');
 
     var min = 0;
@@ -159,7 +165,7 @@ describe('os.histo.UniqueBinMethod', function() {
     var bins = [];
     var bin;
 
-    bin = new os.data.histo.ColorBin('#000');
+    bin = new ColorBin('#000');
     bin['key'] = min;
     bin['label'] = method.getLabelForKey(min);
     bin['id'] = bin['label'];
@@ -169,7 +175,7 @@ describe('os.histo.UniqueBinMethod', function() {
     bin['highlight'] = false;
     bins.push(bin);
 
-    bin = new os.data.histo.ColorBin('#000');
+    bin = new ColorBin('#000');
     bin['key'] = max;
     bin['label'] = method.getLabelForKey(max);
     bin['id'] = bin['label'];

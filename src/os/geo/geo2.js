@@ -3,8 +3,23 @@
  * which are entirely projection-agnostic rather than requiring conversion to lonlat and
  * back when using them.
  */
-goog.provide('os.geo2');
-goog.require('os.map');
+goog.module('os.geo2');
+goog.module.declareLegacyNamespace();
+
+const GeometryType = goog.require('ol.geom.GeometryType');
+const {get: getProjection} = goog.require('ol.proj');
+const GeometryField = goog.require('os.geom.GeometryField');
+const osMap = goog.require('os.map');
+const {isWorldQuery} = goog.require('os.query.utils');
+
+const Geometry = goog.requireType('ol.geom.Geometry');
+const GeometryCollection = goog.requireType('ol.geom.GeometryCollection');
+const LineString = goog.requireType('ol.geom.LineString');
+const MultiLineString = goog.requireType('ol.geom.MultiLineString');
+const MultiPoint = goog.requireType('ol.geom.MultiPoint');
+const MultiPolygon = goog.requireType('ol.geom.MultiPolygon');
+const Point = goog.requireType('ol.geom.Point');
+const Polygon = goog.requireType('ol.geom.Polygon');
 
 
 /**
@@ -14,8 +29,8 @@ goog.require('os.map');
  * @param {ol.ProjectionLike=} opt_proj
  * @return {number}
  */
-os.geo2.normalizeLongitude = function(lon, opt_min, opt_max, opt_proj) {
-  opt_proj = ol.proj.get(opt_proj || os.map.PROJECTION);
+const normalizeLongitude = function(lon, opt_min, opt_max, opt_proj) {
+  opt_proj = getProjection(opt_proj || osMap.PROJECTION);
   var projExtent = opt_proj.getExtent();
   opt_min = opt_min != null ? opt_min : projExtent[0];
   opt_max = opt_max != null ? opt_max : projExtent[2];
@@ -28,7 +43,6 @@ os.geo2.normalizeLongitude = function(lon, opt_min, opt_max, opt_proj) {
   return lon;
 };
 
-
 /**
  * Clamps latitude to the projection bounds
  *
@@ -38,30 +52,28 @@ os.geo2.normalizeLongitude = function(lon, opt_min, opt_max, opt_proj) {
  * @param {ol.ProjectionLike=} opt_proj
  * @return {number}
  */
-os.geo2.normalizeLatitude = function(lat, opt_min, opt_max, opt_proj) {
-  opt_proj = ol.proj.get(opt_proj || os.map.PROJECTION);
+const normalizeLatitude = function(lat, opt_min, opt_max, opt_proj) {
+  opt_proj = getProjection(opt_proj || osMap.PROJECTION);
   var projExtent = opt_proj.getExtent();
   opt_min = opt_min != null ? opt_min : projExtent[1];
   opt_max = opt_max != null ? opt_max : projExtent[3];
   return Math.min(Math.max(lat, opt_min), opt_max);
 };
 
-
 /**
  * @param {?Array<number>} coordinate
  * @param {number=} opt_to
  * @param {ol.ProjectionLike=} opt_proj
  */
-os.geo2.normalizeCoordinate = function(coordinate, opt_to, opt_proj) {
-  opt_proj = ol.proj.get(opt_proj || os.map.PROJECTION);
+const normalizeCoordinate = function(coordinate, opt_to, opt_proj) {
+  opt_proj = getProjection(opt_proj || osMap.PROJECTION);
 
   var projExtent = opt_proj.getExtent();
   var halfWidth = (projExtent[2] - projExtent[0]) / 2;
   opt_to = opt_to != null ? opt_to : projExtent[0] + halfWidth;
-  coordinate[0] = os.geo2.normalizeLongitude(coordinate[0], opt_to - halfWidth, opt_to + halfWidth, opt_proj);
-  coordinate[1] = os.geo2.normalizeLatitude(coordinate[1], undefined, undefined, opt_proj);
+  coordinate[0] = normalizeLongitude(coordinate[0], opt_to - halfWidth, opt_to + halfWidth, opt_proj);
+  coordinate[1] = normalizeLatitude(coordinate[1], undefined, undefined, opt_proj);
 };
-
 
 /**
  * Normalize a set of coordinates
@@ -70,101 +82,98 @@ os.geo2.normalizeCoordinate = function(coordinate, opt_to, opt_proj) {
  * @param {number=} opt_to The longitude to normalize to
  * @param {ol.ProjectionLike=} opt_proj
  */
-os.geo2.normalizeCoordinates = function(coordinates, opt_to, opt_proj) {
+const normalizeCoordinates = function(coordinates, opt_to, opt_proj) {
   if (coordinates && coordinates.length > 0) {
-    opt_proj = ol.proj.get(opt_proj || os.map.PROJECTION);
+    opt_proj = getProjection(opt_proj || osMap.PROJECTION);
 
     for (var i = 0, n = coordinates.length; i < n; i++) {
-      os.geo2.normalizeCoordinate(coordinates[i], opt_to, opt_proj);
+      normalizeCoordinate(coordinates[i], opt_to, opt_proj);
       opt_to = opt_to != null ? opt_to : coordinates[0][0];
     }
   }
 };
-
 
 /**
  * @param {?Array<?Array<Array<number>>>} rings The rings to normalize
  * @param {number=} opt_to The longitude to normalize to
  * @param {ol.ProjectionLike=} opt_proj
  */
-os.geo2.normalizeRings = function(rings, opt_to, opt_proj) {
+const normalizeRings = function(rings, opt_to, opt_proj) {
   if (rings) {
-    opt_proj = ol.proj.get(opt_proj || os.map.PROJECTION);
+    opt_proj = getProjection(opt_proj || osMap.PROJECTION);
 
     for (var i = 0, n = rings.length; i < n; i++) {
-      os.geo2.normalizeCoordinates(rings[i], opt_to, opt_proj);
+      normalizeCoordinates(rings[i], opt_to, opt_proj);
       opt_to = opt_to != null ? opt_to : rings[0][0][0];
     }
   }
 };
-
 
 /**
  * @param {?Array<?Array<?Array<Array<number>>>>} polys The polygons to normalize.
  * @param {number=} opt_to The longitude to normalize to.
  * @param {ol.ProjectionLike=} opt_proj
  */
-os.geo2.normalizePolygons = function(polys, opt_to, opt_proj) {
+const normalizePolygons = function(polys, opt_to, opt_proj) {
   if (polys) {
-    opt_proj = ol.proj.get(opt_proj || os.map.PROJECTION);
+    opt_proj = getProjection(opt_proj || osMap.PROJECTION);
 
     for (var i = 0, n = polys.length; i < n; i++) {
-      os.geo2.normalizeRings(polys[i], opt_to, opt_proj);
+      normalizeRings(polys[i], opt_to, opt_proj);
       opt_to = opt_to != null ? opt_to : polys[0][0][0][0];
     }
   }
 };
 
-
 /**
  * Returns true if geometry coordinates are normlized.
  *
- * @param {ol.geom.Geometry|undefined} geometry The geometry to normalize.
+ * @param {Geometry|undefined} geometry The geometry to normalize.
  * @param {number=} opt_to The longitude to normalize to.
  * @param {ol.ProjectionLike=} opt_proj
  * @return {boolean} If the geometry was normalized.
  */
-os.geo2.normalizeGeometryCoordinates = function(geometry, opt_to, opt_proj) {
+const normalizeGeometryCoordinates = function(geometry, opt_to, opt_proj) {
   if (geometry) {
-    if (geometry.get(os.geom.GeometryField.NORMALIZED) || os.query.utils.isWorldQuery(geometry)) {
+    if (geometry.get(GeometryField.NORMALIZED) || isWorldQuery(geometry)) {
       return false;
     }
 
-    opt_proj = ol.proj.get(opt_proj || os.map.PROJECTION);
+    opt_proj = getProjection(opt_proj || osMap.PROJECTION);
 
     switch (geometry.getType()) {
-      case ol.geom.GeometryType.POINT:
-        var point = /** @type {ol.geom.Point} */ (geometry);
+      case GeometryType.POINT:
+        var point = /** @type {Point} */ (geometry);
         var coord = /** @type {Array<number>} */ (point.getCoordinates());
-        os.geo2.normalizeCoordinate(coord, opt_to, opt_proj);
+        normalizeCoordinate(coord, opt_to, opt_proj);
         point.setCoordinates(coord);
         return true;
-      case ol.geom.GeometryType.LINE_STRING:
-      case ol.geom.GeometryType.MULTI_POINT:
-        var lineString = /** @type {ol.geom.LineString|ol.geom.MultiPoint} */ (geometry);
+      case GeometryType.LINE_STRING:
+      case GeometryType.MULTI_POINT:
+        var lineString = /** @type {LineString|MultiPoint} */ (geometry);
         var coordinates = lineString.getCoordinates();
-        os.geo2.normalizeCoordinates(coordinates, opt_to, opt_proj);
+        normalizeCoordinates(coordinates, opt_to, opt_proj);
         lineString.setCoordinates(coordinates);
         return true;
-      case ol.geom.GeometryType.POLYGON:
-      case ol.geom.GeometryType.MULTI_LINE_STRING:
-        var polygon = /** @type {ol.geom.Polygon|ol.geom.MultiLineString} */ (geometry);
+      case GeometryType.POLYGON:
+      case GeometryType.MULTI_LINE_STRING:
+        var polygon = /** @type {Polygon|MultiLineString} */ (geometry);
         var /** @type {?Array<?Array<Array<number>>>} */ rings = polygon.getCoordinates();
-        os.geo2.normalizeRings(rings, opt_to, opt_proj);
+        normalizeRings(rings, opt_to, opt_proj);
         polygon.setCoordinates(rings);
         return true;
-      case ol.geom.GeometryType.MULTI_POLYGON:
-        var multiPolygon = /** @type {ol.geom.MultiPolygon } */ (geometry);
+      case GeometryType.MULTI_POLYGON:
+        var multiPolygon = /** @type {MultiPolygon } */ (geometry);
         var polygons = /** @type {?Array<?Array<?Array<Array<number>>>>} */ (
           multiPolygon.getCoordinates());
-        os.geo2.normalizePolygons(polygons, opt_to, opt_proj);
+        normalizePolygons(polygons, opt_to, opt_proj);
         multiPolygon.setCoordinates(polygons);
         return true;
-      case ol.geom.GeometryType.GEOMETRY_COLLECTION:
-        var geometryCollection = /** @type {ol.geom.GeometryCollection} */ (geometry);
-        var /** @type {Array<ol.geom.Geometry>} */ geometries = geometryCollection.getGeometriesArray();
+      case GeometryType.GEOMETRY_COLLECTION:
+        var geometryCollection = /** @type {GeometryCollection} */ (geometry);
+        var /** @type {Array<Geometry>} */ geometries = geometryCollection.getGeometriesArray();
         for (var i = 0, n = geometries.length; i < n; i++) {
-          os.geo2.normalizeGeometryCoordinates(geometries[i], opt_to);
+          normalizeGeometryCoordinates(geometries[i], opt_to);
         }
         return true;
       case 'Circle':
@@ -179,7 +188,7 @@ os.geo2.normalizeGeometryCoordinates = function(geometry, opt_to, opt_proj) {
 /**
  * @enum {boolean}
  */
-os.geo2.WindingOrder = {
+const WindingOrder = {
   CLOCKWISE: true,
   COUNTER_CLOCKWISE: false
 };
@@ -188,7 +197,7 @@ os.geo2.WindingOrder = {
  * @param {Array<Array<number>>} ring
  * @return {number}
  */
-os.geo2.computeArea = function(ring) {
+const computeArea = function(ring) {
   var length = ring.length;
   var area = 0.0;
   for (var i0 = length - 1, i1 = 0; i1 < length; i0 = i1++) {
@@ -202,12 +211,25 @@ os.geo2.computeArea = function(ring) {
 
 /**
  * @param {Array<Array<number>>} ring The linear or polygon ring to check
- * @return {os.geo2.WindingOrder}
+ * @return {WindingOrder}
  */
-os.geo2.computeWindingOrder = function(ring) {
-  var area = os.geo2.computeArea(ring);
+const computeWindingOrder = function(ring) {
+  var area = computeArea(ring);
   if (area > 0.0) {
-    return os.geo2.WindingOrder.COUNTER_CLOCKWISE;
+    return WindingOrder.COUNTER_CLOCKWISE;
   }
-  return os.geo2.WindingOrder.CLOCKWISE;
+  return WindingOrder.CLOCKWISE;
+};
+
+exports = {
+  normalizeLongitude,
+  normalizeLatitude,
+  normalizeCoordinate,
+  normalizeCoordinates,
+  normalizeRings,
+  normalizePolygons,
+  normalizeGeometryCoordinates,
+  WindingOrder,
+  computeArea,
+  computeWindingOrder
 };

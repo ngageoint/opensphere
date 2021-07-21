@@ -1,29 +1,33 @@
 /**
  * Histogram utility functions.
  */
-goog.provide('os.hist');
+goog.module('os.hist');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.hist.HistogramData');
-goog.require('os.hist.IHistogramProvider');
-goog.require('os.implements');
+const {binaryInsert, defaultCompare} = goog.require('goog.array');
+const googObject = goog.require('goog.object');
+const IHistogramProvider = goog.require('os.hist.IHistogramProvider');
+const osImplements = goog.require('os.implements');
 
-goog.requireType('os.ui.timeline.TimelineScaleOptions');
-
+const Layer = goog.requireType('ol.layer.Layer');
+const Source = goog.requireType('ol.source.Source');
+const IHistogramData = goog.requireType('os.hist.IHistogramData');
+const TimelineScaleOptions = goog.requireType('os.ui.timeline.TimelineScaleOptions');
 
 /**
  * Gets the maximum combined bin count in an array of histograms.
  *
- * @param {?Array.<!os.hist.IHistogramData>} histograms The array of histograms.
+ * @param {?Array<!IHistogramData>} histograms The array of histograms.
  * @param {boolean=} opt_combine If the counts should be combined for like bins.
  * @return {number}
  */
-os.hist.maxBinCount = function(histograms, opt_combine) {
+const maxBinCount = function(histograms, opt_combine) {
   var combine = opt_combine !== undefined ? opt_combine : false;
   var max = 0;
 
   if (histograms && histograms.length > 0) {
     // add up the counts for each bin across all histograms
-    var binCounts = /** @type {Object.<string, (number|Array)>} */ ({});
+    var binCounts = /** @type {Object<string, (number|Array)>} */ ({});
     for (var i = 0, n = histograms.length; i < n; i++) {
       var counts = histograms[i].getCounts();
       for (var key in counts) {
@@ -50,23 +54,22 @@ os.hist.maxBinCount = function(histograms, opt_combine) {
   return max;
 };
 
-
 /**
  * Gets the bin counts and returns them in a sorted array of objects whose keys are the
  * bin name and values are the count.
  *
- * @param {?Array.<os.hist.IHistogramData>} histograms The array of histograms.
+ * @param {?Array<IHistogramData>} histograms The array of histograms.
  * @param {boolean=} opt_combine If the counts should be combined for like bins.
  * @param {boolean=} opt_skipCompare Whether to skip the compare function.
- * @return {Array.<!Object>}
+ * @return {Array<!Object>}
  */
-os.hist.getBinCounts = function(histograms, opt_combine, opt_skipCompare) {
+const getBinCounts = function(histograms, opt_combine, opt_skipCompare) {
   var combine = opt_combine !== undefined ? opt_combine : false;
   var sortedCounts = [];
 
   if (histograms && histograms.length > 0) {
     // add up the counts for each bin across all histograms
-    var binCounts = /** @type {Object.<string, (number|Array)>} */ ({});
+    var binCounts = /** @type {Object<string, (number|Array)>} */ ({});
     for (var i = 0, n = histograms.length; i < n; i++) {
       var counts = histograms[i].getCounts();
       for (var key in counts) {
@@ -81,16 +84,16 @@ os.hist.getBinCounts = function(histograms, opt_combine, opt_skipCompare) {
       }
     }
 
-    goog.object.forEach(binCounts, function(value, key) {
+    googObject.forEach(binCounts, function(value, key) {
       var object = {};
       object[key] = value;
-      goog.array.binaryInsert(sortedCounts, object, function(a, b) {
-        var aCount = goog.object.getValues(a)[0];
-        var bCount = goog.object.getValues(b)[0];
+      binaryInsert(sortedCounts, object, function(a, b) {
+        var aCount = googObject.getValues(a)[0];
+        var bCount = googObject.getValues(b)[0];
         if (opt_skipCompare) {
           return -1;
         }
-        return aCount != bCount ? goog.array.defaultCompare(bCount, aCount) : -1;
+        return aCount != bCount ? defaultCompare(bCount, aCount) : -1;
       });
     });
   }
@@ -98,44 +101,55 @@ os.hist.getBinCounts = function(histograms, opt_combine, opt_skipCompare) {
   return sortedCounts;
 };
 
-
 /**
  * If an object is a histogram provider.
  * @param {Object} obj The object.
  * @return {boolean}
  */
-os.hist.isHistogramProvider = (obj) => os.implements(obj, os.hist.IHistogramProvider.ID);
-
+const isHistogramProvider = (obj) => osImplements(obj, IHistogramProvider.ID);
 
 /**
  * Convenience function to map a layer or its source to a histogram.
- * @param {ol.layer.Layer} layer The layer.
- * @param {os.ui.timeline.TimelineScaleOptions} options The histogram options.
- * @return {?os.hist.IHistogramData} The histogram, or null if unavailable. May be found on the layer or source.
+ * @param {Layer} layer The layer.
+ * @param {TimelineScaleOptions} options The histogram options.
+ * @return {?IHistogramData} The histogram, or null if unavailable. May be found on the layer or source.
  */
-os.hist.mapLayerToHistogram = (layer, options) => {
+const mapLayerToHistogram = (layer, options) => {
   if (layer) {
-    if (os.hist.isHistogramProvider(layer)) {
-      return /** @type {os.hist.IHistogramProvider} */ (layer).getHistogram(options);
+    if (isHistogramProvider(layer)) {
+      return (
+        /** @type {IHistogramProvider} */
+        (layer).getHistogram(options)
+      );
     } else {
-      return os.hist.mapSourceToHistogram(layer.getSource(), options);
+      return mapSourceToHistogram(layer.getSource(), options);
     }
   }
 
   return null;
 };
 
-
 /**
  * Convenience function to map a source to a histogram.
- * @param {ol.source.Source} source The source.
- * @param {os.ui.timeline.TimelineScaleOptions} options The histogram options.
- * @return {?os.hist.IHistogramData} The histogram, or null if unavailable.
+ * @param {Source} source The source.
+ * @param {TimelineScaleOptions} options The histogram options.
+ * @return {?IHistogramData} The histogram, or null if unavailable.
  */
-os.hist.mapSourceToHistogram = (source, options) => {
-  if (os.hist.isHistogramProvider(source)) {
-    return /** @type {os.hist.IHistogramProvider} */ (source).getHistogram(options);
+const mapSourceToHistogram = (source, options) => {
+  if (isHistogramProvider(source)) {
+    return (
+      /** @type {IHistogramProvider} */
+      (source).getHistogram(options)
+    );
   }
 
   return null;
+};
+
+exports = {
+  maxBinCount,
+  getBinCounts,
+  isHistogramProvider,
+  mapLayerToHistogram,
+  mapSourceToHistogram
 };

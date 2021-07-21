@@ -1,35 +1,39 @@
-goog.provide('os.file.mime.csv');
+goog.module('os.file.mime.csv');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.Promise');
-goog.require('os.file.mime');
-goog.require('os.file.mime.text');
+const Promise = goog.require('goog.Promise');
+const mime = goog.require('os.file.mime');
+const text = goog.require('os.file.mime.text');
 
-
-/**
- * @type {string}
- * @const
- */
-os.file.mime.csv.TYPE = 'text/csv';
+const OSFile = goog.requireType('os.file.File');
 
 
 /**
  * @type {string}
- * @const
  */
-os.file.mime.csv.APPLICATION_TYPE = 'application/csv';
+const TYPE = 'text/csv';
 
+/**
+ * @type {string}
+ */
+const APPLICATION_TYPE = 'application/csv';
 
 /**
  * @param {ArrayBuffer} buffer
- * @param {os.file.File=} opt_file
- * @return {!goog.Promise<*|undefined>}
+ * @param {OSFile=} opt_file
+ * @return {!Promise<*|undefined>}
  */
-os.file.mime.csv.detect = function(buffer, opt_file) {
-  return /** @type {!goog.Promise<*|undefined>} */ (
-    goog.Promise.resolve(opt_file && (/\.csv$/.test(opt_file.getFileName()) ||
-      os.file.mime.csv.TYPE == opt_file.getContentType() ||
-      os.file.mime.csv.APPLICATION_TYPE == opt_file.getContentType())));
+const detect = function(buffer, opt_file) {
+  return /** @type {!Promise<*|undefined>} */ (Promise.resolve(opt_file && (/\.csv$/.test(opt_file.getFileName()) ||
+      TYPE == opt_file.getContentType() ||
+      APPLICATION_TYPE == opt_file.getContentType())));
 };
 
 
-os.file.mime.register(os.file.mime.csv.TYPE, os.file.mime.csv.detect, 1000, os.file.mime.text.TYPE);
+mime.register(TYPE, detect, 1000, text.TYPE);
+
+exports = {
+  TYPE,
+  APPLICATION_TYPE,
+  detect
+};

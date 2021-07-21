@@ -1,100 +1,397 @@
-goog.provide('os.filter.FilterEntry');
-goog.provide('os.filter.cloneToContext');
+goog.module('os.filter.FilterEntry');
+goog.module.declareLegacyNamespace();
 
-goog.require('goog.dom.xml');
-goog.require('goog.events.EventTarget');
-goog.require('goog.events.EventType');
-goog.require('goog.string');
-goog.require('os.IPersistable');
-goog.require('os.events.PropertyChangeEvent');
-goog.require('os.filter.IFilterEntry');
-goog.require('os.registerClass');
-goog.require('os.ui.filter.PropertyChange');
+const {getFirstElementChild} = goog.require('goog.dom');
+const {loadXml} = goog.require('goog.dom.xml');
+const EventTarget = goog.require('goog.events.EventTarget');
+const {getRandomString} = goog.require('goog.string');
+const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
+const registerClass = goog.require('os.registerClass');
+const PropertyChange = goog.require('os.ui.filter.PropertyChange');
 
+const IPersistable = goog.requireType('os.IPersistable');
+const IFilterEntry = goog.requireType('os.filter.IFilterEntry');
 
 
 /**
- * @constructor
- * @implements {os.IPersistable}
- * @implements {os.filter.IFilterEntry}
- * @extends {goog.events.EventTarget}
+ * @implements {IPersistable}
+ * @implements {IFilterEntry}
+ * @unrestricted
  */
-os.filter.FilterEntry = function() {
-  os.filter.FilterEntry.base(this, 'constructor');
+class FilterEntry extends EventTarget {
+  /**
+   * Constructor.
+   */
+  constructor() {
+    super();
+
+    /**
+     * @type {string}
+     * @private
+     */
+    this.id_ = getRandomString();
+
+    /**
+     * @type {string}
+     * @private
+     */
+    this.title_ = 'New Filter';
+
+    /**
+     * If this is a default filter.
+     * @type {boolean}
+     * @private
+     */
+    this.default_ = false;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.temporary_ = false;
+
+    /**
+     * @type {string}
+     */
+    this.type = '';
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.description_ = null;
+
+    /**
+     * @type {?string}
+     * @private
+     */
+    this.filter_ = null;
+
+    /**
+     * @type {?Node}
+     * @private
+     */
+    this.filterNode_ = null;
+
+    /**
+     * @type {boolean}
+     */
+    this['enabled'] = false;
+
+    /**
+     * true = AND, false = OR
+     * @type {boolean}
+     * @private
+     */
+    this.match_ = true;
+
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.tags = '';
+
+    /**
+     * @type {string}
+     * @protected
+     */
+    this.source = '';
+  }
 
   /**
-   * @type {string}
-   * @private
+   * @return {!string}
    */
-  this.id_ = goog.string.getRandomString();
+  getId() {
+    return this.id_;
+  }
 
   /**
-   * @type {string}
-   * @private
+   * @param {!string} value
    */
-  this.title_ = 'New Filter';
+  setId(value) {
+    this.id_ = value;
+  }
 
   /**
-   * If this is a default filter.
-   * @type {boolean}
-   * @private
+   * @inheritDoc
    */
-  this.default_ = false;
+  getTitle() {
+    return this.title_;
+  }
 
   /**
-   * @type {boolean}
-   * @private
+   * @inheritDoc
    */
-  this.temporary_ = false;
+  setTitle(value) {
+    this.title_ = value;
+  }
 
   /**
-   * @type {string}
+   * @inheritDoc
    */
-  this.type = '';
+  getDescription() {
+    return this.description_;
+  }
 
   /**
-   * @type {?string}
-   * @private
+   * @inheritDoc
    */
-  this.description_ = null;
+  setDescription(value) {
+    this.description_ = value;
+  }
 
   /**
-   * @type {?string}
-   * @private
+   * Get the filter type
+   *
+   * @return {string}
    */
-  this.filter_ = null;
+  getType() {
+    return this.type;
+  }
 
   /**
-   * @type {?Node}
-   * @private
+   * Set the filter type
+   *
+   * @param {string} value
    */
-  this.filterNode_ = null;
+  setType(value) {
+    this.type = value;
+  }
 
   /**
-   * @type {boolean}
+   * Whether or not the filter is enabled
+   *
+   * @return {boolean}
    */
-  this['enabled'] = false;
+  isEnabled() {
+    return this['enabled'];
+  }
 
   /**
-   * true = AND, false = OR
-   * @type {boolean}
-   * @private
+   * @param {boolean} value
    */
-  this.match_ = true;
+  setEnabled(value) {
+    this['enabled'] = value;
+    this.dispatchEvent(new PropertyChangeEvent(PropertyChange.ENABLED, value, !value));
+  }
 
   /**
-   * @type {string}
-   * @protected
+   * Whether or not this is a default filter. Default filters are loaded from application settings.
+   *
+   * @return {boolean}
    */
-  this.tags = '';
+  isDefault() {
+    return this.default_;
+  }
 
   /**
-   * @type {string}
-   * @protected
+   * Set if this is a default filter.
+   *
+   * @param {boolean} value
    */
-  this.source = '';
-};
-goog.inherits(os.filter.FilterEntry, goog.events.EventTarget);
+  setDefault(value) {
+    this.default_ = value;
+  }
+
+  /**
+   * Whether or not the filter is temporary. Temporary filters are not persisted across sessions.
+   *
+   * @return {boolean}
+   */
+  isTemporary() {
+    return this.temporary_;
+  }
+
+  /**
+   * Set if the filter is temporary.
+   *
+   * @param {boolean} value
+   */
+  setTemporary(value) {
+    this.temporary_ = value;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getFilter() {
+    return this.filter_;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  setFilter(filter) {
+    var old = this.filter_;
+    this.filter_ = filter;
+    if (this.filter_) {
+      try {
+        this.filterNode_ = loadXml(this.filter_);
+      } catch (e) {}
+    }
+
+    this.dispatchEvent(new PropertyChangeEvent('filter', this.filter_, old));
+  }
+
+  /**
+   * Gets the filter node
+   *
+   * @return {?Node}
+   */
+  getFilterNode() {
+    return this.filterNode_ ? getFirstElementChild(this.filterNode_) : null;
+  }
+
+  /**
+   * @return {boolean}
+   */
+  getMatch() {
+    return this.match_;
+  }
+
+  /**
+   * @param {boolean} match
+   */
+  setMatch(match) {
+    this.match_ = match;
+  }
+
+  /**
+   * Gets the tags for the filter entry.
+   *
+   * @return {string}
+   */
+  getTags() {
+    return this.tags;
+  }
+
+  /**
+   * Sets the tags for the filter entry.
+   *
+   * @param {string} value The tags to set.
+   */
+  setTags(value) {
+    this.tags = value;
+  }
+
+  /**
+   * Get the source name of the filter.
+   * @return {string}
+   */
+  getSource() {
+    return this.source;
+  }
+
+  /**
+   * Set if filter source name.
+   * @param {string} value
+   */
+  setSource(value) {
+    this.source = value;
+  }
+
+  /**
+   * @param {?Array<os.ogc.FeatureTypeColumn>} columns
+   * @return {boolean}
+   */
+  matches(columns) {
+    var matches = false;
+
+    if (columns) {
+      matches = true;
+
+      var columnMap = {};
+      for (var i = 0; i < columns.length; i++) {
+        columnMap[columns[i]['name']] = columns[i]['type'];
+      }
+
+      var filterNode = this.getFilterNode();
+      var columnNames = filterNode.querySelectorAll('PropertyName');
+
+      for (var j = 0; j < columnNames.length; j++) {
+        var columnName = columnNames[j];
+        if (columnName.textContent in columnMap) {
+          var columnType = /** @type {string} */ (columnMap[columnName.textContent]);
+          if (columnType == 'decimal') {
+            var literalElement = columnName.nextElementSibling;
+
+            if (!literalElement || literalElement.localName !== 'Literal') {
+              var parentElement = columnName.parentElement;
+              literalElement = parentElement.querySelector('Literal');
+            }
+
+            if (literalElement) {
+              var value = literalElement.textContent || null;
+              if (value && isNaN(parseFloat(value))) {
+                // column requires numbers, parseFloat gave NaN, fail
+                matches = false;
+                break;
+              }
+            }
+          }
+
+          if (columnType && columnType.startsWith('gml:')) {
+            // gml is a geometry, fail
+            matches = false;
+            break;
+          }
+        } else {
+          // not in the columns for the layer, fail
+          matches = false;
+          break;
+        }
+      }
+    }
+
+    return matches;
+  }
+
+  /**
+   * Clones the entry
+   *
+   * @return {os.filter.FilterEntry} The new entry
+   */
+  clone() {
+    var conf = this.persist();
+    var other = new this.constructor();
+    other.restore(conf);
+    return other;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  persist(opt_to) {
+    if (!opt_to) {
+      opt_to = {};
+    }
+
+    opt_to['id'] = this.id_;
+    opt_to['title'] = this.title_;
+    opt_to['description'] = this.description_;
+    opt_to['type'] = this.type;
+    opt_to['filter'] = this.filter_;
+    opt_to['enabled'] = this['enabled'];
+    opt_to['match'] = this.getMatch();
+    opt_to['tags'] = this.getTags();
+
+    return opt_to;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  restore(config) {
+    this.id_ = config['id'];
+    this.title_ = config['title'];
+    this.description_ = config['description'];
+    this.type = config['type'];
+    this.setFilter(config['filter']);
+    this.setEnabled(config['enabled']);
+    this.setMatch(config['match']);
+    this.setTags(config['tags']);
+  }
+}
 
 
 /**
@@ -102,350 +399,8 @@ goog.inherits(os.filter.FilterEntry, goog.events.EventTarget);
  * @type {string}
  * @const
  */
-os.filter.FilterEntry.NAME = 'os.filter.FilterEntry';
-os.registerClass(os.filter.FilterEntry.NAME, os.filter.FilterEntry);
+FilterEntry.NAME = 'os.filter.FilterEntry';
+registerClass(FilterEntry.NAME, FilterEntry);
 
 
-/**
- * @return {!string}
- */
-os.filter.FilterEntry.prototype.getId = function() {
-  return this.id_;
-};
-
-
-/**
- * @param {!string} value
- */
-os.filter.FilterEntry.prototype.setId = function(value) {
-  this.id_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.filter.FilterEntry.prototype.getTitle = function() {
-  return this.title_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.filter.FilterEntry.prototype.setTitle = function(value) {
-  this.title_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.filter.FilterEntry.prototype.getDescription = function() {
-  return this.description_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.filter.FilterEntry.prototype.setDescription = function(value) {
-  this.description_ = value;
-};
-
-
-/**
- * Get the filter type
- *
- * @return {string}
- */
-os.filter.FilterEntry.prototype.getType = function() {
-  return this.type;
-};
-
-
-/**
- * Set the filter type
- *
- * @param {string} value
- */
-os.filter.FilterEntry.prototype.setType = function(value) {
-  this.type = value;
-};
-
-
-/**
- * Whether or not the filter is enabled
- *
- * @return {boolean}
- */
-os.filter.FilterEntry.prototype.isEnabled = function() {
-  return this['enabled'];
-};
-
-
-/**
- * @param {boolean} value
- */
-os.filter.FilterEntry.prototype.setEnabled = function(value) {
-  this['enabled'] = value;
-  this.dispatchEvent(new os.events.PropertyChangeEvent(os.ui.filter.PropertyChange.ENABLED, value, !value));
-};
-
-
-/**
- * Whether or not this is a default filter. Default filters are loaded from application settings.
- *
- * @return {boolean}
- */
-os.filter.FilterEntry.prototype.isDefault = function() {
-  return this.default_;
-};
-
-
-/**
- * Set if this is a default filter.
- *
- * @param {boolean} value
- */
-os.filter.FilterEntry.prototype.setDefault = function(value) {
-  this.default_ = value;
-};
-
-
-/**
- * Whether or not the filter is temporary. Temporary filters are not persisted across sessions.
- *
- * @return {boolean}
- */
-os.filter.FilterEntry.prototype.isTemporary = function() {
-  return this.temporary_;
-};
-
-
-/**
- * Set if the filter is temporary.
- *
- * @param {boolean} value
- */
-os.filter.FilterEntry.prototype.setTemporary = function(value) {
-  this.temporary_ = value;
-};
-
-
-/**
- * @inheritDoc
- */
-os.filter.FilterEntry.prototype.getFilter = function() {
-  return this.filter_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.filter.FilterEntry.prototype.setFilter = function(filter) {
-  var old = this.filter_;
-  this.filter_ = filter;
-  if (this.filter_) {
-    try {
-      this.filterNode_ = goog.dom.xml.loadXml(this.filter_);
-    } catch (e) {}
-  }
-
-  this.dispatchEvent(new os.events.PropertyChangeEvent('filter', this.filter_, old));
-};
-
-
-/**
- * Gets the filter node
- *
- * @return {?Node}
- */
-os.filter.FilterEntry.prototype.getFilterNode = function() {
-  return this.filterNode_ ? goog.dom.getFirstElementChild(this.filterNode_) : null;
-};
-
-
-/**
- * @return {boolean}
- */
-os.filter.FilterEntry.prototype.getMatch = function() {
-  return this.match_;
-};
-
-
-/**
- * @param {boolean} match
- */
-os.filter.FilterEntry.prototype.setMatch = function(match) {
-  this.match_ = match;
-};
-
-
-/**
- * Gets the tags for the filter entry.
- *
- * @return {string}
- */
-os.filter.FilterEntry.prototype.getTags = function() {
-  return this.tags;
-};
-
-
-/**
- * Sets the tags for the filter entry.
- *
- * @param {string} value The tags to set.
- */
-os.filter.FilterEntry.prototype.setTags = function(value) {
-  this.tags = value;
-};
-
-
-/**
- * Get the source name of the filter.
- * @return {string}
- */
-os.filter.FilterEntry.prototype.getSource = function() {
-  return this.source;
-};
-
-
-/**
- * Set if filter source name.
- * @param {string} value
- */
-os.filter.FilterEntry.prototype.setSource = function(value) {
-  this.source = value;
-};
-
-
-/**
- * @param {?Array<os.ogc.FeatureTypeColumn>} columns
- * @return {boolean}
- */
-os.filter.FilterEntry.prototype.matches = function(columns) {
-  var matches = false;
-
-  if (columns) {
-    matches = true;
-
-    var columnMap = {};
-    for (var i = 0; i < columns.length; i++) {
-      columnMap[columns[i]['name']] = columns[i]['type'];
-    }
-
-    var filterNode = this.getFilterNode();
-    var columnNames = filterNode.querySelectorAll('PropertyName');
-
-    for (var j = 0; j < columnNames.length; j++) {
-      var columnName = columnNames[j];
-      if (columnName.textContent in columnMap) {
-        var columnType = /** @type {string} */ (columnMap[columnName.textContent]);
-        if (columnType == 'decimal') {
-          var literalElement = columnName.nextElementSibling;
-
-          if (!literalElement || literalElement.localName !== 'Literal') {
-            var parentElement = columnName.parentElement;
-            literalElement = parentElement.querySelector('Literal');
-          }
-
-          if (literalElement) {
-            var value = literalElement.textContent || null;
-            if (value && isNaN(parseFloat(value))) {
-              // column requires numbers, parseFloat gave NaN, fail
-              matches = false;
-              break;
-            }
-          }
-        }
-
-        if (goog.string.startsWith(columnType, 'gml:')) {
-          // gml is a geometry, fail
-          matches = false;
-          break;
-        }
-      } else {
-        // not in the columns for the layer, fail
-        matches = false;
-        break;
-      }
-    }
-  }
-
-  return matches;
-};
-
-
-/**
- * Clones the entry
- *
- * @return {os.filter.FilterEntry} The new entry
- */
-os.filter.FilterEntry.prototype.clone = function() {
-  var conf = this.persist();
-  var other = new this.constructor();
-  other.restore(conf);
-  return other;
-};
-
-
-/**
- * @inheritDoc
- */
-os.filter.FilterEntry.prototype.persist = function(opt_to) {
-  if (!opt_to) {
-    opt_to = {};
-  }
-
-  opt_to['id'] = this.id_;
-  opt_to['title'] = this.title_;
-  opt_to['description'] = this.description_;
-  opt_to['type'] = this.type;
-  opt_to['filter'] = this.filter_;
-  opt_to['enabled'] = this['enabled'];
-  opt_to['match'] = this.getMatch();
-  opt_to['tags'] = this.getTags();
-
-  return opt_to;
-};
-
-
-/**
- * @inheritDoc
- */
-os.filter.FilterEntry.prototype.restore = function(config) {
-  this.id_ = config['id'];
-  this.title_ = config['title'];
-  this.description_ = config['description'];
-  this.type = config['type'];
-  this.setFilter(config['filter']);
-  this.setEnabled(config['enabled']);
-  this.setMatch(config['match']);
-  this.setTags(config['tags']);
-};
-
-
-/**
- * Clone a filter entry to the current window context.
- *
- * @param {os.filter.FilterEntry} entry The alleged filter entry.
- * @return {os.filter.FilterEntry} A filter entry created in the current window context.
- */
-os.filter.cloneToContext = function(entry) {
-  if (entry && !(os.instanceOf(entry, os.filter.FilterEntry.NAME))) {
-    try {
-      var clone = new os.filter.FilterEntry();
-      clone.restore(entry.persist());
-
-      if (os.instanceOf(clone, os.filter.FilterEntry.NAME)) {
-        entry = clone;
-      }
-    } catch (e) {
-      entry = null;
-    }
-  }
-
-  return entry;
-};
+exports = FilterEntry;

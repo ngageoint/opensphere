@@ -1,18 +1,21 @@
 goog.module('os.debug.FancierWindow');
 goog.module.declareLegacyNamespace();
 
-goog.require('goog.debug.FancyWindow');
-goog.require('goog.html.SafeStyleSheet');
-goog.require('goog.string.Const');
-goog.require('os.alert.AlertManager');
-goog.require('os.file.persist.FilePersistence');
-goog.require('os.ui');
+const FancyWindow = goog.require('goog.debug.FancyWindow');
+const googEvents = goog.require('goog.events');
+const GoogEventType = goog.require('goog.events.EventType');
+const SafeHtml = goog.require('goog.html.SafeHtml');
+const SafeStyleSheet = goog.require('goog.html.SafeStyleSheet');
+const Const = goog.require('goog.string.Const');
+const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
+const AlertManager = goog.require('os.alert.AlertManager');
+const {saveFile} = goog.require('os.file.persist');
 
 
 /**
- * @type {!goog.string.Const}
+ * @type {!Const}
  */
-const styleRules = goog.string.Const.from(
+const styleRules = Const.from(
     '#log{background-color:#000;}' +
     '.logmsg{color:#eee;}' +
     '.dbg-i{color:#0f0;}' +
@@ -31,7 +34,7 @@ const styleRules = goog.string.Const.from(
 /**
  * Makes FancyWindow fancier by making the window close button do the same thing as clicking the exit button
  */
-class FancierWindow extends goog.debug.FancyWindow {
+class FancierWindow extends FancyWindow {
   /**
    * Constructor.
    * @param {string=} opt_identifier Identifier for this logging class
@@ -45,16 +48,16 @@ class FancierWindow extends goog.debug.FancyWindow {
    * @inheritDoc
    */
   writeInitialDocument() {
-    goog.events.unlisten(this.win, goog.events.EventType.BEFOREUNLOAD, this.closeLogger, false, this);
+    googEvents.unlisten(this.win, GoogEventType.BEFOREUNLOAD, this.closeLogger, false, this);
     super.writeInitialDocument();
 
     /** @suppress {accessControls} To access the private dom helper for the logging window to get the save button */
     const saveButton = this.dh_.getElement('savebutton');
-    saveButton.addEventListener(goog.events.EventType.CLICK, this.exportLogs_.bind(this));
+    saveButton.addEventListener(GoogEventType.CLICK, this.exportLogs_.bind(this));
 
     // close button should set the debug window to disabled
     if (this.win) {
-      goog.events.listenOnce(this.win, goog.events.EventType.BEFOREUNLOAD, this.closeLogger, false, this);
+      googEvents.listenOnce(this.win, GoogEventType.BEFOREUNLOAD, this.closeLogger, false, this);
     }
   }
 
@@ -70,8 +73,8 @@ class FancierWindow extends goog.debug.FancyWindow {
    */
   getStyleRules() {
     const baseRules = super.getStyleRules();
-    const extraRules = goog.html.SafeStyleSheet.fromConstant(styleRules);
-    return goog.html.SafeStyleSheet.concat(baseRules, extraRules);
+    const extraRules = SafeStyleSheet.fromConstant(styleRules);
+    return SafeStyleSheet.concat(baseRules, extraRules);
   }
 
   /**
@@ -81,8 +84,6 @@ class FancierWindow extends goog.debug.FancyWindow {
   getHtml_() {
     const baseHtml = super.getHtml_();
 
-    const SafeHtml = goog.html.SafeHtml;
-
     const body = SafeHtml.create(
         'body', {},
         SafeHtml.create(
@@ -90,7 +91,7 @@ class FancierWindow extends goog.debug.FancyWindow {
             SafeHtml.create('span', {'id': 'savebutton'}, 'save')));
 
     const additionalHtml = SafeHtml.create('html', {}, body);
-    return goog.html.SafeHtml.concat(baseHtml, additionalHtml);
+    return SafeHtml.concat(baseHtml, additionalHtml);
   }
 
   /**
@@ -98,7 +99,6 @@ class FancierWindow extends goog.debug.FancyWindow {
    * @private
    */
   exportLogs_() {
-    const SafeHtml = goog.html.SafeHtml;
     const head = SafeHtml.create(
         'head', {},
         SafeHtml.concat(
@@ -118,18 +118,18 @@ class FancierWindow extends goog.debug.FancyWindow {
         SafeHtml.concat(
             SafeHtml.create(
                 'div',
-                {'id': 'log', 'style': goog.string.Const.from('overflow:auto;height:100%;')},
+                {'id': 'log', 'style': Const.from('overflow:auto;height:100%;')},
                 SafeHtml.concat(htmlMessages))));
 
     const logOutput = SafeHtml.create('html', {}, SafeHtml.concat(head, body));
 
     const outFileName = this.identifier + 'LoggingOutput_' + moment(Date.now()).utc().format('YYYYMMDD_Hmmss') +
         'Z.html';
-    if (os.file.persist.saveFile(outFileName, goog.html.SafeHtml.unwrap(logOutput), 'text/html')) {
-      os.alert.AlertManager.getInstance().sendAlert('Created ' + outFileName, os.alert.AlertEventSeverity.SUCCESS);
+    if (saveFile(outFileName, SafeHtml.unwrap(logOutput), 'text/html')) {
+      AlertManager.getInstance().sendAlert('Created ' + outFileName, AlertEventSeverity.SUCCESS);
     } else {
-      os.alert.AlertManager.getInstance().sendAlert('Could not create ' + outFileName,
-          os.alert.AlertEventSeverity.ERROR);
+      AlertManager.getInstance().sendAlert('Could not create ' + outFileName,
+          AlertEventSeverity.ERROR);
     }
   }
 

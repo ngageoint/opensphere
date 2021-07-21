@@ -1,41 +1,45 @@
-goog.provide('os.filter.AbstractFilter');
-goog.require('os.filter.IFilter');
+goog.module('os.filter.AbstractFilter');
+goog.module.declareLegacyNamespace();
 
+const IFilter = goog.requireType('os.filter.IFilter');
 
 
 /**
- * @implements {os.filter.IFilter}
+ * @implements {IFilter}
  * @template T
- * @constructor
  */
-os.filter.AbstractFilter = function() {
+class AbstractFilter {
   /**
-   * @type {!string}
-   * @private
+   * Constructor.
    */
-  this.id_ = 'os.filter.AbstractFilter';
-};
+  constructor() {
+    /**
+     * @type {!string}
+     * @private
+     */
+    this.id_ = 'os.filter.AbstractFilter';
+  }
 
+  /**
+   * @inheritDoc
+   */
+  evaluate(item, index, array) {
+    return true;
+  }
 
-/**
- * @inheritDoc
- */
-os.filter.AbstractFilter.prototype.evaluate = function(item, index, array) {
-  return true;
-};
+  /**
+   * @inheritDoc
+   */
+  getId() {
+    return this.id_;
+  }
 
+  /**
+   * @inheritDoc
+   */
+  setId(id) {
+    this.id_ = id;
+  }
+}
 
-/**
- * @inheritDoc
- */
-os.filter.AbstractFilter.prototype.getId = function() {
-  return this.id_;
-};
-
-
-/**
- * @inheritDoc
- */
-os.filter.AbstractFilter.prototype.setId = function(id) {
-  this.id_ = id;
-};
+exports = AbstractFilter;

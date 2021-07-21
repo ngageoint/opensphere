@@ -5,6 +5,8 @@ const OSFilterImporter = goog.require('os.filter.im.OSFilterImporter');
 const {getColumnsFromFilterable} = goog.require('os.im.action');
 const FilterActionEntry = goog.require('os.im.action.FilterActionEntry');
 
+const FilterEntry = goog.requireType('os.filter.FilterEntry');
+
 
 /**
  * @template T
@@ -24,7 +26,7 @@ class FilterActionImporter extends OSFilterImporter {
    * @inheritDoc
    */
   getFilterModel(title, filter, tooltip, opt_type, opt_match) {
-    var children = filter.getChildren();
+    var children = /** @type {FilterActionEntry} */ (filter).getChildren();
     var childModels;
     if (children) {
       childModels = [];
@@ -48,7 +50,7 @@ class FilterActionImporter extends OSFilterImporter {
    * @inheritDoc
    */
   getFilterTooltip(entry) {
-    var tooltip = 'Filter: ' + os.ui.filter.toFilterString(entry.getFilterNode(), 1000);
+    var tooltip = 'Filter: ' + os.ui.filter.toFilterString(/** @type {FilterEntry} */ (entry).getFilterNode(), 1000);
 
     if (entry instanceof FilterActionEntry && entry.actions.length > 0) {
       var actionText = entry.actions.map(function(action) {

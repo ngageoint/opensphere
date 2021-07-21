@@ -8,10 +8,12 @@ describe('plugin.arc.mime', function() {
   const arc = goog.module.get('plugin.arc');
   const {registerMimeTypes} = goog.module.get('plugin.arc.mime');
 
+  const mockMime = goog.module.get('os.file.mime.mock');
+
   registerMimeTypes();
 
   it('should not detect files that are not ArcGIS Server files', function() {
-    mime.mock.testFiles([
+    mockMime.testFiles([
       '/base/test/plugin/file/kml/kml_test.xml',
       '/base/test/resources/bin/rand.bin',
       '/base/test/resources/json/partial_object.json',
@@ -24,12 +26,12 @@ describe('plugin.arc.mime', function() {
       '/base/test/resources/arc/arcgis/wmsserver/wms-130.xml',
       // Similarly, "arcgis" is a positive match, but "service=WMS" should be negative.
       '/base/test/resources/arc/arcgis/wms-130.xml?service=WMS&request=GetCapabilities'
-    ], mime.mock.testNo(arc.ID));
+    ], mockMime.testNo(arc.ID));
   });
 
   it('should detect files that are ArcGIS Server files', function() {
-    mime.mock.testFiles(['/base/test/resources/arc/arc.html'],
-        mime.mock.testYes(arc.ID));
+    mockMime.testFiles(['/base/test/resources/arc/arc.html'],
+        mockMime.testYes(arc.ID));
   });
 
   it('should register itself with mime detection', function() {

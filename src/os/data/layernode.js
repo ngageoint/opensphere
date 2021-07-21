@@ -16,6 +16,7 @@ const PropertyChangeEvent = goog.require('os.events.PropertyChangeEvent');
 const ImportActionEventType = goog.require('os.im.action.ImportActionEventType');
 const ImportActionManager = goog.require('os.im.action.ImportActionManager');
 const osImplements = goog.require('os.implements');
+const ILayerProvider = goog.require('os.layer.ILayerProvider');
 const LayerGroup = goog.require('os.layer.LayerGroup');
 const LayerPropertyChange = goog.require('os.layer.PropertyChange');
 const Tile = goog.require('os.layer.Tile');
@@ -36,6 +37,7 @@ const ISearchable = goog.requireType('os.data.ISearchable');
  *
  * @implements {ISearchable}
  * @implements {IExtent}
+ * @implements {ILayerProvider}
  * @implements {ILayerUIProvider}
  */
 class LayerNode extends SlickTreeNode {
@@ -101,7 +103,7 @@ class LayerNode extends SlickTreeNode {
   }
 
   /**
-   * @return {os.layer.ILayer} The layer
+   * @inheritDoc
    */
   getLayer() {
     return this.layer_;
@@ -381,6 +383,7 @@ class LayerNode extends SlickTreeNode {
   }
 }
 
+osImplements(LayerNode, ILayerProvider.ID);
 osImplements(LayerNode, ILayerUIProvider.ID);
 
 

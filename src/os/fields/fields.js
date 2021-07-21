@@ -1,11 +1,10 @@
-goog.provide('os.Fields');
-goog.provide('os.fields');
-
+goog.module('os.Fields');
+goog.module.declareLegacyNamespace();
 
 /**
  * @enum {string}
  */
-os.Fields = {
+exports = {
   ALT: 'ALTITUDE',
   ALT_UNITS: 'ALTITUDE_UNITS',
   BEARING: 'BEARING',
@@ -38,123 +37,4 @@ os.Fields = {
   STARTOFFSET: 'STARTOFFSET',
   TIME: 'TIME',
   URL: 'URL'
-};
-
-
-/**
- * Default units for Altitude
- * @type {string}
- */
-os.fields.DEFAULT_ALT_UNIT = 'm';
-
-
-/**
- * Default units for Bearing
- * @type {string}
- */
-os.fields.DEFAULT_BEARING_UNIT = 'degrees';
-
-
-/**
- * Default units for Semi Min/Semi Maj
- * @type {string}
- */
-os.fields.DEFAULT_RADIUS_UNIT = 'nmi';
-
-
-/**
- * Indicator for a derived column
- * @type {string}
- */
-os.fields.DERIVED_COL_INDICATOR = '*';
-
-
-/**
- * Default field/column name for Altitude
- * @type {string}
- */
-os.fields.DEFAULT_ALT_COL_NAME = os.Fields.ALT + ' (' +
-    os.fields.DEFAULT_ALT_UNIT + ')' + os.fields.DERIVED_COL_INDICATOR;
-
-/**
- * Default field/column name for Radius
- * @type {string}
- */
-os.fields.DEFAULT_RADIUS_COL_NAME = os.Fields.RADIUS + ' (' +
-    os.fields.DEFAULT_RADIUS_UNIT + ')' + os.fields.DERIVED_COL_INDICATOR;
-
-/**
- * Default field/column name for Bearing
- * @type {string}
- */
-os.fields.DEFAULT_BEARING_COL_NAME = os.Fields.BEARING + ' (' +
-    os.fields.DEFAULT_BEARING_UNIT + ')' + os.fields.DERIVED_COL_INDICATOR;
-
-
-/**
- * Default field/column name for Semi Minor
- * @type {string}
- */
-os.fields.DEFAULT_SEMI_MIN_COL_NAME = os.Fields.SEMI_MINOR + ' (' +
-    os.fields.DEFAULT_RADIUS_UNIT + ')' + os.fields.DERIVED_COL_INDICATOR;
-
-
-/**
- * Default field/column name for Semi Major
- * @type {string}
- */
-os.fields.DEFAULT_SEMI_MAJ_COL_NAME = os.Fields.SEMI_MAJOR + ' (' +
-    os.fields.DEFAULT_RADIUS_UNIT + ')' + os.fields.DERIVED_COL_INDICATOR;
-
-
-/**
- * Description field regex.
- * @type {RegExp}
- * @const
- */
-os.fields.DESC_REGEXP = /^desc(ription)?$/i;
-
-
-/**
- * Hide specific columns
- *
- * @param {os.data.ColumnDefinition} colDef
- */
-os.fields.hideSpecialColumns = function(colDef) {
-  var field = colDef['field'];
-  // hide units columns and any other columns we are creating derived columns from
-  if (field == os.Fields.ALT_UNITS || field == os.Fields.RADIUS_UNITS || field == os.Fields.SEMI_MINOR_UNITS ||
-      field == os.Fields.SEMI_MAJOR_UNITS || field == os.Fields.BEARING || field == os.Fields.RADIUS ||
-      field == os.Fields.ALT || field == os.Fields.SEMI_MINOR || field == os.Fields.SEMI_MAJOR) {
-    colDef['visible'] = false;
-  }
-};
-
-/**
- * Return whether a column is derived from another
- * @param {os.data.ColumnDefinition} column
- * @return {boolean}
- */
-os.fields.isDerived = (column) => !!column['derivedFrom'];
-
-/**
- * mark a column as derived
- *
- * @param {os.data.ColumnDefinition} colDef
- */
-os.fields.markDerived = function(colDef) {
-  var field = colDef['field'];
-  if (field == os.fields.DEFAULT_SEMI_MAJ_COL_NAME) {
-    colDef['toolTip'] = 'Derived Column';
-    colDef['derivedFrom'] = os.Fields.SEMI_MAJOR;
-  } else if (field == os.fields.DEFAULT_SEMI_MIN_COL_NAME) {
-    colDef['toolTip'] = 'Derived Column';
-    colDef['derivedFrom'] = os.Fields.SEMI_MINOR;
-  } else if (field == os.fields.DEFAULT_RADIUS_COL_NAME) {
-    colDef['toolTip'] = 'Derived Column';
-    colDef['derivedFrom'] = os.Fields.RADIUS;
-  } else if (field == os.fields.DEFAULT_ALT_COL_NAME) {
-    colDef['toolTip'] = 'Derived Column';
-    colDef['derivedFrom'] = os.Fields.ALT;
-  }
 };
