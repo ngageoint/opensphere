@@ -1,7 +1,7 @@
 goog.module('os.ui.buffer.BufferFormUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.im.basicInfoDirective');
+goog.require('os.ui.im.BasicInfoUI');
 
 const {clone} = goog.require('goog.object');
 const GeometryType = goog.require('ol.geom.GeometryType');

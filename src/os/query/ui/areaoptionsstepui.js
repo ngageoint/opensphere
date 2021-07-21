@@ -1,7 +1,7 @@
 goog.module('os.query.ui.AreaOptionsStepUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.im.mergeAreaOptionDirective');
+goog.require('os.ui.im.MergeAreaOptionUI');
 
 const {ROOT} = goog.require('os');
 const Module = goog.require('os.ui.Module');

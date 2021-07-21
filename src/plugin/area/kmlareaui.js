@@ -1,7 +1,7 @@
 goog.module('plugin.area.KMLAreaUI');
 goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.im.mergeAreaOptionDirective');
+goog.require('os.ui.im.MergeAreaOptionUI');
 
 const {ROOT} = goog.require('os');
 const EventType = goog.require('os.events.EventType');
