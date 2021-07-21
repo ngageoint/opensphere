@@ -4,7 +4,7 @@ goog.module.declareLegacyNamespace();
 const AlertEventSeverity = goog.require('os.alert.AlertEventSeverity');
 const AlertManager = goog.require('os.alert.AlertManager');
 const AudioManager = goog.require('os.audio.AudioManager');
-const osFile = goog.require('os.file');
+const {isFileSystem, isFileUrlEnabled, isLocal} = goog.require('os.file');
 const AbstractImportUI = goog.require('os.ui.im.AbstractImportUI');
 
 
@@ -26,7 +26,7 @@ class AudioImportUI extends AbstractImportUI {
     const url = file.getUrl();
 
     let msg = null;
-    if (url && !osFile.isLocal(url) && (osFile.isFileUrlEnabled() || !osFile.isFileSystem(url))) {
+    if (url && !isLocal(url) && (isFileUrlEnabled() || !isFileSystem(url))) {
       const label = AudioManager.getInstance().addSound(url);
 
       msg = 'Added new sound "' + label + '"';
