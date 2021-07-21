@@ -1,79 +1,80 @@
-goog.provide('os.ui.filter.im.FilterImportUI');
+goog.module('os.ui.filter.im.FilterImportUI');
+goog.module.declareLegacyNamespace();
 
-goog.require('os.ui.filter.im.filterImportDirective');
-goog.require('os.ui.im.FileImportUI');
-
-
+const {directiveTag: filterImportUi} = goog.require('os.ui.filter.im.FilterImport');
+const FileImportUI = goog.require('os.ui.im.FileImportUI');
+const osWindow = goog.require('os.ui.window');
 
 /**
- * @extends {os.ui.im.FileImportUI}
- * @constructor
  */
-os.ui.filter.im.FilterImportUI = function() {
-  os.ui.filter.im.FilterImportUI.base(this, 'constructor');
-
+class FilterImportUI extends FileImportUI {
   /**
-   * The import window label.
-   * @type {string}
+   * Constructor.
    */
-  this.label = 'Import Filters';
+  constructor() {
+    super();
 
-  // file contents are only used in memory, not loaded from storage
-  this.requiresStorage = false;
-};
-goog.inherits(os.ui.filter.im.FilterImportUI, os.ui.im.FileImportUI);
+    /**
+     * The import window label.
+     * @type {string}
+     */
+    this.label = 'Import Filters';
 
-
-/**
- * @inheritDoc
- */
-os.ui.filter.im.FilterImportUI.prototype.getTitle = function() {
-  return 'Filter Import - XML';
-};
-
-
-/**
- * @inheritDoc
- */
-os.ui.filter.im.FilterImportUI.prototype.launchUI = function(file, opt_config) {
-  os.ui.filter.im.FilterImportUI.base(this, 'launchUI', file, opt_config);
-
-  var windowOptions = {
-    'label': this.label,
-    'icon': 'fa fa-sign-in',
-    'x': 'center',
-    'y': 'center',
-    'width': '700',
-    'min-width': '500',
-    'max-width': '900',
-    'height': '600',
-    'min-height': '300',
-    'max-height': '700',
-    'modal': 'true',
-    'show-close': 'true'
-  };
-
-  var layerId;
-  if (opt_config) {
-    layerId = opt_config['layerId'];
+    // file contents are only used in memory, not loaded from storage
+    this.requiresStorage = false;
   }
 
-  var scopeOptions = {
-    'filterData': file.getContent(),
-    'layerId': layerId
-  };
+  /**
+   * @inheritDoc
+   */
+  getTitle() {
+    return 'Filter Import - XML';
+  }
 
-  var template = this.getTemplate();
-  os.ui.window.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
-};
+  /**
+   * @inheritDoc
+   */
+  launchUI(file, opt_config) {
+    super.launchUI(file, opt_config);
 
+    var windowOptions = {
+      'label': this.label,
+      'icon': 'fa fa-sign-in',
+      'x': 'center',
+      'y': 'center',
+      'width': '700',
+      'min-width': '500',
+      'max-width': '900',
+      'height': '600',
+      'min-height': '300',
+      'max-height': '700',
+      'modal': 'true',
+      'show-close': 'true'
+    };
 
-/**
- * Gets the template for this UI.
- *
- * @return {!string}
- * @protected
- */
-os.ui.filter.im.FilterImportUI.prototype.getTemplate = function() {
-  return '<filterimport filter-data="filterData" layer-id="layerId"></filterimport>';
-};
+    var layerId;
+    if (opt_config) {
+      layerId = opt_config['layerId'];
+    }
+
+    var scopeOptions = {
+      'filterData': file.getContent(),
+      'layerId': layerId
+    };
+
+    var template = this.getTemplate();
+    osWindow.create(windowOptions, template, undefined, undefined, undefined, scopeOptions);
+  }
+
+  /**
+   * Gets the template for this UI.
+   *
+   * @return {!string}
+   * @protected
+   */
+  getTemplate() {
+    return `<${filterImportUi} filter-data="filterData" layer-id="layerId"></${filterImportUi}>`;
+  }
+}
+
+exports = FilterImportUI;
