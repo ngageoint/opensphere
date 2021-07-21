@@ -165,23 +165,24 @@ const onEditComplete = function(original, entry) {
   // don't do anything if there was no change
   if (entry && (!original || entry.compare(original) !== 0)) {
     var cmds = [];
-
     var iam = getImportActionManager();
-    var entries = iam.getActionEntries(entry.getType());
-
     var entryTitle = entry.getTitle();
     var insertIndex;
     var parentId;
+    var searchArray;
 
     if (original) {
-      insertIndex = olArray.findIndex(entries, function(entry) {
-        return entry == original;
-      });
-
       var parent = original.getParent();
       if (parent) {
         parentId = parent.getId();
+        searchArray = parent.getChildren();
+      } else {
+        searchArray = iam.getActionEntries(entry.getType());
       }
+
+      insertIndex = olArray.findIndex(searchArray, function(entry) {
+        return entry == original;
+      });
 
       entryTitle = original.getTitle();
       cmds.push(new FilterActionRemove(original, insertIndex, parentId));

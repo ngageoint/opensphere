@@ -34,6 +34,12 @@ class FilterActionTreeSearch extends AbstractGroupByTreeSearch {
      */
     this.showDefaultActions = true;
 
+    /**
+     * Current Open IDs
+     * @type {!Object<string, boolean>}
+     */
+    this.openIds = {};
+
     // filter out default actions when the flag is false
     this.setFilterFunction((node) => {
       var entry = node.getEntry();
@@ -53,6 +59,7 @@ class FilterActionTreeSearch extends AbstractGroupByTreeSearch {
    * @inheritDoc
    */
   beginSearch(term, groupBy) {
+    this.openIds = super.getOpenIds();
     var oldSearch = /** @type {!Array<!os.structs.ITreeNode>} */ (this.target[this.field]);
     if (Array.isArray(oldSearch)) {
       // dispose the old nodes, otherwise they will be retained in memory due to listeners on the filter action entries
@@ -64,6 +71,14 @@ class FilterActionTreeSearch extends AbstractGroupByTreeSearch {
     }
 
     super.beginSearch(term, groupBy);
+    this.openIds = {};
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getOpenIds() {
+    return this.openIds;
   }
 
   /**
