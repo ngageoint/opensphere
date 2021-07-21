@@ -29,6 +29,7 @@ const DynamicFeature = goog.require('os.feature.DynamicFeature');
 const fields = goog.require('os.fields');
 const {reduceExtentFromGeometries} = goog.require('os.fn');
 const geo = goog.require('os.geo');
+const {validate: jstsValidate} = goog.require('os.geo.jsts');
 const Ellipse = goog.require('os.geom.Ellipse');
 const GeometryField = goog.require('os.geom.GeometryField');
 const MappingManager = goog.require('os.im.mapping.MappingManager');
@@ -1395,7 +1396,7 @@ const validatePolygonType_ = function(geometry, opt_quiet) {
   if (geometry instanceof MultiPolygon) {
     const validPolygons = [];
     for (let i = 0, n = geometry.getEndss().length; i < n; ++i) {
-      const geom = os.geo.jsts.validate(geometry.getPolygon(i), opt_quiet, true);
+      const geom = jstsValidate(geometry.getPolygon(i), opt_quiet, true);
       if (geom !== undefined) {
         validPolygons.push(geom);
       }
@@ -1413,7 +1414,7 @@ const validatePolygonType_ = function(geometry, opt_quiet) {
     return undefined;
   }
 
-  return os.geo.jsts.validate(geometry, opt_quiet, true);
+  return jstsValidate(geometry, opt_quiet, true);
 };
 
 
